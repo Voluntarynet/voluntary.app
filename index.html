@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    
+    <link rel="stylesheet" href="_css.css">
+    <link rel="stylesheet" href="view/_css.css">
+    <link rel="stylesheet" href="lib/view/_css.css">
+    <link rel="stylesheet" href="lib/view/browser/_css.css">
+    <link rel="stylesheet" href="lib/view/browser/_area.css">
+    
+  </head>
+  
+		
+		<script>
+		/**
+ * Loads one more external JS files and optionally calls a callback function
+ * when done.
+ * @param {!Array.<string>} urls
+ *     URLs of external JS files to load.
+ * @param {function(!Array.<!Object>)|udefined} callback
+ *     Optional callback function to execute once all of the scripts have been
+ *     loaded.  The parameter passed will be an array of objects containing the
+ *     "script", "url", and "event" (event name fired indicating the script
+ *     loaded).
+ */
+var loadSequentialJS = (function(document) {
+  return function(urls, callback) {
+    var results = [];
+    var parent = document.getElementsByTagName('head')[0] || document.body;
+    var urlsLeft = urls.length;
+     
+    function loadNext(len, script, url, eventName) {
+      if (urlsLeft == len) {
+        if (eventName) {
+          results.push({
+            script: script,
+            url: url,
+            event: eventName
+          });
+        }
+        if (urlsLeft) {
+          var url = urls.shift();
+          len = --urlsLeft;
+          var script = document.createElement('script');
+          script.src = url;
+          script.onload = function() {
+            loadNext(len, script, url, 'load');
+          };
+          script.onerror = function() {
+            loadNext(len, script, url, 'error');
+          };
+          parent.appendChild(script);
+        }
+        else if (callback) {
+          callback(results);
+        }
+      }
+    }
+    loadNext(urlsLeft);
+  };
+})(document);
+
+		    var files = [
+		        "data/categories.json",
+		        "data/us_cities.json",
+		        "data/countries.json",
+
+
+		        "lib/ideal/ideal.js",
+		        "lib/ideal/ideal_plus.js",
+
+		        "lib/notification/Notification.js",
+		        "lib/notification/NotificationCenter.js",
+		        "lib/notification/Observation.js",
+
+		        "lib/peerjs/peer.js",
+
+		        "lib/node/BMNode.js",
+		        "lib/node/BMField.js",
+		        "lib/node/Nodes/BMStorableNode.js",
+		        "lib/node/Nodes/BMFormNode.js",
+		        "lib/node/Nodes/BMInfoNode.js",
+		        "lib/node/Nodes/BMNavNode.js",
+		        "lib/node/NodeStore.js",
+
+		        "lib/model/BaseApp.js",
+		        
+
+		        "model/network/BMMessages.js",
+		        "model/network/BMNetwork.js",
+		        "model/network/BMPayload.js",
+		        "model/network/BMPow.js",
+
+		        "model/network/webrtc/BMServerConnection.js",
+		        "model/network/webrtc/BMRServer.js",
+                "model/network/webrtc/BMRServers.js",
+                "model/network/webrtc/BMRemotePeer.js",
+                
+                "model/network/messages/BMMessage.js",
+                "model/network/messages/BMAddrMessage.js",
+                "model/network/messages/BMGetDataMessage.js",
+                "model/network/messages/BMInvMessage.js",
+                "model/network/messages/BMObjectMessage.js",
+                "model/network/messages/BMPingMessage.js",
+                "model/network/messages/BMPongMessage.js",
+ 
+                "lib/view/CSS.js",
+                "lib/view/Div.js",
+                "lib/view/NodeView.js",
+                "lib/view/ContentView.js",
+                "lib/view/GenericView.js",
+                //"lib/view/MenuManager.js",
+                "lib/view/Window.js",
+
+                "lib/view/browser/Browser.js",
+                "lib/view/browser/BrowserColumn.js",
+                "lib/view/browser/BrowserColumnGroup.js",
+                "lib/view/browser/BrowserHeader.js",
+                "lib/view/browser/BrowserHeaderAction.js",
+                "lib/view/browser/BrowserRow.js",
+                "lib/view/browser/BrowserRowNote.js",
+                "lib/view/browser/BrowserRowSubtitle.js",
+                "lib/view/browser/BrowserRowTitle.js",
+                "lib/view/browser/BrowserFieldRow.js",
+                
+		        "view/BMDraftView.js",
+		        "view/BMLetterView.js",
+		        "view/BMMessageView.js",
+		        "view/BMPostView.js",
+		        
+		        
+                "model/market/BMBuy.js",
+                "model/market/BMBuys.js",
+                "model/market/BMMarket.js",
+                "model/market/BMPost.js",
+                "model/market/BMSell.js",
+                "model/market/BMSells.js",
+
+                "model/market/BMClassifiedPost.js",
+                "model/market/BMClassifiedPosts.js",
+
+		        //"data.js",
+		        //"DCMessage.js",
+		        //"app.js"
+		        
+                "model/market/App.js",
+
+		    ]
+		
+		    loadSequentialJS(files, function () { 
+		        /*
+		        Browser.init(); 
+		        var network = BMNetwork.clone()
+		        network.servers().connect()
+		        */
+		        App.shared()
+		        
+		    })
+
+            
+        </script>
+    
+
+
+    </head>
+      <body id="body">
+        <div class="window">
+          <div id="window-content" class="window-content">
+          </div>
+        </div>
+      </body>
+  
+</html>

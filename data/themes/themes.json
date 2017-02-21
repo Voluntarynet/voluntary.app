@@ -1,0 +1,569 @@
+{
+	"default": 
+	{
+        "password":
+        {
+            "info":
+            {
+                "fontName" : "Open Sans",
+                "fontSize" : 16,
+                "color" : "#cccccc",
+                "align" : "center",
+            },
+
+            "password":
+            {
+                "fontName" : "Open Sans",
+                "fontSize" : 16,
+                "color" : "#cccccc",
+                "align" : "center",
+            },
+        },
+        
+        "wallet":
+        {
+            "info":
+            {
+                "fontName" : "Open Sans",
+                "fontSize" : 16,
+                "color" : "#cccccc",
+                "align" : "center",
+            },
+        },
+        
+        "table":
+        {
+            "header":
+            {
+                "fontName" : "Open Sans",
+                "fontSize" : 14,
+                "color" : "#555555"
+            },
+            
+            "cell":
+            {
+                "fontName" : "Open Sans Light",
+                "fontSize" : 14,
+                "color" : "#888888",
+                "align" : "left",
+            },
+            
+            "cell-right":
+            {
+                "fontName" : "Open Sans Light",
+                "fontSize" : 14,
+                "color" : "#888888",
+                "align" : "right",
+            },
+        },
+        
+        "steps":
+        {
+            "step":
+            {
+                "fontName" : "Open Sans",
+                "fontSize" : 14,
+                "color" : "#888888",
+                "align" : "left",
+                
+            },
+            
+            "status":
+            {
+                "title":
+                {
+                    "fontName" : "Open Sans",
+                    "fontSize" : 22,
+                    "color" : "#000000",
+                    "align" : "left",
+                    "backgroundColor" : "#FFFFFF"
+                },
+                
+                "subtitle":
+                {
+                    "fontName" : "Open Sans",
+                    "fontSize" : 22,
+                    "color" : "#CCCCCC",
+                    "align" : "left",
+                    "backgroundColor" : "#FFFFFF"
+                },
+                
+                "button" :
+                {
+                    "fontName" : "Open Sans",
+                    "fontSize" : 14,
+                    "color" : "#FFFFFF",
+                    "backgroundColor" : "#000000",
+                },
+                
+                "button-disabled" :
+                {
+                    "fontName" : "Open Sans",
+                    "fontSize" : 14,
+                    "color" : "#FFFFFF",
+                    "backgroundColor" : "#DDDDDD",
+                },
+            },
+        },
+        
+        "code" :
+        {
+            "fontName" : "Courier",
+            "fontSize" : 12,
+            "color" : "#888888",
+            "align" : "left",
+            "backgroundColor" : "#000000"
+        },
+        
+        "address" :
+        {
+            "label" :
+            {
+                "fontName" : "Open Sans",
+                "fontSize" : 14,
+                "color" : "#BBBBBB",
+                "align" : "left",
+            },
+            
+            "line" :
+            {
+                "fontName" : "Open Sans",
+                "fontSize" : 14,
+                "color" : "#333333",
+                "align" : "left",
+            },
+            
+            "line-unedited" :
+            {
+                "fontName" : "Open Sans Light Italic",
+                "fontSize" : 14,
+                "color" : "#DD0000",
+                "align" : "left",
+            },
+            
+            "line-invalid" :
+            {
+                "fontName" : "Open Sans Light Italic",
+                "fontSize" : 14,
+                "color" : "#DD0000",
+                "align" : "left",
+            },
+        },
+        
+        "qr" :
+        {
+            "address" :
+            {
+                "fontName" : "Open Sans",
+                "fontSize" : 14,
+                "color" : "#000",
+                "align" : "center",
+           },
+        },
+        
+        "sell" :
+        {
+            "title" :
+            {
+                "fontName" : "Open Sans",
+                "fontSize" : 22,
+                "color" : "#000000",
+            },
+            
+            "title-unedited" :
+            {
+                "fontName" : "Open Sans Light Italic",
+                "fontSize" : 22,
+                "color" : "#DD0000",
+            },
+            
+            "title-invalid" :
+            {
+                "fontName" : "Open Sans Light Italic",
+                "fontSize" : 22,
+                "color" : "#DD0000",
+            },
+            
+            "price" :
+            {
+                "fontName" : "Open Sans",
+                "fontSize" : 22,
+                "color" : "#CCCCCC",
+            },
+            
+            "price-unedited" :
+            {
+                "fontName" : "Open Sans Light Italic",
+                "fontSize" : 22,
+                "color" : "#DD0000",
+            },
+            
+            
+            "price-invalid" :
+            {
+                "fontName" : "Open Sans Light Italic",
+                "fontSize" : 22,
+                "color" : "#DD0000",
+            },
+            
+            "error" :
+            {
+                "fontName" : "Open Sans Light Italic",
+                "fontSize" : 13,
+                "color" : "#DD0000",
+            },
+            
+            "description" :
+            {
+                "fontName" : "Open Sans",
+                "fontSize" : 13,
+                "color" : "#999999",
+            },
+            
+            "description-unedited" :
+            {
+                "fontName" : "Open Sans Light Italic",
+                "fontSize" : 13,
+                "color" : "#DD0000",
+            },
+            
+            "draginstructions":
+            {
+                "fontName" : "Open Sans Italic",
+                "fontSize" : 13,
+                "color" : "#999999",
+                "align" : "center",
+           },
+            
+            "label" :
+            {
+                "fontName" : "Open Sans",
+                "fontSize" : 13,
+                "color" : "#999999",
+            },
+            
+            "address" :
+            {
+                "fontName" : "Open Sans Italic",
+                "fontSize" : 13,
+                "color" : "#999999",
+            },
+            
+            "separator" :
+            {
+                "backgroundColor" : "#CCCCCC",
+            },
+            
+            "button" :
+            {
+                "fontName" : "Open Sans",
+                "fontSize" : 14,
+                "color" : "#FFFFFF",
+                "backgroundColor" : "#000000",
+            },
+            
+            "button-disabled" :
+            {
+                "fontName" : "Open Sans",
+                "fontSize" : 14,
+                "color" : "#FFFFFF",
+                "backgroundColor" : "#DDDDDD",
+            },
+        },
+        
+        
+        "item" :
+        {
+            "unselected" :
+            {
+                "title" :
+                {
+                    "fontName" : "Open Sans",
+                    "fontSize" : 13,
+                    "color" : "#CBCBCB",
+                },
+                
+                "subtitle" :
+                {
+                    "fontName" : "Open Sans Light",
+                    "fontSize" : 11,
+                    "color" : "#989898",
+                },
+                
+                "note" :
+                {
+                    "fontName" : "Open Sans Light",
+                    "fontSize" : 10,
+                    "color" : "#E7E7E7",
+                },
+            },
+            
+            "selected" :
+            {
+                "title" :
+                {
+                    "fontName" : "Open Sans",
+                    "fontSize" : 13,
+                    "color" : "#FFFFFF",
+                },
+                
+                "subtitle" :
+                {
+                    "fontName" : "Open Sans",
+                    "fontSize" : 11,
+                    "color" : "#FFFFFF",
+                },
+                
+                "note" :
+                {
+                    "fontName" : "Open Sans",
+                    "fontSize" : 10,
+                    "color" : "#FFFFFF",
+                },
+            },
+            
+            "unread" :
+            {
+                "title" :
+                {
+                    "fontName" : "Open Sans",
+                    "fontSize" : 13,
+                    "color" : "#81BAE5",
+                },
+                
+                "subtitle" :
+                {
+                    "fontName" : "Open Sans Light",
+                    "fontSize" : 11,
+                    "color" : "#81BAE5",
+                },
+                
+                "note" :
+                {
+                    "fontName" : "Open Sans",
+                    "fontSize" : 10,
+                    "color" : "#81BAE5",
+                },
+            },            
+        },
+        
+        
+        
+		"columns":
+		[
+    		{
+                "unselectedBgColor": [0.12],
+                "selectedBgColor":   [0.09],
+            },
+    		
+    		{
+                "unselectedBgColor": [0.09],
+                "selectedBgColor":   [0.07],
+    		},
+    		
+    		{
+                "unselectedBgColor": [0.07],
+                "selectedBgColor":   [0.03],
+            },
+         
+            {
+                "unselectedBgColor": [0.03],
+                "selectedBgColor":   [0.0],
+            },
+         
+            {
+                "unselectedBgColor": [0.07],
+                "selectedBgColor":   [0.03],
+            },
+
+            {
+                "unselectedBgColor": [0.03],
+                "selectedBgColor":   [0.0],
+            },
+
+            {
+                "unselectedBgColor": [0.07],
+                "selectedBgColor":   [0.03],
+            },
+		],
+        
+
+        "address":
+        {
+            "label" :
+            {
+                "fontName" : "Open Sans Light",
+                "fontSize" : 24,
+                "color" : "#FFFFFF",
+                "align" : "center",
+            },
+            
+            "address" :
+            {
+                "fontName" : "Open Sans Light",
+                "fontSize" : 16,
+                "color" : "#8F8F8F",
+                "align" : "center",
+            },
+            
+            "addressError" :
+            {
+                "fontName" : "Open Sans Light",
+                "fontSize" : 16,
+                "color" : "#FF0000",
+                "align" : "center",
+            },
+            
+            "selected" :
+            {
+                "backgroundColor" : "#555555",
+            },
+            
+            "background" :
+            {
+                "backgroundColor" : "#000000",
+            },
+            
+        },
+        
+		"formBackgroundColor": [0.03],
+		"formText1Color": [1],
+		"formText2Color": [0.82],
+		"formText3Color": [0.5],
+		"formText4Color": [0.3],
+		"formTextErrorColor": [1, 0, 0],
+		"formTextSelectedBgColor": [0.3],
+		"formTextCursorColor": [1],
+		"formTextLinkColor": [0.7],
+		
+		"lightFontName": "Open Sans Light",
+		"mediumFontName": "Open Sans",
+        
+        "message":
+        {
+            "title" :
+            {
+                "fontName" : "Open Sans Light",
+                "fontSize" : 24,
+                "color" : "#FFFFFF",
+            },
+            
+            "subtitle" :
+            {
+                "fontName" : "Open Sans Light",
+                "fontSize" : 13,
+                "color" : "#BBBBBB",
+            },
+            
+            "link" :
+            {
+                "fontName" : "Open Sans Light",
+                "fontSize" : 13,
+                "color" : "#EEEEEE",
+                "text-decoration": "none",
+            },
+            
+            "body" :
+            {
+                "fontName" : "Open Sans Light",
+                "fontSize" : 13,
+                "color" : "#D3D3D3",
+            },
+            
+            "background" :
+            {
+                "backgroundColor" : "#000000",
+            },
+        },
+        
+        "draft" :
+        {
+            "fieldTitle" :
+            {
+                "fontName" : "Open Sans",
+                "fontSize" : 13,
+                "color" : "#323232",
+            },
+            
+            "field" :
+            {
+                "fontName" : "Open Sans",
+                "fontSize" : 13,
+                "color" : "#8F8F8F",
+            },
+            
+            "fieldError" :
+            {
+                "fontName" : "Open Sans Bold",
+                "fontSize" : 13,
+                "color" : "#FF0000",
+            },
+            
+            "body" :
+            {
+                "fontName" : "Open Sans",
+                "fontSize" : 13,
+                "color" : "#C2C2C2",
+                "backgroundColor" : "#FFFFFF",
+            },
+            
+            "separators":
+            {
+                "backgroundColor" : "#EEEEEE",
+            },
+        },
+	
+    
+        "info" :
+        {
+            "header" :
+            {
+                "fontName" : "Open Sans Bold",
+                "fontSize" : 16,
+                "color" : "#777777",
+                "align" : "center",
+            },
+
+            "subheader" :
+            {
+                "fontName" : "Open Sans Light",
+                "fontSize" : 16,
+                "color" : "#777777",
+                "align" : "center",
+            },
+            
+            
+            "title" :
+            {
+                "fontName" : "Open Sans",
+                "fontSize" : 16,
+                "color" : "#777777",
+                "align" : "center",
+            },
+            
+            "item" :
+            {
+                "fontName" : "Open Sans Light",
+                "fontSize" : 16,
+                "color" : "#AAAAAA",
+                "align" : "center",
+            },
+            
+            "item.alt" :
+            {
+                "fontName" : "Open Sans Light",
+                "fontSize" : 16,
+                "color" : "#DDDDDD",
+                "align" : "center",
+            },
+            
+            
+            "background":
+            {
+                "backgroundColor" : "#191919",
+            },
+        }
+    
+    
+    },
+}

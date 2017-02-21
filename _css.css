@@ -1,0 +1,43 @@
+
+
+@font-face {
+    font-family:"OpenSans-Regular";
+    src: url("fonts/Open_Sans/OpenSans-Regular.ttf") 
+}
+
+@font-face {
+    font-family:"OpenSans-Light";
+    src: url("fonts/Open_Sans/OpenSans-Light.ttf")
+}
+
+/*
+@font-face {
+    font-family:"OpenSans-Regular";
+font-stretch: ultra-expanded;
+    src: url("../fonts/Blender_Pro/BlenderPro-Bold.ttf") 
+}
+
+@font-face {
+    font-family:"OpenSans-Light";
+font-stretch: ultra-expanded;
+    src: url("../fonts/Blender_Pro/BlenderPro-Thin.ttf") 
+}
+*/
+
+html {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+.window {
+    position: absolute;
+    overflow: hidden;
+    background-color: #555;
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    border: 0px;
+    top: 0px;
+    left: 0px;
+}

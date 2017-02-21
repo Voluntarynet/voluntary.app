@@ -1,0 +1,38 @@
+
+
+// when a BMNode changes, it calls
+
+    changed()
+
+// on itself, which locally sets
+
+    _needsSyncToView = true 
+
+// and calls 
+
+    didUpdate()
+
+// which goes the hierarchy tree, setting
+ 
+    _didUpdate = true
+
+// at top, set event loop timer of 0 to call 
+
+    handleUpdate()
+
+// on top object
+// when called walks tree paths where _didUpdate == true calling
+
+    handleUpdate()
+
+// each then calls syncToViewIfNeeded
+
+// setting
+
+    _didUpdate = false
+
+// and 
+
+    _needsSyncToView = false
+
+// along the way 

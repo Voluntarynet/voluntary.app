@@ -1,0 +1,169 @@
+CategoriesDict = {
+    "_type": "Group",
+    "name": "For Sale",
+    
+    "children": [
+                 
+                 { "_type": "Category", "name" : "Tests",
+                 },
+                 
+                 { "_type": "Category", "name" : "Media and Games",
+                 "children": [
+                                { "_type": "Category", "name" : "Paper", "nodeSubtitle" : "Books, Magazines..." },
+                                { "_type": "Category", "name" : "Plastic", "nodeSubtitle" : "DVD, CD, Vinyl" },
+                                { "_type": "Category", "name" : "Video Gaming", "nodeSubtitle" : "Games and Gear"  },
+                                { "_type": "Category", "name" : "Instruments", "nodeSubtitle" : "Musical Instruments" },
+                                { "_type": "Category", "name" : "Games", "nodeSubtitle" : "Cards, Board Games..." },
+                              ]
+                 },
+                 
+                 { "_type": "Category", "name" : "Currencies", "nodeShouldSortChildren" : false,
+                 "children":
+                 [
+                    { "_type": "Category", "name" : "Crypto",
+                    "children":
+                    [
+                     { "_type": "Category", "name" : "XBT", "nodeSubtitle" : "Bitcoin"},
+                     { "_type": "Category", "name" : "NMC", "nodeSubtitle" : "Namecoin"},
+                    ]
+                    },
+                  
+                    { "_type": "Category", "name" : "Metals",
+                    "children":
+                    [
+                        { "_type": "Category", "name" : "Gold", "nodeSubtitle" : "coins & bullion"},
+                        { "_type": "Category", "name" : "Silver", "nodeSubtitle" : "coins & bullion"},
+                        { "_type": "Category", "name" : "Platinum", "nodeSubtitle" : "coins & bullion"},
+                    ]
+                    },
+                  
+                    { "_type": "Category", "name" : "Fiat",
+                    "children":
+                    [
+                        { "_type": "Category", "name" : "ARS", "nodeSubtitle" : "Argentinian peso"},
+                        { "_type": "Category", "name" : "AUD", "nodeSubtitle" : "Australian dollar"},
+                        { "_type": "Category", "name" : "BRL", "nodeSubtitle" : "Brazilian real"},
+                        { "_type": "Category", "name" : "CAD", "nodeSubtitle" : "Canadian dollar"},
+                        { "_type": "Category", "name" : "CLP", "nodeSubtitle" : "Chilean peso"},
+                        { "_type": "Category", "name" : "CNY", "nodeSubtitle" : "Chinese renminbi"},
+                        { "_type": "Category", "name" : "CRC", "nodeSubtitle" : "Costa Rican colon"},
+                        { "_type": "Category", "name" : "DKK", "nodeSubtitle" : "Danish krone"},
+                        { "_type": "Category", "name" : "EGP", "nodeSubtitle" : "Egyptian pound"},
+                        { "_type": "Category", "name" : "EUR", "nodeSubtitle" : "Euro-Zone euro"},
+                        { "_type": "Category", "name" : "HKD", "nodeSubtitle" : "Hong Kong dollar"},
+                        { "_type": "Category", "name" : "INR", "nodeSubtitle" : "Indian rupee"},
+                        { "_type": "Category", "name" : "IDR", "nodeSubtitle" : "Indonesian rupiah"},
+                        { "_type": "Category", "name" : "ILS", "nodeSubtitle" : "Israeli new shekel"},
+                        { "_type": "Category", "name" : "JPY", "nodeSubtitle" : "Japanese yen"},
+                        { "_type": "Category", "name" : "KES", "nodeSubtitle" : "Kenyan shilling"},
+                        { "_type": "Category", "name" : "KRW", "nodeSubtitle" : "S Korean won"},
+                        { "_type": "Category", "name" : "KWD", "nodeSubtitle" : "Kuwaiti dinar"},
+                        { "_type": "Category", "name" : "MXN", "nodeSubtitle" : "Mexican peso"},
+                        { "_type": "Category", "name" : "NZD", "nodeSubtitle" : "New Zealand dollar"},
+                        { "_type": "Category", "name" : "NGN", "nodeSubtitle" : "Nigerian naira"},
+                        { "_type": "Category", "name" : "NOK", "nodeSubtitle" : "Norway krone"},
+                        { "_type": "Category", "name" : "PKR", "nodeSubtitle" : "Pakistani rupee"},
+                        { "_type": "Category", "name" : "RUB", "nodeSubtitle" : "Russian rouble"},
+                        { "_type": "Category", "name" : "SAR", "nodeSubtitle" : "Saudi Arabian riyal"},
+                        { "_type": "Category", "name" : "SGD", "nodeSubtitle" : "Singaporean dollar"},
+                        { "_type": "Category", "name" : "ZAR", "nodeSubtitle" : "South African rand"},
+                        { "_type": "Category", "name" : "SEK", "nodeSubtitle" : "Swedish krona"},
+                        { "_type": "Category", "name" : "CHF", "nodeSubtitle" : "Swiss franc"},
+                        { "_type": "Category", "name" : "TWD", "nodeSubtitle" : "Taiwanese dollar"},
+                        { "_type": "Category", "name" : "TRL", "nodeSubtitle" : "Turkish lira"},
+                        { "_type": "Category", "name" : "GBP", "nodeSubtitle" : "UK pound sterling"},
+                        { "_type": "Category", "name" : "USD", "nodeSubtitle" : "US dollar"},
+                        { "_type": "Category", "name" : "VEB", "nodeSubtitle" : "Venezuela bolivar"},
+                    ]
+                    },
+                  
+                  ]
+                 },
+                 
+                 { "_type": "Category", "name" : "Electronics",
+                     "children":
+                     [
+                        { "_type": "Category", "name" : "Cell Phones" },
+                        { "_type": "Category", "name" : "Desktops" },
+                        { "_type": "Category", "name" : "Laptops" },
+                        { "_type": "Category", "name" : "Tablets" },
+                        { "_type": "Category", "name" : "TVs" },
+                        { "_type": "Category", "name" : "Stereos" },
+                        { "_type": "Category", "name" : "Cameras" },
+                        { "_type": "Category", "name" : "Other" },
+                      ]
+                 },
+                 
+                 { "_type": "Category", "name" : "Home",
+                     "children":
+                         [
+                            { "_type": "Category", "name" : "Antiques"},
+                            { "_type": "Category", "name" : "Arts and Crafts" },
+                            { "_type": "Category", "name" : "Appliances" },
+                            { "_type": "Category", "name" : "Household" },
+                            { "_type": "Category", "name" : "Furniture" },
+                            { "_type": "Category", "name" : "Farm and Garden" },
+                            { "_type": "Category", "name" : "Tools" },
+                            { "_type": "Category", "name" : "Collectibles" },
+                          
+                          { "_type": "Category", "name" : "Beauty & Health"
+                          
+                          },
+                         ]
+                 },
+
+                 
+                 { "_type": "Category", "name" : "Fashion",
+                    "children":
+                    [
+                     { "_type": "Category", "name" : "Men's",
+                        "children": [
+                            { "_type": "Category", "name" : "Outerwear" },
+                            { "_type": "Category", "name" : "Tops" },
+                            { "_type": "Category", "name" : "Pants" },
+                            { "_type": "Category", "name" : "Shoes" },
+                            { "_type": "Category", "name" : "Accessories" },
+                            { "_type": "Category", "name" : "Bags" },
+                            { "_type": "Category", "name" : "Jewelry" },
+                        ]
+                     },
+                     { "_type": "Category", "name" : "Women's",
+                     "children": [
+                            { "_type": "Category", "name" : "Outerwear" },
+                            { "_type": "Category", "name" : "Dresses" },
+                            { "_type": "Category", "name" : "Tops" },
+                            { "_type": "Category", "name" : "Pants" },
+                            { "_type": "Category", "name" : "Shoes" },
+                            { "_type": "Category", "name" : "Accessories" },
+                            { "_type": "Category", "name" : "Bags" },
+                            { "_type": "Category", "name" : "Jewelry" },
+                        ]
+                     },
+                    ]
+                 },
+                 
+                 { "_type": "Category", "name" : "Other" },
+                 { "_type": "Category", "name" : "Sporting" },
+                 { "_type": "Category", "name" : "Services",
+                    "children":
+                    [
+                     { "_type": "Category", "name" : "Escort" },
+                     { "_type": "Category", "name" : "Personal" },
+                     { "_type": "Category", "name" : "Transportation" },
+                     { "_type": "Category", "name" : "Delivery" },
+                     { "_type": "Category", "name" : "Moving" },
+                     { "_type": "Category", "name" : "Repair" },
+                     { "_type": "Category", "name" : "Tasks" },
+                    ]
+                 },
+                 { "_type": "Category", "name" : "Tickets" },
+
+                 { "_type": "Category", "name" : "Automotive",
+                     "children":
+                     [
+                        { "_type": "Category", "name" : "Tools" },
+                        { "_type": "Category", "name" : "Auto Parts" },
+                     ]
+                 },
+    ]
+}

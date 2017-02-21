@@ -1,0 +1,1998 @@
+RegionUSCitiesDict = {
+   "children":[
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"auburn"
+            },
+            {
+               "_type":"Region",
+               "name":"birmingham"
+            },
+            {
+               "_type":"Region",
+               "name":"dothan"
+            },
+            {
+               "_type":"Region",
+               "name":"florence \/ muscle shoals"
+            },
+            {
+               "_type":"Region",
+               "name":"gadsden-anniston"
+            },
+            {
+               "_type":"Region",
+               "name":"huntsville \/ decatur"
+            },
+            {
+               "_type":"Region",
+               "name":"mobile"
+            },
+            {
+               "_type":"Region",
+               "name":"montgomery"
+            },
+            {
+               "_type":"Region",
+               "name":"tuscaloosa"
+            }
+         ],
+         "_type":"Region",
+         "name":"Alabama"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"anchorage \/ mat-su"
+            },
+            {
+               "_type":"Region",
+               "name":"fairbanks"
+            },
+            {
+               "_type":"Region",
+               "name":"kenai peninsula"
+            },
+            {
+               "_type":"Region",
+               "name":"southeast alaska"
+            }
+         ],
+         "_type":"Region",
+         "name":"Alaska"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"flagstaff \/ sedona"
+            },
+            {
+               "_type":"Region",
+               "name":"mohave county"
+            },
+            {
+               "_type":"Region",
+               "name":"phoenix"
+            },
+            {
+               "_type":"Region",
+               "name":"prescott"
+            },
+            {
+               "_type":"Region",
+               "name":"show low"
+            },
+            {
+               "_type":"Region",
+               "name":"sierra vista"
+            },
+            {
+               "_type":"Region",
+               "name":"tucson"
+            },
+            {
+               "_type":"Region",
+               "name":"yuma"
+            }
+         ],
+         "_type":"Region",
+         "name":"Arizona"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"fayetteville "
+            },
+            {
+               "_type":"Region",
+               "name":"fort smith"
+            },
+            {
+               "_type":"Region",
+               "name":"jonesboro"
+            },
+            {
+               "_type":"Region",
+               "name":"little rock"
+            },
+            {
+               "_type":"Region",
+               "name":"texarkana"
+            }
+         ],
+         "_type":"Region",
+         "name":"Arkansas"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"bakersfield"
+            },
+            {
+               "_type":"Region",
+               "name":"chico"
+            },
+            {
+               "_type":"Region",
+               "name":"fresno \/ madera"
+            },
+            {
+               "_type":"Region",
+               "name":"gold country"
+            },
+            {
+               "_type":"Region",
+               "name":"hanford-corcoran"
+            },
+            {
+               "_type":"Region",
+               "name":"humboldt county"
+            },
+            {
+               "_type":"Region",
+               "name":"imperial county"
+            },
+            {
+               "_type":"Region",
+               "name":"inland empire"
+            },
+            {
+               "_type":"Region",
+               "name":"los angeles"
+            },
+            {
+               "_type":"Region",
+               "name":"mendocino county"
+            },
+            {
+               "_type":"Region",
+               "name":"merced"
+            },
+            {
+               "_type":"Region",
+               "name":"modesto"
+            },
+            {
+               "_type":"Region",
+               "name":"monterey bay"
+            },
+            {
+               "_type":"Region",
+               "name":"orange county"
+            },
+            {
+               "_type":"Region",
+               "name":"palm springs"
+            },
+            {
+               "_type":"Region",
+               "name":"redding"
+            },
+            {
+               "_type":"Region",
+               "name":"sacramento"
+            },
+            {
+               "_type":"Region",
+               "name":"san diego"
+            },
+            {
+               "_type":"Region",
+               "name":"san francisco bay area"
+            },
+            {
+               "_type":"Region",
+               "name":"san luis obispo"
+            },
+            {
+               "_type":"Region",
+               "name":"santa barbara"
+            },
+            {
+               "_type":"Region",
+               "name":"santa maria"
+            },
+            {
+               "_type":"Region",
+               "name":"siskiyou county"
+            },
+            {
+               "_type":"Region",
+               "name":"stockton"
+            },
+            {
+               "_type":"Region",
+               "name":"susanville"
+            },
+            {
+               "_type":"Region",
+               "name":"ventura county"
+            },
+            {
+               "_type":"Region",
+               "name":"visalia-tulare"
+            },
+            {
+               "_type":"Region",
+               "name":"yuba-sutter"
+            }
+         ],
+         "_type":"Region",
+         "name":"California"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"boulder"
+            },
+            {
+               "_type":"Region",
+               "name":"colorado springs"
+            },
+            {
+               "_type":"Region",
+               "name":"denver"
+            },
+            {
+               "_type":"Region",
+               "name":"eastern CO"
+            },
+            {
+               "_type":"Region",
+               "name":"fort collins \/ north CO"
+            },
+            {
+               "_type":"Region",
+               "name":"high rockies"
+            },
+            {
+               "_type":"Region",
+               "name":"pueblo"
+            },
+            {
+               "_type":"Region",
+               "name":"western slope"
+            }
+         ],
+         "_type":"Region",
+         "name":"Colorado"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"eastern CT"
+            },
+            {
+               "_type":"Region",
+               "name":"hartford"
+            },
+            {
+               "_type":"Region",
+               "name":"new haven"
+            },
+            {
+               "_type":"Region",
+               "name":"northwest CT"
+            }
+         ],
+         "_type":"Region",
+         "name":"Connecticut"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"delaware"
+            }
+         ],
+         "_type":"Region",
+         "name":"Delaware"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"washington"
+            }
+         ],
+         "_type":"Region",
+         "name":"District of Columbia"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"broward county"
+            },
+            {
+               "_type":"Region",
+               "name":"daytona beach"
+            },
+            {
+               "_type":"Region",
+               "name":"florida keys"
+            },
+            {
+               "_type":"Region",
+               "name":"fort lauderdale"
+            },
+            {
+               "_type":"Region",
+               "name":"ft myers \/ SW florida"
+            },
+            {
+               "_type":"Region",
+               "name":"gainesville"
+            },
+            {
+               "_type":"Region",
+               "name":"heartland florida"
+            },
+            {
+               "_type":"Region",
+               "name":"jacksonville"
+            },
+            {
+               "_type":"Region",
+               "name":"lakeland"
+            },
+            {
+               "_type":"Region",
+               "name":"miami \/ dade"
+            },
+            {
+               "_type":"Region",
+               "name":"north central FL"
+            },
+            {
+               "_type":"Region",
+               "name":"ocala"
+            },
+            {
+               "_type":"Region",
+               "name":"okaloosa \/ walton"
+            },
+            {
+               "_type":"Region",
+               "name":"orlando"
+            },
+            {
+               "_type":"Region",
+               "name":"panama city"
+            },
+            {
+               "_type":"Region",
+               "name":"pensacola"
+            },
+            {
+               "_type":"Region",
+               "name":"sarasota-bradenton"
+            },
+            {
+               "_type":"Region",
+               "name":"south florida"
+            },
+            {
+               "_type":"Region",
+               "name":"space coast"
+            },
+            {
+               "_type":"Region",
+               "name":"st augustine"
+            },
+            {
+               "_type":"Region",
+               "name":"tallahassee"
+            },
+            {
+               "_type":"Region",
+               "name":"tampa bay area"
+            },
+            {
+               "_type":"Region",
+               "name":"treasure coast"
+            },
+            {
+               "_type":"Region",
+               "name":"palm beach county"
+            }
+         ],
+         "_type":"Region",
+         "name":"Florida"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"albany "
+            },
+            {
+               "_type":"Region",
+               "name":"athens"
+            },
+            {
+               "_type":"Region",
+               "name":"atlanta"
+            },
+            {
+               "_type":"Region",
+               "name":"augusta"
+            },
+            {
+               "_type":"Region",
+               "name":"brunswick"
+            },
+            {
+               "_type":"Region",
+               "name":"columbus "
+            },
+            {
+               "_type":"Region",
+               "name":"macon \/ warner robins"
+            },
+            {
+               "_type":"Region",
+               "name":"northwest GA"
+            },
+            {
+               "_type":"Region",
+               "name":"savannah \/ hinesville"
+            },
+            {
+               "_type":"Region",
+               "name":"statesboro"
+            },
+            {
+               "_type":"Region",
+               "name":"valdosta"
+            }
+         ],
+         "_type":"Region",
+         "name":"Georgia"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"hawaii"
+            }
+         ],
+         "_type":"Region",
+         "name":"Hawaii"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"boise"
+            },
+            {
+               "_type":"Region",
+               "name":"east idaho"
+            },
+            {
+               "_type":"Region",
+               "name":"lewiston \/ clarkston"
+            },
+            {
+               "_type":"Region",
+               "name":"twin falls"
+            }
+         ],
+         "_type":"Region",
+         "name":"Idaho"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"bloomington-normal"
+            },
+            {
+               "_type":"Region",
+               "name":"champaign urbana"
+            },
+            {
+               "_type":"Region",
+               "name":"chicago"
+            },
+            {
+               "_type":"Region",
+               "name":"decatur"
+            },
+            {
+               "_type":"Region",
+               "name":"la salle co"
+            },
+            {
+               "_type":"Region",
+               "name":"mattoon-charleston"
+            },
+            {
+               "_type":"Region",
+               "name":"peoria"
+            },
+            {
+               "_type":"Region",
+               "name":"rockford"
+            },
+            {
+               "_type":"Region",
+               "name":"southern illinois"
+            },
+            {
+               "_type":"Region",
+               "name":"springfield "
+            },
+            {
+               "_type":"Region",
+               "name":"western IL"
+            }
+         ],
+         "_type":"Region",
+         "name":"Illinois"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"bloomington"
+            },
+            {
+               "_type":"Region",
+               "name":"evansville"
+            },
+            {
+               "_type":"Region",
+               "name":"fort wayne"
+            },
+            {
+               "_type":"Region",
+               "name":"indianapolis"
+            },
+            {
+               "_type":"Region",
+               "name":"kokomo"
+            },
+            {
+               "_type":"Region",
+               "name":"lafayette \/ west lafayette"
+            },
+            {
+               "_type":"Region",
+               "name":"muncie \/ anderson"
+            },
+            {
+               "_type":"Region",
+               "name":"richmond "
+            },
+            {
+               "_type":"Region",
+               "name":"south bend \/ michiana"
+            },
+            {
+               "_type":"Region",
+               "name":"terre haute"
+            }
+         ],
+         "_type":"Region",
+         "name":"Indiana"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"ames"
+            },
+            {
+               "_type":"Region",
+               "name":"cedar rapids"
+            },
+            {
+               "_type":"Region",
+               "name":"des moines"
+            },
+            {
+               "_type":"Region",
+               "name":"dubuque"
+            },
+            {
+               "_type":"Region",
+               "name":"fort dodge"
+            },
+            {
+               "_type":"Region",
+               "name":"iowa city"
+            },
+            {
+               "_type":"Region",
+               "name":"mason city"
+            },
+            {
+               "_type":"Region",
+               "name":"quad cities"
+            },
+            {
+               "_type":"Region",
+               "name":"sioux city"
+            },
+            {
+               "_type":"Region",
+               "name":"southeast IA"
+            },
+            {
+               "_type":"Region",
+               "name":"waterloo \/ cedar falls"
+            }
+         ],
+         "_type":"Region",
+         "name":"Iowa"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"lawrence"
+            },
+            {
+               "_type":"Region",
+               "name":"manhattan"
+            },
+            {
+               "_type":"Region",
+               "name":"northwest KS"
+            },
+            {
+               "_type":"Region",
+               "name":"salina"
+            },
+            {
+               "_type":"Region",
+               "name":"southeast KS"
+            },
+            {
+               "_type":"Region",
+               "name":"southwest KS"
+            },
+            {
+               "_type":"Region",
+               "name":"topeka"
+            },
+            {
+               "_type":"Region",
+               "name":"wichita"
+            }
+         ],
+         "_type":"Region",
+         "name":"Kansas"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"bowling green"
+            },
+            {
+               "_type":"Region",
+               "name":"eastern kentucky"
+            },
+            {
+               "_type":"Region",
+               "name":"lexington"
+            },
+            {
+               "_type":"Region",
+               "name":"louisville"
+            },
+            {
+               "_type":"Region",
+               "name":"owensboro"
+            },
+            {
+               "_type":"Region",
+               "name":"western KY"
+            }
+         ],
+         "_type":"Region",
+         "name":"Kentucky"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"baton rouge"
+            },
+            {
+               "_type":"Region",
+               "name":"central louisiana"
+            },
+            {
+               "_type":"Region",
+               "name":"houma"
+            },
+            {
+               "_type":"Region",
+               "name":"lafayette"
+            },
+            {
+               "_type":"Region",
+               "name":"lake charles"
+            },
+            {
+               "_type":"Region",
+               "name":"monroe"
+            },
+            {
+               "_type":"Region",
+               "name":"new orleans"
+            },
+            {
+               "_type":"Region",
+               "name":"shreveport"
+            }
+         ],
+         "_type":"Region",
+         "name":"Louisiana"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"maine"
+            }
+         ],
+         "_type":"Region",
+         "name":"Maine"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"annapolis"
+            },
+            {
+               "_type":"Region",
+               "name":"baltimore"
+            },
+            {
+               "_type":"Region",
+               "name":"eastern shore"
+            },
+            {
+               "_type":"Region",
+               "name":"frederick"
+            },
+            {
+               "_type":"Region",
+               "name":"southern maryland"
+            },
+            {
+               "_type":"Region",
+               "name":"western maryland"
+            }
+         ],
+         "_type":"Region",
+         "name":"Maryland"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"boston"
+            },
+            {
+               "_type":"Region",
+               "name":"cape cod \/ islands"
+            },
+            {
+               "_type":"Region",
+               "name":"south coast"
+            },
+            {
+               "_type":"Region",
+               "name":"western massachusetts"
+            },
+            {
+               "_type":"Region",
+               "name":"worcester \/ central MA"
+            }
+         ],
+         "_type":"Region",
+         "name":"Massachusetts"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"ann arbor"
+            },
+            {
+               "_type":"Region",
+               "name":"battle creek"
+            },
+            {
+               "_type":"Region",
+               "name":"central michigan"
+            },
+            {
+               "_type":"Region",
+               "name":"detroit metro"
+            },
+            {
+               "_type":"Region",
+               "name":"flint"
+            },
+            {
+               "_type":"Region",
+               "name":"grand rapids"
+            },
+            {
+               "_type":"Region",
+               "name":"holland"
+            },
+            {
+               "_type":"Region",
+               "name":"jackson "
+            },
+            {
+               "_type":"Region",
+               "name":"kalamazoo"
+            },
+            {
+               "_type":"Region",
+               "name":"lansing"
+            },
+            {
+               "_type":"Region",
+               "name":"monroe "
+            },
+            {
+               "_type":"Region",
+               "name":"muskegon"
+            },
+            {
+               "_type":"Region",
+               "name":"northern michigan"
+            },
+            {
+               "_type":"Region",
+               "name":"port huron"
+            },
+            {
+               "_type":"Region",
+               "name":"saginaw-midland-baycity"
+            },
+            {
+               "_type":"Region",
+               "name":"southwest michigan"
+            },
+            {
+               "_type":"Region",
+               "name":"the thumb"
+            },
+            {
+               "_type":"Region",
+               "name":"upper peninsula"
+            }
+         ],
+         "_type":"Region",
+         "name":"Michigan"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"bemidji"
+            },
+            {
+               "_type":"Region",
+               "name":"brainerd"
+            },
+            {
+               "_type":"Region",
+               "name":"duluth \/ superior"
+            },
+            {
+               "_type":"Region",
+               "name":"mankato"
+            },
+            {
+               "_type":"Region",
+               "name":"minneapolis \/ st paul"
+            },
+            {
+               "_type":"Region",
+               "name":"rochester "
+            },
+            {
+               "_type":"Region",
+               "name":"southwest MN"
+            },
+            {
+               "_type":"Region",
+               "name":"st cloud"
+            }
+         ],
+         "_type":"Region",
+         "name":"Minnesota"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"gulfport \/ biloxi"
+            },
+            {
+               "_type":"Region",
+               "name":"hattiesburg"
+            },
+            {
+               "_type":"Region",
+               "name":"jackson"
+            },
+            {
+               "_type":"Region",
+               "name":"meridian"
+            },
+            {
+               "_type":"Region",
+               "name":"north mississippi"
+            },
+            {
+               "_type":"Region",
+               "name":"southwest MS"
+            }
+         ],
+         "_type":"Region",
+         "name":"Mississippi"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"columbia \/ jeff city"
+            },
+            {
+               "_type":"Region",
+               "name":"joplin"
+            },
+            {
+               "_type":"Region",
+               "name":"kansas city"
+            },
+            {
+               "_type":"Region",
+               "name":"kirksville"
+            },
+            {
+               "_type":"Region",
+               "name":"lake of the ozarks"
+            },
+            {
+               "_type":"Region",
+               "name":"southeast missouri"
+            },
+            {
+               "_type":"Region",
+               "name":"springfield"
+            },
+            {
+               "_type":"Region",
+               "name":"st joseph"
+            },
+            {
+               "_type":"Region",
+               "name":"st louis"
+            }
+         ],
+         "_type":"Region",
+         "name":"Missouri"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"billings"
+            },
+            {
+               "_type":"Region",
+               "name":"bozeman"
+            },
+            {
+               "_type":"Region",
+               "name":"butte"
+            },
+            {
+               "_type":"Region",
+               "name":"great falls"
+            },
+            {
+               "_type":"Region",
+               "name":"helena"
+            },
+            {
+               "_type":"Region",
+               "name":"kalispell"
+            },
+            {
+               "_type":"Region",
+               "name":"missoula"
+            },
+            {
+               "_type":"Region",
+               "name":"eastern montana"
+            }
+         ],
+         "_type":"Region",
+         "name":"Montana"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"grand island"
+            },
+            {
+               "_type":"Region",
+               "name":"lincoln"
+            },
+            {
+               "_type":"Region",
+               "name":"north platte"
+            },
+            {
+               "_type":"Region",
+               "name":"omaha \/ council bluffs"
+            },
+            {
+               "_type":"Region",
+               "name":"scottsbluff \/ panhandle"
+            }
+         ],
+         "_type":"Region",
+         "name":"Nebraska"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"elko"
+            },
+            {
+               "_type":"Region",
+               "name":"las vegas"
+            },
+            {
+               "_type":"Region",
+               "name":"reno \/ tahoe"
+            }
+         ],
+         "_type":"Region",
+         "name":"Nevada"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"new hampshire"
+            }
+         ],
+         "_type":"Region",
+         "name":"New Hampshire"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"central NJ"
+            },
+            {
+               "_type":"Region",
+               "name":"jersey shore"
+            },
+            {
+               "_type":"Region",
+               "name":"north jersey"
+            },
+            {
+               "_type":"Region",
+               "name":"south jersey"
+            }
+         ],
+         "_type":"Region",
+         "name":"New Jersey"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"albuquerque"
+            },
+            {
+               "_type":"Region",
+               "name":"clovis \/ portales"
+            },
+            {
+               "_type":"Region",
+               "name":"farmington"
+            },
+            {
+               "_type":"Region",
+               "name":"las cruces"
+            },
+            {
+               "_type":"Region",
+               "name":"roswell \/ carlsbad"
+            },
+            {
+               "_type":"Region",
+               "name":"santa fe \/ taos"
+            }
+         ],
+         "_type":"Region",
+         "name":"New Mexico"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"albany"
+            },
+            {
+               "_type":"Region",
+               "name":"binghamton"
+            },
+            {
+               "_type":"Region",
+               "name":"buffalo"
+            },
+            {
+               "_type":"Region",
+               "name":"catskills"
+            },
+            {
+               "_type":"Region",
+               "name":"chautauqua"
+            },
+            {
+               "_type":"Region",
+               "name":"elmira-corning"
+            },
+            {
+               "_type":"Region",
+               "name":"finger lakes"
+            },
+            {
+               "_type":"Region",
+               "name":"glens falls"
+            },
+            {
+               "_type":"Region",
+               "name":"hudson valley"
+            },
+            {
+               "_type":"Region",
+               "name":"ithaca"
+            },
+            {
+               "_type":"Region",
+               "name":"long island"
+            },
+            {
+               "_type":"Region",
+               "name":"new york city"
+            },
+            {
+               "_type":"Region",
+               "name":"oneonta"
+            },
+            {
+               "_type":"Region",
+               "name":"plattsburgh-adirondacks"
+            },
+            {
+               "_type":"Region",
+               "name":"potsdam-canton-massena"
+            },
+            {
+               "_type":"Region",
+               "name":"rochester"
+            },
+            {
+               "_type":"Region",
+               "name":"syracuse"
+            },
+            {
+               "_type":"Region",
+               "name":"twin tiers NY\/PA"
+            },
+            {
+               "_type":"Region",
+               "name":"utica-rome-oneida"
+            },
+            {
+               "_type":"Region",
+               "name":"watertown"
+            }
+         ],
+         "_type":"Region",
+         "name":"New York"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"asheville"
+            },
+            {
+               "_type":"Region",
+               "name":"boone"
+            },
+            {
+               "_type":"Region",
+               "name":"charlotte"
+            },
+            {
+               "_type":"Region",
+               "name":"eastern NC"
+            },
+            {
+               "_type":"Region",
+               "name":"fayetteville"
+            },
+            {
+               "_type":"Region",
+               "name":"greensboro"
+            },
+            {
+               "_type":"Region",
+               "name":"hickory \/ lenoir"
+            },
+            {
+               "_type":"Region",
+               "name":"jacksonville "
+            },
+            {
+               "_type":"Region",
+               "name":"outer banks"
+            },
+            {
+               "_type":"Region",
+               "name":"raleigh \/ durham \/ CH"
+            },
+            {
+               "_type":"Region",
+               "name":"wilmington"
+            },
+            {
+               "_type":"Region",
+               "name":"winston-salem"
+            }
+         ],
+         "_type":"Region",
+         "name":"North Carolina"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"bismarck"
+            },
+            {
+               "_type":"Region",
+               "name":"fargo \/ moorhead"
+            },
+            {
+               "_type":"Region",
+               "name":"grand forks"
+            },
+            {
+               "_type":"Region",
+               "name":"north dakota"
+            }
+         ],
+         "_type":"Region",
+         "name":"North Dakota"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"akron \/ canton"
+            },
+            {
+               "_type":"Region",
+               "name":"ashtabula"
+            },
+            {
+               "_type":"Region",
+               "name":"athens "
+            },
+            {
+               "_type":"Region",
+               "name":"chillicothe"
+            },
+            {
+               "_type":"Region",
+               "name":"cincinnati"
+            },
+            {
+               "_type":"Region",
+               "name":"cleveland"
+            },
+            {
+               "_type":"Region",
+               "name":"columbus"
+            },
+            {
+               "_type":"Region",
+               "name":"dayton \/ springfield"
+            },
+            {
+               "_type":"Region",
+               "name":"lima \/ findlay"
+            },
+            {
+               "_type":"Region",
+               "name":"mansfield"
+            },
+            {
+               "_type":"Region",
+               "name":"sandusky"
+            },
+            {
+               "_type":"Region",
+               "name":"toledo"
+            },
+            {
+               "_type":"Region",
+               "name":"tuscarawas co"
+            },
+            {
+               "_type":"Region",
+               "name":"youngstown"
+            },
+            {
+               "_type":"Region",
+               "name":"zanesville \/ cambridge"
+            }
+         ],
+         "_type":"Region",
+         "name":"Ohio"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"lawton"
+            },
+            {
+               "_type":"Region",
+               "name":"northwest OK"
+            },
+            {
+               "_type":"Region",
+               "name":"oklahoma city"
+            },
+            {
+               "_type":"Region",
+               "name":"stillwater"
+            },
+            {
+               "_type":"Region",
+               "name":"tulsa"
+            }
+         ],
+         "_type":"Region",
+         "name":"Oklahoma"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"bend"
+            },
+            {
+               "_type":"Region",
+               "name":"corvallis\/albany"
+            },
+            {
+               "_type":"Region",
+               "name":"east oregon"
+            },
+            {
+               "_type":"Region",
+               "name":"eugene"
+            },
+            {
+               "_type":"Region",
+               "name":"klamath falls"
+            },
+            {
+               "_type":"Region",
+               "name":"medford-ashland"
+            },
+            {
+               "_type":"Region",
+               "name":"oregon coast"
+            },
+            {
+               "_type":"Region",
+               "name":"portland"
+            },
+            {
+               "_type":"Region",
+               "name":"roseburg"
+            },
+            {
+               "_type":"Region",
+               "name":"salem"
+            }
+         ],
+         "_type":"Region",
+         "name":"Oregon"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"altoona-johnstown"
+            },
+            {
+               "_type":"Region",
+               "name":"cumberland valley"
+            },
+            {
+               "_type":"Region",
+               "name":"erie"
+            },
+            {
+               "_type":"Region",
+               "name":"harrisburg"
+            },
+            {
+               "_type":"Region",
+               "name":"lancaster"
+            },
+            {
+               "_type":"Region",
+               "name":"lehigh valley"
+            },
+            {
+               "_type":"Region",
+               "name":"meadville"
+            },
+            {
+               "_type":"Region",
+               "name":"philadelphia"
+            },
+            {
+               "_type":"Region",
+               "name":"pittsburgh"
+            },
+            {
+               "_type":"Region",
+               "name":"poconos"
+            },
+            {
+               "_type":"Region",
+               "name":"reading"
+            },
+            {
+               "_type":"Region",
+               "name":"scranton \/ wilkes-barre"
+            },
+            {
+               "_type":"Region",
+               "name":"state college"
+            },
+            {
+               "_type":"Region",
+               "name":"williamsport"
+            },
+            {
+               "_type":"Region",
+               "name":"york"
+            }
+         ],
+         "_type":"Region",
+         "name":"Pennsylvania"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"rhode island"
+            }
+         ],
+         "_type":"Region",
+         "name":"Rhode Island"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"charleston"
+            },
+            {
+               "_type":"Region",
+               "name":"columbia"
+            },
+            {
+               "_type":"Region",
+               "name":"florence"
+            },
+            {
+               "_type":"Region",
+               "name":"greenville \/ upstate"
+            },
+            {
+               "_type":"Region",
+               "name":"hilton head"
+            },
+            {
+               "_type":"Region",
+               "name":"myrtle beach"
+            }
+         ],
+         "_type":"Region",
+         "name":"South Carolina"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"northeast SD"
+            },
+            {
+               "_type":"Region",
+               "name":"pierre \/ central SD"
+            },
+            {
+               "_type":"Region",
+               "name":"rapid city \/ west SD"
+            },
+            {
+               "_type":"Region",
+               "name":"sioux falls \/ SE SD"
+            },
+            {
+               "_type":"Region",
+               "name":"south dakota"
+            }
+         ],
+         "_type":"Region",
+         "name":"South Dakota"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"chattanooga"
+            },
+            {
+               "_type":"Region",
+               "name":"clarksville"
+            },
+            {
+               "_type":"Region",
+               "name":"cookeville"
+            },
+            {
+               "_type":"Region",
+               "name":"jackson  "
+            },
+            {
+               "_type":"Region",
+               "name":"knoxville"
+            },
+            {
+               "_type":"Region",
+               "name":"memphis"
+            },
+            {
+               "_type":"Region",
+               "name":"nashville"
+            },
+            {
+               "_type":"Region",
+               "name":"tri-cities"
+            }
+         ],
+         "_type":"Region",
+         "name":"Tennessee"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"abilene"
+            },
+            {
+               "_type":"Region",
+               "name":"amarillo"
+            },
+            {
+               "_type":"Region",
+               "name":"austin"
+            },
+            {
+               "_type":"Region",
+               "name":"beaumont \/ port arthur"
+            },
+            {
+               "_type":"Region",
+               "name":"brownsville"
+            },
+            {
+               "_type":"Region",
+               "name":"college station"
+            },
+            {
+               "_type":"Region",
+               "name":"corpus christi"
+            },
+            {
+               "_type":"Region",
+               "name":"dallas \/ fort worth"
+            },
+            {
+               "_type":"Region",
+               "name":"deep east texas"
+            },
+            {
+               "_type":"Region",
+               "name":"del rio \/ eagle pass"
+            },
+            {
+               "_type":"Region",
+               "name":"el paso"
+            },
+            {
+               "_type":"Region",
+               "name":"galveston"
+            },
+            {
+               "_type":"Region",
+               "name":"houston"
+            },
+            {
+               "_type":"Region",
+               "name":"killeen \/ temple \/ ft hood"
+            },
+            {
+               "_type":"Region",
+               "name":"laredo"
+            },
+            {
+               "_type":"Region",
+               "name":"lubbock"
+            },
+            {
+               "_type":"Region",
+               "name":"mcallen \/ edinburg"
+            },
+            {
+               "_type":"Region",
+               "name":"odessa \/ midland"
+            },
+            {
+               "_type":"Region",
+               "name":"san angelo"
+            },
+            {
+               "_type":"Region",
+               "name":"san antonio"
+            },
+            {
+               "_type":"Region",
+               "name":"san marcos"
+            },
+            {
+               "_type":"Region",
+               "name":"southwest TX"
+            },
+            {
+               "_type":"Region",
+               "name":"texoma"
+            },
+            {
+               "_type":"Region",
+               "name":"tyler \/ east TX"
+            },
+            {
+               "_type":"Region",
+               "name":"victoria "
+            },
+            {
+               "_type":"Region",
+               "name":"waco"
+            },
+            {
+               "_type":"Region",
+               "name":"wichita falls"
+            }
+         ],
+         "_type":"Region",
+         "name":"Texas"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"logan"
+            },
+            {
+               "_type":"Region",
+               "name":"ogden-clearfield"
+            },
+            {
+               "_type":"Region",
+               "name":"provo \/ orem"
+            },
+            {
+               "_type":"Region",
+               "name":"salt lake city"
+            },
+            {
+               "_type":"Region",
+               "name":"st george"
+            }
+         ],
+         "_type":"Region",
+         "name":"Utah"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"vermont"
+            }
+         ],
+         "_type":"Region",
+         "name":"Vermont"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"charlottesville"
+            },
+            {
+               "_type":"Region",
+               "name":"danville"
+            },
+            {
+               "_type":"Region",
+               "name":"fredericksburg"
+            },
+            {
+               "_type":"Region",
+               "name":"hampton roads"
+            },
+            {
+               "_type":"Region",
+               "name":"harrisonburg"
+            },
+            {
+               "_type":"Region",
+               "name":"lynchburg"
+            },
+            {
+               "_type":"Region",
+               "name":"new river valley"
+            },
+            {
+               "_type":"Region",
+               "name":"richmond"
+            },
+            {
+               "_type":"Region",
+               "name":"roanoke"
+            },
+            {
+               "_type":"Region",
+               "name":"southwest VA"
+            },
+            {
+               "_type":"Region",
+               "name":"winchester"
+            }
+         ],
+         "_type":"Region",
+         "name":"Virginia"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"bellingham"
+            },
+            {
+               "_type":"Region",
+               "name":"kennewick-pasco-richland"
+            },
+            {
+               "_type":"Region",
+               "name":"moses lake"
+            },
+            {
+               "_type":"Region",
+               "name":"olympic peninsula"
+            },
+            {
+               "_type":"Region",
+               "name":"pullman \/ moscow"
+            },
+            {
+               "_type":"Region",
+               "name":"seattle-tacoma"
+            },
+            {
+               "_type":"Region",
+               "name":"skagit \/ island \/ SJI"
+            },
+            {
+               "_type":"Region",
+               "name":"spokane \/ coeur d'alene"
+            },
+            {
+               "_type":"Region",
+               "name":"wenatchee"
+            },
+            {
+               "_type":"Region",
+               "name":"yakima"
+            }
+         ],
+         "_type":"Region",
+         "name":"Washington"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"charleston "
+            },
+            {
+               "_type":"Region",
+               "name":"eastern panhandle"
+            },
+            {
+               "_type":"Region",
+               "name":"huntington-ashland"
+            },
+            {
+               "_type":"Region",
+               "name":"morgantown"
+            },
+            {
+               "_type":"Region",
+               "name":"northern panhandle"
+            },
+            {
+               "_type":"Region",
+               "name":"parkersburg-marietta"
+            },
+            {
+               "_type":"Region",
+               "name":"southern WV"
+            },
+            {
+               "_type":"Region",
+               "name":"west virginia (old)"
+            }
+         ],
+         "_type":"Region",
+         "name":"West Virginia"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"appleton-oshkosh-FDL"
+            },
+            {
+               "_type":"Region",
+               "name":"eau claire"
+            },
+            {
+               "_type":"Region",
+               "name":"green bay"
+            },
+            {
+               "_type":"Region",
+               "name":"janesville"
+            },
+            {
+               "_type":"Region",
+               "name":"kenosha-racine"
+            },
+            {
+               "_type":"Region",
+               "name":"la crosse"
+            },
+            {
+               "_type":"Region",
+               "name":"madison"
+            },
+            {
+               "_type":"Region",
+               "name":"milwaukee"
+            },
+            {
+               "_type":"Region",
+               "name":"northern WI"
+            },
+            {
+               "_type":"Region",
+               "name":"sheboygan"
+            },
+            {
+               "_type":"Region",
+               "name":"wausau"
+            }
+         ],
+         "_type":"Region",
+         "name":"Wisconsin"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"wyoming"
+            }
+         ],
+         "_type":"Region",
+         "name":"Wyoming"
+      },
+      {
+         "children":[
+            {
+               "_type":"Region",
+               "name":"guam-micronesia"
+            },
+            {
+               "_type":"Region",
+               "name":"puerto rico"
+            },
+            {
+               "_type":"Region",
+               "name":"U.S. virgin islands"
+            }
+         ],
+         "_type":"Region",
+         "name":"Territories"
+      }
+   ],
+   "_type":"Region",
+   "name":"US"
+}

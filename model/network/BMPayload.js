@@ -50,7 +50,11 @@ var ECIES = require("bitcore-ecies")
 // Helpers
 
 Object.prototype.toJsonStableString = function() {
-    return JSON.stringify(this, null, 2)
+    return JSON.stableStringify(this, null, 2)
+}
+
+Object.prototype.toStableHash = function() {
+    return this.toJsonStableString().sha256String();
 }
 
 String.prototype.toJsonDict = function() {
@@ -58,7 +62,10 @@ String.prototype.toJsonDict = function() {
 }
 
 String.prototype.sha256String = function() {
-    return bitcore.crypto.Hash.sha256(this.toBuffer()).toString('hex')
+	var shaBits = sjcl.hash.sha256.hash(this);
+	var shaHex = sjcl.codec.hex.fromBits(shaBits);
+    return shaHex;                
+    //return bitcore.crypto.Hash.sha256(this.toBuffer()).toString('hex')
 }
 
 String.prototype.toBuffer = function () {
@@ -74,8 +81,10 @@ BMPayload = ideal.Proto.extend().newSlots({
     data: null,
     error: null,
     senderPublicKey: null,
+    powObject: null,
 }).setSlots({
     init: function () {
+        this.setPowObject(BMPow.clone())
     },
     
     // errors
@@ -140,14 +149,12 @@ BMPayload = ideal.Proto.extend().newSlots({
     /// encrypt / unencrypt
 
     encrypt: function(senderPrivateKey, receiverPubkey) {
-        
         var encryptor = ECIES()
           .privateKey(senderPrivateKey)
           .publicKey(receiverPubkey);
 
         var encryptedPayloadBuf = encryptor.encrypt(this.data().toJsonStableString());
         var encryptedPayload = encryptedPayloadBuf.toString('base64');
-        
         
         this.setData({ 
             type: "EncryptedPayload",
@@ -190,18 +197,27 @@ BMPayload = ideal.Proto.extend().newSlots({
         return this
     },
     
-
     /// pow / unpow
     
     pow: function() {
         // data -> { type: "PowedPayload", payload: data, pow: powString }
         
         var hash = this.data().toJsonStableString().sha256String();
+        var pow = this.powObject()
+        pow.setHash(hash)
+        pow.syncFind()
+        this.setData({ type: "PowedPayload", payload: this.data(), pow: pow.powHex() })
+        return true
+    },  
+    
+    asyncPow: function() {
+        // data -> { type: "PowedPayload", payload: data, pow: powString }
         
-        var pow = BMPow.clone().setHash(hash)
-        pow.findPow()
-        var powString = pow.pow()
-        this.setData({ type: "PowedPayload", payload: this.data(), pow: powString })
+        var hash = this.data().toJsonStableString().sha256String();
+        var pow = this.powObject()
+        pow.setHash(hash)
+        pow.asyncFind()
+        this.setData({ type: "PowedPayload", payload: this.data(), pow: pow.powHex() })
         return true
     },  
       
@@ -212,11 +228,13 @@ BMPayload = ideal.Proto.extend().newSlots({
 
         var hash = this.data().payload.toJsonStableString().sha256String();
 
-        var pow = BMPow.clone().setHash(hash).setPow(this.data().pow)
+        var pow = BMPow.clone().setHash(hash).setPowHex(this.data().pow)
 
         if (pow.isValid()) {
-            this.setData(this.data().payload)
+           pow.show()
+           this.setData(this.data().payload)
         } else {
+            pow.show()
             this.throwError("invalid pow")
             return false
         }

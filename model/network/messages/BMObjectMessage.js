@@ -46,6 +46,7 @@ BMObjectMessage = BMMessage.extend().newSlots({
     senderPublicKey: null,
     receiverPublicKey: null,
     
+    payload: null, // used when we're ready to do pow
 }).setSlots({
     init: function () {
         BMMessage.init.apply(this)
@@ -53,6 +54,8 @@ BMObjectMessage = BMMessage.extend().newSlots({
         this.addStoredSlots(["msgType", "content", "packedContent", "msgHash"])
         //this.setViewClassName("BMMessageView")
         this.addAction("delete")
+        
+        this.setPayload(BMPayload.clone())
 
         this.setupFields()
     },
@@ -92,7 +95,6 @@ BMObjectMessage = BMMessage.extend().newSlots({
     },
     
     
-    
     fromValue: function() {
         console.log("this._content = " + JSON.stringify(this._content, null, 2))
         //console.log("this.content() = " + JSON.stringify(this.content(), null, 2))
@@ -111,8 +113,6 @@ BMObjectMessage = BMMessage.extend().newSlots({
         return this._content ? this._content.body : null
     },
     
-                
-
     network: function() {
         return window.app.network()
     },
@@ -147,7 +147,7 @@ BMObjectMessage = BMMessage.extend().newSlots({
         }
         
         if (this._msgHash == null) {
-            throw "null this._msgHash"
+            //throw "null this._msgHash"
         }
         
         return this._msgHash
@@ -157,19 +157,29 @@ BMObjectMessage = BMMessage.extend().newSlots({
  
     packedContent: function() {
         if (!this._packedContent) {
-            this._packedContent = this.packContent()
+            //this._packedContent = this.packContent()
         }
         
         return this._packedContent
     },
  
      packContent: function() {
-        var payload = BMPayload.clone()
-        payload.setData(this.content())
-        payload.encrypt(this.senderId().privateKey(), this.receiverId().publicKey())
-        payload.pow()
-        var wrappedMsgDict = payload.data()
-        return wrappedMsgDict
+        // sets content, encrypts and does pow
+        this.payload().setData(this.content())
+        //payload.encrypt(this.senderId().privateKey(), this.receiverId().publicKey())
+        this.payload().pow()
+        var payloadData = this.payload().data()
+        console.log("payloadData = ", payloadData)
+        return payloadData
+    },
+    
+    asyncPackContent: function() {
+        this.payload().setData(this.content())
+        this.payload().asyncPow() // pow will post a notification when done
+    },
+    
+    didFinishPow: function() {
+        
     },
 
     unpackContentWithReceiverId: function(receiverId) {
@@ -179,6 +189,7 @@ BMObjectMessage = BMMessage.extend().newSlots({
             var payload = BMPayload.clone()
             payload.setData(this.packedContent())  
             payload.unpow()
+            /*
             payload.unencrypt(receiverPrivateKey)
             if (payload.data()) {
                 //this.setReceiverPublicKey(receiverPrivateKey.publicKey())
@@ -190,6 +201,7 @@ BMObjectMessage = BMMessage.extend().newSlots({
                 this.setReceiverId(receiverId)
                 //receiverId.inbox().addItemIfAbsent(this)
             }
+            */
              
         } catch(error) {
             return false
@@ -221,11 +233,22 @@ BMObjectMessage = BMMessage.extend().newSlots({
     },
     
     place: function() {
+        console.log("BMObjectMessage.place")
+        
         if (this.receiverId()) {
             //var id = this.network().localIdentities().idWithPubKeyString(rec())
             this.receiverId().inbox().addItemIfAbsent(this.clone())
             this.senderId().sent().addItemIfAbsent(this.clone())
             return true
+        }
+        
+        
+        if (this.msgType() == "object") {
+            console.log("this.msgDict() = ", this.msgDict())
+            var dict = this.msgDict().data.payload
+            console.log("creating post for dict ", dict)
+            var post = BMClassifiedPost.clone().setPostDict(dict)
+            post.placeInRegion();
         }
         
         return false

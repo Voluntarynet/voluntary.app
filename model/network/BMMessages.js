@@ -70,6 +70,8 @@ BMMessages = BMStorableNode.extend().newSlots({
         console.log("added a new message, broadcasting to peers")
 
         this.addItem(msg)
+        
+        
         this._index[msg.msgHash()] = msg
         this.notifyChange() // ?
         this.didUpdate()

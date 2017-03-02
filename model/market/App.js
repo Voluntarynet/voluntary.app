@@ -24,6 +24,8 @@ App = BaseApp.extend().newSlots({
     setup: function () {       
         BaseApp.setup.apply(this)
         
+        window.app = this
+        
         this.setName("Bitmarkets")
         this.setTitle("App")
                     

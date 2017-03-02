@@ -14,7 +14,7 @@ Message = {
     
     asString: function() {
         this.addStamp()
-        return JSON.stringify({ content: this._content, stamp: _stamp })
+        return JSON.stableStringify({ content: this._content, stamp: _stamp })
     },
     
     setFromString: function(s) {

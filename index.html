@@ -65,9 +65,29 @@ var loadSequentialJS = (function(document) {
 })(document);
 
 		    var files = [
+		        "external_libs/json-stable-stringify/json-stable-stringify.js",
+
+		        "external_libs/sjcl-version-0.8/sjcl.js",
+		        "external_libs/sjcl-version-0.8/core/aes.js",
+		        "external_libs/sjcl-version-0.8/core/bitArray.js",
+		        "external_libs/sjcl-version-0.8/core/ccm.js",
+		        "external_libs/sjcl-version-0.8/core/codecBase64.js",
+		        "external_libs/sjcl-version-0.8/core/codecBytes.js",
+		        "external_libs/sjcl-version-0.8/core/codecHex.js",
+		        "external_libs/sjcl-version-0.8/core/codecString.js",
+		        "external_libs/sjcl-version-0.8/core/convenience.js",
+		        "external_libs/sjcl-version-0.8/core/hmac.js",
+		        "external_libs/sjcl-version-0.8/core/ocb2.js",
+		        "external_libs/sjcl-version-0.8/core/pbkdf2.js",
+		        "external_libs/sjcl-version-0.8/core/random.js",
+		        "external_libs/sjcl-version-0.8/core/sha256.js",
+		        "external_libs/codecBits.js",
+
+
 		        "data/categories.json",
 		        "data/us_cities.json",
 		        "data/countries.json",
+		        "data/currencies.json",
 
 
 		        "lib/ideal/ideal.js",
@@ -131,10 +151,11 @@ var loadSequentialJS = (function(document) {
 		        "view/BMLetterView.js",
 		        "view/BMMessageView.js",
 		        "view/BMPostView.js",
-		        
+		        "view/BMClassifiedPostView.js",
 		        
                 "model/market/BMBuy.js",
                 "model/market/BMBuys.js",
+                "model/market/BMRegion.js",
                 "model/market/BMMarket.js",
                 "model/market/BMPost.js",
                 "model/market/BMSell.js",
@@ -152,6 +173,14 @@ var loadSequentialJS = (function(document) {
 		    ]
 		
 		    loadSequentialJS(files, function () { 
+		        
+		        sjcl.random.startCollectors();
+		        
+		        var shaBits = sjcl.hash.sha256.hash("test");
+		        var shaHex = sjcl.codec.hex.fromBits(shaBits);
+		        assert(shaHex == "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08")
+		        
+		        
 		        /*
 		        Browser.init(); 
 		        var network = BMNetwork.clone()
@@ -159,6 +188,12 @@ var loadSequentialJS = (function(document) {
 		        */
 		        App.shared()
 		        
+		        /*
+		        var shaObj = new jsSHA("SHA-256", "TEXT");
+                shaObj.update("This is a test");
+                var hash = shaObj.getHash("HEX");
+                console.log("hash = [" + hash + "]")
+                */
 		    })
 
             

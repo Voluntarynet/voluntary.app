@@ -38,9 +38,11 @@ BMNetwork = BMStorableNode.extend().newSlots({
     },
     
     subtitle: function() {
-        return this.serverCount() + " servers" + 
-            ", " + this.remotePeerCount() + " peers" 
-            //", " + this.messages().messages().length + " msgs";
+        var parts = []
+        parts.push(this.serverCount() + " severs")
+        parts.push(this.remotePeerCount() + " peers")
+        parts.push(this.messages().messages().length + " mgs")
+        return parts.join(", ")
     },
     
     broadcastMsg: function(msg) {

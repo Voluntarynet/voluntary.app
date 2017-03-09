@@ -38,7 +38,7 @@ sjcl.codec.bits = {
 sjcl.bitArray.xor = function(bitArr1, bitArr2) {
     var bytes1 = sjcl.codec.bytes.fromBits(bitArr1)
     var bytes2 = sjcl.codec.bytes.fromBits(bitArr2)
-    var bytesOut = sjcl.codec.bytes.fromBits(bitArr1) // just to write over
+    var bytesOut = sjcl.codec.bytes.fromBits(bitArr1) // just to write over 
     var count = 0;
 
     if (bytes1.length != bytes2.length) {

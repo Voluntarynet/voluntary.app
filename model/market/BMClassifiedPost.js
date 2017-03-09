@@ -1,13 +1,17 @@
 
 BMClassifiedPost = BMStorableNode.extend().newSlots({
     type: "BMClassifiedPost",
-    price: 0,
-    currency: "",
     title: null, // string
+    price: 0,
+    currency: "BTC",
     description: null, // string
     path: null, // string
     isEditable: false,
     objMsg: null,
+    
+    postDate: null,
+    postPeriod: 30 * 24 * 60 * 60 * 1000, // 30 days in milliseconds
+    uuid: null,
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
@@ -16,7 +20,7 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
         
         this.setTitle("Untitled")
         this.setPrice(0)
-        this.setDescription("Description")
+        this.setDescription("Item or service description")
         this.addStoredSlots(["price", "title", "description"])
         
         this.setObjMsg(BMObjectMessage.clone())
@@ -52,6 +56,7 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
         if (note.sender() == this.powObj()) {
             //console.log("got powDone")
             this.unwatchPow()
+            this.objMsg().send()
             this.didUpdate()
             //this.syncToView()
         }
@@ -62,19 +67,19 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
     },
     
     subtitle: function() {
-        return this.price() + " " + this.currency()
+        if (this.powObj().isFinding()) {
+            return "stamping... " + this.powObj().estimatedPercentageDone() + "%";
+        } else if (!this.hasSent()) {
+            return "unposted"
+        }
+        return "expires in " + this.expireDescription()
+        //return this.price() + " " + this.currency()
     },
     
     setPrice: function(p) {
         this._price = p; //parseFloat(p)
         return this
     },
-
-/*    
-    getPath: function() {
-        return this.nodePathString()
-    },
-*/
     
     postDict: function () {
         return {
@@ -82,7 +87,10 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
             price: parseFloat(this.price()),
             currency: this.currency(),
             description: this.description(),
-            path: this.path()
+            path: this.path(),
+            postDate: this.postDate(),
+            postPeriod: this.postPeriod(),
+            uuid: this.uuid()
         }
     },
     
@@ -92,6 +100,10 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
         this.setCurrency(aDict.currency)
         this.setDescription(aDict.description)
         this.setPath(aDict.path)
+        this.setPostDate(aDict.postDate)
+        this.setPostPeriod(aDict.postPeriod)
+        this.setUuid(aDict.uuid)
+        this.objMsg().setContent(this.postDict())
         return this
     },
     
@@ -102,16 +114,74 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
         //var toId = App.shared().network().openIdentity().current()        
         this.objMsg().send()
     },
+
+    prepareToSend: function() {
+        this.setUuid(GUID()) 
+        var currentTime = new Date().getTime()
+        // add a random time interval of 5 mintues for some extra privacy
+        var randomInterval = Math.random() * 1000 * 60 * 5; 
+        this.setPostDate(currentTime + randomInterval)
+        this.objMsg().setContent(this.postDict())
+        return this
+    },
     
     send: function () {
+        this.prepareToSend()
         this.setIsEditable(false)
-        this.objMsg().setContent(this.postDict())
         
         //var myId = App.shared().network().localIdentities().current()
         //var toId = App.shared().network().openIdentity().current()
         
         this.watchPow() // watch for pow update and done notifications
-        this.objMsg().asyncPackContent() // will send notification when ready        
+        this.objMsg().asyncPackContent() // will send notification when pow ready        
+    },
+    
+    hasSent: function() {
+        //return this.objMsg().hasValidPow()
+        return this.powObj().isValid() // hack
+    },
+    
+    descriptionOfMsTimePeriod: function(ms) {
+        
+        var seconds = Math.floor(ms / 1000);
+        /*
+        if (seconds < 60) {
+            return seconds + " seconds"
+        }
+        */
+        
+        var minutes = Math.floor(seconds / 60);
+        /*
+        if (minutes < 60) {
+            return minutes + " minutes"
+        }
+        */
+        
+        var hours = Math.floor(minutes / 60);
+        if (hours < 24) {
+            //return hours + " hours"
+            return "today"
+        }
+        
+        var days = Math.ceil(hours / 24);
+        return days + " days"
+    },
+    
+    expireDescription: function() {
+        var dt = this.remainingPeriodInMs();
+        return this.descriptionOfMsTimePeriod(dt)
+    },
+    
+    expirationDate: function() {
+         return new Date(this.postDate() + this.postPeriod())
+    },
+    
+    remainingPeriodInMs: function() {
+         return new Date().getTime() - this.postDate() + this.postPeriod()
+    },
+    
+    postPeriodDayCount: function() {
+        return Math.floor(this.postPeriod() / (24 * 60 * 60 * 1000));
     },
     
     cancelSend: function() {
@@ -124,7 +194,7 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
     
     placeInRegion: function() {
         var rootNode = App.shared()
-        var pathComponents = this.path().split("/").slice(1)
+        var pathComponents = this.path().split("/")
         var region = rootNode.nodeAtSubpath(pathComponents)
         if (region) {
             console.log("inserting post into region path " + this.path())
@@ -146,12 +216,14 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
     
     incrementPowTarget: function() {
         console.log("Post incrementPowTarget")
+        this.prepareToSend() // shouldn't need this if there's a default BMPow hash
         this.powObj().incrementDifficulty()
         this.didUpdate()
     },
     
     decrementPowTarget: function() {
         console.log("Post decrementPowTarget")
+        this.prepareToSend() // shouldn't need this if there's a default BMPow hash
         this.powObj().decrementDifficulty()
         this.didUpdate()
     },

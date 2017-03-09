@@ -2,6 +2,8 @@
 BMClassifiedPostView = NodeView.extend().newSlots({
     type: "BMPostView",
     statusView: null,
+    
+    pathView: null,
     titleView: null,
 
     // price
@@ -15,11 +17,9 @@ BMClassifiedPostView = NodeView.extend().newSlots({
     powIncrementView: null,
     powDecrementView: null,    
     
-    timeView:null,
-    
-
-    
     descriptionView: null,
+
+    postDateInfoView: null,    
     
     // post
     buttonView: null,
@@ -33,6 +33,16 @@ BMClassifiedPostView = NodeView.extend().newSlots({
         this.setStatusView(NodeView.clone().setDivClassName("BMPostStatusView"))
         this.addItem(this.statusView())
 
+
+        // path
+        this.setPathView(NodeView.clone().setDivClassName("BMPostPathView"))
+        this.statusView().addItem(this.pathView())
+
+        // title
+        this.setTitleView(NodeView.clone().setDivClassName("BMPostTitleView"))
+        this.statusView().addItem(this.titleView())        
+                
+        // price container
         this.setPriceContainerView(NodeView.clone().setDivClassName("BMPostPriceContainerView"))
         this.statusView().addItem(this.priceContainerView())
                 
@@ -57,31 +67,40 @@ BMClassifiedPostView = NodeView.extend().newSlots({
             var valid = (s.toUpperCase() in CurrenciesDict) 
             return valid
         }
-             
-        this.setTitleView(NodeView.clone().setDivClassName("BMPostTitleView"))
-        this.statusView().addItem(this.titleView())        
 
+        // post button
         this.setButtonView(NodeView.clone().setDivClassName("BMButtonView").setInnerHTML("Post"))
         this.statusView().addItem(this.buttonView())
         this.buttonView().setTarget(this).setAction("post")
         
-        // stamp
+        // stamp container
         this.setPowContainerView(NodeView.clone().setDivClassName("BMPostPowContainerView"))
+        this.powContainerView().makeUnselectable() 
         this.statusView().addItem(this.powContainerView())
-        this.setPowView(NodeView.clone().setDivClassName("BMPostPowView").setInnerHTML("pow"))
-        this.powContainerView().addItem(this.powView())
-        
-        this.setPowIncrementView(NodeView.clone().setDivClassName("BMPostPowButtonView").setTarget(this).setAction("incrementPowTarget").setInnerHTML("+"))
-        this.powContainerView().addItem(this.powIncrementView())
-        
-        this.setPowDecrementView(NodeView.clone().setDivClassName("BMPostPowButtonView").setTarget(this).setAction("decrementPowTarget").setInnerHTML("-"))
-        this.powContainerView().addItem(this.powDecrementView())
 
         
+        this.setPowIncrementView(NodeView.clone().setDivClassName("BMPostPowIncrementButtonView").setTarget(this).setAction("incrementPowTarget").setInnerHTML("+"))
+        this.powContainerView().addItem(this.powIncrementView())
+        this.powIncrementView().makeUnselectable()
+        
+        this.setPowDecrementView(NodeView.clone().setDivClassName("BMPostPowDecrementButtonView").setTarget(this).setAction("decrementPowTarget").setInnerHTML("-"))
+        this.powContainerView().addItem(this.powDecrementView())
+        this.powDecrementView().makeUnselectable()
+
+        this.setPowView(NodeView.clone().setDivClassName("BMPostPowView").setInnerHTML("pow"))
+        this.powView().makeUnselectable()
+        this.powContainerView().addItem(this.powView())
+         
+        this.setPostDateInfoView(NodeView.clone().setDivClassName("BMPostDateInfoView").setInnerHTML(""))
+        this.postDateInfoView().makeUnselectable()
+        this.powContainerView().addItem(this.postDateInfoView())
+        
+        // description
         this.setDescriptionView(NodeView.clone().setDivClassName("BMPostDescriptionView").loremIpsum())
         this.addItem(this.descriptionView())
         
    
+        // editing
         this.titleView().setShowsHaloWhenEditable(true)
         this.priceView().setShowsHaloWhenEditable(true)
         this.currencyView().setShowsHaloWhenEditable(true)
@@ -89,15 +108,30 @@ BMClassifiedPostView = NodeView.extend().newSlots({
         this.setEditable(true)
         return this
     },
+    
+    hasSent: function() {
+        return this.node().hasSent()
+    },
+    
 
+    
     syncFromNode: function () {
         //this.log(this.type() + " syncFromNode2 " + this.node().type()); 
         var node = this.node()
-        this.priceView().setInnerHTML(node.price())
+        this.pathView().setInnerHTML(node.path().replaceAll("/", " / "))
         this.titleView().setInnerHTML(node.title())
+        this.priceView().setInnerHTML(node.price())
+        this.currencyView().setInnerHTML(node.currency())
         this.descriptionView().setInnerHTML(node.description())
         this.powView().setInnerHTML(node.powStatus())
         this.setEditable(node.isEditable())
+        
+        if (this.hasSent()) {
+            this.postDateInfoView().setInnerHTML(" expires in " + this.node().expireDescription())
+        } else {
+            this.postDateInfoView().setInnerHTML(" which expires in " + this.node().postPeriodDayCount() + " days")
+        }
+        
         return this
     },
     
@@ -119,8 +153,8 @@ BMClassifiedPostView = NodeView.extend().newSlots({
         this.currencyView().setContentEditable(aBool)
         
         this.buttonView().setVisible(aBool)
-        this.powIncrementView().setVisible(aBool)
-        this.powDecrementView().setVisible(aBool)
+        this.powIncrementView().setDisplay(aBool ? "inline-block" : "none")
+        this.powDecrementView().setDisplay(aBool ? "inline-block" : "none")
         
         return this
     },

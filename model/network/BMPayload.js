@@ -41,12 +41,6 @@
     
 */
 
-/*
-var stableStringify = require('json-stable-stringify');
-var bitcore = require("bitcore-lib")
-var ECIES = require("bitcore-ecies")
-*/
-
 // Helpers
 
 Object.prototype.toJsonStableString = function() {
@@ -82,6 +76,7 @@ BMPayload = ideal.Proto.extend().newSlots({
     error: null,
     senderPublicKey: null,
     powObject: null,
+    donePowCallback: null,
 }).setSlots({
     init: function () {
         this.setPowObject(BMPow.clone())
@@ -103,6 +98,10 @@ BMPayload = ideal.Proto.extend().newSlots({
     },
         
     assertType: function(typeName) {
+        if (this._data == null) {
+            console.log("payload = ", this)
+            throw "payload has null data "
+        }
         
         if (typeof(this._data.type) != "string") {
             console.log(this._data)
@@ -116,22 +115,32 @@ BMPayload = ideal.Proto.extend().newSlots({
             this.throwError(this._data.type + " != " + typeName)
         }
     },
-    
+        
+    // bitcoin curve is sjcl.ecc.curves.k256	    
     /*
-    
-    // ECIES encryption signs so we don't need this
+        // Must be ECDSA!
+        var pair = sjcl.ecc.ecdsa.generateKeys(256)
+
+        var sig = pair.sec.sign(sjcl.hash.sha256.hash("Hello World!"))
+        // [ 799253862, -791427911, -170134622, ...
+
+        var ok = pair.pub.verify(sjcl.hash.sha256.hash("Hello World!"), sig)
+        // Either `true` or an error will be thrown.
+    */
     
     /// sign / unsign
 
-    sign: function(senderPrivateKey) {
-        var bitcoreMessage = new BitcoreMessage(this.data());
-        var signature = bitcoreMessage.sign(senderPrivateKey);
-
+    sign: function(senderKeyPair) {
+        var payload = this.data().toJsonStableString();
+        var payloadHash = sjcl.hash.sha256.hash(payload);
+        var sig = senderKeyPair.sec.sign(payloadHash);
+        var senderPubKeyHex = sjcl.codec.hex.fromBits(senderKeyPair.pub);
+       
         this.setData({ 
-            type: "SignedPayload", 
-            senderAddress: senderPrivateKey.toPublicKey().toAddress(), 
-            signature: signature, 
-            payload: stableStringify(this.data()) 
+            type: "SignedPayload",
+            senderAddress: senderPubKeyHex,
+            signature: sig,
+            payload: payload
         })
             
         return this
@@ -139,58 +148,56 @@ BMPayload = ideal.Proto.extend().newSlots({
     
     unsign: function() {
         this.assertType("SignedPayload")
-        var verified = new BitcoreMessage(this.data().payload).verify(this.data().senderAddress, this.data().signature);
-        this.setData(this.data().payload)
-        return this
+        
+        var senderPubKeyHex = this.data().senderAddress;
+        var senderPubKeyBits = sjcl.codec.hex.toBits(senderPubKeyHex);
+        
+        var ok = pair.pub.verify(this.data().payload, sig);
+        
+        if (ok) {
+            this.setData(this.data().payload);
+            return true;
+        }
+        
+        return false;
     },
 
+    /// encrypt / unencrypt
+    
+    /*
+    var pair = sjcl.ecc.elGamal.generateKeys(256)
+
+        var ct = sjcl.encrypt(pair.pub, "Hello World!")
+        var pt = sjcl.decrypt(pair.sec, ct)
     */
 
-    /// encrypt / unencrypt
-
-    encrypt: function(senderPrivateKey, receiverPubkey) {
-        var encryptor = ECIES()
-          .privateKey(senderPrivateKey)
-          .publicKey(receiverPubkey);
-
-        var encryptedPayloadBuf = encryptor.encrypt(this.data().toJsonStableString());
-        var encryptedPayload = encryptedPayloadBuf.toString('base64');
+    encrypt: function(receiverPubkeyHex) {
+        var receiverPubKeyBits = sjcl.codec.hex.toBits(receiverPubkeyHex);
+        //var unencryptedBits = sjcl.codec.utf8String(this.data().toJsonStableString());
+        var encryptedBits = sjcl.encrypt(receiverPubKeyBits, this.data().toJsonStableString());
+        var encryptedBase64 = sjcl.codec.base64.fromBits(encryptedBits);
         
         this.setData({ 
             type: "EncryptedPayload",
-            senderPublicKey: senderPrivateKey.toPublicKey().toString(),
-            payload: encryptedPayload,
+            payload: encryptedBase64,
         })
-        
+
         return this
     },
 
-    unencrypt: function(receiverPrivateKey) {
+    unencrypt: function(receiverPrivateKeyHex) {
         this.assertType("EncryptedPayload")
 
-        var spk = this.data().senderPublicKey
-        
-        if (PublicKey.isValid(spk)) {
-            throw "invalid sender public key"
-        }
-                
-        var senderPublicKey =  new bitcore.PublicKey(spk)
+        var receiverPrivateKeyBits = sjcl.codec.hex.toBits(receiverPrivateKeyHex)
+        var encryptedBase64 = this.data().payload;
+        var encryptedBits = sjcl.codec.base64.toBits(encryptedBase64)
+        var decryptedBits = sjcl.decrypt(receiverPrivateKeyBits, encryptedBits)
+        var decryptedString = sjcl.codec.utf8String.fromBits(encryptedBits)
+        var decryptedPayloadDict = decryptedString.toJsonDict();
 
-        this.setSenderPublicKey(senderPublicKey)
-        
-        var decryptor = ECIES()
-          .privateKey(receiverPrivateKey)
-          .publicKey(senderPublicKey);
-          
-        var encryptedPayloadBuf = new Buffer(this.data().payload, 'base64')          
-
-        try {
-            var decryptedBuf = decryptor.decrypt(encryptedPayloadBuf)
-        } catch(error) {
-            this.throwError("invalid signature found during decryption " + error)            
+        if (decryptedPayloadDict == null) {
+            throw "can't convert decrypted payload to JSON";    
         }
-        
-        var decryptedPayloadDict = decryptedBuf.toString().toJsonDict();
         
         this.setDict(decryptedPayloadDict)
         
@@ -216,14 +223,23 @@ BMPayload = ideal.Proto.extend().newSlots({
         var hash = this.data().toJsonStableString().sha256String();
         var pow = this.powObject()
         pow.setHash(hash)
+        var self = this
+        pow.setDoneCallback(function () { self.powDone() })
         pow.asyncFind()
-        this.setData({ type: "PowedPayload", payload: this.data(), pow: pow.powHex() })
         return true
     },  
+    
+    powDone: function() {
+        this.setData({ type: "PowedPayload", payload: this.data(), pow: this.powObject().powHex() })
+        if (this.donePowCallback()) {
+            this.donePowCallback().apply()
+        }  
+    },
       
     unpow: function() {
         // { type: "PowedPayload", payload: data, pow: aPow } -> data
 
+        console.log("BMPayload.unpow this.data() = ", this.data())
         this.assertType("PowedPayload")
 
         var hash = this.data().payload.toJsonStableString().sha256String();

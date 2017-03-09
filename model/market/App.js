@@ -15,6 +15,7 @@ App = BaseApp.extend().newSlots({
     
     network: null,
     
+    myPosts: null,
 }).setSlots({
     init: function () {
         BaseApp.init.apply(this)

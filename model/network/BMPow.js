@@ -34,9 +34,11 @@ BMPow = ideal.Proto.extend().newSlots({
     
     syncEndTime: null,
     syncTimeoutPeriod: 100,
-    triesPerSyncLoop: 1000,
+    syncTriesPerLoop: 2000,
     status: null,
-    estimateTriesPerMs: null,
+    globalEstimateTriesPerMs: null, // set this 
+    doneCallback: null,
+    isValid: null, // used to cache result, null means "don't know yet"
 }).setSlots({
     init: function () {
         this.pickRandomPow()
@@ -70,16 +72,26 @@ BMPow = ideal.Proto.extend().newSlots({
         return this
     },
     
+    setPowBits: function(bits) {
+        this._powBits = bits
+        this.setIsValid(null)
+        return this
+    },
+    
     status: function() {
         if (this._status != null) {
             return this._status;
         }
         
         if (this.isValid()) {
-            return "level <b>" + this.difficulty() + "</b> Stamp" // + " &#10003;"
+            //return this.highlightString("level " + this.difficulty() + " Stamp &nbsp;&#10003;")
+            //return "valid level " + this.highlightString(this.difficulty()) + " Stamp" // &nbsp; &#10003;"
+            return "level " + this.difficulty() + " Stamp" // &nbsp; &#10003;"
         }
         
-        return "generate level <span style='color:#444;'>" + this.difficulty() + "</span> stamp in about " + this.estimateTimeDescription() + ""
+        //console.log("status invalid")
+        
+        return "generate level " + this.highlightString(this.difficulty()) + " stamp in about " + this.estimateTimeDescription() + ""
     },
     
     /*
@@ -119,17 +131,16 @@ BMPow = ideal.Proto.extend().newSlots({
         var found = this.syncFind() // sync has a timeout period
         
         if (found || this.asyncTimedOut()) {
+            console.log("BMPow: found difficulty " + this.difficulty() + " pow after " + this.tries() + " tries")
             this.setIsFinding(false)
             this.setStatus(null)
-            //this.setStatus("found pow difficulty " + this.difficulty() + " after " +  this.tries() + " tries" )
+            if (this.doneCallback()) { 
+                this.doneCallback().apply() 
+            }
             this._doneNote.post()
-            console.log("sent powDone note: " + this.status())
         } else {
             if (this.isFinding()) {
-               //this.setStatus("generating level " + this.difficulty() + " stamp (" + this.tries() + " tries)")
-               this.setStatus("generating level " + this.difficulty() + " stamp, " + Math.floor(this.tries()/1000) + "K tries)")
-               
-               //this.setStatus(this.tries() + " tries on difficulty " + this.difficulty())
+               this.setStatus("generating level " + this.difficulty() + " stamp... " + this.highlightString(this.estimatedPercentageDone() + "%"))               
                this._updateNote.post()
                var self = this
                 setTimeout(function(){ 
@@ -152,15 +163,16 @@ BMPow = ideal.Proto.extend().newSlots({
     },
     
     syncFindOneLoop: function() {
-        var max = this._triesPerSyncLoop;
+        var max = this.syncTriesPerLoop();
         for (var i = 0; i < max; i++) {
             this.pickRandomPow()
-            this._tries ++;
             if (this.isValid()) {
-                console.log("BMPow: found difficulty " + this.difficulty() + " pow after " + this.tries() + " tries")
+                
+                this._tries += i;
                 return true;
             }
         }
+        this._tries += max;
         return false
     },
     
@@ -172,12 +184,28 @@ BMPow = ideal.Proto.extend().newSlots({
     
     estimateDifficultyForTimeout: function(dtInMiliiseconds) {
         // dt = (2 ^ diff)/triesPerMs so: Log2(dt * triesPerMs) = diff
-        return Math.log2(dtInMiliiseconds * this.estimateTriesPerMs());
+        return Math.log2(dtInMiliiseconds * BMPow.globalEstimateTriesPerMs());
+    },
+ 
+    estimatedPercentageDone: function() {
+        var p = this.estimatedRatioDone()*100
+        if (p < 1) { 
+            return Math.floor(p*100)/100
+        }
+        return Math.floor(p)
+    },
+       
+    estimatedRatioDone: function() {
+        return this.tries() / this.estimatedTries()
     },
     
-    estimateTimeForDifficulty: function(dtInMiliiseconds) {
+    estimatedTries: function() {
+        return Math.pow(2, this.difficulty())
+    },
+    
+    estimateTimeInMsForDifficulty: function() {
         // dt = (2 ^ diff)/triesPerMs
-        return Math.pow(2, this.difficulty()) / this.estimateTriesPerMs()
+        return this.estimatedTries() / BMPow.globalEstimateTriesPerMs()
     },
 
     highlightString: function (s) { 
@@ -188,7 +216,7 @@ BMPow = ideal.Proto.extend().newSlots({
         var value = null
         var unit = null
         
-        var secs = this.estimateTimeForDifficulty()/1000
+        var secs = this.estimateTimeInMsForDifficulty()/1000
         value = Math.floor(secs) 
         unit = "seconds"
         
@@ -215,14 +243,15 @@ BMPow = ideal.Proto.extend().newSlots({
         return 32*8
     },
     
-    estimateTriesPerMs: function() {
-        if (this._estimateTriesPerMs == null) {
+    globalEstimateTriesPerMs: function() {
+        if (this._globalEstimateTriesPerMs == null) {
             var pow = BMPow.clone()
-            pow.setDifficulty(this.maxDifficulty()) 
+            pow.setDifficulty(this.maxDifficulty()) // to make sure we don't find it
+            this.setTries(0)
             pow.syncFind()
-            this._estimateTriesPerMs = pow.tries() / pow.syncTimeoutPeriod()
+            this._globalEstimateTriesPerMs = pow.tries() / pow.syncTimeoutPeriod()
         }
-        return this._estimateTriesPerMs
+        return this._globalEstimateTriesPerMs
     },
     
     /*
@@ -259,11 +288,26 @@ BMPow = ideal.Proto.extend().newSlots({
         return sjcl.codec.bits.leftZeroBitCount(this.catShaBits());
     },
     
+    setHash: function(v) {
+        if (this._hash != v) {
+            this._hash = v
+            this._isValid = null
+        }
+        return this
+    },
+    
     isValid: function () {
         if (this._hash == null) { 
+            //ShowStack();
+            //console.log("WARNING: null hash on BMPow")
             return false 
         }
-        return this.leftZeroBitCount() >= this.difficulty();
+            
+        if (this._isValid == null) {
+            this._isValid = this.leftZeroBitCount() >= this.difficulty();
+        }
+        
+        return this._isValid 
     },
     
     show: function () {

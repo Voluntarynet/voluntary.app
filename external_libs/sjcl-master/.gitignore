@@ -1,0 +1,12 @@
+core.js
+core_closure.js
+node_modules/
+doc/
+doc_private/
+compress/compiler.jar
+compress/compiler-latest.zip
+
+# Swap Files #
+# ########## #
+~*
+*.swp

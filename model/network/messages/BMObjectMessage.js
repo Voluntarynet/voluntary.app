@@ -175,11 +175,13 @@ BMObjectMessage = BMMessage.extend().newSlots({
     
     asyncPackContent: function() {
         this.payload().setData(this.content())
+        var self = this
+        this.payload().setDonePowCallback(function () { self.didFinishPow() }) // pow will post a notification when done
         this.payload().asyncPow() // pow will post a notification when done
     },
     
     didFinishPow: function() {
-        
+        this._packedContent = this.payload().data()
     },
 
     unpackContentWithReceiverId: function(receiverId) {
@@ -260,6 +262,7 @@ BMObjectMessage = BMMessage.extend().newSlots({
     },
        
     send: function() {
+        // check to make sure message is valid and throw if not?
         // this would change out parentNode - so make a copy
         this.network().messages().addMessage(this.clone()) 
         return this

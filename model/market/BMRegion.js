@@ -57,9 +57,16 @@ BMRegion = BMNode.extend().newSlots({
     
     add: function () {  
         // set path when using add button
-        var subnode = BMNode.add.apply(this)
-        subnode.setPath(this.nodePathString())
+        //var subnode = BMNode.add.apply(this)
+
+        var subnode = this.subnodeProto().clone()
+        var path = this.nodePath()
+        path.removeFirst()
+        var pathString = path.map(function (p) { return p.title() }).join("/")
+        subnode.setPath(pathString)
         subnode.setIsEditable(true)
+        App.shared().myPosts().addItem(subnode)
+        App.shared().browser().selectNode(subnode)
         return subnode
     },
     

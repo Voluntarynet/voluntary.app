@@ -6,7 +6,7 @@ BMClassifiedPosts = BMStorableNode.extend().newSlots({
         BMStorableNode.init.apply(this)
         this.setTitle("My Posts")
         this.setPid("_myPosts")
-        this.setActions(["add"])
+        //this.setActions(["add"])
         this.setSubnodeProto(BMClassifiedPost)
         this.setNoteIsItemCount(true)
     },

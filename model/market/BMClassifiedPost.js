@@ -14,6 +14,7 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
     uuid: null,
    // imagesNode:null,
     imageDataURLs: null,
+    hasSent: false,
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
@@ -44,43 +45,6 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
     
     getEncodedImages: function() {
         return this.images().map(function (image) { return image.base64Encoded(); });
-    },
-    
-    // pow notifications
-    
-    watchPow: function() {
-        this._powDoneObs.watch()
-        this._powUpdateObs.watch()
-    },
-    
-    unwatchPow: function() {
-        this._powDoneObs.stopWatching()
-        this._powUpdateObs.stopWatching()
-    },
-    
-    powObj: function() {
-        return this.objMsg().payload().powObject()
-    },
-    
-    powUpdate: function(note) {
-        if (note.sender() == this.powObj()) {
-            //console.log("got powUpdate")
-            this.didUpdate()
-        }
-    },
-    
-    powDone: function(note) {
-        if (note.sender() == this.powObj()) {
-            //console.log("got powDone")
-            this.unwatchPow()
-            this.objMsg().send()
-            this.didUpdate()
-            //this.syncToView()
-        }
-    },
-    
-    powStatus: function() {
-        return this.powObj().status()
     },
     
     subtitle: function() {
@@ -157,11 +121,65 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
         this.objMsg().asyncPackContent() // will send notification when pow ready        
     },
     
+    /*
     hasSent: function() {
-        //return this.objMsg().hasValidPow()
-        return this.powObj().isValid() // hack
+        console.log("this.powObj().isValid()  = " + this.powObj().isValid())
+        if (!this.powObj().isValid()) {
+            console.log("this.powObj() = ", this.powObj())
+        }
+        //console.log("this.objMsg().hasValidPow()  = " + this.objMsg().hasValidPow())
+        return this.objMsg().hasValidPow()
+        //return this.powObj().isValid() // hack
+    },
+    */
+    
+    // pow notifications
+    
+    watchPow: function() {
+        this._powDoneObs.watch()
+        this._powUpdateObs.watch()
     },
     
+    unwatchPow: function() {
+        this._powDoneObs.stopWatching()
+        this._powUpdateObs.stopWatching()
+    },
+    
+    powObj: function() {
+        return this.objMsg().payload().powObject()
+    },
+    
+    powUpdate: function(note) {
+        if (note.sender() == this.powObj()) {
+            //console.log("got powUpdate")
+            this.didUpdate()
+        }
+    },
+    
+    calcHasSent: function() {
+        this.objMsg().setContent(this.postDict())
+        this.setHasSent(this.objMsg().hasValidPow())
+        return this    
+    },
+    
+    powDone: function(note) {
+        if (note.sender() == this.powObj()) {
+            //console.log("got powDone")
+            this.unwatchPow()
+            if (this.objMsg().hasValidPow()) {
+                this.objMsg().send()
+                this.setHasSent(true)
+            }
+            this.didUpdate()
+            //this.syncToView()
+        }
+    },
+    
+    powStatus: function() {
+        return this.powObj().status()
+    },
+    
+    /////////////////////////
     descriptionOfMsTimePeriod: function(ms) {
         
         var seconds = Math.floor(ms / 1000);

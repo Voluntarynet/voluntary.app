@@ -76,6 +76,7 @@ BMObjectMessage = BMMessage.extend().newSlots({
     },
     
     setContent: function(v) {
+        console.log(this.type() + " setContent: ", v)
         this._content = v
         this.syncFields()
         return this
@@ -94,9 +95,12 @@ BMObjectMessage = BMMessage.extend().newSlots({
         return dict
     },
     
-    
     fromValue: function() {
-        console.log("this._content = " + JSON.stringify(this._content, null, 2))
+        if (!this._content) {
+            console.log("WARNING: BMObjectMessage.fromValue() missing this._content = " + this._content)
+            ShowStack()
+        }
+        //console.log("BMObjectMessage.fromValue() this._content = " + JSON.stringify(this._content, null, 2))
         //console.log("this.content() = " + JSON.stringify(this.content(), null, 2))
         return this._content ? this._content.from : "?"
     },
@@ -251,6 +255,7 @@ BMObjectMessage = BMMessage.extend().newSlots({
             console.log("creating post for dict ", dict)
             var post = BMClassifiedPost.clone().setPostDict(dict)
             post.setObjMsg(this)
+            post.calcHasSent()
             post.placeInRegion();
         }
         

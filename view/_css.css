@@ -320,7 +320,7 @@
     
     margin-top: 8px;
     width: 90%;    
-    height: 300px;
+    height: 200px;
     border: 0px solid #eee;
     
     font-family: "OpenSans-Regular";
@@ -366,11 +366,16 @@
     align-items: center; 
     transition: all .3s ease-out;
    
+    user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
 }
 
 .ImageCloseButton {
     position: absolute;
-    bottom: 0px;
+    bottom: -20px;
     right: 50%;
     
     width: 16px;
@@ -381,6 +386,12 @@
     color: #fff;
     font-size: 20px;
     line-height: 9px;
+    
+    user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
 }
 
 .ImageCloseButton:hover {

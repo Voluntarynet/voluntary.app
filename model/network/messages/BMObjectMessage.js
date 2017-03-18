@@ -250,6 +250,7 @@ BMObjectMessage = BMMessage.extend().newSlots({
             var dict = this.msgDict().data.payload
             console.log("creating post for dict ", dict)
             var post = BMClassifiedPost.clone().setPostDict(dict)
+            post.setObjMsg(this)
             post.placeInRegion();
         }
         

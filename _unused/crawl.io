@@ -29,40 +29,43 @@ SGMLElement nextElementWithName := method(name,
     nil
 )
 
-s := URL with("http://www.craigslist.org/about/sites") fetch asXML
-
-states := s elementsWithName("h4") //map(attributes at("href"))
-
-
-countryName := "US"
-
-region := Map clone atPut("_type", "Region") 
-
-
-
-countryDict := region clone atPut("name", "US") atPut("children", list(1, 2, 3))
-
-stateDictList := List clone
-
-states foreach(state, 
-    stateDict := region clone atPut("name", state firstText ) 
+CraigslistCrawler := Object clone do(
+    init := method(
     
-    cities := state nextElementWithName("ul") elementsWithName("a") 
-
-    cityDicts := List clone
-    
-    cities foreach(city,
-        cityDict := region clone atPut("name", city firstText )
-        cityDicts append(cityDict)
     )
-    
-    stateDict atPut("children", cityDicts)
 
-    stateDictList append(stateDict)
+    findRegions := method(
+        s := URL with("http://www.craigslist.org/about/sites") fetch asXML
+
+        states := s elementsWithName("h4")
+
+        countryName := "US"
+
+        region := Map clone atPut("_type", "Region") 
+
+        countryDict := region clone atPut("name", "US")
+
+        stateDictList := List clone
+
+        states foreach(state, 
+            stateDict := region clone atPut("name", state firstText ) 
+    
+            cities := state nextElementWithName("ul") elementsWithName("a") 
+            cityDicts := List clone
+            cities foreach(city,
+                cityDict := region clone atPut("name", city firstText )
+                cityDicts append(cityDict)
+            )
+    
+            stateDict atPut("children", cityDicts)
+            stateDictList append(stateDict)
+        )
+    
+        countryDict atPut("children", stateDictList)
+        countryDict asJson println
+    )
 )
 
-countryDict atPut("children", stateDictList)
-
-countryDict asJson println
+CraigslistCrawler clone findRegions
 
 System exit

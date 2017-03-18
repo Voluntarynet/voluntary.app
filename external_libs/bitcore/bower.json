@@ -1,0 +1,9 @@
+{
+  "name": "bitmarkets",
+  "version": "0.0.1",
+  "license": "MIT",
+  "dependencies": {
+    "bitcore-lib": "^0.13.7",
+    "bitcore-mnemonic": "^1.0.1"
+  }
+}

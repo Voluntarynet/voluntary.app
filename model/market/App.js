@@ -65,6 +65,7 @@ App = BaseApp.extend().newSlots({
         return this
     },
     
+    
     load: function() {
         NodeStore.clear();
         NodeStore.shared().setRootObject(this)

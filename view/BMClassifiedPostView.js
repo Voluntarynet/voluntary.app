@@ -23,7 +23,9 @@ BMClassifiedPostView = NodeView.extend().newSlots({
     
     // post
     buttonView: null,
-
+    
+    imagesHeaderView: null,
+    imageWellView: null,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
@@ -99,6 +101,14 @@ BMClassifiedPostView = NodeView.extend().newSlots({
         this.setDescriptionView(NodeView.clone().setDivClassName("BMPostDescriptionView").loremIpsum())
         this.addItem(this.descriptionView())
         
+        // images header
+        this.setImagesHeaderView(NodeView.clone().setDivClassName("BMImagesHeader").setInnerHTML("drop images below"))
+        this.addItem(this.imagesHeaderView())
+        
+        // image
+        this.setImageWellView(ImageWellView.clone().setDivClassName("BMPostImageWellView"))
+        this.addItem(this.imageWellView())
+        
    
         // editing
         this.titleView().setShowsHaloWhenEditable(true)
@@ -116,7 +126,8 @@ BMClassifiedPostView = NodeView.extend().newSlots({
 
     
     syncFromNode: function () {
-        //this.log(this.type() + " syncFromNode2 " + this.node().type()); 
+//        this.log(this.type() + " syncFromNode2 " + this.node().type()); 
+        
         var node = this.node()
         this.pathView().setInnerHTML(node.path().replaceAll("/", " / "))
         this.titleView().setInnerHTML(node.title())
@@ -126,22 +137,27 @@ BMClassifiedPostView = NodeView.extend().newSlots({
         this.powView().setInnerHTML(node.powStatus())
         this.setEditable(node.isEditable())
         
+        this.imageWellView().setImageDataURLs(node.imageDataURLs())
+        
         if (this.hasSent()) {
             this.postDateInfoView().setInnerHTML(" expires in " + this.node().expireDescription())
         } else {
             this.postDateInfoView().setInnerHTML(" which expires in " + this.node().postPeriodDayCount() + " days")
         }
-        
+                
         return this
     },
     
     syncToNode: function () {
-        //this.log(this.type() + " syncToNode " + this.node().type())
+        this.log(this.type() + " syncToNode " + this.node().type())
         var node = this.node()
         node.setTitle(this.titleView().innerHTML())
         node.setPrice(this.priceView().innerHTML())
         node.setCurrency(this.currencyView().innerHTML())
         node.setDescription(this.descriptionView().innerHTML())
+        
+        node.setImageDataURLs(this.imageWellView().imageDataURLs())
+
         NodeView.syncToNode.apply(this)     
         return this
     },
@@ -156,6 +172,8 @@ BMClassifiedPostView = NodeView.extend().newSlots({
         this.powIncrementView().setDisplay(aBool ? "inline-block" : "none")
         this.powDecrementView().setDisplay(aBool ? "inline-block" : "none")
         
+        this.imageWellView().setIsEditable(aBool)
+        this.imagesHeaderView().setVisible(aBool)
         return this
     },
     

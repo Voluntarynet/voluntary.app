@@ -12,6 +12,8 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
     postDate: null,
     postPeriod: 30 * 24 * 60 * 60 * 1000, // 30 days in milliseconds
     uuid: null,
+   // imagesNode:null,
+    imageDataURLs: null,
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
@@ -22,11 +24,26 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
         this.setPrice(0)
         this.setDescription("Item or service description")
         this.addStoredSlots(["price", "title", "description"])
+
+        //this.setImagesNode(BMNode.clone().setViewClassName("ImageView").setSubnodeProto("ImageNode"))
+        this.setImageDataURLs([])
         
         this.setObjMsg(BMObjectMessage.clone())
 
         this._powDoneObs   = NotificationCenter.shared().newObservation().setName("powDone").setObserver(this)
         this._powUpdateObs = NotificationCenter.shared().newObservation().setName("powUpdate").setObserver(this)
+    },
+    
+    // images
+    
+    setEncodedImages: function(base64images) {
+        var imgs = base64images.map(function (b64) { return ImageNode.clone().setBase64Encoded(b64); });
+        this.setImages(imgs)
+        return this
+    },
+    
+    getEncodedImages: function() {
+        return this.images().map(function (image) { return image.base64Encoded(); });
     },
     
     // pow notifications
@@ -90,7 +107,8 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
             path: this.path(),
             postDate: this.postDate(),
             postPeriod: this.postPeriod(),
-            uuid: this.uuid()
+            uuid: this.uuid(),
+            imageDataURLs: this.imageDataURLs()
         }
     },
     
@@ -103,7 +121,9 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
         this.setPostDate(aDict.postDate)
         this.setPostPeriod(aDict.postPeriod)
         this.setUuid(aDict.uuid)
-        this.objMsg().setContent(this.postDict())
+        this.setImageDataURLs(aDict.imageDataURLs)
+        //this.objMsg().setContent(this.postDict())
+        this.objMsg().setContent(aDict)
         return this
     },
     
@@ -118,7 +138,8 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
     prepareToSend: function() {
         this.setUuid(GUID()) 
         var currentTime = new Date().getTime()
-        // add a random time interval of 5 mintues for some extra privacy
+        // add a random time interval of 5 mintues so a receiving node
+        // can't guess that a sender is the source if the dt is very small
         var randomInterval = Math.random() * 1000 * 60 * 5; 
         this.setPostDate(currentTime + randomInterval)
         this.objMsg().setContent(this.postDict())

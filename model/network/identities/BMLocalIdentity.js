@@ -105,13 +105,20 @@ BMLocalIdentity = BMNavNode.extend().newSlots({
     },
     
     signatureForMessageString: function(msgString) {
-        var bitcoreMessage = new BitcoreMessage('This is an example of a signed message.');
-        var signature = bitcoreMessage.sign(this.privateKey());
+        //var bitcoreMessage = new BitcoreMessage(msgString);
+        //var signature = bitcoreMessage.sign(this.privateKey());
+        
+       // var privateKey = bitcore.PrivateKey.fromWIF('cPBn5A4ikZvBTQ8D7NnvHZYCAxzDZ5Z2TSGW2LkyPiLxqYaJPBW4');
+        var signature = Message(msgString).sign(this.privateKey()));
+
         return signature
     },
 
-    verifySignatureForMessage: function(signature, msg) {
-        var verified = new BitcoreMessage(msg).verify(this.address(), signature);
+    verifySignatureForMessage: function(signature, msgString) {
+        var address = this.publicKeyString()
+        var verified = Message('hello, world').verify(msgString, signature);
+
+        //var verified = new BitcoreMessage(msg).verify(this.publicKey(), signature);
         return verified
     },
 })

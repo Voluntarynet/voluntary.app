@@ -65,6 +65,11 @@ var loadSequentialJS = (function(document) {
 })(document);
 
 		    var files = [
+		    
+		        "external_libs/bitcore/bower_components/bitcore-lib/bitcore-lib.min.js",
+		        "external_libs/bitcore/bower_components/bitcore-mnemonic/bitcore-mnemonic.min.js",
+
+
 		        "external_libs/json-stable-stringify/json-stable-stringify.js",
 
 		        "external_libs/sjcl-master/core/sjcl.js",
@@ -98,8 +103,7 @@ var loadSequentialJS = (function(document) {
 		        "external_libs/sjcl-master/core/sha512.js",
 		        "external_libs/sjcl-master/core/srp.js",
 		        "external_libs/sjcl-master/core/random.js",
-		        "external_libs/codecBits.js",
-
+		        "external_libs/sjcl-extras/codecBits.js",
 
 		        "data/categories.json",
 		        "data/us_cities.json",
@@ -121,6 +125,7 @@ var loadSequentialJS = (function(document) {
 		        "lib/node/Nodes/BMStorableNode.js",
 		        "lib/node/Nodes/BMFormNode.js",
 		        "lib/node/Nodes/BMInfoNode.js",
+		        "lib/node/Nodes/BMImageNode.js",
 		        "lib/node/Nodes/BMNavNode.js",
 		        "lib/node/NodeStore.js",
 
@@ -163,6 +168,8 @@ var loadSequentialJS = (function(document) {
                 "lib/view/browser/BrowserRowSubtitle.js",
                 "lib/view/browser/BrowserRowTitle.js",
                 "lib/view/browser/BrowserFieldRow.js",
+		        "lib/view/ImageWellView.js",
+		        "lib/view/ImageView.js",
                 
 		        "view/BMDraftView.js",
 		        "view/BMLetterView.js",
@@ -186,23 +193,19 @@ var loadSequentialJS = (function(document) {
 		        //"app.js"
 		        
                 "model/market/App.js",
-
 		    ]
 		
-		    loadSequentialJS(files, function () { 
-		        
+		    loadSequentialJS(files, function () {
 		        sjcl.random.startCollectors();
 		        
-		        var shaBits = sjcl.hash.sha256.hash("test");
-		        var shaHex = sjcl.codec.hex.fromBits(shaBits);
-		        assert(shaHex == "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08")
-		        
+
 		        
 		        /*
 		        Browser.init(); 
 		        var network = BMNetwork.clone()
 		        network.servers().connect()
 		        */
+		        
 		        App.shared()
 		        
 		        /*
@@ -212,7 +215,99 @@ var loadSequentialJS = (function(document) {
                 console.log("hash = [" + hash + "]")
                 */
 		    })
+		    
+		    /*
+		    function TestsRun() {
+		        // wait until an ECIES javascript library that works in the browser is available
+	            TestSHA();
+		        TestElGamalEncryptDecrypt();
+		        TestSig2();
+		        TestSerializedKeys();
+		    }
+		    
+		    function TestSHA() {
+		        var shaBits = sjcl.hash.sha256.hash("test");
+		        var shaHex = sjcl.codec.hex.fromBits(shaBits);
+		        assert(shaHex == "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08")		        
+                console.log("TestSHA passed")
+		    }
+		    
+		    function TestElGamalEncryptDecrypt() {
+                var pair = sjcl.ecc.elGamal.generateKeys(256)
+                var inputPlainText = "Hello World!"
+                
+                var cipherText = sjcl.encrypt(pair.pub, inputPlainText)
+                var outputPlainText = sjcl.decrypt(pair.sec, cipherText)
+		        assert(outputPlainText == inputPlainText)		        
+                //console.log("encryption test cipherText: [" + cipherText + "]")
+                console.log("encryption test outputPlainText: [" + outputPlainText + "]")
+                console.log("TestSig TestElGamalEncryptDecrypt")
+            }
+            
+            function TestSig() {
+                // Must be ECDSA!
+                var pair = sjcl.ecc.ecdsa.generateKeys(256)
+                var inputPlainText = "Hello World!"
+                
+                var sig = pair.sec.sign(sjcl.hash.sha256.hash(inputPlainText))
+                // [ 799253862, -791427911, -170134622, ... ]
 
+                var ok = pair.pub.verify(sjcl.hash.sha256.hash(inputPlainText), sig)
+                // Either `true` or an error will be thrown.
+                assert(ok == true)		        
+                console.log("TestSig passed")
+            }
+            
+            function TestSig2() {
+                // Must be ECDSA!
+                var pair = sjcl.ecc.ecdsa.generateKeys(256)
+                var inputPlainText = "Hello World!"
+                var cipherText = sjcl.encrypt(pair.pub, inputPlainText)
+                
+                
+                /*
+                var sig = pair.sec.sign(sjcl.hash.sha256.hash(inputPlainText))
+                // [ 799253862, -791427911, -170134622, ...
+
+                var ok = pair.pub.verify(sjcl.hash.sha256.hash(inputPlainText), sig)
+                // Either `true` or an error will be thrown.
+                assert(ok == true)		        
+                console.log("TestSig passed")
+            }
+            
+            
+            function TestSerializedKeys() {
+                var pair = sjcl.ecc.elGamal.generateKeys(256);
+                var pub = pair.pub.get();
+                var sec = pair.sec.get();
+                //var codec = sjcl.codec.z85;
+                var codec = sjcl.codec.hex;
+                
+                // Serialized public key:
+                var serializedPub = codec.fromBits(pub.x.concat(pub.y))
+                console.log("serializedPub: [" + serializedPub + "]")
+                
+                // Unserialized public key:
+                var unserializedPub = new sjcl.ecc.elGamal.publicKey(
+                    sjcl.ecc.curves.c256, 
+                    codec.toBits(serializedPub)
+                )
+                console.log("unserializedPub: [", unserializedPub, "]")
+                //assert( unserializedPub.equals(pub) )         
+
+                // Serialized private key:
+                var serializedSec = codec.fromBits(sec)
+                console.log("serializedSec: [" + serializedSec + "]")
+
+                // Unserialized private key:
+                var unserializedSec = new sjcl.ecc.elGamal.secretKey(
+                    sjcl.ecc.curves.c256,
+                    sjcl.ecc.curves.c256.field.fromBits(codec.toBits(serializedSec))
+                )
+                console.log("unserializedSec: [", unserializedSec, "]")
+                //assert( unserializedSec.equals(sec) )         
+            }
+            */
             
         </script>
     

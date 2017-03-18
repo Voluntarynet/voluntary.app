@@ -1,5 +1,17 @@
-
-// sjcl.codec.bits.leftZeroBitCount
+/*
+ * codecBits.js
+ *  - some helper methods for sjcl bit arrays
+ * 
+ * usage:
+ *   sjcl.codec.bits.toBitString(sjclBitArray) => string
+ *   sjcl.codec.bits.leftZeroBitCount(sjclBitArray) => number
+ *   sjcl.bitArray.xor(sjclBitArray1, sjclBitArray2) => sjclBitArray
+ * 
+ * (c) 2017 Steve Dekorte
+ * Licensed under the MIT License.
+ * 
+ */
+ 
 sjcl.codec.bits = {
 
   toBitString: function (bitArray) {

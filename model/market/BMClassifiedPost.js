@@ -27,7 +27,7 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
         this.addStoredSlots(["price", "title", "description"])
 
         //this.setImagesNode(BMNode.clone().setViewClassName("ImageView").setSubnodeProto("ImageNode"))
-        this.setImageDataURLs([])
+        this.setImageDataURLs([]) 
         
         this.setObjMsg(BMObjectMessage.clone())
 
@@ -121,18 +121,6 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
         this.objMsg().asyncPackContent() // will send notification when pow ready        
     },
     
-    /*
-    hasSent: function() {
-        console.log("this.powObj().isValid()  = " + this.powObj().isValid())
-        if (!this.powObj().isValid()) {
-            console.log("this.powObj() = ", this.powObj())
-        }
-        //console.log("this.objMsg().hasValidPow()  = " + this.objMsg().hasValidPow())
-        return this.objMsg().hasValidPow()
-        //return this.powObj().isValid() // hack
-    },
-    */
-    
     // pow notifications
     
     watchPow: function() {
@@ -166,7 +154,8 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
         if (note.sender() == this.powObj()) {
             //console.log("got powDone")
             this.unwatchPow()
-            if (this.objMsg().hasValidPow()) {
+            //if (this.objMsg().hasValidPow()) {
+            if (this.powObj().isValid()) {
                 this.objMsg().send()
                 this.setHasSent(true)
             }
@@ -231,9 +220,9 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
         var parts = []
     },
     
-    placeInRegion: function() {
+    placeInPathString: function(pathString) {
         var rootNode = App.shared()
-        var pathComponents = this.path().split("/")
+        var pathComponents = pathString.split("/")
         var region = rootNode.nodeAtSubpath(pathComponents)
         if (region) {
             console.log("inserting post into region path " + this.path())
@@ -241,8 +230,18 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
                 region.addItem(this)
             }
         } else {
-            throw "missing region for path " + this.path()
+            throw new Error("missing region for path " + this.path())
         }
+    },
+    
+    placeInRegion: function() {
+        this.placeInPathString(this.path())
+        return this
+    },
+    
+    placeInAll: function() {
+        this.placeInPathString("Classifieds/All")
+        return this
     },
     
     isEqual: function(aPost) {
@@ -254,17 +253,35 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
     },
     
     incrementPowTarget: function() {
-        console.log("Post incrementPowTarget")
+        //console.log("Post incrementPowTarget")
         this.prepareToSend() // shouldn't need this if there's a default BMPow hash
         this.powObj().incrementDifficulty()
         this.didUpdate()
     },
     
     decrementPowTarget: function() {
-        console.log("Post decrementPowTarget")
+        //console.log("Post decrementPowTarget")
         this.prepareToSend() // shouldn't need this if there's a default BMPow hash
         this.powObj().decrementDifficulty()
         this.didUpdate()
     },
+    
+    powDifficulty: function() {
+        return this.powObj().difficulty()
+    },
+    
+    compare: function(other) {
+        var d1 = this.powDifficulty()
+        var d2 = other.powDifficulty()
+        var p1 = this.postDate()
+        var p2 = other.postDate()
+        
+        var c = d1 - d2
+        if (c == 0) { 
+            c = p1 - p2;
+        }
+        
+        return c;
+    }
 
 })

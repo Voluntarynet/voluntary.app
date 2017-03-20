@@ -1,16 +1,56 @@
 
 BMRegion = BMNode.extend().newSlots({
     type: "BMRegion",
-    lazyChildrenDict: null
+    lazyChildrenDict: null,
+    allowsSubregions: true,
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)
         this.setNodeMinWidth(160)
         //this.setSubnodeProto(BMPost)
     },
+    
+    sumOfItemNotes: function() {
+        var sum = 0
+        this.items().forEach(function (item) {
+            if (item.type() == "BMRegion") {
+                var v = item.note()
+                if (v) {
+                    sum += v
+                }
+            } else {
+                sum += 1
+            }
+        })
+        return sum
+    },
+    
+    sortIfNeeded: function() {
+        if (this._items.length) {
+            if (this._items[0].compare) {
+                this._items = this._items.sort(function (a, b) {
+                    return a.compare(b)
+                })
+            }
+        }
+    },
+    
+    addItem: function(anItem) {
+        BMNode.addItem.apply(this, [anItem])
+        this.sortIfNeeded()
+        return anItem
+    },
 
+    didUpdate: function() {
+        this.setNote(this.sumOfItemNotes())
+        BMNode.didUpdate.apply(this)
+        return this
+    },
+    
     setNodeDict: function(aDict) {
         this.setTitle(aDict.name.titleized())
+        this.setAllowsSubregions(aDict._allowsSubregions != false) // All
+        //this.setNoteIsItemCount(aDict._allowsSubregions == false) // All
         this.addChildrenDicts(aDict.children)
         return this
     },
@@ -28,12 +68,17 @@ BMRegion = BMNode.extend().newSlots({
     },
     
     onLeavesAddDictChildren: function(aDict) {
+        if (!this.allowsSubregions()) {
+            return this
+        }
         if (this._items.length == 0) {
             this._lazyChildrenDict = aDict
+            //this._items.forEach(function (item) { item.setNoteIsItemCount(true) }) // Categories
             //this.addChildrenDicts(aDict.children)
         } else {
             this._items.forEach(function (item) { item.onLeavesAddDictChildren(aDict) })
         }
+        return this
     },
     
     setupCategoryLeaves: function() {

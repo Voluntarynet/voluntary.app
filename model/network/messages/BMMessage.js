@@ -59,7 +59,7 @@ BMMessage = BMFormNode.extend().newSlots({
             return proto.clone().setMsgDict(dict)
         }
         
-        throw "no message type '" + msgType + "'"
+        throw new Error("no message type '" + msgType + "'")
         return null
     },
 })

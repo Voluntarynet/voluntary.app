@@ -86,12 +86,12 @@ BMPayload = ideal.Proto.extend().newSlots({
     
     throwError: function(errorString) {
         this.setError(errorString)
-        throw errorString 
+        throw new Error(errorString) 
     },
     
     setData: function(d) {
         if (typeof(d) != "object") {
-            throw "attempt to set data to non object type of '" + typeof(d) + "'"
+            throw new Error("attempt to set data to non object type of '" + typeof(d) + "'")
         }
         this._data = d
         return this
@@ -100,12 +100,12 @@ BMPayload = ideal.Proto.extend().newSlots({
     assertType: function(typeName) {
         if (this._data == null) {
             console.log("payload = ", this)
-            throw "payload has null data "
+            throw new Error("payload has null data ")
         }
         
         if (typeof(this._data.type) != "string") {
             console.log(this._data)
-            throw "Payload data type is a " + typeof(this._data.type)
+            throw new Error("Payload data type is a " + typeof(this._data.type))
         }
         
         if (this._data.type != typeName) {
@@ -239,7 +239,7 @@ BMPayload = ideal.Proto.extend().newSlots({
     unpow: function() {
         // { type: "PowedPayload", payload: data, pow: aPow } -> data
 
-        console.log("BMPayload.unpow this.data() = ", this.data())
+        //console.log("BMPayload.unpow this.data() = ", this.data())
         this.assertType("PowedPayload")
 
         var hash = this.data().payload.toJsonStableString().sha256String();
@@ -247,7 +247,7 @@ BMPayload = ideal.Proto.extend().newSlots({
         var pow = BMPow.clone().setHash(hash).setPowHex(this.data().pow)
 
         if (pow.isValid()) {
-           pow.show()
+           //pow.show()
            this.setData(this.data().payload)
         } else {
             pow.show()

@@ -191,7 +191,6 @@ BMClassifiedPostView = NodeView.extend().newSlots({
     },
     
     decrementPowTarget: function() {
-        console.log("decrementPowTarget")
         this.node().decrementPowTarget()  
     },
 })

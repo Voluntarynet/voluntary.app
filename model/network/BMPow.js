@@ -30,7 +30,7 @@ BMPow = ideal.Proto.extend().newSlots({
     doneCallback: null,
     
     asyncEndTime: null,
-    asyncTimeoutPeriod: 60*1000,
+    asyncTimeoutPeriod: 10*60*1000,
     
     syncEndTime: null,
     syncTimeoutPeriod: 100,
@@ -130,14 +130,19 @@ BMPow = ideal.Proto.extend().newSlots({
     PRIVATE_findPowLoop: function() {
         var found = this.syncFind() // sync has a timeout period
         
-        if (found || this.asyncTimedOut()) {
+        if (this.asyncTimedOut()) {
+            throw new Error("Pow asyncTimedOut " + new Date().getTime() + " > "  + this.asyncEndTime())
+        }
+        
+        if (found) {
             console.log("BMPow: found difficulty " + this.difficulty() + " pow after " + this.tries() + " tries")
+            this.show()
             this.setIsFinding(false)
             this.setStatus(null)
             if (this.doneCallback()) { 
                 this.doneCallback().apply() 
             }
-            this._doneNote.post()
+            this._doneNote.post()                
         } else {
             if (this.isFinding()) {
                this.setStatus("generating level " + this.difficulty() + " stamp... " + this.highlightString(this.estimatedPercentageDone() + "%"))               
@@ -167,7 +172,6 @@ BMPow = ideal.Proto.extend().newSlots({
         for (var i = 0; i < max; i++) {
             this.pickRandomPow()
             if (this.isValid()) {
-                
                 this._tries += i;
                 return true;
             }
@@ -296,6 +300,15 @@ BMPow = ideal.Proto.extend().newSlots({
         return this
     },
     
+    makeDifficultyMatchPow: function() {
+        this.setDifficulty(this.leftZeroBitCount())
+        return this
+    },
+    
+    actualDifficulty: function() {
+        return this.leftZeroBitCount()    
+    },
+    
     isValid: function () {
         if (this._hash == null) { 
             //ShowStack();
@@ -303,14 +316,19 @@ BMPow = ideal.Proto.extend().newSlots({
             return false 
         }
             
+        return this.leftZeroBitCount() >= this.difficulty()
+        
+        /*
         if (this._isValid == null) {
             this._isValid = this.leftZeroBitCount() >= this.difficulty();
         }
         
         return this._isValid 
+        */
     },
     
     show: function () {
+        ShowStack()
         console.log("BMPow show")
         console.log("          pow: '" + this.powHex() + "'")
         console.log("         hash: '" + this.hash() + "'")

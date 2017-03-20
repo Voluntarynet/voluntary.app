@@ -54,10 +54,15 @@ BMObjectMessage = BMMessage.extend().newSlots({
         this.addStoredSlots(["msgType", "content", "packedContent", "msgHash"])
         //this.setViewClassName("BMMessageView")
         this.addAction("delete")
-        
         this.setPayload(BMPayload.clone())
-
         this.setupFields()
+    },
+    
+    duplicate: function() {
+        //var d = this.clone()
+        //d.payload().powObject().makeDifficultyMatchPow()
+        //return d
+        return this
     },
     
     setNode: function(aNode) {
@@ -76,7 +81,7 @@ BMObjectMessage = BMMessage.extend().newSlots({
     },
     
     setContent: function(v) {
-        console.log(this.type() + " setContent: ", v)
+        //console.log(this.type() + " setContent: ", v)
         this._content = v
         this.syncFields()
         return this
@@ -243,8 +248,8 @@ BMObjectMessage = BMMessage.extend().newSlots({
         
         if (this.receiverId()) {
             //var id = this.network().localIdentities().idWithPubKeyString(rec())
-            this.receiverId().inbox().addItemIfAbsent(this.clone())
-            this.senderId().sent().addItemIfAbsent(this.clone())
+            this.receiverId().inbox().addItemIfAbsent(this.duplicate())
+            this.senderId().sent().addItemIfAbsent(this.duplicate())
             return true
         }
         
@@ -257,6 +262,7 @@ BMObjectMessage = BMMessage.extend().newSlots({
             post.setObjMsg(this)
             post.calcHasSent()
             post.placeInRegion();
+            post.placeInAll();
         }
         
         return false
@@ -268,9 +274,8 @@ BMObjectMessage = BMMessage.extend().newSlots({
     },
        
     send: function() {
-        // check to make sure message is valid and throw if not?
-        // this would change out parentNode - so make a copy
-        this.network().messages().addMessage(this.clone()) 
+        // adding to Messages node this would change parentNode - so make a copy?
+        this.network().messages().addMessage(this.duplicate()) 
         return this
     },
     

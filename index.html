@@ -7,10 +7,10 @@
     <title></title>
     
     <link rel="stylesheet" href="_css.css">
-    <link rel="stylesheet" href="view/_css.css">
-    <link rel="stylesheet" href="lib/view/_css.css">
-    <link rel="stylesheet" href="lib/view/browser/_css.css">
-    <link rel="stylesheet" href="lib/view/browser/_area.css">
+    <link rel="stylesheet" href="src/view/_css.css">
+    <link rel="stylesheet" href="src/lib/view/_css.css">
+    <link rel="stylesheet" href="src/lib/view/browser/_css.css">
+    <link rel="stylesheet" href="src/lib/view/browser/_area.css">
     
   </head>
   
@@ -105,94 +105,94 @@ var loadSequentialJS = (function(document) {
 		        "external_libs/sjcl-master/core/random.js",
 		        "external_libs/sjcl-extras/codecBits.js",
 
+		        "external_libs/peerjs/peer.js",
+
+
 		        "data/categories.json",
 		        "data/us_cities.json",
 		        "data/countries.json",
 		        "data/currencies.json",
 
 
-		        "lib/ideal/ideal.js",
-		        "lib/ideal/ideal_plus.js",
+		        "src/lib/ideal/ideal.js",
+		        "src/lib/ideal/ideal_plus.js",
 
-		        "lib/notification/Notification.js",
-		        "lib/notification/NotificationCenter.js",
-		        "lib/notification/Observation.js",
+		        "src/lib/notification/Notification.js",
+		        "src/lib/notification/NotificationCenter.js",
+		        "src/lib/notification/Observation.js",
 
-		        "lib/peerjs/peer.js",
 
-		        "lib/node/BMNode.js",
-		        "lib/node/BMField.js",
-		        "lib/node/Nodes/BMStorableNode.js",
-		        "lib/node/Nodes/BMFormNode.js",
-		        "lib/node/Nodes/BMInfoNode.js",
-		        "lib/node/Nodes/BMImageNode.js",
-		        "lib/node/Nodes/BMNavNode.js",
-		        "lib/node/NodeStore.js",
+		        "src/lib/node/BMNode.js",
+		        "src/lib/node/BMField.js",
+		        "src/lib/node/Nodes/BMStorableNode.js",
+		        "src/lib/node/Nodes/BMFormNode.js",
+		        "src/lib/node/Nodes/BMInfoNode.js",
+		        "src/lib/node/Nodes/BMImageNode.js",
+		        "src/lib/node/Nodes/BMNavNode.js",
+		        "src/lib/node/NodeStore.js",
 
-		        "lib/model/BaseApp.js",
+		        "src/lib/model/BaseApp.js",
+		        //"lib/model/LocalStorageFolder.js",
+		        "src/lib/model/IndexedDBFolder.js",
 		        
 
-		        "model/network/BMMessages.js",
-		        "model/network/BMNetwork.js",
-		        "model/network/BMPayload.js",
-		        "model/network/BMPow.js",
+		        "src/model/network/BMMessages.js",
+		        "src/model/network/BMNetwork.js",
+		        "src/model/network/BMPayload.js",
+		        "src/model/network/BMPow.js",
 
-		        "model/network/webrtc/BMServerConnection.js",
-		        "model/network/webrtc/BMRServer.js",
-                "model/network/webrtc/BMRServers.js",
-                "model/network/webrtc/BMRemotePeer.js",
+		        "src/model/network/webrtc/BMServerConnection.js",
+		        "src/model/network/webrtc/BMRServer.js",
+                "src/model/network/webrtc/BMRServers.js",
+                "src/model/network/webrtc/BMRemotePeer.js",
                 
-                "model/network/messages/BMMessage.js",
-                "model/network/messages/BMAddrMessage.js",
-                "model/network/messages/BMGetDataMessage.js",
-                "model/network/messages/BMInvMessage.js",
-                "model/network/messages/BMObjectMessage.js",
-                "model/network/messages/BMPingMessage.js",
-                "model/network/messages/BMPongMessage.js",
+                "src/model/network/messages/BMMessage.js",
+                "src/model/network/messages/BMAddrMessage.js",
+                "src/model/network/messages/BMGetDataMessage.js",
+                "src/model/network/messages/BMInvMessage.js",
+                "src/model/network/messages/BMObjectMessage.js",
+                "src/model/network/messages/BMPingMessage.js",
+                "src/model/network/messages/BMPongMessage.js",
  
-                "lib/view/CSS.js",
-                "lib/view/Div.js",
-                "lib/view/NodeView.js",
-                "lib/view/ContentView.js",
-                "lib/view/GenericView.js",
-                //"lib/view/MenuManager.js",
-                "lib/view/Window.js",
+                "src/lib/view/CSS.js",
+                "src/lib/view/Div.js",
+                "src/lib/view/NodeView.js",
+                "src/lib/view/ContentView.js",
+                "src/lib/view/GenericView.js",
+                //"src/lib/view/MenuManager.js",
+                "src/lib/view/Window.js",
 
-                "lib/view/browser/Browser.js",
-                "lib/view/browser/BrowserColumn.js",
-                "lib/view/browser/BrowserColumnGroup.js",
-                "lib/view/browser/BrowserHeader.js",
-                "lib/view/browser/BrowserHeaderAction.js",
-                "lib/view/browser/BrowserRow.js",
-                "lib/view/browser/BrowserRowNote.js",
-                "lib/view/browser/BrowserRowSubtitle.js",
-                "lib/view/browser/BrowserRowTitle.js",
-                "lib/view/browser/BrowserFieldRow.js",
-		        "lib/view/ImageWellView.js",
-		        "lib/view/ImageView.js",
+                "src/lib/view/browser/Browser.js",
+                "src/lib/view/browser/BrowserColumn.js",
+                "src/lib/view/browser/BrowserColumnGroup.js",
+                "src/lib/view/browser/BrowserHeader.js",
+                "src/lib/view/browser/BrowserHeaderAction.js",
+                "src/lib/view/browser/BrowserRow.js",
+                "src/lib/view/browser/BrowserRowNote.js",
+                "src/lib/view/browser/BrowserRowSubtitle.js",
+                "src/lib/view/browser/BrowserRowTitle.js",
+                "src/lib/view/browser/BrowserFieldRow.js",
+		        "src/lib/view/ImageWellView.js",
+		        "src/lib/view/ImageView.js",
                 
-		        "view/BMDraftView.js",
-		        "view/BMLetterView.js",
-		        "view/BMMessageView.js",
-		        "view/BMPostView.js",
-		        "view/BMClassifiedPostView.js",
+		        "src/view/BMDraftView.js",
+		        "src/view/BMLetterView.js",
+		        "src/view/BMMessageView.js",
+		        "src/view/BMPostView.js",
+		        "src/view/BMClassifiedPostView.js",
 		        
-                "model/market/BMBuy.js",
-                "model/market/BMBuys.js",
-                "model/market/BMRegion.js",
-                "model/market/BMMarket.js",
-                "model/market/BMPost.js",
-                "model/market/BMSell.js",
-                "model/market/BMSells.js",
+                "src/model/market/BMBuy.js",
+                "src/model/market/BMBuys.js",
+                "src/model/market/BMRegion.js",
+                "src/model/market/BMMarket.js",
+                "src/model/market/BMPost.js",
+                "src/model/market/BMSell.js",
+                "src/model/market/BMSells.js",
 
-                "model/market/BMClassifiedPost.js",
-                "model/market/BMClassifiedPosts.js",
+                "src/model/market/BMClassifiedPost.js",
+                "src/model/market/BMClassifiedPosts.js",
 
-		        //"data.js",
-		        //"DCMessage.js",
-		        //"app.js"
-		        
-                "model/market/App.js",
+                "src/model/market/App.js",
 		    ]
 		
 		    loadSequentialJS(files, function () {

@@ -73,7 +73,7 @@ BMRemotePeer = BMNode.extend().newSlots({
                 self.setStatus("connect timeout")
                 self.didUpdate()
                 self.serverConnection().onRemotePeerClose(self)
-                console.log("connect timeout")
+                console.log(self.type() + " connect timeout")
             }   
         }, timeoutSeconds*1000)        
     },

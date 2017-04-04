@@ -18,6 +18,7 @@ BMMessage = BMFormNode.extend().newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
+		this.setShouldStore(true)
         this.setNodeMinWidth(650)
         this.setViewClassName("BMMessageView")
     },

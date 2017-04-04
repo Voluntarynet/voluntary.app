@@ -49,6 +49,7 @@ BMObjectMessage = BMMessage.extend().newSlots({
 }).setSlots({
     init: function () {
         BMMessage.init.apply(this)
+		this.setShouldStoreItems(false)
         this.setMsgType("object")
         this.addStoredSlots(["msgType", "content", "packedContent", "msgHash"])
         //this.setViewClassName("BMMessageView")
@@ -58,6 +59,7 @@ BMObjectMessage = BMMessage.extend().newSlots({
     },
     
     duplicate: function() {
+		throw new Error("not sure how to duplicate properly")
         //var d = this.clone()
         //return d
         return this
@@ -284,7 +286,8 @@ BMObjectMessage = BMMessage.extend().newSlots({
        
     send: function() {
         // adding to Messages node this would change parentNode - so make a copy?
-        this.network().messages().addMessage(this.duplicate()) 
+		this.markDirty()
+        this.network().messages().addMessage(this)
         return this
     },
     

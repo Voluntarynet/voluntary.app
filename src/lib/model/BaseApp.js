@@ -18,23 +18,25 @@ BaseApp = BMNavNode.extend().newSlots({
     
 }).setSlots({
     init: function () {
-        BMStorableNode.init.apply(this)
+        BMNavNode.init.apply(this)
         this.setNodeMinWidth(150)
         
         
         // to avoid loop when instantiating on shared call
         var self = this
-        setTimeout(function () { 
-            self.setup() 
-            self.setupWindow()
-            //MenuManager.setup()            
-            self.appLog("app start\n")
-            //self.showVersions()
-        }, 1)
+        //setTimeout(function () { self.didPrepare() }, 1)
         
+		NodeStore.shared().asyncOpen(function () { self.didOpenStore() })
         this.clearAppLog()
-        
     },
+
+	didOpenStore: function() {
+		//NodeStore.shared().clear()
+        this.setup() 
+        this.setupWindow()
+        //MenuManager.setup()            
+        this.appLog("app start\n")	
+	},
     
     setup: function() {
         //console.log("baseSetup")

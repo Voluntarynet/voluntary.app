@@ -18,6 +18,9 @@ BMMessages = BMStorableNode.extend().newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
+		this.setShouldStore(true)
+		this.setShouldStoreItems(true)
+		
         this.setTitle("Messages")
         this.setIndex({})
         this.setNodeMinWidth(150)
@@ -48,19 +51,7 @@ BMMessages = BMStorableNode.extend().newSlots({
     },
     
     validateMsg: function(msg) {
-        return true;
-        
-        /*
-        if (!msg.hasValidPow()) {
-            console.log("rejecting message with invalid pow")
-            // check should be at remotePeer level
-            return 
-        }
-        */    
-    },
-        
-    addMessage: function(msg) {
-        
+
         if (msg.actualDifficulty() < this.globalMinDifficulty()) {
             console.log("rejecting message '" + msg.msgHash() +"' with pow of " + msg.actualDifficulty() + " < globalMinDifficulty of " + this.globalMinDifficulty())
             // check should be at remotePeer level
@@ -77,37 +68,56 @@ BMMessages = BMStorableNode.extend().newSlots({
             console.log("attempt to add duplicate message")
             return false
         }
-        
-        
-        msg.place()
-        
-        console.log("added a new message, broadcasting to peers")
 
+   		return true
+    },
+        
+    addMessage: function(msg) {
+
+        if (!this.validateMsg(msg)) {
+            return false
+        }
+        
         this.addItem(msg)
-        
-        this._index[msg.msgHash()] = msg
-        this.notifyChange() // ?
-        this.didUpdate()
-        
-        // tell peers
-        var peers = this.network().connectedRemotePeers()
-        console.log("broadcasting to " + peers.length + " peers")
-        peers.forEach(function (peer) {
-            peer.addedObjectMsg(msg)
-        })
-        
-        // TODO: store message
-        //if (!this.storeFolder().hasKey(msg.msgHash())) {
-            this.subnodeProto().protoSoup().atPut(msg.msgHash(), msg.msgDict())
-        //}
+        this.broadcastMessage(msg)
         
         return true
     },
+
+	setItems: function(items) {
+		BMStorableNode.setItems.apply(this, [items])
+		
+		var self = this
+		items.forEach(function (item) {
+			self.didAddMsg(item)
+		})
+	},
+
+	addItem: function(msg) {
+		console.log(this.type() + " addItem " + msg.pid())
+		BMStorableNode.addItem.apply(this, [msg])
+	},
+	
+	didAddMsg: function(msg) {
+        msg.place()
+
+        this._index[msg.msgHash()] = msg
+        this.notifyChange()
+        this.didUpdate()
+        
+	},
+
+	broadcastMessage: function(msg) {
+	    // tell peers
+	    var peers = this.network().connectedRemotePeers()
+	    console.log("broadcasting to " + peers.length + " peers")
+	    peers.forEach(function (peer) {
+	        peer.addedObjectMsg(msg)
+	    })	
+	},
     
     removeMessage: function(msg) {
-        this.subnodeProto().protoSoup().asyncRemoveAt(msg.msgHash())
-
-        this.messages().remove(msg)
+		this.removeItem(msg) // garbage collector will remove persisted version
         delete this._index[msg.msgHash()]
         return this
     },
@@ -126,7 +136,7 @@ BMMessages = BMStorableNode.extend().newSlots({
     
     asyncLoad: function(callback) {
         var self = this
-
+/*
         this.subnodeProto().protoSoup().asyncValues(function (values) {
             values.forEach(function(json) {
                 //console.log("load json ", json)
@@ -141,7 +151,7 @@ BMMessages = BMStorableNode.extend().newSlots({
                 callback()
             }
         })
-
+*/
         return this
     },
     
@@ -246,5 +256,10 @@ BMMessages = BMStorableNode.extend().newSlots({
         })
         return invMsg
     },
-    
+
+	didLoadFromStore: function() {
+		//console.log(this.type() + " didLoadFromStore")
+		this.updateIndex()
+	},
+
 })

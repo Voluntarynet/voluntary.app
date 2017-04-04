@@ -5,7 +5,7 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
     price: 0,
     currency: "BTC",
     description: null, // string
-    path: null, // string
+    path: "", // string
     isEditable: false,
     objMsg: null,
     
@@ -15,9 +15,11 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
    // imagesNode:null,
     imageDataURLs: null,
     hasSent: false,
+
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
+		this.setShouldStore(true)
         this.setActions(["delete"])
         this.setNodeMinWidth(550)
         

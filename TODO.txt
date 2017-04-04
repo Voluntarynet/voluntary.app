@@ -1,0 +1,39 @@
+
+
+- fix storage of messages
+
+- make hasSent a property of Sell
+- sell add makes post uneducable
+
+- persist sell
+  - soup system?
+
+- persist on edit, using didUpdate?
+
+
+PERSISTENCE
+
+setNodeDict()
+nodeDict()
+
+
+SOUPS
+
+If a node has a soupName, open a folder for it.
+On addItem, write item to soup.
+On removeItem, remove item from soup.
+
+When writing item to soup, give it a soupId (GUID).
+Make sure to read/set soupId when reading item.
+
+Named soups
+
+Messages
+
+Sells
+
+Servers
+
+Identities
+
+[identity]/Messages

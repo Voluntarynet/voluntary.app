@@ -5,6 +5,9 @@ BMSell = BMStorableNode.extend().newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
+		this.setShouldStore(true)
+		this.setShouldStoreItems(true)
+		
         this.setTitle("Sell")
         this.setActions(["delete"])
         //this.setSubtitle(Math.floor(Math.random()*10000))
@@ -23,7 +26,7 @@ BMSell = BMStorableNode.extend().newSlots({
     subtitle: function() {
         return this.post().subtitle()
     },
-    
+    /*
     serialize: function() {
         var dict = {}
         dict.postDict = this.post().postDict()
@@ -33,4 +36,5 @@ BMSell = BMStorableNode.extend().newSlots({
     unserialize: function(dict) {
         
     },
+*/
 })

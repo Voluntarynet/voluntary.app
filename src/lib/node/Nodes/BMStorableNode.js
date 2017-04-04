@@ -2,7 +2,7 @@
 BMStorableNode = BMNode.extend().newSlots({
     type: "BMStorableNode",
     storedSlots: null,
-    shouldSerializeChildren: true,
+    shouldStoreItems: true,
     loadsUnionOfChildren: false,
     isUnserializing: false,
 }).setSlots({
@@ -29,21 +29,11 @@ BMStorableNode = BMNode.extend().newSlots({
     
     addStoredSlot: function(slotName) {
         this.storedSlots().appendIfAbsent(slotName)
-        /*
-        if (this.pdbWatchSlot) {
-            this.pdbWatchSlot(slotName)
-        }
-        */
         return this
     },
     
     removeStoredSlot: function(slotName) {
         this.storedSlots().remove(slotName)
-        /*
-        if (this.pdbUnwatchSlot) {
-            this.pdbUnwatchSlot(slotName)
-        }
-        */
         return this
     },
 
@@ -73,7 +63,7 @@ BMStorableNode = BMNode.extend().newSlots({
         var dict = { }
         dict.type = this.type()
                 
-        if (this.items().length && this.shouldSerializeChildren()) {
+        if (this.items().length && this.shouldStoreItems()) {
             dict.children = this.itemPids()
         }
         

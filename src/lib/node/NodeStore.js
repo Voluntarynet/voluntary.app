@@ -1,37 +1,40 @@
 /*
-    NodeStore: an JSON object database 
+    NodeStore: a JSON object database with automatic garbage collection 
+	and syncing on event cycle via marking objects as dirty and only writing each once
+	
     stores objects as dictionaries in individual JSON files in a single folder
     
     Overview:
     
-        When the program starts, it should tell the store which object it wants to use
-        as the root (for the persistence garbage collector):
+		The collector can have multiple roots. Any object stored with a pid (persistent Id) that begins
+		with an underscore will be treated as a root object and always marked when collecting garbage.
+		
+        Example:
  
-                var root = BMNode.clone()
-                NodeStore.shared().setRootObject(root)
+				var people = NodeStore.rootInstanceWithPidForProto("_people", PeopleNode) 
+		
+		This instantiates the object if it's not persisted, loads it if it is, and returns any already 
+		unpersisted instance if there is one.
+				
+				people.loadIfPresent() // will add it to active objects list if missing?
+				people.markDirty() // to ensure we'll save it if it's the first time?
+
                 
-        Whenever a BNNode instanceis created, it's init method tells the store of 
-        it's existence ( addActiveObject(aNode) ) and mark itself as dirty.
+        Whenever a BNStorableNode instance is created, it's init method tells the store of 
+        it's existence ( addActiveObject(aNode) ) and marks itself as dirty.
         
-        All dirty objects are persisted on the next event loop. When an item
-        creates the children in it's nodeDict, if the 
-    
-    
-    Limitations: 
-    
-        code currenlty assumes < 100K objects stored at a given time
-        and that each object is typically a few K and rarely more than a few MB
+        All dirty objects are persisted on the next event loop. Doing this in the event loop
+		avoids multiple writes for multiple changes within a given loop.
     
     How it works: 
     
         Persistent ids:
     
         each object is assigned a _pid property when persisted 
-        _pid is a unique (persistent id) number for the object
-        an object's item name is the pid number
+        _pid is a unique (persistent id) number (in string form) for the object
     
-        if a dictionary value points to string or number, it's value is stored in json
-        otherwise, it's value is stored as a pid reference in a dictionary 
+        If a dictionary value points to string or number, it's value is stored in json.
+        Otherwise, it's value is stored as a pid reference in a dictionary 
         like { _pid: pidNum }. 
     
     Writing and reading objects:
@@ -95,76 +98,76 @@
 
 // -----------------------------------------------
 
-/*
-ideal.Proto.pdbWatchSlot = function(name) {
- 	var privateName = "_" + name;
-	this["set" + name.capitalized()] = function(newValue)
-	{
-	    this[privateName] = newValue;
-        NodeStore.shared().addDirtyObject(this)
-		return this;
-	}
-}
-
-ideal.Proto.pdbUnwatchSlot = function(name) {
- 	var privateName = "_" + name;
-	this["set" + name.capitalized()] = function(newValue)
-	{
-	    this[privateName] = newValue;
-		return this;
-	}
-}
-*/
-
-// -----------------------------------------------
-
 //NodeStore.shared().setFolder(window.app.storageFolder().folderNamed("pdb"))   
 
 NodeStore = ideal.Proto.extend().newSlots({
     type: "NodeStore",
     folderName: "NodeStore",
     folder: null,
-    rootObject: null,
     
     dirtyObjects: null,
     hasTimeout: false,
     
     activeObjectsDict: null,
     storingObjects: null,
-    debug: true,
+    debug: false,
+
+	sdb: null,
 }).setSlots({
     init: function () {
-        this.setDirtyObjects([])
+        this.setDirtyObjects({})
         this.setActiveObjectsDict({})
+		this.setSdb(SyncDB.clone())
+		//this.asyncOpen()
     },
+
+	asyncOpen: function(callback) {
+		var self = this
+		this.sdb().asyncOpen(function () {
+			self.didOpen()
+			if (callback) {
+				callback()
+			}
+		})		
+	},
+	
+	didOpen: function() {
+		if (this.debug()) {
+			this.show()
+			this.collect()
+			this.show()
+		}
+	},
     
     shared: function() {
         if (!this._shared) {
             this._shared = this.clone()
             //this._shared.setFolder(window.app.storageFolder().folderNamed(this.folderName())) 
-            ShowStack()
-            console.log("localStorage = ", this.asJson())
+            //ShowStack()
         }
         return this._shared
     },
-    
-    setFolder: function(aFolder) {
-        this._folder = aFolder
-        this._folder.createIfAbsent()
-        this._countFile = null
-        return this
-    },
-    
+
+	rootInstanceWithPidForProto: function(pid, proto) {		
+		if (this.hasObjectForPid(pid)) {
+			return this.objectForPid(pid)
+		} 
+		
+		return  proto.clone().setPid(pid)
+	},
+	
     // dirty objects
     
     addDirtyObject: function(obj) {
         // dirty objects list won't be huge, so a list is ok
         
-        ShowStack()
-        this.debugLog("addDirtyObject(" + obj.pid() + ")")
         
-        if (!this._dirtyObjects.contains(obj)) {
-            this._dirtyObjects.push(obj)
+		var pid = obj.pid()
+        if (!(pid in this._dirtyObjects)) {
+	       // this.debugLog("addDirtyObject(" + obj.pid() + ")")
+	        //ShowStack()
+
+            this._dirtyObjects[pid] = obj
             this.setTimeoutIfNeeded()
         }
         
@@ -188,78 +191,78 @@ NodeStore = ideal.Proto.extend().newSlots({
     
     debugLog: function(s) {
         if (this.debug()) {
-            console.log(s)
+            console.log(this.type() + ": " + s)
         }
     },
     
     storeDirtyObjects: function() {
+	
+		if (!this.sdb().isOpen()) { // delay until it's open
+			throw new Error(this.type() + " storeDirtyObjects but db not open")
+		}
+		
         // it's ok to add dirty objects via setPid() while this is
         // working as it will pick it up and won't cause a loop
         
         //console.log("NodeStore.storeDirtyObjects")
-        var storeCount = 0
+
+        var totalStoreCount = 0
+
+		while (true) {
+	        var storeCount = 0
+			var dirtyBucket = this._dirtyObjects
+        	this._dirtyObjects = {}
+
+	        for (pid in dirtyBucket) {
+                if (dirtyBucket.hasOwnProperty(pid)) {
+		            var obj = dirtyBucket[pid]
+		            this.storeObject(obj)
+		            storeCount ++
+				}
+	        }
+	
+			totalStoreCount += storeCount
+			
+			if (storeCount == 0) {
+				break
+			}
+		} 
         
-        while (true) {
-            var obj = this._dirtyObjects.pop()
-            if (obj) {
-                this.storeObject(obj)
-                storeCount ++
-            } else {
-                break; 
-            }
-        }
-        
-        this.debugLog("NodeStore.storeDirtyObjects stored " +  storeCount + " objects")
-        return storeCount
+        this.debugLog("NodeStore.storeDirtyObjects stored " +  totalStoreCount + " objects")
+		if (this.debug) {
+			this.show()
+		}
+		setTimeout( () => {
+			this.sdb().verifySync()
+		})
+        return totalStoreCount
     },
     
-    newUUID: function() {
-      function s4() {
-        return Math.floor((1 + Math.random()) * 0x10000)
-          .toString(16)
-          .substring(1);
-      }
-      return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-        s4() + '-' + s4() + s4() + s4();
+    newPid: function() {
+		return Math.floor(Math.random() * Math.pow(10, 17)).toString()
     },
 
     pidOfObj: function(obj) {
         if (!("_pid" in obj) || obj._pid == null) {
-            obj._pid = obj.type() + "_" + this.newUUID()
+            obj._pid = obj.type() + "_" + this.newPid()
         }   
         return obj._pid     
     },
     
-    hasRecordForObject: function(obj) {
-        return localStorage.getItem(obj.pid()) != null
-    },
-    
     storeObject: function(obj) {
-        localStorage.setItem(obj.pid(), JSON.stringify(obj.nodeDict()))
+        this.debugLog("storeObject(" + obj.pid() + ") = " + JSON.stringify(obj.nodeDict()))
+        this.sdb().atPut(obj.pid(), JSON.stringify(obj.nodeDict()))
         
-        //ShowStack()
-        //this.debugLog("storeObject(" + obj.pid() + ")")
         
         /*
-        this happens automatically 
+        this happens automatically: 
         - when item pids are requested for serialization, 
         they are added to dirty when pid is assigned
-        
-        var self = this
-        obj.items().forEach(function (item) {
-            self.storeObjectIfAbsent(item)
-        })
-        this.addActiveObject(obj)
         */
         
         return this
     },
     
-    /*
-    fileAtPid: function(pid) {
-        return this.folder().fileNamed(pid)       
-    },
-    */
     
     // reading
     
@@ -281,44 +284,19 @@ NodeStore = ideal.Proto.extend().newSlots({
         }
         
         return false        
-    },
- 
-    // root
-    
-    setRootObject: function(obj) {
-        this.collect()
-        this._rootObject = obj
-        obj.setPid("_root")
-        obj.loadIfPresent()
-        
-        // to ensure we'll save it if it's the first time
-        // should we check if present?
-        // if (!this.hasRecordForObject(obj)) {
-        obj.markDirty() 
-        // }
-        
-        return this
-    },
-    
-    load: function() {
-        this.debugLog("read root")
-        this.loadObject(this.rootObject())  
-        return this      
-    },
-    
-    store: function() {
-        this.debugLog("store root")
-        this.storeObject(this.rootObject())        
-        return this      
-    },
-    
+    },    
+  
     nodeDictAtPid: function(pid) {
-        var v = localStorage.getItem(pid)
+        var v = this.sdb().at(pid)
         if (v == null) { 
             return null 
         }        
         return JSON.parse(v)
     },
+
+	hasObjectForPid: function(pid) {
+		return this.sdb().hasKey(pid)
+	},
     
     objectForPid: function(pid) {
         if (pid == "null") {
@@ -345,7 +323,11 @@ NodeStore = ideal.Proto.extend().newSlots({
         var obj = proto.clone()
         // need to set pid before dict to handle circular refs
         obj.setPid(pid) 
+		//console.log(" nodeDict = ", nodeDict)
         obj.setNodeDict(nodeDict)
+
+        //this.debugLog("objectForPid(" + pid + ")")
+
         return obj
     },
     
@@ -469,6 +451,15 @@ NodeStore = ideal.Proto.extend().newSlots({
     },
     
     // garbage collection
+
+	rootPids: function() {
+		// pids beginning with _ are considered root
+		// to delete them you'll need to call removeEntryForPid()
+		
+		return this.sdb().keys().select(function (pid) {
+			return pid[0] == "_"
+		})
+	},
     
     collect: function() {
         // this is an on-disk collection
@@ -476,7 +467,11 @@ NodeStore = ideal.Proto.extend().newSlots({
         
         this.debugLog("--- begin collect ---")
         this._marked = {}
-        this.markPid("_root")
+        //this.markPid("_root")
+		var self = this
+		this.rootPids().forEach(function (rootPid) {
+	        self.markPid(rootPid)
+		})
         var deleteCount = this.sweep()
         this._marked = null
         //if (deleteCount) {
@@ -496,65 +491,77 @@ NodeStore = ideal.Proto.extend().newSlots({
                 
         var self = this
         var childPids = this.pidRefsFromPid(pid)
-       // console.trace(pid + " refs " + JSON.stringify(childPids))
+       	console.log(pid + " refs " + JSON.stringify(childPids))
         
         childPids.forEach(function(childPid) {
             self.markPid(childPid)
         })
     },
     
-    sweep: function() {
-        // delete all unmarked files
+    sweep: function(deleteCount) {
+        // delete all unmarked records
         var self = this
         var deleteCount = 0
-        
-        for (var i = localStorage.length; i > -1; i--)  {
-           var pid = localStorage.key(i)
+        var pids = this.sdb().keys()
+
+         pids.forEach(function(pid) {
             if (self._marked[pid] != true) {
                 self.debugLog("deletePid(" + pid + ")")
-                localStorage.removeItem(pid)
-                deleteCount ++
-            }            
-        }
-        /*
-        var pidFiles = this.folder().files()
-        pidFiles.forEach(function(file) {
-            var pid = file.name()
-            if (self._marked[pid] != true) {
-                self.debugLog("deletePid(" + pid + ")")
-                file.delete()
+                self.sdb().removeAt(pid)
                 deleteCount ++
             } 
-        })
-        return
-        */ deleteCount
+         })
+            
+         return deleteCount
     },
     
     // transactions
     
     begin: function() {
-        
+        throw "transactions not implemented yet"
         
     },
     
     commit: function() {
-        
+        throw "transactions not implemented yet"
     },
     
     asJson: function() {
-        var dict = {}
-        
-        for (var i = localStorage.length; i > -1; i--)  {
-           var pid = localStorage.key(i)
-           dict[pid] = localStorage.getItem(pid)    
-        }
-        return dict
+		this.sdb().asJson()
     },
     
     clear: function() {
         console.log("NodeStore clearing all data!")
-        localStorage.clear();
-        ShowStack()
-        console.log("localStorage = ", this.asJson())
-    }
+		throw new Error("NodeStore clearing all data!")
+        this.sdb().clear();
+    },
+
+	show: function() {
+		console.log("--- NodeStore show ---")
+		var self = this
+		this.rootPids().forEach(function (pid) {
+			self.showPid(pid, 1, 3)
+		})
+		console.log("----------------------")
+		//this.sdb().idb().show()
+		return this
+	},
+	
+	showPid: function(pid, level, maxLevel) {
+		if (level > maxLevel) {
+			return
+		}
+		
+		var indent = "   ".repeat(level) 
+        var nodeDict = this.nodeDictAtPid(pid)
+		console.log(indent + pid + ": " + JSON.stringify(nodeDict))
+		
+		if (nodeDict.children) {
+			var self = this
+			nodeDict.children.forEach(function (childPid) {
+				self.showPid(childPid, level + 1, maxLevel)
+			})
+		}
+
+	},
 })

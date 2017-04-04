@@ -33,6 +33,7 @@ BMNode = ideal.Proto.extend().newSlots({
     nodeFieldProperty: null,
     
     pid: null,
+	shouldStore: false,
     
 }).setSlots({
     init: function () {
@@ -322,6 +323,29 @@ BMNode = ideal.Proto.extend().newSlots({
         })
     },
     
+    
+    // items
+    
+    
+    itemsLength: function() {
+        return this._items.length
+    },
+    
+    setItems: function(items) {
+        this._items = items
+        //this.verifyItemsHaveParentNodes()
+        return this
+    },
+
+    
+    verifyItemsHaveParentNodes: function() {
+        var missing = this.items().detect(function (item) { return !item.parentNode() })
+        if (missing) {
+            throw new Error("missing parent node on item " + missing.type())
+        }
+        return this
+    },
+    
     // -----------------------------------------------
     // persistence
     // -----------------------------------------------
@@ -354,6 +378,11 @@ BMNode = ideal.Proto.extend().newSlots({
     },
     
     pid: function() {
+		if (!this.shouldStore()) {
+			
+			throw new Error("attempt to prepare to store a node of type '" + this.type() + "' which has shouldStore == false, use this.setShouldStore(true)")
+		}
+		
         if (!this._pid) {
             this.assignPid()
         }
@@ -362,7 +391,9 @@ BMNode = ideal.Proto.extend().newSlots({
     
     markDirty: function() {
         //console.trace("markDirty(" + this.title() + " " + this.pid() + ")")
-        //NodeStore.shared().addDirtyObject(this)
+		if (this.shouldStore()) {
+        	NodeStore.shared().addDirtyObject(this)
+		}
         return this
     },
     
@@ -377,9 +408,13 @@ BMNode = ideal.Proto.extend().newSlots({
     
     setNodeDict: function(aDict) {
         // ignore - BMStorableNode will override 
+		this.didLoadFromStore()
         return this
     },
  
+	didLoadFromStore: function() {
+		console.log(this.type() + " didLoadFromStore")
+	},
  
     // store
     
@@ -389,7 +424,7 @@ BMNode = ideal.Proto.extend().newSlots({
     },
     
     existsInStore: function() {
-        return NodeStore.shared().hasRecordForObject(this)
+        return localStorage.getItem(obj.pid()) != null
     },
     
     loadIfPresent: function() {
@@ -404,15 +439,10 @@ BMNode = ideal.Proto.extend().newSlots({
             this.store()
         }
         return this
-    },    
-    
-    // peristent items
-    
-    
-    itemsLength: function() {
-        return this._items.length
     },
-    
+
+	// StorableNode
+	
     itemPids: function() {
         var pids = this.items().map(function (item) { 
             return item.pid()
@@ -421,59 +451,14 @@ BMNode = ideal.Proto.extend().newSlots({
         return pids
     },
     
-    setItems: function(items) {
-        this._items = items
-        //this.verifyItemsHaveParentNodes()
-        return this
-    },
-    
     setItemPids: function(pids) {
         var self = this
         var items = pids.map(function(pid) {
             return NodeStore.shared().objectForPid(pid).setParentNode(self)
         })
+
+		//items.forEach(function (item) { self.addItem(item) }) // this will cause an infinite loop?
         this.setItems(items)
         return this
-    },
-    
-    verifyItemsHaveParentNodes: function() {
-        var missing = this.items().detect(function (item) { return !item.parentNode() })
-        if (missing) {
-            throw new Error("missing parent node on item " + missing.type())
-        }
-        return this
-    },
-    
-    // classSoup storage
-    
-    protoSoup: function() {
-        if (!this._protoSoup) {
-            this._protoSoup = IndexedDBFolder.root().folderAt(this.type())
-        }
-        return this._protoSoup
-    },
-    
-    asyncLoadItemSoup: function(callback) {
-        var self = this
-        var itemProto = this.subnodeProto()
-        
-        itemProto.protoSoup().asyncValues(function (values) {
-            values.forEach(function(json) {
-                var item = itemProto.clone().uncanned(json)
-                self.addItem(item)
-            })
-            
-            if (callback) {
-                callback()
-            }
-        })
-    },
-    
-    asyncStoreInSoup: function(callback) {
-        this.protoSoup().atPut(this.uuid(), this.canned())
-        
-        if (callback) {
-            callback()
-        }
     },
 })

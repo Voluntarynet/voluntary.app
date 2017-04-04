@@ -102,13 +102,18 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
         this.objMsg().send()
     },
 
-    prepareToSend: function() {
-        this.setUuid(GUID()) 
+	choosePostDate: function() {
         var currentTime = new Date().getTime()
         // add a random time interval of 5 mintues so a receiving node
         // can't guess that a sender is the source if the dt is very small
         var randomInterval = Math.random() * 1000 * 60 * 5; 
-        this.setPostDate(currentTime + randomInterval)
+        this.setPostDate(currentTime + randomInterval)	
+		return this	
+	},
+	
+    prepareToSend: function() {
+        this.setUuid(GUID()) 
+		this.choosePostDate()
         this.objMsg().setContent(this.postDict())
         return this
     },

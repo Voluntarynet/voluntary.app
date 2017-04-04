@@ -72,8 +72,10 @@ BMMessages = BMStorableNode.extend().newSlots({
    		return true
     },
         
-    addMessage: function(msg) {
-
+    addMessage: function(msg) { // validate and broadcast
+	
+		console.log(this.type() + " addMessage ", msg)
+		
         if (!this.validateMsg(msg)) {
             return false
         }
@@ -96,6 +98,8 @@ BMMessages = BMStorableNode.extend().newSlots({
 	addItem: function(msg) {
 		console.log(this.type() + " addItem " + msg.pid())
 		BMStorableNode.addItem.apply(this, [msg])
+		this.didAddMsg(msg)
+		return this
 	},
 	
 	didAddMsg: function(msg) {
@@ -104,7 +108,6 @@ BMMessages = BMStorableNode.extend().newSlots({
         this._index[msg.msgHash()] = msg
         this.notifyChange()
         this.didUpdate()
-        
 	},
 
 	broadcastMessage: function(msg) {

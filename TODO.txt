@@ -1,39 +1,23 @@
 
 
-- fix storage of messages
+BASICS
+
 
 - make hasSent a property of Sell
-- sell add makes post uneducable
-
-- persist sell
-  - soup system?
-
-- persist on edit, using didUpdate?
+  - have Sell set editable on post somehow?
 
 
-PERSISTENCE
+MORE
 
-setNodeDict()
-nodeDict()
+- remove post delete action when under a sale?
+- image expansion 
+- image resizing (adjust jpg compression until <= size target)
 
+EXTRA
 
-SOUPS
+- support encrypted message objects
+- support identities
 
-If a node has a soupName, open a folder for it.
-On addItem, write item to soup.
-On removeItem, remove item from soup.
-
-When writing item to soup, give it a soupId (GUID).
-Make sure to read/set soupId when reading item.
-
-Named soups
-
-Messages
-
-Sells
-
-Servers
-
-Identities
+ObjectMessages with receiverId bathing a local identity placed in:
 
 [identity]/Messages

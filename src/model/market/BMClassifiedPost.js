@@ -26,7 +26,7 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
         this.setTitle("Untitled")
         this.setPrice(0)
         this.setDescription("Item or service description")
-        this.addStoredSlots(["price", "title", "description"])
+        this.addStoredSlots(["price", "title", "description", "objMsg"])
 
         //this.setImagesNode(BMNode.clone().setViewClassName("ImageView").setSubnodeProto("ImageNode"))
         this.setImageDataURLs([]) 
@@ -152,9 +152,9 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
         }
     },
     
-    setupAsSent: function() {
+    setupFromDict: function() {
         this.objMsg().setContent(this.postDict())
-        this.setHasSent(true)
+        //this.setHasSent(true)
         return this    
     },
     

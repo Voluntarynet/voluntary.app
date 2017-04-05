@@ -121,12 +121,14 @@ BMStorableNode = BMNode.extend().newSlots({
         return this
     },
     
-    setNodeDict: function (aDict) {       
+    setNodeDict: function (aDict) {   
+	    BMNode.setNodeDict.apply(this, [aDict])
         this.setIsUnserializing(true) 
         this.setNodeDictForProperties(aDict)
         this.setNodeDictForChildren(aDict)
         this.didLoad() // a chance to finish
         this.setIsUnserializing(false) 
+		this.didLoadFromStore()
         return this
     },
     

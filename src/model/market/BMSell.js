@@ -16,11 +16,18 @@ BMSell = BMStorableNode.extend().newSlots({
         
         this.setPost(BMClassifiedPost.clone())
         this.addItem(this.post())
+		this.post().setIsEditable(true)
     },
 
     
     subtitle: function() {
         return this.post().subtitle()
     },
+
+	didLoadFromStore: function() {
+		console.log("BMSell didLoadFromStore")
+		this.post().setIsEditable(true)
+	},
+
 
 })

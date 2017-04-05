@@ -1,10 +1,24 @@
 
+BUGS
+
+New msg not placed
+
+
+TESTING
+
+If post in test category, lorel ipsum it.
+
 
 BASICS
 
 
 - make hasSent a property of Sell
   - have Sell set editable on post somehow?
+
+
+STAMPS
+
+- calculate difficulty for category and msg size
 
 
 MORE
@@ -18,6 +32,10 @@ EXTRA
 - support encrypted message objects
 - support identities
 
-ObjectMessages with receiverId bathing a local identity placed in:
+ObjectMessages with receiverId matching a local identity placed in:
 
 [identity]/Messages
+
+If they reference a sell thread, place in:
+
+Identity/Sales/[sale]/Messages

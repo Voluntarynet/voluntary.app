@@ -23,8 +23,6 @@ BMNetwork = BMStorableNode.extend().newSlots({
 		this.addItem(this.servers())
 		this.setMessages(NodeStore.shared().rootInstanceWithPidForProto("_messages", BMMessages))
 		this.addItem(this.messages())
-		
-        this.messages().asyncLoad()
     },
     
     connectedRemotePeers: function () {

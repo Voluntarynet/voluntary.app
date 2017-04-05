@@ -77,37 +77,44 @@ BMMessages = BMStorableNode.extend().newSlots({
 		console.log(this.type() + " addMessage ", msg)
 		
         if (!this.validateMsg(msg)) {
+			console.log(this.type() + " INVALID MESSAGE")
             return false
         }
         
         this.addItem(msg)
+		msg.place()
         this.broadcastMessage(msg)
         
         return true
     },
 
-	setItems: function(items) {
-		BMStorableNode.setItems.apply(this, [items])
-		
+	didLoadFromStore: function() {
+		console.log(this.type() + " didLoadFromStore items length = ", this.items().length)
+		this.updateIndex()
+		this.placeAllItems()
+	},
+	
+	placeAllItems: function() {
 		var self = this
-		items.forEach(function (item) {
-			self.didAddMsg(item)
+		this.items().forEach(function (msg) {
+			console.log(self.type() + " placing ", msg)
+			msg.place()
 		})
 	},
 
 	addItem: function(msg) {
 		console.log(this.type() + " addItem " + msg.pid())
 		BMStorableNode.addItem.apply(this, [msg])
-		this.didAddMsg(msg)
+		
+        this.addMessageToIndex(msg)
+        this.notifyChange()
+        this.didUpdate()
+
 		return this
 	},
 	
-	didAddMsg: function(msg) {
-        msg.place()
-
+	addMessageToIndex: function(msg) {
         this._index[msg.msgHash()] = msg
-        this.notifyChange()
-        this.didUpdate()
 	},
 
 	broadcastMessage: function(msg) {
@@ -136,27 +143,7 @@ BMMessages = BMStorableNode.extend().newSlots({
         this.notifyChange()
         return this
     },
-    
-    asyncLoad: function(callback) {
-        var self = this
-/*
-        this.subnodeProto().protoSoup().asyncValues(function (values) {
-            values.forEach(function(json) {
-                //console.log("load json ", json)
-                var msg = BMObjectMessage.clone().setMsgDict(json)
-                //console.log("loaded msg ", msg)
-                self.addMessage(msg)
-            })
-            
-            self.updateIndex()
-            
-            if (callback) { 
-                callback()
-            }
-        })
-*/
-        return this
-    },
+
     
     // handling inv messages
     
@@ -260,9 +247,6 @@ BMMessages = BMStorableNode.extend().newSlots({
         return invMsg
     },
 
-	didLoadFromStore: function() {
-		//console.log(this.type() + " didLoadFromStore")
-		this.updateIndex()
-	},
+
 
 })

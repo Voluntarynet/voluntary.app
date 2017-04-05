@@ -271,7 +271,7 @@ BMObjectMessage = BMMessage.extend().newSlots({
             var post = BMClassifiedPost.clone().setPostDict(dict)
             console.log("placing post with hash ", post.hash())
             post.setObjMsg(this)
-            post.setupAsSent()
+            post.setupFromDict()
             post.placeInRegion();
             post.placeInAll();
         }

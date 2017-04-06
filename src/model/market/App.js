@@ -44,14 +44,12 @@ App = BaseApp.extend().newSlots({
             //this.sells().asyncLoadItemSoup()
             
             
-            /*
             //this.initStoredSlotWithProto("myPosts", BMClassifiedPosts)
-            this.initStoredSlotWithProto("market", BMMarket)
+            //this.initStoredSlotWithProto("market", BMMarket)
             //this.initStoredSlotWithProto("buys", BMBuys)
             //this.initStoredSlotWithProto("sells", BMSells)
-            this.initStoredSlotWithProto("myPosts", BMClassifiedPosts)
+            //this.initStoredSlotWithProto("myPosts", BMClassifiedPosts)
             //this.initStoredSlotWithProto("wallet", BMWallet)
-            */
         }
 
         if (true) {

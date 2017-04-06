@@ -26,7 +26,7 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
         this.setTitle("Untitled")
         this.setPrice(0)
         this.setDescription("Item or service description")
-        this.addStoredSlots(["price", "title", "description", "objMsg"])
+        this.addStoredSlots(["price", "title", "description", "path", "objMsg", "hasSent", "imageDataURLs"])
 
         //this.setImagesNode(BMNode.clone().setViewClassName("ImageView").setSubnodeProto("ImageNode"))
         this.setImageDataURLs([]) 
@@ -36,6 +36,12 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
         this._powDoneObs   = NotificationCenter.shared().newObservation().setName("powDone").setObserver(this)
         this._powUpdateObs = NotificationCenter.shared().newObservation().setName("powUpdate").setObserver(this)
     },
+
+	didLoadFromStore: function() {
+		BMStorableNode.didLoadFromStore.apply(this)
+		
+		this.setIsEditable(!this.hasSent())
+	},
     
     // images
     
@@ -203,8 +209,8 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
     },
     
     expireDescription: function() {
-        var dt = this.remainingPeriodInMs();
-        return this.descriptionOfMsTimePeriod(dt)
+        var ms = this.remainingPeriodInMs();
+        return this.descriptionOfMsTimePeriod(ms)
     },
     
     expirationDate: function() {
@@ -232,16 +238,16 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
         var pathComponents = pathString.split("/")
         var region = rootNode.nodeAtSubpath(pathComponents)
         if (region) {
-            console.log("inserting post " + this.hash() + " into region path " + pathString + " ", this.postDict().title)
+            //console.log("inserting post " + this.hash() + " into region path " + pathString + " ", this.postDict().title)
             if (!region.containsItem(this)) {
                 region.addItem(this)
             } else {
                 console.log("can't insert duplicate item")
             }
         } else {
-            var error = "missing region for path " + pathString
-            console.log(error)
-            throw new Error(error)
+            var error = "missing region for path '" + pathString + "'"
+            console.log("-----------\n".repeat(3) + "WARNING: " + error + "\n" + "-----------\n".repeat(3))
+            //throw new Error(error)
         }
     },
     

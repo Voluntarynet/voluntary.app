@@ -39,3 +39,12 @@ ObjectMessages with receiverId matching a local identity placed in:
 If they reference a sell thread, place in:
 
 Identity/Sales/[sale]/Messages
+
+
+--- NICE ---
+
+- browser resets path on selection
+- browser nodes support "rememberBrowserPath" and auto select and update?
+
+--- BUGS ---
+

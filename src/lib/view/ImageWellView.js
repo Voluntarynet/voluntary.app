@@ -86,7 +86,8 @@ ImageWellView = NodeView.extend().newSlots({
         var imageView = ImageView.clone().setFromPath(dataUrl)
         imageView.setIsEditable(this.isEditable())
         this.addItem(imageView)
-        this.parentItem().syncToNode()
+        this.parentItem().syncToNode() // hack
+	//	this.node().markDirty()
         return this        
     },
     

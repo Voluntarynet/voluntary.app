@@ -1548,27 +1548,27 @@ Proto.setSlots({
 		return this;
 	},
 
-	newSlot: function(name, initialValue)
+	newSlot: function(slotName, initialValue)
 	{
-		if(typeof(name) != "string") throw "name must be a string";
+		if(typeof(slotName) != "string") throw "name must be a string";
 
 		if(initialValue === undefined) { initialValue = null };
 
-		var privateName = "_" + name;
+		var privateName = "_" + slotName;
 		this[privateName] = initialValue;
-		this[name] = function()
+		this[slotName] = function()
 		{
 			return this[privateName];
 		}
 
-		this["set" + name.capitalized()] = function(newValue)
+		this["set" + slotName.capitalized()] = function(newValue)
 		{
-			this[privateName] = newValue;
-			//return this.updateSlot(name, newValue);
+			//this[privateName] = newValue;
+			this.updateSlot(slotName, privateName, newValue);
 			return this;
 		}
 
-		this["addTo" + name.capitalized()] = function(amount)
+		this["addTo" + slotName.capitalized()] = function(amount)
 		{
 			this[privateName] = (this[privateName] || 0) + amount;
 			return this;
@@ -1577,18 +1577,21 @@ Proto.setSlots({
 		return this;
 	},
 
-	updateSlot: function(name, newValue)
+	updateSlot: function(slotName, privateName, newValue)
 	{
-		var privateName = "_" + name;
-
 		var oldValue = this[privateName];
 		if (oldValue != newValue)
 		{
 			this[privateName] = newValue;
+			this.didUpdateSlot(slotName, oldValue, newValue)
 			//this.mySlotChanged(name, oldValue, newValue);
 		}
 
 		return this;
+	},
+	
+	didUpdateSlot: function(slotName, oldValue, newValue) {
+		// persistence system can hook this
 	},
 
 	mySlotChanged: function(slotName, oldValue, newValue)

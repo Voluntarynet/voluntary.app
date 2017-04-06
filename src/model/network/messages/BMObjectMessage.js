@@ -252,9 +252,7 @@ BMObjectMessage = BMMessage.extend().newSlots({
         return false
     },
     
-    place: function() {
-        console.log("BMObjectMessage.place -------------------")
-        
+    place: function() {        
         /*
         if (this.receiverId()) {
             //var id = this.network().localIdentities().idWithPubKeyString(rec())
@@ -269,9 +267,10 @@ BMObjectMessage = BMMessage.extend().newSlots({
             var dict = this.msgDict().data.payload
             //console.log("creating post for dict ", dict)
             var post = BMClassifiedPost.clone().setPostDict(dict)
-            console.log("placing post with hash ", post.hash())
+            //console.log("placing post with hash ", post.hash())
             post.setObjMsg(this)
             post.setupFromDict()
+	        post.setHasSent(true)
             post.placeInRegion();
             post.placeInAll();
         }

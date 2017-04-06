@@ -9,7 +9,7 @@ BMRServers = BMStorableNode.extend().newSlots({
         this.setTitle("RTC Servers")
         this.addServer(this.bootStrapServer())
         this.setNoteIsItemCount(true)
-        this.setNodeMinWidth(210)
+        this.setNodeMinWidth(270)
         
         //this.setPidSymbol("_servers")     
     },

@@ -104,23 +104,28 @@ BMRegion = BMNode.extend().newSlots({
        }        
     },
     
-    add: function () {  
-        // set path when using add button
-        //var subnode = BMNode.add.apply(this)
-
-        var sell = BMSell.clone()
-        var post = sell.post()
-        var subnode = this.subnodeProto().clone()
-        
+	postPathString: function() {
         var path = this.nodePath()
         path.removeFirst()
-        var pathString = path.map(function (p) { return p.title() }).join("/")
-        
-        post.setPath(pathString)
-        post.setIsEditable(true)
+        var pathString = path.map(function (p) { return p.title() }).join("/")	
+		return pathString
+	},
+	
+    add: function () {  
+		/*
+        var sell = BMSell.clone()
         App.shared().sells().addItem(sell)
         App.shared().browser().selectNode(sell)
-        return subnode
+        var post = sell.post()
+        */
+
+		var post = BMClassifiedPost.clone()
+        post.setPath(this.postPathString())
+        post.setIsEditable(true)
+        App.shared().sells().addItem(post)
+        App.shared().browser().selectNode(post)
+
+        return null
     },
     
     containsItem: function(anItem) {

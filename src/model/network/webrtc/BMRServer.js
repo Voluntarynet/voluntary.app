@@ -58,7 +58,7 @@ BMRServer = BMStorableNode.extend().newSlots({
     
     connect: function () {
         var self = this
-        this.log("BMRServer.connect")
+        //this.log("BMRServer.connect")
         this.serverConnection().connect()
         return this              
     },

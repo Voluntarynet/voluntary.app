@@ -258,10 +258,13 @@
     color: #aaa;
 
     position: relative;
+
     margin-top: 20px;
     margin-bottom: 0px;
-    width: 90%;
     margin-left: 35px;
+    margin-right: 35px;
+
+    width: 90%;
     height: 30%;
     
     text-align: left;

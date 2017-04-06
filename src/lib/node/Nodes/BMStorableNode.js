@@ -1,7 +1,7 @@
 
 BMStorableNode = BMNode.extend().newSlots({
     type: "BMStorableNode",
-    storedSlots: null,
+    storedSlots: null, // dict
     shouldStoreItems: true,
     loadsUnionOfChildren: false,
     isUnserializing: false,
@@ -28,12 +28,13 @@ BMStorableNode = BMNode.extend().newSlots({
     },
     
     addStoredSlot: function(slotName) {
-        this.storedSlots().appendIfAbsent(slotName)
+        this.storedSlots()[slotName] = true
+		// Note: BMStorableNode hooks didUpdateSlot() to call markDirty on updates. 
         return this
     },
     
     removeStoredSlot: function(slotName) {
-        this.storedSlots().remove(slotName)
+        delete this.storedSlots()[slotName]
         return this
     },
 
@@ -43,18 +44,19 @@ BMStorableNode = BMNode.extend().newSlots({
  
         //console.log(this.type() + " storedSlots = " + JSON.stringify(this.storedSlots()))
        
-        var self = this
-        this.storedSlots().forEach(function (k) {
-            var v = self[k]
-
-            if (k.beginsWith("_")) {
-                v = self[k]
-            } else {
-                v = self[k].apply(self)
-            }
+		var slots = this.storedSlots()
+		for (var k in slots) {
+			if (slots.hasOwnProperty(k)) {
+	            var v = null
+	            if (k.beginsWith("_")) {
+	                v = this[k]
+	            } else {
+	                v = this[k].apply(this)
+	            }
             
-            dict[k] = NodeStore.shared().refValueIfNeeded(v)
-        })
+	            dict[k] = NodeStore.shared().refValueIfNeeded(v)
+			}
+        }
         
         return dict
     },
@@ -126,15 +128,22 @@ BMStorableNode = BMNode.extend().newSlots({
         this.setIsUnserializing(true) 
         this.setNodeDictForProperties(aDict)
         this.setNodeDictForChildren(aDict)
-        this.didLoad() // a chance to finish
-        this.setIsUnserializing(false) 
 		this.didLoadFromStore()
+        this.setIsUnserializing(false) 
         return this
     },
     
-    didLoad: function() {
-        
+    didLoadFromStore: function() {
+        // a chance to finish any unserializing
     },
+
+	didUpdateSlot: function(slotName, oldValue, newValue) {
+		// check so we don't mark dirty while loading
+		// and use private ivars directly for performance
+		if (!this._isUnserializing && (slotName in this._storedSlots)) { 
+			this.markDirty()
+		}
+	},
 })
 
 BMListNode = BMStorableNode

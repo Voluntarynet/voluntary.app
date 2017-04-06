@@ -89,7 +89,7 @@ BMMessages = BMStorableNode.extend().newSlots({
     },
 
 	didLoadFromStore: function() {
-		console.log(this.type() + " didLoadFromStore items length = ", this.items().length)
+		//console.log(this.type() + " didLoadFromStore items length = ", this.items().length)
 		this.updateIndex()
 		this.placeAllItems()
 	},
@@ -97,7 +97,7 @@ BMMessages = BMStorableNode.extend().newSlots({
 	placeAllItems: function() {
 		var self = this
 		this.items().forEach(function (msg) {
-			console.log(self.type() + " placing ", msg)
+			//console.log(self.type() + " placing ", msg)
 			msg.place()
 		})
 	},

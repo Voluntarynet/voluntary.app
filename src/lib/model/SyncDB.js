@@ -159,9 +159,9 @@ SyncDB = ideal.Proto.extend().newSlots({
 				setTimeout(function () {
 					self.verifySync()
 				}, 1000)
-				console.log("idb/sdb SYNCING")
+				//console.log("idb/sdb SYNCING")
 			} else {
-				console.log("idb/sdb SYNCED")
+				console.log("SyncDB SYNCED")
 				
 			}
 			

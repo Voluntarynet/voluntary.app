@@ -132,11 +132,11 @@ NodeStore = ideal.Proto.extend().newSlots({
 	},
 	
 	didOpen: function() {
-		if (this.debug()) {
-			this.show()
+		//if (this.debug()) {
+			//this.show()
 			this.collect()
-			this.show()
-		}
+			//this.show()
+		//}
 	},
     
     shared: function() {
@@ -229,7 +229,7 @@ NodeStore = ideal.Proto.extend().newSlots({
 		} 
         
         this.debugLog("NodeStore.storeDirtyObjects stored " +  totalStoreCount + " objects")
-		if (this.debug) {
+		if (this.debug()) {
 			this.show()
 		}
 		setTimeout( () => {
@@ -491,7 +491,7 @@ NodeStore = ideal.Proto.extend().newSlots({
                 
         var self = this
         var childPids = this.pidRefsFromPid(pid)
-       	console.log(pid + " refs " + JSON.stringify(childPids))
+       	this.debugLog(pid + " refs " + JSON.stringify(childPids))
         
         childPids.forEach(function(childPid) {
             self.markPid(childPid)
@@ -552,9 +552,25 @@ NodeStore = ideal.Proto.extend().newSlots({
 			return
 		}
 		
+		var stringReplacer = function(value) {
+			if (typeof(value) === 'string' && value.length > 100) {
+				return value.substring(0, 100) + "...";
+			}	
+			return value		
+		}
+		
+		var replacer = function(key, value) {
+		  value = stringReplacer(value)
+		
+		  if (typeof(value) === 'array') {
+			 return value.map(stringReplacer)
+		  }
+		  return value;
+		}
+		
 		var indent = "   ".repeat(level) 
         var nodeDict = this.nodeDictAtPid(pid)
-		console.log(indent + pid + ": " + JSON.stringify(nodeDict))
+		console.log(indent + pid + ": " + JSON.stringify(nodeDict, replacer, 2 + indent.length))
 		
 		if (nodeDict.children) {
 			var self = this

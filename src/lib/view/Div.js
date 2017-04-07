@@ -29,7 +29,8 @@ Div = ideal.Proto.extend().newSlots({
     showsHaloWhenEditable: false,
     tabCount: 0,
     validColor: null,
-    invalidColor: null
+    invalidColor: null,
+	isHandlingEvent: false,
 }).setSlots({
     init: function () {
         this._items = []
@@ -109,6 +110,7 @@ Div = ideal.Proto.extend().newSlots({
         }
         this._element.appendChild(anItem.element());
         anItem.setParentItem(this)
+		this.didChangeItemList()
         return anItem
     },
     
@@ -171,11 +173,15 @@ Div = ideal.Proto.extend().newSlots({
     willRemove: function() {
     },
     
+	didChangeItemList: function() {
+	},
+	
     removeItem: function (anItem) {
         anItem.willRemove()
         this._items.remove(anItem)
         this._element.removeChild(anItem.element());
         anItem.setParentItem(null)
+		this.didChangeItemList()
         return anItem
     },
     
@@ -235,27 +241,10 @@ Div = ideal.Proto.extend().newSlots({
     setString: function (v) {
         return this.setInnerHTML(v)
     },
+
     
     loremIpsum: function (maxWordCount) {
-        if (!maxWordCount) { maxWordCount = 40; }
-
-        
-    	var loremIpsumWordBank = new Array("lorem","ipsum","dolor","sit","amet,","consectetur","adipisicing","elit,","sed","do","eiusmod","tempor","incididunt","ut","labore","et","dolore","magna","aliqua.","enim","ad","minim","veniam,","quis","nostrud","exercitation","ullamco","laboris","nisi","ut","aliquip","ex","ea","commodo","consequat.","duis","aute","irure","dolor","in","reprehenderit","in","voluptate","velit","esse","cillum","dolore","eu","fugiat","nulla","pariatur.","excepteur","sint","occaecat","cupidatat","non","proident,","sunt","in","culpa","qui","officia","deserunt","mollit","anim","id","est","laborum.","sed","ut","perspiciatis,","unde","omnis","iste","natus","error","sit","voluptatem","accusantium","doloremque","laudantium,","totam","rem","aperiam","eaque","ipsa,","quae","ab","illo","inventore","veritatis","et","quasi","architecto","beatae","vitae","dicta","sunt,","explicabo.","nemo","enim","ipsam","voluptatem,","quia","voluptas","sit,","aspernatur","aut","odit","aut","fugit,","sed","quia","consequuntur","magni","dolores","eos,","qui","ratione","voluptatem","sequi","nesciunt,","neque","porro","quisquam","est,","qui","dolorem","ipsum,","quia","dolor","sit,","amet,","consectetur,","adipisci","velit,","sed","quia","non","numquam","eius","modi","tempora","incidunt,","ut","labore","et","dolore","magnam","aliquam","quaerat","voluptatem.","ut","enim","ad","minima","veniam,","quis","nostrum","exercitationem","ullam","corporis","suscipit","laboriosam,","nisi","ut","aliquid","ex","ea","commodi","consequatur?","quis","autem","vel","eum","iure","reprehenderit,","qui","in","ea","voluptate","velit","esse,","quam","nihil","molestiae","consequatur,","vel","illum,","qui","dolorem","eum","fugiat,","quo","voluptas","nulla","pariatur?","at","vero","eos","et","accusamus","et","iusto","odio","dignissimos","ducimus,","qui","blanditiis","praesentium","voluptatum","deleniti","atque","corrupti,","quos","dolores","et","quas","molestias","excepturi","sint,","obcaecati","cupiditate","non","provident,","similique","sunt","in","culpa,","qui","officia","deserunt","mollitia","animi,","id","est","laborum","et","dolorum","fuga.","harum","quidem","rerum","facilis","est","et","expedita","distinctio.","Nam","libero","tempore,","cum","soluta","nobis","est","eligendi","optio,","cumque","nihil","impedit,","quo","minus","id,","quod","maxime","placeat,","facere","possimus,","omnis","voluptas","assumenda","est,","omnis","dolor","repellendus.","temporibus","autem","quibusdam","aut","officiis","debitis","aut","rerum","necessitatibus","saepe","eveniet,","ut","et","voluptates","repudiandae","sint","molestiae","non","recusandae.","itaque","earum","rerum","hic","tenetur","a","sapiente","delectus,","aut","reiciendis","voluptatibus","maiores","alias","consequatur","aut","perferendis","doloribus","asperiores","repellat");
-    	var minWordCount = 15;
-    	//var maxWordCount = 100;
-
-    	var randy = Math.floor(Math.random()*(maxWordCount - minWordCount)) + minWordCount;
-    	var ret = "";
-    	for(i = 0; i < randy; i++) {
-    		var newTxt = loremIpsumWordBank[Math.floor(Math.random() * (loremIpsumWordBank.length - 1))];
-    		if (ret.substring(ret.length-1,ret.length) == "." || ret.substring(ret.length-1,ret.length) == "?") {
-    			newTxt = newTxt.substring(0,1).toUpperCase() + newTxt.substring(1, newTxt.length);
-    		}
-    		ret += " " + newTxt;
-    	}
-
-        this.setInnerHTML(ret)
-        
+        this.setInnerHTML("".loremIpsum(10, 40))
         return this
     },
 
@@ -272,11 +261,45 @@ Div = ideal.Proto.extend().newSlots({
     },
     
     // onclick target & action
+
+	setIsHandlingEvent: function() {
+		Div._isHandlingEvent = true
+		return this
+	},
+	
+	isHandlingEvent: function() {
+		return Div._isHandlingEvent
+	},
+
+	handleEventFunction: function(f) {
+		//  a try gaurd to make sure isHandlingEvent has correct value
+		//  isHandlingEvent is used to determine if view should inform node of changes
+		//  - it should only while handling an event
+		
+		var error = null
+		
+		this.setIsHandlingEvent(true)
+		
+		try {
+			f()
+		} catch (e) {
+			error = e
+		}
+		
+		this.setIsHandlingEvent(false)
+		
+		if (error) {
+			throw error
+		}
+	},
+	
     
     registerForClicks: function (aBool) {
         if (aBool) {
             var self = this
-            this.element().onclick = function (event) { self.onClick(event) }
+            this.element().onclick = function (event) { 
+				self.handleEventFunction(function () { self.onClick(event) })
+			}
             //this.element().ondblclick = function (event) { self.onDoubleClick(event) }
         } else {
             this.element().onclick = null
@@ -293,7 +316,7 @@ Div = ideal.Proto.extend().newSlots({
     
     onClick: function(event) {
         var t = this.target()
-        if (t) {
+        if (t && this.action) {
             t[this.action()].apply(t)
         } else {
             throw new Error("no target for action " + this.action())
@@ -405,13 +428,13 @@ Div = ideal.Proto.extend().newSlots({
    
       onDataTransfer: function(dataTransfer) {     
         
-        console.log('onDataTransfer ', dataTransfer);
+        //console.log('onDataTransfer ', dataTransfer);
         
         if (dataTransfer.files.length) {   
             var dataUrls = []
             for (var i = 0; i < dataTransfer.files.length; i ++) {
                 var file = dataTransfer.files[i]
-                console.log("file: ", file)
+                //console.log("file: ", file)
                 
                 if (!file.type.match('image.*')) {
                     continue;

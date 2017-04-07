@@ -26,7 +26,7 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
         this.setTitle("Untitled")
         this.setPrice(0)
         this.setDescription("Item or service description")
-        this.addStoredSlots(["price", "title", "description", "path", "objMsg", "hasSent", "imageDataURLs"])
+        this.addStoredSlots(["price", "title", "description", "path", "postDate", "postPeriod", "uuid", "imageDataURLs", "hasSent"])
 
         //this.setImagesNode(BMNode.clone().setViewClassName("ImageView").setSubnodeProto("ImageNode"))
         this.setImageDataURLs([]) 
@@ -37,9 +37,23 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
         this._powUpdateObs = NotificationCenter.shared().newObservation().setName("powUpdate").setObserver(this)
     },
 
+	setParentNode: function(item) {
+		BMStorableNode.setParentNode.apply(this, [item])
+		this.syncDeleteAction()
+		return this
+	},
+	
+	syncDeleteAction: function() {
+		if (this.parentNode().isKindOf(Region)) {
+			this.removeAction("delete")
+		} else {
+			this.addAction("delete")
+		}
+		return this
+	},
+
 	didLoadFromStore: function() {
 		BMStorableNode.didLoadFromStore.apply(this)
-		
 		this.setIsEditable(!this.hasSent())
 	},
     
@@ -56,13 +70,18 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
     },
     
     subtitle: function() {
-        if (this.powObj().isFinding()) {
-            return "stamping... " + this.powObj().estimatedPercentageDone() + "%";
-        } else if (!this.hasSent()) {
-            return "unposted"
-        }
-        return "expires in " + this.expireDescription()
-        //return this.price() + " " + this.currency()
+		try {
+	        if (this.powObj().isFinding()) {
+	            return "stamping... " + this.powObj().estimatedPercentageDone() + "%";
+	        } else if (!this.hasSent()) {
+	            return "unposted"
+	        }
+	        return "expires in " + this.expireDescription()
+	        //return this.price() + " " + this.currency()
+		} catch(e) {
+			console.log(e)
+		}
+		return "error"
     },
     
     setPrice: function(p) {
@@ -299,6 +318,12 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
         }
         
         return c;
-    }
+    },
+
+	fillWithTestData: function() {
+		this.setTitle("".loremIpsum(2, 5))
+		this.setDescription("".loremIpsum(20, 200))
+		this.setPrice(Math.floor(Math.random()*100)/2)
+	},
 
 })

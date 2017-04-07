@@ -78,7 +78,6 @@ ImageWellView = NodeView.extend().newSlots({
     imageDataURLs: function() {
         var urls =  this.items().map(function (imageView) { return imageView.dataURL(); })
         urls = urls.select(function (url) { return url != null; })
-        //console.log("imageDataURLs = ", urls)
         return urls
     },
     
@@ -86,28 +85,8 @@ ImageWellView = NodeView.extend().newSlots({
         var imageView = ImageView.clone().setFromPath(dataUrl)
         imageView.setIsEditable(this.isEditable())
         this.addItem(imageView)
-        this.parentItem().syncToNode() // hack
-	//	this.node().markDirty()
+        this.parentItem().syncToNode() // we explicitly sync for view -> model
         return this        
     },
-    
-    /*
-    onDropFiles: function (files) {
-        var self = this
-        files.forEach(function (file) { self.onDropFile(file); })
-
-        this.parentItem().syncToNode()
-        return true;
-    },
-    
-    onDropFile: function(urlPath) {
-        var imageView = ImageView.clone().setFromPath(urlPath)
-        imageView.setIsEditable(this.isEditable())
-        this.addItem(imageView)
-        
-        //var imageNode = this.node().add()
-        //this.node().addItem(ImageNode.clone().setView(imageView))     
-    },
-    */
     
 })

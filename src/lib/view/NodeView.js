@@ -58,6 +58,7 @@ NodeView = Div.extend().newSlots({
         return Div.itemProto.apply(this)
     },
 
+	// --- syncing ---
 /*
     syncFromNode: function () {
         if (!this.node()) { 
@@ -145,10 +146,46 @@ NodeView = Div.extend().newSlots({
         return this
     },
 
+	didChangeItemList: function() {
+		Div.didChangeItemList.apply(this)
+		//this.markViewDirty()
+		return this
+	},
+	
+	markViewDirty: function() {
+		if (this.isHandlingEvent()) {
+			this.setNeedsSyncToNode(true)
+		}		
+	},
+
     didUpdateNode: function () {
         //console.log(this.type() + " didUpdateNode " + this.node().type())
         this.syncFromNode()
     },
+
+    setNeedsSyncToNode: function(aBool) {
+        if (this._needsSyncToNode == aBool) { 
+            return this; 
+        }
+        
+        //this.log("needsSyncToView " + this._needsSyncToView + " -> " + aBool)
+
+        if (aBool && !this._needsSyncToNode) {
+            //this.log(" >>> adding timer syncToView")
+            
+            var self = this
+            setTimeout(function () { 
+                self.syncToNode()
+                self.log(" +++ fired syncToNode")
+            }, 1)            
+        }
+        
+        this._needsSyncToNode = aBool
+        return this
+    },
+
+
+	// logging 
     
     logName: function() {
         return this.type()

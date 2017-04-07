@@ -103,15 +103,22 @@ SyncDB = ideal.Proto.extend().newSlots({
 	atPut: function(key, value) {
 		this.assertOpen()
 		this._cache[key] = value
-		//console.log("atPut(" + key + ", " + JSON.
+		//console.log("atPut(" + key + ", " + JSON.stringify(value) + ")")
+		//console.log("atPut(" + key + ", " + JSON.stringify(value).substring(1, 100) + "...)")
 		this.idb().asyncAtPut(key, value)
 	},
 	
 	removeAt: function(key) {
 		this.assertOpen()
 		if (key in this._cache) {
+			//console.log("syncdb removeAt('" + key + "')")
 			delete this._cache[key]
+			if (key in this._cache) {
+				throw new Error("wut")
+			}
 			this.idb().asyncRemoveAt(key)
+		} else {
+			console.log("WARNING: syncdb removeAt('" + key + "') - key not in syncdb cache")
 		}
 	},
 	
@@ -162,6 +169,8 @@ SyncDB = ideal.Proto.extend().newSlots({
 				//console.log("idb/sdb SYNCING")
 			} else {
 				console.log("SyncDB SYNCED")
+				//self.idb().show()
+				//console.log("syncdb idb json: ", JSON.stringify(json, null, 2))
 				
 			}
 			

@@ -1,8 +1,8 @@
 
+
 BUGS
 
-New msg not placed
-
+- don't show post delete if it's parent is a Region?
 
 TESTING
 
@@ -46,5 +46,14 @@ Identity/Sales/[sale]/Messages
 - browser resets path on selection
 - browser nodes support "rememberBrowserPath" and auto select and update?
 
---- BUGS ---
+--- DOC NOTES ---------
+
+SYNCING
+
+DB -> MODEL -> VIEW (db loads on start or model access, view loads on access)
+
+DB <- MODEL -> VIEW (model code auto detects changes and calls sync to view and DB)
+
+DB    MODEL <- VIEW (event code explicitly calls sync)
+
 

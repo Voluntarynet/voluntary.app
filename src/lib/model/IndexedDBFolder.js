@@ -238,7 +238,7 @@ IndexedDBFolder = ideal.Proto.extend().newSlots({
     show: function() {
 		var self = this
         this.asyncAsJson(function (json) {
-	        console.log(self.type() + " " + self.path() + " = " + JSON.stringify(json))
+	        console.log(self.type() + " " + self.path() + " = " + JSON.stringify(json, null, 2))
 
 		})
     },
@@ -249,6 +249,7 @@ IndexedDBFolder = ideal.Proto.extend().newSlots({
         var request = this.db().transaction(this.storeName(), "readwrite").objectStore(this.storeName()).delete(key);
             
         request.onsuccess = function(event) {
+			//console.log("idb removed key '" + key + "'")
 			if (callback) {
 				callback()
 			}

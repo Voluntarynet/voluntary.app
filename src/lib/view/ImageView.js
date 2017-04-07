@@ -48,6 +48,8 @@ ImageView = NodeView.extend().newSlots({
         var self = this
         setTimeout(function () { 
             self.removeItem(self.closeButtonView())
+			self.parentItem().syncToNode()
+			
             var style = self.element().style;
             style.width = "0px";
             style.paddingLeft = "0px";
@@ -58,6 +60,7 @@ ImageView = NodeView.extend().newSlots({
         }, 0)
     },
 
+/*
     syncFromNode: function () {
         var node = this.node()
         
@@ -70,6 +73,7 @@ ImageView = NodeView.extend().newSlots({
         NodeView.syncToNode.apply(this)
         return this
     },
+*/
     
     setEditable: function (aBool) {
 

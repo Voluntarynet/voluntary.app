@@ -74,7 +74,7 @@ BMMessages = BMStorableNode.extend().newSlots({
         
     addMessage: function(msg) { // validate and broadcast
 	
-		console.log(this.type() + " addMessage ", msg)
+		//console.log(this.type() + " addMessage ", msg)
 		
         if (!this.validateMsg(msg)) {
 			console.log(this.type() + " INVALID MESSAGE")
@@ -103,7 +103,7 @@ BMMessages = BMStorableNode.extend().newSlots({
 	},
 
 	addItem: function(msg) {
-		console.log(this.type() + " addItem " + msg.pid())
+		//console.log(this.type() + " addItem " + msg.pid())
 		BMStorableNode.addItem.apply(this, [msg])
 		
         this.addMessageToIndex(msg)

@@ -252,9 +252,16 @@ BMNode = ideal.Proto.extend().newSlots({
     // standard actions
     
     addAction: function(actionString) {
-        this.actions().push(actionString)
+		if (!this.actions().contains(actionString)) {
+	        this.actions().push(actionString)
+		}
         return this
     },
+
+	removeAction: function(actionString) {
+        this.actions().remove(actionString)
+		return this
+	},
     
     addActions: function(actionStringList) {
         var self = this
@@ -391,7 +398,8 @@ BMNode = ideal.Proto.extend().newSlots({
     
     markDirty: function() {
         //console.trace("markDirty(" + this.title() + " " + this.pid() + ")")
-		if (this.shouldStore()) {
+        //console.log("markDirty(" +this.title() + ")")
+		if (this.shouldStore() && !this.isUnserializing()) {
         	NodeStore.shared().addDirtyObject(this)
 		}
         return this

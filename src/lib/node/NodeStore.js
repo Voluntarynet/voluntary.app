@@ -134,6 +134,8 @@ NodeStore = ideal.Proto.extend().newSlots({
 	didOpen: function() {
 		//if (this.debug()) {
 			//this.show()
+			//this.sdb().idb().show()
+			//this.show()
 			this.collect()
 			//this.show()
 		//}
@@ -313,7 +315,10 @@ NodeStore = ideal.Proto.extend().newSlots({
         
         var nodeDict = this.nodeDictAtPid(pid)
         if (!nodeDict) {
-            throw new Error("missing pid '" + pid + "'")
+			var error = "missing pid '" + pid + "'"
+			console.log("WARNING: " + error)
+			return null
+            throw new Error(error)
         }
         
         var proto = window[nodeDict.type]
@@ -506,7 +511,7 @@ NodeStore = ideal.Proto.extend().newSlots({
 
          pids.forEach(function(pid) {
             if (self._marked[pid] != true) {
-                self.debugLog("deletePid(" + pid + ")")
+                //self.debugLog("deletePid(" + pid + ")")
                 self.sdb().removeAt(pid)
                 deleteCount ++
             } 

@@ -137,10 +137,17 @@ BMStorableNode = BMNode.extend().newSlots({
         // a chance to finish any unserializing
     },
 
+	markDirty: function() {
+		if (!this._isUnserializing) { 
+			BMNode.markDirty.apply(this)
+		}
+		return this
+	},
+	
 	didUpdateSlot: function(slotName, oldValue, newValue) {
 		// check so we don't mark dirty while loading
 		// and use private ivars directly for performance
-		if (!this._isUnserializing && (slotName in this._storedSlots)) { 
+		if (slotName in this._storedSlots) { 
 			this.markDirty()
 		}
 	},

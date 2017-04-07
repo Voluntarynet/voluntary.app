@@ -125,6 +125,10 @@ BMRegion = BMNode.extend().newSlots({
         App.shared().sells().addItem(post)
         App.shared().browser().selectNode(post)
 
+		if (this.title() == "Tests") {
+			post.fillWithTestData()
+		}
+
         return null
     },
     

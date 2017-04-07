@@ -98,7 +98,7 @@ BMClassifiedPostView = NodeView.extend().newSlots({
         this.powContainerView().addItem(this.postDateInfoView())
         
         // description
-        this.setDescriptionView(NodeView.clone().setDivClassName("BMPostDescriptionView").loremIpsum())
+        this.setDescriptionView(NodeView.clone().setDivClassName("BMPostDescriptionView"))
         this.addItem(this.descriptionView())
         
         // images header
@@ -150,6 +150,7 @@ BMClassifiedPostView = NodeView.extend().newSlots({
     
     syncToNode: function () {
         this.log(this.type() + " syncToNode " + this.node().type())
+
         var node = this.node()
         node.setTitle(this.titleView().innerHTML())
         node.setPrice(this.priceView().innerHTML())

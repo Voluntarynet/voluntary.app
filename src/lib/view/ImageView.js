@@ -48,7 +48,7 @@ ImageView = NodeView.extend().newSlots({
         var self = this
         setTimeout(function () { 
             self.removeItem(self.closeButtonView())
-			self.parentItem().syncToNode()
+			self.syncToNode()
 			
             var style = self.element().style;
             style.width = "0px";
@@ -58,6 +58,12 @@ ImageView = NodeView.extend().newSlots({
             style.marginRight = "0px";
            // self.element().style.height = "0px"
         }, 0)
+    },
+
+    syncToNode: function () {
+        this.parentItem().syncToNode()
+        NodeView.syncToNode.apply(this)
+        return this
     },
 
 /*

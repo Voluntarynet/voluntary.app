@@ -64,7 +64,7 @@ ImageWellView = NodeView.extend().newSlots({
         }
         
         this.removeAllItems();
-        //console.log("setImageDataURLs = ", dataURLs)
+        console.log("setImageDataURLs = ", dataURLs)
 
         var self = this
         dataURLs.forEach(function (dataURL) {
@@ -85,7 +85,7 @@ ImageWellView = NodeView.extend().newSlots({
         var imageView = ImageView.clone().setFromPath(dataUrl)
         imageView.setIsEditable(this.isEditable())
         this.addItem(imageView)
-        this.parentItem().syncToNode() // we explicitly sync for view -> model
+		this.syncToNode()
         return this        
     },
     

@@ -44,7 +44,7 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
 	},
 	
 	syncDeleteAction: function() {
-		if (this.parentNode().isKindOf(Region)) {
+		if (this.parentNode() && this.parentNode().isKindOf(Region)) {
 			this.removeAction("delete")
 		} else {
 			this.addAction("delete")

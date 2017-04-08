@@ -4,6 +4,8 @@
   "license": "MIT",
   "dependencies": {
     "bitcore-lib": "^0.13.7",
-    "bitcore-mnemonic": "^1.0.1"
+    "bitcore-mnemonic": "^1.0.1",
+    "bitcore-ecies" : "^1.0.3",
+    "bitcore": "^4.1.0"
   }
 }

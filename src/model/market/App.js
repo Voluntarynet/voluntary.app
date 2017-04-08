@@ -6,10 +6,11 @@ App = BaseApp.extend().newSlots({
     type: "App",
     
     // market
-    marketMode: true,    
     market: null,
     buys: null,
     sells: null,
+	localIdentities: null,
+	remoteIdentities: null,
     
     wallet: null,
     
@@ -20,6 +21,13 @@ App = BaseApp.extend().newSlots({
         this.setNodeMinWidth(170)        
     },
 
+	addItemForSlot: function(anObject, slotName) {
+		var setterName = this.setterNameForSlot(slotName)
+		this[setterName].apply(this, [anObject])
+		this.addItem(anObject)
+		return this
+	},
+
     setup: function () {       
         BaseApp.setup.apply(this)
         
@@ -27,61 +35,42 @@ App = BaseApp.extend().newSlots({
         
         this.setName("Bitmarkets")
         this.setTitle("App")
-                    
-        // setup child nodes
-        if (this.marketMode()) {
+        
+        // market
             
-            // market
-            this.setMarket(BMMarket.clone())
-            this.addItem(this.market())
-            
-            // market
-            //this.setSells(BMSells.clone())
-			this.setSells(NodeStore.shared().rootInstanceWithPidForProto("_sells", BMSells))
+		//this.addItemForSlot(BMMarket.clone(), "market")
+		this.setMarket(BMMarket.clone())
+		this.addItem(this.market())
 
-            //this.setMyPosts(BMClassifiedPosts.clone())
-            this.addItem(this.sells())
-            //this.sells().asyncLoadItemSoup()
-            
-            
-            //this.initStoredSlotWithProto("myPosts", BMClassifiedPosts)
-            //this.initStoredSlotWithProto("market", BMMarket)
-            //this.initStoredSlotWithProto("buys", BMBuys)
-            //this.initStoredSlotWithProto("sells", BMSells)
-            //this.initStoredSlotWithProto("myPosts", BMClassifiedPosts)
-            //this.initStoredSlotWithProto("wallet", BMWallet)
-        }
+		this.setSells(NodeStore.shared().rootInstanceWithPidForProto("_sells", BMSells))
+		this.addItem(this.sells())
 
-        if (true) {
-            this.initStoredSlotWithProto("network", BMNetwork)
-        }
+        // ids
 
+		this.setLocalIdentities(NodeStore.shared().rootInstanceWithPidForProto("_localIdentities", BMLocalIdentities))
+		this.addItem(this.localIdentities())
+		
+		this.setRemoteIdentities(NodeStore.shared().rootInstanceWithPidForProto("_remoteIdentities", BMRemoteIdentities))
+		this.addItem(this.remoteIdentities())
+
+		// network
+
+		this.setNetwork(BMNetwork.clone())
+		this.addItem(this.network())
+
+		// about 
+		
         //this.initStoredSlotWithProto("about", BMInfoNode)
 
-        /*
-        this.initStoredSlotWithProto("Posts", BMInfoNode)
-        this.initStoredSlotWithProto("My Publications", BMInfoNode)
-        this.initStoredSlotWithProto("My Purchases", BMInfoNode)
-        this.initStoredSlotWithProto("wallet", BMInfoNode)
-        */
-
-        this.setAbout(BMInfoNode.clone().setTitle("About")).setSubtitle(null)
+        this.setAbout(BMInfoNode.clone().setTitle("About")).setSubtitle("")
         this.about() //.setPidSymbol("_about")     
         this.addItem(this.about())
         this.addStoredSlots(["about"])
-        
-        this.load()
-        
+                
         if (this.network()) {
             this.network().servers().connect()
         }
-        return this
-    },
-    
-    
-    load: function() {
-        //NodeStore.clear();
-        //NodeStore.shared().setRootObject(this)
+
         return this
     },
 

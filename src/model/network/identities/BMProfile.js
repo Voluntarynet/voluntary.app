@@ -3,6 +3,7 @@ BMProfile = BMFormNode.extend().newSlots({
 }).setSlots({
     init: function () {
         BMFormNode.init.apply(this)
+ 		this.setShouldStore(true)
         this.setTitle("Profile")
         
         this.addFieldNamed("name").setNodeTitleIsEditable(false).setNodeFieldProperty("name")

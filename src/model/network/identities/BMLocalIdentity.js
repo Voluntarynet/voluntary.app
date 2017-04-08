@@ -1,11 +1,10 @@
 var bitcore = require("bitcore-lib")
-var BitcoreMessage = require('bitcore-message');
+//var BitcoreMessage = require('bitcore-message');
 
 BMLocalIdentity = BMNavNode.extend().newSlots({
     type: "BMLocalIdentity",
     name: null,
     keyPair: null,
-    
     
     profile: null,
     drafts: null,
@@ -16,6 +15,7 @@ BMLocalIdentity = BMNavNode.extend().newSlots({
     
     init: function () {
         BMNavNode.init.apply(this)
+		this.setShouldStore(true)
         this.setNodeTitleIsEditable(true)
  
         this.initStoredSlotWithProto("profile", BMProfile)
@@ -109,9 +109,9 @@ BMLocalIdentity = BMNavNode.extend().newSlots({
         //var signature = bitcoreMessage.sign(this.privateKey());
         
        // var privateKey = bitcore.PrivateKey.fromWIF('cPBn5A4ikZvBTQ8D7NnvHZYCAxzDZ5Z2TSGW2LkyPiLxqYaJPBW4');
-        var signature = Message(msgString).sign(this.privateKey()));
+        //var signature = Message(msgString).sign(this.privateKey()));
 
-        return signature
+        //return signature
     },
 
     verifySignatureForMessage: function(signature, msgString) {

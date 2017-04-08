@@ -3,13 +3,14 @@ BMRemoteIdentities = BMListNode.extend().newSlots({
 }).setSlots({
     init: function () {
         BMListNode.init.apply(this)
+		this.setShouldStore(true)
         this.setTitle("Contacts")
         this.setNodeMinWidth(180)
         
         this.setActions(["add"]).setSubnodeProto(BMRemoteIdentity)
         this.setNoteIsItemCount(true)
         
-        this.setPidSymbol("_remoteIdentities") 
+        //this.setPidSymbol("_remoteIdentities") 
         //this.loadIfPresent()
     },
 

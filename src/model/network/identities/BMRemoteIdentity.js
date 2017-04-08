@@ -8,6 +8,7 @@ BMRemoteIdentity = BMNavNode.extend().newSlots({
 }).setSlots({
     init: function () {
         BMNavNode.init.apply(this)
+		this.setShouldStore(true)
         this.setName("Untitled")
         this.setNodeTitleIsEditable(true)
         //this.setNodeSubtitleIsEditable(true)

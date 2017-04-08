@@ -1,5 +1,6 @@
 console.log("------ BEGIN TESTS ------")
 
+// generate keys, encrypt and decrypt message with signature 
 
 //var bitcore = require('bitcore');
 

@@ -3,6 +3,7 @@ BMInbox = BMStorableNode.extend().newSlots({
 }).setSlots({
     init: function () {
         BMListNode.init.apply(this)
+ 		this.setShouldStore(true)
         this.setNoteIsItemCount(true)
         this.setTitle("Inbox")
     },

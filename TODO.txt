@@ -56,4 +56,24 @@ DB <- MODEL -> VIEW (model code auto detects changes and calls sync to view and 
 
 DB    MODEL <- VIEW (event code explicitly calls sync)
 
+--- TWITTER NOTES ---
+
+BMTweet - BMObjectMessage
+BMTweetRowView (non fixed height)
+
+
+
+peer id: pubkey-bloomFilterOfSubscriptions-syncEstimate
+
+connect to peers whose filter match any friends, ask them if they 
+
+channeling strategies:
+
+1) connect, get rserver list, connect to IP hashes least distance from your pubkey or subscription keys?
+
+2) pick random rservers as homes and publish those via blockstack
+blockstack: name -> pubkey, homeServers
+
+3) 
+
 

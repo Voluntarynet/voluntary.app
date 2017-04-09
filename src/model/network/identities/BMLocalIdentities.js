@@ -5,7 +5,7 @@ BMLocalIdentities = BMListNode.extend().newSlots({
     init: function () {
         BMListNode.init.apply(this)
 		this.setShouldStore(true)
-        this.setTitle("Accounts")
+        this.setTitle("My identities")
         this.setNodeMinWidth(180)
         
         this.setActions(["add"]).setSubnodeProto(BMLocalIdentity)

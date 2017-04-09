@@ -6,6 +6,7 @@ BMDraft = BMFormNode.extend().newSlots({
 }).setSlots({
     init: function () {
         BMFormNode.init.apply(this)
+		this.setShouldStore(true)
         //this.setNodeRowViewClassName("BrowserFieldRow")
 
         this.addFieldNamed("from").setNodeTitleIsEditable(false)

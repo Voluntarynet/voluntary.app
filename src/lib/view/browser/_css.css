@@ -226,54 +226,64 @@
 /* --- BrowserFieldRow --- */
 
 .BrowserFieldRow {
-    background-color: #fff;
+    background-color: transparent;
     opacity: 1;
     
-    font-family: "OpenSans-Regular";
+    font-family: "OpenSans-Light";
 
     display: block;
     position: relative;
     width: 100%;
-    height: 60px;
-    color: #CBCBCB;
-    border-bottom: 1px solid #ddd;
+    height: 100px;
+    color: #fff;
+
+
+    border-bottom: 1px solid #111;
     transition: background-color .3s ease-out;
+
+    text-align: center;
+    padding-left: 0px;
+    padding-right: 0px;
 }
 
 .BrowserFieldRowTitle {
-    color: #999;
-    font-family: "OpenSans-Regular";
+    color: #fff;
+    font-family: "OpenSans-Light";
     
-    min-width: 100%;
-    text-align: left;
-    
-    position: absolute;
-    top: 22px;
-    left: 90px;
-    font-size: 13px;
+    height: 30px;
+	margin-top: 30px;
+	margin-left: 20%;
+	margin-right: 20%;
+
+    font-size: 30px;
     font-weight: normal;
     white-space: nowrap;
     text-transform: none;
+
+    text-align: center;
+    padding-bottom: 13px;
+    border-bottom: 1px solid #222;
 }
+
 
 
 .BrowserFieldRowSubtitle {
-    color: #000;
-    font-family: "OpenSans-Regular";
-    position: absolute;
-    opacity: .8;
-    top: 22px;
-    width: 80px;
-    text-align: right;
+	background-color: transparent;
+    color: #aaa;
+    font-family: "OpenSans-Light";
+
+    height: 20px;
+    min-width: 100%;
+
+    text-align: center;
     font-size: 13px;
-    font-weight: bold;
     white-space: nowrap;
-    text-transform: capitalize;
+
+    padding-left: 0px;
+    padding-right: 0px;
 }
 
-.BrowserFieldRowSubtitle::after {
-    content: ": "
-}
+
 
 
 .BrowserFieldRowNote {

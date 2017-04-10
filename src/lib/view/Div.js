@@ -88,6 +88,13 @@ Div = ideal.Proto.extend().newSlots({
 		this.setCursor("grab")
 		return this
 	},
+	
+	// tool tip
+	
+	setToolTip: function(aName) {		
+		this._element.setAttribute('title', aName);
+		return this
+	},
 
     width: function() {
         return this.element().style.clientWidth

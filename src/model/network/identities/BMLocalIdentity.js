@@ -10,9 +10,10 @@ BMLocalIdentity = BMNavNode.extend().newSlots({
     drafts: null,
     inbox: null,
     sent: null,
-    
 }).setSlots({
     
+    _nodeVisibleClassName: "Identity",
+
     init: function () {
         BMNavNode.init.apply(this)
 		this.setShouldStore(true)

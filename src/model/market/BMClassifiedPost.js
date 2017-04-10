@@ -17,6 +17,8 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
     hasSent: false,
 
 }).setSlots({
+	_nodeVisibleClassName: "Post",
+	
     init: function () {
         BMStorableNode.init.apply(this)
 		this.setShouldStore(true)

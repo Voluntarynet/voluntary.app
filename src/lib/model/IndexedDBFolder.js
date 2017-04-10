@@ -41,18 +41,19 @@ IndexedDBFolder = ideal.Proto.extend().newSlots({
         };
          
         request.onupgradeneeded = function(event) { 
-          console.log(self.type() + " onupgradeneeded ", event)
-          var db = event.target.result;
-          
-          db.onerror = function(event) {
-              console.log("db error ", event)
-          };
-          
-          self.setDb(db)
-          
-          var objectStore = db.createObjectStore(self.storeName(), { keyPath: "key" }, false);          
-          //self.setObjectStore(objectStore);
-          objectStore.createIndex("key", "key", { unique: true });
+			console.log(self.type() + " onupgradeneeded")
+
+			var db = event.target.result;
+
+			db.onerror = function(event) {
+				console.log("db error ", event)
+			};
+
+			self.setDb(db)
+
+			var objectStore = db.createObjectStore(self.storeName(), { keyPath: "key" }, false);          
+			//self.setObjectStore(objectStore);
+			objectStore.createIndex("key", "key", { unique: true });
         };
 
         request.onsuccess = function (event) {

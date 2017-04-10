@@ -16,8 +16,8 @@ BMRServers = BMStorableNode.extend().newSlots({
     
     bootStrapServer: function () {
         return BMRServer.clone().setHost('peers.bitmarkets.org').setPort(9000) //.setPidSymbol("_bootStrapServer")
-        console.log("BMRServers.bootStrapServer")
-        return BMRServer.clone().setHost('127.0.0.1').setPort(9000) //.setPidSymbol("_bootStrapServer")
+        //console.log("BMRServers.bootStrapServer")
+        //return BMRServer.clone().setHost('127.0.0.1').setPort(9000) //.setPidSymbol("_bootStrapServer")
     },
     
     addServer: function (aServer) {

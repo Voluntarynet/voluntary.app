@@ -4,7 +4,10 @@ BMNode = ideal.Proto.extend().newSlots({
     title: null,
     subtitle: null,
     note: null,
+
     nodeMinWidth: 200,
+	//nodeDoesSizeToFit: true,
+
     items: null,
     view: null,
     subnodeProto: null,

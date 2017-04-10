@@ -1,4 +1,61 @@
 
+DivTextTapeMeasure = ideal.Proto.extend().newSlots({
+	idName: "DivTextTapeMeasure",
+    type: "Div",
+	copyStyles: ['fontSize','fontStyle', 'fontWeight', 'fontFamily','lineHeight', 'textTransform', 'letterSpacing'],
+}).setSlots({
+	
+	testElement: function() {
+		if (!this._testElement) {
+			this._testElement = this.createTestElement()
+			if (!document.getElementById(this.idName())) {
+				throw new Error("missing element '" + this.idName() + "'")
+			}
+		}
+		return this._testElement
+	},
+	
+	createTestElement: function() {
+		var e = document.createElement('div');
+	    e.setAttribute("id", this.idName());
+		document.body.appendChild(e);
+		e.style.display = "none";
+		e.style.position = "absolute";
+		e.style.left = -1000;
+		e.style.top  = -1000;
+		return e		
+	},
+	
+	widthOfDivWithText: function(div, text) {
+		var e = this.testElement()
+		
+		this.copyStyles().forEach(function (styleName) {
+			var v = div.style[styleName]
+			if (v) {
+				e.style[styleName] = v
+			} else {
+				delete e.style[styleName]
+			}
+		})
+		
+		e.innerHTML = div.innerHTML
+		
+		//var height = (e.clientHeight + 1)
+		var width = (e.clientWidth + 1) 
+		this.clean()
+		return width
+	},
+	
+	clean: function() {
+		var e = this.testElement()
+		e.innerHTML = ""
+		this.copyStyles().forEach(function (styleName) {
+			delete e.style[styleName]
+		})		
+	},
+	
+})
+
 function DomElement_atInsert(el, index, child) {
     var children = el.children
     

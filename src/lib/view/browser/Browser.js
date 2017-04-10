@@ -146,8 +146,27 @@ Browser = NodeView.extend().newSlots({
     },
 
     fitLastColumnGroupToRemainingWidth: function() {
+		//console.log("WARNING: SKIPPING fitLastColumnGroupToRemainingWidth ---------------")
+		//return this
+		
+		
+		
+		
         var otherColsWidth = 0
         var lastCg = this.columnGroups().last()
+		var lastNode = lastCg.column().node()
+		
+		//console.log("lastCg.column().node() = ", lastNode.view().type())
+		
+		/*
+		if (lastNode.view().type() == "BrowserColumnGroup") {
+	        //this.fitToColumnWidths()
+			return 
+		}
+		*/
+		
+	//	if (lastNode)
+
         //console.log("index of last column group = " + this.columnGroups().indexOf(lastCg))
 
         // set other columns width to that of their nodes
@@ -196,11 +215,11 @@ Browser = NodeView.extend().newSlots({
         var selectedColumnGroup = selectedColumn.parentItem()
         
         var index = this.columnGroups().indexOf(selectedColumn.columnGroup())
-        //console.log("index: " + index)
-        this.setColumnGroupCount(index + 2)
+		
+        this.setColumnGroupCount(index + 3)
         //console.log("selectColumn index: " + index + " cg " + this.columnGroups().length)
 
-        var nextCg = this.columnGroups().itemAfter(selectedColumnGroup)
+        var nextCg = this.columnGroups().itemAfter(selectedColumnGroup)		
 
         if (nextCg) {
             var nextNode = selectedColumnGroup.column().selectedRow().node()
@@ -210,6 +229,11 @@ Browser = NodeView.extend().newSlots({
             //this.log(" --- selectColumn sync")
             
             nextCg.syncFromNode()
+			//console.log("nextNode = ", nextNode.view().type())
+			
+			if (nextNode.view().type() != "BrowserColumnGroup") {
+				this.setColumnGroupCount(index + 2)
+			}
         }
         
         this.setupColumnGroupColors()

@@ -1,4 +1,12 @@
 
+UI
+
+collapse option on views? or...
+option to show several levels in one column and collapse on selection? or...
+use breadcrumbs (works on mobile as well)
+
+
+
 TODAY
 GOAL: send an ecrypted msg bt identities
 

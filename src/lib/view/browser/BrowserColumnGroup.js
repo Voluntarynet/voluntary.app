@@ -89,6 +89,7 @@ BrowserColumnGroup = NodeView.extend().newSlots({
             
             var w = this.node().nodeMinWidth()
             if (w) {
+	//nodeDoesSizeToFit
                 //console.log("setNode setMinAndMaxWidth")
                 this.setMinAndMaxWidth(w)
             }

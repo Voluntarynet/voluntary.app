@@ -55,7 +55,40 @@ Div = ideal.Proto.extend().newSlots({
         this.element().style.backgroundColor = s
         return this
     },
-    
+
+	// cursor 
+	
+    setCursor: function(s) {
+        this.element().style.cursor = s
+		console.log(this.divClassName(), " setCursor " + s) 
+        return this
+    },
+
+	makeCursorDefault: function() {
+		this.setCursor("default")
+		return this
+	},
+	
+	makeCursorPointer: function() {
+		this.setCursor("pointer")
+		return this
+	},
+
+	makeCursorText: function() {
+		this.setCursor("text")
+		return this
+	},
+	
+	makeCursorGrab: function() {
+		this.setCursor("grab")
+		return this
+	},
+	
+	makeCursorGrabbing: function() {
+		this.setCursor("grab")
+		return this
+	},
+
     width: function() {
         return this.element().style.clientWidth
     },
@@ -301,9 +334,11 @@ Div = ideal.Proto.extend().newSlots({
 				self.handleEventFunction(function () { self.onClick(event) })
 			}
             //this.element().ondblclick = function (event) { self.onDoubleClick(event) }
+			this.makeCursorPointer()
         } else {
             this.element().onclick = null
             this.element().ondbclick = null
+			this.makeCursorDefault()
         }
         return this
     },
@@ -486,7 +521,11 @@ Div = ideal.Proto.extend().newSlots({
     // editing
     
     setContentEditable: function (aBool) {
-        
+		//console.log(this.divClassName() + " setContentEditable(" + aBool + ")")
+		if (aBool) {
+        	this.makeCursorText()
+		}
+
         this.element().contentEditable = aBool ? 'true' : 'false'
         
         if (this.showsHaloWhenEditable()) {

@@ -45,6 +45,16 @@ BMFormNode = BMStorableNode.extend().newSlots({
         field.setNodeTitleIsEditable(true)
         field.setNodeRowViewClassName("BrowserFieldRow")
         this.addItem(field)
+
+		var self = this
+		this[this.setterNameForSlot(name)] = function (v) {
+			return self.fieldNamed(name).setTitle(v)
+		}
+		
+		this[name] = function() {
+			return self.fieldNamed(name).title()
+		}
+		
         return field
     },
     

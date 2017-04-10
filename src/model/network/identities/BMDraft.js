@@ -51,6 +51,10 @@ BMDraft = BMFormNode.extend().newSlots({
     toValue: function() {
         return this.valueForFieldNamed("to")
     },
+
+	body: function() {
+        return this.valueForFieldNamed("body")
+	},
     
     drafts: function() {
         return this.parentNode()

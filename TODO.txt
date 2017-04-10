@@ -1,4 +1,11 @@
 
+TODAY
+GOAL: send an ecrypted msg bt identities
+
+
+
+verify gen key pairs
+
 
 BUGS
 

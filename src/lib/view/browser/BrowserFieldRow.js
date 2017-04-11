@@ -8,7 +8,7 @@ BrowserFieldRow = BrowserRow.extend().newSlots({
         this.setIsSelectable(false) 
         this.title().turnOnUserSelect()
         this.subtitle().turnOffUserSelect()
-       
+        this.makeCursorDefault()
         return this
     },
     

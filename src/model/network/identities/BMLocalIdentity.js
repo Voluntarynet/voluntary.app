@@ -81,7 +81,6 @@ BMLocalIdentity = BMNavNode.extend().newSlots({
     
     setPrivateKey: function(pk) {
         this._privateKey = pk
-        //this.profile().setSubtitle(this.publicKeyString())
         return this
     },
     

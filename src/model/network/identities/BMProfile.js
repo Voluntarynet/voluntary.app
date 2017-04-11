@@ -7,12 +7,19 @@ BMProfile = BMFormNode.extend().newSlots({
         this.setTitle("Profile")
         
         this.addFieldNamed("name").setNodeTitleIsEditable(true).setNodeFieldProperty("name")
-        this.addFieldNamed("public key").setNodeTitleIsEditable(true).setNodeFieldProperty("publicKeyString")
-        this.addFieldNamed("private key").setNodeTitleIsEditable(true).setNodeFieldProperty("privateKeyString")
+        this.addFieldNamed("public key").setNodeTitleIsEditable(false).setNodeFieldProperty("publicKeyString")
+        this.addFieldNamed("private key").setNodeTitleIsEditable(false).setNodeFieldProperty("privateKeyString")
+
+        this.setNodeBgColor("white")
     },
     
     name: function() {
-        return this.parentNode().name()
+        return this.parentNode().parentNode().name()
+    },
+    
+    setName: function(aString) {
+        this.parentNode().parentNode().setName(aString)
+        return this
     },
     
     publicKeyString: function() {

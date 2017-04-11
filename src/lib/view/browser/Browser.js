@@ -13,6 +13,7 @@ Browser = NodeView.extend().newSlots({
             "#232323", "#000"
             ],
     //bgColors: ["#151515"],
+    
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
@@ -146,12 +147,7 @@ Browser = NodeView.extend().newSlots({
     },
 
     fitLastColumnGroupToRemainingWidth: function() {
-		//console.log("WARNING: SKIPPING fitLastColumnGroupToRemainingWidth ---------------")
-		//return this
-		
-		
-		
-		
+
         var otherColsWidth = 0
         var lastCg = this.columnGroups().last()
 		var lastNode = lastCg.column().node()
@@ -229,9 +225,9 @@ Browser = NodeView.extend().newSlots({
             //this.log(" --- selectColumn sync")
             
             nextCg.syncFromNode()
-			//console.log("nextNode = ", nextNode.view().type())
+			//console.log("nextNode = ", nextNode.isKindOf(BMFormNode))
 			
-			if (nextNode.view().type() != "BrowserColumnGroup") {
+			if (nextNode.view().type() != "BrowserColumnGroup" || nextNode.isKindOf(BMFormNode)) {
 				this.setColumnGroupCount(index + 2)
 			}
         }

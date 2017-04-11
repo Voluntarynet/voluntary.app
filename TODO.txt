@@ -1,6 +1,16 @@
 
 UI
 
+TWITTER mode
+
+separate node path from columnGroups
+
+- on first selection of 2nd column, add a back arrow to root column headerView
+- on Browser.selectColumn(), if column depth < 3, remove back arrow
+- on back arrow click, set node of 2nd column back one unless that would be root
+
+-----
+
 - collapse if not last two columns
 - expand when last column again
 

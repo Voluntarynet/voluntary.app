@@ -242,7 +242,7 @@
 }
 
 .BrowserFieldRowTitle {
-    color: #999;
+    color: #000;
     font-family: "OpenSans-Regular";
     
     min-width: 100%;
@@ -259,7 +259,7 @@
 
 
 .BrowserFieldRowSubtitle {
-    color: #000;
+    color: #777;
     font-family: "OpenSans-Regular";
     position: absolute;
     opacity: .8;

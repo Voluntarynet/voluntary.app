@@ -1,6 +1,6 @@
 
 require('./BMStorableNode.js')
 
-require('./BMFormNode.js')
+require('./BMFieldSetNode.js')
 require('./BMNavNode.js')
 require('./BMInfoNode.js')

@@ -72,18 +72,18 @@ BMObjectMessage = BMMessage.extend().newSlots({
     },
     
     setupFields: function() {
-        this.setNodeRowViewClassName("BrowserFieldRow")
+        //this.setNodeRowViewClassName("BrowserFieldRow")
         this.addFieldNamed("from").setNodeTitleIsEditable(false).setNodeFieldProperty("fromValue")
         this.addFieldNamed("to").setNodeTitleIsEditable(false).setNodeFieldProperty("toValue")
         this.addFieldNamed("subject").setNodeTitleIsEditable(false).setNodeFieldProperty("subjectValue")
         var body = this.addFieldNamed("body").setNodeTitleIsEditable(false).setNodeFieldProperty("bodyValue")       
-        body.setNodeMinHeight(-1).setNodeRowViewClassName("BrowserAreaRow")   
+        body.setNodeMinHeight(-1).setValueDivClassName("BMTextAreaFieldValueView")   
     },
     
     setContent: function(v) {
         //console.log(this.type() + " setContent: ", v)
         this._content = v
-        this.syncFields()
+        //this.syncFields()
         return this
     },
     

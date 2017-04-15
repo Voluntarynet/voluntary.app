@@ -1,19 +1,20 @@
 
-BMDraft = BMFormNode.extend().newSlots({
+BMDraft = BMFieldSetNode.extend().newSlots({
     type: "BMDraft",
     status: "",
     isSent: false,
 }).setSlots({
     init: function () {
-        BMFormNode.init.apply(this)
+        BMFieldSetNode.init.apply(this)
 		this.setShouldStore(true)
+		this.setShouldStoreItems(false)
         //this.setNodeRowViewClassName("BrowserFieldRow")
 
-        this.addFieldNamed("from").setNodeTitleIsEditable(false)
-        this.addFieldNamed("to")
-        this.addFieldNamed("subject")
-        this.addFieldNamed("body").setNodeMinHeight(-1).setNodeRowViewClassName("BrowserAreaRow")
-
+        this.addFieldNamed("fromAddress").setKey("from")
+        this.addFieldNamed("toAddress").setKey("to")
+        this.addFieldNamed("subject").setKey("subject")
+        //this.addFieldNamed("body").setNodeMinHeight(-1).setValueDivClassName("BMTextAreaFieldValueView").setKeyIsVisible(false)
+		this.addField(BMTextAreaField.clone().setKey("body").setNodeFieldProperty("body"))
         this.setStatus("")
 
         this.setActions(["send", "delete"])
@@ -23,8 +24,8 @@ BMDraft = BMFormNode.extend().newSlots({
     
     
     title: function() {
-        var title = this.valueForFieldNamed("subject")
-        if (title.length == 0) {
+        var title = this.subject()
+        if (!title) {
             title = "Untitled"
         }
         return title
@@ -44,17 +45,6 @@ BMDraft = BMFormNode.extend().newSlots({
         return d
     },
     
-    fromValue: function() {
-        return this.valueForFieldNamed("from")
-    },
-    
-    toValue: function() {
-        return this.valueForFieldNamed("to")
-    },
-
-	body: function() {
-        return this.valueForFieldNamed("body")
-	},
     
     drafts: function() {
         return this.parentNode()

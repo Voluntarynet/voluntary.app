@@ -1,24 +1,27 @@
-BMProfile = BMFormNode.extend().newSlots({
+BMProfile = BMFieldSetNode.extend().newSlots({
     type: "BMProfile",
 }).setSlots({
     init: function () {
-        BMFormNode.init.apply(this)
+        BMFieldSetNode.init.apply(this)
  		this.setShouldStore(true)
+		this.setShouldStoreItems(false)
         this.setTitle("Profile")
         
-        this.addFieldNamed("name").setNodeTitleIsEditable(true).setNodeFieldProperty("name")
-        this.addFieldNamed("public key").setNodeTitleIsEditable(false).setNodeFieldProperty("publicKeyString")
-        this.addFieldNamed("private key").setNodeTitleIsEditable(false).setNodeFieldProperty("privateKeyString")
+        this.addFieldNamed("name").setNodeFieldProperty("name").setValueIsEditable(true)
+        this.addFieldNamed("public key").setNodeFieldProperty("publicKeyString").setValueIsEditable(false)
+        this.addFieldNamed("private key").setNodeFieldProperty("privateKeyString").setValueIsEditable(false)
 
         this.setNodeBgColor("white")
+       // this.setViewClassName("BMFieldSetView")
+
     },
     
     name: function() {
-        return this.parentNode().parentNode().name()
+        return this.parentNode().name()
     },
     
     setName: function(aString) {
-        this.parentNode().parentNode().setName(aString)
+        this.parentNode().setName(aString)
         return this
     },
     

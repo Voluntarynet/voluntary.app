@@ -9,6 +9,7 @@ BrowserFieldRow = BrowserRow.extend().newSlots({
         this.title().turnOnUserSelect()
         this.subtitle().turnOffUserSelect()
         this.makeCursorDefault()
+		this.setSpellCheck(false)
         return this
     },
     
@@ -16,7 +17,7 @@ BrowserFieldRow = BrowserRow.extend().newSlots({
         BrowserRow.setNode.apply(this, [aNode])
         
         if (aNode) {
-            var name = aNode.nodeRowViewClassName() 
+            var name = aNode.nodeOverrideDivClassName() 
             if (name == null) { name = "BrowserFieldRow" }
             this.setDivClassName(name)
             if(aNode.nodeAfterContent()) {

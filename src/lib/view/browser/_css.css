@@ -267,7 +267,6 @@
     width: 100px;
     text-align: right;
     font-size: 13px;
-    font-weight: bold;
     white-space: nowrap;
     text-transform: capitalize;
 }
@@ -371,6 +370,7 @@
     color: #CBCBCB;
     border-bottom: 1px solid #ddd;
     transition: background-color .3s ease-out;
+	margin: 20px;
 }
 
 .BrowserAreaRowTitle {

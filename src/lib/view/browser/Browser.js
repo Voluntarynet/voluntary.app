@@ -225,9 +225,9 @@ Browser = NodeView.extend().newSlots({
             //this.log(" --- selectColumn sync")
             
             nextCg.syncFromNode()
-			//console.log("nextNode = ", nextNode.isKindOf(BMFormNode))
+			//console.log("nextNode = ", nextNode.isKindOf(BMFieldSetNode))
 			
-			if (nextNode.view().type() != "BrowserColumnGroup" || nextNode.isKindOf(BMFormNode)) {
+			if (nextNode.view().type() != "BrowserColumnGroup" || nextNode.isKindOf(BMFieldSetNode)) {
 				this.setColumnGroupCount(index + 2)
 			}
         }

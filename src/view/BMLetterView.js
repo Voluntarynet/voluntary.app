@@ -1,4 +1,5 @@
 
+/*
 BMLetterView = NodeView.extend().newSlots({
     type: "BMLetterView",
     fromAddressView: null,
@@ -57,3 +58,4 @@ BMLetterView = NodeView.extend().newSlots({
         this.syncToNode()
     },
 })
+*/

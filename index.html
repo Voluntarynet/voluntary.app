@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="src/view/_css.css">
     <link rel="stylesheet" href="src/lib/view/_css.css">
     <link rel="stylesheet" href="src/lib/view/browser/_css.css">
-    <link rel="stylesheet" href="src/lib/view/browser/_area.css">
+    <link rel="stylesheet" href="src/lib/view/fields/_css.css">
     
   </head>
   
@@ -118,6 +118,7 @@ var loadSequentialJS = (function(document) {
 
 		        "src/lib/ideal/ideal.js",
 		        "src/lib/ideal/ideal_plus.js",
+		        "src/lib/ideal/Stack.js",
 
 		        "src/lib/notification/Notification.js",
 		        "src/lib/notification/NotificationCenter.js",
@@ -125,9 +126,15 @@ var loadSequentialJS = (function(document) {
 
 
 		        "src/lib/node/BMNode.js",
-		        "src/lib/node/BMField.js",
+		
+
+		
 		        "src/lib/node/Nodes/BMStorableNode.js",
-		        "src/lib/node/Nodes/BMFormNode.js",
+		
+		        "src/lib/node/fields/BMFieldSetNode.js",
+		        "src/lib/node/fields/BMField.js",
+		        "src/lib/node/fields/BMTextAreaField.js",
+		
 		        "src/lib/node/Nodes/BMInfoNode.js",
 		        "src/lib/node/Nodes/BMImageNode.js",
 		        "src/lib/node/Nodes/BMNavNode.js",
@@ -171,6 +178,11 @@ var loadSequentialJS = (function(document) {
                 "src/lib/view/Div.js",
                 "src/lib/view/DivTextTapeMeasure.js",
                 "src/lib/view/NodeView.js",
+
+                "src/lib/view/fields/BMFieldSetView.js",
+                "src/lib/view/fields/BMFieldView.js",
+                "src/lib/view/fields/BMTextAreaFieldView.js",
+
                 "src/lib/view/ContentView.js",
                 "src/lib/view/GenericView.js",
                 //"src/lib/view/MenuManager.js",

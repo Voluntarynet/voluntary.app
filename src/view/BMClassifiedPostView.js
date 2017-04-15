@@ -169,12 +169,12 @@ BMClassifiedPostView = NodeView.extend().newSlots({
         this.descriptionView().setContentEditable(aBool)
         this.currencyView().setContentEditable(aBool)
         
-        this.buttonView().setVisible(aBool)
+        this.buttonView().setIsVisible(aBool)
         this.powIncrementView().setDisplay(aBool ? "inline-block" : "none")
         this.powDecrementView().setDisplay(aBool ? "inline-block" : "none")
         
         this.imageWellView().setIsEditable(aBool)
-        this.imagesHeaderView().setVisible(aBool)
+        this.imagesHeaderView().setIsVisible(aBool)
         return this
     },
     

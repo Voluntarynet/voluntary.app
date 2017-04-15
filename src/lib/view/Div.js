@@ -89,6 +89,11 @@ Div = ideal.Proto.extend().newSlots({
 		return this
 	},
 	
+	setSpellCheck: function(aBool) {
+		this._element.setAttribute('spellcheck', aBool);
+		return this
+	},
+	
 	// tool tip
 	
 	setToolTip: function(aName) {		
@@ -113,10 +118,12 @@ Div = ideal.Proto.extend().newSlots({
     },
 
     setDivClassName: function (aName) {
-        this._divClassName = aName
-        if (this._element) {
-            this._element.setAttribute('class', aName);
-        }
+		if (this._divClassName != aName) {
+	        this._divClassName = aName
+	        if (this._element) {
+	            this._element.setAttribute('class', aName);
+	        }
+		}
         return this
     },
 
@@ -161,10 +168,28 @@ Div = ideal.Proto.extend().newSlots({
     },
  
     newItemForNode: function(aNode) {
-        if (!this.itemProto()) {
-            throw new Error("missing itemProto to create newItemForNode")
+		var proto = null
+
+		if (!proto) {
+			proto = this.itemProto()
+		}
+		
+		if (!proto) {
+			proto = aNode.viewClass()
+			if (proto) {
+				//console.log("viewClass = ", aNode.viewClass())
+			}
+		}
+				
+        if (!proto) {
+            throw new Error("missing proto to create newItemForNode(" + aNode.type() + ")")
         }
-        return this.itemProto().clone().setNode(aNode)
+
+		var item = proto.clone()
+		if (!item.setNode) {
+			console.log("node = " + aNode.type() + " item = ", item.type())
+		}
+        return item.setNode(aNode)
     },
     
     atInsert: function (anIndex, anItem) {
@@ -323,7 +348,8 @@ Div = ideal.Proto.extend().newSlots({
 		try {
 			f()
 		} catch (e) {
-			error = e
+			//Stack.showError(e)
+			console.log(e)
 		}
 		
 		this.setIsHandlingEvent(false)
@@ -726,17 +752,23 @@ Div = ideal.Proto.extend().newSlots({
         return this.element().style.color 
     },
     
-    setVisible: function(aBool) {
-        this.element().style.visibility = aBool ? "visible" : "hidden";
+    setIsVisible: function(aBool) {
+		var v = aBool ? "visible" : "hidden"
+		if (this.element().style.visibility != v) {
+        	this.element().style.visibility = v
+		}
         return this
     },
+
+	isVisible: function() {
+        return this.element().style.visibility != "hidden";
+	},
     
     setDisplay: function(s) {
         //assert(s in { "none", ...} );
         this.element().style.display = s;
         return this
     },
-    
     
     turnOffUserSelect: function() {
         this.element().style.userSelect = "none";

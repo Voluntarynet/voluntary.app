@@ -8,7 +8,7 @@
 
 */
 
-BMMessage = BMFormNode.extend().newSlots({
+BMMessage = BMFieldSetNode.extend().newSlots({
     type: "BMMessage",
     msgType: null,
     data: null,

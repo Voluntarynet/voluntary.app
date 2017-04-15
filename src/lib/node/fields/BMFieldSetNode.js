@@ -1,5 +1,4 @@
 /*
-
         FormNode is useful for node's which are to be viewed and interacted with as forms
         
         child nodes are of type BMField and should only be added via addFieldNamed()
@@ -8,12 +7,12 @@
         
         example use in subclass 
     
-        BMCustomFormNode = BMFormNode.extend().newSlots({
+        BMCustomFormNode = BMFieldSetNode.extend().newSlots({
             type: "BMCustomFormNode",
         }).setSlots({
         
         init: function () {
-            BMFormNode.init.apply(this)
+            BMFieldSetNode.init.apply(this)
 
             this.addFieldNamed("from")
             this.addFieldNamed("to")
@@ -26,56 +25,53 @@
 */  
         
         
-BMFormNode = BMStorableNode.extend().newSlots({
-    type: "BMFormNode",
+BMFieldSetNode = BMStorableNode.extend().newSlots({
+    type: "BMFieldSetNode",
     status: "",
     isEditable: true,
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
-        //this.setNodeRowViewClassName("BrowserFieldRow")
-        this.setNodeRowViewClassName("BrowserFieldRow")
         this.setNodeMinWidth(500)
+		this.setViewClassName("BMFieldSetView")
     },        
     
     // --- fields ---
-    
-    addFieldNamed: function(name) {
-        var field = BMNode.clone().setTitle("").setSubtitle(name)
-        field.setNodeTitleIsEditable(true)
-        field.setNodeRowViewClassName("BrowserFieldRow")
-        this.addItem(field)
 
-		var self = this
-		this[this.setterNameForSlot(name)] = function (v) {
-			return self.fieldNamed(name).setTitle(v)
-		}
-		
-		this[name] = function() {
-			return self.fieldNamed(name).title()
-		}
-		
+	addField: function(field) {
+		var name = field.nodeFieldProperty()
+		this.addItem(field)
+		this.addStoredSlot(name)
+		this.newSlot(name, null);
+		return field	
+	},
+
+    addFieldNamed: function(name) {	
+        var field = BMField.clone().setKey(name)
+		field.setNodeFieldProperty(name)
+		this.addField(field)
         return field
     },
     
     fieldNamed: function(name) {
         return this.items().detect(function (item) { 
-            return item.subtitle() == name 
+            return item.key() == name 
         })
     },
     
     valueForFieldNamed: function(aName) {
-        return this.fieldNamed(aName).title()
+        return this.fieldNamed(aName).value()
     },
     
     // --- peristence - save items as fields in dict ---
-    
+    /*
+	
     nodeDict: function () {
         var dict = BMStorableNode.nodeDictForProperties.apply(this)
         
         var self = this
         this.items().forEach(function(item) {
-            dict[item.subtitle()] = item.title()
+            dict[item.key()] = item.value()
         })
         
         return dict
@@ -83,27 +79,28 @@ BMFormNode = BMStorableNode.extend().newSlots({
 
     setNode: function(aNode) {
         BMStorableNode.setNode.apply(this, [aNode])
-        this.syncFields()
+        //this.syncToFields()
         return this
     },
         
     setNodeDict: function(dict) {
         var self = this
         this.items().forEach(function(item) {
-            item.setTitle(dict[item.subtitle()])
+            item.setValue(dict[item.key()])
         })        
         
         //this.syncFields()
 
         return this
     },
+*/
     
     onDidEditNode: function() {
         this.markDirty()
         this.didUpdate()
     },
-    
-    syncFields: function() {
+    /*
+    syncToFields: function() {
         var self = this
         this.items().forEach(function(field) {
             var key = field.nodeFieldProperty()
@@ -111,13 +108,14 @@ BMFormNode = BMStorableNode.extend().newSlots({
             if (key) {
                 if (!self[key]) {
                     console.error("missing field key= '" + key + "'")
-                    field.setTitle("missing field key= '" + key + "'")
                 } else {            
-                    //console.log("found key= '" + key + "'") 
                     var value = self[key].apply(self)
-                    field.setTitle(value)
+                    console.log(self.type() + " found key= '" + key + "' with value '" + value + "'") 
+                    //field.setKey(key)
+                    field.setValue(value)
                 }
             }
         })
     },
+*/
 })

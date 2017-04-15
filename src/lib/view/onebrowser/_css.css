@@ -128,9 +128,7 @@
 }
 
 .BrowserRow:hover {
-    /*
-    background-color: #3f3f3f;
-    */
+
 }
 
 .BrowserRowTitle_NoSubtitle {
@@ -220,10 +218,7 @@
 
 
 
-
-
-
-/* --- BrowserFieldRow --- */
+/*
 
 .BrowserFieldRow {
     background-color: #fff;
@@ -286,7 +281,11 @@
     white-space: nowrap;
 }
 
-/* --------------------- */
+
+
+
+
+
 
 .BrowserFieldRow_Selected {
     background-color: #fff;
@@ -351,7 +350,6 @@
 
 
 
-/* area */
 
 
 
@@ -386,9 +384,7 @@
     font-weight: normal;
     white-space: nowrap;
     text-transform: none;
-    /*
-    border: 1px solid #ddd;
-    */
+
 }
 
 
@@ -401,7 +397,9 @@
 
 }
 
-/* --------------------- */
+
+
+
 
 .BrowserAreaRow_Selected {
     background-color: #fff;
@@ -445,7 +443,7 @@
 }
 
 
-
+*/
 
 
 

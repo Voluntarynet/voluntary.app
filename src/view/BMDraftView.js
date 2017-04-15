@@ -1,5 +1,6 @@
 
-BMDraftView = NodeView.extend().newSlots({
+/*
+BMDraftView______ = NodeView.extend().newSlots({
     type: "BMDraftView",
     fromAddressView: null,
     toAddressView: null,
@@ -60,3 +61,4 @@ BMDraftView = NodeView.extend().newSlots({
         this.syncToNode()
     },
 })
+*/

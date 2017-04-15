@@ -82,6 +82,8 @@ BrowserColumnGroup = NodeView.extend().newSlots({
         }
          
         NodeView.setNode.apply(this, [aNode])
+
+        this.setColumnClass(BrowserColumn)
         
         if (aNode) {
             
@@ -89,7 +91,7 @@ BrowserColumnGroup = NodeView.extend().newSlots({
             
             var w = this.node().nodeMinWidth()
             if (w) {
-	//nodeDoesSizeToFit
+				//nodeDoesSizeToFit
                 //console.log("setNode setMinAndMaxWidth")
                 this.setMinAndMaxWidth(w)
             }
@@ -97,6 +99,8 @@ BrowserColumnGroup = NodeView.extend().newSlots({
             // use custom class for column if node wants it
             
             var customViewClass = aNode.viewClass()
+		//	console.log(this.node().title() + " customViewClass = ", customViewClass)
+		//	console.log(this.node().title() + " viewClassName = ", this.node().viewClassName())
                     
             if (customViewClass) {
                 this.setColumnClass(customViewClass)

@@ -1,6 +1,10 @@
 
 
+- add ImageWellField
+- support setHeight on TextAreaField
+- disable send action on draft when invalid
 - Multiselection popup?
+- add hashtag path to url
 
 
 UI

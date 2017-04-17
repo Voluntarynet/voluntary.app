@@ -9,8 +9,8 @@ BMTextAreaField = BMField.extend().newSlots({
 }).setSlots({
     init: function () {
         BMField.init.apply(this)
-		this.setViewClassName("BMTextAreaFieldView")
-		this.valueDivClassName("BMTextAreaValueFieldView")
+		//this.setViewClassName("BMTextAreaFieldView")
+		//this.valueDivClassName("BMTextAreaValueFieldView")
 		this.setKeyIsVisible(false)
     },
 })

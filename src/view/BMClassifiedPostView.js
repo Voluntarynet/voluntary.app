@@ -1,4 +1,5 @@
 
+/*
 BMClassifiedPostView = NodeView.extend().newSlots({
     type: "BMPostView",
     statusView: null,
@@ -195,3 +196,5 @@ BMClassifiedPostView = NodeView.extend().newSlots({
         this.node().decrementPowTarget()  
     },
 })
+
+*/

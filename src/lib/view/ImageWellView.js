@@ -2,7 +2,7 @@
 ImageWellView = NodeView.extend().newSlots({
     type: "ImageWellView",
     imageView: null,
-    isEditable: false,
+    isEditable: true,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
@@ -12,6 +12,7 @@ ImageWellView = NodeView.extend().newSlots({
         //this.setEditable(false)
         this.dragUnhighlight()
         this.makeUnselectable()
+        this.turnOffUserSelect()
         return this
     },
 

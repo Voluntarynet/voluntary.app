@@ -1,5 +1,5 @@
 
-BMClassifiedPost = BMStorableNode.extend().newSlots({
+BMClassifiedPost = BMFieldSetNode.extend().newSlots({
     type: "BMClassifiedPost",
     title: null, // string
     price: 0,
@@ -20,15 +20,24 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
 	_nodeVisibleClassName: "Post",
 	
     init: function () {
-        BMStorableNode.init.apply(this)
+        BMFieldSetNode.init.apply(this)
 		this.setShouldStore(true)
-        this.setActions(["delete"])
-        this.setNodeMinWidth(550)
+		this.setShouldStoreItems(false)
+        //this.setNodeMinWidth(550)
         
+        this.addFieldNamed("stamp").setKey("stamp").setValueIsEditable(false)
+        this.addFieldNamed("path").setKey("path").setValueIsEditable(false)
+        this.addFieldNamed("title").setKey("title").setValueIsEditable(true)
+        this.addFieldNamed("price").setKey("price").setValueIsEditable(true)
+        this.addFieldNamed("currency").setKey("currency").setValueIsEditable(true)
+        //this.addFieldNamed("description").setKey("description").setValueIsEditable(true)
+		this.addField(BMTextAreaField.clone().setKey("description").setNodeFieldProperty("description")).setValueIsEditable(true)
+		this.addField(BMImageWellField.clone().setKey("drop images here").setNodeFieldProperty("imageDataURLs")).setValueIsEditable(true)
+
         this.setTitle("Untitled")
         this.setPrice(0)
         this.setDescription("Item or service description")
-        this.addStoredSlots(["price", "title", "description", "path", "postDate", "postPeriod", "uuid", "imageDataURLs", "hasSent"])
+        this.addStoredSlots([/*"price", "title", "description", "path",*/ "postDate", "postPeriod", "uuid", "imageDataURLs", "hasSent"])
 
         //this.setImagesNode(BMNode.clone().setViewClassName("ImageView").setSubnodeProto("ImageNode"))
         this.setImageDataURLs([]) 
@@ -37,6 +46,9 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
 
         this._powDoneObs   = NotificationCenter.shared().newObservation().setName("powDone").setObserver(this)
         this._powUpdateObs = NotificationCenter.shared().newObservation().setName("powUpdate").setObserver(this)
+
+        this.setActions(["delete"])
+
     },
 
 	setParentNode: function(item) {
@@ -84,11 +96,6 @@ BMClassifiedPost = BMStorableNode.extend().newSlots({
 			console.log(e)
 		}
 		return "error"
-    },
-    
-    setPrice: function(p) {
-        this._price = p; //parseFloat(p)
-        return this
     },
     
     postDict: function () {

@@ -1,4 +1,4 @@
-
+/*
 BMPostView = NodeView.extend().newSlots({
     type: "BMPostView",
     statusView: null,
@@ -111,3 +111,4 @@ BMPostView = NodeView.extend().newSlots({
         this.syncToNode()
     },
 })
+*/

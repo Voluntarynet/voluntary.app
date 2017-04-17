@@ -38,7 +38,10 @@ BMField = BMNode.extend().newSlots({
 	
     init: function () {
         BMNode.init.apply(this)
-		this.setViewClassName("BMFieldView")
+		//this.setViewClassName("BMFieldView")
+		this.setViewClassName(null)
+		
+		//console.log("BMField viewClassName = '" + this.viewClassName() + "'")
     },    
 	
 	target: function() {
@@ -52,7 +55,7 @@ BMField = BMNode.extend().newSlots({
 	setValue: function(v) {
 		var target = this.target()
 		var setter = this.setterNameForSlot(this.nodeFieldProperty())
-		//console.log("this.parentNode() = " + this.parentNode().type() + " setter = '" + setter + "'")
+		//console.log("target = " + target.type() + " setter = '" + setter + "'")
 		target[setter].apply(target, [v])
 		return this
 	},
@@ -60,7 +63,7 @@ BMField = BMNode.extend().newSlots({
 	value: function() {
 		var target = this.target()
 		var getter = this.nodeFieldProperty()
-		//console.log("this.parentNode() = " + this.parentNode().type() + " getter = '" + getter + "'")
+		//console.log("target = " + target.type() + " getter = '" + getter + "'")
 		var value = target[getter].apply(target)
 		return value
 	},

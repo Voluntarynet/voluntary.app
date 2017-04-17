@@ -3,6 +3,9 @@ BMFieldView = NodeView.extend().newSlots({
     type: "BMFieldView",
 	keyView: null,
 	valueView: null,
+	editableColor: "black",
+	uneditableColor: "#aaa",
+	errorColor: "red",
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
@@ -11,17 +14,18 @@ BMFieldView = NodeView.extend().newSlots({
 
 		this.setKeyView(this.addItem(Div.clone().setDivClassName("BMFieldKeyView")))
         this.addItem(this.keyView())     
-   		this.keyView().turnOffUserSelect()
+   		this.keyView().turnOffUserSelect().setSpellCheck(false)   
 		
         this.setValueView(this.addItem(Div.clone().setDivClassName("BMFieldValueView")))
-        this.addItem(this.valueView())        
+        this.addItem(this.valueView())  
+		this.valueView().setSpellCheck(false)      
         
         //his.setEditable(false)
         return this
     },
 
     syncFromNode: function () {
-		console.log("BMFieldView syncFromNode")
+		//console.log("BMFieldView syncFromNode")
 		
         var node = this.node()
 
@@ -30,10 +34,32 @@ BMFieldView = NodeView.extend().newSlots({
 
 		this.keyView().setIsVisible(node.keyIsVisible())
 		this.valueView().setIsVisible(node.valueIsVisible())
+		
 
         
         this.keyView().setContentEditable(node.keyIsEditable())
         this.valueView().setContentEditable(node.valueIsEditable())
+
+		if (!node.valueIsEditable()) {
+			//console.log("fieldview key '", node.key(), "' node.valueIsEditable() = ", node.valueIsEditable(), " setColor ", this.uneditableColor())
+			this.valueView().setColor(this.uneditableColor())
+		} else {
+			this.valueView().setColor(this.editableColor())
+		}
+		
+		var color = this.valueView().color()
+		
+		if (node.valueError()) {
+			this.valueView().setColor(this.errorColor())
+			//this.valueView().setBackgroundColor(this.errorColor())
+			//this.valueView().setColor("white")
+			this.valueView().setToolTip(node.valueError())
+			
+		} else {
+			this.valueView().setBackgroundColor("transparent")
+			this.valueView().setColor(color)
+			this.valueView().setToolTip("")
+		}
 
 		// allow for custom view class
 		if (node.valueDivClassName()) {

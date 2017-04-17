@@ -4,20 +4,14 @@ BMNetwork = BMStorableNode.extend().newSlots({
     type: "BMNetwork",
     servers: null,
     messages: null,
-    localIdentities: null,
-    remoteIdentities: null,
+    localIdentities: null, // set by parent 
+    remoteIdentities: null, // set by parent 
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
         //this.setPid("_network")
         this.setTitle("Network")
         this.setNodeMinWidth(150)
-        
-        //this.initStoredSlotWithProto("localIdentities", BMLocalIdentities)
-        //this.initStoredSlotWithProto("remoteIdentities", BMRemoteIdentities)
-
-        //this.initStoredSlotWithProto("servers", BMRServers)
-        //this.initStoredSlotWithProto("messages", BMMessages)
 
 		this.setServers(NodeStore.shared().rootInstanceWithPidForProto("_servers", BMRServers))
 		this.addItem(this.servers())

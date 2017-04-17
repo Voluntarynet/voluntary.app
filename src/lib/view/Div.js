@@ -96,8 +96,12 @@ Div = ideal.Proto.extend().newSlots({
 	
 	// tool tip
 	
-	setToolTip: function(aName) {		
-		this._element.setAttribute('title', aName);
+	setToolTip: function(aName) {	
+		if (aName) {	
+			this._element.setAttribute('title', aName);
+		} else {
+			this._element.removeAttribute('title');
+		}
 		return this
 	},
 

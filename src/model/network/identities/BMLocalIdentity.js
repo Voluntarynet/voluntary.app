@@ -17,7 +17,7 @@ BMLocalIdentity = BMNavNode.extend().newSlots({
     init: function () {
         BMNavNode.init.apply(this)
 		this.setShouldStore(true)
-        this.setNodeTitleIsEditable(true)
+        //this.setNodeTitleIsEditable(true)
  
         this.initStoredSlotWithProto("profile", BMProfile)
         this.initStoredSlotWithProto("inbox", BMInbox)
@@ -101,7 +101,7 @@ BMLocalIdentity = BMNavNode.extend().newSlots({
     },
     
     address: function() {
-        return this.publicKey().toString().slice(0, 12) + "..."
+        return this.publicKey().toString().slice(0, 5) + "..."
     },
     
     signatureForMessageString: function(msgString) {

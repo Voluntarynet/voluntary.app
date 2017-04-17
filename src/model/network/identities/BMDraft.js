@@ -10,9 +10,15 @@ BMDraft = BMFieldSetNode.extend().newSlots({
 		this.setShouldStoreItems(false)
         //this.setNodeRowViewClassName("BrowserFieldRow")
 
-        this.addFieldNamed("fromAddress").setKey("from")
+        this.addFieldNamed("stamp").setKey("stamp").setValueIsEditable(false)
+		this.setStamp("Unstamped")
+		
+        this.addFieldNamed("fromAddress").setKey("from").setValueIsEditable(false)
         this.addFieldNamed("toAddress").setKey("to")
         this.addFieldNamed("subject").setKey("subject")
+
+		this.didUpdate()
+	
         //this.addFieldNamed("body").setNodeMinHeight(-1).setValueDivClassName("BMTextAreaFieldValueView").setKeyIsVisible(false)
 		this.addField(BMTextAreaField.clone().setKey("body").setNodeFieldProperty("body"))
         this.setStatus("")
@@ -21,7 +27,20 @@ BMDraft = BMFieldSetNode.extend().newSlots({
         this.setNodeMinWidth(600)
         this.setNodeBgColor("white")
     },
-    
+
+	localIdentity: function() {
+		if (this.drafts()) {
+			return this.drafts().parentNode()
+		}
+		return null
+	},
+
+	setParentNode: function(aNode) {
+		BMFieldSetNode.setParentNode.apply(this, [aNode])
+		this.validateFromAddress()
+
+		return this
+	},    
     
     title: function() {
         var title = this.subject()
@@ -38,10 +57,13 @@ BMDraft = BMFieldSetNode.extend().newSlots({
     // ------------------------
 
     postDict: function() {
-        var d = this.nodeDict()
-        delete d.type
-        delete d.children
-        //console.log("postDict: ", d)
+        var d = {}
+		var payload = {}
+		payload.toAddress = this.toAddress()
+		payload.fromAddress = this.fromAddress()
+		payload.subject = this.subject()
+		payload.body = this.body()
+		d.payload = d
         return d
     },
     
@@ -49,15 +71,54 @@ BMDraft = BMFieldSetNode.extend().newSlots({
     drafts: function() {
         return this.parentNode()
     },
+
+	validateFromAddress: function() {
+		if (this.localIdentity()) {
+			this.setFromAddress(this.localIdentity().publicKeyString())
+		}
+	},
+
+	validateToAddress: function() {
+		var addressField = this.fieldNamed("toAddress")
+		
+		if (addressField) {
+			if (!bitcore.PublicKey.isValid(this.toAddress())) {
+				addressField.setValueError("invalid address")
+			} else {
+				addressField.setValueError(null)
+			}
+		}	
+		
+		return this	
+	},
+	
+	didLoadFromStore: function() {
+		this.validate()
+		return this
+	},
+	
+	validate: function() {
+		this.validateToAddress()
+		this.validateFromAddress()
+		
+		return this	
+	},
+	
+	didUpdate: function() {
+		BMFieldSetNode.didUpdate.apply(this)
+		//console.log("Draft update")
+		this.validate()
+		return this
+	},
     
     send: function () {
         var objMsg = BMObjectMessage.clone()
         
-        var myId = App.shared().network().localIdentities().idWithPubKeyString(this.fromValue())        
-        var toId = App.shared().network().idWithPubKeyString(this.toValue())
+        var myId = App.shared().network().localIdentities().idWithPubKeyString(this.fromAddress())        
+        var toId = App.shared().network().idWithPubKeyString(this.toAddress())
 
         objMsg.setSenderId(myId)
-        objMsg.setReceiverId(myId)
+        objMsg.setReceiverId(toId)
         objMsg.setContent(this.postDict())
     
         objMsg.send()

@@ -13,23 +13,23 @@ BMProfile = BMFieldSetNode.extend().newSlots({
 
         this.setNodeBgColor("white")
        // this.setViewClassName("BMFieldSetView")
+    },
 
-    },
-    
-    name: function() {
-        return this.parentNode().name()
-    },
-    
-    setName: function(aString) {
-        this.parentNode().setName(aString)
-        return this
-    },
+	setParentNode: function(aNode) {
+		BMFieldSetNode.setParentNode.apply(this, [aNode])
+		this.fieldNamed("name").setTarget(aNode)
+		return this
+	},
+
+	identity: function() {
+		return this.parentNode()
+	},
     
     publicKeyString: function() {
-        return this.parentNode().publicKeyString()
+        return this.identity().publicKeyString()
     },
     
     privateKeyString: function() {
-        return this.parentNode().privateKeyString()
+        return this.identity().privateKeyString()
     },
 })

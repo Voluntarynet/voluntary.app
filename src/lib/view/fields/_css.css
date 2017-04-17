@@ -11,7 +11,7 @@
     background-color: #fff;
 }
 
-/* --- FieldView --- */
+/* --- FieldView --------------------------- */
 
 .BMFieldView {
     background-color: #fff;
@@ -28,7 +28,7 @@
     transition: background-color .3s ease-out;
 }
 
-/* --- Key --- */
+/* --------------------------- Key --------------------------- */
 
 .BMFieldKeyView {
     color: #777;
@@ -47,26 +47,35 @@
     content: ": "
 }
 
-/* --- Value --- */
+/* --------------------------- Value --------------------------- */
 
 .BMFieldValueView {
     color: #000;
     font-family: "OpenSans-Regular";
     position: absolute;
     
-    min-width: 100%;
+    min-width: 100px;
     text-align: left;
     
-    top: 22px;
+    top: 19px;
     left: 110px;
     font-size: 13px;
     font-weight: normal;
     white-space: nowrap;
     text-transform: none;	
+
+	border-radius: 5px;
+	/* 
+	background-color: #aaa;
+	*/
+	padding-left: 7px;
+	padding-right: 7px;
+	padding-top: 3px;
+	padding-bottom: 3px;
 }
 
 
-/* --- TextArea --- */
+/* --------------------------- TextArea --------------------------- */
 
 .BMTextAreaFieldView {
     background-color: #fff;

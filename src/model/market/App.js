@@ -56,6 +56,9 @@ App = BaseApp.extend().newSlots({
 		// network
 
 		this.setNetwork(BMNetwork.clone())
+		this.network().setLocalIdentities(this.localIdentities())
+		this.network().setRemoteIdentities(this.remoteIdentities())
+		
 		this.addItem(this.network())
 
 		// about 

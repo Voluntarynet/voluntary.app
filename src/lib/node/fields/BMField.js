@@ -67,5 +67,13 @@ BMField = BMNode.extend().newSlots({
 		var value = target[getter].apply(target)
 		return value
 	},
-    
+	
+	visibleValue: function() {
+		return this.value()
+	},
+
+	validate: function() {
+		// subclasses should override if needed
+		return true
+	},    
 })

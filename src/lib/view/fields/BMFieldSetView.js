@@ -9,4 +9,5 @@ BMFieldSetView = NodeView.extend().newSlots({
 		// calling syncToNode will set up field views
         return this
     },
+
 })

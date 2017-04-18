@@ -121,4 +121,24 @@ BMFieldSetNode = BMStorableNode.extend().newSlots({
         })
     },
 */
+
+	validate: function() {
+		var isValid = true
+
+		this.items().forEach(function (item) { 
+			if (!item.validate()) {
+				isValid = false
+			}
+		})
+	
+		return isValid
+	},
+
+	invalidItems: function() {
+		return this.items().detect(function (item) { item.validate() })
+	},
+
+	isValid: function() {
+		return this.validate() // could cache this later...
+	},
 })

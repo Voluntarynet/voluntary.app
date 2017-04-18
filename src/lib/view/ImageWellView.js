@@ -65,7 +65,7 @@ ImageWellView = NodeView.extend().newSlots({
         }
         
         this.removeAllItems();
-        console.log("setImageDataURLs = ", dataURLs)
+        //console.log("setImageDataURLs = ", dataURLs)
 
         var self = this
         dataURLs.forEach(function (dataURL) {

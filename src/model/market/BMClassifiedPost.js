@@ -25,19 +25,28 @@ BMClassifiedPost = BMFieldSetNode.extend().newSlots({
 		this.setShouldStoreItems(false)
         //this.setNodeMinWidth(550)
         
-        this.addFieldNamed("stamp").setKey("stamp").setValueIsEditable(false)
+ 		this.addField(BMStampField.clone().setKey("stamp").setNodeFieldProperty("stamp")).setValueIsEditable(false)
+        //this.addFieldNamed("stamp").setKey("stamp").setValueIsEditable(false)
         this.addFieldNamed("path").setKey("path").setValueIsEditable(false)
         this.addFieldNamed("title").setKey("title").setValueIsEditable(true)
-        this.addFieldNamed("price").setKey("price").setValueIsEditable(true)
+        //this.addFieldNamed("price").setKey("price").setValueIsEditable(true)
+ 		this.addField(BMNumberField.clone().setKey("price").setNodeFieldProperty("price")).setValueIsEditable(true).setUnsetVisibleValue(0)
+
+
         this.addFieldNamed("currency").setKey("currency").setValueIsEditable(true)
-        //this.addFieldNamed("description").setKey("description").setValueIsEditable(true)
+
+        //this.addFieldNamed("uuid").setKey("ID").setValueIsEditable(false)
+        //this.addFieldNamed("postDate").setKey("post date").setValueIsEditable(false)
+ 		this.addField(BMDateField.clone().setKey("sent date").setNodeFieldProperty("postDate")).setValueIsEditable(false).setUnsetVisibleValue("(not sent yet)")
+
 		this.addField(BMTextAreaField.clone().setKey("description").setNodeFieldProperty("description")).setValueIsEditable(true)
 		this.addField(BMImageWellField.clone().setKey("drop images here").setNodeFieldProperty("imageDataURLs")).setValueIsEditable(true)
 
         this.setTitle("Untitled")
         this.setPrice(0)
         this.setDescription("Item or service description")
-        this.addStoredSlots([/*"price", "title", "description", "path",*/ "postDate", "postPeriod", "uuid", "imageDataURLs", "hasSent"])
+        //this.addStoredSlots(["price", "title", "description", "path", "postDate", "postPeriod", "uuid", "imageDataURLs", "hasSent"])
+        this.addStoredSlots(["uuid", "postPeriod", "hasSent"])
 
         //this.setImagesNode(BMNode.clone().setViewClassName("ImageView").setSubnodeProto("ImageNode"))
         this.setImageDataURLs([]) 
@@ -47,8 +56,8 @@ BMClassifiedPost = BMFieldSetNode.extend().newSlots({
         this._powDoneObs   = NotificationCenter.shared().newObservation().setName("powDone").setObserver(this)
         this._powUpdateObs = NotificationCenter.shared().newObservation().setName("powUpdate").setObserver(this)
 
-        this.setActions(["delete"])
-
+        this.setActions(["send", "delete"])
+		this.validate()
     },
 
 	setParentNode: function(item) {
@@ -69,6 +78,7 @@ BMClassifiedPost = BMFieldSetNode.extend().newSlots({
 	didLoadFromStore: function() {
 		BMStorableNode.didLoadFromStore.apply(this)
 		this.setIsEditable(!this.hasSent())
+		this.validate()
 	},
     
     // images

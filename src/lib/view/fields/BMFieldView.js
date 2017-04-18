@@ -27,6 +27,8 @@ BMFieldView = NodeView.extend().newSlots({
 	createValueView: function() {
 		return Div.clone().setDivClassName("BMFieldValueView")
 	},
+	
+
 
     syncFromNode: function () {
 		//console.log("BMFieldView syncFromNode")
@@ -34,7 +36,7 @@ BMFieldView = NodeView.extend().newSlots({
         var node = this.node()
 
         this.keyView().setInnerHTML(node.key())
-        this.valueView().setInnerHTML(node.value())
+        this.valueView().setInnerHTML(node.visibleValue())
 
 		this.keyView().setIsVisible(node.keyIsVisible())
 		this.valueView().setIsVisible(node.valueIsVisible())
@@ -120,5 +122,4 @@ BMFieldView = NodeView.extend().newSlots({
         
         return this
     },
-
 })

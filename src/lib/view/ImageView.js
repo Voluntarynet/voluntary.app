@@ -15,7 +15,7 @@ ImageView = NodeView.extend().newSlots({
 		this.setContentEditable(false)
         this.dragUnhighlight()
         this.makeUnselectable()
-        this.turnOnUserSelect()
+        this.turnOffUserSelect()
         return this
     },
     

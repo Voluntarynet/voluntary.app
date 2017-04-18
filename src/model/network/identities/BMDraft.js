@@ -13,8 +13,9 @@ BMDraft = BMFieldSetNode.extend().newSlots({
         this.addFieldNamed("stamp").setKey("stamp").setValueIsEditable(false)
 		this.setStamp("Unstamped")
 		
-        this.addFieldNamed("fromAddress").setKey("from").setValueIsEditable(false)
-        this.addFieldNamed("toAddress").setKey("to")
+		this.addField(BMIdentityField.clone().setNodeFieldProperty("fromAddress").setKey("from").setValueIsEditable(false))
+		this.addField(BMIdentityField.clone().setNodeFieldProperty("toAddress").setKey("to").setValueIsEditable(true))
+		
         this.addFieldNamed("subject").setKey("subject")
 
 		this.didUpdate()
@@ -80,7 +81,12 @@ BMDraft = BMFieldSetNode.extend().newSlots({
 
 	validateToAddress: function() {
 		var addressField = this.fieldNamed("toAddress")
+
+		if (addressField) {
+			addressField.validate()
+		}
 		
+		/*
 		if (addressField) {
 			if (!bitcore.PublicKey.isValid(this.toAddress())) {
 				addressField.setValueError("invalid address")
@@ -88,6 +94,7 @@ BMDraft = BMFieldSetNode.extend().newSlots({
 				addressField.setValueError(null)
 			}
 		}	
+		*/
 		
 		return this	
 	},
@@ -106,7 +113,7 @@ BMDraft = BMFieldSetNode.extend().newSlots({
 	
 	didUpdate: function() {
 		BMFieldSetNode.didUpdate.apply(this)
-		//console.log("Draft update")
+		console.log("Draft update")
 		this.validate()
 		return this
 	},

@@ -172,5 +172,77 @@
     text-transform: none;
 }
 
+/* --------------------------- Multi --------------------------- */
 
+.BMMultiFieldValueView {
+    position: absolute;
+    color: #000;
+    font-family: "OpenSans-Regular";
 
+    min-width: 100px;
+	width: 100px;
+    min-height: 23px;
+    text-align: left;
+
+    position: absolute;
+    
+    top: 19px;
+    left: 110px;
+    font-size: 13px;
+    font-weight: normal;
+    text-transform: none;
+	border: solid #ccc 1px;
+	border-radius: 4px;
+	
+	padding-left: 5px;
+	padding-top: 3px;
+}
+
+.BMMultiFieldOptionsView {
+	overflow:hidden;
+	z-index: 100;
+    position: absolute;
+    color: #000;
+    background-color: #fff;
+    font-family: "OpenSans-Regular";
+
+    min-width: 600px;
+	width: auto;
+    text-align: left;
+    
+    top: -1px;
+    left: 110px;
+	border: solid #ccc 1px;
+	border-radius: 4px;	
+    transition: opacity 3s ease-out;
+	opacity: 0;
+	padding: 0;
+}
+
+.BMMultiFieldOptionView {
+	display: block;
+    float:left;
+    position: relative;
+	overflow:hidden;
+
+    width: auto;
+    height: 26px;
+    text-align: center;
+    
+    font-size: 13px;
+    font-weight: normal;
+    text-transform: none;
+	border: solid #ddd 0px;
+	padding-top: 5px;
+}
+
+.BMMultiFieldOptionView:hover {
+	/*
+    background-color: #ccc;
+
+*/
+	font-weight: bold;
+	
+	background-color: #000;
+    color: #fff;
+}

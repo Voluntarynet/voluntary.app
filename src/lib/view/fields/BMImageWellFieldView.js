@@ -24,7 +24,7 @@ BMImageWellFieldView = BMFieldView.extend().newSlots({
         var field = this.node()
 
 		if (this.imageWellView()) {
-			console.log("field = ", field.type())
+			//console.log("field = ", field.type())
 			this.keyView().setInnerHTML(field.key())
 			this.imageWellView().setImageDataURLs(field.value())
 		}

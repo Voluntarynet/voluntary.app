@@ -27,7 +27,6 @@ BMFieldView = NodeView.extend().newSlots({
 	createValueView: function() {
 		return Div.clone().setDivClassName("BMFieldValueView")
 	},
-	
 
 
     syncFromNode: function () {

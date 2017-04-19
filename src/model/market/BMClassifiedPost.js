@@ -26,19 +26,13 @@ BMClassifiedPost = BMFieldSetNode.extend().newSlots({
         //this.setNodeMinWidth(550)
         
  		this.addField(BMStampField.clone().setKey("stamp").setNodeFieldProperty("stamp")).setValueIsEditable(false)
-        //this.addFieldNamed("stamp").setKey("stamp").setValueIsEditable(false)
         this.addFieldNamed("path").setKey("path").setValueIsEditable(false)
         this.addFieldNamed("title").setKey("title").setValueIsEditable(true)
-        //this.addFieldNamed("price").setKey("price").setValueIsEditable(true)
  		this.addField(BMNumberField.clone().setKey("price").setNodeFieldProperty("price")).setValueIsEditable(true).setUnsetVisibleValue(0)
 
 
-        this.addFieldNamed("currency").setKey("currency").setValueIsEditable(true)
-
-        //this.addFieldNamed("uuid").setKey("ID").setValueIsEditable(false)
-        //this.addFieldNamed("postDate").setKey("post date").setValueIsEditable(false)
+ 		this.addField(BMMultiField.clone().setKey("currency").setNodeFieldProperty("currency")).setValueIsEditable(false).setValidValues(CurrenciesDict.slotNames().sort())
  		this.addField(BMDateField.clone().setKey("sent date").setNodeFieldProperty("postDate")).setValueIsEditable(false).setUnsetVisibleValue("(not sent yet)")
-
 		this.addField(BMTextAreaField.clone().setKey("description").setNodeFieldProperty("description")).setValueIsEditable(true)
 		this.addField(BMImageWellField.clone().setKey("drop images here").setNodeFieldProperty("imageDataURLs")).setValueIsEditable(true)
 

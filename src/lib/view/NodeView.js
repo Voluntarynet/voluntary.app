@@ -44,7 +44,7 @@ NodeView = Div.extend().newSlots({
     
     willRemove: function() {
         Div.willRemove.apply(this)
-            this.stopWatchingNode()
+        this.stopWatchingNode()
         return this
     },
     

@@ -113,7 +113,7 @@ BMDraft = BMFieldSetNode.extend().newSlots({
 	
 	didUpdate: function() {
 		BMFieldSetNode.didUpdate.apply(this)
-		console.log("Draft update")
+		//console.log("Draft update")
 		this.validate()
 		return this
 	},

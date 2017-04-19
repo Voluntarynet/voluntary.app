@@ -53,10 +53,12 @@ BMField = BMNode.extend().newSlots({
 	},
 	
 	setValue: function(v) {
+		console.log("setValue '" + v + "'")
 		var target = this.target()
 		var setter = this.setterNameForSlot(this.nodeFieldProperty())
 		//console.log("target = " + target.type() + " setter = '" + setter + "'")
 		target[setter].apply(target, [v])
+		target.didUpdate()
 		return this
 	},
 	

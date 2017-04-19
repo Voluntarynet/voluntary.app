@@ -56,6 +56,26 @@ Div = ideal.Proto.extend().newSlots({
         return this
     },
 
+	setOpacity: function(v) {
+        this.element().style.opacity = v
+		return this
+	},
+	
+	opacity: function() {
+		return this.element().style.opacity
+	},
+
+	// z index 
+	
+	setZIndex: function(v) {
+        this.element().style.zIndex = v
+		return this
+	},
+	
+	zIndex: function() {
+        return this.element().style.zIndex
+	},
+
 	// cursor 
 	
     setCursor: function(s) {
@@ -104,9 +124,9 @@ Div = ideal.Proto.extend().newSlots({
 		}
 		return this
 	},
-
+	
     width: function() {
-        return this.element().style.clientWidth
+        return this.element().clientWidth
     },
     
     minWidth: function() {
@@ -245,10 +265,41 @@ Div = ideal.Proto.extend().newSlots({
 	didChangeItemList: function() {
 	},
 	
+	hasItem: function(anItem) {
+		var children = this._element.childNodes
+		for (var i = 0; i < children.length; i ++) {
+			var child = children[i]
+			if (anItem.element() == child) {
+				return true
+			}
+		}
+		return false		
+	},
+	
     removeItem: function (anItem) {
+		console.log(this.type() + " removeItem " + anItem.type())
+		/*
+		if (!this.hasItem(anItem)) {
+			console.log(this.type() + " removeItem " + anItem.type() + " failed - no child found!")
+			return anItem
+		}
+		*/
+		
         anItem.willRemove()
         this._items.remove(anItem)
-        this._element.removeChild(anItem.element());
+		/*
+		var children = this._element.childNodes
+		for (var i = 0; i < children.length; i ++) {
+			var child = children[i]
+			if (anItem.element() == child) {
+				console.log("has remove match")
+			}
+		}
+		*/
+		if (this.hasItem(anItem)) {
+			console.log(this.type() + " removeItem " + anItem.type() + " failed - no child found!")
+        	this._element.removeChild(anItem.element());
+		}
         anItem.setParentItem(null)
 		this.didChangeItemList()
         return anItem
@@ -389,7 +440,7 @@ Div = ideal.Proto.extend().newSlots({
     onClick: function(event) {
         var t = this.target()
         if (t && this.action) {
-            t[this.action()].apply(t)
+            t[this.action()].apply(t, [this])
         } else {
             throw new Error("no target for action " + this.action())
         }

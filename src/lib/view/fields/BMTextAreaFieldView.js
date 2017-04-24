@@ -11,6 +11,6 @@ BMTextAreaFieldView = BMFieldView.extend().newSlots({
     },
 
 	createValueView: function() {
-		return Div.clone().setDivClassName("BMTextAreaFieldValueView")
+		return NodeView.clone().setDivClassName("BMTextAreaFieldValueView")
 	},
 })

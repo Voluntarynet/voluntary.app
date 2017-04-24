@@ -2,61 +2,85 @@ var bitcore = require("bitcore-lib")
 
 BMRemoteIdentity = BMNavNode.extend().newSlots({
     type: "BMRemoteIdentity",
-    address: null,
-    name: null,
-    publicKey: null,
+	name: "untitled",
+
+	publicKeyString: "",
+	privateKeyString: "",
+
 }).setSlots({
 	
-    _nodeVisibleClassName: "Contact",
+    //_nodeVisibleClassName: "Contact",
 
     init: function () {
         BMNavNode.init.apply(this)
 		this.setShouldStore(true)
-        this.setName("Untitled")
+
         this.setNodeTitleIsEditable(true)
-        //this.setNodeSubtitleIsEditable(true)
-        this.setAddress("no address")
-        this.addStoredSlots(["name", "publickKeyString"])
-        this.actions().push("delete")
-        this.setViewClassName("GenericView")
-        this.setNodeTitleIsEditable(true)
-        this.setNodeSubtitleIsEditable(true)
+        this.setNodeSubtitleIsEditable(false)
         this.setNodeMinWidth(120)
+
+        //this.addFieldNamed("name").setNodeFieldProperty("name").setValueIsEditable(true)
+       // this.setName("Untitled")
+
+		//this.addField(BMIdentityField.clone().setNodeFieldProperty("publicKeyString").setKey("public key").setValueIsEditable(true))
+        //this.setPublicKeyString("")
+
+		this.addStoredSlots(["name", "publicKeyString", "privateKeyString"])
+		this.initStoredSlotWithProto("profile", BMProfile)
+		this.initStoredSlotWithProto("messages", BMInbox)
+
+        //this.setNodeBgColor("white")
+
+		this.profile().fieldNamed("publicKeyString").setValueIsEditable(true)
+		
+        this.addAction("delete")
     },
     
     title: function () {
+		if (this.name() == "") {
+			return "untitled"
+		}
         return this.name()
     },
-    
+
     setTitle: function (s) {
-        return this.setName(s)
+        this.setName(s)
+        return this
     },
  
     subtitle: function () {
-        return this.address()
+		if (this.publicKeyString()) {
+        	return this.publicKeyString().toString().slice(0, 5) + "..."
+		}
+		
+		return ""
     },  
-    
-    setSubtitle: function (s) {
-        return this.setAddress(s)
-    }, 
-    
-    publickKeyString: function () {
-        if (!this.publicKey()) { return null }
-        return this.publicKey().toString()
-    },
-    
-    setPublickKeyString: function(s) {
-        if (s) {
-            console.log("set pubkey '" + s + "'")
-            var pk = new bitcore.PublicKey(s)
-            this.setPublicKey(pk)
+
+    isValid: function() {
+		var s = this.publickKeyString()
+		return bitcore.PublicKey.isValid(s)
+	},
+	
+    publickKey: function() {
+		if (this.isValid()) {
+            return new bitcore.PublicKey(s)
         }
-        return this
+        return null
     },
+
+	compressedPublicKeyString: function() {
+		var pk = this.publickKey()
+		if (pk) {
+			
+		}
+		return null
+	},
+
+	/*
+	verifySignatureOnHash: function(signature, hash) {
+		
+	},
+	*/
     
-    idWithPubKeyString: function(pubkeyString) {
-        return this.items().detect(function (id) {
-            return id.publicKey().toString() == pubkeyString
-        })
-    },
+
 })

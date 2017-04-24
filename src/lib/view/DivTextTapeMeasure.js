@@ -19,14 +19,15 @@ DivTextTapeMeasure = ideal.Proto.extend().newSlots({
 		var e = document.createElement('div');
 	    e.setAttribute("id", this.idName());
 		document.body.appendChild(e);
-		e.style.display = "none";
+		e.style.display = "block";
 		e.style.position = "absolute";
+		e.style.width = "auto";
 		e.style.left = -1000;
 		e.style.top  = -1000;
 		return e		
 	},
 	
-	widthOfDivWithText: function(div, text) {
+	widthOfDivWithText: function(div, text) { 
 		var e = this.testElement()
 		
 		this.copyStyles().forEach(function (styleName) {
@@ -43,6 +44,19 @@ DivTextTapeMeasure = ideal.Proto.extend().newSlots({
 		//var height = (e.clientHeight + 1)
 		var width = (e.clientWidth + 1) 
 		this.clean()
+		return width
+	},
+	
+	widthOfDivClassWithText: function(divClassName, text) { 
+		var e = this.testElement()
+		e.className = divClassName
+		e.innerHTML = text
+		
+		//var height = (e.clientHeight + 1)
+		var width = (e.clientWidth + 1) 
+		
+		//console.log(divClassName, " '" + text + "' width = ", width)
+		//this.clean()
 		return width
 	},
 	

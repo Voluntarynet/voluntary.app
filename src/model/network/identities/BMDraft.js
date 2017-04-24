@@ -7,27 +7,43 @@ BMDraft = BMFieldSetNode.extend().newSlots({
     init: function () {
         BMFieldSetNode.init.apply(this)
 		this.setShouldStore(true)
-		this.setShouldStoreItems(false)
-        //this.setNodeRowViewClassName("BrowserFieldRow")
 
         this.addFieldNamed("stamp").setKey("stamp").setValueIsEditable(false)
 		this.setStamp("Unstamped")
 		
-		this.addField(BMIdentityField.clone().setNodeFieldProperty("fromAddress").setKey("from").setValueIsEditable(false))
-		this.addField(BMIdentityField.clone().setNodeFieldProperty("toAddress").setKey("to").setValueIsEditable(true))
+		//this.addField(BMIdentityField.clone().setNodeFieldProperty("fromAddress").setKey("from").setValueIsEditable(false))
+		//this.addField(BMIdentityField.clone().setNodeFieldProperty("toAddress").setKey("to").setValueIsEditable(true))
 		
-        this.addFieldNamed("subject").setKey("subject")
-
-		this.didUpdate()
-	
-        //this.addFieldNamed("body").setNodeMinHeight(-1).setValueDivClassName("BMTextAreaFieldValueView").setKeyIsVisible(false)
+		this.addField(BMMultiField.clone().setKey("From").setNodeFieldProperty("fromContact")).setValueIsEditable(false).setValidValuesMethod("fromContactNames")
+		this.addField(BMMultiField.clone().setKey("to").setNodeFieldProperty("toContact")).setValueIsEditable(true).setValidValuesMethod("toContactNames")
+        this.addFieldNamed("subject").setKey("subject")	
 		this.addField(BMTextAreaField.clone().setKey("body").setNodeFieldProperty("body"))
         this.setStatus("")
 
         this.setActions(["send", "delete"])
         this.setNodeMinWidth(600)
         this.setNodeBgColor("white")
+
+		//this.didUpdate()
     },
+
+    prepareToSyncToView: function() {
+		BMFieldSetNode.prepareToSyncToView.apply(this)
+		
+		if (this.localIdentity()) {
+			//this.setFromAddress(this.localIdentity().publicKeyString())
+			this.setFromContact(this.localIdentity().name())
+		}
+	},
+
+	fromContactNames: function() {
+		return App.shared().network().localIdentityNames()
+	},
+
+	toContactNames: function() {
+		//return App.shared().network().remoteIdentityNames()
+		return App.shared().network().allIdentityNames()
+	},
 
 	localIdentity: function() {
 		if (this.drafts()) {
@@ -44,15 +60,15 @@ BMDraft = BMFieldSetNode.extend().newSlots({
 	},    
     
     title: function() {
-        var title = this.subject()
-        if (!title) {
-            title = "Untitled"
-        }
-        return title
+        return this.toContact()
     },
     
     subtitle: function () {
-        return this.status()
+        var s = this.subject()
+        if (s) {
+            return s
+        }
+        return "No subject"
     },   
     
     // ------------------------
@@ -74,9 +90,12 @@ BMDraft = BMFieldSetNode.extend().newSlots({
     },
 
 	validateFromAddress: function() {
+		/*
 		if (this.localIdentity()) {
-			this.setFromAddress(this.localIdentity().publicKeyString())
+			//this.setFromAddress(this.localIdentity().publicKeyString())
+			this.setFromContact(this.localIdentity().name())
 		}
+		*/
 	},
 
 	validateToAddress: function() {

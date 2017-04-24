@@ -9,7 +9,7 @@ BMField = BMNode.extend().newSlots({
     key: null,
     //value: "test value",
 
-	isVisible: null,
+	isVisible: true,
 	keyIsVisible: true,
 	valueIsVisible: true,
 
@@ -40,7 +40,6 @@ BMField = BMNode.extend().newSlots({
         BMNode.init.apply(this)
 		//this.setViewClassName("BMFieldView")
 		this.setViewClassName(null)
-		
 		//console.log("BMField viewClassName = '" + this.viewClassName() + "'")
     },    
 	
@@ -53,7 +52,7 @@ BMField = BMNode.extend().newSlots({
 	},
 	
 	setValue: function(v) {
-		console.log("setValue '" + v + "'")
+		//console.log("setValue '" + v + "'")
 		var target = this.target()
 		var setter = this.setterNameForSlot(this.nodeFieldProperty())
 		//console.log("target = " + target.type() + " setter = '" + setter + "'")

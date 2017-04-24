@@ -8,6 +8,7 @@ BMMultiField = BMField.extend().newSlots({
     type: "BMMultiField",
 	validValues: [],
 	options: [],
+	validValuesMethod: null,
 }).setSlots({
     init: function () {
         BMField.init.apply(this)
@@ -21,12 +22,13 @@ BMMultiField = BMField.extend().newSlots({
 			this.setValue(v[0])
 		}
 		
-		this.setupOptions()
-		console.log("this._validValues = ", this._validValues)
+		//this.setupOptions()
+		//console.log("this._validValues = ", this._validValues)
 		
 		return this
 	},
 	
+	/*
 	removeAllItems: function() {
 		var self = this
 
@@ -34,8 +36,24 @@ BMMultiField = BMField.extend().newSlots({
 			self.removeItem(item)
 		})	
 	},
+	*/
 	
+	validValues: function() {
+		if (this._validValues.length == 0 && this.validValuesMethod()) {
+			var t = this.target()
+			return t[this.validValuesMethod()].apply(t)
+		}
+		
+		return this._validValues
+	},
+	
+	/*
 	setupOptions: function() {
+		if (this.validValuesMethod()) {
+			var t = this.target()
+			this.setValidValues(t[this.validValuesMethod()].apply(t))
+		}
+		
 		this.removeAllItems()
 		
 		var self = this
@@ -43,4 +61,33 @@ BMMultiField = BMField.extend().newSlots({
 			self.addItem(BMMultiFieldOption.clone().setTitle(v))
 		})
 	},
+	*/
+	
+	// lazy load items
+	/*
+	prepareToSyncToView: function() {
+		BMField.prepareToSyncToView.apply(this)
+		console.log(this.type() + " prepareToSyncToView <<<<<<<<<<<<<<<<<<<<<<<")
+	},
+	*/
+	
+	/*
+	prepareToAccess: function() {
+		BMField.prepareToAccess.apply(this)
+		
+
+		if (this.validValuesMethod()) {
+			var t = this.target()
+			this.setValidValues(t[this.validValuesMethod()].apply(t))
+			this.setupOptions()
+		}
+			
+		console.log(this.type() + " lazy load items <<<<<<<<<<<<<<<<<<<<<<<")
+		if ((this._items == null || this._items.length ==  0) && this.validValuesMethod()) {
+			var t = this.target()
+			this.setValidValues(t[this.validValuesMethod()].apply(t))
+			this.setupOptions()
+		}
+	},
+	*/
 })

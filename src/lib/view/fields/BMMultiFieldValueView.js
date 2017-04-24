@@ -3,20 +3,47 @@ BMMultiFieldValueView = NodeView.extend().newSlots({
     type: "BMMultiFieldValueView",
 	optionsView: null,
 	//isOpen: false,
+	inactiveBackgroundColor: "#fff",
+	inactiveColor: "#000",
+	
+	activeBackgroundColor: "#eee",
+	activeColor: "#000",
+	
+	textView: null,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
         this.setDivClassName("BMMultiFieldValueView")
-		console.log("BMMultiFieldValueView setup")
 		this.registerForClicks(true)
 		this.registerForMouse(true)
+		
 		this.setOptionsView(BMMultiFieldOptionsView.clone())
+		this.optionsView().setDisplay("none")
+		this.addItem(this.optionsView())
+		
+		this.setTextView(Div.clone())
+		this.addItem(this.textView())
+		
+		this.showInactive()
+		this.makeUnselectable()
+		this.setItemProto(null)
         return this
     },
 
+	setText: function(aString) {
+		this.textView().setInnerHTML(aString)
+		return this
+	},
+	
+	isEditable: function() {
+		return this.parentItem().node().valueIsEditable()
+	},
+	
 	onClick: function() {
 		console.log(this.type() + " onClick")
-		this.toggleOpen()
+		if (this.isEditable()) {
+			this.toggleOpen()
+		}
 	},
 	
 	toggleOpen: function() {
@@ -29,50 +56,67 @@ BMMultiFieldValueView = NodeView.extend().newSlots({
 	},
 	
 	isOpen: function() {
-		return this.items().contains(this.optionsView())
+		return this.optionsView().display() != "none"
+	},
+	
+	setNode: function(aNode) {
+		NodeView.setNode.apply(this, [aNode])
+		this.updateValidValues()
+		return this
+	},
+	
+	updateValidValues: function() {
+		this.optionsView().setValidValues(this.node().validValues())
+		return this
 	},
 	
 	open: function() {
 		if(!this.isOpen()) {
+			//this.node().setupOptions()
 			console.log(this.type() + " open")
 			//this.setIsOpen(true)
-			this.optionsView().setValidValues(this.node().validValues())
-			this.addItem(this.optionsView())
-			if (!this.hasItem(this.optionsView())) {
-				console.log("missing optionsView after add")
-			} else {
-				console.log("contains optionsView after add")
-			}
+			
+			this.updateValidValues()
+			//this.addItem(this.optionsView())
+			this.optionsView().setDisplay("block")
+			this.showActive()
 		}
 	},
 	
 	close: function() {
 		if(this.isOpen()) {
 			console.log(this.type() + " close")
-			//this.setIsOpen(false)
-			//var self = this
-			//setTimeout(function () { self.removeItem(self.optionsView()) }, 10)
-			
-			if (!this.hasItem(this.optionsView())) {
-				console.log("missing optionsView before close")
-			} else {
-				console.log("contains optionsView before close")
-			}
-			
-			this.removeItem(this.optionsView())
-			this.setBackgroundColor("#fff")
+			this.optionsView().setDisplay("none")
+			//this.removeItem(this.optionsView())
+			this.showInactive()
 		}
 	},
 	
 	onMouseOver: function() {
 		//console.log(this.type() + " onMouseOver")
-		this.setBackgroundColor("#eee")
+		if (this.isEditable()) {
+			this.showActive()
+		}
 	},
 	
 	onMouseOut: function() {
 		//console.log(this.type() + " onMouseOut")
 		//this.close()
-		this.setBackgroundColor("#fff")
+		if (this.isEditable() && !this.isOpen()) {
+			this.showInactive()
+		}
+	},
+	
+	showActive: function() {
+		this.setBackgroundColor(this.activeBackgroundColor())
+		this.setColor(this.activeColor())
+		return this
+	},
+	
+	showInactive: function() {
+		this.setBackgroundColor(this.inactiveBackgroundColor())
+		this.setColor(this.inactiveColor())
+		return this
 	},
 	
 	select: function(validValue) {
@@ -87,80 +131,4 @@ BMMultiFieldValueView = NodeView.extend().newSlots({
 		return this
 		
 	},
-})
-
-// -------------------------------------------------------------
-
-BMMultiFieldOptionsView = NodeView.extend().newSlots({
-    type: "BMMultiFieldOptionsView",
-}).setSlots({
-    init: function () {
-        NodeView.init.apply(this)
-        this.setDivClassName("BMMultiFieldOptionsView")
-        return this
-    },
-
-	onClick: function() {
-
-	},
-	
-	setValidValues: function(validValues) {
-		this.removeAllItems()
-		
-		var self = this
-        this.element().style.transition = "opacity .2s"
-		self.setOpacity(0)
-		
-		validValues.forEach(function(v) {
-			var option = Div.clone().setInnerHTML(v).setDivClassName("BMMultiFieldOptionView").setTarget(self).setAction("select")
-			option.validValue = v
-			self.addItem(option)
-		})
-		
-		setTimeout(function() { 
-			self.adjustOptionWidths() 
-			self.setOpacity(1)
-		} , 1)
-		
-		return this
-	},
-	
-	adjustOptionWidths: function() {
-		var maxWidth = this.items().max(function(item) {
-			//console.log("item.width() = ", item.width())
-			return item.width()
-		}).width()
-		
-		//console.log("maxWidth = ", maxWidth)
-		
-		this.items().forEach(function(item) {
-			item.setMinAndMaxWidth(maxWidth + 10)
-		})
-		
-		var itemsPerRow = 1
-		
-		if (this.items().length > 10) {
-			itemsPerRow = Math.ceil(Math.sqrt(this.items()))
-		}
-		
-		this.setMinAndMaxWidth((maxWidth * itemsPerRow) )
-		
-	},
-	
-	select: function(sender) {
-		//console.log("selected " + sender.validValue)
-		this.parentItem().select(sender.validValue)
-	},
-})
-
-// -------------------------------------------------------------
-
-BMMultiFieldOptionView = Div.extend().newSlots({
-    type: "BMMultiFieldOptionView",
-}).setSlots({
-    init: function () {
-        Div.init.apply(this)
-        this.setDivClassName("BMMultiFieldOptionView")
-        return this
-    },
 })

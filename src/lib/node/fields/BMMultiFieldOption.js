@@ -1,7 +1,6 @@
 /*
 
 
-*/
 
         
 BMMultiFieldOption = BMNode.extend().newSlots({
@@ -9,6 +8,7 @@ BMMultiFieldOption = BMNode.extend().newSlots({
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)
-		this.setViewClassName("BMMultiFieldOption")
+		//this.setViewClassName("BMMultiFieldOptionView")
     },
 })
+*/

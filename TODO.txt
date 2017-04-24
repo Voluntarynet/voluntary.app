@@ -2,13 +2,14 @@
 
 - validator in field
 
-- add IdentityField
-- add StampField
+- complete StampField
 - support setHeight on TextAreaField
 - disable send action on draft when invalid
 - Multiselection popup?
 - add hashtag path to url
 
+
+- make tab go to next field?
 
 UI
 

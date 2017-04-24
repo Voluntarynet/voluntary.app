@@ -31,6 +31,10 @@ Div = ideal.Proto.extend().newSlots({
     validColor: null,
     invalidColor: null,
 	isHandlingEvent: false,
+	
+	interceptsTab: true,
+	nextKeyView: null,
+	canMakeKey: true,
 }).setSlots({
     init: function () {
         this._items = []
@@ -50,7 +54,34 @@ Div = ideal.Proto.extend().newSlots({
         CSS.ruleAt(ruleName).applyToElement(this.element())
         return this
     },
-    
+
+    setPaddingLeft: function(s) {
+        this.element().style.paddingLeft = s
+        return this
+    },
+
+	paddingLeft: function() {
+		return this.element().style.paddingLeft
+	},
+	
+    setPaddingRight: function(s) {
+        this.element().style.paddingRight = s
+        return this
+    },
+
+	paddingRight: function() {
+		return this.element().style.paddingRight
+	},
+
+    setTextAlign: function(s) {
+        this.element().style.textAlign = s
+        return this
+    },
+
+	textAlign: function() {
+		return this.element().style.textAlign
+	},
+
     setBackgroundColor: function(s) {
         this.element().style.backgroundColor = s
         return this
@@ -193,6 +224,7 @@ Div = ideal.Proto.extend().newSlots({
  
     newItemForNode: function(aNode) {
 		var proto = null
+		
 
 		if (!proto) {
 			proto = this.itemProto()
@@ -210,9 +242,14 @@ Div = ideal.Proto.extend().newSlots({
         }
 
 		var item = proto.clone()
+		
 		if (!item.setNode) {
-			console.log("node = " + aNode.type() + " item = ", item.type())
+			console.log("Div WARNING: node " + aNode.type() + " has view proto = " + proto.type() + " but it's missing setNode method")
+			console.log("Div WARNING: missing " + item.type() + ".setNode method, node is a '" + aNode.type() + "' view proto = " + proto.type())
+			console.log(this.type() + ".itemProto() = ", this.itemProto().type())
+			console.log(aNode.type() + ".viewClass() = ", aNode.viewClass().type())
 		}
+		
         return item.setNode(aNode)
     },
     
@@ -277,7 +314,8 @@ Div = ideal.Proto.extend().newSlots({
 	},
 	
     removeItem: function (anItem) {
-		console.log(this.type() + " removeItem " + anItem.type())
+	//	ShowStack()
+		//console.log("WANRING: " + this.type() + " removeItem " + anItem.type())
 		/*
 		if (!this.hasItem(anItem)) {
 			console.log(this.type() + " removeItem " + anItem.type() + " failed - no child found!")
@@ -297,7 +335,7 @@ Div = ideal.Proto.extend().newSlots({
 		}
 		*/
 		if (this.hasItem(anItem)) {
-			console.log(this.type() + " removeItem " + anItem.type() + " failed - no child found!")
+			console.log("WANRING: " + this.type() + " removeItem " + anItem.type() + " failed - no child found!")
         	this._element.removeChild(anItem.element());
 		}
         anItem.setParentItem(null)
@@ -334,7 +372,8 @@ Div = ideal.Proto.extend().newSlots({
 
         if (a != b) {
 
-            if (document.activeElement == this._element) {
+            if (document.activeElement == this._element && this.contentEditable()) {
+				ShowStack();
                 console.log("WARNING: attempt to setInnerHTML on active element. ")
                 // Can't do this until we can properly set the cursor.
                 // there also seems to be some inconsistency problem
@@ -630,6 +669,10 @@ Div = ideal.Proto.extend().newSlots({
         
         return this
     },
+
+	contentEditable: function() {
+		return this.element().contentEditable == "true"
+	},
     
     // mouse 
     
@@ -695,8 +738,16 @@ Div = ideal.Proto.extend().newSlots({
         return this
     },    
     
+	keyCodes: { tab: 9 },
+	
     onKeyDown: function (event) {
-        
+		console.log("onKeyDown")
+		if (this.interceptsTab()) {
+	        if (event.keyCode == this.keyCodes.tab) {
+		        event.preventDefault()
+	            this.onTabKeyDown()
+	        }
+		}        
         //console.log("onKeyDown")
         //this._lastInnerHTML = this.innerHTML()
      /*   
@@ -704,13 +755,8 @@ Div = ideal.Proto.extend().newSlots({
         this._clickx = cursorPos.getBoundingClientRect().left; 
         this._clicky = cursorPos.getBoundingClientRect().top;
     */
-        /*
-        var tabCode = 9
-        if (event.keyCode == tabCode) {
-            this.onTabKeyDown()
-            console.log("onTabKeyDown")
-        }
-        */
+
+
     },
     
     onKeyPress: function (event) {
@@ -718,13 +764,12 @@ Div = ideal.Proto.extend().newSlots({
     },
     
     onKeyUp: function (event) {
-        /*
-        var tabCode = 9
-        console.log(this.type() + " onKeyUp " + event.keyCode)
-        if (event.keyCode == tabCode) {
-            event.preventDefault() 
-        }
-        */
+		if (this.interceptsTab()) {
+	        if (event.keyCode == this.keyCodes.tab) {
+	            event.preventDefault()
+				return
+	        }
+		}
         
         //console.log("event: ", event)
         
@@ -742,16 +787,18 @@ Div = ideal.Proto.extend().newSlots({
     },
     
     onTabKeyDown: function() {
-        /*
+        this.selectNextKeyView()
+    },
+
+	selectNextKeyView: function() {
+		console.log(this.type() + " selectNextKeyView")
         var nkv = this.nextKeyView()
         if (nkv) {
-            event.preventDefault()
-            if (nkv.initialFirstResponder()) {
-                nkv.focus()
-            }
-        }
-        */
-    },
+            //if (nkv.initialFirstResponder()) {
+                //nkv.focus()
+            //}
+        }	
+	},
     
     isValid: function() {
         return true
@@ -775,8 +822,10 @@ Div = ideal.Proto.extend().newSlots({
         this.element().blur()
         return this
     },
+
     
     focus: function() {
+		console.log(this.type() + " focus")
         var self = this
         setTimeout(function () {
             self.element().focus()
@@ -825,6 +874,10 @@ Div = ideal.Proto.extend().newSlots({
         return this
     },
     
+	display: function() {
+		return this.element().style.display
+	},
+
     turnOffUserSelect: function() {
         this.element().style.userSelect = "none";
         this.element().style.webkitUserSelect = "none";
@@ -904,7 +957,6 @@ Div = ideal.Proto.extend().newSlots({
         }
     },
     
- 
     setContentAfterOrBeforeString: function(aString, afterOrBefore) {
         var uniqueClassName = "UniqueClass_" + this._uniqueId
         var e = this.element()

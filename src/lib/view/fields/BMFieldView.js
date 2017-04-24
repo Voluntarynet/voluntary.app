@@ -18,8 +18,8 @@ BMFieldView = NodeView.extend().newSlots({
 		
         this.setValueView(this.createValueView())
         this.addItem(this.valueView())  
-		this.valueView().setSpellCheck(false)      
-        
+		this.valueView().setSpellCheck(false)
+		        
         //his.setEditable(false)
         return this
     },
@@ -28,17 +28,30 @@ BMFieldView = NodeView.extend().newSlots({
 		return Div.clone().setDivClassName("BMFieldValueView")
 	},
 
-
     syncFromNode: function () {
 		//console.log("BMFieldView syncFromNode")
 		
         var node = this.node()
 
-        this.keyView().setInnerHTML(node.key())
-        this.valueView().setInnerHTML(node.visibleValue())
+		this.node().prepareToSyncToView()
 
+		if (node.isVisible()) {
+			this.setDisplay("block")
+		} else {
+			this.setDisplay("none")
+		}
+
+        this.keyView().setInnerHTML(node.key())
+
+		if (this.valueView().setText) {
+			this.valueView().setText(node.visibleValue())
+		} else {
+			this.valueView().setInnerHTML(node.visibleValue())
+		}
+		
 		this.keyView().setIsVisible(node.keyIsVisible())
 		this.valueView().setIsVisible(node.valueIsVisible())
+		
 
         
         this.keyView().setContentEditable(node.keyIsEditable())
@@ -55,8 +68,6 @@ BMFieldView = NodeView.extend().newSlots({
 		
 		if (node.valueError()) {
 			this.valueView().setColor(this.errorColor())
-			//this.valueView().setBackgroundColor(this.errorColor())
-			//this.valueView().setColor("white")
 			this.valueView().setToolTip(node.valueError())
 			
 		} else {

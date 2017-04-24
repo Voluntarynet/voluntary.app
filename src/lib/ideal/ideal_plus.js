@@ -34,6 +34,30 @@ Array.prototype.select = function(callback) {
 	return results;
 }
 	
+
+Array.prototype.after = function(v)
+{
+	var index = this.indexOf(v);
+	
+	if(index == -1)
+	{
+		return [];
+	}
+
+	return this.slice(index + 1);
+}
+
+Array.prototype.before = function(v)
+{
+	var index = this.indexOf(v);
+	
+	if(index == -1)
+	{
+		return this.slice();
+	}
+
+	return this.slice(0, index);
+}
 	
 /// String
 

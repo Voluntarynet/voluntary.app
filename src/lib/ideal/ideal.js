@@ -1556,16 +1556,23 @@ Proto.setSlots({
 
 		var privateName = "_" + slotName;
 		this[privateName] = initialValue;
-		this[slotName] = function()
-		{
-			return this[privateName];
+		
+		if (!this[slotName]) {
+			this[slotName] = function()
+			{
+				return this[privateName];
+			}
 		}
+		
+		var setterName = "set" + slotName.capitalized()
 
-		this["set" + slotName.capitalized()] = function(newValue)
-		{
-			//this[privateName] = newValue;
-			this.updateSlot(slotName, privateName, newValue);
-			return this;
+		if (!this[setterName]) {
+			this[setterName] = function(newValue)
+			{
+				//this[privateName] = newValue;
+				this.updateSlot(slotName, privateName, newValue);
+				return this;
+			}
 		}
 
 		this["addTo" + slotName.capitalized()] = function(amount)

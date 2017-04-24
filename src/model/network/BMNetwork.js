@@ -91,4 +91,19 @@ BMNetwork = BMStorableNode.extend().newSlots({
         return this.remoteIdentities().idWithPubKeyString(pubKeyString)
     },
     
+	allIdentityNames: function() {
+		var names = []
+		names.appendItems(this.localIdentityNames())
+		names.appendItems(this.remoteIdentityNames())
+		return names
+	},
+	
+	localIdentityNames: function() {
+		return this.localIdentities().items().map(function(id) { return id.name(); })
+	},
+	
+	remoteIdentityNames: function() {
+		return this.remoteIdentities().items().map(function(id) { return id.name(); })
+	},
+	
 })

@@ -17,8 +17,22 @@ BMMultiFieldView = BMFieldView.extend().newSlots({
 		this.valueView().setNode(aNode)
 		return this
 	},
+	
+
+    syncFromNode: function () {
+		BMFieldView.syncFromNode.apply(this)
+		this.valueView().setContentEditable(false)
+		return this
+	},
 
 	createValueView: function() {
 		return BMMultiFieldValueView.clone()
 	},
 })
+
+/*
+BMMultiFieldOptionView = NodeView.extend().newSlots({
+    type: "BMMultiFieldOptionView",
+}).setSlots({
+})
+*/

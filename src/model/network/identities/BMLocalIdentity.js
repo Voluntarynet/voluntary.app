@@ -3,13 +3,10 @@ var bitcore = require("bitcore-lib")
 
 BMLocalIdentity = BMNavNode.extend().newSlots({
     type: "BMLocalIdentity",
-    name: null,
-    keyPair: null,
-    
-    profile: null,
-    drafts: null,
-    inbox: null,
-    sent: null,
+
+    name: "",
+	privateKeyString: "",
+
 }).setSlots({
     
     _nodeVisibleClassName: "Identity",
@@ -17,18 +14,29 @@ BMLocalIdentity = BMNavNode.extend().newSlots({
     init: function () {
         BMNavNode.init.apply(this)
 		this.setShouldStore(true)
-        //this.setNodeTitleIsEditable(true)
+        this.setNodeTitleIsEditable(true)
  
         this.initStoredSlotWithProto("profile", BMProfile)
         this.initStoredSlotWithProto("inbox", BMInbox)
         this.initStoredSlotWithProto("drafts", BMDrafts)
         this.initStoredSlotWithProto("sent", BMSent)
         
-        this.addStoredSlots(["name", "privateKeyString"])
-
+		this.addStoredSlots(["name", "privateKeyString"])
+		
         this.setName("Untitled")
         this.addAction("delete")
+
+		this.profile().fieldNamed("publicKeyString").setValueIsEditable(false)
+		//console.log("is editable = ", this.profile().fieldNamed("publicKeyString").valueIsEditable())
+		this.generatePrivateKey()
     },
+
+	didLoadFromStore: function() {
+		console.log(this.type() + " didLoadFromStore")
+		BMNavNode.didLoadFromStore.apply(this)
+		this.profile().fieldNamed("publicKeyString").setValueIsEditable(false)
+	},
+
     
     title: function () {
         return this.name()
@@ -36,72 +44,47 @@ BMLocalIdentity = BMNavNode.extend().newSlots({
     
     setTitle: function (s) {
         this.setName(s)
-        var self = this
-        setTimeout(function () { 
-            self.didUpdate() 
-            //self.markDirty()
-        }, 10)
         return this
     },
  
     subtitle: function () {
-        return this.address()
+		if (this.publicKey()) {
+	        return this.publicKey().toString().slice(0, 5) + "..."
+		}
+		return null
     },  
     
-    /*
-    setSubtitle: function (s) {
-        return this.setAddress(s)
-    }, 
-    */
     
-    privateKeyString: function () {
-        /*
-        if (!this.privateKey()) { 
-            return null 
-        }
-        */
-        return this.privateKey().toString()
-    },
+	isValid: function() {
+		return bitcore.PrivateKey.isValid(this.privateKeyString())
+	},
+	
+	generatePrivateKey: function() {
+		var privateKey = new bitcore.PrivateKey();
+		this.setPrivateKeyString(privateKey.toString())
+		return this
+	},
     
-    setPrivateKeyString: function(s) {
-        if (s) {
-            this._privateKey = bitcore.PrivateKey.fromString(s)
+    privateKey: function() {
+        if (this.isValid()) { 
+            return bitcore.PrivateKey.fromString(this.privateKeyString())
         }
         
-        return this
+        return null
     },
-    
-    /*
-    setName: function(v) {
-        this._name = v
-        this.profile().setTitle(v)
-        return this
-    },
-    */
-    
-    setPrivateKey: function(pk) {
-        this._privateKey = pk
-        return this
-    },
-    
-    privateKey: function () {
-        if (!this._privateKey) {
-            this.setPrivateKey(new bitcore.PrivateKey())
-        }
-        return this._privateKey
-    },
-    
+
     publicKey: function () {
-        // PublicKey.isValid()
-        return this.privateKey().toPublicKey()
+        if (this.privateKey()) {
+	        return this.privateKey().toPublicKey()
+		}
+		return null
     },
-    
+
     publicKeyString: function () {
-        return this.publicKey().toString()
-    },
-    
-    address: function() {
-        return this.publicKey().toString().slice(0, 5) + "..."
+        if (this.publicKey()) {
+	        return this.publicKey().toString()
+		}
+		return null
     },
     
     signatureForMessageString: function(msgString) {

@@ -175,6 +175,7 @@ BMNode = ideal.Proto.extend().newSlots({
     },
 
     didUpdate: function() {
+		//ShowStack()
         this._didUpdateNodeNote.post()
 
         this.setNeedsSyncToView(true)

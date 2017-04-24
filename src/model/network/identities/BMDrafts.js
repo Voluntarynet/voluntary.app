@@ -15,8 +15,9 @@ BMDrafts = BMListNode.extend().newSlots({
     
     add: function() {
         var newItem = BMListNode.add.apply(this)
-        var toKey = this.localIdentity().publicKey().toString()
-        newItem.fieldNamed("from").setTitle(toKey)
+        //var toKey = this.localIdentity().publicKey().toString()
+        var name = this.localIdentity().name()
+        //newItem.fieldNamed("from").setFromContactName(name)
         this.didUpdate()
         return newItem
     },

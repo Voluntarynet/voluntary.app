@@ -1,0 +1,23 @@
+{
+  "name": "bloom-filter",
+  "main": "lib/index.js",
+  "version": "0.2.0",
+  "scripts": {
+    "test": "node_modules/.bin/gulp test",
+    "coverage": "node_modules/.bin/gulp coverage"
+  },
+  "repository": {
+    "type" : "git",
+    "url" : "http://github.com/bitpay/bloom-filter.git"
+  },
+  "devDependencies": {
+    "chai": "=1.10.0",
+    "gulp": "=3.8.10",
+    "gulp-coveralls": "=0.1.3",
+    "gulp-mocha": "^2.0.0",
+    "gulp-shell": "=0.2.11",
+    "istanbul": "^0.3.5",
+    "mocha": "^2.1.0",
+    "run-sequence": "=1.0.2"
+  }
+}

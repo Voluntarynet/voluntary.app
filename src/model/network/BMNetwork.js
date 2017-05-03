@@ -79,7 +79,6 @@ BMNetwork = BMStorableNode.extend().newSlots({
     privateKeyForChannelName: function(channelName) {
         var hexName = channelName.toString(16)
         var privateKey = new bitcore.PrivateKey(hexName);
- 
         return privateKey
     },
     
@@ -105,5 +104,15 @@ BMNetwork = BMStorableNode.extend().newSlots({
 	remoteIdentityNames: function() {
 		return this.remoteIdentities().items().map(function(id) { return id.name(); })
 	},
+	
+	idWithName: function(aName) {
+		var id = this.localIdentities().idWithName(aName)
+		if (id) {
+			return id
+		}
+		
+		id = this.remoteIdentities().idWithName(aName)
+		return id
+	}
 	
 })

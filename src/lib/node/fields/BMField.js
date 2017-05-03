@@ -34,6 +34,8 @@ BMField = BMNode.extend().newSlots({
 	
 	target: null,
 	
+	noteMethod: null,
+	
 }).setSlots({
 	
     init: function () {
@@ -58,6 +60,8 @@ BMField = BMNode.extend().newSlots({
 		//console.log("target = " + target.type() + " setter = '" + setter + "'")
 		target[setter].apply(target, [v])
 		target.didUpdate()
+		this.validate()
+		
 		return this
 	},
 	
@@ -67,6 +71,15 @@ BMField = BMNode.extend().newSlots({
 		//console.log("target = " + target.type() + " getter = '" + getter + "'")
 		var value = target[getter].apply(target)
 		return value
+	},
+	
+	note: function() {
+		var target = this.target()
+		var noteGetter = this.noteMethod()
+		if (target && noteGetter) {
+			return target[noteGetter].apply(target)
+		}
+		return null
 	},
 	
 	visibleValue: function() {

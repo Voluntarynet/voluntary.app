@@ -3,6 +3,7 @@ BMFieldView = NodeView.extend().newSlots({
     type: "BMFieldView",
 	keyView: null,
 	valueView: null,
+	noteView: null,
 	editableColor: "black",
 	uneditableColor: "#aaa",
 	errorColor: "red",
@@ -19,7 +20,12 @@ BMFieldView = NodeView.extend().newSlots({
         this.setValueView(this.createValueView())
         this.addItem(this.valueView())  
 		this.valueView().setSpellCheck(false)
-		        
+		
+		this.setNoteView(Div.clone().setDivClassName("BMFieldViewNoteView"))
+		this.addItem(this.noteView())
+		this.noteView().setInnerHTML("test")
+        this.noteView().makeUnselectable()
+        
         //his.setEditable(false)
         return this
     },
@@ -29,7 +35,7 @@ BMFieldView = NodeView.extend().newSlots({
 	},
 
     syncFromNode: function () {
-		//console.log("BMFieldView syncFromNode")
+		console.log(this.type() + " syncFromNode ")
 		
         var node = this.node()
 
@@ -43,16 +49,17 @@ BMFieldView = NodeView.extend().newSlots({
 
         this.keyView().setInnerHTML(node.key())
 
-		if (this.valueView().setText) {
-			this.valueView().setText(node.visibleValue())
-		} else {
-			this.valueView().setInnerHTML(node.visibleValue())
+		if (!this.valueView().isActiveElementAndEditable()) {
+			if (this.valueView().setText) {
+				this.valueView().setText(node.visibleValue())
+			} else {
+				this.valueView().setInnerHTML(node.visibleValue())
+			}
 		}
 		
 		this.keyView().setIsVisible(node.keyIsVisible())
 		this.valueView().setIsVisible(node.valueIsVisible())
 		
-
         
         this.keyView().setContentEditable(node.keyIsEditable())
         this.valueView().setContentEditable(node.valueIsEditable())
@@ -65,6 +72,7 @@ BMFieldView = NodeView.extend().newSlots({
 		}
 		
 		var color = this.valueView().color()
+		
 		
 		if (node.valueError()) {
 			this.valueView().setColor(this.errorColor())
@@ -80,6 +88,14 @@ BMFieldView = NodeView.extend().newSlots({
 		if (node.valueDivClassName()) {
 			this.valueView().setDivClassName(node.valueDivClassName())
 		}
+		
+		var note = node.note()
+		
+		if (note) {
+			this.noteView().setInnerHTML(note)
+		} else {
+			this.noteView().setInnerHTML("")
+		}
 
         return this
     },
@@ -93,7 +109,11 @@ BMFieldView = NodeView.extend().newSlots({
 		}
 		
 		if (node.valueIsEditable()) {
-        	node.setValue(this.valueView().innerHTML())
+			if (this.valueView().text) {
+        		node.setValue(this.valueView().text())
+			} else {
+        		node.setValue(this.valueView().innerHTML())
+			}
 		}
 		
         NodeView.syncToNode.apply(this)
@@ -101,8 +121,9 @@ BMFieldView = NodeView.extend().newSlots({
     },
     
     onDidEdit: function (changedView) {     
-        //this.log("onDidEdit")   
+        this.log(this.type() + " onDidEdit")   
         this.syncToNode()
+		this.syncFromNode()
     },
 
 

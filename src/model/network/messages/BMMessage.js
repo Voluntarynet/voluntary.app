@@ -8,11 +8,12 @@
 
 */
 
+
+
 BMMessage = BMFieldSetNode.extend().newSlots({
     type: "BMMessage",
     msgType: null,
     data: null,
-    dictFields: null,
     msgTypes: ["addr", "inv", "object", "ping", "pong", "getData"],
     remotePeer: null,
 }).setSlots({

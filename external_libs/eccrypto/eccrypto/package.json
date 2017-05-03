@@ -1,0 +1,59 @@
+{
+  "name": "eccrypto",
+  "version": "1.0.3",
+  "description": "JavaScript Elliptic curve cryptography library",
+  "main": "index.js",
+  "browser": "browser.js",
+  "scripts": {
+    "install": "node-gyp rebuild || exit 0",
+    "test": "ECCRYPTO_NO_FALLBACK=1 mocha && xvfb-run -a karma start && jshint .",
+    "m": "mocha",
+    "k": "xvfb-run -a karma start",
+    "kc": "xvfb-run -a karma start --browsers Chromium",
+    "kf": "xvfb-run -a karma start --browsers Firefox",
+    "j": "jshint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bitchan/eccrypto.git"
+  },
+  "keywords": [
+    "ecc",
+    "ecdsa",
+    "ecdh",
+    "ecies",
+    "crypto",
+    "cryptography",
+    "secp256k1",
+    "K-256",
+    "elliptic",
+    "curve"
+  ],
+  "author": "Kagami Hiiragi",
+  "license": "CC0-1.0",
+  "bugs": {
+    "url": "https://github.com/bitchan/eccrypto/issues"
+  },
+  "homepage": "https://github.com/bitchan/eccrypto",
+  "devDependencies": {
+    "buffer-equal": "~0.0.1",
+    "chai": "*",
+    "jshint": "*",
+    "karma": "^0.12.37",
+    "karma-browserify": "^4.2.1",
+    "karma-chrome-launcher": "^0.2.0",
+    "karma-cli": "^0.1.0",
+    "karma-firefox-launcher": "^0.1.6",
+    "karma-mocha": "^0.2.0",
+    "karma-mocha-reporter": "^1.0.2",
+    "mocha": "*"
+  },
+  "dependencies": {
+    "elliptic": "^6.0.2",
+    "es6-promise": "^3.0.2",
+    "nan": "^2.1.0"
+  },
+  "optionalDependencies": {
+    "secp256k1": "^2.0.4"
+  }
+}

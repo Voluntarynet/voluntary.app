@@ -1575,11 +1575,13 @@ Proto.setSlots({
 			}
 		}
 
+		/*
 		this["addTo" + slotName.capitalized()] = function(amount)
 		{
 			this[privateName] = (this[privateName] || 0) + amount;
 			return this;
 		}
+		*/
 
 		return this;
 	},

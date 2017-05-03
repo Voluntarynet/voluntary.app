@@ -55,6 +55,15 @@ Div = ideal.Proto.extend().newSlots({
         return this
     },
 
+	setFontWeight: function(s) {
+        this.element().style.fontWeight = s
+		return this
+	},
+	
+	fontWeight: function() {
+		return this.element().style.fontWeight
+	},
+	
     setPaddingLeft: function(s) {
         this.element().style.paddingLeft = s
         return this
@@ -335,7 +344,10 @@ Div = ideal.Proto.extend().newSlots({
 		}
 		*/
 		if (this.hasItem(anItem)) {
-			console.log("WANRING: " + this.type() + " removeItem " + anItem.type() + " failed - no child found!")
+			if(!Div._didShowWarning) {
+				Div._didShowWarning = true
+				console.log("WANRING: " + this.type() + " removeItem " + anItem.type() + " failed - no child found!")
+			}
         	this._element.removeChild(anItem.element());
 		}
         anItem.setParentItem(null)
@@ -362,6 +374,14 @@ Div = ideal.Proto.extend().newSlots({
         return null
     },
 
+	isActiveElement: function() {
+		return document.activeElement == this._element 
+	},
+	
+	isActiveElementAndEditable: function() {
+		return this.isActiveElement() && this.contentEditable()
+	},
+
     setInnerHTML: function (v) {
         if (v == null) { v = "" }
         v = "" + v //escape(v)
@@ -372,7 +392,7 @@ Div = ideal.Proto.extend().newSlots({
 
         if (a != b) {
 
-            if (document.activeElement == this._element && this.contentEditable()) {
+            if (this.isActiveElementAndEditable()) {
 				ShowStack();
                 console.log("WARNING: attempt to setInnerHTML on active element. ")
                 // Can't do this until we can properly set the cursor.

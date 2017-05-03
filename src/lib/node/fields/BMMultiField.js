@@ -47,6 +47,17 @@ BMMultiField = BMField.extend().newSlots({
 		return this._validValues
 	},
 	
+	validate: function() {
+		console.log(this.type() + " validate")
+		 
+		if(!this.validValues().contains(this.value())) {	
+			this.setValueError("invalid value")
+			return false
+		}
+		this.setValueError(null)
+		return true
+	},
+	
 	/*
 	setupOptions: function() {
 		if (this.validValuesMethod()) {

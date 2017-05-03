@@ -261,12 +261,16 @@ BMNode = ideal.Proto.extend().newSlots({
     addAction: function(actionString) {
 		if (!this.actions().contains(actionString)) {
 	        this.actions().push(actionString)
+			this.didUpdate()
 		}
         return this
     },
 
 	removeAction: function(actionString) {
-        this.actions().remove(actionString)
+		if (this.actions().contains(actionString)) {
+        	this.actions().remove(actionString)
+			this.didUpdate()
+		}
 		return this
 	},
     

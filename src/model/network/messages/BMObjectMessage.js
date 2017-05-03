@@ -1,10 +1,24 @@
 /*
-    
+
+	BMObjMessage
+	{
+		pow (on hash of what's below) [optional]
+		signature (on hash what's below) [optional]
+				msgType
+				senderPublicKey	
+				receiverPublicKey
+				data 
+	}
+
     // msgDict structure:
     
         ObjectMessage = {
+			pow: "...",
+			signature: "...",
             msgType: "object"
-            packedContent: packedContent,
+            senderPublicKey: "...",
+            receiverPublicKey: "...",
+            uuid: "...",
         }
  
     // sending
@@ -23,39 +37,56 @@
         
 */
 
-/*
-var stableStringify = require('json-stable-stringify');
-var bitcore = require("bitcore-lib")
-var ECIES = require("bitcore-ecies")
-*/
+
+// Helpers
+
+Object.prototype.toJsonStableString = function() {
+    return JSON.stableStringify(this, null, 2)
+}
+
+Object.prototype.toStableHash = function() {
+    return this.toJsonStableString().sha256String();
+}
+
+String.prototype.toJsonDict = function() {
+    return JSON.parse(this)
+}
+
+String.prototype.sha256String = function() {
+	var shaBits = sjcl.hash.sha256.hash(this);
+	var shaHex = sjcl.codec.hex.fromBits(shaBits);
+    return shaHex;                
+    //return bitcore.crypto.Hash.sha256(this.toBuffer()).toString('hex')
+}
+
+String.prototype.toBuffer = function () {
+    return new Buffer(this, "binary")
+}
+
+
 
 BMObjectMessage = BMMessage.extend().newSlots({
     type: "BMObjectMessage",
     
     msgType: "object",
     
-    senderId: null,
-    receiverId: null,
+    pow: null,
+    msgHash: null, // hash of data - computed and cached as needed    
 
-    content: null, 
-    packedContent: null, 
-    
-    msgHash: null, // hash of packedContent - computed and cached as needed
-    
+	signature: null,
     senderPublicKey: null,
     receiverPublicKey: null,
-    
-    payload: null, // used when we're ready to do pow
+
+	powObj: null,
 }).setSlots({
     init: function () {
         BMMessage.init.apply(this)
 		this.setShouldStoreItems(false)
         this.setMsgType("object")
-        this.addStoredSlots(["msgType", "content", "packedContent", "msgHash"])
+        this.addStoredSlots(["msgType", "pow", "signature", "senderPublicKey", "receiverPublicKey", "data"])
         //this.setViewClassName("BMMessageView")
         this.addAction("delete")
-        this.setPayload(BMPayload.clone())
-        this.setupFields()
+        this.setPowObj(BMPow.clone())
     },
     
     duplicate: function() {
@@ -69,15 +100,6 @@ BMObjectMessage = BMMessage.extend().newSlots({
         BMMessage.setNode.apply(this, [aNode])
         console.log("BMObjectMessage setNode " + aNode ? aNode.type() : aNode)
         return this
-    },
-    
-    setupFields: function() {
-        //this.setNodeRowViewClassName("BrowserFieldRow")
-        this.addFieldNamed("from").setNodeTitleIsEditable(false).setNodeFieldProperty("fromValue")
-        this.addFieldNamed("to").setNodeTitleIsEditable(false).setNodeFieldProperty("toValue")
-        this.addFieldNamed("subject").setNodeTitleIsEditable(false).setNodeFieldProperty("subjectValue")
-        var body = this.addFieldNamed("body").setNodeTitleIsEditable(false).setNodeFieldProperty("bodyValue")       
-        body.setNodeMinHeight(-1).setValueDivClassName("BMTextAreaFieldValueView")   
     },
     
     setContent: function(v) {
@@ -99,29 +121,7 @@ BMObjectMessage = BMMessage.extend().newSlots({
         //console.log("BMObjectMessage nodeDict " + JSON.stringify(dict, null, 2) )
         return dict
     },
-    
-    fromValue: function() {
-        if (!this._content) {
-            console.log("WARNING: BMObjectMessage.fromValue() missing this._content = " + this._content)
-            ShowStack()
-        }
-        //console.log("BMObjectMessage.fromValue() this._content = " + JSON.stringify(this._content, null, 2))
-        //console.log("this.content() = " + JSON.stringify(this.content(), null, 2))
-        return this._content ? this._content.from : "?"
-    },
-
-    toValue: function() {
-        return this._content ? this._content.to : "?"
-    },
-
-    subjectValue: function() {
-        return this._content ? this._content.subject : "?"
-    },
-        
-    bodyValue: function() {
-        return this._content ? this._content.body : null
-    },
-    
+   
     network: function() {
         return window.app.network()
     },
@@ -135,154 +135,60 @@ BMObjectMessage = BMMessage.extend().newSlots({
     
     setMsgDict: function(dict) {
         //console.log("setMsgDict ", dict)
+        this.setPow(dict.pow)
+        //this.setSignature(dict.signature)
         this.setMsgType(dict.msgType)
-        this.setPackedContent(dict.data)            
-        this.payload().setData(this.packedContent())  
-
+        this.setData(dict.data)            
+        //this.setsenderPublicKey(dict.senderPublicKey)            
+        //this.setreceiverPublicKey(dict.receiverPublicKey)            
         return this
     },
     
     msgDict: function() {
         return {
+            pow: this.pow(),
+            //signature: this.signature(),
             msgType: this.msgType(),
-            data: this.packedContent(),
-            msgHash: this.msgHash(),
+            //senderPublicKey: this.senderPublicKey(),
+            //receiverPublicKey: this.receiverPublicKey(),
+            data: this.data()
         }
     },
+
+	dictToHash: function() {
+		var dict = this.msgDict()
+		delete dict.signature
+		delete dict.msgHash
+		return dict
+	},
     
-    serialize: function(dict) {
-        this.setMsgDict(dict)
-    },
-    
-    unserialize: function(dict) {
-        this.setMsgDict(dict)
-    },
-    
-    // hash
-    
+	// hash
+	
+	computeMsgHash: function() {
+		return this.dictToHash().toJsonStableString().sha256String()
+	},
+
     msgHash: function() {
-        if (!this._msgHash && this._packedContent) {
-            this._msgHash = this.packedContent().payload.toJsonStableString().sha256String();
-        }
-        
-        if (this._msgHash == null) {
-            //throw "null this._msgHash"
+        if (!this._msgHash) {
+            this._msgHash = this.computeMsgHash();
         }
         
         return this._msgHash
     },
-    
-    // send
- 
-    packedContent: function() {
-        if (!this._packedContent) {
-            //this._packedContent = this.packContent()
-        }
-        
-        return this._packedContent
-    },
- 
-     packContent: function() {
-        // sets content, encrypts and does pow
-        this.payload().setData(this.content())
-        //payload.encrypt(this.senderId().privateKey(), this.receiverId().publicKey())
-        this.payload().pow()
-        var payloadData = this.payload().data()
-        console.log("payloadData = ", payloadData)
-        return payloadData
-    },
-    
-    asyncPackContent: function() {
-        this.payload().setData(this.content())
-        var self = this
-        this.payload().setDonePowCallback(function () { self.didFinishPow() }) // pow will post a notification when done
-        this.payload().asyncPow() // pow will post a notification when done
-    },
-    
-    didFinishPow: function() {
-        this._packedContent = this.payload().data()
-    },
 
-    unpackContentWithReceiverId: function(receiverId) {
-        try {
-            var receiverPrivateKey = receiverId.privateKey()
-            
-             this.payload().setData(this.packedContent())  
-             this.payload().unpow()
-            /*
-            payload.unencrypt(receiverPrivateKey)
-            if (payload.data()) {
-                //this.setReceiverPublicKey(receiverPrivateKey.publicKey())
-                this.setContent(payload.data())
-                
-                var spk = payload.senderPublicKey().toString()
-                var senderId = this.network().localIdentities().idWithPubKeyString(spk)
-                this.setSenderId(senderId)
-                this.setReceiverId(receiverId)
-                //receiverId.inbox().addItemIfAbsent(this)
-            }
-            */
-             
-        } catch(error) {
-            return false
-        }
-        
-        return true
-    },
-        
-    unpackContent: function() {
-        var self = this        
-        var succeeded = this.network().localIdentities().items().detect(function(localId) {
-            var result = self.unpackContentWithReceiverId(localId)
-            if (result) {
-                self.place()
-            }
-            return result
-        })
-        
-        return succeeded
-    },
+	// sign and verify
+	
+	signWithSenderId: function(senderId) {
+		this.setSignature(senderId.signatureForMessageString(this.msgHash()))
+		return this
+	},
     
-    attemptToUnpackIfNeeded: function() {
-        // only returns true if we unpacked it now, 
-        // returns false if we couldn't unpack or already had the content
-        if (!this._content && this._packedContent) {
-            return this.unpackContent()
-        }        
-        return false
-    },
-    
-    place: function() {        
-        /*
-        if (this.receiverId()) {
-            //var id = this.network().localIdentities().idWithPubKeyString(rec())
-            this.receiverId().inbox().addItemIfAbsent(this.duplicate())
-            this.senderId().sent().addItemIfAbsent(this.duplicate())
-            return true
-        }
-        */
-                    
-        if (this.msgType() == "object") {
-            //console.log("this.msgDict() = ", this.msgDict())
-            var dict = this.msgDict().data.payload
-            //console.log("creating post for dict ", dict)
-            var post = BMClassifiedPost.clone().setPostDict(dict)
-            //console.log("placing post with hash ", post.hash())
-            post.setObjMsg(this)
-            post.setupFromDict()
-	        post.setHasSent(true)
-            post.placeInRegion();
-            post.placeInAll();
-        }
-        
-        return false
-    },
-    
-    content: function() {
-        // this.attemptToUnpackIfNeeded()
-        return this._content
-    },
-       
+	verifySignature: function() {
+		var spk = new PublicKey(this.senderPublicKey());
+        var verified = bitcore.Message(this.msgHash()).verify(spk.toAddress(), this.signature());
+		return verified
+	},
+	    
     send: function() {
         // adding to Messages node this would change parentNode - so make a copy?
 		this.markDirty()
@@ -290,11 +196,83 @@ BMObjectMessage = BMMessage.extend().newSlots({
         return this
     },
     
-    actualDifficulty: function() {        
-        return this.payload().actualDifficulty()
+	validMessageProtos: function() {
+		return ["BMPrivateMessage", "BMClassifiedPost"]
+	},
+
+    place: function() {   
+        var dict = this.data()
+
+		var protoName = dict.type
+		
+		//console.log("placing ", protoName)
+		
+		if (!this.validMessageProtos().contains(protoName)) {
+			console.log("'" + protoName + "'  is not a valid proto found in ", this.validMessageProtos())
+			return false
+		}
+		
+		var proto = window[protoName]
+		var obj = proto.clone().setObjMsg(this).setPostDict(dict).place()
+		
+		//console.log("placed ", protoName)
+		
+		/*
+        if (dict.type == "BMPrivateMessage") {
+            var privateMsg = BMPrivateMessage.clone().setPostDict(dict)
+			privateMsg.place()
+            return true
+     	}       
+        else if (dict.type == "BMClassifiedPost") {			
+            var post = BMClassifiedPost.clone().setPostDict(dict)
+            post.setObjMsg(this)
+            post.setupFromDict()
+	        post.setHasSent(true)
+            post.placeInRegion()
+            post.placeInAll()
+			return true
+        }
+*/
+        
+        return false
+    },
+
+	// ---- pow ------------------------------------------------
+	
+    /// pow / unpow
+    
+/*
+    pow: function() {        
+        var hash = this.msgHash()
+        var pow = this.powObject()
+        pow.setHash(hash)
+        pow.syncFind()
+        this.setPow(pow.powHex())
+        return true
+    },  
+*/
+    
+    asyncFindPowAndSend: function() {        
+        var hash = this.msgHash()
+        var pow = this.powObj()
+        pow.setHash(hash)
+        pow.setDoneCallback(() => { this.powDone() })
+        pow.asyncFind()
+        return true
+    },  
+    
+    powDone: function() {
+        this.setPow(this.powObj().powHex())
+		this.send()
+		return this
     },
     
-    powPerMBDay: function() {
-        
+    actualPowDifficulty: function() {
+		if (this.pow()) {
+	        var pow = BMPow.clone().setHash(this.msgHash()).setPowHex(this.pow())
+	        return pow.actualPowDifficulty()
+		}
+		return 0
     },
+
 })

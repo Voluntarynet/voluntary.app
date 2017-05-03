@@ -5,7 +5,6 @@ BMRemoteIdentity = BMNavNode.extend().newSlots({
 	name: "untitled",
 
 	publicKeyString: "",
-	privateKeyString: "",
 
 }).setSlots({
 	
@@ -25,9 +24,10 @@ BMRemoteIdentity = BMNavNode.extend().newSlots({
 		//this.addField(BMIdentityField.clone().setNodeFieldProperty("publicKeyString").setKey("public key").setValueIsEditable(true))
         //this.setPublicKeyString("")
 
-		this.addStoredSlots(["name", "publicKeyString", "privateKeyString"])
+		this.addStoredSlots(["name", "publicKeyString"])
 		this.initStoredSlotWithProto("profile", BMProfile)
 		this.initStoredSlotWithProto("messages", BMInbox)
+		this.messages().setTitle("messages")
 
         //this.setNodeBgColor("white")
 
@@ -35,6 +35,11 @@ BMRemoteIdentity = BMNavNode.extend().newSlots({
 		
         this.addAction("delete")
     },
+
+	didLoadFromStore: function() {
+		BMNavNode.didLoadFromStore.apply(this)
+		this.messages().setTitle("messages")
+	},
     
     title: function () {
 		if (this.name() == "") {
@@ -47,7 +52,7 @@ BMRemoteIdentity = BMNavNode.extend().newSlots({
         this.setName(s)
         return this
     },
- 
+ /*
     subtitle: function () {
 		if (this.publicKeyString()) {
         	return this.publicKeyString().toString().slice(0, 5) + "..."
@@ -55,32 +60,42 @@ BMRemoteIdentity = BMNavNode.extend().newSlots({
 		
 		return ""
     },  
+*/
 
     isValid: function() {
-		var s = this.publickKeyString()
+		var s = this.publicKeyString()
 		return bitcore.PublicKey.isValid(s)
 	},
 	
-    publickKey: function() {
+    publicKey: function() {
 		if (this.isValid()) {
+			var s = this.publicKeyString()
             return new bitcore.PublicKey(s)
         }
         return null
     },
 
 	compressedPublicKeyString: function() {
-		var pk = this.publickKey()
+		var pk = this.publicKey()
 		if (pk) {
 			
 		}
 		return null
 	},
 
-	/*
-	verifySignatureOnHash: function(signature, hash) {
+    verifySignatureForMessage: function(signature, msgString) {
+        var address = this.publicKey().toAddress()
+        var verified = Message(msgString).verify(address, signature);
+        return verified
+    },
+
+	fileMessage: function(aPrivateMsg) {
 		
+		if (aPrivateMsg.senderId() == this || aPrivateMsg.receiverId() == this) {
+			this.messages().addItemIfAbsent(aPrivateMsg)
+		}	
+		
+		return this
 	},
-	*/
-    
 
 })

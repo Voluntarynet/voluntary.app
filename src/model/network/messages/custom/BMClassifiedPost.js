@@ -26,11 +26,15 @@ BMClassifiedPost = BMFieldSetNode.extend().newSlots({
         
  		this.addField(BMStampField.clone().setKey("stamp").setNodeFieldProperty("stamp")).setValueIsEditable(false)
         this.addFieldNamed("path").setKey("path").setValueIsEditable(false)
+		this.fieldNamed("path").visibleValue = function () {
+			return this.value().split("/").join(" / ")
+		}
+		
         this.addFieldNamed("title").setKey("title").setValueIsEditable(true)
  		this.addField(BMNumberField.clone().setKey("price").setNodeFieldProperty("price")).setValueIsEditable(true).setUnsetVisibleValue(0)
 
 
- 		this.addField(BMMultiField.clone().setKey("currency").setNodeFieldProperty("currency")).setValueIsEditable(true).setValidValues(CurrenciesDict.slotNames().sort())
+ 		this.addField(BMMultiField.clone().setKey("currency").setNodeFieldProperty("currency")).setValueIsEditable(true).setValidValuesMethod("currencySymbols").setNoteMethod("currencyName")
  		this.addField(BMDateField.clone().setKey("sent date").setNodeFieldProperty("postDate")).setValueIsEditable(false).setUnsetVisibleValue("(not sent yet)")
 		this.addField(BMTextAreaField.clone().setKey("description").setNodeFieldProperty("description")).setValueIsEditable(true)
 		this.addField(BMImageWellField.clone().setKey("drop images here").setNodeFieldProperty("imageDataURLs")).setValueIsEditable(true)
@@ -73,7 +77,27 @@ BMClassifiedPost = BMFieldSetNode.extend().newSlots({
 		this.setIsEditable(!this.hasSent())
 		this.validate()
 	},
-    
+	
+	currencySymbols: function() {
+		/*
+		return CurrenciesDict.slotNames().map(function (k) {
+			return k + " (" + CurrenciesDict[k].name + ")"
+		}).sort()
+		*/
+		return CurrenciesDict.slotNames().sort()
+	},
+	
+	currencyName: function() {
+		if (this.currency()) {
+			var dict = CurrenciesDict[this.currency()]
+			if (dict) {
+				return dict.name
+			}
+		}
+		return null
+	},
+  
+/*  
     // images
     
     setEncodedImages: function(base64images) {
@@ -85,6 +109,7 @@ BMClassifiedPost = BMFieldSetNode.extend().newSlots({
     getEncodedImages: function() {
         return this.images().map(function (image) { return image.base64Encoded(); });
     },
+*/
     
     subtitle: function() {
 		try {
@@ -151,7 +176,7 @@ BMClassifiedPost = BMFieldSetNode.extend().newSlots({
     prepareToSend: function() {
         this.setUuid(GUID()) 
 		this.choosePostDate()
-        this.objMsg().setContent(this.postDict())
+        this.objMsg().setData(this.postDict())
         return this
     },
     
@@ -179,7 +204,7 @@ BMClassifiedPost = BMFieldSetNode.extend().newSlots({
     },
     
     powObj: function() {
-        return this.objMsg().payload().powObject()
+        return this.objMsg().powObj()
     },
     
     powUpdate: function(note) {
@@ -319,8 +344,8 @@ BMClassifiedPost = BMFieldSetNode.extend().newSlots({
     },
     
     compare: function(other) {
-        var d1 = this.powObj().actualDifficulty()
-        var d2 = other.powObj().actualDifficulty()
+        var d1 = this.powObj().actualPowDifficulty()
+        var d2 = other.powObj().actualPowDifficulty()
         var p1 = this.postDate()
         var p2 = other.postDate()
         

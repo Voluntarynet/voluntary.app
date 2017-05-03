@@ -14,7 +14,8 @@ App = BaseApp.extend().newSlots({
     
     wallet: null,
     
-    network: null,    
+    network: null,   
+	dataStore: null, 
 }).setSlots({
     init: function () {
         BaseApp.init.apply(this)
@@ -61,6 +62,9 @@ App = BaseApp.extend().newSlots({
 		
 		this.addItem(this.network())
 
+		this.setDataStore(BMDataStore.clone())
+		this.addItem(this.dataStore())
+		
 		// about 
 		
         //this.initStoredSlotWithProto("about", BMInfoNode)

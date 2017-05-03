@@ -74,9 +74,9 @@ BMPow = ideal.Proto.extend().newSlots({
         }
         
         if (this.isValid()) {
-            //return this.highlightString("level " + this.actualDifficulty() + " Stamp &nbsp;&#10003;")
-            //return "valid level " + this.highlightString(this.actualDifficulty()) + " Stamp" // &nbsp; &#10003;"
-            return "level " + this.actualDifficulty() + " Stamp" // &nbsp; &#10003;"
+            //return this.highlightString("level " + this.actualPowDifficulty() + " Stamp &nbsp;&#10003;")
+            //return "valid level " + this.highlightString(this.actualPowDifficulty()) + " Stamp" // &nbsp; &#10003;"
+            return "level " + this.actualPowDifficulty() + " Stamp" // &nbsp; &#10003;"
         }
         
         //console.log("status invalid")
@@ -112,7 +112,7 @@ BMPow = ideal.Proto.extend().newSlots({
         }
         
         if (found) {
-            console.log("BMPow: found targetDifficulty " + this.actualDifficulty() + " pow after " + this.tries() + " tries")
+            console.log("BMPow: found targetDifficulty " + this.actualPowDifficulty() + " pow after " + this.tries() + " tries")
             this.show()
             this.setIsFinding(false)
             this.setStatus(null)
@@ -274,7 +274,7 @@ BMPow = ideal.Proto.extend().newSlots({
         return this
     },
     
-    actualDifficulty: function() {
+    actualPowDifficulty: function() {
         if (this.hash() == null || this.powBits() == null) {
             return 0
         }
@@ -288,7 +288,7 @@ BMPow = ideal.Proto.extend().newSlots({
             return false 
         }
             
-        return this.actualDifficulty() >= this.targetDifficulty()
+        return this.actualPowDifficulty() >= this.targetDifficulty()
         
         /*
         if (this._isValid == null) {
@@ -307,7 +307,7 @@ BMPow = ideal.Proto.extend().newSlots({
         console.log("       catsha: '" + sjcl.codec.hex.fromBits(this.catShaBits()) + "'")
         console.log("   catshaBits: '" + sjcl.codec.bits.toBitString(this.catShaBits()).slice(0, this.targetDifficulty() + 10) + "...'")
         console.log("                " + "^".repeat(this.targetDifficulty()))
-        console.log("  actual diff: " + this.actualDifficulty())
+        console.log("  actual diff: " + this.actualPowDifficulty())
         console.log("  target diff: " + this.targetDifficulty())
         ///console.log("        tries: " + this.tries());
         console.log("      isValid: " + this.isValid() )

@@ -120,6 +120,29 @@ NodeStore = ideal.Proto.extend().newSlots({
 		this.setSdb(SyncDB.clone())
 		//this.asyncOpen()
     },
+	
+	descriptionForByteCount: function(b) {
+		if (b < 1024) {
+			return b + " bytes"
+		}
+		
+		if (b < 1024*1024) {
+			return Math.floor(b/1024) + " KB"
+		}
+		
+		return Math.floor(b/1024*1024) + " MB"
+	},
+
+	shortStatsString: function() {
+		if (!this.isOpen()) {
+			return "closed"
+		}
+		return this.sdb().size() + " objects, " + this.descriptionForByteCount(this.sdb().totalBytes())
+	},
+	
+	isOpen: function() {
+		return this.sdb().isOpen()	
+	},
 
 	asyncOpen: function(callback) {
 		var self = this

@@ -5,7 +5,7 @@ BMDrafts = BMListNode.extend().newSlots({
         BMListNode.init.apply(this)
  		this.setShouldStore(true)
         this.setNoteIsItemCount(true)
-        this.setSubnodeProto(BMDraft).addAction("add")
+        this.setSubnodeProto(BMPrivateMessage).addAction("add")
         this.setTitle("Drafts")
     },
     
@@ -16,8 +16,9 @@ BMDrafts = BMListNode.extend().newSlots({
     add: function() {
         var newItem = BMListNode.add.apply(this)
         //var toKey = this.localIdentity().publicKey().toString()
-        var name = this.localIdentity().name()
+        //var name = this.localIdentity().name()
         //newItem.fieldNamed("from").setFromContactName(name)
+		//newItem.useDefaultFromAddress()
         this.didUpdate()
         return newItem
     },

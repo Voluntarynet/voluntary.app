@@ -1,6 +1,9 @@
+-  BMTextField autocomplete feature
+   - uses Multi similar API for getting choices
 
-
-- validator in field
+- BMPrivateMessage.setEditable
+- way to show pubkey when no contact available
+- update ClassifiedPost
 
 - complete StampField
 - support setHeight on TextAreaField

@@ -5,6 +5,7 @@ SyncDB = ideal.Proto.extend().newSlots({
     idb: null,
     cache: null,
 	isOpen: false,
+	isSynced: false,
 }).setSlots({
     init: function () {
 		this.setCache({})
@@ -30,6 +31,7 @@ SyncDB = ideal.Proto.extend().newSlots({
 		//	console.log("SyncDB didOpen() - loaded cache")
 			self._cache = dict
 			self.setIsOpen(true)
+			self.setIsSynced(true)
 			if (callback) {
 				callback()
 			}
@@ -95,7 +97,7 @@ SyncDB = ideal.Proto.extend().newSlots({
 				count++;
 			}
 		}
-		return size
+		return count
 	},	
 	
 	// write (and async write to idb)
@@ -137,6 +139,7 @@ SyncDB = ideal.Proto.extend().newSlots({
 	verifySync: function() {
 		var self = this
 		var cache = this._cache
+		this._isSynced = false
 		this.idb().asyncAsJson(function (json) {
 			var hasError = false
 			
@@ -169,6 +172,7 @@ SyncDB = ideal.Proto.extend().newSlots({
 				//console.log("idb/sdb SYNCING")
 			} else {
 				console.log("SyncDB SYNCED")
+				this._isSynced = true
 				//self.idb().show()
 				//console.log("syncdb idb json: ", JSON.stringify(json, null, 2))
 				
@@ -185,6 +189,20 @@ SyncDB = ideal.Proto.extend().newSlots({
 			}
 			*/
 		})
+	},
+	
+	// stats
+	
+	totalBytes: function() {
+		var byteCount = 0
+		var dict = this._cache
+		for (var k in dict) {
+		   if (dict.hasOwnProperty(k)) {
+				var v = dict[k]
+				byteCount += k.length + v.length
+			}
+		}
+		return byteCount
 	},
 	
 })

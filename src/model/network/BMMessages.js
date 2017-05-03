@@ -51,19 +51,15 @@ BMMessages = BMStorableNode.extend().newSlots({
     },
     
     validateMsg: function(msg) {
-
-        if (msg.actualDifficulty() < this.globalMinDifficulty()) {
-            console.log("rejecting message '" + msg.msgHash() +"' with pow of " + msg.actualDifficulty() + " < globalMinDifficulty of " + this.globalMinDifficulty())
+/*
+        if (msg.actualPowDifficulty() < this.globalMinDifficulty()) {
+            console.log("rejecting message '" + msg.msgHash() +"' with pow of " + msg.actualPowDifficulty() + " < globalMinDifficulty of " + this.globalMinDifficulty())
             // check should be at remotePeer level
             this.removeMessage(msg)
             return false
         }
-        
-        if (msg.msgHash() == null) {
-            console.log("attempt to add message with no msgHash")
-            return false
-        }
-        
+*/
+      
         if (this.hasMessage(msg)) {
             console.log("attempt to add duplicate message")
             return false
@@ -75,15 +71,18 @@ BMMessages = BMStorableNode.extend().newSlots({
     addMessage: function(msg) { // validate and broadcast
 	
 		//console.log(this.type() + " addMessage ", msg)
-		
+
         if (!this.validateMsg(msg)) {
 			console.log(this.type() + " INVALID MESSAGE")
             return false
         }
         
         this.addItem(msg)
-		msg.place()
-        this.broadcastMessage(msg)
+
+		setTimeout(() => {
+			msg.place()
+	        this.broadcastMessage(msg)
+		}, 10)
         
         return true
     },
@@ -91,7 +90,9 @@ BMMessages = BMStorableNode.extend().newSlots({
 	didLoadFromStore: function() {
 		//console.log(this.type() + " didLoadFromStore items length = ", this.items().length)
 		this.updateIndex()
-		this.placeAllItems()
+			setTimeout(() => {
+			this.placeAllItems()
+		}, 0)
 	},
 	
 	placeAllItems: function() {

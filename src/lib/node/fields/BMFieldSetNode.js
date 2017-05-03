@@ -66,6 +66,16 @@ BMFieldSetNode = BMStorableNode.extend().newSlots({
     valueForFieldNamed: function(aName) {
         return this.fieldNamed(aName).value()
     },
+
+
+	copyFieldsFrom: function(sourceObj) {
+		this.items().forEach((targetField) => {
+			var sourceField = sourceObj.fieldNamed(targetField.nodeFieldProperty())
+			targetField.setValue(sourceField.value())
+			//console.log("target field " + targetField.nodeFieldProperty() + " set to '" + targetField.value() + "'")
+		})
+		return this
+	},
     
     // --- peristence - save items as fields in dict ---
     /*

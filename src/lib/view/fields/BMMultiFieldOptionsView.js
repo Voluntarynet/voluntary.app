@@ -35,21 +35,31 @@ BMMultiFieldOptionsView = Div.extend().newSlots({
 		return this
 	},
 	
-	adjustOptionWidths: function() {
+	setOptionWidths: function(maxWidth) {
+		this.items().forEach(function(item) {
+			item.setMinAndMaxWidth(maxWidth)
+		})
+		return this
+	},
+	
+	maxOptionTextWidth: function() {
 		var maxWidth = this.items().maxValue(function(item) {
 			//console.log("item.width() = ", item.width())
 			return DivTextTapeMeasure.widthOfDivClassWithText("BMMultiFieldOptionView", item.innerHTML())
-		})
+		})	
+		//console.log("items.length = " +  this.items().length + " maxWidth = ", maxWidth)
+		
+		return maxWidth	
+	},
+	
+	adjustOptionWidths: function() {
+		var maxWidth = this.maxOptionTextWidth()
 		
 		var leftPad = 10
 		var rightPad = 10
 		
-		maxWidth *= 1
-		//console.log("items.length = " +  this.items().length + " maxWidth = ", maxWidth)
 		
-		this.items().forEach(function(item) {
-			item.setMinAndMaxWidth(maxWidth)
-		})
+		this.setOptionWidths(maxWidth)
 		
 		var itemsPerRow = 1
 		
@@ -67,14 +77,16 @@ BMMultiFieldOptionsView = Div.extend().newSlots({
 				item.setPaddingLeft(leftPad + "px")
 				item.setPaddingRight(rightPad + "px")
 			})
-			this.parentItem().setMinAndMaxWidth(fullWidth)
+			//this.parentItem().setMinAndMaxWidth(fullWidth)
 			this.setLeft(fullWidth + 30)
 		} else {
 			this.items().forEach(function(item) {
-				item.setTextAlign("center")
+				item.setPaddingLeft(leftPad + "px")
+				item.setTextAlign("left")
+				item.setPaddingRight(rightPad + "px")
 			})			
-			this.parentItem().setMinAndMaxWidth(maxWidth)
-			this.setLeft(maxWidth + 30)
+			//this.parentItem().textView().setMinAndMaxWidth(maxWidth)
+			//this.setLeft(maxWidth + 30)
 		}
 		
 		//this.setLeft(0)

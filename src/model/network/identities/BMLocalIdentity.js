@@ -1,5 +1,7 @@
 var bitcore = require("bitcore-lib")
 //var BitcoreMessage = require('bitcore-message');
+var ECIES = require('bitcore-ecies');
+var Buffer = bitcore.deps.Buffer;
 
 BMLocalIdentity = BMNavNode.extend().newSlots({
     type: "BMLocalIdentity",
@@ -32,7 +34,7 @@ BMLocalIdentity = BMNavNode.extend().newSlots({
     },
 
 	didLoadFromStore: function() {
-		console.log(this.type() + " didLoadFromStore")
+		//console.log(this.type() + " didLoadFromStore")
 		BMNavNode.didLoadFromStore.apply(this)
 		this.profile().fieldNamed("publicKeyString").setValueIsEditable(false)
 	},
@@ -47,13 +49,14 @@ BMLocalIdentity = BMNavNode.extend().newSlots({
         return this
     },
  
+/*
     subtitle: function () {
 		if (this.publicKey()) {
 	        return this.publicKey().toString().slice(0, 5) + "..."
 		}
 		return null
     },  
-    
+    */
     
 	isValid: function() {
 		return bitcore.PrivateKey.isValid(this.privateKeyString())
@@ -86,22 +89,38 @@ BMLocalIdentity = BMNavNode.extend().newSlots({
 		}
 		return null
     },
-    
+
     signatureForMessageString: function(msgString) {
-        //var bitcoreMessage = new BitcoreMessage(msgString);
-        //var signature = bitcoreMessage.sign(this.privateKey());
-        
-       // var privateKey = bitcore.PrivateKey.fromWIF('cPBn5A4ikZvBTQ8D7NnvHZYCAxzDZ5Z2TSGW2LkyPiLxqYaJPBW4');
-        //var signature = Message(msgString).sign(this.privateKey()));
-
-        //return signature
+        var signature = Message(msgString).sign(this.privateKey())
+        return signature
     },
 
-    verifySignatureForMessage: function(signature, msgString) {
-        var address = this.publicKeyString()
-        var verified = Message('hello, world').verify(msgString, signature);
+	encryptMessageForReceiverId: function(msgString, receiverId) {
+		var encryptor = ECIES().privateKey(this.privateKey()).publicKey(receiverId.publicKey());
+		var encryptedBase64String = encryptor.encrypt(msgString).toString('base64')
+		return encryptedBase64String
+	},
+    
+	decryptMessageFromSenderPublicKeyString: function(encryptedBase64String, senderPublicKeyString) {
+		var encryptedBuffer = new Buffer(encryptedBase64String, 'base64')
+		var senderPublicKey = new bitcore.PublicKey(senderPublicKeyString)
+		var decryptor = ECIES().privateKey(this.privateKey()).publicKey(senderPublicKey);
+		//console.log("encryptedMsg = '" + encryptedMsg + "'")
+		var decrypted = decryptor.decrypt(encryptedBuffer).toString();
+		return decrypted
+	},
+	
+	fileMessage: function(aPrivateMsg) {
+		
+		if (aPrivateMsg.senderId() == this) {
+			this.sent().addItemIfAbsent(aPrivateMsg)
+		}
+		
+		if (aPrivateMsg.receiverId() == this) {
+			this.inbox().addItemIfAbsent(aPrivateMsg)
+		}		
+		
+		return this
+	},
 
-        //var verified = new BitcoreMessage(msg).verify(this.publicKey(), signature);
-        return verified
-    },
 })

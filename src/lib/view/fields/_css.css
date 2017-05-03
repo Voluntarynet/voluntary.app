@@ -59,8 +59,7 @@
 /* --------------------------- Value --------------------------- */
 
 .BMFieldValueView {
-    color: #000;
-    font-family: "OpenSans-Regular";
+	display: inline;
     position: absolute;
     
     min-width: 100px;
@@ -68,10 +67,13 @@
     
     top: 19px;
     left: 110px;
-    font-size: 13px;
-    font-weight: normal;
     white-space: nowrap;
     text-transform: none;	
+
+    color: #000;
+    font-family: "OpenSans-Regular";
+    font-weight: normal;
+    font-size: 13px;
 
 	border-radius: 5px;
 	/* 
@@ -176,39 +178,37 @@
 
 .BMMultiFieldValueView {
 	white-space: pre-wrap;
-	
+	display: inline;
     position: absolute;
 
-    min-width: 100px;
-	width: 100px;
-    min-height: 23px;
+    min-width: 40px;
+    min-height: 20px;
+	width: auto;
     text-align: left;
 
     position: absolute;
     
-    top: 19px;
+    top: 18px;
     left: 110px;
 
-
     font-family: "OpenSans-Regular";
-    color: #000;
     font-size: 13px;
     font-weight: normal;
     text-transform: none;
-
 
 	border: solid #ccc 1px;
 	border-radius: 4px;
 	
 	padding-left: 7px;
 	padding-right: 7px;
-	padding-top: 3px;
+	padding-top: 3px;	
+	padding-bottom: 3px;
 }
 
 .BMMultiFieldOptionsView {
-	overflow:hidden;
 	z-index: 100;
     position: absolute;
+	overflow:hidden;
 
 
     font-family: "OpenSans-Regular";
@@ -244,15 +244,50 @@
     font-weight: normal;
     text-transform: none;
 
-	border: solid #ddd 0px;
 	padding-top: 5px;
 }
 
-.BMMultiFieldOptionView:hover {
-	/*
-    background-color: #ccc;
-	*/
+/*
+
+.BMMultiFieldValueTextView {
+	display: inline;
+    
+	width: auto;
+
+	border: solid #ccc 1px;
+	border-radius: 4px;
+	
+	padding-left: 7px;
+	padding-right: 7px;
+	padding-top: 3px;	
+	padding-bottom: 3px;	
+}
+*/
+
+/*
+.BMMultiFieldValueTextView:hover {
 	font-weight: bold;
 	background-color: #000;
     color: #fff;
+}
+*/
+
+.BMFieldViewNoteView {
+	display: inline;
+    position: relative;
+	float:right;
+	margin-right: 33px;
+	top: 22px;
+    min-height: 23px;
+	overflow: hidden;
+	
+	width: auto;
+	
+	font-family: "OpenSans-Regular";
+    font-size: 13px;
+    font-weight: normal;
+    text-transform: none;
+
+	color: #aaa;
+	text-align: left;	
 }

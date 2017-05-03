@@ -22,9 +22,15 @@ BMLocalIdentities = BMListNode.extend().newSlots({
         return this.items()[0]
     },
     
-    idWithPubKeyString: function(pubkeyString) {
+    idWithPubKeyString: function(s) {
         return this.items().detect(function (id) {            
-            return id.publicKey().toString() == pubkeyString
+            return id.publicKey().toString() == s
         })
     },
+
+	idWithName: function(s) {
+        return this.items().detect(function (id) {            
+            return id.name() == s
+        })
+	}
 })

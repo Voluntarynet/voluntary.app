@@ -1,3 +1,4 @@
+/*
 console.log("------ BEGIN TESTS ------")
 
 // generate keys, encrypt and decrypt message with signature 
@@ -15,17 +16,28 @@ var bobPrivateKey = new bitcore.PrivateKey();
 var alice = ECIES().privateKey(alicePrivateKey).publicKey(bobPrivateKey.publicKey);
 
 var message = 'some secret message';
-var encrypted = alice.encrypt(message);
+var encryptedString = alice.encrypt(message).toString('base64')
+
+console.log("encryptedString = ", encryptedString)
+
+var encryptedBuffer = new Buffer(encryptedString, 'base64')
+
+
+//var encrypted = new Buffer(JSON.parse(JSON.stringify(encrypted)))
+// encrypted = new Buffer(encrypted)
+
+console.log("encryptedBuffer = ", encryptedBuffer)
+
 
 // encrypted will contain an encrypted buffer only Bob can decrypt
 
 var bob = ECIES().privateKey(bobPrivateKey).publicKey(alicePrivateKey.publicKey);
-var decrypted = bob.decrypt(encrypted).toString();
+var decrypted = bob.decrypt(encryptedBuffer).toString();
 
 console.log("'" + decrypted + "' " + ((decrypted == message) ? "==" : "!=" ) + " '" + message + "'")
 
-// decrypted will be 'some secret message'
 console.log("------ END TESTS ------")
+*/
 
 /*
 var bitcore = require('bitcore-lib');

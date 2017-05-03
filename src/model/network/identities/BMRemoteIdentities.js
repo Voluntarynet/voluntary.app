@@ -21,10 +21,16 @@ BMRemoteIdentities = BMListNode.extend().newSlots({
         
         if (!id) {
             // make an id if it's not here
-            id = BMRemoteIdentity.clone().setPublickKeyString(pubkeyString)
+            id = BMRemoteIdentity.clone().setPublicKeyString(pubkeyString)
             this.addItem(id)
         }
         
         return id
     },
+
+	idWithName: function(s) {
+        return this.items().detect(function (id) {            
+            return id.name() == s
+        })
+	},
 })

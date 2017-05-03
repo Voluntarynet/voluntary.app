@@ -209,7 +209,7 @@ BMRemotePeer = BMNode.extend().newSlots({
             
         /*
         let messages object validate it 
-        if (msg.actualDifficulty() > this.minimumDifficulty()) {
+        if (msg.actualPowDifficulty() > this.minimumDifficulty()) {
             // mark it as seen, just to be safe
             this.remoteInventory()[msg.msgHash()] = true
             

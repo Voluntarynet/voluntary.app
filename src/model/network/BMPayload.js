@@ -22,7 +22,7 @@
     
         var payload = BMPayload.clone()
         payload.setData(originalMsgDict)
-        payload.encrypt(senderPrivateKey, receiverPubkey)
+        payload.encrypt(senderPrivateKey, receiverPublicKey)
         payload.pow()
         var wrappedMsgDict = payload.data()
         
@@ -41,30 +41,6 @@
     
 */
 
-// Helpers
-
-Object.prototype.toJsonStableString = function() {
-    return JSON.stableStringify(this, null, 2)
-}
-
-Object.prototype.toStableHash = function() {
-    return this.toJsonStableString().sha256String();
-}
-
-String.prototype.toJsonDict = function() {
-    return JSON.parse(this)
-}
-
-String.prototype.sha256String = function() {
-	var shaBits = sjcl.hash.sha256.hash(this);
-	var shaHex = sjcl.codec.hex.fromBits(shaBits);
-    return shaHex;                
-    //return bitcore.crypto.Hash.sha256(this.toBuffer()).toString('hex')
-}
-
-String.prototype.toBuffer = function () {
-    return new Buffer(this, "binary")
-}
 
 // ideal.js also has String.base64Encoded,  String.base64Decoded
 
@@ -134,11 +110,11 @@ BMPayload = ideal.Proto.extend().newSlots({
         var payload = this.data().toJsonStableString();
         var payloadHash = sjcl.hash.sha256.hash(payload);
         var sig = senderKeyPair.sec.sign(payloadHash);
-        var senderPubKeyHex = sjcl.codec.hex.fromBits(senderKeyPair.pub);
+        var senderPublicKeyHex = sjcl.codec.hex.fromBits(senderKeyPair.pub);
        
         this.setData({ 
             type: "SignedPayload",
-            senderAddress: senderPubKeyHex,
+            senderAddress: senderPublicKeyHex,
             signature: sig,
             payload: payload
         })
@@ -149,8 +125,8 @@ BMPayload = ideal.Proto.extend().newSlots({
     unsign: function() {
         this.assertType("SignedPayload")
         
-        var senderPubKeyHex = this.data().senderAddress;
-        var senderPubKeyBits = sjcl.codec.hex.toBits(senderPubKeyHex);
+        var senderPublicKeyHex = this.data().senderAddress;
+        var senderPublicKeyBits = sjcl.codec.hex.toBits(senderPublicKeyHex);
         
         var ok = pair.pub.verify(this.data().payload, sig);
         
@@ -171,10 +147,10 @@ BMPayload = ideal.Proto.extend().newSlots({
         var pt = sjcl.decrypt(pair.sec, ct)
     */
 
-    encrypt: function(receiverPubkeyHex) {
-        var receiverPubKeyBits = sjcl.codec.hex.toBits(receiverPubkeyHex);
+    encrypt: function(receiverPublicKeyHex) {
+        var receiverPublicKeyBits = sjcl.codec.hex.toBits(receiverPublicKeyHex);
         //var unencryptedBits = sjcl.codec.utf8String(this.data().toJsonStableString());
-        var encryptedBits = sjcl.encrypt(receiverPubKeyBits, this.data().toJsonStableString());
+        var encryptedBits = sjcl.encrypt(receiverPublicKeyBits, this.data().toJsonStableString());
         var encryptedBase64 = sjcl.codec.base64.fromBits(encryptedBits);
         
         this.setData({ 
@@ -258,10 +234,10 @@ BMPayload = ideal.Proto.extend().newSlots({
             return false
         }
         
-        return pow.actualDifficulty()
+        return pow.actualPowDifficulty()
     },
     
-    actualDifficulty: function() {
+    actualPowDifficulty: function() {
         // { type: "PowedPayload", payload: data, pow: aPow } -> data
         // console.log("BMPayload.unpow this.data() = ", this.data())
         
@@ -269,7 +245,7 @@ BMPayload = ideal.Proto.extend().newSlots({
 
         var hash = this.data().payload.toJsonStableString().sha256String();
         var pow = BMPow.clone().setHash(hash).setPowHex(this.data().pow)
-        return pow.actualDifficulty()
+        return pow.actualPowDifficulty()
     },    
     
 })

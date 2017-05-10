@@ -6,40 +6,13 @@ BMMultiFieldView = BMFieldView.extend().newSlots({
     init: function () {
         BMFieldView.init.apply(this)
         this.setDivClassName("BMFieldView")
-        //this.setDivClassName("BMMultiFieldView")
-		//this.keyView().setDisplay("none")
-		//this.valueView().setDivClassName("BMTextAreaFieldValueView")
-		//this.valueView().setDivClassName("BMMultiFieldValueView")
 		
 		this.setOptionsView(BMMultiFieldOptionsView.clone())
 		this.optionsView().setDisplay("none")
 		this.addItem(this.optionsView())
-		
-		//this.valueView().setTarget(this).setAction("toggleOpen")
-		//this.valueView().setDivClassName("BMMultiFieldValueView")
+
         return this
     },
-
-/*
-	setNode: function(aNode) {
-		BMFieldView.setNode.apply(this, [aNode])
-		//this.valueView().setNode(aNode)
-		return this
-	},
-	*/
-
-	/*
-    syncFromNode: function () {
-		BMFieldView.syncFromNode.apply(this)
-		this.valueView().setContentEditable(false)
-		return this
-	},
-
-	createValueView: function() {
-		return BMMultiFieldValueView.clone()
-	},
-	*/
-	
 	
 	// ------------------ open / close ------------------
 	
@@ -58,23 +31,22 @@ BMMultiFieldView = BMFieldView.extend().newSlots({
 	
 	open: function() {
 		if(!this.isOpen()) {
-			//this.node().setupOptions()
 			console.log(this.type() + " open")
-			//this.setIsOpen(true)
 			
 			this.updateValidValues()
-			//this.addItem(this.optionsView())
-			this.optionsView().setDisplay("block")
+			this.optionsView().setDisplay("inline")
 			this.showActive()
+			this.noteView().setDisplay("none")
 		}
-	},
+		this.updateValidValues()
+	},                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
 	
 	close: function() {
 		if(this.isOpen()) {
 			console.log(this.type() + " close")
 			this.optionsView().setDisplay("none")
-			//this.removeItem(this.optionsView())
 			this.showInactive()
+			this.noteView().setDisplay("inline")
 		}
 	},
 	
@@ -82,6 +54,7 @@ BMMultiFieldView = BMFieldView.extend().newSlots({
 		console.log(this.type() + " selected " + validValue)
 		//this.setInnerHTML(validValue)
 		this.node().setValue(validValue)
+		this.close()
 	},
 	
 	showActive: function() {
@@ -104,17 +77,44 @@ BMMultiFieldView = BMFieldView.extend().newSlots({
 		return this
 	},
 	
+	currentValue: function() {
+		return this.valueView().innerHTML()
+	},
+	
+	currentValidValues: function() {
+		var validValues = this.node().validValues()
+		var value = this.currentValue().strip()
+		
+		if (value.length) {
+			validValues = validValues.select(function (v) { return v.beginsWith(value) || v.contains(value) })
+		}
+		
+		return validValues
+	},
+	
 	updateValidValues: function() {
-		this.optionsView().setValidValues(this.node().validValues())
+		this.optionsView().setValidValues(this.currentValidValues())
+		//this.optionsView().setLeft(this.left() + this.width() + 10)
 		return this
 	},
 	
-	/*
-	didEdit: function() {
-		console.log(this.type() + " didEdit")
-		this.syncFromNode()
+	onDidEdit: function() {
+		BMFieldView.onDidEdit.apply(this)
+		console.log(this.type() + " onDidEdit")
+		
+		var currentValidValues = this.currentValidValues()
+		
+		if (currentValidValues.length == 1 && currentValidValues[0] == this.currentValue()) {
+			this.close()
+			return
+		}
+
+		if (this.currentValidValues().length > 0) {
+			this.open()
+		} else {
+			this.close()
+		}
 	},
-	*/
 	
 })
 

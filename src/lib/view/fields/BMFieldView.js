@@ -16,6 +16,7 @@ BMFieldView = NodeView.extend().newSlots({
 		this.setKeyView(this.addItem(Div.clone().setDivClassName("BMFieldKeyView")))
         this.addItem(this.keyView())     
    		this.keyView().turnOffUserSelect().setSpellCheck(false)   
+		//this.keyView().setMinAndMaxWidth("200")
 		
         this.setValueView(this.createValueView())
         this.addItem(this.valueView())  
@@ -35,7 +36,7 @@ BMFieldView = NodeView.extend().newSlots({
 	},
 
     syncFromNode: function () {
-		console.log(this.type() + " syncFromNode ")
+		//console.log(this.type() + " syncFromNode")
 		
         var node = this.node()
 

@@ -64,22 +64,22 @@ Div = ideal.Proto.extend().newSlots({
 		return this.element().style.fontWeight
 	},
 	
-    setPaddingLeft: function(s) {
-        this.element().style.paddingLeft = s
+    setPaddingLeft: function(aNumber) {
+        this.element().style.paddingLeft = aNumber + "px"
         return this
     },
 
 	paddingLeft: function() {
-		return this.element().style.paddingLeft
+		return this.element().style.paddingLeft.before("px")
 	},
 	
-    setPaddingRight: function(s) {
-        this.element().style.paddingRight = s
+    setPaddingRight: function(aNumber) {
+        this.element().style.paddingRight = aNumber + "px"
         return this
     },
 
 	paddingRight: function() {
-		return this.element().style.paddingRight
+		return this.element().style.paddingRight.before("px")
 	},
 
     setTextAlign: function(s) {
@@ -175,11 +175,19 @@ Div = ideal.Proto.extend().newSlots({
         return w
     },
 
-    setMinAndMaxWidth: function(w) {
-        this.element().style.minWidth = w + "px"
-        this.element().style.maxWidth = w + "px"
+    setMinAndMaxWidth: function(aNumber) {
+		assert(typeof(aNumber) == "number")
+        this.element().style.minWidth = aNumber + "px"
+        this.element().style.maxWidth = aNumber + "px"
         return this        
     },
+
+	setMinAndMaxHeight: function(aNumber) {
+		assert(typeof(aNumber) == "number")
+        this.element().style.minHeight = aNumber + "px"
+        this.element().style.maxHeight = aNumber + "px"
+        return this		
+	},
 
     setDivClassName: function (aName) {
 		if (this._divClassName != aName) {
@@ -853,6 +861,8 @@ Div = ideal.Proto.extend().newSlots({
         return this
     },
     
+	// top
+
     setTop: function (y) {
         var v = y + "px"
         this.element().style.top = v;
@@ -860,13 +870,68 @@ Div = ideal.Proto.extend().newSlots({
         return this
     },
 
-    setLeft: function (x) {
-        var v = x + "px"
-        this.element().style.left = v;
-        //console.log("setLeft " + v)
+	top: function() {
+		if (this.element().style.top.length) {
+			return this.element().style.top.before("px")
+		}
+		return 0
+	},
+	
+	/* 
+	
+	// doesn't work?
+	
+	setWidth: function(aNumber) {
+		if (aNumber == "auto") {
+			this.element().style.left = "auto"
+		} else {
+	        this.element().style.left = aNumber + "px"
+		}
+        return this		
+	},
+	*/
+	
+
+	
+	// left
+
+    setLeft: function (aNumber) {
+        var s = aNumber + "px"
+        this.element().style.left = s;
         return this
     },
+
+	left: function() {
+		if (this.element().style.left.length) {
+			return this.element().style.left.before("px")
+		}
+		return 0
+	},
+	
+	// float
+	
+	setFloat: function(s) {
+		this.element().style.float = s
+		return this
+	},
+	
+	float: function() {
+		return this.element().style.float
+	},
+	
+	// border 
+	
+	setBorder: function(s) {
+		this.element().style.border = s
+		return this
+	},
+	
+	border: function() {
+		return this.element().style.border
+	},
     
+	// color
+	
     setColor: function(c) {
         this.element().style.color = c;
         return this

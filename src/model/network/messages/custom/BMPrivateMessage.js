@@ -45,7 +45,7 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 	},
 
 	fromContactNames: function() {
-		console.log("App.shared().network().localIdentityNames() = ", App.shared().network().localIdentityNames())
+		//console.log("App.shared().network().localIdentityNames() = ", App.shared().network().localIdentityNames())
 		return App.shared().network().localIdentityNames()
 	},
 
@@ -149,8 +149,8 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 
 	setPostDict: function(dict) {
 		
-		console.log("dict.senderPublicKey = ", dict.senderPublicKey)
-		console.log("dict.receiverPublicKey = ", dict.receiverPublicKey)
+		//console.log("dict.senderPublicKey = ", dict.senderPublicKey)
+		//console.log("dict.receiverPublicKey = ", dict.receiverPublicKey)
 		
 		var senderId = App.shared().network().idWithPubKeyString(dict.senderPublicKey)
 		var receiverId = App.shared().network().localIdentities().idWithPubKeyString(dict.receiverPublicKey)
@@ -169,15 +169,11 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 			return this
 		}
 		
-		console.log(this.type() + ".setPostDict(" + JSON.stringify(dict, null, 2) + ")")
-		console.log("senderId.name() = ", senderId.name())
-		console.log("receiverId.name() = ", receiverId.name())
+		//console.log(this.type() + ".setPostDict(" + JSON.stringify(dict, null, 2) + ")")
+
 		
 		this.setFromContact(senderId.name())
 		this.setToContact(receiverId.name())
-
-		console.log("this.fromContact() = ", this.fromContact())
-		console.log("this.toContact() = ", this.toContact())
 
 		
 		//console.log("dict = ", dict)
@@ -201,7 +197,7 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 	},
 
 	place: function() {
-		console.log("placing " + this.type() + " from '" + this.senderId().name() + "' to '" + this.receiverId().name() + "'")
+		//console.log("placing " + this.type() + " from '" + this.senderId().name() + "' to '" + this.receiverId().name() + "'")
 		
 		if(!this.canReceive()) {
 			console.log("can't receive message")

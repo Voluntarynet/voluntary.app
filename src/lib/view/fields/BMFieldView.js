@@ -24,14 +24,12 @@ BMFieldView = NodeView.extend().newSlots({
 		
 		this.setNoteView(Div.clone().setDivClassName("BMFieldViewNoteView"))
 		this.addItem(this.noteView())
-		this.noteView().setInnerHTML("test")
+		//this.noteView().setInnerHTML("")
         this.noteView().makeUnselectable()
         
         //his.setEditable(false)
         return this
     },
-
-
 
 	createValueView: function() {
 		return Div.clone().setDivClassName("BMFieldValueView")

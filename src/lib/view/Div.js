@@ -858,7 +858,7 @@ Div = ideal.Proto.extend().newSlots({
 		
         if (aBool) {
             var self = this
-			console.log(this.type() + " registerForFocus(" + aBool + ")")
+			//console.log(this.type() + " registerForFocus(" + aBool + ")")
             this.element().onfocus = function() { self.onFocus() };
             this.element().onblur  = function() { self.onBlur() };
         } else {

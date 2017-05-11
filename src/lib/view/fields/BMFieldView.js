@@ -5,7 +5,7 @@ BMFieldView = NodeView.extend().newSlots({
 	valueView: null,
 	noteView: null,
 	editableColor: "black",
-	uneditableColor: "#aaa",
+	uneditableColor: "#888",
 	errorColor: "red",
 }).setSlots({
     init: function () {
@@ -21,7 +21,6 @@ BMFieldView = NodeView.extend().newSlots({
         this.setValueView(this.createValueView())
         this.addItem(this.valueView())  
 		this.valueView().setSpellCheck(false)
-		this.valueView().registerForFocus(true)
 		
 		this.setNoteView(Div.clone().setDivClassName("BMFieldViewNoteView"))
 		this.addItem(this.noteView())

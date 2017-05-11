@@ -16,7 +16,7 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 		//this.addField(BMIdentityField.clone().setNodeFieldProperty("fromAddress").setKey("from").setValueIsEditable(false))
 		//this.addField(BMIdentityField.clone().setNodeFieldProperty("toAddress").setKey("to").setValueIsEditable(true))
 		
-		this.addField(BMMultiField.clone().setKey("From").setNodeFieldProperty("fromContact")).setValueIsEditable(false).setValidValuesMethod("fromContactNames").setNoteMethod("fromContactPublicKey")
+		this.addField(BMMultiField.clone().setKey("from").setNodeFieldProperty("fromContact")).setValueIsEditable(false).setValidValuesMethod("fromContactNames").setNoteMethod("fromContactPublicKey")
 		this.addField(BMMultiField.clone().setKey("to").setNodeFieldProperty("toContact")).setValueIsEditable(true).setValidValuesMethod("toContactNames").setNoteMethod("toContactPublicKey")
         this.addFieldNamed("subject").setKey("subject")	
 		this.addField(BMTextAreaField.clone().setKey("body").setNodeFieldProperty("body"))
@@ -31,6 +31,7 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 
 	duplicate: function() {
 		var dup = BMPrivateMessage.clone().copyFieldsFrom(this)
+		dup.setIsSent(true)
 		return dup
 	},
 
@@ -206,20 +207,17 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 			console.log("can't receive message")
 			return
 		}
+
+		this.isSent(true)
 		
 		if (this.receiverId()) {
-			console.log(" === privatemessage placing in receiver " + this.receiverId().name())
-			console.log("privatemessage 1 this.senderId().name(): " + this.senderId().name())
-			this.receiverId().fileMessage(this)
-			console.log("privatemessage 2 this.senderId().name(): " + this.senderId().name())
+			this.receiverId().fileMessage(this.duplicate())
 		}
 		
 		if (this.senderId()) {
-			console.log(" === privatemessage placing in sender " + this.senderId().name())
          	this.senderId().fileMessage(this.duplicate())	
 		}
 		
-		console.log(" === privatemessage done placing")
 		//this.didUpdate()
 	},
     
@@ -235,6 +233,10 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 	},
 	*/
 
+	canEdit: function() {
+		return !this.isSent()
+	},
+	
 	prepareToSyncToView: function() {
 		BMFieldSetNode.prepareToSyncToView.apply(this)
 		
@@ -243,6 +245,11 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 		} else {
 			this.removeAction("send")
 		}
+		
+		this.fieldNamed("from").setValueIsEditable(this.canEdit())
+		this.fieldNamed("to").setValueIsEditable(this.canEdit())
+		this.fieldNamed("subject").setValueIsEditable(this.canEdit())
+		this.fieldNamed("body").setValueIsEditable(this.canEdit())
 		
 		/*
 		console.log(this.type() + " prepareToSyncToView")

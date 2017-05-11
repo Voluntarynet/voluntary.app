@@ -11,6 +11,9 @@ BMMultiFieldView = BMFieldView.extend().newSlots({
 		this.optionsView().setDisplay("none")
 		this.addItem(this.optionsView())
 
+		this.valueView().registerForFocus(true)
+		var self = this
+		this.valueView().onBlur = function() { self.close() }
         return this
     },
 	
@@ -29,24 +32,23 @@ BMMultiFieldView = BMFieldView.extend().newSlots({
 		return this.optionsView().display() != "none"
 	},
 	
+	
 	open: function() {
 		if(!this.isOpen()) {
-			console.log(this.type() + " open")
-			
+			//console.log(this.type() + " open")
 			this.updateValidValues()
-			this.optionsView().setDisplay("inline")
-			this.showActive()
-			this.noteView().setDisplay("none")
+			this.optionsView().fadeInToDisplayInlineBlock()
+			this.noteView().fadeOutToDisplayNone()
+		} else {
+			this.updateValidValues()
 		}
-		this.updateValidValues()
 	},                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
 	
 	close: function() {
 		if(this.isOpen()) {
-			console.log(this.type() + " close")
-			this.optionsView().setDisplay("none")
-			this.showInactive()
-			this.noteView().setDisplay("inline")
+			//console.log(this.type() + " close")
+			this.optionsView().fadeOutToDisplayNone()
+			this.noteView().fadeInToDisplayInlineBlock() 
 		}
 	},
 	
@@ -57,6 +59,7 @@ BMMultiFieldView = BMFieldView.extend().newSlots({
 		this.close()
 	},
 	
+	/*
 	showActive: function() {
 		//this.setBackgroundColor(this.activeBackgroundColor())
 		//this.setColor(this.activeColor())
@@ -68,6 +71,7 @@ BMMultiFieldView = BMFieldView.extend().newSlots({
 		//this.setColor(this.inactiveColor())
 		return this
 	},
+	*/
 	
 	// --------------------------------------
 

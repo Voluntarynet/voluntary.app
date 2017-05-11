@@ -294,6 +294,26 @@ Div = ideal.Proto.extend().newSlots({
         }
         return null
     },
+
+	// fade
+	
+	fadeInToDisplayInlineBlock: function() {
+        this.setDisplay("inline-block")
+        var self = this
+        setTimeout(function () { 
+            self.setOpacity(1)
+        }, 0)	
+		return this
+	},	
+
+	fadeOutToDisplayNone: function() {
+		this.setOpacity(0)
+        var self = this
+        setTimeout(function () { 
+            self.setDisplay("none")
+        }, 200)	
+		return this
+	},
     
     removeAfterFadeDelay: function(delayInSeconds) {
         // call removeItem for a direct actions
@@ -303,7 +323,7 @@ Div = ideal.Proto.extend().newSlots({
         
         this.element().style.transition = "all " + delayInSeconds + "s"
         setTimeout(function () { 
-            self.element().style.opacity = 0
+            self.setOpacity(0)
         }, 0)
         
         setTimeout(function () { 

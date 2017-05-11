@@ -110,17 +110,38 @@ BMLocalIdentity = BMNavNode.extend().newSlots({
 		return decrypted
 	},
 	
-	fileMessage: function(aPrivateMsg) {
+	fileMessage: function(msg) {
+		ShowStack()
 		
-		if (aPrivateMsg.senderId() == this) {
-			this.sent().addItemIfAbsent(aPrivateMsg)
+		if (this.equals(msg.senderId())) {
+			console.log("LocalIdentity 1 fileMessage from " + msg.senderId().name() + " to " + msg.receiverId().name() + " into " + this.name() + " inbox")
+			console.log("LocalIdentity 2 aPrivateMsg.senderId().name() = ",  msg.senderId().name())
+			this.sent().addItemIfAbsent(msg)
+			console.log("LocalIdentity 3 aPrivateMsg.senderId().name() = ",  msg.senderId().name())
 		}
 		
-		if (aPrivateMsg.receiverId() == this) {
-			this.inbox().addItemIfAbsent(aPrivateMsg)
-		}		
+		if (this.equals(msg.receiverId())) {
+			console.log("LocalIdentity 11 fileMessage from " + msg.senderId().name() + " to " + msg.receiverId().name() + " into " + this.name() + " inbox")
+			var senderName1 = msg.senderId().name()
+			console.log("LocalIdentity 22 aPrivateMsg.senderId().name() = ",  msg.senderId().name())
+			console.log("msg1 = ", msg.postDict())
+			
+			//this.inbox().addItemIfAbsent(msg)
+			this.inbox().addItem(msg)
+			
+			console.log("msg2 = ", msg.postDict())
+			var senderName2 = msg.senderId().name()
+			if (senderName1 != senderName2) {
+				throw new Error(senderName1 + " != " + senderName2)
+			}
+			console.log("LocalIdentity 33 aPrivateMsg.senderId().name() = ",  msg.senderId().name())
+		}
 		
 		return this
+	},
+	
+	equals: function(anIdentity) {
+		return this.publicKeyString() == anIdentity.publicKeyString()
 	},
 
 })

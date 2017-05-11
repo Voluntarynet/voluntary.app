@@ -60,11 +60,13 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 		return null
 	},
 
+/*
 	setParentNode: function(aNode) {
 		BMFieldSetNode.setParentNode.apply(this, [aNode])
 		this.validateFromAddress()
 		return this
 	},   
+	*/
 	
 	toContactPublicKey: function() {
 		if (this.receiverId()) {
@@ -146,6 +148,9 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 
 	setPostDict: function(dict) {
 		
+		console.log("dict.senderPublicKey = ", dict.senderPublicKey)
+		console.log("dict.receiverPublicKey = ", dict.receiverPublicKey)
+		
 		var senderId = App.shared().network().idWithPubKeyString(dict.senderPublicKey)
 		var receiverId = App.shared().network().localIdentities().idWithPubKeyString(dict.receiverPublicKey)
 		
@@ -164,14 +169,14 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 		}
 		
 		console.log(this.type() + ".setPostDict(" + JSON.stringify(dict, null, 2) + ")")
-		//console.log("senderId.name() = ", senderId.name())
-		//console.log("receiverId.name() = ", receiverId.name())
+		console.log("senderId.name() = ", senderId.name())
+		console.log("receiverId.name() = ", receiverId.name())
 		
 		this.setFromContact(senderId.name())
 		this.setToContact(receiverId.name())
 
-		//console.log("this.fromContact() = ", this.fromContact())
-		//console.log("this.toContact() = ", this.toContact())
+		console.log("this.fromContact() = ", this.fromContact())
+		console.log("this.toContact() = ", this.toContact())
 
 		
 		//console.log("dict = ", dict)
@@ -195,19 +200,26 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 	},
 
 	place: function() {
+		console.log("placing " + this.type() + " from '" + this.senderId().name() + "' to '" + this.receiverId().name() + "'")
+		
 		if(!this.canReceive()) {
 			console.log("can't receive message")
 			return
 		}
 		
 		if (this.receiverId()) {
+			console.log(" === privatemessage placing in receiver " + this.receiverId().name())
+			console.log("privatemessage 1 this.senderId().name(): " + this.senderId().name())
 			this.receiverId().fileMessage(this)
+			console.log("privatemessage 2 this.senderId().name(): " + this.senderId().name())
 		}
 		
 		if (this.senderId()) {
+			console.log(" === privatemessage placing in sender " + this.senderId().name())
          	this.senderId().fileMessage(this.duplicate())	
 		}
 		
+		console.log(" === privatemessage done placing")
 		//this.didUpdate()
 	},
     

@@ -47,7 +47,7 @@
     color: #777;
     font-family: "OpenSans-Regular";
 
-	display: inline;
+	display: inline-block;
     position: relative;
 
 	overflow: hidden;
@@ -68,7 +68,7 @@
 	
 	padding-top: 3px;
 	padding-bottom: 3px;
-	padding-right: 0px;
+	padding-right: 5px;
 	margin: 0px;
 	
 	border: 0px dashed #aaa;
@@ -81,17 +81,13 @@
 /* --------------------------- Value --------------------------- */
 
 .BMFieldValueView {
-	display: inline;
+	display: inline-block;
     position: relative;
 
 
     min-width: 100px;
     text-align: left;
-	/*
-    
-    top: 19px;
-    left: 110px;
-*/
+
     white-space: nowrap;
     text-transform: none;	
 
@@ -100,12 +96,12 @@
     font-weight: normal;
     font-size: 13px;
 
-	border-radius: 5px;
 	/* 
+	border-radius: 5px;
 	background-color: #aaa;
-	*/
-	padding-left: 7px;
-	padding-right: 7px;
+	*/'
+	padding-left: 3px;
+	padding-right: 3px;
 	padding-top: 3px;
 	padding-bottom: 3px;
 	
@@ -203,6 +199,7 @@
 
 /* --------------------------- Multi --------------------------- */
 
+/*
 .BMMultiFieldValueView {
 	white-space: pre-wrap;
 	display: inline;
@@ -227,6 +224,7 @@
 	padding-top: 3px;	
 	padding-bottom: 3px;
 }
+*/
 
 .BMMultiFieldOptionsView {
 	z-index: 100;

@@ -831,27 +831,38 @@ Div = ideal.Proto.extend().newSlots({
     isValid: function() {
         return true
     },
+
+	// --- get focus and blur/unfocus events ---
     
     registerForFocus: function(aBool) {
+		
         if (aBool) {
             var self = this
+			console.log(this.type() + " registerForFocus(" + aBool + ")")
             this.element().onfocus = function() { self.onFocus() };
+            this.element().onblur  = function() { self.onBlur() };
         } else {
             this.element().onfocus = null
+            this.element().onblur = null
         }
-        return this
-    },
-    
-    onFocus: function () {
-        
-    },
-    
-    blur: function () {
-        this.element().blur()
+
         return this
     },
 
+	onFocus: function() {
+        // subclasses can override 
+		console.log(this.type() + " onFocus")
+		return this
+	},
+
+	onBlur: function() {
+        // subclasses can override 
+		console.log(this.type() + " onBlur")
+		return this
+	},
     
+	// --- focus and blur/unfocus ---
+
     focus: function() {
 		console.log(this.type() + " focus")
         var self = this
@@ -860,7 +871,12 @@ Div = ideal.Proto.extend().newSlots({
         }, 0)
         return this
     },
-    
+
+    blur: function () { // surrender focus
+        this.element().blur()
+        return this
+    },
+
 	// top
 
     setTop: function (y) {
@@ -890,8 +906,6 @@ Div = ideal.Proto.extend().newSlots({
         return this		
 	},
 	*/
-	
-
 	
 	// left
 

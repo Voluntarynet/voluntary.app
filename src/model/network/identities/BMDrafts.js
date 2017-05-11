@@ -14,11 +14,12 @@ BMDrafts = BMListNode.extend().newSlots({
     },
     
     add: function() {
-        var newItem = BMListNode.add.apply(this)
+        var newPrivateMsg = BMListNode.add.apply(this)
         //var toKey = this.localIdentity().publicKey().toString()
         //var name = this.localIdentity().name()
         //newItem.fieldNamed("from").setFromContactName(name)
 		//newItem.useDefaultFromAddress()
+		newPrivateMsg.setFromContact(this.localIdentity().name())
         this.didUpdate()
         return newItem
     },

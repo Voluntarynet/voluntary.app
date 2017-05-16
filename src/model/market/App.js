@@ -54,25 +54,31 @@ App = BaseApp.extend().newSlots({
 		this.setRemoteIdentities(NodeStore.shared().rootInstanceWithPidForProto("_remoteIdentities", BMRemoteIdentities))
 		this.addItem(this.remoteIdentities())
 
+		// about 
+		
+        this.setAbout(BMInfoNode.clone().setTitle("About")).setSubtitle("")
+        this.about() //.setPidSymbol("_about")     
+        this.addItem(this.about())
+        this.addStoredSlots(["about"])
+
+		// -----------------------
+		
 		// network
 
 		this.setNetwork(BMNetwork.clone())
 		this.network().setLocalIdentities(this.localIdentities())
 		this.network().setRemoteIdentities(this.remoteIdentities())
 		
-		this.addItem(this.network())
+		//this.addItem(this.network())
+		this.about().addItem(this.network())
 
+		// data store
+		
 		this.setDataStore(BMDataStore.clone())
-		this.addItem(this.dataStore())
+		//this.addItem(this.dataStore())
+		this.about().addItem(this.dataStore())
 		
-		// about 
-		
-        //this.initStoredSlotWithProto("about", BMInfoNode)
 
-        this.setAbout(BMInfoNode.clone().setTitle("About")).setSubtitle("")
-        this.about() //.setPidSymbol("_about")     
-        this.addItem(this.about())
-        this.addStoredSlots(["about"])
                 
         if (this.network()) {
             this.network().servers().connect()

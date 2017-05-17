@@ -69,7 +69,10 @@ BMServerConnection = BMNode.extend().newSlots({
 
     localOptions: function () {
         return { 
-                //debug: true, 
+				// secure: true, // wait until we fix the mixed network connection issue
+				//serialization: "json",
+				reliable: true,
+                debug: 3, 
                 host: this.server().host(), 
                 port: this.server().port() 
             }
@@ -77,7 +80,7 @@ BMServerConnection = BMNode.extend().newSlots({
     
     iceOptions: function() {
         return {
-                debug: true, 
+                debug: 3, 
                 iceServers: this.iceServers()
             }
     },

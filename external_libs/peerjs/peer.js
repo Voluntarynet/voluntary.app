@@ -506,10 +506,17 @@ Negotiator._startPeerConnection = function(connection) {
   
   //var pc = new RTCPeerConnection({ iceServers:[] });
 
-  var pc = new RTCPeerConnection({ iceServers:   RTCPeerConnection.defaultIceServers });
+  //console.log("RTCPeerConnection.defaultIceServers = ", RTCPeerConnection.defaultIceServers)
 
+  //var pc = new RTCPeerConnection({ iceServers:   RTCPeerConnection.defaultIceServers });
   //var pc = new RTCPeerConnection({});
   //var pc = new RTCPeerConnection(connection.provider.options.config, optional);
+
+  console.log("connection.provider.options.config = ", connection.provider.options.config)
+
+  var pc = new RTCPeerConnection(connection.provider.options.config);
+
+
   Negotiator.pcs[connection.type][connection.peer][id] = pc;
 
   Negotiator._setupListeners(connection, pc, id);

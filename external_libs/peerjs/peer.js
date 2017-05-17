@@ -1457,6 +1457,7 @@ var defaultConfig = {'iceServers': [
     {url:'stun:stun.voipstunt.com'},
     {url:'stun:stun.voxgratia.org'},
     {url:'stun:stun.xten.com'},
+    /*
     {
     	url: 'turn:numb.viagenie.ca',
     	credential: 'muazkh',
@@ -1472,6 +1473,7 @@ var defaultConfig = {'iceServers': [
     	credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
     	username: '28224511:1379330808'
     }
+    */
 ]}
 
 var dataCount = 1;

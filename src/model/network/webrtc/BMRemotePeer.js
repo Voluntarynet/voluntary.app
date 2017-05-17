@@ -72,7 +72,7 @@ BMRemotePeer = BMNode.extend().newSlots({
     },
     
     startConnectTimeout: function () {
-        var timeoutSeconds = 120
+        var timeoutSeconds = 45
         setTimeout(() => { 
             if (!this.isConnected()) {
                 this.close()

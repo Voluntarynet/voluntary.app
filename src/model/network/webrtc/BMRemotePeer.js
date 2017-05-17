@@ -6,6 +6,7 @@ BMRemotePeer = BMNode.extend().newSlots({
     messages: null,
     status: null,
     remoteInventory: null,
+    debug: true
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)
@@ -14,6 +15,11 @@ BMRemotePeer = BMNode.extend().newSlots({
         this.setMessages(BMNode.clone().setTitle("messages").setNoteIsItemCount(true))
         this.addItem(this.messages())
         this.setRemoteInventory({})
+    },
+    
+    log: function(s) {
+        console.log(this.type() + " " + this.id() + " " + s)
+        return this
     },
     
     network: function() {
@@ -46,6 +52,7 @@ BMRemotePeer = BMNode.extend().newSlots({
     setConn: function (aConn) {
         this._conn = aConn
         this.setStatus("connecting...")
+        this.log("connecting")
         this.setTitle("Peer " + this.shortId())
                     
         if (this._conn) {
@@ -65,15 +72,14 @@ BMRemotePeer = BMNode.extend().newSlots({
     },
     
     startConnectTimeout: function () {
-        var timeoutSeconds = 4
-        var self = this
-        setTimeout(function () { 
-            if (!self.isConnected()) {
-                self.close()
-                self.setStatus("connect timeout")
-                self.didUpdate()
-                self.serverConnection().onRemotePeerClose(self)
-                console.log(self.type() + " connect timeout")
+        var timeoutSeconds = 120
+        setTimeout(() => { 
+            if (!this.isConnected()) {
+                this.close()
+                this.setStatus("connect timeout")
+                this.didUpdate()
+                this.serverConnection().onRemotePeerClose(this)
+                this.log("connect timeout")
             }   
         }, timeoutSeconds*1000)        
     },
@@ -90,7 +96,7 @@ BMRemotePeer = BMNode.extend().newSlots({
     },
 
     onOpen: function(c) {
-        //this.log("onOpen")
+        this.log("onOpen")
         this.setTitle("Peer " + this.shortId())
         this.didUpdate()
         this.setStatus("connected")
@@ -104,14 +110,14 @@ BMRemotePeer = BMNode.extend().newSlots({
         this.network().onRemotePeerConnect(this)
     },
 
-    onError: function(err) {
+    onError: function(error) {
         this.setStatus("error")
-        this.log("onError " + err)
+        this.log(" onError " + error)
     },
 
     onClose: function(err) {
         this.setStatus("closed")
-        //this.log("onClose " + err)
+        this.log("onClose " + err)
         this.serverConnection().onRemotePeerClose(this)
         console.trace("RemotePeer onClose")
         if (this.parentNode() == null) {
@@ -179,7 +185,7 @@ BMRemotePeer = BMNode.extend().newSlots({
     },
     
     inv: function(msg) {
-        //this.log("got inv")
+        this.log("got inv")
         // TODO: track local inventory, 
         // blacklist if sender repeats any hashes
         this.network().messages().inv(msg)
@@ -196,7 +202,7 @@ BMRemotePeer = BMNode.extend().newSlots({
     },
     
     object: function(msg) {
-        this.log("object")
+        this.log("got object")
         
         var msgs = this.network().messages()
         

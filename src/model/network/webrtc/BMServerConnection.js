@@ -12,6 +12,7 @@ BMServerConnection = BMNode.extend().newSlots({
     lastError: null,
     privateKey: null,
     status: null,
+    log: null,
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)
@@ -20,6 +21,7 @@ BMServerConnection = BMNode.extend().newSlots({
         this.setNoteIsItemCount(true)
         //this.setViewClassName("GenericView")
         this.setNodeMinWidth(160)
+        //this.setLog(BMNode.clone())
     },
     
     setStatus: function(s) {
@@ -117,7 +119,7 @@ BMServerConnection = BMNode.extend().newSlots({
 
     onError: function(error) {
         this.setStatus(error)
-        //this.log("onOpen " + this.id());
+        this.log(this.type() + " onError: ", error);
         this._serverConn = null
         this.didUpdate()
     },

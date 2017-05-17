@@ -1451,7 +1451,6 @@ var defaultConfig = {'iceServers': [
     {url:'stun:stun4.l.google.com:19302'},
     {url:'stun:stunserver.org'},
     {url:'stun:stun.softjoys.com'},
-
     {url:'stun:stun.voiparound.com'},
     {url:'stun:stun.voipbuster.com'},
     {url:'stun:stun.voipstunt.com'},

@@ -463,9 +463,21 @@ BMNode = ideal.Proto.extend().newSlots({
 	// StorableNode
 	
     itemPids: function() {
+        var pids = []
+        
+        // only items with shouldStore ==  true
+        this.items().forEach((item) => {
+            if (item.shouldStore() == true) {
+                pids.push(item.pid())
+            }
+        })
+        
+        /*
         var pids = this.items().map(function (item) { 
             return item.pid()
         })
+        */
+        
         //console.log("pids: " +  JSON.stringify(pids))
         return pids
     },

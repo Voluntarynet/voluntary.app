@@ -1,6 +1,6 @@
 
-BMMarket = BMRegion.extend().newSlots({
-    type: "BMMarket",
+BMRegions = BMRegion.extend().newSlots({
+    type: "BMRegions",
 }).setSlots({
     init: function () {
         BMRegion.init.apply(this)
@@ -16,20 +16,20 @@ BMMarket = BMRegion.extend().newSlots({
         this.justAddItem(this.physical())
         */
 
-        //console.log("begin BMMarket init")
-        //this.setNodeDict(RegionUSCitiesDict)
+        //console.log("begin BMClassifieds init")
         this.setNodeDict(RegionCountriesDict)
-        this.setTitle("Classifieds")
-        //console.log("end BMMarket init")
+        this.setTitle("Regions")
         
         this.onLeavesAddDictChildren(CategoriesDict)
     },
     
+    /*
     receivedMsgFrom: function(msg, remotePeer) {
         var postDict = JSON.parse(msg)
         var post = BMPost.clone().setPostDict(postDict)
         this.addItem(post)
         this.didUpdate() 
     }
+    */
 })
 

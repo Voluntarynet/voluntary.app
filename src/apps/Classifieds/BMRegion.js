@@ -127,7 +127,7 @@ BMRegion = BMNode.extend().newSlots({
 		var post = BMClassifiedPost.clone()
         post.setPath(this.postPathString())
         post.setIsEditable(true)
-        App.shared().sells().addItem(post)
+        App.shared().appNamed("Classifieds").sells().addItem(post)
         App.shared().browser().selectNode(post)
 
 		if (this.title() == "Tests") {

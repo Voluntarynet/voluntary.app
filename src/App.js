@@ -5,14 +5,11 @@
 App = BaseApp.extend().newSlots({
     type: "App",
     
+    apps: null,
+    
     // market
-    market: null,
-    buys: null,
-    sells: null,
 	localIdentities: null,
 	remoteIdentities: null,
-    
-    wallet: null,
     
     network: null,   
 	dataStore: null, 
@@ -34,17 +31,14 @@ App = BaseApp.extend().newSlots({
         
         window.app = this
         
-        this.setName("Bitmarkets")
+        this.setName("Bitcom")
         this.setTitle("App")
         
-        // market
-            
-		//this.addItemForSlot(BMMarket.clone(), "market")
-		this.setMarket(BMMarket.clone())
-		this.addItem(this.market())
-
-		this.setSells(NodeStore.shared().rootInstanceWithPidForProto("_sells", BMSells))
-		this.addItem(this.sells())
+        // app
+        
+        this.setApps(BMNode.clone().setTitle("Apps"))
+        this.addItem(this.apps())
+        this.addApps()
 
         // ids
 
@@ -56,35 +50,45 @@ App = BaseApp.extend().newSlots({
 
 		// about 
 		
-        this.setAbout(BMInfoNode.clone().setTitle("About")).setSubtitle("")
-        this.about() //.setPidSymbol("_about")     
+        this.setAbout(BMNode.clone().setTitle("About").setSubtitle(null))
+        this.about()  
         this.addItem(this.about())
-        this.addStoredSlots(["about"])
 
 		// -----------------------
 		
-		// network
+    		// network
 
-		this.setNetwork(BMNetwork.clone())
-		this.network().setLocalIdentities(this.localIdentities())
-		this.network().setRemoteIdentities(this.remoteIdentities())
-		
-		//this.addItem(this.network())
-		this.about().addItem(this.network())
+    		this.setNetwork(BMNetwork.clone())
+    		this.network().setLocalIdentities(this.localIdentities())
+    		this.network().setRemoteIdentities(this.remoteIdentities())
+    		this.about().addItem(this.network())
 
-		// data store
+    		// data store
 		
-		this.setDataStore(BMDataStore.clone())
-		//this.addItem(this.dataStore())
-		this.about().addItem(this.dataStore())
+    		this.setDataStore(BMDataStore.clone())
+    		this.about().addItem(this.dataStore())
 		
 
                 
-        if (this.network()) {
-            this.network().servers().connect()
-        }
+            if (this.network()) {
+                this.network().servers().connect()
+            }
 
         return this
+    },
+    
+    addApps: function() {
+        var appProtos = [BMTwitter, BMChat, BMClassifieds, BMBitcoinWallet]
+        
+        appProtos.forEach((appProto) => {
+            this.apps().addItem(appProto.sharedStoredInstance())
+        })     
+        
+        return this
+    },
+    
+    appNamed: function(name) {
+        return this.apps().firstItemWithTitle(name)
     },
 
 })

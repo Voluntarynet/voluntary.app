@@ -8,7 +8,6 @@ IndexedDBFolder = ideal.Proto.extend().newSlots({
     //objectStore: null,
 }).setSlots({
     init: function () {
-
     },
     
     storeName: function() {
@@ -108,9 +107,10 @@ IndexedDBFolder = ideal.Proto.extend().newSlots({
     atAdd: function(key, object) { 
         //console.log(this.type() + " atAdd ", key, object)
 
-		if (object == null) {
-			throw new Error("can't add null value 1")
+		if (typeof(object) == "null" || typeof(object) == "undefined") {
+			throw new Error(this.type() + ".atAdd('" + key + "') can't add null value")
 		}
+		
 		//assert(typeof(object) == "string")
         var v = JSON.stringify(object)
 		if (v == null) {
@@ -122,24 +122,30 @@ IndexedDBFolder = ideal.Proto.extend().newSlots({
         var requestStack = new Error().stack
 
 		tx.onerror = (event) => {
-		    console.log("tx error")
-		  	throw new Error(this.type() + " atAdd('" + key + "') tx error ", event)
+		    var errorDescription = this.type() + ".atAdd('" + key + "') tx error " +  event.target.error
+		    console.log(errorDescription)
+		    //console.log("requestStack: ", requestStack)
+		  	//throw new Error(errorDescription)
 		}
 		
         var objectStore = tx.objectStore(this.storeName());
         var request = objectStore.add(entry);
         
 		request.onerror = (event) => {
-		    //console.log(this.type() + " objectStore.add(entry) request.onerror")
-		    console.log(this.type() + ".atAdd('" + key + "') error event: ", event)
-		    console.log(requestStack)
-		  	throw new Error(this.type() + ".atAdd('" + key + "') objectStore [" + this.storeName() + "] .add('" + JSON.stringify(entry) + "') request.onerror")
+		    var errorDescription = this.type() + ".atAdd('" + key + "') objectStore [" + this.storeName() + "] request.onerror " + event.target.error
+		    console.log(errorDescription)
+		    //console.log("requestStack: ", requestStack)
+		  	//throw new Error(errorDescription)
 		}
 		
         return this
     },
 
     atUpdate: function(key, object) {
+		if (typeof(object) == "null" || typeof(object) == "undefined") {
+			throw new Error(this.type() + ".atUpdate('" + key + "') can't update to null/undefined")
+		}
+		
 		//assert(typeof(object) == "string")
         var v = JSON.stringify(object)
         //console.log(this.type() + " atPut ", key, v)
@@ -147,9 +153,9 @@ IndexedDBFolder = ideal.Proto.extend().newSlots({
         var tx = this.db().transaction(this.storeName(), "readwrite")
 
 		tx.onerror = (event) => {
-		    console.log("tx error")
-		  	throw new Error("atUpdate " + key + " error ", event)
-		};
+		    //console.log("tx error " + event.target.error)
+		  	throw new Error(this.type() + ".atUpdate('" + key + "') tx error " +  event.target.error)
+		}
 		
         var objectStore = tx.objectStore(this.storeName());
         var request = objectStore.put(entry);
@@ -158,7 +164,7 @@ IndexedDBFolder = ideal.Proto.extend().newSlots({
 		request.onerror = (event) => {
 		    console.log("error event ", event)
 		    console.log("error stack ", requestStack)
-		  	throw new Error(this.type() + " atUpdate(" + key + ") error: '" + event + "'")
+		  	throw new Error(this.type() + " atUpdate(" + key + ") objectStore.put error: '" + event + "'")
 		}
         return this
     },
@@ -180,20 +186,21 @@ IndexedDBFolder = ideal.Proto.extend().newSlots({
         var stack = new Error().stack
         
         request.onerror = (event) => {
-            console.log("asyncAt onerror", event)
-			throw new Error("asyncAt onerror", event)
-            callback(null)
+            console.log("asyncAt('" + key + "') onerror", event.target.error)
+            callback(undefined)
         };
         
         request.onsuccess = (event) => {
             //console.log("asyncAt onsuccess ", event)
+            // request.result is undefined if value not in DB
             try {
-                if (request.result) {
+                if (typeof(request.result) != "undefined") {
+                    //console.log("asyncAt('" + key + "') onsuccess request.result = ", request.result)
                     var entry = request.result
                     var value = JSON.parse(entry.value)
                     callback(value)
                 } else {
-                    console.log("asyncAt('" + key + "') onsuccess request.result = ", request.result)
+                    //console.log("asyncAt('" + key + "') onsuccess request.result = ", request.result)
                     callback(undefined)
                 }
             } catch (e) {

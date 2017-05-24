@@ -75,13 +75,7 @@ BMServerConnection = BMNode.extend().newSlots({
                 debug: 3, 
                 host: this.server().host(), 
                 port: this.server().port() 
-            }
-    },
-    
-    iceOptions: function() {
-        return {
-                debug: 3, 
-                iceServers: this.iceServers()
+                //iceServers: this.iceServers()
             }
     },
     

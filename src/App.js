@@ -78,7 +78,7 @@ App = BaseApp.extend().newSlots({
     },
     
     addApps: function() {
-        var appProtos = [BMTwitter, BMChat, BMClassifieds, BMBitcoinWallet]
+        var appProtos = [BMTwitter, BMChat, BMGroupChat, BMClassifieds, BMBitcoinWallet]
         
         appProtos.forEach((appProto) => {
             this.apps().addItem(appProto.sharedStoredInstance())

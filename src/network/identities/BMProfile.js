@@ -5,7 +5,7 @@ BMProfile = BMFieldSetNode.extend().newSlots({
         BMFieldSetNode.init.apply(this)
 
  		this.setShouldStore(true)
-        this.setTitle("Profile")
+        this.setTitle("profile")
         
 		// pass through fields
         this.addFieldNamed("name").setNodeFieldProperty("name").setValueIsEditable(true)

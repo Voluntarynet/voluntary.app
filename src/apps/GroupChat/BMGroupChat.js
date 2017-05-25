@@ -1,13 +1,13 @@
 
-BMGroupChat = BMStorableNode.extend().newSlots({
+BMGroupChat = BMApplet.extend().newSlots({
     type: "BMGroupChat",
     channels: null,
     directMessages: null,
     profile: null,
 }).setSlots({
     init: function () {
-        BMNode.init.apply(this)
-        this.setTitle("BMGroupChat")
+        BMApplet.init.apply(this)
+        this.setTitle("Group Chat")
         
         /*
         this.setRegions(BMRegions.clone())

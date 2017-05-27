@@ -1,0 +1,2 @@
+
+JSImporter.currentFolder().importSubfolder("lib")

@@ -2,6 +2,7 @@
 BMTwitter = BMApplet.extend().newSlots({
     type: "BMTwitter",
     feed: null,
+    drafts: null,
     notifications: null,
     messages: null,
     profile: null,
@@ -11,10 +12,13 @@ BMTwitter = BMApplet.extend().newSlots({
     init: function () {
         BMApplet.init.apply(this)
         this.setTitle("Twitter")
-
+        
         this.setFeed(BMNode.clone())
         this.addItem(this.feed().setTitle("feed"))
-        
+
+        this.setDrafts(BMNode.clone())
+        this.addItem(this.drafts().setTitle("drafts"))
+                
 		this.setNotifications(BMNode.clone().setTitle("notifications"))
         this.addItem(this.notifications())
 

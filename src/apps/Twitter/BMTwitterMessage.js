@@ -1,11 +1,15 @@
 
-BMTwitterMessage = BMStorableNode.extend().newSlots({
-    type: "BMTwitter",
+BMTwitterMessage = BMPrivateMessage.extend().newSlots({
+    type: "BMTwitterMessage",
 }).setSlots({
     init: function () {
-        BMStorableNode.init.apply(this)
+        BMPrivateMessage.init.apply(this)
         this.setTitle("Twitter")
     },
 
+
+    place: function() {
+        
+    },
 })
 

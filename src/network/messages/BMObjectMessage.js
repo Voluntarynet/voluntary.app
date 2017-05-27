@@ -199,6 +199,18 @@ BMObjectMessage = BMMessage.extend().newSlots({
 	validMessageProtos: function() {
 		return ["BMPrivateMessage", "BMClassifiedPost"]
 	},
+	
+	isValidDataMessage: function() {
+        var dict = this.data()
+		var protoName = dict.type
+	    var valid = this.validMessageProtos().contains(protoName)
+	    
+		if (!valid) {
+			console.log("'" + protoName + "'  is not a valid proto found in ", this.validMessageProtos())
+		}	    
+		
+	    return valid
+	},
 
     place: function() {   
         var dict = this.data()
@@ -207,8 +219,7 @@ BMObjectMessage = BMMessage.extend().newSlots({
 		
 		//console.log("placing ", protoName)
 		
-		if (!this.validMessageProtos().contains(protoName)) {
-			console.log("'" + protoName + "'  is not a valid proto found in ", this.validMessageProtos())
+		if (!this.isValidDataMessage()) {
 			return false
 		}
 		
@@ -218,23 +229,6 @@ BMObjectMessage = BMMessage.extend().newSlots({
 		var obj = proto.clone().setObjMsg(this).setPostDict(dict).place()
 		
 		//console.log("placed ", protoName)
-		
-		/*
-        if (dict.type == "BMPrivateMessage") {
-            var privateMsg = BMPrivateMessage.clone().setPostDict(dict)
-			privateMsg.place()
-            return true
-     	}       
-        else if (dict.type == "BMClassifiedPost") {			
-            var post = BMClassifiedPost.clone().setPostDict(dict)
-            post.setObjMsg(this)
-            post.setupFromDict()
-	        post.setHasSent(true)
-            post.placeInRegion()
-            post.placeInAll()
-			return true
-        }
-*/
         
         return false
     },

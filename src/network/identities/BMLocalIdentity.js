@@ -5,10 +5,8 @@ var Buffer = bitcore.deps.Buffer;
 
 BMLocalIdentity = BMNavNode.extend().newSlots({
     type: "BMLocalIdentity",
-
     name: "",
 	privateKeyString: "",
-
 }).setSlots({
     
     _nodeVisibleClassName: "Identity",
@@ -18,6 +16,8 @@ BMLocalIdentity = BMNavNode.extend().newSlots({
 		this.setShouldStore(true)
         this.setNodeTitleIsEditable(true)
  
+        //this.initStoredSlotWithProto("apps", BMApps)
+
         this.initStoredSlotWithProto("profile", BMProfile)
         this.initStoredSlotWithProto("inbox", BMInbox)
         this.initStoredSlotWithProto("drafts", BMDrafts)

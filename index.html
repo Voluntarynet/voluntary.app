@@ -15,40 +15,9 @@
   </head>
   
 		
-	<script>
+<script>
 
-/*
-SImporter  = {
-	_currentFolder: null,
-	_doneCallback: null,
-	
-	addFolderPath: function(path) {
-		JSImporterFolder.clone().setPath(path).setPreviousFolder(this.currentFolder())
-	},
-	
-	run: function() {
-		this._currentFolder.run()
-		return this
-	},
-	
-	currentFolder: function() {
-		return this._currentFolder
-	},
-	
-	setCurrentFolder: function(aFolder) {
-		this._currentFolder = aFolder
-		return this
-	},
-}
-*/
-
-JSImporterFolder = {
-	_path: "./",
-	_currentFolder: null,
-	_urls: [],
-	_doneCallback: null,
-	
-	clone: function() {
+	var ObjectCloneFunction = function() {
 		var constructor = new Function;
 		constructor.prototype = this;
 		var instance = new constructor;
@@ -56,286 +25,188 @@ JSImporterFolder = {
 			instance.init()
 		}
 		return instance
-	},
-	
-	urls: function() {
-		return this._urls
-	},
-	
-	setUrls: function(urls) {
-		this._urls = urls
-		return this
-	},
-	
-	addUrl: function(url) {
-		this._urls.push(url)
-		return this
-	},
-	
-	setDoneCallback: function(callback) {
-		this._doneCallback = callback
-		return this
-	},
-	
-	run: function() {
-	    this.loadNext();
-	},
-	
-	isDone: function() {
-		return this.urls().length == 0	
-	},
+	}
+
+	JSScript = {
+		_fullPath: null,
+		_doneCallback: null,
 		
-	loadNext: function() {
-		if (!this.isDone()) {
-	        var url = this._urls.shift();
-			this.loadUrl(url)
-		} else {
-			this.done()
-		}
-		return this
-	},
-	
-	loadUrl: function(url) {
-	    var script = document.createElement('script');
-	    script.src = url;
-	
-	    script.onload = () => {
-			this.loadNext()
-	    }
-	
-	    script.onerror = (error) => {
-			throw new Error("missing url " + url)
-	      	//this.loadNext();
-	    }
-
-	    var parent = document.getElementsByTagName('head')[0] || document.body;
-	    parent.appendChild(script)	
-		return this	
-	},
-	
-	done: function() {
-		if (this._doneCallback) {
-			this._doneCallback()
-        }
-	},
-	
-	importSubfolder: function(folderPath) {
-		var folder = JSImporterFolder.clone().setPath(this.path() + folderPath).loadFolder()
-		this._folderStack.push(folder)
-	},
-	
-	loadFolder: function() {
+		fullPath: function() {
+			return this._fullPath
+		},
 		
-	},
+		setDoneCallback: function(callback) {
+			this._doneCallback = callback
+			return this
+		},
+		
+		clone: ObjectCloneFunction,
+		
+		setFullPath: function(aPath) {
+			this._fullPath = aPath
+			return this
+		},
+		
+		run: function() {
+		    var script = document.createElement('script');
+		    script.src = this._fullPath;
+			//console.log("JSScript " + this._fullPath)
 	
-	currentFolder: function() {
-		return this._folderStack[this._folderStack.length - 1]
-	},
-}
+		    script.onload = () => {
+				this._doneCallback()
+		    }
+	
+		    script.onerror = (error) => {
+				throw new Error("missing url " + this._fullPath)
+		    }
 
-		    var files = [
-		    
-		        "external_libs/bitcore/bower_components/bitcore-lib/bitcore-lib.js",
-		        "external_libs/bitcore/bower_components/bitcore-mnemonic/bitcore-mnemonic.js",
-		        "external_libs/bitcore/bower_components/bitcore-ecies/bitcore-ecies.js",
-		        "external_libs/bloom-filter/bloom-filter.js",
-		        //"external_libs/bitcore/bower_components/bitcore/bitcore.js",
-
-
-		        "external_libs/json-stable-stringify/json-stable-stringify.js",
-
-		        "external_libs/sjcl/core/sjcl.js",
-		        "external_libs/sjcl/core/aes.js",
-		        "external_libs/sjcl/core/bitArray.js",
-		        "external_libs/sjcl/core/bn.js",
-		        "external_libs/sjcl/core/cbc.js",
-		        "external_libs/sjcl/core/ccm.js",
-		        "external_libs/sjcl/core/ccmArrayBuffer.js",
-		        "external_libs/sjcl/core/codecArrayBuffer.js",
-		        "external_libs/sjcl/core/codecBase32.js",
-		        "external_libs/sjcl/core/codecBase64.js",
-		        "external_libs/sjcl/core/codecBytes.js",
-		        "external_libs/sjcl/core/codecHex.js",
-		        "external_libs/sjcl/core/codecString.js",
-		        "external_libs/sjcl/core/codecZ85.js",
-		        "external_libs/sjcl/core/convenience.js",
-		        "external_libs/sjcl/core/ctr.js",
-		        "external_libs/sjcl/core/ecc.js",
-		        "external_libs/sjcl/core/exports.js",
-		        "external_libs/sjcl/core/gcm.js",
-		        "external_libs/sjcl/core/hkdf.js",
-		        "external_libs/sjcl/core/hmac.js",
-		        "external_libs/sjcl/core/ocb2.js",
-		        "external_libs/sjcl/core/ocb2progressive.js",
-		        "external_libs/sjcl/core/pbkdf2.js",
-		        "external_libs/sjcl/core/ripemd160.js",
-		        "external_libs/sjcl/core/scrypt.js",
-		        "external_libs/sjcl/core/sha1.js",
-		        "external_libs/sjcl/core/sha256.js",
-		        "external_libs/sjcl/core/sha512.js",
-		        "external_libs/sjcl/core/srp.js",
-		        "external_libs/sjcl/core/random.js",
-		        "external_libs/sjcl-extras/codecBits.js",
-
-		        "external_libs/peerjs/peer.js",
-
-
-		        "data/categories.json",
-		        "data/us_cities.json",
-		        "data/countries.json",
-		        "data/currencies.json",
-
-
-		        "src/lib/ideal/ideal.js",
-		        "src/lib/ideal/ideal_plus.js",
-		        "src/lib/ideal/Stack.js",
-
-		        "src/lib/notification/Notification.js",
-		        "src/lib/notification/NotificationCenter.js",
-		        "src/lib/notification/Observation.js",
-
-
-		        "src/lib/node/BMNode.js",
+		    var parent = document.getElementsByTagName('head')[0] || document.body;
+		    parent.appendChild(script)			
+		},
 		
-
-		
-		        "src/lib/node/Nodes/BMStorableNode.js",
-		
-		        "src/lib/node/fields/BMFieldSetNode.js",
-		        "src/lib/node/fields/BMField.js",
-		        "src/lib/node/fields/BMImageWellField.js",
-		        "src/lib/node/fields/BMTextAreaField.js",
-		        "src/lib/node/fields/BMStampField.js",
-		        "src/lib/node/fields/BMIdentityField.js",
-		        "src/lib/node/fields/BMDateField.js",
-		        "src/lib/node/fields/BMNumberField.js",
-		        "src/lib/node/fields/BMMultiField.js",
-                "src/lib/node/fields/BMMultiFieldOption.js",
-		
-		        "src/lib/node/Nodes/BMInfoNode.js",
-		        "src/lib/node/Nodes/BMImageNode.js",
-		        "src/lib/node/Nodes/BMNavNode.js",
-		        "src/lib/node/NodeStore.js",
-		        "src/lib/node/BMDataStore.js",
-		        "src/lib/node/BMDataStoreRecord.js",
-
-		        "src/lib/model/BaseApp.js",
-		        "src/lib/model/IndexedDBFolder.js",
-		        "src/lib/model/SyncDB.js",
-
-		        "src/network/BMMessages.js",
-		        "src/network/BMNetwork.js",
-		        //"src/network/BMPayload.js",
-		        "src/network/BMPow.js",
-
-		        "src/network/webrtc/BMServerConnection.js",
-		        "src/network/webrtc/BMRServer.js",
-                "src/network/webrtc/BMRServers.js",
-                "src/network/webrtc/BMRemotePeer.js",
-                
-                "src/network/identities/BMLocalIdentities.js",
-                "src/network/identities/BMLocalIdentity.js",
-
-                "src/network/identities/BMRemoteIdentities.js",
-                "src/network/identities/BMRemoteIdentity.js",
-                "src/network/identities/BMProfile.js",
-                "src/network/identities/BMInbox.js",
-                "src/network/identities/BMDrafts.js",
-                "src/network/identities/BMProfile.js",
-                "src/network/identities/BMSent.js",
-
-                "src/network/messages/BMMessage.js",
-                "src/network/messages/BMAddrMessage.js",
-                "src/network/messages/BMGetDataMessage.js",
-                "src/network/messages/BMInvMessage.js",
-                "src/network/messages/BMObjectMessage.js",
-                "src/network/messages/BMPingMessage.js",
-                "src/network/messages/BMPongMessage.js",
-
-                "src/network/messages/custom/BMClassifiedPost.js",
-                "src/network/messages/custom/BMPrivateMessage.js",
-
- 
-                "src/lib/view/CSS.js",
-                "src/lib/view/Div.js",
-                "src/lib/view/DivTextTapeMeasure.js",
-                "src/lib/view/NodeView.js",
-
-                "src/lib/view/fields/BMFieldSetView.js",
-                "src/lib/view/fields/BMFieldView.js",
-                "src/lib/view/fields/BMTextAreaFieldView.js",
-                "src/lib/view/fields/BMImageWellFieldView.js",
-                "src/lib/view/fields/BMMultiFieldView.js",
-                "src/lib/view/fields/BMMultiFieldOptionsView.js",
-
-                "src/lib/view/ContentView.js",
-                "src/lib/view/GenericView.js",
-                //"src/lib/view/MenuManager.js",
-                "src/lib/view/Window.js",
-
-                "src/lib/view/browser/Browser.js",
-                "src/lib/view/browser/BrowserColumn.js",
-                "src/lib/view/browser/BrowserColumnGroup.js",
-                "src/lib/view/browser/BrowserHeader.js",
-                "src/lib/view/browser/BrowserHeaderAction.js",
-                "src/lib/view/browser/BrowserRow.js",
-                "src/lib/view/browser/BrowserRowNote.js",
-                "src/lib/view/browser/BrowserRowSubtitle.js",
-                "src/lib/view/browser/BrowserRowTitle.js",
-                "src/lib/view/browser/BrowserFieldRow.js",
-		        "src/lib/view/ImageWellView.js",
-		        "src/lib/view/ImageView.js",
-                
-		        "src/view/BMDraftView.js",
-		        "src/view/BMLetterView.js",
-		        "src/view/BMMessageView.js",
-		        "src/view/BMPostView.js",
-		        //"src/view/BMClassifiedPostView.js",
-		        "src/view/BMDataStoreRecordView.js",
-		        
-                "src/network/identities/apps/BMApplet.js",
-
-                "src/network/identities/apps/Classifieds/BMBuy.js",
-                "src/network/identities/apps/Classifieds/BMBuys.js",
-                "src/network/identities/apps/Classifieds/BMRegion.js",
-                "src/network/identities/apps/Classifieds/BMRegions.js",
-                "src/network/identities/apps/Classifieds/BMClassifieds.js",
-                "src/network/identities/apps/Classifieds/BMPost.js",
-                "src/network/identities/apps/Classifieds/BMSell.js",
-                "src/network/identities/apps/Classifieds/BMSells.js",
-                "src/network/identities/apps/Classifieds/BMClassifiedPosts.js",
-
-                "src/network/identities/apps/Twitter/BMTwitter.js",
-                
-                "src/network/identities/apps/BitcoinWallet/BMBitcoinWallet.js",
-                "src/network/identities/apps/Chat/BMChat.js",
-                "src/network/identities/apps/Chat/BMChatThreads.js",
-                "src/network/identities/apps/GroupChat/BMGroupChat.js",
-
-                "src/App.js",
-
-		        "src/_tests.js",
-		    ]
+		basePath: function() {
+			var parts = this.fullPath().split("/")
+			parts.pop()
+			var basePath = parts.join("/")
+			//console.log("basePath = " + basePath)
 			
-			var importer = JSImporterFolder.clone()
-			importer.setUrls(files)
-			importer.setDoneCallback(function () {
-				sjcl.random.startCollectors();
-		        App.shared()
-			})
+			return basePath
+		},
+	},
+	
+	function arrayInsertAt(destArray, pos, arrayToInsert) {
+	    var args = [];
+	    args.push(pos);                           // where to insert
+	    args.push(0);                             // nothing to remove
+	    args = args.concat(arrayToInsert);        // add on array to insert
+	    destArray.splice.apply(destArray, args);  // splice it in
+	}
+
+	JSImporter = {
+		_currentScript: null,
+		_urls: [],
+		_doneCallback: null,
+	
+		clone: ObjectCloneFunction,
+
+		currentScriptPath: function() {
+			if (this._currentScript) {
+				return this._currentScript.basePath()
+			}
+			return ""
+		},
+		
+		absolutePathForRelativePath: function(aPath) {
+			var parts = this.currentScriptPath().split("/").concat(aPath.split("/")) 
+			var rPath = parts.join("/")
 			
-		    importer.run()		
-            
-        </script>
-    
+			if (rPath[0] == "/"[0]) {
+				rPath = "." + rPath
+			}
+			
+			if (aPath.includes("imports")) {
+			//	console.log("        " + aPath + " [" + this.currentScriptPath() + "] -> " + rPath)
+			}
+			
+			return rPath
+		},	
+			
+		absolutePathsForRelativePaths: function(paths) {
+			return paths.map((aPath) => { return this.absolutePathForRelativePath(aPath) })
+		},
+
+		pushRelativePaths: function(paths) {
+			this.pushFilePaths(this.absolutePathsForRelativePaths(paths))
+			return this
+		},
+				
+		pushRelativePath: function(aPath) {
+			this.pushPath(this.absolutePathForRelativePath(aPath))
+			return this
+		},
+			
+		pushFilePaths: function(paths) {
+			this._urls = paths.concat(this._urls)
+			return this
+		},
+		
+		pushPath: function(aPath) {
+			this.pushFilePaths([aPath])
+			return this
+		},
+
+		urls: function() {
+			return this._urls
+		},
+	
+		setUrls: function(urls) {
+			this._urls = urls
+			return this
+		},
+	
+		addUrl: function(url) {
+			this._urls.push(url)
+			return this
+		},
+	
+		setDoneCallback: function(callback) {
+			this._doneCallback = callback
+			return this
+		},
+	
+		run: function() {
+		    this.loadNext();
+		},
+	
+		isDone: function() {
+			return this.urls().length == 0	
+		},
+		
+		loadNext: function() {
+			if (!this.isDone()) {
+		        var url = this._urls.shift();
+				//var url = this.path().split("/").concat( url.split("/")).join("/")
+				//console.log("loading " + url)
+				this.loadUrl(url)
+			} else {
+				this.done()
+			}
+			return this
+		},
+	
+		loadUrl: function(url) {
+			this._currentScript = JSScript.clone().setFullPath(url).setDoneCallback(() => { this.loadNext() })
+			//console.log("this._currentScript = ", this._currentScript)
+			this._currentScript.run()
+			return this	
+		},
+	
+		done: function() {
+			if (this._doneCallback) {
+				this._doneCallback()
+	        }
+		},
+
+	}
+
+	JSImporter.pushPath("_imports.js").setDoneCallback(function () {
+		sjcl.random.startCollectors();
+        App.shared()
+	}).run()
+	
+	
+          
+</script>
+  
 
 
     </head>
-      <body id="body">
-        <div class="window">
-          <div id="window-content" class="window-content">
-          </div>
+
+    <body id="body">
+      <div class="window">
+        <div id="window-content" class="window-content">
         </div>
-      </body>
+      </div>
+    </body>
   
 </html>

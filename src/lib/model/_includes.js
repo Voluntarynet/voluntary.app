@@ -1,2 +1,0 @@
-
-require('./BaseApp.js')

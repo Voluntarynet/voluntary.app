@@ -1,22 +1,29 @@
 
 /*
 	A simple javascript importing system.
-	This runs _import.js which will then reference js files and
+	This runs _import.js which will then reference js and css files and
 	_import.js file in it's subfolders.
 	This makes source reorganizations easier and helps
 	keep folder organization aligned with dependency organization
+	
+	Add an _imports.js file - here's an example. Notice you can reference css files as well.
+	
+	JSImporter.pushRelativePaths([
+		"_css.css",
+		"external_libs/_imports.js",
+		"data/_imports.js",
+		"src/_imports.js",
+		"MyApp.js",
+	])
+	
+	The paths in each _imports.js file are relative to the folder it is found within.
 
 	If you need to call some initialization functions after everything is loaded, 
 	you can call JSImporter.pushDoneCallback() in the related folder's _imports.js
 
 		JSImporter.pushDoneCallback( () => {
 			sjcl.random.startCollectors();
-		})
-	
-	To import a CSS file, use:
-	
-		JSImporter.pushRelativeCSSPath("somefile.css")
-		
+		})		
 */
 
 var ObjectCloneFunction = function() {

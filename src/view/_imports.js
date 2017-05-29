@@ -1,5 +1,6 @@
 
 JSImporter.pushRelativePaths([
+	"_css.css",
     "BMDraftView.js",
     "BMLetterView.js",
     "BMMessageView.js",
@@ -7,3 +8,4 @@ JSImporter.pushRelativePaths([
     //"BMClassifiedPostView.js",
     "BMDataStoreRecordView.js",
 ])
+

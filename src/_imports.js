@@ -7,3 +7,7 @@ JSImporter.pushRelativePaths([
     "App.js",
     "_tests.js",
 ])
+
+JSImporter.pushDoneCallback( () => {
+        App.shared()
+})

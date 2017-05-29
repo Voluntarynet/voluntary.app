@@ -32,3 +32,7 @@ JSImporter.pushRelativePaths([
     "core/srp.js",
     "core/random.js",
 ])
+
+JSImporter.pushDoneCallback( () => {
+	sjcl.random.startCollectors();
+})

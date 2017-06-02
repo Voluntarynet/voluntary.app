@@ -33,13 +33,9 @@ App = BaseApp.extend().newSlots({
         
         this.setName("Bitcom")
         this.setTitle("App")
-        
-        // app
-        
-        this.setApps(BMNode.clone().setTitle("Apps"))
-        this.addItem(this.apps())
-        this.addApps()
 
+		//this.addAppItem()
+		
         // ids
 
 		this.setLocalIdentities(NodeStore.shared().rootInstanceWithPidForProto("_localIdentities", BMLocalIdentities))
@@ -68,14 +64,20 @@ App = BaseApp.extend().newSlots({
     		this.setDataStore(BMDataStore.clone())
     		this.about().addItem(this.dataStore())
 		
-
-                
             if (this.network()) {
                 this.network().servers().connect()
             }
 
         return this
     },
+
+/*
+	addAppItem: function() {        
+        this.setApps(BMNode.clone().setTitle("Apps"))
+        this.addItem(this.apps())
+        this.addApps()	
+		return this
+	},
     
     addApps: function() {
         var appProtos = [BMTwitter, BMChat, BMGroupChat, BMClassifieds, BMBitcoinWallet]
@@ -90,6 +92,7 @@ App = BaseApp.extend().newSlots({
     appNamed: function(name) {
         return this.apps().firstItemWithTitle(name)
     },
+*/
 
 })
 

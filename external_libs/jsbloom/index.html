@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bloom Filter</title>
+
+    <link rel="stylesheet" href="https://bootswatch.com/cosmo/bootstrap.min.css">
+
+    <style>
+
+        pre {
+            white-space: pre-wrap;       /* Since CSS 2.1 */
+            white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+            white-space: -pre-wrap;      /* Opera 4-6 */
+            white-space: -o-pre-wrap;    /* Opera 7 */
+            word-wrap: break-word;       /* Internet Explorer 5.5+ */
+        }
+
+        .text-muted {
+            color: #808080;
+        }
+
+    </style>
+</head>
+<body style="margin: 15px">
+
+    <h1>Bloom test page <small> type: <span id="type">countingFilter</span></small></h1>
+
+    <button class="btn btn-default" onclick="change('filter')">switch to regular</button>
+    <button class="btn btn-default" onclick="change('countingFilter')">switch to counting</button> <br><br>
+
+    <input type="text" placeholder="hash field" onkeyup="hash()" id="input">
+
+    <pre>
+        
+        djb2: <span id="djb2"></span>
+
+        sdbm: <span id="sdbm"></span>
+
+        indices: <span id="indices"></span>
+
+    </pre>
+
+    <hr>
+
+    <input type="text" placeholder="add entry" onkeyup="add(event)" id="add">
+
+    <p class="text-muted">Press enter to add</p>
+
+    <pre>
+        
+        contents: <span id="contents">[]</span>
+
+    </pre>
+
+    <hr>
+
+    <input type="text" placeholder="check entry" onkeyup="check()" id="check"> <br> <br>
+
+    <p><span id="search_element"></span> is <span id="status"></span></p>
+
+    <script src="bloom.js"></script>
+
+    <script>
+
+        let contents = [],
+            filter = new JSBloom.countingFilter(2000, 1E-10);
+
+        console.info(filter.info);
+
+        var change = function(type) {
+            eval("filter = new JSBloom." + type + "(1000, 1E-10);");
+
+            document.getElementById("type").innerHTML = type;
+
+            console.info(filter.info);
+        }
+
+        var hash = function() {
+            let val = document.getElementById("input").value;
+
+            document.getElementById("djb2").innerHTML = filter.hashes.djb2(val);
+
+            document.getElementById("sdbm").innerHTML = filter.hashes.sdbm(val);
+
+            document.getElementById("indices").innerHTML = filter.hashes.getIndices(val);
+        }
+
+        var add = function(e) {
+            let val = document.getElementById("add").value;
+
+            if (e.keyCode == 13) {
+                console.log("Adding " + val);
+                filter.addEntry(val);
+
+                contents.push(val);
+                document.getElementById("add").value = "";
+
+                document.getElementById("contents").innerHTML = contents;
+            };
+        }
+
+        var check = function() {
+            let val = document.getElementById("check").value,
+                status = document.getElementById("status");
+
+            document.getElementById("search_element").innerHTML = val;
+
+            if (filter.checkEntry(val)) {
+                status.innerHTML = "probably added";
+            } else {
+                status.innerHTML = "definitely not added"
+            }
+
+        }
+
+    </script>
+</body>
+</html>

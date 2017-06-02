@@ -1,0 +1,10 @@
+{
+  "name": "ecc",
+  "version": "0.3.0",
+  "title": "Simple wrapper around SJCL's ECC Implementation",
+  "author": "Jaime Pillora <dev@jpillora.com>",
+  "license": "MIT/BSD(sljc)",
+  "homepage": "https://github.com/jpillora/eccjs",
+  "source": "~/.grunt-sources/jslib",
+  "repo": "https://github.com/jpillora/grunt-source-jslib.git"
+}

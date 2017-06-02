@@ -10,4 +10,5 @@ JSImporter.pushRelativePaths([
 
 JSImporter.pushDoneCallback( () => {
         App.shared()
+		App.runTests()
 })

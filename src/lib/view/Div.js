@@ -884,7 +884,7 @@ Div = ideal.Proto.extend().newSlots({
 	// --- focus and blur/unfocus ---
 
     focus: function() {
-		console.log(this.type() + " focus")
+		//console.log(this.type() + " focus")
         var self = this
         setTimeout(function () {
             self.element().focus()

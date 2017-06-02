@@ -1,3 +1,98 @@
+
+App.runTests = function() {
+	/*
+	var PlainText = "hello world"
+	
+	var msg = { 
+	}
+
+	sha256 = {}
+	sha256.hex = function(s)
+	{
+	    return SHA256(s);
+	}
+	
+	//console.log("sha256.hex = ", sha256.hex)
+	var bits = 1024 // 3072
+
+	var knownRSAkey = cryptico.generateRSAKey("known", bits);
+	var knownPublicKeyString = cryptico.publicKeyString(knownRSAkey);       
+	
+	// send from sam to matt 
+	
+	var receiverPassPhrase = "4329843289843098345909432987"; 
+	var receiverRSAkey = cryptico.generateRSAKey(receiverPassPhrase, bits);
+	var receiverPublicKeyString = cryptico.publicKeyString(receiverRSAkey);       
+
+	var senderPassPhrase = "3094093288545334523098095248"; 
+	var senderRSAkey = cryptico.generateRSAKey(senderPassPhrase, bits);
+	
+	msg.data = cryptico.encrypt(PlainText, receiverPublicKeyString, senderRSAkey).cipher; // signed
+	var DecryptionResult = cryptico.decrypt(msg.data, receiverRSAkey);
+	
+	var hash = sha256.hex(msg.data)
+	msg.signature = cryptico.encrypt(hash, knownPublicKeyString, senderRSAkey).cipher
+	
+	console.log("rsa test 1: DecryptionResult: ", DecryptionResult )
+	console.log("rsa test 1: PlainText       : ", PlainText)
+	console.log("msg = ", msg)
+
+	// receive and verify
+	
+	var hash = sha256.hex(msg.data)
+	var verifySig = cryptico.decrypt(msg.signature, knownRSAkey);
+	var isVerified = (verifySig.plaintext == hash) && (verifySig.signature == "verified");
+	console.log("verifySig: ", verifySig)
+	console.log("     hash: ", msg.hash)
+	console.log("   verify: ", isVerified)
+	
+	*/
+	
+/*
+	// ---- encrypt with pubkey --------------------------------------------
+
+	var keys = ecc.generate(ecc.ENC_DEC);
+	// => { dec: "192e35a51dc....", enc: "192037..." }
+	console.log("keys = ", keys)
+	var plaintext = "hello world!";
+	var cipher = ecc.encrypt(keys.enc, plaintext);
+	var result = ecc.decrypt(keys.dec, cipher);
+	console.log("ecc encryption test 1: ", plaintext === result);
+	// => truez
+
+	// ---- encrypt with pubkey --------------------------------------------
+
+	var cipher = ecc.encrypt(keys.dec, plaintext);
+	var result = ecc.decrypt(keys.enc, cipher);
+	console.log("ecc encryption test 2: ", plaintext === result);
+
+	// ---- signature --------------------------------------------
+	
+	// Generate (or load) sign/verify keys 
+	var keys = ecc.generate(ecc.SIG_VER);
+	// => { dec: "192e35a51dc....", enc: "192037..." }
+	
+	
+	// An important message
+	var message = "hello world!";
+
+	// Create digital signature
+	var signature = ecc.sign(keys.sig, message);
+
+	// Verify matches the text
+	var result = ecc.verify(keys.ver, signature, message);
+
+	console.log("ecc signature test 2: ", result); // => trues	
+	
+	
+	var shaBits = sjcl.hash.sha256.hash("test");
+    var shaHex = sjcl.codec.hex.fromBits(shaBits);
+    assert(shaHex == "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08")		        
+    console.log("sjcl.hash.sha256 test passed")
+*/
+}
+
+
 /*
 console.log("------ BEGIN TESTS ------")
 

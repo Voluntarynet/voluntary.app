@@ -16,12 +16,11 @@ BMLocalIdentity = BMNavNode.extend().newSlots({
 		this.setShouldStore(true)
         this.setNodeTitleIsEditable(true)
  
-        //this.initStoredSlotWithProto("apps", BMApps)
 
+        this.initStoredSlotWithProto("apps", BMApps)
         this.initStoredSlotWithProto("profile", BMProfile)
-        this.initStoredSlotWithProto("inbox", BMInbox)
-        this.initStoredSlotWithProto("drafts", BMDrafts)
-        this.initStoredSlotWithProto("sent", BMSent)
+
+
         
 		this.addStoredSlots(["name", "privateKeyString"])
 		

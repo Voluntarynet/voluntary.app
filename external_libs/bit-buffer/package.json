@@ -1,0 +1,35 @@
+{
+  "name": "bit-buffer",
+  "version": "0.1.0",
+  "description": "Bit-level reads and writes for ArrayBuffers",
+  "main": "bit-buffer.js",
+  "types": "./bit-buffer.d.ts",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/inolen/bit-buffer.git"
+  },
+  "keywords": [
+    "dataview",
+    "arraybuffer",
+    "bit",
+    "bits"
+  ],
+  "author": "Anthony Pesch",
+  "contributors": [
+    "Robin Appelman"
+  ],
+  "license": "MIT",
+  "gitHead": "cd4417237bed1f22dd5adfd8a6b961ea7234d9c9",
+  "readmeFilename": "README.md",
+  "devDependencies": {
+    "@types/node": "^7.0.5",
+    "jshint": "^2.9.4",
+    "mocha": "^3.2.0"
+  }
+}

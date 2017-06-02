@@ -60,7 +60,6 @@ BMFieldSetNode = BMStorableNode.extend().newSlots({
         return this.items().detect(function (item) { 
 			return item.nodeFieldProperty() == aName || item.key() == aName
         })
-		return null
     },
     
     valueForFieldNamed: function(aName) {

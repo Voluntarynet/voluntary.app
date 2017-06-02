@@ -61,6 +61,7 @@ BMRServers = BMStorableNode.extend().newSlots({
     },
     
     connect: function () {
+		
         var unconnectedServers = this.unconnectedServers().shuffle()
         var connectionsToAdd = this.maxConnections() - this.connectionCount()
         
@@ -125,5 +126,26 @@ BMRServers = BMStorableNode.extend().newSlots({
             }
         })
     },
+
+	// --- choosing which servers to connect to ---
+	
+	sortServersByDistanceToBloomFilter: function(aBloomFilter) {
+		// distance = countOfDifferentBits(hash(serverIp).bitArrayOfBloomLength, uncompactedBloomFilterBitArray)
+		// as we connect to peers whose blooms match to one or more of our ids/contacts
+		// this distance metric should help minimize number of servers we need to 
+		// connect to, to find friends - particularly since friends connections tend to overlap
+		
+		var bloomUint8Array = aBloomFilter.asUncompactedUint8BitArray();
+		
+		var servers = this.items()
+		servers.forEach((server) => { server.updateBloomDistance(bloomUint8Array) })
+		var sorted = servers.slice().sort((serverA, serverB) => {
+			return serverA.bloomDistance() - serverB.bloomDistance() // smallest distance first	
+		})
+		
+		this.setItems(sorted)
+		
+		return this
+	},
     
 })

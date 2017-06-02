@@ -1,8 +1,0 @@
-{
-  "name": "eccrypto-browser",
-  "version": "0.0.1",
-  "license": "MIT",
-  "dependencies": {
-    "eccrypto": "^v1.0.3"
-  }
-}

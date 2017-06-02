@@ -1,0 +1,4 @@
+
+JSImporter.pushRelativePaths([
+    "BMBitcoinWallet.js",
+])

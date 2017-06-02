@@ -1,4 +1,3 @@
-//var bitcore = require("bitcore-lib")
 
 BMNetwork = BMStorableNode.extend().newSlots({
     type: "BMNetwork",
@@ -6,9 +5,20 @@ BMNetwork = BMStorableNode.extend().newSlots({
     messages: null,
     localIdentities: null, // set by parent 
     remoteIdentities: null, // set by parent 
+	idsBloomFilter: null,
+	shared: null,
 }).setSlots({
     init: function () {
+		if (BMNetwork._shared) {
+			throw new Error("multiple instances of " + this.type() + " singleton")
+		}
+		
+		BMNetwork._shared = this
+
         BMStorableNode.init.apply(this)
+
+
+		
         //this.setPid("_network")
         this.setTitle("Network")
         this.setNodeMinWidth(150)
@@ -18,7 +28,11 @@ BMNetwork = BMStorableNode.extend().newSlots({
 		this.setMessages(NodeStore.shared().rootInstanceWithPidForProto("_messages", BMMessages))
 		this.addItem(this.messages())
     },
-    
+
+	shared: function() {
+		return BMNetwork._shared
+	},
+
     connectedRemotePeers: function () {
         var remotePeers = []
         this.servers().connectedServers().forEach(function (server) {
@@ -75,6 +89,8 @@ BMNetwork = BMStorableNode.extend().newSlots({
         //this.didUpdate()
         this.syncToView()
     },
+
+	// --- identities -----------------------------------------
     
     privateKeyForChannelName: function(channelName) {
         var hexName = channelName.toString(16)
@@ -89,12 +105,19 @@ BMNetwork = BMStorableNode.extend().newSlots({
         }
         return this.remoteIdentities().idWithPubKeyString(pubKeyString)
     },
+
+	allIdenties: function() {
+		var ids = []
+		ids = this.localIdentities().items().concat(this.remoteIdentities().items())
+		return ids
+	},
     
+	allIdentityPublicKeyStrings: function() {
+		return this.allIdenties().map(function(id) { return id.publicKeyString(); })
+	},
+	
 	allIdentityNames: function() {
-		var names = []
-		names.appendItems(this.localIdentityNames())
-		names.appendItems(this.remoteIdentityNames())
-		return names
+		return this.allIdenties().map(function(id) { return id.name(); })
 	},
 	
 	localIdentityNames: function() {
@@ -113,6 +136,44 @@ BMNetwork = BMStorableNode.extend().newSlots({
 		
 		id = this.remoteIdentities().idWithName(aName)
 		return id
-	}
+	},
+	
+	// --- bloom filter for matching ids -----------------------------------------
+	
+	newDefaultBloomFilter: function() { // proto method?
+		var falsePositiveRate = 0.01;
+		var maxElementSize = 1000		
+		var filter = JSBloom.newFilter(maxElementSize, falsePositiveRate)
+		return filter
+	},
+	
+	updateIdsBloomFilter: function() {
+		var ids = this.allIdenties()
+				
+		this._idsBloomFilter = this.newDefaultBloomFilter()
+				
+		ids.forEach((id) => {
+			this._idsBloomFilter.addEntry(id.publicKeyString());
+		})
+		return this;		
+	},
+	
+	idsBloomFilter: function() {
+		if (this._idsBloomFilter == null) {
+			this.updateIdsBloomFilter()
+		}
+		return this._idsBloomFilter
+	},
+	
+	/*
+	matching is done on peer connections
+	idsBloomFilterMatchesPublicKey: function(aPublicKeyString) {
+		return this.idsBloomFilter().checkEntry(aPublicKeyString)
+	},
+	*/
+	
+	shouldRelayForSenderPublicKey: function(aPublicKeyString) {
+		return this.allIdentityPublicKeyStrings().includes(aPublicKeyString)
+	},
 	
 })

@@ -1,5 +1,3 @@
-//var bitcore = require("bitcore-lib")
-//var Peer = require('peerjs')
 
 BMServerConnection = BMNode.extend().newSlots({
     type: "BMServerConnection",
@@ -13,6 +11,8 @@ BMServerConnection = BMNode.extend().newSlots({
     privateKey: null,
     status: null,
     log: null,
+	sessionId: null,
+	peerId: null,
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)
@@ -22,27 +22,15 @@ BMServerConnection = BMNode.extend().newSlots({
         //this.setViewClassName("GenericView")
         this.setNodeMinWidth(160)
         //this.setLog(BMNode.clone())
+
+		this.setSessionId(BMLocalIdentity.clone().generatePrivateKey())
+		this.setPeerId(BMPeerId.clone())
     },
     
     setStatus: function(s) {
         this._status = s
         this.setSubtitle(s)
         return this
-    },
-
-    privateKey: function () {
-        if (!this._privateKey) {
-            this._privateKey = new bitcore.PrivateKey();
-        }
-        return this._privateKey
-    },
-    
-    publicKeyString: function() {
-        return this.privateKey().publicKey.toString()
-    },
-    
-    address: function() {
-        return this.privateKey().toAddress()
     },
 
     shortId: function() {
@@ -61,24 +49,31 @@ BMServerConnection = BMNode.extend().newSlots({
     items: function () {
         return this.remotePeers()
     },
-    
-    makePeerIdString: function() {
-        // return this.publicKeyString()
-        return this.shortId()
-    },
 
-    localOptions: function () {
+	// --- server connection --------------------------
+	
+    serverConnectionOptions: function () {
         return { 
-				// secure: true, // wait until we fix the mixed network connection issue
-				//serialization: "json",
-				reliable: true,
-                debug: 3, 
                 host: this.server().host(), 
-                port: this.server().port() 
-                //iceServers: this.iceServers()
+                port: this.server().port(),
+				//path: null,
+				//secure: true,
+                //config: this.iceServers()
+                debug: 3, 
             }
     },
-    
+
+	// --- connection id ----
+	
+	currentPeerId: function() {
+		var peerId = BMPeerId.clone()
+		peerId.setPublicKeyString(this.sessionId().publicKeyString())
+		
+		peerId.setBloomFilter(BMNetwork.shared().idsBloomFilter())
+		console.log("peerId '" + peerId.toString() + "'")
+		return peerId
+	},
+			
     connect: function () {
         // TODO: add timeout and tell server when it occurs
 
@@ -86,15 +81,14 @@ BMServerConnection = BMNode.extend().newSlots({
             var self = this
             //this.log("connecting...");
             this.setStatus("connecting...")
-            
             this.setTitle("Connection")
-            
-            this._serverConn = new Peer(this.localOptions())                
-            //this._serverConn = new Peer(this.makePeerIdString(), options)
+			
+            this._serverConn = new Peer(this.currentPeerId().toString(), this.serverConnectionOptions())                
+            //this._serverConn = new Peer(this.localOptions())                
                       
             this._serverConn.on('open', function(id) { 
-                self.setId(id); 
-                self.onOpen() 
+                self.setId(id) 
+                self.onOpen()
             })
             
             this._serverConn.on('connection', function (aConn) { 
@@ -177,14 +171,26 @@ BMServerConnection = BMNode.extend().newSlots({
         }) != null
     },
 
+	// --- peer connection options -------------------
+	// todo: move to BMRemotePeer
+	
+    peerConnectionOptions: function () {
+        return { 
+				// label: "",
+				// metadata: {},
+				//serialization: "json",
+				reliable: true,
+            }
+    },
+
     connectToPeerId: function(pid) {
         //console.log("limiting peer connections to one's with short pids")
         if (!this.isConnectedToPeerId(pid) && pid.length < 25) {
             //this.log("connectToPeerId " + pid)
             //try {
                                 
-                var conn = this.serverConn().connect(pid);
-                this.addRemotePeerConn(conn)
+                var dataConnection = this.serverConn().connect(pid);
+                this.addRemotePeerConn(dataConnection)
                 /*
             } catch (error) {
                 console.log("ERROR on BMServerConnection.connectToPeerId('" + pid + "')")
@@ -233,6 +239,7 @@ BMServerConnection = BMNode.extend().newSlots({
         })        
     },
 
+/*
     iceServers: function() {
         return [
             {url:'stun:stun01.sipphone.com'},
@@ -256,6 +263,7 @@ BMServerConnection = BMNode.extend().newSlots({
             {url:'stun:stun.xten.com'},
         ]
     },   
+*/
 })
 
 

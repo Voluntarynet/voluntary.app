@@ -1,0 +1,35 @@
+{
+  "name": "jsbloom",
+  "version": "1.0.1",
+  "description": "a fast javascript counting bloom filter implementation",
+  "main": "bloom.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "coveralls": "^2.11.11",
+    "istanbul": "^0.4.4",
+    "mocha": "*"
+  },
+  "scripts": {
+    "test": "node_modules/.bin/mocha && istanbul report text-summary lcov"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cry/jsbloom.git"
+  },
+  "keywords": [
+    "javascript",
+    "bloom",
+    "filter",
+    "counting"
+  ],
+  "author": "Carey Li",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cry/jsbloom/issues"
+  },
+  "homepage": "https://github.com/cry/jsbloom#readme"
+}

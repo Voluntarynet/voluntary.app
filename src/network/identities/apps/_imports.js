@@ -2,20 +2,12 @@
 JSImporter.pushRelativePaths([
     "BMApplet.js",
 
-    "Classifieds/BMBuy.js",
-    "Classifieds/BMBuys.js",
-    "Classifieds/BMRegion.js",
-    "Classifieds/BMRegions.js",
-    "Classifieds/BMClassifieds.js",
-    "Classifieds/BMPost.js",
-    "Classifieds/BMSell.js",
-    "Classifieds/BMSells.js",
-    "Classifieds/BMClassifiedPosts.js",
+    "Classifieds/_imports.js",
+    "Twitter/_imports.js",
+    "BitcoinWallet/_imports.js",
+    "Chat/_imports.js",
+    "GroupChat/_imports.js",
+    "Mail/_imports.js",
 
-    "Twitter/BMTwitter.js",
-    
-    "BitcoinWallet/BMBitcoinWallet.js",
-    "Chat/BMChat.js",
-    "Chat/BMChatThreads.js",
-    "GroupChat/BMGroupChat.js",
+    "BMApps.js",
 ])

@@ -83,7 +83,6 @@ BMPostView = NodeView.extend().newSlots({
     },
     
     syncToNode: function () {
-		ShowStack()
         //this.log(this.type() + " syncToNode " + this.node().type())
         var node = this.node()
         node.setTitle(this.titleView().innerHTML())

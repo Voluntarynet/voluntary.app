@@ -7,6 +7,7 @@ BMRServer = BMStorableNode.extend().newSlots({
     host: '127.0.0.1',
     port: 9000,
     serverConnection: null,
+	bloomDistance: null,
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
@@ -88,5 +89,30 @@ BMRServer = BMStorableNode.extend().newSlots({
     connectedRemotePeers: function () {
         return this.serverConnection().connectedRemotePeers()
     },
+
+	updateBloomDistance: function(bloomUint8Array) {
+		var hostHashUint8Array = this.host().sha256()
+
+		// make sure host bits are at least as long as bloom
+		while (hostHashUint8Array.length < bloomUint8Array.length) {
+			hostHashUint8Array = hostHashUint8Array.concat(hostHashUint8Array)
+		}
+		
+		var s1 = new BitStream(bloomUint8Array);
+		var s2 = new BitStream(hostHashUint8Array);
+		
+		var bitCount = hostHashUint8Array.length * 8
+		var diff = 0
+		for (var i = 0; i < bitCount; i ++) {
+			if (s1.readBoolean() != s2.readBoolean()) {
+				diff ++
+			}
+		}
+		
+		this.setBloomDistance(diff)
+		return this
+	},
+
+	
     
 })

@@ -6,7 +6,8 @@ BMRemotePeer = BMNode.extend().newSlots({
     messages: null,
     status: null,
     remoteInventory: null,
-    debug: true
+    debug: true,
+	peerId: null,
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)
@@ -15,6 +16,7 @@ BMRemotePeer = BMNode.extend().newSlots({
         this.setMessages(BMNode.clone().setTitle("messages").setNoteIsItemCount(true))
         this.addItem(this.messages())
         this.setRemoteInventory({})
+		this.setPeerId(BMPeerId.clone())
     },
     
     log: function(s) {
@@ -98,7 +100,8 @@ BMRemotePeer = BMNode.extend().newSlots({
     onOpen: function(c) {
         this.log("onOpen")
         this.setTitle("Peer " + this.shortId())
-        this.didUpdate()
+		this.peerId().setFromString(this.id())
+        //this.didUpdate()
         this.setStatus("connected")
         
         var self = this

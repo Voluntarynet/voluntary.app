@@ -15,7 +15,7 @@ BMApps = BMStorableNode.extend().newSlots({
     },	
 
     addApps: function() {
-        var appProtos = [BMMail, BMTwitter, BMChat, BMGroupChat] //, BMClassifieds, BMBitcoinWallet]
+        var appProtos = [BMMail, BMTwitter, BMGroupChat] //, BMChat, BMClassifieds, BMBitcoinWallet]
         
         appProtos.forEach((appProto) => {
             this.addItem(appProto.clone())
@@ -28,5 +28,8 @@ BMApps = BMStorableNode.extend().newSlots({
         return this.firstItemWithTitle(name)
     },
 
+	handleMessage: function(aMessage) {
+		this.items().forEach((app) => { app.handleMessage(aMessage) })
+	},
 })
 

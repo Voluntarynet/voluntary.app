@@ -9,4 +9,5 @@ JSImporter.pushRelativePaths([
     "BMSell.js",
     "BMSells.js",
     "BMClassifiedPosts.js",
+    "BMClassifiedPost.js",
 ])

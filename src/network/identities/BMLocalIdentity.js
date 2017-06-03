@@ -19,8 +19,6 @@ BMLocalIdentity = BMNavNode.extend().newSlots({
 
         this.initStoredSlotWithProto("apps", BMApps)
         this.initStoredSlotWithProto("profile", BMProfile)
-
-
         
 		this.addStoredSlots(["name", "privateKeyString"])
 		
@@ -109,21 +107,8 @@ BMLocalIdentity = BMNavNode.extend().newSlots({
 		return decrypted
 	},
 	
-	fileMessage: function(msg) {		
-		if (this.equals(msg.senderId())) {
-			this.sent().addItemIfAbsent(msg)
-		}
-		
-		if (this.equals(msg.receiverId())) {
-			var senderName1 = msg.senderId().name()			
-			this.inbox().addItemIfAbsent(msg)
-			
-			var senderName2 = msg.senderId().name()
-			if (senderName1 != senderName2) {
-				throw new Error(senderName1 + " != " + senderName2)
-			}
-		}
-		
+	handleMessage: function(msg) {	
+		this.apps().handleMessage(msg)
 		return this
 	},
 	

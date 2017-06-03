@@ -98,6 +98,9 @@ BMRServer = BMStorableNode.extend().newSlots({
 			hostHashUint8Array = hostHashUint8Array.concat(hostHashUint8Array)
 		}
 		
+		// TODO: shouldn't need to calculate this often but 
+		// might when server count gets high or changes frequently. Optimize then.
+		
 		var s1 = new BitStream(bloomUint8Array);
 		var s2 = new BitStream(hostHashUint8Array);
 		
@@ -111,8 +114,5 @@ BMRServer = BMStorableNode.extend().newSlots({
 		
 		this.setBloomDistance(diff)
 		return this
-	},
-
-	
-    
+	},    
 })

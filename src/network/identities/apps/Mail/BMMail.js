@@ -18,10 +18,26 @@ BMMail = BMApplet.extend().newSlots({
         this.initStoredSlotWithProto("sent", BMSent)        
 
     },
+
+	identity: function() {
+		return this.parentNode().parentNode()
+	},
     
-    handleMessage: function(twitterMessage) {
-        
-        
+    handleMessage: function(msg) {
+        var myId = this.identity()
+
+        if (myId.equals(msg.senderId())) {
+			this.sent().addItemIfAbsent(msg)
+		}
+		
+		if (myId.equals(msg.receiverId())) {
+			var senderName1 = msg.senderId().name()	// test for bug
+					
+			this.inbox().addItemIfAbsent(msg)
+			
+			var senderName2 = msg.senderId().name() // test for bug
+			assert (senderName1 == senderName2)  // test for bug
+		}
     },
 })
 

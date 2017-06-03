@@ -5,10 +5,6 @@ JSImporter.pushRelativePaths([
 	JSBloom.newFilter = function(a, b) {
 		var filter = JSBloom.filter(a, b)
 		
-		filter.asUncompactedBitArray = function() {
-			throw new Error("unimplemented")
-		}
-		
 		filter.asUncompactedUint8BitArray = function() {
 			return this.info.raw_buffer
 		}

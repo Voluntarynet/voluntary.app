@@ -10,5 +10,9 @@ BMApplet = BMStorableNode.extend().newSlots({
         BMStorableNode.init.apply(this)
         this.setShouldStore(true)
     },
+
+	handleMessage: function(aMessage) {
+		// override
+	},
 })
 

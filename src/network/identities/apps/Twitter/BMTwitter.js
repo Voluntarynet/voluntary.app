@@ -22,7 +22,7 @@ BMTwitter = BMApplet.extend().newSlots({
 		this.setNotifications(BMNode.clone().setTitle("notifications"))
         this.addItem(this.notifications())
 
-		this.setMessages(BMNode.clone().setTitle("messages"))
+		this.setMessages(BMNode.clone().setTitle("direct messages"))
         this.addItem(this.messages())
         
 		this.setProfile(BMNode.clone().setTitle("profile"))

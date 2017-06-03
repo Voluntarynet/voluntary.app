@@ -152,7 +152,7 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 		//console.log("dict.senderPublicKey = ", dict.senderPublicKey)
 		//console.log("dict.receiverPublicKey = ", dict.receiverPublicKey)
 		
-		var senderId = App.shared().network().idWithPubKeyString(dict.senderPublicKey)
+		var senderId   = App.shared().network().idWithPubKeyString(dict.senderPublicKey)
 		var receiverId = App.shared().network().localIdentities().idWithPubKeyString(dict.receiverPublicKey)
 		
 		this.setCanReceive(true)
@@ -207,11 +207,11 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 		this.isSent(true)
 		
 		if (this.receiverId()) {
-			this.receiverId().fileMessage(this.duplicate())
+			this.receiverId().handleMessage(this.duplicate())
 		}
 		
 		if (this.senderId()) {
-         	this.senderId().fileMessage(this.duplicate())	
+         	this.senderId().handleMessage(this.duplicate())	
 		}
 		
 		//this.didUpdate()

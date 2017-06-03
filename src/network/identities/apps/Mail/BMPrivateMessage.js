@@ -10,8 +10,8 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
         BMFieldSetNode.init.apply(this)
 		this.setShouldStore(true)
 
-        this.addFieldNamed("stamp").setKey("stamp").setValueIsEditable(false)
-		this.setStamp("Unstamped")
+        //this.addFieldNamed("stamp").setKey("stamp").setValueIsEditable(false)
+		//this.setStamp("Unstamped")
 		
 		//this.addField(BMIdentityField.clone().setNodeFieldProperty("fromAddress").setKey("from").setValueIsEditable(false))
 		//this.addField(BMIdentityField.clone().setNodeFieldProperty("toAddress").setKey("to").setValueIsEditable(true))
@@ -270,8 +270,11 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
     send: function () {
         var objMsg = BMObjectMessage.clone()
         objMsg.setData(this.postDict())
-    	objMsg.powObj().setTargetDifficulty(17)
+    	/*
+		objMsg.powObj().setTargetDifficulty(17)
         objMsg.asyncFindPowAndSend()
+		*/
+		objMsg.send()
         this.delete()
     },
 })

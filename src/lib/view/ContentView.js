@@ -33,7 +33,7 @@ ContentView = NodeView.extend().newSlots({
     },
     
     onDidEdit: function (changedView) {     
-        this.log("onDidEdit")   
+        //this.log("onDidEdit")   
         this.syncToNode()
     },
 })

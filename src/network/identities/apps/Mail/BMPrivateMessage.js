@@ -165,7 +165,7 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 				
 		if (!receiverId) {
 			this.setCanReceive(false)
-			console.log("no contact for receiverPublicKey '" + dict.receiverPublicKey + "'")
+			console.log("no identity for receiverPublicKey '" + dict.receiverPublicKey + "'")
 			return this
 		}
 		

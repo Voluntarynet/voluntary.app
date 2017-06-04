@@ -68,7 +68,6 @@ BMServerConnection = BMNode.extend().newSlots({
 	currentPeerId: function() {
 		var peerId = BMPeerId.clone()
 		peerId.setPublicKeyString(this.sessionId().publicKeyString())
-		
 		peerId.setBloomFilter(BMNetwork.shared().idsBloomFilter())
 		console.log("peerId '" + peerId.toString() + "'")
 		return peerId
@@ -83,8 +82,8 @@ BMServerConnection = BMNode.extend().newSlots({
             this.setStatus("connecting...")
             this.setTitle("Connection")
 			
-            this._serverConn = new Peer(this.currentPeerId().toString(), this.serverConnectionOptions())                
-            //this._serverConn = new Peer(this.localOptions())                
+            //this._serverConn = new Peer(this.currentPeerId().toString(), this.serverConnectionOptions())                
+            this._serverConn = new Peer(this.serverConnectionOptions())                
                       
             this._serverConn.on('open', function(id) { 
                 self.setId(id) 

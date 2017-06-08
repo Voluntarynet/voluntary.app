@@ -110,7 +110,7 @@ NodeStore = ideal.Proto.extend().newSlots({
     
     activeObjectsDict: null,
     storingObjects: null,
-    debug: false,
+    debug: true,
 
 	sdb: null,
 }).setSlots({
@@ -145,9 +145,9 @@ NodeStore = ideal.Proto.extend().newSlots({
 	},
 
 	asyncOpen: function(callback) {
-		var self = this
-		this.sdb().asyncOpen(function () {
-			self.didOpen()
+		this.sdb().asyncOpen(() => {
+			this.didOpen()
+			this.clear()
 			if (callback) {
 				callback()
 			}
@@ -548,12 +548,12 @@ NodeStore = ideal.Proto.extend().newSlots({
     // transactions
     
     begin: function() {
-        throw "transactions not implemented yet"
+        throw new Error("transactions not implemented yet")
         
     },
     
     commit: function() {
-        throw "transactions not implemented yet"
+        throw new Error("transactions not implemented yet")
     },
     
     asJson: function() {
@@ -562,7 +562,7 @@ NodeStore = ideal.Proto.extend().newSlots({
     
     clear: function() {
         console.log("NodeStore clearing all data!")
-		throw new Error("NodeStore clearing all data!")
+		//throw new Error("NodeStore clearing all data!")
         this.sdb().clear();
     },
 

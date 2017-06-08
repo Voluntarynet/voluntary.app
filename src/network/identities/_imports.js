@@ -9,4 +9,5 @@ JSImporter.pushRelativePaths([
     "BMProfile.js",
 
     "apps/_imports.js",
+    "keys/_imports.js",
 ])

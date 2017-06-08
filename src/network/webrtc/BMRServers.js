@@ -6,7 +6,7 @@ BMRServers = BMStorableNode.extend().newSlots({
     init: function () {
         BMStorableNode.init.apply(this)
 		this.setShouldStore(true)
-        this.setTitle("RTC Servers")
+        this.setTitle("PeerJS Servers")
         this.addServer(this.bootStrapServer())
         this.setNoteIsItemCount(true)
         this.setNodeMinWidth(270)

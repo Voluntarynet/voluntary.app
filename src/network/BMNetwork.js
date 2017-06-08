@@ -5,6 +5,7 @@ BMNetwork = BMStorableNode.extend().newSlots({
     messages: null,
     localIdentities: null, // set by parent 
     remoteIdentities: null, // set by parent 
+    blacklists: null,
 	idsBloomFilter: null,
 	shared: null,
 }).setSlots({
@@ -16,8 +17,6 @@ BMNetwork = BMStorableNode.extend().newSlots({
 		BMNetwork._shared = this
 
         BMStorableNode.init.apply(this)
-
-
 		
         //this.setPid("_network")
         this.setTitle("Network")
@@ -25,8 +24,12 @@ BMNetwork = BMStorableNode.extend().newSlots({
 
 		this.setServers(NodeStore.shared().rootInstanceWithPidForProto("_servers", BMRServers))
 		this.addItem(this.servers())
+		
 		this.setMessages(NodeStore.shared().rootInstanceWithPidForProto("_messages", BMMessages))
 		this.addItem(this.messages())
+		
+		this.setBlacklists(NodeStore.shared().rootInstanceWithPidForProto("_blacklists", BMBlacklists))
+		this.addItem(this.blacklists())
     },
 
 	shared: function() {

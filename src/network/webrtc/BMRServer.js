@@ -28,7 +28,8 @@ BMRServer = BMStorableNode.extend().newSlots({
     },
 
     title: function () {
-        return "RTC Server " + this.host() + "  " + this.port()
+        //return "RTC Server " + this.host() + "  " + this.port()
+        return this.host() + "  " + this.port()
     },  
     
     subtitle: function () {

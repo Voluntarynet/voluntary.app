@@ -75,14 +75,6 @@ BMRemoteIdentity = BMNavNode.extend().newSlots({
         return null
     },
 
-	compressedPublicKeyString: function() {
-		var pk = this.publicKey()
-		if (pk) {
-			
-		}
-		return null
-	},
-
     verifySignatureForMessage: function(signature, msgString) {
         var address = this.publicKey().toAddress()
         var verified = Message(msgString).verify(address, signature);

@@ -223,10 +223,7 @@ NodeStore = ideal.Proto.extend().newSlots({
     },
     
     storeDirtyObjects: function() {
-	
-		if (this.isReadOnly()) {
-			throw new Error("attempt to write to read-only store")
-		}
+		this.assertIsWritable()
 	
 		if (!this.sdb().isOpen()) { // delay until it's open
 			throw new Error(this.type() + " storeDirtyObjects but db not open")
@@ -282,10 +279,17 @@ NodeStore = ideal.Proto.extend().newSlots({
         return obj._pid     
     },
     
+	assertIsWritable: function() {
+		if (this.isReadOnly()) {
+			throw new Error("attempt to write to read-only store")
+		}	
+	},
+
     storeObject: function(obj) {
         this.debugLog("storeObject(" + obj.pid() + ") = " + JSON.stringify(obj.nodeDict()))
+		this.assertIsWritable()
+	
         this.sdb().atPut(obj.pid(), JSON.stringify(obj.nodeDict()))
-        
         
         /*
         this happens automatically: 

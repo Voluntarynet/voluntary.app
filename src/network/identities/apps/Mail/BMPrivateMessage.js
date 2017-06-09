@@ -15,7 +15,7 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 		
 		//this.addField(BMIdentityField.clone().setNodeFieldProperty("fromAddress").setKey("from").setValueIsEditable(false))
 		//this.addField(BMIdentityField.clone().setNodeFieldProperty("toAddress").setKey("to").setValueIsEditable(true))
-		
+
 		this.addField(BMMultiField.clone().setKey("from").setNodeFieldProperty("fromContact")).setValueIsEditable(false).setValidValuesMethod("fromContactNames").setNoteMethod("fromContactPublicKey")
 		this.addField(BMMultiField.clone().setKey("to").setNodeFieldProperty("toContact")).setValueIsEditable(true).setValidValuesMethod("toContactNames").setNoteMethod("toContactPublicKey")
         this.addFieldNamed("subject").setKey("subject")	
@@ -40,6 +40,7 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 		
 		if (this.localIdentity()) {
 			//this.setFromAddress(this.localIdentity().publicKeyString())
+			
 			this.setFromContact(this.localIdentity().name())
 		}
 	},
@@ -97,12 +98,20 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 		}
 	},
     
+	localIdentityIsSender: function() {
+		return this.senderId().publicKeyString().equals(this.localIdentity().publicKeyString())
+	},
+    
     title: function() {
-		var s = this.toContact()
-        if (s) {
-            return s
-        }		
-        return "No recipient"
+		if (!this.localIdentityIsSender()) {
+			return this.localIdentity().title()
+		} else {
+			var s = this.toContact()
+	        if (s) {
+	            return s
+	        }			
+	        return "No recipient"
+		}
     },
     
     subtitle: function () {
@@ -242,7 +251,7 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 			this.removeAction("send")
 		}
 		
-		this.fieldNamed("from").setValueIsEditable(this.canEdit())
+		//this.fieldNamed("from").setValueIsEditable(this.canEdit())
 		this.fieldNamed("to").setValueIsEditable(this.canEdit())
 		this.fieldNamed("subject").setValueIsEditable(this.canEdit())
 		this.fieldNamed("body").setValueIsEditable(this.canEdit())

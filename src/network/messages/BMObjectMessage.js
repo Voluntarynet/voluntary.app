@@ -201,6 +201,8 @@ BMObjectMessage = BMMessage.extend().newSlots({
 	},
 	
 	isValidDataMessage: function() {
+		return true
+		/*
         var dict = this.data()
 		var protoName = dict.type
 	    var valid = this.validMessageProtos().contains(protoName)
@@ -210,6 +212,7 @@ BMObjectMessage = BMMessage.extend().newSlots({
 		}	    
 		
 	    return valid
+		*/
 	},
 
     place: function() {   

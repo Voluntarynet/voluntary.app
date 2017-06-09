@@ -3,9 +3,7 @@ var bitcore = require("bitcore-lib")
 BMRemoteIdentity = BMNavNode.extend().newSlots({
     type: "BMRemoteIdentity",
 	name: "untitled",
-
 	publicKeyString: "",
-
 }).setSlots({
 	
     //_nodeVisibleClassName: "Contact",
@@ -43,7 +41,7 @@ BMRemoteIdentity = BMNavNode.extend().newSlots({
     
     title: function () {
 		if (this.name() == "") {
-			return "untitled"
+			return "Untitled"
 		}
         return this.name()
     },

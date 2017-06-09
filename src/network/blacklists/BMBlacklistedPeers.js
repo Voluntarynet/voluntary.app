@@ -9,7 +9,7 @@ BMBlacklistedPeers = BMBlacklist.extend().newSlots({
     init: function () {
         BMBlacklist.init.apply(this)		
         this.setShouldStore(true)        
-        this.setTitle("Peers")
+        this.setTitle("peers")
     },
 	
 })

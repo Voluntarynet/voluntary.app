@@ -14,6 +14,7 @@ BMBlacklist = BMStorableNode.extend().newSlots({
         this.setNodeMinWidth(150)
 	    this.addAction("add")
         this.setSubnodeProto(BMBlacklistEntry)
+        this.setNoteIsItemCount(true)
     },
 	
 })

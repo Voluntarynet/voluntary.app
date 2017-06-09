@@ -1,29 +1,18 @@
 
 BMBlacklistEntry = BMFieldSetNode.extend().newSlots({
     type: "BMBlacklistEntry",
-    /*
-    ip: "",
-    creationDate: "",
-    expirationDate: "",
-    reason: "",
-    */
 }).setSlots({
     init: function () {
         BMFieldSetNode.init.apply(this)		
         this.setTitle("Blacklist entry")
+        this.setShouldStore(true)
         this.setNodeMinWidth(150)
-        
-        /*
-		this.addStoredSlot("ip")
-		this.addStoredSlot("creationDate")
-		this.addStoredSlot("expirationDate")
-		this.addStoredSlot("reason")
-		*/
+
+		this.addFieldNamed("host").setNodeFieldProperty("host").setValueIsEditable(true).setValue("host")
+		this.addFieldNamed("reason").setNodeFieldProperty("reason").setValueIsEditable(true).setValue("")
+		this.addFieldNamed("creationDate").setNodeFieldProperty("creationDate").setValueIsEditable(false).setValue("")
+		this.addFieldNamed("expirationDate").setNodeFieldProperty("expirationDate").setValueIsEditable(false).setValue("")
 		
-		this.addFieldNamed("host").setNodeFieldProperty("host").setValueIsEditable(true)
-		this.addFieldNamed("reason").setNodeFieldProperty("reason").setValueIsEditable(true)
-		this.addFieldNamed("creationDate").setNodeFieldProperty("creationDate").setValueIsEditable(false)
-		this.addFieldNamed("expirationDate").setNodeFieldProperty("expirationDate").setValueIsEditable(false)
 	    this.addAction("delete")
     },
     

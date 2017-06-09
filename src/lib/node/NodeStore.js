@@ -113,6 +113,8 @@ NodeStore = ideal.Proto.extend().newSlots({
     debug: true,
 
 	sdb: null,
+	
+	isReadOnly: false,
 }).setSlots({
     init: function () {
         this.setDirtyObjects({})
@@ -147,7 +149,7 @@ NodeStore = ideal.Proto.extend().newSlots({
 	asyncOpen: function(callback) {
 		this.sdb().asyncOpen(() => {
 			this.didOpen()
-			this.clear()
+			//this.clear()
 			if (callback) {
 				callback()
 			}
@@ -222,6 +224,10 @@ NodeStore = ideal.Proto.extend().newSlots({
     
     storeDirtyObjects: function() {
 	
+		if (this.isReadOnly()) {
+			throw new Error("attempt to write to read-only store")
+		}
+	
 		if (!this.sdb().isOpen()) { // delay until it's open
 			throw new Error(this.type() + " storeDirtyObjects but db not open")
 		}
@@ -294,11 +300,17 @@ NodeStore = ideal.Proto.extend().newSlots({
     // reading
     
     loadObject: function(obj) {
-        var nodeDict = this.nodeDictAtPid(obj.pid())
-        if (nodeDict) {
-            obj.setNodeDict(nodeDict)
-            return true
-        }
+		try {
+	        var nodeDict = this.nodeDictAtPid(obj.pid())
+	        if (nodeDict) {
+	            obj.setNodeDict(nodeDict)
+	            return true
+	        }
+		} catch(error) {
+			this.setIsReadOnly(true)
+			console.log(error.stack)
+			throw new Error(error)
+		}
         
         return false
     },

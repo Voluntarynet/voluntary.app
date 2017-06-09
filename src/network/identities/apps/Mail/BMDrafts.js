@@ -5,12 +5,12 @@ BMDrafts = BMListNode.extend().newSlots({
         BMListNode.init.apply(this)
  		this.setShouldStore(true)
         this.setNoteIsItemCount(true)
-        this.setSubnodeProto(BMPrivateMessage).addAction("add")
+        this.setSubnodeProto(BMMailMessage).addAction("add")
         this.setTitle("drafts")
     },
     
     localIdentity: function() {
-        return this.parentNode()
+        return this.parentNodeOfType("BMLocalIdentity")
     },
     
     add: function() {
@@ -22,10 +22,6 @@ BMDrafts = BMListNode.extend().newSlots({
 		newPrivateMsg.setFromContact(this.localIdentity().name())
         this.didUpdate()
         return newItem
-    },
-    
-    localIdentity: function() {
-        return this.parentNode()
     },
     
 })

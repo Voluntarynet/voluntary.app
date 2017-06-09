@@ -10,7 +10,7 @@ BMBlacklistedServers = BMBlacklist.extend().newSlots({
     init: function () {
         BMBlacklist.init.apply(this)		
         this.setShouldStore(true)        
-        this.setTitle("Servers")
+        this.setTitle("servers")
         this.setNodeMinWidth(150)
 		this.addStoredSlot("ipsDict")
     },

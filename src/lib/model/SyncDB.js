@@ -125,7 +125,7 @@ SyncDB = ideal.Proto.extend().newSlots({
 	},
 	
 	clear: function() {
-		//throw new Error("SyncDB clear")
+		throw new Error("SyncDB clear")
 		this._cache = {}
 		this.idb().asyncClear()
 	},

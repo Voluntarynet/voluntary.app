@@ -6,7 +6,7 @@ BMRemotePeer = BMNode.extend().newSlots({
     messages: null,
     status: null,
     remoteInventory: null,
-    debug: true,
+    debug: false,
 	peerId: null,
 }).setSlots({
     init: function () {

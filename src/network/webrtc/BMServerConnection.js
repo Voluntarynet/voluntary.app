@@ -10,9 +10,10 @@ BMServerConnection = BMNode.extend().newSlots({
     lastError: null,
     privateKey: null,
     status: null,
-    log: null,
+    //log: null,
 	sessionId: null,
 	peerId: null,
+	debug: true,
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)
@@ -59,7 +60,7 @@ BMServerConnection = BMNode.extend().newSlots({
 				//path: null,
 				//secure: true,
                 //config: this.iceServers()
-                debug: 3, 
+                //debug: 3, 
             }
     },
 
@@ -105,6 +106,13 @@ BMServerConnection = BMNode.extend().newSlots({
             }) 
         }
         return this              
+    },
+    
+    log: function(s) {
+        if (this.debug()) {
+            console.log(s)
+        }
+        return this
     },
 
     onError: function(error) {
@@ -205,7 +213,7 @@ BMServerConnection = BMNode.extend().newSlots({
         this.log("addRemotePeerConn " + aConn.peer)
         var rp = BMRemotePeer.clone().setConn(aConn).setServerConnection(this)
         this.addItem(rp)
-        console.log("BMServerConnection addRemotePeerConn didUpdate --------------------")
+        //console.log("BMServerConnection addRemotePeerConn didUpdate --------------------")
         this.didUpdate()
         return this
     },

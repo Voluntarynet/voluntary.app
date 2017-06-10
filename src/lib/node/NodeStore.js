@@ -312,7 +312,7 @@ NodeStore = ideal.Proto.extend().newSlots({
 	        }
 		} catch(error) {
 			this.setIsReadOnly(true)
-			console.log(error.stack)
+			console.log(error.stack, "background: #000; color: #f00")
 			throw new Error(error)
 		}
         

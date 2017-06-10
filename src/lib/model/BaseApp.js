@@ -35,7 +35,7 @@ BaseApp = BMNavNode.extend().newSlots({
         this.setup() 
         this.setupWindow()
         //MenuManager.setup()            
-        this.appLog("app start\n")	
+        //this.appLog("app didOpenStore\n")	
 	},
     
     setup: function() {

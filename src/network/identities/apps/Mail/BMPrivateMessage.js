@@ -55,12 +55,12 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 		return App.shared().network().allIdentityNames()
 	},
 
-	localIdentity: function() {
-		if (this.drafts()) {
-			return this.drafts().parentNode()
-		}
-		return null
-	},
+    localIdentity: function() {
+        var localId = this.parentNodeOfType("BMLocalIdentity")
+        console.log("localId = ", localId)
+        assert(typeof(localId) != "null")
+        return localId
+    },
 
 /*
 	setParentNode: function(aNode) {
@@ -99,7 +99,10 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 	},
     
 	localIdentityIsSender: function() {
-		return this.senderId().publicKeyString().equals(this.localIdentity().publicKeyString())
+	    if (this.senderId()) {
+		    return this.senderId().publicKeyString().equals(this.localIdentity().publicKeyString())
+		}
+		return false
 	},
     
     title: function() {

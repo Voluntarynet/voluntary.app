@@ -50,7 +50,7 @@ BMPeerId = BMNode.extend().newSlots({
 		return "0" + s // pad front to ensure that first character is alphanumeric (peerjs wants this)
 	},
 	
-	setEncodedBloomString: function() {
+	setEncodedBloomString: function(s) {
 		var filter = BMNetwork.shared().newDefaultBloomFilter()
 		s = s.substr(1); // remove front padding character
 		s = s.replaceAll("_0", "+")
@@ -71,10 +71,16 @@ BMPeerId = BMNode.extend().newSlots({
 	
 	setFromString: function(aString) {
 		var parts = aString.split("-")
+		var pubkey = parts[0]
+		var bloom = parts[1] // open relay blooms are all 1s
 		
 		try {
-			this.setEncodedPublicKeyString(parts[0])
-			this.setEncodedBloomString(parts[1])
+		    if (pubkey && bloom) {
+			    this.setEncodedPublicKeyString(pubkey)
+			    this.setEncodedBloomString(bloom)
+		    } else {
+		        console.log("WARNING: peer name '" + aString + "' doesn't contain pubkey and bloom")
+		    }
 		} catch(e) {
 			this.setError(e)
 			console.log("PeerId.setFromString('" + aString + "') error: ", e)

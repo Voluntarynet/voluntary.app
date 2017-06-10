@@ -1,3 +1,6 @@
+
+
+
 BMDrafts = BMListNode.extend().newSlots({
     type: "BMDrafts",
 }).setSlots({

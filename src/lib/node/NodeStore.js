@@ -110,7 +110,7 @@ NodeStore = ideal.Proto.extend().newSlots({
     
     activeObjectsDict: null,
     storingObjects: null,
-    debug: true,
+    debug: false,
 
 	sdb: null,
 	

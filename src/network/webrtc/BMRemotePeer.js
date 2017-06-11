@@ -20,7 +20,9 @@ BMRemotePeer = BMNode.extend().newSlots({
     },
     
     log: function(s) {
-        console.log(this.type() + " " + this.id() + " " + s)
+		if(this.debug()) {
+        	console.log(this.type() + " " + this.id() + " " + s)
+		}
         return this
     },
     

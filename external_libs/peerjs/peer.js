@@ -512,7 +512,7 @@ Negotiator._startPeerConnection = function(connection) {
   //var pc = new RTCPeerConnection({});
   //var pc = new RTCPeerConnection(connection.provider.options.config, optional);
 
-  console.log("connection.provider.options.config = ", connection.provider.options.config)
+  //console.log("connection.provider.options.config = ", connection.provider.options.config)
 
   var pc = new RTCPeerConnection(connection.provider.options.config);
 

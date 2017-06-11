@@ -57,8 +57,9 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 
     localIdentity: function() {
         var localId = this.parentNodeOfType("BMLocalIdentity")
-        console.log("localId = ", localId)
-        assert(typeof(localId) != "null")
+        //console.log("localId = ", localId)
+        assert(typeof(localId) != null)
+		assert(localId.type() == "BMLocalIdentity")
         return localId
     },
 
@@ -100,7 +101,7 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
     
 	localIdentityIsSender: function() {
 	    if (this.senderId()) {
-		    return this.senderId().publicKeyString().equals(this.localIdentity().publicKeyString())
+		    return this.senderId().publicKeyString() == this.localIdentity().publicKeyString()
 		}
 		return false
 	},

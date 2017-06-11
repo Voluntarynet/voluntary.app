@@ -13,7 +13,7 @@ BMServerConnection = BMNode.extend().newSlots({
     //log: null,
 	sessionId: null,
 	peerId: null,
-	debug: true,
+	debug: false,
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)

@@ -124,9 +124,8 @@ BMPow = ideal.Proto.extend().newSlots({
             if (this.isFinding()) {
                this.setStatus("generating level " + this.targetDifficulty() + " stamp... " + this.highlightString(this.estimatedPercentageDone() + "%"))               
                this._updateNote.post()
-               var self = this
-                setTimeout(function(){ 
-                    self.PRIVATE_findPowLoop()
+                setTimeout(() =>{ 
+                    this.PRIVATE_findPowLoop()
                 }, 100);
             } 
         } 

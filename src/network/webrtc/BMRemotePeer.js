@@ -36,13 +36,7 @@ BMRemotePeer = BMNode.extend().newSlots({
     },
 
     shortId: function() {
-        var id = this.id()
-        var maxLength = 7
-        if (id.length > maxLength) {
-            return id.substring(id.length - maxLength)
-        }
-        
-        return id
+        return this.id().substring(0, 6)
     },
     
     subtitle: function () {
@@ -60,9 +54,8 @@ BMRemotePeer = BMNode.extend().newSlots({
         this.setTitle("Peer " + this.shortId())
                     
         if (this._conn) {
-            var self = this
-            this._conn.on('open', function() { self.onOpen() })
-            this._conn.on('error', function(err) { self.onError(err) })
+            this._conn.on('open', () => { this.onOpen() })
+            this._conn.on('error', (err) => { this.onError(err) })
         }
 
         this.startConnectTimeout()
@@ -106,9 +99,8 @@ BMRemotePeer = BMNode.extend().newSlots({
         //this.didUpdate()
         this.setStatus("connected")
         
-        var self = this
-        this._conn.on('data', function(data) { self.onData(data) })
-        this._conn.on('close', function(err) { self.onClose(err) })
+        this._conn.on('data', (data) => { this.onData(data) })
+        this._conn.on('close', (err) => { this.onClose(err) })
 
         this.didUpdate()
         //this.sendPing()
@@ -196,9 +188,8 @@ BMRemotePeer = BMNode.extend().newSlots({
         this.network().messages().inv(msg)
         
         // mark these hashes as seen
-        var self = this
-        msg.data().forEach(function(hash) {
-            self.markSeenHash(hash)
+        msg.data().forEach((hash) => {
+            this.markSeenHash(hash)
         })
     },
     

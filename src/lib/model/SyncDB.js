@@ -17,8 +17,7 @@ SyncDB = ideal.Proto.extend().newSlots({
 
 	asyncOpen: function(callback) {
 		//console.log("SyncDB asyncOpen()")
-		var self = this
-		this.idb().asyncOpenIfNeeded(function () { self.didOpen(callback) })
+		this.idb().asyncOpenIfNeeded( () => { this.didOpen(callback) })
 		return this
 	},
 	
@@ -26,16 +25,15 @@ SyncDB = ideal.Proto.extend().newSlots({
 		// load the cache
 		//console.log("SyncDB didOpen() - loading cache")
 		
-		var self = this
-		this.idb().asyncAsJson(function (dict) {
+		this.idb().asyncAsJson( (dict) => {
 		//	console.log("SyncDB didOpen() - loaded cache")
-			self._cache = dict
-			self.setIsOpen(true)
-			self.setIsSynced(true)
+			this._cache = dict
+			this.setIsOpen(true)
+			this.setIsSynced(true)
 			if (callback) {
 				callback()
 			}
-		//	self.verifySync()
+		//	this.verifySync()
 		})
 	},
 	
@@ -137,10 +135,9 @@ SyncDB = ideal.Proto.extend().newSlots({
 	},
 	
 	verifySync: function() {
-		var self = this
 		var cache = this._cache
 		this._isSynced = false
-		this.idb().asyncAsJson(function (json) {
+		this.idb().asyncAsJson( (json) => {
 			var hasError = false
 			
 			for (k in json) {
@@ -167,24 +164,24 @@ SyncDB = ideal.Proto.extend().newSlots({
 			if (hasError) {
 				//console.log("adding sync timeout")
 				setTimeout(function () {
-					self.verifySync()
+					this.verifySync()
 				}, 1000)
 				//console.log("idb/sdb SYNCING")
 			} else {
 				console.log("SyncDB SYNCED")
 				this._isSynced = true
-				//self.idb().show()
+				//this.idb().show()
 				//console.log("syncdb idb json: ", JSON.stringify(json, null, 2))
 				
 			}
 			
 			/*
-			if(JSON.stableStringify(json) == JSON.stableStringify(self._cache)) {
+			if(JSON.stableStringify(json) == JSON.stableStringify(this._cache)) {
 				console.log("syncdb in sync with idb")
 			} else {
 				console.log("---- out of sync ---")
 				console.log("idb: " + JSON.stableStringify(json))
-				console.log("sdb: " + JSON.stableStringify(self._cache))
+				console.log("sdb: " + JSON.stableStringify(this._cache))
 				throw new Error("syncdb not in sync with idb")
 			}
 			*/

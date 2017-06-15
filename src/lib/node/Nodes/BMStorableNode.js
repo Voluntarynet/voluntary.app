@@ -20,9 +20,8 @@ BMStorableNode = BMNode.extend().newSlots({
     },
     
     addStoredSlots: function(slotNames) {
-        var self = this
-        slotNames.forEach(function(slotName) {
-            self.addStoredSlot(slotName)
+        slotNames.forEach((slotName) => {
+            this.addStoredSlot(slotName)
         })
         return this
     },
@@ -84,8 +83,6 @@ BMStorableNode = BMNode.extend().newSlots({
     },
     
     setNodeDictForProperties: function (aDict) {
-        var self = this
-        
         for (var k in aDict) {
           if (aDict.hasOwnProperty(k)) {
             if (k != "children" && k != "type") {
@@ -93,7 +90,7 @@ BMStorableNode = BMNode.extend().newSlots({
                  v = NodeStore.shared().unrefValueIfNeeded(v)
                 
                 if (k.beginsWith("_")) {
-                    self[k] = v
+                    this[k] = v
                 } else {
                     var setter = "set" + k.capitalized();
                     if (this[setter]) {
@@ -105,12 +102,12 @@ BMStorableNode = BMNode.extend().newSlots({
                 }
             }
           }
-        }        
+        }
+   
         return this
     },
 
     setNodeDictForChildren: function (aDict) {
-        var self = this
         
         var newPids = aDict.children
         if (newPids) {

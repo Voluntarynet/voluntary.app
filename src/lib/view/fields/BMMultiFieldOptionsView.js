@@ -35,19 +35,18 @@ BMMultiFieldOptionsView = Div.extend().newSlots({
 	updatedValidValues: function() {
 		this.removeAllItems()
 		
-		var self = this
         this.element().style.transition = "opacity .2s"
-		self.setOpacity(0)
+		this.setOpacity(0)
 		
-		this._validValues.forEach(function(v) {
-			var option = Div.clone().setInnerHTML(v).setDivClassName("BMMultiFieldOptionView").setTarget(self).setAction("select")
+		this._validValues.forEach((v) => {
+			var option = Div.clone().setInnerHTML(v).setDivClassName("BMMultiFieldOptionView").setTarget(this).setAction("select")
 			option.validValue = v
-			self.addItem(option)
+			this.addItem(option)
 		})
 		
-		setTimeout(function() { 
-			self.adjustOptionWidths() 
-			self.setOpacity(1)
+		setTimeout(() => { 
+			this.adjustOptionWidths() 
+			this.setOpacity(1)
 		}, 1)
 		
 		return this

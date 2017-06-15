@@ -151,7 +151,7 @@ Object.shallowCopyTo({
 
 	appendIfAbsent: function()
 	{
-		var self = this;;
+		var self = this;
 		this.slice.call(arguments).forEach(function(value)
 		{
 			if(self.indexOf(value) == -1)

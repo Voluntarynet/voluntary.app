@@ -1209,6 +1209,7 @@ Peer.prototype.listAllPeers = function(cb) {
     } else if (http.status !== 200) {
       cb([]);
     } else {
+		console.log("peerjs listAllPeers response: " + JSON.parse(http.responseText) + "")
       cb(JSON.parse(http.responseText));
     }
   };

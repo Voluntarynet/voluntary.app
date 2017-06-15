@@ -199,8 +199,7 @@ BMPayload = ideal.Proto.extend().newSlots({
         var hash = this.data().toJsonStableString().sha256String();
         var pow = this.powObject()
         pow.setHash(hash)
-        var self = this
-        pow.setDoneCallback(function () { self.powDone() })
+        pow.setDoneCallback(() => { this.powDone() })
         pow.asyncFind()
         return true
     },  

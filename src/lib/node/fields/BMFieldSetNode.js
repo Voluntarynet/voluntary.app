@@ -82,8 +82,7 @@ BMFieldSetNode = BMStorableNode.extend().newSlots({
     nodeDict: function () {
         var dict = BMStorableNode.nodeDictForProperties.apply(this)
         
-        var self = this
-        this.items().forEach(function(item) {
+        this.items().forEach((item) => {
             dict[item.key()] = item.value()
         })
         
@@ -97,8 +96,7 @@ BMFieldSetNode = BMStorableNode.extend().newSlots({
     },
         
     setNodeDict: function(dict) {
-        var self = this
-        this.items().forEach(function(item) {
+        this.items().forEach((item) => {
             item.setValue(dict[item.key()])
         })        
         
@@ -114,16 +112,15 @@ BMFieldSetNode = BMStorableNode.extend().newSlots({
     },
     /*
     syncToFields: function() {
-        var self = this
-        this.items().forEach(function(field) {
+        this.items().forEach((field) => {
             var key = field.nodeFieldProperty()
             
             if (key) {
-                if (!self[key]) {
+                if (!this[key]) {
                     console.error("missing field key= '" + key + "'")
                 } else {            
-                    var value = self[key].apply(self)
-                    console.log(self.type() + " found key= '" + key + "' with value '" + value + "'") 
+                    var value = this[key].apply(this)
+                    console.log(this.type() + " found key= '" + key + "' with value '" + value + "'") 
                     //field.setKey(key)
                     field.setValue(value)
                 }

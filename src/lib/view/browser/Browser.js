@@ -24,10 +24,9 @@ Browser = NodeView.extend().newSlots({
     },
     
     watchForWindowResize: function() {
-        var self = this
-        window.addEventListener('resize', function(event) {
+        window.addEventListener('resize', (event) => {
             //console.log("resize ", event)
-            self.onResize(event)
+            this.onResize(event)
         }, false);
     },
     

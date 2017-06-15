@@ -18,11 +18,10 @@ BrowserHeader = NodeView.extend().newSlots({
         this.removeAllItems()
         
         if (node) {
-            var self = this
-            node.actions().forEach(function (action) {
+            node.actions().forEach( (action) => {
                 var button = BrowserHeaderAction.clone()
                 button.setAction(action).setTarget(node)
-                self.addItem(button).syncFromNode()
+                this.addItem(button).syncFromNode()
             })
         }
         

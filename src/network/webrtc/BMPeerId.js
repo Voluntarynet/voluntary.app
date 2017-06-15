@@ -93,10 +93,12 @@ BMPeerId = BMNode.extend().newSlots({
 	chooseRandomPeerId: function() {
 		// NOTE: there seems to be 24 character limit on peerjs id names
 		var s = ""
-		for (var i = 0; i < 24; i++) {
+		var max = 64 // 24
+		//var max = 24
+		for (var i = 0; i < max; i++) {
 			s = s + (Math.floor(Math.random()*1000000) % 10)
 		}
-		//console.log(s + " length = " + s.length)
+		console.log(s + " length = " + s.length)
 		return s
 	},
 })

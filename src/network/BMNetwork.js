@@ -8,6 +8,7 @@ BMNetwork = BMStorableNode.extend().newSlots({
     blacklists: null,
 	idsBloomFilter: null,
 	shared: null,
+	debug: false,
 }).setSlots({
     init: function () {
 		if (BMNetwork._shared) {

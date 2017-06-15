@@ -13,7 +13,7 @@ BMServerConnection = BMNode.extend().newSlots({
     //log: null,
 	sessionId: null,
 	peerId: null,
-	debug: false,
+	debug: true,
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)
@@ -35,12 +35,7 @@ BMServerConnection = BMNode.extend().newSlots({
     },
 
     shortId: function() {
-        var id = this.id()
-        if (id.length > 3) {
-            return id.substring(id.length - 3)
-        }
-        
-        return id
+         return this.id().substring(0, 6)
     },
     
     subtitle: function () {
@@ -78,31 +73,30 @@ BMServerConnection = BMNode.extend().newSlots({
         // TODO: add timeout and tell server when it occurs
 
         if (!this._serverConn) {
-            var self = this
             //this.log("connecting...");
             this.setStatus("connecting...")
             this.setTitle("Connection")
 			
-            //this._serverConn = new Peer(this.currentPeerId().toString(), this.serverConnectionOptions())                
-            this._serverConn = new Peer(this.serverConnectionOptions())                
+            this._serverConn = new Peer(this.currentPeerId().toString(), this.serverConnectionOptions())                
+            //this._serverConn = new Peer(this.serverConnectionOptions())                
                       
-            this._serverConn.on('open', function(id) { 
-                self.setId(id) 
-                self.onOpen()
+            this._serverConn.on('open', (id) => { 
+                this.setId(id) 
+                this.onOpen()
             })
             
-            this._serverConn.on('connection', function (aConn) { 
+            this._serverConn.on('connection', (aConn) => { 
                 //console.log("connection"); 
-                self.addRemotePeerConn(aConn) 
+                this.addRemotePeerConn(aConn) 
             })
             
-            this._serverConn.on('error', function (error) { 
-                self.onError(error)
+            this._serverConn.on('error', (error) => { 
+                this.onError(error)
             })  
             
-            this._serverConn.on('close', function (error) { 
+            this._serverConn.on('close', (error) => { 
                 console.log("BMServerConnection close with error: ", error); 
-                self.onClose(error)
+                this.onClose(error)
             }) 
         }
         return this              
@@ -110,7 +104,7 @@ BMServerConnection = BMNode.extend().newSlots({
     
     log: function(s) {
         if (this.debug()) {
-            console.log(s)
+            console.log(this.type() + " " + s)
         }
         return this
     },
@@ -125,7 +119,7 @@ BMServerConnection = BMNode.extend().newSlots({
     onOpen: function() {
         this.setTitle("Connection " + this.shortId())
         this.setStatus("connected")
-        //this.log("onOpen " + this.id());
+        this.log("onOpen " + this.id());
         this.updatePeerIds()
         this.didUpdate()
     },
@@ -152,23 +146,21 @@ BMServerConnection = BMNode.extend().newSlots({
     
     updatePeerIds: function() {
         //this.log("updatePeerIds");
-        var self = this
-        this.serverConn().listAllPeers(function(pids) {
-            self.setPeerIds(pids)
+        this.serverConn().listAllPeers((peerIds) => {
+            this.setPeerIds(peerIds)
         })
     },
 
-    setPeerIds: function (pids) {
-        pids.remove(this.id())
-        //this.log(" setPeerIds " + JSON.stringify(pids));
-        this._peerIds = pids
+    setPeerIds: function (peerIds) {
+        peerIds.remove(this.id())
+        this.log(" setPeerIds " + JSON.stringify(peerIds));
+        this._peerIds = peerIds
         this.connectToAllPeerIds()
         return this
     },
 
     connectToAllPeerIds: function () {
-        var self = this
-        this.peerIds().forEach(function (peerId) {  self.connectToPeerId(peerId) })
+        this.peerIds().forEach((peerId) => { this.connectToPeerId(peerId) })
         return this
     },
 
@@ -191,8 +183,7 @@ BMServerConnection = BMNode.extend().newSlots({
     },
 
     connectToPeerId: function(pid) {
-        //console.log("limiting peer connections to one's with short pids")
-        if (!this.isConnectedToPeerId(pid) && pid.length < 25) {
+        if (!this.isConnectedToPeerId(pid)) {
             //this.log("connectToPeerId " + pid)
             //try {
                                 

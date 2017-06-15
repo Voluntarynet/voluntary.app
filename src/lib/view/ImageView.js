@@ -47,18 +47,16 @@ ImageView = NodeView.extend().newSlots({
     close: function() {
         console.log("close action")
         this.removeAfterFadeDelay(0.4)
-        var self = this
-        setTimeout(function () { 
-            self.removeItem(self.closeButtonView())
-			self.syncToNode()
+        setTimeout( () => { 
+            this.removeItem(this.closeButtonView())
+			this.syncToNode()
 			
-            var style = self.element().style;
+            var style = this.element().style;
             style.width = "0px";
             style.paddingLeft = "0px";
             style.paddingRight = "0px";
             style.marginLeft = "0px";
             style.marginRight = "0px";
-           // self.element().style.height = "0px"
         }, 0)
     },
 

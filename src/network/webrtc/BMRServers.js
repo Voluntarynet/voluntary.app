@@ -16,6 +16,7 @@ BMRServers = BMStorableNode.extend().newSlots({
     
     bootStrapServer: function () {
         return BMRServer.clone().setHost('peers.bitmarkets.org').setPort(9000) //.setPidSymbol("_bootStrapServer")
+        //return BMRServer.clone().setHost('127.0.0.1').setPort(9000) //.setPidSymbol("_bootStrapServer")
         //console.log("BMRServers.bootStrapServer")
         //return BMRServer.clone().setHost('127.0.0.1').setPort(9000) //.setPidSymbol("_bootStrapServer")
     },
@@ -119,10 +120,9 @@ BMRServers = BMStorableNode.extend().newSlots({
         // TODO: check to see if we can connect *before* adding server
         
         var entries = msg.data()
-        var self = this
-        entries.forEach(function (addrDict) {
-            if (!self.hasAddrDict(addrDict)) {
-                self.addServer(Server.clone().setAddrDict(addrDict))
+        entries.forEach( (addrDict) => {
+            if (!this.hasAddrDict(addrDict)) {
+                this.addServer(Server.clone().setAddrDict(addrDict))
             }
         })
     },

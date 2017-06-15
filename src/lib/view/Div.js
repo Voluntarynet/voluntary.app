@@ -234,8 +234,7 @@ Div = ideal.Proto.extend().newSlots({
     },
     
     addItems: function(someItems) {
-        var self = this
-        someItems.forEach(function (item) { self.addItem(item) })
+        someItems.forEach( (item) => { this.addItem(item) })
         return this
     },
  
@@ -299,18 +298,16 @@ Div = ideal.Proto.extend().newSlots({
 	
 	fadeInToDisplayInlineBlock: function() {
         this.setDisplay("inline-block")
-        var self = this
-        setTimeout(function () { 
-            self.setOpacity(1)
+        setTimeout( () => { 
+            this.setOpacity(1)
         }, 0)	
 		return this
 	},	
 
 	fadeOutToDisplayNone: function() {
 		this.setOpacity(0)
-        var self = this
-        setTimeout(function () { 
-            self.setDisplay("none")
+        setTimeout( () => { 
+            this.setDisplay("none")
         }, 200)	
 		return this
 	},
@@ -319,15 +316,14 @@ Div = ideal.Proto.extend().newSlots({
         // call removeItem for a direct actions
         // use justRemoteItem for internal changes
 
-        var self = this
         
         this.element().style.transition = "all " + delayInSeconds + "s"
-        setTimeout(function () { 
-            self.setOpacity(0)
+        setTimeout( () => { 
+            this.setOpacity(0)
         }, 0)
         
-        setTimeout(function () { 
-            self.parentItem().removeItem(self)
+        setTimeout( () => { 
+            this.parentItem().removeItem(this)
         }, delayInSeconds*1000)        
         
         return this
@@ -384,8 +380,7 @@ Div = ideal.Proto.extend().newSlots({
     },
     
     removeAllItems: function() {
-        var self = this
-        this.items().copy().forEach(function(item) { self.removeItem(item) })
+        this.items().copy().forEach((item) => { this.removeItem(item) })
         return this
     },
 
@@ -504,11 +499,10 @@ Div = ideal.Proto.extend().newSlots({
     
     registerForClicks: function (aBool) {
         if (aBool) {
-            var self = this
-            this.element().onclick = function (event) { 
-				self.handleEventFunction(function () { self.onClick(event) })
+            this.element().onclick =  (event) =>{ 
+				this.handleEventFunction(function () { this.onClick(event) })
 			}
-            //this.element().ondblclick = function (event) { self.onDoubleClick(event) }
+            //this.element().ondblclick = function (event) { this.onDoubleClick(event) }
 			this.makeCursorPointer()
         } else {
             this.element().onclick = null
@@ -543,11 +537,10 @@ Div = ideal.Proto.extend().newSlots({
     
     registerForDrop: function (aBool) {
         if (aBool) {
-            var self = this
-            this.element().ondragover  = function (event) { return self.onDragOver(event) }
-            this.element().ondragleave = function (event) { return self.onDragLeave(event) }
-            this.element().ondragend   = function (event) { return self.onDragEnd(event) }
-            this.element().ondrop      = function (event) { return self.onDrop(event) }
+            this.element().ondragover  =  (event) => { return this.onDragOver(event) }
+            this.element().ondragleave =  (event) => { return this.onDragLeave(event) }
+            this.element().ondragend   =  (event) => { return this.onDragEnd(event) }
+            this.element().ondrop      =  (event) => { return this.onDrop(event) }
         } else {
             this.element().ondragover  = null
             this.element().ondragleave = null
@@ -619,14 +612,13 @@ Div = ideal.Proto.extend().newSlots({
 
             //var fileIsImage = /\.(jpe?g|png|gif)$/i.test(file.name);
 
-             var self = this
-             reader.addEventListener("load", function () {
+             reader.addEventListener("load",  () => {
                     console.log('onDataTransfer load ');
                    var image = new Image();
                     image.height = 100;
                     image.title = file.name;
                     image.src = reader.result;
-                    self.element().appendChild( image );
+                    this.element().appendChild( image );
               }, false);
 
               if (file) {
@@ -651,9 +643,8 @@ Div = ideal.Proto.extend().newSlots({
                 }
 
                 var reader = new FileReader();
-                var self = this;
-                reader.onload = (function(event) {
-                    self.onDropImageDataUrl(event.target.result)
+                reader.onload = ((event) => {
+                    this.onDropImageDataUrl(event.target.result)
                 })
                 reader.readAsDataURL(file);
 
@@ -726,12 +717,11 @@ Div = ideal.Proto.extend().newSlots({
     
     registerForMouse: function (aBool) {
         if (aBool) {
-            var self = this
-            this.element().onmousedown = function (event) { return self.onMouseDown(event) }
-            this.element().onmousemove = function (event) { return self.onMouseMove(event) }
-            this.element().onmouseout  = function (event) { return self.onMouseOut(event) }
-            this.element().onmouseover = function (event) { return self.onMouseOver(event) }
-            this.element().onmouseup   = function (event) { return self.onMouseUp(event) }
+            this.element().onmousedown =  (event) => { return this.onMouseDown(event) }
+            this.element().onmousemove =  (event) => { return this.onMouseMove(event) }
+            this.element().onmouseout  =  (event) => { return this.onMouseOut(event) }
+            this.element().onmouseover =  (event) => { return this.onMouseOver(event) }
+            this.element().onmouseup   =  (event) => { return this.onMouseUp(event) }
         } else {
             this.element().onmousedown  = null
             this.element().onmousemove  = null
@@ -761,18 +751,17 @@ Div = ideal.Proto.extend().newSlots({
     
     registerForKeyboard: function (aBool) {
         if (aBool) {
-            var self = this
             /*
-            this.element().onkeydown  = function (event) {       
-                return self.onKeyDown(event) 
+            this.element().onkeydown  =  (event) => {       
+                return this.onKeyDown(event) 
             }
 
-            this.element().onkeypress = function (event) { return self.onKeyPress(event) }
+            this.element().onkeypress =  (event) => { return this.onKeyPress(event) }
             */
-            this.element().onkeyup    = function (event) { 
-                //self._onkeyupInnerHTML = self._element.innerHTML // THIS NEEDS TO BE HERE OR DOM innerHTML ISN'T CONSISTENT?
-                //console.log("onkeyup [" + self._element.innerHTML  + "]")
-                return self.onKeyUp(event) 
+            this.element().onkeyup    =  (event) => { 
+                //this._onkeyupInnerHTML = this._element.innerHTML // THIS NEEDS TO BE HERE OR DOM innerHTML ISN'T CONSISTENT?
+                //console.log("onkeyup [" + this._element.innerHTML  + "]")
+                return this.onKeyUp(event) 
             }
             Div._tabCount ++
             this.element().tabIndex   = Div._tabCount
@@ -857,10 +846,9 @@ Div = ideal.Proto.extend().newSlots({
     registerForFocus: function(aBool) {
 		
         if (aBool) {
-            var self = this
 			//console.log(this.type() + " registerForFocus(" + aBool + ")")
-            this.element().onfocus = function() { self.onFocus() };
-            this.element().onblur  = function() { self.onBlur() };
+            this.element().onfocus = () => { this.onFocus() };
+            this.element().onblur  = () => { this.onBlur() };
         } else {
             this.element().onfocus = null
             this.element().onblur = null
@@ -885,9 +873,8 @@ Div = ideal.Proto.extend().newSlots({
 
     focus: function() {
 		//console.log(this.type() + " focus")
-        var self = this
-        setTimeout(function () {
-            self.element().focus()
+        setTimeout( () => {
+            this.element().focus()
         }, 0)
         return this
     },
@@ -1046,8 +1033,7 @@ Div = ideal.Proto.extend().newSlots({
     
     pasteListenerFunc: function () {
         if (!this._pasteListenerFunc) {
-            var self = this
-            this._pasteListenerFunc = function(e) { self.paste(e) }
+            this._pasteListenerFunc = function(e) { this.paste(e) }
         }
         return this._pasteListenerFunc
     },

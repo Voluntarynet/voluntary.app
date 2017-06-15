@@ -96,9 +96,8 @@ BMMessages = BMStorableNode.extend().newSlots({
 	},
 	
 	placeAllItems: function() {
-		var self = this
-		this.items().forEach(function (msg) {
-			//console.log(self.type() + " placing ", msg)
+		this.items().forEach( (msg) => {
+			//console.log(this.type() + " placing ", msg)
 			msg.place()
 		})
 	},
@@ -155,15 +154,13 @@ BMMessages = BMStorableNode.extend().newSlots({
     },
     
     inv: function(invMsg) {
-        var remoteInv = invMsg.data()
-        var self = this
-        
+        var remoteInv = invMsg.data()        
         var getMsg = BMGetDataMessage.clone().setRemotePeer(invMsg.remotePeer())
         
-        remoteInv.forEach(function (h) {
-            if (self.needsHash(h)) {
+        remoteInv.forEach( (h) => {
+            if (this.needsHash(h)) {
                 getMsg.addHash(h)
-                self._queue[h] = true
+                this._queue[h] = true
             }
         })
         
@@ -218,9 +215,8 @@ BMMessages = BMStorableNode.extend().newSlots({
     },
     
     getData: function(msg) {
-        var self = this
-        msg.data().forEach(function(aHash) {
-            var objMsg = self.objectWithHash(aHash)
+        msg.data().forEach((aHash) => {
+            var objMsg = this.objectWithHash(aHash)
             if (objMsg) {
                 msg.remotePeer().sendMsg(objMsg)
             }

@@ -204,10 +204,9 @@ NodeStore = ideal.Proto.extend().newSlots({
     setTimeoutIfNeeded: function() {
         if (!this._hasTimeout) {
             this._hasTimeout = true
-            var self = this
-            setTimeout(function () { 
-                self._hasTimeout = false
-                self.storeDirtyObjects() 
+            setTimeout( () => { 
+                this._hasTimeout = false
+                this.storeDirtyObjects() 
             }, 10)
         }
         
@@ -393,9 +392,8 @@ NodeStore = ideal.Proto.extend().newSlots({
     },
 
     writeAllActiveObjects: function() {
-        var self = this
-        this.activeObjectsDict().slotValues().forEach(function(obj) {
-            self.storeObject(obj)
+        this.activeObjectsDict().slotValues().forEach((obj) => {
+            this.storeObject(obj)
         })
         return this
     },
@@ -514,9 +512,8 @@ NodeStore = ideal.Proto.extend().newSlots({
         this.debugLog("--- begin collect ---")
         this._marked = {}
         //this.markPid("_root")
-		var self = this
-		this.rootPids().forEach(function (rootPid) {
-	        self.markPid(rootPid)
+		this.rootPids().forEach( (rootPid) => {
+	        this.markPid(rootPid)
 		})
         var deleteCount = this.sweep()
         this._marked = null
@@ -535,25 +532,23 @@ NodeStore = ideal.Proto.extend().newSlots({
         }
         this._marked[pid] = true
                 
-        var self = this
         var childPids = this.pidRefsFromPid(pid)
        	this.debugLog(pid + " refs " + JSON.stringify(childPids))
         
-        childPids.forEach(function(childPid) {
-            self.markPid(childPid)
+        childPids.forEach((childPid) => {
+            this.markPid(childPid)
         })
     },
     
     sweep: function(deleteCount) {
         // delete all unmarked records
-        var self = this
         var deleteCount = 0
         var pids = this.sdb().keys()
 
-         pids.forEach(function(pid) {
-            if (self._marked[pid] != true) {
-                //self.debugLog("deletePid(" + pid + ")")
-                self.sdb().removeAt(pid)
+         pids.forEach((pid) =>{
+            if (this._marked[pid] != true) {
+                //this.debugLog("deletePid(" + pid + ")")
+                this.sdb().removeAt(pid)
                 deleteCount ++
             } 
          })
@@ -584,9 +579,8 @@ NodeStore = ideal.Proto.extend().newSlots({
 
 	show: function() {
 		console.log("--- NodeStore show ---")
-		var self = this
-		this.rootPids().forEach(function (pid) {
-			self.showPid(pid, 1, 3)
+		this.rootPids().forEach( (pid) => {
+			this.showPid(pid, 1, 3)
 		})
 		console.log("----------------------")
 		//this.sdb().idb().show()
@@ -619,9 +613,8 @@ NodeStore = ideal.Proto.extend().newSlots({
 		console.log(indent + pid + ": " + JSON.stringify(nodeDict, replacer, 2 + indent.length))
 		
 		if (nodeDict.children) {
-			var self = this
-			nodeDict.children.forEach(function (childPid) {
-				self.showPid(childPid, level + 1, maxLevel)
+			nodeDict.children.forEach( (childPid) => {
+				this.showPid(childPid, level + 1, maxLevel)
 			})
 		}
 

@@ -21,10 +21,9 @@ BMNavNode = BMStorableNode.extend().newSlots({
     nodeChildrenDict: function () {
         // makes sure we add a title filed on the child dicts
         
-        var self = this
-        return this.items().map(function (child) { 
+        return this.items().map( (child) => { 
             if (!child.nodeDict) {
-                var s = self.type() + " nodeChildrenDict can't serialize " + child.type()
+                var s = this.type() + " nodeChildrenDict can't serialize " + child.type()
                 console.log("WARNING: " + s)
                 //throw s
             }
@@ -37,13 +36,11 @@ BMNavNode = BMStorableNode.extend().newSlots({
     setNodeDictForChildren: function (aDict) {
         // instead of creating new children, map dicts to currenct children with 
         // same title
-        
-        var self = this
-        
+                
         if (aDict.children) {
             var items = aDict.children.map(function (childDict) {
                 var title = childDict.title
-                var item = self.itemWithTitle(title)
+                var item = this.itemWithTitle(title)
                 if (item) {
                     item.setNodeDict(childDict)
                 }

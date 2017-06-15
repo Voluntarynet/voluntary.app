@@ -23,10 +23,9 @@ BaseApp = BMNavNode.extend().newSlots({
         
         
         // to avoid loop when instantiating on shared call
-        var self = this
-        //setTimeout(function () { self.didPrepare() }, 1)
+        //setTimeout(function () { this.didPrepare() }, 1)
         
-		NodeStore.shared().asyncOpen(function () { self.didOpenStore() })
+		NodeStore.shared().asyncOpen( () => { this.didOpenStore() })
         this.clearAppLog()
     },
 
@@ -106,10 +105,9 @@ BaseApp = BMNavNode.extend().newSlots({
 
     fixElectronDropBehavior: function () {        
         // checks if target div has needed methods, otherwise cancel drop
-        var self = this
         /*
-        window.addEventListener('resize', function(e) {
-            self.browser().onResize(e)
+        window.addEventListener('resize', (e) => {
+            this.browser().onResize(e)
         }, false);
 
         window.addEventListener('onbeforeunload', function(e) {
@@ -158,18 +156,17 @@ BaseApp = BMNavNode.extend().newSlots({
     },
 
     watchForAppEvent: function(eventName) {
-        var self = this        
         var methodName = this.methodNameForEventName(eventName)
         var app = require('remote').require("app")
                     
         //console.log("watch for app event '" + eventName + "' -> '" + methodName + "'")
-        //self.appLog("watching for event '" + eventName + "' -> '" + methodName + "'\n")
+        //this.appLog("watching for event '" + eventName + "' -> '" + methodName + "'\n")
 
-        app.on(eventName, function() {
+        app.on(eventName, () => {
             //NotificationCenter.shared().newNotification().setSender(this).setName(methodName).post()
-            //self.appLog("got event '" + eventName + "' -> '" + methodName + "'\n")
-            if (self[methodName]) {
-                self[methodName].apply(self)
+            //this.appLog("got event '" + eventName + "' -> '" + methodName + "'\n")
+            if (this[methodName]) {
+                this[methodName].apply(this)
             }
             
         });
@@ -218,9 +215,8 @@ BaseApp = BMNavNode.extend().newSlots({
     */
 
     watchAllAppEvents: function() {
-        var self = this
-        this.appEventNames().forEach(function(eventName) {
-            self.watchForAppEvent(eventName)
+        this.appEventNames().forEach((eventName) => {
+            this.watchForAppEvent(eventName)
         })
     },
     

@@ -31,19 +31,18 @@ BMSoupNode = BMNode.extend().newSlots({
 	},
 
     asyncSoupLoadItems: function(callback) {
-        var self = this
 
-        this.soupFolder().asyncValues(function (values) {
+        this.soupFolder().asyncValues( (values) => {
             values.forEach(function(nodeDict) {
                 //console.log("load json ", json)
 				var proto = window[nodeDict._type]
 				
                 var aNode = proto.clone().setNodeDict(nodeDict)
                 //console.log("loaded aNode ", aNode)
-                BMNode.addItem.apply(self, [aNode])
+                BMNode.addItem.apply(this, [aNode])
             })
             
-            //self.updateIndex()
+            //this.updateIndex()
             
             if (callback) { 
                 callback()

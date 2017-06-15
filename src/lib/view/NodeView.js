@@ -174,10 +174,9 @@ NodeView = Div.extend().newSlots({
         if (aBool && !this._needsSyncToNode) {
             //this.log(" >>> adding timer syncToView")
             
-            var self = this
-            setTimeout(function () { 
-                self.syncToNode()
-                self.log(" +++ fired syncToNode")
+            setTimeout( () => { 
+                this.syncToNode()
+                this.log(" +++ fired syncToNode")
             }, 1)            
         }
         

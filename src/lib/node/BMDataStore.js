@@ -34,7 +34,6 @@ BMDataStore = BMNode.extend().newSlots({
 	refreshItems: function() {
 		console.log(this.type() + " refreshItems")
 		this.removeAllItems()
-		var self = this
         this.store().sdb().keys().sort().forEach( (key) => {
 			var item = BMDataStoreRecord.clone().setTitle(key)
 			item.setSubtitle(this.store().sdb().at(key).length + " bytes")

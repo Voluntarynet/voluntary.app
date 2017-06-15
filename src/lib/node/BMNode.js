@@ -163,10 +163,9 @@ BMNode = ideal.Proto.extend().newSlots({
         if (aBool && !this._needsSyncToView) {
             //this.log(" >>> adding timer syncToView")
             
-            var self = this
-            setTimeout(function () { 
-                self.syncToView()
-                //self.log(" +++ fired syncToView")
+            setTimeout( () => { 
+                this.syncToView()
+                //this.log(" +++ fired syncToView")
             }, 1)            
         }
         
@@ -275,9 +274,8 @@ BMNode = ideal.Proto.extend().newSlots({
 	},
     
     addActions: function(actionStringList) {
-        var self = this
-        actionStringList.forEach(function (action) {
-            self.addAction(action)
+        actionStringList.forEach( (action) => {
+            this.addAction(action)
         })
         return this
     },
@@ -483,12 +481,11 @@ BMNode = ideal.Proto.extend().newSlots({
     },
     
     setItemPids: function(pids) {
-        var self = this
-        var items = pids.map(function(pid) {
-            return NodeStore.shared().objectForPid(pid).setParentNode(self)
+        var items = pids.map((pid) => {
+            return NodeStore.shared().objectForPid(pid).setParentNode(this)
         })
 
-		//items.forEach(function (item) { self.addItem(item) }) // this will cause an infinite loop?
+		//items.forEach(function (item) { this.addItem(item) }) // this will cause an infinite loop?
         this.setItems(items)
         return this
     },

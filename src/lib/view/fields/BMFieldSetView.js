@@ -20,10 +20,9 @@ BMFieldSetView = NodeView.extend().newSlots({
 	setupKeyViews: function() {
 		var lastFieldView = null
 		var fieldViews = this.items()
-		var self = this
 		
-		fieldViews.forEach(function(fieldView) {
-			var next = self.keyFieldAfterFieldView(fieldView).valueView()
+		fieldViews.forEach((fieldView) => {
+			var next = this.keyFieldAfterFieldView(fieldView).valueView()
 			//console.log(fieldView.keyView())
 			fieldView.valueView().setNextKeyView(next)
 		})

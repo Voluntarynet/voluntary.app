@@ -30,10 +30,8 @@ BMMultiField = BMField.extend().newSlots({
 	
 	/*
 	removeAllItems: function() {
-		var self = this
-
-		this.items().forEach(function (item) {
-			self.removeItem(item)
+		this.items().forEach( (item) => {
+			this.removeItem(item)
 		})	
 	},
 	*/
@@ -67,9 +65,8 @@ BMMultiField = BMField.extend().newSlots({
 		
 		this.removeAllItems()
 		
-		var self = this
-		this.validValues().forEach(function(v) {
-			self.addItem(BMMultiFieldOption.clone().setTitle(v))
+		this.validValues().forEach((v) => {
+			this.addItem(BMMultiFieldOption.clone().setTitle(v))
 		})
 	},
 	*/

@@ -87,6 +87,8 @@ BMPeerId = BMNode.extend().newSlots({
 			return null
 		}
 		
+		//console.log("parsed peerid publicKeyString [" + this.publicKeyString() + "] bloom [ " + this.encodedBloomString() + "]")
+		
 		return this
 	},
 	

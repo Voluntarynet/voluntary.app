@@ -8,7 +8,7 @@ BMNetwork = BMStorableNode.extend().newSlots({
     blacklists: null,
 	idsBloomFilter: null,
 	shared: null,
-	debug: false,
+	debug: true,
 }).setSlots({
     init: function () {
 		if (BMNetwork._shared) {
@@ -81,7 +81,7 @@ BMNetwork = BMStorableNode.extend().newSlots({
     },
     
     onRemotePeerConnect: function(remotePeer) {      
-        console.log("Network onRemotePeerConnect")
+        this.log("onRemotePeerConnect " + remotePeer.shortId())
           
         // servers will send addr msg
         this.servers().onRemotePeerConnect(remotePeer)
@@ -89,7 +89,7 @@ BMNetwork = BMStorableNode.extend().newSlots({
         // messages will send inv msg
         this.messages().onRemotePeerConnect(remotePeer)
         
-        //console.log("Network onRemotePeerConnect this.remotePeerCount()  = " + this.remotePeerCount() )
+        //this.log("Network onRemotePeerConnect this.remotePeerCount()  = " + this.remotePeerCount() )
         //this.didUpdate()
         this.syncToView()
     },

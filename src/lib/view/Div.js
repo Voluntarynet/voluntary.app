@@ -500,7 +500,7 @@ Div = ideal.Proto.extend().newSlots({
     registerForClicks: function (aBool) {
         if (aBool) {
             this.element().onclick =  (event) =>{ 
-				this.handleEventFunction(function () { this.onClick(event) })
+				this.handleEventFunction( () => { this.onClick(event) })
 			}
             //this.element().ondblclick = function (event) { this.onDoubleClick(event) }
 			this.makeCursorPointer()

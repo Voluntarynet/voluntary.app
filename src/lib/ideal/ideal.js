@@ -151,12 +151,11 @@ Object.shallowCopyTo({
 
 	appendIfAbsent: function()
 	{
-		var self = this;
-		this.slice.call(arguments).forEach(function(value)
+		this.slice.call(arguments).forEach((value) =>
 		{
-			if(self.indexOf(value) == -1)
+			if(this.indexOf(value) == -1)
 			{
-				self.push(value);
+				this.push(value);
 				return true;
 			}
 		})
@@ -311,7 +310,6 @@ Object.shallowCopyTo({
 
 	  var remaining = this.length;
 	  var err = null;
-	  var self = this;
 	  args.push(function(error){
 	    err = error;
 	    remaining --;

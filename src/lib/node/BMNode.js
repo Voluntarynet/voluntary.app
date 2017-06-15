@@ -40,7 +40,7 @@ BMNode = ideal.Proto.extend().newSlots({
     
     pid: null,
 	shouldStore: false,
-    
+    debug: false,
 }).setSlots({
     init: function () {
         this._items = []
@@ -252,7 +252,9 @@ BMNode = ideal.Proto.extend().newSlots({
     
     log: function(msg) {
         //var s = this.nodePathString() + " --  " + msg
-        console.log("[" +  this.nodePathString() + "] " + msg)
+		if (this.debug()) {
+        	console.log("[" +  this.nodePathString() + "] " + msg)
+		}
     },
     
     // standard actions

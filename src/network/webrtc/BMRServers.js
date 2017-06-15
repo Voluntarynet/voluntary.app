@@ -2,6 +2,7 @@
 BMRServers = BMStorableNode.extend().newSlots({
     type: "BMRServers",
     maxConnections: 8,
+	debug: true,
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
@@ -104,7 +105,7 @@ BMRServers = BMStorableNode.extend().newSlots({
     onRemotePeerConnect: function(remotePeer) {
         // send addr
         var msg = this.currentAddrMsg()
-        console.log("sendMsg ", msg)
+        this.log("sendMsg " + msg.type())
         remotePeer.sendMsg(msg)
     },
     

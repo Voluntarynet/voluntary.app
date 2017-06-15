@@ -15,6 +15,7 @@ BMMessages = BMStorableNode.extend().newSlots({
     network: null,
     // TODO: deal with timeouts
     globalMinDifficulty: 16,
+	debug: true,
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
@@ -229,7 +230,7 @@ BMMessages = BMStorableNode.extend().newSlots({
         // send inv
         var invMsg = this.currentInvMsg()
 
-        console.log("onRemotePeerConnect send inv " + invMsg.data().length)
+        this.log("onRemotePeerConnect send inv " + invMsg.data().length)
 
         if (invMsg.data().length) {
             remotePeer.sendMsg(invMsg)

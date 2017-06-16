@@ -12,13 +12,12 @@ BMRServers = BMStorableNode.extend().newSlots({
         this.setNoteIsItemCount(true)
         this.setNodeMinWidth(270)
         
-        //this.setPidSymbol("_servers")     
+        this.setSubnodeProto(BMRServer)
+        this.addAction("add")
     },
     
     bootStrapServer: function () {
         return BMRServer.clone().setHost('peers.bitmarkets.org').setPort(9000) //.setPidSymbol("_bootStrapServer")
-        //return BMRServer.clone().setHost('127.0.0.1').setPort(9000) //.setPidSymbol("_bootStrapServer")
-        //console.log("BMRServers.bootStrapServer")
         //return BMRServer.clone().setHost('127.0.0.1').setPort(9000) //.setPidSymbol("_bootStrapServer")
     },
     

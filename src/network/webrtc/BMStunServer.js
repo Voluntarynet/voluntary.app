@@ -46,17 +46,20 @@ BMStunServer = BMStorableNode.extend().newSlots({
 	
 	// ice entry - for Peer options
 	
-	setIceEntry: function(url) {
+	setIceEntry: function(dict) {
+	    var url = dict.url
 		var parts = url.split(":")
-		var host = parts[0]
-		var port = parts[1]
+		var type = parts[0]
+		assert(type == "stun")
+		var host = parts[1]
+		var port = parts[2]
 		this.setHost(host)
 		this.setPort(port)
 		return this
 	},
 	
 	asIceEntry: function() {
-		var url = this.host()
+		var url = "stun:" + this.host()
 		if (this.port() != null) {
 			url += ":" + this.port()
 		}

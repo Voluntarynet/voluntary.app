@@ -1,3 +1,4 @@
+// BMStunServers.peerOptionsDict()
 
 BMStunServers = BMStorableNode.extend().newSlots({
     type: "BMStunServers",
@@ -8,7 +9,7 @@ BMStunServers = BMStorableNode.extend().newSlots({
         this.setTitle("STUN Servers")
         this.setNoteIsItemCount(true)
         this.setNodeMinWidth(270)
-
+        this.addAction("add")
 		this.addItemsIfAbsent(this.bootStrapServers())
     },
     
@@ -22,25 +23,25 @@ BMStunServers = BMStorableNode.extend().newSlots({
 
 	defaultOptions: function() {
 		return {'iceServers': [
-		    { host:'stun:stun01.sipphone.com' },
-		    { host:'stun:stun.ekiga.net' },
-		    { host:'stun:stun.fwdnet.net' },
-		    { host:'stun:stun.ideasip.com' },
-		    { host:'stun:stun.iptel.org' },
-		    { host:'stun:stun.rixtelecom.se' },
-		    { host:'stun:stun.schlund.de' },
-		    { host:'stun:stun.l.google.com', port:'19302' },
-		    { host:'stun:stun1.l.google.com', port:'19302' },
-		    { host:'stun:stun2.l.google.com', port:'19302' },
-		    { host:'stun:stun3.l.google.com', port:'19302' },
-		    { host:'stun:stun4.l.google.com', port:'19302' },
-		    { host:'stun:stunserver.org' },
-		    { host:'stun:stun.softjoys.com' },
-		    { host:'stun:stun.voiparound.com' },
-		    { host:'stun:stun.voipbuster.com' },
-		    { host:'stun:stun.voipstunt.com' },
-		    { host:'stun:stun.voxgratia.org' },
-		    { host:'stun:stun.xten.com' },
+		    {url:'stun:stun01.sipphone.com'},
+		    {url:'stun:stun.ekiga.net'},
+		    {url:'stun:stun.fwdnet.net'},
+		    {url:'stun:stun.ideasip.com'},
+		    {url:'stun:stun.iptel.org'},
+		    {url:'stun:stun.rixtelecom.se'},
+		    {url:'stun:stun.schlund.de'},
+		    {url:'stun:stun.l.google.com:19302'},
+		    {url:'stun:stun1.l.google.com:19302'},
+		    {url:'stun:stun2.l.google.com:19302'},
+		    {url:'stun:stun3.l.google.com:19302'},
+		    {url:'stun:stun4.l.google.com:19302'},
+		    {url:'stun:stunserver.org'},
+		    {url:'stun:stun.softjoys.com'},
+		    {url:'stun:stun.voiparound.com'},
+		    {url:'stun:stun.voipbuster.com'},
+		    {url:'stun:stun.voipstunt.com'},
+		    {url:'stun:stun.voxgratia.org'},
+		    {url:'stun:stun.xten.com'},
 		]}	
 	},
 
@@ -49,10 +50,15 @@ BMStunServers = BMStorableNode.extend().newSlots({
 		return dicts.map((dict) => {
         	return BMStunServer.clone().setIceEntry(dict) 
 		})
-
+    },
 
 	iceEntries: function() {
-		return this.servers().map((server) => { return server.asIceEntry() })
+	    if (this.servers()) {
+		    return this.servers().map((server) => { return server.asIceEntry() })
+	    } else {
+	        console.log(this.type() + " WARNING: using defaultOptions")
+	        return this.defaultOptions()
+	    }
 	},
 	
 	peerOptionsDict: function() {

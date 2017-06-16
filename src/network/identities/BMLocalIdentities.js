@@ -8,7 +8,8 @@ BMLocalIdentities = BMListNode.extend().newSlots({
         this.setTitle("My identities")
         this.setNodeMinWidth(180)
         
-        this.setActions(["add"]).setSubnodeProto(BMLocalIdentity)
+        this.setActions(["add"])
+        this.setSubnodeProto(BMLocalIdentity)
         this.setNoteIsItemCount(true)
         
         //this.setPidSymbol("_localIdentities")  

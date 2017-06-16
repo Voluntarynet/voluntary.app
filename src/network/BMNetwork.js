@@ -2,6 +2,7 @@
 BMNetwork = BMStorableNode.extend().newSlots({
     type: "BMNetwork",
     servers: null,
+    stunServers: null,
     messages: null,
     localIdentities: null, // set by parent 
     remoteIdentities: null, // set by parent 
@@ -25,7 +26,10 @@ BMNetwork = BMStorableNode.extend().newSlots({
 
 		this.setServers(NodeStore.shared().rootInstanceWithPidForProto("_servers", BMRServers))
 		this.addItem(this.servers())
-		
+
+		this.setStunServers(NodeStore.shared().rootInstanceWithPidForProto("_stunServers", BMStunServers))
+		this.addItem(this.stunServers())
+						
 		this.setMessages(NodeStore.shared().rootInstanceWithPidForProto("_messages", BMMessages))
 		this.addItem(this.messages())
 		

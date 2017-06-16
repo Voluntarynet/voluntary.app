@@ -126,6 +126,11 @@ BMNode = ideal.Proto.extend().newSlots({
         this.didChangeItemList()
         return anItem
     },
+
+	addItemsIfAbsent: function(items) {
+		items.forEach((item) => { this.addItemIfAbsent(item) })
+		return this
+	},
     
     addItemIfAbsent: function(anItem) {
         if(!this.items().contains(anItem)) {

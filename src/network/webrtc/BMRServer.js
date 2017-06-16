@@ -20,7 +20,7 @@ BMRServer = BMStorableNode.extend().newSlots({
         //this.setTitle("RTC Server")
         this.addStoredSlots(["host", "port"])
         this.setShouldStoreItems(false)
-        this.actions().appendIfAbsent("delete")
+        this.addAction("delete")
         this.setNodeMinWidth(160)
     },
 

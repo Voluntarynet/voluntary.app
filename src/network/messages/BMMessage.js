@@ -55,9 +55,7 @@ BMMessage = BMFieldSetNode.extend().newSlots({
         if (this.msgTypes().contains(msgType)) {
             var className = "BM" + msgType.capitalized() + "Message"
             //this.log("className '" + className + "'")
-            //var proto = window[className]
             var proto = window[className]
-            //var proto = classes[className]
             return proto.clone().setMsgDict(dict)
         }
         

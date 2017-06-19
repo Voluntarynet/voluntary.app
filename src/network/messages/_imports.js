@@ -1,5 +1,6 @@
 
 JSImporter.pushRelativePaths([
+    "helpers.js",
     "BMMessage.js",
     "BMAddrMessage.js",
     "BMGetDataMessage.js",

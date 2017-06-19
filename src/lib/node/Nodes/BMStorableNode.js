@@ -131,6 +131,7 @@ BMStorableNode = BMNode.extend().newSlots({
     },
     
     didLoadFromStore: function() {
+		//console.log(this.type() + " didLoadFromStore in BMStorableNode")
         // a chance to finish any unserializing
     },
 

@@ -432,7 +432,7 @@ BMNode = ideal.Proto.extend().newSlots({
     
     setNodeDict: function(aDict) {
         // ignore - BMStorableNode will override 
-		//this.didLoadFromStore()
+		//this.didLoadFromStore() // BMStorableNode.setNodeDict wants to do this *after* it's done
         return this
     },
  

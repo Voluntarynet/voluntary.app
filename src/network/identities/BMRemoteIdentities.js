@@ -1,3 +1,5 @@
+
+
 BMRemoteIdentities = BMListNode.extend().newSlots({
     type: "BMRemoteIdentities",
 }).setSlots({

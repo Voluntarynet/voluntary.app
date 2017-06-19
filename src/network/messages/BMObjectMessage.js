@@ -134,13 +134,13 @@ BMObjectMessage = BMMessage.extend().newSlots({
     // dict 
     
     setMsgDict: function(dict) {
-        //console.log("setMsgDict ", dict)
+        console.log(this.type() + " setMsgDict ", dict)
         this.setPow(dict.pow)
         //this.setSignature(dict.signature)
         this.setMsgType(dict.msgType)
         this.setData(dict.data)            
-        //this.setsenderPublicKey(dict.senderPublicKey)            
-        //this.setreceiverPublicKey(dict.receiverPublicKey)            
+        this.setSenderPublicKey(dict.data.senderPublicKey)            
+        this.setreceiverPublicKey(dict.data.receiverPublicKey)            
         return this
     },
     

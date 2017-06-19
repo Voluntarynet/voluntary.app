@@ -7,16 +7,20 @@
   See: https://en.wikipedia.org/wiki/STUNå
 */
 
-BMStunServer = BMStorableNode.extend().newSlots({
+BMStunServer = BMFieldSetNode.extend().newSlots({
     type: "BMStunServer",
    	//host: 'stun.bitmarkets.org',
-    host: '127.0.0.1',
-    port: 3478,
+    host: "",
+    port: null, 
 	//credential: null,
 	//username: null,
 }).setSlots({
+	localServer: function() {
+		return this.clone().setHost("127.0.0.1").setPort(3478)
+	},
+	
     init: function () {
-        BMStorableNode.init.apply(this)
+        BMFieldSetNode.init.apply(this)
 		this.setShouldStore(true)
 		this.setShouldStoreItems(true)
         this.addStoredSlots(["host", "port"])
@@ -24,6 +28,10 @@ BMStunServer = BMStorableNode.extend().newSlots({
         this.setShouldStoreItems(false)
         this.addAction("delete")
         this.setNodeMinWidth(160)
+
+		this.addField(BMField.clone().setKey("host").setNodeFieldProperty("host")).setValueIsEditable(true)
+		this.addField(BMField.clone().setKey("port").setNodeFieldProperty("port")).setValueIsEditable(true)
+		this.addField(BMField.clone().setKey("notes").setNodeFieldProperty("notes")).setValueIsEditable(true)
     },
 
     title: function () {

@@ -41,6 +41,7 @@ BMPeerId = BMNode.extend().newSlots({
 	
 	// --- bloom key ---
 	
+	/*
 	encodedBloomString: function() {
 		assert(this.bloomFilter() != null)
 		var s = this.bloomFilter().exportData();
@@ -58,6 +59,17 @@ BMPeerId = BMNode.extend().newSlots({
 		s = s.replaceAll("_2", "=")
 		filter.importData(s)
 		this.setBloomFilter(filter)
+		return this
+	},
+	*/
+	
+	encodedBloomString: function() {
+		assert(this.bloomFilter() != null)
+		return this.bloomFilter().serialized()
+	},
+	
+	setEncodedBloomString: function(s) {
+		var filter = BMNetwork.shared().newDefaultBloomFilter().unserialized(s)
 		return this
 	},
 	

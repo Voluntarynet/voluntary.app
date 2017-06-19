@@ -1,4 +1,6 @@
-// BMStunServers.peerOptionsDict()
+/*
+
+*/
 
 BMStunServers = BMStorableNode.extend().newSlots({
     type: "BMStunServers",
@@ -62,7 +64,8 @@ BMStunServers = BMStorableNode.extend().newSlots({
 	},
 	
 	peerOptionsDict: function() {
-		return { 'iceServers': this.iceEntries() }
+		var dict = { 'iceServers': this.iceEntries() }
+		//console.log("peerOptionsDict: " + JSON.stringify(dict))
+		return dict
 	},
-    
 })

@@ -1,4 +1,5 @@
 
+/*
 BMGetDataItem = BMNode.extend().newSlots({
     type: "BMGetDataItem",
     hash: null,
@@ -6,6 +7,7 @@ BMGetDataItem = BMNode.extend().newSlots({
 }).setSlots({
     
 })
+*/
 
 BMMessages = BMStorableNode.extend().newSlots({
     type: "BMMessages",
@@ -33,6 +35,19 @@ BMMessages = BMStorableNode.extend().newSlots({
     subnodeProto: function() {
         return BMObjectMessage
     },
+
+	didLoadFromStore: function() {
+		//console.log(this.type() + " didLoadFromStore items length = ", this.items().length)
+		this.updateIndex()
+		
+		// these need to wait until after the initial store load is complete
+		setTimeout(() => {
+			this.removeMessagesNotMatchingIdentities()
+			this.placeAllItems()
+		}, 0)
+		
+		return this
+	},
     
     messageWithHash: function(hash) {
         return this._index[hash]
@@ -88,14 +103,7 @@ BMMessages = BMStorableNode.extend().newSlots({
         return true
     },
 
-	didLoadFromStore: function() {
-		//console.log(this.type() + " didLoadFromStore items length = ", this.items().length)
-		this.updateIndex()
-			setTimeout(() => {
-			this.placeAllItems()
-		}, 0)
-	},
-	
+
 	placeAllItems: function() {
 		this.items().forEach( (msg) => {
 			//console.log(this.type() + " placing ", msg)
@@ -236,15 +244,52 @@ BMMessages = BMStorableNode.extend().newSlots({
             remotePeer.sendMsg(invMsg)
         }
     },
-    
-    currentInvMsg: function () {
+
+    invMsgForMessages: function (msgs) {
         var invMsg = BMInvMessage.clone()
-        this.messages().forEach(function (objMsg) {
+        msgs.forEach( (objMsg) => {
             invMsg.addMsgHash(objMsg.msgHash())
         })
         return invMsg
     },
+    
+    currentInvMsg: function () {
+        return this.invMsgForMessages(this.messages())
+    },
+    
+    messagesMatchingBloom: function (aBloomFilter) {
+        return this.messages().select((objMsg) => {
+			return aBloomFilter.contains(objMsg.senderPublicKey())
+        })
+    },
 
+    currentInvMsgForBloom: function (aBloomFilter) {
+        return this.invMsgForMessages(this.messagesMatchingBloom(aBloomFilter))
+    },
 
+	removeMessagesNotMatchingIdentities: function() {
+		// this gets slow for large msg count but target is short term
+		// ephemeral messages for now 
+		
+		var pubkeys = BMNetwork.shared().allIdentityPublicKeyStrings()
+		var count = 0
+		
+		this.log("pubkeys = " + pubkeys )
+		
+		this.messages().copy().forEach( (objMsg) => {
+			console.log("objMsg: ", objMsg)
+			var senderPK = objMsg.senderPublicKey()
+            if (!pubkeys.contains(senderPK)) {
+				//this.removeMessage(objMsg)
+				count ++
+				console.log("no match for sender " + senderPK)
+			} else {
+				console.log("matched sender " + senderPK)
+			}
+        })
 
+		this.log("removeMessagesNotMatchingIdentities would have removed " + count + " messages")
+
+		return this
+	},
 })

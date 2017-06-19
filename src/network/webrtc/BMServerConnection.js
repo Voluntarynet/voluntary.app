@@ -96,7 +96,7 @@ BMServerConnection = BMNode.extend().newSlots({
             })  
             
             this._serverConn.on('close', (error) => { 
-                this.log("close with error: ", error); 
+                this.log("close with error: " + error); 
                 this.onClose(error)
             }) 
         }
@@ -114,7 +114,7 @@ BMServerConnection = BMNode.extend().newSlots({
 
     onError: function(error) {
         this.setStatus(error)
-        this.log(this.type() + " onError: ", error);
+        this.log(this.type() + " onError: " + error);
         this._serverConn = null
         this.didUpdate()
     },
@@ -188,18 +188,17 @@ BMServerConnection = BMNode.extend().newSlots({
     connectToPeerId: function(pid) {
         if (!this.isConnectedToPeerId(pid)) {
             //this.log("connectToPeerId " + pid)
-            //try {
+            try {
                                 
                 var dataConnection = this.serverConn().connect(pid);
                 this.addRemotePeerConn(dataConnection)
-                /*
+
             } catch (error) {
                 console.log("ERROR on BMServerConnection.connectToPeerId('" + pid + "')")
                 console.error("    " + error.message )
                 //console.log( error.stack )
                 //throw error
             }
-            */
         }
     },
 

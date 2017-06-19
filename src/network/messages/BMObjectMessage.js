@@ -44,23 +44,23 @@ BMObjectMessage = BMMessage.extend().newSlots({
     
     msgType: "object",
     
-    pow: null,
+    //pow: null,
     msgHash: null, // hash of data - computed and cached as needed    
 
 	signature: null,
     senderPublicKey: null,
     receiverPublicKey: null,
 
-	powObj: null,
+	//powObj: null,
 }).setSlots({
     init: function () {
         BMMessage.init.apply(this)
 		this.setShouldStoreItems(false)
         this.setMsgType("object")
-        this.addStoredSlots(["msgType", "pow", "signature", "senderPublicKey", "receiverPublicKey", "data"])
+        this.addStoredSlots(["msgType", /*"pow",*/ "signature", "senderPublicKey", "receiverPublicKey", "data"])
         //this.setViewClassName("BMMessageView")
         this.addAction("delete")
-        this.setPowObj(BMPow.clone())
+        //this.setPowObj(BMPow.clone())
     },
     
     duplicate: function() {
@@ -109,7 +109,7 @@ BMObjectMessage = BMMessage.extend().newSlots({
     
     setMsgDict: function(dict) {
         console.log(this.type() + " setMsgDict ", dict)
-        this.setPow(dict.pow)
+        //this.setPow(dict.pow)
         //this.setSignature(dict.signature)
         this.setMsgType(dict.msgType)
         this.setData(dict.data)            
@@ -120,7 +120,7 @@ BMObjectMessage = BMMessage.extend().newSlots({
     
     msgDict: function() {
         return {
-            pow: this.pow(),
+            //pow: this.pow(),
             //signature: this.signature(),
             msgType: this.msgType(),
             //senderPublicKey: this.senderPublicKey(),
@@ -224,7 +224,8 @@ BMObjectMessage = BMMessage.extend().newSlots({
         return true
     },  
 */
-    
+  
+/*  
     asyncFindPowAndSend: function() {        
         var hash = this.msgHash()
         var pow = this.powObj()
@@ -247,5 +248,10 @@ BMObjectMessage = BMMessage.extend().newSlots({
 		}
 		return 0
     },
+*/
+
+	setPow: function() {
+		
+	},
 
 })

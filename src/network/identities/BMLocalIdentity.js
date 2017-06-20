@@ -1,5 +1,5 @@
 var bitcore = require("bitcore-lib")
-//var BitcoreMessage = require('bitcore-message');
+var BitcoreMessage = require('bitcore-message');
 var ECIES = require('bitcore-ecies');
 var Buffer = bitcore.deps.Buffer;
 
@@ -88,7 +88,7 @@ BMLocalIdentity = BMNavNode.extend().newSlots({
     },
 
     signatureForMessageString: function(msgString) {
-        var signature = Message(msgString).sign(this.privateKey())
+        var signature = BitcoreMessage(msgString).sign(this.privateKey())
         return signature
     },
 

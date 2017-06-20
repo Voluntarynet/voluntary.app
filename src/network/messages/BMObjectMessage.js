@@ -38,29 +38,24 @@
 */
 
 
+var BitcoreMessage = require('bitcore-message');
 
 BMObjectMessage = BMMessage.extend().newSlots({
     type: "BMObjectMessage",
-    
     msgType: "object",
-    
-    //pow: null,
-    msgHash: null, // hash of data - computed and cached as needed    
 
-	signature: null,
-    senderPublicKey: null,
-    receiverPublicKey: null,
-
-	//powObj: null,
+    senderPublicKeyString: null,
+    receiverPublicKeyString: null,
+	timeStamp: null,
+    msgHash: null, // hash of data - computed as needed    
+	signature: null, // sender signature on msgHash
 }).setSlots({
     init: function () {
         BMMessage.init.apply(this)
 		this.setShouldStoreItems(false)
         this.setMsgType("object")
-        this.addStoredSlots(["msgType", /*"pow",*/ "signature", "senderPublicKey", "receiverPublicKey", "data"])
-        //this.setViewClassName("BMMessageView")
+        this.addStoredSlots(["msgType", "data", "senderPublicKey", "receiverPublicKey", "timeStamp", "signature"])
         this.addAction("delete")
-        //this.setPowObj(BMPow.clone())
     },
     
     duplicate: function() {
@@ -75,18 +70,17 @@ BMObjectMessage = BMMessage.extend().newSlots({
         console.log("BMObjectMessage setNode " + aNode ? aNode.type() : aNode)
         return this
     },
-    
+
+/*    
     setContent: function(v) {
         //console.log(this.type() + " setContent: ", v)
         this._content = v
-        //this.syncFields()
         return this
     },
+*/
     
     setNodeDict: function(dict) {
         BMStorableNode.setNodeDict.apply(this, [dict])
-        //console.log("BMMessageObject.setNodeDict ", this)
-        //this.syncFields()
         return this
     },
     
@@ -113,33 +107,36 @@ BMObjectMessage = BMMessage.extend().newSlots({
         //this.setSignature(dict.signature)
         this.setMsgType(dict.msgType)
         this.setData(dict.data)            
-        this.setSenderPublicKey(dict.data.senderPublicKey)            
-        this.setreceiverPublicKey(dict.data.receiverPublicKey)            
+        this.setSenderPublicKeyString(dict.sender)            
+        this.setReceiverPublicKeyString(dict.receiver)            
+        this.setTimeStamp(dict.timeStamp)            
+        this.setSignature(dict.signature)            
         return this
     },
     
     msgDict: function() {
         return {
-            //pow: this.pow(),
-            //signature: this.signature(),
             msgType: this.msgType(),
-            //senderPublicKey: this.senderPublicKey(),
-            //receiverPublicKey: this.receiverPublicKey(),
-            data: this.data()
+            data: this.data(),
+            sender: this.senderPublicKeyString(),
+            receiver: this.receiverPublicKeyString(),
+            timeStamp: this.timeStamp(),
+            signature: this.signature(),
+            //pow: this.pow(),
         }
     },
 
-	dictToHash: function() {
+	theDictToHash: function() {
 		var dict = this.msgDict()
-		delete dict.signature
-		delete dict.msgHash
+		delete dict.msgHash   // remove this slots as we are computing hash itself
+		delete dict.signature // remove this slot as signature is done on hash
 		return dict
 	},
     
 	// hash
 	
 	computeMsgHash: function() {
-		return this.dictToHash().toJsonStableString().sha256String()
+		return this.theDictToHash().toJsonStableString().sha256String()
 	},
 
     msgHash: function() {
@@ -158,8 +155,8 @@ BMObjectMessage = BMMessage.extend().newSlots({
 	},
     
 	verifySignature: function() {
-		var spk = new PublicKey(this.senderPublicKey());
-        var verified = bitcore.Message(this.msgHash()).verify(spk.toAddress(), this.signature());
+		var spk = new bitcore.PublicKey(this.senderPublicKey());
+        var verified = BitcoreMessage(this.msgHash()).verify(spk.toAddress(), this.signature());
 		return verified
 	},
 	    
@@ -169,13 +166,9 @@ BMObjectMessage = BMMessage.extend().newSlots({
         this.network().messages().addMessage(this)
         return this
     },
-    
-	validMessageProtos: function() {
-		return ["BMPrivateMessage", "BMClassifiedPost"]
-	},
-	
+
 	isValidDataMessage: function() {
-		return true
+		return this.verifySignature()
 		/*
         var dict = this.data()
 		var protoName = dict.type
@@ -193,19 +186,14 @@ BMObjectMessage = BMMessage.extend().newSlots({
         var dict = this.data()
 
 		var protoName = dict.type
-		
-		//console.log("placing ", protoName)
-		
+				
 		if (!this.isValidDataMessage()) {
 			return false
 		}
 		
 		var proto = window[protoName]
-		
 		//console.log("BMObjectMessage placing dict = ", dict)
 		var obj = proto.clone().setObjMsg(this).setPostDict(dict).place()
-		
-		//console.log("placed ", protoName)
         
         return false
     },

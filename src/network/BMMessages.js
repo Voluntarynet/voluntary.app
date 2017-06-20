@@ -259,7 +259,7 @@ BMMessages = BMStorableNode.extend().newSlots({
     
     messagesMatchingBloom: function (aBloomFilter) {
         return this.messages().select((objMsg) => {
-			return aBloomFilter.contains(objMsg.senderPublicKey())
+			return aBloomFilter.contains(objMsg.senderPublicKeyString())
         })
     },
 
@@ -278,7 +278,7 @@ BMMessages = BMStorableNode.extend().newSlots({
 		
 		this.messages().copy().forEach( (objMsg) => {
 			console.log("objMsg: ", objMsg)
-			var senderPK = objMsg.senderPublicKey()
+			var senderPK = objMsg.senderPublicKeyString()
             if (!pubkeys.contains(senderPK)) {
 				//this.removeMessage(objMsg)
 				count ++

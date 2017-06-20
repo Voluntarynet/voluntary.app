@@ -282,11 +282,16 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 
     send: function () {
         var objMsg = BMObjectMessage.clone()
+
+        objMsg.setSenderPublicKeyString(this.senderId().publicKeyString())
+        objMsg.setReceiverPublicKeyString(this.receiverId().publicKeyString())
+
         objMsg.setData(this.postDict())
     	/*
 		objMsg.powObj().setTargetDifficulty(17)
         objMsg.asyncFindPowAndSend()
 		*/
+		objMsg.signWithSenderId(this.senderId())
 		objMsg.send()
         this.delete()
     },

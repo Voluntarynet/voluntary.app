@@ -1,0 +1,38 @@
+{
+  "name": "bitcore-message",
+  "main": "./bitcore-message.min.js",
+  "version": "0.11.1",
+  "homepage": "https://github.com/bitpay/bitcore-message",
+  "authors": [
+    "BitPay"
+  ],
+  "description": "Bitcoin Message Verification and Signing for Bitcore",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "bitcoin",
+    "bitcore",
+    "btc",
+    "satoshi",
+    "message",
+    "signing"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "_release": "0.11.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.11.1",
+    "commit": "60ef099bdf70588ae6a516e2168fb14d286cf7e3"
+  },
+  "_source": "https://github.com/bitpay/bitcore-message.git",
+  "_target": "^0.11.0",
+  "_originalSource": "bitcore-message"
+}

@@ -1,14 +1,16 @@
 {
   "name": "bitcore",
-  "version": "0.13.5",
-  "description": "A pure and powerful JavaScript Bitcoin library.",
+  "version": "4.1.1",
+  "description": "A platform to build bitcoin and blockchain-based applications.",
   "author": "BitPay <dev@bitpay.com>",
   "main": "index.js",
   "scripts": {
-    "lint": "gulp lint",
-    "test": "gulp test",
-    "coverage": "gulp coverage",
-    "build": "gulp"
+    "test": "./node_modules/.bin/mocha test/** --recursive",
+    "build-deb": "./scripts/build-deb"
+  },
+  "bin": {
+    "bitcore": "./bin/bitcore",
+    "bitcored": "./bin/bitcored"
   },
   "contributors": [
     {
@@ -80,21 +82,14 @@
     "request": "browser-request"
   },
   "dependencies": {
-    "bn.js": "=2.0.4",
-    "bs58": "=2.0.0",
-    "buffer-compare": "=1.0.0",
-    "elliptic": "=3.0.3",
-    "hash.js": "=1.0.2",
-    "inherits": "=2.0.1",
-    "lodash": "=3.10.1",
-    "sha512": "=0.0.1"
+    "bitcore-lib": "^0.14",
+    "bitcore-node": "~3.1.0",
+    "insight-api": "^0.4.0",
+    "insight-ui": "^0.4.0"
   },
+  "license": "MIT",
   "devDependencies": {
-    "bitcore-build": "bitpay/bitcore-build",
-    "brfs": "^1.2.0",
-    "chai": "^1.10.0",
-    "gulp": "^3.8.10",
-    "sinon": "^1.13.0"
-  },
-  "license": "MIT"
+    "chai": "^3.3.0",
+    "mocha": "^2.3.3"
+  }
 }

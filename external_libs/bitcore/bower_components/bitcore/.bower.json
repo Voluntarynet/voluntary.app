@@ -1,7 +1,7 @@
 {
   "name": "bitcore",
   "main": "./bitcore.min.js",
-  "version": "0.13.5",
+  "version": "4.1.1",
   "homepage": "http://bitcore.io",
   "authors": [
     "BitPay, Inc."
@@ -27,13 +27,13 @@
     "npm-shrinkwrap.json",
     "test"
   ],
-  "_release": "0.13.5",
+  "_release": "4.1.1",
   "_resolution": {
     "type": "version",
-    "tag": "v0.13.5",
-    "commit": "0f051b9dcffa10710633c225dc9959aed985b3cb"
+    "tag": "v4.1.1",
+    "commit": "8dc264374db74e70454454d2aa39e406ab2c1203"
   },
   "_source": "https://github.com/bitpay/bitcore.git",
-  "_target": "^0.13.5",
+  "_target": "^4.1.0",
   "_originalSource": "bitcore"
 }

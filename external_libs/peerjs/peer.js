@@ -502,7 +502,7 @@ Negotiator._startPeerConnection = function(connection) {
 
   //console.log("connection.provider.options.config = " + JSON.stringify(connection.provider.options.config, null, 2))
   //console.log("optional = " + JSON.stringify(optional, null, 2))
-  console.log("WARNING: not using empty peerjs connection config")
+  //console.log("WARNING: not using empty peerjs connection config")
   
   //var pc = new RTCPeerConnection({ iceServers:[] });
 
@@ -1438,9 +1438,9 @@ module.exports = Socket;
 	
 	
 	var defaultConfig = {}
-	/*
 //var defaultConfig = {} //{'iceServers': [{ 'url': 'stun:stun.l.google.com:19302' }]};
 
+/*
 var defaultConfig = {'iceServers': [
     {url:'stun:stun01.sipphone.com'},
     {url:'stun:stun.ekiga.net'},

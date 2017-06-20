@@ -49,13 +49,14 @@ BMServerConnection = BMNode.extend().newSlots({
 	// --- server connection --------------------------
 	
     serverConnectionOptions: function () {
+		//console.log("BMNetwork.shared().stunServers().peerOptionsDict() = ", BMNetwork.shared().stunServers().peerOptionsDict())
         return { 
                 host: this.server().host(), 
                 port: this.server().port(),
 				//path: null,
 				//secure: true,
 				config: BMNetwork.shared().stunServers().peerOptionsDict(),
-               // config: this.defaultConfig()
+                //config: this.defaultConfig()
                 //debug: 3, 
             }
     },
@@ -100,6 +101,7 @@ BMServerConnection = BMNode.extend().newSlots({
                 this.onClose(error)
             }) 
         }
+
         return this              
     },
   
@@ -189,10 +191,8 @@ BMServerConnection = BMNode.extend().newSlots({
         if (!this.isConnectedToPeerId(pid)) {
             //this.log("connectToPeerId " + pid)
             try {
-                                
-                var dataConnection = this.serverConn().connect(pid);
+                var dataConnection = this.serverConn().connect(pid, this.peerConnectionOptions());
                 this.addRemotePeerConn(dataConnection)
-
             } catch (error) {
                 console.log("ERROR on BMServerConnection.connectToPeerId('" + pid + "')")
                 console.error("    " + error.message )
@@ -238,32 +238,6 @@ BMServerConnection = BMNode.extend().newSlots({
             return remotePeer.isConnected()
         })        
     },
-
-/*
-	defaultConfig: function() {
-		return {'iceServers': [
-		    {url:'stun:stun01.sipphone.com'},
-		    {url:'stun:stun.ekiga.net'},
-		    {url:'stun:stun.fwdnet.net'},
-		    {url:'stun:stun.ideasip.com'},
-		    {url:'stun:stun.iptel.org'},
-		    {url:'stun:stun.rixtelecom.se'},
-		    {url:'stun:stun.schlund.de'},
-		    {url:'stun:stun.l.google.com:19302'},
-		    {url:'stun:stun1.l.google.com:19302'},
-		    {url:'stun:stun2.l.google.com:19302'},
-		    {url:'stun:stun3.l.google.com:19302'},
-		    {url:'stun:stun4.l.google.com:19302'},
-		    {url:'stun:stunserver.org'},
-		    {url:'stun:stun.softjoys.com'},
-		    {url:'stun:stun.voiparound.com'},
-		    {url:'stun:stun.voipbuster.com'},
-		    {url:'stun:stun.voipstunt.com'},
-		    {url:'stun:stun.voxgratia.org'},
-		    {url:'stun:stun.xten.com'},
-		]}	
-	},
-	*/
 })
 
 

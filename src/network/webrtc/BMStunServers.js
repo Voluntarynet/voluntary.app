@@ -55,6 +55,7 @@ BMStunServers = BMStorableNode.extend().newSlots({
     },
 
 	iceEntries: function() {
+
 	    if (this.servers()) {
 		    return this.servers().map((server) => { return server.asIceEntry() })
 	    } else {
@@ -64,7 +65,7 @@ BMStunServers = BMStorableNode.extend().newSlots({
 	},
 	
 	peerOptionsDict: function() {
-		var dict = { 'iceServers': this.iceEntries() }
+		var dict = this.iceEntries() 
 		//console.log("peerOptionsDict: " + JSON.stringify(dict))
 		return dict
 	},

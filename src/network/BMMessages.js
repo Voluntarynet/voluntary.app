@@ -274,22 +274,24 @@ BMMessages = BMStorableNode.extend().newSlots({
 		var pubkeys = BMNetwork.shared().allIdentityPublicKeyStrings()
 		var count = 0
 		
-		this.log("pubkeys = " + pubkeys )
+		//this.log("pubkeys = " + pubkeys )
 		
 		this.messages().copy().forEach( (objMsg) => {
-			console.log("objMsg: ", objMsg)
+			//console.log("objMsg: ", objMsg)
 			var senderPK = objMsg.senderPublicKeyString()
             if (!pubkeys.contains(senderPK)) {
-				//this.removeMessage(objMsg)
+				this.removeMessage(objMsg)
 				count ++
 				console.log("no match for sender " + senderPK)
 			} else {
-				console.log("matched sender " + senderPK)
+				//console.log("matched sender " + senderPK)
 			}
         })
 
-		this.log("removeMessagesNotMatchingIdentities would have removed " + count + " messages")
-
+		if (count) {
+			this.log("removeMessagesNotMatchingIdentities removed " + count + " messages")
+		}
+	
 		return this
 	},
 })

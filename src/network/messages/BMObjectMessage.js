@@ -54,7 +54,7 @@ BMObjectMessage = BMMessage.extend().newSlots({
         BMMessage.init.apply(this)
 		this.setShouldStoreItems(false)
         this.setMsgType("object")
-        this.addStoredSlots(["msgType", "data", "senderPublicKey", "receiverPublicKey", "timeStamp", "signature"])
+        this.addStoredSlots(["msgType", "data", "senderPublicKeyString", "receiverPublicKeyString", "timeStamp", "signature"])
         this.addAction("delete")
     },
     
@@ -154,9 +154,15 @@ BMObjectMessage = BMMessage.extend().newSlots({
 		return this
 	},
     
+	makeTimeStampNow: function() {
+		this.setTimeStamp(new Date().getTime())
+		return this
+	},
+
 	verifySignature: function() {
-		var spk = new bitcore.PublicKey(this.senderPublicKey());
+		var spk = new bitcore.PublicKey(this.senderPublicKeyString());
         var verified = BitcoreMessage(this.msgHash()).verify(spk.toAddress(), this.signature());
+		//console.log("verifySignature: " + verified)
 		return verified
 	},
 	    

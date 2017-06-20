@@ -287,6 +287,7 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
         objMsg.setReceiverPublicKeyString(this.receiverId().publicKeyString())
 
         objMsg.setData(this.postDict())
+		objMsg.makeTimeStampNow()
     	/*
 		objMsg.powObj().setTargetDifficulty(17)
         objMsg.asyncFindPowAndSend()

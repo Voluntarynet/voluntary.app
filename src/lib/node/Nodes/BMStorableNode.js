@@ -50,7 +50,12 @@ BMStorableNode = BMNode.extend().newSlots({
 	            if (k.beginsWith("_")) {
 	                v = this[k]
 	            } else {
-	                v = this[k].apply(this)
+					try {
+		                v = this[k].apply(this)
+					} catch(error) {
+						console.log("ERROR: " + this.type() + "." + k + "() missing method")
+						throw error
+					}
 	            }
             
 	            dict[k] = NodeStore.shared().refValueIfNeeded(v)

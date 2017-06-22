@@ -1,3 +1,6 @@
+/*
+	Used to measure rendered text dimensions given a string and a style.
+*/
 
 DivTextTapeMeasure = ideal.Proto.extend().newSlots({
 	idName: "DivTextTapeMeasure",

@@ -137,10 +137,9 @@ NotificationCenter = ideal.Proto.extend().setType("NotificationCenter").newSlots
         
         if (!this._hasTimeout) {
             this._hasTimeout = true
-            var self = this
-            setTimeout(function () { 
-                self._hasTimeout = false
-                self.processPostQueue() 
+            setTimeout( () => { 
+                this._hasTimeout = false
+                this.processPostQueue() 
             }, 0)
         }
         return this
@@ -157,10 +156,9 @@ NotificationCenter = ideal.Proto.extend().setType("NotificationCenter").newSlots
         
             var notes = this.notifications()
             this.setNotifications([])
-            var self = this
-            notes.forEach(function (note) {
+            notes.forEach( (note) => {
                 this._currentNote = note;
-                self.postNotificationNow(note)
+                this.postNotificationNow(note)
             })
             this._isProcessing = false
         } else {

@@ -69,7 +69,7 @@ ImageWellView = NodeView.extend().newSlots({
 
         dataURLs.forEach( (dataURL) => {
             var imageView = ImageView.clone().setFromDataURL(dataURL)
-            imageView.setIsEditable(self.isEditable())
+            imageView.setIsEditable(this.isEditable())
             this.addItem(imageView);
             //this.node().addItem(ImageNode.clone().setView(imageView))
         })

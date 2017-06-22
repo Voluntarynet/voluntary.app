@@ -50,11 +50,6 @@ BMNavNode = BMStorableNode.extend().newSlots({
     },
     
     */
-    
-    itemWithTitle: function(aTitle) {
-        return this.items().detect(function(item) {
-            return item.title() == aTitle
-        })
-    },
+  
     
 })

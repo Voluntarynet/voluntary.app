@@ -276,22 +276,7 @@ Div = ideal.Proto.extend().newSlots({
     },
     
     itemForNode: function(aNode) {
-        //this.log("itemForNode " + aNode.type())
-        
-        var items = this.items()
-        for (var i = 0; i < items.length; i++) {
-            var item = items[i]
-            
-            if (!item.node) {
-                //console.log(item + " missing node method")
-                //console.log("items = ", items)
-            }
-            
-            if (item.node() == aNode) {
-                return item
-            }
-        }
-        return null
+        return this.items().detect((item) => { return item.node() == aNode; })
     },
 
 	// fade

@@ -1,45 +1,54 @@
 BMNode = ideal.Proto.extend().newSlots({
     type: "BMNode",
         
+	// node summary presented in parent row views
     title: null,
     subtitle: null,
     note: null,
+    subtitleIsItemCount: false,
+    noteIsItemCount: false,
+    nodeTitleIsEditable: false,
+    nodeSubtitleIsEditable: false,
+
 
 	nodeVisibleClassName: "",
     nodeMinWidth: 200,
-	//nodeDoesSizeToFit: true,
 
-    items: null,
-    view: null,
-    subnodeProto: null,
-    viewClassName: null,
     parentNode: null,
+
+    view: null,
+    viewClassName: null,
+
+	// items
+    items: null,
+    subnodeProto: null,
+    nodeEmptyLabel: null, // shown in view when there are no items
+
+	// actions
     actions: null,
-    subtitleIsItemCount: false,
-    noteIsItemCount: false,
-    
+
+    // sync
     needsSyncToView: false, 
+
+	// html
     acceptsFileDrop: false,
-    nodeEmptyLabel: null,
     
-    nodeContent: null,
-    
-    // these should all move to Field properties
+    // these should all move to Field properties?
     // new inline custom view support...
-    //nodeRowViewClassName: null,
 	nodeOverrideDivClassName: null,
-	
-    nodeTitleIsEditable: false,
-    nodeSubtitleIsEditable: false,
+
     nodeMinHeight: 0, // tall fields like draft body
+
+    nodeContent: null,
     nodeAfterContent: null,
     nodeBeforeContent: null,
     nodeBgColor: null,
-    
-    //nodeFieldProperty: null,
-    
+        
+	// persistence 
     pid: null,
 	shouldStore: false,
+	
+	// debug
     debug: false,
 }).setSlots({
     init: function () {
@@ -437,7 +446,7 @@ BMNode = ideal.Proto.extend().newSlots({
     },
  
 	didLoadFromStore: function() {
-		console.log(this.type() + " didLoadFromStore")
+		//console.log(this.type() + " didLoadFromStore")
 	},
  
     // store

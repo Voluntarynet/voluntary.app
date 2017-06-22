@@ -48,7 +48,6 @@ NodeView = Div.extend().newSlots({
         return this
     },
     
-    
     itemProto: function() {
         if (this.node()) {
             var vc = this.node().nodeRowViewClass()
@@ -60,43 +59,6 @@ NodeView = Div.extend().newSlots({
     },
 
 	// --- syncing ---
-/*
-    syncFromNode: function () {
-        if (!this.node()) { 
-            this.removeAllItems();
-            return
-        }
-
-        var subnodes = this.node().items()
-        for (var i = 0; i < subnodes.length; i++) {
-            var subnode = subnodes[i]
-            var item = this.itemForNode(subnode)
-
-            item.setNode(subnode).syncFromNode()
-        }
-        
-        
-        return this
-    },
-    */
-    
-    /*
-    syncFromNode_: function () {
-        this.removeAllItems()
-
-        if (this.node()) {
-            var subnodes = this.node().items()
-            for (var i = 0; i < subnodes.length; i++) {
-                var subnode = subnodes[i]
-                var item = this.addItem()
-                //console.log(this.type() + " addItemView " + item.type() + " forItem " + nodeItem.type())
-                item.setNode(subnode).syncFromNode()
-            }
-        }
-        
-        return this
-    },
-    */
     
     syncFromNode: function () {
         // only replace items if sync requires it
@@ -111,8 +73,7 @@ NodeView = Div.extend().newSlots({
         var newItems = []
         var subnodes = this.node().items()
         
-        for (var i = 0; i < subnodes.length; i++) {
-            var subnode = subnodes[i]
+		subnodes.forEach((subnode) => {
             var item = this.itemForNode(subnode)
             
             if (!item) {
@@ -126,7 +87,7 @@ NodeView = Div.extend().newSlots({
             }
             
             newItems.push(item)      
-        }
+        })
         
         if (!newItems.isEqual(this.items())) {
             this.removeAllItems()

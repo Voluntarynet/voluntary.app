@@ -5,6 +5,7 @@ BrowserColumn = NodeView.extend().newSlots({
     node: null,
     selectionColor: "#aaa",
     allowsCursorNavigation: true,
+	debug: true,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
@@ -102,7 +103,7 @@ BrowserColumn = NodeView.extend().newSlots({
   
      indexOfRowWithNode: function (aNode) {
         var rows = this.rows()
-        for (var i = 0; i < rows.length; i++ ) {
+        for (var i = 0; i < rows.length; i++) {
             var row = rows[i]
             if (row.node() == aNode) {
                 return i;
@@ -121,7 +122,7 @@ BrowserColumn = NodeView.extend().newSlots({
       
     selectRowWithNode: function (aNode) {
         var rows = this.rows()
-        for (var i = 0; i < rows.length; i++ ) {
+        for (var i = 0; i < rows.length; i++) {
             var row = rows[i]
             if (row.node() == aNode) {
                 row.setIsSelected(true)
@@ -197,17 +198,46 @@ BrowserColumn = NodeView.extend().newSlots({
         }
     },
     
-    onKeyDown: function (event) {
-        //this.log("onKeyDown ", event)
+    onKeyUp: function (event) {
+       // this.log("onKeyDown ", event)
         if (!this.allowsCursorNavigation()) {
             return
         }
-        
+
+		if (event.keyCode == '38') {
+	        // up arrow
+			event.keyIdentifier = "Up"
+	    }
+	    else if (event.keyCode == '40') {
+	        // down arrow
+			event.keyIdentifier = "Down"
+	    }
+	    else if (event.keyCode == '37') {
+	       // left arrow
+			event.keyIdentifier = "Left"
+	    }
+	    else if (event.keyCode == '39') {
+	       // right arrow
+			event.keyIdentifier = "Right"
+	    }
+	
+
+        this.log("onKeyDown 2 ", event)
+        this.log("event.keyIdentifier " + event.keyIdentifier)
+
         var kid = event.keyIdentifier
         var isDelete = false //kid == "U+0008"
         var isPlus   = kid == "U+002B" && event.shiftKey == true
         var sNode = this.selectedNode()
         
+		if (kid == "Left") {
+			if (this.selectedRow()) { this.selectedRow().unselect() }
+
+			var pc = this.previousColumn()			
+			pc.rowClicked(pc.selectedRow())
+            this.selectPreviousColumn()
+        }
+
         if (!sNode) {
             return
         }
@@ -220,8 +250,6 @@ BrowserColumn = NodeView.extend().newSlots({
             this.selectPreviousRow()
         } else if (kid == "Down") {
             this.selectNextRow()
-        } else if (kid == "Left") {
-            this.selectPreviousColumn()
         } else if (kid == "Right") {
             this.selectNextColumn()
         } else if(sNode && isDelete) { 
@@ -239,6 +267,8 @@ BrowserColumn = NodeView.extend().newSlots({
         return this.browser().columnGroups().indexOf(this.columnGroup())
         //return this.browser().columns().indexOf(this)
     },
+
+	// nextRow
 
     selectNextRow: function() {
         var si = this.selectedRowIndex()
@@ -261,6 +291,8 @@ BrowserColumn = NodeView.extend().newSlots({
         }
         return this
     },
+
+	// next column
     
     nextColumn: function() {
         var i = this.columnIndex()
@@ -269,8 +301,7 @@ BrowserColumn = NodeView.extend().newSlots({
     },
     
     selectNextColumn: function() {
-        var i = this.columnIndex()
-        var nextColumn = this.browser().columns()[i+1]
+        var nextColumn = this.nextColumn()
         if (nextColumn) {
             if (nextColumn.selectedRowIndex() == -1) {
                 nextColumn.setSelectedRowIndex(0)
@@ -282,18 +313,25 @@ BrowserColumn = NodeView.extend().newSlots({
         return this
     },
     
-    selectPreviousColumn: function() {
+	// previous column
+	
+    previousColumn: function() {
         var i = this.columnIndex()
-        if (i == 0) { 
-            return; 
-        }
-        var nextColumn = this.browser().columns()[i-1]
-        if (nextColumn) {
+        var prevColumn = this.browser().columns()[i-1]
+        return prevColumn
+    },
+
+    selectPreviousColumn: function() {
+		this.log("selectPreviousColumn this.columnIndex() = " + this.columnIndex())
+        var prevColumn = this.previousColumn()
+        if (prevColumn) {
             this.blur()
-            nextColumn.focus()
+            prevColumn.focus()
         }
         return this
     },
+
+	// paths
     
     browserPathArray: function() {
         var items = this.browser().columns().itemsBefore(this)

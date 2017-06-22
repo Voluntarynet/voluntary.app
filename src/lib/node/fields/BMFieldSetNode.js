@@ -76,40 +76,11 @@ BMFieldSetNode = BMStorableNode.extend().newSlots({
 		return this
 	},
     
-    // --- peristence - save items as fields in dict ---
-    /*
-	
-    nodeDict: function () {
-        var dict = BMStorableNode.nodeDictForProperties.apply(this)
-        
-        this.items().forEach((item) => {
-            dict[item.key()] = item.value()
-        })
-        
-        return dict
-    },
-
-    setNode: function(aNode) {
-        BMStorableNode.setNode.apply(this, [aNode])
-        //this.syncToFields()
-        return this
-    },
-        
-    setNodeDict: function(dict) {
-        this.items().forEach((item) => {
-            item.setValue(dict[item.key()])
-        })        
-        
-        //this.syncFields()
-
-        return this
-    },
-*/
-    
     onDidEditNode: function() {
         this.markDirty()
         this.didUpdate()
     },
+
     /*
     syncToFields: function() {
         this.items().forEach((field) => {
@@ -127,22 +98,26 @@ BMFieldSetNode = BMStorableNode.extend().newSlots({
             }
         })
     },
-*/
+	*/
 
 	validate: function() {
+		return this.items().detect((item) => { return !item.validate() }) != null
+		
+		/*
 		var isValid = true
 
-		this.items().forEach(function (item) { 
+		this.items().forEach((item) => { 
 			if (!item.validate()) {
 				isValid = false
 			}
 		})
 	
 		return isValid
+		*/
 	},
 
 	invalidItems: function() {
-		return this.items().detect(function (item) { item.validate() })
+		return this.items().detect((item) => { item.validate() })
 	},
 
 	isValid: function() {

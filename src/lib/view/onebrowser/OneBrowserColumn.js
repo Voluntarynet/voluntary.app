@@ -99,20 +99,20 @@ OneBrowserColumn = NodeView.extend().newSlots({
     },
     
     selectRowWithNode: function (aNode) {
-        var rows = this.rows()
-        for (var i = 0; i < rows.length; i++ ) {
-            var row = rows[i]
-            if (row.node() == aNode) {
-                row.setIsSelected(true)
-                return row
-            }
-        }
+        var matchingRow = this.rows().detect((row) => { return row.node() == aNode })
+		if (matchingRow) {
+            matchingRow.setIsSelected(true)
+            return matchingRow
+		}
+		
         return null
     },
     
     selectedRowTitle: function () {
         var row = this.selectedRow()
-        if (row) { return row.title().innerHTML() }
+        if (row) { 
+			return row.title().innerHTML() 
+		}
         return null
     },
 

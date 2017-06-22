@@ -217,18 +217,22 @@ BrowserView = NodeView.extend().newSlots({
         var nextCg = this.columnGroups().itemAfter(selectedColumnGroup)		
 
         if (nextCg) {
-            var nextNode = selectedColumnGroup.column().selectedRow().node()
-            nextCg.setNode(nextNode)
-            this.clearColumnsGroupsAfter(nextCg)
-            //nextCg.column().setTitle(selectedColumn.selectedRowTitle())
-            //this.log(" --- selectColumn sync")
+            var selectedRow = selectedColumnGroup.column().selectedRow()
+
+			if (selectedRow) {
+	            var nextNode = selectedRow.node()
+	            nextCg.setNode(nextNode)
+	            this.clearColumnsGroupsAfter(nextCg)
+	            //nextCg.column().setTitle(selectedColumn.selectedRowTitle())
+	            //this.log(" --- selectColumn sync")
             
-            nextCg.syncFromNode()
-			//console.log("nextNode = ", nextNode.isKindOf(BMFieldSetNode))
+	            nextCg.syncFromNode()
+				//console.log("nextNode = ", nextNode.isKindOf(BMFieldSetNode))
 			
-			if (nextNode.view().type() != "BrowserColumnGroup" || nextNode.isKindOf(BMFieldSetNode)) {
-				this.setColumnGroupCount(index + 2)
-			}
+				if (nextNode.view().type() != "BrowserColumnGroup" || nextNode.isKindOf(BMFieldSetNode)) {
+					this.setColumnGroupCount(index + 2)
+				}
+			} // should this be here?
         }
         
         this.setupColumnGroupColors()

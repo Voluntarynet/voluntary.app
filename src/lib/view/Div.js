@@ -35,6 +35,7 @@ Div = ideal.Proto.extend().newSlots({
 	interceptsTab: true,
 	nextKeyView: null,
 	canMakeKey: true,
+	unfocusOnEnterKey: false,
 }).setSlots({
     init: function () {
         this._items = []
@@ -797,15 +798,19 @@ Div = ideal.Proto.extend().newSlots({
 			return "plus"
 		}
 		
-		console.log("specialNameForKeyEvent ", code, " = ", result)
+		//console.log("specialNameForKeyEvent ", code, " = ", result)
 		
 		return result
 	},
 	
     onKeyDown: function (event) {
 		event.specialKeyName = this.specialNameForKeyEvent(event)
-
-		console.log("onKeyDown event.specialKeyName = " + event.specialKeyName)
+		
+		if (event.specialKeyName == "enter" && this.unfocusOnEnterKey()) {
+			console.log(" releasing focus")
+			// this.releaseFocus() // todo: implement something to pass focus up view chain to whoever wants it
+			this._element.parentElement.focus()
+		}
 		
 		/*
 		if (this.interceptsTab()) {
@@ -830,8 +835,10 @@ Div = ideal.Proto.extend().newSlots({
     },
     
     onKeyUp: function (event) {
+		console.log(this.type() + " onKeyUp")
+		
+		var shouldPropogate = true
 		event.specialKeyName = this.specialNameForKeyEvent(event)
-		console.log("onKeyUp event.specialKeyName = " + event.specialKeyName)
 
 		/*
 		if (this.interceptsTab()) {
@@ -856,11 +863,14 @@ Div = ideal.Proto.extend().newSlots({
 		if (event.specialKeyName) {
 			var name = "on" + event.specialKeyName.capitalized() + "KeyUp"
 			if (this[name]) {
-				this[name].apply(this, [event])
+				shouldPropogate = this[name].apply(this, [event])
+		        event.preventDefault()
+				console.log("shouldPropogate = ", shouldPropogate)
 			}
 		}
         
         this.tellParents("onDidEdit", this)
+		return shouldPropogate
     },
     
     onTabKeyDown: function() {
@@ -1041,6 +1051,19 @@ Div = ideal.Proto.extend().newSlots({
     
     // ---------------------
     
+	selectAll: function() {
+		if (document.selection) {
+            var range = document.body.createTextRange();
+            range.moveToElementText(this._element);
+            range.select();
+        } else if (window.getSelection) {
+            var range = document.createRange();
+            range.selectNode(this._element);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+        }
+	},
+
     paste: function (e) {
         // prevent pasting text by default after event
         e.preventDefault(); 

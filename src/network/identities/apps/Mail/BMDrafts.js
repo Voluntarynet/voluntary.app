@@ -24,7 +24,7 @@ BMDrafts = BMListNode.extend().newSlots({
 		//newItem.useDefaultFromAddress()
 		newPrivateMsg.setFromContact(this.localIdentity().name())
         this.didUpdate()
-        return newItem
+        return newPrivateMsg
     },
     
 })

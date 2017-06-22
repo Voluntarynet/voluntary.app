@@ -42,6 +42,8 @@ BrowserColumn = NodeView.extend().newSlots({
         return this.parentItem()
     },
 
+	// rows
+
     rows: function() {
         return this.items()
     },
@@ -50,14 +52,16 @@ BrowserColumn = NodeView.extend().newSlots({
         return this.addItem(v)
     },
 
+    removeRow: function(v) {
+        return this.removeItem(v)
+    },
+
+	/*
     removeItem: function(v) {
         var r = NodeView.removeItem.apply(this, [v])
         return r       
     },
-    
-    removeRow: function(v) {
-        return this.removeItem(v)
-    },
+	*/
 
 	// selection
 
@@ -209,55 +213,82 @@ BrowserColumn = NodeView.extend().newSlots({
 	onUpArrowKeyUp: function(event) {
         if (!this.allowsCursorNavigation()) { return }
         this.selectPreviousRow()
-		return this
+		return false
 	},
 	
 	onDownArrowKeyUp: function(event) {
         if (!this.allowsCursorNavigation()) { return }	
         this.selectNextRow()
-		return this
+		return false
 	},
 	
 	onLeftArrowKeyUp: function(event) {
         if (!this.allowsCursorNavigation()) { return }	
 
-        var sNode = this.selectedNode()
-		if (sNode) { sNode.unselect() }
 
-		var pc = this.previousColumn()			
-		pc.rowClicked(pc.selectedRow())
-        this.selectPreviousColumn()
-		return this
+
+		var pc = this.previousColumn()	
+		if (pc) {		
+			if (this.selectedRow()) { 
+				this.selectedRow().unselect() 
+			}
+			
+			pc.rowClicked(pc.selectedRow())
+        	this.selectPreviousColumn()
+		}
+		return false
 	},
 	
 	onRightArrowKeyUp: function(event) {
-        if (!this.allowsCursorNavigation()) { return }		
-
-        this.selectNextColumn()
-		return this
+        if (!this.allowsCursorNavigation()) { return }	
+		if (this.nextColumn().items().length > 0) {
+        	this.selectNextColumn()
+		}
+		return false
 	},	
+	
+	onEnterKeyUp: function(event) {
+        if (!this.allowsCursorNavigation()) { return }	
+		var row = this.selectedRow()
+		if (row && row.node().nodeTitleIsEditable()) { 
+			//row.title().focus() 
+			setTimeout(() => {
+				row.title().selectAll() 
+				setTimeout(() => { row.title().focus() })
+			})
+		}
+		
+		return false
+	},
 
 	// keyboard controls, add and delete actions
 	
-	/*
 	
 	// need to fix interactions with direct editing of row title, etc first
 	
 	onDeleteKeyUp: function(event) {
         if (!this.allowsCursorNavigation()) { return }		
         var sNode = this.selectedNode()
-        if (sNode && sNode.hasAction("delete")) { sNode.performAction("delete") }
-		return this
+        if (sNode && sNode.hasAction("delete")) { 
+			sNode.performAction("delete") 
+			if (this.items().length == 0) {
+				this.selectPreviousColumn()
+			}
+		}
+		return false
 	},
 	
 	onPlusKeyUp: function(event) {
         if (!this.allowsCursorNavigation()) { return }		
         var sNode = this.selectedNode()
-        if (sNode && sNode.hasAction("add")) { sNode.performAction("add") }
-		return this		
+        if (sNode && sNode.hasAction("add")) { 
+			var newNode = sNode.performAction("add") 
+	        this.selectNextColumn()
+			this.nextColumn().selectRowWithNode(newNode)
+		}
+		return false		
 	},
 	
-	*/
 	
 
 	// -----------------------------
@@ -321,7 +352,7 @@ BrowserColumn = NodeView.extend().newSlots({
     },
 
     selectPreviousColumn: function() {
-		this.log("selectPreviousColumn this.columnIndex() = " + this.columnIndex())
+		//this.log("selectPreviousColumn this.columnIndex() = " + this.columnIndex())
         var prevColumn = this.previousColumn()
         if (prevColumn) {
             this.blur()

@@ -7,4 +7,5 @@ JSImporter.pushRelativePaths([
     "BMImageWellFieldView.js",
     "BMMultiFieldView.js",
     "BMMultiFieldOptionsView.js",
+	"BMPointerFieldView.js"
 ])

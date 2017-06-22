@@ -760,25 +760,69 @@ Div = ideal.Proto.extend().newSlots({
         return this
     },    
     
-	keyCodes: { tab: 9 },
+	specialKeyCodes: function () { 
+		return {
+			8:  "delete", // "delete" on Apple keyboard
+			9:  "tab", 
+			13:  "enter", 
+			16:  "shift", 
+			17:  "control", 
+			18:  "alt", 
+			20:  "capsLock", 
+			27:  "escape", 
+			33:  "pageUp", 
+			34:  "pageDown", 
+			37: "leftArrow",  
+			38: "upArrow",  
+			39: "rightArrow", 
+			40: "downArrow",  
+			46: "delete", 
+			/* 
+			107: "add",  
+			109: "subtract",  
+			111: "divide",  
+			144: "numLock",  
+			145: "scrollLock",  
+			186: "semiColon",  
+			187: "equalsSign", 
+			*/ 
+		}
+	},
+	
+	specialNameForKeyEvent: function(event) {
+		var code = event.keyCode
+		var result = this.specialKeyCodes()[code]
+		
+		if (event.shiftKey && (code == 187)) {
+			return "plus"
+		}
+		
+		console.log("specialNameForKeyEvent ", code, " = ", result)
+		
+		return result
+	},
 	
     onKeyDown: function (event) {
-		console.log("onKeyDown")
+		event.specialKeyName = this.specialNameForKeyEvent(event)
+
+		console.log("onKeyDown event.specialKeyName = " + event.specialKeyName)
+		
+		/*
 		if (this.interceptsTab()) {
-	        if (event.keyCode == this.keyCodes.tab) {
+	        if (event.keyId == "tab") {
 		        event.preventDefault()
 	            this.onTabKeyDown()
 	        }
-		}        
-        //console.log("onKeyDown")
-        //this._lastInnerHTML = this.innerHTML()
-     /*   
-        var cursorPos = document.selection.createRange().duplicate();
-        this._clickx = cursorPos.getBoundingClientRect().left; 
-        this._clicky = cursorPos.getBoundingClientRect().top;
-    */
-
-
+		}
+		*/    
+		
+		if (event.specialKeyName) {
+			var name = "on" + event.specialKeyName.capitalized() + "KeyDown"
+			if (this[name]) {
+				this[name].apply(this, [event])
+		        event.preventDefault()
+			}
+		}
     },
     
     onKeyPress: function (event) {
@@ -786,15 +830,19 @@ Div = ideal.Proto.extend().newSlots({
     },
     
     onKeyUp: function (event) {
+		event.specialKeyName = this.specialNameForKeyEvent(event)
+		console.log("onKeyUp event.specialKeyName = " + event.specialKeyName)
+
+		/*
 		if (this.interceptsTab()) {
-	        if (event.keyCode == this.keyCodes.tab) {
+	        if (event.keyId == "tab") {
 	            event.preventDefault()
 				return
 	        }
 		}
+		*/
         
         //console.log("event: ", event)
-        
         //event.preventDefault()
         
         if ((!this.isValid()) && (this.invalidColor() != null)) {
@@ -804,6 +852,13 @@ Div = ideal.Proto.extend().newSlots({
                 this.setColor(null)
             }
         }
+
+		if (event.specialKeyName) {
+			var name = "on" + event.specialKeyName.capitalized() + "KeyUp"
+			if (this[name]) {
+				this[name].apply(this, [event])
+			}
+		}
         
         this.tellParents("onDidEdit", this)
     },

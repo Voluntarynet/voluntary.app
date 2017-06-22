@@ -114,18 +114,18 @@ BMNetwork = BMStorableNode.extend().newSlots({
         return this.remoteIdentities().idWithPubKeyString(pubKeyString)
     },
 
-	allIdenties: function() {
+	allIdentities: function() {
 		var ids = []
 		ids = this.localIdentities().items().concat(this.remoteIdentities().items())
 		return ids
 	},
     
 	allIdentityPublicKeyStrings: function() {
-		return this.allIdenties().map(function(id) { return id.publicKeyString(); })
+		return this.allIdentities().map(function(id) { return id.publicKeyString(); })
 	},
 	
 	allIdentityNames: function() {
-		return this.allIdenties().map(function(id) { return id.name(); })
+		return this.allIdentities().map(function(id) { return id.name(); })
 	},
 	
 	localIdentityNames: function() {
@@ -156,7 +156,7 @@ BMNetwork = BMStorableNode.extend().newSlots({
 	},
 	
 	updateIdsBloomFilter: function() {
-		var ids = this.allIdenties()
+		var ids = this.allIdentities()
 				
 		this._idsBloomFilter = this.newDefaultBloomFilter()
 				

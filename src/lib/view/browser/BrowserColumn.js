@@ -59,6 +59,9 @@ BrowserColumn = NodeView.extend().newSlots({
         return this.removeItem(v)
     },
 
+	// selection
+
+
     rowClicked: function(clickedRow) {
         var rows = this.rows()
         rows.forEach(function(row) {
@@ -119,6 +122,7 @@ BrowserColumn = NodeView.extend().newSlots({
         }
         return this
     },
+
       
     selectRowWithNode: function (aNode) {
         var rows = this.rows()
@@ -137,6 +141,8 @@ BrowserColumn = NodeView.extend().newSlots({
         if (row) { return row.title().innerHTML() }
         return null
     },
+
+	// sync
 
     syncFromNode: function () {
         
@@ -197,71 +203,64 @@ BrowserColumn = NodeView.extend().newSlots({
             }
         }
     },
-    
-    onKeyUp: function (event) {
-       // this.log("onKeyDown ", event)
-        if (!this.allowsCursorNavigation()) {
-            return
-        }
 
-		if (event.keyCode == '38') {
-	        // up arrow
-			event.keyIdentifier = "Up"
-	    }
-	    else if (event.keyCode == '40') {
-	        // down arrow
-			event.keyIdentifier = "Down"
-	    }
-	    else if (event.keyCode == '37') {
-	       // left arrow
-			event.keyIdentifier = "Left"
-	    }
-	    else if (event.keyCode == '39') {
-	       // right arrow
-			event.keyIdentifier = "Right"
-	    }
+	// keyboard controls, arrow navigation
+	
+	onUpArrowKeyUp: function(event) {
+        if (!this.allowsCursorNavigation()) { return }
+        this.selectPreviousRow()
+		return this
+	},
+	
+	onDownArrowKeyUp: function(event) {
+        if (!this.allowsCursorNavigation()) { return }	
+        this.selectNextRow()
+		return this
+	},
+	
+	onLeftArrowKeyUp: function(event) {
+        if (!this.allowsCursorNavigation()) { return }	
+
+        var sNode = this.selectedNode()
+		if (sNode) { sNode.unselect() }
+
+		var pc = this.previousColumn()			
+		pc.rowClicked(pc.selectedRow())
+        this.selectPreviousColumn()
+		return this
+	},
+	
+	onRightArrowKeyUp: function(event) {
+        if (!this.allowsCursorNavigation()) { return }		
+
+        this.selectNextColumn()
+		return this
+	},	
+
+	// keyboard controls, add and delete actions
+	
+	/*
+	
+	// need to fix interactions with direct editing of row title, etc first
+	
+	onDeleteKeyUp: function(event) {
+        if (!this.allowsCursorNavigation()) { return }		
+        var sNode = this.selectedNode()
+        if (sNode && sNode.hasAction("delete")) { sNode.performAction("delete") }
+		return this
+	},
+	
+	onPlusKeyUp: function(event) {
+        if (!this.allowsCursorNavigation()) { return }		
+        var sNode = this.selectedNode()
+        if (sNode && sNode.hasAction("add")) { sNode.performAction("add") }
+		return this		
+	},
+	
+	*/
 	
 
-        this.log("onKeyDown 2 ", event)
-        this.log("event.keyIdentifier " + event.keyIdentifier)
-
-        var kid = event.keyIdentifier
-        var isDelete = false //kid == "U+0008"
-        var isPlus   = kid == "U+002B" && event.shiftKey == true
-        var sNode = this.selectedNode()
-        
-		if (kid == "Left") {
-			if (this.selectedRow()) { this.selectedRow().unselect() }
-
-			var pc = this.previousColumn()			
-			pc.rowClicked(pc.selectedRow())
-            this.selectPreviousColumn()
-        }
-
-        if (!sNode) {
-            return
-        }
-        
-        if (!this.allowsCursorNavigation()) {
-            return
-        }
-                
-        if (kid == "Up") {
-            this.selectPreviousRow()
-        } else if (kid == "Down") {
-            this.selectNextRow()
-        } else if (kid == "Right") {
-            this.selectNextColumn()
-        } else if(sNode && isDelete) { 
-            if (sNode.hasAction("delete")) {
-                sNode.performAction("delete")
-            }            
-        } else if(isPlus) {
-            if (sNode && sNode.hasAction("add")) {
-                sNode.performAction("add")
-            }
-        }
-    },
+	// -----------------------------
     
     columnIndex: function() {
         return this.browser().columnGroups().indexOf(this.columnGroup())

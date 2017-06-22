@@ -55,7 +55,7 @@ NotificationCenter = ideal.Proto.extend().setType("NotificationCenter").newSlots
     hasTimeout: null,
     notifications: null,
     shared: null,
-    usesTimeouts: true,
+    //usesTimeouts: true,
     isDebugging: false,
     currentNote: null,
 }).setSlots({

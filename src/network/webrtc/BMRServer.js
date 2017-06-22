@@ -1,27 +1,32 @@
 
 // A Rendezvous Server
 
-BMRServer = BMStorableNode.extend().newSlots({
+BMRServer = BMFieldSetNode.extend().newSlots({
     type: "BMRServer",
    // host: 'peers.bitmarkets.org',
     host: '127.0.0.1',
     port: 9000,
     serverConnection: null,
 	bloomDistance: null,
+	error: null,
 	debug: true,
 }).setSlots({
     init: function () {
-        BMStorableNode.init.apply(this)
+        BMFieldSetNode.init.apply(this)
 		this.setShouldStore(true)
 		this.setShouldStoreItems(true)
 		
         this.setServerConnection(BMServerConnection.clone().setServer(this))
-        this.addItem(this.serverConnection())
+        //this.addItem(this.serverConnection())
         //this.setTitle("RTC Server")
         this.addStoredSlots(["host", "port"])
         this.setShouldStoreItems(false)
         this.addAction("delete")
         this.setNodeMinWidth(160)
+	
+		this.addStoredField(BMField.clone().setKey("host"))
+		this.addStoredField(BMField.clone().setKey("port"))
+		this.justAddField(BMPointerField.clone().setKey("serverConnection"))
     },
 
     servers: function () {
@@ -38,26 +43,20 @@ BMRServer = BMStorableNode.extend().newSlots({
     },
     
     status: function() {
-        var s = ""  
-        var serverConnection = this.serverConnections()[0] 
-        if (serverConnection) {
-            s += this.remotePeerCount() + " remote peers"
-        } else {
-            return "connecting..."
-        }
-        return s
+        if (this.serverConnection().isConnected()) {
+            return this.remotePeerCount() + " remote peers"
+        } 
+
+		if (this.serverConnection().error()) {
+			return this.serverConnection().error()
+		}
+
+        return "connecting..."
     }, 
     
     remotePeerCount: function() {
-        return this.serverConnections().sum(function (p) {
-            return p.remotePeers().length
-            //return p.itemsLength()
-        })
+        return this.serverConnection().connectedRemotePeers().length
     },
-    
-    serverConnections: function () {
-        return this.items()
-    }, 
     
     connect: function () {
         //this.log("BMRServer.connect")

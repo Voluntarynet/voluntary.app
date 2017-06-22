@@ -60,10 +60,11 @@ BMNode = ideal.Proto.extend().newSlots({
     
     addLinkFieldForNode: function(aNode) {
         var field = BMLinkField.clone().setName(aNode.title()).setValue(aNode)
-        return this.addField(field)
+        return this.addStoredField(field)
     },
     
     addField: function(aField) {
+		throw "shouldn't be called"
         return this.addItem(aField)
     },
         

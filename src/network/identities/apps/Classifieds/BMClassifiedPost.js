@@ -24,20 +24,20 @@ BMClassifiedPost = BMFieldSetNode.extend().newSlots({
 		this.setShouldStore(true)
         //this.setNodeMinWidth(550)
         
- 		this.addField(BMStampField.clone().setKey("stamp").setNodeFieldProperty("stamp")).setValueIsEditable(false)
+ 		this.addStoredField(BMStampField.clone().setKey("stamp").setNodeFieldProperty("stamp")).setValueIsEditable(false)
         this.addFieldNamed("path").setKey("path").setValueIsEditable(false)
 		this.fieldNamed("path").visibleValue = function () {
 			return this.value().split("/").join(" / ")
 		}
 		
         this.addFieldNamed("title").setKey("title").setValueIsEditable(true)
- 		this.addField(BMNumberField.clone().setKey("price").setNodeFieldProperty("price")).setValueIsEditable(true).setUnsetVisibleValue(0)
+ 		this.addStoredField(BMNumberField.clone().setKey("price").setNodeFieldProperty("price")).setValueIsEditable(true).setUnsetVisibleValue(0)
 
 
- 		this.addField(BMMultiField.clone().setKey("currency").setNodeFieldProperty("currency")).setValueIsEditable(true).setValidValuesMethod("currencySymbols").setNoteMethod("currencyName")
- 		this.addField(BMDateField.clone().setKey("sent date").setNodeFieldProperty("postDate")).setValueIsEditable(false).setUnsetVisibleValue("(not sent yet)")
-		this.addField(BMTextAreaField.clone().setKey("description").setNodeFieldProperty("description")).setValueIsEditable(true)
-		this.addField(BMImageWellField.clone().setKey("drop images here").setNodeFieldProperty("imageDataURLs")).setValueIsEditable(true)
+ 		this.addStoredField(BMMultiField.clone().setKey("currency").setNodeFieldProperty("currency")).setValueIsEditable(true).setValidValuesMethod("currencySymbols").setNoteMethod("currencyName")
+ 		this.addStoredField(BMDateField.clone().setKey("sent date").setNodeFieldProperty("postDate")).setValueIsEditable(false).setUnsetVisibleValue("(not sent yet)")
+		this.addStoredField(BMTextAreaField.clone().setKey("description").setNodeFieldProperty("description")).setValueIsEditable(true)
+		this.addStoredField(BMImageWellField.clone().setKey("drop images here").setNodeFieldProperty("imageDataURLs")).setValueIsEditable(true)
 
         this.setTitle("Untitled")
         this.setPrice(0)

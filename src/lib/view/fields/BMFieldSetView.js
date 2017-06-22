@@ -9,14 +9,17 @@ BMFieldSetView = NodeView.extend().newSlots({
 		// calling syncToNode will set up field views
         return this
     },
+	
+	/*
 
+	// tabing between fields
+	
 	syncFromNode: function() {
 		NodeView.syncFromNode.apply(this)
 		//this.setupKeyViews()
 		return this
 	},
 	
-	/*
 	setupKeyViews: function() {
 		var lastFieldView = null
 		var fieldViews = this.items()

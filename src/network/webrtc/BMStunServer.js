@@ -29,9 +29,9 @@ BMStunServer = BMFieldSetNode.extend().newSlots({
         this.addAction("delete")
         this.setNodeMinWidth(160)
 
-		this.addField(BMField.clone().setKey("host").setNodeFieldProperty("host")).setValueIsEditable(true)
-		this.addField(BMField.clone().setKey("port").setNodeFieldProperty("port")).setValueIsEditable(true)
-		this.addField(BMField.clone().setKey("notes").setNodeFieldProperty("notes")).setValueIsEditable(true)
+		this.addStoredField(BMField.clone().setKey("host").setNodeFieldProperty("host")).setValueIsEditable(true)
+		this.addStoredField(BMField.clone().setKey("port").setNodeFieldProperty("port")).setValueIsEditable(true)
+		this.addStoredField(BMField.clone().setKey("notes").setNodeFieldProperty("notes")).setValueIsEditable(true)
     },
 
     title: function () {

@@ -9,8 +9,8 @@ BMProfile = BMFieldSetNode.extend().newSlots({
         
 		// pass through fields
         this.addFieldNamed("name").setNodeFieldProperty("name").setValueIsEditable(true)
-		this.addField(BMIdentityField.clone().setNodeFieldProperty("publicKeyString").setKey("public key").setValueIsEditable(true))
-	//	this.addField(BMIdentityField.clone().setNodeFieldProperty("privateKeyString").setKey("private key").setValueIsEditable(false))
+		this.addStoredField(BMIdentityField.clone().setNodeFieldProperty("publicKeyString").setKey("public key").setValueIsEditable(true))
+	//	this.addStoredField(BMIdentityField.clone().setNodeFieldProperty("privateKeyString").setKey("private key").setValueIsEditable(false))
 
 		// local fields
         this.addFieldNamed("phone").setNodeFieldProperty("phone").setValueIsEditable(true)

@@ -1,7 +1,7 @@
 
 JSImporter.pushRelativePaths([
 	"_css.css",
-    "Browser.js",
+    "BrowserView.js",
     "BrowserColumn.js",
     "BrowserColumnGroup.js",
     "BrowserHeader.js",

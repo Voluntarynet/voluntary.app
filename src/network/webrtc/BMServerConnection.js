@@ -10,6 +10,7 @@ BMServerConnection = BMNode.extend().newSlots({
     lastError: null,
     privateKey: null,
     status: null,
+	error: null,
     //log: null,
 	sessionId: null,
 	peerId: null,
@@ -115,6 +116,7 @@ BMServerConnection = BMNode.extend().newSlots({
 */
 
     onError: function(error) {
+		this.setError(error)
         this.setStatus(error)
         this.log(this.type() + " onError: " + error);
         this._serverConn = null

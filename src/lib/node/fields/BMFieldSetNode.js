@@ -41,18 +41,25 @@ BMFieldSetNode = BMStorableNode.extend().newSlots({
     
     // --- fields ---
 
-	addField: function(field) {
-		var name = field.nodeFieldProperty()
+	addStoredField: function(aField) {
+		var name = aField.nodeFieldProperty()
 		this.addStoredSlot(name)
-		this.newSlot(name, null);
-		this.addItem(field)
-		return field	
+		if (!this[name]) {
+			this.newSlot(name, null)
+		}
+		this.justAddField(aField)
+		return aField	
+	},
+	
+	justAddField: function(aField) {
+		this.addItem(aField)
+		return aField
 	},
 
     addFieldNamed: function(name) {	
         var field = BMField.clone().setKey(name)
 		field.setNodeFieldProperty(name)
-		this.addField(field)
+		this.addStoredField(field)
         return field
     },
     

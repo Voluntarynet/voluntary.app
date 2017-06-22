@@ -1,7 +1,7 @@
 //var assert = require("assert")
 
-Browser = NodeView.extend().newSlots({
-    type: "Browser",
+BrowserView = NodeView.extend().newSlots({
+    type: "BrowserView",
     columns: null,
     bgColors: [
             //"#404040", 

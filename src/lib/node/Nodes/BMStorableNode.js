@@ -53,8 +53,8 @@ BMStorableNode = BMNode.extend().newSlots({
 					try {
 		                v = this[k].apply(this)
 					} catch(error) {
-						console.log("ERROR: " + this.type() + "." + k + "() missing method")
-						throw error
+						console.log("WARNING: " + this.type() + "." + k + "() missing method")
+						//throw error
 					}
 	            }
             
@@ -88,6 +88,7 @@ BMStorableNode = BMNode.extend().newSlots({
     },
     
     setNodeDictForProperties: function (aDict) {
+		var hadMissingSetter = false 
         for (var k in aDict) {
           if (aDict.hasOwnProperty(k)) {
             if (k != "children" && k != "type") {
@@ -101,14 +102,21 @@ BMStorableNode = BMNode.extend().newSlots({
                     if (this[setter]) {
                         this[setter].apply(this, [v])
                     } else {
-                        console.error(this.type() + " missing setter " + setter)
+						var error = "WARNING: " + this.type() + " missing setter " + setter
+                        console.error(error)
                         console.log("dict = " + JSON.stringify(aDict))
+						hadMissingSetter = true
+						throw error
                     }
                 }
             }
           }
         }
    
+		if (hadMissingSetter) {
+			this.markDirty()
+		}
+		
         return this
     },
 

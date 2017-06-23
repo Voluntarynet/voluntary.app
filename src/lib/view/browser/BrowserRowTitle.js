@@ -13,6 +13,14 @@ BrowserRowTitle = Div.extend().newSlots({
         return this
     },
 
+/*
+	updateSubviews: function() {
+		 if (this.isSelected()) {
+			this.setColor("#CBCBCB")
+		}
+	},
+	*/
+
     setHasSubtitle: function(aBool) {        
         if (aBool) {
             this.setTop(10)

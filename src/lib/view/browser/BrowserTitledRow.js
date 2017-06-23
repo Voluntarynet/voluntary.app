@@ -33,6 +33,12 @@ BrowserTitledRow = BrowserRow.extend().newSlots({
         this.noteView().setIsSelected(this._isSelected)
         this.setBackgroundColor(this.currentBgColor())
 
+		if (this.isSelected()) {
+			this.setColor("white")
+		} else {
+			this.setColor("CBCBCB")
+		}
+		
         return this
     },
 

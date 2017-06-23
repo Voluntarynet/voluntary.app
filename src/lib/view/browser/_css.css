@@ -77,9 +77,6 @@
 }
 
 .BrowserColumn {
-    /*
-    display: table;
-    */
     position: relative;
     overflow-y: auto;
     flex: 1;
@@ -91,9 +88,6 @@
 }
 
 .BrowserFieldsColumn {
-    /*
-    display: table;
-    */
     position: relative;
     overflow-y: auto;
     flex: 1;
@@ -110,7 +104,6 @@
   border: 1px dashed white;
 }
 
-
 .BrowserRow_Selected:focus {
   border: 1px dashed white;
 }
@@ -122,40 +115,13 @@
     font-family: "OpenSans-Regular";
     display: block;
     position: relative;
-    opacity: .8;
+    opacity:1;
     width: 100%;
     height: 60px;
     color: #CBCBCB;
     border-bottom: 0px solid #ddd;
     transition: background-color .3s ease-out;
 }
-
-.BrowserRow_Selected {
-    font-family: "OpenSans-Regular";
-    display: block;
-    position: relative;
-    opacity: 1;
-    width: 100%;
-    height: 60px;
-    border-bottom: 0px solid #ddd;
-    transition: background-color .3s ease-out;
-    color: #fff;
-}
-
-.BrowserRow:hover {
-    /*
-    background-color: #3f3f3f;
-    */
-}
-
-.BrowserRowTitle_NoSubtitle {
-    position: absolute;
-    top: 22px;
-    left: 20px;
-    font-size: 13px;
-    font-weight: normal;
-    white-space: nowrap;
-}  
 
 .BrowserRowTitle {
     min-width: 100px;
@@ -170,34 +136,9 @@
     text-transform: none;
 }
 
-.BrowserRowTitle_Selected {
-    min-width: 100px;
-    text-align: left;
-    color: #fff;
-    opacity: 1;
-    position: absolute;
-    left: 20px;
-    top: 10px;
-    font-size: 13px;
-    font-weight: normal;
-    white-space: nowrap;
-    text-transform: none;
-}
-
 .BrowserRowSubtitle {
     font-family: "OpenSans-Light";
     position: absolute;
-    opacity: .8;
-    left: 20px;
-    top: 30px;
-    font-size: 11px;
-    font-weight: normal;
-    white-space: nowrap;
-}
-
-.BrowserRowSubtitle_Selected {
-    font-family: "OpenSans-Light";
-    position: absolute;
     opacity: 1;
     left: 20px;
     top: 30px;
@@ -205,7 +146,6 @@
     font-weight: normal;
     white-space: nowrap;
 }
-
 
 .BrowserRowNote {
     font-family: "OpenSans-Light";
@@ -215,113 +155,6 @@
     font-size: 11px;
     font-weight: normal;
     white-space: nowrap;
-}
-
-.BrowserRowNote_Selected {
-    font-family: "OpenSans-Light";
-    position: absolute;
-    right: 20px;
-    top: 24px;
-    font-size: 11px;
-    font-weight: normal;
-    white-space: nowrap;
-}
-
-
-
-
-/* area */
-
-
-
-
-.BrowserAreaRow {
-    background-color: #fff;
-    opacity: 1;
-    
-    font-family: "OpenSans-Regular";
-
-    display: block;
-    position: relative;
-    width: 100%;
-    height: 60px;
-    color: #CBCBCB;
-    border-bottom: 1px solid #ddd;
-    transition: background-color .3s ease-out;
-	margin: 20px;
-}
-
-.BrowserAreaRowTitle {
-    color: #999;
-    font-family: "OpenSans-Regular";
-    
-    min-width: 90%;
-    text-align: left;
-    
-    position: absolute;
-    margin: 30px;
-    top: 0px;
-    left: 0px;
-    font-size: 13px;
-    font-weight: normal;
-    white-space: nowrap;
-    text-transform: none;
-    /*
-    border: 1px solid #ddd;
-    */
-}
-
-
-.BrowserAreaRowSubtitle {
-    visibility: hidden;
-}
-
-.BrowserAreaRowNote {
-    visibility: hidden;
-
-}
-
-/* --------------------- */
-
-.BrowserAreaRow_Selected {
-    background-color: #fff;
-    opacity: 1;
-    
-    font-family: "OpenSans-Regular";
-
-    display: block;
-    position: relative;
-    width: 100%;
-    height: 60px;
-    color: #CBCBCB;
-    border-bottom: 1px solid #ddd;
-    transition: background-color .3s ease-out;
-}
-
-.BrowserAreaRowTitle_Selected {
-    color: #999;
-    font-family: "OpenSans-Regular";
-    
-    min-width: 100%;
-    text-align: left;
-    
-    position: absolute;
-    top: 22px;
-    left: 90px;
-    font-size: 13px;
-    font-weight: normal;
-    white-space: nowrap;
-    text-transform: none;
-}
-
-
-.BrowserAreaRowSubtitle_Selected {
-    visibility: hidden;
-
-}
-
-.BrowserAreaRowNote_Selected {
-    visibility: hidden;
 }
 
 

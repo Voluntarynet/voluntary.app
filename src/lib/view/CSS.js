@@ -156,6 +156,7 @@ CSS = ideal.Proto.extend().newSlots({
 
 /// --------------------
 
+/*
 CSS.ruleAt("Browser").setDict({
     overflow: "hidden",
     position: "absolute",
@@ -233,9 +234,11 @@ CSS.ruleAt("BrowserColumn").setDict({
     width: "100%",
     // borderLeft: "1px solid #333",
 })
+*/
 
 /* --- Browser Row --- */
 
+/*
 CSS.ruleAt("BrowserRow").setDict({
     fontFamily: "OpenSans-Regular",
     display: "block",
@@ -328,10 +331,11 @@ CSS.ruleAt("BrowserRowNote").setDict({
     whiteSpace: "nowrap",
 })
 
-
+*/
 
 /* --- BrowserFieldRow --- */
 
+/*
 CSS.ruleAt("BrowserFieldRow").setDict({
     backgroundColor: "#fff",
     opacity: 1,
@@ -388,3 +392,4 @@ CSS.ruleAt("BrowserFieldRowNote").setDict({
     fontWeight: "normal",
     whiteSpace: "nowrap",
 })
+*/

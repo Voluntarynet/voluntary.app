@@ -6,25 +6,8 @@ BrowserFieldRow = BrowserRow.extend().newSlots({
     init: function () {
         BrowserRow.init.apply(this)
         this.setIsSelectable(false) 
-        this.title().turnOnUserSelect()
-        this.subtitle().turnOffUserSelect()
         this.makeCursorDefault()
 		this.setSpellCheck(false)
-        return this
-    },
-    
-    setNode: function(aNode) {
-        BrowserRow.setNode.apply(this, [aNode])
-        
-        if (aNode) {
-            var name = aNode.nodeOverrideDivClassName() 
-            if (name == null) { name = "BrowserFieldRow" }
-            this.setDivClassName(name)
-            if(aNode.nodeAfterContent()) {
-                this.title().setContentAfterString(aNode.nodeAfterContent())
-            }
-        }     
-        
         return this
     },
     
@@ -36,16 +19,7 @@ BrowserFieldRow = BrowserRow.extend().newSlots({
         return "#eee"
     },
     
-    updateSubviews: function() {
-        var isEditable = this.node() ? this.node().nodeTitleIsEditable() : false;
-        /*
-        if (!isEditable) {
-            this.title().element().style.color = "black"
-        }
-        */
-        
-        this.setEditable(isEditable)
-        
+    updateSubviews: function() {        
         var node = this.node()
 
         if (node && node.nodeMinHeight()) {

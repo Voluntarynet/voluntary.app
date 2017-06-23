@@ -90,6 +90,21 @@
     */
 }
 
+.BrowserFieldsColumn {
+    /*
+    display: table;
+    */
+    position: relative;
+    overflow-y: auto;
+    flex: 1;
+    top: 40px;
+    width: 100%;
+    /*
+    border-left: 1px solid #333;
+    */
+	background-color: white;
+}
+
 /*
 .BrowserColumn:focus {
   border: 1px dashed white;
@@ -192,7 +207,7 @@
 }
 
 
-.BrowserRowNote{
+.BrowserRowNote {
     font-family: "OpenSans-Light";
     position: absolute;
     right: 20px;
@@ -212,143 +227,6 @@
     white-space: nowrap;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-/* --- BrowserFieldRow --- */
-
-
-.BrowserFieldRow {
-    background-color: #fff;
-    opacity: 1;
-    
-    font-family: "OpenSans-Regular";
-
-    display: block;
-    position: relative;
-    width: 100%;
-    height: 60px;
-    color: #CBCBCB;
-    border-bottom: 1px solid #ddd;
-    transition: background-color .3s ease-out;
-}
-
-.BrowserFieldRowTitle {
-    color: #000;
-    font-family: "OpenSans-Regular";
-    
-    min-width: 100%;
-    text-align: left;
-    
-    position: absolute;
-    top: 22px;
-    left: 110px;
-    font-size: 13px;
-    font-weight: normal;
-    white-space: nowrap;
-    text-transform: none;
-}
-
-
-.BrowserFieldRowSubtitle {
-    color: #777;
-    font-family: "OpenSans-Regular";
-    position: absolute;
-    opacity: .8;
-    top: 22px;
-    width: 100px;
-    text-align: right;
-    font-size: 13px;
-    white-space: nowrap;
-    text-transform: capitalize;
-}
-
-.BrowserFieldRowSubtitle::after {
-    content: ": "
-}
-
-
-
-.BrowserFieldRowNote {
-    font-family: "OpenSans-Light";
-    position: absolute;
-    right: 20px;
-    top: 24px;
-    font-size: 11px;
-    font-weight: normal;
-    white-space: nowrap;
-}
-
-/* --------------------- */
-
-.BrowserFieldRow_Selected {
-    background-color: #fff;
-    opacity: 1;
-    
-    font-family: "OpenSans-Regular";
-
-    display: block;
-    position: relative;
-    width: 100%;
-    height: 60px;
-    color: #CBCBCB;
-    border-bottom: 1px solid #ddd;
-    transition: background-color .3s ease-out;
-}
-
-.BrowserFieldRowTitle_Selected {
-    color: #999;
-    font-family: "OpenSans-Regular";
-    
-    min-width: 100%;
-    text-align: left;
-    
-    position: absolute;
-    top: 22px;
-    left: 110px;
-    font-size: 13px;
-    font-weight: normal;
-    white-space: nowrap;
-    text-transform: none;
-}
-
-
-.BrowserFieldRowSubtitle_Selected {
-    color: #000;
-    font-family: "OpenSans-Regular";
-    position: absolute;
-    opacity: .8;
-    top: 22px;
-    width: 100px;
-    text-align: right;
-    font-size: 13px;
-    font-weight: bold;
-    white-space: nowrap;
-    text-transform: capitalize;
-}
-
-.BrowserFieldRowSubtitle_Selected::after {
-    content: ": "
-}
-
-
-.BrowserFieldRowNote_Selected {
-    font-family: "OpenSans-Light";
-    position: absolute;
-    right: 20px;
-    top: 24px;
-    font-size: 11px;
-    font-weight: normal;
-    white-space: nowrap;
-}
 
 
 

@@ -134,7 +134,7 @@ BrowserView = NodeView.extend().newSlots({
         
         
         while (this.columnGroups().length < count) {
-            this.addColumnGroup()
+            this.addColumnGroup(BrowserColumnGroup.clone())
             
         }
         

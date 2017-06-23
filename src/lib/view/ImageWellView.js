@@ -8,8 +8,6 @@ ImageWellView = NodeView.extend().newSlots({
         NodeView.init.apply(this)
         this.setDivClassName("ImageWellView")
         this.registerForDrop(true)
-        //this.setInnerHTML("<div>drop images here</div>")
-        //this.setEditable(false)
         this.dragUnhighlight()
         this.makeUnselectable()
         this.turnOffUserSelect()
@@ -28,22 +26,6 @@ ImageWellView = NodeView.extend().newSlots({
         this.items().forEach(function (imageView) { imageView.setIsEditable(aBool); })
         return this
     },
-    
-/*
-    syncFromNode: function () {
-        var node = this.node()
-        return this
-    },
-    
-    setEditable: function (aBool) {
-        return this
-    },
-    
-    onDidEdit: function (changedView) {     
-        //this.log("onDidEdit")   
-        this.syncToNode()
-    },
-    */
     
     dragHighlight: function() {
         this.setBackgroundColor("#eee")

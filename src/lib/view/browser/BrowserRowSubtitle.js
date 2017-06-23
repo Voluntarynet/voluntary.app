@@ -1,6 +1,7 @@
 
 BrowserRowSubtitle = Div.extend().newSlots({
     type: "BrowserRowSubtitle",
+	isSelected: false,
 }).setSlots({
     init: function () {
         Div.init.apply(this)

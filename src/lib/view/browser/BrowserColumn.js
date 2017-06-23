@@ -10,12 +10,13 @@ BrowserColumn = NodeView.extend().newSlots({
     init: function () {
         NodeView.init.apply(this)
         this.setDivClassName("BrowserColumn")
-        this.setItemProto(BrowserRow)
+        this.setItemProto(BrowserTitledRow)
         this.setOwnsView(false)
         this.registerForKeyboard(true)
         return this
     },
     
+/*
     setNode: function(aNode) {
         NodeView.setNode.apply(this, [aNode])
         if (aNode) {
@@ -23,12 +24,11 @@ BrowserColumn = NodeView.extend().newSlots({
             if (itemProto) {
                 //console.log("set itemProto ", itemProto)
                 this.setItemProto(itemProto)
-            } else {
-                this.setItemProto(BrowserRow)
-            }
+            } 
         }
         return this
     },
+*/
     
     title: function() {
         return this.node() ? this.node().title() : ""
@@ -79,7 +79,12 @@ BrowserColumn = NodeView.extend().newSlots({
     },
     
     selectedRows: function() {
-        return this.items().filter(function (row) { return row.isSelected(); })
+        return this.items().filter((row) => { 
+			if (!row.isSelected) {
+				console.log("row.type() = ", row.type(), " missing isSelected")
+			}
+			return row.isSelected(); 
+		})
     },
 
     selectedRow: function() {
@@ -146,7 +151,7 @@ BrowserColumn = NodeView.extend().newSlots({
         return null
     },
 
-	// sync
+	// --- sync -----------------------------
 
     syncFromNode: function () {
         
@@ -208,7 +213,7 @@ BrowserColumn = NodeView.extend().newSlots({
         }
     },
 
-	// keyboard controls, arrow navigation
+	// --- keyboard controls, arrow navigation -----------------------------
 	
 	onUpArrowKeyUp: function(event) {
         if (!this.allowsCursorNavigation()) { return }
@@ -225,8 +230,6 @@ BrowserColumn = NodeView.extend().newSlots({
 	onLeftArrowKeyUp: function(event) {
         if (!this.allowsCursorNavigation()) { return }	
 
-
-
 		var pc = this.previousColumn()	
 		if (pc) {		
 			if (this.selectedRow()) { 
@@ -241,6 +244,7 @@ BrowserColumn = NodeView.extend().newSlots({
 	
 	onRightArrowKeyUp: function(event) {
         if (!this.allowsCursorNavigation()) { return }	
+
 		if (this.nextColumn().items().length > 0) {
         	this.selectNextColumn()
 		}
@@ -248,7 +252,8 @@ BrowserColumn = NodeView.extend().newSlots({
 	},	
 	
 	onEnterKeyUp: function(event) {
-        if (!this.allowsCursorNavigation()) { return }	
+        if (!this.allowsCursorNavigation()) { return }
+	
 		var row = this.selectedRow()
 		if (row && row.node().nodeTitleIsEditable()) { 
 			//row.title().focus() 
@@ -261,13 +266,11 @@ BrowserColumn = NodeView.extend().newSlots({
 		return false
 	},
 
-	// keyboard controls, add and delete actions
-	
-	
-	// need to fix interactions with direct editing of row title, etc first
-	
+	// --- keyboard controls, add and delete actions -----------------------------
+		
 	onDeleteKeyUp: function(event) {
-        if (!this.allowsCursorNavigation()) { return }		
+        if (!this.allowsCursorNavigation()) { return }
+
         var sNode = this.selectedNode()
         if (sNode && sNode.hasAction("delete")) { 
 			sNode.performAction("delete") 
@@ -280,6 +283,7 @@ BrowserColumn = NodeView.extend().newSlots({
 	
 	onPlusKeyUp: function(event) {
         if (!this.allowsCursorNavigation()) { return }		
+
         var sNode = this.selectedNode()
         if (sNode && sNode.hasAction("add")) { 
 			var newNode = sNode.performAction("add") 
@@ -329,15 +333,22 @@ BrowserColumn = NodeView.extend().newSlots({
         var nextColumn = this.browser().columns()[i+1]
         return nextColumn
     },
+
+	focus: function() {
+		NodeView.focus.apply(this)
+		
+	    if (this.selectedRowIndex() == -1) {
+            this.setSelectedRowIndex(0)
+        }
+
+		return this
+	},
     
     selectNextColumn: function() {
         var nextColumn = this.nextColumn()
         if (nextColumn) {
-            if (nextColumn.selectedRowIndex() == -1) {
-                nextColumn.setSelectedRowIndex(0)
-            }
             this.blur()
-            console.log("nextColumn.focus()")
+            //console.log("nextColumn.focus()")
             nextColumn.focus()
         }
         return this

@@ -1,5 +1,5 @@
 
-BMFieldView = NodeView.extend().newSlots({
+BMFieldView = BrowserFieldRow.extend().newSlots({
     type: "BMFieldView",
 	keyView: null,
 	valueView: null,
@@ -9,7 +9,7 @@ BMFieldView = NodeView.extend().newSlots({
 	errorColor: "red",
 }).setSlots({
     init: function () {
-        NodeView.init.apply(this)
+        BrowserFieldRow.init.apply(this)
         
         this.setDivClassName("BMFieldView")
 
@@ -24,7 +24,6 @@ BMFieldView = NodeView.extend().newSlots({
 		
 		this.setNoteView(Div.clone().setDivClassName("BMFieldViewNoteView"))
 		this.addItem(this.noteView())
-		//this.noteView().setInnerHTML("")
         this.noteView().makeUnselectable()
         
         //his.setEditable(false)
@@ -36,6 +35,7 @@ BMFieldView = NodeView.extend().newSlots({
 	},
 
     syncFromNode: function () {
+		BrowserFieldRow.syncFromNode.apply(this)
 		//console.log(this.type() + " syncFromNode")
 		
         var node = this.node()
@@ -104,7 +104,6 @@ BMFieldView = NodeView.extend().newSlots({
     syncToNode: function () {
         var node = this.node()
 
-		
 		if (node.keyIsEditable()) {
         	node.setKey(this.keyView().innerHTML())
 		}
@@ -127,17 +126,9 @@ BMFieldView = NodeView.extend().newSlots({
 		this.syncFromNode()
     },
 
-
     updateSubviews: function() {
-        var isEditable = this.node() ? this.node().nodeTitleIsEditable() : false;
-        /*
-        if (!isEditable) {
-            this.title().element().style.color = "black"
-        }
-        */
-        
-        this.setEditable(isEditable)
-        
+		BrowserFieldRow.updateSubviews.apply(this)
+		
         var node = this.node()
 
         if (node && node.nodeMinHeight()) {

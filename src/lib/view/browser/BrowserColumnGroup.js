@@ -98,9 +98,7 @@ BrowserColumnGroup = NodeView.extend().newSlots({
             // use custom class for column if node wants it
             
             var customViewClass = aNode.viewClass()
-		//	console.log(this.node().title() + " customViewClass = ", customViewClass)
-		//	console.log(this.node().title() + " viewClassName = ", this.node().viewClassName())
-                    
+
             if (customViewClass) {
                 this.setColumnClass(customViewClass)
                 //this.browser().fitToColumnWidths()

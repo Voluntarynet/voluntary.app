@@ -260,9 +260,11 @@ NodeStore = ideal.Proto.extend().newSlots({
 			this.show()
 		}
 
+		/*
 		setTimeout( () => {
 			this.sdb().verifySync()
 		})
+		*/
 
         return totalStoreCount
     },

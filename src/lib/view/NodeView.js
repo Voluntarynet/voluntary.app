@@ -74,19 +74,19 @@ NodeView = Div.extend().newSlots({
         var subnodes = this.node().items()
         
 		subnodes.forEach((subnode) => {
-            var item = this.itemForNode(subnode)
+            var itemView = this.itemForNode(subnode) // get the current view for the node, if there is one
             
-            if (!item) {
-                item = this.newItemForNode(subnode).syncFromNode()
+            if (!itemView) {
+                itemView = this.newItemForNode(subnode).syncFromNode()
             } else {
-                item.syncFromNode()
+                itemView.syncFromNode()
             }
             
-            if(item == null) {
-                throw new Error("null item")
+            if(itemView == null) {
+                throw new Error("null itemView")
             }
             
-            newItems.push(item)      
+            newItems.push(itemView)      
         })
         
         if (!newItems.isEqual(this.items())) {

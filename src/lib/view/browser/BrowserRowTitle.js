@@ -1,5 +1,6 @@
 BrowserRowTitle = Div.extend().newSlots({
     type: "BrowserRowTitle",
+	isSelected: false,
 }).setSlots({
     init: function () {
         Div.init.apply(this)
@@ -12,10 +13,7 @@ BrowserRowTitle = Div.extend().newSlots({
         return this
     },
 
-    setHasSubtitle: function(aBool) {
-        
-        //this.setLeft(20)
-        
+    setHasSubtitle: function(aBool) {        
         if (aBool) {
             this.setTop(10)
         } else {
@@ -38,9 +36,9 @@ BrowserRowTitle = Div.extend().newSlots({
 	},
 
 	onKeyUp: function(event) {
-		console.log(this.type() + " onKeyUp ", event.keyCode)
+		//console.log(this.type() + " onKeyUp ", event.keyCode)
 		
-		if (event.keyCode == 13) {
+		if (event.keyCode == 13) { // enter key
 			//this.setContentEditable(false)
 						
 			setTimeout(() => {

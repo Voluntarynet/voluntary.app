@@ -12,8 +12,8 @@ JSImporter.pushRelativePaths([
     //"MenuManager.js",
     "Window.js",
 
-    "fields/_imports.js",
     "browser/_imports.js",
+    "fields/_imports.js",
 
     "ImageWellView.js",
     "ImageView.js",

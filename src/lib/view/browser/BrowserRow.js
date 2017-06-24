@@ -57,23 +57,24 @@ BrowserRow = NodeView.extend().newSlots({
             this.select()
             this.tellParents("rowClicked", this)
         }
+		return false
     },
 
 	// colors
 	
 	currentBgColor: function() {
 		if (this.isSelected()) {
-			return this.selectionBgColor()
+			return this.selectedBgColor()
 		} 
 		
-		return this.unselectionBgColor()
+		return this.unselectedBgColor()
 	},
 
-    unselectionBgColor: function() {
+    unselectedBgColor: function() {
         return "transparent"
     },
     
-    selectionBgColor: function() {
+    selectedBgColor: function() {
 		if (!this.column()) {
 			return "transparent"
 		}

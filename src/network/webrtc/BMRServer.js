@@ -22,11 +22,12 @@ BMRServer = BMFieldSetNode.extend().newSlots({
         this.addStoredSlots(["host", "port"])
         this.setShouldStoreItems(false)
         this.addAction("delete")
-        this.setNodeMinWidth(160)
+        this.setNodeMinWidth(360)
 	
 		this.addStoredField(BMField.clone().setKey("host"))
 		this.addStoredField(BMField.clone().setKey("port"))
-		this.justAddField(BMPointerField.clone().setKey("serverConnection"))
+		//this.justAddField(BMPointerField.clone().setKey("serverConnection"))
+		this.addItem(BMPointerField.clone().setKey("serverConnection"))
     },
 
     servers: function () {

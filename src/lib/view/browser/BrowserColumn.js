@@ -147,7 +147,9 @@ BrowserColumn = NodeView.extend().newSlots({
     
     selectedRowTitle: function () {
         var row = this.selectedRow()
-        if (row) { return row.title().innerHTML() }
+        if (row) { 
+			return row.title().innerHTML() 
+		}
         return null
     },
 
@@ -293,8 +295,6 @@ BrowserColumn = NodeView.extend().newSlots({
 		return false		
 	},
 	
-	
-
 	// -----------------------------
     
     columnIndex: function() {

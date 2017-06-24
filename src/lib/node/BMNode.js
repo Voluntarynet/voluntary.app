@@ -9,7 +9,7 @@ BMNode = ideal.Proto.extend().newSlots({
     noteIsItemCount: false,
     nodeTitleIsEditable: false,
     nodeSubtitleIsEditable: false,
-
+	nodeRowIsSelectable: true,
 
 	nodeVisibleClassName: "",
     nodeMinWidth: 200,
@@ -40,8 +40,10 @@ BMNode = ideal.Proto.extend().newSlots({
     nodeMinHeight: 0, // tall fields like draft body
 
     nodeContent: null,
+/*
     nodeAfterContent: null,
     nodeBeforeContent: null,
+*/
     nodeBgColor: null,
         
 	// persistence 
@@ -68,7 +70,7 @@ BMNode = ideal.Proto.extend().newSlots({
         return this.addItem(aField)
     },
         
-    nodeLink: function() {
+    nodeRowLink: function() {
         return this
     },    
     

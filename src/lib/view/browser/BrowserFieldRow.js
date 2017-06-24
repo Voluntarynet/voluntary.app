@@ -11,11 +11,11 @@ BrowserFieldRow = BrowserRow.extend().newSlots({
         return this
     },
     
-    unselectionBgColor: function() {
+    unselectedBgColor: function() {
         return "white"
     },
     
-    selectionBgColor: function() {
+    selectedBgColor: function() {
         return "#eee"
     },
     

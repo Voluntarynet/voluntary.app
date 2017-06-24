@@ -997,10 +997,31 @@ Div = ideal.Proto.extend().newSlots({
 		return this
 	},
 	
+	setBorderTop: function(s) {
+		this.element().style.borderTop = s
+		return this
+	},
+	
+	setBorderBottom: function(s) {
+		this.element().style.borderBottom = s
+		return this
+	},
+	
 	border: function() {
 		return this.element().style.border
 	},
     
+	// alignment
+	
+	setTextAlign: function(s) {
+		this.element().style.textAlign = s
+		return this		
+	},
+	
+	textAlign: function() {
+		return this.element().style.textAlign
+	},	
+	
 	// color
 	
     setColor: function(c) {

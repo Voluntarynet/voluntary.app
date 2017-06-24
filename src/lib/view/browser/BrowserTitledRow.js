@@ -5,7 +5,6 @@ BrowserTitledRow = BrowserRow.extend().newSlots({
     subtitleView: null,
     noteView: null,
     isSelected: false,
-    isSelectable: true,
 }).setSlots({
     init: function () {
         BrowserRow.init.apply(this)
@@ -14,6 +13,7 @@ BrowserTitledRow = BrowserRow.extend().newSlots({
         this.setSubtitleView(this.addItem(BrowserRowSubtitle.clone()))
         this.setNoteView(this.addItem(BrowserRowNote.clone()))
 		//this.updateSubviews()
+		this.setIsSelectable(true)
         return this
     },
 
@@ -31,16 +31,27 @@ BrowserTitledRow = BrowserRow.extend().newSlots({
         this.titleView().setIsSelected(this._isSelected)
         this.subtitleView().setIsSelected(this._isSelected)
         this.noteView().setIsSelected(this._isSelected)
-        this.setBackgroundColor(this.currentBgColor())
 
-		if (this.isSelected()) {
-			this.setColor("white")
-		} else {
-			this.setColor("CBCBCB")
-		}
+        this.setBackgroundColor(this.currentBgColor())
+		this.setColor(this.unselectedTextColor())
 		
         return this
     },
+
+	currentTextColor: function() {
+		if (this.isSelected()) {
+			this.selectedTextColor()
+		} 
+		return this.unselectedTextColor()		
+	},
+
+	selectedTextColor: function() {
+		return "white"
+	},
+	
+	unselectedTextColor: function() {
+		return "#CBCBCB"
+	},
 
     // -------------
 

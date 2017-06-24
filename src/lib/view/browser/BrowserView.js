@@ -96,12 +96,6 @@ BrowserView = NodeView.extend().newSlots({
                         
             if (cg.column().type() == "BrowserColumn") {
                 var bgColor = this.bgColorForIndex(i)
- 
-                /*
-                if (cg.node()) { 
-                    console.log(i + "/" + cgs.length +  " " + cg.node().type() + " nodeBgColor: " + cg.node().nodeBgColor())
-                }
-                */
                                
                 if (cg.node() && cg.node().nodeBgColor()) { 
                     bgColor = cg.node().nodeBgColor() 
@@ -220,7 +214,7 @@ BrowserView = NodeView.extend().newSlots({
             var selectedRow = selectedColumnGroup.column().selectedRow()
 
 			if (selectedRow) {
-	            var nextNode = selectedRow.node()
+	            var nextNode = selectedRow.node().nodeRowLink()
 	            nextCg.setNode(nextNode)
 	            this.clearColumnsGroupsAfter(nextCg)
 	            //nextCg.column().setTitle(selectedColumn.selectedRowTitle())

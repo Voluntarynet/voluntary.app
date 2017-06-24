@@ -9,7 +9,6 @@ JSImporter.pushRelativePaths([
 
     "ContentView.js",
     "GenericView.js",
-    //"MenuManager.js",
     "Window.js",
 
     "browser/_imports.js",

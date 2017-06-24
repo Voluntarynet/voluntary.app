@@ -33,6 +33,14 @@ BMFieldView = BrowserFieldRow.extend().newSlots({
 	createValueView: function() {
 		return Div.clone().setDivClassName("BMFieldValueView")
 	},
+	
+	visibleValue: function() {
+		return this.node().visibleValue()
+	},
+	
+	visibleKey: function() {
+		return this.node().key()
+	},
 
     syncFromNode: function () {
 		BrowserFieldRow.syncFromNode.apply(this)
@@ -48,13 +56,13 @@ BMFieldView = BrowserFieldRow.extend().newSlots({
 			this.setDisplay("none")
 		}
 
-        this.keyView().setInnerHTML(node.key())
+        this.keyView().setInnerHTML(this.visibleKey())
 
 		if (!this.valueView().isActiveElementAndEditable()) {
 			if (this.valueView().setText) {
-				this.valueView().setText(node.visibleValue())
+				this.valueView().setText(this.visibleValue())
 			} else {
-				this.valueView().setInnerHTML(node.visibleValue())
+				this.valueView().setInnerHTML(this.visibleValue())
 			}
 		}
 		
@@ -89,17 +97,25 @@ BMFieldView = BrowserFieldRow.extend().newSlots({
 		if (node.valueDivClassName()) {
 			this.valueView().setDivClassName(node.valueDivClassName())
 		}
-		
-		var note = node.note()
-		
-		if (note) {
-			this.noteView().setInnerHTML(note)
+				
+		if (this.visibleNote()) {
+			this.noteView().setInnerHTML(this.visibleNote())
 		} else {
 			this.noteView().setInnerHTML("")
+		}
+		
+		if (this.isSelected()) {
+			this.setBackgroundColor("CBCBCB")
+		} else {
+			this.setBackgroundColor("white")
 		}
 
         return this
     },
+
+	visibleNote: function() {
+		return this.node().note()
+	},
     
     syncToNode: function () {
         var node = this.node()

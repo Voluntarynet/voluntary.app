@@ -36,7 +36,7 @@
 	padding: 24px;
 	*/
 	padding-left: 20px;
-    height: 60px;
+    height: 59px;
 	margin: 0px;
 	
 	text-align: left;
@@ -55,7 +55,7 @@
 
 	overflow: hidden;
 	float: left;
-	top: 16px;
+	top: 18px;
 	
 /*
     min-width: 200px;
@@ -87,7 +87,7 @@
 .BMFieldValueView {
 	display: inline-block;
     position: relative;
-	top: 16px;
+	top: 18px;
 
     min-width: 100px;
     text-align: left;
@@ -103,8 +103,9 @@
 	/* 
 	border-radius: 5px;
 	background-color: #aaa;
-	*/'
-	padding-left: 3px;
+	margin-left: 40px;
+	*/
+	padding-left: 4px;
 	padding-right: 3px;
 	padding-top: 3px;
 	padding-bottom: 3px;
@@ -322,6 +323,7 @@
 	margin-right: 33px;
 */
 	overflow: hidden;
+	top: 18px;
 	
 	width: auto;
 	

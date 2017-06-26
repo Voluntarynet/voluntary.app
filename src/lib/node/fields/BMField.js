@@ -106,4 +106,8 @@ BMField = BMNode.extend().newSlots({
 		// subclasses should override if needed
 		return true
 	},    
+	
+    nodeRowLink: function() {
+        return null
+    },
 })

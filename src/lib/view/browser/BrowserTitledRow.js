@@ -22,6 +22,8 @@ BrowserTitledRow = BrowserRow.extend().newSlots({
     },
 
     updateSubviews: function() {
+		BrowserRow.updateSubviews.apply(this)
+	
 		this.titleView().setHasSubtitle(this.hasSubtitle())
 
         var node = this.node()
@@ -32,12 +34,13 @@ BrowserTitledRow = BrowserRow.extend().newSlots({
         this.subtitleView().setIsSelected(this._isSelected)
         this.noteView().setIsSelected(this._isSelected)
 
-        this.setBackgroundColor(this.currentBgColor())
 		this.setColor(this.unselectedTextColor())
 		
         return this
     },
 
+	// text color
+	
 	currentTextColor: function() {
 		if (this.isSelected()) {
 			this.selectedTextColor()

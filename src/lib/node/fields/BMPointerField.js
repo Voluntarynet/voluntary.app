@@ -23,10 +23,6 @@ BMPointerField = BMField.extend().newSlots({
 		return this
 	},
 
-	nodeRowLink: function() {
-		return this.value()
-	},
-	
 	title: function() {
 		return this.value().title()
 	},
@@ -38,4 +34,9 @@ BMPointerField = BMField.extend().newSlots({
 	note: function() {
 		return this.value().note()
 	},
+	
+	nodeRowLink: function() {
+		return this.value()
+	},
+
 })

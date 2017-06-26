@@ -22,6 +22,7 @@ BrowserRow = NodeView.extend().newSlots({
     },
     
     updateSubviews: function() {
+        this.setBackgroundColor(this.currentBgColor())
         return this
     },
     

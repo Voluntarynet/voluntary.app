@@ -835,7 +835,7 @@ Div = ideal.Proto.extend().newSlots({
     },
     
     onKeyUp: function (event) {
-		console.log(this.type() + " onKeyUp")
+		//console.log(this.type() + " onKeyUp")
 		
 		var shouldPropogate = true
 		event.specialKeyName = this.specialNameForKeyEvent(event)
@@ -865,7 +865,7 @@ Div = ideal.Proto.extend().newSlots({
 			if (this[name]) {
 				shouldPropogate = this[name].apply(this, [event])
 		        event.preventDefault()
-				console.log("shouldPropogate = ", shouldPropogate)
+				//console.log("shouldPropogate = ", shouldPropogate)
 			}
 		}
         
@@ -909,13 +909,13 @@ Div = ideal.Proto.extend().newSlots({
 
 	onFocus: function() {
         // subclasses can override 
-		console.log(this.type() + " onFocus")
+		//console.log(this.type() + " onFocus")
 		return this
 	},
 
 	onBlur: function() {
         // subclasses can override 
-		console.log(this.type() + " onBlur")
+		//console.log(this.type() + " onBlur")
 		return this
 	},
     

@@ -80,6 +80,8 @@ BrowserColumnGroup = NodeView.extend().newSlots({
         if (aNode == this._node) {
             //return
         }
+
+		//ShowStack()
          
         NodeView.setNode.apply(this, [aNode])
 

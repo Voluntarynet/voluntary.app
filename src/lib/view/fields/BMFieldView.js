@@ -104,11 +104,14 @@ BMFieldView = BrowserFieldRow.extend().newSlots({
 			this.noteView().setInnerHTML("")
 		}
 		
+		/*
+		this.setBackgroundColor("white")
 		if (this.isSelected()) {
 			this.setBackgroundColor("CBCBCB")
 		} else {
 			this.setBackgroundColor("white")
 		}
+		*/
 
         return this
     },

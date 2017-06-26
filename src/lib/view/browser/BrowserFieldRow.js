@@ -19,7 +19,9 @@ BrowserFieldRow = BrowserRow.extend().newSlots({
         return "#eee"
     },
     
-    updateSubviews: function() {        
+    updateSubviews: function() {   
+	    BrowserRow.updateSubviews.apply(this)
+	
         var node = this.node()
 
         if (node && node.nodeMinHeight()) {

@@ -15,26 +15,14 @@ BrowserColumn = NodeView.extend().newSlots({
         this.registerForKeyboard(true)
         return this
     },
-    
-/*
-    setNode: function(aNode) {
-        NodeView.setNode.apply(this, [aNode])
-        if (aNode) {
-            var itemProto = aNode.nodeRowViewClass()
-            if (itemProto) {
-                //console.log("set itemProto ", itemProto)
-                this.setItemProto(itemProto)
-            } 
-        }
-        return this
-    },
-*/
+
     
     title: function() {
         return this.node() ? this.node().title() : ""
     },
 
     browser: function() {
+		assert(this.columnGroup() != null) 
         return this.columnGroup().browser()
     },
     
@@ -56,15 +44,7 @@ BrowserColumn = NodeView.extend().newSlots({
         return this.removeItem(v)
     },
 
-	/*
-    removeItem: function(v) {
-        var r = NodeView.removeItem.apply(this, [v])
-        return r       
-    },
-	*/
-
 	// selection
-
 
     rowClicked: function(clickedRow) {
         var rows = this.rows()
@@ -73,16 +53,23 @@ BrowserColumn = NodeView.extend().newSlots({
                 row.unselect()
             }
         })
-        this.browser().selectColumn(this)
+
+		//console.log("clickedRow = ", clickedRow.type())
+		//console.log("nodeRowLink = ", clickedRow.node().nodeRowLink().type())
+		if (clickedRow.node().nodeRowLink()) {
+        	this.browser().selectColumn(this)
+		}
         //this.focus()
         return true
     },
     
     selectedRows: function() {
         return this.items().filter((row) => { 
+			/*
 			if (!row.isSelected) {
 				console.log("row.type() = ", row.type(), " missing isSelected")
 			}
+			*/
 			return row.isSelected(); 
 		})
     },
@@ -247,7 +234,7 @@ BrowserColumn = NodeView.extend().newSlots({
 	onRightArrowKeyUp: function(event) {
         if (!this.allowsCursorNavigation()) { return }	
 
-		if (this.nextColumn().items().length > 0) {
+		if (this.nextColumn() && this.nextColumn().items().length > 0) {
         	this.selectNextColumn()
 		}
 		return false

@@ -6,9 +6,32 @@ IndexedDBFolder = ideal.Proto.extend().newSlots({
     //debug: true,
     db: null,
     //objectStore: null,
+	didRequestPersistence: false,
 }).setSlots({
     init: function () {
     },
+
+	requestPersistenceIfNeeded: function() {
+		if (!IndexedDBFolder.didRequestPersistence()) {
+			this.requestPersistence()
+		}
+		return this
+	},
+	
+	requestPersistence: function() {
+		
+		if (navigator.storage && navigator.storage.persist)
+		  navigator.storage.persist().then(granted => {
+		    if (granted)
+		      alert("Storage will not be cleared except by explicit user action");
+		    else
+		      alert("Storage may be cleared by the UA under storage pressure.");
+		  });
+		
+		IndexedDBFolder.setDidRequestPersistence(true)
+		
+		return this
+	},
     
     storeName: function() {
         return this.path()

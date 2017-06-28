@@ -18,13 +18,22 @@ BMApps = BMStorableNode.extend().newSlots({
 		this.addApps()
 		return this
 	},
+	
+	appProtos: function() {
+        return [BMMail] //, BMChat] //BMTwitter, BMGroupChat] //, BMChat, BMClassifieds, BMBitcoinWallet]
+	},
 
     addApps: function() {
-        var appProtos = [BMMail, BMChat] //BMTwitter, BMGroupChat] //, BMChat, BMClassifieds, BMBitcoinWallet]
-        
-        appProtos.forEach((appProto) => {
+	
+		// add any missing apps
+        this.appProtos().forEach((appProto) => {
             this.addAppTypeIfMissing(appProto)
-        })     
+        })
+
+		// remove any apps not in appProtos
+		var types = this.appProtos().map((proto) => { return proto.type() })
+		var matches = this.apps().select((app) => { return types.contains(app.type()) })
+		this.setItems(matches)
         
         return this
     },

@@ -5,6 +5,8 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
     isSent: false,
 	canReceive: false,
 	objMsg: null,
+	senderPublicKeyString: null,
+	receiverPublicKeyString: null,
 }).setSlots({
     init: function () {
         BMFieldSetNode.init.apply(this)
@@ -19,6 +21,10 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 		this.addStoredField(BMMultiField.clone().setKey("from").setNodeFieldProperty("fromContact")).setValueIsEditable(false).setValidValuesMethod("fromContactNames").setNoteMethod("fromContactPublicKey")
 		this.addStoredField(BMMultiField.clone().setKey("to").setNodeFieldProperty("toContact")).setValueIsEditable(true).setValidValuesMethod("toContactNames").setNoteMethod("toContactPublicKey")
         this.addFieldNamed("subject").setKey("subject")	
+
+        this.addFieldNamed("senderPublicKeyString").setKey("senderPublicKeyString").setValueIsEditable(false)
+        this.addFieldNamed("receiverPublicKeyString").setKey("receiverPublicKeyString").setValueIsEditable(false)
+
 		this.addStoredField(BMTextAreaField.clone().setKey("body").setNodeFieldProperty("body"))
         this.setStatus("")
 
@@ -26,6 +32,7 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
         this.setNodeMinWidth(600)
         this.setNodeBgColor("white")
 
+		this.addStoredSlots(["senderPublicKeyString", "receiverPublicKeyString"])
 		//this.didUpdate()
     },
 
@@ -35,15 +42,6 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 		return dup
 	},
 
-    prepareToSyncToView: function() {
-		BMFieldSetNode.prepareToSyncToView.apply(this)
-		
-		if (this.localIdentity()) {
-			//this.setFromAddress(this.localIdentity().publicKeyString())
-			
-			this.setFromContact(this.localIdentity().name())
-		}
-	},
 
 	fromContactNames: function() {
 		//console.log("App.shared().network().localIdentityNames() = ", App.shared().network().localIdentityNames())
@@ -74,6 +72,7 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 	toContactPublicKey: function() {
 		if (this.receiverId()) {
 			return this.receiverId().publicKeyString()
+			//return "..." + s.substring(s.length - 6)
 		}
 		return null
 	},	
@@ -81,6 +80,7 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 	fromContactPublicKey: function() {
 		if (this.senderId()) {
 			return this.senderId().publicKeyString()
+			//return "..." + s.substring(s.length - 6)
 		}
 		return null
 	},
@@ -260,11 +260,21 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 		this.fieldNamed("subject").setValueIsEditable(this.canEdit())
 		this.fieldNamed("body").setValueIsEditable(this.canEdit())
 		
-		/*
+		console.log("")	
 		console.log(this.type() + " prepareToSyncToView")
 		console.log("-- this.fromContact() = ", this.fromContact())
+		console.log("-- this.senderId() = ", this.senderId())	
+		console.log("-- this.fromContactPublicKey() = ", this.fromContactPublicKey())	
+		console.log("")	
 		console.log("-- this.toContact() = ", this.toContact())	
-		*/	
+		console.log("-- this.receiverId() = ", this.receiverId())	
+		console.log("-- this.toContactPublicKey() = ", this.toContactPublicKey())	
+		console.log("")	
+		
+		
+		this.setSenderPublicKeyString(this.fromContactPublicKey())
+		this.setReceiverPublicKeyString(this.toContactPublicKey())
+		
 		return this
 	},
     

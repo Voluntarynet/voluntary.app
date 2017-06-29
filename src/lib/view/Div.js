@@ -1169,14 +1169,21 @@ Div = ideal.Proto.extend().newSlots({
         return this
     },
     
-    makeUnselectable: function() {
+
+    setUserSelect: function(v) {
         var s = this._element.style
-        s.userSelect = "none";
-        s["-moz-user-select"] = "none";
-        s["-khtml-user-select"] = "none";
-        s["-webkit-user-select"] = "none";
-        s["-o-user-select"] = "none";
+        s.userSelect = v;
+        s["-moz-user-select"] = v;
+        s["-khtml-user-select"] = v;
+        s["-webkit-user-select"] = v;
+        s["-o-user-select"] = v;
         return this
     },
+
+    makeUnselectable: function() {
+        this.setUserSelect("none");
+        return this
+    },
+
 
 })

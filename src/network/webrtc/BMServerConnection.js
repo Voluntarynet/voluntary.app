@@ -56,7 +56,7 @@ BMServerConnection = BMNode.extend().newSlots({
                 port: this.server().port(),
 				//path: null,
 				//secure: true,
-				config: BMNetwork.shared().stunServers().peerOptionsDict(),
+				//config: BMNetwork.shared().stunServers().peerOptionsDict(),
                 //config: this.defaultConfig()
                 //debug: 3, 
             }

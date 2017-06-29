@@ -106,7 +106,7 @@ BMStorableNode = BMNode.extend().newSlots({
                         console.error(error)
                         console.log("dict = " + JSON.stringify(aDict))
 						hadMissingSetter = true
-						throw error
+						//throw error
                     }
                 }
             }

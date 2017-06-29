@@ -500,9 +500,9 @@ Negotiator._startPeerConnection = function(connection) {
     optional = {optional: [{DtlsSrtpKeyAgreement: true}]};
   }
 
-  //console.log("connection.provider.options.config = " + JSON.stringify(connection.provider.options.config, null, 2))
-  //console.log("optional = " + JSON.stringify(optional, null, 2))
-  //console.log("WARNING: not using empty peerjs connection config")
+  console.log("connection.provider.options.config = " + JSON.stringify(connection.provider.options.config, null, 2))
+  console.log("optional = " + JSON.stringify(optional, null, 2))
+  console.log("WARNING: not using empty peerjs connection config")
   
   //var pc = new RTCPeerConnection({ iceServers:[] });
 
@@ -1437,10 +1437,9 @@ module.exports = Socket;
 },{"./util":8,"eventemitter3":9}],8:[function(require,module,exports){
 	
 	
-	var defaultConfig = {}
+	//var defaultConfig = {}
 //var defaultConfig = {} //{'iceServers': [{ 'url': 'stun:stun.l.google.com:19302' }]};
 
-/*
 var defaultConfig = {'iceServers': [
     {url:'stun:stun01.sipphone.com'},
     {url:'stun:stun.ekiga.net'},
@@ -1462,7 +1461,6 @@ var defaultConfig = {'iceServers': [
     {url:'stun:stun.voxgratia.org'},
     {url:'stun:stun.xten.com'},
 ]}
-*/
 
 var dataCount = 1;
 

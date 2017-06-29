@@ -20,11 +20,12 @@ BMFieldView = BrowserFieldRow.extend().newSlots({
 		
         this.setValueView(this.createValueView())
         this.addItem(this.valueView())  
+        this.valueView().setUserSelect("text")
 		this.valueView().setSpellCheck(false)
 		
 		this.setNoteView(Div.clone().setDivClassName("BMFieldViewNoteView"))
 		this.addItem(this.noteView())
-        this.noteView().makeUnselectable()
+        this.noteView().setUserSelect("text")
         
         //his.setEditable(false)
         return this

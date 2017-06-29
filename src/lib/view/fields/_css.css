@@ -235,6 +235,7 @@
 	z-index: 100;
  	display: inline;
     position: absolute;
+	top: 18px;
 	float: right;
 
 	overflow: hidden;
@@ -277,9 +278,7 @@
 
 	padding: 3px;
 	margin: 0;
-/*
-	padding-top: 5px;
-	*/
+
 	border: dashed #ccc 0px;
 }
 
@@ -289,41 +288,16 @@
 	color: white;
 }
 
-/*
-
-.BMMultiFieldValueTextView {
-	display: inline;
-    
-	width: auto;
-
-	border: solid #ccc 1px;
-	border-radius: 4px;
-	
-	padding-left: 7px;
-	padding-right: 7px;
-	padding-top: 3px;	
-	padding-bottom: 3px;	
-}
-*/
-
-/*
-.BMMultiFieldValueTextView:hover {
-	font-weight: bold;
-	background-color: #000;
-    color: #fff;
-}
-*/
-
 .BMFieldViewNoteView {
 	display: block;
     position: relative;
+	top: 18px;
 	right: 0px;
 	float: right;
-	/*
-	margin-right: 33px;
-*/
+
+	margin-right: 18px;
+
 	overflow: hidden;
-	top: 18px;
 	
 	width: auto;
 	

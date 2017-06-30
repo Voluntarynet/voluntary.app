@@ -22,7 +22,7 @@ BMDrafts = BMListNode.extend().newSlots({
         //var name = this.localIdentity().name()
         //newItem.fieldNamed("from").setFromContactName(name)
 		//newItem.useDefaultFromAddress()
-		newPrivateMsg.setSenderPublicKeyString(this.localIdentity().publicKeyString())
+		newPrivateMsg.setSenderPublicKeyString(this.localIdentity().publicKeyString()).setupInputsFromPubkeys()
         this.didUpdate()
         return newPrivateMsg
     },

@@ -34,7 +34,6 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 
 		this.addStoredSlots(["senderPublicKeyString", "receiverPublicKeyString"])
 		//this.didUpdate()
-		console.log("x " + this.type() + " init 1")
     },
 
 	// sync
@@ -318,7 +317,7 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 	},
 
 	place: function() {
-		console.log("placing " + this.type() + " from '" + this.senderId().name() + "' to '" + this.receiverId().name() + "'")
+		//console.log("placing " + this.type() + " from '" + this.senderId().name() + "' to '" + this.receiverId().name() + "'")
 		
 		if(!this.canReceive()) {
 			console.log("can't receive message")

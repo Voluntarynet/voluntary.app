@@ -39,6 +39,10 @@ BMFieldSetNode = BMStorableNode.extend().newSlots({
 		//console.log("BMFieldSetNode viewClassName = '" + this.viewClassName() + "'")
     },        
     
+	didUpdateField: function(aField) {
+		
+	},
+	
     // --- fields ---
 
 	addStoredField: function(aField) {

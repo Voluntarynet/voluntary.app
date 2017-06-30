@@ -136,14 +136,16 @@ BMNetwork = BMStorableNode.extend().newSlots({
 		return this.remoteIdentities().items().map(function(id) { return id.name(); })
 	},
 	
-	idWithName: function(aName) {
-		var id = this.localIdentities().idWithName(aName)
-		if (id) {
-			return id
-		}
-		
-		id = this.remoteIdentities().idWithName(aName)
-		return id
+	idWithName: function(aString) {
+		return this.allIdentities().detect((id) => { 
+			return id.name() == aString
+		})
+	},
+	
+	idWithNameOrPubkey: function(aString) {
+		return this.allIdentities().detect((id) => { 
+			return id.name() == aString || id.publicKeyString() == aString
+		})
 	},
 	
 	// --- bloom filter for matching ids -----------------------------------------

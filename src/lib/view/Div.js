@@ -56,6 +56,15 @@ Div = ideal.Proto.extend().newSlots({
         return this
     },
 
+	setTextTransform: function(s) {
+        this.element().style.textTransform = s
+		return this
+	},
+	
+	textTransform: function() {
+		return this.element().style.textTransform
+	},
+
 	setFontWeight: function(s) {
         this.element().style.fontWeight = s
 		return this

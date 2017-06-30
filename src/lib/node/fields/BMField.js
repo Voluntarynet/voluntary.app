@@ -98,6 +98,11 @@ BMField = BMNode.extend().newSlots({
 		return null
 	},
 	
+	didUpdateView: function(aFieldView) {
+		this.parentNode().didUpdateField(this)
+		return this
+	},
+	
 	visibleValue: function() {
 		return this.value()
 	},

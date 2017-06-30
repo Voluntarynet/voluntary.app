@@ -26,6 +26,7 @@ BMMail = BMApplet.extend().newSlots({
     handleMessage: function(msg) {
         var myId = this.identity()
 
+		console.log(" msg.senderId() = ", msg.senderId())
         if (myId.equals(msg.senderId())) {
 			this.sent().addItemIfAbsent(msg)
 		}

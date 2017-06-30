@@ -18,12 +18,12 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 		//this.addStoredField(BMIdentityField.clone().setNodeFieldProperty("fromAddress").setKey("from").setValueIsEditable(false))
 		//this.addStoredField(BMIdentityField.clone().setNodeFieldProperty("toAddress").setKey("to").setValueIsEditable(true))
 
-		this.addStoredField(BMMultiField.clone().setKey("from").setNodeFieldProperty("fromContact")).setValueIsEditable(false).setValidValuesMethod("fromContactNames").setNoteMethod("fromContactPublicKey")
-		this.addStoredField(BMMultiField.clone().setKey("to").setNodeFieldProperty("toContact")).setValueIsEditable(true).setValidValuesMethod("toContactNames").setNoteMethod("toContactPublicKey")
+		this.addStoredField(BMMultiField.clone().setKey("from").setNodeFieldProperty("fromContact")).setValueIsEditable(false).setValidValuesMethod("fromContactNames") //.setNoteMethod("fromContactPublicKey")
+		this.addStoredField(BMMultiField.clone().setKey("to").setNodeFieldProperty("toContact")).setValueIsEditable(true).setValidValuesMethod("toContactNames") //.setNoteMethod("toContactPublicKey")
         this.addFieldNamed("subject").setKey("subject")	
 
-        this.addFieldNamed("senderPublicKeyString").setKey("senderPublicKeyString").setValueIsEditable(false)
-        this.addFieldNamed("receiverPublicKeyString").setKey("receiverPublicKeyString").setValueIsEditable(false)
+        //this.addFieldNamed("senderPublicKeyString").setKey("senderPublicKeyString").setValueIsEditable(false)
+        //this.addFieldNamed("receiverPublicKeyString").setKey("receiverPublicKeyString").setValueIsEditable(false)
 
 		this.addStoredField(BMTextAreaField.clone().setKey("body").setNodeFieldProperty("body"))
         this.setStatus("")
@@ -34,10 +34,124 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 
 		this.addStoredSlots(["senderPublicKeyString", "receiverPublicKeyString"])
 		//this.didUpdate()
+		console.log("x " + this.type() + " init 1")
     },
 
+	// sync
+	
+
+	didUpdateField: function(aField) {
+		BMFieldSetNode.didUpdateField.apply(this)
+
+		var name = aField.nodeFieldProperty()
+		//console.log("didUpdateField(" + name + ")")
+		
+		
+		/*
+		if (name == "from") {
+			this.setupSenderPubkeyFromInput()
+			this.updateCanSend()
+		} else 
+		*/
+		if (name == "toContact") {
+			this.setupReceiverPubkeyFromInput()
+			this.updateCanSend()
+		}
+				
+		return this
+	},
+	
+	updateCanSend: function() {
+		if (this.canSend()) {
+			this.addAction("send")
+		} else {
+			this.removeAction("send")
+		}		
+	},
+	
+	prepareToSyncToView: function() {
+		BMFieldSetNode.prepareToSyncToView.apply(this)
+		
+		/*
+		if (this.canSend()) {
+			this.addAction("send")
+		} else {
+			this.removeAction("send")
+		}
+		
+		//this.fieldNamed("from").setValueIsEditable(this.canEdit())
+		this.fieldNamed("to").setValueIsEditable(this.canEdit())
+		this.fieldNamed("subject").setValueIsEditable(this.canEdit())
+		this.fieldNamed("body").setValueIsEditable(this.canEdit())
+		
+		//console.log(this.type() + " prepareToSyncToView")
+		//this.setupInputsFromPubkeys()
+*/
+		return this
+	},
+	
+	/*
+	didLoadFromStore: function() {
+		this.setupInputsFromPubkeys()
+		//this.validate()
+		return this
+	},
+	*/
+
+/*
+    onDidEditNode: function() {
+		BMFieldSetNode.onDidEditNode.apply(this)
+       	this.setupPubkeysFromInputs()
+		return this
+    },
+*/
+
+	// ids
+
+	senderId: function() {
+		if (!App.shared().network()) { return null }
+		var senderId = App.shared().network().idWithNameOrPubkey(this.senderPublicKeyString())      
+		return senderId
+	},
+	
+	receiverId: function() {
+		if (!App.shared().network()) { return null }
+        var receiverId = App.shared().network().idWithNameOrPubkey(this.receiverPublicKeyString())
+		return receiverId
+	},
+
+	// set pubkeys from inputs
+	
+	/*
+	setupSenderPubkeyFromInput: function() { // called on edits
+		if (!App.shared().network()) { return null }
+		var senderId = App.shared().network().idWithNameOrPubkey(this.fromContact())      
+		this.setSenderPublicKeyString(senderId ? senderId.publicKeyString() : null)
+	},
+	*/
+	
+	setupReceiverPubkeyFromInput: function() { // called on edits
+        var receiverId = App.shared().network().idWithNameOrPubkey(this.toContact())
+		this.setReceiverPublicKeyString(receiverId? receiverId.publicKeyString() : null)
+		return this
+	},
+	
+	setupInputsFromPubkeys: function() { // called on load from store
+		if (!App.shared().network()) { return null }
+		// if pubkey matches a contact name, set to name
+		// otherwise, set to the pubkey
+		
+		var senderId = App.shared().network().idWithNameOrPubkey(this.senderPublicKeyString())      
+		var from = senderId ? senderId.name() : ""
+		if (from != this.fromContact()) { this.setFromContact(from) }
+	
+		var receiverId = App.shared().network().idWithNameOrPubkey(this.receiverPublicKeyString())      
+		var to = receiverId ? receiverId.name() : ""
+		if (to != this.toContact()) { this.setToContact(to) }
+	},
+
 	duplicate: function() {
-		var dup = BMPrivateMessage.clone().copyFieldsFrom(this)
+		var dup = BMPrivateMessage.clone().setPostDict(this.postDict())
 		dup.setIsSent(true)
 		return dup
 	},
@@ -69,6 +183,7 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 	},   
 	*/
 	
+	/*
 	toContactPublicKey: function() {
 		if (this.receiverId()) {
 			return this.receiverId().publicKeyString()
@@ -84,6 +199,7 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 		}
 		return null
 	},
+	*/
 	
 	/*
 	useDefaultFromAddress: function() {
@@ -101,7 +217,7 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
     
 	localIdentityIsSender: function() {
 	    if (this.senderId()) {
-		    return this.senderId().publicKeyString() == this.localIdentity().publicKeyString()
+		    return this.senderPublicKeyString() == this.localIdentity().publicKeyString()
 		}
 		return false
 	},
@@ -129,26 +245,16 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
     // ------------------------
 
     postDict: function() {
-        var senderId = this.senderId()       
-        var receiverId = this.receiverId()
 
-		if (!this.senderId()) {
-			throw new Error("missing senderId")
-		}
-		
-		if (!this.receiverId()) {
-			throw new Error("missing receiverId")
-		}		
-		
 		var contentDict = {}
 		contentDict.subject = this.subject()
 		contentDict.body = this.body()
-		var encryptedData = senderId.encryptMessageForReceiverId(JSON.stringify(contentDict), receiverId).toString()
+		var encryptedData = this.senderId().encryptMessageForReceiverId(JSON.stringify(contentDict), this.receiverId()).toString()
 				
         var dict = {}
 		dict.type = "BMPrivateMessage"
-		dict.senderPublicKey   = senderId.publicKeyString()
-		dict.receiverPublicKey = receiverId.publicKeyString()
+		dict.senderPublicKey   = this.senderPublicKeyString()
+		dict.receiverPublicKey = this.receiverPublicKeyString()
 		dict.encryptedData = encryptedData
 		//dict.signature = senderId.signatureForMessageString(dict.toJsonStableString().sha256String())
 
@@ -156,7 +262,7 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
     },
 
 	canSend: function() {
-		return (this.senderId() != null) && (this.receiverId() != null)
+		return (this.senderPublicKeyString() != null) && (this.receiverPublicKeyString() != null)
 	},
 
 
@@ -165,10 +271,13 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 		//console.log("dict.senderPublicKey = ", dict.senderPublicKey)
 		//console.log("dict.receiverPublicKey = ", dict.receiverPublicKey)
 		
-		var senderId   = App.shared().network().idWithPubKeyString(dict.senderPublicKey)
-		var receiverId = App.shared().network().localIdentities().idWithPubKeyString(dict.receiverPublicKey)
+		this.setSenderPublicKeyString(dict.senderPublicKey)
+		this.setReceiverPublicKeyString(dict.receiverPublicKey)
 		
 		this.setCanReceive(true)
+		
+		var senderId   = this.senderId()
+		var receiverId = this.receiverId()
 		
 		if (!senderId) {
 			console.log("no contact for senderPublicKey '" + dict.senderPublicKey + "'")
@@ -187,7 +296,6 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 		
 		this.setFromContact(senderId.name())
 		this.setToContact(receiverId.name())
-
 		
 		//console.log("dict = ", dict)
 		//console.log("dict.encryptedBuffer = ", dict.encryptedData)
@@ -210,7 +318,7 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 	},
 
 	place: function() {
-		//console.log("placing " + this.type() + " from '" + this.senderId().name() + "' to '" + this.receiverId().name() + "'")
+		console.log("placing " + this.type() + " from '" + this.senderId().name() + "' to '" + this.receiverId().name() + "'")
 		
 		if(!this.canReceive()) {
 			console.log("can't receive message")
@@ -235,66 +343,17 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
         return this.parentNode()
     },
 	
-	/*
-	didLoadFromStore: function() {
-		this.validate()
-		return this
-	},
-	*/
+
 
 	canEdit: function() {
 		return !this.isSent()
-	},
-	
-	prepareToSyncToView: function() {
-		BMFieldSetNode.prepareToSyncToView.apply(this)
-		
-		if (this.canSend()) {
-			this.addAction("send")
-		} else {
-			this.removeAction("send")
-		}
-		
-		//this.fieldNamed("from").setValueIsEditable(this.canEdit())
-		this.fieldNamed("to").setValueIsEditable(this.canEdit())
-		this.fieldNamed("subject").setValueIsEditable(this.canEdit())
-		this.fieldNamed("body").setValueIsEditable(this.canEdit())
-		
-		console.log("")	
-		console.log(this.type() + " prepareToSyncToView")
-		console.log("-- this.fromContact() = ", this.fromContact())
-		console.log("-- this.senderId() = ", this.senderId())	
-		console.log("-- this.fromContactPublicKey() = ", this.fromContactPublicKey())	
-		console.log("")	
-		console.log("-- this.toContact() = ", this.toContact())	
-		console.log("-- this.receiverId() = ", this.receiverId())	
-		console.log("-- this.toContactPublicKey() = ", this.toContactPublicKey())	
-		console.log("")	
-		
-		
-		this.setSenderPublicKeyString(this.fromContactPublicKey())
-		this.setReceiverPublicKeyString(this.toContactPublicKey())
-		
-		return this
-	},
-    
-	senderId: function() {
-		if (!App.shared().network()) { return null }
-		var senderId = App.shared().network().idWithName(this.fromContact())      
-		return senderId
-	},
-	
-	receiverId: function() {
-		if (!App.shared().network()) { return null }
-        var receiverId = App.shared().network().idWithName(this.toContact())
-		return receiverId
 	},
 
     send: function () {
         var objMsg = BMObjectMessage.clone()
 
-        objMsg.setSenderPublicKeyString(this.senderId().publicKeyString())
-        objMsg.setReceiverPublicKeyString(this.receiverId().publicKeyString())
+        objMsg.setSenderPublicKeyString(this.senderPublicKeyString())
+        objMsg.setReceiverPublicKeyString(this.receiverPublicKeyString())
 
         objMsg.setData(this.postDict())
 		objMsg.makeTimeStampNow()

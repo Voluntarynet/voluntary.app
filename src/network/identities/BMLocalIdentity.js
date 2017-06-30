@@ -113,7 +113,7 @@ BMLocalIdentity = BMNavNode.extend().newSlots({
 	},
 	
 	equals: function(anIdentity) {
-		return this.publicKeyString() == anIdentity.publicKeyString()
+		return anIdentity != null && this.publicKeyString() == anIdentity.publicKeyString()
 	},
 
 })

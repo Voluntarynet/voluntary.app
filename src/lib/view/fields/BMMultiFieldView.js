@@ -55,6 +55,7 @@ BMMultiFieldView = BMFieldView.extend().newSlots({
 		console.log(this.type() + " selected " + validValue)
 		//this.setInnerHTML(validValue)
 		this.node().setValue(validValue)
+		this.node().didUpdateView(this)
 		this.close()
 	},
 	
@@ -105,7 +106,7 @@ BMMultiFieldView = BMFieldView.extend().newSlots({
 	
 	onDidEdit: function() {
 		var returnValue = BMFieldView.onDidEdit.apply(this)
-		console.log(this.type() + " onDidEdit")
+	//	console.log(this.type() + " onDidEdit")
 		
 		var currentValidValues = this.currentValidValues()
 		
@@ -119,7 +120,9 @@ BMMultiFieldView = BMFieldView.extend().newSlots({
 		} else {
 			this.close()
 		}
+
 	},
+	
 	
 })
 

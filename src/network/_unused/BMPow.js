@@ -282,7 +282,6 @@ BMPow = ideal.Proto.extend().newSlots({
     
     isValid: function () {
         if (this._hash == null) { 
-            //ShowStack();
             //console.log("WARNING: null hash on BMPow")
             return false 
         }
@@ -299,7 +298,6 @@ BMPow = ideal.Proto.extend().newSlots({
     },
     
     show: function () {
-        ShowStack()
         console.log("BMPow show")
         console.log("          pow: '" + this.powHex() + "'")
         console.log("         hash: '" + this.hash() + "'")

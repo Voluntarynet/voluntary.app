@@ -8,13 +8,28 @@ BMChat = BMApplet.extend().newSlots({
     init: function () {
         BMApplet.init.apply(this)
         this.setShouldStore(true)
-         this.setTitle("Chat")
-        
-		this.setThreads(BMChatThreads.clone())
-        this.addItem(this.threads())
-        
-		this.setNewThread(BMChatNewThread.clone())
-        this.addItem(this.newThread())
+        this.setTitle("Chat")
+		console.log(this + " init ")
+		this.setupItems()
     },
+
+	didLoadFromStore: function() {
+		console.log(this + " didLoadFromStore ")
+		this.setupItems()
+		return this
+	},
+	
+    localIdentity: function() {
+        return this.parentNodeOfType("BMLocalIdentity")
+    },
+
+
+	setupItems: function() {
+		console.log(this + " setupItems ")
+		this.addItemProtoForSlotIfAbsent(BMChatThreads, "threads") 
+		this.addItemProtoForSlotIfAbsent(BMChatNewThread, "newThread")
+		return this
+	},
+	
 })
 

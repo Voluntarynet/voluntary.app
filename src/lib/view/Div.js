@@ -40,14 +40,15 @@ Div = ideal.Proto.extend().newSlots({
     init: function () {
         this._items = []
         var e = document.createElement("div");
-        e._item = this
+        //e._viewObject = this
         e.setAttribute('class', this.divClassName());
         this._element = e
         this.element().style.transition = "all .2s"
         this.setItemProto(Div)
         return this
     },
-    
+
+/*    
     applyCSS: function(ruleName) {
         if (ruleName == null) { 
             ruleName = this.divClassName()
@@ -55,6 +56,7 @@ Div = ideal.Proto.extend().newSlots({
         CSS.ruleAt(ruleName).applyToElement(this.element())
         return this
     },
+*/
 
 	setTextTransform: function(s) {
         this.element().style.textTransform = s
@@ -342,7 +344,6 @@ Div = ideal.Proto.extend().newSlots({
 	},
 	
     removeItem: function (anItem) {
-	//	ShowStack()
 		//console.log("WANRING: " + this.type() + " removeItem " + anItem.type())
 		/*
 		if (!this.hasItem(anItem)) {
@@ -353,6 +354,7 @@ Div = ideal.Proto.extend().newSlots({
 		
         anItem.willRemove()
         this._items.remove(anItem)
+
 		/*
 		var children = this._element.childNodes
 		for (var i = 0; i < children.length; i ++) {
@@ -362,6 +364,7 @@ Div = ideal.Proto.extend().newSlots({
 			}
 		}
 		*/
+		
 		if (this.hasItem(anItem)) {
 			if(!Div._didShowWarning) {
 				Div._didShowWarning = true
@@ -369,6 +372,7 @@ Div = ideal.Proto.extend().newSlots({
 			}
         	this._element.removeChild(anItem.element());
 		}
+		
         anItem.setParentItem(null)
 		this.didChangeItemList()
         return anItem
@@ -401,14 +405,13 @@ Div = ideal.Proto.extend().newSlots({
 	},
 
     setInnerHTML: function (v) {
-        if (v == null) { v = "" }
+        if (v == null) { 
+			v = "" 
+		}
+		
         v = "" + v //escape(v)
-        var a = this._element.innerHTML
-        var b = v
-        //a = a.replaceAll("&nbsp;", " ")
-        //b = b.replaceAll("&nbsp;", " ")
 
-        if (a != b) {
+        if (v != this._element.innerHTML) {
 
             if (this.isActiveElementAndEditable()) {
 				ShowStack();
@@ -418,16 +421,10 @@ Div = ideal.Proto.extend().newSlots({
                 // maybe with DOM update sync?
                 return 
             }
-        
-
-            //console.log("e[" + a + "] -> e[" + b + "]")
-            //console.log("setInnerHTML [" + this._element.innerHTML  + "] -> [" + v + "]")
-            //console.log("[" + this._element.innerHTML + "] -> [" + v + "]")
-            //NotificationCenter.showCurrentNoteStack()
-            //ShowStack()
             
             this._element.innerHTML = v
         }
+
         return this
     },
 
@@ -438,7 +435,6 @@ Div = ideal.Proto.extend().newSlots({
     setString: function (v) {
         return this.setInnerHTML(v)
     },
-
     
     loremIpsum: function (maxWordCount) {
         this.setInnerHTML("".loremIpsum(10, 40))

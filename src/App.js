@@ -19,13 +19,6 @@ App = BaseApp.extend().newSlots({
         this.setNodeMinWidth(170)        
     },
 
-	addItemForSlot: function(anObject, slotName) {
-		var setterName = this.setterNameForSlot(slotName)
-		this[setterName].apply(this, [anObject])
-		this.addItem(anObject)
-		return this
-	},
-
     setup: function () {       
         BaseApp.setup.apply(this)
         

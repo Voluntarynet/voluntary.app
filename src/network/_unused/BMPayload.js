@@ -219,7 +219,6 @@ BMPayload = ideal.Proto.extend().newSlots({
         this.assertType("PowedPayload")
         
         console.log("unpow")
-        ShowStack()
 
         var hash = this.data().payload.toJsonStableString().sha256String();
         var pow = BMPow.clone().setHash(hash).setPowHex(this.data().pow)

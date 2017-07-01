@@ -25,7 +25,7 @@ BMServerConnection = BMNode.extend().newSlots({
         this.setNodeMinWidth(160)
         //this.setLog(BMNode.clone())
 
-		this.setSessionId(BMLocalIdentity.clone().generatePrivateKey())
+		this.setSessionId(BMKeyPair.clone().generatePrivateKey())
 		this.setPeerId(BMPeerId.clone())
     },
     

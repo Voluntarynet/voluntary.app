@@ -8,8 +8,17 @@ BMChatNewThread = BMNode.extend().newSlots({
         this.setTitle("new thread")        
     },
 
+    localIdentity: function() {
+        return this.parentNodeOfType("BMLocalIdentity")
+    },
+
+    remoteIdentities: function() {
+        return App.shared().remoteIdentities()
+    },
+
     prepareToAccess: function() {
-        this.setItems(
+		var items = this.remoteIdentities().items().map((rid) => { return BMChatContact.clone().setRemoteIdentity(rid) })
+        this.setItems(items)
     },
 })
 

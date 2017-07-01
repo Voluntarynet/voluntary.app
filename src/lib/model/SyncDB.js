@@ -148,6 +148,10 @@ SyncDB = ideal.Proto.extend().newSlots({
 					//console.log("syncdb not in sync with idb - diff values for key " + k )
 					hasError = true
 				}
+				
+				if (typeof(json[k]) == "undefined" || typeof(cache[k]) == "undefined") {
+					hasError = true
+				}
 			}
 			
 			
@@ -157,6 +161,10 @@ SyncDB = ideal.Proto.extend().newSlots({
 					hasError = true
 				} else if (json[k] != cache[k]) {
 					//console.log("syncdb not in sync with idb - diff values for key " + k )
+					hasError = true
+				}
+				
+				if (typeof(json[k]) == "undefined" || typeof(cache[k]) == "undefined") {
 					hasError = true
 				}
 			}

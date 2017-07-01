@@ -170,7 +170,6 @@ NodeStore = ideal.Proto.extend().newSlots({
         if (!this._shared) {
             this._shared = this.clone()
             //this._shared.setFolder(window.app.storageFolder().folderNamed(this.folderName())) 
-            //ShowStack()
         }
         return this._shared
     },
@@ -192,8 +191,6 @@ NodeStore = ideal.Proto.extend().newSlots({
 		var pid = obj.pid()
         if (!(pid in this._dirtyObjects)) {
 	       // this.debugLog("addDirtyObject(" + obj.pid() + ")")
-	        //ShowStack()
-
             this._dirtyObjects[pid] = obj
             this.setTimeoutIfNeeded()
         }
@@ -522,6 +519,7 @@ NodeStore = ideal.Proto.extend().newSlots({
         //if (deleteCount) {
             this.debugLog("--- end collect - collected " + deleteCount + " pids ---")
         //}
+		this.sdb().verifySync()
         return deleteCount
     },
     
@@ -549,7 +547,7 @@ NodeStore = ideal.Proto.extend().newSlots({
 
          pids.forEach((pid) =>{
             if (this._marked[pid] != true) {
-                //this.debugLog("deletePid(" + pid + ")")
+                this.debugLog("deletePid(" + pid + ")")
                 this.sdb().removeAt(pid)
                 deleteCount ++
             } 

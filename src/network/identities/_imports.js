@@ -1,5 +1,6 @@
 
 JSImporter.pushRelativePaths([
+    "BMKeyPair.js",
     "BMLocalIdentities.js",
     "BMLocalIdentity.js",
 

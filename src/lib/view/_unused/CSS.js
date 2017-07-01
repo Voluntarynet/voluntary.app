@@ -29,19 +29,6 @@
 
 /// --------------------
 
-function assert(v) {
-    if(v == false || v == null) {
-        throw new Error("assert failed - false value")
-    }
-    return v
-}
-
-function assertDefined(v) {
-    if(typeof(v) == 'undefined') {
-        throw new Error("assert failed - undefined value")
-    }
-    return v
-}
 
 CSSDeclaration = ideal.Proto.extend().newSlots({
     type: "CSSDeclaration",

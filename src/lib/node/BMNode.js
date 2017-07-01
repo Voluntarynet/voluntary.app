@@ -115,11 +115,15 @@ BMNode = ideal.Proto.extend().newSlots({
         return null
     },
     
-    nodeRowViewClass: function () {        
+    nodeRowViewClass: function () {     
         var name = this.nodeOverrideDivClassName()
         if (name) {
             return window[name]
         }
+		name = this.type() + "RowView"
+		if (window[name]) {
+			return window[name]
+		}
         
         return null
     },
@@ -150,6 +154,28 @@ BMNode = ideal.Proto.extend().newSlots({
         }
         return anItem
     },
+
+	addItemProtoForSlotIfAbsent: function(aProto, slotName) {
+		var getter = this[slotName]
+		if (!getter) {
+			throw new Error(this.type() + "." + slotName + " slot missing")
+		}
+		
+		var slotValue = this[slotName].apply(this)
+		assert(aProto)
+		
+		//console.log("addItemProtoForSlotIfAbsent " + slotName + " = " + slotValue + " type " + typeof(slotValue) + " " + typeof(slotValue))
+		
+		if (slotValue === null) {
+			console.log("addItemProtoForSlotIfAbsent " + slotName + " adding")
+			var obj = aProto.clone()
+			var setterName = this.setterNameForSlot(slotName)
+			this[setterName].apply(this, [obj])
+			this.addItem(obj)
+		}
+		
+		return this
+	},
     
     removeItem: function(anItem) {
         this.items().remove(anItem)
@@ -191,7 +217,6 @@ BMNode = ideal.Proto.extend().newSlots({
     },
 
     didUpdate: function() {
-		//ShowStack()
         this._didUpdateNodeNote.post()
 
         this.setNeedsSyncToView(true)

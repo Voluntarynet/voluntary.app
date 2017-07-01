@@ -2,7 +2,7 @@
 BMChat = BMApplet.extend().newSlots({
     type: "BMChat",
     threads: null,
-    profile: null,
+    newThread: null,
 }).setSlots({
     
     init: function () {
@@ -12,6 +12,9 @@ BMChat = BMApplet.extend().newSlots({
         
 		this.setThreads(BMChatThreads.clone())
         this.addItem(this.threads())
+        
+		this.setNewThread(BMChatNewThread.clone())
+        this.addItem(this.newThread())
     },
 })
 

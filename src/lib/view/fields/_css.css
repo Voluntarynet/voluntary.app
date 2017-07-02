@@ -2,7 +2,7 @@
 /* --- FieldSet --- */
 
 .BMFieldSetView {
-    font-family: "OpenSans-Light";
+    font-family: "AppLight";
     position: relative;
     overflow-y: auto;
     flex: 1;
@@ -23,7 +23,7 @@
     background-color: #fff;
     opacity: 1;
     
-    font-family: "OpenSans-Regular";
+    font-family: "AppRegular";
 
     display: block;
     position: relative;
@@ -48,7 +48,7 @@
 
 .BMFieldKeyView {
     color: #777;
-    font-family: "OpenSans-Regular";
+    font-family: "AppRegular";
 
 	display: inline-block;
     position: relative;
@@ -96,7 +96,7 @@
     text-transform: none;	
 
     color: #000;
-    font-family: "OpenSans-Regular";
+    font-family: "AppRegular";
     font-weight: normal;
     font-size: 13px;
 
@@ -120,7 +120,7 @@
     background-color: #fff;
     opacity: 1;
     
-    font-family: "OpenSans-Regular";
+    font-family: "AppRegular";
 
     display: block;
     position: relative;
@@ -136,7 +136,7 @@
 .BMTextAreaFieldValueView {
     position: absolute;
     color: #000;
-    font-family: "OpenSans-Regular";
+    font-family: "AppRegular";
 
     width: 90%;
     min-height: auto;
@@ -158,7 +158,7 @@
     background-color: #fff;
     opacity: 1;
     
-    font-family: "OpenSans-Regular";
+    font-family: "AppRegular";
 
     display: block;
     position: relative;
@@ -179,14 +179,14 @@
 	width: auto;
 	text-transform: uppercase;
 	text-align:center;
-    font-family: "OpenSans-Regular";
+    font-family: "AppRegular";
 	font-size: 12px;
 }
 
 .BMImageWellFieldValueView {
     position: relative;
     color: #000;
-    font-family: "OpenSans-Regular";
+    font-family: "AppRegular";
 
     width: auto;
     min-height: auto;
@@ -216,7 +216,7 @@
     text-align: left;
 
 
-    font-family: "OpenSans-Regular";
+    font-family: "AppRegular";
     font-size: 13px;
     font-weight: normal;
     text-transform: none;
@@ -242,7 +242,7 @@
 
 	width: auto;
 	
-    font-family: "OpenSans-Regular";
+    font-family: "AppRegular";
     background-color: #fff;
 
     text-align: left;
@@ -271,7 +271,7 @@
     
     color: #000;
 
-    font-family: "OpenSans-Regular";
+    font-family: "AppRegular";
     font-size: 13px;
     font-weight: normal;
     text-transform: none;
@@ -301,7 +301,7 @@
 	
 	width: auto;
 	
-	font-family: "OpenSans-Regular";
+	font-family: "AppRegular";
     font-size: 13px;
     font-weight: normal;
     text-transform: none;

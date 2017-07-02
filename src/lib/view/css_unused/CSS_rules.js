@@ -1,147 +1,3 @@
-/*
-    CSS Rule sets abstraction
-    
-    example use:
-    
-    // define a rule set
-    
-    CSS.ruleAt("Browser").setDict({
-        overflow: "hidden",
-        position: "absolute",
-        top: "0px",
-        right: 0,
-        bottom: 0,
-        left: 0,
-        paddingTop: "40px",
-        display: "flex"
-    })
-    
-    // update a declaration
-    
-    CSS.ruleAt("Browser").decAt("position").setValue("relative")
-    
-    // apply a rule
-    
-    CSS.ruleAt("Browser").applyToElement(e)
-
-
-*/
-
-/// --------------------
-
-
-CSSDeclaration = ideal.Proto.extend().newSlots({
-    type: "CSSDeclaration",
-    key: null,
-    value: null,
-    ruleSet: null,
-}).setSlots({
-    init: function() {
-    },
-    
-    applyToElement: function(anElement) {
-        anElement.style[this.key()] = this.value()
-        if (this.key() == "left") {
-            console.log("apply " + this.ruleSet().key() + " " + this.key() + ":" + this.value())
-        }
-        return this
-    },
-    
-    set: function(key, value) {
-        this.setKey(key)
-        this.setValue(value)
-        return this
-    },
-
-    setKey: function(k) {
-       this._key = assertDefined(k)
-       return this
-    },
-        
-    setValue: function(v) {
-       this._value = assertDefined(v)
-       return this
-    },
-})
-
-/// --------------------
-
-CSSRuleSet = ideal.Proto.extend().newSlots({
-    type: "CSSRuleSet",
-    declarations: null,
-    key: null,
-}).setSlots({
-    init: function() {
-        this.setDeclarations({})
-    },
-    
-    decAt: function(k) {
-        var dec = this.declarations()[k]
-        if (!dec) {
-            dec = CSSDeclaration.clone().setRuleSet(this).setKey(k)
-            this.declarations()[k] = dec
-        }
-        return dec
-    },
-
-    applyToElement: function(anElement) {        
-        var dict = this.declarations()
-        
-        dict.slotValues().forEach(function(declaration) {
-            declaration.applyToElement(anElement)
-        })
-        
-        return this
-    },
-    
-    setDict: function(dict) {
-        for (var k in dict) {
-            if (dict.hasOwnProperty(k)) {
-                this.decAt(k).setValue(dict[k])
-            }
-        }
-        return this
-    },
-})
-
-/// --------------------
-
-CSS = ideal.Proto.extend().newSlots({
-    type: "CSS",
-    rules: {},
-}).setSlots({
-    shared: function() {
-        return this
-    },
-    
-    hasRule: function(k) {
-        return k in this.rules()
-    },
-    
-    ruleAt: function(k) {
-        var rule = this.rules()[k]
-        if (!rule) {
-            rule = CSSRuleSet.clone().setKey(k)
-            this.rules()[k] = rule
-        }
-        return rule        
-    },
-    
-    assertRuleExists: function(ruleName) {
-        if (!this.hasRule(ruleName)) {
-            throw new Error("CSS missing ruleset '" + ruleName + "'")
-        }     
-        return this   
-    },
-    
-    applyEntryToElement: function(ruleName, anElement) {        
-        this.assertRuleExists(ruleName)
-        this.ruleAt(ruleName).applyToElement(anElement)
-        return this
-    },
-})
-
-/// --------------------
 
 /*
 CSS.ruleAt("Browser").setDict({
@@ -175,7 +31,7 @@ CSS.ruleAt("BrowserColumnEmptyLabel").setDict({
     zIndex: 11,
     textAlign: "center",
     border: "0px solid #aaa",
-    fontFamily: "OpenSans-Regular",
+    fontFamily: "AppRegular",
     fontSize: "14px",
 })
 
@@ -227,7 +83,7 @@ CSS.ruleAt("BrowserColumn").setDict({
 
 /*
 CSS.ruleAt("BrowserRow").setDict({
-    fontFamily: "OpenSans-Regular",
+    fontFamily: "AppRegular",
     display: "block",
     position: "relative",
     opacity: .8,
@@ -239,7 +95,7 @@ CSS.ruleAt("BrowserRow").setDict({
 })
 
 CSS.ruleAt("BrowserRow_Selected").setDict({
-    fontFamily: "OpenSans-Regular",
+    fontFamily: "AppRegular",
     display: "block",
     position: "relative",
     opacity: 1,
@@ -287,7 +143,7 @@ CSS.ruleAt("BrowserRowTitle_Selected").setDict({
 })
 
 CSS.ruleAt("BrowserRowSubtitle").setDict({
-    fontFamily: "OpenSans-Light",
+    fontFamily: "AppLight",
     position: "absolute",
     opacity: .8,
     left: "20px",
@@ -298,7 +154,7 @@ CSS.ruleAt("BrowserRowSubtitle").setDict({
 })
 
 CSS.ruleAt("BrowserRowSubtitle_Selected").setDict({
-    fontFamily: "OpenSans-Light",
+    fontFamily: "AppLight",
     position: "absolute",
     opacity: 1,
     left: "20px",
@@ -309,7 +165,7 @@ CSS.ruleAt("BrowserRowSubtitle_Selected").setDict({
 })
 
 CSS.ruleAt("BrowserRowNote").setDict({
-    fontFamily: "OpenSans-Light",
+    fontFamily: "AppLight",
     position: "absolute",
     right: "20px",
     top: "24px",
@@ -327,7 +183,7 @@ CSS.ruleAt("BrowserFieldRow").setDict({
     backgroundColor: "#fff",
     opacity: 1,
     
-    fontFamily: "OpenSans-Regular",
+    fontFamily: "AppRegular",
     display: "block",
     position: "relative",
     width: "100%",
@@ -339,7 +195,7 @@ CSS.ruleAt("BrowserFieldRow").setDict({
 
 CSS.ruleAt("BrowserFieldRowTitle").setDict({
     color: "#999",
-    fontFamily: "OpenSans-Regular",
+    fontFamily: "AppRegular",
     
     minWidth: "100%",
     textAlign: "left",
@@ -357,7 +213,7 @@ CSS.ruleAt("BrowserFieldRowTitle").setDict({
 
 CSS.ruleAt("BrowserFieldRowSubtitle").setDict({
     color: "#000",
-    fontFamily: "OpenSans-Regular",
+    fontFamily: "AppRegular",
     position: "absolute",
     opacity: .8,
     top: "22px",
@@ -371,7 +227,7 @@ CSS.ruleAt("BrowserFieldRowSubtitle").setDict({
 
 
 CSS.ruleAt("BrowserFieldRowNote").setDict({
-    fontFamily: "OpenSans-Light",
+    fontFamily: "AppLight",
     position: "absolute",
     right: "20px",
     top: "24px",

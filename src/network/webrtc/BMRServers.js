@@ -17,8 +17,8 @@ BMRServers = BMStorableNode.extend().newSlots({
     },
     
     bootStrapServer: function () {
-        return BMRServer.clone().setHost('peers.bitmarkets.org').setPort(9000) //.setPidSymbol("_bootStrapServer")
-        //return BMRServer.clone().setHost('127.0.0.1').setPort(9000) //.setPidSymbol("_bootStrapServer")
+        return BMRServer.clone().setHost("peerjs1.voluntary.net").setPort(9000) //.setPidSymbol("_bootStrapServer")
+        //return BMRServer.clone().setHost("127.0.0.1").setPort(9000) //.setPidSymbol("_bootStrapServer")
     },
     
     addServer: function (aServer) {
@@ -122,7 +122,7 @@ BMRServers = BMStorableNode.extend().newSlots({
         var entries = msg.data()
         entries.forEach( (addrDict) => {
             if (!this.hasAddrDict(addrDict)) {
-                this.addServer(Server.clone().setAddrDict(addrDict))
+                this.addServer(BMRServer.clone().setAddrDict(addrDict))
             }
         })
     },

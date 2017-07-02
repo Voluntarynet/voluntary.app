@@ -34,7 +34,7 @@
     z-index: 11;
     text-align: center;
     border: 0px solid #aaa;
-    font-family: "OpenSans-Regular";
+    font-family: "AppRegular";
     font-size: 14px;
 }
 
@@ -112,7 +112,7 @@
 /* --- Browser Row --- */
 
 .BrowserRow {
-    font-family: "OpenSans-Regular";
+    font-family: "AppRegular";
     display: block;
     position: relative;
     opacity:1;
@@ -137,7 +137,7 @@
 }
 
 .BrowserRowSubtitle {
-    font-family: "OpenSans-Light";
+    font-family: "AppLight";
     position: absolute;
     opacity: 1;
     left: 20px;
@@ -148,7 +148,7 @@
 }
 
 .BrowserRowNote {
-    font-family: "OpenSans-Light";
+    font-family: "AppLight";
     position: absolute;
     right: 20px;
     top: 24px;

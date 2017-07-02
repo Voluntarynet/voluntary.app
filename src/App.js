@@ -24,7 +24,19 @@ App = BaseApp.extend().newSlots({
         
         window.app = this
         
-        this.setName("Bitcom")
+		var parser = document.createElement('a')
+		console.log(" window.location.href = ",  window.location.href)
+		parser.href = window.location.href
+		var name = parser.hostname
+		console.log("parser.hostname = ",  typeof(parser.hostname))
+		
+		if (name != "") {
+			name = name.before(".").replaceAll("-", " ").toUpperCase()
+		} else {
+			name = "TEST"
+		}
+
+        this.setName(name)
         this.setTitle("App")
 
 		//this.addAppItem()

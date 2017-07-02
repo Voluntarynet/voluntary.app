@@ -3,7 +3,7 @@
 /* --- BMDraftView --- */
 
 .BMDraftView {
-    font-family: "OpenSans-Light";
+    font-family: "AppLight";
     position: relative;
     overflow-y: auto;
     flex: 1;
@@ -13,7 +13,7 @@
 }
 
 .BMDraftToAddressView {
-    font-family: "OpenSans-Light";
+    font-family: "AppLight";
     font-size: 14px;
     position: absolute;
     top: 30px;
@@ -25,7 +25,7 @@
 
 
 .BMDraftFromAddressView {
-    font-family: "OpenSans-Light";
+    font-family: "AppLight";
     font-size: 14px;
     position: absolute;
     top: 30px;
@@ -36,7 +36,7 @@
 }
 
 .BMDraftSubjectLabelView {
-    font-family: "OpenSans-Light";
+    font-family: "AppLight";
     font-size: 14px;
     position: absolute;
     top: 30px;
@@ -46,7 +46,7 @@
 }
 
 .BMDraftSubjectView {
-    font-family: "OpenSans-Regular";
+    font-family: "AppRegular";
     font-size: 14px;
 
     position: absolute;
@@ -62,7 +62,7 @@
 }
 
 .BMDraftBodyView {
-    font-family: "OpenSans-Regular";
+    font-family: "AppRegular";
     font-size: 14px;
     color: #aaa;
 
@@ -85,19 +85,18 @@
 /* --- BMMessageView --- */
 
 .BMMessageView {
-    font-family: "OpenSans-Light";
     position: relative;
     overflow-y: auto;
     flex: 1;
     top: 40px;
     width: 100%;
     background-color: white;
-    color: #666;
+    color: #777;
     padding: 50px;
     white-space: pre-wrap;
     text-align: left;
     font-size: 12px;
-    font-family: "Courier";
+    font-family: "AppFixed";
 	white-space: pre;
 }
 
@@ -113,7 +112,7 @@
 }
 
 .BMPostStatusView {
-    font-family: "OpenSans-Light";
+    font-family: "AppLight";
 
     position: relative;
     margin-top: 0px;
@@ -127,7 +126,7 @@
 }
 
 .BMPostPathView {
-    font-family: "OpenSans-Regular";
+    font-family: "AppRegular";
     font-size: 11px;
     color: #bcbcbc;
 
@@ -149,7 +148,7 @@
     
 
 .BMPostTitleView {
-    font-family: "OpenSans-Regular";
+    font-family: "AppRegular";
     font-size: 24px;
 
     position: absolute;
@@ -167,7 +166,7 @@
     top: 83px;
     left: 35px;
 
-    font-family: "OpenSans-Regular";
+    font-family: "AppRegular";
     font-size: 20px;
     color: #bcbcbc;
 }
@@ -180,7 +179,7 @@
 }
 
 .BMPostPowContainerView {
-    font-family: "OpenSans-Regular";
+    font-family: "AppRegular";
     font-size: 11px;
     color: #bcbcbc;
     
@@ -254,7 +253,7 @@
 
 
 .BMPostDescriptionView {
-    font-family: "OpenSans-Regular";
+    font-family: "AppRegular";
     font-size: 14px;
     color: #aaa;
 
@@ -277,7 +276,7 @@
 /* --- Button --- */
 
 .BMButtonView {
-    font-family: "OpenSans-Regular";
+    font-family: "AppRegular";
     font-size: 14px;
     color: white;
     background-color: black;
@@ -310,7 +309,7 @@
     margin-top: 10px;
     margin-bottom: 0px;
 
-    font-family: "OpenSans-Regular";
+    font-family: "AppRegular";
     font-size: 11px;
     color: #bbb;
     text-transform: uppercase;
@@ -330,7 +329,7 @@
     height: 200px;
     border: 0px solid #eee;
     
-    font-family: "OpenSans-Regular";
+    font-family: "AppRegular";
     font-size: 11px;
     color: #aaa;
     text-transform: uppercase;
@@ -358,7 +357,7 @@
     height: 90%;
     border: 0px solid #eee;
     
-    font-family: "OpenSans-Regular";
+    font-family: "AppRegular";
     font-size: 11px;
     color: #aaa;
     text-transform: uppercase;

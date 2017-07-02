@@ -2,6 +2,16 @@
     App is a singleton that represents the application
 */
 
+/*
+document.ontouchmove = function(event){
+    event.preventDefault();
+}
+
+document.body.ontouchmove = function(event){
+    event.preventDefault();
+}
+*/
+
 App = BaseApp.extend().newSlots({
     type: "App",
     

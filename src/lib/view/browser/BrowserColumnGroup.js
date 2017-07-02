@@ -5,6 +5,8 @@ BrowserColumnGroup = NodeView.extend().newSlots({
     column: null,
     columnWrapper: null,
     emptyLabel: null,
+	isSelected: false,
+	doesCollapseIfUnselected: false,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
@@ -21,8 +23,40 @@ BrowserColumnGroup = NodeView.extend().newSlots({
         this.setColumn(BrowserColumn.clone())
         this.columnWrapper().addItem(this.column())
         
+		//this.registerForFocus(true)
         return this
     },
+
+	isFirstColumnGroup: function() {
+		return this.browser().columnGroups()[0] === this
+	},
+
+	setIsSelected: function(aBool) {
+		if (this.column()) {
+			this.column().setIsSelected(aBool)
+		}
+		
+		if (this._isSelected == aBool) {
+			return this
+		}
+		
+		this._isSelected = aBool
+		this.header().setDoesShowBackArrow(aBool && !this.isFirstColumnGroup())
+		
+		if (this.doesCollapseIfUnselected()) {
+			if (aBool) {
+				console.log(this + " expanding")
+				this.setDisplay("flex")
+				this.setMinAndMaxWidth("100%")
+			} else {
+				this.setDisplay("none")
+				console.log(this + " collapsing")
+			}
+		}
+		
+		return this
+	},
+
     
     /// empty label 
     
@@ -92,7 +126,9 @@ BrowserColumnGroup = NodeView.extend().newSlots({
             var w = this.node().nodeMinWidth()
             if (w) {
                 //console.log("setNode setMinAndMaxWidth")
-                this.setMinAndMaxWidth(w)
+				if (!this.doesCollapseIfUnselected()) {
+                	this.setMinAndMaxWidth(w)
+				}
             }
 
             // use custom class for column if node wants it

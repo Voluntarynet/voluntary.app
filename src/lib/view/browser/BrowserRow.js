@@ -94,9 +94,11 @@ BrowserRow = NodeView.extend().newSlots({
         this.setIsSelected(true)
         this.updateSubviews()
 
+		/*
 		if (this.node().didSelect) {
 			this.node().didSelect(this)
 		}
+		*/
 		
         return this
     },

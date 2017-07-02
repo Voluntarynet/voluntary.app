@@ -6,6 +6,7 @@ BrowserColumn = NodeView.extend().newSlots({
     selectionColor: "#aaa",
     allowsCursorNavigation: true,
 	debug: true,
+	isSelected: false,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
@@ -15,6 +16,22 @@ BrowserColumn = NodeView.extend().newSlots({
         this.registerForKeyboard(true)
         return this
     },
+
+	setIsSelected: function(aBool) {
+		if (this._isSelected == aBool) {
+			return this
+		}
+		
+		this._isSelected = aBool
+		
+		if (aBool) {
+			this.focus()
+		} else {
+			this.blur()
+		}
+		
+		return this
+	},
 
     
     title: function() {
@@ -328,6 +345,8 @@ BrowserColumn = NodeView.extend().newSlots({
             this.setSelectedRowIndex(0)
         }
 
+		console.log(this.type() + " focus")
+
 		return this
 	},
     
@@ -355,6 +374,7 @@ BrowserColumn = NodeView.extend().newSlots({
         if (prevColumn) {
             this.blur()
             prevColumn.focus()
+			this.browser().selectColumn(prevColumn)
         }
         return this
     },

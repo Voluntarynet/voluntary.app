@@ -167,7 +167,7 @@ BMNode = ideal.Proto.extend().newSlots({
 		//console.log("addItemProtoForSlotIfAbsent " + slotName + " = " + slotValue + " type " + typeof(slotValue) + " " + typeof(slotValue))
 		
 		if (slotValue === null) {
-			console.log("addItemProtoForSlotIfAbsent " + slotName + " adding")
+			//console.log("addItemProtoForSlotIfAbsent " + slotName + " adding")
 			var obj = aProto.clone()
 			var setterName = this.setterNameForSlot(slotName)
 			this[setterName].apply(this, [obj])

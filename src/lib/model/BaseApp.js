@@ -46,15 +46,15 @@ BaseApp = BMNavNode.extend().newSlots({
     },
     
     setupBrowser: function() {
-        this.setBrowser(BrowserView.clone().setColumnGroupCount(4))
-        this.browser().focusEach()
+        this.setBrowser(BrowserView.clone().setColumnGroupCount(4).selectFirstColumn())
+        this.browser().focusEach() // hack
         return this        
     },
     
     setupWindow: function() {        
         this.browser().setNode(this).syncFromNode()
 
-        var windowContent = document.getElementById('window-content');
+        var windowContent = document.getElementById('body');
         windowContent.appendChild(this.browser().element())     
         return this
     },

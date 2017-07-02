@@ -183,14 +183,20 @@ Div = ideal.Proto.extend().newSlots({
     
     minWidth: function() {
         var s = this.element().style.minWidth
+		assert(s.includes("px"))
         var w = Number(s.replace("px", ""))
         return w
     },
 
     setMinAndMaxWidth: function(aNumber) {
-		assert(typeof(aNumber) == "number")
-        this.element().style.minWidth = aNumber + "px"
-        this.element().style.maxWidth = aNumber + "px"
+		if (typeof(aNumber) == "string") {
+	        this.element().style.minWidth = aNumber 
+	        this.element().style.maxWidth = aNumber 		
+		} else {
+			assert(typeof(aNumber) == "number")
+	        this.element().style.minWidth = aNumber + "px"
+	        this.element().style.maxWidth = aNumber + "px"
+		}
         return this        
     },
 

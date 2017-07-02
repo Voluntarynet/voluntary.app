@@ -1,18 +1,39 @@
 
-html {
+html, body {
+    position: fixed;
+    overflow: hidden;
+	top: 0px;
+	left: 0px;
     height: 100%;
     width: 100%;
-    overflow: hidden;
+	padding: 0px;
+	margin: 0px;
+    border: 0px;
+	background-color: black;
 }
 
 .window {
-    position: absolute;
+    position: fixed;
     overflow: hidden;
-    background-color: #555;
-    width: 100%;
-    height: 100%;
-    margin: 0px;
-    border: 0px;
     top: 0px;
     left: 0px;
+    width: 100%;
+    height: 100%;
+	padding: 0px;
+    margin: 0px;
+    border: 0px;
+    background-color: #555;
+}
+
+.window-content {
+    position: fixed;
+    overflow: hidden;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+	padding: 0px;
+    margin: 0px;
+    border: 0px;
+    background-color: #555;	
 }

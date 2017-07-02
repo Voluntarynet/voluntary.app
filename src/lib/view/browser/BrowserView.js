@@ -160,7 +160,7 @@ BrowserView = NodeView.extend().newSlots({
 
         // set other columns width to that of their nodes
         // and get total width 
-        this.columnGroups().forEach( function (cg) {
+        this.columnGroups().forEach((cg) => {
             if (cg != lastCg) { 
                 var mw = cg.node() ? cg.node().nodeMinWidth() : 100 // not sure why this happens
                 otherColsWidth += mw 
@@ -200,9 +200,22 @@ BrowserView = NodeView.extend().newSlots({
         }
     },
 
+	selectFirstColumn: function() {
+		this.selectColumn(this.columns()[0])
+		return this
+	},
+	
+	updateSelectedColumnTo: function(selectedColumn) {
+        var selectedColumnGroup = selectedColumn.parentItem()
+        this.columnGroups().forEach(function (cg) { 
+			cg.setIsSelected(cg === selectedColumnGroup) 
+        })		
+	},
+	
     selectColumn: function(selectedColumn) {
         var selectedColumnGroup = selectedColumn.parentItem()
-        
+
+
         var index = this.columnGroups().indexOf(selectedColumn.columnGroup())
 		
         this.setColumnGroupCount(index + 3)
@@ -231,6 +244,8 @@ BrowserView = NodeView.extend().newSlots({
         
         this.setupColumnGroupColors()
         this.fitLastColumnGroupToRemainingWidth()
+
+		this.updateSelectedColumnTo(selectedColumn)
         
         return this
     },

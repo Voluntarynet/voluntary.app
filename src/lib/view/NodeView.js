@@ -61,7 +61,7 @@ NodeView = DivView.extend().newSlots({
 	// --- syncing ---
     
     syncFromNode: function () {
-        // only replace items if sync requires it
+        // only replace subviews if sync requires it
         
         if (!this.node()) { 
             this.removeAllItems();
@@ -89,11 +89,11 @@ NodeView = DivView.extend().newSlots({
             newItems.push(itemView)      
         })
         
-        if (!newItems.isEqual(this.items())) {
+        if (!newItems.isEqual(this.subviews())) {
             this.removeAllItems()
             this.addItems(newItems)
         } else {
-            //this.log(" view items equal")
+            //this.log(" view subviews equal")
         }
 
         return this

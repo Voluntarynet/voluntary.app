@@ -22,7 +22,7 @@ BMFieldSetView = NodeView.extend().newSlots({
 	
 	setupKeyViews: function() {
 		var lastFieldView = null
-		var fieldViews = this.items()
+		var fieldViews = this.subviews()
 		
 		fieldViews.forEach((fieldView) => {
 			var next = this.keyFieldAfterFieldView(fieldView).valueView()
@@ -32,7 +32,7 @@ BMFieldSetView = NodeView.extend().newSlots({
 	},
 	
 	keyFieldAfterFieldView: function(aFieldView) {		
-		var fieldViews = this.items()
+		var fieldViews = this.subviews()
 		
 		var nextFieldView = fieldViews.after(aFieldView).detect(function(fieldView) { 
 			return fieldView.node().valueIsEditable() 
@@ -40,7 +40,7 @@ BMFieldSetView = NodeView.extend().newSlots({
 		
 		if (nextFieldView == null) {
 			
-			nextFieldView = this.items().first()
+			nextFieldView = this.subviews().first()
 		}
 		
 		return nextFieldView

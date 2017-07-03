@@ -50,7 +50,7 @@ BrowserColumn = NodeView.extend().newSlots({
 	// rows
 
     rows: function() {
-        return this.items()
+        return this.subviews()
     },
 
     addRow: function(v) {
@@ -81,7 +81,7 @@ BrowserColumn = NodeView.extend().newSlots({
     },
     
     selectedRows: function() {
-        return this.items().filter((row) => { 
+        return this.subviews().filter((row) => { 
 			/*
 			if (!row.isSelected) {
 				console.log("row.type() = ", row.type(), " missing isSelected")
@@ -251,7 +251,7 @@ BrowserColumn = NodeView.extend().newSlots({
 	onRightArrowKeyUp: function(event) {
         if (!this.allowsCursorNavigation()) { return }	
 
-		if (this.nextColumn() && this.nextColumn().items().length > 0) {
+		if (this.nextColumn() && this.nextColumn().subviews().length > 0) {
         	this.selectNextColumn()
 		}
 		return false
@@ -280,7 +280,7 @@ BrowserColumn = NodeView.extend().newSlots({
         var sNode = this.selectedNode()
         if (sNode && sNode.hasAction("delete")) { 
 			sNode.performAction("delete") 
-			if (this.items().length == 0) {
+			if (this.subviews().length == 0) {
 				this.selectPreviousColumn()
 			}
 		}
@@ -382,9 +382,9 @@ BrowserColumn = NodeView.extend().newSlots({
 	// paths
     
     browserPathArray: function() {
-        var items = this.browser().columns().itemsBefore(this)
-        items.push(this)
-        return items
+        var subviews = this.browser().columns().subviewsBefore(this)
+        subviews.push(this)
+        return subviews
     },
     
     browserPathString: function() {

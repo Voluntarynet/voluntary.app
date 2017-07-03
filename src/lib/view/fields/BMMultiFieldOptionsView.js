@@ -53,18 +53,18 @@ BMMultiFieldOptionsView = DivView.extend().newSlots({
 	},
 	
 	setOptionWidths: function(maxWidth) {
-		this.items().forEach(function(item) {
+		this.subviews().forEach(function(item) {
 			item.setMinAndMaxWidth(maxWidth)
 		})
 		return this
 	},
 	
 	maxOptionTextWidth: function() {
-		var maxWidth = this.items().maxValue(function(item) {
+		var maxWidth = this.subviews().maxValue(function(item) {
 			//console.log("item.width() = ", item.width())
 			return DivTextTapeMeasure.widthOfDivClassWithText("BMMultiFieldOptionView", item.innerHTML())
 		})	
-		//console.log("items.length = " +  this.items().length + " maxWidth = ", maxWidth)
+		//console.log("subviews.length = " +  this.subviews().length + " maxWidth = ", maxWidth)
 		
 		return maxWidth	
 	},
@@ -77,39 +77,39 @@ BMMultiFieldOptionsView = DivView.extend().newSlots({
 		
 		this.setOptionWidths(maxWidth)
 		
-		var itemsPerRow = 1
+		var subviewsPerRow = 1
 		
-		if (this.items().length > 10) {
-			itemsPerRow = Math.ceil(Math.sqrt(this.items().length))
+		if (this.subviews().length > 10) {
+			subviewsPerRow = Math.ceil(Math.sqrt(this.subviews().length))
 		}
 		
-		var fullWidth = maxWidth * itemsPerRow 
+		var fullWidth = maxWidth * subviewsPerRow 
 		var w = fullWidth + leftPad + rightPad
 		
 		//this.setMinAndMaxWidth(w)
 		
-		this.items().forEach(function(item) {
+		this.subviews().forEach(function(item) {
 			//item.setTextAlign("left")
 			//item.setPaddingLeft(leftPad)
 			//item.setPaddingRight(rightPad)
 			item.setMinAndMaxWidth(w)
 		})
 		
-		//var rowCount = this.items().length / itemsPerRow
+		//var rowCount = this.subviews().length / subviewsPerRow
 		//var h = rowCount * 26
 		//console.log("maxHeight = ", h)
 		//this.setMinAndMaxHeight(h)
 		
 		/*
 		console.log(this.type() + " maxWidth: ", maxWidth)
-		console.log(this.type() + " itemsPerRow: ", itemsPerRow)
+		console.log(this.type() + " subviewsPerRow: ", subviewsPerRow)
 		console.log(this.type() + " fullWidth: ", fullWidth)
 		console.log(this.type() + " setMinAndMaxWidth: ", w)
 		*/
 		
 		/*
-		if (itemsPerRow == 1) {
-			this.items().forEach(function(item) {
+		if (subviewsPerRow == 1) {
+			this.subviews().forEach(function(item) {
 				item.setTextAlign("left")
 				item.setPaddingLeft(leftPad)
 				item.setPaddingRight(rightPad)
@@ -117,7 +117,7 @@ BMMultiFieldOptionsView = DivView.extend().newSlots({
 			//this.parentView().setMinAndMaxWidth(fullWidth)
 			//this.setLeft(fullWidth + 30)
 		} else {
-			this.items().forEach(function(item) {
+			this.subviews().forEach(function(item) {
 				item.setTextAlign("left")
 				item.setPaddingLeft(leftPad)
 				item.setPaddingRight(rightPad)

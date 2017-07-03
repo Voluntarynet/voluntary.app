@@ -23,7 +23,7 @@ ImageWellView = NodeView.extend().newSlots({
     
     setIsEditable: function(aBool) {
         this._isEditable = aBool
-        this.items().forEach(function (imageView) { imageView.setIsEditable(aBool); })
+        this.subviews().forEach(function (imageView) { imageView.setIsEditable(aBool); })
         return this
     },
     
@@ -58,7 +58,7 @@ ImageWellView = NodeView.extend().newSlots({
     },
     
     imageDataURLs: function() {
-        var urls =  this.items().map(function (imageView) { return imageView.dataURL(); })
+        var urls =  this.subviews().map(function (imageView) { return imageView.dataURL(); })
         urls = urls.select(function (url) { return url != null; })
         return urls
     },

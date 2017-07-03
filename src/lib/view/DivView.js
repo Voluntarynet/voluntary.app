@@ -22,7 +22,7 @@ DivView = ideal.Proto.extend().newSlots({
     
     // parent view and subviews
     parentView: null,
-    items: null,
+    subviews: null,
     subviewProto: null,
     
     // target / action
@@ -41,7 +41,7 @@ DivView = ideal.Proto.extend().newSlots({
 	unfocusOnEnterKey: false,
 }).setSlots({
     init: function () {
-        this._items = []
+        this._subviews = []
         var e = document.createElement("div");
         //e._viewObject = this
         e.setAttribute('class', this.divClassName());
@@ -242,7 +242,7 @@ DivView = ideal.Proto.extend().newSlots({
             anItem = this.newItemFromProto()
         }
         
-        this._items.append(anItem)
+        this._subviews.append(anItem)
         
         if ( anItem.element() == null) {
                 console.log("anItem = ", anItem)
@@ -291,13 +291,13 @@ DivView = ideal.Proto.extend().newSlots({
     },
     
     atInsert: function (anIndex, anItem) {
-        this.items().atInsert(anIndex, anItem)
+        this.subviews().atInsert(anIndex, anItem)
         DomElement_atInsert(this.element(), anIndex, anItem.element())
         return anItem
     },
     
     itemForNode: function(aNode) {
-        return this.items().detect((item) => { return item.node() == aNode; })
+        return this.subviews().detect((item) => { return item.node() == aNode; })
     },
 
 	// fade
@@ -362,7 +362,7 @@ DivView = ideal.Proto.extend().newSlots({
 		*/
 		
         anItem.willRemove()
-        this._items.remove(anItem)
+        this._subviews.remove(anItem)
 
 		/*
 		var children = this._element.childNodes
@@ -388,19 +388,19 @@ DivView = ideal.Proto.extend().newSlots({
     },
     
     removeAllItems: function() {
-        this.items().copy().forEach((item) => { this.removeItem(item) })
+        this.subviews().copy().forEach((item) => { this.removeItem(item) })
         return this
     },
 
     indexOfItem: function(anItem) {
-        return this.items().indexOf(anItem)
+        return this.subviews().indexOf(anItem)
     },
 
     itemAfter: function(anItem) {
         var index = this.indexOfItem(anItem)
         var nextIndex = index + 1
-        if (nextIndex < this.items().length) {
-            return this.items()[nextIndex]
+        if (nextIndex < this.subviews().length) {
+            return this.subviews()[nextIndex]
         }
         return null
     },

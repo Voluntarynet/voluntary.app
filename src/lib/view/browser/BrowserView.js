@@ -40,7 +40,7 @@ BrowserView = NodeView.extend().newSlots({
     },
 
     columnGroups: function() {
-        return this.items()
+        return this.subviews()
     },
     
     columns: function() {

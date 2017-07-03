@@ -18,9 +18,11 @@ function DomElement_atInsert(el, index, child) {
 DivView = ideal.Proto.extend().newSlots({
     type: "DivView",
     divClassName: "",
-    items: null,
     element: null,
-    parentItem: null,
+    
+    // parent view and subviews
+    parentView: null,
+    items: null,
     itemProto: null,
     
     // target / action
@@ -32,6 +34,7 @@ DivView = ideal.Proto.extend().newSlots({
     invalidColor: null,
 	isHandlingEvent: false,
 	
+	// key views
 	interceptsTab: true,
 	nextKeyView: null,
 	canMakeKey: true,
@@ -246,7 +249,7 @@ DivView = ideal.Proto.extend().newSlots({
                 throw new Error("null anItem.element()")
         }
         this._element.appendChild(anItem.element());
-        anItem.setParentItem(this)
+        anItem.setParentView(this)
 		this.didChangeItemList()
         return anItem
     },
@@ -326,7 +329,7 @@ DivView = ideal.Proto.extend().newSlots({
         }, 0)
         
         setTimeout( () => { 
-            this.parentItem().removeItem(this)
+            this.parentView().removeItem(this)
         }, delayInSeconds*1000)        
         
         return this
@@ -379,7 +382,7 @@ DivView = ideal.Proto.extend().newSlots({
         	this._element.removeChild(anItem.element());
 		}
 		
-        anItem.setParentItem(null)
+        anItem.setParentView(null)
 		this.didChangeItemList()
         return anItem
     },
@@ -453,7 +456,7 @@ DivView = ideal.Proto.extend().newSlots({
             return
         }
 
-        var p = this.parentItem()
+        var p = this.parentView()
         if (p) {
             p.tellParents(msg, item)
         }

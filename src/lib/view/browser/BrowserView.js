@@ -206,14 +206,14 @@ BrowserView = NodeView.extend().newSlots({
 	},
 	
 	updateSelectedColumnTo: function(selectedColumn) {
-        var selectedColumnGroup = selectedColumn.parentItem()
+        var selectedColumnGroup = selectedColumn.parentView()
         this.columnGroups().forEach(function (cg) { 
 			cg.setIsSelected(cg === selectedColumnGroup) 
         })		
 	},
 	
     selectColumn: function(selectedColumn) {
-        var selectedColumnGroup = selectedColumn.parentItem()
+        var selectedColumnGroup = selectedColumn.parentView()
 
 
         var index = this.columnGroups().indexOf(selectedColumn.columnGroup())

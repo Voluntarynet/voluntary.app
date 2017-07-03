@@ -15,11 +15,11 @@ BrowserHeader = NodeView.extend().newSlots({
     },
     
     browser: function() {
-        return this.parentItem().parentItem()
+        return this.parentView().parentView()
     },
 
 	columnGroup: function() {
-		return this.parentItem()
+		return this.parentView()
 	},
 
     syncFromNode: function() {

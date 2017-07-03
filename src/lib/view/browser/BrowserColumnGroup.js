@@ -150,7 +150,7 @@ BrowserColumnGroup = NodeView.extend().newSlots({
     },
 
     browser: function() {
-        return this.parentItem()
+        return this.parentView()
     },
     
 

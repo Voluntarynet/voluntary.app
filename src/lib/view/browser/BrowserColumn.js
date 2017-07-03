@@ -44,7 +44,7 @@ BrowserColumn = NodeView.extend().newSlots({
     },
     
     columnGroup: function () {
-        return this.parentItem()
+        return this.parentView()
     },
 
 	// rows

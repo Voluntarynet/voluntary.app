@@ -114,7 +114,7 @@ BMMultiFieldOptionsView = DivView.extend().newSlots({
 				item.setPaddingLeft(leftPad)
 				item.setPaddingRight(rightPad)
 			})
-			//this.parentItem().setMinAndMaxWidth(fullWidth)
+			//this.parentView().setMinAndMaxWidth(fullWidth)
 			//this.setLeft(fullWidth + 30)
 		} else {
 			this.items().forEach(function(item) {
@@ -122,7 +122,7 @@ BMMultiFieldOptionsView = DivView.extend().newSlots({
 				item.setPaddingLeft(leftPad)
 				item.setPaddingRight(rightPad)
 			})			
-			//this.parentItem().textView().setMinAndMaxWidth(maxWidth)
+			//this.parentView().textView().setMinAndMaxWidth(maxWidth)
 			//this.setLeft(maxWidth + 30)
 		}
 		*/
@@ -132,6 +132,6 @@ BMMultiFieldOptionsView = DivView.extend().newSlots({
 	
 	select: function(sender) {
 		//console.log("selected " + sender.validValue)
-		this.parentItem().select(sender.validValue)
+		this.parentView().select(sender.validValue)
 	},
 })

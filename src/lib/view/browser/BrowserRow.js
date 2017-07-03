@@ -18,7 +18,7 @@ BrowserRow = NodeView.extend().newSlots({
     },
     
     column: function () {
-        return this.parentItem()
+        return this.parentView()
     },
     
     updateSubviews: function() {

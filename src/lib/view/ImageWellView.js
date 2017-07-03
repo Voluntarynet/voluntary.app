@@ -16,7 +16,7 @@ ImageWellView = NodeView.extend().newSlots({
 
     syncToNode: function () {
         var node = this.node()
-        this.parentItem().syncToNode()
+        this.parentView().syncToNode()
         NodeView.syncToNode.apply(this)
         return this
     },

@@ -9,7 +9,7 @@ BrowserHeader = NodeView.extend().newSlots({
         this.setDivClassName("BrowserHeader")
         this.setOwnsView(false)
 
-		var ba = Div.clone().setDivClassName("BackArrow").setInnerHTML("&#8249;").setTarget(this).setAction("back")
+		var ba = DivView.clone().setDivClassName("BackArrow").setInnerHTML("&#8249;").setTarget(this).setAction("back")
 		this.setBackArrowView(ba)
         return this
     },

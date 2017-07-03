@@ -17,7 +17,7 @@ BrowserColumnGroup = NodeView.extend().newSlots({
         
         this.setColumnWrapper(this)
         
-        //this.setColumnWrapper(Div.clone().setDivClassName("BrowserColumnWrapper"))
+        //this.setColumnWrapper(DivView.clone().setDivClassName("BrowserColumnWrapper"))
         //this.addItem(this.columnWrapper())
         
         this.setColumn(BrowserColumn.clone())
@@ -75,7 +75,7 @@ BrowserColumnGroup = NodeView.extend().newSlots({
     
     addEmptyLabelIfMissing: function() {
         if (!this.emptyLabel()) {
-            this.setEmptyLabel(Div.clone().setDivClassName("BrowserColumnEmptyLabel"))
+            this.setEmptyLabel(DivView.clone().setDivClassName("BrowserColumnEmptyLabel"))
             this.setEmptyLabelText("").turnOffUserSelect()
             this.addItem(this.emptyLabel())            
         }

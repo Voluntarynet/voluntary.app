@@ -16,7 +16,7 @@ GenericView = NodeView.extend().newSlots({
         this.setTitleView(NodeView.clone().setDivClassName("GenericTitleView"))
         this.middleView().addItem(this.titleView())        
 
-        this.middleView().addItem(Div.clone())        
+        this.middleView().addItem(DivView.clone())        
 
         this.setSubtitleView(NodeView.clone().setDivClassName("GenericSubtitleView"))
         this.middleView().addItem(this.subtitleView())  

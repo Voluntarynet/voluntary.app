@@ -1,9 +1,9 @@
-BrowserRowTitle = Div.extend().newSlots({
+BrowserRowTitle = DivView.extend().newSlots({
     type: "BrowserRowTitle",
 	isSelected: false,
 }).setSlots({
     init: function () {
-        Div.init.apply(this)
+        DivView.init.apply(this)
         this.setDivClassName("BrowserRowTitle")
         this.setInnerHTML("title")
         this.turnOffUserSelect()
@@ -64,6 +64,6 @@ BrowserRowTitle = Div.extend().newSlots({
 		event.stopPropagation()
         this.tellParents("onDidEdit", this)
 		return false
-		//return Div.onKeyUp.apply(this, [event])
+		//return DivView.onKeyUp.apply(this, [event])
 	},
 })

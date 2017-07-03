@@ -13,7 +13,7 @@ BMFieldView = BrowserFieldRow.extend().newSlots({
         
         this.setDivClassName("BMFieldView")
 
-		this.setKeyView(this.addItem(Div.clone().setDivClassName("BMFieldKeyView")))
+		this.setKeyView(this.addItem(DivView.clone().setDivClassName("BMFieldKeyView")))
         this.addItem(this.keyView())     
    		this.keyView().turnOffUserSelect().setSpellCheck(false)   
 		//this.keyView().setMinAndMaxWidth("200")
@@ -23,7 +23,7 @@ BMFieldView = BrowserFieldRow.extend().newSlots({
         this.valueView().setUserSelect("text")
 		this.valueView().setSpellCheck(false)
 		
-		this.setNoteView(Div.clone().setDivClassName("BMFieldViewNoteView"))
+		this.setNoteView(DivView.clone().setDivClassName("BMFieldViewNoteView"))
 		this.addItem(this.noteView())
         this.noteView().setUserSelect("text")
         
@@ -32,7 +32,7 @@ BMFieldView = BrowserFieldRow.extend().newSlots({
     },
 
 	createValueView: function() {
-		return Div.clone().setDivClassName("BMFieldValueView")
+		return DivView.clone().setDivClassName("BMFieldValueView")
 	},
 	
 	visibleValue: function() {

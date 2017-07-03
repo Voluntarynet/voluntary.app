@@ -15,8 +15,8 @@ function DomElement_atInsert(el, index, child) {
     throw new Error("invalid dom child index")
 }
 
-Div = ideal.Proto.extend().newSlots({
-    type: "Div",
+DivView = ideal.Proto.extend().newSlots({
+    type: "DivView",
     divClassName: "",
     items: null,
     element: null,
@@ -44,7 +44,7 @@ Div = ideal.Proto.extend().newSlots({
         e.setAttribute('class', this.divClassName());
         this._element = e
         this.element().style.transition = "all .2s"
-        this.setItemProto(Div)
+        this.setItemProto(DivView)
         return this
     },
 
@@ -372,8 +372,8 @@ Div = ideal.Proto.extend().newSlots({
 		*/
 		
 		if (this.hasItem(anItem)) {
-			if(!Div._didShowWarning) {
-				Div._didShowWarning = true
+			if(!DivView._didShowWarning) {
+				DivView._didShowWarning = true
 				console.log("WANRING: " + this.type() + " removeItem " + anItem.type() + " failed - no child found!")
 			}
         	this._element.removeChild(anItem.element());
@@ -462,12 +462,12 @@ Div = ideal.Proto.extend().newSlots({
     // onclick target & action
 
 	setIsHandlingEvent: function() {
-		Div._isHandlingEvent = true
+		DivView_isHandlingEvent = true
 		return this
 	},
 	
 	isHandlingEvent: function() {
-		return Div._isHandlingEvent
+		return DivView_isHandlingEvent
 	},
 
 	handleEventFunction: function(f) {
@@ -760,8 +760,8 @@ Div = ideal.Proto.extend().newSlots({
                 //console.log("onkeyup [" + this._element.innerHTML  + "]")
                 return this.onKeyUp(event) 
             }
-            Div._tabCount ++
-            this.element().tabIndex   = Div._tabCount
+            DivView._tabCount ++
+            this.element().tabIndex   = DivView._tabCount
             this.element().style.outline = "none"
         } else {
             this.element().onkeydown  = null
@@ -1161,7 +1161,7 @@ Div = ideal.Proto.extend().newSlots({
         var uniqueClassName = "UniqueClass_" + this._uniqueId
         var e = this.element()
         if (e.className.indexOf(uniqueClassName) == -1) {
-            var newRuleKey = "div." + uniqueClassName + ':' + afterOrBefore
+            var newRuleKey = "DivView" + uniqueClassName + ':' + afterOrBefore
             var newRuleValue = 'content: "'+ aString + '";'
             //console.log("newRule '" + newRuleKey + "', '" + newRuleValue + "'")
             document.styleSheets[0].addRule(newRuleKey, newRuleValue);

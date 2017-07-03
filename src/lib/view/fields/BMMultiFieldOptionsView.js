@@ -1,10 +1,10 @@
 
-BMMultiFieldOptionsView = Div.extend().newSlots({
+BMMultiFieldOptionsView = DivView.extend().newSlots({
     type: "BMMultiFieldOptionsView",
 	validValues: null,
 }).setSlots({
     init: function () {
-        Div.init.apply(this)
+        DivView.init.apply(this)
         this.setDivClassName("BMMultiFieldOptionsView")
 		this.makeUnselectable()
 		//this.setItemProto(BMMultiFieldOptionView)
@@ -39,7 +39,7 @@ BMMultiFieldOptionsView = Div.extend().newSlots({
 		this.setOpacity(0)
 		
 		this._validValues.forEach((v) => {
-			var option = Div.clone().setInnerHTML(v).setDivClassName("BMMultiFieldOptionView").setTarget(this).setAction("select")
+			var option = DivView.clone().setInnerHTML(v).setDivClassName("BMMultiFieldOptionView").setTarget(this).setAction("select")
 			option.validValue = v
 			this.addItem(option)
 		})

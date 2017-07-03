@@ -1,10 +1,10 @@
 
-BrowserRowSubtitle = Div.extend().newSlots({
+BrowserRowSubtitle = DivView.extend().newSlots({
     type: "BrowserRowSubtitle",
 	isSelected: false,
 }).setSlots({
     init: function () {
-        Div.init.apply(this)
+        DivView.init.apply(this)
         this.setDivClassName("BrowserRowSubtitle")
         this.setInnerHTML("")
         //this.turnOffUserSelect()

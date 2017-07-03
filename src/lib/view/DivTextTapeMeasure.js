@@ -34,7 +34,7 @@ DivTextTapeMeasure = ideal.Proto.extend().newSlots({
 		var e = this.testElement()
 		
 		this.copyStyles().forEach(function (styleName) {
-			var v = div.style[styleName]
+			var v = DivView.style[styleName]
 			if (v) {
 				e.style[styleName] = v
 			} else {
@@ -42,7 +42,7 @@ DivTextTapeMeasure = ideal.Proto.extend().newSlots({
 			}
 		})
 		
-		e.innerHTML = div.innerHTML
+		e.innerHTML = DivView.innerHTML
 		
 		//var height = (e.clientHeight + 1)
 		var width = (e.clientWidth + 1) 

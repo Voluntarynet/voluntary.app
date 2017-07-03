@@ -1,11 +1,11 @@
 
-NodeView = Div.extend().newSlots({
+NodeView = DivView.extend().newSlots({
     type: "NodeView",
     node: null,
     ownsView: true,
 }).setSlots({
     init: function () {
-        Div.init.apply(this)
+        DivView.init.apply(this)
         this._nodeObservation = NotificationCenter.shared().newObservation().setName("didUpdateNode").setObserver(this)
         return this
     },
@@ -43,7 +43,7 @@ NodeView = Div.extend().newSlots({
     },
     
     willRemove: function() {
-        Div.willRemove.apply(this)
+        DivView.willRemove.apply(this)
         this.stopWatchingNode()
         return this
     },
@@ -55,7 +55,7 @@ NodeView = Div.extend().newSlots({
                 return vc
             }
         }
-        return Div.itemProto.apply(this)
+        return DivView.itemProto.apply(this)
     },
 
 	// --- syncing ---
@@ -109,7 +109,7 @@ NodeView = Div.extend().newSlots({
     },
 
 	didChangeItemList: function() {
-		Div.didChangeItemList.apply(this)
+		DivView.didChangeItemList.apply(this)
 		//this.markViewDirty()
 		return this
 	},

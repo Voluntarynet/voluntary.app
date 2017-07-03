@@ -1,10 +1,10 @@
 
-BrowserRowNote = Div.extend().newSlots({
+BrowserRowNote = DivView.extend().newSlots({
     type: "BrowserRowNote",
 	isSelected: false,
 }).setSlots({
     init: function () {
-        Div.init.apply(this)
+        DivView.init.apply(this)
         this.setDivClassName("BrowserRowNote")
         this.setInnerHTML("")
         this.turnOffUserSelect()

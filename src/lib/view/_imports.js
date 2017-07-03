@@ -4,7 +4,7 @@ JSImporter.pushRelativePaths([
 	
     //"css_unused/_imports.js",
 
-    "Div.js",
+    "DivView.js",
     "DivTextTapeMeasure.js",
     "NodeView.js",
 

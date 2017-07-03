@@ -18,7 +18,7 @@ BrowserView = NodeView.extend().newSlots({
     init: function () {
         NodeView.init.apply(this)
         this.setDivClassName("Browser")
-        this.setItemProto(BrowserColumnGroup)
+        this.setSubviewProto(BrowserColumnGroup)
         this.watchForWindowResize()
         return this
     },

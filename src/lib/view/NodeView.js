@@ -48,14 +48,14 @@ NodeView = DivView.extend().newSlots({
         return this
     },
     
-    itemProto: function() {
+    subviewProto: function() {
         if (this.node()) {
             var vc = this.node().nodeRowViewClass()
             if (vc) { 
                 return vc
             }
         }
-        return DivView.itemProto.apply(this)
+        return DivView.subviewProto.apply(this)
     },
 
 	// --- syncing ---

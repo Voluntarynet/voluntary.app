@@ -5,7 +5,7 @@ BrowserFieldsColumn = BrowserColumn.extend().newSlots({
     init: function () {
         BrowserColumn.init.apply(this)
         this.setDivClassName("BrowserFieldsColumn")
-        this.setItemProto(null)
+        this.setSubviewProto(null)
         return this
     },
 })

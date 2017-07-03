@@ -7,7 +7,7 @@ BMMultiFieldOptionsView = DivView.extend().newSlots({
         DivView.init.apply(this)
         this.setDivClassName("BMMultiFieldOptionsView")
 		this.makeUnselectable()
-		//this.setItemProto(BMMultiFieldOptionView)
+		//this.setSubviewProto(BMMultiFieldOptionView)
         return this
     },
 

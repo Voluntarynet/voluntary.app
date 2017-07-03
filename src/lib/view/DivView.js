@@ -23,7 +23,7 @@ DivView = ideal.Proto.extend().newSlots({
     // parent view and subviews
     parentView: null,
     items: null,
-    itemProto: null,
+    subviewProto: null,
     
     // target / action
     target: null,
@@ -47,7 +47,7 @@ DivView = ideal.Proto.extend().newSlots({
         e.setAttribute('class', this.divClassName());
         this._element = e
         this.element().style.transition = "all .2s"
-        this.setItemProto(DivView)
+        this.setSubviewProto(DivView)
         return this
     },
 
@@ -230,7 +230,7 @@ DivView = ideal.Proto.extend().newSlots({
     },
     
     newItemFromProto: function () {
-        var anItem = this.itemProto().clone()
+        var anItem = this.subviewProto().clone()
         if (anItem == null) {
             throw new Error("null anItem")
         }
@@ -264,7 +264,7 @@ DivView = ideal.Proto.extend().newSlots({
 		
 
 		if (!proto) {
-			proto = this.itemProto()
+			proto = this.subviewProto()
 		}
 		
 		if (!proto) {
@@ -283,7 +283,7 @@ DivView = ideal.Proto.extend().newSlots({
 		if (!item.setNode) {
 			console.log("Div WARNING: node " + aNode.type() + " has view proto = " + proto.type() + " but it's missing setNode method")
 			console.log("Div WARNING: missing " + item.type() + ".setNode method, node is a '" + aNode.type() + "' view proto = " + proto.type())
-			console.log(this.type() + ".itemProto() = ", this.itemProto().type())
+			console.log(this.type() + ".subviewProto() = ", this.subviewProto().type())
 			console.log(aNode.type() + ".viewClass() = ", aNode.viewClass().type())
 		}
 		

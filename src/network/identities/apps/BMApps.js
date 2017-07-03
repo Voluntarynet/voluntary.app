@@ -33,14 +33,14 @@ BMApps = BMStorableNode.extend().newSlots({
 		// remove any apps not in appProtos
 		var types = this.appProtos().map((proto) => { return proto.type() })
 		var matches = this.apps().select((app) => { return types.contains(app.type()) })
-		this.setItems(matches)
+		this.setSubnodes(matches)
         
         return this
     },
 
 	addAppTypeIfMissing: function(appProto) {
 		if (this.hasAppType(appProto) == false) {
-        	this.addItem(appProto.clone())
+        	this.addSubnode(appProto.clone())
 		}
 		return this
 	},
@@ -50,15 +50,15 @@ BMApps = BMStorableNode.extend().newSlots({
 	},
 
 	apps: function() {
-		return this.items()
+		return this.subnodes()
 	},
     
     appNamed: function(name) {
-        return this.firstItemWithTitle(name)
+        return this.firstSubnodeWithTitle(name)
     },
 
 	handleMessage: function(aMessage) {
-		this.items().forEach((app) => { app.handleMessage(aMessage) })
+		this.subnodes().forEach((app) => { app.handleMessage(aMessage) })
 	},
 })
 

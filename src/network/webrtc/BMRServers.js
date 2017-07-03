@@ -9,7 +9,7 @@ BMRServers = BMStorableNode.extend().newSlots({
 		this.setShouldStore(true)
         this.setTitle("PeerJS Servers")
         this.addServer(this.bootStrapServer())
-        this.setNoteIsItemCount(true)
+        this.setNnoteIsSubnodeCount(true)
         this.setNodeMinWidth(270)
         
         this.setSubnodeProto(BMRServer)
@@ -22,11 +22,11 @@ BMRServers = BMStorableNode.extend().newSlots({
     },
     
     addServer: function (aServer) {
-        return this.addItem(aServer)
+        return this.addSubnode(aServer)
     },
     
     servers: function () {
-        return this.items()
+        return this.subnodes()
     }, 
     
     network: function() {
@@ -137,13 +137,13 @@ BMRServers = BMStorableNode.extend().newSlots({
 		
 		var bloomUint8Array = aBloomFilter.asUncompactedUint8BitArray();
 		
-		var servers = this.items()
+		var servers = this.subnodes()
 		servers.forEach((server) => { server.updateBloomDistance(bloomUint8Array) })
 		var sorted = servers.slice().sort((serverA, serverB) => {
 			return serverA.bloomDistance() - serverB.bloomDistance() // smallest distance first	
 		})
 		
-		this.setItems(sorted)
+		this.setSubnodes(sorted)
 		
 		return this
 	},

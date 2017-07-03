@@ -34,7 +34,7 @@ BMFieldSetNode = BMStorableNode.extend().newSlots({
         BMStorableNode.init.apply(this)
         this.setNodeMinWidth(500)
 		this.setViewClassName("BrowserFieldsColumn")
-		this.setShouldStoreItems(false)
+		this.setShouldStoreSubnodes(false)
 		//this.setViewClassName(null)
 		//console.log("BMFieldSetNode viewClassName = '" + this.viewClassName() + "'")
     },        
@@ -56,7 +56,7 @@ BMFieldSetNode = BMStorableNode.extend().newSlots({
 	},
 	
 	justAddField: function(aField) {
-		this.addItem(aField)
+		this.addSubnode(aField)
 		return aField
 	},
 
@@ -68,7 +68,7 @@ BMFieldSetNode = BMStorableNode.extend().newSlots({
     },
     
     fieldNamed: function(aName) {
-        return this.items().detect(function (item) { 
+        return this.subnodes().detect(function (item) { 
 			return item.nodeFieldProperty() == aName || item.key() == aName
         })
     },
@@ -79,7 +79,7 @@ BMFieldSetNode = BMStorableNode.extend().newSlots({
 
 
 	copyFieldsFrom: function(sourceObj) {
-		this.items().forEach((targetField) => {
+		this.subnodes().forEach((targetField) => {
 			var sourceField = sourceObj.fieldNamed(targetField.nodeFieldProperty())
 			targetField.setValue(sourceField.value())
 			//console.log("target field " + targetField.nodeFieldProperty() + " set to '" + targetField.value() + "'")
@@ -94,7 +94,7 @@ BMFieldSetNode = BMStorableNode.extend().newSlots({
 
     /*
     syncToFields: function() {
-        this.items().forEach((field) => {
+        this.subnodes().forEach((field) => {
             var key = field.nodeFieldProperty()
             
             if (key) {
@@ -112,12 +112,12 @@ BMFieldSetNode = BMStorableNode.extend().newSlots({
 	*/
 
 	validate: function() {
-		return this.items().detect((item) => { return !item.validate() }) != null
+		return this.subnodes().detect((item) => { return !item.validate() }) != null
 		
 		/*
 		var isValid = true
 
-		this.items().forEach((item) => { 
+		this.subnodes().forEach((item) => { 
 			if (!item.validate()) {
 				isValid = false
 			}
@@ -127,8 +127,8 @@ BMFieldSetNode = BMStorableNode.extend().newSlots({
 		*/
 	},
 
-	invalidItems: function() {
-		return this.items().detect((item) => { item.validate() })
+	invalidSubnodes: function() {
+		return this.subnodes().detect((item) => { item.validate() })
 	},
 
 	isValid: function() {

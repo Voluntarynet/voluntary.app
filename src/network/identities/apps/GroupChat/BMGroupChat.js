@@ -10,10 +10,10 @@ BMGroupChat = BMApplet.extend().newSlots({
         this.setTitle("Slack")
         
 		this.setChannels(BMNode.clone().setTitle("channels"))
-        this.addItem(this.channels())
+        this.addSubnode(this.channels())
 
 		this.setDirectMessages(BMNode.clone().setTitle("direct messages"))
-        this.addItem(this.directMessages())
+        this.addSubnode(this.directMessages())
     },
 })
 

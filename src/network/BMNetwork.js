@@ -25,16 +25,16 @@ BMNetwork = BMStorableNode.extend().newSlots({
         this.setNodeMinWidth(150)
 
 		this.setServers(NodeStore.shared().rootInstanceWithPidForProto("_servers", BMRServers))
-		this.addItem(this.servers())
+		this.addSubnode(this.servers())
 
 		this.setStunServers(NodeStore.shared().rootInstanceWithPidForProto("_stunServers", BMStunServers))
-		this.addItem(this.stunServers())
+		this.addSubnode(this.stunServers())
 						
 		this.setMessages(NodeStore.shared().rootInstanceWithPidForProto("_messages", BMMessages))
-		this.addItem(this.messages())
+		this.addSubnode(this.messages())
 		
 		this.setBlacklists(NodeStore.shared().rootInstanceWithPidForProto("_blacklists", BMBlacklists))
-		this.addItem(this.blacklists())
+		this.addSubnode(this.blacklists())
     },
 
 	shared: function() {
@@ -50,13 +50,13 @@ BMNetwork = BMStorableNode.extend().newSlots({
     },
     
     remotePeerCount: function() {
-        return this.servers().items().sum(function (p) {
+        return this.servers().subnodes().sum(function (p) {
             return p.remotePeerCount()
         })
     },
     
     serverCount: function () {
-        return this.servers().itemsLength()
+        return this.servers().subnodesLength()
     },
     
     subtitle: function() {
@@ -116,7 +116,7 @@ BMNetwork = BMStorableNode.extend().newSlots({
 
 	allIdentities: function() {
 		var ids = []
-		ids = this.localIdentities().items().concat(this.remoteIdentities().items())
+		ids = this.localIdentities().subnodes().concat(this.remoteIdentities().subnodes())
 		return ids
 	},
     
@@ -129,11 +129,11 @@ BMNetwork = BMStorableNode.extend().newSlots({
 	},
 	
 	localIdentityNames: function() {
-		return this.localIdentities().items().map(function(id) { return id.name(); })
+		return this.localIdentities().subnodes().map(function(id) { return id.name(); })
 	},
 	
 	remoteIdentityNames: function() {
-		return this.remoteIdentities().items().map(function(id) { return id.name(); })
+		return this.remoteIdentities().subnodes().map(function(id) { return id.name(); })
 	},
 	
 	idWithName: function(aString) {

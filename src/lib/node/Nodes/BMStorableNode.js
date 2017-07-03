@@ -2,7 +2,7 @@
 BMStorableNode = BMNode.extend().newSlots({
     type: "BMStorableNode",
     storedSlots: null, // dict
-    shouldStoreItems: true,
+    shouldStoreSubnodes: true,
     loadsUnionOfChildren: false,
     isUnserializing: false,
 }).setSlots({
@@ -14,7 +14,7 @@ BMStorableNode = BMNode.extend().newSlots({
     initStoredSlotWithProto: function(name, proto) {
         var obj = proto.clone()
         this.newSlot(name, obj)
-        this.justAddItem(obj)
+        this.justAddSubnode(obj)
         this.addStoredSlot(name)
         return this
     },
@@ -69,7 +69,7 @@ BMStorableNode = BMNode.extend().newSlots({
         var dict = { }
         dict.type = this.type()
                 
-        if (this.items().length && this.shouldStoreItems()) {
+        if (this.subnodes().length && this.shouldStoreSubnodes()) {
             dict.children = this.itemPids()
         }
         
@@ -128,7 +128,7 @@ BMStorableNode = BMNode.extend().newSlots({
                 newPids = this.itemPids().union(newPids)
             }
             
-            this.setItemPids(newPids)
+            this.setSubnodePids(newPids)
         }
         return this
     },

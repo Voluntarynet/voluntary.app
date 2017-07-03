@@ -15,9 +15,9 @@ BMRegion = BMNode.extend().newSlots({
         //this.setSubnodeProto(BMPost)
     },
     
-    sumOfItemNotes: function() {
+    sumOfSubnodeNotes: function() {
         var sum = 0
-        this.items().forEach(function (item) {
+        this.subnodes().forEach(function (item) {
             if (item.title() == "All") {
                 return;
             }
@@ -35,23 +35,23 @@ BMRegion = BMNode.extend().newSlots({
     },
     
     sortIfNeeded: function() {
-        if (this._items.length) {
-            if (this._items[0].compare) {
-                this._items = this._items.sort(function (a, b) {
+        if (this._subnodes.length) {
+            if (this._subnodes[0].compare) {
+                this._subnodes = this._subnodes.sort(function (a, b) {
                     return a.compare(b)
                 })
             }
         }
     },
     
-    addItem: function(anItem) {
-        BMNode.addItem.apply(this, [anItem])
+    addSubnode: function(aSubnode) {
+        BMNode.addSubnode.apply(this, [aSubnode])
         this.sortIfNeeded()
-        return anItem
+        return aSubnode
     },
 
     didUpdate: function() {
-        this.setNote(this.sumOfItemNotes())
+        this.setNote(this.sumOfSubnodeNotes())
         BMNode.didUpdate.apply(this)
         return this
     },
@@ -59,7 +59,7 @@ BMRegion = BMNode.extend().newSlots({
     setNodeDict: function(aDict) {
         this.setTitle(aDict.name.titleized())
         this.setAllowsSubregions(aDict._allowsSubregions != false) // All
-        //this.setNoteIsItemCount(aDict._allowsSubregions == false) // All
+        //this.setNnoteIsSubnodeCount(aDict._allowsSubregions == false) // All
         this.addChildrenDicts(aDict.children)
         return this
     },
@@ -71,7 +71,7 @@ BMRegion = BMNode.extend().newSlots({
                 var childDict = children[i]
                 //var child = window[childDict._type].clone().setNodeDict(childDict)
                 var child = BMRegion.clone().setNodeDict(childDict)
-                this.justAddItem(child)
+                this.justAddSubnode(child)
             }
         }  
     },
@@ -80,22 +80,22 @@ BMRegion = BMNode.extend().newSlots({
         if (!this.allowsSubregions()) {
             return this
         }
-        if (this._items.length == 0) {
+        if (this._subnodes.length == 0) {
             this._lazyChildrenDict = aDict
-            //this._items.forEach(function (item) { item.setNoteIsItemCount(true) }) // Categories
+            //this._subnodes.forEach(function (item) { item.setNnoteIsSubnodeCount(true) }) // Categories
             //this.addChildrenDicts(aDict.children)
         } else {
-            this._items.forEach(function (item) { item.onLeavesAddDictChildren(aDict) })
+            this._subnodes.forEach(function (item) { item.onLeavesAddDictChildren(aDict) })
         }
         return this
     },
     
     setupCategoryLeaves: function() {
-        if (this._items.length == 0) {
+        if (this._subnodes.length == 0) {
             this.addAction("add")
             this.setSubnodeProto(BMClassifiedPost)
         } else {
-            this._items.forEach(function (item) { item.setupCategoryLeaves() })
+            this._subnodes.forEach(function (item) { item.setupCategoryLeaves() })
         }
     },
 
@@ -119,7 +119,7 @@ BMRegion = BMNode.extend().newSlots({
     add: function () {  
 		/*
         var sell = BMSell.clone()
-        App.shared().sells().addItem(sell)
+        App.shared().sells().addSubnode(sell)
         App.shared().browser().selectNode(sell)
         var post = sell.post()
         */
@@ -127,7 +127,7 @@ BMRegion = BMNode.extend().newSlots({
 		var post = BMClassifiedPost.clone()
         post.setPath(this.postPathString())
         post.setIsEditable(true)
-        App.shared().appNamed("Classifieds").sells().addItem(post)
+        App.shared().appNamed("Classifieds").sells().addSubnode(post)
         App.shared().browser().selectNode(post)
 
 		if (this.title() == "Tests") {
@@ -137,8 +137,8 @@ BMRegion = BMNode.extend().newSlots({
         return null
     },
     
-    containsItem: function(anItem) {
-        return this.items().detect(function(item) { return item.isEqual(anItem) })
+    containsSubnode: function(aSubnode) {
+        return this.subnodes().detect(function(item) { return item.isEqual(aSubnode) })
     },
     
 })

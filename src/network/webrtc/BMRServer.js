@@ -14,20 +14,20 @@ BMRServer = BMFieldSetNode.extend().newSlots({
     init: function () {
         BMFieldSetNode.init.apply(this)
 		this.setShouldStore(true)
-		this.setShouldStoreItems(true)
+		this.setShouldStoreSubnodes(true)
 		
         this.setServerConnection(BMServerConnection.clone().setServer(this))
-        //this.addItem(this.serverConnection())
+        //this.addSubnode(this.serverConnection())
         //this.setTitle("RTC Server")
         this.addStoredSlots(["host", "port"])
-        this.setShouldStoreItems(false)
+        this.setShouldStoreSubnodes(false)
         this.addAction("delete")
         this.setNodeMinWidth(360)
 	
 		this.addStoredField(BMField.clone().setKey("host"))
 		this.addStoredField(BMField.clone().setKey("port"))
 		//this.justAddField(BMPointerField.clone().setKey("serverConnection"))
-		this.addItem(BMPointerField.clone().setKey("serverConnection"))
+		this.addSubnode(BMPointerField.clone().setKey("serverConnection"))
     },
 
     servers: function () {

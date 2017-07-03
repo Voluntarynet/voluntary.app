@@ -13,16 +13,16 @@ BMLetterView = NodeView.extend().newSlots({
         this.setDivClassName("BMLetterView")
         
         this.setToAddressView(NodeView.clone().setDivClassName("BMLetterToAddressView"))
-        this.addItem(this.toAddressView())    
+        this.addSubview(this.toAddressView())    
         
         this.setFromAddressView(NodeView.clone().setDivClassName("BMLetterFromAddressView"))
-        this.addItem(this.fromAddressView())           
+        this.addSubview(this.fromAddressView())           
         
         this.setSubjectView(NodeView.clone().setDivClassName("BMPostSubjectView"))
-        this.addItem(this.subjectView())
+        this.addSubview(this.subjectView())
         
         this.setBodyView(NodeView.clone().setDivClassName("BMLetterBodyView").loremIpsum())
-        this.addItem(this.bodyView())
+        this.addSubview(this.bodyView())
         
         this.setEditable(true)
         return this

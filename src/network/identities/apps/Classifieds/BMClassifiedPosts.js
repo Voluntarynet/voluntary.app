@@ -7,6 +7,6 @@ BMClassifiedPosts = BMStorableNode.extend().newSlots({
         this.setTitle("My Posts")
         //this.setPid("_myPosts")
         this.setSubnodeProto(BMClassifiedPost)
-        this.setNoteIsItemCount(true)
+        this.setNnoteIsSubnodeCount(true)
     },
 })

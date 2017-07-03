@@ -13,8 +13,8 @@ BMRemotePeer = BMNode.extend().newSlots({
         BMNode.init.apply(this)
         this.setTitle("Peer")
         
-        this.setMessages(BMNode.clone().setTitle("messages").setNoteIsItemCount(true))
-        this.addItem(this.messages())
+        this.setMessages(BMNode.clone().setTitle("messages").setNnoteIsSubnodeCount(true))
+        this.addSubnode(this.messages())
         this.setRemoteInventory({})
 		this.setPeerId(BMPeerId.clone())
     },
@@ -44,7 +44,7 @@ BMRemotePeer = BMNode.extend().newSlots({
     },   
     
     addMessage: function (msg) {
-        return this.messages().addItem(msg)
+        return this.messages().addSubnode(msg)
     },
 
     setConn: function (aConn) {
@@ -120,7 +120,7 @@ BMRemotePeer = BMNode.extend().newSlots({
         if (this.parentNode() == null) {
             console.log("missing this.parentNode() on BMRemotePeer onClose")
         } else {
-            this.parentNode().removeItem(this)
+            this.parentNode().removeSubnode(this)
         }
      },
 

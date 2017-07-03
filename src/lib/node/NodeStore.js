@@ -59,13 +59,13 @@
                 store.setRootObject(root)
                 store.load()
             
-            // when you modify any BMNode instance's items or data slots, 
+            // when you modify any BMNode instance's subnodes or data slots, 
             // or call markDirty() on it, it will be marked as needing to be persisted in the
             // next event loop
             
                 var test = BMNode.clone()
-                root.addItem(test) // this marks root as dirty
-                test.addItem(foo) // this marks test as dirty
+                root.this.addSubnode(test) // this marks root as dirty
+                test.this.addSubnode(foo) // this marks test as dirty
                         
             // for singular objects, set their pid to a unique name, e.g.
             

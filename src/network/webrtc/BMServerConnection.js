@@ -20,7 +20,7 @@ BMServerConnection = BMNode.extend().newSlots({
         BMNode.init.apply(this)
         this._remotePeers = []
         this.setTitle("Server Connection")
-        this.setNoteIsItemCount(true)
+        this.setNnoteIsSubnodeCount(true)
         //this.setViewClassName("GenericView")
         this.setNodeMinWidth(160)
         //this.setLog(BMNode.clone())
@@ -43,7 +43,7 @@ BMServerConnection = BMNode.extend().newSlots({
         return this.status()
     },   
     
-    items: function () {
+    subnodes: function () {
         return this.remotePeers()
     },
 
@@ -207,14 +207,14 @@ BMServerConnection = BMNode.extend().newSlots({
     addRemotePeerConn: function(aConn) {
         this.log("addRemotePeerConn " + aConn.peer)
         var rp = BMRemotePeer.clone().setConn(aConn).setServerConnection(this)
-        this.addItem(rp)
+        this.addSubnode(rp)
         //console.log("BMServerConnection addRemotePeerConn didUpdate --------------------")
         this.didUpdate()
         return this
     },
 
     onRemotePeerClose: function(remotePeer) {
-        this.removeItem(remotePeer)
+        this.removeSubnode(remotePeer)
         this.didUpdate()
         return this
     },

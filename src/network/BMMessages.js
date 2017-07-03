@@ -22,14 +22,14 @@ BMMessages = BMStorableNode.extend().newSlots({
     init: function () {
         BMStorableNode.init.apply(this)
 		this.setShouldStore(true)
-		this.setShouldStoreItems(true)
+		this.setShouldStoreSubnodes(true)
 		
         this.setTitle("Messages")
         this.setIndex({})
         this.setNodeMinWidth(150)
         this.setChangeNote(NotificationCenter.shared().newNotification().setSender(this).setName("newMessage"))
         this.setQueue({})
-        this.setNoteIsItemCount(true)
+        this.setNnoteIsSubnodeCount(true)
     },
     
     subnodeProto: function() {
@@ -37,13 +37,13 @@ BMMessages = BMStorableNode.extend().newSlots({
     },
 
 	didLoadFromStore: function() {
-		//console.log(this.type() + " didLoadFromStore items length = ", this.items().length)
+		//console.log(this.type() + " didLoadFromStore subnodes length = ", this.subnodes().length)
 		this.updateIndex()
 		
 		// these need to wait until after the initial store load is complete
 		setTimeout(() => {
 			this.removeMessagesNotMatchingIdentities()
-			this.placeAllItems()
+			this.placeAllSubnodes()
 		}, 0)
 		
 		return this
@@ -54,7 +54,7 @@ BMMessages = BMStorableNode.extend().newSlots({
     },
     
     messages: function () {
-        return this.items()
+        return this.subnodes()
     },
 
     notifyChange: function() {
@@ -93,7 +93,7 @@ BMMessages = BMStorableNode.extend().newSlots({
             return false
         }
         
-        this.addItem(msg)
+        this.addSubnode(msg)
 
 		setTimeout(() => {
 			msg.place()
@@ -104,16 +104,16 @@ BMMessages = BMStorableNode.extend().newSlots({
     },
 
 
-	placeAllItems: function() {
-		this.items().forEach( (msg) => {
+	placeAllSubnodes: function() {
+		this.subnodes().forEach( (msg) => {
 			//console.log(this.type() + " placing ", msg)
 			msg.place()
 		})
 	},
 
-	addItem: function(msg) {
-		//console.log(this.type() + " addItem " + msg.pid())
-		BMStorableNode.addItem.apply(this, [msg])
+	addSubnode: function(msg) {
+		//console.log(this.type() + " addSubnode " + msg.pid())
+		BMStorableNode.addSubnode.apply(this, [msg])
 		
         this.addMessageToIndex(msg)
         this.notifyChange()
@@ -136,7 +136,7 @@ BMMessages = BMStorableNode.extend().newSlots({
 	},
     
     removeMessage: function(msg) {
-		this.removeItem(msg) // garbage collector will remove persisted version
+		this.removeSubnode(msg) // garbage collector will remove persisted version
         delete this._index[msg.msgHash()]
         return this
     },

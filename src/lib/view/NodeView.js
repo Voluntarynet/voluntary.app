@@ -64,34 +64,34 @@ NodeView = DivView.extend().newSlots({
         // only replace subviews if sync requires it
         
         if (!this.node()) { 
-            this.removeAllItems();
+            this.removeAllSubview();
             return
         }
         
         this.node().prepareToSyncToView()
        
-        var newItems = []
-        var subnodes = this.node().items()
+        var newSubviews = []
+        var subnodes = this.node().subnodes()
         
 		subnodes.forEach((subnode) => {
-            var itemView = this.itemForNode(subnode) // get the current view for the node, if there is one
+            var subview = this.subviewForNode(subnode) // get the current view for the node, if there is one
             
-            if (!itemView) {
-                itemView = this.newItemForNode(subnode).syncFromNode()
+            if (!subview) {
+                subview = this.newSubviewForNode(subnode).syncFromNode()
             } else {
-                itemView.syncFromNode()
+                subview.syncFromNode()
             }
             
-            if(itemView == null) {
-                throw new Error("null itemView")
+            if(subview == null) {
+                throw new Error("null subview")
             }
             
-            newItems.push(itemView)      
+            newSubviews.push(subview)      
         })
         
-        if (!newItems.isEqual(this.subviews())) {
-            this.removeAllItems()
-            this.addItems(newItems)
+        if (!newSubviews.isEqual(this.subviews())) {
+            this.removeAllSubview()
+            this.addSubviews(newSubviews)
         } else {
             //this.log(" view subviews equal")
         }
@@ -108,11 +108,13 @@ NodeView = DivView.extend().newSlots({
         return this
     },
 
-	didChangeItemList: function() {
-		DivView.didChangeItemList.apply(this)
+    /*
+	didChangeSubviewList: function() {
+		DivView.didChangeSubviewList.apply(this)
 		//this.markViewDirty()
 		return this
 	},
+	*/
 	
 	markViewDirty: function() {
 		if (this.isHandlingEvent()) {

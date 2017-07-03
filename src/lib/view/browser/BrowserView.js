@@ -57,7 +57,7 @@ BrowserView = NodeView.extend().newSlots({
     },
 
     addColumnGroup: function(v) {
-        var cg = this.addItem(v)
+        var cg = this.addSubview(v)
         return cg
     },
     
@@ -112,7 +112,7 @@ BrowserView = NodeView.extend().newSlots({
     },
 
     removeColumnGroup: function(v) {
-        return this.removeItem(v)
+        return this.removeSubview(v)
     },
     
     setColumnGroupCount: function(count) {

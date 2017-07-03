@@ -48,22 +48,20 @@ App = BaseApp.extend().newSlots({
 
         this.setName(name)
         this.setTitle("App")
-
-		//this.addAppItem()
 		
         // ids
 
 		this.setLocalIdentities(NodeStore.shared().rootInstanceWithPidForProto("_localIdentities", BMLocalIdentities))
-		this.addItem(this.localIdentities())
+		this.addSubnode(this.localIdentities())
 		
 		this.setRemoteIdentities(NodeStore.shared().rootInstanceWithPidForProto("_remoteIdentities", BMRemoteIdentities))
-		this.addItem(this.remoteIdentities())
+		this.addSubnode(this.remoteIdentities())
 
 		// about 
 		
         this.setAbout(BMNode.clone().setTitle("About").setSubtitle(null))
         this.about()  
-        this.addItem(this.about())
+        this.addSubnode(this.about())
 
 		// -----------------------
 		
@@ -72,12 +70,12 @@ App = BaseApp.extend().newSlots({
     		this.setNetwork(BMNetwork.clone())
     		this.network().setLocalIdentities(this.localIdentities())
     		this.network().setRemoteIdentities(this.remoteIdentities())
-    		this.about().addItem(this.network())
+    		this.about().addSubnode(this.network())
 
     		// data store
 		
     		this.setDataStore(BMDataStore.clone())
-    		this.about().addItem(this.dataStore())
+    		this.about().addSubnode(this.dataStore())
 		
             if (this.network()) {
                 this.network().servers().connect()
@@ -85,29 +83,6 @@ App = BaseApp.extend().newSlots({
 
         return this
     },
-
-/*
-	addAppItem: function() {        
-        this.setApps(BMNode.clone().setTitle("Apps"))
-        this.addItem(this.apps())
-        this.addApps()	
-		return this
-	},
-    
-    addApps: function() {
-        var appProtos = [BMTwitter, BMChat, BMGroupChat, BMClassifieds, BMBitcoinWallet]
-        
-        appProtos.forEach((appProto) => {
-            this.apps().addItem(appProto.sharedStoredInstance())
-        })     
-        
-        return this
-    },
-    
-    appNamed: function(name) {
-        return this.apps().firstItemWithTitle(name)
-    },
-*/
 
 })
 

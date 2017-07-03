@@ -11,15 +11,15 @@ GenericView = NodeView.extend().newSlots({
         this.setDivClassName("GenericView")
 
         this.setMiddleView(NodeView.clone().setDivClassName("GenericMiddleView"))
-        this.addItem(this.middleView()) 
+        this.addSubview(this.middleView()) 
         
         this.setTitleView(NodeView.clone().setDivClassName("GenericTitleView"))
-        this.middleView().addItem(this.titleView())        
+        this.middleView().addSubview(this.titleView())        
 
-        this.middleView().addItem(DivView.clone())        
+        this.middleView().addSubview(DivView.clone())        
 
         this.setSubtitleView(NodeView.clone().setDivClassName("GenericSubtitleView"))
-        this.middleView().addItem(this.subtitleView())  
+        this.middleView().addSubview(this.subtitleView())  
 
 		this.titleView().setSpellCheck(false)
 		this.subtitleView().setSpellCheck(false)

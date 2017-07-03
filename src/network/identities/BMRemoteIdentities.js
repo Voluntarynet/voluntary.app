@@ -10,28 +10,28 @@ BMRemoteIdentities = BMListNode.extend().newSlots({
         this.setNodeMinWidth(180)
         
         this.setActions(["add"]).setSubnodeProto(BMRemoteIdentity)
-        this.setNoteIsItemCount(true)
+        this.setNnoteIsSubnodeCount(true)
         
         //this.setPidSymbol("_remoteIdentities") 
         //this.loadIfPresent()
     },
 
     idWithPubKeyString: function(pubkeyString) {
-        var id = this.items().detect(function (id) {
+        var id = this.subnodes().detect(function (id) {
             return id.publicKey().toString() == pubkeyString
         })
         
         if (!id) {
             // make an id if it's not here
             id = BMRemoteIdentity.clone().setPublicKeyString(pubkeyString)
-            this.addItem(id)
+            this.addSubnode(id)
         }
         
         return id
     },
 
 	idWithName: function(s) {
-        return this.items().detect(function (id) {            
+        return this.subnodes().detect(function (id) {            
             return id.name() == s
         })
 	},

@@ -13,7 +13,7 @@ BMGroupConversation = BMApplet.extend().newSlots({
 	},
 
 	messages: function() {
-		return this.items()
+		return this.subnodes()
 	},
 })
 

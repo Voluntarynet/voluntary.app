@@ -13,11 +13,11 @@ BMBuy = BMStorableNode.extend().newSlots({
     
     setPost: function(aPost) {
         if (this.post()) {
-            this.removeItem(this.post())
+            this.removeSubnode(this.post())
         }
         
         this._post = aPost
-        this.addItem(aPost)
+        this.addSubnode(aPost)
         return this
     },
 

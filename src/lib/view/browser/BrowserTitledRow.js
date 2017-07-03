@@ -9,9 +9,9 @@ BrowserTitledRow = BrowserRow.extend().newSlots({
     init: function () {
         BrowserRow.init.apply(this)
         //this.setDivClassName("BrowserRow")
-        this.setTitleView(this.addItem(BrowserRowTitle.clone()))
-        this.setSubtitleView(this.addItem(BrowserRowSubtitle.clone()))
-        this.setNoteView(this.addItem(BrowserRowNote.clone()))
+        this.setTitleView(this.addSubview(BrowserRowTitle.clone()))
+        this.setSubtitleView(this.addSubview(BrowserRowSubtitle.clone()))
+        this.setNoteView(this.addSubview(BrowserRowNote.clone()))
 		//this.updateSubviews()
 		this.setIsSelectable(true)
         return this

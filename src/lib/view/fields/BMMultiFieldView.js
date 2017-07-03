@@ -9,7 +9,7 @@ BMMultiFieldView = BMFieldView.extend().newSlots({
 
 		this.setOptionsView(BMMultiFieldOptionsView.clone())
 		this.optionsView().setDisplay("none")
-		this.addItem(this.optionsView())
+		this.addSubview(this.optionsView())
 
 		this.valueView().registerForFocus(true)
 		this.valueView().onBlur = () => { this.close() }

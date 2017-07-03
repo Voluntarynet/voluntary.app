@@ -7,7 +7,7 @@ BMSell = BMStorableNode.extend().newSlots({
     init: function () {
         BMStorableNode.init.apply(this)
 		this.setShouldStore(true)
-		this.setShouldStoreItems(true)
+		this.setShouldStoreSubnodes(true)
 		
         this.setTitle("Sell")
         this.setActions(["delete"])
@@ -15,7 +15,7 @@ BMSell = BMStorableNode.extend().newSlots({
         this.addStoredSlots(["subtitle", "hasSent"])
         
         this.setPost(BMClassifiedPost.clone())
-        this.addItem(this.post())
+        this.addSubnode(this.post())
 		this.post().setIsEditable(true)
     },
 

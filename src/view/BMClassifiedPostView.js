@@ -34,23 +34,23 @@ BMClassifiedPostView = NodeView.extend().newSlots({
         this.setDivClassName("BMPostView")
         
         this.setStatusView(NodeView.clone().setDivClassName("BMPostStatusView"))
-        this.addItem(this.statusView())
+        this.addSubview(this.statusView())
 
 
         // path
         this.setPathView(NodeView.clone().setDivClassName("BMPostPathView"))
-        this.statusView().addItem(this.pathView())
+        this.statusView().addSubnode(this.pathView())
 
         // title
         this.setTitleView(NodeView.clone().setDivClassName("BMPostTitleView"))
-        this.statusView().addItem(this.titleView())        
+        this.statusView().addSubnode(this.titleView())        
                 
         // price container
         this.setPriceContainerView(NodeView.clone().setDivClassName("BMPostPriceContainerView"))
-        this.statusView().addItem(this.priceContainerView())
+        this.statusView().addSubnode(this.priceContainerView())
                 
         this.setPriceView(NodeView.clone().setDivClassName("BMPostPriceView"))
-        this.priceContainerView().addItem(this.priceView())
+        this.priceContainerView().addSubnode(this.priceView())
         
         this.priceView().setInvalidColor("red")
         this.priceView().isValid = function () {
@@ -61,7 +61,7 @@ BMClassifiedPostView = NodeView.extend().newSlots({
         }
         
         this.setCurrencyView(NodeView.clone().setDivClassName("BMPostPriceView").setInnerHTML("BTC"))
-        this.priceContainerView().addItem(this.currencyView())
+        this.priceContainerView().addSubnode(this.currencyView())
         
         this.currencyView().setInvalidColor("red")
         this.currencyView().setValidColor("black")
@@ -73,42 +73,42 @@ BMClassifiedPostView = NodeView.extend().newSlots({
 
         // post button
         this.setButtonView(NodeView.clone().setDivClassName("BMButtonView").setInnerHTML("Post"))
-        this.statusView().addItem(this.buttonView())
+        this.statusView().addSubnode(this.buttonView())
         this.buttonView().setTarget(this).setAction("post")
         
         // stamp container
         this.setPowContainerView(NodeView.clone().setDivClassName("BMPostPowContainerView"))
         this.powContainerView().makeUnselectable() 
-        this.statusView().addItem(this.powContainerView())
+        this.statusView().addSubnode(this.powContainerView())
 
         
         this.setPowIncrementView(NodeView.clone().setDivClassName("BMPostPowIncrementButtonView").setTarget(this).setAction("incrementPowTarget").setInnerHTML("+"))
-        this.powContainerView().addItem(this.powIncrementView())
+        this.powContainerView().addSubnode(this.powIncrementView())
         this.powIncrementView().makeUnselectable()
         
         this.setPowDecrementView(NodeView.clone().setDivClassName("BMPostPowDecrementButtonView").setTarget(this).setAction("decrementPowTarget").setInnerHTML("-"))
-        this.powContainerView().addItem(this.powDecrementView())
+        this.powContainerView().addSubnode(this.powDecrementView())
         this.powDecrementView().makeUnselectable()
 
         this.setPowView(NodeView.clone().setDivClassName("BMPostPowView").setInnerHTML("pow"))
         this.powView().makeUnselectable()
-        this.powContainerView().addItem(this.powView())
+        this.powContainerView().addSubnode(this.powView())
          
         this.setPostDateInfoView(NodeView.clone().setDivClassName("BMPostDateInfoView").setInnerHTML(""))
         this.postDateInfoView().makeUnselectable()
-        this.powContainerView().addItem(this.postDateInfoView())
+        this.powContainerView().addSubnode(this.postDateInfoView())
         
         // description
         this.setDescriptionView(NodeView.clone().setDivClassName("BMPostDescriptionView"))
-        this.addItem(this.descriptionView())
+        this.addSubview(this.descriptionView())
         
         // images header
         this.setImagesHeaderView(NodeView.clone().setDivClassName("BMImagesHeader").setInnerHTML("drop images below"))
-        this.addItem(this.imagesHeaderView())
+        this.addSubview(this.imagesHeaderView())
         
         // image
         this.setImageWellView(ImageWellView.clone().setDivClassName("BMPostImageWellView"))
-        this.addItem(this.imageWellView())
+        this.addSubview(this.imageWellView())
         
    
         // editing

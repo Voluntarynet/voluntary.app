@@ -229,37 +229,37 @@ DivView = ideal.Proto.extend().newSlots({
         return this._divClassName
     },
     
-    newItemFromProto: function () {
-        var anItem = this.subviewProto().clone()
-        if (anItem == null) {
-            throw new Error("null anItem")
+    newSubviewFromProto: function () {
+        var anSubview = this.subviewProto().clone()
+        if (anSubview == null) {
+            throw new Error("null anSubview")
         }
-        return anItem
+        return anSubview
     },
 
-    addItem: function(anItem) {
-        if (anItem == null) {
-            anItem = this.newItemFromProto()
+    addSubview: function(anSubview) {
+        if (anSubview == null) {
+            anSubview = this.newSubviewFromProto()
         }
         
-        this._subviews.append(anItem)
+        this._subviews.append(anSubview)
         
-        if ( anItem.element() == null) {
-                console.log("anItem = ", anItem)
-                throw new Error("null anItem.element()")
+        if ( anSubview.element() == null) {
+                console.log("anSubview = ", anSubview)
+                throw new Error("null anSubview.element()")
         }
-        this._element.appendChild(anItem.element());
-        anItem.setParentView(this)
-		this.didChangeItemList()
-        return anItem
+        this._element.appendChild(anSubview.element());
+        anSubview.setParentView(this)
+		this.didChangeSubviewList()
+        return anSubview
     },
     
-    addItems: function(someItems) {
-        someItems.forEach( (item) => { this.addItem(item) })
+    addSubviews: function(someSubviews) {
+        someSubviews.forEach( (item) => { this.addSubview(item) })
         return this
     },
  
-    newItemForNode: function(aNode) {
+    newSubviewForNode: function(aNode) {
 		var proto = null
 		
 
@@ -275,7 +275,7 @@ DivView = ideal.Proto.extend().newSlots({
 		}
 				
         if (!proto) {
-            throw new Error("missing proto to create newItemForNode(" + aNode.type() + ")")
+            throw new Error("missing proto to create newSubviewForNode(" + aNode.type() + ")")
         }
 
 		var item = proto.clone()
@@ -290,13 +290,13 @@ DivView = ideal.Proto.extend().newSlots({
         return item.setNode(aNode)
     },
     
-    atInsert: function (anIndex, anItem) {
-        this.subviews().atInsert(anIndex, anItem)
-        DomElement_atInsert(this.element(), anIndex, anItem.element())
-        return anItem
+    atInsert: function (anIndex, anSubview) {
+        this.subviews().atInsert(anIndex, anSubview)
+        DomElement_atInsert(this.element(), anIndex, anSubview.element())
+        return anSubview
     },
     
-    itemForNode: function(aNode) {
+    subviewForNode: function(aNode) {
         return this.subviews().detect((item) => { return item.node() == aNode; })
     },
 
@@ -319,8 +319,8 @@ DivView = ideal.Proto.extend().newSlots({
 	},
     
     removeAfterFadeDelay: function(delayInSeconds) {
-        // call removeItem for a direct actions
-        // use justRemoteItem for internal changes
+        // call removeSubview for a direct actions
+        // use justRemoteSubview for internal changes
 
         
         this.element().style.transition = "all " + delayInSeconds + "s"
@@ -329,7 +329,7 @@ DivView = ideal.Proto.extend().newSlots({
         }, 0)
         
         setTimeout( () => { 
-            this.parentView().removeItem(this)
+            this.parentView().removeSubview(this)
         }, delayInSeconds*1000)        
         
         return this
@@ -338,66 +338,66 @@ DivView = ideal.Proto.extend().newSlots({
     willRemove: function() {
     },
     
-	didChangeItemList: function() {
+	didChangeSubviewList: function() {
 	},
 	
-	hasItem: function(anItem) {
+	hasSubview: function(anSubview) {
 		var children = this._element.childNodes
 		for (var i = 0; i < children.length; i ++) {
 			var child = children[i]
-			if (anItem.element() == child) {
+			if (anSubview.element() == child) {
 				return true
 			}
 		}
 		return false		
 	},
 	
-    removeItem: function (anItem) {
-		//console.log("WANRING: " + this.type() + " removeItem " + anItem.type())
+    removeSubview: function (anSubview) {
+		//console.log("WANRING: " + this.type() + " removeSubview " + anSubview.type())
 		/*
-		if (!this.hasItem(anItem)) {
-			console.log(this.type() + " removeItem " + anItem.type() + " failed - no child found!")
-			return anItem
+		if (!this.hasSubview(anSubview)) {
+			console.log(this.type() + " removeSubview " + anSubview.type() + " failed - no child found!")
+			return anSubview
 		}
 		*/
 		
-        anItem.willRemove()
-        this._subviews.remove(anItem)
+        anSubview.willRemove()
+        this._subviews.remove(anSubview)
 
 		/*
 		var children = this._element.childNodes
 		for (var i = 0; i < children.length; i ++) {
 			var child = children[i]
-			if (anItem.element() == child) {
+			if (anSubview.element() == child) {
 				console.log("has remove match")
 			}
 		}
 		*/
 		
-		if (this.hasItem(anItem)) {
+		if (this.hasSubview(anSubview)) {
 			if(!DivView._didShowWarning) {
 				DivView._didShowWarning = true
-				console.log("WANRING: " + this.type() + " removeItem " + anItem.type() + " failed - no child found!")
+				console.log("WANRING: " + this.type() + " removeSubview " + anSubview.type() + " failed - no child found!")
 			}
-        	this._element.removeChild(anItem.element());
+        	this._element.removeChild(anSubview.element());
 		}
 		
-        anItem.setParentView(null)
-		this.didChangeItemList()
-        return anItem
+        anSubview.setParentView(null)
+		this.didChangeSubviewList()
+        return anSubview
     },
     
-    removeAllItems: function() {
-        this.subviews().copy().forEach((item) => { this.removeItem(item) })
+    removeAllSubview: function() {
+        this.subviews().copy().forEach((item) => { this.removeSubview(item) })
         return this
     },
 
-    indexOfItem: function(anItem) {
-        return this.subviews().indexOf(anItem)
+    indexOfSubview: function(anSubview) {
+        return this.subviews().indexOf(anSubview)
     },
 
-    itemAfter: function(anItem) {
-        var index = this.indexOfItem(anItem)
+    itemAfter: function(anSubview) {
+        var index = this.indexOfSubview(anSubview)
         var nextIndex = index + 1
         if (nextIndex < this.subviews().length) {
             return this.subviews()[nextIndex]

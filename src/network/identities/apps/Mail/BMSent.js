@@ -4,8 +4,8 @@ BMSent = BMListNode.extend().newSlots({
     init: function () {
         BMListNode.init.apply(this)
  		this.setShouldStore(true)
- 		this.setShouldStoreItems(false)
-        this.setNoteIsItemCount(true)
+ 		this.setShouldStoreSubnodes(false)
+        this.setNnoteIsSubnodeCount(true)
         this.setTitle("sent")
     },
 })

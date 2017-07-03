@@ -1,28 +1,31 @@
 BMNode = ideal.Proto.extend().newSlots({
     type: "BMNode",
         
-	// node summary presented in parent row views
+	// row view summary
     title: null,
     subtitle: null,
     note: null,
-    subtitleIsItemCount: false,
-    noteIsItemCount: false,
+    subtitleIsSubnodeCount: false,
+    nnoteIsSubnodeCount: false,
+        
+    // row view interaction
     nodeTitleIsEditable: false,
     nodeSubtitleIsEditable: false,
 	nodeRowIsSelectable: true,
-
 	nodeVisibleClassName: "",
+	
+	// column settings (this should really auto adjust to fit)
     nodeMinWidth: 200,
 
-    parentNode: null,
-
+    // view
     view: null,
     viewClassName: null,
 
-	// items
-    items: null,
+    // parent node, subnodes
+    parentNode: null,
+    subnodes: null,
     subnodeProto: null,
-    nodeEmptyLabel: null, // shown in view when there are no items
+    nodeEmptyLabel: null, // shown in view when there are no subnodes
 
 	// actions
     actions: null,
@@ -40,10 +43,6 @@ BMNode = ideal.Proto.extend().newSlots({
     nodeMinHeight: 0, // tall fields like draft body
 
     nodeContent: null,
-/*
-    nodeAfterContent: null,
-    nodeBeforeContent: null,
-*/
     nodeBgColor: null,
         
 	// persistence 
@@ -54,7 +53,7 @@ BMNode = ideal.Proto.extend().newSlots({
     debug: false,
 }).setSlots({
     init: function () {
-        this._items = []
+        this._subnodes = []
         this._actions = []        
         this._didUpdateNodeNote = NotificationCenter.shared().newNotification().setSender(this._uniqueId).setName("didUpdateNode")
         return this
@@ -67,7 +66,7 @@ BMNode = ideal.Proto.extend().newSlots({
     
     addField: function(aField) {
 		throw "shouldn't be called"
-        return this.addItem(aField)
+        return this.addSubnode(aField)
     },
         
     nodeRowLink: function() {
@@ -75,16 +74,16 @@ BMNode = ideal.Proto.extend().newSlots({
     },    
     
     subtitle: function () {
-        if (this.subtitleIsItemCount() && this.itemsLength()) {
-            return this.itemsLength()
+        if (this.subtitleIsSubnodeCount() && this.subnodesLength()) {
+            return this.subnodesLength()
         }
         
         return this._subtitle
     },
     
     note: function () {
-        if (this.noteIsItemCount() && this.itemsLength()) {
-            return this.itemsLength()
+        if (this.nnoteIsSubnodeCount() && this.subnodesLength()) {
+            return this.subnodesLength()
         }
         
         return this._note
@@ -96,7 +95,7 @@ BMNode = ideal.Proto.extend().newSlots({
         }
         
         /*
-        if (this.itemsLength() == 0) {
+        if (this.subnodesLength() == 0) {
             return "GenericView"
         }
         */
@@ -128,34 +127,34 @@ BMNode = ideal.Proto.extend().newSlots({
         return null
     },
     
-    justAddItem: function(anItem) {
-        if (this.items() == null) {
-            throw new Error("items is null")
+    justAddSubnode: function(aSubnode) {
+        if (this.subnodes() == null) {
+            throw new Error("subnodes is null")
         }
-        this.items().push(anItem)
-        anItem.setParentNode(this)
-        return anItem        
+        this.subnodes().push(aSubnode)
+        aSubnode.setParentNode(this)
+        return aSubnode        
     },
 
-    addItem: function(anItem) {
-        this.justAddItem(anItem)
-        this.didChangeItemList()
-        return anItem
+    addSubnode: function(aSubnode) {
+        this.justAddSubnode(aSubnode)
+        this.didChangeSubviewList()
+        return aSubnode
     },
 
-	addItemsIfAbsent: function(items) {
-		items.forEach((item) => { this.addItemIfAbsent(item) })
+	addSubnodesIfAbsent: function(subnodes) {
+		subnodes.forEach((item) => { this.addSubnodeIfAbsent(item) })
 		return this
 	},
     
-    addItemIfAbsent: function(anItem) {
-        if(!this.items().contains(anItem)) {
-            this.addItem(anItem)
+    addSubnodeIfAbsent: function(aSubnode) {
+        if(!this.subnodes().contains(aSubnode)) {
+            this.addSubnode(aSubnode)
         }
-        return anItem
+        return aSubnode
     },
 
-	addItemProtoForSlotIfAbsent: function(aProto, slotName) {
+	addSubnodeProtoForSlotIfAbsent: function(aProto, slotName) {
 		var getter = this[slotName]
 		if (!getter) {
 			throw new Error(this.type() + "." + slotName + " slot missing")
@@ -164,31 +163,31 @@ BMNode = ideal.Proto.extend().newSlots({
 		var slotValue = this[slotName].apply(this)
 		assert(aProto)
 		
-		//console.log("addItemProtoForSlotIfAbsent " + slotName + " = " + slotValue + " type " + typeof(slotValue) + " " + typeof(slotValue))
+		//console.log("addSubnodeProtoForSlotIfAbsent " + slotName + " = " + slotValue + " type " + typeof(slotValue) + " " + typeof(slotValue))
 		
 		if (slotValue === null) {
-			//console.log("addItemProtoForSlotIfAbsent " + slotName + " adding")
+			//console.log("addSubnodeProtoForSlotIfAbsent " + slotName + " adding")
 			var obj = aProto.clone()
 			var setterName = this.setterNameForSlot(slotName)
 			this[setterName].apply(this, [obj])
-			this.addItem(obj)
+			this.addSubnode(obj)
 		}
 		
 		return this
 	},
     
-    removeItem: function(anItem) {
-        this.items().remove(anItem)
+    removeSubnode: function(aSubnode) {
+        this.subnodes().remove(aSubnode)
         
-        if (anItem.parentNode() == this) {
-            anItem.setParentNode(null)
+        if (aSubnode.parentNode() == this) {
+            aSubnode.setParentNode(null)
         }
         
-        this.didChangeItemList()
-        return anItem
+        this.didChangeSubviewList()
+        return aSubnode
     },
 
-    didChangeItemList: function() {
+    didChangeSubviewList: function() {
         this.markDirty()
         this.didUpdate()
         return this
@@ -283,7 +282,7 @@ BMNode = ideal.Proto.extend().newSlots({
     
     nodeAtSubpath: function(subpathArray) {
         if (subpathArray.length > 0) {
-            var item = this.firstItemWithTitle(subpathArray[0])
+            var item = this.firstSubnodeWithTitle(subpathArray[0])
             if (item) {
                 return item.nodeAtSubpath(subpathArray.slice(1))
             }
@@ -335,13 +334,13 @@ BMNode = ideal.Proto.extend().newSlots({
     add: function () {  
         var subnode = this.subnodeProto().clone()
         console.log("BMNode add " + subnode.type())
-        this.addItem(subnode)
+        this.addSubnode(subnode)
         this.didUpdate()
         return subnode
     },
 
     delete: function () {
-        this.parentNode().removeItem(this)
+        this.parentNode().removeSubnode(this)
         return this
     },
     
@@ -359,47 +358,47 @@ BMNode = ideal.Proto.extend().newSlots({
     
     // item lookup
     
-    firstItemOfType: function(aProto) {
-        this.prepareToAccess(); // put guard on items instead?
+    firstSubnodeOfType: function(aProto) {
+        this.prepareToAccess(); // put guard on subnodes instead?
 
-        return this.items().detect(function (item) {
+        return this.subnodes().detect(function (item) {
             return item.type() == aProto.type()
         })
     },
 
-    firstItemWithSubtitle: function(aString) {
-        this.prepareToAccess(); // put guard on items instead?
+    firstSubnodeWithSubtitle: function(aString) {
+        this.prepareToAccess(); // put guard on subnodes instead?
 
-        return this.items().detect(function (item) {
+        return this.subnodes().detect(function (item) {
             return item.subtitle() == aString
         })
     },
         
-    firstItemWithTitle: function(aString) {
-        this.prepareToAccess(); // put guard on items instead?
+    firstSubnodeWithTitle: function(aString) {
+        this.prepareToAccess(); // put guard on subnodes instead?
 
-        return this.items().detect(function (item) {
+        return this.subnodes().detect(function (item) {
             return item.title() == aString
         })
     },
     
     
-    // items
+    // subnodes
     
     
-    itemsLength: function() {
-        return this._items.length
+    subnodesLength: function() {
+        return this._subnodes.length
     },
     
-    setItems: function(items) {
-        this._items = items
-        //this.verifyItemsHaveParentNodes()
+    setSubnodes: function(subnodes) {
+        this._subnodes = subnodes
+        //this.verifySubnodesHaveParentNodes()
         return this
     },
 
     
-    verifyItemsHaveParentNodes: function() {
-        var missing = this.items().detect(function (item) { return !item.parentNode() })
+    verifySubnodesHaveParentNodes: function() {
+        var missing = this.subnodes().detect(function (item) { return !item.parentNode() })
         if (missing) {
             throw new Error("missing parent node on item " + missing.type())
         }
@@ -507,15 +506,15 @@ BMNode = ideal.Proto.extend().newSlots({
     itemPids: function() {
         var pids = []
         
-        // only items with shouldStore ==  true
-        this.items().forEach((item) => {
+        // only subnodes with shouldStore ==  true
+        this.subnodes().forEach((item) => {
             if (item.shouldStore() == true) {
                 pids.push(item.pid())
             }
         })
         
         /*
-        var pids = this.items().map(function (item) { 
+        var pids = this.subnodes().map(function (item) { 
             return item.pid()
         })
         */
@@ -524,13 +523,13 @@ BMNode = ideal.Proto.extend().newSlots({
         return pids
     },
     
-    setItemPids: function(pids) {
-        var items = pids.map((pid) => {
+    setSubnodePids: function(pids) {
+        var subnodes = pids.map((pid) => {
             return NodeStore.shared().objectForPid(pid).setParentNode(this)
         })
 
-		//items.forEach(function (item) { this.addItem(item) }) // this will cause an infinite loop?
-        this.setItems(items)
+		//subnodes.forEach(function (item) { this.addSubnode(item) }) // this will cause an infinite loop?
+        this.setSubnodes(subnodes)
         return this
     },
 })

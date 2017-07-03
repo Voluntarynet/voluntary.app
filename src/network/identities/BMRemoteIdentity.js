@@ -82,7 +82,7 @@ BMRemoteIdentity = BMNavNode.extend().newSlots({
 	handleMessage: function(aPrivateMsg) {
 		/*
 		if (aPrivateMsg.senderId() == this || aPrivateMsg.receiverId() == this) {
-			this.messages().addItemIfAbsent(aPrivateMsg)
+			this.messages().addSubnodeIfAbsent(aPrivateMsg)
 		}
 		*/	
 		

@@ -22,10 +22,10 @@ BMStunServer = BMFieldSetNode.extend().newSlots({
     init: function () {
         BMFieldSetNode.init.apply(this)
 		this.setShouldStore(true)
-		this.setShouldStoreItems(true)
+		this.setShouldStoreSubnodes(true)
         this.addStoredSlots(["host", "port"])
         //this.addStoredSlots(["credential", "username"])
-        this.setShouldStoreItems(false)
+        this.setShouldStoreSubnodes(false)
         this.addAction("delete")
         this.setNodeMinWidth(160)
 

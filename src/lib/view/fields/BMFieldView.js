@@ -13,18 +13,18 @@ BMFieldView = BrowserFieldRow.extend().newSlots({
         
         this.setDivClassName("BMFieldView")
 
-		this.setKeyView(this.addItem(DivView.clone().setDivClassName("BMFieldKeyView")))
-        this.addItem(this.keyView())     
+		this.setKeyView(this.addSubview(DivView.clone().setDivClassName("BMFieldKeyView")))
+        this.addSubview(this.keyView())     
    		this.keyView().turnOffUserSelect().setSpellCheck(false)   
 		//this.keyView().setMinAndMaxWidth("200")
 		
         this.setValueView(this.createValueView())
-        this.addItem(this.valueView())  
+        this.addSubview(this.valueView())  
         this.valueView().setUserSelect("text")
 		this.valueView().setSpellCheck(false)
 		
 		this.setNoteView(DivView.clone().setDivClassName("BMFieldViewNoteView"))
-		this.addItem(this.noteView())
+		this.addSubview(this.noteView())
         this.noteView().setUserSelect("text")
         
         //his.setEditable(false)

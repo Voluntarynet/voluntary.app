@@ -16,9 +16,9 @@ BMDataStore = BMNode.extend().newSlots({
 		return NodeStore.shared()
 	},
 	
-	removeAllItems: function() {
-		this.items().slice().forEach((item) => {
-			this.removeItem(item)
+	removeAllSubnodes: function() {
+		this.subnodes().slice().forEach((item) => {
+			this.removeSubnode(item)
 		})
 		return this
 	},
@@ -26,18 +26,18 @@ BMDataStore = BMNode.extend().newSlots({
     prepareToSyncToView: function() {
 		console.log(this.type() + " prepareToSyncToView")
 		
-		if (this.items().length == 0) {
-			this.refreshItems()
+		if (this.subnodes().length == 0) {
+			this.refreshSubnodes()
 		}
     },
 
-	refreshItems: function() {
-		console.log(this.type() + " refreshItems")
-		this.removeAllItems()
+	refreshSubnodes: function() {
+		console.log(this.type() + " refreshSubnodes")
+		this.removeAllSubnodes()
         this.store().sdb().keys().sort().forEach( (key) => {
 			var item = BMDataStoreRecord.clone().setTitle(key)
 			item.setSubtitle(this.store().sdb().at(key).length + " bytes")
-			this.justAddItem(item)
+			this.justAddSubnode(item)
 			
 		})		
 	},

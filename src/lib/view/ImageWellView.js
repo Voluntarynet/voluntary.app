@@ -46,14 +46,14 @@ ImageWellView = NodeView.extend().newSlots({
             return this
         }
         
-        this.removeAllItems();
+        this.removeAllSubview();
         //console.log("setImageDataURLs = ", dataURLs)
 
         dataURLs.forEach( (dataURL) => {
             var imageView = ImageView.clone().setFromDataURL(dataURL)
             imageView.setIsEditable(this.isEditable())
-            this.addItem(imageView);
-            //this.node().addItem(ImageNode.clone().setView(imageView))
+            this.addSubview(imageView);
+            //this.node().addSubview(ImageNode.clone().setView(imageView))
         })
     },
     
@@ -66,7 +66,7 @@ ImageWellView = NodeView.extend().newSlots({
     onDropImageDataUrl: function(dataUrl) {
         var imageView = ImageView.clone().setFromPath(dataUrl)
         imageView.setIsEditable(this.isEditable())
-        this.addItem(imageView)
+        this.addSubview(imageView)
 		this.syncToNode()
         return this        
     },

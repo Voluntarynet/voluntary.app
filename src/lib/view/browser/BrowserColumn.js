@@ -54,11 +54,11 @@ BrowserColumn = NodeView.extend().newSlots({
     },
 
     addRow: function(v) {
-        return this.addItem(v)
+        return this.addSubview(v)
     },
 
     removeRow: function(v) {
-        return this.removeItem(v)
+        return this.removeSubview(v)
     },
 
 	// selection

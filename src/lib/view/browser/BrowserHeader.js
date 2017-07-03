@@ -24,17 +24,17 @@ BrowserHeader = NodeView.extend().newSlots({
 
     syncFromNode: function() {
         var node = this.node()
-        this.removeAllItems()
+        this.removeAllSubview()
         
         if (node) {
 			if (this.doesShowBackArrow()) {
-				this.addItem(this.backArrowView())
+				this.addSubview(this.backArrowView())
 			}
 			
             node.actions().forEach( (action) => {
                 var button = BrowserHeaderAction.clone()
                 button.setAction(action).setTarget(node)
-                this.addItem(button).syncFromNode()
+                this.addSubview(button).syncFromNode()
             })
         }
         

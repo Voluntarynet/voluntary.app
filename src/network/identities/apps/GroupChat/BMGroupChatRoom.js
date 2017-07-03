@@ -7,10 +7,10 @@ BMGroupChatRoom = BMApplet.extend().newSlots({
 	        BMApplet.init.apply(this)
 
 			this.setNotifications(BMNode.clone().setTitle("channels"))
-	        this.addItem(this.notifications())
+	        this.addSubnode(this.notifications())
 
 			this.setMessages(BMNode.clone().setTitle("direct messages"))
-	        this.addItem(this.messages())
+	        this.addSubnode(this.messages())
 
 	    },
 

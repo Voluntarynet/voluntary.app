@@ -14,16 +14,16 @@ BMDraftView______ = NodeView.extend().newSlots({
         this.setDivClassName("BMPostView")
         
         this.setToAddressView(NodeView.clone().setDivClassName("BMDraftToAddressView"))
-        this.addItem(this.toAddressView())    
+        this.addSubview(this.toAddressView())    
         
         this.setFromAddressView(NodeView.clone().setDivClassName("BMDraftFromAddressView"))
-        this.addItem(this.fromAddressView())           
+        this.addSubview(this.fromAddressView())           
         
         this.setSubjectView(NodeView.clone().setDivClassName("BMPostSubjectView"))
-        this.addItem(this.subjectView())
+        this.addSubview(this.subjectView())
         
         this.setBodyView(NodeView.clone().setDivClassName("BMDraftBodyView").loremIpsum())
-        this.addItem(this.bodyView())
+        this.addSubview(this.bodyView())
         
         this.setEditable(true)
         return this

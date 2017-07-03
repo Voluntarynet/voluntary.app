@@ -52,7 +52,7 @@ BMObjectMessage = BMMessage.extend().newSlots({
 }).setSlots({
     init: function () {
         BMMessage.init.apply(this)
-		this.setShouldStoreItems(false)
+		this.setShouldStoreSubnodes(false)
         this.setMsgType("object")
         this.addStoredSlots(["msgType", "data", "senderPublicKeyString", "receiverPublicKeyString", "timeStamp", "signature"])
         this.addAction("delete")

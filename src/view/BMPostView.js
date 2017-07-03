@@ -21,30 +21,30 @@ BMPostView = NodeView.extend().newSlots({
         this.setDivClassName("BMPostView")
         
         this.setStatusView(NodeView.clone().setDivClassName("BMPostStatusView"))
-        this.addItem(this.statusView())
+        this.addSubview(this.statusView())
         
 
         this.setPriceContainerView(NodeView.clone().setDivClassName("BMPostPriceContainerView"))
-        this.statusView().addItem(this.priceContainerView())
+        this.statusView().addSubnode(this.priceContainerView())
                 
         this.setPriceView(NodeView.clone().setDivClassName("BMPostPriceView"))
-        this.priceContainerView().addItem(this.priceView())
+        this.priceContainerView().addSubnode(this.priceView())
         
         this.setCurrencyView(NodeView.clone().setDivClassName("BMPostPriceView").setInnerHTML("BTC"))
-        this.priceContainerView().addItem(this.currencyView())
+        this.priceContainerView().addSubnode(this.currencyView())
         
         this.setTitleView(NodeView.clone().setDivClassName("BMPostTitleView"))
-        this.statusView().addItem(this.titleView())        
+        this.statusView().addSubnode(this.titleView())        
 
         this.setButtonView(NodeView.clone().setDivClassName("BMButtonView").setInnerHTML("Post"))
-        this.statusView().addItem(this.buttonView())
+        this.statusView().addSubnode(this.buttonView())
         this.buttonView().setTarget(this).setAction("post")
         
         this.setDescriptionView(NodeView.clone().setDivClassName("BMPostDescriptionView").loremIpsum())
-        this.addItem(this.descriptionView())
+        this.addSubview(this.descriptionView())
         
         this.setPowView(NodeView.clone().setDivClassName("BMPowView"))
-        this.addItem(this.powView())
+        this.addSubview(this.powView())
         
         this.priceView().setInvalidColor("red")
         this.priceView().isValid = function () {

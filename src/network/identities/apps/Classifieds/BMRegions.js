@@ -10,10 +10,10 @@ BMRegions = BMRegion.extend().newSlots({
         
         /*
         this.setDigital(BMStorableNode.clone().setTitle("Digital"))
-        this.justAddItem(this.digital())
+        this.justAddSubnode(this.digital())
         
         this.setPhysical(BMStorableNode.clone().setTitle("Physical"))
-        this.justAddItem(this.physical())
+        this.justAddSubnode(this.physical())
         */
 
         //console.log("begin BMClassifieds init")
@@ -27,7 +27,7 @@ BMRegions = BMRegion.extend().newSlots({
     receivedMsgFrom: function(msg, remotePeer) {
         var postDict = JSON.parse(msg)
         var post = BMPost.clone().setPostDict(postDict)
-        this.addItem(post)
+        this.addSubnode(post)
         this.didUpdate() 
     }
     */

@@ -33,7 +33,7 @@ BMMultiFieldOptionsView = DivView.extend().newSlots({
 	},
 		
 	updatedValidValues: function() {
-		this.removeAllItems()
+		this.removeAllSubview()
 		
         this.element().style.transition = "opacity .2s"
 		this.setOpacity(0)
@@ -41,7 +41,7 @@ BMMultiFieldOptionsView = DivView.extend().newSlots({
 		this._validValues.forEach((v) => {
 			var option = DivView.clone().setInnerHTML(v).setDivClassName("BMMultiFieldOptionView").setTarget(this).setAction("select")
 			option.validValue = v
-			this.addItem(option)
+			this.addSubview(option)
 		})
 		
 		setTimeout(() => { 

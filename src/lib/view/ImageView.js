@@ -31,7 +31,7 @@ ImageView = NodeView.extend().newSlots({
     addCloseButton: function() {
         if (this.closeButtonView() == null) {
             this.setCloseButtonView(NodeView.clone().setDivClassName("ImageCloseButton"))
-            this.addItem(this.closeButtonView()) 
+            this.addSubview(this.closeButtonView()) 
             this.closeButtonView().setTarget(this).setAction("close").setInnerHTML("&#10799;")
         }
         return this        
@@ -39,7 +39,7 @@ ImageView = NodeView.extend().newSlots({
     
     removeCloseButton: function() {
         if (this.closeButtonView() != null) {
-            this.removeItem(this.closeButtonView()) 
+            this.removeSubview(this.closeButtonView()) 
             this.setCloseButtonView(null)
         }
     },
@@ -48,7 +48,7 @@ ImageView = NodeView.extend().newSlots({
         console.log("close action")
         this.removeAfterFadeDelay(0.4)
         setTimeout( () => { 
-            this.removeItem(this.closeButtonView())
+            this.removeSubview(this.closeButtonView())
 			this.syncToNode()
 			
             var style = this.element().style;

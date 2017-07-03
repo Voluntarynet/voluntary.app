@@ -27,13 +27,13 @@ BMMail = BMApplet.extend().newSlots({
         var myId = this.identity()
 
         if (myId.equals(msg.senderId())) {
-			this.sent().addItemIfAbsent(msg)
+			this.sent().addSubnodeIfAbsent(msg)
 		}
 		
 		if (myId.equals(msg.receiverId())) {
 			var senderName1 = msg.senderId().name()	// test for bug
 					
-			this.inbox().addItemIfAbsent(msg)
+			this.inbox().addSubnodeIfAbsent(msg)
 			
 			var senderName2 = msg.senderId().name() // test for bug
 			assert (senderName1 == senderName2)  // test for bug

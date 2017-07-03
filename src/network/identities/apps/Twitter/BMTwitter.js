@@ -13,22 +13,22 @@ BMTwitter = BMApplet.extend().newSlots({
         this.setTitle("Twitter")
         
         this.setFeed(BMNode.clone())
-        this.addItem(this.feed().setTitle("feed"))
+        this.addSubnode(this.feed().setTitle("feed"))
                 
 		this.setNotifications(BMNode.clone().setTitle("notifications"))
-        this.addItem(this.notifications())
+        this.addSubnode(this.notifications())
 
 		this.setMessages(BMNode.clone().setTitle("direct messages"))
-        this.addItem(this.messages())
+        this.addSubnode(this.messages())
         
 		this.setProfile(BMNode.clone().setTitle("profile"))
-        this.addItem(this.profile())
+        this.addSubnode(this.profile())
 
 		this.setFollowing(BMNode.clone().setTitle("following"))
-        this.addItem(this.following())
+        this.addSubnode(this.following())
         
 		this.setFollowers(BMNode.clone().setTitle("followers"))
-        this.addItem(this.followers())
+        this.addSubnode(this.followers())
     },
     
     handleMessage: function(twitterMessage) {

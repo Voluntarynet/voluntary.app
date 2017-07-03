@@ -295,8 +295,8 @@ BMClassifiedPost = BMFieldSetNode.extend().newSlots({
         var region = rootNode.nodeAtSubpath(pathComponents)
         if (region) {
             //console.log("inserting post " + this.hash() + " into region path " + pathString + " ", this.postDict().title)
-            if (!region.containsItem(this)) {
-                region.addItem(this)
+            if (!region.containsSubnode(this)) {
+                region.this.addSubnode(this)
             } else {
                 console.log("can't insert duplicate item")
             }

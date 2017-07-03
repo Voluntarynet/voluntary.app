@@ -8,6 +8,6 @@ BMBuys = BMStorableNode.extend().newSlots({
         this.setTitle("Buys")
         this.setActions(["add"])
         this.setSubnodeProto(BMBuy)
-        this.setSubtitleIsItemCount(true)
+        this.setSubtitleIsSubnodeCount(true)
     },
 })

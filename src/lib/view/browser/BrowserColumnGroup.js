@@ -13,15 +13,15 @@ BrowserColumnGroup = NodeView.extend().newSlots({
         this.setDivClassName("BrowserColumnGroup")
         
         this.setHeader(BrowserHeader.clone())
-        this.addItem(this.header())
+        this.addSubview(this.header())
         
         this.setColumnWrapper(this)
         
         //this.setColumnWrapper(DivView.clone().setDivClassName("BrowserColumnWrapper"))
-        //this.addItem(this.columnWrapper())
+        //this.addSubview(this.columnWrapper())
         
         this.setColumn(BrowserColumn.clone())
-        this.columnWrapper().addItem(this.column())
+        this.columnWrapper().addSubview(this.column())
         
 		//this.registerForFocus(true)
         return this
@@ -63,7 +63,7 @@ BrowserColumnGroup = NodeView.extend().newSlots({
     updateEmptyLabel: function() {
         var node = this.node()
         if (node) {
-            if (node.items().length == 0 && node.nodeEmptyLabel()) {
+            if (node.subnodes().length == 0 && node.nodeEmptyLabel()) {
                 this.setEmptyLabelText(node.nodeEmptyLabel())
                 return this
             }
@@ -77,7 +77,7 @@ BrowserColumnGroup = NodeView.extend().newSlots({
         if (!this.emptyLabel()) {
             this.setEmptyLabel(DivView.clone().setDivClassName("BrowserColumnEmptyLabel"))
             this.setEmptyLabelText("").turnOffUserSelect()
-            this.addItem(this.emptyLabel())            
+            this.addSubview(this.emptyLabel())            
         }
         
         return this
@@ -91,7 +91,7 @@ BrowserColumnGroup = NodeView.extend().newSlots({
     
     removeEmptyLabel: function() {
         if (this.emptyLabel()) {
-            this.removeItem(this.emptyLabel())
+            this.removeSubview(this.emptyLabel())
             this.setEmptyLabel(null)
         }
         return this
@@ -101,9 +101,9 @@ BrowserColumnGroup = NodeView.extend().newSlots({
         if (this.column().type() != columnClass.type()) {
             
             var view = columnClass.clone().setNode(this.node())
-            this.columnWrapper().removeItem(this.column())
+            this.columnWrapper().removeSubview(this.column())
             this.setColumn(view)
-            this.columnWrapper().addItem(this.column())
+            this.columnWrapper().addSubview(this.column())
             this.browser().clipToColumnGroup(this)
             //this.browser().fitToColumnWidths()
         }

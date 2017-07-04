@@ -3,7 +3,7 @@
     for fixed navigation use 
     
     doesn't replace subsubnodes on read 
-    instead matches with item titles and sends appropriate setNodeDict to them
+    instead matches with subnode titles and sends appropriate setNodeDict to them
     
     * have to make sure we set a "title" property when saving so we can do this
 
@@ -40,11 +40,11 @@ BMNavNode = BMStorableNode.extend().newSlots({
         if (aDict.children) {
             var subnodes = aDict.children.map(function (childDict) {
                 var title = childDict.title
-                var item = this.itemWithTitle(title)
-                if (item) {
-                    item.setNodeDict(childDict)
+                var subnode = this.subnodeWithTitle(title)
+                if (subnode) {
+                    subnode.setNodeDict(childDict)
                 }
-                return item
+                return subnode
             })            
         }
     },

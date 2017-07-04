@@ -70,7 +70,7 @@ BMStorableNode = BMNode.extend().newSlots({
         dict.type = this.type()
                 
         if (this.subnodes().length && this.shouldStoreSubnodes()) {
-            dict.children = this.itemPids()
+            dict.children = this.subnodePids()
         }
         
         return dict
@@ -125,7 +125,7 @@ BMStorableNode = BMNode.extend().newSlots({
         var newPids = aDict.children
         if (newPids) {
             if (this.loadsUnionOfChildren()) {
-                newPids = this.itemPids().union(newPids)
+                newPids = this.subnodePids().union(newPids)
             }
             
             this.setSubnodePids(newPids)

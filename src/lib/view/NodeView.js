@@ -50,7 +50,7 @@ NodeView = DivView.extend().newSlots({
     
     subviewProto: function() {
         if (this.node()) {
-            var vc = this.node().nodeRowViewClass()
+            var vc = this.node().nodeRowViewProto()
             if (vc) { 
                 return vc
             }
@@ -64,7 +64,7 @@ NodeView = DivView.extend().newSlots({
         // only replace subviews if sync requires it
         
         if (!this.node()) { 
-            this.removeAllSubview();
+            this.removeAllSubviews();
             return
         }
         
@@ -90,7 +90,7 @@ NodeView = DivView.extend().newSlots({
         })
         
         if (!newSubviews.isEqual(this.subviews())) {
-            this.removeAllSubview()
+            this.removeAllSubviews()
             this.addSubviews(newSubviews)
         } else {
             //this.log(" view subviews equal")

@@ -24,7 +24,7 @@ BrowserHeader = NodeView.extend().newSlots({
 
     syncFromNode: function() {
         var node = this.node()
-        this.removeAllSubview()
+        this.removeAllSubviews()
         
         if (node) {
 			if (this.doesShowBackArrow()) {

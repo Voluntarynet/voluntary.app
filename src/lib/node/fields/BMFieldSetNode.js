@@ -68,8 +68,8 @@ BMFieldSetNode = BMStorableNode.extend().newSlots({
     },
     
     fieldNamed: function(aName) {
-        return this.subnodes().detect(function (item) { 
-			return item.nodeFieldProperty() == aName || item.key() == aName
+        return this.subnodes().detect(function (subnode) { 
+			return subnode.nodeFieldProperty() == aName || subnode.key() == aName
         })
     },
     
@@ -112,23 +112,11 @@ BMFieldSetNode = BMStorableNode.extend().newSlots({
 	*/
 
 	validate: function() {
-		return this.subnodes().detect((item) => { return !item.validate() }) != null
-		
-		/*
-		var isValid = true
-
-		this.subnodes().forEach((item) => { 
-			if (!item.validate()) {
-				isValid = false
-			}
-		})
-	
-		return isValid
-		*/
+		return this.subnodes().detect((subnode) => { return !subnode.validate() }) != null
 	},
 
 	invalidSubnodes: function() {
-		return this.subnodes().detect((item) => { item.validate() })
+		return this.subnodes().detect((subnode) => { subnode.validate() })
 	},
 
 	isValid: function() {

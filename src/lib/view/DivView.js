@@ -255,7 +255,7 @@ DivView = ideal.Proto.extend().newSlots({
     },
     
     addSubviews: function(someSubviews) {
-        someSubviews.forEach( (item) => { this.addSubview(item) })
+        someSubviews.forEach( (subview) => { this.addSubview(subview) })
         return this
     },
  
@@ -278,16 +278,16 @@ DivView = ideal.Proto.extend().newSlots({
             throw new Error("missing proto to create newSubviewForNode(" + aNode.type() + ")")
         }
 
-		var item = proto.clone()
+		var subview = proto.clone()
 		
-		if (!item.setNode) {
+		if (!subview.setNode) {
 			console.log("Div WARNING: node " + aNode.type() + " has view proto = " + proto.type() + " but it's missing setNode method")
-			console.log("Div WARNING: missing " + item.type() + ".setNode method, node is a '" + aNode.type() + "' view proto = " + proto.type())
+			console.log("Div WARNING: missing " + subview.type() + ".setNode method, node is a '" + aNode.type() + "' view proto = " + proto.type())
 			console.log(this.type() + ".subviewProto() = ", this.subviewProto().type())
 			console.log(aNode.type() + ".viewClass() = ", aNode.viewClass().type())
 		}
 		
-        return item.setNode(aNode)
+        return subview.setNode(aNode)
     },
     
     atInsert: function (anIndex, anSubview) {
@@ -297,7 +297,7 @@ DivView = ideal.Proto.extend().newSlots({
     },
     
     subviewForNode: function(aNode) {
-        return this.subviews().detect((item) => { return item.node() == aNode; })
+        return this.subviews().detect((aView) => { return aView.node() == aNode; })
     },
 
 	// fade
@@ -387,8 +387,8 @@ DivView = ideal.Proto.extend().newSlots({
         return anSubview
     },
     
-    removeAllSubview: function() {
-        this.subviews().copy().forEach((item) => { this.removeSubview(item) })
+    removeAllSubviews: function() {
+        this.subviews().copy().forEach((aView) => { this.removeSubview(aView) })
         return this
     },
 
@@ -450,15 +450,15 @@ DivView = ideal.Proto.extend().newSlots({
         return this
     },
 
-    tellParents: function(msg, item) {
+    tellParents: function(msg, aView) {
         var f = this[msg]
-        if (f && f.apply(this, [item])) {
+        if (f && f.apply(this, [aView])) {
             return
         }
 
         var p = this.parentView()
         if (p) {
-            p.tellParents(msg, item)
+            p.tellParents(msg, aView)
         }
     },
     

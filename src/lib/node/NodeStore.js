@@ -291,7 +291,7 @@ NodeStore = ideal.Proto.extend().newSlots({
         
         /*
         this happens automatically: 
-        - when item pids are requested for serialization, 
+        - when subnode pids are requested for serialization, 
         they are added to dirty when pid is assigned
         */
         

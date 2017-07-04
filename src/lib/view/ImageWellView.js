@@ -46,7 +46,7 @@ ImageWellView = NodeView.extend().newSlots({
             return this
         }
         
-        this.removeAllSubview();
+        this.removeAllSubviews();
         //console.log("setImageDataURLs = ", dataURLs)
 
         dataURLs.forEach( (dataURL) => {

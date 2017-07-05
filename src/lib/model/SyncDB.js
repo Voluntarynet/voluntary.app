@@ -1,4 +1,10 @@
-
+/*
+	A cache on top of IndexedDB to allow us to do all synchronous reads and writes
+	On open, it reads the entire db into a dictionary
+	- reads are on the cache
+	- writes are to the cache and then async write to IndexedDB
+	-
+*/
 
 SyncDB = ideal.Proto.extend().newSlots({
     type: "SyncDB",

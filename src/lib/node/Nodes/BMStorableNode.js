@@ -10,6 +10,8 @@ BMStorableNode = BMNode.extend().newSlots({
         BMNode.init.apply(this)
         this.setStoredSlots([])
     },
+
+	// --- add / remove stored slots ---
     
     initStoredSlotWithProto: function(name, proto) {
         var obj = proto.clone()
@@ -36,6 +38,8 @@ BMStorableNode = BMNode.extend().newSlots({
         delete this.storedSlots()[slotName]
         return this
     },
+
+	// --- get storage dictionary ---
 
     nodeDictForProperties: function () {
         var dict = { }
@@ -86,6 +90,8 @@ BMStorableNode = BMNode.extend().newSlots({
         
         return dict
     },
+
+	// --- set storage dictionary ---
     
     setNodeDictForProperties: function (aDict) {
 		var hadMissingSetter = false 
@@ -121,7 +127,6 @@ BMStorableNode = BMNode.extend().newSlots({
     },
 
     setNodeDictForChildren: function (aDict) {
-        
         var newPids = aDict.children
         if (newPids) {
             if (this.loadsUnionOfChildren()) {
@@ -143,6 +148,8 @@ BMStorableNode = BMNode.extend().newSlots({
         return this
     },
     
+	// --- udpates ---
+	
     didLoadFromStore: function() {
 		//console.log(this.type() + " didLoadFromStore in BMStorableNode")
         // a chance to finish any unserializing

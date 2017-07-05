@@ -3,10 +3,9 @@ IndexedDBFolder = ideal.Proto.extend().newSlots({
     type: "IndexedDBFolder",
     path: "/", // path should end with pathSeparator
     pathSeparator: "/",
-    //debug: true,
     db: null,
-    //objectStore: null,
 	didRequestPersistence: false,
+    //debug: true,
 }).setSlots({
     init: function () {
     },
@@ -21,7 +20,7 @@ IndexedDBFolder = ideal.Proto.extend().newSlots({
 	requestPersistence: function() {
 		
 		if (navigator.storage && navigator.storage.persist)
-		  navigator.storage.persist().then(granted => {
+		  navigator.storage.persist().then((granted) => {
 		    if (granted)
 		      alert("Storage will not be cleared except by explicit user action");
 		    else
@@ -59,7 +58,6 @@ IndexedDBFolder = ideal.Proto.extend().newSlots({
 		//console.log(this.type() + " asyncOpen")
 		
         var request = window.indexedDB.open(this.path(), 2);
-        
         
         request.onerror = (event) => {
             console.log(this.type() + " open db error ", event);
@@ -105,7 +103,6 @@ IndexedDBFolder = ideal.Proto.extend().newSlots({
     },
             
     // writing
-    
 
 	asyncAtPut: function(key, value, callback) {
 		this.asyncAt(key,  (oldValue) => {

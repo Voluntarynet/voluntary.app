@@ -16,23 +16,6 @@ BrowserColumn = NodeView.extend().newSlots({
         this.registerForKeyboard(true)
         return this
     },
-
-	setIsSelected: function(aBool) {
-		if (this._isSelected == aBool) {
-			return this
-		}
-		
-		this._isSelected = aBool
-		
-		if (aBool) {
-			this.focus()
-		} else {
-			this.blur()
-		}
-		
-		return this
-	},
-
     
     title: function() {
         return this.node() ? this.node().title() : ""
@@ -62,10 +45,26 @@ BrowserColumn = NodeView.extend().newSlots({
     },
 
 	// selection
+	
+	setIsSelected: function(aBool) {
+		if (this._isSelected == aBool) {
+			return this
+		}
+		
+		this._isSelected = aBool
+		
+		if (aBool) {
+			this.focus()
+		} else {
+			this.blur()
+		}
+		
+		return this
+	},
 
     rowClicked: function(clickedRow) {
         var rows = this.rows()
-        rows.forEach(function(row) {
+        rows.forEach((row) => {
             if (row != clickedRow) {
                 row.unselect()
             }
@@ -81,14 +80,7 @@ BrowserColumn = NodeView.extend().newSlots({
     },
     
     selectedRows: function() {
-        return this.subviews().filter((row) => { 
-			/*
-			if (!row.isSelected) {
-				console.log("row.type() = ", row.type(), " missing isSelected")
-			}
-			*/
-			return row.isSelected(); 
-		})
+        return this.subviews().filter((row) => { return row.isSelected(); })
     },
 
     selectedRow: function() {
@@ -117,15 +109,8 @@ BrowserColumn = NodeView.extend().newSlots({
         return this
     },
   
-     indexOfRowWithNode: function (aNode) {
-        var rows = this.rows()
-        for (var i = 0; i < rows.length; i++) {
-            var row = rows[i]
-            if (row.node() == aNode) {
-                return i;
-            }
-        }
-        return null
+    indexOfRowWithNode: function (aNode) {
+		return this.rows().detectIndex((row) => { return row.node() === aNode })
     },
     
     clickRowWithNode: function(aNode) {
@@ -138,6 +123,13 @@ BrowserColumn = NodeView.extend().newSlots({
 
       
     selectRowWithNode: function (aNode) {
+		var row = this.rows().detect((row) => { return row.node() === aNode })
+        if (row) {
+			row.setIsSelected(true)
+		}
+
+		return row
+/*		
         var rows = this.rows()
         for (var i = 0; i < rows.length; i++) {
             var row = rows[i]
@@ -147,6 +139,7 @@ BrowserColumn = NodeView.extend().newSlots({
             }
         }
         return null
+*/
     },
     
     selectedRowTitle: function () {
@@ -256,6 +249,8 @@ BrowserColumn = NodeView.extend().newSlots({
 		}
 		return false
 	},	
+	
+	// --- enter key begins row editing ---------------------------
 	
 	onEnterKeyUp: function(event) {
         if (!this.allowsCursorNavigation()) { return }

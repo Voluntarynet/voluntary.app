@@ -32,7 +32,7 @@ BMLocalIdentity = BMKeyPair.extend().newSlots({
 
 	didLoadFromStore: function() {
 		//console.log(this.type() + " didLoadFromStore")
-		BMNavNode.didLoadFromStore.apply(this)
+		BMKeyPair.didLoadFromStore.apply(this)
 		this.profile().fieldNamed("publicKeyString").setValueIsEditable(false)
 	},
 

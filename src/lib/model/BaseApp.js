@@ -10,21 +10,12 @@ BaseApp = BMNavNode.extend().newSlots({
     type: "BaseApp",
     name: null,
     browser: null,
-    
-    about: null,
-    
     isDebugging: true,
     version: "0.0",
-    
 }).setSlots({
     init: function () {
         BMNavNode.init.apply(this)
         this.setNodeMinWidth(150)
-        
-        
-        // to avoid loop when instantiating on shared call
-        //setTimeout(function () { this.didPrepare() }, 1)
-        
 		NodeStore.shared().asyncOpen( () => { this.didOpenStore() })
         this.clearAppLog()
     },
@@ -79,6 +70,7 @@ BaseApp = BMNavNode.extend().newSlots({
     
     /// standard folders
     
+/*
     appFolderPath: function () {
         var path = require("path")
         var exePath = __dirname
@@ -100,6 +92,7 @@ BaseApp = BMNavNode.extend().newSlots({
     toolsFolder: function () {
         return this.appFolder().folderNamed("tools")
     },
+	*/
     
     // helpers
 
@@ -214,18 +207,22 @@ BaseApp = BMNavNode.extend().newSlots({
     },
     */
 
+/*
     watchAllAppEvents: function() {
         this.appEventNames().forEach((eventName) => {
             this.watchForAppEvent(eventName)
         })
     },
-    
+  */
+  
     /*
     appLogFile: function() {
         return this.appFolder().fileNamed("log.txt")
     },
     */
     
+	// --- app log ---
+	
     clearAppLog: function() {
         //this.appLogFile().setContents("")
     },

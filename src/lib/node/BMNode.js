@@ -58,7 +58,9 @@ BMNode = ideal.Proto.extend().newSlots({
         this._actions = []        
         this._didUpdateNodeNote = NotificationCenter.shared().newNotification().setSender(this._uniqueId).setName("didUpdateNode")
         return this
-    },    
+    },
+
+	// --- fields ---
     
     addLinkFieldForNode: function(aNode) {
         var field = BMLinkField.clone().setName(aNode.title()).setValue(aNode)
@@ -73,6 +75,8 @@ BMNode = ideal.Proto.extend().newSlots({
     nodeRowLink: function() {
         return this
     },    
+
+	// subtitle and note
     
     subtitle: function () {
         if (this.subtitleIsSubnodeCount() && this.subnodesLength()) {
@@ -89,6 +93,8 @@ BMNode = ideal.Proto.extend().newSlots({
         
         return this._note
     },
+
+	// --- viewClassName ---
     
     viewClassName: function() {
         if (!this._viewClassName) {
@@ -106,6 +112,8 @@ BMNode = ideal.Proto.extend().newSlots({
         
         return null
     },
+
+	// --- nodeRowViewProto ---
     
     nodeRowViewProto: function () {     
         var name = this.nodeOverrideDivClassName()

@@ -9,7 +9,7 @@ BMRServers = BMStorableNode.extend().newSlots({
 		this.setShouldStore(true)
         this.setTitle("PeerJS Servers")
         this.addServer(this.bootStrapServer())
-        this.setNnoteIsSubnodeCount(true)
+        this.setNoteIsSubnodeCount(true)
         this.setNodeMinWidth(270)
         
         this.setSubnodeProto(BMRServer)

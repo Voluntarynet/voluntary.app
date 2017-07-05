@@ -20,7 +20,7 @@ BMServerConnection = BMNode.extend().newSlots({
         BMNode.init.apply(this)
         this._remotePeers = []
         this.setTitle("Server Connection")
-        this.setNnoteIsSubnodeCount(true)
+        this.setNoteIsSubnodeCount(true)
         //this.setViewClassName("GenericView")
         this.setNodeMinWidth(160)
         //this.setLog(BMNode.clone())

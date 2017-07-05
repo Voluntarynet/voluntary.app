@@ -1,7 +1,7 @@
 /*
 	BMRegion represents a regional market category (Country, State, City, etc)
 	It does some tricks with lazy loading children as needed so we don't have to read everything in immediately.
-	If can also propogate subitem count sum updates.
+	If can also propogate subnode count sum updates.
 */
 
 BMRegion = BMNode.extend().newSlots({
@@ -17,13 +17,13 @@ BMRegion = BMNode.extend().newSlots({
     
     sumOfSubnodeNotes: function() {
         var sum = 0
-        this.subnodes().forEach(function (item) {
-            if (item.title() == "All") {
+        this.subnodes().forEach((subnode) => {
+            if (subnode.title() == "All") {
                 return;
             }
             
-            if (item.type() == "BMRegion") {
-                var v = item.note()
+            if (subnode.type() == "BMRegion") {
+                var v = subnode.note()
                 if (v) {
                     sum += v
                 }
@@ -59,7 +59,7 @@ BMRegion = BMNode.extend().newSlots({
     setNodeDict: function(aDict) {
         this.setTitle(aDict.name.titleized())
         this.setAllowsSubregions(aDict._allowsSubregions != false) // All
-        //this.setNnoteIsSubnodeCount(aDict._allowsSubregions == false) // All
+        //this.setNoteIsSubnodeCount(aDict._allowsSubregions == false) // All
         this.addChildrenDicts(aDict.children)
         return this
     },
@@ -82,10 +82,10 @@ BMRegion = BMNode.extend().newSlots({
         }
         if (this._subnodes.length == 0) {
             this._lazyChildrenDict = aDict
-            //this._subnodes.forEach(function (item) { item.setNnoteIsSubnodeCount(true) }) // Categories
+            //this._subnodes.forEach( (subnode) => { subnode.setNoteIsSubnodeCount(true) }) // Categories
             //this.addChildrenDicts(aDict.children)
         } else {
-            this._subnodes.forEach(function (item) { item.onLeavesAddDictChildren(aDict) })
+            this._subnodes.forEach((subnode) => { subnode.onLeavesAddDictChildren(aDict) })
         }
         return this
     },
@@ -95,7 +95,7 @@ BMRegion = BMNode.extend().newSlots({
             this.addAction("add")
             this.setSubnodeProto(BMClassifiedPost)
         } else {
-            this._subnodes.forEach(function (item) { item.setupCategoryLeaves() })
+            this._subnodes.forEach((subnode) => { subnode.setupCategoryLeaves() })
         }
     },
 
@@ -138,7 +138,7 @@ BMRegion = BMNode.extend().newSlots({
     },
     
     containsSubnode: function(aSubnode) {
-        return this.subnodes().detect(function(item) { return item.isEqual(aSubnode) })
+        return this.subnodes().detect((subnode) => { return subnode.isEqual(aSubnode) })
     },
     
 })

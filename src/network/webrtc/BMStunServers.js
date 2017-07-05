@@ -9,7 +9,7 @@ BMStunServers = BMStorableNode.extend().newSlots({
         BMStorableNode.init.apply(this)
 		this.setShouldStore(true)
         this.setTitle("STUN Servers")
-        this.setNnoteIsSubnodeCount(true)
+        this.setNoteIsSubnodeCount(true)
         this.setNodeMinWidth(270)
         this.addAction("add")
 		this.addSubnodesIfAbsent(this.bootStrapServers())

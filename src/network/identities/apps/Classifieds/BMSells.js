@@ -12,7 +12,7 @@ BMSells = BMStorableNode.extend().newSlots({
         //this.setPid("_sells")
         //this.setActions(["add"])
         this.setSubnodeProto(BMSell)
-        this.setNnoteIsSubnodeCount(true)
+        this.setNoteIsSubnodeCount(true)
     },
     
 

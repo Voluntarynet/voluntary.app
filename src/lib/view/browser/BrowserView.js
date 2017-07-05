@@ -44,21 +44,15 @@ BrowserView = NodeView.extend().newSlots({
     },
     
     columns: function() {
-        var columns = []
-        this.columnGroups().forEach(function (cg) { columns.push(cg.column()) })
-        return columns
-        
-        //return this.columnGroups().map(function (cg) { return cg.column() })
+        return this.columnGroups().map( (cg) => { return cg.column() })
     },
     
     bgColorForIndex: function(i) {
-        var c = this.bgColors()
-        return c[i % c.length]
+		return this.bgColors().atModLength(i)
     },
 
     addColumnGroup: function(v) {
-        var cg = this.addSubview(v)
-        return cg
+        return this.addSubview(v)
     },
     
     focusEach: function () {
@@ -68,15 +62,17 @@ BrowserView = NodeView.extend().newSlots({
         }
         //console.log(" Browser focusEach")
         this._hasDoneFocusEach = true
-        this.columnGroups().forEach(function (cg) { 
+        this.columnGroups().forEach( (cg) => { 
             cg.column().focus()
         })
     },
     
     updateColumnPositions: function () {
-        this.columnGroups().forEach(function (cg) { 
+        /*
+		this.columnGroups().forEach( (cg) => { 
             //cg.column().setTop(80)
         })
+		*/
         
         /*
         var w = 0
@@ -88,6 +84,31 @@ BrowserView = NodeView.extend().newSlots({
         return this
     },
     
+    setupColumnGroupColors: function() {
+        var i = 0
+        
+       this.columnGroups().forEach((cg) => {
+                        
+            if (cg.column().type() == "BrowserColumn") {
+                var bgColor = this.bgColorForIndex(i)
+                               
+                if (cg.node() && cg.node().nodeBgColor()) { 
+                    bgColor = cg.node().nodeBgColor() 
+                }
+                
+                cg.column().setBackgroundColor(bgColor)
+                
+                if (cg.column().setSelectionColor) {
+                    cg.column().setSelectionColor(this.bgColorForIndex(i+1))
+                } 
+            } 
+			i ++
+        })
+
+        return this
+    },
+
+/*
     setupColumnGroupColors: function() {
         var cgs = this.columnGroups()
         
@@ -110,7 +131,7 @@ BrowserView = NodeView.extend().newSlots({
         }    
         return this
     },
-
+*/
     removeColumnGroup: function(v) {
         return this.removeSubview(v)
     },
@@ -215,7 +236,6 @@ BrowserView = NodeView.extend().newSlots({
     selectColumn: function(selectedColumn) {
         var selectedColumnGroup = selectedColumn.parentView()
 
-
         var index = this.columnGroups().indexOf(selectedColumn.columnGroup())
 		
         this.setColumnGroupCount(index + 3)
@@ -260,11 +280,12 @@ BrowserView = NodeView.extend().newSlots({
         var columnGroups = this.columnGroups()
         columnGroups[0].setNode(this.node())
         
-        for (var i = 0; i < columnGroups.length; i++) {
-            cg = columnGroups[i]
+		columnGroups.forEach((cg) => {
+        //for (var i = 0; i < columnGroups.length; i++) {
+            //cg = columnGroups[i]
             //this.log(" --- syncFromNode sync")
             cg.syncFromNode()
-        }
+        })
         
         //this.setupColumnGroupColors()
         
@@ -279,7 +300,7 @@ BrowserView = NodeView.extend().newSlots({
     
     widthOfColumnGroups: function () {
         var w = 0
-        this.columnGroups().forEach(function (cg) { w += cg.minWidth() })      
+        this.columnGroups().forEach( (cg) => { w += cg.minWidth() })      
         return w        
     },
     
@@ -307,14 +328,13 @@ BrowserView = NodeView.extend().newSlots({
         }
         //console.log("nodePathArray 2 = ", nodePathArray)
         
-        for (var i = 0; i < nodePathArray.length; i++ ) {
-            var node = nodePathArray[i];
+		nodePathArray.forEach((node) => {
             //console.log("node[" + i + "] = ", node.title())
             //console.log("column = ", column)
             column.clickRowWithNode(node)
             //column.selectNextColumn()
             column = column.nextColumn()
-        }
+        })
         
         this.syncFromNode()
     },

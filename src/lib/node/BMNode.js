@@ -1,3 +1,4 @@
+
 BMNode = ideal.Proto.extend().newSlots({
     type: "BMNode",
         
@@ -6,7 +7,7 @@ BMNode = ideal.Proto.extend().newSlots({
     subtitle: null,
     note: null,
     subtitleIsSubnodeCount: false,
-    nnoteIsSubnodeCount: false,
+    noteIsSubnodeCount: false,
         
     // row view interaction
     nodeTitleIsEditable: false,
@@ -82,7 +83,7 @@ BMNode = ideal.Proto.extend().newSlots({
     },
     
     note: function () {
-        if (this.nnoteIsSubnodeCount() && this.subnodesLength()) {
+        if (this.noteIsSubnodeCount() && this.subnodesLength()) {
             return this.subnodesLength()
         }
         
@@ -93,14 +94,6 @@ BMNode = ideal.Proto.extend().newSlots({
         if (!this._viewClassName) {
             return this.type() + "View" //.prefixRemoved("BM")
         }
-        
-        /*
-        if (this.subnodesLength() == 0) {
-            return "GenericView"
-        }
-        */
-        
-        //console.log("this._viewClassName = " + this._viewClassName)
         
         return this._viewClassName
     },
@@ -128,6 +121,8 @@ BMNode = ideal.Proto.extend().newSlots({
         
         return null
     },
+
+	// --- subnodes ----------------------------------------
     
     justAddSubnode: function(aSubnode) {
         if (this.subnodes() == null) {
@@ -140,7 +135,7 @@ BMNode = ideal.Proto.extend().newSlots({
 
     addSubnode: function(aSubnode) {
         this.justAddSubnode(aSubnode)
-        this.didChangeSubviewList()
+        this.didChangeSubnodeList()
         return aSubnode
     },
 
@@ -164,11 +159,8 @@ BMNode = ideal.Proto.extend().newSlots({
 		
 		var slotValue = this[slotName].apply(this)
 		assert(aProto)
-		
-		//console.log("addSubnodeProtoForSlotIfAbsent " + slotName + " = " + slotValue + " type " + typeof(slotValue) + " " + typeof(slotValue))
-		
+				
 		if (slotValue === null) {
-			//console.log("addSubnodeProtoForSlotIfAbsent " + slotName + " adding")
 			var obj = aProto.clone()
 			var setterName = this.setterNameForSlot(slotName)
 			this[setterName].apply(this, [obj])
@@ -185,17 +177,17 @@ BMNode = ideal.Proto.extend().newSlots({
             aSubnode.setParentNode(null)
         }
         
-        this.didChangeSubviewList()
+        this.didChangeSubnodeList()
         return aSubnode
     },
 
-    didChangeSubviewList: function() {
+    didChangeSubnodeList: function() {
         this.markDirty()
         this.didUpdate()
         return this
     },
     
-    // --- update system ---
+    // --- update / sync system ----------------------------
     
     setNeedsSyncToView: function(aBool) {
         if (this._needsSyncToView == aBool) { 
@@ -261,8 +253,7 @@ BMNode = ideal.Proto.extend().newSlots({
         }
     },
     
-    
-    // ------------------------
+    // --- node path ------------------------
     
     nodePath: function () {
         if (this.parentNode()) {
@@ -292,6 +283,8 @@ BMNode = ideal.Proto.extend().newSlots({
         }        
         return this
     },
+
+    // --- log ------------------------
     
     log: function(msg) {
         //var s = this.nodePathString() + " --  " + msg
@@ -300,7 +293,7 @@ BMNode = ideal.Proto.extend().newSlots({
 		}
     },
     
-    // standard actions
+    // --- standard actions -----------------------------
     
     addAction: function(actionString) {
 		if (!this.actions().contains(actionString)) {
@@ -345,6 +338,8 @@ BMNode = ideal.Proto.extend().newSlots({
         this.parentNode().removeSubnode(this)
         return this
     },
+
+	// --- utility -----------------------------
     
     parentNodeOfType: function(className) {
         if (this.type() == className) {
@@ -358,7 +353,7 @@ BMNode = ideal.Proto.extend().newSlots({
         return null
     },
     
-    // subnode lookup
+    // --- subnode lookup -----------------------------
     
     firstSubnodeOfType: function(aProto) {
         this.prepareToAccess(); // put guard on subnodes instead?
@@ -384,9 +379,7 @@ BMNode = ideal.Proto.extend().newSlots({
         })
     },
     
-    
-    // subnodes
-    
+    // --- subnodes -----------------------------
     
     subnodesLength: function() {
         return this._subnodes.length

@@ -17,8 +17,8 @@ BMDataStore = BMNode.extend().newSlots({
 	},
 	
 	removeAllSubnodes: function() {
-		this.subnodes().slice().forEach((item) => {
-			this.removeSubnode(item)
+		this.subnodes().slice().forEach((subnode) => {
+			this.removeSubnode(subnode)
 		})
 		return this
 	},
@@ -35,9 +35,9 @@ BMDataStore = BMNode.extend().newSlots({
 		console.log(this.type() + " refreshSubnodes")
 		this.removeAllSubnodes()
         this.store().sdb().keys().sort().forEach( (key) => {
-			var item = BMDataStoreRecord.clone().setTitle(key)
-			item.setSubtitle(this.store().sdb().at(key).length + " bytes")
-			this.justAddSubnode(item)
+			var subnode = BMDataStoreRecord.clone().setTitle(key)
+			subnode.setSubtitle(this.store().sdb().at(key).length + " bytes")
+			this.justAddSubnode(subnode)
 			
 		})		
 	},

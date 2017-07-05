@@ -7,7 +7,7 @@ BMDrafts = BMListNode.extend().newSlots({
     init: function () {
         BMListNode.init.apply(this)
  		this.setShouldStore(true)
-        this.setNnoteIsSubnodeCount(true)
+        this.setNoteIsSubnodeCount(true)
         this.setSubnodeProto(BMMailMessage).addAction("add")
         this.setTitle("drafts")
     },

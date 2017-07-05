@@ -53,16 +53,16 @@ BMMultiFieldOptionsView = DivView.extend().newSlots({
 	},
 	
 	setOptionWidths: function(maxWidth) {
-		this.subviews().forEach(function(item) {
-			item.setMinAndMaxWidth(maxWidth)
+		this.subviews().forEach(function(subview) {
+			subview.setMinAndMaxWidth(maxWidth)
 		})
 		return this
 	},
 	
 	maxOptionTextWidth: function() {
-		var maxWidth = this.subviews().maxValue(function(item) {
-			//console.log("item.width() = ", item.width())
-			return DivTextTapeMeasure.widthOfDivClassWithText("BMMultiFieldOptionView", item.innerHTML())
+		var maxWidth = this.subviews().maxValue(function(subview) {
+			//console.log("subview.width() = ", subview.width())
+			return DivTextTapeMeasure.widthOfDivClassWithText("BMMultiFieldOptionView", subview.innerHTML())
 		})	
 		//console.log("subviews.length = " +  this.subviews().length + " maxWidth = ", maxWidth)
 		
@@ -88,11 +88,11 @@ BMMultiFieldOptionsView = DivView.extend().newSlots({
 		
 		//this.setMinAndMaxWidth(w)
 		
-		this.subviews().forEach(function(item) {
-			//item.setTextAlign("left")
-			//item.setPaddingLeft(leftPad)
-			//item.setPaddingRight(rightPad)
-			item.setMinAndMaxWidth(w)
+		this.subviews().forEach((subview) => {
+			//subview.setTextAlign("left")
+			//subview.setPaddingLeft(leftPad)
+			//subview.setPaddingRight(rightPad)
+			subview.setMinAndMaxWidth(w)
 		})
 		
 		//var rowCount = this.subviews().length / subviewsPerRow
@@ -109,18 +109,18 @@ BMMultiFieldOptionsView = DivView.extend().newSlots({
 		
 		/*
 		if (subviewsPerRow == 1) {
-			this.subviews().forEach(function(item) {
-				item.setTextAlign("left")
-				item.setPaddingLeft(leftPad)
-				item.setPaddingRight(rightPad)
+			this.subviews().forEach(function(subview) {
+				subview.setTextAlign("left")
+				subview.setPaddingLeft(leftPad)
+				subview.setPaddingRight(rightPad)
 			})
 			//this.parentView().setMinAndMaxWidth(fullWidth)
 			//this.setLeft(fullWidth + 30)
 		} else {
-			this.subviews().forEach(function(item) {
-				item.setTextAlign("left")
-				item.setPaddingLeft(leftPad)
-				item.setPaddingRight(rightPad)
+			this.subviews().forEach(function(subview) {
+				subview.setTextAlign("left")
+				subview.setPaddingLeft(leftPad)
+				subview.setPaddingRight(rightPad)
 			})			
 			//this.parentView().textView().setMinAndMaxWidth(maxWidth)
 			//this.setLeft(maxWidth + 30)

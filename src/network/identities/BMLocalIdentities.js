@@ -10,7 +10,7 @@ BMLocalIdentities = BMListNode.extend().newSlots({
         
         this.setActions(["add"])
         this.setSubnodeProto(BMLocalIdentity)
-        this.setNnoteIsSubnodeCount(true)
+        this.setNoteIsSubnodeCount(true)
         
         //this.setPidSymbol("_localIdentities")  
     },

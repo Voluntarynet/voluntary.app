@@ -34,6 +34,10 @@ Object.shallowCopyTo({
 			return this[this.length + index];
 		}
 	},
+	
+	atModLength: function(index) {
+		return this.at(index % this.length)
+	},
 
 	first: function()
 	{

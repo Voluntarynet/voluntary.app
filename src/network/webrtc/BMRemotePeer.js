@@ -13,7 +13,7 @@ BMRemotePeer = BMNode.extend().newSlots({
         BMNode.init.apply(this)
         this.setTitle("Peer")
         
-        this.setMessages(BMNode.clone().setTitle("messages").setNnoteIsSubnodeCount(true))
+        this.setMessages(BMNode.clone().setTitle("messages").setNoteIsSubnodeCount(true))
         this.addSubnode(this.messages())
         this.setRemoteInventory({})
 		this.setPeerId(BMPeerId.clone())

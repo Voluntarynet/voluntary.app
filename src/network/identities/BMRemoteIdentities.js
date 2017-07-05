@@ -10,7 +10,7 @@ BMRemoteIdentities = BMListNode.extend().newSlots({
         this.setNodeMinWidth(180)
         
         this.setActions(["add"]).setSubnodeProto(BMRemoteIdentity)
-        this.setNnoteIsSubnodeCount(true)
+        this.setNoteIsSubnodeCount(true)
         
         //this.setPidSymbol("_remoteIdentities") 
         //this.loadIfPresent()

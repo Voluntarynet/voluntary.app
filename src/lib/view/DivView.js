@@ -396,7 +396,7 @@ DivView = ideal.Proto.extend().newSlots({
         return this.subviews().indexOf(anSubview)
     },
 
-    itemAfter: function(anSubview) {
+    subviewAfter: function(anSubview) {
         var index = this.indexOfSubview(anSubview)
         var nextIndex = index + 1
         if (nextIndex < this.subviews().length) {

@@ -57,8 +57,8 @@ BMClassifiedPost = BMFieldSetNode.extend().newSlots({
 		this.validate()
     },
 
-	setParentNode: function(item) {
-		BMStorableNode.setParentNode.apply(this, [item])
+	setParentNode: function(aNode) {
+		BMStorableNode.setParentNode.apply(this, [aNode])
 		this.syncDeleteAction()
 		return this
 	},
@@ -298,7 +298,7 @@ BMClassifiedPost = BMFieldSetNode.extend().newSlots({
             if (!region.containsSubnode(this)) {
                 region.this.addSubnode(this)
             } else {
-                console.log("can't insert duplicate item")
+                console.log("can't insert duplicate subnode")
             }
         } else {
             var error = "missing region for path '" + pathString + "'"

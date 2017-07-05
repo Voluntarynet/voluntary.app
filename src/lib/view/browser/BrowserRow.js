@@ -33,6 +33,8 @@ BrowserRow = NodeView.extend().newSlots({
         this.syncToNode()
     },
     
+	// --- sync ---
+	
     syncToNode: function () {   
         //console.log("syncToNode")
         this.node().setTitle(this.titleView().innerHTML())
@@ -50,18 +52,8 @@ BrowserRow = NodeView.extend().newSlots({
     onTabKeyUp: function() {
         console.log(this.type() + " onTabKeyUp")
     },
-    
-    // -----------------
 
-    onClick: function (anEvent) {
-        if (this.isSelectable()) {
-            this.select()
-            this.tellParents("rowClicked", this)
-        }
-		return false
-    },
-
-	// colors
+	// --- colors ---
 	
 	currentBgColor: function() {
 		if (this.isSelected()) {
@@ -82,8 +74,16 @@ BrowserRow = NodeView.extend().newSlots({
         return this.column().selectionColor()
     },
 
-	// selecting
+	// --- selecting ---
     
+    onClick: function (anEvent) {
+        if (this.isSelectable()) {
+            this.select()
+            this.tellParents("rowClicked", this)
+        }
+		return false
+    },
+
     setIsSelected: function (aBool) {
         this._isSelected = aBool
         this.updateSubviews()

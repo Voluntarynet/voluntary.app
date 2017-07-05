@@ -31,6 +31,9 @@ BrowserRowTitle = DivView.extend().newSlots({
         return this
     },
 
+	// --- begin editing when return is hit ------
+	// --- remove return characters when editing title -------
+
 	cleanText: function() {
 		console.log(this.type() + " cleanText")
 		var s = this.innerHTML()

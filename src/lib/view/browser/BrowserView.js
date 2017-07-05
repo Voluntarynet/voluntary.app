@@ -22,6 +22,8 @@ BrowserView = NodeView.extend().newSlots({
         this.watchForWindowResize()
         return this
     },
+
+	// --- resizing ---------------------------------
     
     watchForWindowResize: function() {
         window.addEventListener('resize', (event) => {
@@ -39,51 +41,30 @@ BrowserView = NodeView.extend().newSlots({
         this.fitLastColumnGroupToRemainingWidth()
     },
 
+	// --- columns -------------------------------
+
     columnGroups: function() {
         return this.subviews()
-    },
-    
-    columns: function() {
-        return this.columnGroups().map( (cg) => { return cg.column() })
-    },
-    
-    bgColorForIndex: function(i) {
-		return this.bgColors().atModLength(i)
     },
 
     addColumnGroup: function(v) {
         return this.addSubview(v)
     },
-    
-    focusEach: function () {
-        if (this._hasDoneFocusEach) { 
-            console.log("skipping Browser focusEach because it hoses editing")
-            return 
-        }
-        //console.log(" Browser focusEach")
-        this._hasDoneFocusEach = true
-        this.columnGroups().forEach( (cg) => { 
-            cg.column().focus()
-        })
+
+    removeColumnGroup: function(v) {
+        return this.removeSubview(v)
+    },
+
+    columns: function() {
+        return this.columnGroups().map( (cg) => { return cg.column() })
     },
     
-    updateColumnPositions: function () {
-        /*
-		this.columnGroups().forEach( (cg) => { 
-            //cg.column().setTop(80)
-        })
-		*/
-        
-        /*
-        var w = 0
-        this.columnGroups().forEach(function (cg) { 
-            cg.setLeft(w)
-            w += cg.minWidth() 
-        })
-        */         
-        return this
+	// --- column background colors ----------------------------
+	
+    bgColorForIndex: function(i) {
+		return this.bgColors().atModLength(i)
     },
-    
+
     setupColumnGroupColors: function() {
         var i = 0
         
@@ -108,52 +89,55 @@ BrowserView = NodeView.extend().newSlots({
         return this
     },
 
+	// --- focus each somehow prevents a weird layout bug -----
+    
+    focusEach: function () {
+        if (this._hasDoneFocusEach) { 
+            console.log("skipping Browser focusEach because it hoses editing")
+            return 
+        }
+        //console.log(" Browser focusEach")
+        this._hasDoneFocusEach = true
+        this.columnGroups().forEach( (cg) => { 
+            cg.column().focus()
+        })
+    },
+    
 /*
-    setupColumnGroupColors: function() {
-        var cgs = this.columnGroups()
-        
-        for (var i = 0; i < cgs.length; i ++) {
-            var cg = cgs[i]
-                        
-            if (cg.column().type() == "BrowserColumn") {
-                var bgColor = this.bgColorForIndex(i)
-                               
-                if (cg.node() && cg.node().nodeBgColor()) { 
-                    bgColor = cg.node().nodeBgColor() 
-                }
-                
-                cg.column().setBackgroundColor(bgColor)
-                
-                if (cg.column().setSelectionColor) {
-                    cg.column().setSelectionColor(this.bgColorForIndex(i+1))
-                } 
-            } 
-        }    
+    updateColumnPositions: function () {
+		this.columnGroups().forEach( (cg) => { 
+            //cg.column().setTop(80)
+        })
+
+        var w = 0
+        this.columnGroups().forEach(function (cg) { 
+            cg.setLeft(w)
+            w += cg.minWidth() 
+        })
+
         return this
     },
 */
-    removeColumnGroup: function(v) {
-        return this.removeSubview(v)
-    },
-    
+        
     setColumnGroupCount: function(count) {
         //this.log("setColumnGroupCount " + count)
         
         if (this.columnGroups().length == 2 && count == 1) {
-            throw "what?"
+            throw "this shouldn't happen"
         }
         
+		// remove any excess columns
         while (this.columnGroups().length > count) {
             this.removeColumnGroup(this.columnGroups().last())
         }
         
-        
+		// add columns as needed
         while (this.columnGroups().length < count) {
             this.addColumnGroup(BrowserColumnGroup.clone())
             
         }
         
-        this.updateColumnPositions()
+        //this.updateColumnPositions()
         this.setupColumnGroupColors()
         //this.log("this.columnGroups().length = " + this.columnGroups().length)
         assert(this.columnGroups().length  == count)
@@ -167,15 +151,6 @@ BrowserView = NodeView.extend().newSlots({
 		var lastNode = lastCg.column().node()
 		
 		//console.log("lastCg.column().node() = ", lastNode.view().type())
-		
-		/*
-		if (lastNode.view().type() == "BrowserColumnGroup") {
-	        //this.fitToColumnWidths()
-			return 
-		}
-		*/
-		
-	//	if (lastNode)
 
         //console.log("index of last column group = " + this.columnGroups().indexOf(lastCg))
 
@@ -220,6 +195,8 @@ BrowserView = NodeView.extend().newSlots({
             cg.setNode(null).syncFromNode()
         }
     },
+
+	// --- column selection ---------------------------------------
 
 	selectFirstColumn: function() {
 		this.selectColumn(this.columns()[0])
@@ -281,9 +258,6 @@ BrowserView = NodeView.extend().newSlots({
         columnGroups[0].setNode(this.node())
         
 		columnGroups.forEach((cg) => {
-        //for (var i = 0; i < columnGroups.length; i++) {
-            //cg = columnGroups[i]
-            //this.log(" --- syncFromNode sync")
             cg.syncFromNode()
         })
         
@@ -297,11 +271,11 @@ BrowserView = NodeView.extend().newSlots({
         this.setColumnGroupCount(index + 1)
         return this
     },
+
+	// --- width --------------------------
     
     widthOfColumnGroups: function () {
-        var w = 0
-        this.columnGroups().forEach( (cg) => { w += cg.minWidth() })      
-        return w        
+        return this.columnGroups().sum( (cg) => { return cg.minWidth() })      
     },
     
     fitToColumnWidths: function() {   
@@ -309,7 +283,7 @@ BrowserView = NodeView.extend().newSlots({
         return this
     },
     
-    ///////////// new untested code ///////////////////////
+    // --- node paths -----------------------------
     
     selectNode: function(aNode) {
         this.selectNodePath(aNode.nodePath())

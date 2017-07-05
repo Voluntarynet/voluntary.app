@@ -78,24 +78,24 @@ BMClassifiedPostView = NodeView.extend().newSlots({
         
         // stamp container
         this.setPowContainerView(NodeView.clone().setDivClassName("BMPostPowContainerView"))
-        this.powContainerView().makeUnselectable() 
+        this.powContainerView().turnOffUserSelect() 
         this.statusView().addSubnode(this.powContainerView())
 
         
         this.setPowIncrementView(NodeView.clone().setDivClassName("BMPostPowIncrementButtonView").setTarget(this).setAction("incrementPowTarget").setInnerHTML("+"))
         this.powContainerView().addSubnode(this.powIncrementView())
-        this.powIncrementView().makeUnselectable()
+        this.powIncrementView().turnOffUserSelect()
         
         this.setPowDecrementView(NodeView.clone().setDivClassName("BMPostPowDecrementButtonView").setTarget(this).setAction("decrementPowTarget").setInnerHTML("-"))
         this.powContainerView().addSubnode(this.powDecrementView())
-        this.powDecrementView().makeUnselectable()
+        this.powDecrementView().turnOffUserSelect()
 
         this.setPowView(NodeView.clone().setDivClassName("BMPostPowView").setInnerHTML("pow"))
-        this.powView().makeUnselectable()
+        this.powView().turnOffUserSelect()
         this.powContainerView().addSubnode(this.powView())
          
         this.setPostDateInfoView(NodeView.clone().setDivClassName("BMPostDateInfoView").setInnerHTML(""))
-        this.postDateInfoView().makeUnselectable()
+        this.postDateInfoView().turnOffUserSelect()
         this.powContainerView().addSubnode(this.postDateInfoView())
         
         // description

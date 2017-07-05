@@ -14,10 +14,12 @@ ImageView = NodeView.extend().newSlots({
         //this.setEditable(false)
 		this.setContentEditable(false)
         this.dragUnhighlight()
-        this.makeUnselectable()
+        this.turnOffUserSelect()
         this.turnOffUserSelect()
         return this
     },
+
+	// --- editable ---
     
     setIsEditable: function(aBool) {
         if (aBool) {
@@ -27,7 +29,15 @@ ImageView = NodeView.extend().newSlots({
         }
         return this
     },
+
     
+    setEditable: function (aBool) {
+
+        return this
+    },
+    
+	// --- close button ---
+
     addCloseButton: function() {
         if (this.closeButtonView() == null) {
             this.setCloseButtonView(NodeView.clone().setDivClassName("ImageCloseButton"))
@@ -45,7 +55,7 @@ ImageView = NodeView.extend().newSlots({
     },
     
     close: function() {
-        console.log("close action")
+        //console.log("close action")
         this.removeAfterFadeDelay(0.4)
         setTimeout( () => { 
             this.removeSubview(this.closeButtonView())
@@ -59,6 +69,8 @@ ImageView = NodeView.extend().newSlots({
             style.marginRight = "0px";
         }, 0)
     },
+
+	// --- sync ---
 
     syncToNode: function () {
         this.parentView().syncToNode()
@@ -80,11 +92,7 @@ ImageView = NodeView.extend().newSlots({
         return this
     },
 */
-    
-    setEditable: function (aBool) {
 
-        return this
-    },
     
     /*
     onDidEdit: function (changedView) {     
@@ -138,11 +146,11 @@ ImageView = NodeView.extend().newSlots({
         this.setImageElement(image)
         
         //console.log("image.outerHTML  = " + typeof(image.outerHTML) + " [" + image.outerHTML + "]")
-        
         this.fetchDataURLFromSrc(src)
-        
         return this     
     },
+
+	// --- set dataURL or set normal src url and create a dataURL ---
     
     setFromDataURL: function(dataURL) {
         //console.log("setFromDataURL: ", dataURL)

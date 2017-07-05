@@ -28,7 +28,6 @@ DivTextTapeMeasure = ideal.Proto.extend().newSlots({
 		e.style.left = -1000;
 		e.style.top  = -1000;
 		e.style.visibility = "hidden";
-	    
 		return e		
 	},
 	

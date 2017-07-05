@@ -23,7 +23,6 @@ GenericView = NodeView.extend().newSlots({
 
 		this.titleView().setSpellCheck(false)
 		this.subtitleView().setSpellCheck(false)
-
         
         this.setEditable(false)
         return this
@@ -46,8 +45,6 @@ GenericView = NodeView.extend().newSlots({
         //this.log("syncToNode " + this.titleView().innerHTML())
         node.setTitle(this.titleView().innerHTML())
         node.setSubtitle(this.subtitleView().innerHTML())
-        //node.didUpdate()
-        //node.markDirty()
         NodeView.syncToNode.apply(this)
         return this
     },

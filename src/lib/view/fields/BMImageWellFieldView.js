@@ -8,7 +8,7 @@ BMImageWellFieldView = BMFieldView.extend().newSlots({
 		this.keyView().setDivClassName("BMImageWellKeyField") //.setDisplay("none")
 		//this.valueView().setContentEditable(false)
         //this.turnOffUserSelect()
-        this.makeUnselectable()
+        this.turnOffUserSelect()
         return this
     },
 

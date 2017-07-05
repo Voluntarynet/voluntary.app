@@ -1,5 +1,5 @@
 
-function DomElement_atInsert(el, index, child) {
+function DomElement_atInsertElement(el, index, child) {
     var children = el.children
     
     if (index < children.length) {
@@ -46,7 +46,7 @@ DivView = ideal.Proto.extend().newSlots({
         //e._viewObject = this
         e.setAttribute('class', this.divClassName());
         this._element = e
-        this.element().style.transition = "all .2s"
+        //this.element().style.transition = "all .2s"
         this.setSubviewProto(DivView)
         return this
     },
@@ -61,6 +61,10 @@ DivView = ideal.Proto.extend().newSlots({
     },
 */
 
+	// --- css properties ---
+	
+	// transform
+	
 	setTextTransform: function(s) {
         this.element().style.textTransform = s
 		return this
@@ -70,6 +74,8 @@ DivView = ideal.Proto.extend().newSlots({
 		return this.element().style.textTransform
 	},
 
+	// font weight
+	
 	setFontWeight: function(s) {
         this.element().style.fontWeight = s
 		return this
@@ -79,6 +85,8 @@ DivView = ideal.Proto.extend().newSlots({
 		return this.element().style.fontWeight
 	},
 	
+	// padding left
+	
     setPaddingLeft: function(aNumber) {
         this.element().style.paddingLeft = aNumber + "px"
         return this
@@ -87,6 +95,8 @@ DivView = ideal.Proto.extend().newSlots({
 	paddingLeft: function() {
 		return this.element().style.paddingLeft.before("px")
 	},
+
+	// padding right
 	
     setPaddingRight: function(aNumber) {
         this.element().style.paddingRight = aNumber + "px"
@@ -97,6 +107,8 @@ DivView = ideal.Proto.extend().newSlots({
 		return this.element().style.paddingRight.before("px")
 	},
 
+	// text align
+
     setTextAlign: function(s) {
         this.element().style.textAlign = s
         return this
@@ -106,10 +118,18 @@ DivView = ideal.Proto.extend().newSlots({
 		return this.element().style.textAlign
 	},
 
+	// background color
+	
     setBackgroundColor: function(s) {
         this.element().style.backgroundColor = s
         return this
     },
+
+	backgroundColor: function() {
+		return this.element().style.backgroundColor
+	},
+
+	// opacity
 
 	setOpacity: function(v) {
         this.element().style.opacity = v
@@ -139,6 +159,10 @@ DivView = ideal.Proto.extend().newSlots({
         return this
     },
 
+    cursor: function() {
+        return this.element().style.cursor 
+    },
+
 	makeCursorDefault: function() {
 		this.setCursor("default")
 		return this
@@ -164,6 +188,177 @@ DivView = ideal.Proto.extend().newSlots({
 		return this
 	},
 	
+	// --- focus and blur ---
+
+    focus: function() {
+		//console.log(this.type() + " focus")
+        setTimeout( () => {
+            this.element().focus()
+        }, 0)
+        return this
+    },
+
+	hasFocus: function() {
+		return this.isActiveElement()
+	},
+
+    blur: function () { // surrender focus
+        this.element().blur()
+        return this
+    },
+
+	// top
+
+    setTop: function (y) {
+        var v = y + "px"
+        this.element().style.top = v;
+        //console.log("setTop " + v)
+        return this
+    },
+
+	top: function() {
+		if (this.element().style.top.length) {
+			return this.element().style.top.before("px")
+		}
+		return 0
+	},
+	
+	/* 
+	
+	// doesn't work?
+	
+	setWidth: function(aNumber) {
+		if (aNumber == "auto") {
+			this.element().style.left = "auto"
+		} else {
+	        this.element().style.left = aNumber + "px"
+		}
+        return this		
+	},
+	*/
+	
+	// left
+
+    setLeft: function (aNumber) {
+        var s = aNumber + "px"
+        this.element().style.left = s;
+        return this
+    },
+
+	left: function() {
+		if (this.element().style.left.length) {
+			return this.element().style.left.before("px")
+		}
+		return 0
+	},
+	
+	// float
+	
+	setFloat: function(s) {
+		this.element().style.float = s
+		return this
+	},
+	
+	float: function() {
+		return this.element().style.float
+	},
+	
+	// border 
+	
+	setBorder: function(s) {
+		this.element().style.border = s
+		return this
+	},
+	
+	setBorderTop: function(s) {
+		this.element().style.borderTop = s
+		return this
+	},
+	
+	setBorderBottom: function(s) {
+		this.element().style.borderBottom = s
+		return this
+	},
+	
+	border: function() {
+		return this.element().style.border
+	},
+    
+	// alignment
+	
+	setTextAlign: function(s) {
+		this.element().style.textAlign = s
+		return this		
+	},
+	
+	textAlign: function() {
+		return this.element().style.textAlign
+	},	
+	
+	// color
+	
+    setColor: function(c) {
+        this.element().style.color = c;
+        return this
+    },
+    
+    color: function() {
+        return this.element().style.color 
+    },
+    
+    setIsVisible: function(aBool) {
+		var v = aBool ? "visible" : "hidden"
+		if (this.element().style.visibility != v) {
+        	this.element().style.visibility = v
+		}
+        return this
+    },
+
+	isVisible: function() {
+        return this.element().style.visibility != "hidden";
+	},
+    
+    setDisplay: function(s) {
+        //assert(s in { "none", ...} );
+        this.element().style.display = s;
+        return this
+    },
+    
+	display: function() {
+		return this.element().style.display
+	},
+
+    turnOffUserSelect: function() {
+        this.element().style.userSelect = "none";
+        this.element().style.webkitUserSelect = "none";
+        this.element().style.MozUserSelect = "none";
+        this.setUserSelect("none");
+        return this
+    },
+
+    turnOnUserSelect: function() {
+		this.setUserSelect("text")
+        return this
+    },
+	
+	// user selection 
+	
+    setUserSelect: function(v) {
+        var s = this._element.style
+        s.userSelect = v;
+        s["-moz-user-select"] = v;
+        s["-khtml-user-select"] = v;
+        s["-webkit-user-select"] = v;
+        s["-o-user-select"] = v;
+
+        s.userSelect = v;
+        s.webkitUserSelect = v;
+        s.MozUserSelect = v;
+        return this
+    },
+	
+	// spell check
+	
 	setSpellCheck: function(aBool) {
 		this._element.setAttribute('spellcheck', aBool);
 		return this
@@ -179,6 +374,8 @@ DivView = ideal.Proto.extend().newSlots({
 		}
 		return this
 	},
+	
+	// width and height
 	
     width: function() {
         return this.element().clientWidth
@@ -209,6 +406,8 @@ DivView = ideal.Proto.extend().newSlots({
         this.element().style.maxHeight = aNumber + "px"
         return this		
 	},
+	
+	// div class name
 
     setDivClassName: function (aName) {
 		if (this._divClassName != aName) {
@@ -228,6 +427,8 @@ DivView = ideal.Proto.extend().newSlots({
         }
         return this._divClassName
     },
+
+	// --- subviews ---
     
     newSubviewFromProto: function () {
         var anSubview = this.subviewProto().clone()
@@ -290,9 +491,9 @@ DivView = ideal.Proto.extend().newSlots({
         return subview.setNode(aNode)
     },
     
-    atInsert: function (anIndex, anSubview) {
+    atInsertSubview: function (anIndex, anSubview) {
         this.subviews().atInsert(anIndex, anSubview)
-        DomElement_atInsert(this.element(), anIndex, anSubview.element())
+        DomElement_atInsertElement(this.element(), anIndex, anSubview.element())
         return anSubview
     },
     
@@ -300,7 +501,7 @@ DivView = ideal.Proto.extend().newSlots({
         return this.subviews().detect((aView) => { return aView.node() == aNode; })
     },
 
-	// fade
+	// --- fade animations ---
 	
 	fadeInToDisplayInlineBlock: function() {
         this.setDisplay("inline-block")
@@ -321,7 +522,6 @@ DivView = ideal.Proto.extend().newSlots({
     removeAfterFadeDelay: function(delayInSeconds) {
         // call removeSubview for a direct actions
         // use justRemoteSubview for internal changes
-
         
         this.element().style.transition = "all " + delayInSeconds + "s"
         setTimeout( () => { 
@@ -405,6 +605,8 @@ DivView = ideal.Proto.extend().newSlots({
         return null
     },
 
+	// --- active element ---
+
 	isActiveElement: function() {
 		return document.activeElement == this._element 
 	},
@@ -412,6 +614,8 @@ DivView = ideal.Proto.extend().newSlots({
 	isActiveElementAndEditable: function() {
 		return this.isActiveElement() && this.contentEditable()
 	},
+	
+	// --- inner html ---
 
     setInnerHTML: function (v) {
         if (v == null) { 
@@ -450,6 +654,8 @@ DivView = ideal.Proto.extend().newSlots({
         return this
     },
 
+	// --- updates ---
+
     tellParents: function(msg, aView) {
         var f = this[msg]
         if (f && f.apply(this, [aView])) {
@@ -461,8 +667,10 @@ DivView = ideal.Proto.extend().newSlots({
             p.tellParents(msg, aView)
         }
     },
+
+	// --- events --------------------------------------------------------------------
     
-    // onclick target & action
+    // globally track whether we are inside an event 
 
 	setIsHandlingEvent: function() {
 		DivView_isHandlingEvent = true
@@ -496,6 +704,7 @@ DivView = ideal.Proto.extend().newSlots({
 		}
 	},
 	
+    // --- onClick target & action ---
     
     registerForClicks: function (aBool) {
         if (aBool) {
@@ -598,38 +807,8 @@ DivView = ideal.Proto.extend().newSlots({
         event.preventDefault();
         return true;
     },
-    
-    /*
-    onDataTransfer: function(dataTransfer) {     
-        console.log('onDataTransfer ', dataTransfer);
-        
-        //var file = event.dataTransfer.files[0];
-        //console.log('onDataTransfer file[0]: ' + file.path);
-        
-        for (var i = 0; i < dataTransfer.files.length; i ++) {
-            var file = files[i];
-            var reader = new FileReader();
-
-            //var fileIsImage = /\.(jpe?g|png|gif)$/i.test(file.name);
-
-             reader.addEventListener("load",  () => {
-                    console.log('onDataTransfer load ');
-                   var image = new Image();
-                    image.height = 100;
-                    image.title = file.name;
-                    image.src = reader.result;
-                    this.element().appendChild( image );
-              }, false);
-
-              if (file) {
-                reader.readAsDataURL(file);
-              }
-        }        
-    },
-    */
    
-      onDataTransfer: function(dataTransfer) {     
-        
+    onDataTransfer: function(dataTransfer) {     
         //console.log('onDataTransfer ', dataTransfer);
         
         if (dataTransfer.files.length) {   
@@ -653,27 +832,6 @@ DivView = ideal.Proto.extend().newSlots({
 
     },
     
-    /* 
-    onDataTransfer: function(dataTransfer) {     
-        console.log('onDataTransfer ', dataTransfer);
-        if (dataTransfer.files.length) {   
-            var filePaths = []
-            var dataUrls = []
-            for (var i = 0; i < dataTransfer.files.length; i ++) {
-                var file = dataTransfer.files[i]
-                console.log("file: ", file)
-                var path = file.path
-                filePaths.push(path)
-                var dataUrl = FileReader.readAsDataURL(file) 
-                filePaths.push(dataUrl)
-            }
-            console.log('onDataTransfer filePaths: ', filePaths);
-            assert(filePaths.length == dataTransfer.files.length)
-            this.onDropFiles(filePaths)
-        }
-    },
-    */
-    
     onDropImageDataUrl: function(dataUrl) {
         console.log('onDropImageDataUrl: ', dataUrl);
         //this.node().onDropFiles(filePaths)
@@ -684,7 +842,7 @@ DivView = ideal.Proto.extend().newSlots({
         //this.node().onDropFiles(filePaths)
     },
     
-    // editing
+    // --- content editing ---
     
     setContentEditable: function (aBool) {
 		//console.log(this.divClassName() + " setContentEditable(" + aBool + ")")
@@ -713,7 +871,7 @@ DivView = ideal.Proto.extend().newSlots({
 		return this.element().contentEditable == "true"
 	},
     
-    // mouse 
+    // mouse events
     
     registerForMouse: function (aBool) {
         if (aBool) {
@@ -747,7 +905,7 @@ DivView = ideal.Proto.extend().newSlots({
     onMouseUp: function (event) {
     },
         
-    // keyboard 
+    // --- keyboard events ---
     
     registerForKeyboard: function (aBool) {
         if (aBool) {
@@ -886,6 +1044,8 @@ DivView = ideal.Proto.extend().newSlots({
         this.tellParents("onDidEdit", this)
 		return shouldPropogate
     },
+
+	// --- tabs and next key view ----
     
     onTabKeyDown: function() {
         this.selectNextKeyView()
@@ -900,12 +1060,14 @@ DivView = ideal.Proto.extend().newSlots({
             //}
         }	
 	},
+	
+	// --- error checking ---
     
     isValid: function() {
         return true
     },
 
-	// --- get focus and blur/unfocus events ---
+	// --- focus and blur event handling ---
     
     registerForFocus: function(aBool) {
 		
@@ -933,158 +1095,10 @@ DivView = ideal.Proto.extend().newSlots({
 		return this
 	},
     
-	// --- focus and blur/unfocus ---
 
-    focus: function() {
-		//console.log(this.type() + " focus")
-        setTimeout( () => {
-            this.element().focus()
-        }, 0)
-        return this
-    },
-
-    blur: function () { // surrender focus
-        this.element().blur()
-        return this
-    },
-
-	// top
-
-    setTop: function (y) {
-        var v = y + "px"
-        this.element().style.top = v;
-        //console.log("setTop " + v)
-        return this
-    },
-
-	top: function() {
-		if (this.element().style.top.length) {
-			return this.element().style.top.before("px")
-		}
-		return 0
-	},
-	
-	/* 
-	
-	// doesn't work?
-	
-	setWidth: function(aNumber) {
-		if (aNumber == "auto") {
-			this.element().style.left = "auto"
-		} else {
-	        this.element().style.left = aNumber + "px"
-		}
-        return this		
-	},
-	*/
-	
-	// left
-
-    setLeft: function (aNumber) {
-        var s = aNumber + "px"
-        this.element().style.left = s;
-        return this
-    },
-
-	left: function() {
-		if (this.element().style.left.length) {
-			return this.element().style.left.before("px")
-		}
-		return 0
-	},
-	
-	// float
-	
-	setFloat: function(s) {
-		this.element().style.float = s
-		return this
-	},
-	
-	float: function() {
-		return this.element().style.float
-	},
-	
-	// border 
-	
-	setBorder: function(s) {
-		this.element().style.border = s
-		return this
-	},
-	
-	setBorderTop: function(s) {
-		this.element().style.borderTop = s
-		return this
-	},
-	
-	setBorderBottom: function(s) {
-		this.element().style.borderBottom = s
-		return this
-	},
-	
-	border: function() {
-		return this.element().style.border
-	},
-    
-	// alignment
-	
-	setTextAlign: function(s) {
-		this.element().style.textAlign = s
-		return this		
-	},
-	
-	textAlign: function() {
-		return this.element().style.textAlign
-	},	
-	
-	// color
-	
-    setColor: function(c) {
-        this.element().style.color = c;
-        return this
-    },
-    
-    color: function() {
-        return this.element().style.color 
-    },
-    
-    setIsVisible: function(aBool) {
-		var v = aBool ? "visible" : "hidden"
-		if (this.element().style.visibility != v) {
-        	this.element().style.visibility = v
-		}
-        return this
-    },
-
-	isVisible: function() {
-        return this.element().style.visibility != "hidden";
-	},
-    
-    setDisplay: function(s) {
-        //assert(s in { "none", ...} );
-        this.element().style.display = s;
-        return this
-    },
-    
-	display: function() {
-		return this.element().style.display
-	},
-
-    turnOffUserSelect: function() {
-        this.element().style.userSelect = "none";
-        this.element().style.webkitUserSelect = "none";
-        this.element().style.MozUserSelect = "none";
-        return this
-    },
-
-    turnOnUserSelect: function() {
-        this.element().style.userSelect = "text";
-        this.element().style.webkitUserSelect = "text";
-        this.element().style.MozUserSelect = "text";
-        return this
-    },
     
     
-    // ---------------------
+    // --- text selection ------------------
     
 	selectAll: function() {
 		if (document.selection) {
@@ -1098,6 +1112,8 @@ DivView = ideal.Proto.extend().newSlots({
             window.getSelection().addRange(range);
         }
 	},
+	
+	// --- paste from clipboard ---
 
     paste: function (e) {
         // prevent pasting text by default after event
@@ -1181,23 +1197,6 @@ DivView = ideal.Proto.extend().newSlots({
     setContentBeforeString: function(aString) {
         this.setContentAfterOrBeforeString(aString, "before")
         return this
-    },
-    
-
-    setUserSelect: function(v) {
-        var s = this._element.style
-        s.userSelect = v;
-        s["-moz-user-select"] = v;
-        s["-khtml-user-select"] = v;
-        s["-webkit-user-select"] = v;
-        s["-o-user-select"] = v;
-        return this
-    },
-
-    makeUnselectable: function() {
-        this.setUserSelect("none");
-        return this
-    },
-
+    },    
 
 })

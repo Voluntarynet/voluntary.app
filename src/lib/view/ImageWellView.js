@@ -9,7 +9,7 @@ ImageWellView = NodeView.extend().newSlots({
         this.setDivClassName("ImageWellView")
         this.registerForDrop(true)
         this.dragUnhighlight()
-        this.makeUnselectable()
+        this.turnOffUserSelect()
         this.turnOffUserSelect()
         return this
     },

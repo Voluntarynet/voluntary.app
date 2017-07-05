@@ -13,7 +13,7 @@ BMPointerFieldView = BrowserTitledRow.extend().newSlots({
         //this.valueView().setTarget(this).setAction("clickedOnValue")
 
 		//this.setValueIsVisible(true)
-        this.valueView().makeUnselectable()
+        this.valueView().turnOffUserSelect()
         //this.valueView().setDisplay("none")
 		//this.keyView().setMinAndMaxWidth(500)
 		this.keyView().setContentAfterString("").setTextAlign("left")

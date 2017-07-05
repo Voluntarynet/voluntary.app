@@ -10,6 +10,7 @@ BaseApp = BMNavNode.extend().newSlots({
     type: "BaseApp",
     name: null,
     browser: null,
+    about: null,
     isDebugging: true,
     version: "0.0",
 }).setSlots({

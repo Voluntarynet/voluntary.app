@@ -17,7 +17,6 @@ BMClassifiedPost = BMFieldSetNode.extend().newSlots({
     hasSent: false,
 
 }).setSlots({
-	_nodeVisibleClassName: "Post",
 	
     init: function () {
         BMFieldSetNode.init.apply(this)

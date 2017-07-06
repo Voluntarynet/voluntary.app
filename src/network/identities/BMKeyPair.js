@@ -9,8 +9,6 @@ BMKeyPair = BMNavNode.extend().newSlots({
 	privateKeyString: "",
 }).setSlots({
     
-    _nodeVisibleClassName: "Identity",
-
     init: function () {
         BMNavNode.init.apply(this)
 		this.generatePrivateKey()

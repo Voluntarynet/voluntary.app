@@ -9,8 +9,6 @@ BMLocalIdentity = BMKeyPair.extend().newSlots({
 	privateKeyString: "",
 }).setSlots({
     
-    _nodeVisibleClassName: "Identity",
-
     init: function () {
         BMKeyPair.init.apply(this)
 		this.setShouldStore(true)

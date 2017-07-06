@@ -5,8 +5,6 @@ BMPublicKey = BMNode.extend().newSlots({
 	publicKeyString: "",
 }).setSlots({
 	
-    _nodeVisibleClassName: "Public Key",
-
     init: function () {
         BMNode.init.apply(this)
 		this.setShouldStore(true)

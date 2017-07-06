@@ -1,10 +1,10 @@
 /*
-    Stack
+    StackTrace
     A stack printout that understands objects.
 */
 
-Stack = ideal.Proto.extend().newSlots({
-    type: "Stack",
+StackTrace = ideal.Proto.extend().newSlots({
+    type: "StackTrace",
  
 }).setSlots({
     init: function () {
@@ -56,7 +56,7 @@ Stack = ideal.Proto.extend().newSlots({
 
 
 /*
-Stack.try(function() {	
+StackTrace.try(function() {	
 	iejije
 })
 */

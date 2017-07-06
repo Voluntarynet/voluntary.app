@@ -8,8 +8,6 @@ BMPrivateKey = BMNode.extend().newSlots({
 	privateKeyString: "",
 }).setSlots({
     
-    _nodeVisibleClassName: "Private Key",
-
     init: function () {
         BMNode.init.apply(this)
 		this.setShouldStore(false)

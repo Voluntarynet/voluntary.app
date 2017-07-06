@@ -11,8 +11,6 @@ BrowserHeaderAction = NodeView.extend().newSlots({
     updateImage: function () {
         var path = 'icons/' + this.action() + '_active.png'
         this.element().style['background-image'] = 'url("' + path + '")';
-		//console.log("this.target() = ", this.target().type())
-		//console.log("this.target().nodeVisibleClassName() = ", this.target().subnodeProto().nodeVisibleClassName())
 		
 		this.setToolTip(this.action())
 

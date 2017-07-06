@@ -279,7 +279,7 @@ BrowserView = NodeView.extend().newSlots({
     },
     
     fitToColumnWidths: function() {   
-        App.shared().mainWindow().setWidth(this.widthOfColumnGroups())
+        //App.shared().mainWindow().setWidth(this.widthOfColumnGroups()) // only works in Electron
         return this
     },
     

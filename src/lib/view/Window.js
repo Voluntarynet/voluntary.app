@@ -26,12 +26,12 @@ WebBrowserWindow = ideal.Proto.extend().newSlots({
     },
     
     setWidth: function (w) {
-        //console.warn("warning: Window.setWidth() unavailable in browser")
+        console.warn("warning: Window.setWidth() unavailable in browser")
 		return this
     },
     
     setHeight: function (h) {
-        //console.warn("warning: Window.setHeight() unavailable in browser")
+        console.warn("warning: Window.setHeight() unavailable in browser")
 		return this
     },
 

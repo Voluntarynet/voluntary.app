@@ -693,7 +693,7 @@ DivView = ideal.Proto.extend().newSlots({
 		try {
 			f()
 		} catch (e) {
-			//Stack.showError(e)
+			//StackTrace.showError(e)
 			console.log(e)
 		}
 		

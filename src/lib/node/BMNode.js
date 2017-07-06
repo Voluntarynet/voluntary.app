@@ -13,7 +13,7 @@ BMNode = ideal.Proto.extend().newSlots({
     nodeTitleIsEditable: false,
     nodeSubtitleIsEditable: false,
 	nodeRowIsSelectable: true,
-	nodeVisibleClassName: "",
+	nodeVisibleClassName: null,
 	
 	// column settings (this should really auto adjust to fit)
     nodeMinWidth: 200,
@@ -59,6 +59,14 @@ BMNode = ideal.Proto.extend().newSlots({
         this._didUpdateNodeNote = NotificationCenter.shared().newNotification().setSender(this._uniqueId).setName("didUpdateNode")
         return this
     },
+
+	nodeVisibleClassName: function() {
+		if (this._nodeVisibleClassName) {
+			return this._nodeVisibleClassName
+		}
+		
+		return this.type().prefixRemoved("BM")
+	},
 
 	// --- fields ---
     

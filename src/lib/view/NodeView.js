@@ -50,7 +50,7 @@ NodeView = DivView.extend().newSlots({
     
     subviewProto: function() {
         if (this.node()) {
-            var vc = this.node().nodeRowViewProto()
+            var vc = this.node().nodeRowViewClass()
             if (vc) { 
                 return vc
             }

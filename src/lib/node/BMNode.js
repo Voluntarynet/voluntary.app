@@ -36,10 +36,6 @@ BMNode = ideal.Proto.extend().newSlots({
 
 	// html
     acceptsFileDrop: false,
-    
-    // these should all move to Field properties?
-    // new inline custom view support...
-	nodeOverrideDivClassName: null,
 
     nodeMinHeight: 0, // tall fields like draft body
 
@@ -121,19 +117,17 @@ BMNode = ideal.Proto.extend().newSlots({
         return null
     },
 
-	// --- nodeRowViewProto ---
+	// --- nodeRowViewClass ---
     
-    nodeRowViewProto: function () {     
-        var name = this.nodeOverrideDivClassName()
-        if (name) {
-            return window[name]
-        }
-
-		name = this.type() + "RowView"
+    nodeRowViewClass: function () {     
+		// see if there's a type + RowView class
+		var name = this.type() + "RowView"
 		
 		if (window[name]) {
 			return window[name]
 		}
+		
+		// default is up to parent view to choose
         
         return null
     },

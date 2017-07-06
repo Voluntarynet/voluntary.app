@@ -15,17 +15,17 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
         //this.addFieldNamed("stamp").setKey("stamp").setValueIsEditable(false)
 		//this.setStamp("Unstamped")
 		
-		//this.addStoredField(BMIdentityField.clone().setNodeFieldProperty("fromAddress").setKey("from").setValueIsEditable(false))
-		//this.addStoredField(BMIdentityField.clone().setNodeFieldProperty("toAddress").setKey("to").setValueIsEditable(true))
+		//this.addStoredField(BMIdentityField.clone().setNodeValueMethod("fromAddress").setKey("from").setValueIsEditable(false))
+		//this.addStoredField(BMIdentityField.clone().setNodeValueMethod("toAddress").setKey("to").setValueIsEditable(true))
 
-		this.addStoredField(BMMultiField.clone().setKey("from").setNodeFieldProperty("fromContact")).setValueIsEditable(false).setValidValuesMethod("fromContactNames") //.setNoteMethod("fromContactPublicKey")
-		this.addStoredField(BMMultiField.clone().setKey("to").setNodeFieldProperty("toContact")).setValueIsEditable(true).setValidValuesMethod("toContactNames") //.setNoteMethod("toContactPublicKey")
+		this.addStoredField(BMMultiField.clone().setKey("from").setNodeValueMethod("fromContact")).setValueIsEditable(false).setValidValuesMethod("fromContactNames") //.setNoteMethod("fromContactPublicKey")
+		this.addStoredField(BMMultiField.clone().setKey("to").setNodeValueMethod("toContact")).setValueIsEditable(true).setValidValuesMethod("toContactNames") //.setNoteMethod("toContactPublicKey")
         this.addFieldNamed("subject").setKey("subject")	
 
         //this.addFieldNamed("senderPublicKeyString").setKey("senderPublicKeyString").setValueIsEditable(false)
         //this.addFieldNamed("receiverPublicKeyString").setKey("receiverPublicKeyString").setValueIsEditable(false)
 
-		this.addStoredField(BMTextAreaField.clone().setKey("body").setNodeFieldProperty("body"))
+		this.addStoredField(BMTextAreaField.clone().setKey("body").setNodeValueMethod("body"))
         this.setStatus("")
 
         this.setActions(["send", "delete"])
@@ -42,7 +42,7 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 	didUpdateField: function(aField) {
 		BMFieldSetNode.didUpdateField.apply(this)
 
-		var name = aField.nodeFieldProperty()
+		var name = aField.nodeValueMethod()
 		//console.log("didUpdateField(" + name + ")")
 		
 		

@@ -2,9 +2,7 @@
         FormNode is useful for node's which are to be viewed and interacted with as forms
         
         child nodes are of type BMField and should only be added via addFieldNamed()
-                
-        when persisted, it's nodeDict method maps the child node values into the returned dict
-        
+                        
         example use in subclass 
     
         BMCustomFormNode = BMFieldSetNode.extend().newSlots({
@@ -46,7 +44,7 @@ BMFieldSetNode = BMStorableNode.extend().newSlots({
     // --- fields ---
 
 	addStoredField: function(aField) {
-		var name = aField.nodeFieldProperty()
+		var name = aField.nodeValueMethod()
 		this.addStoredSlot(name)
 		if (!this[name]) {
 			this.newSlot(name, null)
@@ -62,14 +60,14 @@ BMFieldSetNode = BMStorableNode.extend().newSlots({
 
     addFieldNamed: function(name) {	
         var field = BMField.clone().setKey(name)
-		field.setNodeFieldProperty(name)
+		field.setNodeValueMethod(name)
 		this.addStoredField(field)
         return field
     },
     
     fieldNamed: function(aName) {
         return this.subnodes().detect(function (subnode) { 
-			return subnode.nodeFieldProperty() == aName || subnode.key() == aName
+			return subnode.nodeValueMethod() == aName || subnode.key() == aName
         })
     },
     
@@ -80,9 +78,9 @@ BMFieldSetNode = BMStorableNode.extend().newSlots({
 
 	copyFieldsFrom: function(sourceObj) {
 		this.subnodes().forEach((targetField) => {
-			var sourceField = sourceObj.fieldNamed(targetField.nodeFieldProperty())
+			var sourceField = sourceObj.fieldNamed(targetField.nodeValueMethod())
 			targetField.setValue(sourceField.value())
-			//console.log("target field " + targetField.nodeFieldProperty() + " set to '" + targetField.value() + "'")
+			//console.log("target field " + targetField.nodeValueMethod() + " set to '" + targetField.value() + "'")
 		})
 		return this
 	},
@@ -95,7 +93,7 @@ BMFieldSetNode = BMStorableNode.extend().newSlots({
     /*
     syncToFields: function() {
         this.subnodes().forEach((field) => {
-            var key = field.nodeFieldProperty()
+            var key = field.nodeValueMethod()
             
             if (key) {
                 if (!this[key]) {

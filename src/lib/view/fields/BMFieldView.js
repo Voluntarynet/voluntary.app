@@ -48,6 +48,8 @@ BMFieldView = BrowserFieldRow.extend().newSlots({
 		//console.log(this.type() + " syncFromNode")
 		
         var node = this.node()
+		var keyView = this.keyView()
+		var valueView = this.valueView()
 
 		this.node().prepareToSyncToView()
 
@@ -57,46 +59,42 @@ BMFieldView = BrowserFieldRow.extend().newSlots({
 			this.setDisplay("none")
 		}
 
-        this.keyView().setInnerHTML(this.visibleKey())
+        keyView.setInnerHTML(this.visibleKey())
 
-		if (!this.valueView().isActiveElementAndEditable()) {
-			if (this.valueView().setText) {
-				this.valueView().setText(this.visibleValue())
+		if (!valueView.isActiveElementAndEditable()) {
+			if (valueView.setText) {
+				valueView.setText(this.visibleValue())
 			} else {
-				this.valueView().setInnerHTML(this.visibleValue())
+				valueView.setInnerHTML(this.visibleValue())
 			}
 		}
 		
-		this.keyView().setIsVisible(node.keyIsVisible())
-		this.valueView().setIsVisible(node.valueIsVisible())
+		keyView.setIsVisible(node.keyIsVisible())
+		valueView.setIsVisible(node.valueIsVisible())
 		
         
-        this.keyView().setContentEditable(node.keyIsEditable())
-        this.valueView().setContentEditable(node.valueIsEditable())
+        keyView.setContentEditable(node.keyIsEditable())
+        valueView.setContentEditable(node.valueIsEditable())
 
 		if (!node.valueIsEditable()) {
 			//console.log("fieldview key '", node.key(), "' node.valueIsEditable() = ", node.valueIsEditable(), " setColor ", this.uneditableColor())
-			this.valueView().setColor(this.uneditableColor())
+			valueView.setColor(this.uneditableColor())
 		} else {
-			this.valueView().setColor(this.editableColor())
+			valueView.setColor(this.editableColor())
 		}
 		
-		var color = this.valueView().color()
+		// change color if value is invalid
 		
+		var color = valueView.color()
 		
 		if (node.valueError()) {
-			this.valueView().setColor(this.errorColor())
-			this.valueView().setToolTip(node.valueError())
+			valueView.setColor(this.errorColor())
+			valueView.setToolTip(node.valueError())
 			
 		} else {
-			this.valueView().setBackgroundColor("transparent")
-			this.valueView().setColor(color)
-			this.valueView().setToolTip("")
-		}
-
-		// allow for custom view class
-		if (node.valueDivClassName()) {
-			this.valueView().setDivClassName(node.valueDivClassName())
+			valueView.setBackgroundColor("transparent")
+			valueView.setColor(color)
+			valueView.setToolTip("")
 		}
 				
 		if (this.visibleNote()) {

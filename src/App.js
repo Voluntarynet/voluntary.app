@@ -29,21 +29,24 @@ App = BaseApp.extend().newSlots({
         this.setNodeMinWidth(170)        
     },
 
+	appDidInit: function() {
+		var element = document.getElementById("spinner");
+		element.parentNode.removeChild(element);
+	},
+
     setup: function () {       
         BaseApp.setup.apply(this)
         
         window.app = this
         
 		var parser = document.createElement('a')
-		console.log(" window.location.href = ",  window.location.href)
 		parser.href = window.location.href
 		var name = parser.hostname
-		console.log("parser.hostname = ",  typeof(parser.hostname))
 		
 		if (name != "") {
 			name = name.before(".").replaceAll("-", " ").toUpperCase()
 		} else {
-			name = "TEST"
+			name = "T E S T"
 		}
 
         this.setName(name)
@@ -65,22 +68,24 @@ App = BaseApp.extend().newSlots({
 
 		// -----------------------
 		
-    		// network
+   		// network
 
-    		this.setNetwork(BMNetwork.clone())
-    		this.network().setLocalIdentities(this.localIdentities())
-    		this.network().setRemoteIdentities(this.remoteIdentities())
-    		this.about().addSubnode(this.network())
+   		this.setNetwork(BMNetwork.clone())
+   		this.network().setLocalIdentities(this.localIdentities())
+   		this.network().setRemoteIdentities(this.remoteIdentities())
+   		this.about().addSubnode(this.network())
 
-    		// data store
+   		// data store
+	
+   		this.setDataStore(BMDataStore.clone())
+   		this.about().addSubnode(this.dataStore())
+	
+        if (this.network()) {
+            this.network().servers().connect()
+        }
+
+		this.appDidInit()
 		
-    		this.setDataStore(BMDataStore.clone())
-    		this.about().addSubnode(this.dataStore())
-		
-            if (this.network()) {
-                this.network().servers().connect()
-            }
-
         return this
     },
 

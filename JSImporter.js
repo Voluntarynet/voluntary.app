@@ -105,6 +105,7 @@ JSImporter = {
 	_currentScript: null,
 	_urls: [],
 	_doneCallbacks: [],
+	_urlLoadingCallbacks: [],
 
 	clone: ObjectCloneFunction,
 
@@ -148,6 +149,11 @@ JSImporter = {
 		this._doneCallbacks.push(aCallback)
 		return this
 	},
+	
+	pushUrlLoadingCallback: function(aCallback) {
+		this._urlLoadingCallbacks.push(aCallback)
+		return this
+	},
 
 	run: function() {
 	    this.loadNext();
@@ -168,6 +174,8 @@ JSImporter = {
 	},
 
 	loadUrl: function(url) {
+		this._urlLoadingCallbacks.forEach((callback) => { callback(url) })
+
 		var extension = url.split('.').pop();
 		
 		if (extension == "js" || extension == "json") {

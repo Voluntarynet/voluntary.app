@@ -121,19 +121,19 @@ BMNetwork = BMStorableNode.extend().newSlots({
 	},
     
 	allIdentityPublicKeyStrings: function() {
-		return this.allIdentities().map(function(id) { return id.publicKeyString(); })
+		return this.allIdentities().map((id) => { return id.publicKeyString(); })
 	},
 	
 	allIdentityNames: function() {
-		return this.allIdentities().map(function(id) { return id.name(); })
+		return this.allIdentities().map((id) => { return id.name(); })
 	},
 	
 	localIdentityNames: function() {
-		return this.localIdentities().subnodes().map(function(id) { return id.name(); })
+		return this.localIdentities().subnodes().map((id) => { return id.name(); })
 	},
 	
 	remoteIdentityNames: function() {
-		return this.remoteIdentities().subnodes().map(function(id) { return id.name(); })
+		return this.remoteIdentities().subnodes().map((id) => { return id.name(); })
 	},
 	
 	idWithName: function(aString) {

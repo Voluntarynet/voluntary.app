@@ -10,6 +10,7 @@ BMField = BMNode.extend().newSlots({
     //value: "test value",
 
 	isVisible: true,
+	
 	keyIsVisible: true,
 	valueIsVisible: true,
 
@@ -25,28 +26,25 @@ BMField = BMNode.extend().newSlots({
 	valuePrefix: null,
 	valuePostfix: null,
 	
-	nodeFieldProperty: null,
-	
-	valueDivClassName: null,
-	
+	nodeValueMethod: null,
+		
 	keyError: null,
 	valueError: null,
 	
 	target: null,
 	
-	noteMethod: null,
+	noteMethod: null, // fetches note from a parent node method
 	
 }).setSlots({
 	
     init: function () {
         BMNode.init.apply(this)
 		this.setViewClassName("BMFieldView")
-		//this.setNodeRowViewProto(BMFieldView)
 		this.setViewClassName(null)
 		//console.log("BMField viewClassName = '" + this.viewClassName() + "'")
     },    
 
-	nodeRowViewProto: function() {
+	nodeRowViewClass: function() {
 		return BMFieldView
 	},
 	
@@ -58,19 +56,19 @@ BMField = BMNode.extend().newSlots({
 		return this.parentNode()
 	},
 	
-	nodeFieldProperty: function() {
+	nodeValueMethod: function() {
 		// defaults to key 
-		if (this._nodeFieldProperty == null) {
+		if (this._nodeValueMethod == null) {
 			return this.key()
 		}
 		
-		return this._nodeFieldProperty
+		return this._nodeValueMethod
 	},
 	
 	setValue: function(v) {
 		//console.log("setValue '" + v + "'")
 		var target = this.target()
-		var setter = this.setterNameForSlot(this.nodeFieldProperty())
+		var setter = this.setterNameForSlot(this.nodeValueMethod())
 		if (!target[setter]) {
 			console.log("WARNING target = " + target.type() + " setter = '" + setter + "' missing")
 		}
@@ -83,7 +81,7 @@ BMField = BMNode.extend().newSlots({
 	
 	value: function() {
 		var target = this.target()
-		var getter = this.nodeFieldProperty()
+		var getter = this.nodeValueMethod()
 		//console.log("target = " + target.type() + " getter = '" + getter + "'")
 		var value = target[getter].apply(target)
 		return value

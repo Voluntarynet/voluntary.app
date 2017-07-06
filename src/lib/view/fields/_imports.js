@@ -1,7 +1,7 @@
 
 JSImporter.pushRelativePaths([
 	"_css.css",
-    "BMFieldSetView.js",
+    //"BMFieldSetView.js",
     "BMFieldView.js",
     "BMTextAreaFieldView.js",
     "BMImageWellFieldView.js",

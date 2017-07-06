@@ -16,10 +16,10 @@ BMRemoteIdentity = BMNavNode.extend().newSlots({
         this.setNodeSubtitleIsEditable(false)
         this.setNodeMinWidth(120)
 
-        //this.addFieldNamed("name").setNodeFieldProperty("name").setValueIsEditable(true)
+        //this.addFieldNamed("name").setNodeValueMethod("name").setValueIsEditable(true)
        // this.setName("Untitled")
 
-		//this.addStoredField(BMIdentityField.clone().setNodeFieldProperty("publicKeyString").setKey("public key").setValueIsEditable(true))
+		//this.addStoredField(BMIdentityField.clone().setNodeValueMethod("publicKeyString").setKey("public key").setValueIsEditable(true))
         //this.setPublicKeyString("")
 
 		this.addStoredSlots(["name", "publicKeyString"])

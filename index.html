@@ -5,5 +5,56 @@
     <title></title>
     <script type="text/javascript" src="JSImporter.js"></script>
   </head>
-  <body id="body"></body>
+  <body id="body">
+	
+	<div id="spinner" style="
+	  	text-align: center;
+		margin-top: 30%;
+		margin-bottom: auto;
+		height: 100%; 
+		font-family:AppRegular;
+		letter-spacing: 3px;
+		transition: all 1s ease-out;
+		color: transparent;
+	    ">
+		<div id="SpinnerTitle"></div>
+		<br>
+		<div id="SpinnerSubtitle" style="letter-spacing: -6px;"></div>
+	</div>
+	
+	<script> 
+		function spinner() {
+			var element = document.getElementById("SpinnerTitle");
+						 
+			if (element) {
+				element.style.color = "#aaa"
+				element.innerHTML = "PEER LOADING" //+ periods	
+				setTimeout(function () { spinner() }, 500)
+			}
+		}
+		
+		JSImporter.pushUrlLoadingCallback(function(url) {
+			var element = document.getElementById("SpinnerSubtitle");
+			element.style.color = "#666"
+			/*
+			var parser = document.createElement('a')
+			parser.href = url
+			
+			var name = parser.pathname.split("/").pop()
+			var key = name.split(".")[0]
+			var ext = name.split(".")[1]
+			
+			if (name[0] != "_" && ext == "js") {
+				element.style.color = "#666"
+				//element.innerHTML = key
+				element.innerHTML += "."
+			}
+			*/
+			element.innerHTML += "."
+		})
+		
+		setTimeout(function() { spinner() }, 1)
+	</script>
+	
+  </body>
 </html>

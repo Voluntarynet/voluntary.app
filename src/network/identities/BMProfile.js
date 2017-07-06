@@ -8,14 +8,14 @@ BMProfile = BMFieldSetNode.extend().newSlots({
         this.setTitle("profile")
         
 		// pass through fields
-        this.addFieldNamed("name").setNodeFieldProperty("name").setValueIsEditable(true)
-		this.addStoredField(BMIdentityField.clone().setNodeFieldProperty("publicKeyString").setKey("public key").setValueIsEditable(true))
-	//	this.addStoredField(BMIdentityField.clone().setNodeFieldProperty("privateKeyString").setKey("private key").setValueIsEditable(false))
+        this.addFieldNamed("name").setNodeValueMethod("name").setValueIsEditable(true)
+		this.addStoredField(BMIdentityField.clone().setNodeValueMethod("publicKeyString").setKey("public key").setValueIsEditable(true))
+	//	this.addStoredField(BMIdentityField.clone().setNodeValueMethod("privateKeyString").setKey("private key").setValueIsEditable(false))
 
 		// local fields
-        this.addFieldNamed("phone").setNodeFieldProperty("phone").setValueIsEditable(true)
-        this.addFieldNamed("email").setNodeFieldProperty("email").setValueIsEditable(true)
-        this.addFieldNamed("address").setNodeFieldProperty("address").setValueIsEditable(true)
+        this.addFieldNamed("phone").setNodeValueMethod("phone").setValueIsEditable(true)
+        this.addFieldNamed("email").setNodeValueMethod("email").setValueIsEditable(true)
+        this.addFieldNamed("address").setNodeValueMethod("address").setValueIsEditable(true)
 
         this.setNodeBgColor("white")
     },

@@ -18,8 +18,7 @@ BMPointerField = BMField.extend().newSlots({
     },
 
 	setValue: function(v) {
-		console.log("BMPointerField setValue '" + v + "'")
-		
+		console.warn("WARNING: BMPointerField setValue '" + v + "'")
 		return this
 	},
 

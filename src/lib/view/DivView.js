@@ -704,7 +704,32 @@ DivView = ideal.Proto.extend().newSlots({
 		}
 	},
 	
-    // --- onClick target & action ---
+	// --- window resize events ---
+	
+    registerForWindowResize: function(aBool) {
+        if (!this._windowResizeCallback) { // so callback is unique to this div        
+            this._windowResizeCallback = (event) => { this.onWindowResize(event) }
+        }
+        
+        if (aBool) {
+            window.addEventListener('resize', this._windowResizeCallback, false);
+        } else {
+            window.removeEventListener('resize', this._windowResizeCallback);
+        }
+        
+        return this
+    },
+    
+    onWindowResize: function(event) {
+        //console.log("onWindowResize")
+        //var r = document.body.getBoundingClientRect()
+        //console.log("onResize ")
+        //console.log("onResize " + r.width + " x " + r.right)
+        //console.log("onResize " + window.innerWidth + " x " + window.innerHeight)
+        //console.log("onResize " + document.body.clientHeight + " x " + document.body.clientHeight)        
+    },
+	
+    // --- onClick event, target & action ---
     
     registerForClicks: function (aBool) {
         if (aBool) {

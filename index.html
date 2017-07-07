@@ -7,19 +7,18 @@
   </head>
   <body id="body">
 	
-	<div id="spinner" style="
+	<div id="Spinner" style="
 	  	text-align: center;
 		margin-top: 30%;
 		margin-bottom: auto;
 		height: 100%; 
 		font-family:AppRegular;
 		letter-spacing: 3px;
-		transition: all 1s ease-out;
 		color: transparent;
 	    ">
-		<div id="SpinnerTitle"></div>
+		<div id="SpinnerTitle" style="transition: all .6s ease-out;"></div>
 		<br>
-		<div id="SpinnerSubtitle" style="letter-spacing: -6px;"></div>
+		<div id="SpinnerSubtitle" style="transition: all .3s ease-out; letter-spacing: -6px;"></div>
 	</div>
 	
 	<script> 
@@ -28,32 +27,22 @@
 						 
 			if (element) {
 				element.style.color = "#aaa"
-				element.innerHTML = "PEER LOADING" //+ periods	
+				element.innerHTML = "PEER LOADING"
 				setTimeout(function () { spinner() }, 500)
+			} else {
+			    delete window.spinner
 			}
 		}
 		
 		JSImporter.pushUrlLoadingCallback(function(url) {
 			var element = document.getElementById("SpinnerSubtitle");
-			element.style.color = "#666"
-			/*
-			var parser = document.createElement('a')
-			parser.href = url
-			
-			var name = parser.pathname.split("/").pop()
-			var key = name.split(".")[0]
-			var ext = name.split(".")[1]
-			
-			if (name[0] != "_" && ext == "js") {
-				element.style.color = "#666"
-				//element.innerHTML = key
-				element.innerHTML += "."
-			}
-			*/
-			element.innerHTML += "."
+			if (element) {
+    			element.style.color = "#666"
+    			element.innerHTML += "."
+		    }
 		})
 		
-		setTimeout(function() { spinner() }, 1)
+		setTimeout(function() { spinner() }, 10)
 	</script>
 	
   </body>

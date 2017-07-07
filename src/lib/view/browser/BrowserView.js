@@ -19,25 +19,13 @@ BrowserView = NodeView.extend().newSlots({
         NodeView.init.apply(this)
         this.setDivClassName("Browser")
         this.setSubviewProto(BrowserColumnGroup)
-        this.watchForWindowResize()
+        this.registerForWindowResize(true)
         return this
     },
 
 	// --- resizing ---------------------------------
     
-    watchForWindowResize: function() {
-        window.addEventListener('resize', (event) => {
-            //console.log("resize ", event)
-            this.onResize(event)
-        }, false);
-    },
-    
-    onResize: function (event) {
-        //var r = document.body.getBoundingClientRect()
-        //console.log("onResize ")
-        //console.log("onResize " + r.width + " x " + r.right)
-        //console.log("onResize " + window.innerWidth + " x " + window.innerHeight)
-        //console.log("onResize " + document.body.clientHeight + " x " + document.body.clientHeight)
+    onWindowResize: function (event) {
         this.fitLastColumnGroupToRemainingWidth()
     },
 

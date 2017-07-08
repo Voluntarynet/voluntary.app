@@ -24,10 +24,13 @@ BaseApp = BMNavNode.extend().newSlots({
 	didOpenStore: function() {
 		//NodeStore.shared().clear()
         this.setup() 
-        this.setupWindow()
-        //this.appLog("app didOpenStore\n")	
+        console.log("app didOpenStore\n")	
 	},
     
+	appDidInit: function() {
+		// unused
+	},
+	
     setup: function() {
         //console.log("baseSetup")
         //this.fixElectronDropBehavior()
@@ -35,18 +38,21 @@ BaseApp = BMNavNode.extend().newSlots({
         this.setupBrowser()
         return this        
     },
-    
+
     setupBrowser: function() {
         this.setBrowser(BrowserView.clone().setColumnGroupCount(4).selectFirstColumn())
         this.browser().focusEach() // hack
-        return this        
-    },
-    
-    setupWindow: function() {        
+     
         this.browser().setNode(this).syncFromNode()
+		//this.browser().setIsVisible(false)
 
         var windowContent = document.getElementById('body');
         windowContent.appendChild(this.browser().element())     
+/*
+		setTimeout(() => {
+			this.browser().setIsVisible(true)
+		}, 0)
+		*/
         return this
     },
     

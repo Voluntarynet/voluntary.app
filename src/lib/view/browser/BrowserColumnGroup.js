@@ -7,6 +7,7 @@ BrowserColumnGroup = NodeView.extend().newSlots({
     emptyLabel: null,
 	isSelected: false,
 	doesCollapseIfUnselected: false,
+	isCollapsed: false,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
@@ -76,24 +77,31 @@ BrowserColumnGroup = NodeView.extend().newSlots({
 	// collapsing
 	
 	setIsCollapsed: function(aBool) {
-		if (aBool) {
-			this.collapse()
-		} else {
-			this.uncollapse()
+		if (this._isCollapsed != aBool) {		
+			if (aBool) {
+				this.collapse()
+			} else {
+				this.uncollapse()
+			}
+			//this._isCollapsed = aBool
 		}
 		return this
 	},
 	
+	/*
 	isCollapsed: function() {
 		return this.display() == "none"
 	},
+	*/
 	
 	collapse: function() {
+		this._isCollapsed = true
 		this.setDisplay("none")
 		return this
 	},
 	
 	uncollapse: function() {
+		this._isCollapsed = false
 		this.setDisplay("inline-flex")		
 		var w = this.node() ? this.node().nodeMinWidth() : 100 // not sure why this happens
         this.setMinAndMaxWidth(w)

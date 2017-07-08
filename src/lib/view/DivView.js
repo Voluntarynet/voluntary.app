@@ -78,7 +78,6 @@ DivView = ideal.Proto.extend().newSlots({
 	
 	setTextTransform: function(s) {
 		this.setCssAttribute("text-transform", s)
-        //this.cssStyle().textTransform = s
 		return this
 	},
 	
@@ -90,7 +89,6 @@ DivView = ideal.Proto.extend().newSlots({
 	
 	setFontWeight: function(s) {
 		this.setCssAttribute("font-weight", s)
-        //this.cssStyle().fontWeight = s
 		return this
 	},
 	
@@ -102,7 +100,6 @@ DivView = ideal.Proto.extend().newSlots({
 	
     setPaddingLeft: function(aNumber) {
 		this.setCssAttribute("padding-left", aNumber + "px")
-        //this.cssStyle().paddingLeft = aNumber + "px"
         return this
     },
 
@@ -114,7 +111,6 @@ DivView = ideal.Proto.extend().newSlots({
 	
     setPaddingRight: function(aNumber) {
 		this.setCssAttribute("padding-right", aNumber + "px")
-        //this.cssStyle().paddingRight = aNumber + "px"
         return this
     },
 
@@ -126,7 +122,6 @@ DivView = ideal.Proto.extend().newSlots({
 
     setTextAlign: function(s) {
 		this.setCssAttribute("text-align", s)
-        //this.cssStyle().textAlign = s
         return this
     },
 
@@ -138,7 +133,6 @@ DivView = ideal.Proto.extend().newSlots({
 	
     setBackgroundColor: function(v) {
 		this.setCssAttribute("background-color", v)
-        //this.cssStyle().backgroundColor = v
         return this
     },
 
@@ -150,7 +144,6 @@ DivView = ideal.Proto.extend().newSlots({
 
 	setOpacity: function(v) {
 		this.setCssAttribute("opacity", v)
-        //this.cssStyle().opacity = v
 		return this
 	},
 	
@@ -162,7 +155,6 @@ DivView = ideal.Proto.extend().newSlots({
 	
 	setZIndex: function(v) {
 		this.setCssAttribute("z-index", v)
-        //this.cssStyle().zIndex = v
 		return this
 	},
 	
@@ -174,7 +166,6 @@ DivView = ideal.Proto.extend().newSlots({
 	
     setCursor: function(s) {
 		this.setCssAttribute("cursor", s)
-        //this.cssStyle().cursor = s
 		//console.log(this.divClassName(), " setCursor " + s) 
         return this
     },
@@ -232,7 +223,6 @@ DivView = ideal.Proto.extend().newSlots({
     setTop: function (y) {
         var v = y + "px"
 		this.setCssAttribute("top", v)
-        //this.cssStyle().top = v;
         //console.log("setTop " + v)
         return this
     },
@@ -263,7 +253,6 @@ DivView = ideal.Proto.extend().newSlots({
     setLeft: function (aNumber) {
         var s = aNumber + "px"
 		this.setCssAttribute("left", s)
-        //this.cssStyle().left = s;
         return this
     },
 
@@ -278,7 +267,6 @@ DivView = ideal.Proto.extend().newSlots({
 	
 	setFloat: function(s) {
 		this.setCssAttribute("float", s)
-		//this.cssStyle().float = s
 		return this
 	},
 	
@@ -290,19 +278,16 @@ DivView = ideal.Proto.extend().newSlots({
 	
 	setBorder: function(s) {
 		this.setCssAttribute("border", s)
-		//this.cssStyle().border = s
 		return this
 	},
 	
 	setBorderTop: function(s) {
 		this.setCssAttribute("border-top", s)
-		//this.cssStyle().borderTop = s
 		return this
 	},
 	
 	setBorderBottom: function(s) {
 		this.setCssAttribute("border-bottom", s)
-		//this.cssStyle().borderBottom = s
 		return this
 	},
 	
@@ -314,7 +299,6 @@ DivView = ideal.Proto.extend().newSlots({
 	
 	setTextAlign: function(s) {
 		this.setCssAttribute("text-align", s)
-		//this.cssStyle().textAlign = s
 		return this		
 	},
 	
@@ -326,7 +310,6 @@ DivView = ideal.Proto.extend().newSlots({
 	
 	setFlexGrow: function(v) {
 		this.setCssAttribute("flex-grow", v)
-		//this.cssStyle().flexGrow = v
 		return this
 	},
 
@@ -336,7 +319,6 @@ DivView = ideal.Proto.extend().newSlots({
 	
 	setFlexBasis: function(v) {
 		this.setCssAttribute("flex-basis", v)
-		//this.cssStyle().flexBasis = v
 		return this
 	},
 
@@ -348,7 +330,6 @@ DivView = ideal.Proto.extend().newSlots({
 	
     setColor: function(v) {
 		this.setCssAttribute("color", v)
-        //this.cssStyle().color = v;
         return this
     },
     
@@ -359,11 +340,6 @@ DivView = ideal.Proto.extend().newSlots({
     setIsVisible: function(aBool) {
 		var v = aBool ? "visible" : "hidden"
 		this.setCssAttribute("visibility", v)
-		/*
-		if (this.cssStyle().visibility != v) {
-        	this.cssStyle().visibility = v
-		}
-		*/
         return this
     },
 
@@ -374,7 +350,6 @@ DivView = ideal.Proto.extend().newSlots({
     setDisplay: function(s) {
         //assert(s in { "none", ...} );
 		this.setCssAttribute("display", s)
-        //this.cssStyle().display = s;
         return this
     },
     
@@ -495,8 +470,9 @@ DivView = ideal.Proto.extend().newSlots({
 
 	setMinAndMaxHeight: function(aNumber) {
 		assert(typeof(aNumber) == "number")
-        this.cssStyle().minHeight = aNumber + "px"
-        this.cssStyle().maxHeight = aNumber + "px"
+		var newValue = aNumber + "px"
+		this.setCssAttribute("max-height", newValue)
+		this.setCssAttribute("max-height", newValue)
         return this		
 	},
 	

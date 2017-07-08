@@ -78,6 +78,7 @@ App = BaseApp.extend().newSlots({
     },
     
 	appDidInit: function() {
+        BaseApp.appDidInit.apply(this)
 		this.removeLoadingBar()
 		
         //var hash =  window.location.hash.substr(1);

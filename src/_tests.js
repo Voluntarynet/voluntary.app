@@ -1,6 +1,8 @@
 
+App.runTests = function() {}
+
+/*
 App.runTests = function() {
-	/*
 	var PlainText = "hello world"
 	
 	var msg = { 
@@ -46,9 +48,7 @@ App.runTests = function() {
 	console.log("     hash: ", msg.hash)
 	console.log("   verify: ", isVerified)
 	
-	*/
-	
-/*
+
 	// ---- encrypt with pubkey --------------------------------------------
 
 	var keys = ecc.generate(ecc.ENC_DEC);
@@ -89,9 +89,9 @@ App.runTests = function() {
     var shaHex = sjcl.codec.hex.fromBits(shaBits);
     assert(shaHex == "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08")		        
     console.log("sjcl.hash.sha256 test passed")
-*/
-}
 
+}
+*/
 
 /*
 console.log("------ BEGIN TESTS ------")

@@ -9,7 +9,7 @@ BrowserHeader = NodeView.extend().newSlots({
         this.setDivClassName("BrowserHeader")
         this.setOwnsView(false)
 
-		var ba = DivView.clone().setDivClassName("BackArrow").setInnerHTML("&#8249;").setTarget(this).setAction("back")
+		var ba = DivView.clone().setDivClassName("BackArrow").setInnerHTML("&#8249;").setTarget(this).setAction("didHitBackArrow")
 		this.setBackArrowView(ba)
         return this
     },
@@ -41,7 +41,7 @@ BrowserHeader = NodeView.extend().newSlots({
         return this
     },
 
-	back: function() {
+	didHitBackArrow: function() {
 		console.log(this.type() + " back")
 		this.columnGroup().column().selectPreviousColumn()
 	},

@@ -106,6 +106,7 @@ JSImporter = {
 	_urls: [],
 	_doneCallbacks: [],
 	_urlLoadingCallbacks: [],
+	_errorCallbacks: [],
 
 	clone: ObjectCloneFunction,
 
@@ -152,6 +153,11 @@ JSImporter = {
 	
 	pushUrlLoadingCallback: function(aCallback) {
 		this._urlLoadingCallbacks.push(aCallback)
+		return this
+	},
+	
+	pushErrorCallback: function(aCallback) {
+		this._errorCallbacks.push(aCallback)
 		return this
 	},
 

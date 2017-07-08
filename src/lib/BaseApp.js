@@ -53,7 +53,6 @@ BaseApp = BMNavNode.extend().newSlots({
     shared: function() {        
         if (!this._shared) {
             this._shared = App.clone();
-            
         }
         return this._shared;
     },

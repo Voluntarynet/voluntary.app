@@ -52,7 +52,7 @@ BMMultiFieldView = BMFieldView.extend().newSlots({
 	},
 	
 	select: function(validValue) {
-		console.log(this.type() + " selected " + validValue)
+		//console.log(this.type() + " selected " + validValue)
 		//this.setInnerHTML(validValue)
 		this.node().setValue(validValue)
 		this.node().didUpdateView(this)

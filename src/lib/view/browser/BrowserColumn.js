@@ -340,7 +340,7 @@ BrowserColumn = NodeView.extend().newSlots({
             this.setSelectedRowIndex(0)
         }
 
-		console.log(this.type() + " focus")
+		//console.log(this.type() + " focus")
 
 		return this
 	},

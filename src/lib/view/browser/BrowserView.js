@@ -26,8 +26,11 @@ BrowserView = NodeView.extend().newSlots({
 	// --- resizing ---------------------------------
     
     onWindowResize: function (event) {
-        this.fitLastColumnGroupToRemainingWidth()
+        this._hasDoneFocusEach = false
+		this.focusEach()
+		this.fitColumns()
     },
+
 
 	// --- columns -------------------------------
 
@@ -132,44 +135,9 @@ BrowserView = NodeView.extend().newSlots({
         return this
     },
 
-    fitLastColumnGroupToRemainingWidth: function() {
-
-        var otherColsWidth = 0
-        var lastCg = this.columnGroups().last()
-		var lastNode = lastCg.column().node()
-		
-		//console.log("lastCg.column().node() = ", lastNode.view().type())
-
-        //console.log("index of last column group = " + this.columnGroups().indexOf(lastCg))
-
-        // set other columns width to that of their nodes
-        // and get total width 
-        this.columnGroups().forEach((cg) => {
-            if (cg != lastCg) { 
-                var mw = cg.node() ? cg.node().nodeMinWidth() : 100 // not sure why this happens
-                otherColsWidth += mw 
-                cg.setMinAndMaxWidth(mw)
-            }
-        })
-        
-        var winWidth = App.shared().mainWindow().width()
-        var diffWidth = winWidth - otherColsWidth
-        var lastWidth = lastCg.node() ? lastCg.node().nodeMinWidth() : 0;
-        
-        //console.log("winWidth: " + winWidth + " diffWidth: " + diffWidth + " lastWidth: " + lastWidth)
-        
-        if (lastWidth == 0) {
-            lastCg.setMinAndMaxWidth(diffWidth)
-        } else if (diffWidth > lastWidth) {
-            lastCg.setMinAndMaxWidth(diffWidth)
-        } else {
-            lastCg.setMinAndMaxWidth(lastWidth)
-        }
-        
-        this.fitToColumnWidths()
-
-        return this
-    },
+	windowWidth: function() {
+		return App.shared().mainWindow().width()
+	},
 
     clearColumnsGroupsAfter: function(selectedCg) {
         var cgs = this.columnGroups()
@@ -228,6 +196,7 @@ BrowserView = NodeView.extend().newSlots({
         }
         
         this.setupColumnGroupColors()
+		this.collapseColumnGroupsAsNeeded()
         this.fitLastColumnGroupToRemainingWidth()
 
 		this.updateSelectedColumnTo(selectedColumn)
@@ -248,9 +217,7 @@ BrowserView = NodeView.extend().newSlots({
 		columnGroups.forEach((cg) => {
             cg.syncFromNode()
         })
-        
-        //this.setupColumnGroupColors()
-        
+                
         return this
     },
     
@@ -264,11 +231,6 @@ BrowserView = NodeView.extend().newSlots({
     
     widthOfColumnGroups: function () {
         return this.columnGroups().sum( (cg) => { return cg.minWidth() })      
-    },
-    
-    fitToColumnWidths: function() {   
-        //App.shared().mainWindow().setWidth(this.widthOfColumnGroups()) // only works in Electron
-        return this
     },
     
     // --- node paths -----------------------------
@@ -300,5 +262,74 @@ BrowserView = NodeView.extend().newSlots({
         
         this.syncFromNode()
     },
+
+	// --- collapsing column groups -----
+	
+    fitColumns: function () {
+		this.collapseColumnGroupsAsNeeded()
+        this.fitLastColumnGroupToRemainingWidth()
+    },
+
+/*
+    fitLastColumnGroupToRemainingWidth: function() {
+        var otherColsWidth = 0
+        var lastCg = this.columnGroups().last()
+		var lastNode = lastCg.column().node()
+		
+		//console.log("lastCg.column().node() = ", lastNode.view().type())
+        //console.log("index of last column group = " + this.columnGroups().indexOf(lastCg))
+        // set other columns width to that of their nodes
+        // and get total width 
+        this.columnGroups().forEach((cg) => {
+            if (cg != lastCg) { 
+                var mw = cg.node() ? cg.node().nodeMinWidth() : 100 // not sure why this happens
+                otherColsWidth += mw 
+                cg.setMinAndMaxWidth(mw)
+            }
+        })
+        
+        var winWidth = this.windowWidth()
+        var diffWidth = winWidth - otherColsWidth
+        var lastWidth = lastCg.node() ? lastCg.node().nodeMinWidth() : 0;
+        
+        //console.log("winWidth: " + winWidth + " diffWidth: " + diffWidth + " lastWidth: " + lastWidth)
+        
+        if (lastWidth == 0) {
+            lastCg.setMinAndMaxWidth(diffWidth)
+        } else if (diffWidth > lastWidth) {
+            lastCg.setMinAndMaxWidth(diffWidth)
+        } else {
+            lastCg.setMinAndMaxWidth(lastWidth)
+        }
+        
+        return this
+    },
+*/
+
+    fitLastColumnGroupToRemainingWidth: function() {
+        var lastCg = this.columnGroups().last()
+		var lastNode = lastCg.column().node()		
+		lastCg.setMinAndMaxWidth("100%")
+        return this
+    },
+
+	collapseColumnGroupsAsNeeded: function() {
+		var widthsSum = 0
+        var winWidth = this.windowWidth()
+		var shouldCollapse = false
+        var lastCg = this.columnGroups().last()
+		
+		this.columnGroups().reversed().forEach((cg) => { 
+            widthsSum += cg.node() ? cg.node().nodeMinWidth() : 0
+			shouldCollapse = (widthsSum > winWidth) && (cg != lastCg)
+			cg.setIsCollapsed(shouldCollapse)
+		})
+		
+		this.columnGroups().forEach((cg) => { 
+			cg.updateBackArrow()
+		})
+		
+		return this
+	},
     
 })

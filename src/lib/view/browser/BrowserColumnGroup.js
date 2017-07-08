@@ -23,7 +23,6 @@ BrowserColumnGroup = NodeView.extend().newSlots({
         this.setColumn(BrowserColumn.clone())
         this.columnWrapper().addSubview(this.column())
         
-		//this.registerForFocus(true)
         return this
     },
 
@@ -41,22 +40,64 @@ BrowserColumnGroup = NodeView.extend().newSlots({
 		}
 		
 		this._isSelected = aBool
-		this.header().setDoesShowBackArrow(aBool && !this.isFirstColumnGroup())
+	//	this.header().setDoesShowBackArrow(aBool && !this.isFirstColumnGroup())
 		
 		if (this.doesCollapseIfUnselected()) {
 			if (aBool) {
 				console.log(this + " expanding")
-				this.setDisplay("flex")
-				this.setMinAndMaxWidth("100%")
+				this.uncollapse()
+				//this.setMinAndMaxWidth("100%")
 			} else {
-				this.setDisplay("none")
+				this.collapse()
 				console.log(this + " collapsing")
 			}
 		}
 		
 		return this
 	},
-
+	
+	previousColumnGroup: function() {
+		var prevCol = this.column().previousColumn()
+		if (prevCol) { return prevCol.columnGroup() }
+		return null
+	},
+	
+	isFirstUncollapsed: function() {
+		var pcg = this.previousColumnGroup()
+		return (!this.isCollapsed()) && (!pcg || pcg.isCollapsed())
+	},
+	
+	updateBackArrow: function() {
+		this.header().setDoesShowBackArrow(!this.isFirstColumnGroup() && this.isFirstUncollapsed())
+		return this
+	},
+	
+	// collapsing
+	
+	setIsCollapsed: function(aBool) {
+		if (aBool) {
+			this.collapse()
+		} else {
+			this.uncollapse()
+		}
+		return this
+	},
+	
+	isCollapsed: function() {
+		return this.display() == "none"
+	},
+	
+	collapse: function() {
+		this.setDisplay("none")
+		return this
+	},
+	
+	uncollapse: function() {
+		this.setDisplay("flex")		
+		var w = this.node() ? this.node().nodeMinWidth() : 100 // not sure why this happens
+        this.setMinAndMaxWidth(w)
+		return this
+	},
     
     /// empty label 
     
@@ -99,13 +140,11 @@ BrowserColumnGroup = NodeView.extend().newSlots({
     
     setColumnClass: function(columnClass) {
         if (this.column().type() != columnClass.type()) {
-            
             var view = columnClass.clone().setNode(this.node())
             this.columnWrapper().removeSubview(this.column())
             this.setColumn(view)
             this.columnWrapper().addSubview(this.column())
             this.browser().clipToColumnGroup(this)
-            //this.browser().fitToColumnWidths()
         }
         return this
     },
@@ -137,7 +176,6 @@ BrowserColumnGroup = NodeView.extend().newSlots({
 
             if (customViewClass) {
                 this.setColumnClass(customViewClass)
-                //this.browser().fitToColumnWidths()
             }
             
         } else {

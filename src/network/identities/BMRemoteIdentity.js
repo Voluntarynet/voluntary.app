@@ -4,6 +4,7 @@ BMRemoteIdentity = BMNavNode.extend().newSlots({
     type: "BMRemoteIdentity",
 	name: "untitled",
 	publicKeyString: "",
+	hasPrivateKey: false,
 }).setSlots({
 	
     _nodeVisibleClassName: "Contact",

@@ -7,6 +7,7 @@ BMKeyPair = BMNavNode.extend().newSlots({
     type: "BMKeyPair",
     name: "",
 	privateKeyString: "",
+	hasPrivateKey: true,
 }).setSlots({
     
     init: function () {

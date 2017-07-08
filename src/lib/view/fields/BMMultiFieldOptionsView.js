@@ -35,7 +35,7 @@ BMMultiFieldOptionsView = DivView.extend().newSlots({
 	updatedValidValues: function() {
 		this.removeAllSubviews()
 		
-        this.element().style.transition = "opacity .2s"
+        this.cssStyle().transition = "opacity .2s"
 		this.setOpacity(0)
 		
 		this._validValues.forEach((v) => {

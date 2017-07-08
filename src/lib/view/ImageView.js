@@ -61,7 +61,7 @@ ImageView = NodeView.extend().newSlots({
             this.removeSubview(this.closeButtonView())
 			this.syncToNode()
 			
-            var style = this.element().style;
+            var style = this.cssStyle();
             style.width = "0px";
             style.paddingLeft = "0px";
             style.paddingRight = "0px";

@@ -57,7 +57,7 @@ BrowserColumnGroup = NodeView.extend().newSlots({
 	},
 	
 	previousColumnGroup: function() {
-		console.log("this.column() = ", this.column())
+		//console.log("this.column() = ", this.column())
 		var prevCol = this.column().previousColumn()
 		if (prevCol) { return prevCol.columnGroup() }
 		return null
@@ -94,9 +94,10 @@ BrowserColumnGroup = NodeView.extend().newSlots({
 	},
 	
 	uncollapse: function() {
-		this.setDisplay("flex")		
+		this.setDisplay("inline-flex")		
 		var w = this.node() ? this.node().nodeMinWidth() : 100 // not sure why this happens
         this.setMinAndMaxWidth(w)
+        this.setFlexGrow(1)
 		return this
 	},
     

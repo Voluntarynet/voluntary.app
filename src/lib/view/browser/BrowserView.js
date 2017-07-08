@@ -196,8 +196,7 @@ BrowserView = NodeView.extend().newSlots({
         }
         
         this.setupColumnGroupColors()
-		this.collapseColumnGroupsAsNeeded()
-        this.fitLastColumnGroupToRemainingWidth()
+		this.fitColumns()
 
 		this.updateSelectedColumnTo(selectedColumn)
         
@@ -266,19 +265,7 @@ BrowserView = NodeView.extend().newSlots({
 	// --- collapsing column groups -----
 	
     fitColumns: function () {
-		this.collapseColumnGroupsAsNeeded()
-        this.fitLastColumnGroupToRemainingWidth()
-    },
-
-    fitLastColumnGroupToRemainingWidth: function() {
-        var lastCg = this.columnGroups().last()
-		var lastNode = lastCg.column().node()	
-		console.log("lastCg node = ", lastNode ? lastNode.type() : "null")	
-		lastCg.setMinAndMaxWidth("100%")
-        return this
-    },
-
-	collapseColumnGroupsAsNeeded: function() {
+		// collapse columns as needed
 		var widthsSum = 0
         var winWidth = this.windowWidth()
 		var shouldCollapse = false
@@ -291,9 +278,14 @@ BrowserView = NodeView.extend().newSlots({
 		})
 		
 		this.columnGroups().forEach((cg) => { 
+			cg.setFlexGrow(1)
 			cg.updateBackArrow()
+			//cg.setMinAndMaxWidth(null)
 		})
 		
+		// have last column fit remaining width
+		lastCg.setMinAndMaxWidth(null)
+		lastCg.setFlexGrow(100)
 		return this
 	},
     

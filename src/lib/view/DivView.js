@@ -61,12 +61,24 @@ DivView = ideal.Proto.extend().newSlots({
     },
 */
 
+	setCssAttribute: function(key, newValue) {
+		//this.cssStyle()[key] = newValue
+
+		var oldValue = this.cssStyle()[key]
+		if(String(oldValue) != String(newValue)) {
+			this.cssStyle()[key] = newValue
+		}
+		return this
+	},
+
+
 	// --- css properties ---
 	
 	// transform
 	
 	setTextTransform: function(s) {
-        this.cssStyle().textTransform = s
+		this.setCssAttribute("text-transform", s)
+        //this.cssStyle().textTransform = s
 		return this
 	},
 	
@@ -77,7 +89,8 @@ DivView = ideal.Proto.extend().newSlots({
 	// font weight
 	
 	setFontWeight: function(s) {
-        this.cssStyle().fontWeight = s
+		this.setCssAttribute("font-weight", s)
+        //this.cssStyle().fontWeight = s
 		return this
 	},
 	
@@ -88,7 +101,8 @@ DivView = ideal.Proto.extend().newSlots({
 	// padding left
 	
     setPaddingLeft: function(aNumber) {
-        this.cssStyle().paddingLeft = aNumber + "px"
+		this.setCssAttribute("padding-left", aNumber + "px")
+        //this.cssStyle().paddingLeft = aNumber + "px"
         return this
     },
 
@@ -99,7 +113,8 @@ DivView = ideal.Proto.extend().newSlots({
 	// padding right
 	
     setPaddingRight: function(aNumber) {
-        this.cssStyle().paddingRight = aNumber + "px"
+		this.setCssAttribute("padding-right", aNumber + "px")
+        //this.cssStyle().paddingRight = aNumber + "px"
         return this
     },
 
@@ -110,7 +125,8 @@ DivView = ideal.Proto.extend().newSlots({
 	// text align
 
     setTextAlign: function(s) {
-        this.cssStyle().textAlign = s
+		this.setCssAttribute("text-align", s)
+        //this.cssStyle().textAlign = s
         return this
     },
 
@@ -120,8 +136,9 @@ DivView = ideal.Proto.extend().newSlots({
 
 	// background color
 	
-    setBackgroundColor: function(s) {
-        this.cssStyle().backgroundColor = s
+    setBackgroundColor: function(v) {
+		this.setCssAttribute("background-color", v)
+        //this.cssStyle().backgroundColor = v
         return this
     },
 
@@ -132,7 +149,8 @@ DivView = ideal.Proto.extend().newSlots({
 	// opacity
 
 	setOpacity: function(v) {
-        this.cssStyle().opacity = v
+		this.setCssAttribute("opacity", v)
+        //this.cssStyle().opacity = v
 		return this
 	},
 	
@@ -143,7 +161,8 @@ DivView = ideal.Proto.extend().newSlots({
 	// z index 
 	
 	setZIndex: function(v) {
-        this.cssStyle().zIndex = v
+		this.setCssAttribute("z-index", v)
+        //this.cssStyle().zIndex = v
 		return this
 	},
 	
@@ -154,7 +173,8 @@ DivView = ideal.Proto.extend().newSlots({
 	// cursor 
 	
     setCursor: function(s) {
-        this.cssStyle().cursor = s
+		this.setCssAttribute("cursor", s)
+        //this.cssStyle().cursor = s
 		//console.log(this.divClassName(), " setCursor " + s) 
         return this
     },
@@ -211,7 +231,8 @@ DivView = ideal.Proto.extend().newSlots({
 
     setTop: function (y) {
         var v = y + "px"
-        this.cssStyle().top = v;
+		this.setCssAttribute("top", v)
+        //this.cssStyle().top = v;
         //console.log("setTop " + v)
         return this
     },
@@ -225,7 +246,7 @@ DivView = ideal.Proto.extend().newSlots({
 	
 	/* 
 	
-	// doesn't work?
+	// doesn't work - use setMinWidth / setMaxWidth / setMinAndMaxWidth instead
 	
 	setWidth: function(aNumber) {
 		if (aNumber == "auto") {
@@ -241,7 +262,8 @@ DivView = ideal.Proto.extend().newSlots({
 
     setLeft: function (aNumber) {
         var s = aNumber + "px"
-        this.cssStyle().left = s;
+		this.setCssAttribute("left", s)
+        //this.cssStyle().left = s;
         return this
     },
 
@@ -255,7 +277,8 @@ DivView = ideal.Proto.extend().newSlots({
 	// float
 	
 	setFloat: function(s) {
-		this.cssStyle().float = s
+		this.setCssAttribute("float", s)
+		//this.cssStyle().float = s
 		return this
 	},
 	
@@ -266,17 +289,20 @@ DivView = ideal.Proto.extend().newSlots({
 	// border 
 	
 	setBorder: function(s) {
-		this.cssStyle().border = s
+		this.setCssAttribute("border", s)
+		//this.cssStyle().border = s
 		return this
 	},
 	
 	setBorderTop: function(s) {
-		this.cssStyle().borderTop = s
+		this.setCssAttribute("border-top", s)
+		//this.cssStyle().borderTop = s
 		return this
 	},
 	
 	setBorderBottom: function(s) {
-		this.cssStyle().borderBottom = s
+		this.setCssAttribute("border-bottom", s)
+		//this.cssStyle().borderBottom = s
 		return this
 	},
 	
@@ -287,7 +313,8 @@ DivView = ideal.Proto.extend().newSlots({
 	// alignment
 	
 	setTextAlign: function(s) {
-		this.cssStyle().textAlign = s
+		this.setCssAttribute("text-align", s)
+		//this.cssStyle().textAlign = s
 		return this		
 	},
 	
@@ -298,7 +325,8 @@ DivView = ideal.Proto.extend().newSlots({
 	// flex
 	
 	setFlexGrow: function(v) {
-		this.cssStyle().flexGrow = v
+		this.setCssAttribute("flex-grow", v)
+		//this.cssStyle().flexGrow = v
 		return this
 	},
 
@@ -307,7 +335,8 @@ DivView = ideal.Proto.extend().newSlots({
 	},
 	
 	setFlexBasis: function(v) {
-		this.cssStyle().flexBasis = v
+		this.setCssAttribute("flex-basis", v)
+		//this.cssStyle().flexBasis = v
 		return this
 	},
 
@@ -317,8 +346,9 @@ DivView = ideal.Proto.extend().newSlots({
 			
 	// color
 	
-    setColor: function(c) {
-        this.cssStyle().color = c;
+    setColor: function(v) {
+		this.setCssAttribute("color", v)
+        //this.cssStyle().color = v;
         return this
     },
     
@@ -328,9 +358,12 @@ DivView = ideal.Proto.extend().newSlots({
     
     setIsVisible: function(aBool) {
 		var v = aBool ? "visible" : "hidden"
+		this.setCssAttribute("visibility", v)
+		/*
 		if (this.cssStyle().visibility != v) {
         	this.cssStyle().visibility = v
 		}
+		*/
         return this
     },
 
@@ -340,7 +373,8 @@ DivView = ideal.Proto.extend().newSlots({
     
     setDisplay: function(s) {
         //assert(s in { "none", ...} );
-        this.cssStyle().display = s;
+		this.setCssAttribute("display", s)
+        //this.cssStyle().display = s;
         return this
     },
     
@@ -431,9 +465,8 @@ DivView = ideal.Proto.extend().newSlots({
 			throw new Error(type + " is invalid argument type")
 		}
 		
-		if (this.cssStyle().minWidth != newValue) {
-			this.cssStyle().minWidth = newValue
-		}
+		this.setCssAttribute("min-width", newValue)
+
         return this        
     },
 
@@ -449,9 +482,8 @@ DivView = ideal.Proto.extend().newSlots({
 			throw new Error(type + " is invalid argument type")
 		}
 		
-		if (this.cssStyle().maxWidth != newValue) {
-			this.cssStyle().maxWidth = newValue
-		}
+		this.setCssAttribute("max-width", newValue)
+		
         return this        
     },
 

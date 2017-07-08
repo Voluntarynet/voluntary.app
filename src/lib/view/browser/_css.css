@@ -20,6 +20,7 @@
     background-color: #333;
     color: #777;
     text-align: center;
+    transition: all .3s ease-out;
 }
 
 .BrowserColumnEmptyLabel {
@@ -90,6 +91,7 @@
   	overflow-y: scroll; /* has to be scroll, not auto, for touch scroll momentum to work */
 	-webkit-overflow-scrolling: touch;
     /*border-right: 1px solid rgba(100,100,100, .2);*/
+	overflow-x: hidden;
 }
 
 .BrowserFieldsColumn {

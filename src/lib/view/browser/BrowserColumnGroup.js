@@ -57,6 +57,7 @@ BrowserColumnGroup = NodeView.extend().newSlots({
 	},
 	
 	previousColumnGroup: function() {
+		console.log("this.column() = ", this.column())
 		var prevCol = this.column().previousColumn()
 		if (prevCol) { return prevCol.columnGroup() }
 		return null

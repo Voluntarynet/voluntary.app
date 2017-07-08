@@ -1,14 +1,10 @@
 /*
-
     subclasses:
-    
         BMAddrMessage
         BMInvMessage
         BMObjectMessage
 
 */
-
-
 
 BMMessage = BMFieldSetNode.extend().newSlots({
     type: "BMMessage",
@@ -24,7 +20,7 @@ BMMessage = BMFieldSetNode.extend().newSlots({
         this.setViewClassName("BMMessageView")
     },
 
-    title: function () {
+    title: function() {
         return "Message " + this.msgType()
     },
     
@@ -47,9 +43,8 @@ BMMessage = BMFieldSetNode.extend().newSlots({
         return this
     },
     
-
-    messageForString: function(dictString) {
-        var dict = JSON.parse(dictString)
+    messageForString: function(aString) {
+        var dict = JSON.parse(aString)
         var msgType = dict.msgType
         
         if (this.msgTypes().contains(msgType)) {

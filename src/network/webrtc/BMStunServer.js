@@ -27,7 +27,7 @@ BMStunServer = BMFieldSetNode.extend().newSlots({
         //this.addStoredSlots(["credential", "username"])
         this.setShouldStoreSubnodes(false)
         this.addAction("delete")
-        this.setNodeMinWidth(160)
+        this.setNodeMinWidth(300)
 
 		this.addStoredField(BMField.clone().setKey("host").setNodeValueMethod("host")).setValueIsEditable(true)
 		this.addStoredField(BMField.clone().setKey("port").setNodeValueMethod("port")).setValueIsEditable(true)

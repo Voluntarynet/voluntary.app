@@ -4,13 +4,15 @@
 	flex-direction: row;
 	flex-wrap: nowrap;
 	align-content: stretch;
-    overflow: hidden;
     position: fixed;
+    overflow: hidden;
     top: 0px;
     left: 0px;
-    width: 100%;
+    width: 90%;
     height: 100%;
-	overflow: hidden;
+	margin: 0;
+	padding: 0;
+	/*border: 1px yellow dashed;*/
 }
 
 .BrowserColumnGroup {
@@ -24,8 +26,21 @@
 	overflow: hidden;
 }
 
+.BrowserHeader {
+    position: absolute;
+    x: 0;
+    y: 0;
+    height: 40px;
+    width: 100%;
+    z-index: 10;
+    background-color: #dbdbdb;
+    text-align: right;
+	border: 1px blue dashed;
+}
+
+
 .BrowserScrollView {
-    position: fixed;
+    position: relative;
     top: 40px;
     width: 100%;
     height: 100%;
@@ -63,27 +78,6 @@
     font-size: 14px;
 }
 
-.BrowserSharedHeader {
-    position: absolute;
-    x: 0;
-    y: 0;
-    height: 40px;
-    width: 100%;
-    z-index: 10;
-    background-color: #dbdbdb;
-    text-align: right;
-}
-
-.BrowserHeader {
-    position: absolute;
-    x: 0;
-    y: 0;
-    height: 40px;
-    width: 100%;
-    z-index: 10;
-    background-color: #dbdbdb;
-    text-align: right;
-}
 
 .BackArrow {
 	display: block;
@@ -111,11 +105,12 @@
 
 .BrowserFieldsColumn {
     position: relative;
-    overflow-y: auto;
+    overflow-y: scroll;
     flex: 1;
     width: 100%;
     /*border-left: 1px solid #333;*/
 	background-color: white;
+	border: 1px blue dashed;
 }
 
 /*

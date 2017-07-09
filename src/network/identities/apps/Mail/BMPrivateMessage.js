@@ -15,17 +15,17 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
         //this.addFieldNamed("stamp").setKey("stamp").setValueIsEditable(false)
 		//this.setStamp("Unstamped")
 		
-		//this.addStoredField(BMIdentityField.clone().setNodeValueMethod("fromAddress").setKey("from").setValueIsEditable(false))
-		//this.addStoredField(BMIdentityField.clone().setNodeValueMethod("toAddress").setKey("to").setValueIsEditable(true))
+		//this.addStoredField(BMIdentityField.clone().setValueMethod("fromAddress").setKey("from").setValueIsEditable(false))
+		//this.addStoredField(BMIdentityField.clone().setValueMethod("toAddress").setKey("to").setValueIsEditable(true))
 
-		this.addStoredField(BMMultiField.clone().setKey("from").setNodeValueMethod("fromContact")).setValueIsEditable(false).setValidValuesMethod("fromContactNames") //.setNoteMethod("fromContactPublicKey")
-		this.addStoredField(BMMultiField.clone().setKey("to").setNodeValueMethod("toContact")).setValueIsEditable(true).setValidValuesMethod("toContactNames") //.setNoteMethod("toContactPublicKey")
+		this.addStoredField(BMMultiField.clone().setKey("from").setValueMethod("fromContact")).setValueIsEditable(false).setValidValuesMethod("fromContactNames") //.setNoteMethod("fromContactPublicKey")
+		this.addStoredField(BMMultiField.clone().setKey("to").setValueMethod("toContact")).setValueIsEditable(true).setValidValuesMethod("toContactNames") //.setNoteMethod("toContactPublicKey")
         this.addFieldNamed("subject").setKey("subject")	
 
         //this.addFieldNamed("senderPublicKeyString").setKey("senderPublicKeyString").setValueIsEditable(false)
         //this.addFieldNamed("receiverPublicKeyString").setKey("receiverPublicKeyString").setValueIsEditable(false)
 
-		this.addStoredField(BMTextAreaField.clone().setKey("body").setNodeValueMethod("body"))
+		this.addStoredField(BMTextAreaField.clone().setKey("body").setValueMethod("body"))
         this.setStatus("")
 
         this.setActions(["send", "delete"])
@@ -42,7 +42,7 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 	didUpdateField: function(aField) {
 		BMFieldSetNode.didUpdateField.apply(this)
 
-		var name = aField.nodeValueMethod()
+		var name = aField.valueMethod()
 		//console.log("didUpdateField(" + name + ")")
 		
 		

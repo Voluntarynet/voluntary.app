@@ -8,10 +8,10 @@ BMBlacklistEntry = BMFieldSetNode.extend().newSlots({
         this.setShouldStore(true)
         this.setNodeMinWidth(150)
 
-		this.addFieldNamed("host").setNodeValueMethod("host").setValueIsEditable(true).setValue("host")
-		this.addFieldNamed("reason").setNodeValueMethod("reason").setValueIsEditable(true).setValue("")
-		//this.addFieldNamed("creationDate").setNodeValueMethod("creationDate").setValueIsEditable(false).setValue("")
-		//this.addFieldNamed("expirationDate").setNodeValueMethod("expirationDate").setValueIsEditable(false).setValue("")
+		this.addFieldNamed("host").setValueMethod("host").setValueIsEditable(true).setValue("host")
+		this.addFieldNamed("reason").setValueMethod("reason").setValueIsEditable(true).setValue("")
+		//this.addFieldNamed("creationDate").setValueMethod("creationDate").setValueIsEditable(false).setValue("")
+		//this.addFieldNamed("expirationDate").setValueMethod("expirationDate").setValueIsEditable(false).setValue("")
 		
 	    this.addAction("delete")
     },

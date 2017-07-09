@@ -1,6 +1,7 @@
 
 /* --- FieldSet --- */
 
+/*
 .BMFieldSetView {
     font-family: "AppLight";
     position: relative;
@@ -16,6 +17,7 @@
 	padding-left: 0px;
 	padding-right: 0px;
 }
+*/
 
 /* --- FieldView --------------------------- */
 
@@ -32,9 +34,6 @@
     color: #CBCBCB;
     transition: background-color .3s ease-out;
 
-/*
-	padding: 24px;
-	*/
 	padding-left: 20px;
     height: 59px;
 	margin: 0px;
@@ -56,12 +55,7 @@
 	overflow: hidden;
 	float: left;
 	top: 18px;
-	
-/*
-    min-width: 200px;
-    max-width: 200px;
-    width: 80px;
-	*/
+
 	margin: auto;
 	
     text-align: right;
@@ -117,39 +111,45 @@
 /* --------------------------- TextArea --------------------------- */
 
 .BMTextAreaFieldView {
-    background-color: #fff;
-    opacity: 1;
-    
-    font-family: "AppRegular";
-
     display: block;
     position: relative;
-    width: 100%;
-    height: 300px;
-    color: #CBCBCB;
+    width: auto;
+	height: 300px;
+	margin: 0;
+	padding: 0;
     border-bottom: 1px solid #ddd;
+
+	border-left: 1px yellow dashed;
+	border-right: 1px yellow dashed;
+	border-top: 1px yellow dashed;
+    background-color: #fff;
     transition: background-color .3s ease-out;
+	overflow: hidden;
+	
+	overflow-y: scroll;
 }
 
-
-
 .BMTextAreaFieldValueView {
-    position: absolute;
-    color: #000;
-    font-family: "AppRegular";
-
-    width: 90%;
-    min-height: auto;
-    text-align: left;
-
-    position: absolute;
-    margin: 35px;
-	margin-left: 40px;
+    display: block;
+    position: relative;
     top: 0px;
     left: 0px;
+	padding: 0;
+    margin: 20px;
+    width: auto;
+    min-height: auto;
+
+    word-break: break-all;
+    white-space: normal;
+
+    color: black;
+    font-family: "AppRegular";
     font-size: 13px;
     font-weight: normal;
     text-transform: none;
+    text-align: left;
+
+	border: 1px red dashed;
 }
 
 /* --------------------------- TextArea --------------------------- */

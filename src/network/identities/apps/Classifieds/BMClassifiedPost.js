@@ -23,20 +23,20 @@ BMClassifiedPost = BMFieldSetNode.extend().newSlots({
 		this.setShouldStore(true)
         //this.setNodeMinWidth(550)
         
- 		this.addStoredField(BMStampField.clone().setKey("stamp").setNodeValueMethod("stamp")).setValueIsEditable(false)
+ 		this.addStoredField(BMStampField.clone().setKey("stamp").setValueMethod("stamp")).setValueIsEditable(false)
         this.addFieldNamed("path").setKey("path").setValueIsEditable(false)
 		this.fieldNamed("path").visibleValue = function () {
 			return this.value().split("/").join(" / ")
 		}
 		
         this.addFieldNamed("title").setKey("title").setValueIsEditable(true)
- 		this.addStoredField(BMNumberField.clone().setKey("price").setNodeValueMethod("price")).setValueIsEditable(true).setUnsetVisibleValue(0)
+ 		this.addStoredField(BMNumberField.clone().setKey("price").setValueMethod("price")).setValueIsEditable(true).setUnsetVisibleValue(0)
 
 
- 		this.addStoredField(BMMultiField.clone().setKey("currency").setNodeValueMethod("currency")).setValueIsEditable(true).setValidValuesMethod("currencySymbols").setNoteMethod("currencyName")
- 		this.addStoredField(BMDateField.clone().setKey("sent date").setNodeValueMethod("postDate")).setValueIsEditable(false).setUnsetVisibleValue("(not sent yet)")
-		this.addStoredField(BMTextAreaField.clone().setKey("description").setNodeValueMethod("description")).setValueIsEditable(true)
-		this.addStoredField(BMImageWellField.clone().setKey("drop images here").setNodeValueMethod("imageDataURLs")).setValueIsEditable(true)
+ 		this.addStoredField(BMMultiField.clone().setKey("currency").setValueMethod("currency")).setValueIsEditable(true).setValidValuesMethod("currencySymbols").setNoteMethod("currencyName")
+ 		this.addStoredField(BMDateField.clone().setKey("sent date").setValueMethod("postDate")).setValueIsEditable(false).setUnsetVisibleValue("(not sent yet)")
+		this.addStoredField(BMTextAreaField.clone().setKey("description").setValueMethod("description")).setValueIsEditable(true)
+		this.addStoredField(BMImageWellField.clone().setKey("drop images here").setValueMethod("imageDataURLs")).setValueIsEditable(true)
 
         this.setTitle("Untitled")
         this.setPrice(0)

@@ -136,8 +136,9 @@ BrowserView = NodeView.extend().newSlots({
         return this
     },
 
-	windowWidth: function() {
-		return App.shared().mainWindow().width()
+	browserWidth: function() {
+		return this.width()
+		//return App.shared().mainWindow().width()
 	},
 
     clearColumnsGroupsAfter: function(selectedCg) {
@@ -268,7 +269,7 @@ BrowserView = NodeView.extend().newSlots({
     fitColumns: function () {
 		// collapse columns as needed
 		var widthsSum = 0
-        var winWidth = this.windowWidth()
+        var winWidth = this.browserWidth()
 		var shouldCollapse = false
         var lastCg = this.columnGroups().last()
 		

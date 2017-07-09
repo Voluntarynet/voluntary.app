@@ -26,14 +26,14 @@ BMField = BMNode.extend().newSlots({
 	valuePrefix: null,
 	valuePostfix: null,
 	
-	nodeValueMethod: null,
+	valueMethod: null,
+	noteMethod: null, // fetches note from a parent node method
 		
 	keyError: null,
 	valueError: null,
 	
 	target: null,
 	
-	noteMethod: null, // fetches note from a parent node method
 	
 }).setSlots({
 	
@@ -56,19 +56,19 @@ BMField = BMNode.extend().newSlots({
 		return this.parentNode()
 	},
 	
-	nodeValueMethod: function() {
+	valueMethod: function() {
 		// defaults to key 
-		if (this._nodeValueMethod == null) {
+		if (this._valueMethod == null) {
 			return this.key()
 		}
 		
-		return this._nodeValueMethod
+		return this._valueMethod
 	},
 	
 	setValue: function(v) {
 		//console.log("setValue '" + v + "'")
 		var target = this.target()
-		var setter = this.setterNameForSlot(this.nodeValueMethod())
+		var setter = this.setterNameForSlot(this.valueMethod())
 		if (!target[setter]) {
 			console.log("WARNING target = " + target.type() + " setter = '" + setter + "' missing")
 		}
@@ -81,7 +81,7 @@ BMField = BMNode.extend().newSlots({
 	
 	value: function() {
 		var target = this.target()
-		var getter = this.nodeValueMethod()
+		var getter = this.valueMethod()
 		//console.log("target = " + target.type() + " getter = '" + getter + "'")
 		var value = target[getter].apply(target)
 		return value

@@ -44,7 +44,7 @@ BMFieldSetNode = BMStorableNode.extend().newSlots({
     // --- fields ---
 
 	addStoredField: function(aField) {
-		var name = aField.nodeValueMethod()
+		var name = aField.valueMethod()
 		this.addStoredSlot(name)
 		if (!this[name]) {
 			this.newSlot(name, null)
@@ -60,14 +60,14 @@ BMFieldSetNode = BMStorableNode.extend().newSlots({
 
     addFieldNamed: function(name) {	
         var field = BMField.clone().setKey(name)
-		field.setNodeValueMethod(name)
+		field.setValueMethod(name)
 		this.addStoredField(field)
         return field
     },
     
     fieldNamed: function(aName) {
         return this.subnodes().detect(function (subnode) { 
-			return subnode.nodeValueMethod() == aName || subnode.key() == aName
+			return subnode.valueMethod() == aName || subnode.key() == aName
         })
     },
     
@@ -75,12 +75,11 @@ BMFieldSetNode = BMStorableNode.extend().newSlots({
         return this.fieldNamed(aName).value()
     },
 
-
 	copyFieldsFrom: function(sourceObj) {
 		this.subnodes().forEach((targetField) => {
-			var sourceField = sourceObj.fieldNamed(targetField.nodeValueMethod())
+			var sourceField = sourceObj.fieldNamed(targetField.valueMethod())
 			targetField.setValue(sourceField.value())
-			//console.log("target field " + targetField.nodeValueMethod() + " set to '" + targetField.value() + "'")
+			//console.log("target field " + targetField.valueMethod() + " set to '" + targetField.value() + "'")
 		})
 		return this
 	},
@@ -89,25 +88,6 @@ BMFieldSetNode = BMStorableNode.extend().newSlots({
         this.markDirty()
         this.didUpdate()
     },
-
-    /*
-    syncToFields: function() {
-        this.subnodes().forEach((field) => {
-            var key = field.nodeValueMethod()
-            
-            if (key) {
-                if (!this[key]) {
-                    console.error("missing field key= '" + key + "'")
-                } else {            
-                    var value = this[key].apply(this)
-                    console.log(this.type() + " found key= '" + key + "' with value '" + value + "'") 
-                    //field.setKey(key)
-                    field.setValue(value)
-                }
-            }
-        })
-    },
-	*/
 
 	validate: function() {
 		return this.subnodes().detect((subnode) => { return !subnode.validate() }) != null

@@ -2,6 +2,7 @@
 .Browser {
     display: flex;
 	flex-direction: row;
+	flex-wrap: nowrap;
 	align-content: stretch;
     overflow: hidden;
     position: fixed;
@@ -20,7 +21,7 @@
     background-color: #333;
     color: #777;
     text-align: center;
-    transition: all .3s ease-out;
+    transition: all .2s ease-out;
 }
 
 .BrowserColumnEmptyLabel {

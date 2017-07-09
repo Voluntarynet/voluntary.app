@@ -10,7 +10,6 @@
     left: 0px;
     width: 100%;
     height: 100%;
-    padding-top: 40px;
 	overflow: hidden;
 }
 
@@ -22,7 +21,32 @@
     color: #777;
     text-align: center;
     transition: all .2s ease-out;
+	overflow: hidden;
 }
+
+.BrowserScrollView {
+    position: fixed;
+    top: 40px;
+    width: 100%;
+    height: 100%;
+	background-color: transparent;
+	border: 0px dashed #aaa;
+	overflow: hidden;
+  	overflow-y: scroll; /* has to be scroll, not auto, for touch scroll momentum to work */
+	-webkit-overflow-scrolling: touch;
+	overflow-x: hidden;
+}
+
+.BrowserColumn {
+    position: relative;
+    width: 100%;
+  	/*overflow-y: scroll; *//* has to be scroll, not auto, for touch scroll momentum to work */
+	/*
+	-webkit-overflow-scrolling: touch;
+	overflow-x: hidden;
+	*/
+}
+
 
 .BrowserColumnEmptyLabel {
     position: absolute;
@@ -84,22 +108,11 @@
     opacity: 1;
 }
 
-.BrowserColumn {
-    position: relative;
-    flex: 1;
-    top: 40px;
-    width: 100%;
-  	overflow-y: scroll; /* has to be scroll, not auto, for touch scroll momentum to work */
-	-webkit-overflow-scrolling: touch;
-    /*border-right: 1px solid rgba(100,100,100, .2);*/
-	overflow-x: hidden;
-}
 
 .BrowserFieldsColumn {
     position: relative;
     overflow-y: auto;
     flex: 1;
-    top: 40px;
     width: 100%;
     /*border-left: 1px solid #333;*/
 	background-color: white;

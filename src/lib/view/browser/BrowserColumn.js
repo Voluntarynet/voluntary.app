@@ -2,7 +2,6 @@
 BrowserColumn = NodeView.extend().newSlots({
     type: "BrowserColumn",
     rows: null,
-    node: null,
     selectionColor: "#aaa",
     allowsCursorNavigation: true,
 	debug: true,
@@ -27,7 +26,7 @@ BrowserColumn = NodeView.extend().newSlots({
     },
     
     columnGroup: function () {
-        return this.parentView()
+        return this.parentView().parentView()
     },
 
 	// rows

@@ -2,8 +2,8 @@
 BrowserColumnGroup = NodeView.extend().newSlots({
     type: "BrowserColumnGroup",
     header: null,
+	scrollView: null, // contains column
     column: null,
-    columnWrapper: null,
     emptyLabel: null,
 	isSelected: false,
 	doesCollapseIfUnselected: false,
@@ -16,14 +16,16 @@ BrowserColumnGroup = NodeView.extend().newSlots({
         this.setHeader(BrowserHeader.clone())
         this.addSubview(this.header())
         
-        this.setColumnWrapper(this)
-        
-        //this.setColumnWrapper(DivView.clone().setDivClassName("BrowserColumnWrapper"))
-        //this.addSubview(this.columnWrapper())
+        //this.setColumnWrapper(this)
+
+		this.setScrollView(DivView.clone().setDivClassName("BrowserScrollView"))
+        this.addSubview(this.scrollView())
         
         this.setColumn(BrowserColumn.clone())
-        this.columnWrapper().addSubview(this.column())
-        
+        this.scrollView().addSubview(this.column())
+
+
+
         return this
     },
 
@@ -153,9 +155,9 @@ BrowserColumnGroup = NodeView.extend().newSlots({
     setColumnClass: function(columnClass) {
         if (this.column().type() != columnClass.type()) {
             var view = columnClass.clone().setNode(this.node())
-            this.columnWrapper().removeSubview(this.column())
+            this.scrollView().removeSubview(this.column())
             this.setColumn(view)
-            this.columnWrapper().addSubview(this.column())
+            this.scrollView().addSubview(this.column())
             this.browser().clipToColumnGroup(this)
         }
         return this

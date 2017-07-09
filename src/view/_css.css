@@ -7,7 +7,6 @@
     position: relative;
     overflow-y: auto;
     flex: 1;
-    top: 40px;
     width: 100%;
     background-color: white;
 }
@@ -88,7 +87,6 @@
     position: relative;
     overflow-y: auto;
     flex: 1;
-    top: 40px;
     width: 100%;
     background-color: white;
     color: #777;
@@ -106,7 +104,6 @@
     position: relative;
     overflow-y: auto;
     flex: 1;
-    top: 40px;
     width: 100%;
     background-color: white;
 }

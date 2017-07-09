@@ -68,8 +68,9 @@ BrowserView = NodeView.extend().newSlots({
                     bgColor = cg.node().nodeBgColor() 
                 }
                 
-                cg.column().setBackgroundColor(bgColor)
-                
+//                cg.column().setBackgroundColor(bgColor)
+                cg.setBackgroundColor(bgColor)
+
                 if (cg.column().setSelectionColor) {
                     cg.column().setSelectionColor(this.bgColorForIndex(i+1))
                 } 
@@ -160,14 +161,14 @@ BrowserView = NodeView.extend().newSlots({
 	},
 	
 	updateSelectedColumnTo: function(selectedColumn) {
-        var selectedColumnGroup = selectedColumn.parentView()
+        var selectedColumnGroup = selectedColumn.columnGroup()
         this.columnGroups().forEach(function (cg) { 
 			cg.setIsSelected(cg === selectedColumnGroup) 
         })		
 	},
 	
     selectColumn: function(selectedColumn) {
-        var selectedColumnGroup = selectedColumn.parentView()
+        var selectedColumnGroup = selectedColumn.columnGroup()
 
         var index = this.columnGroups().indexOf(selectedColumn.columnGroup())
 		

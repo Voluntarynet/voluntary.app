@@ -118,10 +118,11 @@
 	margin: 0;
 	padding: 0;
     border-bottom: 1px solid #ddd;
-
+/*
 	border-left: 1px yellow dashed;
 	border-right: 1px yellow dashed;
 	border-top: 1px yellow dashed;
+	*/
     background-color: #fff;
     transition: background-color .3s ease-out;
 	overflow: hidden;
@@ -149,7 +150,7 @@
     text-transform: none;
     text-align: left;
 
-	border: 1px red dashed;
+	/*border: 1px red dashed;*/
 }
 
 /* --------------------------- TextArea --------------------------- */

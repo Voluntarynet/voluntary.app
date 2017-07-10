@@ -1,17 +1,18 @@
 
 .Browser {
     display: flex;
+    justify-content: stretch;
 	flex-direction: row;
 	flex-wrap: nowrap;
 	align-content: stretch;
-    position: fixed;
-    overflow: hidden;
+    position: absolute;
     top: 0px;
     left: 0px;
-    width: 90%;
+    width: 100%;
     height: 100%;
 	margin: 0;
 	padding: 0;
+    overflow: hidden;
 	/*border: 1px yellow dashed;*/
 }
 
@@ -27,26 +28,26 @@
 }
 
 .BrowserHeader {
-    position: absolute;
-    x: 0;
-    y: 0;
+    position: fixed;
+    top: 0px;
+    /*left: 0px;*/
     height: 40px;
     width: 100%;
-    z-index: 10;
+    z-index: 100000;
     background-color: #dbdbdb;
     text-align: right;
-	border: 1px blue dashed;
+	/*border: 1px blue dashed;*/
 }
 
 
 .BrowserScrollView {
-    position: relative;
+    position: fixed;
     top: 40px;
+    /*left: 0px;*/
     width: 100%;
     height: 100%;
 	background-color: transparent;
-	border: 0px dashed #aaa;
-	overflow: hidden;
+/*	border: 0px dashed #aaa;*/
   	overflow-y: scroll; /* has to be scroll, not auto, for touch scroll momentum to work */
 	-webkit-overflow-scrolling: touch;
 	overflow-x: hidden;
@@ -110,7 +111,7 @@
     width: 100%;
     /*border-left: 1px solid #333;*/
 	background-color: white;
-	border: 1px blue dashed;
+/*	border: 1px blue dashed;*/
 }
 
 /*

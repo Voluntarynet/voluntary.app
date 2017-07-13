@@ -1,15 +1,18 @@
 
 .Browser {
     display: flex;
-    justify-content: stretch;
-	flex-direction: row;
-	flex-wrap: nowrap;
-	align-content: stretch;
     position: absolute;
     top: 0px;
     left: 0px;
-    width: 100%;
-    height: 100%;
+    /*
+    justify-content: stretch;
+	align-content: stretch;
+	*/
+	flex-direction: row;
+	flex-wrap: nowrap;
+    width: calc(100% - 0px);
+    height: calc(100% - 0px);
+    
 	margin: 0;
 	padding: 0;
     overflow: hidden;
@@ -17,7 +20,7 @@
 }
 
 .BrowserColumnGroup {
-    display: inline-flex;
+    display: flex;
 	flex-grow: 1;
     position: relative;
     background-color: #333;
@@ -28,9 +31,9 @@
 }
 
 .BrowserHeader {
-    position: fixed;
+    position: absolute;
     top: 0px;
-    /*left: 0px;*/
+    left: 0px;
     height: 40px;
     width: 100%;
     z-index: 100000;
@@ -39,30 +42,23 @@
 	/*border: 1px blue dashed;*/
 }
 
-
 .BrowserScrollView {
-    position: fixed;
+    position: absolute;
     top: 40px;
-    /*left: 0px;*/
+    left: 0px;
     width: 100%;
-    height: 100%;
+    height: calc(100% - 40px);
 	background-color: transparent;
-/*	border: 0px dashed #aaa;*/
   	overflow-y: scroll; /* has to be scroll, not auto, for touch scroll momentum to work */
-	-webkit-overflow-scrolling: touch;
 	overflow-x: hidden;
 }
 
 .BrowserColumn {
     position: relative;
     width: 100%;
-  	/*overflow-y: scroll; *//* has to be scroll, not auto, for touch scroll momentum to work */
-	/*
 	-webkit-overflow-scrolling: touch;
-	overflow-x: hidden;
-	*/
+	overflow: hidden;
 }
-
 
 .BrowserColumnEmptyLabel {
     position: absolute;
@@ -78,7 +74,6 @@
     font-family: "AppRegular";
     font-size: 14px;
 }
-
 
 .BackArrow {
 	display: block;
@@ -102,7 +97,6 @@
 .BrowserHeaderAction:hover {
     opacity: 1;
 }
-
 
 .BrowserFieldsColumn {
     position: relative;

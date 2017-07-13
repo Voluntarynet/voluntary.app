@@ -136,10 +136,6 @@ BrowserView = NodeView.extend().newSlots({
         return this
     },
 
-	browserWidth: function() {
-		return this.width()
-		//return App.shared().mainWindow().width()
-	},
 
     clearColumnsGroupsAfter: function(selectedCg) {
         var cgs = this.columnGroups()
@@ -267,28 +263,57 @@ BrowserView = NodeView.extend().newSlots({
 	// --- collapsing column groups -----
 	
     fitColumns: function () {
+        //this.fitToWindow()
+        
 		// collapse columns as needed
 		var widthsSum = 0
         var winWidth = this.browserWidth()
 		var shouldCollapse = false
         var lastCg = this.columnGroups().last()
+        var usedWidth = 0
 		
 		this.columnGroups().reversed().forEach((cg) => { 
-            widthsSum += cg.node() ? cg.node().nodeMinWidth() : 0
+		    var w = cg.node() ? cg.node().nodeMinWidth() : 0
+            widthsSum += w
 			shouldCollapse = (widthsSum > winWidth) && (cg != lastCg)
+			if (!shouldCollapse) {
+			    usedWidth += w
+			}
 			cg.setIsCollapsed(shouldCollapse)
 		})
 		
-		this.columnGroups().forEach((cg) => { 
+		this.columnGroups().forEach((cg) => {
 			cg.setFlexGrow(1)
 			cg.updateBackArrow()
 			//cg.setMinAndMaxWidth(null)
 		})
 		
-		// have last column fit remaining width
-		lastCg.setMinAndMaxWidth(null)
-		lastCg.setFlexGrow(100)
+		if (false) {
+    		var remainingWidth = this.browserWidth() - usedWidth
+    		// have last column fit remaining width
+    		lastCg.setMinAndMaxWidth(remainingWidth)
+    		console.log("remainingWidth = ", remainingWidth)
+    		//lastCg.setFlexGrow(0)
+        } else {
+    		lastCg.setMinAndMaxWidth(null)
+    		lastCg.setFlexGrow(100)
+    	}
+    	
+    	
 		return this
 	},
+	
+
+	browserWidth: function() {
+		return this.width()
+	},
+	
+	/*
+	fitToWindow: function() {
+		this.setMinAndMaxWidth(App.shared().mainWindow().width()-2)
+		this.setMinAndMaxHeight(App.shared().mainWindow().height()-2)
+	    return this
+	},
+	*/
     
 })

@@ -8,6 +8,7 @@ BrowserColumnGroup = NodeView.extend().newSlots({
 	isSelected: false,
 	doesCollapseIfUnselected: false,
 	isCollapsed: false,
+	animatesCollapse: false,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
@@ -97,19 +98,29 @@ BrowserColumnGroup = NodeView.extend().newSlots({
 	
 	collapse: function() {
 		this._isCollapsed = true
-		this.setMinAndMaxWidth(0)
-		setTimeout(() => { this.setDisplay("none") }, 500)
+		if (this.animatesCollapse()) {
+    		this.setMinAndMaxWidth(0)
+    		setTimeout(() => { this.setDisplay("none") }, 500)
+        } else {
+            this.setDisplay("none")
+        }
 		return this
 	},
 	
 	uncollapse: function() {
 		this._isCollapsed = false
-		this.setDisplay("inline-flex")		
-        this.setFlexGrow(1)
-		setTimeout(() => { 
-			var w = this.node() ? this.node().nodeMinWidth() : 100 // not sure why this happens
-	        this.setMinAndMaxWidth(w)
-		}, 10)
+		if (this.animatesCollapse()) {
+    		this.setDisplay("inline-flex")		
+            this.setFlexGrow(1)
+    		setTimeout(() => { 
+    			var w = this.node() ? this.node().nodeMinWidth() : 100 // not sure why this happens
+    	        this.setMinAndMaxWidth(w)
+    		}, 10)
+    	} else {
+    	    this.setDisplay("inline-flex")		
+            this.setFlexGrow(1)
+    	    this.setMinAndMaxWidth(w)
+    	}
 		return this
 	},
     

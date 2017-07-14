@@ -117,6 +117,7 @@ BrowserColumnGroup = NodeView.extend().newSlots({
     	        this.setMinAndMaxWidth(w)
     		}, 10)
     	} else {
+    	   var w = this.node() ? this.node().nodeMinWidth() : 100 // not sure why this happens
     	    this.setDisplay("inline-flex")		
             this.setFlexGrow(1)
     	    this.setMinAndMaxWidth(w)

@@ -10,7 +10,7 @@ BrowserColumn = NodeView.extend().newSlots({
     init: function () {
         NodeView.init.apply(this)
         this.setDivClassName("BrowserColumn")
-        this.setSubviewProto(BrowserTitledRow)
+        this.setDefaultSubnodeViewClass(BrowserTitledRow)
         this.setOwnsView(false)
         this.registerForKeyboard(true)
         return this

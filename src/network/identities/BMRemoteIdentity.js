@@ -28,7 +28,7 @@ BMRemoteIdentity = BMNavNode.extend().newSlots({
 		this.initStoredSlotWithProto("messages", BMInbox)
 		this.messages().setTitle("messages")
 
-        //this.setNodeBgColor("white")
+        //this.setNodeBackgroundColor("white")
 
 		this.profile().fieldNamed("publicKeyString").setValueIsEditable(true)
 		

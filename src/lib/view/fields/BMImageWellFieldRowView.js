@@ -1,10 +1,10 @@
 
-BMImageWellFieldView = BMFieldView.extend().newSlots({
+BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
     type: "BMImageWellFieldView",
 }).setSlots({
     init: function () {
-        BMFieldView.init.apply(this)
-        this.setDivClassName("BMImageWellFieldView")
+        BMFieldRowView.init.apply(this)
+        this.setDivClassName("BMImageWellFieldRowView")
 		this.keyView().setDivClassName("BMImageWellKeyField") //.setDisplay("none")
 		//this.valueView().setContentEditable(false)
         //this.turnOffUserSelect()

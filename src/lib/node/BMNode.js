@@ -40,7 +40,7 @@ BMNode = ideal.Proto.extend().newSlots({
     nodeMinHeight: 0, // tall fields like draft body
 
     nodeContent: null,
-    nodeBgColor: null,
+    nodeBackgroundColor: null,
         
 	// persistence 
     pid: null,
@@ -119,11 +119,19 @@ BMNode = ideal.Proto.extend().newSlots({
 
 	// --- nodeRowViewClass ---
     
+    /*
+    rowNode: function() {
+        return this
+    },
+    */
+    
     nodeRowViewClass: function () {     
 		// see if there's a type + RowView class
 		var name = this.type() + "RowView"
+		    console.log("looking for " +  name)
 		
 		if (window[name]) {
+		    console.log("FOUND " +  name)
 			return window[name]
 		}
 		

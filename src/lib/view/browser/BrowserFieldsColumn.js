@@ -1,4 +1,5 @@
 
+/*
 BrowserFieldsColumn = BrowserColumn.extend().newSlots({
     type: "BrowserFieldsColumn",
 }).setSlots({
@@ -9,4 +10,4 @@ BrowserFieldsColumn = BrowserColumn.extend().newSlots({
         return this
     },
 })
-
+*/

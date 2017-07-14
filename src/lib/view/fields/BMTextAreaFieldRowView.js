@@ -1,10 +1,10 @@
 
-BMTextAreaFieldView = BMFieldView.extend().newSlots({
-    type: "BMTextAreaFieldView",
+BMTextAreaFieldRowView = BMFieldRowView.extend().newSlots({
+    type: "BMTextAreaFieldRowView",
 }).setSlots({
     init: function () {
-        BMFieldView.init.apply(this)
-        this.setDivClassName("BMTextAreaFieldView")
+        BMFieldRowView.init.apply(this)
+        this.setDivClassName("BMTextAreaFieldRowView")
 		this.keyView().setDisplay("none")
 		//this.valueView().setDivClassName("BMTextAreaFieldValueView")
         return this

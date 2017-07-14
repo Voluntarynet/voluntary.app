@@ -9,7 +9,7 @@ BMStampField = BMField.extend().newSlots({
 }).setSlots({
     init: function () {
         BMField.init.apply(this)
-		this.setViewClassName("BMFieldView")
+		this.setViewClassName("BMFieldRowView")
 		//this.setKeyIsVisible(false)
 		//this.setKey("drop images here")
 		this.setKeyIsEditable(false)

@@ -98,15 +98,15 @@
     opacity: 1;
 }
 
+/*
 .BrowserFieldsColumn {
     position: relative;
     overflow-y: scroll;
     flex: 1;
     width: 100%;
-    /*border-left: 1px solid #333;*/
 	background-color: white;
-/*	border: 1px blue dashed;*/
 }
+*/
 
 /*
 .BrowserColumn:focus {
@@ -129,6 +129,7 @@
     color: #CBCBCB;
     /*border-bottom: 1px solid rgba(100,100,100, .4);*/
     transition: background-color .3s ease-out;
+	overflow: hidden;
 }
 
 .BrowserRowTitle {

@@ -1,3 +1,4 @@
+
 BrowserRowTitle = DivView.extend().newSlots({
     type: "BrowserRowTitle",
 	isSelected: false,

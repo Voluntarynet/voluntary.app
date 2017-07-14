@@ -1,13 +1,12 @@
 
-BMMultiFieldOptionsView = DivView.extend().newSlots({
+BMMultiFieldOptionsRowView = DivView.extend().newSlots({
     type: "BMMultiFieldOptionsView",
 	validValues: null,
 }).setSlots({
     init: function () {
         DivView.init.apply(this)
-        this.setDivClassName("BMMultiFieldOptionsView")
+        this.setDivClassName("BMMultiFieldOptionsRowView")
 		this.turnOffUserSelect()
-		//this.setSubviewProto(BMMultiFieldOptionView)
         return this
     },
 

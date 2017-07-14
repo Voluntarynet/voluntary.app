@@ -9,7 +9,7 @@ BMDateField = BMField.extend().newSlots({
 }).setSlots({
     init: function () {
         BMField.init.apply(this)
-		this.setViewClassName("BMFieldView")
+		this.setViewClassName("BMFieldRowView")
 		this.setKeyIsEditable(false)
 		this.setValueIsEditable(false)
     },

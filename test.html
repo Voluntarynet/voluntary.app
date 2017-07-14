@@ -22,28 +22,16 @@
     
         .Browser {
             display: flex;
-            /*
-            position: absolute;
-            top: 0px;
-            left: 0px;
-            */
-            /*
-            justify-content: stretch;
-        	align-content: stretch;
-        	*/
         	flex-direction: row;
         	flex-wrap: nowrap;
-        	/*
-            width: 100%;
-            height: 100%;
-            */
+ 
             width: calc(100% - 2px);
             height: calc(100% - 2px);
     
         	margin: 0;
         	padding: 0;
             overflow: hidden;
-    	background-color: black;
+    	    background-color: black;
         }
 
         .BrowserColumnGroup {
@@ -71,13 +59,12 @@
         	/*border: 1px blue dashed;*/
         }
 
-
         .BrowserScrollView {
             position: absolute;
             top: 41px;
             /*left: 0px;*/
             width: 100%;
-            height: calc(100% - 41px);
+            height: calc(100% - 40px);
         	background-color: transparent;
         /*	border: 0px dashed #aaa;*/
           	overflow-y: scroll; /* has to be scroll, not auto, for touch scroll momentum to work */

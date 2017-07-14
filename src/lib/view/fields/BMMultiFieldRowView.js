@@ -1,11 +1,11 @@
 
-BMMultiFieldView = BMFieldView.extend().newSlots({
-    type: "BMMultiFieldView",
+BMMultiFieldRowView = BMFieldRowView.extend().newSlots({
+    type: "BMMultiFieldRowView",
 	optionsView: null,
 }).setSlots({
     init: function () {
-        BMFieldView.init.apply(this)
-        this.setDivClassName("BMFieldView")
+        BMFieldRowView.init.apply(this)
+        this.setDivClassName("BMFieldRowView")
 
 		this.setOptionsView(BMMultiFieldOptionsView.clone())
 		this.optionsView().setDisplay("none")
@@ -105,7 +105,7 @@ BMMultiFieldView = BMFieldView.extend().newSlots({
 	},
 	
 	onDidEdit: function() {
-		var returnValue = BMFieldView.onDidEdit.apply(this)
+		var returnValue = BMFieldRowView.onDidEdit.apply(this)
 	//	console.log(this.type() + " onDidEdit")
 		
 		var currentValidValues = this.currentValidValues()

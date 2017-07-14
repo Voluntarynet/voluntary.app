@@ -31,7 +31,7 @@ BMFieldSetNode = BMStorableNode.extend().newSlots({
     init: function () {
         BMStorableNode.init.apply(this)
         this.setNodeMinWidth(500)
-		this.setViewClassName("BrowserFieldsColumn")
+		//this.setViewClassName("BrowserFieldsColumn")
 		this.setShouldStoreSubnodes(false)
 		//this.setViewClassName(null)
 		//console.log("BMFieldSetNode viewClassName = '" + this.viewClassName() + "'")

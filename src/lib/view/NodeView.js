@@ -3,6 +3,7 @@ NodeView = DivView.extend().newSlots({
     type: "NodeView",
     node: null,
     ownsView: true,
+    defaultSubnodeViewClass: null,
 }).setSlots({
     init: function () {
         DivView.init.apply(this)
@@ -49,6 +50,7 @@ NodeView = DivView.extend().newSlots({
     },
     
     subviewProto: function() {
+        //console.log("looking for subviewProto")
         if (this.node()) {
             var vc = this.node().nodeRowViewClass()
             if (vc) { 
@@ -59,6 +61,20 @@ NodeView = DivView.extend().newSlots({
     },
 
 	// --- syncing ---
+    
+    newSubviewForSubnode: function(aSubnode) {
+		var proto = aSubnode.viewClass()
+		
+		if (!proto) {
+			proto = this.defaultSubnodeViewClass()
+		}
+				
+        if (!proto) {
+            throw new Error("missing proto view to create " + aNode.type() + " view")
+        }
+
+		return proto.clone().setNode(aSubnode)
+    },
     
     syncFromNode: function () {
         // only replace subviews if sync requires it
@@ -77,7 +93,7 @@ NodeView = DivView.extend().newSlots({
             var subview = this.subviewForNode(subnode) // get the current view for the node, if there is one
             
             if (!subview) {
-                subview = this.newSubviewForNode(subnode).syncFromNode()
+                subview = this.newSubviewForSubnode(subnode).syncFromNode()
             } else {
                 subview.syncFromNode()
             }

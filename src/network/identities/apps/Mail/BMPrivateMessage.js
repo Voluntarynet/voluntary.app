@@ -30,7 +30,7 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 
         this.setActions(["send", "delete"])
         this.setNodeMinWidth(600)
-        this.setNodeBgColor("white")
+        this.setNodeBackgroundColor("white")
 
 		this.addStoredSlots(["senderPublicKeyString", "receiverPublicKeyString"])
 		//this.didUpdate()

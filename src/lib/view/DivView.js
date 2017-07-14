@@ -23,7 +23,6 @@ DivView = ideal.Proto.extend().newSlots({
     // parent view and subviews
     parentView: null,
     subviews: null,
-    subviewProto: null,
     
     // target / action
     target: null,
@@ -47,7 +46,7 @@ DivView = ideal.Proto.extend().newSlots({
         e.setAttribute('class', this.divClassName());
         this._element = e
         //this.cssStyle().transition = "all .2s"
-        this.setSubviewProto(DivView)
+        //this.setSubviewProto(DivView)
         return this
     },
 
@@ -498,25 +497,17 @@ DivView = ideal.Proto.extend().newSlots({
     },
 
 	// --- subviews ---
-    
-    newSubviewFromProto: function () {
-        var anSubview = this.subviewProto().clone()
-        if (anSubview == null) {
-            throw new Error("null anSubview")
-        }
-        return anSubview
-    },
 
     addSubview: function(anSubview) {
         if (anSubview == null) {
-            anSubview = this.newSubviewFromProto()
+            throw new Error("anSubview can't be null")
         }
         
         this._subviews.append(anSubview)
         
-        if ( anSubview.element() == null) {
-                console.log("anSubview = ", anSubview)
-                throw new Error("null anSubview.element()")
+        if (anSubview.element() == null) {
+            //console.log("anSubview = ", anSubview)
+            throw new Error("null anSubview.element()")
         }
         this._element.appendChild(anSubview.element());
         anSubview.setParentView(this)
@@ -527,37 +518,6 @@ DivView = ideal.Proto.extend().newSlots({
     addSubviews: function(someSubviews) {
         someSubviews.forEach( (subview) => { this.addSubview(subview) })
         return this
-    },
- 
-    newSubviewForNode: function(aNode) {
-		var proto = null
-		
-
-		if (!proto) {
-			proto = this.subviewProto()
-		}
-		
-		if (!proto) {
-			proto = aNode.viewClass()
-			if (proto) {
-				//console.log("viewClass = ", aNode.viewClass())
-			}
-		}
-				
-        if (!proto) {
-            throw new Error("missing proto to create newSubviewForNode(" + aNode.type() + ")")
-        }
-
-		var subview = proto.clone()
-		
-		if (!subview.setNode) {
-			console.log("Div WARNING: node " + aNode.type() + " has view proto = " + proto.type() + " but it's missing setNode method")
-			console.log("Div WARNING: missing " + subview.type() + ".setNode method, node is a '" + aNode.type() + "' view proto = " + proto.type())
-			console.log(this.type() + ".subviewProto() = ", this.subviewProto().type())
-			console.log(aNode.type() + ".viewClass() = ", aNode.viewClass().type())
-		}
-		
-        return subview.setNode(aNode)
     },
     
     atInsertSubview: function (anIndex, anSubview) {

@@ -1,6 +1,6 @@
 
-BMFieldView = BrowserFieldRow.extend().newSlots({
-    type: "BMFieldView",
+BMFieldRowView = BrowserFieldRow.extend().newSlots({
+    type: "BMFieldRowView",
 	keyView: null,
 	valueView: null,
 	noteView: null,
@@ -11,7 +11,7 @@ BMFieldView = BrowserFieldRow.extend().newSlots({
     init: function () {
         BrowserFieldRow.init.apply(this)
         
-        this.setDivClassName("BMFieldView")
+        this.setDivClassName("BMFieldRowView")
 
 		this.setKeyView(this.addSubview(DivView.clone().setDivClassName("BMFieldKeyView")))
         this.addSubview(this.keyView())     
@@ -23,7 +23,7 @@ BMFieldView = BrowserFieldRow.extend().newSlots({
         this.valueView().setUserSelect("text")
 		this.valueView().setSpellCheck(false)
 		
-		this.setNoteView(DivView.clone().setDivClassName("BMFieldViewNoteView"))
+		this.setNoteView(DivView.clone().setDivClassName("BMFieldRowViewNoteView"))
 		this.addSubview(this.noteView())
         this.noteView().setUserSelect("text")
         

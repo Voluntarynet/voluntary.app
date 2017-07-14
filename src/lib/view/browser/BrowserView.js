@@ -18,7 +18,7 @@ BrowserView = NodeView.extend().newSlots({
     init: function () {
         NodeView.init.apply(this)
         this.setDivClassName("Browser")
-        this.setSubviewProto(BrowserColumnGroup)
+        this.setDefaultSubnodeViewClass(BrowserColumnGroup)
         this.registerForWindowResize(true)
         return this
     },
@@ -64,8 +64,8 @@ BrowserView = NodeView.extend().newSlots({
             if (cg.column().type() == "BrowserColumn") {
                 var bgColor = this.bgColorForIndex(i)
                                
-                if (cg.node() && cg.node().nodeBgColor()) { 
-                    bgColor = cg.node().nodeBgColor() 
+                if (cg.node() && cg.node().nodeBackgroundColor()) { 
+                    bgColor = cg.node().nodeBackgroundColor() 
                 }
                 
 //                cg.column().setBackgroundColor(bgColor)
@@ -267,15 +267,19 @@ BrowserView = NodeView.extend().newSlots({
         
 		// collapse columns as needed
 		var widthsSum = 0
-        var winWidth = this.browserWidth()
+        var browserWidth = this.browserWidth()
 		var shouldCollapse = false
         var lastCg = this.columnGroups().last()
         var usedWidth = 0
+        var remainingWidth = 0
 		
 		this.columnGroups().reversed().forEach((cg) => { 
 		    var w = cg.node() ? cg.node().nodeMinWidth() : 0
             widthsSum += w
-			shouldCollapse = (widthsSum > winWidth) && (cg != lastCg)
+			shouldCollapse = (widthsSum > browserWidth) && (cg != lastCg)
+			if (cg == lastCg) {
+			    remainingWidth =  this.browserWidth() - usedWidth
+			}
 			if (!shouldCollapse) {
 			    usedWidth += w
 			}
@@ -289,7 +293,6 @@ BrowserView = NodeView.extend().newSlots({
 		})
 		
 		if (false) {
-    		var remainingWidth = this.browserWidth() - usedWidth
     		// have last column fit remaining width
     		lastCg.setMinAndMaxWidth(remainingWidth)
     		console.log("remainingWidth = ", remainingWidth)
@@ -299,14 +302,16 @@ BrowserView = NodeView.extend().newSlots({
     		lastCg.setFlexGrow(100)
     	}
     	
-    	
 		return this
 	},
-	
 
 	browserWidth: function() {
 		return this.width()
 	},
+	
+	windowWidth: function() {
+	    return App.shared().mainWindow().width()
+	}
 	
 	/*
 	fitToWindow: function() {
@@ -315,5 +320,4 @@ BrowserView = NodeView.extend().newSlots({
 	    return this
 	},
 	*/
-    
 })

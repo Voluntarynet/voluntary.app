@@ -1,6 +1,6 @@
 
 BMPointerFieldView = BrowserTitledRow.extend().newSlots({
-//BMPointerFieldView = BMFieldView.extend().newSlots({
+//BMPointerFieldView = BMFieldRowView.extend().newSlots({
     type: "BMPointerFieldView",
 }).setSlots({
     init: function () {

@@ -21,7 +21,7 @@
 
 /* --- FieldView --------------------------- */
 
-.BMFieldView {
+.BMFieldRowView {
     background-color: #fff;
     opacity: 1;
     
@@ -110,7 +110,7 @@
 
 /* --------------------------- TextArea --------------------------- */
 
-.BMTextAreaFieldView {
+.BMTextAreaFieldRowView {
     display: block;
     position: relative;
     width: auto;
@@ -289,7 +289,7 @@
 	color: white;
 }
 
-.BMFieldViewNoteView {
+.BMFieldRowViewNoteView {
 	display: block;
     position: relative;
 	top: 18px;

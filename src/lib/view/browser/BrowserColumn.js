@@ -12,7 +12,7 @@ BrowserColumn = NodeView.extend().newSlots({
         this.setDivClassName("BrowserColumn")
         this.setDefaultSubnodeViewClass(BrowserTitledRow)
         this.setOwnsView(false)
-        this.registerForKeyboard(true)
+        this.setIsRegisteredForKeyboard(true)
         return this
     },
     
@@ -166,11 +166,11 @@ BrowserColumn = NodeView.extend().newSlots({
         NodeView.syncFromNode.apply(this)
         
         if (this.node() == null) {
-            this.registerForDrop(false)
+            this.setIsRegisteredForDrop(false)
             return
         }
         
-        this.registerForDrop(this.node().acceptsFileDrop())
+        this.setIsRegisteredForDrop(this.node().acceptsFileDrop())
 
         if (!thereWasASelection) {
             this.browser().clearColumnsGroupsAfter(this.columnGroup())

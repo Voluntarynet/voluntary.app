@@ -38,6 +38,16 @@ DivView = ideal.Proto.extend().newSlots({
 	nextKeyView: null,
 	canMakeKey: true,
 	unfocusOnEnterKey: false,
+	
+	// event handling
+	isRegisteredForDrop: false,
+	isRegisteredForWindowResize: false,
+	isRegisteredForClicks: false,
+	isRegisteredForKeyboard: false,
+	isRegisteredForMouse: false,
+	isRegisteredForFocus: false,
+	isRegisteredForPaste: false,
+	
 }).setSlots({
     init: function () {
         this._subviews = []
@@ -355,11 +365,24 @@ DivView = ideal.Proto.extend().newSlots({
 	display: function() {
 		return this.cssStyle().display
 	},
+	
+	userSelectKeys: function() {
+		return [
+			"-moz-user-select", 
+			"-khtml-user-select", 
+			"-webkit-user-select", 
+			"-o-user-select"
+		]
+	},
 
+	userSelect: function() {
+        var style = this.cssStyle()
+		var result = this.userSelectKeys().detect((key) => { return style[key] })
+		result = result || style.userSelect
+		return result 
+	},
+	
     turnOffUserSelect: function() {
-        this.cssStyle().userSelect = "none";
-        this.cssStyle().webkitUserSelect = "none";
-        this.cssStyle().MozUserSelect = "none";
         this.setUserSelect("none");
         return this
     },
@@ -371,17 +394,13 @@ DivView = ideal.Proto.extend().newSlots({
 	
 	// user selection 
 	
-    setUserSelect: function(v) {
-        var s = this._element.style
-        s.userSelect = v;
-        s["-moz-user-select"] = v;
-        s["-khtml-user-select"] = v;
-        s["-webkit-user-select"] = v;
-        s["-o-user-select"] = v;
-
-        s.userSelect = v;
-        s.webkitUserSelect = v;
-        s.MozUserSelect = v;
+    setUserSelect: function(aString) {
+        var style = this.cssStyle()
+		//console.log("'" + aString + "' this.userSelect() = '" + this.userSelect() + "' == ", this.userSelect() == aString)
+		if (this.userSelect() != aString) {
+			style.userSelect = aString
+			this.userSelectKeys().forEach((key) => { style[key] = aString })
+		}
         return this
     },
 	
@@ -735,15 +754,24 @@ DivView = ideal.Proto.extend().newSlots({
 	
 	// --- window resize events ---
 	
-    registerForWindowResize: function(aBool) {
-        if (!this._windowResizeCallback) { // so callback is unique to this div        
-            this._windowResizeCallback = (event) => { this.onWindowResize(event) }
+	windowResizeListenerFunc: function() {
+        if (!this._windowResizeListenerFunc) { // so callback is unique to this div        
+            this._windowResizeListenerFunc = (event) => { this.onWindowResize(event) }
         }
-        
+		return this._windowResizeListenerFunc	
+	},
+	
+    setIsRegisterForWindowResize: function(aBool) {        
         if (aBool) {
-            window.addEventListener('resize', this._windowResizeCallback, false);
+			if (this._isRegisteredForWindowResize == false) {
+				this._isRegisteredForWindowResize = true
+            	window.addEventListener('resize', this.windowResizeListenerFunc(), false);
+			}
         } else {
-            window.removeEventListener('resize', this._windowResizeCallback);
+			if (this._isRegisteredForWindowResize == true) {
+				this._isRegisteredForWindowResize = false
+	            window.removeEventListener('resize', this.windowResizeListenerFunc());
+			}
         }
         
         return this
@@ -760,24 +788,30 @@ DivView = ideal.Proto.extend().newSlots({
 	
     // --- onClick event, target & action ---
     
-    registerForClicks: function (aBool) {
+    setIsRegisteredForClicks: function (aBool) {
         if (aBool) {
-            this.element().onclick =  (event) =>{ 
-				this.handleEventFunction( () => { this.onClick(event) })
+			if (this._isRegisteredForClicks == false) {
+				this._isRegisteredForClicks = true
+	            this.element().onclick =  (event) =>{ 
+					this.handleEventFunction( () => { this.onClick(event) })
+				}
+	            //this.element().ondblclick = function (event) { this.onDoubleClick(event) }
+				this.makeCursorPointer()
 			}
-            //this.element().ondblclick = function (event) { this.onDoubleClick(event) }
-			this.makeCursorPointer()
         } else {
-            this.element().onclick = null
-            this.element().ondbclick = null
-			this.makeCursorDefault()
+			if (this._isRegisteredForClicks == true) {
+				this._isRegisteredForClicks = false
+	            this.element().onclick = null
+	            this.element().ondbclick = null
+				this.makeCursorDefault()
+			}
         }
         return this
     },
     
     setAction: function (anAction) {
         this._action = anAction
-        this.registerForClicks(anAction != null)
+        this.setIsRegisteredForClicks(anAction != null)
         return this       
     },
     
@@ -798,17 +832,23 @@ DivView = ideal.Proto.extend().newSlots({
     
     // drag & drop
     
-    registerForDrop: function (aBool) {
+    setIsRegisteredForDrop: function (aBool) {
         if (aBool) {
-            this.element().ondragover  =  (event) => { return this.onDragOver(event) }
-            this.element().ondragleave =  (event) => { return this.onDragLeave(event) }
-            this.element().ondragend   =  (event) => { return this.onDragEnd(event) }
-            this.element().ondrop      =  (event) => { return this.onDrop(event) }
+			if (this._isRegisteredForDrop == false) {
+				this._isRegisteredForDrop = true
+	            this.element().ondragover  =  (event) => { return this.onDragOver(event) }
+	            this.element().ondragleave =  (event) => { return this.onDragLeave(event) }
+	            this.element().ondragend   =  (event) => { return this.onDragEnd(event) }
+	            this.element().ondrop      =  (event) => { return this.onDrop(event) }
+			}
         } else {
-            this.element().ondragover  = null
-            this.element().ondragleave = null
-            this.element().ondragend   = null
-            this.element().ondrop     = null
+			if (this._isRegisteredForDrop == true) {
+				this._isRegisteredForDrop = false
+	            this.element().ondragover  = null
+	            this.element().ondragleave = null
+	            this.element().ondragend   = null
+	            this.element().ondrop      = null
+			}
         }
         return this
     },   
@@ -909,15 +949,14 @@ DivView = ideal.Proto.extend().newSlots({
         if (this.showsHaloWhenEditable()) {
             this.cssStyle().boxShadow = aBool ? "0px 0px 5px #ddd" : "none"
         }
-        this.registerForKeyboard(aBool)
+        this.setIsRegisteredForKeyboard(aBool)
         
         if (aBool) {
             this.turnOnUserSelect()
-            this.registerForPaste()
-        } else {
-            this.unregisterForPaste()
-        }
-        
+        } 
+
+        this.setIsRegisteredForPaste(aBool)
+
         return this
     },
 
@@ -927,19 +966,25 @@ DivView = ideal.Proto.extend().newSlots({
     
     // mouse events
     
-    registerForMouse: function (aBool) {
+    setIsRegisteredForMouse: function (aBool) {
         if (aBool) {
-            this.element().onmousedown =  (event) => { return this.onMouseDown(event) }
-            this.element().onmousemove =  (event) => { return this.onMouseMove(event) }
-            this.element().onmouseout  =  (event) => { return this.onMouseOut(event) }
-            this.element().onmouseover =  (event) => { return this.onMouseOver(event) }
-            this.element().onmouseup   =  (event) => { return this.onMouseUp(event) }
+			if (this._isRegisteredForMouse == false) {
+				this._isRegisteredForMouse = true
+	            this.element().onmousedown =  (event) => { return this.onMouseDown(event) }
+	            this.element().onmousemove =  (event) => { return this.onMouseMove(event) }
+	            this.element().onmouseout  =  (event) => { return this.onMouseOut(event) }
+	            this.element().onmouseover =  (event) => { return this.onMouseOver(event) }
+	            this.element().onmouseup   =  (event) => { return this.onMouseUp(event) }
+			}
         } else {
-            this.element().onmousedown  = null
-            this.element().onmousemove  = null
-            this.element().onmouseout   = null
-            this.element().onmouseover  = null
-            this.element().onmouseup    = null
+			if (this._isRegisteredForMouse == true) {
+				this._isRegisteredForMouse = false
+	            this.element().onmousedown  = null
+	            this.element().onmousemove  = null
+	            this.element().onmouseout   = null
+	            this.element().onmouseover  = null
+	            this.element().onmouseup    = null
+			}
         }
         return this
     },    
@@ -961,28 +1006,34 @@ DivView = ideal.Proto.extend().newSlots({
         
     // --- keyboard events ---
     
-    registerForKeyboard: function (aBool) {
+    setIsRegisteredForKeyboard: function (aBool) {
         if (aBool) {
-            /*
-            this.element().onkeydown  =  (event) => {       
-                return this.onKeyDown(event) 
-            }
+			if (this._isRegisteredForKeyboard == false) {
+				this._isRegisteredForKeyboard = true
+	            /*
+	            this.element().onkeydown  =  (event) => {       
+	                return this.onKeyDown(event) 
+	            }
 
-            this.element().onkeypress =  (event) => { return this.onKeyPress(event) }
-            */
-            this.element().onkeyup    =  (event) => { 
-                //this._onkeyupInnerHTML = this._element.innerHTML // THIS NEEDS TO BE HERE OR DOM innerHTML ISN'T CONSISTENT?
-                //console.log("onkeyup [" + this._element.innerHTML  + "]")
-                return this.onKeyUp(event) 
-            }
-            DivView._tabCount ++
-            this.element().tabIndex   = DivView._tabCount
-            this.cssStyle().outline = "none"
+	            this.element().onkeypress =  (event) => { return this.onKeyPress(event) }
+	            */
+	            this.element().onkeyup    =  (event) => { 
+	                //this._onkeyupInnerHTML = this._element.innerHTML // THIS NEEDS TO BE HERE OR DOM innerHTML ISN'T CONSISTENT?
+	                //console.log("onkeyup [" + this._element.innerHTML  + "]")
+	                return this.onKeyUp(event) 
+	            }
+	            DivView._tabCount ++
+	            this.element().tabIndex   = DivView._tabCount
+	            this.cssStyle().outline = "none"
+			}
         } else {
-            this.element().onkeydown  = null
-            this.element().onkeypress = null
-            this.element().onkeyup    = null
-            delete this.element().tabindex 
+			if (this._isRegisteredForKeyboard == true) {
+				this._isRegisteredForKeyboard = false
+	            this.element().onkeydown  = null
+	            this.element().onkeypress = null
+	            this.element().onkeyup    = null
+	            delete this.element().tabindex 
+			}
         }
         return this
     },    
@@ -1123,17 +1174,21 @@ DivView = ideal.Proto.extend().newSlots({
 
 	// --- focus and blur event handling ---
     
-    registerForFocus: function(aBool) {
-		
+    setIsRegisteredForFocus: function(aBool) {
         if (aBool) {
-			//console.log(this.type() + " registerForFocus(" + aBool + ")")
-            this.element().onfocus = () => { this.onFocus() };
-            this.element().onblur  = () => { this.onBlur() };
+			if (this._isRegisteredForFocus == false) {
+				this._isRegisteredForFocus = true
+				//console.log(this.type() + " setIsRegisteredForFocus(" + aBool + ")")
+	            this.element().onfocus = () => { this.onFocus() };
+	            this.element().onblur  = () => { this.onBlur() };
+			}
         } else {
-            this.element().onfocus = null
-            this.element().onblur = null
+			if (this._isRegisteredForFocus == true) {
+				this._isRegisteredForFocus = false
+				this.element().onfocus = null
+				this.element().onblur = null
+			}
         }
-
         return this
     },
 
@@ -1206,13 +1261,19 @@ DivView = ideal.Proto.extend().newSlots({
         return this._pasteListenerFunc
     },
     
-    unregisterForPaste: function () {
-        this.element().removeEventListener('paste', this.pasteListenerFunc());
-    },
-    
-    registerForPaste: function() {
-        this.element().addEventListener('paste', this.pasteListenerFunc(), false);
-        return this
+    setIsRegisteredForPaste: function(aBool) {
+		if (aBool) {
+			if (this._isRegisteredForPaste == false) {
+				this._isRegisteredForPaste = true
+	        	this.element().addEventListener('paste', this.pasteListenerFunc(), false);
+			}
+		} else {
+			if (this._isRegisteredForPaste == true) {
+				this._isRegisteredForPaste = false
+	        	this.element().removeEventListener('paste', this.pasteListenerFunc());
+			}
+		}
+		return this
     },
 
     replaceSelectedText: function(replacementText) {

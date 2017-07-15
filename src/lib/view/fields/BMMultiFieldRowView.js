@@ -11,7 +11,7 @@ BMMultiFieldRowView = BMFieldRowView.extend().newSlots({
 		this.optionsView().setDisplay("none")
 		this.addSubview(this.optionsView())
 
-		this.valueView().registerForFocus(true)
+		this.valueView().setIsRegisteredForFocus(true)
 		this.valueView().onBlur = () => { this.close() }
         return this
     },

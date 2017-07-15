@@ -1,4 +1,3 @@
-
 BrowserRowTitle = DivView.extend().newSlots({
     type: "BrowserRowTitle",
 	isSelected: false,
@@ -9,7 +8,7 @@ BrowserRowTitle = DivView.extend().newSlots({
         this.setInnerHTML("title")
         this.turnOffUserSelect()
 		//this.setUnfocusOnEnterKey(true)
-		this.registerForKeyboard(true)
+		this.setIsRegisteredForKeyboard(true)
 		this.setDisplay("inline-block")
         return this
     },

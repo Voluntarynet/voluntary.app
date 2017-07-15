@@ -436,9 +436,9 @@ DivView = ideal.Proto.extend().newSlots({
     },
 
 	maxWidth: function() {
-        var s = this.cssStyle().maxWidth
-		assert(s.includes("px"))
-        var w = Number(s.replace("px", ""))
+        var style = this.cssStyle().maxWidth
+		assert(style.includes("px"))
+        var w = Number(style.replace("px", ""))
         return w
     },
 
@@ -494,7 +494,7 @@ DivView = ideal.Proto.extend().newSlots({
         return this		
 	},
 	
-	// div class name
+	// --- div class name ---
 
     setDivClassName: function (aName) {
 		if (this._divClassName != aName) {
@@ -506,7 +506,7 @@ DivView = ideal.Proto.extend().newSlots({
         return this
     },
 
-    divClassName: function (aName) {
+    divClassName: function () {
         if (this._element) {
             var className = this._element.getAttribute('class');
             this._divClassName = className

@@ -100,6 +100,7 @@ BMNode = ideal.Proto.extend().newSlots({
 
 	// --- viewClassName ---
     
+/*
     viewClassName: function() {
         if (!this._viewClassName) {
             return this.type() + "View" //.prefixRemoved("BM")
@@ -107,14 +108,15 @@ BMNode = ideal.Proto.extend().newSlots({
         
         return this._viewClassName
     },
+*/
     
     viewClass: function () {        
         var name = this.viewClassName()
         if (name) {
             return window[name]
         }
-        
-        return null
+
+	  	return this.firstAncestorWithMatchingPostfixClass("View")        
     },
 
 	// --- nodeRowViewClass ---
@@ -124,20 +126,9 @@ BMNode = ideal.Proto.extend().newSlots({
         return this
     },
     */
-    
-    nodeRowViewClass: function () {     
-		// see if there's a type + RowView class
-		var name = this.type() + "RowView"
-		    console.log("looking for " +  name)
-		
-		if (window[name]) {
-		    console.log("FOUND " +  name)
-			return window[name]
-		}
-		
-		// default is up to parent view to choose
-        
-        return null
+
+    nodeRowViewClass: function () {   
+	  	return this.firstAncestorWithMatchingPostfixClass("RowView")
     },
 
 	// --- subnodes ----------------------------------------

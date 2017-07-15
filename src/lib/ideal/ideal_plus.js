@@ -178,6 +178,38 @@ Object.defineProperty(Array.prototype, "equals", {enumerable: false});
 
 /// Object
 
+Object.prototype.ancestors = function() {
+	var results = []
+	var obj = this
+	while (obj.__proto__ && obj.type) {
+		results.push(obj)
+		if (results.length > 100) {
+			throw new Error("proto loop detected?")
+		}
+		obj = obj.__proto__
+	}
+	return results
+}
+
+Object.prototype.firstAncestorWithMatchingPostfixClass = function(aPostfix) {
+	// not a great name but this walks back the ancestors and tries to find an
+	// existing class with the same name as the ancestor + the given postfix
+	// useful for things like type + "View" or type + "RowView", etc
+	//console.log(this.type() + " firstAncestorWithMatchingPostfixClass(" + aPostfix + ")")
+	var match = this.ancestors().detect((obj) => {
+		var name = obj.type() + aPostfix
+		var proto = window[name]
+		return proto
+	})
+	var result = match ? window[match.type() + aPostfix] : null
+	/*
+	if (result) { 
+		console.log("FOUND " + result.type())
+	}
+	*/
+	return result
+},
+
 Object.prototype.slotNames = function() {
   var keys = [];
   for (var k in this) {

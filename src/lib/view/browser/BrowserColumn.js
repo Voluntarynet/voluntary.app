@@ -151,6 +151,20 @@ BrowserColumn = NodeView.extend().newSlots({
 
 	// --- sync -----------------------------
 
+    newSubviewForSubnode: function(aSubnode) {
+		var proto = aSubnode.nodeRowViewClass()
+		
+		if (!proto) {
+			proto = BrowserTitledRow
+		}
+				
+        if (!proto) {
+            throw new Error("missing proto view to create " + aNode.type() + " view")
+        }
+
+		return proto.clone().setNode(aSubnode)
+    },
+
     syncFromNode: function () {
         
         if (this.browser() == null) {
@@ -192,7 +206,7 @@ BrowserColumn = NodeView.extend().newSlots({
                 
                 // otherwise, select close to last selected index
                 if (selectedIndex > this.rows().length) {
-                    selectedIndex = this.rows().length -1
+                    selectedIndex = this.rows().length - 1
                 }
                 
                 //this.log("selectedIndex after: " + selectedIndex)

@@ -66,7 +66,7 @@ NodeView = DivView.extend().newSlots({
 		var proto = aSubnode.viewClass()
 		
 		if (!proto) {
-			proto = this.defaultSubnodeViewClass()
+			//proto = this.defaultSubnodeViewClass()
 		}
 				
         if (!proto) {
@@ -145,9 +145,9 @@ NodeView = DivView.extend().newSlots({
 
     setNeedsSyncToNode: function(aBool) {
         if (this._needsSyncToNode == aBool) { 
-            return this; 
-        }
-        
+			return this 
+		}
+
         //this.log("needsSyncToView " + this._needsSyncToView + " -> " + aBool)
 
         if (aBool && !this._needsSyncToNode) {
@@ -160,6 +160,7 @@ NodeView = DivView.extend().newSlots({
         }
         
         this._needsSyncToNode = aBool
+		
         return this
     },
 

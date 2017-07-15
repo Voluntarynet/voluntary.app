@@ -1,6 +1,6 @@
 
 BMMultiFieldOptionsRowView = DivView.extend().newSlots({
-    type: "BMMultiFieldOptionsView",
+    type: "BMMultiFieldOptionsRowView",
 	validValues: null,
 }).setSlots({
     init: function () {

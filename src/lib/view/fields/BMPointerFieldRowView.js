@@ -1,6 +1,5 @@
 
-BMPointerFieldView = BrowserTitledRow.extend().newSlots({
-//BMPointerFieldView = BMFieldRowView.extend().newSlots({
+BMPointerFieldRowView = BrowserTitledRow.extend().newSlots({
     type: "BMPointerFieldView",
 }).setSlots({
     init: function () {
@@ -20,7 +19,7 @@ BMPointerFieldView = BrowserTitledRow.extend().newSlots({
 		*/
 		//this.setIsSelectable(true)
 		
-		this.setBorderBottom("1px solid #ddd")
+		/*this.setBorderBottom("1px solid #ddd")*/
         return this
     },
 
@@ -29,7 +28,7 @@ BMPointerFieldView = BrowserTitledRow.extend().newSlots({
 	},
 	
 	unselectedTextColor: function() {
-		return "#888"
+		return "#666"
 	},
 	
     selectedBgColor: function() {

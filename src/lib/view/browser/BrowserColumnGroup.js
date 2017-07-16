@@ -44,6 +44,7 @@ BrowserColumnGroup = NodeView.extend().newSlots({
 		this._isSelected = aBool
 	//	this.header().setDoesShowBackArrow(aBool && !this.isFirstColumnGroup())
 		
+		/*
 		if (this.doesCollapseIfUnselected()) {
 			if (aBool) {
 				console.log(this + " expanding")
@@ -54,6 +55,7 @@ BrowserColumnGroup = NodeView.extend().newSlots({
 				console.log(this + " collapsing")
 			}
 		}
+		*/
 		
 		return this
 	},
@@ -95,6 +97,7 @@ BrowserColumnGroup = NodeView.extend().newSlots({
 	*/
 	
 	collapse: function() {
+		console.log(this + " collapse")
 		this._isCollapsed = true
 		if (this.animatesCollapse()) {
     		this.setMinAndMaxWidth(0)
@@ -106,6 +109,7 @@ BrowserColumnGroup = NodeView.extend().newSlots({
 	},
 	
 	uncollapse: function() {
+		console.log(this + " uncollapse")
 		this._isCollapsed = false
 		if (this.animatesCollapse()) {
     		this.setDisplay("inline-flex")		
@@ -115,7 +119,7 @@ BrowserColumnGroup = NodeView.extend().newSlots({
     	        this.setMinAndMaxWidth(w)
     		}, 10)
     	} else {
-    	   var w = this.node() ? this.node().nodeMinWidth() : 100 // not sure why this happens
+    	    var w = this.node() ? this.node().nodeMinWidth() : 100 // not sure why this happens
     	    this.setDisplay("inline-flex")		
             this.setFlexGrow(1)
     	    this.setMinAndMaxWidth(w)
@@ -172,6 +176,20 @@ BrowserColumnGroup = NodeView.extend().newSlots({
         }
         return this
     },
+
+	matchNodeMinWidth: function() {
+		if (this.node()) {
+	        var w = this.node().nodeMinWidth()
+			console.log(this.node().type() + " nodeMinWidth = " + w)
+	        if (w) {
+	            //console.log("setNode setMinAndMaxWidth")
+				//if (!this.doesCollapseIfUnselected()) {
+	            	this.setMinAndMaxWidth(w)
+				//}
+	        }
+		}
+		return this
+	},
     
     setNode: function(aNode) {
         if (aNode == this._node) {
@@ -183,16 +201,9 @@ BrowserColumnGroup = NodeView.extend().newSlots({
         this.setColumnClass(BrowserColumn)
         
         if (aNode) {
-            
             // obey node's width preferences
             
-            var w = this.node().nodeMinWidth()
-            if (w) {
-                //console.log("setNode setMinAndMaxWidth")
-				if (!this.doesCollapseIfUnselected()) {
-                	this.setMinAndMaxWidth(w)
-				}
-            }
+            this.matchNodeMinWidth()
 
             // use custom class for column if node wants it
             

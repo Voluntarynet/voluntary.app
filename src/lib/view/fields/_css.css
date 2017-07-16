@@ -150,7 +150,13 @@
 	/*border: 1px red dashed;*/
 }
 
-/* --------------------------- TextArea --------------------------- */
+/* --------------------------- Pointer --------------------------- */
+
+.BMPointerFieldRowView {
+	
+}
+
+/* --------------------------- Image --------------------------- */
 
 .BMImageWellFieldView {
     background-color: #fff;

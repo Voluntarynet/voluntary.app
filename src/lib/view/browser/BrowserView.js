@@ -177,8 +177,10 @@ BrowserView = NodeView.extend().newSlots({
         if (nextCg) {
             var selectedRow = selectedColumnGroup.column().selectedRow()
 
+			selectedColumnGroup.matchNodeMinWidth() // testing
+			
 			if (selectedRow) {
-	            var nextNode = selectedRow.node().nodeRowLink()
+	            var nextNode = selectedRow.node().nodeRowLink() // returns receiver by default
 	            nextCg.setNode(nextNode)
 	            this.clearColumnsGroupsAfter(nextCg)
 	            //nextCg.column().setTitle(selectedColumn.selectedRowTitle())

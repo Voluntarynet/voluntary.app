@@ -9,7 +9,6 @@ BMPointerField = BMField.extend().newSlots({
 }).setSlots({
     init: function () {
         BMField.init.apply(this)
-		this.setViewClassName("BMPointerFieldView")
 		this.setKeyIsEditable(false)
 		this.setValueIsEditable(false)
 		this.setKeyIsVisible(true)

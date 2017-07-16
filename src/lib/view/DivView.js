@@ -84,9 +84,10 @@ DivView = ideal.Proto.extend().newSlots({
 */
 
 	setCssAttribute: function(key, newValue) {
-		var oldValue = this.cssStyle()[key]
+		var style = this.cssStyle()
+		var oldValue = style[key]
 		if(String(oldValue) != String(newValue)) {
-			this.cssStyle()[key] = newValue
+			style[key] = newValue
 		}
 		return this
 	},
@@ -169,6 +170,17 @@ DivView = ideal.Proto.extend().newSlots({
 
 	backgroundColor: function() {
 		return this.getCssAttribute("background-color")
+	},
+	
+	// background image
+	
+    setBackgroundImage: function(v) {
+		this.setCssAttribute("background-image", v)
+        return this
+    },
+
+	backgroundImage: function() {
+		return this.getCssAttribute("background-image")
 	},
 	
 	// transition

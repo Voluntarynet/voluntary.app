@@ -54,10 +54,13 @@
 }
 
 .BrowserColumn {
+	display: flex;
+	flex-direction: column;
     position: relative;
     width: 100%;
 	-webkit-overflow-scrolling: touch;
 	overflow: hidden;
+	min-height: 100%;
 }
 
 .BrowserColumnEmptyLabel {

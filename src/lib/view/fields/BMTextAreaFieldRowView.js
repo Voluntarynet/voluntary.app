@@ -17,9 +17,12 @@ BMTextAreaFieldRowView = BMFieldRowView.extend().newSlots({
 	    BMFieldRowView.updateSubviews.apply(this)
 		if (this.column().rows().last() == this) {
 			console.log(this.type() + " update height")
-			//this.setHeightPercentage(100)
-			this._element.style.minHeight = "100%"
-			this._element.style.maxHeight = "100%"
+			this.setMinAndMaxHeightPercentage(100)
+			this.setFlexGrow(100)
+			this.setBorderBottom("0px")
+		} else {
+			this.setFlexGrow(1)
+			this.setBorderBottom("1px solid #aaa")
 		}
 	},
 })

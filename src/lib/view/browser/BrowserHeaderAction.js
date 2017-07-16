@@ -9,7 +9,7 @@ BrowserHeaderAction = NodeView.extend().newSlots({
 
     updateImage: function () {
         var path = 'icons/' + this.action() + '_active.png'
-        this.cssStyle()['background-image'] = 'url("' + path + '")';
+        this.setBackgroundImage('url("' + path + '")')
 		
 		this.setToolTip(this.action())
 

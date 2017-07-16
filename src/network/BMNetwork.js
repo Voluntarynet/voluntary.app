@@ -22,7 +22,7 @@ BMNetwork = BMStorableNode.extend().newSlots({
 		
         //this.setPid("_network")
         this.setTitle("Network")
-        this.setNodeMinWidth(150)
+        this.setNodeMinWidth(200)
 
 		this.setServers(NodeStore.shared().rootInstanceWithPidForProto("_servers", BMRServers))
 		this.addSubnode(this.servers())
@@ -61,14 +61,16 @@ BMNetwork = BMStorableNode.extend().newSlots({
     
     subtitle: function() {
         var parts = []
-/*
-        parts.push(this.serverCount() + " severs")
-        parts.push(this.remotePeerCount() + " peers")
-*/
-        parts.push(this.serverCount() + " svrs")
-        parts.push(this.remotePeerCount() + " prs")
 
-        parts.push(this.messages().messages().length + " msgs")
+		var n = this.serverCount()
+        parts.push(count + " server" + ((n!=1) ? "s" : ""))
+
+		n = this.remotePeerCount()
+        parts.push(n + " peer" + ((n!=1) ? "s" : ""))
+
+		n = this.messages().messages().length
+        parts.push(n + " msg" + ((n!=1) ? "s" : ""))
+
         return parts.join(", ")
     },
     

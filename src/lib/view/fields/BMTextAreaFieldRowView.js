@@ -15,6 +15,11 @@ BMTextAreaFieldRowView = BMFieldRowView.extend().newSlots({
 	
     updateSubviews: function() {   
 	    BMFieldRowView.updateSubviews.apply(this)
+		this.fillBottomOfColumnIfAvailable()
+		return this
+	},
+	
+	fillBottomOfColumnIfAvailable: function() {
 		if (this.column().rows().last() == this) {
 			console.log(this.type() + " update height")
 			this.setMinAndMaxHeightPercentage(100)
@@ -24,5 +29,6 @@ BMTextAreaFieldRowView = BMFieldRowView.extend().newSlots({
 			this.setFlexGrow(1)
 			this.setBorderBottom("1px solid #aaa")
 		}
+		return this
 	},
 })

@@ -91,7 +91,7 @@ BrowserRow = NodeView.extend().newSlots({
     
     select: function() {
         this.setIsSelected(true)
-        this.updateSubviews()
+        //this.updateSubviews()
 
 		/*
 		if (this.node().didSelect) {
@@ -104,7 +104,7 @@ BrowserRow = NodeView.extend().newSlots({
 
     unselect: function() {
         this.setIsSelected(false)
-        this.updateSubviews()
+        //this.updateSubviews()
         return this
     },
 

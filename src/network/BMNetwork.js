@@ -63,7 +63,7 @@ BMNetwork = BMStorableNode.extend().newSlots({
         var parts = []
 
 		var n = this.serverCount()
-        parts.push(count + " server" + ((n!=1) ? "s" : ""))
+        parts.push(n + " server" + ((n!=1) ? "s" : ""))
 
 		n = this.remotePeerCount()
         parts.push(n + " peer" + ((n!=1) ? "s" : ""))

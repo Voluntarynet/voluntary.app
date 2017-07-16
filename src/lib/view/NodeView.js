@@ -64,6 +64,10 @@ NodeView = DivView.extend().newSlots({
 
 	// --- syncing ---
     
+    subviewForNode: function(aNode) {
+        return this.subviews().detect((aView) => { return aView.node() == aNode; })
+    },
+
     newSubviewForSubnode: function(aSubnode) {
 		var proto = aSubnode.viewClass()
 		

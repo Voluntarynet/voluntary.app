@@ -595,10 +595,6 @@ DivView = ideal.Proto.extend().newSlots({
         DomElement_atInsertElement(this.element(), anIndex, anSubview.element())
         return anSubview
     },
-    
-    subviewForNode: function(aNode) {
-        return this.subviews().detect((aView) => { return aView.node() == aNode; })
-    },
 
 	// --- fade animations ---
 	

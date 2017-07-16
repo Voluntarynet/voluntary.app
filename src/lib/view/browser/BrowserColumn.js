@@ -119,7 +119,11 @@ BrowserColumn = NodeView.extend().newSlots({
         return this
     },
 
-      
+    unselectAllRows: function() {
+		this.rows().forEach((row) => { row.unselect() })
+		return this
+	},
+	
     selectRowWithNode: function (aNode) {
 		var row = this.rows().detect((row) => { return row.node() === aNode })
         if (row) {
@@ -164,6 +168,14 @@ BrowserColumn = NodeView.extend().newSlots({
 		return proto.clone().setNode(aSubnode)
     },
 
+	setNode: function(aNode) {
+		if (this.node() != aNode) {
+			NodeView.setNode.apply(this, [aNode])
+			this.unselectAllRows()
+		}
+		return this
+	},
+	
     syncFromNode: function () {
         
         if (this.browser() == null) {

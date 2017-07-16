@@ -21,6 +21,7 @@ BrowserTitledRow = BrowserRow.extend().newSlots({
         return this.subtitleView().innerHTML().length > 0
     },
 
+
     updateSubviews: function() {
 		BrowserRow.updateSubviews.apply(this)
 	
@@ -35,7 +36,12 @@ BrowserTitledRow = BrowserRow.extend().newSlots({
         this.noteView().setIsSelected(this._isSelected)
 
 		this.setColor(this.unselectedTextColor())
-		
+
+
+        this.titleView().setMaxWidth(this.node().parentNode().nodeMinWidth() - 30)
+        this.subtitleView().setMaxWidth(this.node().parentNode().nodeMinWidth() - 30)
+
+
         return this
     },
 

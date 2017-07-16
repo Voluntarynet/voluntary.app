@@ -304,8 +304,8 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 			var decryptedData = receiverId.decryptMessageFromSenderPublicKeyString(dict.encryptedData, dict.senderPublicKey)
 		
 			if (!decryptedData) {
-				this.setSubject("[unable to decrypt message]")
-				this.setBody("[unable to decrypt message]")
+				this.setSubject("[INVALID KEY]")
+				this.setBody("[INVALID KEY]")
 			} else {
 				//console.log("decryptedData = ", decryptedData)
 				var contentDict = JSON.parse(decryptedData)
@@ -314,8 +314,8 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 				this.setBody(contentDict.body)
 			}
 		} else {
-			this.setSubject("[unable to decrypt message (no private key for receiver)]")
-			this.setBody("[unable to decrypt message (no private key for receiver)]")			
+			this.setSubject("[ENCRYPTED]")
+			this.setBody("[ENCRYPTED]")			
 		}
 		
 		

@@ -129,29 +129,44 @@
     color: #CBCBCB;
     /*border-bottom: 1px solid rgba(100,100,100, .4);*/
     transition: background-color .3s ease-out;
+
 	overflow: hidden;
+    white-space: nowrap;
 }
 
 .BrowserRowTitle {
-    min-width: 100px;
-    text-align: left;
+	display: block;
     position: absolute;
     top: 10px;
     left: 20px;
+	width: 60%;
+    text-align: left;
     font-size: 13px;
     font-weight: normal;
-    white-space: nowrap;
     text-transform: none;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+	margin-right: 20px;
+    /*border: dashed 1px blue;*/
 }
 
 .BrowserRowSubtitle {
-    font-family: "AppLight";
     position: absolute;
     left: 20px;
     top: 30px;
+
+    font-family: "AppLight";
     font-size: 11px;
     font-weight: normal;
+
+    text-overflow: ellipsis;
     white-space: nowrap;
+    overflow: hidden;
+	word-wrap: break-word;
+
+    /*border: dashed 1px yellow;*/
 }
 
 .BrowserRowNote {
@@ -162,4 +177,6 @@
     font-size: 11px;
     font-weight: normal;
     white-space: nowrap;
+
+    text-overflow: ellipsis;
 }

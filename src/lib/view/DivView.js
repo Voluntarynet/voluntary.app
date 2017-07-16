@@ -445,9 +445,13 @@ DivView = ideal.Proto.extend().newSlots({
     },
 
 	maxWidth: function() {
-        var style = this.cssStyle().maxWidth
-		assert(style.includes("px"))
-        var w = Number(style.replace("px", ""))
+        var w = this.cssStyle().maxWidth
+		if (w == "") {
+			return null
+		}
+		console.log("maxWidth w = ", typeof(w))
+		assert(w.includes("px"))
+        w = Number(w.replace("px", ""))
         return w
     },
 

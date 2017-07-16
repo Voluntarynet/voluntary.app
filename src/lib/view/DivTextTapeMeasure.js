@@ -58,7 +58,7 @@ DivTextTapeMeasure = ideal.Proto.extend().newSlots({
 		
 		//var height = (e.clientHeight + 1)
 		var width = (e.clientWidth + 1) 
-		
+		e.innerHTML = ""
 		//console.log(divClassName, " '" + text + "' width = ", width)
 		//this.clean()
 		return width

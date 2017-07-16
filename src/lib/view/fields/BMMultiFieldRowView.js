@@ -5,7 +5,6 @@ BMMultiFieldRowView = BMFieldRowView.extend().newSlots({
 }).setSlots({
     init: function () {
         BMFieldRowView.init.apply(this)
-        this.setDivClassName("BMFieldRowView")
 
 		this.setOptionsView(BMMultiFieldOptionsRowView.clone())
 		this.optionsView().setDisplay("none")

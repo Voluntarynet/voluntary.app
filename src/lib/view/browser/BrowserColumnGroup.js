@@ -11,9 +11,7 @@ BrowserColumnGroup = NodeView.extend().newSlots({
 	animatesCollapse: false,
 }).setSlots({
     init: function () {
-        NodeView.init.apply(this)
-        this.setDivClassName("BrowserColumnGroup")
-        
+        NodeView.init.apply(this)        
         this.setHeader(BrowserHeader.clone())
         this.addSubview(this.header())
         
@@ -97,7 +95,7 @@ BrowserColumnGroup = NodeView.extend().newSlots({
 	*/
 	
 	collapse: function() {
-		console.log(this + " collapse")
+		//console.log(this + " collapse")
 		this._isCollapsed = true
 		if (this.animatesCollapse()) {
     		this.setMinAndMaxWidth(0)
@@ -109,7 +107,7 @@ BrowserColumnGroup = NodeView.extend().newSlots({
 	},
 	
 	uncollapse: function() {
-		console.log(this + " uncollapse")
+		//console.log(this + " uncollapse")
 		this._isCollapsed = false
 		if (this.animatesCollapse()) {
     		this.setDisplay("inline-flex")		

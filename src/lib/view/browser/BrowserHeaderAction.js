@@ -4,7 +4,6 @@ BrowserHeaderAction = NodeView.extend().newSlots({
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
-        this.setDivClassName("BrowserHeaderAction")
         return this
     },
 

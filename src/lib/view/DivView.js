@@ -53,15 +53,26 @@ DivView = ideal.Proto.extend().newSlots({
         this._subviews = []
         var e = document.createElement("div");
         //e._viewObject = this
-        e.setAttribute('class', this.divClassName());
+        //e.setAttribute('class', this.divClassName());
         this._element = e
         //this.cssStyle().transition = "all .2s"
         //this.setSubviewProto(DivView)
 		//this.setDivComment(this.type())
 		this._element.id = this.type() + "-" + this._uniqueId
+		this.setupDivClassName()
         return this
     },
 
+	setupDivClassName: function() {
+		var ancestorNames = this.ancestors().map((obj) => { 
+			if (obj.type().contains(".")) {
+				return ""
+			}
+			return obj.type() 
+		}).join(" ")
+		this.setDivClassName(ancestorNames)
+		return this
+	},
 /*    
     applyCSS: function(ruleName) {
         if (ruleName == null) { 
@@ -506,8 +517,23 @@ DivView = ideal.Proto.extend().newSlots({
 	setMinAndMaxHeight: function(aNumber) {
 		assert(typeof(aNumber) == "number")
 		var newValue = aNumber + "px"
+		this.setCssAttribute("min-height", newValue)
 		this.setCssAttribute("max-height", newValue)
+        return this		
+	},
+
+	setMinAndMaxHeightPercentage: function(aNumber) {
+		assert(typeof(aNumber) == "number")
+		var newValue = aNumber + "%"
+		this.setCssAttribute("min-height", newValue)
 		this.setCssAttribute("max-height", newValue)
+        return this		
+	},
+	
+	setHeightPercentage: function(aNumber) {
+		assert(typeof(aNumber) == "number")
+		var newValue = aNumber + "%"
+		this.setCssAttribute("height", newValue)
         return this		
 	},
 	

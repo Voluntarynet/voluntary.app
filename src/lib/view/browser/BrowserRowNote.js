@@ -5,7 +5,6 @@ BrowserRowNote = DivView.extend().newSlots({
 }).setSlots({
     init: function () {
         DivView.init.apply(this)
-        this.setDivClassName("BrowserRowNote")
         this.setInnerHTML("")
         this.turnOffUserSelect()
         return this

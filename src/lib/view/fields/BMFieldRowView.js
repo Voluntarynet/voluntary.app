@@ -11,8 +11,6 @@ BMFieldRowView = BrowserFieldRow.extend().newSlots({
     init: function () {
         BrowserFieldRow.init.apply(this)
         
-        this.setDivClassName("BMFieldRowView")
-
 		this.setKeyView(this.addSubview(DivView.clone().setDivClassName("BMFieldKeyView")))
         this.addSubview(this.keyView())     
    		this.keyView().turnOffUserSelect().setSpellCheck(false)   

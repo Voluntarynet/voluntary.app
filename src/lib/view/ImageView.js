@@ -8,13 +8,10 @@ ImageView = NodeView.extend().newSlots({
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
-        
-        this.setDivClassName("ImageView")
         this.setIsRegisteredForDrop(false)
         //this.setEditable(false)
 		this.setContentEditable(false)
         this.dragUnhighlight()
-        this.turnOffUserSelect()
         this.turnOffUserSelect()
         return this
     },

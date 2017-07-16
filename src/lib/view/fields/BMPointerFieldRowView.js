@@ -5,7 +5,6 @@ BMPointerFieldRowView = BrowserTitledRow.extend().newSlots({
     init: function () {
         BrowserTitledRow.init.apply(this)
         
-        //this.setDivClassName("BMPointerFieldView")
 /*
 		//this.noteView().setInnerHTML("→")
         this.valueView().setTarget(this).setAction("clickedOnValue")

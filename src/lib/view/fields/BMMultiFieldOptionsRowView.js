@@ -5,7 +5,6 @@ BMMultiFieldOptionsRowView = DivView.extend().newSlots({
 }).setSlots({
     init: function () {
         DivView.init.apply(this)
-        this.setDivClassName("BMMultiFieldOptionsRowView")
 		this.turnOffUserSelect()
         return this
     },

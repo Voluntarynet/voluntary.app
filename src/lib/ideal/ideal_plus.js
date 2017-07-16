@@ -61,6 +61,14 @@ Array.prototype.before = function(v)
 	
 /// String
 
+String.prototype.firstCharacter = function() {
+	return this.slice(0);
+}
+
+String.prototype.lastCharacter = function() {
+	return this.slice(-1);
+}
+
 String.prototype.capitalizeWords = function() {
     return this.replace(/(?:^|\s)\S/g, function(a) { 
         return a.toUpperCase(); 

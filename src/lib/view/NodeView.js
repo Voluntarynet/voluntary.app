@@ -10,7 +10,7 @@ NodeView = DivView.extend().newSlots({
         this._nodeObservation = NotificationCenter.shared().newObservation().setName("didUpdateNode").setObserver(this)
         return this
     },
-
+	
     setNode: function(aNode) {
         if (this._node != aNode) {
             this.stopWatchingNode()
@@ -25,8 +25,6 @@ NodeView = DivView.extend().newSlots({
 			var nodeId = aNode ? this.node().type() + "-" + this.node().uniqueId() : "null"
 			this._element.id = this.type() + "-" + this._uniqueId + " for node " + nodeId
         }
-
-
 		
         return this
     },
@@ -77,7 +75,7 @@ NodeView = DivView.extend().newSlots({
             throw new Error("missing proto view to create " + aNode.type() + " view")
         }
 
-		return proto.clone().setNode(aSubnode)
+		return proto.clone().setNode(aSubnode).setParentView(this)
     },
     
     syncFromNode: function () {
@@ -97,10 +95,15 @@ NodeView = DivView.extend().newSlots({
             var subview = this.subviewForNode(subnode) // get the current view for the node, if there is one
             
             if (!subview) {
+                subview = this.newSubviewForSubnode(subnode)
+			}
+/*           
+            if (!subview) {
                 subview = this.newSubviewForSubnode(subnode).syncFromNode()
             } else {
                 subview.syncFromNode()
             }
+*/
             
             if(subview == null) {
                 throw new Error("null subview")
@@ -115,6 +118,8 @@ NodeView = DivView.extend().newSlots({
         } else {
             //this.log(" view subviews equal")
         }
+
+		this.subviews().forEach((subview) => { subview.syncFromNode() })
 
         return this
     },

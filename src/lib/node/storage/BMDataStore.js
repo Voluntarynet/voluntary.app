@@ -24,7 +24,7 @@ BMDataStore = BMNode.extend().newSlots({
 	},
 	
     prepareToSyncToView: function() {
-		console.log(this.type() + " prepareToSyncToView")
+		console.log(this.type() + " prepareToSyncToView - refreshSubnodes")
 		
 		if (this.subnodes().length == 0) {
 			this.refreshSubnodes()

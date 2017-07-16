@@ -2,12 +2,12 @@
 ContentView = NodeView.extend().newSlots({
     type: "ContentView",
 }).setSlots({
+	/*
     init: function () {
         NodeView.init.apply(this)
-        this.setDivClassName("GenericView")
         return this
     },
-
+*/
     syncFromNode: function () {
         var node = this.node()
         if (node.nodeContent) {

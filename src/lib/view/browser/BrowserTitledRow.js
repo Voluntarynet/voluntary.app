@@ -8,7 +8,6 @@ BrowserTitledRow = BrowserRow.extend().newSlots({
 }).setSlots({
     init: function () {
         BrowserRow.init.apply(this)
-        //this.setDivClassName("BrowserRow")
         this.setTitleView(this.addSubview(BrowserRowTitle.clone()))
         this.setSubtitleView(this.addSubview(BrowserRowSubtitle.clone()))
         this.setNoteView(this.addSubview(BrowserRowNote.clone()))

@@ -11,7 +11,6 @@ BrowserRow = NodeView.extend().newSlots({
     init: function () {
         NodeView.init.apply(this)
         this.setOwnsView(false)
-        this.setDivClassName("BrowserRow")
         this.setIsRegisteredForClicks(true)
         this.turnOffUserSelect()
         return this

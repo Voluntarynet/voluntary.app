@@ -4,7 +4,6 @@ BrowserRowTitle = DivView.extend().newSlots({
 }).setSlots({
     init: function () {
         DivView.init.apply(this)
-        this.setDivClassName("BrowserRowTitle")
         this.setInnerHTML("title")
         this.turnOffUserSelect()
 		//this.setUnfocusOnEnterKey(true)

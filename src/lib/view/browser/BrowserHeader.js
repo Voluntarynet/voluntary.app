@@ -6,7 +6,6 @@ BrowserHeader = NodeView.extend().newSlots({
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
-        this.setDivClassName("BrowserHeader")
         this.setOwnsView(false)
 
 		var ba = DivView.clone().setDivClassName("BackArrow").setInnerHTML("&#8249;").setTarget(this).setAction("didHitBackArrow")

@@ -6,10 +6,8 @@ ImageWellView = NodeView.extend().newSlots({
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
-        this.setDivClassName("ImageWellView")
         this.setIsRegisteredForDrop(true)
         this.dragUnhighlight()
-        this.turnOffUserSelect()
         this.turnOffUserSelect()
         return this
     },

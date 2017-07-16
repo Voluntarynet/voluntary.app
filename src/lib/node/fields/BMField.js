@@ -36,19 +36,10 @@ BMField = BMNode.extend().newSlots({
 	
 	
 }).setSlots({
-	
+	/*
     init: function () {
         BMNode.init.apply(this)
-		//this.setViewClassName("BMFieldRowView")
-	//	this.setViewClassName(null)
-		//console.log("BMField viewClassName = '" + this.viewClassName() + "'")
     },  
-
-
-/*
-	nodeRowViewClass: function() {
-		return BMFieldRowView
-	},
 	*/
 	
 	target: function() {

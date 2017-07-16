@@ -8,8 +8,6 @@ GenericView = NodeView.extend().newSlots({
     init: function () {
         NodeView.init.apply(this)
         
-        this.setDivClassName("GenericView")
-
         this.setMiddleView(NodeView.clone().setDivClassName("GenericMiddleView"))
         this.addSubview(this.middleView()) 
         

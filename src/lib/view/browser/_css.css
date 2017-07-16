@@ -140,6 +140,7 @@
     top: 10px;
     left: 20px;
 	width: 60%;
+	
     text-align: left;
     font-size: 13px;
     font-weight: normal;
@@ -149,6 +150,7 @@
     white-space: nowrap;
     overflow: hidden;
 	margin-right: 20px;
+
     /*border: dashed 1px blue;*/
 }
 
@@ -165,7 +167,12 @@
     white-space: nowrap;
     overflow: hidden;
 	word-wrap: break-word;
-
+	
+	/*
+	max-width: 100% - 40px;
+	margin-right: 20px;
+	*/
+	
     /*border: dashed 1px yellow;*/
 }
 

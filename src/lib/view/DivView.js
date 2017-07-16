@@ -477,6 +477,10 @@ DivView = ideal.Proto.extend().newSlots({
     },
 
 	setMaxWidth: function(v) {
+		if (v == this._maxWidth) {
+			return this
+		}
+		
 		var type = typeof(v)
 		if (v == null) {
 			newValue = ""
@@ -487,7 +491,7 @@ DivView = ideal.Proto.extend().newSlots({
 		} else {
 			throw new Error(type + " is invalid argument type")
 		}
-		
+		this._maxWidth = newValue
 		this.setCssAttribute("max-width", newValue)
 		
         return this        

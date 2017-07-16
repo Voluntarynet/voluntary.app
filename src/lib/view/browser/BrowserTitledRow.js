@@ -37,11 +37,12 @@ BrowserTitledRow = BrowserRow.extend().newSlots({
 
 		this.setColor(this.unselectedTextColor())
 
-
-        this.titleView().setMaxWidth(this.node().parentNode().nodeMinWidth() - 30)
-        this.subtitleView().setMaxWidth(this.node().parentNode().nodeMinWidth() - 30)
-
-
+/*
+		if (true) {
+	        this.titleView().setMaxWidth(this.node().parentNode().nodeMinWidth() - 30)
+	        this.subtitleView().setMaxWidth(this.node().parentNode().nodeMinWidth() - 30)
+		}
+*/	
         return this
     },
 

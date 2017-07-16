@@ -167,7 +167,7 @@ BrowserColumn = NodeView.extend().newSlots({
     syncFromNode: function () {
         
         if (this.browser() == null) {
-            console.log("WANRING: exiting BrowserColumn.syncFromNode because this.browser() == null")
+            console.warn("WARNING: exiting BrowserColumn.syncFromNode because this.browser() == null")
             return
         }
         

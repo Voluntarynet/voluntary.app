@@ -55,7 +55,7 @@ DivView = ideal.Proto.extend().newSlots({
         //e._viewObject = this
         //e.setAttribute('class', this.divClassName());
         this._element = e
-        //this.cssStyle().transition = "all .2s"
+        //this.setTransition("all .2s")
         //this.setSubviewProto(DivView)
 		//this.setDivComment(this.type())
 		this._element.id = this.type() + "-" + this._uniqueId
@@ -84,13 +84,15 @@ DivView = ideal.Proto.extend().newSlots({
 */
 
 	setCssAttribute: function(key, newValue) {
-		//this.cssStyle()[key] = newValue
-
 		var oldValue = this.cssStyle()[key]
 		if(String(oldValue) != String(newValue)) {
 			this.cssStyle()[key] = newValue
 		}
 		return this
+	},
+	
+	getCssAttribute: function(key) {
+		return this.cssStyle()[key]
 	},
 
 
@@ -111,7 +113,7 @@ DivView = ideal.Proto.extend().newSlots({
 	},
 	
 	textTransform: function() {
-		return this.cssStyle().textTransform
+		return this.getCssAttribute("text-transform")
 	},
 
 	// font weight
@@ -122,7 +124,7 @@ DivView = ideal.Proto.extend().newSlots({
 	},
 	
 	fontWeight: function() {
-		return this.cssStyle().fontWeight
+		return this.getCssAttribute("font-weight")
 	},
 	
 	// padding left
@@ -133,7 +135,7 @@ DivView = ideal.Proto.extend().newSlots({
     },
 
 	paddingLeft: function() {
-		return this.cssStyle().paddingLeft.before("px")
+		return this.getCssAttribute("padding-left").before("px")
 	},
 
 	// padding right
@@ -144,7 +146,7 @@ DivView = ideal.Proto.extend().newSlots({
     },
 
 	paddingRight: function() {
-		return this.cssStyle().paddingRight.before("px")
+		return this.getCssAttribute("padding-right").before("px")
 	},
 
 	// text align
@@ -155,7 +157,7 @@ DivView = ideal.Proto.extend().newSlots({
     },
 
 	textAlign: function() {
-		return this.cssStyle().textAlign
+		return this.getCssAttribute("text-align")
 	},
 
 	// background color
@@ -166,8 +168,15 @@ DivView = ideal.Proto.extend().newSlots({
     },
 
 	backgroundColor: function() {
-		return this.cssStyle().backgroundColor
+		return this.getCssAttribute("background-color")
 	},
+	
+	// transition
+	
+	setTransition: function(s) {
+		this.setCssAttribute("transition", s)
+		return this
+	},		
 
 	// opacity
 
@@ -177,7 +186,7 @@ DivView = ideal.Proto.extend().newSlots({
 	},
 	
 	opacity: function() {
-		return this.cssStyle().opacity
+		return this.getCssAttribute("opacity")
 	},
 
 	// z index 
@@ -188,19 +197,18 @@ DivView = ideal.Proto.extend().newSlots({
 	},
 	
 	zIndex: function() {
-        return this.cssStyle().zIndex
+		return this.getCssAttribute("z-index")
 	},
 
 	// cursor 
 	
     setCursor: function(s) {
 		this.setCssAttribute("cursor", s)
-		//console.log(this.divClassName(), " setCursor " + s) 
         return this
     },
 
     cursor: function() {
-        return this.cssStyle().cursor 
+		return this.getCssAttribute("cursor")
     },
 
 	makeCursorDefault: function() {
@@ -257,25 +265,12 @@ DivView = ideal.Proto.extend().newSlots({
     },
 
 	top: function() {
-		if (this.cssStyle().top.length) {
-			return this.cssStyle().top.before("px")
+		var v = this.getCssAttribute("top")
+		if (v.length) {
+			return v.before("px")
 		}
 		return 0
 	},
-	
-	/* 
-	
-	// doesn't work - use setMinWidth / setMaxWidth / setMinAndMaxWidth instead
-	
-	setWidth: function(aNumber) {
-		if (aNumber == "auto") {
-			this.cssStyle().left = "auto"
-		} else {
-	        this.cssStyle().left = aNumber + "px"
-		}
-        return this		
-	},
-	*/
 	
 	// left
 
@@ -286,8 +281,9 @@ DivView = ideal.Proto.extend().newSlots({
     },
 
 	left: function() {
-		if (this.cssStyle().left.length) {
-			return this.cssStyle().left.before("px")
+		var s = this.getCssAttribute("left")
+		if (s.length) {
+			return s.before("px")
 		}
 		return 0
 	},
@@ -300,7 +296,7 @@ DivView = ideal.Proto.extend().newSlots({
 	},
 	
 	float: function() {
-		return this.cssStyle().float
+		return this.getCssAttribute("float")
 	},
 	
 	// border 
@@ -321,7 +317,7 @@ DivView = ideal.Proto.extend().newSlots({
 	},
 	
 	border: function() {
-		return this.cssStyle().border
+		return this.getCssAttribute("border")
 	},
     
 	// alignment
@@ -332,7 +328,7 @@ DivView = ideal.Proto.extend().newSlots({
 	},
 	
 	textAlign: function() {
-		return this.cssStyle().textAlign
+		return this.getCssAttribute("text-align")
 	},	
 	
 	// flex
@@ -343,7 +339,7 @@ DivView = ideal.Proto.extend().newSlots({
 	},
 
 	flexGrow: function() {
-		return this.cssStyle().flexGrow
+		return this.getCssAttribute("flex-grow")
 	},
 	
 	setFlexBasis: function(v) {
@@ -352,7 +348,7 @@ DivView = ideal.Proto.extend().newSlots({
 	},
 
 	flexBasis: function() {
-		return this.cssStyle().flexBasis
+		return this.getCssAttribute("flex-basis")
 	},
 			
 	// color
@@ -363,7 +359,7 @@ DivView = ideal.Proto.extend().newSlots({
     },
     
     color: function() {
-        return this.cssStyle().color 
+		return this.getCssAttribute("color")
     },
     
     setIsVisible: function(aBool) {
@@ -373,7 +369,7 @@ DivView = ideal.Proto.extend().newSlots({
     },
 
 	isVisible: function() {
-        return this.cssStyle().visibility != "hidden";
+        return this.getCssAttribute("visibility") != "hidden";
 	},
     
     setDisplay: function(s) {
@@ -383,7 +379,7 @@ DivView = ideal.Proto.extend().newSlots({
     },
     
 	display: function() {
-		return this.cssStyle().display
+		return this.getCssAttribute("display")
 	},
 	
 	userSelectKeys: function() {
@@ -449,14 +445,14 @@ DivView = ideal.Proto.extend().newSlots({
     },
     
     minWidth: function() {
-        var s = this.cssStyle().minWidth
+        var s = this.getCssAttribute("min-width")
 		assert(s.includes("px"))
         var w = Number(s.replace("px", ""))
         return w
     },
 
 	maxWidth: function() {
-        var w = this.cssStyle().maxWidth
+        var w = this.getCssAttribute("max-width")
 		if (w == "") {
 			return null
 		}
@@ -614,7 +610,7 @@ DivView = ideal.Proto.extend().newSlots({
         // call removeSubview for a direct actions
         // use justRemoteSubview for internal changes
         
-        this.cssStyle().transition = "all " + delayInSeconds + "s"
+        this.setTransition("all " + delayInSeconds + "s")
         setTimeout( () => { 
             this.setOpacity(0)
         }, 0)
@@ -644,7 +640,7 @@ DivView = ideal.Proto.extend().newSlots({
 	},
 	
     removeSubview: function (anSubview) {
-		//console.log("WANRING: " + this.type() + " removeSubview " + anSubview.type())
+		//console.warn("WARNING: " + this.type() + " removeSubview " + anSubview.type())
 		/*
 		if (!this.hasSubview(anSubview)) {
 			console.log(this.type() + " removeSubview " + anSubview.type() + " failed - no child found!")
@@ -668,7 +664,7 @@ DivView = ideal.Proto.extend().newSlots({
 		if (this.hasSubview(anSubview)) {
 			if(!DivView._didShowWarning) {
 				DivView._didShowWarning = true
-				console.log("WANRING: " + this.type() + " removeSubview " + anSubview.type() + " failed - no child found!")
+				console.warn("WARNING: " + this.type() + " removeSubview " + anSubview.type() + " failed - no child found!")
 			}
         	this._element.removeChild(anSubview.element());
 		}
@@ -990,7 +986,7 @@ DivView = ideal.Proto.extend().newSlots({
         this.element().contentEditable = aBool ? 'true' : 'false'
         
         if (this.showsHaloWhenEditable()) {
-            this.cssStyle().boxShadow = aBool ? "0px 0px 5px #ddd" : "none"
+			this.setCssAttribute("box-shadow", aBool ? "0px 0px 5px #ddd" : "none")
         }
         this.setIsRegisteredForKeyboard(aBool)
         
@@ -1067,7 +1063,7 @@ DivView = ideal.Proto.extend().newSlots({
 	            }
 	            DivView._tabCount ++
 	            this.element().tabIndex   = DivView._tabCount
-	            this.cssStyle().outline = "none"
+				this.setCssAttribute("outline", "none")
 			}
         } else {
 			if (this._isRegisteredForKeyboard == true) {

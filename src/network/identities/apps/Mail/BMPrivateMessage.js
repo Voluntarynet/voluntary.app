@@ -298,7 +298,7 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 		
 		//console.log("dict = ", dict)
 		//console.log("dict.encryptedBuffer = ", dict.encryptedData)
-		console.log("receiverId = ", receiverId.type())
+		//console.log("receiverId = ", receiverId.type())
 		
 		if (receiverId.hasPrivateKey()) {
 			var decryptedData = receiverId.decryptMessageFromSenderPublicKeyString(dict.encryptedData, dict.senderPublicKey)

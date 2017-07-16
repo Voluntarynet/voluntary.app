@@ -24,7 +24,7 @@ BaseApp = BMNavNode.extend().newSlots({
 	didOpenStore: function() {
 		//NodeStore.shared().clear()
         this.setup() 
-        console.log("app didOpenStore\n")	
+        //console.log("app didOpenStore\n")	
 	},
     
 	appDidInit: function() {
@@ -44,15 +44,17 @@ BaseApp = BMNavNode.extend().newSlots({
         this.browser().focusEach() // hack
      
         this.browser().setNode(this).syncFromNode()
-		//this.browser().setIsVisible(false)
+		this.browser().setOpacity(0)
+		this.browser().setTransition("all 0.5s")
 
         var windowContent = document.getElementById('body');
-        windowContent.appendChild(this.browser().element())     
-/*
+        windowContent.appendChild(this.browser().element())    
+ 
 		setTimeout(() => {
-			this.browser().setIsVisible(true)
+			this.browser().setOpacity(1)
+			setTimeout(() => { this.browser().setTransition("") }, 1000)
 		}, 0)
-		*/
+		
         return this
     },
     

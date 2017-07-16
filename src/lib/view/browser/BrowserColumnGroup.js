@@ -178,7 +178,7 @@ BrowserColumnGroup = NodeView.extend().newSlots({
 	matchNodeMinWidth: function() {
 		if (this.node()) {
 	        var w = this.node().nodeMinWidth()
-			console.log(this.node().type() + " nodeMinWidth = " + w)
+			//console.log(this.node().type() + " nodeMinWidth = " + w)
 	        if (w) {
 	            //console.log("setNode setMinAndMaxWidth")
 				//if (!this.doesCollapseIfUnselected()) {

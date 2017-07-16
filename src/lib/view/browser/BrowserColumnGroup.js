@@ -25,8 +25,6 @@ BrowserColumnGroup = NodeView.extend().newSlots({
         this.setColumn(BrowserColumn.clone())
         this.scrollView().addSubview(this.column())
 
-
-
         return this
     },
 

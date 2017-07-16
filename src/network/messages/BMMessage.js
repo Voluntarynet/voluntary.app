@@ -17,12 +17,20 @@ BMMessage = BMFieldSetNode.extend().newSlots({
         BMStorableNode.init.apply(this)
 		this.setShouldStore(true)
         this.setNodeMinWidth(650)
-        this.setViewClassName("BMMessageView")
+		this.setNodeBackgroundColor("white")
+        //this.setViewClassName("BMMessageView")
     },
 
     title: function() {
         return "Message " + this.msgType()
     },
+
+	prepareToAccess: function() {
+		if (!this._didSetupFields) {
+			this.addStoredField(BMTextAreaField.clone().setKey("dict").setValueMethod("msgDictString").setValueIsEditable(false))
+			this._didSetupFields = true
+		}
+	},
     
     // dict
     

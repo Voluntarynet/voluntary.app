@@ -8,6 +8,6 @@ JSImporter.pushRelativePaths([
     "BMPostView.js",
     //"BMClassifiedPostView.js",
 */
-    "BMDataStoreRecordView.js",
+    //"BMDataStoreRecordView.js",
 ])
 

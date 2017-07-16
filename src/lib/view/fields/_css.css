@@ -117,17 +117,14 @@
 	height: 300px;
 	margin: 0;
 	padding: 0;
+	
     border-bottom: 1px solid #ddd;
-/*
-	border-left: 1px yellow dashed;
-	border-right: 1px yellow dashed;
-	border-top: 1px yellow dashed;
-	*/
     background-color: #fff;
     transition: background-color .3s ease-out;
-	overflow: hidden;
-	
+
+	overflow-x: hidden;
 	overflow-y: scroll;
+	font-style: italic;
 }
 
 .BMTextAreaFieldValueView {
@@ -141,7 +138,8 @@
     min-height: auto;
 
     word-break: break-all;
-    white-space: normal;
+   	unicode-bidi: embed;
+    white-space: pre-wrap;
 
     color: black;
     font-family: "AppRegular";

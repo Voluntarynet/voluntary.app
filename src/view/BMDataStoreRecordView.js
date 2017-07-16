@@ -5,7 +5,7 @@ BMDataStoreRecordView = NodeView.extend().newSlots({
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)        
-        this.setDivClassName("BMMessageView") // BMDataStoreRecordView
+        //this.setDivClassName("BMMessageView") // BMDataStoreRecordView
         //this.setEditable(false)
         return this
     },

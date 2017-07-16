@@ -57,6 +57,8 @@ DivView = ideal.Proto.extend().newSlots({
         this._element = e
         //this.cssStyle().transition = "all .2s"
         //this.setSubviewProto(DivView)
+		//this.setDivComment(this.type())
+		this._element.id = this.type() + "-" + this._uniqueId
         return this
     },
 
@@ -82,6 +84,13 @@ DivView = ideal.Proto.extend().newSlots({
 
 
 	// --- css properties ---
+/*	
+	setDivComment: function(s) {
+		this._element.id =  "comment-" + s
+		console.log("data-comment = " + s)
+		return this
+	},
+	*/
 	
 	// transform
 	

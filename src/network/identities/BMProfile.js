@@ -17,7 +17,7 @@ BMProfile = BMFieldSetNode.extend().newSlots({
         this.addFieldNamed("email").setValueMethod("email").setValueIsEditable(true)
         this.addFieldNamed("address").setValueMethod("address").setValueIsEditable(true)
 
-        this.setNodeBackgroundColor("white")
+		this.setNodeMinWidth(600)
     },
 
 	setParentNode: function(aNode) {

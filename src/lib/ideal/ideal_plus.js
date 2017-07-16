@@ -268,9 +268,9 @@ function escapeHtml() {
           "&": "&amp;",
           "<": "&lt;",
           ">": "&gt;",
-          '"': '&quot;',
-          "'": '&#39;',
-          "/": '&#x2F;'
+          '"': "&quot;",
+          "'": "&#39;",
+          "/": "&#x2F;"
         };
 
       return entityMap[s];

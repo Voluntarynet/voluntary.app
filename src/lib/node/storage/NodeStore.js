@@ -139,7 +139,6 @@ NodeStore = ideal.Proto.extend().newSlots({
 		if (!this.isOpen()) {
 			return "closed"
 		}
-		console.log("this.sdb().totalBytes() = ", this.sdb().totalBytes())
 		return this.sdb().size() + " objects, " + this.descriptionForByteCount(this.sdb().totalBytes())
 	},
 	

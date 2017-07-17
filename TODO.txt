@@ -1,93 +1,28 @@
--  BMTextField autocomplete feature
-   - uses Multi similar API for getting choices
+- select row when added with plus action
 
-- BMPrivateMessage.setEditable
+- add BrowserHeader title - use when single column
+
+- add a forward arrow note to PointerRowView
+
+- cleanup message dict format
+
+- chat threads
+
+- move contacts under identity
+++ move actions to fields with attributes like "isEnabled" and enabledMethod
+
+
+-----------------------------------------------------------------
+
 - way to show pubkey when no contact available
-- update ClassifiedPost
-
-- complete StampField
-- support setHeight on TextAreaField
 - disable send action on draft when invalid
-- Multiselection popup?
 - add hashtag path to url
-
-
 - make tab go to next field?
 
-UI
 
-TWITTER mode
+-----------------------
 
-separate node path from columnGroups
-
-- on first selection of 2nd column, add a back arrow to root column headerView
-- on Browser.selectColumn(), if column depth < 3, remove back arrow
-- on back arrow click, set node of 2nd column back one unless that would be root
-
------
-
-- collapse if not last two columns
-- expand when last column again
-
-collapse option on views? or...
-option to show several levels in one column and collapse on selection? or...
-use breadcrumbs (works on mobile as well)
-
-
-
-TODAY
-GOAL: send an ecrypted msg bt identities
-
-
-
-verify gen key pairs
-
-
-BUGS
-
-- don't show post delete if it's parent is a Region?
-
-TESTING
-
-If post in test category, lorel ipsum it.
-
-
-BASICS
-
-
-- make hasSent a property of Sell
-  - have Sell set editable on post somehow?
-
-
-STAMPS
-
-- calculate difficulty for category and msg size
-
-
-MORE
-
-- remove post delete action when under a sale?
-- image expansion 
 - image resizing (adjust jpg compression until <= size target)
-
-EXTRA
-
-- support encrypted message objects
-- support identities
-
-ObjectMessages with receiverId matching a local identity placed in:
-
-[identity]/Messages
-
-If they reference a sell thread, place in:
-
-Identity/Sales/[sale]/Messages
-
-
---- NICE ---
-
-- browser resets path on selection
-- browser nodes support "rememberBrowserPath" and auto select and update?
 
 --- DOC NOTES ---------
 
@@ -117,6 +52,5 @@ channeling strategies:
 2) pick random rservers as homes and publish those via blockstack
 blockstack: name -> pubkey, homeServers
 
-3) 
 
 

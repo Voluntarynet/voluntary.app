@@ -166,7 +166,7 @@ BrowserView = NodeView.extend().newSlots({
 	popOneActiveColumn: function() {
 	    var n = this.columnGroups().length - 1
 	    if (n < 1) { n = 1; }
-        this.setColumnGroupCount(n)
+        this.setColumnGroupCount(n) // TODO: collapse cg instead?
         this.fitColumns()
 	    return this
 	},

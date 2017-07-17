@@ -85,26 +85,28 @@ BrowserRow = NodeView.extend().newSlots({
 
     setIsSelected: function (aBool) {
         this._isSelected = aBool
+        
+        if (aBool) {
+            //this.setBorderTop("1px solid #333")
+            //this.setBorderBottom("1px solid #444")
+            this.setOpacity(1)       
+        } else {
+            //this.setBorderTop("1px solid transparent")
+            //this.setBorderBottom("1px solid transparent")
+            this.setOpacity(0.7)       
+        }
+        
         this.updateSubviews()
         return this
     },
     
     select: function() {
-        this.setIsSelected(true)
-        //this.updateSubviews()
-
-		/*
-		if (this.node().didSelect) {
-			this.node().didSelect(this)
-		}
-		*/
-		
+        this.setIsSelected(true)		
         return this
     },
 
     unselect: function() {
         this.setIsSelected(false)
-        //this.updateSubviews()
         return this
     },
 

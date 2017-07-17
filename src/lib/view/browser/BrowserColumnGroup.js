@@ -8,7 +8,7 @@ BrowserColumnGroup = NodeView.extend().newSlots({
 	isSelected: false,
 	doesCollapseIfUnselected: false,
 	isCollapsed: false,
-	animatesCollapse: false,
+	animatesCollapse: true,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)        

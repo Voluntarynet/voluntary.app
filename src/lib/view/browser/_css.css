@@ -102,16 +102,6 @@
 }
 
 /*
-.BrowserFieldsColumn {
-    position: relative;
-    overflow-y: scroll;
-    flex: 1;
-    width: 100%;
-	background-color: white;
-}
-*/
-
-/*
 .BrowserColumn:focus {
   border: 1px dashed white;
 }
@@ -136,12 +126,6 @@
 
 	overflow: hidden;
     white-space: nowrap;
-
-	/*
-	flex-direction: column;
-	flex-wrap: nowrap;
-	flex-grow: 1;
-	*/
 }
 
 .BrowserRowTitle {

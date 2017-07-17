@@ -282,7 +282,7 @@ BMPow = ideal.Proto.extend().newSlots({
     
     isValid: function () {
         if (this._hash == null) { 
-            //console.log("WARNING: null hash on BMPow")
+            //console.warn("WARNING: null hash on BMPow")
             return false 
         }
             

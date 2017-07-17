@@ -163,7 +163,7 @@ NotificationCenter = ideal.Proto.extend().setType("NotificationCenter").newSlots
             this._isProcessing = false
         } else {
             ShowStack()
-            console.log("WARNING: attempt to call processPostQueue recursively while on note: ", this._currentNote)
+            console.warn("WARNING: attempt to call processPostQueue recursively while on note: ", this._currentNote)
         }
         
         return this

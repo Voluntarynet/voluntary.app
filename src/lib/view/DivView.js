@@ -651,7 +651,7 @@ DivView = ideal.Proto.extend().newSlots({
 		//console.warn("WARNING: " + this.type() + " removeSubview " + anSubview.type())
 		/*
 		if (!this.hasSubview(anSubview)) {
-			console.log(this.type() + " removeSubview " + anSubview.type() + " failed - no child found!")
+			console.warn(this.type() + " removeSubview " + anSubview.type() + " failed - no child found!")
 			return anSubview
 		}
 		*/

@@ -57,7 +57,7 @@ BMStorableNode = BMNode.extend().newSlots({
 					try {
 		                v = this[k].apply(this)
 					} catch(error) {
-						console.log("WARNING: " + this.type() + "." + k + "() missing method")
+						console.warn("WARNING: " + this.type() + "." + k + "() missing method")
 						//throw error
 					}
 	            }

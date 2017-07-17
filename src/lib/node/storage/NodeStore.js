@@ -355,7 +355,7 @@ NodeStore = ideal.Proto.extend().newSlots({
         var nodeDict = this.nodeDictAtPid(pid)
         if (!nodeDict) {
 			var error = "missing pid '" + pid + "'"
-			console.log("WARNING: " + error)
+			console.warn("WARNING: " + error)
 			return null
             throw new Error(error)
         }

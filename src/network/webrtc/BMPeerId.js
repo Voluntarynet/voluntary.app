@@ -91,7 +91,7 @@ BMPeerId = BMNode.extend().newSlots({
 			    this.setEncodedPublicKeyString(pubkey)
 			    this.setEncodedBloomString(bloom)
 		    } else {
-		        console.log("WARNING: peer name '" + aString + "' doesn't contain pubkey and bloom")
+		        console.warn("WARNING: peer name '" + aString + "' doesn't contain pubkey and bloom")
 		    }
 		} catch(e) {
 			this.setError(e)

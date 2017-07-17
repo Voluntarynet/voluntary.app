@@ -301,7 +301,7 @@ BMClassifiedPost = BMFieldSetNode.extend().newSlots({
             }
         } else {
             var error = "missing region for path '" + pathString + "'"
-            console.log("-----------\n".repeat(3) + "WARNING: " + error + "\n" + "-----------\n".repeat(3))
+            console.warn("-----------\n".repeat(3) + "WARNING: " + error + "\n" + "-----------\n".repeat(3))
             //throw new Error(error)
         }
     },

@@ -124,7 +124,7 @@ SyncDB = ideal.Proto.extend().newSlots({
 			}
 			this.idb().asyncRemoveAt(key)
 		} else {
-			console.log("WARNING: syncdb removeAt('" + key + "') - key not in syncdb cache")
+			console.warn("WARNING: syncdb removeAt('" + key + "') - key not in syncdb cache")
 		}
 	},
 	

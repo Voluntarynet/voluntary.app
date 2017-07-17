@@ -170,5 +170,3 @@ BMStorableNode = BMNode.extend().newSlots({
 		}
 	},
 })
-
-BMListNode = BMStorableNode

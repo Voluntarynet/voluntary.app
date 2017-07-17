@@ -1,10 +1,10 @@
 
 
-BMRemoteIdentities = BMListNode.extend().newSlots({
+BMRemoteIdentities = BMStorableNode.extend().newSlots({
     type: "BMRemoteIdentities",
 }).setSlots({
     init: function () {
-        BMListNode.init.apply(this)
+        BMStorableNode.init.apply(this)
 		this.setShouldStore(true)
         this.setTitle("Contacts")
         this.setNodeMinWidth(180)

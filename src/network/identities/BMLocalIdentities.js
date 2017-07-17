@@ -1,9 +1,9 @@
 
-BMLocalIdentities = BMListNode.extend().newSlots({
+BMLocalIdentities = BMStorableNode.extend().newSlots({
     type: "BMLocalIdentities",
 }).setSlots({
     init: function () {
-        BMListNode.init.apply(this)
+        BMStorableNode.init.apply(this)
 		this.setShouldStore(true)
         this.setTitle("My identities")
         this.setNodeMinWidth(180)

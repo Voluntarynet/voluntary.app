@@ -1,8 +1,8 @@
-BMSent = BMListNode.extend().newSlots({
+BMSent = BMStorableNode.extend().newSlots({
     type: "BMSent",
 }).setSlots({
     init: function () {
-        BMListNode.init.apply(this)
+        BMStorableNode.init.apply(this)
  		this.setShouldStore(true)
  		this.setShouldStoreSubnodes(false)
         this.setNoteIsSubnodeCount(true)

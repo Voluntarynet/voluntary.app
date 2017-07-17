@@ -220,9 +220,7 @@ BMNode = ideal.Proto.extend().newSlots({
 
     didUpdate: function() {
         this._didUpdateNodeNote.post()
-
         this.setNeedsSyncToView(true)
-        //this.markDirty()
 
         if (this.parentNode()) {
             this.parentNode().didUpdate()
@@ -238,7 +236,7 @@ BMNode = ideal.Proto.extend().newSlots({
     syncToView: function() {
         this._needsSyncToView = false
         if (this.view()) {
-            this.view().didUpdateNode()
+            this.view().didUpdateNode() // TODO: move to notifications?
         }        
     },
     

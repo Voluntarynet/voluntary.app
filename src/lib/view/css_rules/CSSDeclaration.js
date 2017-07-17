@@ -1,3 +1,9 @@
+/*
+    move to styleSheets implementation, e.g.:
+         
+         document.styleSheets[0].addRule(newRuleKey, newRuleValue);
+         
+*/
 
 CSSDeclaration = ideal.Proto.extend().newSlots({
     type: "CSSDeclaration",

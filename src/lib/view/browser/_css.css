@@ -89,19 +89,20 @@
     display: inline-block;
     width: 28px;
     height: 14px;
-    background-color: transparent;
     margin-top: 15px;
     margin-right: 15px;
+    
     opacity: 1;
     background-repeat: no-repeat;
     background-position: right center;
+    background-color: transparent;
 }
 
+/*
 .BrowserHeaderAction:hover {
     opacity: 1;
 }
 
-/*
 .BrowserColumn:focus {
   border: 1px dashed white;
 }

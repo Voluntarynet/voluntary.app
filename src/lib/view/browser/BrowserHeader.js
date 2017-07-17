@@ -33,16 +33,27 @@ BrowserHeader = NodeView.extend().newSlots({
             node.actions().forEach( (action) => {
                 var button = BrowserHeaderAction.clone()
                 button.setAction(action).setTarget(node)
+                button.setCanClick(this.nodeHasAction(action))
+                //button.setCanClick(false)
                 this.addSubview(button).syncFromNode()
             })
         }
         
         return this
     },
+    
+    nodeHasAction: function(anAction) {
+        return (anAction in this.node())
+    },
+    
+    hitButton: function(aButton) {
+        this.node()[aButton.action()].apply(this.node(), self)
+    },
 
 	didHitBackArrow: function() {
 		console.log(this.type() + " back")
-		this.columnGroup().column().selectPreviousColumn()
+		this.browser().popOneActiveColumn()
+		//this.columnGroup().column().selectPreviousColumn()
 	},
 	
 	setDoesShowBackArrow: function(aBool) {

@@ -163,6 +163,14 @@ BrowserView = NodeView.extend().newSlots({
         })		
 	},
 	
+	popOneActiveColumn: function() {
+	    var n = this.columnGroups().length - 1
+	    if (n < 1) { n = 1; }
+        this.setColumnGroupCount(n)
+        this.fitColumns()
+	    return this
+	},
+	
     selectColumn: function(selectedColumn) {
         var selectedColumnGroup = selectedColumn.columnGroup()
 
@@ -188,7 +196,7 @@ BrowserView = NodeView.extend().newSlots({
 	            nextCg.syncFromNode()
 				//console.log("nextNode = ", nextNode.isKindOf(BMFieldSetNode))
 			
-				if (nextNode.view().type() != "BrowserColumnGroup" || nextNode.isKindOf(BMFieldSetNode)) {
+				if (nextNode.view().type() != "BrowserColumnGroup" || nextNode.isKindOf(BMFieldSetNode)) { // TODO: use a better rule here
 					this.setColumnGroupCount(index + 2)
 				}
 			} // should this be here?

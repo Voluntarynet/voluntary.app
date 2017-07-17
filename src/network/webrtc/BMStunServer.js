@@ -11,9 +11,10 @@ BMStunServer = BMFieldSetNode.extend().newSlots({
     type: "BMStunServer",
    	//host: 'stun.bitmarkets.org',
     host: "",
-    port: null, 
+    port: "", 
 	//credential: null,
 	//username: null,
+	note: "",
 }).setSlots({
 	localServer: function() {
 		return this.clone().setHost("127.0.0.1").setPort(3478)
@@ -31,26 +32,17 @@ BMStunServer = BMFieldSetNode.extend().newSlots({
 
 		this.addStoredField(BMField.clone().setKey("host").setValueMethod("host")).setValueIsEditable(true)
 		this.addStoredField(BMField.clone().setKey("port").setValueMethod("port")).setValueIsEditable(true)
-		this.addStoredField(BMField.clone().setKey("notes").setValueMethod("notes")).setValueIsEditable(true)
+		this.addStoredField(BMField.clone().setKey("note").setValueMethod("note")).setValueIsEditable(true)
     },
 
     title: function () {
-        return this.host()
-    },  
+        return this.host() 
+    },
 
-	setTitle: function(aString) {
-		this.setHost(aString)
-		return this
-	},
-    
     subtitle: function () {
         return this.port()
     },
 
-	setSubtitle: function(aString) {
-		this.setPost(aString)
-		return this
-	},
 	
 	// ice entry - for Peer options
 	
@@ -68,7 +60,7 @@ BMStunServer = BMFieldSetNode.extend().newSlots({
 	
 	asIceEntry: function() {
 		var url = "stun:" + this.host()
-		if (this.port() != null) {
+		if (this.port() != null && this.port() != "") {
 			url += ":" + this.port()
 		}
 		return { url: url }

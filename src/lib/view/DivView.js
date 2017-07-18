@@ -183,6 +183,17 @@ DivView = ideal.Proto.extend().newSlots({
 		return this.getCssAttribute("background-image")
 	},
 	
+    setBackgroundImageUrlPath: function(path) {
+		this.setBackgroundImage('url("' + path + '")')
+        return this
+    },
+
+	// icons - until I find a better place for this
+	
+	pathForIconName: function(aName) { 
+        return 'icons/' + aName + '_active.png'
+	},    
+	
 	// transition
 	
 	setTransition: function(s) {

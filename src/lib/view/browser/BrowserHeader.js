@@ -10,7 +10,10 @@ BrowserHeader = NodeView.extend().newSlots({
         NodeView.init.apply(this)
         this.setOwnsView(false)
 
-		var backArrowView = DivView.clone().setDivClassName("BackArrow").setInnerHTML("&#8249;").setTarget(this).setAction("didHitBackArrow")
+		var backArrowView = DivView.clone().setDivClassName("BackArrow").setTarget(this).setAction("didHitBackArrow")
+		//backArrowView.setInnerHTML("&#8249;")
+		backArrowView.setBackgroundImageUrlPath(this.pathForIconName("left"))
+        
 		this.setBackArrowView(backArrowView)
 		
 

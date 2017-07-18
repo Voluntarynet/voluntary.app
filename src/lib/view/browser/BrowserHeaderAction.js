@@ -34,8 +34,7 @@ BrowserHeaderAction = NodeView.extend().newSlots({
     },
 
     updateImage: function () {
-        var path = 'icons/' + this.action() + '_active.png'
-        this.setBackgroundImage('url("' + path + '")')
+        this.setBackgroundImageUrlPath(this.pathForIconName(this.action()))
         return this
     },
 

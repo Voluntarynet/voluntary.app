@@ -1,32 +1,12 @@
 
-/* --- FieldSet --- */
-
-/*
-.BMFieldSetView {
-    font-family: "AppLight";
-    position: relative;
-    overflow-y: auto;
-    flex: 1;
-    top: 40px;
-    width: 100%;
-    background-color: #fff;
-
-	margin-left: 0px;
-	margin-right: 0px;
-
-	padding-left: 0px;
-	padding-right: 0px;
-}
-*/
 
 /* --- FieldView --------------------------- */
 
 .BMFieldRowView {
-    background-color: #fff;
+	font-family: "AppRegular";
+    background-color: white;
     opacity: 1;
     
-    font-family: "AppRegular";
-
     display: block;
     position: relative;
 
@@ -47,7 +27,6 @@
 
 .BMFieldKeyView {
     color: #777;
-    font-family: "AppRegular";
 
 	display: inline-block;
     position: relative;
@@ -90,7 +69,6 @@
     text-transform: none;	
 
     color: #000;
-    font-family: "AppRegular";
     font-weight: normal;
     font-size: 13px;
 
@@ -141,7 +119,6 @@
     white-space: pre-wrap;
 
     color: black;
-    font-family: "AppRegular";
     font-size: 13px;
     font-weight: normal;
     text-transform: none;
@@ -162,8 +139,6 @@
     background-color: #fff;
     opacity: 1;
     
-    font-family: "AppRegular";
-
     display: block;
     position: relative;
     width: auto;
@@ -183,14 +158,12 @@
 	width: auto;
 	text-transform: uppercase;
 	text-align:center;
-    font-family: "AppRegular";
 	font-size: 12px;
 }
 
 .BMImageWellFieldValueView {
     position: relative;
     color: #000;
-    font-family: "AppRegular";
 
     width: auto;
     min-height: auto;
@@ -220,7 +193,6 @@
     text-align: left;
 
 
-    font-family: "AppRegular";
     font-size: 13px;
     font-weight: normal;
     text-transform: none;
@@ -246,7 +218,6 @@
 
 	width: auto;
 	
-    font-family: "AppRegular";
     background-color: #fff;
 
     text-align: left;
@@ -275,7 +246,6 @@
     
     color: #000;
 
-    font-family: "AppRegular";
     font-size: 13px;
     font-weight: normal;
     text-transform: none;
@@ -305,7 +275,6 @@
 	
 	width: auto;
 	
-	font-family: "AppRegular";
     font-size: 13px;
     font-weight: normal;
     text-transform: none;

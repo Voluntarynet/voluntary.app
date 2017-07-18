@@ -1,4 +1,13 @@
 
+.NodeView {
+	font-size: 14px; 
+	font-size-adjust: 0.5;
+    font-family: "AppRegular";
+
+    letter-spacing: 1px;
+    text-transform: none;
+}
+
 .BrowserView {
     display: flex;
     position: absolute;
@@ -74,15 +83,22 @@
     z-index: 11;
     text-align: center;
     border: 0px solid #aaa;
-    font-family: "AppRegular";
-    font-size: 14px;
 }
 
 .BackArrow {
 	display: block;
     position: absolute;
-	top: 10px;
-	left: 10px;
+	margin-top: 15px;
+	margin-left: 15px;
+    width: 14px;
+    height: 14px;
+
+    opacity: 1;
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-color: transparent;
+
+	/*border: 1px yellow dashed;*/
 }
 
 .BrowserHeaderAction {
@@ -104,8 +120,6 @@
     margin-top: 14px;
     width: 100%;   
     
-    font-size: 14px; 
-    font-family: "AppRegular";
     color: #666;
     text-align: center;
     
@@ -129,13 +143,13 @@
 /* --- Browser Row --- */
 
 .BrowserRow {
+	font-family: "AppLight";
     display: block;
     position: relative;
     width: 100%;
     height: 60px;
 
     color: #CBCBCB;
-    font-family: "AppRegular";
     /*border-bottom: 1px solid rgba(100,100,100, .4);*/
     transition: background-color .3s ease-out;
 
@@ -155,8 +169,8 @@
 	
     text-align: left;
     font-size: 13px;
+
     font-weight: normal;
-    text-transform: none;
 
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -173,7 +187,6 @@
 
     color: #aaa;
     
-    font-family: "AppLight";
     font-size: 11px;
     font-weight: normal;
 
@@ -191,7 +204,6 @@
 }
 
 .BrowserRowNote {
-    font-family: "AppLight";
     position: absolute;
     right: 20px;
     top: 24px;

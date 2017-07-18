@@ -1,3 +1,5 @@
+- back arrow doesn't scale with command+
+
 - select row when added with plus action
   -- options:
 	- intercept action at view level 

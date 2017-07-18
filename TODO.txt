@@ -1,7 +1,19 @@
 - select row when added with plus action
+  -- options:
+	- intercept action at view level 
+		- pro: might want to override anyways
+		- con: doesn't deal with other situations where we might want to focus
+	- have view observe notification from node 
+		- pro: might want other notes
+		- con: might have to clean up observations
 
 - add BrowserHeader title - use when single column
 
+-- bug: collapsing with one column has issues
+
+-- add a nodeColumnTitle method which defaults to title
+
+-- cleanup css using new inheritance feature - e.g. declare font only on NodeView
 - add a forward arrow note to PointerRowView
 
 - cleanup message dict format
@@ -9,7 +21,16 @@
 - chat threads
 
 - move contacts under identity
+
+- move font to be local so we don't need to be online to see it
+
+
 ++ move actions to fields with attributes like "isEnabled" and enabledMethod
+
+- support text color for selected rows
+
+-- use View prefix consistently
+
 
 
 -----------------------------------------------------------------

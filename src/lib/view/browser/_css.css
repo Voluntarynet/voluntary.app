@@ -98,6 +98,20 @@
     background-color: transparent;
 }
 
+.BrowserHeaderTitleView {
+    display: block;
+    position: absolute;
+    margin-top: 14px;
+    width: 100%;   
+    
+    font-size: 14px; 
+    font-family: "AppRegular";
+    color: #666;
+    text-align: center;
+    
+    /*border: 1px dashed yellow;*/
+}
+
 /*
 .BrowserHeaderAction:hover {
     opacity: 1;

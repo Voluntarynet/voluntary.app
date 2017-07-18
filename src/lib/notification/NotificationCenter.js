@@ -56,7 +56,7 @@ NotificationCenter = ideal.Proto.extend().setType("NotificationCenter").newSlots
     notifications: null,
     shared: null,
     //usesTimeouts: true,
-    isDebugging: false,
+    isDebugging: true,
     currentNote: null,
 }).setSlots({
     init: function() {
@@ -175,13 +175,19 @@ NotificationCenter = ideal.Proto.extend().setType("NotificationCenter").newSlots
         //
         // TODO: add an dictionary index to optimize? 
         
+        console.log(this.type() + " sender " + note.sender() + " posting " + note.name())
+
         this.setCurrentNote(note)
         
-        var observations = this.observations().copy()        
+        var observations = this.observations().copy()  
+        console.log("observations: " + observations.map((obs) => { return obs.observer().type() + " listening to " + obs.target() }).join(",") )
+      
         observations.forEach(function (obs) {
             if (obs.matchesNotification(note)) {
-
+                console.log(this.type() + " " + note.name() + " matches obs ", obs)
+                
                 try {
+                    console.log(this.type() + " sending ", note.name() + " to obs " + obs.type())
                     obs.sendNotification(note)                
                 } catch(error) {
                     //console.log("Error", typeof(error), "  ", error);

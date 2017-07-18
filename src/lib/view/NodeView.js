@@ -7,7 +7,8 @@ NodeView = DivView.extend().newSlots({
 }).setSlots({
     init: function () {
         DivView.init.apply(this)
-        this._nodeObservation = NotificationCenter.shared().newObservation().setName("didUpdateNode").setObserver(this)
+        //this._nodeObservation = NotificationCenter.shared().newObservation().setName("didUpdateNode").setObserver(this)
+        this._nodeObservation = NotificationCenter.shared().newObservation().setObserver(this) // observe all
         return this
     },
 	

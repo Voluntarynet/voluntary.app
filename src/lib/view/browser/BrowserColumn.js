@@ -172,8 +172,14 @@ BrowserColumn = NodeView.extend().newSlots({
 		if (this.node() != aNode) {
 			NodeView.setNode.apply(this, [aNode])
 			this.unselectAllRows()
+			//"shouldFocusSubnode"
 		}
 		return this
+	},
+	
+	shouldFocusSubnode: function(aSubnode) {
+	    console.log(this.type() + " shouldFocusSubnode " + aSubnode.type())
+	    return this 
 	},
 	
     syncFromNode: function () {

@@ -53,6 +53,7 @@ BMNode = ideal.Proto.extend().newSlots({
         this._subnodes = []
         this._actions = []        
         this._didUpdateNodeNote = NotificationCenter.shared().newNotification().setSender(this._uniqueId).setName("didUpdateNode")
+        this._shouldFocusSubnodeNote = NotificationCenter.shared().newNotification().setSender(this._uniqueId).setName("shouldFocusSubnode")
         return this
     },
 
@@ -219,7 +220,10 @@ BMNode = ideal.Proto.extend().newSlots({
     },
 
     didUpdate: function() {
-        this._didUpdateNodeNote.post()
+        if (this._didUpdateNodeNote) {
+            this._didUpdateNodeNote.post()
+        }
+        
         this.setNeedsSyncToView(true)
 
         if (this.parentNode()) {
@@ -338,6 +342,7 @@ BMNode = ideal.Proto.extend().newSlots({
         console.log("BMNode add " + subnode.type())
         this.addSubnode(subnode)
         this.didUpdate()
+        this._shouldFocusSubnodeNote.post()
         return subnode
     },
 

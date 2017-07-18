@@ -30,6 +30,7 @@ BMMessages = BMStorableNode.extend().newSlots({
         this.setChangeNote(NotificationCenter.shared().newNotification().setSender(this).setName("newMessage"))
         this.setQueue({})
         this.setNoteIsSubnodeCount(true)
+		this.setNodeMinWidth(180)
     },
     
     subnodeProto: function() {

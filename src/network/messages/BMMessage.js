@@ -27,7 +27,7 @@ BMMessage = BMFieldSetNode.extend().newSlots({
 
 	prepareToAccess: function() {
 		if (!this._didSetupFields) {
-			this.addStoredField(BMTextAreaField.clone().setKey("dict").setValueMethod("msgDictString").setValueIsEditable(false))
+			this.addStoredField(BMTextAreaField.clone().setKey("dict").setValueMethod("msgDictString").setValueIsEditable(false).setIsMono(true))
 			this._didSetupFields = true
 		}
 	},

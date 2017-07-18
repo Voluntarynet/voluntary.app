@@ -117,6 +117,17 @@ DivView = ideal.Proto.extend().newSlots({
 		return this.getCssAttribute("text-transform")
 	},
 
+	// font family
+
+	setFontFamily: function(s) {
+		this.setCssAttribute("font-family", s)
+		return this
+	},
+	
+	fontFamily: function() {
+		return this.getCssAttribute("font-family")
+	},	
+	
 	// font weight
 	
 	setFontWeight: function(s) {

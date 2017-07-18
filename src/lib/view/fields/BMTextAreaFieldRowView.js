@@ -16,6 +16,14 @@ BMTextAreaFieldRowView = BMFieldRowView.extend().newSlots({
     updateSubviews: function() {   
 	    BMFieldRowView.updateSubviews.apply(this)
 		this.fillBottomOfColumnIfAvailable()
+		
+		if (this.node().isMono()) {
+			this.valueView().setDivClassName("BMMonoTextAreaFieldValueView")
+			this.valueView().set
+		} else {
+			this.valueView().setDivClassName("BMTextAreaFieldValueView")
+		}
+		
 		return this
 	},
 	

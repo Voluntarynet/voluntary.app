@@ -15,13 +15,6 @@ BMRemoteIdentity = BMNavNode.extend().newSlots({
 
         this.setNodeTitleIsEditable(true)
         this.setNodeSubtitleIsEditable(false)
-        this.setNodeMinWidth(120)
-
-        //this.addFieldNamed("name").setValueMethod("name").setValueIsEditable(true)
-       // this.setName("Untitled")
-
-		//this.addStoredField(BMIdentityField.clone().setValueMethod("publicKeyString").setKey("public key").setValueIsEditable(true))
-        //this.setPublicKeyString("")
 
 		this.addStoredSlots(["name", "publicKeyString"])
 		this.initStoredSlotWithProto("profile", BMProfile)
@@ -33,6 +26,7 @@ BMRemoteIdentity = BMNavNode.extend().newSlots({
 		this.profile().fieldNamed("publicKeyString").setValueIsEditable(true)
 		
         this.addAction("delete")
+        this.setNodeMinWidth(180)
     },
 
 	didLoadFromStore: function() {

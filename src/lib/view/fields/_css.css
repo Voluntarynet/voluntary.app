@@ -104,6 +104,32 @@
 	overflow-y: scroll;
 }
 
+.BMMonoTextAreaFieldValueView {
+    display: block;
+    position: relative;
+    top: 0px;
+    left: 0px;
+	padding: 0;
+    margin: 20px;
+    width: auto;
+    min-height: auto;
+
+    word-break: break-all;
+   	unicode-bidi: embed;
+    white-space: pre-wrap;
+
+    color: black;
+    font-weight: normal;
+    text-transform: none;
+    text-align: left;
+
+
+    font-size: 13px;
+    font-family: AppMono;
+	font-weight: lighter;
+	letter-spacing: 0.1px;
+}
+
 .BMTextAreaFieldValueView {
     display: block;
     position: relative;
@@ -131,7 +157,6 @@
 
 .BMPointerFieldRowView {
 	border-bottom: 1px solid #ddd;
-	font-family: "AppRegular";
 }
 
 /* --------------------------- Image --------------------------- */

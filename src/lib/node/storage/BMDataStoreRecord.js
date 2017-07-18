@@ -16,7 +16,7 @@ BMDataStoreRecord = BMFieldSetNode.extend().newSlots({
 		
 		if (!this._didSetupFields) {
 			console.log(this.type() + " prepareToAccess")
-			this.addStoredField(BMTextAreaField.clone().setKey("dict").setValueMethod("dictString").setValueIsEditable(false))
+			this.addStoredField(BMTextAreaField.clone().setKey("dict").setValueMethod("dictString").setValueIsEditable(false).setIsMono(true))
 			this._didSetupFields = true
 		}
 	},

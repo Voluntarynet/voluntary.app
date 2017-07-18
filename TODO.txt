@@ -1,4 +1,4 @@
-- back arrow doesn't scale with command+
+- fix from address on emails 
 
 - select row when added with plus action
   -- options:
@@ -8,6 +8,8 @@
 	- have view observe notification from node 
 		- pro: might want other notes
 		- con: might have to clean up observations
+
+- add notification for removing a subnode - have column deal with unselecting it
 
 - add BrowserHeader title - use when single column
 

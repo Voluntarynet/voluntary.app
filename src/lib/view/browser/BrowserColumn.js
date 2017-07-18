@@ -177,8 +177,9 @@ BrowserColumn = NodeView.extend().newSlots({
 		return this
 	},
 	
-	shouldFocusSubnode: function(aSubnode) {
-	    console.log(this.type() + " shouldFocusSubnode " + aSubnode.type())
+	shouldFocusSubnode: function(aNote) {
+	    var subnode = aNote.info()
+	    this.clickRowWithNode(subnode)
 	    return this 
 	},
 	

@@ -10,8 +10,8 @@ Observation = ideal.Proto.extend().setType("Observation").newSlots({
     },
     
     matchesNotification: function(note) {
-        var matchesTarget = note.sender() == this.target() || this.target() == null
-        var matchesName = note.name() == this.name()
+        var matchesTarget = (note.sender() == this.target()) || (this.target() == null)
+        var matchesName = (note.name() == this.name()) || (this.name() === null)
         return matchesTarget && matchesName
     },
     
@@ -19,7 +19,12 @@ Observation = ideal.Proto.extend().setType("Observation").newSlots({
         if (this.center().isDebugging()) {
             //console.log(this._observer + " received note " + note.name() + " from " + note.sender() )
         }
-        this._observer[this._name].apply(this._observer, [note])
+        var method = this._observer[note.name()]
+        if (method) {
+            method.apply(this._observer, [note])
+        } else {
+           console.log(this.type() + " no method found for note name " + note.name())
+        }
     },
     
     isEqual: function(obs) {

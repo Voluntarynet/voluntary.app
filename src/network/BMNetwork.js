@@ -95,7 +95,7 @@ BMNetwork = BMStorableNode.extend().newSlots({
         // messages will send inv msg
         this.messages().onRemotePeerConnect(remotePeer)
         
-        //this.log("Network onRemotePeerConnect this.remotePeerCount()  = " + this.remotePeerCount() )
+        //this.log("Network onRemotePeerConnect this.remotePeerCount()  = " + this.remotePeerCount())
         //this.didUpdate()
         this.syncToView()
     },

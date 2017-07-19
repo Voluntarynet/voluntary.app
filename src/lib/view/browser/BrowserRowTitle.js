@@ -14,7 +14,7 @@ BrowserRowTitle = DivView.extend().newSlots({
         return this
     },
 
-/*
+    /*
 	updateSubviews: function() {
 		 if (this.isSelected()) {
 			this.setColor("#CBCBCB")

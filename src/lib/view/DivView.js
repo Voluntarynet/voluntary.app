@@ -1328,7 +1328,7 @@ DivView = ideal.Proto.extend().newSlots({
     
     pasteListenerFunc: function () {
         if (!this._pasteListenerFunc) {
-            this._pasteListenerFunc = function(e) { this.paste(e) }
+            this._pasteListenerFunc = (e) => { this.paste(e) }
         }
         return this._pasteListenerFunc
     },

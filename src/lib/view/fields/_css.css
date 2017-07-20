@@ -233,6 +233,12 @@
 }
 */
 
+.BMMultiFieldRowView {
+	overflow-x: hidden;
+	overflow-y: visible;
+}
+
+
 .BMMultiFieldOptionsRowView {
 	z-index: 100;
  	display: inline;
@@ -240,7 +246,6 @@
 	top: 18px;
 	float: right;
 
-	overflow: hidden;
 
 	width: auto;
 	

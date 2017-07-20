@@ -192,6 +192,7 @@ BrowserColumn = NodeView.extend().newSlots({
         
         // remember the selection        
         var selectedIndex = this.selectedRowIndex()
+       // console.log(this.node().title() + "  selectedIndex 1: " + selectedIndex)
         var thereWasASelection = selectedIndex != -1
         var lastSelectedNode = this.selectedNode()
         
@@ -223,11 +224,11 @@ BrowserColumn = NodeView.extend().newSlots({
                 //this.log("selectedIndex: " + selectedIndex)
                 
                 // otherwise, select close to last selected index
-                if (selectedIndex > this.rows().length) {
+                if (selectedIndex >= this.rows().length) {
                     selectedIndex = this.rows().length - 1
                 }
                 
-                //this.log("selectedIndex after: " + selectedIndex)
+                //console.log(this.node().title() + " selectedIndex : " + selectedIndex)
                 //this.log("selectedIndex < this.rows().length: " + (selectedIndex < this.rows().length) )
                 
                 if (selectedIndex > -1 && selectedIndex < this.rows().length) {

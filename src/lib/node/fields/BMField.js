@@ -59,7 +59,7 @@ BMField = BMNode.extend().newSlots({
 		return this._valueMethod
 	},
 	
-	setValue: function(v) {
+	setValue: function(v) { // called by View on edit
 		//console.log("setValue '" + v + "'")
 		var target = this.target()
 		var setter = this.setterNameForSlot(this.valueMethod())

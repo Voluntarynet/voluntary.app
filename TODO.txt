@@ -1,3 +1,10 @@
+- fix single column mode
+- replace icons with unicode chars - use transform to scale if needed
+
+
+- add BrowserHeader title - use when single column
+-- add a nodeColumnTitle method which defaults to title
+
 - multi options popup overflow is hidden?
 
 - cleanup message dict format
@@ -7,12 +14,6 @@
 
 
 - fix from address on emails 
-
-- add BrowserHeader title - use when single column
--- add a nodeColumnTitle method which defaults to title
-
--- bug: collapsing with one column has issues
-
 
 -- CLEANUP css using new inheritance feature - e.g. declare font only on NodeView
 - add a forward arrow note to PointerRowView

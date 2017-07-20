@@ -88,8 +88,10 @@ BrowserView = NodeView.extend().newSlots({
     },
 
 	// --- focus each somehow prevents a weird layout bug -----
+    // no longer needed after adding scroll view and moving to flex
     
     focusEach: function () {
+        /*
         if (this._hasDoneFocusEach) { 
             console.log("skipping Browser focusEach because it hoses editing")
             return 
@@ -99,33 +101,23 @@ BrowserView = NodeView.extend().newSlots({
         this.columnGroups().forEach( (cg) => { 
             cg.column().focus()
         })
+        */
     },
     
-/*
-    updateColumnPositions: function () {
-		this.columnGroups().forEach( (cg) => { 
-            //cg.column().setTop(80)
-        })
-
-        var w = 0
-        this.columnGroups().forEach(function (cg) { 
-            cg.setLeft(w)
-            w += cg.minWidth() 
-        })
-
-        return this
+    activeColumnGroups: function() {
+        return this.columnGroups().select((cg) => { return !(cg.node() === null); })
     },
-*/
         
     setColumnGroupCount: function(count) {
         //this.log("setColumnGroupCount " + count)
-        
+
         /*
-        if (this.columnGroups().length == 2 && count == 1) {
-            throw "this shouldn't happen"
+		// collapse excess columns
+        for (var i = count; i < this.columnGroups().length - 1; i ++) {
+            this.columnGroups()[i].collpase()
         }
         */
-        
+            
 		// remove any excess columns
         while (this.columnGroups().length > count) {
             this.removeColumnGroup(this.columnGroups().last())
@@ -140,7 +132,7 @@ BrowserView = NodeView.extend().newSlots({
         //this.updateColumnPositions()
         this.setupColumnGroupColors()
         //this.log("this.columnGroups().length = " + this.columnGroups().length)
-        assert(this.columnGroups().length  == count)
+        //assert(this.columnGroups().length  == count)
         return this
     },
 
@@ -283,7 +275,7 @@ BrowserView = NodeView.extend().newSlots({
 	// --- collapsing column groups -----
 	
     fitColumns: function () {
-       // this.updateSingleColumnMode()
+       this.updateSingleColumnMode()
         //this.fitToWindow()
         
 		// collapse columns as needed
@@ -294,7 +286,8 @@ BrowserView = NodeView.extend().newSlots({
         var usedWidth = 0
         var remainingWidth = 0
         
-		this.setIsSingleColumn(true)
+        /*
+		//this.setIsSingleColumn(true)
 		console.log("isSingleColumn = ", this.isSingleColumn())
 		
 		var lastActiveCg = this.columnGroups().reversed().detect((cg) => { return cg.column().node() != null; })
@@ -324,6 +317,7 @@ BrowserView = NodeView.extend().newSlots({
     		
     		return this ////////////////////////////////// early return
 		} 
+		*/
 		
 		this.columnGroups().reversed().forEach((cg) => { 
 		    var w = cg.node() ? cg.node().nodeMinWidth() : 0

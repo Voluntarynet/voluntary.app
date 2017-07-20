@@ -548,8 +548,8 @@ DivView = ideal.Proto.extend().newSlots({
     },
 
     setMinAndMaxWidth: function(v) {
-        console.log(this.type() + " setMinAndMaxWidth ", v)
-        ShowStack()
+        //console.log(this.type() + " setMinAndMaxWidth ", v)
+        //ShowStack()
 		this.setMinWidth(v)
 		this.setMaxWidth(v)
         return this        

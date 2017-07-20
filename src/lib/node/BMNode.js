@@ -54,6 +54,7 @@ BMNode = ideal.Proto.extend().newSlots({
         this._actions = []        
         this._didUpdateNodeNote = NotificationCenter.shared().newNotification().setSender(this._uniqueId).setName("didUpdateNode")
         this._shouldFocusSubnodeNote = NotificationCenter.shared().newNotification().setSender(this._uniqueId).setName("shouldFocusSubnode")
+        this._nodeMinWidth = 180
         return this
     },
 

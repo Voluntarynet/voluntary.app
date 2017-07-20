@@ -6,7 +6,6 @@ BMLocalIdentities = BMStorableNode.extend().newSlots({
         BMStorableNode.init.apply(this)
 		this.setShouldStore(true)
         this.setTitle("My identities")
-        this.setNodeMinWidth(180)
         
         this.setActions(["add"])
         this.setSubnodeProto(BMLocalIdentity)

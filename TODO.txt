@@ -1,4 +1,7 @@
+- can't delete in network/messages/
 - fix from address on emails 
+- fix ellipsis width on rows 
+
 
 - select row when added with plus action
   -- options:

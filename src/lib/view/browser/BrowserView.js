@@ -13,12 +13,13 @@ BrowserView = NodeView.extend().newSlots({
             "#232323", "#000"
             ],
     //bgColors: ["#151515"],
-    
+    isSingleColumn: false,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
         this.setDefaultSubnodeViewClass(BrowserColumnGroup)
         this.setIsRegisterForWindowResize(true)
+        
         return this
     },
 
@@ -29,7 +30,13 @@ BrowserView = NodeView.extend().newSlots({
 		this.focusEach()
 		this.fitColumns()
     },
-
+    
+    updateSingleColumnMode: function() {
+        if (Window.width() < Window.height()) {
+            this.setIsSingleColumn(true)
+        }
+        return this
+    },
 
 	// --- columns -------------------------------
 
@@ -113,9 +120,11 @@ BrowserView = NodeView.extend().newSlots({
     setColumnGroupCount: function(count) {
         //this.log("setColumnGroupCount " + count)
         
+        /*
         if (this.columnGroups().length == 2 && count == 1) {
             throw "this shouldn't happen"
         }
+        */
         
 		// remove any excess columns
         while (this.columnGroups().length > count) {
@@ -223,6 +232,8 @@ BrowserView = NodeView.extend().newSlots({
 		columnGroups.forEach((cg) => {
             cg.syncFromNode()
         })
+        
+        // this.fitColumns()
                 
         return this
     },
@@ -272,6 +283,7 @@ BrowserView = NodeView.extend().newSlots({
 	// --- collapsing column groups -----
 	
     fitColumns: function () {
+       // this.updateSingleColumnMode()
         //this.fitToWindow()
         
 		// collapse columns as needed
@@ -281,6 +293,37 @@ BrowserView = NodeView.extend().newSlots({
         var lastCg = this.columnGroups().last()
         var usedWidth = 0
         var remainingWidth = 0
+        
+		this.setIsSingleColumn(true)
+		console.log("isSingleColumn = ", this.isSingleColumn())
+		
+		var lastActiveCg = this.columnGroups().reversed().detect((cg) => { return cg.column().node() != null; })
+		if (lastActiveCg && this.isSingleColumn()) {
+		    
+		    this.columnGroups().forEach((cg) => {
+    			if (cg != lastActiveCg) {
+    			    cg.setFlexGrow(1)
+    			    cg.setIsCollapsed(true)
+    			    cg.setMinAndMaxWidth(0)
+    			}
+    		})
+
+		    console.log("Window.width() = ", Window.width())
+    		lastActiveCg.setIsCollapsed(false)
+    		
+    		this.columnGroups().forEach((cg) => {
+    			cg.updateBackArrow()    			
+    		})
+    		
+    		lastActiveCg.node().setNodeMinWidth(null)
+    		lastActiveCg.setMinAndMaxWidth(Window.width())
+    		lastActiveCg.setFlexGrow(100)  
+    		
+    		console.log("lastActiveCg.node().title() = ", lastActiveCg.node().title(), " width ", lastActiveCg.minWidth(), " ", lastActiveCg.maxWidth())
+    		  		
+    		
+    		return this ////////////////////////////////// early return
+		} 
 		
 		this.columnGroups().reversed().forEach((cg) => { 
 		    var w = cg.node() ? cg.node().nodeMinWidth() : 0
@@ -300,16 +343,9 @@ BrowserView = NodeView.extend().newSlots({
 			cg.updateBackArrow()
 			//cg.setMinAndMaxWidth(null)
 		})
-		
-		if (false) {
-    		// have last column fit remaining width
-    		lastCg.setMinAndMaxWidth(remainingWidth)
-    		console.log("remainingWidth = ", remainingWidth)
-    		//lastCg.setFlexGrow(0)
-        } else {
-    		lastCg.setMinAndMaxWidth(null)
-    		lastCg.setFlexGrow(100)
-    	}
+
+		lastCg.setMinAndMaxWidth(null)
+		lastCg.setFlexGrow(100)
     	
 		return this
 	},

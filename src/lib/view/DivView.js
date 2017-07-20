@@ -118,7 +118,7 @@ DivView = ideal.Proto.extend().newSlots({
 	
 	// zoom
 	
-	setZoom: function(z) {
+	setZoom: function(s) {
 		this.setCssAttribute("zoom", s)
 		return this
 	},
@@ -500,7 +500,6 @@ DivView = ideal.Proto.extend().newSlots({
 		if (w == "") {
 			return null
 		}
-		console.log("maxWidth w = ", typeof(w))
 		assert(w.includes("px"))
         w = Number(w.replace("px", ""))
         return w
@@ -549,6 +548,8 @@ DivView = ideal.Proto.extend().newSlots({
     },
 
     setMinAndMaxWidth: function(v) {
+        console.log(this.type() + " setMinAndMaxWidth ", v)
+        ShowStack()
 		this.setMinWidth(v)
 		this.setMaxWidth(v)
         return this        

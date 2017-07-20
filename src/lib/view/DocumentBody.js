@@ -5,7 +5,7 @@ DocumentBody = DivView.extend().newSlots({
     init: function () {
         DivView.init.apply(this)
         this.setIsRegisterForWindowResize(true)
-        this.autoAdjustZoomForMobile()
+        setTimeout(() => { this.autoAdjustZoomForMobile() })
         return this
     },
     
@@ -20,11 +20,13 @@ DocumentBody = DivView.extend().newSlots({
     autoAdjustZoomForMobile: function() {
         var z = "100%"
         
-        if (this.width() < 1000) {
-            document.body.style.zoom = "300%"
+        if (Window.width() < 1000) {
+            z = "300%"
         }
         
         this.setZoom(z)
-        console.log("set zoom: ", this.zoom() )
+        
+        //console.log("DocumentBody windowWidth: " + Window.width() + " zoom: " + this.zoom() )
+        return this
     },
 })

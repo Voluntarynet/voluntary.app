@@ -44,11 +44,26 @@ WebBrowserWindow = ideal.Proto.extend().newSlots({
     /*
     isOnPhone: function()
     {
-       var userAgent = navigator.userAgent.toLowerCase();
+       var userAgent = navigator.userAgent.toLowerCase()
        console.log("userAgent: '" + userAgent + "'")
     },
     */
     
+    mobileNames: function() {
+        return ["android", "webos", "iphone", "ipad", "ipod", "blackBerry", "windows phone"]  
+    },
+
+    agent: function() {
+        var agent = navigator.userAgent.toLowerCase()
+        return agent
+    },
+    
+    isOnMobile: function() { 
+        var agent = this.agent();
+        var match = this.mobileNames().detect((name) => { return agent.contains(name); })
+        return !(match === null)
+    },
+
 })
 
 

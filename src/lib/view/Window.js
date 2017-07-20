@@ -1,12 +1,14 @@
 
 WebBrowserWindow = ideal.Proto.extend().newSlots({
     type: "WebBrowserWindow",
-    win: null,
+    //win: null,
+    documentBody: DocumentBody.clone(),
 }).setSlots({
     init: function () {
         throw new Error("this class is meant to be used as singleton, for now")
         return this
     },
+    
  /*  
     win: function() {
         if (!this._win) {
@@ -34,9 +36,21 @@ WebBrowserWindow = ideal.Proto.extend().newSlots({
         console.warn("warning: Window.setHeight() unavailable in browser")
 		return this
     },
+    
+    show: function() {
+        console.log("Window size " + this.width() + "x" + this.height())
+    },
 
+    /*
+    isOnPhone: function()
+    {
+       var userAgent = navigator.userAgent.toLowerCase();
+       console.log("userAgent: '" + userAgent + "'")
+    },
+    */
+    
 })
 
 
 Window = WebBrowserWindow
-
+//Window.show()

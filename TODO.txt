@@ -1,29 +1,25 @@
+- multi options popup overflow is hidden?
+
+- cleanup message dict format
+- chat threads
+- move contacts under identity
+- add time/date field
+
 
 - fix from address on emails 
 
-- add notification for removing a subnode - have column deal with unselecting it
-
 - add BrowserHeader title - use when single column
+-- add a nodeColumnTitle method which defaults to title
 
 -- bug: collapsing with one column has issues
 
--- add a nodeColumnTitle method which defaults to title
 
--- cleanup css using new inheritance feature - e.g. declare font only on NodeView
+-- CLEANUP css using new inheritance feature - e.g. declare font only on NodeView
 - add a forward arrow note to PointerRowView
 
-- cleanup message dict format
-
-- chat threads
-
-- move contacts under identity
-
-- move font to be local so we don't need to be online to see it
 
 
 ++ move actions to fields with attributes like "isEnabled" and enabledMethod
-
-- support text color for selected rows
 
 -- use View prefix consistently
 

@@ -51,16 +51,15 @@ DivView = ideal.Proto.extend().newSlots({
 }).setSlots({
     init: function () {
         this._subviews = []
-        var e = document.createElement("div");
-        //e._viewObject = this
-        //e.setAttribute('class', this.divClassName());
-        this._element = e
-        //this.setTransition("all .2s")
-        //this.setSubviewProto(DivView)
-		//this.setDivComment(this.type())
-		this._element.id = this.type() + "-" + this._uniqueId
-		this.setupDivClassName()
+        this.setupElement()
         return this
+    },
+    
+    setupElement: function() {
+        this._element = document.createElement("div")
+		this._element.id = this.type() + "-" + this._uniqueId
+		this.setupDivClassName()      
+		return this  
     },
 
 	setupDivClassName: function() {
@@ -115,6 +114,17 @@ DivView = ideal.Proto.extend().newSlots({
 	
 	textTransform: function() {
 		return this.getCssAttribute("text-transform")
+	},
+	
+	// zoom
+	
+	setZoom: function(z) {
+		this.setCssAttribute("zoom", s)
+		return this
+	},
+	
+	zoom: function() {
+		return this.getCssAttribute("zoom")
 	},
 
 	// font family

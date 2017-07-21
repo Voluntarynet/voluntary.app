@@ -139,7 +139,7 @@ BrowserView = NodeView.extend().newSlots({
             var newCg = BrowserColumnGroup.clone()
             this.addColumnGroup(newCg)
             newCg.setMinAndMaxWidth(0)
-            
+            newCg.setFlexGrow(0)
         }
         
         //this.updateColumnPositions()
@@ -310,7 +310,7 @@ BrowserView = NodeView.extend().newSlots({
 		    
 		    this.columnGroups().forEach((cg) => {
     			if (cg != lastActiveCg) {
-    			    //cg.setFlexGrow(1)
+    			    cg.setFlexGrow(0)
     			    cg.setIsCollapsed(true)
     			    cg.setMinAndMaxWidth(0)
     		        if (cg.node()) { cg.node().setNodeMinWidth(0) }
@@ -340,8 +340,10 @@ BrowserView = NodeView.extend().newSlots({
 			shouldCollapse = (widthsSum > browserWidth) && (cg != lastCg)
 			if (cg.node() === null) {
 			    cg.setMinAndMaxWidth(0)
+			    cg.setFlexGrow(0)
+			} else {
 			    cg.setFlexGrow(1)
-			}
+            }
 			
 			if (cg == lastActiveCg) {
 			    remainingWidth =  this.browserWidth() - usedWidth

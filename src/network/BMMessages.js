@@ -5,7 +5,6 @@ BMGetDataItem = BMNode.extend().newSlots({
     hash: null,
     fromMsg: null,
 }).setSlots({
-    
 })
 */
 

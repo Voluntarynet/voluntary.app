@@ -247,20 +247,26 @@ BrowserColumn = NodeView.extend().newSlots({
 	// --- keyboard controls, arrow navigation -----------------------------
 	
 	onUpArrowKeyUp: function(event) {
-        if (!this.allowsCursorNavigation()) { return }
+        if (!this.allowsCursorNavigation()) { 
+			return 
+		}
         this.selectPreviousRow()
 		return false
 	},
 	
 	onDownArrowKeyUp: function(event) {
-        if (!this.allowsCursorNavigation()) { return }	
+        if (!this.allowsCursorNavigation()) { 
+			return 
+		}
         this.selectNextRow()
 		return false
 	},
 	
 	onLeftArrowKeyUp: function(event) {
-        if (!this.allowsCursorNavigation()) { return }	
-
+        if (!this.allowsCursorNavigation()) { 
+			return 
+		}
+		
 		var pc = this.previousColumn()	
 		if (pc) {		
 			if (this.selectedRow()) { 

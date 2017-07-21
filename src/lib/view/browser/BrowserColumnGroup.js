@@ -14,7 +14,7 @@ BrowserColumnGroup = NodeView.extend().newSlots({
         NodeView.init.apply(this)        
         this.setHeader(BrowserHeader.clone())
         this.addSubview(this.header())
-        
+    
         //this.setColumnWrapper(this)
 
 		this.setScrollView(DivView.clone().setDivClassName("BrowserScrollView"))

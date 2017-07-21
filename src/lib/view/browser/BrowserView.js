@@ -5,21 +5,26 @@ BrowserView = NodeView.extend().newSlots({
     columns: null,
     bgColors: [
             //"#404040", 
-            //"#3c3c3c", 
+            "#3c3c3c", 
             "#303030", 
             "#202020", "#1a1a1a", "#111", 
             "#232323", "#000", 
             "#232323", "#000", 
             "#232323", "#000"
             ],
-    //bgColors: ["#151515"],
     isSingleColumn: false,
+    defaultHeader: null,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
         this.setDefaultSubnodeViewClass(BrowserColumnGroup)
         this.setIsRegisterForWindowResize(true)
         
+        var dh = DivView.clone().setDivClassName("BrowserDefaultHeader")
+        this.setDefaultHeader(dh)
+        this.addSubview(dh)
+        
+        this.setBackgroundColor(this.bgColorForIndex(1))
         return this
     },
     
@@ -33,9 +38,8 @@ BrowserView = NodeView.extend().newSlots({
 	// --- resizing ---------------------------------
     
     onWindowResize: function (event) {
-        //this._hasDoneFocusEach = false
-		//this.focusEach()
 		this.fitColumns()
+		return this
     },
     
     updateSingleColumnMode: function() {
@@ -48,7 +52,7 @@ BrowserView = NodeView.extend().newSlots({
 	// --- columns -------------------------------
 
     columnGroups: function() {
-        return this.subviews()
+        return this.subviews().select((subview) => { return subview.isKindOf(BrowserColumnGroup) })
     },
 
     addColumnGroup: function(v) {
@@ -72,7 +76,7 @@ BrowserView = NodeView.extend().newSlots({
     setupColumnGroupColors: function() {
         var i = 0
         
-       this.columnGroups().forEach((cg) => {
+        this.columnGroups().forEach((cg) => {
                         
             if (cg.column().type() == "BrowserColumn") {
                 var bgColor = this.bgColorForIndex(i)
@@ -81,7 +85,6 @@ BrowserView = NodeView.extend().newSlots({
                     bgColor = cg.node().nodeBackgroundColor() 
                 }
                 
-//                cg.column().setBackgroundColor(bgColor)
                 cg.setBackgroundColor(bgColor)
 
                 if (cg.column().setSelectionColor) {
@@ -93,23 +96,6 @@ BrowserView = NodeView.extend().newSlots({
 
         return this
     },
-
-	// --- focus each somehow prevents a weird layout bug -----
-    // no longer needed after adding scroll view and moving to flex
-    
-    /*
-    focusEach: function () {
-        if (this._hasDoneFocusEach) { 
-            console.log("skipping Browser focusEach because it hoses editing")
-            return 
-        }
-        //console.log(" Browser focusEach")
-        this._hasDoneFocusEach = true
-        this.columnGroups().forEach( (cg) => { 
-            cg.column().focus()
-        })
-    },
-    */
     
     activeColumnGroups: function() {
         return this.columnGroups().select((cg) => { return !(cg.node() === null); })
@@ -333,7 +319,6 @@ BrowserView = NodeView.extend().newSlots({
     		return this ////////////////////////////////// early return
 		} 
 
-		
 		this.columnGroups().reversed().forEach((cg) => { 
 		    var w = cg.node() ? cg.node().nodeMinWidth() : 0
             widthsSum += w

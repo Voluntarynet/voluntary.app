@@ -20,6 +20,7 @@ BrowserHeader = NodeView.extend().newSlots({
 		var titleView = DivView.clone().setDivClassName("BrowserHeaderTitleView").setInnerHTML("title")
 		this.setTitleView(titleView)
 		
+		this.setZIndex(2)
         return this
     },
     

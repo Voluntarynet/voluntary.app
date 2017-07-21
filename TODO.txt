@@ -1,6 +1,21 @@
+- collapse non active end columns *unless* not in single column mode
+  --- or if there's excess room, then leave 2 open
+
+fitColumns
+
+  activeEndColumnsThatFitBrowserWidth
+  inactiveEndColumns
+  setInactiveEndColumnCount()
+  startColumnsToCollapse
+  
+   - reverse count width of active columns up to browser width
+   - if fills browser, collapse all inactive columns
+   - else leave 2 last columns uncollapsed 
+- always apply flex 100 to last uncollapsed column
+
 - fix single column mode
 - replace icons with unicode chars - use transform to scale if needed
-
+- if single column mode, use a single default column bgColor
 
 - add BrowserHeader title - use when single column
 -- add a nodeColumnTitle method which defaults to title

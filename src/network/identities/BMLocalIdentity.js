@@ -21,7 +21,6 @@ BMLocalIdentity = BMKeyPair.extend().newSlots({
 		this.addStoredSlots(["name", "privateKeyString"])
 		
         this.setName("Untitled")
-        this.addAction("delete")
 
 		this.profile().fieldNamed("publicKeyString").setValueIsEditable(false)
 		//console.log("is editable = ", this.profile().fieldNamed("publicKeyString").valueIsEditable())

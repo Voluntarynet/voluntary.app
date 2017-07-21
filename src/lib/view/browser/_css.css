@@ -28,6 +28,17 @@
 	/*border: 1px yellow dashed;*/
 }
 
+.BrowserDefaultHeader {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 40px;
+    width: 100%;
+    background-color: #dbdbdb;
+    text-align: right;
+	z-index: 1;
+}
+
 .BrowserColumnGroup {
     display: flex;
 	flex-grow: 1;
@@ -45,7 +56,7 @@
     left: 0px;
     height: 40px;
     width: 100%;
-    z-index: 100000;
+    z-index: 3;
     background-color: #dbdbdb;
     text-align: right;
 	/*border: 1px blue dashed;*/

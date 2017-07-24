@@ -247,7 +247,6 @@ BrowserView = NodeView.extend().newSlots({
         return this.columnGroups().sum( (cg) => { return cg.minWidth() })      
     },
     
-
 	// --- collapsing column groups -----
 	
 	lastActiveColumnGroup: function() {
@@ -296,7 +295,6 @@ BrowserView = NodeView.extend().newSlots({
     		lastActiveCg.setFlexGrow(100)  
     		
     		console.log("lastActiveCg.node().title() = ", lastActiveCg.node().title(), " width ", lastActiveCg.minWidth(), " ", lastActiveCg.maxWidth())
-    		  		
     		
     		return this ////////////////////////////////// early return
 		} 
@@ -373,7 +371,6 @@ BrowserView = NodeView.extend().newSlots({
     },
 
     nodeStringPath: function() {
-        
     },
     
     nodePathArray: function() {

@@ -27,7 +27,7 @@ BrowserColumnGroup = NodeView.extend().newSlots({
     },
 
 	isFirstColumnGroup: function() {
-		return this.browser().columnGroups()[0] === this
+		return this.browser().columnGroups().first() === this
 	},
 
 	setIsSelected: function(aBool) {
@@ -106,6 +106,8 @@ BrowserColumnGroup = NodeView.extend().newSlots({
 		return this
 	},
 	
+
+	
 	uncollapse: function() {
 		//console.log(this + " uncollapse")
 		this._isCollapsed = false
@@ -113,14 +115,12 @@ BrowserColumnGroup = NodeView.extend().newSlots({
     		this.setDisplay("inline-flex")		
             this.setFlexGrow(1)
     		setTimeout(() => { 
-    			var w = this.node() ? this.node().nodeMinWidth() : 100 // not sure why this happens
-    	        this.setMinAndMaxWidth(w)
+				this.matchNodeMinWidth()
     		}, 10)
     	} else {
-    	    var w = this.node() ? this.node().nodeMinWidth() : 100 // not sure why this happens
     	    this.setDisplay("inline-flex")		
             this.setFlexGrow(1)
-    	    this.setMinAndMaxWidth(w)
+			this.matchNodeMinWidth()
     	}
 		return this
 	},
@@ -178,7 +178,13 @@ BrowserColumnGroup = NodeView.extend().newSlots({
 	matchNodeMinWidth: function() {
 		if (this.node()) {
 	        var w = this.node().nodeMinWidth()
-			//console.log(this.node().type() + " nodeMinWidth = " + w)
+	
+			if (this.browser().isSingleColumn()) {
+				w = this.browser().browserWidth()
+			}
+			
+			console.log(this.type() + " / " + this.node().type() + " nodeMinWidth = " + w)
+			
 	        if (w) {
 	            this.setMinAndMaxWidth(w)
 	        }

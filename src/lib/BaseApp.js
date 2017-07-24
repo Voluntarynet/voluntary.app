@@ -40,18 +40,23 @@ BaseApp = BMNavNode.extend().newSlots({
     },
 
     setupBrowser: function() {
-        this.setBrowser(BrowserView.clone().setColumnGroupCount(4).selectFirstColumn())
+        this.setBrowser(BrowserView.clone())
      
-        this.browser().setNode(this).syncFromNode()
+        this.browser().setNode(this)
+	//	this.browser().fitColumns()
 		this.browser().setOpacity(0)
 		this.browser().setTransition("all 0.5s")
 
         var windowContent = document.getElementById('body');
         windowContent.appendChild(this.browser().element())    
- 
+		this.browser().syncFromNode()
 		setTimeout(() => {
 			this.browser().setOpacity(1)
-			setTimeout(() => { this.browser().setTransition("") }, 1000)
+			setTimeout(() => { 
+				this.browser().setTransition("") 
+				//this.browser().selectFirstColumn()
+				//this.browser().syncToNode()
+			}, 1000)
 		}, 0)
 		
         return this

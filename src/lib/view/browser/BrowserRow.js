@@ -109,5 +109,4 @@ BrowserRow = NodeView.extend().newSlots({
         this.setIsSelected(false)
         return this
     },
-
 })

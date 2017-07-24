@@ -58,13 +58,9 @@ BMMultiFieldOptionsRowView = DivView.extend().newSlots({
 	},
 	
 	maxOptionTextWidth: function() {
-		var maxWidth = this.subviews().maxValue(function(subview) {
-			//console.log("subview.width() = ", subview.width())
+		return this.subviews().maxValue(function(subview) {
 			return DivTextTapeMeasure.widthOfDivClassWithText("BMMultiFieldOptionView", subview.innerHTML())
-		})	
-		//console.log("subviews.length = " +  this.subviews().length + " maxWidth = ", maxWidth)
-		
-		return maxWidth	
+		})			
 	},
 	
 	adjustOptionWidths: function() {

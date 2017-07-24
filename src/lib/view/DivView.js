@@ -484,6 +484,10 @@ DivView = ideal.Proto.extend().newSlots({
 	
 	// width and height
 	
+	calcWidth: function() {
+		return DivTextTapeMeasure.widthOfDivClassWithText(this.divClassName(), this.innerHTML())
+	},
+
     width: function() {
         return this.element().clientWidth
     },

@@ -25,13 +25,15 @@ BrowserView = NodeView.extend().newSlots({
         this.addSubview(dh)
         
         this.setBackgroundColor(this.bgColorForIndex(1))
+		this.setColumnGroupCount(1)
+		//.selectFirstColumn()
         return this
     },
     
     prepareToSyncToView: function() {
         console.log(this.type() + " prepareToSyncToView")
         NodeView.prepareToSyncToView.apply(this)
-        this.fitColumns()
+		this.fitColumns()
         return this
     },
     
@@ -111,14 +113,12 @@ BrowserView = NodeView.extend().newSlots({
         }
         */
             
-            /*
 		// remove any excess columns
         while (this.columnGroups().length > count) {
             this.removeColumnGroup(this.columnGroups().last())
         }
-        */
         
-        this.clearColumnsGroupsAfterIndex(count -1)
+        //this.clearColumnsGroupsAfterIndex(count -1)
                 
 		// add columns as needed
         while (this.columnGroups().length < count) {
@@ -154,7 +154,7 @@ BrowserView = NodeView.extend().newSlots({
 	// --- column selection ---------------------------------------
 
 	selectFirstColumn: function() {
-		this.selectColumn(this.columns()[0])
+		this.selectColumn(this.columns().first())
 		return this
 	},
 	
@@ -180,7 +180,11 @@ BrowserView = NodeView.extend().newSlots({
 
         var index = this.columnGroups().indexOf(selectedColumn.columnGroup())
 		
-        this.setColumnGroupCount(index + 3)
+		if (this.isSingleColumn()) {
+        	this.setColumnGroupCount(index + 0)
+		} else {
+        	this.setColumnGroupCount(index + 3)
+		}
         //console.log("selectColumn index: " + index + " cg " + this.columnGroups().length)
 
         var nextCg = this.columnGroups().itemAfter(selectedColumnGroup)		
@@ -222,13 +226,13 @@ BrowserView = NodeView.extend().newSlots({
     syncFromNode: function () {
         //this.log("syncFromNode")
         var columnGroups = this.columnGroups()
-        columnGroups[0].setNode(this.node())
+        columnGroups.first().setNode(this.node())
         
 		columnGroups.forEach((cg) => {
             cg.syncFromNode()
         })
         
-        // this.fitColumns()
+        this.fitColumns()
                 
         return this
     },
@@ -289,9 +293,14 @@ BrowserView = NodeView.extend().newSlots({
         var usedWidth = 0
         var remainingWidth = 0
         
-		//console.log("isSingleColumn = ", this.isSingleColumn())
+		//ShowStack()
+		console.log(this.type() + " isSingleColumn = ", this.isSingleColumn() + " node = ", this.node().type())
 		
 		var lastActiveCg = this.columnGroups().reversed().detect((cg) => { return cg.column().node() != null; })
+		
+		//this.columnGroups().forEach((cg) => { console.log("cg.column().node() = ", cg.column().node()); })
+		
+		console.log("lastActiveCg = ", lastActiveCg ? lastActiveCg.node().title() : null)
 		if (lastActiveCg && this.isSingleColumn()) {
 		    
 		    this.columnGroups().forEach((cg) => {

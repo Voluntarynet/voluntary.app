@@ -1,3 +1,15 @@
+++ FIX OPTIONS overflow
+
+- support saving node path and going to last path on open
+- nodeMaxWidth?
+- support for size to fit width on columns (limit to nodeMaxWidth)
+
+- move:
+	BrowserColumnGroup -> BrowserColumn
+	BrowserColumn -> ClipView, 
+
+	BrowserColumn header, footer, scrollview, clipview
+
 - collapse non active end columns *unless* not in single column mode
   --- or if there's excess room, then leave 2 open
 
@@ -39,6 +51,7 @@ fitColumns
 
 -- use View prefix consistently
 
+- support hashtag for sharing a path (app will ask which id to find it under)
 
 
 -----------------------------------------------------------------

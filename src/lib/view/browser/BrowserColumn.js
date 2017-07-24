@@ -429,5 +429,13 @@ BrowserColumn = NodeView.extend().newSlots({
     logName: function() {
         return this.browserPathString()
     },
+
+	maxRowWidth: function() {
+		var maxWidth = this.rows().maxValue(function(row) {
+			return calcWidth.calcWidth()
+		})			
+		return maxWidth	
+	},
+	
 })
 

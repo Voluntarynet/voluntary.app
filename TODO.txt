@@ -13,6 +13,9 @@
 - collapse non active end columns *unless* not in single column mode
   --- or if there's excess room, then leave 2 open
 
+
+- have browserview observe node titles to update window hash path
+
 fitColumns
 
   activeEndColumnsThatFitBrowserWidth

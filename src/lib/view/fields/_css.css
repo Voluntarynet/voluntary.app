@@ -245,13 +245,15 @@
 */
 
 .BMMultiFieldRowView {
+    /*display: flex;*/
     position: relative;
 	overflow: hidden;
 }
 
 .BMMultiFieldOptionsRowView {
+    display: flex;
 	z-index: 10;
- 	display: inline-block;
+/* 	display: inline-block;*/
     position: relative;
 	top: 16px;
 

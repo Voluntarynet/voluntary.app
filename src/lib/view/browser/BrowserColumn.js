@@ -60,7 +60,7 @@ BrowserColumn = NodeView.extend().newSlots({
 		return this
 	},
 
-    rowClicked: function(clickedRow) {
+    didClickRow: function(clickedRow) {
         var rows = this.rows()
         rows.forEach((row) => {
             if (row != clickedRow) {
@@ -74,6 +74,9 @@ BrowserColumn = NodeView.extend().newSlots({
         	this.browser().selectColumn(this)
 		}
         //this.focus()
+        
+        //this.tellParents("didClickRow", clickedRow)
+
         return true
     },
     
@@ -101,7 +104,7 @@ BrowserColumn = NodeView.extend().newSlots({
             if(index < rows.length && index > -1) {
                 var row = rows[index]
                 row.select()
-                this.rowClicked(row)
+                this.didClickRow(row)
             }
         }
         return this
@@ -216,7 +219,7 @@ BrowserColumn = NodeView.extend().newSlots({
                 //this.log("selecting row titled '" + row.title().innerHTML() + "'")
                 if (!row.isSelected()) {
                     row.setIsSelected(true)
-                    this.rowClicked(row)
+                    this.didClickRow(row)
                 }
             } else {
                 //this.log(this.title() + " syncFromNode with new selection")
@@ -235,7 +238,7 @@ BrowserColumn = NodeView.extend().newSlots({
                     var row = this.rows()[selectedIndex]
                     //this.log("selecting row titled '" + row.title().innerHTML() + "'")
                     row.setIsSelected(true)
-                    this.rowClicked(row)
+                    this.didClickRow(row)
                 } else {
                     //this.log("clear other columns")
                     this.browser().clearColumnsGroupsAfter(this.columnGroup())
@@ -273,7 +276,7 @@ BrowserColumn = NodeView.extend().newSlots({
 				this.selectedRow().unselect() 
 			}
 			
-			pc.rowClicked(pc.selectedRow())
+			pc.didClickRow(pc.selectedRow())
         	this.selectPreviousColumn()
 		}
 		return false

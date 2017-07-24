@@ -162,7 +162,9 @@ BrowserView = NodeView.extend().newSlots({
         var selectedColumnGroup = selectedColumn.columnGroup()
         this.columnGroups().forEach(function (cg) { 
 			cg.setIsSelected(cg === selectedColumnGroup) 
-        })		
+        })
+        
+        this.syncToHashPath()
 	},
 	
 	popOneActiveColumn: function() {
@@ -215,8 +217,8 @@ BrowserView = NodeView.extend().newSlots({
         return this
     },
 
-    rowClicked: function(row) {
-        //console.log("Browser rowClicked ", row)
+    didClickRow: function(row) {
+        console.log("Browser didClickRow ", row)
         return true
     },
 
@@ -230,7 +232,6 @@ BrowserView = NodeView.extend().newSlots({
         })
         
         this.fitColumns()
-                
         return this
     },
     
@@ -246,41 +247,15 @@ BrowserView = NodeView.extend().newSlots({
         return this.columnGroups().sum( (cg) => { return cg.minWidth() })      
     },
     
-    // --- node paths -----------------------------
-    
-    selectNode: function(aNode) {
-        this.selectNodePath(aNode.nodePath())
-        return this
-    },
-    
-    selectNodePath: function(nodePathArray) {
-        this.setColumnGroupCount(1)
-
-        var column = this.columns()[0];
-        
-        //console.log("nodePathArray 1 = ", nodePathArray)
-        
-        if (nodePathArray[0] == column.node()) {
-            nodePathArray.removeFirst()
-        }
-        //console.log("nodePathArray 2 = ", nodePathArray)
-        
-		nodePathArray.forEach((node) => {
-            //console.log("node[" + i + "] = ", node.title())
-            //console.log("column = ", column)
-            column.clickRowWithNode(node)
-            //column.selectNextColumn()
-            column = column.nextColumn()
-        })
-        
-        this.syncFromNode()
-    },
 
 	// --- collapsing column groups -----
 	
+	lastActiveColumnGroup: function() {
+		return this.columnGroups().reversed().detect((cg) => { return cg.column().node() != null; })
+    },
+
     fitColumns: function () {
-       this.updateSingleColumnMode()
-        //this.fitToWindow()
+        this.updateSingleColumnMode()
         
 		// collapse columns as needed
 		var widthsSum = 0
@@ -291,13 +266,14 @@ BrowserView = NodeView.extend().newSlots({
         var remainingWidth = 0
         
 		//ShowStack()
-		console.log(this.type() + " isSingleColumn = ", this.isSingleColumn() + " node = ", this.node().type())
+		//console.log(this.type() + " isSingleColumn = ", this.isSingleColumn() + ", node = ", this.node().type())
 		
-		var lastActiveCg = this.columnGroups().reversed().detect((cg) => { return cg.column().node() != null; })
+		var lastActiveCg = this.lastActiveColumnGroup()
 		
 		//this.columnGroups().forEach((cg) => { console.log("cg.column().node() = ", cg.column().node()); })
 		
-		console.log("lastActiveCg = ", lastActiveCg ? lastActiveCg.node().title() : null)
+		//console.log("lastActiveCg = ", lastActiveCg ? lastActiveCg.node().title() : null)
+		
 		if (lastActiveCg && this.isSingleColumn()) {
 		    
 		    this.columnGroups().forEach((cg) => {
@@ -364,13 +340,74 @@ BrowserView = NodeView.extend().newSlots({
 	
 	windowWidth: function() {
 	    return App.shared().mainWindow().width()
-	}
-	
-	/*
-	fitToWindow: function() {
-		this.setMinAndMaxWidth(App.shared().mainWindow().width()-2)
-		this.setMinAndMaxHeight(App.shared().mainWindow().height()-2)
-	    return this
 	},
-	*/
+	
+    // --- node paths -----------------------------
+    
+    selectNode: function(aNode) {
+        //console.log("selectNode " + aNode.nodePath())
+        this.selectNodePath(aNode.nodePath())
+        return this
+    },
+    
+    selectNodePath: function(nodePathArray) {
+        //console.log("selectNodePath " + nodePathArray.map((node) => { return node.title() }).join("/") )
+        this.setColumnGroupCount(1)
+            
+        
+        var column = this.columns().first();
+                
+        if (nodePathArray.first() == column.node()) {
+           // console.log("selectNodePath removeFirst")
+            nodePathArray.removeFirst()
+        }
+        
+		nodePathArray.forEach((node) => {
+           // console.log("clicking node " + node.title())
+            column.clickRowWithNode(node)
+            //column.selectNextColumn()
+            column = column.nextColumn()
+        })
+        
+        //this.syncFromNode()
+    },
+
+    nodeStringPath: function() {
+        
+    },
+    
+    nodePathArray: function() {
+        return this.activeColumnGroups().map((cg) => { return cg.node() })
+    },
+    
+    nodePathString: function() {
+        return this.lastActiveColumnGroup().node().nodePathString() //.map((node) => { return node.title() }).join("/")
+    },
+    
+    setNodePathString: function(pathString) {
+        if (pathString == null || pathString.length == 0) {
+            return this
+        }
+        var parts = pathString.split("/")
+        parts.removeFirst()
+        pathString = parts.join("/")
+        var lastNode = this.node().nodeAtSubpathString(pathString) 
+        // TODO: select as much of the path as exists if full path not valid
+       // console.log("lastNode = ", lastNode)
+        this.selectNode(lastNode)
+        return this
+    },
+    
+    // --- hash paths ------------------------------------- 
+    
+	syncFromHashPath: function() {
+        //console.log("syncFromHashPath Window.urlHash() = '" + Window.urlHash() + "'")
+	    this.setNodePathString(Window.urlHash())
+        return this	    
+	},
+	
+	syncToHashPath: function() {
+        Window.setUrlHash(this.nodePathString())
+        return this
+	},
 })

@@ -80,9 +80,10 @@ App = BaseApp.extend().newSlots({
 	appDidInit: function() {
         BaseApp.appDidInit.apply(this)
 		LoadSpinner.removeIfPresent()  
-		
-        //var hash =  window.location.hash.substr(1);
-        //console.log("hash = ", hash)
+
+        setTimeout(() => {
+            this.browser().syncFromHashPath()
+        }, 100)
 	},
 })
 

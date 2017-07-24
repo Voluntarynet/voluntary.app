@@ -78,7 +78,8 @@ BrowserRow = NodeView.extend().newSlots({
     onClick: function (anEvent) {
         if (this.isSelectable()) {
             this.select()
-            this.tellParents("rowClicked", this)
+            console.log(this.type() + " tellParents didClickRow")
+            this.tellParents("didClickRow", this)
         }
 		return false
     },
@@ -109,4 +110,5 @@ BrowserRow = NodeView.extend().newSlots({
         this.setIsSelected(false)
         return this
     },
+
 })

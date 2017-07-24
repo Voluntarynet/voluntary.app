@@ -791,7 +791,7 @@ DivView = ideal.Proto.extend().newSlots({
     tellParents: function(msg, aView) {
         var f = this[msg]
         if (f && f.apply(this, [aView])) {
-            return
+            return // stop propogation
         }
 
         var p = this.parentView()

@@ -64,8 +64,9 @@ LoadSpinner = {
     },
 
     removeIfPresent: function() {
-        if (this.mainElement()) {
-		    this.mainElement().parentNode.removeChild(element)
+        var e = this.mainElement()
+        if (e) {
+		    e.parentNode.removeChild(e)
 	    }
 		
 	    delete window.LoadSpinner

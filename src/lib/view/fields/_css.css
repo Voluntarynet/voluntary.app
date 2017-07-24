@@ -57,10 +57,12 @@
 
 /* --------------------------- Value --------------------------- */
 
+
 .BMFieldValueView {
 	display: inline-block;
     position: relative;
 	top: 18px;
+	overflow: hidden;
 
     min-width: 100px;
     text-align: left;
@@ -85,6 +87,14 @@
 	border: 0px dashed #aaa;
 }
 
+.BMFieldValueView br {
+    display: none;
+}
+
+.BMFieldValueView * {
+    display:inline;
+    white-space:nowrap;
+}
 
 /* --------------------------- TextArea --------------------------- */
 
@@ -235,22 +245,19 @@
 */
 
 .BMMultiFieldRowView {
-	overflow-x: hidden;
-	overflow-y: visible;
+    position: relative;
+	overflow: hidden;
 }
 
-
 .BMMultiFieldOptionsRowView {
-	z-index: 100;
- 	display: inline;
-    position: absolute;
-	top: 18px;
-	float: right;
-
+	z-index: 10;
+ 	display: inline-block;
+    position: relative;
+	top: 16px;
 
 	width: auto;
 	
-    background-color: #fff;
+    background-color: white;
 
     text-align: left;
     
@@ -263,7 +270,7 @@
 	padding-bottom: 0px;
 	padding-right: 0px;
 	padding-left: 0px;
-	margin: 0;
+	margin: 0px;
 	
 	white-space: normal;
 }
@@ -283,11 +290,10 @@
     text-transform: none;
 
 	padding: 3px;
-	margin: 0;
+	margin: 0px;
 
 	border: dashed #ccc 0px;
 }
-
 
 .BMMultiFieldOptionView:hover {
 	background-color: black;

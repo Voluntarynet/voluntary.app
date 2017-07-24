@@ -166,10 +166,10 @@ BrowserView = NodeView.extend().newSlots({
 	},
 	
 	popOneActiveColumn: function() {
-	    console.log("popOneActiveColumn this.activeColumnGroups().length = ", this.activeColumnGroups().length)
+	    //console.log("popOneActiveColumn this.activeColumnGroups().length = ", this.activeColumnGroups().length)
 	    var n = this.activeColumnGroups().length - 1
 	    if (n < 1) { n = 1; }
-	    console.log("setColumnGroupCount ", n)
+	    //console.log("setColumnGroupCount ", n)
         this.setColumnGroupCount(n) // TODO: collapse cg instead?
         this.fitColumns()
 	    return this
@@ -198,11 +198,8 @@ BrowserView = NodeView.extend().newSlots({
 	            var nextNode = selectedRow.node().nodeRowLink() // returns receiver by default
 	            nextCg.setNode(nextNode)
 	            this.clearColumnsGroupsAfter(nextCg)
-	            //nextCg.column().setTitle(selectedColumn.selectedRowTitle())
-	            //this.log(" --- selectColumn sync")
-            
+	            //nextCg.column().setTitle(selectedColumn.selectedRowTitle())            
 	            nextCg.syncFromNode()
-				//console.log("nextNode = ", nextNode.isKindOf(BMFieldSetNode))
 			
 				if (nextNode.view().type() != "BrowserColumnGroup" || nextNode.isKindOf(BMFieldSetNode)) { // TODO: use a better rule here
 					this.setColumnGroupCount(index + 2)

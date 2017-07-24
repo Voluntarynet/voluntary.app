@@ -79,15 +79,10 @@ App = BaseApp.extend().newSlots({
     
 	appDidInit: function() {
         BaseApp.appDidInit.apply(this)
-		this.removeLoadingBar()
+		LoadSpinner.removeIfPresent()  
 		
         //var hash =  window.location.hash.substr(1);
         //console.log("hash = ", hash)
-	},
-	
-	removeLoadingBar: function() {
-		var element = document.getElementById("Spinner");
-		element.parentNode.removeChild(element);	    
 	},
 })
 

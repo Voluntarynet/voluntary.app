@@ -3,62 +3,8 @@
   <head>
     <meta charset="utf-8">
     <title></title>
+    <script type="text/javascript" src="LoadSpinner.js"></script>
     <script type="text/javascript" src="JSImporter.js"></script>
   </head>
-  <body id="body">
-	
-	<div id="Spinner" style="
-	  	text-align: center;
-		position: relative;
-		top: 50%;
-		transform: translateY(-50%);
-
-		height: auto;
-		width: 100%;
-		font-family: AppRegular;
-		letter-spacing: 3px;
-		color: transparent;
-	    ">
-		<div id="SpinnerTitle" style="transition: all .6s ease-out; "></div>
-		<br>
-		<div id="SpinnerSubtitle" style="transition: all .3s ease-out; letter-spacing: -2.5px; "></div>
-		<br>
-		<div id="SpinnerItem" style="coloe: transparent; transition: all .6s ease-out; "></div>
-		<br>
-		<div id="SpinnerError" style="color: red; transition: all .6s ease-out;"></div>
-	</div>
-	
-	<script> 
-		function spinner() {
-			var element = document.getElementById("SpinnerTitle");
-						 
-			if (element) {
-				element.style.color = "#aaa"
-				element.innerHTML = "PEER LOADING"
-				setTimeout(function () { spinner() }, 500)
-			} else {
-			    delete window.spinner
-			}
-		}
-		
-		JSImporter.pushUrlLoadingCallback(function(url) {
-			var element = document.getElementById("SpinnerSubtitle");
-			if (element) {
-    			element.style.color = "#666"
-    			element.innerHTML += "."
-		    }
-			var e = document.getElementById("SpinnerItem");
-			e.style.color = "#333"
-			e.innerHTML = url.split("/").pop()
-		})
-		
-		JSImporter.pushErrorCallback(function(error) {
-			var element = document.getElementById("SpinnerError");
-			element.innerHTML = error
-		})
-		
-		setTimeout(function() { spinner() }, 10)
-	</script>
-	
-  </body>
+  <body id="body"></body>
 </html>

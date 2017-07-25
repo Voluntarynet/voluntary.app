@@ -1,5 +1,7 @@
 ++ FIX OPTIONS overflow
 
+-- make didUpdate and tellParents Node/View specific
+
 - support saving node path and going to last path on open
 - nodeMaxWidth?
 - support for size to fit width on columns (limit to nodeMaxWidth)

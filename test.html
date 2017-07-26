@@ -556,6 +556,7 @@
     height: 20px;
     width: auto;
     
+<<<<<<< HEAD
     text-align: left;
     color: #000;
 
@@ -608,9 +609,409 @@
 	padding-bottom: 3px;
 }
 
+=======
+        	margin: 0;
+        	padding: 0;
+            overflow: hidden;
+    	    background-color: black;
+        }
+
+        .BrowserColumnGroup {
+            display: flex;
+        	flex-grow: 1;
+            position: relative;
+            background-color: #333;
+            color: #777;
+            text-align: center;
+            transition: all .2s ease-out;
+        	overflow: hidden;
+        	border: 1px yellow dashed;
+        }
+
+        .BrowserHeader {
+            display: none;
+            position: absolute;
+            top: 0px;
+            /*left: 0px;*/
+            height: 40px;
+            width: 100%;
+            z-index: 100000;
+            background-color: #dbdbdb;
+            text-align: right;
+        	/*border: 1px blue dashed;*/
+        }
+
+        .BrowserScrollView {
+            position: absolute;
+            top: 41px;
+            /*left: 0px;*/
+            width: 100%;
+            height: calc(100% - 40px);
+        	background-color: transparent;
+        /*	border: 0px dashed #aaa;*/
+          	overflow-y: scroll; /* has to be scroll, not auto, for touch scroll momentum to work */
+        	-webkit-overflow-scrolling: touch;
+        	overflow-x: hidden;
+        }
+
+        .BrowserColumn {
+            position: relative;
+            width: 100%;
+          	/*overflow-y: scroll; *//* has to be scroll, not auto, for touch scroll momentum to work */
+        	/*
+        	-webkit-overflow-scrolling: touch;
+        	overflow-x: hidden;
+        	*/
+        }
+        
+
+        .BrowserRow {
+            font-family: "AppRegular";
+            display: flex;
+            position: relative;
+            width: 100%;
+            height: 60px;
+            background-color: white;
+            text-align: left;
+            border-bottom: 1px solid rgba(100,100,100, .4);
+            transition: background-color .3s ease-out;
+        }
+>>>>>>> 83c44fb4d77f9b6ca28a8466226bc092ef44c1f6
+
+
+
+
+		/* --- FieldView --------------------------- */
+
+		.BMFieldRowView {
+			font-family: "AppRegular";
+		    background-color: white;
+		    opacity: 1;
+
+		    display: block;
+		    position: relative;
+
+		    width: auto;
+		    color: #CBCBCB;
+		    transition: background-color .3s ease-out;
+
+			padding-left: 20px;
+		    height: 59px;
+			margin: 0px;
+
+			text-align: left;
+
+		    border-bottom: 1px solid #ddd;
+		}
+
+		/* --------------------------- Key --------------------------- */
+
+		.BMFieldKeyView {
+		    color: #777;
+
+			display: inline-block;
+		    position: relative;
+
+			overflow: hidden;
+			float: left;
+			top: 18px;
+
+			margin: auto;
+
+		    text-align: right;
+		    font-size: 13px;
+		    white-space: nowrap;
+		    text-transform: capitalize;
+
+
+			padding-top: 3px;
+			padding-bottom: 3px;
+			padding-right: 5px;
+			margin: 0px;
+
+			border: 0px dashed #aaa;
+		}
+
+		.BMFieldKeyView::after {
+		    content: ": "
+		}
+
+		/* --------------------------- Value --------------------------- */
+
+
+		.BMFieldValueView {
+			display: inline-block;
+		    position: relative;
+			top: 18px;
+			overflow: hidden;
+
+		    min-width: 100px;
+		    text-align: left;
+
+		    white-space: nowrap;
+		    text-transform: none;	
+
+		    color: #000;
+		    font-weight: normal;
+		    font-size: 13px;
+
+			/* 
+			border-radius: 5px;
+			background-color: #aaa;
+			margin-left: 40px;
+			*/
+			padding-left: 4px;
+			padding-right: 3px;
+			padding-top: 3px;
+			padding-bottom: 3px;
+
+			border: 0px dashed #aaa;
+		}
+
+		.BMFieldValueView br {
+		    display: none;
+		}
+
+		.BMFieldValueView * {
+		    display:inline;
+		    white-space:nowrap;
+		}
+
+		/* --------------------------- TextArea --------------------------- */
+
+		.BMTextAreaFieldRowView {
+		    display: block;
+		    position: relative;
+		    width: auto;
+			height: 300px;
+			margin: 0;
+			padding: 0;
+
+		    border-bottom: 1px solid #ddd;
+		    background-color: #fff;
+		    transition: background-color .3s ease-out;
+
+			overflow-x: hidden;
+			overflow-y: scroll;
+		}
+
+		.BMMonoTextAreaFieldValueView {
+		    display: block;
+		    position: relative;
+		    top: 0px;
+		    left: 0px;
+			padding: 0;
+		    margin: 20px;
+		    width: auto;
+		    min-height: auto;
+
+		    word-break: break-all;
+		   	unicode-bidi: embed;
+		    white-space: pre-wrap;
+
+		    color: black;
+		    font-weight: normal;
+		    text-transform: none;
+		    text-align: left;
+
+
+		    font-size: 13px;
+		    font-family:  SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+			font-weight: lighter;
+			letter-spacing: 0.1px;
+		}
+
+		.BMTextAreaFieldValueView {
+		    display: block;
+		    position: relative;
+		    top: 0px;
+		    left: 0px;
+			padding: 0;
+		    margin: 20px;
+		    width: auto;
+		    min-height: auto;
+
+		    word-break: break-all;
+		   	unicode-bidi: embed;
+		    white-space: pre-wrap;
+
+		    color: black;
+		    font-size: 13px;
+		    font-weight: normal;
+		    text-transform: none;
+		    text-align: left;
+
+			/*border: 1px red dashed;*/
+		}
+
+		/* --------------------------- Pointer --------------------------- */
+
+		.BMPointerFieldRowView {
+			border-bottom: 1px solid #ddd;
+			font-family: AppRegular;
+		}
+
+		/* --------------------------- Image --------------------------- */
+
+		.BMImageWellFieldView {
+		    background-color: #fff;
+		    opacity: 1;
+
+		    display: block;
+		    position: relative;
+		    width: auto;
+		    min-height: 100px;
+		    height: auto;
+			padding-bottom: 35px;
+		    color: #CBCBCB;
+		    border-bottom: 1px solid #ddd;
+		    transition: background-color .3s ease-out;
+			text-align:center;
+		}
+
+		.BMImageWellKeyField {
+			position: relative;
+			margin-top: 15px;
+			margin-bottom: 15px;
+			width: auto;
+			text-transform: uppercase;
+			text-align:center;
+			font-size: 12px;
+		}
+
+		.BMImageWellFieldValueView {
+		    position: relative;
+		    color: #000;
+
+		    width: auto;
+		    min-height: auto;
+		    text-align: left;
+
+		    position: absolute;
+		    margin: 35px;
+			margin-left: 40px;
+		    top: 0px;
+		    left: 0px;
+		    font-size: 13px;
+		    font-weight: normal;
+		    text-transform: none;
+		}
+
+		/* --------------------------- Multi --------------------------- */
+
+		/*
+		.BMMultiFieldValueView {
+			white-space: pre-wrap;
+			display: inline;
+		    position: relative;
+
+		    min-width: 40px;
+		    min-height: 20px;
+			width: auto;
+		    text-align: left;
+
+
+		    font-size: 13px;
+		    font-weight: normal;
+		    text-transform: none;
+
+			border: solid #ccc 1px;
+			border-radius: 4px;
+
+			padding-left: 7px;
+			padding-right: 7px;
+			padding-top: 3px;	
+			padding-bottom: 3px;
+		}
+		*/
+
+		.BMMultiFieldRowView {
+		    /*display: flex;*/
+		    position: relative;
+			overflow: hidden;
+		}
+
+		.BMMultiFieldOptionsRowView {
+			z-index: 10;
+			display: table;
+		    position: relative;
+			top: 0px;
+
+			width: auto;
+
+		    background-color: white;
+
+		    text-align: left;
+
+			border: solid #ccc 1px;
+			border-radius: 4px;	
+		    transition: opacity 3s ease-out;
+			opacity: 0;
+
+			padding-top: 0px;
+			padding-bottom: 0px;
+			padding-right: 0px;
+			padding-left: 0px;
+			margin: 0px;
+
+			white-space: normal;
+			color: black;
+		}
+
+		.BMMultiFieldOptionView {
+			display: table-row;
+		    position: relative;
+
+		    width: auto;
+		    height: auto;
+		    text-align: left;
+
+		    color: #000;
+
+		    font-size: 13px;
+		    font-weight: normal;
+		    text-transform: none;
+
+			cursor: pointer;
+			border: dashed #ccc 0px;
+			padding-top: 15px;
+			padding-bottom: 15px;
+			margin-top: 15px;
+			margin-bottom: 15px;
+		}
+
+		.BMMultiFieldOptionView:hover {
+			background-color: black;
+			color: white;
+		}
+
+		.BMFieldRowViewNoteView {
+			display: block;
+		    position: relative;
+			top: 18px;
+			right: 0px;
+			float: right;
+
+			margin-right: 18px;
+
+			overflow: hidden;
+
+			width: auto;
+
+		    font-size: 13px;
+		    font-weight: normal;
+		    text-transform: none;
+
+			color: #aaa;
+
+			padding-top: 3px;
+			padding-bottom: 3px;
+		}
+
 
     </style>
   </head>
+<<<<<<< HEAD
 <body id="body" style="zoom: 100%;">
    <div id="BrowserView-128 for node App-121" class="BrowserView BrowserView NodeView DivView " style="background-color: rgb(48, 48, 48); opacity: 1; transition: all 0.5s;">
       <div id="DivView-130" class="BrowserDefaultHeader"></div>
@@ -635,6 +1036,43 @@
                </div>
             </div>
          </div>
+=======
+  <body id="body">
+	
+      <div class="Browser">
+ 	
+          <div class="BrowserColumnGroup">
+          <div class="BrowserHeader">          
+          </div>                
+          <div class="BrowserScrollView">   
+              <div class="BrowserColumn">          
+                    <div class="BrowserRow">0</div>        
+                    <div class="BrowserRow">Testing
+
+					<div id="BMMultiFieldOptionsRowView-1610" class="BMMultiFieldOptionsRowView BMMultiFieldOptionsRowView DivView" style="color: black; background-color: white; user-select: none;  transition: opacity 0.2s; opacity: 1; font-family: inherit;">
+						<div id="DivView-1611" class="BMMultiFieldOptionView">Steve Dekorte</div>
+						<div id="DivView-1612" class="BMMultiFieldOptionView">Untitled</div>
+						<div id="DivView-1613" class="BMMultiFieldOptionView">Chris</div>
+						<div id="DivView-1614" class="BMMultiFieldOptionView">untitled</div>
+						<div id="DivView-1615" class="BMMultiFieldOptionView">untitled</div>
+						<div id="DivView-1616" class="BMMultiFieldOptionView">untitled</div>
+					</div>
+					123
+	
+					</div>        
+                    <div class="BrowserRow">2</div>        
+                    <div class="BrowserRow">3</div>        
+                    <div class="BrowserRow">4</div>        
+                    <div class="BrowserRow">5</div>        
+                    <div class="BrowserRow">6</div>        
+                    <div class="BrowserRow">7</div>        
+                    <div class="BrowserRow">8</div>        
+                    <div class="BrowserRow">9</div>        
+              </div>             
+          </div>           
+          </div>         
+          
+>>>>>>> 83c44fb4d77f9b6ca28a8466226bc092ef44c1f6
       </div>
       <div id="BrowserColumnGroup-1116 for node BMLocalIdentities-140" class="BrowserColumnGroup BrowserColumnGroup NodeView DivView " style="flex-grow: 1; background-color: rgb(48, 48, 48); display: none; min-width: 0px; max-width: 0px;">
          <div id="BrowserHeader-1118 for node BMLocalIdentities-140" class="BrowserHeader BrowserHeader NodeView DivView " style="z-index: 2;">

@@ -378,7 +378,11 @@ BrowserView = NodeView.extend().newSlots({
     },
     
     nodePathString: function() {
-        return this.lastActiveColumnGroup().node().nodePathString() //.map((node) => { return node.title() }).join("/")
+		var cg = this.lastActiveColumnGroup()
+		if (cg) { 
+	        return cg.node().nodePathString() //.map((node) => { return node.title() }).join("/")
+		}
+		return "" 
     },
     
     setNodePathString: function(pathString) {

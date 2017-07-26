@@ -1,7 +1,13 @@
 ++ FIX OPTIONS overflow
 
+<<<<<<< HEAD
 - fix double div class name declarations
 
+=======
+-- make didUpdate and tellParents Node/View specific
+
+- support saving node path and going to last path on open
+>>>>>>> 83c44fb4d77f9b6ca28a8466226bc092ef44c1f6
 - nodeMaxWidth?
 - support for size to fit width on columns (limit to nodeMaxWidth)
 

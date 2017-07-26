@@ -57,7 +57,6 @@
 
 /* --------------------------- Value --------------------------- */
 
-
 .BMFieldValueView {
 	display: inline-block;
     position: relative;
@@ -133,9 +132,8 @@
     text-transform: none;
     text-align: left;
 
-
     font-size: 13px;
-    font-family:  SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+    font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;
 	font-weight: lighter;
 	letter-spacing: 0.1px;
 }

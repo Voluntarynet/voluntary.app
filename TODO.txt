@@ -1,6 +1,7 @@
 ++ FIX OPTIONS overflow
 
-- support saving node path and going to last path on open
+- fix double div class name declarations
+
 - nodeMaxWidth?
 - support for size to fit width on columns (limit to nodeMaxWidth)
 

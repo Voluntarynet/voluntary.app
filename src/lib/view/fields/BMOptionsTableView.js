@@ -1,6 +1,6 @@
 
-BMMultiFieldOptionsRowView = DivView.extend().newSlots({
-    type: "BMMultiFieldOptionsRowView",
+BMOptionsTableView = DivView.extend().newSlots({
+    type: "BMOptionsTableView",
 	validValues: null,
 }).setSlots({
     init: function () {
@@ -37,9 +37,11 @@ BMMultiFieldOptionsRowView = DivView.extend().newSlots({
 		this.setOpacity(0)
 		
 		this._validValues.forEach((v) => {
-			var option = DivView.clone().setInnerHTML(v).setDivClassName("BMMultiFieldOptionView").setTarget(this).setAction("select")
-			option.validValue = v
-			this.addSubview(option)
+			var optionRow = DivView.clone().setDivClassName("BMOptionsTableRowView")//.setTarget(this).setAction("select")
+			var optionColumn = DivView.clone().setDivClassName("BMOptionsTableColumnView").setInnerHTML(v).setTarget(this).setAction("select")
+			optionRow.addSubview(optionColumn)
+			optionColumn.validValue = v
+			this.addSubview(optionRow)
 		})
 		
 		setTimeout(() => { 
@@ -59,7 +61,7 @@ BMMultiFieldOptionsRowView = DivView.extend().newSlots({
 	
 	maxOptionTextWidth: function() {
 		return this.subviews().maxValue(function(subview) {
-			return DivTextTapeMeasure.widthOfDivClassWithText("BMMultiFieldOptionView", subview.innerHTML())
+			return DivTextTapeMeasure.widthOfDivClassWithText("BMOptionsTableRowView", subview.innerHTML())
 		})			
 	},
 	

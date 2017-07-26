@@ -33,7 +33,7 @@ BMClassifiedPost = BMFieldSetNode.extend().newSlots({
  		this.addStoredField(BMNumberField.clone().setKey("price").setValueMethod("price")).setValueIsEditable(true).setUnsetVisibleValue(0)
 
 
- 		this.addStoredField(BMMultiField.clone().setKey("currency").setValueMethod("currency")).setValueIsEditable(true).setValidValuesMethod("currencySymbols").setNoteMethod("currencyName")
+ 		this.addStoredField(BMOptionsField.clone().setKey("currency").setValueMethod("currency")).setValueIsEditable(true).setValidValuesMethod("currencySymbols").setNoteMethod("currencyName")
  		this.addStoredField(BMDateField.clone().setKey("sent date").setValueMethod("postDate")).setValueIsEditable(false).setUnsetVisibleValue("(not sent yet)")
 		this.addStoredField(BMTextAreaField.clone().setKey("description").setValueMethod("description")).setValueIsEditable(true)
 		this.addStoredField(BMImageWellField.clone().setKey("drop images here").setValueMethod("imageDataURLs")).setValueIsEditable(true)
@@ -301,7 +301,7 @@ BMClassifiedPost = BMFieldSetNode.extend().newSlots({
             }
         } else {
             var error = "missing region for path '" + pathString + "'"
-            console.warn("-----------\n".repeat(3) + "WARNING: " + error + "\n" + "-----------\n".repeat(3))
+            console.log("-----------\n".repeat(3) + "WARNING: " + error + "\n" + "-----------\n".repeat(3))
             //throw new Error(error)
         }
     },

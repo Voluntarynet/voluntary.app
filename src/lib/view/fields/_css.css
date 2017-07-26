@@ -216,43 +216,16 @@
 
 /* --------------------------- Multi --------------------------- */
 
-/*
-.BMMultiFieldValueView {
-	white-space: pre-wrap;
-	display: inline;
-    position: relative;
-
-    min-width: 40px;
-    min-height: 20px;
-	width: auto;
-    text-align: left;
-
-
-    font-size: 13px;
-    font-weight: normal;
-    text-transform: none;
-
-	border: solid #ccc 1px;
-	border-radius: 4px;
-	
-	padding-left: 7px;
-	padding-right: 7px;
-	padding-top: 3px;	
-	padding-bottom: 3px;
-}
-*/
-
-.BMMultiFieldRowView {
+.BMOptionsFieldRowView {
     /*display: flex;*/
     position: relative;
-	overflow: hidden;
+	overflow: visible;
 }
 
-.BMMultiFieldOptionsRowView {
-    display: flex;
-	z-index: 10;
-/* 	display: inline-block;*/
-    position: relative;
+.BMOptionsTableView {
+    display: table;
+	position: absolute;
+	z-index: 1000;
 	top: 16px;
 
 	width: auto;
@@ -273,10 +246,11 @@
 	margin: 0px;
 	
 	white-space: normal;
+	overflow: hidden;
 }
 
-.BMMultiFieldOptionView {
-	display: block;
+.BMOptionsTableRowView {
+	display: table-row;
     position: relative;
 
     width: auto;
@@ -293,9 +267,25 @@
 	margin: 0px;
 
 	border: dashed #ccc 0px;
+	
+	overflow: hidden;
 }
 
-.BMMultiFieldOptionView:hover {
+.BMOptionsTableColumnView {
+    display: table-column;
+	float: left; 
+
+	width: 100%;
+	height: auto;
+
+	padding-left: 6px;
+	padding-right: 6px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	overflow: hidden;
+}
+
+.BMOptionsTableColumnView:hover {
 	background-color: black;
 	color: white;
 }

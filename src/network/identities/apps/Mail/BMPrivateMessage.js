@@ -18,8 +18,8 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 		//this.addStoredField(BMIdentityField.clone().setValueMethod("fromAddress").setKey("from").setValueIsEditable(false))
 		//this.addStoredField(BMIdentityField.clone().setValueMethod("toAddress").setKey("to").setValueIsEditable(true))
 
-		this.addStoredField(BMMultiField.clone().setKey("from").setValueMethod("fromContact")).setValueIsEditable(false).setValidValuesMethod("fromContactNames") //.setNoteMethod("fromContactPublicKey")
-		this.addStoredField(BMMultiField.clone().setKey("to").setValueMethod("toContact")).setValueIsEditable(true).setValidValuesMethod("toContactNames") //.setNoteMethod("toContactPublicKey")
+		this.addStoredField(BMOptionsField.clone().setKey("from").setValueMethod("fromContact")).setValueIsEditable(false).setValidValuesMethod("fromContactNames") //.setNoteMethod("fromContactPublicKey")
+		this.addStoredField(BMOptionsField.clone().setKey("to").setValueMethod("toContact")).setValueIsEditable(true).setValidValuesMethod("toContactNames") //.setNoteMethod("toContactPublicKey")
         this.addFieldNamed("subject").setKey("subject")	
 
         //this.addFieldNamed("senderPublicKeyString").setKey("senderPublicKeyString").setValueIsEditable(false)

@@ -1,12 +1,12 @@
 
-BMMultiFieldRowView = BMFieldRowView.extend().newSlots({
-    type: "BMMultiFieldRowView",
+BMOptionsFieldRowView = BMFieldRowView.extend().newSlots({
+    type: "BMOptionsFieldRowView",
 	optionsView: null,
 }).setSlots({
     init: function () {
         BMFieldRowView.init.apply(this)
 
-		this.setOptionsView(BMMultiFieldOptionsRowView.clone())
+		this.setOptionsView(BMOptionsTableView.clone())
 		this.optionsView().setDisplay("none")
 		this.addSubview(this.optionsView())
 
@@ -126,8 +126,8 @@ BMMultiFieldRowView = BMFieldRowView.extend().newSlots({
 })
 
 /*
-BMMultiFieldOptionView = NodeView.extend().newSlots({
-    type: "BMMultiFieldOptionView",
+BMOptionsTableRowView = NodeView.extend().newSlots({
+    type: "BMOptionsTableRowView",
 }).setSlots({
 })
 */

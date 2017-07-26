@@ -3,15 +3,15 @@
 
 */
 
-BMMultiField = BMField.extend().newSlots({
-    type: "BMMultiField",
+BMOptionsField = BMField.extend().newSlots({
+    type: "BMOptionsField",
 	validValues: [],
 	options: [],
 	validValuesMethod: null,
 }).setSlots({
     init: function () {
         BMField.init.apply(this)
-		this.setViewClassName("BMMultiFieldView")
+		//this.setViewClassName("BMOptionsFieldView")
     },
 
 	setValidValues: function(v) {

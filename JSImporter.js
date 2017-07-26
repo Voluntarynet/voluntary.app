@@ -56,10 +56,16 @@ var CSSLink = {
 }
 
 var JSScript = {
+	_importer: null,
 	_fullPath: null,
 	_doneCallback: null,
 
 	clone: ObjectCloneFunction,
+	
+	setImporter: function(obj) {
+		this._importer = obj
+		return this
+	},
 	
 	fullPath: function() {
 		return this._fullPath
@@ -85,6 +91,7 @@ var JSScript = {
 	    }
 
 	    script.onerror = (error) => {
+			this._importer.setError(error)
 			throw new Error("missing url " + this._fullPath)
 	    }
 
@@ -109,6 +116,7 @@ JSImporter = {
 	_errorCallbacks: [],
 
 	clone: ObjectCloneFunction,
+
 
 	currentScriptPath: function() {
 		if (this._currentScript) {
@@ -160,6 +168,11 @@ JSImporter = {
 		this._errorCallbacks.push(aCallback)
 		return this
 	},
+	
+	removeErrorCallback: function(aCallback) {
+		this._errorCallbacks.remove(aCallback)
+		return this
+	},
 
 	run: function() {
 	    this.loadNext();
@@ -185,7 +198,7 @@ JSImporter = {
 		var extension = url.split('.').pop();
 		
 		if (extension == "js" || extension == "json") {
-			this._currentScript = JSScript.clone().setFullPath(url).setDoneCallback(() => { this.loadNext() })
+			this._currentScript = JSScript.clone().setImporter(this).setFullPath(url).setDoneCallback(() => { this.loadNext() })
 			//console.log("this._currentScript = ", this._currentScript)
 			this._currentScript.run()
 		} else if (extension == "css") {
@@ -203,6 +216,10 @@ JSImporter = {
 		return this
 	},
 
+	setError: function(error) {
+		this._errorCallbacks.forEach((callback) => { callback(error) })
+		return this		
+	},
 }
 
 JSImporter.pushRelativePaths(["_imports.js"]).run()

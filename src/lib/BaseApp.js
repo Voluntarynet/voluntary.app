@@ -39,7 +39,7 @@ BaseApp = BMNavNode.extend().newSlots({
         return this        
     },
 
-    setupBrowser: function() {
+    setupBrowser: function() {	
         this.setBrowser(BrowserView.clone())
      
         this.browser().setNode(this)

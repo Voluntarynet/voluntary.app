@@ -18,7 +18,7 @@ StackTrace = ideal.Proto.extend().newSlots({
 		}
 	},
 	
-	showError: function(error) {
+	stringForError: function(error) {
 		var lines = error.stack.split("\n")
 		var firstLine = lines.removeFirst()
 		var out = []
@@ -48,9 +48,14 @@ StackTrace = ideal.Proto.extend().newSlots({
 		out.forEach(function (entry) {
 			s += indent + entry[0] + " ".repeat(m + 1 - entry[0].length) + entry[1] + "\n"
 		})
+		
+		return s
+	},
+	
+	showError: function(error) {
+		var s = this.stringForError(error)
 		console.warn(s)
 
-//		console.log(error.stack)
 	},
 })
 

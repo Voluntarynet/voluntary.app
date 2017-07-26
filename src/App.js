@@ -79,6 +79,8 @@ App = BaseApp.extend().newSlots({
     
 	appDidInit: function() {
         BaseApp.appDidInit.apply(this)
+
+		
 		LoadSpinner.removeIfPresent()  
 
         setTimeout(() => {

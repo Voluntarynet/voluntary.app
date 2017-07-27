@@ -54,7 +54,8 @@ LoadProgressBar = {
     
     setupHtml: function() {
         document.body.innerHTML = "<div id='SpinnerMain' style='position: absolute; width:100%; height: 100%; background-color: black; z-index: 100000;'> \
-            <div id='SpinnerMiddle'> \
+            <div id='SpinnerMiddle' \
+                style='position: relative; top: 50%; transform: translateY(-50%); height: auto; width: 100%; font-family: AppRegular; letter-spacing: 3px; text-align: center;'> \
     		    <div id='SpinnerTitle' style='transition: all .6s ease-out;'></div><br> \
     		    <div id='SpinnerSubtitle' style='transition: all .3s ease-out; letter-spacing: -2.5px;'></div><br> \
     		    <div id='SpinnerItem' style='color: transparent; transition: all 0.3s ease-out;'></div><br> \
@@ -62,6 +63,7 @@ LoadProgressBar = {
     		</div> \
 	    </div>"
 	
+	    /*
 	    var style = this.middleElement().style
 	    style.position = "relative"
         style.top = "50%"
@@ -72,6 +74,7 @@ LoadProgressBar = {
         style.letterSpacing = "3px"
         style.color = "transparent"
         style.textAlign = "center"
+        */
         
         return this
     },

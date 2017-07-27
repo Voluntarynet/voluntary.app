@@ -57,7 +57,7 @@ DivView = ideal.Proto.extend().newSlots({
     
     setupElement: function() {
         this._element = document.createElement("div")
-		this._element.id = this.type() + "-" + this._uniqueId
+		this.element().id = this.type() + "-" + this._uniqueId
 		this.setupDivClassName()      
 		return this  
     },
@@ -68,8 +68,13 @@ DivView = ideal.Proto.extend().newSlots({
 				return ""
 			}
 			return obj.type() 
-		}).join(" ")
-		this.setDivClassName(ancestorNames)
+		})
+		
+		if (ancestorNames.length > 1 && ancestorNames[0] == ancestorNames[1]) {
+		    ancestorNames.removeFirst()
+		}
+		
+		this.setDivClassName(ancestorNames.join(" ").strip())
 		return this
 	},
 /*    
@@ -99,7 +104,7 @@ DivView = ideal.Proto.extend().newSlots({
 	// --- css properties ---
 /*	
 	setDivComment: function(s) {
-		this._element.id =  "comment-" + s
+		this.element().id =  "comment-" + s
 		console.log("data-comment = " + s)
 		return this
 	},
@@ -125,6 +130,10 @@ DivView = ideal.Proto.extend().newSlots({
 	
 	zoom: function() {
 		return this.getCssAttribute("zoom")
+	},
+	
+	zoomRatio: function() {
+		return Number(this.zoom().before("%"))/100
 	},
 
 	// font family
@@ -467,7 +476,7 @@ DivView = ideal.Proto.extend().newSlots({
 	// spell check
 	
 	setSpellCheck: function(aBool) {
-		this._element.setAttribute('spellcheck', aBool);
+		this.element().setAttribute('spellcheck', aBool);
 		return this
 	},
 	
@@ -475,9 +484,9 @@ DivView = ideal.Proto.extend().newSlots({
 	
 	setToolTip: function(aName) {	
 		if (aName) {	
-			this._element.setAttribute('title', aName);
+			this.element().setAttribute('title', aName);
 		} else {
-			this._element.removeAttribute('title');
+			this.element().removeAttribute('title');
 		}
 		return this
 	},
@@ -587,16 +596,16 @@ DivView = ideal.Proto.extend().newSlots({
     setDivClassName: function (aName) {
 		if (this._divClassName != aName) {
 	        this._divClassName = aName
-	        if (this._element) {
-	            this._element.setAttribute('class', aName);
+	        if (this.element()) {
+	            this.element().setAttribute('class', aName);
 	        }
 		}
         return this
     },
 
     divClassName: function () {
-        if (this._element) {
-            var className = this._element.getAttribute('class');
+        if (this.element()) {
+            var className = this.element().getAttribute('class');
             this._divClassName = className
             return className
         }
@@ -616,7 +625,7 @@ DivView = ideal.Proto.extend().newSlots({
             //console.log("anSubview = ", anSubview)
             throw new Error("null anSubview.element()")
         }
-        this._element.appendChild(anSubview.element());
+        this.element().appendChild(anSubview.element());
         anSubview.setParentView(this)
 		this.didChangeSubviewList()
         return anSubview
@@ -674,7 +683,7 @@ DivView = ideal.Proto.extend().newSlots({
 	},
 	
 	hasSubview: function(anSubview) {
-		var children = this._element.childNodes
+		var children = this.element().childNodes
 		for (var i = 0; i < children.length; i ++) {
 			var child = children[i]
 			if (anSubview.element() == child) {
@@ -697,7 +706,7 @@ DivView = ideal.Proto.extend().newSlots({
         this._subviews.remove(anSubview)
 
 		/*
-		var children = this._element.childNodes
+		var children = this.element().childNodes
 		for (var i = 0; i < children.length; i ++) {
 			var child = children[i]
 			if (anSubview.element() == child) {
@@ -711,7 +720,7 @@ DivView = ideal.Proto.extend().newSlots({
 				DivView._didShowWarning = true
 				console.warn("WARNING: " + this.type() + " removeSubview " + anSubview.type() + " failed - no child found!")
 			}
-        	this._element.removeChild(anSubview.element());
+        	this.element().removeChild(anSubview.element());
 		}
 		
         anSubview.setParentView(null)
@@ -740,7 +749,7 @@ DivView = ideal.Proto.extend().newSlots({
 	// --- active element ---
 
 	isActiveElement: function() {
-		return document.activeElement == this._element 
+		return document.activeElement == this.element() 
 	},
 	
 	isActiveElementAndEditable: function() {
@@ -756,7 +765,7 @@ DivView = ideal.Proto.extend().newSlots({
 		
         v = "" + v //escape(v)
 
-        if (v != this._element.innerHTML) {
+        if (v != this.element().innerHTML) {
 
             if (this.isActiveElementAndEditable()) {
 				ShowStack();
@@ -767,14 +776,14 @@ DivView = ideal.Proto.extend().newSlots({
                 return 
             }
             
-            this._element.innerHTML = v
+            this.element().innerHTML = v
         }
 
         return this
     },
 
     innerHTML: function() {
-        return this._element.innerHTML
+        return this.element().innerHTML
     },
 
     setString: function (v) {
@@ -1105,8 +1114,8 @@ DivView = ideal.Proto.extend().newSlots({
 	            this.element().onkeypress =  (event) => { return this.onKeyPress(event) }
 	            */
 	            this.element().onkeyup    =  (event) => { 
-	                //this._onkeyupInnerHTML = this._element.innerHTML // THIS NEEDS TO BE HERE OR DOM innerHTML ISN'T CONSISTENT?
-	                //console.log("onkeyup [" + this._element.innerHTML  + "]")
+	                //this._onkeyupInnerHTML = this.element().innerHTML // THIS NEEDS TO BE HERE OR DOM innerHTML ISN'T CONSISTENT?
+	                //console.log("onkeyup [" + this.element().innerHTML  + "]")
 	                return this.onKeyUp(event) 
 	            }
 	            DivView._tabCount ++
@@ -1173,7 +1182,7 @@ DivView = ideal.Proto.extend().newSlots({
 		if (event.specialKeyName == "enter" && this.unfocusOnEnterKey()) {
 			console.log(" releasing focus")
 			// this.releaseFocus() // todo: implement something to pass focus up view chain to whoever wants it
-			this._element.parentElement.focus()
+			this.element().parentElement.focus()
 		}
 		
 		/*
@@ -1299,11 +1308,11 @@ DivView = ideal.Proto.extend().newSlots({
 	selectAll: function() {
 		if (document.selection) {
             var range = document.body.createTextRange();
-            range.moveToElementText(this._element);
+            range.moveToElementText(this.element());
             range.select();
         } else if (window.getSelection) {
             var range = document.createRange();
-            range.selectNode(this._element);
+            range.selectNode(this.element());
             window.getSelection().removeAllRanges();
             window.getSelection().addRange(range);
         }

@@ -24,7 +24,7 @@ NodeView = DivView.extend().newSlots({
             }
 
 			var nodeId = aNode ? this.node().type() + "-" + this.node().uniqueId() : "null"
-			this._element.id = this.type() + "-" + this._uniqueId + " for node " + nodeId
+			this.element().id = this.type() + "-" + this._uniqueId + " for node " + nodeId
         }
 		
         return this

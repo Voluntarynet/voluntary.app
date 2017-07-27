@@ -45,9 +45,16 @@ BrowserView = NodeView.extend().newSlots({
     },
     
     updateSingleColumnMode: function() {
-        if (Window.width() < Window.height()) {
-            this.setIsSingleColumn(true)
-        }
+        var size = DocumentBody.zoomAdjustedSize()
+        //var w = size.width
+        //var h = size.height
+        //console.log("Window = " + Window.width() + "x" + Window.height())
+        //console.log("zoom size = " + w + "x" + h)
+        //console.log("(Window.width() < Window.height()) = ", (Window.width() < Window.height()))
+        //console.log("(Window.width() < 700) = ", (Window.width() < 700))
+        var isSingle = (Window.width() < Window.height()) && (Window.width() < 700)
+        console.log("isSingle = ", isSingle)
+        this.setIsSingleColumn(isSingle)
         return this
     },
 
@@ -168,11 +175,16 @@ BrowserView = NodeView.extend().newSlots({
 	},
 	
 	popOneActiveColumn: function() {
-	    //console.log("popOneActiveColumn this.activeColumnGroups().length = ", this.activeColumnGroups().length)
+	    console.log("popOneActiveColumn this.activeColumnGroups().length = ", this.activeColumnGroups().length)
 	    var n = this.activeColumnGroups().length - 1
-	    if (n < 1) { n = 1; }
+	    if (n < 0) { n = 0; }
 	    //console.log("setColumnGroupCount ", n)
         this.setColumnGroupCount(n) // TODO: collapse cg instead?
+
+	    n -= 2
+	    if (n < 0) { n = 0; }
+	    //console.log("popOneActiveColumn 222 this.activeColumnGroups().length = ", this.activeColumnGroups().length)
+        this.selectColumn(this.columns()[n])
         this.fitColumns()
 	    return this
 	},

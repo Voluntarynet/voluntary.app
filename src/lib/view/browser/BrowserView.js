@@ -40,21 +40,35 @@ BrowserView = NodeView.extend().newSlots({
 	// --- resizing ---------------------------------
     
     onWindowResize: function (event) {
+        console.log(this.type() + " onWindowResize")
 		this.fitColumns()
 		return this
     },
     
     updateSingleColumnMode: function() {
-        var size = DocumentBody.zoomAdjustedSize()
-        //var w = size.width
-        //var h = size.height
-        //console.log("Window = " + Window.width() + "x" + Window.height())
-        //console.log("zoom size = " + w + "x" + h)
-        //console.log("(Window.width() < Window.height()) = ", (Window.width() < Window.height()))
-        //console.log("(Window.width() < 700) = ", (Window.width() < 700))
-        var isSingle = (Window.width() < Window.height()) && (Window.width() < 700)
+        console.log("---")
+        //var size = DocumentBody.zoomAdjustedSize()
+        var w = WebBrowserScreen.orientedWidth()
+        var h = WebBrowserScreen.orientedHeight()
+        console.log("WebBrowserScreen size = " + w + "x" + h)
+        
+        var r = 1
+        
+        if (w < 800) { 
+            r = 1.5
+        }
+        
+        if (w < 400) {
+            r = 3
+        }
+
+        console.log("setZoomRatio(" + r + ")") 
+        DocumentBody.setZoomRatio(r)
+            
+        var isSingle = ((w < h) && (w < 800)) || (w < 400)
         console.log("isSingle = ", isSingle)
         this.setIsSingleColumn(isSingle)
+        console.log("---")
         return this
     },
 
@@ -174,17 +188,19 @@ BrowserView = NodeView.extend().newSlots({
         this.syncToHashPath()
 	},
 	
-	popOneActiveColumn: function() {
-	    console.log("popOneActiveColumn this.activeColumnGroups().length = ", this.activeColumnGroups().length)
+	popLastActiveColumn: function() {
+	    console.log("popLastActiveColumn this.activeColumnGroups().length = ", this.activeColumnGroups().length)
 	    var n = this.activeColumnGroups().length - 1
 	    if (n < 0) { n = 0; }
 	    //console.log("setColumnGroupCount ", n)
         this.setColumnGroupCount(n) // TODO: collapse cg instead?
+	    //console.log("popLastActiveColumn 222 this.activeColumnGroups().length = ", this.activeColumnGroups().length)
 
+        /*
 	    n -= 2
 	    if (n < 0) { n = 0; }
-	    //console.log("popOneActiveColumn 222 this.activeColumnGroups().length = ", this.activeColumnGroups().length)
         this.selectColumn(this.columns()[n])
+        */
         this.fitColumns()
 	    return this
 	},
@@ -303,7 +319,8 @@ BrowserView = NodeView.extend().newSlots({
     		})
     		
     		lastActiveCg.node().setNodeMinWidth(null)
-    		lastActiveCg.setMinAndMaxWidth(Window.width())
+    		lastActiveCg.setMinAndMaxWidth(null)
+    		lastActiveCg.setWidthPercentage(100)
     		lastActiveCg.setFlexGrow(100)  
     		
     		//console.log("lastActiveCg.node().title() = ", lastActiveCg.node().title(), " width ", lastActiveCg.minWidth(), " ", lastActiveCg.maxWidth())
@@ -414,13 +431,13 @@ BrowserView = NodeView.extend().newSlots({
     // --- hash paths ------------------------------------- 
     
 	syncFromHashPath: function() {
-        //console.log("syncFromHashPath Window.urlHash() = '" + Window.urlHash() + "'")
-	    this.setNodePathString(Window.urlHash())
+        //console.log("syncFromHashPath WebBrowserWindow.urlHash() = '" + WebBrowserWindow.urlHash() + "'")
+	    this.setNodePathString(WebBrowserWindow.urlHash())
         return this	    
 	},
 	
 	syncToHashPath: function() {
-        Window.setUrlHash(this.nodePathString())
+        WebBrowserWindow.setUrlHash(this.nodePathString())
         return this
 	},
 })

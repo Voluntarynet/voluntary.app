@@ -22,34 +22,32 @@ DocumentBody = DivView.extend().newSlots({
     },
     
     autoAdjustZoomForMobile: function() {
+        /*
+        var w = WebBrowserScreen.width();
+        var h = WebBrowserScreen.height();
+        
+        console.log("screen " + w + "x" + h)
+
         var z = "100%"
         
-        if (Window.width() < 1000) {
+        if (w < 800) {
             z = "300%"
         }
-        
-        /*
-        if (Window.width() < 600) {
-            z = "200%"
-        }
-        
-        if (Window.width() < 400) {
-            z = "150%"
-        }
-        */
+
         
         this.setZoom(z)
         
-        //console.log("DocumentBody windowWidth: " + Window.width() + " zoom: " + this.zoom() )
+        //console.log("DocumentBody windowWidth: " + WebBrowserWindow.width() + " zoom: " + this.zoom() )
+        */
         return this
     },
     
     zoomAdjustedWidth: function() {
-        return Window.width() * this.zoomRatio()
+        return WebBrowserWindow.width() * this.zoomRatio()
     },
     
     zoomAdjustedHeight: function() {
-        return Window.width() * this.zoomRatio()
+        return WebBrowserWindow.width() * this.zoomRatio()
     },
     
     zoomAdjustedSize: function() {

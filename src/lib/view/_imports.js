@@ -8,8 +8,9 @@ JSImporter.pushRelativePaths([
 
     "ContentView.js",
     "generic/_imports.js",
+    "WebBrowserScreen.js",
     "DocumentBody.js",
-    "Window.js",
+    "WebBrowserWindow.js",
 
     "browser/_imports.js",
     "fields/_imports.js",

@@ -134,17 +134,6 @@ BrowserColumn = NodeView.extend().newSlots({
 		}
 
 		return row
-/*		
-        var rows = this.rows()
-        for (var i = 0; i < rows.length; i++) {
-            var row = rows[i]
-            if (row.node() == aNode) {
-                row.setIsSelected(true)
-                return row
-            }
-        }
-        return null
-*/
     },
     
     selectedRowTitle: function () {
@@ -382,7 +371,6 @@ BrowserColumn = NodeView.extend().newSlots({
         }
 
 		//console.log(this.type() + " focus")
-
 		return this
 	},
     
@@ -415,6 +403,7 @@ BrowserColumn = NodeView.extend().newSlots({
         return this
     },
 
+    /*
 	// paths
     
     browserPathArray: function() {
@@ -428,6 +417,7 @@ BrowserColumn = NodeView.extend().newSlots({
             return column.title()  // + ":" + column.node().type()
         }).join("/")
     },
+    */
 
     logName: function() {
         return this.browserPathString()
@@ -435,7 +425,7 @@ BrowserColumn = NodeView.extend().newSlots({
 
 	maxRowWidth: function() {
 		var maxWidth = this.rows().maxValue(function(row) {
-			return calcWidth.calcWidth()
+			return row.calcWidth()
 		})			
 		return maxWidth	
 	},

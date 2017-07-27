@@ -19,13 +19,14 @@
 	*/
 	flex-direction: row;
 	flex-wrap: nowrap;
-    width: calc(100% - 0px);
-    height: calc(100% - 0px);
+    width: calc(100% - 2px); /* subtract 2px if there's a 1px border */
+    height: calc(100% - 2px); /* subtract 2px if there's a 1px border */
     
 	margin: 0;
 	padding: 0;
     overflow: hidden;
-	/*border: 1px yellow dashed;*/
+	
+	border: 1px yellow dashed;
 }
 
 .BrowserDefaultHeader {
@@ -128,12 +129,12 @@
 .BrowserHeaderTitleView {
     display: block;
     position: absolute;
-    margin-top: 14px;
+    margin-top: 10px;
     width: 100%;   
     
     color: #666;
     text-align: center;
-    
+    height: 20px;
     /*border: 1px dashed yellow;*/
 }
 

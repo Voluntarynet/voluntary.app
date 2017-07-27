@@ -174,6 +174,15 @@ BrowserColumnGroup = NodeView.extend().newSlots({
         }
         return this
     },
+    
+    /*
+    setMinAndMaxWidth: function(w) {
+        ShowStack()
+		console.log(this.type() + " / " + (this.node() ? this.node().type() : "?") + " nodeMinWidth = " + w)
+        NodeView.setMinAndMaxWidth.apply(this, [w])
+        return this
+    },
+    */
 
 	matchNodeMinWidth: function() {
 		if (this.node()) {
@@ -183,7 +192,7 @@ BrowserColumnGroup = NodeView.extend().newSlots({
 				w = this.browser().browserWidth()
 			}
 			
-			console.log(this.type() + " / " + this.node().type() + " nodeMinWidth = " + w)
+			//console.log(this.type() + " / " + this.node().type() + " nodeMinWidth = " + w)
 			
 	        if (w) {
 	            this.setMinAndMaxWidth(w)

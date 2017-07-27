@@ -27,13 +27,17 @@ WebBrowserWindow = ideal.Proto.extend().newSlots({
         return window.innerHeight
     },
     
+    aspectRatio: function() {
+        return this.width() / this.height()
+    },
+    
     setWidth: function (w) {
-        console.warn("warning: Window.setWidth() unavailable in browser")
+        console.warn("warning: WebBrowserWindow.setWidth() unavailable in browser")
 		return this
     },
     
     setHeight: function (h) {
-        console.warn("warning: Window.setHeight() unavailable in browser")
+        console.warn("warning: WebBrowserWindow.setHeight() unavailable in browser")
 		return this
     },
     
@@ -74,8 +78,13 @@ WebBrowserWindow = ideal.Proto.extend().newSlots({
         }
         return this
     },
+    
+    descriptionDict: function() {
+        var dict = {
+            agent: this.agent(),
+            size: this.width() + "x" + this.height(),
+            isOnMobile: this.isOnMobile()
+        }
+        return dict
+    },
 })
-
-
-Window = WebBrowserWindow
-//Window.show()

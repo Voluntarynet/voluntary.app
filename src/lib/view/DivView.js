@@ -136,6 +136,17 @@ DivView = ideal.Proto.extend().newSlots({
 	zoomRatio: function() {
 		return Number(this.zoom().before("%"))/100
 	},
+	
+	setZoomRatio: function(r) {
+	    this.setZoomPercentage(r*100)
+		return this
+	},
+	
+	setZoomPercentage: function(aNumber) {
+	    assert(typeof(aNumber) == "number") 
+		this.setCssAttribute("zoom", aNumber + "%")
+	    return this
+	},
 
 	// font family
 
@@ -497,9 +508,19 @@ DivView = ideal.Proto.extend().newSlots({
 	calcWidth: function() {
 		return DivTextTapeMeasure.widthOfDivClassWithText(this.divClassName(), this.innerHTML())
 	},
+	
+	setWidthPercentage: function(aNumber) {
+	    assert(typeof(aNumber) == "number")
+	    this.getCssAttribute("width", aNumber + "%")
+	    return this
+	},
 
     width: function() {
         return this.element().clientWidth
+    },
+    
+    height: function() {
+        return this.element().clientHeight
     },
     
     minWidth: function() {

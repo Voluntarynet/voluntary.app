@@ -4,7 +4,7 @@ BrowserHeader = NodeView.extend().newSlots({
 	backArrowView: null,
 	titleView: null,
 	doesShowBackArrow: false,
-	shouldShowTitle: false,
+	//shouldShowTitle: false,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
@@ -15,7 +15,7 @@ BrowserHeader = NodeView.extend().newSlots({
 		backArrowView.setBackgroundImageUrlPath(this.pathForIconName("left"))        
 		this.setBackArrowView(backArrowView)
 		
-		var titleView = DivView.clone().setDivClassName("BrowserHeaderTitleView").setInnerHTML("title")
+		var titleView = DivView.clone().setDivClassName("BrowserHeaderTitleView NodeView DivView").setInnerHTML("title")
 		this.setTitleView(titleView)
 		
 		this.setZIndex(2)
@@ -29,6 +29,10 @@ BrowserHeader = NodeView.extend().newSlots({
 	columnGroup: function() {
 		return this.parentView()
 	},
+	
+	shouldShowTitle: function() {
+	    return this.browser().isSingleColumn()
+	},
 
     syncFromNode: function() {
         var node = this.node()
@@ -40,8 +44,8 @@ BrowserHeader = NodeView.extend().newSlots({
 			}
 
             if (this.shouldShowTitle()) {
-    		    this.addSubview(this.titleView())
     		    this.titleView().setInnerHTML(node.title())
+    		    this.addSubview(this.titleView())
 	        }
 			
             node.actions().forEach( (action) => {
@@ -51,6 +55,8 @@ BrowserHeader = NodeView.extend().newSlots({
                 button.setCanClick(this.nodeHasAction(action))
                 this.addSubview(button).syncFromNode()
             })
+        } else {
+            console.log("no header subviews")
         }
         
         return this
@@ -69,7 +75,7 @@ BrowserHeader = NodeView.extend().newSlots({
 
 	didHitBackArrow: function() {
 		console.log(this.type() + " back")
-		this.browser().popOneActiveColumn()
+		this.browser().popLastActiveColumn()
 		//this.columnGroup().column().selectPreviousColumn()
 	},
 	

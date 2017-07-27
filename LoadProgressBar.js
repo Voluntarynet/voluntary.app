@@ -1,13 +1,18 @@
 
 LoadProgressBar = {
     type: function() { return "LoadProgressBar" },
-    _error = null,
+    _error: null,
     
     // --- elements ------------------------------------------------
 
     mainElement: function() {
-        return document.getElementById("Spinner")
+        return document.getElementById("SpinnerMain")
     },
+    
+    middleElement: function() {
+        return document.getElementById("SpinnerMiddle")
+    },
+    
     
     titleElement: function() {
         return document.getElementById("SpinnerTitle")
@@ -48,14 +53,16 @@ LoadProgressBar = {
     },
     
     setupHtml: function() {
-        document.body.innerHTML = "<div id='Spinner'> \
-    		<div id='SpinnerTitle' style='transition: all .6s ease-out;'></div><br> \
-    		<div id='SpinnerSubtitle' style='transition: all .3s ease-out; letter-spacing: -2.5px;'></div><br> \
-    		<div id='SpinnerItem' style='color: transparent; transition: all 0.3s ease-out;'></div><br> \
-    		<div id='SpinnerError' style='color: red; transition: all .6s ease-out; text-align: center; width: 100%;'></div> \
+        document.body.innerHTML = "<div id='SpinnerMain' style='position: absolute; width:100%; height: 100%; background-color: black; z-index: 100000;'> \
+            <div id='SpinnerMiddle'> \
+    		    <div id='SpinnerTitle' style='transition: all .6s ease-out;'></div><br> \
+    		    <div id='SpinnerSubtitle' style='transition: all .3s ease-out; letter-spacing: -2.5px;'></div><br> \
+    		    <div id='SpinnerItem' style='color: transparent; transition: all 0.3s ease-out;'></div><br> \
+    		    <div id='SpinnerError' style='color: red; transition: all .6s ease-out; text-align: center; width: 100%;'></div> \
+    		</div> \
 	    </div>"
 	
-	    var style = this.mainElement().style
+	    var style = this.middleElement().style
 	    style.position = "relative"
         style.top = "50%"
         style.transform = "translateY(-50%)"
@@ -159,7 +166,7 @@ LoadProgressBar = {
     
     setError: function(error) {
         this._error = error
-		//console.warn("LoadProgressBar setError " + error)
+		console.warn("LoadProgressBar setError " + error)
         this.errorElement().innerHTML = error
         return this
     },
@@ -176,10 +183,13 @@ LoadProgressBar = {
     },
 
     stop: function() {
-        this.removeMainElement()
-		this.unregisterForImports()
-		this.unregisterForWindowError()
-	    delete window[this.type()]
+        
+        if (!this.error()) {
+            this.removeMainElement()
+    		this.unregisterForImports()
+    		this.unregisterForWindowError()
+    	    delete window[this.type()]
+        }
 	    return this
     },
 }

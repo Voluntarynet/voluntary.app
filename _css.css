@@ -1,6 +1,6 @@
 
 html, body {
-    position: fixed;
+    position: absolute;
     overflow: hidden;
 	top: 0px;
 	left: 0px;
@@ -13,31 +13,3 @@ html, body {
 	
     zoom: 100%;
 }
-
-/*
-.window {
-    position: fixed;
-    overflow: hidden;
-    top: 0px;
-    left: 0px;
-    width: 100%;
-    height: 100%;
-	padding: 0px;
-    margin: 0px;
-    border: 0px;
-    background-color: #555;
-}
-
-.window-content {
-    position: fixed;
-    overflow: hidden;
-    top: 0px;
-    left: 0px;
-    width: 100%;
-    height: 100%;
-	padding: 0px;
-    margin: 0px;
-    border: 0px;
-    background-color: #555;	
-}
-*/

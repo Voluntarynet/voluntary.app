@@ -41,7 +41,7 @@ BaseApp = BMNavNode.extend().newSlots({
 
     setupBrowser: function() {	
         this.setBrowser(BrowserView.clone())
-     
+       
         this.browser().setNode(this)
 		this.browser().setOpacity(0)
 		this.browser().setTransition("all 0.5s")

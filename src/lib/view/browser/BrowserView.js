@@ -294,7 +294,7 @@ BrowserView = NodeView.extend().newSlots({
     		lastActiveCg.setMinAndMaxWidth(Window.width())
     		lastActiveCg.setFlexGrow(100)  
     		
-    		console.log("lastActiveCg.node().title() = ", lastActiveCg.node().title(), " width ", lastActiveCg.minWidth(), " ", lastActiveCg.maxWidth())
+    		//console.log("lastActiveCg.node().title() = ", lastActiveCg.node().title(), " width ", lastActiveCg.minWidth(), " ", lastActiveCg.maxWidth())
     		
     		return this ////////////////////////////////// early return
 		} 

@@ -21,7 +21,7 @@ LoadSpinner = {
     },
     
     start: function() {
-        console.log("--- running spinner 2---")
+        //console.log("--- running spinner 2---")
 
         var title = this.titleElement()
         
@@ -154,7 +154,7 @@ LoadSpinner = {
   
     startWhenReady: function() {
         if (window["JSImporter"]) {
-            console.log("--- running spinner ---")
+            //console.log("--- running spinner ---")
             this.setupHtml()
             this.start() 
         } else {

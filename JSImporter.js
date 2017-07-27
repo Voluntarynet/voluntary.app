@@ -173,6 +173,12 @@ JSImporter = {
 		this._errorCallbacks.remove(aCallback)
 		return this
 	},
+	
+	removeUrlCallback: function(aCallback) {
+		this._urlLoadingCallbacks.remove(aCallback)
+		return this
+	},
+	
 
 	run: function() {
 	    this.loadNext();

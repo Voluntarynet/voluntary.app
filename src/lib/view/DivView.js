@@ -70,6 +70,7 @@ DivView = ideal.Proto.extend().newSlots({
 			return obj.type() 
 		})
 		
+		// small hack to remove duplicate first name (as instance and first proto names are the same)
 		if (ancestorNames.length > 1 && ancestorNames[0] == ancestorNames[1]) {
 		    ancestorNames.removeFirst()
 		}

@@ -1,5 +1,7 @@
 ++ FIX OPTIONS overflow
 
+- move delete action to rows?
+
 - cleanup ColumnGroup vs Column, cleanup selectColumn and setColumnGroupCount
 
 - fix double div class name declarations

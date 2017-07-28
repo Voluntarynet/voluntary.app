@@ -230,10 +230,15 @@ DivView = ideal.Proto.extend().newSlots({
         return this
     },
 
+	setBackgroundSize: function(x, y) {
+		this.setCssAttribute("background-size", x + "px " + y + "px")
+        return this
+	},
+
 	// icons - until I find a better place for this
 	
 	pathForIconName: function(aName) { 
-        return 'icons/' + aName + '_active.png'
+        return 'icons/' + aName + '.svg'
 	},    
 	
 	// transition

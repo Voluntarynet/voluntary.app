@@ -10,7 +10,7 @@ BMTextAreaFieldRowView = BMFieldRowView.extend().newSlots({
     },
 
 	createValueView: function() {
-		return NodeView.clone().setDivClassName("BMTextAreaFieldValueView")
+		return NodeView.clone().setDivClassName("BMTextAreaFieldValueView NodeView DivView")
 	},
 	
     updateSubviews: function() {   
@@ -18,10 +18,10 @@ BMTextAreaFieldRowView = BMFieldRowView.extend().newSlots({
 		this.fillBottomOfColumnIfAvailable()
 		
 		if (this.node().isMono()) {
-			this.valueView().setDivClassName("BMMonoTextAreaFieldValueView")
+			this.valueView().setDivClassName("BMMonoTextAreaFieldValueView NodeView DivView")
 			this.valueView().set
 		} else {
-			this.valueView().setDivClassName("BMTextAreaFieldValueView")
+			this.valueView().setDivClassName("BMTextAreaFieldValueView NodeView DivView")
 		}
 		
 		return this

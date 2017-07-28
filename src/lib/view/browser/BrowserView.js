@@ -46,11 +46,11 @@ BrowserView = NodeView.extend().newSlots({
     },
     
     updateSingleColumnMode: function() {
-        console.log("---")
+        //console.log("---")
         //var size = DocumentBody.zoomAdjustedSize()
         var w = WebBrowserScreen.orientedWidth()
         var h = WebBrowserScreen.orientedHeight()
-        console.log("WebBrowserScreen size = " + w + "x" + h)
+        //console.log("WebBrowserScreen size = " + w + "x" + h)
         
         var r = 1
         
@@ -62,13 +62,13 @@ BrowserView = NodeView.extend().newSlots({
             r = 3
         }
 
-        console.log("setZoomRatio(" + r + ")") 
+        //console.log("setZoomRatio(" + r + ")") 
         DocumentBody.setZoomRatio(r)
             
         var isSingle = ((w < h) && (w < 800)) || (w < 400)
-        console.log("isSingle = ", isSingle)
+        //console.log("isSingle = ", isSingle)
         this.setIsSingleColumn(isSingle)
-        console.log("---")
+        //console.log("---")
         return this
     },
 
@@ -326,7 +326,11 @@ BrowserView = NodeView.extend().newSlots({
     		//console.log("lastActiveCg.node().title() = ", lastActiveCg.node().title(), " width ", lastActiveCg.minWidth(), " ", lastActiveCg.maxWidth())
     		
     		return this ////////////////////////////////// early return
-		} 
+		}
+		
+		this.columnGroups().forEach((cg) => {
+			cg.setDisplay("inline-flex")
+		})
 
 		this.columnGroups().reversed().forEach((cg) => { 
 		    var w = cg.node() ? cg.node().nodeMinWidth() : 0

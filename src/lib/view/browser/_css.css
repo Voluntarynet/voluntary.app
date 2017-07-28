@@ -19,14 +19,14 @@
 	*/
 	flex-direction: row;
 	flex-wrap: nowrap;
-    width: calc(100% - 2px); /* subtract 2px if there's a 1px border */
-    height: calc(100% - 2px); /* subtract 2px if there's a 1px border */
+    width: calc(100% - 0px); /* subtract 2px if there's a 1px border */
+    height: calc(100% - 0px); /* subtract 2px if there's a 1px border */
     
 	margin: 0;
 	padding: 0;
     overflow: hidden;
 	
-	border: 1px yellow dashed;
+	/*border: 1px yellow dashed;*/
 }
 
 .BrowserDefaultHeader {

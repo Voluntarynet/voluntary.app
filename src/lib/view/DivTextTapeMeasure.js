@@ -5,7 +5,7 @@
 DivTextTapeMeasure = ideal.Proto.extend().newSlots({
 	idName: "DivTextTapeMeasure",
     type: "Div",
-	copyStyles: ['fontSize','fontStyle', 'fontWeight', 'fontFamily','lineHeight', 'textTransform', 'letterSpacing'],
+	stylesToCopy: ['fontSize','fontStyle', 'fontWeight', 'fontFamily','lineHeight', 'textTransform', 'letterSpacing'],
 }).setSlots({
 	
 	testElement: function() {
@@ -34,7 +34,7 @@ DivTextTapeMeasure = ideal.Proto.extend().newSlots({
 	widthOfDivWithText: function(div, text) { 
 		var e = this.testElement()
 		
-		this.copyStyles().forEach(function (styleName) {
+		this.stylesToCopy().forEach(function (styleName) {
 			var v = DivView.style[styleName]
 			if (v) {
 				e.style[styleName] = v
@@ -67,7 +67,7 @@ DivTextTapeMeasure = ideal.Proto.extend().newSlots({
 	clean: function() {
 		var e = this.testElement()
 		e.innerHTML = ""
-		this.copyStyles().forEach(function (styleName) {
+		this.stylesToCopy().forEach(function (styleName) {
 			delete e.style[styleName]
 		})		
 	},

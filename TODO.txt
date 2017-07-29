@@ -1,9 +1,13 @@
+add setNeedsSync*From*Node()
+
 - fix column behavior
 	- on initial load if on first column, it's stretched to fit width
 	- select email msg and then type in a field - selection change issue?
 	- sometimes column does not include back button
 	- isSingle not always detected
+	- header title appearing even in multi column mode
 
+	- on multi, don't expand last column to fill width unless it's close to edge
 
 - move delete action to rows?
 

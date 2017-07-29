@@ -78,28 +78,39 @@ BrowserRow = NodeView.extend().newSlots({
     onClick: function (anEvent) {
         if (this.isSelectable()) {
             this.select()
-            console.log(this.type() + " tellParentViews didClickRow")
+            //console.log(this.type() + " tellParentViews didClickRow")
             this.tellParentViews("didClickRow", this)
         }
 		return false
     },
 
     setIsSelected: function (aBool) {
-        this._isSelected = aBool
+		if (this._isSelected != aBool) {
+	        this._isSelected = aBool
         
-        if (aBool) {
-            //this.setBorderTop("1px solid #333")
-            //this.setBorderBottom("1px solid #444")
-            this.setOpacity(1)       
-        } else {
-            //this.setBorderTop("1px solid transparent")
-            //this.setBorderBottom("1px solid transparent")
-            this.setOpacity(0.7)       
-        }
+	        if (aBool) {
+	            this.showSelected()    
+	        } else {
+	            this.showUnselected() 
+	        }
         
-        this.updateSubviews()
+	        this.updateSubviews()
+		}
         return this
     },
+
+	showSelected: function() {
+        //this.setBorderTop("1px solid #333")
+        //this.setBorderBottom("1px solid #444")
+        this.setOpacity(1)
+		return this		
+	},
+	
+	showUnselected: function() {
+        //this.setBorderTop("1px solid transparent")
+        //this.setBorderBottom("1px solid transparent")
+        this.setOpacity(0.7)		
+	},
     
     select: function() {
         this.setIsSelected(true)		

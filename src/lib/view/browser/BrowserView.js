@@ -40,7 +40,7 @@ BrowserView = NodeView.extend().newSlots({
 	// --- resizing ---------------------------------
     
     onWindowResize: function (event) {
-        //console.log(this.type() + " onWindowResize")
+        console.log(this.type() + " onWindowResize")
 		this.fitColumns()
 		return this
     },
@@ -133,6 +133,9 @@ BrowserView = NodeView.extend().newSlots({
         
     setColumnGroupCount: function(count) {
         this.log("setColumnGroupCount " + count)
+		if (count == 0) {
+			ShowStack()
+		}
 
         /*
 		// collapse excess columns
@@ -213,12 +216,14 @@ BrowserView = NodeView.extend().newSlots({
 	},
 	
     selectColumn: function(selectedColumn) {
+		console.log(this.type() + " selectColumn " + selectedColumn.node().type())
         var selectedColumnGroup = selectedColumn.columnGroup()
 
         var index = this.columnGroups().indexOf(selectedColumn.columnGroup())
+		console.log(this.type() + " index " + index)
 		
 		if (this.isSingleColumn()) {
-        	this.setColumnGroupCount(index + 0)
+        	this.setColumnGroupCount(index + 1)
 		} else {
         	this.setColumnGroupCount(index + 3)
 		}
@@ -288,9 +293,62 @@ BrowserView = NodeView.extend().newSlots({
 		return this.columnGroups().reversed().detect((cg) => { return cg.column().node() != null; })
     },
 
+	// --- fitting columns in browser ---------------------------------------------
+
     fitColumns: function () {
+        console.log(this.type() + " fitColumns")
         this.updateSingleColumnMode()
-        
+
+		var lastActiveCg = this.lastActiveColumnGroup()
+	
+		if (lastActiveCg && this.isSingleColumn()) {
+		    this.fitForSingleColumn()
+		} else {
+			this.fitForMultiColumn()
+		}
+		
+		return this
+	},
+	
+	updateBackArrow: function() {
+   		this.columnGroups().forEach((cg) => {
+   			cg.updateBackArrow()    			
+   		})
+		return this
+	},
+	
+	makeLastActiveColumnFillRemainingSpace: function() {
+		var lastActiveCg = this.lastActiveColumnGroup()
+		
+   		lastActiveCg.node().setNodeMinWidth(null)
+   		lastActiveCg.setMinAndMaxWidth(null)
+   		lastActiveCg.setWidthPercentage(100)
+   		lastActiveCg.setFlexGrow(100)  
+		return this
+	},
+	
+	fitForSingleColumn: function() {
+		var lastActiveCg = this.lastActiveColumnGroup()
+		
+	    this.columnGroups().forEach((cg) => {
+   			if (cg != lastActiveCg) {
+   			    cg.setFlexGrow(0)
+   			    cg.setIsCollapsed(true)
+   			    cg.setMinAndMaxWidth(0)
+   		        //if (cg.node()) { cg.node().setNodeMinWidth(0) } // hack
+   			}
+   		})
+
+   		lastActiveCg.setIsCollapsed(false)
+   		this.makeLastActiveColumnFillRemainingSpace()
+   		this.updateBackArrow()
+
+   		//console.log("lastActiveCg.node().title() = ", lastActiveCg.node().title(), " width ", lastActiveCg.minWidth(), " ", lastActiveCg.maxWidth())
+   		
+   		return this ////////////////////////////////// early return
+	},
+		
+	fitForMultiColumn: function() {
 		// collapse columns as needed
 		var widthsSum = 0
         var browserWidth = this.browserWidth()
@@ -299,41 +357,7 @@ BrowserView = NodeView.extend().newSlots({
         var usedWidth = 0
         var remainingWidth = 0
         
-		//ShowStack()
-		//console.log(this.type() + " isSingleColumn = ", this.isSingleColumn() + ", node = ", this.node().type())
-		
 		var lastActiveCg = this.lastActiveColumnGroup()
-		
-		//this.columnGroups().forEach((cg) => { console.log("cg.column().node() = ", cg.column().node()); })
-		
-		//console.log("lastActiveCg = ", lastActiveCg ? lastActiveCg.node().title() : null)
-		
-		if (lastActiveCg && this.isSingleColumn()) {
-		    
-		    this.columnGroups().forEach((cg) => {
-    			if (cg != lastActiveCg) {
-    			    cg.setFlexGrow(0)
-    			    cg.setIsCollapsed(true)
-    			    cg.setMinAndMaxWidth(0)
-    		        if (cg.node()) { cg.node().setNodeMinWidth(0) }
-    			}
-    		})
-
-    		lastActiveCg.setIsCollapsed(false)
-    		
-    		this.columnGroups().forEach((cg) => {
-    			cg.updateBackArrow()    			
-    		})
-    		
-    		lastActiveCg.node().setNodeMinWidth(null)
-    		lastActiveCg.setMinAndMaxWidth(null)
-    		lastActiveCg.setWidthPercentage(100)
-    		lastActiveCg.setFlexGrow(100)  
-    		
-    		//console.log("lastActiveCg.node().title() = ", lastActiveCg.node().title(), " width ", lastActiveCg.minWidth(), " ", lastActiveCg.maxWidth())
-    		
-    		return this ////////////////////////////////// early return
-		}
 		
 		this.columnGroups().forEach((cg) => {
 			cg.setDisplay("inline-flex")
@@ -358,19 +382,22 @@ BrowserView = NodeView.extend().newSlots({
 			}
 			cg.setIsCollapsed(shouldCollapse)
 		})
-		
+
 		this.columnGroups().forEach((cg) => {
 			cg.setFlexGrow(1)
-			cg.updateBackArrow()
-			//cg.setMinAndMaxWidth(null)
 		})
 
         if (lastActiveCg) {
     		lastActiveCg.setMinAndMaxWidth(null)
     		lastActiveCg.setFlexGrow(100)
     	}
+
+   		this.updateBackArrow()
+
 		return this
 	},
+	
+	// -----------------------------------------------
 
 	browserWidth: function() {
 		return this.width()
@@ -384,6 +411,10 @@ BrowserView = NodeView.extend().newSlots({
     
     selectNode: function(aNode) {
         //console.log("selectNode " + aNode.nodePath())
+		if (!aNode) {
+			console.warn(this.type() + " selectNode called with null argument")
+			return this
+		}
         this.selectNodePath(aNode.nodePath())
         return this
     },

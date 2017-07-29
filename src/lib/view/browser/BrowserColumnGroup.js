@@ -4,7 +4,7 @@ BrowserColumnGroup = NodeView.extend().newSlots({
     header: null,
 	scrollView: null, // contains column
     column: null,
-    emptyLabel: null,
+    //emptyLabel: null,
 	isSelected: false,
 	doesCollapseIfUnselected: false,
 	isCollapsed: false,
@@ -40,20 +40,6 @@ BrowserColumnGroup = NodeView.extend().newSlots({
 		}
 		
 		this._isSelected = aBool
-	//	this.header().setDoesShowBackArrow(aBool && !this.isFirstColumnGroup())
-		
-		/*
-		if (this.doesCollapseIfUnselected()) {
-			if (aBool) {
-				console.log(this + " expanding")
-				this.uncollapse()
-				//this.setMinAndMaxWidth("100%")
-			} else {
-				this.collapse()
-				console.log(this + " collapsing")
-			}
-		}
-		*/
 		
 		return this
 	},
@@ -70,8 +56,12 @@ BrowserColumnGroup = NodeView.extend().newSlots({
 		return (!this.isCollapsed()) && (!pcg || pcg.isCollapsed())
 	},
 	
+	shouldShowBackArrow: function() {
+		return !this.isFirstColumnGroup() && this.isFirstUncollapsed()
+	},
+	
 	updateBackArrow: function() {
-		this.header().setDoesShowBackArrow(!this.isFirstColumnGroup() && this.isFirstUncollapsed())
+		this.header().setDoesShowBackArrow(this.shouldShowBackArrow())
 		return this
 	},
 	
@@ -88,12 +78,6 @@ BrowserColumnGroup = NodeView.extend().newSlots({
 		return this
 	},
 	
-	/*
-	isCollapsed: function() {
-		return this.display() == "none"
-	},
-	*/
-	
 	collapse: function() {
 		//console.log(this + " collapse")
 		this._isCollapsed = true
@@ -105,8 +89,6 @@ BrowserColumnGroup = NodeView.extend().newSlots({
         }
 		return this
 	},
-	
-
 	
 	uncollapse: function() {
 		//console.log(this + " uncollapse")
@@ -126,7 +108,7 @@ BrowserColumnGroup = NodeView.extend().newSlots({
 	},
     
     /// empty label 
-    
+    /*
     updateEmptyLabel: function() {
         var node = this.node()
         if (node) {
@@ -163,6 +145,7 @@ BrowserColumnGroup = NodeView.extend().newSlots({
         }
         return this
     },
+*/
     
     setColumnClass: function(columnClass) {
         if (this.column().type() != columnClass.type()) {
@@ -209,7 +192,7 @@ BrowserColumnGroup = NodeView.extend().newSlots({
         NodeView.setNode.apply(this, [aNode])
 
         this.setColumnClass(BrowserColumn)
-        this.matchNodeMinWidth()
+        //this.matchNodeMinWidth()
         
         if (aNode) {
             // obey node's width preferences
@@ -249,7 +232,7 @@ BrowserColumnGroup = NodeView.extend().newSlots({
         //console.log("BrowserColumnGroup syncFromNode "  + this.node().type())
         this.header().syncFromNode()
         this.column().syncFromNode()
-        this.updateEmptyLabel()
+        //this.updateEmptyLabel()
         return this
     },
 })

@@ -33,6 +33,11 @@ BrowserHeader = NodeView.extend().newSlots({
 	},
 	
 	shouldShowTitle: function() {
+		/*
+		console.log(this.type() + " shouldShowTitle")
+		console.log("this.parentView() = ", this.parentView().type())
+		console.log("this.parentView().parentView() = ", this.parentView().parentView().type())
+		*/
 	    return this.browser().isSingleColumn()
 	},
 
@@ -40,7 +45,7 @@ BrowserHeader = NodeView.extend().newSlots({
         var node = this.node()
         this.removeAllSubviews()
         
-        if (node) {
+        if (node && this.browser()) {
             if (this.shouldShowTitle()) {
     		    this.titleView().setInnerHTML(node.title())
     		    this.addSubview(this.titleView())
@@ -49,7 +54,6 @@ BrowserHeader = NodeView.extend().newSlots({
 			if (this.doesShowBackArrow()) {
 				this.addSubview(this.backArrowView())
 			}
-
 
             node.actions().forEach( (action) => {
                 var button = BrowserHeaderAction.clone()
@@ -67,13 +71,6 @@ BrowserHeader = NodeView.extend().newSlots({
     nodeHasAction: function(anAction) {
         return (anAction in this.node())
     },
-    
-    /*
-    hitButton: function(aButton) {
-        this.node()[aButton._nodeAction].apply(this.node(), self)
-        return this
-    },
-    */
 
 	didHitBackArrow: function() {
 		console.log(this.type() + " back")
@@ -83,8 +80,10 @@ BrowserHeader = NodeView.extend().newSlots({
 	
 	setDoesShowBackArrow: function(aBool) {
 		if (this._doesShowBackArrow != aBool) {
+			console.log(this.node().title() + " setDoesShowBackArrow " + aBool)
 			this._doesShowBackArrow = aBool
-			this.setNeedsSyncToNode(true)
+			this.setNeedsSyncFromNode(true)
+			//this.syncFromNode()
 		}
 		return this
 	},

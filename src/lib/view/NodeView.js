@@ -158,22 +158,31 @@ NodeView = DivView.extend().newSlots({
     },
 
     setNeedsSyncToNode: function(aBool) {
-        if (this._needsSyncToNode == aBool) { 
-			return this 
-		}
-
-        //this.log("needsSyncToView " + this._needsSyncToView + " -> " + aBool)
-
-        if (aBool && !this._needsSyncToNode) {
-            //this.log(" >>> adding timer syncToView")
-            
-            setTimeout( () => { 
-                this.syncToNode()
-                //this.log(" +++ fired syncToNode")
-            }, 1)            
-        }
+        if (this._needsSyncToNode != aBool) { 
+	        if (aBool && !this._needsSyncToNode) {
+	            setTimeout( () => { 
+	                this.syncToNode()
+					this._needsSyncToNode = false
+	            }, 1)            
+	        }
         
-        this._needsSyncToNode = aBool
+	        this._needsSyncToNode = aBool
+		}
+		
+        return this
+    },
+
+    setNeedsSyncFromNode: function(aBool) {
+        if (this._needsSyncFromNode != aBool) { 
+	        if (aBool && !this._needsSyncFromNode) {
+	            setTimeout( () => { 
+	                this.syncFromNode()
+					this._needsSyncFromNode = false
+	            }, 1)            
+	        }
+        
+	        this._needsSyncFromNode = aBool
+		}
 		
         return this
     },

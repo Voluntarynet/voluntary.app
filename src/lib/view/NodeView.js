@@ -169,7 +169,7 @@ NodeView = DivView.extend().newSlots({
             
             setTimeout( () => { 
                 this.syncToNode()
-                this.log(" +++ fired syncToNode")
+                //this.log(" +++ fired syncToNode")
             }, 1)            
         }
         

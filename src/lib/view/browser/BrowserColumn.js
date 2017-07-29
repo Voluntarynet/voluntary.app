@@ -75,7 +75,7 @@ BrowserColumn = NodeView.extend().newSlots({
 		}
         //this.focus()
         
-        //this.tellParents("didClickRow", clickedRow)
+        //this.tellParentViews("didClickRow", clickedRow)
 
         return true
     },

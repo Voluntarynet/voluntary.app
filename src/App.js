@@ -25,9 +25,7 @@ App = BaseApp.extend().newSlots({
     },
     
     setupPageTitle: function() {
-		var parser = document.createElement('a')
-		parser.href = window.location.href
-		var name = parser.hostname
+		var name = WebBrowserWindow.urlHostname()
 		
 		if (name != "") {
 			name = name.before(".").replaceAll("-", " ").toUpperCase()

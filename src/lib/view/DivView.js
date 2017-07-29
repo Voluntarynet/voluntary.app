@@ -709,11 +709,15 @@ DivView = ideal.Proto.extend().newSlots({
 	didChangeSubviewList: function() {
 	},
 	
-	hasSubview: function(anSubview) {
+	hasSubview: function(aSubview) {
+		return this.subviews().indexOf(aSubview) != -1
+	},
+	
+	hasChildElement: function(anElement) {
 		var children = this.element().childNodes
 		for (var i = 0; i < children.length; i ++) {
 			var child = children[i]
-			if (anSubview.element() == child) {
+			if (anElement === child) {
 				return true
 			}
 		}
@@ -722,32 +726,23 @@ DivView = ideal.Proto.extend().newSlots({
 	
     removeSubview: function (anSubview) {
 		//console.warn("WARNING: " + this.type() + " removeSubview " + anSubview.type())
-		/*
+
 		if (!this.hasSubview(anSubview)) {
 			console.warn(this.type() + " removeSubview " + anSubview.type() + " failed - no child found!")
+			ShowStack()
 			return anSubview
 		}
-		*/
 		
         anSubview.willRemove()
         this._subviews.remove(anSubview)
 
-		/*
-		var children = this.element().childNodes
-		for (var i = 0; i < children.length; i ++) {
-			var child = children[i]
-			if (anSubview.element() == child) {
-				console.log("has remove match")
-			}
-		}
-		*/
-		
-		if (this.hasSubview(anSubview)) {
-			if(!DivView._didShowWarning) {
-				DivView._didShowWarning = true
-				console.warn("WARNING: " + this.type() + " removeSubview " + anSubview.type() + " failed - no child found!")
-			}
+		if (this.hasChildElement(anSubview.element())) {
         	this.element().removeChild(anSubview.element());
+		}
+
+		if (this.hasChildElement(anSubview.element())) {
+			console.warn("WARNING: " + this.type() + " removeSubview " + anSubview.type() + " failed - still has element after remove")
+			ShowStack()
 		}
 		
         anSubview.setParentView(null)
@@ -824,7 +819,7 @@ DivView = ideal.Proto.extend().newSlots({
 
 	// --- updates ---
 
-    tellParents: function(msg, aView) {
+    tellParentViews: function(msg, aView) {
         var f = this[msg]
         if (f && f.apply(this, [aView])) {
             return // stop propogation
@@ -832,7 +827,7 @@ DivView = ideal.Proto.extend().newSlots({
 
         var p = this.parentView()
         if (p) {
-            p.tellParents(msg, aView)
+            p.tellParentViews(msg, aView)
         }
     },
 
@@ -1269,7 +1264,7 @@ DivView = ideal.Proto.extend().newSlots({
 			}
 		}
         
-        this.tellParents("onDidEdit", this)
+        this.tellParentViews("onDidEdit", this)
 		return shouldPropogate
     },
 

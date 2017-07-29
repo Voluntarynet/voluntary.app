@@ -1,4 +1,7 @@
-++ FIX OPTIONS overflow
+- fix column behavior
+	- select email msg and then type in a field - selection change issue?
+	
+
 
 - move delete action to rows?
 

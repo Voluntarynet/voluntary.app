@@ -253,7 +253,7 @@ BMNode = ideal.Proto.extend().newSlots({
         this.prepareToAccess();
     },
     
-    tellParents: function(msg, aNode) {
+    tellParentNodes: function(msg, aNode) {
         var f = this[msg]
         if (f && f.apply(this, [aNode])) {
             return
@@ -261,7 +261,7 @@ BMNode = ideal.Proto.extend().newSlots({
 
         var p = this.parentNode()
         if (p) {
-            p.tellParents(msg, aNode)
+            p.tellParentNodes(msg, aNode)
         }
     },
     

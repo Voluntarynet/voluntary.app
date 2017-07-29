@@ -81,7 +81,7 @@ BrowserRowTitle = DivView.extend().newSlots({
 		
         event.preventDefault()
 		event.stopPropagation()
-        this.tellParents("onDidEdit", this)
+        this.tellParentViews("onDidEdit", this)
 		return false
 		//return DivView.onKeyUp.apply(this, [event])
 	},

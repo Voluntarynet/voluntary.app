@@ -71,7 +71,7 @@ BaseApp = BMNavNode.extend().newSlots({
 
     setName: function(aString) {
         this._name = aString
-        document.title = this.name()
+		WebBrowserWindow.setTitle(this.name())
         return this
     },
     

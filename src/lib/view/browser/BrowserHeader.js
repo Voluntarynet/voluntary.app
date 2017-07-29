@@ -53,12 +53,11 @@ BrowserHeader = NodeView.extend().newSlots({
             node.actions().forEach( (action) => {
                 var button = BrowserHeaderAction.clone()
                 button.setTarget(node).setAction(action)
-                //button._nodeAction = action
                 button.setCanClick(this.nodeHasAction(action))
                 this.addSubview(button).syncFromNode()
             })
         } else {
-            console.log("no header subviews")
+            //console.log("no header subviews")
         }
         
         return this
@@ -82,8 +81,10 @@ BrowserHeader = NodeView.extend().newSlots({
 	},
 	
 	setDoesShowBackArrow: function(aBool) {
-		this._doesShowBackArrow = aBool
-		this.syncFromNode()
+		if (this._doesShowBackArrow != aBool) {
+			this._doesShowBackArrow = aBool
+			this.setNeedsSyncToNode(true)
+		}
 		return this
 	},
 })

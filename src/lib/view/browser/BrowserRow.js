@@ -38,7 +38,7 @@ BrowserRow = NodeView.extend().newSlots({
         //console.log("syncToNode")
         this.node().setTitle(this.titleView().innerHTML())
         this.node().setSubtitle(this.subtitleView().innerHTML())
-        this.node().tellParents("onDidEditNode", this.node())   
+        this.node().tellParentNodes("onDidEditNode", this.node())   
         this.node().markDirty()
         return this
     },
@@ -78,8 +78,8 @@ BrowserRow = NodeView.extend().newSlots({
     onClick: function (anEvent) {
         if (this.isSelectable()) {
             this.select()
-            console.log(this.type() + " tellParents didClickRow")
-            this.tellParents("didClickRow", this)
+            console.log(this.type() + " tellParentViews didClickRow")
+            this.tellParentViews("didClickRow", this)
         }
 		return false
     },

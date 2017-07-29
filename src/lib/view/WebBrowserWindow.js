@@ -87,4 +87,15 @@ WebBrowserWindow = ideal.Proto.extend().newSlots({
         }
         return dict
     },
+
+	urlHostname: function() {
+		var parser = document.createElement('a')
+		parser.href = window.location.href
+		return parser.hostname
+	},
+	
+	setTitle: function(aName) {
+		document.title = aName
+        return this
+	},
 })

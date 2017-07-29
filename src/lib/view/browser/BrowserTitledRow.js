@@ -73,7 +73,7 @@ BrowserTitledRow = BrowserRow.extend().newSlots({
         //console.log("syncToNode")
         this.node().setTitle(this.titleView().innerHTML())
         this.node().setSubtitle(this.subtitleView().innerHTML())
-        this.node().tellParents("onDidEditNode", this.node())   
+        this.node().tellParentNodes("onDidEditNode", this.node())   
         this.node().markDirty()
         return this
     },

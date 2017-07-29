@@ -20,7 +20,7 @@ BrowserView = NodeView.extend().newSlots({
         this.setDefaultSubnodeViewClass(BrowserColumnGroup)
         this.setIsRegisterForWindowResize(true)
         
-        var dh = DivView.clone().setDivClassName("BrowserDefaultHeader")
+        var dh = DivView.clone().setDivClassName("BrowserDefaultHeader NodeView DivView")
         this.setDefaultHeader(dh)
         this.addSubview(dh)
         
@@ -40,7 +40,7 @@ BrowserView = NodeView.extend().newSlots({
 	// --- resizing ---------------------------------
     
     onWindowResize: function (event) {
-        console.log(this.type() + " onWindowResize")
+        //console.log(this.type() + " onWindowResize")
 		this.fitColumns()
 		return this
     },
@@ -48,10 +48,14 @@ BrowserView = NodeView.extend().newSlots({
     updateSingleColumnMode: function() {
         //console.log("---")
         //var size = DocumentBody.zoomAdjustedSize()
-        var w = WebBrowserScreen.orientedWidth()
-        var h = WebBrowserScreen.orientedHeight()
+        //var w = WebBrowserScreen.orientedWidth()
+        //var h = WebBrowserScreen.orientedHeight()
         //console.log("WebBrowserScreen size = " + w + "x" + h)
-        
+
+		var size = WebBrowserScreen.lesserOrientedSize()
+        var w = size.width
+		var h = size.height
+		
         var r = 1
         
         if (w < 800) { 
@@ -68,6 +72,9 @@ BrowserView = NodeView.extend().newSlots({
         var isSingle = ((w < h) && (w < 800)) || (w < 400)
         //console.log("isSingle = ", isSingle)
         this.setIsSingleColumn(isSingle)
+
+		WebBrowserWindow.setTitle(size.width + " x " + size.height + " " + (isSingle ? "single" : "multi"))
+
         //console.log("---")
         return this
     },

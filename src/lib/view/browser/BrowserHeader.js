@@ -4,7 +4,7 @@ BrowserHeader = NodeView.extend().newSlots({
 	backArrowView: null,
 	titleView: null,
 	doesShowBackArrow: false,
-	//shouldShowTitle: false,
+	shouldShowTitle: false,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
@@ -32,13 +32,17 @@ BrowserHeader = NodeView.extend().newSlots({
 		return this.parentView()
 	},
 	
+	setShouldShowTitle: function(aBool) {
+		if (this._shouldShowTitle != aBool) {
+			this._shouldShowTitle = aBool
+			this.setNeedsSyncFromNode(true)
+			console.log(" ----- " + (this.node() ? this.node().title() : null) + " setShouldShowTitle ", aBool)
+		}
+		return this
+	},
+	
 	shouldShowTitle: function() {
-		/*
-		console.log(this.type() + " shouldShowTitle")
-		console.log("this.parentView() = ", this.parentView().type())
-		console.log("this.parentView().parentView() = ", this.parentView().parentView().type())
-		*/
-	    return this.browser().isSingleColumn()
+		return this.browser().isSingleColumn() && this.browser().lastActiveColumnGroup() == this.columnGroup()
 	},
 
     syncFromNode: function() {
@@ -55,7 +59,7 @@ BrowserHeader = NodeView.extend().newSlots({
 				this.addSubview(this.backArrowView())
 			}
 
-            node.actions().forEach( (action) => {
+            node.actions().forEach((action) => {
                 var button = BrowserHeaderAction.clone()
                 button.setTarget(node).setAction(action)
                 button.setCanClick(this.nodeHasAction(action))
@@ -83,7 +87,6 @@ BrowserHeader = NodeView.extend().newSlots({
 			console.log(this.node().title() + " setDoesShowBackArrow " + aBool)
 			this._doesShowBackArrow = aBool
 			this.setNeedsSyncFromNode(true)
-			//this.syncFromNode()
 		}
 		return this
 	},

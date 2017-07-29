@@ -1,4 +1,4 @@
-add setNeedsSync*From*Node()
+add setNeedsSyncFromNode()
 
 - fix column behavior
 	- on initial load if on first column, it's stretched to fit width

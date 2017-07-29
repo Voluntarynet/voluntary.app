@@ -54,10 +54,15 @@ DivView = ideal.Proto.extend().newSlots({
         this.setupElement()
         return this
     },
+
+	setDivId: function(aString) {
+		this.element().id = aString
+		return this
+	},
     
     setupElement: function() {
         this._element = document.createElement("div")
-		this.element().id = this.type() + "-" + this._uniqueId
+		this.setDivId(this.type() + "-" + this._uniqueId)
 		this.setupDivClassName()      
 		return this  
     },
@@ -401,7 +406,7 @@ DivView = ideal.Proto.extend().newSlots({
 		return this.getCssAttribute("text-align")
 	},	
 	
-	// flex
+	// flex grow
 	
 	setFlexGrow: function(v) {
 		this.setCssAttribute("flex-grow", v)
@@ -411,6 +416,19 @@ DivView = ideal.Proto.extend().newSlots({
 	flexGrow: function() {
 		return this.getCssAttribute("flex-grow")
 	},
+	
+	// flex shrink
+
+	setFlexShrink: function(v) {
+		this.setCssAttribute("flex-shrink", v)
+		return this
+	},
+
+	flexShrink: function() {
+		return this.getCssAttribute("flex-shrink")
+	},
+	
+	// flex basis
 	
 	setFlexBasis: function(v) {
 		this.setCssAttribute("flex-basis", v)

@@ -45,16 +45,14 @@ BrowserColumn = NodeView.extend().newSlots({
 	// selection
 	
 	setIsSelected: function(aBool) {
-		if (this._isSelected == aBool) {
-			return this
-		}
+		if (this._isSelected != aBool) {		
+			this._isSelected = aBool
 		
-		this._isSelected = aBool
-		
-		if (aBool) {
-			this.focus()
-		} else {
-			this.blur()
+			if (aBool) {
+				this.focus()
+			} else {
+				this.blur()
+			}
 		}
 		
 		return this
@@ -62,19 +60,24 @@ BrowserColumn = NodeView.extend().newSlots({
 
     didClickRow: function(clickedRow) {
         var rows = this.rows()
+
+		// unselect all other rows
         rows.forEach((row) => {
             if (row != clickedRow) {
                 row.unselect()
             }
         })
 
-		//console.log("clickedRow = ", clickedRow.type())
-		//console.log("nodeRowLink = ", clickedRow.node().nodeRowLink().type())
+		// if it's a link, follow it
 		if (clickedRow.node().nodeRowLink()) {
         	this.browser().selectColumn(this)
 		}
+		
+		if (this.browser().isSingleColumn()) {
+			this.browser().selectColumn(this)	
+		}
+
         //this.focus()
-        
         //this.tellParentViews("didClickRow", clickedRow)
 
         return true
@@ -101,7 +104,7 @@ BrowserColumn = NodeView.extend().newSlots({
         var oldIndex = this.selectedRowIndex()
         if (index != oldIndex) {
             var rows = this.rows()
-            if(index < rows.length && index > -1) {
+            if (index < rows.length && index > -1) {
                 var row = rows[index]
                 row.select()
                 this.didClickRow(row)

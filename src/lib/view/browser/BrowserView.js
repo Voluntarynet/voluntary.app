@@ -40,7 +40,7 @@ BrowserView = NodeView.extend().newSlots({
 	// --- resizing ---------------------------------
     
     onWindowResize: function (event) {
-        console.log(this.type() + " onWindowResize")
+        //console.log(this.type() + " onWindowResize")
 		this.fitColumns()
 		return this
     },
@@ -296,7 +296,7 @@ BrowserView = NodeView.extend().newSlots({
 	// --- fitting columns in browser ---------------------------------------------
 
     fitColumns: function () {
-        console.log(this.type() + " fitColumns")
+        //console.log(this.type() + " fitColumns")
         this.updateSingleColumnMode()
 
 		var lastActiveCg = this.lastActiveColumnGroup()
@@ -319,7 +319,6 @@ BrowserView = NodeView.extend().newSlots({
 	
 	makeLastActiveColumnFillRemainingSpace: function() {
 		var lastActiveCg = this.lastActiveColumnGroup()
-		
    		lastActiveCg.node().setNodeMinWidth(null)
    		lastActiveCg.setMinAndMaxWidth(null)
    		lastActiveCg.setWidthPercentage(100)
@@ -343,9 +342,11 @@ BrowserView = NodeView.extend().newSlots({
    		this.makeLastActiveColumnFillRemainingSpace()
    		this.updateBackArrow()
 
+		lastActiveCg.header().setShouldShowTitle(true)
+		
    		//console.log("lastActiveCg.node().title() = ", lastActiveCg.node().title(), " width ", lastActiveCg.minWidth(), " ", lastActiveCg.maxWidth())
    		
-   		return this ////////////////////////////////// early return
+   		return this
 	},
 		
 	fitForMultiColumn: function() {
@@ -365,8 +366,11 @@ BrowserView = NodeView.extend().newSlots({
 
 		this.columnGroups().reversed().forEach((cg) => { 
 		    var w = cg.node() ? cg.node().nodeMinWidth() : 0
+		
             widthsSum += w
+
 			shouldCollapse = (widthsSum > browserWidth) && (cg != lastCg)
+			
 			if (cg.node() === null) {
 			    cg.setMinAndMaxWidth(0)
 			    cg.setFlexGrow(0)
@@ -377,14 +381,20 @@ BrowserView = NodeView.extend().newSlots({
 			if (cg == lastActiveCg) {
 			    remainingWidth =  this.browserWidth() - usedWidth
 			}
+			
 			if (!shouldCollapse) {
 			    usedWidth += w
 			}
+			
 			cg.setIsCollapsed(shouldCollapse)
 		})
 
 		this.columnGroups().forEach((cg) => {
 			cg.setFlexGrow(1)
+		})
+		
+		this.columnGroups().forEach((cg) => {
+			cg.header().setShouldShowTitle(false)
 		})
 
         if (lastActiveCg) {

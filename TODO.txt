@@ -1,6 +1,8 @@
 - fix column behavior
+	- on initial load if on first column, it's stretched to fit width
 	- select email msg and then type in a field - selection change issue?
-	
+	- sometimes column does not include back button
+	- isSingle not always detected
 
 
 - move delete action to rows?
@@ -9,7 +11,7 @@
 
 - fix double div class name declarations
 
--- make didUpdate and tellParents Node/View specific
+-- make didUpdate and Node/View specific
 
 - nodeMaxWidth?
 - support for size to fit width on columns (limit to nodeMaxWidth)

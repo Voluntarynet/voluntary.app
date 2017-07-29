@@ -17,7 +17,7 @@ BrowserHeader = NodeView.extend().newSlots({
 		backArrowView.setOpacity(0.6)
 		this.setBackArrowView(backArrowView)
 		
-		var titleView = DivView.clone().setDivClassName("BrowserHeaderTitleView NodeView DivView").setInnerHTML("title")
+		var titleView = DivView.clone().setDivClassName("BrowserHeaderTitleView NodeView DivView").setInnerHTML("title").setUserSelect("none")
 		this.setTitleView(titleView)
 		
 		this.setZIndex(2)
@@ -41,15 +41,17 @@ BrowserHeader = NodeView.extend().newSlots({
         this.removeAllSubviews()
         
         if (node) {
-			if (this.doesShowBackArrow()) {
-				this.addSubview(this.backArrowView())
-			}
-
             if (this.shouldShowTitle()) {
     		    this.titleView().setInnerHTML(node.title())
     		    this.addSubview(this.titleView())
 	        }
-			
+
+
+			if (this.doesShowBackArrow()) {
+				this.addSubview(this.backArrowView())
+			}
+
+
             node.actions().forEach( (action) => {
                 var button = BrowserHeaderAction.clone()
                 button.setTarget(node).setAction(action)

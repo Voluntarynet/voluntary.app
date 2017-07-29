@@ -26,6 +26,5 @@ BMImageNode = BMStorableNode.extend().newSlots({
     onDidEditNode: function() {
         console.log(this.type() + " onDidEditNode")
         this.markDirty()
-        //this.didUpdate()
     },
 })

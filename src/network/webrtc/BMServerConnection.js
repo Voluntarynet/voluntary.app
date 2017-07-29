@@ -120,7 +120,7 @@ BMServerConnection = BMNode.extend().newSlots({
         this.setStatus(error)
         this.log(this.type() + " onError: " + error);
         this._serverConn = null
-        this.didUpdate()
+        this.didUpdateNode()
     },
     
     onOpen: function() {
@@ -128,7 +128,7 @@ BMServerConnection = BMNode.extend().newSlots({
         this.setStatus("connected")
         this.log("onOpen " + this.id());
         this.updatePeerIds()
-        this.didUpdate()
+        this.didUpdateNode()
     },
 
     onClose: function(err) {
@@ -138,7 +138,7 @@ BMServerConnection = BMNode.extend().newSlots({
         this.setLastError("close error: " + err)
         this._serverConn = null
         //this.server().closedRemotePeer(this)
-        this.didUpdate()
+        this.didUpdateNode()
     },
     
     isConnected: function () {
@@ -208,14 +208,14 @@ BMServerConnection = BMNode.extend().newSlots({
         this.log("addRemotePeerConn " + aConn.peer)
         var rp = BMRemotePeer.clone().setConn(aConn).setServerConnection(this)
         this.addSubnode(rp)
-        //console.log("BMServerConnection addRemotePeerConn didUpdate --------------------")
-        this.didUpdate()
+        //console.log("BMServerConnection addRemotePeerConn didUpdateNode --------------------")
+        this.didUpdateNode()
         return this
     },
 
     onRemotePeerClose: function(remotePeer) {
         this.removeSubnode(remotePeer)
-        this.didUpdate()
+        this.didUpdateNode()
         return this
     },
     

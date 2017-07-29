@@ -29,7 +29,7 @@ BMIdentityField = BMField.extend().newSlots({
 		if (validPart && validPart != v) {
 			v = validPart
 			BMField.setValue.apply(this, [v])
-			setTimeout(() => { this.didUpdate() }, 10)
+			setTimeout(() => { this.didUpdateNode() }, 10)
 		}
 		else {
 			BMField.setValue.apply(this, [v])

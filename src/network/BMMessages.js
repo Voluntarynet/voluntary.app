@@ -117,7 +117,7 @@ BMMessages = BMStorableNode.extend().newSlots({
 		
         this.addMessageToIndex(msg)
         this.notifyChange()
-        this.didUpdate()
+        this.didUpdateNode()
 
 		return this
 	},

@@ -50,9 +50,9 @@ BMRegion = BMNode.extend().newSlots({
         return aSubnode
     },
 
-    didUpdate: function() {
+    didUpdateNode: function() {
         this.setNote(this.sumOfSubnodeNotes())
-        BMNode.didUpdate.apply(this)
+        BMNode.didUpdateNode.apply(this)
         return this
     },
     

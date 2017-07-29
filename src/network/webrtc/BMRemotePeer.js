@@ -75,7 +75,7 @@ BMRemotePeer = BMNode.extend().newSlots({
             if (!this.isConnected()) {
                 this.close()
                 this.setStatus("connect timeout")
-                this.didUpdate()
+                this.didUpdateNode()
                 this.serverConnection().onRemotePeerClose(this)
                 this.log("connect timeout")
             }   
@@ -85,7 +85,7 @@ BMRemotePeer = BMNode.extend().newSlots({
     close: function() {
         this._conn.close()
         this.setStatus("closed")
-        this.didUpdate()
+        this.didUpdateNode()
         return this 
     },
     
@@ -97,13 +97,13 @@ BMRemotePeer = BMNode.extend().newSlots({
         this.log("onOpen")
         this.setTitle("Peer " + this.shortId())
 		this.peerId().setFromString(this.id())
-        //this.didUpdate()
+
         this.setStatus("connected")
         
         this._conn.on('data', (data) => { this.onData(data) })
         this._conn.on('close', (err) => { this.onClose(err) })
 
-        this.didUpdate()
+        this.didUpdateNode()
         //this.sendPing()
         this.network().onRemotePeerConnect(this)
     },

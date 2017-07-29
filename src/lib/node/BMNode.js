@@ -194,7 +194,7 @@ BMNode = ideal.Proto.extend().newSlots({
 
     didChangeSubnodeList: function() {
         this.markDirty()
-        this.didUpdate()
+        this.didUpdateNode()
         return this
     },
     
@@ -220,7 +220,7 @@ BMNode = ideal.Proto.extend().newSlots({
         return this
     },
 
-    didUpdate: function() {
+    didUpdateNode: function() {
         if (this._didUpdateNodeNote) {
             this._didUpdateNodeNote.post()
         }
@@ -228,7 +228,7 @@ BMNode = ideal.Proto.extend().newSlots({
         this.setNeedsSyncToView(true)
 
         if (this.parentNode()) {
-            this.parentNode().didUpdate()
+            this.parentNode().didUpdateNode()
         }
     },
     
@@ -310,7 +310,7 @@ BMNode = ideal.Proto.extend().newSlots({
     addAction: function(actionString) {
 		if (!this.actions().contains(actionString)) {
 	        this.actions().push(actionString)
-			this.didUpdate()
+			this.didUpdateNode()
 		}
         return this
     },
@@ -318,7 +318,7 @@ BMNode = ideal.Proto.extend().newSlots({
 	removeAction: function(actionString) {
 		if (this.actions().contains(actionString)) {
         	this.actions().remove(actionString)
-			this.didUpdate()
+			this.didUpdateNode()
 		}
 		return this
 	},
@@ -342,7 +342,7 @@ BMNode = ideal.Proto.extend().newSlots({
         var newSubnode = this.subnodeProto().clone()
         console.log("BMNode add " + newSubnode.type())
         this.addSubnode(newSubnode)
-        this.didUpdate()
+        this.didUpdateNode()
         this._shouldFocusSubnodeNote.setInfo(newSubnode).post()
         return newSubnode
     },

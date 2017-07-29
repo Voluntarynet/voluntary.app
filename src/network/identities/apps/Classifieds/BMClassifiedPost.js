@@ -209,7 +209,7 @@ BMClassifiedPost = BMFieldSetNode.extend().newSlots({
     powUpdate: function(note) {
         if (note.sender() == this.powObj()) {
             //console.log("got powUpdate")
-            this.didUpdate()
+            this.didUpdateNode()
         }
     },
     
@@ -227,7 +227,7 @@ BMClassifiedPost = BMFieldSetNode.extend().newSlots({
                 this.objMsg().send()
                 this.setHasSent(true)
             }
-            this.didUpdate()
+            this.didUpdateNode()
             //this.syncToView()
         }
     },
@@ -328,14 +328,14 @@ BMClassifiedPost = BMFieldSetNode.extend().newSlots({
         //console.log("Post incrementPowTarget")
         this.prepareToSend() // shouldn't need this if there's a default BMPow hash
         this.powObj().incrementDifficulty()
-        this.didUpdate()
+        this.didUpdateNode()
     },
     
     decrementPowTarget: function() {
         //console.log("Post decrementPowTarget")
         this.prepareToSend() // shouldn't need this if there's a default BMPow hash
         this.powObj().decrementDifficulty()
-        this.didUpdate()
+        this.didUpdateNode()
     },
     
     powDifficulty: function() {

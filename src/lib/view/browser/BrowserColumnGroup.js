@@ -234,11 +234,11 @@ BrowserColumnGroup = NodeView.extend().newSlots({
     NOT USED - VIEWS DON'T IMPLEMENT didUpdate now - they use didUpdateNode
     the syncFromNode overide in this class handles the subviews
     
-    didUpdate: function() {
+    didUpdateNode: function() {
         dfdffdfdf()
-        this.log("didUpdate")
-        this.header().didUpdate()
-        this.column().didUpdate()
+        this.log("didUpdateNode")
+        this.header().didUpdateNode()
+        this.column().didUpdateNode()
         return this        
     },
     */

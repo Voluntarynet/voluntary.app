@@ -132,7 +132,7 @@ NodeView = DivView.extend().newSlots({
     syncToNode: function () {
         var node = this.node()
         if (node) {
-            node.didUpdate()
+            node.didUpdateNode()
             node.markDirty()
         }
         return this

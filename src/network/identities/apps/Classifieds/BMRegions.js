@@ -28,7 +28,7 @@ BMRegions = BMRegion.extend().newSlots({
         var postDict = JSON.parse(msg)
         var post = BMPost.clone().setPostDict(postDict)
         this.addSubnode(post)
-        this.didUpdate() 
+        this.didUpdateNode() 
     }
     */
 })

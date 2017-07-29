@@ -33,7 +33,7 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
         this.setNodeBackgroundColor("white")
 
 		this.addStoredSlots(["senderPublicKeyString", "receiverPublicKeyString"])
-		//this.didUpdate()
+		//this.didUpdateNode()
     },
 
 	// sync
@@ -340,16 +340,13 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
          	this.senderId().handleMessage(this.duplicate())	
 		}
 		
-		//this.didUpdate()
+		return this
 	},
-    
     
     drafts: function() {
         return this.parentNode()
     },
 	
-
-
 	canEdit: function() {
 		return !this.isSent()
 	},

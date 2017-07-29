@@ -46,7 +46,6 @@ BrowserHeader = NodeView.extend().newSlots({
     		    this.addSubview(this.titleView())
 	        }
 
-
 			if (this.doesShowBackArrow()) {
 				this.addSubview(this.backArrowView())
 			}

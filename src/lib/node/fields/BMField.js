@@ -67,7 +67,7 @@ BMField = BMNode.extend().newSlots({
 			console.warn("WARNING target = " + target.type() + " setter = '" + setter + "' missing")
 		}
 		target[setter].apply(target, [v])
-		target.didUpdate()
+		target.didUpdateNode()
 		this.validate()
 		
 		return this

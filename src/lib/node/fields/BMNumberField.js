@@ -31,8 +31,8 @@ BMNumberField = BMField.extend().newSlots({
 		return isValid
 	},
 	
-	didUpdate: function() {
+	didUpdateNode: function() {
 		this.validate()
-		return BMField.didUpdate.apply(this)
+		return BMField.didUpdateNode.apply(this)
 	},
 })

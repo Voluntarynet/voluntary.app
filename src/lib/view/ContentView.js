@@ -22,7 +22,6 @@ ContentView = NodeView.extend().newSlots({
             node.setNodeContent(this.element().innerHTML())
         }
         NodeView.syncToNode.apply(this)
-        //node.didUpdate()
         return this
     },
     

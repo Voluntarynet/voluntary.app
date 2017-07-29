@@ -223,7 +223,7 @@ BrowserView = NodeView.extend().newSlots({
 		console.log(this.type() + " index " + index)
 		
 		if (this.isSingleColumn()) {
-        	this.setColumnGroupCount(index + 1)
+        	this.setColumnGroupCount(index + 2)
 		} else {
         	this.setColumnGroupCount(index + 3)
 		}

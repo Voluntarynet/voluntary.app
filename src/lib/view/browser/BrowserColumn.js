@@ -68,14 +68,17 @@ BrowserColumn = NodeView.extend().newSlots({
             }
         })
 
-		// if it's a link, follow it
+		// if we can follow it, do so 
 		if (clickedRow.node().nodeRowLink()) {
+			console.log("didClickRow selecting column ", this.node().title())
         	this.browser().selectColumn(this)
+/*
+			if (this.browser().isSingleColumn()) {
+				this.browser().selectColumn(this)	
+			}
+			*/
 		}
 		
-		if (this.browser().isSingleColumn()) {
-			this.browser().selectColumn(this)	
-		}
 
         //this.focus()
         //this.tellParentViews("didClickRow", clickedRow)

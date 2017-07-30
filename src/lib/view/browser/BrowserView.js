@@ -42,6 +42,9 @@ BrowserView = NodeView.extend().newSlots({
     onWindowResize: function (event) {
         //console.log(this.type() + " onWindowResize")
 		this.fitColumns()
+		if (this._selectedColumnGroup) {
+			this.selectColumn(this._selectedColumnGroup.column())
+		}
 		return this
     },
     
@@ -132,7 +135,7 @@ BrowserView = NodeView.extend().newSlots({
     },
         
     setColumnGroupCount: function(count) {
-        this.log("setColumnGroupCount " + count)
+        //this.log("setColumnGroupCount " + count)
 		if (count == 0) {
 			ShowStack()
 		}
@@ -216,17 +219,19 @@ BrowserView = NodeView.extend().newSlots({
 	},
 	
     selectColumn: function(selectedColumn) {
-		console.log(this.type() + " selectColumn " + selectedColumn.node().type())
         var selectedColumnGroup = selectedColumn.columnGroup()
+		this._selectedColumnGroup = selectedColumnGroup
 
         var index = this.columnGroups().indexOf(selectedColumn.columnGroup())
-		console.log(this.type() + " index " + index)
+
+		console.log(this.type() + " selectColumn " + selectedColumn.node().type() + " index " + index)
 		
 		if (this.isSingleColumn()) {
         	this.setColumnGroupCount(index + 2)
 		} else {
         	this.setColumnGroupCount(index + 3)
 		}
+		
         //console.log("selectColumn index: " + index + " cg " + this.columnGroups().length)
 
         var nextCg = this.columnGroups().itemAfter(selectedColumnGroup)		
@@ -373,9 +378,9 @@ BrowserView = NodeView.extend().newSlots({
 			
 			if (cg.node() === null) {
 			    cg.setMinAndMaxWidth(0)
-			    cg.setFlexGrow(0)
+			    //cg.setFlexGrow(0)
 			} else {
-			    cg.setFlexGrow(1)
+			    //cg.setFlexGrow(1)
             }
 			
 			if (cg == lastActiveCg) {

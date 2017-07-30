@@ -78,39 +78,48 @@ BrowserColumnGroup = NodeView.extend().newSlots({
 		return this
 	},
 	
+	name: function() {
+		return this.node() ? this.index() + "-" + this.node().title() : null
+	},
+	
+	index: function() {
+		return this.browser().columnGroups().indexOf(this)
+	},
+	
 	collapse: function() {
-		//console.log(this + " collapse")
+		console.log(this.name() + " collapse ")
 		this._isCollapsed = true
 		this.setDivId("_isCollapsed = true")
+		
 		if (this.animatesCollapse()) {
     		this.setMinAndMaxWidth(0)
     		setTimeout(() => { this.setDisplay("none") }, 500)
             this.setFlexGrow(0)
             this.setFlexShrink(0)
-			//this.setFlexBasis()
+			this.setFlexBasis(0)
         } else {
             this.setDisplay("none")
         }
+
 		return this
 	},
 	
 	uncollapse: function() {
-		//console.log(this + " uncollapse")
+		console.log(this.name() + " uncollapse")
 		this._isCollapsed = false
 		this.setDivId("_isCollapsed = false")
+		
 		if (this.animatesCollapse()) {
-    		this.setDisplay("inline-flex")		
-            this.setFlexGrow(1)
-            this.setFlexShrink(1)
-			//this.setFlexBasis()
-    		setTimeout(() => { 
-				this.matchNodeMinWidth()
-    		}, 10)
+    		this.setDisplay("inline-flex")
+    		setTimeout(() => { this.matchNodeMinWidth() }, 10)
     	} else {
     	    this.setDisplay("inline-flex")		
-            this.setFlexGrow(1)
 			this.matchNodeMinWidth()
     	}
+
+        this.setFlexGrow(1)
+        this.setFlexShrink(1)
+		this.setFlexBasis(this.targetWidth())
 		return this
 	},
     
@@ -174,20 +183,25 @@ BrowserColumnGroup = NodeView.extend().newSlots({
     },
     */
 
-	matchNodeMinWidth: function() {
+	targetWidth: function() {
+		var w = 0
+		
 		if (this.node()) {
 	        var w = this.node().nodeMinWidth()
 	
-			if (this.browser().isSingleColumn()) {
+			if (this.browser() && this.browser().isSingleColumn()) {
 				w = this.browser().browserWidth()
 			}
-			
-			//console.log(this.type() + " / " + this.node().type() + " nodeMinWidth = " + w)
-			
-	        if (w) {
-	            this.setMinAndMaxWidth(w)
-	        }
 		}
+		
+		return w		
+	},
+
+	matchNodeMinWidth: function() {
+		var w = this.targetWidth()
+        if (w) {
+            this.setMinAndMaxWidth(w)
+        }
 		return this
 	},
     

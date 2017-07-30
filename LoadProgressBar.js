@@ -8,6 +8,10 @@ LoadProgressBar = {
     mainElement: function() {
         return document.getElementById("SpinnerMain")
     },
+
+    iconElement: function() {
+        return document.getElementById("SpinnerIcon")
+    },
     
     middleElement: function() {
         return document.getElementById("SpinnerMiddle")
@@ -56,6 +60,9 @@ LoadProgressBar = {
         document.body.innerHTML = "<div id='SpinnerMain' style='position: absolute; width:100%; height: 100%; background-color: black; z-index: 100000;'> \
             <div id='SpinnerMiddle' \
                 style='position: relative; top: 50%; transform: translateY(-50%); height: auto; width: 100%; font-family: AppRegular; letter-spacing: 3px; text-align: center;'> \
+<div>\
+    		    <div id='SpinnerIcon' style='opacity: 0.7; border: 0px dashed yellow; transition: all .6s ease-out; background-image:url(\"icons/appicon.svg\"); background-position: center; background-repeat: no-repeat; height: 40px; width: 100%; background-size: contain;'></div><br> \
+</div>\
     		    <div id='SpinnerTitle' style='transition: all .6s ease-out;'></div><br> \
     		    <div id='SpinnerSubtitle' style='transition: all .3s ease-out; letter-spacing: -2.5px;'></div><br> \
     		    <div id='SpinnerItem' style='color: transparent; transition: all 0.3s ease-out;'></div><br> \

@@ -84,7 +84,7 @@ BrowserHeader = NodeView.extend().newSlots({
 	
 	setDoesShowBackArrow: function(aBool) {
 		if (this._doesShowBackArrow != aBool) {
-			console.log(this.node().title() + " setDoesShowBackArrow " + aBool)
+			//console.log(this.node().title() + " setDoesShowBackArrow " + aBool)
 			this._doesShowBackArrow = aBool
 			this.setNeedsSyncFromNode(true)
 		}

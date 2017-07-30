@@ -34,7 +34,7 @@ App = BaseApp.extend().newSlots({
 		}
 
         this.setName(name)
-        this.setTitle("App")
+        this.setTitle(name)
         return this        
     },
     

@@ -1,4 +1,7 @@
-add setNeedsSyncFromNode()
+
+SINGLE COLUMN MODE BUGS
+
+- can't move to next column on selection
 
 - fix column behavior
 	- on initial load if on first column, it's stretched to fit width
@@ -10,6 +13,8 @@ add setNeedsSyncFromNode()
 	- on multi, don't expand last column to fill width unless it's close to edge
 
 - move delete action to rows?
+
+- support elipsis in column header title
 
 - cleanup ColumnGroup vs Column, cleanup selectColumn and setColumnGroupCount
 

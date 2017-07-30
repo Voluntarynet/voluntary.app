@@ -70,7 +70,7 @@ BrowserColumn = NodeView.extend().newSlots({
 
 		// if we can follow it, do so 
 		if (clickedRow.node().nodeRowLink()) {
-			console.log("didClickRow selecting column ", this.node().title())
+		//	console.log("didClickRow selecting column ", this.node().title())
         	this.browser().selectColumn(this)
 /*
 			if (this.browser().isSingleColumn()) {

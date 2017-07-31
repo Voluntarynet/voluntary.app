@@ -1,7 +1,8 @@
 
 SINGLE COLUMN MODE BUGS
 
-- can't move to next column on selection
+- restrict when last column fills width 
+- no animation for back arrow actions
 
 - fix column behavior
 	- on initial load if on first column, it's stretched to fit width

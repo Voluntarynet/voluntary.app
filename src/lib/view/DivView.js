@@ -239,6 +239,17 @@ DivView = ideal.Proto.extend().newSlots({
 		this.setCssAttribute("background-size", x + "px " + y + "px")
         return this
 	},
+	
+	// background position
+	
+	setBackgroundPosition: function(s) {
+		this.setCssAttribute("background-position", s)
+        return this
+	},
+	
+	backgroundPosition: function() {
+		return this.getCssAttribute("background-position")
+	},
 
 	// icons - until I find a better place for this
 	

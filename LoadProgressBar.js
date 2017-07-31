@@ -61,7 +61,7 @@ LoadProgressBar = {
             <div id='SpinnerMiddle' \
                 style='position: relative; top: 50%; transform: translateY(-50%); height: auto; width: 100%; font-family: AppRegular; letter-spacing: 3px; text-align: center;'> \
 <div>\
-    		    <div id='SpinnerIcon' style='opacity: 0.7; border: 0px dashed yellow; transition: all .6s ease-out; background-image:url(\"icons/appicon.svg\"); background-position: center; background-repeat: no-repeat; height: 40px; width: 100%; background-size: contain;'></div><br> \
+    		    <div id='SpinnerIcon' style='opacity: 0.7; border: 0px dashed yellow; transition: all .6s ease-out; background-image:url(\"icons/appicon.svg\"); background-position: center; background-repeat: no-repeat; height: 60px; width: 100%; background-size: contain;'></div><br> \
 </div>\
     		    <div id='SpinnerTitle' style='transition: all .6s ease-out;'></div><br> \
     		    <div id='SpinnerSubtitle' style='transition: all .3s ease-out; letter-spacing: -2.5px;'></div><br> \

@@ -377,11 +377,8 @@ BrowserView = NodeView.extend().newSlots({
 			shouldCollapse = (widthsSum > browserWidth) && (cg != lastCg)
 			
 			if (cg.node() === null) {
-			    cg.setMinAndMaxWidth(0)
-			    //cg.setFlexGrow(0)
-			} else {
-			    //cg.setFlexGrow(1)
-            }
+			    shouldCollapse = true
+			} 
 			
 			if (cg == lastActiveCg) {
 			    remainingWidth =  this.browserWidth() - usedWidth

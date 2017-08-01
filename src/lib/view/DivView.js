@@ -374,6 +374,38 @@ DivView = ideal.Proto.extend().newSlots({
 		return 0
 	},
 	
+	// right
+	
+    setRight: function (aNumber) {
+        var s = aNumber + "px"
+		this.setCssAttribute("right", s)
+        return this
+    },
+
+	right: function() {
+		var s = this.getCssAttribute("right")
+		if (s.length) {
+			return s.before("px")
+		}
+		return 0
+	},	
+	
+	// bottom
+	
+    setBottom: function (aNumber) {
+        var s = aNumber + "px"
+		this.setCssAttribute("bottom", s)
+        return this
+    },
+
+	bottom: function() {
+		var s = this.getCssAttribute("bottom")
+		if (s.length) {
+			return s.before("px")
+		}
+		return 0
+	},	
+	
 	// float
 	
 	setFloat: function(s) {
@@ -1117,11 +1149,15 @@ DivView = ideal.Proto.extend().newSlots({
         if (aBool) {
 			if (this._isRegisteredForMouse == false) {
 				this._isRegisteredForMouse = true
-	            this.element().onmousedown =  (event) => { return this.onMouseDown(event) }
-	            this.element().onmousemove =  (event) => { return this.onMouseMove(event) }
-	            this.element().onmouseout  =  (event) => { return this.onMouseOut(event) }
-	            this.element().onmouseover =  (event) => { return this.onMouseOver(event) }
-	            this.element().onmouseup   =  (event) => { return this.onMouseUp(event) }
+	            this.element().onmousedown  =  (event) => { return this.onMouseDown(event) }
+	            this.element().onmousemove  =  (event) => { return this.onMouseMove(event) }
+	            this.element().onmouseout   =  (event) => { return this.onMouseOut(event) }
+	            this.element().onmouseover  =  (event) => { return this.onMouseOver(event) }
+	            this.element().onmouseup    =  (event) => { return this.onMouseUp(event) }
+	            
+	            this.element().onmouseenter =  (event) => { return this.onMouseEnter(event) }
+	            this.element().onmouseleave =  (event) => { return this.onMouseLeave(event) }
+
 			}
         } else {
 			if (this._isRegisteredForMouse == true) {
@@ -1131,24 +1167,58 @@ DivView = ideal.Proto.extend().newSlots({
 	            this.element().onmouseout   = null
 	            this.element().onmouseover  = null
 	            this.element().onmouseup    = null
+
+	            this.element().onmouseenter = null
+	            this.element().onmouseleave = null
+
 			}
         }
         return this
     },    
     
     onMouseDown: function (event) {
+        console.log("onMouseDown")
+        this._isMouseDown = true
+        this._onMouseDownEventPosition = { x: event.clientX, y: event.clientY }
+    },
+    
+    mouseDownDiffWithEvent: function(event) {
+        assert(this._onMouseDownEventPosition) 
+        this._onMouseUpEventPosition = { x: event.clientX, y: event.clientY }
+        
+        var p1 = this._onMouseDownEventPosition
+        var p2 = this._onMouseUpEventPosition
+        
+        var d = {} 
+        d.xd = p1.x - p2.x
+        d.yd = p1.y - p2.y
+        d.dist = Math.sqrt(d.xd*d.xd + d.yd*d.yd)
+        
+        return d
+    },
+    
+    isMouseDown: function () {
+        return this._isMouseDown
     },
     
     onMouseMove: function (event) {
+        if (this.isMouseDown()) {
+            var diff = this.mouseDownDiffWithEvent(event)
+            console.log("onMouseMove:" + JSON.stringify(diff))
+        }
     },
     
     onMouseOut: function (event) {
+        //console.log("onMouseOut")
     },
     
     onMouseOver: function (event) {
     },
 
     onMouseUp: function (event) {
+        this._isMouseDown = false
+        var diff = this.mouseDownDiffWithEvent(this._onMouseDownEventPosition) 
+        this._onMouseDownEventPosition = null 
     },
         
     // --- keyboard events ---

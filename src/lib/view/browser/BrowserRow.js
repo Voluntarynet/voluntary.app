@@ -7,12 +7,15 @@ BrowserRow = NodeView.extend().newSlots({
     type: "BrowserRow",
     isSelected: false,
     isSelectable: true,
+    closeButtonView: null,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
         this.setOwnsView(false)
         this.setIsRegisteredForClicks(true)
+        //this.setIsRegisteredForMouse(true)
         this.turnOffUserSelect()
+        //this.addCloseButton()
         return this
     },
     
@@ -72,10 +75,88 @@ BrowserRow = NodeView.extend().newSlots({
 		}
         return this.column().selectionColor()
     },
+    
+    // close button
+    
+    addCloseButton: function() {
+        if (this.closeButtonView() == null) {
+            this.setCloseButtonView(NodeView.clone().setDivClassName("BrowserRowCloseButton"))
+            this.addSubview(this.closeButtonView()) 
+            this.closeButtonView().setTarget(null).setAction("delete").setInnerHTML("&#10799;")
+            this.closeButtonView().setOpacity(0).setTransition("all 0.2s")
+            /*
+            this.closeButtonView().setBackgroundImageUrlPath(this.pathForIconName(this.action()))
+    		this.closeButtonView().setBackgroundSize(20, 20) // use "contain" instead?
+    		this.closeButtonView().setBackgroundPosition("center")
+    		*/
+        }
+        return this
+    },
+    
+    removeCloseButton: function() {
+        if (this.closeButtonView() != null) {
+            this.removeSubview(this.closeButtonView()) 
+            this.setCloseButtonView(null)
+        }
+    },
+    
+    delete: function() {
+        if (this.canDelete()) {
+            this.node().performAction("delete")
+        }
+    },
 
+    // sliding
+    
+    canDelete: function() {
+        return this.node() && this.node().hasAction("delete")
+    },
+    
+    /*
+    onMouseMove: function (event) {
+        if (this.isMouseDown() && this.canDelete()) {
+            var diff = this.mouseDownDiffWithEvent(event)
+            //console.log("onMouseMove:" + JSON.stringify(diff))
+            this.setTransition("all 0s")
+            this.setRight(diff.xd)
+        }
+    },
+    */
+    
+    hasCloseButton: function() {
+        return this.closeButtonView().target() != null
+    },
+    
+    onMouseEnter: function(event) {
+        console.log(this.type() + " onMouseEnter")
+        
+        if (this.canDelete() && !this.hasCloseButton()) {
+            this.closeButtonView().setOpacity(1)
+            this.closeButtonView().setTarget(this)
+        }
+    },
+    
+    onMouseLeave: function(event) {
+        console.log(this.type() + " onMouseLeave")
+        if (this.hasCloseButton()) {
+            this.closeButtonView().setOpacity(0)
+            this.closeButtonView().setTarget(null)
+        }        
+    },
+    
+    onMouseUp: function (event) {
+        NodeView.onMouseUp.apply(this, [event])
+        if (this.canDelete()) {
+            this.setTransition("all 0.2s")
+            setTimeout(() => {
+                this.setRight(0)
+            })
+        }
+    },
+    
 	// --- selecting ---
     
-    onClick: function (anEvent) {
+    onClick: function (event) {
         if (this.isSelectable()) {
             this.select()
             //console.log(this.type() + " tellParentViews didClickRow")

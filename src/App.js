@@ -16,7 +16,6 @@ App = BaseApp.extend().newSlots({
     },
     
     setup: function () {       
-        console.log("--- App setup ---")
         BaseApp.setup.apply(this)
         window.app = this        
         this.setupPageTitle()

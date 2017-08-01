@@ -228,3 +228,29 @@
 
     text-overflow: ellipsis;
 }
+
+.BrowserRowCloseButton {
+    display: block;
+    position: absolute;
+    right: 20px;
+    top: 16px;
+    
+    min-width: 20px;
+    max-width: 20px;
+    min-height: 20px;
+    max-height: 20px;
+    
+    font-size: 24px;
+    line-height: 20px;
+    font-weight: normal;
+    white-space: nowrap;
+    border: 0px dashed yellow;
+    color: #888;
+    margin: 0px;
+    padding: 0px;
+    padding-bottom: 10px;
+}
+
+.BrowserRowCloseButton:hover {
+    color: white;
+}

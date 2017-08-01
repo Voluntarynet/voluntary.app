@@ -15,7 +15,6 @@ BaseApp = BMNavNode.extend().newSlots({
     version: "0.0",
 }).setSlots({
     init: function () {
-        console.log("--- BaseApp setup ---")
         BMNavNode.init.apply(this)
 		NodeStore.shared().asyncOpen( () => { this.didOpenStore() })
         this.clearAppLog()

@@ -1,12 +1,16 @@
 
 SINGLE COLUMN MODE BUGS
 
+- editing too slow when lots of email message rows....
+
+- move delete action to rows? mouse over X for desktop, swipe left for mobile?
+
+- add verify delete panel
+
 - don't adjust visible column set if a new row selection doesn't require more room (let user use back arrow if they want that)
 
 - add right arrow on note of link field
 
-
-- move delete action to rows? mouse over X for desktop, swipe left for mobile?
 
 - support elipsis in column header title
 

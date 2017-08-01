@@ -49,7 +49,7 @@ BrowserView = NodeView.extend().newSlots({
     },
     
     updateSingleColumnMode: function() {
-        console.log("---")
+        //console.log("---")
         //var size = DocumentBody.zoomAdjustedSize()
         //var w = WebBrowserScreen.orientedWidth()
         //var h = WebBrowserScreen.orientedHeight()
@@ -73,7 +73,7 @@ BrowserView = NodeView.extend().newSlots({
             r = 2.5
         }
 
-        console.log("lesserOrientedSize: " + w + "x" + h + " setZoomRatio(" + r + ")") 
+        //console.log("lesserOrientedSize: " + w + "x" + h + " setZoomRatio(" + r + ")") 
         DocumentBody.setZoomRatio(r)
             
         var isSingle = ((w < h) && (w < 800)) || (w < 400)

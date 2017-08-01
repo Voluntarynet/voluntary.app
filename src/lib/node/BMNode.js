@@ -227,9 +227,12 @@ BMNode = ideal.Proto.extend().newSlots({
         
         this.setNeedsSyncToView(true)
 
+/*
+		// this is too slow for general use e.g. text editing if parent nodes have lots of items
         if (this.parentNode()) {
             this.parentNode().didUpdateNode()
         }
+*/
     },
     
     syncToViewIfNeeded: function() {

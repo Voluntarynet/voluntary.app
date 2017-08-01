@@ -28,7 +28,7 @@ BMStunServer = BMFieldSetNode.extend().newSlots({
         //this.addStoredSlots(["credential", "username"])
         this.setShouldStoreSubnodes(false)
         this.addAction("delete")
-        this.setNodeMinWidth(300)
+        this.setNodeMinWidth(500)
 
 		this.addStoredField(BMField.clone().setKey("host").setValueMethod("host")).setValueIsEditable(true)
 		this.addStoredField(BMField.clone().setKey("port").setValueMethod("port")).setValueIsEditable(true)
@@ -42,7 +42,6 @@ BMStunServer = BMFieldSetNode.extend().newSlots({
     subtitle: function () {
         return this.port()
     },
-
 	
 	// ice entry - for Peer options
 	
@@ -65,5 +64,4 @@ BMStunServer = BMFieldSetNode.extend().newSlots({
 		}
 		return { url: url }
 	},
-
 })

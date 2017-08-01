@@ -523,6 +523,7 @@ BrowserView = NodeView.extend().newSlots({
         //console.log("selectNode " + aNode.nodePath())
 		if (!aNode) {
 			console.warn(this.type() + " selectNode called with null argument")
+			ShowStack()
 			return this
 		}
         this.selectNodePath(aNode.nodePath())
@@ -576,7 +577,9 @@ BrowserView = NodeView.extend().newSlots({
         var lastNode = this.node().nodeAtSubpathString(pathString) 
         // TODO: select as much of the path as exists if full path not valid
        // console.log("lastNode = ", lastNode)
-        this.selectNode(lastNode)
+		if (lastNode) {
+			this.selectNode(lastNode)
+		}
         return this
     },
     

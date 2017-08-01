@@ -66,11 +66,11 @@ BrowserView = NodeView.extend().newSlots({
         }
         
         if (w < 500) {
-            r = 2
+            r = 1.5
         }
 
         if (w < 400) {
-            r = 2
+            r = 1
         }
 
         console.log("lesserOrientedSize: " + w + "x" + h + " setZoomRatio(" + r + ")") 

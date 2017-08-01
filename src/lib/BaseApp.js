@@ -16,7 +16,6 @@ BaseApp = BMNavNode.extend().newSlots({
 }).setSlots({
     init: function () {
         BMNavNode.init.apply(this)
-        this.setNodeMinWidth(150)
 		NodeStore.shared().asyncOpen( () => { this.didOpenStore() })
         this.clearAppLog()
     },

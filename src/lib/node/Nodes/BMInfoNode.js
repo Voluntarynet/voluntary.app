@@ -14,7 +14,6 @@ BMInfoNode = BMStorableNode.extend().newSlots({
         BMStorableNode.init.apply(this)
         this.setNodeTitleIsEditable(true)
         this.setNodeSubtitleIsEditable(true)
-        this.setNodeMinWidth(200)
         this.setTitle("Untitled")
         this.setSubtitle("...")
         

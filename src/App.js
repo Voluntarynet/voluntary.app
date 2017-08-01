@@ -13,7 +13,6 @@ App = BaseApp.extend().newSlots({
 }).setSlots({
     init: function () {
         BaseApp.init.apply(this)
-        this.setNodeMinWidth(170)        
     },
     
     setup: function () {       

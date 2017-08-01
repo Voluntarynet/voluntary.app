@@ -224,7 +224,7 @@ BrowserView = NodeView.extend().newSlots({
 
         var index = this.columnGroups().indexOf(selectedColumn.columnGroup())
 
-		console.log(this.type() + " selectColumn " + selectedColumn.node().type() + " index " + index)
+		//console.log(this.type() + " selectColumn " + selectedColumn.node().type() + " index " + index)
 		
 		if (this.isSingleColumn()) {
         	this.setColumnGroupCount(index + 2)
@@ -323,11 +323,22 @@ BrowserView = NodeView.extend().newSlots({
 	},
 	
 	makeLastActiveColumnFillRemainingSpace: function() {
+		// TODO: merge with this code in multi column fit
 		var lastActiveCg = this.lastActiveColumnGroup()
-   		lastActiveCg.node().setNodeMinWidth(null)
-   		lastActiveCg.setMinAndMaxWidth(null)
-   		lastActiveCg.setWidthPercentage(100)
-   		lastActiveCg.setFlexGrow(100)  
+		
+		var fillWidth = this.browserWidth() - this.widthOfUncollapsedColumnsSansLastActive()
+		/*
+		if (lastActiveCg.targetWidth() *2 < fillWidth && lastActiveCg.targetWidth() < 500) {
+			fillWidth = lastActiveCg.targetWidth()
+		}
+		*/
+		
+        if (lastActiveCg) {
+    		lastActiveCg.setFlexGrow(1)
+    		lastActiveCg.setFlexShrink(1)
+    		lastActiveCg.setFlexBasis(fillWidth)
+			lastActiveCg.setMinAndMaxWidth(fillWidth)
+    	}
 		return this
 	},
 	
@@ -339,7 +350,6 @@ BrowserView = NodeView.extend().newSlots({
    			    cg.setFlexGrow(0)
    			    cg.setIsCollapsed(true)
    			    cg.setMinAndMaxWidth(0)
-   		        //if (cg.node()) { cg.node().setNodeMinWidth(0) } // hack
    			}
    		})
 
@@ -347,16 +357,106 @@ BrowserView = NodeView.extend().newSlots({
    		this.makeLastActiveColumnFillRemainingSpace()
    		this.updateBackArrow()
 
-		lastActiveCg.header().setShouldShowTitle(true)
+		this.setShouldShowTitles(true)
 		
    		//console.log("lastActiveCg.node().title() = ", lastActiveCg.node().title(), " width ", lastActiveCg.minWidth(), " ", lastActiveCg.maxWidth())
    		
    		return this
 	},
+	
+	uncollapsedColumns: function() {
+		return this.activeColumnGroups().select((cg) => { return !cg.isCollapsed() })		
+	},
+	
+	widthOfUncollapsedColumns: function() {
+		return this.uncollapsedColumns().sum((cg) => { return cg.targetWidth(); })		
+	},
+	
+	widthOfUncollapsedColumnsSansLastActive: function() {
+		var lastActiveCg = this.lastActiveColumnGroup()
+		var cgs = this.uncollapsedColumns()
+		//console.log("cgs.length = ", cgs.length)
+		cgs.remove(lastActiveCg)
+		//console.log("cgs.length = ", cgs.length)
+		return cgs.sum((cg) => { return cg.targetWidth(); })		
+	},
+	
+	setShouldShowTitles: function(aBool) {
+		this.columnGroups().forEach((cg) => {
+			cg.header().setShouldShowTitle(aBool)
+		})
+		return this
+	},
+	
+	columnDescription: function() {
+		var d = this.columnGroups().map((cg) => {
+			if (cg.isCollapsed() ) { return "" }
+			var s = cg.name() 
+			if (cg.node() == null) { s += " [null node] " }
+			//s += " " + (cg.isCollapsed() ? "collapsed" : "uncollapsed")
+			s += " " + cg.targetWidth() + "px"
+			return s
+		}).join(" / ")
 		
+		d += " [" + this.widthOfUncollapsedColumns() + " of " + this.browserWidth() + "]"
+		return d
+	},
+	
+	/*
+	removeNullColumns: function() {
+		this.columnGroups().reverse().map((cg) => {
+			//if (cg.node() == null) { this.columnGroups().pop() }
+		})
+	},
+	*/
+	
 	fitForMultiColumn: function() {
 		// collapse columns as needed
-		var widthsSum = 0
+		
+        var browserWidth = this.browserWidth()
+		var lastActiveCg = this.lastActiveColumnGroup()
+		//	console.log("---------")
+		this.columnGroups().forEach((cg) => { 
+			cg.setIsCollapsed(false)
+			//console.log(cg.name() + " targetWidth: " + cg.targetWidth())
+		})
+		
+		//console.log("---------")
+		this.columnGroups().forEach((cg) => { 
+			var usedWidth = this.widthOfUncollapsedColumns()
+			var shouldCollapse = (usedWidth > this.browserWidth()) && (cg != lastActiveCg) 
+			shouldCollapse = shouldCollapse || (cg.node() == null)
+			//console.log(cg.name() + " shouldCollapse:" + shouldCollapse + " usedWidth: " + usedWidth + " browserWidth:" + this.browserWidth())
+			cg.setIsCollapsed(shouldCollapse)
+		})
+		
+		var usedWidth = this.widthOfUncollapsedColumns()
+		//console.log("usedWidth: " + usedWidth + " of " + this.browserWidth())
+
+		var fillWidth = this.browserWidth() - this.widthOfUncollapsedColumnsSansLastActive()
+		if (lastActiveCg.targetWidth() *2 < fillWidth && lastActiveCg.targetWidth() < 500) {
+			fillWidth = lastActiveCg.targetWidth()
+		}
+		//console.log("fillWidth = ", fillWidth)
+        if (lastActiveCg) {
+    		lastActiveCg.setFlexGrow(1)
+    		lastActiveCg.setFlexShrink(1)
+    		lastActiveCg.setFlexBasis(fillWidth)
+			lastActiveCg.setMinAndMaxWidth(fillWidth)
+    	}
+
+   		this.updateBackArrow()
+		this.setShouldShowTitles(false)
+		
+		//console.log(this.columnDescription())
+
+		return this
+	},
+	
+	/*
+	fitForMultiColumn: function() {
+		// collapse columns as needed
+				
         var browserWidth = this.browserWidth()
 		var shouldCollapse = false
         var lastCg = this.columnGroups().last()
@@ -364,17 +464,13 @@ BrowserView = NodeView.extend().newSlots({
         var remainingWidth = 0
         
 		var lastActiveCg = this.lastActiveColumnGroup()
-		
-		this.columnGroups().forEach((cg) => {
-			cg.setDisplay("inline-flex")
-		})
 
 		this.columnGroups().reversed().forEach((cg) => { 
+			// starts from right and goes to left columns
+			
 		    var w = cg.node() ? cg.node().nodeMinWidth() : 0
 		
-            widthsSum += w
-
-			shouldCollapse = (widthsSum > browserWidth) && (cg != lastCg)
+			shouldCollapse = (usedWidth > browserWidth) && (cg != lastCg)
 			
 			if (cg.node() === null) {
 			    shouldCollapse = true
@@ -391,9 +487,6 @@ BrowserView = NodeView.extend().newSlots({
 			cg.setIsCollapsed(shouldCollapse)
 		})
 
-		this.columnGroups().forEach((cg) => {
-			cg.setFlexGrow(1)
-		})
 		
 		this.columnGroups().forEach((cg) => {
 			cg.header().setShouldShowTitle(false)
@@ -408,6 +501,7 @@ BrowserView = NodeView.extend().newSlots({
 
 		return this
 	},
+	*/
 	
 	// -----------------------------------------------
 

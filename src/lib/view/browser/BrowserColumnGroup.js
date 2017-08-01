@@ -35,17 +35,16 @@ BrowserColumnGroup = NodeView.extend().newSlots({
 			this.column().setIsSelected(aBool)
 		}
 		
-		if (this._isSelected == aBool) {
-			return this
+		if (this._isSelected != aBool) {
+			this._isSelected = aBool
+			
+			
 		}
-		
-		this._isSelected = aBool
-		
+				
 		return this
 	},
 	
 	previousColumnGroup: function() {
-		//console.log("this.column() = ", this.column())
 		var prevCol = this.column().previousColumn()
 		if (prevCol) { return prevCol.columnGroup() }
 		return null
@@ -87,35 +86,28 @@ BrowserColumnGroup = NodeView.extend().newSlots({
 	},
 	
 	collapse: function() {
-		console.log(this.name() + " collapse ")
-		
+		//console.log(this.name() + " collapse ")
 		this._isCollapsed = true
-		
-		//this.setDivId("_isCollapsed = true")
-    	setTimeout(() => { this.setMinAndMaxWidth(0) }, 10)
+		this.setMinAndMaxWidth(0)
 		this.setFlexGrow(0)
 		this.setFlexShrink(0)
 		this.setFlexBasis(0)
-
 		return this
 	},
 	
 	uncollapse: function() {
-		console.log(this.name() + " uncollapse")
+		//console.log(this.name() + " uncollapse")
 		this._isCollapsed = false
-		this.setDivId("_isCollapsed = false")
-		
-    	setTimeout(() => { this.matchNodeMinWidth() }, 10)
-
-	    //this.setDisplay("inline-flex")		
+		this.matchNodeMinWidth()
         this.setFlexGrow(1)
         this.setFlexShrink(1)
-		this.setFlexBasis(this.targetWidth())
+		//this.setFlexBasis(this.targetWidth())
 		return this
 	},
     
     /// empty label 
-    /*
+
+/*
     updateEmptyLabel: function() {
         var node = this.node()
         if (node) {
@@ -179,12 +171,17 @@ BrowserColumnGroup = NodeView.extend().newSlots({
 		
 		if (this.node()) {
 	        var w = this.node().nodeMinWidth()
+			if (w == null) {
+				return 0
+			}
 	
 			if (this.browser() && this.browser().isSingleColumn()) {
 				w = this.browser().browserWidth()
+				assert (w != null) 
 			}
 		}
 		
+			
 		return w		
 	},
 

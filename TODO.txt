@@ -1,6 +1,9 @@
 
 SINGLE COLUMN MODE BUGS
 
+- transaction support for syncDB (use 2 dicts)
+- Transitions object 
+
 - editing too slow when lots of email message rows....
 
 - move delete action to rows? mouse over X for desktop, swipe left for mobile?

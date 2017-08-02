@@ -1,15 +1,23 @@
 /*
 	A cache on top of IndexedDB to allow us to do all synchronous reads and writes
 	On open, it reads the entire db into a dictionary
-	- reads are on the cache
-	- writes are to the cache and then async write to IndexedDB
-	-
+
+	- reads are on the writeCache and then default to the cache 
+	
+	- begin() - writes can only be done after calling begin()
+	- writes/removes are to the writeCache : format: "key" -> { _value: "", _isDelete: aBool }
+	- after a write, a timeout is set to commit/flush the writeCache (only one timeout is set)
+	- timeout calls commit which uses an indexedDBFolder tx to write all 
+	- on commit complete, writeCache is cleared
+	
+	- any exception between begin and commit should halt the app and require a restart to ensure consistency
 */
 
 SyncDB = ideal.Proto.extend().newSlots({
     type: "SyncDB",
     idb: null,
     cache: null,
+    writeCache: null,
 	isOpen: false,
 	isSynced: false,
 }).setSlots({
@@ -50,6 +58,7 @@ SyncDB = ideal.Proto.extend().newSlots({
 	
 	// read
 	
+	/*
 	hasKey: function(key) {
 		this.assertOpen()
 		return key in this._cache;
@@ -59,6 +68,7 @@ SyncDB = ideal.Proto.extend().newSlots({
 		this.assertOpen()
 		return this._cache[key]
 	},
+	*/
 
 	keys: function() {
 		this.assertOpen()
@@ -106,6 +116,7 @@ SyncDB = ideal.Proto.extend().newSlots({
 	
 	// write (and async write to idb)
 	
+	/*
 	atPut: function(key, value) {
 		this.assertOpen()
 		this._cache[key] = value
@@ -127,6 +138,7 @@ SyncDB = ideal.Proto.extend().newSlots({
 			console.warn("WARNING: syncdb removeAt('" + key + "') - key not in syncdb cache")
 		}
 	},
+	*/
 	
 	clear: function() {
 		throw new Error("SyncDB clear")
@@ -215,6 +227,118 @@ SyncDB = ideal.Proto.extend().newSlots({
 		}
 		return byteCount
 	},
+	
+	// transactions
+	
+	hasBegun: function() {
+	    return (this.writeCache() != null)
+	},
+	
+	assertInTx: function() {
+	    assert(this.hasBegun())
+	    return this
+    },
+	
+	begin: function() {
+	    assert(!this.hasBegun())
+	    this.setWriteCache({})
+	    return this
+	},
+	
+	commit: function() {
+	    this.assertInTx()
+	    
+	    var tx = this.idb().newTx()
+	    
+	    tx.begin()
+	    
+	    var count = 0
+		var d = this._writeCache
+		
+		for (var k in d) {
+		   if (d.hasOwnProperty(k)) {
+				var entry = d[k]
+                
+                if (entry._isDelete) {
+                    tx.removeAt(k)
+                    delete this._cache[k]
+                    console.log(this.type() + " delete ", k)
+                } else {
+                    var v = entry._value
+                    //tx.atPut(k, v)
+                    
+                    if (k in this._cache) {
+                        tx.atUpdate(k, v)
+                        console.log(this.type() + " update ", k)
+                    } else {
+                        tx.atAdd(k, v)
+                        console.log(this.type() + " add ", k)
+                    }   
+                    
+                    this._cache[k] = entry._value
+                    
+                }
+                count ++
+			}
+		}
+		
+		 // indexeddb commits on next event loop but this commit is 
+		 // a sanity check that we don't write more to the same tx after that
+		 
+		tx.commit() 
+		console.log("---- " + this.type() + " commited " + count + " writes")
+		
+		// TODO: use commit callback to clear writeCache
+		this._writeCache = null
+	},
+	
+	// NEW
+	
+	hasKey: function(key) {
+		this.assertOpen()
+		return key in this._cache;
+	},
+	
+	at: function(key) {
+		this.assertOpen()
+		
+		if (this._writeCache) {
+    		var e = this._writeCache[key]
+    		if (e) {
+    		    if (e._isDelete) {
+    		        return null
+    		    } else {
+    		        return e._value
+    		    }
+    		}
+    	}
+		
+		return this._cache[key]
+	},
+	
+	atPut: function(key, value) {
+		this.assertOpen()
+	    this.assertInTx()
+	    
+	    if (!(key in this._writeCache) && this._cache[key] == value) {
+	        return
+	    }
+	    
+		this._writeCache[key] = { _value: value }
+	},
+	
+	removeAt: function(key) {
+		this.assertOpen()
+	    this.assertInTx()
+	    
+	    if (!(key in this._writeCache) && !(key in this._cache)) {
+	        return
+	    }
+	    
+		this._writeCache[key] = { _isDelete: true }
+	},
+	
+	// TODO: update keys, values and size method to use writeCache? Or just assert they are out of tx?
 	
 })
 	

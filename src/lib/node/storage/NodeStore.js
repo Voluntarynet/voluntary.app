@@ -219,11 +219,15 @@ NodeStore = ideal.Proto.extend().newSlots({
     },
     
     storeDirtyObjects: function() {
+        console.log(" --- " + this.type() + " storeDirtyObjects --- ")
+        
 		this.assertIsWritable()
 	
 		if (!this.sdb().isOpen()) { // delay until it's open
 			throw new Error(this.type() + " storeDirtyObjects but db not open")
 		}
+		
+		this.sdb().begin() 
 		
         // it's ok to add dirty objects via setPid() while this is
         // working as it will pick it up and won't cause a loop
@@ -256,6 +260,8 @@ NodeStore = ideal.Proto.extend().newSlots({
 		if (this.debug()) {
 			this.show()
 		}
+
+		this.sdb().commit() // flushes write cache
 
 		/*
 		setTimeout( () => {
@@ -541,7 +547,10 @@ NodeStore = ideal.Proto.extend().newSlots({
     },
     
     sweep: function(deleteCount) {
+        console.log(" --- " + this.type() + " sweep --- ")
         // delete all unmarked records
+        this.sdb().begin()
+        
         var deleteCount = 0
         var pids = this.sdb().keys()
 
@@ -552,6 +561,8 @@ NodeStore = ideal.Proto.extend().newSlots({
                 deleteCount ++
             } 
          })
+         
+        this.sdb().commit()
             
          return deleteCount
     },

@@ -9,6 +9,7 @@ BrowserRow = NodeView.extend().newSlots({
     isSelectable: true,
     closeButtonView: null,
 	defaultHeight: 60,
+	restCloseButtonOpacity: 0.4,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
@@ -34,6 +35,15 @@ BrowserRow = NodeView.extend().newSlots({
     
     updateSubviews: function() {
         this.setBackgroundColor(this.currentBgColor())
+        
+        if (this.closeButtonView()) {
+            if (this.canDelete()) {
+                this.closeButtonView().setOpacity(this.restCloseButtonOpacity())
+            } else {
+                this.closeButtonView().setOpacity(0)
+            }
+        }
+        
         return this
     },
     
@@ -56,6 +66,7 @@ BrowserRow = NodeView.extend().newSlots({
     },
 
     syncFromNode: function () {
+        // is this ever called?
         this.updateSubviews()
         return this
     },
@@ -202,7 +213,7 @@ BrowserRow = NodeView.extend().newSlots({
     onMouseLeave: function(event) {
         //console.log(this.type() + " onMouseLeave")
         if (this.hasCloseButton()) {
-            this.closeButtonView().setOpacity(0)
+            this.closeButtonView().setOpacity(this.restCloseButtonOpacity())
             this.closeButtonView().setTarget(null)
         }        
     },

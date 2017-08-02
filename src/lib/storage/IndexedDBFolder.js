@@ -150,6 +150,7 @@ IndexedDBFolder = ideal.Proto.extend().newSlots({
 		
         var objectStore = tx.objectStore(this.storeName());
         var request = objectStore.add(entry);
+        //var request = objectStore.update(entry);
         
 		request.onerror = (event) => {
 		    var errorDescription = this.type() + ".atAdd('" + key + "') objectStore [" + this.storeName() + "] request.onerror " + event.target.error
@@ -200,7 +201,7 @@ IndexedDBFolder = ideal.Proto.extend().newSlots({
 
     asyncAt: function(key, callback) {
         //console.log("asyncAt ", key)
-        var objectStore = this.db().transaction(this.storeName()).objectStore(this.storeName());
+        var objectStore = this.db().transaction(this.storeName(), "readonly").objectStore(this.storeName());
         var request = objectStore.get(key);
 
         var stack = new Error().stack
@@ -231,6 +232,7 @@ IndexedDBFolder = ideal.Proto.extend().newSlots({
         return this
     },
 
+    /*
     asyncKeys: function(callback) {
         this.asyncAsJson((dict) => {
             
@@ -261,11 +263,12 @@ IndexedDBFolder = ideal.Proto.extend().newSlots({
         })
         //console.log("asyncValues returning")
     },
+    */
     
     asyncAsJson: function(callback) {   
         //console.log("asyncAsJson start")
 
-        var cursorRequest = this.db().transaction(this.storeName()).objectStore(this.storeName()).openCursor()
+        var cursorRequest = this.db().transaction(this.storeName(), "readonly").objectStore(this.storeName()).openCursor()
         var dict = {}
     
         cursorRequest.onsuccess = (event) => {
@@ -313,17 +316,6 @@ IndexedDBFolder = ideal.Proto.extend().newSlots({
     },
     
     asyncClear: function(callback, errorCallback) {
-		/*
-        this.asyncKeys( (keys) => {
-			keys.forEach(function (key) {
-            	this.asyncRemoveAt(key)
-			})
-			if (callback) {
-				callback()
-			}
-        })
-		*/
-		
 		var transaction = this.db().transaction([this.storeName()], "readwrite");
 
 		transaction.onerror = function(event) {
@@ -374,6 +366,10 @@ IndexedDBFolder = ideal.Proto.extend().newSlots({
             })
         })
         
+    },
+    
+    newTx: function() {
+        return IndexedDBTx.clone().setDbFolder(this)
     },
 })
 

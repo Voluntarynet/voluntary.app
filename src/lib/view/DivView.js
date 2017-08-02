@@ -679,6 +679,13 @@ DivView = ideal.Proto.extend().newSlots({
         return this		
 	},
 	
+	/*
+	setHeight: function(aNumber) {
+		this.setCssAttribute("height", newValue)
+        return this		
+	},	
+	*/
+	
 	// --- div class name ---
 
     setDivClassName: function (aName) {
@@ -1142,6 +1149,95 @@ DivView = ideal.Proto.extend().newSlots({
 	contentEditable: function() {
 		return this.element().contentEditable == "true"
 	},
+	
+    // touch events
+
+    touchstartListenerFunc: function () {
+        if (!this._touchstartListenerFunc) {
+            this._touchstartListenerFunc = (e) => { this.onTouchStart(e) }
+        }
+        return this._touchstartListenerFunc
+    },
+
+    touchmoveListenerFunc: function () {
+        if (!this._touchmoveListenerFunc) {
+            this._touchmoveListenerFunc = (e) => { this.onTouchMove(e) }
+        }
+        return this._touchmoveListenerFunc
+    },
+
+    touchcancelListenerFunc: function () {
+        if (!this._touchcancelListenerFunc) {
+            this._touchcancelListenerFunc = (e) => { this.onTouchCancel(e) }
+        }
+        return this._touchcancelListenerFunc
+    },
+
+    touchendListenerFunc: function () {
+        if (!this._touchendListenerFunc) {
+            this._touchendListenerFunc = (e) => { this.onTouchEnd(e) }
+        }
+        return this._touchendListenerFunc
+    },
+    
+    setIsRegisteredForTouch: function(aBool) {
+		if (aBool) {
+			if (this._isRegisteredForPaste == false) {
+				this._isRegisteredForPaste = true
+	        	this.element().addEventListener('touchstart',  this.touchstartListenerFunc(), false);
+	        	this.element().addEventListener('touchmove',   this.touchmoveListenerFunc(), false);
+	        	this.element().addEventListener('touchcancel', this.touchcancelListenerFunc(), false);
+	        	this.element().addEventListener('touchend',    this.touchendListenerFunc(), false);
+			}
+		} else {
+			if (this._isRegisteredForPaste == true) {
+				this._isRegisteredForPaste = false
+	        	this.element().removeEventListener('touchstart',  this.touchstartListenerFunc());
+	        	this.element().removeEventListener('touchmove',   this.touchmoveListenerFunc());
+	        	this.element().removeEventListener('touchcancel', this.touchcancelListenerFunc());
+	        	this.element().removeEventListener('touchend',    this.touchendListenerFunc());
+			}
+		}
+		return this
+    },
+
+    touchDownDiffWithEvent: function(event) {
+        assert(this._onTouchDownEventPosition) 
+
+		var thisTouch = event.changedTouches[0]
+        var lastTouch = this._onTouchDownEventPosition
+        var d = {} 
+        d.xd = thisTouch.screenX - lastTouch.screenX
+        d.yd = thisTouch.screenY - lastTouch.screenY
+        d.dist = Math.sqrt(d.xd*d.xd + d.yd*d.yd)
+        return d
+    },
+
+	onTouchStart: function(event) {
+        this._isTouchDown = true
+		var touches = event.changedTouches
+		//console.log(this.type() + " onTouchStart ", touches)
+        this._onTouchDownEventPosition = { screenX: touches[0].screenX, screenY: touches[0].screenY }
+		//console.log(this.type() + " onTouchStart  this._onTouchDownEventPosition ", this._onTouchDownEventPosition)
+	},
+	
+	onTouchMove: function(event) {
+		//console.log(this.type() + " onTouchMove diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
+	},
+	
+	onTouchCancel: function(event) {
+		//console.log(this.type() + " onTouchCancel")
+        this._isTouchDown = false
+	},
+	
+	onTouchEnd: function(event) {
+		//console.log(this.type() + " onTouchEnd diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
+		if (this._isTouchDown) {
+
+	        this._isTouchDown = false
+		}
+	},	
+
     
     // mouse events
     
@@ -1177,7 +1273,7 @@ DivView = ideal.Proto.extend().newSlots({
     },    
     
     onMouseDown: function (event) {
-        console.log("onMouseDown")
+        //console.log("onMouseDown")
         this._isMouseDown = true
         this._onMouseDownEventPosition = { x: event.clientX, y: event.clientY }
     },
@@ -1202,10 +1298,12 @@ DivView = ideal.Proto.extend().newSlots({
     },
     
     onMouseMove: function (event) {
+	/*
         if (this.isMouseDown()) {
             var diff = this.mouseDownDiffWithEvent(event)
             console.log("onMouseMove:" + JSON.stringify(diff))
         }
+		*/
     },
     
     onMouseOut: function (event) {

@@ -8,14 +8,23 @@ BrowserRow = NodeView.extend().newSlots({
     isSelected: false,
     isSelectable: true,
     closeButtonView: null,
+	defaultHeight: 60,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
         this.setOwnsView(false)
         this.setIsRegisteredForClicks(true)
-        //this.setIsRegisteredForMouse(true)
         this.turnOffUserSelect()
-        //this.addCloseButton()
+
+		if (WebBrowserWindow.isOnMobile()) {
+			this.setIsRegisteredForTouch(true)
+		} else {
+	        this.setIsRegisteredForMouse(true)
+			this.addCloseButton()
+		}
+
+		this.setTransition("all 0.25s")
+		//this.animateOpen()
         return this
     },
     
@@ -102,9 +111,24 @@ BrowserRow = NodeView.extend().newSlots({
     
     delete: function() {
         if (this.canDelete()) {
-            this.node().performAction("delete")
+			this.setOpacity(0)
+			//this.setRight(-this.width())
+			this.setMinAndMaxHeight(0)
+			setTimeout(() => {
+	            this.node().performAction("delete")
+			}, 240)
         }
     },
+
+	animateOpen: function() {
+		this.setTransition("all 0.2s")
+		this.setOpacity(0)
+		this.setMinAndMaxHeight(0)
+		setTimeout(() => {
+			this.setOpacity(1)
+			this.setMinAndMaxHeight(this.defaultHeight())
+		}, 0)		
+	},
 
     // sliding
     
@@ -112,6 +136,45 @@ BrowserRow = NodeView.extend().newSlots({
         return this.node() && this.node().hasAction("delete")
     },
     
+
+	// touch sliding
+	
+	onTouchMove: function(event) {
+		console.log(this.type() + " onTouchMove diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
+        if (this.canDelete()) {
+            var diff = this.touchDownDiffWithEvent(event)
+            //console.log("onMouseMove:" + JSON.stringify(diff))
+            this.setTransition("all 0s")
+			var xd = diff.xd
+			
+			if (xd > 0) { 
+				xd = 0; 
+			}
+			
+            this.setRight(-xd)
+        }
+	},
+	
+	onTouchCancel: function(event) {
+		console.log(this.type() + " onTouchCancel")
+        this._isTouchDown = false
+        this.slideBack()
+	},
+	
+	onTouchEnd: function(event) {
+		console.log(this.type() + " onTouchEnd diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
+
+		if (this._isTouchDown) {
+			var diff = this.touchDownDiffWithEvent(event)
+			if ((-diff.xd) > this.width() * 0.25) {
+				this.delete()
+			} else {
+		        this.slideBack()
+			}
+	        this._isTouchDown = false
+		}
+	},
+	
     /*
     onMouseMove: function (event) {
         if (this.isMouseDown() && this.canDelete()) {
@@ -124,11 +187,11 @@ BrowserRow = NodeView.extend().newSlots({
     */
     
     hasCloseButton: function() {
-        return this.closeButtonView().target() != null
+        return this.closeButtonView() && this.closeButtonView().target() != null
     },
     
     onMouseEnter: function(event) {
-        console.log(this.type() + " onMouseEnter")
+        //console.log(this.type() + " onMouseEnter")
         
         if (this.canDelete() && !this.hasCloseButton()) {
             this.closeButtonView().setOpacity(1)
@@ -137,7 +200,7 @@ BrowserRow = NodeView.extend().newSlots({
     },
     
     onMouseLeave: function(event) {
-        console.log(this.type() + " onMouseLeave")
+        //console.log(this.type() + " onMouseLeave")
         if (this.hasCloseButton()) {
             this.closeButtonView().setOpacity(0)
             this.closeButtonView().setTarget(null)
@@ -146,13 +209,17 @@ BrowserRow = NodeView.extend().newSlots({
     
     onMouseUp: function (event) {
         NodeView.onMouseUp.apply(this, [event])
+        this.slideBack()
+    },
+
+	slideBack: function() {
         if (this.canDelete()) {
             this.setTransition("all 0.2s")
             setTimeout(() => {
                 this.setRight(0)
             })
-        }
-    },
+        }		
+	},
     
 	// --- selecting ---
     

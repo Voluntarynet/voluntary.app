@@ -44,6 +44,16 @@ BrowserHeader = NodeView.extend().newSlots({
 	shouldShowTitle: function() {
 		return this.browser().isSingleColumn() && this.browser().lastActiveColumnGroup() == this.columnGroup()
 	},
+	
+	showsAction: function(actionName) {
+		return actionName != "delete"
+		/*
+		if (actionName == "delete" && !WebBrowserWindow.isOnMobile()) {
+			return false
+		}
+		return true
+		*/
+	},
 
     syncFromNode: function() {
         var node = this.node()
@@ -60,10 +70,12 @@ BrowserHeader = NodeView.extend().newSlots({
 			}
 
             node.actions().forEach((action) => {
-                var button = BrowserHeaderAction.clone()
-                button.setTarget(node).setAction(action)
-                button.setCanClick(this.nodeHasAction(action))
-                this.addSubview(button).syncFromNode()
+				if (this.showsAction(action)) {
+	                var button = BrowserHeaderAction.clone()
+	                button.setTarget(node).setAction(action)
+	                button.setCanClick(this.nodeHasAction(action))
+	                this.addSubview(button).syncFromNode()
+				}
             })
         } else {
             //console.log("no header subviews")

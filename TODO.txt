@@ -1,6 +1,8 @@
 
 SINGLE COLUMN MODE BUGS
 
+- CLEANUP: remove old async IndexedDB code?
+
 - row delete button not stopping event propogation to select row?
 
 - CLEANUP: avoid writing over (or at least ever storing) existing object instances on read from store?
@@ -8,11 +10,10 @@ SINGLE COLUMN MODE BUGS
 
 - transaction support for syncDB (use 2 dicts)
 - Transitions object 
-    -  transition: width 2s, height 4s;
-    -    transition-delay: 1s;
-    - #div1 {transition-timing-function: linear;}
+    -   transition-delay: 1s;
+    -   transition-timing-function: linear;
     - ease-in-out
-    -     transition: width 2s linear 1s; 1st time is duration, 2nd time is delay
+    -     transition: width 2s linear 1s, height 2s ease 1s; 1st time is duration, 2nd time is delay
 
 - editing too slow when lots of email message rows....
 

@@ -8,6 +8,11 @@ SINGLE COLUMN MODE BUGS
 
 - transaction support for syncDB (use 2 dicts)
 - Transitions object 
+    -  transition: width 2s, height 4s;
+    -    transition-delay: 1s;
+    - #div1 {transition-timing-function: linear;}
+    - ease-in-out
+    -     transition: width 2s linear 1s; 1st time is duration, 2nd time is delay
 
 - editing too slow when lots of email message rows....
 

@@ -6,6 +6,7 @@ IndexedDBTx = ideal.Proto.extend().newSlots({
     tx: null,
     requests: null,
     isCommitted: false,
+	debug: false,
 }).setSlots({
     init: function () {
         this.setRequests([])
@@ -21,14 +22,21 @@ IndexedDBTx = ideal.Proto.extend().newSlots({
 	
 	// --- being and commit ---
 
-	begin: function() {
+	assertNotCommitted: function() {
 	    assert(this.isCommitted() == false)
+	},
+
+	begin: function() {
+	    this.assertNotCommitted()
+	
 	    var tx = this.db().transaction(this.storeName(), "readwrite")
         this.setTx(tx)
 
-        //var requestStack = new Error().stack
+        var requestStack = this.debug() ? new Error().stack : null
 		tx.onerror = (event) => {
-		    //console.log("requestStack: ", requestStack)
+		    if (requestStack) { 
+				console.log("error stack ", requestStack)
+			}
 		  	throw new Error("tx error " + event.target.error)
 		}
 		        
@@ -39,7 +47,7 @@ IndexedDBTx = ideal.Proto.extend().newSlots({
 	},
 	
 	abort: function() {
-	    assert(this.isCommitted() == false)
+	    this.assertNotCommitted()
 	    this.tx().abort()
 	    return this
 	},
@@ -60,11 +68,14 @@ IndexedDBTx = ideal.Proto.extend().newSlots({
 	},
 	
 	pushRequest: function(aRequest) {
-	    assert(this.isCommitted() == false)
-        //var requestStack = new Error().stack
+	    this.assertNotCommitted()
+
+        var requestStack = this.debug() ? new Error().stack : null
 		aRequest.onerror = (event) => {
 		    var fullDescription = aRequest.description + " on objectStore [" + this.storeName() + "] " + event.target.error
-		    //console.log("error stack ", requestStack)
+		    if (requestStack) { 
+				console.log("error stack ", requestStack)
+			}
 		    console.warn(fullDescription)
 		  	throw new Error(fullDescription)
 		}
@@ -73,8 +84,6 @@ IndexedDBTx = ideal.Proto.extend().newSlots({
 	},
 	
 	entryForKeyAndValue: function(key, object) {
-        //console.log(this.type() + " atAdd ", key, object)
-
 		if (typeof(object) == "null" || typeof(object) == "undefined") {
 			throw new Error(this.type() + ".entryForKeyAndValue('" + key + "', ...) can't add null value")
 		}
@@ -90,14 +99,19 @@ IndexedDBTx = ideal.Proto.extend().newSlots({
 	// --- operations ----
 	
 	atPut: function(key, object) {
+	    this.assertNotCommitted()
+
         if (this.hasKey(key)) {
             this.atUpdate(key, object)
         } else {
             this.atAdd(key, object)
         }
+        return this
 	},
 	
     atAdd: function(key, object) { 
+	    this.assertNotCommitted()
+
         var entry = this.entryForKeyAndValue(key, object)
         var request = this.objectStore().add(entry);
 		request._action = "add"
@@ -107,6 +121,8 @@ IndexedDBTx = ideal.Proto.extend().newSlots({
     },
 
     atUpdate: function(key, object) {
+	    this.assertNotCommitted()
+
         var entry = this.entryForKeyAndValue(key, object)
         var request = this.objectStore().put(entry);
 		request._action = "put"
@@ -116,6 +132,8 @@ IndexedDBTx = ideal.Proto.extend().newSlots({
     },
     
     removeAt: function(key) {
+	    this.assertNotCommitted()
+
         var request = this.objectStore().delete(key);
 		request._action = "remove"
 		request._key = key

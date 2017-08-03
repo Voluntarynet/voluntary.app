@@ -219,8 +219,8 @@ NodeStore = ideal.Proto.extend().newSlots({
     },
     
     storeDirtyObjects: function() {
-        console.log(" --- " + this.type() + " storeDirtyObjects --- ")
-        
+		this.debugLog(" --- storeDirtyObjects --- ")
+	
 		this.assertIsWritable()
 	
 		if (!this.sdb().isOpen()) { // delay until it's open
@@ -232,8 +232,6 @@ NodeStore = ideal.Proto.extend().newSlots({
         // it's ok to add dirty objects via setPid() while this is
         // working as it will pick it up and won't cause a loop
         
-        //console.log("NodeStore.storeDirtyObjects")
-
         var totalStoreCount = 0
 
 		while (true) {
@@ -262,12 +260,6 @@ NodeStore = ideal.Proto.extend().newSlots({
 		}
 
 		this.sdb().commit() // flushes write cache
-
-		/*
-		setTimeout( () => {
-			this.sdb().verifySync()
-		})
-		*/
 
         return totalStoreCount
     },
@@ -373,7 +365,7 @@ NodeStore = ideal.Proto.extend().newSlots({
         var obj = proto.clone()
         // need to set pid before dict to handle circular refs
         obj.setPid(pid) 
-		//console.log(" nodeDict = ", nodeDict)
+		//this.debugLog(" nodeDict = ", nodeDict)
         obj.setNodeDict(nodeDict)
 
         //this.debugLog("objectForPid(" + pid + ")")
@@ -525,7 +517,6 @@ NodeStore = ideal.Proto.extend().newSlots({
         //if (deleteCount) {
             this.debugLog("--- end collect - collected " + deleteCount + " pids ---")
         //}
-		this.sdb().verifySync()
         return deleteCount
     },
     
@@ -547,7 +538,7 @@ NodeStore = ideal.Proto.extend().newSlots({
     },
     
     sweep: function(deleteCount) {
-        console.log(" --- " + this.type() + " sweep --- ")
+        this.debugLog(" --- sweep --- ")
         // delete all unmarked records
         this.sdb().begin()
         

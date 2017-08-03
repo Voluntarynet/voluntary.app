@@ -4,13 +4,13 @@
 
 	- reads are on the writeCache and then default to the cache 
 	
-	- begin() - writes can only be done after calling begin()
+	- begin() - writes can only be done after calling begin() or exception is raised
 	- writes/removes are to the writeCache : format: "key" -> { _value: "", _isDelete: aBool }
-	- after a write, a timeout is set to commit/flush the writeCache (only one timeout is set)
-	- timeout calls commit which uses an indexedDBFolder tx to write all 
-	- on commit complete, writeCache is cleared
+	- commit() flushes writeCache to indexedDBFolder 
 	
 	- any exception between begin and commit should halt the app and require a restart to ensure consistency
+	
+	TODO: auto sweep after a write if getting full?
 */
 
 SyncDB = ideal.Proto.extend().newSlots({
@@ -20,6 +20,7 @@ SyncDB = ideal.Proto.extend().newSlots({
     writeCache: null,
 	isOpen: false,
 	isSynced: false,
+	debug: false,
 }).setSlots({
     init: function () {
 		this.setCache({})
@@ -113,33 +114,7 @@ SyncDB = ideal.Proto.extend().newSlots({
 		}
 		return count
 	},	
-	
-	// write (and async write to idb)
-	
-	/*
-	atPut: function(key, value) {
-		this.assertOpen()
-		this._cache[key] = value
-		//console.log("atPut(" + key + ", " + JSON.stringify(value) + ")")
-		//console.log("atPut(" + key + ", " + JSON.stringify(value).substring(1, 100) + "...)")
-		this.idb().asyncAtPut(key, value)
-	},
-	
-	removeAt: function(key) {
-		this.assertOpen()
-		if (key in this._cache) {
-			//console.log("syncdb removeAt('" + key + "')")
-			delete this._cache[key]
-			if (key in this._cache) {
-				throw new Error("wut")
-			}
-			this.idb().asyncRemoveAt(key)
-		} else {
-			console.warn("WARNING: syncdb removeAt('" + key + "') - key not in syncdb cache")
-		}
-	},
-	*/
-	
+		
 	clear: function() {
 		throw new Error("SyncDB clear")
 		this._cache = {}
@@ -262,17 +237,23 @@ SyncDB = ideal.Proto.extend().newSlots({
                 if (entry._isDelete) {
                     tx.removeAt(k)
                     delete this._cache[k]
-                    console.log(this.type() + " delete ", k)
+					if (this.debug()) {
+                    	console.log(this.type() + " delete ", k)
+					}
                 } else {
                     var v = entry._value
                     //tx.atPut(k, v)
                     
                     if (k in this._cache) {
                         tx.atUpdate(k, v)
-                        console.log(this.type() + " update ", k)
+						if (this.debug()) {
+                        	console.log(this.type() + " update ", k)
+						}
                     } else {
                         tx.atAdd(k, v)
-                        console.log(this.type() + " add ", k)
+						if (this.debug()) {
+                        	console.log(this.type() + " add ", k)
+						}
                     }   
                     
                     this._cache[k] = entry._value
@@ -286,7 +267,10 @@ SyncDB = ideal.Proto.extend().newSlots({
 		 // a sanity check that we don't write more to the same tx after that
 		 
 		tx.commit() 
-		console.log("---- " + this.type() + " commited " + count + " writes")
+		
+		if (this.debug()) {
+			console.log("---- " + this.type() + " commited " + count + " writes")
+		}
 		
 		// TODO: use commit callback to clear writeCache
 		this._writeCache = null

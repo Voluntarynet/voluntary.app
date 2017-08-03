@@ -1,7 +1,6 @@
 
 SINGLE COLUMN MODE BUGS
 
-- CLEANUP: remove old async IndexedDB code?
 
 - row delete button not stopping event propogation to select row?
 
@@ -14,6 +13,8 @@ SINGLE COLUMN MODE BUGS
     -   transition-timing-function: linear;
     - ease-in-out
     -     transition: width 2s linear 1s, height 2s ease 1s; 1st time is duration, 2nd time is delay
+
+- fix hash path to remove fix component (the app name)
 
 - editing too slow when lots of email message rows....
 

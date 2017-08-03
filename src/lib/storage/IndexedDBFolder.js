@@ -5,7 +5,7 @@ IndexedDBFolder = ideal.Proto.extend().newSlots({
     pathSeparator: "/",
     db: null,
 	didRequestPersistence: false,
-    //debug: true,
+    debug: false,
 }).setSlots({
     init: function () {
     },
@@ -55,7 +55,9 @@ IndexedDBFolder = ideal.Proto.extend().newSlots({
     },
     
     asyncOpen: function(callback) {
-		//console.log(this.type() + " asyncOpen")
+		if (this.debug()) {
+			console.log(this.type() + " asyncOpen")
+		}
 		
         var request = window.indexedDB.open(this.path(), 2);
         
@@ -75,7 +77,6 @@ IndexedDBFolder = ideal.Proto.extend().newSlots({
 			this.setDb(db)
 
 			var objectStore = db.createObjectStore(this.storeName(), { keyPath: "key" }, false);          
-			//this.setObjectStore(objectStore);
 			objectStore.createIndex("key", "key", { unique: true });
         };
 
@@ -103,102 +104,7 @@ IndexedDBFolder = ideal.Proto.extend().newSlots({
     },
             
     // writing
-
-	asyncAtPut: function(key, value, callback) {
-		this.asyncAt(key,  (oldValue) => {
-		    var stack = new Error().stack
-		    
-		    try {
-    			if (typeof(oldValue) == "undefined") {
-    				this.atAdd(key, value)
-    			} else {
-    				this.atUpdate(key, value)
-    			}
-		    } catch(e) {
-		        console.log(this.type() + " asyncAtPut('" + key + "') stack ", stack)
-		    }
-			
-			if (callback) {
-				callback()
-			}
-		})
-	},
-	
-    atAdd: function(key, object) { 
-        //console.log(this.type() + " atAdd ", key, object)
-
-		if (typeof(object) == "null" || typeof(object) == "undefined") {
-			throw new Error(this.type() + ".atAdd('" + key + "') can't add null value")
-		}
-		
-		//assert(typeof(object) == "string")
-        var v = JSON.stringify(object)
-		if (v == null) {
-			throw new Error("can't add null value 2")
-		}
-        var entry = { key: key, value: v }
-        var tx = this.db().transaction(this.storeName(), "readwrite")
-
-        var requestStack = new Error().stack
-
-		tx.onerror = (event) => {
-		    var errorDescription = this.type() + ".atAdd('" + key + "') tx error " +  event.target.error
-		    console.log(errorDescription)
-		    //console.log("requestStack: ", requestStack)
-		  	//throw new Error(errorDescription)
-		}
-		
-        var objectStore = tx.objectStore(this.storeName());
-        var request = objectStore.add(entry);
-        //var request = objectStore.update(entry);
-        
-		request.onerror = (event) => {
-		    var errorDescription = this.type() + ".atAdd('" + key + "') objectStore [" + this.storeName() + "] request.onerror " + event.target.error
-		    console.log(errorDescription)
-		    //console.log("requestStack: ", requestStack)
-		  	//throw new Error(errorDescription)
-		}
-		
-        return this
-    },
-
-    atUpdate: function(key, object) {
-		if (typeof(object) == "null" || typeof(object) == "undefined") {
-			throw new Error(this.type() + ".atUpdate('" + key + "') can't update to null/undefined")
-		}
-		
-		//assert(typeof(object) == "string")
-        var v = JSON.stringify(object)
-        //console.log(this.type() + " atPut ", key, v)
-        var entry = { key: key, value: v }
-        var tx = this.db().transaction(this.storeName(), "readwrite")
-
-		tx.onerror = (event) => {
-		    //console.log("tx error " + event.target.error)
-		  	throw new Error(this.type() + ".atUpdate('" + key + "') tx error " +  event.target.error)
-		}
-		
-        var objectStore = tx.objectStore(this.storeName());
-        var request = objectStore.put(entry);
-
-        var requestStack = new Error().stack
-		request.onerror = (event) => {
-		    console.log("error event ", event)
-		    console.log("error stack ", requestStack)
-		  	throw new Error(this.type() + " atUpdate(" + key + ") objectStore.put error: '" + event + "'")
-		}
-        return this
-    },
-    
-    
-    // reading
-
-	asyncHasKey: function(key, callback) {
-		this.asyncAt(key, function (value) {
-			callback(value != null)
-		})
-	},
-
+/*
     asyncAt: function(key, callback) {
         //console.log("asyncAt ", key)
         var objectStore = this.db().transaction(this.storeName(), "readonly").objectStore(this.storeName());
@@ -231,39 +137,8 @@ IndexedDBFolder = ideal.Proto.extend().newSlots({
         
         return this
     },
+*/
 
-    /*
-    asyncKeys: function(callback) {
-        this.asyncAsJson((dict) => {
-            
-            var keys = []
-            for (var k in dict) {
-                if (dict.hasOwnProperty(k)) {
-                    keys.push(k)
-                }
-            }
-            
-            callback(keys)
-                        
-        })
-        return this
-    },
-    
-    asyncValues: function(callback) {
-        //console.log("asyncValues start")
-        this.asyncAsJson( (dict) => {
-            var values = []
-            for (var k in dict) {
-                if (dict.hasOwnProperty(k)) {
-                    values.push(dict[k])
-                }
-            }
-            //console.log("asyncValues done callback")
-            callback(values)
-        })
-        //console.log("asyncValues returning")
-    },
-    */
     
     asyncAsJson: function(callback) {   
         //console.log("asyncAsJson start")
@@ -297,23 +172,6 @@ IndexedDBFolder = ideal.Proto.extend().newSlots({
     },
     
     // removing
-
-    asyncRemoveAt: function(key, callback) {
-        var request = this.db().transaction(this.storeName(), "readwrite").objectStore(this.storeName()).delete(key);
-            
-        request.onsuccess = function(event) {
-			//console.log("idb removed key '" + key + "'")
-			if (callback) {
-				callback()
-			}
-        };
-
-		request.onerror = function (event) {
-            throw new Error("error removing key '" + key + "'")
-		}
-
-        return this
-    },
     
     asyncClear: function(callback, errorCallback) {
 		var transaction = this.db().transaction([this.storeName()], "readwrite");

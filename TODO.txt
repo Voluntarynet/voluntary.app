@@ -7,7 +7,6 @@ SINGLE COLUMN MODE BUGS
 - CLEANUP: avoid writing over (or at least ever storing) existing object instances on read from store?
     - looks like they get stored the first pass and the ones from last time are deleted on next sweep
 
-- transaction support for syncDB (use 2 dicts)
 - Transitions object 
     -   transition-delay: 1s;
     -   transition-timing-function: linear;

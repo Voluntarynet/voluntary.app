@@ -261,8 +261,26 @@ DivView = ideal.Proto.extend().newSlots({
 	
 	setTransition: function(s) {
 		this.setCssAttribute("transition", s)
+		
+		if (this._transitions) {
+			this.transitions().syncFromDiv()
+		}
+		
 		return this
-	},		
+	},	
+	
+	transition: function() {
+		return this.getCssAttribute("transition")
+	},	
+
+	// transitions
+	
+	transitions: function() {
+		if (this._transitions == null) {
+			this._transitions = DivTransitions.clone().setDivView(this).syncFromDiv()
+		}
+		return this._transitions
+	},
 
 	// opacity
 

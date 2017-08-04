@@ -59,7 +59,7 @@ BrowserTitledRow = BrowserRow.extend().newSlots({
 	},
 	
 	unselectedTextColor: function() {
-		return "#CBCBCB"
+		return "rgba(255, 255, 255, 0.5)"
 	},
 
     // -------------

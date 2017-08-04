@@ -3,18 +3,60 @@
 BrowserView = NodeView.extend().newSlots({
     type: "BrowserView",
     columns: null,
-    bgColors: [
-            //"#404040", 
-            "#3c3c3c", 
-            "#303030", 
-            "#202020", "#1a1a1a", "#111", 
-            "#232323", "#000", 
-            "#232323", "#000", 
-            "#232323", "#000"
-            ],
     isSingleColumn: false,
     defaultHeader: null,
 }).setSlots({
+ 
+    bgColors: function() {
+        return this.bgColorsGray()
+    },
+    
+    bgColorsGray: function() {
+        return [
+            //"#404040", 
+            [64/255, 64/255, 64/255],
+            [60/255, 60/255, 60/255],
+            [48/255, 48/255, 48/255],
+            [32/255, 32/255, 32/255],
+            [26/255, 26/255, 26/255],
+            [16/255, 16/255, 16/255],
+        ]
+    },
+       
+    bgColorsWarm: function() {
+        return [
+            //[0.412, 0.110, 0.067], // header color
+            //[0.867, 0.235, 0.145],
+            [0.871, 0.278, 0.145],
+            //[0.875, 0.325, 0.153],
+            [0.875, 0.325, 0.153],
+            //[0.882, 0.412, 0.161],
+            [0.886, 0.459, 0.165],
+            //[0.890, 0.502, 0.169],
+            [0.898, 0.545, 0.176],
+            //[0.902, 0.592, 0.184],
+            [0.906, 0.635, 0.192],
+            //[0.914, 0.682, 0.196]
+        ]
+    },
+    
+    bgColorsCool: function() {
+        return [
+            [0.118, 0.506, 0.965],
+            //[0.118, 0.525, 0.965],
+            [0.122, 0.545, 0.969],
+            //[0.118, 0.569, 0.969],
+            [0.122, 0.584, 0.976],
+            //[0.122, 0.608, 0.976],
+            [0.122, 0.627, 0.980],
+            //[0.122, 0.651, 0.980],
+            [0.125, 0.675, 0.984],
+            //[0.125, 0.694, 0.984],
+            [0.129, 0.718, 0.988],
+            [0.129, 0.741, 0.988]
+        ]
+    },
+    
     init: function () {
         NodeView.init.apply(this)
         this.setDefaultSubnodeViewClass(BrowserColumnGroup)
@@ -107,7 +149,10 @@ BrowserView = NodeView.extend().newSlots({
 	// --- column background colors ----------------------------
 	
     bgColorForIndex: function(i) {
-		return this.bgColors().atModLength(i)
+		var rgb = this.bgColors().atModLength(i)
+		var s = "rgb(" + rgb.map((v) => { return Math.round(v * 255) }).join(",") + ")"
+		console.log("bgColorForIndex = '" + s + "'")
+		return s
     },
 
     setupColumnGroupColors: function() {

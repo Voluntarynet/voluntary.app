@@ -1,7 +1,7 @@
 
 SINGLE COLUMN MODE BUGS
 
-
+- abstract TextField with selectedColor, unselectedColor (support selection styles? bold, italic, diff font?)
 - row delete button not stopping event propogation to select row?
 
 - CLEANUP: avoid writing over (or at least ever storing) existing object instances on read from store?

@@ -2,7 +2,7 @@ BrowserRowTitle = DivView.extend().newSlots({
     type: "BrowserRowTitle",
 	isSelected: false,
 	selectedColor: "white",
-	unselectedColor: "",
+	unselectedColor: "rgba(255, 255, 255, 0.5)",
 }).setSlots({
     init: function () {
         DivView.init.apply(this)
@@ -14,14 +14,6 @@ BrowserRowTitle = DivView.extend().newSlots({
         return this
     },
 
-    /*
-	updateSubviews: function() {
-		 if (this.isSelected()) {
-			this.setColor("#CBCBCB")
-		}
-	},
-	*/
-	
 	setIsSelected: function(aBool) {
 	    this._isSelected = aBool
 	    this.updateColors()

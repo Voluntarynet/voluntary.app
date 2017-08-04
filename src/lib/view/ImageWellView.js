@@ -27,12 +27,10 @@ ImageWellView = NodeView.extend().newSlots({
     
     dragHighlight: function() {
         this.setBackgroundColor("#eee")
-        //this.setColor("#fefefe")
     },
     
     dragUnhighlight: function() {
         this.setBackgroundColor("transparent")
-        //this.setColor("#aaa")
     },
     
     acceptsDrop: function(event) {

@@ -1,0 +1,32 @@
+
+APP OVERVIEW
+
+This app started as a port of Bitmarkets Objective-C/OSX implementation to Electron/Javascript in order to support the app across platforms. Bitmarkets is a sort of decentralized ebay that uses Bitcoin for decentralized transactions, Bitmessage for decentralized and secure communications, and 2 party escrow to secure transctions:
+
+    https://voluntary.net/bitmarkets/
+    
+I made progress on re-implementing Bitmarket's Miller collumn based UI and replacing Bitmessage with a webRTC based messaging system but ran into issues with getting a Bitcoin wallet working in JS (e.g. state of stand alone JS Bitcoin implementations). Around this time, I heard about Mastadon (a federated Twitter clone) getting traction and 
+
+FRAMEWORKS
+
+The app is built on integrated naked objects UI and transparent persistence database frameworks. 
+These allow the developer to add new business/model level objects without the need to write (almost) any code to interface these objects to the UI or DB. 
+
+BASICS
+
+The system is built around the observations: 
+    - the model and UI of most apps can be well described as a hierarchy. That is, that each model or view object has a single owner/parent, even if references aren't restricted to those between parents and children. This hierarchical pattern is the basis of most UI frameworks but is rarely exploited at model or database level. 
+    - there tends to be a close correspondence between objects, views and DB records
+    - synchronization between DB, model and views is difficult and underappreciated
+By representing these pattern in a reusable and integrated way, most application code can be eliminated.
+
+
+HOW TO USE
+
+Model level objects should subclass the BMNode class. 
+If the object will need to persist itself, it should subclass BMStorableNode.
+
+HOW IT WORKS
+
+
+

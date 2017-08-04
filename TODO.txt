@@ -7,17 +7,7 @@ SINGLE COLUMN MODE BUGS
 - CLEANUP: avoid writing over (or at least ever storing) existing object instances on read from store?
     - looks like they get stored the first pass and the ones from last time are deleted on next sweep
 
-- Transitions object 
-    -   transition-delay: 1s;
-    -   transition-timing-function: linear;
-    - ease-in-out
-    -     transition: width 2s linear 1s, height 2s ease 1s; 1st time is duration, 2nd time is delay
-
-- fix hash path to remove fix component (the app name)
-
-- editing too slow when lots of email message rows....
-
-- move delete action to rows? mouse over X for desktop, swipe left for mobile?
+- fix hash path to remove first component (the app name)
 
 - add verify delete panel
 
@@ -25,37 +15,22 @@ SINGLE COLUMN MODE BUGS
 
 - add right arrow on note of link field
 
-
 - support elipsis in column header title
 
--- make didUpdate and Node/View specific
-
 - nodeMaxWidth?
-- support for size to fit width on columns (limit to nodeMaxWidth)
-
 
 - have browserview observe node titles to update window hash path
 
 fitColumns
-
   activeEndColumnsThatFitBrowserWidth
   inactiveEndColumns
   setInactiveEndColumnCount()
   startColumnsToCollapse
-  
-   - reverse count width of active columns up to browser width
-   - if fills browser, collapse all inactive columns
-   - else leave 2 last columns uncollapsed 
-- always apply flex 100 to last uncollapsed column
+ 
 
-- fix single column mode
-- replace icons with unicode chars - use transform to scale if needed
 - if single column mode, use a single default column bgColor
+-- add a nodeColumnTitle method which defaults to title for single column mode
 
-- add BrowserHeader title - use when single column
--- add a nodeColumnTitle method which defaults to title
-
-- multi options popup overflow is hidden?
 
 - cleanup message dict format
 - chat threads

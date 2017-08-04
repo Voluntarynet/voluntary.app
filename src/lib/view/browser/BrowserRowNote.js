@@ -1,12 +1,9 @@
 
-BrowserRowNote = DivView.extend().newSlots({
+BrowserRowNote = TextField.extend().newSlots({
     type: "BrowserRowNote",
-	isSelected: false,
 }).setSlots({
     init: function () {
-        DivView.init.apply(this)
-        this.setInnerHTML("")
-        this.turnOffUserSelect()
+        TextField.init.apply(this)
         return this
     },
 })

@@ -291,6 +291,7 @@ BrowserColumn = NodeView.extend().newSlots({
 	onEnterKeyUp: function(event) {
         if (!this.allowsCursorNavigation()) { return }
 	
+	/*
 		var row = this.selectedRow()
 		if (row && row.node().nodeTitleIsEditable()) { 
 			//row.title().focus() 
@@ -299,7 +300,7 @@ BrowserColumn = NodeView.extend().newSlots({
 				setTimeout(() => { row.title().focus() })
 			})
 		}
-		
+	*/	
 		return false
 	},
 
@@ -308,6 +309,7 @@ BrowserColumn = NodeView.extend().newSlots({
 	onDeleteKeyUp: function(event) {
         if (!this.allowsCursorNavigation()) { return }
 
+        /*
         var sNode = this.selectedNode()
         if (sNode && sNode.hasAction("delete")) { 
 			sNode.performAction("delete") 
@@ -315,6 +317,7 @@ BrowserColumn = NodeView.extend().newSlots({
 				this.selectPreviousColumn()
 			}
 		}
+		*/
 		return false
 	},
 	

@@ -151,7 +151,7 @@ BrowserView = NodeView.extend().newSlots({
     bgColorForIndex: function(i) {
 		var rgb = this.bgColors().atModLength(i)
 		var s = "rgb(" + rgb.map((v) => { return Math.round(v * 255) }).join(",") + ")"
-		console.log("bgColorForIndex = '" + s + "'")
+		//console.log("bgColorForIndex = '" + s + "'")
 		return s
     },
 

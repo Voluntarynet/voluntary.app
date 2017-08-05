@@ -103,7 +103,6 @@ var JSScript = {
 		var parts = this.fullPath().split("/")
 		parts.pop()
 		var basePath = parts.join("/")
-		//console.log("basePath = " + basePath)
 		return basePath
 	},
 },

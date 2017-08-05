@@ -1,98 +1,74 @@
 
-SINGLE COLUMN MODE BUGS
+BROWSER HEADER:
+    - support elipsis in column header title
+    
+BROWSER:
+    TITLE:
+        - if single column mode, use a single default column bgColor
+        - add a nodeColumnTitle method which defaults to title for single column mode
+    PATH:
+        - fix hash path to remove first component (the app name)
 
-- abstract TextField with selectedColor, unselectedColor (support selection styles? bold, italic, diff font?)
-- row delete button not stopping event propogation to select row?
+    ROWS:
+    - row delete button not stopping event propogation to select row?
+    - use double tap to edit editable text field row title?
+    - don't adjust visible column set if a new row selection doesn't require more room (let user use back arrow if they want that)
+    - have browserview observe node titles to update window hash path
 
-- use double tap to edit editable text field row title?
+    - FEATURE: support for reording rows (nodeRowsUserOrderable) like Clear
+    - FEATURE: support for white rows with shadow selection (use z-index?)
 
-- CLEANUP: avoid writing over (or at least ever storing) existing object instances on read from store?
-    - looks like they get stored the first pass and the ones from last time are deleted on next sweep
-
-- fix hash path to remove first component (the app name)
-
-- add verify delete panel
-
-- don't adjust visible column set if a new row selection doesn't require more room (let user use back arrow if they want that)
-
-- add right arrow on note of link field
-
-- support elipsis in column header title
-
-- nodeMaxWidth?
-
-- have browserview observe node titles to update window hash path
-
-fitColumns
-  activeEndColumnsThatFitBrowserWidth
-  inactiveEndColumns
-  setInactiveEndColumnCount()
-  startColumnsToCollapse
- 
-
-- if single column mode, use a single default column bgColor
--- add a nodeColumnTitle method which defaults to title for single column mode
-
-
-- cleanup message dict format
-- chat threads
-- move contacts under identity
-- add time/date field
-
-
-- fix from address on emails 
-
--- CLEANUP css using new inheritance feature - e.g. declare font only on NodeView
-- add a forward arrow note to PointerRowView
+    - nodeMaxWidth?
 
 
 
-++ move actions to fields with attributes like "isEnabled" and enabledMethod
+BROWSER fitColumns cleanup?
+    activeEndColumnsThatFitBrowserWidth
+    inactiveEndColumns
+    setInactiveEndColumnCount()
+    startColumnsToCollapse
 
--- use View prefix consistently
+DATASTORE:
+    - cleanup: avoid writing over (or at least ever storing) existing object instances on read from store?
+        - looks like they get stored the first pass and the ones from last time are deleted on next sweep
 
-- support hashtag for sharing a path (app will ask which id to find it under)
+PANEL:
+    - add verify delete panel
 
+FIELDS:
+    - add right arrow on note of link field 
+    - make tab go to next field?
+    FIELD ACTION BUTTONS:
+        - move actions to fields with attributes like "isEnabled" and enabledMethod
 
------------------------------------------------------------------
+MESSAGING:
+    - fix from address on emails 
+    - cleanup message dict format
+    - chat threads
+    - move contacts under identity
+    - add time/date field
+    - way to show pubkey when no contact available
 
-- way to show pubkey when no contact available
-- disable send action on draft when invalid
-- add hashtag path to url
-- make tab go to next field?
+IMAGES:
+    - image resizing (adjust jpg compression until <= size target)
 
-
------------------------
-
-- image resizing (adjust jpg compression until <= size target)
+CLEANUP:
+    -- use View postfix consistently
 
 --- DOC NOTES ---------
 
 SYNCING
 
 DB -> MODEL -> VIEW (db loads on start or model access, view loads on access)
-
 DB <- MODEL -> VIEW (model code auto detects changes and calls sync to view and DB)
-
 DB    MODEL <- VIEW (event code explicitly calls sync)
 
---- TWITTER NOTES ---
+--- FEEDS ---
 
 BMTweet - BMObjectMessage
 BMTweetRowView (non fixed height)
-
-
-
 peer id: pubkey-bloomFilterOfSubscriptions-syncEstimate
 
-connect to peers whose filter match any friends, ask them if they 
-
-channeling strategies:
-
-1) connect, get rserver list, connect to IP hashes least distance from your pubkey or subscription keys?
-
-2) pick random rservers as homes and publish those via blockstack
-blockstack: name -> pubkey, homeServers
 
 
 

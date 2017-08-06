@@ -1,3 +1,4 @@
+
 BMInbox = BMStorableNode.extend().newSlots({
     type: "BMInbox",
 }).setSlots({

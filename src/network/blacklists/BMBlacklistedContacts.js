@@ -10,7 +10,6 @@ BMBlacklistedContacts = BMBlacklist.extend().newSlots({
         BMBlacklist.init.apply(this)		
         this.setShouldStore(true)        
         this.setTitle("contacts")
-        this.setNodeMinWidth(150)
     },
 	
 })

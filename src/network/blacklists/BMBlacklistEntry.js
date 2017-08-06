@@ -6,7 +6,6 @@ BMBlacklistEntry = BMFieldSetNode.extend().newSlots({
         BMFieldSetNode.init.apply(this)		
         this.setTitle("Blacklist entry")
         this.setShouldStore(true)
-        this.setNodeMinWidth(150)
 
 		this.addFieldNamed("host").setValueMethod("host").setValueIsEditable(true).setValue("host")
 		this.addFieldNamed("reason").setValueMethod("reason").setValueIsEditable(true).setValue("")

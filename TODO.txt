@@ -1,9 +1,27 @@
 
+MESSAGING:
+	- cleanup message dict format
+		- add time/date field
+	
+	EMAIL:
+		- from address is missing (just not updated on load?) on unsent emails after reload
+
+	    - way to show pubkey when no contact available?
+	    - fix from address on emails 
+	
+		- move sent to separate instance made on send, not when seen in msg queue
+
+	CHAT:
+	    - chat threads
+
+	CONTACTS:
+    	- move contacts under identity
+
+
+
 ++ replace updateViews with a better name?
 	++ it means "syncInternalToVisibleStateOfView"?
 
-BROWSER HEADER:
-    - support elipsis in column header title
     
 BROWSER:
     TITLE:
@@ -13,23 +31,22 @@ BROWSER:
         - fix hash path to remove first component (the app name)
 
     ROWS:
-    - row delete button not stopping event propogation to select row?
+    - row delete button not stopping event propagation to select row?
     - use double tap to edit editable text field row title?
-    - don't adjust visible column set if a new row selection doesn't require more room (let user use back arrow if they want that)
-    - have browserview observe node titles to update window hash path
+    - don't adjust visible column set if a new row selection doesn't require more room 
+		- (let user use back arrow if they want that)
+    - have BrowserView observe node titles to update window hash path?
 
     - FEATURE: support for reording rows (nodeRowsUserOrderable) like Clear
     - FEATURE: support for white rows with shadow selection (use z-index?)
 
     - nodeMaxWidth?
 
-
-
-BROWSER fitColumns cleanup?
-    activeEndColumnsThatFitBrowserWidth
-    inactiveEndColumns
-    setInactiveEndColumnCount()
-    startColumnsToCollapse
+	BROWSER fitColumns cleanup?
+	    activeEndColumnsThatFitBrowserWidth
+	    inactiveEndColumns
+	    setInactiveEndColumnCount()
+	    startColumnsToCollapse
 
 DATASTORE:
     - cleanup: avoid writing over (or at least ever storing) existing object instances on read from store?
@@ -44,13 +61,6 @@ FIELDS:
     FIELD ACTION BUTTONS:
         - move actions to fields with attributes like "isEnabled" and enabledMethod
 
-MESSAGING:
-    - fix from address on emails 
-    - cleanup message dict format
-    - chat threads
-    - move contacts under identity
-    - add time/date field
-    - way to show pubkey when no contact available
 
 IMAGES:
     - image resizing (adjust jpg compression until <= size target)

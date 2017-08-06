@@ -26,7 +26,6 @@ BMRemoteIdentity = BMNavNode.extend().newSlots({
 		this.profile().fieldNamed("publicKeyString").setValueIsEditable(true)
 		
         this.addAction("delete")
-        this.setNodeMinWidth(180)
     },
 
 	didLoadFromStore: function() {

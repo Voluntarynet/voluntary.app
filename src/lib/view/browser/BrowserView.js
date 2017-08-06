@@ -66,11 +66,16 @@ BrowserView = NodeView.extend().newSlots({
         this.setDefaultHeader(dh)
         this.addSubview(dh)
         
-        this.setBackgroundColor(this.bgColorForIndex(1))
+        this.setBackgroundColor(this.bgColorForIndex(Math.round(this.bgColors().length/2)))
 		this.setColumnGroupCount(1)
 		//.selectFirstColumn()
         return this
     },
+
+	updateBackground: function() {
+		var n = this.activeColumnGroups().length
+        this.setBackgroundColor(this.bgColorForIndex(n + 1))
+	},
     
     prepareToSyncToView: function() {
         console.log(this.type() + " prepareToSyncToView")
@@ -149,7 +154,14 @@ BrowserView = NodeView.extend().newSlots({
 	// --- column background colors ----------------------------
 	
     bgColorForIndex: function(i) {
-		var rgb = this.bgColors().atModLength(i)
+		var colors = this.bgColors()
+		var rcolors = this.bgColors().reversed()
+		rcolors.removeFirst()
+		colors = colors.copy().appendItems(rcolors)
+		
+		var rgb = colors.atModLength(i)
+
+
 		var s = "rgb(" + rgb.map((v) => { return Math.round(v * 255) }).join(",") + ")"
 		//console.log("bgColorForIndex = '" + s + "'")
 		return s
@@ -460,6 +472,7 @@ BrowserView = NodeView.extend().newSlots({
 	*/
 	
 	fitForMultiColumn: function() {
+		this.updateBackground()
 		// collapse columns as needed
 		
         var browserWidth = this.browserWidth()

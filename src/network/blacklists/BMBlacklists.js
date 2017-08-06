@@ -14,7 +14,6 @@ BMBlacklists = BMStorableNode.extend().newSlots({
         this.setShouldStore(true)
  		this.setShouldStoreSubnodes(true)
         this.setTitle("Blacklists")
-        this.setNodeMinWidth(150)
         
         this.initStoredSlotWithProto("servers", BMBlacklistedServers)
         this.initStoredSlotWithProto("peers", BMBlacklistedPeers)

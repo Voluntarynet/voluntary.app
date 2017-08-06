@@ -1,4 +1,8 @@
 
+FIELDS
+    - select field on edit
+    - edit on hitting return on selected/focused field 
+    
 MESSAGING:
 	- cleanup message dict format
 		- add time/date field

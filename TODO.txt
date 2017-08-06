@@ -8,8 +8,6 @@ MESSAGING:
 		- add time/date field
 	
 	EMAIL:
-		- from address is missing (just not updated on load?) on unsent emails after reload
-
 	    - way to show pubkey when no contact available?
 	    - fix from address on emails 
 	

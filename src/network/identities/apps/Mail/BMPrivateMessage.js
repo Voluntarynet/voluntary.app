@@ -15,8 +15,8 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
         //this.addFieldNamed("stamp").setKey("stamp").setValueIsEditable(false)
 		//this.setStamp("Unstamped")
 		
-		//this.addStoredField(BMIdentityField.clone().setValueMethod("fromAddress").setKey("from").setValueIsEditable(false))
-		//this.addStoredField(BMIdentityField.clone().setValueMethod("toAddress").setKey("to").setValueIsEditable(true))
+		//this.addStoredField(BMIdentityField.clone().setValueMethod("senderPublicKeyString").setKey("fromPubkey").setValueIsEditable(false))
+		//this.addStoredField(BMIdentityField.clone().setValueMethod("receiverPublicKeyString").setKey("toPubkey").setValueIsEditable(false))
 
 		this.addStoredField(BMOptionsField.clone().setKey("from").setValueMethod("fromContact")).setValueIsEditable(false).setValidValuesMethod("fromContactNames") //.setNoteMethod("fromContactPublicKey")
 		this.addStoredField(BMOptionsField.clone().setKey("to").setValueMethod("toContact")).setValueIsEditable(true).setValidValuesMethod("toContactNames") //.setNoteMethod("toContactPublicKey")
@@ -37,7 +37,6 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
     },
 
 	// sync
-	
 
 	didUpdateField: function(aField) {
 		BMFieldSetNode.didUpdateField.apply(this)
@@ -46,12 +45,6 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 		//console.log("didUpdateField(" + name + ")")
 		
 		
-		/*
-		if (name == "from") {
-			this.setupSenderPubkeyFromInput()
-			this.updateCanSend()
-		} else 
-		*/
 		if (name == "toContact") {
 			this.setupReceiverPubkeyFromInput()
 			this.updateCanSend()
@@ -89,13 +82,18 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 		return this
 	},
 	
-	/*
 	didLoadFromStore: function() {
-		this.setupInputsFromPubkeys()
-		//this.validate()
+		
+		if (App.shared().network()) {
+			this.setupInputsFromPubkeys()
+		} else {
+			setTimeout(() => {
+				this.setupInputsFromPubkeys()
+			})
+		}
+		
 		return this
 	},
-	*/
 
 /*
     onDidEditNode: function() {
@@ -136,11 +134,14 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 	},
 	
 	setupInputsFromPubkeys: function() { // called on load from store
-		if (!App.shared().network()) { return null }
+		console.log(this.type() + " setupInputsFromPubkeys this.senderPublicKeyString() = " + this.senderPublicKeyString())
+		
+		//if (!App.shared().network()) { return null }
 		// if pubkey matches a contact name, set to name
 		// otherwise, set to the pubkey
 		
 		var senderId = App.shared().network().idWithNameOrPubkey(this.senderPublicKeyString())      
+		console.log(this.type() + " senderId = " + senderId)
 		var from = senderId ? senderId.name() : ""
 		if (from != this.fromContact()) { this.setFromContact(from) }
 	

@@ -28,6 +28,11 @@ MESSAGING:
 
     
 BROWSER:
+	COLORS: 
+		- support for browser header bar colors
+		- move color themes to json file
+		- make themes a preference?
+		
     TITLE:
         - if single column mode, use a single default column bgColor
         - add a nodeColumnTitle method which defaults to title for single column mode

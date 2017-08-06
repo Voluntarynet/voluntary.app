@@ -128,11 +128,16 @@
     display: block;
     position: absolute;
     margin-top: 10px;
-    width: 100%;   
+    margin-left: 35px;
+    width: calc(100% - 70px);   
+    height: 20px;
     
     color: rgba(0,0,0,0.5);
     text-align: center;
-    height: 20px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	padding: 0px;
+	
     /*border: 1px dashed yellow;*/
 }
 

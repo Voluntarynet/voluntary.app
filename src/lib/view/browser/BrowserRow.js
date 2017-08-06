@@ -56,15 +56,6 @@ BrowserRow = NodeView.extend().newSlots({
     
 	// --- sync ---
 	
-    syncToNode: function () {   
-        //console.log("syncToNode")
-        this.node().setTitle(this.titleView().innerHTML())
-        this.node().setSubtitle(this.subtitleView().innerHTML())
-        this.node().tellParentNodes("onDidEditNode", this.node())   
-        this.node().markDirty()
-        return this
-    },
-
     syncFromNode: function () {
         // is this ever called?
         this.updateSubviews()
@@ -253,8 +244,8 @@ BrowserRow = NodeView.extend().newSlots({
 	            this.showUnselected() 
 	        }
         
-	        //this.updateSubviews()
-	        this.syncToNode()
+	        this.updateSubviews()
+	        //this.syncToNode()
 		}
         return this
     },

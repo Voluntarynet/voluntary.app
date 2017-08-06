@@ -11,7 +11,7 @@ BrowserTitledRow = BrowserRow.extend().newSlots({
         this.setTitleView(this.addSubview(BrowserRowTitle.clone()))
         this.setSubtitleView(this.addSubview(BrowserRowSubtitle.clone()))
         this.setNoteView(this.addSubview(BrowserRowNote.clone()))
-		//this.updateSubviews()
+		this.updateSubviews()
 		this.setIsSelectable(true)
         return this
     },
@@ -19,7 +19,6 @@ BrowserTitledRow = BrowserRow.extend().newSlots({
     hasSubtitle: function() {
         return this.subtitleView().innerHTML().length > 0
     },
-
 
     updateSubviews: function() {
 		BrowserRow.updateSubviews.apply(this)
@@ -54,6 +53,8 @@ BrowserTitledRow = BrowserRow.extend().newSlots({
         return this
     },
 
+	
+
 	// text color
 	
 	currentTextColor: function() {
@@ -78,16 +79,16 @@ BrowserTitledRow = BrowserRow.extend().newSlots({
         this.syncToNode()
     },
 
-    syncToNode: function (changedView) {   
+    // -----------------
+
+    syncToNode: function () {   
         //console.log("syncToNode")
         this.node().setTitle(this.titleView().innerHTML())
         this.node().setSubtitle(this.subtitleView().innerHTML())
-        this.node().tellParentNodes("onDidEditNode", this.node())   
+        this.node().tellParentNodes("onDidEditNode", this.node())  
         this.node().markDirty()
         return this
     },
-
-    // -----------------
 
     syncFromNode: function () {
         var node = this.node()

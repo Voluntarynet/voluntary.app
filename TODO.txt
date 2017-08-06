@@ -1,11 +1,7 @@
 
-++ replace updateViews with syncToNode?
-	++ use DivView.isHandlingEvent()
-	
-	if (DivView.isHandlingEvent()) {
-		
-	}
-	
+++ replace updateViews with a better name?
+	++ it means "syncInternalToVisibleStateOfView"?
+
 BROWSER HEADER:
     - support elipsis in column header title
     

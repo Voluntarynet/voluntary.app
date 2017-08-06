@@ -138,6 +138,7 @@
 	text-overflow: ellipsis;
 	padding: 0px;
 	
+	overflow: hidden;
     /*border: 1px dashed yellow;*/
 }
 

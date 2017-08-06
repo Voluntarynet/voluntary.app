@@ -1,4 +1,11 @@
 
+++ replace updateViews with syncToNode?
+	++ use DivView.isHandlingEvent()
+	
+	if (DivView.isHandlingEvent()) {
+		
+	}
+	
 BROWSER HEADER:
     - support elipsis in column header title
     

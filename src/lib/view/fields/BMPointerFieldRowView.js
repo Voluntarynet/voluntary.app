@@ -19,6 +19,12 @@ BMPointerFieldRowView = BrowserTitledRow.extend().newSlots({
 		//this.setIsSelectable(true)
 		
 		/*this.setBorderBottom("1px solid #ddd")*/
+
+		this.noteView().setBackgroundImageUrlPath(this.pathForIconName("right"))        
+		this.noteView().setBackgroundSize(10, 10)
+		//this.noteView().setOpacity(0.25)
+		this.noteView().setMinAndMaxWidth(10).setMinAndMaxHeight(10)
+
         return this
     },
 
@@ -27,10 +33,26 @@ BMPointerFieldRowView = BrowserTitledRow.extend().newSlots({
 	},
 	
 	unselectedTextColor: function() {
-		return "#666"
+		return "rgba(0, 0, 0, 0.6)"
 	},
 	
     selectedBgColor: function() {
-        return "#ddd"
+        return "rgba(0, 0, 0, 0.1)"
+    },
+
+    syncFromNode: function () {
+		//console.log(this.type() + " syncFromNode this.isSelected() = ", this.isSelected())
+	
+		BrowserTitledRow.syncFromNode.apply(this)
+        var node = this.node()
+        this.noteView().setString("")
+        this.updateSubviews()
+
+		if (this.isSelected()) {
+			this.noteView().setOpacity(1)	
+		} else {
+			this.noteView().setOpacity(0.25)	
+		}
+        return this
     },
 })

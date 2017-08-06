@@ -253,7 +253,8 @@ BrowserRow = NodeView.extend().newSlots({
 	            this.showUnselected() 
 	        }
         
-	        this.updateSubviews()
+	        //this.updateSubviews()
+	        this.syncToNode()
 		}
         return this
     },

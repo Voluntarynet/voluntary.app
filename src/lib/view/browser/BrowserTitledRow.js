@@ -34,8 +34,23 @@ BrowserTitledRow = BrowserRow.extend().newSlots({
         this.subtitleView().setIsSelected(this._isSelected)
         this.noteView().setIsSelected(this._isSelected)
 
-		this.setColor(this.unselectedTextColor())
+        this.titleView().setSelectedColor(this.selectedTextColor())
+        this.titleView().setUnselectedColor(this.unselectedTextColor())
 
+        this.subtitleView().setSelectedColor(this.selectedTextColor())
+        this.subtitleView().setUnselectedColor(this.unselectedTextColor())
+
+        this.noteView().setSelectedColor(this.selectedTextColor())
+        this.noteView().setUnselectedColor(this.unselectedTextColor())
+
+		/*
+		if (this.isSelected()) {
+			this.setColor(this.selectedTextColor())
+		} else {
+			this.setColor(this.unselectedTextColor())
+		}
+		*/
+		
         return this
     },
 
@@ -76,7 +91,6 @@ BrowserTitledRow = BrowserRow.extend().newSlots({
 
     syncFromNode: function () {
         var node = this.node()
-
         this.titleView().setString(node.title())
         this.subtitleView().setString(node.subtitle())
         this.noteView().setString(this.node().note())

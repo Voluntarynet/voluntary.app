@@ -1003,7 +1003,7 @@ DivView = ideal.Proto.extend().newSlots({
 			if (this._isRegisteredForClicks == true) {
 				this._isRegisteredForClicks = false
 	            this.element().onclick = null
-	            this.element().ondbclick = null
+	            //this.element().ondbclick = null
 				this.makeCursorDefault()
 			}
         }

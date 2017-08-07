@@ -170,15 +170,29 @@ BMNode = ideal.Proto.extend().newSlots({
 		
 		var slotValue = this[slotName].apply(this)
 		assert(aProto)
-				
-		if (slotValue === null) {
-			var obj = aProto.clone()
-			var setterName = this.setterNameForSlot(slotName)
-			this[setterName].apply(this, [obj])
-			this.addSubnode(obj)
-		}
 		
+		console.log(this.type() + ".addSubnodeProtoForSlotIfAbsent(" + aProto.type() + ", " + slotName + ")")
+		console.log(this.type() + " slotValue = " + slotValue)
+		
+		if (slotValue == null) {
+		    
+			slotValue = aProto.clone()
+			//console.log(this.type() + "." + setterName + "(", obj, ")")
+			var setterName = this.setterNameForSlot(slotName)
+			this[setterName].apply(this, [slotValue])
+		}
+		// TODO: this doesn't preserve ordering - how to address this?
+		// split up init between stored and unstored slots?
+		
+		if (!this.hasSubnode(slotValue)) {
+			this.addSubnode(slotValue)
+        }
+        
 		return this
+	},
+	
+	hasSubnode: function(aSubnode) {
+	    return this.subnodes().contains(aSubnode)
 	},
     
     removeSubnode: function(aSubnode) {

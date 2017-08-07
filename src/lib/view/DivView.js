@@ -1010,9 +1010,19 @@ DivView = ideal.Proto.extend().newSlots({
         return this
     },
     
-    setAction: function (anAction) {
-        this._action = anAction
-        this.setIsRegisteredForClicks(anAction != null)
+    hasTargetAndAction: function() {
+        return (this.target() != null) && (this.action() != null)
+    },
+    
+    setTarget: function(anObject) {
+        this._target = anObject
+        this.setIsRegisteredForClicks(this.hasTargetAndAction())    
+        return this
+    },
+    
+    setAction: function (anActionString) {
+        this._action = anActionString
+        this.setIsRegisteredForClicks(this.hasTargetAndAction())
         return this       
     },
     

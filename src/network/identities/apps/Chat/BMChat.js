@@ -9,12 +9,12 @@ BMChat = BMApplet.extend().newSlots({
         BMApplet.init.apply(this)
         this.setShouldStore(true)
         this.setTitle("Chat")
-		//console.log(this + " init ")
+		console.log(this + " init ")
 		this.setupSubnodes()
     },
 
 	didLoadFromStore: function() {
-		//console.log(this + " didLoadFromStore ")
+		console.log(this + " didLoadFromStore ")
 		this.setupSubnodes()
 		return this
 	},
@@ -25,7 +25,7 @@ BMChat = BMApplet.extend().newSlots({
 
 
 	setupSubnodes: function() {
-		//console.log(this + " setupSubnodes ")
+		console.log(this + " setupSubnodes ")
 		this.addSubnodeProtoForSlotIfAbsent(BMChatThreads, "threads") 
 		this.addSubnodeProtoForSlotIfAbsent(BMChatNewThread, "newThread")
 		return this

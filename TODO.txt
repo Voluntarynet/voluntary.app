@@ -1,4 +1,9 @@
 
+    navigator.onLine
+
+    https://blog.superhuman.com/building-reliable-apps-on-unreliable-networks-3f75743fc457
+
+
 FIELDS
     - select field on edit
     - edit on hitting return on selected/focused field 

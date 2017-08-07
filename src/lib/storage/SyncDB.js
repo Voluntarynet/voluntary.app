@@ -221,6 +221,10 @@ SyncDB = ideal.Proto.extend().newSlots({
 	},
 	
 	commit: function() {
+	    // push to indexedDB tx and to SyncDb's read cache
+	    // TODO: only push to read cache on IndexedDB when tx complete callback received,
+	    // and block new writes until push to read cache
+	    
 	    this.assertInTx()
 	    
 	    var tx = this.idb().newTx()
@@ -263,8 +267,8 @@ SyncDB = ideal.Proto.extend().newSlots({
 			}
 		}
 		
-		 // indexeddb commits on next event loop but this commit is 
-		 // a sanity check that we don't write more to the same tx after that
+		 // indexeddb commits on next event loop but this "commit" is 
+		 // a sanity check - it raises exception if we attempt to write more to the same tx 
 		 
 		tx.commit() 
 		

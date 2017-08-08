@@ -1,7 +1,7 @@
 
 BMChatThread = BMStorableNode.extend().newSlots({
     type: "BMChatThread",
-    receiverPublicKeyString: null,
+    remotePublicKeyString: null,
 }).setSlots({
     
     init: function () {
@@ -9,5 +9,17 @@ BMChatThread = BMStorableNode.extend().newSlots({
         this.setShouldStore(true)
         this.setTitle("threads")  
     },
+
+	setRemoteIdentity: function(rid) {
+		this.setRemotePublicKeyString(rid.publicKeyString())
+		return this
+	},
+	
+	remoteIdentity: function() {
+		if (this._remoteIdentity == null) {
+			this._remoteIdentity = this.localIdentity().remoteIdentityWithPublicKeyString(this.receiverPublicKeyString())
+		}
+		return this._remoteIdentity
+	},
 })
 

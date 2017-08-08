@@ -392,6 +392,21 @@ BMNode = ideal.Proto.extend().newSlots({
         
         return null
     },
+
+	parentNodes: function() {
+		var node = this.parentNode()
+		var results = []
+		
+		while (node) {
+			results.push(node)
+			node = this.parentNode()
+		}
+		return results
+	},
+	
+	parentNodeTypes: function() {
+		return this.parentNodes().map((node) => { return node.type() })
+	},
     
     // --- subnode lookup -----------------------------
     
@@ -425,13 +440,13 @@ BMNode = ideal.Proto.extend().newSlots({
         return this._subnodes.length
     },
     
-    /*
     setSubnodes: function(subnodes) {
+		subnodes.forEach((subnode) => { subnode.setParentNode(this) })
         this._subnodes = subnodes
+		this.markDirty()
         //this.verifySubnodesHaveParentNodes()
         return this
     },
-    */
     
     verifySubnodesHaveParentNodes: function() {
         var missing = this.subnodes().detect(function (subnode) { return !subnode.parentNode() })
@@ -536,29 +551,4 @@ BMNode = ideal.Proto.extend().newSlots({
         }
         return this
     },
-
-/*
-	// StorableNode
-	
-    subnodePids: function() {
-        var pids = []
-        
-        this.subnodes().forEach((subnode) => {
-            if (subnode.shouldStore() == true) {
-                pids.push(subnode.pid())
-            }
-        })
-
-        return pids
-    },
-    
-    setSubnodePids: function(pids) {
-        var subnodes = pids.map((pid) => {
-            return NodeStore.shared().objectForPid(pid).setParentNode(this)
-        })
-
-        this.setSubnodes(subnodes)
-        return this
-    },
-    */
 })

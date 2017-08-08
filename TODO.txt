@@ -7,6 +7,7 @@ on setting a stored slot, check subnodes and replace old slot value with new one
 - move BMNode storage code to BMStorableNode
 - eliminate BMNavNode? still need title matching?
 
+- make sure direct setting of _slot = value also call slotUpdate
 
 GENERAL 
     - add navigator.onLine check?

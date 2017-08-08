@@ -12,22 +12,7 @@ BMChatContact = BMNode.extend().newSlots({
 		return this.remoteIdentity().title()
 	},
 
-})
-
-BMChatContactRowView = BrowserRow.extend().newSlots({
-    type: "BMChatContact",
-	remoteIdentity: null,
-}).setSlots({
-    
-    init: function () {
-        BrowserRow.init.apply(this)        
-    },
-
-	select: function() {
-		BrowserRow.select.apply(this)
-		console.log("select")
-		return this
+	chatApp: function() {
+	 	return this.parentNodeOfType("BMChat")
 	},
-
 })
-

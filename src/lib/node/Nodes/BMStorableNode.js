@@ -170,6 +170,11 @@ BMStorableNode = BMNode.extend().newSlots({
 		if (slotName in this._storedSlots) { 
 			this.markDirty()
 		}
+		
+		if (this.subnodes().includes(oldValue)) { // TODO: add a switch for this feature
+			this.subnodes().replaceOccurancesOfWith(oldValue, newValue)
+			//console.log(this.type() + " this.subnodes().replaceOccurancesOfWith(", oldValue, ",", newValue, ")")
+		}
 	},
 	
 	// StorableNode
@@ -188,7 +193,7 @@ BMStorableNode = BMNode.extend().newSlots({
     
     setSubnodePids: function(pids) {
         var subnodes = pids.map((pid) => {
-            return NodeStore.shared().objectForPid(pid).setParentNode(this)
+            return NodeStore.shared().objectForPid(pid)
         })
 
         this.setSubnodes(subnodes)

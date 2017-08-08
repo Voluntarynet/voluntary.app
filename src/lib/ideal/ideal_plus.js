@@ -58,7 +58,17 @@ Array.prototype.before = function(v)
 
 	return this.slice(0, index);
 }
-	
+
+Array.prototype.replaceOccurancesOfWith = function(oldValue, newValue)
+{
+	for (var i = 0; i < this.length; i++) {
+	    if (this[i] == oldValue) {
+	        this[i] = newValue;
+		}
+	}
+	return this
+}
+
 /// String
 
 String.prototype.firstCharacter = function() {
@@ -161,11 +171,8 @@ Array.prototype.equals = function (array) {
     return true;
 }
 
-Array.prototype.includes = function (anItem) {
-    // if the other array is a falsy value, return
-    if (!array)
-        return false;
-
+/*
+Array.prototype.includes = function (b) {
     for (var i = 0, l=this.length; i < l; i++) {
 		var a = this[i]
 
@@ -180,6 +187,7 @@ Array.prototype.includes = function (anItem) {
     }    
     return false;
 }
+*/
 
 // Hide method from for-in loops
 Object.defineProperty(Array.prototype, "equals", {enumerable: false});
@@ -198,6 +206,11 @@ Object.prototype.ancestors = function() {
 	}
 	return results
 }
+
+Object.prototype.ancestorTypes = function() {
+	return this.ancestors().map((obj) => { return obj.type() })
+}
+
 
 Object.prototype.firstAncestorWithMatchingPostfixClass = function(aPostfix) {
 	// not a great name but this walks back the ancestors and tries to find an

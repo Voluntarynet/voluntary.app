@@ -26,6 +26,8 @@ BMLocalIdentity = BMKeyPair.extend().newSlots({
 		//console.log("is editable = ", this.profile().fieldNamed("publicKeyString").valueIsEditable())
 		this.generatePrivateKey()
         this.addAction("delete")
+
+		//this.setShouldStoreSubnodes(false)
     },
 
 	didLoadFromStore: function() {

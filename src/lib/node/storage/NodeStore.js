@@ -315,6 +315,7 @@ NodeStore = ideal.Proto.extend().newSlots({
         return false
     },
     
+    /*
     justReadChildrenOfObject: function(obj) {
         var nodeDict = this.nodeDictAtPid(obj.pid())
         if (nodeDict) {
@@ -323,7 +324,8 @@ NodeStore = ideal.Proto.extend().newSlots({
         }
         
         return false        
-    },    
+    },
+    */
   
     nodeDictAtPid: function(pid) {
         var v = this.sdb().at(pid)

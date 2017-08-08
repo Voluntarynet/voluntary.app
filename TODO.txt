@@ -1,6 +1,15 @@
 
-    navigator.onLine
+on setting a stored slot, check subnodes and replace old slot value with new one if found
 
+- bug: Chat adding more thread subnodes on reload
+- deal with issue of storedSlots which are also subnodes
+
+- move BMNode storage code to BMStorableNode
+- eliminate BMNavNode? still need title matching?
+
+
+GENERAL 
+    - add navigator.onLine check?
     https://blog.superhuman.com/building-reliable-apps-on-unreliable-networks-3f75743fc457
 
 
@@ -43,16 +52,18 @@ BROWSER:
         - fix hash path to remove first component (the app name)
 
     ROWS:
-    - row delete button not stopping event propagation to select row?
-    - use double tap to edit editable text field row title?
-    - don't adjust visible column set if a new row selection doesn't require more room 
-		- (let user use back arrow if they want that)
-    - have BrowserView observe node titles to update window hash path?
+        - double tap to edit row titles? or hold tap?
 
-    - FEATURE: support for reording rows (nodeRowsUserOrderable) like Clear
-    - FEATURE: support for white rows with shadow selection (use z-index?)
+        - row delete button not stopping event propagation to select row?
+        - use double tap to edit editable text field row title?
+        - don't adjust visible column set if a new row selection doesn't require more room 
+    		- (let user use back arrow if they want that)
+        - have BrowserView observe node titles to update window hash path?
 
-    - nodeMaxWidth?
+        - FEATURE: support for reording rows (nodeRowsUserOrderable) like Clear
+        - FEATURE: support for white rows with shadow selection (use z-index?)
+
+        - nodeMaxWidth?
 
 	BROWSER fitColumns cleanup?
 	    activeEndColumnsThatFitBrowserWidth

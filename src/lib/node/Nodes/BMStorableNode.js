@@ -92,6 +92,16 @@ BMStorableNode = BMNode.extend().newSlots({
     },
 
 	// --- set storage dictionary ---
+   
+    setNodeDict: function (aDict) {   
+	    BMNode.setNodeDict.apply(this, [aDict])
+        this.setIsUnserializing(true) 
+        this.setNodeDictForProperties(aDict)
+        this.setNodeDictForChildren(aDict)
+		this.didLoadFromStore()
+        this.setIsUnserializing(false) 
+        return this
+    },
     
     setNodeDictForProperties: function (aDict) {
 		var hadMissingSetter = false 
@@ -130,6 +140,7 @@ BMStorableNode = BMNode.extend().newSlots({
         var newPids = aDict.children
         if (newPids) {
             if (this.loadsUnionOfChildren()) {
+                throw new Error("loadsUnionOfChildren")
                 newPids = this.subnodePids().union(newPids)
             }
             
@@ -138,16 +149,7 @@ BMStorableNode = BMNode.extend().newSlots({
         return this
     },
     
-    setNodeDict: function (aDict) {   
-	    BMNode.setNodeDict.apply(this, [aDict])
-        this.setIsUnserializing(true) 
-        this.setNodeDictForProperties(aDict)
-        this.setNodeDictForChildren(aDict)
-		this.didLoadFromStore()
-        this.setIsUnserializing(false) 
-        return this
-    },
-    
+
 	// --- udpates ---
 	
     didLoadFromStore: function() {
@@ -169,4 +171,27 @@ BMStorableNode = BMNode.extend().newSlots({
 			this.markDirty()
 		}
 	},
+	
+	// StorableNode
+	
+    subnodePids: function() {
+        var pids = []
+        
+        this.subnodes().forEach((subnode) => {
+            if (subnode.shouldStore() == true) {
+                pids.push(subnode.pid())
+            }
+        })
+
+        return pids
+    },
+    
+    setSubnodePids: function(pids) {
+        var subnodes = pids.map((pid) => {
+            return NodeStore.shared().objectForPid(pid).setParentNode(this)
+        })
+
+        this.setSubnodes(subnodes)
+        return this
+    },
 })

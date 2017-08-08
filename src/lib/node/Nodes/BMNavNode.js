@@ -2,11 +2,10 @@
 /*
     for fixed navigation use 
     
-    doesn't replace subsubnodes on read 
+    doesn't replace ubnodes on read 
     instead matches with subnode titles and sends appropriate setNodeDict to them
     
-    * have to make sure we set a "title" property when saving so we can do this
-
+    NOTE: have to make sure we set a "title" property when saving so we can do this
 */
 
 BMNavNode = BMStorableNode.extend().newSlots({

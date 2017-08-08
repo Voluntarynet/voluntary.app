@@ -137,10 +137,6 @@ BMRegion = BMNode.extend().newSlots({
         return null
     },
     
-    containsSubnode: function(aSubnode) {
-        return this.subnodes().detect((subnode) => { return subnode.isEqual(aSubnode) })
-    },
-    
 })
 
 window.Region = BMRegion

@@ -184,16 +184,26 @@ BMNode = ideal.Proto.extend().newSlots({
 		// TODO: this doesn't preserve ordering - how to address this?
 		// split up init between stored and unstored slots?
 		
-		if (!this.hasSubnode(slotValue)) {
+		if (!this.containsSubnode(slotValue)) {
 			this.addSubnode(slotValue)
         }
         
 		return this
 	},
 	
+	/*
 	hasSubnode: function(aSubnode) {
 	    return this.subnodes().contains(aSubnode)
 	},
+	*/
+	
+	isEqual: function(aNode) {
+	    return this === aNode
+	},
+	
+    containsSubnode: function(aSubnode) {
+        return this.subnodes().detect((subnode) => { return subnode.isEqual(aSubnode) })
+    },
     
     removeSubnode: function(aSubnode) {
         this.subnodes().remove(aSubnode)
@@ -415,12 +425,13 @@ BMNode = ideal.Proto.extend().newSlots({
         return this._subnodes.length
     },
     
+    /*
     setSubnodes: function(subnodes) {
         this._subnodes = subnodes
         //this.verifySubnodesHaveParentNodes()
         return this
     },
-
+    */
     
     verifySubnodesHaveParentNodes: function() {
         var missing = this.subnodes().detect(function (subnode) { return !subnode.parentNode() })
@@ -526,6 +537,7 @@ BMNode = ideal.Proto.extend().newSlots({
         return this
     },
 
+/*
 	// StorableNode
 	
     subnodePids: function() {
@@ -548,4 +560,5 @@ BMNode = ideal.Proto.extend().newSlots({
         this.setSubnodes(subnodes)
         return this
     },
+    */
 })

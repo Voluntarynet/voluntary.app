@@ -17,6 +17,7 @@ BMChatNewThread = BMNode.extend().newSlots({
     },
 
     prepareToAccess: function() {
+		BMNode.prepareToAccess.apply(this)
         console.log(this.type() + ".prepareToAccess()")
 		var subnodes = this.remoteIdentities().subnodes().map((rid) => { return BMChatContact.clone().setRemoteIdentity(rid) })
 		console.log("subnodes = ", subnodes)

@@ -140,7 +140,7 @@ BMStorableNode = BMNode.extend().newSlots({
         var newPids = aDict.children
         if (newPids) {
             if (this.loadsUnionOfChildren()) {
-                throw new Error("loadsUnionOfChildren")
+                throw new Error("loadsUnionOfChildren") // checking if this is being used
                 newPids = this.subnodePids().union(newPids)
             }
             
@@ -171,7 +171,8 @@ BMStorableNode = BMNode.extend().newSlots({
 			this.markDirty()
 		}
 		
-		if (this.subnodes().includes(oldValue)) { // TODO: add a switch for this feature
+		if (newValue != null && this.subnodes().includes(oldValue)) { // TODO: add a switch for this feature
+			newValue.setParentNode(this)
 			this.subnodes().replaceOccurancesOfWith(oldValue, newValue)
 			//console.log(this.type() + " this.subnodes().replaceOccurancesOfWith(", oldValue, ",", newValue, ")")
 		}

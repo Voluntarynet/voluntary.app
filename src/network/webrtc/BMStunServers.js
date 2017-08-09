@@ -12,9 +12,16 @@ BMStunServers = BMStorableNode.extend().newSlots({
         this.setNoteIsSubnodeCount(true)
         this.setNodeMinWidth(270)
         this.addAction("add")
-		this.addSubnodesIfAbsent(this.bootStrapServers())
+
+		setTimeout(() => { this.bootstrap() })
 		this.setSubnodeProto(BMStunServer)
     },
+
+	bootstrap: function() {
+		if (this.subnodes().length == 0) {
+			this.addSubnodesIfAbsent(this.bootStrapServers())
+		}		
+	},
     
     addServer: function (aServer) {
         return this.addSubnode(aServer)
@@ -51,13 +58,13 @@ BMStunServers = BMStorableNode.extend().newSlots({
     bootStrapServers: function (dict) {
 		var dicts = this.defaultOptions().iceServers
 		return dicts.map((dict) => {
-        	return BMStunServer.clone().setIceEntry(dict) 
+        	return BMStunServer.clone().setIceDict(dict) 
 		})
     },
 
 	iceEntries: function() {
 	    if (this.servers()) {
-		    return this.servers().map((server) => { return server.asIceEntry() })
+		    return this.servers().map((server) => { return server.iceDict() })
 	    }
 	    
         console.warn(this.type() + " WARNING: using defaultOptions")

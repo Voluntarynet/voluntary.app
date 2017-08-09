@@ -28,14 +28,11 @@ BMDataStore = BMNode.extend().newSlots({
 		return this
 	},
 	
-    prepareToSyncToView: function() {
-	//	console.log(this.type() + " prepareToSyncToView - refreshSubnodes")
-		
+    prepareToSyncToView: function() {		
 		if (this.subnodes().length == 0) {
 			this.refreshSubnodes()
 		}
     },
-
 	
 	refreshSubnodes: function() {
 		console.log(this.type() + " refreshSubnodes")
@@ -46,12 +43,6 @@ BMDataStore = BMNode.extend().newSlots({
 			this.addRecord(subnode)
 		})		
 	},
-	
-	/*
-	addRecord: function(aRecord) {
-		this.justAddSubnode(aRecord)		
-	},
-	*/
 	
 	subnodeForClassName: function(aClassName) {
 		var subnode = this.firstSubnodeWithTitle(aClassName)

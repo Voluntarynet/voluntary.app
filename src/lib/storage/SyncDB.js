@@ -20,7 +20,7 @@ SyncDB = ideal.Proto.extend().newSlots({
     writeCache: null,
 	isOpen: false,
 	isSynced: false,
-	debug: false,
+	debug: true,
 }).setSlots({
     init: function () {
 		this.setCache({})

@@ -45,7 +45,7 @@ BMStunServer = BMFieldSetNode.extend().newSlots({
 	
 	// ice entry - for Peer options
 	
-	setIceEntry: function(dict) {
+	setIceDict: function(dict) {
 	    var url = dict.url
 		var parts = url.split(":")
 		var type = parts[0]
@@ -57,7 +57,8 @@ BMStunServer = BMFieldSetNode.extend().newSlots({
 		return this
 	},
 	
-	asIceEntry: function() {
+	
+	iceDict: function() {
 		var url = "stun:" + this.host()
 		if (this.port() != null && this.port() != "") {
 			url += ":" + this.port()

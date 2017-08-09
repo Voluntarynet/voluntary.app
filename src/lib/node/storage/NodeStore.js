@@ -261,6 +261,10 @@ NodeStore = ideal.Proto.extend().newSlots({
 
 		this.sdb().commit() // flushes write cache
 
+		if (this.debug()) {
+			this.collect()
+		}
+		
         return totalStoreCount
     },
     

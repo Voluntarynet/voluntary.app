@@ -2,7 +2,6 @@
 BMChat = BMApplet.extend().newSlots({
     type: "BMChat",
     threads: null,
-    newThread: null,
 }).setSlots({
     
     init: function () {
@@ -15,14 +14,34 @@ BMChat = BMApplet.extend().newSlots({
 
 		this.setThreads(BMChatThreads.clone())
 		this.addSubnode(this.threads())
+		this.addStoredSlot("threads")
 		
-		this.setNewThread(BMChatNewThread.clone())
-		this.addSubnode(this.newThread())
+		console.log(this.type() + ".init()")
+		ShowStack()
     },
 	
     localIdentity: function() {
         return this.parentNodeOfType("BMLocalIdentity")
     },
+
+    remoteIdentities: function() {
+		// TODO: change to be off of local identity
+		// return this.localIdentity().remoteIdentities()
+        return App.shared().remoteIdentities()
+    },
+
+	setThreads: function(newValue) {
+		var oldValue = this._threads
+		this._threads = newValue
+		this.didUpdateSlot("threads", oldValue, newValue)
+		
+		if (newValue == null) {
+			console.warn(this.type() + ".setThreads oldValue:", oldValue, " newValue:", newValue)
+			//throw new Error("setting chat threads to null!")
+			ShowStack()
+		}
+		return this
+	},
 	
 })
 

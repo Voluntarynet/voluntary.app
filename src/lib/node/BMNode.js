@@ -135,6 +135,21 @@ BMNode = ideal.Proto.extend().newSlots({
 
 	// --- subnodes ----------------------------------------
     
+	setParentNode: function(aNode) {
+		if (aNode === this._parentNode) {
+			//console.warn(this.type() + " setParentNode(" + aNode.type() + ")  already has parent ", this._parentNode.type())
+			//ShowStack()
+			return this
+		}
+		
+		if (this._parentNode && aNode) {
+			console.warn(this.type() + " setParentNode(" + aNode.type() + ")  already has parent " + this._parentNode.type())
+		}
+		
+		this._parentNode = aNode
+		return this
+	},
+	
     justAddSubnode: function(aSubnode) {
         if (this.subnodes() == null) {
             throw new Error("subnodes is null")

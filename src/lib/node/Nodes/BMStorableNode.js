@@ -15,6 +15,50 @@ BMStorableNode = BMNode.extend().newSlots({
         this.setStoredSlots([])
     },
 
+    // -----------------------------------------------
+    // persistence id - "pid"
+    // -----------------------------------------------
+
+    setPidSymbol: function(aPid) {
+        this.setPid(aPid)
+        this.loadIfPresent()
+        return this
+    },
+        
+    setPid: function(aPid) {
+        this._pid = aPid
+        NodeStore.shared().addActiveObject(this)
+        this.markDirty()
+        return this
+    },
+    
+    assignPid: function() {
+        if (this._pid) {
+            throw new Error("attempt to reassign pid")
+        }
+        
+        this._pid = NodeStore.shared().pidOfObj(this)
+        
+        NodeStore.shared().addActiveObject(this)
+        this.markDirty()
+        
+        return this
+    },
+    
+    pid: function() {
+		if (!this.shouldStore()) {
+			
+			throw new Error("attempt to prepare to store a node of type '" + this.type() + "' which has shouldStore == false, use this.setShouldStore(true)")
+		}
+		
+        if (!this._pid) {
+            this.assignPid()
+        }
+        return this._pid
+    },
+
+	// -------------------------------------------
+
 	// --- add / remove stored slots ---
     
     initStoredSlotWithProto: function(name, proto) {
@@ -73,22 +117,8 @@ BMStorableNode = BMNode.extend().newSlots({
         return dict
     },
 
-/*
-    nodeDictForChildren: function () {
-        var dict = { }
-        dict.type = this.type()
-                
-        if (this.subnodes().length && this.shouldStoreSubnodes()) {
-            dict.children = this.subnodePids()
-        }
-        
-        return dict
-    },   
-*/
-
     nodeDict: function () {
         var dict = this.nodeDictForProperties()
-        //var childrenDict = this.nodeDictForChildren()
         
         if (this.subnodes().length && this.shouldStoreSubnodes()) {
             dict.children = this.subnodePids()
@@ -156,7 +186,6 @@ BMStorableNode = BMNode.extend().newSlots({
         return this
     },
     
-
 	// --- udpates ---
 	
     didLoadFromStore: function() {
@@ -233,47 +262,7 @@ BMStorableNode = BMNode.extend().newSlots({
         }
         return this
     },
-    // -----------------------------------------------
-    // persistence
-    // -----------------------------------------------
 
-    setPidSymbol: function(aPid) {
-        this.setPid(aPid)
-        this.loadIfPresent()
-        return this
-    },
-        
-    setPid: function(aPid) {
-        this._pid = aPid
-        
-        NodeStore.shared().addActiveObject(this)
-        this.markDirty()
-        return this
-    },
-    
-    assignPid: function() {
-        if (this._pid) {
-            throw new Error("attempt to reassign pid")
-        }
-        
-        this._pid = NodeStore.shared().pidOfObj(this)
-        
-        NodeStore.shared().addActiveObject(this)
-        this.markDirty()
-        
-        return this
-    },
-    
-    pid: function() {
-		if (!this.shouldStore()) {
-			
-			throw new Error("attempt to prepare to store a node of type '" + this.type() + "' which has shouldStore == false, use this.setShouldStore(true)")
-		}
-		
-        if (!this._pid) {
-            this.assignPid()
-        }
-        return this._pid
-    },
+
 
 })

@@ -1,10 +1,16 @@
 /*
-    NodeStore: a JSON object database with automatic garbage collection 
-	and syncing on event cycle via marking objects as dirty and only writing each once
+    NodeStore: 
+
+		An object store for BMStorableNode objects, that supports 
+		- read reference cache of "activeObjects" so re-loading an object will reference the same instance
+		- a write reference cache of "dirtyObjects"
+		- automatic tracking of dirty objects (objects whose state needs to be persisted)
+		- group transactional writes of dirty objects ( nodeStore.storeDirtyObjects() )
+		- garbage collection of persisted objects ( nodeStore.collect() )	
+		- supports circular references and properly collecting them
 	
-    stores objects as dictionaries in individual JSON files in a single folder
     
-    Overview:
+    Garbage collection:
     
 		The collector can have multiple roots. Any object stored with a pid (persistent Id) that begins
 		with an underscore will be treated as a root object and always marked when collecting garbage.
@@ -15,35 +21,31 @@
 		
 		This instantiates the object if it's not persisted, loads it if it is, and returns any already 
 		unpersisted instance if there is one.
-				
-				people.loadIfPresent() // will add it to active objects list if missing?
-				people.markDirty() // to ensure we'll save it if it's the first time?
 
+	Active objects:
                 
         Whenever a BNStorableNode instance is created, it's init method tells the store of 
-        it's existence ( addActiveObject(aNode) ) and marks itself as dirty.
+        it's existence ( addActiveObject(aNode) ) and marks itself as dirty if it's not being unserialized.
         
-        All dirty objects are persisted on the next event loop. Doing this in the event loop
-		avoids multiple writes for multiple changes within a given loop.
+        All dirty objects are transactionally persisted on the next event loop. 
+		This avoids multiple writes for multiple changes within a given loop.
     
-    How it works: 
-    
-        Persistent ids:
+    Persistent ids:
     
         each object is assigned a _pid property when persisted 
         _pid is a unique (persistent id) number (in string form) for the object
     
-        If a dictionary value points to string or number, it's value is stored in json.
+        If a serialized object record dictionary value points to string or number, it's value is stored in json.
         Otherwise, it's value is stored as a pid reference in a dictionary 
         like { _pid: pidNum }. 
     
     Writing and reading objects:
     
-        storable objects must define nodeDict() and setNodeDict(aDict) methods
+        BMStorableNode defines nodeDict() and setNodeDict(aDict) methods
         a nodeDict is JSON dict and contains a type slot which contains the object type name
         such that:
     
-            window[typeName].clone().setNodeDict(nodeDict)
+            window[typeName].clone().setNodeDict(nodeDict).didLoadFromStore()
         
         can be used to unserialize the object. Object's are responsible for unserializing 
         the nodeDict. The NodeStore.refForObject(obj) and NodeStore.objectForRef(refDict) can be used
@@ -51,15 +53,15 @@
 
         Example use:
     
-                var store = NodeStore.clone().setFolder(Folder.clone().setPath("..."))
+                var store = NodeStore.clone().setFolderName("store")
             
             // need to define a root
             
-                var root = BMNode.clone()
+                var root = BMStorableNode.clone()
                 store.setRootObject(root)
                 store.load()
             
-            // when you modify any BMNode instance's subnodes or data slots, 
+            // when you modify any BMStorableNode instance's subnodes or stored data slots, 
             // or call markDirty() on it, it will be marked as needing to be persisted in the
             // next event loop
             
@@ -67,10 +69,9 @@
                 root.this.addSubnode(test) // this marks root as dirty
                 test.this.addSubnode(foo) // this marks test as dirty
                         
-            // for singular objects, set their pid to a unique name, e.g.
+            // for singleton objects, set their pid to a unique name, e.g.
             
                 servers.setPid("_servers")
-        
             
             // when ready to store
             
@@ -84,21 +85,8 @@
         object records to make sure they don't use up too much space. To do this call:
     
             pdb.collect()
-    
-    Issues:
-    
-        deal with loading circular refs
-        - need to add to pid list before linking children or ivars that ref objects
-        but what if we call a setter which does some validation on the object set?
-        the object wouldn't be valid until we finished loading it...
+ 
 */
-
-//var fs = require('fs');
-//var path = require('path')
-
-// -----------------------------------------------
-
-//NodeStore.shared().setFolder(window.app.storageFolder().folderNamed("pdb"))   
 
 NodeStore = ideal.Proto.extend().newSlots({
     type: "NodeStore",
@@ -180,7 +168,9 @@ NodeStore = ideal.Proto.extend().newSlots({
 		return  proto.clone().setPid(pid)
 	},
 	
+	// ----------------------------------------------------
     // dirty objects
+	// ----------------------------------------------------
     
     addDirtyObject: function(obj) {
         // dirty objects list won't be huge, so a list is ok
@@ -208,7 +198,9 @@ NodeStore = ideal.Proto.extend().newSlots({
         return this
     },
         
+	// ----------------------------------------------------
     // writing
+	// ----------------------------------------------------
     
     debugLog: function(s) {
         if (this.debug()) {
@@ -272,18 +264,8 @@ NodeStore = ideal.Proto.extend().newSlots({
 		
         return totalStoreCount
     },
-    
-    newPid: function() {
-		return Math.floor(Math.random() * Math.pow(10, 17)).toString()
-    },
 
-    pidOfObj: function(obj) {
-        if (!("_pid" in obj) || obj._pid == null) {
-            obj._pid = obj.type() + "_" + this.newPid()
-        }   
-        return obj._pid     
-    },
-    
+
 	assertIsWritable: function() {
 		if (this.isReadOnly()) {
 			throw new Error("attempt to write to read-only store")
@@ -317,8 +299,25 @@ NodeStore = ideal.Proto.extend().newSlots({
         return this
     },
     
+	// ----------------------------------------------------
+	// pids
+	// ----------------------------------------------------
     
+    newPid: function() {
+		return Math.floor(Math.random() * Math.pow(10, 17)).toString()
+    },
+
+    pidOfObj: function(obj) {
+        if (!("_pid" in obj) || obj._pid == null) {
+            obj._pid = obj.type() + "_" + this.newPid()
+        }   
+        return obj._pid     
+    },
+
+
+	// ----------------------------------------------------
     // reading
+	// ----------------------------------------------------
     
     loadObject: function(obj) {
 		try {
@@ -336,18 +335,6 @@ NodeStore = ideal.Proto.extend().newSlots({
         return false
     },
     
-    /*
-    justReadChildrenOfObject: function(obj) {
-        var nodeDict = this.nodeDictAtPid(obj.pid())
-        if (nodeDict) {
-            obj.setNodeDictForChildren(nodeDict)
-            return true
-        }
-        
-        return false        
-    },
-    */
-  
     nodeDictAtPid: function(pid) {
         var v = this.sdb().at(pid)
         if (v == null) { 
@@ -396,6 +383,10 @@ NodeStore = ideal.Proto.extend().newSlots({
         return obj
     },
     
+	// ----------------------------------------------------
+	// active objects (the read cache)
+	// ----------------------------------------------------
+
     // active objects - one's we've read or written to disk
     // we use a dictionary to track the pids and a WeakMap
     // to connect each pid to a object
@@ -514,7 +505,9 @@ NodeStore = ideal.Proto.extend().newSlots({
         return pids
     },
     
+	// ----------------------------------------------------
     // garbage collection
+	// ----------------------------------------------------
 
 	rootPids: function() {
 		// pids beginning with _ are considered root

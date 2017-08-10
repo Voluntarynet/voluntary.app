@@ -41,11 +41,7 @@ BMNode = ideal.Proto.extend().newSlots({
 
     nodeContent: null,
     nodeBackgroundColor: null,
-     /*   
-	// persistence 
-    pid: null,
-	shouldStore: false,
-	*/
+
 	// debug
     debug: false,
 }).setSlots({
@@ -475,83 +471,10 @@ BMNode = ideal.Proto.extend().newSlots({
         return this
     },
 
+	
 	markDirty: function() {
 		// to be used by subclasses
+		// useful for persistence
 	},
     
-    // -----------------------------------------------
-    // persistence
-    // -----------------------------------------------
-/*
-    setPidSymbol: function(aPid) {
-        this.setPid(aPid)
-        this.loadIfPresent()
-        return this
-    },
-        
-    setPid: function(aPid) {
-        this._pid = aPid
-        
-        NodeStore.shared().addActiveObject(this)
-        this.markDirty()
-        return this
-    },
-    
-    assignPid: function() {
-        if (this._pid) {
-            throw new Error("attempt to reassign pid")
-        }
-        
-        this._pid = NodeStore.shared().pidOfObj(this)
-        
-        NodeStore.shared().addActiveObject(this)
-        this.markDirty()
-        
-        return this
-    },
-    
-    pid: function() {
-		if (!this.shouldStore()) {
-			
-			throw new Error("attempt to prepare to store a node of type '" + this.type() + "' which has shouldStore == false, use this.setShouldStore(true)")
-		}
-		
-        if (!this._pid) {
-            this.assignPid()
-        }
-        return this._pid
-    },
-  */
-/*  
-    markDirty: function() {
-        //console.trace("markDirty(" + this.title() + " " + this.pid() + ")")
-        //console.log("markDirty(" +this.title() + ")")
-		if (this.shouldStore() && !this.isUnserializing()) {
-        	NodeStore.shared().addDirtyObject(this)
-		}
-        return this
-    },
-*/
-    
-    // nodeDict
-    /*
-    nodeDict: function() {
-        return { 
-            type: this.type(),
-            children: this.subnodePids()
-        }    
-    },
-    
-    setNodeDict: function(aDict) {
-        // ignore - BMStorableNode will override 
-		//this.didLoadFromStore() // BMStorableNode.setNodeDict wants to do this *after* it's done
-        return this
-    },
- 
-	didLoadFromStore: function() {
-		//console.log(this.type() + " didLoadFromStore")
-	},
-	*/
- 
-
 })

@@ -177,6 +177,12 @@
     border-bottom: 1px solid transparent;
 }
 
+/*
+.BrowserRow:hover  {
+	font-family: "AppRegular";
+}
+*/
+
 .BrowserRowTitle {
 	display: block;
     position: absolute;

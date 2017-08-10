@@ -24,21 +24,27 @@ BMApps = BMStorableNode.extend().newSlots({
 	},
 
     addApps: function() {
-	
-		// add any missing apps
-        this.appProtos().forEach((appProto) => {
-            this.addAppTypeIfMissing(appProto)
-        })
-
-		// remove any apps not in appProtos
-		var types = this.appProtos().map((proto) => { return proto.type() })
-		var matches = this.apps().select((app) => { return types.contains(app.type()) })
-		this.setSubnodes(matches)
-        
+		this.addAnyMisingApps()
+		this.removeAnyExtraApps()
         return this
     },
 
+	removeAnyExtraApps: function() {
+		// remove any apps not in appProtos
+		var types = this.appProtos().map((proto) => { return proto.type() })
+		var matches = this.apps().select((app) => { return types.contains(app.type()) })
+		this.setSubnodes(matches)		
+	},
+
+	addAnyMisingApps: function() {
+        this.appProtos().forEach((appProto) => {
+            this.addAppTypeIfMissing(appProto)
+        })
+		return this
+	},
+
 	addAppTypeIfMissing: function(appProto) {
+		console.log(this.typeId() + ".addAppTypeIfMissing(" + appProto.type() + ")")
 		if (this.hasAppType(appProto) == false) {
         	this.addSubnode(appProto.clone())
 		}

@@ -216,8 +216,17 @@ SyncDB = ideal.Proto.extend().newSlots({
 	
 	begin: function() {
 	    assert(!this.hasBegun())
+	
+		if (this.debug()) {
+			console.log("---- " + this.type() + " begin tx ----")
+		}
+		
 	    this.setWriteCache({})
 	    return this
+	},
+	
+	hasWrites: function() {
+		return Object.keys(this._writeCache).length > 0
 	},
 	
 	commit: function() {
@@ -273,7 +282,7 @@ SyncDB = ideal.Proto.extend().newSlots({
 		tx.commit() 
 		
 		if (this.debug()) {
-			console.log("---- " + this.type() + " commited " + count + " writes")
+			console.log("---- " + this.type() + " committed tx with " + count + " writes ----")
 		}
 		
 		// TODO: use commit callback to clear writeCache

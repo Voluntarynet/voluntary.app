@@ -14,29 +14,28 @@ BMChatThreads = BMStorableNode.extend().newSlots({
 	},
 
 	prepareToAccess: function() {
-		BMNode.prepareToAccess.apply(this)
-
-		// remove threads for which there is no remote identity
-		
-		var newSubnodes = this.subnodes().select((thread) => { 
-			return thread.remoteIdentity() != null
-		})
-		
-		this.setSubnodes(newSubnodes)
-		
-		// make sure we have a thread for each remote identities
-		
+		BMNode.prepareToAccess.apply(this)		
+		this.removeThreadsWithNoRemoteIdentity()
+		this.addThreadForEveryRemoteIdentity()
+		this.sortSubnodes()
+	},
+	
+	addThreadForEveryRemoteIdentity: function() {
 		this.chatApp().remoteIdentities().subnodes().forEach((rid) => { 
-			
-			// add a thread if there isn't one
 			if (!this.threadForRemoteIdentity(rid)) {
 				var thread = BMChatThread.clone().setRemoteIdentity(rid)
 				this.addSubnode(thread)
 			}
-			
 		})
-			
-		this.sortSubnodes()
+		return this		
+	},
+	
+	removeThreadsWithNoRemoteIdentity: function() {
+		var ridSubnodes = this.subnodes().select((thread) => { 
+			return thread.remoteIdentity() != null
+		})
+		this.setSubnodes(ridSubnodes)
+		return this
 	},
 	
 	threadForRemoteIdentity: function(rid) {
@@ -57,7 +56,12 @@ BMChatThreads = BMStorableNode.extend().newSlots({
 		})
 		
 		this.setSubnodes(threads)
+
 		return this
+	},
+	
+	didStore: function() {
+		console.log(this.typeId() + ".didStore()")
 	},
 
 })

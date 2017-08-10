@@ -41,11 +41,11 @@ BMNode = ideal.Proto.extend().newSlots({
 
     nodeContent: null,
     nodeBackgroundColor: null,
-        
+     /*   
 	// persistence 
     pid: null,
 	shouldStore: false,
-	
+	*/
 	// debug
     debug: false,
 }).setSlots({
@@ -456,6 +456,10 @@ BMNode = ideal.Proto.extend().newSlots({
     },
     
     setSubnodes: function(subnodes) {
+		if (this._subnodes && subnodes && this._subnodes.equals(subnodes)) {
+			//console.log(this.typeId() + ".setSubnodes() - skipping because subnodes are the same <<<<<<<<<<<<<<<<<<<<<")
+			return this
+		}
 		subnodes.forEach((subnode) => { subnode.setParentNode(this) })
         this._subnodes = subnodes
 		this.markDirty()
@@ -470,11 +474,15 @@ BMNode = ideal.Proto.extend().newSlots({
         }
         return this
     },
+
+	markDirty: function() {
+		// to be used by subclasses
+	},
     
     // -----------------------------------------------
     // persistence
     // -----------------------------------------------
-
+/*
     setPidSymbol: function(aPid) {
         this.setPid(aPid)
         this.loadIfPresent()
@@ -513,7 +521,8 @@ BMNode = ideal.Proto.extend().newSlots({
         }
         return this._pid
     },
-    
+  */
+/*  
     markDirty: function() {
         //console.trace("markDirty(" + this.title() + " " + this.pid() + ")")
         //console.log("markDirty(" +this.title() + ")")
@@ -522,9 +531,10 @@ BMNode = ideal.Proto.extend().newSlots({
 		}
         return this
     },
+*/
     
     // nodeDict
-    
+    /*
     nodeDict: function() {
         return { 
             type: this.type(),
@@ -541,29 +551,7 @@ BMNode = ideal.Proto.extend().newSlots({
 	didLoadFromStore: function() {
 		//console.log(this.type() + " didLoadFromStore")
 	},
+	*/
  
-    // store
-    
-    store: function() {
-        NodeStore.shared().storeObject(obj)
-        return this
-    },
-    
-    existsInStore: function() {
-        return localStorage.getItem(obj.pid()) != null
-    },
-    
-    loadIfPresent: function() {
-        if (this.existsInStore()) {
-            NodeStore.shared().loadObject(this)
-        }
-        return this
-    },
-    
-    storeIfAbsent: function() {
-        if (!this.existsInStore()) {
-            this.store()
-        }
-        return this
-    },
+
 })

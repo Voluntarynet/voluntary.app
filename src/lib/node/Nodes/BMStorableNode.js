@@ -1,6 +1,10 @@
 
 BMStorableNode = BMNode.extend().newSlots({
     type: "BMStorableNode",
+
+    pid: null,
+	shouldStore: false,
+
     storedSlots: null, // dict
     shouldStoreSubnodes: true,
     loadsUnionOfChildren: false,
@@ -69,6 +73,7 @@ BMStorableNode = BMNode.extend().newSlots({
         return dict
     },
 
+/*
     nodeDictForChildren: function () {
         var dict = { }
         dict.type = this.type()
@@ -79,13 +84,14 @@ BMStorableNode = BMNode.extend().newSlots({
         
         return dict
     },   
+*/
 
     nodeDict: function () {
         var dict = this.nodeDictForProperties()
-        var childrenDict = this.nodeDictForChildren()
+        //var childrenDict = this.nodeDictForChildren()
         
-        if (childrenDict.children) {
-            dict.children = childrenDict.children
+        if (this.subnodes().length && this.shouldStoreSubnodes()) {
+            dict.children = this.subnodePids()
         }
         
         return dict
@@ -94,7 +100,8 @@ BMStorableNode = BMNode.extend().newSlots({
 	// --- set storage dictionary ---
    
     setNodeDict: function (aDict) {   
-	    BMNode.setNodeDict.apply(this, [aDict])
+	    //BMNode.setNodeDict.apply(this, [aDict])
+		// TODO: wrap in try {}
         this.setIsUnserializing(true) 
         this.setNodeDictForProperties(aDict)
         this.setNodeDictForChildren(aDict)
@@ -158,8 +165,9 @@ BMStorableNode = BMNode.extend().newSlots({
     },
 
 	markDirty: function() {
-		if (!this._isUnserializing) { 
-			BMNode.markDirty.apply(this)
+		if (!this._isUnserializing && this.shouldStore() && !this.isUnserializing()) {
+        	NodeStore.shared().addDirtyObject(this)
+			//BMNode.markDirty.apply(this)
 		}
 		return this
 	},
@@ -200,4 +208,72 @@ BMStorableNode = BMNode.extend().newSlots({
         this.setSubnodes(subnodes)
         return this
     },
+
+    // store
+    
+    store: function() {
+        NodeStore.shared().storeObject(obj)
+        return this
+    },
+    
+    existsInStore: function() {
+        return localStorage.getItem(obj.pid()) != null
+    },
+    
+    loadIfPresent: function() {
+        if (this.existsInStore()) {
+            NodeStore.shared().loadObject(this)
+        }
+        return this
+    },
+    
+    storeIfAbsent: function() {
+        if (!this.existsInStore()) {
+            this.store()
+        }
+        return this
+    },
+    // -----------------------------------------------
+    // persistence
+    // -----------------------------------------------
+
+    setPidSymbol: function(aPid) {
+        this.setPid(aPid)
+        this.loadIfPresent()
+        return this
+    },
+        
+    setPid: function(aPid) {
+        this._pid = aPid
+        
+        NodeStore.shared().addActiveObject(this)
+        this.markDirty()
+        return this
+    },
+    
+    assignPid: function() {
+        if (this._pid) {
+            throw new Error("attempt to reassign pid")
+        }
+        
+        this._pid = NodeStore.shared().pidOfObj(this)
+        
+        NodeStore.shared().addActiveObject(this)
+        this.markDirty()
+        
+        return this
+    },
+    
+    pid: function() {
+		if (!this.shouldStore()) {
+			
+			throw new Error("attempt to prepare to store a node of type '" + this.type() + "' which has shouldStore == false, use this.setShouldStore(true)")
+		}
+		
+        if (!this._pid) {
+            this.assignPid()
+        }
+        return this._pid
+    },
+
 })

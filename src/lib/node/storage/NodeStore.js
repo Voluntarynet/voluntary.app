@@ -147,6 +147,9 @@ NodeStore = ideal.Proto.extend().newSlots({
 	},
 
 	asyncOpen: function(callback) {
+		if (this.isOpen()) {
+			throw new Error(this.typeId() + ".asyncOpen() already open")
+		}
 		this.sdb().asyncOpen(() => {
 			this.didOpen()
 			//this.clear()
@@ -157,13 +160,8 @@ NodeStore = ideal.Proto.extend().newSlots({
 	},
 	
 	didOpen: function() {
-		//if (this.debug()) {
-			//this.show()
-			//this.sdb().idb().show()
-			//this.show()
-			this.collect()
-			//this.show()
-		//}
+		
+		this.collect()
 	},
     
     shared: function() {
@@ -220,7 +218,14 @@ NodeStore = ideal.Proto.extend().newSlots({
     
     storeDirtyObjects: function() {
 		this.debugLog(" --- storeDirtyObjects --- ")
-	
+		
+		/*
+		if (Object.keys(this._dirtyObjects).length == 0) {
+			console.log("no dirty objects to store")
+			return this
+		}
+		*/
+		
 		this.assertIsWritable()
 	
 		if (!this.sdb().isOpen()) { // delay until it's open
@@ -286,16 +291,28 @@ NodeStore = ideal.Proto.extend().newSlots({
 	},
 
     storeObject: function(obj) {
-        this.debugLog("storeObject(" + obj.pid() + ") = " + JSON.stringify(obj.nodeDict()))
 		this.assertIsWritable()
+		
+		var aDict = obj.nodeDict()
+
+		if (obj.willStore) {
+			obj.willStore(aDict)
+		}
+		
+        //this.debugLog("storeObject(" + obj.pid() + ") = " + s)
 	
-        this.sdb().atPut(obj.pid(), JSON.stringify(obj.nodeDict()))
+		var serializedString = JSON.stringify(aDict)
+        this.sdb().atPut(obj.pid(), serializedString)
         
         /*
         this happens automatically: 
         - when subnode pids are requested for serialization, 
         they are added to dirty when pid is assigned
         */
+
+		if (obj.didStore) {
+			obj.didStore(aDict)
+		}
         
         return this
     },

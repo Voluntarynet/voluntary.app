@@ -8,13 +8,19 @@ BMRServers = BMStorableNode.extend().newSlots({
         BMStorableNode.init.apply(this)
 		this.setShouldStore(true)
         this.setTitle("PeerJS Servers")
-        this.addServer(this.bootStrapServer())
         this.setNoteIsSubnodeCount(true)
         this.setNodeMinWidth(270)
-        
         this.setSubnodeProto(BMRServer)
         this.addAction("add")
+
+		setTimeout(() => { this.bootstrap() })
     },
+
+	bootstrap: function() { 
+		if (this.servers().length == 0) {
+	        this.addServer(this.bootStrapServer())			
+		}
+	},
     
     bootStrapServer: function () {
         return BMRServer.clone().setHost("peerjs1.voluntary.net").setPort(9000) //.setPidSymbol("_bootStrapServer")

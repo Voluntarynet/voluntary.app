@@ -1503,6 +1503,14 @@ Proto.setSlots({
         return obj;
     },
 
+	uniqueId: function() {
+		return this._uniqueId
+	},
+	
+	typeId: function() {
+		return this.type() + this.uniqueId()
+	},
+
     subclass: function() {
         console.warn("subclass is deprecated in favor of extend");
         return this.extend.call(this);

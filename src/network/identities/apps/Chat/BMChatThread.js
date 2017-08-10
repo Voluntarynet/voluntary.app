@@ -58,5 +58,8 @@ this.markDirty()
         return newComposeMsg
     },
 
+	didStore: function() {
+		console.log(this.typeId() + ".didStore()")
+	},
 })
 

@@ -6,7 +6,7 @@
 		- a write reference cache of "dirtyObjects"
 		- automatic tracking of dirty objects (objects whose state needs to be persisted)
 		- group transactional writes of dirty objects ( nodeStore.storeDirtyObjects() )
-		- garbage collection of persisted objects ( nodeStore.collect() )	
+		- on disk garbage collection of persisted objects ( nodeStore.collect() )	
 		- supports circular references and properly collecting them
 	
     
@@ -88,6 +88,7 @@
  
 */
 
+
 NodeStore = ideal.Proto.extend().newSlots({
     type: "NodeStore",
     folderName: "NodeStore",
@@ -98,11 +99,12 @@ NodeStore = ideal.Proto.extend().newSlots({
     
     activeObjectsDict: null,
     storingObjects: null,
-    debug: false,
 
 	sdb: null,
 	
 	isReadOnly: false,
+
+    debug: false,
 }).setSlots({
     init: function () {
         this.setDirtyObjects({})
@@ -178,6 +180,7 @@ NodeStore = ideal.Proto.extend().newSlots({
         
 		var pid = obj.pid()
         if (!(pid in this._dirtyObjects)) {
+			//console.log("addDirtyObject(" + obj.pid() + ")")
 	       // this.debugLog("addDirtyObject(" + obj.pid() + ")")
             this._dirtyObjects[pid] = obj
             this.setTimeoutIfNeeded()
@@ -208,15 +211,22 @@ NodeStore = ideal.Proto.extend().newSlots({
         }
     },
     
+	hasDirtyObjects: function() {
+		return Object.keys(this._dirtyObjects).length > 0
+	},
+
     storeDirtyObjects: function() {
 		this.debugLog(" --- storeDirtyObjects --- ")
 		
-		/*
-		if (Object.keys(this._dirtyObjects).length == 0) {
-			console.log("no dirty objects to store")
+		console.log(" --- storeDirtyObjects --- ")
+		if (!this.hasDirtyObjects()) {
+			console.log("no dirty objects to store Object.keys(this._dirtyObjects) = ", Object.keys(this._dirtyObjects))
 			return this
 		}
-		*/
+
+		this.showDirtyObjects()
+		//this.showActiveObjects()
+		
 		
 		this.assertIsWritable()
 	
@@ -239,7 +249,11 @@ NodeStore = ideal.Proto.extend().newSlots({
 	        for (pid in dirtyBucket) {
                 if (dirtyBucket.hasOwnProperty(pid)) {
 		            var obj = dirtyBucket[pid]
-		            this.storeObject(obj)
+		
+					if (pid[0] == "_" || this.objectIsReferencedByActiveObjects(obj)) {
+		            	this.storeObject(obj)
+					}
+					
 		            storeCount ++
 				}
 	        }
@@ -258,9 +272,12 @@ NodeStore = ideal.Proto.extend().newSlots({
 
 		this.sdb().commit() // flushes write cache
 
+/*
 		if (this.debug()) {
 			this.collect()
 		}
+		*/
+		
 		
         return totalStoreCount
     },
@@ -374,7 +391,7 @@ NodeStore = ideal.Proto.extend().newSlots({
         }
         var obj = proto.clone()
         // need to set pid before dict to handle circular refs
-        obj.setPid(pid) 
+        obj.setPid(pid) // calls addActiveObject()
 		//this.debugLog(" nodeDict = ", nodeDict)
         obj.setNodeDict(nodeDict)
 
@@ -521,7 +538,11 @@ NodeStore = ideal.Proto.extend().newSlots({
     collect: function() {
         // this is an on-disk collection
         // in-memory objects aren't considered
-        
+
+		// so make sure everything is flushed to disk first
+		assert(!this.hasDirtyObjects())
+        //this.storeDirtyObjects()
+
         this.debugLog("--- begin collect ---")
         this._marked = {}
         //this.markPid("_root")
@@ -571,7 +592,7 @@ NodeStore = ideal.Proto.extend().newSlots({
          
         this.sdb().commit()
             
-         return deleteCount
+		return deleteCount
     },
     
     // transactions
@@ -636,5 +657,55 @@ NodeStore = ideal.Proto.extend().newSlots({
 			})
 		}
 
+	},
+	
+	showDirtyObjects: function() {
+		var dirty = this._dirtyObjects
+		//console.log("dirty objects: ")
+		console.log("dirty objects:  " + Object.keys(dirty).join(", "))
+		/*
+		Object.keys(dirty).forEach((pid) => {
+			var obj = dirty[pid]
+			console.log("    " + pid + ": ", Object.keys(obj.nodeRefPids()))
+		})
+		*/
+		
+	},
+
+	showActiveObjects: function() {
+		var active = this.activeObjectsDict()
+		console.log("active objects: ")
+		
+		Object.keys(active).forEach((pid) => {
+			var obj = active[pid]
+			console.log("    " + pid + ": ", Object.keys(obj.nodeRefPids()))
+		})
+		
+		var pid = "_localIdentities"
+		var obj = active[pid]
+		//debugger;
+		console.log("    " + pid + ": ", Object.keys(obj.nodeRefPids()))
+		
+		return this		
+	},
+	
+	objectIsReferencedByActiveObjects: function(aNode) {
+		var nodePid = aNode.pid()
+		var active = this.activeObjectsDict()
+		
+		//var foundPids = {} nodeRefPids
+		
+		var result = Object.keys(active).detect((pid) => {
+			var obj = active[pid]
+			var match = (!(obj === aNode)) && obj.nodeReferencesPid(nodePid)
+			return match
+		}) != null
+
+		if (!result) {
+			console.log(">>>>>> " + aNode.pid() + " is unreferenced - not storing!")
+			//console.log("this.objectIsReferencedByActiveObjects(" + aNode.typeId() + ") = " + result)
+			//console.log("Object.keys(active).length = ", Object.keys(active).length)
+		}
+		return result
 	},
 })

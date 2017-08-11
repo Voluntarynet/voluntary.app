@@ -48,11 +48,11 @@ BMChat = BMApplet.extend().newSlots({
 		if (this.threads() == null) {
 			console.warn(this.typeId() + " missing threads!?")
 		}
-		console.log(this.typeId() + ".willStore(" + JSON.stringify(aDict) + ")")
+		//console.log(this.typeId() + ".willStore(" + JSON.stringify(aDict) + ")")
 	},
 	
 	didStore: function(aDict) {
-		console.log(this.typeId() + ".didStore(" + JSON.stringify(aDict)  + ")")
+		//console.log(this.typeId() + ".didStore(" + JSON.stringify(aDict)  + ")")
 	},
 })
 

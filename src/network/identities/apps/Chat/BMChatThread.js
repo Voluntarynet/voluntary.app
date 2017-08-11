@@ -59,7 +59,7 @@ this.markDirty()
     },
 
 	didStore: function() {
-		console.log(this.typeId() + ".didStore()")
+		//console.log(this.typeId() + ".didStore()")
 	},
 })
 

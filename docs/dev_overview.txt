@@ -5,7 +5,7 @@ This app started as a port of Bitmarkets Objective-C/OSX implementation to Elect
 
     https://voluntary.net/bitmarkets/
     
-I made progress on re-implementing Bitmarket's Miller collumn based UI and replacing Bitmessage with a webRTC based messaging system but ran into issues with getting a Bitcoin wallet working in JS (e.g. state of stand alone JS Bitcoin implementations). Around this time, I heard about Mastadon (a federated Twitter clone) getting traction and 
+I made progress on re-implementing Bitmarket's Miller column based UI and replacing Bitmessage with a webRTC based messaging system but ran into issues with getting a Bitcoin wallet working in JS (e.g. state of stand alone JS Bitcoin implementations). Around this time, I heard about Mastadon (a federated Twitter clone) getting traction and decided it might be worth releasing a decentralized twitter-like app using the existing code first.
 
 FRAMEWORKS
 
@@ -15,11 +15,12 @@ These allow the developer to add new business/model level objects without the ne
 BASICS
 
 The system is built around the observations: 
-    - the model and UI of most apps can be well described as a hierarchy. That is, that each model or view object has a single owner/parent, even if references aren't restricted to those between parents and children. This hierarchical pattern is the basis of most UI frameworks but is rarely exploited at model or database level. 
-    - there tends to be a close correspondence between objects, views and DB records
-    - synchronization between DB, model and views is difficult and underappreciated
-By representing these pattern in a reusable and integrated way, most application code can be eliminated.
-
+    - typically, there's a close correspondence between data, model, and view objects 
+    - the structure of the data, model and views can each be well described as hierarchy (with links)
+    - synchronization between data, model and views can be generalized
+	- an expanding miller column like UI can be generalized to work reactively on most devices
+	- form entry and it's mapping to model and data objects can be generalized for most use cases
+	
 
 HOW TO USE
 

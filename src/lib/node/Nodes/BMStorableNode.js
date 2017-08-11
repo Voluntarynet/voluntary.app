@@ -196,7 +196,7 @@ BMStorableNode = BMNode.extend().newSlots({
 	markDirty: function() {
 		if (!this._isUnserializing && this.shouldStore() && !this.isUnserializing()) {
         	NodeStore.shared().addDirtyObject(this)
-			//BMNode.markDirty.apply(this)
+			this._refPids = null
 		}
 		return this
 	},
@@ -263,6 +263,49 @@ BMStorableNode = BMNode.extend().newSlots({
         return this
     },
 
+	nodeRefPids: function() {
+		if (this._refPids == null) {
+			var refs = {}
+			var dict = this.nodeDict()
+			var keys = Object.keys(dict)
+		
+			var name = this.typeId()
+			//debugger;
+			// stored slots
+			keys.forEach((k) => {
+				var v = dict[k]
+				if (k != "children" && typeof(v) == "object") {
+					if (v.pid != "null") {
+						refs[v.pid] = true
+					}
+				}
+			})
+		
 
+			// children
+			if (dict.children) {
+				dict.children.forEach((pid) => {
+					if (pid == null || pid == "null") {
+						debugger;
+					}
+					refs[pid] = true
+				})
+			}
+		
+			//this._refPids = refs
+			
+		//	console.log(this.pid() + " nodeRefPids: ", Object.keys(refs))
+		}
+		//return this._refPids
+		
+		return refs
+	},
+	
+	nodeReferencesPid: function(pid) {
+		var pids = this.nodeRefPids()
+		//console.log(this.pid() + " nodeRefPids: ", Object.keys(pids))
+		return pid in pids
+		
+	},
 
 })

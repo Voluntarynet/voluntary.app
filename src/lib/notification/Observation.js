@@ -23,7 +23,9 @@ Observation = ideal.Proto.extend().setType("Observation").newSlots({
         if (method) {
             method.apply(this._observer, [note])
         } else {
-           console.log(this.type() + " no method found for note name " + note.name())
+			if (this.debug()) {
+           		console.log(this.type() + " no method found for note name " + note.name())
+			}
         }
     },
     

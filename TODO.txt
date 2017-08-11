@@ -3,6 +3,8 @@ on setting a stored slot, check subnodes and replace old slot value with new one
 
 - BMNode - add subnode sorter function, auto invoke on setSubnodes, addSubnode, etc
 
+- abstract descriptionForByteCount into ByteFormatter?
+
 - Browser footer support
 
 - support for bold on focus row?

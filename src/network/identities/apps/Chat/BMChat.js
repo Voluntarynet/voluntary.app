@@ -16,7 +16,7 @@ BMChat = BMApplet.extend().newSlots({
 		this.setThreads(BMChatThreads.clone())
 		this.addSubnode(this.threads())
 		
-		console.log(">>>>>>> " + this.typeId() + ".init()")
+		//console.log(">>>>>>> " + this.typeId() + ".init()")
     },
 	
     localIdentity: function() {
@@ -43,6 +43,7 @@ BMChat = BMApplet.extend().newSlots({
 		return this
 	},
 	
+	/*
 	willStore: function(aDict) {
 		if (this.threads() == null) {
 			console.warn(this.pid() + " missing threads!?")
@@ -50,7 +51,6 @@ BMChat = BMApplet.extend().newSlots({
 		console.log(this.pid() + ".willStore(" + JSON.stringify(aDict) + ")")
 	},
 	
-	/*
 	didStore: function(aDict) {
 		console.log(this.pid() + ".didStore(" + JSON.stringify(aDict)  + ")")
 	},

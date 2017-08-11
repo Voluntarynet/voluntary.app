@@ -2,7 +2,7 @@
 BMChatThread = BMStorableNode.extend().newSlots({
     type: "BMChatThread",
     remotePublicKeyString: null,
-	remoteIdentity: null,
+	//remoteIdentity: null,
 }).setSlots({
     
     init: function () {
@@ -11,6 +11,7 @@ BMChatThread = BMStorableNode.extend().newSlots({
         this.setTitle("thread")  
 		this.setShouldStoreSubnodes(true)
 		this.addAction("add")
+		this.addStoredSlot("remotePublicKeyString")
     },
 
 	title: function() {
@@ -28,22 +29,24 @@ BMChatThread = BMStorableNode.extend().newSlots({
         return this.parentNodeOfType("BMLocalIdentity")
     },
 
+/*
 	setRemoteIdentity: function(rid) {
 		this._remoteIdentity = rid
 		this.setRemotePublicKeyString(rid.publicKeyString())
+		console.warn("]]]]]]] " + this.typeId() + " setRemoteIdentity(" + rid.typeId() + ") this.receiverPublicKeyString() = ", this.remotePublicKeyString())
+		this.markDirty()
 		return this
+	},
+	*/
+	
+	assertHasRid: function() {
+	    assert(this.remoteIdentity())
 	},
 	
 	remoteIdentity: function() {
-		if (this._remoteIdentity == null) {
-			this._remoteIdentity = this.localIdentity().remoteIdentities().idWithPubKeyString(this.remotePublicKeyString())
-		}
-		
-		if (!this._remoteIdentity) {
-		    console.warn(this.typeId() + " missing this._remoteIdentity this.receiverPublicKeyString() = ", this.remotePublicKeyString())
-		}
-		
-		return this._remoteIdentity
+	    assert(this.remotePublicKeyString())
+		console.warn("]]]]]]] " + this.typeId() + " sremoteIdentity() this.remotePublicKeyString() = ", this.remotePublicKeyString())
+		return this.localIdentity().remoteIdentities().idWithPubKeyString(this.remotePublicKeyString())
 	},
 	
 	mostRecentDate: function() {
@@ -58,13 +61,15 @@ BMChatThread = BMStorableNode.extend().newSlots({
         var newComposeMsg = BMChatComposeMessage.clone()
 		//newComposeMsg.setSenderPublicKeyString(this.localIdentity().publicKeyString())
 		this.addSubnode(newComposeMsg)
-        this.didUpdateNode()
-this.markDirty()
+        //this.didUpdateNode()
+        //this.markDirty()
         return newComposeMsg
     },
 
+	/*
 	didStore: function() {
 		//console.log(this.typeId() + ".didStore()")
 	},
+	*/
 })
 

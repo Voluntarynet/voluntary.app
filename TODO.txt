@@ -1,4 +1,7 @@
 
+
+- ChatThread - only select from valid remoteIdentities? Color/Mark invalid RemoteIdentities
+
 on setting a stored slot, check subnodes and replace old slot value with new one if found
 
 - BMNode - add subnode sorter function, auto invoke on setSubnodes, addSubnode, etc

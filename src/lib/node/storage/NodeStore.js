@@ -310,6 +310,10 @@ NodeStore = ideal.Proto.extend().newSlots({
         they are added to dirty when pid is assigned
         */
 
+        if (obj.pid().contains("Chat")) {
+            console.log(">>>> " + obj.pid() + " didStore " + serializedString)
+        }
+        
 		if (obj.didStore) {
 			obj.didStore(aDict)
 		}
@@ -571,7 +575,7 @@ NodeStore = ideal.Proto.extend().newSlots({
                 
         var refPids = this.pidRefsFromPid(pid)
        	this.debugLog(pid + " refs " + JSON.stringify(refPids))
-
+/*
         if (pid.contains("Chat")) {
             var nodeDict = this.nodeDictAtPid(pid)
 
@@ -579,7 +583,7 @@ NodeStore = ideal.Proto.extend().newSlots({
             console.log("    nodeDict: ", JSON.stringify(nodeDict))
             console.log("     refPids: ", JSON.stringify(refPids))
         }
-                
+*/  
         refPids.forEach((refPid) => {
             this.markPid(refPid)
         })

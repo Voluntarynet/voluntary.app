@@ -117,9 +117,9 @@ BMRemotePeer = BMNode.extend().newSlots({
         this.setStatus("closed")
         this.log("onClose " + err)
         this.serverConnection().onRemotePeerClose(this)
-        console.trace("RemotePeer onClose")
+        //console.trace("RemotePeer onClose")
         if (this.parentNode() == null) {
-            console.log("missing this.parentNode() on BMRemotePeer onClose")
+            console.warn("missing this.parentNode() on BMRemotePeer onClose")
         } else {
             this.parentNode().removeSubnode(this)
         }

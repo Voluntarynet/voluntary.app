@@ -7,7 +7,7 @@ BMChatThreads = BMStorableNode.extend().newSlots({
         BMStorableNode.init.apply(this)
         this.setShouldStore(true)
         this.setTitle("threads")
-        console.log(">>>>>>> " + this.typeId() + ".init()")
+        //console.log(">>>>>>> " + this.typeId() + ".init()")
     },
 
 	chatApp: function() {
@@ -24,7 +24,9 @@ BMChatThreads = BMStorableNode.extend().newSlots({
 	addThreadForEveryRemoteIdentity: function() {
 		this.chatApp().remoteIdentities().subnodes().forEach((rid) => { 
 			if (!this.threadForRemoteIdentity(rid)) {
-				var thread = BMChatThread.clone().setRemoteIdentity(rid)
+			    console.log(rid.typeId() + ".publicKeyString() = ", rid.publicKeyString())
+				var thread = BMChatThread.clone().setRemotePublicKeyString(rid.publicKeyString())
+				thread.assertHasRid()
 				this.addSubnode(thread)
 			}
 		})
@@ -61,9 +63,11 @@ BMChatThreads = BMStorableNode.extend().newSlots({
 		return this
 	},
 	
+	/*
 	didStore: function() {
 		console.log(this.typeId() + ".didStore()")
 	},
+	*/
 
 })
 

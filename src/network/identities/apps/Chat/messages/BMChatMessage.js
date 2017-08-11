@@ -47,8 +47,10 @@ BMChatMessage = BMStorableNode.extend().newSlots({
 		return 0
 	},
 	
+	/*
 	didStore: function() {
 		console.warn(this.typeId() + ".didStore()")
 	},
+	*/
 })
 

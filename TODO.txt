@@ -49,6 +49,8 @@ MESSAGING:
 	++ it means "syncInternalToVisibleStateOfView"?
 
     
+- fix: WARNING: not using empty peerjs connection config
+
 BROWSER:
 	COLORS: 
 		- support for browser header bar colors

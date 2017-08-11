@@ -2,7 +2,7 @@
 BMRServers = BMStorableNode.extend().newSlots({
     type: "BMRServers",
     maxConnections: 8,
-	debug: true,
+	debug: false,
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)

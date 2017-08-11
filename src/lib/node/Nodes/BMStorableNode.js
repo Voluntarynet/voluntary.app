@@ -6,9 +6,11 @@ BMStorableNode = BMNode.extend().newSlots({
 	shouldStore: false,
 
     storedSlots: null, // dict
+    
     shouldStoreSubnodes: true,
     loadsUnionOfChildren: false,
     isUnserializing: false,
+    
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)
@@ -47,7 +49,6 @@ BMStorableNode = BMNode.extend().newSlots({
     
     pid: function() {
 		if (!this.shouldStore()) {
-			
 			throw new Error("attempt to prepare to store a node of type '" + this.type() + "' which has shouldStore == false, use this.setShouldStore(true)")
 		}
 		
@@ -55,6 +56,10 @@ BMStorableNode = BMNode.extend().newSlots({
             this.assignPid()
         }
         return this._pid
+    },
+    
+    typeId: function() {
+        return this.pid() // is this a good idea?
     },
 
 	// -------------------------------------------

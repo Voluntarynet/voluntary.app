@@ -47,8 +47,5 @@ BMNavNode = BMStorableNode.extend().newSlots({
             })            
         }
     },
-    
-    */
-  
-    
+    */  
 })

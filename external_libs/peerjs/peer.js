@@ -502,7 +502,7 @@ Negotiator._startPeerConnection = function(connection) {
 
   //console.log("connection.provider.options.config = " + JSON.stringify(connection.provider.options.config, null, 2))
   //console.log("optional = " + JSON.stringify(optional, null, 2))
-  console.log("WARNING: not using empty peerjs connection config")
+  //console.log("WARNING: not using empty peerjs connection config")
   
   //var pc = new RTCPeerConnection({ iceServers:[] });
 

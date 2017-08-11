@@ -6,7 +6,8 @@ BMChatThreads = BMStorableNode.extend().newSlots({
     init: function () {
         BMStorableNode.init.apply(this)
         this.setShouldStore(true)
-        this.setTitle("threads")        
+        this.setTitle("threads")
+        console.log(">>>>>>> " + this.typeId() + ".init()")
     },
 
 	chatApp: function() {
@@ -61,7 +62,7 @@ BMChatThreads = BMStorableNode.extend().newSlots({
 	},
 	
 	didStore: function() {
-		//console.log(this.typeId() + ".didStore()")
+		console.log(this.typeId() + ".didStore()")
 	},
 
 })

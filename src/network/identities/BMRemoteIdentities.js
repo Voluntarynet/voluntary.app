@@ -17,8 +17,12 @@ BMRemoteIdentities = BMStorableNode.extend().newSlots({
     },
 
     idWithPubKeyString: function(pubkeyString) {
+        if (!pubkeyString) {
+            return null
+        }
+        
         var id = this.subnodes().detect(function (id) {
-            return id.publicKey().toString() == pubkeyString
+            return id.publicKeyString().toString() == pubkeyString
         })
         
         if (!id) {

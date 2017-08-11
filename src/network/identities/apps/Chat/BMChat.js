@@ -16,7 +16,7 @@ BMChat = BMApplet.extend().newSlots({
 		this.setThreads(BMChatThreads.clone())
 		this.addSubnode(this.threads())
 		
-		console.warn(this.typeId() + ".init()")
+		console.log(">>>>>>> " + this.typeId() + ".init()")
     },
 	
     localIdentity: function() {
@@ -37,22 +37,23 @@ BMChat = BMApplet.extend().newSlots({
 		if (newValue == null) {
 			console.warn(this.typeId() + ".setThreads oldValue:", oldValue, " newValue:", newValue)
 			//debugger;
-			
 			//throw new Error("setting chat threads to null!")
-			ShowStack()
+			//ShowStack()
 		}
 		return this
 	},
 	
 	willStore: function(aDict) {
 		if (this.threads() == null) {
-			console.warn(this.typeId() + " missing threads!?")
+			console.warn(this.pid() + " missing threads!?")
 		}
-		//console.log(this.typeId() + ".willStore(" + JSON.stringify(aDict) + ")")
+		console.log(this.pid() + ".willStore(" + JSON.stringify(aDict) + ")")
 	},
 	
+	/*
 	didStore: function(aDict) {
-		//console.log(this.typeId() + ".didStore(" + JSON.stringify(aDict)  + ")")
+		console.log(this.pid() + ".didStore(" + JSON.stringify(aDict)  + ")")
 	},
+	*/
 })
 

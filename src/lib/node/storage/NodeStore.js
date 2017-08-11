@@ -190,11 +190,12 @@ NodeStore = ideal.Proto.extend().newSlots({
     },
     
     setTimeoutIfNeeded: function() {
-        if (!this._hasTimeout) {
+        if (!this._hasTimeout && this.hasDirtyObjects()) {
             this._hasTimeout = true
             setTimeout( () => { 
-                this._hasTimeout = false
+                // TODO: try wrap this to ensure this._hasTimeout is set
                 this.storeDirtyObjects() 
+                this._hasTimeout = false
             }, 10)
         }
         
@@ -216,15 +217,15 @@ NodeStore = ideal.Proto.extend().newSlots({
 	},
 
     storeDirtyObjects: function() {
-		this.debugLog(" --- storeDirtyObjects --- ")
+		this.debugLog(" --- begin storeDirtyObjects --- ")
 		
-		console.log(" --- storeDirtyObjects --- ")
+		console.log(" --- begin storeDirtyObjects --- ")
 		if (!this.hasDirtyObjects()) {
 			console.log("no dirty objects to store Object.keys(this._dirtyObjects) = ", Object.keys(this._dirtyObjects))
 			return this
 		}
 
-		this.showDirtyObjects()
+		//this.showDirtyObjects()
 		//this.showActiveObjects()
 		
 		
@@ -250,9 +251,9 @@ NodeStore = ideal.Proto.extend().newSlots({
                 if (dirtyBucket.hasOwnProperty(pid)) {
 		            var obj = dirtyBucket[pid]
 		
-					if (pid[0] == "_" || this.objectIsReferencedByActiveObjects(obj)) {
+					//if (pid[0] == "_" || this.objectIsReferencedByActiveObjects(obj)) {
 		            	this.storeObject(obj)
-					}
+					//}
 					
 		            storeCount ++
 				}
@@ -272,12 +273,12 @@ NodeStore = ideal.Proto.extend().newSlots({
 
 		this.sdb().commit() // flushes write cache
 
-/*
+        /*
 		if (this.debug()) {
 			this.collect()
 		}
 		*/
-		
+		console.log(" --- end storeDirtyObjects --- ")
 		
         return totalStoreCount
     },
@@ -503,8 +504,9 @@ NodeStore = ideal.Proto.extend().newSlots({
         if (nodeDict) {
             // property pids
             for (var k in nodeDict) {
-                if (this.hasOwnProperty(k)) {
-                    var childPid = this.pidIfRef(nodeDict[v])
+                if (nodeDict.hasOwnProperty(k)) {
+                    var v = nodeDict[k]
+                    var childPid = this.pidIfRef(v)
                     if (childPid) {
                         pids.push(childPid);
                     }
@@ -544,6 +546,7 @@ NodeStore = ideal.Proto.extend().newSlots({
         //this.storeDirtyObjects()
 
         this.debugLog("--- begin collect ---")
+        console.log("--- begin collect ---")
         this._marked = {}
         //this.markPid("_root")
 		this.rootPids().forEach( (rootPid) => {
@@ -554,6 +557,7 @@ NodeStore = ideal.Proto.extend().newSlots({
         //if (deleteCount) {
             this.debugLog("--- end collect - collected " + deleteCount + " pids ---")
         //}
+        console.log("--- end collect ---")
         return deleteCount
     },
     
@@ -561,17 +565,26 @@ NodeStore = ideal.Proto.extend().newSlots({
         this.debugLog("markPid(" + pid + ")")
         
         if (this._marked[pid] == true) { 
-            // already marked it
-            return 
+            return false // already marked it
         }
         this._marked[pid] = true
                 
-        var childPids = this.pidRefsFromPid(pid)
-       	this.debugLog(pid + " refs " + JSON.stringify(childPids))
-        
-        childPids.forEach((childPid) => {
-            this.markPid(childPid)
+        var refPids = this.pidRefsFromPid(pid)
+       	this.debugLog(pid + " refs " + JSON.stringify(refPids))
+
+        if (pid.contains("Chat")) {
+            var nodeDict = this.nodeDictAtPid(pid)
+
+            console.log("markPid(" + pid + ")")
+            console.log("    nodeDict: ", JSON.stringify(nodeDict))
+            console.log("     refPids: ", JSON.stringify(refPids))
+        }
+                
+        refPids.forEach((refPid) => {
+            this.markPid(refPid)
         })
+        
+        return true
     },
     
     sweep: function(deleteCount) {
@@ -585,6 +598,9 @@ NodeStore = ideal.Proto.extend().newSlots({
          pids.forEach((pid) =>{
             if (this._marked[pid] != true) {
                 this.debugLog("deletePid(" + pid + ")")
+                if (pid.contains("Chat")) {
+                    console.log("deletePid(" + pid + ")")
+                }
                 this.sdb().removeAt(pid)
                 deleteCount ++
             } 
@@ -692,9 +708,7 @@ NodeStore = ideal.Proto.extend().newSlots({
 	objectIsReferencedByActiveObjects: function(aNode) {
 		var nodePid = aNode.pid()
 		var active = this.activeObjectsDict()
-		
-		//var foundPids = {} nodeRefPids
-		
+				
 		var result = Object.keys(active).detect((pid) => {
 			var obj = active[pid]
 			var match = (!(obj === aNode)) && obj.nodeReferencesPid(nodePid)
@@ -702,9 +716,7 @@ NodeStore = ideal.Proto.extend().newSlots({
 		}) != null
 
 		if (!result) {
-			console.log(">>>>>> " + aNode.pid() + " is unreferenced - not storing!")
-			//console.log("this.objectIsReferencedByActiveObjects(" + aNode.typeId() + ") = " + result)
-			//console.log("Object.keys(active).length = ", Object.keys(active).length)
+			//console.log(">>>>>> " + aNode.pid() + " is unreferenced - not storing!")
 		}
 		return result
 	},

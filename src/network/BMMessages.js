@@ -16,7 +16,7 @@ BMMessages = BMStorableNode.extend().newSlots({
     network: null,
     // TODO: deal with timeouts
     globalMinDifficulty: 16,
-	debug: true,
+	debug: false,
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)

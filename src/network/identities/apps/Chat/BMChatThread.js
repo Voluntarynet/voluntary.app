@@ -21,13 +21,19 @@ BMChatThread = BMStorableNode.extend().newSlots({
 		return "[missing rid]"
 	},
 	
+	nodeHeaderTitle: function() {
+		return "Chat with " + this.title()
+	},
+	
+	/*
+	// for debugging
 	subtitle: function() {
 		if (this.remoteIdentity()) {
 			return this.remoteIdentity().pid().split("_").pop()
 		}
 		return "[missing rid]"	    
-	    
 	},
+	*/
 	
 	threads: function() {
 		return this.parentNode()
@@ -43,7 +49,7 @@ BMChatThread = BMStorableNode.extend().newSlots({
 	
 	hasValidRemoteIdentity: function() {
 	    var result = this.localIdentity().remoteIdentities().idWithPubkeyString(this.remoteIdentity().publicKeyString()) 
-	    console.log(this.typeId() + " " + this.remoteIdentity().title() + ".hasValidRemoteIdentity() = " + result)
+	    //console.log(this.typeId() + " " + this.remoteIdentity().title() + ".hasValidRemoteIdentity() = " + result)
 	    return result != null
 	},
 	
@@ -64,6 +70,8 @@ BMChatThread = BMStorableNode.extend().newSlots({
         return newComposeMsg
     },
 
+
+	
 	/*
 	didStore: function() {
 		//console.log(this.typeId() + ".didStore()")

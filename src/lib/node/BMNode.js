@@ -96,6 +96,10 @@ BMNode = ideal.Proto.extend().newSlots({
         return this._note
     },
 
+	nodeHeaderTitle: function() {
+		return this.title()
+	},
+
 	// --- viewClassName ---
     
 /*

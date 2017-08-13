@@ -44,7 +44,7 @@ BMApps = BMStorableNode.extend().newSlots({
 	},
 
 	addAppTypeIfMissing: function(appProto) {
-		console.log(this.typeId() + ".addAppTypeIfMissing(" + appProto.type() + ")")
+		//console.log(this.typeId() + ".addAppTypeIfMissing(" + appProto.type() + ")")
 		if (this.hasAppType(appProto) == false) {
         	this.addSubnode(appProto.clone())
 		}

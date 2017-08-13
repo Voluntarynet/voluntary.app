@@ -44,6 +44,13 @@ BMRemoteIdentity = BMNavNode.extend().newSlots({
         this.setName(s)
         return this
     },
+
+	subtitle: function() {
+		if (!this.isValid()) {
+			return "invalid public key"
+		}
+		return null
+	},
  /*
     subtitle: function () {
 		if (this.publicKeyString()) {

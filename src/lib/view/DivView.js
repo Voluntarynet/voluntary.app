@@ -83,6 +83,27 @@ DivView = ideal.Proto.extend().newSlots({
 		this.setDivClassName(ancestorNames.join(" ").strip())
 		return this
 	},
+	
+	insertDivClassName: function(aName) {
+		var names = this.divClassName().split(" ")
+		names.removeOccurancesOf(aName) // avoid duplicates
+		names.atInsert(0, aName)
+		this.setDivClassNames(names)
+		return this
+	},
+	
+	removeDivClassName: function(aName) {
+		var names = this.divClassName().split(" ")
+		names.removeOccurancesOf(aName)
+		this.setDivClassNames(names)
+		return this
+	},
+	
+	setDivClassNames: function(names) {
+		this.setDivClassName(names.join(" "))
+		return this		
+	},
+	
 /*    
     applyCSS: function(ruleName) {
         if (ruleName == null) { 
@@ -97,12 +118,19 @@ DivView = ideal.Proto.extend().newSlots({
 		var style = this.cssStyle()
 		var oldValue = style[key]
 		if(String(oldValue) != String(newValue)) {
-			style[key] = newValue
+			if (newValue == null) {
+				delete style[key]
+			} else {
+				style[key] = newValue
+			}
 		}
 		return this
 	},
 	
-	getCssAttribute: function(key) {
+	getCssAttribute: function(key, errorCheck) {
+		if(errorCheck) {
+			throw new Error("getCssAttribute called with 2 arguments")
+		}
 		return this.cssStyle()[key]
 	},
 
@@ -115,6 +143,15 @@ DivView = ideal.Proto.extend().newSlots({
 		return this
 	},
 	*/
+	
+	setPosition: function(s) {
+		this.setCssAttribute("position", s)
+		return this		
+	},
+	
+	position: function() {
+		return this.getCssAttribute("position")
+	},
 	
 	// transform
 	
@@ -175,10 +212,57 @@ DivView = ideal.Proto.extend().newSlots({
 		return this.getCssAttribute("font-weight")
 	},
 	
+	// margin
+
+	setMargin: function(aNumber) {
+		this.setCssAttribute("margin", aNumber + "px")
+        return this
+    },
+
+	setMarginLeft: function(aNumber) {
+		this.setCssAttribute("margin-left", aNumber + "px")
+        return this
+    },
+	
+	setMarginRight: function(aNumber) {
+		this.setCssAttribute("margin-right", aNumber + "px")
+        return this
+    },
+
+	setMarginTop: function(aNumber) {
+		this.setCssAttribute("margin-top", aNumber + "px")
+        return this
+    },
+	
+	setMarginBottom: function(aNumber) {
+		this.setCssAttribute("margin-bottom", aNumber + "px")
+        return this
+    },
+
 	// padding left
+
+    setPadding: function(aNumber) {
+		this.setCssAttribute("padding", aNumber + "px")
+        return this
+    },
+
+    setPaddingRight: function(aNumber) {
+		this.setCssAttribute("padding-right", aNumber + "px")
+        return this
+    },
 	
     setPaddingLeft: function(aNumber) {
 		this.setCssAttribute("padding-left", aNumber + "px")
+        return this
+    },
+
+    setPaddingTop: function(aNumber) {
+		this.setCssAttribute("padding-top", aNumber + "px")
+        return this
+    },
+
+    setPaddingBottom: function(aNumber) {
+		this.setCssAttribute("padding-bottom", aNumber + "px")
         return this
     },
 
@@ -593,17 +677,23 @@ DivView = ideal.Proto.extend().newSlots({
 		return DivTextTapeMeasure.widthOfDivClassWithText(this.divClassName(), this.innerHTML())
 	},
 	
+	setWidth: function(s) {
+	    assert(typeof(s) == "string")
+	    this.setCssAttribute("width", s)
+	    return this
+	},
+	
 	setWidthPercentage: function(aNumber) {
 	    assert(typeof(aNumber) == "number")
-	    this.getCssAttribute("width", aNumber + "%")
+	    this.setCssAttribute("width", aNumber + "%")
 	    return this
 	},
 
-    width: function() {
+    clientWidth: function() {
         return this.element().clientWidth
     },
     
-    height: function() {
+    clientHeight: function() {
         return this.element().clientHeight
     },
     
@@ -697,12 +787,24 @@ DivView = ideal.Proto.extend().newSlots({
         return this		
 	},
 	
-	/*
-	setHeight: function(aNumber) {
+	setMinHeight: function(newValue) {
+		this.setCssAttribute("min-height", newValue)
+        return this		
+	},
+	
+	setMaxHeight: function(newValue) {
+		this.setCssAttribute("max-height", newValue)
+        return this		
+	},
+
+	setHeight: function(newValue) {
 		this.setCssAttribute("height", newValue)
         return this		
 	},	
-	*/
+	
+	height: function() {
+		return this.getCssAttribute("height")
+	},
 	
 	// --- div class name ---
 

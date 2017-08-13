@@ -6,7 +6,9 @@ BMChatComposeMessage = BMChatMessage.extend().newSlots({
     
     init: function () {
         BMChatMessage.init.apply(this)
-		this.setTitle("compose")
+		//this.setTitle("compose")
+		this.setTitle("".loremIpsum())
+		this.addStoredSlot("title")
     },	
 
 })

@@ -20,10 +20,20 @@ BrowserTitledRow = BrowserRow.extend().newSlots({
         return this.subtitleView().innerHTML().length > 0
     },
 
+    setHasSubtitle: function(aBool) {        
+        if (aBool) {
+            this.titleView().setTop(10)
+        } else {
+            this.titleView().setTop(22)      
+        }
+
+        return this
+    },
+
     updateSubviews: function() {
 		BrowserRow.updateSubviews.apply(this)
 	
-		this.titleView().setHasSubtitle(this.hasSubtitle())
+		this.setHasSubtitle(this.hasSubtitle())
 
         var node = this.node()
         this.titleView().setContentEditable(node ? node.nodeTitleIsEditable() : false)
@@ -53,9 +63,7 @@ BrowserTitledRow = BrowserRow.extend().newSlots({
         return this
     },
 
-	
-
-	// text color
+	// --- text color ---
 	
 	currentTextColor: function() {
 		if (this.isSelected()) {
@@ -72,14 +80,14 @@ BrowserTitledRow = BrowserRow.extend().newSlots({
 		return "rgba(255, 255, 255, 0.5)"
 	},
 
-    // -------------
+    // --- edit ---
 
     onDidEdit: function (changedView) {   
         //console.log("onDidEdit")
         this.syncToNode()
     },
 
-    // -----------------
+    // --- sync ---
 
     syncToNode: function () {   
         //console.log("syncToNode")

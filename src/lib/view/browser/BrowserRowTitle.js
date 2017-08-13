@@ -7,13 +7,5 @@ BrowserRowTitle = TextField.extend().newSlots({
         return this
     },
 
-    setHasSubtitle: function(aBool) {        
-        if (aBool) {
-            this.setTop(10)
-        } else {
-            this.setTop(22)      
-        }
 
-        return this
-    },
 })

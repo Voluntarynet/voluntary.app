@@ -175,6 +175,9 @@
     
     border-top: 1px solid transparent;
     border-bottom: 1px solid transparent;
+	text-align: left;
+	margin: 0px;
+	padding: 0px;
 }
 
 /*

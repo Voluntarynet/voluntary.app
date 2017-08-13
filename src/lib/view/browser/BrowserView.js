@@ -568,7 +568,7 @@ BrowserView = NodeView.extend().newSlots({
 	// -----------------------------------------------
 
 	browserWidth: function() {
-		return this.width()
+		return this.clientWidth()
 	},
 	
 	windowWidth: function() {

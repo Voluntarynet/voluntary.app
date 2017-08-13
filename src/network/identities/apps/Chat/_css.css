@@ -1,0 +1,26 @@
+
+.BMChatComposeMessageRowView {
+	height: auto;
+	min-height: auto;
+	max-height: auto;
+	border: 0px dashed yellow;
+}
+
+.BMChatComposeMessageRowViewTitle {
+	
+	top: 0px;
+    left: 0px;
+
+	background-color: rgba(255,255,255,0.2);
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-left: 10px;
+	padding-right: 10px;
+	border-radius: 8px 8px 8px 8px; // top-left, top-right,  bottom-right, bottom-left 
+	word-wrap: normal;
+	white-space: normal;
+	/*
+	min-height: auto;
+	max-height: auto;
+	*/
+}

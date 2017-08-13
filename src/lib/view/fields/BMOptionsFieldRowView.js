@@ -98,7 +98,7 @@ BMOptionsFieldRowView = BMFieldRowView.extend().newSlots({
 	updateValidValues: function() {
 		if (this.optionsView()) {
 			this.optionsView().setValidValues(this.currentValidValues())
-			//this.optionsView().setLeft(this.left() + this.width() + 10)
+			//this.optionsView().setLeft(this.left() + this.clientWidth() + 10)
 		}
 		return this
 	},

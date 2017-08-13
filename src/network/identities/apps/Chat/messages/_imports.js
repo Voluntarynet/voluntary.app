@@ -4,4 +4,6 @@ JSImporter.pushRelativePaths([
     "BMChatComposeMessage.js",
     "BMChatSentMessage.js",
     "BMChatReceivedMessage.js",
+
+	"BMChatComposeMessageRowView.js",
 ])

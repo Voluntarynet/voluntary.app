@@ -35,8 +35,7 @@ Array.prototype.select = function(callback) {
 }
 	
 
-Array.prototype.after = function(v)
-{
+Array.prototype.after = function(v) {
 	var index = this.indexOf(v);
 	
 	if(index == -1)
@@ -47,8 +46,7 @@ Array.prototype.after = function(v)
 	return this.slice(index + 1);
 }
 
-Array.prototype.before = function(v)
-{
+Array.prototype.before = function(v) {
 	var index = this.indexOf(v);
 	
 	if(index == -1)
@@ -59,8 +57,7 @@ Array.prototype.before = function(v)
 	return this.slice(0, index);
 }
 
-Array.prototype.replaceOccurancesOfWith = function(oldValue, newValue)
-{
+Array.prototype.replaceOccurancesOfWith = function(oldValue, newValue) {
 	for (var i = 0; i < this.length; i++) {
 	    if (this[i] == oldValue) {
 	        this[i] = newValue;
@@ -68,6 +65,16 @@ Array.prototype.replaceOccurancesOfWith = function(oldValue, newValue)
 	}
 	return this
 }
+
+Array.prototype.removeOccurancesOf = function(e) {
+	var i = this.indexOf(e);
+	while(i > -1)
+	{
+		this.removeAt(i);
+		i = this.indexOf(e)
+	}
+	return this;
+},
 
 /// String
 

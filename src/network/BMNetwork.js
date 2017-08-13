@@ -107,12 +107,12 @@ BMNetwork = BMStorableNode.extend().newSlots({
         return privateKey
     },
     
-    idWithPubKeyString: function(pubKeyString) {        
-        var pubkey = this.localIdentities().idWithPubKeyString(pubKeyString)
+    idWithPubkeyString: function(pubKeyString) {        
+        var pubkey = this.localIdentities().idWithPubkeyString(pubKeyString)
         if (pubkey) {
             return pubkey
         }
-        return this.remoteIdentities().idWithPubKeyString(pubKeyString)
+        return this.remoteIdentities().idWithPubkeyString(pubKeyString)
     },
 
 	allIdentities: function() {

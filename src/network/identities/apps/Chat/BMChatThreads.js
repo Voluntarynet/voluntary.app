@@ -2,12 +2,10 @@
 BMChatThreads = BMStorableNode.extend().newSlots({
     type: "BMChatThreads",
 }).setSlots({
-    
     init: function () {
         BMStorableNode.init.apply(this)
         this.setShouldStore(true)
         this.setTitle("threads")
-        //console.log(">>>>>>> " + this.typeId() + ".init()")
     },
 
 	chatApp: function() {
@@ -24,26 +22,26 @@ BMChatThreads = BMStorableNode.extend().newSlots({
 	addThreadForEveryRemoteIdentity: function() {
 		this.chatApp().remoteIdentities().subnodes().forEach((rid) => { 
 			if (!this.threadForRemoteIdentity(rid)) {
-			    console.log(rid.typeId() + ".publicKeyString() = ", rid.publicKeyString())
-				var thread = BMChatThread.clone().setRemotePublicKeyString(rid.publicKeyString())
-				thread.assertHasRid()
+			    //console.log(rid.typeId() + ".publicKeyString() = ", rid.publicKeyString())
+				var thread = BMChatThread.clone().setRemoteIdentity(rid)
 				this.addSubnode(thread)
+				thread.assertHasRid()
 			}
 		})
 		return this		
 	},
-	
+
 	removeThreadsWithNoRemoteIdentity: function() {
-		var ridSubnodes = this.subnodes().select((thread) => { 
-			return thread.remoteIdentity() != null
+		var matches = this.subnodes().select((thread) => { 
+			return thread.hasValidRemoteIdentity() 
 		})
-		this.setSubnodes(ridSubnodes)
+		this.setSubnodes(matches)
 		return this
 	},
 	
 	threadForRemoteIdentity: function(rid) {
 		return this.subnodes().detect((thread) => {
-			return thread.remoteIdentity() == rid
+			return thread.remoteIdentity() === rid
 		})
 	},
 	

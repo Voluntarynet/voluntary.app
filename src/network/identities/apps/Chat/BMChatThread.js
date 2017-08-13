@@ -1,8 +1,7 @@
 
 BMChatThread = BMStorableNode.extend().newSlots({
     type: "BMChatThread",
-    remotePublicKeyString: null,
-	//remoteIdentity: null,
+	remoteIdentity: null,
 }).setSlots({
     
     init: function () {
@@ -11,14 +10,23 @@ BMChatThread = BMStorableNode.extend().newSlots({
         this.setTitle("thread")  
 		this.setShouldStoreSubnodes(true)
 		this.addAction("add")
-		this.addStoredSlot("remotePublicKeyString")
+		this.addStoredSlot("remoteIdentity")
+        this.setNodeMinWidth(600)
     },
 
 	title: function() {
 		if (this.remoteIdentity()) {
 			return this.remoteIdentity().title()
 		}
-		return this.remotePublicKeyString()
+		return "[missing rid]"
+	},
+	
+	subtitle: function() {
+		if (this.remoteIdentity()) {
+			return this.remoteIdentity().pid().split("_").pop()
+		}
+		return "[missing rid]"	    
+	    
 	},
 	
 	threads: function() {
@@ -26,27 +34,17 @@ BMChatThread = BMStorableNode.extend().newSlots({
 	},
 
     localIdentity: function() {
-        return this.parentNodeOfType("BMLocalIdentity")
+        return this.parentNodeOfType("BMLocalIdentity") // this won't work before it's added as a subnode
     },
-
-/*
-	setRemoteIdentity: function(rid) {
-		this._remoteIdentity = rid
-		this.setRemotePublicKeyString(rid.publicKeyString())
-		console.warn("]]]]]]] " + this.typeId() + " setRemoteIdentity(" + rid.typeId() + ") this.receiverPublicKeyString() = ", this.remotePublicKeyString())
-		this.markDirty()
-		return this
-	},
-	*/
 	
 	assertHasRid: function() {
 	    assert(this.remoteIdentity())
 	},
 	
-	remoteIdentity: function() {
-	    assert(this.remotePublicKeyString())
-		console.warn("]]]]]]] " + this.typeId() + " sremoteIdentity() this.remotePublicKeyString() = ", this.remotePublicKeyString())
-		return this.localIdentity().remoteIdentities().idWithPubKeyString(this.remotePublicKeyString())
+	hasValidRemoteIdentity: function() {
+	    var result = this.localIdentity().remoteIdentities().idWithPubkeyString(this.remoteIdentity().publicKeyString()) 
+	    console.log(this.typeId() + " " + this.remoteIdentity().title() + ".hasValidRemoteIdentity() = " + result)
+	    return result != null
 	},
 	
 	mostRecentDate: function() {

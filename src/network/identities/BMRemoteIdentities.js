@@ -15,21 +15,15 @@ BMRemoteIdentities = BMStorableNode.extend().newSlots({
         //this.loadIfPresent()
     },
 
-    idWithPubKeyString: function(pubkeyString) {
-        if (pubkeyString == null) {
-            return null
-        }
-        
-        var id = this.subnodes().detect(function (id) {
+    idWithPubkeyString: function(pubkeyString) {
+        return this.subnodes().detect(function (id) {
             return id.publicKeyString().toString() == pubkeyString
         })
-        
-        if (!id) {
-            // make an id if it's not here
-            id = BMRemoteIdentity.clone().setPublicKeyString(pubkeyString)
-            this.addSubnode(id)
-        }
-        
+    },
+    
+    addIdWithPubkeyString: function(pubkeyString) {
+        var id = BMRemoteIdentity.clone().setPublicKeyString(pubkeyString)
+        this.addSubnode(id)
         return id
     },
 

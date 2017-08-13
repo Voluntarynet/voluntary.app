@@ -6,6 +6,7 @@ BMChatMessage = BMStorableNode.extend().newSlots({
     init: function () {
         BMStorableNode.init.apply(this)
         this.setShouldStore(true)
+        this.addAction("delete")
     },	
 
 	/*

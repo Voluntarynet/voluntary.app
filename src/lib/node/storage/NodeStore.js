@@ -552,10 +552,13 @@ NodeStore = ideal.Proto.extend().newSlots({
         this.debugLog("--- begin collect ---")
         console.log("--- begin collect ---")
         this._marked = {}
-        //this.markPid("_root")
+
 		this.rootPids().forEach( (rootPid) => {
-	        this.markPid(rootPid)
+	        this.markPid(rootPid) // this is recursive, but skips marked records
 		})
+		
+        this.markActiveObjects()
+		
         var deleteCount = this.sweep()
         this._marked = null
         //if (deleteCount) {
@@ -563,6 +566,13 @@ NodeStore = ideal.Proto.extend().newSlots({
         //}
         console.log("--- end collect ---")
         return deleteCount
+    },
+    
+    markActiveObjects: function() {
+		Object.keys(this.activeObjectsDict()).forEach((pid) => {
+	        this._marked[pid] = true
+		})        
+        return this
     },
     
     markPid: function(pid) {

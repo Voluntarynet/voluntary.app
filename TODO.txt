@@ -2,6 +2,10 @@
 - Browser footer bar
 - custom BMChatMessageRowView
 
+Use nodeDict type declared proto to get pid refs if available? 
+
+- put column header actions in separate view so they can be synced separately 
+    
 
 - ChatThread - only select from valid remoteIdentities? Color/Mark invalid RemoteIdentities
 

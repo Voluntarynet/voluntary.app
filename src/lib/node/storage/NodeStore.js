@@ -310,9 +310,11 @@ NodeStore = ideal.Proto.extend().newSlots({
         they are added to dirty when pid is assigned
         */
 
+/*
         if (obj.pid().contains("Chat")) {
             console.log(">>>> " + obj.pid() + " didStore " + serializedString)
         }
+  */
         
 		if (obj.didStore) {
 			obj.didStore(aDict)
@@ -501,10 +503,23 @@ NodeStore = ideal.Proto.extend().newSlots({
     },
     
     pidRefsFromPid: function(pid) {
+        var nodeDict = this.nodeDictAtPid(pid)
+        if (!nodeDict) {
+            return []
+        }
+        
+        var proto = window[nodeDict.type]
+        if (!proto) {
+            proto = BMStorageNode
+        }
+        
+        return proto.nodePidRefsFromNodeDict(nodeDict)    
+    },
+    
+    /*
+    pidRefsFromNodeDict: function(nodeDict) {
         var pids = []
 
-        var nodeDict = this.nodeDictAtPid(pid)
-        
         if (nodeDict) {
             // property pids
             for (var k in nodeDict) {
@@ -527,6 +542,7 @@ NodeStore = ideal.Proto.extend().newSlots({
         
         return pids
     },
+    */
     
 	// ----------------------------------------------------
     // garbage collection
@@ -552,10 +568,13 @@ NodeStore = ideal.Proto.extend().newSlots({
         this.debugLog("--- begin collect ---")
         console.log("--- begin collect ---")
         this._marked = {}
-        //this.markPid("_root")
+
 		this.rootPids().forEach( (rootPid) => {
-	        this.markPid(rootPid)
+	        this.markPid(rootPid) // this is recursive, but skips marked records
 		})
+		
+        //this.markActiveObjects() // not needed if assert(!this.hasDirtyObjects()) is above
+		
         var deleteCount = this.sweep()
         this._marked = null
         //if (deleteCount) {
@@ -563,6 +582,13 @@ NodeStore = ideal.Proto.extend().newSlots({
         //}
         console.log("--- end collect ---")
         return deleteCount
+    },
+    
+    markActiveObjects: function() {
+		Object.keys(this.activeObjectsDict()).forEach((pid) => {
+	        this._marked[pid] = true
+		})        
+        return this
     },
     
     markPid: function(pid) {
@@ -602,9 +628,11 @@ NodeStore = ideal.Proto.extend().newSlots({
          pids.forEach((pid) =>{
             if (this._marked[pid] != true) {
                 this.debugLog("deletePid(" + pid + ")")
+                /*
                 if (pid.contains("Chat")) {
                     console.log("deletePid(" + pid + ")")
                 }
+                */
                 this.sdb().removeAt(pid)
                 deleteCount ++
             } 
@@ -627,7 +655,7 @@ NodeStore = ideal.Proto.extend().newSlots({
     },
     
     asJson: function() {
-		this.sdb().asJson()
+		return this.sdb().asJson()
     },
     
     clear: function() {
@@ -676,7 +704,7 @@ NodeStore = ideal.Proto.extend().newSlots({
 				this.showPid(childPid, level + 1, maxLevel)
 			})
 		}
-
+		return this
 	},
 	
 	showDirtyObjects: function() {
@@ -689,7 +717,7 @@ NodeStore = ideal.Proto.extend().newSlots({
 			console.log("    " + pid + ": ", Object.keys(obj.nodeRefPids()))
 		})
 		*/
-		
+		return this
 	},
 
 	showActiveObjects: function() {

@@ -267,7 +267,60 @@ BMStorableNode = BMNode.extend().newSlots({
         }
         return this
     },
+    
+    pidRefsFromNodeDict: function(nodeDict) {
+        var pids = []
 
+        if (nodeDict) {
+            // property pids
+            for (var k in nodeDict) {
+                if (nodeDict.hasOwnProperty(k)) {
+                    var v = nodeDict[k]
+                    var childPid = this.pidIfRef(v)
+                    if (childPid) {
+                        pids.push(childPid);
+                    }
+                }
+            }
+            
+            // child pids
+            if (nodeDict.children) {
+                nodeDict.children.forEach(function(childPid) {
+                    pids.push(childPid)
+                })
+            }          
+        }
+        
+        return pids
+    },
+
+    nodePidRefsFromNodeDict: function(nodeDict) {
+        var pids = []
+
+        if (nodeDict) {
+            // property pids
+            for (var k in nodeDict) {
+                if (nodeDict.hasOwnProperty(k)) {
+                    var v = nodeDict[k]
+                    var childPid = NodeStore.shared().pidIfRef(v)
+                    if (childPid) {
+                        pids.push(childPid);
+                    }
+                }
+            }
+            
+            // child pids
+            if (nodeDict.children) {
+                nodeDict.children.forEach(function(childPid) {
+                    pids.push(childPid)
+                })
+            }          
+        }
+        
+        return pids
+    },
+    
+    /*
 	nodeRefPids: function() {
 		if (this._refPids == null) {
 			var refs = {}
@@ -305,12 +358,7 @@ BMStorableNode = BMNode.extend().newSlots({
 		
 		return refs
 	},
-	
-	nodeReferencesPid: function(pid) {
-		var pids = this.nodeRefPids()
-		//console.log(this.pid() + " nodeRefPids: ", Object.keys(pids))
-		return pid in pids
-		
-	},
+	*/
+
 
 })

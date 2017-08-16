@@ -35,7 +35,7 @@ BrowserHeader = NodeView.extend().newSlots({
 		if (this._shouldShowTitle != aBool) {
 			this._shouldShowTitle = aBool
 			this.setNeedsSyncFromNode(true)
-			//console.log(" ----- " + (this.node() ? this.node().title() : null) + " setShouldShowTitle ", aBool)
+			console.log(" ----- " + (this.node() ? this.node().title() : null) + " setShouldShowTitle ", aBool)
 		}
 		return this
 	},

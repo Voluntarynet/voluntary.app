@@ -1,4 +1,6 @@
 
+- Browser footer bar
+- custom BMChatMessageRowView
 
 
 - ChatThread - only select from valid remoteIdentities? Color/Mark invalid RemoteIdentities

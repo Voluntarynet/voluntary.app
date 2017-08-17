@@ -19,7 +19,7 @@ BMChatThreads = BMStorableNode.extend().newSlots({
 	},
 
 	prepareToAccess: function() {
-		console.log("++++++ " + this.typeId() + " prepareToAccess")
+		//console.log("++++++ " + this.typeId() + " prepareToAccess")
 		BMNode.prepareToAccess.apply(this)	
 
 		this.removeThreadsWithNoRemoteIdentity()

@@ -219,7 +219,7 @@ NodeStore = ideal.Proto.extend().newSlots({
     storeDirtyObjects: function() {
 		this.debugLog(" --- begin storeDirtyObjects --- ")
 		
-		console.log(" --- begin storeDirtyObjects --- ")
+		//console.log(" --- begin storeDirtyObjects --- ")
 		if (!this.hasDirtyObjects()) {
 			console.log("no dirty objects to store Object.keys(this._dirtyObjects) = ", Object.keys(this._dirtyObjects))
 			return this
@@ -278,7 +278,7 @@ NodeStore = ideal.Proto.extend().newSlots({
 			this.collect()
 		}
 		*/
-		console.log(" --- end storeDirtyObjects --- ")
+		//console.log(" --- end storeDirtyObjects --- ")
 		
         return totalStoreCount
     },
@@ -557,16 +557,23 @@ NodeStore = ideal.Proto.extend().newSlots({
 		})
 	},
     
+    flushIfNeeded: function() {
+		if (this.hasDirtyObjects()) {
+            this.storeDirtyObjects()
+            assert(!this.hasDirtyObjects())
+        }
+        return this   
+    },
+    
     collect: function() {
         // this is an on-disk collection
         // in-memory objects aren't considered
+        // so we make sure they're flush to the db first 
 
-		// so make sure everything is flushed to disk first
-		assert(!this.hasDirtyObjects())
-        //this.storeDirtyObjects()
+		this.flushIfNeeded()
 
         this.debugLog("--- begin collect ---")
-        console.log("--- begin collect ---")
+        
         this._marked = {}
 
 		this.rootPids().forEach( (rootPid) => {
@@ -577,10 +584,9 @@ NodeStore = ideal.Proto.extend().newSlots({
 		
         var deleteCount = this.sweep()
         this._marked = null
-        //if (deleteCount) {
-            this.debugLog("--- end collect - collected " + deleteCount + " pids ---")
-        //}
-        console.log("--- end collect ---")
+        
+        this.debugLog("--- end collect - collected " + deleteCount + " pids ---")
+        
         return deleteCount
     },
     

@@ -1,11 +1,10 @@
 
 - Browser footer bar
-- custom BMChatMessageRowView
-
-Use nodeDict type declared proto to get pid refs if available? 
+    - unify browser header/footer with leftActions + text + rightActions layout?
+    
+TODO: add way to access style sheet attribute of a given css class e.g. BrowserFooter height
 
 - put column header actions in separate view so they can be synced separately 
-    
 
 - ChatThread - only select from valid remoteIdentities? Color/Mark invalid RemoteIdentities
 

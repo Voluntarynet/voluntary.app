@@ -1,20 +1,28 @@
 
 BrowserColumnGroup = NodeView.extend().newSlots({
     type: "BrowserColumnGroup",
+    
     header: null,
+    footer: null,
+    
 	scrollView: null, // contains column
-    column: null,
+    column: null, // is inside scrollView
+    
     //emptyLabel: null,
 	isSelected: false,
-	doesCollapseIfUnselected: false,
+
 	isCollapsed: false,
 	animatesCollapse: true,
 }).setSlots({
     init: function () {
-        NodeView.init.apply(this)        
+        NodeView.init.apply(this)
+         
         this.setHeader(BrowserHeader.clone())
         this.addSubview(this.header())
-    
+
+        this.setFooter(BrowserFooter.clone())
+        //this.addSubview(this.footer())
+   
         //this.setColumnWrapper(this)
 
 		this.setScrollView(DivView.clone().setDivClassName("BrowserScrollView"))
@@ -23,6 +31,50 @@ BrowserColumnGroup = NodeView.extend().newSlots({
         this.setColumn(BrowserColumn.clone())
         this.scrollView().addSubview(this.column())
 
+        this.updateScrollView()
+        
+        return this
+    },
+    
+    hasHeader: function() {
+        return true
+    },
+    
+    hasFooter: function() {
+        return this.hasSubview(this.footer())
+    },
+    
+    setHasFooter: function(aBool) {
+        if (this.hasFooter() != aBool) {
+            if (aBool) {
+                this.addSubview(this.footer())
+            } else {
+                this.removeSubview(this.footer())
+            }
+            this.updateScrollView()
+        }
+        return this
+    },
+    
+    updateScrollView: function() {
+        var headerHeight = 40
+        var footerHeight = 40
+        
+        var heightOffset = 0
+        var top = 0
+        
+        if (this.hasHeader()) { 
+            heightOffset += headerHeight
+            top = headerHeight
+        }
+        
+        if (this.hasFooter()) { 
+            heightOffset += footerHeight
+        }
+        
+        this.scrollView().setHeight("calc(100% - " + heightOffset + "px)")
+        this.scrollView().setTop(top)
+        
         return this
     },
 
@@ -37,8 +89,7 @@ BrowserColumnGroup = NodeView.extend().newSlots({
 		
 		if (this._isSelected != aBool) {
 			this._isSelected = aBool
-			
-			
+			//
 		}
 				
 		return this

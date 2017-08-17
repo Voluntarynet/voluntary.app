@@ -1,33 +1,26 @@
 
-BrowserHeader = NodeView.extend().newSlots({
-    type: "BrowserHeader",
-	backArrowView: null,
-	titleView: null,
-	doesShowBackArrow: false,
-	shouldShowTitle: false,
-	
+BrowserFooter = NodeView.extend().newSlots({
+    type: "BrowserFooter",
+
+	leftActionsView: null,
+	textView: null,
 	rightActionsView: null,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
         this.setOwnsView(false)
 
-		var backArrowView = DivView.clone().setDivClassName("BackArrow").setTarget(this).setAction("didHitBackArrow")
-		backArrowView.setBackgroundImageUrlPath(this.pathForIconName("left"))        
-		backArrowView.setBackgroundSize(10, 10)
-		backArrowView.setOpacity(0.6)
-		this.setBackArrowView(backArrowView)
+		this.setLeftActionsView(DivView.clone().setDivClassName("BrowserFooterLeftActionsView"))
 		
-		var titleView = DivView.clone().setDivClassName("BrowserHeaderTitleView NodeView DivView").setInnerHTML("").setUserSelect("none")
-		this.setTitleView(titleView)
+		var textView = DivView.clone().setDivClassName("BrowserHeaderTitleView NodeView DivView").setInnerHTML("").setUserSelect("none")
+		this.setTextView(textView)
 		
 		this.setRightActionsView(DivView.clone().setDivClassName("BrowserFooterRightActionsView"))
-		this.addSubview(this.rightActionsView())
-		
+						
 		this.setZIndex(2)
         return this
     },
-
+    
 	columnGroup: function() {
 		return this.parentView()
 	},
@@ -35,29 +28,6 @@ BrowserHeader = NodeView.extend().newSlots({
     browser: function() {
         return this.columnGroup().parentView()
     },
-    
-	setShouldShowTitle: function(aBool) {
-		if (this._shouldShowTitle != aBool) {
-			this._shouldShowTitle = aBool
-			this.setNeedsSyncFromNode(true)
-			console.log(" ----- " + (this.node() ? this.node().title() : null) + " setShouldShowTitle ", aBool)
-		}
-		return this
-	},
-	
-	shouldShowTitle: function() {
-		return this.browser().isSingleColumn() && this.browser().lastActiveColumnGroup() == this.columnGroup()
-	},
-	
-	showsAction: function(actionName) {
-		return actionName != "delete"
-		/*
-		if (actionName == "delete" && !WebBrowserWindow.isOnMobile()) {
-			return false
-		}
-		return true
-		*/
-	},
 
     syncFromNode: function() {
         var node = this.node()

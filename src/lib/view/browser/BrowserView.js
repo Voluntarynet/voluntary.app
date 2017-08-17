@@ -124,7 +124,7 @@ BrowserView = NodeView.extend().newSlots({
         DocumentBody.setZoomRatio(r)
             
         var isSingle = ((w < h) && (w < 800)) || (w < 400)
-        console.log("isSingle = ", isSingle)
+        //console.log("isSingle = ", isSingle)
         this.setIsSingleColumn(isSingle)
 
 		WebBrowserWindow.setTitle(size.width + " x " + size.height + " " + (isSingle ? "single" : "multi"))
@@ -367,7 +367,7 @@ BrowserView = NodeView.extend().newSlots({
 
 		var lastActiveCg = this.lastActiveColumnGroup()
 	
-	    console.log("this.isSingleColumn(): ", this.isSingleColumn())
+	    //console.log("this.isSingleColumn(): ", this.isSingleColumn())
 	    
 		if (lastActiveCg && this.isSingleColumn()) {
 		    this.fitForSingleColumn()

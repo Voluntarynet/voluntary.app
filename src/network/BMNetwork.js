@@ -115,9 +115,9 @@ BMNetwork = BMStorableNode.extend().newSlots({
         return this.remoteIdentities().idWithPubkeyString(pubKeyString)
     },
 
-	allIdentities: function() {
+	allIdentities: function() { // only uses valid remote identities
 		var ids = []
-		ids = this.localIdentities().subnodes().concat(this.remoteIdentities().subnodes())
+		ids = this.localIdentities().subnodes().concat(this.remoteIdentities().validSubnodes())
 		return ids
 	},
     

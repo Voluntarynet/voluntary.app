@@ -1,7 +1,7 @@
 
 JSImporter.pushRelativePaths([
     "css_rules/_imports.js",
-    "transitions/_imports.js",
+    "div_attributes/_imports.js",
 	
     "DivView.js",
     "DivTextTapeMeasure.js",

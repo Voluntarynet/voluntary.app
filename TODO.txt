@@ -1,6 +1,13 @@
 
 - Browser footer bar
     - unify browser header/footer with leftActions + text + rightActions layout?
+
+    - chat auto scroll to bottom
+    
+    - support for view actions? (delete all with animations?)
+
+- make DivBorderRadius abstraction
+
     
 TODO: add way to access style sheet attribute of a given css class e.g. BrowserFooter height
 

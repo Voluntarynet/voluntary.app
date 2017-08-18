@@ -8,6 +8,7 @@ BMChatMessage = BMStorableNode.extend().newSlots({
     init: function () {
         BMStorableNode.init.apply(this)
         this.setShouldStore(true)
+        this.addStoredSlots(["content", "privateMessage"])
         this.addAction("delete")
     },	
 
@@ -17,6 +18,10 @@ BMChatMessage = BMStorableNode.extend().newSlots({
 	
 	nodeRowLink: function() {
 		return null
+	},
+	
+	title: function() {
+	    return this.content()
 	},
 })
 

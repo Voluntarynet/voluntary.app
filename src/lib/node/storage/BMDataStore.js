@@ -21,13 +21,7 @@ BMDataStore = BMNode.extend().newSlots({
 		return NodeStore.shared()
 	},
 	
-	removeAllSubnodes: function() {
-		this.subnodes().slice().forEach((subnode) => {
-			this.removeSubnode(subnode)
-		})
-		return this
-	},
-	
+
     prepareToSyncToView: function() {		
 		if (this.subnodes().length == 0) {
 			this.refreshSubnodes()

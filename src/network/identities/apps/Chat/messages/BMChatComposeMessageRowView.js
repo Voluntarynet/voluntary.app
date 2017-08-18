@@ -1,6 +1,7 @@
 
-BMChatComposeMessageRowView = BrowserTitledRow.extend().newSlots({
-    type: "BMChatComposeMessageRowView",
+
+BMChatMessageRowView = BrowserTitledRow.extend().newSlots({
+    type: "BMChatMessageRowView",
 	content: null,
 }).setSlots({
     
@@ -8,37 +9,63 @@ BMChatComposeMessageRowView = BrowserTitledRow.extend().newSlots({
         BrowserTitledRow.init.apply(this)
 	//	this.setSelectedBgColor("white")
 	//	this.setUnselectedBgColor("white")
-		this.titleView().insertDivClassName("BMChatComposeMessageRowViewTitle")
 
+		this.setDisplay("block")
+		
+		this.setMinHeight("auto")
+		this.setMaxHeight("1000px")
+		this.setHeight("auto")
+		
 		this.setPaddingTop(10)
 		this.setMarginBottom(10)
-		this.setMinHeight("auto")
-		this.setMaxHeight("auto")
-		this.setHeight("auto")
-		this.titleView().setWidth("80%")
+		
+		this.setupTitleView()
+    },
+    
+    setupTitleView: function() {
+		
+		this.titleView().insertDivClassName(this.type() + "Title")
+		this.titleView().setWidth("auto")
+		this.titleView().setMinWidth("50px")
+		this.titleView().setMaxWidth("calc(100% - 100px)")
 
 		this.titleView().setTop(0)
 		this.titleView().setPosition("relative")
-		this.titleView().setLeft("auto")
-		this.titleView().setRight(0)
-		if (Math.random() > 0.5) {
-			this.titleView().setFloat("right")
-		} else {
-			this.titleView().setFloat("left")
-		}
+		this.titleView().setLeft(null)
+		this.titleView().setMarginRight(20)
 		this.titleView().setMarginLeft(0)
-	//	this.titleView().setMarginRight(100)
-		this.setDisplay("block")
-		setTimeout(() => { this.updateSubviews() }, 1000)
-    },	
+		
+		if (Math.random() > 1.5) {
+            this.alignToRight()
+		} else {
+            this.alignToLeft()
+		}        
+        
+    },
+    
+    alignToRight: function() {
+	    this.titleView().setRight(20)
+		this.titleView().setFloat("right")
+	    this.titleView().setBorderRadius("8px 8px 0px 8px") // top-left, top-right,  bottom-right, bottom-left
+	    return this
+    },
+    
+    alignToLeft: function() {
+        this.titleView().setLeft(20)
+    	this.titleView().setFloat("left")
+        this.titleView().setBorderRadius("8px 8px 8px 0px") // top-left, top-right,  bottom-right, bottom-left 
+	    return this
+    },
 
     setHasSubtitle: function(aBool) {        
 		// so it doesn't adjust title 
         return this
     },
 
-    updateSubviews: function() {
+    //updateSubviews: function() {
+    syncToNode: function() {
 		BrowserTitledRow.updateSubviews.apply(this)
+		this.titleView().setInnerHTML(this.node().title())
 		//console.log(this.typeId() + " this.titleView().height() = ", this.titleView().height())
 		//this.setMinAndMaxHeight(this.titleView().clientHeight()) 
 		/*
@@ -51,5 +78,12 @@ BMChatComposeMessageRowView = BrowserTitledRow.extend().newSlots({
 			*/
 		return this
 	},
+})
+
+
+BMChatComposeMessageRowView = BMChatMessageRowView.extend().newSlots({
+    type: "BMChatComposeMessageRowView",
+	content: null,
+}).setSlots({
 })
 

@@ -78,6 +78,10 @@ Array.prototype.removeOccurancesOf = function(e) {
 
 /// String
 
+String.prototype.asSetter = function() {
+    return "set" + slotName.capitalized();
+}
+
 String.prototype.firstCharacter = function() {
 	return this.slice(0);
 }

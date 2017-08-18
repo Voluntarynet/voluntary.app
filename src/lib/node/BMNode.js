@@ -42,6 +42,9 @@ BMNode = ideal.Proto.extend().newSlots({
     nodeContent: null,
     nodeBackgroundColor: null,
 
+    nodeHasFooter: false,
+    nodeInputFieldMethod: null,
+    
 	// debug
     debug: false,
 }).setSlots({
@@ -220,16 +223,31 @@ BMNode = ideal.Proto.extend().newSlots({
         return this.subnodes().detect((subnode) => { return subnode.isEqual(aSubnode) })
     },
     
-    removeSubnode: function(aSubnode) {
+    justRemoveSubnode: function(aSubnode) {
         this.subnodes().remove(aSubnode)
         
         if (aSubnode.parentNode() == this) {
             aSubnode.setParentNode(null)
         }
         
+        return aSubnode
+    },
+    
+    removeSubnode: function(aSubnode) {
+        this.justRemoveSubnode(aSubnode)
         this.didChangeSubnodeList()
         return aSubnode
     },
+    
+	removeAllSubnodes: function() {
+	    if (this.subnodes().length) {
+    		this.subnodes().slice().forEach((subnode) => {
+    			this.justRemoveSubnode(subnode)
+    		})
+            this.didChangeSubnodeList()
+        }
+		return this
+	},
 
     didChangeSubnodeList: function() {
         this.markDirty()

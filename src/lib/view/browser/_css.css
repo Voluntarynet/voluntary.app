@@ -65,12 +65,35 @@
     position: absolute;
     bottom: 0px;
     left: 0px;
-    height: 40px;
+    min-height: 40px;
+    height: auto;
     width: 100%;
     z-index: 3;
     background-color: #dbdbdb;
     text-align: right;
 	/*border: 1px blue dashed;*/
+    overflow: hidden;
+}
+
+.BrowserFooterTextView {
+    position: relative;
+    background-color: white;
+    border-radius: 4px;
+    width: calc(100% - 40px);
+    margin-top: 8px;
+    margin-left: 10px;
+    margin-bottom: 8px;
+    min-height: 25px;
+    max-height: 25px;
+    border: 1px solid rgba(0,0,0,.3);
+    color: black;
+    text-align: left;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+    line-height: 25px;
+    overflow: hidden;
 }
 
 

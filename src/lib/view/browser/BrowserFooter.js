@@ -10,12 +10,13 @@ BrowserFooter = NodeView.extend().newSlots({
         NodeView.init.apply(this)
         this.setOwnsView(false)
 
-		this.setLeftActionsView(DivView.clone().setDivClassName("BrowserFooterLeftActionsView"))
+		this.setLeftActionsView(DivView.clone().setDivClassName("BrowserFooterLeftActionsView NodeView DivView"))
 		
-		var textView = DivView.clone().setDivClassName("BrowserHeaderTitleView NodeView DivView").setInnerHTML("").setUserSelect("none")
+		var textView = DivView.clone().setDivClassName("BrowserFooterTextView NodeView DivView").setInnerHTML("").setUserSelect("none")
 		this.setTextView(textView)
 		
-		this.setRightActionsView(DivView.clone().setDivClassName("BrowserFooterRightActionsView"))
+		this.setRightActionsView(DivView.clone().setDivClassName("BrowserFooterRightActionsView NodeView DivView"))
+	    this.textView().setContentEditable(true)
 						
 		this.setZIndex(2)
         return this
@@ -29,53 +30,78 @@ BrowserFooter = NodeView.extend().newSlots({
         return this.columnGroup().parentView()
     },
 
-    syncFromNode: function() {
-        var node = this.node()
-        this.removeAllSubviews()
-        
-        if (node && this.browser()) {
-            if (this.shouldShowTitle()) {
-    		    this.titleView().setInnerHTML(node.nodeHeaderTitle())
-    		    this.addSubview(this.titleView())
-	        }
-
-			if (this.doesShowBackArrow()) {
-				this.addSubview(this.backArrowView())
-			}
-
-            node.actions().forEach((action) => {
-				if (this.showsAction(action)) {
-	                var button = BrowserHeaderAction.clone()
-	                button.setTarget(node).setAction(action)
-	                button.setCanClick(this.nodeHasAction(action))
-	                this.addSubview(button).syncFromNode()
-				}
-            })
-        } else {
-            //console.log("no header subviews")
+    setNode: function(aNode) {
+        if (aNode == this._node) {
+            //return
         }
+        
+        NodeView.setNode.apply(this, [aNode])
+        this.updateTextView()
+    },
+    
+    onDidEdit: function(aView) {
+        // TODO: move this into a BMTextField class
+        var s = aView.innerHTML()
+        var didReturn = false
+        var returnStrings = ["<div><br></div>", "<br>"]
+        
+        returnStrings.forEach((returnString) => {
+            if (s.contains(returnString)) {
+                s = s.replaceAll(returnString, "")
+                didReturn = true
+            }
+        })
+        
+        if (didReturn) { 
+            this.setInput(s)
+            aView.blur()
+            aView.setInnerHTML("") 
+        }
+        
+        //console.log(this.typeId() + " onDidEdit ", aView.innerHTML())
         
         return this
     },
     
-    nodeHasAction: function(anAction) {
-        return (anAction in this.node())
+    setInput: function(s) {
+        var n = this.node()
+        if (n) {
+            var m = n.nodeInputFieldMethod()
+            if (m) {
+                n[m].apply(n, [s])
+            }
+        }
+        return this
     },
-
-	didHitBackArrow: function() {
-		console.log(this.type() + " back")
-		this.browser().popLastActiveColumn()
-		//this.columnGroup().column().selectPreviousColumn()
-	},
-	
-	setDoesShowBackArrow: function(aBool) {
-		if (this._doesShowBackArrow != aBool) {
-			//console.log(this.node().title() + " setDoesShowBackArrow " + aBool)
-			this._doesShowBackArrow = aBool
-			this.setNeedsSyncFromNode(true)
-		}
-		return this
-	},
+    
+    updateTextView: function() {
+        //console.log("this.shouldShowTextView() = ", this.shouldShowTextView())
+        if (this.shouldShowTextView()) {
+            if (!this.hasSubview(this.textView())) {
+		        this.addSubview(this.textView())
+	        }
+        } else {
+            if (this.hasSubview(this.textView())) {
+		        this.removeSubview(this.textView())
+	        }
+        }
+        return this
+    },
+    
+    shouldShowTextView: function() {
+        return this.node() && (this.node().nodeInputFieldMethod() != null)
+    },
+    
+    syncFromNode: function() {
+        var node = this.node()
+        this.removeAllSubviews()
+        
+        if (node) {
+            this.updateTextView()
+        } 
+        return this
+    },
+    
 })
 
 

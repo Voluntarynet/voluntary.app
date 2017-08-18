@@ -261,10 +261,13 @@ BrowserColumnGroup = NodeView.extend().newSlots({
             if (customViewClass) {
                 this.setColumnClass(customViewClass)
             }
+            
+            this.setHasFooter(aNode.nodeHasFooter())
         }
         
         this.header().setNode(aNode)
         this.column().setNode(aNode)
+        this.footer().setNode(aNode)
         return this
     },
 

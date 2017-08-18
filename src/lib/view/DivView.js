@@ -539,6 +539,13 @@ DivView = ideal.Proto.extend().newSlots({
 	border: function() {
 		return this.getCssAttribute("border")
 	},
+	
+	// border radius
+	
+	setBorderRadius: function(s) {
+		this.setCssAttribute("border-radius", s)
+	    return this
+	},
     
 	// alignment
 	
@@ -1759,4 +1766,21 @@ DivView = ideal.Proto.extend().newSlots({
         return this
     },    
 
+/*
+    scrollTop: function() {
+        return this.element().scrollTop
+    },
+    
+    scrollHeight: function() {
+        return this.element().scrollHeight
+    },
+    */
+    
+    scrollToBottom: function() {
+        var e = this.element()
+        e.scrollTop = e.scrollHeight;
+        //  e.animate({ scrollTop: e.scrollHeight; }, 1000);
+
+        return this
+    },
 })

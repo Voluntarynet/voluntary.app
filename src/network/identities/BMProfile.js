@@ -8,6 +8,7 @@ BMProfile = BMFieldSetNode.extend().newSlots({
         this.setTitle("profile")
         
 		// pass through fields
+		//this.addStoredField(BMImageWellField.clone().setValueMethod("avatar")).setValueIsEditable(true)
         this.addFieldNamed("name").setValueMethod("name").setValueIsEditable(true)
 		this.addStoredField(BMIdentityField.clone().setValueMethod("publicKeyString").setKey("public key").setValueIsEditable(true))
 	//	this.addStoredField(BMIdentityField.clone().setValueMethod("privateKeyString").setKey("private key").setValueIsEditable(false))
@@ -16,7 +17,6 @@ BMProfile = BMFieldSetNode.extend().newSlots({
         this.addFieldNamed("phone").setValueMethod("phone").setValueIsEditable(true)
         this.addFieldNamed("email").setValueMethod("email").setValueIsEditable(true)
         this.addFieldNamed("address").setValueMethod("address").setValueIsEditable(true)
-
 		this.setNodeMinWidth(600)
     },
 

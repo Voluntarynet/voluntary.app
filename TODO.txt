@@ -1,4 +1,6 @@
 
+Add profile image
+
 - Browser footer bar
     - unify browser header/footer with leftActions + text + rightActions layout?
 

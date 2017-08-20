@@ -8,6 +8,10 @@ WebBrowserWindow = ideal.Proto.extend().newSlots({
         throw new Error("this class is meant to be used as singleton, for now")
         return this
     },
+
+	setup: function() {
+		this.preventDrop()
+	},
     
  /*  
     win: function() {
@@ -18,6 +22,45 @@ WebBrowserWindow = ideal.Proto.extend().newSlots({
         return this._win
     },
 */
+
+
+	preventDrop: function() {
+		
+		/*
+		this.element().ondragstart = null
+        this.element().ondragover  = null
+        this.element().ondragleave = null
+        this.element().ondragend   = null
+        this.element().ondrop      = null
+*/
+		var stopEvent = function(e) {
+		    e.preventDefault();
+		    e.dataTransfer.effectAllowed = "none";
+		    e.dataTransfer.dropEffect = "none";			
+		}
+
+		window.addEventListener("dragenter", function(e) {
+			console.log("e.target", e.target)
+			console.log("e.target.ondragenter = ", e.target.ondragenter)
+		  if (e.target.ondragenter == null) {
+		    stopEvent(e)
+		  }
+		}, false);
+
+		window.addEventListener("dragover", function(e) {
+		  if (e.target.ondragover == null) {
+		    stopEvent(e)
+		  }
+		});
+
+		window.addEventListener("drop", function(e) {
+		  if (e.target.ondrop == null) {
+		    stopEvent(e)
+		  }
+		});
+		
+		return this
+	},
     
     width: function () {
         return window.innerWidth
@@ -105,3 +148,6 @@ WebBrowserWindow = ideal.Proto.extend().newSlots({
         return this
 	},
 })
+
+
+WebBrowserWindow.setup()

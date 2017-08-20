@@ -52,6 +52,7 @@ DivView = ideal.Proto.extend().newSlots({
     init: function () {
         this._subviews = []
         this.setupElement()
+		this.setIsRegisteredForDrop(false)
         return this
     },
 
@@ -1159,7 +1160,9 @@ DivView = ideal.Proto.extend().newSlots({
         if (aBool) {
 			if (this._isRegisteredForDrop == false) {
 				this._isRegisteredForDrop = true
+	            this.element().ondragstart  = (event) => { return this.onDragStart(event) }
 	            this.element().ondragover  =  (event) => { return this.onDragOver(event) }
+	            this.element().ondragenter  = (event) => { return this.onDragEnter(event) }
 	            this.element().ondragleave =  (event) => { return this.onDragLeave(event) }
 	            this.element().ondragend   =  (event) => { return this.onDragEnd(event) }
 	            this.element().ondrop      =  (event) => { return this.onDrop(event) }
@@ -1167,7 +1170,20 @@ DivView = ideal.Proto.extend().newSlots({
         } else {
 			if (this._isRegisteredForDrop == true) {
 				this._isRegisteredForDrop = false
+				
+				/*
+				var preventFunc = (event) => { 
+					if(event.preventDefault) { 
+						event.preventDefault(); 
+					}
+					event.returnValue = false; 
+					return false 
+				}
+				*/
+				
+	            this.element().ondragstart = null
 	            this.element().ondragover  = null
+	            this.element().ondragenter = null
 	            this.element().ondragleave = null
 	            this.element().ondragend   = null
 	            this.element().ondrop      = null
@@ -1179,7 +1195,21 @@ DivView = ideal.Proto.extend().newSlots({
     acceptsDrop: function() {
         return true
     },    
-         
+        
+	onDragStart: function (event) {
+        return true;
+	},
+	
+	onDragEnter: function (event) { // needed?
+        if (this.acceptsDrop()) {
+            this.onDragOverAccept(event)
+            event.preventDefault()
+            return true
+        }
+
+        return false;
+	},
+	
     onDragOver: function (event) {
         //console.log("onDragOver ");
 

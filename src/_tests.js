@@ -1,6 +1,4 @@
 
-App.runTests = function() {}
-
 /*
 App.runTests = function() {
 	var PlainText = "hello world"

@@ -223,7 +223,7 @@ BMNode = ideal.Proto.extend().newSlots({
         return this.subnodes().detect((subnode) => { return subnode.isEqual(aSubnode) })
     },
     
-    justRemoveSubnode: function(aSubnode) {
+    justRemoveSubnode: function(aSubnode) { // private method 
         this.subnodes().remove(aSubnode)
         
         if (aSubnode.parentNode() == this) {

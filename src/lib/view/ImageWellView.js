@@ -12,12 +12,14 @@ ImageWellView = NodeView.extend().newSlots({
         return this
     },
 
+/*
     syncToNode: function () {
         var node = this.node()
         this.parentView().syncToNode()
         NodeView.syncToNode.apply(this)
         return this
     },
+*/
     
     setIsEditable: function(aBool) {
         this._isEditable = aBool
@@ -63,7 +65,8 @@ ImageWellView = NodeView.extend().newSlots({
         var imageView = ImageView.clone().setFromPath(dataUrl)
         imageView.setIsEditable(this.isEditable())
         this.addSubview(imageView)
-		this.syncToNode()
+		//this.syncToNode()
+		this.tellParentViews("didUpdateImageWellView", this)
         return this        
     },
     

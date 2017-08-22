@@ -161,19 +161,24 @@ ImageView = NodeView.extend().newSlots({
     fetchDataURLFromSrc: function(src) {
         var img = new Image();
         img.crossOrigin = 'Anonymous';
-        
-        img.onload = () => {
-            var canvas = document.createElement('CANVAS');
-            var ctx = canvas.getContext('2d');
-            canvas.height = this.height;
-            canvas.width = this.width;
-            ctx.drawImage(this, 0, 0);
-            var data = canvas.toDataURL("image/jpeg");
-            this.setDataURL(data);
-            //console.log("this._dataURL = ",data)
-            this.syncToNode()
-        };
-        
+
+        if (src.beginsWith("data:")) {
+            this.setDataURL(src)
+            this.setNeedsSyncToNode(true)
+		} else {
+	        img.onload = () => {
+	            var canvas = document.createElement('CANVAS');
+	            var ctx = canvas.getContext('2d');
+	            canvas.height = this.height;
+	            canvas.width = this.width;
+	            ctx.drawImage(img, 0, 0);
+	            var data = canvas.toDataURL("image/jpeg");
+				//console.log("img.onload setDataURL ", data)
+	            this.setDataURL(data)
+	            //console.log("this._dataURL = ",data)
+	            this.setNeedsSyncToNode(true)
+	        };
+		}
         
         img.src = src;
         /*

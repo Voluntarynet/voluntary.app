@@ -23,44 +23,28 @@ WebBrowserWindow = ideal.Proto.extend().newSlots({
     },
 */
 
+	// prevent window level drop and only allow drop on elements that can handle it
 
-	preventDrop: function() {
+	dropCheck : function(e) {
+		// stopEventIfNotDroppable
 		
-		/*
-		this.element().ondragstart = null
-        this.element().ondragover  = null
-        this.element().ondragleave = null
-        this.element().ondragend   = null
-        this.element().ondrop      = null
-*/
-		var stopEvent = function(e) {
-		    e.preventDefault();
-		    e.dataTransfer.effectAllowed = "none";
-		    e.dataTransfer.dropEffect = "none";			
+		if (e.target.ondrop == null) {
+			e.preventDefault();
+			e.dataTransfer.effectAllowed = "none";
+			e.dataTransfer.dropEffect = "none";	
 		}
-
-		window.addEventListener("dragenter", function(e) {
-			console.log("e.target", e.target)
-			console.log("e.target.ondragenter = ", e.target.ondragenter)
-		  if (e.target.ondragenter == null) {
-		    stopEvent(e)
-		  }
-		}, false);
-
-		window.addEventListener("dragover", function(e) {
-		  if (e.target.ondragover == null) {
-		    stopEvent(e)
-		  }
-		});
-
-		window.addEventListener("drop", function(e) {
-		  if (e.target.ondrop == null) {
-		    stopEvent(e)
-		  }
-		});
 		
 		return this
 	},
+
+	preventDrop: function() {
+		window.addEventListener("dragenter", (e) => { this.dropCheck(e) }, false);
+		window.addEventListener("dragover",  (e) => { this.dropCheck(e) }, false);
+		window.addEventListener("drop",      (e) => { this.dropCheck(e) }, false);
+		return this
+	},
+	
+	// attributes
     
     width: function () {
         return window.innerWidth

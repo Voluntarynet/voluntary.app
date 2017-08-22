@@ -33,6 +33,8 @@ BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
     syncToNode: function () {
         var field = this.node()
 		
+		console.log(this.typeId() + " field.valueIsEditable() = ", field.valueIsEditable())
+		
 		if (field.valueIsEditable()) {
         	field.setValue(this.imageWellView().imageDataURLs())
 		}

@@ -63,6 +63,7 @@ ImageWellView = NodeView.extend().newSlots({
         var imageView = ImageView.clone().setFromPath(dataUrl)
         imageView.setIsEditable(this.isEditable())
         this.addSubview(imageView)
+		//imageView.setHeightPercentage(this.clientHeight())
 		this.syncToNode()
         return this        
     },

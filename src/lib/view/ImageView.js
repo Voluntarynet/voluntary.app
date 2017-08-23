@@ -40,6 +40,10 @@ ImageView = NodeView.extend().newSlots({
             this.setCloseButtonView(NodeView.clone().setDivClassName("ImageCloseButton"))
             this.addSubview(this.closeButtonView()) 
             this.closeButtonView().setTarget(this).setAction("close").setInnerHTML("&#10799;")
+
+	        this.closeButtonView().setBackgroundImageUrlPath(this.pathForIconName("close"))
+			this.setBackgroundSize(10, 10) // use "contain" instead?
+			this.setBackgroundPosition("center")
         }
         return this        
     },
@@ -50,30 +54,46 @@ ImageView = NodeView.extend().newSlots({
             this.setCloseButtonView(null)
         }
     },
+
+	collapse: function() {
+		this.closeButtonView().setOpacity(0).setTarget(null)
+		this.setOpacity(0)
+		this.setMinAndMaxWidth(0)
+        var style = this.cssStyle();
+        style.paddingLeft = "0px";
+        style.paddingRight = "0px";
+        style.marginLeft = "0px";
+        style.marginRight = "0px";	
+	},
     
     close: function() {
         //console.log("close action")
-        this.removeAfterFadeDelay(0.4)
+        //this.removeAfterFadeDelay(0.4)
+		
+		var seconds = 0.33
+		this.setTransition("all " + seconds + "s")
+		
         setTimeout( () => { 
-            this.removeSubview(this.closeButtonView())
-			this.syncToNode()
-			
-            var style = this.cssStyle();
-            style.width = "0px";
-            style.paddingLeft = "0px";
-            style.paddingRight = "0px";
-            style.marginLeft = "0px";
-            style.marginRight = "0px";
-        }, 0)
+			this.collapse()
+		}, 0)
+
+        setTimeout( () => { 
+			this.removeCloseButton()
+			var parentView = this.parentView()
+			this.removeFromParentView()
+			parentView.syncToNode()
+        }, seconds*1000)
     },
 
 	// --- sync ---
 
+/*
     syncToNode: function () {
         this.parentView().syncToNode()
         NodeView.syncToNode.apply(this)
         return this
     },
+*/
 
 /*
     syncFromNode: function () {
@@ -128,10 +148,12 @@ ImageView = NodeView.extend().newSlots({
         var image = new Image();
         image.style.maxHeight = "100%";
         image.style.maxWidth = "100%";
+/*
         image.style.marginTop = "20px";
         image.style.marginBottom = "20px";
         image.style.marginLeft = "10px";
         image.style.marginRight = "10px";
+*/
         return image        
     },
 

@@ -882,6 +882,11 @@ DivView = ideal.Proto.extend().newSlots({
         }, 200)	
 		return this
 	},
+	
+	removeFromParentView: function() {
+		this.parentView().removeSubview(this)
+		return this
+	},
     
     removeAfterFadeDelay: function(delayInSeconds) {
         // call removeSubview for a direct actions

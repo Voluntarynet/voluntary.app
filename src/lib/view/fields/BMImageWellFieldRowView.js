@@ -29,11 +29,10 @@ BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
         return this
     },
 
-
     syncToNode: function () {
         var field = this.node()
 		
-		console.log(this.typeId() + " field.valueIsEditable() = ", field.valueIsEditable())
+		console.log(this.typeId() + "syncToNode()  this.imageWellView().imageDataURLs() = ", this.imageWellView().imageDataURLs())
 		
 		if (field.valueIsEditable()) {
         	field.setValue(this.imageWellView().imageDataURLs())
@@ -44,7 +43,7 @@ BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
     },
     
     didUpdateImageWellView: function(anImageWell) {
-      this.setNeedsSyncToNode(true)
-       return this
+		this.setNeedsSyncToNode(true)
+		return this
     },
 })

@@ -407,8 +407,13 @@ BMNode = ideal.Proto.extend().newSlots({
         return newSubnode
     },
 
-    delete: function () {
+	removeFromParentNode: function() {
         this.parentNode().removeSubnode(this)
+		return this
+	},
+	
+    delete: function () {
+        this.removeFromParentNode()
         return this
     },
 

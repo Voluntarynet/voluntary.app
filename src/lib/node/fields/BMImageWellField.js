@@ -18,7 +18,7 @@ BMImageWellField = BMField.extend().newSlots({
 
 	setValue: function(v) {
 		BMField.setValue.apply(this, [v])
-		console.log(this.typeId() + " setValue " + v)
+		//console.log(this.typeId() + " setValue " + v)
 		this.updateKey()
 		return this
 	},
@@ -28,7 +28,8 @@ BMImageWellField = BMField.extend().newSlots({
 			this.setKey("drop images here")
 		} else {
 			this.setKey("")
-		}	
+		}
+		this.setNeedsSyncToView(true)
 		return this
 	},
 })

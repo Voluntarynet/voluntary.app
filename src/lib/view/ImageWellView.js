@@ -10,6 +10,7 @@ ImageWellView = NodeView.extend().newSlots({
         this.setIsRegisteredForDrop(true)
         this.dragUnhighlight()
         this.turnOffUserSelect()
+		this.setTransition("all 0.3s")
         return this
     },
 

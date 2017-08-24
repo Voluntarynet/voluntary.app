@@ -28,6 +28,7 @@ BMChat = BMApplet.extend().newSlots({
 		// return this.localIdentity().remoteIdentities()
         return App.shared().remoteIdentities()
     },
+    
 
 	setThreads: function(newValue) {
 		var oldValue = this._threads

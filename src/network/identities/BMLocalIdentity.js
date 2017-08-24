@@ -66,4 +66,10 @@ BMLocalIdentity = BMKeyPair.extend().newSlots({
 		return this
 	},
 	
+	allOtherIdentities: function() {
+		var validRemoteIds = this.remoteIdentities().validSubnodes()
+		var otherLocalIds = App.shared().localIdentities().subnodesSans(this)
+		return validRemoteIds.concat(otherLocalIds)
+	},
+	
 })

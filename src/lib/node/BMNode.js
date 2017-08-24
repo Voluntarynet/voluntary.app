@@ -448,6 +448,11 @@ BMNode = ideal.Proto.extend().newSlots({
     
     // --- subnode lookup -----------------------------
     
+	subnodesSans: function(aSubnode) {
+	    var results = this.subnodes().select((subnode) => { return subnode != aSubnode })
+	    return results
+	},
+	
     firstSubnodeOfType: function(aProto) {
         this.prepareToAccess(); // put guard on subnodes instead?
 

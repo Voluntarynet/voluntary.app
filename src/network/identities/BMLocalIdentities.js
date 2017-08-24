@@ -32,5 +32,6 @@ BMLocalIdentities = BMStorableNode.extend().newSlots({
         return this.subnodes().detect(function (id) {            
             return id.name() == s
         })
-	}
+	},
+	
 })

@@ -47,7 +47,7 @@ ImageWellView = NodeView.extend().newSlots({
     
     acceptsDrop: function(event) {
         var accepts = (!this.isFull()) && this.isEditable()
-        console.log(this.typeId() + " isFull:" + this.isFull() + " count:" + this.imageCount() + "/" + this.maxImageCount() + " accepts:" + accepts)
+        //console.log(this.typeId() + " isFull:" + this.isFull() + " count:" + this.imageCount() + "/" + this.maxImageCount() + " accepts:" + accepts)
         return accepts        
     },
     

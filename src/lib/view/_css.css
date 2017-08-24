@@ -14,8 +14,10 @@
 .ImageView {
     display: inline-block;
 	position: relative;
-	width: 200px;
-	height: 220px;
+	min-width: 200px;
+	max-width: 200px;
+	min-height: 230px;
+	max-height: 230px;
 	margin-bottom: 20px;
 	transition: all 0.5s;
 	margin-left: 30px;
@@ -25,19 +27,20 @@
 }
 
 .ImageViewImageContainer { 
-    display: table-cell;
+    display: inline-block;
     position: relative;
-    width: 200px;
-    height: 200px;
+    max-width: 200px;
+    max-height: 200px;
     vertical-align: middle;
     text-align: center;
 	border: 0px solid #eee;
+	overflow: hidden;
 }
 
 .ImageViewImageObject {
     position: relative;
-    max-width: 100%;
-    min-width: 100%;
+    max-width: 200px;
+    max-height: 200px;
 	border: 0px solid #eee;
 }
 
@@ -49,9 +52,10 @@
 	width: 100%;
 	max-width: 100%;
 	min-width: 100%;
-	min-height: 20px;
+	min-height: 30px;
 	text-align: center;
 	opacity: 0.3;
+	z-index: 2;
 }
 
 .ImageCloseButton:hover {

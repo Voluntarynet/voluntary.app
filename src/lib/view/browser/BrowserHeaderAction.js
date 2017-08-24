@@ -35,7 +35,7 @@ BrowserHeaderAction = NodeView.extend().newSlots({
 	
     updateImage: function () {
         this.setBackgroundImageUrlPath(this.pathForIconName(this.action()))
-		this.setBackgroundSize(10, 10) // use "contain" instead?
+		this.setBackgroundSizeWH(10, 10) // use "contain" instead?
 		this.setBackgroundPosition("center")
 		this.setOpacity(0.6)
         return this

@@ -3,6 +3,7 @@ ImageWellView = NodeView.extend().newSlots({
     type: "ImageWellView",
     imageView: null,
     isEditable: true,
+    maxImageCount: null,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
@@ -13,8 +14,6 @@ ImageWellView = NodeView.extend().newSlots({
     },
 
     syncToNode: function () {
-        var node = this.node()
-        //this.parentView().syncToNode()
 		this.tellParentViews("didUpdateImageWellView", this)
         return this
     },
@@ -33,8 +32,22 @@ ImageWellView = NodeView.extend().newSlots({
         this.setBackgroundColor("transparent")
     },
     
+    imageCount: function() {
+        return this.subviews().length
+    },
+    
+    isFull: function() {
+        if (this.maxImageCount() == null) {
+            return false
+        }
+        
+        return this.imageCount() >= this.maxImageCount()
+    },
+    
     acceptsDrop: function(event) {
-        return this.isEditable()
+        var accepts = (!this.isFull()) && this.isEditable()
+        console.log(this.typeId() + " isFull:" + this.isFull() + " count:" + this.imageCount() + "/" + this.maxImageCount() + " accepts:" + accepts)
+        return accepts        
     },
     
     setImageDataURLs: function(dataURLs) {
@@ -46,12 +59,19 @@ ImageWellView = NodeView.extend().newSlots({
         //console.log("setImageDataURLs = ", dataURLs)
 
         dataURLs.forEach( (dataURL) => {
-            var imageView = ImageView.clone().setFromDataURL(dataURL)
-            imageView.setIsEditable(this.isEditable())
-			imageView.setMaxHeight(180)
-            this.addSubview(imageView);
-            //this.node().addSubview(ImageNode.clone().setView(imageView))
+            this.addImageDataURL(dataURL)
         })
+    },
+    
+    addImageDataURL: function(dataURL) {
+        if (this.isFull()) {
+            return this
+        }
+        var imageView = ImageView.clone().fetchDataURLFromSrc(dataURL)
+        imageView.setIsEditable(this.isEditable())
+        imageView.setMaxHeight(180)
+        this.addSubview(imageView);    
+        return this
     },
     
     imageDataURLs: function() {
@@ -60,13 +80,9 @@ ImageWellView = NodeView.extend().newSlots({
         return urls
     },
     
-    onDropImageDataUrl: function(dataUrl) {
-        var imageView = ImageView.clone().setFromPath(dataUrl)
-        imageView.setIsEditable(this.isEditable())
-        this.addSubview(imageView)
-		//imageView.setHeightPercentage(this.clientHeight())
-		//this.syncToNode()
-		this.tellParentViews("didUpdateImageWellView", this)
+    onDropImageDataUrl: function(dataURL) {
+        this.addImageDataURL(dataURL)
+		this.syncToNode()
         return this        
     },
     

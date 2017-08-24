@@ -97,7 +97,7 @@ BrowserRow = NodeView.extend().newSlots({
             this.closeButtonView().setOpacity(0).setTransition("all 0.2s")
             /*
             this.closeButtonView().setBackgroundImageUrlPath(this.pathForIconName(this.action()))
-    		this.closeButtonView().setBackgroundSize(20, 20) // use "contain" instead?
+    		this.closeButtonView().setBackgroundSizeWH(20, 20) // use "contain" instead?
     		this.closeButtonView().setBackgroundPosition("center")
     		*/
         }

@@ -176,13 +176,16 @@
     display: block;
     position: relative;
     width: auto;
-    min-height: 200px;
-    max-height: 200px;
+    min-height: 250px;
+    max-height: 250px;
 	padding-bottom: 35px;
     color: #CBCBCB;
     border-bottom: 1px solid #ddd;
     transition: background-color .3s ease-out;
 	text-align:center;
+	
+	padding-left: 0px;
+
 }
 
 .BMImageWellKeyField {

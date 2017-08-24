@@ -1,18 +1,24 @@
 
 ImageView = NodeView.extend().newSlots({
     type: "ImageView",
-    imageElement: null,
     closeButtonView: null,
     dataURL: null,
     isEditable: false,
+    imageContainer: null,
+    rawImageView: null,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
         this.setIsRegisteredForDrop(false)
+        
+        this.setImageContainer(DivView.clone().setDivClassName("ImageViewImageContainer"))
+        this.addSubview(this.imageContainer())
+        
         //this.setEditable(false)
 		this.setContentEditable(false)
         this.dragUnhighlight()
         this.turnOffUserSelect()
+		this.setTransition("all 0.3s")
         return this
     },
 
@@ -37,13 +43,15 @@ ImageView = NodeView.extend().newSlots({
 
     addCloseButton: function() {
         if (this.closeButtonView() == null) {
-            this.setCloseButtonView(NodeView.clone().setDivClassName("ImageCloseButton"))
-            this.addSubview(this.closeButtonView()) 
-            this.closeButtonView().setTarget(this).setAction("close").setInnerHTML("&#10799;")
+            var cb = NodeView.clone().setDivClassName("ImageCloseButton")
+            this.setCloseButtonView(cb)
+            this.addSubview(cb) 
+            cb.setTarget(this).setAction("close") //.setInnerHTML("&#10799;")
 
-	        this.closeButtonView().setBackgroundImageUrlPath(this.pathForIconName("close"))
-			this.setBackgroundSize(10, 10) // use "contain" instead?
-			this.setBackgroundPosition("center")
+	        cb.setBackgroundImageUrlPath(this.pathForIconName("close"))
+			cb.setBackgroundSizeWH(10, 10) // use "contain" instead?
+			cb.setBackgroundPosition("center")
+			cb.makeBackgroundNoRepeat()
         }
         return this        
     },
@@ -58,136 +66,75 @@ ImageView = NodeView.extend().newSlots({
 	collapse: function() {
 		this.closeButtonView().setOpacity(0).setTarget(null)
 		this.setOpacity(0)
-		this.setMinAndMaxWidth(0)
+		
+		this.setWidth("0px")
+		
+		this.setPaddingLeft(0)
+		this.setPaddingRight(0)
+		
+		this.setMarginLeft(0)
+		this.setMarginRight(0)
+		
+		//this.rawImageView().setMinAndMaxWidth(0)
+		//this.imageContainer().setMinAndMaxWidth(0)
+		//this.setMinAndMaxWidth(0)
+		/*
         var style = this.cssStyle();
         style.paddingLeft = "0px";
         style.paddingRight = "0px";
         style.marginLeft = "0px";
         style.marginRight = "0px";	
+        */
 	},
     
     close: function() {
-        //console.log("close action")
-        //this.removeAfterFadeDelay(0.4)
+		var seconds = 0.3
 		
-		var seconds = 0.33
-		this.setTransition("all " + seconds + "s")
-		
-        setTimeout( () => { 
-			this.collapse()
-		}, 0)
-
+        this.collapse()
+        
         setTimeout( () => { 
 			this.removeCloseButton()
 			var parentView = this.parentView()
 			this.removeFromParentView()
+			//console.log(this.typeId() + ".close complete parentView = ", parentView)
 			parentView.syncToNode()
-        }, seconds*1000)
+        }, seconds * 1000)
     },
 
 	// --- sync ---
-
-/*
-    syncToNode: function () {
-        this.parentView().syncToNode()
-        NodeView.syncToNode.apply(this)
-        return this
-    },
-*/
-
-/*
-    syncFromNode: function () {
-        var node = this.node()
-        
-        return this
-    },
     
-    syncToNode: function () {
-        //var node = this.node()
-        this.parentView().syncToNode()
-        NodeView.syncToNode.apply(this)
-        return this
-    },
-*/
-
-    
-    /*
-    onDidEdit: function (changedView) {     
-        //this.log("onDidEdit")   
-        this.syncToNode()
-    },
-    
-    dragHighlight: function() {
-        this.setBackgroundColor("#eee")
-    },
-    
-    dragUnhighlight: function() {
-        this.setBackgroundColor("transparent")
-    },
-        
-    onDropFiles: function (files) {
-        var file = files[0];
-        console.log(this.type() + " onDropFiles " + typeof(file) + " " + file);
-
-        this.setFromPath(file)
-                    
-        event.preventDefault();
-        return true;
-    },
-    */
-    
-    removeChildren: function() {
-        var e = this.element()
-        while (e.hasChildNodes()) {
-            e.removeChild(e.lastChild);
+    removeRawImageView: function() {
+        if (this.rawImageView()) {
+            this.imageContainer().removeSubview(this.rawImageView())
+            this.setRawImageView(null)
         }
         return this
     },
     
-    newImage: function() {
-        var image = new Image();
-        image.style.maxHeight = "100%";
-        image.style.maxWidth = "100%";
-/*
-        image.style.marginTop = "20px";
-        image.style.marginBottom = "20px";
-        image.style.marginLeft = "10px";
-        image.style.marginRight = "10px";
-*/
-        return image        
-    },
-
-    setFromPath: function(src) {        
-        var image = this.newImage();
-        image.src = src;
-
-        this.element().appendChild(image); 
-        this.setImageElement(image)
-        
-        //console.log("image.outerHTML  = " + typeof(image.outerHTML) + " [" + image.outerHTML + "]")
-        this.fetchDataURLFromSrc(src)
-        return this     
-    },
-
-	// --- set dataURL or set normal src url and create a dataURL ---
-    
     setFromDataURL: function(dataURL) {
         //console.log("setFromDataURL: ", dataURL)
-        var image = this.newImage();
+
+        assert(dataURL.beginsWith("data:")) 
+
+        this.removeRawImageView()
+        this.setDataURL(dataURL)
+
+		var image = new Image();
         image.src = dataURL;
-        this.element().appendChild(image); 
-        this.setImageElement(image);
+
+        this.setRawImageView(DivView.clone().setElement(image).setDivClassName("ImageViewImageObject"))
+		this.imageContainer().addSubview(this.rawImageView())
+
         return this;
     },
     
     fetchDataURLFromSrc: function(src) {
-        var img = new Image();
-        img.crossOrigin = 'Anonymous';
-
         if (src.beginsWith("data:")) {
-            this.setDataURL(src)
-            this.setNeedsSyncToNode(true)
+	        this.setFromDataURL(src)
 		} else {
+		    var img = new Image();
+            img.crossOrigin = 'Anonymous';
+        
 	        img.onload = () => {
 	            var canvas = document.createElement('CANVAS');
 	            var ctx = canvas.getContext('2d');
@@ -195,21 +142,26 @@ ImageView = NodeView.extend().newSlots({
 	            canvas.width = this.width;
 	            ctx.drawImage(img, 0, 0);
 	            var data = canvas.toDataURL("image/jpeg");
-				//console.log("img.onload setDataURL ", data)
-	            this.setDataURL(data)
-	            //console.log("this._dataURL = ",data)
-	            this.setNeedsSyncToNode(true)
+	            this.didFetchDataURL(data)
 	        };
-		}
-        
-        img.src = src;
-        /*
-        if (img.complete || img.complete === undefined) {
-            img.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
+
             img.src = src;
-        }
-        */
-  
+
+            /*
+            if (img.complete || img.complete === undefined) {
+                img.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
+                img.src = src;
+            }
+            */
+		}
+		
+        return this
+    },
+    
+    didFetchDataURL: function(dataURL) {
+        this.setFromDataURL(dataURL)
+        this.setNeedsSyncToNode(true)
+        return this
     },
     
 })

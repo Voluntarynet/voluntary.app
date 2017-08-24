@@ -4,31 +4,56 @@
 .ImageWellView {
 	display: block;
 	position: absolute;
-	height: calc(100% - 30px);
-	width: calc(100% - 40px);
+	height: calc(100%);
+	width: calc(100%);
 	/*border: 1px dashed yellow;*/
 	overflow-x: scroll;
 	overflow-y: hidden;
 }
 
 .ImageView {
-	display: inline-block;
+    display: inline-block;
 	position: relative;
-	min-height: calc(100% - 40px);
-	max-height: calc(100% - 40px);
+	width: 200px;
+	height: 220px;
 	margin-bottom: 20px;
 	transition: all 0.5s;
 	margin-left: 30px;
 	margin-right: 30px;
 	overflow: hidden;
-	border: 1px dashed yellow;
+	border: 0px solid #eee;
+}
+
+.ImageViewImageContainer { 
+    display: table-cell;
+    position: relative;
+    width: 200px;
+    height: 200px;
+    vertical-align: middle;
+    text-align: center;
+	border: 0px solid #eee;
+}
+
+.ImageViewImageObject {
+    position: relative;
+    max-width: 100%;
+    min-width: 100%;
+	border: 0px solid #eee;
 }
 
 .ImageCloseButton {
+    position: absolute;
+    bottom: 0px;
 	margin: 0px;
 	padding: 0px;	
 	width: 100%;
 	max-width: 100%;
 	min-width: 100%;
+	min-height: 20px;
 	text-align: center;
+	opacity: 0.3;
+}
+
+.ImageCloseButton:hover {
+	opacity: 1;
 }

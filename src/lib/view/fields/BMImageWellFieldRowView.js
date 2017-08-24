@@ -7,6 +7,7 @@ BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
 		this.keyView().setDivClassName("BMImageWellKeyField") //.setDisplay("none")
 		//this.valueView().setContentEditable(false)
         this.turnOffUserSelect()
+        this.keyView().setTransition("all 0.3s")
         return this
     },
 
@@ -25,14 +26,19 @@ BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
 			//console.log("field = ", field.type())
 			this.keyView().setInnerHTML(field.key())
 			this.imageWellView().setImageDataURLs(field.value())
+		    this.updateKeyView()
+		    this.imageWellView().setMaxImageCount(this.node().maxImageCount())
 		}
+		
         return this
     },
 
     syncToNode: function () {
         var field = this.node()
 		
-		console.log(this.typeId() + "syncToNode()  this.imageWellView().imageDataURLs() = ", this.imageWellView().imageDataURLs())
+		//console.log(this.typeId() + ".syncToNode() imageDataURLs: ", this.dataUrls())
+		
+		this.updateKeyView()
 		
 		if (field.valueIsEditable()) {
         	field.setValue(this.imageWellView().imageDataURLs())
@@ -41,8 +47,25 @@ BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
         //NodeView.syncToNode.apply(this)
         return this
     },
+
+    dataUrls: function() {
+		return this.imageWellView().imageDataURLs()
+    },
+    
+    updateKeyView: function() {
+        var opacity = 1
+        
+        if(this.node().onlyShowsKeyWhenEmpty()) {
+		    opacity = this.dataUrls().length ? 0 : 1
+	    }
+	    
+	    this.keyView().setOpacity(opacity)
+	    
+		return this
+    },
     
     didUpdateImageWellView: function(anImageWell) {
+        //console.log(this.typeId() + ".didUpdateImageWellView()")
 		this.setNeedsSyncToNode(true)
 		return this
     },

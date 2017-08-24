@@ -320,9 +320,45 @@ DivView = ideal.Proto.extend().newSlots({
         return this
     },
 
-	setBackgroundSize: function(x, y) {
+    // background size
+    
+	setBackgroundSizeWH: function(x, y) {
 		this.setCssAttribute("background-size", x + "px " + y + "px")
         return this
+	},
+	
+	setBackgroundSize: function(s) {
+	    assert(typeof(s) == "string")
+		this.setCssAttribute("background-size", s)
+        return this
+	},
+	
+	makeBackgroundCover: function() {
+	    this.setBackgroundSize("cover")
+	    return this
+	},
+	
+	makeBackgroundContain: function() {
+	    this.setBackgroundSize("contain")
+	    return this
+	},
+	
+	// background repeat
+	
+    makeBackgroundNoRepeat: function() {
+	    this.setBackgroundRepeat("no-repeat")
+        return this
+    },
+
+
+    setBackgroundRepeat: function(s) {
+	    assert(typeof(s) == "string")
+		this.setCssAttribute("background-repeat", s)
+        return this
+    },
+
+	backgroundRepeat: function() {
+		return this.getCssAttribute("background-repeat")
 	},
 	
 	// background position
@@ -1252,12 +1288,15 @@ DivView = ideal.Proto.extend().newSlots({
     },
 
     onDrop: function (event) {
-        //var file = event.dataTransfer.files[0];
-        //console.log('onDrop ' + file.path);
-        this.onDataTransfer(event.dataTransfer)
-        this.dragUnhighlight()
-        event.preventDefault();
-        return true;
+        if (this.acceptsDrop()) {
+            //var file = event.dataTransfer.files[0];
+            //console.log('onDrop ' + file.path);
+            this.onDataTransfer(event.dataTransfer)
+            this.dragUnhighlight()
+            event.preventDefault();
+            return true;
+        }
+        return false
     },
    
     onDataTransfer: function(dataTransfer) {     

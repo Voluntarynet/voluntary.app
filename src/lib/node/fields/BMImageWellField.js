@@ -5,7 +5,8 @@
         
 BMImageWellField = BMField.extend().newSlots({
     type: "BMImageWellField",
-	
+	onlyShowsKeyWhenEmpty: true,
+	maxImageCount: 1,
 }).setSlots({
     init: function () {
         BMField.init.apply(this)
@@ -19,10 +20,11 @@ BMImageWellField = BMField.extend().newSlots({
 	setValue: function(v) {
 		BMField.setValue.apply(this, [v])
 		//console.log(this.typeId() + " setValue " + v)
-		this.updateKey()
+		//this.updateKey()
 		return this
 	},
 	
+	/*
 	updateKey: function() {
 		if (this.value().length == 0) {
 			this.setKey("drop images here")
@@ -32,4 +34,5 @@ BMImageWellField = BMField.extend().newSlots({
 		this.setNeedsSyncToView(true)
 		return this
 	},
+	*/
 })

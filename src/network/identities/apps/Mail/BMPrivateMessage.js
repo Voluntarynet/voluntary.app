@@ -175,39 +175,6 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
         return localId
     },
 
-/*
-	setParentNode: function(aNode) {
-		BMFieldSetNode.setParentNode.apply(this, [aNode])
-		this.validateFromAddress()
-		return this
-	},   
-	*/
-	
-	/*
-	toContactPublicKey: function() {
-		if (this.receiverId()) {
-			return this.receiverId().publicKeyString()
-			//return "..." + s.substring(s.length - 6)
-		}
-		return null
-	},	
-	
-	fromContactPublicKey: function() {
-		if (this.senderId()) {
-			return this.senderId().publicKeyString()
-			//return "..." + s.substring(s.length - 6)
-		}
-		return null
-	},
-	*/
-	
-	/*
-	useDefaultFromAddress: function() {
-		if (this.localIdentity()) {
-			this.setFromContact(this.localIdentity().name())
-		}
-	},
-	*/
 	
 	validateFromAddress: function() {
 		if (this.localIdentity()) {

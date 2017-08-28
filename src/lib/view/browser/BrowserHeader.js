@@ -93,7 +93,7 @@ BrowserHeader = NodeView.extend().newSlots({
     },
 
 	didHitBackArrow: function() {
-		console.log(this.type() + " back")
+		//console.log(this.type() + " back")
 		this.browser().popLastActiveColumn()
 		//this.columnGroup().column().selectPreviousColumn()
 	},

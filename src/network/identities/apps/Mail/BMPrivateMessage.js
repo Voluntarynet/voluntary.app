@@ -95,14 +95,6 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 		return this
 	},
 
-/*
-    onDidEditNode: function() {
-		BMFieldSetNode.onDidEditNode.apply(this)
-       	this.setupPubkeysFromInputs()
-		return this
-    },
-*/
-
 	// ids
 
 	senderId: function() {
@@ -232,14 +224,21 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 		return (this.senderPublicKeyString() != null) && (this.receiverPublicKeyString() != null)
 	},
 
+	setObjMsg: function(objMsg) {
+		this._obkMsg = objMsg
+		this.setSenderPublicKeyString(objMsg.senderPublicKeyString())
+		this.setReceiverPublicKeyString(objMsg.receiverPublicKeyString())
+		this.setPostDict(objMsg.data())
+		return this
+	},
 
 	setPostDict: function(dict) {
 		
 		//console.log("dict.senderPublicKey = ", dict.senderPublicKey)
 		//console.log("dict.receiverPublicKey = ", dict.receiverPublicKey)
 		
-		this.setSenderPublicKeyString(dict.senderPublicKey)
-		this.setReceiverPublicKeyString(dict.receiverPublicKey)
+		//this.setSenderPublicKeyString(dict.senderPublicKey)
+		//this.setReceiverPublicKeyString(dict.receiverPublicKey)
 		
 		this.setCanReceive(true)
 		
@@ -310,10 +309,6 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 		
 		return this
 	},
-    
-    drafts: function() {
-        return this.parentNode()
-    },
 	
 	canEdit: function() {
 		return !this.isSent()

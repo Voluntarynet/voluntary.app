@@ -1,4 +1,10 @@
 
+
+bug: vertical alignment of header icons is too low (view in single column mode to verify)
+
+- add ID by left arrow?
+- support a ID specific theme? colors? fonts?
+
 Add profile image
 
 - Browser footer bar

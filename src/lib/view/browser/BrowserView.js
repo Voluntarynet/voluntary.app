@@ -263,7 +263,7 @@ BrowserView = NodeView.extend().newSlots({
 	},
 	
 	popLastActiveColumn: function() {
-	    console.log("popLastActiveColumn this.activeColumnGroups().length = ", this.activeColumnGroups().length)
+	    //console.log("popLastActiveColumn this.activeColumnGroups().length = ", this.activeColumnGroups().length)
 	    var n = this.activeColumnGroups().length - 1
 	    if (n < 0) { n = 0; }
 	    //console.log("setColumnGroupCount ", n)

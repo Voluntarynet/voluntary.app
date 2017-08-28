@@ -1339,7 +1339,7 @@ DivView = ideal.Proto.extend().newSlots({
 		//console.log(this.divClassName() + " setContentEditable(" + aBool + ")")
 		if (aBool) {
         	this.makeCursorText()
-            this.element().ondblclick = function (event) { this.select() }
+            //this.element().ondblclick =  (event) => { this.selectAll();	}
 		} else {
             this.element().ondblclick = null
 		}

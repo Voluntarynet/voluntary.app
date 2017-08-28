@@ -199,7 +199,8 @@ BMObjectMessage = BMMessage.extend().newSlots({
 		
 		var proto = window[protoName]
 		//console.log("BMObjectMessage placing dict = ", dict)
-		var obj = proto.clone().setObjMsg(this).setPostDict(dict).place()
+		//var obj = proto.clone().setObjMsg(this).setPostDict(dict).place()
+		var obj = proto.clone().setObjMsg(this).place()
         
         return false
     },

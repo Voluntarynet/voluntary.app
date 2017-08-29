@@ -1675,10 +1675,16 @@ DivView = ideal.Proto.extend().newSlots({
 			}
 		}
         
-        this.tellParentViews("onDidEdit", this)
+        this.didEdit()
 		return shouldPropogate
     },
-
+    
+    
+    didEdit: function() {
+        this.tellParentViews("onDidEdit", this)
+        return this
+    },
+    
 	// --- tabs and next key view ----
     
     onTabKeyDown: function() {

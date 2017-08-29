@@ -1,3 +1,5 @@
+
+
 TextField = DivView.extend().newSlots({
     type: "TextField",
 	isSelected: false,
@@ -7,10 +9,9 @@ TextField = DivView.extend().newSlots({
     init: function () {
         DivView.init.apply(this)
 		this.setDisplay("inline-block")
-        //this.setInnerHTML("")
         this.turnOffUserSelect()
 		//this.setUnfocusOnEnterKey(true)
-		//this.setIsRegisteredForKeyboard(true)
+		//this.setIsRegisteredForKeyboard(true) // gets set by setContentEditable()
         return this
     },
 
@@ -28,8 +29,73 @@ TextField = DivView.extend().newSlots({
 	    }
 	    return this
 	},
+	
+	/*
+	cleanReturn: function() {
+        var s = this.innerHTML()
+        var didReturn = false
+        var returnStrings = ["<div><br></div>", "<br>"]
+        
+        returnStrings.forEach((returnString) => {
+            if (s.contains(returnString)) {
+                s = s.replaceAll(returnString, "")
+                didReturn = true
+            }
+        })
+        
+        return didReturn	    
+	},
+	*/
 
+    didEdit: function() {
+        DivView.didEdit.apply(this)
+                
+        var s = this.innerHTML()
+        var didReturn = false
+        var returnStrings = ["<div><br></div>", "<br>"]
+        
+        returnStrings.forEach((returnString) => {
+            if (s.contains(returnString)) {
+                s = s.replaceAll(returnString, "")
+                didReturn = true
+            }
+        })
+        
+        if (didReturn) { 
+            this.blur()
+            this.setInnerHTML(s)
+            this.tellParentViews("didInput", this)
+            //this.setInput(s)
+            //this.setInnerHTML("") 
+        }
+        
+        //console.log(this.typeId() + " didEdit ", aView.innerHTML())
+        
+        return this
+    },
+    
+    
+    /*
+    setInput: function(s) {
+        var n = this.node()
+        if (n) {
+            var m = n.nodeInputFieldMethod()
+            if (m) {
+                n[m].apply(n, [s])
+            }
+        }
+        return this
+    },
+    
+    */
+    
+    
 /*
+
+    // this should be moved to a BrowserRow behavior
+    
+    
+    
 	// --- support for begin editing when return is hit ------
 
     beginEditingOnReturnKey: function() {

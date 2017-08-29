@@ -12,7 +12,7 @@ BrowserFooter = NodeView.extend().newSlots({
 
 		this.setLeftActionsView(DivView.clone().setDivClassName("BrowserFooterLeftActionsView NodeView DivView"))
 		
-		var textView = DivView.clone().setDivClassName("BrowserFooterTextView NodeView DivView").setInnerHTML("").setUserSelect("none")
+		var textView = TextField.clone().setDivClassName("BrowserFooterTextView NodeView DivView") //.setUserSelect("none")
 		this.setTextView(textView)
 		
 		this.setRightActionsView(DivView.clone().setDivClassName("BrowserFooterRightActionsView NodeView DivView"))
@@ -38,32 +38,15 @@ BrowserFooter = NodeView.extend().newSlots({
         NodeView.setNode.apply(this, [aNode])
         this.updateTextView()
     },
-    
-    onDidEdit: function(aView) {
-        // TODO: move this into a BMTextField class
-        var s = aView.innerHTML()
-        var didReturn = false
-        var returnStrings = ["<div><br></div>", "<br>"]
-        
-        returnStrings.forEach((returnString) => {
-            if (s.contains(returnString)) {
-                s = s.replaceAll(returnString, "")
-                didReturn = true
-            }
-        })
-        
-        if (didReturn) { 
-            this.setInput(s)
-            aView.blur()
-            aView.setInnerHTML("") 
-        }
-        
-        //console.log(this.typeId() + " onDidEdit ", aView.innerHTML())
-        
+
+    didInput: function(aView) {
+        this.setInput(aView.innerHTML())
+        aView.setInnerHTML("")
         return this
     },
     
     setInput: function(s) {
+        console.log(this.typeId() + ".setInput('" + s + "')")
         var n = this.node()
         if (n) {
             var m = n.nodeInputFieldMethod()

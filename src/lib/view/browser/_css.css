@@ -66,11 +66,12 @@
     bottom: 0px;
     left: 0px;
     min-height: 40px;
+    max-height: 40px;
     height: auto;
     width: 100%;
     z-index: 3;
     background-color: #dbdbdb;
-    text-align: right;
+    text-align: center;
 	/*border: 1px blue dashed;*/
     overflow: hidden;
 }
@@ -80,8 +81,13 @@
     background-color: white;
     border-radius: 4px;
     width: calc(100% - 40px);
-    margin-top: 8px;
+    margin-top: 7px;
+
+/*
     margin-left: 10px;
+    margin-right: 10px;
+    */
+
     margin-bottom: 8px;
     min-height: 25px;
     max-height: 25px;

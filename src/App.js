@@ -29,7 +29,7 @@ App = BaseApp.extend().newSlots({
 		if (name != "") {
 			name = name.before(".").replaceAll("-", " ").toUpperCase()
 		} else {
-			name = "T E S T"
+			name = "test"
 		}
 
         this.setName(name)

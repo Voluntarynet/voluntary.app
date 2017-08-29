@@ -400,7 +400,7 @@ BMNode = ideal.Proto.extend().newSlots({
     
     add: function () {  
         var newSubnode = this.subnodeProto().clone()
-        console.log("BMNode add " + newSubnode.type())
+        //console.log(this.typeId() + " add " + newSubnode.type())
         this.addSubnode(newSubnode)
         this.didUpdateNode()
         this._shouldFocusSubnodeNote.setInfo(newSubnode).post()

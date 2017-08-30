@@ -62,7 +62,7 @@ BMChatThread = BMStorableNode.extend().newSlots({
 	
 	hasValidRemoteIdentity: function() {
 	    var result = this.threads().chatTargetIds().detect((id) => { return id === this.remoteIdentity() })
-	    //var result = this.localIdentity().remoteIdentities().idWithPubkeyString(this.remoteIdentity().publicKeyString()) 
+	    //var result = this.localIdentity().remoteIdentities().idWithPublicKeyString(this.remoteIdentity().publicKeyString()) 
 	    //console.log(this.typeId() + " " + this.remoteIdentity().title() + ".hasValidRemoteIdentity() = " + result)
 	    return result != null
 	},

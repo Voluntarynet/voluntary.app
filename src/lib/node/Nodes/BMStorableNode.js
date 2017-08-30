@@ -160,9 +160,9 @@ BMStorableNode = BMNode.extend().newSlots({
                     if (this[setter]) {
                         this[setter].apply(this, [v])
                     } else {
-						var error = "WARNING: " + this.type() + " missing setter " + setter
-                        console.error(error)
-                        console.log("dict = " + JSON.stringify(aDict))
+						var error = "WARNING: " + this.type() + " missing setter " + setter + " - dict is: " 
+                        console.error(error) //, JSON.stringify(aDict))
+                        console.log("dict = ", aDict)
 						hadMissingSetter = true
 						//throw error
                     }

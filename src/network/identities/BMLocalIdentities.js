@@ -22,7 +22,7 @@ BMLocalIdentities = BMStorableNode.extend().newSlots({
         return this.subnodes()[0]
     },
     
-    idWithPubkeyString: function(s) {
+    idWithPublicKeyString: function(s) {
         return this.subnodes().detect(function (id) {            
             return id.publicKey().toString() == s
         })

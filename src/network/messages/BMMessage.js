@@ -26,6 +26,8 @@ BMMessage = BMFieldSetNode.extend().newSlots({
     },
 
 	prepareToAccess: function() {
+	    // as this field is only needed when viewing the Message in the browser,
+	    // so create it as needed here instead of in the init method
 		if (!this._didSetupFields) {
 			this.addStoredField(BMTextAreaField.clone().setKey("dict").setValueMethod("msgDictString").setValueIsEditable(false).setIsMono(true))
 			this._didSetupFields = true

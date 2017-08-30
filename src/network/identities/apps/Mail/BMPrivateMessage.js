@@ -99,13 +99,13 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 
 	senderId: function() {
 		if (!App.shared().network()) { return null }
-		var senderId = App.shared().network().idWithNameOrPubkey(this.senderPublicKeyString())      
+		var senderId = App.shared().network().idWithPublicKeyString(this.senderPublicKeyString())      
 		return senderId
 	},
 	
 	receiverId: function() {
 		if (!App.shared().network()) { return null }
-        var receiverId = App.shared().network().idWithNameOrPubkey(this.receiverPublicKeyString())
+        var receiverId = App.shared().network().idWithPublicKeyString(this.receiverPublicKeyString())
 		return receiverId
 	},
 
@@ -204,7 +204,6 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
     // ------------------------
 
     postDict: function() {
-
 		var contentDict = {}
 		contentDict.subject = this.subject()
 		contentDict.body = this.body()
@@ -226,6 +225,11 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 
 	setObjMsg: function(objMsg) {
 		this._obkMsg = objMsg
+		assert(objMsg.senderPublicKeyString())
+		assert(objMsg.receiverPublicKeyString())
+		console.log(this.typeId() + ".setObjMsg()")
+		console.log("objMsg.senderPublicKeyString() = ", objMsg.senderPublicKeyString())
+		console.log("objMsg.receiverPublicKeyString() = ", objMsg.receiverPublicKeyString())
 		this.setSenderPublicKeyString(objMsg.senderPublicKeyString())
 		this.setReceiverPublicKeyString(objMsg.receiverPublicKeyString())
 		this.setPostDict(objMsg.data())
@@ -290,7 +294,7 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 	},
 
 	place: function() {
-		//console.log("placing " + this.type() + " from '" + this.senderId().name() + "' to '" + this.receiverId().name() + "'")
+		console.log("placing " + this.type() + " from '" + this.senderId().name() + "' to '" + this.receiverId().name() + "'")
 		
 		if(!this.canReceive()) {
 			console.log("can't receive message")

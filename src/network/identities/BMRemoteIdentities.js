@@ -21,14 +21,14 @@ BMRemoteIdentities = BMStorableNode.extend().newSlots({
         })		
 	},
 
-    idWithPubkeyString: function(pubkeyString) { // limits to valid nodes
+    idWithPublicKeyString: function(publicKeyString) { // limits to valid nodes
         return this.validSubnodes().detect(function (id) {
-            return id.publicKeyString().toString() == pubkeyString
+            return id.publicKeyString().toString() == publicKeyString
         })
     },
     
-    addIdWithPubkeyString: function(pubkeyString) {
-        var id = BMRemoteIdentity.clone().setPublicKeyString(pubkeyString)
+    addIdWithPublicKeyString: function(publicKeyString) {
+        var id = BMRemoteIdentity.clone().setPublicKeyString(publicKeyString)
         this.addSubnode(id)
         return id
     },

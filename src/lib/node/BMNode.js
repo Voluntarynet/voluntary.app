@@ -398,12 +398,17 @@ BMNode = ideal.Proto.extend().newSlots({
         return this[actionName].apply(this)
     },
     
+    postShouldFocusSubnode: function(aSubnode) {
+        this._shouldFocusSubnodeNote.setInfo(aSubnode).post()
+        return this
+    },
+    
     add: function () {  
         var newSubnode = this.subnodeProto().clone()
         //console.log(this.typeId() + " add " + newSubnode.type())
         this.addSubnode(newSubnode)
         this.didUpdateNode()
-        this._shouldFocusSubnodeNote.setInfo(newSubnode).post()
+        this.postShouldFocusSubnode(newSubnode)
         return newSubnode
     },
 

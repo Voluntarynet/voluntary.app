@@ -5,6 +5,8 @@ TextField = DivView.extend().newSlots({
 	isSelected: false,
 	selectedColor: "white",
 	unselectedColor: "rgba(255, 255, 255, 0.5)",
+	doesClearOnReturn: false,
+	doesHoldFocusOnReturn: false,
 }).setSlots({
     init: function () {
         DivView.init.apply(this)
@@ -64,7 +66,8 @@ TextField = DivView.extend().newSlots({
         	this.blur()
 		}
 		//console.log("setInnerHTML '" + s + "'")
-        DivView.setInnerHTML.apply(this, [s])		
+        DivView.setInnerHTML.apply(this, [s])
+
 		//console.log("innerHTML =  '" + this.innerHTML() + "'")
 		return this
 	},
@@ -83,7 +86,8 @@ TextField = DivView.extend().newSlots({
 
         if (didReturn) { 
             this.setInnerHTML(this.innerText())
-			//this.focus()
+        
+
         }
 
 		return didReturn
@@ -93,9 +97,15 @@ TextField = DivView.extend().newSlots({
         DivView.didEdit.apply(this)
                 
         if (this.removeReturns()) { 
-            this.tellParentViews("didInput", this)
-            //this.setInput(s)
-            //this.setInnerHTML("") 
+            this.tellParentViews("didInput", this) 
+
+            if (this.doesClearOnReturn()) {
+                DivView.setInnerHTML.apply(this, [""])
+            }
+        
+            if (this.doesHoldFocusOnReturn()) {
+                this.focus()
+            }	
         }
                 
         return this

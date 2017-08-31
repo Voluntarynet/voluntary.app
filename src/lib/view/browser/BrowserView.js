@@ -419,10 +419,8 @@ BrowserView = NodeView.extend().newSlots({
    		lastActiveCg.setIsCollapsed(false)
    		this.makeLastActiveColumnFillRemainingSpace()
    		this.updateBackArrow()
-
-        console.log("fitForSingleColumn")
+        //console.log("fitForSingleColumn")
 		this.setShouldShowTitles(true)
-		
    		//console.log("lastActiveCg.node().title() = ", lastActiveCg.node().title(), " width ", lastActiveCg.minWidth(), " ", lastActiveCg.maxWidth())
    		
    		return this
@@ -439,9 +437,7 @@ BrowserView = NodeView.extend().newSlots({
 	widthOfUncollapsedColumnsSansLastActive: function() {
 		var lastActiveCg = this.lastActiveColumnGroup()
 		var cgs = this.uncollapsedColumns()
-		//console.log("cgs.length = ", cgs.length)
 		cgs.remove(lastActiveCg)
-		//console.log("cgs.length = ", cgs.length)
 		return cgs.sum((cg) => { return cg.targetWidth(); })		
 	},
 	
@@ -475,18 +471,20 @@ BrowserView = NodeView.extend().newSlots({
 	*/
 	
 	fitForMultiColumn: function() {
+		// collapse columns, update column left arrows and titles as needed
+
 		this.updateBackground()
-		// collapse columns as needed
 		
         var browserWidth = this.browserWidth()
 		var lastActiveCg = this.lastActiveColumnGroup()
-		//	console.log("---------")
+		
+		// uncollapse all columns
 		this.columnGroups().forEach((cg) => { 
 			cg.setIsCollapsed(false)
 			//console.log(cg.name() + " targetWidth: " + cg.targetWidth())
 		})
 		
-		//console.log("---------")
+		// collapse columns from left to right until they all fit
 		this.columnGroups().forEach((cg) => { 
 			var usedWidth = this.widthOfUncollapsedColumns()
 			var shouldCollapse = (usedWidth > this.browserWidth()) && (cg != lastActiveCg) 
@@ -495,6 +493,7 @@ BrowserView = NodeView.extend().newSlots({
 			cg.setIsCollapsed(shouldCollapse)
 		})
 		
+		// if suitable, expand last column to fit remaining space 
 		var usedWidth = this.widthOfUncollapsedColumns()
 		//console.log("usedWidth: " + usedWidth + " of " + this.browserWidth())
 
@@ -510,6 +509,7 @@ BrowserView = NodeView.extend().newSlots({
 			lastActiveCg.setMinAndMaxWidth(fillWidth)
     	}
 
+        // update back arrow and column titles (only show title in single column mode)
    		this.updateBackArrow()
 		this.setShouldShowTitles(false)
 		
@@ -517,56 +517,6 @@ BrowserView = NodeView.extend().newSlots({
 
 		return this
 	},
-	
-	/*
-	fitForMultiColumn: function() {
-		// collapse columns as needed
-				
-        var browserWidth = this.browserWidth()
-		var shouldCollapse = false
-        var lastCg = this.columnGroups().last()
-        var usedWidth = 0
-        var remainingWidth = 0
-        
-		var lastActiveCg = this.lastActiveColumnGroup()
-
-		this.columnGroups().reversed().forEach((cg) => { 
-			// starts from right and goes to left columns
-			
-		    var w = cg.node() ? cg.node().nodeMinWidth() : 0
-		
-			shouldCollapse = (usedWidth > browserWidth) && (cg != lastCg)
-			
-			if (cg.node() === null) {
-			    shouldCollapse = true
-			} 
-			
-			if (cg == lastActiveCg) {
-			    remainingWidth =  this.browserWidth() - usedWidth
-			}
-			
-			if (!shouldCollapse) {
-			    usedWidth += w
-			}
-			
-			cg.setIsCollapsed(shouldCollapse)
-		})
-
-		
-		this.columnGroups().forEach((cg) => {
-			cg.header().setShouldShowTitle(false)
-		})
-
-        if (lastActiveCg) {
-    		lastActiveCg.setMinAndMaxWidth(null)
-    		lastActiveCg.setFlexGrow(100)
-    	}
-
-   		this.updateBackArrow()
-
-		return this
-	},
-	*/
 	
 	// -----------------------------------------------
 

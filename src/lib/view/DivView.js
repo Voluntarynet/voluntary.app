@@ -1890,22 +1890,75 @@ DivView = ideal.Proto.extend().newSlots({
         this.setContentAfterOrBeforeString(aString, "before")
         return this
     },    
+    
+    // scroll top
+    
+    setScrollTop: function(v) {
+        this.element().scrollTop = v
+        return this
+    },
 
-/*
     scrollTop: function() {
         return this.element().scrollTop
     },
     
+    // scroll width & scroll height
+  
+    scrollWidth: function() {
+        return this.element().scrollWidth // a read-only value
+    },
+      
     scrollHeight: function() {
-        return this.element().scrollHeight
+        return this.element().scrollHeight // a read-only value
+    },
+    
+    // offset width & offset height
+    
+    offsetLeft: function() {
+        return this.element().offsetLeft // a read-only value
+    },
+      
+    offsetTop: function() {
+        return this.element().offsetTop // a read-only value
+    },        
+    
+    // scroll actions
+    
+    scrollToTop: function() {
+        this.setScrollTop(0)
+        return this       
+    },
+    
+    scrollToBottom: function() {
+        this.setScrollTop(this.scrollHeight())
+        //e.animate({ scrollTop: offset }, 500); // TODO: why doesn't this work?
+        return this
+    },
+    
+    scrollToSubview: function(aSubview) {
+        assert(this.subviews().contains(aSubview))
+        this.setScrollTop(aSubview.scrollHeight())
+        return this
+    },
+    
+    /* 
+    // not usefull for column view because it contains it's subnode views but we
+    // want to adjust it's parent scrollView
+    
+    scrollToSubviewIfNeeded: function(aSubview) {
+        assert(this.subviews().contains(aSubview))
+        if (!aSubview.isScrolledIntoView()) {
+            this.scrollToSubview(aSubview)
+        }
+        return this
     },
     */
     
-    scrollToBottom: function() {
+    isScrolledIntoView: function() {
         var e = this.element()
-        e.scrollTop = e.scrollHeight;
-        //  e.animate({ scrollTop: e.scrollHeight; }, 1000);
-
-        return this
+        var top = e.getBoundingClientRect().top;
+        var bottom = e.getBoundingClientRect().bottom;
+        var isVisible = (top >= 0) && (bottom <= window.innerHeight);
+        return isVisible;
     },
 })

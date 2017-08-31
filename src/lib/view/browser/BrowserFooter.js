@@ -14,10 +14,11 @@ BrowserFooter = NodeView.extend().newSlots({
 		
 		var textView = TextField.clone().setDivClassName("BrowserFooterTextView NodeView DivView") //.setUserSelect("none")
 		this.setTextView(textView)
-		
-		this.setRightActionsView(DivView.clone().setDivClassName("BrowserFooterRightActionsView NodeView DivView"))
-	    this.textView().setContentEditable(true)
+	    this.textView().setContentEditable(true).setDoesClearOnReturn(true).setDoesHoldFocusOnReturn(true)
 						
+		this.setRightActionsView(DivView.clone().setDivClassName("BrowserFooterRightActionsView NodeView DivView"))
+		
+		
 		this.setZIndex(2)
         return this
     },
@@ -41,7 +42,6 @@ BrowserFooter = NodeView.extend().newSlots({
 
     didInput: function(aView) {
         this.setInput(aView.innerHTML())
-        aView.setInnerHTML("")
         return this
     },
     
@@ -54,6 +54,15 @@ BrowserFooter = NodeView.extend().newSlots({
                 n[m].apply(n, [s])
             }
         }
+        
+        // TODO: hack - need a better way to ensure this happens after node does syncToView
+        // maybe, scrollToBottomOnAdd?
+        /*
+        setTimeout(() => {
+            this.columnGroup().scrollView().scrollToBottom()
+        }, 10) 
+        */
+        
         return this
     },
     

@@ -1,7 +1,4 @@
 
-
-bug: vertical alignment of header icons is too low (view in single column mode to verify)
-
 - add ID by left arrow?
 - support a ID specific theme? colors? fonts?
 
@@ -9,12 +6,8 @@ Add profile image
 
 - Browser footer bar
     - unify browser header/footer with leftActions + text + rightActions layout?
-
     - chat auto scroll to bottom
-    
     - support for view actions? (delete all with animations?)
-
-- make DivBorderRadius abstraction
 
     
 - ImageWellView

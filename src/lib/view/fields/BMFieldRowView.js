@@ -30,7 +30,7 @@ BMFieldRowView = BrowserFieldRow.extend().newSlots({
     },
 
 	createValueView: function() {
-		return DivView.clone().setDivClassName("BMFieldValueView")
+		return TextField.clone().setDivClassName("BMFieldValueView")
 	},
 	
 	visibleValue: function() {

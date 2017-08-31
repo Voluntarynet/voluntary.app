@@ -638,6 +638,8 @@ DivView = ideal.Proto.extend().newSlots({
     color: function() {
 		return this.getCssAttribute("color")
     },
+
+	// visibility
     
     setIsVisible: function(aBool) {
 		var v = aBool ? "visible" : "hidden"
@@ -649,6 +651,8 @@ DivView = ideal.Proto.extend().newSlots({
         return this.getCssAttribute("visibility") != "hidden";
 	},
     
+	// display
+
     setDisplay: function(s) {
         //assert(s in { "none", ...} );
 		this.setCssAttribute("display", s)
@@ -658,6 +662,41 @@ DivView = ideal.Proto.extend().newSlots({
 	display: function() {
 		return this.getCssAttribute("display")
 	},
+	
+	// white space
+	
+	setWhiteSpace: function(s) {
+		this.setCssAttribute("white-space", s)
+        return this
+    },
+    
+	whiteSpace: function() {
+		return this.getCssAttribute("white-space")
+	},
+	
+	// over flow
+	
+	setOverflow: function(s) {
+		this.setCssAttribute("overflow", s)
+        return this
+    },
+    
+	overflow: function() {
+		return this.getCssAttribute("overflow")
+	},
+	
+	// text over flow
+	
+	setTextOverflow: function(s) {
+		this.setCssAttribute("text-overflow", s)
+        return this
+    },
+    
+	textOverflow: function() {
+		return this.getCssAttribute("text-overflow")
+	},
+	
+	// user select
 	
 	userSelectKeys: function() {
 		return [
@@ -1739,7 +1778,10 @@ DivView = ideal.Proto.extend().newSlots({
 		return this
 	},
     
-
+	innerText: function() {
+		var e = this.element()
+	    return e.textContent || e.innerText || "";		
+	},
     
     
     // --- text selection ------------------

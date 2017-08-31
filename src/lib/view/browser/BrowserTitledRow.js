@@ -87,6 +87,10 @@ BrowserTitledRow = BrowserRow.extend().newSlots({
         this.syncToNode()
     },
 
+	didInput: function() {
+        this.syncToNode()
+	},
+
     // --- sync ---
 
     syncToNode: function () {   

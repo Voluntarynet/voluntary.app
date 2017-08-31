@@ -10,6 +10,11 @@ TextField = DivView.extend().newSlots({
         DivView.init.apply(this)
 		this.setDisplay("inline-block")
         this.turnOffUserSelect()
+		this.setWhiteSpace("nowrap")
+		this.setOverflow("hidden")
+		this.setDisplay("inline-block")
+		this.setTextOverflow("ellipsis")
+		
 		//this.setUnfocusOnEnterKey(true)
 		//this.setIsRegisteredForKeyboard(true) // gets set by setContentEditable()
         return this
@@ -30,50 +35,71 @@ TextField = DivView.extend().newSlots({
 	    return this
 	},
 	
-	/*
-	cleanReturn: function() {
-        var s = this.innerHTML()
-        var didReturn = false
-        var returnStrings = ["<div><br></div>", "<br>"]
-        
+	
+	returnStrings: function() {
+		return ["<div><br></div>", "<br>"]
+	},
+	
+	containsReturns: function() {
         returnStrings.forEach((returnString) => {
+            if (s.contains(returnString)) {
+                return true
+            }
+        })		
+		return false
+	},
+	
+	setInnerHTML: function(s) {
+		// need to blur it first, if user is typing 
+		
+		if (this.innerHTML() == s) {
+			return this
+		}
+		
+		if (s == null) { 
+			s = ""
+		}
+		
+		if (this.hasFocus()) {
+        	this.blur()
+		}
+		//console.log("setInnerHTML '" + s + "'")
+        DivView.setInnerHTML.apply(this, [s])		
+		//console.log("innerHTML =  '" + this.innerHTML() + "'")
+		return this
+	},
+	
+	
+	removeReturns: function() {
+        var didReturn = false
+        var s = this.innerHTML()
+
+        this.returnStrings().forEach((returnString) => {
             if (s.contains(returnString)) {
                 s = s.replaceAll(returnString, "")
                 didReturn = true
             }
         })
-        
-        return didReturn	    
+
+        if (didReturn) { 
+            this.setInnerHTML(this.innerText())
+			//this.focus()
+        }
+
+		return didReturn
 	},
-	*/
 
     didEdit: function() {
         DivView.didEdit.apply(this)
                 
-        var s = this.innerHTML()
-        var didReturn = false
-        var returnStrings = ["<div><br></div>", "<br>"]
-        
-        returnStrings.forEach((returnString) => {
-            if (s.contains(returnString)) {
-                s = s.replaceAll(returnString, "")
-                didReturn = true
-            }
-        })
-        
-        if (didReturn) { 
-            this.blur()
-            this.setInnerHTML(s)
+        if (this.removeReturns()) { 
             this.tellParentViews("didInput", this)
             //this.setInput(s)
             //this.setInnerHTML("") 
         }
-        
-        //console.log(this.typeId() + " didEdit ", aView.innerHTML())
-        
+                
         return this
     },
-    
     
     /*
     setInput: function(s) {

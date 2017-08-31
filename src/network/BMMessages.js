@@ -105,7 +105,7 @@ BMMessages = BMStorableNode.extend().newSlots({
 
 	placeAllSubnodes: function() {
 		this.subnodes().forEach( (msg) => {
-			console.log(this.type() + " placing ", msg)
+			//console.log(this.type() + " placing ", msg)
 			msg.place()
 		})
 	},

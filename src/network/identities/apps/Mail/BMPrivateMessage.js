@@ -142,13 +142,6 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 		if (to != this.toContact()) { this.setToContact(to) }
 	},
 
-	duplicate: function() {
-		var dup = BMPrivateMessage.clone().setPostDict(this.postDict())
-		dup.setIsSent(true)
-		return dup
-	},
-
-
 	fromContactNames: function() {
 		//console.log("App.shared().network().localIdentityNames() = ", App.shared().network().localIdentityNames())
 		return App.shared().network().localIdentityNames()
@@ -203,7 +196,34 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
     
     // ------------------------
 
-    postDict: function() {
+	canSend: function() {
+		return (this.senderPublicKeyString() != null) && (this.receiverPublicKeyString() != null)
+	},
+
+	duplicate: function() {
+	    assert(this.objMsg() != null)
+		var dup = BMPrivateMessage.clone().setObjMsg(this.objMsg())
+		dup.setIsSent(true)
+		return dup
+	},
+
+	setObjMsg: function(objMsg) {
+		this._objMsg = objMsg
+		assert(objMsg.senderPublicKeyString())
+		assert(objMsg.receiverPublicKeyString())
+		/*
+		console.log(this.typeId() + ".setObjMsg()")
+		console.log("objMsg.senderPublicKeyString() = ", objMsg.senderPublicKeyString())
+		console.log("objMsg.receiverPublicKeyString() = ", objMsg.receiverPublicKeyString())
+		*/
+		this.setSenderPublicKeyString(objMsg.senderPublicKeyString())
+		this.setReceiverPublicKeyString(objMsg.receiverPublicKeyString())
+		this.setDataDict(objMsg.data())
+		return this
+	},
+
+
+    dataDict: function() {
 		var contentDict = {}
 		contentDict.subject = this.subject()
 		contentDict.body = this.body()
@@ -219,24 +239,8 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
         return dict
     },
 
-	canSend: function() {
-		return (this.senderPublicKeyString() != null) && (this.receiverPublicKeyString() != null)
-	},
 
-	setObjMsg: function(objMsg) {
-		this._obkMsg = objMsg
-		assert(objMsg.senderPublicKeyString())
-		assert(objMsg.receiverPublicKeyString())
-		console.log(this.typeId() + ".setObjMsg()")
-		console.log("objMsg.senderPublicKeyString() = ", objMsg.senderPublicKeyString())
-		console.log("objMsg.receiverPublicKeyString() = ", objMsg.receiverPublicKeyString())
-		this.setSenderPublicKeyString(objMsg.senderPublicKeyString())
-		this.setReceiverPublicKeyString(objMsg.receiverPublicKeyString())
-		this.setPostDict(objMsg.data())
-		return this
-	},
-
-	setPostDict: function(dict) {
+	setDataDict: function(dict) {
 		
 		//console.log("dict.senderPublicKey = ", dict.senderPublicKey)
 		//console.log("dict.receiverPublicKey = ", dict.receiverPublicKey)
@@ -317,21 +321,27 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 	canEdit: function() {
 		return !this.isSent()
 	},
-
-    send: function () {
+	
+	composeObjMsg: function() {
         var objMsg = BMObjectMessage.clone()
+        this.setObjMsg(objMsg)
 
         objMsg.setSenderPublicKeyString(this.senderPublicKeyString())
         objMsg.setReceiverPublicKeyString(this.receiverPublicKeyString())
 
-        objMsg.setData(this.postDict())
+        objMsg.setData(this.dataDict())
 		objMsg.makeTimeStampNow()
     	/*
 		objMsg.powObj().setTargetDifficulty(17)
         objMsg.asyncFindPowAndSend()
 		*/
 		objMsg.signWithSenderId(this.senderId())
-		objMsg.send()
+		return this	    
+	},
+
+    send: function () {
+        this.composeObjMsg()
+		this.objMsg().send()
         this.delete()
     },
 })

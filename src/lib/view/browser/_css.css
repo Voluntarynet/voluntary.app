@@ -140,7 +140,7 @@
 .BackArrow {
 	display: block;
     position: absolute;
-	margin-top: 15px;
+	margin-top: 14px;
 	margin-left: 15px;
     width: 14px;
     height: 14px;
@@ -157,7 +157,7 @@
     display: inline-block;
     width: 28px;
     height: 14px;
-    margin-top: 15px;
+    margin-top: 14px;
     margin-right: 20px;
     
     opacity: 1;

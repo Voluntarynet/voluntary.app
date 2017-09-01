@@ -179,13 +179,15 @@ BrowserColumn = NodeView.extend().newSlots({
 	    var subnode = aNote.info()
 	    //console.log("shouldFocusSubnode ", subnode)
 	    this.clickRowWithNode(subnode)
-
-	    var subview = this.subviewForNode(subnode)
-	    //console.log("subview.offsetTop() = ", subview.offsetTop())
-	    this.columnGroup().scrollView().setScrollTop(subview.offsetTop())
-	    //this.scrollToSubviewIfNeeded(subview)
-	    
+        this.scrollToSubnode(subnode)
 	    return this 
+	},
+	
+	scrollToSubnode: function(aSubnode) {
+	    var subview = this.subviewForNode(aSubnode)
+	    assert(subview)
+	    this.columnGroup().scrollView().setScrollTop(subview.offsetTop())
+	    return this 	    
 	},
 	
     syncFromNode: function () {

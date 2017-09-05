@@ -124,13 +124,12 @@ BMMailMessage = BMPrivateMessage.extend().newSlots({
 		return contentDict
 	},
 	
-	setDecryptedData: function(decryptedData) {
+	setContentDict: function(contentDict) {
 		
-		if (!decryptedData) {
+		if (!contentDict) {
 			this.setSubject("[INVALID KEY]")
 			this.setBody("[INVALID KEY]")
 		} else {
-			var contentDict = JSON.parse(decryptedData)
 			this.setSubject(contentDict.subject)
 			this.setBody(contentDict.body)
 		}

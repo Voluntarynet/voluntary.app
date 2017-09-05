@@ -24,11 +24,8 @@ BMChat = BMApplet.extend().newSlots({
     },
 
     remoteIdentities: function() {
-		// TODO: change to be off of local identity
-		// return this.localIdentity().remoteIdentities()
-        return App.shared().remoteIdentities()
+        return this.localIdentity().remoteIdentities()
     },
-    
 
 	setThreads: function(newValue) {
 		var oldValue = this._threads
@@ -46,28 +43,29 @@ BMChat = BMApplet.extend().newSlots({
 	
     handleMessage: function(msg) {
 		if (msg.type() == BMChatMessage.type()) {
+			msg = msg.duplicate()
 			this.handleSentMessage(msg)
 			this.handleReceivedMessage(msg)
 		}
     },
 
 	handleSentMessage: function(msg) {
-        if (this.identity().equals(msg.senderId())) {
-			this.sent().addSubnodeIfAbsent(msg)
+        if (msg.senderId() && msg.senderId().equals(this.localIdentity())) {
+			var thread = this.threads().threadForRemoteIdentity(msg.receiverId())
+			if (thread) {
+				thread.addMessage(msg)
+			}
 		}		
 	},
 	
-	/*
-	willStore: function(aDict) {
-		if (this.threads() == null) {
-			console.warn(this.pid() + " missing threads!?")
-		}
-		console.log(this.pid() + ".willStore(" + JSON.stringify(aDict) + ")")
+	handleReceivedMessage: function(msg) {
+        if (msg.receiverId() && msg.receiverId().equals(this.localIdentity())) {
+			var thread = this.threads().threadForRemoteIdentity(msg.senderId())
+			if (thread) {
+				thread.addMessage(msg)
+			}
+		}		
 	},
-	
-	didStore: function(aDict) {
-		console.log(this.pid() + ".didStore(" + JSON.stringify(aDict)  + ")")
-	},
-	*/
+		
 })
 

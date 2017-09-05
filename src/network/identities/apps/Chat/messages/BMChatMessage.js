@@ -1,15 +1,13 @@
 
-BMChatMessage = BMStorableNode.extend().newSlots({
+BMChatMessage = BMPrivateMessage.extend().newSlots({
     type: "BMChatMessage",
 	content: "",
-	privateMessage: null,
 }).setSlots({
     
     init: function () {
-        BMStorableNode.init.apply(this)
-        this.setShouldStore(true)
-        this.addStoredSlots(["content", "privateMessage"])
-        this.addAction("delete")
+        BMPrivateMessage.init.apply(this)
+        this.addStoredSlots(["content"])
+        //this.addAction("delete")
     },	
 
 	mostRecentDate: function() {
@@ -22,6 +20,24 @@ BMChatMessage = BMStorableNode.extend().newSlots({
 	
 	title: function() {
 	    return this.content()
+	},
+	
+	
+	wasSentByMe: function() {
+		return this.senderId() == this.localIdentity()
+	},
+	
+	contentDict: function() {
+		var contentDict = {}
+		contentDict.content = this.content()
+		//console.log(this.typeId() + ".contentDict = ", contentDict)
+		return contentDict
+	},
+	
+	setContentDict: function(contentDict) {
+		//console.log(this.typeId() + ".setContentDict = ", contentDict)
+		this.setContent(contentDict.content)
+		return this
 	},
 })
 

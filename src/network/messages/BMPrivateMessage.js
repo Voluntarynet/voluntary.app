@@ -66,11 +66,19 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 	},
 
 	contentDict: function() {
-		return {}
+		throw (this.type() + " subclasses should override contentDict")
+		var contentDict = {}
+		return contentDict
+	},
+	
+	setContentDict: function(contentDict) {
+		throw (this.type() + " subclasses should override setContentDict")
+		return this
 	},
 	
     dataDict: function() {
 		var contentDict = this.contentDict()
+		//console.log(this.typeId() + ".dataDict() contentDict: ", contentDict)
 		var encryptedData = this.senderId().encryptMessageForReceiverId(JSON.stringify(contentDict), this.receiverId()).toString()
 				
         var dataDict = {}
@@ -97,9 +105,9 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 
 		if (receiverId.hasPrivateKey()) {
 			var spk = senderId.publicKeyString()
-			//console.log("spk = ", spk)
 			var decryptedData = receiverId.decryptMessageFromSenderPublicKeyString(dict.encryptedData, spk)
-			this.setDecryptedData(decryptedData)
+			var contentDict = JSON.parse(decryptedData)
+			this.setContentDict(contentDict)
 		}
 		
 		this.setCanReceive(true)

@@ -1,6 +1,4 @@
 
-
-
 BMDrafts = BMStorableNode.extend().newSlots({
     type: "BMDrafts",
 }).setSlots({

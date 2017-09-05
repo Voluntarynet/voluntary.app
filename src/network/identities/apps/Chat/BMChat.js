@@ -44,6 +44,19 @@ BMChat = BMApplet.extend().newSlots({
 		return this
 	},
 	
+    handleMessage: function(msg) {
+		if (msg.type() == BMChatMessage.type()) {
+			this.handleSentMessage(msg)
+			this.handleReceivedMessage(msg)
+		}
+    },
+
+	handleSentMessage: function(msg) {
+        if (this.identity().equals(msg.senderId())) {
+			this.sent().addSubnodeIfAbsent(msg)
+		}		
+	},
+	
 	/*
 	willStore: function(aDict) {
 		if (this.threads() == null) {

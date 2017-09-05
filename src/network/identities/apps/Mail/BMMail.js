@@ -16,28 +16,30 @@ BMMail = BMApplet.extend().newSlots({
         this.initStoredSlotWithProto("drafts", BMDrafts)
         this.initStoredSlotWithProto("inbox", BMInbox)
         this.initStoredSlotWithProto("sent", BMSent)        
-
+    },
+	
+    localIdentity: function() {
+        return this.parentNodeOfType("BMLocalIdentity")
     },
 
-	identity: function() {
-		return this.parentNode().parentNode()
-	},
     
     handleMessage: function(msg) {
-        var myId = this.identity()
-
-        if (myId.equals(msg.senderId())) {
-			this.sent().addSubnodeIfAbsent(msg)
-		}
-		
-		if (myId.equals(msg.receiverId())) {
-			var senderName1 = msg.senderId().name()	// test for bug
-					
-			this.inbox().addSubnodeIfAbsent(msg)
-			
-			var senderName2 = msg.senderId().name() // test for bug
-			assert (senderName1 == senderName2)  // test for bug
+		if (msg.type() == BMMailMessage.type()) {
+			this.handleSentMessage(msg)
+			this.handleReceivedMessage(msg)
 		}
     },
+
+	handleSentMessage: function(msg) {
+        if (this.localIdentity().equals(msg.senderId())) {
+			this.sent().addSubnodeIfAbsent(msg)
+		}		
+	},
+	
+	handleReceivedMessage: function(msg) {
+		if (this.localIdentity().equals(msg.receiverId())) {
+			this.inbox().addSubnodeIfAbsent(msg)
+		}		
+	},
 })
 

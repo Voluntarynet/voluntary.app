@@ -1120,7 +1120,7 @@ DivView = ideal.Proto.extend().newSlots({
 		return DivView_isHandlingEvent
 	},
 
-	handleEventFunction: function(f) {
+	handleEventFunction: function(eventFunc) {
 		//  a try gaurd to make sure isHandlingEvent has correct value
 		//  isHandlingEvent is used to determine if view should inform node of changes
 		//  - it should only while handling an event
@@ -1130,10 +1130,11 @@ DivView = ideal.Proto.extend().newSlots({
 		this.setIsHandlingEvent(true)
 		
 		try {
-			f()
+			eventFunc()
 		} catch (e) {
-			//StackTrace.showError(e)
-			console.log(e)
+			//console.log(e)
+			StackTrace.showError(e)
+			//error = e
 		}
 		
 		this.setIsHandlingEvent(false)

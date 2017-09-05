@@ -29,6 +29,9 @@ StackTrace = ideal.Proto.extend().newSlots({
 					out.push(["....", line.after("at ").split("/").pop()])
 				} else {
 					var line = line.after("at ")
+					if (line == null) {
+						return;
+					}
 					var obj = line.before(".")
 					var method = line.after(".").before(" (")
 					var path = line.after("(").before(")")

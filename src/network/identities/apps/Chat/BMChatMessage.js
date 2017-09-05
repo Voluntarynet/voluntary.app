@@ -1,10 +1,9 @@
 
-BMTwitterMessage = BMPrivateMessage.extend().newSlots({
-    type: "BMTwitterMessage",
+BMChatMessage = BMPrivateMessage.extend().newSlots({
+    type: "BMChatMessage",
 }).setSlots({
     init: function () {
         BMPrivateMessage.init.apply(this)
-        this.setTitle("Twitter")
     },
 
 

@@ -181,9 +181,13 @@ BrowserColumn = NodeView.extend().newSlots({
 	    this.clickRowWithNode(subnode)
 
 	    var subview = this.subviewForNode(subnode)
-	    //console.log("subview.offsetTop() = ", subview.offsetTop())
-	    this.columnGroup().scrollView().setScrollTop(subview.offsetTop())
-	    //this.scrollToSubviewIfNeeded(subview)
+		if (subview) {
+		    //console.log("subview.offsetTop() = ", subview.offsetTop())
+		    this.columnGroup().scrollView().setScrollTop(subview.offsetTop())
+		    //this.scrollToSubviewIfNeeded(subview)
+		} else {
+			console.warn("no subview for shouldFocusSubnode subnode ", subnode.typeId())
+		}
 	    
 	    return this 
 	},

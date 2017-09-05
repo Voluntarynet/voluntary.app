@@ -65,6 +65,7 @@ BMKeyPair = BMNavNode.extend().newSlots({
     
 	decryptMessageFromSenderPublicKeyString: function(encryptedBase64String, senderPublicKeyString) {
 		var encryptedBuffer = new Buffer(encryptedBase64String, 'base64')
+		//console.log("senderPublicKeyString = ", senderPublicKeyString)
 		var senderPublicKey = new bitcore.PublicKey(senderPublicKeyString)
 		var decryptor = ECIES().privateKey(this.privateKey()).publicKey(senderPublicKey);
 		//console.log("encryptedMsg = '" + encryptedMsg + "'")

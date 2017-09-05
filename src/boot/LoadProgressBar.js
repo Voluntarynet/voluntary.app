@@ -117,31 +117,40 @@ LoadProgressBar = {
     	return this
     },
 
-	registerForWindowError: function() {
-		this._windowErrorCallback = (errorMsg, url, lineNumber, column, errorObj) => {
-			this.titleElement().innerHTML = "ERROR"
-			var s = "" + errorMsg 
-			
-			if (url) {
-				s += ' in ' + url.split("/").pop() + ' Line: ' + lineNumber  //+ ' Column: ' + column 
-			}
-			
-			/*
-			if (errorObj) {
-				s += '<br><br>' +  this.stringForError(errorObj).split("\n").join("<br>")
-			}
-			*/
-			
-		    this.setError(s)
-		    return false;
+	handleError: function(errorMsg, url, lineNumber, column, errorObj) {
+		if (!this.titleElement()) {
+			console.warn("should be unregistered?")
+			return false
 		}
 		
+		this.titleElement().innerHTML = "ERROR"
+		var s = "" + errorMsg 
+		
+		if (url) {
+			s += ' in ' + url.split("/").pop() + ' Line: ' + lineNumber  //+ ' Column: ' + column 
+		}
+		
+		/*
+		if (errorObj) {
+			s += '<br><br>' +  this.stringForError(errorObj).split("\n").join("<br>")
+		}
+		*/
+		
+	    this.setError(s)
+	    return false;	
+	},
+
+	registerForWindowError: function() {
+		this._windowErrorCallback = (errorMsg, url, lineNumber, column, errorObj) => {
+			return this.handleError(errorMsg, url, lineNumber, column, errorObj)
+		}
 		window.onerror = this._windowErrorCallback
     },
     
     unregisterForWindowError: function() {
-		if (window.onerror == this._windowErrorCallback) {
-		    delete window.onerror
+		var isRegistered = window.onerror === this._windowErrorCallback
+		if (isRegistered) {
+			window.onerror = null
 		}
     },
     
@@ -193,11 +202,11 @@ LoadProgressBar = {
     },
 
     stop: function() {
+		this.unregisterForWindowError()
         
         if (!this.error()) {
             this.removeMainElement()
     		this.unregisterForImports()
-    		this.unregisterForWindowError()
     	    delete window[this.type()]
         }
 	    return this

@@ -29,7 +29,14 @@ BMChatThread = BMStorableNode.extend().newSlots({
 	},
 	
 	setInputFieldValue: function(s) {
-	    this.addMessage(BMChatSentMessage.clone().setContent(s))
+		var msg = BMChatSentMessage.clone()
+		
+		msg.setSenderPublicKeyString(this.localIdentity().publicKeyString())
+		msg.setReceiverPublicKeyString(this.remoteIdentity().publicKeyString())
+		msg.setContent(s)
+		msg.send()
+		
+	    this.addMessage(msg)
 	    return this
 	},
 	
@@ -80,7 +87,8 @@ BMChatThread = BMStorableNode.extend().newSlots({
 	    this.postShouldFocusSubnode(aMessage)
 	    return this
 	},
-	
+
+/*	
     add: function() {
         var newComposeMsg = BMChatReceivedMessage.clone()
 		//newComposeMsg.setSenderPublicKeyString(this.localIdentity().publicKeyString())
@@ -89,6 +97,7 @@ BMChatThread = BMStorableNode.extend().newSlots({
         //this.markDirty()
         return newComposeMsg
     },
+*/
 
 
 	

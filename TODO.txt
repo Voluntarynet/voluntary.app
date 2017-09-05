@@ -1,4 +1,6 @@
 
+BUG: error on imports can empty db?
+
 - add ID by left arrow?
 - support a ID specific theme? colors? fonts?
 

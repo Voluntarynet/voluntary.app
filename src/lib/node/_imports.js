@@ -1,5 +1,6 @@
 
 JSImporter.pushRelativePaths([
+    "BMNodeSynchronizer.js",
     "BMNode.js",
     "storage/_imports.js",
     "nodes/_imports.js",

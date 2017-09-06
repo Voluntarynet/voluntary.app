@@ -257,6 +257,12 @@ BMNode = ideal.Proto.extend().newSlots({
     
     // --- update / sync system ----------------------------
     
+    scheduleSyncToView: function() {
+        BMNodeSynchronizer.addToView(this)
+        return this
+    },
+    
+    /*
     setNeedsSyncToView: function(aBool) {
         if (this._needsSyncToView == aBool) { 
             return this; 
@@ -276,13 +282,14 @@ BMNode = ideal.Proto.extend().newSlots({
         this._needsSyncToView = aBool
         return this
     },
+    */
 
     didUpdateNode: function() {
         if (this._didUpdateNodeNote) {
             this._didUpdateNodeNote.post()
         }
         
-        this.setNeedsSyncToView(true)
+        this.scheduleSyncToView() // this.setNeedsSyncToView(true)
 
 /*
 		// this is too slow for general use e.g. text editing if parent nodes have lots of items
@@ -292,14 +299,8 @@ BMNode = ideal.Proto.extend().newSlots({
 */
     },
     
-    syncToViewIfNeeded: function() {
-        if (this.needsSyncToView()) {
-            this.syncToView()
-        }
-    },
-    
     syncToView: function() {
-        this._needsSyncToView = false
+        //this._needsSyncToView = false
         if (this.view()) {
             this.view().didUpdateNode() // TODO: move to notifications?
         }        

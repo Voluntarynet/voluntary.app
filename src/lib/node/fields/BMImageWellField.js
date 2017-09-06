@@ -31,7 +31,7 @@ BMImageWellField = BMField.extend().newSlots({
 		} else {
 			this.setKey("")
 		}
-		this.setNeedsSyncToView(true)
+		this.scheduleSyncToView() // this.setNeedsSyncToView(true)
 		return this
 	},
 	*/

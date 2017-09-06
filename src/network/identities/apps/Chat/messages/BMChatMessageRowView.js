@@ -2,7 +2,6 @@
 
 BMChatMessageRowView = BrowserTitledRow.extend().newSlots({
     type: "BMChatMessageRowView",
-	content: null,
 }).setSlots({
     
     init: function () {
@@ -23,7 +22,6 @@ BMChatMessageRowView = BrowserTitledRow.extend().newSlots({
     },
     
     setupTitleView: function() {
-		
 		this.titleView().insertDivClassName(this.type() + "Title")
 		this.titleView().setWidth("auto")
 		this.titleView().setMinWidth("50px")
@@ -34,19 +32,14 @@ BMChatMessageRowView = BrowserTitledRow.extend().newSlots({
 		this.titleView().setLeft(null)
 		this.titleView().setMarginRight(20)
 		this.titleView().setMarginLeft(0)
-		
-		if (Math.random() > 1.5) {
-            this.alignToRight()
-		} else {
-            this.alignToLeft()
-		}        
-        
     },
     
     alignToRight: function() {
 	    this.titleView().setRight(20)
 		this.titleView().setFloat("right")
 	    this.titleView().setBorderRadius("8px 8px 0px 8px") // top-left, top-right,  bottom-right, bottom-left
+		this.titleView().setBackgroundColor("rgb(84, 193, 250)")
+		this.titleView().setColor("white")
 	    return this
     },
     
@@ -54,6 +47,8 @@ BMChatMessageRowView = BrowserTitledRow.extend().newSlots({
         this.titleView().setLeft(20)
     	this.titleView().setFloat("left")
         this.titleView().setBorderRadius("8px 8px 8px 0px") // top-left, top-right,  bottom-right, bottom-left 
+		this.titleView().setBackgroundColor("#888")
+		this.titleView().setColor("black")
 	    return this
     },
 
@@ -62,28 +57,34 @@ BMChatMessageRowView = BrowserTitledRow.extend().newSlots({
         return this
     },
 
-    //updateSubviews: function() {
-    syncToNode: function() {
+	message: function() {
+		return this.node()
+	},
+
+    updateSubviews: function() {
 		BrowserTitledRow.updateSubviews.apply(this)
-		this.titleView().setInnerHTML(this.node().title())
-		//console.log(this.typeId() + " this.titleView().height() = ", this.titleView().height())
-		//this.setMinAndMaxHeight(this.titleView().clientHeight()) 
-		/*
-		setTimeout(() => { 
-			
-			//this.titleView().setInnerHTML(this.titleView().innerHTML() + " " + this.titleView().height())
-			this.setMinAndMaxHeight(this.titleView().height()) 
-			//setTimeout(() => {  this.setMinAndMaxHeight(this.titleView().height()) }, 10)
-			}, 10)
-			*/
+		
+		if (this.node()) {
+			this.titleView().setInnerHTML(this.node().title())
+
+			//console.log(this.typeId() + ".syncToNode()")
+		
+			if (this.message().wasSentByMe()) {
+				this.styleAsSent()
+			} else {
+				this.styleAsReceived()
+			}
+		}
+		
 		return this
 	},
-})
-
-
-BMChatComposeMessageRowView = BMChatMessageRowView.extend().newSlots({
-    type: "BMChatComposeMessageRowView",
-	content: null,
-}).setSlots({
+	
+	styleAsSent: function() {
+		this.alignToRight()
+	},
+	
+	styleAsReceived: function() {
+		this.alignToLeft()
+	},
 })
 

@@ -174,7 +174,7 @@ BMNode = ideal.Proto.extend().newSlots({
 	},
     
     addSubnodeIfAbsent: function(aSubnode) {
-        if(!this.subnodes().contains(aSubnode)) {
+        if(!this.containsSubnode(aSubnode)) {
             this.addSubnode(aSubnode)
         }
         return aSubnode
@@ -211,7 +211,7 @@ BMNode = ideal.Proto.extend().newSlots({
 	
 	/*
 	hasSubnode: function(aSubnode) {
-	    return this.subnodes().contains(aSubnode)
+    	return this.subnodes().detect((subnode) => { return subnode.isEqual(aSubnode) })
 	},
 	*/
 	

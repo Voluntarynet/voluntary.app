@@ -136,7 +136,10 @@ BMObjectMessage = BMMessage.extend().newSlots({
 	// hash
 	
 	computeMsgHash: function() {
-		return this.theDictToHash().toJsonStableString().sha256String()
+		var s = this.theDictToHash().toJsonStableString()
+		var hash = s.sha256String()
+		console.log(this.typeId() + "\n    dict: ", s, "\n    hash: " + hash)
+		return hash
 	},
 
     msgHash: function() {

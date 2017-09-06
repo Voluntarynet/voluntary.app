@@ -171,15 +171,17 @@ LoadProgressBar = {
         
     setCurrentItem: function(itemName) {
         var item = this.itemElement()
-        item.style.opacity = 0
+        //item.style.opacity = 0
         item.style.color = "#444"
-    	item.currentValue = itemName	
+    	//item.currentValue = itemName	
     	item.innerHTML = itemName	
-    	setTimeout(() => { 
+/*
+    	//setTimeout(() => { 
     	    if (item.currentValue == item.innerHTML) {
     	        item.style.opacity = 1
 	        }
-    	}, 0)
+    	//}, 0)
+*/
         return this
     },
     

@@ -1,4 +1,6 @@
 
+PERFORMANCE: compact needsUpdate timeouts
+
 BUG: error on imports can empty db?
 
 - add ID by left arrow?

@@ -31,7 +31,7 @@ BMChatThread = BMStorableNode.extend().newSlots({
 	setInputFieldValue: function(s) {
 		var msg = BMChatMessage.clone()
 		
-		console.log("msg = ", msg.typeId())
+		//console.log("msg = ", msg.typeId())
 		msg.setSenderPublicKeyString(this.localIdentity().publicKeyString())
 		msg.setReceiverPublicKeyString(this.remoteIdentity().publicKeyString())
 		msg.setContent(s)

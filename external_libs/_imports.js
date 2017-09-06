@@ -8,7 +8,7 @@ JSImporter.pushRelativePaths([
 
 	//"bloom-filter/_imports.js",
 	//"cryptico/_imports.js",
-    "sjcl/_imports.js",
-    "sjcl-extras/_imports.js",
+    //"sjcl/_imports.js",
+    //"sjcl-extras/_imports.js",
     //"eccjs-gh-pages/_imports.js",
 ])

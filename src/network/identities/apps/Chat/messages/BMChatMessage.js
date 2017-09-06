@@ -22,9 +22,8 @@ BMChatMessage = BMPrivateMessage.extend().newSlots({
 	    return this.content()
 	},
 	
-	
 	wasSentByMe: function() {
-		return this.senderId() == this.localIdentity()
+		return this.senderId() === this.localIdentity()
 	},
 	
 	contentDict: function() {
@@ -38,6 +37,22 @@ BMChatMessage = BMPrivateMessage.extend().newSlots({
 		//console.log(this.typeId() + ".setContentDict = ", contentDict)
 		this.setContent(contentDict.content)
 		return this
+	},
+	
+	isEqual: function(other) {
+		console.log(this.description() + "' is equal? " + other.description())
+		return this.hash() == other.hash()
+	},
+	
+	description: function() {
+		return this.typeId() + "-" + this.hash() + "'" + this.content() + "'"
+	},
+	
+	hash: function() {
+		if (this.objMsg()) {
+			return this.objMsg().msgHash()
+		}
+		return this.typeId()
 	},
 })
 

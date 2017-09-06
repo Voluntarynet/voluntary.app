@@ -1,5 +1,21 @@
 
 /*
+console.log("--- test ---")
+
+for(i = 0; i < 1000; i ++) {
+	var s = ("x" + i)
+	var h1 = s.sha256String()
+	//console.log("calling String.prototype.sha256String this = " + typeof(s) + " '" + s + "'")
+	//var shaBits = sjcl.hash.sha256.hash(s);
+	//var h2 = sjcl.codec.hex.fromBits(shaBits);
+
+	var h2 = bitcore.crypto.Hash.sha256(s.toBuffer()).toString('hex')
+	
+	console.log(s,  ":", h1 == h2)
+}
+*/
+
+/*
 App.runTests = function() {
 	var PlainText = "hello world"
 	

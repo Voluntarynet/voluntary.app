@@ -76,7 +76,7 @@ BMMessages = BMStorableNode.extend().newSlots({
 */
       
         if (this.hasMessage(msg)) {
-            console.log("attempt to add duplicate message")
+            console.log("attempt to add duplicate message ", msg.msgHash())
             return false
         }
 

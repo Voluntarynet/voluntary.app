@@ -873,6 +873,11 @@ var Map = Proto.clone().newSlots({
 	{
 		this.setJsMap({});
 	},
+	
+	clear: function() {
+		this.setJsMap({});
+		return this
+	},
 
 	withJsMap: function(jsMap)
 	{

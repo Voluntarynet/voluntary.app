@@ -39,7 +39,7 @@ BrowserHeader = NodeView.extend().newSlots({
 	setShouldShowTitle: function(aBool) {
 		if (this._shouldShowTitle != aBool) {
 			this._shouldShowTitle = aBool
-			this.setNeedsSyncFromNode(true)
+			this.scheduleSyncFromNode()
 			//console.log(" ----- " + (this.node() ? this.node().title() : null) + " setShouldShowTitle ", aBool)
 		}
 		return this
@@ -102,7 +102,7 @@ BrowserHeader = NodeView.extend().newSlots({
 		if (this._doesShowBackArrow != aBool) {
 			//console.log(this.node().title() + " setDoesShowBackArrow " + aBool)
 			this._doesShowBackArrow = aBool
-			this.setNeedsSyncFromNode(true)
+			this.scheduleSyncFromNode()
 		}
 		return this
 	},

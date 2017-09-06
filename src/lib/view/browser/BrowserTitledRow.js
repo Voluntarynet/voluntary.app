@@ -83,12 +83,12 @@ BrowserTitledRow = BrowserRow.extend().newSlots({
     // --- edit ---
 
     onDidEdit: function (changedView) {   
-        //console.log("onDidEdit")
-        this.syncToNode()
+        console.log(this.typeId() + ".onDidEdit")
+        this.scheduleSyncToNode()
     },
 
 	didInput: function() {
-        this.syncToNode()
+        this.scheduleSyncToNode() //this.syncToNode()
 	},
 
     // --- sync ---

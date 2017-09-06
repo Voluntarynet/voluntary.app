@@ -1,10 +1,13 @@
 
+- can produce db corruption error by throwing exception in PrivateMessage setObjMsg (which is raised when loading first time)
+
+need a way to delete ObjMessages and to mark them as placed
+
+
 PERFORMANCE: compact needsUpdate timeouts
 
 BUG: error on imports can empty db?
 
-- add ID by left arrow?
-- support a ID specific theme? colors? fonts?
 
 Add profile image
 
@@ -126,6 +129,11 @@ IMAGES:
 
 CLEANUP:
     -- use View postfix consistently
+
+
+NICE:
+    - add ID by left arrow?
+    - support a ID specific theme? colors? fonts?
 
 --- DOC NOTES ---------
 

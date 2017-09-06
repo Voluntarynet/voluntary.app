@@ -66,7 +66,7 @@ BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
     
     didUpdateImageWellView: function(anImageWell) {
         //console.log(this.typeId() + ".didUpdateImageWellView()")
-		this.setNeedsSyncToNode(true)
+		this.scheduleSyncToNode() //this.setNeedsSyncToNode(true)
 		return this
     },
 })

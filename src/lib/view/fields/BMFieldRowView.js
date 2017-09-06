@@ -138,7 +138,8 @@ BMFieldRowView = BrowserFieldRow.extend().newSlots({
     
     onDidEdit: function (changedView) {     
         //this.log(this.type() + " onDidEdit")   
-        this.syncToNode()
+        this.scheduleSyncToNode() //this.syncToNode()
+        
 		this.node().didUpdateView(this)
 		//this.node().tellParentNodes("onDidEditNode", this.node())   
 		this.syncFromNode()

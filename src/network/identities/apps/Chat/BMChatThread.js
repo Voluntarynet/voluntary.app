@@ -41,6 +41,9 @@ BMChatThread = BMStorableNode.extend().newSlots({
 	},
 	
 	deleteAll: function() {
+	    this.messages().forEach((chatMsg) => {
+	        chatMsg.prepareToDelete()
+	    })
 	    this.removeAllSubnodes()
 	    return this
 	},

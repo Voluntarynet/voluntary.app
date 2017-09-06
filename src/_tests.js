@@ -1,4 +1,6 @@
 
+console.log("--- test ---")
+
 /*
 console.log("--- test ---")
 
@@ -334,3 +336,5 @@ function TestSerializedKeys() {
     //assert( unserializedSec.equals(sec) )         
 }
 */
+
+console.log("--- test end ---")

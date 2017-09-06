@@ -48,7 +48,10 @@ DivView = ideal.Proto.extend().newSlots({
 	isRegisteredForFocus: false,
 	isRegisteredForPaste: false,
 	
+
 }).setSlots({
+
+    
     init: function () {
         this._subviews = []
         this.setupElement()

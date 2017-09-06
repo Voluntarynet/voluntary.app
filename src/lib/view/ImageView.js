@@ -97,7 +97,8 @@ ImageView = NodeView.extend().newSlots({
 			var parentView = this.parentView()
 			this.removeFromParentView()
 			//console.log(this.typeId() + ".close complete parentView = ", parentView)
-			parentView.syncToNode()
+			parentView.scheduleSyncToNode() //parentView.syncToNode()
+
         }, seconds * 1000)
     },
 
@@ -160,7 +161,7 @@ ImageView = NodeView.extend().newSlots({
     
     didFetchDataURL: function(dataURL) {
         this.setFromDataURL(dataURL)
-        this.setNeedsSyncToNode(true)
+        this.scheduleSyncToNode() //this.setNeedsSyncToNode(true)
         return this
     },
     

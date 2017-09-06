@@ -55,12 +55,15 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 
 	setObjMsg: function(objMsg) {
 		this._objMsg = objMsg
-		assert(objMsg.senderPublicKeyString())
-		assert(objMsg.receiverPublicKeyString())
+		
+		if (objMsg) {
+    		assert(objMsg.senderPublicKeyString())
+    		assert(objMsg.receiverPublicKeyString())
 
-		this.setSenderPublicKeyString(objMsg.senderPublicKeyString())
-		this.setReceiverPublicKeyString(objMsg.receiverPublicKeyString())
-		this.setDataDict(objMsg.data())
+    		this.setSenderPublicKeyString(objMsg.senderPublicKeyString())
+    		this.setReceiverPublicKeyString(objMsg.receiverPublicKeyString())
+    		this.setDataDict(objMsg.data())
+    	}
 		return this
 	},
 

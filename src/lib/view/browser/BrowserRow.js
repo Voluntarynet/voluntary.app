@@ -51,7 +51,7 @@ BrowserRow = NodeView.extend().newSlots({
     
     onDidEdit: function (changedView) {   
         //console.log("onDidEdit")
-        this.syncToNode()
+        this.scheduleSyncToNode() //this.syncToNode()
     },
     
 	// --- sync ---

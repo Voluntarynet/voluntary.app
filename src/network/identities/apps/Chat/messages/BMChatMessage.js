@@ -54,5 +54,9 @@ BMChatMessage = BMPrivateMessage.extend().newSlots({
 		}
 		return this.typeId()
 	},
+	
+	prepareToDelete: function() {
+	    
+	},
 })
 

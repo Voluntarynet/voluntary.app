@@ -83,7 +83,7 @@ ImageWellView = NodeView.extend().newSlots({
     
     onDropImageDataUrl: function(dataURL) {
         this.addImageDataURL(dataURL)
-		this.syncToNode()
+        this.scheduleSyncToNode() //this.syncToNode()
         return this        
     },
     

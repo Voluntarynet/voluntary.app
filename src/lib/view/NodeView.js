@@ -1,3 +1,78 @@
+NodeViewSynchronizer = ideal.Proto.extend().newSlots({
+	toNode: ideal.Map.clone(),	
+	fromNode: ideal.Map.clone(),
+	hasTimeout: false,
+	isProcessing: false,	
+}).setSlots({
+
+	addToNode: function(aView) {
+	    var uid = aView.uniqueId()
+	    var map = this.toNode()
+	    if (!map.hasKey(uid)) {
+    	    map.atPut(uid, aView)
+    	    this.setTimeoutIfNeeded()
+        }
+	    return this
+	},
+	
+	addFromNode: function(aView) {
+	    var uid = aView.uniqueId()
+	    var map = this.fromNode()
+	    if (!map.hasKey(uid)) {
+    	    map.atPut(uid, aView)
+    	    this.setTimeoutIfNeeded()
+        }
+	    return this	    
+	},
+	
+	setTimeoutIfNeeded: function() {
+        //console.log("processSyncs.setTimeoutIfNeeded")
+	    if (!this.hasTimeout()) {
+	        setTimeout(() => { 
+	            this.setHasTimeout(false)
+	            this.processSyncs() 
+	        }, 0)
+	    }
+	    return this
+	},
+	
+    processSyncs: function() {
+        //console.log("processing NodeView syncs")
+        this.setIsProcessing(true)
+        
+        var error = null
+        try {
+            var toNode = this.toNode()
+            var toSize = toNode.size()
+            this.setToNode(ideal.Map.clone())
+            
+            var fromNode = this.fromNode()
+            this.setFromNode(ideal.Map.clone())
+
+            console.log("processing " + toNode.size() + "-to and " + fromNode.size() + "-from Syncs")
+            
+            toNode.forEach((uid) => {
+                toNode.at(uid).syncToNode()
+            })
+            
+            fromNode.forEach((uid) => {
+                fromNode.at(uid).syncFromNode()
+            })
+
+
+        } catch (e) {
+            error = e
+        } 
+        
+        this.setIsProcessing(false)
+        
+        if (error) {
+            throw error
+        }
+        
+        return this
+    },
+})
 
 NodeView = DivView.extend().newSlots({
     type: "NodeView",
@@ -5,6 +80,9 @@ NodeView = DivView.extend().newSlots({
     ownsView: true,
     defaultSubnodeViewClass: null,
 }).setSlots({
+    
+    // -------------------------------------
+    
     init: function () {
         DivView.init.apply(this)
         //this._nodeObservation = NotificationCenter.shared().newObservation().setName("didUpdateNode").setObserver(this)
@@ -148,7 +226,7 @@ NodeView = DivView.extend().newSlots({
 	
 	markViewDirty: function() {
 		if (this.isHandlingEvent()) {
-			this.setNeedsSyncToNode(true)
+			this.scheduleSyncToNode() //this.setNeedsSyncToNode(true)
 		}		
 	},
 
@@ -156,37 +234,16 @@ NodeView = DivView.extend().newSlots({
         //console.log(this.type() + " didUpdateNode " + this.node().type())
         this.syncFromNode()
     },
-
-    setNeedsSyncToNode: function(aBool) {
-        if (this._needsSyncToNode != aBool) { 
-	        if (aBool && !this._needsSyncToNode) {
-	            setTimeout( () => { 
-	                this.syncToNode()
-					this._needsSyncToNode = false
-	            }, 1)            
-	        }
-        
-	        this._needsSyncToNode = aBool
-		}
-		
+    
+    scheduleSyncToNode: function() {
+        NodeViewSynchronizer.addToNode(this)    
         return this
     },
-
-    setNeedsSyncFromNode: function(aBool) {
-        if (this._needsSyncFromNode != aBool) { 
-	        if (aBool && !this._needsSyncFromNode) {
-	            setTimeout( () => { 
-	                this.syncFromNode()
-					this._needsSyncFromNode = false
-	            }, 1)            
-	        }
-        
-	        this._needsSyncFromNode = aBool
-		}
-		
+    
+    scheduleSyncFromNode: function() {
+        NodeViewSynchronizer.addFromNode(this)    
         return this
     },
-
 
 	// logging 
     

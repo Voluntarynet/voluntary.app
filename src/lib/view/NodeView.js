@@ -157,7 +157,7 @@ NodeView = DivView.extend().newSlots({
 
     didUpdateNode: function () {
         //console.log(this.type() + " didUpdateNode " + this.node().type())
-        this.syncFromNode()
+        this.scheduleSyncFromNode()
     },
     
     scheduleSyncToNode: function() {

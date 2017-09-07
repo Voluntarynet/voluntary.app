@@ -1,9 +1,10 @@
 BMNodeSynchronizer = ideal.Proto.extend().newSlots({
+    type: "BMNodeSynchronizer",
 	toView: ideal.Map.clone(),	
 	fromView: ideal.Map.clone(),
 	hasTimeout: false,
 	isProcessing: false,	
-	// BMNodeSynchronizer.addFromView(aNode)
+	debug: false,
 }).setSlots({
 
 	addToView: function(aNode) {
@@ -27,8 +28,8 @@ BMNodeSynchronizer = ideal.Proto.extend().newSlots({
 	},
 	
 	setTimeoutIfNeeded: function() {
-        //console.log("processSyncs.setTimeoutIfNeeded")
 	    if (!this.hasTimeout()) {
+            this.setHasTimeout(true)
 	        setTimeout(() => { 
 	            this.setHasTimeout(false)
 	            this.processSyncs() 
@@ -38,26 +39,28 @@ BMNodeSynchronizer = ideal.Proto.extend().newSlots({
 	},
 	
     processSyncs: function() {
-        //console.log("processing NodeView syncs")
+		assert(!this.isProcessing())
         this.setIsProcessing(true)
         
         var error = null
         try {
+            console.log(this.type() + " " + this.description())
+
             var toView = this.toView()
             this.setToView(ideal.Map.clone())
             
             var fromView = this.fromView()
             this.setFromView(ideal.Map.clone())
-
-            console.log("syning Nodes " + toView.size() + "-toView and " + fromView.size() + "-fromView")
             
             toView.forEach((uid) => {
                 var aNode = toView.at(uid)
+				if (this.debug()) { console.log(aNode.typeId() + ".syncToView()") }
                 aNode.syncToView()
             })
             
             fromView.forEach((uid) => {
                 var aNode = fromView.at(uid)
+				if (this.debug()) { console.log(aNode.typeId() + ".syncFromView()") }
                 aNode.syncFromView()
             })
 
@@ -74,4 +77,22 @@ BMNodeSynchronizer = ideal.Proto.extend().newSlots({
         
         return this
     },
+
+	description: function() {
+		//console.log("this.toView().size() = ", this.toView().size())
+		//console.log("this.fromView().size() = ", this.fromView().size())
+		
+		var s = ""
+		var n = this.toView().size()
+        if (n) { 
+			s += n + " syncNodeToViews"
+		}
+		
+		var n = this.fromView().size()
+        if (n) { 
+			s += " " + n + " syncNodeFromViews"
+		}
+		
+		return s
+	},
 })

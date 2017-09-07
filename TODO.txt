@@ -1,4 +1,6 @@
 
+- chat send not showing up on other side - sync issue?
+
 - can produce db corruption error by throwing exception in PrivateMessage setObjMsg (which is raised when loading first time)
 
 need a way to delete ObjMessages and to mark them as placed

@@ -6,7 +6,7 @@
 
 // ---
 
-BaseApp = BMNavNode.extend().newSlots({
+BaseApp = BMNode.extend().newSlots({
     type: "BaseApp",
     name: null,
     browser: null,
@@ -15,7 +15,7 @@ BaseApp = BMNavNode.extend().newSlots({
     version: "0.0",
 }).setSlots({
     init: function () {
-        BMNavNode.init.apply(this)
+        BMNode.init.apply(this)
 		NodeStore.shared().asyncOpen( () => { this.didOpenStore() })
         this.clearAppLog()
     },
@@ -46,7 +46,7 @@ BaseApp = BMNavNode.extend().newSlots({
 		this.browser().setTransition("all 0.5s")
 
         document.body.appendChild(this.browser().element())    
-		this.browser().syncFromNode()
+		this.browser().scheduleSyncFromNode() // this.browser().syncFromNode()
 		setTimeout(() => {
 			this.browser().setOpacity(1)
 			setTimeout(() => { 

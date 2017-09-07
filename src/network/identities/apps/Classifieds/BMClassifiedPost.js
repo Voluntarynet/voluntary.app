@@ -228,7 +228,6 @@ BMClassifiedPost = BMFieldSetNode.extend().newSlots({
                 this.setHasSent(true)
             }
             this.didUpdateNode()
-            //this.syncToView()
         }
     },
     

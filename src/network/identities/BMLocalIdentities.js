@@ -12,6 +12,7 @@ BMLocalIdentities = BMStorableNode.extend().newSlots({
         this.setNoteIsSubnodeCount(true)
         
         //this.setPidSymbol("_localIdentities")  
+		this._didChangeIdentitiesNote = NotificationCenter.shared().newNotification().setSender(this.uniqueId()).setName("didChangeIdentities")
     },
 
     current: function() {
@@ -34,4 +35,10 @@ BMLocalIdentities = BMStorableNode.extend().newSlots({
         })
 	},
 	
+    didChangeSubnodeList: function() {
+		//console.log(this.typeId() + " didChangeSubnodeList <<<")
+		BMStorableNode.didChangeSubnodeList.apply(this)
+        this._didChangeIdentitiesNote.post()
+        return this
+    },
 })

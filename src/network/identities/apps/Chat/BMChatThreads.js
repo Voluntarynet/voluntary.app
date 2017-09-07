@@ -7,8 +7,35 @@ BMChatThreads = BMStorableNode.extend().newSlots({
         this.setShouldStore(true)
         this.setTitle("threads")
 
-		// TODO: watch contacts and update as needed?
+		setTimeout(() => { 
+			this.updateIdentities()
+		})
     },
+
+	setParentNode: function(aNode) {
+		BMStorableNode.setParentNode.apply(this, [aNode])
+		if (aNode == null) {
+			this.unwatchIdentities()
+		} else {
+			this.watchIdentities()
+		}
+	},
+	
+	watchIdentities: function() {
+		if (!this._idsObservaction) {
+	        this._idsObservaction = NotificationCenter.shared().newObservation().setName("didChangeIdentities").setObserver(this).watch()
+		}
+	},
+	
+	unwatchIdentities: function() {
+		NotificationCenter.shared().removeObserver(this)
+		this._idsObservaction = null
+	},
+	
+	didChangeIdentities: function(aNote) {
+		console.log(this.nodePathString() + ".didChangeIdentities() <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+		this.updateIdentities()
+	},
 
 	chatApp: function() {
 		return this.parentNode()
@@ -18,13 +45,11 @@ BMChatThreads = BMStorableNode.extend().newSlots({
 		return this.subnodes()
 	},
 
-	prepareToAccess: function() {
-		//console.log("++++++ " + this.typeId() + " prepareToAccess")
-		BMNode.prepareToAccess.apply(this)	
-
+	updateIdentities: function() {
 		this.removeThreadsWithNoRemoteIdentity()
 		this.addThreadForEveryRemoteIdentity()
 		this.sortSubnodes()
+		return this		
 	},
 	
 
@@ -55,6 +80,7 @@ BMChatThreads = BMStorableNode.extend().newSlots({
 	},
 	
 	threadForRemoteIdentity: function(rid) {
+		this.prepareToAccess()
 		return this.threads().detect((thread) => {
 			return thread.remoteIdentity() === rid
 		})

@@ -38,4 +38,10 @@ BMRemoteIdentities = BMStorableNode.extend().newSlots({
             return id.name() == s
         })
 	},
+	
+    didChangeSubnodeList: function() {
+		BMStorableNode.didChangeSubnodeList.apply(this)
+        NotificationCenter.shared().newNotification().setSender(this.uniqueId()).setName("didChangeIdentities")
+        return this
+    },
 })

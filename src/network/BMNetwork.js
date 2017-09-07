@@ -96,7 +96,7 @@ BMNetwork = BMStorableNode.extend().newSlots({
         this.messages().onRemotePeerConnect(remotePeer)
         
         //this.log("Network onRemotePeerConnect this.remotePeerCount()  = " + this.remotePeerCount())
-        this.syncToView()
+        this.scheduleSyncToView()
     },
 
 	// --- identities -----------------------------------------

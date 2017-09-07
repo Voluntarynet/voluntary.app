@@ -1,6 +1,6 @@
 
 Observation = ideal.Proto.extend().setType("Observation").newSlots({
-    target: null,
+    target: null, // expects uniqueId string for target
     name: null,
     observer: null,
     center: null,

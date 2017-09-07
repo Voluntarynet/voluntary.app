@@ -234,6 +234,7 @@ BMNode = ideal.Proto.extend().newSlots({
     },
     
     removeSubnode: function(aSubnode) {
+		console.log(this.typeId() + ".removeSubnode()")
         this.justRemoveSubnode(aSubnode)
         this.didChangeSubnodeList()
         return aSubnode
@@ -258,52 +259,27 @@ BMNode = ideal.Proto.extend().newSlots({
     // --- update / sync system ----------------------------
     
     scheduleSyncToView: function() {
-        BMNodeSynchronizer.addToView(this)
+        if (this.view()) {
+        	BMNodeSynchronizer.addToView(this)
+		}
         return this
     },
-    
-    /*
-    setNeedsSyncToView: function(aBool) {
-        if (this._needsSyncToView == aBool) { 
-            return this; 
-        }
-        
-        //this.log("needsSyncToView " + this._needsSyncToView + " -> " + aBool)
-
-        if (aBool && !this._needsSyncToView) {
-            //this.log(" >>> adding timer syncToView")
-            
-            setTimeout( () => { 
-                this.syncToView()
-                //this.log(" +++ fired syncToView")
-            }, 1)            
-        }
-        
-        this._needsSyncToView = aBool
-        return this
-    },
-    */
 
     didUpdateNode: function() {
         if (this._didUpdateNodeNote) {
             this._didUpdateNodeNote.post()
         }
         
-        this.scheduleSyncToView() // this.setNeedsSyncToView(true)
-
-/*
-		// this is too slow for general use e.g. text editing if parent nodes have lots of items
-        if (this.parentNode()) {
-            this.parentNode().didUpdateNode()
-        }
-*/
+        this.scheduleSyncToView()
     },
     
     syncToView: function() {
         //this._needsSyncToView = false
         if (this.view()) {
             this.view().didUpdateNode() // TODO: move to notifications?
-        }        
+        }  else {
+			//console.log(this.typeId() + ".syncToView has no view")
+        }
     },
     
     prepareToAccess: function() {

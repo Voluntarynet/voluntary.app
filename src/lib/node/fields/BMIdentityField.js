@@ -1,7 +1,3 @@
-/*
-
-
-*/
         
 BMIdentityField = BMField.extend().newSlots({
     type: "BMIdentityField",
@@ -22,8 +18,33 @@ BMIdentityField = BMField.extend().newSlots({
 		}
 	},
 	
-	setValue: function(v) { // called by View on edit
-		/*
+	setValue: function(inValue) { // called by View on edit
+	    console.log("inValue = '" + inValue + "'")
+	    var newValue = inValue.strip()
+	    
+        var parts = newValue.split(" ").concat(newValue.split("\n")).concat(newValue.split(","))
+	    console.log("parts = '", parts)
+		var validPart = parts.detect((part) => { return bitcore.PublicKey.isValid(part) })
+		if (validPart) {
+			newValue = validPart
+		}
+
+        if (inValue != newValue) {
+			setTimeout(() => { 
+			    	    console.log("inValue scheduleSyncToView")
+
+			    this.scheduleSyncToView() 
+			}, 10)
+        }
+        
+	    console.log("newValue = '" + newValue + "'")
+		BMField.setValue.apply(this, [newValue])
+		
+		return this
+	},
+	
+	/*
+	cleanedValue: function(v) {
 		v = v.strip()
 		var validPart = v.split(" ").detect((part) => { return bitcore.PublicKey.isValid(part) })
 		if (validPart && validPart != v) {
@@ -33,10 +54,8 @@ BMIdentityField = BMField.extend().newSlots({
 		}
 		else {
 			BMField.setValue.apply(this, [v])
-		}
-		*/
-		BMField.setValue.apply(this, [v])
-		return this
+		}	    
 	},
+	*/
 
 })

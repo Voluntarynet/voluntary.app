@@ -59,12 +59,22 @@ BMFieldRowView = BrowserFieldRow.extend().newSlots({
 
         keyView.setInnerHTML(this.visibleKey())
 
-		if (!valueView.isActiveElementAndEditable()) {
+        var newValue = this.visibleValue()
+        if (valueView.innerHTML() != newValue) {
+            if (valueView.isActiveElementAndEditable()) {
+                valueView.blur()
+			    valueView.setInnerHTML(newValue)
+                valueView.focus()
+			} else {
+			    valueView.setInnerHTML(newValue)
+			}
+		    /*
 			if (valueView.setText) {
 				valueView.setText(this.visibleValue())
 			} else {
 				valueView.setInnerHTML(this.visibleValue())
 			}
+			*/
 		}
 		
 		keyView.setIsVisible(node.keyIsVisible())

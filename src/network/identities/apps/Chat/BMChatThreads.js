@@ -106,6 +106,4 @@ BMChatThreads = BMStorableNode.extend().newSlots({
 
 		return this
 	},
-
 })
-

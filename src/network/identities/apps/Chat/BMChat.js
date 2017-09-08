@@ -71,4 +71,3 @@ BMChat = BMApplet.extend().newSlots({
 	},
 		
 })
-

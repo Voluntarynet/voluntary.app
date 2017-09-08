@@ -68,13 +68,6 @@ BMFieldRowView = BrowserFieldRow.extend().newSlots({
 			} else {
 			    valueView.setInnerHTML(newValue)
 			}
-		    /*
-			if (valueView.setText) {
-				valueView.setText(this.visibleValue())
-			} else {
-				valueView.setInnerHTML(this.visibleValue())
-			}
-			*/
 		}
 		
 		keyView.setIsVisible(node.keyIsVisible())
@@ -152,7 +145,7 @@ BMFieldRowView = BrowserFieldRow.extend().newSlots({
         
 		this.node().didUpdateView(this)
 		//this.node().tellParentNodes("onDidEditNode", this.node())   
-		this.scheduleSyncFromNode()
+		this.scheduleSyncFromNode() // needed for validation?
     },
 
     updateSubviews: function() {

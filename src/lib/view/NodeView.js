@@ -136,24 +136,10 @@ NodeView = DivView.extend().newSlots({
         var node = this.node()
         if (node) {
             node.didUpdateNode()
-            node.markDirty()
+            node.scheduleSyncToStore()
         }
         return this
     },
-
-    /*
-	didChangeSubviewList: function() {
-		DivView.didChangeSubviewList.apply(this)
-		//this.markViewDirty()
-		return this
-	},
-	*/
-	
-	markViewDirty: function() {
-		if (this.isHandlingEvent()) {
-			this.scheduleSyncToNode() //this.setNeedsSyncToNode(true)
-		}		
-	},
 
     didUpdateNode: function () {
         //console.log(this.type() + " didUpdateNode " + this.node().type())
@@ -161,12 +147,14 @@ NodeView = DivView.extend().newSlots({
     },
     
     scheduleSyncToNode: function() {
-        NodeViewSynchronizer.addToNode(this)    
+        //NodeViewSynchronizer.addToNode(this)  
+        SyncScheduler.scheduleTargetToSync(this, "syncToNode")
         return this
     },
     
     scheduleSyncFromNode: function() {
-        NodeViewSynchronizer.addFromNode(this)    
+        //NodeViewSynchronizer.addFromNode(this)    
+        SyncScheduler.scheduleTargetToSync(this, "syncFromNode")
         return this
     },
 

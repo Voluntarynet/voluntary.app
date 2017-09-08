@@ -62,7 +62,7 @@
                 store.load()
             
             // when you modify any BMStorableNode instance's subnodes or stored data slots, 
-            // or call markDirty() on it, it will be marked as needing to be persisted in the
+            // or call scheduleSyncToStore() on it, it will be marked as needing to be persisted in the
             // next event loop
             
                 var test = BMNode.clone()

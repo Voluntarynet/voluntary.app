@@ -19,11 +19,11 @@ BMIdentityField = BMField.extend().newSlots({
 	},
 	
 	setValue: function(inValue) { // called by View on edit
-	    console.log("inValue = '" + inValue + "'")
+	    //console.log("inValue = '" + inValue + "'")
 	    var newValue = inValue.strip()
 	    
         var parts = newValue.split(" ").concat(newValue.split("\n")).concat(newValue.split(","))
-	    console.log("parts = '", parts)
+	    //console.log("parts = '", parts)
 		var validPart = parts.detect((part) => { return bitcore.PublicKey.isValid(part) })
 		if (validPart) {
 			newValue = validPart
@@ -31,13 +31,11 @@ BMIdentityField = BMField.extend().newSlots({
 
         if (inValue != newValue) {
 			setTimeout(() => { 
-			    	    console.log("inValue scheduleSyncToView")
-
 			    this.scheduleSyncToView() 
 			}, 10)
         }
         
-	    console.log("newValue = '" + newValue + "'")
+	    //console.log("newValue = '" + newValue + "'")
 		BMField.setValue.apply(this, [newValue])
 		
 		return this

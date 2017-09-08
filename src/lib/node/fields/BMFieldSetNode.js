@@ -86,7 +86,7 @@ BMFieldSetNode = BMStorableNode.extend().newSlots({
 	},
     
     onDidEditNode: function() {
-        this.markDirty()
+        this.scheduleSyncToStore()
         this.didUpdateNode()
     },
 

@@ -21,9 +21,11 @@ BaseApp = BMNode.extend().newSlots({
     },
 
 	didOpenStore: function() {
-		//NodeStore.shared().clear()
-        this.setup() 
-        //console.log("app didOpenStore\n")	
+	    setTimeout(() => { 
+    		//NodeStore.shared().clear()
+            this.setup() 
+            //console.log("app didOpenStore\n")	
+        },1)
 	},
     
 	appDidInit: function() {

@@ -21,10 +21,4 @@ BMImagesNode = BMStorableNode.extend().newSlots({
         //this.addStoredSlots(["title", "dataURL"])
     },        
     
-    /*
-    onDidEditNode: function() {
-        console.log(this.type() + " onDidEditNode")
-        this.markDirty()
-    },
-    */
 })

@@ -171,7 +171,7 @@ BMObjectMessage = BMMessage.extend().newSlots({
 	    
     send: function() {
         // adding to Messages node this would change parentNode - so make a copy?
-		this.markDirty()
+		this.scheduleSyncToStore()
         this.network().messages().addMessage(this)
         return this
     },

@@ -48,12 +48,7 @@ BMChatMessage = BMPrivateMessage.extend().newSlots({
 		return this.typeId() + "-" + this.hash() + "'" + this.content() + "'"
 	},
 	
-	hash: function() {
-		if (this.objMsg()) {
-			return this.objMsg().msgHash()
-		}
-		return this.typeId()
-	},
+
 	
 	prepareToDelete: function() {
 	    

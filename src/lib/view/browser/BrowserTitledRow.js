@@ -98,7 +98,7 @@ BrowserTitledRow = BrowserRow.extend().newSlots({
         this.node().setTitle(this.titleView().innerHTML())
         this.node().setSubtitle(this.subtitleView().innerHTML())
         this.node().tellParentNodes("onDidEditNode", this.node())  
-        this.node().markDirty()
+        this.node().scheduleSyncToStore()
         return this
     },
 

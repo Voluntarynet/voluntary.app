@@ -30,7 +30,7 @@ BMStorableNode = BMNode.extend().newSlots({
     setPid: function(aPid) {
         this._pid = aPid
         NodeStore.shared().addActiveObject(this)
-        this.markDirty()
+        this.scheduleSyncToStore()
         return this
     },
     
@@ -42,7 +42,7 @@ BMStorableNode = BMNode.extend().newSlots({
         this._pid = NodeStore.shared().pidOfObj(this)
         
         NodeStore.shared().addActiveObject(this)
-        this.markDirty()
+        this.scheduleSyncToStore()
         
         return this
     },
@@ -85,7 +85,7 @@ BMStorableNode = BMNode.extend().newSlots({
     
     addStoredSlot: function(slotName) {
         this.storedSlots()[slotName] = true
-		// Note: BMStorableNode hooks didUpdateSlot() to call markDirty on updates. 
+		// Note: BMStorableNode hooks didUpdateSlot() to call scheduleSyncToStore on updates. 
         return this
     },
     
@@ -174,7 +174,7 @@ BMStorableNode = BMNode.extend().newSlots({
         }
    
 		if (hadMissingSetter) {
-			this.markDirty()
+			this.scheduleSyncToStore()
 		}
 		
         return this
@@ -200,7 +200,7 @@ BMStorableNode = BMNode.extend().newSlots({
         // a chance to finish any unserializing
     },
 
-	markDirty: function() {
+	scheduleSyncToStore: function() {
 		if (!this._isUnserializing && this.shouldStore() && !this.isUnserializing()) {
         	NodeStore.shared().addDirtyObject(this)
 			this._refPids = null
@@ -212,7 +212,7 @@ BMStorableNode = BMNode.extend().newSlots({
 		// check so we don't mark dirty while loading
 		// and use private ivars directly for performance
 		if (slotName in this._storedSlots) { 
-			this.markDirty()
+			this.scheduleSyncToStore()
 		}
 		
 		if (newValue != null && this.subnodes().includes(oldValue)) { // TODO: add a switch for this feature

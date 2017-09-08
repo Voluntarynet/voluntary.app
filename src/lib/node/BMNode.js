@@ -251,7 +251,7 @@ BMNode = ideal.Proto.extend().newSlots({
 	},
 
     didChangeSubnodeList: function() {
-        this.markDirty()
+        this.scheduleSyncToStore()
         this.didUpdateNode()
         return this
     },
@@ -260,7 +260,8 @@ BMNode = ideal.Proto.extend().newSlots({
     
     scheduleSyncToView: function() {
         if (this.view()) {
-        	BMNodeSynchronizer.addToView(this)
+            SyncScheduler.scheduleTargetToSync(this, "syncToView")
+        	//BMNodeSynchronizer.addToView(this)
 		}
         return this
     },
@@ -472,7 +473,7 @@ BMNode = ideal.Proto.extend().newSlots({
 		}
 		subnodes.forEach((subnode) => { subnode.setParentNode(this) })
         this._subnodes = subnodes
-		this.markDirty()
+		this.scheduleSyncToStore()
         //this.verifySubnodesHaveParentNodes()
         return this
     },
@@ -486,7 +487,7 @@ BMNode = ideal.Proto.extend().newSlots({
     },
 
 	
-	markDirty: function() {
+	scheduleSyncToStore: function() {
 		// to be used by subclasses
 		// useful for persistence
 	},

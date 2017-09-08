@@ -122,7 +122,6 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 	},
 
 	place: function() {
-		console.log("placing " + this.type() + " from '" + this.senderId().name() + "' to '" + this.receiverId().name() + "'")
 		
 		if(!this.canReceive()) {
 			console.log("can't receive message")
@@ -136,6 +135,8 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 		if (this.senderId()) {
          	this.senderId().handleMessage(this.duplicate())	
 		}
+
+		console.log("placing " + this.type() + " from '" + this.senderId().name() + "' to '" + this.receiverId().name() + "'")
 		
 		return this
 	},
@@ -171,4 +172,11 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
         this.composeObjMsg()
 		this.objMsg().send()
     },
+    
+	hash: function() {
+		if (this.objMsg()) {
+			return this.objMsg().msgHash()
+		}
+		return this.typeId()
+	},
 })

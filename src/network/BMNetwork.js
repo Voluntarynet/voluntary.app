@@ -119,7 +119,7 @@ BMNetwork = BMStorableNode.extend().newSlots({
 		})
 		
 		if (!result) {		
-		    console.log("idWithPublicKeyString(" + publicKeyString + ") = ", result)
+		    console.log(this.type() + ".idWithPublicKeyString(" + publicKeyString + ") = ", result)
 		    console.log("all ids: ", ids.map((id) => { return id.name() + ":" + id.publicKeyString() }))
 	    }
 		return result

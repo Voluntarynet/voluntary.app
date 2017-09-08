@@ -1,14 +1,24 @@
+- unify Synchronizers
 
-- contact not visible in chat threads until reload
+SYNC
+    store <- node -> view
+    
+    node scheduleSyncToStore    store <- node
+    node scheduleSyncToView     node -> view (just requests that view sync from it)
+    view scheduleSyncFromNode   node -> view
+    view scheduleSyncToNode     node <- view
+    
+    - model to store (any storable set slot outside of loading)
+    - model to view (any viewable set slot)
+    - view to model (any modelled set slot during user input? timers?)
+
 
 - unify equals() with isEqual()
-
-- remove formatting when pasting pubkey from Messages into RemoteId public key field
 
 --------
 need a way to delete ObjMessages and to mark them as placed
 options:
-  - 1. wrap the ObjMessage in MessageRecord
+  - 1. wrap the ObjMessage in ObjMsgRecord
   - 2. add a "local" slot to the ObjMessage (security risk?)
 
 extra ObjMsg attributes:
@@ -22,15 +32,13 @@ extra ObjMsg attributes:
     }
 }
 
-
-
-- can produce db corruption error by throwing exception in PrivateMessage setObjMsg (which is raised when loading first time)
-
-
-
-PERFORMANCE: compact needsUpdate timeouts
-
-BUG: error on imports can empty db?
+ChatMsg
+    -> ObjMsgRecord 
+        -> ObjMsg
+   
+DB LOST IDS:     
+    - can produce by throwing exception in PrivateMessage setObjMsg (which is raised when loading first time)
+    - can produce sometimes with error on imports 
 
 
 Add profile image

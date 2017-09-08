@@ -13,8 +13,20 @@ BMRemoteIdentities = BMStorableNode.extend().newSlots({
 		//this.setShouldStoreSubnodes(false)
         //this.setPidSymbol("_remoteIdentities") 
         //this.loadIfPresent()
+		this._didChangeIdentitiesNote = NotificationCenter.shared().newNotification().setSender(this.uniqueId()).setName("didChangeIdentities")
+        this.watchIdentity()
     },
 
+	watchIdentity: function() {
+		if (!this._idObs) {
+	        this._idObs = NotificationCenter.shared().newObservation().setName("didChangeIdentity").setObserver(this).watch()
+		}
+	},
+	
+	didChangeIdentity: function() {
+        this._didChangeIdentitiesNote.post()
+	},
+	
 	validSubnodes: function() {
         return this.subnodes().select(function (id) {
             return id.isValid()
@@ -41,7 +53,7 @@ BMRemoteIdentities = BMStorableNode.extend().newSlots({
 	
     didChangeSubnodeList: function() {
 		BMStorableNode.didChangeSubnodeList.apply(this)
-        NotificationCenter.shared().newNotification().setSender(this.uniqueId()).setName("didChangeIdentities")
+        this._didChangeIdentitiesNote.post()
         return this
     },
 })

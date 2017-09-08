@@ -22,14 +22,14 @@ BMChatThreads = BMStorableNode.extend().newSlots({
 	},
 	
 	watchIdentities: function() {
-		if (!this._idsObservaction) {
-	        this._idsObservaction = NotificationCenter.shared().newObservation().setName("didChangeIdentities").setObserver(this).watch()
+		if (!this._idsObservation) {
+	        this._idsObservation = NotificationCenter.shared().newObservation().setName("didChangeIdentities").setObserver(this).watch()
 		}
 	},
 	
 	unwatchIdentities: function() {
 		NotificationCenter.shared().removeObserver(this)
-		this._idsObservaction = null
+		this._idsObservation = null
 	},
 	
 	didChangeIdentities: function(aNote) {

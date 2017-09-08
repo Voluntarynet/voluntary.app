@@ -36,7 +36,6 @@ BMLocalIdentities = BMStorableNode.extend().newSlots({
 	},
 	
     didChangeSubnodeList: function() {
-		//console.log(this.typeId() + " didChangeSubnodeList <<<")
 		BMStorableNode.didChangeSubnodeList.apply(this)
         this._didChangeIdentitiesNote.post()
         return this

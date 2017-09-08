@@ -59,12 +59,15 @@ BMChat = BMApplet.extend().newSlots({
 	},
 	
 	handleReceivedMessage: function(msg) {
-        if (msg.receiverId() && msg.receiverId().equals(this.localIdentity())) {
-			var thread = this.threads().threadForRemoteIdentity(msg.senderId())
-			if (thread) {
-				thread.addMessage(msg)
-			}
-		}		
+        if (msg.receiverId()) {
+            //console.log("msg.receiverId() = ", msg.receiverId().type())
+            if (msg.receiverId().equals(this.localIdentity())) {
+    			var thread = this.threads().threadForRemoteIdentity(msg.senderId())
+    			if (thread) {
+    				thread.addMessage(msg)
+    			}
+    		}
+    	}
 	},
 		
 })

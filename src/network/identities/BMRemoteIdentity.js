@@ -26,6 +26,17 @@ BMRemoteIdentity = BMNavNode.extend().newSlots({
 		this.profile().fieldNamed("publicKeyString").setValueIsEditable(true)
 		
         this.addAction("delete")
+		this._didChangeIdentityNote = NotificationCenter.shared().newNotification().setSender(this.uniqueId()).setName("didChangeIdentity")
+    },
+    
+    didUpdateSlot: function(slotName, oldValue, newValue) {
+        BMNavNode.didUpdateSlot.apply(this, [slotName, oldValue, newValue])
+        
+        if (slotName == "publicKeyString") {
+            this._didChangeIdentityNote.post()
+        }
+        
+        return this
     },
 
 	didLoadFromStore: function() {
@@ -47,19 +58,10 @@ BMRemoteIdentity = BMNavNode.extend().newSlots({
 
 	subtitle: function() {
 		if (!this.isValid()) {
-			return "invalid public key"
+			return "need to set public key"
 		}
 		return null
 	},
- /*
-    subtitle: function () {
-		if (this.publicKeyString()) {
-        	return this.publicKeyString().toString().slice(0, 5) + "..."
-		}
-		
-		return ""
-    },  
-*/
 
     isValid: function() {
 		var s = this.publicKeyString()
@@ -88,6 +90,10 @@ BMRemoteIdentity = BMNavNode.extend().newSlots({
 		*/	
 		
 		return this
+	},
+	
+	equals: function(anIdentity) {
+		return anIdentity != null && anIdentity.publicKeyString && (this.publicKeyString() == anIdentity.publicKeyString())
 	},
 
 })

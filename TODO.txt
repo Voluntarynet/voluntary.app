@@ -1,9 +1,31 @@
 
-- chat send not showing up on other side - sync issue?
+- contact not visible in chat threads until reload
+
+- unify equals() with isEqual()
+
+- remove formatting when pasting pubkey from Messages into RemoteId public key field
+
+--------
+need a way to delete ObjMessages and to mark them as placed
+options:
+  - 1. wrap the ObjMessage in MessageRecord
+  - 2. add a "local" slot to the ObjMessage (security risk?)
+
+extra ObjMsg attributes:
+{
+    type: "object",
+    ...
+    local: {
+        placed: aBool,
+        deleted: aBool,
+        firstSeenDate: timestamp,
+    }
+}
+
+
 
 - can produce db corruption error by throwing exception in PrivateMessage setObjMsg (which is raised when loading first time)
 
-need a way to delete ObjMessages and to mark them as placed
 
 
 PERFORMANCE: compact needsUpdate timeouts

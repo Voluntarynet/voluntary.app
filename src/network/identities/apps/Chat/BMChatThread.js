@@ -37,6 +37,8 @@ BMChatThread = BMStorableNode.extend().newSlots({
 		msg.setContent(s)
 		msg.send()
 		
+		this.addMessage(msg)
+		
 	    return this
 	},
 	

@@ -40,18 +40,15 @@ BMChatMessage = BMPrivateMessage.extend().newSlots({
 	},
 	
 	isEqual: function(other) {
-		console.log(this.description() + "' is equal? " + other.description())
 		return this.hash() == other.hash()
 	},
 	
 	description: function() {
 		return this.typeId() + "-" + this.hash() + "'" + this.content() + "'"
 	},
-	
 
-	
 	prepareToDelete: function() {
-	    
+	    // TODO: mark MsgObjRecord as deleted
 	},
 })
 

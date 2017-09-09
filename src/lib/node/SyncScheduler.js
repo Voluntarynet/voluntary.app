@@ -61,26 +61,32 @@ SyncScheduler = ideal.Proto.extend().newSlots({
     processSets: function() {
 		assert(!this.isProcessing())
         this.setIsProcessing(true)
-        
+        var indent = "    "
+
         var error = null
         try {
             //console.log(this.description())
-            console.log(this.type() + ".processSets()")
-
+			if (this.debug()) { 
+            	console.log("Sync")
+			}
+			
             var sets = this.syncSets()
             this.clear()
             
             sets.forEach((syncMethod) => {
                 var set = sets.at(syncMethod)
+
+   				if (this.debug()) { 
+    				   console.log(indent + syncMethod) 
+    			}
+
                 set.forEach((key) => {
                     var target = set.at(key)
+
     				if (this.debug()) { 
-    				    console.log("    " + target.typeId() + "." + syncMethod + "()") 
+    				    console.log(indent + indent + target.typeId()) 
     				}
-    				if (!target[syncMethod]) {
-    				    //console.log("target = ", target) 
-    				    //console.log(target.typeId() + "." + syncMethod + "() missing method") 
-    				}
+
                     target[syncMethod].apply(target)
                 })
             })

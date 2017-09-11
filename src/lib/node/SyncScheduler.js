@@ -25,7 +25,7 @@ SyncScheduler = ideal.Proto.extend().newSlots({
 	
 	hasTimeout: false,
 	isProcessing: false,	
-	debug: true,
+	debug: false,
 }).setSlots({
     
     syncSet: function(syncMethod) {

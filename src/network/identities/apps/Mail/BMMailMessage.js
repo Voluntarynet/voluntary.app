@@ -6,7 +6,7 @@ BMMailMessage = BMPrivateMessage.extend().newSlots({
     init: function () {
         BMPrivateMessage.init.apply(this)
 
-		this.addStoredField(BMOptionsField.clone().setKey("from").setValueMethod("fromContact")).setValueIsEditable(false).setValidValuesMethod("fromContactNames") //.setNoteMethod("fromContactPublicKey")
+		this.addStoredField(BMOptionsField.clone().setKey("from").setValueMethod("fromContact")).setValueIsEditable(false) //.setValidValuesMethod("fromContactNames") //.setNoteMethod("fromContactPublicKey")
 		this.addStoredField(BMOptionsField.clone().setKey("to").setValueMethod("toContact")).setValueIsEditable(true).setValidValuesMethod("toContactNames") //.setNoteMethod("toContactPublicKey")
         this.addFieldNamed("subject").setKey("subject")	
 
@@ -79,14 +79,10 @@ BMMailMessage = BMPrivateMessage.extend().newSlots({
 		if (to != this.toContact()) { this.setToContact(to) }
 	},
 
-	fromContactNames: function() {
-		//console.log("App.shared().network().localIdentityNames() = ", App.shared().network().localIdentityNames())
-		return App.shared().network().localIdentityNames()
-	},
-
 	toContactNames: function() {
-		//return App.shared().network().remoteIdentityNames()
-		return App.shared().network().allIdentityNames()
+		var localNames = App.shared().network().localIdentityNames()
+		var remoteNames = this.localIdentity().remoteIdentities().names()
+		return localNames.concat(remoteNames)
 	},
 
 	validateFromAddress: function() {

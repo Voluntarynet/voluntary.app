@@ -5,7 +5,6 @@ BMNetwork = BMStorableNode.extend().newSlots({
     stunServers: null,
     messages: null,
     localIdentities: null, // set by parent 
-    remoteIdentities: null, // set by parent 
     blacklists: null,
 	idsBloomFilter: null,
 	shared: null,
@@ -125,9 +124,15 @@ BMNetwork = BMStorableNode.extend().newSlots({
 		return result
     },
 
+	allRemoteIdentities: function() {
+		var allRids = []
+		this.localIdentities().subnodes().map((id) => { return id.remoteIdentities().validSubnodes() }).forEach((rids) => { allRids.concat(rids) })
+		return allRids
+	},
+
 	allIdentities: function() { // only uses valid remote identities
 		var ids = []
-		ids = this.localIdentities().subnodes().concat(this.remoteIdentities().validSubnodes())
+		ids = this.localIdentities().subnodes().concat(this.allRemoteIdentities())
 		return ids
 	},
     
@@ -140,11 +145,11 @@ BMNetwork = BMStorableNode.extend().newSlots({
 	},
 	
 	localIdentityNames: function() {
-		return this.localIdentities().subnodes().map((id) => { return id.name(); })
+		return this.localIdentities().names()
 	},
 	
 	remoteIdentityNames: function() {
-		return this.remoteIdentities().subnodes().map((id) => { return id.name(); })
+		return this.allRemoteIdentities().map((id) => { return id.name(); })
 	},
 	
 	idWithName: function(aString) {

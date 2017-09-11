@@ -6,6 +6,7 @@ JSImporter.pushRelativePaths([
     "BMGetDataMessage.js",
     "BMInvMessage.js",
     "BMObjectMessage.js",
+	//"BMObjMsgRecord.js",
     "BMPingMessage.js",
     "BMPongMessage.js",
 	"BMPrivateMessage.js",

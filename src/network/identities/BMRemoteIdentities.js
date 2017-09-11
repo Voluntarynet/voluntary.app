@@ -6,7 +6,7 @@ BMRemoteIdentities = BMStorableNode.extend().newSlots({
     init: function () {
         BMStorableNode.init.apply(this)
 		this.setShouldStore(true)
-        this.setTitle("Contacts")
+        this.setTitle("contacts")
         
         this.setActions(["add"]).setSubnodeProto(BMRemoteIdentity)
         this.setNoteIsSubnodeCount(true)
@@ -49,6 +49,10 @@ BMRemoteIdentities = BMStorableNode.extend().newSlots({
         return this.subnodes().detect(function (id) {            
             return id.name() == s
         })
+	},
+	
+	names: function() {
+		return this.subnodes().map((id) => { return id.name(); })
 	},
 	
     didChangeSubnodeList: function() {

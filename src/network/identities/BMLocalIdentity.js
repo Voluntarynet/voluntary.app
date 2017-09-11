@@ -14,9 +14,9 @@ BMLocalIdentity = BMKeyPair.extend().newSlots({
 		this.setShouldStore(true)
         this.setNodeTitleIsEditable(true)
  
-
         this.initStoredSlotWithProto("apps", BMApps)
         this.initStoredSlotWithProto("profile", BMProfile)
+        this.initStoredSlotWithProto("remoteIdentities", BMRemoteIdentities)
         
 		this.addStoredSlots(["name", "privateKeyString"])
 		
@@ -54,12 +54,6 @@ BMLocalIdentity = BMKeyPair.extend().newSlots({
 		return null
     },  
     */
-    
-    remoteIdentities: function() {
-		// TODO: change to be off of local identity
-		// return this.localIdentity().remoteIdentities()
-        return App.shared().remoteIdentities()
-    },
 
 	handleMessage: function(msg) {	
 		this.apps().handleMessage(msg)

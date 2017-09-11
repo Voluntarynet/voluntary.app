@@ -7,7 +7,6 @@
 App = BaseApp.extend().newSlots({
     type: "App",
 	localIdentities: null,
-	remoteIdentities: null,
     network: null,   
 	dataStore: null, 
 }).setSlots({
@@ -43,9 +42,6 @@ App = BaseApp.extend().newSlots({
 
 		this.setLocalIdentities(NodeStore.shared().rootInstanceWithPidForProto("_localIdentities", BMLocalIdentities))
 		this.addSubnode(this.localIdentities())
-		
-		this.setRemoteIdentities(NodeStore.shared().rootInstanceWithPidForProto("_remoteIdentities", BMRemoteIdentities))
-		this.addSubnode(this.remoteIdentities())
 
 		// about 
 		
@@ -59,7 +55,6 @@ App = BaseApp.extend().newSlots({
 
    		this.setNetwork(BMNetwork.clone())
    		this.network().setLocalIdentities(this.localIdentities())
-   		this.network().setRemoteIdentities(this.remoteIdentities())
    		this.about().addSubnode(this.network())
 
    		// data store

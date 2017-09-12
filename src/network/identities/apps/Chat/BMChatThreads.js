@@ -8,11 +8,17 @@ BMChatThreads = BMStorableNode.extend().newSlots({
         this.setTitle("threads")
 
 		setTimeout(() => { 
+			// so this happens after load from store
 		    if (this.parentNode()) {
 			    this.updateIdentities()
 		    }
 		}, 0)
     },
+
+	didLoadFromStore: function() {
+		BMStorableNode.didLoadFromStore.apply(this)
+		console.log(this.typeId() + " didLoadFromStore")
+	},
 
 	setParentNode: function(aNode) {
 		BMStorableNode.setParentNode.apply(this, [aNode])
@@ -43,6 +49,10 @@ BMChatThreads = BMStorableNode.extend().newSlots({
 		return this.parentNode()
 	},
 	
+	localIdentity: function() {
+		return this.chatApp().localIdentity()
+	},
+	
 	threads: function() {
 		return this.subnodes()
 	},
@@ -53,10 +63,14 @@ BMChatThreads = BMStorableNode.extend().newSlots({
 		this.sortSubnodes()
 		return this		
 	},
-	
 
 	chatTargetIds: function() {
-	    return this.chatApp().localIdentity().allOtherIdentities()    
+	    //return this.chatApp().localIdentity().allOtherIdentities()    
+	    var chatTargetIds  = this.localIdentity().remoteIdentities().validSubnodes()
+		console.log("lid ", this.localIdentity().name())
+		console.log("	remoteIdentities: ", this.localIdentity().remoteIdentities().subnodes().map((rid) => { return rid.name() }) )
+		console.log("	chatTargetIds: ", chatTargetIds.map((rid) => { return rid.name() }) )
+		return chatTargetIds	
 	},
 	
 	addThreadForEveryRemoteIdentity: function() {
@@ -77,7 +91,6 @@ BMChatThreads = BMStorableNode.extend().newSlots({
 				this.removeSubnode(thread)
 			}
 		})
-		
 		return this
 	},
 	

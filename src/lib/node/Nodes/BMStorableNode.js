@@ -195,9 +195,14 @@ BMStorableNode = BMNode.extend().newSlots({
     
 	// --- udpates ---
 	
+	didFinalizeLoadFromStore: function() {
+        // called after all objects loaded within this event cycle
+	},
+	
     didLoadFromStore: function() {
 		//console.log(this.type() + " didLoadFromStore in BMStorableNode")
-        // a chance to finish any unserializing
+        // chance to finish any unserializing this particular instance
+		// also see: didFinalizeLoadFromStore
     },
 
 	scheduleSyncToStore: function() {

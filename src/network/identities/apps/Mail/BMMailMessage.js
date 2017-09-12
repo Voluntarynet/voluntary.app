@@ -94,13 +94,13 @@ BMMailMessage = BMPrivateMessage.extend().newSlots({
     title: function() {
 		if (!this.localIdentityIsSender()) {
 			return this.localIdentity().title()
-		} else {
-			var s = this.toContact()
-	        if (s) {
-	            return s
-	        }			
-	        return "No recipient"
 		}
+		
+		var s = this.toContact()
+        if (s) {
+            return s
+        }			
+        return "No recipient"
     },
 
     subtitle: function () {

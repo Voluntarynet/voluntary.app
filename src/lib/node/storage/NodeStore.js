@@ -98,7 +98,7 @@ NodeStore = ideal.Proto.extend().newSlots({
     hasTimeout: false,
     
     activeObjectsDict: null,
-    storingObjects: null,
+    justLoadedObjectsDict: null,
 
 	sdb: null,
 	
@@ -109,6 +109,7 @@ NodeStore = ideal.Proto.extend().newSlots({
     init: function () {
         this.setDirtyObjects({})
         this.setActiveObjectsDict({})
+        this.setJustLoadedObjectsDict({})
 		this.setSdb(SyncDB.clone())
 		//this.asyncOpen()
     },
@@ -183,19 +184,18 @@ NodeStore = ideal.Proto.extend().newSlots({
 			//console.log("addDirtyObject(" + obj.pid() + ")")
 	       // this.debugLog("addDirtyObject(" + obj.pid() + ")")
             this._dirtyObjects[pid] = obj
-            this.setTimeoutIfNeeded()
+            this.setStoreTimeoutIfNeeded()
         }
         
         return this
     },
     
-    setTimeoutIfNeeded: function() {
-        if (!this._hasTimeout && this.hasDirtyObjects()) {
-            this._hasTimeout = true
+    setStoreTimeoutIfNeeded: function() {
+        if (!this._hasStoreTimeout && this.hasDirtyObjects()) {
+            this._hasStoreTimeout = true
             setTimeout( () => { 
-                // TODO: try wrap this to ensure this._hasTimeout is set
                 this.storeDirtyObjects() 
-                this._hasTimeout = false
+                this._hasStoreTimeout = false
             }, 10)
         }
         
@@ -340,22 +340,67 @@ NodeStore = ideal.Proto.extend().newSlots({
 
 
 	// ----------------------------------------------------
-    // reading
+    // just loaded objects
 	// ----------------------------------------------------
     
+	isNewLoadCycle: function() {
+		return this.justLoadedObjectsDict().slotValues().length == 0
+	},
+	
+	addJustLoadedObject: function(obj) {
+		this.justLoadedObjectsDict()[obj.pid()] = obj
+		return this
+	},
+	
+	finalizeJustLoadedObjects: function() {
+		console.log(this.type() + " finalizeJustLoadedObjects")
+		var loaded = this.justLoadedObjectsDict()
+        loaded.slotValues().forEach((obj) => {
+            obj.didFinalizeLoadFromStore()
+        })
+		this.clearJustLoadedObjects()
+		return this
+	},
+	
+	clearJustLoadedObjects: function() {
+		this.setJustLoadedObjectsDict({})
+		return this
+	},
+	
+    setFinalizeLoadTimeoutIfNeeded: function() {
+        if (!this._hasFinalizeLoadTimeout) {
+            this._hasFinalizeLoadTimeout = true
+            setTimeout( () => { 
+                this.finalizeJustLoadedObjects() 
+                this._hasFinalizeLoadTimeout = false
+            }, 10)
+        }
+        
+        return this
+    },
+	
+	// ----------------------------------------------------
+    // reading
+	// ----------------------------------------------------
+	
+	
     loadObject: function(obj) {
+			
+		this.setFinalizeLoadTimeoutIfNeeded()
+		
 		try {
 	        var nodeDict = this.nodeDictAtPid(obj.pid())
 	        if (nodeDict) {
 	            obj.setNodeDict(nodeDict)
+				this.addJustLoadedObject(obj)
 	            return true
 	        }
 		} catch(error) {
 			this.setIsReadOnly(true)
 			console.log(error.stack, "background: #000; color: #f00")
-			throw new Error(error)
+			throw error
 		}
-        
+		
         return false
     },
     
@@ -382,6 +427,7 @@ NodeStore = ideal.Proto.extend().newSlots({
             return obj
         }
 
+		this.setFinalizeLoadTimeoutIfNeeded()
         //this.debugLog("objectForPid(" + pid + ")")
         
         var nodeDict = this.nodeDictAtPid(pid)
@@ -401,6 +447,7 @@ NodeStore = ideal.Proto.extend().newSlots({
         obj.setPid(pid) // calls addActiveObject()
 		//this.debugLog(" nodeDict = ", nodeDict)
         obj.setNodeDict(nodeDict)
+		this.addJustLoadedObject(obj)
 
         //this.debugLog("objectForPid(" + pid + ")")
 

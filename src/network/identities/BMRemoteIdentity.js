@@ -42,6 +42,7 @@ BMRemoteIdentity = BMNavNode.extend().newSlots({
 	didLoadFromStore: function() {
 		BMNavNode.didLoadFromStore.apply(this)
 		this.messages().setTitle("messages")
+		console.log(this.typeId() + " didLoadFromStore")
 	},
     
     title: function () {

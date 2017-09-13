@@ -353,7 +353,7 @@ NodeStore = ideal.Proto.extend().newSlots({
 	},
 	
 	finalizeJustLoadedObjects: function() {
-		console.log(this.type() + " finalizeJustLoadedObjects")
+		//console.log(this.type() + " finalizeJustLoadedObjects")
 		var loaded = this.justLoadedObjectsDict()
         loaded.slotValues().forEach((obj) => {
             obj.didFinalizeLoadFromStore()

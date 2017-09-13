@@ -65,11 +65,13 @@ BMChatThreads = BMStorableNode.extend().newSlots({
 	},
 
 	chatTargetIds: function() {
-	    //return this.chatApp().localIdentity().allOtherIdentities()    
+	    return this.chatApp().localIdentity().allOtherIdentities()    
+		/*
 	    var chatTargetIds  = this.localIdentity().remoteIdentities().validSubnodes()
 		console.log("lid ", this.localIdentity().name())
 		console.log("	remoteIdentities: ", this.localIdentity().remoteIdentities().subnodes().map((rid) => { return rid.name() }) )
 		console.log("	chatTargetIds: ", chatTargetIds.map((rid) => { return rid.name() }) )
+		*/
 		return chatTargetIds	
 	},
 	

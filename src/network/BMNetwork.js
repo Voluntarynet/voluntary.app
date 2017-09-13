@@ -100,12 +100,6 @@ BMNetwork = BMStorableNode.extend().newSlots({
 
 	// --- identities -----------------------------------------
     
-    privateKeyForChannelName: function(channelName) {
-        var hexName = channelName.toString(16)
-        var privateKey = new bitcore.PrivateKey(hexName);
-        return privateKey
-    },
-    
     idWithPublicKeyString: function(publicKeyString) { 
         
         if (publicKeyString == null) {

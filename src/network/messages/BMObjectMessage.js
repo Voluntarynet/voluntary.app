@@ -149,6 +149,10 @@ BMObjectMessage = BMMessage.extend().newSlots({
         
         return this._msgHash
     },
+    
+    hash: function() {
+        return this.msgHash()
+    },
 
 	// sign and verify
 	
@@ -246,10 +250,18 @@ BMObjectMessage = BMMessage.extend().newSlots({
 		}
 		return 0
     },
-*/
 
 	setPow: function() {
 		
 	},
+*/
 
+    isDeleted: function() {
+        return this.network().messages().hasDeletedHash(this.hash())
+    },
+    
+    delete: function() {
+        this.network().messages().deleteObjMsg(this)
+        return this
+    },
 })

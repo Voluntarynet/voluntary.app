@@ -45,6 +45,7 @@ BMNode = ideal.Proto.extend().newSlots({
     nodeHasFooter: false,
     nodeInputFieldMethod: null,
     
+    subnodeIndex: null,
 	// debug
     debug: false,
 }).setSlots({
@@ -158,6 +159,11 @@ BMNode = ideal.Proto.extend().newSlots({
             throw new Error("subnodes is null")
         }
         this.subnodes().push(aSubnode)
+        
+        if (this._subnodeIndex) {
+            this.addSubnodeToIndex(aSubnode)
+        }
+        
         aSubnode.setParentNode(this)
         return aSubnode        
     },
@@ -236,6 +242,11 @@ BMNode = ideal.Proto.extend().newSlots({
     removeSubnode: function(aSubnode) {
 		console.log(this.typeId() + ".removeSubnode()")
         this.justRemoveSubnode(aSubnode)
+
+        if (this._subnodeIndex) {
+            delete this._subnodeIndex[aSubnode.hash()] 
+        }
+        
         this.didChangeSubnodeList()
         return aSubnode
     },
@@ -245,6 +256,11 @@ BMNode = ideal.Proto.extend().newSlots({
     		this.subnodes().slice().forEach((subnode) => {
     			this.justRemoveSubnode(subnode)
     		})
+    		
+            if (this._subnodeIndex) {
+                this._subnodeIndex = {}
+            }
+        
             this.didChangeSubnodeList()
         }
 		return this
@@ -474,6 +490,7 @@ BMNode = ideal.Proto.extend().newSlots({
 		subnodes.forEach((subnode) => { subnode.setParentNode(this) })
         this._subnodes = subnodes
 		this.scheduleSyncToStore()
+		this.reindexSubnodesIfNeeded()
         //this.verifySubnodesHaveParentNodes()
         return this
     },
@@ -491,5 +508,89 @@ BMNode = ideal.Proto.extend().newSlots({
 		// to be used by subclasses
 		// useful for persistence
 	},
+	
+	// index
+	
+	createSubnodeIndex: function() {
+	    if (!this._subnodeIndex) { 
+	        this._subnodeIndex = {}
+	        this.reindexSubnodes()
+	    }
+	    return this
+	},
+	
+	subnodeWithHash: function(h) {
+        this.assertHasSubnodeIndex()
+        return this._subnodeIndex[h]
+	},
+	
+	removeSubnodeWithHash: function(h) {
+	    var subnode = this.subnodeWithHash(h)
+	    if (subnode) {
+	        this.removeSubnode(subnode)
+	    }
+	    return this
+	},
+	
+	hasSubnodeWithHash: function(h) {
+        this.assertHasSubnodeIndex()
+	    return h in this._subnodeIndex
+	},
+	
+	addSubnodeToIndex: function(subnode) { // private
+        this.assertHasSubnodeIndex()
+
+	    if (!subnode.hash) {
+            throw new Error(this.type() + " missing hash method on subnode of type " + subnode.typeId())
+	    }
+	    
+        var h = subnode.hash()
+        
+        if (h == null) {
+            throw new Error(this.type() + " null subnode hash")
+        }
+        
+        var index = this._subnodeIndex
+        
+        if (h in index) {
+            throw new Error(this.type() + " duplicate subnode hash " + h + " in indexed node")
+        }
+        
+        index[h] = subnode
+        return this	    
+	},
+	
+	reindexSubnodesIfNeeded: function() {
+        if (this._subnodeIndex) {
+            this.reindexSubnodes()
+        }
+        return this
+	},
+	
+	reindexSubnodes: function() { // private
+	    //var shouldDeleteDuplicates = true // temporary
+	    
+        this.assertHasSubnodeIndex()
+        this._subnodeIndex = {}
+        
+	    var index = this._subnodeIndex
+	    this.subnodes().forEach((subnode) => {
+	        /*
+	        if (shouldDeleteDuplicates && this.hasSubnodeWithHash(subnode.hash())) {
+	            console.warn("duplicate subnode hash found")
+	        } else {
+	            this.addSubnodeToIndex(subnode)
+            }
+	        */
+            this.addSubnodeToIndex(subnode)
+	    })
+	    return this
+	},
+
+	assertHasSubnodeIndex: function(h) { // private
+        if (!this._subnodeIndex) {
+            throw new Error(this.type() + " missing subnode index")
+        }
+    },    	
     
 })

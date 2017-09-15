@@ -12,10 +12,13 @@ SYNC
     - model to view (any viewable set slot)
     - view to model (any modelled set slot during user input? timers?)
 
-
 - unify equals() with isEqual()
 
 --------
+
+Does an app own a message type? Does it control deleting msg?
+
+
 need a way to delete ObjMessages and to mark them as placed
 options:
   - 1. wrap the ObjMessage in ObjMsgRecord

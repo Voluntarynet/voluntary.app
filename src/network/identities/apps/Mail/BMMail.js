@@ -13,9 +13,9 @@ BMMail = BMApplet.extend().newSlots({
         BMApplet.init.apply(this)
         this.setTitle("Mail")
 
-        this.initStoredSlotWithProto("drafts", BMDrafts)
-        this.initStoredSlotWithProto("inbox", BMInbox)
-        this.initStoredSlotWithProto("sent", BMSent)        
+        this.initStoredSubnodeSlotWithProto("drafts", BMDrafts)
+        this.initStoredSubnodeSlotWithProto("inbox", BMInbox)
+        this.initStoredSubnodeSlotWithProto("sent", BMSent)        
     },
 	
     localIdentity: function() {

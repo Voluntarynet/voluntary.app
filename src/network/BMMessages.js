@@ -10,13 +10,13 @@ BMGetDataItem = BMNode.extend().newSlots({
 
 BMMessages = BMStorableNode.extend().newSlots({
     type: "BMMessages",
-    index: null,
     changeNote: null,
-    queue: null,
     network: null,
     // TODO: deal with timeouts
     globalMinDifficulty: 16,
 	debug: false,
+	placedSet: null,
+	deletedSet: null,
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
@@ -24,11 +24,18 @@ BMMessages = BMStorableNode.extend().newSlots({
 		this.setShouldStoreSubnodes(true)
 		
         this.setTitle("Messages")
-        this.setIndex({})
         this.setChangeNote(NotificationCenter.shared().newNotification().setSender(this).setName("newMessagesMessage"))
-        this.setQueue({})
+
+        this.setDeletedSet(BMDatedSet.clone())
+        this.addStoredSlot("deletedSet")
+
+        this.setPlacedSet(BMDatedSet.clone())
+        this.addStoredSlot("placedSet")
+        
         this.setNoteIsSubnodeCount(true)
 		this.setNodeMinWidth(180)
+		
+		this.createSubnodeIndex()
     },
     
     subnodeProto: function() {
@@ -36,8 +43,10 @@ BMMessages = BMStorableNode.extend().newSlots({
     },
 
 	didLoadFromStore: function() {
+	    BMStorableNode.didLoadFromStore.apply(this)
+	    
 		//console.log(this.type() + " didLoadFromStore subnodes length = ", this.subnodes().length)
-		this.updateIndex()
+		this.reindexSubnodes()
 		
 		// these need to wait until after the initial store load is complete
 		setTimeout(() => {
@@ -47,10 +56,24 @@ BMMessages = BMStorableNode.extend().newSlots({
 		
 		return this
 	},
+	
     
-    messageWithHash: function(hash) {
-        return this._index[hash]
+    // --- deletedSet -----------------------------------------
+
+    deleteObjMsg: function(objMsg) {
+        var h = objMsg.hash()
+        this.deletedSet().addKey(h)
+        this.placedSet().removeKey(h)
+        //this.getQueueSet().removeKey(h)
+        this.removeSubnodeWithHash(h) 
+        return this
     },
+    
+    hasDeletedHash: function(h) {
+        return this.deletedSet().hasKey(h)
+    },
+    
+    // --------------------------------------------
     
     messages: function () {
         return this.subnodes()
@@ -59,10 +82,6 @@ BMMessages = BMStorableNode.extend().newSlots({
     notifyChange: function() {
         this.changeNote().post()
         return this
-    },
-    
-    hasMessage: function(msg) {
-        return msg.msgHash() in this._index
     },
     
     validateMsg: function(msg) {
@@ -75,7 +94,7 @@ BMMessages = BMStorableNode.extend().newSlots({
         }
 */
       
-        if (this.hasMessage(msg)) {
+        if (this.hasSubnodeWithHash(msg.hash())) {
             console.log("attempt to add duplicate message ", msg.msgHash())
             return false
         }
@@ -103,7 +122,7 @@ BMMessages = BMStorableNode.extend().newSlots({
 
 
 	placeAllSubnodes: function() {
-		this.subnodes().forEach( (msg) => {
+		this.subnodes().forEach((msg) => {
 			//console.log(this.type() + " placing ", msg)
 			msg.place()
 		})
@@ -112,13 +131,8 @@ BMMessages = BMStorableNode.extend().newSlots({
 	addSubnode: function(msg) {
 		//console.log(this.type() + " addSubnode " + msg.pid())
 		BMStorableNode.addSubnode.apply(this, [msg])
-        this.addMessageToIndex(msg)
         this.notifyChange()
 		return this
-	},
-	
-	addMessageToIndex: function(msg) {
-        this._index[msg.msgHash()] = msg
 	},
 
 	broadcastMessage: function(msg) {
@@ -131,20 +145,7 @@ BMMessages = BMStorableNode.extend().newSlots({
 	},
     
     removeMessage: function(msg) {
-		this.removeSubnode(msg) // garbage collector will remove persisted version
-        delete this._index[msg.msgHash()]
-        return this
-    },
-    
-    updateIndex: function () {
-        var index = {}
-        
-        this.messages().forEach(function (msg) {
-            index[msg.msgHash()] = msg
-        })
-        
-        this.setIndex(index)  
-        this.notifyChange()
+		this.removeSubnode(msg)
         return this
     },
 
@@ -158,7 +159,7 @@ BMMessages = BMStorableNode.extend().newSlots({
         remoteInv.forEach( (h) => {
             if (this.needsHash(h)) {
                 getMsg.addHash(h)
-                this._queue[h] = true
+                //this._queue[h] = true
             }
         })
         
@@ -177,21 +178,14 @@ BMMessages = BMStorableNode.extend().newSlots({
         var h = msg.msgHash()
         
         // remove from the queue
-        delete this._queue[h]
+        //delete this._queue[h]
         
         this.addMessage(msg)
     },
     
-    objectWithHash: function(aHash) {
-        // move to index after this works
-        return this.messages().detect(function (msg) { 
-            return msg.msgHash() == aHash
-        })
-    },
-    
     getData: function(msg) {
         msg.data().forEach((aHash) => {
-            var objMsg = this.objectWithHash(aHash)
+            var objMsg = this.message(aHash)
             if (objMsg) {
                 msg.remotePeer().sendMsg(objMsg)
             }

@@ -17,8 +17,8 @@ BMRemoteIdentity = BMNavNode.extend().newSlots({
         this.setNodeSubtitleIsEditable(false)
 
 		this.addStoredSlots(["name", "publicKeyString"])
-		this.initStoredSlotWithProto("profile", BMProfile)
-		this.initStoredSlotWithProto("messages", BMInbox)
+		this.initStoredSubnodeSlotWithProto("profile", BMProfile)
+		this.initStoredSubnodeSlotWithProto("messages", BMInbox)
 		this.messages().setTitle("messages")
 
         //this.setNodeBackgroundColor("white")

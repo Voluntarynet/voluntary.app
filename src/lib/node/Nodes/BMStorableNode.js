@@ -68,7 +68,7 @@ BMStorableNode = BMNode.extend().newSlots({
 
 	// --- add / remove stored slots ---
     
-    initStoredSlotWithProto: function(name, proto) {
+    initStoredSubnodeSlotWithProto: function(name, proto) {
         var obj = proto.clone()
         this.newSlot(name, obj)
         this.justAddSubnode(obj)

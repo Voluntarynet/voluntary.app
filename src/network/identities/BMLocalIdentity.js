@@ -15,9 +15,9 @@ BMLocalIdentity = BMKeyPair.extend().newSlots({
 		//this.setShouldStoreSubnodes(false)
         this.setNodeTitleIsEditable(true)
  
-        this.initStoredSlotWithProto("apps", BMApps)
-        this.initStoredSlotWithProto("profile", BMProfile)
-        this.initStoredSlotWithProto("remoteIdentities", BMRemoteIdentities)
+        this.initStoredSubnodeSlotWithProto("apps", BMApps)
+        this.initStoredSubnodeSlotWithProto("profile", BMProfile)
+        this.initStoredSubnodeSlotWithProto("remoteIdentities", BMRemoteIdentities)
         
 		this.addStoredSlots(["name", "privateKeyString"])
 		

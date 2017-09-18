@@ -21,8 +21,8 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 	},
 	
 	receiverId: function() {
-		if (!App.shared().network()) { return null }
-        var receiverId = App.shared().network().idWithPublicKeyString(this.receiverPublicKeyString())
+		if (!this.localIdentity()) { return null }
+        var receiverId = this.localIdentity().remoteIdentities().idWithPublicKeyString(this.receiverPublicKeyString())
 		return receiverId
 	},
 
@@ -61,7 +61,7 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
     		assert(objMsg.receiverPublicKeyString())
 
     		this.setSenderPublicKeyString(objMsg.senderPublicKeyString())
-    		this.setReceiverPublicKeyString(objMsg.receiverPublicKeyString())
+    		//this.setReceiverPublicKeyString(objMsg.receiverPublicKeyString())
     		this.setDataDict(objMsg.data())
     	}
 		return this
@@ -153,15 +153,9 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
         var objMsg = BMObjectMessage.clone()
 
         objMsg.setSenderPublicKeyString(this.senderPublicKeyString())
-        objMsg.setReceiverPublicKeyString(this.receiverPublicKeyString())
-
-        objMsg.setData(this.dataDict())
+        console.log(this.typeId() + ".composeObjMsg() this.receiverId() = ", this.receiverId().typeId())
+        objMsg.setEncryptedData(this.receiverId().encryptJson(this.dataDict()))
 		objMsg.makeTimeStampNow()
-		
-    	/*
-		objMsg.powObj().setTargetDifficulty(17)
-        objMsg.asyncFindPowAndSend()
-		*/
 		
 		objMsg.signWithSenderId(this.senderId())
         this.setObjMsg(objMsg)
@@ -171,6 +165,7 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
     send: function () {
         this.composeObjMsg()
 		this.objMsg().send()
+		return this
     },
     
 	hash: function() {
@@ -179,4 +174,18 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 		}
 		return this.typeId()
 	},
+	    
+    fromDataDict: function(dataDict) {
+        var className = dataDict.type
+        if (!className) {
+            return null
+        }
+        
+        var proto = window[className]
+        if (!proto) {
+            return null
+        }
+        
+        return proto.clone().setMsgDict(dataDict)
+    },
 })

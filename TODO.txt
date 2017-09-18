@@ -1,4 +1,13 @@
-- unify Synchronizers
+
+- move KeyPair off of Identities in preparation for using BMSessionKeys
+
+- move encryptedData to ObjMessage level
+- encrypt/decrypt via remoteIdentity - allows it to manage session keys
+
+- have ids/apps hangle ObjMessage, mark as placed after allowing all to handle
+- *Message objects store in unencrypted data
+
+
 
 SYNC
     store <- node -> view

@@ -39,9 +39,21 @@ BMLocalIdentities = BMStorableNode.extend().newSlots({
 		return this.subnodes().map((id) => { return id.name(); })
 	},
 	
+	identities: function() {
+	    return this.subnodes()
+	},
+	
     didChangeSubnodeList: function() {
 		BMStorableNode.didChangeSubnodeList.apply(this)
         this._didChangeIdentitiesNote.post()
         return this
+    },
+    
+    handleObjMsg: function(objMsg) {
+        var result = false
+        this.identities().forEach((id) => {
+            result |= id.handleObjMsg(objMsg)
+        })
+        return result
     },
 })

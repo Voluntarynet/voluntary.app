@@ -46,18 +46,17 @@ BMMessages = BMStorableNode.extend().newSlots({
 	    BMStorableNode.didLoadFromStore.apply(this)
 	    
 		//console.log(this.type() + " didLoadFromStore subnodes length = ", this.subnodes().length)
-		this.reindexSubnodes()
+		//this.reindexSubnodes()
 		
 		// these need to wait until after the initial store load is complete
 		setTimeout(() => {
 			this.removeMessagesNotMatchingIdentities()
-			this.placeAllSubnodes()
+			this.handleAllMessages()
 		}, 0)
 		
 		return this
 	},
 	
-    
     // --- deletedSet -----------------------------------------
 
     deleteObjMsg: function(objMsg) {
@@ -84,47 +83,43 @@ BMMessages = BMStorableNode.extend().newSlots({
         return this
     },
     
-    validateMsg: function(msg) {
-/*
-        if (msg.actualPowDifficulty() < this.globalMinDifficulty()) {
-            console.log("rejecting message '" + msg.msgHash() +"' with pow of " + msg.actualPowDifficulty() + " < globalMinDifficulty of " + this.globalMinDifficulty())
-            // check should be at remotePeer level
-            this.removeMessage(msg)
-            return false
-        }
-*/
-      
-        if (this.hasSubnodeWithHash(msg.hash())) {
-            console.log("attempt to add duplicate message ", msg.msgHash())
+    validateMsg: function(objMsg) {
+        if (this.hasSubnodeWithHash(objMsg.hash())) {
+            console.warn("attempt to add duplicate message ", objMsg.msgHash())
             return false
         }
 
+   		if(!objMsg.hasValidSignature()) {
+            console.warn("invalid signature on message ", objMsg.msgHash())
+   		    return false
+   		}
    		return true
     },
         
-    addMessage: function(msg) { // validate and broadcast
-		//console.log(this.type() + " addMessage ", msg)
+    addMessage: function(objMsg) { // validate and broadcast
 
-        if (!this.validateMsg(msg)) {
+        if (!this.validateMsg(objMsg)) {
 			console.log(this.type() + " INVALID MESSAGE")
             return false
         }
         
-        this.addSubnode(msg)
-
+        this.addSubnode(objMsg)
+        
 		setTimeout(() => {
-			msg.place()
-	        this.broadcastMessage(msg)
+            this.handleMessage(objMsg)
+	        this.broadcastMessage(objMsg)
 		}, 10)
         
         return true
     },
+    
+    handleMessage: function(objMsg) {
+        this.network().localIdentities().handleObjMsg(objMsg)
+    },
 
-
-	placeAllSubnodes: function() {
-		this.subnodes().forEach((msg) => {
-			//console.log(this.type() + " placing ", msg)
-			msg.place()
+	handleAllMessages: function() {
+		this.messages().forEach((objMsg) => {
+			this.handleMessage(objMsg)
 		})
 	},
 

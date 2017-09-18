@@ -20,7 +20,7 @@ BMApps = BMStorableNode.extend().newSlots({
 	},
 	
 	appProtos: function() {
-        return [BMMail, BMChat] //BMTwitter, BMGroupChat] //, BMChat, BMClassifieds, BMBitcoinWallet]
+        return [BMChat] //BMMail, BMTwitter, BMGroupChat] //, BMChat, BMClassifieds, BMBitcoinWallet]
 	},
 
     addApps: function() {

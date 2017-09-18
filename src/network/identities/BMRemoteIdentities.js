@@ -60,4 +60,12 @@ BMRemoteIdentities = BMStorableNode.extend().newSlots({
         this._didChangeIdentitiesNote.post()
         return this
     },
+    
+    handleObjMsg: function(objMsg) {
+        var result = false
+        this.subnodes().forEach((id) => {
+            result |= id.handleObjMsg(objMsg)
+        })
+        return result
+    },
 })

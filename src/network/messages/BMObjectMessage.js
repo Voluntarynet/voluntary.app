@@ -43,10 +43,10 @@ var BitcoreMessage = require('bitcore-message');
 BMObjectMessage = BMMessage.extend().newSlots({
     type: "BMObjectMessage",
     msgType: "object",
-
     senderPublicKeyString: null,
-    receiverPublicKeyString: null,
+    //receiverPublicKeyString: null,
 	timeStamp: null,
+	encryptedData: null,
     msgHash: null, // hash of data - computed as needed    
 	signature: null, // sender signature on msgHash
 }).setSlots({
@@ -54,7 +54,7 @@ BMObjectMessage = BMMessage.extend().newSlots({
         BMMessage.init.apply(this)
 		this.setShouldStoreSubnodes(false)
         this.setMsgType("object")
-        this.addStoredSlots(["msgType", "data", "senderPublicKeyString", "receiverPublicKeyString", "timeStamp", "signature"])
+        this.addStoredSlots(["msgType", "encryptedData", "senderPublicKeyString", "receiverPublicKeyString", "timeStamp", "signature"])
         this.addAction("delete")
     },
     
@@ -71,25 +71,6 @@ BMObjectMessage = BMMessage.extend().newSlots({
         return this
     },
 
-/*    
-    setContent: function(v) {
-        //console.log(this.type() + " setContent: ", v)
-        this._content = v
-        return this
-    },
-*/
-    
-    setNodeDict: function(dict) {
-        BMStorableNode.setNodeDict.apply(this, [dict])
-        return this
-    },
-    
-    nodeDict: function() {
-        var dict = BMStorableNode.nodeDict.apply(this)
-        //console.log("BMObjectMessage nodeDict " + JSON.stringify(dict, null, 2) )
-        return dict
-    },
-   
     network: function() {
         return window.app.network()
     },
@@ -106,9 +87,9 @@ BMObjectMessage = BMMessage.extend().newSlots({
         //this.setPow(dict.pow)
         //this.setSignature(dict.signature)
         this.setMsgType(dict.msgType)
-        this.setData(dict.data)            
+        this.setData(dict.encryptedData)            
         this.setSenderPublicKeyString(dict.sender)            
-        this.setReceiverPublicKeyString(dict.receiver)            
+        //this.setReceiverPublicKeyString(dict.receiver)            
         this.setTimeStamp(dict.timeStamp)            
         this.setSignature(dict.signature)            
         return this
@@ -117,9 +98,9 @@ BMObjectMessage = BMMessage.extend().newSlots({
     msgDict: function() {
         return {
             msgType: this.msgType(),
-            data: this.data(),
+            encryptedData: this.encryptedData(),
             sender: this.senderPublicKeyString(),
-            receiver: this.receiverPublicKeyString(),
+            //receiver: this.receiverPublicKeyString(),
             timeStamp: this.timeStamp(),
             signature: this.signature(),
             //pow: this.pow(),
@@ -138,7 +119,7 @@ BMObjectMessage = BMMessage.extend().newSlots({
 	computeMsgHash: function() {
 		var s = this.theDictToHash().toJsonStableString()
 		var hash = s.sha256String()
-		console.log(this.typeId() + "\n    dict: ", s, "\n    hash: " + hash)
+		//console.log(this.typeId() + "\n    dict: ", s, "\n    computed hash: " + hash)
 		return hash
 	},
 
@@ -166,11 +147,11 @@ BMObjectMessage = BMMessage.extend().newSlots({
 		return this
 	},
 
-	verifySignature: function() {
+	hasValidSignature: function() {
 		var spk = new bitcore.PublicKey(this.senderPublicKeyString());
-        var verified = BitcoreMessage(this.msgHash()).verify(spk.toAddress(), this.signature());
-		//console.log("verifySignature: " + verified)
-		return verified
+        var isValid = BitcoreMessage(this.msgHash()).verify(spk.toAddress(), this.signature());
+		//console.log("hasValidSignature: " + verified)
+		return isValid
 	},
 	    
     send: function() {
@@ -180,43 +161,21 @@ BMObjectMessage = BMMessage.extend().newSlots({
         return this
     },
 
-	isValidDataMessage: function() {
-		return this.verifySignature()
-		/*
-        var dict = this.data()
-		var protoName = dict.type
-	    var valid = this.validMessageProtos().contains(protoName)
-	    
-		if (!valid) {
-			console.log("'" + protoName + "'  is not a valid proto found in ", this.validMessageProtos())
-		}	    
-		
-	    return valid
-		*/
-	},
-
-    place: function() {   
-        var dict = this.data()
-
-		var protoName = dict.type
-				
-		if (!this.isValidDataMessage()) {
-			return false
-		}
-		
-		var proto = window[protoName]
-		//console.log("BMObjectMessage placing dict = ", dict)
-		//var obj = proto.clone().setObjMsg(this).setPostDict(dict).place()
-		var obj = proto.clone().setObjMsg(this).place()
-        
-        return false
+    isDeleted: function() {
+        return this.network().messages().hasDeletedHash(this.hash())
     },
+    
+    delete: function() {
+        this.network().messages().deleteObjMsg(this)
+        return this
+    },
+})
 
-	// ---- pow ------------------------------------------------
-	
-    /// pow / unpow
     
 /*
+
+	// ---- pow / unpow ------------------------------------------------
+
     pow: function() {        
         var hash = this.msgHash()
         var pow = this.powObject()
@@ -225,9 +184,7 @@ BMObjectMessage = BMMessage.extend().newSlots({
         this.setPow(pow.powHex())
         return true
     },  
-*/
-  
-/*  
+
     asyncFindPowAndSend: function() {        
         var hash = this.msgHash()
         var pow = this.powObj()
@@ -255,13 +212,3 @@ BMObjectMessage = BMMessage.extend().newSlots({
 		
 	},
 */
-
-    isDeleted: function() {
-        return this.network().messages().hasDeletedHash(this.hash())
-    },
-    
-    delete: function() {
-        this.network().messages().deleteObjMsg(this)
-        return this
-    },
-})

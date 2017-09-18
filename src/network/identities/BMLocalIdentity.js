@@ -46,11 +46,19 @@ BMLocalIdentity = BMKeyPair.extend().newSlots({
     setTitle: function (s) {
         this.setName(s)
         return this
-    },
+    }, 
  
+    handleObjMsg: function(objMsg) {
+        console.log(this.typeId() + " handleObjMsg ", objMsg)
+        var senderId = this.remoteIdentities().idWithPublicKeyString(objMsg.senderPublicKeyString()) 
+        if (senderId) {
+            return senderId.handleObjMsg(objMsg)
+        }
+        return false
+    },
+
 	handleMessage: function(msg) {	
-		this.apps().handleMessage(msg)
-		return this
+		return this.apps().handleMessage(msg)
 	},
 	
 	allOtherIdentities: function() {
@@ -59,4 +67,4 @@ BMLocalIdentity = BMKeyPair.extend().newSlots({
 		return validRemoteIds.concat(otherLocalIds)
 	},
 	
-})
+})	

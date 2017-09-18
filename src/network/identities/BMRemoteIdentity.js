@@ -5,6 +5,7 @@ BMRemoteIdentity = BMNavNode.extend().newSlots({
 	name: "untitled",
 	publicKeyString: "",
 	hasPrivateKey: false,
+	sessionKeys: null,
 }).setSlots({
 	
     _nodeVisibleClassName: "Contact",
@@ -17,8 +18,11 @@ BMRemoteIdentity = BMNavNode.extend().newSlots({
         this.setNodeSubtitleIsEditable(false)
 
 		this.addStoredSlots(["name", "publicKeyString"])
+		
 		this.initStoredSubnodeSlotWithProto("profile", BMProfile)
 		this.initStoredSubnodeSlotWithProto("messages", BMInbox)
+		//this.initStoredSubnodeSlotWithProto("sessionKeys", BMSessionKeys)
+		
 		this.messages().setTitle("messages")
 
         //this.setNodeBackgroundColor("white")
@@ -83,7 +87,7 @@ BMRemoteIdentity = BMNavNode.extend().newSlots({
         return verified
     },
 
-	handleMessage: function(aPrivateMsg) {
+	handleObjMsg: function(objMsg) {
 		/*
 		if (aPrivateMsg.senderId() == this || aPrivateMsg.receiverId() == this) {
 			this.messages().addSubnodeIfAbsent(aPrivateMsg)
@@ -95,6 +99,20 @@ BMRemoteIdentity = BMNavNode.extend().newSlots({
 	
 	equals: function(anIdentity) {
 		return anIdentity != null && anIdentity.publicKeyString && (this.publicKeyString() == anIdentity.publicKeyString())
+	},
+	
+	encryptJson: function(dataDict) {
+	    // TODO: use sessionKeys
+	    return this.localIdentity().encryptMessageForReceiverId(JSON.stringify(dataDict), this).toString()	    
+	},
+	
+	decryptJson: function(encryptedData) {
+	    // TODO: use sessionKeys
+		var decryptedData = this.localIdentity().decryptMessageFromSenderPublicKeyString(encryptedData, this.publicKeyString())
+		if (decryptedData) {
+		    return JSON.parse(decryptedData)	    
+	    }
+	    return null
 	},
 
 })

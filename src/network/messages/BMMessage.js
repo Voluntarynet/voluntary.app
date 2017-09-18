@@ -67,4 +67,6 @@ BMMessage = BMFieldSetNode.extend().newSlots({
         throw new Error("no message type '" + msgType + "'")
         return null
     },
+    
+
 })

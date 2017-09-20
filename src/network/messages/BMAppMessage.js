@@ -61,7 +61,7 @@ window.BMAppMessage = BMFieldSetNode.extend().newSlots({
 	},
 
     sendToRemoteId: function (rid) {
-        console.log("rid = ", rid.typeId())
+        //console.log("rid = ", rid.typeId())
         var lid = rid.localIdentity()
         this.setSenderId(lid)
 		this.setReceiverId(rid)

@@ -47,6 +47,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     nodeInputFieldMethod: null,
     
     subnodeIndex: null,
+    subnodeSortFunc: null,
 	// debug
     debug: false,
 }).setSlots({
@@ -272,6 +273,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
 	},
 
     didChangeSubnodeList: function() {
+        this.sortIfNeeded()
         this.scheduleSyncToStore()
         this.didUpdateNode()
         return this
@@ -514,7 +516,28 @@ window.BMNode = ideal.Proto.extend().newSlots({
 		// useful for persistence
 	},
 	
-	// index
+	// subnode sorting
+	
+	setSubnodeSortFunc: function(f) {
+	    if (this._subnodeSortFunc != f) {
+	        this._subnodeSortFunc = f
+	        this.sortIfNeeded()
+	    }
+	    return this
+	},
+	
+	doesSortSubnodes: function() {
+	    return this._subnodeSortFunc != null
+	},
+	
+	sortIfNeeded: function() {
+        if (this.doesSortSubnodes()) {
+            this._subnodes = this._subnodes.sort(this._subnodeSortFunc)
+        }
+        return this
+    },
+    
+	// subnodeIndex
 	
 	createSubnodeIndex: function() {
 	    if (!this._subnodeIndex) { 

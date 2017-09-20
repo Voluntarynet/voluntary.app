@@ -78,7 +78,7 @@ window.BMChatThread = BMStorableNode.extend().newSlots({
 	},
 	
 	addMessage: function(msg) {	
-		console.log(this.nodePathString() + " addMessage " + msg.typeId())
+		//console.log(this.nodePathString() + " addMessage " + msg.typeId())
 	    if(this.addSubnodeIfAbsent(msg)) {
 	    	this.postShouldFocusSubnode(msg)
 		}

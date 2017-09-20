@@ -125,7 +125,7 @@ BMRemotePeer = BMNode.extend().newSlots({
         var msg = BMMessage.messageForString(data)
         msg.setSubtitle("via peer " + this.shortId())
         msg.setRemotePeer(this)
-        this.addMessage(msg)
+        //this.addMessage(msg.duplicate())
         //this.serverConnection().receivedMsgFrom(data, this)
         //this.log("msg.msgType() = '" + msg.msgType() + "'")
         this[msg.msgType()].apply(this, [msg])
@@ -133,7 +133,7 @@ BMRemotePeer = BMNode.extend().newSlots({
 
     sendMsg: function(msg) {
         msg.setSubtitle("sent to peer " + this.shortId())
-        this.addMessage(msg)
+        this.addMessage(msg.duplicate())
         this.sendData(msg.msgDictString())
     },
     

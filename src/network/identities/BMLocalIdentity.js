@@ -49,7 +49,7 @@ BMLocalIdentity = BMKeyPair.extend().newSlots({
     }, 
  
     handleObjMsg: function(objMsg) {
-        console.log(this.typeId() + " handleObjMsg ", objMsg)
+        //console.log(this.typeId() + " " + this.name() + " handleObjMsg ", objMsg)
         var senderId = this.remoteIdentities().idWithPublicKeyString(objMsg.senderPublicKeyString()) 
         if (senderId) {
             return senderId.handleObjMsg(objMsg)

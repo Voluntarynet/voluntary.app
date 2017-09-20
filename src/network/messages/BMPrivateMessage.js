@@ -53,20 +53,6 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 		return window[this.type()].clone().setObjMsg(this.objMsg())
 	},
 
-	setObjMsg: function(objMsg) {
-		this._objMsg = objMsg
-		
-		if (objMsg) {
-    		assert(objMsg.senderPublicKeyString())
-    		assert(objMsg.receiverPublicKeyString())
-
-    		this.setSenderPublicKeyString(objMsg.senderPublicKeyString())
-    		//this.setReceiverPublicKeyString(objMsg.receiverPublicKeyString())
-    		this.setDataDict(objMsg.data())
-    	}
-		return this
-	},
-
 	contentDict: function() {
 		throw (this.type() + " subclasses should override contentDict")
 		var contentDict = {}
@@ -79,65 +65,18 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 	},
 	
     dataDict: function() {
-		var contentDict = this.contentDict()
-		//console.log(this.typeId() + ".dataDict() contentDict: ", contentDict)
-		var encryptedData = this.senderId().encryptMessageForReceiverId(JSON.stringify(contentDict), this.receiverId()).toString()
-				
         var dataDict = {}
 		dataDict.type = this.type()
-		dataDict.encryptedData = encryptedData
-
+		dataDict.data = this.contentDict()
         return dataDict
     },
 
-
-	setDataDict: function(dict) {
-		var senderId   = this.senderId()
-		var receiverId = this.receiverId()
-		
-		if (!senderId) {
-			console.log("no contact for senderPublicKey '" + dict.senderPublicKey + "'")
-			return this
-		}
-				
-		if (!receiverId) {
-			console.log("no identity for receiverPublicKey '" + dict.receiverPublicKey + "'")
-			return this
-		}
-
-		if (receiverId.hasPrivateKey()) {
-			var spk = senderId.publicKeyString()
-			var decryptedData = receiverId.decryptMessageFromSenderPublicKeyString(dict.encryptedData, spk)
-			var contentDict = JSON.parse(decryptedData)
-			this.setContentDict(contentDict)
-		}
-		
-		this.setCanReceive(true)
-		
+	setDataDict: function(dataDict) {
+	    this.setContentDict(dataDict.data)		
 		return this
 	},
 
 	setDecryptedData: function(decryptedData) {
-		return this
-	},
-
-	place: function() {
-		
-		if(!this.canReceive()) {
-			console.log("can't receive message")
-			return
-		}
-		
-		if (this.receiverId()) {
-			this.receiverId().handleMessage(this.duplicate())
-		}
-		
-		if (this.senderId()) {
-         	this.senderId().handleMessage(this.duplicate())	
-		}
-
-		console.log("placing " + this.type() + " from '" + this.senderId().name() + "' to '" + this.receiverId().name() + "'")
-		
 		return this
 	},
 	
@@ -148,22 +87,19 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
 	canEdit: function() {
 		return !this.isSent()
 	},
-	
-	composeObjMsg: function() {
+
+    sendToRemoteId: function (rid) {
+        console.log("rid = ", rid.typeId())
+        var lid = rid.localIdentity()
+        this.setSenderPublicKeyString(lid.publicKeyString())
+		this.setReceiverPublicKeyString(rid.publicKeyString())
+        
         var objMsg = BMObjectMessage.clone()
-
-        objMsg.setSenderPublicKeyString(this.senderPublicKeyString())
-        console.log(this.typeId() + ".composeObjMsg() this.receiverId() = ", this.receiverId().typeId())
-        objMsg.setEncryptedData(this.receiverId().encryptJson(this.dataDict()))
+        objMsg.setSenderPublicKeyString(lid.publicKeyString())
+        objMsg.setEncryptedData(rid.encryptJson(this.dataDict()))
 		objMsg.makeTimeStampNow()
-		
-		objMsg.signWithSenderId(this.senderId())
+		objMsg.signWithSenderId(lid)
         this.setObjMsg(objMsg)
-		return this	    
-	},
-
-    send: function () {
-        this.composeObjMsg()
 		this.objMsg().send()
 		return this
     },
@@ -186,6 +122,6 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
             return null
         }
         
-        return proto.clone().setMsgDict(dataDict)
+        return proto.clone().setDataDict(dataDict)
     },
 })

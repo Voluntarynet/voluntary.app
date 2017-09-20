@@ -1,32 +1,25 @@
 /*
 
 	BMObjMessage
-	{
-		pow (on hash of what's below) [optional]
-		signature (on hash what's below) [optional]
-				msgType
-				senderPublicKey	
-				receiverPublicKey
-				data 
-	}
 
     // msgDict structure:
     
         ObjectMessage = {
-			pow: "...",
-			signature: "...",
-            msgType: "object"
-            senderPublicKey: "...",
-            receiverPublicKey: "...",
-            uuid: "...",
+            type: "object"
+            sender: "...",
+            encryptedData: "",
+            ts: "...",
+			sig: "...",
+			pow: "...", // optional
         }
  
     // sending
  
         var m = BMObjectMessage.clone()
-        m.setFromId(senderId)
-        m.setToId(receiverId)
-        m.setContent(content) // content assumed to be a dict
+        m.setSenderPublicKeyString(localId.publicKeyString())
+        m.setEncryptedData(remoteId.encryptJson(dataDict)) // content assumed to be a dict
+        m.makeTimeStampNow()
+        m.signWithSenderId(localId)
         m.send()
     
     // receiving (m is a BMObjectMessage)
@@ -54,15 +47,14 @@ BMObjectMessage = BMMessage.extend().newSlots({
         BMMessage.init.apply(this)
 		this.setShouldStoreSubnodes(false)
         this.setMsgType("object")
-        this.addStoredSlots(["msgType", "encryptedData", "senderPublicKeyString", "receiverPublicKeyString", "timeStamp", "signature"])
+        this.addStoredSlots(["msgType", "encryptedData", "senderPublicKeyString", "timeStamp", "signature"])
         this.addAction("delete")
     },
     
     duplicate: function() {
-		throw new Error("not sure how to duplicate properly")
-        //var d = this.clone()
-        //return d
-        return this
+		var objMsg = BMObjectMessage.clone()
+		objMsg.setMsgDict(this.msgDict())
+        return objMsg
     },
     
     setNode: function(aNode) {
@@ -83,15 +75,15 @@ BMObjectMessage = BMMessage.extend().newSlots({
     // dict 
     
     setMsgDict: function(dict) {
-        console.log(this.type() + " setMsgDict ", dict)
+        //console.log(this.type() + " setMsgDict ", dict)
         //this.setPow(dict.pow)
         //this.setSignature(dict.signature)
         this.setMsgType(dict.msgType)
         this.setData(dict.encryptedData)            
         this.setSenderPublicKeyString(dict.sender)            
         //this.setReceiverPublicKeyString(dict.receiver)            
-        this.setTimeStamp(dict.timeStamp)            
-        this.setSignature(dict.signature)            
+        this.setTimeStamp(dict.ts)            
+        this.setSignature(dict.sig)            
         return this
     },
     
@@ -101,8 +93,8 @@ BMObjectMessage = BMMessage.extend().newSlots({
             encryptedData: this.encryptedData(),
             sender: this.senderPublicKeyString(),
             //receiver: this.receiverPublicKeyString(),
-            timeStamp: this.timeStamp(),
-            signature: this.signature(),
+            ts: this.timeStamp(),
+            sig: this.signature(),
             //pow: this.pow(),
         }
     },
@@ -110,7 +102,7 @@ BMObjectMessage = BMMessage.extend().newSlots({
 	theDictToHash: function() {
 		var dict = this.msgDict()
 		delete dict.msgHash   // remove this slots as we are computing hash itself
-		delete dict.signature // remove this slot as signature is done on hash
+		delete dict.sig // remove this slot as signature is done on hash
 		return dict
 	},
     
@@ -143,7 +135,7 @@ BMObjectMessage = BMMessage.extend().newSlots({
 	},
     
 	makeTimeStampNow: function() {
-		this.setTimeStamp(new Date().getTime())
+		this.setTimeStamp(Math.floor(new Date().getTime()/1000))
 		return this
 	},
 
@@ -155,7 +147,6 @@ BMObjectMessage = BMMessage.extend().newSlots({
 	},
 	    
     send: function() {
-        // adding to Messages node this would change parentNode - so make a copy?
 		this.scheduleSyncToStore()
         this.network().messages().addMessage(this)
         return this
@@ -170,45 +161,3 @@ BMObjectMessage = BMMessage.extend().newSlots({
         return this
     },
 })
-
-    
-/*
-
-	// ---- pow / unpow ------------------------------------------------
-
-    pow: function() {        
-        var hash = this.msgHash()
-        var pow = this.powObject()
-        pow.setHash(hash)
-        pow.syncFind()
-        this.setPow(pow.powHex())
-        return true
-    },  
-
-    asyncFindPowAndSend: function() {        
-        var hash = this.msgHash()
-        var pow = this.powObj()
-        pow.setHash(hash)
-        pow.setDoneCallback(() => { this.powDone() })
-        pow.asyncFind()
-        return true
-    },  
-    
-    powDone: function() {
-        this.setPow(this.powObj().powHex())
-		this.send()
-		return this
-    },
-    
-    actualPowDifficulty: function() {
-		if (this.pow()) {
-	        var pow = BMPow.clone().setHash(this.msgHash()).setPowHex(this.pow())
-	        return pow.actualPowDifficulty()
-		}
-		return 0
-    },
-
-	setPow: function() {
-		
-	},
-*/

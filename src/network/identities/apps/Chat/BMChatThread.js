@@ -32,10 +32,10 @@ BMChatThread = BMStorableNode.extend().newSlots({
 		var msg = BMChatMessage.clone()
 		
 		//console.log("msg = ", msg.typeId())
-		msg.setSenderPublicKeyString(this.localIdentity().publicKeyString())
-		msg.setReceiverPublicKeyString(this.remoteIdentity().publicKeyString())
+		//msg.setSenderPublicKeyString(this.localIdentity().publicKeyString())
+		//msg.setReceiverPublicKeyString(this.remoteIdentity().publicKeyString())
 		msg.setContent(s)
-		msg.send()
+		msg.sendToRemoteId(this.remoteIdentity())
 		
 		this.addMessage(msg)
 		

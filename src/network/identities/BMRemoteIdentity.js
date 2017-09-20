@@ -33,6 +33,10 @@ BMRemoteIdentity = BMNavNode.extend().newSlots({
 		this._didChangeIdentityNote = NotificationCenter.shared().newNotification().setSender(this.uniqueId()).setName("didChangeIdentity")
     },
     
+    localIdentity: function() {
+        return this.parentNodeOfType("BMLocalIdentity")
+    },
+    
     didUpdateSlot: function(slotName, oldValue, newValue) {
         BMNavNode.didUpdateSlot.apply(this, [slotName, oldValue, newValue])
         
@@ -88,11 +92,17 @@ BMRemoteIdentity = BMNavNode.extend().newSlots({
     },
 
 	handleObjMsg: function(objMsg) {
-		/*
-		if (aPrivateMsg.senderId() == this || aPrivateMsg.receiverId() == this) {
-			this.messages().addSubnodeIfAbsent(aPrivateMsg)
-		}
-		*/	
+
+        if (objMsg.senderPublicKeyString() == this.publicKeyString()) {
+            //console.log(this.pid() + " " + this.localIdentity().name() + "->" + this.name() + " handleObjMsg ", objMsg.pid())
+            
+            var dataDict = this.decryptJson(objMsg.encryptedData())
+            if (dataDict) {
+                console.log(this.pid() + " " + this.localIdentity().name() + "->" + this.name() + " handleObjMsg ", objMsg.pid())
+            }
+            var msg = BMPrivateMessage.fromDataDict(
+        }
+        
 		
 		return this
 	},

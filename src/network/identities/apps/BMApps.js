@@ -63,8 +63,8 @@ BMApps = BMStorableNode.extend().newSlots({
         return this.firstSubnodeWithTitle(name)
     },
 
-	handleMessage: function(aMessage) {
-		this.subnodes().forEach((app) => { app.handleMessage(aMessage) })
+	handleAppMsg: function(aMessage) {
+		this.subnodes().forEach((app) => { app.handleAppMsg(aMessage) })
 	},
 })
 

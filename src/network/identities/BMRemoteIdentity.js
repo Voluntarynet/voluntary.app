@@ -38,6 +38,15 @@ BMRemoteIdentity = BMNavNode.extend().newSlots({
 		return this
 	},
 	
+    localIdentity: function() {
+		/*
+		var localIdentity = this.parentNode().parentNode()
+		assert(localIdentity.type() == "BMLocalIdentity")
+		return localIdentity
+		*/
+        return this.parentNodeOfType("BMLocalIdentity")
+    },
+    
     didUpdateSlot: function(slotName, oldValue, newValue) {
         BMNavNode.didUpdateSlot.apply(this, [slotName, oldValue, newValue])
         
@@ -51,7 +60,7 @@ BMRemoteIdentity = BMNavNode.extend().newSlots({
 	didLoadFromStore: function() {
 		BMNavNode.didLoadFromStore.apply(this)
 		this.messages().setTitle("messages")
-		console.log(this.typeId() + " didLoadFromStore")
+		//console.log(this.typeId() + " didLoadFromStore")
 	},
     
     title: function () {
@@ -93,10 +102,21 @@ BMRemoteIdentity = BMNavNode.extend().newSlots({
     },
 
 	handleObjMsg: function(objMsg) {
+
 		var dict = this.decryptJson(objMsg.encryptedData())
-		var appMsg = BMAppMessage.fromDataDict(dict)
-		this.localIdentity().handleAppMsg(appMsg)
-		return this
+		if (dict) {
+			var appMsg = BMAppMessage.fromDataDict(dict)
+			console.log("created ", appMsg.typeId())
+			
+			if (appMsg) {
+				appMsg.setSenderId(this)
+				appMsg.setReceiverId(this.localIdentity())
+				appMsg.setObjMsg(objMsg)
+				this.localIdentity().handleAppMsg(appMsg)
+				return true
+			}
+		}
+		return false
 	},
 	
 	equals: function(anIdentity) {

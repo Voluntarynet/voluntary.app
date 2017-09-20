@@ -19,7 +19,7 @@ BMRemoteIdentities = BMStorableNode.extend().newSlots({
 
 	didLoadFromStore: function() {
 		BMStorableNode.didLoadFromStore.apply(this)
-		console.log(this.typeId() + " didLoadFromStore names = ", this.names())
+		//console.log(this.typeId() + " didLoadFromStore names = ", this.names())
 		this.postChangeNote()
 	},
 

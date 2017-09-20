@@ -30,13 +30,15 @@ BMLocalIdentity = BMKeyPair.extend().newSlots({
     },
 
 	didLoadFromStore: function() {
-		console.log(this.typeId() + " didLoadFromStore")
+		//console.log(this.typeId() + " didLoadFromStore")
 		BMKeyPair.didLoadFromStore.apply(this)
 		this.profile().fieldNamed("publicKeyString").setValueIsEditable(false)
 		
+		/*
 		setTimeout(() => {
 			console.log("id " + this.name() + " remoteIdentities ", this.remoteIdentities().subnodes().length)
 		}, 10)
+		*/
 	},
     
     title: function () {
@@ -49,7 +51,7 @@ BMLocalIdentity = BMKeyPair.extend().newSlots({
     }, 
  
     handleObjMsg: function(objMsg) {
-        console.log(this.typeId() + " handleObjMsg ", objMsg)
+        //console.log(this.typeId() + " " + this.name() + " handleObjMsg ", objMsg)
         var senderId = this.remoteIdentities().idWithPublicKeyString(objMsg.senderPublicKeyString()) 
         if (senderId) {
             return senderId.handleObjMsg(objMsg)
@@ -57,8 +59,8 @@ BMLocalIdentity = BMKeyPair.extend().newSlots({
         return false
     },
 
-	handleMessage: function(msg) {	
-		return this.apps().handleMessage(msg)
+	handleAppMsg: function(appMsg) {	
+		return this.apps().handleAppMsg(appMsg)
 	},
 	
 	allOtherIdentities: function() {

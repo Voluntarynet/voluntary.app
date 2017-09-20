@@ -354,7 +354,7 @@ NodeStore = ideal.Proto.extend().newSlots({
 	
 	finalizeJustLoadedObjects: function() {
 		var loadedObjs = this.justLoadedObjectsDict().slotValues()
-		console.log(this.type() + " finalizeJustLoadedObjects ", loadedObjs.length)
+		//console.log(this.type() + " finalizeJustLoadedObjects ", loadedObjs.length)
         loadedObjs.forEach((obj) => {
             obj.didFinalizeLoadFromStore()
         })
@@ -557,7 +557,8 @@ NodeStore = ideal.Proto.extend().newSlots({
         
         var proto = window[nodeDict.type]
         if (!proto) {
-            proto = BMStorageNode
+			console.warn(this.type() + "pidRefsFromPid(" + pid + ") missing type " + nodeDict.type)
+            proto = BMStorableNode
         }
         
         return proto.nodePidRefsFromNodeDict(nodeDict)    

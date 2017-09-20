@@ -68,5 +68,7 @@ BMMessage = BMFieldSetNode.extend().newSlots({
         return null
     },
     
-
+    duplicate: function() {
+        return this
+    },
 })

@@ -41,9 +41,9 @@ BMChat = BMApplet.extend().newSlots({
 		return this
 	},
 	
-    handleMessage: function(msg) {
+    handleAppMsg: function(msg) {
+		console.log(this.nodePathString() + " handleAppMsg " + msg.typeId() + " ", msg.dataDict())
 		if (msg.type() == BMChatMessage.type()) {
-			msg = msg.duplicate()
 			this.handleSentMessage(msg)
 			this.handleReceivedMessage(msg)
 		}
@@ -53,18 +53,21 @@ BMChat = BMApplet.extend().newSlots({
         if (msg.senderId() && msg.senderId().equals(this.localIdentity())) {
 			var thread = this.threads().threadForRemoteIdentity(msg.receiverId())
 			if (thread) {
-				thread.addMessage(msg)
+				thread.addMessage(msg.duplicate())
 			}
 		}		
 	},
 	
 	handleReceivedMessage: function(msg) {
+        //console.log("handleReceivedMessage msg.receiverId() = ", msg.receiverId().type())
         if (msg.receiverId()) {
-            //console.log("msg.receiverId() = ", msg.receiverId().type())
+            console.log("msg.receiverId() = ", msg.receiverId().type())
             if (msg.receiverId().equals(this.localIdentity())) {
-    			var thread = this.threads().threadForRemoteIdentity(msg.senderId())
+ 	            console.log(this.nodePathString() + " handleReceivedMessage adding " + msg.typeId() + "  ", msg.dataDict())
+   				var thread = this.threads().threadForRemoteIdentity(msg.senderId())
     			if (thread) {
     				thread.addMessage(msg)
+    				//thread.addMessage(msg.duplicate())
     			}
     		}
     	}

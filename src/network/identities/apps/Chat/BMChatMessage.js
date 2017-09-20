@@ -19,6 +19,7 @@ BMChatMessage = BMAppMessage.extend().newSlots({
 	},
 	
 	title: function() {
+		console.log(this.typeId() + " content = " + this.content())
 	    return this.content()
 	},
 	
@@ -29,13 +30,14 @@ BMChatMessage = BMAppMessage.extend().newSlots({
 	contentDict: function() {
 		var contentDict = {}
 		contentDict.content = this.content()
-		//console.log(this.typeId() + ".contentDict = ", contentDict)
 		return contentDict
 	},
 	
 	setContentDict: function(contentDict) {
-		//console.log(this.typeId() + ".setContentDict = ", contentDict)
+		console.log(this.typeId() + " setContentDict = ", contentDict)
 		this.setContent(contentDict.content)
+		console.log(this.typeId() + " after setContentDict title = ", this.title())
+		//this.scheduleSyncToView()
 		return this
 	},
 	
@@ -49,6 +51,14 @@ BMChatMessage = BMAppMessage.extend().newSlots({
 
 	prepareToDelete: function() {
 	    // TODO: mark MsgObjRecord as deleted
+	},
+	
+    localIdentity: function() {
+        return this.parentNodeOfType("BMLocalIdentity")
+    },
+    
+	localIdentityIsSender: function() {
+		return this.senderId().equals(this.localIdentity())
 	},
 })
 

@@ -15,10 +15,12 @@ BMChatThreads = BMStorableNode.extend().newSlots({
 		}, 0)
     },
 
+/*
 	didLoadFromStore: function() {
 		BMStorableNode.didLoadFromStore.apply(this)
 		console.log(this.typeId() + " didLoadFromStore")
 	},
+	*/
 
 	setParentNode: function(aNode) {
 		BMStorableNode.setParentNode.apply(this, [aNode])
@@ -89,7 +91,7 @@ BMChatThreads = BMStorableNode.extend().newSlots({
 		this.chatTargetIds().forEach((rid) => { 
 			if (!this.threadForRemoteIdentity(rid)) {
 				var thread = BMChatThread.clone().setRemoteIdentity(rid)
-			   	console.log(this.typeId() + " adding thread ", thread.title())
+			   	//console.log(this.typeId() + " adding thread ", thread.title())
 				this.addSubnode(thread)
 			} else {
 			   //	console.log(this.typeId() + " already has thread for rid ", rid.name())

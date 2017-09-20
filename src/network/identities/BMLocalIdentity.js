@@ -30,13 +30,13 @@ BMLocalIdentity = BMKeyPair.extend().newSlots({
     },
 
 	didLoadFromStore: function() {
-		//console.log(this.type() + " didLoadFromStore")
+		console.log(this.typeId() + " didLoadFromStore")
 		BMKeyPair.didLoadFromStore.apply(this)
 		this.profile().fieldNamed("publicKeyString").setValueIsEditable(false)
 		
 		setTimeout(() => {
 			console.log("id " + this.name() + " remoteIdentities ", this.remoteIdentities().subnodes().length)
-		})
+		}, 10)
 	},
     
     title: function () {

@@ -1,11 +1,11 @@
 
-BMChatMessage = BMPrivateMessage.extend().newSlots({
+BMChatMessage = BMAppMessage.extend().newSlots({
     type: "BMChatMessage",
 	content: "",
 }).setSlots({
     
     init: function () {
-        BMPrivateMessage.init.apply(this)
+        BMAppMessage.init.apply(this)
         this.addStoredSlots(["content"])
         //this.addAction("delete")
     },	

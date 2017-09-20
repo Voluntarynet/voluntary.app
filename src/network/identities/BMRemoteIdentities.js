@@ -17,14 +17,27 @@ BMRemoteIdentities = BMStorableNode.extend().newSlots({
         this.watchIdentity()
     },
 
+	didLoadFromStore: function() {
+		BMStorableNode.didLoadFromStore.apply(this)
+		console.log(this.typeId() + " didLoadFromStore names = ", this.names())
+		this.postChangeNote()
+	},
+
+
 	watchIdentity: function() {
 		if (!this._idObs) {
 	        this._idObs = NotificationCenter.shared().newObservation().setName("didChangeIdentity").setObserver(this).watch()
 		}
 	},
 	
-	didChangeIdentity: function() {
-        this._didChangeIdentitiesNote.post()
+	didChangeIdentity: function(aNote) {
+		if (aNote.info() == this) {
+        	this.postChangeNote()
+		}
+	},
+	
+	postChangeNote: function() {
+		this._didChangeIdentitiesNote.post()
 	},
 	
 	validSubnodes: function() {

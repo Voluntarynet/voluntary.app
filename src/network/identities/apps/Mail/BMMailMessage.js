@@ -1,10 +1,10 @@
 
-BMMailMessage = BMPrivateMessage.extend().newSlots({
+BMMailMessage = BMAppMessage.extend().newSlots({
     type: "BMMailMessage",
 	//canReceive: false,
 }).setSlots({
     init: function () {
-        BMPrivateMessage.init.apply(this)
+        BMAppMessage.init.apply(this)
 
 		this.addStoredField(BMOptionsField.clone().setKey("from").setValueMethod("fromContact")).setValueIsEditable(false) //.setValidValuesMethod("fromContactNames") //.setNoteMethod("fromContactPublicKey")
 		this.addStoredField(BMOptionsField.clone().setKey("to").setValueMethod("toContact")).setValueIsEditable(true).setValidValuesMethod("toContactNames") //.setNoteMethod("toContactPublicKey")
@@ -136,7 +136,7 @@ BMMailMessage = BMPrivateMessage.extend().newSlots({
 	},
 
     send: function () {
-		BMPrivateMessage.send.apply(this)
+		BMAppMessage.send.apply(this)
         this.delete()
     },
 })

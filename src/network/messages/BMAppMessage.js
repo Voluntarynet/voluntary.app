@@ -1,6 +1,6 @@
 
-BMPrivateMessage = BMFieldSetNode.extend().newSlots({
-    type: "BMPrivateMessage",
+BMAppMessage = BMFieldSetNode.extend().newSlots({
+    type: "BMAppMessage",
 	objMsg: null,
 	senderPublicKeyString: null,
 	receiverPublicKeyString: null,
@@ -180,6 +180,10 @@ BMPrivateMessage = BMFieldSetNode.extend().newSlots({
         if (!className) {
             return null
         }
+
+		if (!className.endsWith("Message")) {
+			return null
+		}
         
         var proto = window[className]
         if (!proto) {

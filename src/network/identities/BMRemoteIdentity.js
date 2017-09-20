@@ -30,14 +30,19 @@ BMRemoteIdentity = BMNavNode.extend().newSlots({
 		this.profile().fieldNamed("publicKeyString").setValueIsEditable(true)
 		
         this.addAction("delete")
-		this._didChangeIdentityNote = NotificationCenter.shared().newNotification().setSender(this.uniqueId()).setName("didChangeIdentity")
+		this._didChangeIdentityNote = NotificationCenter.shared().newNotification().setSender(this.uniqueId()).setName("didChangeIdentity").setInfo(this)
     },
     
+	postChange: function() {
+        this._didChangeIdentityNote.post()
+		return this
+	},
+	
     didUpdateSlot: function(slotName, oldValue, newValue) {
         BMNavNode.didUpdateSlot.apply(this, [slotName, oldValue, newValue])
         
         if (slotName == "publicKeyString") {
-            this._didChangeIdentityNote.post()
+            this.postChange()
         }
         
         return this
@@ -88,12 +93,9 @@ BMRemoteIdentity = BMNavNode.extend().newSlots({
     },
 
 	handleObjMsg: function(objMsg) {
-		/*
-		if (aPrivateMsg.senderId() == this || aPrivateMsg.receiverId() == this) {
-			this.messages().addSubnodeIfAbsent(aPrivateMsg)
-		}
-		*/	
-		
+		var dict = this.decryptJson(objMsg.encryptedData())
+		var appMsg = BMAppMessage.fromDataDict(dict)
+		this.localIdentity().handleAppMsg(appMsg)
 		return this
 	},
 	

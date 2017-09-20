@@ -29,6 +29,10 @@ BMChatThreads = BMStorableNode.extend().newSlots({
 		}
 	},
 	
+	finalizeJustLoadedObjects: function() {
+		this.updateIdentities()
+	},
+	
 	watchIdentities: function() {
 		if (!this._idsObservation) {
 	        this._idsObservation = NotificationCenter.shared().newObservation().setName("didChangeIdentities").setObserver(this).watch()
@@ -42,7 +46,9 @@ BMChatThreads = BMStorableNode.extend().newSlots({
 	
 	didChangeIdentities: function(aNote) {
 		//console.log(this.nodePathString() + ".didChangeIdentities() <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+		setTimeout(() => {
 		this.updateIdentities()
+		}, 10)
 	},
 
 	chatApp: function() {
@@ -61,6 +67,7 @@ BMChatThreads = BMStorableNode.extend().newSlots({
 		this.removeThreadsWithNoRemoteIdentity()
 		this.addThreadForEveryRemoteIdentity()
 		this.sortSubnodes()
+		//console.log(this.typeId() + " updateIdentities threads " + this.subnodes().length)
 		return this		
 	},
 
@@ -68,9 +75,12 @@ BMChatThreads = BMStorableNode.extend().newSlots({
 	    //return this.chatApp().localIdentity().allOtherIdentities()   	     
 	    var chatTargetIds  = this.localIdentity().remoteIdentities().validSubnodes()
 /*
-		console.log("lid ", this.localIdentity().name())
-		console.log("	remoteIdentities: ", this.localIdentity().remoteIdentities().subnodes().map((rid) => { return rid.name() }) )
-		console.log("	chatTargetIds: ", chatTargetIds.map((rid) => { return rid.name() }) )
+		if (this.localIdentity().name() == "Steve") {
+			console.warn("lid ", this.localIdentity().name())
+			console.log("	remoteIdentities.length: ", this.localIdentity().remoteIdentities().subnodes().length )
+			console.log("	remoteIdentities: ", this.localIdentity().remoteIdentities().names() )
+			console.log("	chatTargetIds: ", chatTargetIds.map((rid) => { return rid.name() }) )
+		}
 		*/
 		return chatTargetIds	
 	},
@@ -79,8 +89,10 @@ BMChatThreads = BMStorableNode.extend().newSlots({
 		this.chatTargetIds().forEach((rid) => { 
 			if (!this.threadForRemoteIdentity(rid)) {
 				var thread = BMChatThread.clone().setRemoteIdentity(rid)
-			   	//console.log(this.typeId() + " adding thread ", thread.title())
+			   	console.log(this.typeId() + " adding thread ", thread.title())
 				this.addSubnode(thread)
+			} else {
+			   //	console.log(this.typeId() + " already has thread for rid ", rid.name())
 			}
 		})
 		return this		

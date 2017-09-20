@@ -31,7 +31,9 @@ BMChatThread = BMStorableNode.extend().newSlots({
 	setInputFieldValue: function(s) {
 		var msg = BMChatMessage.clone()
 		
-		//console.log("msg = ", msg.typeId())
+		console.log("msg = ", msg.typeId())
+		console.log("this.remoteIdentity().publicKeyString() = ", this.remoteIdentity().publicKeyString())
+		
 		msg.setSenderPublicKeyString(this.localIdentity().publicKeyString())
 		msg.setReceiverPublicKeyString(this.remoteIdentity().publicKeyString())
 		msg.setContent(s)
@@ -49,16 +51,6 @@ BMChatThread = BMStorableNode.extend().newSlots({
 	    this.removeAllSubnodes()
 	    return this
 	},
-	
-	/*
-	// for debugging
-	subtitle: function() {
-		if (this.remoteIdentity()) {
-			return this.remoteIdentity().pid().split("_").pop()
-		}
-		return "[missing rid]"	    
-	},
-	*/
 	
 	threads: function() {
 		return this.parentNode()

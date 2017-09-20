@@ -1,9 +1,11 @@
+"use strict"
+
 /*
 
 
 */
         
-BMPointerField = BMField.extend().newSlots({
+window.BMPointerField = BMField.extend().newSlots({
     type: "BMPointerField",
 	
 }).setSlots({

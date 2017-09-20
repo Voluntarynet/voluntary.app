@@ -2,7 +2,9 @@
 // this.titleView().setBorderRadius("8px 8px 0px 8px") // top-left, top-right,  bottom-right, bottom-left
 // TODO: em vs px support?
 
-DivBorderRadius = ideal.Proto.extend().newSlots({
+"use strict"
+
+window.DivBorderRadius = ideal.Proto.extend().newSlots({
     type: "DivBorderRadius",
     divView: null,
 

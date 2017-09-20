@@ -3,7 +3,9 @@
 
 */
 
-BMBlacklistedContacts = BMBlacklist.extend().newSlots({
+"use strict"
+
+window.BMBlacklistedContacts = BMBlacklist.extend().newSlots({
     type: "BMBlacklistedContacts",
 }).setSlots({
     init: function () {

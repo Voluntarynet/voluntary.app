@@ -1,5 +1,6 @@
+"use strict"
 
-ContentView = NodeView.extend().newSlots({
+window.ContentView = NodeView.extend().newSlots({
     type: "ContentView",
 }).setSlots({
 	/*

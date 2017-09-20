@@ -1,6 +1,6 @@
+"use strict"
 
-
-TextField = DivView.extend().newSlots({
+window.TextField = DivView.extend().newSlots({
     type: "TextField",
 	isSelected: false,
 	selectedColor: "white",

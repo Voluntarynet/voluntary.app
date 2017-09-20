@@ -1,6 +1,6 @@
-//var assert = require("assert")
+"use strict"
 
-BrowserView = NodeView.extend().newSlots({
+window.BrowserView = NodeView.extend().newSlots({
     type: "BrowserView",
     columns: null,
     isSingleColumn: false,

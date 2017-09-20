@@ -1,5 +1,7 @@
 
-BMRServers = BMStorableNode.extend().newSlots({
+"use strict"
+
+window.BMRServers = BMStorableNode.extend().newSlots({
     type: "BMRServers",
     maxConnections: 8,
 	debug: false,

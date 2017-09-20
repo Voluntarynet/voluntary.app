@@ -1,3 +1,4 @@
+"use strict"
 
 JSImporter.pushRelativePaths([
     "DivTransition.js",

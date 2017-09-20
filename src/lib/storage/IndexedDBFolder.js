@@ -1,5 +1,6 @@
+"use strict"
 
-IndexedDBFolder = ideal.Proto.extend().newSlots({
+window.IndexedDBFolder = ideal.Proto.extend().newSlots({
     type: "IndexedDBFolder",
     path: "/", // path should end with pathSeparator
     pathSeparator: "/",

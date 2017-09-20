@@ -1,5 +1,6 @@
+"use strict"
 
-BrowserColumn = NodeView.extend().newSlots({
+window.BrowserColumn = NodeView.extend().newSlots({
     type: "BrowserColumn",
     rows: null,
     selectionColor: "#aaa",

@@ -1,5 +1,6 @@
+"use strict"
 
-BMNode = ideal.Proto.extend().newSlots({
+window.BMNode = ideal.Proto.extend().newSlots({
     type: "BMNode",
         
 	// row view summary

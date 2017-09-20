@@ -1,6 +1,8 @@
+"use strict"
+
 var bitcore = require("bitcore-lib")
 
-BMRemoteIdentity = BMNavNode.extend().newSlots({
+window.BMRemoteIdentity = BMNavNode.extend().newSlots({
     type: "BMRemoteIdentity",
 	name: "untitled",
 	publicKeyString: "",

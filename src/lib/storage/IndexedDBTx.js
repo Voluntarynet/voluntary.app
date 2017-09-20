@@ -1,5 +1,6 @@
+"use strict"
 
-IndexedDBTx = ideal.Proto.extend().newSlots({
+window.IndexedDBTx = ideal.Proto.extend().newSlots({
     type: "IndexedDBTx",
     dbFolder: null,
     objectStore: null,

@@ -1,3 +1,4 @@
+"use strict"
 
 /*
     for fixed navigation use 
@@ -8,7 +9,7 @@
     NOTE: have to make sure we set a "title" property when saving so we can do this
 */
 
-BMNavNode = BMStorableNode.extend().newSlots({
+window.BMNavNode = BMStorableNode.extend().newSlots({
     type: "BMNavNode",
 }).setSlots({
     init: function () {

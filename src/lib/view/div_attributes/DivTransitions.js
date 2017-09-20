@@ -2,7 +2,9 @@
 -     transition: width 2s linear 1s, height 2s ease 1s; 1st time is duration, 2nd time is delay
 */
 
-DivTransitions = ideal.Proto.extend().newSlots({
+"use strict"
+
+window.DivTransitions = ideal.Proto.extend().newSlots({
     type: "DivTransitions",
     properties: null,
 	divView: null,

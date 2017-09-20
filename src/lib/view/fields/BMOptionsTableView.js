@@ -1,5 +1,6 @@
+"use strict"
 
-BMOptionsTableView = DivView.extend().newSlots({
+window.BMOptionsTableView = DivView.extend().newSlots({
     type: "BMOptionsTableView",
 	validValues: null,
 }).setSlots({

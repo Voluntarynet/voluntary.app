@@ -1,10 +1,12 @@
+"use strict"
+
 /*
     App is a singleton that represents the application
     It's superclass, BaseApp will set up the NodeStore and call App.setup after it's initialized.
     After setup, appDidInit is called.
 */
 
-App = BaseApp.extend().newSlots({
+window.App = BaseApp.extend().newSlots({
     type: "App",
 	localIdentities: null,
     network: null,   

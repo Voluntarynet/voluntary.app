@@ -1,3 +1,5 @@
+"use strict"
+
 /*
     BaseApp is a singleton that represents the application
     For your application, create a subclass called App and implement
@@ -6,7 +8,7 @@
 
 // ---
 
-BaseApp = BMNode.extend().newSlots({
+window.BaseApp = BMNode.extend().newSlots({
     type: "BaseApp",
     name: null,
     browser: null,

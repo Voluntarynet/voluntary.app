@@ -1,3 +1,5 @@
+"use strict"
+
 /*
     move to styleSheets implementation, e.g.:
          
@@ -5,7 +7,7 @@
          
 */
 
-CSSDeclaration = ideal.Proto.extend().newSlots({
+window.CSSDeclaration = ideal.Proto.extend().newSlots({
     type: "CSSDeclaration",
     key: null,
     value: null,

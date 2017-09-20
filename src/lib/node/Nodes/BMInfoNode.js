@@ -1,3 +1,5 @@
+"use strict"
+
 /*
 
     BMInfoNode
@@ -6,8 +8,7 @@
     
 */  
         
-        
-BMInfoNode = BMStorableNode.extend().newSlots({
+window.BMInfoNode = BMStorableNode.extend().newSlots({
     type: "BMInfoNode",
 }).setSlots({
     init: function () {

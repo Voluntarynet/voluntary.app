@@ -1,5 +1,6 @@
+"use strict"
 
-WebBrowserScreen = ideal.Proto.extend().newSlots({
+window.WebBrowserScreen = ideal.Proto.extend().newSlots({
     type: "WebBrowserScreen",
 }).setSlots({
     init: function () {

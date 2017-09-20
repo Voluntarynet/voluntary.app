@@ -1,5 +1,7 @@
 
-BMGroupChat = BMApplet.extend().newSlots({
+"use strict"
+
+window.BMGroupChat = BMApplet.extend().newSlots({
     type: "BMGroupChat",
     channels: null,
     directMessages: null,

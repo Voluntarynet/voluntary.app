@@ -1,9 +1,11 @@
+"use strict"
+
 /*
 
 
 */
         
-BMDateField = BMField.extend().newSlots({
+window.BMDateField = BMField.extend().newSlots({
     type: "BMDateField",
 	unsetVisibleValue: "unset",
 }).setSlots({

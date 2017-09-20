@@ -1,5 +1,7 @@
 
-BMClassifiedPost = BMFieldSetNode.extend().newSlots({
+"use strict"
+
+window.BMClassifiedPost = BMFieldSetNode.extend().newSlots({
     type: "BMClassifiedPost",
     title: null, // string
     price: 0,

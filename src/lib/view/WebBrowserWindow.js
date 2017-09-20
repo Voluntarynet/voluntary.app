@@ -1,5 +1,6 @@
+"use strict"
 
-WebBrowserWindow = ideal.Proto.extend().newSlots({
+window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     type: "WebBrowserWindow",
     //win: null,
     documentBody: DocumentBody.clone(),

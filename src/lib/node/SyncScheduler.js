@@ -1,5 +1,6 @@
+"use strict"
 
-SyncScheduler = ideal.Proto.extend().newSlots({
+window.SyncScheduler = ideal.Proto.extend().newSlots({
     type: "SyncScheduler",
 
     /*

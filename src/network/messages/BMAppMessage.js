@@ -1,5 +1,6 @@
+"use strict"
 
-BMAppMessage = BMFieldSetNode.extend().newSlots({
+window.BMAppMessage = BMFieldSetNode.extend().newSlots({
     type: "BMAppMessage",
 	objMsg: null,
 	senderId: null,

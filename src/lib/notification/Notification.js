@@ -1,6 +1,6 @@
+"use strict"
 
-
-Notification = ideal.Proto.extend().setType("Notification").newSlots({
+window.Notification = ideal.Proto.extend().setType("Notification").newSlots({
     name: null,
     sender: null,
     info: null,

@@ -8,7 +8,9 @@ BMGetDataItem = BMNode.extend().newSlots({
 })
 */
 
-BMMessages = BMStorableNode.extend().newSlots({
+"use strict"
+
+window.BMMessages = BMStorableNode.extend().newSlots({
     type: "BMMessages",
     changeNote: null,
     network: null,

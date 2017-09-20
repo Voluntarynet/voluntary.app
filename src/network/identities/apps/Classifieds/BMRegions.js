@@ -1,5 +1,7 @@
 
-BMRegions = BMRegion.extend().newSlots({
+"use strict"
+
+window.BMRegions = BMRegion.extend().newSlots({
     type: "BMRegions",
 }).setSlots({
     init: function () {

@@ -1,3 +1,4 @@
+"use strict"
 
 /*
 	A simple javascript importing system.

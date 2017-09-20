@@ -30,10 +30,11 @@
         
 */
 
+"use strict"
 
 var BitcoreMessage = require('bitcore-message');
 
-BMObjectMessage = BMMessage.extend().newSlots({
+window.BMObjectMessage = BMMessage.extend().newSlots({
     type: "BMObjectMessage",
     msgType: "object",
     senderPublicKeyString: null,

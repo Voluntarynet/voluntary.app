@@ -1,5 +1,6 @@
+"use strict"
 
-NodeView = DivView.extend().newSlots({
+window.NodeView = DivView.extend().newSlots({
     type: "NodeView",
     node: null,
     ownsView: true,

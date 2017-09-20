@@ -1,5 +1,7 @@
 
-BMGroupConversation = BMApplet.extend().newSlots({
+"use strict"
+
+window.BMGroupConversation = BMApplet.extend().newSlots({
     type: "BMGroupConversation",
 	remoteIdentity: null,
 }).setSlots({

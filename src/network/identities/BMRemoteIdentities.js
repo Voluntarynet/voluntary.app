@@ -1,6 +1,8 @@
 
 
-BMRemoteIdentities = BMStorableNode.extend().newSlots({
+"use strict"
+
+window.BMRemoteIdentities = BMStorableNode.extend().newSlots({
     type: "BMRemoteIdentities",
 }).setSlots({
     init: function () {

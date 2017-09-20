@@ -1,5 +1,6 @@
+"use strict"
 
-BrowserHeader = NodeView.extend().newSlots({
+window.BrowserHeader = NodeView.extend().newSlots({
     type: "BrowserHeader",
 	backArrowView: null,
 	titleView: null,

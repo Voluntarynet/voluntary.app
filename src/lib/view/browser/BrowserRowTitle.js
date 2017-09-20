@@ -1,4 +1,6 @@
-BrowserRowTitle = TextField.extend().newSlots({
+"use strict"
+
+window.BrowserRowTitle = TextField.extend().newSlots({
     type: "BrowserRowTitle",
 }).setSlots({
     init: function () {

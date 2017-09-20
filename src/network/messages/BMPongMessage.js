@@ -1,6 +1,6 @@
+"use strict"
 
-
-BMPongMessage = BMMessage.extend().newSlots({
+window.BMPongMessage = BMMessage.extend().newSlots({
     type: "BMPongMessage",
 }).setSlots({
     init: function () {

@@ -1,9 +1,11 @@
+"use strict"
+
 /*
 
 
 */
         
-BMField = BMNode.extend().newSlots({
+window.BMField = BMNode.extend().newSlots({
     type: "BMField",
     
     key: null,

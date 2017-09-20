@@ -1,5 +1,7 @@
 
-BMClassifiedPosts = BMStorableNode.extend().newSlots({
+"use strict"
+
+window.BMClassifiedPosts = BMStorableNode.extend().newSlots({
     type: "BMClassifiedPosts",
 }).setSlots({
     init: function () {

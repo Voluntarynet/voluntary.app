@@ -3,7 +3,9 @@ var BitcoreMessage = require('bitcore-message');
 var ECIES = require('bitcore-ecies');
 var Buffer = bitcore.deps.Buffer;
 
-BMLocalIdentity = BMKeyPair.extend().newSlots({
+"use strict"
+
+window.BMLocalIdentity = BMKeyPair.extend().newSlots({
     type: "BMLocalIdentity",
     name: "",
 	privateKeyString: "",

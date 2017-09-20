@@ -1,3 +1,4 @@
+"use strict"
 
 function DomElement_atInsertElement(el, index, child) {
     var children = el.children
@@ -15,7 +16,8 @@ function DomElement_atInsertElement(el, index, child) {
     throw new Error("invalid dom child index")
 }
 
-DivView = ideal.Proto.extend().newSlots({
+
+window.DivView = ideal.Proto.extend().newSlots({
     type: "DivView",
     divClassName: "",
     element: null,
@@ -806,6 +808,7 @@ DivView = ideal.Proto.extend().newSlots({
 
 	setMinWidth: function(v) {
 		var type = typeof(v)
+		var newValue = null
 		if (v == null) {
 			newValue = ""
 		} else if (type == "string") {
@@ -827,6 +830,7 @@ DivView = ideal.Proto.extend().newSlots({
 		}
 		
 		var type = typeof(v)
+		var newValue = null
 		if (v == null) {
 			newValue = ""
 		} else if (type == "string") {
@@ -1115,12 +1119,12 @@ DivView = ideal.Proto.extend().newSlots({
     // globally track whether we are inside an event 
 
 	setIsHandlingEvent: function() {
-		DivView_isHandlingEvent = true
+		DivView._isHandlingEvent = true
 		return this
 	},
 	
 	isHandlingEvent: function() {
-		return DivView_isHandlingEvent
+		return DivView._isHandlingEvent
 	},
 
 	handleEventFunction: function(eventFunc) {

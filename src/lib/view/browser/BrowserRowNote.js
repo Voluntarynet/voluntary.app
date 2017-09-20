@@ -1,5 +1,6 @@
+"use strict"
 
-BrowserRowNote = TextField.extend().newSlots({
+window.BrowserRowNote = TextField.extend().newSlots({
     type: "BrowserRowNote",
 }).setSlots({
     init: function () {

@@ -1,9 +1,11 @@
+"use strict"
+
 /*
 
 
 */
 
-BMOptionsField = BMField.extend().newSlots({
+window.BMOptionsField = BMField.extend().newSlots({
     type: "BMOptionsField",
 	validValues: [],
 	options: [],

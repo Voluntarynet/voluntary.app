@@ -1,5 +1,6 @@
+"use strict"
 
-BMOptionsFieldRowView = BMFieldRowView.extend().newSlots({
+window.BMOptionsFieldRowView = BMFieldRowView.extend().newSlots({
     type: "BMOptionsFieldRowView",
 	optionsView: null,
 }).setSlots({

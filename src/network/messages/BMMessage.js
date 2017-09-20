@@ -6,7 +6,9 @@
 
 */
 
-BMMessage = BMFieldSetNode.extend().newSlots({
+"use strict"
+
+window.BMMessage = BMFieldSetNode.extend().newSlots({
     type: "BMMessage",
     msgType: null,
     data: null,

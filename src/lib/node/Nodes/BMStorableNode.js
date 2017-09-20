@@ -1,5 +1,6 @@
+"use strict"
 
-BMStorableNode = BMNode.extend().newSlots({
+window.BMStorableNode = BMNode.extend().newSlots({
     type: "BMStorableNode",
 
     pid: null,

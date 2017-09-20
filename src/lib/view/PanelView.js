@@ -1,6 +1,6 @@
+"use strict"
 
-
-PanelView = DivView.extend().newSlots({
+window.PanelView = DivView.extend().newSlots({
     type: "PanelView",
 	titleView: null,
 	subtitleView: null,

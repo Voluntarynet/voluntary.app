@@ -1,5 +1,6 @@
+"use strict"
 
-BrowserFooter = NodeView.extend().newSlots({
+window.BrowserFooter = NodeView.extend().newSlots({
     type: "BrowserFooter",
 
 	leftActionsView: null,

@@ -1,4 +1,6 @@
-BMProfile = BMFieldSetNode.extend().newSlots({
+"use strict"
+
+window.BMProfile = BMFieldSetNode.extend().newSlots({
     type: "BMProfile",
     avatars: [],
 }).setSlots({

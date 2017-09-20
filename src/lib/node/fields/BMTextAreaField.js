@@ -1,10 +1,12 @@
+"use strict"
+
 /*
 
 
 */
 
         
-BMTextAreaField = BMField.extend().newSlots({
+window.BMTextAreaField = BMField.extend().newSlots({
     type: "BMTextAreaField",
 	isMono: false,
 }).setSlots({

@@ -1,6 +1,6 @@
+"use strict"
 
-
-BMAddrMessage = BMMessage.extend().newSlots({
+window.BMAddrMessage = BMMessage.extend().newSlots({
     type: "BMAddrMessage",
 }).setSlots({
     init: function () {

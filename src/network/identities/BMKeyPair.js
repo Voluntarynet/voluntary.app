@@ -3,7 +3,9 @@ var BitcoreMessage = require('bitcore-message');
 var ECIES = require('bitcore-ecies');
 var Buffer = bitcore.deps.Buffer;
 
-BMKeyPair = BMNavNode.extend().newSlots({
+"use strict"
+
+window.BMKeyPair = BMNavNode.extend().newSlots({
     type: "BMKeyPair",
     name: "",
 	privateKeyString: "",

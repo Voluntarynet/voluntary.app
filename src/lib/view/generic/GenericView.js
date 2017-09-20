@@ -1,5 +1,6 @@
+"use strict"
 
-GenericView = NodeView.extend().newSlots({
+window.GenericView = NodeView.extend().newSlots({
     type: "GenericView",
     titleView: null,
     subtitleView: null,

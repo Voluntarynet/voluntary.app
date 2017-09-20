@@ -7,7 +7,9 @@
   See: https://en.wikipedia.org/wiki/STUNå
 */
 
-BMStunServer = BMFieldSetNode.extend().newSlots({
+"use strict"
+
+window.BMStunServer = BMFieldSetNode.extend().newSlots({
     type: "BMStunServer",
    	//host: 'stun.bitmarkets.org',
     host: "",

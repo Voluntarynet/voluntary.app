@@ -3,7 +3,9 @@
 
 */
 
-BMBlacklistedPeers = BMBlacklist.extend().newSlots({
+"use strict"
+
+window.BMBlacklistedPeers = BMBlacklist.extend().newSlots({
     type: "BMBlacklistedPeers",
 }).setSlots({
     init: function () {

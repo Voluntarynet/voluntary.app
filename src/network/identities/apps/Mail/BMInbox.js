@@ -1,5 +1,7 @@
 
-BMInbox = BMStorableNode.extend().newSlots({
+"use strict"
+
+window.BMInbox = BMStorableNode.extend().newSlots({
     type: "BMInbox",
 }).setSlots({
     init: function () {

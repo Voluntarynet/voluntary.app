@@ -1,5 +1,6 @@
+"use strict"
 
-LoadProgressBar = {
+window.LoadProgressBar = {
     type: function() { return "LoadProgressBar" },
     _error: null,
     

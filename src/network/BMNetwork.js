@@ -1,5 +1,7 @@
 
-BMNetwork = BMStorableNode.extend().newSlots({
+"use strict"
+
+window.BMNetwork = BMStorableNode.extend().newSlots({
     type: "BMNetwork",
     servers: null,
     stunServers: null,

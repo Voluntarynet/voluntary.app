@@ -1,5 +1,6 @@
+"use strict"
 
-BMDataStoreRecord = BMFieldSetNode.extend().newSlots({
+window.BMDataStoreRecord = BMFieldSetNode.extend().newSlots({
     type: "BMDataStoreRecord",
 	key: null,
 	didSetupFields: false,

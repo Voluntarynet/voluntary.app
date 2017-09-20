@@ -1,5 +1,7 @@
 
-BMDrafts = BMStorableNode.extend().newSlots({
+"use strict"
+
+window.BMDrafts = BMStorableNode.extend().newSlots({
     type: "BMDrafts",
 }).setSlots({
     init: function () {

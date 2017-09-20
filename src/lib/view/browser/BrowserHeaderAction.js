@@ -1,5 +1,6 @@
+"use strict"
 
-BrowserHeaderAction = NodeView.extend().newSlots({
+window.BrowserHeaderAction = NodeView.extend().newSlots({
     type: "BrowserHeaderAction",
     canClick: true,
 }).setSlots({

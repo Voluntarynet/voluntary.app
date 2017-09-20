@@ -1,5 +1,6 @@
+"use strict"
 
-DocumentBody = DivView.extend().newSlots({
+window.DocumentBody = DivView.extend().newSlots({
     type: "DocumentBody",
 }).setSlots({
     init: function () {

@@ -1,3 +1,5 @@
+"use strict"
+
 /*
         FormNode is useful for node's which are to be viewed and interacted with as forms
         
@@ -22,8 +24,8 @@
     
 */  
         
-        
-BMFieldSetNode = BMStorableNode.extend().newSlots({
+
+window.BMFieldSetNode = BMStorableNode.extend().newSlots({
     type: "BMFieldSetNode",
     status: "",
     isEditable: true,

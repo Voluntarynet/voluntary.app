@@ -1,8 +1,9 @@
+"use strict"
 /*
     BMImagesNode 
 */  
 
-BMImagesNode = BMStorableNode.extend().newSlots({
+window.BMImagesNode = BMStorableNode.extend().newSlots({
     type: "BMImagesNode",
 }).setSlots({
     init: function () {

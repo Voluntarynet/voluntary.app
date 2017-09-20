@@ -46,7 +46,9 @@
 
 // timestamp?
 
-BMPayload = ideal.Proto.extend().newSlots({
+"use strict"
+
+window.BMPayload = ideal.Proto.extend().newSlots({
     type: "BMPayload",
     data: null,
     error: null,

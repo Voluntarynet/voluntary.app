@@ -1,5 +1,7 @@
 
-BMServerConnection = BMNode.extend().newSlots({
+"use strict"
+
+window.BMServerConnection = BMNode.extend().newSlots({
     type: "BMServerConnection",
     server: null,
     serverConn: null,

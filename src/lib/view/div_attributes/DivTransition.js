@@ -1,5 +1,7 @@
 
-DivTransition = ideal.Proto.extend().newSlots({
+"use strict"
+
+window.DivTransition = ideal.Proto.extend().newSlots({
     type: "DivTransition",
 
     property: "",

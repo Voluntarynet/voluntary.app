@@ -1,5 +1,6 @@
+"use strict"
 
-BrowserRowSubtitle = TextField.extend().newSlots({
+window.BrowserRowSubtitle = TextField.extend().newSlots({
     type: "BrowserRowSubtitle",
 }).setSlots({
     init: function () {

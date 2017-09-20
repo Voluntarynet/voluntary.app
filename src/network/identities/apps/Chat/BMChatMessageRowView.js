@@ -1,6 +1,8 @@
 
 
-BMChatMessageRowView = BrowserTitledRow.extend().newSlots({
+"use strict"
+
+window.BMChatMessageRowView = BrowserTitledRow.extend().newSlots({
     type: "BMChatMessageRowView",
 }).setSlots({
     

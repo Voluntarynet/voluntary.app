@@ -1,6 +1,6 @@
+"use strict"
 
-
-BMGetDataMessage = BMMessage.extend().newSlots({
+window.BMGetDataMessage = BMMessage.extend().newSlots({
     type: "BMGetDataMessage",
 }).setSlots({
     init: function () {

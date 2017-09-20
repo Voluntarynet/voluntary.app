@@ -1,9 +1,11 @@
+"use strict"
+
 /*
 
 
 */
         
-BMImageWellField = BMField.extend().newSlots({
+window.BMImageWellField = BMField.extend().newSlots({
     type: "BMImageWellField",
 	onlyShowsKeyWhenEmpty: true,
 	maxImageCount: 1,

@@ -1,6 +1,6 @@
+"use strict"
 
-
-BMInvMessage = BMMessage.extend().newSlots({
+window.BMInvMessage = BMMessage.extend().newSlots({
     type: "BMInvMessage",
 }).setSlots({
     init: function () {

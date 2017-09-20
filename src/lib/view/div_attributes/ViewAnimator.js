@@ -1,6 +1,8 @@
 
   
-ViewAnimator = ideal.Proto.extend().newSlots({
+"use strict"
+
+window.ViewAnimator = ideal.Proto.extend().newSlots({
     type: "ViewAnimator",
 
     startValue: 0, 

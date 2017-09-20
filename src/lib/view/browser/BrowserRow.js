@@ -1,9 +1,10 @@
+"use strict"
 /*
 
 	base row view, just knows about selected, selectable and colors
 */
 
-BrowserRow = NodeView.extend().newSlots({
+window.BrowserRow = NodeView.extend().newSlots({
     type: "BrowserRow",
     isSelected: false,
     isSelectable: true,

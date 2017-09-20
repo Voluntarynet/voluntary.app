@@ -3,7 +3,9 @@
 
 */
 
-BMBlacklists = BMStorableNode.extend().newSlots({
+"use strict"
+
+window.BMBlacklists = BMStorableNode.extend().newSlots({
     type: "BMBlacklists",
     servers: null,
     peers: null,

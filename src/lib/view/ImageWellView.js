@@ -1,5 +1,6 @@
+"use strict"
 
-ImageWellView = NodeView.extend().newSlots({
+window.ImageWellView = NodeView.extend().newSlots({
     type: "ImageWellView",
     imageView: null,
     isEditable: true,

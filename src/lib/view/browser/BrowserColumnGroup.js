@@ -1,5 +1,6 @@
+"use strict"
 
-BrowserColumnGroup = NodeView.extend().newSlots({
+window.BrowserColumnGroup = NodeView.extend().newSlots({
     type: "BrowserColumnGroup",
     
     header: null,

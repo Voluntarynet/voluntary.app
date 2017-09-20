@@ -1,5 +1,7 @@
 
-BMApplet = BMStorableNode.extend().newSlots({
+"use strict"
+
+window.BMApplet = BMStorableNode.extend().newSlots({
     type: "BMApplet",
 }).setSlots({
     sharedStoredInstance: function() {

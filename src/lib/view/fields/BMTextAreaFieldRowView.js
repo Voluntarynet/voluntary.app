@@ -1,5 +1,6 @@
+"use strict"
 
-BMTextAreaFieldRowView = BMFieldRowView.extend().newSlots({
+window.BMTextAreaFieldRowView = BMFieldRowView.extend().newSlots({
     type: "BMTextAreaFieldRowView",
 }).setSlots({
     init: function () {

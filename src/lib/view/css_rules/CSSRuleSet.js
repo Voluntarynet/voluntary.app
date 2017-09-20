@@ -1,6 +1,6 @@
+"use strict"
 
-
-CSSRuleSet = ideal.Proto.extend().newSlots({
+window.CSSRuleSet = ideal.Proto.extend().newSlots({
     type: "CSSRuleSet",
     declarations: null,
     key: null,

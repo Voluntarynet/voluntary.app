@@ -1,5 +1,7 @@
 
-BMTwitterMessage = BMAppMessage.extend().newSlots({
+"use strict"
+
+window.BMTwitterMessage = BMAppMessage.extend().newSlots({
     type: "BMTwitterMessage",
 }).setSlots({
     init: function () {

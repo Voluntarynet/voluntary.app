@@ -1,3 +1,4 @@
+"use strict"
 
 /*
 
@@ -50,7 +51,7 @@
 
 */
 
-NotificationCenter = ideal.Proto.extend().setType("NotificationCenter").newSlots({
+window.NotificationCenter = ideal.Proto.extend().setType("NotificationCenter").newSlots({
     observations: null,
     hasTimeout: null,
     notifications: null,

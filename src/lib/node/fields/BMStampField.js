@@ -1,9 +1,11 @@
+"use strict"
+
 /*
 
 
 */
         
-BMStampField = BMField.extend().newSlots({
+window.BMStampField = BMField.extend().newSlots({
     type: "BMStampField",
 	
 }).setSlots({

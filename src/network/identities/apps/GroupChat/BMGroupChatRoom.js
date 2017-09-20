@@ -1,5 +1,7 @@
 
-BMGroupChatRoom = BMApplet.extend().newSlots({
+"use strict"
+
+window.BMGroupChatRoom = BMApplet.extend().newSlots({
     type: "BMGroupChatRoom",
 		name: "Untitled",
 	}).setSlots({

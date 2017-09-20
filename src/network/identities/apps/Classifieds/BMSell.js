@@ -1,5 +1,7 @@
 
-BMSell = BMStorableNode.extend().newSlots({
+"use strict"
+
+window.BMSell = BMStorableNode.extend().newSlots({
     type: "BMSell",
     post: null,
 	hasSent: false,

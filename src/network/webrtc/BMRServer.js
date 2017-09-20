@@ -1,7 +1,9 @@
 
 // A Rendezvous Server
 
-BMRServer = BMFieldSetNode.extend().newSlots({
+"use strict"
+
+window.BMRServer = BMFieldSetNode.extend().newSlots({
     type: "BMRServer",
    // host: 'peers.bitmarkets.org',
     host: '127.0.0.1',

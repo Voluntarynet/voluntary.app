@@ -1,5 +1,7 @@
 
-BMDatedSet = BMStorableNode.extend().newSlots({
+"use strict"
+
+window.BMDatedSet = BMStorableNode.extend().newSlots({
     type: "BMDatedSet",
     maxAgeInSeconds: 30*24*60*60,
     autoCheckPeriod: 1*60*60,

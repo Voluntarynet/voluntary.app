@@ -1,9 +1,11 @@
+"use strict"
+
 /*
     StackTrace
     A stack printout that understands objects.
 */
 
-StackTrace = ideal.Proto.extend().newSlots({
+window.StackTrace = ideal.Proto.extend().newSlots({
     type: "StackTrace",
  
 }).setSlots({

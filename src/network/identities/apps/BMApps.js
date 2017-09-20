@@ -4,7 +4,9 @@
 */
 
 
-BMApps = BMStorableNode.extend().newSlots({
+"use strict"
+
+window.BMApps = BMStorableNode.extend().newSlots({
     type: "BMApps",
 }).setSlots({
     init: function () {

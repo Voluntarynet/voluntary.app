@@ -1,5 +1,6 @@
+"use strict"
 
-BrowserFieldRow = BrowserRow.extend().newSlots({
+window.BrowserFieldRow = BrowserRow.extend().newSlots({
     type: "BrowserFieldRow",
     allowsCursorNavigation: false,
 }).setSlots({

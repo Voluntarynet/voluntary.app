@@ -1,3 +1,4 @@
+"use strict"
 /*
 
     BMImageNode
@@ -6,7 +7,7 @@
     
 */  
 
-BMImageNode = BMStorableNode.extend().newSlots({
+window.BMImageNode = BMStorableNode.extend().newSlots({
     type: "BMImageNode",
     dataURL: null,
 }).setSlots({

@@ -1,5 +1,6 @@
-        
-BMIdentityField = BMField.extend().newSlots({
+"use strict"
+
+window.BMIdentityField = BMField.extend().newSlots({
     type: "BMIdentityField",
 	
 }).setSlots({

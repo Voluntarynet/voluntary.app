@@ -1,5 +1,7 @@
 
-BMChat = BMApplet.extend().newSlots({
+"use strict"
+
+window.BMChat = BMApplet.extend().newSlots({
     type: "BMChat",
     threads: null,
 }).setSlots({

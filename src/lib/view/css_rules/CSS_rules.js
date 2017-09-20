@@ -1,5 +1,7 @@
 
 /*
+"use strict"
+
 CSS.ruleAt("Browser").setDict({
     overflow: "hidden",
     position: "absolute",

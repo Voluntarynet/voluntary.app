@@ -1,5 +1,6 @@
+"use strict"
 
-BrowserTitledRow = BrowserRow.extend().newSlots({
+window.BrowserTitledRow = BrowserRow.extend().newSlots({
     type: "BrowserTitledRow",
     titleView: null,
     subtitleView: null,

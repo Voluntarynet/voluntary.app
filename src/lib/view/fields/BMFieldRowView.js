@@ -1,5 +1,6 @@
+"use strict"
 
-BMFieldRowView = BrowserFieldRow.extend().newSlots({
+window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
     type: "BMFieldRowView",
 	keyView: null,
 	valueView: null,

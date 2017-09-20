@@ -1,5 +1,7 @@
 
-BMClassifieds = BMApplet.extend().newSlots({
+"use strict"
+
+window.BMClassifieds = BMApplet.extend().newSlots({
     type: "BMClassifieds",
     regions: null,
     sells: null,

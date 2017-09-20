@@ -1,5 +1,6 @@
+"use strict"
 
-BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
+window.BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
     type: "BMImageWellFieldView",
 }).setSlots({
     init: function () {

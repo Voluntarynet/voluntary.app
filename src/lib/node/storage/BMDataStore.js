@@ -1,10 +1,11 @@
+"use strict"
 /*
 	BMDataStore
 	A visible representation of the NodeStore
 
 */
 
-BMDataStore = BMNode.extend().newSlots({
+window.BMDataStore = BMNode.extend().newSlots({
     type: "BMDataStore",
 }).setSlots({
     init: function () {

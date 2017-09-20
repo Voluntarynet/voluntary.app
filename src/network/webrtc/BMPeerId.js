@@ -6,7 +6,9 @@
 
 */
 
-BMPeerId = BMNode.extend().newSlots({
+"use strict"
+
+window.BMPeerId = BMNode.extend().newSlots({
     type: "BMPeerId",
     publicKeyString: null,
 	bloomFilter: null,

@@ -1,6 +1,6 @@
+"use strict"
 
-
-BMPingMessage = BMMessage.extend().newSlots({
+window.BMPingMessage = BMMessage.extend().newSlots({
     type: "BMPingMessage",
 }).setSlots({
     init: function () {

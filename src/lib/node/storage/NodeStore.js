@@ -1,3 +1,5 @@
+"use strict"
+
 /*
     NodeStore: 
 
@@ -88,8 +90,7 @@
  
 */
 
-
-NodeStore = ideal.Proto.extend().newSlots({
+window.NodeStore = ideal.Proto.extend().newSlots({
     type: "NodeStore",
     folderName: "NodeStore",
     folder: null,
@@ -247,7 +248,7 @@ NodeStore = ideal.Proto.extend().newSlots({
 			var dirtyBucket = this._dirtyObjects
         	this._dirtyObjects = {}
 
-	        for (pid in dirtyBucket) {
+	        for (var pid in dirtyBucket) {
                 if (dirtyBucket.hasOwnProperty(pid)) {
 		            var obj = dirtyBucket[pid]
 		

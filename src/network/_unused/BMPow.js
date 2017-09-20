@@ -15,7 +15,9 @@
         setDifficulty() method available
 */
 
-BMPow = ideal.Proto.extend().newSlots({
+"use strict"
+
+window.BMPow = ideal.Proto.extend().newSlots({
     type: "BMPow",
     targetDifficulty: 15,
     hash: null, // hex string

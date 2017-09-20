@@ -1,3 +1,5 @@
+"use strict"
+
 /*
     CSS Rule sets abstraction
     
@@ -26,7 +28,8 @@
 
 */
 
-CSS = ideal.Proto.extend().newSlots({
+
+window.CSS = ideal.Proto.extend().newSlots({
     type: "CSS",
     rules: {},
 }).setSlots({

@@ -3,7 +3,9 @@
 
 */
 
-BMBlacklistedServers = BMBlacklist.extend().newSlots({
+"use strict"
+
+window.BMBlacklistedServers = BMBlacklist.extend().newSlots({
     type: "BMBlacklistedServers",
     ipsDict: null, 
 }).setSlots({

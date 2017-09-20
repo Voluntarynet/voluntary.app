@@ -1,5 +1,7 @@
 
-BMChatThreads = BMStorableNode.extend().newSlots({
+"use strict"
+
+window.BMChatThreads = BMStorableNode.extend().newSlots({
     type: "BMChatThreads",
 }).setSlots({
     init: function () {

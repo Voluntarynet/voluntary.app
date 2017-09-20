@@ -1,3 +1,4 @@
+"use strict"
 /*
 	A cache on top of IndexedDB to allow us to do all synchronous reads and writes
 	On open, it reads the entire db into a dictionary
@@ -13,7 +14,7 @@
 	TODO: auto sweep after a write if getting full?
 */
 
-SyncDB = ideal.Proto.extend().newSlots({
+window.SyncDB = ideal.Proto.extend().newSlots({
     type: "SyncDB",
     idb: null,
     cache: null,

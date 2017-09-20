@@ -1,5 +1,7 @@
 
-BMMailMessage = BMAppMessage.extend().newSlots({
+"use strict"
+
+window.BMMailMessage = BMAppMessage.extend().newSlots({
     type: "BMMailMessage",
 	//canReceive: false,
 }).setSlots({

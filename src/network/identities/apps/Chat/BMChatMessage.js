@@ -19,7 +19,6 @@ BMChatMessage = BMAppMessage.extend().newSlots({
 	},
 	
 	title: function() {
-		console.log(this.typeId() + " content = " + this.content())
 	    return this.content()
 	},
 	
@@ -34,9 +33,7 @@ BMChatMessage = BMAppMessage.extend().newSlots({
 	},
 	
 	setContentDict: function(contentDict) {
-		console.log(this.typeId() + " setContentDict = ", contentDict)
 		this.setContent(contentDict.content)
-		console.log(this.typeId() + " after setContentDict title = ", this.title())
 		//this.scheduleSyncToView()
 		return this
 	},

@@ -15,6 +15,7 @@ BMChatThread = BMStorableNode.extend().newSlots({
         this.setNodeMinWidth(600)
         this.setNodeHasFooter(true)
         this.setNodeInputFieldMethod("setInputFieldValue")
+		this.createSubnodeIndex()
     },
 
 	title: function() {
@@ -76,8 +77,9 @@ BMChatThread = BMStorableNode.extend().newSlots({
 	
 	addMessage: function(msg) {	
 		console.log(this.nodePathString() + " addMessage " + msg.typeId())
-	    this.addSubnodeIfAbsent(msg)
-	    this.postShouldFocusSubnode(msg)
+	    if(this.addSubnodeIfAbsent(msg)) {
+	    	this.postShouldFocusSubnode(msg)
+		}
 	    return this
 	},
 })

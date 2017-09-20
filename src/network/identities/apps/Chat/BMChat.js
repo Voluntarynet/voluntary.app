@@ -42,7 +42,7 @@ BMChat = BMApplet.extend().newSlots({
 	},
 	
     handleAppMsg: function(msg) {
-		console.log(this.nodePathString() + " handleAppMsg " + msg.typeId() + " ", msg.dataDict())
+		//console.log(this.nodePathString() + " handleAppMsg " + msg.typeId() + " ", msg.dataDict())
 		if (msg.type() == BMChatMessage.type()) {
 			this.handleSentMessage(msg)
 			this.handleReceivedMessage(msg)
@@ -61,9 +61,9 @@ BMChat = BMApplet.extend().newSlots({
 	handleReceivedMessage: function(msg) {
         //console.log("handleReceivedMessage msg.receiverId() = ", msg.receiverId().type())
         if (msg.receiverId()) {
-            console.log("msg.receiverId() = ", msg.receiverId().type())
+            //console.log("msg.receiverId() = ", msg.receiverId().type())
             if (msg.receiverId().equals(this.localIdentity())) {
- 	            console.log(this.nodePathString() + " handleReceivedMessage adding " + msg.typeId() + "  ", msg.dataDict())
+ 	            //console.log(this.nodePathString() + " handleReceivedMessage adding " + msg.typeId() + "  ", msg.dataDict())
    				var thread = this.threads().threadForRemoteIdentity(msg.senderId())
     			if (thread) {
     				thread.addMessage(msg)

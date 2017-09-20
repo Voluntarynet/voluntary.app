@@ -106,7 +106,7 @@ BMRemoteIdentity = BMNavNode.extend().newSlots({
 		var dict = this.decryptJson(objMsg.encryptedData())
 		if (dict) {
 			var appMsg = BMAppMessage.fromDataDict(dict)
-			console.log("created ", appMsg.typeId())
+			//console.log("created ", appMsg.typeId())
 			
 			if (appMsg) {
 				appMsg.setSenderId(this)

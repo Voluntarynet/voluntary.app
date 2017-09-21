@@ -273,7 +273,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
 	},
 
     didChangeSubnodeList: function() {
-        this.sortIfNeeded()
+        this.sortIfNeeded() // TODO: move to a scheduleSort system - triggered before syncToStore and didUpdateNode?
         this.scheduleSyncToStore()
         this.didUpdateNode()
         return this

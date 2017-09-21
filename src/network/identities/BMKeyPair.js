@@ -71,7 +71,12 @@ window.BMKeyPair = BMNavNode.extend().newSlots({
 		var senderPublicKey = new bitcore.PublicKey(senderPublicKeyString)
 		var decryptor = ECIES().privateKey(this.privateKey()).publicKey(senderPublicKey);
 		//console.log("encryptedMsg = '" + encryptedMsg + "'")
-		var decrypted = decryptor.decrypt(encryptedBuffer).toString();
+		var decrypted = null
+		try {
+    		decrypted = decryptor.decrypt(encryptedBuffer).toString();
+        } catch(e) {
+            
+        }
 		return decrypted
 	},
 

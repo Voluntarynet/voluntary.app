@@ -1445,10 +1445,12 @@ window.DivView = ideal.Proto.extend().newSlots({
 		if (aBool) {
 			if (this._isRegisteredForPaste == false) {
 				this._isRegisteredForPaste = true
-	        	this.element().addEventListener('touchstart',  this.touchstartListenerFunc(), false);
-	        	this.element().addEventListener('touchmove',   this.touchmoveListenerFunc(), false);
-	        	this.element().addEventListener('touchcancel', this.touchcancelListenerFunc(), false);
-	        	this.element().addEventListener('touchend',    this.touchendListenerFunc(), false);
+				//var b = Modernizr.passiveeventlisteners ? {passive: true} : false
+				var b = { passive: true}
+	        	this.element().addEventListener('touchstart',  this.touchstartListenerFunc(), b);
+	        	this.element().addEventListener('touchmove',   this.touchmoveListenerFunc(), b);
+	        	this.element().addEventListener('touchcancel', this.touchcancelListenerFunc(), b);
+	        	this.element().addEventListener('touchend',    this.touchendListenerFunc(), b);
 			}
 		} else {
 			if (this._isRegisteredForPaste == true) {
@@ -1813,13 +1815,9 @@ window.DivView = ideal.Proto.extend().newSlots({
         // prevent pasting text by default after event
         e.preventDefault(); 
 
-        var clipboardData = {},
-        rDataText,
-        rDataHTML;
-
-        clipboardData = e.clipboardData;
-        rDataHTML = clipboardData.getData('text/html');
-        rDataPText = clipboardData.getData('text/plain');
+        var clipboardData = e.clipboardData;
+        var rDataHTML = clipboardData.getData('text/html');
+        var rDataPText = clipboardData.getData('text/plain');
 
         var htmlToPlainText = function (html)
         {

@@ -115,7 +115,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     delete: function() {
         if (this.canDelete()) {
 			this.setOpacity(0)
-			//this.setRight(-this.width())
+			//this.setRight(-this.clientWidth())
 			this.setMinAndMaxHeight(0)
 			setTimeout(() => {
 	            this.node().performAction("delete")
@@ -169,7 +169,7 @@ window.BrowserRow = NodeView.extend().newSlots({
 
 		if (this._isTouchDown) {
 			var diff = this.touchDownDiffWithEvent(event)
-			if ((-diff.xd) > this.width() * 0.25) {
+			if ((-diff.xd) > this.clientWidth() * 0.25) {
 				this.delete()
 			} else {
 		        this.slideBack()

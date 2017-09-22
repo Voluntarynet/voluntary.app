@@ -12,11 +12,23 @@ window.BMStorableNode = BMNode.extend().newSlots({
     loadsUnionOfChildren: false,
     isUnserializing: false,
     
+    //existsInStore: false,
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)
         this.setStoredSlots([])
         this.scheduleSyncToStore()
+    },
+    
+    // --- overrides from parent class ---
+    // hook this to schedules writes when subnode list is changed
+
+    didChangeSubnodeList: function() {
+        BMNode.didChangeSubnodeList.apply(this)
+        if (this.shouldStoreSubnodes()) {
+            this.scheduleSyncToStore()
+        }
+        return this
     },
 
     // -----------------------------------------------

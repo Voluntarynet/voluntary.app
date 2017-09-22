@@ -293,7 +293,6 @@ window.BMNode = ideal.Proto.extend().newSlots({
 
     didChangeSubnodeList: function() {
         this.sortIfNeeded() // TODO: move to a scheduleSort system - triggered before syncToStore and didUpdateNode?
-        this.scheduleSyncToStore()
         this.didUpdateNode()
         return this
     },
@@ -514,8 +513,8 @@ window.BMNode = ideal.Proto.extend().newSlots({
 		}
 		subnodes.forEach((subnode) => { subnode.setParentNode(this) })
         this._subnodes = subnodes
-		this.scheduleSyncToStore()
 		this.reindexSubnodesIfNeeded()
+        this.didChangeSubnodeList()
         //this.verifySubnodesHaveParentNodes()
         return this
     },
@@ -527,12 +526,6 @@ window.BMNode = ideal.Proto.extend().newSlots({
         }
         return this
     },
-
-	
-	scheduleSyncToStore: function() {
-		// to be used by subclasses
-		// useful for persistence
-	},
 	
 	// subnode sorting
 	

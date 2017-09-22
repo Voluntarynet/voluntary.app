@@ -1,5 +1,14 @@
 
+goal:
+    avoid storing objects that aren't referenced
+    separate _isDirty from store list, 
+        only schedule for store if:
+            !_existsInStore & root or 
+            _existsInStore & stored slot changed
 
+    need a _existsInStored
+        - set true on load
+        - set true on write
 Inside setPropertiesDict, call unscheduleFinalize on values being replaced by loaded objects?
 
 

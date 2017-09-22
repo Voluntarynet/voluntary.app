@@ -12,17 +12,18 @@ Identity
                     and then route to the corresponding app
                     
 
-BMNode - sort on change if if subnodeSortMethod set
+--- SERVICES ----------------------------------------------
                     
-Twittter
+Twittter [TO PEERS]
    profile ]- from user public profile? periodically send clear text message
    posts ]- my posts sent in clear text
    feed ]- my posts + following posts
    messages ]- chat
    following ]- auto follow all contacts, but support turning off follow
    followers
+   search?
    
-Forums
+Forums [BROADCAST?]
     profile
     friends
     category tree
@@ -129,7 +130,7 @@ Markets: craigslist / ebay
 *** ability to like/repost
 *** respondTo: postid
 
-// private msg
+// private msg ----------------------------------------------
 
 {
   "msgType": "object",

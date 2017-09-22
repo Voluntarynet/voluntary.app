@@ -1,29 +1,27 @@
 "use strict"
 
-window.SyncScheduler = ideal.Proto.extend().newSlots({
-    type: "SyncScheduler",
+/*
+    expected syncMethods:
 
-    /*
-        expected syncMethods:
+        // store
+    	syncToStore
+
+        // node
+    	syncToView
+    	syncFromView
+
+        // view
+    	syncToNode	
+    	syncFromNode
+    	
+    example use:
     
-            // store
-        	syncToStore
-
-            // node
-        	syncToView
-        	syncFromView
-
-            // view
-        	syncToNode	
-        	syncFromNode
-        	
-        example use:
-        
-        SyncScheduler.scheduleTargetToSync(this, "syncToView")
-	*/
+    SyncScheduler.scheduleTargetToSync(this, "syncToView")
+*/
 	
+window.SyncScheduler = ideal.Proto.extend().newSlots({
+    type: "SyncScheduler",	
 	syncSets: ideal.Map.clone(),
-	
 	hasTimeout: false,
 	isProcessing: false,	
 	debug: false,

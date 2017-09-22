@@ -23,6 +23,9 @@ window.BMDataStoreRecord = BMFieldSetNode.extend().newSlots({
 		}
 	},
 	
+	valuePid: function() {
+	    return this.title()
+	},
 /*
 	subtitle: function() {
 		return this.value().length + " bytes"
@@ -30,11 +33,18 @@ window.BMDataStoreRecord = BMFieldSetNode.extend().newSlots({
 	*/
 	
 	value: function() {
-		return NodeStore.shared().sdb().at(this.title())
+		return NodeStore.shared().sdb().at(this.valuePid())
 	},
 	
 	dictString: function() {
 		return JSON.stringify(JSON.parse(this.value()), null, 2)
+	},
+	
+	delete: function() {
+	    BMFieldSetNode.delete.apply(this)
+//        NodeStore.shared().justRemoveObject(this.value())
+        NodeStore.shared().justRemovePid(this.valuePid())
+	    return this
 	},
 })
 

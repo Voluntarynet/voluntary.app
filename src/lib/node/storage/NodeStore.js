@@ -179,12 +179,14 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     addDirtyObject: function(obj) {
         // dirty objects list won't be huge, so a list is ok
         
+        // don't use pid for these keys so we can
+        // use pid to see if the obj gets referrenced when walked from a stored node
         
-		var pid = obj.pid()
-        if (!(pid in this._dirtyObjects)) {
+		var objId = obj.uniqueId()
+        if (!(objId in this._dirtyObjects)) {
 			//console.log("addDirtyObject(" + obj.pid() + ")")
 	       // this.debugLog("addDirtyObject(" + obj.pid() + ")")
-            this._dirtyObjects[pid] = obj
+            this._dirtyObjects[objId] = obj
             this.setStoreTimeoutIfNeeded()
         }
         
@@ -248,9 +250,9 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 			var dirtyBucket = this._dirtyObjects
         	this._dirtyObjects = {}
 
-	        for (var pid in dirtyBucket) {
-                if (dirtyBucket.hasOwnProperty(pid)) {
-		            var obj = dirtyBucket[pid]
+	        for (var objId in dirtyBucket) {
+                if (dirtyBucket.hasOwnProperty(objId)) {
+		            var obj = dirtyBucket[objId]
 		
 					//if (pid[0] == "_" || this.objectIsReferencedByActiveObjects(obj)) {
 		            	this.storeObject(obj)
@@ -392,6 +394,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 		try {
 	        var nodeDict = this.nodeDictAtPid(obj.pid())
 	        if (nodeDict) {
+	            //obj.setExistsInStore(true)
 	            obj.setNodeDict(nodeDict)
 				this.addJustLoadedObject(obj)
 	            return true
@@ -696,6 +699,13 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         this.sdb().commit()
             
 		return deleteCount
+    },
+    
+    justRemovePid: function(pid) { // private
+        this.sdb().begin()
+        this.sdb().removeAt(pid)
+        this.sdb().commit()
+       return this
     },
     
     // transactions

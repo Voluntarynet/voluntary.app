@@ -1,15 +1,109 @@
 
+
+Inside setPropertiesDict, call unscheduleFinalize on values being replaced by loaded objects?
+
+
+BMNode ---------------------------------
+
+    clone: function() {
+        ...
+        this.scheduleFinalize()
+    }
+    
+    scheduleFinalize: function() {
+        SyncScheduler.scheduleTargetToSync(this, "finalize")
+    },
+    
+    unscheduleFinalize: function() {
+        SyncScheduler.unscheduleTargetToSync(this, "finalize")
+    },
+    
+    
+BMStorableNode ----------------------
+
+    clone: function() {
+        this.unscheduleFinalize()
+        this.scheduleFinalizeFromStore()
+    },
+    
+    finalizeFromStore: function() {
+        // for subclasses to override
+    },
+    
+    finalize: function() {
+        // if called, we didn't just load from the store
+    },
+
+
+---------------------------------
+
+
+- remove all roots except Network?
+    keep servers and stun servers?
+
 - move KeyPair off of Identities in preparation for using BMSessionKeys
 
-- move encryptedData to ObjMessage level
-- encrypt/decrypt via remoteIdentity - allows it to manage session keys
 
-- have ids/apps hangle ObjMessage, mark as placed after allowing all to handle
-- *Message objects store in unencrypted data
+-- new Synchronizer
+            object needing sync marks it locally:
+                this._needsSyncToStore = true
+                this._needsSyncToView = true
+                this._needsSyncFromView = true
+                this._needsSyncToNode = true
+                this._needsSyncFromNode = true
+                
+                    BMNode.scheduleSyncToView: function() {
+                        this._needsSyncToView = true
+                        Synchronizer.shared().addObject(this)
+                    }
+                    
+                    BMNode.sync: function() {
+                        this._isSyncing = true
+                        
+                        if (this._needsSyncToView) { 
+                            if (this._isSyncingToView) {
+                                throw new Error("sync to view loop detected")
+                            }
+                            this._isSyncingToView = true
+                            try {
+                                this.syncToView(); 
+                            } catch(e) {
+                            
+                            }
+                            this._needsSyncToView = false 
+                            if (e) { throw e }
+                        }
+                        ...
+                    }
+                    
+                    BMNode.syncAscpect: function(aspect) {
+                        var active = "_isDoing" + aspect
+                        var needs = "_need" + aspect
+                        var do = "do" + aspect
+                        
+                        if (this[active]) {
+                            throw new Error(aspect + " loop detected")
+                        }
+                        this[active] = true
+                        
+                        try {
+                            this[do].apply(this); 
+                        } catch(e) {
+                        
+                        }
+                        
+                        this[needs] + aspect = false 
+                        if (e) { 
+                            throw e 
+                        }
+                        ...
+                    }
+                
+            addObject(obj)
+        on sync sends:
+        
 
 
-
-SYNC
     store <- node -> view
     
     node scheduleSyncToStore    store <- node
@@ -25,24 +119,9 @@ SYNC
 
 --------
 
-Does an app own a message type? Does it control deleting msg?
+Deleting msg?
 
 
-need a way to delete ObjMessages and to mark them as placed
-options:
-  - 1. wrap the ObjMessage in ObjMsgRecord
-  - 2. add a "local" slot to the ObjMessage (security risk?)
-
-extra ObjMsg attributes:
-{
-    type: "object",
-    ...
-    local: {
-        placed: aBool,
-        deleted: aBool,
-        firstSeenDate: timestamp,
-    }
-}
 
 ChatMsg
     -> ObjMsgRecord 

@@ -16,6 +16,7 @@ window.BMStorableNode = BMNode.extend().newSlots({
     init: function () {
         BMNode.init.apply(this)
         this.setStoredSlots([])
+        this.scheduleSyncToStore()
     },
 
     // -----------------------------------------------

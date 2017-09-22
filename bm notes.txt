@@ -1,0 +1,162 @@
+BMMessage -> BMSysMsg
+
+BMPrivateMessage -> BMAppMsg
+
+Identity
+    contacts
+        contact
+            sessionKeys
+            appFeedKeys appName/keys
+                    if a msgObj is from this contact, 
+                    we'll try these keys to decrypt message,
+                    and then route to the corresponding app
+                    
+
+BMNode - sort on change if if subnodeSortMethod set
+                    
+Twittter
+   profile ]- from user public profile? periodically send clear text message
+   posts ]- my posts sent in clear text
+   feed ]- my posts + following posts
+   messages ]- chat
+   following ]- auto follow all contacts, but support turning off follow
+   followers
+   
+Forums
+    profile
+    friends
+    category tree
+        thread ]- some public key whose private key is known to readers
+
+Slack
+    category tree
+        thread
+
+FB
+    profile
+    posts
+    feed
+    friends
+
+LinkedIn
+    profile
+    *invitations*
+    myFeed
+    connections
+    jobs?
+    
+Notifications
+    mentions in any know threads? include mentions in public tweet list?
+   
+Instagram
+    profile
+    posts
+    feed
+    followers 
+    following
+ 
+Tumblr
+    profile
+    posts
+    feed + *feed filters [text/photos/quotes/links/audio/video/asks]*
+    *links*
+
+Flickr
+
+Youtube *channel ids under identity * [periscope/vine]
+    profile
+    posts
+    feed
+    channels
+        posts
+    
+ 
+Pinterest
+    profile
+    boards
+        board ]- add item, current manifest msg
+            image, text
+                comments
+
+Reddit / Delicious / Digg / BizSugar (biz focused) / StumbleUpon
+    profile
+        posts index
+    messages
+    channels
+        posts + vote messages
+    
+Messaging: SnapChat / WhatsApp / Viber / Signal / Telegram
+    
+Quora/ StackOverflow
+    account
+        posts
+        rating
+    search/filter
+        posts
+        
+WeChat
+    payment
+        service accounts
+        red packet / transfer / go dutch
+        shopping
+        ticket
+        taxi
+    scan QR code
+    messages
+        text / audio / video
+        group chat
+        social apps
+    fitness
+    moments
+    games
+    official account
+        experience
+        courses
+        books
+        activities
+        post
+    
+
+Markets: craigslist / ebay
+    profile/account
+        cart
+        notifications
+    search / filter
+    categories
+        posts
+            post
+
+*** ability to like/repost
+*** respondTo: postid
+
+// private msg
+
+{
+  "msgType": "object",
+  "encryptedData": "A285E2bUUj8iRQcxQm+TX5dGVoQHw1AWSgF+FjjbnsFJ4uLq0A0ChpY9ljhqdxggkwO1QWPSPPR1QII6+2nkLmXi6Odw/AwZsflOPeFr7Z+3lsHee3yG7MZI5nNOeZodCJ2V/rasrGzoV2owoE+B+vCzVEQytnOT3kkohVy1qTGt4WCNvrOxolm0U3X0psMhUg==",
+  "sender": "036f391366d4523f22450731426f935f9746568407c350164a017e1638db9ec149",
+  "ts": 1505886277,
+  "sig": "IP9BNCNs5E1BPQRD168pj2eDR/ZrNqLS9QWXi2BRGKghbayQPZHDUw4FVcdyUzDSg1UP+KvwP7I9FpfvvYVoHeE="
+}
+
+// public msg to contacts
+
+{
+  "msgType": "object",
+  "data": { type: "BMTwitter", text: "", images: [], mentions: [], prev: msgHash },
+  "sender": "036f391366d4523f22450731426f935f9746568407c350164a017e1638db9ec149",
+  "ts": 1505886277,
+  "sig": "IP9BNCNs5E1BPQRD168pj2eDR/ZrNqLS9QWXi2BRGKghbayQPZHDUw4FVcdyUzDSg1UP+KvwP7I9FpfvvYVoHeE="
+}
+
+// public msg to public thread
+
+{
+  "msgType": "object",
+  "data": { type: "BMTwitter", text: "", images: [], prev: msgHash },
+  "sender": "036f391366d4523f22450731426f935f9746568407c350164a017e1638db9ec149",
+  "ts": 1505886277,
+  "sig": "IP9BNCNs5E1BPQRD168pj2eDR/ZrNqLS9QWXi2BRGKghbayQPZHDUw4FVcdyUzDSg1UP+KvwP7I9FpfvvYVoHeE="
+}
+
+

@@ -42,6 +42,10 @@ window.SyncScheduler = ideal.Proto.extend().newSlots({
         this.syncSet(syncMethod).atPut(target.typeId(), target)
     	this.setTimeoutIfNeeded()
     },
+    
+    unscheduleTargetToSync: function(target, syncMethod) {
+        this.syncSet(syncMethod).removeKey(target.typeId())
+    },
 	
 	setTimeoutIfNeeded: function() {
 	    if (!this.hasTimeout()) {

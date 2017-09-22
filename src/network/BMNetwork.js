@@ -36,6 +36,8 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
 		
 		this.setBlacklists(NodeStore.shared().rootInstanceWithPidForProto("_blacklists", BMBlacklists))
 		this.addSubnode(this.blacklists())
+		
+		//this.addStoredSlots(["messages", "blacklists"])
     },
 
 	shared: function() {

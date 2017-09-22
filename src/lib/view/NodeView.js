@@ -148,13 +148,11 @@ window.NodeView = DivView.extend().newSlots({
     },
     
     scheduleSyncToNode: function() {
-        //NodeViewSynchronizer.addToNode(this)  
         SyncScheduler.scheduleTargetToSync(this, "syncToNode")
         return this
     },
     
     scheduleSyncFromNode: function() {
-        //NodeViewSynchronizer.addFromNode(this)    
         SyncScheduler.scheduleTargetToSync(this, "syncFromNode")
         return this
     },

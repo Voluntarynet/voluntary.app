@@ -57,9 +57,28 @@ window.BMNode = ideal.Proto.extend().newSlots({
         this._didUpdateNodeNote = NotificationCenter.shared().newNotification().setSender(this._uniqueId).setName("didUpdateNode")
         this._shouldFocusSubnodeNote = NotificationCenter.shared().newNotification().setSender(this._uniqueId).setName("shouldFocusSubnode")
         this._nodeMinWidth = 180
+        this.scheduleFinalize()
         return this
     },
+    
+    // --- finalize ----------
 
+    scheduleFinalize: function() {
+        SyncScheduler.scheduleTargetToSync(this, "finalize")
+
+    },
+    
+    unscheduleFinalize: function() {
+        SyncScheduler.unscheduleTargetToSync(this, "finalize")
+    },
+    
+    
+    finalize: function() {
+        // for subclasses to override
+    },    
+    
+    // -----------------------
+    
 	nodeVisibleClassName: function() {
 		if (this._nodeVisibleClassName) {
 			return this._nodeVisibleClassName
@@ -284,7 +303,6 @@ window.BMNode = ideal.Proto.extend().newSlots({
     scheduleSyncToView: function() {
         if (this.view()) {
             SyncScheduler.scheduleTargetToSync(this, "syncToView")
-        	//BMNodeSynchronizer.addToView(this)
 		}
         return this
     },

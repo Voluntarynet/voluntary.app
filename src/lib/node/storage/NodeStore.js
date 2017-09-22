@@ -95,13 +95,10 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     folderName: "NodeStore",
     folder: null,
     
-    dirtyObjects: null,
-    hasTimeout: false,
-    
+    dirtyObjects: null,    
     activeObjectsDict: null,
 
 	sdb: null,
-	
 	isReadOnly: false,
 
     debug: false,
@@ -179,33 +176,27 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         
         // don't use pid for these keys so we can
         // use pid to see if the obj gets referrenced when walked from a stored node
-        
-        if (obj.hasPid()) {
-            console.warn("addDirtyObject: " + obj.pid())
-        } else {
-            console.warn("addDirtyObject: " + obj.typeId())
-        }
-        
+                
 		var objId = obj.uniqueId()
         if (!(objId in this._dirtyObjects)) {
+            
+            if (obj.hasPid()) {
+                console.warn("addDirtyObject: " + obj.pid())
+            } else {
+                console.warn("addDirtyObject: " + obj.typeId())
+            }
+        
 			//console.log("addDirtyObject(" + obj.pid() + ")")
 	       // this.debugLog("addDirtyObject(" + obj.pid() + ")")
             this._dirtyObjects[objId] = obj
-            this.setStoreTimeoutIfNeeded()
+            this.scheduleStore()
         }
         
         return this
     },
     
-    setStoreTimeoutIfNeeded: function() {
-        if (!this._hasStoreTimeout && this.hasDirtyObjects()) {
-            this._hasStoreTimeout = true
-            setTimeout( () => { 
-                this.storeDirtyObjects() 
-                this._hasStoreTimeout = false
-            }, 10)
-        }
-        
+    scheduleStore: function() {
+        SyncScheduler.scheduleTargetToSync(this, "storeDirtyObjects")
         return this
     },
         
@@ -309,6 +300,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 	},
 
     storeObject: function(obj) {
+        console.log("NodeStore.storeObject(" + obj.pid() + ")")
 		this.assertIsWritable()
 		
 		var aDict = obj.nodeDict()
@@ -317,7 +309,6 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 			obj.willStore(aDict)
 		}
 		
-        console.log("NodeStore.storeObject(" + obj.pid() + ")")
 	
 		var serializedString = JSON.stringify(aDict)
         this.sdb().atPut(obj.pid(), serializedString)
@@ -396,7 +387,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
             return null
         }
         
-        console.log("objectForPid(" + pid + ")")
+        //console.log("NodeStore.objectForPid(" + pid + ")")
         
         var obj = this.activeObjectsDict()[pid]
         if (obj) {

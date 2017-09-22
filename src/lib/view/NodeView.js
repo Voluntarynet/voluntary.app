@@ -137,7 +137,7 @@ window.NodeView = DivView.extend().newSlots({
         var node = this.node()
         if (node) {
             node.didUpdateNode()
-            node.scheduleSyncToStore()
+            //node.scheduleSyncToStore()
         }
         return this
     },

@@ -1,7 +1,6 @@
 "use strict"
 
 JSImporter.pushRelativePaths([
-    "SyncScheduler.js",
     "BMNode.js",
     "storage/_imports.js",
     "nodes/_imports.js",

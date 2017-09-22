@@ -33,7 +33,7 @@ window.BMChatThreads = BMStorableNode.extend().newSlots({
 		}
 	},
 	
-	didFinalizeLoadFromStore: function() {
+	loadFinalize: function() {
 		this.updateIdentities()
 	},
 	

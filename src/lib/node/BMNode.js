@@ -65,7 +65,6 @@ window.BMNode = ideal.Proto.extend().newSlots({
 
     scheduleFinalize: function() {
         SyncScheduler.scheduleTargetToSync(this, "finalize")
-
     },
     
     unscheduleFinalize: function() {

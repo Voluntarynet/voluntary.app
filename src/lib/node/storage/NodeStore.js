@@ -99,7 +99,6 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     hasTimeout: false,
     
     activeObjectsDict: null,
-    justLoadedObjectsDict: null,
 
 	sdb: null,
 	
@@ -110,7 +109,6 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     init: function () {
         this.setDirtyObjects({})
         this.setActiveObjectsDict({})
-        this.setJustLoadedObjectsDict({})
 		this.setSdb(SyncDB.clone())
 		//this.asyncOpen()
     },
@@ -182,6 +180,12 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         // don't use pid for these keys so we can
         // use pid to see if the obj gets referrenced when walked from a stored node
         
+        if (obj.hasPid()) {
+            console.warn("addDirtyObject: " + obj.pid())
+        } else {
+            console.warn("addDirtyObject: " + obj.typeId())
+        }
+        
 		var objId = obj.uniqueId()
         if (!(objId in this._dirtyObjects)) {
 			//console.log("addDirtyObject(" + obj.pid() + ")")
@@ -220,7 +224,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 	},
 
     storeDirtyObjects: function() {
-		this.debugLog(" --- begin storeDirtyObjects --- ")
+		console.log(" --- begin storeDirtyObjects --- ")
 		
 		//console.log(" --- begin storeDirtyObjects --- ")
 		if (!this.hasDirtyObjects()) {
@@ -245,29 +249,39 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         
         var totalStoreCount = 0
 
+        var justStoredPids = {}
+        
 		while (true) {
-	        var storeCount = 0
+		    
+	        var thisLoopStoreCount = 0
 			var dirtyBucket = this._dirtyObjects
         	this._dirtyObjects = {}
 
 	        for (var objId in dirtyBucket) {
                 if (dirtyBucket.hasOwnProperty(objId)) {
 		            var obj = dirtyBucket[objId]
-		
+		            var pid = obj.pid()
+		            
+		            if (justStoredPids[pid]) {
+		                throw new Error("attempt to double store " + pid)
+		            }
+		            
 					//if (pid[0] == "_" || this.objectIsReferencedByActiveObjects(obj)) {
 		            	this.storeObject(obj)
+		            	justStoredPids[pid] = obj
 					//}
 					
-		            storeCount ++
+		            thisLoopStoreCount ++
 				}
 	        }
 	
-			totalStoreCount += storeCount
-			
-			if (storeCount == 0) {
+			totalStoreCount += thisLoopStoreCount
+			console.log("totalStoreCount: ", totalStoreCount)
+			if (thisLoopStoreCount == 0) {
 				break
 			}
 		} 
+		
         
         this.debugLog("NodeStore.storeDirtyObjects stored " +  totalStoreCount + " objects")
 		if (this.debug()) {
@@ -275,6 +289,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 		}
 
 		this.sdb().commit() // flushes write cache
+		console.log("--- commit ---")
 
         /*
 		if (this.debug()) {
@@ -302,7 +317,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 			obj.willStore(aDict)
 		}
 		
-        //this.debugLog("storeObject(" + obj.pid() + ") = " + s)
+        console.log("NodeStore.storeObject(" + obj.pid() + ")")
 	
 		var serializedString = JSON.stringify(aDict)
         this.sdb().atPut(obj.pid(), serializedString)
@@ -340,63 +355,19 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         }   
         return obj._pid     
     },
-
-
-	// ----------------------------------------------------
-    // just loaded objects
-	// ----------------------------------------------------
-    
-	isNewLoadCycle: function() {
-		return this.justLoadedObjectsDict().slotValues().length == 0
-	},
-	
-	addJustLoadedObject: function(obj) {
-		this.justLoadedObjectsDict()[obj.pid()] = obj
-		return this
-	},
-	
-	finalizeJustLoadedObjects: function() {
-		var loadedObjs = this.justLoadedObjectsDict().slotValues()
-		//console.log(this.type() + " finalizeJustLoadedObjects ", loadedObjs.length)
-        loadedObjs.forEach((obj) => {
-            obj.didFinalizeLoadFromStore()
-        })
-		this.clearJustLoadedObjects()
-		return this
-	},
-	
-	clearJustLoadedObjects: function() {
-		this.setJustLoadedObjectsDict({})
-		return this
-	},
-	
-    setFinalizeLoadTimeoutIfNeeded: function() {
-        if (!this._hasFinalizeLoadTimeout) {
-            this._hasFinalizeLoadTimeout = true
-            setTimeout( () => { 
-                this.finalizeJustLoadedObjects() 
-                this._hasFinalizeLoadTimeout = false
-            }, 10)
-        }
-        
-        return this
-    },
 	
 	// ----------------------------------------------------
     // reading
 	// ----------------------------------------------------
 	
 	
-    loadObject: function(obj) {
-			
-		this.setFinalizeLoadTimeoutIfNeeded()
-		
+    loadObject: function(obj) {		
 		try {
 	        var nodeDict = this.nodeDictAtPid(obj.pid())
 	        if (nodeDict) {
 	            //obj.setExistsInStore(true)
 	            obj.setNodeDict(nodeDict)
-				this.addJustLoadedObject(obj)
+	            obj.scheduleLoadFinalize()
 	            return true
 	        }
 		} catch(error) {
@@ -425,13 +396,14 @@ window.NodeStore = ideal.Proto.extend().newSlots({
             return null
         }
         
+        console.log("objectForPid(" + pid + ")")
+        
         var obj = this.activeObjectsDict()[pid]
         if (obj) {
             //this.debugLog("objectForPid(" + pid + ") found in mem")
             return obj
         }
 
-		this.setFinalizeLoadTimeoutIfNeeded()
         //this.debugLog("objectForPid(" + pid + ")")
         
         var nodeDict = this.nodeDictAtPid(pid)
@@ -448,10 +420,11 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         }
         var obj = proto.clone()
         // need to set pid before dict to handle circular refs
-        obj.setPid(pid) // calls addActiveObject()
+        obj.justSetPid(pid) // calls addActiveObject()
+        obj.setExistsInStore(true)
 		//this.debugLog(" nodeDict = ", nodeDict)
         obj.setNodeDict(nodeDict)
-		this.addJustLoadedObject(obj)
+		obj.scheduleLoadFinalize()
 
         //this.debugLog("objectForPid(" + pid + ")")
 

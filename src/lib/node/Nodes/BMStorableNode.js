@@ -12,7 +12,7 @@ window.BMStorableNode = BMNode.extend().newSlots({
     loadsUnionOfChildren: false,
     isUnserializing: false,
     
-    //existsInStore: false,
+    existsInStore: false,
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)
@@ -46,6 +46,16 @@ window.BMStorableNode = BMNode.extend().newSlots({
         NodeStore.shared().addActiveObject(this)
         this.scheduleSyncToStore()
         return this
+    },
+    
+    justSetPid: function(aPid) { // don't schedule sync
+        this._pid = aPid
+        NodeStore.shared().addActiveObject(this)
+        return this
+    },
+    
+    hasPid: function() {
+        return this._pid != null
     },
     
     assignPid: function() {
@@ -207,18 +217,23 @@ window.BMStorableNode = BMNode.extend().newSlots({
     
 	// --- udpates ---
 	
-	didFinalizeLoadFromStore: function() {
+    scheduleLoadFinalize: function() {
+        SyncScheduler.scheduleTargetToSync(this, "loadFinalize")
+    },
+    
+    
+	loadFinalize: function() {
         // called after all objects loaded within this event cycle
 	},
 	
     didLoadFromStore: function() {
 		//console.log(this.type() + " didLoadFromStore in BMStorableNode")
         // chance to finish any unserializing this particular instance
-		// also see: didFinalizeLoadFromStore
+		// also see: loadFinalize
     },
 
 	scheduleSyncToStore: function() {
-		if (!this._isUnserializing && this.shouldStore() && !this.isUnserializing()) {
+		if (this.hasPid() && !this._isUnserializing && this.shouldStore() && !this.isUnserializing()) {
         	NodeStore.shared().addDirtyObject(this)
 			this._refPids = null
 		}
@@ -266,24 +281,6 @@ window.BMStorableNode = BMNode.extend().newSlots({
     
     store: function() {
         NodeStore.shared().storeObject(obj)
-        return this
-    },
-    
-    existsInStore: function() {
-        return localStorage.getItem(obj.pid()) != null
-    },
-    
-    loadIfPresent: function() {
-        if (this.existsInStore()) {
-            NodeStore.shared().loadObject(this)
-        }
-        return this
-    },
-    
-    storeIfAbsent: function() {
-        if (!this.existsInStore()) {
-            this.store()
-        }
         return this
     },
     

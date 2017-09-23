@@ -107,10 +107,10 @@ window.BMMessages = BMStorableNode.extend().newSlots({
         
         this.addSubnode(objMsg)
         
-		setTimeout(() => {
+		//setTimeout(() => {
             this.handleMessage(objMsg)
 	        this.broadcastMessage(objMsg)
-		}, 10)
+		//}, 10)
         
         return true
     },

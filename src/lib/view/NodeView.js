@@ -1,6 +1,5 @@
-"use strict"
 
-window.NodeView = DivView.extend().newSlots({
+NodeView = DivView.extend().newSlots({
     type: "NodeView",
     node: null,
     ownsView: true,
@@ -137,7 +136,7 @@ window.NodeView = DivView.extend().newSlots({
         var node = this.node()
         if (node) {
             node.didUpdateNode()
-            //node.scheduleSyncToStore()
+            node.scheduleSyncToStore()
         }
         return this
     },
@@ -148,12 +147,14 @@ window.NodeView = DivView.extend().newSlots({
     },
     
     scheduleSyncToNode: function() {
-        SyncScheduler.scheduleTargetToSync(this, "syncToNode")
+        //NodeViewSynchronizer.addToNode(this)  
+        SyncScheduler.scheduleTargetAndMethod(this, "syncToNode")
         return this
     },
     
     scheduleSyncFromNode: function() {
-        SyncScheduler.scheduleTargetToSync(this, "syncFromNode")
+        //NodeViewSynchronizer.addFromNode(this)    
+        SyncScheduler.scheduleTargetAndMethod(this, "syncFromNode")
         return this
     },
 

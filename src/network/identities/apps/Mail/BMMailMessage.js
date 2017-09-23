@@ -42,18 +42,13 @@ window.BMMailMessage = BMAppMessage.extend().newSlots({
 			this.removeAction("send")
 		}		
 	},
-
-	didLoadFromStore: function() {
-
-		if (App.shared().network()) {
-			this.setupInputsFromPubkeys()
-		} else {
-			setTimeout(() => {
-				this.setupInputsFromPubkeys()
-			})
-		}
-
-		return this
+	
+	finalize: function() {
+		this.setupInputsFromPubkeys()
+	},
+	
+	loadFinalize: function() {
+		this.setupInputsFromPubkeys()
 	},
 
 	// ids

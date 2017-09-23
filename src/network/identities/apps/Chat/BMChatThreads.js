@@ -8,21 +8,7 @@ window.BMChatThreads = BMStorableNode.extend().newSlots({
         BMStorableNode.init.apply(this)
         this.setShouldStore(true)
         this.setTitle("threads")
-
-		setTimeout(() => { 
-			// so this happens after load from store
-		    if (this.parentNode()) {
-			    this.updateIdentities()
-		    }
-		}, 0)
     },
-
-/*
-	didLoadFromStore: function() {
-		BMStorableNode.didLoadFromStore.apply(this)
-		console.log(this.typeId() + " didLoadFromStore")
-	},
-	*/
 
 	setParentNode: function(aNode) {
 		BMStorableNode.setParentNode.apply(this, [aNode])
@@ -30,6 +16,12 @@ window.BMChatThreads = BMStorableNode.extend().newSlots({
 			this.unwatchIdentities()
 		} else {
 			this.watchIdentities()
+		}
+	},
+	
+	finalize: function() {
+	    if (this.parentNode()) {
+			this.updateIdentities()
 		}
 	},
 	

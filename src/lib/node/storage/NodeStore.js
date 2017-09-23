@@ -202,7 +202,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     scheduleStore: function() {
 		if (!SyncScheduler.isSyncingTargetAndMethod(this, "storeDirtyObjects")) {
 			if (!SyncScheduler.hasScheduledTargetAndMethod(this, "storeDirtyObjects")) {
-				console.warn("scheduleStore!!!!!!!!!!!!!!!!!! currentAction = ", SyncScheduler.currentAction() ? SyncScheduler.currentAction().description() : null)
+				console.warn("scheduleStore currentAction = ", SyncScheduler.currentAction() ? SyncScheduler.currentAction().description() : null)
         		SyncScheduler.scheduleTargetAndMethod(this, "storeDirtyObjects", 1000)
 			}
 		}
@@ -225,7 +225,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 
     storeDirtyObjects: function() {
 		console.log(" --- storeDirtyObjects --- ")
-		console.warn("   isSyncingTargetAndMethod = ", SyncScheduler.isSyncingTargetAndMethod(this, "storeDirtyObjects"))
+		//console.warn("   isSyncingTargetAndMethod = ", SyncScheduler.isSyncingTargetAndMethod(this, "storeDirtyObjects"))
 		
 		//console.log(" --- begin storeDirtyObjects --- ")
 		if (!this.hasDirtyObjects()) {

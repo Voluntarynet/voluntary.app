@@ -1,5 +1,8 @@
 
-MOVE store timer to syncscheduler
+updateIdentities not working
+
+Remove extra setTimeouts
+unify Notification timeout with SyncScheduler?
 
 _existsInStore is different from pid?
     want to know if we should scheduleSyncToStore?

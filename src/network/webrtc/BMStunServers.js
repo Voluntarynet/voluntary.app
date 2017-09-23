@@ -14,10 +14,12 @@ window.BMStunServers = BMStorableNode.extend().newSlots({
         this.setNoteIsSubnodeCount(true)
         this.setNodeMinWidth(270)
         this.addAction("add")
-
-		setTimeout(() => { this.bootstrap() })
 		this.setSubnodeProto(BMStunServer)
     },
+
+	finalize: function() {
+		this.bootstrap()
+	},
 
 	bootstrap: function() {
 		if (this.subnodes().length == 0) {

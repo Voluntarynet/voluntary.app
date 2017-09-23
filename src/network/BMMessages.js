@@ -44,18 +44,9 @@ window.BMMessages = BMStorableNode.extend().newSlots({
         return BMObjectMessage
     },
 
-	didLoadFromStore: function() {
-	    BMStorableNode.didLoadFromStore.apply(this)
-	    
-		//console.log(this.type() + " didLoadFromStore subnodes length = ", this.subnodes().length)
-		//this.reindexSubnodes()
-		
-		// these need to wait until after the initial store load is complete
-		setTimeout(() => {
-			this.removeMessagesNotMatchingIdentities()
-			this.handleAllMessages()
-		}, 0)
-		
+	loadFinalize: function() {	    
+		this.removeMessagesNotMatchingIdentities()
+		this.handleAllMessages()
 		return this
 	},
 	
@@ -107,16 +98,26 @@ window.BMMessages = BMStorableNode.extend().newSlots({
         
         this.addSubnode(objMsg)
         
-		//setTimeout(() => {
-            this.handleMessage(objMsg)
-	        this.broadcastMessage(objMsg)
-		//}, 10)
+		this.handleMessage(objMsg)
+        this.broadcastMessage(objMsg)
         
         return true
     },
     
+	hasPlacedObjMsg: function(objMsg) {
+		return this.placedSet().hasKey(objMsg.hash())
+	},
+	
+	markPlacedObjMsg: function(objMsg) {
+		this.placedSet().addKey(objMsg.hash())
+		return this
+	},
+	
     handleMessage: function(objMsg) {
-        this.network().localIdentities().handleObjMsg(objMsg)
+		if (!this.hasPlacedObjMsg(objMsg)) {
+        	this.network().localIdentities().handleObjMsg(objMsg)
+			this.markPlacedObjMsg(objMsg) 
+		}
     },
 
 	handleAllMessages: function() {

@@ -14,9 +14,11 @@ window.BMRServers = BMStorableNode.extend().newSlots({
         this.setNodeMinWidth(270)
         this.setSubnodeProto(BMRServer)
         this.addAction("add")
-
-		setTimeout(() => { this.bootstrap() })
     },
+
+	finalize: function() {
+		this.bootstrap()
+	},
 
 	bootstrap: function() { 
 		if (this.servers().length == 0) {

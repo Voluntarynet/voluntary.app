@@ -32,39 +32,6 @@ goal:
     existsInStore infered from pid?
     avoid pid assignment until save
     don't use pid in dirty list
-Inside setPropertiesDict, call unscheduleFinalize on values being replaced by loaded objects?
-
-
-BMNode ---------------------------------
-
-    clone: function() {
-        ...
-        this.scheduleFinalize()
-    }
-    
-    scheduleFinalize: function() {
-        SyncScheduler.scheduleTargetToSync(this, "finalize")
-    },
-    
-    unscheduleFinalize: function() {
-        SyncScheduler.unscheduleTargetToSync(this, "finalize")
-    },
-    
-    
-BMStorableNode ----------------------
-
-    clone: function() {
-        this.unscheduleFinalize()
-        this.scheduleFinalizeFromStore()
-    },
-    
-    finalizeFromStore: function() {
-        // for subclasses to override
-    },
-    
-    finalize: function() {
-        // if called, we didn't just load from the store
-    },
 
 
 ---------------------------------

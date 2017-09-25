@@ -1,3 +1,99 @@
+
+
+Locate Msg
+
+    policy: replaceOlder,
+    
+    prev: msgHash,
+    policy: replacePrev,
+
+--------------------
+
+    msgType: "rendez",
+    data: ["ip:port", ...]
+    ts: 
+    ttl: 
+    sender:
+    policy: "replaceOlder", // replacePrev (w prev: hash)
+
+--------------------
+
+    msgType: "delete",
+    prev: hash
+    ts: 
+    sender:
+
+
+--------------------
+
+DB ASSERT ROOT
+
+    msgType: "obj",
+    data: {
+        type: "DB",
+        action: "assert",
+        objs: [
+            {
+                merklePath: "", // so receiver can request merkle unknown path's 
+                objDict: { properties, children }, /* children ids are their merkle root hashes"
+            },
+        ]
+    }
+    ts: 
+    sender:
+    policy: "replaceOlderMsgType", 
+    
+
+DB PUT
+
+    msgType: "obj",
+    data: {
+        type: "DB",
+        action: "put",
+        objs: [
+            {
+                merklePath: "", // so receiver can request merkle unknown path's 
+                objDict: { properties, children }, /* children ids are their merkle root hashes */ 
+            },
+            add all new objects - let peers request old ones if missing
+            
+        ]
+    }
+    ts: 
+    sender:
+    policy: "replaceOlderMsgType", 
+
+DB GET
+
+    msgType: "obj",
+    data: {
+        type: "DB",
+        action: "get",
+        merklePath: "", return all items under valid parts of this path
+    }
+    ts: 
+    ttl: 
+    sender:
+
+--------------------
+
+    msgType: ShareRecord
+    encryptedData: [
+        {
+            type: "record",
+            policy: "overwrite",
+            app: "twitter",
+            location: "profile"
+            dict: {},
+            children: [ids], // optional inline?
+        }
+    ]
+    ts:
+    sender:
+
+--------------------
+
+
 BMMessage -> BMSysMsg
 
 BMPrivateMessage -> BMAppMsg
@@ -13,6 +109,28 @@ Identity
                     
 
 --- SERVICES ----------------------------------------------
+
+***Notifications
+    mentions in any know threads? include mentions in public tweet list?
+*** ability to like/repost
+*** respondTo: postid
+
+
+--- Chat --- 
+
+SnapChat / WhatsApp / Viber / Signal / Telegram
+    profile
+    contacts
+        chat thread
+
+--- Group Chat ---
+
+Slack
+    forum
+        #channels
+        direct msg to members of forum
+        
+--- Social Feed ---
                     
 Twittter [TO PEERS]
    profile ]- from user public profile? periodically send clear text message
@@ -22,16 +140,6 @@ Twittter [TO PEERS]
    following ]- auto follow all contacts, but support turning off follow
    followers
    search?
-   
-Forums [BROADCAST?]
-    profile
-    friends
-    category tree
-        thread ]- some public key whose private key is known to readers
-
-Slack
-    category tree
-        thread
 
 FB
     profile
@@ -40,15 +148,23 @@ FB
     friends
 
 LinkedIn
-    profile
+    profile / RESUME
     *invitations*
     myFeed
     connections
     jobs?
-    
-Notifications
-    mentions in any know threads? include mentions in public tweet list?
+
+
+--- Group Forums ---   
+
+Forums [BROADCAST?]
+    profile
+    friends
+    category tree
+        thread ]- some public key whose private key is known to readers
    
+--- IMAGE SHARING ---
+
 Instagram
     profile
     posts
@@ -64,6 +180,8 @@ Tumblr
 
 Flickr
 
+--- VIDEO SHARING ---
+
 Youtube *channel ids under identity * [periscope/vine]
     profile
     posts
@@ -71,13 +189,15 @@ Youtube *channel ids under identity * [periscope/vine]
     channels
         posts
     
- 
+
 Pinterest
     profile
     boards
         board ]- add item, current manifest msg
             image, text
                 comments
+
+--- LINK VOTING ---
 
 Reddit / Delicious / Digg / BizSugar (biz focused) / StumbleUpon
     profile
@@ -86,8 +206,8 @@ Reddit / Delicious / Digg / BizSugar (biz focused) / StumbleUpon
     channels
         posts + vote messages
     
-Messaging: SnapChat / WhatsApp / Viber / Signal / Telegram
-    
+--- QUESTIONS ---
+
 Quora/ StackOverflow
     account
         posts
@@ -95,6 +215,8 @@ Quora/ StackOverflow
     search/filter
         posts
         
+--- WeChat ---
+
 WeChat
     payment
         service accounts
@@ -118,7 +240,9 @@ WeChat
         post
     
 
-Markets: craigslist / ebay
+--- Markets ---
+
+craigslist / ebay
     profile/account
         cart
         notifications
@@ -127,8 +251,24 @@ Markets: craigslist / ebay
         posts
             post
 
-*** ability to like/repost
-*** respondTo: postid
+localbitcoins
+
+--- Code Sharing ---
+
+github
+
+
+-- Slide sharing ---
+
+slideshare
+
+-- meetups ---
+
+meetup.com
+
+-- file sharing ---
+
+
 
 // private msg ----------------------------------------------
 

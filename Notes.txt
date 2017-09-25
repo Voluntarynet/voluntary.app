@@ -18,23 +18,62 @@ Locate Msg
 
 --------------------
 
-DB PUT
+    msgType: "delete",
+    prev: hash
+    ts: 
+    sender:
+
+
+--------------------
+
+DB ASSERT ROOT
 
     msgType: "obj",
     data: {
-        type: "db",
-        action: "put",
+        type: "DB",
+        action: "assert",
         objs: [
             {
                 merklePath: "", // so receiver can request merkle unknown path's 
-                objDict: { properties, children },
+                objDict: { properties, children }, /* children ids are their merkle root hashes"
             },
         ]
     }
     ts: 
     sender:
     policy: "replaceOlderMsgType", 
+    
 
+DB PUT
+
+    msgType: "obj",
+    data: {
+        type: "DB",
+        action: "put",
+        objs: [
+            {
+                merklePath: "", // so receiver can request merkle unknown path's 
+                objDict: { properties, children }, /* children ids are their merkle root hashes */ 
+            },
+            add all new objects - let peers request old ones if missing
+            
+        ]
+    }
+    ts: 
+    sender:
+    policy: "replaceOlderMsgType", 
+
+DB GET
+
+    msgType: "obj",
+    data: {
+        type: "DB",
+        action: "get",
+        merklePath: "", return all items under valid parts of this path
+    }
+    ts: 
+    ttl: 
+    sender:
 
 --------------------
 

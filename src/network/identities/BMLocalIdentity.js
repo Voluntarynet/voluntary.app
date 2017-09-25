@@ -65,4 +65,6 @@ window.BMLocalIdentity = BMKeyPair.extend().newSlots({
 		return validRemoteIds.concat(otherLocalIds)
 	},
 	
+
+	
 })	

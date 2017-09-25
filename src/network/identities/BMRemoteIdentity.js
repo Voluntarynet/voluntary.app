@@ -36,7 +36,9 @@ window.BMRemoteIdentity = BMNavNode.extend().newSlots({
     },
     
 	postChange: function() {
-        this._didChangeIdentityNote.post()
+        if (this._didChangeIdentityNote) {
+			this._didChangeIdentityNote.post()
+		}
 		return this
 	},
 	

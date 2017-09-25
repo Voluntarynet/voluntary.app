@@ -31,7 +31,7 @@ window.BMChatThreads = BMStorableNode.extend().newSlots({
 	
 	watchIdentities: function() {
 		if (!this._idsObservation) {
-	        this._idsObservation = NotificationCenter.shared().newObservation().setName("didChangeIdentities").setObserver(this).watch()
+	        this._idsObservation = NotificationCenter.shared().newObservation().setName("didChangeIdentity").setObserver(this).watch()
 		}
 	},
 	
@@ -40,7 +40,7 @@ window.BMChatThreads = BMStorableNode.extend().newSlots({
 		this._idsObservation = null
 	},
 	
-	didChangeIdentities: function(aNote) {
+	didChangeIdentity: function(aNote) {
 		//console.log(this.nodePathString() + ".didChangeIdentities() <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
 		setTimeout(() => {
 		this.updateIdentities()

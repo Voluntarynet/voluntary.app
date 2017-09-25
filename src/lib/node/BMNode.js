@@ -64,11 +64,11 @@ window.BMNode = ideal.Proto.extend().newSlots({
     // --- finalize ----------
 
     scheduleFinalize: function() {
-        SyncScheduler.scheduleTargetToSync(this, "finalize")
+        SyncScheduler.scheduleTargetAndMethod(this, "finalize")
     },
     
     unscheduleFinalize: function() {
-        SyncScheduler.unscheduleTargetToSync(this, "finalize")
+        SyncScheduler.unscheduleTargetAndMethod(this, "finalize")
     },
     
     
@@ -300,7 +300,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     
     scheduleSyncToView: function() {
         if (this.view()) {
-            SyncScheduler.scheduleTargetToSync(this, "syncToView")
+            SyncScheduler.scheduleTargetAndMethod(this, "syncToView")
 		}
         return this
     },

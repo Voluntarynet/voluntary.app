@@ -31,9 +31,7 @@ window.BMIdentityField = BMField.extend().newSlots({
 		}
 
         if (inValue != newValue) {
-			setTimeout(() => { 
-			    this.scheduleSyncToView() 
-			}, 10)
+			this.scheduleSyncToView() 
         }
         
 	    //console.log("newValue = '" + newValue + "'")
@@ -41,20 +39,5 @@ window.BMIdentityField = BMField.extend().newSlots({
 		
 		return this
 	},
-	
-	/*
-	cleanedValue: function(v) {
-		v = v.strip()
-		var validPart = v.split(" ").detect((part) => { return bitcore.PublicKey.isValid(part) })
-		if (validPart && validPart != v) {
-			v = validPart
-			BMField.setValue.apply(this, [v])
-			setTimeout(() => { this.didUpdateNode() }, 10)
-		}
-		else {
-			BMField.setValue.apply(this, [v])
-		}	    
-	},
-	*/
 
 })

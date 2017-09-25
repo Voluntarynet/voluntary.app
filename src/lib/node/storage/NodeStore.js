@@ -180,23 +180,32 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 		var objId = obj.uniqueId()
         if (!(objId in this._dirtyObjects)) {
             
+/*
             if (obj.hasPid()) {
                 console.warn("addDirtyObject: " + obj.pid())
             } else {
                 console.warn("addDirtyObject: " + obj.typeId())
             }
-        
+*/
+       
 			//console.log("addDirtyObject(" + obj.pid() + ")")
 	       // this.debugLog("addDirtyObject(" + obj.pid() + ")")
-            this._dirtyObjects[objId] = obj
-            this.scheduleStore()
+			if (!this._dirtyObjects[objId]) {
+            	this._dirtyObjects[objId] = obj
+            	this.scheduleStore()
+			}
         }
         
         return this
     },
     
     scheduleStore: function() {
-        SyncScheduler.scheduleTargetToSync(this, "storeDirtyObjects")
+		if (!SyncScheduler.isSyncingTargetAndMethod(this, "storeDirtyObjects")) {
+			if (!SyncScheduler.hasScheduledTargetAndMethod(this, "storeDirtyObjects")) {
+				console.warn("scheduleStore currentAction = ", SyncScheduler.currentAction() ? SyncScheduler.currentAction().description() : null)
+        		SyncScheduler.scheduleTargetAndMethod(this, "storeDirtyObjects", 1000)
+			}
+		}
         return this
     },
         
@@ -215,14 +224,15 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 	},
 
     storeDirtyObjects: function() {
-		console.log(" --- begin storeDirtyObjects --- ")
+		console.log(" --- storeDirtyObjects --- ")
+		//console.warn("   isSyncingTargetAndMethod = ", SyncScheduler.isSyncingTargetAndMethod(this, "storeDirtyObjects"))
 		
 		//console.log(" --- begin storeDirtyObjects --- ")
 		if (!this.hasDirtyObjects()) {
 			console.log("no dirty objects to store Object.keys(this._dirtyObjects) = ", Object.keys(this._dirtyObjects))
 			return this
 		}
-
+		
 		//this.showDirtyObjects()
 		//this.showActiveObjects()
 		
@@ -233,6 +243,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 			throw new Error(this.type() + " storeDirtyObjects but db not open")
 		}
 		
+		console.log(" --- begin storeDirtyObjects --- ")
 		this.sdb().begin() 
 		
         // it's ok to add dirty objects via setPid() while this is

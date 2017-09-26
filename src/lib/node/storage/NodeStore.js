@@ -126,7 +126,8 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 		if (!this.isOpen()) {
 			return "closed"
 		}
-		return this.sdb().size() + " objects, " + this.descriptionForByteCount(this.sdb().totalBytes())
+		var b = this.sdb().totalBytes()
+		return this.sdb().size() + " objects, " + ByteFormatter.clone().setValue(b).formattedValue()
 	},
 	
 	isOpen: function() {

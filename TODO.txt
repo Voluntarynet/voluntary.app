@@ -1,8 +1,8 @@
 
-updateIdentities not working
+BUG: Don't go into next selection when deleting an item in single column mode
 
-Remove extra setTimeouts
-unify Notification timeout with SyncScheduler?
+
+-------------------------------------
 
 goal:
     avoid storing objects that aren't referenced
@@ -126,14 +126,6 @@ DB LOST IDS:
     - can produce by throwing exception in PrivateMessage setObjMsg (which is raised when loading first time)
     - can produce sometimes with error on imports 
 
-
-Add profile image
-
-- Browser footer bar
-    - unify browser header/footer with leftActions + text + rightActions layout?
-    - chat auto scroll to bottom
-    - support for view actions? (delete all with animations?)
-
     
 - ImageWellView
     - insert dropped image between images at drop point instead of appending to end
@@ -146,18 +138,6 @@ TODO: add way to access style sheet attribute of a given css class e.g. BrowserF
 
 on setting a stored slot, check subnodes and replace old slot value with new one if found
 
-- BMNode - add subnode sorter function, auto invoke on setSubnodes, addSubnode, etc
-
-- abstract descriptionForByteCount into ByteFormatter?
-
-- Browser footer support
-
-- support for bold on focus row?
-
-- bug: Chat adding more thread subnodes on reload
-- deal with issue of storedSlots which are also subnodes
-
-- move BMNode storage code to BMStorableNode
 - eliminate BMNavNode? still need title matching?
 
 - make sure direct setting of _slot = value also call slotUpdate

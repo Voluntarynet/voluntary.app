@@ -5,7 +5,7 @@ var Buffer = bitcore.deps.Buffer;
 
 "use strict"
 
-window.BMKeyPair = BMNavNode.extend().newSlots({
+window.BMKeyPair = BMStorableNode.extend().newSlots({
     type: "BMKeyPair",
     name: "",
 	privateKeyString: "",
@@ -13,7 +13,7 @@ window.BMKeyPair = BMNavNode.extend().newSlots({
 }).setSlots({
     
     init: function () {
-        BMNavNode.init.apply(this)
+        BMStorableNode.init.apply(this)
 		this.generatePrivateKey()
     },
 

@@ -2,7 +2,7 @@
 
 var bitcore = require("bitcore-lib")
 
-window.BMRemoteIdentity = BMNavNode.extend().newSlots({
+window.BMRemoteIdentity = BMStorableNode.extend().newSlots({
     type: "BMRemoteIdentity",
 	name: "untitled",
 	publicKeyString: "",
@@ -13,7 +13,7 @@ window.BMRemoteIdentity = BMNavNode.extend().newSlots({
     _nodeVisibleClassName: "Contact",
 
     init: function () {
-        BMNavNode.init.apply(this)
+        BMStorableNode.init.apply(this)
 		this.setShouldStore(true)
 
         this.setNodeTitleIsEditable(true)
@@ -52,7 +52,7 @@ window.BMRemoteIdentity = BMNavNode.extend().newSlots({
     },
     
     didUpdateSlot: function(slotName, oldValue, newValue) {
-        BMNavNode.didUpdateSlot.apply(this, [slotName, oldValue, newValue])
+        BMStorableNode.didUpdateSlot.apply(this, [slotName, oldValue, newValue])
         
         if (slotName == "publicKeyString") {
             this.postChange()
@@ -62,7 +62,7 @@ window.BMRemoteIdentity = BMNavNode.extend().newSlots({
     },
 
 	didLoadFromStore: function() {
-		BMNavNode.didLoadFromStore.apply(this)
+		BMStorableNode.didLoadFromStore.apply(this)
 		this.messages().setTitle("messages")
 		//console.log(this.typeId() + " didLoadFromStore")
 	},

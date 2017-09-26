@@ -1,5 +1,41 @@
 
 
+
+--------------------
+
+on load failure, open panel with option for:
+
+App.resetNonIdentityData()
+
+delete _messages
+
+---------------------
+
+messages
+	BMPublicProfileMessage
+	BMPublicPostMessage
+	BMChatMessage
+	
+	
+Twittter [TO PEERS]
+   profile ]- from user public profile? periodically send clear text message
+   posts ]- my posts sent in clear text
+   feed ]- my posts + following posts
+   messages ]- chat
+   following ]- auto follow all contacts, but support turning off follow
+   followers
+   search?
+   channels
+		+ create channel (creates a label + key)
+		+ add channel (add a label + key)
+		channel 
+			+ add subchannel
+			+ join subchannel
+		* invite to channel -> contacts 
+		
+
+----
+
 Locate Msg
 
     policy: replaceOlder,

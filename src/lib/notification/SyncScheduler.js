@@ -26,9 +26,20 @@ window.SyncAction = ideal.Proto.extend().newSlots({
 	order: 0,
 	args: null,
 }).setSlots({
+	
+	trySend: function() {
+		try {
+			this.send()
+		} catch(e) {
+			console.warn(this.typeId() + ".trySend(" + this.description() + ") ", e)
+			return false
+		}
+		return true
+	},
+	
 	send: function() {
 		//console.log("   sending " + this.description())
-		this.target()[this.method()].apply(this.target(), this.args() ? this.args() : [])
+			this.target()[this.method()].apply(this.target(), this.args() ? this.args() : [])
 	},
 	
 	actionsKey: function() {
@@ -40,7 +51,8 @@ window.SyncAction = ideal.Proto.extend().newSlots({
 	},
 	
 	description: function() {
-		return this.target().typeId() + "." + this.method() + "() order:" + this.order()
+		var t = this.target() ? this.target().typeId() : "null"
+		return t+ "." + this.method() + "() order:" + this.order()
 	},
 	
 	ActionKeyForTargetAndMethod: function(target, method) {
@@ -140,7 +152,7 @@ window.SyncScheduler = ideal.Proto.extend().newSlots({
 			//console.log("--- sending ----")
             actions.forEach((action) => {
 				this.setCurrentAction(action)
-				action.send()
+				action.trySend()
             })
 			//console.log("--- done sending ----")
         } catch (e) {

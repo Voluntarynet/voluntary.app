@@ -1,9 +1,9 @@
 "use strict"
 
 JSImporter.pushRelativePaths([
-    "BMDrafts.js",
+    //"BMDrafts.js",
     "BMInbox.js",
     "BMSent.js",
-    "BMMail.js",
-	"BMMailMessage.js",
+    //"BMMail.js",
+	//"BMMailMessage.js",
 ])

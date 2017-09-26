@@ -2,6 +2,7 @@
 
 JSImporter.pushRelativePaths([
     "_css.css",
+    "BMContactLinks.js",
     "BMChatThreads.js",
     "BMChatThread.js",
     "BMChat.js",

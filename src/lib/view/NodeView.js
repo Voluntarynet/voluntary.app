@@ -105,26 +105,17 @@ NodeView = DivView.extend().newSlots({
             if (!subview) {
                 subview = this.newSubviewForSubnode(subnode)
 			}
-/*           
-            if (!subview) {
-                subview = this.newSubviewForSubnode(subnode).syncFromNode()
-            } else {
-                subview.syncFromNode()
-            }
-*/
             
             if(subview == null) {
                 throw new Error("null subview")
             }
             
-            newSubviews.push(subview)      
+            newSubviews.push(subview)   
         })
         
         if (!newSubviews.isEqual(this.subviews())) {
             this.removeAllSubviews()
             this.addSubviews(newSubviews)
-        } else {
-            //this.log(" view subviews equal")
         }
 
 		this.subviews().forEach((subview) => { subview.syncFromNode() })

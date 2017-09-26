@@ -15,7 +15,7 @@ window.BMChat = BMApplet.extend().newSlots({
         this.setTitle("Chat")
 
 		this.addStoredSlot("threads")
-		this.setThreads(BMChatThreads.clone())
+		this.setThreads(BMChatThreads.clone().setTitle("threads"))
 		this.addSubnode(this.threads())
 		
 		//console.log(">>>>>>> " + this.typeId() + ".init()")
@@ -36,9 +36,6 @@ window.BMChat = BMApplet.extend().newSlots({
 		
 		if (newValue == null) {
 			console.warn(this.typeId() + ".setThreads oldValue:", oldValue, " newValue:", newValue)
-			//debugger;
-			//throw new Error("setting chat threads to null!")
-			//ShowStack()
 		}
 		return this
 	},
@@ -53,7 +50,7 @@ window.BMChat = BMApplet.extend().newSlots({
 
 	handleSentMessage: function(msg) {
         if (msg.senderId() && msg.senderId().equals(this.localIdentity())) {
-			var thread = this.threads().threadForRemoteIdentity(msg.receiverId())
+			var thread = this.threads().linkForContact(msg.receiverId())
 			if (thread) {
 				thread.addMessage(msg.duplicate())
 			}
@@ -66,7 +63,7 @@ window.BMChat = BMApplet.extend().newSlots({
             //console.log("msg.receiverId() = ", msg.receiverId().type())
             if (msg.receiverId().equals(this.localIdentity())) {
  	            //console.log(this.nodePathString() + " handleReceivedMessage adding " + msg.typeId() + "  ", msg.dataDict())
-   				var thread = this.threads().threadForRemoteIdentity(msg.senderId())
+   				var thread = this.threads().linkForContact(msg.senderId())
     			if (thread) {
     				thread.addMessage(msg)
     				//thread.addMessage(msg.duplicate())

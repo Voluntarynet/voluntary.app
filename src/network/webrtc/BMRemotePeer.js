@@ -69,6 +69,7 @@ window.BMRemotePeer = BMNode.extend().newSlots({
         var timeoutSeconds = 45
         setTimeout(() => { 
             if (!this.isConnected()) {
+				console.log(this.typeId() + " connection timeout")
                 this.close()
                 this.setStatus("connect timeout")
                 this.didUpdateNode()
@@ -79,6 +80,7 @@ window.BMRemotePeer = BMNode.extend().newSlots({
     },
     
     close: function() {
+		console.log(this.typeId() + " close")
         this._conn.close()
         this.setStatus("closed")
         this.didUpdateNode()
@@ -105,6 +107,7 @@ window.BMRemotePeer = BMNode.extend().newSlots({
     },
 
     onError: function(error) {
+		//console.log(this.typeId() + " onError ", error)
         this.setStatus("error")
         this.log(" onError " + error)
     },
@@ -113,12 +116,6 @@ window.BMRemotePeer = BMNode.extend().newSlots({
         this.setStatus("closed")
         this.log("onClose " + err)
         this.serverConnection().onRemotePeerClose(this)
-        //console.trace("RemotePeer onClose")
-        if (this.parentNode() == null) {
-            console.warn("missing this.parentNode() on BMRemotePeer onClose")
-        } else {
-            this.parentNode().removeSubnode(this)
-        }
      },
 
     onData: function(data) {

@@ -150,12 +150,22 @@ window.BMMessages = BMStorableNode.extend().newSlots({
     
     // handling inv (inventory) messages, immediately respond with BMGetDataMessage for missing hashes
 
+	messageWithHash: function(h) {
+		return this.subnodeWithHash(h)
+	},
+	
+	needsMessageWithHash: function(h) {
+		var wasDeleted = this.deletedSet().hasKey(h)
+		var isMissing = this.subnodeWithHash(h) == null
+		return (!wasDeleted) && isMissing
+	},
+	
     inv: function(invMsg) {
         var remoteInv = invMsg.data()        
         var getMsg = BMGetDataMessage.clone().setRemotePeer(invMsg.remotePeer())
         
         remoteInv.forEach( (h) => {
-            if (this.needsHash(h)) {
+            if (this.needsMessageWithHash(h)) {
                 getMsg.addHash(h)
                 //this._queue[h] = true
             }
@@ -183,7 +193,7 @@ window.BMMessages = BMStorableNode.extend().newSlots({
     
     getData: function(msg) {
         msg.data().forEach((aHash) => {
-            var objMsg = this.message(aHash)
+            var objMsg = this.needsMessageWithHash(aHash)
             if (objMsg) {
                 msg.remotePeer().sendMsg(objMsg)
             }

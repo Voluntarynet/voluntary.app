@@ -45,11 +45,13 @@ window.BMOptionsTableView = DivView.extend().newSlots({
 			this.addSubview(optionRow)
 		})
 		
-		setTimeout(() => { 
-			this.adjustOptionWidths() 
-			this.setOpacity(1)
-		}, 1)
-		
+	    SyncScheduler.scheduleTargetAndMethod(this, "finishUpdatedValidValues")
+		return this
+	},
+	
+	finishUpdatedValidValues: function() {
+		this.adjustOptionWidths() 
+		this.setOpacity(1)
 		return this
 	},
 	

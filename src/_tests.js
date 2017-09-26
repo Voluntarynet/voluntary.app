@@ -1,16 +1,5 @@
 "use strict"
 
-console.log("--- test ---")
-
-/*
-_setTimeout = setTimeout
-
-setTimeout = function(f, delay) {
-    console.log("setTimeout " + f)
-    _setTimeout(function () { f() }, delay)
-}
-*/
-
 /*
 console.log("--- test ---")
 

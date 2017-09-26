@@ -6,7 +6,7 @@ window.DocumentBody = DivView.extend().newSlots({
     init: function () {
         DivView.init.apply(this)
         this.setIsRegisterForWindowResize(true)
-        setTimeout(() => { this.autoAdjustZoomForMobile() })
+	    SyncScheduler.scheduleTargetAndMethod(this, "autoAdjustZoomForMobile")
         return this
     },
     

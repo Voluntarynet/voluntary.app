@@ -42,9 +42,7 @@ window.BMChatThreads = BMStorableNode.extend().newSlots({
 	
 	didChangeIdentity: function(aNote) {
 		//console.log(this.nodePathString() + ".didChangeIdentities() <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
-		setTimeout(() => {
-		this.updateIdentities()
-		}, 10)
+	    SyncScheduler.scheduleTargetAndMethod(this, "updateIdentities")
 	},
 
 	chatApp: function() {

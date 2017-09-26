@@ -32,7 +32,7 @@ window.SyncAction = ideal.Proto.extend().newSlots({
 	},
 	
 	actionsKey: function() {
-		return this.target().typeId() + "." + this.method()
+		return this.ActionKeyForTargetAndMethod(this.target(), this.method())
 	},
 	
 	equals: function(anAction) {
@@ -41,6 +41,10 @@ window.SyncAction = ideal.Proto.extend().newSlots({
 	
 	description: function() {
 		return this.target().typeId() + "." + this.method() + "() order:" + this.order()
+	},
+	
+	ActionKeyForTargetAndMethod: function(target, method) {
+		return target.typeId() + "." + method
 	},
 })
 
@@ -52,7 +56,6 @@ window.SyncScheduler = ideal.Proto.extend().newSlots({
 	hasTimeout: false,
 	isProcessing: false,	
 	debug: false,
-	
 	currentAction: null,
 }).setSlots({
 	
@@ -70,18 +73,19 @@ window.SyncScheduler = ideal.Proto.extend().newSlots({
 	},
 	
     scheduleTargetAndMethod: function(target, syncMethod, optionalOrder) { // higher order performed last
-		var action = this.newActionForTargetAndMethod(target, syncMethod, optionalOrder)
-		if (this.actions().at(action.actionsKey())) {
-			return false
+		if (!this.hasScheduledTargetAndMethod(target, syncMethod)) {
+			var action = this.newActionForTargetAndMethod(target, syncMethod, optionalOrder)
+			this.actions().atIfAbsentPut(action.actionsKey(), action)
+	    	this.setTimeoutIfNeeded()
+			return true
 		}
-		this.actions().atIfAbsentPut(action.actionsKey(), action)
-    	this.setTimeoutIfNeeded()
-		return true
+		
+		return false
     },
 
     hasScheduledTargetAndMethod: function(target, syncMethod) {
-		var action = this.newActionForTargetAndMethod(target, syncMethod)
-    	return this.actions().hasKey(action.actionsKey())
+		var actionKey = SyncAction.ActionKeyForTargetAndMethod(target, syncMethod)
+    	return this.actions().hasKey(actionKey)
     },
 
     isSyncingTargetAndMethod: function(target, syncMethod) {

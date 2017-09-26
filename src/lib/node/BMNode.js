@@ -264,7 +264,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     },
     
     removeSubnode: function(aSubnode) {
-		console.log(this.typeId() + ".removeSubnode()")
+		//console.warn(this.typeId() + ".removeSubnode()")
         this.justRemoveSubnode(aSubnode)
 
         if (this._subnodeIndex) {

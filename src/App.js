@@ -75,10 +75,7 @@ window.App = BaseApp.extend().newSlots({
         BaseApp.appDidInit.apply(this)
 
 		LoadProgressBar.stop()  
-
-        setTimeout(() => {
-            this.browser().syncFromHashPath()
-        }, 100)
+	    SyncScheduler.scheduleTargetAndMethod(this.browser(), "syncFromHashPath", 10)
 	},
 })
 

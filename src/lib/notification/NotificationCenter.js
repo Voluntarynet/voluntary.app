@@ -5,7 +5,7 @@
     NotificationCenter
     
     A notification system that queues notifications and waits for the 
-    app to return to the event loop (using setTimeout) to post them. 
+    app to return to the event loop (using a timeout) to post them. 
     It filters out duplicate notifications (posted on the same event loop) 
     and duplicate observations (same object registering the same observation again).
         
@@ -53,10 +53,8 @@
 
 window.NotificationCenter = ideal.Proto.extend().setType("NotificationCenter").newSlots({
     observations: null,
-    hasTimeout: null,
     notifications: null,
     shared: null,
-    //usesTimeouts: true,
     isDebugging: false,
     currentNote: null,
 }).setSlots({
@@ -117,7 +115,7 @@ window.NotificationCenter = ideal.Proto.extend().setType("NotificationCenter").n
     addNotification: function(note) {
         if (!this.hasNotification(note)) {
             this.notifications().push(note)
-            this.setTimeoutIfNeeded()
+		    SyncScheduler.scheduleTargetAndMethod(this, "processPostQueue")
         }
         return this
     },
@@ -127,24 +125,6 @@ window.NotificationCenter = ideal.Proto.extend().setType("NotificationCenter").n
     },
     
     // --- timeout & posting ---
-    
-    setTimeoutIfNeeded: function() {
-        /*
-        if (!this.usesTimeouts()) {
-            this.processPostQueue() 
-            return this
-        }
-        */
-        
-        if (!this._hasTimeout) {
-            this._hasTimeout = true
-            setTimeout( () => { 
-                this._hasTimeout = false
-                this.processPostQueue() 
-            }, 0)
-        }
-        return this
-    },
     
     processPostQueue: function() {
         // keep local ref of notifications and set 

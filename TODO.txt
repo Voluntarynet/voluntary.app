@@ -4,10 +4,6 @@ updateIdentities not working
 Remove extra setTimeouts
 unify Notification timeout with SyncScheduler?
 
-_existsInStore is different from pid?
-    want to know if we should scheduleSyncToStore?
-        only scheduleSyncToStore if we already have a pid?
-        
 goal:
     avoid storing objects that aren't referenced
     

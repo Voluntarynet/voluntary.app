@@ -23,11 +23,7 @@ window.BaseApp = BMNode.extend().newSlots({
     },
 
 	didOpenStore: function() {
-	    setTimeout(() => { 
-    		//NodeStore.shared().clear()
-            this.setup() 
-            //console.log("app didOpenStore\n")	
-        },1)
+	    SyncScheduler.scheduleTargetAndMethod(this, "setup")
 	},
     
 	appDidInit: function() {
@@ -51,15 +47,15 @@ window.BaseApp = BMNode.extend().newSlots({
 
         document.body.appendChild(this.browser().element())    
 		this.browser().scheduleSyncFromNode() // this.browser().syncFromNode()
-		setTimeout(() => {
-			this.browser().setOpacity(1)
-			setTimeout(() => { 
-				//this.browser().setTransition("") 
-			}, 1000)
-		}, 0)
+
+	    SyncScheduler.scheduleTargetAndMethod(this, "fadeInBrowser")
 		
         return this
     },
+
+	fadeInBrowser: function() {
+		this.browser().setOpacity(1)
+	},
     
     shared: function() {        
         if (!this._shared) {

@@ -20,10 +20,9 @@ window.BMRemoteIdentities = BMStorableNode.extend().newSlots({
 
 	didLoadFromStore: function() {
 		BMStorableNode.didLoadFromStore.apply(this)
-		//console.log(this.typeId() + " didLoadFromStore names = ", this.names())
+        this.setTitle("contacts")
 		this.postChangeNote()
 	},
-
 
 	watchIdentity: function() {
 		if (!this._idObs) {

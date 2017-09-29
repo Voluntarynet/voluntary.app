@@ -1,4 +1,11 @@
 
+Left Shelf view - needs a StorableNode to store selection state?
+
+NodeSlot
+    - just minic fields for now?
+
+------------
+
 BUG: Don't go into next selection when deleting an item in single column mode
 
 

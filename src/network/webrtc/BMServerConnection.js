@@ -11,7 +11,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
     delegate: null,
     lastError: null,
     privateKey: null,
-    status: null,
+    status: "not connected",
 	error: null,
     //log: null,
 	sessionId: null,

@@ -27,6 +27,10 @@ window.BMProfile = BMFieldSetNode.extend().newSlots({
 		this.setNodeMinWidth(600)
     },
 
+    profileImageDataUrl: function() {
+        return this.avatars()[0]
+    },
+    
 	setParentNode: function(aNode) {
 		BMFieldSetNode.setParentNode.apply(this, [aNode])
 		

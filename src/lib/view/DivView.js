@@ -368,6 +368,11 @@ window.DivView = ideal.Proto.extend().newSlots({
 	
 	// background position
 	
+	makeBackgroundCentered: function() {
+		this.setBackgroundPosition("center")
+        return this
+	},
+	
 	setBackgroundPosition: function(s) {
 		this.setCssAttribute("background-position", s)
         return this
@@ -377,7 +382,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 		return this.getCssAttribute("background-position")
 	},
 
-	// icons - until I find a better place for this
+	// icons - TODO: find a better place for this
 	
 	pathForIconName: function(aName) { 
         return 'icons/' + aName + '.svg'
@@ -810,7 +815,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 		var type = typeof(v)
 		var newValue = null
 		if (v == null) {
-			newValue = ""
+			newValue = null //""
 		} else if (type == "string") {
 	        newValue = v 
 		} else if (type == "number") {

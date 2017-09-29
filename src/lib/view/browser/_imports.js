@@ -17,4 +17,5 @@ JSImporter.pushRelativePaths([
     "BrowserRowSubtitle.js",
     "BrowserRowTitle.js",
     "BrowserFieldRow.js",
+    "shelf/_imports.js",
 ])

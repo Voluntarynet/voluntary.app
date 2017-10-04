@@ -1,6 +1,26 @@
 
-Left Shelf view - needs a StorableNode to store selection state?
+- add a inReplyTo: hash for ChatMessage
+- add timeout with ACK for Chat? Only do this for direct connection for privacy?
+- on connecting to a node, support challenge/response handshake for establishing identity 
+    - support special direct connection messages such as ACK, audio and video chat, file transfer
+    
 
+
+- make shelf view into a special column view?
+- add last message as subtitle on chat thread view
+
+- BUG: weird issue with browser width when setting new root node
+- update shelf image on profile image change
+- on group selection - try to scroll to top of shelf
+- make shelf item target the browser root?
+
+- sync shelf with local identities
+
+- default user image - svg use with solid fill?
+
+- Left Shelf view - needs a StorableNode to store selection state - use App state?
+
+------------
 NodeSlot
     - just minic fields for now?
 

@@ -73,7 +73,6 @@ window.App = BaseApp.extend().newSlots({
     
 	appDidInit: function() {
         BaseApp.appDidInit.apply(this)
-
 		LoadProgressBar.stop()  
 	    SyncScheduler.scheduleTargetAndMethod(this.browser(), "syncFromHashPath", 10)
 	},

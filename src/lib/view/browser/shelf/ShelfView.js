@@ -39,12 +39,12 @@ window.ShelfView = DivView.extend().newSlots({
     addGroupForLid: function(lid) {
         var group = this.newShelfGroup()
         var image = lid.profile().profileImageDataUrl()
-        console.log("image = ", image)
-        group.newShelfItem().setImageDataUrl(image).setDestinationNode(lid)
+        //console.log("image = ", image)
+        group.newShelfItem().setImageDataUrl(image).setDestinationNode(lid.profile())
         group.newShelfItem().setIconName("home3-white").setDestinationNode(lid)
-        group.newShelfItem().setIconName("lightning3-white")
-        group.newShelfItem().setIconName("bell-white")
-        group.newShelfItem().setIconName("mail-white")
+        //group.newShelfItem().setIconName("lightning3-white")
+        //group.newShelfItem().setIconName("bell-white")
+        group.newShelfItem().setIconName("mail-white").setDestinationNode(lid.apps().appNamed("Chat").threads())
         /*
         shelf.newShelfItem().setIconName("user-white")
         shelf.newShelfItem().setIconName("search-white")

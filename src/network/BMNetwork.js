@@ -189,13 +189,12 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
 		return this._idsBloomFilter
 	},
 	
-	/*
-	matching is done on peer connections
-	idsBloomFilterMatchesPublicKey: function(aPublicKeyString) {
-		return this.idsBloomFilter().checkEntry(aPublicKeyString)
+	hasIdentityMatchingBloomFilter: function(bloomFilter) {
+	    return this.allIdentities().detect((id) {
+	        return bloomFilter.checkEntry(id.publicKeyString())
+	    }) != null	        
 	},
-	*/
-	
+
 	shouldRelayForSenderPublicKey: function(aPublicKeyString) {
 		return this.allIdentityPublicKeyStrings().includes(aPublicKeyString)
 	},

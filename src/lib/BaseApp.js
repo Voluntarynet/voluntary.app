@@ -58,15 +58,18 @@ window.BaseApp = BMNode.extend().newSlots({
 
 	    SyncScheduler.scheduleTargetAndMethod(this, "fadeInBrowser")
 		
-
-        
+        // this.setupShelf()
+        return this
+    },
+    
+    setupShelf: function() {
 	    this.setShelf(ShelfView.clone())
         this.rootView().addSubview(this.shelf())
 		setTimeout(() => { 
 		    this.shelf().appDidInit()
 		    this.shelf().unhide() 
 		}, 100)
-        return this
+        return this        
     },
 
 	fadeInBrowser: function() {

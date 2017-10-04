@@ -33,7 +33,9 @@ window.ShelfItemGroupView = DivView.extend().newSlots({
         
         var node = clickedItem.destinationNode()
         if (node) {
-            App.shared().browser().selectNode(node)
+            //App.shared().browser().selectNode(node)
+            App.shared().browser().setNode(node).scheduleSyncFromNode() // this.browser().syncFromNode()
+
         }
         this.shelf().didClickGroup(this)
     },
@@ -51,13 +53,11 @@ window.ShelfItemGroupView = DivView.extend().newSlots({
 
             var fs = this.firstSubview()
             if (fs) {
-                console.log("fs.clientWidth() = ", fs.clientWidth())
-                console.log("fs.clientHeight() = ", fs.clientHeight())
-                //this.setMinAndMaxWidth(fs.clientWidth())
                 this.setMinAndMaxHeight(fs.clientHeight())
             }
             
-            console.log(this.typeId() + ".compact()")
+            this.subviews().forEach((subview) => { subview.unselect() })
+           // console.log(this.typeId() + ".compact()")
         }
         return this
     },
@@ -69,7 +69,7 @@ window.ShelfItemGroupView = DivView.extend().newSlots({
     uncompact: function() {
         if (this._isCompacted) {
             this._isCompacted = false
-            console.log(this.typeId() + ".uncompact()")
+            //console.log(this.typeId() + ".uncompact()")
             //this.setMinAndMaxWidth(null)
             var fs = this.firstSubview()
             if (fs) {

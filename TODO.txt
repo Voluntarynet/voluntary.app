@@ -1,4 +1,8 @@
 
+- filter peer connections by other node's bloom
+- filter shared messages by other node's bloom
+
+
 - add a inReplyTo: hash for ChatMessage
 - add timeout with ACK for Chat? Only do this for direct connection for privacy?
 - on connecting to a node, support challenge/response handshake for establishing identity 

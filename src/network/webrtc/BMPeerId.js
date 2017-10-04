@@ -114,6 +114,12 @@ window.BMPeerId = BMNode.extend().newSlots({
 		}
 		return s
 	},
+	
+	/*
+	matchesPeerId: function(otherPeerId) {
+	    this.bloomFilter().
+	},
+	*/
 })
 
 

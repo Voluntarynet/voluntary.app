@@ -24,7 +24,7 @@ window.BMMessage = BMFieldSetNode.extend().newSlots({
     },
 
     title: function() {
-        return "Message " + this.msgType()
+        return this.msgType()
     },
 
 	prepareToAccess: function() {

@@ -59,6 +59,20 @@ window.BrowserColumn = NodeView.extend().newSlots({
 		return this
 	},
 
+    rowWithNode: function(aNode) {
+        return this.rows().detect((row) => { return row.node() === aNode })
+    },
+    
+    didClickRowWithNode: function(aNode) {
+        var row = this.rowWithNode(aNode)
+        if (!row) {
+            //throw new Error("column with path '" + this.browserPathString() + "' missing row for node '" + node.title() + "'")
+            throw new Error("column  missing row for node '" + aNode.title() + "'")
+        }
+        this.didClickRow(row)
+        return this
+    },
+    
     didClickRow: function(clickedRow) {
         var rows = this.rows()
 
@@ -69,11 +83,11 @@ window.BrowserColumn = NodeView.extend().newSlots({
             }
         })
 
-		// if we can follow it, do so 
+		// follow it if we can 
 		if (clickedRow.node().nodeRowLink()) {
-		//	console.log("didClickRow selecting column ", this.node().title())
+		    //console.log(this.typeId() + ".didClickRow(" + clickedRow.node().title() + ") selecting column ", this.node().title())
         	this.browser().selectColumn(this)
-/*
+            /*
 			if (this.browser().isSingleColumn()) {
 				this.browser().selectColumn(this)	
 			}
@@ -135,12 +149,21 @@ window.BrowserColumn = NodeView.extend().newSlots({
 	},
 	
     selectRowWithNode: function (aNode) {
-		var row = this.rows().detect((row) => { return row.node() === aNode })
-        if (row) {
-			row.setIsSelected(true)
+
+        
+		var clickedRow = this.rows().detect((row) => { return row.node() === aNode })
+		
+        if (clickedRow) {
+			clickedRow.setIsSelected(true)
+			
+			this.rows().forEach((row) => {
+                if (row != clickedRow) {
+                    row.unselect()
+                }
+            })
 		}
 
-		return row
+		return clickedRow
     },
     
     selectedRowTitle: function () {
@@ -431,9 +454,9 @@ window.BrowserColumn = NodeView.extend().newSlots({
         return this
     },
 
-    /*
 	// paths
     
+    /*
     browserPathArray: function() {
         var subviews = this.browser().columns().subviewsBefore(this)
         subviews.push(this)

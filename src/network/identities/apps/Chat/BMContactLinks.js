@@ -7,7 +7,7 @@ window.BMContactLinks = BMStorableNode.extend().newSlots({
     init: function () {
         BMStorableNode.init.apply(this)
         this.setShouldStore(true)
-        this.setTitle("contact links")
+        this.setTitle("contacts")
     },
 
 	setParentNode: function(aNode) {
@@ -23,6 +23,7 @@ window.BMContactLinks = BMStorableNode.extend().newSlots({
 	    if (this.parentNode()) {
 			this.updatedContacts()
 		}
+        this.setTitle("contacts")
 	},
 	
 	loadFinalize: function() {

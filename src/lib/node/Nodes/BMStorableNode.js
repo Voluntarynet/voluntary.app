@@ -13,6 +13,7 @@ window.BMStorableNode = BMNode.extend().newSlots({
     isUnserializing: false,
     
     existsInStore: false,
+    doesLazyLoadChildren: false,
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)
@@ -165,9 +166,20 @@ window.BMStorableNode = BMNode.extend().newSlots({
 		// TODO: wrap in try {}
         this.setIsUnserializing(true) 
         this.setNodeDictForProperties(aDict)
-        this.setNodeDictForChildren(aDict)
+        if (!this.doesLazyLoadChildren()) {
+            this.setNodeDictForChildren(aDict)
+        }
 		this.didLoadFromStore()
         this.setIsUnserializing(false) 
+        return this
+    },
+    
+    prepareToAccess: function() {
+        BMNode.prepareToAccess.apply(this)
+        if (this.doesLazyLoadChildren()) {
+            var dict = BMNodeStore.shared().nodeDictAtPid(this.pid())
+            this.setNodeDictForProperties(dict)
+        }
         return this
     },
     

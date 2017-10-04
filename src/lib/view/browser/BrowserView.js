@@ -78,7 +78,7 @@ window.BrowserView = NodeView.extend().newSlots({
 	},
     
     prepareToSyncToView: function() {
-        console.log(this.type() + " prepareToSyncToView")
+        //console.log(this.type() + " prepareToSyncToView")
         NodeView.prepareToSyncToView.apply(this)
 		this.fitColumns()
         return this
@@ -542,22 +542,32 @@ window.BrowserView = NodeView.extend().newSlots({
     },
     
     selectNodePath: function(nodePathArray) {
-        //console.log("selectNodePath " + nodePathArray.map((node) => { return node.title() }).join("/") )
+        //console.log(this.typeId() + ".selectNodePath(" + nodePathArray.map((node) => { return node.title() }).join("/")  + ")")
+        //console.log(this.typeId() + ".selectNodePath() current path: " + this.nodePathString())
         this.setColumnGroupCount(1)
             
         
-        var column = this.columns().first();
+        var column = this.columns().first()
                 
-        if (nodePathArray.first() == column.node()) {
-           // console.log("selectNodePath removeFirst")
+        if (nodePathArray.first() === column.node()) {
+            //console.log("selectNodePath removeFirst column " + column.node().title())
             nodePathArray.removeFirst()
         }
         
+        //console.log(this.typeId() + ".selectNodePath() selecting path " + nodePathArray.map((node) => { return node.title() }).join("/") )
+        
 		nodePathArray.forEach((node) => {
-           // console.log("clicking node " + node.title())
-            column.clickRowWithNode(node)
-            //column.selectNextColumn()
-            column = column.nextColumn()
+            //console.log("clicking node " + (node ? node.title() : null))
+            if (node) {
+                column.selectRowWithNode(node)
+                
+                //column.didClickRowWithNode(node)
+                
+                //column.clickRowWithNode(node)
+                //column.selectNextColumn()
+                this.selectColumn(column)
+                column = column.nextColumn()
+            }
         })
         
         //this.syncFromNode()

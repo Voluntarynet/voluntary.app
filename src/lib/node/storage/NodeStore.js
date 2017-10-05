@@ -203,7 +203,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     scheduleStore: function() {
 		if (!SyncScheduler.isSyncingTargetAndMethod(this, "storeDirtyObjects")) {
 			if (!SyncScheduler.hasScheduledTargetAndMethod(this, "storeDirtyObjects")) {
-				console.warn("scheduleStore currentAction = ", SyncScheduler.currentAction() ? SyncScheduler.currentAction().description() : null)
+				//console.warn("scheduleStore currentAction = ", SyncScheduler.currentAction() ? SyncScheduler.currentAction().description() : null)
         		SyncScheduler.scheduleTargetAndMethod(this, "storeDirtyObjects", 1000)
 			}
 		}
@@ -279,7 +279,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 	        }
 	
 			totalStoreCount += thisLoopStoreCount
-			console.log("totalStoreCount: ", totalStoreCount)
+			//console.log("totalStoreCount: ", totalStoreCount)
 			if (thisLoopStoreCount == 0) {
 				break
 			}
@@ -312,7 +312,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 	},
 
     storeObject: function(obj) {
-        console.log("NodeStore.storeObject(" + obj.pid() + ")")
+        this.debugLog("NodeStore.storeObject(" + obj.pid() + ")")
 		this.assertIsWritable()
 		
 		var aDict = obj.nodeDict()

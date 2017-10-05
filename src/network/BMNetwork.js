@@ -38,7 +38,18 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
 		this.addSubnode(this.blacklists())
 		
 		//this.addStoredSlots(["messages", "blacklists"])
+		this.watchIdentities()
     },
+
+	loadFinalize: function() {
+		//this.updateIdsBloomFilter()
+	},
+
+	watchIdentities: function() {
+		if (!this._idsObservation) {
+	        this._idsObservation = NotificationCenter.shared().newObservation().setName("didChangeIdentity").setObserver(this).watch()
+		}
+	},
 
 	shared: function() {
 		return BMNetwork._shared
@@ -124,7 +135,13 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
 
 	allRemoteIdentities: function() {
 		var allRids = []
-		this.localIdentities().subnodes().map((id) => { return id.remoteIdentities().validSubnodes() }).forEach((rids) => { allRids.concat(rids) })
+		this.localIdentities().subnodes().forEach((id) => { 
+			var valids = id.remoteIdentities().validSubnodes()
+			//console.log(id.publicKeyString() + " valid rid count: " + valids.length)
+			valids.forEach((rid) => {
+				allRids.push(rid)
+			})
+		})
 		return allRids
 	},
 
@@ -170,16 +187,41 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
 		var filter = JSBloom.newFilter(maxElementSize, falsePositiveRate)
 		return filter
 	},
-	
+
+	didChangeIdentity: function() {
+		this.updateIdsBloomFilter()
+	},
+		
 	updateIdsBloomFilter: function() {
 		var ids = this.allIdentities()
-				
+		
+		/*
+		console.log(this.typeId() + ".updateIdsBloomFilter() with " + ids.length + " ids")
+		console.log("   local ids:  " + this.localIdentities().subnodes().length)
+		console.log("   remote ids: " + this.allRemoteIdentities().length)
+		*/
+		
 		this._idsBloomFilter = this.newDefaultBloomFilter()
 				
 		ids.forEach((id) => {
 			this._idsBloomFilter.addEntry(id.publicKeyString());
 		})
+		
+		this.verifyIdsBloom()
 		return this;		
+	},
+	
+	verifyIdsBloom: function() {
+		//console.log(this.typeId() + ".verifyIdsBloom: " + this.idsBloomFilter().serialized().sha256String().substring(0, 6) )
+	    this.allIdentities().forEach((id) => {
+			var k = id.publicKeyString()
+			var doesMatch = this.idsBloomFilter().checkEntry(k)
+			//console.log("    key: " + k + " " + doesMatch)
+	        if (!doesMatch) {
+				throw new Error("bloom is missing key " + k)
+			}
+	    })
+		//console.log("idsBloom verified!")
 	},
 	
 	idsBloomFilter: function() {
@@ -190,9 +232,15 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
 	},
 	
 	hasIdentityMatchingBloomFilter: function(bloomFilter) {
-	    return this.allIdentities().detect((id) {
-	        return bloomFilter.checkEntry(id.publicKeyString())
-	    }) != null	        
+		//console.log(this.typeId() + ".hasIdentityMatchingBloomFilter: " + bloomFilter.serialized().sha256String().substring(0, 6) )
+	    var match = this.allIdentities().detect((id) => {
+			var k = id.publicKeyString()
+			var doesMatch = bloomFilter.checkEntry(k)
+			//console.log("    key: " + k + " " + doesMatch)
+	        return doesMatch
+	    }) 
+		//console.log("hasIdentityMatchingBloomFilter match = ", match)
+		return match != null	        
 	},
 
 	shouldRelayForSenderPublicKey: function(aPublicKeyString) {

@@ -20,10 +20,21 @@ window.BMRemotePeer = BMNode.extend().newSlots({
         this.setRemoteInventory({})
 		this.setPeerId(BMPeerId.clone())
     },
+
+	setPeerIdString: function(id) {
+		//console.log(this.typeId() + ".setPeerIdString(" + id + ")")
+	 	this.peerId().setFromString(id)
+		this.updateTitle()
+		return this
+	},
+	
+	hash: function() {
+		return this.peerId().toString()
+	},
     
     log: function(s) {
 		if(this.debug()) {
-        	console.log(this.type() + " " + this.id() + " " + s)
+        	console.log(this.type() + " " + this.hash() + " " + s)
 		}
         return this
     },
@@ -38,7 +49,7 @@ window.BMRemotePeer = BMNode.extend().newSlots({
     },
 
     shortId: function() {
-        return this.id().substring(0, 6)
+        return this.hash().substring(0, 6)
     },
     
     subtitle: function () {
@@ -49,11 +60,52 @@ window.BMRemotePeer = BMNode.extend().newSlots({
         return this.messages().addSubnode(msg)
     },
 
+	setStatus: function(s) {
+		this._status = s
+		console.log(this.typeId() + ".setStatus(" + s + ")")
+		this.scheduleSyncToView()
+		return this
+	},
+	
+	updateTitle: function() {
+        this.setTitle("Peer " + this.shortId())
+		this.scheduleSyncToView()
+	},
+
+    connect: function() {
+        if (!this.isConnected()) {
+			var id = this.hash()
+            console.log(this.typeId() + ".connect() " + id)
+			this.setStatus("connecting...")
+			this.scheduleSyncToView()
+            try {
+                var dataConnection = this.serverConnection().serverConn().connect(id, this.peerConnectionOptions());
+                this.setConn(dataConnection)
+            } catch (error) {
+                console.log("ERROR on BMServerConnection.connectToPeerId('" + id + "')")
+                console.error("    " + error.message )
+            }
+        }
+		return this
+    },
+
+	// --- peer connection options -------------------
+	// todo: move to BMRemotePeer
+	
+    peerConnectionOptions: function () {
+        return { 
+				// label: "",
+				// metadata: {},
+				//serialization: "json",
+				reliable: true,
+            }
+    },
+
     setConn: function (aConn) {
         this._conn = aConn
         this.setStatus("connecting...")
         this.log("connecting")
-        this.setTitle("Peer " + this.shortId())
+        this.updateTitle()
                     
         if (this._conn) {
             this._conn.on('open', () => { this.onOpen() })
@@ -227,4 +279,16 @@ window.BMRemotePeer = BMNode.extend().newSlots({
         }
         return this
     },
+
+	mayShareContacts: function() {
+		return BMNetwork.shared().hasIdentityMatchingBloomFilter(this.peerId().bloomFilter())
+    },
+
+	connectIfMayShareContacts: function() {
+		if (!this.isConnected() && this.mayShareContacts()) {
+			this.connect()
+		}
+		this.setStatus("no contact match")
+		return this
+	},
 })

@@ -72,6 +72,7 @@ window.BMPeerId = BMNode.extend().newSlots({
 	
 	setEncodedBloomString: function(s) {
 		var filter = BMNetwork.shared().newDefaultBloomFilter().unserialized(s)
+		this.setBloomFilter(filter)
 		return this
 	},
 	
@@ -100,6 +101,10 @@ window.BMPeerId = BMNode.extend().newSlots({
 			console.log("PeerId.setFromString('" + aString + "') error: ", e)
 			return null
 		}
+		
+		assert(this.publicKeyString() != null)
+		assert(this.bloomFilter() != null)
+		assert(this.encodedBloomString() != null)
 		
 		//console.log("parsed peerid publicKeyString [" + this.publicKeyString() + "] bloom [ " + this.encodedBloomString() + "]")
 		

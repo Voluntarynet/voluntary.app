@@ -188,7 +188,7 @@ window.LoadProgressBar = {
     
     setError: function(error) {
         this._error = error
-		console.warn("LoadProgressBar setError " + error)
+		console.log("LoadProgressBar setError " + error)
         this.errorElement().innerHTML = error
         return this
     },

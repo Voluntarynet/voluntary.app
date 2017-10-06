@@ -1,5 +1,6 @@
 
-- filter INV messages by other node's bloom and date?
+- setTimeout to remove closed peers 60 seconds?
+- filter INV messages by  date?
 
 
 - add a inReplyTo: hash for ChatMessage

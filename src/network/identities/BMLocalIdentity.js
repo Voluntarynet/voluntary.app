@@ -29,8 +29,14 @@ window.BMLocalIdentity = BMKeyPair.extend().newSlots({
 		//console.log("is editable = ", this.profile().fieldNamed("publicKeyString").valueIsEditable())
 		this.generatePrivateKey()
         this.addAction("delete")
+
     },
 
+	finalize: function() {
+		console.log(this.typeId() + ".finalize()")
+		NotificationCenter.shared().newNotification().setSender(this.uniqueId()).setName("didChangeIdentity").setInfo(this).post()
+	},
+	
 	didLoadFromStore: function() {
 		//console.log(this.typeId() + " didLoadFromStore")
 		BMKeyPair.didLoadFromStore.apply(this)
@@ -63,8 +69,6 @@ window.BMLocalIdentity = BMKeyPair.extend().newSlots({
 		var validRemoteIds = this.remoteIdentities().validSubnodes()		
 		var otherLocalIds = App.shared().localIdentities().subnodesSans(this)
 		return validRemoteIds.concat(otherLocalIds)
-	},
-	
-
+	},	
 	
 })	

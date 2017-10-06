@@ -62,7 +62,7 @@ window.BMRemotePeer = BMNode.extend().newSlots({
 
 	setStatus: function(s) {
 		this._status = s
-		console.log(this.typeId() + ".setStatus(" + s + ")")
+		//console.log(this.typeId() + ".setStatus(" + s + ")")
 		this.scheduleSyncToView()
 		return this
 	},
@@ -75,7 +75,7 @@ window.BMRemotePeer = BMNode.extend().newSlots({
     connect: function() {
         if (!this.isConnected()) {
 			var id = this.hash()
-            console.log(this.typeId() + ".connect() " + id)
+            console.log(this.typeId() + ".connect() " + id.substring(0, 4))
 			this.setStatus("connecting...")
 			this.scheduleSyncToView()
             try {
@@ -132,10 +132,9 @@ window.BMRemotePeer = BMNode.extend().newSlots({
     },
     
     close: function() {
-		console.log(this.typeId() + " close")
+		//console.log(this.typeId() + " close")
         this._conn.close()
         this.setStatus("closed")
-        this.didUpdateNode()
         return this 
     },
     
@@ -153,14 +152,13 @@ window.BMRemotePeer = BMNode.extend().newSlots({
         this._conn.on('data', (data) => { this.onData(data) })
         this._conn.on('close', (err) => { this.onClose(err) })
 
-        this.didUpdateNode()
         //this.sendPing()
         this.network().onRemotePeerConnect(this)
     },
 
     onError: function(error) {
-		//console.log(this.typeId() + " onError ", error)
-        this.setStatus("error")
+		console.log(this.typeId() + " onError ", error)
+        this.setStatus(error.message)
         this.log(" onError " + error)
     },
 
@@ -285,10 +283,12 @@ window.BMRemotePeer = BMNode.extend().newSlots({
     },
 
 	connectIfMayShareContacts: function() {
-		if (!this.isConnected() && this.mayShareContacts()) {
+		if ((!this.isConnected()) && this.mayShareContacts()) {
+			console.log(this.shortId() + " may share contacts - connecting")
 			this.connect()
+		} else {
+			this.setStatus("no contact match")
 		}
-		this.setStatus("no contact match")
 		return this
 	},
 })

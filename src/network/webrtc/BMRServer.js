@@ -66,6 +66,11 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
         this.serverConnection().connect()
         return this              
     },
+
+	reconnect: function() {
+        this.serverConnection().reconnect()
+        return this		
+	},
     
     isConnected: function () {
         return this.serverConnection().isConnected()

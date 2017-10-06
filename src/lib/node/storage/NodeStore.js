@@ -225,7 +225,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 	},
 
     storeDirtyObjects: function() {
-		console.log(" --- storeDirtyObjects --- ")
+		//console.log(" --- storeDirtyObjects --- ")
 		//console.warn("   isSyncingTargetAndMethod = ", SyncScheduler.isSyncingTargetAndMethod(this, "storeDirtyObjects"))
 		
 		//console.log(" --- begin storeDirtyObjects --- ")
@@ -244,7 +244,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 			throw new Error(this.type() + " storeDirtyObjects but db not open")
 		}
 		
-		console.log(" --- begin storeDirtyObjects --- ")
+		//console.log(" --- begin storeDirtyObjects --- ")
 		this.sdb().begin() 
 		
         // it's ok to add dirty objects via setPid() while this is
@@ -292,7 +292,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 		}
 
 		this.sdb().commit() // flushes write cache
-		console.log("--- commit ---")
+		//console.log("--- commit ---")
 
         /*
 		if (this.debug()) {

@@ -65,10 +65,19 @@ window.BMLocalIdentity = BMKeyPair.extend().newSlots({
 		return this.apps().handleAppMsg(appMsg)
 	},
 	
-	allOtherIdentities: function() {
-		var validRemoteIds = this.remoteIdentities().validSubnodes()		
-		var otherLocalIds = App.shared().localIdentities().subnodesSans(this)
-		return validRemoteIds.concat(otherLocalIds)
-	},	
+	allIdentitiesMap: function() { // only uses valid remote identities
+		var ids = Map.clone()
+		ids.atPut(this.publicKeyString(), this)
+		
+		this.remoteIdentities().subnodes().forEach((rid) => { 
+		    ids.merge(id.allIdentitiesMap())
+		})
+		
+		this.apps().subnodes().forEach((app) => { 
+		    ids.merge(app.allIdentitiesMap())
+		})
+		
+		return ids
+	},
 	
 })	

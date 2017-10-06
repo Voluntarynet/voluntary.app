@@ -1,4 +1,13 @@
 
+Chat - Public Feed 
+
+Group Chat:
+    - create key pair
+    - select contacts
+    - share private key with selected contacts
+    
+- contacts -> direct messages
+
 - setTimeout to remove closed peers 60 seconds?
 - filter INV messages by  date?
 

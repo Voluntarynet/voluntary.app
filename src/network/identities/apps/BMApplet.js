@@ -16,5 +16,11 @@ window.BMApplet = BMStorableNode.extend().newSlots({
 	handleAppMsg: function(aMessage) {
 		// override
 	},
+	
+	allIdentitiesMap: function() { // only uses valid remote identities
+		var ids = Map.clone()
+		return ids
+	},
+
 })
 

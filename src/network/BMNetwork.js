@@ -144,6 +144,14 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
 		})
 		return allRids
 	},
+	
+	allIdentitiesMap: function() { // only uses valid remote identities
+		var ids = Map.clone()
+		this.localIdentities().subnodes().forEach((id) => { 
+		    ids.merge(id.allIdentitiesMap())
+		})
+		return ids
+	},
 
 	allIdentities: function() { // only uses valid remote identities
 		var ids = []
@@ -152,19 +160,18 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
 	},
     
 	allIdentityPublicKeyStrings: function() {
-		return this.allIdentities().map((id) => { return id.publicKeyString(); })
+	    return this.allIdentitiesMap().keys()
+		//return this.allIdentities().map((id) => { return id.publicKeyString(); })
 	},
 	
+	/*
 	allIdentityNames: function() {
 		return this.allIdentities().map((id) => { return id.name(); })
 	},
+
 	
 	localIdentityNames: function() {
 		return this.localIdentities().names()
-	},
-	
-	remoteIdentityNames: function() {
-		return this.allRemoteIdentities().map((id) => { return id.name(); })
 	},
 	
 	idWithName: function(aString) {
@@ -178,6 +185,7 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
 			return id.name() == aString || id.publicKeyString() == aString
 		})
 	},
+	*/	
 	
 	// --- bloom filter for matching ids -----------------------------------------
 	

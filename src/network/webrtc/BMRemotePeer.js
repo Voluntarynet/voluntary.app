@@ -77,7 +77,6 @@ window.BMRemotePeer = BMNode.extend().newSlots({
 			var id = this.hash()
             console.log(this.typeId() + ".connect() " + id.substring(0, 4))
 			this.setStatus("connecting...")
-			this.scheduleSyncToView()
             try {
                 var dataConnection = this.serverConnection().serverConn().connect(id, this.peerConnectionOptions());
                 this.setConn(dataConnection)

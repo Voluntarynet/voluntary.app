@@ -196,9 +196,6 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
 	updateIdsBloomFilter: function() {
 		//console.log(this.typeId() + ".updateIdsBloomFilter()")
 		var oldFilter = this._idsBloomFilter
-		if(oldFilter) {
-			console.log("f1::" + oldFilter.serialized())
-		}
 	
 		var ids = this.allIdentities()
 		
@@ -210,21 +207,18 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
 		
 		this._idsBloomFilter = this.newDefaultBloomFilter()
 		
-		if (oldFilter) {
-			console.log("oldFilter = ", oldFilter)
-			console.log("this._idsBloomFilter = ", this._idsBloomFilter)
-		
-		}
 				
 		ids.forEach((id) => {
 			this._idsBloomFilter.addEntry(id.publicKeyString());
 			
+			/*
 			if(oldFilter) {
 				var f1 = oldFilter.serialized()
 				var f2 = this._idsBloomFilter.serialized()
 				console.log("--f1: " + f1)
 				console.log("--f2: " + f2)
 			}
+			*/
 		})
 		
 		this.verifyIdsBloom()
@@ -232,14 +226,11 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
 		if (oldFilter) {
 			var f1 = oldFilter.serialized()
 			var f2 = this._idsBloomFilter.serialized()
-			console.log("ids = ", ids.length)
-			console.log("f1: " + f1)
-			console.log("f2: " + f2)
-			console.log("eq: " + (this._idsBloomFilter === oldFilter))
 			if (f1 != f2) {
 				this.didChangeIdsBloom()
 			}
 		}
+		
 		return this;		
 	},
 	

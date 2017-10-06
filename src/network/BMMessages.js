@@ -204,35 +204,24 @@ window.BMMessages = BMStorableNode.extend().newSlots({
     
     onRemotePeerConnect: function(remotePeer) {
         // send inv
-        var invMsg = this.currentInvMsg()
+        //var invMsg = this.currentInvMsg()
+		var invMsg = BMInvMessage.clone().addMessages(this.messagesMatchingBloom(remotePeer.peerId().bloomFilter()))
 
-        this.log("onRemotePeerConnect send inv " + invMsg.data().length)
+        console.log("onRemotePeerConnect send inv " + invMsg.data().length)
 
         if (invMsg.data().length) {
             remotePeer.sendMsg(invMsg)
         }
     },
 
-    invMsgForMessages: function (msgs) {
-        var invMsg = BMInvMessage.clone()
-        msgs.forEach( (objMsg) => {
-            invMsg.addMsgHash(objMsg.msgHash())
-        })
-        return invMsg
-    },
-    
-    currentInvMsg: function () {
-        return this.invMsgForMessages(this.messages())
-    },
-    
-    messagesMatchingBloom: function (aBloomFilter) {
-        return this.messages().select((objMsg) => {
-			return aBloomFilter.contains(objMsg.senderPublicKeyString())
+    messagesMatchingBloom: function (bloom) {
+        return this.messages().select( (objMsg) => {
+			return  bloom.checkEntry(objMsg.senderPublicKeyString())
         })
     },
-
-    currentInvMsgForBloom: function (aBloomFilter) {
-        return this.invMsgForMessages(this.messagesMatchingBloom(aBloomFilter))
+    
+    fullInvMsg: function () {
+        return BMInvMessage.clone().addMessages(this.messages())
     },
 
 	removeMessagesNotMatchingIdentities: function() {

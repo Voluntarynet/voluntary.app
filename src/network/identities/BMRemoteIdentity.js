@@ -142,7 +142,7 @@ window.BMRemoteIdentity = BMStorableNode.extend().newSlots({
 	},
 	
 	allIdentitiesMap: function() { // only uses valid remote identities
-		var ids = Map.clone()
+		var ids = ideal.Map.clone()
 		ids.atPut(this.publicKeyString(), this)
 		return ids
 	},

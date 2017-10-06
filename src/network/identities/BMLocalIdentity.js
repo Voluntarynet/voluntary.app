@@ -66,11 +66,11 @@ window.BMLocalIdentity = BMKeyPair.extend().newSlots({
 	},
 	
 	allIdentitiesMap: function() { // only uses valid remote identities
-		var ids = Map.clone()
+		var ids = ideal.Map.clone()
 		ids.atPut(this.publicKeyString(), this)
 		
 		this.remoteIdentities().subnodes().forEach((rid) => { 
-		    ids.merge(id.allIdentitiesMap())
+		    ids.merge(rid.allIdentitiesMap())
 		})
 		
 		this.apps().subnodes().forEach((app) => { 

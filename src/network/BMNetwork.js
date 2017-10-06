@@ -146,7 +146,7 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
 	},
 	
 	allIdentitiesMap: function() { // only uses valid remote identities
-		var ids = Map.clone()
+		var ids = ideal.Map.clone()
 		this.localIdentities().subnodes().forEach((id) => { 
 		    ids.merge(id.allIdentitiesMap())
 		})

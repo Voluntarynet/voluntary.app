@@ -8,4 +8,9 @@ window.BMChatThreads = BMContactLinks.extend().newSlots({
         BMContactLinks.init.apply(this)
         this.setLinkProto(BMChatThread)
     },
+
+	finalize: function() {
+		BMContactLinks.finalize.apply(this)
+		this.setTitle("direct messages")
+	},
 })

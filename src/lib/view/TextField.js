@@ -19,6 +19,7 @@ window.TextField = DivView.extend().newSlots({
 		
 		//this.setUnfocusOnEnterKey(true)
 		//this.setIsRegisteredForKeyboard(true) // gets set by setContentEditable()
+		this.removeReturns()
         return this
     },
 
@@ -39,7 +40,7 @@ window.TextField = DivView.extend().newSlots({
 	
 	
 	returnStrings: function() {
-		return ["<div><br></div>", "<br>"]
+		return ["<div><br></div>", "<br><br>"]
 	},
 	
 	containsReturns: function() {
@@ -77,17 +78,19 @@ window.TextField = DivView.extend().newSlots({
         var didReturn = false
         var s = this.innerHTML()
 
+		//console.log(this.typeId() + ".removeReturns() s = '" + s + "'")
+		//console.log(this.typeId() + ".innerText() = '" + this.innerText() + "'")
+
         this.returnStrings().forEach((returnString) => {
             if (s.contains(returnString)) {
-                s = s.replaceAll(returnString, "")
+				//console.log(this.typeId() + ".removeReturns() found return in '" + s + "'")
+                //s = s.replaceAll(returnString, "")
                 didReturn = true
             }
         })
 
         if (didReturn) { 
             this.setInnerHTML(this.innerText())
-        
-
         }
 
 		return didReturn

@@ -62,7 +62,7 @@ window.BMMessages = BMStorableNode.extend().newSlots({
     },
     
     hasDeletedHash: function(h) {
-        return this.deletedSet().hasKey(h)
+        return false ////////////////////////////////////////////////////////////////////////////////// this.deletedSet().hasKey(h)
     },
     
     // --------------------------------------------
@@ -77,30 +77,41 @@ window.BMMessages = BMStorableNode.extend().newSlots({
     },
     
     validateMsg: function(objMsg) {
-        if (this.hasSubnodeWithHash(objMsg.hash())) {
-            console.warn("attempt to add duplicate message ", objMsg.msgHash())
-            return false
-        }
+        // TODO: add some validation of fields and size?
 
-   		if(!objMsg.hasValidSignature()) {
-            console.warn("invalid signature on message ", objMsg.msgHash())
-   		    return false
-   		}
+		if (objMsg.hasValidationErrors()) {
+			console.warn(objMsg.msgHash() + " has validation errors: ", objMsg.validationErrors().join(", "))
+			console.log("objMsg.msgDict(): ", objMsg.msgDict())
+			return false
+		}
+		
    		return true
     },
+
+	canRelayObjMsg: function(objMsg) {
+		return this.network().allIdentitiesMap().hasKey(objMsg.senderPublicKeyString())
+	},
         
     addMessage: function(objMsg) { // validate and broadcast
+		if (!this.validateMsg(objMsg)) {
+			return false
+		}
+		
+		if (!this.canRelayObjMsg(objMsg) {
+			
+			return false
+		}
 
-        if (!this.validateMsg(objMsg)) {
-			console.log(this.type() + " INVALID MESSAGE")
+        if (this.hasSubnodeWithHash(objMsg.msgHash())) {
+            console.warn("attempt to add duplicate message ", objMsg.msgHash())
+			console.log("I have msgs:\n  " + this.messages().map((msg) => { return msg.msgHash() }).join("\n  "))
             return false
-        }
+        } else {
+        	this.addSubnode(objMsg)
+		}
         
-        this.addSubnode(objMsg)
-        
-		this.handleMessage(objMsg)
-        this.broadcastMessage(objMsg)
-        
+		this.handleObjMsg(objMsg)
+	    this.broadcastMessage(objMsg)		
         return true
     },
     
@@ -113,11 +124,21 @@ window.BMMessages = BMStorableNode.extend().newSlots({
 		return this
 	},
 	
-    handleMessage: function(objMsg) {
-		if (!this.hasPlacedObjMsg(objMsg)) {
-        	this.network().localIdentities().handleObjMsg(objMsg)
+    handleObjMsg: function(objMsg) {
+		if (this.hasPlacedObjMsg(objMsg)) {
+			return true
+		} 
+		
+        var didPlace = this.network().localIdentities().handleObjMsg(objMsg)
+
+		if (didPlace) {
 			this.markPlacedObjMsg(objMsg) 
+		} else {
+			console.log("couldn't place objMsg " + objMsg.hash() + " so deleting")
+			this.deleteObjMsg(objMsg)
 		}
+					
+		return didPlace
     },
 
 	handleAllMessages: function() {
@@ -138,7 +159,7 @@ window.BMMessages = BMStorableNode.extend().newSlots({
 	    var peers = this.network().connectedRemotePeers()
 	    console.log("broadcasting to " + peers.length + " peers")
 	    peers.forEach(function (peer) {
-	        peer.addedObjectMsg(msg)
+	        peer.addedObjMsg(msg)
 	    })	
 	},
     
@@ -193,7 +214,7 @@ window.BMMessages = BMStorableNode.extend().newSlots({
     
     getData: function(msg) {
         msg.data().forEach((aHash) => {
-            var objMsg = this.needsMessageWithHash(aHash)
+            var objMsg = this.messageWithHash(aHash)
             if (objMsg) {
                 msg.remotePeer().sendMsg(objMsg)
             }

@@ -80,7 +80,7 @@ window.BMObjectMessage = BMMessage.extend().newSlots({
         //this.setPow(dict.pow)
         //this.setSignature(dict.signature)
         this.setMsgType(dict.msgType)
-        this.setData(dict.encryptedData)            
+        this.setEncryptedData(dict.encryptedData)            
         this.setSenderPublicKeyString(dict.sender)            
         //this.setReceiverPublicKeyString(dict.receiver)            
         this.setTimeStamp(dict.ts)            
@@ -139,6 +139,11 @@ window.BMObjectMessage = BMMessage.extend().newSlots({
 		this.setTimeStamp(Math.floor(new Date().getTime()/1000))
 		return this
 	},
+	
+	ageInSeconds: function() {
+		var nowInSecs = new Date().getTime()/1000
+		return nowInSecs - this.timeStamp()
+	},
 
 	hasValidSignature: function() {
 		var spk = new bitcore.PublicKey(this.senderPublicKeyString());
@@ -161,4 +166,39 @@ window.BMObjectMessage = BMMessage.extend().newSlots({
         this.network().messages().deleteObjMsg(this)
         return this
     },
+
+	hasValidationErrors: function() {
+		return this.validationErrors().length != 0
+	},
+	
+	validationErrors: function() {
+		var errors = []
+
+		if (!this.senderPublicKeyString()) {
+			errors.push("missing senderPublicKeyString")
+		}
+				
+		if (!this.signature()) {
+			errors.push("missing signature")
+		}
+				
+		if (!this.timeStamp()) {
+			errors.push("missing timeStamp")
+		} else if (!this.hasValidSignature()) {
+			errors.push("invalid signature")
+		}
+			
+		if (!this.timeStamp()) {
+			errors.push("missing timeStamp")
+		} else if (this.ageInSeconds() < 0) {
+			errors.push("invalid timeStamp - not in the past")
+			return false
+		}
+		
+		if (!this.encryptedData()) {
+			errors.push("missing encryptedData")
+		}
+		
+		return errors
+	},
 })

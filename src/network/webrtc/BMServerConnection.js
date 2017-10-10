@@ -40,12 +40,13 @@ window.BMServerConnection = BMNode.extend().newSlots({
         this._status = s
         this.setSubtitle(s)
 		this.scheduleSyncToView()
+		this.didUpdateNode()
         return this
     },
 
     shortId: function() {
         if (this.peerId()) {
-            return this.peerId().toString().substring(0, 6)
+            return this.peerId().toString().substring(0, 3)
         }
         return "-"
     },
@@ -96,7 +97,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
             this._serverConn = new Peer(this.peerId().toString(), this.serverConnectionOptions())                
             //this._serverConn = new Peer(this.serverConnectionOptions())
             
-            console.log(this.typeId() + ".connect() with id ", this.peerId().toString().substring(0, 4))          
+            console.log("Server " +  this.shortId() + ".connect()")          
                       
             this._serverConn.on('open', (id) => { 
                 assert(this.peerId().toString() == id)

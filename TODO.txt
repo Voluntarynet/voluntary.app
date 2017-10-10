@@ -1,4 +1,7 @@
 
+- find out why server and remote peer views aren't updating on status change
+- remove rendezvous server if can't connect to it but we can connect to others?
+
 Chat - Public Feed 
 
 Group Chat:

@@ -71,8 +71,12 @@ window.BMAppMessage = BMFieldSetNode.extend().newSlots({
         objMsg.setEncryptedData(rid.encryptJson(this.dataDict()))
 		objMsg.makeTimeStampNow()
 		objMsg.signWithSenderId(lid)
-        this.setObjMsg(objMsg)
-		this.objMsg().send()
+		if (objMsg.hasValidationErrors()) {
+			console.log(this.typeId() + ".sendToRemoteId() validationErrors:" + objMsg.hasValidationErrors().join(","))
+		} else {
+        	this.setObjMsg(objMsg)
+			this.objMsg().send()
+		}
 		return this
     },
     

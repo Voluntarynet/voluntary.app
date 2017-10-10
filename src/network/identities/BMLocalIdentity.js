@@ -33,7 +33,7 @@ window.BMLocalIdentity = BMKeyPair.extend().newSlots({
     },
 
 	finalize: function() {
-		console.log(this.typeId() + ".finalize()")
+		//console.log(this.typeId() + ".finalize()")
 		NotificationCenter.shared().newNotification().setSender(this.uniqueId()).setName("didChangeIdentity").setInfo(this).post()
 	},
 	

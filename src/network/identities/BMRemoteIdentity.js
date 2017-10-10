@@ -106,7 +106,8 @@ window.BMRemoteIdentity = BMStorableNode.extend().newSlots({
     },
 
 	handleObjMsg: function(objMsg) {
-
+		console.log(this.typeId() + ".handleObjMsg(" + objMsg.type() + ") encryptedData:", objMsg.encryptedData())
+		
 		var dict = this.decryptJson(objMsg.encryptedData())
 		if (dict) {
 			var appMsg = BMAppMessage.fromDataDict(dict)
@@ -128,16 +129,24 @@ window.BMRemoteIdentity = BMStorableNode.extend().newSlots({
 	},
 	
 	encryptJson: function(dataDict) {
+		assert(dataDict)
+		var encryptedData = this.localIdentity().encryptMessageForReceiverId(JSON.stringify(dataDict), this)
+		assert(encryptedData)
 	    // TODO: use sessionKeys
-	    return this.localIdentity().encryptMessageForReceiverId(JSON.stringify(dataDict), this).toString()	    
+	    return encryptedData.toString()	    
 	},
 	
 	decryptJson: function(encryptedData) {
 	    // TODO: use sessionKeys
-		var decryptedData = this.localIdentity().decryptMessageFromSenderPublicKeyString(encryptedData, this.publicKeyString())
-		if (decryptedData) {
-		    return JSON.parse(decryptedData)	    
-	    }
+		if (this.isValid()) {
+			if(!encryptedData) {
+				throw new Error("encryptedData is null")
+			}
+			var decryptedData = this.localIdentity().decryptMessageFromSenderPublicKeyString(encryptedData, this.publicKeyString())
+			if (decryptedData) {
+			    return JSON.parse(decryptedData)	    
+		    }
+		}
 	    return null
 	},
 	

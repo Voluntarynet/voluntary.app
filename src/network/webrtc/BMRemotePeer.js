@@ -22,7 +22,7 @@ window.BMRemotePeer = BMNode.extend().newSlots({
     },
 
 	setPeerIdString: function(id) {
-		//console.log(this.typeId() + ".setPeerIdString(" + id + ")")
+		//this.log(.setPeerIdString(" + id + ")")
 	 	this.peerId().setFromString(id)
 		this.updateTitle()
 		return this
@@ -34,7 +34,7 @@ window.BMRemotePeer = BMNode.extend().newSlots({
     
     log: function(s) {
 		if(this.debug()) {
-        	console.log(this.type() + " " + this.hash() + " " + s)
+        	console.log(this.fullShortId() + " " + s)
 		}
         return this
     },
@@ -49,8 +49,12 @@ window.BMRemotePeer = BMNode.extend().newSlots({
     },
 
     shortId: function() {
-        return this.hash().substring(0, 6)
+        return this.hash().substring(0, 3)
     },
+
+	fullShortId: function() {
+		return "RemotePeer " + this.shortId()
+	},
     
     subtitle: function () {
         return this.status()
@@ -62,7 +66,7 @@ window.BMRemotePeer = BMNode.extend().newSlots({
 
 	setStatus: function(s) {
 		this._status = s
-		//console.log(this.typeId() + ".setStatus(" + s + ")")
+		//this.log(this.typeId() + ".setStatus(" + s + ")")
 		this.scheduleSyncToView()
 		return this
 	},
@@ -75,13 +79,13 @@ window.BMRemotePeer = BMNode.extend().newSlots({
     connect: function() {
         if (!this.isConnected()) {
 			var id = this.hash()
-            console.log(this.typeId() + ".connect() " + id.substring(0, 4))
+            this.log(".connect()")
 			this.setStatus("connecting...")
             try {
                 var dataConnection = this.serverConnection().serverConn().connect(id, this.peerConnectionOptions());
                 this.setConn(dataConnection)
             } catch (error) {
-                console.log("ERROR on BMServerConnection.connectToPeerId('" + id + "')")
+                this.log("ERROR on BMServerConnection.connectToPeerId('" + this.shortId() + "')")
                 console.error("    " + error.message )
             }
         }
@@ -120,7 +124,7 @@ window.BMRemotePeer = BMNode.extend().newSlots({
         var timeoutSeconds = 45
         setTimeout(() => { 
             if (!this.isConnected()) {
-				console.log(this.typeId() + " connection timeout")
+				this.log(" connection timeout")
                 this.close()
                 this.setStatus("connect timeout")
                 this.didUpdateNode()
@@ -131,7 +135,7 @@ window.BMRemotePeer = BMNode.extend().newSlots({
     },
     
     close: function() {
-		//console.log(this.typeId() + " close")
+		this.log("close")
         this._conn.close()
         this.setStatus("closed")
         return this 
@@ -156,7 +160,7 @@ window.BMRemotePeer = BMNode.extend().newSlots({
     },
 
     onError: function(error) {
-		console.log(this.typeId() + " onError ", error)
+		this.log(" onError ", error)
         this.setStatus(error.message)
         this.log(" onError " + error)
     },
@@ -171,17 +175,25 @@ window.BMRemotePeer = BMNode.extend().newSlots({
         this.setStatus("connected")
         this.log("onData '" + data + "'")
         var msg = BMMessage.messageForString(data)
-        msg.setSubtitle("via peer " + this.shortId())
+		this.log("onData msg.msgDict(): ", msg.msgDict())
+        msg.setSubtitle("received")
+        //msg.setSubtitle("via peer " + this.shortId())
         msg.setRemotePeer(this)
-        //this.addMessage(msg.duplicate())
-        //this.serverConnection().receivedMsgFrom(data, this)
-        //this.log("msg.msgType() = '" + msg.msgType() + "'")
-        this[msg.msgType()].apply(this, [msg])
+        this.log("onData msgType '" + msg.msgType() + "'")
+		var msgType = msg.msgType()
+		
+        if (["ping", "pong", "addr", "inv", "getData", "object"].includes(msgType)) {
+	        //this.addMessage(msg.duplicate())
+			this.log(" applying " + msgType)
+			this[msg.msgType()].apply(this, [msg])
+		}
+		
     },
 
     sendMsg: function(msg) {
-        msg.setSubtitle("sent to peer " + this.shortId())
-        this.addMessage(msg.duplicate())
+        //msg.setSubtitle("sent to peer " + this.shortId())
+        msg.setSubtitle("sent")
+        //this.addMessage(msg.duplicate())
         this.sendData(msg.msgDictString())
     },
     
@@ -202,7 +214,14 @@ window.BMRemotePeer = BMNode.extend().newSlots({
         this.sendMsg(BMPongMessage.clone())
         return this
     },
-    
+
+    // inventory
+
+    markSeenHash: function(aHash) {
+        this.remoteInventory()[aHash] = true
+        return true
+    },
+
     // receive messages
     
     ping: function(msg) {
@@ -219,13 +238,8 @@ window.BMRemotePeer = BMNode.extend().newSlots({
         this.network().addr(msg)
     },
     
-    markSeenHash: function(aHash) {
-        this.remoteInventory()[aHash] = true
-        return true
-    },
-    
     inv: function(msg) {
-        this.log("got inv")
+        this.log("got inv ")
         // TODO: track local inventory, 
         // blacklist if sender repeats any hashes
         this.network().messages().inv(msg)
@@ -237,40 +251,31 @@ window.BMRemotePeer = BMNode.extend().newSlots({
     },
     
     getData: function(msg) {
+        this.log("got getData ")
         this.network().messages().getData(msg)
     },
     
-    object: function(msg) {
-        this.log("got object")
+    object: function(objMsg) {
+		this.log("got object msg.msgDict(): ", objMsg.msgDict())
+        //this.log("got object")
         
         var msgs = this.network().messages()
         
-        if (msgs.validateMsg(msg)) {
-            msgs.object(msg)
+        if (msgs.validateMsg(objMsg)) {
+			this.markSeenHash(objMsg.msgHash())
+            msgs.object(objMsg)
         } else {
+			this.log("received invalid object ")
             this.close()
-            this.status("error: received invalid object")
+            this.setStatus("error: received invalid object")
         }            
-            
-        /*
-        let messages object validate it 
-        if (msg.actualPowDifficulty() > this.minimumDifficulty()) {
-            // mark it as seen, just to be safe
-            this.remoteInventory()[msg.msgHash()] = true
-            
-            this.network().messages().object(msg)
-        } else {
-            this.close()
-            this.status("error: received invalid object")
-        }
-        */
     },
     
     hasSeenMsgHash: function(aHash) {
         return aHash in this.remoteInventory()
     },
     
-    addedObjectMsg: function(msg) {
+    addedObjMsg: function(msg) {
         if (!this.hasSeenMsgHash(msg.msgHash())) {
             this.sendMsg(msg)
         }
@@ -283,7 +288,7 @@ window.BMRemotePeer = BMNode.extend().newSlots({
 
 	connectIfMayShareContacts: function() {
 		if ((!this.isConnected()) && this.mayShareContacts()) {
-			console.log(this.shortId() + " may share contacts - connecting")
+			//this.log(this.shortId() + " may share contacts - connecting")
 			this.connect()
 		} else {
 			this.setStatus("no contact match")

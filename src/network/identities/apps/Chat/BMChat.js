@@ -3,7 +3,9 @@
 
 window.BMChat = BMApplet.extend().newSlots({
     type: "BMChat",
-    threads: null,
+	//feedPosts: null,
+	//myPosts: null,
+   // threads: null,
 }).setSlots({
     
     init: function () {
@@ -14,12 +16,17 @@ window.BMChat = BMApplet.extend().newSlots({
 		
         this.setTitle("Chat")
 
-		this.addStoredSlot("threads")
-		this.setThreads(BMChatThreads.clone().setTitle("threads"))
-		this.addSubnode(this.threads())
-		
-		//console.log(">>>>>>> " + this.typeId() + ".init()")
+		this.initStoredSubnodeSlotWithProto("feedPosts", BMFeedPosts)	
+		this.initStoredSubnodeSlotWithProto("myPosts",   BMMyPosts)
+		this.initStoredSubnodeSlotWithProto("threads",   BMChatThreads)
+		this.initStoredSubnodeSlotWithProto("drafts",    BMPostDrafts)
     },
+
+/*
+	finalizeLoad: function() {
+		BMApplet.finalizeLoad.apply(this)		
+	},
+	*/
 	
     localIdentity: function() {
         return this.parentNodeOfType("BMLocalIdentity")
@@ -54,7 +61,7 @@ window.BMChat = BMApplet.extend().newSlots({
 			if (thread) {
 				thread.addMessage(msg.duplicate())
 			}
-		}		
+		}
 	},
 	
 	handleReceivedMessage: function(msg) {

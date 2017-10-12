@@ -86,6 +86,10 @@ window.BMAppMessage = BMFieldSetNode.extend().newSlots({
 		}
 		return this.typeId()
 	},
+	
+	isEqual: function(other) {
+		return this.hash() == other.hash()
+	},
 	    
     fromDataDict: function(dataDict) {
         var className = dataDict.type
@@ -105,4 +109,10 @@ window.BMAppMessage = BMFieldSetNode.extend().newSlots({
 		//console.log(this.type() + " fromDataDict() dataDict = ", dataDict)
         return proto.clone().setDataDict(dataDict)
     },
+
+	prepareToDelete: function() {
+		if (this.objMsg()) {
+			this.objMsg().delete()
+		}
+	},
 })

@@ -245,9 +245,10 @@ window.BMStorableNode = BMNode.extend().newSlots({
     },
 
 	scheduleSyncToStore: function() {
-		if (this.hasPid() && !this._isUnserializing && this.shouldStore() && !this.isUnserializing()) {
+		console.log(this.typeId() + " scheduleSyncToStore this.hasPid() = ", this.hasPid())
+		if (this.hasPid() && this.shouldStore() && !this.isUnserializing()) {
         	NodeStore.shared().addDirtyObject(this)
-			this._refPids = null
+			//this._refPids = null
 		}
 		return this
 	},

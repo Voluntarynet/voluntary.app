@@ -1,8 +1,8 @@
 
 "use strict"
 
-window.BMChatMessage = BMAppMessage.extend().newSlots({
-    type: "BMChatMessage",
+window.BMPostMessage = BMAppMessage.extend().newSlots({
+    type: "BMPostMessage",
 	content: "",
 }).setSlots({
     
@@ -10,6 +10,7 @@ window.BMChatMessage = BMAppMessage.extend().newSlots({
         BMAppMessage.init.apply(this)
         this.addStoredSlots(["content"])
         //this.addAction("delete")
+        this.setShouldStore(true)	
     },	
 
 	mostRecentDate: function() {
@@ -40,18 +41,10 @@ window.BMChatMessage = BMAppMessage.extend().newSlots({
 		return this
 	},
 	
-	isEqual: function(other) {
-		return this.hash() == other.hash()
-	},
-	
 	description: function() {
 		return this.typeId() + "-" + this.hash() + "'" + this.content() + "'"
 	},
 
-	prepareToDelete: function() {
-	    // TODO: mark MsgObjRecord as deleted
-	},
-	
     localIdentity: function() {
         return this.parentNodeOfType("BMLocalIdentity")
     },

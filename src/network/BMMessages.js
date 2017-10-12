@@ -97,7 +97,7 @@ window.BMMessages = BMStorableNode.extend().newSlots({
 			return false
 		}
 		
-		if (!this.canRelayObjMsg(objMsg) {
+		if (!this.canRelayObjMsg(objMsg)) {
 			
 			return false
 		}
@@ -143,7 +143,7 @@ window.BMMessages = BMStorableNode.extend().newSlots({
 
 	handleAllMessages: function() {
 		this.messages().forEach((objMsg) => {
-			this.handleMessage(objMsg)
+			this.handleObjMsg(objMsg)
 		})
 	},
 

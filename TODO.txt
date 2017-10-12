@@ -1,99 +1,40 @@
 
-- find out why server and remote peer views aren't updating on status change
-- remove rendezvous server if can't connect to it but we can connect to others?
+Rendezvous server
+	- flooding of addresses among everyone
+	- only share an address you've verified
 
-Chat - Public Feed 
+Public and direct messages
+	- flooding of messages between sender and sender's followers
 
-Group Chat:
-    - create key pair
-    - select contacts
-    - share private key with selected contacts
-    
-- contacts -> direct messages
+Not hidden:
+	- my IP
+	- my pubkey identities
+	- my following pubkeys list
+	- public feed posts
+	- public "find me at these rendezvous server" messages
+	
+hidden:
+	- content and recipient (recipient among mutual following) is hidden to all but sender and receiver 
+	- sender, size of content and timestamp is visible to friends
+	- packet sizes, bandwidth between friends visible to 
+	
+	
 
-- setTimeout to remove closed peers 60 seconds?
-- filter INV messages by  date?
+visibly only to sender and receiver:
+	content of direct messages
+	recipient of direct messages
+	
+visible to friend network:
+	sender X sent message with encrypted content of size Y at time T (recipient unknown)
+	
+exchange of messages between peers is encrypted so only receiver can receive it
+pubkey receiving the connection sends an sync encryption key encrypted so only other pubkey can read it
+other pubkey must send messages on this connection using that key
 
-
-- add a inReplyTo: hash for ChatMessage
-- add timeout with ACK for Chat? Only do this for direct connection for privacy?
-- on connecting to a node, support challenge/response handshake for establishing identity 
-    - support special direct connection messages such as ACK, audio and video chat, file transfer
-    
-
-
-- make shelf view into a special column view?
-- add last message as subtitle on chat thread view
-
-- BUG: weird issue with browser width when setting new root node
-- update shelf image on profile image change
-- on group selection - try to scroll to top of shelf
-- make shelf item target the browser root?
-
-- sync shelf with local identities
-
-- default user image - svg use with solid fill?
-
-- Left Shelf view - needs a StorableNode to store selection state - use App state?
-
-------------
-NodeSlot
-    - just minic fields for now?
-
-------------
-
-BUG: Don't go into next selection when deleting an item in single column mode
-
-
--------------------------------------
-
-goal:
-    avoid storing objects that aren't referenced
-    
-    storeDirtyObjects method
-        enumerates dirtyObjects
-        
-        loop dirty objects, allow new ones to be added as pids are referenced 
-        but keep storedPids list and check before each store - error if double write of same obj detected
-        
-        BMStorableNode.pid() 
-            if missing pid, creates and marksDirty
-    
-    separate _isDirty from store list, 
-        only schedule for store if:
-            !_existsInStore & root or 
-            _existsInStore & stored slot changed
-
-    need a _existsInStored
-        - set true on load
-        - set true on write
-        
-    existsInStore infered from pid?
-    avoid pid assignment until save
-    don't use pid in dirty list
-
-
----------------------------------
-
-
-- remove all roots except Network?
-    keep servers and stun servers?
-
-- move KeyPair off of Identities in preparation for using BMSessionKeys
-
-
--- new Synchronizer
-            object needing sync marks it locally:
-                this._needsSyncToStore = true
-                this._needsSyncToView = true
-                this._needsSyncFromView = true
-                this._needsSyncToNode = true
-                this._needsSyncFromNode = true
-                
-                    BMNode.scheduleSyncToView: function() {
-                        this._needsSyncToView = true
-                        Synchronizer.shared().addObject(this)
-                    }
+visible to passive network observer:
+	list of public rendezvous servers
+	
+-----------
                     
                     BMNode.sync: function() {
                         this._isSyncing = true

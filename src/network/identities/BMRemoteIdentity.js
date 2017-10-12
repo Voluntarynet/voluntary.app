@@ -8,6 +8,7 @@ window.BMRemoteIdentity = BMStorableNode.extend().newSlots({
 	publicKeyString: "",
 	hasPrivateKey: false,
 	sessionKeys: null,
+	messages: null, // TODO: remove later - no longer used
 }).setSlots({
 	
     _nodeVisibleClassName: "Contact",
@@ -22,10 +23,10 @@ window.BMRemoteIdentity = BMStorableNode.extend().newSlots({
 		this.addStoredSlots(["name", "publicKeyString"])
 		
 		this.initStoredSubnodeSlotWithProto("profile", BMProfile)
-		this.initStoredSubnodeSlotWithProto("messages", BMInbox)
+		//this.initStoredSubnodeSlotWithProto("messages", BMInbox)
 		//this.initStoredSubnodeSlotWithProto("sessionKeys", BMSessionKeys)
 		
-		this.messages().setTitle("messages")
+	//	this.messages().setTitle("messages")
 
         //this.setNodeBackgroundColor("white")
 
@@ -63,7 +64,7 @@ window.BMRemoteIdentity = BMStorableNode.extend().newSlots({
 
 	didLoadFromStore: function() {
 		BMStorableNode.didLoadFromStore.apply(this)
-		this.messages().setTitle("messages")
+		//this.messages().setTitle("messages")
 		//console.log(this.typeId() + " didLoadFromStore")
 	},
     

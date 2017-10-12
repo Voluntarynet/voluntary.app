@@ -304,13 +304,16 @@ window.BrowserView = NodeView.extend().newSlots({
 			
 			if (selectedRow) {
 	            var nextNode = selectedRow.node().nodeRowLink() // returns receiver by default
-	            nextCg.setNode(nextNode)
-	            this.clearColumnsGroupsAfter(nextCg)
-	            //nextCg.column().setTitle(selectedColumn.selectedRowTitle())            
-	            nextCg.syncFromNode()
+				if (nextNode) {
+					
+		            nextCg.setNode(nextNode)
+		            this.clearColumnsGroupsAfter(nextCg)
+		            //nextCg.column().setTitle(selectedColumn.selectedRowTitle())            
+		            nextCg.syncFromNode()
 			
-				if (nextNode.view().type() != "BrowserColumnGroup" || nextNode.isKindOf(BMFieldSetNode)) { // TODO: use a better rule here
-					this.setColumnGroupCount(index + 2)
+					if ((nextNode.view().type() != "BrowserColumnGroup") || nextNode.isKindOf(BMFieldSetNode)) { // TODO: use a better rule here
+						this.setColumnGroupCount(index + 2)
+					}
 				}
 			} // should this be here?
         }

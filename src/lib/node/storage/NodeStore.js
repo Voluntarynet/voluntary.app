@@ -101,7 +101,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 	sdb: null,
 	isReadOnly: false,
 
-    debug: false,
+    debug: true,
 }).setSlots({
     init: function () {
         this.setDirtyObjects({})
@@ -287,9 +287,12 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 		
         
         this.debugLog("NodeStore.storeDirtyObjects stored " +  totalStoreCount + " objects")
+		
+		/*
 		if (this.debug()) {
 			this.show()
 		}
+		*/
 
 		this.sdb().commit() // flushes write cache
 		//console.log("--- commit ---")
@@ -312,7 +315,8 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 	},
 
     storeObject: function(obj) {
-        this.debugLog("NodeStore.storeObject(" + obj.pid() + ")")
+		console.log("store obj")
+        this.debugLog("storeObject(" + obj.pid() + ")")
 		this.assertIsWritable()
 		
 		var aDict = obj.nodeDict()
@@ -626,7 +630,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     },
     
     markPid: function(pid) {
-        this.debugLog("markPid(" + pid + ")")
+        //this.debugLog("markPid(" + pid + ")")
         
         if (this._marked[pid] == true) { 
             return false // already marked it
@@ -634,7 +638,8 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         this._marked[pid] = true
                 
         var refPids = this.pidRefsFromPid(pid)
-       	this.debugLog(pid + " refs " + JSON.stringify(refPids))
+       	//this.debugLog("markPid " + pid + " w refs " + JSON.stringify(refPids))
+
 /*
         if (pid.contains("Chat")) {
             var nodeDict = this.nodeDictAtPid(pid)

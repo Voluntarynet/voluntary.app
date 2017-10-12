@@ -8,7 +8,8 @@ window.BMDrafts = BMStorableNode.extend().newSlots({
         BMStorableNode.init.apply(this)
  		this.setShouldStore(true)
         this.setNoteIsSubnodeCount(true)
-        this.setSubnodeProto(BMMailMessage).addAction("add")
+        this.setSubnodeProto(BMMailMessage)
+		this.addAction("add")
         this.setTitle("drafts")
     },
     

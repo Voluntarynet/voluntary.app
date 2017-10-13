@@ -115,7 +115,11 @@ window.ImageView = NodeView.extend().newSlots({
     
     setFromDataURL: function(dataURL) {
         //console.log("setFromDataURL: ", dataURL)
-
+		if (!dataURL) {
+			console.warn(this.typeId() + ".setFromDataURL() called with null argument")
+			return this
+		}
+		
         assert(dataURL.beginsWith("data:")) 
 
         this.removeRawImageView()
@@ -126,8 +130,8 @@ window.ImageView = NodeView.extend().newSlots({
 
         this.setRawImageView(DivView.clone().setElement(image).setDivClassName("ImageViewImageObject"))
 		this.imageContainer().addSubview(this.rawImageView())
-
-        return this;
+	
+        return this
     },
     
     fetchDataURLFromSrc: function(src) {

@@ -12,6 +12,8 @@ window.BMPostDrafts = BMStorableNode.extend().newSlots({
         this.setNodeMinWidth(450)
         this.setSubnodeProto(BMPostDraft)
 		this.addAction("add")
+
+		this.setNodeBackgroundColor("white")
     },
 
 	finalize: function() {
@@ -27,10 +29,12 @@ window.BMPostDrafts = BMStorableNode.extend().newSlots({
 		return result
 	},
 
+/*
 	scheduleSyncToStore: function() {
 		BMStorableNode.scheduleSyncToStore.apply(this)
         console.log(this.typeId() + " scheduleSyncToStore")
 		return this
 	},
+	*/
 	
 })

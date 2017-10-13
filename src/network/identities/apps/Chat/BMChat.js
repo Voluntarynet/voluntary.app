@@ -23,8 +23,8 @@ window.BMChat = BMApplet.extend().newSlots({
     },
 
 /*
-	finalizeLoad: function() {
-		BMApplet.finalizeLoad.apply(this)		
+	loadFinalize: function() {
+		BMApplet.loadFinalize.apply(this)		
 	},
 	*/
 	

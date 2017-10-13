@@ -1,5 +1,5 @@
 
-.BMPostDraftRowView {
+.BMPostMessageRowView {
 	height: auto;
 
 	min-height: fit-content;
@@ -11,13 +11,33 @@
 	overflow: hidden;
 }
 
-.BMPostDraftRowViewRowViewTitle {
+.BMPostAvatarView {
+	position: absolute;
+	top: 8px;
+    left: 10px;	
+	width: 55px;
+	height: 55px;
+
+/*
+	min-width: 55px;
+	max-width: 55px;
+	
+	min-height: 55px;
+	max-height: 55px;
+	*/
+	background-color: #aaa;;
+	border-radius: 5px;
+	overflow: hidden;
+}
+
+.BMPostMessageRowViewRowViewTitle {
+	position: absolute;
 	top: 0px;
     left: 0px;
 
 	color: rgba(0,0,0, 0.9);
 	
-	padding-top: 8px;
+	padding-top: 08px;
 	padding-bottom: 8px;
 	
 	padding-left: 12px;

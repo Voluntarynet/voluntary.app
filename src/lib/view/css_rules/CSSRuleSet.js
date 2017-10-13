@@ -29,11 +29,9 @@ window.CSSRuleSet = ideal.Proto.extend().newSlots({
     },
     
     setDict: function(dict) {
-        for (var k in dict) {
-            if (dict.hasOwnProperty(k)) {
-                this.decAt(k).setValue(dict[k])
-            }
-        }
+		Object.keys(dict).forEach((k) => {
+			this.decAt(k).setValue(dict[k])
+        })
         return this
     },
 })

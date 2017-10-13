@@ -74,46 +74,17 @@ window.SyncDB = ideal.Proto.extend().newSlots({
 
 	keys: function() {
 		this.assertOpen()
-		
-		var obj = this._cache
-		var keys = []
-		for (var k in obj)
-		{
-			if (obj.hasOwnProperty(k))
-			{
-				keys.push(k)
-			}
-		}
-				
-		return keys;
+		return Object.keys(this._cache);
 	},
 	
 	values: function() {
 		this.assertOpen()
-		
-		var obj = this._cache
-		var values = []
-		for (var k in obj)
-		{
-			if (obj.hasOwnProperty(k))
-			{
-				values.push(obj[k])
-			}
-		}
-
-		return values;
+		return Object.values(this._cache);
 	},
 	
 	size: function() {
 		this.assertOpen()
-		var count = 0;
-		var dict = this._cache
-		for (var i in dict) {
-		   if (dict.hasOwnProperty(i)) {
-				count++;
-			}
-		}
-		return count
+		return this.keys().length
 	},	
 		
 	clear: function() {
@@ -286,7 +257,8 @@ window.SyncDB = ideal.Proto.extend().newSlots({
 			console.log("---- " + this.type() + " committed tx with " + count + " writes ----")
 		}
 		
-		// TODO: use commit callback to clear writeCache
+		// TODO: use commit callback to clear writeCache instead of assuming it
+		// will complete and setting it to null here
 		this._writeCache = null
 	},
 	

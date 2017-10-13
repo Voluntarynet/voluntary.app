@@ -23,14 +23,7 @@ window.DivTransitions = ideal.Proto.extend().newSlots({
 	},
 
 	propertiesAsList: function() {
-		var d = this.properties()
-		var parts = []
-        for (var k in d) {
-			if (d.hasOwnProperty(k)) {
-				parts.push(d[k])
-			}
-		}
-		return parts	
+		return Object.values(this.properties())	
 	},
 	
 	asString: function(aString) {

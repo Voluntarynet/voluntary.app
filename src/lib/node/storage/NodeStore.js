@@ -260,23 +260,21 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 			var dirtyBucket = this._dirtyObjects
         	this._dirtyObjects = {}
 
-	        for (var objId in dirtyBucket) {
-                if (dirtyBucket.hasOwnProperty(objId)) {
-		            var obj = dirtyBucket[objId]
-		            var pid = obj.pid()
-		            
-		            if (justStoredPids[pid]) {
-		                throw new Error("attempt to double store " + pid)
-		            }
-		            
-					//if (pid[0] == "_" || this.objectIsReferencedByActiveObjects(obj)) {
-		            	this.storeObject(obj)
-		            	justStoredPids[pid] = obj
-					//}
-					
-		            thisLoopStoreCount ++
-				}
-	        }
+			Object.keys(dirtyBucket).forEach((objId) => {
+	            var obj = dirtyBucket[objId]
+	            var pid = obj.pid()
+	            
+	            if (justStoredPids[pid]) {
+	                throw new Error("attempt to double store " + pid)
+	            }
+	            
+				//if (pid[0] == "_" || this.objectIsReferencedByActiveObjects(obj)) {
+	            	this.storeObject(obj)
+	            	justStoredPids[pid] = obj
+				//}
+				
+	            thisLoopStoreCount ++
+	        })
 	
 			totalStoreCount += thisLoopStoreCount
 			//console.log("totalStoreCount: ", totalStoreCount)
@@ -315,7 +313,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 	},
 
     storeObject: function(obj) {
-		console.log("store obj")
+		//console.log("store obj")
         this.debugLog("storeObject(" + obj.pid() + ")")
 		this.assertIsWritable()
 		
@@ -332,7 +330,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         /*
         this happens automatically: 
         - when subnode pids are requested for serialization, 
-        they are added to dirty when pid is assigned
+        they are added to dirty object list when pid is assigned
         */
 
 /*
@@ -554,15 +552,15 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 
         if (nodeDict) {
             // property pids
-            for (var k in nodeDict) {
-                if (nodeDict.hasOwnProperty(k)) {
+
+			Object.keys(nodeDict).forEach((k) => {
+
                     var v = nodeDict[k]
                     var childPid = this.pidIfRef(v)
                     if (childPid) {
                         pids.push(childPid);
                     }
-                }
-            }
+            })
             
             // child pids
             if (nodeDict.children) {

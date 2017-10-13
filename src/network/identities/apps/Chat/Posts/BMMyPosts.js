@@ -8,9 +8,11 @@ window.BMMyPosts = BMStorableNode.extend().newSlots({
         BMStorableNode.init.apply(this)
         //this.setLinkProto(BMChatThread)
 		this.setTitle("my posts")
-        //this.setActions(["add"])
+        this.setActions(["add", "deleteAll"])
         this.setShouldStore(true)	
         this.setNodeMinWidth(450)
+        this.setSubnodeProto(BMPostMessage)
+		this.setNodeBackgroundColor("white")
     },
 
 	finalize: function() {
@@ -28,4 +30,12 @@ window.BMMyPosts = BMStorableNode.extend().newSlots({
         return newPost
 	},
 	*/
+	
+	deleteAll: function() {
+	    this.subnodes().forEach((post) => {
+	        post.prepareToDelete()
+	    })
+	    this.removeAllSubnodes()
+	    return this
+	},
 })

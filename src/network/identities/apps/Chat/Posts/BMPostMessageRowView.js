@@ -2,15 +2,22 @@
 
 "use strict"
 
-window.BMPostDraftRowView = BrowserRow.extend().newSlots({
-    type: "BMPostDraftRowView",
-    //imageWellView: null,
+window.BMPostMessageRowView = BrowserRow.extend().newSlots({
+    type: "BMPostMessageRowView",
+	imageView: null,
     textView: null,
     isSelected: false,
 }).setSlots({
     init: function () {
         BrowserRow.init.apply(this)
-        this.setTextView(this.addSubview(TextField.clone().setDivClassName("BMPostDraftRowViewRowViewTitle")))
+		this.setImageView(this.addSubview(ImageView.clone().setDivClassName("BMPostAvatarView")))
+		var iv = this.imageView()
+		//iv.makeBackgroundNoRepeat()
+		//this.makeBackgroundContain()
+		//iv.makeBackgroundCentered()
+		
+        //this.setTextView(this.addSubview(TextField.clone().setDivClassName("BMPostDraftRowViewRowViewTitle")))
+        this.setTextView(this.addSubview(TextField.clone()))
         this.textView().setContentEditable(true)
 		this.setupContentView()
 		this.updateSubviews()
@@ -25,16 +32,15 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
 		tv.setMinWidth("50px")
 		tv.setMaxWidth("calc(100% - 120px)")
 
-		tv.setTop(0)
+		//tv.setTop(0)
 		tv.setPosition("relative")
 		tv.setLeft(80)
 		tv.setMarginRight(0)
 		tv.setMarginLeft(0)
-		this.setPaddingBottom(0)
+		tv.setPaddingTop(8)
+		tv.setPaddingBottom(8)
 		tv.setWhiteSpace("normal")
 		tv.setFontFamily("AppRegular")
-		
-        
     },
 
     updateSubviews: function() {
@@ -54,11 +60,11 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
 	// --- text color ---
 	
     unselectedBgColor: function() {
-        return "rgba(255, 255, 255, 0.5)"
+        return "white"
     },
     
     selectedBgColor: function() {
-        return "rgba(0, 0, 0, 0.05)"
+        return "white"
     },
 
 	selectedTextColor: function() {
@@ -66,7 +72,7 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
 	},
 	
 	unselectedTextColor: function() {
-		return "rgba(0, 0, 0, 0.5)"
+		return "black"
 	},
 
     // --- edit ---
@@ -92,6 +98,7 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
 
     syncFromNode: function () {
         var node = this.node()
+		this.imageView().setFromDataURL(node.avatarImageDataURL())
         this.textView().setString(node.content())
         this.updateSubviews()
         return this
@@ -99,77 +106,3 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
 })
 
 
-
-
-/*BrowserTitledRow.extend().newSlots({
-    type: "BMPostDraftRowView",
-}).setSlots({
-    
-    init: function () {
-        BrowserTitledRow.init.apply(this)
-	//	this.setSelectedBgColor("white")
-	//	this.setUnselectedBgColor("white")
-
-		this.setDisplay("block")
-		
-		this.setMinHeight("auto")
-		this.setMaxHeight("1000px")
-		this.setHeight("auto")
-		
-		this.setPaddingTop(10)
-		this.setPaddingBottom(10)
-		//this.setMarginBottom(10)
-		
-		this.setupTitleView()
-    },
-    
-    setupTitleView: function() {
-		var tv = this.titleView()
-		tv.insertDivClassName(this.type() + "Title")
-		tv.setWidth("auto")
-		tv.setMinWidth("50px")
-		tv.setMaxWidth("calc(100% - 100px)")
-
-		tv.setTop(0)
-		tv.setPosition("relative")
-		tv.setLeft(null)
-		tv.setMarginRight(20)
-		tv.setMarginLeft(0)
-		tv.setWhiteSpace("normal")
-		tv.setFontFamily("AppRegular")
-	    
-    },
-
-    setHasSubtitle: function(aBool) {        
-		// so it doesn't adjust title 
-        return this
-    },
-
-	message: function() {
-		return this.node()
-	},
-
-    updateSubviews: function() {
-		BrowserTitledRow.updateSubviews.apply(this)
-
-		return this
-	},
-	
-    unselectedBgColor: function() {
-        return "rgba(255, 255, 255, 0.5)"
-    },
-    
-    selectedBgColor: function() {
-        return "rgba(0, 0, 0, 0.05)"
-    },
-
-	selectedTextColor: function() {
-		return "black"
-	},
-	
-	unselectedTextColor: function() {
-		return "rgba(0, 0, 0, 0.5)"
-	},
-})
-
-*/

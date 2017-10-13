@@ -9,8 +9,9 @@ window.BMPostMessage = BMAppMessage.extend().newSlots({
     init: function () {
         BMAppMessage.init.apply(this)
         this.addStoredSlots(["content"])
-        //this.addAction("delete")
+        this.addAction("delete")
         this.setShouldStore(true)	
+		this.setContent("...".loremIpsum(40, 100))	
     },	
 
 	mostRecentDate: function() {
@@ -51,6 +52,10 @@ window.BMPostMessage = BMAppMessage.extend().newSlots({
     
 	localIdentityIsSender: function() {
 		return this.senderId().equals(this.localIdentity())
+	},
+	
+	avatarImageDataURL: function() {
+		return this.localIdentity().profile().profileImageDataUrl()
 	},
 })
 

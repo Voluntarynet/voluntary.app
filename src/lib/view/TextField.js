@@ -16,6 +16,7 @@ window.TextField = DivView.extend().newSlots({
 		this.setOverflow("hidden")
 		this.setDisplay("inline-block")
 		this.setTextOverflow("ellipsis")
+		this.setSpellCheck(false)
 		
 		//this.setUnfocusOnEnterKey(true)
 		//this.setIsRegisteredForKeyboard(true) // gets set by setContentEditable()

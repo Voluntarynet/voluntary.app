@@ -4,14 +4,16 @@
 
 window.BMPostMessageRowView = BrowserRow.extend().newSlots({
     type: "BMPostMessageRowView",
-	imageView: null,
+	titleBarView: null,
+	iconView: null,
     textView: null,
     isSelected: false,
 }).setSlots({
     init: function () {
         BrowserRow.init.apply(this)
-		this.setImageView(this.addSubview(ImageView.clone().setDivClassName("BMPostAvatarView")))
-		var iv = this.imageView()
+		this.setTitleBarView(this.addSubview(DivView.clone().setDivClassName("BMPostTitleBarView")))
+		this.setIconView(this.addSubview(ImageView.clone().setDivClassName("BMPostAvatarView")))
+		//var iv = this.iconView()
 		//iv.makeBackgroundNoRepeat()
 		//this.makeBackgroundContain()
 		//iv.makeBackgroundCentered()
@@ -25,12 +27,45 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
         return this
     },
 
+
+	setupIconView: function() {
+		var iv = DivView.clone().setDivClassName("ShelfIconView")
+		this.setIconView(iv)
+        this.addSubview(iv)
+        
+        var iconSize = 46
+        iv.setPosition("relative")
+        iv.setLeft((itemSize-iconSize)/2)
+        iv.setTop((itemSize-iconSize)/2)
+		iv.setMinAndMaxWidth(iconSize)
+		iv.setMinAndMaxHeight(iconSize)
+		iv.makeBackgroundNoRepeat()
+		//this.makeBackgroundContain()
+		iv.makeBackgroundCentered()
+		iv.setBackgroundColor("transparent")
+		iv.setOpacity(1)
+        return this
+    },
+   
+    setIconDataUrl: function(imageDataUrl) {
+        var iv = this.iconView()
+        
+        if (imageDataUrl) {
+    		iv.setBackgroundImageUrlPath(imageDataUrl)        
+    		iv.setBackgroundSizeWH(64, 64)     
+        } else {
+            iv.setBackgroundColor("#aaa")
+        }
+        
+		return this
+	},
+
     setupContentView: function() {
 		var tv = this.textView()
 		tv.insertDivClassName(this.type() + "Title")
 		tv.setWidth("auto")
 		tv.setMinWidth("50px")
-		tv.setMaxWidth("calc(100% - 120px)")
+		//tv.setMaxWidth("calc(100% - 120px)")
 
 		//tv.setTop(0)
 		tv.setPosition("relative")
@@ -98,7 +133,7 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
 
     syncFromNode: function () {
         var node = this.node()
-		this.imageView().setFromDataURL(node.avatarImageDataURL())
+		this.setIconDataUrl(node.avatarImageDataURL())
         this.textView().setString(node.content())
         this.updateSubviews()
         return this

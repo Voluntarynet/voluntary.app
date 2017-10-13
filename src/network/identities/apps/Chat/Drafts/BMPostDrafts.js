@@ -14,6 +14,7 @@ window.BMPostDrafts = BMStorableNode.extend().newSlots({
 		this.addAction("add")
 
 		this.setNodeBackgroundColor("white")
+		this.setNoteIsSubnodeCount(true)
     },
 
 	finalize: function() {

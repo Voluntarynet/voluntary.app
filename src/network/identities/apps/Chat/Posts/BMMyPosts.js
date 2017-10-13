@@ -13,6 +13,7 @@ window.BMMyPosts = BMStorableNode.extend().newSlots({
         this.setNodeMinWidth(450)
         this.setSubnodeProto(BMPostMessage)
 		this.setNodeBackgroundColor("white")
+		this.setNoteIsSubnodeCount(true)
     },
 
 	finalize: function() {

@@ -1,4 +1,7 @@
 
+Avoid full path reselect if possible with Browser.selectNode()
+
+
 Rendezvous server
 	- flooding of addresses among everyone
 	- only share an address you've verified

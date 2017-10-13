@@ -18,26 +18,28 @@
 	width: 55px;
 	height: 55px;
 
-/*
+	/*
 	min-width: 55px;
 	max-width: 55px;
 	
 	min-height: 55px;
 	max-height: 55px;
+
+	background-color: rgba(255, 255, 255, 0);
 	*/
-	background-color: #aaa;;
 	border-radius: 5px;
 	overflow: hidden;
 }
 
-.BMPostMessageRowViewRowViewTitle {
+.BMPostMessageRowViewTitle {
 	position: absolute;
-	top: 0px;
-    left: 0px;
+	top: 32px;
+    left: 80px;
+	width: calc(100% - 100px);
 
 	color: rgba(0,0,0, 0.9);
 	
-	padding-top: 08px;
+	padding-top: 0px;
 	padding-bottom: 8px;
 	
 	padding-left: 12px;
@@ -51,4 +53,17 @@
 	font-size: 13px; 
 	font-size-adjust: 0.5;
 	overflow: visible;
+	
+	border: 1px #eee solid;
+}
+
+.BMPostTitleBarView {
+	position: absolute;
+	top: 8px;
+    left: 80px;	
+	width: calc(100% - 100px);
+	height: 22px;
+	/*background-color: #eee;*/
+	border: 1px #eee solid;
+	white-space: nowrap;
 }

@@ -8,6 +8,7 @@ window.BMFeedPosts = BMStorableNode.extend().newSlots({
         BMStorableNode.init.apply(this)
 		this.setTitle("feed")
         this.setShouldStore(true)	
+		this.setNoteIsSubnodeCount(true)
     },
 
 	finalize: function() {

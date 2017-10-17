@@ -1,5 +1,5 @@
-
 .BMPostDraftRowView {
+    display: flex;
 	height: auto;
 
 	min-height: fit-content;
@@ -11,10 +11,40 @@
 	overflow: hidden;
 }
 
-.BMPostDraftRowViewRowViewTitle {
-	top: 0px;
-    left: 0px;
+.BMPostDraftRowLeftView {
+    display: inline-block;
+    position: relative;
+    flex: 1;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: auto;
 
+    float: left;
+
+    width: 0px;
+    min-height: 100%;
+
+    border: 1px dashed red;
+    background-color: transparent;
+}
+
+.BMPostDraftRowRightView {
+    display: inline-block;
+    position: relative;
+    flex: 1;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: auto;
+    
+    min-height: 100%;
+    width: calc(100% - 108px);
+    
+    border: 1px dashed blue;
+    margin: 0px;
+    background-color: transparent;
+}
+
+.BMPostDraftRowTitleView {
 	color: rgba(0,0,0, 0.9);
 	
 	padding-top: 8px;

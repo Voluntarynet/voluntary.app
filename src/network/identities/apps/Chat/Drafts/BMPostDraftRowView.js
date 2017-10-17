@@ -4,17 +4,25 @@
 
 window.BMPostDraftRowView = BrowserRow.extend().newSlots({
     type: "BMPostDraftRowView",
-    //imageWellView: null,
+    leftView: null,
+    rightView: null,
     textView: null,
     isSelected: false,
 }).setSlots({
     init: function () {
         BrowserRow.init.apply(this)
-        this.setTextView(this.addSubview(TextField.clone().setDivClassName("BMPostDraftRowViewRowViewTitle")))
-        this.textView().setContentEditable(true)
+        
+        this.setLeftView(this.addSubview(DivView.clone().setDivClassName("BMPostDraftRowLeftView")))
+        this.setRightView(this.addSubview(DivView.clone().setDivClassName("BMPostDraftRowRightView")))
+        
+        var text = TextField.clone().setDivClassName("BMPostDraftRowTitleView").setContentEditable(true)
+        this.setTextView(this.rightView().addSubview(text))
+        
 		this.setupContentView()
 		this.updateSubviews()
 		this.setIsSelectable(true)
+		
+		//this.setDisplay("flex")
         return this
     },
 
@@ -25,16 +33,12 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
 		tv.setMinWidth("50px")
 		tv.setMaxWidth("calc(100% - 120px)")
 
-		tv.setTop(0)
 		tv.setPosition("relative")
-		tv.setLeft(80)
 		tv.setMarginRight(0)
 		tv.setMarginLeft(0)
 		this.setPaddingBottom(0)
 		tv.setWhiteSpace("normal")
-		tv.setFontFamily("AppRegular")
-		
-        
+		tv.setFontFamily("AppRegular")        
     },
 
     updateSubviews: function() {

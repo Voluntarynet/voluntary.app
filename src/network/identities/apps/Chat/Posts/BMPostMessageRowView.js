@@ -1,9 +1,9 @@
-
-
 "use strict"
 
 window.BMPostMessageRowView = BrowserRow.extend().newSlots({
     type: "BMPostMessageRowView",
+    leftView: null,
+    rightView: null,
 	titleBarView: null,
 	iconView: null,
     textView: null,
@@ -11,27 +11,25 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
 }).setSlots({
     init: function () {
         BrowserRow.init.apply(this)
-		this.setTitleBarView(this.addSubview(DivView.clone().setDivClassName("BMPostTitleBarView")))
-		this.setIconView(this.addSubview(ImageView.clone().setDivClassName("BMPostAvatarView")))
-		//var iv = this.iconView()
-		//iv.makeBackgroundNoRepeat()
-		//this.makeBackgroundContain()
-		//iv.makeBackgroundCentered()
-		
-        //this.setTextView(this.addSubview(TextField.clone().setDivClassName("BMPostDraftRowViewRowViewTitle")))
-        this.setTextView(this.addSubview(TextField.clone()))
-        this.textView().setContentEditable(true)
+        
+        this.setLeftView(this.addSubview(DivView.clone().setDivClassName("BMPostMessageRowLeftView")))
+        this.setRightView(this.addSubview(DivView.clone().setDivClassName("BMPostMessageRowRightView")))
+        
+		this.setIconView(this.leftView().addSubview(ImageView.clone().setDivClassName("BMPostAvatarView")))
+		this.setTitleBarView(this.rightView().addSubview(DivView.clone().setDivClassName("BMPostTitleBarView")))
+        this.setTextView(this.rightView().addSubview(TextField.clone().setDivClassName("BMPostMessageRowViewContent")))
+
 		this.setupContentView()
 		this.updateSubviews()
 		this.setIsSelectable(true)
         return this
     },
 
-
+    /*
 	setupIconView: function() {
 		var iv = DivView.clone().setDivClassName("ShelfIconView")
 		this.setIconView(iv)
-        this.addSubview(iv)
+        this.leftView().addSubview(iv)
         
         var iconSize = 46
         iv.setPosition("relative")
@@ -46,6 +44,7 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
 		iv.setOpacity(1)
         return this
     },
+    */
    
     setIconDataUrl: function(imageDataUrl) {
         var iv = this.iconView()
@@ -62,17 +61,14 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
 
     setupContentView: function() {
 		var tv = this.textView()
-		tv.insertDivClassName(this.type() + "Title")
-		tv.setWidth("auto")
+		//tv.setWidth("auto")
 		tv.setMinWidth("50px")
 		//tv.setMaxWidth("calc(100% - 120px)")
 
-		//tv.setTop(0)
 		tv.setPosition("relative")
-		tv.setLeft(80)
 		tv.setMarginRight(0)
 		tv.setMarginLeft(0)
-		tv.setPaddingTop(8)
+		tv.setPaddingTop(0)
 		tv.setPaddingBottom(8)
 		tv.setWhiteSpace("normal")
 		tv.setFontFamily("AppRegular")
@@ -82,7 +78,9 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
 		BrowserRow.updateSubviews.apply(this)
 	
         var node = this.node()
-
+        
+        this.titleBarView().setInnerHTML("title")
+        
 		if (this.isSelected()) {
 			this.setColor(this.selectedTextColor())
 		} else {
@@ -139,5 +137,3 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
         return this
     },
 })
-
-

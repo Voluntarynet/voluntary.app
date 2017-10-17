@@ -11,7 +11,7 @@ window.BMPostMessage = BMAppMessage.extend().newSlots({
         this.addStoredSlots(["content"])
         this.addAction("delete")
         this.setShouldStore(true)	
-		this.setContent("...".loremIpsum(40, 100))	
+		this.setContent("...".loremIpsum(4, 100))	
     },	
 
 	mostRecentDate: function() {

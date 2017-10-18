@@ -95,6 +95,22 @@
 }
 
 
+@font-face {
+    font-family:"AppBold";
+    src: url("fonts/OpenSans/OpenSans-Bold.ttf");
+}
+
+@font-face {
+    font-family:"AppExtraBold";
+    src: url("fonts/OpenSans/OpenSans-ExtraBold.ttf");
+}
+
+
+@font-face {
+    font-family:"AppSemiBold";
+    src: url("fonts/OpenSans/OpenSans-SemiBold.ttf");
+}
+
 
 /*
 @font-face {

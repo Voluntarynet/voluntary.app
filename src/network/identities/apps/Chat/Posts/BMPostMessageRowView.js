@@ -3,22 +3,72 @@
 window.BMPostMessageRowView = BrowserRow.extend().newSlots({
     type: "BMPostMessageRowView",
     leftView: null,
-    rightView: null,
-	titleBarView: null,
-	iconView: null,
-    textView: null,
+	    iconView: null,
+    middleView: null,
+	    titleBarView: null,
+	        titleBarTextView: null,
+	        dateView: null,
+        textView: null,
+        bottomBarView: null,
+            replyButton: null,
+            replyCountView: null,
+            
+            repostButton: null,
+            repostCountView: null,
+            
+            likeButton: null,
+            likeCountView: null,
+        //rightView: null,
     isSelected: false,
 }).setSlots({
     init: function () {
         BrowserRow.init.apply(this)
         
+        // left view
         this.setLeftView(this.addSubview(DivView.clone().setDivClassName("BMPostMessageRowLeftView")))
-        this.setRightView(this.addSubview(DivView.clone().setDivClassName("BMPostMessageRowRightView")))
-        
 		this.setIconView(this.leftView().addSubview(ImageView.clone().setDivClassName("BMPostAvatarView")))
-		this.setTitleBarView(this.rightView().addSubview(DivView.clone().setDivClassName("BMPostTitleBarView")))
-        this.setTextView(this.rightView().addSubview(TextField.clone().setDivClassName("BMPostMessageRowViewContent")))
+        this.iconView().setBackgroundSizeWH(64, 64)     
 
+        // middle view
+        this.setMiddleView(this.addSubview(DivView.clone().setDivClassName("BMPostMessageRowMiddleView")))
+        
+            // title view
+    		this.setTitleBarView(this.middleView().addSubview(DivView.clone().setDivClassName("BMPostTitleBarView")))
+    		
+    		this.setTitleBarTextView(this.titleBarView().addSubview(DivView.clone().setDivClassName("BMPostTitleBarTextView")))
+		    this.setDateView(this.titleBarView().addSubview(DivView.clone().setDivClassName("BMPostDateView")))
+		
+		    // content
+            this.setTextView(this.middleView().addSubview(TextField.clone().setDivClassName("BMPostMessageRowViewContent")))
+        
+            // bottom bar
+            this.setBottomBarView(this.middleView().addSubview(DivView.clone().setDivClassName("BMPostMessageRowViewBottomBar")))
+        
+                // reply
+                this.setReplyButton(this.bottomBarView().addSubview(DivView.clone().setDivClassName("BMPostMessageRowViewReplyButton")))
+                this.replyButton().setTarget(this).setAction("reply")
+                this.replyButton().setBackgroundImageUrlPath(this.pathForIconName("reply"))        
+        		this.replyButton().makeBackgroundContain().makeBackgroundNoRepeat()
+        		this.setReplyCountView(this.bottomBarView().addSubview(DivView.clone().setDivClassName("BMPostMessageRowViewCountView")))
+        
+                // repost
+                this.setRepostButton(this.bottomBarView().addSubview(DivView.clone().setDivClassName("BMPostMessageRowViewRepostButton")))
+                this.repostButton().setTarget(this).setAction("repost")
+                this.repostButton().setBackgroundImageUrlPath(this.pathForIconName("repost"))        
+        		this.repostButton().makeBackgroundContain().makeBackgroundNoRepeat()
+        		this.setRepostCountView(this.bottomBarView().addSubview(DivView.clone().setDivClassName("BMPostMessageRowViewCountView")))
+
+                // like
+                this.setLikeButton(this.bottomBarView().addSubview(DivView.clone().setDivClassName("BMPostMessageRowViewLikeButton")))
+                this.likeButton().setTarget(this).setAction("like")
+                this.likeButton().setBackgroundImageUrlPath(this.pathForIconName("heart-black-filled"))        
+        		this.likeButton().makeBackgroundContain().makeBackgroundNoRepeat()
+        		this.setLikeCountView(this.bottomBarView().addSubview(DivView.clone().setDivClassName("BMPostMessageRowViewCountView")))
+
+        // right view
+        //this.setRightView(this.addSubview(DivView.clone().setDivClassName("BMPostMessageRowRightView")))
+        
+        
 		this.setupContentView()
 		this.updateSubviews()
 		this.setIsSelectable(true)
@@ -51,7 +101,6 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
         
         if (imageDataUrl) {
     		iv.setBackgroundImageUrlPath(imageDataUrl)        
-    		iv.setBackgroundSizeWH(64, 64)     
         } else {
             iv.setBackgroundColor("#aaa")
         }
@@ -61,15 +110,12 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
 
     setupContentView: function() {
 		var tv = this.textView()
-		//tv.setWidth("auto")
 		tv.setMinWidth("50px")
-		//tv.setMaxWidth("calc(100% - 120px)")
-
-		tv.setPosition("relative")
+		//tv.setPosition("relative")
 		tv.setMarginRight(0)
 		tv.setMarginLeft(0)
 		tv.setPaddingTop(0)
-		tv.setPaddingBottom(8)
+		tv.setPaddingBottom(4)
 		tv.setWhiteSpace("normal")
 		tv.setFontFamily("AppRegular")
     },
@@ -78,8 +124,22 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
 		BrowserRow.updateSubviews.apply(this)
 	
         var node = this.node()
+
+        // title
+        if (node) {
+            this.titleBarTextView().setInnerHTML(node.localIdentity().title())
+            this.dateView().setInnerHTML("1h")
+        } else {
+            //this.titleBarView().setInnerHTML("?")
+        }
         
-        this.titleBarView().setInnerHTML("title")
+        // counts
+        /*
+        this.replyCountView().setInnerHTML("0")
+        this.repostCountView().setInnerHTML("0")
+        this.likeCountView().setInnerHTML("0")
+		*/
+		
         
 		if (this.isSelected()) {
 			this.setColor(this.selectedTextColor())
@@ -136,4 +196,22 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
         this.updateSubviews()
         return this
     },
+    
+    // actions
+    
+    reply: function() {
+        console.log("reply")
+        return this
+    },
+    
+    repost: function() {
+        console.log("repost")
+        return this
+    },
+    
+    like: function() {
+        console.log("like")
+        return this
+    },
+
 })

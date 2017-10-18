@@ -41,5 +41,9 @@ window.BMPostDraft = BMStorableNode.extend().newSlots({
     localIdentity: function() {
         return this.parentNodeOfType("BMLocalIdentity")
     },
+    
+	avatarImageDataURL: function() {
+		return this.localIdentity().profile().profileImageDataUrl()
+	},
 })
 

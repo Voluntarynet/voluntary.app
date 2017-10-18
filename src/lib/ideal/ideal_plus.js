@@ -110,15 +110,23 @@ String.prototype.loremIpsum = function (minWordCount, maxWordCount) {
 
 	var randy = Math.floor(Math.random()*(maxWordCount - minWordCount)) + minWordCount;
 	var ret = "";
+	var needsCap = true
 	for(var i = 0; i < randy; i++) {
 		var newTxt = loremIpsumWordBank[Math.floor(Math.random() * (loremIpsumWordBank.length - 1))];
+
 		if (ret.substring(ret.length-1,ret.length) == "." || ret.substring(ret.length-1,ret.length) == "?") {
 			newTxt = newTxt.substring(0,1).toUpperCase() + newTxt.substring(1, newTxt.length);
 		}
+
+		if (needsCap) {
+		    newTxt = newTxt.capitalized()
+		    needsCap = false
+		}
+
 		ret += " " + newTxt;
 	}
 	    
-    return ret
+    return ret + "."
 },
 
 

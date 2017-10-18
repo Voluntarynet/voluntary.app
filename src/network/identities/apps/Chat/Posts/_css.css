@@ -13,6 +13,8 @@
 	overflow: hidden;
 }
 
+/* --- columns --- */
+
 .BMPostMessageRowLeftView {
     display: inline-block;
     position: relative;
@@ -23,7 +25,7 @@
     flex-basis: auto;
 
     min-width: 80px;
-    min-height: 100px;
+    max-width: 80px;
 
     border: 0px dashed rgba(255, 0, 0, 1);
     background-color: transparent;
@@ -40,12 +42,30 @@
     flex-basis: auto;
     
     min-width: 100px;
-    min-height: 100%;
 
     border: 0px dashed rgba(0, 0, 255, 1);
     margin: 0px;
     background-color: transparent;
 }
+
+/*
+.BMPostMessageRowRightView {
+    display: inline-block;
+    position: relative;
+        
+    flex: 1;
+    flex-grow: 0;
+    flex-shrink: 1;
+    flex-basis: auto;
+
+    min-width: 40px;
+    max-width: 40px;
+
+    border: 1px dashed rgba(255, 0, 0, 1);
+    background-color: transparent;
+    overflow: hidden;
+}
+*/
 
 /* --- avatar -------------------------------- */
 
@@ -55,19 +75,9 @@
     left: 10px;	
 	width: 55px;
 	height: 55px;
-
-	/*
-	min-width: 55px;
-	max-width: 55px;
-	
-	min-height: 55px;
-	max-height: 55px;
-
-	background-color: rgba(255, 255, 255, 0);
-	*/
 	
 	border-radius: 5px;
-	border: 1px solid #eee;
+	border: 0px solid #eee;
 	overflow: hidden;
 }
 
@@ -76,13 +86,30 @@
 .BMPostTitleBarView {
     display: block;
 	position: relative;
-	font-family: AppRegular;
-	font-style: bold;
-	width: calc(100% - 20px);
+	font-family: AppSemiBold;
+	width: calc(100% - 10px);
+	min-height: 20px;
 	margin-top: 8px;
-	height: 22px;
 	white-space: nowrap;
 	border: 0px dashed green;
+}
+
+.BMPostTitleBarTextView {
+    display: inline-block;
+	position: relative;
+    float: left;
+    border: 0px dashed blue;
+}
+
+.BMPostDateView {
+    display: inline-block;
+	position: relative;
+    float: right;
+    opacity: 0.33;
+	min-width: 20px;
+	min-height: 20px;
+
+    border: 0px dashed red;
 }
 
 /* --- content -------------------------------- */
@@ -94,7 +121,7 @@
 	color: rgba(0,0,0, 0.9);
 	
 	padding-top: 0px;
-	padding-bottom: 8px;
+	padding-bottom: 0px;
 	
 	padding-left: 0px;
 	padding-right: 0px;
@@ -110,3 +137,74 @@
 	
 	border: 0px dashed orange;
 }
+
+/* --- bottom bar -------------------------------- */
+
+.BMPostMessageRowViewBottomBar {
+    display: block;
+	width: calc(100% - 20px); 
+	text-align: left;
+	height: 20px;
+	margin-bottom: 8px;
+    vertical-align: top; /* here */
+	border: 0px dashed #ddd;
+}
+
+.BMPostMessageRowViewReplyButton {
+    display: inline-block;
+    position: relative;
+    min-width: 15px;
+    min-height: 20px;    
+    margin-top: 1px;    
+    opacity: 0.5;
+    border: 0px solid #aaa;
+    vertical-align: top; /* here */
+}
+
+.BMPostMessageRowViewRepostButton {
+    display: inline-block;
+    position: relative;
+    min-width: 18px;
+    min-height: 20px;    
+    opacity: 0.5;
+    border: 0px solid #aaa;
+    vertical-align: top; /* here */
+}
+
+.BMPostMessageRowViewLikeButton {
+    display: inline-block;
+    position: relative;
+    min-width: 13px;
+    min-height: 20px;
+    margin-top: 3px;    
+    opacity: 0.5;
+    border: 0px solid #aaa;
+    vertical-align: top; /* here */
+}
+
+.BMPostMessageRowViewCountView {
+    display: inline-block;
+
+    vertical-align: top; /* here */
+
+    
+    font-family: AppSemiBold;
+    font-size: 14px;
+
+    width: 55px;    
+    min-height: 19px;
+    padding-left: 6px;
+    padding-right: 4px;
+    margin: 0px;
+    /*
+    margin-left: 4px;
+    margin-right: 4px;
+    */
+    opacity: 0.5;
+    border: 0px solid #aaa;
+}
+
+
+
+
+

@@ -1,4 +1,15 @@
 
+- send a post - draft creates post, sends it, adds it to myposts, deletes draft
+- handle a post - place in feed
+
+- change selection color for drafts?
+- delete button for post drafts
+- delete button for my posts
+- LikePostMessage 
+- replyTo:hash and repostOf:msgObj attributes for PostMessage
+
+- search?
+
 Avoid full path reselect if possible with Browser.selectNode()
 
 

@@ -4,35 +4,42 @@
 
 window.BMPostDraftRowView = BrowserRow.extend().newSlots({
     type: "BMPostDraftRowView",
+    
     topView: null,
-    bottomView: null,
+        leftView: null,
+            iconView: null,
+        rightView: null,
+            contentView: null,
 
-    leftView: null,
-        iconView: null,
-    rightView: null,
-        contentView: null,
+    bottomView: null,
+        sendButton: null,
+
     isSelected: false,
 }).setSlots({
     init: function () {
         BrowserRow.init.apply(this)
         
-        // left view
-        this.setLeftView(this.addSubview(DivView.clone().setDivClassName("BMPostDraftRowLeftView")))
+        this.setTopView(this.addSubview(DivView.clone().setDivClassName("BMPostDraftRowTopView")))
 
-            // icon view
-		    this.setIconView(this.leftView().addSubview(ImageView.clone().setDivClassName("BMPostAvatarView")))
-            this.iconView().setBackgroundSizeWH(64, 64)     
+            // left view
+            this.setLeftView(this.topView().addSubview(DivView.clone().setDivClassName("BMPostDraftRowLeftView")))
 
-        // right view
-        this.setRightView(this.addSubview(DivView.clone().setDivClassName("BMPostDraftRowRightView")))
+                // icon view
+    		    this.setIconView(this.leftView().addSubview(ImageView.clone().setDivClassName("BMPostAvatarView")))
+                this.iconView().setBackgroundSizeWH(64, 64)     
+
+            // right view
+            this.setRightView(this.topView().addSubview(DivView.clone().setDivClassName("BMPostDraftRowRightView")))
         
-            this.setContentView(this.rightView().addSubview(TextField.clone().setDivClassName("BMPostDraftRowContentView")))
-            this.contentView().setContentEditable(true)
+                this.setContentView(this.rightView().addSubview(TextField.clone().setDivClassName("BMPostDraftRowContentView")))
+                this.contentView().setContentEditable(true)
 
-            //this.setToolsView(this.rightView().addSubview(TextField.clone().setDivClassName("BMPostDraftRowContentView")))
 
-            //BMPostDraftRowToolsView
         
+        this.setBottomView(this.addSubview(DivView.clone().setDivClassName("BMPostDraftRowBottomView")))
+                this.setSendButton(this.bottomView().addSubview(DivView.clone().setDivClassName("BMPostDraftRowSendButton")))
+                this.sendButton().setInnerHTML("Post")
+
 		this.setupContentView()
 		this.updateSubviews()
 		this.setIsSelectable(true)

@@ -261,7 +261,7 @@ window.BrowserRow = NodeView.extend().newSlots({
 	showUnselected: function() {
         //this.setBorderTop("1px solid transparent")
         //this.setBorderBottom("1px solid transparent")
-        this.setOpacity(0.7)		
+        //this.setOpacity(0.7)		
 	},
     
     select: function() {

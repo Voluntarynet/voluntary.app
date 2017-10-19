@@ -4,15 +4,51 @@
 window.BMPostMessage = BMAppMessage.extend().newSlots({
     type: "BMPostMessage",
 	content: "",
+	
+	replyCount: 0,
+	repostCount: 0,
+	likeCount: 0,
+
+	didReply: false,
+	didRepost: false,
+	didLike: false,
+
 }).setSlots({
     
     init: function () {
         BMAppMessage.init.apply(this)
-        this.addStoredSlots(["content"])
+        this.addStoredSlots(["content", "replyCount", "repostCount", "likeCount"])
         this.addAction("delete")
         this.setShouldStore(true)	
 		this.setContent("...".loremIpsum(4, 100))	
-    },	
+    },
+    
+    ageDescription: function() {
+        var seconds = this.ageInSeconds()
+        if (seconds == null) {
+            return "?"
+        }
+        
+        var minutes = Math.floor(seconds/60)
+        if (minutes < 60) {
+            return minutes + "m"
+        }
+
+        var hours = Math.floor(minutes/60)
+        if (hours < 24) {
+            return hours + "h"
+        }
+        
+        var days = Math.floor(hours/24)
+        return days + "d"
+    },
+    
+    ageInSeconds: function() {
+        if (this.objMsg()) {
+            return this.objMsg().ageInSeconds()
+        }
+        return null
+    },
 
 	mostRecentDate: function() {
 		return 0
@@ -57,5 +93,22 @@ window.BMPostMessage = BMAppMessage.extend().newSlots({
 	avatarImageDataURL: function() {
 		return this.localIdentity().profile().profileImageDataUrl()
 	},
+	
+	// counts
+	
+    incrementReplyCount: function() {
+        this.setReplyCount(this.replyCount() + 1)
+        return this
+    },
+    
+    incrementRepostCount: function() {
+        this.setRepostCount(this.repostCount() + 1)
+        return this
+    },
+    
+    incrementLikeCount: function() {
+        this.setLikeCount(this.likeCount() + 1)
+        return this
+    },
 })
 

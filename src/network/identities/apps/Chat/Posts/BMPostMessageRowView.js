@@ -120,26 +120,47 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
 		tv.setFontFamily("AppRegular")
     },
 
+    showButtonNamed: function(name) {
+        // TODO: abstract this into something like a PostAttributeButton 
+        var node = this.node()
+        var countView = this.perform(name + "CountView")
+        var button = this.perform(name + "Button")
+        var count = node.perform(name + "Count")
+        var did = node.perform("did" + name.capitalized())
+        
+        if (count) {
+            countView.setInnerHTML(count)
+        } else {
+            countView.setInnerHTML("")
+        }
+        
+        if (did) {
+            countView.setOpacity(1)
+            button.setOpacity(1) 
+        } else {
+            countView.setOpacity(0.5)
+            button.setOpacity(0.5) 
+        }
+    },
+        
     updateSubviews: function() {
 		BrowserRow.updateSubviews.apply(this)
 	
         var node = this.node()
 
-        // title
         if (node) {
             this.titleBarTextView().setInnerHTML(node.localIdentity().title())
-            this.dateView().setInnerHTML("1h")
+            this.dateView().setInnerHTML(node.ageDescription())
+            
+            console.log("----")
+            this.showButtonNamed("reply")
+            this.showButtonNamed("repost")
+            this.showButtonNamed("like")
+            
         } else {
-            //this.titleBarView().setInnerHTML("?")
+            this.titleBarTextView().setInnerHTML("[no node]")
         }
         
-        // counts
-        /*
-        this.replyCountView().setInnerHTML("0")
-        this.repostCountView().setInnerHTML("0")
-        this.likeCountView().setInnerHTML("0")
-		*/
-		
         
 		if (this.isSelected()) {
 			this.setColor(this.selectedTextColor())
@@ -201,16 +222,22 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
     
     reply: function() {
         console.log("reply")
+        this.node().incrementReplyCount()
+        this.scheduleSyncToNode()
         return this
     },
     
     repost: function() {
         console.log("repost")
+        this.node().incrementRepostCount()
+        this.scheduleSyncToNode()
         return this
     },
     
     like: function() {
         console.log("like")
+        this.node().incrementLikeCount()
+        this.scheduleSyncToNode()
         return this
     },
 

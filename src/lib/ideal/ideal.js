@@ -1670,10 +1670,10 @@ Proto.setSlots({
 		{
 			return this[message].apply(this, this.argsAsArray(arguments).slice(1));
 		}
-		else
-		{
-			return this;
-		}
+
+        throw new Error(this, ".perform(" + message + ") missing method")
+        
+		return this;
 	},
 
 	setterNameForSlot: function(name)

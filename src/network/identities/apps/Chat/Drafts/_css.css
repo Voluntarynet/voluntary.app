@@ -1,6 +1,6 @@
 .BMPostDraftRowView {
     display: flex;
-	flex-direction: row;
+	flex-direction: column;
 	height: auto;
 
 	min-height: fit-content;
@@ -10,6 +10,24 @@
 	margin: 0px;
 	padding: 0px;
 	overflow: hidden;
+}
+
+.BMPostDraftRowTopView {
+    display: flex;
+	flex-direction: row;
+	height: auto;
+	
+	overflow: hidden;
+    /*border-bottom: 1px dashed #eee;*/
+}
+
+.BMPostDraftRowBottomView {
+    display: block;
+    height: 35px;
+    /*
+    border: 1px dashed #eee;
+    */
+    text-align: right;
 }
 
 .BMPostDraftRowLeftView {
@@ -23,9 +41,9 @@
     float: left;
 
     min-width: 80px;
-    min-height: 130px;
+    min-height: 100px;
 
-    border: 1px dashed red;
+    border: 0px dashed red;
     background-color: transparent;
 }
 
@@ -40,7 +58,7 @@
     min-height: 100%;
     width: calc(100% - 108px);
     
-    border: 1px dashed blue;
+    border: 0px dashed blue;
     margin: 0px;
     background-color: transparent;
 }
@@ -68,9 +86,10 @@
 	font-size-adjust: 0.5;
 	overflow: visible;
 
-    border: 1px dashed blue;
+    border: 0px dashed blue;
 }
 
+/*
 .BMPostDraftRowToolsView {
     display: block;
     position: relative;    
@@ -95,4 +114,32 @@
 	overflow: visible;
 
     border: 1px dashed blue;
+}
+*/
+
+.BMPostDraftRowSendButton {
+    display: inline-block;
+    position: relative;
+    
+    font-family: AppSemiBold;
+    
+    min-height: 20px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 4px;
+    margin-top: 4px;
+    margin-right: 13px;
+    
+    
+    /*border: 0px solid #ccc;*/
+    background-color: #ccc; 
+    color: white;
+    
+    transition: all 0.15s ease;
+}
+
+.BMPostDraftRowSendButton:hover {
+    background-color: black; 
 }

@@ -648,7 +648,18 @@ window.DivView = ideal.Proto.extend().newSlots({
     color: function() {
 		return this.getCssAttribute("color")
     },
+    
+    // filters
 
+    setFilter: function(s) {
+		this.setCssAttribute("filter", s)
+        return this
+    },
+    
+    filter: function() {
+		return this.getCssAttribute("filter")
+    },    
+    
 	// visibility
     
     setIsVisible: function(aBool) {

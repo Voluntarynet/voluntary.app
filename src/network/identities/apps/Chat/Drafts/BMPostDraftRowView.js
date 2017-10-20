@@ -9,11 +9,13 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         leftView: null,
             iconView: null,
         rightView: null,
+            placeHolderView: null,
             contentView: null,
+            deleteButton: null,
 
     bottomView: null,
         sendButton: null,
-
+        
     isSelected: false,
 }).setSlots({
     init: function () {
@@ -31,14 +33,25 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
             // right view
             this.setRightView(this.topView().addSubview(DivView.clone().setDivClassName("BMPostDraftRowRightView")))
         
+                // placeholder
+                this.setPlaceHolderView(this.rightView().addSubview(TextField.clone().setDivClassName("BMPostDraftRowPlaceHolderView")))
+                this.placeHolderView().setInnerHTML("What's happening?")
+                
+                // content view
                 this.setContentView(this.rightView().addSubview(TextField.clone().setDivClassName("BMPostDraftRowContentView")))
                 this.contentView().setContentEditable(true)
 
-
+                // delete button
+                this.setDeleteButton(this.rightView().addSubview(DivView.clone().setDivClassName("BMPostDraftRowCloseButton")))
+                this.deleteButton().setTarget(this).setAction("close")
+                //this.deleteButton().setBackgroundSizeWH(20, 20) 
+                this.deleteButton().setBackgroundImageUrlPath(this.pathForIconName("close"))
+                this.deleteButton().makeBackgroundContain().makeBackgroundCentered().makeBackgroundNoRepeat()    
         
         this.setBottomView(this.addSubview(DivView.clone().setDivClassName("BMPostDraftRowBottomView")))
                 this.setSendButton(this.bottomView().addSubview(DivView.clone().setDivClassName("BMPostDraftRowSendButton")))
                 this.sendButton().setInnerHTML("Post")
+                this.sendButton().setTarget(this).setAction("post")
 
 		this.setupContentView()
 		this.updateSubviews()
@@ -78,7 +91,12 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         var node = this.node()
         
         if (node) {
-            
+/*
+            var placeText = this.contentView().innerHTML().length ? "" : "What's happening?"    
+            this.placeHolderView().setInnerHTML(placeText)
+*/
+            var opacity = this.contentView().innerHTML().length ? 0 : 1
+            this.placeHolderView().setOpacity(opacity)
         }
 
 		if (this.isSelected()) {
@@ -112,6 +130,7 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
 
     onDidEdit: function (changedView) {   
         console.log(this.typeId() + ".onDidEdit")
+        this.updateSubviews()
         this.scheduleSyncToNode()
     },
 
@@ -134,6 +153,20 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         this.contentView().setString(node.content())
 		this.setIconDataUrl(node.avatarImageDataURL())
         this.updateSubviews()
+        return this
+    },
+    
+    // actions
+    
+    post: function() {
+        console.log("post")
+        //this.node().post()
+        return this
+    },
+    
+    close: function() {
+        console.log("delete")
+        this.node().delete()
         return this
     },
 })

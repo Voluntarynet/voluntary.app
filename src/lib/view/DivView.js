@@ -1246,12 +1246,21 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
     
     sendActionToTarget: function() {
+        if (!this.action()) {
+            return null
+        }
+
         var t = this.target()
-        if (t && this.action) {
-            t[this.action()].apply(t, [this])
-        } else {
+        if (!t) {
             throw new Error("no target for action " + this.action())
-        }        
+        }
+        
+        var method = t[this.action()]
+        if (!method) {
+            throw new Error("no target for action " + this.action())
+        }
+
+        return method.apply(t, [this])
     },
     
     onDoubleClick: function (event) {

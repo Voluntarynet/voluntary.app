@@ -63,6 +63,22 @@
     background-color: transparent;
 }
 
+.BMPostDraftRowPlaceHolderView {
+    display: block;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    
+	padding-top: 8px;	
+	padding-left: 8px;	
+	
+    width: calc(100% - 40px);
+    height: calc(100% - 20px);
+    color: #aaa;
+    background-color: transparent;
+    transition: all 0.15s ease;
+}
+
 .BMPostDraftRowContentView {
     display: block;
     position: relative;    
@@ -86,7 +102,23 @@
 	font-size-adjust: 0.5;
 	overflow: visible;
 
-    border: 1px dashed #ddd;
+    border: 0px dashed #ddd;
+}
+
+.BMPostDraftRowCloseButton {
+    display: block;
+    position: absolute;
+    top: 10px;
+    right: 13px;
+    color: #aaa;
+    width: 11px;
+    height: 11px;
+    border: 0px dashed #ddd;
+    opacity: 0.4;
+}
+
+.BMPostDraftRowCloseButton:hover {
+    opacity: 0.7;
 }
 
 /*
@@ -134,12 +166,12 @@
     
     
     /*border: 0px solid #ccc;*/
-    background-color: #ccc; 
+    background-color: #aaa; 
     color: white;
     
     transition: all 0.15s ease;
 }
 
 .BMPostDraftRowSendButton:hover {
-    background-color: black; 
+    background-color: #888; 
 }

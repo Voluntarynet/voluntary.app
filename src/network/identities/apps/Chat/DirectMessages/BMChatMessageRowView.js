@@ -34,6 +34,7 @@ window.BMChatMessageRowView = BrowserTitledRow.extend().newSlots({
 		this.titleView().setLeft(null)
 		this.titleView().setMarginRight(20)
 		this.titleView().setMarginLeft(0)
+		//this.titleView().setBorder("1px solid rgba(0,0,0,0.05)")
     },
     
     alignToRight: function() {
@@ -42,6 +43,7 @@ window.BMChatMessageRowView = BrowserTitledRow.extend().newSlots({
 	    this.titleView().setBorderRadius("8px 8px 0px 8px") // top-left, top-right,  bottom-right, bottom-left
 		this.titleView().setBackgroundColor("rgb(84, 193, 250)")
 		this.titleView().setColor("white")
+		//this.titleView().setBorder("1px solid rgba(0,0,0,0.02)")
 	    return this
     },
     
@@ -49,7 +51,7 @@ window.BMChatMessageRowView = BrowserTitledRow.extend().newSlots({
         this.titleView().setLeft(20)
     	this.titleView().setFloat("left")
         this.titleView().setBorderRadius("8px 8px 8px 0px") // top-left, top-right,  bottom-right, bottom-left 
-		this.titleView().setBackgroundColor("#888")
+		this.titleView().setBackgroundColor("#ccc")
 		this.titleView().setColor("black")
 	    return this
     },

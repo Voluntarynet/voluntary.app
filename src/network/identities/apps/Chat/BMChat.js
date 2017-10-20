@@ -48,10 +48,31 @@ window.BMChat = BMApplet.extend().newSlots({
 	},
 	
     handleAppMsg: function(msg) {
-		//console.log(this.nodePathString() + " handleAppMsg " + msg.typeId() + " ", msg.dataDict())
+		console.log(this.localIdentity().title() + " app " + this.typeId() + ".handleAppMsg(" + msg.typeId() + ") ", msg.dataDict())
+		
 		if (msg.type() == BMChatMessage.type()) {
 			this.handleSentMessage(msg)
 			this.handleReceivedMessage(msg)
+		}
+		
+		if (msg.type() == BMPostMessage.type()) {
+		    //console.log("found BMPostMessage")
+		    
+		    var spk = msg.senderPublicKeyString()
+            var senderId = this.localIdentity().idForPublicKeyString(spk)
+		    //console.log("this.localIdentity().idForPublicKeyString(spk) = ", this.localIdentity().idForPublicKeyString(spk))
+		    
+		    if (senderId) {		        
+		        console.log(" placing in " + this.localIdentity().title() + " feedPosts")
+			    this.feedPosts().addSubnode(msg.duplicate())
+		    }
+		    
+		    //console.log(this.localIdentity().title() + " " + this.localIdentity().publicKeyString() + " =?= " + spk)
+		    
+		    if (this.localIdentity().publicKeyString() == spk) {
+		        console.log(" placing in " + this.localIdentity().title() + " myPosts")
+			    this.myPosts().addSubnode(msg.duplicate())
+		    }
 		}
     },
 

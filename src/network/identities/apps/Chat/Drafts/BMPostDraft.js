@@ -45,5 +45,13 @@ window.BMPostDraft = BMStorableNode.extend().newSlots({
 	avatarImageDataURL: function() {
 		return this.localIdentity().profile().profileImageDataUrl()
 	},
+	
+	post: function() {
+		var msg = BMPostMessage.clone()
+		msg.setContent(this.content())
+		msg.postFromSender(this.localIdentity())
+		this.delete()
+		//this.addMessage(msg)
+	},
 })
 

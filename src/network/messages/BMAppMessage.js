@@ -12,6 +12,14 @@ window.BMAppMessage = BMFieldSetNode.extend().newSlots({
 		this.addStoredSlots(["senderId", "receiverId", "objMsg"])
     },
 
+    senderPublicKeyString: function() {
+        var rid = this.senderId()
+        if (rid) {
+            return rid.publicKeyString()
+        }
+        return null
+    },
+    
     // ------------------------
 	
 	duplicate: function() {
@@ -115,4 +123,24 @@ window.BMAppMessage = BMFieldSetNode.extend().newSlots({
 			this.objMsg().delete()
 		}
 	},
+	
+	// --- public posts ----
+	
+    postFromSender: function (lid) {
+        this.setSenderId(lid)
+        
+        var objMsg = BMObjectMessage.clone()
+        objMsg.setSenderPublicKeyString(lid.publicKeyString())
+        objMsg.setData(this.dataDict())
+		objMsg.makeTimeStampNow()
+		objMsg.signWithSenderId(lid)
+		if (objMsg.hasValidationErrors()) {
+			console.log(this.typeId() + ".sendToRemoteId() validationErrors:" + objMsg.hasValidationErrors().join(","))
+		} else {
+        	this.setObjMsg(objMsg)
+			this.objMsg().send()
+			console.log(this.typeId() + ".postFromSender() sent!")
+		}
+		return this
+    },
 })

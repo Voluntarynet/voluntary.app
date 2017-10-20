@@ -23,6 +23,18 @@ window.BMPostMessage = BMAppMessage.extend().newSlots({
 		this.setContent("...".loremIpsum(4, 100))	
     },
     
+    senderName: function() {
+        if (this.senderId()) {
+            return this.senderId().title()
+        }
+        
+        if (this.objMsg()) {
+            return this.objMsg().senderPublicKeyString()
+        }
+        
+        return "?"
+    },
+    
     ageDescription: function() {
         var seconds = this.ageInSeconds()
         if (seconds == null) {

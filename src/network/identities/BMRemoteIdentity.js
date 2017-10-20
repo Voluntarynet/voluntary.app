@@ -107,7 +107,12 @@ window.BMRemoteIdentity = BMStorableNode.extend().newSlots({
     },
 
 	handleObjMsg: function(objMsg) {
-		console.log(this.typeId() + ".handleObjMsg(" + objMsg.type() + ") encryptedData:", objMsg.encryptedData())
+		
+		if (!objMsg.encryptedData()) {
+		    return false
+		}
+
+		console.log(this.title() + " >>> " + this.typeId() + ".handleObjMsg(" + objMsg.type() + ") encryptedData:", objMsg.encryptedData())
 		
 		var dict = this.decryptJson(objMsg.encryptedData())
 		if (dict) {

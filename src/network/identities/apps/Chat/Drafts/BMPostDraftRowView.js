@@ -43,7 +43,7 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
 
                 // delete button
                 this.setDeleteButton(this.rightView().addSubview(DivView.clone().setDivClassName("BMPostDraftRowCloseButton")))
-                this.deleteButton().setTarget(this).setAction("close")
+                this.deleteButton().setTarget(this).setAction("delete")
                 //this.deleteButton().setBackgroundSizeWH(20, 20) 
                 this.deleteButton().setBackgroundImageUrlPath(this.pathForIconName("close"))
                 this.deleteButton().makeBackgroundContain().makeBackgroundCentered().makeBackgroundNoRepeat()    
@@ -159,13 +159,11 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
     // actions
     
     post: function() {
-        console.log("post")
-        //this.node().post()
+        this.node().post()
         return this
     },
     
     close: function() {
-        console.log("delete")
         this.node().delete()
         return this
     },

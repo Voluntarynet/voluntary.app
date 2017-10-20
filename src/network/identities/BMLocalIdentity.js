@@ -56,13 +56,44 @@ window.BMLocalIdentity = BMKeyPair.extend().newSlots({
         //console.log(this.typeId() + " " + this.name() + " handleObjMsg ", objMsg)
         var senderId = this.remoteIdentities().idWithPublicKeyString(objMsg.senderPublicKeyString()) 
         if (senderId) {
+            // give the remote id a chance to decrypt it with local private key + remote pubkey
             return senderId.handleObjMsg(objMsg)
         }
+        
+        if (objMsg.data()) {
+            // it's a clear text message
+            return this.handleCleartextObjMsg(objMsg)
+        }
+        
         return false
     },
+    
+	handleCleartextObjMsg: function(objMsg) {
+		console.log(this.title() + " >>>>>> " + this.typeId() + ".handleCleartextObjMsg(" + objMsg.type() + ") encryptedData:", objMsg.encryptedData(), " data:", objMsg.data())
+		
+		var dict = objMsg.data()
+		if (dict) {
+			var appMsg = BMAppMessage.fromDataDict(dict)
+			//console.log("created ", appMsg.typeId())
+			
+			if (appMsg) {
+			    var senderId = this.idForPublicKeyString(objMsg.senderPublicKeyString())
+				appMsg.setSenderId(senderId)
+				appMsg.setObjMsg(objMsg)
+				this.handleAppMsg(appMsg)
+				return true
+			}
+		}
+		return false
+	},
+	
 
 	handleAppMsg: function(appMsg) {	
 		return this.apps().handleAppMsg(appMsg)
+	},
+	
+	idForPublicKeyString: function(pk) {
+	    return this.allIdentitiesMap().at(pk)
 	},
 	
 	allIdentitiesMap: function() { // only uses valid remote identities

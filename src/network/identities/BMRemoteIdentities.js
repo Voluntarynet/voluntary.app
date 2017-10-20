@@ -68,6 +68,10 @@ window.BMRemoteIdentities = BMStorableNode.extend().newSlots({
 		return this.subnodes().map((id) => { return id.name(); })
 	},
 	
+	publicKeyStrings: function() {
+		return this.validSubnodes().map((id) => { return id.publicKeyString(); })
+	},
+	
     didChangeSubnodeList: function() {
 		BMStorableNode.didChangeSubnodeList.apply(this)
         this._didChangeIdentitiesNote.post()
@@ -77,6 +81,7 @@ window.BMRemoteIdentities = BMStorableNode.extend().newSlots({
     handleObjMsg: function(objMsg) {
         var result = false
         this.subnodes().forEach((id) => {
+            console.log(" remote ------------- " + this.typeId() + " " + id.title() + ".handleObjMsg()")
             result |= id.handleObjMsg(objMsg)
         })
         return result

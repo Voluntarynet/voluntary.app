@@ -48,8 +48,7 @@
     background-color: transparent;
 }
 
-/*
-.BMPostMessageRowRightView {
+.BMPostMessageRowMiddleView {
     display: inline-block;
     position: relative;
         
@@ -58,14 +57,12 @@
     flex-shrink: 1;
     flex-basis: auto;
 
-    min-width: 40px;
-    max-width: 40px;
+    min-width: calc(100% - 83px);
 
-    border: 1px dashed rgba(255, 0, 0, 1);
+    border: 0px dashed rgba(255, 0, 0, 1);
     background-color: transparent;
     overflow: hidden;
 }
-*/
 
 /* --- avatar -------------------------------- */
 

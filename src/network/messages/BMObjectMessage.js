@@ -41,6 +41,7 @@ window.BMObjectMessage = BMMessage.extend().newSlots({
     //receiverPublicKeyString: null,
 	timeStamp: null,
 	encryptedData: null,
+	data: null,
     msgHash: null, // hash of data - computed as needed    
 	signature: null, // sender signature on msgHash
 }).setSlots({
@@ -48,7 +49,7 @@ window.BMObjectMessage = BMMessage.extend().newSlots({
         BMMessage.init.apply(this)
 		this.setShouldStoreSubnodes(false)
         this.setMsgType("object")
-        this.addStoredSlots(["msgType", "encryptedData", "senderPublicKeyString", "timeStamp", "signature"])
+        this.addStoredSlots(["msgType", "encryptedData", "data", "senderPublicKeyString", "timeStamp", "signature"])
         this.addAction("delete")
     },
     
@@ -81,6 +82,7 @@ window.BMObjectMessage = BMMessage.extend().newSlots({
         //this.setSignature(dict.signature)
         this.setMsgType(dict.msgType)
         this.setEncryptedData(dict.encryptedData)            
+        this.setData(dict.data)            
         this.setSenderPublicKeyString(dict.sender)            
         //this.setReceiverPublicKeyString(dict.receiver)            
         this.setTimeStamp(dict.ts)            
@@ -89,15 +91,24 @@ window.BMObjectMessage = BMMessage.extend().newSlots({
     },
     
     msgDict: function() {
-        return {
+        var dict = {
             msgType: this.msgType(),
-            encryptedData: this.encryptedData(),
             sender: this.senderPublicKeyString(),
             //receiver: this.receiverPublicKeyString(),
             ts: this.timeStamp(),
             sig: this.signature(),
             //pow: this.pow(),
         }
+
+        if (this.encryptedData()) {
+            dict.encryptedData = this.encryptedData()
+        }
+        
+        if (this.data()) {
+            dict.data = this.data()
+        }
+        
+        return dict
     },
 
 	theDictToHash: function() {
@@ -154,6 +165,7 @@ window.BMObjectMessage = BMMessage.extend().newSlots({
 	    
     send: function() {
 		this.scheduleSyncToStore()
+		//console.log(">>> "+ this.typeId() + ".send() adding to network messages")
         this.network().messages().addMessage(this)
         return this
     },
@@ -195,8 +207,8 @@ window.BMObjectMessage = BMMessage.extend().newSlots({
 			return false
 		}
 		
-		if (!this.encryptedData()) {
-			errors.push("missing encryptedData")
+		if (!this.encryptedData() && !this.data()) {
+			errors.push("no encryptedData or data fields")
 		}
 		
 		return errors

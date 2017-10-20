@@ -149,7 +149,7 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
         var node = this.node()
 
         if (node) {
-            this.titleBarTextView().setInnerHTML(node.localIdentity().title())
+            this.titleBarTextView().setInnerHTML(node.senderName())
             this.dateView().setInnerHTML(node.ageDescription())
             
             console.log("----")

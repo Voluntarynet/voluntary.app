@@ -53,7 +53,10 @@ window.BMLocalIdentities = BMStorableNode.extend().newSlots({
     
     handleObjMsg: function(objMsg) {
         var result = false
+        
+        console.log("========== this.identities() = ", this.identities().length)
         this.identities().forEach((id) => {
+            console.log("local ------------- " + this.typeId() + " " + id.title() + ".handleObjMsg()")
             result |= id.handleObjMsg(objMsg)
         })
         return result

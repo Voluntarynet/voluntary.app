@@ -55,14 +55,16 @@ window.BMLocalIdentity = BMKeyPair.extend().newSlots({
     handleObjMsg: function(objMsg) {
         //console.log(this.typeId() + " " + this.name() + " handleObjMsg ", objMsg)
         var senderId = this.remoteIdentities().idWithPublicKeyString(objMsg.senderPublicKeyString()) 
+		var didHandle = false
+		
         if (senderId) {
             // give the remote id a chance to decrypt it with local private key + remote pubkey
-            return senderId.handleObjMsg(objMsg)
+            didHandle |= senderId.handleObjMsg(objMsg)
         }
         
         if (objMsg.data()) {
             // it's a clear text message
-            return this.handleCleartextObjMsg(objMsg)
+            didHandle |= this.handleCleartextObjMsg(objMsg)
         }
         
         return false

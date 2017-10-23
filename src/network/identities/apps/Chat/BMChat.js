@@ -48,7 +48,7 @@ window.BMChat = BMApplet.extend().newSlots({
 	},
 	
     handleAppMsg: function(msg) {
-		console.log(this.localIdentity().title() + " app " + this.typeId() + ".handleAppMsg(" + msg.typeId() + ") ", msg.dataDict())
+		console.log("  " + this.localIdentity().title() + " app " + this.typeId() + ".handleAppMsg(" + msg.typeId() + ") ") //, msg.dataDict())
 		
 		if (msg.type() == BMChatMessage.type()) {
 			this.handleSentMessage(msg)
@@ -63,16 +63,20 @@ window.BMChat = BMApplet.extend().newSlots({
 		    //console.log("this.localIdentity().idForPublicKeyString(spk) = ", this.localIdentity().idForPublicKeyString(spk))
 		    
 		    if (senderId) {		        
-		        console.log(" placing in " + this.localIdentity().title() + " feedPosts")
+		        console.log("  placing in " + this.localIdentity().title() + " feedPosts")
 			    this.feedPosts().addSubnode(msg.duplicate())
-		    }
+		    } else {
+				console.log("  no senderId, can't put in feeds")
+			}
 		    
 		    //console.log(this.localIdentity().title() + " " + this.localIdentity().publicKeyString() + " =?= " + spk)
 		    
 		    if (this.localIdentity().publicKeyString() == spk) {
-		        console.log(" placing in " + this.localIdentity().title() + " myPosts")
+		        console.log("  placing in " + this.localIdentity().title() + " myPosts")
 			    this.myPosts().addSubnode(msg.duplicate())
-		    }
+		    } else {
+				console.log("  sender isn't local id, can't put in myPosts")
+			}
 		}
     },
 

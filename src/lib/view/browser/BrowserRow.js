@@ -11,6 +11,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     closeButtonView: null,
 	defaultHeight: 60,
 	restCloseButtonOpacity: 0.4,
+	transitionStyle: "all 0.2s ease, width 0s, max-width 0s, min-width 0s",
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
@@ -25,7 +26,7 @@ window.BrowserRow = NodeView.extend().newSlots({
 			this.addCloseButton()
 		}
 
-		this.setTransition("all 0.25s")
+		this.setTransition(this.transitionStyle())
 		//this.animateOpen()
         return this
     },
@@ -95,7 +96,7 @@ window.BrowserRow = NodeView.extend().newSlots({
             this.setCloseButtonView(NodeView.clone().setDivClassName("BrowserRowCloseButton"))
             this.addSubview(this.closeButtonView()) 
             this.closeButtonView().setTarget(null).setAction("delete").setInnerHTML("&#10799;")
-            this.closeButtonView().setOpacity(0).setTransition("all 0.2s")
+            this.closeButtonView().setOpacity(0).setTransition(this.transitionStyle())
             /*
             this.closeButtonView().setBackgroundImageUrlPath(this.pathForIconName(this.action()))
     		this.closeButtonView().setBackgroundSizeWH(20, 20) // use "contain" instead?
@@ -124,7 +125,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
 
 	animateOpen: function() {
-		this.setTransition("all 0.2s")
+		this.setTransition(this.transitionStyle())
 		this.setOpacity(0)
 		this.setMinAndMaxHeight(0)
 		setTimeout(() => {
@@ -217,7 +218,7 @@ window.BrowserRow = NodeView.extend().newSlots({
 
 	slideBack: function() {
         if (this.canDelete()) {
-            this.setTransition("all 0.2s")
+            this.setTransition(this.transitionStyle())
             setTimeout(() => {
                 this.setRight(0)
             })

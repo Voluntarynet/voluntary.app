@@ -518,7 +518,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 	left: function() {
 		var s = this.getCssAttribute("left")
 		if (s.length) {
-			return s.before("px")
+			return Number(s.before("px"))
 		}
 		return 0
 	},

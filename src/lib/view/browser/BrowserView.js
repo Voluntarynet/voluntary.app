@@ -340,6 +340,7 @@ window.BrowserView = NodeView.extend().newSlots({
             cg.syncFromNode()
         })
         
+        this.setupColumnGroupColors()
         this.fitColumns()
         return this
     },
@@ -392,7 +393,7 @@ window.BrowserView = NodeView.extend().newSlots({
 		// TODO: merge with this code in multi column fit
 		var lastActiveCg = this.lastActiveColumnGroup()
 		
-		var fillWidth = this.browserWidth() - this.widthOfUncollapsedColumnsSansLastActive()
+		var fillWidth = (this.browserWidth() - this.left()) - this.widthOfUncollapsedColumnsSansLastActive()
 		/*
 		if (lastActiveCg.targetWidth() *2 < fillWidth && lastActiveCg.targetWidth() < 500) {
 			fillWidth = lastActiveCg.targetWidth()
@@ -500,7 +501,7 @@ window.BrowserView = NodeView.extend().newSlots({
 		var usedWidth = this.widthOfUncollapsedColumns()
 		//console.log("usedWidth: " + usedWidth + " of " + this.browserWidth())
 
-		var fillWidth = this.browserWidth() - this.widthOfUncollapsedColumnsSansLastActive()
+		var fillWidth = (this.browserWidth() - this.left()) - this.widthOfUncollapsedColumnsSansLastActive()
 		if (lastActiveCg.targetWidth() *2 < fillWidth && lastActiveCg.targetWidth() < 500) {
 			fillWidth = lastActiveCg.targetWidth()
 		}

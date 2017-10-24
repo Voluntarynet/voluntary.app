@@ -58,7 +58,7 @@ window.BaseApp = BMNode.extend().newSlots({
 
 	    SyncScheduler.scheduleTargetAndMethod(this, "fadeInBrowser")
 		
-        // this.setupShelf()
+        this.setupShelf()
         return this
     },
     

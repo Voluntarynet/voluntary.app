@@ -1,4 +1,12 @@
 
+- fix final column calculation to adjust for shelf (subtract browsers X offset)
+- set default path for shelf
+- add notifications folder (for replies, reposts)
+- single person icon for profile folder
+- add icons to chat bubbles, chat thread titles
+- search folder
+
+
 - send a post - draft creates post, sends it, adds it to myposts, deletes draft
 - handle a post - place in feed
 

@@ -40,15 +40,20 @@ window.ShelfView = DivView.extend().newSlots({
         var group = this.newShelfGroup()
         var image = lid.profile().profileImageDataUrl()
         //console.log("image = ", image)
-        group.newShelfItem().setImageDataUrl(image).setDestinationNode(lid.profile())
-        group.newShelfItem().setIconName("home3-white").setDestinationNode(lid)
+        
+        var feedNode = lid.apps().appNamed("Chat").feedPosts()
+        var myPostsNode = lid.apps().appNamed("Chat").myPosts()
+        
+        group.newShelfItem().setImageDataUrl(image).setDestinationNode(myPostsNode).setToolTip(lid.title())
+        group.newShelfItem().setIconName("home3-white").setDestinationNode(feedNode).setToolTip("Feed")
         //group.newShelfItem().setIconName("lightning3-white")
         //group.newShelfItem().setIconName("bell-white")
         group.newShelfItem().setIconName("mail-white").setDestinationNode(lid.apps().appNamed("Chat").threads())
-        /*
-        shelf.newShelfItem().setIconName("user-white")
-        shelf.newShelfItem().setIconName("search-white")
-        shelf.newShelfItem().setIconName("gear-white")
+
+        group.newShelfItem().setIconName("user-white").setDestinationNode(lid.profile())
+/*
+        group.newShelfItem().setIconName("search-white")
+        group.newShelfItem().setIconName("gear-white")
         */      
         group.compact()
         return this  

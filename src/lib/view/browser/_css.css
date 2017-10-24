@@ -45,7 +45,7 @@
     background-color: #333;
     color: rgba(255, 255, 255, 0.5);
     text-align: center;
-    transition: all .3s ease;
+    transition: all .3s ease, width 0s, max-width 0s, min-width 0s;
 	overflow: hidden;
 }
 

@@ -35,6 +35,14 @@ window.ShelfItemView = DivView.extend().newSlots({
         return this
     },
     
+    setDestinationNode: function(aNode) {
+        this._destinationNode = aNode
+        if (aNode) {
+            this.setToolTip(aNode.title().capitalized())
+        }
+        return this
+    },
+    
     /*
     shelf: function () {
         return this.parentView()

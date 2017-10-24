@@ -19,7 +19,8 @@ window.DocumentBody = DivView.extend().newSlots({
     },
     
     onWindowResize: function() {
-        this.autoAdjustZoomForMobile()
+	    SyncScheduler.scheduleTargetAndMethod(this, "autoAdjustZoomForMobile")
+        //this.autoAdjustZoomForMobile()
     },
     
     autoAdjustZoomForMobile: function() {

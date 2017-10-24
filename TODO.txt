@@ -1,3 +1,7 @@
+- shelf imagine 2px bigger, less height on shelf items
+
+- adjust zoom to match normal Twitter client on desktop but be larger on mobile if possible
+- add settings gear shelf item, link to about
 
 - find a way to switch between shelf/non-shelf modes
 - add an "expires in X days" to post row view? Don't expire if liked/reposted/replied?

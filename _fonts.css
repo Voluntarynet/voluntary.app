@@ -84,6 +84,8 @@
 	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
 }
 
+/* --- OpenSans --- */
+
 @font-face {
     font-family:"AppLight";
     src: url("fonts/OpenSans/OpenSans-Light.ttf");
@@ -105,14 +107,47 @@
     src: url("fonts/OpenSans/OpenSans-ExtraBold.ttf");
 }
 
-
 @font-face {
     font-family:"AppSemiBold";
     src: url("fonts/OpenSans/OpenSans-SemiBold.ttf");
 }
 
+/* --- Montserrat --- */
 
 /*
+@font-face {
+    font-family:"AppLight";
+    src: url("fonts/Montserrat/Montserrat-Thin.otf");
+}
+
+@font-face {
+    font-family:"AppRegular";
+    src: url("fonts/Montserrat/Montserrat-Light.otf");
+}
+
+@font-face {
+    font-family:"AppSemiBold";
+    src: url("fonts/Montserrat/Montserrat-Regular.otf");
+}
+
+@font-face {
+    font-family:"AppBold";
+    src: url("fonts/Montserrat/Montserrat-SemiBold.otf");
+}
+
+@font-face {
+    font-family:"AppExtraBold";
+    src: url("fonts/Montserrat/Montserrat-ExtraBold.otf");
+}
+*/
+
+
+
+
+/* --- sharetech ---- */
+
+/*
+
 @font-face {
 	font-family: 'AppRegular';
 	font-style: normal;

@@ -105,20 +105,19 @@ window.BrowserView = NodeView.extend().newSlots({
 		var size = WebBrowserScreen.lesserOrientedSize()
         var w = size.width
 		var h = size.height
-		
         var r = 1
         
-        if (w < 800) { 
-            r = 1.5
+        if (w < 900 && WebBrowserWindow.shared().isOnMobile()) {
+            //console.log("w = " , w)
+            //console.log("((900 - w)/100) = ", ((900 - w)/100))
+            r = 1 + ((900 - w)/100) *  0.3
         }
         
-        if (w < 500) {
-            r = 2
+        if (r > 3) {
+            r = 3
         }
-
-        if (w < 400) {
-            r = 2.5
-        }
+        //console.log("r = " + r)
+        
 
         //console.log("lesserOrientedSize: " + w + "x" + h + " setZoomRatio(" + r + ")") 
         DocumentBody.setZoomRatio(r)

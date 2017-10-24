@@ -49,6 +49,7 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
                 this.replyButton().setTarget(this).setAction("reply")
                 this.replyButton().setBackgroundImageUrlPath(this.pathForIconName("reply"))        
         		this.replyButton().makeBackgroundContain().makeBackgroundNoRepeat()
+        		this.replyButton().setToolTip("reply")
         		this.setReplyCountView(this.bottomBarView().addSubview(DivView.clone().setDivClassName("BMPostMessageRowViewCountView")))
         
                 // repost
@@ -56,6 +57,7 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
                 this.repostButton().setTarget(this).setAction("repost")
                 this.repostButton().setBackgroundImageUrlPath(this.pathForIconName("repost"))        
         		this.repostButton().makeBackgroundContain().makeBackgroundNoRepeat()
+        		this.repostButton().setToolTip("repost")
         		this.setRepostCountView(this.bottomBarView().addSubview(DivView.clone().setDivClassName("BMPostMessageRowViewCountView")))
 
                 // like
@@ -63,6 +65,7 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
                 this.likeButton().setTarget(this).setAction("like")
                 this.likeButton().setBackgroundImageUrlPath(this.pathForIconName("heart-black-filled"))        
         		this.likeButton().makeBackgroundContain().makeBackgroundNoRepeat()
+        		this.likeButton().setToolTip("like")
         		this.setLikeCountView(this.bottomBarView().addSubview(DivView.clone().setDivClassName("BMPostMessageRowViewCountView")))
 
         // right view

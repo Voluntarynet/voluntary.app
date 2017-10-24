@@ -73,7 +73,7 @@ window.BMPostMessage = BMAppMessage.extend().newSlots({
         if (this.objMsg()) {
             return this.objMsg().ageInSeconds()
         }
-        return null
+        return 0
     },
 
 	mostRecentDate: function() {

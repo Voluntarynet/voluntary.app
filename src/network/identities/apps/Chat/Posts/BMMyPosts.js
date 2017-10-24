@@ -14,6 +14,10 @@ window.BMMyPosts = BMStorableNode.extend().newSlots({
         this.setSubnodeProto(BMPostMessage)
 		this.setNodeBackgroundColor("white")
 		this.setNoteIsSubnodeCount(true)
+		
+		this.setSubnodeSortFunc(function (postMsg1, postMsg2) {
+		    return postMsg1.ageInSeconds() - postMsg2.ageInSeconds()
+		})
     },
 
 	finalize: function() {

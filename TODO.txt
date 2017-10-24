@@ -1,11 +1,14 @@
 
-- fix final column calculation to adjust for shelf (subtract browsers X offset)
+- find a way to switch between shelf/non-shelf modes
+- add an "expires in X days" to post row view? Don't expire if liked/reposted/replied?
+
+- logic for reply, repost, like
+- reverse feed/posts ordering and insert new items at 0
+- add a group shelf item for contacts
 - set default path for shelf
-- add notifications folder (for replies, reposts)
-- single person icon for profile folder
+- add notifications folder (add replies, reposts here when adding to feed?)
 - add icons to chat bubbles, chat thread titles
 - search folder
-
 
 - send a post - draft creates post, sends it, adds it to myposts, deletes draft
 - handle a post - place in feed

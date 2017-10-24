@@ -51,6 +51,8 @@ window.ShelfView = DivView.extend().newSlots({
         group.newShelfItem().setIconName("mail-white").setDestinationNode(lid.apps().appNamed("Chat").threads())
 
         group.newShelfItem().setIconName("user-white").setDestinationNode(lid.profile())
+        group.newShelfItem().setIconName("users-white").setDestinationNode(lid.remoteIdentities())
+        group.newShelfItem().setIconName("write-white").setDestinationNode(lid.apps().appNamed("Chat").drafts())
 /*
         group.newShelfItem().setIconName("search-white")
         group.newShelfItem().setIconName("gear-white")

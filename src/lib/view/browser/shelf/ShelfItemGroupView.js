@@ -42,7 +42,7 @@ window.ShelfItemGroupView = DivView.extend().newSlots({
     // --------------
     
     shelf: function() {
-        return this.parentView()
+        return this.parentView().parentView()
     },
     
     didClickItem: function(clickedItem) {

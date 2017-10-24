@@ -18,11 +18,17 @@ window.ShelfView = DivView.extend().newSlots({
         
         this.setScrollView(this.addSubview(DivView.clone().setDivClassName("ShelfScrollView")))
         this.setFooterView(this.addSubview(ShelfFooterView.clone()))
+        
+
         return this
     },
         
     appDidInit: function() {
         this.syncWithLocalIdentities()
+        
+        this.addCreateIdentityGroup()
+        this.addSettingsGroup()
+        
         this._idsObservation = NotificationCenter.shared().newObservation().setName("didChangeIdentities").setObserver(this).watch()
         var firstGroup = this.groups()[0]
         if (firstGroup) {
@@ -36,28 +42,30 @@ window.ShelfView = DivView.extend().newSlots({
     },
 
     syncWithLocalIdentities: function() {
-        this.removeAllSubviews()
-        
+        this.scrollView().removeAllSubviews()
         App.shared().localIdentities().subnodes().forEach(lid => this.addGroupForLid(lid))
-        
-        this.addCreateIdentityGroup()
-        this.addSettingsGroup()
+    },
+    
+    newFooterItem: function() {
+        return this.footerView().addSubview(ShelfItemView.clone())
     },
     
     addCreateIdentityGroup: function() {
-        var group = this.newShelfGroup()
-        group.newShelfItem().setIconName("add-user-white").setTarget(this).setAction("createIdentity").setToolTip("Create New Identity")
-        group.setIsAlwaysSelected(true)     
+        var item = this.newFooterItem()
+        item.setIconName("add-user-white").setTarget(this).setAction("createIdentity").setToolTip("Create New Identity")
+        //item.setIsAlwaysSelected(true)     
     },
     
     createIdentity: function() {
         console.log("createIdentity")
+        App.shared().localIdentities().add()
+	    SyncScheduler.scheduleTargetAndMethod(this, "syncWithLocalIdentities")
     },
     
     addSettingsGroup: function() {
-        var group = this.newShelfGroup()
-        group.newShelfItem().setIconName("gear-filled-white").setDestinationNode(App.shared().about()).setToolTip("Settings")   
-        group.setIsAlwaysSelected(true)     
+        var item = this.newFooterItem()
+        item.setIconName("gear-filled-white").setDestinationNode(App.shared().about()).setToolTip("Settings")   
+        //item.setIsAlwaysSelected(true)     
     },
     
     addGroupForLid: function(lid) {
@@ -121,12 +129,12 @@ window.ShelfView = DivView.extend().newSlots({
 	// --- groups ---
 
     groups: function() {
-        return this.subviews()
+        return this.scrollView().subviews()
     },
     
     newShelfGroup: function() {
         var group = ShelfItemGroupView.clone()
-        this.addSubview(group)
+        this.scrollView().addSubview(group)
         return group
     },
 

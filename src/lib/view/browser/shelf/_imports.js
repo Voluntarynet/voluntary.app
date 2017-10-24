@@ -5,4 +5,5 @@ JSImporter.pushRelativePaths([
     "ShelfView.js",
     "ShelfItemView.js",
     "ShelfItemGroupView.js",
+    "ShelfFooterView.js"
 ])

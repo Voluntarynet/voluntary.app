@@ -8,11 +8,16 @@ window.ShelfView = DivView.extend().newSlots({
 	debug: true,
 	browser: null,
 	defaultWidth: 80,
+	scrollView: null,
+	footerView: null,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
         this.setIsRegisteredForKeyboard(true)
         this.setMinAndMaxWidth(0)
+        
+        this.setScrollView(this.addSubview(DivView.clone().setDivClassName("ShelfScrollView")))
+        this.setFooterView(this.addSubview(ShelfFooterView.clone()))
         return this
     },
         
@@ -33,9 +38,7 @@ window.ShelfView = DivView.extend().newSlots({
     syncWithLocalIdentities: function() {
         this.removeAllSubviews()
         
-        App.shared().localIdentities().subnodes().forEach((lid) => {
-            this.addGroupForLid(lid)
-        })
+        App.shared().localIdentities().subnodes().forEach(lid => this.addGroupForLid(lid))
         
         this.addCreateIdentityGroup()
         this.addSettingsGroup()
@@ -43,7 +46,8 @@ window.ShelfView = DivView.extend().newSlots({
     
     addCreateIdentityGroup: function() {
         var group = this.newShelfGroup()
-        group.newShelfItem().setIconName("home3-white").setTarget(this).setAction("createIdentity").setToolTip("Create New Identity")
+        group.newShelfItem().setIconName("add-user-white").setTarget(this).setAction("createIdentity").setToolTip("Create New Identity")
+        group.setIsAlwaysSelected(true)     
     },
     
     createIdentity: function() {
@@ -105,7 +109,7 @@ window.ShelfView = DivView.extend().newSlots({
     
     didClickGroup: function(clickedGroup) {
 
-        this.groups().forEach((group) => {
+        this.groups().forEach(group => {
             if (group != clickedGroup) {
                 group.compact()
             }
@@ -151,7 +155,7 @@ window.ShelfView = DivView.extend().newSlots({
     },
     
     unselectAllItems: function() {
-		this.groups().forEach((row) => { row.unselect() })
+		this.groups().forEach(row => row.unselect())
 		return this
 	},
 	

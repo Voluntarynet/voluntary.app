@@ -124,6 +124,8 @@ window.ShelfItemView = DivView.extend().newSlots({
 	// --- selecting ---
     
     onClick: function (event) {
+        DivView.onClick.apply(this)
+        
         if (this.isSelectable()) {
             this.select()
             this.tellParentViews("didClickItem", this)

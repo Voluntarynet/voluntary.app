@@ -1,9 +1,7 @@
 "use strict"
 
-window.ShelfItemGroupView = DivView.extend().newSlots({
-    type: "ShelfItemGroupView",
-    isCompacted: false,
-    isAlwaysSelected: false,
+window.ShelfFooterView = DivView.extend().newSlots({
+    type: "ShelfFooterView",
 }).setSlots({
     init: function () {
         DivView.init.apply(this)

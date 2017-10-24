@@ -1,3 +1,5 @@
+- badges for shelf icons! A feature of imageView?
+
 - add user button
 - pinned compose button that applies to currently open lid, pinned settings gear?
 

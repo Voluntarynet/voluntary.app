@@ -22,6 +22,20 @@ window.BMPostMessage = BMAppMessage.extend().newSlots({
         this.setShouldStore(true)	
 		this.setContent("...".loremIpsum(4, 100))	
     },
+
+/*
+	senderId: function() {
+		if (this._senderId) {
+			return this._senderId
+		}
+		
+        if (this.localIdentity() && this.objMsg()) {
+			return this.localIdentity().idForPublicKeyString(this.objMsg().senderPublicKeyString())
+		}
+		
+		return null
+	},
+	*/
     
     senderName: function() {
         if (this.senderId()) {
@@ -103,7 +117,10 @@ window.BMPostMessage = BMAppMessage.extend().newSlots({
 	},
 	
 	avatarImageDataURL: function() {
-		return this.localIdentity().profile().profileImageDataUrl()
+		if (this.senderId()) {
+			return this.senderId().profile().profileImageDataUrl()
+		}
+		return null
 	},
 	
 	// counts

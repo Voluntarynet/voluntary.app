@@ -1,4 +1,5 @@
-- shelf imagine 2px bigger, less height on shelf items
+- add user button
+- pinned compose button that applies to currently open lid, pinned settings gear?
 
 - adjust zoom to match normal Twitter client on desktop but be larger on mobile if possible
 - add settings gear shelf item, link to about

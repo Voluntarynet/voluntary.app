@@ -3,6 +3,7 @@
 window.ShelfItemGroupView = DivView.extend().newSlots({
     type: "ShelfItemGroupView",
     isCompacted: false,
+    isAlwaysSelected: false,
 }).setSlots({
     init: function () {
         DivView.init.apply(this)
@@ -11,14 +12,34 @@ window.ShelfItemGroupView = DivView.extend().newSlots({
 		
 		var itemSize = 80
 		this.setMinAndMaxWidth(itemSize)
-		//this.setMinAndMaxHeight(itemSize)
 
         return this
     },
     
+    setIsAlwaysSelected: function(aBool) {
+        this._isAlwaysSelected = aBool
+        if (aBool) {
+            this.selectItems()
+        }
+        return this
+    },
+    
+    // --- items ---
+    
     items: function() {
         return this.subviews()
     },
+    
+    addItem: function(shelfItemView) {
+        this.addSubview(shelfItemView)
+        return this
+    },
+    
+    firstItem: function() {
+        return this.items()[0]
+    },
+    
+    // --------------
     
     shelf: function() {
         return this.parentView()
@@ -42,39 +63,45 @@ window.ShelfItemGroupView = DivView.extend().newSlots({
     
     newShelfItem: function() {
         var item = ShelfItemView.clone()
-        this.addSubview(item)
+        this.addItem(item)
         item.showUnselected()
         return item
+    },
+    
+    firstItemHeight: function() {
+        var fs = this.firstItem()    
+        return fs ? fs.clientHeight() : 0
+    },
+    
+    selectItems: function() {
+        this.items().forEach((item) => { item.select() })
+        return this
+    },
+       
+    unselectItems: function() {
+        this.items().forEach((item) => { item.unselect() })
+        return this
     },
     
     compact: function() {
         if (!this._isCompacted) {
             this._isCompacted = true
-
-            var fs = this.firstSubview()
-            if (fs) {
-                this.setMinAndMaxHeight(fs.clientHeight())
-            }
             
-            this.subviews().forEach((subview) => { subview.unselect() })
+            this.setMinAndMaxHeight(this.firstItemHeight())
+            
+            if (!this.setIsAlwaysSelected()) {
+                this.unselectItems()
+            }
            // console.log(this.typeId() + ".compact()")
         }
         return this
     },
     
-    firstSubview: function() {
-        return this.subviews()[0]
-    },
-    
     uncompact: function() {
         if (this._isCompacted) {
             this._isCompacted = false
-            //console.log(this.typeId() + ".uncompact()")
-            //this.setMinAndMaxWidth(null)
-            var fs = this.firstSubview()
+            var fs = this.firstItem()
             if (fs) {
-                // TODO: figure out this 6px issue
-//                var newHeight = (fs.clientHeight())*this.subviews().length
                 var newHeight = this.sumOfSubviewHeights()
                 this.setMinAndMaxHeight(newHeight)
                 fs.select()

@@ -31,9 +31,29 @@ window.ShelfView = DivView.extend().newSlots({
     },
 
     syncWithLocalIdentities: function() {
+        this.removeAllSubviews()
+        
         App.shared().localIdentities().subnodes().forEach((lid) => {
             this.addGroupForLid(lid)
-        })        
+        })
+        
+        this.addCreateIdentityGroup()
+        this.addSettingsGroup()
+    },
+    
+    addCreateIdentityGroup: function() {
+        var group = this.newShelfGroup()
+        group.newShelfItem().setIconName("home3-white").setTarget(this).setAction("createIdentity").setToolTip("Create New Identity")
+    },
+    
+    createIdentity: function() {
+        console.log("createIdentity")
+    },
+    
+    addSettingsGroup: function() {
+        var group = this.newShelfGroup()
+        group.newShelfItem().setIconName("gear-filled-white").setDestinationNode(App.shared().about()).setToolTip("Settings")   
+        group.setIsAlwaysSelected(true)     
     },
     
     addGroupForLid: function(lid) {

@@ -47,7 +47,7 @@ window.App = BaseApp.extend().newSlots({
 
 		// about 
 		
-        this.setAbout(BMNode.clone().setTitle("About").setSubtitle(null))
+        this.setAbout(BMNode.clone().setTitle("Settings").setSubtitle(null))
         this.about()  
         this.addSubnode(this.about())
 

@@ -74,7 +74,9 @@ window.ShelfItemGroupView = DivView.extend().newSlots({
             var fs = this.firstSubview()
             if (fs) {
                 // TODO: figure out this 6px issue
-                this.setMinAndMaxHeight((fs.clientHeight())*this.subviews().length)
+//                var newHeight = (fs.clientHeight())*this.subviews().length
+                var newHeight = this.sumOfSubviewHeights()
+                this.setMinAndMaxHeight(newHeight)
                 fs.select()
             }
             

@@ -52,7 +52,7 @@
     display: block;
     opacity: 0;
     z-index: 0;    
-    /*border: 1px dashed white; */
+    border-bottom: 0px dashed #aaa; 
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -66,6 +66,6 @@
 
 .ShelfIconView {
     border-radius: 5px;
-    /*border: 1px dashed white; */
+    border: 0px solid #ccc; 
     /* background-color: #555; */
 }

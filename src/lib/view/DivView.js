@@ -963,6 +963,12 @@ window.DivView = ideal.Proto.extend().newSlots({
         return anSubview
     },
 
+    // --- subview calculations ---
+    
+    sumOfSubviewHeights: function() {
+        return this.subviews().sum((subview) => { return subview.clientHeight() })
+    },
+    
 	// --- fade animations ---
 	
 	fadeInToDisplayInlineBlock: function() {

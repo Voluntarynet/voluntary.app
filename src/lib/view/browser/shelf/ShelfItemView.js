@@ -14,25 +14,37 @@ window.ShelfItemView = DivView.extend().newSlots({
         this.turnOffUserSelect()
 		this.setTransition("all 0.35s")
 		
-		var itemSize = 78
-		this.setMinAndMaxWidth(itemSize)
-		this.setMinAndMaxHeight(itemSize)
 		this.setIsRegisteredForMouse()
 		
 		var iv = DivView.clone().setDivClassName("ShelfIconView")
 		this.setIconView(iv)
         this.addSubview(iv)
-        
-        var iconSize = 46
-        iv.setPosition("relative")
-        iv.setLeft((itemSize-iconSize)/2)
-        iv.setTop((itemSize-iconSize)/2)
-		iv.setMinAndMaxWidth(iconSize)
-		iv.setMinAndMaxHeight(iconSize)
+
 		iv.makeBackgroundNoRepeat()
 		//this.makeBackgroundContain()
 		iv.makeBackgroundCentered()
+
+        this.setItemWidthHeight(78, 70)
+
         return this
+    },
+    
+    setItemWidthHeight: function(itemWidth, itemHeight) {
+		//var itemWidth = 78
+		//var itemHeight = 70
+		
+		this.setMinAndMaxWidth(itemWidth)
+		this.setMinAndMaxHeight(itemHeight)
+		
+        var iv = this.iconView()
+        var iconWidth = itemWidth*.7
+        var iconHeight = itemHeight*.7
+        iv.setPosition("relative")
+        iv.setLeft((itemWidth-iconWidth)/2)
+        iv.setTop((itemHeight-iconHeight)/2)
+		iv.setMinAndMaxWidth(iconWidth)
+		iv.setMinAndMaxHeight(iconHeight)
+		return this
     },
     
     setDestinationNode: function(aNode) {
@@ -55,6 +67,7 @@ window.ShelfItemView = DivView.extend().newSlots({
         if (imageDataUrl) {
     		iv.setBackgroundImageUrlPath(imageDataUrl)        
     		iv.setBackgroundSizeWH(64, 64)     
+    		this.setItemWidthHeight(78, 70)
         } else {
             iv.setBackgroundColor("#aaa")
         }
@@ -66,6 +79,7 @@ window.ShelfItemView = DivView.extend().newSlots({
         var iv = this.iconView()
 		iv.setBackgroundImageUrlPath(this.pathForIconName(name))        
 		iv.setBackgroundSizeWH(24, 24)
+        this.setItemWidthHeight(78, 45)
         return this
 	},
 	

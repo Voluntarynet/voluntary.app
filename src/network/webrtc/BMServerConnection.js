@@ -97,7 +97,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
             this._serverConn = new Peer(this.peerId().toString(), this.serverConnectionOptions())                
             //this._serverConn = new Peer(this.serverConnectionOptions())
             
-            console.log("Server " +  this.shortId() + ".connect()")          
+            this.log("Server " +  this.shortId() + ".connect()")          
                       
             this._serverConn.on('open', (id) => { 
                 assert(this.peerId().toString() == id)

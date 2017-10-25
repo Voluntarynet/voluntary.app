@@ -197,7 +197,7 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
 	},
 
 	didChangeIdentity: function() {
-		console.log(this.typeId() + ".didChangeIdentity()")
+		//console.log(this.typeId() + ".didChangeIdentity()")
 		this.updateIdsBloomFilter()
 	},
 		

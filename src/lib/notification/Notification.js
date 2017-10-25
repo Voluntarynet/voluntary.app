@@ -35,5 +35,9 @@ window.Notification = ideal.Proto.extend().setType("Notification").newSlots({
         this.center().addNotification(this)
         return this
     },
+    
+    schedulePost: function() {
+	    SyncScheduler.scheduleTargetAndMethod(this, "post")
+    },
 })
 

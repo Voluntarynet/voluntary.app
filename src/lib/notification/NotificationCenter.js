@@ -115,7 +115,7 @@ window.NotificationCenter = ideal.Proto.extend().setType("NotificationCenter").n
     addNotification: function(note) {
         if (!this.hasNotification(note)) {
             this.notifications().push(note)
-		    SyncScheduler.scheduleTargetAndMethod(this, "processPostQueue")
+		    SyncScheduler.scheduleTargetAndMethod(this, "processPostQueue") //, -1)
         }
         return this
     },

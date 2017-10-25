@@ -424,6 +424,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     
     postShouldFocusSubnode: function(aSubnode) {
         this._shouldFocusSubnodeNote.setInfo(aSubnode).post()
+        //this._shouldFocusSubnodeNote.setInfo(aSubnode).schedulePost()
         return this
     },
     

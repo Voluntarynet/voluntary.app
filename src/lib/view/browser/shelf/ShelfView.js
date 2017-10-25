@@ -17,8 +17,7 @@ window.ShelfView = DivView.extend().newSlots({
         this.setMinAndMaxWidth(0)
         
         this.setScrollView(this.addSubview(DivView.clone().setDivClassName("ShelfScrollView")))
-        this.setFooterView(this.addSubview(ShelfFooterView.clone()))
-        
+        this.setFooterView(this.addSubview(ShelfFooterView.clone()))        
 
         return this
     },
@@ -30,6 +29,7 @@ window.ShelfView = DivView.extend().newSlots({
         this.addSettingsGroup()
         
         this._idsObservation = NotificationCenter.shared().newObservation().setName("didChangeIdentities").setObserver(this).watch()
+        this._idsObservation = NotificationCenter.shared().newObservation().setName("didChangeIdentity").setObserver(this).watch()
         var firstGroup = this.groups()[0]
         if (firstGroup) {
             firstGroup.uncompact()
@@ -37,8 +37,12 @@ window.ShelfView = DivView.extend().newSlots({
         return this      
     },
     
+    didChangeIdentity: function() {
+	    SyncScheduler.scheduleTargetAndMethod(this, "syncWithLocalIdentities")
+    },
+    
     didChangeIdentities: function() {
-        this.syncWithLocalIdentities()
+	    SyncScheduler.scheduleTargetAndMethod(this, "syncWithLocalIdentities")
     },
 
     syncWithLocalIdentities: function() {
@@ -57,9 +61,24 @@ window.ShelfView = DivView.extend().newSlots({
     },
     
     createIdentity: function() {
-        console.log("createIdentity")
-        App.shared().localIdentities().add()
-	    SyncScheduler.scheduleTargetAndMethod(this, "syncWithLocalIdentities")
+        SyncScheduler.scheduleTargetAndMethod(this, "finishCreateIdentity")
+        return this
+    },
+    
+    finishCreateIdentity: function() {        
+        var newLid = App.shared().localIdentities().add()
+        this.syncWithLocalIdentities()
+        SyncScheduler.scheduleTargetAndMethod(this, "clickLastGroupProfile", -1)
+    },
+    
+    clickLastGroupProfile: function() {
+        var group = this.groups().last()
+        var item = group.items()[3]
+        item.onClick(null)
+    },
+    
+    groupWithNode: function(aNode) {
+        return this.groups().detect(group => group.node() === aNode )
     },
     
     addSettingsGroup: function() {
@@ -69,32 +88,36 @@ window.ShelfView = DivView.extend().newSlots({
     },
     
     addGroupForLid: function(lid) {
-        var group = this.newShelfGroup()
-        var image = lid.profile().profileImageDataUrl()
-        //console.log("image = ", image)
+        var group = this.newShelfGroup().setNode(lid)
         
-        var feedNode = lid.apps().appNamed("Chat").feedPosts()
+        // my posts
+        var imageUrl = lid.profile().profileImageDataUrl()
         var myPostsNode = lid.apps().appNamed("Chat").myPosts()
+        group.newShelfItem().setImageDataUrl(imageUrl).setDestinationNode(myPostsNode).setToolTip(lid.title())
         
-        group.newShelfItem().setImageDataUrl(image).setDestinationNode(myPostsNode).setToolTip(lid.title())
+        // feed
+        var feedNode = lid.apps().appNamed("Chat").feedPosts()
         group.newShelfItem().setIconName("home3-white").setDestinationNode(feedNode).setToolTip("Feed")
-        //group.newShelfItem().setIconName("lightning3-white")
-        //group.newShelfItem().setIconName("bell-white")
+        
+        // notifications
+        //group.newShelfItem().setIconName("bell-white") 
+        
+        // direct messages
         group.newShelfItem().setIconName("mail-white").setDestinationNode(lid.apps().appNamed("Chat").threads())
-
+        
+        // profile
         group.newShelfItem().setIconName("user-white").setDestinationNode(lid.profile())
+        
+        // contacts
         group.newShelfItem().setIconName("users-white").setDestinationNode(lid.remoteIdentities())
-        group.newShelfItem().setIconName("write-white").setDestinationNode(lid.apps().appNamed("Chat").drafts())
-/*
-        group.newShelfItem().setIconName("search-white")
-        group.newShelfItem().setIconName("gear-white")
-        */      
+        
+        // drafts
+        group.newShelfItem().setIconName("write-white").setDestinationNode(lid.apps().appNamed("Chat").drafts()) 
+        
         group.compact()
         return this  
     },
-    
-
-    
+        
     browser: function() {
         return App.shared().browser()
     },
@@ -116,14 +139,18 @@ window.ShelfView = DivView.extend().newSlots({
     },
     
     didClickGroup: function(clickedGroup) {
+        console.log(this.typeId() + ".didClickGroup(" + clickedGroup.typeId() + ")")
+        if (this.scrollView().hasSubview(clickedGroup)) {
 
-        this.groups().forEach(group => {
-            if (group != clickedGroup) {
-                group.compact()
-            }
-        })
-        
-        clickedGroup.uncompact()
+            this.groups().forEach(group => {
+                if (group != clickedGroup) {
+                    group.compact()
+                }
+            })
+            clickedGroup.uncompact()
+
+            this.scrollView().scrollSubviewToTop(clickedGroup)
+        }
     },
     
 	// --- groups ---

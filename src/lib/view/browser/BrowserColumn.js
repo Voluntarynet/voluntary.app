@@ -208,7 +208,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
 		if (subview) {
 		    //console.log("subview.offsetTop() = ", subview.offsetTop())
 		    this.columnGroup().scrollView().setScrollTop(subview.offsetTop())
-		    //this.scrollToSubviewIfNeeded(subview)
+		    subview.scrollIntoView()
 		} else {
 			console.warn("no subview for shouldFocusSubnode subnode ", subnode.typeId())
 		}

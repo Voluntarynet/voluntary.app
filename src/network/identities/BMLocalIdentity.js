@@ -9,6 +9,7 @@ window.BMLocalIdentity = BMKeyPair.extend().newSlots({
     type: "BMLocalIdentity",
     name: "",
 	privateKeyString: "",
+	didChangeIdentityNote: null,
 }).setSlots({
     
     init: function () {
@@ -29,7 +30,18 @@ window.BMLocalIdentity = BMKeyPair.extend().newSlots({
 		//console.log("is editable = ", this.profile().fieldNamed("publicKeyString").valueIsEditable())
 		this.generatePrivateKey()
         this.addAction("delete")
+		this._didChangeIdentityNote = NotificationCenter.shared().newNotification().setSender(this.uniqueId()).setName("didChangeIdentity")
 
+    },
+    
+    didUpdateSubnode: function(aSubnode) {
+        this.postDidChangeIdentity()
+        return this
+    },
+    
+    postDidChangeIdentity: function() {
+        this.didChangeIdentityNote().post()
+        return this
     },
 
 	finalize: function() {

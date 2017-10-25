@@ -135,9 +135,13 @@ window.BMRemotePeer = BMNode.extend().newSlots({
     },
     
     close: function() {
-		this.log("close")
-        this._conn.close()
-        this.setStatus("closed")
+        if (this._conn) {
+    		this.log("close")
+            this._conn.close()
+            this.setStatus("closed")
+        } else {
+            console.warn(this.typeId() + ".close() sent to closed connection")
+        }
         return this 
     },
     

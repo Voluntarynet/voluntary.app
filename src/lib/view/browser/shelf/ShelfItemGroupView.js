@@ -4,6 +4,7 @@ window.ShelfItemGroupView = DivView.extend().newSlots({
     type: "ShelfItemGroupView",
     isCompacted: false,
     isAlwaysSelected: false,
+    node: null,
 }).setSlots({
     init: function () {
         DivView.init.apply(this)
@@ -46,6 +47,8 @@ window.ShelfItemGroupView = DivView.extend().newSlots({
     },
     
     didClickItem: function(clickedItem) {
+        console.log(this.typeId() + ".didClickItem(" + clickedItem.typeId() + ")")
+        
         this.items().forEach((item) => {
             if (item != clickedItem) {
                 if (item != this.firstItem()) {

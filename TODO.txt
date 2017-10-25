@@ -1,3 +1,6 @@
+- select new user profile after creating it (animate it?)
+- always use column titles if only one column is displayed (which may not be in single column mode)
+
 - badges for shelf icons! A feature of imageView?
 
 - add user button

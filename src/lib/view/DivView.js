@@ -793,6 +793,16 @@ window.DivView = ideal.Proto.extend().newSlots({
 	    return this
 	},
 
+    /*
+    hideScrollbar: function() {
+        // need to do JS equivalent of: .class::-webkit-scrollbar { display: none; }
+	    // this.setCssAttribute("-webkit-scrollbar", { display: "none" }) // doesn't work
+	    return this
+    },
+    */
+    
+    // clientX - includes padding but not scrollbar, border, or margin
+        
     clientWidth: function() {
         return this.element().clientWidth
     },
@@ -800,6 +810,18 @@ window.DivView = ideal.Proto.extend().newSlots({
     clientHeight: function() {
         return this.element().clientHeight
     },
+    
+    // offsetX - includes borders, padding, scrollbar 
+    
+    offsetWidth: function() {
+        return this.element().offsetWidth
+    },
+    
+    offsetHeight: function() { 
+        return this.element().offsetHeight
+    },
+    
+    // width
     
     minWidth: function() {
         var s = this.getCssAttribute("min-width")
@@ -1972,24 +1994,85 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this
     },
     
-    scrollToSubview: function(aSubview) {
+    scrollSubviewToTop: function(aSubview) {
         assert(this.subviews().contains(aSubview))
-        this.setScrollTop(aSubview.scrollHeight())
+        //this.setScrollTop(aSubview.offsetTop())
+        //this.setScrollTopSmooth(aSubview.offsetTop())
+        //this.setScrollTop(aSubview.offsetTop() + aSubview.scrollHeight())
+        this.animateValue(
+            () => { return aSubview.offsetTop() }, 
+            () => { return this.scrollTop() }, 
+            (v) => { this.setScrollTop(v) }, 
+            500)
         return this
     },
     
-    /* 
-    // not usefull for column view because it contains it's subnode views but we
-    // want to adjust it's parent scrollView
-    
-    scrollToSubviewIfNeeded: function(aSubview) {
-        assert(this.subviews().contains(aSubview))
-        if (!aSubview.isScrolledIntoView()) {
-            this.scrollToSubview(aSubview)
+    animateValue: function(targetFunc, valueFunc, setterFunc, duration) { // duration in milliseconds 
+        if (duration == null) {
+            duration = 500
         }
+            //duration = 1500
+        var startTime = Date.now();
+        
+        var step = () => {
+            var dt = (Date.now() - startTime)
+            var r =  dt / duration
+            r = Math.sin(r*Math.PI/2)
+            r = r*r*r
+
+            var currentValue = valueFunc()
+            var currentTargetValue = targetFunc()
+            
+            //console.log("time: ", dt, " /", duration, " r:", r, " top:", currentValue, "/", currentTargetValue)
+            
+            if (dt > duration) {
+                setterFunc(currentTargetValue)
+            } else {
+                var newValue = currentValue + (currentTargetValue - currentValue) * r
+                setterFunc(newValue)
+                window.requestAnimationFrame(step);
+            }
+        }
+        
+        window.requestAnimationFrame(step);
+        
+        return this    
+    },
+    
+    setScrollTopSmooth: function(newScrollTop, scrollDuration) { 
+        this.animateValue(() => { return newScrollTop }, () => { return this.scrollTop() }, (v) => { this.setScrollTop(v) }, scrollDuration)
+        /*
+        if (scrollDuration == null) {
+            scrollDuration = 500
+        }
+        
+        var tStart = Date.now();
+        
+        var step = () => {
+            var dt = (Date.now() - tStart)
+            var r =  dt / scrollDuration
+
+            console.log("time: ", dt, " /", scrollDuration, " r:", r, " top:", this.scrollTop(), "/", newScrollTop)
+            
+            if (dt > scrollDuration) {
+                this.setScrollTop(newScrollTop)
+            } else {
+                var st = this.scrollTop() + (newScrollTop - this.scrollTop()) * r
+                this.setScrollTop(st)
+                window.requestAnimationFrame(step);
+            }
+        }
+        
+        window.requestAnimationFrame(step);
+        */
+        
+        return this    
+    },
+    
+    scrollIntoView: function(options) {
+        this.element().scrollIntoView({ block: "start", inline: "nearest", behavior: "smooth", })
         return this
     },
-    */
     
     isScrolledIntoView: function() {
         var e = this.element()

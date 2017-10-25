@@ -17,21 +17,27 @@
 
 	background-color: #151515; 
 
-	/*
-	background-color: rgb(37, 37, 37); 
-	*/
-	/* background-color: rgb(37, 72, 112); */
-    overflow-x: hidden;
-    overflow-y: scroll;
-    overflow-scrolling: touch;
-    -webkit-overflow-scrolling: touch;
-
     transition: all .45s ease;
     z-index: 0;    
 }
 
-.ShelfView::-webkit-scrollbar { 
-    display: none; 
+.ShelfScrollView {
+    display: inline-block;
+    position: relative;
+    
+    overflow-x: hidden;
+    overflow-y: auto;
+    overflow-scrolling: touch;
+    -webkit-overflow-scrolling: touch;
+        
+    width: calc(100% - 2px);
+    height: calc(100% - 112px);
+    border: 0px dashed red;
+    background-color: transparent;
+}
+
+.ShelfScrollView::-webkit-scrollbar { 
+    display: none;
 }
 
 .ShelfFooterView {
@@ -44,19 +50,6 @@
     border-top: 1px solid rgba(255, 255, 255, 0.05);
     background-color: #111;
     z-index: 10;
-}
-
-
-.ShelfScrollView {
-    display: block;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    width: calc(100% - 2px);
-    height: calc(100% - 2px);
-    border: 0px dashed red;
-    background-color: transparent;
-    overflow: hidden;
 }
 
 /* --- ShelfItemVGroupView --- */

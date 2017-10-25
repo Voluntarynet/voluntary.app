@@ -26,6 +26,7 @@ window.BMProfile = BMFieldSetNode.extend().newSlots({
         this.addFieldNamed("instagram").setValueMethod("instagram").setValueIsEditable(true)
 		this.setNodeMinWidth(600)
     },
+    
 
     profileImageDataUrl: function() {
         return this.avatars()[0]
@@ -44,4 +45,16 @@ window.BMProfile = BMFieldSetNode.extend().newSlots({
 	identity: function() {
 		return this.parentNode()
 	},
+	
+	didUpdateSlot: function(slotName, oldValue, newValue) {
+		BMFieldSetNode.didUpdateSlot.apply(this, [slotName, oldValue, newValue])
+		if (slotName == "avatars") {
+		    var parentNode = this.parentNode()
+		    if (parentNode && parentNode.didUpdateSubnode) {
+		        parentNode.didUpdateSubnode(this)
+		    }
+		}
+		return this
+	},
+	
 })

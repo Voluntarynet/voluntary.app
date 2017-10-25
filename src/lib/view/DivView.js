@@ -2041,35 +2041,15 @@ window.DivView = ideal.Proto.extend().newSlots({
     
     setScrollTopSmooth: function(newScrollTop, scrollDuration) { 
         this.animateValue(() => { return newScrollTop }, () => { return this.scrollTop() }, (v) => { this.setScrollTop(v) }, scrollDuration)
-        /*
-        if (scrollDuration == null) {
-            scrollDuration = 500
-        }
-        
-        var tStart = Date.now();
-        
-        var step = () => {
-            var dt = (Date.now() - tStart)
-            var r =  dt / scrollDuration
-
-            console.log("time: ", dt, " /", scrollDuration, " r:", r, " top:", this.scrollTop(), "/", newScrollTop)
-            
-            if (dt > scrollDuration) {
-                this.setScrollTop(newScrollTop)
-            } else {
-                var st = this.scrollTop() + (newScrollTop - this.scrollTop()) * r
-                this.setScrollTop(st)
-                window.requestAnimationFrame(step);
-            }
-        }
-        
-        window.requestAnimationFrame(step);
-        */
-        
         return this    
     },
     
-    scrollIntoView: function(options) {
+    dynamicScrollIntoView: function() {
+        this.parentView().scrollSubviewToTop(this)
+        return this
+    },
+    
+    scrollIntoView: function() {
         this.element().scrollIntoView({ block: "start", inline: "nearest", behavior: "smooth", })
         return this
     },

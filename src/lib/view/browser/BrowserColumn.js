@@ -198,12 +198,6 @@ window.BrowserColumn = NodeView.extend().newSlots({
 		return this
 	},
 	
-	/*
-	subviewNodes: function() {
-	    return this.subviews().map(subview => subview.node()
-	},
-	*/
-	
 	shouldFocusSubnode: function(aNote) {
 	    var subnode = aNote.info()
 	    this.clickRowWithNode(subnode)
@@ -212,8 +206,6 @@ window.BrowserColumn = NodeView.extend().newSlots({
 	    
 		if (!subview) {
             this.syncFromNode()
-		    //console.log("subview.offsetTop() = ", subview.offsetTop())
-		    //this.columnGroup().scrollView().setScrollTop(subview.offsetTop())
 	        subview = this.subviewForNode(subnode)
 		} 
 
@@ -221,6 +213,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
 	        var subview = this.subviewForNode(subnode)
 		    this.selectRowWithNode(subnode)
 		    subview.scrollIntoView()
+		    //subview.dynamicScrollIntoView()
 		} else {
 			console.warn("BrowserColumn for node " + this.node().typeId() + " has no matching subview for shouldFocusSubnode " + subnode.typeId())
 			//console.log("subview nodes = ", this.subviews().map(subview => subview.node().typeId()) )

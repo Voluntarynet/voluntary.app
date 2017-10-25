@@ -100,7 +100,11 @@ window.BMServerConnection = BMNode.extend().newSlots({
             this.log("Server " +  this.shortId() + ".connect()")          
                       
             this._serverConn.on('open', (id) => { 
-                assert(this.peerId().toString() == id)
+                var sid = this.peerId().toString()
+                if(sid != id) {
+                    console.log(sid + " != ", id)
+                    throw newError(this.typeId() + " peerId doesn't match our id from the server")
+                }
                 this.onOpen()
             })
             
@@ -125,6 +129,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
     },
 
 	reconnect: function() {
+	    console.log(this.typeId() + ".reconnect()")
         this.close()
 		this.connect()
         return this		

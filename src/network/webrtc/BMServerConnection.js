@@ -129,7 +129,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
     },
 
 	reconnect: function() {
-	    console.log(this.typeId() + ".reconnect()")
+	    //console.log(this.typeId() + ".reconnect()")
         this.close()
 		this.connect()
         return this		

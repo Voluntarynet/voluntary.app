@@ -39,4 +39,7 @@ window.BMPostDrafts = BMStorableNode.extend().newSlots({
 	},
 	*/
 	
+	shelfIconName: function() {
+	    return "write-white"
+	},
 })

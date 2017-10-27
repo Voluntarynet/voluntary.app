@@ -1,13 +1,12 @@
 "use strict"
 
-window.ShelfItemGroupView = DivView.extend().newSlots({
+window.ShelfItemGroupView = NodeView.extend().newSlots({
     type: "ShelfItemGroupView",
     isCompacted: false,
     isAlwaysSelected: false,
-    node: null,
 }).setSlots({
     init: function () {
-        DivView.init.apply(this)
+        NodeView.init.apply(this)
         this.turnOffUserSelect()
 		this.setTransition("all 0.35s")
 		
@@ -16,7 +15,18 @@ window.ShelfItemGroupView = DivView.extend().newSlots({
 
         return this
     },
-    
+
+    visibleSubnodes: function() {
+        return this.node().shelfSubnodes() 
+    },
+
+    newSubviewForSubnode: function(aSubnode) {
+        var newSubview = NodeView.newSubviewForSubnode(aSubnode)
+        newSubview.setOverrideSubviewProto(ShelfItemView)
+        return newSubview
+    },
+        
+    /*
     setIsAlwaysSelected: function(aBool) {
         this._isAlwaysSelected = aBool
         if (aBool) {
@@ -56,13 +66,7 @@ window.ShelfItemGroupView = DivView.extend().newSlots({
                 }
             }
         })
-        
-        var node = clickedItem.destinationNode()
-        if (node) {
-            //App.shared().browser().selectNode(node)
-            App.shared().browser().setNode(node).scheduleSyncFromNode() // this.browser().syncFromNode()
 
-        }
         this.shelf().didClickGroup(this)
     },
     
@@ -124,5 +128,6 @@ window.ShelfItemGroupView = DivView.extend().newSlots({
         }
         return this
     },
+    */
 
 })

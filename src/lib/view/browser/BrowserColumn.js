@@ -66,7 +66,6 @@ window.BrowserColumn = NodeView.extend().newSlots({
     didClickRowWithNode: function(aNode) {
         var row = this.rowWithNode(aNode)
         if (!row) {
-            //throw new Error("column with path '" + this.browserPathString() + "' missing row for node '" + node.title() + "'")
             throw new Error("column  missing row for node '" + aNode.title() + "'")
         }
         this.didClickRow(row)
@@ -87,18 +86,13 @@ window.BrowserColumn = NodeView.extend().newSlots({
 		if (clickedRow.node().nodeRowLink()) {
 		    //console.log(this.typeId() + ".didClickRow(" + clickedRow.node().title() + ") selecting column ", this.node().title())
         	this.browser().selectColumn(this)
-            /*
-			if (this.browser().isSingleColumn()) {
-				this.browser().selectColumn(this)	
-			}
-			*/
 		}
-		
-
-        //this.focus()
-        //this.tellParentViews("didClickRow", clickedRow)
 
         return true
+    },
+    
+    rowRequestsAddColumnForNode: function(aNode) {
+        
     },
     
     selectedRows: function() {
@@ -132,7 +126,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
   
     indexOfRowWithNode: function (aNode) {
-		return this.rows().detectIndex((row) => { return row.node() === aNode })
+		return this.rows().detectIndex(row => row.node() === aNode)
     },
     
     clickRowWithNode: function(aNode) {
@@ -144,25 +138,24 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
 
     unselectAllRows: function() {
-		this.rows().forEach((row) => { row.unselect() })
+		this.rows().forEach(row => row.unselect())
 		return this
 	},
 	
     selectRowWithNode: function (aNode) {
-        
-		var clickedRow = this.rows().detect((row) => { return row.node() === aNode })
+		var selectedRow = this.rows().detect(row => row.node() === aNode)
 		
-        if (clickedRow) {
-			clickedRow.setIsSelected(true)
+        if (selectedRow) {
+			selectedRow.setIsSelected(true)
 			
-			this.rows().forEach((row) => {
-                if (row != clickedRow) {
-                    row.unselect()
+			this.rows().forEach((aRow) => {
+                if (aRow != selectedRow) {
+                    aRow.unselect()
                 }
             })
 		}
 
-		return clickedRow
+		return selectedRow
     },
     
     selectedRowTitle: function () {
@@ -175,18 +168,14 @@ window.BrowserColumn = NodeView.extend().newSlots({
 
 	// --- sync -----------------------------
 
-    newSubviewForSubnode: function(aSubnode) {
+   subviewProtoForSubnode: function(aSubnode) {
 		var proto = aSubnode.nodeRowViewClass()
 		
 		if (!proto) {
 			proto = BrowserTitledRow
 		}
 				
-        if (!proto) {
-            throw new Error("missing proto view to create " + aNode.type() + " view")
-        }
-
-		return proto.clone().setNode(aSubnode)
+        return proto      
     },
 
 	setNode: function(aNode) {

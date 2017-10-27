@@ -2,7 +2,7 @@
 .NodeView {
 	font-size: 13px; 
 	font-size-adjust: 0.5;
-    font-family: "AppRegular";
+    font-family: "AppRegular", sans-serif;
     text-transform: none;
 }
 
@@ -202,7 +202,7 @@
 /* --- Browser Row --- */
 
 .BrowserRow {
-	font-family: "AppLight";
+	font-family: "AppLight", sans-serif;
     display: block;
     position: relative;
     width: 100%;
@@ -225,7 +225,7 @@
 
 /*
 .BrowserRow:hover  {
-	font-family: "AppRegular";
+	font-family: "AppRegular", sans-serif;
 }
 */
 

@@ -329,6 +329,10 @@ window.BMNode = ideal.Proto.extend().newSlots({
     },
     */
     
+    shelfSubnodes: function() {
+        return []
+    },
+    
     prepareToAccess: function() {
         
     },

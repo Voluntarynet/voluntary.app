@@ -90,5 +90,14 @@ window.BMChatMessageRowView = BrowserTitledRow.extend().newSlots({
 	styleAsReceived: function() {
 		this.alignToLeft()
 	},
+	
+    unselectedBgColor: function() {
+        return "white"
+    },
+    
+    selectedBgColor: function() {
+        return "white"
+    },
+
 })
 

@@ -57,4 +57,7 @@ window.BMProfile = BMFieldSetNode.extend().newSlots({
 		return this
 	},
 	
+	shelfIconName: function() {
+	    return "user-white"
+	},
 })

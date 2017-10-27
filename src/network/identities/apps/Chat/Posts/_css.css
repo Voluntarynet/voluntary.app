@@ -83,7 +83,7 @@
 .BMPostTitleBarView {
     display: block;
 	position: relative;
-	font-family: AppSemiBold;
+	font-family: AppSemiBold, sans-serif;
 	width: calc(100% - 10px);
 	min-height: 20px;
 	margin-top: 8px;
@@ -183,9 +183,8 @@
     display: inline-block;
 
     vertical-align: top; /* here */
-
     
-    font-family: AppSemiBold;
+    font-family: AppSemiBold, sans-serif;
     font-size: 14px;
 
     width: 55px;    
@@ -200,8 +199,4 @@
     opacity: 0.5;
     border: 0px solid #aaa;
 }
-
-
-
-
 

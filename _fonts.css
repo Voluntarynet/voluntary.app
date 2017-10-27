@@ -1,102 +1,30 @@
 
-/*
-@font-face {
-    font-family:"AppRegular";
-    src: url("fonts/OpenSans/OpenSans-Regular.ttf") 
-}
+/* --- mono --- */
 
 @font-face {
-    font-family:"AppLight";
-    src: url("fonts/OpenSans/OpenSans-Light.ttf")
-}
-
-
-@font-face {
-	font-family: 'AppMono';
-	font-style: normal;
-	font-weight: 400;
-	src: url("fonts/ShareTechMono/ShareTechMono.ttf");
-	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
-}
-
-@font-face {
-	font-family: 'AppLight';
-	font-style: normal;
-	font-weight: 400;
-	src: url("fonts/ShareTechMono/ShareTechMono.ttf");
-	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
-}
-
-@font-face {
-	font-family: 'AppRegular';
-	font-style: normal;
-	font-weight: 400;
-	src: url("fonts/ShareTechMono/ShareTechMono.ttf");
-	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
-}
-
-*/
-
-/*
-@font-face {
-	font-family: 'AppMono';
-	src: local('Share Tech Mono'), local('ShareTechMono-Regular'), url(https://fonts.gstatic.com/s/sharetechmono/v6/RQxK-3RA0Lnf3gnnnNrAsVlgUn8GogvcKKzoM9Dh-4E.woff2) format('woff2');
-	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
-}
-*/
-
-/*
-@font-face {
-    font-family:"AppRegular";
-    src: url("fonts/MateriaPro/MateriaPro_Regular.ttf");
-}
-
-@font-face {
-    font-family:"AppLight";
-    src: url("fonts/MateriaPro/MateriaPro_Light.ttf");
-}
-*/
-
-/*
-@font-face {
-	font-family: 'AppMono';
-    src: url("fonts/Blender/Blender-THIN.ttf");
-}
-
-@font-face {
-    font-family:"AppMono";
-    src: url("fonts/Blender/Blender-BOOK.ttf");
-}
-
-@font-face {
-    font-family:"AppRegular";
-    src: url("fonts/Blender/Blender-BOOK.ttf");
-}
-@font-face {
-    font-family:"AppLight";
-    src: url("fonts/Blender/Blender-THIN.ttf");
-}
-*/
-
-@font-face {
-	font-family: 'AppMono';
-	src: local('Share Tech Mono'), local('ShareTechMono-Regular'), url(https://fonts.gstatic.com/s/sharetechmono/v6/RQxK-3RA0Lnf3gnnnNrAsVlgUn8GogvcKKzoM9Dh-4E.woff2) format('woff2');
+	font-family: "AppMono";
+    src: url("fonts/ShareTechMono/ShareTechMono.ttf");
 	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
 }
 
 /* --- OpenSans --- */
 
 @font-face {
-    font-family:"AppLight";
+    font-family: "AppLight";
     src: url("fonts/OpenSans/OpenSans-Light.ttf");
 }
 
 @font-face {
-    font-family:"AppRegular";
+    font-family: "AppRegular";
     src: url("fonts/OpenSans/OpenSans-Regular.ttf");
 }
 
+@font-face {
+    font-family: "AppSemiBold";
+    src: url("fonts/OpenSans/OpenSans-SemiBold.ttf");
+}
 
+/*
 @font-face {
     font-family:"AppBold";
     src: url("fonts/OpenSans/OpenSans-Bold.ttf");
@@ -106,11 +34,8 @@
     font-family:"AppExtraBold";
     src: url("fonts/OpenSans/OpenSans-ExtraBold.ttf");
 }
+*/
 
-@font-face {
-    font-family:"AppSemiBold";
-    src: url("fonts/OpenSans/OpenSans-SemiBold.ttf");
-}
 
 /* --- Montserrat --- */
 
@@ -142,26 +67,3 @@
 */
 
 
-
-
-/* --- sharetech ---- */
-
-/*
-
-@font-face {
-	font-family: 'AppRegular';
-	font-style: normal;
-	font-weight: 400;
-	src: local('Share Tech Mono'), local('ShareTechMono-Regular'), url(https://fonts.gstatic.com/s/sharetechmono/v6/RQxK-3RA0Lnf3gnnnNrAsVlgUn8GogvcKKzoM9Dh-4E.woff2) format('woff2');
-	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
-}
-
-@font-face {
-	font-family: 'AppLight';
-	font-style: normal;
-	font-weight: 400;
-	src: local('Share Tech Mono'), local('ShareTechMono-Regular'), url(https://fonts.gstatic.com/s/sharetechmono/v6/RQxK-3RA0Lnf3gnnnNrAsVlgUn8GogvcKKzoM9Dh-4E.woff2) format('woff2');
-	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
-}
-
-*/

@@ -243,7 +243,7 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
 	},
 	
 	didChangeIdsBloom: function() {
-		console.log(this.typeId() + ".didChangeIdsBloom()")
+		//console.log(this.typeId() + ".didChangeIdsBloom()")
 		//this._didChangeIdsBloomeNote = NotificationCenter.shared().newNotification().setSender(this.typeId()).setName("didChangeIdsBloom")
         this.servers().subnodes().forEach((server) => {
 			server.reconnect()

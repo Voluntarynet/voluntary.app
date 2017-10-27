@@ -153,7 +153,7 @@
     display: inline-block;
     position: relative;
     
-    font-family: AppRegular;
+    font-family: AppRegular, sans-serif;
     
     min-height: 20px;
     padding-top: 3px;

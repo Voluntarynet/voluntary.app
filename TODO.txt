@@ -1,3 +1,15 @@
+- fix item selection in shelf
+- add badge support?
+- select last selected node on shelf on addDidInit
+
+- integrate shelf with columns?
+    - separate column didClickRow(aRow) and addColumnForNode(aNode)
+    - add BrowserExpandableRow
+    - add way for node to request top toolbar color
+        - use white versions of tool icons if background is dark
+            - write a BMColor class to calc brightness
+            
+
 - select new user profile after creating it (animate it?)
 - always use column titles if only one column is displayed (which may not be in single column mode)
 

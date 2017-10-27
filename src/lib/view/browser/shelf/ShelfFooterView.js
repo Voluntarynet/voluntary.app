@@ -73,6 +73,7 @@ window.ShelfFooterView = DivView.extend().newSlots({
         return fs ? fs.clientHeight() : 0
     },
     
+    /*
     selectItems: function() {
         this.items().forEach((item) => { item.select() })
         return this
@@ -119,5 +120,5 @@ window.ShelfFooterView = DivView.extend().newSlots({
         }
         return this
     },
-
+    */
 })

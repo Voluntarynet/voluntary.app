@@ -3,7 +3,7 @@
 /* --- FieldView --------------------------- */
 
 .BMFieldRowView {
-	font-family: "AppRegular";
+	font-family: "AppRegular", sans-serif;
     background-color: white;
     opacity: 1;
     
@@ -133,7 +133,7 @@
     text-align: left;
 
     font-size: 12px;
-    font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+    font-family: AppMono, monospace;
 	font-weight: lighter;
 }
 
@@ -164,7 +164,7 @@
 
 .BMPointerFieldRowView {
 	border-bottom: 1px solid #ddd;
-	font-family: AppRegular;
+	font-family: "AppRegular", sans-serif;
 }
 
 /* --------------------------- Image --------------------------- */

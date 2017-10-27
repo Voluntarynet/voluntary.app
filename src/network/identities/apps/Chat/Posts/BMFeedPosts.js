@@ -34,4 +34,8 @@ window.BMFeedPosts = BMStorableNode.extend().newSlots({
 	    this.removeAllSubnodes()
 	    return this
 	},
+	
+	shelfIconName: function() {
+	    return "home3-white"
+	},
 })

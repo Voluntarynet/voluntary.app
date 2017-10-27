@@ -29,6 +29,13 @@ window.ShelfItemView = DivView.extend().newSlots({
         return this
     },
     
+    name: function() {
+        if (this.destinationNode()) {
+            return this.destinationNode().title()
+        }
+        return this.typeId()
+    },
+    
     setItemWidthHeight: function(itemWidth, itemHeight) {
 		//var itemWidth = 78
 		//var itemHeight = 70
@@ -105,7 +112,7 @@ window.ShelfItemView = DivView.extend().newSlots({
     },
     
     // --- mouse hover ---
-
+/*
     onMouseEnter: function(event) {
         console.log(this.typeId() + " onMouseEnter")
         this.setOpacity(1)
@@ -120,6 +127,7 @@ window.ShelfItemView = DivView.extend().newSlots({
         console.log(this.typeId() + " onMouseUp")
 
     },
+    */
     
 	// --- selecting ---
     
@@ -127,10 +135,16 @@ window.ShelfItemView = DivView.extend().newSlots({
         DivView.onClick.apply(this, [event])
         
         if (this.isSelectable()) {
-            console.log(this.typeId() + ".onClick()")
+            console.log(this.name() + ".onClick()")
             this.select()
-            this.tellParentViews("didClickItem", this)
+            this.tellParentViews("didClickItem", this)            
+
+            var destNode = this.destinationNode()
+            if (destNode) {
+                App.shared().browser().setNode(destNode).scheduleSyncFromNode() // this.browser().syncFromNode()
+            }
         }
+        
 		return false
     },
 
@@ -138,6 +152,7 @@ window.ShelfItemView = DivView.extend().newSlots({
 		if (this._isSelected != aBool) {
 	        this._isSelected = aBool
             this.show()
+            console.warn(this.name() + ".setIsSelected(" + aBool + ")")
 		}
         return this
     },

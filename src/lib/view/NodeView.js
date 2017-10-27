@@ -4,6 +4,7 @@ NodeView = DivView.extend().newSlots({
     node: null,
     ownsView: true,
     defaultSubnodeViewClass: null,
+    overrideSubviewProto: null,
 }).setSlots({
     
     // -------------------------------------
@@ -72,18 +73,39 @@ NodeView = DivView.extend().newSlots({
         return this.subviews().detect((aView) => { return aView.node() == aNode; })
     },
 
-    newSubviewForSubnode: function(aSubnode) {
-		var proto = aSubnode.viewClass()
+    subviewProtoForSubnode: function(aSubnode) {
+		var proto = this.overrideSubviewProto()
 		
 		if (!proto) {
-			//proto = this.defaultSubnodeViewClass()
+		    proto = aSubnode.viewClass()
 		}
-				
+		
+		/*
         if (!proto) {
-            throw new Error("missing proto view to create " + aNode.type() + " view")
-        }
+		    proto = this.defaultSubnodeViewClass()
+		}
+		*/
+				
+        return proto      
+    },
 
-		return proto.clone().setNode(aSubnode).setParentView(this)
+    
+    newSubviewForSubnode: function(aSubnode) {
+        if (!aSubnode) {
+            throw new Error("null aSubnode")
+        }
+        
+		var proto = this.subviewProtoForSubnode(aSubnode)
+		
+		if (!proto) {
+            throw new Error("no subviewProto for subnode " + aSubnode.typeId())
+		}
+		
+		return proto.clone().setNode(aSubnode) //.setParentView(this)
+    },
+    
+    visibleSubnodes: function() {
+        return this.node().subnodes()
     },
     
     syncFromNode: function () {
@@ -97,7 +119,7 @@ NodeView = DivView.extend().newSlots({
         this.node().prepareToSyncToView()
        
         var newSubviews = []
-        var subnodes = this.node().subnodes()
+        var subnodes = this.visibleSubnodes()
         
 		subnodes.forEach((subnode) => {
             var subview = this.subviewForNode(subnode) // get the current view for the node, if there is one

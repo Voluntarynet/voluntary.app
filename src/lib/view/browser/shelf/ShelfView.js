@@ -131,56 +131,29 @@ window.ShelfView = NodeView.extend().newSlots({
         item.setIconName("gear-filled-white").setDestinationNode(App.shared().about()).setToolTip("Settings")   
         item.setIsSelectable(false)
     },
-    
-    newSubviewForSubnode2: function(lid) {
-        var group = this.newShelfGroup().setNode(lid)
-        
-        // my posts
-        var imageUrl = lid.profile().profileImageDataUrl()
-        var feedNode = lid.apps().appNamed("Chat").feedPosts()
-        group.newShelfItem().setImageDataUrl(imageUrl).setDestinationNode(feedNode).setToolTip(lid.title())
-        
-        // feed
-        var myPostsNode = lid.apps().appNamed("Chat").myPosts()
-        group.newShelfItem().setIconName("home3-white").setDestinationNode(myPostsNode).setToolTip("My Posts")
-        
-        // notifications
-        //group.newShelfItem().setIconName("bell-white") 
-        
-        // direct messages
-        group.newShelfItem().setIconName("mail-white").setDestinationNode(lid.apps().appNamed("Chat").threads())
-        
-        // profile
-        group.newShelfItem().setIconName("user-white").setDestinationNode(lid.profile())
-        
-        // contacts
-        group.newShelfItem().setIconName("users-white").setDestinationNode(lid.remoteIdentities())
-        
-        // drafts
-        group.newShelfItem().setIconName("write-white").setDestinationNode(lid.apps().appNamed("Chat").drafts()) 
-        
-        group.compact()
-        return this  
-    },
-        
+*/
 
+	performOnSubviewsExcept: function(methodName, exceptedSubview) {
+        this.subviews().forEach(subview => {
+            if (subview != exceptedSubview) {
+                subview[methodName].apply(subview)
+            }
+        })
+
+		return this
+	},
     
     didClickGroup: function(clickedGroup) {
         console.log(this.typeId() + ".didClickGroup(" + clickedGroup.typeId() + ")")
-        if (this.scrollView().hasSubview(clickedGroup)) {
 
-            this.groups().forEach(group => {
-                if (group != clickedGroup) {
-                    group.compact()
-                }
-            })
-            clickedGroup.uncompact()
-            console.log(this.typeId() + " scrolling to subview " + clickedGroup.typeId() + "")
-            this.scrollView().scrollSubviewToTop(clickedGroup)
-        } else {
-            console.warn(this.typeId() + " missing subview " + clickedGroup.typeId() + "")
-        }
+		this.scrollView().performOnSubviewsExcept("compact", clickedGroup)
+		clickedGroup.uncompact()
+        this.scrollView().scrollSubviewToTop(clickedGroup)
+
+		return this
     },
+
+/*
     
 	// --- groups ---
 

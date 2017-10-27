@@ -2,7 +2,7 @@
 
 window.ShelfItemGroupView = NodeView.extend().newSlots({
     type: "ShelfItemGroupView",
-    isCompacted: false,
+    isCompacted: true,
     isAlwaysSelected: false,
 }).setSlots({
     init: function () {
@@ -33,7 +33,6 @@ window.ShelfItemGroupView = NodeView.extend().newSlots({
 		return this
 	},
 	
-    /*
 
     
     // --------------
@@ -45,6 +44,8 @@ window.ShelfItemGroupView = NodeView.extend().newSlots({
     didClickItem: function(clickedItem) {
         console.log(this.typeId() + ".didClickItem(" + clickedItem.typeId() + ")")
         
+		//this.scrollView().performOnSubviewsExcept("unselect", clickedItem)
+
         this.items().forEach((item) => {
             if (item != clickedItem) {
                 if (item != this.firstItem()) {
@@ -97,7 +98,6 @@ window.ShelfItemGroupView = NodeView.extend().newSlots({
         return this
     },
 
-*/
 	showCompaction: function() {
 		if (this.isCompacted()) {
         	this.setMinAndMaxHeight(this.firstItemHeight())

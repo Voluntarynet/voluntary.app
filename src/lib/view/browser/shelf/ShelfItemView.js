@@ -50,6 +50,8 @@ window.ShelfItemView = NodeView.extend().newSlots({
 			this.iconView().setBackgroundColor("#aaa")
 		}
 		
+		this.showSelection()
+		
 		return this
 	},
     
@@ -108,7 +110,7 @@ window.ShelfItemView = NodeView.extend().newSlots({
 	},
 	
 	// --- colors ---
-	
+	/*
 	currentBgColor: function() {
 		if (this.isSelected()) {
 			return this.selectedBgColor()
@@ -122,11 +124,9 @@ window.ShelfItemView = NodeView.extend().newSlots({
     },
     
     selectedBgColor: function() {
-		if (!this.column()) {
-			return "transparent"
-		}
-        return this.column().selectionColor()
+        return "transparent"
     },
+*/
     
 	// --- selecting ---
     
@@ -150,20 +150,18 @@ window.ShelfItemView = NodeView.extend().newSlots({
     setIsSelected: function (aBool) {
 		if (this._isSelected != aBool) {
 	        this._isSelected = aBool
-            this.show()
+            this.showSelection()
             console.warn(this.name() + ".setIsSelected(" + aBool + ")")
 		}
         return this
     },
     
-    show: function() {
+    showSelection: function() {
         if (this.isSelected()) {
             this.showSelected()    
         } else {
             this.showUnselected() 
-        }
-    
-        //this.updateSubviews()        
+        }    
     },
 
 	showSelected: function() {

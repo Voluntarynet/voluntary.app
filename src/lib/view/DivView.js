@@ -985,11 +985,28 @@ window.DivView = ideal.Proto.extend().newSlots({
         return anSubview
     },
 
-    // --- subview calculations ---
+    // --- subview utilities ---
     
     sumOfSubviewHeights: function() {
-        return this.subviews().sum((subview) => { return subview.clientHeight() })
+		console.log(this.typeId() + ".sumOfSubviewHeights()")
+		
+        var sum = this.subviews().sum((subview) => { 
+			console.log("    subview.clientHeight() = ", subview.clientHeight())
+			return subview.clientHeight() 
+		})
+		console.log("    sum: " + sum)
+		return sum
     },
+
+	performOnSubviewsExcept: function(methodName, exceptedSubview) {
+        this.subviews().forEach(subview => {
+            if (subview != exceptedSubview) {
+                subview[methodName].apply(subview)
+            }
+        })
+
+		return this
+	},
     
 	// --- fade animations ---
 	

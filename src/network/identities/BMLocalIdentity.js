@@ -131,10 +131,11 @@ window.BMLocalIdentity = BMKeyPair.extend().newSlots({
         var feed     = chat.feedPosts()
         var posts    = chat.myPosts()
         var threads  = chat.threads()
+        var profile = this.profile()
         var contacts = this.remoteIdentities()
         var drafts   = chat.drafts()
         
-        return [feed, posts, threads, contacts, drafts]
+        return [feed, posts, threads, profile, contacts, drafts]
     },
         
         

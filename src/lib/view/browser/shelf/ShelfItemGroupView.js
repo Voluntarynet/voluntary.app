@@ -12,43 +12,29 @@ window.ShelfItemGroupView = NodeView.extend().newSlots({
 		
 		var itemSize = 80
 		this.setMinAndMaxWidth(itemSize)
-
+		this.setOverrideSubviewProto(ShelfItemView)
         return this
     },
 
     visibleSubnodes: function() {
         return this.node().shelfSubnodes() 
     },
-
+/*
     newSubviewForSubnode: function(aSubnode) {
         var newSubview = NodeView.newSubviewForSubnode(aSubnode)
         newSubview.setOverrideSubviewProto(ShelfItemView)
         return newSubview
     },
-        
+*/
+    
+	syncFromNode: function() {
+		NodeView.syncFromNode.apply(this)
+        this.showCompaction()
+		return this
+	},
+	
     /*
-    setIsAlwaysSelected: function(aBool) {
-        this._isAlwaysSelected = aBool
-        if (aBool) {
-            this.selectItems()
-        }
-        return this
-    },
-    
-    // --- items ---
-    
-    items: function() {
-        return this.subviews()
-    },
-    
-    addItem: function(shelfItemView) {
-        this.addSubview(shelfItemView)
-        return this
-    },
-    
-    firstItem: function() {
-        return this.items()[0]
-    },
+
     
     // --------------
     
@@ -70,18 +56,37 @@ window.ShelfItemGroupView = NodeView.extend().newSlots({
         this.shelf().didClickGroup(this)
     },
     
-    newShelfItem: function() {
-        var item = ShelfItemView.clone()
-        this.addItem(item)
-        item.showUnselected()
-        return item
+
+    // --- items ---
+    
+    items: function() {
+        return this.subviews()
     },
     
+    addItem: function(shelfItemView) {
+        this.addSubview(shelfItemView)
+        return this
+    },
+    
+    firstItem: function() {
+        return this.items()[0]
+    },
+
     firstItemHeight: function() {
         var fs = this.firstItem()    
         return fs ? fs.clientHeight() : 0
     },
     
+    setIsAlwaysSelected: function(aBool) {
+        this._isAlwaysSelected = aBool
+        if (aBool) {
+            this.selectItems()
+        }
+        return this
+    },
+
+	// --- selection ---
+
     selectItems: function() {
         this.items().forEach((item) => { item.select() })
         return this
@@ -91,12 +96,23 @@ window.ShelfItemGroupView = NodeView.extend().newSlots({
         this.items().forEach((item) => { item.unselect() })
         return this
     },
+
+*/
+	showCompaction: function() {
+		if (this.isCompacted()) {
+        	this.setMinAndMaxHeight(this.firstItemHeight())
+		} else {
+            var newHeight = this.sumOfSubviewHeights()
+            this.setMinAndMaxHeight(newHeight)			
+		}
+		return this
+	},
     
     compact: function() {
         if (!this._isCompacted) {
             this._isCompacted = true
             
-            this.setMinAndMaxHeight(this.firstItemHeight())
+            this.showCompaction()
             
             if (!this.isAlwaysSelected()) {
                 this.unselectItems()
@@ -109,10 +125,11 @@ window.ShelfItemGroupView = NodeView.extend().newSlots({
     uncompact: function() {
         if (this._isCompacted) {
             this._isCompacted = false
+
+            this.showCompaction()
+
             var fs = this.firstItem()
             if (fs) {
-                var newHeight = this.sumOfSubviewHeights()
-                this.setMinAndMaxHeight(newHeight)
                 fs.select()
             }
             
@@ -128,6 +145,5 @@ window.ShelfItemGroupView = NodeView.extend().newSlots({
         }
         return this
     },
-    */
 
 })

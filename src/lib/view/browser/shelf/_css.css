@@ -75,7 +75,7 @@
     padding: 0;
     overflow: hidden;
 
-    border-bottom: 1px dashed #aaa; 
+    border-bottom: 0px dashed #aaa; 
 }
 
 .ShelfItemView:hover {

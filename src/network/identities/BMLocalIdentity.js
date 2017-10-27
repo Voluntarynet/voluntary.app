@@ -126,15 +126,15 @@ window.BMLocalIdentity = BMKeyPair.extend().newSlots({
 	},
 	
 	shelfSubnodes: function() {    
-        //var shelfSubnodes = []
         var chat = this.apps().appNamed("Chat")
-        var feedNode = chat.feedPosts()
-        var myPostsNode = chat.myPosts()
-        var threads = chat.threads()
-        var contacts = lid.remoteIdentities()
-        var drafts = chat.drafts()
+
+        var feed     = chat.feedPosts()
+        var posts    = chat.myPosts()
+        var threads  = chat.threads()
+        var contacts = this.remoteIdentities()
+        var drafts   = chat.drafts()
         
-        return [feedNode, myPostsNode, threads, contacts, drafts]
+        return [feed, posts, threads, contacts, drafts]
     },
         
         

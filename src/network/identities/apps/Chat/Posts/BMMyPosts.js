@@ -33,11 +33,7 @@ window.BMMyPosts = BMStorableNode.extend().newSlots({
 	    return this
 	},
 	
-	localIdentity: function() {
-	    return this.parentNode()
-	},
-	
-	shelfIconUrl: function() {
-	    return this.localIdentity().profile().profileImageDataUrl()
+	shelfIconName: function() {
+	    return "home3-white"
 	},
 })

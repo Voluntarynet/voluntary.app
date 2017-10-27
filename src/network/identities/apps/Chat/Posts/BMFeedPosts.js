@@ -35,7 +35,16 @@ window.BMFeedPosts = BMStorableNode.extend().newSlots({
 	    return this
 	},
 	
-	shelfIconName: function() {
-	    return "home3-white"
+	
+	chat: function() {
+	    return this.parentNode()
+	},
+	
+	localIdentity: function() {
+		return this.chat().localIdentity()
+	},
+	
+	shelfIconUrl: function() {
+	    return this.localIdentity().profile().profileImageDataUrl()
 	},
 })

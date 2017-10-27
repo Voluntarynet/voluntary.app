@@ -329,10 +329,22 @@ window.BMNode = ideal.Proto.extend().newSlots({
     },
     */
     
+	// --- shelf ---
+	
     shelfSubnodes: function() {
         return []
     },
-    
+
+	shelfIconName: function() {
+	    return null
+	},
+	
+	shelfIconUrl: function() {
+	    return null
+	},
+
+	// ---------------------------------------
+	
     prepareToAccess: function() {
         
     },

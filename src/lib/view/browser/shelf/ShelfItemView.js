@@ -1,6 +1,6 @@
 "use strict"
 
-window.ShelfItemView = DivView.extend().newSlots({
+window.ShelfItemView = NodeView.extend().newSlots({
     type: "ShelfItemView",
     isSelected: false,
     isSelectable: true,
@@ -9,7 +9,7 @@ window.ShelfItemView = DivView.extend().newSlots({
 	destinationNode: null,
 }).setSlots({
     init: function () {
-        DivView.init.apply(this)
+        NodeView.init.apply(this)
         this.setIsRegisteredForClicks(true)
         this.turnOffUserSelect()
 		this.setTransition("all 0.35s")
@@ -35,6 +35,23 @@ window.ShelfItemView = DivView.extend().newSlots({
         }
         return this.typeId()
     },
+
+	syncFromNode: function() {
+		var node = this.node()
+		this.setDestinationNode(node)
+		var iconUrl = node.shelfIconUrl()
+		var iconName = node.shelfIconName()
+		
+		if (iconUrl) {
+			this.setImageDataUrl(iconUrl)
+		} else if (iconName) {
+			this.setIconName(iconName)
+		} else {
+			this.iconView().setBackgroundColor("#aaa")
+		}
+		
+		return this
+	},
     
     setItemWidthHeight: function(itemWidth, itemHeight) {
 		//var itemWidth = 78
@@ -44,8 +61,8 @@ window.ShelfItemView = DivView.extend().newSlots({
 		this.setMinAndMaxHeight(itemHeight)
 		
         var iv = this.iconView()
-        var iconWidth = itemWidth*.7
-        var iconHeight = itemHeight*.7
+        var iconWidth  = itemWidth  * 0.7
+        var iconHeight = itemHeight * 0.7
         iv.setPosition("relative")
         iv.setLeft((itemWidth-iconWidth)/2)
         iv.setTop((itemHeight-iconHeight)/2)
@@ -111,28 +128,10 @@ window.ShelfItemView = DivView.extend().newSlots({
         return this.column().selectionColor()
     },
     
-    // --- mouse hover ---
-/*
-    onMouseEnter: function(event) {
-        console.log(this.typeId() + " onMouseEnter")
-        this.setOpacity(1)
-    },
-    
-    onMouseLeave: function(event) {
-        console.log(this.typeId() + " onMouseLeave")
-        this.show() 
-    },
-    
-    onMouseUp: function (event) {
-        console.log(this.typeId() + " onMouseUp")
-
-    },
-    */
-    
 	// --- selecting ---
     
     onClick: function (event) {
-        DivView.onClick.apply(this, [event])
+        NodeView.onClick.apply(this, [event])
         
         if (this.isSelectable()) {
             console.log(this.name() + ".onClick()")

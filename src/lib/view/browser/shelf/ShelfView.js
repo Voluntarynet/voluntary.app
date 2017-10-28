@@ -16,7 +16,7 @@ window.ShelfView = NodeView.extend().newSlots({
         this.setScrollView(this.addSubview(NodeView.clone().setDivClassName("ShelfScrollView")))
         this.scrollView().setOverrideSubviewProto(window.ShelfItemGroupView)
         this.setFooterView(this.addSubview(ShelfFooterView.clone()))        
-
+		
         return this
     },
         
@@ -27,17 +27,21 @@ window.ShelfView = NodeView.extend().newSlots({
         var lids = App.shared().localIdentities()
         this.setNode(lids)
         this.scrollView().setNode(lids)
+
+		this.setupFooter()
         return this      
     },
     
     browser: function() {
         return App.shared().browser()
     },
+
+	// --- hide ----------------------
     
     isHidden: function() {
         return this.parentView() == null
     },
-    
+
     unhide: function() {
         if (this.subviews().length) {
             this.setMinAndMaxWidth(this.defaultWidth())
@@ -49,20 +53,8 @@ window.ShelfView = NodeView.extend().newSlots({
         this.setMinAndMaxWidth(0)
         this.browser().setLeft(0)
     },
-    
-    /*
-    selectFirstGroup: function() {
-        var firstGroup = this.groups()[0]
-        if (firstGroup) {
-            firstGroup.uncompact()
-        }        
-    },
-    
-    setupFooter: function() {
-        this.addCreateIdentityGroup()
-        this.addSettingsGroup()        
-    },
-    */
+
+	// --- sync -----------------------
     
     didChangeIdentity: function() {
 	    this.scheduleSyncFromNode()
@@ -71,80 +63,22 @@ window.ShelfView = NodeView.extend().newSlots({
     didChangeIdentities: function() {
 	    this.scheduleSyncFromNode()
     },
-
-    /*
-    syncWithLocalIdentities: function() {
-        console.log("--------------- " + this.typeId() + ".syncWithLocalIdentities()")
-        this.scrollView().removeAllSubviews()
-        var groups = App.shared().localIdentities().subnodes().forEach(lid => this.addGroupForLid(lid))
-        
-        if (this.needsToSelectLastItem()) {
-            this.setNeedsToSelectLastItem(false)
-            this.clickLastGroupProfile()
-        }
-    },
-    */
     
     syncFromNode: function () {
         this.scrollView().syncFromNode()
+
+		if (this.needsToSelectLastItem()) {
+			this.setNeedsToSelectLastItem(false)
+			this.clickLastGroupProfile()
+	    }
+        
         return this
     },
     
-    /*
-    newFooterItem: function() {
-        return this.footerView().addSubview(ShelfItemView.clone())
-    },
-    
-    addCreateIdentityGroup: function() {
-        var item = this.newFooterItem()
-        item.setIconName("add-user-white").setTarget(this).setAction("createIdentity").setToolTip("Create New Identity")
-        item.setIsSelectable(false)
-        //item.setIsAlwaysSelected(true)     
-    },
-    
-    createIdentity: function() {
-        //SyncScheduler.scheduleTargetAndMethod(this, "finishCreateIdentity")
-        this.finishCreateIdentity()
-        return this
-    },
-    
-    finishCreateIdentity: function() {        
-        var newLid = App.shared().localIdentities().add()
-        this.syncWithLocalIdentities()
-            this.setNeedsToSelectLastItem(true)
-        //SyncScheduler.scheduleTargetAndMethod(this, "clickLastGroupProfile", -1)
-    },
-    
-    clickLastGroupProfile: function() {
-        var group = this.groups().last()
-        var item = group.items()[0]
-        console.log(this.typeId() + ".clickLastGroupProfile()")
-        item.onClick(null)
-    },
-    
-    groupWithNode: function(aNode) {
-        return this.groups().detect(group => group.node() === aNode )
-    },
-    
-    addSettingsGroup: function() {
-        var item = this.newFooterItem()
-        item.setIconName("gear-filled-white").setDestinationNode(App.shared().about()).setToolTip("Settings")   
-        item.setIsSelectable(false)
-    },
-*/
-
-	performOnSubviewsExcept: function(methodName, exceptedSubview) {
-        this.subviews().forEach(subview => {
-            if (subview != exceptedSubview) {
-                subview[methodName].apply(subview)
-            }
-        })
-
-		return this
-	},
+	// --- clicks -----------------------
     
     didClickGroup: function(clickedGroup) {
-        console.log(this.typeId() + ".didClickGroup(" + clickedGroup.typeId() + ")")
+        //console.log(this.typeId() + ".didClickGroup(" + clickedGroup.typeId() + ")")
 
 		this.scrollView().performOnSubviewsExcept("compact", clickedGroup)
 		clickedGroup.uncompact()
@@ -153,48 +87,56 @@ window.ShelfView = NodeView.extend().newSlots({
 		return this
     },
 
-/*
-    
-	// --- groups ---
-
-    groups: function() {
-        return this.scrollView().subviews()
+    /*
+    selectFirstGroup: function() {
+        var firstGroup = this.groups()[0]
+        if (firstGroup) {
+            firstGroup.uncompact()
+        }        
     },
-    
-    newShelfGroup: function() {
-        var group = ShelfItemGroupView.clone()
-        this.scrollView().addSubview(group)
-        return group
-    },
+    */
 
-	// --- selection ---
-	
-	setIsSelected: function(aBool) {
-		if (this._isSelected != aBool) {		
-			this._isSelected = aBool
-		
-			if (aBool) {
-				this.focus()
-			} else {
-				this.blur()
-			}
-		}
-		
-		return this
+
+	// --- footer -----------------------
+
+
+	setupFooter: function() {
+	    this.addCreateIdentityGroup()
+	    this.addSettingsGroup()        
 	},
-    
-    selectedItems: function() {
-        return this.subviews().filter((item) => { return item.isSelected(); })
+
+    newFooterItem: function() {
+        return this.footerView().addSubview(ShelfItemView.clone())
     },
 
-    selectedItem: function() {
-        return this.selectedItems()[0]
+	// create identity 
+
+    addCreateIdentityGroup: function() {
+        var item = this.newFooterItem()
+        item.setIconName("add-user-white").setTarget(this).setAction("createIdentity").setToolTip("Create New Identity")
+        item.setIsSelectable(false)
+        //item.setIsAlwaysSelected(true)     
     },
-    
-    unselectAllItems: function() {
-		this.groups().forEach(row => row.unselect())
-		return this
-	},
-	*/
+
+    createIdentity: function() {     
+        var newLid = App.shared().localIdentities().add()
+        this.scheduleSyncFromNode()
+        this.setNeedsToSelectLastItem(true)
+    },
+
+    clickLastGroupProfile: function() {
+        var group = this.scrollView().subviews().last()
+        var item = group.items()[0]
+        item.onClick(null)
+    },
+
+	// settings 
+
+    addSettingsGroup: function() {
+        var item = this.newFooterItem()
+		var settings = App.shared().about()
+        item.setIconName("gear-filled-white").setDestinationNode(settings).setToolTip("Settings")   
+        item.setIsSelectable(false)
+    },
 })
 

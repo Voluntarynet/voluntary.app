@@ -132,16 +132,17 @@ window.ShelfItemView = NodeView.extend().newSlots({
     
     onClick: function (event) {
         NodeView.onClick.apply(this, [event])
+        //console.log(this.name() + ".onClick()")
         
         if (this.isSelectable()) {
-            console.log(this.name() + ".onClick()")
             this.select()
             this.tellParentViews("didClickItem", this)            
 
-            var destNode = this.destinationNode()
-            if (destNode) {
-                App.shared().browser().setNode(destNode).scheduleSyncFromNode() // this.browser().syncFromNode()
-            }
+        }
+
+        var destNode = this.destinationNode()
+        if (destNode) {
+            App.shared().browser().setNode(destNode).scheduleSyncFromNode() 
         }
         
 		return false
@@ -151,7 +152,7 @@ window.ShelfItemView = NodeView.extend().newSlots({
 		if (this._isSelected != aBool) {
 	        this._isSelected = aBool
             this.showSelection()
-            console.warn(this.name() + ".setIsSelected(" + aBool + ")")
+            //console.warn(this.name() + ".setIsSelected(" + aBool + ")")
 		}
         return this
     },

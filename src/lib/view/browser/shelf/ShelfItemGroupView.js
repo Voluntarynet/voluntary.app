@@ -42,7 +42,7 @@ window.ShelfItemGroupView = NodeView.extend().newSlots({
     },
     
     didClickItem: function(clickedItem) {
-        console.log(this.typeId() + ".didClickItem(" + clickedItem.typeId() + ")")
+        //console.log(this.typeId() + ".didClickItem(" + clickedItem.typeId() + ")")
         
 		//this.scrollView().performOnSubviewsExcept("unselect", clickedItem)
 

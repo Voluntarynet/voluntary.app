@@ -730,7 +730,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 
 	userSelect: function() {
         var style = this.cssStyle()
-		var result = this.userSelectKeys().detect((key) => { return style[key] })
+		var result = this.userSelectKeys().detect(key => style[key])
 		result = result || style.userSelect
 		return result 
 	},
@@ -752,7 +752,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 		//console.log("'" + aString + "' this.userSelect() = '" + this.userSelect() + "' == ", this.userSelect() == aString)
 		if (this.userSelect() != aString) {
 			style.userSelect = aString
-			this.userSelectKeys().forEach((key) => { style[key] = aString })
+			this.userSelectKeys().forEach(key => style[key] = aString)
 		}
         return this
     },
@@ -975,7 +975,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
     
     addSubviews: function(someSubviews) {
-        someSubviews.forEach( (subview) => { this.addSubview(subview) })
+        someSubviews.forEach(subview => this.addSubview(subview))
         return this
     },
     
@@ -988,14 +988,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     // --- subview utilities ---
     
     sumOfSubviewHeights: function() {
-		console.log(this.typeId() + ".sumOfSubviewHeights()")
-		
-        var sum = this.subviews().sum((subview) => { 
-			console.log("    subview.clientHeight() = ", subview.clientHeight())
-			return subview.clientHeight() 
-		})
-		console.log("    sum: " + sum)
-		return sum
+		return this.subviews().sum(subview => subview.clientHeight())
     },
 
 	performOnSubviewsExcept: function(methodName, exceptedSubview) {

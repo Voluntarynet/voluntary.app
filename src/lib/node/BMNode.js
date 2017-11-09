@@ -655,4 +655,13 @@ window.BMNode = ideal.Proto.extend().newSlots({
         }
     },    	
     
+	// node view badge
+
+	nodeViewShouldBadge: function() {
+		return false
+	},
+
+	nodeViewBadgeTitle: function() {
+		return null
+	},
 })

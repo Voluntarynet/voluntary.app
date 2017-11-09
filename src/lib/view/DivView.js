@@ -120,7 +120,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 */
 
-	setCssAttribute: function(key, newValue) {
+	setCssAttribute: function(key, newValue, didChangeCallbackFunc) {
 		var style = this.cssStyle()
 		var oldValue = style[key]
 		if(String(oldValue) != String(newValue)) {
@@ -129,7 +129,12 @@ window.DivView = ideal.Proto.extend().newSlots({
 			} else {
 				style[key] = newValue
 			}
+			
+			if (didChangeCallbackFunc) {
+				didChangeCallbackFunc()
+			}
 		}
+		
 		return this
 	},
 	
@@ -783,13 +788,14 @@ window.DivView = ideal.Proto.extend().newSlots({
 	
 	setWidth: function(s) {
 	    assert(typeof(s) == "string")
-	    this.setCssAttribute("width", s)
+	    this.setCssAttribute("width", s, () => { this.didChangeWidth() })
 	    return this
 	},
 	
 	setWidthPercentage: function(aNumber) {
 	    assert(typeof(aNumber) == "number")
-	    this.setCssAttribute("width", aNumber + "%")
+		var newValue = aNumber + "%"
+	    this.setCssAttribute("width", newValue, () => { this.didChangeWidth() })
 	    return this
 	},
 
@@ -857,10 +863,16 @@ window.DivView = ideal.Proto.extend().newSlots({
 			throw new Error(type + " is invalid argument type")
 		}
 		
-		this.setCssAttribute("min-width", newValue)
+		this.setCssAttribute("min-width", newValue, () => { this.didChangeWidth() })
 
         return this        
     },
+
+	didChangeWidth: function() {
+	},
+	
+	didChangeHeight: function() {	
+	},
 
 	setMaxWidth: function(v) {
 		if (v == this._maxWidth) {
@@ -879,8 +891,9 @@ window.DivView = ideal.Proto.extend().newSlots({
 			throw new Error(type + " is invalid argument type")
 		}
 		this._maxWidth = newValue
-		this.setCssAttribute("max-width", newValue)
-		
+
+		this.setCssAttribute("max-width", newValue, () => { this.didChangeWidth() })
+				
         return this        
     },
 
@@ -895,38 +908,38 @@ window.DivView = ideal.Proto.extend().newSlots({
 	setMinAndMaxHeight: function(aNumber) {
 		assert(typeof(aNumber) == "number")
 		var newValue = aNumber + "px"
-		this.setCssAttribute("min-height", newValue)
-		this.setCssAttribute("max-height", newValue)
+		this.setCssAttribute("min-height", newValue, () => { this.didChangeHeight() })
+		this.setCssAttribute("max-height", newValue, () => { this.didChangeHeight() })
         return this		
 	},
 
 	setMinAndMaxHeightPercentage: function(aNumber) {
 		assert(typeof(aNumber) == "number")
 		var newValue = aNumber + "%"
-		this.setCssAttribute("min-height", newValue)
-		this.setCssAttribute("max-height", newValue)
+		this.setCssAttribute("min-height", newValue, () => { this.didChangeHeight() })
+		this.setCssAttribute("max-height", newValue, () => { this.didChangeHeight() })
         return this		
 	},
 	
 	setHeightPercentage: function(aNumber) {
 		assert(typeof(aNumber) == "number")
 		var newValue = aNumber + "%"
-		this.setCssAttribute("height", newValue)
+		this.setCssAttribute("height", newValue, () => { this.didChangeHeight() })
         return this		
 	},
 	
 	setMinHeight: function(newValue) {
-		this.setCssAttribute("min-height", newValue)
+		this.setCssAttribute("min-height", newValue, () => { this.didChangeHeight() })
         return this		
 	},
 	
 	setMaxHeight: function(newValue) {
-		this.setCssAttribute("max-height", newValue)
+		this.setCssAttribute("max-height", newValue, () => { this.didChangeHeight() })
         return this		
 	},
 
 	setHeight: function(newValue) {
-		this.setCssAttribute("height", newValue)
+		this.setCssAttribute("height", newValue, () => { this.didChangeHeight() })
         return this		
 	},	
 	
@@ -2071,4 +2084,27 @@ window.DivView = ideal.Proto.extend().newSlots({
         var isVisible = (top >= 0) && (bottom <= window.innerHeight);
         return isVisible;
     },
+
+	// helpers
+	
+	verticallyAlignAbsoluteNow: function() {
+		var pv = this.parentView()
+		if (pv) {
+			this.setPosition("absolute")
+			this.setTop(pv.clientHeight()/2 - this.clientHeight()/2)
+			console.log("parent height: ", pv.clientHeight() + " height:" + this.clientHeight())
+			console.log("new top: ", this.top())
+		}
+		return this
+	},
+	
+	horizontallyAlignAbsoluteNow: function() {
+		var pv = this.parentView()
+		if (pv) {
+			this.setPosition("absolute")
+			this.setRight(pv.clientWidth()/2 - this.clientWidth()/2)
+		}
+		return this
+	},
+	
 })

@@ -6,6 +6,8 @@ window.ShelfItemView = NodeView.extend().newSlots({
     isSelectable: true,
 	restCloseButtonOpacity: 0.4,
 	iconView: null,
+	badgeView: null,
+	markerView: null,
 	destinationNode: null,
 }).setSlots({
     init: function () {
@@ -19,15 +21,33 @@ window.ShelfItemView = NodeView.extend().newSlots({
 		var iv = DivView.clone().setDivClassName("ShelfIconView")
 		this.setIconView(iv)
         this.addSubview(iv)
-
 		iv.makeBackgroundNoRepeat()
 		//this.makeBackgroundContain()
 		iv.makeBackgroundCentered()
+
+		// this.setupBadgeView()
+		this.setupMarkerView()
 
         this.setItemWidthHeight(78, 70)
 
         return this
     },
+
+	setupBadgeView: function() {	
+		var v = DivView.clone().setDivClassName("ShelfBadgeView")
+		this.setBadgeView(v)
+	    this.addSubview(v)
+		v.setInnerHTML("1212")
+		return this
+	},
+	
+	setupMarkerView: function() {	
+		var v = DivView.clone().setDivClassName("ShelfMarkerView")
+		this.setMarkerView(v)
+	    this.addSubview(v)
+		v.setOpacity(1)
+		return this
+	},
     
     name: function() {
         if (this.destinationNode()) {
@@ -52,6 +72,22 @@ window.ShelfItemView = NodeView.extend().newSlots({
 		
 		this.showSelection()
 		
+		//console.log("vert align")
+		if (this.node().nodeViewShouldBadge()) {
+			this.markerView().setOpacity(0.5)
+		} else {
+			this.markerView().setOpacity(0)
+		}
+		//this.markerView().verticallyAlignAbsoluteNow()
+		
+		return this
+	},
+	
+	didChangeHeight: function() {
+		NodeView.didChangeHeight.apply(this)
+		console.log(this.typeId() + " didChangeHeight")
+		//this.markerView().verticallyAlignAbsoluteNow()
+	    SyncScheduler.scheduleTargetAndMethod(this.markerView(), "verticallyAlignAbsoluteNow", 0)
 		return this
 	},
     

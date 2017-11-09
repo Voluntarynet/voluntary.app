@@ -42,4 +42,12 @@ window.BMPostDrafts = BMStorableNode.extend().newSlots({
 	shelfIconName: function() {
 	    return "write-white"
 	},
+	
+	nodeViewShouldBadge: function() {
+		return this.subnodesLength() > 0
+	},
+	
+	nodeViewBadgeTitle: function() {
+		return null
+	},
 })

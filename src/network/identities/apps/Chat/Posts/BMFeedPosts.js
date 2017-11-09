@@ -3,6 +3,7 @@
 
 window.BMFeedPosts = BMStorableNode.extend().newSlots({
     type: "BMFeedPosts",
+    hasRead: false,
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
@@ -47,4 +48,25 @@ window.BMFeedPosts = BMStorableNode.extend().newSlots({
 	shelfIconUrl: function() {
 	    return this.localIdentity().profile().profileImageDataUrl()
 	},
+	
+	// hasRead
+	
+	firstUnreadPost: function() {
+	    return this.subnodes().detect(post => !post.hasRead())
+    },
+    
+    updateHasRead: function() {
+        this.setHasRead(this.firstUnreadPost() == null)
+        return this
+    },
+    
+    didChangeSubnodeList: function() {
+        BMStorableNode.didChangeSubnodeList.apply(this)
+        this.updateHasRead()
+        return this
+    },
+    
+    nodeViewShouldBadge: function() {
+        return !this.hasRead()
+    },
 })

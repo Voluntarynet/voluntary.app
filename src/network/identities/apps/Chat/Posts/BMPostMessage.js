@@ -4,6 +4,8 @@
 window.BMPostMessage = BMAppMessage.extend().newSlots({
     type: "BMPostMessage",
 	content: "",
+
+    hasRead: false,
 	
 	replyCount: 0,
 	repostCount: 0,
@@ -12,12 +14,11 @@ window.BMPostMessage = BMAppMessage.extend().newSlots({
 	didReply: false,
 	didRepost: false,
 	didLike: false,
-
 }).setSlots({
     
     init: function () {
         BMAppMessage.init.apply(this)
-        this.addStoredSlots(["content", "replyCount", "repostCount", "likeCount"])
+        this.addStoredSlots(["content", "hasRead", "replyCount", "repostCount", "likeCount"])
         this.addAction("delete")
         this.setShouldStore(true)	
 		this.setContent("...".loremIpsum(4, 100))	
@@ -137,6 +138,28 @@ window.BMPostMessage = BMAppMessage.extend().newSlots({
     
     incrementLikeCount: function() {
         this.setLikeCount(this.likeCount() + 1)
+        return this
+    },
+    
+    // link
+    
+    nodeRowLink: function() {
+        return this.senderId().profile()
+    },
+    
+    // updating hasRead
+    
+    nodeBecameVisible: function() {
+        BMAppMessage.nodeBecameVisible.apply(this)
+        //console.log(this.typeId() + ".hasRead() = ", this.hasRead())
+        if (!this.hasRead()) {
+            console.log(this.typeId() + " marking read")
+            this.setHasRead(true)
+            this.parentNode().didUpdateNode()
+        }
+        //console.log(this.typeId() + ".nodeBecameVisible()")
+        //console.log(this.typeId() + ".hasRead() = ", this.hasRead())
+        
         return this
     },
 })

@@ -121,6 +121,6 @@
 	margin: 0px;
 	
 	background-color: white;
-	opacity: 0.5;
+	opacity: 0;
     transition: opacity 0.5s ease;
 }

@@ -85,8 +85,6 @@ window.ShelfItemView = NodeView.extend().newSlots({
 	
 	didChangeHeight: function() {
 		NodeView.didChangeHeight.apply(this)
-		console.log(this.typeId() + " didChangeHeight")
-		//this.markerView().verticallyAlignAbsoluteNow()
 	    SyncScheduler.scheduleTargetAndMethod(this.markerView(), "verticallyAlignAbsoluteNow", 0)
 		return this
 	},
@@ -207,7 +205,7 @@ window.ShelfItemView = NodeView.extend().newSlots({
 	},
 	
 	showUnselected: function() {
-        this.setOpacity(0.3)		
+        this.setOpacity(0.45)		
 	},
     
     select: function() {

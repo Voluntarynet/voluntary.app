@@ -54,8 +54,8 @@ window.BMNode = ideal.Proto.extend().newSlots({
     init: function () {
         this._subnodes = []
         this._actions = []        
-        this._didUpdateNodeNote = NotificationCenter.shared().newNotification().setSender(this._uniqueId).setName("didUpdateNode")
-        this._shouldFocusSubnodeNote = NotificationCenter.shared().newNotification().setSender(this._uniqueId).setName("shouldFocusSubnode")
+        this._didUpdateNode = NotificationCenter.shared().newNotification().setSender(this._uniqueId).setName("didUpdateNode")
+        this._shouldFocusSubnode = NotificationCenter.shared().newNotification().setSender(this._uniqueId).setName("shouldFocusSubnode")
         this._nodeMinWidth = 180
         this.scheduleFinalize()
         return this
@@ -99,6 +99,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     },
         
     nodeRowLink: function() {
+        // used by UI row views to browse into next column
         return this
     },    
 
@@ -306,8 +307,8 @@ window.BMNode = ideal.Proto.extend().newSlots({
     },
 
     didUpdateNode: function() {
-        if (this._didUpdateNodeNote) {
-            this._didUpdateNodeNote.post()
+        if (this._didUpdateNode) {
+            this._didUpdateNode.post()
         }
         
         this.scheduleSyncToView()
@@ -439,8 +440,8 @@ window.BMNode = ideal.Proto.extend().newSlots({
     },
     
     postShouldFocusSubnode: function(aSubnode) {
-        this._shouldFocusSubnodeNote.setInfo(aSubnode).post()
-        //this._shouldFocusSubnodeNote.setInfo(aSubnode).schedulePost()
+        this._shouldFocusSubnode.setInfo(aSubnode).post()
+        //this._shouldFocusSubnode.setInfo(aSubnode).schedulePost()
         return this
     },
     
@@ -663,5 +664,11 @@ window.BMNode = ideal.Proto.extend().newSlots({
 
 	nodeViewBadgeTitle: function() {
 		return null
+	},
+	
+	// visibility
+	
+	nodeBecameVisible: function() {
+	    return this
 	},
 })

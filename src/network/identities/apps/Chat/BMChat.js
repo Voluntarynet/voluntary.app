@@ -36,6 +36,7 @@ window.BMChat = BMApplet.extend().newSlots({
         return this.localIdentity().remoteIdentities()
     },
 
+/*
 	setThreads: function(newValue) {
 		var oldValue = this._threads
 		this._threads = newValue
@@ -46,6 +47,7 @@ window.BMChat = BMApplet.extend().newSlots({
 		}
 		return this
 	},
+	*/
 	
     handleAppMsg: function(msg) {
 		console.log("  " + this.localIdentity().title() + " app " + this.typeId() + ".handleAppMsg(" + msg.typeId() + ") ") //, msg.dataDict())

@@ -191,4 +191,18 @@ NodeView = DivView.extend().newSlots({
         return this
     },
     
+    // visibility
+    
+	onVisibility: function() {
+	    DivView.onVisibility.apply(this)
+	    //console.log(this.typeId() + ".onVisibility()")
+	    var node = this.node()
+	    if (node && node.nodeBecameVisible) {
+	        node.nodeBecameVisible()
+	    }
+
+	    return this
+	},
+	
+    
 })

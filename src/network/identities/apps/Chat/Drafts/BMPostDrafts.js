@@ -13,7 +13,7 @@ window.BMPostDrafts = BMStorableNode.extend().newSlots({
         this.setSubnodeProto(BMPostDraft)
 		this.addAction("add")
 
-		this.setNodeBackgroundColor("white")
+		this.setNodeColumnBackgroundColor("white")
 		this.setNoteIsSubnodeCount(true)
 		this.setTitle("my drafts")
     },

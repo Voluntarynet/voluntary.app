@@ -3,7 +3,7 @@
 
 window.BMFeedPosts = BMStorableNode.extend().newSlots({
     type: "BMFeedPosts",
-    hasRead: false,
+    hasRead: true,
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
@@ -15,7 +15,7 @@ window.BMFeedPosts = BMStorableNode.extend().newSlots({
         this.setShouldStore(true)
         this.setNodeMinWidth(450)
         this.setSubnodeProto(BMPostMessage)
-		this.setNodeBackgroundColor("white")
+		this.setNodeColumnBackgroundColor("white")
 		this.setNoteIsSubnodeCount(true)
 		
 		this.setSubnodeSortFunc(function (postMsg1, postMsg2) {
@@ -64,6 +64,11 @@ window.BMFeedPosts = BMStorableNode.extend().newSlots({
         BMStorableNode.didChangeSubnodeList.apply(this)
         this.updateHasRead()
         return this
+    },
+    
+    didUpdateNode: function() {
+        BMStorableNode.didUpdateNode.apply(this)
+        this.updateHasRead()
     },
     
     nodeViewShouldBadge: function() {

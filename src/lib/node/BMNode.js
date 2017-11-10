@@ -11,6 +11,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     noteIsSubnodeCount: false,
         
     // row view interaction
+    nodeThumbnailUrl: null,
     nodeTitleIsEditable: false,
     nodeSubtitleIsEditable: false,
 	nodeRowIsSelectable: true,
@@ -41,7 +42,24 @@ window.BMNode = ideal.Proto.extend().newSlots({
     nodeMinHeight: 0, // tall fields like draft body
 
     nodeContent: null,
-    nodeBackgroundColor: null,
+    
+    // node row style
+    nodeColumnBackgroundColor: null,
+    nodeRowUnselectedTextColor: null,
+    nodeRowSelectedTextColor: null,
+    nodeRowSelectedBackgroundColor: null,
+    nodeColumnLeftBorderColor: null,
+
+    nodeRowStyles: {
+        unselected: {
+            color: "black",
+            backgroundColor: "transparent",
+        },
+        selected: {
+            color: "black",
+            backgroundColor: "#efefef",        
+        }
+    },
 
     nodeHasFooter: false,
     nodeInputFieldMethod: null,

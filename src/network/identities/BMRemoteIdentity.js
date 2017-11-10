@@ -28,7 +28,7 @@ window.BMRemoteIdentity = BMStorableNode.extend().newSlots({
 		
 	//	this.messages().setTitle("messages")
 
-        //this.setNodeBackgroundColor("white")
+        //this.setNodeColumnBackgroundColor("white")
 
 		this.profile().fieldNamed("publicKeyString").setValueIsEditable(true)
 		
@@ -36,6 +36,11 @@ window.BMRemoteIdentity = BMStorableNode.extend().newSlots({
 		this._didChangeIdentityNote = NotificationCenter.shared().newNotification().setSender(this.uniqueId()).setName("didChangeIdentity").setInfo(this)
     },
     
+	nodeThumbnailUrl: function() {
+		return this.profile().profileImageDataUrl()
+	},
+	
+	
 	postChange: function() {
         if (this._didChangeIdentityNote) {
 			this._didChangeIdentityNote.post()

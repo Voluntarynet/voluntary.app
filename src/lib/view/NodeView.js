@@ -29,8 +29,14 @@ NodeView = DivView.extend().newSlots({
 
 			var nodeId = aNode ? this.node().type() + "-" + this.node().uniqueId() : "null"
 			this.element().id = this.type() + "-" + this._uniqueId + " for node " + nodeId
+			this.didChangeNode()
         }
 		
+        return this
+    },
+    
+    didChangeNode: function() {
+        this.scheduleSyncFromNode()
         return this
     },
  

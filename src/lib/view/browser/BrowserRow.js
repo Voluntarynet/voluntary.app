@@ -35,8 +35,38 @@ window.BrowserRow = NodeView.extend().newSlots({
         return this.parentView()
     },
     
+    // node style dict 
+    
+    currentStyle: function() {
+        var styles = this.node().nodeRowStyles()
+        
+        var b = this.isSelected()
+        var style = b ? styles.selected : styles.unselected
+        
+        return style
+    },
+    
+    setStyleDict: function(styleDict) {
+        
+        if (styleDict.color) {
+            this.setColor(styleDict.color) 
+        }
+        
+        if (styleDict.backgroundColor) {
+            this.setBackgroundColor(styleDict.backgroundColor) 
+        }
+        
+        return this
+    },
+    
+    // update
+     
     updateSubviews: function() {
         this.setBackgroundColor(this.currentBgColor())
+        
+        if (this.node()) {
+            this.setStyleDict(this.currentStyle())
+        }
         
         if (this.closeButtonView()) {
             if (this.canDelete()) {

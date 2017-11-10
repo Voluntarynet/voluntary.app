@@ -16,7 +16,7 @@ window.BMMailMessage = BMAppMessage.extend().newSlots({
 
         this.setActions(["send", "delete"])
         this.setNodeMinWidth(600)
-        this.setNodeBackgroundColor("white")
+        this.setNodeColumnBackgroundColor("white")
     },
 
 	// sync

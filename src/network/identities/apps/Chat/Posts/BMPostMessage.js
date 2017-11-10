@@ -4,8 +4,6 @@
 window.BMPostMessage = BMAppMessage.extend().newSlots({
     type: "BMPostMessage",
 	content: "",
-
-    hasRead: false,
 	
 	replyCount: 0,
 	repostCount: 0,
@@ -147,20 +145,6 @@ window.BMPostMessage = BMAppMessage.extend().newSlots({
         return this.senderId().profile()
     },
     
-    // updating hasRead
-    
-    nodeBecameVisible: function() {
-        BMAppMessage.nodeBecameVisible.apply(this)
-        //console.log(this.typeId() + ".hasRead() = ", this.hasRead())
-        if (!this.hasRead()) {
-            console.log(this.typeId() + " marking read")
-            this.setHasRead(true)
-            this.parentNode().didUpdateNode()
-        }
-        //console.log(this.typeId() + ".nodeBecameVisible()")
-        //console.log(this.typeId() + ".hasRead() = ", this.hasRead())
-        
-        return this
-    },
+
 })
 

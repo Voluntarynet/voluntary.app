@@ -32,6 +32,11 @@ window.ShelfItemView = NodeView.extend().newSlots({
 
         return this
     },
+    
+    didUpdateNode: function() {
+        NodeView.didUpdateNode.apply(this)
+        this.syncFromNode()
+    },
 
 	setupBadgeView: function() {	
 		var v = DivView.clone().setDivClassName("ShelfBadgeView")
@@ -45,7 +50,6 @@ window.ShelfItemView = NodeView.extend().newSlots({
 		var v = DivView.clone().setDivClassName("ShelfMarkerView")
 		this.setMarkerView(v)
 	    this.addSubview(v)
-		v.setOpacity(1)
 		return this
 	},
     
@@ -75,6 +79,7 @@ window.ShelfItemView = NodeView.extend().newSlots({
 		//console.log("vert align")
 		if (this.node().nodeViewShouldBadge()) {
 			this.markerView().setOpacity(0.5)
+			console.log(this.typeId() + " showing marker")
 		} else {
 			this.markerView().setOpacity(0)
 		}

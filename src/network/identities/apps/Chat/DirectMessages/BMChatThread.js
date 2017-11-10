@@ -15,10 +15,12 @@ window.BMChatThread = BMStorableNode.extend().newSlots({
 		this.addAction("deleteAll")
 		this.addStoredSlot("remoteIdentity")
         this.setNodeMinWidth(600)
-		this.setNodeBackgroundColor("white")
+		this.setNodeColumnBackgroundColor("white")
         this.setNodeHasFooter(true)
         this.setNodeInputFieldMethod("setInputFieldValue")
 		this.createSubnodeIndex()
+		this.setNodeRowUnselectedTextColor("black")
+		this.setNodeRowSelectedTextColor("black")
     },
 
 	title: function() {
@@ -26,6 +28,13 @@ window.BMChatThread = BMStorableNode.extend().newSlots({
 			return this.remoteIdentity().title()
 		}
 		return "[missing rid]"
+	},
+	
+	nodeThumbnailUrl: function() {
+		if (this.remoteIdentity()) {
+			return this.remoteIdentity().nodeThumbnailUrl()
+		}
+		return null
 	},
 	
 	nodeHeaderTitle: function() {

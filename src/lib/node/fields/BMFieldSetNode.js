@@ -35,7 +35,7 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
         this.setNodeMinWidth(500)
 		//this.setViewClassName("BrowserFieldsColumn")
 		this.setShouldStoreSubnodes(false)
-		this.setNodeBackgroundColor("white")
+		this.setNodeColumnBackgroundColor("white")
 		//this.setViewClassName(null)
 		//console.log("BMFieldSetNode viewClassName = '" + this.viewClassName() + "'")
     },        

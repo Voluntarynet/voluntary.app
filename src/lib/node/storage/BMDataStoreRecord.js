@@ -10,7 +10,7 @@ window.BMDataStoreRecord = BMFieldSetNode.extend().newSlots({
         //this.setViewClassName("GenericView")
         //this.setViewClassName("BMDataStoreRecordView")
         this.addAction("delete")
-		this.setNodeBackgroundColor("white")
+		this.setNodeColumnBackgroundColor("white")
     },
 
 	prepareToAccess: function() {

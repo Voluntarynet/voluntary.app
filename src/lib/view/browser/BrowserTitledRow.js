@@ -5,6 +5,7 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
     titleView: null,
     subtitleView: null,
     noteView: null,
+    thumbnailView: null,
     isSelected: false,
 }).setSlots({
     init: function () {
@@ -30,29 +31,66 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
 
         return this
     },
+    
+    setupThumbnailViewIfAbsent: function() {
+        if (!this.thumbnailView()) {
+            var tv = DivView.clone().setDivClassName("BrowserRowThumbnailView")
+    		tv.makeBackgroundNoRepeat()
+            tv.makeBackgroundCentered()
+            tv.makeBackgroundContain()
+            
+            this.setThumbnailView(tv)
+            this.addSubview(tv)
+            
+            // TODO: make this dynamic with subview for title & subtitle
+            var offset = 60
+            this.titleView().setLeft(offset)
+            this.subtitleView().setLeft(offset)
+        }
+        return this
+    },
+    
+
 
     updateSubviews: function() {
 		BrowserRow.updateSubviews.apply(this)
 	
 		this.setHasSubtitle(this.hasSubtitle())
 
-        var node = this.node()
         this.titleView().setContentEditable(node ? node.nodeTitleIsEditable() : false)
         this.subtitleView().setContentEditable(node ? node.nodeSubtitleIsEditable() : false)
+            
+        var node = this.node()
+        
+        if (node) {
+            var b = this.isSelected()
+            this.titleView().setIsSelected(b)
+            this.subtitleView().setIsSelected(b)
+            this.noteView().setIsSelected(b)
 
-        this.titleView().setIsSelected(this._isSelected)
-        this.subtitleView().setIsSelected(this._isSelected)
-        this.noteView().setIsSelected(this._isSelected)
+            var sc = this.selectedTextColor()
+            var uc = this.unselectedTextColor()
+        
+            this.titleView().setSelectedColor(sc)
+            this.titleView().setUnselectedColor(uc)
 
-        this.titleView().setSelectedColor(this.selectedTextColor())
-        this.titleView().setUnselectedColor(this.unselectedTextColor())
+            this.subtitleView().setSelectedColor(sc)
+            this.subtitleView().setUnselectedColor(uc)
 
-        this.subtitleView().setSelectedColor(this.selectedTextColor())
-        this.subtitleView().setUnselectedColor(this.unselectedTextColor())
-
-        this.noteView().setSelectedColor(this.selectedTextColor())
-        this.noteView().setUnselectedColor(this.unselectedTextColor())
-
+            this.noteView().setSelectedColor(sc)
+            this.noteView().setUnselectedColor(uc)
+        
+            
+            if (node) {
+                var imageUrl = node.nodeThumbnailUrl()
+                if (imageUrl) {
+                    this.setupThumbnailViewIfAbsent()
+                    this.thumbnailView().verticallyAlignAbsoluteNow() // TODO: optimize this
+                    this.thumbnailView().setBackgroundImageUrlPath(imageUrl)
+                }
+            } 
+        }
+        
 		/*
 		if (this.isSelected()) {
 			this.setColor(this.selectedTextColor())
@@ -65,20 +103,27 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
     },
 
 	// --- text color ---
-	
-	currentTextColor: function() {
-		if (this.isSelected()) {
-			this.selectedTextColor()
-		} 
-		return this.unselectedTextColor()		
-	},
+
 
 	selectedTextColor: function() {
+	    var node = this.node()
+	    if (node && node.nodeRowStyles()) {
+            var styles = node.nodeRowStyles()
+	        return styles.selected.color
+	    }
+	    
 		return "white"
 	},
 	
 	unselectedTextColor: function() {
-		return "rgba(255, 255, 255, 0.5)"
+	    var node = this.node()
+	    if (node && node.nodeRowStyles()) {
+            var styles = node.nodeRowStyles()
+	        return styles.unselected.color
+	    }
+	    
+		//return "rgba(255, 255, 255, 0.5)"
+		return "#aaa"
 	},
 
     // --- edit ---

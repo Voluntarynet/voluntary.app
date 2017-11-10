@@ -19,7 +19,7 @@ window.BMMessage = BMFieldSetNode.extend().newSlots({
         BMStorableNode.init.apply(this)
 		this.setShouldStore(true)
         this.setNodeMinWidth(650)
-		this.setNodeBackgroundColor("white")
+		this.setNodeColumnBackgroundColor("white")
         //this.setViewClassName("BMMessageView")
     },
 

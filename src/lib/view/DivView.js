@@ -50,7 +50,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 	isRegisteredForFocus: false,
 	isRegisteredForPaste: false,
 	
-
+    intersectionObserver: null,
 }).setSlots({
 
     
@@ -2104,5 +2104,49 @@ window.DivView = ideal.Proto.extend().newSlots({
 		}
 		return this
 	},
+	
+	// visibility event
+	
+	onVisibility: function() {
+	    //console.log(this.typeId() + ".onVisibility()")
+	    this.unregisterForVisibility()
+	    return this
+	},
+	
+	unregisterForVisibility: function() {
+	    var obs = this.intersectionObserver()
+	    if (obs) {
+	        obs.disconnect()
+            this.setIntersectionObserver(null);
+	    }
+	    return this
+	},
+	
+	registerForVisibility: function() {
+	    var root = document.body
+	    
+	    /*
+	    if (this.parentView()) {
+	        root = this.parentView().parentView().element()
+	    }
+	    */
+	    
+        var intersectionObserverOptions = {
+          root: root, // watch for visibility in the viewport 
+          rootMargin: '0px',
+          threshold: 1.0
+        }
+    
+        var obs = new IntersectionObserver((entries, observer) => { 
+            entries.forEach(entry => {
+                if (entry.isIntersecting) { this.onVisibility() }
+            })
+        }, intersectionObserverOptions)
+        
+        this.setIntersectionObserver(obs);
+        obs.observe(this.element());
+        return this
+    },
+
 	
 })

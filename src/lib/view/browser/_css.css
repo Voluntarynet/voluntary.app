@@ -313,3 +313,16 @@
 .BrowserRowCloseButton:hover {
     color: white;
 }
+
+.BrowserRowThumbnailView {
+    display: block;
+    position: absolute;
+    left: 10px;
+    top: 5px;
+    min-height: 40px;
+    min-width: 40px;
+    border-radius: 20px;
+    background-color: transparent;
+    border: 0px solid #aaa;
+}
+

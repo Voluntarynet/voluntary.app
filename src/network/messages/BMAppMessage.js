@@ -5,6 +5,7 @@ window.BMAppMessage = BMFieldSetNode.extend().newSlots({
 	objMsg: null,
 	senderId: null,
 	receiverId: null,
+	hasRead: false,
 }).setSlots({
     init: function () {
         BMFieldSetNode.init.apply(this)
@@ -142,5 +143,18 @@ window.BMAppMessage = BMFieldSetNode.extend().newSlots({
 			console.log(this.typeId() + ".postFromSender() sent!")
 		}
 		return this
+    },
+    
+    // updating hasRead
+    
+    nodeBecameVisible: function() {
+        BMFieldSetNode.nodeBecameVisible.apply(this)
+
+        if (!this.hasRead()) {
+            this.setHasRead(true)
+            this.parentNode().didUpdateNode()
+        }
+
+        return this
     },
 })

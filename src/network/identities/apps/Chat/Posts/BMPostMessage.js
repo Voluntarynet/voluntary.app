@@ -12,12 +12,11 @@ window.BMPostMessage = BMAppMessage.extend().newSlots({
 	didReply: false,
 	didRepost: false,
 	didLike: false,
-
 }).setSlots({
     
     init: function () {
         BMAppMessage.init.apply(this)
-        this.addStoredSlots(["content", "replyCount", "repostCount", "likeCount"])
+        this.addStoredSlots(["content", "hasRead", "replyCount", "repostCount", "likeCount"])
         this.addAction("delete")
         this.setShouldStore(true)	
 		this.setContent("...".loremIpsum(4, 100))	
@@ -139,5 +138,13 @@ window.BMPostMessage = BMAppMessage.extend().newSlots({
         this.setLikeCount(this.likeCount() + 1)
         return this
     },
+    
+    // link
+    
+    nodeRowLink: function() {
+        return this.senderId().profile()
+    },
+    
+
 })
 

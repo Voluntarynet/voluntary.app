@@ -75,6 +75,13 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
 		this.setupContentView()
 		this.updateSubviews()
 		this.setIsSelectable(true)
+		
+        return this
+    },
+    
+    setParentView: function(aView) {
+        BrowserRow.setParentView.apply(this, [aView])
+		this.registerForVisibility()
         return this
     },
 
@@ -155,7 +162,6 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
             this.titleBarTextView().setInnerHTML(node.senderName())
             this.dateView().setInnerHTML(node.ageDescription())
             
-            //console.log("----")
             this.showButtonNamed("reply")
             this.showButtonNamed("repost")
             this.showButtonNamed("like")

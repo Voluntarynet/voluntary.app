@@ -174,15 +174,15 @@ window.BrowserView = NodeView.extend().newSlots({
             if (cg.column().type() == "BrowserColumn") {
                 var bgColor = this.bgColorForIndex(i)
                                
-                if (cg.node() && cg.node().nodeBackgroundColor()) { 
-                    bgColor = cg.node().nodeBackgroundColor() 
+                if (cg.node() && cg.node().nodeColumnBackgroundColor()) { 
+                    bgColor = cg.node().nodeColumnBackgroundColor() 
                 }
                 
                 cg.setBackgroundColor(bgColor)
 
-                if (cg.column().setSelectionColor) {
+                //if (cg.column().setSelectionColor) {
                     cg.column().setSelectionColor(this.bgColorForIndex(i+1))
-                } 
+                //} 
             } 
 			i ++
         })

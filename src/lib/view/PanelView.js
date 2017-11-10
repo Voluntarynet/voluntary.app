@@ -7,8 +7,8 @@ window.PanelView = DivView.extend().newSlots({
 }).setSlots({
     init: function () {
 		this.setTitleView(DivView.clone().setDivClassName("PanelTitleView"))
-		this.setSbttleView(DivView.clone().setDivClassName("PanelSubtitleView"))
-
+		this.setSubtitleView(DivView.clone().setDivClassName("PanelSubtitleView"))
+		
         return this
     },
 

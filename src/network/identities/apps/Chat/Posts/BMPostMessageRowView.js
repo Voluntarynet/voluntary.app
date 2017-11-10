@@ -155,7 +155,7 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
             this.titleBarTextView().setInnerHTML(node.senderName())
             this.dateView().setInnerHTML(node.ageDescription())
             
-            console.log("----")
+            //console.log("----")
             this.showButtonNamed("reply")
             this.showButtonNamed("repost")
             this.showButtonNamed("like")

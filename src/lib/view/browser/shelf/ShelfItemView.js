@@ -85,7 +85,6 @@ window.ShelfItemView = NodeView.extend().newSlots({
 	
 	didChangeHeight: function() {
 		NodeView.didChangeHeight.apply(this)
-		console.log(this.typeId() + " didChangeHeight")
 		//this.markerView().verticallyAlignAbsoluteNow()
 	    SyncScheduler.scheduleTargetAndMethod(this.markerView(), "verticallyAlignAbsoluteNow", 0)
 		return this

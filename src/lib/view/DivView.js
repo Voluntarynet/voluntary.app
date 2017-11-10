@@ -2092,8 +2092,6 @@ window.DivView = ideal.Proto.extend().newSlots({
 		if (pv) {
 			this.setPosition("absolute")
 			this.setTop(pv.clientHeight()/2 - this.clientHeight()/2)
-			console.log("parent height: ", pv.clientHeight() + " height:" + this.clientHeight())
-			console.log("new top: ", this.top())
 		}
 		return this
 	},

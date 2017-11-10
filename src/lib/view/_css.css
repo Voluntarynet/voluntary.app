@@ -59,3 +59,7 @@
 .ImageCloseButton:hover {
 	opacity: 1;
 }
+
+.PanelView {
+    position: absolute;
+}

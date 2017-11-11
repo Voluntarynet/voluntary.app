@@ -1,4 +1,4 @@
-- add badge support?
+- add multi marker support?
 - avatar in titled row view support
 - need delete button for user
 - verify panel

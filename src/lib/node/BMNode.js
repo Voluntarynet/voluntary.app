@@ -44,22 +44,16 @@ window.BMNode = ideal.Proto.extend().newSlots({
     nodeContent: null,
     
     // node row style
+	
     nodeColumnBackgroundColor: null,
     nodeRowUnselectedTextColor: null,
     nodeRowSelectedTextColor: null,
     nodeRowSelectedBackgroundColor: null,
     nodeColumnLeftBorderColor: null,
 
-    nodeRowStyles: {
-        unselected: {
-            color: "black",
-            backgroundColor: "transparent",
-        },
-        selected: {
-            color: "black",
-            backgroundColor: "#efefef",        
-        }
-    },
+	// view style overrides
+	
+	nodeRowStyles: BMNodeStyles.clone(),
 
     nodeHasFooter: false,
     nodeInputFieldMethod: null,
@@ -76,6 +70,8 @@ window.BMNode = ideal.Proto.extend().newSlots({
         this._shouldFocusSubnode = NotificationCenter.shared().newNotification().setSender(this._uniqueId).setName("shouldFocusSubnode")
         this._nodeMinWidth = 180
         this.scheduleFinalize()
+
+		
         return this
     },
     

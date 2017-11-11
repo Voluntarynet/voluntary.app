@@ -3,8 +3,8 @@
 window.TextField = DivView.extend().newSlots({
     type: "TextField",
 	isSelected: false,
-	selectedColor: "white",
-	unselectedColor: "rgba(255, 255, 255, 0.5)",
+	selectedColor: null,
+	unselectedColor: null,
 	doesClearOnReturn: false,
 	doesHoldFocusOnReturn: false,
 }).setSlots({
@@ -32,9 +32,13 @@ window.TextField = DivView.extend().newSlots({
 	
 	updateColors: function() {
 	    if (this.isSelected()) {
-	        this.setColor(this.selectedColor())
+			if (this.selectedColor()) {
+	        	this.setColor(this.selectedColor())
+			}
 	    } else {
-	        this.setColor(this.unselectedColor())
+			if (this.unselectedColor()) {
+	        	this.setColor(this.unselectedColor())
+			}
 	    }
 	    return this
 	},

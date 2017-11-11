@@ -79,7 +79,6 @@ window.ShelfItemView = NodeView.extend().newSlots({
 		//console.log("vert align")
 		if (this.node().nodeViewShouldBadge()) {
 			this.markerView().setOpacity(0.5)
-			console.log(this.typeId() + " showing marker")
 		} else {
 			this.markerView().setOpacity(0)
 		}

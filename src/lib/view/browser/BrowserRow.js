@@ -37,26 +37,14 @@ window.BrowserRow = NodeView.extend().newSlots({
     
     // node style dict 
     
-    currentStyle: function() {
+    currentRowStyle: function() {
         var styles = this.node().nodeRowStyles()
         
-        var b = this.isSelected()
-        var style = b ? styles.selected : styles.unselected
+        if (this.isSelected()) {
+        	return styles.selected()
+ 		}
         
-        return style
-    },
-    
-    setStyleDict: function(styleDict) {
-        
-        if (styleDict.color) {
-            this.setColor(styleDict.color) 
-        }
-        
-        if (styleDict.backgroundColor) {
-            this.setBackgroundColor(styleDict.backgroundColor) 
-        }
-        
-        return this
+        return styles.unselected()
     },
     
     // update
@@ -65,10 +53,14 @@ window.BrowserRow = NodeView.extend().newSlots({
         this.setBackgroundColor(this.currentBgColor())
         
         if (this.node()) {
-            this.setStyleDict(this.currentStyle())
+           this.currentRowStyle().applyToView(this)
         }
         
         if (this.closeButtonView()) {
+			if (this.node()) {
+				this.closeButtonView().element().style.color = this.currentRowStyle().color()
+			}
+			
             if (this.canDelete()) {
                 this.closeButtonView().setOpacity(this.restCloseButtonOpacity())
             } else {
@@ -98,6 +90,31 @@ window.BrowserRow = NodeView.extend().newSlots({
         console.log(this.type() + " onTabKeyUp")
     },
 
+	// --- text color ---
+
+	/*
+	selectedTextColor: function() {
+	    var node = this.node()
+	    if (node && node.≈()) {
+            var styles = node.nodeRowStyles()
+	        return styles.selected.color
+	    }
+	    
+		return "white"
+	},
+	
+	unselectedTextColor: function() {
+	    var node = this.node()
+	    if (node && node.nodeRowStyles()) {
+            var styles = node.nodeRowStyles()
+	        return styles.unselected.color
+	    }
+	    
+		//return "rgba(255, 255, 255, 0.5)"
+		return "#aaa"
+	},
+	*/
+	
 	// --- colors ---
 	
 	currentBgColor: function() {
@@ -109,13 +126,28 @@ window.BrowserRow = NodeView.extend().newSlots({
 	},
 
     unselectedBgColor: function() {
-        return "transparent"
+		if (this.node()) {
+			var c = this.node().nodeRowStyles().unselected().backgroundColor()
+			if (c) {
+				return c
+			}
+		}
+		
+		return "transparent"
     },
     
     selectedBgColor: function() {
+		if (this.node()) {
+			var c = this.node().nodeRowStyles().selected().backgroundColor()
+			if (c) {
+				return c
+			}
+		}
+		
 		if (!this.column()) {
 			return "transparent"
 		}
+		
         return this.column().selectionColor()
     },
     
@@ -269,32 +301,11 @@ window.BrowserRow = NodeView.extend().newSlots({
     setIsSelected: function (aBool) {
 		if (this._isSelected != aBool) {
 	        this._isSelected = aBool
-        
-	        if (aBool) {
-	            this.showSelected()    
-	        } else {
-	            this.showUnselected() 
-	        }
-        
 	        this.updateSubviews()
-	        //this.syncToNode()
 		}
         return this
     },
 
-	showSelected: function() {
-        //this.setBorderTop("1px solid #333")
-        //this.setBorderBottom("1px solid #444")
-        this.setOpacity(1)
-		return this		
-	},
-	
-	showUnselected: function() {
-        //this.setBorderTop("1px solid transparent")
-        //this.setBorderBottom("1px solid transparent")
-        //this.setOpacity(0.7)		
-	},
-    
     select: function() {
         this.setIsSelected(true)		
         return this

@@ -50,8 +50,6 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
         return this
     },
     
-
-
     updateSubviews: function() {
 		BrowserRow.updateSubviews.apply(this)
 	
@@ -68,6 +66,7 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
             this.subtitleView().setIsSelected(b)
             this.noteView().setIsSelected(b)
 
+/*
             var sc = this.selectedTextColor()
             var uc = this.unselectedTextColor()
         
@@ -79,6 +78,7 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
 
             this.noteView().setSelectedColor(sc)
             this.noteView().setUnselectedColor(uc)
+*/
         
             
             if (node) {
@@ -102,29 +102,7 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
         return this
     },
 
-	// --- text color ---
 
-
-	selectedTextColor: function() {
-	    var node = this.node()
-	    if (node && node.nodeRowStyles()) {
-            var styles = node.nodeRowStyles()
-	        return styles.selected.color
-	    }
-	    
-		return "white"
-	},
-	
-	unselectedTextColor: function() {
-	    var node = this.node()
-	    if (node && node.nodeRowStyles()) {
-            var styles = node.nodeRowStyles()
-	        return styles.unselected.color
-	    }
-	    
-		//return "rgba(255, 255, 255, 0.5)"
-		return "#aaa"
-	},
 
     // --- edit ---
 

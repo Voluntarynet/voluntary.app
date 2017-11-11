@@ -7,6 +7,8 @@ window.BrowserView = NodeView.extend().newSlots({
     defaultHeader: null,
 }).setSlots({
  
+	defaultRowStyles: null,
+	
     bgColors: function() {
         return this.bgColorsGray()
     },
@@ -69,6 +71,11 @@ window.BrowserView = NodeView.extend().newSlots({
         this.setBackgroundColor(this.bgColorForIndex(Math.round(this.bgColors().length/2)))
 		this.setColumnGroupCount(1)
 		//.selectFirstColumn()
+		
+		this.setDefaultRowStyles(BMNodeStyles.clone())
+		this.defaultRowStyles().unselected().setColor("#aaa")
+		this.defaultRowStyles().selected().setColor("white")
+		//this.defaultRowStyles().selected().setBackgroundColor("white")
         return this
     },
 

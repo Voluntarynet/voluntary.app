@@ -58,6 +58,7 @@ window.BMProfile = BMFieldSetNode.extend().newSlots({
 	},
 	
 	shelfIconName: function() {
-	    return "user-white"
+		return "chat/my_profile"
+//	    return "user-white"
 	},
 })

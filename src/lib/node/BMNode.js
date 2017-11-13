@@ -53,7 +53,8 @@ window.BMNode = ideal.Proto.extend().newSlots({
 
 	// view style overrides
 	
-	nodeRowStyles: BMNodeStyles.clone(),
+	nodeColumnStyles: BMViewStyles.clone(),
+	nodeRowStyles: BMViewStyles.clone(),
 
     nodeHasFooter: false,
     nodeInputFieldMethod: null,
@@ -69,11 +70,20 @@ window.BMNode = ideal.Proto.extend().newSlots({
         this._didUpdateNode = NotificationCenter.shared().newNotification().setSender(this._uniqueId).setName("didUpdateNode")
         this._shouldFocusSubnode = NotificationCenter.shared().newNotification().setSender(this._uniqueId).setName("shouldFocusSubnode")
         this._nodeMinWidth = 180
-        this.scheduleFinalize()
-
-		
+        this.scheduleFinalize()		
         return this
     },
+
+	setNodeColumnBackgroundColor: function(c) {
+		this.nodeColumnStyles().selected().setBackgroundColor(c)
+		this.nodeColumnStyles().unselected().setBackgroundColor(c)
+		return this
+	},
+	
+
+	nodeColumnBackgroundColor: function(c) {
+		return this.nodeColumnStyles().selected().backgroundColor(c)
+	},
     
     // --- finalize ----------
 

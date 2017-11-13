@@ -17,6 +17,7 @@ window.BMChatThreads = BMContactLinks.extend().newSlots({
 	},
 	
 	shelfIconName: function() {
-	    return "mail-white"
+		return "chat/direct_messages"
+	    //return "mail-white"
 	},
 })

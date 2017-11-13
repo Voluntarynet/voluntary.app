@@ -88,6 +88,7 @@ window.BMRemoteIdentities = BMStorableNode.extend().newSlots({
     },
     
 	shelfIconName: function() {
-	    return "users-white"
+		return "chat/contacts"
+//	    return "users-white"
 	},
 })

@@ -40,7 +40,8 @@ window.BMPostDrafts = BMStorableNode.extend().newSlots({
 	*/
 	
 	shelfIconName: function() {
-	    return "write-white"
+	    return "chat/drafts"
+	    //return "write-white"
 	},
 	
 	// badge - a badge without a title becomes a marker

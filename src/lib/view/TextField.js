@@ -1,6 +1,6 @@
 "use strict"
 
-window.TextField = DivView.extend().newSlots({
+window.TextField = DivStyledView.extend().newSlots({
     type: "TextField",
 	isSelected: false,
 	selectedColor: null,
@@ -23,26 +23,6 @@ window.TextField = DivView.extend().newSlots({
 		this.removeReturns()
         return this
     },
-
-	setIsSelected: function(aBool) {
-	    this._isSelected = aBool
-	    this.updateColors()
-	    return this
-	},
-	
-	updateColors: function() {
-	    if (this.isSelected()) {
-			if (this.selectedColor()) {
-	        	this.setColor(this.selectedColor())
-			}
-	    } else {
-			if (this.unselectedColor()) {
-	        	this.setColor(this.unselectedColor())
-			}
-	    }
-	    return this
-	},
-	
 	
 	returnStrings: function() {
 		return ["<div><br></div>", "<br><br>"]

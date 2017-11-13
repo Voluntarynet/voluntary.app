@@ -1,5 +1,9 @@
+have browserview use defaultRowStyles
+defaultColumnStyles
+
+- need to set svg color to match textColor of row?
+
 - add multi marker support?
-- avatar in titled row view support
 - need delete button for user
 - verify panel
 - select last selected node on shelf on addDidInit

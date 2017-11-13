@@ -1,8 +1,8 @@
 "use strict"
 
 JSImporter.pushRelativePaths([
-	"BMNodeStyles.js",
-	"BMNodeStyle.js",
+	"BMViewStyles.js",
+	"BMViewStyle.js",
 	
     "BMNode.js",
 	

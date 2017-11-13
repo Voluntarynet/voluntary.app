@@ -298,11 +298,9 @@ window.BrowserRow = NodeView.extend().newSlots({
 		return false
     },
 
-    setIsSelected: function (aBool) {
-		if (this._isSelected != aBool) {
-	        this._isSelected = aBool
-	        this.updateSubviews()
-		}
+    didChangeIsSelected: function () {
+		NodeView.didChangeIsSelected.apply(this)
+	    this.updateSubviews()
         return this
     },
 

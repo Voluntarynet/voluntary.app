@@ -6,7 +6,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     selectionColor: "#aaa",
     allowsCursorNavigation: true,
 	debug: true,
-	isSelected: false,
+	defaultRowStyles: null,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
@@ -45,15 +45,13 @@ window.BrowserColumn = NodeView.extend().newSlots({
 
 	// selection
 	
-	setIsSelected: function(aBool) {
-		if (this._isSelected != aBool) {		
-			this._isSelected = aBool
-		
-			if (aBool) {
-				this.focus()
-			} else {
-				this.blur()
-			}
+	didChangeIsSelected: function() {
+		NodeView.didChangeIsSelected.apply(this)
+
+		if (this.isSelected()) {
+			this.focus()
+		} else {
+			this.blur()
 		}
 		
 		return this

@@ -10,7 +10,6 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
     column: null, // is inside scrollView
     
     //emptyLabel: null,
-	isSelected: false,
 
 	isCollapsed: false,
 	animatesCollapse: true,
@@ -83,16 +82,12 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
 		return this.browser().columnGroups().first() === this
 	},
 
-	setIsSelected: function(aBool) {
-		if (this.column()) {
-			this.column().setIsSelected(aBool)
-		}
+	didChangeIsSelected: function() {
+		NodeView.didChangeIsSelected.apply(this)
 		
-		if (this._isSelected != aBool) {
-			this._isSelected = aBool
-			//
-		}
-				
+		if (this.column()) {
+			this.column().setIsSelected(this.isSelected())
+		}	
 		return this
 	},
 	

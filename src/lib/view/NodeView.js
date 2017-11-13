@@ -1,18 +1,20 @@
 
-NodeView = DivView.extend().newSlots({
+NodeView = DivStyledView.extend().newSlots({
     type: "NodeView",
     node: null,
     ownsView: true,
     defaultSubnodeViewClass: null,
     overrideSubviewProto: null,
+	styles: null,
 }).setSlots({
     
     // -------------------------------------
     
     init: function () {
-        DivView.init.apply(this)
+        DivStyledView.init.apply(this)
         //this._nodeObservation = NotificationCenter.shared().newObservation().setName("didUpdateNode").setObserver(this)
         this._nodeObservation = NotificationCenter.shared().newObservation().setObserver(this) // observe all
+		this.setStyles(BMViewStyles.clone())
         return this
     },
 	
@@ -57,7 +59,7 @@ NodeView = DivView.extend().newSlots({
     },
     
     willRemove: function() {
-        DivView.willRemove.apply(this)
+        DivStyledView.willRemove.apply(this)
         this.stopWatchingNode()
         return this
     },
@@ -70,9 +72,15 @@ NodeView = DivView.extend().newSlots({
                 return vc
             }
         }
-        return DivView.subviewProto.apply(this)
+        return DivStyledView.subviewProto.apply(this)
     },
 
+	// styles
+
+	applyStyle: function() {
+		
+	},
+	
 	// --- syncing ---
     
     subviewForNode: function(aNode) {
@@ -200,7 +208,7 @@ NodeView = DivView.extend().newSlots({
     // visibility
     
 	onVisibility: function() {
-	    DivView.onVisibility.apply(this)
+	    DivStyledView.onVisibility.apply(this)
 	    //console.log(this.typeId() + ".onVisibility()")
 	    var node = this.node()
 	    if (node && node.nodeBecameVisible) {
@@ -209,6 +217,5 @@ NodeView = DivView.extend().newSlots({
 
 	    return this
 	},
-	
     
 })

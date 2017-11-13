@@ -5,10 +5,10 @@ window.BrowserView = NodeView.extend().newSlots({
     columns: null,
     isSingleColumn: false,
     defaultHeader: null,
-}).setSlots({
- 
+	defaultColumnStyles: null,
 	defaultRowStyles: null,
-	
+}).setSlots({
+ 	
     bgColors: function() {
         return this.bgColorsGray()
     },
@@ -61,6 +61,9 @@ window.BrowserView = NodeView.extend().newSlots({
     
     init: function () {
         NodeView.init.apply(this)
+		
+		this.setupDefaultStyles()
+
         this.setDefaultSubnodeViewClass(BrowserColumnGroup)
         this.setIsRegisterForWindowResize(true)
         
@@ -72,13 +75,22 @@ window.BrowserView = NodeView.extend().newSlots({
 		this.setColumnGroupCount(1)
 		//.selectFirstColumn()
 		
-		this.setDefaultRowStyles(BMNodeStyles.clone())
-		this.defaultRowStyles().unselected().setColor("#aaa")
-		this.defaultRowStyles().selected().setColor("white")
-		//this.defaultRowStyles().selected().setBackgroundColor("white")
+
         return this
     },
 
+	setupDefaultStyles: function() {
+		this.setDefaultColumnStyles(BMViewStyles.clone())
+		this.defaultColumnStyles().unselected().setBackgroundColor("white")
+		this.defaultColumnStyles().selected().setBackgroundColor("white")
+				
+		this.setDefaultRowStyles(BMViewStyles.clone())
+		this.defaultRowStyles().unselected().setColor("#aaa")
+		this.defaultRowStyles().selected().setColor("white")
+		
+		return this
+	},
+	
 	updateBackground: function() {
 		var n = this.activeColumnGroups().length
         this.setBackgroundColor(this.bgColorForIndex(n + 1))
@@ -182,9 +194,13 @@ window.BrowserView = NodeView.extend().newSlots({
                 var bgColor = this.bgColorForIndex(i)
                                
                 if (cg.node() && cg.node().nodeColumnBackgroundColor()) { 
+					console.log("found  nodeColumnBackgroundColor for ", cg.node().title())
                     bgColor = cg.node().nodeColumnBackgroundColor() 
                 }
                 
+				cg.styles().selected().setBackgroundColor(bgColor)
+				//cg.styles().unselected().setBackgroundColor(bgColor)
+				//this.defaultColumnStyles().selected().applyToView(cg)
                 cg.setBackgroundColor(bgColor)
 
                 //if (cg.column().setSelectionColor) {

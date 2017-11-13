@@ -30,6 +30,8 @@ window.ShelfItemView = NodeView.extend().newSlots({
 
         this.setItemWidthHeight(78, 70)
 
+		this.styles().selected().setOpacity(1)
+		this.styles().unselected().setOpacity(0.45)
         return this
     },
     
@@ -74,7 +76,7 @@ window.ShelfItemView = NodeView.extend().newSlots({
 			this.iconView().setBackgroundColor("#aaa")
 		}
 		
-		this.showSelection()
+		this.applyStyles()
 		
 		//console.log("vert align")
 		if (this.node().nodeViewShouldBadge()) {
@@ -146,25 +148,6 @@ window.ShelfItemView = NodeView.extend().newSlots({
         this.setItemWidthHeight(78, 45)
         return this
 	},
-	
-	// --- colors ---
-	/*
-	currentBgColor: function() {
-		if (this.isSelected()) {
-			return this.selectedBgColor()
-		} 
-		
-		return this.unselectedBgColor()
-	},
-
-    unselectedBgColor: function() {
-        return "transparent"
-    },
-    
-    selectedBgColor: function() {
-        return "transparent"
-    },
-*/
     
 	// --- selecting ---
     
@@ -184,42 +167,6 @@ window.ShelfItemView = NodeView.extend().newSlots({
         }
         
 		return false
-    },
-
-    setIsSelected: function (aBool) {
-		if (this._isSelected != aBool) {
-	        this._isSelected = aBool
-            this.showSelection()
-            //console.warn(this.name() + ".setIsSelected(" + aBool + ")")
-		}
-        return this
-    },
-    
-    showSelection: function() {
-        if (this.isSelected()) {
-            this.showSelected()    
-        } else {
-            this.showUnselected() 
-        }    
-    },
-
-	showSelected: function() {
-        this.setOpacity(1)
-		return this		
-	},
-	
-	showUnselected: function() {
-        this.setOpacity(0.45)		
-	},
-    
-    select: function() {
-        this.setIsSelected(true)		
-        return this
-    },
-
-    unselect: function() {
-        this.setIsSelected(false)
-        return this
     },
 
 })

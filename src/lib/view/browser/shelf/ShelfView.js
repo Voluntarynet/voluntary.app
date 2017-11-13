@@ -113,7 +113,9 @@ window.ShelfView = NodeView.extend().newSlots({
 
     addCreateIdentityGroup: function() {
         var item = this.newFooterItem()
-        item.setIconName("add-user-white").setTarget(this).setAction("createIdentity").setToolTip("Create New Identity")
+        //item.setIconName("add-user-white")
+        item.setIconName("chat/new_identity")
+		item.setTarget(this).setAction("createIdentity").setToolTip("Create New Identity")
         item.setIsSelectable(false)
         //item.setIsAlwaysSelected(true)     
     },
@@ -135,7 +137,9 @@ window.ShelfView = NodeView.extend().newSlots({
     addSettingsGroup: function() {
         var item = this.newFooterItem()
 		var settings = App.shared().about()
-        item.setIconName("gear-filled-white").setDestinationNode(settings).setToolTip("Settings")   
+        //item.setIconName("gear-filled-white")
+        item.setIconName("chat/system")
+		item.setDestinationNode(settings).setToolTip("Settings")   
         item.setIsSelectable(false)
     },
 })

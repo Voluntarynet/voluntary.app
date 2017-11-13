@@ -34,6 +34,7 @@ window.BMMyPosts = BMStorableNode.extend().newSlots({
 	},
 	
 	shelfIconName: function() {
-	    return "home3-white"
+		return "chat/feed_a"
+//	    return "home3-white"
 	},
 })

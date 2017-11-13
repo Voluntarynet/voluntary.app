@@ -178,8 +178,6 @@ window.BrowserView = NodeView.extend().newSlots({
 		colors = colors.copy().appendItems(rcolors)
 		
 		var rgb = colors.atModLength(i)
-
-
 		var s = "rgb(" + rgb.map((v) => { return Math.round(v * 255) }).join(",") + ")"
 		//console.log("bgColorForIndex = '" + s + "'")
 		return s
@@ -193,9 +191,15 @@ window.BrowserView = NodeView.extend().newSlots({
             if (cg.column().type() == "BrowserColumn") {
                 var bgColor = this.bgColorForIndex(i)
                                
-                if (cg.node() && cg.node().nodeColumnBackgroundColor()) { 
-					console.log("found  nodeColumnBackgroundColor for ", cg.node().title())
-                    //bgColor = cg.node().nodeColumnBackgroundColor() 
+                if (cg.node()) {
+                    var color = cg.node().nodeColumnBackgroundColor()
+                    if (color) { 
+					    console.log("found  nodeColumnBackgroundColor " + color + " for ", cg.node().typeId() + " " + cg.node().title())
+                        bgColor = color
+                    } else {
+					    console.log("no nodeColumnBackgroundColor for ", cg.node().typeId() + " " + cg.node().title())
+                        
+                    }
                 }
                 
 				cg.styles().selected().setBackgroundColor(bgColor)

@@ -15,12 +15,11 @@ window.BMChatThread = BMStorableNode.extend().newSlots({
 		this.addAction("deleteAll")
 		this.addStoredSlot("remoteIdentity")
         this.setNodeMinWidth(600)
-		this.setNodeColumnBackgroundColor("white")
         this.setNodeHasFooter(true)
         this.setNodeInputFieldMethod("setInputFieldValue")
 		this.createSubnodeIndex()
-		this.setNodeRowUnselectedTextColor("black")
-		this.setNodeRowSelectedTextColor("black")
+
+		this.setNodeColumnBackgroundColor("white")
     },
 
 	title: function() {

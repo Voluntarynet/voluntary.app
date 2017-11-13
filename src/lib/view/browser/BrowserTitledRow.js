@@ -65,21 +65,6 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
             this.titleView().setIsSelected(b)
             this.subtitleView().setIsSelected(b)
             this.noteView().setIsSelected(b)
-
-/*
-            var sc = this.selectedTextColor()
-            var uc = this.unselectedTextColor()
-        
-            this.titleView().setSelectedColor(sc)
-            this.titleView().setUnselectedColor(uc)
-
-            this.subtitleView().setSelectedColor(sc)
-            this.subtitleView().setUnselectedColor(uc)
-
-            this.noteView().setSelectedColor(sc)
-            this.noteView().setUnselectedColor(uc)
-*/
-        
             
             if (node) {
                 var imageUrl = node.nodeThumbnailUrl()
@@ -90,19 +75,9 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
                 }
             } 
         }
-        
-		/*
-		if (this.isSelected()) {
-			this.setColor(this.selectedTextColor())
-		} else {
-			this.setColor(this.unselectedTextColor())
-		}
-		*/
 		
         return this
     },
-
-
 
     // --- edit ---
 

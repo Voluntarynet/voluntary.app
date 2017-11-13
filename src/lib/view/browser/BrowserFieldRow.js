@@ -9,15 +9,10 @@ window.BrowserFieldRow = BrowserRow.extend().newSlots({
         this.setIsSelectable(false) 
         this.makeCursorDefault()
 		this.setSpellCheck(false)
+		
+		this.styles().setToBlackOnWhite()
+		
         return this
-    },
-    
-    unselectedBgColor: function() {
-        return "white"
-    },
-    
-    selectedBgColor: function() {
-        return "#eee"
     },
     
     updateSubviews: function() {   
@@ -36,6 +31,8 @@ window.BrowserFieldRow = BrowserRow.extend().newSlots({
                 e.style.height = node.nodeMinHeight() + "px"
             }
         }
+        
+        this.applyStyles()
         
         return this
     },

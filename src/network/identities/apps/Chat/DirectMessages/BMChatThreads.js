@@ -7,7 +7,7 @@ window.BMChatThreads = BMContactLinks.extend().newSlots({
     init: function () {
         BMContactLinks.init.apply(this)
         this.setLinkProto(BMChatThread)
-		this.setNodeColumnBackgroundColor("white")
+		//this.setNodeColumnBackgroundColor("white")
 		
     },
 

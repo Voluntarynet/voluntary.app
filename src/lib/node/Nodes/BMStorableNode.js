@@ -270,6 +270,11 @@ window.BMStorableNode = BMNode.extend().newSlots({
 	},
 	
 	didUpdateSlot: function(slotName, oldValue, newValue) {
+	    if (!this._storedSlots) {
+	        // looks like StorableNode hasn't initialized yet
+	        return this
+	    }
+	    
 		// check so we don't mark dirty while loading
 		// and use private ivars directly for performance
 		if (slotName in this._storedSlots) { 

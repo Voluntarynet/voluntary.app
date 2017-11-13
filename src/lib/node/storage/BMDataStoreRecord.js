@@ -26,7 +26,8 @@ window.BMDataStoreRecord = BMFieldSetNode.extend().newSlots({
 	valuePid: function() {
 	    return this.title()
 	},
-/*
+	
+    /*
 	subtitle: function() {
 		return this.value().length + " bytes"
 	},
@@ -42,7 +43,7 @@ window.BMDataStoreRecord = BMFieldSetNode.extend().newSlots({
 	
 	delete: function() {
 	    BMFieldSetNode.delete.apply(this)
-//        NodeStore.shared().justRemoveObject(this.value())
+        //NodeStore.shared().justRemoveObject(this.value())
         NodeStore.shared().justRemovePid(this.valuePid())
 	    return this
 	},

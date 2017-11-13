@@ -57,6 +57,11 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
 		this.updateSubviews()
 		this.setIsSelectable(true)
 		
+		this.styles().unselected().setColor("black")
+		this.styles().unselected().setBackgroundColor("white")
+		this.styles().selected().setColor("black")
+		this.styles().selected().setBackgroundColor("white")
+				
         return this
     },
 
@@ -99,32 +104,9 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
             this.placeHolderView().setOpacity(opacity)
         }
 
-		if (this.isSelected()) {
-			this.setColor(this.selectedTextColor())
-		} else {
-			this.setColor(this.unselectedTextColor())
-		}
 		
         return this
     },
-
-	// --- text color ---
-	
-    unselectedBgColor: function() {
-        return "rgba(255, 255, 255, 0.5)"
-    },
-    
-    selectedBgColor: function() {
-        return "rgba(0, 0, 0, 0.05)"
-    },
-
-	selectedTextColor: function() {
-		return "black"
-	},
-	
-	unselectedTextColor: function() {
-		return "rgba(0, 0, 0, 0.5)"
-	},
 
     // --- edit ---
 

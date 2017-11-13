@@ -6,6 +6,13 @@ window.BMPointerFieldRowView = BrowserTitledRow.extend().newSlots({
     init: function () {
         BrowserTitledRow.init.apply(this)
 		this.makeNoteRightArrow()
+		
+		this.styles().unselected().setColor("#888")
+		this.styles().unselected().setBackgroundColor("white")
+
+		this.styles().selected().setColor("#888")
+		this.styles().selected().setBackgroundColor("#eee")
+		
         return this
     },
 
@@ -15,18 +22,6 @@ window.BMPointerFieldRowView = BrowserTitledRow.extend().newSlots({
 		this.noteView().setMinAndMaxWidth(10).setMinAndMaxHeight(10)
 		return this		
 	},
-
-	selectedTextColor: function() {
-		return "black"
-	},
-	
-	unselectedTextColor: function() {
-		return "rgba(0, 0, 0, 0.6)"
-	},
-	
-    selectedBgColor: function() {
-        return "rgba(0, 0, 0, 0.1)"
-    },
 
     updateSubviews: function () {	
 		BrowserTitledRow.updateSubviews.apply(this)
@@ -38,6 +33,8 @@ window.BMPointerFieldRowView = BrowserTitledRow.extend().newSlots({
 		} else {
 			this.noteView().setOpacity(0.4)	
 		}
+
+        this.applyStyles()
 		
         return this
     },

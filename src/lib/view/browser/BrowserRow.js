@@ -49,9 +49,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     
     // update
      
-    updateSubviews: function() {
-        this.setBackgroundColor(this.currentBgColor())
-        
+    updateSubviews: function() {        
         if (this.node()) {
            this.currentRowStyle().applyToView(this)
         }
@@ -68,6 +66,8 @@ window.BrowserRow = NodeView.extend().newSlots({
             }
         }
         
+		this.applyStyles()
+
         return this
     },
     
@@ -90,33 +90,20 @@ window.BrowserRow = NodeView.extend().newSlots({
         console.log(this.type() + " onTabKeyUp")
     },
 
-	// --- text color ---
-
-	/*
-	selectedTextColor: function() {
-	    var node = this.node()
-	    if (node && node.≈()) {
-            var styles = node.nodeRowStyles()
-	        return styles.selected.color
-	    }
-	    
-		return "white"
-	},
-	
-	unselectedTextColor: function() {
-	    var node = this.node()
-	    if (node && node.nodeRowStyles()) {
-            var styles = node.nodeRowStyles()
-	        return styles.unselected.color
-	    }
-	    
-		//return "rgba(255, 255, 255, 0.5)"
-		return "#aaa"
-	},
-	*/
 	
 	// --- colors ---
 	
+   applyStyles: function() {
+        var node = this.node() 
+        if (node) {
+            this.styles().copyFrom(node.nodeRowStyles())
+        }
+        
+        NodeView.applyStyles.apply(this)
+        
+        return this
+    },
+    
 	currentBgColor: function() {
 		if (this.isSelected()) {
 			return this.selectedBgColor()

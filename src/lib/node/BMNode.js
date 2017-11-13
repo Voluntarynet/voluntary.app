@@ -42,19 +42,10 @@ window.BMNode = ideal.Proto.extend().newSlots({
     nodeMinHeight: 0, // tall fields like draft body
 
     nodeContent: null,
-    
-    // node row style
-	
-    nodeColumnBackgroundColor: null,
-    nodeRowUnselectedTextColor: null,
-    nodeRowSelectedTextColor: null,
-    nodeRowSelectedBackgroundColor: null,
-    nodeColumnLeftBorderColor: null,
-
+    	
 	// view style overrides
-	
-	nodeColumnStyles: BMViewStyles.clone(),
-	nodeRowStyles: BMViewStyles.clone(),
+	nodeColumnStyles: null,
+	nodeRowStyles: null,
 
     nodeHasFooter: false,
     nodeInputFieldMethod: null,
@@ -70,19 +61,30 @@ window.BMNode = ideal.Proto.extend().newSlots({
         this._didUpdateNode = NotificationCenter.shared().newNotification().setSender(this._uniqueId).setName("didUpdateNode")
         this._shouldFocusSubnode = NotificationCenter.shared().newNotification().setSender(this._uniqueId).setName("shouldFocusSubnode")
         this._nodeMinWidth = 180
-        this.scheduleFinalize()		
+        this.scheduleFinalize()	
+        
+        this.setNodeColumnStyles(BMViewStyles.clone())
+        this.setNodeRowStyles(BMViewStyles.clone())
         return this
     },
 
+    // column view style
+    
 	setNodeColumnBackgroundColor: function(c) {
+	    if (this.nodeColumnStyles()) {
+            this.setNodeColumnStyles(BMViewStyles.clone())
+	    }
+	    
 		this.nodeColumnStyles().selected().setBackgroundColor(c)
 		this.nodeColumnStyles().unselected().setBackgroundColor(c)
 		return this
 	},
-	
 
-	nodeColumnBackgroundColor: function(c) {
-		return this.nodeColumnStyles().selected().backgroundColor(c)
+	nodeColumnBackgroundColor: function() {
+	    if (this.nodeColumnStyles()) {
+		    return this.nodeColumnStyles().selected().backgroundColor()
+	    }
+	    return null
 	},
     
     // --- finalize ----------

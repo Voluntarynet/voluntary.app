@@ -76,6 +76,8 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
 		this.updateSubviews()
 		this.setIsSelectable(true)
 		
+		this.styles().setToBlackOnWhite()
+		
         return this
     },
     
@@ -170,33 +172,8 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
             this.titleBarTextView().setInnerHTML("[no node]")
         }
         
-        
-		if (this.isSelected()) {
-			this.setColor(this.selectedTextColor())
-		} else {
-			this.setColor(this.unselectedTextColor())
-		}
-		
         return this
     },
-
-	// --- text color ---
-	
-    unselectedBgColor: function() {
-        return "white"
-    },
-    
-    selectedBgColor: function() {
-        return "white"
-    },
-
-	selectedTextColor: function() {
-		return "black"
-	},
-	
-	unselectedTextColor: function() {
-		return "black"
-	},
 
     // --- edit ---
 

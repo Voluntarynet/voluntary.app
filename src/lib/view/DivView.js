@@ -230,6 +230,10 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this
     },
 
+	margin: function() {
+		return this.getCssAttribute("margin")
+	},
+
 	setMarginLeft: function(aNumber) {
 		this.setCssAttribute("margin-left", aNumber + "px")
         return this
@@ -578,25 +582,63 @@ window.DivView = ideal.Proto.extend().newSlots({
 		return this
 	},
 	
+	border: function() {
+		return this.getCssAttribute("border")
+	},
+	
+	// border top
+	
 	setBorderTop: function(s) {
 		this.setCssAttribute("border-top", s)
 		return this
 	},
 	
+	borderTop: function() {
+		return this.getCssAttribute("border-top")
+	},
+	
+	// border bottom
+
 	setBorderBottom: function(s) {
 		this.setCssAttribute("border-bottom", s)
 		return this
 	},
 	
-	border: function() {
-		return this.getCssAttribute("border")
+	borderBottom: function() {
+		return this.getCssAttribute("border-bottom")
 	},
 	
+	// border left
+
+	setBorderLeft: function(s) {
+		this.setCssAttribute("border-left", s)
+		return this
+	},
+	
+	borderLeft: function() {
+		return this.getCssAttribute("border-left")
+	},
+
+	// border right
+
+	setBorderRight: function(s) {
+		this.setCssAttribute("border-right", s)
+		return this
+	},
+
+	borderRight: function() {
+		return this.getCssAttribute("border-right")
+	},
+		
 	// border radius
 	
 	setBorderRadius: function(s) {
 		this.setCssAttribute("border-radius", s)
 	    return this
+	},
+	
+	borderRadius: function() {
+		return this.getCssAttribute("border-radius")
 	},
     
 	// alignment

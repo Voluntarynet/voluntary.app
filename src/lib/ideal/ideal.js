@@ -1676,9 +1676,16 @@ Proto.setSlots({
 		return this;
 	},
 
-	setterNameForSlot: function(name)
-	{
-		return "set" + name.capitalized();
+	_setterNameMap: {},
+	
+	setterNameForSlot: function(name) {
+		// cache these as there aren't too many and it will avoid extra string operations
+		var setter = this._setterNameMap[name]
+		if (!setter) {
+			setter = "set" + name.capitalized()
+			this._setterNameMap[name] = setter
+		}
+		return setter
 	},
 
 	performSet: function(name, value)

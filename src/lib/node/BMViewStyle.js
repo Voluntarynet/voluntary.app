@@ -9,10 +9,12 @@ window.BMViewStyle = ideal.Proto.extend().newSlots({
     color: null,
     backgroundColor: null,
 	opacity: null,
+	leftBorder: null,
+	
 	// margin, padding, border,...
 	// fontSize, fontFamily, fontStyle
 	
-	styleNames: ["color", "backgroundColor", "opacity"]
+	styleNames: ["color", "backgroundColor", "opacity", "leftBorder"]
 }).setSlots({
     init: function () {
         return this
@@ -43,19 +45,18 @@ window.BMViewStyle = ideal.Proto.extend().newSlots({
 		return this
 	},
 	
-	/*
 	applyToView: function(aView) {		
-		var e = aView.element()
-
 		this.styleNames().forEach( (name) => { 
 			var v = this[name].apply(this)
 			if (v != null) {
-				e.style[name] = vå
+				aView[aView.setterNameForSlot(name)].apply(aView, [v])
 			}
 		})
+		
+		return this
 	},
-	*/
 	
+	/*
 	applyToView: function(aView) {
 
         if (this.color() != null) {
@@ -72,6 +73,7 @@ window.BMViewStyle = ideal.Proto.extend().newSlots({
 
 		return this
 	},
+	*/
     
 
 })

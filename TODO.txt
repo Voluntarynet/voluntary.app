@@ -1,3 +1,5 @@
+TODO: cleanup DivView setPaddingBottom etc into abstract setter/getter
+
 have browserview use defaultRowStyles
 defaultColumnStyles
 

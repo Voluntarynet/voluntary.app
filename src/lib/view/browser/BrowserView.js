@@ -195,7 +195,7 @@ window.BrowserView = NodeView.extend().newSlots({
                                
                 if (cg.node() && cg.node().nodeColumnBackgroundColor()) { 
 					console.log("found  nodeColumnBackgroundColor for ", cg.node().title())
-                    bgColor = cg.node().nodeColumnBackgroundColor() 
+                    //bgColor = cg.node().nodeColumnBackgroundColor() 
                 }
                 
 				cg.styles().selected().setBackgroundColor(bgColor)

@@ -76,7 +76,10 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
 		this.updateSubviews()
 		this.setIsSelectable(true)
 		
-		this.styles().setToBlackOnWhite()
+//		this.styles().setToBlackOnWhite()
+		
+	   // console.log(" =======> " + this.typeId() + " this.styles().selected().backgroundColor() = ", this.styles().selected().backgroundColor())
+
 		
         return this
     },

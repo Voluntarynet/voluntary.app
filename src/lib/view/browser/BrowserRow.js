@@ -100,6 +100,8 @@ window.BrowserRow = NodeView.extend().newSlots({
         
         NodeView.applyStyles.apply(this)
         
+        console.log(this.node().title() + " this.currentBgColor() = ", this.currentBgColor())
+        console.log("this.node().nodeRowStyles().selected().backgroundColor() = ", this.currentBgColor())
         this.setBackgroundColor(this.currentBgColor())
         return this
     },

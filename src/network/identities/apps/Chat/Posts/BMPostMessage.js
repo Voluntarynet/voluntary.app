@@ -20,6 +20,7 @@ window.BMPostMessage = BMAppMessage.extend().newSlots({
         this.addAction("delete")
         this.setShouldStore(true)	
 		this.setContent("...".loremIpsum(4, 100))	
+		this.nodeRowStyles().setToBlackOnWhite()
     },
 
 /*

@@ -95,6 +95,7 @@
     display: inline-block;
 	position: relative;
     float: left;
+    color: black;
     border: 0px dashed blue;
 }
 

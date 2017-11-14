@@ -25,6 +25,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
 		this.setNoteView(DivView.clone().setDivClassName("BMFieldRowViewNoteView"))
 		this.addSubview(this.noteView())
         this.noteView().setUserSelect("text")
+
         
         //his.setEditable(false)
         return this

@@ -38,11 +38,12 @@ window.BMField = BMNode.extend().newSlots({
 	
 	
 }).setSlots({
-	/*
+
     init: function () {
         BMNode.init.apply(this)
+        this.nodeRowStyles().setToBlackOnWhite()
+        return this
     },  
-	*/
 	
 	target: function() {
 		if (this._target) {

@@ -57,10 +57,8 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
 		this.updateSubviews()
 		this.setIsSelectable(true)
 		
-		this.styles().unselected().setColor("black")
-		this.styles().unselected().setBackgroundColor("white")
-		this.styles().selected().setColor("black")
-		this.styles().selected().setBackgroundColor("white")
+//        this.styles().setToBlackOnWhite()
+
 				
         return this
     },

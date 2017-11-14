@@ -17,18 +17,24 @@ window.BMViewStyles = ideal.Proto.extend().newSlots({
     },
     
     setToBlackOnWhite: function() {
+        
         this.unselected().setColor("black")
         this.unselected().setBackgroundColor("white")
+        
         this.selected().setColor("black")
         this.selected().setBackgroundColor("#eee")
+        
         return this
     },
     
     setToGrayOnTransparent: function() {
+        
         this.unselected().setColor("#aaa")
         this.unselected().setBackgroundColor("transparent")
+        
         this.selected().setColor("white")
         this.selected().setBackgroundColor("transparent")        
+        
         return this
     },
     

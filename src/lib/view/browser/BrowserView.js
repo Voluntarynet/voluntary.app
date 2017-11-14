@@ -194,22 +194,18 @@ window.BrowserView = NodeView.extend().newSlots({
                 if (cg.node()) {
                     var color = cg.node().nodeColumnBackgroundColor()
                     if (color) { 
-					    console.log("found  nodeColumnBackgroundColor " + color + " for ", cg.node().typeId() + " " + cg.node().title())
+					    //console.log("found  nodeColumnBackgroundColor " + color + " for ", cg.node().typeId() + " " + cg.node().title())
                         bgColor = color
                     } else {
-					    console.log("no nodeColumnBackgroundColor for ", cg.node().typeId() + " " + cg.node().title())
-                        
+					    //console.log("no nodeColumnBackgroundColor for ", cg.node().typeId() + " " + cg.node().title())
                     }
                 }
                 
-				cg.styles().selected().setBackgroundColor(bgColor)
+				//cg.styles().selected().setBackgroundColor(bgColor)
 				//cg.styles().unselected().setBackgroundColor(bgColor)
 				//this.defaultColumnStyles().selected().applyToView(cg)
                 cg.setBackgroundColor(bgColor)
-
-                //if (cg.column().setSelectionColor) {
-                    cg.column().setSelectionColor(this.bgColorForIndex(i+1))
-                //} 
+                cg.column().setSelectionColor(this.bgColorForIndex(i+1))
             } 
 			i ++
         })

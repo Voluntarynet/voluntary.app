@@ -6,7 +6,6 @@
 
 window.BrowserRow = NodeView.extend().newSlots({
     type: "BrowserRow",
-    isSelected: false,
     isSelectable: true,
     closeButtonView: null,
 	defaultHeight: 60,
@@ -66,7 +65,7 @@ window.BrowserRow = NodeView.extend().newSlots({
             }
         }
         
-		this.applyStyles()
+		//this.applyStyles()
 
         return this
     },
@@ -90,17 +89,18 @@ window.BrowserRow = NodeView.extend().newSlots({
         console.log(this.type() + " onTabKeyUp")
     },
 
-	
 	// --- colors ---
 	
    applyStyles: function() {
         var node = this.node() 
+        
         if (node) {
             this.styles().copyFrom(node.nodeRowStyles())
         }
         
         NodeView.applyStyles.apply(this)
         
+        this.setBackgroundColor(this.currentBgColor())
         return this
     },
     
@@ -288,16 +288,6 @@ window.BrowserRow = NodeView.extend().newSlots({
     didChangeIsSelected: function () {
 		NodeView.didChangeIsSelected.apply(this)
 	    this.updateSubviews()
-        return this
-    },
-
-    select: function() {
-        this.setIsSelected(true)		
-        return this
-    },
-
-    unselect: function() {
-        this.setIsSelected(false)
         return this
     },
 

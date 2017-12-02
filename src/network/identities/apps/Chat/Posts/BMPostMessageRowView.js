@@ -27,7 +27,7 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
         // left view
         this.setLeftView(this.addSubview(DivView.clone().setDivClassName("BMPostMessageRowLeftView")))
 		this.setIconView(this.leftView().addSubview(ImageView.clone().setDivClassName("BMPostAvatarView")))
-        this.iconView().setBackgroundSizeWH(64, 64)     
+        this.iconView().setBackgroundSizeWH(64, 64).setTarget(this).setAction("clickedIconView")
 
         // middle view
         this.setMiddleView(this.addSubview(DivView.clone().setDivClassName("BMPostMessageRowMiddleView")))
@@ -76,11 +76,19 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
 		this.updateSubviews()
 		this.setIsSelectable(true)
 		
-//		this.styles().setToBlackOnWhite()
+        //this.styles().setToBlackOnWhite()		
+        // console.log(" =======> " + this.typeId() + " this.styles().selected().backgroundColor() = ", this.styles().selected().backgroundColor())
 		
-	   // console.log(" =======> " + this.typeId() + " this.styles().selected().backgroundColor() = ", this.styles().selected().backgroundColor())
-
-		
+        return this
+    },
+    
+    clickedIconView: function() {
+        console.log("clickedIconView")
+        return this
+    },
+    
+    addCloseButton: function() {
+        // avoid adding normal BrowserRow closeButtonView
         return this
     },
     

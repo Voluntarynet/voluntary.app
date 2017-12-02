@@ -1,0 +1,55 @@
+- close button on PostMessages not working
+
+- clicking on post should go to post + replies view
+    - lazy create PostThread, add the message and any responses (by searching feed)
+- clicking on image should fo to user profile
+
+
+- only allow nodes to choose themes?
+
+- hasRead for ChatThreads
+- vertical divider line option?
+- thumbnail for direct messages
+
+- custom profile view?
+    - support a row header/footer views (diff from column header/footer)
+
+
+- filter inv by bloom filter of peer
+- add signature to messages using open receiver key
+- verify msg signatures 
+- add blacklist feature for peers
+- PublicKey, PrivateKey abstractions?
+- add NodeStore method to delete unreferrenced roots (to be used after startup)
+
+
+need to store Applets but don't want to store all items
+
+on write, ignore items with rule:
+- ignore items that aren't BMStorableNode? show WARNING?
+- ignore items with shouldStore == false (null is default)
+
+on read, add items in didLoadFromStore?
+- read only happens on initial load of instance
+- does store load overwrite all items?
+  this.items().insertAfter(item, this.someItem())
+
+
+- add sendDate and sender signature to objmessage
+
+- if before sendDate, ignore message
+- if long before sendDate, blacklist peer that shared it
+- if long after sendDate, expire message
+
+
+
+blockstack
+- blockchainId -> userPubkey + [optional] peer's default rendezvous servers (IP+port) 
+
+rendezvous servers (need a static IP)
+- only keep list of connected peers and share it with other connected peers
+- peer names peerPubkey-bloomFilterOfContactPubkeys
+- server can filter peer list sent to peer by union of bloom filters
+
+- peers filter inv messages to peers so senders match bloom filter
+

@@ -100,8 +100,8 @@ window.BrowserRow = NodeView.extend().newSlots({
         
         NodeView.applyStyles.apply(this)
         
-        console.log(this.node().title() + " this.currentBgColor() = ", this.currentBgColor())
-        console.log("this.node().nodeRowStyles().selected().backgroundColor() = ", this.currentBgColor())
+        //console.log(this.node().title() + " this.currentBgColor() = ", this.currentBgColor())
+        //console.log("this.node().nodeRowStyles().selected().backgroundColor() = ", this.currentBgColor())
         this.setBackgroundColor(this.currentBgColor())
         return this
     },
@@ -248,7 +248,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     onMouseEnter: function(event) {
         //console.log(this.type() + " onMouseEnter")
         
-        if (this.canDelete() && !this.hasCloseButton()) {
+        if (this.canDelete() && this.hasCloseButton()) {
             this.closeButtonView().setOpacity(1)
             this.closeButtonView().setTarget(this)
         }

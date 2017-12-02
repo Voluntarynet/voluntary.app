@@ -1335,6 +1335,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     
     onClick: function(event) {
         this.sendActionToTarget()
+        event.stopPropagation()
         return this
     },
     
@@ -1654,9 +1655,10 @@ window.DivView = ideal.Proto.extend().newSlots({
     },    
     
     onMouseDown: function (event) {
-        //console.log("onMouseDown")
+        //console.log(this.typeId() + ".onMouseDown()")
         this._isMouseDown = true
         this._onMouseDownEventPosition = { x: event.clientX, y: event.clientY }
+        event.stopPropagation()
     },
     
     mouseDownDiffWithEvent: function(event) {
@@ -1695,9 +1697,11 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     onMouseUp: function (event) {
+        //console.log(this.typeId() + ".onMouseUp()")
         this._isMouseDown = false
         var diff = this.mouseDownDiffWithEvent(this._onMouseDownEventPosition) 
         this._onMouseDownEventPosition = null 
+        event.stopPropagation()
     },
         
     // --- keyboard events ---

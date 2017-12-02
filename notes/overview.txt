@@ -1,0 +1,46 @@
+
+- add sendDate and sender signature to objmessage
+
+- if before sendDate, ignore message
+- if long before sendDate, blacklist peer that shared it
+- if long after sendDate, expire message
+
+Rendezvous Server:
+
+peerName-bloomFilterOfContactPubkeys -> IP
+
+Peer DataStore:
+
+senderPubkey -> recently sent messages
+
+
+Common Decentralized Messaging Platform CDMP
+
+    identity -> rendezvous servers 
+        - blockstack blockchainId userPubkey -> 
+          [optional] peer's default rendezvous servers (IP+port), date, signature on this record
+
+    rendezvous servers -> peers
+        rendezvous servers (need a static IP)
+        - only keeps list of connected peers and share it with other connected peers
+        - peer names peerPubkey-idFilter (bloomFilterOfContactPubkeys)
+        - [future] server could filter peer list sent to peer by some union metric of bloom filters?
+
+    peers -> message exchange
+        - only connect to peers whose bloom filter matches for one or more of your identities or contacts
+        - messages have sender pubkey and signature
+        - on connect, peerA sends an inventory message peerB containing only the message hashes which match peerB's id filter
+        - peerB then sends a getData request with a list of message hashes it doesn't have yet
+        - peerA sends an ObjectMessage for each requested message
+        - peerB verifies signature of each received message, blacklists other peer if message invalid/long expired
+        - (likewise for peerB to peerA)
+        - when a peer receives a new message, it sends an inv message to any matching peer
+        - if an identity or contact is added/removed, disconnect, reconstruct filter and reconnect with new peer name
+
+    p2p monetization to support scaling?
+        pay rendezvous and peer caching servers
+        server has web page with it's price per GB/month, IP, port
+        - user input's their peer pubkey and identity pubkeys, storage size 
+        - if it accepts order, server show's Monero address, paymentId
+
+

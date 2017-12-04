@@ -288,15 +288,7 @@ window.BrowserView = NodeView.extend().newSlots({
 	    //console.log("popLastActiveColumn this.activeColumnGroups().length = ", this.activeColumnGroups().length)
 	    var n = this.activeColumnGroups().length - 1
 	    if (n < 0) { n = 0; }
-	    //console.log("setColumnGroupCount ", n)
         this.setColumnGroupCount(n) // TODO: collapse cg instead?
-	    //console.log("popLastActiveColumn 222 this.activeColumnGroups().length = ", this.activeColumnGroups().length)
-
-        /*
-	    n -= 2
-	    if (n < 0) { n = 0; }
-        this.selectColumn(this.columns()[n])
-        */
         this.fitColumns()
 	    return this
 	},
@@ -325,19 +317,19 @@ window.BrowserView = NodeView.extend().newSlots({
 			selectedColumnGroup.matchNodeMinWidth() // testing
 			
 			if (selectedRow) {
-	            var nextNode = selectedRow.node().nodeRowLink() // returns receiver by default
-				if (nextNode) {
-					
-		            nextCg.setNode(nextNode)
-		            this.clearColumnsGroupsAfter(nextCg)
-		            //nextCg.column().setTitle(selectedColumn.selectedRowTitle())            
-		            nextCg.syncFromNode()
+    	            var nextNode = selectedRow.nodeRowLink() // returns receiver by default
+
+    				if (nextNode) {
+    		            nextCg.setNode(nextNode)
+    		            this.clearColumnsGroupsAfter(nextCg)
+    		            //nextCg.column().setTitle(selectedColumn.selectedRowTitle())            
+    		            nextCg.syncFromNode()
 			
-					if ((nextNode.view().type() != "BrowserColumnGroup") || nextNode.isKindOf(BMFieldSetNode)) { // TODO: use a better rule here
-						this.setColumnGroupCount(index + 2)
-					}
-				}
-			} // should this be here?
+    					if ((nextNode.view().type() != "BrowserColumnGroup") || nextNode.isKindOf(BMFieldSetNode)) { // TODO: use a better rule here
+    						this.setColumnGroupCount(index + 2)
+    					}
+    				}
+			} 
         }
         
         this.setupColumnGroupColors()

@@ -284,6 +284,7 @@ window.BrowserRow = NodeView.extend().newSlots({
             //console.log(this.type() + " tellParentViews didClickRow")
             this.tellParentViews("didClickRow", this)
         }
+        event.stopPropagation()
 		return false
     },
 
@@ -291,6 +292,10 @@ window.BrowserRow = NodeView.extend().newSlots({
 		NodeView.didChangeIsSelected.apply(this)
 	    this.updateSubviews()
         return this
+    },
+    
+    nodeRowLink: function() {
+        return this.node().nodeRowLink()
     },
 
 })

@@ -1,8 +1,10 @@
-- close button on PostMessages not working
+- click on post
+  - lazy create PostThread, fill items with post + any direct responses (time ordered?)
+
+- clicking on image should go to user profile
 
 - clicking on post should go to post + replies view
     - lazy create PostThread, add the message and any responses (by searching feed)
-- clicking on image should fo to user profile
 
 
 - only allow nodes to choose themes?

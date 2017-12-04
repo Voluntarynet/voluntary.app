@@ -12,6 +12,8 @@ window.BMPostMessage = BMAppMessage.extend().newSlots({
 	didReply: false,
 	didRepost: false,
 	didLike: false,
+	
+	postThread: null,
 }).setSlots({
     
     init: function () {
@@ -80,10 +82,6 @@ window.BMPostMessage = BMAppMessage.extend().newSlots({
 		return 0
 	},
 	
-	nodeRowLink: function() {
-		return null
-	},
-	
 	title: function() {
 	    return this.content()
 	},
@@ -143,9 +141,36 @@ window.BMPostMessage = BMAppMessage.extend().newSlots({
     // link
     
     nodeRowLink: function() {
+        if (this._nodeRowLink) {
+            return this._nodeRowLink
+        }
+        
+        return this.postNodeRowLink()
+    },
+    
+    avatarNodeRowLink: function() {
         return this.senderId().profile()
     },
     
+    postNodeRowLink: function() {
+        return this.postThread()
+    },
+    
+    postThread: function() {
+        if (this._postThread == null) {
+            this._postThread = BMPostThread.clone().setPostMessage(this).update()
+        }
+        return this._postThread
+    },
 
+    // replies
+    
+    replies: function() {
+        if (this._replies == null) {
+            this._replies = []
+        }
+        
+        return this._replies
+    },
 })
 

@@ -72,18 +72,24 @@ window.BrowserColumn = NodeView.extend().newSlots({
         return this
     },
     
-    didClickRow: function(clickedRow) {
+    unselectRowsBesides: function(selectedRow) {
         var rows = this.rows()
 
 		// unselect all other rows
         rows.forEach((row) => {
-            if (row != clickedRow) {
+            if (row != selectedRow) {
                 row.unselect()
             }
         })
+        
+        return this
+    },
+    
+    didClickRow: function(clickedRow) {
+        this.unselectRowsBesides(clickedRow)
 
 		// follow it if we can 
-		if (clickedRow.node().nodeRowLink()) {
+		if (clickedRow.nodeRowLink()) {
 		    //console.log(this.typeId() + ".didClickRow(" + clickedRow.node().title() + ") selecting column ", this.node().title())
         	this.browser().selectColumn(this)
 		}

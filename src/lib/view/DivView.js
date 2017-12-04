@@ -1681,7 +1681,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
     
     onMouseMove: function (event) {
-	/*
+	    /*
         if (this.isMouseDown()) {
             var diff = this.mouseDownDiffWithEvent(event)
             console.log("onMouseMove:" + JSON.stringify(diff))

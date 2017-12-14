@@ -13,8 +13,14 @@ window.BrowserColumn = NodeView.extend().newSlots({
         this.setDefaultSubnodeViewClass(BrowserTitledRow)
         this.setOwnsView(false)
         this.setIsRegisteredForKeyboard(true)
-		this.styles().selected().setBorderLeft("1px solid rgba(0, 0, 0, 0.1)")
-		this.styles().unselected().setBorderLeft("1px solid rgba(0, 0, 0, 0.1)")
+		this.styles().selected().setBorderLeft("5px solid rgba(0, 0, 0, 0.1)")
+		this.styles().unselected().setBorderLeft("5px solid rgba(0, 0, 0, 0.1)")
+        return this
+    },
+    
+    applyStyles: function() {
+        console.log(this.typeId() + ".applyStyles()")
+        NodeView.applyStyles.apply(this)
         return this
     },
     

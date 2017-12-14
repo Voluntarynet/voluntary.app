@@ -32,6 +32,7 @@ window.BMViewStyle = ideal.Proto.extend().newSlots({
 		
 		return "{" + parts.join(", ") + "}"	
 	},
+	
 	/*
 	setBackgroundColor: function(c) {
 		this._backgroundColor = c

@@ -10,6 +10,7 @@ window.BrowserView = NodeView.extend().newSlots({
 }).setSlots({
  	
     bgColors: function() {
+        //return this.bgColorsWarm()
         return this.bgColorsGray()
     },
     

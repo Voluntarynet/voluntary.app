@@ -10,11 +10,12 @@ window.BMViewStyle = ideal.Proto.extend().newSlots({
     backgroundColor: null,
 	opacity: null,
 	borderLeft: null,
+	borderRight: null,
 	
 	// margin, padding, border,...
 	// fontSize, fontFamily, fontStyle
 	
-	styleNames: ["color", "backgroundColor", "opacity", "borderLeft"]
+	styleNames: ["color", "backgroundColor", "opacity", "borderLeft", "borderRight"]
 }).setSlots({
     init: function () {
         return this

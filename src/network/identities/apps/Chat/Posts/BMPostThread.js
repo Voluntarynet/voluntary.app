@@ -12,6 +12,10 @@ window.BMPostThread = BMAppMessage.extend().newSlots({
 		this.nodeRowStyles().setToBlackOnWhite()
     },
     
+    title: function() {
+        return "post"
+    },
+    
     findThreadItems: function() {
         var items = []
         items.push(this.postMessage())

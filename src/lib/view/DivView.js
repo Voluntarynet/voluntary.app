@@ -611,7 +611,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 	// border left
 
 	setBorderLeft: function(s) {
-	    console.log(this.typeId() + " border-left set '", s, "'")
+	    //console.log(this.typeId() + " border-left set '", s, "'")
 		this.setCssAttribute("border-left", s)
 		return this
 	},

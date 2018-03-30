@@ -86,7 +86,7 @@ var JSScript = {
 	    var script = document.createElement('script');
 	    
 	    if (this._fullPath != "/"[0]) {
-			this._fullPath = "/" + this._fullPath
+			this._fullPath = "/p-e-e-r.net/" + this._fullPath
 		}
 				
 				

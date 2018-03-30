@@ -85,7 +85,7 @@ var JSScript = {
 	run: function() {
 	    var script = document.createElement('script');
 	    script.src = this._fullPath;
-		//console.log("JSScript " + this._fullPath)
+		console.log("JSScript " + this._fullPath)
 
 	    script.onload = () => {
 			this._doneCallback()

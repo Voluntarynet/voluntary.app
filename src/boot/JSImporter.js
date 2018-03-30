@@ -85,9 +85,8 @@ var JSScript = {
 	run: function() {
 	    var script = document.createElement('script');
 	    
-	    if (this._fullPath != "/"[0]) {
-			this._fullPath = "https://stevedekorte.github.io/p-e-e-r.net/" + this._fullPath
-		}
+
+	    this._fullPath = "https://stevedekorte.github.io/p-e-e-r.net/" + this._fullPath
 				
 				
 	    script.src = this._fullPath;
@@ -135,19 +134,19 @@ JSImporter = {
 		var parts = this.currentScriptPath().split("/").concat(aPath.split("/")) 
 		var rPath = parts.join("/")
 		
-		/*
 		if (rPath[0] == "/"[0]) {
 			rPath = "." + rPath
 		}
 
+		/*
 		if (rPath[0] == "/"[0]) {
 			rPath = rPath.substr(1)
 		}
-		*/
 		
 		if (rPath[0] != "/"[0]) {
 			rPath = "/" + rPath
 		}
+		*/
 				
 		
 		return rPath

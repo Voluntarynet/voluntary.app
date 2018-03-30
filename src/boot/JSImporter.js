@@ -133,10 +133,14 @@ JSImporter = {
 		if (rPath[0] == "/"[0]) {
 			rPath = "." + rPath
 		}
-		*/
 
 		if (rPath[0] == "/"[0]) {
 			rPath = rPath.substr(1)
+		}
+		*/
+		
+		if (rPath[0] != "/"[0]) {
+			rPath = "/" + rPath
 		}
 				
 		

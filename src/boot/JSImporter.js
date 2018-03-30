@@ -84,6 +84,12 @@ var JSScript = {
 	
 	run: function() {
 	    var script = document.createElement('script');
+	    
+	    if (this._fullPath != "/"[0]) {
+			this._fullPath = "/" + this._fullPath
+		}
+				
+				
 	    script.src = this._fullPath;
 		console.log("JSScript " + this._fullPath)
 

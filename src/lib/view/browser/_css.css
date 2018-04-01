@@ -123,6 +123,7 @@
 	overflow-scrolling: touch;
 	overflow: hidden;
 	min-height: 100%;
+	-ms-overflow-style: none;
 }
 
 .BrowserColumnEmptyLabel {

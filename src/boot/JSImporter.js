@@ -86,11 +86,11 @@ var JSScript = {
 	    var script = document.createElement('script');
 	    
 
-	    this._fullPath = "https://stevedekorte.github.io/p-e-e-r.net/" + this._fullPath
+	    //this._fullPath = "https://stevedekorte.github.io/p-e-e-r.net/" + this._fullPath
 				
 				
 	    script.src = this._fullPath;
-		console.log("JSScript " + this._fullPath)
+		console.log("   <script type='text/javascript' src=' + this._fullPath + '></script>")
 
 	    script.onload = () => {
 			this._doneCallback()

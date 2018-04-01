@@ -112,6 +112,7 @@
 	background-color: transparent;
   	overflow-y: scroll; /* has to be scroll, not auto, for touch scroll momentum to work */
 	overflow-x: hidden;
+	-ms-overflow-style: none;
 }
 
 .BrowserColumn {

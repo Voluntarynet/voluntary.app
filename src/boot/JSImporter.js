@@ -85,10 +85,9 @@ var JSScript = {
 	run: function() {
 	    var script = document.createElement('script');
 	    
-        if (this._fullPath[0] == "/"[0]) {
-            this._fullPath = this._fullPath.substr(1)
-        }
+
 	    this._fullPath = "https://stevedekorte.github.io/p-e-e-r.net/" + this._fullPath
+				
 				
 	    script.src = this._fullPath;
 		console.log("JSScript " + this._fullPath)

@@ -28,6 +28,7 @@ window.BMRServers = BMStorableNode.extend().newSlots({
     
     bootStrapServer: function () {
         return BMRServer.clone().setHost("peerjs1.voluntary.net").setPort(9000) //.setPidSymbol("_bootStrapServer")
+        //return BMRServer.clone().setHost("peerjs1.voluntary.net").setPort(9000) //.setPidSymbol("_bootStrapServer")
         //return BMRServer.clone().setHost("127.0.0.1").setPort(9000) //.setPidSymbol("_bootStrapServer")
     },
     

@@ -48,4 +48,4 @@ JSImporter.pushRelativePaths([
 		
 		return filter
 	}
-})
+});

@@ -88,9 +88,9 @@ var JSScript = {
 
 	    //this._fullPath = "https://stevedekorte.github.io/p-e-e-r.net/" + this._fullPath
 				
+		console.log("JSScript loading: '" + this._fullPath + "'")
 				
 	    script.src = this._fullPath;
-		console.log("   <script type='text/javascript' src=' + this._fullPath + '></script>")
 
 	    script.onload = () => {
 			this._doneCallback()
@@ -119,6 +119,8 @@ JSImporter = {
 	_doneCallbacks: [],
 	_urlLoadingCallbacks: [],
 	_errorCallbacks: [],
+	_jsFilesLoaded: [],
+	_cssFilesLoaded: [],
 
 	clone: ObjectCloneFunction,
 
@@ -220,10 +222,12 @@ JSImporter = {
 		var extension = url.split('.').pop();
 		
 		if (extension == "js" || extension == "json") {
+		    this._jsFilesLoaded.push(url)
 			this._currentScript = JSScript.clone().setImporter(this).setFullPath(url).setDoneCallback(() => { this.loadNext() })
 			//console.log("this._currentScript = ", this._currentScript)
 			this._currentScript.run()
 		} else if (extension == "css") {
+		    this._cssFilesLoaded.push(url)
 			CSSLink.clone().setFullPath(url).run()
 			this.loadNext()
 		} else {
@@ -235,6 +239,7 @@ JSImporter = {
 
 	done: function() {
 		this._doneCallbacks.forEach((callback) => { callback() })
+		this.showConcatCommand()
 		return this
 	},
 
@@ -242,6 +247,20 @@ JSImporter = {
 		this._errorCallbacks.forEach((callback) => { callback(error) })
 		return this		
 	},
+	
+	showConcatCommand: function() {
+	    var files = ["archive/top.html"]
+	    files.appendItems(this._cssFilesLoaded)
+	    files.append("archive/middle.html")
+	    files.appendItems(["./src/boot/LoadProgressBar.js", "./src/boot/JSImporter.js"])
+	    files.appendItems(this._jsFilesLoaded)
+	    files.append("archive/bottom.html")
+	    
+	    var s = "cat " + files.map((p) => { return '"' + p + '"' }).join(" ") + " > index_embedded.html"
+        console.log(s)
+	},
 }
 
-JSImporter.pushRelativePaths(["_imports.js"]).run()
+if (window.JSImporterIsEmbedded != true) {
+    JSImporter.pushRelativePaths(["_imports.js"]).run()
+}

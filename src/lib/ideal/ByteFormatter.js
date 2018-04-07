@@ -36,3 +36,4 @@ window.ByteFormatter = ideal.Proto.extend().newSlots({
 	},
 
 })
+

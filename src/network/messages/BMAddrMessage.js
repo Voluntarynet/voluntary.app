@@ -21,3 +21,4 @@ window.BMAddrMessage = BMMessage.extend().newSlots({
         }
     },
 })
+

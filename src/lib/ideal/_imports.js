@@ -5,4 +5,5 @@ JSImporter.pushRelativePaths([
     "ideal_plus.js",
     "StackTrace.js",
 	"ByteFormatter.js",
-])
+]);
+

@@ -148,3 +148,4 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         return this
     },
 })
+

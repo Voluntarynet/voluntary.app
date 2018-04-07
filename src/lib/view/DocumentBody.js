@@ -56,3 +56,4 @@ window.DocumentBody = DivView.extend().newSlots({
         return { width: this.zoomAdjustedWidth(), height: this.zoomAdjustedHeight() }
     },
 })
+

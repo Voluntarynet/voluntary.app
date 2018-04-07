@@ -45,7 +45,7 @@ window.LoadProgressBar = {
         if (this.canStart()) {
             this.start() 
         } else {
-            setTimeout(() => { LoadProgressBar.startWhenReady() }, 100)
+            setTimeout(() => { this.startWhenReady() }, 100)
         }
     },
     
@@ -216,4 +216,4 @@ window.LoadProgressBar = {
     },
 }
 
-LoadProgressBar.startWhenReady()
+window.LoadProgressBar.startWhenReady()

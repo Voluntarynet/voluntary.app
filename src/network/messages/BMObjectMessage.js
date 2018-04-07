@@ -214,3 +214,4 @@ window.BMObjectMessage = BMMessage.extend().newSlots({
 		return errors
 	},
 })
+

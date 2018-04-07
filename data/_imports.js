@@ -4,4 +4,4 @@ JSImporter.pushRelativePaths([
     "us_cities.json",
     "countries.json",
     "currencies.json",
-])
+]);

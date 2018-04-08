@@ -50,10 +50,12 @@ window.LoadProgressBar = {
     },
     
     start: function() {
-        this.setupHtml()
-        this.initTitle()
-        this.registerForWindowError()
-        this.registerForImports()
+        if (!JSImporter.isDone()) {
+            this.setupHtml()
+            this.initTitle()
+            this.registerForWindowError()
+            this.registerForImports()
+        }
         return this
     },
     

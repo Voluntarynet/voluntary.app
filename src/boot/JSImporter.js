@@ -239,7 +239,9 @@ JSImporter = {
 
 	done: function() {
 		this._doneCallbacks.forEach((callback) => { callback() })
-		this.showConcatCommand()
+		if (window.JSImporterIsEmbedded != true) {
+		    this.showConcatCommand()
+	    }
 		return this
 	},
 
@@ -249,13 +251,17 @@ JSImporter = {
 	},
 	
 	showConcatCommand: function() {
+	    // a unix cat command to embed all the css and js files into the html file
+	    // other resources such as ttf fonts, svg files, images, etc will need to be loaded individually
+	    // but using the embedded JS/css index file will tremendously speed up the load time (>10x)
+	    // and provide a single source file to sign (still need to sign full archive too)
+	     
 	    var files = ["archive/top.html"]
 	    files.appendItems(this._cssFilesLoaded)
 	    files.append("archive/middle.html")
 	    files.appendItems(["./src/boot/LoadProgressBar.js", "./src/boot/JSImporter.js"])
 	    files.appendItems(this._jsFilesLoaded)
 	    files.append("archive/bottom.html")
-	    
 	    var s = "cat " + files.map((p) => { return '"' + p + '"' }).join(" ") + " > index_embedded.html"
         console.log(s)
 	},

@@ -8,6 +8,7 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
    // host: 'peers.bitmarkets.org',
     host: '127.0.0.1',
     port: 9000,
+    path: '',
     isSecure: false,
     serverConnection: null,
 	bloomDistance: null,
@@ -29,6 +30,7 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
 	
 		this.addStoredField(BMField.clone().setKey("host"))
 		this.addStoredField(BMNumberField.clone().setKey("port").setValueIsEditable(true))
+		this.addStoredField(BMField.clone().setKey("path"))
 		this.addStoredField(BMBoolField.clone().setKey("isSecure").setValueIsEditable(true))
 		//this.justAddField(BMPointerField.clone().setKey("serverConnection"))
 		this.addSubnode(BMPointerField.clone().setKey("serverConnection"))

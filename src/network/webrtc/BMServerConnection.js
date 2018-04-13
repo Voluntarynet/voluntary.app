@@ -66,8 +66,8 @@ window.BMServerConnection = BMNode.extend().newSlots({
         return { 
                 host: this.server().host(), 
                 port: this.server().port(),
-				//path: null,
-				//secure: true,
+				path: this.server().path(),
+				secure: this.server().isSecure(),
 				//config: BMNetwork.shared().stunServers().peerOptionsDict(),
                 //config: this.defaultConfig()
                 //debug: 3, 

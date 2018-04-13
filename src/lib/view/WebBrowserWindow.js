@@ -105,7 +105,7 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
 		var result = 'ontouchstart' in window        // works on most browsers 
 			|| navigator.maxTouchPoints;       // works on IE10/11 and Surface	
 		if (result === 0) { result = false; }		
-		console.log("WebBrowserWindow.isTouchDevice() = ", result)
+		//console.log("WebBrowserWindow.isTouchDevice() = ", result)
 		return result
 	},
 

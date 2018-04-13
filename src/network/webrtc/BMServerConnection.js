@@ -98,7 +98,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
             //this._serverConn = new Peer(this.serverConnectionOptions())
             
             this.log("Server " +  this.shortId() + ".connect()")          
-                      
+            
             this._serverConn.on('open', (id) => { 
                 var sid = this.peerId().toString()
                 if(sid != id) {

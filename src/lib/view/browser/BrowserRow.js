@@ -165,6 +165,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
     
     delete: function() {
+        console.log("delete")
         if (this.canDelete()) {
 			this.setOpacity(0)
 			//this.setRight(-this.clientWidth())
@@ -246,11 +247,23 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
     
     onMouseEnter: function(event) {
-        //console.log(this.type() + " onMouseEnter")
+        /*
+        console.log(this.type() + " onMouseEnter")
+        console.log(this.type() + ".canDelete() = ", this.canDelete())
+        console.log(this.type() + ".hasCloseButton() = ", this.hasCloseButton())
         
         if (this.canDelete() && this.hasCloseButton()) {
             this.closeButtonView().setOpacity(1)
             this.closeButtonView().setTarget(this)
+            console.log("this.closeButtonView().target() = ", this.closeButtonView().target())
+            console.log("this.closeButtonView().action() = ", this.closeButtonView().action())
+        }
+        */
+        if (this.canDelete() && this.closeButtonView()) {
+            this.closeButtonView().setOpacity(1)
+            this.closeButtonView().setTarget(this)
+            console.log("this.closeButtonView().target() = ", this.closeButtonView().target())
+            console.log("this.closeButtonView().action() = ", this.closeButtonView().action())
         }
     },
     

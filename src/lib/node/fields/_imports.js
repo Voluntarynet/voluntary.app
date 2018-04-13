@@ -9,6 +9,7 @@ JSImporter.pushRelativePaths([
     "BMIdentityField.js",
     "BMDateField.js",
     "BMNumberField.js",
+    "BMBoolField.js",
     "BMOptionsField.js",
     "BMPointerField.js",
 ])

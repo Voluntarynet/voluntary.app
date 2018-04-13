@@ -102,8 +102,11 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
 
 	isTouchDevice: function() {
 		// via https://stackoverflow.com/questions/4817029/whats-the-best-way-to-detect-a-touch-screen-device-using-javascript
-		return 'ontouchstart' in window        // works on most browsers 
-			|| navigator.maxTouchPoints;       // works on IE10/11 and Surface			
+		var result = 'ontouchstart' in window        // works on most browsers 
+			|| navigator.maxTouchPoints;       // works on IE10/11 and Surface	
+		if (result === 0) { result = false; }		
+		console.log("WebBrowserWindow.isTouchDevice() = ", result)
+		return result
 	},
 
     urlHash: function() {

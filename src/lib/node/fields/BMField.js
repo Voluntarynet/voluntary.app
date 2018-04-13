@@ -69,11 +69,16 @@ window.BMField = BMNode.extend().newSlots({
 		if (!target[setter]) {
 			console.warn("WARNING target = " + target.type() + " setter = '" + setter + "' missing")
 		}
+		v = this.normalizeThisValue(v)
 		target[setter].apply(target, [v])
 		target.didUpdateNode()
 		this.validate()
 		
 		return this
+	},
+	
+	normalizeThisValue: function(v) {
+	    return v
 	},
 	
 	value: function() {

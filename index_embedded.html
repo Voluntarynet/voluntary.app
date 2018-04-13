@@ -1437,11 +1437,15 @@ window.LoadProgressBar = {
     },
     
     start: function() {
-        if (!JSImporter.isDone()) {
+       // if (!JSImporter.isDone()) {
             this.setupHtml()
             this.initTitle()
             this.registerForWindowError()
             this.registerForImports()
+        //}
+        
+        if (JSImporter.isDone()) {
+            this.stop()
         }
         return this
     },
@@ -1693,10 +1697,8 @@ var JSScript = {
 	run: function() {
 	    var script = document.createElement('script');
 	    
-
 	    //this._fullPath = "https://stevedekorte.github.io/p-e-e-r.net/" + this._fullPath
-				
-		console.log("JSScript loading: '" + this._fullPath + "'")
+		//console.log("JSScript loading: '" + this._fullPath + "'")
 				
 	    script.src = this._fullPath;
 
@@ -95730,7 +95732,7 @@ window.BrowserRow = NodeView.extend().newSlots({
 	// touch sliding
 	
 	onTouchMove: function(event) {
-		console.log(this.type() + " onTouchMove diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
+		//console.log(this.type() + " onTouchMove diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
         if (this.canDelete()) {
             var diff = this.touchDownDiffWithEvent(event)
             //console.log("onMouseMove:" + JSON.stringify(diff))
@@ -95746,13 +95748,13 @@ window.BrowserRow = NodeView.extend().newSlots({
 	},
 	
 	onTouchCancel: function(event) {
-		console.log(this.type() + " onTouchCancel")
+		//console.log(this.type() + " onTouchCancel")
         this._isTouchDown = false
         this.slideBack()
 	},
 	
 	onTouchEnd: function(event) {
-		console.log(this.type() + " onTouchEnd diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
+	    //console.log(this.type() + " onTouchEnd diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
 
 		if (this._isTouchDown) {
 			var diff = this.touchDownDiffWithEvent(event)

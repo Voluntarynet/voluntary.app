@@ -85,10 +85,8 @@ var JSScript = {
 	run: function() {
 	    var script = document.createElement('script');
 	    
-
-	    //this._fullPath = "https://stevedekorte.github.io/p-e-e-r.net/" + this._fullPath
-				
-		console.log("JSScript loading: '" + this._fullPath + "'")
+	    //this._fullPath = "https://stevedekorte.github.io/p-e-e-r.net/" + this._fullPath		
+		//console.log("JSScript loading: '" + this._fullPath + "'")
 				
 	    script.src = this._fullPath;
 

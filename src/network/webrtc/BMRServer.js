@@ -86,16 +86,22 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
     },
     
     addrDict: function() {
-        return { host: this.host(), port: this.port() }
+        return { host: this.host(), port: this.port(), path: this.path(), isSecure: this.isSecure() }
     },
     
     setAddrDict: function(dict) {
-        this.setHost(dict.host).setPort(dict.port)
+        this.setHost(dict.host);
+        this.setPort(dict.port);
+        if ("path" in dict) { this.setPath(dict.path); }
+        if ("isSecure" in dict) { this.setIsSecure(dict.isSecure); }
         return this
     },
     
     isAddrDict: function(addrDict) {
-        return this.host()== addrDict.host && this.port() == addrDict.port 
+        return  this.host() == addrDict.host && 
+                this.port() == addrDict.port &&
+                this.path() == addrDict.path &&
+                this.isSecure() == addrDict.isSecure
     },
     
     connectedRemotePeers: function () {

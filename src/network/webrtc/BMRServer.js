@@ -92,8 +92,10 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
     setAddrDict: function(dict) {
         this.setHost(dict.host);
         this.setPort(dict.port);
-        if ("path" in dict) { this.setPath(dict.path); }
-        if ("isSecure" in dict) { this.setIsSecure(dict.isSecure); }
+        this.setPath(dict.path);
+        this.setIsSecure(dict.isSecure);
+        //if ("path" in dict) { this.setPath(dict.path); }
+        //if ("isSecure" in dict) { this.setIsSecure(dict.isSecure); }
         return this
     },
     

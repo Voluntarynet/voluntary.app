@@ -1697,7 +1697,7 @@ var JSScript = {
 	run: function() {
 	    var script = document.createElement('script');
 	    
-	    //this._fullPath = "https://stevedekorte.github.io/p-e-e-r.net/" + this._fullPath
+	    //this._fullPath = "https://stevedekorte.github.io/p-e-e-r.net/" + this._fullPath		
 		//console.log("JSScript loading: '" + this._fullPath + "'")
 				
 	    script.src = this._fullPath;
@@ -79773,6 +79773,8 @@ Socket.prototype._startWebSocket = function(id) {
     util.log('Socket closed.');
     self.disconnected = true;
     self.emit('disconnected');
+    //Hack: prevent Heroku from closing idle web socket.
+    clearInterval(self._pingInterval);
   };
 
   // Take care of the queue of connections if necessary and make sure Peer knows
@@ -79785,6 +79787,10 @@ Socket.prototype._startWebSocket = function(id) {
         self._http = null;
       }, 5000);
     }
+    //Hack: prevent Heroku from closing idle web socket.
+    self._pingInterval = setInterval(function(){
+      self.send({ type: 'PING' });
+    }, 15000);
     self._sendQueuedMessages();
     util.log('Socket open');
   };
@@ -89687,6 +89693,7 @@ JSImporter.pushRelativePaths([
     "BMIdentityField.js",
     "BMDateField.js",
     "BMNumberField.js",
+    "BMBoolField.js",
     "BMOptionsField.js",
     "BMPointerField.js",
 ])
@@ -89867,11 +89874,16 @@ window.BMField = BMNode.extend().newSlots({
 		if (!target[setter]) {
 			console.warn("WARNING target = " + target.type() + " setter = '" + setter + "' missing")
 		}
+		v = this.normalizeThisValue(v)
 		target[setter].apply(target, [v])
 		target.didUpdateNode()
 		this.validate()
 		
 		return this
+	},
+	
+	normalizeThisValue: function(v) {
+	    return v
 	},
 	
 	value: function() {
@@ -90088,6 +90100,52 @@ window.BMNumberField = BMField.extend().newSlots({
 		} 
 		
 		return isValid
+	},
+	
+	didUpdateNode: function() {
+		this.validate()
+		return BMField.didUpdateNode.apply(this)
+	},
+})
+"use strict"
+
+/*
+
+
+*/
+        
+window.BMBoolField = BMField.extend().newSlots({
+    type: "BMBoolField",
+	unsetVisibleValue: "unset",
+}).setSlots({
+    init: function () {
+        BMField.init.apply(this)
+		this.setViewClassName("BMFieldRowView")
+		this.setKeyIsEditable(false)
+		this.setValueIsEditable(false)
+		//this.setValue(false)
+    },
+
+	valueIsBool: function() {
+		var b = this.value()
+		return b == "true" || b == "false";
+	},
+	
+	validate: function() {
+		var isValid = this.valueIsBool()
+		
+		if (!isValid) {
+			this.setValueError("this needs to be a boolean (true or false)")
+		} else {
+			this.setValueError(null)
+		} 
+		
+		return isValid
+	},
+	
+	normalizeThisValue: function(v) {
+	    if (v === true || v == "t" || v == "true" | v == 1) { return true; }
+	    return false
 	},
 	
 	didUpdateNode: function() {
@@ -93785,8 +93843,11 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
 
 	isTouchDevice: function() {
 		// via https://stackoverflow.com/questions/4817029/whats-the-best-way-to-detect-a-touch-screen-device-using-javascript
-		return 'ontouchstart' in window        // works on most browsers 
-			|| navigator.maxTouchPoints;       // works on IE10/11 and Surface			
+		var result = 'ontouchstart' in window        // works on most browsers 
+			|| navigator.maxTouchPoints;       // works on IE10/11 and Surface	
+		if (result === 0) { result = false; }		
+		//console.log("WebBrowserWindow.isTouchDevice() = ", result)
+		return result
 	},
 
     urlHash: function() {
@@ -95702,6 +95763,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
     
     delete: function() {
+        console.log("delete")
         if (this.canDelete()) {
 			this.setOpacity(0)
 			//this.setRight(-this.clientWidth())
@@ -95732,7 +95794,7 @@ window.BrowserRow = NodeView.extend().newSlots({
 	// touch sliding
 	
 	onTouchMove: function(event) {
-		//console.log(this.type() + " onTouchMove diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
+		console.log(this.type() + " onTouchMove diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
         if (this.canDelete()) {
             var diff = this.touchDownDiffWithEvent(event)
             //console.log("onMouseMove:" + JSON.stringify(diff))
@@ -95748,13 +95810,13 @@ window.BrowserRow = NodeView.extend().newSlots({
 	},
 	
 	onTouchCancel: function(event) {
-		//console.log(this.type() + " onTouchCancel")
+		console.log(this.type() + " onTouchCancel")
         this._isTouchDown = false
         this.slideBack()
 	},
 	
 	onTouchEnd: function(event) {
-	    //console.log(this.type() + " onTouchEnd diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
+		console.log(this.type() + " onTouchEnd diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
 
 		if (this._isTouchDown) {
 			var diff = this.touchDownDiffWithEvent(event)
@@ -95783,11 +95845,23 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
     
     onMouseEnter: function(event) {
-        //console.log(this.type() + " onMouseEnter")
+        /*
+        console.log(this.type() + " onMouseEnter")
+        console.log(this.type() + ".canDelete() = ", this.canDelete())
+        console.log(this.type() + ".hasCloseButton() = ", this.hasCloseButton())
         
         if (this.canDelete() && this.hasCloseButton()) {
             this.closeButtonView().setOpacity(1)
             this.closeButtonView().setTarget(this)
+            console.log("this.closeButtonView().target() = ", this.closeButtonView().target())
+            console.log("this.closeButtonView().action() = ", this.closeButtonView().action())
+        }
+        */
+        if (this.canDelete() && this.closeButtonView()) {
+            this.closeButtonView().setOpacity(1)
+            this.closeButtonView().setTarget(this)
+            console.log("this.closeButtonView().target() = ", this.closeButtonView().target())
+            console.log("this.closeButtonView().action() = ", this.closeButtonView().action())
         }
     },
     
@@ -98499,8 +98573,8 @@ window.BMServerConnection = BMNode.extend().newSlots({
         return { 
                 host: this.server().host(), 
                 port: this.server().port(),
-				//path: null,
-				//secure: true,
+				path: this.server().path(),
+				secure: this.server().isSecure(),
 				//config: BMNetwork.shared().stunServers().peerOptionsDict(),
                 //config: this.defaultConfig()
                 //debug: 3, 
@@ -98531,7 +98605,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
             //this._serverConn = new Peer(this.serverConnectionOptions())
             
             this.log("Server " +  this.shortId() + ".connect()")          
-                      
+            
             this._serverConn.on('open', (id) => { 
                 var sid = this.peerId().toString()
                 if(sid != id) {
@@ -98742,6 +98816,8 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
    // host: 'peers.bitmarkets.org',
     host: '127.0.0.1',
     port: 9000,
+    path: '',
+    isSecure: false,
     serverConnection: null,
 	bloomDistance: null,
 	error: null,
@@ -98761,7 +98837,9 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
         this.setNodeMinWidth(500)
 	
 		this.addStoredField(BMField.clone().setKey("host"))
-		this.addStoredField(BMField.clone().setKey("port"))
+		this.addStoredField(BMNumberField.clone().setKey("port").setValueIsEditable(true))
+		this.addStoredField(BMField.clone().setKey("path"))
+		this.addStoredField(BMBoolField.clone().setKey("isSecure").setValueIsEditable(true))
 		//this.justAddField(BMPointerField.clone().setKey("serverConnection"))
 		this.addSubnode(BMPointerField.clone().setKey("serverConnection"))
     },
@@ -98816,16 +98894,24 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
     },
     
     addrDict: function() {
-        return { host: this.host(), port: this.port() }
+        return { host: this.host(), port: this.port(), path: this.path(), isSecure: this.isSecure() }
     },
     
     setAddrDict: function(dict) {
-        this.setHost(dict.host).setPort(dict.port)
+        this.setHost(dict.host);
+        this.setPort(dict.port);
+        this.setPath(dict.path);
+        this.setIsSecure(dict.isSecure);
+        //if ("path" in dict) { this.setPath(dict.path); }
+        //if ("isSecure" in dict) { this.setIsSecure(dict.isSecure); }
         return this
     },
     
     isAddrDict: function(addrDict) {
-        return this.host()== addrDict.host && this.port() == addrDict.port 
+        return  this.host() == addrDict.host && 
+                this.port() == addrDict.port &&
+                this.path() == addrDict.path &&
+                this.isSecure() == addrDict.isSecure
     },
     
     connectedRemotePeers: function () {

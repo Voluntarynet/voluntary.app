@@ -132,7 +132,11 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
 	urlHostname: function() {
 		var parser = document.createElement('a')
 		parser.href = window.location.href
-		return parser.hostname
+		var name = parser.hostname
+		if (!name) {
+		    name = ""
+		}
+		return name
 	},
 	
 	setTitle: function(aName) {

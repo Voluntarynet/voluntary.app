@@ -62,9 +62,34 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         keyView.setInnerHTML(this.visibleKey())
 
         var newValue = this.visibleValue()
+		
+		/*
+        console.log("FieldRow.syncFromNode:")
+        console.log("  valueView.type() == ", valueView.type())
+        console.log("  valueView.innerHTML() == '" + valueView.innerHTML() + "'")
+        console.log("  valueView.value == ", valueView.value)
+        console.log("  newValue =  '" + newValue + "'")
+        */
         
-        console.log("valueView.type() == ", valueView.type())
-        valueView.setValue(newValue)
+            valueView.setValue(newValue)
+
+/*
+        if (valueView.type() == "NodeView") {
+            
+            if (valueView.isActiveElementAndEditable()) {
+                valueView.blur()
+			    valueView.setInnerHTML(newValue)
+                valueView.focus()
+			} else {
+			    valueView.setInnerHTML(newValue)
+			}
+			            
+        } else if (valueView.value && (valueView.value() != newValue) && valueView.setValue) {
+            valueView.setValue(newValue)
+        }
+        */
+        
+        console.log("")
 		
 		keyView.setIsVisible(node.keyIsVisible())
 		valueView.setIsVisible(node.valueIsVisible())

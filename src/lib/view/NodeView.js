@@ -218,4 +218,22 @@ NodeView = DivStyledView.extend().newSlots({
 	    return this
 	},
     
+    // value
+    
+    setValue: function(newValue) {
+        
+        if (this.isActiveElementAndEditable()) {
+            this.blur()
+		    this.setInnerHTML(newValue)
+            this.focus()
+		} else {
+		    this.setInnerHTML(newValue)
+		}
+			
+        return this
+    },
+    
+    value: function() {
+        return this.innerHTML()
+    },
 })

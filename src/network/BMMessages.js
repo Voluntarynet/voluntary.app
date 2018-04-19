@@ -134,8 +134,9 @@ window.BMMessages = BMStorableNode.extend().newSlots({
 		if (didPlace) {
 			this.markPlacedObjMsg(objMsg) 
 		} else {
-			console.log("couldn't place objMsg " + objMsg.hash() + " so deleting")
-			this.deleteObjMsg(objMsg)
+		    console.log("couldn't place objMsg " + objMsg.hash() )
+            //console.log("couldn't place objMsg " + objMsg.hash() + " so deleting")
+			//this.deleteObjMsg(objMsg)
 		}
 					
 		return didPlace

@@ -62,15 +62,9 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         keyView.setInnerHTML(this.visibleKey())
 
         var newValue = this.visibleValue()
-        if (valueView.innerHTML() != newValue) {
-            if (valueView.isActiveElementAndEditable()) {
-                valueView.blur()
-			    valueView.setInnerHTML(newValue)
-                valueView.focus()
-			} else {
-			    valueView.setInnerHTML(newValue)
-			}
-		}
+        
+        console.log("valueView.type() == ", valueView.type())
+        valueView.setValue(newValue)
 		
 		keyView.setIsVisible(node.keyIsVisible())
 		valueView.setIsVisible(node.valueIsVisible())

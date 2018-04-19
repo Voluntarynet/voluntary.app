@@ -37,6 +37,32 @@ window.TextField = DivStyledView.extend().newSlots({
 		return false
 	},
 	
+	// ------------------
+
+	setValue: function(newValue) {
+        //var newValue = this.visibleValue()
+        if (this.innerHTML() != newValue) {
+            if (this.isActiveElementAndEditable()) {
+                this.blur()
+			    this.setInnerHTML(newValue)
+                this.focus()
+			} else {
+			    this.setInnerHTML(newValue)
+			}
+		}
+		return this
+	},	
+			
+	value: function() {
+	    /*
+	    				if (this.valueView().text) {
+        		node.setValue(this.valueView().text())
+        	*/
+	    return this.innerHTML()
+	},
+	
+	// ------------------
+	
 	setInnerHTML: function(s) {
 		// need to blur it first, if user is typing 
 		

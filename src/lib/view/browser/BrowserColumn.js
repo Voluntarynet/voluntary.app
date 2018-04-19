@@ -20,7 +20,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
     
     applyStyles: function() {
-        console.log(this.typeId() + ".applyStyles()")
+        //console.log(this.typeId() + ".applyStyles()")
         NodeView.applyStyles.apply(this)
         return this
     },

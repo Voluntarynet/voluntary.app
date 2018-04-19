@@ -262,8 +262,8 @@ window.BrowserRow = NodeView.extend().newSlots({
         if (this.canDelete() && this.closeButtonView()) {
             this.closeButtonView().setOpacity(1)
             this.closeButtonView().setTarget(this)
-            console.log("this.closeButtonView().target() = ", this.closeButtonView().target())
-            console.log("this.closeButtonView().action() = ", this.closeButtonView().action())
+            //console.log("this.closeButtonView().target() = ", this.closeButtonView().target())
+            //console.log("this.closeButtonView().action() = ", this.closeButtonView().action())
         }
     },
     

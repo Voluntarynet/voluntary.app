@@ -1,9 +1,4 @@
 "use strict"
-
-/*
-
-
-*/
         
 window.BMBoolField = BMField.extend().newSlots({
     type: "BMBoolField",

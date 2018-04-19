@@ -1280,6 +1280,8 @@ Socket.prototype._startWebSocket = function(id) {
     util.log('Socket closed.');
     self.disconnected = true;
     self.emit('disconnected');
+    //Hack: prevent Heroku from closing idle web socket.
+    clearInterval(self._pingInterval);
   };
 
   // Take care of the queue of connections if necessary and make sure Peer knows
@@ -1292,6 +1294,10 @@ Socket.prototype._startWebSocket = function(id) {
         self._http = null;
       }, 5000);
     }
+    //Hack: prevent Heroku from closing idle web socket.
+    self._pingInterval = setInterval(function(){
+      self.send({ type: 'PING' });
+    }, 15000);
     self._sendQueuedMessages();
     util.log('Socket open');
   };

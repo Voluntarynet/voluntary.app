@@ -29,9 +29,7 @@ window.BoolView = DivStyledView.extend().newSlots({
     
     // editable
     
-    setIsEditable: function(aBool) {
-        console.log(this.type() + ".setIsEditable(" + aBool + ")")
-        
+    setIsEditable: function(aBool) {        
         this._isEditable = aBool
         
         if (this._isEditable) {
@@ -50,14 +48,12 @@ window.BoolView = DivStyledView.extend().newSlots({
     // clicks
     
     onClick: function(event) {
-        console.log(this.type() + ".onClick()\n")
         DivStyledView.onClick.apply(this, [event])
         this.toggle()
         return this
     },
     
     toggle: function() {
-        console.log(this.type() + ".toggle()")
         this.setValue(!this.value())
         //this.scheduleSyncToNode()
         this.didEdit()
@@ -67,13 +63,11 @@ window.BoolView = DivStyledView.extend().newSlots({
 	// ------------------
 
 	setValue: function(v) {
-	    console.log(this.type() + ".setValue( " + typeof(v) + ":" + v + ")")
 	    assert(typeof(v) == "boolean")
 	    this._value = v
 
 		//this.updateUnicode()
         this.updateIcon()
-        
 		return this
 	},	
 	
@@ -87,6 +81,7 @@ window.BoolView = DivStyledView.extend().newSlots({
 	
 	// unicode
 	
+	/*
 	checkedUnicode: function() {
 	     return "&#10004;"
 	},
@@ -103,8 +98,9 @@ window.BoolView = DivStyledView.extend().newSlots({
 		this.setSafeInnerHTML(this.currentUnicode())
 		return this
 	},
+	*/
 	
-	// icon
+	// svg icon
 	
 	/*
 	checkedIcon: function() {
@@ -123,16 +119,13 @@ window.BoolView = DivStyledView.extend().newSlots({
 	uncheckedIcon: function() {
 	   return "checkbox-circle-unchecked" 
 	},
-	
-	
-	
+		
 	currentIcon: function() {
 	    return this.isChecked() ? this.checkedIcon() : this.uncheckedIcon();
 	},
 	
     updateIcon: function () {
         this.setMinAndMaxWidth(16).setMinAndMaxHeight(16)
-        console.log("this.currentIcon() = ", this.currentIcon())
         this.setBackgroundImageUrlPath(this.pathForIconName(this.currentIcon()))
 		this.setBackgroundSizeWH(16, 16) // use "contain" instead?
 		this.setBackgroundPosition("center")

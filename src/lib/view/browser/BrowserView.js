@@ -295,14 +295,7 @@ window.BrowserView = NodeView.extend().newSlots({
 	    return this
 	},
 	
-    selectColumn: function(selectedColumn, canShiftColumns) {
-        if (typeof(canShiftColumns) == "undefined") {
-            canShiftColumns = true
-        }
-        
-        console.log("canShiftColumns = ", canShiftColumns)
-        //console.trace()
-        
+    selectColumn: function(selectedColumn) {
         var selectedColumnGroup = selectedColumn.columnGroup()
 		this._selectedColumnGroup = selectedColumnGroup
 
@@ -343,7 +336,7 @@ window.BrowserView = NodeView.extend().newSlots({
         
         this.setupColumnGroupColors()
         
-		this.fitColumns(canShiftColumns)
+		this.fitColumns()
 
 		this.updateSelectedColumnTo(selectedColumn)
         
@@ -389,7 +382,7 @@ window.BrowserView = NodeView.extend().newSlots({
 
 	// --- fitting columns in browser ---------------------------------------------
 
-    fitColumns: function (canShiftColumns) {
+    fitColumns: function () {
         //console.log(this.type() + " fitColumns")
         this.updateSingleColumnMode()
 
@@ -400,7 +393,7 @@ window.BrowserView = NodeView.extend().newSlots({
 		if (lastActiveCg && this.isSingleColumn()) {
 		    this.fitForSingleColumn()
 		} else {
-			this.fitForMultiColumn(canShiftColumns)
+			this.fitForMultiColumn()
 		}
 		
 		return this
@@ -498,13 +491,10 @@ window.BrowserView = NodeView.extend().newSlots({
 	},
 	*/
 	
-	fitForMultiColumn: function(canShiftColumns) {
-		// collapse columns, update column left arrows and titles as needed
+	fitForMultiColumn: function() {
 		this.updateBackground()		
 		this.uncollapseAllColumns()
-		//if (canShiftColumns) {
-		    this.collapseLeftColumnsUntilRightColumnsFit()
-		//}
+	    this.collapseLeftColumnsUntilRightColumnsFit()
         this.expandLastColumnIfNeeded()
    		this.updateBackArrow()
 		this.setShouldShowTitles(false) // only show titles in single column mode

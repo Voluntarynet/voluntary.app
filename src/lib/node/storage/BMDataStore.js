@@ -1,8 +1,8 @@
 "use strict"
+
 /*
 	BMDataStore
 	A visible representation of the NodeStore
-
 */
 
 window.BMDataStore = BMNode.extend().newSlots({
@@ -11,7 +11,7 @@ window.BMDataStore = BMNode.extend().newSlots({
     init: function () {
 		BMNode.init.apply(this)
 		this.setTitle("DataStore")
-		this.setNodeMinWidth(300)
+		this.setNodeMinWidth(300) 
     },
 
 	subtitle: function() {
@@ -56,6 +56,7 @@ window.BMDataStore = BMNode.extend().newSlots({
 		}
 		
 		var classNode = this.subnodeForClassName(className)
+		classNode.setNodeMinWidth(300) 
 		classNode.justAddSubnode(aRecord)	
 		return this	
 	},

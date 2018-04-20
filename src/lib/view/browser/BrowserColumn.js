@@ -98,7 +98,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
 		// follow it if we can 
 		if (clickedRow.nodeRowLink()) {
 		    //console.log(this.typeId() + ".didClickRow(" + clickedRow.node().title() + ") selecting column ", this.node().title())
-        	this.browser().selectColumn(this, false)
+        	this.browser().selectColumn(this)
 		}
 
         return true

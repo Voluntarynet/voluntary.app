@@ -1,5 +1,10 @@
 "use strict"
 
+/*
+	BMDataStoreRecord
+	A visible representation of the NodeStore object record
+*/
+
 window.BMDataStoreRecord = BMFieldSetNode.extend().newSlots({
     type: "BMDataStoreRecord",
 	key: null,
@@ -11,6 +16,7 @@ window.BMDataStoreRecord = BMFieldSetNode.extend().newSlots({
         //this.setViewClassName("BMDataStoreRecordView")
         this.addAction("delete")
 		this.setNodeColumnBackgroundColor("white")
+		this.setNodeMinWidth(300)
     },
 
 	prepareToAccess: function() {

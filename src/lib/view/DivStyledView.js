@@ -25,7 +25,7 @@ window.DivStyledView = DivView.extend().newSlots({
 		var style = null
 		if (this.isSelected()) {
 			style = this.styles().selected()
-			console.log(this.typeId() + ".applyStyles() selected ", style.description())
+			//console.log(this.typeId() + ".applyStyles() selected ", style.description())
 		} else {
 			style = this.styles().unselected()
 			//console.log(this.typeId() + ".applyStyles() unselected ", style.description())

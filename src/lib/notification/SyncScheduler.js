@@ -107,6 +107,7 @@ window.SyncScheduler = ideal.Proto.extend().newSlots({
             var actions = this.orderedActions()
             this.clearActions()
             
+            //console.log("actions = ", actions.map(a => a.method()).join(","))
 			//console.log("--- sending ----")
             actions.forEach((action) => {
 				this.setCurrentAction(action)

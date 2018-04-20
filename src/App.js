@@ -64,14 +64,20 @@ window.App = BaseApp.extend().newSlots({
    		this.setDataStore(BMDataStore.clone())
    		this.about().addSubnode(this.dataStore())
 	
-        this.network().servers().connect()
 
 		this.appDidInit()
+		
+		try {
+            this.network().servers().connect()
+        } catch (e) {
+        	console.warn("App setupSubnodes caught exception: ", e)
+        }
 		
         return this
     },
     
 	appDidInit: function() {
+	    //console.log("App.appDidInit() --------------------------------")
         BaseApp.appDidInit.apply(this)
 		window.LoadProgressBar.stop()  
 	    SyncScheduler.scheduleTargetAndMethod(this.browser(), "syncFromHashPath", 10)

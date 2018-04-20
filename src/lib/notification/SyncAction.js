@@ -20,7 +20,7 @@ window.SyncAction = ideal.Proto.extend().newSlots({
 	
 	send: function() {
 		//console.log("   sending " + this.description())
-			this.target()[this.method()].apply(this.target(), this.args() ? this.args() : [])
+		this.target()[this.method()].apply(this.target(), this.args() ? this.args() : [])
 	},
 	
 	actionsKey: function() {

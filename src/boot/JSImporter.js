@@ -236,6 +236,7 @@ JSImporter = {
 	},
 
 	done: function() {
+	    //console.log("JSImporter.done() -----------------------------")
 		this._doneCallbacks.forEach((callback) => { callback() })
 		if (window.JSImporterIsEmbedded != true) {
 		    //this.showConcatCommand()

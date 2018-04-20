@@ -291,6 +291,7 @@ window.BrowserView = NodeView.extend().newSlots({
 	    if (n < 0) { n = 0; }
         this.setColumnGroupCount(n) // TODO: collapse cg instead?
         this.fitColumns()
+        this.syncToHashPath()
 	    return this
 	},
 	

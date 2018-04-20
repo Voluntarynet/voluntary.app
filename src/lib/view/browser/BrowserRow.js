@@ -177,6 +177,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         }
     },
 
+    /*
 	animateOpen: function() {
 		this.setTransition(this.transitionStyle())
 		this.setOpacity(0)
@@ -186,6 +187,7 @@ window.BrowserRow = NodeView.extend().newSlots({
 			this.setMinAndMaxHeight(this.defaultHeight())
 		}, 0)		
 	},
+	*/
 
     // sliding
     

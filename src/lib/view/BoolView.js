@@ -37,7 +37,9 @@ window.BoolView = DivStyledView.extend().newSlots({
         } else {
             this.setIsRegisteredForClicks(false)
         }
-
+        
+        this.updateIcon()
+        
         return this
     },
     
@@ -61,7 +63,7 @@ window.BoolView = DivStyledView.extend().newSlots({
     },
     
 	// ------------------
-
+    
 	setValue: function(v) {
 	    assert(typeof(v) == "boolean")
 	    this._value = v
@@ -129,7 +131,7 @@ window.BoolView = DivStyledView.extend().newSlots({
         this.setBackgroundImageUrlPath(this.pathForIconName(this.currentIcon()))
 		this.setBackgroundSizeWH(16, 16) // use "contain" instead?
 		this.setBackgroundPosition("center")
-		this.setOpacity(1)
+		this.setOpacity(this.isEditable() ? 1 : 0.5)
         return this
     },
 })

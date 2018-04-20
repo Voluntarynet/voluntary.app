@@ -65,6 +65,8 @@ window.BMNode = ideal.Proto.extend().newSlots({
         
         this.setNodeColumnStyles(BMViewStyles.clone())
         this.setNodeRowStyles(BMViewStyles.clone())
+        this.nodeRowStyles().selected().setColor("white")
+        this.nodeRowStyles().unselected().setColor("#aaa")
         return this
     },
 

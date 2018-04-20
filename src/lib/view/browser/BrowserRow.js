@@ -38,6 +38,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     
     currentRowStyle: function() {
         var styles = this.node().nodeRowStyles()
+        //styles.selected().set
         
         if (this.isSelected()) {
         	return styles.selected()

@@ -1954,7 +1954,31 @@ window.DivView = ideal.Proto.extend().newSlots({
 	    return e.textContent || e.innerText || "";		
 	},
     
+    // --- set caret ----
     
+    moveCaretToEnd: function() {
+        var contentEditableElement = this.element()
+        var range, selection;
+        
+        if(document.createRange)//Firefox, Chrome, Opera, Safari, IE 9+
+        {
+            range = document.createRange();//Create a range (a range is a like the selection but invisible)
+            range.selectNodeContents(contentEditableElement);//Select the entire contents of the element with the range
+            range.collapse(false);//collapse the range to the end point. false means collapse to end rather than the start
+            selection = window.getSelection();//get the selection object (allows you to change selection)
+            selection.removeAllRanges();//remove any selections already made
+            selection.addRange(range);//make the range you have just created the visible selection
+        }
+        else if(document.selection)//IE 8 and lower
+        { 
+            range = document.body.createTextRange();//Create a range (a range is a like the selection but invisible)
+            range.moveToElementText(contentEditableElement);//Select the entire contents of the element with the range
+            range.collapse(false);//collapse the range to the end point. false means collapse to end rather than the start
+            range.select();//Select the range (make it the visible selection
+        }
+        return this
+    },
+
     // --- text selection ------------------
     
 	selectAll: function() {
@@ -1980,20 +2004,19 @@ window.DivView = ideal.Proto.extend().newSlots({
         var rDataHTML = clipboardData.getData('text/html');
         var rDataPText = clipboardData.getData('text/plain');
 
-        var htmlToPlainText = function (html)
-        {
+        var htmlToPlainTextFunc = function (html) {
            var tmp = document.createElement("DIV");
            tmp.innerHTML = html;
            return tmp.textContent || tmp.innerText || "";
         }
 
         if (rDataHTML && rDataHTML.trim().length != 0) {
-            this.replaceSelectedText(htmlToPlainText(rDataHTML))
+            this.replaceSelectedText(htmlToPlainTextFunc(rDataHTML))
             return false; // prevent returning text in clipboard
         }
 
         if (rDataPText && rDataPText.trim().length != 0) {
-            this.replaceSelectedText(htmlToPlainText(rDataPText))
+            this.replaceSelectedText(htmlToPlainTextFunc(rDataPText))
             return false; // prevent returning text in clipboard
         }
     },
@@ -2021,18 +2044,62 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     replaceSelectedText: function(replacementText) {
-        var sel, range;
+        var range;
         if (window.getSelection) {
-            sel = window.getSelection();
+            var sel = window.getSelection();
             if (sel.rangeCount) {
                 range = sel.getRangeAt(0);
                 range.deleteContents();
                 range.insertNode(document.createTextNode(replacementText));
             }
+            
+
+            console.log("inserted node")
         } else if (document.selection && document.selection.createRange) {
             range = document.selection.createRange();
             range.text = replacementText;
+            console.log("set range.text")
         }
+
+        if (range) {
+            // now move the selection to just the end of the range
+            range.setStart(range.endContainer, range.endOffset);
+        }
+        
+        return this
+    },
+
+    /*
+    // untested
+
+    setCaretPosition: function(caretPos) {
+        var elem = this.element();
+
+        if(elem != null) {
+            if(elem.createTextRange) {
+                var range = elem.createTextRange();
+                range.move('character', caretPos);
+                range.select();
+            }
+            else {
+                if(elem.selectionStart) {
+                    elem.focus();
+                    elem.setSelectionRange(caretPos, caretPos);
+                } else {
+                    elem.focus();
+                }
+            }
+        }
+    },
+    */
+    
+    clearSelection: function() {
+        if (window.getSelection) {
+            window.getSelection().removeAllRanges();
+        } else if (document.selection) {
+            document.selection.empty();
+        }
+        return this
     },
     
     setContentAfterOrBeforeString: function(aString, afterOrBefore) {

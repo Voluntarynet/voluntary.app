@@ -41,29 +41,24 @@ window.TextField = DivStyledView.extend().newSlots({
 
 	setValue: function(newValue) {
         //var newValue = this.visibleValue()
-        if (this.innerHTML() != newValue) {
-            if (this.isActiveElementAndEditable()) {
-                this.blur()
-			    this.setInnerHTML(newValue)
-                this.focus()
-			} else {
-			    this.setInnerHTML(newValue)
-			}
-		}
+	    this.setSafeInnerHTML(newValue)
 		return this
 	},	
 			
 	value: function() {
 	    /*
-	    				if (this.valueView().text) {
-        		node.setValue(this.valueView().text())
-        	*/
+	    return this.element().text
+        */
 	    return this.innerHTML()
 	},
 	
 	// ------------------
 	
 	setInnerHTML: function(s) {
+	    throw new Error("use setSafeInnerHTML instead")
+	    
+	    /*
+        DivView.setSafeInnerHTML.apply(this, [s])
 		// need to blur it first, if user is typing 
 		
 		if (this.innerHTML() == s) {
@@ -79,7 +74,7 @@ window.TextField = DivStyledView.extend().newSlots({
 		}
 		//console.log("setInnerHTML '" + s + "'")
         DivView.setInnerHTML.apply(this, [s])
-
+        */
 		//console.log("innerHTML =  '" + this.innerHTML() + "'")
 		return this
 	},
@@ -101,7 +96,7 @@ window.TextField = DivStyledView.extend().newSlots({
         })
 
         if (didReturn) { 
-            this.setInnerHTML(this.innerText())
+            this.setSafeInnerHTML(this.innerText())
         }
 
 		return didReturn

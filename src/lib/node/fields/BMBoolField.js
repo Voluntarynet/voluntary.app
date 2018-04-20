@@ -14,7 +14,7 @@ window.BMBoolField = BMField.extend().newSlots({
 
 	valueIsBool: function() {
 		var b = this.value()
-		return b == "true" || b == "false";
+		return typeof(b) == "boolean";
 	},
 	
 	validate: function() {

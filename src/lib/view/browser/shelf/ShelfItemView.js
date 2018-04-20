@@ -44,7 +44,6 @@ window.ShelfItemView = NodeView.extend().newSlots({
 		var v = DivView.clone().setDivClassName("ShelfBadgeView")
 		this.setBadgeView(v)
 	    this.addSubview(v)
-		v.setInnerHTML("1212")
 		return this
 	},
 	

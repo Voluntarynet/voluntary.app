@@ -19,15 +19,15 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
 		
         this.setValueView(this.createValueView())
         this.addSubview(this.valueView())  
-        this.valueView().setUserSelect("text")
-		this.valueView().setSpellCheck(false)
+      
+        this.valueView().setUserSelect("text")   // should the value view handle this?
+		this.valueView().setSpellCheck(false)   // should the value view handle this?
 		
 		this.setNoteView(DivView.clone().setDivClassName("BMFieldRowViewNoteView"))
 		this.addSubview(this.noteView())
         this.noteView().setUserSelect("text")
-
         
-        //his.setEditable(false)
+        //this.setEditable(false)
         return this
     },
 
@@ -35,6 +35,8 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
 		return TextField.clone().setDivClassName("BMFieldValueView")
 	},
 	
+    // visible key and value
+    
 	visibleValue: function() {
 		return this.node().visibleValue()
 	},
@@ -43,27 +45,45 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
 		return this.node().key()
 	},
 
+    // sync 
+    
+	syncValueViewToNode: function() {
+        //console.log(this.type() + ".syncFromNode " + this.node().type())
+	    if (this.node().type() == "BMBoolField" && this.valueView().type() != "BoolView") {
+	        //console.log("syncValueViewToNode setup bool view")
+	        var boolView = BoolView.clone()
+            this.removeSubview(this.valueView())  
+            this.setValueView(boolView)
+            this.addSubview(this.valueView())  
+            //this.valueView().setUserSelect("text")   // should the value view handle this?
+		    //this.valueView().setSpellCheck(false)   // should the value view handle this?	        
+		    //return TextField.clone().setDivClassName("BMFieldValueView")
+        }
+	},
+    
     syncFromNode: function () {
 		BrowserFieldRow.syncFromNode.apply(this)
 		//console.log(this.type() + " syncFromNode")
 		
+		this.node().prepareToSyncToView()
+		this.syncValueViewToNode()
+
         var node = this.node()
 		var keyView = this.keyView()
 		var valueView = this.valueView()
-
-		this.node().prepareToSyncToView()
-
+		
 		if (node.isVisible()) {
 			this.setDisplay("block")
 		} else {
 			this.setDisplay("none")
 		}
 
-        keyView.setInnerHTML(this.visibleKey())
+        keyView.setSafeInnerHTML(this.visibleKey())
 
         var newValue = this.visibleValue()
 		
 		/*
+        console.log("")
         console.log("FieldRow.syncFromNode:")
         console.log("  valueView.type() == ", valueView.type())
         console.log("  valueView.innerHTML() == '" + valueView.innerHTML() + "'")
@@ -71,32 +91,14 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         console.log("  newValue =  '" + newValue + "'")
         */
         
-            valueView.setValue(newValue)
-
-/*
-        if (valueView.type() == "NodeView") {
-            
-            if (valueView.isActiveElementAndEditable()) {
-                valueView.blur()
-			    valueView.setInnerHTML(newValue)
-                valueView.focus()
-			} else {
-			    valueView.setInnerHTML(newValue)
-			}
-			            
-        } else if (valueView.value && (valueView.value() != newValue) && valueView.setValue) {
-            valueView.setValue(newValue)
-        }
-        */
-        
-        console.log("")
+        valueView.setValue(newValue)
 		
 		keyView.setIsVisible(node.keyIsVisible())
 		valueView.setIsVisible(node.valueIsVisible())
 		
         
-        keyView.setContentEditable(node.keyIsEditable())
-        valueView.setContentEditable(node.valueIsEditable())
+        keyView.setIsEditable(node.keyIsEditable())
+        valueView.setIsEditable(node.valueIsEditable())
 
 		if (!node.valueIsEditable()) {
 			//console.log("fieldview key '", node.key(), "' node.valueIsEditable() = ", node.valueIsEditable(), " setColor ", this.uneditableColor())
@@ -120,9 +122,9 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
 		}
 				
 		if (this.visibleNote()) {
-			this.noteView().setInnerHTML(this.visibleNote())
+			this.noteView().setSafeInnerHTML(this.visibleNote())
 		} else {
-			this.noteView().setInnerHTML("")
+			this.noteView().setSafeInnerHTML("")
 		}
 		
 		/*
@@ -145,15 +147,11 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         var node = this.node()
 
 		if (node.keyIsEditable()) {
-        	node.setKey(this.keyView().innerHTML())
+        	node.setKey(this.keyView().value())
 		}
-		
+	
 		if (node.valueIsEditable()) {
-			if (this.valueView().text) {
-        		node.setValue(this.valueView().text())
-			} else {
-        		node.setValue(this.valueView().innerHTML())
-			}
+        	node.setValue(this.valueView().value())
 		}
 		
         NodeView.syncToNode.apply(this)

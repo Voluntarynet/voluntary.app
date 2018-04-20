@@ -1173,6 +1173,28 @@ window.DivView = ideal.Proto.extend().newSlots({
 	
 	// --- inner html ---
 
+    setSafeInnerHTML: function(v) {
+        if (v == null) { 
+			v = "" 
+		}
+		
+		v = "" + v
+		
+        if (v == this.element().innerHTML) {
+            return this
+        }
+
+        if (this.isActiveElementAndEditable()) {
+            this.blur()
+            this.element().innerHTML = v
+            this.focus()
+        } else {
+            this.element().innerHTML = v
+        }
+
+	    return this
+	},
+	
     setInnerHTML: function (v) {
         if (v == null) { 
 			v = "" 
@@ -1202,7 +1224,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     setString: function (v) {
-        return this.setInnerHTML(v)
+        return this.setSafeInnerHTML(v)
     },
     
     loremIpsum: function (maxWordCount) {
@@ -1500,6 +1522,18 @@ window.DivView = ideal.Proto.extend().newSlots({
         //this.node().onDropFiles(filePaths)
     },
     
+    // --- editing - abstracted from content editable for use in non text views ---
+    
+    setIsEditable: function(aBool) {
+        // subclasses can override for non text editing behaviors e.g. a checkbox, toggle switch, etc
+        this.setContentEditable(aBool)
+        return this
+    },
+    
+    isEditable: function() {
+        return this.isContentEditable()
+    },
+    
     // --- content editing ---
     
     setContentEditable: function (aBool) {
@@ -1525,6 +1559,10 @@ window.DivView = ideal.Proto.extend().newSlots({
         this.setIsRegisteredForPaste(aBool)
 
         return this
+    },
+    
+    isContentEditable: function() {
+        return this.element().contentEditable
     },
 
 	contentEditable: function() {

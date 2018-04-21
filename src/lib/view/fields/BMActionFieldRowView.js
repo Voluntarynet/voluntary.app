@@ -15,6 +15,8 @@ window.BMActionFieldRowView = BrowserRow.extend().newSlots({
 		
 		this.setButtonView(DivView.clone().setDivClassName("BMActionFieldButtonView"))
 	    this.buttonView().setTarget(this).setAction("didClickButton")
+	    this.buttonView().setTransition("all 0.3s")
+
         this.addSubview(this.buttonView())
         this.setMinHeight(64)
         return this
@@ -27,7 +29,8 @@ window.BMActionFieldRowView = BrowserRow.extend().newSlots({
         bv.setInnerHTML(this.node().key())
         
 		if (this.node().isEnabled()) {
-			bv.setBackgroundColor("black").setColor("white").setOpacity(1)	
+			//bv.setBackgroundColor("black").setColor("white")
+			bv.setOpacity(1)	
 		} else {
 			bv.setOpacity(0.5)	
 		}

@@ -34,11 +34,22 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
 		this.addStoredField(BMBoolField.clone().setKey("isSecure").setValueIsEditable(true))
 		//this.justAddField(BMPointerField.clone().setKey("serverConnection"))
 		this.addSubnode(BMPointerField.clone().setKey("serverConnection"))
+		this.addSubnode(BMActionField.clone().setKey("connect").setValue("connect"))
     },
 
     servers: function () {
         return this.parentNode()
     },
+    
+    /*
+    setPort: function(aPort) {
+        this._port = aPort
+        if (this._port == 443) {
+            this.setIsSecure(true)
+        }
+        return this
+    },
+    */
 
     title: function () {
         //return "RTC Server " + this.host() + "  " + this.port()

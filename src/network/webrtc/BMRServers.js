@@ -22,18 +22,30 @@ window.BMRServers = BMStorableNode.extend().newSlots({
 
 	bootstrap: function() { 
 		if (this.servers().length == 0) {
-	        this.addServer(this.bootStrapServer())			
+		    this.bootStrapServers().forEach((server) => {
+	            this.addServer(server)		
+	        })	
 		}
 	},
     
-    bootStrapServer: function () {
-        return BMRServer.clone().setHost("peerjs1.voluntary.net").setPort(9000) //.setPidSymbol("_bootStrapServer")
-        //return BMRServer.clone().setHost("peerjs1.voluntary.net").setPort(9000) //.setPidSymbol("_bootStrapServer")
-        //return BMRServer.clone().setHost("127.0.0.1").setPort(9000) //.setPidSymbol("_bootStrapServer")
+    bootStrapServers: function () {
+        return [
+            BMRServer.clone().setHost("rendezvous9000.voluntary.net").setPort(9000),
+            BMRServer.clone().setHost("rendezvous443.voluntary.net").setPort(443).setIsSecure(true),
+            //BMRServer.clone().setHost("127.0.0.1").setPort(9000) ,
+            //BMRServer.clone().setHost("127.0.0.1").setPort(433) ,
+        ] 
     },
     
     addServer: function (aServer) {
-        return this.addSubnode(aServer)
+        if (!this.hasServer(aServer)) {
+            this.addSubnode(aServer)
+        }
+        return aServer
+    },
+    
+    hasServer: function(aServer) {
+        return this.hasAddrDict(aServer.addrDict())
     },
     
     servers: function () {
@@ -73,7 +85,6 @@ window.BMRServers = BMStorableNode.extend().newSlots({
     },
     
     connect: function () {
-		
         var unconnectedServers = this.unconnectedServers().shuffle()
         var connectionsToAdd = this.maxConnections() - this.connectionCount()
         

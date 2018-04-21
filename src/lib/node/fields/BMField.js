@@ -12,6 +12,7 @@ window.BMField = BMNode.extend().newSlots({
     //value: "test value",
 
 	isVisible: true,
+    isEnabled: true,
 	
 	keyIsVisible: true,
 	valueIsVisible: true,

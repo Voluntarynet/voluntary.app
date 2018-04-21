@@ -31,6 +31,41 @@
     margin-left: 5px;
 }
 
+.BMActionFieldRowView {
+    border-bottom: 1px solid #ddd;
+
+}
+
+.BMActionFieldButtonView {
+    height: 44px;
+    width: auto;
+    margin-top: 7px;
+    margin-bottom: 7px;
+    margin-left: 17px;
+    margin-right: 17px;
+    /*
+    background-color: red;
+    color: white;
+    */
+    border-style: solid;
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: black;
+    
+	font-family: AppSemiBold, sans-serif;
+
+    text-align: center;
+    line-height: 46px;
+    /*overflow: hidden;*/
+    text-transform: uppercase;
+    transition: all 0.3 ease;
+}
+
+.BMActionFieldButtonView:hover {
+    background-color: black;
+    color: white;
+}
+
 /* --------------------------- Key --------------------------- */
 
 .BMFieldKeyView {

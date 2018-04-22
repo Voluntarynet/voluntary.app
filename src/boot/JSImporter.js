@@ -239,7 +239,7 @@ JSImporter = {
 	    //console.log("JSImporter.done() -----------------------------")
 		this._doneCallbacks.forEach((callback) => { callback() })
 		if (window.JSImporterIsEmbedded != true) {
-		    //this.showConcatCommand()
+		    this.showConcatCommand()
 	    }
 		return this
 	},
@@ -261,7 +261,7 @@ JSImporter = {
 	    files.appendItems(["./src/boot/LoadProgressBar.js", "./src/boot/JSImporter.js"])
 	    files.appendItems(this._jsFilesLoaded)
 	    files.append("archive/bottom.html")
-	    var s = "cat " + files.map((p) => { return '"' + p + '"' }).join(" ") + " > index_embedded.html"
+	    var s = "cat " + files.map((p) => { return '"' + p + '"' }).join(" ") + " > index.html"
         console.log(s)
 	},
 }

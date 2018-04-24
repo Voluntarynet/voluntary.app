@@ -30,7 +30,7 @@ window.App = BaseApp.extend().newSlots({
 		if (name != "") {
 			name = name.before(".").replaceAll("-", " ").toUpperCase()
 		} else {
-			name = "test"
+			name = "-"
 		}
 
         this.setName(name)

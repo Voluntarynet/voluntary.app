@@ -14,6 +14,7 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
 	bloomDistance: null,
 	error: null,
 	debug: true,
+	connectButton: null,
 }).setSlots({
     init: function () {
         BMFieldSetNode.init.apply(this)
@@ -34,9 +35,29 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
 		this.addStoredField(BMBoolField.clone().setKey("isSecure").setValueIsEditable(true))
 		//this.justAddField(BMPointerField.clone().setKey("serverConnection"))
 		this.addSubnode(BMPointerField.clone().setKey("serverConnection"))
-		this.addSubnode(BMActionField.clone().setKey("connect").setValue("connect"))
+		
+		this.setConnectButton(BMActionField.clone().setKey("connect").setValue("connect"))
+		this.addSubnode(this.connectButton())
     },
 
+    didUpdateNode: function() {
+        BMFieldSetNode.didUpdateNode.apply(this)
+        //console.log(this.type() + ".didUpdateNode()")
+        this.updateButtons()
+        return this
+    },
+    
+    updateButtons: function() {
+        var cb = this.connectButton()
+        if (cb) {
+            if (this.serverConnection().isConnected()) {
+                cb.setKey("disconnect").setValue("disconnect")
+            } else {
+                cb.setKey("connect").setValue("connect")
+            }
+        }
+    },
+    
     servers: function () {
         return this.parentNode()
     },
@@ -80,6 +101,11 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
         //this.log("BMRServer.connect")
         this.serverConnection().connect()
         return this              
+    },
+    
+    disconnect: function() {
+        this.serverConnection().close()
+        return this          
     },
 
 	reconnect: function() {

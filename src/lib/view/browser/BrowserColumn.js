@@ -339,18 +339,21 @@ window.BrowserColumn = NodeView.extend().newSlots({
 	// --- enter key begins row editing ---------------------------
 	
 	onEnterKeyUp: function(event) {
+        console.log(this.type() + ".onEnterKeyUp()")
         if (!this.allowsCursorNavigation()) { return }
 	
-	/*
 		var row = this.selectedRow()
-		if (row && row.node().nodeTitleIsEditable()) { 
+		if (row) { 
+		    row.onEnterKeyUp(event)
+		    /*
 			//row.title().focus() 
 			setTimeout(() => {
 				row.title().selectAll() 
 				setTimeout(() => { row.title().focus() })
 			})
+			*/
 		}
-	*/	
+
 		return false
 	},
 

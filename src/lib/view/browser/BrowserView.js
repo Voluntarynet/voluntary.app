@@ -146,7 +146,8 @@ window.BrowserView = NodeView.extend().newSlots({
         //console.log("isSingle = ", isSingle)
         this.setIsSingleColumn(isSingle)
 
-		WebBrowserWindow.setTitle(size.width + " x " + size.height + " " + (isSingle ? "single" : "multi"))
+        // for debugging window resizing
+		//WebBrowserWindow.setTitle(size.width + " x " + size.height + " " + (isSingle ? "single" : "multi"))
 
         //console.log("---")
         return this

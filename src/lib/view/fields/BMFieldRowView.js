@@ -186,4 +186,12 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         
         return this
     },
+    
+    onEnterKeyUp: function() {
+        console.log(this.type() + ".onEnterKeyUp()")
+        if(this.valueView().activate) {
+            this.valueView().activate()
+        }
+        return this
+    },
 })

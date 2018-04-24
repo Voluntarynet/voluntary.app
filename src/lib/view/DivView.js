@@ -1851,10 +1851,10 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
     
     onKeyUp: function (event) {
-		//console.log(this.type() + " onKeyUp")
 		
 		var shouldPropogate = true
 		event.specialKeyName = this.specialNameForKeyEvent(event)
+//		console.log(this.type() + " onKeyUp event.specialKeyName=", event.specialKeyName)
 
 		/*
 		if (this.interceptsTab()) {
@@ -1892,6 +1892,10 @@ window.DivView = ideal.Proto.extend().newSlots({
     
     didEdit: function() {
         this.tellParentViews("onDidEdit", this)
+        return this
+    },
+    
+    onEnterKeyUp: function() {
         return this
     },
     

@@ -6,6 +6,7 @@ JSImporter.pushRelativePaths([
     "BMRServer.js",
     "BMRServers.js",
     "BMRemotePeer.js",
+    "BMRemotePeers.js",
     "BMStunServer.js",
     "BMStunServers.js",
 ])

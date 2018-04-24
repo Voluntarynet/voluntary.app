@@ -38,7 +38,7 @@ window.BMActionField = BMField.extend().newSlots({
 	doAction: function() {
 	    var func = this.target()[this.value()]
 	    
-	    if (func) {
+	    if (typeof(func) == "function") {
 	        func.apply(this.target())
 	    } else {
 	        this.setValueError("no method with this name")

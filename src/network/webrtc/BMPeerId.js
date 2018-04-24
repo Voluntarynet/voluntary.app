@@ -16,7 +16,7 @@ window.BMPeerId = BMNode.extend().newSlots({
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)
-        this._remotePeers = []
+        //this._remotePeers = []
         this.setTitle("Connection")
     },
     

@@ -62,6 +62,11 @@ window.BoolView = DivStyledView.extend().newSlots({
         return this
     },
     
+    activate: function() {
+        this.toggle()
+        return this
+    },
+    
 	// ------------------
     
 	setValue: function(v) {

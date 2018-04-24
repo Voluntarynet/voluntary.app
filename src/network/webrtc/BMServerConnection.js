@@ -15,18 +15,30 @@ window.BMServerConnection = BMNode.extend().newSlots({
     //log: null,
 	sessionId: null,
 	debug: false,
+	statusLog: null,
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)
-        this._remotePeers = []
+        //this._remotePeers = []
+       
+        this.setRemotePeers(BMRemotePeers.clone())
+        this.addSubnode(this.remotePeers())
+
+        this.setStatusLog(BMNode.clone().setTitle("log").setNodeMinWidth(300))
+        this.addSubnode(this.statusLog())
+        this.statusLog().addAction("deleteAll")
+        this.statusLog().deleteAll = function() {
+            this.removeAllSubnodes()
+        }
+        
         this.setTitle("Server Connection")
-        this.setNoteIsSubnodeCount(true)
+        this.setNoteIsSubnodeCount(false)
         //this.setViewClassName("GenericView")
         //this.setLog(BMNode.clone())
 
 		this.setSessionId(BMKeyPair.clone().generatePrivateKey())
 		this.setPeerId(BMPeerId.clone())
-		this.createSubnodeIndex()
+		//this.createSubnodeIndex()
     },
 
 	/*
@@ -39,8 +51,13 @@ window.BMServerConnection = BMNode.extend().newSlots({
 		//console.warn(this.typeId() + ".setStatus(" + s + ")")
         this._status = s
         this.setSubtitle(s)
-		this.scheduleSyncToView()
+        
+        var statusNode = BMNode.clone().setTitle(s).setSubtitle(new Date().toString())
+        this.statusLog().addSubnode(statusNode)
+        
+		//this.scheduleSyncToView()
 		this.didUpdateNode()
+		this.server().didUpdateNode()
         return this
     },
 
@@ -55,9 +72,11 @@ window.BMServerConnection = BMNode.extend().newSlots({
         return this.status()
     },   
     
+    /*
     subnodes: function () {
         return this.remotePeers()
     },
+    */
 
 	// --- server connection --------------------------
 	
@@ -88,14 +107,18 @@ window.BMServerConnection = BMNode.extend().newSlots({
         // TODO: add timeout and tell server when it occurs
 
         if (!this._serverConn) {
-            //this.log("connecting...");
-            this.setStatus("connecting to server...")
+            this.setStatus("connecting...")
             this.setTitle("Connection")
 			
 			this.setPeerId(this.currentPeerId())
 			
-            this._serverConn = new Peer(this.peerId().toString(), this.serverConnectionOptions())                
-            //this._serverConn = new Peer(this.serverConnectionOptions())
+			try {
+                this._serverConn = new Peer(this.peerId().toString(), this.serverConnectionOptions())                
+                //this._serverConn = new Peer(this.serverConnectionOptions())
+            } catch(e) {
+                this.onError(e)
+                return this
+            }
             
             this.log("Server " +  this.shortId() + ".connect()")          
             
@@ -111,7 +134,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
             this._serverConn.on('connection', (aConn) => { 
                 console.log(this.typeId() + " connection event aConn.peer=" + aConn.peer); 
                 //this.addRemotePeerConn(aConn) 
-				var remotePeer = this.addRemotePeerForId(aConn.peer)
+				var remotePeer = this.remotePeers().addRemotePeerForId(aConn.peer)
 				remotePeer.setConn(aConn)
             })
             
@@ -137,20 +160,27 @@ window.BMServerConnection = BMNode.extend().newSlots({
 	
 	close: function() {
         this.setStatus("closing...")
-		this.remotePeers().forEach((peer) => { peer.close() })
-		this.removeAllSubnodes()
+        this.remotePeers().closeAll()
+        
+		//this.remotePeers().forEach((peer) => { peer.close() })
+		//this.removeAllSubnodes()
+		
 		if (this._serverConn) {
 			this._serverConn.disconnect()
 			this._serverConn = null
 		}
+        this.setStatus("offline")
 		return this
 	},
 
 	showPeers: function() {
+	    this.remotePeers().showPeers()
+	    /*
 		console.log(this.typeId() + ".showPeers()")
 		this.subnodes().forEach((peer) => {
 			console.log("    ", peer.hash())
 		})
+		*/
 	},
   
 /*  
@@ -165,7 +195,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
     onError: function(error) {
 		this.setError(error)
 		if (!error.message.beginsWith("Could not connect to peer")) {
-	        this.setStatus(error.message)
+	        this.setStatus("ERROR: " + error.message)
 	        this.log(this.type() + " onError: " + error);
 	        this._serverConn = null
 		}
@@ -194,9 +224,11 @@ window.BMServerConnection = BMNode.extend().newSlots({
 */
 
     onClose: function(err) {
-        //this.log("onClose " + err)
+        this.log(this.type() + ".onClose " + err)
         this.setStatus("closed")
-        this.setLastError("close error: " + err)
+        if (err) {
+            this.setLastError("close error: " + err)
+        }
         this._serverConn = null
     },
     
@@ -221,46 +253,11 @@ window.BMServerConnection = BMNode.extend().newSlots({
     },
 
 	setPeerIds: function(ids) {
-		//console.log(this.typeId() + ".setPeerIds(\n" + ids.join("\n") + "\n)")
-		
+		//console.log(this.typeId() + ".setPeerIds(\n" + ids.join("\n") + "\n)")		
 		ids.remove(this.peerId().toString())
-		
-		// remove peers not in ids
-		this.remotePeers().forEach((peer) => {
-			if(!ids.contains(peer.hash())) {
-				if (!peer.isConnected()) {
-					this.removeSubnode(peer)
-				}
-			}
-		})
-		
-		// add a peer for each new id
-		ids.forEach((id) => {
-			if (!this.hasSubnodeWithHash(id)) {
-				this.addRemotePeerForId(id)
-			}
-		})
-		
-        this.connectToMatchingPeerIds()
+		this.remotePeers().setPeerIds(ids)
+        //this.connectToMatchingPeerIds()
 	},
-	
-	addRemotePeerForId: function(id) {
-		var peer = this.subnodeWithHash(id)
-		if (!peer) {
-		 	peer = BMRemotePeer.clone().setPeerIdString(id).setServerConnection(this)
-			this.addSubnode(peer)
-		}
-		return peer
-	},
-    
-    connectToMatchingPeerIds: function () {
-        this.remotePeers().forEach((remotePeer) => { 
-			// TODO: add max connections limit? 
-			// have peer limit overly friendly blooms?
-			remotePeer.connectIfMayShareContacts() 
-		})
-        return this
-    },
 
 /*    
     connectToAllPeerIds: function () {
@@ -276,7 +273,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
     
     broadcastMsg: function(msg) {
         //this.log("broadcastMsg " + msg)
-        this.remotePeers().forEach(function (remotePeer) { 
+        this.remotePeers().subnodes().forEach((remotePeer) => { 
             //console.log("remotePeer = ", remotePeer)
             remotePeer.sendMsg(msg)
         })
@@ -291,9 +288,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
     },
     
     connectedRemotePeers: function () {
-        return this.remotePeers().filter(function (remotePeer) {
-            return remotePeer.isConnected()
-        })        
+        return this.remotePeers().connectedRemotePeers()
     },
 })
 

@@ -134,4 +134,8 @@ window.TextField = DivStyledView.extend().newSlots({
     
     */
 
+    activate: function() {
+        this.focus()
+        return this
+    },
 })

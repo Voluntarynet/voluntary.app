@@ -75,6 +75,11 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
                 }
             } 
         }
+        
+        if (this.noteView().innerHTML() == "&gt;") {
+            this.makeNoteRightArrow()
+            this.noteView().setSafeInnerHTML("")
+        }
 		
         return this
     },
@@ -109,4 +114,14 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
         this.updateSubviews()
         return this
     },
+    
+    // arrow
+    
+	makeNoteRightArrow: function() {
+		this.noteView().setBackgroundImageUrlPath(this.pathForIconName("right-white"))        
+		this.noteView().setBackgroundSizeWH(10, 10)
+		this.noteView().setMinAndMaxWidth(10).setMinAndMaxHeight(10)
+		this.noteView().setOpacity(0.5)
+		return this		
+	},
 })

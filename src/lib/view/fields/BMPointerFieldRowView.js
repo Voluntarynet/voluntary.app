@@ -16,12 +16,7 @@ window.BMPointerFieldRowView = BrowserTitledRow.extend().newSlots({
         return this
     },
 
-	makeNoteRightArrow: function() {
-		this.noteView().setBackgroundImageUrlPath(this.pathForIconName("right"))        
-		this.noteView().setBackgroundSizeWH(10, 10)
-		this.noteView().setMinAndMaxWidth(10).setMinAndMaxHeight(10)
-		return this		
-	},
+
 
     updateSubviews: function () {	
 		BrowserTitledRow.updateSubviews.apply(this)

@@ -47,13 +47,33 @@ window.BMServerConnection = BMNode.extend().newSlots({
 	},
 	*/
     
-    setStatus: function(s) {
+    addLog: function(s, error) {
+        var statusNode = BMFieldSetNode.clone().setTitle(s).setSubtitle(new Date().toString())
+        this.statusLog().addSubnode(statusNode)
+        statusNode.error = function () { return this._error }
+        statusNode._error = ""
+        
+        if (error) {	        
+	        statusNode._error = StackTrace.clone().stringForError(error)
+	        statusNode.setNote("&gt;")
+	        //statusNode.makeNoteRightArrow()
+
+	    }
+	    
+        //var entry = BMDataStoreRecord.clone().setNodeColumnBackgroundColor("white").setNodeMinWidth(300)
+		statusNode.addStoredField(BMTextAreaField.clone().setKey("dict").setValueMethod("error").setValueIsEditable(false).setIsMono(true))
+        //entry.setTitle(s)
+        //entry.setSubtitle(new Date().toString())
+        //entry.setValue(s)
+        this.statusLog().addSubnode(statusNode)
+    },
+
+    setStatus: function(s, error) {
 		//console.warn(this.typeId() + ".setStatus(" + s + ")")
         this._status = s
         this.setSubtitle(s)
         
-        var statusNode = BMNode.clone().setTitle(s).setSubtitle(new Date().toString())
-        this.statusLog().addSubnode(statusNode)
+        this.addLog(s, error)
         
 		//this.scheduleSyncToView()
 		this.didUpdateNode()
@@ -195,7 +215,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
     onError: function(error) {
 		this.setError(error)
 		if (!error.message.beginsWith("Could not connect to peer")) {
-	        this.setStatus("ERROR: " + error.message)
+	        this.setStatus(error.message, error)	        
 	        this.log(this.type() + " onError: " + error);
 	        this._serverConn = null
 		}

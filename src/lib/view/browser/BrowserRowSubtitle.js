@@ -5,6 +5,7 @@ window.BrowserRowSubtitle = TextField.extend().newSlots({
 }).setSlots({
     init: function () {
         TextField.init.apply(this)
+        //this.setMinAndMaxHeight(13)
         return this
     },
 

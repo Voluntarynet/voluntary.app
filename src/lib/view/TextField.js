@@ -1,5 +1,13 @@
 "use strict"
 
+/*
+    A view for a single line of text. 
+    For multi-line text, use TextArea.
+    
+    Behavior:
+    On Return/Enter key, it passes focus to the nextResponder/parent.
+*/
+
 window.TextField = DivStyledView.extend().newSlots({
     type: "TextField",
 	isSelected: false,

@@ -241,6 +241,7 @@
 	
     text-align: left;
     font-size: 13px;
+    max-height: 17px;
 
     font-weight: normal;
 
@@ -257,8 +258,10 @@
     position: absolute;
     top: 32px;
     left: 20px;
+    
 	width: calc(100% - 50px);
-
+    max-height: 17px;
+    
 /*
     color: rgba(255, 255, 255, 0.5);
   */

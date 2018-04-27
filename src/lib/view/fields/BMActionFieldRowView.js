@@ -40,10 +40,20 @@ window.BMActionFieldRowView = BrowserRow.extend().newSlots({
         return this
     },
     
-    didClickButton: function() {
+    onEnterKeyUp: function() {
+        this.doAction()
+        return false
+    },
+    
+    doAction: function() {
         if (this.node().isEnabled()) { // check in node field?
             this.node().doAction()
         }
+        return this     
+    },
+    
+    didClickButton: function() {
+        this.doAction()
         return this
     },
     

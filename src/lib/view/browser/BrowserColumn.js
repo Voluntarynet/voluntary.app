@@ -16,6 +16,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
 		this.styles().selected().setBorderLeft("1px solid rgba(0, 0, 0, 0.15)")
 		this.styles().unselected().setBorderLeft("1px solid rgba(0, 0, 0, 0.15)")
 		this.applyStyles()
+		this.setAcceptsFirstResponder(true)
         return this
     },
     
@@ -92,14 +93,20 @@ window.BrowserColumn = NodeView.extend().newSlots({
         return this
     },
     
+    requestSelectionOfRow: function(aRow) {
+        return this.didClickRow(aRow)
+    },
+    
     didClickRow: function(clickedRow) {
         this.unselectRowsBesides(clickedRow)
 
 		// follow it if we can 
 		if (clickedRow.nodeRowLink()) {
 		    //console.log(this.typeId() + ".didClickRow(" + clickedRow.node().title() + ") selecting column ", this.node().title())
-        	this.browser().selectColumn(this)
+        //	this.browser().selectColumn(this)
 		}
+        
+        this.browser().selectColumn(this)
 
         return true
     },

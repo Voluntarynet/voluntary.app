@@ -321,8 +321,10 @@ window.BrowserView = NodeView.extend().newSlots({
 			
 			if (selectedRow) {
     	            var nextNode = selectedRow.nodeRowLink() // returns receiver by default
+                    //console.log("selectedRow title:  ", selectedRow.node().title())
 
     				if (nextNode) {
+                        //console.log("nextNode:  ", nextNode.title())
     		            nextCg.setNode(nextNode)
     		            this.clearColumnsGroupsAfter(nextCg)
     		            //nextCg.column().setTitle(selectedColumn.selectedRowTitle())            
@@ -332,8 +334,11 @@ window.BrowserView = NodeView.extend().newSlots({
     						this.setColumnGroupCount(index + 2)
     					}
     				}
+    				else {
+                        this.clearColumnsGroupsAfter(selectedColumnGroup)
+    				}
 			} 
-        }
+        } 
         
         this.setupColumnGroupColors()
         
@@ -346,6 +351,7 @@ window.BrowserView = NodeView.extend().newSlots({
 
     didClickRow: function(row) {
         console.log("Browser didClickRow ", row)
+        // columns intercept this, so we don't get this message anymore
         return true
     },
 

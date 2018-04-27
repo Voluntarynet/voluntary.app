@@ -17,7 +17,8 @@ window.BrowserRow = NodeView.extend().newSlots({
         this.setOwnsView(false)
         this.setIsRegisteredForClicks(true)
         this.turnOffUserSelect()
-
+        this.setAcceptsFirstResponder(false)
+        
 		if (WebBrowserWindow.isTouchDevice()) {
 			this.setIsRegisteredForTouch(true)
 		} else {
@@ -250,18 +251,6 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
     
     onMouseEnter: function(event) {
-        /*
-        console.log(this.type() + " onMouseEnter")
-        console.log(this.type() + ".canDelete() = ", this.canDelete())
-        console.log(this.type() + ".hasCloseButton() = ", this.hasCloseButton())
-        
-        if (this.canDelete() && this.hasCloseButton()) {
-            this.closeButtonView().setOpacity(1)
-            this.closeButtonView().setTarget(this)
-            console.log("this.closeButtonView().target() = ", this.closeButtonView().target())
-            console.log("this.closeButtonView().action() = ", this.closeButtonView().action())
-        }
-        */
         if (this.canDelete() && this.closeButtonView()) {
             this.closeButtonView().setOpacity(1)
             this.closeButtonView().setTarget(this)
@@ -294,11 +283,28 @@ window.BrowserRow = NodeView.extend().newSlots({
     
 	// --- selecting ---
     
+    /*
+    requestSelectionOfRow: function() {
+        this.tellParentViews("requestSelectionOfRow", this)
+    },
+    */
+    
+    requestSelection: function () {
+        this.select()
+        //console.log(this.type() + " tellParentViews didClickRow")
+        //this.tellParentViews("didClickRow", this)
+        this.tellParentViews("requestSelectionOfRow", this)
+        return this      
+    },
+	
+	willAcceptFirstResponder: function() {
+	    console.log(this.type() + ".willAcceptFirstResponder()")
+	    this.requestSelection()
+	},
+    
     onClick: function (event) {
         if (this.isSelectable()) {
-            this.select()
-            //console.log(this.type() + " tellParentViews didClickRow")
-            this.tellParentViews("didClickRow", this)
+            this.requestSelection()
         }
         event.stopPropagation()
 		return false

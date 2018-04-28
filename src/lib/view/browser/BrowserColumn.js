@@ -134,6 +134,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     
     setSelectedRowIndex: function(index) {
         var oldIndex = this.selectedRowIndex()
+        //console.log("this.setSelectedRowIndex(" + index + ") oldIndex=", oldIndex)
         if (index != oldIndex) {
             var rows = this.rows()
             if (index < rows.length && index > -1) {
@@ -241,7 +242,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     syncFromNode: function () {
         
         if (this.browser() == null) {
-            console.warn("WARNING: exiting BrowserColumn.syncFromNode because this.browser() == null")
+            console.warn("WARNING: skipping BrowserColumn.syncFromNode because this.browser() == null")
             return
         }
         
@@ -314,6 +315,8 @@ window.BrowserColumn = NodeView.extend().newSlots({
 	},
 	
 	onDownArrowKeyUp: function(event) {
+	    console.log(this.type() + ".onDownArrowKeyUp()")
+	    
         if (!this.canNavigate()) { 
 			return 
 		}
@@ -407,7 +410,11 @@ window.BrowserColumn = NodeView.extend().newSlots({
 	// nextRow
 
     selectNextRow: function() {
+        
         var si = this.selectedRowIndex()
+
+        //console.log(this.type() + ".selectNextRow(), selectedRowIndex:" + this.selectedRowIndex() + "/" + this.rows().length)
+
         var rows = this.rows()
         if (si == -1) {
             this.setSelectedRowIndex(0)
@@ -419,7 +426,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     
     selectPreviousRow: function() {
         var si = this.selectedRowIndex()
-        var rows = this.rows()
+        //var rows = this.rows()
         if (si == -1) {
             this.setSelectedRowIndex(0)
         } else {

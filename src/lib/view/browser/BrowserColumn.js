@@ -315,7 +315,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
 	},
 	
 	onDownArrowKeyUp: function(event) {
-	    console.log(this.type() + ".onDownArrowKeyUp()")
+	    //console.log(this.type() + ".onDownArrowKeyUp()")
 	    
         if (!this.canNavigate()) { 
 			return 
@@ -353,7 +353,8 @@ window.BrowserColumn = NodeView.extend().newSlots({
 	// --- enter key begins row editing ---------------------------
 	
 	onEnterKeyUp: function(event) {
-        console.log(this.type() + ".onEnterKeyUp()")
+        //console.log(this.type() + ".onEnterKeyUp()")
+        
         if (!this.canNavigate()) { return }
 	
 		var row = this.selectedRow()

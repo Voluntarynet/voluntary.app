@@ -66,7 +66,7 @@ window.BrowserHeader = NodeView.extend().newSlots({
         
         if (node && this.browser()) {
             if (this.shouldShowTitle()) {
-    		    this.titleView().setSafeInnerHTML(node.nodeHeaderTitle())
+    		    this.titleView().setInnerHTML(node.nodeHeaderTitle())
     		    this.addSubview(this.titleView())
 	        }
 

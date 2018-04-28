@@ -49,7 +49,7 @@ window.TextField = DivStyledView.extend().newSlots({
 
 	setValue: function(newValue) {
         //var newValue = this.visibleValue()
-	    this.setSafeInnerHTML(newValue)
+	    this.setInnerHTML(newValue)
 		return this
 	},	
 			
@@ -61,11 +61,6 @@ window.TextField = DivStyledView.extend().newSlots({
 	},
 	
 	// ------------------
-	
-	setInnerHTML: function(s) {
-	    throw new Error("use setSafeInnerHTML instead")
-		return this
-	},
     
 	onEnterKeyUp: function(event) {
 	    console.log(this.type() + ".onEnterKeyUp()")
@@ -74,7 +69,7 @@ window.TextField = DivStyledView.extend().newSlots({
 	    this.removeReturns()
 
         if (this.doesClearOnReturn()) {
-            DivView.setSafeInnerHTML.apply(this, [""])
+            this.setInnerHTML("")
         }
 
         this.tellParentViews("didInput", this) 
@@ -87,7 +82,7 @@ window.TextField = DivStyledView.extend().newSlots({
 	},
 	
 	removeReturns: function() {
-        this.setSafeInnerHTML(this.innerText())
+        this.setInnerHTML(this.innerText())
 		return this
 	},
     

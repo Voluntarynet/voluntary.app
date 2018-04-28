@@ -78,7 +78,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
 			this.setDisplay("none")
 		}
 
-        keyView.setSafeInnerHTML(this.visibleKey())
+        keyView.setInnerHTML(this.visibleKey())
 
         var newValue = this.visibleValue()
 		
@@ -122,9 +122,9 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
 		}
 				
 		if (this.visibleNote()) {
-			this.noteView().setSafeInnerHTML(this.visibleNote())
+			this.noteView().setInnerHTML(this.visibleNote())
 		} else {
-			this.noteView().setSafeInnerHTML("")
+			this.noteView().setInnerHTML("")
 		}
 		
 		/*

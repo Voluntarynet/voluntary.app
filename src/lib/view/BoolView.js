@@ -101,7 +101,7 @@ window.BoolView = DivStyledView.extend().newSlots({
 	},
 	
 	updateUnicode: function() {
-		this.setSafeInnerHTML(this.currentUnicode())
+		this.setInnerHTML(this.currentUnicode())
 		return this
 	},
 	*/

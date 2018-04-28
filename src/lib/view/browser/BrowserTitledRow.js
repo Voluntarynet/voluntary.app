@@ -78,7 +78,7 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
         
         if (this.noteView().innerHTML() == "&gt;") {
             this.makeNoteRightArrow()
-            this.noteView().setSafeInnerHTML("")
+            this.noteView().setInnerHTML("")
         }
 		
         return this

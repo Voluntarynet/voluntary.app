@@ -1182,7 +1182,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 	
 	// --- inner html ---
 
-    setSafeInnerHTML: function(v) {
+    setInnerHTML: function(v) {
         if (v == null) { 
 			v = "" 
 		}
@@ -1193,47 +1193,27 @@ window.DivView = ideal.Proto.extend().newSlots({
             return this
         }
 
-        if (this.isActiveElementAndEditable()) {
+        var isFocused = this.isActiveElementAndEditable()
+        
+        if (isFocused) {
             this.blur()
-            this.element().innerHTML = v
+        }
+        
+        this.element().innerHTML = v
+            
+        if (isFocused) {
             this.focus()
-        } else {
-            this.element().innerHTML = v
         }
 
 	    return this
 	},
-	
-    setInnerHTML: function (v) {
-        if (v == null) { 
-			v = "" 
-		}
-		
-        v = "" + v //escape(v)
-
-        if (v != this.element().innerHTML) {
-
-            if (this.isActiveElementAndEditable()) {
-				ShowStack();
-                console.log("WARNING: attempt to setInnerHTML on active element. ")
-                // Can't do this until we can properly set the cursor.
-                // there also seems to be some inconsistency problem
-                // maybe with DOM update sync?
-                return 
-            }
-            
-            this.element().innerHTML = v
-        }
-
-        return this
-    },
 
     innerHTML: function() {
         return this.element().innerHTML
     },
 
     setString: function (v) {
-        return this.setSafeInnerHTML(v)
+        return this.setInnerHTML(v)
     },
     
     loremIpsum: function (maxWordCount) {

@@ -221,7 +221,7 @@ NodeView = DivStyledView.extend().newSlots({
     // value
     
     setValue: function(newValue) {
-		this.setSafeInnerHTML(newValue)			
+		this.setInnerHTML(newValue)			
         return this
     },
     

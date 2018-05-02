@@ -42,3 +42,8 @@ SyncDB has a transactional write cache (reads check the write cache before readi
 	3) commit the SyncDB transaction, which bundles these writes into a single IndexedDB transaction 
 	and "commits" it (which just means it doesn't abort it before the end of the event loop when IndexedDB will do an atomic write of all changes).
 	
+NODE FIELDS
+
+
+
+	

@@ -1,12 +1,28 @@
-TODO: cleanup DivView setPaddingBottom etc into abstract setter/getter
+
+IDEAS
+
+unifying fields with normal browsing:
+always present a node field set in the browser but collapse it be default and select it's default subnodes pointer field
+
+applets:
+use javascript with() to implement sandboxes
+
+messages:
+unify forum messages, posts and direct messages with optional target field (needed for forums anyways)
+
+
+
+
+
+----------------------------
 
 have browserview use defaultRowStyles
 defaultColumnStyles
 
-- need to set svg color to match textColor of row?
+- set svg color to match textColor of row?
 
 - add multi marker support?
-- need delete button for user
+- need delete button for user (in shelf?)
 - verify panel
 - select last selected node on shelf on addDidInit
 

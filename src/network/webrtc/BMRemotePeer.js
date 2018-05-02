@@ -43,10 +43,6 @@ window.BMRemotePeer = BMNode.extend().newSlots({
         //return this.parentNodeOfType("BMNetwork")
         return this.serverConnection().server().servers().network()
     },
-    
-    id: function () {
-        return this.conn().peer
-    },
 
     shortId: function() {
         return this.hash().substring(0, 3)
@@ -78,15 +74,17 @@ window.BMRemotePeer = BMNode.extend().newSlots({
 
     connect: function() {
         if (!this.isConnected()) {
-			var id = this.hash()
             this.log(".connect()")
 			this.setStatus("connecting...")
+
             try {
-                var dataConnection = this.serverConnection().serverConn().connect(id, this.peerConnectionOptions());
-                this.setConn(dataConnection)
+                this.setConn(new SimplePeer({
+                    initiator: true,
+                    config: BMStunServers.defaultOptions()
+                }));
             } catch (error) {
                 this.log("ERROR on BMServerConnection.connectToPeerId('" + this.shortId() + "')")
-                console.error("    " + error.message )
+                console.error(error);
             }
         }
 		return this
@@ -111,8 +109,11 @@ window.BMRemotePeer = BMNode.extend().newSlots({
         this.updateTitle()
                     
         if (this._conn) {
-            this._conn.on('open', () => { this.onOpen() })
+            this._conn.on('connect', () => { this.onOpen() })
             this._conn.on('error', (err) => { this.onError(err) })
+            this.conn().on('signal', signal => {
+                this.serverConnection().send('signalToPeer', { signal: signal, toPeer: this.peerId().toString()  }).catch((e) => this.onError(e));
+            });
         }
 
         this.startConnectTimeout()
@@ -137,7 +138,7 @@ window.BMRemotePeer = BMNode.extend().newSlots({
     close: function() {
         if (this._conn) {
     		this.log("close")
-            this._conn.close()
+            this._conn.destroy()
             this.setStatus("closed")
         } else {
             //console.warn(this.typeId() + ".close() sent to closed connection")
@@ -152,7 +153,6 @@ window.BMRemotePeer = BMNode.extend().newSlots({
     onOpen: function(c) {
         this.log("onOpen")
         this.setTitle("Peer " + this.shortId())
-		this.peerId().setFromString(this.id())
 
         this.setStatus("connected")
         

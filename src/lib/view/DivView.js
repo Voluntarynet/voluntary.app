@@ -83,7 +83,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
 	setupDivClassName: function() {
-		var ancestorNames = this.ancestors().map((obj) => { 
+		var ancestorNames = Object.ancestors(this).map((obj) => { 
 			if (obj.type().contains(".")) {
 				return ""
 			}

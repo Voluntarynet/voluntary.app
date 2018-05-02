@@ -456,7 +456,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     },
 
     writeAllActiveObjects: function() {
-        this.activeObjectsDict().slotValues().forEach((obj) => {
+        Object.slotValues(this.activeObjectsDict()).forEach((obj) => {
             this.storeObject(obj)
         })
         return this

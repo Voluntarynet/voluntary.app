@@ -171,7 +171,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
             return window[name]
         }
 
-	  	return this.firstAncestorWithMatchingPostfixClass("View")        
+	  	return Object.firstAncestorWithMatchingPostfixClass(this, "View")
     },
 
 	// --- nodeRowViewClass ---
@@ -183,7 +183,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     */
 
     nodeRowViewClass: function () {   
-	  	return this.firstAncestorWithMatchingPostfixClass("RowView")
+	  	return Object.firstAncestorWithMatchingPostfixClass(this, "RowView")
     },
 
 	// --- subnodes ----------------------------------------

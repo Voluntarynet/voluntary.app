@@ -16,6 +16,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
 	sessionId: null,
 	debug: false,
 	statusLog: null,
+    pendingMessages: null
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)
@@ -39,6 +40,8 @@ window.BMServerConnection = BMNode.extend().newSlots({
 		this.setSessionId(BMKeyPair.clone().generatePrivateKey())
 		this.setPeerId(BMPeerId.clone())
 		//this.createSubnodeIndex()
+
+        this.setPendingMessages({});
     },
 
 	/*
@@ -122,6 +125,10 @@ window.BMServerConnection = BMNode.extend().newSlots({
 		//this.log("currentPeerId = '" + peerId.toString() + "'")
 		return peerId
 	},
+
+    serverConnUrl: function() {
+        return 'ws' + (this.server().isSecure() ? 's' : '') + '://' + this.server().host() + ':' + this.server().port();
+    },
 			
     connect: function () {
         // TODO: add timeout and tell server when it occurs
@@ -133,42 +140,67 @@ window.BMServerConnection = BMNode.extend().newSlots({
 			this.setPeerId(this.currentPeerId())
 			
 			try {
-                this._serverConn = new Peer(this.peerId().toString(), this.serverConnectionOptions())                
-                //this._serverConn = new Peer(this.serverConnectionOptions())
+                this._serverConn = new WebSocket(this.serverConnUrl());
             } catch(e) {
                 this.onError(e)
                 return this
             }
             
             this.log("Server " +  this.shortId() + ".connect()")          
+
+            this._serverConn.addEventListener('open', e => {
+                this.onOpen();
+            });
+
+            this._serverConn.addEventListener('close', e => {
+                this.onClose();
+            });
+
+            this._serverConn.addEventListener('error', e => {
+                this.onError(e.data);
+            });
             
-            this._serverConn.on('open', (id) => { 
-                var sid = this.peerId().toString()
-                if(sid != id) {
-                    console.log(sid + " != ", id)
-                    throw newError(this.typeId() + " peerId doesn't match our id from the server")
+            this._serverConn.addEventListener('message', event => {
+                try {
+                    console.log('BMServerConnection receive: ' + event.data);
+                    const msg = JSON.parse(event.data);
+                    this.perform('receive' + msg.name.capitalized(), msg.data);
                 }
-                this.onOpen()
-            })
-            
-            this._serverConn.on('connection', (aConn) => { 
-                console.log(this.typeId() + " connection event aConn.peer=" + aConn.peer); 
-                //this.addRemotePeerConn(aConn) 
-				var remotePeer = this.remotePeers().addRemotePeerForId(aConn.peer)
-				remotePeer.setConn(aConn)
-            })
-            
-            this._serverConn.on('error', (error) => { 
-                this.onError(error)
-            })  
-            
-            this._serverConn.on('close', (error) => { 
-                this.log("close with error: " + error); 
-                this.onClose(error)
-            }) 
+                catch (error) {
+                    this.onError(error);
+                }
+            });
         }
 
-        return this              
+        return this;
+    },
+
+    receiveResponse(response) {
+        const pendingMessage = this.pendingMessages()[response.id];
+        if (pendingMessage) {
+            delete this.pendingMessages()[response.id];
+            if (response.error) {
+                pendingMessage.reject(response.error);
+            }
+            else {
+                pendingMessage.resolve(response.result);
+            }
+        }
+        else {
+            this.onError('Received invalid response: ' + JSON.stringify(msg));
+        }
+    },
+
+    receiveSignalFromPeer(data) {
+        let remotePeer = this.remotePeers().subnodes().detect(p => p.peerId().toString() == data.fromPeer);
+        if (remotePeer == null) {
+            remotePeer = this.remotePeers().addRemotePeerForId(data.fromPeer);
+            remotePeer.setConn(new SimplePeer({
+                initiator: false,
+                config: BMStunServers.defaultOptions()
+            }));
+        }
+        remotePeer.conn().signal(data.signal);
     },
 
 	reconnect: function() {
@@ -213,6 +245,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
 */
 
     onError: function(error) {
+        console.error(error);
 		this.setError(error)
 		if (!error.message.beginsWith("Could not connect to peer")) {
 	        this.setStatus(error.message, error)	        
@@ -225,7 +258,9 @@ window.BMServerConnection = BMNode.extend().newSlots({
         this.setTitle("Connection " + this.shortId())
         this.setStatus("connected")
         this.log("onOpen " + this.peerId().toString());
-        this.updatePeers()
+        this.send('requestId', { requestedId: this.peerId().toString() }).then(() => {
+            this.updatePeers();
+        }).catch(e => this.onError(e));
     },
 
 /*
@@ -256,6 +291,15 @@ window.BMServerConnection = BMNode.extend().newSlots({
         return this.serverConn() != null
     },
 
+    //returns a Promise
+    send: function(name, data) {
+        const msg = BMServerMessage.clone();
+        msg.setServerConnection(this);
+        msg.setName(name);
+        msg.setData(data);
+        return msg.send();
+    },
+
 /*
     onData: function(data) {
         //this.log("onData " + data)
@@ -266,10 +310,9 @@ window.BMServerConnection = BMNode.extend().newSlots({
     
     updatePeers: function() {
         //this.log("updatePeers");
-		
-        this.serverConn().listAllPeers((ids) => {
-			this.setPeerIds(ids)
-        })
+        this.send('listAllPeers')
+            .then((peerIds) => this.setPeerIds(peerIds))
+            .catch((e) => this.onError(e));
     },
 
 	setPeerIds: function(ids) {

@@ -109,7 +109,7 @@ window.BMPayload = ideal.Proto.extend().newSlots({
     /// sign / unsign
 
     sign: function(senderKeyPair) {
-        var payload = this.data().toJsonStableString();
+        var payload = Object.toJsonStableString(this.data());
         var payloadHash = sjcl.hash.sha256.hash(payload);
         var sig = senderKeyPair.sec.sign(payloadHash);
         var senderPublicKeyHex = sjcl.codec.hex.fromBits(senderKeyPair.pub);
@@ -151,8 +151,8 @@ window.BMPayload = ideal.Proto.extend().newSlots({
 
     encrypt: function(receiverPublicKeyHex) {
         var receiverPublicKeyBits = sjcl.codec.hex.toBits(receiverPublicKeyHex);
-        //var unencryptedBits = sjcl.codec.utf8String(this.data().toJsonStableString());
-        var encryptedBits = sjcl.encrypt(receiverPublicKeyBits, this.data().toJsonStableString());
+        //var unencryptedBits = sjcl.codec.utf8String(Object.toJsonStableString(this.data()));
+        var encryptedBits = sjcl.encrypt(receiverPublicKeyBits, Object.toJsonStableString(this.data()));
         var encryptedBase64 = sjcl.codec.base64.fromBits(encryptedBits);
         
         this.setData({ 
@@ -187,7 +187,7 @@ window.BMPayload = ideal.Proto.extend().newSlots({
     pow: function() {
         // data -> { type: "PowedPayload", payload: data, pow: powString }
         
-        var hash = this.data().toJsonStableString().sha256String();
+        var hash = Object.toJsonStableString(this.data()).sha256String();
         var pow = this.powObject()
         pow.setHash(hash)
         pow.syncFind()
@@ -198,7 +198,7 @@ window.BMPayload = ideal.Proto.extend().newSlots({
     asyncPow: function() {
         // data -> { type: "PowedPayload", payload: data, pow: powString }
         
-        var hash = this.data().toJsonStableString().sha256String();
+        var hash = Object.toJsonStableString(this.data()).sha256String();
         var pow = this.powObject()
         pow.setHash(hash)
         pow.setDoneCallback(() => { this.powDone() })
@@ -222,7 +222,7 @@ window.BMPayload = ideal.Proto.extend().newSlots({
         
         console.log("unpow")
 
-        var hash = this.data().payload.toJsonStableString().sha256String();
+        var hash = Object.toJsonStableString(this.data().payload).sha256String();
         var pow = BMPow.clone().setHash(hash).setPowHex(this.data().pow)
 
         if (pow.isValid()) {
@@ -243,7 +243,7 @@ window.BMPayload = ideal.Proto.extend().newSlots({
         
         this.assertType("PowedPayload")
 
-        var hash = this.data().payload.toJsonStableString().sha256String();
+        var hash = Object.toJsonStableString(this.data().payload).sha256String();
         var pow = BMPow.clone().setHash(hash).setPowHex(this.data().pow)
         return pow.actualPowDifficulty()
     },    

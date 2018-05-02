@@ -214,9 +214,9 @@ Object.defineProperty(Array.prototype, "equals", {enumerable: false});
 
 /// Object
 
-Object.prototype.ancestors = function() {
+Object.ancestors = function(self) {
 	var results = []
-	var obj = this
+  var obj = self;
 	while (obj.__proto__ && obj.type) {
 		results.push(obj)
 		if (results.length > 100) {
@@ -227,17 +227,17 @@ Object.prototype.ancestors = function() {
 	return results
 }
 
-Object.prototype.ancestorTypes = function() {
-	return this.ancestors().map((obj) => { return obj.type() })
+Object.ancestorTypes = function(self) {
+	return self.ancestors().map((obj) => { return obj.type() })
 }
 
 
-Object.prototype.firstAncestorWithMatchingPostfixClass = function(aPostfix) {
+Object.firstAncestorWithMatchingPostfixClass = function(self, aPostfix) {
 	// not a great name but this walks back the ancestors and tries to find an
 	// existing class with the same name as the ancestor + the given postfix
 	// useful for things like type + "View" or type + "RowView", etc
 	//console.log(this.type() + " firstAncestorWithMatchingPostfixClass(" + aPostfix + ")")
-	var match = this.ancestors().detect((obj) => {
+	var match = Object.ancestors(self).detect((obj) => {
 		var name = obj.type() + aPostfix
 		var proto = window[name]
 		return proto
@@ -251,22 +251,14 @@ Object.prototype.firstAncestorWithMatchingPostfixClass = function(aPostfix) {
 	return result
 },
 
-Object.prototype.slotNames = function() {
-	/*
-  var keys = [];
-  for (var k in this) {
-    if (this.hasOwnProperty(k)) {
-      keys.push(k);
-    }
-  }
-*/
-  return Object.keys(this);
+Object.slotNames = function(self) {
+  return Object.keys(self);
 }
 
-Object.prototype.slotValues = function() {
+Object.slotValues = function(self) {
   var values = [];
   for (var k in this) {
-    if (this.hasOwnProperty(k)) {
+    if (self.hasOwnProperty(k)) {
       values.push(this[k]);
     }
   }
@@ -276,16 +268,16 @@ Object.prototype.slotValues = function() {
 
 // Objective-C like associations
 
-Object.prototype._globalAssocationWeakMap = new WeakMap()
+Object._globalAssocationWeakMap = new WeakMap()
 
-Object.prototype.associationDict = function() {
-    var map = Object.prototype._globalAssocationWeakMap
+Object.associationDict = function(self) {
+    var map = Object._globalAssocationWeakMap
     
-    if (!map.has(this)) {
-        map.set(this, {})
+    if (!map.has(self)) {
+        map.set(self, {})
     }
     
-    return map.get(this)
+    return map.get(self)
 }
 
 

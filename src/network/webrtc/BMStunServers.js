@@ -36,6 +36,7 @@ window.BMStunServers = BMStorableNode.extend().newSlots({
     }, 
 
 	defaultOptions: function() {
+		
 		return {'iceServers': [
 		    { url:"stun:stun01.sipphone.com" },
 		    { url:"stun:stun.ekiga.net" },

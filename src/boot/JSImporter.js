@@ -239,7 +239,7 @@ JSImporter = {
 	    //console.log("JSImporter.done() -----------------------------")
 		this._doneCallbacks.forEach((callback) => { callback() })
 		if (window.JSImporterIsEmbedded != true) {
-		    this.showConcatCommand()
+		    //this.showConcatCommand()
 	    }
 		return this
 	},

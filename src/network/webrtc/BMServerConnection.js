@@ -218,7 +218,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
 		//this.removeAllSubnodes()
 		
 		if (this._serverConn) {
-			this._serverConn.disconnect()
+			this._serverConn.close()
 			this._serverConn = null
 		}
         this.setStatus("offline")

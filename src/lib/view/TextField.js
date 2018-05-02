@@ -15,6 +15,7 @@ window.TextField = DivStyledView.extend().newSlots({
 	unselectedColor: null,
 	doesClearOnReturn: false,
 	doesHoldFocusOnReturn: false,
+	doesTrim: true,
 }).setSlots({
     init: function () {
         DivView.init.apply(this)
@@ -28,7 +29,7 @@ window.TextField = DivStyledView.extend().newSlots({
 		
 		//this.setUnfocusOnEnterKey(true)
 		//this.setIsRegisteredForKeyboard(true) // gets set by setContentEditable()
-		this.removeReturns()
+		this.formatValue()
         return this
     },
 	
@@ -66,7 +67,7 @@ window.TextField = DivStyledView.extend().newSlots({
 	    console.log(this.type() + ".onEnterKeyUp()")
 	    //this.didEdit()
 	    
-	    this.removeReturns()
+	    this.formatValue()
 
         if (this.doesClearOnReturn()) {
             this.setInnerHTML("")
@@ -81,8 +82,16 @@ window.TextField = DivStyledView.extend().newSlots({
 		return false
 	},
 	
-	removeReturns: function() {
-        this.setInnerHTML(this.innerText())
+	formatValue: function() {
+	    var newValue = this.innerText() // removes returns
+        
+        if (this.doesTrim()) {
+            newValue = newValue.trim()
+        }
+
+        this.setInnerHTML(newValue)
+        
+        console.log(this.type() + " after formatValue: '" + this.innerHTML() + "'")
 		return this
 	},
     

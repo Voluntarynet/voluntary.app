@@ -54,6 +54,8 @@ window.StackTrace = ideal.Proto.extend().newSlots({
 			s += indent + entry[0] + " ".repeat(m + 1 - entry[0].length) + entry[1] + "\n"
 		})
 		
+		//s = error.message + "\n" + s
+		s = s.replaceAll("<br>", "\n")
 		return s
 	},
 	

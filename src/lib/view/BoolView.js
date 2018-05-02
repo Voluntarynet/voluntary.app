@@ -23,7 +23,6 @@ window.BoolView = DivStyledView.extend().newSlots({
 		
 		//this.setUnfocusOnEnterKey(true)
 		//this.setIsRegisteredForKeyboard(true) // gets set by setContentEditable()
-		//this.removeReturns()
         return this
     },
     

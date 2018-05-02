@@ -16,8 +16,6 @@ window.BMPointerFieldRowView = BrowserTitledRow.extend().newSlots({
         return this
     },
 
-
-
     updateSubviews: function () {	
 		BrowserTitledRow.updateSubviews.apply(this)
 		

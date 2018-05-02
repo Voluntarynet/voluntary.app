@@ -16,6 +16,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
 		this.styles().selected().setBorderLeft("1px solid rgba(0, 0, 0, 0.15)")
 		this.styles().unselected().setBorderLeft("1px solid rgba(0, 0, 0, 0.15)")
 		this.applyStyles()
+		this.setAcceptsFirstResponder(true)
         return this
     },
     
@@ -92,14 +93,20 @@ window.BrowserColumn = NodeView.extend().newSlots({
         return this
     },
     
+    requestSelectionOfRow: function(aRow) {
+        return this.didClickRow(aRow)
+    },
+    
     didClickRow: function(clickedRow) {
         this.unselectRowsBesides(clickedRow)
 
 		// follow it if we can 
 		if (clickedRow.nodeRowLink()) {
 		    //console.log(this.typeId() + ".didClickRow(" + clickedRow.node().title() + ") selecting column ", this.node().title())
-        	this.browser().selectColumn(this)
+        //	this.browser().selectColumn(this)
 		}
+        
+        this.browser().selectColumn(this)
 
         return true
     },
@@ -127,6 +134,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     
     setSelectedRowIndex: function(index) {
         var oldIndex = this.selectedRowIndex()
+        //console.log("this.setSelectedRowIndex(" + index + ") oldIndex=", oldIndex)
         if (index != oldIndex) {
             var rows = this.rows()
             if (index < rows.length && index > -1) {
@@ -234,7 +242,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     syncFromNode: function () {
         
         if (this.browser() == null) {
-            console.warn("WARNING: exiting BrowserColumn.syncFromNode because this.browser() == null")
+            console.warn("WARNING: skipping BrowserColumn.syncFromNode because this.browser() == null")
             return
         }
         
@@ -294,8 +302,12 @@ window.BrowserColumn = NodeView.extend().newSlots({
 
 	// --- keyboard controls, arrow navigation -----------------------------
 	
+	canNavigate: function() {
+        return this.allowsCursorNavigation() && this.isActiveElement()
+	},
+	
 	onUpArrowKeyUp: function(event) {
-        if (!this.allowsCursorNavigation()) { 
+        if (!this.canNavigate()) { 
 			return 
 		}
         this.selectPreviousRow()
@@ -303,7 +315,9 @@ window.BrowserColumn = NodeView.extend().newSlots({
 	},
 	
 	onDownArrowKeyUp: function(event) {
-        if (!this.allowsCursorNavigation()) { 
+	    console.log(this.type() + ".onDownArrowKeyUp()")
+	    
+        if (!this.canNavigate()) { 
 			return 
 		}
         this.selectNextRow()
@@ -311,7 +325,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
 	},
 	
 	onLeftArrowKeyUp: function(event) {
-        if (!this.allowsCursorNavigation()) { 
+        if (!this.canNavigate()) { 
 			return 
 		}
 		
@@ -328,7 +342,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
 	},
 	
 	onRightArrowKeyUp: function(event) {
-        if (!this.allowsCursorNavigation()) { return }	
+        if (!this.canNavigate()) { return }	
 
 		if (this.nextColumn() && this.nextColumn().subviews().length > 0) {
         	this.selectNextColumn()
@@ -340,7 +354,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
 	
 	onEnterKeyUp: function(event) {
         console.log(this.type() + ".onEnterKeyUp()")
-        if (!this.allowsCursorNavigation()) { return }
+        if (!this.canNavigate()) { return }
 	
 		var row = this.selectedRow()
 		if (row) { 
@@ -360,7 +374,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
 	// --- keyboard controls, add and delete actions -----------------------------
 		
 	onDeleteKeyUp: function(event) {
-        if (!this.allowsCursorNavigation()) { return }
+        if (!this.canNavigate()) { return }
 
         /*
         var sNode = this.selectedNode()
@@ -375,7 +389,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
 	},
 	
 	onPlusKeyUp: function(event) {
-        if (!this.allowsCursorNavigation()) { return }		
+        if (!this.canNavigate()) { return }		
 
         var sNode = this.selectedNode()
         if (sNode && sNode.hasAction("add")) { 
@@ -396,7 +410,11 @@ window.BrowserColumn = NodeView.extend().newSlots({
 	// nextRow
 
     selectNextRow: function() {
+        
         var si = this.selectedRowIndex()
+
+        //console.log(this.type() + ".selectNextRow(), selectedRowIndex:" + this.selectedRowIndex() + "/" + this.rows().length)
+
         var rows = this.rows()
         if (si == -1) {
             this.setSelectedRowIndex(0)
@@ -408,7 +426,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     
     selectPreviousRow: function() {
         var si = this.selectedRowIndex()
-        var rows = this.rows()
+        //var rows = this.rows()
         if (si == -1) {
             this.setSelectedRowIndex(0)
         } else {

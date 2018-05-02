@@ -1,5 +1,13 @@
 "use strict"
 
+/*
+    A view for a single line of text. 
+    For multi-line text, use TextArea.
+    
+    Behavior:
+    On Return/Enter key, it passes focus to the nextResponder/parent.
+*/
+
 window.TextField = DivStyledView.extend().newSlots({
     type: "TextField",
 	isSelected: false,
@@ -56,69 +64,32 @@ window.TextField = DivStyledView.extend().newSlots({
 	
 	setInnerHTML: function(s) {
 	    throw new Error("use setSafeInnerHTML instead")
-	    
-	    /*
-        DivView.setSafeInnerHTML.apply(this, [s])
-		// need to blur it first, if user is typing 
-		
-		if (this.innerHTML() == s) {
-			return this
-		}
-		
-		if (s == null) { 
-			s = ""
-		}
-		
-		if (this.hasFocus()) {
-        	this.blur()
-		}
-		//console.log("setInnerHTML '" + s + "'")
-        DivView.setInnerHTML.apply(this, [s])
-        */
-		//console.log("innerHTML =  '" + this.innerHTML() + "'")
 		return this
 	},
-	
+    
+	onEnterKeyUp: function(event) {
+	    console.log(this.type() + ".onEnterKeyUp()")
+	    //this.didEdit()
+	    
+	    this.removeReturns()
+
+        if (this.doesClearOnReturn()) {
+            DivView.setSafeInnerHTML.apply(this, [""])
+        }
+
+        this.tellParentViews("didInput", this) 
+            
+        if (!this.doesHoldFocusOnReturn()) {
+            this.releaseFirstResponder()
+        }
+        
+		return false
+	},
 	
 	removeReturns: function() {
-        var didReturn = false
-        var s = this.innerHTML()
-
-		//console.log(this.typeId() + ".removeReturns() s = '" + s + "'")
-		//console.log(this.typeId() + ".innerText() = '" + this.innerText() + "'")
-
-        this.returnStrings().forEach((returnString) => {
-            if (s.contains(returnString)) {
-				//console.log(this.typeId() + ".removeReturns() found return in '" + s + "'")
-                //s = s.replaceAll(returnString, "")
-                didReturn = true
-            }
-        })
-
-        if (didReturn) { 
-            this.setSafeInnerHTML(this.innerText())
-        }
-
-		return didReturn
+        this.setSafeInnerHTML(this.innerText())
+		return this
 	},
-
-    didEdit: function() {
-        DivView.didEdit.apply(this)
-                
-        if (this.removeReturns()) { 
-            this.tellParentViews("didInput", this) 
-
-            if (this.doesClearOnReturn()) {
-                DivView.setInnerHTML.apply(this, [""])
-            }
-        
-            if (this.doesHoldFocusOnReturn()) {
-                this.focus()
-            }	
-        }
-                
-        return this
-    },
     
     /*
     setInput: function(s) {

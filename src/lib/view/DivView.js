@@ -51,6 +51,8 @@ window.DivView = ideal.Proto.extend().newSlots({
 	isRegisteredForPaste: false,
 	
     intersectionObserver: null,
+    
+    acceptsFirstResponder: false,
 }).setSlots({
 
     
@@ -65,9 +67,16 @@ window.DivView = ideal.Proto.extend().newSlots({
 		this.element().id = aString
 		return this
 	},
-    
+	
+	setElement: function(e) {
+	    this._element = e
+	    this.setIsRegisteredForFocus(true)
+	    //e._divView = this // try to avoid depending on this as much as possible - keep refs to divViews, not elements
+	    return this
+	},
+	    
     setupElement: function() {
-        this._element = document.createElement("div")
+        this.setElement(document.createElement("div"))
 		this.setDivId(this.type() + "-" + this._uniqueId)
 		this.setupDivClassName()      
 		return this  
@@ -1837,6 +1846,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 		}
 		*/    
 		
+		// onEnterKeyDown onLeftArrowKeyUp
 		if (event.specialKeyName) {
 			var name = "on" + event.specialKeyName.capitalized() + "KeyDown"
 			if (this[name]) {
@@ -1877,6 +1887,7 @@ window.DivView = ideal.Proto.extend().newSlots({
         }
 
 		if (event.specialKeyName) {
+		    // onEnterKeyUp onLeftArrowKeyUp
 			var name = "on" + event.specialKeyName.capitalized() + "KeyUp"
 			if (this[name]) {
 				shouldPropogate = this[name].apply(this, [event])
@@ -1928,8 +1939,8 @@ window.DivView = ideal.Proto.extend().newSlots({
 			if (this._isRegisteredForFocus == false) {
 				this._isRegisteredForFocus = true
 				//console.log(this.type() + " setIsRegisteredForFocus(" + aBool + ")")
-	            this.element().onfocus = () => { this.onFocus() };
-	            this.element().onblur  = () => { this.onBlur() };
+	            this.element().onfocus = () => { this.willAcceptFirstResponder(); this.onFocus() };
+	            this.element().onblur  = () => { this.didReleaseFirstResponder(); this.onBlur() };
 			}
         } else {
 			if (this._isRegisteredForFocus == true) {
@@ -1940,6 +1951,46 @@ window.DivView = ideal.Proto.extend().newSlots({
         }
         return this
     },
+    
+    willAcceptFirstResponder: function() {
+	    //console.log(this.type() + ".willAcceptFirstResponder()")
+		return this
+    },
+    
+    didReleaseFirstResponder: function() {
+        // called on focus event from browser
+		return this
+    },
+	
+	// firstResponder
+	
+	willBecomeFirstResponder: function() {
+        // called if becomeFirstResponder accepts
+	},
+	
+	becomeFirstResponder: function() {
+	    if (this.acceptsFirstResponder()) {
+	        this.willBecomeFirstResponder()
+	        this.focus()
+	    } else if (this.parentView()) {
+	        this.parentView().becomeFirstResponder()
+	    }
+	    return this
+	},
+	
+	releaseFirstResponder: function() {
+	    // walk up parent view chain and focus on the first view to 
+	    // answer true for the acceptsFirstResponder message
+	    //console.log(this.type() + ".releaseFirstResponder()")
+	    
+	    this.blur()
+	    if (this.parentView()) {
+	        this.parentView().becomeFirstResponder()
+	    }
+	    return this
+	},
+	
+	// --------------------------------------------------------
 
 	onFocus: function() {
         // subclasses can override 

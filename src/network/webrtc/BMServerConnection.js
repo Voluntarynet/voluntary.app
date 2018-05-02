@@ -52,7 +52,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
     
     addLog: function(s, error) {
         var statusNode = BMFieldSetNode.clone().setTitle(s).setSubtitle(new Date().toString())
-        this.statusLog().addSubnode(statusNode)
+        //this.statusLog().addSubnode(statusNode)
         statusNode.error = function () { return this._error }
         statusNode._error = ""
         
@@ -60,7 +60,6 @@ window.BMServerConnection = BMNode.extend().newSlots({
 	        statusNode._error = StackTrace.clone().stringForError(error)
 	        statusNode.setNote("&gt;")
 	        //statusNode.makeNoteRightArrow()
-
 	    }
 	    
         //var entry = BMDataStoreRecord.clone().setNodeColumnBackgroundColor("white").setNodeMinWidth(300)
@@ -73,14 +72,15 @@ window.BMServerConnection = BMNode.extend().newSlots({
 
     setStatus: function(s, error) {
 		//console.warn(this.typeId() + ".setStatus(" + s + ")")
+        
         this._status = s
         this.setSubtitle(s)
         
         this.addLog(s, error)
         
 		//this.scheduleSyncToView()
-		this.didUpdateNode()
-		this.server().didUpdateNode()
+		this.didUpdateNode() 
+		this.server().didUpdateNode() 
         return this
     },
 

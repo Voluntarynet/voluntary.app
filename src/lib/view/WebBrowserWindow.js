@@ -143,6 +143,49 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
 		document.title = aName
         return this
 	},
+	
+	/*
+    // firstResponder/activeElement - focus/blur
+
+    lastActiveElement: document.activeElement,
+
+    registerToWatchFocus: function() {
+        var focusFunc = () => { this.onElementFocus() }
+        var blurFunc = () => { this.onElementBlur() }
+        
+        window.addEventListener ? window.addEventListener('focus', focusFunc, true) : window.attachEvent('onfocusout', focusFunc);  
+        window.addEventListener ? window.addEventListener('blur', blurFunc, true) : window.attachEvent('onblur', blurFunc);
+        return this
+    },
+    
+    updateLastActiveElement: function() {
+        this.setLastActiveElement(document.activeElement);
+        return this
+    },
+    
+    didChangeFocus: function() {
+        return this.lastActiveElement() != currentActiveElement
+    },
+
+    onElementFocus: function() {
+        if (this.didChangeFocus()) {
+            var last = this.lastActiveElement()
+            if (last && last.) {
+                this.lastActiveElement().willReleaseFirstResponder()
+            }
+            if (document.activeElement) {
+                
+            }
+        }
+        
+        this.updateLastActiveElement()
+    },
+    
+    onElementBlur: function() {
+
+        this.updateLastActiveElement()
+    },  
+    */
 })
 
 

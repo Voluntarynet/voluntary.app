@@ -118,10 +118,10 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
     // arrow
     
 	makeNoteRightArrow: function() {
-		this.noteView().setBackgroundImageUrlPath(this.pathForIconName("right-white"))        
+		this.noteView().setBackgroundImageUrlPath(this.pathForIconName("right-gray"))        
 		this.noteView().setBackgroundSizeWH(10, 10)
 		this.noteView().setMinAndMaxWidth(10).setMinAndMaxHeight(10)
-		this.noteView().setOpacity(0.5)
+		//this.noteView().setOpacity(0.5)
 		return this		
 	},
 })

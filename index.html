@@ -101811,7 +101811,7 @@ window.BMClassifiedPost = BMFieldSetNode.extend().newSlots({
 			return k + " (" + CurrenciesDict[k].name + ")"
 		}).sort()
 		*/
-		return CurrenciesDict.slotNames().sort()
+		return Object.slotNames(CurrenciesDict).sort()
 	},
 	
 	currencyName: function() {

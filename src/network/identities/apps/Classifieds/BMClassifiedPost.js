@@ -81,11 +81,11 @@ window.BMClassifiedPost = BMFieldSetNode.extend().newSlots({
 	
 	currencySymbols: function() {
 		/*
-		return CurrenciesDict.slotNames().map(function (k) {
+		return Object.slotNames(CurrenciesDict).map(function (k) {
 			return k + " (" + CurrenciesDict[k].name + ")"
 		}).sort()
 		*/
-		return CurrenciesDict.slotNames().sort()
+		return Object.slotNames(CurrenciesDict).sort()
 	},
 	
 	currencyName: function() {
@@ -322,7 +322,7 @@ window.BMClassifiedPost = BMFieldSetNode.extend().newSlots({
     },
     
     hash: function() {
-        return this.postDict().toStableHash()
+        return Object.toStableHash(this.postDict())
     },
     
     incrementPowTarget: function() {

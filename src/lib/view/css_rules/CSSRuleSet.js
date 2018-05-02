@@ -21,7 +21,7 @@ window.CSSRuleSet = ideal.Proto.extend().newSlots({
     applyToElement: function(anElement) {        
         var dict = this.declarations()
         
-        dict.slotValues().forEach(function(declaration) {
+        Object.slotValues(dict).forEach(function(declaration) {
             declaration.applyToElement(anElement)
         })
         

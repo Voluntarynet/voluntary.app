@@ -162,7 +162,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
             
             this._serverConn.addEventListener('message', event => {
                 try {
-                    console.log('BMServerConnection receive: ' + event.data);
+                    //console.log('BMServerConnection receive: ' + event.data);
                     const msg = JSON.parse(event.data);
                     this.perform('receive' + msg.name.capitalized(), msg.data);
                 }
@@ -213,7 +213,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
 	close: function() {
         this.setStatus("closing...")
         this.remotePeers().closeAll()
-        
+        clearInterval(this._pingInterval);
 		//this.remotePeers().forEach((peer) => { peer.close() })
 		//this.removeAllSubnodes()
 		
@@ -258,6 +258,9 @@ window.BMServerConnection = BMNode.extend().newSlots({
         this.setTitle("Connection " + this.shortId())
         this.setStatus("connected")
         this.log("onOpen " + this.peerId().toString());
+        this._pingInterval = setInterval(() => {
+            this.send('ping');
+        }, 15000);
         this.send('requestId', { requestedId: this.peerId().toString() }).then(() => {
             this.updatePeers();
         }).catch(e => this.onError(e));
@@ -279,6 +282,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
 */
 
     onClose: function(err) {
+        clearInterval(this._pingInterval);
         this.log(this.type() + ".onClose " + err)
         this.setStatus("closed")
         if (err) {

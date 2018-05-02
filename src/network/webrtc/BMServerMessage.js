@@ -22,7 +22,7 @@ window.BMServerMessage = ideal.Proto.extend().newSlots({
 			data: this.data()
 		});
 
-		console.log('BMServerMessage send: ' + messageString);
+		//console.log('BMServerMessage send: ' + messageString);
 
 		this.serverConnection().pendingMessages()[this.id()] = this;
 		this.serverConnection().serverConn().send(messageString);

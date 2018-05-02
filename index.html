@@ -35,6 +35,24 @@ html, body {
 	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
 }
 
+/* --- Blender --- */
+/*
+@font-face {
+    font-family: "AppLight";
+    src: url("fonts/Blender/Blender-THIN.ttf");
+}
+
+@font-face {
+    font-family: "AppRegular";
+    src: url("fonts/Blender/Blender-BOOK.ttf");
+}
+
+@font-face {
+    font-family: "AppSemiBold";
+    src: url("fonts/Blender/Blender-BOLD.ttf");
+}
+*/
+
 /* --- OpenSans --- */
 
 @font-face {
@@ -1898,7 +1916,7 @@ JSImporter = {
 	    //console.log("JSImporter.done() -----------------------------")
 		this._doneCallbacks.forEach((callback) => { callback() })
 		if (window.JSImporterIsEmbedded != true) {
-		    this.showConcatCommand()
+		    //this.showConcatCommand()
 	    }
 		return this
 	},
@@ -89092,7 +89110,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 	
 	// --- inner html ---
 
-    setSafeInnerHTML: function(v) {
+    setInnerHTML: function(v) {
         if (v == null) { 
 			v = "" 
 		}
@@ -89103,47 +89121,27 @@ window.DivView = ideal.Proto.extend().newSlots({
             return this
         }
 
-        if (this.isActiveElementAndEditable()) {
+        var isFocused = this.isActiveElementAndEditable()
+        
+        if (isFocused) {
             this.blur()
-            this.element().innerHTML = v
+        }
+        
+        this.element().innerHTML = v
+            
+        if (isFocused) {
             this.focus()
-        } else {
-            this.element().innerHTML = v
         }
 
 	    return this
 	},
-	
-    setInnerHTML: function (v) {
-        if (v == null) { 
-			v = "" 
-		}
-		
-        v = "" + v //escape(v)
-
-        if (v != this.element().innerHTML) {
-
-            if (this.isActiveElementAndEditable()) {
-				ShowStack();
-                console.log("WARNING: attempt to setInnerHTML on active element. ")
-                // Can't do this until we can properly set the cursor.
-                // there also seems to be some inconsistency problem
-                // maybe with DOM update sync?
-                return 
-            }
-            
-            this.element().innerHTML = v
-        }
-
-        return this
-    },
 
     innerHTML: function() {
         return this.element().innerHTML
     },
 
     setString: function (v) {
-        return this.setSafeInnerHTML(v)
+        return this.setInnerHTML(v)
     },
     
     loremIpsum: function (maxWordCount) {
@@ -90647,7 +90645,7 @@ NodeView = DivStyledView.extend().newSlots({
     // value
     
     setValue: function(newValue) {
-		this.setSafeInnerHTML(newValue)			
+		this.setInnerHTML(newValue)			
         return this
     },
     
@@ -90706,7 +90704,7 @@ window.TextField = DivStyledView.extend().newSlots({
 
 	setValue: function(newValue) {
         //var newValue = this.visibleValue()
-	    this.setSafeInnerHTML(newValue)
+	    this.setInnerHTML(newValue)
 		return this
 	},	
 			
@@ -90718,11 +90716,6 @@ window.TextField = DivStyledView.extend().newSlots({
 	},
 	
 	// ------------------
-	
-	setInnerHTML: function(s) {
-	    throw new Error("use setSafeInnerHTML instead")
-		return this
-	},
     
 	onEnterKeyUp: function(event) {
 	    console.log(this.type() + ".onEnterKeyUp()")
@@ -90731,7 +90724,7 @@ window.TextField = DivStyledView.extend().newSlots({
 	    this.removeReturns()
 
         if (this.doesClearOnReturn()) {
-            DivView.setSafeInnerHTML.apply(this, [""])
+            this.setInnerHTML("")
         }
 
         this.tellParentViews("didInput", this) 
@@ -90744,7 +90737,7 @@ window.TextField = DivStyledView.extend().newSlots({
 	},
 	
 	removeReturns: function() {
-        this.setSafeInnerHTML(this.innerText())
+        this.setInnerHTML(this.innerText())
 		return this
 	},
     
@@ -90870,7 +90863,7 @@ window.BoolView = DivStyledView.extend().newSlots({
 	},
 	
 	updateUnicode: function() {
-		this.setSafeInnerHTML(this.currentUnicode())
+		this.setInnerHTML(this.currentUnicode())
 		return this
 	},
 	*/
@@ -92301,7 +92294,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
 	},
 	
 	onDownArrowKeyUp: function(event) {
-	    console.log(this.type() + ".onDownArrowKeyUp()")
+	    //console.log(this.type() + ".onDownArrowKeyUp()")
 	    
         if (!this.canNavigate()) { 
 			return 
@@ -92339,7 +92332,8 @@ window.BrowserColumn = NodeView.extend().newSlots({
 	// --- enter key begins row editing ---------------------------
 	
 	onEnterKeyUp: function(event) {
-        console.log(this.type() + ".onEnterKeyUp()")
+        //console.log(this.type() + ".onEnterKeyUp()")
+        
         if (!this.canNavigate()) { return }
 	
 		var row = this.selectedRow()
@@ -92863,7 +92857,7 @@ window.BrowserHeader = NodeView.extend().newSlots({
         
         if (node && this.browser()) {
             if (this.shouldShowTitle()) {
-    		    this.titleView().setSafeInnerHTML(node.nodeHeaderTitle())
+    		    this.titleView().setInnerHTML(node.nodeHeaderTitle())
     		    this.addSubview(this.titleView())
 	        }
 
@@ -93461,7 +93455,7 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
         
         if (this.noteView().innerHTML() == "&gt;") {
             this.makeNoteRightArrow()
-            this.noteView().setSafeInnerHTML("")
+            this.noteView().setInnerHTML("")
         }
 		
         return this
@@ -94274,7 +94268,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
 			this.setDisplay("none")
 		}
 
-        keyView.setSafeInnerHTML(this.visibleKey())
+        keyView.setInnerHTML(this.visibleKey())
 
         var newValue = this.visibleValue()
 		
@@ -94318,9 +94312,9 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
 		}
 				
 		if (this.visibleNote()) {
-			this.noteView().setSafeInnerHTML(this.visibleNote())
+			this.noteView().setInnerHTML(this.visibleNote())
 		} else {
-			this.noteView().setSafeInnerHTML("")
+			this.noteView().setInnerHTML("")
 		}
 		
 		/*
@@ -96238,7 +96232,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
             
             this._serverConn.addEventListener('message', event => {
                 try {
-                    console.log('BMServerConnection receive: ' + event.data);
+                    //console.log('BMServerConnection receive: ' + event.data);
                     const msg = JSON.parse(event.data);
                     this.perform('receive' + msg.name.capitalized(), msg.data);
                 }
@@ -96289,7 +96283,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
 	close: function() {
         this.setStatus("closing...")
         this.remotePeers().closeAll()
-        
+        clearInterval(this._pingInterval);
 		//this.remotePeers().forEach((peer) => { peer.close() })
 		//this.removeAllSubnodes()
 		
@@ -96334,6 +96328,9 @@ window.BMServerConnection = BMNode.extend().newSlots({
         this.setTitle("Connection " + this.shortId())
         this.setStatus("connected")
         this.log("onOpen " + this.peerId().toString());
+        this._pingInterval = setInterval(() => {
+            this.send('ping');
+        }, 15000);
         this.send('requestId', { requestedId: this.peerId().toString() }).then(() => {
             this.updatePeers();
         }).catch(e => this.onError(e));
@@ -96355,6 +96352,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
 */
 
     onClose: function(err) {
+        clearInterval(this._pingInterval);
         this.log(this.type() + ".onClose " + err)
         this.setStatus("closed")
         if (err) {
@@ -96457,7 +96455,7 @@ window.BMServerMessage = ideal.Proto.extend().newSlots({
 			data: this.data()
 		});
 
-		console.log('BMServerMessage send: ' + messageString);
+		//console.log('BMServerMessage send: ' + messageString);
 
 		this.serverConnection().pendingMessages()[this.id()] = this;
 		this.serverConnection().serverConn().send(messageString);
@@ -96682,7 +96680,7 @@ window.BMRServers = BMStorableNode.extend().newSlots({
     
     bootStrapServers: function () {
         return [
-            //BMRServer.clone().setHost("rendezvous9000.voluntary.net").setPort(9000),
+            BMRServer.clone().setHost("rendezvous9000.voluntary.net").setPort(9000),
             BMRServer.clone().setHost("peer-net-server.herokuapp.com").setPort(443).setIsSecure(true),
             //BMRServer.clone().setHost("127.0.0.1").setPort(9000) ,
             //BMRServer.clone().setHost("127.0.0.1").setPort(433) ,
@@ -99996,7 +99994,7 @@ window.BMChatMessageRowView = BrowserTitledRow.extend().newSlots({
 		var node = this.node()
 		if (node) {
 			//console.log(this.typeId() + " updateSubviews node = " + node.typeId() + " content = ", this.node().content())
-			this.titleView().setSafeInnerHTML(node.title())
+			this.titleView().setInnerHTML(node.title())
 		
 			if (this.message().wasSentByMe()) {
 				this.styleAsSent()

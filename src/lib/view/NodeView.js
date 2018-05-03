@@ -38,7 +38,9 @@ NodeView = DivStyledView.extend().newSlots({
     },
     
     didChangeNode: function() {
-        this.scheduleSyncFromNode()
+        if (this.node()) {
+            this.scheduleSyncFromNode()
+        }
         return this
     },
  

@@ -239,12 +239,27 @@ window.BrowserColumn = NodeView.extend().newSlots({
 	    return this 	    
 	},
 	
+	scheduleSyncFromNode: function() {
+       if (this.browser() == null || this.node() == null) {
+            console.warn("WARNING: skipping BrowserColumn.scheduleSyncFromNode")
+            console.warn("  this.browser() = " , this.browser())
+            console.warn("  this.node() = " , this.node())
+            return this
+        }	    
+	    NodeView.scheduleSyncFromNode.apply(this)
+	    return this
+	},
+	
     syncFromNode: function () {
         
+        /*
         if (this.browser() == null) {
             console.warn("WARNING: skipping BrowserColumn.syncFromNode because this.browser() == null")
+            console.warn("this.node() = " , this.node())
+            //console.warn("this.node().title() = " , this.node().title())
             return
         }
+        */
         
         // remember the selection        
         var selectedIndex = this.selectedRowIndex()

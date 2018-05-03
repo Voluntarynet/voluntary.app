@@ -91,7 +91,7 @@ window.TextField = DivStyledView.extend().newSlots({
 
         this.setInnerHTML(newValue)
         
-        console.log(this.type() + " after formatValue: '" + this.innerHTML() + "'")
+        //console.log(this.type() + " after formatValue: '" + this.innerHTML() + "'")
 		return this
 	},
     

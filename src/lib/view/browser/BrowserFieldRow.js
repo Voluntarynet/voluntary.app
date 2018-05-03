@@ -32,7 +32,7 @@ window.BrowserFieldRow = BrowserRow.extend().newSlots({
             }
         }
         
-        this.applyStyles()
+        //this.applyStyles()
         
         return this
     },

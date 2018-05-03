@@ -32,6 +32,7 @@ window.DivStyledView = DivView.extend().newSlots({
 		}
 		
 		style.applyToView(this)
+		//setTimeout(() => { style.applyToView(this) }, 0)
 		
 		return this
 	},

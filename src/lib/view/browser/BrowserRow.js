@@ -11,6 +11,8 @@ window.BrowserRow = NodeView.extend().newSlots({
 	defaultHeight: 60,
 	restCloseButtonOpacity: 0.4,
 	transitionStyle: "all 0.2s ease, width 0s, max-width 0s, min-width 0s",
+	selectedFlashColor: "white",
+	isChangingSelection: false,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
@@ -48,6 +50,15 @@ window.BrowserRow = NodeView.extend().newSlots({
         return styles.unselected()
     },
     
+    select: function() {
+        if (!this.isSelected()) {
+            this.setIsChangingSelection(true)
+        }
+
+        NodeView.select.apply(this)
+        return this
+    },
+    
     // update
      
     updateSubviews: function() {        
@@ -67,7 +78,7 @@ window.BrowserRow = NodeView.extend().newSlots({
             }
         }
         
-		//this.applyStyles()
+		this.applyStyles()
 
         return this
     },
@@ -104,8 +115,33 @@ window.BrowserRow = NodeView.extend().newSlots({
         
         //console.log(this.node().title() + " this.currentBgColor() = ", this.currentBgColor())
         //console.log("this.node().nodeRowStyles().selected().backgroundColor() = ", this.currentBgColor())
-        this.setBackgroundColor(this.currentBgColor())
+
+/*
+        if (!this.isSelected() && this.selectedFlashColor()) {
+            console.log("flashing")
+            this.setTransition("0s all")
+            this.setBackgroundColor(this.selectedFlashColor())
+            this.setTransition("0.3s all")
+        }
+        */
+
+        if (this.isChangingSelection() && this.selectedFlashColor()) {
+            this.setBackgroundColor(this.selectedFlashColor())
+            //setTimeout(() => { this.setBackgroundColor(this.currentBgColor()) }, 300)
+        } else {
+           // this.setBackgroundColor(this.currentBgColor())
+        }
+        this.setTransition("0.3s all")
+        setTimeout(() => { this.setBackgroundColor(this.currentBgColor()) }, 60)
+        this.setIsChangingSelection(false)
+        
         return this
+    },
+    
+   willAcceptFirstResponder: function() {
+        NodeView.willAcceptFirstResponder.apply(this)
+	    console.log(this.type() + ".willAcceptFirstResponder()")
+		return this
     },
     
 	currentBgColor: function() {

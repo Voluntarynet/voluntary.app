@@ -42,12 +42,14 @@ window.BrowserFooter = NodeView.extend().newSlots({
     },
 
     didInput: function(aView) {
+        console.log(this.type() + ".didInput(" + aView.typeId() + " '" + aView.innerHTML() + "')")
         this.setInput(aView.innerHTML())
         return this
     },
     
     setInput: function(s) {
-        //console.log(this.typeId() + ".setInput('" + s + "')")
+        console.trace(this.typeId() + ".setInput('" + s + "')")
+        
         var n = this.node()
         if (n) {
             var m = n.nodeInputFieldMethod()

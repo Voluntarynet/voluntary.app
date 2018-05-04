@@ -64,14 +64,10 @@ window.TextField = DivStyledView.extend().newSlots({
 	// ------------------
     
 	onEnterKeyUp: function(event) {
-	    console.log(this.type() + ".onEnterKeyUp()")
+	    console.log(this.typeId() + ".onEnterKeyUp()")
 	    //this.didEdit()
 	    
 	    this.formatValue()
-
-        if (this.doesClearOnReturn()) {
-            this.setInnerHTML("")
-        }
 
         this.tellParentViews("didInput", this) 
             
@@ -79,10 +75,15 @@ window.TextField = DivStyledView.extend().newSlots({
             this.releaseFirstResponder()
         }
         
+        if (this.doesClearOnReturn()) {
+            this.setInnerHTML("")
+        }
+        
 		return false
 	},
 	
 	formatValue: function() {
+	    var oldValue = this.innerHTML()
 	    var newValue = this.innerText() // removes returns
         
         if (this.doesTrim()) {
@@ -91,6 +92,7 @@ window.TextField = DivStyledView.extend().newSlots({
 
         this.setInnerHTML(newValue)
         
+	    console.trace(this.type() + " formatValue '" + oldValue + "' -> '" + this.innerHTML() + "'")
         //console.log(this.type() + " after formatValue: '" + this.innerHTML() + "'")
 		return this
 	},

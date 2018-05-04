@@ -43,6 +43,7 @@ window.BMChatThread = BMStorableNode.extend().newSlots({
 	setInputFieldValue: function(s) {
 		var msg = BMChatMessage.clone()
 
+        console.log(this.type() + ".setInputFieldValue('" + s + "')")
 		msg.setContent(s)
 		msg.sendToRemoteId(this.remoteIdentity())
 		

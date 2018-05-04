@@ -9,7 +9,8 @@ window.DivTransition = ideal.Proto.extend().newSlots({
     timingFunction: "ease-in-ease-out",
     delay: 0, // set to number type (unit = seconds)
 
-	parent: null,
+	//parent: null,
+	transitions: null,
 }).setSlots({
     init: function () {
         return this
@@ -68,7 +69,7 @@ window.DivTransition = ideal.Proto.extend().newSlots({
 	},
 	
 	syncToDiv: function() {
-		this.parent().syncToDiv()
+		this.transitions().syncToDiv()
 		return this
 	},
 })

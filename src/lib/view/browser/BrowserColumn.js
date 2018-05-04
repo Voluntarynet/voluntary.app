@@ -350,7 +350,9 @@ window.BrowserColumn = NodeView.extend().newSlots({
 				this.selectedRow().unselect() 
 			}
 			
-			pc.didClickRow(pc.selectedRow())
+			var newSelectedRow = pc.selectedRow()
+			newSelectedRow.setShouldShowFlash(true).updateSubviews()
+			pc.didClickRow(newSelectedRow)
         	this.selectPreviousColumn()
 		}
 		return false

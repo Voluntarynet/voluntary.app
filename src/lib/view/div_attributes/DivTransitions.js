@@ -19,7 +19,7 @@ window.DivTransitions = ideal.Proto.extend().newSlots({
 		if (!(name in d)) {
 			d[name] = DivTransition.clone().setTransitions(this)
 		}
-		return v
+		return d[name]
 	},
 
 	propertiesAsList: function() {

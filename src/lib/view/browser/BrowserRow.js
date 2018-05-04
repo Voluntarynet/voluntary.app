@@ -11,8 +11,8 @@ window.BrowserRow = NodeView.extend().newSlots({
 	defaultHeight: 60,
 	restCloseButtonOpacity: 0.4,
 	transitionStyle: "all 0.2s ease, width 0s, max-width 0s, min-width 0s",
-	selectedFlashColor: "white",
-	isChangingSelection: false,
+	selectedFlashColor: "#ccc",
+	shouldShowFlash: false,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
@@ -52,7 +52,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     
     select: function() {
         if (!this.isSelected()) {
-            this.setIsChangingSelection(true)
+            this.setShouldShowFlash(true)
         }
 
         NodeView.select.apply(this)
@@ -125,15 +125,21 @@ window.BrowserRow = NodeView.extend().newSlots({
         }
         */
 
-        if (this.isChangingSelection() && this.selectedFlashColor()) {
+        //this.setTransition("0.0s all")
+
+        if (this.shouldShowFlash() && this.selectedFlashColor()) {
             this.setBackgroundColor(this.selectedFlashColor())
+            //setTimeout(() => { this.setBackgroundColor(this.selectedFlashColor()) }, 0)
             //setTimeout(() => { this.setBackgroundColor(this.currentBgColor()) }, 300)
         } else {
            // this.setBackgroundColor(this.currentBgColor())
         }
-        this.setTransition("0.3s all")
-        setTimeout(() => { this.setBackgroundColor(this.currentBgColor()) }, 60)
-        this.setIsChangingSelection(false)
+        
+        //this.setTransition("0.3s all")
+        //this.setTransition("0.3s background-color")
+        //this.transitions().at("backgroundColor").setDuration(1)
+        setTimeout(() => { this.setBackgroundColor(this.currentBgColor()) }, 100)
+        this.setShouldShowFlash(false)
         
         return this
     },

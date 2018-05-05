@@ -64,7 +64,7 @@ window.TextField = DivStyledView.extend().newSlots({
 	// ------------------
     
 	onEnterKeyUp: function(event) {
-	    console.log(this.typeId() + ".onEnterKeyUp()")
+	    //console.log(this.typeId() + ".onEnterKeyUp()")
 	    //this.didEdit()
 	    
 	    this.formatValue()
@@ -72,11 +72,13 @@ window.TextField = DivStyledView.extend().newSlots({
         this.tellParentViews("didInput", this) 
             
         if (!this.doesHoldFocusOnReturn()) {
+            //console.log(this.typeId() + " calling releaseFirstResponder")
             this.releaseFirstResponder()
         }
         
         if (this.doesClearOnReturn()) {
             this.setInnerHTML("")
+            //this.focusAfterDelay(.125) // hack to get focus back after chat view scrolling - todo: fix this
         }
         
 		return false
@@ -92,7 +94,7 @@ window.TextField = DivStyledView.extend().newSlots({
 
         this.setInnerHTML(newValue)
         
-	    console.trace(this.type() + " formatValue '" + oldValue + "' -> '" + this.innerHTML() + "'")
+	    //console.trace(this.type() + " formatValue '" + oldValue + "' -> '" + this.innerHTML() + "'")
         //console.log(this.type() + " after formatValue: '" + this.innerHTML() + "'")
 		return this
 	},

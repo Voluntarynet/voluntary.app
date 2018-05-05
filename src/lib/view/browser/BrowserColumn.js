@@ -233,6 +233,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
 	},
 	
 	scrollToSubnode: function(aSubnode) {
+	    //console.log(this.typeId() + ".scrollToSubnode")
 	    var subview = this.subviewForNode(aSubnode)
 	    assert(subview)
 	    this.columnGroup().scrollView().setScrollTop(subview.offsetTop())

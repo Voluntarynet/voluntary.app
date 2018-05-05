@@ -71,7 +71,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 	setElement: function(e) {
 	    this._element = e
 	    this.setIsRegisteredForFocus(true)
-	    //e._divView = this // try to avoid depending on this as much as possible - keep refs to divViews, not elements
+	    e._divView = this // try to avoid depending on this as much as possible - keep refs to divViews, not elements
 	    return this
 	},
 	    
@@ -492,10 +492,22 @@ window.DivView = ideal.Proto.extend().newSlots({
 	// --- focus and blur ---
 
     focus: function() {
-		//console.log(this.type() + " focus")
+        if (!this.isActiveElement()) {
+    	    
+    	    //console.log(this.typeId() + ".focus() " + document.activeElement._divView)
+    	    
+            setTimeout( () => {
+                this.element().focus()
+                //console.log(this.typeId() + " did refocus after 0 timeout? " + this.isActiveElement())
+            }, 0)
+        }
+        return this
+    },
+    
+    focusAfterDelay: function(seconds) {
         setTimeout( () => {
             this.element().focus()
-        }, 0)
+        }, seconds*1000)
         return this
     },
 
@@ -2194,17 +2206,27 @@ window.DivView = ideal.Proto.extend().newSlots({
     // scroll actions
     
     scrollToTop: function() {
-        this.setScrollTop(0)
+         console.log("]]]]]]]]]]]] " + this.typeId() + ".scrollToTop()")
+       this.setScrollTop(0)
         return this       
     },
     
     scrollToBottom: function() {
+        var focusedElement = document.activeElement
+        var needsRefocus = focusedElement != this.element()
+        console.log("]]]]]]]]]]]] " + this.typeId() + ".scrollToTop() needsRefocus = ", needsRefocus)
+        
         this.setScrollTop(this.scrollHeight())
+        
+        if (needsRefocus) {
+            focusedElement.focus()
+        }
         //e.animate({ scrollTop: offset }, 500); // TODO: why doesn't this work?
         return this
     },
     
     scrollSubviewToTop: function(aSubview) {
+        console.log("]]]]]]]]]]]] " + this.typeId() + ".scrollSubviewToTop()")
         assert(this.subviews().contains(aSubview))
         //this.setScrollTop(aSubview.offsetTop())
         //this.setScrollTopSmooth(aSubview.offsetTop())
@@ -2213,13 +2235,14 @@ window.DivView = ideal.Proto.extend().newSlots({
             () => { return aSubview.offsetTop() }, 
             () => { return this.scrollTop() }, 
             (v) => { this.setScrollTop(v) }, 
-            500)
+            200)
         return this
     },
     
-    animateValue: function(targetFunc, valueFunc, setterFunc, duration) { // duration in milliseconds 
+    animateValue: function(targetFunc, valueFunc, setterFunc, duration) { // duration in milliseconds         
+        console.log("]]]]]]]]]]]] " + this.typeId() + ".animateValue()")
         if (duration == null) {
-            duration = 500
+            duration = 200
         }
             //duration = 1500
         var startTime = Date.now();
@@ -2260,7 +2283,15 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
     
     scrollIntoView: function() {
+        var focusedView =  WebBrowserWindow.activeDivView()
+        //console.log("]]]]]]]]]]]] " + this.typeId() + ".scrollIntoView() needsRefocus = ", focusedView != this)
+        
         this.element().scrollIntoView({ block: "start", inline: "nearest", behavior: "smooth", })
+        
+        if (focusedView != this) {
+            focusedView.focusAfterDelay(0.5) // todo: get this value from transition property
+        }
+        
         return this
     },
     

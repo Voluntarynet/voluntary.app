@@ -16,6 +16,7 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
 
 	setup: function() {
 		this.preventDrop()
+		//this.debugFocus()
 	},
     
  /*  
@@ -143,6 +144,27 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
 		document.title = aName
         return this
 	},
+	
+    debugFocus: function() {
+        var focusFunc = (event) => { 
+            var e = event.srcElement
+            var name = e._divView ? e._divView.typeId() : (e.id ? e.id : e)
+            console.log(">>>>>>>>>>>> Window focused element ", name) 
+        }
+        //var blurFunc = (e) => { console.log("window blurred element ", e._divView ? e._divView.typeId() : e)}
+        
+        window.addEventListener ? window.addEventListener('focus', focusFunc, true) : window.attachEvent('onfocusout', focusFunc);  
+        //window.addEventListener ? window.addEventListener('blur', blurFunc, true) : window.attachEvent('onblur', blurFunc);
+        return this
+    },
+    
+    activeDivView: function() {
+        var e = document.activeElement
+        if (e && e._divView) {
+            return e._divView
+        }
+        return null
+    },
 	
 	/*
     // firstResponder/activeElement - focus/blur

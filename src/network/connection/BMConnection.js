@@ -6,6 +6,7 @@ window.BMConnection = BMNode.extend().newSlots({
     //log: null,
     connection: null,
     lastConnectionType: null,
+    lastIsOnline: 0,
 	debug: false,
 }).setSlots({
     init: function () {
@@ -23,6 +24,8 @@ window.BMConnection = BMNode.extend().newSlots({
 		//this.setServers(NodeStore.shared().rootInstanceWithPidForProto("_servers", BMRServers))
 		//this.addSubnode(this.servers())
 		
+        this.setConnection(navigator.connection || navigator.mozConnection || navigator.webkitConnection)
+        this.updateLastState()  
         this.registerForConnectionChange()
     },
     
@@ -51,29 +54,59 @@ window.BMConnection = BMNode.extend().newSlots({
         return this
     },
 
+    updateLastState: function() {
+        this.setLastConnectionType(this.connectionType())
+        this.setLastIsOnline(this.isOnline())
+        return this
+    },    
+
 	registerForConnectionChange: function() {
-        this.setConnection(navigator.connection || navigator.mozConnection || navigator.webkitConnection)
-        console.log("connection: ", this.connection())
-        this.updateLastConnectionType()
-            
-        this.connection().addEventListener('change', () => { this.onConnectionChange() });
+        this.connection().addEventListener('change', () => { this.onNetworkInformationChange() });
         return this
 	},
 	
-	onConnectionChange: function() {
-        console.log(this.type() + "Connection type changed from " + this.lastConnectionType() + " to " +  this.connectionType(), this.connection());	  
-        this.updateLastConnectionType()  
+	didComeOnline: function() {
+	    return this.lastIsOnline() == false && this.isOnline() == true
+	},
+	
+	didGoOffline: function() {
+	    return this.lastIsOnline() == true && this.isOnline() == false
+	},
+	
+	onNetworkInformationChange: function() {
+        //console.log(this.type() + "Connection type changed from " + this.lastConnectionType() + " to " +  this.connectionType(), this.connection());	  
+
+        NotificationCenter.shared().newNotification().setSender(this).setName("onNetworkInformationChange").post()
+        
+        this.updateLastState()            
         this.didUpdateNode()
+        
+        if (this.didComeOnline()) {
+            this.onNetworkOnline()
+        }
+        
+        if (this.didGoOffline()) {
+            this.onNetworkOffline()
+        }
+	},
+	
+	onNetworkOnline: function() {
+        NotificationCenter.shared().newNotification().setSender(this).setName("onNetworkOnline").post()
 	},
     
-    isOffline: function() {
-        return this.rtt() == 0
+	onNetworkOffline: function() {
+        NotificationCenter.shared().newNotification().setSender(this).setName("onNetworkOffline").post()
+	},
+	
+    isOnline: function() {
+        return this.rtt() != 0
     },
     
     connectionDescription: function() {
-        if (this.isOffline()) {
+        if (!this.isOnline()) {
             return "offline"
         }
+        
         return this.connectionType() + " " + this.downlink() + "Mbps " + this.rtt() + "ms"
     },
     

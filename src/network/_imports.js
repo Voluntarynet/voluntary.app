@@ -11,4 +11,5 @@ JSImporter.pushRelativePaths([
     "messages/_imports.js",
     "identities/_imports.js",
     "blacklists/_imports.js",
+    "connection/_imports.js",
 ])

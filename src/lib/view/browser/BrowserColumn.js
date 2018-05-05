@@ -322,21 +322,31 @@ window.BrowserColumn = NodeView.extend().newSlots({
         return this.allowsCursorNavigation() && this.isActiveElement()
 	},
 	
+	showSelected: function() {
+        /*
+        todo: add check if visible
+        if (this.selectedRow()) {
+            this.selectedRow().scrollIntoView()
+        }
+        */
+        return this	    
+	},
+	
 	onUpArrowKeyUp: function(event) {
         if (!this.canNavigate()) { 
 			return 
 		}
         this.selectPreviousRow()
+        this.showSelected()
 		return false
 	},
 	
 	onDownArrowKeyUp: function(event) {
-	    //console.log(this.type() + ".onDownArrowKeyUp()")
-	    
         if (!this.canNavigate()) { 
 			return 
 		}
         this.selectNextRow()
+        this.showSelected()
 		return false
 	},
 	

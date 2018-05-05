@@ -6,6 +6,7 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
     servers: null,
     stunServers: null,
     messages: null,
+    connection: null,
     localIdentities: null, // set by parent 
     blacklists: null,
 	idsBloomFilter: null,
@@ -24,6 +25,9 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
         //this.setPid("_network")
         this.setTitle("Network")
         this.setNodeMinWidth(200)
+        
+        this.setConnection(BMConnection.shared())
+		this.addSubnode(this.connection())
 
 		this.setServers(NodeStore.shared().rootInstanceWithPidForProto("_servers", BMRServers))
 		this.addSubnode(this.servers())

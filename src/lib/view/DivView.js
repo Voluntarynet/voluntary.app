@@ -49,6 +49,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 	isRegisteredForMouse: false,
 	isRegisteredForFocus: false,
 	isRegisteredForPaste: false,
+	isRegisteredForVisibility: false,
 	
     intersectionObserver: null,
     
@@ -2285,13 +2286,30 @@ window.DivView = ideal.Proto.extend().newSlots({
     scrollIntoView: function() {
         var focusedView =  WebBrowserWindow.activeDivView()
         //console.log("]]]]]]]]]]]] " + this.typeId() + ".scrollIntoView() needsRefocus = ", focusedView != this)
+
+        if (focusedView != this) {
+            console.log("scrollIntoView - registerForVisibility")
+            // this hack is needed to return focus that scrollIntoView grabs from other elements
+            // need to do this before element().scrollIntoView appearently
+            this.registerForVisibility()
+            this._endScrollIntoViewFunc = () => {
+                console.log("_endScrollIntoViewFunc - returning focus")
+                //focusedView.focus()
+                // need delay to allow scroll to finish - hack - todo: check for full visibility
+                focusedView.focusAfterDelay(0.2)
+            }
+        }
+        setTimeout(() => {
+            this.element().scrollIntoView({ block: "start", inline: "nearest", behavior: "smooth", })
+        }, 0)
         
-        this.element().scrollIntoView({ block: "start", inline: "nearest", behavior: "smooth", })
+
         
+        /*
         if (focusedView != this) {
             focusedView.focusAfterDelay(0.5) // todo: get this value from transition property
         }
-        
+        */
         return this
     },
     
@@ -2336,18 +2354,22 @@ window.DivView = ideal.Proto.extend().newSlots({
 	    if (obs) {
 	        obs.disconnect()
             this.setIntersectionObserver(null);
+            this.setIsRegisteredForVisibility(false)
 	    }
 	    return this
 	},
 	
 	registerForVisibility: function() {
+	    if (this.isRegisteredForVisibility()) {
+	        return this
+	    }
+	    
 	    var root = document.body
 	    
-	    /*
 	    if (this.parentView()) {
-	        root = this.parentView().parentView().element()
+	        root = this.parentView().parentView().element() // hack for scroll view - todo: make more general
+	        //root = this.parentView().element()
 	    }
-	    */
 	    
         var intersectionObserverOptions = {
           root: root, // watch for visibility in the viewport 
@@ -2357,14 +2379,24 @@ window.DivView = ideal.Proto.extend().newSlots({
     
         var obs = new IntersectionObserver((entries, observer) => { 
             entries.forEach(entry => {
-                if (entry.isIntersecting) { this.onVisibility() }
+                if (entry.isIntersecting) { 
+                    
+                    console.log("onVisibility!")
+                    if (this._endScrollIntoViewFunc) {
+            	        this._endScrollIntoViewFunc() 
+            	        // hack around lack of end of scrollIntoView event 
+            	        // needed to return focus that scrollIntoView grabs from other elements
+            	    }
+	    
+                    this.onVisibility() 
+                }
             })
         }, intersectionObserverOptions)
         
         this.setIntersectionObserver(obs);
         obs.observe(this.element());
+
+        this.setIsRegisteredForVisibility(true)
         return this
     },
-
-	
 })

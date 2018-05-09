@@ -16,7 +16,9 @@ window.BMNode = ideal.Proto.extend().newSlots({
     nodeSubtitleIsEditable: false,
 	nodeRowIsSelectable: true,
 	nodeVisibleClassName: null,
-	
+    
+    nodeRowsStartAtBottom: false,
+
 	// column settings (this should really auto adjust to fit)
     nodeMinWidth: 200,
 
@@ -52,6 +54,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     
     subnodeIndex: null,
     subnodeSortFunc: null,
+
 	// debug
     debug: false,
 }).setSlots({

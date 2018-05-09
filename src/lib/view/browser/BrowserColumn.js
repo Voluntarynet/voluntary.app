@@ -202,7 +202,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
 	setNode: function(aNode) {
 		if (this.node() != aNode) {
 			NodeView.setNode.apply(this, [aNode])
-			this.unselectAllRows()
+            this.unselectAllRows() // move to didChangeNode
 			//"shouldFocusSubnode"
 		}
 		return this
@@ -238,7 +238,28 @@ window.BrowserColumn = NodeView.extend().newSlots({
 	    assert(subview)
 	    this.columnGroup().scrollView().setScrollTop(subview.offsetTop())
 	    return this 	    
-	},
+    },
+    
+    scrollToBottom: function() {
+        var last = this.subviews().last()
+
+        if (last) { 
+            last.scrollIntoView()
+        }
+
+        return this
+    },
+
+    didChangeNode: function() {
+        NodeView.didChangeNode.apply(this)
+
+        if (this.node() && this.node().nodeRowsStartAtBottom()) {
+            setTimeout(() => { this.scrollToBottom() }, 0)
+            //this.subviews().last().scrollIntoView()
+        }
+
+        return this
+    },
 	
 	scheduleSyncFromNode: function() {
        if (this.browser() == null || this.node() == null) {

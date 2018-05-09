@@ -20,6 +20,7 @@ window.BMChatThread = BMStorableNode.extend().newSlots({
 		this.createSubnodeIndex()
 
 		this.setNodeColumnBackgroundColor("white")
+		this.setNodeRowsStartAtBottom(true)
     },
 
 	title: function() {

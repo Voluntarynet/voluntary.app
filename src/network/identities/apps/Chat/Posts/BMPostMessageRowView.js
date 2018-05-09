@@ -93,6 +93,7 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
     },
     
     setParentView: function(aView) {
+        // what is this for?
         BrowserRow.setParentView.apply(this, [aView])
 		this.registerForVisibility()
         return this

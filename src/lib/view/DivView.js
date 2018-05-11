@@ -2287,7 +2287,7 @@ window.DivView = ideal.Proto.extend().newSlots({
         var focusedView =  WebBrowserWindow.activeDivView()
         //console.log("]]]]]]]]]]]] " + this.typeId() + ".scrollIntoView() needsRefocus = ", focusedView != this)
 
-        if (focusedView != this) {
+        if (focusedView && focusedView != this) {
             console.log("scrollIntoView - registerForVisibility")
             // this hack is needed to return focus that scrollIntoView grabs from other elements
             // need to do this before element().scrollIntoView appearently

@@ -423,7 +423,13 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         if (!proto) {
             throw new Error("missing proto '" + nodeDict.type + "'")
         }
+
         var obj = proto.clone()
+        
+        if (!obj.justSetPid) {
+            throw new Error("stored object of type '" + nodeDict.type + "' missing justSetPid() method")
+        }
+
         // need to set pid before dict to handle circular refs
         obj.justSetPid(pid) // calls addActiveObject()
         obj.setExistsInStore(true)

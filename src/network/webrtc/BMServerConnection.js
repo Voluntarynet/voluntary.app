@@ -146,7 +146,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
                 return this
             }
             
-            this.log("Server " +  this.shortId() + ".connect()")          
+            this.log("Server " +  this.shortId() + ".connect()")
 
             this._serverConn.addEventListener('open', e => {
                 this.onOpen();
@@ -204,10 +204,9 @@ window.BMServerConnection = BMNode.extend().newSlots({
     },
 
 	reconnect: function() {
-	    //console.log(this.typeId() + ".reconnect()")
+        //console.log(this.typeId() + ".reconnect()")
         this.close()
-		this.connect()
-        return this		
+        return this;
 	},
 	
 	close: function() {
@@ -218,10 +217,13 @@ window.BMServerConnection = BMNode.extend().newSlots({
 		//this.removeAllSubnodes()
 		
 		if (this._serverConn) {
-			this._serverConn.close()
+            this._serverConn.removeEventListeners();
+            this._serverConn.close()
 			this._serverConn = null
 		}
         this.setStatus("offline")
+
+        this.onClose();
 		return this
 	},
 
@@ -255,7 +257,8 @@ window.BMServerConnection = BMNode.extend().newSlots({
 		this.setError(error)
 		if (error && !error.message.beginsWith("Could not connect to peer")) {
 	        this.setStatus(error.message, error)	        
-	        this.log(this.type() + " onError: " + error);
+            this.log(this.type() + " onError: " + error);
+            this._serverConn.removeEventListeners();
 	        this._serverConn = null
 		}
     },
@@ -267,7 +270,14 @@ window.BMServerConnection = BMNode.extend().newSlots({
         this._pingInterval = setInterval(() => {
             this.send('ping');
         }, 15000);
-        this.send('requestId', { requestedId: this.peerId().toString() }).then(() => {
+        this.requestId();
+        
+        
+    },
+
+    requestId: function() {
+        this.setPeerId(this.currentPeerId());
+        return this.send('requestId', { requestedId: this.peerId().toString() }).then(() => {
             this.updatePeers();
         }).catch(e => this.onError(e));
     },
@@ -294,7 +304,11 @@ window.BMServerConnection = BMNode.extend().newSlots({
         if (err) {
             this.setLastError("close error: " + err)
         }
-        this._serverConn = null
+
+        if (this._serverConn) {
+            this._serverConn.removeEventListeners();
+            this._serverConn = null;
+        }
     },
     
     isConnected: function () {

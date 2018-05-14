@@ -1916,7 +1916,7 @@ JSImporter = {
 	    //console.log("JSImporter.done() -----------------------------")
 		this._doneCallbacks.forEach((callback) => { callback() })
 		if (window.JSImporterIsEmbedded != true) {
-		    //this.showConcatCommand()
+		    this.showConcatCommand()
 	    }
 		return this
 	},
@@ -84699,7 +84699,9 @@ window.BMNode = ideal.Proto.extend().newSlots({
     nodeSubtitleIsEditable: false,
 	nodeRowIsSelectable: true,
 	nodeVisibleClassName: null,
-	
+    
+    nodeRowsStartAtBottom: false,
+
 	// column settings (this should really auto adjust to fit)
     nodeMinWidth: 200,
 
@@ -84735,6 +84737,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     
     subnodeIndex: null,
     subnodeSortFunc: null,
+
 	// debug
     debug: false,
 }).setSlots({
@@ -85815,7 +85818,13 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         if (!proto) {
             throw new Error("missing proto '" + nodeDict.type + "'")
         }
+
         var obj = proto.clone()
+        
+        if (!obj.justSetPid) {
+            throw new Error("stored object of type '" + nodeDict.type + "' missing justSetPid() method")
+        }
+
         // need to set pid before dict to handle circular refs
         obj.justSetPid(pid) // calls addActiveObject()
         obj.setExistsInStore(true)
@@ -87604,7 +87613,8 @@ window.DivTransition = ideal.Proto.extend().newSlots({
     timingFunction: "ease-in-ease-out",
     delay: 0, // set to number type (unit = seconds)
 
-	parent: null,
+	//parent: null,
+	transitions: null,
 }).setSlots({
     init: function () {
         return this
@@ -87663,7 +87673,7 @@ window.DivTransition = ideal.Proto.extend().newSlots({
 	},
 	
 	syncToDiv: function() {
-		this.parent().syncToDiv()
+		this.transitions().syncToDiv()
 		return this
 	},
 })
@@ -87688,7 +87698,7 @@ window.DivTransitions = ideal.Proto.extend().newSlots({
 		if (!(name in d)) {
 			d[name] = DivTransition.clone().setTransitions(this)
 		}
-		return v
+		return d[name]
 	},
 
 	propertiesAsList: function() {
@@ -87977,6 +87987,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 	isRegisteredForMouse: false,
 	isRegisteredForFocus: false,
 	isRegisteredForPaste: false,
+	isRegisteredForVisibility: false,
 	
     intersectionObserver: null,
     
@@ -87999,7 +88010,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 	setElement: function(e) {
 	    this._element = e
 	    this.setIsRegisteredForFocus(true)
-	    //e._divView = this // try to avoid depending on this as much as possible - keep refs to divViews, not elements
+	    e._divView = this // try to avoid depending on this as much as possible - keep refs to divViews, not elements
 	    return this
 	},
 	    
@@ -88420,10 +88431,22 @@ window.DivView = ideal.Proto.extend().newSlots({
 	// --- focus and blur ---
 
     focus: function() {
-		//console.log(this.type() + " focus")
+        if (!this.isActiveElement()) {
+    	    
+    	    //console.log(this.typeId() + ".focus() " + document.activeElement._divView)
+    	    
+            setTimeout( () => {
+                this.element().focus()
+                //console.log(this.typeId() + " did refocus after 0 timeout? " + this.isActiveElement())
+            }, 0)
+        }
+        return this
+    },
+    
+    focusAfterDelay: function(seconds) {
         setTimeout( () => {
             this.element().focus()
-        }, 0)
+        }, seconds*1000)
         return this
     },
 
@@ -90122,17 +90145,27 @@ window.DivView = ideal.Proto.extend().newSlots({
     // scroll actions
     
     scrollToTop: function() {
-        this.setScrollTop(0)
+         console.log("]]]]]]]]]]]] " + this.typeId() + ".scrollToTop()")
+       this.setScrollTop(0)
         return this       
     },
     
     scrollToBottom: function() {
+        var focusedElement = document.activeElement
+        var needsRefocus = focusedElement != this.element()
+        console.log("]]]]]]]]]]]] " + this.typeId() + ".scrollToTop() needsRefocus = ", needsRefocus)
+        
         this.setScrollTop(this.scrollHeight())
+        
+        if (needsRefocus) {
+            focusedElement.focus()
+        }
         //e.animate({ scrollTop: offset }, 500); // TODO: why doesn't this work?
         return this
     },
     
     scrollSubviewToTop: function(aSubview) {
+        console.log("]]]]]]]]]]]] " + this.typeId() + ".scrollSubviewToTop()")
         assert(this.subviews().contains(aSubview))
         //this.setScrollTop(aSubview.offsetTop())
         //this.setScrollTopSmooth(aSubview.offsetTop())
@@ -90141,13 +90174,14 @@ window.DivView = ideal.Proto.extend().newSlots({
             () => { return aSubview.offsetTop() }, 
             () => { return this.scrollTop() }, 
             (v) => { this.setScrollTop(v) }, 
-            500)
+            200)
         return this
     },
     
-    animateValue: function(targetFunc, valueFunc, setterFunc, duration) { // duration in milliseconds 
+    animateValue: function(targetFunc, valueFunc, setterFunc, duration) { // duration in milliseconds         
+        console.log("]]]]]]]]]]]] " + this.typeId() + ".animateValue()")
         if (duration == null) {
-            duration = 500
+            duration = 200
         }
             //duration = 1500
         var startTime = Date.now();
@@ -90188,7 +90222,32 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
     
     scrollIntoView: function() {
-        this.element().scrollIntoView({ block: "start", inline: "nearest", behavior: "smooth", })
+        var focusedView =  WebBrowserWindow.activeDivView()
+        //console.log("]]]]]]]]]]]] " + this.typeId() + ".scrollIntoView() needsRefocus = ", focusedView != this)
+
+        if (focusedView && focusedView != this) {
+            console.log("scrollIntoView - registerForVisibility")
+            // this hack is needed to return focus that scrollIntoView grabs from other elements
+            // need to do this before element().scrollIntoView appearently
+            this.registerForVisibility()
+            this._endScrollIntoViewFunc = () => {
+                console.log("_endScrollIntoViewFunc - returning focus")
+                //focusedView.focus()
+                // need delay to allow scroll to finish - hack - todo: check for full visibility
+                focusedView.focusAfterDelay(0.2)
+            }
+        }
+        setTimeout(() => {
+            this.element().scrollIntoView({ block: "start", inline: "nearest", behavior: "smooth", })
+        }, 0)
+        
+
+        
+        /*
+        if (focusedView != this) {
+            focusedView.focusAfterDelay(0.5) // todo: get this value from transition property
+        }
+        */
         return this
     },
     
@@ -90233,18 +90292,22 @@ window.DivView = ideal.Proto.extend().newSlots({
 	    if (obs) {
 	        obs.disconnect()
             this.setIntersectionObserver(null);
+            this.setIsRegisteredForVisibility(false)
 	    }
 	    return this
 	},
 	
 	registerForVisibility: function() {
+	    if (this.isRegisteredForVisibility()) {
+	        return this
+	    }
+	    
 	    var root = document.body
 	    
-	    /*
 	    if (this.parentView()) {
-	        root = this.parentView().parentView().element()
+	        root = this.parentView().parentView().element() // hack for scroll view - todo: make more general
+	        //root = this.parentView().element()
 	    }
-	    */
 	    
         var intersectionObserverOptions = {
           root: root, // watch for visibility in the viewport 
@@ -90254,16 +90317,26 @@ window.DivView = ideal.Proto.extend().newSlots({
     
         var obs = new IntersectionObserver((entries, observer) => { 
             entries.forEach(entry => {
-                if (entry.isIntersecting) { this.onVisibility() }
+                if (entry.isIntersecting) { 
+                    
+                    console.log("onVisibility!")
+                    if (this._endScrollIntoViewFunc) {
+            	        this._endScrollIntoViewFunc() 
+            	        // hack around lack of end of scrollIntoView event 
+            	        // needed to return focus that scrollIntoView grabs from other elements
+            	    }
+	    
+                    this.onVisibility() 
+                }
             })
         }, intersectionObserverOptions)
         
         this.setIntersectionObserver(obs);
         obs.observe(this.element());
+
+        this.setIsRegisteredForVisibility(true)
         return this
     },
-
-	
 })
 "use strict"
 
@@ -90299,6 +90372,7 @@ window.DivStyledView = DivView.extend().newSlots({
 		}
 		
 		style.applyToView(this)
+		//setTimeout(() => { style.applyToView(this) }, 0)
 		
 		return this
 	},
@@ -90462,7 +90536,9 @@ NodeView = DivStyledView.extend().newSlots({
     },
     
     didChangeNode: function() {
-        this.scheduleSyncFromNode()
+        if (this.node()) {
+            this.scheduleSyncFromNode()
+        }
         return this
     },
  
@@ -90670,6 +90746,7 @@ window.TextField = DivStyledView.extend().newSlots({
 	unselectedColor: null,
 	doesClearOnReturn: false,
 	doesHoldFocusOnReturn: false,
+	doesTrim: true,
 }).setSlots({
     init: function () {
         DivView.init.apply(this)
@@ -90683,7 +90760,7 @@ window.TextField = DivStyledView.extend().newSlots({
 		
 		//this.setUnfocusOnEnterKey(true)
 		//this.setIsRegisteredForKeyboard(true) // gets set by setContentEditable()
-		this.removeReturns()
+		this.formatValue()
         return this
     },
 	
@@ -90718,26 +90795,38 @@ window.TextField = DivStyledView.extend().newSlots({
 	// ------------------
     
 	onEnterKeyUp: function(event) {
-	    console.log(this.type() + ".onEnterKeyUp()")
+	    //console.log(this.typeId() + ".onEnterKeyUp()")
 	    //this.didEdit()
 	    
-	    this.removeReturns()
-
-        if (this.doesClearOnReturn()) {
-            this.setInnerHTML("")
-        }
+	    this.formatValue()
 
         this.tellParentViews("didInput", this) 
             
         if (!this.doesHoldFocusOnReturn()) {
+            //console.log(this.typeId() + " calling releaseFirstResponder")
             this.releaseFirstResponder()
+        }
+        
+        if (this.doesClearOnReturn()) {
+            this.setInnerHTML("")
+            //this.focusAfterDelay(.125) // hack to get focus back after chat view scrolling - todo: fix this
         }
         
 		return false
 	},
 	
-	removeReturns: function() {
-        this.setInnerHTML(this.innerText())
+	formatValue: function() {
+	    var oldValue = this.innerHTML()
+	    var newValue = this.innerText() // removes returns
+        
+        if (this.doesTrim()) {
+            newValue = newValue.trim()
+        }
+
+        this.setInnerHTML(newValue)
+        
+	    //console.trace(this.type() + " formatValue '" + oldValue + "' -> '" + this.innerHTML() + "'")
+        //console.log(this.type() + " after formatValue: '" + this.innerHTML() + "'")
 		return this
 	},
     
@@ -91134,6 +91223,7 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
 
 	setup: function() {
 		this.preventDrop()
+		//this.debugFocus()
 	},
     
  /*  
@@ -91261,6 +91351,27 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
 		document.title = aName
         return this
 	},
+	
+    debugFocus: function() {
+        var focusFunc = (event) => { 
+            var e = event.srcElement
+            var name = e._divView ? e._divView.typeId() : (e.id ? e.id : e)
+            console.log(">>>>>>>>>>>> Window focused element ", name) 
+        }
+        //var blurFunc = (e) => { console.log("window blurred element ", e._divView ? e._divView.typeId() : e)}
+        
+        window.addEventListener ? window.addEventListener('focus', focusFunc, true) : window.attachEvent('onfocusout', focusFunc);  
+        //window.addEventListener ? window.addEventListener('blur', blurFunc, true) : window.attachEvent('onblur', blurFunc);
+        return this
+    },
+    
+    activeDivView: function() {
+        var e = document.activeElement
+        if (e && e._divView) {
+            return e._divView
+        }
+        return null
+    },
 	
 	/*
     // firstResponder/activeElement - focus/blur
@@ -92181,7 +92292,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
 	setNode: function(aNode) {
 		if (this.node() != aNode) {
 			NodeView.setNode.apply(this, [aNode])
-			this.unselectAllRows()
+            this.unselectAllRows() // move to didChangeNode
 			//"shouldFocusSubnode"
 		}
 		return this
@@ -92212,18 +92323,55 @@ window.BrowserColumn = NodeView.extend().newSlots({
 	},
 	
 	scrollToSubnode: function(aSubnode) {
+	    //console.log(this.typeId() + ".scrollToSubnode")
 	    var subview = this.subviewForNode(aSubnode)
 	    assert(subview)
 	    this.columnGroup().scrollView().setScrollTop(subview.offsetTop())
 	    return this 	    
+    },
+    
+    scrollToBottom: function() {
+        var last = this.subviews().last()
+
+        if (last) { 
+            last.scrollIntoView()
+        }
+
+        return this
+    },
+
+    didChangeNode: function() {
+        NodeView.didChangeNode.apply(this)
+
+        if (this.node() && this.node().nodeRowsStartAtBottom()) {
+            setTimeout(() => { this.scrollToBottom() }, 0)
+            //this.subviews().last().scrollIntoView()
+        }
+
+        return this
+    },
+	
+	scheduleSyncFromNode: function() {
+       if (this.browser() == null || this.node() == null) {
+            console.warn("WARNING: skipping BrowserColumn.scheduleSyncFromNode")
+            console.warn("  this.browser() = " , this.browser())
+            console.warn("  this.node() = " , this.node())
+            return this
+        }	    
+	    NodeView.scheduleSyncFromNode.apply(this)
+	    return this
 	},
 	
     syncFromNode: function () {
         
+        /*
         if (this.browser() == null) {
             console.warn("WARNING: skipping BrowserColumn.syncFromNode because this.browser() == null")
+            console.warn("this.node() = " , this.node())
+            //console.warn("this.node().title() = " , this.node().title())
             return
         }
+        */
         
         // remember the selection        
         var selectedIndex = this.selectedRowIndex()
@@ -92285,21 +92433,31 @@ window.BrowserColumn = NodeView.extend().newSlots({
         return this.allowsCursorNavigation() && this.isActiveElement()
 	},
 	
+	showSelected: function() {
+        /*
+        todo: add check if visible
+        if (this.selectedRow()) {
+            this.selectedRow().scrollIntoView()
+        }
+        */
+        return this	    
+	},
+	
 	onUpArrowKeyUp: function(event) {
         if (!this.canNavigate()) { 
 			return 
 		}
         this.selectPreviousRow()
+        this.showSelected()
 		return false
 	},
 	
 	onDownArrowKeyUp: function(event) {
-	    //console.log(this.type() + ".onDownArrowKeyUp()")
-	    
         if (!this.canNavigate()) { 
 			return 
 		}
         this.selectNextRow()
+        this.showSelected()
 		return false
 	},
 	
@@ -92314,7 +92472,9 @@ window.BrowserColumn = NodeView.extend().newSlots({
 				this.selectedRow().unselect() 
 			}
 			
-			pc.didClickRow(pc.selectedRow())
+			var newSelectedRow = pc.selectedRow()
+			newSelectedRow.setShouldShowFlash(true).updateSubviews()
+			pc.didClickRow(newSelectedRow)
         	this.selectPreviousColumn()
 		}
 		return false
@@ -93001,7 +93161,8 @@ window.BrowserFooter = NodeView.extend().newSlots({
     },
     
     setInput: function(s) {
-        //console.log(this.typeId() + ".setInput('" + s + "')")
+        //console.trace(this.typeId() + ".setInput('" + s + "')")
+        
         var n = this.node()
         if (n) {
             var m = n.nodeInputFieldMethod()
@@ -93065,6 +93226,8 @@ window.BrowserRow = NodeView.extend().newSlots({
 	defaultHeight: 60,
 	restCloseButtonOpacity: 0.4,
 	transitionStyle: "all 0.2s ease, width 0s, max-width 0s, min-width 0s",
+	selectedFlashColor: "#ccc",
+	shouldShowFlash: false,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
@@ -93102,6 +93265,15 @@ window.BrowserRow = NodeView.extend().newSlots({
         return styles.unselected()
     },
     
+    select: function() {
+        if (!this.isSelected()) {
+            this.setShouldShowFlash(true)
+        }
+
+        NodeView.select.apply(this)
+        return this
+    },
+    
     // update
      
     updateSubviews: function() {        
@@ -93121,7 +93293,7 @@ window.BrowserRow = NodeView.extend().newSlots({
             }
         }
         
-		//this.applyStyles()
+		this.applyStyles()
 
         return this
     },
@@ -93158,8 +93330,39 @@ window.BrowserRow = NodeView.extend().newSlots({
         
         //console.log(this.node().title() + " this.currentBgColor() = ", this.currentBgColor())
         //console.log("this.node().nodeRowStyles().selected().backgroundColor() = ", this.currentBgColor())
-        this.setBackgroundColor(this.currentBgColor())
+
+/*
+        if (!this.isSelected() && this.selectedFlashColor()) {
+            console.log("flashing")
+            this.setTransition("0s all")
+            this.setBackgroundColor(this.selectedFlashColor())
+            this.setTransition("0.3s all")
+        }
+        */
+
+        //this.setTransition("0.0s all")
+
+        if (this.shouldShowFlash() && this.selectedFlashColor()) {
+            this.setBackgroundColor(this.selectedFlashColor())
+            //setTimeout(() => { this.setBackgroundColor(this.selectedFlashColor()) }, 0)
+            //setTimeout(() => { this.setBackgroundColor(this.currentBgColor()) }, 300)
+        } else {
+           // this.setBackgroundColor(this.currentBgColor())
+        }
+        
+        //this.setTransition("0.3s all")
+        //this.setTransition("0.3s background-color")
+        //this.transitions().at("backgroundColor").setDuration(1)
+        setTimeout(() => { this.setBackgroundColor(this.currentBgColor()) }, 100)
+        this.setShouldShowFlash(false)
+        
         return this
+    },
+    
+   willAcceptFirstResponder: function() {
+        NodeView.willAcceptFirstResponder.apply(this)
+	    console.log(this.type() + ".willAcceptFirstResponder()")
+		return this
     },
     
 	currentBgColor: function() {
@@ -93571,7 +93774,7 @@ window.BrowserFieldRow = BrowserRow.extend().newSlots({
             }
         }
         
-        this.applyStyles()
+        //this.applyStyles()
         
         return this
     },
@@ -94378,7 +94581,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
     },
     
     onEnterKeyUp: function() {
-        console.log(this.type() + ".onEnterKeyUp()")
+        //console.log(this.type() + ".onEnterKeyUp()")
         if(this.valueView().activate) {
             this.valueView().activate()
         }
@@ -95281,6 +95484,7 @@ JSImporter.pushRelativePaths([
     "messages/_imports.js",
     "identities/_imports.js",
     "blacklists/_imports.js",
+    "connection/_imports.js",
 ])
 
 "use strict"
@@ -95643,6 +95847,7 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
     servers: null,
     stunServers: null,
     messages: null,
+    connection: null,
     localIdentities: null, // set by parent 
     blacklists: null,
 	idsBloomFilter: null,
@@ -95661,6 +95866,9 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
         //this.setPid("_network")
         this.setTitle("Network")
         this.setNodeMinWidth(200)
+        
+        this.setConnection(BMConnection.shared())
+		this.addSubnode(this.connection())
 
 		this.setServers(NodeStore.shared().rootInstanceWithPidForProto("_servers", BMRServers))
 		this.addSubnode(this.servers())
@@ -95883,7 +96091,7 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
 		//console.log(this.typeId() + ".didChangeIdsBloom()")
 		//this._didChangeIdsBloomeNote = NotificationCenter.shared().newNotification().setSender(this.typeId()).setName("didChangeIdsBloom")
         this.servers().subnodes().forEach((server) => {
-			server.reconnect()
+			server.reRequestPeerId()
 		})
 	},
 	
@@ -95936,6 +96144,7 @@ JSImporter.pushRelativePaths([
     "BMRemotePeers.js",
     "BMStunServer.js",
     "BMStunServers.js",
+    "WebSocketExtensions.js"
 ])
 /*
 	PeerId
@@ -96216,7 +96425,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
                 return this
             }
             
-            this.log("Server " +  this.shortId() + ".connect()")          
+            this.log("Server " +  this.shortId() + ".connect()")
 
             this._serverConn.addEventListener('open', e => {
                 this.onOpen();
@@ -96274,10 +96483,9 @@ window.BMServerConnection = BMNode.extend().newSlots({
     },
 
 	reconnect: function() {
-	    //console.log(this.typeId() + ".reconnect()")
+        //console.log(this.typeId() + ".reconnect()")
         this.close()
-		this.connect()
-        return this		
+        return this;
 	},
 	
 	close: function() {
@@ -96288,10 +96496,13 @@ window.BMServerConnection = BMNode.extend().newSlots({
 		//this.removeAllSubnodes()
 		
 		if (this._serverConn) {
-			this._serverConn.disconnect()
+            this._serverConn.removeEventListeners();
+            this._serverConn.close()
 			this._serverConn = null
 		}
         this.setStatus("offline")
+
+        this.onClose();
 		return this
 	},
 
@@ -96315,11 +96526,18 @@ window.BMServerConnection = BMNode.extend().newSlots({
 */
 
     onError: function(error) {
-        console.error(error);
+        if (typeof(error) == "undefined") {
+            // closed connection
+            return
+        }
+
+
+        console.error(this.typeId() + " ERROR: ", error);
 		this.setError(error)
-		if (!error.message.beginsWith("Could not connect to peer")) {
+		if (error && !error.message.beginsWith("Could not connect to peer")) {
 	        this.setStatus(error.message, error)	        
-	        this.log(this.type() + " onError: " + error);
+            this.log(this.type() + " onError: " + error);
+            this._serverConn.removeEventListeners();
 	        this._serverConn = null
 		}
     },
@@ -96331,7 +96549,14 @@ window.BMServerConnection = BMNode.extend().newSlots({
         this._pingInterval = setInterval(() => {
             this.send('ping');
         }, 15000);
-        this.send('requestId', { requestedId: this.peerId().toString() }).then(() => {
+        this.requestId();
+        
+        
+    },
+
+    requestId: function() {
+        this.setPeerId(this.currentPeerId());
+        return this.send('requestId', { requestedId: this.peerId().toString() }).then(() => {
             this.updatePeers();
         }).catch(e => this.onError(e));
     },
@@ -96358,7 +96583,11 @@ window.BMServerConnection = BMNode.extend().newSlots({
         if (err) {
             this.setLastError("close error: " + err)
         }
-        this._serverConn = null
+
+        if (this._serverConn) {
+            this._serverConn.removeEventListeners();
+            this._serverConn = null;
+        }
     },
     
     isConnected: function () {
@@ -96473,8 +96702,7 @@ window.BMServerMessage = ideal.Proto.extend().newSlots({
 	reject: function(reason) {
 		this._reject(reason);
 	}
-});
-// A Rendezvous Server
+});// A Rendezvous Server
 
 "use strict"
 
@@ -96586,7 +96814,11 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
 	reconnect: function() {
         this.serverConnection().reconnect()
         return this		
-	},
+    },
+    
+    reRequestPeerId: function() {
+        this.serverConnection().requestId();
+    },
     
     isConnected: function () {
         return this.serverConnection().isConnected()
@@ -97355,6 +97587,27 @@ window.BMStunServers = BMStorableNode.extend().newSlots({
 		return dict
 	},
 })
+"use strict"
+WebSocket.prototype.removeEventListeners = function() {
+    if (this._eventListeners) {
+        this._eventListeners.forEach(eventListener => {
+            this.removeEventListener(eventListener.name, eventListener.fn);
+        });
+    }
+}
+
+WebSocket.prototype.addEventListenerWithoutExtensions = WebSocket.prototype.addEventListener;
+
+WebSocket.prototype.addEventListener = function(name, fn) {
+    if (!this._eventListeners) {
+        this._eventListeners = [];
+    }
+    this._eventListeners.push({
+        name: name,
+        fn: fn
+    });
+    this.addEventListenerWithoutExtensions(name, fn);
+}
 "use strict"
 
 JSImporter.pushRelativePaths([
@@ -99796,6 +100049,7 @@ window.BMChatThread = BMStorableNode.extend().newSlots({
 		this.createSubnodeIndex()
 
 		this.setNodeColumnBackgroundColor("white")
+		this.setNodeRowsStartAtBottom(true)
     },
 
 	title: function() {
@@ -100718,6 +100972,7 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
     },
     
     setParentView: function(aView) {
+        // what is this for?
         BrowserRow.setParentView.apply(this, [aView])
 		this.registerForVisibility()
         return this
@@ -101218,6 +101473,131 @@ window.BMBlacklistedContacts = BMBlacklist.extend().newSlots({
     },
 	
 })
+"use strict"
+
+JSImporter.pushRelativePaths([
+    "BMConnection.js",
+])
+
+"use strict"
+
+window.BMConnection = BMNode.extend().newSlots({
+    type: "BMConnection",
+    //log: null,
+    connection: null,
+    lastConnectionType: null,
+    lastIsOnline: 0,
+	debug: false,
+}).setSlots({
+    init: function () {
+		if (BMConnection._shared) {
+			throw new Error("multiple instances of " + this.type() + " singleton")
+		}
+		
+		BMConnection._shared = this
+
+        BMNode.init.apply(this)
+		
+        this.setTitle("Connection")
+        this.setNodeMinWidth(200)
+
+		//this.setServers(NodeStore.shared().rootInstanceWithPidForProto("_servers", BMRServers))
+		//this.addSubnode(this.servers())
+		
+        this.setConnection(navigator.connection || navigator.mozConnection || navigator.webkitConnection)
+        this.updateLastState()  
+        this.registerForConnectionChange()
+    },
+    
+	shared: function() {
+		return BMConnection._shared
+	},
+    
+    connectionType: function() {
+        var s = this.connection().effectiveType
+        if (s) {
+            return s.toUpperCase()
+        }
+        return "?"
+    },
+    
+    downlink: function() {
+        return this.connection().downlink
+    },
+    
+    rtt: function() {
+        return this.connection().rtt
+    },
+    
+    updateLastConnectionType: function() {
+        this.setLastConnectionType(this.connectionType())
+        return this
+    },
+
+    updateLastState: function() {
+        this.setLastConnectionType(this.connectionType())
+        this.setLastIsOnline(this.isOnline())
+        return this
+    },    
+
+	registerForConnectionChange: function() {
+        this.connection().addEventListener('change', () => { this.onNetworkInformationChange() });
+        return this
+	},
+	
+	didComeOnline: function() {
+	    return this.lastIsOnline() == false && this.isOnline() == true
+	},
+	
+	didGoOffline: function() {
+	    return this.lastIsOnline() == true && this.isOnline() == false
+	},
+	
+	onNetworkInformationChange: function() {
+        //console.log(this.type() + "Connection type changed from " + this.lastConnectionType() + " to " +  this.connectionType(), this.connection());	  
+
+        NotificationCenter.shared().newNotification().setSender(this).setName("onNetworkInformationChange").post()
+        
+        this.updateLastState()            
+        this.didUpdateNode()
+        
+        if (this.didComeOnline()) {
+            this.onNetworkOnline()
+        }
+        
+        if (this.didGoOffline()) {
+            this.onNetworkOffline()
+        }
+	},
+	
+	onNetworkOnline: function() {
+        NotificationCenter.shared().newNotification().setSender(this).setName("onNetworkOnline").post()
+	},
+    
+	onNetworkOffline: function() {
+        NotificationCenter.shared().newNotification().setSender(this).setName("onNetworkOffline").post()
+	},
+	
+    isOnline: function() {
+        return this.rtt() != 0
+    },
+    
+    connectionDescription: function() {
+        if (!this.isOnline()) {
+            return "offline"
+        }
+        
+        return this.connectionType() + " " + this.downlink() + "Mbps " + this.rtt() + "ms"
+    },
+    
+    subtitle: function() {
+        return this.connectionDescription()
+    },
+	
+})
+
+window.BMConnection.clone() // setup shared instance
+
 "use strict"
 
 /*

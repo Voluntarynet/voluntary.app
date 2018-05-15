@@ -67,7 +67,7 @@ window.IndexedDBFolder = ideal.Proto.extend().newSlots({
         };
          
         request.onupgradeneeded = (event) => { 
-			console.log(this.type() + " onupgradeneeded")
+			console.log(this.type() + " onupgradeneeded - likely setting up local database for the first time")
 
 			var db = event.target.result;
 

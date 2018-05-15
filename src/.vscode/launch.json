@@ -7,14 +7,21 @@
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Launch Chrome",
-            "url": "http://localhost:8080",
+            "name": "Github Incremental",
+            "url": "http://github.voluntary.net/index_incremental.html",
             "webRoot": "${workspaceFolder}"
         },
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Local Chrome",
+            "name": "Github",
+            "url": "http://github.voluntary.net/",
+            "webRoot": "${workspaceFolder}"
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Local",
             "url": "file:///Users/steve/Desktop/peer/index_incremental.html",
             "webRoot": "${workspaceFolder}"
         },

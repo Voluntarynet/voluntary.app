@@ -10,7 +10,7 @@
 	Add an _imports.js file - here's an example. Notice you can reference css files as well.
 	
 	JSImporter.pushRelativePaths([
-		"_css.css",
+		"_css.css", 
 		"external_libs/_imports.js",
 		"data/_imports.js",
 		"src/_imports.js",

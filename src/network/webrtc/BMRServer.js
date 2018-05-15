@@ -1,4 +1,3 @@
-
 // A Rendezvous Server
 
 "use strict"
@@ -111,7 +110,11 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
 	reconnect: function() {
         this.serverConnection().reconnect()
         return this		
-	},
+    },
+    
+    reRequestPeerId: function() {
+        this.serverConnection().requestId();
+    },
     
     isConnected: function () {
         return this.serverConnection().isConnected()

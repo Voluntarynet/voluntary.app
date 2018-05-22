@@ -289,7 +289,7 @@ var JSScript = {
 				var obj = this
                 xhr.onreadystatechange = () => {
                     if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-                        obj.loadedArchiveFile(xhr.responseText)
+                        obj.loadedArchiveFile(src, xhr.responseText)
                     }
                 }
                 xhr.send()

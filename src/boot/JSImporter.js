@@ -298,7 +298,7 @@ var JSScript = {
 
         loadedArchiveFile: function (src, text) {
             this._loadedArchiveFilesMap[src] = text
-            window.console.log("the script text content is", text)
+            window.console.log("the script " + src + " text content is ", text)
             this._unloadedArchiveFiles.remove(src)
             if (this._unloadedArchiveFiles.length == 0) {
                 this.composeArchive()

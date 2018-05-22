@@ -22,7 +22,7 @@ window.BMArchiveNode = BMFieldSetNode.extend().newSlots({
 
     subtitle: function() {
         if (this.value()) {
-            var size = this.value().length/1024
+            var size = Math.floor(this.value().length/1024)
             return size + "kB"
         }
         return "N/A"

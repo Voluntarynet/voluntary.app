@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
     {
         "type": "chrome",
         "request": "launch",
@@ -14,8 +15,8 @@
     {
         "type": "chrome",
         "request": "launch",
-        "name": "Launch p-e-e-r.net",
-        "url": "https://p-e-e-r.net",
+        "name": "Launch nt3p.org",
+        "url": "http://nt3p.org",
         "webRoot": "${workspaceFolder}"
     },
     ]

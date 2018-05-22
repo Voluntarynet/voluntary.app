@@ -81,17 +81,17 @@ window.LoadProgressBar = {
 
     setupHtml: function () {
         document.body.innerHTML = "<div id='SpinnerMain' style='position: absolute; width:100%; height: 100%; background-color: black; z-index: 100000; font-family: AppRegular; letter-spacing: 3px; font-size:13px;'> \
-            <div id='SpinnerMiddle' \
-                style='position: relative; top: 50%; transform: translateY(-50%); height: auto; width: 100%; text-align: center;'> \
+<div id='SpinnerMiddle' \
+style='position: relative; top: 50%; transform: translateY(-50%); height: auto; width: 100%; text-align: center;'> \
 <div>\
-    		    <div id='SpinnerIcon' style='opacity: 0.7; border: 0px dashed yellow; transition: all .6s ease-out; background-image:url(\"icons/appicon.svg\"); background-position: center; background-repeat: no-repeat; height: 60px; width: 100%; background-size: contain;'></div><br> \
+<div id='SpinnerIcon' style='opacity: 0.7; border: 0px dashed yellow; transition: all .6s ease-out; background-image:url(\"icons/appicon.svg\"); background-position: center; background-repeat: no-repeat; height: 60px; width: 100%; background-size: contain;'></div><br> \
 </div>\
-    		    <div id='SpinnerTitle' style='transition: all .6s ease-out;'></div><br> \
-    		    <div id='SpinnerSubtitle' style='transition: all .3s ease-out; letter-spacing: -2.5px;'></div><br> \
-    		    <div id='SpinnerItem' style='color: transparent; transition: all 0.3s ease-out;'></div><br> \
-    		    <div id='SpinnerError' style='color: red; transition: all .6s ease-out; text-align: center; width: 100%;'></div> \
-    		</div> \
-	    </div>"
+<div id='SpinnerTitle' style='transition: all .6s ease-out;'></div><br> \
+<div id='SpinnerSubtitle' style='transition: all .3s ease-out; letter-spacing: -2.5px;'></div><br> \
+<div id='SpinnerItem' style='color: transparent; transition: all 0.3s ease-out;'></div><br> \
+<div id='SpinnerError' style='color: red; transition: all .6s ease-out; text-align: center; width: 100%;'></div> \
+</div> \
+</div>"
 
 	    /*
 	    var style = this.middleElement().style
@@ -150,7 +150,7 @@ window.LoadProgressBar = {
         var s = "" + errorMsg
 
         if (url) {
-            s += ' in ' + url.split("/").pop() + ' Line: ' + lineNumber  //+ ' Column: ' + column 
+            s += " in " + url.split("/").pop() + " Line: " + lineNumber;  //+ " Column: "" + column;
         }
 
         /*

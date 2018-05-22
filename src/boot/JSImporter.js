@@ -286,7 +286,7 @@ var JSScript = {
             this.archiveFileList().forEach((src) => {
                 var xhr = new XMLHttpRequest()
                 xhr.open("GET", src)
-                xhr.onreadystatechange = function () {
+                xhr.onreadystatechange = () => {
                     if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
                         this.loadedArchiveFile(xhr.responseText)
                     }

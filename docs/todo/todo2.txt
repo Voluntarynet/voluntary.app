@@ -1,0 +1,28 @@
+TODO:
+
+Don't send empty direct message
+
+add row display starts at bottom
+
+add check for network availability
+	- show notification of network down in top bar?
+	- check for network before doing network ops
+
+fix keyboard nav for chat column view
+fix scrollIntoView for column up/down key nav
+
+Rename PeerServers to Rendezvous servers
+have Rendezvous attempt reconnect after editing attributes
+add a status field to Rendezvous Server
+add a (no peers) status for the connection
+
+---
+
+unify column view types with:
+
+	collection view
+	object/fields view <- collapsed by default
+
+	root object view (properties?) -> collections -> identities, settings
+
+	collection -> [collapsed collection object] -> collection title default child (items) -> 

@@ -1,11 +1,15 @@
 
 APP OVERVIEW
 
-This app started as a port of Bitmarkets Objective-C/OSX implementation to Electron/Javascript in order to support the app across platforms. Bitmarkets is a sort of decentralized ebay that uses Bitcoin for decentralized transactions, Bitmessage for decentralized and secure communications, and 2 party escrow to secure transctions:
+ABOUT
 
-    https://voluntary.net/bitmarkets/
-    
-I made progress on re-implementing Bitmarket's Miller column based UI and replacing Bitmessage with a webRTC based messaging system but ran into issues with getting a Bitcoin wallet working in JS (e.g. state of stand alone JS Bitcoin implementations). Around this time, I heard about Mastadon (a federated Twitter clone) getting traction and decided it might be worth releasing a decentralized twitter-like app using the existing code first.
+PEER (temporary name) is an in-browser webRTC-based decentralized messaging platform on which decentralized apps (dapps) can be written. A decentralized Twitter app is included as an example dapp.
+
+
+IMPORT SYSTEM
+
+
+
 
 FRAMEWORKS
 
@@ -44,6 +48,14 @@ SyncDB has a transactional write cache (reads check the write cache before readi
 	
 NODE FIELDS
 
+Forthcoming...
 
 
+HISTORY
+
+This app started as a port of Bitmarkets Objective-C/OSX implementation to Electron/Javascript in order to support the app across platforms. Bitmarkets is a sort of decentralized ebay which uses Bitcoin for decentralized transactions, Bitmessage for decentralized and secure communications, and 2 party escrow to secure transctions:
+
+    https://voluntary.net/bitmarkets/
+    
+I made some progress on re-implementing Bitmarket's Miller column based UI and replacing Bitmessage with a webRTC based messaging system but ran into issues with getting a Bitcoin wallet working in JS (e.g. state of stand alone JS Bitcoin implementations). Around this time, I heard about Mastadon (a federated Twitter clone) getting traction and decided it might be worth releasing a decentralized twitter-like app using the existing code first.
 	

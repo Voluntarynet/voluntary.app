@@ -285,10 +285,11 @@ var JSScript = {
         loadArchiveFiles: function () {
             this.archiveFileList().forEach((src) => {
                 var xhr = new XMLHttpRequest()
-                xhr.open("GET", src)
+				xhr.open("GET", src)
+				var obj = this
                 xhr.onreadystatechange = () => {
                     if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-                        this.loadedArchiveFile(xhr.responseText)
+                        obj.loadedArchiveFile(xhr.responseText)
                     }
                 }
                 xhr.send()

@@ -44,8 +44,21 @@ window.BMArchiveNode = BMFieldSetNode.extend().newSlots({
 	},
 	*/
 
+    escapeHtml: function(unsafe) {
+        return unsafe
+             .replace(/&/g, "&amp;")
+             .replace(/</g, "&lt;")
+             .replace(/>/g, "&gt;")
+             .replace(/"/g, "&quot;")
+             .replace(/'/g, "&#039;");
+     }
+
     value: function () {
-        return JSImporter.archive()
+        var s = JSImporter.archive()
+        if (s) {
+            return this.escapeHtml(s)
+        }
+        return null
     },
 
     dataString: function () {

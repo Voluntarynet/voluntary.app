@@ -22,8 +22,8 @@ window.BMArchiveNode = BMFieldSetNode.extend().newSlots({
 
     subtitle: function() {
         if (this.value()) {
-            var size = Math.floor(this.value().length/1024)
-            return size + "kB"
+            var b = this.value().length
+            return ByteFormatter.clone().setValue(b).formattedValue()
         }
         return "N/A"
     },
@@ -42,16 +42,16 @@ window.BMArchiveNode = BMFieldSetNode.extend().newSlots({
 	subtitle: function() {
 		return this.value().length + " bytes"
 	},
-	*/
 
     escapeHtml: function(unsafe) {
         return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
     },
+	*/
 
     value: function () {
         var s = JSImporter.archive()
         if (s) {
-            return this.escapeHtml(s)
+            return s.escapeHtml()
         }
         return null
     },

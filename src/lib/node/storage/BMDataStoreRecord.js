@@ -33,12 +33,6 @@ window.BMDataStoreRecord = BMFieldSetNode.extend().newSlots({
         return this.title()
     },
 
-    /*
-	subtitle: function() {
-		return this.value().length + " bytes"
-	},
-	*/
-
     value: function () {
         return NodeStore.shared().sdb().at(this.valuePid())
     },

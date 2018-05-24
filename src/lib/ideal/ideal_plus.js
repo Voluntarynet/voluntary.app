@@ -4,16 +4,16 @@
 // Proto
 
 ideal.Proto.isKindOf = function (aProto) {
-	if (this.__proto__) {
-		if (this.__proto__  === aProto) {
-			return true
-		}
+    if (this.__proto__) {
+        if (this.__proto__  === aProto) {
+            return true
+        }
 		
-		if (this.__proto__.isKindOf) {
-			return this.__proto__.isKindOf(aProto)
-		}
-	}
-	return false
+        if (this.__proto__.isKindOf) {
+            return this.__proto__.isKindOf(aProto)
+        }
+    }
+    return false
 }
 
 
@@ -22,59 +22,59 @@ ideal.Proto.isKindOf = function (aProto) {
 Array.prototype.select = function(callback) {
     var results = []
     
-	for (var i = 0; i < this.length; i++)
-	{
+    for (var i = 0; i < this.length; i++)
+    {
 	    var v = this[i];
 	    
-		if(callback(v))
-		{
-			results.push(v)
-		}
-	}
+        if(callback(v))
+        {
+            results.push(v)
+        }
+    }
 
-	return results;
+    return results;
 }
 	
 
 Array.prototype.after = function(v) {
-	var index = this.indexOf(v);
+    var index = this.indexOf(v);
 	
-	if(index == -1)
-	{
-		return [];
-	}
+    if(index == -1)
+    {
+        return [];
+    }
 
-	return this.slice(index + 1);
+    return this.slice(index + 1);
 }
 
 Array.prototype.before = function(v) {
-	var index = this.indexOf(v);
+    var index = this.indexOf(v);
 	
-	if(index == -1)
-	{
-		return this.slice();
-	}
+    if(index == -1)
+    {
+        return this.slice();
+    }
 
-	return this.slice(0, index);
+    return this.slice(0, index);
 }
 
 Array.prototype.replaceOccurancesOfWith = function(oldValue, newValue) {
-	for (var i = 0; i < this.length; i++) {
+    for (var i = 0; i < this.length; i++) {
 	    if (this[i] == oldValue) {
 	        this[i] = newValue;
-		}
-	}
-	return this
+        }
+    }
+    return this
 }
 
 Array.prototype.removeOccurancesOf = function(e) {
-	var i = this.indexOf(e);
-	while(i > -1)
-	{
-		this.removeAt(i);
-		i = this.indexOf(e)
-	}
-	return this;
+    var i = this.indexOf(e);
+    while(i > -1)
+    {
+        this.removeAt(i);
+        i = this.indexOf(e)
+    }
+    return this;
 },
 
 /// String
@@ -84,11 +84,11 @@ String.prototype.asSetter = function() {
 }
 
 String.prototype.firstCharacter = function() {
-	return this.slice(0);
+    return this.slice(0);
 }
 
 String.prototype.lastCharacter = function() {
-	return this.slice(-1);
+    return this.slice(-1);
 }
 
 String.prototype.capitalizeWords = function() {
@@ -98,7 +98,7 @@ String.prototype.capitalizeWords = function() {
 };
 
 String.prototype.replaceAll = function(target, replacement) {
-  return this.split(target).join(replacement);
+    return this.split(target).join(replacement);
 };
 
 
@@ -106,25 +106,25 @@ String.prototype.loremIpsum = function (minWordCount, maxWordCount) {
     if (!minWordCount) { minWordCount = 10; }
     if (!maxWordCount) { maxWordCount = 40; }
     
-	var loremIpsumWordBank = new Array("lorem","ipsum","dolor","sit","amet,","consectetur","adipisicing","elit,","sed","do","eiusmod","tempor","incididunt","ut","labore","et","dolore","magna","aliqua.","enim","ad","minim","veniam,","quis","nostrud","exercitation","ullamco","laboris","nisi","ut","aliquip","ex","ea","commodo","consequat.","duis","aute","irure","dolor","in","reprehenderit","in","voluptate","velit","esse","cillum","dolore","eu","fugiat","nulla","pariatur.","excepteur","sint","occaecat","cupidatat","non","proident,","sunt","in","culpa","qui","officia","deserunt","mollit","anim","id","est","laborum.","sed","ut","perspiciatis,","unde","omnis","iste","natus","error","sit","voluptatem","accusantium","doloremque","laudantium,","totam","rem","aperiam","eaque","ipsa,","quae","ab","illo","inventore","veritatis","et","quasi","architecto","beatae","vitae","dicta","sunt,","explicabo.","nemo","enim","ipsam","voluptatem,","quia","voluptas","sit,","aspernatur","aut","odit","aut","fugit,","sed","quia","consequuntur","magni","dolores","eos,","qui","ratione","voluptatem","sequi","nesciunt,","neque","porro","quisquam","est,","qui","dolorem","ipsum,","quia","dolor","sit,","amet,","consectetur,","adipisci","velit,","sed","quia","non","numquam","eius","modi","tempora","incidunt,","ut","labore","et","dolore","magnam","aliquam","quaerat","voluptatem.","ut","enim","ad","minima","veniam,","quis","nostrum","exercitationem","ullam","corporis","suscipit","laboriosam,","nisi","ut","aliquid","ex","ea","commodi","consequatur?","quis","autem","vel","eum","iure","reprehenderit,","qui","in","ea","voluptate","velit","esse,","quam","nihil","molestiae","consequatur,","vel","illum,","qui","dolorem","eum","fugiat,","quo","voluptas","nulla","pariatur?","at","vero","eos","et","accusamus","et","iusto","odio","dignissimos","ducimus,","qui","blanditiis","praesentium","voluptatum","deleniti","atque","corrupti,","quos","dolores","et","quas","molestias","excepturi","sint,","obcaecati","cupiditate","non","provident,","similique","sunt","in","culpa,","qui","officia","deserunt","mollitia","animi,","id","est","laborum","et","dolorum","fuga.","harum","quidem","rerum","facilis","est","et","expedita","distinctio.","Nam","libero","tempore,","cum","soluta","nobis","est","eligendi","optio,","cumque","nihil","impedit,","quo","minus","id,","quod","maxime","placeat,","facere","possimus,","omnis","voluptas","assumenda","est,","omnis","dolor","repellendus.","temporibus","autem","quibusdam","aut","officiis","debitis","aut","rerum","necessitatibus","saepe","eveniet,","ut","et","voluptates","repudiandae","sint","molestiae","non","recusandae.","itaque","earum","rerum","hic","tenetur","a","sapiente","delectus,","aut","reiciendis","voluptatibus","maiores","alias","consequatur","aut","perferendis","doloribus","asperiores","repellat");
+    var loremIpsumWordBank = new Array("lorem","ipsum","dolor","sit","amet,","consectetur","adipisicing","elit,","sed","do","eiusmod","tempor","incididunt","ut","labore","et","dolore","magna","aliqua.","enim","ad","minim","veniam,","quis","nostrud","exercitation","ullamco","laboris","nisi","ut","aliquip","ex","ea","commodo","consequat.","duis","aute","irure","dolor","in","reprehenderit","in","voluptate","velit","esse","cillum","dolore","eu","fugiat","nulla","pariatur.","excepteur","sint","occaecat","cupidatat","non","proident,","sunt","in","culpa","qui","officia","deserunt","mollit","anim","id","est","laborum.","sed","ut","perspiciatis,","unde","omnis","iste","natus","error","sit","voluptatem","accusantium","doloremque","laudantium,","totam","rem","aperiam","eaque","ipsa,","quae","ab","illo","inventore","veritatis","et","quasi","architecto","beatae","vitae","dicta","sunt,","explicabo.","nemo","enim","ipsam","voluptatem,","quia","voluptas","sit,","aspernatur","aut","odit","aut","fugit,","sed","quia","consequuntur","magni","dolores","eos,","qui","ratione","voluptatem","sequi","nesciunt,","neque","porro","quisquam","est,","qui","dolorem","ipsum,","quia","dolor","sit,","amet,","consectetur,","adipisci","velit,","sed","quia","non","numquam","eius","modi","tempora","incidunt,","ut","labore","et","dolore","magnam","aliquam","quaerat","voluptatem.","ut","enim","ad","minima","veniam,","quis","nostrum","exercitationem","ullam","corporis","suscipit","laboriosam,","nisi","ut","aliquid","ex","ea","commodi","consequatur?","quis","autem","vel","eum","iure","reprehenderit,","qui","in","ea","voluptate","velit","esse,","quam","nihil","molestiae","consequatur,","vel","illum,","qui","dolorem","eum","fugiat,","quo","voluptas","nulla","pariatur?","at","vero","eos","et","accusamus","et","iusto","odio","dignissimos","ducimus,","qui","blanditiis","praesentium","voluptatum","deleniti","atque","corrupti,","quos","dolores","et","quas","molestias","excepturi","sint,","obcaecati","cupiditate","non","provident,","similique","sunt","in","culpa,","qui","officia","deserunt","mollitia","animi,","id","est","laborum","et","dolorum","fuga.","harum","quidem","rerum","facilis","est","et","expedita","distinctio.","Nam","libero","tempore,","cum","soluta","nobis","est","eligendi","optio,","cumque","nihil","impedit,","quo","minus","id,","quod","maxime","placeat,","facere","possimus,","omnis","voluptas","assumenda","est,","omnis","dolor","repellendus.","temporibus","autem","quibusdam","aut","officiis","debitis","aut","rerum","necessitatibus","saepe","eveniet,","ut","et","voluptates","repudiandae","sint","molestiae","non","recusandae.","itaque","earum","rerum","hic","tenetur","a","sapiente","delectus,","aut","reiciendis","voluptatibus","maiores","alias","consequatur","aut","perferendis","doloribus","asperiores","repellat");
 
-	var randy = Math.floor(Math.random()*(maxWordCount - minWordCount)) + minWordCount;
-	var ret = "";
-	var needsCap = true
-	for(var i = 0; i < randy; i++) {
-		var newTxt = loremIpsumWordBank[Math.floor(Math.random() * (loremIpsumWordBank.length - 1))];
+    var randy = Math.floor(Math.random()*(maxWordCount - minWordCount)) + minWordCount;
+    var ret = "";
+    var needsCap = true
+    for(var i = 0; i < randy; i++) {
+        var newTxt = loremIpsumWordBank[Math.floor(Math.random() * (loremIpsumWordBank.length - 1))];
 
-		if (ret.substring(ret.length-1,ret.length) == "." || ret.substring(ret.length-1,ret.length) == "?") {
-			newTxt = newTxt.substring(0,1).toUpperCase() + newTxt.substring(1, newTxt.length);
-		}
+        if (ret.substring(ret.length-1,ret.length) == "." || ret.substring(ret.length-1,ret.length) == "?") {
+            newTxt = newTxt.substring(0,1).toUpperCase() + newTxt.substring(1, newTxt.length);
+        }
 
-		if (needsCap) {
+        if (needsCap) {
 		    newTxt = newTxt.capitalized()
 		    needsCap = false
-		}
+        }
 
-		ret += " " + newTxt;
-	}
+        ret += " " + newTxt;
+    }
 	    
     return ret + "."
 },
@@ -167,10 +167,10 @@ Array.prototype.equals = function (array) {
         return false;
 
     for (var i = 0, l=this.length; i < l; i++) {
-		var a = this[i]
-		var b = array[i]
+        var a = this[i]
+        var b = array[i]
         // Check if we have nested arrays
-/*
+        /*
         if (this[i] instanceof Array && array[i] instanceof Array) {
             // recurse into the nested arrays
             if (!this[i].equals(array[i]))
@@ -215,54 +215,54 @@ Object.defineProperty(Array.prototype, "equals", {enumerable: false});
 /// Object
 
 Object.ancestors = function(self) {
-	var results = []
-  var obj = self;
-	while (obj.__proto__ && obj.type) {
-		results.push(obj)
-		if (results.length > 100) {
-			throw new Error("proto loop detected?")
-		}
-		obj = obj.__proto__
-	}
-	return results
+    var results = []
+    var obj = self;
+    while (obj.__proto__ && obj.type) {
+        results.push(obj)
+        if (results.length > 100) {
+            throw new Error("proto loop detected?")
+        }
+        obj = obj.__proto__
+    }
+    return results
 }
 
 Object.ancestorTypes = function(self) {
-	return self.ancestors().map((obj) => { return obj.type() })
+    return self.ancestors().map((obj) => { return obj.type() })
 }
 
 
 Object.firstAncestorWithMatchingPostfixClass = function(self, aPostfix) {
-	// not a great name but this walks back the ancestors and tries to find an
-	// existing class with the same name as the ancestor + the given postfix
-	// useful for things like type + "View" or type + "RowView", etc
-	//console.log(this.type() + " firstAncestorWithMatchingPostfixClass(" + aPostfix + ")")
-	var match = Object.ancestors(self).detect((obj) => {
-		var name = obj.type() + aPostfix
-		var proto = window[name]
-		return proto
-	})
-	var result = match ? window[match.type() + aPostfix] : null
-	/*
+    // not a great name but this walks back the ancestors and tries to find an
+    // existing class with the same name as the ancestor + the given postfix
+    // useful for things like type + "View" or type + "RowView", etc
+    //console.log(this.type() + " firstAncestorWithMatchingPostfixClass(" + aPostfix + ")")
+    var match = Object.ancestors(self).detect((obj) => {
+        var name = obj.type() + aPostfix
+        var proto = window[name]
+        return proto
+    })
+    var result = match ? window[match.type() + aPostfix] : null
+    /*
 	if (result) { 
 		console.log("FOUND " + result.type())
 	}
 	*/
-	return result
+    return result
 },
 
 Object.slotNames = function(self) {
-  return Object.keys(self);
+    return Object.keys(self);
 }
 
 Object.slotValues = function(self) {
-  var values = [];
-  for (var k in this) {
-    if (self.hasOwnProperty(k)) {
-      values.push(this[k]);
+    var values = [];
+    for (var k in this) {
+        if (self.hasOwnProperty(k)) {
+            values.push(this[k]);
+        }
     }
-  }
-  return values;
+    return values;
 }
 
 
@@ -299,16 +299,16 @@ function ShowStack() {
 
 function escapeHtml() {
     return this.replace(/[&<>"'\/]/g, function (s) {
-      var entityMap = {
-          "&": "&amp;",
-          "<": "&lt;",
-          ">": "&gt;",
-          '"': "&quot;",
-          "'": "&#39;",
-          "/": "&#x2F;"
+        var entityMap = {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;",
+            "/": "&#x2F;"
         };
 
-      return entityMap[s];
+        return entityMap[s];
     });
 }
 
@@ -317,12 +317,12 @@ if (typeof(String.prototype.escapeHtml) !== 'function') {
 }
 
 function GUID() {
-  function s4() {
-    return Math.floor((1 + Math.random()) * 0x10000)
-      .toString(16)
-      .substring(1);
-  }
-  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+    function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+    }
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
     s4() + '-' + s4() + s4() + s4();
 }
 

@@ -34,7 +34,9 @@ window.BMDataStore = BMNode.extend().newSlots({
         this.removeAllSubnodes()
         this.store().sdb().keys().sort().forEach((key) => {
             var subnode = BMDataStoreRecord.clone().setTitle(key)
-            subnode.setSubtitle(this.store().sdb().at(key).length + " bytes")
+            var size = this.store().sdb().at(key).length
+            var sizeDescription = ByteFormatter.clone().setValue(size).formattedValue()
+            subnode.setSubtitle(sizeDescription)
             this.addRecord(subnode)
         })
     },

@@ -111,15 +111,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     },
 
     descriptionForByteCount: function (b) {
-        if (b < 1024) {
-            return b + " bytes"
-        }
-
-        if (b < 1024 * 1024) {
-            return Math.floor(b / 1024) + " KB"
-        }
-
-        return Math.floor(b / (1024 * 1024)) + " MB"
+        return ByteFormatter.clone().setValue(b).formattedValue()
     },
 
     shortStatsString: function () {

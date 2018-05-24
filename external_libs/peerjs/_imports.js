@@ -1,4 +1,0 @@
-
-JSImporter.pushRelativePaths([
-    "peer.js"
-]);

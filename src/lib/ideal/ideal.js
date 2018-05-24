@@ -1520,6 +1520,7 @@
                 }
             },
 
+						/*
             objectAsSerializedMap: function (object) {
                 var map = {
                     deserializer: "ideal.Deserialization",
@@ -1552,7 +1553,7 @@
                     });
                 }
                 return map;
-            },
+						},
 
             setRootObject: function (rootObject) {
                 this._rootObject = rootObject;
@@ -1561,12 +1562,15 @@
                 this.keyForObject(rootObject);
                 return this;
             },
+						*/
 
             toJson: function () {
                 return JSON.stringify(this.map());
             }
         });
 
+
+				/*
         Proto.newSlots({
             serializedSlots: []
         }).setSlots({
@@ -1611,7 +1615,7 @@
                     slots: slots
                 };
             }
-        });
+				});
 
         Array.prototype.asSerializedMap = function (serialization) {
             return {
@@ -1651,7 +1655,9 @@
                 data: this,
                 slots: {}
             };
-        }
+				}
+								*/
+
 
         module.exports = Serialization;
     }, { "./Proto": 11 }], 13: [function (require, module, exports) {

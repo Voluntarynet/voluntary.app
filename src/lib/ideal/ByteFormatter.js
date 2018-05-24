@@ -18,6 +18,14 @@
 
 */
 
+/*
+class ByteFormatterNew extends BaseObject {
+    constructor() {
+        super()
+    }
+}
+*/
+
 window.ByteFormatter = ideal.Proto.extend().newSlots({
     type: "ByteFormatter",
     value: 0,
@@ -25,8 +33,16 @@ window.ByteFormatter = ideal.Proto.extend().newSlots({
     useSpace: false,
     useLongNames: false,
     orderNamesShort: ["bytes", "k", "M", "G", "T", "P", "E", "Z", "Y"],
-    orderNamesLong: ["bytes", "kilobytes", "megabytes", "gigabytes", "terabytes", "petabytes", "exabytes", "zettabytes", "yottabytes"],
-
+    orderNamesLong: [
+        "bytes", 
+        "kilobytes", 
+        "megabytes", 
+        "gigabytes", 
+        "terabytes", 
+        "petabytes", 
+        "exabytes", 
+        "zettabytes", 
+        "yottabytes"],
 }).setSlots({
 
     formattedValue: function () {

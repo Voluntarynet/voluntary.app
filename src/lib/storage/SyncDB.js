@@ -19,48 +19,48 @@ window.SyncDB = ideal.Proto.extend().newSlots({
     idb: null,
     cache: null,
     writeCache: null,
-	isOpen: false,
-	isSynced: false,
-	debug: false,
+    isOpen: false,
+    isSynced: false,
+    debug: false,
 }).setSlots({
     init: function () {
-		this.setCache({})
-		this.setIdb(IndexedDBFolder.clone().setPath("SyncDB"))
-		//this.asyncOpen()
+        this.setCache({})
+        this.setIdb(IndexedDBFolder.clone().setPath("SyncDB"))
+        //this.asyncOpen()
     },
 
-	// open
+    // open
 
-	asyncOpen: function(callback) {
-		//console.log("SyncDB asyncOpen()")
-		this.idb().asyncOpenIfNeeded( () => { this.didOpen(callback) })
-		return this
-	},
+    asyncOpen: function(callback) {
+        //console.log("SyncDB asyncOpen()")
+        this.idb().asyncOpenIfNeeded( () => { this.didOpen(callback) })
+        return this
+    },
 	
-	didOpen: function(callback) {
-		// load the cache
-		//console.log("SyncDB didOpen() - loading cache")
+    didOpen: function(callback) {
+        // load the cache
+        //console.log("SyncDB didOpen() - loading cache")
 		
-		this.idb().asyncAsJson( (dict) => {
-		//	console.log("SyncDB didOpen() - loaded cache")
-			this._cache = dict
-			this.setIsOpen(true)
-			this.setIsSynced(true)
-			if (callback) {
-				callback()
-			}
-		//	this.verifySync()
-		})
-	},
+        this.idb().asyncAsJson( (dict) => {
+            //	console.log("SyncDB didOpen() - loaded cache")
+            this._cache = dict
+            this.setIsOpen(true)
+            this.setIsSynced(true)
+            if (callback) {
+                callback()
+            }
+            //	this.verifySync()
+        })
+    },
 	
-	assertOpen: function() {
-		assert(this.isOpen())
-		return this
-	},
+    assertOpen: function() {
+        assert(this.isOpen())
+        return this
+    },
 	
-	// read
+    // read
 	
-	/*
+    /*
 	hasKey: function(key) {
 		this.assertOpen()
 		return key in this._cache;
@@ -72,83 +72,83 @@ window.SyncDB = ideal.Proto.extend().newSlots({
 	},
 	*/
 
-	keys: function() {
-		this.assertOpen()
-		return Object.keys(this._cache);
-	},
+    keys: function() {
+        this.assertOpen()
+        return Object.keys(this._cache);
+    },
 	
-	values: function() {
-		this.assertOpen()
-		return Object.values(this._cache);
-	},
+    values: function() {
+        this.assertOpen()
+        return Object.values(this._cache);
+    },
 	
-	size: function() {
-		this.assertOpen()
-		return this.keys().length
-	},	
+    size: function() {
+        this.assertOpen()
+        return this.keys().length
+    },	
 		
-	clear: function() {
-		throw new Error("SyncDB clear")
-		this._cache = {}
-		this.idb().asyncClear()
-	},
+    clear: function() {
+        throw new Error("SyncDB clear")
+        this._cache = {}
+        this.idb().asyncClear()
+    },
 	
-	asJson: function() {
-		// WARNING: bad performance if called frequently
-		var s = JSON.stringify(this._cache)
-		return JSON.parse(this._cache)
-	},
+    asJson: function() {
+        // WARNING: bad performance if called frequently
+        var s = JSON.stringify(this._cache)
+        return JSON.parse(this._cache)
+    },
 	
-	verifySync: function() {
-		var cache = this._cache
-		this._isSynced = false
-		this.idb().asyncAsJson( (json) => {
-			var hasError = false
+    verifySync: function() {
+        var cache = this._cache
+        this._isSynced = false
+        this.idb().asyncAsJson( (json) => {
+            var hasError = false
 			
-			for (k in json) {
-				if (!(k in cache)) {
-					//console.log("syncdb not in sync with idb - sdb missing key " + k)
-					hasError = true
-				} else if (json[k] != cache[k]) {
-					//console.log("syncdb not in sync with idb - diff values for key " + k )
-					hasError = true
-				}
+            for (k in json) {
+                if (!(k in cache)) {
+                    //console.log("syncdb not in sync with idb - sdb missing key " + k)
+                    hasError = true
+                } else if (json[k] != cache[k]) {
+                    //console.log("syncdb not in sync with idb - diff values for key " + k )
+                    hasError = true
+                }
 				
-				if (typeof(json[k]) == "undefined" || typeof(cache[k]) == "undefined") {
-					hasError = true
-				}
-			}
+                if (typeof(json[k]) == "undefined" || typeof(cache[k]) == "undefined") {
+                    hasError = true
+                }
+            }
 			
 			
-			for (k in cache) {
-				if (!(k in json)) {
-					//console.log("syncdb not in sync with idb - idb missing key " + k)
-					hasError = true
-				} else if (json[k] != cache[k]) {
-					//console.log("syncdb not in sync with idb - diff values for key " + k )
-					hasError = true
-				}
+            for (k in cache) {
+                if (!(k in json)) {
+                    //console.log("syncdb not in sync with idb - idb missing key " + k)
+                    hasError = true
+                } else if (json[k] != cache[k]) {
+                    //console.log("syncdb not in sync with idb - diff values for key " + k )
+                    hasError = true
+                }
 				
-				if (typeof(json[k]) == "undefined" || typeof(cache[k]) == "undefined") {
-					hasError = true
-				}
-			}
+                if (typeof(json[k]) == "undefined" || typeof(cache[k]) == "undefined") {
+                    hasError = true
+                }
+            }
 			
-			if (hasError) {
-				//console.log("adding sync timeout")
-				setTimeout( () => {
-					this.verifySync()
-				}, 1000)
-				//console.log("idb/sdb SYNCING")
-			} else {
-				console.log("SyncDB SYNCED")
-				this._isSynced = true
-				//this.idb().show()
-				//console.log("syncdb idb json: ", JSON.stringify(json, null, 2))
+            if (hasError) {
+                //console.log("adding sync timeout")
+                setTimeout( () => {
+                    this.verifySync()
+                }, 1000)
+                //console.log("idb/sdb SYNCING")
+            } else {
+                console.log("SyncDB SYNCED")
+                this._isSynced = true
+                //this.idb().show()
+                //console.log("syncdb idb json: ", JSON.stringify(json, null, 2))
 				
-			}
+            }
 			
-			/*
+            /*
 			if(JSON.stableStringify(json) == JSON.stableStringify(this._cache)) {
 				console.log("syncdb in sync with idb")
 			} else {
@@ -158,50 +158,50 @@ window.SyncDB = ideal.Proto.extend().newSlots({
 				throw new Error("syncdb not in sync with idb")
 			}
 			*/
-		})
-	},
+        })
+    },
 	
-	// stats
+    // stats
 	
-	totalBytes: function() {
-		var byteCount = 0
-		var dict = this._cache
-		for (var k in dict) {
+    totalBytes: function() {
+        var byteCount = 0
+        var dict = this._cache
+        for (var k in dict) {
 		   if (dict.hasOwnProperty(k)) {
-				var v = dict[k]
-				byteCount += k.length + v.length
-			}
-		}
-		return byteCount
-	},
+                var v = dict[k]
+                byteCount += k.length + v.length
+            }
+        }
+        return byteCount
+    },
 	
-	// transactions
+    // transactions
 	
-	hasBegun: function() {
+    hasBegun: function() {
 	    return (this.writeCache() != null)
-	},
+    },
 	
-	assertInTx: function() {
+    assertInTx: function() {
 	    assert(this.hasBegun())
 	    return this
     },
 	
-	begin: function() {
+    begin: function() {
 	    assert(!this.hasBegun())
 	
-		if (this.debug()) {
-			console.log("---- " + this.type() + " begin tx ----")
-		}
+        if (this.debug()) {
+            console.log("---- " + this.type() + " begin tx ----")
+        }
 		
 	    this.setWriteCache({})
 	    return this
-	},
+    },
 	
-	hasWrites: function() {
-		return Object.keys(this._writeCache).length > 0
-	},
+    hasWrites: function() {
+        return Object.keys(this._writeCache).length > 0
+    },
 	
-	commit: function() {
+    commit: function() {
 	    // push to indexedDB tx and to SyncDb's read cache
 	    // TODO: only push to read cache on IndexedDB when tx complete callback received,
 	    // and block new writes until push to read cache
@@ -213,66 +213,66 @@ window.SyncDB = ideal.Proto.extend().newSlots({
 	    tx.begin()
 	    
 	    var count = 0
-		var d = this._writeCache
+        var d = this._writeCache
 		
-		for (var k in d) {
+        for (var k in d) {
 		   if (d.hasOwnProperty(k)) {
-				var entry = d[k]
+                var entry = d[k]
                 
                 if (entry._isDelete) {
                     tx.removeAt(k)
                     delete this._cache[k]
-					if (this.debug()) {
+                    if (this.debug()) {
                     	console.log(this.type() + " delete ", k)
-					}
+                    }
                 } else {
                     var v = entry._value
                     //tx.atPut(k, v)
                     
                     if (k in this._cache) {
                         tx.atUpdate(k, v)
-						if (this.debug()) {
+                        if (this.debug()) {
                         	console.log(this.type() + " update ", k)
-						}
+                        }
                     } else {
                         tx.atAdd(k, v)
-						if (this.debug()) {
+                        if (this.debug()) {
                         	console.log(this.type() + " add ", k)
-						}
+                        }
                     }   
                     
                     this._cache[k] = entry._value
                     
                 }
                 count ++
-			}
-		}
+            }
+        }
 		
 		 // indexeddb commits on next event loop but this "commit" is 
 		 // a sanity check - it raises exception if we attempt to write more to the same tx 
 		 
-		tx.commit() 
+        tx.commit() 
 		
-		if (this.debug()) {
-			console.log("---- " + this.type() + " committed tx with " + count + " writes ----")
-		}
+        if (this.debug()) {
+            console.log("---- " + this.type() + " committed tx with " + count + " writes ----")
+        }
 		
-		// TODO: use commit callback to clear writeCache instead of assuming it
-		// will complete and setting it to null here
-		this._writeCache = null
-	},
+        // TODO: use commit callback to clear writeCache instead of assuming it
+        // will complete and setting it to null here
+        this._writeCache = null
+    },
 	
-	// NEW
+    // NEW
 	
-	hasKey: function(key) {
-		this.assertOpen()
-		return key in this._cache;
-	},
+    hasKey: function(key) {
+        this.assertOpen()
+        return key in this._cache;
+    },
 	
-	at: function(key) {
-		this.assertOpen()
+    at: function(key) {
+        this.assertOpen()
 		
-		if (this._writeCache) {
+        if (this._writeCache) {
     		var e = this._writeCache[key]
     		if (e) {
     		    if (e._isDelete) {
@@ -283,32 +283,32 @@ window.SyncDB = ideal.Proto.extend().newSlots({
     		}
     	}
 		
-		return this._cache[key]
-	},
+        return this._cache[key]
+    },
 	
-	atPut: function(key, value) {
-		this.assertOpen()
+    atPut: function(key, value) {
+        this.assertOpen()
 	    this.assertInTx()
 	    
 	    if (!(key in this._writeCache) && this._cache[key] == value) {
 	        return
 	    }
 	    
-		this._writeCache[key] = { _value: value }
-	},
+        this._writeCache[key] = { _value: value }
+    },
 	
-	removeAt: function(key) {
-		this.assertOpen()
+    removeAt: function(key) {
+        this.assertOpen()
 	    this.assertInTx()
 	    
 	    if (!(key in this._writeCache) && !(key in this._cache)) {
 	        return
 	    }
 	    
-		this._writeCache[key] = { _isDelete: true }
-	},
+        this._writeCache[key] = { _isDelete: true }
+    },
 	
-	// TODO: update keys, values and size method to use writeCache? Or just assert they are out of tx?
+    // TODO: update keys, values and size method to use writeCache? Or just assert they are out of tx?
 	
 })
 	

@@ -9,6 +9,9 @@
 
 /* --- Blender --- */
 /*
+
+// blender didnt work that well
+
 @font-face {
     font-family: "AppLight";
     src: url("fonts/Blender/Blender-THIN.ttf");
@@ -25,7 +28,28 @@
 }
 */
 
+
+/* --- MateriaPro --- */
+
+/*
+@font-face {
+    font-family: "AppLight";
+    src: url("fonts/OpenSans/MateriaPro-Light.ttf");
+}
+
+@font-face {
+    font-family: "AppRegular";
+    src: url("fonts/OpenSans/MateriaPro-Light.ttf");
+}
+
+@font-face {
+    font-family: "AppSemiBold";
+    src: url("fonts/OpenSans/MateriaPro-Regular.ttf");
+}
+*/
+
 /* --- OpenSans --- */
+
 
 @font-face {
     font-family: "AppLight";

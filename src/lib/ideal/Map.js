@@ -10,7 +10,7 @@ Map.__map = map;
 
 // --- Map ---------------------------
 
-var Map = Proto.clone().newSlots({
+ideal.Map = Proto.clone().newSlots({
     type: "ideal.Map",
     jsMap: null
 }).setSlots({
@@ -176,5 +176,3 @@ var Map = Proto.clone().newSlots({
         }).join("&");
     }
 });
-
-ideal.Map = Map

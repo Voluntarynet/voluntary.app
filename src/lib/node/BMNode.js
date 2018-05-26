@@ -562,7 +562,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     },
     
     setSubnodes: function(subnodes) {
-        if (this._subnodes && subnodes && this._subnodes.equalsArray(subnodes)) {
+        if (this._subnodes && subnodes && this._subnodes.equals(subnodes)) {
             //console.log(this.typeId() + ".setSubnodes() - skipping because subnodes are the same <<<<<<<<<<<<<<<<<<<<<")
             return this
         }

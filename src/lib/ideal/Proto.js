@@ -3,16 +3,11 @@
 window.ideal = {}
 
 
-var Proto_constructor = new Function;
-
-
-
 var Proto = new Object;
 ideal.Proto = Proto
 
 Proto.setSlot = function (name, value) {
     this[name] = value;
-
     return this;
 };
 
@@ -24,18 +19,14 @@ Proto.setSlots = function (slots) {
     return this;
 }
 
-var uniqueIdCounter = 0;
-
-var Object_hasProto = (Object.prototype.__proto__ !== undefined);
-var Object_clone = Object.clone;
-
 Proto.setSlots({
+    uniqueIdCounter: 0,
+
     extend: function () {
-        var obj = Object_clone(this);
-        if (!Object_hasProto) {
-            obj.__proto__ = this;
-        }
-        obj._uniqueId = ++uniqueIdCounter;
+        var obj = Object.clone(this);
+        obj.__proto__ = this;
+        Proto.uniqueIdCounter ++;
+        obj._uniqueId = Proto.uniqueIdCounter;
         return obj;
     },
 
@@ -45,11 +36,6 @@ Proto.setSlots({
 
     typeId: function () {
         return this.type() + this.uniqueId()
-    },
-
-    subclass: function () {
-        console.warn("subclass is deprecated in favor of extend");
-        return this.extend.call(this);
     },
 
     clone: function () {
@@ -215,34 +201,28 @@ Proto.setSlots({
         });
 
         return object;
-    }
+    },
+
+    uniqueId: function () {
+        return this._uniqueId
+    },
+
+    isKindOf: function (aProto) {
+        if (this.__proto__) {
+            if (this.__proto__  === aProto) {
+                return true
+            }
+            
+            if (this.__proto__.isKindOf) {
+                return this.__proto__.isKindOf(aProto)
+            }
+        }
+        return false
+    },
+
+    toString: function () {
+        return this.type() + "." + this.uniqueId();
+    },
 });
 
-Proto.toString = function () {
-    return this.type() + "." + this.uniqueId();
-}
-
 Proto.newSlot("type", "ideal.Proto");
-
-// Proto
-
-ideal.Proto.isKindOf = function (aProto) {
-    if (this.__proto__) {
-        if (this.__proto__  === aProto) {
-            return true
-        }
-		
-        if (this.__proto__.isKindOf) {
-            return this.__proto__.isKindOf(aProto)
-        }
-    }
-    return false
-}
-
-
-
-/// Proto
-
-ideal.Proto.uniqueId = function () {
-    return this._uniqueId
-}

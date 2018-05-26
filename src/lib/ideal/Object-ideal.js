@@ -1,6 +1,7 @@
 "use strict"
 
 Object.clone = function (obj) {
+    var Proto_constructor = new Function;
     Proto_constructor.prototype = obj;
     return new Proto_constructor;
 },
@@ -141,12 +142,6 @@ function Object_atPath(obj, pathList) {
         return Array.wrap(obj[k]).first();
     }
 }
-
-
-
-
-// Hide method from for-in loops
-Object.defineProperty(Array.prototype, "equals", {enumerable: false});
 
 /// Object
 

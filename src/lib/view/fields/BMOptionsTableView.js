@@ -16,7 +16,7 @@ window.BMOptionsTableView = DivView.extend().newSlots({
 	
     hasValidValues: function(validValues) {
         if (this._validValues) {
-            if (this._validValues.equalsArray(validValues)) {
+            if (this._validValues.equals(validValues)) {
                 return true
             }
         }

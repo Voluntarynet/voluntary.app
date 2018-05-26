@@ -597,175 +597,160 @@ Object.shallowCopyTo({
         return this.first() != "";
     },
 
-    isArray: true
+    isArray: true,
+
+    select: function (callback) {
+        var results = []
+    
+        for (var i = 0; i < this.length; i++) {
+            var v = this[i];
+    
+            if (callback(v)) {
+                results.push(v)
+            }
+        }
+    
+        return results;
+    },
+    
+    after: function (v) {
+        var index = this.indexOf(v);
+    
+        if (index == -1) {
+            return [];
+        }
+    
+        return this.slice(index + 1);
+    },
+    
+    before: function (v) {
+        var index = this.indexOf(v);
+    
+        if (index == -1) {
+            return this.slice();
+        }
+    
+        return this.slice(0, index);
+    },
+    
+    replaceOccurancesOfWith: function (oldValue, newValue) {
+        for (var i = 0; i < this.length; i++) {
+            if (this[i] == oldValue) {
+                this[i] = newValue;
+            }
+        }
+        return this
+    },
+    
+    removeOccurancesOf: function (e) {
+        var i = this.indexOf(e);
+        while (i > -1) {
+            this.removeAt(i);
+            i = this.indexOf(e)
+        }
+        return this;
+    },
+
+    wrap: function (obj) {
+        if (obj === null || obj === undefined) {
+            return [];
+        }
+        else if (obj.isArray) {
+            return obj;
+        }
+        else {
+            return [obj];
+        }
+    },
+
+    itemsBefore: function (item) {
+        var index = this.indexOf(item);
+        if (index != -1) {
+            return this.slice(0, index);
+        }
+        return this
+    },
+    
+    union: function (a) {
+        var r = this.slice(0);
+        a.forEach(function (i) { if (r.indexOf(i) < 0) r.push(i); });
+        return r;
+    },
+    
+    diff: function (a) {
+        return this.filter(function (i) { return a.indexOf(i) < 0; });
+    },
+
+    equals: function (array) {
+        // we want this to work on any object that confroms to the array protocol, 
+        // not just objects of the same JS type
+        // but how do we test for the [] accessor?
+    
+        if(typeof(array.length) == "undefined") {
+            return false;
+        }
+    
+        // compare lengths - can save a lot of time 
+        if (this.length != array.length) {
+            return false;
+        }
+    
+        for (var i = 0, l = this.length; i < l; i++) {
+            var a = this[i]
+            var b = array[i]
+            
+            // Check if we have nested arrays
+            /*
+                if (this[i] instanceof Array && array[i] instanceof Array) {
+                    // recurse into the nested arrays
+                    if (!this[i].equals(array[i]))
+                        return false;       
+                }     
+            */
+    
+            
+            if (a.equals && !a.equals(b)) {
+                return false;
+            }
+            
+            if (a != b) {
+                // Warning - two different object instances will never be equal: {x:20} != {x:20}
+                return false;
+            }
+        }
+        return true;
+    },
+
+
+    /*
+    includes: function (b) {
+        for (var i = 0, l=this.length; i < l; i++) {
+            var a = this[i]
+
+            if (a.equals) {
+                if (!a.equals(b)) {
+                    return false;  
+                }
+            }
+            else if (a != b) { 
+                return false;   
+            }           
+        }    
+        return false;
+    },
+    */
+    
 }, Array.prototype);
 
-Array.prototype.wrap = function (obj) {
-    if (obj === null || obj === undefined) {
-        return [];
-    }
-    else if (obj.isArray) {
-        return obj;
-    }
-    else {
-        return [obj];
-    }
-}
-
-
-
-/// Array
-
-Array.prototype.itemsBefore = function (item) {
-    var index = this.indexOf(item);
-    if (index != -1) {
-        return this.slice(0, index);
-    }
-    return this
-};
-
-Array.prototype.union = function (a) {
-    var r = this.slice(0);
-    a.forEach(function (i) { if (r.indexOf(i) < 0) r.push(i); });
-    return r;
-};
-
-Array.prototype.diff = function (a) {
-    return this.filter(function (i) { return a.indexOf(i) < 0; });
-};
-
-if (Array.prototype.equals) {
-    console.warn("Overriding existing Array.prototype.equals. Possible causes: New API defines the method, there's a framework conflict or you've got double inclusions in your code.");
-}
-
-var equalsArrayFunc = function (array) {
-    if(typeof(array) != typeof(this)) {
-        return false;
-    }
-
-    // compare lengths - can save a lot of time 
-    if (this.length != array.length) {
-        return false;
-    }
-
-    for (var i = 0, l = this.length; i < l; i++) {
-        var a = this[i]
-        var b = array[i]
-        
-        // Check if we have nested arrays
-        /*
-            if (this[i] instanceof Array && array[i] instanceof Array) {
-                // recurse into the nested arrays
-                if (!this[i].equals(array[i]))
-                    return false;       
-            }     
-        */
-
-        if (a.equalsArrayFunc && !a.equalsArrayFunc(b)) {
-            return false
-        }
-        
-        if (a.equals && !a.equals(b)) {
-            return false;
-        }
-        
-        if (a != b) {
-            // Warning - two different object instances will never be equal: {x:20} != {x:20}
-            return false;
-        }
-    }
-    return true;
-}
-
-Object.defineProperty(Array.prototype, "equalsArray",  
-    {
-        configurable: true,
-        value: equalsArrayFunc,
-    }
-);
-
-
 /*
-Array.prototype.equals = arrayEqualsFunc
-
-console.log("---- Array.prototype.equals = ", Array.prototype.equals)
-
-Array.prototype.equals2 = 1
-
-console.log("---- Array.prototype.equals2 = ", Array.prototype.equals2)
-*/
-
-/*
-Array.prototype.includes = function (b) {
-    for (var i = 0, l=this.length; i < l; i++) {
-		var a = this[i]
-
-        if (a.equals) {
-            if (!a.equals(b)) {
-                return false;  
-     		}
-        }
-        else if (a != b) { 
-            return false;   
-        }           
-    }    
-    return false;
-}
+// Hide method from for-in loops
+Object.defineProperty(Array.prototype, "equals", { 
+    writable: true,
+    enumerable: false,
+    configurable: true,
+    enumerable: false,
+    value: equalsArrayFunc,
+});
 */
 
 
-
-/// Array 
-
-Array.prototype.select = function (callback) {
-    var results = []
-
-    for (var i = 0; i < this.length; i++) {
-        var v = this[i];
-
-        if (callback(v)) {
-            results.push(v)
-        }
-    }
-
-    return results;
-}
-
-
-Array.prototype.after = function (v) {
-    var index = this.indexOf(v);
-
-    if (index == -1) {
-        return [];
-    }
-
-    return this.slice(index + 1);
-}
-
-Array.prototype.before = function (v) {
-    var index = this.indexOf(v);
-
-    if (index == -1) {
-        return this.slice();
-    }
-
-    return this.slice(0, index);
-}
-
-Array.prototype.replaceOccurancesOfWith = function (oldValue, newValue) {
-    for (var i = 0; i < this.length; i++) {
-        if (this[i] == oldValue) {
-            this[i] = newValue;
-        }
-    }
-    return this
-}
-
-Array.prototype.removeOccurancesOf = function (e) {
-    var i = this.indexOf(e);
-    while (i > -1) {
-        this.removeAt(i);
-        i = this.indexOf(e)
-    }
-    return this;
-}

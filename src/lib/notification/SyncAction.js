@@ -11,8 +11,9 @@ window.SyncAction = ideal.Proto.extend().newSlots({
     trySend: function() {
         try {
             this.send()
-        } catch(e) {
-            console.warn(this.typeId() + ".trySend(" + this.description() + ") ", e)
+        } catch(error) {
+            console.warn(this.typeId() + ".trySend(" + this.description() + ") caught exception: ")
+            StackTrace.showError(error)
             return false
         }
         return true

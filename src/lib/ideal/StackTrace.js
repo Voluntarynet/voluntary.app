@@ -3,6 +3,9 @@
 /*
     StackTrace
     A stack printout that understands objects.
+
+    			StackTrace.showError(e)
+
 */
 
 window.StackTrace = ideal.Proto.extend().newSlots({
@@ -72,3 +75,27 @@ StackTrace.try(function() {
 	iejije
 })
 */
+
+// Extra
+
+function ShowStack() {
+    var e = new Error()
+    e.name = "STACK TRACE"
+    e.message = ""
+    console.log( e.stack );
+}
+
+
+function assert(v) {
+    if(v == false || v == null) {
+        throw new Error("assert failed - false value")
+    }
+    return v
+}
+
+function assertDefined(v) {
+    if(typeof(v) == "undefined") {
+        throw new Error("assert failed - undefined value")
+    }
+    return v
+}

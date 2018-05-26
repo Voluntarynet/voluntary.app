@@ -6,13 +6,13 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
     header: null,
     footer: null,
     
-	scrollView: null, // contains column
+    scrollView: null, // contains column
     column: null, // is inside scrollView
     
     //emptyLabel: null,
 
-	isCollapsed: false,
-	animatesCollapse: true,
+    isCollapsed: false,
+    animatesCollapse: true,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
@@ -25,7 +25,7 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
    
         //this.setColumnWrapper(this)
 
-		this.setScrollView(DivView.clone().setDivClassName("BrowserScrollView"))
+        this.setScrollView(DivView.clone().setDivClassName("BrowserScrollView"))
         this.addSubview(this.scrollView())
         
         this.setColumn(BrowserColumn.clone())
@@ -78,83 +78,83 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
         return this
     },
 
-	isFirstColumnGroup: function() {
-		return this.browser().columnGroups().first() === this
-	},
+    isFirstColumnGroup: function() {
+        return this.browser().columnGroups().first() === this
+    },
 
-	didChangeIsSelected: function() {
-		NodeView.didChangeIsSelected.apply(this)
+    didChangeIsSelected: function() {
+        NodeView.didChangeIsSelected.apply(this)
 		
-		if (this.column()) {
-			this.column().setIsSelected(this.isSelected())
-		}	
-		return this
-	},
+        if (this.column()) {
+            this.column().setIsSelected(this.isSelected())
+        }	
+        return this
+    },
 	
-	previousColumnGroup: function() {
-		var prevCol = this.column().previousColumn()
-		if (prevCol) { return prevCol.columnGroup() }
-		return null
-	},
+    previousColumnGroup: function() {
+        var prevCol = this.column().previousColumn()
+        if (prevCol) { return prevCol.columnGroup() }
+        return null
+    },
 	
-	isFirstUncollapsed: function() {
-		var pcg = this.previousColumnGroup()
-		return (!this.isCollapsed()) && (!pcg || pcg.isCollapsed())
-	},
+    isFirstUncollapsed: function() {
+        var pcg = this.previousColumnGroup()
+        return (!this.isCollapsed()) && (!pcg || pcg.isCollapsed())
+    },
 	
-	shouldShowBackArrow: function() {
-		return !this.isFirstColumnGroup() && this.isFirstUncollapsed()
-	},
+    shouldShowBackArrow: function() {
+        return !this.isFirstColumnGroup() && this.isFirstUncollapsed()
+    },
 	
-	updateBackArrow: function() {
-		this.header().setDoesShowBackArrow(this.shouldShowBackArrow())
-		return this
-	},
+    updateBackArrow: function() {
+        this.header().setDoesShowBackArrow(this.shouldShowBackArrow())
+        return this
+    },
 	
-	// collapsing
+    // collapsing
 	
-	setIsCollapsed: function(aBool) {
-		if (this._isCollapsed != aBool) {		
-			if (aBool) {
-				this.collapse()
-			} else {
-				this.uncollapse()
-			}
-		}
-		return this
-	},
+    setIsCollapsed: function(aBool) {
+        if (this._isCollapsed != aBool) {		
+            if (aBool) {
+                this.collapse()
+            } else {
+                this.uncollapse()
+            }
+        }
+        return this
+    },
 	
-	name: function() {
-		return this.node() ? this.index() + "-" + this.node().title() : null
-	},
+    name: function() {
+        return this.node() ? this.index() + "-" + this.node().title() : null
+    },
 	
-	index: function() {
-		return this.browser().columnGroups().indexOf(this)
-	},
+    index: function() {
+        return this.browser().columnGroups().indexOf(this)
+    },
 	
-	collapse: function() {
-		//console.log(this.name() + " collapse ")
-		this._isCollapsed = true
-		this.setMinAndMaxWidth(0)
-		this.setFlexGrow(0)
-		this.setFlexShrink(0)
-		this.setFlexBasis(0)
-		return this
-	},
+    collapse: function() {
+        //console.log(this.name() + " collapse ")
+        this._isCollapsed = true
+        this.setMinAndMaxWidth(0)
+        this.setFlexGrow(0)
+        this.setFlexShrink(0)
+        this.setFlexBasis(0)
+        return this
+    },
 	
-	uncollapse: function() {
-		//console.log(this.name() + " uncollapse")
-		this._isCollapsed = false
-		this.matchNodeMinWidth()
+    uncollapse: function() {
+        //console.log(this.name() + " uncollapse")
+        this._isCollapsed = false
+        this.matchNodeMinWidth()
         this.setFlexGrow(1)
         this.setFlexShrink(1)
-		//this.setFlexBasis(this.targetWidth())
-		return this
-	},
+        //this.setFlexBasis(this.targetWidth())
+        return this
+    },
     
     /// empty label 
 
-/*
+    /*
     updateEmptyLabel: function() {
         var node = this.node()
         if (node) {
@@ -206,39 +206,39 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
     
     /*
     setMinAndMaxWidth: function(w) {
-        ShowStack()
+        StackTrace.showCurrentStack()
 		console.log(this.type() + " / " + (this.node() ? this.node().type() : "?") + " nodeMinWidth = " + w)
         NodeView.setMinAndMaxWidth.apply(this, [w])
         return this
     },
     */
 
-	targetWidth: function() {
-		var w = 0
+    targetWidth: function() {
+        var w = 0
 		
-		if (this.node()) {
+        if (this.node()) {
 	        var w = this.node().nodeMinWidth()
-			if (w == null) {
-				return 0
-			}
+            if (w == null) {
+                return 0
+            }
 	
-			if (this.browser() && this.browser().isSingleColumn()) {
-				w = this.browser().browserWidth()
-				assert (w != null) 
-			}
-		}
+            if (this.browser() && this.browser().isSingleColumn()) {
+                w = this.browser().browserWidth()
+                assert (w != null) 
+            }
+        }
 		
 			
-		return w		
-	},
+        return w		
+    },
 
-	matchNodeMinWidth: function() {
-		var w = this.targetWidth()
+    matchNodeMinWidth: function() {
+        var w = this.targetWidth()
         if (w) {
             this.setMinAndMaxWidth(w)
         }
-		return this
-	},
+        return this
+    },
     
     setNode: function(aNode) {
         if (aNode == this._node) {

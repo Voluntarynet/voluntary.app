@@ -1,6 +1,7 @@
 "use strict"
 
 Object.shallowCopyTo({
+    /*
     milliseconds: function () {
         return this;
     },
@@ -24,6 +25,7 @@ Object.shallowCopyTo({
     years: function () {
         return this.days() * 365;
     },
+    */
 
     repeat: function (callback) {
         for (var i = 0; i < this; i++) {
@@ -44,5 +46,9 @@ Object.shallowCopyTo({
 
     isEven: function () {
         return this % 2 == 0;
-    }
+    },
+
+    isOdd: function () {
+        return this % 2 != 0;
+    },
 }, Number.prototype);

@@ -174,7 +174,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
             return window[name]
         }
 
-	  	return Object.firstAncestorWithMatchingPostfixClass(this, "View")
+	  	return this.firstAncestorWithMatchingPostfixClass("View")
     },
 
     // --- nodeRowViewClass ---
@@ -186,7 +186,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     */
 
     nodeRowViewClass: function () {   
-	  	return Object.firstAncestorWithMatchingPostfixClass(this, "RowView")
+	  	return this.firstAncestorWithMatchingPostfixClass("RowView")
     },
 
     // --- subnodes ----------------------------------------
@@ -194,7 +194,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     setParentNode: function(aNode) {
         if (aNode === this._parentNode) {
             //console.warn(this.type() + " setParentNode(" + aNode.type() + ")  already has parent ", this._parentNode.type())
-            //ShowStack()
+            //StackTrace.showCurrentStack()
             return this
         }
 		

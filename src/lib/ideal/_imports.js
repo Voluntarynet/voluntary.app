@@ -1,7 +1,6 @@
 "use strict"
 
 JSImporter.pushRelativePaths([
-    //"BaseObject.js",
     "Object-ideal.js",
     "Array-ideal.js",
     "String-ideal.js",
@@ -10,5 +9,6 @@ JSImporter.pushRelativePaths([
     "Map.js",
     "StackTrace.js",
     "ByteFormatter.js",
+    "BaseObject.js",
 ]);
 

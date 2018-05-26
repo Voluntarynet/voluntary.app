@@ -76,9 +76,10 @@ Function.prototype.forwardErrors = function (fn) {
     }
 }
 
+// --- deep keys ---
 
 function Object_atDeepKey(obj, key) {
-    if (typeof (obj) !== "object" || (Object.getPrototypeOf(obj) != Object.prototype)) {
+    if (typeof(obj) !== "object" || (Object.getPrototypeOf(obj) != Object.prototype)) {
         return null;
     }
 
@@ -100,7 +101,7 @@ function Object_atDeepKey(obj, key) {
 }
 
 function Object_allAtDeepKey(obj, key) {
-    if (typeof (obj) !== "object" || (Object.getPrototypeOf(obj) != Object.prototype)) {
+    if (typeof(obj) !== "object" || (Object.getPrototypeOf(obj) != Object.prototype)) {
         return [];
     }
 
@@ -142,45 +143,6 @@ function Object_atPath(obj, pathList) {
         return Array.wrap(obj[k]).first();
     }
 }
-
-/// Object
-
-Object.ancestors = function(self) {
-    var results = []
-    var obj = self;
-    while (obj.__proto__ && obj.type) {
-        results.push(obj)
-        if (results.length > 100) {
-            throw new Error("proto loop detected?")
-        }
-        obj = obj.__proto__
-    }
-    return results
-}
-
-Object.ancestorTypes = function(self) {
-    return self.ancestors().map((obj) => { return obj.type() })
-}
-
-
-Object.firstAncestorWithMatchingPostfixClass = function(self, aPostfix) {
-    // not a great name but this walks back the ancestors and tries to find an
-    // existing class with the same name as the ancestor + the given postfix
-    // useful for things like type + "View" or type + "RowView", etc
-    //console.log(this.type() + " firstAncestorWithMatchingPostfixClass(" + aPostfix + ")")
-    var match = Object.ancestors(self).detect((obj) => {
-        var name = obj.type() + aPostfix
-        var proto = window[name]
-        return proto
-    })
-    var result = match ? window[match.type() + aPostfix] : null
-    /*
-	if (result) { 
-		console.log("FOUND " + result.type())
-	}
-	*/
-    return result
-},
 
 Object.slotNames = function(self) {
     return Object.keys(self);

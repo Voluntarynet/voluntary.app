@@ -2,7 +2,6 @@
 
 window.ideal = {}
 
-
 var Proto = new Object;
 ideal.Proto = Proto
 
@@ -25,7 +24,7 @@ Proto.setSlots({
     extend: function () {
         var obj = Object.clone(this);
         obj.__proto__ = this;
-        Proto.uniqueIdCounter ++;
+        Proto.uniqueIdCounter++;
         obj._uniqueId = Proto.uniqueIdCounter;
         return obj;
     },
@@ -209,10 +208,10 @@ Proto.setSlots({
 
     isKindOf: function (aProto) {
         if (this.__proto__) {
-            if (this.__proto__  === aProto) {
+            if (this.__proto__ === aProto) {
                 return true
             }
-            
+
             if (this.__proto__.isKindOf) {
                 return this.__proto__.isKindOf(aProto)
             }
@@ -223,6 +222,48 @@ Proto.setSlots({
     toString: function () {
         return this.type() + "." + this.uniqueId();
     },
+
+
+    // --- ancestors ---
+
+    ancestors: function () {
+        var results = []
+        var obj = this;
+        while (obj.__proto__ && obj.type) {
+            results.push(obj)
+            if (results.length > 100) {
+                throw new Error("proto loop detected?")
+            }
+            obj = obj.__proto__
+        }
+        return results
+    },
+
+    ancestorTypes: function () {
+        return this.ancestors().map((obj) => { return obj.type() })
+    },
+
+    firstAncestorWithMatchingPostfixClass: function (aPostfix) {
+        // not a great name but this walks back the ancestors and tries to find an
+        // existing class with the same name as the ancestor + the given postfix
+        // useful for things like type + "View" or type + "RowView", etc
+        //console.log(this.type() + " firstAncestorWithMatchingPostfixClass(" + aPostfix + ")")
+        var match = this.ancestors().detect((obj) => {
+            var name = obj.type() + aPostfix
+            var proto = window[name]
+            return proto
+        })
+        var result = match ? window[match.type() + aPostfix] : null
+        /*
+        if (result) { 
+            console.log("FOUND " + result.type())
+        }
+        */
+        return result
+    },
+
 });
 
 Proto.newSlot("type", "ideal.Proto");
+
+

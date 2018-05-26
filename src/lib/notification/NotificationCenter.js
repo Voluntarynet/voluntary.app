@@ -143,7 +143,7 @@ window.NotificationCenter = ideal.Proto.extend().setType("NotificationCenter").n
             })
             this._isProcessing = false
         } else {
-            ShowStack()
+            StackTrace.showCurrentStack()
             console.warn("WARNING: attempt to call processPostQueue recursively while on note: ", this._currentNote)
         }
         

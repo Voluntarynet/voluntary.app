@@ -4,13 +4,30 @@
     StackTrace
     A stack printout that understands objects.
 
-    			StackTrace.showError(e)
+    example uses:
+
+        showing a caught error:
+
+            try {
+                ...
+            } catch(e) {
+                StackTrace.showError(e)
+            }
+
+        try and catch:
+
+            StackTrace.try(() => {	 ... })
+
+        show the current stack:
+
+            StackTrace.showCurrentStack()
+
+})
 
 */
 
 window.StackTrace = ideal.Proto.extend().newSlots({
     type: "StackTrace",
- 
 }).setSlots({
     init: function () {
     },
@@ -67,6 +84,13 @@ window.StackTrace = ideal.Proto.extend().newSlots({
         console.warn(s)
 
     },
+
+    showCurrentStack: function() {
+        var e = new Error()
+        e.name = "STACK TRACE"
+        e.message = ""
+        console.log( e.stack );
+    },
 })
 
 
@@ -77,14 +101,6 @@ StackTrace.try(function() {
 */
 
 // Extra
-
-function ShowStack() {
-    var e = new Error()
-    e.name = "STACK TRACE"
-    e.message = ""
-    console.log( e.stack );
-}
-
 
 function assert(v) {
     if(v == false || v == null) {

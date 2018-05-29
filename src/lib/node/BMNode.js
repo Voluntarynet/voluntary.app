@@ -558,6 +558,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     // --- subnodes -----------------------------
     
     subnodesLength: function() {
+        this.prepareToAccess()
         return this._subnodes.length
     },
     

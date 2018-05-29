@@ -287,10 +287,9 @@ Object.shallowCopyTo({
         }
 
         var i = 0;
-        var self = this;
-        function next() {
-            if (i < self.length) {
-                var e = self[i];
+        var next = () => {
+            if (i < this.length) {
+                var e = this[i];
                 i++;
                 e[functionName].apply(e, args);
             } else {

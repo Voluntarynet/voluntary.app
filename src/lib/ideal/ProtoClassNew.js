@@ -2,50 +2,124 @@
 
 window.ideal = {}
 
-var Proto = new Object;
-ideal.Proto = Proto
 
-Proto.setSlot = function (name, value) {
-    this[name] = value;
-    return this;
-};
+class ProtoClass { 
+    constructor() {
+    }
 
-Proto.setSlots = function (slots) {
-    Object.eachSlot(slots,  (name, initialValue) => {
-        this.setSlot(name, initialValue);
-    });
-    return this;
-}
+    static clone() {
+        var obj = new this()
+        obj.init()
+        return obj
+    }
+    
+    init() {
+        // subclasses should override to initialize
+    }
 
-Proto.setSlots({
-    _uniqueIdCounter: 0,
-    _allProtos: [Proto],
+    type() {
+        return this.constructor.name
+    }
 
-    childProtos: function() {
+    _uniqueIdCounter = 0;
+    static var _allProtos = [Proto];
+
+    // --- slot create and update ---
+
+
+    newSlot(slotName, initialValue) {
+        if (typeof (slotName) != "string") throw "name must be a string";
+
+        if (initialValue === undefined) { initialValue = null };
+
+        var privateName = "_" + slotName;
+        this[privateName] = initialValue;
+
+        if (!this[slotName]) {
+            this[slotName] = function () {
+                return this[privateName];
+            }
+        }
+
+        var setterName = "set" + slotName.capitalized()
+
+        if (!this[setterName]) {
+            this[setterName] = function (newValue) {
+                //this[privateName] = newValue;
+                this.updateSlot(slotName, privateName, newValue);
+                return this;
+            }
+        }
+
+        return this;
+    }
+
+    newSlots(slots) {
+        Object.eachSlot(slots,  (slotName, initialValue) => {
+            this.newSlot(slotName, initialValue);
+        });
+
+        return this;
+    }
+
+
+    updateSlot(slotName, privateName, newValue) {
+        var oldValue = this[privateName];
+        if (oldValue != newValue) {
+            this[privateName] = newValue;
+            this.didUpdateSlot(slotName, oldValue, newValue)
+            //this.mySlotChanged(name, oldValue, newValue);
+        }
+
+        return this;
+    }
+
+    didUpdateSlot(slotName, oldValue, newValue) {
+        // persistence system can hook this
+    }
+
+    // --------------------------
+
+
+    setSlot(name, value) {
+        this[name] = value;
+        return this;
+    }
+
+    setSlots(slots) {
+        Object.eachSlot(slots,  (name, initialValue) => {
+            this.setSlot(name, initialValue);
+        });
+        return this;
+    }
+
+  
+
+    childProtos() {
         var result = Proto._allProtos.select((proto) => { return proto._parentProto == this })
         console.log("Proto._allProtos = " + Proto._allProtos.map((obj) => { return obj.type() }))
         console.log("'" + this.type() + "'.childProtos() = " + result.map((obj) => { return obj.type() }))
 
         return result
-    },
+    }
 
-    extend: function () {
+    extend () {
         var obj = this.cloneWithoutInit()
         Proto._allProtos.push(obj)
         obj._parentProto = this
         //console.log("Proto._allProtos.length = ", Proto._allProtos.length)
         return obj;
-    },
+    }
 
-    uniqueId: function () {
+    uniqueId () {
         return this._uniqueId
-    },
+    }
 
-    typeId: function () {
+    typeId () {
         return this.type() + this.uniqueId()
-    },
+    }
 
-    cloneWithoutInit: function () {
+    cloneWithoutInit () {
         var obj = Object.clone(this);
         obj.__proto__ = this;
         Proto._uniqueIdCounter ++;
@@ -53,45 +127,45 @@ Proto.setSlots({
         //Proto._allProtos.push(obj)
         //console.log("Proto._allProtos.length = ", Proto._allProtos.length)
         return obj;
-    },
+    }
 
-    clone: function () {
+    clone () {
         var obj = this.cloneWithoutInit();
         obj.init();
 
         return obj;
-    },
+    }
 
-    withSets: function (sets) {
+    withSets (sets) {
         return this.clone().performSets(sets);
-    },
+    }
 
-    withSlots: function (slots) {
+    withSlots (slots) {
         return this.clone().setSlots(slots);
-    },
+    }
 
-    init: function () { 
+    init () { 
         // subclasses should override to do initialization
-    },
+    }
 
-    uniqueId: function () {
+    uniqueId () {
         return this._uniqueId;
-    },
+    }
 
-    toString: function () {
+    toString () {
         return this._type;
-    },
+    }
 
-    setSlotsIfAbsent: function (slots) {
+    setSlotsIfAbsent (slots) {
         Object.eachSlot(slots,  (name, value) => {
             if (!this[name]) {
                 this.setSlot(name, value);
             }
         });
         return this;
-    },
+    }
 
-    newSlot: function (slotName, initialValue) {
+    newSlot (slotName, initialValue) {
         if (typeof (slotName) != "string") throw "name must be a string";
 
         if (initialValue === undefined) { initialValue = null };
@@ -124,9 +198,9 @@ Proto.setSlots({
 				*/
 
         return this;
-    },
+    }
 
-    updateSlot: function (slotName, privateName, newValue) {
+    updateSlot (slotName, privateName, newValue) {
         var oldValue = this[privateName];
         if (oldValue != newValue) {
             this[privateName] = newValue;
@@ -135,47 +209,47 @@ Proto.setSlots({
         }
 
         return this;
-    },
+    }
 
-    didUpdateSlot: function (slotName, oldValue, newValue) {
+    didUpdateSlot (slotName, oldValue, newValue) {
         // persistence system can hook this
-    },
+    }
 
-    mySlotChanged: function (slotName, oldValue, newValue) {
+    mySlotChanged (slotName, oldValue, newValue) {
         this.perform(slotName + "SlotChanged", oldValue, newValue);
-    },
+    }
 
-    ownsSlot: function (name) {
+    ownsSlot (name) {
         return this.hasOwnProperty(name);
-    },
+    }
 
-    aliasSlot: function (slotName, aliasName) {
+    aliasSlot (slotName, aliasName) {
         this[aliasName] = this[slotName];
         this["set" + aliasName.capitalized()] = this["set" + slotName.capitalized()];
         return this;
-    },
+    }
 
-    argsAsArray: function (args) {
+    argsAsArray (args) {
         return Array.prototype.slice.call(args);
-    },
+    }
 
-    newSlots: function (slots) {
-        Object.eachSlot(slots,  (slotName, initialValue) => {
+    newSlots (slots) {
+        Object.eachSlot(slots, (slotName, initialValue) => {
             this.newSlot(slotName, initialValue);
         });
 
         return this;
-    },
+    }
 
-    canPerform: function (message) {
+    canPerform (message) {
         return this[message] && typeof (this[message]) == "function";
-    },
+    }
 
-    performWithArgList: function (message, argList) {
+    performWithArgList (message, argList) {
         return this[message].apply(this, argList);
-    },
+    }
 
-    perform: function (message) {
+    perform (message) {
         if (this[message] && this[message].apply) {
             return this[message].apply(this, this.argsAsArray(arguments).slice(1));
         }
@@ -183,11 +257,11 @@ Proto.setSlots({
         throw new Error(this, ".perform(" + message + ") missing method")
 
         return this;
-    },
+    }
 
     _setterNameMap: {},
 
-    setterNameForSlot: function (name) {
+    setterNameForSlot (name) {
         // cache these as there aren't too many and it will avoid extra string operations
         var setter = this._setterNameMap[name]
         if (!setter) {
@@ -195,34 +269,34 @@ Proto.setSlots({
             this._setterNameMap[name] = setter
         }
         return setter
-    },
+    }
 
-    performSet: function (name, value) {
+    performSet (name, value) {
         return this.perform("set" + name.capitalized(), value);
-    },
+    }
 
-    performSets: function (slots) {
-        Object.eachSlot(slots,  (name, value) => {
+    performSets (slots) {
+        Object.eachSlot(slots, (name, value) => {
             this.perform("set" + name.capitalized(), value);
         });
 
         return this;
-    },
+    }
 
-    performGets: function (slots) {
+    performGets (slots) {
         var object = {};
         slots.forEach( (slot) => {
             object[slot] = this.perform(slot);
         });
 
         return object;
-    },
+    }
 
-    uniqueId: function () {
+    uniqueId () {
         return this._uniqueId
-    },
+    }
 
-    isKindOf: function (aProto) {
+    isKindOf (aProto) {
         if (this.__proto__) {
             if (this.__proto__ === aProto) {
                 return true
@@ -233,16 +307,16 @@ Proto.setSlots({
             }
         }
         return false
-    },
+    }
 
-    toString: function () {
+    toString () {
         return this.type() + "." + this.uniqueId();
-    },
+    }
 
 
     // --- ancestors ---
 
-    ancestors: function () {
+    ancestors () {
         var results = []
         var obj = this;
         while (obj.__proto__ && obj.type) {
@@ -253,13 +327,13 @@ Proto.setSlots({
             obj = obj.__proto__
         }
         return results
-    },
+    }
 
-    ancestorTypes: function () {
+    ancestorTypes () {
         return this.ancestors().map((obj) => { return obj.type() })
-    },
+    }
 
-    firstAncestorWithMatchingPostfixClass: function (aPostfix) {
+    firstAncestorWithMatchingPostfixClass (aPostfix) {
         // not a great name but this walks back the ancestors and tries to find an
         // existing class with the same name as the ancestor + the given postfix
         // useful for things like type + "View" or type + "RowView", etc
@@ -276,7 +350,7 @@ Proto.setSlots({
         }
         */
         return result
-    },
+    }
 
 });
 

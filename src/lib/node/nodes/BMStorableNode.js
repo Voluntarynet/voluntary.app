@@ -4,7 +4,7 @@ window.BMStorableNode = BMNode.extend().newSlots({
     type: "BMStorableNode",
 
     pid: null,
-	shouldStore: false,
+    shouldStore: false,
 
     storedSlots: null, // dict
     
@@ -73,9 +73,9 @@ window.BMStorableNode = BMNode.extend().newSlots({
     },
     
     pid: function() {
-		if (!this.shouldStore()) {
-			throw new Error("attempt to prepare to store a node of type '" + this.type() + "' which has shouldStore == false, use this.setShouldStore(true)")
-		}
+        if (!this.shouldStore()) {
+            throw new Error("attempt to prepare to store a node of type '" + this.type() + "' which has shouldStore == false, use this.setShouldStore(true)")
+        }
 		
         if (!this._pid) {
             this.assignPid()
@@ -83,15 +83,15 @@ window.BMStorableNode = BMNode.extend().newSlots({
         return this._pid
     },
   
-/*  
+    /*  
     typeId: function() {
         return this.pid() // is this a good idea?
     },
 */
 
-	// -------------------------------------------
+    // -------------------------------------------
 
-	// --- add / remove stored slots ---
+    // --- add / remove stored slots ---
     
     initStoredSubnodeSlotWithProto: function(name, proto) {
         var obj = proto.clone()
@@ -110,7 +110,7 @@ window.BMStorableNode = BMNode.extend().newSlots({
     
     addStoredSlot: function(slotName) {
         this.storedSlots()[slotName] = true
-		// Note: BMStorableNode hooks didUpdateSlot() to call scheduleSyncToStore on updates. 
+        // Note: BMStorableNode hooks didUpdateSlot() to call scheduleSyncToStore on updates. 
         return this
     },
     
@@ -119,7 +119,7 @@ window.BMStorableNode = BMNode.extend().newSlots({
         return this
     },
 
-	// --- get storage dictionary ---
+    // --- get storage dictionary ---
 
     nodeDictForProperties: function () {
         var dict = { }
@@ -127,18 +127,18 @@ window.BMStorableNode = BMNode.extend().newSlots({
  
         //console.log(this.type() + " storedSlots = " + JSON.stringify(this.storedSlots()))
        
-		var slots = this.storedSlots()
-		Object.keys(slots).forEach((k) => {
+        var slots = this.storedSlots()
+        Object.keys(slots).forEach((k) => {
             var v = null
             if (k.beginsWith("_")) {
                 v = this[k]
             } else {
-				try {
+                try {
 	                v = this[k].apply(this)
-				} catch(error) {
-					console.warn("WARNING: " + this.type() + "." + k + "() missing method")
-					//throw error
-				}
+                } catch(error) {
+                    console.warn("WARNING: " + this.type() + "." + k + "() missing method")
+                    //throw error
+                }
             }
            
             dict[k] = NodeStore.shared().refValueIfNeeded(v)
@@ -157,17 +157,17 @@ window.BMStorableNode = BMNode.extend().newSlots({
         return dict
     },
 
-	// --- set storage dictionary ---
+    // --- set storage dictionary ---
    
     setNodeDict: function (aDict) {   
 	    //BMNode.setNodeDict.apply(this, [aDict])
-		// TODO: wrap in try {}
+        // TODO: wrap in try {}
         this.setIsUnserializing(true) 
         this.setNodeDictForProperties(aDict)
         if (!this.doesLazyLoadChildren()) {
             this.setNodeDictForChildren(aDict)
         }
-		this.didLoadFromStore()
+        this.didLoadFromStore()
         this.setIsUnserializing(false) 
         return this
     },
@@ -182,11 +182,11 @@ window.BMStorableNode = BMNode.extend().newSlots({
     },
     
     setNodeDictForProperties: function (aDict) {
-		var hadMissingSetter = false 
-		Object.keys(aDict).forEach((k) => {
+        var hadMissingSetter = false 
+        Object.keys(aDict).forEach((k) => {
             if (k != "children" && k != "type") {
                 var v = aDict[k]
-                 v = NodeStore.shared().unrefValueIfNeeded(v)
+                v = NodeStore.shared().unrefValueIfNeeded(v)
                 
                 if (k.beginsWith("_")) {
                     this[k] = v
@@ -196,16 +196,16 @@ window.BMStorableNode = BMNode.extend().newSlots({
                         this[setter].apply(this, [v])
                     } else {
                         console.error("WARNING: " + this.type() + "." + setter + "(", v , ") not found - dict is: " , aDict) //, JSON.stringify(aDict))
-						hadMissingSetter = true
-						//throw error
+                        hadMissingSetter = true
+                        //throw error
                     }
                 }
             }
         })
    
-		if (hadMissingSetter) {
-			this.scheduleSyncToStore()
-		}
+        if (hadMissingSetter) {
+            this.scheduleSyncToStore()
+        }
 		
         return this
     },
@@ -223,72 +223,72 @@ window.BMStorableNode = BMNode.extend().newSlots({
         return this
     },
     
-	// --- udpates ---
+    // --- udpates ---
 	
     scheduleLoadFinalize: function() {
         SyncScheduler.scheduleTargetAndMethod(this, "loadFinalize")
     },
     
     
-	loadFinalize: function() {
+    loadFinalize: function() {
         // called after all objects loaded within this event cycle
 	
-	},
+    },
 	
     didLoadFromStore: function() {
-		//console.log(this.type() + " didLoadFromStore in BMStorableNode")
+        //console.log(this.type() + " didLoadFromStore in BMStorableNode")
         // chance to finish any unserializing this particular instance
-		// also see: loadFinalize
+        // also see: loadFinalize
 		
-		this.checkForStoredSlotsWithoutPids()
+        this.checkForStoredSlotsWithoutPids()
     },
 
-	checkForStoredSlotsWithoutPids: function() {
-		// make sure all stored slots have pids after load
-		// if not, we've just added them and they'll need to be saved
-		// as well as this object itself
+    checkForStoredSlotsWithoutPids: function() {
+        // make sure all stored slots have pids after load
+        // if not, we've just added them and they'll need to be saved
+        // as well as this object itself
 
-		Object.keys(this._storedSlots).forEach((slotName) => {
-			var obj = this[slotName].apply(this)
-			var isRef = obj != null && obj.typeId
-			if (isRef && !obj.hasPid()) {
-				obj.pid()
-				NodeStore.shared().addDirtyObject(this)
-				//console.log(">>>>>>>>>>>>>>>>> loadFinalize assigned pid ", obj.pid())
-			}
-		})		
-	},
+        Object.keys(this._storedSlots).forEach((slotName) => {
+            var obj = this[slotName].apply(this)
+            var isRef = obj != null && obj.typeId
+            if (isRef && !obj.hasPid()) {
+                obj.pid()
+                NodeStore.shared().addDirtyObject(this)
+                //console.log(">>>>>>>>>>>>>>>>> loadFinalize assigned pid ", obj.pid())
+            }
+        })		
+    },
 
-	scheduleSyncToStore: function() {
-		//console.log(this.typeId() + " scheduleSyncToStore this.hasPid() = ", this.hasPid())
+    scheduleSyncToStore: function() {
+        //console.log(this.typeId() + " scheduleSyncToStore this.hasPid() = ", this.hasPid())
 		
-		if (this.hasPid() && this.shouldStore() && !this.isUnserializing()) {
+        if (this.hasPid() && this.shouldStore() && !this.isUnserializing()) {
         	NodeStore.shared().addDirtyObject(this)
-			//this._refPids = null
-		}
-		return this
-	},
+            //this._refPids = null
+        }
+        return this
+    },
 	
-	didUpdateSlot: function(slotName, oldValue, newValue) {
+    didUpdateSlot: function(slotName, oldValue, newValue) {
 	    if (!this._storedSlots) {
 	        // looks like StorableNode hasn't initialized yet
 	        return this
 	    }
 	    
-		// check so we don't mark dirty while loading
-		// and use private ivars directly for performance
-		if (slotName in this._storedSlots) { 
-			this.scheduleSyncToStore()
-		}
+        // check so we don't mark dirty while loading
+        // and use private ivars directly for performance
+        if (slotName in this._storedSlots) { 
+            this.scheduleSyncToStore()
+        }
 		
-		if (newValue != null && this.subnodes().includes(oldValue)) { // TODO: add a switch for this feature
-			newValue.setParentNode(this)
-			this.subnodes().replaceOccurancesOfWith(oldValue, newValue)
-			//console.log(this.type() + " this.subnodes().replaceOccurancesOfWith(", oldValue, ",", newValue, ")")
-		}
-	},
+        if (newValue != null && this.subnodes().includes(oldValue)) { // TODO: add a switch for this feature
+            newValue.setParentNode(this)
+            this.subnodes().replaceOccurancesOfWith(oldValue, newValue)
+            //console.log(this.type() + " this.subnodes().replaceOccurancesOfWith(", oldValue, ",", newValue, ")")
+        }
+    },
 	
-	// StorableNode
+    // StorableNode
 	
     subnodePids: function() {
         var pids = []
@@ -323,12 +323,12 @@ window.BMStorableNode = BMNode.extend().newSlots({
 
         if (nodeDict) {
             // property pids
-			Object.keys(nodeDict).forEach((k) => {
-                 var v = nodeDict[k]
-                 var childPid = this.pidIfRef(v)
-                 if (childPid) {
-                     pids.push(childPid);
-                 }
+            Object.keys(nodeDict).forEach((k) => {
+                var v = nodeDict[k]
+                var childPid = this.pidIfRef(v)
+                if (childPid) {
+                    pids.push(childPid);
+                }
             })
             
             // child pids
@@ -347,7 +347,7 @@ window.BMStorableNode = BMNode.extend().newSlots({
 
         if (nodeDict) {
             // property pids
-			Object.keys(nodeDict).forEach((k) => {
+            Object.keys(nodeDict).forEach((k) => {
                 var v = nodeDict[k]
                 var childPid = NodeStore.shared().pidIfRef(v)
                 if (childPid) {

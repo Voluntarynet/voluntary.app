@@ -32,9 +32,8 @@ ideal.Map = Proto.clone().newSlots({
     },
 
     values: function () {
-        var self = this;
-        return this.keys().map(function (k) {
-            return self.jsMap()[k];
+        return this.keys().map( (k) => {
+            return this.jsMap()[k];
         });
     },
 
@@ -65,16 +64,14 @@ ideal.Map = Proto.clone().newSlots({
     },
 
     valuesSortedByKeys: function () {
-        var self = this;
-        return this.keys().sort().map(function (k) {
-            return self.at(k);
+        return this.keys().sort().map( (k) => {
+            return this.at(k);
         });
     },
 
     forEach: function (fn) {
-        var self = this;
-        this.keys().forEach(function (k) {
-            fn(k, self._jsMap[k]);
+        this.keys().forEach( (k) => {
+            fn(k, this._jsMap[k]);
         });
 
         return this;
@@ -116,15 +113,15 @@ ideal.Map = Proto.clone().newSlots({
     },
 
     atDeepKey: function (k) {
-        return Object_atDeepKey(this.jsMap(), k);
+        return Object.atDeepKey(this.jsMap(), k);
     },
 
     allAtDeepKey: function (k) {
-        return Object_allAtDeepKey(this.jsMap(), k);
+        return Object.allAtDeepKey(this.jsMap(), k);
     },
 
     atPath: function (pathList) {
-        return Object_atPath(this.jsMap(), pathList);
+        return Object.atPath(this.jsMap(), pathList);
     },
 
     merged: function (aMap) {
@@ -158,11 +155,10 @@ ideal.Map = Proto.clone().newSlots({
     },
 
     percentDecode: function () {
-        var self = this;
-        this.forEach(function (k, v) {
-            self.atPut(k, decodeURIComponent(v));
+        this.forEach( (k, v) => {
+            this.atPut(k, decodeURIComponent(v));
         });
-        return self;
+        return this;
     },
 
     queryString: function () {

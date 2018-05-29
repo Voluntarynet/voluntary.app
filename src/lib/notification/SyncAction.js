@@ -9,6 +9,8 @@ window.SyncAction = ideal.Proto.extend().newSlots({
 }).setSlots({
 	
     trySend: function() {
+        this.send()
+        /*
         try {
             this.send()
         } catch(error) {
@@ -16,6 +18,7 @@ window.SyncAction = ideal.Proto.extend().newSlots({
             StackTrace.showError(error)
             return false
         }
+        */
         return true
     },
 	

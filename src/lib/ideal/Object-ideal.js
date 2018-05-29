@@ -1,14 +1,15 @@
 "use strict"
 
+/*
+    Object isn't a prototype or class, it's more like a namespace to organize
+    some functions that take an object as an argument. JS ugliness.
+*/
+
 Object.clone = function (obj) {
     var Proto_constructor = new Function;
     Proto_constructor.prototype = obj;
     return new Proto_constructor;
-},
-
-Object.shallowCopy = function (obj) {
-    return Object.shallowCopyTo(obj, {});
-},
+}
 
 Object.shallowCopyTo = function (fromObj, toObj) {
     Object.eachSlot(fromObj, function (name) {
@@ -16,13 +17,17 @@ Object.shallowCopyTo = function (fromObj, toObj) {
     });
 
     return toObj;
-},
+}
+
+Object.shallowCopy = function (obj) {
+    return Object.shallowCopyTo(obj, {});
+}
 
 Object.eachSlot = function (obj, fn) {
     Object.getOwnPropertyNames(obj).forEach(function (name) {
         fn(name, obj[name]);
     });
-},
+}
 
 Object.lookupPath = function (obj, path) {
     path = path.split(".");
@@ -65,11 +70,10 @@ Object.pop = function (obj) {
 // --- forwardErrors ---------------------------
 
 Function.prototype.forwardErrors = function (fn) {
-    var self = this;
-    return function () {
+    return  () => {
         var e = arguments[0];
         if (e) {
-            self(e);
+            this(e);
         } else {
             fn.apply(null, Array.prototype.slice.call(arguments, 1));
         }
@@ -78,7 +82,7 @@ Function.prototype.forwardErrors = function (fn) {
 
 // --- deep keys ---
 
-function Object_atDeepKey(obj, key) {
+Object.atDeepKey = function(obj, key) {
     if (typeof(obj) !== "object" || (Object.getPrototypeOf(obj) != Object.prototype)) {
         return null;
     }
@@ -89,7 +93,7 @@ function Object_atDeepKey(obj, key) {
                 return obj[k];
             }
             else {
-                var v = Object_atDeepKey(obj[k], key);
+                var v = Object.atDeepKey(obj[k], key);
                 if (v !== null) {
                     return v;
                 }
@@ -100,7 +104,7 @@ function Object_atDeepKey(obj, key) {
     return null;
 }
 
-function Object_allAtDeepKey(obj, key) {
+Object.allAtDeepKey = function(obj, key) {
     if (typeof(obj) !== "object" || (Object.getPrototypeOf(obj) != Object.prototype)) {
         return [];
     }
@@ -113,7 +117,7 @@ function Object_allAtDeepKey(obj, key) {
                 objs.append(obj[k]);
             }
             else {
-                objs.appendItems(Object_allAtDeepKey(obj[k], key));
+                objs.appendItems(Object.allAtDeepKey(obj[k], key));
             }
         }
     }
@@ -121,7 +125,7 @@ function Object_allAtDeepKey(obj, key) {
     return objs;
 }
 
-function Object_atPath(obj, pathList) {
+Object.atPath = function(obj, pathList) {
     if (typeof (pathList) == "string") {
         pathList = pathList.split("/");
     }
@@ -134,7 +138,7 @@ function Object_atPath(obj, pathList) {
     var pathList = pathList.rest();
 
     if (pathList.length) {
-        return Object_atPath(obj[k], pathList);
+        return Object.atPath(obj[k], pathList);
     }
     else if (k == "") {
         return obj;
@@ -144,14 +148,14 @@ function Object_atPath(obj, pathList) {
     }
 }
 
-Object.slotNames = function(self) {
-    return Object.keys(self);
+Object.slotNames = function(obj) {
+    return Object.keys(obj);
 }
 
-Object.slotValues = function(self) {
+Object.slotValues = function(obj) {
     var values = [];
     for (var k in this) {
-        if (self.hasOwnProperty(k)) {
+        if (obj.hasOwnProperty(k)) {
             values.push(this[k]);
         }
     }

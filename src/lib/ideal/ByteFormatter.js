@@ -20,14 +20,56 @@
 
 */
 
-/*
-class ByteFormatterNew extends BaseObject {
-    constructor() {
-        super()
+class ByteFormatter extends ProtoClass {
+    init() {
+        super.init()
+        this.newSlots({
+            type: "ByteFormatter",
+            value: 0,
+            usePostfix: true,
+            useSpace: false,
+            useLongNames: false,
+            orderNamesShort: ["bytes", "k", "M", "G", "T", "P", "E", "Z", "Y"],
+            orderNamesLong: [
+                "bytes", 
+                "kilobytes", 
+                "megabytes", 
+                "gigabytes", 
+                "terabytes", 
+                "petabytes", 
+                "exabytes", 
+                "zettabytes", 
+                "yottabytes"],
+        })
+    }
+
+    formattedValue() {
+        var b = Math.floor(this.value());
+        var postfix = this.usePostfix() ? "B" : "";
+        var space = this.useSpace() ? " " : "";
+		
+        var orderNames = this.useLongNames() ? this.orderNamesLong() : this.orderNamesShort();
+        var order = Math.floor(Math.log10(b)/3)
+        order = Math.min(order, orderNames.length - 1)
+        var orderName = orderNames[order]
+
+        if (order == 0 || this.useLongNames()) {
+            space = " "
+            postfix = ""
+        }
+
+        var v = Math.floor(b / Math.pow(10, order))
+		
+        // remove plural if v == 1
+        if (orderName[orderName.length-1] == "s" && v == 1) {
+            orderName = orderName.substring(0, orderName - 2)
+        }
+		
+        return v + space + orderName + postfix
     }
 }
-*/
 
+/*
 window.ByteFormatter = ideal.Proto.extend().newSlots({
     type: "ByteFormatter",
     value: 0,
@@ -74,3 +116,4 @@ window.ByteFormatter = ideal.Proto.extend().newSlots({
 
 })
 
+*/

@@ -14,10 +14,10 @@ String.prototype.toJsonDict = function() {
 }
 
 String.prototype.sha256String = function() {
-	var h1 = bitcore.crypto.Hash.sha256(this.toBuffer()).toString('hex')
-	//var h2 = bitcore.crypto.Hash.sha256(("" + this).toBuffer()).toString('hex')
-	//assert(h1 == h2)
-	return h1
+    var h1 = bitcore.crypto.Hash.sha256(this.toBuffer()).toString("hex")
+    //var h2 = bitcore.crypto.Hash.sha256(("" + this).toBuffer()).toString('hex')
+    //assert(h1 == h2)
+    return h1
 /*
 	var s = "" + this
 	console.log("String.prototype.sha256String this = " + typeof(s) + " '" + s + "'")

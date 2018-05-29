@@ -69,6 +69,10 @@ window.App = BaseApp.extend().newSlots({
         var archive = BMArchiveNode.clone()
         this.about().addSubnode(archive)
 
+        // protos
+        var protoNode = BMProtoNode.clone()
+        this.about().addSubnode(protoNode)
+
         this.appDidInit()
 
         try {

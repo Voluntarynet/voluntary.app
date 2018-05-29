@@ -15,7 +15,6 @@ Object.shallowCopyTo = function (fromObj, toObj) {
     Object.eachSlot(fromObj, function (name) {
         toObj[name] = fromObj[name];
     });
-
     return toObj;
 }
 
@@ -42,8 +41,7 @@ Object.perform = function (obj, name) {
     if (obj !== undefined && obj !== null && obj[name] && typeof (obj[name]) == "function") {
         var args = Array.prototype.slice.call(arguments).slice(2);
         return obj[name].apply(obj, args);
-    }
-    else {
+    } else {
         return obj;
     }
 }
@@ -63,21 +61,6 @@ Object.pop = function (obj) {
     var v = obj[k];
     delete obj[k];
     return v;
-}
-
-
-
-// --- forwardErrors ---------------------------
-
-Function.prototype.forwardErrors = function (fn) {
-    return  () => {
-        var e = arguments[0];
-        if (e) {
-            this(e);
-        } else {
-            fn.apply(null, Array.prototype.slice.call(arguments, 1));
-        }
-    }
 }
 
 // --- deep keys ---
@@ -139,13 +122,13 @@ Object.atPath = function(obj, pathList) {
 
     if (pathList.length) {
         return Object.atPath(obj[k], pathList);
-    }
-    else if (k == "") {
+    } 
+    
+    if (k == "") {
         return obj;
     }
-    else {
-        return Array.wrap(obj[k]).first();
-    }
+
+    return Array.wrap(obj[k]).first();
 }
 
 Object.slotNames = function(obj) {
@@ -163,17 +146,29 @@ Object.slotValues = function(obj) {
 }
 
 
-// Objective-C like associations
+// --- Objective-C like associations ---
 
 Object._globalAssocationWeakMap = new WeakMap()
 
-Object.associationDict = function(self) {
+Object.associationDict = function(obj) {
     var map = Object._globalAssocationWeakMap
     
-    if (!map.has(self)) {
-        map.set(self, {})
+    if (!map.has(obj)) {
+        map.set(obj, {})
     }
     
-    return map.get(self)
+    return map.get(obj)
 }
 
+// --- forwardErrors ---------------------------
+
+Function.prototype.forwardErrors = function (fn) {
+    return  () => {
+        var e = arguments[0];
+        if (e) {
+            this(e);
+        } else {
+            fn.apply(null, Array.prototype.slice.call(arguments, 1));
+        }
+    }
+}

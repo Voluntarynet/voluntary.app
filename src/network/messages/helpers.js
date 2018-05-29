@@ -1,12 +1,12 @@
 "use strict"
 
 
-Object.toJsonStableString = function(self) {
-    return JSON.stableStringify(self, null, 2)
+Object.toJsonStableString = function(obj) {
+    return JSON.stableStringify(obj, null, 2)
 }
 
-Object.toStableHash = function(self) {
-    return Object.toJsonStableString(self).sha256String();
+Object.toStableHash = function(obj) {
+    return Object.toJsonStableString(obj).sha256String();
 }
 
 String.prototype.toJsonDict = function() {

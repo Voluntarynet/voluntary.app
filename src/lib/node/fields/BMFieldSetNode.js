@@ -33,44 +33,44 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
     init: function () {
         BMStorableNode.init.apply(this)
         this.setNodeMinWidth(500)
-		//this.setViewClassName("BrowserFieldsColumn")
-		this.setShouldStoreSubnodes(false)
-		this.setNodeColumnBackgroundColor("white")
-		//this.setViewClassName(null)
-		//console.log("BMFieldSetNode viewClassName = '" + this.viewClassName() + "'")
+        //this.setViewClassName("BrowserFieldsColumn")
+        this.setShouldStoreSubnodes(false)
+        this.setNodeColumnBackgroundColor("white")
+        //this.setViewClassName(null)
+        //console.log("BMFieldSetNode viewClassName = '" + this.viewClassName() + "'")
     },        
     
-	didUpdateField: function(aField) {
+    didUpdateField: function(aField) {
 		
-	},
+    },
 	
     // --- fields ---
 
-	addStoredField: function(aField) {
-		var name = aField.valueMethod()
-		this.addStoredSlot(name)
-		if (!this[name]) {
-			this.newSlot(name, null)
-		}
-		this.justAddField(aField)
-		return aField	
-	},
+    addStoredField: function(aField) {
+        var name = aField.valueMethod()
+        this.addStoredSlot(name)
+        if (!this[name]) {
+            this.newSlot(name, null)
+        }
+        this.justAddField(aField)
+        return aField	
+    },
 	
-	justAddField: function(aField) {
-		this.addSubnode(aField)
-		return aField
-	},
+    justAddField: function(aField) {
+        this.addSubnode(aField)
+        return aField
+    },
 
     addFieldNamed: function(name) {	
         var field = BMField.clone().setKey(name)
-		field.setValueMethod(name)
-		this.addStoredField(field)
+        field.setValueMethod(name)
+        this.addStoredField(field)
         return field
     },
     
     fieldNamed: function(aName) {
         return this.subnodes().detect(function (subnode) { 
-			return subnode.valueMethod() == aName || subnode.key() == aName
+            return subnode.valueMethod() == aName || subnode.key() == aName
         })
     },
     
@@ -78,29 +78,29 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
         return this.fieldNamed(aName).value()
     },
 
-	copyFieldsFrom: function(sourceObj) {
-		this.subnodes().forEach((targetField) => {
-			var sourceField = sourceObj.fieldNamed(targetField.valueMethod())
-			targetField.setValue(sourceField.value())
-			//console.log("target field " + targetField.valueMethod() + " set to '" + targetField.value() + "'")
-		})
-		return this
-	},
+    copyFieldsFrom: function(sourceObj) {
+        this.subnodes().forEach((targetField) => {
+            var sourceField = sourceObj.fieldNamed(targetField.valueMethod())
+            targetField.setValue(sourceField.value())
+            //console.log("target field " + targetField.valueMethod() + " set to '" + targetField.value() + "'")
+        })
+        return this
+    },
     
     onDidEditNode: function() {
         this.scheduleSyncToStore()
         this.didUpdateNode()
     },
 
-	validate: function() {
-		return this.subnodes().detect((subnode) => { return !subnode.validate() }) != null
-	},
+    validate: function() {
+        return this.subnodes().detect((subnode) => { return !subnode.validate() }) != null
+    },
 
-	invalidSubnodes: function() {
-		return this.subnodes().detect((subnode) => { subnode.validate() })
-	},
+    invalidSubnodes: function() {
+        return this.subnodes().detect((subnode) => { subnode.validate() })
+    },
 
-	isValid: function() {
-		return this.validate() // could cache this later...
-	},
+    isValid: function() {
+        return this.validate() // could cache this later...
+    },
 })

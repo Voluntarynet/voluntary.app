@@ -6,10 +6,10 @@ window.ShelfFooterView = DivView.extend().newSlots({
     init: function () {
         DivView.init.apply(this)
         this.turnOffUserSelect()
-		this.setTransition("all 0.35s")
+        this.setTransition("all 0.35s")
 		
-		var itemSize = 80
-		this.setMinAndMaxWidth(itemSize)
+        var itemSize = 80
+        this.setMinAndMaxWidth(itemSize)
 
         return this
     },

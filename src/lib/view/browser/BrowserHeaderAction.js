@@ -20,7 +20,7 @@ window.BrowserHeaderAction = NodeView.extend().newSlots({
     },
     
     updateTooltip: function() {
-		this.setToolTip(this.action())
+        this.setToolTip(this.action())
 
         /*
 		if (this.target() && this.target().subnodeProto() && this.target().subnodeProto().nodeVisibleClassName()) {
@@ -31,14 +31,14 @@ window.BrowserHeaderAction = NodeView.extend().newSlots({
 		}
 		*/
 		
-		return this
+        return this
     },
 	
     updateImage: function () {
         this.setBackgroundImageUrlPath(this.pathForIconName(this.action()))
-		this.setBackgroundSizeWH(10, 10) // use "contain" instead?
-		this.setBackgroundPosition("center")
-		this.setOpacity(0.6)
+        this.setBackgroundSizeWH(10, 10) // use "contain" instead?
+        this.setBackgroundPosition("center")
+        this.setOpacity(0.6)
         return this
     },
 

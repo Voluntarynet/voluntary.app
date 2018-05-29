@@ -5,31 +5,31 @@ window.BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
 }).setSlots({
     init: function () {
         BMFieldRowView.init.apply(this)
-		this.keyView().setDivClassName("BMImageWellKeyField") //.setDisplay("none")
-		//this.valueView().setContentEditable(false)
+        this.keyView().setDivClassName("BMImageWellKeyField") //.setDisplay("none")
+        //this.valueView().setContentEditable(false)
         this.turnOffUserSelect()
         this.keyView().setTransition("all 0.3s")
         return this
     },
 
-	createValueView: function() {
-		return ImageWellView.clone()
-	},
+    createValueView: function() {
+        return ImageWellView.clone()
+    },
 	
-	imageWellView: function() {
-		return this.valueView()
-	},
+    imageWellView: function() {
+        return this.valueView()
+    },
 
     syncFromNode: function () {
         var field = this.node()
 
-		if (this.imageWellView()) {
-			//console.log("field = ", field.type())
-			this.keyView().setInnerHTML(field.key())
-			this.imageWellView().setImageDataURLs(field.value())
+        if (this.imageWellView()) {
+            //console.log("field = ", field.type())
+            this.keyView().setInnerHTML(field.key())
+            this.imageWellView().setImageDataURLs(field.value())
 		    this.updateKeyView()
 		    this.imageWellView().setMaxImageCount(this.node().maxImageCount())
-		}
+        }
 		
         return this
     },
@@ -37,20 +37,20 @@ window.BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
     syncToNode: function () {
         var field = this.node()
 		
-		//console.log(this.typeId() + ".syncToNode() imageDataURLs: ", this.dataUrls())
+        //console.log(this.typeId() + ".syncToNode() imageDataURLs: ", this.dataUrls())
 		
-		this.updateKeyView()
+        this.updateKeyView()
 		
-		if (field.valueIsEditable()) {
+        if (field.valueIsEditable()) {
         	field.setValue(this.imageWellView().imageDataURLs())
-		}
+        }
 		
         //NodeView.syncToNode.apply(this)
         return this
     },
 
     dataUrls: function() {
-		return this.imageWellView().imageDataURLs()
+        return this.imageWellView().imageDataURLs()
     },
     
     updateKeyView: function() {
@@ -62,12 +62,12 @@ window.BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
 	    
 	    this.keyView().setOpacity(opacity)
 	    
-		return this
+        return this
     },
     
     didUpdateImageWellView: function(anImageWell) {
         //console.log(this.typeId() + ".didUpdateImageWellView()")
-		this.scheduleSyncToNode() //this.setNeedsSyncToNode(true)
-		return this
+        this.scheduleSyncToNode() //this.setNeedsSyncToNode(true)
+        return this
     },
 })

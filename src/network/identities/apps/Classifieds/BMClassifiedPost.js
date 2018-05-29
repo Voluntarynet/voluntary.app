@@ -14,7 +14,7 @@ window.BMClassifiedPost = BMFieldSetNode.extend().newSlots({
     postDate: null,
     postPeriod: 30 * 24 * 60 * 60 * 1000, // 30 days in milliseconds
     uuid: null,
-   // imagesNode:null,
+    // imagesNode:null,
     imageDataURLs: null,
     hasSent: false,
 
@@ -22,14 +22,14 @@ window.BMClassifiedPost = BMFieldSetNode.extend().newSlots({
 	
     init: function () {
         BMFieldSetNode.init.apply(this)
-		this.setShouldStore(true)
+        this.setShouldStore(true)
         //this.setNodeMinWidth(550)
         
  		this.addStoredField(BMStampField.clone().setKey("stamp").setValueMethod("stamp")).setValueIsEditable(false)
         this.addFieldNamed("path").setKey("path").setValueIsEditable(false)
-		this.fieldNamed("path").visibleValue = function () {
-			return this.value().split("/").join(" / ")
-		}
+        this.fieldNamed("path").visibleValue = function () {
+            return this.value().split("/").join(" / ")
+        }
 		
         this.addFieldNamed("title").setKey("title").setValueIsEditable(true)
  		this.addStoredField(BMNumberField.clone().setKey("price").setValueMethod("price")).setValueIsEditable(true).setUnsetVisibleValue(0)
@@ -37,8 +37,8 @@ window.BMClassifiedPost = BMFieldSetNode.extend().newSlots({
 
  		this.addStoredField(BMOptionsField.clone().setKey("currency").setValueMethod("currency")).setValueIsEditable(true).setValidValuesMethod("currencySymbols").setNoteMethod("currencyName")
  		this.addStoredField(BMDateField.clone().setKey("sent date").setValueMethod("postDate")).setValueIsEditable(false).setUnsetVisibleValue("(not sent yet)")
-		this.addStoredField(BMTextAreaField.clone().setKey("description").setValueMethod("description")).setValueIsEditable(true)
-		this.addStoredField(BMImageWellField.clone().setKey("drop images here").setValueMethod("imageDataURLs")).setValueIsEditable(true)
+        this.addStoredField(BMTextAreaField.clone().setKey("description").setValueMethod("description")).setValueIsEditable(true)
+        this.addStoredField(BMImageWellField.clone().setKey("drop images here").setValueMethod("imageDataURLs")).setValueIsEditable(true)
 
         this.setTitle("Untitled")
         this.setPrice(0)
@@ -55,50 +55,50 @@ window.BMClassifiedPost = BMFieldSetNode.extend().newSlots({
         this._powUpdateObs = NotificationCenter.shared().newObservation().setName("powUpdate").setObserver(this)
 
         this.setActions(["send", "delete"])
-		this.validate()
+        this.validate()
     },
 
-	setParentNode: function(aNode) {
-		BMStorableNode.setParentNode.apply(this, [aNode])
-		this.syncDeleteAction()
-		return this
-	},
+    setParentNode: function(aNode) {
+        BMStorableNode.setParentNode.apply(this, [aNode])
+        this.syncDeleteAction()
+        return this
+    },
 	
-	syncDeleteAction: function() {
-		if (this.parentNode() && this.parentNode().isKindOf(Region)) {
-			this.removeAction("delete")
-		} else {
-			this.addAction("delete")
-		}
-		return this
-	},
+    syncDeleteAction: function() {
+        if (this.parentNode() && this.parentNode().isKindOf(Region)) {
+            this.removeAction("delete")
+        } else {
+            this.addAction("delete")
+        }
+        return this
+    },
 
-	didLoadFromStore: function() {
-		BMStorableNode.didLoadFromStore.apply(this)
-		this.setIsEditable(!this.hasSent())
-		this.validate()
-	},
+    didLoadFromStore: function() {
+        BMStorableNode.didLoadFromStore.apply(this)
+        this.setIsEditable(!this.hasSent())
+        this.validate()
+    },
 	
-	currencySymbols: function() {
-		/*
+    currencySymbols: function() {
+        /*
 		return Object.slotNames(CurrenciesDict).map(function (k) {
 			return k + " (" + CurrenciesDict[k].name + ")"
 		}).sort()
 		*/
-		return Object.slotNames(CurrenciesDict).sort()
-	},
+        return Object.slotNames(CurrenciesDict).sort()
+    },
 	
-	currencyName: function() {
-		if (this.currency()) {
-			var dict = CurrenciesDict[this.currency()]
-			if (dict) {
-				return dict.name
-			}
-		}
-		return null
-	},
+    currencyName: function() {
+        if (this.currency()) {
+            var dict = CurrenciesDict[this.currency()]
+            if (dict) {
+                return dict.name
+            }
+        }
+        return null
+    },
   
-/*  
+    /*  
     // images
     
     setEncodedImages: function(base64images) {
@@ -113,7 +113,7 @@ window.BMClassifiedPost = BMFieldSetNode.extend().newSlots({
 */
     
     subtitle: function() {
-		try {
+        try {
 	        if (this.powObj().isFinding()) {
 	            return "stamping... " + this.powObj().estimatedPercentageDone() + "%";
 	        } else if (!this.hasSent()) {
@@ -121,10 +121,10 @@ window.BMClassifiedPost = BMFieldSetNode.extend().newSlots({
 	        }
 	        return "expires in " + this.expireDescription()
 	        //return this.price() + " " + this.currency()
-		} catch(e) {
-			console.log(e)
-		}
-		return "error"
+        } catch(e) {
+            console.log(e)
+        }
+        return "error"
     },
     
     postDict: function () {
@@ -165,18 +165,18 @@ window.BMClassifiedPost = BMFieldSetNode.extend().newSlots({
         this.objMsg().send()
     },
 
-	choosePostDate: function() {
+    choosePostDate: function() {
         var currentTime = new Date().getTime()
         // add a random time interval of 5 mintues so a receiving node
         // can't guess that a sender is the source if the dt is very small
         var randomInterval = Math.random() * 1000 * 60 * 5; 
         this.setPostDate(currentTime + randomInterval)	
-		return this	
-	},
+        return this	
+    },
 	
     prepareToSend: function() {
         this.setUuid(GUID()) 
-		this.choosePostDate()
+        this.choosePostDate()
         this.objMsg().setData(this.postDict())
         return this
     },
@@ -270,11 +270,11 @@ window.BMClassifiedPost = BMFieldSetNode.extend().newSlots({
     },
     
     expirationDate: function() {
-         return new Date(this.postDate() + this.postPeriod())
+        return new Date(this.postDate() + this.postPeriod())
     },
     
     remainingPeriodInMs: function() {
-         return new Date().getTime() - this.postDate() + this.postPeriod()
+        return new Date().getTime() - this.postDate() + this.postPeriod()
     },
     
     postPeriodDayCount: function() {
@@ -357,10 +357,10 @@ window.BMClassifiedPost = BMFieldSetNode.extend().newSlots({
         return c;
     },
 
-	fillWithTestData: function() {
-		this.setTitle("".loremIpsum(2, 5))
-		this.setDescription("".loremIpsum(20, 200))
-		this.setPrice(Math.floor(Math.random()*100)/2)
-	},
+    fillWithTestData: function() {
+        this.setTitle("".loremIpsum(2, 5))
+        this.setDescription("".loremIpsum(20, 200))
+        this.setPrice(Math.floor(Math.random()*100)/2)
+    },
 
 })

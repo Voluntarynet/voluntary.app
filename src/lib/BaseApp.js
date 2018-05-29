@@ -17,19 +17,30 @@ window.BaseApp = BMNode.extend().newSlots({
     isDebugging: true,
     version: "0.0",
 }).setSlots({
+    
+    shared: function() {
+        return BaseApp._shared
+    },
+
+    setShared: function(anApp) {
+        assert (!BaseApp._shared)
+        BaseApp._shared = anApp
+        return this
+    },
+
     init: function () {
         BMNode.init.apply(this)
-		NodeStore.shared().asyncOpen( () => { this.didOpenStore() })
+        NodeStore.shared().asyncOpen( () => { this.didOpenStore() })
         this.clearAppLog()
     },
 
-	didOpenStore: function() {
+    didOpenStore: function() {
 	    SyncScheduler.scheduleTargetAndMethod(this, "setup")
-	},
+    },
     
-	appDidInit: function() {
-		// unused
-	},
+    appDidInit: function() {
+        // unused
+    },
 	
     setup: function() {
         //console.log("baseSetup")
@@ -47,14 +58,14 @@ window.BaseApp = BMNode.extend().newSlots({
         this.setBrowser(BrowserView.clone())
        
         this.browser().setNode(this)
-		this.browser().setOpacity(0)
-		this.browser().setTransition("all 0.5s")
+        this.browser().setOpacity(0)
+        this.browser().setTransition("all 0.5s")
                 
   
         //document.body.appendChild(this.browser().element())  
         this.rootView().addSubview(this.browser())
           
-		this.browser().scheduleSyncFromNode() // this.browser().syncFromNode()
+        this.browser().scheduleSyncFromNode() // this.browser().syncFromNode()
 
 	    SyncScheduler.scheduleTargetAndMethod(this, "fadeInBrowser")
 		
@@ -65,16 +76,16 @@ window.BaseApp = BMNode.extend().newSlots({
     setupShelf: function() {
 	    this.setShelf(ShelfView.clone())
         this.rootView().addSubview(this.shelf())
-		setTimeout(() => { 
+        setTimeout(() => { 
 		    this.shelf().appDidInit()
 		    this.shelf().unhide() 
-		}, 100)
+        }, 100)
         return this        
     },
 
-	fadeInBrowser: function() {
-		this.browser().setOpacity(1)
-	},
+    fadeInBrowser: function() {
+        this.browser().setOpacity(1)
+    },
     
     shared: function() {        
         if (!this._shared) {
@@ -89,11 +100,11 @@ window.BaseApp = BMNode.extend().newSlots({
 
     setName: function(aString) {
         this._name = aString
-		WebBrowserWindow.setTitle(this.name())
+        WebBrowserWindow.setTitle(this.name())
         return this
     },
     
-	// --- app log ---
+    // --- app log ---
 	
     clearAppLog: function() {
         //this.appLogFile().setContents("")

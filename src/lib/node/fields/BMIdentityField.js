@@ -6,38 +6,38 @@ window.BMIdentityField = BMField.extend().newSlots({
 }).setSlots({
     init: function () {
         BMField.init.apply(this)
-		//this.setViewClassName("BMFieldRowView")
-		this.setKeyIsEditable(false)
-		this.setValueIsEditable(false)
+        //this.setViewClassName("BMFieldRowView")
+        this.setKeyIsEditable(false)
+        this.setValueIsEditable(false)
     },
 
-	validate: function() {
-		if (!bitcore.PublicKey.isValid(this.value())) {
-			this.setValueError("invalid address")
-		} else {
-			this.setValueError(null)
-		}
-	},
+    validate: function() {
+        if (!bitcore.PublicKey.isValid(this.value())) {
+            this.setValueError("invalid address")
+        } else {
+            this.setValueError(null)
+        }
+    },
 	
-	setValue: function(inValue) { // called by View on edit
+    setValue: function(inValue) { // called by View on edit
 	    //console.log("inValue = '" + inValue + "'")
 	    var newValue = inValue.strip()
 	    
         var parts = newValue.split(" ").concat(newValue.split("\n")).concat(newValue.split(","))
 	    //console.log("parts = '", parts)
-		var validPart = parts.detect((part) => { return bitcore.PublicKey.isValid(part) })
-		if (validPart) {
-			newValue = validPart
-		}
+        var validPart = parts.detect((part) => { return bitcore.PublicKey.isValid(part) })
+        if (validPart) {
+            newValue = validPart
+        }
 
         if (inValue != newValue) {
-			this.scheduleSyncToView() 
+            this.scheduleSyncToView() 
         }
         
 	    //console.log("newValue = '" + newValue + "'")
-		BMField.setValue.apply(this, [newValue])
+        BMField.setValue.apply(this, [newValue])
 		
-		return this
-	},
+        return this
+    },
 
 })

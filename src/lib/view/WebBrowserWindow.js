@@ -14,43 +14,43 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
         return this
     },
 
-	setup: function() {
-		this.preventDrop()
-		//this.debugFocus()
-	},
+    setup: function() {
+        this.preventDrop()
+        //this.debugFocus()
+    },
     
- /*  
+    /*  
     win: function() {
         if (!this._win) {
-            const remote = require('electron').remote;
+            const remote = require("electron").remote;
             this._win = remote.getCurrentWindow()
         }
         return this._win
     },
 */
 
-	// prevent window level drop and only allow drop on elements that can handle it
+    // prevent window level drop and only allow drop on elements that can handle it
 
-	dropCheck : function(e) {
-		// stopEventIfNotDroppable
+    dropCheck : function(e) {
+        // stopEventIfNotDroppable
 		
-		if (e.target.ondrop == null) {
-			e.preventDefault();
-			e.dataTransfer.effectAllowed = "none";
-			e.dataTransfer.dropEffect = "none";	
-		}
+        if (e.target.ondrop == null) {
+            e.preventDefault();
+            e.dataTransfer.effectAllowed = "none";
+            e.dataTransfer.dropEffect = "none";	
+        }
 		
-		return this
-	},
+        return this
+    },
 
-	preventDrop: function() {
-		window.addEventListener("dragenter", (e) => { this.dropCheck(e) }, false);
-		window.addEventListener("dragover",  (e) => { this.dropCheck(e) }, false);
-		window.addEventListener("drop",      (e) => { this.dropCheck(e) }, false);
-		return this
-	},
+    preventDrop: function() {
+        window.addEventListener("dragenter", (e) => { this.dropCheck(e) }, false);
+        window.addEventListener("dragover",  (e) => { this.dropCheck(e) }, false);
+        window.addEventListener("drop",      (e) => { this.dropCheck(e) }, false);
+        return this
+    },
 	
-	// attributes
+    // attributes
     
     width: function () {
         return window.innerWidth
@@ -66,12 +66,12 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     
     setWidth: function (w) {
         console.warn("warning: WebBrowserWindow.setWidth() unavailable in browser")
-		return this
+        return this
     },
     
     setHeight: function (h) {
         console.warn("warning: WebBrowserWindow.setHeight() unavailable in browser")
-		return this
+        return this
     },
     
     show: function() {
@@ -101,14 +101,14 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
         return !(match === null)
     },
 
-	isTouchDevice: function() {
-		// via https://stackoverflow.com/questions/4817029/whats-the-best-way-to-detect-a-touch-screen-device-using-javascript
-		var result = 'ontouchstart' in window        // works on most browsers 
+    isTouchDevice: function() {
+        // via https://stackoverflow.com/questions/4817029/whats-the-best-way-to-detect-a-touch-screen-device-using-javascript
+        var result = "ontouchstart" in window        // works on most browsers 
 			|| navigator.maxTouchPoints;       // works on IE10/11 and Surface	
-		if (result === 0) { result = false; }		
-		//console.log("WebBrowserWindow.isTouchDevice() = ", result)
-		return result
-	},
+        if (result === 0) { result = false; }		
+        //console.log("WebBrowserWindow.isTouchDevice() = ", result)
+        return result
+    },
 
     urlHash: function() {
         return decodeURI(window.location.hash.substr(1)) // return string after # character
@@ -130,20 +130,20 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
         return dict
     },
 
-	urlHostname: function() {
-		var parser = document.createElement('a')
-		parser.href = window.location.href
-		var name = parser.hostname
-		if (!name) {
+    urlHostname: function() {
+        var parser = document.createElement("a")
+        parser.href = window.location.href
+        var name = parser.hostname
+        if (!name) {
 		    name = ""
-		}
-		return name
-	},
+        }
+        return name
+    },
 	
-	setTitle: function(aName) {
-		document.title = aName
+    setTitle: function(aName) {
+        document.title = aName
         return this
-	},
+    },
 	
     debugFocus: function() {
         var focusFunc = (event) => { 
@@ -153,8 +153,8 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
         }
         //var blurFunc = (e) => { console.log("window blurred element ", e._divView ? e._divView.typeId() : e)}
         
-        window.addEventListener ? window.addEventListener('focus', focusFunc, true) : window.attachEvent('onfocusout', focusFunc);  
-        //window.addEventListener ? window.addEventListener('blur', blurFunc, true) : window.attachEvent('onblur', blurFunc);
+        window.addEventListener ? window.addEventListener("focus", focusFunc, true) : window.attachEvent("onfocusout", focusFunc);  
+        //window.addEventListener ? window.addEventListener("blur', blurFunc, true) : window.attachEvent("onblur", blurFunc);
         return this
     },
     
@@ -166,7 +166,7 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
         return null
     },
 	
-	/*
+    /*
     // firstResponder/activeElement - focus/blur
 
     lastActiveElement: document.activeElement,
@@ -175,8 +175,8 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
         var focusFunc = () => { this.onElementFocus() }
         var blurFunc = () => { this.onElementBlur() }
         
-        window.addEventListener ? window.addEventListener('focus', focusFunc, true) : window.attachEvent('onfocusout', focusFunc);  
-        window.addEventListener ? window.addEventListener('blur', blurFunc, true) : window.attachEvent('onblur', blurFunc);
+        window.addEventListener ? window.addEventListener("focus", focusFunc, true) : window.attachEvent("onfocusout", focusFunc);  
+        window.addEventListener ? window.addEventListener("blur", blurFunc, true) : window.attachEvent("onblur", blurFunc);
         return this
     },
     

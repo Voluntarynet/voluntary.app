@@ -8,18 +8,18 @@ window.ShelfItemGroupView = NodeView.extend().newSlots({
     init: function () {
         NodeView.init.apply(this)
         this.turnOffUserSelect()
-		this.setTransition("all 0.35s")
+        this.setTransition("all 0.35s")
 		
-		var itemSize = 80
-		this.setMinAndMaxWidth(itemSize)
-		this.setOverrideSubviewProto(ShelfItemView)
+        var itemSize = 80
+        this.setMinAndMaxWidth(itemSize)
+        this.setOverrideSubviewProto(ShelfItemView)
         return this
     },
 
     visibleSubnodes: function() {
         return this.node().shelfSubnodes() 
     },
-/*
+    /*
     newSubviewForSubnode: function(aSubnode) {
         var newSubview = NodeView.newSubviewForSubnode(aSubnode)
         newSubview.setOverrideSubviewProto(ShelfItemView)
@@ -27,11 +27,11 @@ window.ShelfItemGroupView = NodeView.extend().newSlots({
     },
 */
     
-	syncFromNode: function() {
-		NodeView.syncFromNode.apply(this)
+    syncFromNode: function() {
+        NodeView.syncFromNode.apply(this)
         this.showCompaction()
-		return this
-	},
+        return this
+    },
 	
 
     
@@ -44,7 +44,7 @@ window.ShelfItemGroupView = NodeView.extend().newSlots({
     didClickItem: function(clickedItem) {
         //console.log(this.typeId() + ".didClickItem(" + clickedItem.typeId() + ")")
         
-		//this.scrollView().performOnSubviewsExcept("unselect", clickedItem)
+        //this.scrollView().performOnSubviewsExcept("unselect", clickedItem)
 
         this.items().forEach((item) => {
             if (item != clickedItem) {
@@ -86,7 +86,7 @@ window.ShelfItemGroupView = NodeView.extend().newSlots({
         return this
     },
 
-	// --- selection ---
+    // --- selection ---
 
     selectItems: function() {
         this.items().forEach((item) => { item.select() })
@@ -98,15 +98,15 @@ window.ShelfItemGroupView = NodeView.extend().newSlots({
         return this
     },
 
-	showCompaction: function() {
-		if (this.isCompacted()) {
+    showCompaction: function() {
+        if (this.isCompacted()) {
         	this.setMinAndMaxHeight(this.firstItemHeight())
-		} else {
+        } else {
             var newHeight = this.sumOfSubviewHeights()
             this.setMinAndMaxHeight(newHeight)			
-		}
-		return this
-	},
+        }
+        return this
+    },
     
     compact: function() {
         if (!this._isCompacted) {
@@ -117,7 +117,7 @@ window.ShelfItemGroupView = NodeView.extend().newSlots({
             if (!this.isAlwaysSelected()) {
                 this.unselectItems()
             }
-           // console.log(this.typeId() + ".compact()")
+            // console.log(this.typeId() + ".compact()")
         }
         return this
     },

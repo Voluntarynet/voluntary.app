@@ -2,27 +2,27 @@
 
 window.BoolView = DivStyledView.extend().newSlots({
     type: "BoolView",
-	isSelected: false,
-	selectedColor: null,
-	unselectedColor: null,
-	doesClearOnReturn: false,
-	doesHoldFocusOnReturn: false,
-	value: false,
-	isEditable: false,
+    isSelected: false,
+    selectedColor: null,
+    unselectedColor: null,
+    doesClearOnReturn: false,
+    doesHoldFocusOnReturn: false,
+    value: false,
+    isEditable: false,
 }).setSlots({
     init: function () {
         DivView.init.apply(this)
-		this.setDisplay("inline-block")
+        this.setDisplay("inline-block")
         this.turnOffUserSelect()
-		this.setWhiteSpace("nowrap")
-		this.setOverflow("hidden")
-		this.setDisplay("inline-block")
-		this.setTextOverflow("ellipsis")
-		this.setSpellCheck(false)
-		this.setContentEditable(false)
+        this.setWhiteSpace("nowrap")
+        this.setOverflow("hidden")
+        this.setDisplay("inline-block")
+        this.setTextOverflow("ellipsis")
+        this.setSpellCheck(false)
+        this.setContentEditable(false)
 		
-		//this.setUnfocusOnEnterKey(true)
-		//this.setIsRegisteredForKeyboard(true) // gets set by setContentEditable()
+        //this.setUnfocusOnEnterKey(true)
+        //this.setIsRegisteredForKeyboard(true) // gets set by setContentEditable()
         return this
     },
     
@@ -66,28 +66,28 @@ window.BoolView = DivStyledView.extend().newSlots({
         return this
     },
     
-	// ------------------
+    // ------------------
     
-	setValue: function(v) {
+    setValue: function(v) {
 	    assert(typeof(v) == "boolean")
 	    this._value = v
 
-		//this.updateUnicode()
+        //this.updateUnicode()
         this.updateIcon()
-		return this
-	},	
+        return this
+    },	
 	
-	value: function() {
+    value: function() {
 	    return this._value
-	},
+    },
 	
-	isChecked: function() {
+    isChecked: function() {
 	    return this.value()
-	},
+    },
 	
-	// unicode
+    // unicode
 	
-	/*
+    /*
 	checkedUnicode: function() {
 	     return "&#10004;"
 	},
@@ -106,9 +106,9 @@ window.BoolView = DivStyledView.extend().newSlots({
 	},
 	*/
 	
-	// svg icon
+    // svg icon
 	
-	/*
+    /*
 	checkedIcon: function() {
 	   return "checkbox-square-checked" 
 	},
@@ -118,24 +118,24 @@ window.BoolView = DivStyledView.extend().newSlots({
 	},
 	*/
 	
-	checkedIcon: function() {
+    checkedIcon: function() {
 	   return "checkbox-circle-checked" 
-	},
+    },
 	
-	uncheckedIcon: function() {
+    uncheckedIcon: function() {
 	   return "checkbox-circle-unchecked" 
-	},
+    },
 		
-	currentIcon: function() {
+    currentIcon: function() {
 	    return this.isChecked() ? this.checkedIcon() : this.uncheckedIcon();
-	},
+    },
 	
     updateIcon: function () {
         this.setMinAndMaxWidth(16).setMinAndMaxHeight(16)
         this.setBackgroundImageUrlPath(this.pathForIconName(this.currentIcon()))
-		this.setBackgroundSizeWH(16, 16) // use "contain" instead?
-		this.setBackgroundPosition("center")
-		this.setOpacity(this.isEditable() ? 1 : 0.5)
+        this.setBackgroundSizeWH(16, 16) // use "contain" instead?
+        this.setBackgroundPosition("center")
+        this.setOpacity(this.isEditable() ? 1 : 0.5)
         return this
     },
 })

@@ -4,17 +4,17 @@ window.BMViewStyles = ideal.Proto.extend().newSlots({
     type: "BMViewStyles",
     name: "",
 
-	unselected: null,
-	selected: null,
-	//hover: null,
-	//enabled: null,
-	//disabled: null,
+    unselected: null,
+    selected: null,
+    //hover: null,
+    //enabled: null,
+    //disabled: null,
 	
 }).setSlots({
     init: function () {
-		this.setSelected(BMViewStyle.clone())
-		this.setUnselected(BMViewStyle.clone())
-		//this.setHover(BMViewStyle.clone())
+        this.setSelected(BMViewStyle.clone())
+        this.setUnselected(BMViewStyle.clone())
+        //this.setHover(BMViewStyle.clone())
         return this
     },
     

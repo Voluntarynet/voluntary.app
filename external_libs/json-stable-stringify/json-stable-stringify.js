@@ -1,6 +1,20 @@
-var json = typeof JSON !== 'undefined' ? JSON : require('jsonify');
+//var json = typeof JSON !== 'undefined' ? JSON : require('jsonify');
 
 JSON.stableStringify = function (obj, opts) {
+
+    var isArray = Array.isArray || function (x) {
+        return {}.toString.call(x) === '[object Array]';
+    };
+    
+    var objectKeys = Object.keys || function (obj) {
+        var has = Object.prototype.hasOwnProperty || function () { return true };
+        var keys = [];
+        for (var key in obj) {
+            if (has.call(obj, key)) keys.push(key);
+        }
+        return keys;
+    };
+
     if (!opts) opts = {};
     if (typeof opts === 'function') opts = { cmp: opts };
     var space = opts.space || '';
@@ -70,15 +84,3 @@ JSON.stableStringify = function (obj, opts) {
     })({ '': obj }, '', obj, 0);
 };
 
-var isArray = Array.isArray || function (x) {
-    return {}.toString.call(x) === '[object Array]';
-};
-
-var objectKeys = Object.keys || function (obj) {
-    var has = Object.prototype.hasOwnProperty || function () { return true };
-    var keys = [];
-    for (var key in obj) {
-        if (has.call(obj, key)) keys.push(key);
-    }
-    return keys;
-};

@@ -5,18 +5,18 @@ window.BrowserColumn = NodeView.extend().newSlots({
     rows: null,
     selectionColor: "#aaa",
     allowsCursorNavigation: true,
-	debug: true,
-	defaultRowStyles: null,
+    debug: true,
+    defaultRowStyles: null,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
         this.setDefaultSubnodeViewClass(BrowserTitledRow)
         this.setOwnsView(false)
         this.setIsRegisteredForKeyboard(true)
-		this.styles().selected().setBorderLeft("1px solid rgba(0, 0, 0, 0.15)")
-		this.styles().unselected().setBorderLeft("1px solid rgba(0, 0, 0, 0.15)")
-		this.applyStyles()
-		this.setAcceptsFirstResponder(true)
+        this.styles().selected().setBorderLeft("1px solid rgba(0, 0, 0, 0.15)")
+        this.styles().unselected().setBorderLeft("1px solid rgba(0, 0, 0, 0.15)")
+        this.applyStyles()
+        this.setAcceptsFirstResponder(true)
         return this
     },
     
@@ -31,7 +31,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
 
     browser: function() {
-		assert(this.columnGroup() != null) 
+        assert(this.columnGroup() != null) 
         return this.columnGroup().browser()
     },
     
@@ -39,7 +39,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
         return this.parentView().parentView()
     },
 
-	// rows
+    // rows
 
     rows: function() {
         return this.subviews()
@@ -53,19 +53,19 @@ window.BrowserColumn = NodeView.extend().newSlots({
         return this.removeSubview(v)
     },
 
-	// selection
+    // selection
 	
-	didChangeIsSelected: function() {
-		NodeView.didChangeIsSelected.apply(this)
+    didChangeIsSelected: function() {
+        NodeView.didChangeIsSelected.apply(this)
 
-		if (this.isSelected()) {
-			this.focus()
-		} else {
-			this.blur()
-		}
+        if (this.isSelected()) {
+            this.focus()
+        } else {
+            this.blur()
+        }
 		
-		return this
-	},
+        return this
+    },
 
     rowWithNode: function(aNode) {
         return this.rows().detect((row) => { return row.node() === aNode })
@@ -83,7 +83,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     unselectRowsBesides: function(selectedRow) {
         var rows = this.rows()
 
-		// unselect all other rows
+        // unselect all other rows
         rows.forEach((row) => {
             if (row != selectedRow) {
                 row.unselect()
@@ -100,11 +100,11 @@ window.BrowserColumn = NodeView.extend().newSlots({
     didClickRow: function(clickedRow) {
         this.unselectRowsBesides(clickedRow)
 
-		// follow it if we can 
-		if (clickedRow.nodeRowLink()) {
+        // follow it if we can 
+        if (clickedRow.nodeRowLink()) {
 		    //console.log(this.typeId() + ".didClickRow(" + clickedRow.node().title() + ") selecting column ", this.node().title())
         //	this.browser().selectColumn(this)
-		}
+        }
         
         this.browser().selectColumn(this)
 
@@ -147,7 +147,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
   
     indexOfRowWithNode: function (aNode) {
-		return this.rows().detectIndex(row => row.node() === aNode)
+        return this.rows().detectIndex(row => row.node() === aNode)
     },
     
     clickRowWithNode: function(aNode) {
@@ -159,80 +159,80 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
 
     unselectAllRows: function() {
-		this.rows().forEach(row => row.unselect())
-		return this
-	},
+        this.rows().forEach(row => row.unselect())
+        return this
+    },
 	
     selectRowWithNode: function (aNode) {
-		var selectedRow = this.rows().detect(row => row.node() === aNode)
+        var selectedRow = this.rows().detect(row => row.node() === aNode)
 		
         if (selectedRow) {
-			selectedRow.setIsSelected(true)
+            selectedRow.setIsSelected(true)
 			
-			this.rows().forEach((aRow) => {
+            this.rows().forEach((aRow) => {
                 if (aRow != selectedRow) {
                     aRow.unselect()
                 }
             })
-		}
+        }
 
-		return selectedRow
+        return selectedRow
     },
     
     selectedRowTitle: function () {
         var row = this.selectedRow()
         if (row) { 
-			return row.title().innerHTML() 
-		}
+            return row.title().innerHTML() 
+        }
         return null
     },
 
-	// --- sync -----------------------------
+    // --- sync -----------------------------
 
-   subviewProtoForSubnode: function(aSubnode) {
-		var proto = aSubnode.nodeRowViewClass()
+    subviewProtoForSubnode: function(aSubnode) {
+        var proto = aSubnode.nodeRowViewClass()
 		
-		if (!proto) {
-			proto = BrowserTitledRow
-		}
+        if (!proto) {
+            proto = BrowserTitledRow
+        }
 				
         return proto      
     },
 
-	setNode: function(aNode) {
-		if (this.node() != aNode) {
-			NodeView.setNode.apply(this, [aNode])
+    setNode: function(aNode) {
+        if (this.node() != aNode) {
+            NodeView.setNode.apply(this, [aNode])
             this.unselectAllRows() // move to didChangeNode
-			//"shouldFocusSubnode"
-		}
-		return this
-	},
+            //"shouldFocusSubnode"
+        }
+        return this
+    },
 	
-	shouldFocusSubnode: function(aNote) {
+    shouldFocusSubnode: function(aNote) {
 	    var subnode = aNote.info()
 	    this.clickRowWithNode(subnode)
 
 	    var subview = this.subviewForNode(subnode)
 	    
-		if (!subview) {
+        if (!subview) {
             this.syncFromNode()
 	        subview = this.subviewForNode(subnode)
-		} 
+        } 
 
-		if (subview) {
+        if (subview) {
 	        var subview = this.subviewForNode(subnode)
 		    this.selectRowWithNode(subnode)
 		    subview.scrollIntoView()
 		    //subview.dynamicScrollIntoView()
-		} else {
-			console.warn("BrowserColumn for node " + this.node().typeId() + " has no matching subview for shouldFocusSubnode " + subnode.typeId())
-			//console.log("subview nodes = ", this.subviews().map(subview => subview.node().typeId()) )
+        } else {
+            console.warn("BrowserColumn for node " + this.node().typeId() + " has no matching subview for shouldFocusSubnode " + subnode.typeId())
+            //console.log("subview nodes = ", this.subviews().map(subview => subview.node().typeId()) )
 	    }
 
 	    return this 
-	},
+    },
 	
-	scrollToSubnode: function(aSubnode) {
+    scrollToSubnode: function(aSubnode) {
 	    //console.log(this.typeId() + ".scrollToSubnode")
 	    var subview = this.subviewForNode(aSubnode)
 	    assert(subview)
@@ -261,8 +261,8 @@ window.BrowserColumn = NodeView.extend().newSlots({
         return this
     },
 	
-	scheduleSyncFromNode: function() {
-       if (this.browser() == null || this.node() == null) {
+    scheduleSyncFromNode: function() {
+        if (this.browser() == null || this.node() == null) {
             console.warn("WARNING: skipping BrowserColumn.scheduleSyncFromNode")
             console.warn("  this.browser() = " , this.browser())
             console.warn("  this.node() = " , this.node())
@@ -270,7 +270,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
         }	    
 	    NodeView.scheduleSyncFromNode.apply(this)
 	    return this
-	},
+    },
 	
     syncFromNode: function () {
         
@@ -285,7 +285,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
         
         // remember the selection        
         var selectedIndex = this.selectedRowIndex()
-       // console.log(this.node().title() + "  selectedIndex 1: " + selectedIndex)
+        // console.log(this.node().title() + "  selectedIndex 1: " + selectedIndex)
         var thereWasASelection = selectedIndex != -1
         var lastSelectedNode = this.selectedNode()
         
@@ -337,13 +337,13 @@ window.BrowserColumn = NodeView.extend().newSlots({
         }
     },
 
-	// --- keyboard controls, arrow navigation -----------------------------
+    // --- keyboard controls, arrow navigation -----------------------------
 	
-	canNavigate: function() {
+    canNavigate: function() {
         return this.allowsCursorNavigation() && this.isActiveElement()
-	},
+    },
 	
-	showSelected: function() {
+    showSelected: function() {
         /*
         todo: add check if visible
         if (this.selectedRow()) {
@@ -351,63 +351,63 @@ window.BrowserColumn = NodeView.extend().newSlots({
         }
         */
         return this	    
-	},
+    },
 	
-	onUpArrowKeyUp: function(event) {
+    onUpArrowKeyUp: function(event) {
         if (!this.canNavigate()) { 
-			return 
-		}
+            return 
+        }
         this.selectPreviousRow()
         this.showSelected()
-		return false
-	},
+        return false
+    },
 	
-	onDownArrowKeyUp: function(event) {
+    onDownArrowKeyUp: function(event) {
         if (!this.canNavigate()) { 
-			return 
-		}
+            return 
+        }
         this.selectNextRow()
         this.showSelected()
-		return false
-	},
+        return false
+    },
 	
-	onLeftArrowKeyUp: function(event) {
+    onLeftArrowKeyUp: function(event) {
         if (!this.canNavigate()) { 
-			return 
-		}
+            return 
+        }
 		
-		var pc = this.previousColumn()	
-		if (pc) {		
-			if (this.selectedRow()) { 
-				this.selectedRow().unselect() 
-			}
+        var pc = this.previousColumn()	
+        if (pc) {		
+            if (this.selectedRow()) { 
+                this.selectedRow().unselect() 
+            }
 			
-			var newSelectedRow = pc.selectedRow()
-			newSelectedRow.setShouldShowFlash(true).updateSubviews()
-			pc.didClickRow(newSelectedRow)
+            var newSelectedRow = pc.selectedRow()
+            newSelectedRow.setShouldShowFlash(true).updateSubviews()
+            pc.didClickRow(newSelectedRow)
         	this.selectPreviousColumn()
-		}
-		return false
-	},
+        }
+        return false
+    },
 	
-	onRightArrowKeyUp: function(event) {
+    onRightArrowKeyUp: function(event) {
         if (!this.canNavigate()) { return }	
 
-		if (this.nextColumn() && this.nextColumn().subviews().length > 0) {
+        if (this.nextColumn() && this.nextColumn().subviews().length > 0) {
         	this.selectNextColumn()
-		}
-		return false
-	},	
+        }
+        return false
+    },	
 	
-	// --- enter key begins row editing ---------------------------
+    // --- enter key begins row editing ---------------------------
 	
-	onEnterKeyUp: function(event) {
+    onEnterKeyUp: function(event) {
         //console.log(this.type() + ".onEnterKeyUp()")
         
         if (!this.canNavigate()) { return }
 	
-		var row = this.selectedRow()
-		if (row) { 
+        var row = this.selectedRow()
+        if (row) { 
 		    row.onEnterKeyUp(event)
 		    /*
 			//row.title().focus() 
@@ -416,14 +416,14 @@ window.BrowserColumn = NodeView.extend().newSlots({
 				setTimeout(() => { row.title().focus() })
 			})
 			*/
-		}
+        }
 
-		return false
-	},
+        return false
+    },
 
-	// --- keyboard controls, add and delete actions -----------------------------
+    // --- keyboard controls, add and delete actions -----------------------------
 		
-	onDeleteKeyUp: function(event) {
+    onDeleteKeyUp: function(event) {
         if (!this.canNavigate()) { return }
 
         /*
@@ -435,29 +435,29 @@ window.BrowserColumn = NodeView.extend().newSlots({
 			}
 		}
 		*/
-		return false
-	},
+        return false
+    },
 	
-	onPlusKeyUp: function(event) {
+    onPlusKeyUp: function(event) {
         if (!this.canNavigate()) { return }		
 
         var sNode = this.selectedNode()
         if (sNode && sNode.hasAction("add")) { 
-			var newNode = sNode.performAction("add") 
+            var newNode = sNode.performAction("add") 
 	        this.selectNextColumn()
-			this.nextColumn().selectRowWithNode(newNode)
-		}
-		return false		
-	},
+            this.nextColumn().selectRowWithNode(newNode)
+        }
+        return false		
+    },
 	
-	// -----------------------------
+    // -----------------------------
     
     columnIndex: function() {
         return this.browser().columnGroups().indexOf(this.columnGroup())
         //return this.browser().columns().indexOf(this)
     },
 
-	// nextRow
+    // nextRow
 
     selectNextRow: function() {
         
@@ -485,7 +485,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
         return this
     },
 
-	// next column
+    // next column
     
     nextColumn: function() {
         var i = this.columnIndex()
@@ -493,16 +493,16 @@ window.BrowserColumn = NodeView.extend().newSlots({
         return nextColumn
     },
 
-	focus: function() {
-		NodeView.focus.apply(this)
+    focus: function() {
+        NodeView.focus.apply(this)
 		
 	    if (this.selectedRowIndex() == -1) {
             this.setSelectedRowIndex(0)
         }
 
-		//console.log(this.type() + " focus")
-		return this
-	},
+        //console.log(this.type() + " focus")
+        return this
+    },
     
     selectNextColumn: function() {
         var nextColumn = this.nextColumn()
@@ -514,7 +514,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
         return this
     },
     
-	// previous column
+    // previous column
 	
     previousColumn: function() {
         var i = this.columnIndex()
@@ -523,17 +523,17 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
 
     selectPreviousColumn: function() {
-		//this.log("selectPreviousColumn this.columnIndex() = " + this.columnIndex())
+        //this.log("selectPreviousColumn this.columnIndex() = " + this.columnIndex())
         var prevColumn = this.previousColumn()
         if (prevColumn) {
             this.blur()
             prevColumn.focus()
-			this.browser().selectColumn(prevColumn)
+            this.browser().selectColumn(prevColumn)
         }
         return this
     },
 
-	// paths
+    // paths
     
     /*
     browserPathArray: function() {
@@ -553,12 +553,12 @@ window.BrowserColumn = NodeView.extend().newSlots({
         return this.browserPathString()
     },
 
-	maxRowWidth: function() {
-		var maxWidth = this.rows().maxValue(function(row) {
-			return row.calcWidth()
-		})			
-		return maxWidth	
-	},
+    maxRowWidth: function() {
+        var maxWidth = this.rows().maxValue(function(row) {
+            return row.calcWidth()
+        })			
+        return maxWidth	
+    },
 	
 })
 

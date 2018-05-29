@@ -21,7 +21,7 @@ window.BMBlacklists = BMStorableNode.extend().newSlots({
         this.initStoredSubnodeSlotWithProto("peers", BMBlacklistedPeers)
         this.initStoredSubnodeSlotWithProto("contacts", BMBlacklistedContacts)
         
-		this.addStoredSlots(["servers", "peers", "contacts"])
+        this.addStoredSlots(["servers", "peers", "contacts"])
     },
 	
 })

@@ -11,12 +11,12 @@ window.ImageWellView = NodeView.extend().newSlots({
         this.setIsRegisteredForDrop(true)
         this.dragUnhighlight()
         this.turnOffUserSelect()
-		this.setTransition("all 0.3s")
+        this.setTransition("all 0.3s")
         return this
     },
 
     syncToNode: function () {
-		this.tellParentViews("didUpdateImageWellView", this)
+        this.tellParentViews("didUpdateImageWellView", this)
         return this
     },
     

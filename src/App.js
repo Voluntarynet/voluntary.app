@@ -17,9 +17,12 @@ window.App = BaseApp.extend().newSlots({
         this.setName("NT3P")
     },
 
+
+
     setup: function () {
         BaseApp.setup.apply(this)
-        window.app = this
+        //window.app = this
+        this.setShared(this)
         this.setupPageTitle()
         this.setupSubnodes()
         return this

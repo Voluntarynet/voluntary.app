@@ -1,6 +1,6 @@
 var bitcore = require("bitcore-lib")
-var BitcoreMessage = require('bitcore-message');
-var ECIES = require('bitcore-ecies');
+var BitcoreMessage = require("bitcore-message");
+var ECIES = require("bitcore-ecies");
 var Buffer = bitcore.deps.Buffer;
 
 "use strict"
@@ -8,13 +8,13 @@ var Buffer = bitcore.deps.Buffer;
 window.BMKeyPair = BMStorableNode.extend().newSlots({
     type: "BMKeyPair",
     name: "",
-	privateKeyString: "",
-	hasPrivateKey: true,
+    privateKeyString: "",
+    hasPrivateKey: true,
 }).setSlots({
     
     init: function () {
         BMStorableNode.init.apply(this)
-		this.generatePrivateKey()
+        this.generatePrivateKey()
     },
 
     
@@ -22,15 +22,15 @@ window.BMKeyPair = BMStorableNode.extend().newSlots({
         return this.publicKeyString()
     },
     
-	isValid: function() {
-		return bitcore.PrivateKey.isValid(this.privateKeyString())
-	},
+    isValid: function() {
+        return bitcore.PrivateKey.isValid(this.privateKeyString())
+    },
 	
-	generatePrivateKey: function() {
-		var privateKey = new bitcore.PrivateKey();
-		this.setPrivateKeyString(privateKey.toString())
-		return this
-	},
+    generatePrivateKey: function() {
+        var privateKey = new bitcore.PrivateKey();
+        this.setPrivateKeyString(privateKey.toString())
+        return this
+    },
     
     privateKey: function() {
         if (this.isValid()) { 
@@ -43,15 +43,15 @@ window.BMKeyPair = BMStorableNode.extend().newSlots({
     publicKey: function () {
         if (this.privateKey()) {
 	        return this.privateKey().toPublicKey()
-		}
-		return null
+        }
+        return null
     },
 
     publicKeyString: function () {
         if (this.publicKey()) {
 	        return this.publicKey().toString()
-		}
-		return null
+        }
+        return null
     },
 
     signatureForMessageString: function(msgString) {
@@ -59,29 +59,29 @@ window.BMKeyPair = BMStorableNode.extend().newSlots({
         return signature
     },
 
-	encryptMessageForReceiverId: function(msgString, receiverId) {
-		var encryptor = ECIES().privateKey(this.privateKey()).publicKey(receiverId.publicKey());
-		var encryptedBase64String = encryptor.encrypt(msgString).toString('base64')
-		return encryptedBase64String
-	},
+    encryptMessageForReceiverId: function(msgString, receiverId) {
+        var encryptor = ECIES().privateKey(this.privateKey()).publicKey(receiverId.publicKey());
+        var encryptedBase64String = encryptor.encrypt(msgString).toString("base64")
+        return encryptedBase64String
+    },
     
-	decryptMessageFromSenderPublicKeyString: function(encryptedBase64String, senderPublicKeyString) {
-		var encryptedBuffer = new Buffer(encryptedBase64String, 'base64')
-		//console.log("senderPublicKeyString = ", senderPublicKeyString)
-		var senderPublicKey = new bitcore.PublicKey(senderPublicKeyString)
-		var decryptor = ECIES().privateKey(this.privateKey()).publicKey(senderPublicKey);
-		//console.log("encryptedMsg = '" + encryptedMsg + "'")
-		var decrypted = null
-		try {
+    decryptMessageFromSenderPublicKeyString: function(encryptedBase64String, senderPublicKeyString) {
+        var encryptedBuffer = new Buffer(encryptedBase64String, "base64")
+        //console.log("senderPublicKeyString = ", senderPublicKeyString)
+        var senderPublicKey = new bitcore.PublicKey(senderPublicKeyString)
+        var decryptor = ECIES().privateKey(this.privateKey()).publicKey(senderPublicKey);
+        //console.log("encryptedMsg = '" + encryptedMsg + "'")
+        var decrypted = null
+        try {
     		decrypted = decryptor.decrypt(encryptedBuffer).toString();
         } catch(e) {
             
         }
-		return decrypted
-	},
+        return decrypted
+    },
 
-	equals: function(anIdentity) {
-		return anIdentity != null && this.publicKeyString() == anIdentity.publicKeyString()
-	},
+    equals: function(anIdentity) {
+        return anIdentity != null && this.publicKeyString() == anIdentity.publicKeyString()
+    },
 
 })

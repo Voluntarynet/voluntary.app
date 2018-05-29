@@ -5,22 +5,22 @@ window.IndexedDBFolder = ideal.Proto.extend().newSlots({
     path: "/", // path should end with pathSeparator
     pathSeparator: "/",
     db: null,
-	didRequestPersistence: false,
+    didRequestPersistence: false,
     debug: false,
 }).setSlots({
     init: function () {
     },
 
-	requestPersistenceIfNeeded: function() {
-		if (!IndexedDBFolder.didRequestPersistence()) {
-			this.requestPersistence()
-		}
-		return this
-	},
+    requestPersistenceIfNeeded: function() {
+        if (!IndexedDBFolder.didRequestPersistence()) {
+            this.requestPersistence()
+        }
+        return this
+    },
 	
-	requestPersistence: function() {
+    requestPersistence: function() {
 		
-		if (navigator.storage && navigator.storage.persist)
+        if (navigator.storage && navigator.storage.persist)
 		  navigator.storage.persist().then((granted) => {
 		    if (granted)
 		      alert("Storage will not be cleared except by explicit user action");
@@ -28,10 +28,10 @@ window.IndexedDBFolder = ideal.Proto.extend().newSlots({
 		      alert("Storage may be cleared by the UA under storage pressure.");
 		  });
 		
-		IndexedDBFolder.setDidRequestPersistence(true)
+        IndexedDBFolder.setDidRequestPersistence(true)
 		
-		return this
-	},
+        return this
+    },
     
     storeName: function() {
         return this.path()
@@ -40,7 +40,7 @@ window.IndexedDBFolder = ideal.Proto.extend().newSlots({
     root: function() {
         if (!IndexedDBFolder._root) {
             IndexedDBFolder._root = IndexedDBFolder.clone()
-           // IndexedDBFolder._root.rootShow()
+            // IndexedDBFolder._root.rootShow()
         }
         return IndexedDBFolder._root
     },
@@ -56,9 +56,9 @@ window.IndexedDBFolder = ideal.Proto.extend().newSlots({
     },
     
     asyncOpen: function(callback) {
-		if (this.debug()) {
-			console.log(this.type() + " asyncOpen")
-		}
+        if (this.debug()) {
+            console.log(this.type() + " asyncOpen")
+        }
 		
         var request = window.indexedDB.open(this.path(), 2);
         
@@ -67,26 +67,26 @@ window.IndexedDBFolder = ideal.Proto.extend().newSlots({
         };
          
         request.onupgradeneeded = (event) => { 
-			console.log(this.type() + " onupgradeneeded - likely setting up local database for the first time")
+            console.log(this.type() + " onupgradeneeded - likely setting up local database for the first time")
 
-			var db = event.target.result;
+            var db = event.target.result;
 
-			db.onerror = function(event) {
-				console.log("db error ", event)
-			};
+            db.onerror = function(event) {
+                console.log("db error ", event)
+            };
 
-			this.setDb(db)
+            this.setDb(db)
 
-			var objectStore = db.createObjectStore(this.storeName(), { keyPath: "key" }, false);          
-			objectStore.createIndex("key", "key", { unique: true });
+            var objectStore = db.createObjectStore(this.storeName(), { keyPath: "key" }, false);          
+            objectStore.createIndex("key", "key", { unique: true });
         };
 
         request.onsuccess =  (event) => {
-              //console.log(this.type() + " db open onsuccess ", event)
-              this.setDb(event.target.result)
-              if (callback) {
-                  callback()
-              }
+            //console.log(this.type() + " db open onsuccess ", event)
+            this.setDb(event.target.result)
+            if (callback) {
+                callback()
+            }
         };
         return this
     },
@@ -105,7 +105,7 @@ window.IndexedDBFolder = ideal.Proto.extend().newSlots({
     },
             
     // writing
-/*
+    /*
     asyncAt: function(key, callback) {
         //console.log("asyncAt ", key)
         var objectStore = this.db().transaction(this.storeName(), "readonly").objectStore(this.storeName());
@@ -169,47 +169,47 @@ window.IndexedDBFolder = ideal.Proto.extend().newSlots({
         this.asyncAsJson((json) => {
 	        console.log(this.type() + " " + this.path() + " = " + JSON.stringify(json, null, 2))
 
-		})
+        })
     },
     
     // removing
     
     asyncClear: function(callback, errorCallback) {
-		var transaction = this.db().transaction([this.storeName()], "readwrite");
+        var transaction = this.db().transaction([this.storeName()], "readwrite");
 
-		transaction.onerror = function(event) {
-			if (errorCallback) {
-				errorCallback(event)
-			}
-		};
+        transaction.onerror = function(event) {
+            if (errorCallback) {
+                errorCallback(event)
+            }
+        };
 
-		var objectStore = transaction.objectStore(this.storeName());
-		var request = objectStore.clear();
+        var objectStore = transaction.objectStore(this.storeName());
+        var request = objectStore.clear();
 
-		request.onsuccess = function(event) {
-			if (callback) {
-				callback(event)
-			}
-		};
-	},
+        request.onsuccess = function(event) {
+            if (callback) {
+                callback(event)
+            }
+        };
+    },
 	
     asyncDelete: function() {
-		var request = window.indexedDB.deleteDatabase(this.storeName())
+        var request = window.indexedDB.deleteDatabase(this.storeName())
 		
-		request.onerror = (event) => {
+        request.onerror = (event) => {
   			console.log(this.type() +  "Error deleting '" + this.storeName() + "'");
-		}
+        }
  
-		request.onsuccess = (event) => {
-			console.log(this.type() + " deleted successfully '" + this.storeName()  + "'");
+        request.onsuccess = (event) => {
+            console.log(this.type() + " deleted successfully '" + this.storeName()  + "'");
     	}
 		
-		this.setDb(null)
+        this.setDb(null)
 		
         return this
     },
     
-	// test
+    // test
     
     test: function() {
         var folder = IndexedDBFolder.clone()

@@ -6,8 +6,8 @@ window.BMSells = BMStorableNode.extend().newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
-		this.setShouldStore(true)
-		this.setShouldStoreSubnodes(true)
+        this.setShouldStore(true)
+        this.setShouldStoreSubnodes(true)
 		
         //this.setTitle("Sells")
         this.setTitle("My Sales")

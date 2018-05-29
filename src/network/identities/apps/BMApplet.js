@@ -13,14 +13,14 @@ window.BMApplet = BMStorableNode.extend().newSlots({
         this.setShouldStore(true)
     },
 
-	handleAppMsg: function(aMessage) {
-		// override
-	},
+    handleAppMsg: function(aMessage) {
+        // override
+    },
 	
-	allIdentitiesMap: function() { // only uses valid remote identities
-		var ids = ideal.Map.clone()
-		return ids
-	},
+    allIdentitiesMap: function() { // only uses valid remote identities
+        var ids = ideal.Map.clone()
+        return ids
+    },
 
 })
 

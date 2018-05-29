@@ -7,34 +7,34 @@ window.BMMyPosts = BMStorableNode.extend().newSlots({
     init: function () {
         BMStorableNode.init.apply(this)
         //this.setLinkProto(BMChatThread)
-		this.setTitle("my posts")
+        this.setTitle("my posts")
         this.setActions(["deleteAll"])
         this.setShouldStore(true)	
         this.setNodeMinWidth(450)
         this.setSubnodeProto(BMPostMessage)
-		this.setNodeColumnBackgroundColor("white")
-		this.setNoteIsSubnodeCount(true)
+        this.setNodeColumnBackgroundColor("white")
+        this.setNoteIsSubnodeCount(true)
 		
-		this.setSubnodeSortFunc(function (postMsg1, postMsg2) {
+        this.setSubnodeSortFunc(function (postMsg1, postMsg2) {
 		    return postMsg1.ageInSeconds() - postMsg2.ageInSeconds()
-		})
+        })
     },
 
-	finalize: function() {
-		BMStorableNode.finalize.apply(this)
-		this.setTitle("my posts")
-	},
+    finalize: function() {
+        BMStorableNode.finalize.apply(this)
+        this.setTitle("my posts")
+    },
 	
-	deleteAll: function() {
+    deleteAll: function() {
 	    this.subnodes().forEach((post) => {
 	        post.prepareToDelete()
 	    })
 	    this.removeAllSubnodes()
 	    return this
-	},
+    },
 	
-	shelfIconName: function() {
-		return "chat/feed_a"
-//	    return "home3-white"
-	},
+    shelfIconName: function() {
+        return "chat/feed_a"
+        //	    return "home3-white"
+    },
 })

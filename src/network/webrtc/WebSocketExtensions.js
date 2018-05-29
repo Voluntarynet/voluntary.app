@@ -1,4 +1,5 @@
 "use strict"
+
 WebSocket.prototype.removeEventListeners = function() {
     if (this._eventListeners) {
         this._eventListeners.forEach(eventListener => {

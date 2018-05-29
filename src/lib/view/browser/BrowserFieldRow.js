@@ -8,9 +8,9 @@ window.BrowserFieldRow = BrowserRow.extend().newSlots({
         BrowserRow.init.apply(this)
         this.setIsSelectable(false) 
         this.makeCursorDefault()
-		this.setSpellCheck(false)
+        this.setSpellCheck(false)
 		
-		this.styles().setToBlackOnWhite()
+        this.styles().setToBlackOnWhite()
 		
         return this
     },

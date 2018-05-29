@@ -16,14 +16,14 @@ window.ImageView = NodeView.extend().newSlots({
         this.addSubview(this.imageContainer())
         
         //this.setEditable(false)
-		this.setContentEditable(false)
+        this.setContentEditable(false)
         this.dragUnhighlight()
         this.turnOffUserSelect()
-		this.setTransition("all 0.3s")
+        this.setTransition("all 0.3s")
         return this
     },
 
-	// --- editable ---
+    // --- editable ---
     
     setIsEditable: function(aBool) {
         if (aBool) {
@@ -40,7 +40,7 @@ window.ImageView = NodeView.extend().newSlots({
         return this
     },
     
-	// --- close button ---
+    // --- close button ---
 
     addCloseButton: function() {
         if (this.closeButtonView() == null) {
@@ -50,9 +50,9 @@ window.ImageView = NodeView.extend().newSlots({
             cb.setTarget(this).setAction("close") //.setInnerHTML("&#10799;")
 
 	        cb.setBackgroundImageUrlPath(this.pathForIconName("close"))
-			cb.setBackgroundSizeWH(10, 10) // use "contain" instead?
-			cb.setBackgroundPosition("center")
-			cb.makeBackgroundNoRepeat()
+            cb.setBackgroundSizeWH(10, 10) // use "contain" instead?
+            cb.setBackgroundPosition("center")
+            cb.makeBackgroundNoRepeat()
         }
         return this        
     },
@@ -64,46 +64,46 @@ window.ImageView = NodeView.extend().newSlots({
         }
     },
 
-	collapse: function() {
-		this.closeButtonView().setOpacity(0).setTarget(null)
-		this.setOpacity(0)
+    collapse: function() {
+        this.closeButtonView().setOpacity(0).setTarget(null)
+        this.setOpacity(0)
 		
-		this.setWidth("0px")
+        this.setWidth("0px")
 		
-		this.setPaddingLeft(0)
-		this.setPaddingRight(0)
+        this.setPaddingLeft(0)
+        this.setPaddingRight(0)
 		
-		this.setMarginLeft(0)
-		this.setMarginRight(0)
+        this.setMarginLeft(0)
+        this.setMarginRight(0)
 		
-		//this.rawImageView().setMinAndMaxWidth(0)
-		//this.imageContainer().setMinAndMaxWidth(0)
-		//this.setMinAndMaxWidth(0)
-		/*
+        //this.rawImageView().setMinAndMaxWidth(0)
+        //this.imageContainer().setMinAndMaxWidth(0)
+        //this.setMinAndMaxWidth(0)
+        /*
         var style = this.cssStyle();
         style.paddingLeft = "0px";
         style.paddingRight = "0px";
         style.marginLeft = "0px";
         style.marginRight = "0px";	
         */
-	},
+    },
     
     close: function() {
-		var seconds = 0.3
+        var seconds = 0.3
 		
         this.collapse()
         
         setTimeout( () => { 
-			this.removeCloseButton()
-			var parentView = this.parentView()
-			this.removeFromParentView()
-			//console.log(this.typeId() + ".close complete parentView = ", parentView)
-			parentView.scheduleSyncToNode() //parentView.syncToNode()
+            this.removeCloseButton()
+            var parentView = this.parentView()
+            this.removeFromParentView()
+            //console.log(this.typeId() + ".close complete parentView = ", parentView)
+            parentView.scheduleSyncToNode() //parentView.syncToNode()
 
         }, seconds * 1000)
     },
 
-	// --- sync ---
+    // --- sync ---
     
     removeRawImageView: function() {
         if (this.rawImageView()) {
@@ -115,21 +115,21 @@ window.ImageView = NodeView.extend().newSlots({
     
     setFromDataURL: function(dataURL) {
         //console.log("setFromDataURL: ", dataURL)
-		if (!dataURL) {
-			console.warn(this.typeId() + ".setFromDataURL() called with null argument")
-			return this
-		}
+        if (!dataURL) {
+            console.warn(this.typeId() + ".setFromDataURL() called with null argument")
+            return this
+        }
 		
         assert(dataURL.beginsWith("data:")) 
 
         this.removeRawImageView()
         this.setDataURL(dataURL)
 
-		var image = new Image();
+        var image = new Image();
         image.src = dataURL;
 
         this.setRawImageView(DivView.clone().setElement(image).setDivClassName("ImageViewImageObject"))
-		this.imageContainer().addSubview(this.rawImageView())
+        this.imageContainer().addSubview(this.rawImageView())
 	
         return this
     },
@@ -137,13 +137,13 @@ window.ImageView = NodeView.extend().newSlots({
     fetchDataURLFromSrc: function(src) {
         if (src.beginsWith("data:")) {
 	        this.setFromDataURL(src)
-		} else {
+        } else {
 		    var img = new Image();
-            img.crossOrigin = 'Anonymous';
+            img.crossOrigin = "Anonymous";
         
 	        img.onload = () => {
-	            var canvas = document.createElement('CANVAS');
-	            var ctx = canvas.getContext('2d');
+	            var canvas = document.createElement("CANVAS");
+	            var ctx = canvas.getContext("2d");
 	            canvas.height = this.height;
 	            canvas.width = this.width;
 	            ctx.drawImage(img, 0, 0);
@@ -159,7 +159,7 @@ window.ImageView = NodeView.extend().newSlots({
                 img.src = src;
             }
             */
-		}
+        }
 		
         return this
     },

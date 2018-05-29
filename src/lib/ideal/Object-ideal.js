@@ -37,14 +37,14 @@ Object.lookupPath = function (obj, path) {
     return obj;
 },
 
-Object.perform = function (obj, name) {
-    if (obj !== undefined && obj !== null && obj[name] && typeof (obj[name]) == "function") {
-        var args = Array.prototype.slice.call(arguments).slice(2);
-        return obj[name].apply(obj, args);
-    } else {
-        return obj;
+    Object.perform = function (obj, name) {
+        if (obj !== undefined && obj !== null && obj[name] && typeof (obj[name]) == "function") {
+            var args = Array.prototype.slice.call(arguments).slice(2);
+            return obj[name].apply(obj, args);
+        } else {
+            return obj;
+        }
     }
-}
 
 Object.values = function (obj) {
     var values = [];
@@ -65,30 +65,48 @@ Object.pop = function (obj) {
 
 // --- deep keys ---
 
-Object.atDeepKey = function(obj, key) {
-    if (typeof(obj) !== "object" || (Object.getPrototypeOf(obj) != Object.prototype)) {
+Object.atDeepKey = function (obj, key, seenSet) {
+    if (typeof (obj) != "object" /* || (Object.getPrototypeOf(obj) != Object.prototype)*/) {
         return null;
     }
 
+    if (!seenSet) {
+        seenSet = new Set()
+    }
+
+    if (seenSet.has(obj)) {
+        return null
+    }
+
+    seenSet.add(obj)
+
     for (var k in obj) {
+        //console.log("k = ")
         if (obj.hasOwnProperty(k)) {
             if (k == key) {
                 return obj[k];
             }
-            else {
-                var v = Object.atDeepKey(obj[k], key);
+        }
+    }
+
+    for (var k in obj) {
+        try {
+            if (obj.hasOwnProperty(k)) {
+                var v = Object.atDeepKey(obj[k], key, seenSet);
                 if (v !== null) {
                     return v;
                 }
             }
+        } catch (e) {
+            console.log("on key '" + k + "' caught error:", e)
         }
     }
 
     return null;
 }
 
-Object.allAtDeepKey = function(obj, key) {
-    if (typeof(obj) !== "object" || (Object.getPrototypeOf(obj) != Object.prototype)) {
+Object.allAtDeepKey = function (obj, key) {
+    if (typeof (obj) !== "object" || (Object.getPrototypeOf(obj) != Object.prototype)) {
         return [];
     }
 
@@ -108,7 +126,7 @@ Object.allAtDeepKey = function(obj, key) {
     return objs;
 }
 
-Object.atPath = function(obj, pathList) {
+Object.atPath = function (obj, pathList) {
     if (typeof (pathList) == "string") {
         pathList = pathList.split("/");
     }
@@ -122,8 +140,8 @@ Object.atPath = function(obj, pathList) {
 
     if (pathList.length) {
         return Object.atPath(obj[k], pathList);
-    } 
-    
+    }
+
     if (k == "") {
         return obj;
     }
@@ -131,11 +149,11 @@ Object.atPath = function(obj, pathList) {
     return Array.wrap(obj[k]).first();
 }
 
-Object.slotNames = function(obj) {
+Object.slotNames = function (obj) {
     return Object.keys(obj);
 }
 
-Object.slotValues = function(obj) {
+Object.slotValues = function (obj) {
     var values = [];
     for (var k in this) {
         if (obj.hasOwnProperty(k)) {
@@ -150,20 +168,20 @@ Object.slotValues = function(obj) {
 
 Object._globalAssocationWeakMap = new WeakMap()
 
-Object.associationDict = function(obj) {
+Object.associationDict = function (obj) {
     var map = Object._globalAssocationWeakMap
-    
+
     if (!map.has(obj)) {
         map.set(obj, {})
     }
-    
+
     return map.get(obj)
 }
 
 // --- forwardErrors ---------------------------
 
 Function.prototype.forwardErrors = function (fn) {
-    return  () => {
+    return () => {
         var e = arguments[0];
         if (e) {
             this(e);

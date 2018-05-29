@@ -6,7 +6,7 @@ window.BMLocalIdentities = BMStorableNode.extend().newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
-		this.setShouldStore(true)
+        this.setShouldStore(true)
         this.setTitle("My identities")
         
         this.setActions(["add"])
@@ -14,7 +14,7 @@ window.BMLocalIdentities = BMStorableNode.extend().newSlots({
         this.setNoteIsSubnodeCount(true)
         
         //this.setPidSymbol("_localIdentities")  
-		this._didChangeIdentitiesNote = NotificationCenter.shared().newNotification().setSender(this.uniqueId()).setName("didChangeIdentities")
+        this._didChangeIdentitiesNote = NotificationCenter.shared().newNotification().setSender(this.uniqueId()).setName("didChangeIdentities")
     },
 
     current: function() {
@@ -31,22 +31,22 @@ window.BMLocalIdentities = BMStorableNode.extend().newSlots({
         })
     },
 
-	idWithName: function(s) {
+    idWithName: function(s) {
         return this.subnodes().detect(function (id) {            
             return id.name() == s
         })
-	},
+    },
 	
-	names: function() {
-		return this.subnodes().map((id) => { return id.name(); })
-	},
+    names: function() {
+        return this.subnodes().map((id) => { return id.name(); })
+    },
 	
-	identities: function() {
+    identities: function() {
 	    return this.subnodes()
-	},
+    },
 	
     didChangeSubnodeList: function() {
-		BMStorableNode.didChangeSubnodeList.apply(this)
+        BMStorableNode.didChangeSubnodeList.apply(this)
         this._didChangeIdentitiesNote.post()
         return this
     },

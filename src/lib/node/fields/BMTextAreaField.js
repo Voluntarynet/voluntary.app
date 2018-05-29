@@ -8,10 +8,10 @@
         
 window.BMTextAreaField = BMField.extend().newSlots({
     type: "BMTextAreaField",
-	isMono: false,
+    isMono: false,
 }).setSlots({
     init: function () {
         BMField.init.apply(this)
-		this.setKeyIsVisible(false)
+        this.setKeyIsVisible(false)
     },
 })

@@ -2,13 +2,13 @@
 
 window.JSBloom = {};
 
-JSBloom.filter = function(items, target_prob) {
+JSBloom.filter = function (items, target_prob) {
 
     if (typeof items !== "number" || typeof target_prob !== "number" || target_prob >= 1) {
         throw Error("Usage: new JSBloom.filter(items, target_probability)");
     };
 
-    var BUFFER_LEN = (function() {
+    var BUFFER_LEN = (function () {
             var buffer = Math.ceil((items * Math.log(target_prob)) / Math.log(1.0 / (Math.pow(2.0, Math.log(2.0)))));
 
             if ((buffer % 8) !== 0) {
@@ -18,7 +18,7 @@ JSBloom.filter = function(items, target_prob) {
             return buffer;
         })(),
         HASH_ROUNDS = Math.round(Math.log(2.0) * BUFFER_LEN / items),
-        LZString = function() {
+        LZString = function () {
             function o(o, r) {
                 if (!t[o]) {
                     t[o] = {};
@@ -31,69 +31,69 @@ JSBloom.filter = function(items, target_prob) {
                 e = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$",
                 t = {},
                 i = {
-                    compressToBase64: function(o) {
+                    compressToBase64: function (o) {
                         if (null == o) return "";
-                        var r = i._compress(o, 6, function(o) {
+                        var r = i._compress(o, 6, function (o) {
                             return n.charAt(o)
                         });
                         switch (r.length % 4) {
-                            default:
-                                case 0:
-                                return r;
-                            case 1:
-                                    return r + "===";
-                            case 2:
-                                    return r + "==";
-                            case 3:
-                                    return r + "="
+                        default:
+                        case 0:
+                            return r;
+                        case 1:
+                            return r + "===";
+                        case 2:
+                            return r + "==";
+                        case 3:
+                            return r + "="
                         }
                     },
-                    decompressFromBase64: function(r) {
-                        return null == r ? "" : "" == r ? null : i._decompress(r.length, 32, function(e) {
+                    decompressFromBase64: function (r) {
+                        return null == r ? "" : "" == r ? null : i._decompress(r.length, 32, function (e) {
                             return o(n, r.charAt(e))
                         })
                     },
-                    compressToUTF16: function(o) {
-                        return null == o ? "" : i._compress(o, 15, function(o) {
+                    compressToUTF16: function (o) {
+                        return null == o ? "" : i._compress(o, 15, function (o) {
                             return r(o + 32)
                         }) + " "
                     },
-                    decompressFromUTF16: function(o) {
-                        return null == o ? "" : "" == o ? null : i._decompress(o.length, 16384, function(r) {
+                    decompressFromUTF16: function (o) {
+                        return null == o ? "" : "" == o ? null : i._decompress(o.length, 16384, function (r) {
                             return o.charCodeAt(r) - 32
                         })
                     },
-                    compressToUint8Array: function(o) {
+                    compressToUint8Array: function (o) {
                         for (var r = i.compress(o), n = new Uint8Array(2 * r.length), e = 0, t = r.length; t > e; e++) {
                             var s = r.charCodeAt(e);
                             n[2 * e] = s >>> 8, n[2 * e + 1] = s % 256
                         }
                         return n
                     },
-                    decompressFromUint8Array: function(o) {
+                    decompressFromUint8Array: function (o) {
                         if (null === o || void 0 === o) return i.decompress(o);
                         for (var n = new Array(o.length / 2), e = 0, t = n.length; t > e; e++) n[e] = 256 * o[2 * e] + o[2 * e + 1];
                         var s = [];
-                        return n.forEach(function(o) {
+                        return n.forEach(function (o) {
                             s.push(r(o))
                         }), i.decompress(s.join(""))
                     },
-                    compressToEncodedURIComponent: function(o) {
-                        return null == o ? "" : i._compress(o, 6, function(o) {
+                    compressToEncodedURIComponent: function (o) {
+                        return null == o ? "" : i._compress(o, 6, function (o) {
                             return e.charAt(o)
                         })
                     },
-                    decompressFromEncodedURIComponent: function(r) {
-                        return null == r ? "" : "" == r ? null : (r = r.replace(/ /g, "+"), i._decompress(r.length, 32, function(n) {
+                    decompressFromEncodedURIComponent: function (r) {
+                        return null == r ? "" : "" == r ? null : (r = r.replace(/ /g, "+"), i._decompress(r.length, 32, function (n) {
                             return o(e, r.charAt(n))
                         }))
                     },
-                    compress: function(o) {
-                        return i._compress(o, 16, function(o) {
+                    compress: function (o) {
+                        return i._compress(o, 16, function (o) {
                             return r(o)
                         })
                     },
-                    _compress: function(o, r, n) {
+                    _compress: function (o, r, n) {
                         if (null == o) return "";
                         var e, t, i, s = {},
                             p = {},
@@ -107,37 +107,37 @@ JSBloom.filter = function(items, target_prob) {
                             m = 0,
                             v = 0;
                         for (i = 0; i < o.length; i += 1)
-                            if (u = o.charAt(i), Object.prototype.hasOwnProperty.call(s, u) || (s[u] = f++, p[u] = !0), c = a + u, Object.prototype.hasOwnProperty.call(s, c)) a = c;
+                            if (u = o.charAt(i), Object.prototype.hasOwnProperty.call(s, u) || (s[u] = f++ , p[u] = !0), c = a + u, Object.prototype.hasOwnProperty.call(s, c)) a = c;
                             else {
                                 if (Object.prototype.hasOwnProperty.call(p, a)) {
                                     if (a.charCodeAt(0) < 256) {
                                         for (e = 0; h > e; e++) m <<= 1, v == r - 1 ? (v = 0, d.push(n(m)), m = 0) : v++;
-                                        for (t = a.charCodeAt(0), e = 0; 8 > e; e++) m = m << 1 | 1 & t, v == r - 1 ? (v = 0, d.push(n(m)), m = 0) : v++, t >>= 1
+                                        for (t = a.charCodeAt(0), e = 0; 8 > e; e++) m = m << 1 | 1 & t, v == r - 1 ? (v = 0, d.push(n(m)), m = 0) : v++ , t >>= 1
                                     } else {
-                                        for (t = 1, e = 0; h > e; e++) m = m << 1 | t, v == r - 1 ? (v = 0, d.push(n(m)), m = 0) : v++, t = 0;
-                                        for (t = a.charCodeAt(0), e = 0; 16 > e; e++) m = m << 1 | 1 & t, v == r - 1 ? (v = 0, d.push(n(m)), m = 0) : v++, t >>= 1
+                                        for (t = 1, e = 0; h > e; e++) m = m << 1 | t, v == r - 1 ? (v = 0, d.push(n(m)), m = 0) : v++ , t = 0;
+                                        for (t = a.charCodeAt(0), e = 0; 16 > e; e++) m = m << 1 | 1 & t, v == r - 1 ? (v = 0, d.push(n(m)), m = 0) : v++ , t >>= 1
                                     }
-                                    l--, 0 == l && (l = Math.pow(2, h), h++), delete p[a]
+                                    l-- , 0 == l && (l = Math.pow(2, h), h++), delete p[a]
                                 } else
-                                    for (t = s[a], e = 0; h > e; e++) m = m << 1 | 1 & t, v == r - 1 ? (v = 0, d.push(n(m)), m = 0) : v++, t >>= 1;
-                                l--, 0 == l && (l = Math.pow(2, h), h++), s[c] = f++, a = String(u)
+                                    for (t = s[a], e = 0; h > e; e++) m = m << 1 | 1 & t, v == r - 1 ? (v = 0, d.push(n(m)), m = 0) : v++ , t >>= 1;
+                                l-- , 0 == l && (l = Math.pow(2, h), h++), s[c] = f++ , a = String(u)
                             }
                         if ("" !== a) {
                             if (Object.prototype.hasOwnProperty.call(p, a)) {
                                 if (a.charCodeAt(0) < 256) {
                                     for (e = 0; h > e; e++) m <<= 1, v == r - 1 ? (v = 0, d.push(n(m)), m = 0) : v++;
-                                    for (t = a.charCodeAt(0), e = 0; 8 > e; e++) m = m << 1 | 1 & t, v == r - 1 ? (v = 0, d.push(n(m)), m = 0) : v++, t >>= 1
+                                    for (t = a.charCodeAt(0), e = 0; 8 > e; e++) m = m << 1 | 1 & t, v == r - 1 ? (v = 0, d.push(n(m)), m = 0) : v++ , t >>= 1
                                 } else {
-                                    for (t = 1, e = 0; h > e; e++) m = m << 1 | t, v == r - 1 ? (v = 0, d.push(n(m)), m = 0) : v++, t = 0;
-                                    for (t = a.charCodeAt(0), e = 0; 16 > e; e++) m = m << 1 | 1 & t, v == r - 1 ? (v = 0, d.push(n(m)), m = 0) : v++, t >>= 1
+                                    for (t = 1, e = 0; h > e; e++) m = m << 1 | t, v == r - 1 ? (v = 0, d.push(n(m)), m = 0) : v++ , t = 0;
+                                    for (t = a.charCodeAt(0), e = 0; 16 > e; e++) m = m << 1 | 1 & t, v == r - 1 ? (v = 0, d.push(n(m)), m = 0) : v++ , t >>= 1
                                 }
-                                l--, 0 == l && (l = Math.pow(2, h), h++), delete p[a]
+                                l-- , 0 == l && (l = Math.pow(2, h), h++), delete p[a]
                             } else
-                                for (t = s[a], e = 0; h > e; e++) m = m << 1 | 1 & t, v == r - 1 ? (v = 0, d.push(n(m)), m = 0) : v++, t >>= 1;
-                            l--, 0 == l && (l = Math.pow(2, h), h++)
+                                for (t = s[a], e = 0; h > e; e++) m = m << 1 | 1 & t, v == r - 1 ? (v = 0, d.push(n(m)), m = 0) : v++ , t >>= 1;
+                            l-- , 0 == l && (l = Math.pow(2, h), h++)
                         }
-                        for (t = 2, e = 0; h > e; e++) m = m << 1 | 1 & t, v == r - 1 ? (v = 0, d.push(n(m)), m = 0) : v++, t >>= 1;
-                        for (;;) {
+                        for (t = 2, e = 0; h > e; e++) m = m << 1 | 1 & t, v == r - 1 ? (v = 0, d.push(n(m)), m = 0) : v++ , t >>= 1;
+                        for (; ;) {
                             if (m <<= 1, v == r - 1) {
                                 d.push(n(m));
                                 break
@@ -146,12 +146,12 @@ JSBloom.filter = function(items, target_prob) {
                         }
                         return d.join("")
                     },
-                    decompress: function(o) {
-                        return null == o ? "" : "" == o ? null : i._decompress(o.length, 32768, function(r) {
+                    decompress: function (o) {
+                        return null == o ? "" : "" == o ? null : i._decompress(o.length, 32768, function (r) {
                             return o.charCodeAt(r)
                         })
                     },
-                    _decompress: function(o, n, e) {
+                    _decompress: function (o, n, e) {
                         var t, i, s, p, u, c, a, l, f = [],
                             h = 4,
                             d = 4,
@@ -166,52 +166,52 @@ JSBloom.filter = function(items, target_prob) {
                         for (i = 0; 3 > i; i += 1) f[i] = i;
                         for (p = 0, c = Math.pow(2, 2), a = 1; a != c;) u = A.val & A.position, A.position >>= 1, 0 == A.position && (A.position = n, A.val = e(A.index++)), p |= (u > 0 ? 1 : 0) * a, a <<= 1;
                         switch (t = p) {
-                            case 0:
-                                for (p = 0, c = Math.pow(2, 8), a = 1; a != c;) u = A.val & A.position, A.position >>= 1, 0 == A.position && (A.position = n, A.val = e(A.index++)), p |= (u > 0 ? 1 : 0) * a, a <<= 1;
-                                l = r(p);
-                                break;
-                            case 1:
-                                for (p = 0, c = Math.pow(2, 16), a = 1; a != c;) u = A.val & A.position, A.position >>= 1, 0 == A.position && (A.position = n, A.val = e(A.index++)), p |= (u > 0 ? 1 : 0) * a, a <<= 1;
-                                l = r(p);
-                                break;
-                            case 2:
-                                return ""
+                        case 0:
+                            for (p = 0, c = Math.pow(2, 8), a = 1; a != c;) u = A.val & A.position, A.position >>= 1, 0 == A.position && (A.position = n, A.val = e(A.index++)), p |= (u > 0 ? 1 : 0) * a, a <<= 1;
+                            l = r(p);
+                            break;
+                        case 1:
+                            for (p = 0, c = Math.pow(2, 16), a = 1; a != c;) u = A.val & A.position, A.position >>= 1, 0 == A.position && (A.position = n, A.val = e(A.index++)), p |= (u > 0 ? 1 : 0) * a, a <<= 1;
+                            l = r(p);
+                            break;
+                        case 2:
+                            return ""
                         }
-                        for (f[3] = l, s = l, w.push(l);;) {
+                        for (f[3] = l, s = l, w.push(l); ;) {
                             if (A.index > o) return "";
                             for (p = 0, c = Math.pow(2, m), a = 1; a != c;) u = A.val & A.position, A.position >>= 1, 0 == A.position && (A.position = n, A.val = e(A.index++)), p |= (u > 0 ? 1 : 0) * a, a <<= 1;
                             switch (l = p) {
-                                case 0:
-                                    for (p = 0, c = Math.pow(2, 8), a = 1; a != c;) u = A.val & A.position, A.position >>= 1, 0 == A.position && (A.position = n, A.val = e(A.index++)), p |= (u > 0 ? 1 : 0) * a, a <<= 1;
-                                    f[d++] = r(p), l = d - 1, h--;
-                                    break;
-                                case 1:
-                                    for (p = 0, c = Math.pow(2, 16), a = 1; a != c;) u = A.val & A.position, A.position >>= 1, 0 == A.position && (A.position = n, A.val = e(A.index++)), p |= (u > 0 ? 1 : 0) * a, a <<= 1;
-                                    f[d++] = r(p), l = d - 1, h--;
-                                    break;
-                                case 2:
-                                    return w.join("")
+                            case 0:
+                                for (p = 0, c = Math.pow(2, 8), a = 1; a != c;) u = A.val & A.position, A.position >>= 1, 0 == A.position && (A.position = n, A.val = e(A.index++)), p |= (u > 0 ? 1 : 0) * a, a <<= 1;
+                                f[d++] = r(p), l = d - 1, h--;
+                                break;
+                            case 1:
+                                for (p = 0, c = Math.pow(2, 16), a = 1; a != c;) u = A.val & A.position, A.position >>= 1, 0 == A.position && (A.position = n, A.val = e(A.index++)), p |= (u > 0 ? 1 : 0) * a, a <<= 1;
+                                f[d++] = r(p), l = d - 1, h--;
+                                break;
+                            case 2:
+                                return w.join("")
                             }
                             if (0 == h && (h = Math.pow(2, m), m++), f[l]) v = f[l];
                             else {
                                 if (l !== d) return null;
                                 v = s + s.charAt(0)
                             }
-                            w.push(v), f[d++] = s + v.charAt(0), h--, s = v, 0 == h && (h = Math.pow(2, m), m++)
+                            w.push(v), f[d++] = s + v.charAt(0), h-- , s = v, 0 == h && (h = Math.pow(2, m), m++)
                         }
                     }
                 };
             return i
         }();
-/*
-    "function" == typeof define && define.amd ? define(function() {
-            return LZString
-        }) : "undefined" != typeof module && null != module && (module.exports = LZString),
-*/
-        var bVector = new Uint8Array(BUFFER_LEN / 8);
+    /*
+        "function" == typeof define && define.amd ? define(function() {
+                return LZString
+            }) : "undefined" != typeof module && null != module && (module.exports = LZString),
+    */
+    var bVector = new Uint8Array(BUFFER_LEN / 8);
 
     var hashes = {
-        djb2: function(str) {
+        djb2: function (str) {
             var hash = 5381;
 
             for (var len = str.length, count = 0; count < len; count++) {
@@ -220,7 +220,7 @@ JSBloom.filter = function(items, target_prob) {
 
             return (hash >>> 0) % BUFFER_LEN;
         },
-        sdbm: function(str) {
+        sdbm: function (str) {
             var hash = 0;
 
             for (var len = str.length, count = 0; count < len; count++) {
@@ -231,7 +231,7 @@ JSBloom.filter = function(items, target_prob) {
         }
     }
 
-    var addEntry = function(str) {
+    var addEntry = function (str) {
 
         var h1 = hashes.djb2(str)
         var h2 = hashes.sdbm(str)
@@ -239,7 +239,7 @@ JSBloom.filter = function(items, target_prob) {
         for (var round = 0; round <= HASH_ROUNDS; round++) {
             var new_hash = round == 0 ? h1 :
                 round == 1 ? h2 :
-                (h1 + (round * h2) + (round ^ 2)) % BUFFER_LEN;
+                    (h1 + (round * h2) + (round ^ 2)) % BUFFER_LEN;
 
             var extra_indices = new_hash % 8,
                 index = ((new_hash - extra_indices) / 8);
@@ -257,7 +257,7 @@ JSBloom.filter = function(items, target_prob) {
         return added;
     }
 
-    var addEntries = function(arr) {
+    var addEntries = function (arr) {
         for (var i = arr.length - 1; i >= 0; i--) {
 
             addEntry(arr[i]);
@@ -267,7 +267,7 @@ JSBloom.filter = function(items, target_prob) {
         return true;
     }
 
-    var checkEntry = function(str) {
+    var checkEntry = function (str) {
         var index, extra_indices
         var h1 = hashes.djb2(str)
 
@@ -305,7 +305,7 @@ JSBloom.filter = function(items, target_prob) {
         return true;
     }
 
-    var importData = function(lzData, k) {
+    var importData = function (lzData, k) {
 
         var raw_data = LZString.decompressFromBase64(lzData),
             data = raw_data.split(',');
@@ -317,14 +317,14 @@ JSBloom.filter = function(items, target_prob) {
 
     }
 
-    var exportData = function(callback) {
+    var exportData = function (callback) {
 
         switch (typeof callback) {
-            case "function":
-                callback(LZString.compressToBase64(bVector.toString()));
-                break;
-            default:
-                return LZString.compressToBase64(bVector.toString());
+        case "function":
+            callback(LZString.compressToBase64(bVector.toString()));
+            break;
+        default:
+            return LZString.compressToBase64(bVector.toString());
         }
 
 

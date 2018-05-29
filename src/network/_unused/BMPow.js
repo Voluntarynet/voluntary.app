@@ -124,8 +124,8 @@ window.BMPow = ideal.Proto.extend().newSlots({
             this._doneNote.post()                
         } else {
             if (this.isFinding()) {
-               this.setStatus("generating level " + this.targetDifficulty() + " stamp... " + this.highlightString(this.estimatedPercentageDone() + "%"))               
-               this._updateNote.post()
+                this.setStatus("generating level " + this.targetDifficulty() + " stamp... " + this.highlightString(this.estimatedPercentageDone() + "%"))               
+                this._updateNote.post()
                 setTimeout(() =>{ 
                     this.PRIVATE_findPowLoop()
                 }, 100);
@@ -260,8 +260,8 @@ window.BMPow = ideal.Proto.extend().newSlots({
     
     catShaBits: function() {
         var catBits  = sjcl.bitArray.concat(this.hashBits(), this.powBits());
-		return sjcl.hash.sha256.hash(catBits);
-	},
+        return sjcl.hash.sha256.hash(catBits);
+    },
     
     leftZeroBitCount: function() {
         return sjcl.codec.bits.leftZeroBitCount(this.catShaBits());
@@ -314,20 +314,20 @@ window.BMPow = ideal.Proto.extend().newSlots({
     },
     
     boundsCheckTargetDifficulty: function() {
-       var d = this.targetDifficulty() 
-       if (d < 0) { d = 0; }        
-       if (d > this.maxDifficulty()) { d = this.maxDifficulty(); }  
-       this.setTargetDifficulty(d)      
+        var d = this.targetDifficulty() 
+        if (d < 0) { d = 0; }        
+        if (d > this.maxDifficulty()) { d = this.maxDifficulty(); }  
+        this.setTargetDifficulty(d)      
     },
     
     decrementDifficulty: function() {
-       this.setTargetDifficulty(this.targetDifficulty() - 1)
-       this.boundsCheckTargetDifficulty()
+        this.setTargetDifficulty(this.targetDifficulty() - 1)
+        this.boundsCheckTargetDifficulty()
     },
     
     incrementDifficulty: function() {
-       this.setTargetDifficulty(this.targetDifficulty() + 1)
-       this.boundsCheckTargetDifficulty()
+        this.setTargetDifficulty(this.targetDifficulty() + 1)
+        this.boundsCheckTargetDifficulty()
     },
 
 })

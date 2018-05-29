@@ -2,15 +2,15 @@
 
 window.BMAppMessage = BMFieldSetNode.extend().newSlots({
     type: "BMAppMessage",
-	objMsg: null,
-	senderId: null,
-	receiverId: null,
-	hasRead: false,
+    objMsg: null,
+    senderId: null,
+    receiverId: null,
+    hasRead: false,
 }).setSlots({
     init: function () {
         BMFieldSetNode.init.apply(this)
-		this.setShouldStore(true)
-		this.addStoredSlots(["senderId", "receiverId", "objMsg"])
+        this.setShouldStore(true)
+        this.addStoredSlots(["senderId", "receiverId", "objMsg"])
     },
 
     senderPublicKeyString: function() {
@@ -23,82 +23,82 @@ window.BMAppMessage = BMFieldSetNode.extend().newSlots({
     
     // ------------------------
 	
-	duplicate: function() {
+    duplicate: function() {
 	    assert(this.objMsg() != null)
-		var obj = window[this.type()].clone()
-		obj.setSenderId(this.senderId())
-		obj.setReceiverId(this.receiverId())
-		obj.setObjMsg(this.objMsg())
-		obj.setDataDict(this.dataDict())
-		console.log(this.typeId() + " duplicated to " + obj.typeId())
-		return obj
-	},
+        var obj = window[this.type()].clone()
+        obj.setSenderId(this.senderId())
+        obj.setReceiverId(this.receiverId())
+        obj.setObjMsg(this.objMsg())
+        obj.setDataDict(this.dataDict())
+        console.log(this.typeId() + " duplicated to " + obj.typeId())
+        return obj
+    },
 
-	contentDict: function() {
-		throw new Error(this.type() + " subclasses should override contentDict")
-		var contentDict = {}
-		return contentDict
-	},
+    contentDict: function() {
+        throw new Error(this.type() + " subclasses should override contentDict")
+        var contentDict = {}
+        return contentDict
+    },
 	
-	setContentDict: function(contentDict) {
-		throw new Error(this.type() + " subclasses should override setContentDict")
-		return this
-	},
+    setContentDict: function(contentDict) {
+        throw new Error(this.type() + " subclasses should override setContentDict")
+        return this
+    },
 	
     dataDict: function() {
         var dataDict = {}
-		dataDict.type = this.type()
-		dataDict.data = this.contentDict()
+        dataDict.type = this.type()
+        dataDict.data = this.contentDict()
         return dataDict
     },
 
-	setDataDict: function(dataDict) {
+    setDataDict: function(dataDict) {
 	    this.setContentDict(dataDict.data)		
-		return this
-	},
+        return this
+    },
 
-	setDecryptedData: function(decryptedData) {
-		return this
-	},
+    setDecryptedData: function(decryptedData) {
+        return this
+    },
 	
-	isSent: function() {
-		return this.objMsg() != null
-	},
+    isSent: function() {
+        return this.objMsg() != null
+    },
 	
-	canEdit: function() {
-		return !this.isSent()
-	},
+    canEdit: function() {
+        return !this.isSent()
+    },
 
     sendToRemoteId: function (rid) {
         //console.log("rid = ", rid.typeId())
         var lid = rid.localIdentity()
         this.setSenderId(lid)
-		this.setReceiverId(rid)
+        this.setReceiverId(rid)
         
         var objMsg = BMObjectMessage.clone()
         objMsg.setSenderPublicKeyString(lid.publicKeyString())
         objMsg.setEncryptedData(rid.encryptJson(this.dataDict()))
-		objMsg.makeTimeStampNow()
-		objMsg.signWithSenderId(lid)
-		if (objMsg.hasValidationErrors()) {
-			console.log(this.typeId() + ".sendToRemoteId() validationErrors:" + objMsg.hasValidationErrors().join(","))
-		} else {
+        objMsg.makeTimeStampNow()
+        objMsg.signWithSenderId(lid)
+        if (objMsg.hasValidationErrors()) {
+            console.log(this.typeId() + ".sendToRemoteId() validationErrors:" + objMsg.hasValidationErrors().join(","))
+        } else {
         	this.setObjMsg(objMsg)
-			this.objMsg().send()
-		}
-		return this
+            this.objMsg().send()
+        }
+        return this
     },
     
-	hash: function() {
-		if (this.objMsg()) {
-			return this.objMsg().msgHash()
-		}
-		return this.typeId()
-	},
+    hash: function() {
+        if (this.objMsg()) {
+            return this.objMsg().msgHash()
+        }
+        return this.typeId()
+    },
 	
-	isEqual: function(other) {
-		return this.hash() == other.hash()
-	},
+    isEqual: function(other) {
+        return this.hash() == other.hash()
+    },
 	    
     fromDataDict: function(dataDict) {
         var className = dataDict.type
@@ -106,26 +106,26 @@ window.BMAppMessage = BMFieldSetNode.extend().newSlots({
             return null
         }
 
-		if (!className.endsWith("Message")) {
-			return null
-		}
+        if (!className.endsWith("Message")) {
+            return null
+        }
         
         var proto = window[className]
         if (!proto) {
             return null
         }
         
-		//console.log(this.type() + " fromDataDict() dataDict = ", dataDict)
+        //console.log(this.type() + " fromDataDict() dataDict = ", dataDict)
         return proto.clone().setDataDict(dataDict)
     },
 
-	prepareToDelete: function() {
-		if (this.objMsg()) {
-			this.objMsg().delete()
-		}
-	},
+    prepareToDelete: function() {
+        if (this.objMsg()) {
+            this.objMsg().delete()
+        }
+    },
 	
-	// --- public posts ----
+    // --- public posts ----
 	
     postFromSender: function (lid) {
         this.setSenderId(lid)
@@ -133,16 +133,16 @@ window.BMAppMessage = BMFieldSetNode.extend().newSlots({
         var objMsg = BMObjectMessage.clone()
         objMsg.setSenderPublicKeyString(lid.publicKeyString())
         objMsg.setData(this.dataDict())
-		objMsg.makeTimeStampNow()
-		objMsg.signWithSenderId(lid)
-		if (objMsg.hasValidationErrors()) {
-			console.log(this.typeId() + ".sendToRemoteId() validationErrors:" + objMsg.hasValidationErrors().join(","))
-		} else {
+        objMsg.makeTimeStampNow()
+        objMsg.signWithSenderId(lid)
+        if (objMsg.hasValidationErrors()) {
+            console.log(this.typeId() + ".sendToRemoteId() validationErrors:" + objMsg.hasValidationErrors().join(","))
+        } else {
         	this.setObjMsg(objMsg)
-			this.objMsg().send()
-			console.log(this.typeId() + ".postFromSender() sent!")
-		}
-		return this
+            this.objMsg().send()
+            console.log(this.typeId() + ".postFromSender() sent!")
+        }
+        return this
     },
     
     // updating hasRead

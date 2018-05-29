@@ -7,45 +7,45 @@
 window.DivTransitions = ideal.Proto.extend().newSlots({
     type: "DivTransitions",
     properties: null,
-	divView: null,
+    divView: null,
 }).setSlots({
     init: function () {
-		this.setProperties({})
+        this.setProperties({})
         return this
     },
 
-	at: function(aName) {
-		var d = this.properties()
-		if (!(name in d)) {
-			d[name] = DivTransition.clone().setTransitions(this)
-		}
-		return d[name]
-	},
+    at: function(aName) {
+        var d = this.properties()
+        if (!(name in d)) {
+            d[name] = DivTransition.clone().setTransitions(this)
+        }
+        return d[name]
+    },
 
-	propertiesAsList: function() {
-		return Object.values(this.properties())	
-	},
+    propertiesAsList: function() {
+        return Object.values(this.properties())	
+    },
 	
-	asString: function(aString) {
-		return this.propertiesAsList().map((t) => { return t.asString() }).join(", ")
-	},
+    asString: function(aString) {
+        return this.propertiesAsList().map((t) => { return t.asString() }).join(", ")
+    },
 	
-	syncToDiv: function() {
-		this.divView().setTransition(this.asString())
-		return this
-	},
+    syncToDiv: function() {
+        this.divView().setTransition(this.asString())
+        return this
+    },
 	
-	syncFromDiv: function() {
-		this.setProperties({})
+    syncFromDiv: function() {
+        this.setProperties({})
 
-		var s = this.divView().transition()
-		var transitionStrings = s.split(",")
+        var s = this.divView().transition()
+        var transitionStrings = s.split(",")
 
-		transitionStrings.forEach((tString) => {
-			var t = DivTransition.clone().setFromString(tString)
-			this.properties()[t.property()] = t
-		})
+        transitionStrings.forEach((tString) => {
+            var t = DivTransition.clone().setFromString(tString)
+            this.properties()[t.property()] = t
+        })
 		
-		return this
-	},
+        return this
+    },
 })

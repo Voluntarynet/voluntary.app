@@ -3,7 +3,7 @@
 window.ContentView = NodeView.extend().newSlots({
     type: "ContentView",
 }).setSlots({
-	/*
+    /*
     init: function () {
         NodeView.init.apply(this)
         return this

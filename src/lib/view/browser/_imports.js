@@ -1,7 +1,7 @@
 "use strict"
 
 JSImporter.pushRelativePaths([
-	"_css.css",
+    "_css.css",
     "BrowserView.js",
     "BrowserColumn.js",
     "BrowserColumnGroup.js",
@@ -12,7 +12,7 @@ JSImporter.pushRelativePaths([
     "BrowserFooter.js",
     
     "BrowserRow.js",
-	"BrowserTitledRow.js",
+    "BrowserTitledRow.js",
     "BrowserRowNote.js",
     "BrowserRowSubtitle.js",
     "BrowserRowTitle.js",

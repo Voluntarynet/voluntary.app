@@ -7,13 +7,13 @@ window.BMActionFieldRowView = BrowserRow.extend().newSlots({
     init: function () {
         BrowserRow.init.apply(this)
 		
-		this.styles().unselected().setColor("#888")
-		this.styles().unselected().setBackgroundColor("white")
+        this.styles().unselected().setColor("#888")
+        this.styles().unselected().setBackgroundColor("white")
 
-		this.styles().selected().setColor("#888")
-		this.styles().selected().setBackgroundColor("#eee")
+        this.styles().selected().setColor("#888")
+        this.styles().selected().setBackgroundColor("#eee")
 		
-		this.setButtonView(DivView.clone().setDivClassName("BMActionFieldButtonView"))
+        this.setButtonView(DivView.clone().setDivClassName("BMActionFieldButtonView"))
 	    this.buttonView().setTarget(this).setAction("didClickButton")
 	    this.buttonView().setTransition("all 0.3s")
 
@@ -23,17 +23,17 @@ window.BMActionFieldRowView = BrowserRow.extend().newSlots({
     },
 
     updateSubviews: function () {	
-		BrowserRow.updateSubviews.apply(this)
+        BrowserRow.updateSubviews.apply(this)
 		
         var bv = this.buttonView()
         bv.setInnerHTML(this.node().key())
         
-		if (this.node().isEnabled()) {
-			//bv.setBackgroundColor("black").setColor("white")
-			bv.setOpacity(1)	
-		} else {
-			bv.setOpacity(0.5)	
-		}
+        if (this.node().isEnabled()) {
+            //bv.setBackgroundColor("black").setColor("white")
+            bv.setOpacity(1)	
+        } else {
+            bv.setOpacity(0.5)	
+        }
 
         this.applyStyles()
 		

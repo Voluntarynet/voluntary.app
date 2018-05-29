@@ -4,7 +4,7 @@
 window.BMChannel = BMStorableNode.extend().newSlots({
     type: "BMChannel",
     name: "",
-	debug: false,
+    debug: false,
 }).setSlots({
     init: function () {
         this.addStoredSlot("name")

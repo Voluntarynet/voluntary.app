@@ -17,9 +17,9 @@ window.BMMessage = BMFieldSetNode.extend().newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
-		this.setShouldStore(true)
+        this.setShouldStore(true)
         this.setNodeMinWidth(650)
-		this.setNodeColumnBackgroundColor("white")
+        this.setNodeColumnBackgroundColor("white")
         //this.setViewClassName("BMMessageView")
     },
 
@@ -27,14 +27,14 @@ window.BMMessage = BMFieldSetNode.extend().newSlots({
         return this.msgType()
     },
 
-	prepareToAccess: function() {
+    prepareToAccess: function() {
 	    // as this field is only needed when viewing the Message in the browser,
 	    // so create it as needed here instead of in the init method
-		if (!this._didSetupFields) {
-			this.justAddField(BMTextAreaField.clone().setKey("dict").setValueMethod("msgDictString").setValueIsEditable(false).setIsMono(true))
-			this._didSetupFields = true
-		}
-	},
+        if (!this._didSetupFields) {
+            this.justAddField(BMTextAreaField.clone().setKey("dict").setValueMethod("msgDictString").setValueIsEditable(false).setIsMono(true))
+            this._didSetupFields = true
+        }
+    },
     
     // dict
     

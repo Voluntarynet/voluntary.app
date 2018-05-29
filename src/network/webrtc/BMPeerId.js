@@ -11,8 +11,8 @@
 window.BMPeerId = BMNode.extend().newSlots({
     type: "BMPeerId",
     publicKeyString: null,
-	bloomFilter: null,
-	error: null,
+    bloomFilter: null,
+    error: null,
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)
@@ -20,30 +20,30 @@ window.BMPeerId = BMNode.extend().newSlots({
         this.setTitle("Connection")
     },
     
-	title: function() {
-		return this.publicKeyString()
-	},
+    title: function() {
+        return this.publicKeyString()
+    },
 	
-	subtitle: function() {
-		return this.encodedBloomString()
-	},
-	
-	
-	// --- public key ---
-	
-	encodedPublicKeyString: function() {
-		return this.publicKeyString()
-	},
-	
-	setEncodedPublicKeyString: function(aString) {
-		this.setPublicKeyString(aString)
-		return this
-	},
+    subtitle: function() {
+        return this.encodedBloomString()
+    },
 	
 	
-	// --- bloom key ---
+    // --- public key ---
 	
-	/*
+    encodedPublicKeyString: function() {
+        return this.publicKeyString()
+    },
+	
+    setEncodedPublicKeyString: function(aString) {
+        this.setPublicKeyString(aString)
+        return this
+    },
+	
+	
+    // --- bloom key ---
+	
+    /*
 	encodedBloomString: function() {
 		assert(this.bloomFilter() != null)
 		var s = this.bloomFilter().exportData();
@@ -65,62 +65,62 @@ window.BMPeerId = BMNode.extend().newSlots({
 	},
 	*/
 	
-	encodedBloomString: function() {
-		assert(this.bloomFilter() != null)
-		return this.bloomFilter().serialized()
-	},
+    encodedBloomString: function() {
+        assert(this.bloomFilter() != null)
+        return this.bloomFilter().serialized()
+    },
 	
-	setEncodedBloomString: function(s) {
-		var filter = BMNetwork.shared().newDefaultBloomFilter().unserialized(s)
-		this.setBloomFilter(filter)
-		return this
-	},
+    setEncodedBloomString: function(s) {
+        var filter = BMNetwork.shared().newDefaultBloomFilter().unserialized(s)
+        this.setBloomFilter(filter)
+        return this
+    },
 	
-	// --- to/from string ----
+    // --- to/from string ----
 	
-	toString: function() {
-		//return this.chooseRandomPeerId()
+    toString: function() {
+        //return this.chooseRandomPeerId()
 		
-		return this.encodedPublicKeyString() + "-" + this.encodedBloomString()
-	},
+        return this.encodedPublicKeyString() + "-" + this.encodedBloomString()
+    },
 	
-	setFromString: function(aString) {
-		var parts = aString.split("-")
-		var pubkey = parts[0]
-		var bloom = parts[1] // open relay blooms are all 1s
+    setFromString: function(aString) {
+        var parts = aString.split("-")
+        var pubkey = parts[0]
+        var bloom = parts[1] // open relay blooms are all 1s
 		
-		try {
+        try {
 		    if (pubkey && bloom) {
 			    this.setEncodedPublicKeyString(pubkey)
 			    this.setEncodedBloomString(bloom)
 		    } else {
 		        console.warn("WARNING: peer name '" + aString + "' doesn't contain pubkey and bloom")
 		    }
-		} catch(e) {
-			this.setError(e)
-			console.log("PeerId.setFromString('" + aString + "') error: ", e)
-			return null
-		}
+        } catch(e) {
+            this.setError(e)
+            console.log("PeerId.setFromString('" + aString + "') error: ", e)
+            return null
+        }
 		
-		assert(this.publicKeyString() != null)
-		assert(this.bloomFilter() != null)
-		assert(this.encodedBloomString() != null)
+        assert(this.publicKeyString() != null)
+        assert(this.bloomFilter() != null)
+        assert(this.encodedBloomString() != null)
 		
-		//console.log("parsed peerid publicKeyString [" + this.publicKeyString() + "] bloom [ " + this.encodedBloomString() + "]")
+        //console.log("parsed peerid publicKeyString [" + this.publicKeyString() + "] bloom [ " + this.encodedBloomString() + "]")
 		
-		return this
-	},
+        return this
+    },
 	
-	chooseRandomPeerId: function() {
-		var s = ""
-		var max = 10
-		for (var i = 0; i < max; i++) {
-			s = s + (Math.floor(Math.random()*1000000) % 10)
-		}
-		return s
-	},
+    chooseRandomPeerId: function() {
+        var s = ""
+        var max = 10
+        for (var i = 0; i < max; i++) {
+            s = s + (Math.floor(Math.random()*1000000) % 10)
+        }
+        return s
+    },
 	
-	/*
+    /*
 	matchesPeerId: function(otherPeerId) {
 	    this.bloomFilter().
 	},

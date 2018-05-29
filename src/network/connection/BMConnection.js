@@ -7,31 +7,31 @@ window.BMConnection = BMNode.extend().newSlots({
     connection: null,
     lastConnectionType: null,
     lastIsOnline: 0,
-	debug: false,
+    debug: false,
 }).setSlots({
     init: function () {
-		if (BMConnection._shared) {
-			throw new Error("multiple instances of " + this.type() + " singleton")
-		}
+        if (BMConnection._shared) {
+            throw new Error("multiple instances of " + this.type() + " singleton")
+        }
 		
-		BMConnection._shared = this
+        BMConnection._shared = this
 
         BMNode.init.apply(this)
 		
         this.setTitle("Connection")
         this.setNodeMinWidth(200)
 
-		//this.setServers(NodeStore.shared().rootInstanceWithPidForProto("_servers", BMRServers))
-		//this.addSubnode(this.servers())
+        //this.setServers(NodeStore.shared().rootInstanceWithPidForProto("_servers", BMRServers))
+        //this.addSubnode(this.servers())
 		
         this.setConnection(navigator.connection || navigator.mozConnection || navigator.webkitConnection)
         this.updateLastState()  
         this.registerForConnectionChange()
     },
     
-	shared: function() {
-		return BMConnection._shared
-	},
+    shared: function() {
+        return BMConnection._shared
+    },
     
     connectionType: function() {
         var s = this.connection().effectiveType
@@ -60,20 +60,20 @@ window.BMConnection = BMNode.extend().newSlots({
         return this
     },    
 
-	registerForConnectionChange: function() {
-        this.connection().addEventListener('change', () => { this.onNetworkInformationChange() });
+    registerForConnectionChange: function() {
+        this.connection().addEventListener("change", () => { this.onNetworkInformationChange() });
         return this
-	},
+    },
 	
-	didComeOnline: function() {
+    didComeOnline: function() {
 	    return this.lastIsOnline() == false && this.isOnline() == true
-	},
+    },
 	
-	didGoOffline: function() {
+    didGoOffline: function() {
 	    return this.lastIsOnline() == true && this.isOnline() == false
-	},
+    },
 	
-	onNetworkInformationChange: function() {
+    onNetworkInformationChange: function() {
         //console.log(this.type() + "Connection type changed from " + this.lastConnectionType() + " to " +  this.connectionType(), this.connection());	  
 
         NotificationCenter.shared().newNotification().setSender(this).setName("onNetworkInformationChange").post()
@@ -88,15 +88,15 @@ window.BMConnection = BMNode.extend().newSlots({
         if (this.didGoOffline()) {
             this.onNetworkOffline()
         }
-	},
+    },
 	
-	onNetworkOnline: function() {
+    onNetworkOnline: function() {
         NotificationCenter.shared().newNotification().setSender(this).setName("onNetworkOnline").post()
-	},
+    },
     
-	onNetworkOffline: function() {
+    onNetworkOffline: function() {
         NotificationCenter.shared().newNotification().setSender(this).setName("onNetworkOffline").post()
-	},
+    },
 	
     isOnline: function() {
         return this.rtt() != 0

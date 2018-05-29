@@ -13,7 +13,7 @@ window.BMBlacklistedServers = BMBlacklist.extend().newSlots({
         BMBlacklist.init.apply(this)		
         this.setShouldStore(true)        
         this.setTitle("servers")
-		this.addStoredSlot("ipsDict")
+        this.addStoredSlot("ipsDict")
     },
 	
 })

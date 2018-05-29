@@ -226,8 +226,8 @@ window.BMPayload = ideal.Proto.extend().newSlots({
         var pow = BMPow.clone().setHash(hash).setPowHex(this.data().pow)
 
         if (pow.isValid()) {
-           //pow.show()
-           this.setData(this.data().payload)
+            //pow.show()
+            this.setData(this.data().payload)
         } else {
             pow.show()
             this.throwError("invalid pow")

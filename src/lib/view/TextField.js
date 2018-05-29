@@ -10,60 +10,60 @@
 
 window.TextField = DivStyledView.extend().newSlots({
     type: "TextField",
-	isSelected: false,
-	selectedColor: null,
-	unselectedColor: null,
-	doesClearOnReturn: false,
-	doesHoldFocusOnReturn: false,
-	doesTrim: true,
+    isSelected: false,
+    selectedColor: null,
+    unselectedColor: null,
+    doesClearOnReturn: false,
+    doesHoldFocusOnReturn: false,
+    doesTrim: true,
 }).setSlots({
     init: function () {
         DivView.init.apply(this)
-		this.setDisplay("inline-block")
+        this.setDisplay("inline-block")
         this.turnOffUserSelect()
-		this.setWhiteSpace("nowrap")
-		this.setOverflow("hidden")
-		this.setDisplay("inline-block")
-		this.setTextOverflow("ellipsis")
-		this.setSpellCheck(false)
+        this.setWhiteSpace("nowrap")
+        this.setOverflow("hidden")
+        this.setDisplay("inline-block")
+        this.setTextOverflow("ellipsis")
+        this.setSpellCheck(false)
 		
-		//this.setUnfocusOnEnterKey(true)
-		//this.setIsRegisteredForKeyboard(true) // gets set by setContentEditable()
-		this.formatValue()
+        //this.setUnfocusOnEnterKey(true)
+        //this.setIsRegisteredForKeyboard(true) // gets set by setContentEditable()
+        this.formatValue()
         return this
     },
 	
-	returnStrings: function() {
-		return ["<div><br></div>", "<br><br>"]
-	},
+    returnStrings: function() {
+        return ["<div><br></div>", "<br><br>"]
+    },
 	
-	containsReturns: function() {
+    containsReturns: function() {
         returnStrings.forEach((returnString) => {
             if (s.contains(returnString)) {
                 return true
             }
         })		
-		return false
-	},
+        return false
+    },
 	
-	// ------------------
+    // ------------------
 
-	setValue: function(newValue) {
+    setValue: function(newValue) {
         //var newValue = this.visibleValue()
 	    this.setInnerHTML(newValue)
-		return this
-	},	
+        return this
+    },	
 			
-	value: function() {
+    value: function() {
 	    /*
 	    return this.element().text
         */
 	    return this.innerHTML()
-	},
+    },
 	
-	// ------------------
+    // ------------------
     
-	onEnterKeyUp: function(event) {
+    onEnterKeyUp: function(event) {
 	    //console.log(this.typeId() + ".onEnterKeyUp()")
 	    //this.didEdit()
 	    
@@ -81,10 +81,10 @@ window.TextField = DivStyledView.extend().newSlots({
             //this.focusAfterDelay(.125) // hack to get focus back after chat view scrolling - todo: fix this
         }
         
-		return false
-	},
+        return false
+    },
 	
-	formatValue: function() {
+    formatValue: function() {
 	    var oldValue = this.innerHTML()
 	    var newValue = this.innerText() // removes returns
         
@@ -96,8 +96,8 @@ window.TextField = DivStyledView.extend().newSlots({
         
 	    //console.trace(this.type() + " formatValue '" + oldValue + "' -> '" + this.innerHTML() + "'")
         //console.log(this.type() + " after formatValue: '" + this.innerHTML() + "'")
-		return this
-	},
+        return this
+    },
     
     /*
     setInput: function(s) {

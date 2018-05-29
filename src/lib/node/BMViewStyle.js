@@ -4,37 +4,37 @@ window.BMViewStyle = ideal.Proto.extend().newSlots({
     type: "BMViewStyle",
     name: "",
 
-	// use same names as css style, nulls aren't applied
+    // use same names as css style, nulls aren't applied
 	
     color: null,
     backgroundColor: null,
-	opacity: null,
-	borderLeft: null,
-	borderRight: null,
+    opacity: null,
+    borderLeft: null,
+    borderRight: null,
 	
-	// margin, padding, border,...
-	// fontSize, fontFamily, fontStyle
+    // margin, padding, border,...
+    // fontSize, fontFamily, fontStyle
 	
-	styleNames: ["color", "backgroundColor", "opacity", "borderLeft", "borderRight"]
+    styleNames: ["color", "backgroundColor", "opacity", "borderLeft", "borderRight"]
 }).setSlots({
     init: function () {
         return this
     },
 
-	description: function() {
-		var parts = []
+    description: function() {
+        var parts = []
 		
-		this.styleNames().forEach( (name) => { 
-			var v = this[name].apply(this)
-			if (v != null) {
-				parts.push(name + ":" + v)
-			}
-		})	
+        this.styleNames().forEach( (name) => { 
+            var v = this[name].apply(this)
+            if (v != null) {
+                parts.push(name + ":" + v)
+            }
+        })	
 		
-		return "{" + parts.join(", ") + "}"	
-	},
+        return "{" + parts.join(", ") + "}"	
+    },
 	
-	/*
+    /*
 	setBackgroundColor: function(c) {
 		this._backgroundColor = c
 		console.warn(this.typeId() + ".setBackgroundColor(" + c + ")")
@@ -42,23 +42,23 @@ window.BMViewStyle = ideal.Proto.extend().newSlots({
 	},
 	*/
 	
-	copyFrom: function(aViewStyle) {
-		aViewStyle.applyToView(this) // since it uses the same methods
-		return this
-	},
+    copyFrom: function(aViewStyle) {
+        aViewStyle.applyToView(this) // since it uses the same methods
+        return this
+    },
 	
-	applyToView: function(aView) {		
-		this.styleNames().forEach( (name) => { 
-			var v = this[name].apply(this)
-			if (v != null) {
-				aView[aView.setterNameForSlot(name)].apply(aView, [v])
-			}
-		})
+    applyToView: function(aView) {		
+        this.styleNames().forEach( (name) => { 
+            var v = this[name].apply(this)
+            if (v != null) {
+                aView[aView.setterNameForSlot(name)].apply(aView, [v])
+            }
+        })
 		
-		return this
-	},
+        return this
+    },
 	
-	/*
+    /*
 	applyToView: function(aView) {
 
         if (this.color() != null) {

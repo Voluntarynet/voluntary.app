@@ -67,7 +67,7 @@ window.BMRegion = BMNode.extend().newSlots({
     },
     
     addChildrenDicts: function(children) {
-         if (children) {
+        if (children) {
             var max = children.length
             for(var i = 0; i < max; i++) {
                 var childDict = children[i]
@@ -108,33 +108,33 @@ window.BMRegion = BMNode.extend().newSlots({
             this._lazyChildrenDict = null
             this.addChildrenDicts(ld.children)
             this.setupCategoryLeaves()
-       }        
+        }        
     },
     
-	postPathString: function() {
+    postPathString: function() {
         var path = this.nodePath()
         path.removeFirst()
         var pathString = path.map(function (p) { return p.title() }).join("/")	
-		return pathString
-	},
+        return pathString
+    },
 	
     add: function () {  
-		/*
+        /*
         var sell = BMSell.clone()
         App.shared().sells().addSubnode(sell)
         App.shared().browser().selectNode(sell)
         var post = sell.post()
         */
 
-		var post = BMClassifiedPost.clone()
+        var post = BMClassifiedPost.clone()
         post.setPath(this.postPathString())
         post.setIsEditable(true)
         App.shared().appNamed("Classifieds").sells().addSubnode(post)
         App.shared().browser().selectNode(post)
 
-		if (this.title() == "Tests") {
-			post.fillWithTestData()
-		}
+        if (this.title() == "Tests") {
+            post.fillWithTestData()
+        }
 
         return null
     },

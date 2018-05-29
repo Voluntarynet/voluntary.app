@@ -7,17 +7,17 @@ window.BMChatThreads = BMContactLinks.extend().newSlots({
     init: function () {
         BMContactLinks.init.apply(this)
         this.setLinkProto(BMChatThread)
-		//this.setNodeColumnBackgroundColor("white")
+        //this.setNodeColumnBackgroundColor("white")
 		
     },
 
-	finalize: function() {
-		BMContactLinks.finalize.apply(this)
-		this.setTitle("direct messages")
-	},
+    finalize: function() {
+        BMContactLinks.finalize.apply(this)
+        this.setTitle("direct messages")
+    },
 	
-	shelfIconName: function() {
-		return "chat/direct_messages"
+    shelfIconName: function() {
+        return "chat/direct_messages"
 	    //return "mail-white"
-	},
+    },
 })

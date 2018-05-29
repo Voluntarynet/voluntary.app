@@ -4,12 +4,12 @@
 window.BMPostThread = BMAppMessage.extend().newSlots({
     type: "BMPostThread",
 	
-	postMessage: null,
+    postMessage: null,
 }).setSlots({
     
     init: function () {
         BMAppMessage.init.apply(this)	
-		this.nodeRowStyles().setToBlackOnWhite()
+        this.nodeRowStyles().setToBlackOnWhite()
     },
     
     title: function() {

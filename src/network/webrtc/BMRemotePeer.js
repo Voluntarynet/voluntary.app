@@ -8,7 +8,7 @@ window.BMRemotePeer = BMNode.extend().newSlots({
     messages: null,
     status: null,
     remoteInventory: null,
-	peerId: null,
+    peerId: null,
     debug: false,
 }).setSlots({
     init: function () {
@@ -18,24 +18,24 @@ window.BMRemotePeer = BMNode.extend().newSlots({
         this.setMessages(BMNode.clone().setTitle("messages").setNoteIsSubnodeCount(true))
         this.addSubnode(this.messages())
         this.setRemoteInventory({})
-		this.setPeerId(BMPeerId.clone())
+        this.setPeerId(BMPeerId.clone())
     },
 
-	setPeerIdString: function(id) {
-		//this.log(.setPeerIdString(" + id + ")")
+    setPeerIdString: function(id) {
+        //this.log(.setPeerIdString(" + id + ")")
 	 	this.peerId().setFromString(id)
-		this.updateTitle()
-		return this
-	},
+        this.updateTitle()
+        return this
+    },
 	
-	hash: function() {
-		return this.peerId().toString()
-	},
+    hash: function() {
+        return this.peerId().toString()
+    },
     
     log: function(s) {
-		if(this.debug()) {
+        if(this.debug()) {
         	console.log(this.fullShortId() + " " + s)
-		}
+        }
         return this
     },
     
@@ -48,9 +48,9 @@ window.BMRemotePeer = BMNode.extend().newSlots({
         return this.hash().substring(0, 3)
     },
 
-	fullShortId: function() {
-		return "RemotePeer " + this.shortId()
-	},
+    fullShortId: function() {
+        return "RemotePeer " + this.shortId()
+    },
     
     subtitle: function () {
         return this.status()
@@ -60,22 +60,22 @@ window.BMRemotePeer = BMNode.extend().newSlots({
         return this.messages().addSubnode(msg)
     },
 
-	setStatus: function(s) {
-		this._status = s
-		//this.log(this.typeId() + ".setStatus(" + s + ")")
-		this.scheduleSyncToView()
-		return this
-	},
+    setStatus: function(s) {
+        this._status = s
+        //this.log(this.typeId() + ".setStatus(" + s + ")")
+        this.scheduleSyncToView()
+        return this
+    },
 	
-	updateTitle: function() {
+    updateTitle: function() {
         this.setTitle("Peer " + this.shortId())
-		this.scheduleSyncToView()
-	},
+        this.scheduleSyncToView()
+    },
 
     connect: function() {
         if (!this.isConnected()) {
             this.log(".connect()")
-			this.setStatus("connecting...")
+            this.setStatus("connecting...")
 
             try {
                 this.setConn(new SimplePeer({
@@ -87,19 +87,19 @@ window.BMRemotePeer = BMNode.extend().newSlots({
                 console.error(error);
             }
         }
-		return this
+        return this
     },
 
-	// --- peer connection options -------------------
-	// todo: move to BMRemotePeer
+    // --- peer connection options -------------------
+    // todo: move to BMRemotePeer
 	
     peerConnectionOptions: function () {
         return { 
-				// label: "",
-				// metadata: {},
-				//serialization: "json",
-				reliable: true,
-            }
+            // label: "",
+            // metadata: {},
+            //serialization: "json",
+            reliable: true,
+        }
     },
 
     setConn: function (aConn) {
@@ -109,10 +109,10 @@ window.BMRemotePeer = BMNode.extend().newSlots({
         this.updateTitle()
                     
         if (this._conn) {
-            this._conn.on('connect', () => { this.onOpen() })
-            this._conn.on('error', (err) => { this.onError(err) })
-            this.conn().on('signal', signal => {
-                this.serverConnection().send('signalToPeer', { signal: signal, toPeer: this.peerId().toString()  }).catch((e) => this.onError(e));
+            this._conn.on("connect", () => { this.onOpen() })
+            this._conn.on("error", (err) => { this.onError(err) })
+            this.conn().on("signal", signal => {
+                this.serverConnection().send("signalToPeer", { signal: signal, toPeer: this.peerId().toString()  }).catch((e) => this.onError(e));
             });
         }
 
@@ -125,7 +125,7 @@ window.BMRemotePeer = BMNode.extend().newSlots({
         var timeoutSeconds = 45
         setTimeout(() => { 
             if (!this.isConnected()) {
-				this.log(" connection timeout")
+                this.log(" connection timeout")
                 this.close()
                 this.setStatus("connect timeout")
                 this.didUpdateNode()
@@ -156,15 +156,15 @@ window.BMRemotePeer = BMNode.extend().newSlots({
 
         this.setStatus("connected")
         
-        this._conn.on('data', (data) => { this.onData(data) })
-        this._conn.on('close', (err) => { this.onClose(err) })
+        this._conn.on("data", (data) => { this.onData(data) })
+        this._conn.on("close", (err) => { this.onClose(err) })
 
         //this.sendPing()
         this.network().onRemotePeerConnect(this)
     },
 
     onError: function(error) {
-		this.log(" onError ", error)
+        this.log(" onError ", error)
         this.setStatus(error.message)
         this.log(" onError " + error)
     },
@@ -173,24 +173,24 @@ window.BMRemotePeer = BMNode.extend().newSlots({
         this.setStatus("closed")
         this.log("onClose " + err)
         this.serverConnection().onRemotePeerClose(this)
-     },
+    },
 
     onData: function(data) {
         this.setStatus("connected")
         this.log("onData '" + data + "'")
         var msg = BMMessage.messageForString(data)
-		this.log("onData msg.msgDict(): ", msg.msgDict())
+        this.log("onData msg.msgDict(): ", msg.msgDict())
         msg.setSubtitle("received")
         //msg.setSubtitle("via peer " + this.shortId())
         msg.setRemotePeer(this)
         this.log("onData msgType '" + msg.msgType() + "'")
-		var msgType = msg.msgType()
+        var msgType = msg.msgType()
 		
         if (["ping", "pong", "addr", "inv", "getData", "object"].includes(msgType)) {
 	        //this.addMessage(msg.duplicate())
-			this.log(" applying " + msgType)
-			this[msg.msgType()].apply(this, [msg])
-		}
+            this.log(" applying " + msgType)
+            this[msg.msgType()].apply(this, [msg])
+        }
 		
     },
 
@@ -260,16 +260,16 @@ window.BMRemotePeer = BMNode.extend().newSlots({
     },
     
     object: function(objMsg) {
-		this.log("got object msg.msgDict(): ", objMsg.msgDict())
+        this.log("got object msg.msgDict(): ", objMsg.msgDict())
         //this.log("got object")
         
         var msgs = this.network().messages()
         
         if (msgs.validateMsg(objMsg)) {
-			this.markSeenHash(objMsg.msgHash())
+            this.markSeenHash(objMsg.msgHash())
             msgs.object(objMsg)
         } else {
-			this.log("received invalid object ")
+            this.log("received invalid object ")
             this.close()
             this.setStatus("error: received invalid object")
         }            
@@ -286,17 +286,17 @@ window.BMRemotePeer = BMNode.extend().newSlots({
         return this
     },
 
-	mayShareContacts: function() {
-		return BMNetwork.shared().hasIdentityMatchingBloomFilter(this.peerId().bloomFilter())
+    mayShareContacts: function() {
+        return BMNetwork.shared().hasIdentityMatchingBloomFilter(this.peerId().bloomFilter())
     },
 
-	connectIfMayShareContacts: function() {
-		if ((!this.isConnected()) && this.mayShareContacts()) {
-			//this.log(this.shortId() + " may share contacts - connecting")
-			this.connect()
-		} else {
-			this.setStatus("no contact match")
-		}
-		return this
-	},
+    connectIfMayShareContacts: function() {
+        if ((!this.isConnected()) && this.mayShareContacts()) {
+            //this.log(this.shortId() + " may share contacts - connecting")
+            this.connect()
+        } else {
+            this.setStatus("no contact match")
+        }
+        return this
+    },
 })

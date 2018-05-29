@@ -13,8 +13,8 @@ window.BMClassifieds = BMApplet.extend().newSlots({
         this.setRegions(BMRegions.clone())
         this.addSubnode(this.regions())
         
-		//this.setSells(NodeStore.shared().rootInstanceWithPidForProto("BMClassifieds_sells", BMSells)) // move to pid for classifieds
-		this.setSells(BMSells.clone()) // move to pid for classifieds
+        //this.setSells(NodeStore.shared().rootInstanceWithPidForProto("BMClassifieds_sells", BMSells)) // move to pid for classifieds
+        this.setSells(BMSells.clone()) // move to pid for classifieds
         this.addSubnode(this.sells())
     },
 })

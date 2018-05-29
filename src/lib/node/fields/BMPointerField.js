@@ -12,32 +12,32 @@ window.BMPointerField = BMField.extend().newSlots({
 }).setSlots({
     init: function () {
         BMField.init.apply(this)
-		this.setKeyIsEditable(false)
-		this.setValueIsEditable(false)
-		this.setKeyIsVisible(true)
-		this.setValueIsVisible(true)
-		this.setNodeRowIsSelectable(true)
+        this.setKeyIsEditable(false)
+        this.setValueIsEditable(false)
+        this.setKeyIsVisible(true)
+        this.setValueIsVisible(true)
+        this.setNodeRowIsSelectable(true)
     },
 
-	setValue: function(v) {
-		console.warn("WARNING: BMPointerField setValue '" + v + "'")
-		return this
-	},
+    setValue: function(v) {
+        console.warn("WARNING: BMPointerField setValue '" + v + "'")
+        return this
+    },
 
-	title: function() {
-		return this.value().title()
-	},
+    title: function() {
+        return this.value().title()
+    },
 	
-	subtitle: function() {
-		return this.value().subtitle()
-	},
+    subtitle: function() {
+        return this.value().subtitle()
+    },
 	
-	note: function() {
-		return this.value().note()
-	},
+    note: function() {
+        return this.value().note()
+    },
 	
-	nodeRowLink: function() {
-		return this.value()
-	},
+    nodeRowLink: function() {
+        return this.value()
+    },
 
 })

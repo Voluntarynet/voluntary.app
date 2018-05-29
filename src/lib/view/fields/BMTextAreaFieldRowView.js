@@ -5,39 +5,39 @@ window.BMTextAreaFieldRowView = BMFieldRowView.extend().newSlots({
 }).setSlots({
     init: function () {
         BMFieldRowView.init.apply(this)
-		this.keyView().setDisplay("none")
-		//this.valueView().setDivClassName("BMTextAreaFieldValueView")
+        this.keyView().setDisplay("none")
+        //this.valueView().setDivClassName("BMTextAreaFieldValueView")
         return this
     },
 
-	createValueView: function() {
-		return NodeView.clone().setDivClassName("BMTextAreaFieldValueView NodeView DivView")
-	},
+    createValueView: function() {
+        return NodeView.clone().setDivClassName("BMTextAreaFieldValueView NodeView DivView")
+    },
 	
     updateSubviews: function() {   
 	    BMFieldRowView.updateSubviews.apply(this)
-		this.fillBottomOfColumnIfAvailable()
+        this.fillBottomOfColumnIfAvailable()
 		
-		if (this.node().isMono()) {
-			this.valueView().setDivClassName("BMMonoTextAreaFieldValueView NodeView DivView")
-			this.valueView().set
-		} else {
-			this.valueView().setDivClassName("BMTextAreaFieldValueView NodeView DivView")
-		}
+        if (this.node().isMono()) {
+            this.valueView().setDivClassName("BMMonoTextAreaFieldValueView NodeView DivView")
+            this.valueView().set
+        } else {
+            this.valueView().setDivClassName("BMTextAreaFieldValueView NodeView DivView")
+        }
 		
-		return this
-	},
+        return this
+    },
 	
-	fillBottomOfColumnIfAvailable: function() {
-		if (this.column().rows().last() == this) {
-			//console.log(this.type() + " update height")
-			this.setMinAndMaxHeightPercentage(100)
-			this.setFlexGrow(100)
-			this.setBorderBottom("0px")
-		} else {
-			this.setFlexGrow(1)
-			this.setBorderBottom("1px solid #aaa")
-		}
-		return this
-	},
+    fillBottomOfColumnIfAvailable: function() {
+        if (this.column().rows().last() == this) {
+            //console.log(this.type() + " update height")
+            this.setMinAndMaxHeightPercentage(100)
+            this.setFlexGrow(100)
+            this.setBorderBottom("0px")
+        } else {
+            this.setFlexGrow(1)
+            this.setBorderBottom("1px solid #aaa")
+        }
+        return this
+    },
 })

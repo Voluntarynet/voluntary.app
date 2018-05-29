@@ -5,7 +5,7 @@ NodeView = DivStyledView.extend().newSlots({
     ownsView: true,
     defaultSubnodeViewClass: null,
     overrideSubviewProto: null,
-	styles: null,
+    styles: null,
 }).setSlots({
     
     // -------------------------------------
@@ -14,7 +14,7 @@ NodeView = DivStyledView.extend().newSlots({
         DivStyledView.init.apply(this)
         //this._nodeObservation = NotificationCenter.shared().newObservation().setName("didUpdateNode").setObserver(this)
         this._nodeObservation = NotificationCenter.shared().newObservation().setObserver(this) // observe all
-		this.setStyles(BMViewStyles.clone())
+        this.setStyles(BMViewStyles.clone())
         return this
     },
 	
@@ -29,9 +29,9 @@ NodeView = DivStyledView.extend().newSlots({
                 aNode.setView(this) 
             }
 
-			var nodeId = aNode ? this.node().type() + "-" + this.node().uniqueId() : "null"
-			this.element().id = this.type() + "-" + this._uniqueId + " for node " + nodeId
-			this.didChangeNode()
+            var nodeId = aNode ? this.node().type() + "-" + this.node().uniqueId() : "null"
+            this.element().id = this.type() + "-" + this._uniqueId + " for node " + nodeId
+            this.didChangeNode()
         }
 		
         return this
@@ -77,26 +77,26 @@ NodeView = DivStyledView.extend().newSlots({
         return DivStyledView.subviewProto.apply(this)
     },
 
-	// styles
+    // styles
 
-	applyStyle: function() {
+    applyStyle: function() {
 		
-	},
+    },
 	
-	// --- syncing ---
+    // --- syncing ---
     
     subviewForNode: function(aNode) {
         return this.subviews().detect((aView) => { return aView.node() == aNode; })
     },
 
     subviewProtoForSubnode: function(aSubnode) {
-		var proto = this.overrideSubviewProto()
+        var proto = this.overrideSubviewProto()
 		
-		if (!proto) {
+        if (!proto) {
 		    proto = aSubnode.viewClass()
-		}
+        }
 		
-		/*
+        /*
         if (!proto) {
 		    proto = this.defaultSubnodeViewClass()
 		}
@@ -111,13 +111,13 @@ NodeView = DivStyledView.extend().newSlots({
             throw new Error("null aSubnode")
         }
         
-		var proto = this.subviewProtoForSubnode(aSubnode)
+        var proto = this.subviewProtoForSubnode(aSubnode)
 		
-		if (!proto) {
+        if (!proto) {
             throw new Error("no subviewProto for subnode " + aSubnode.typeId())
-		}
+        }
 		
-		return proto.clone().setNode(aSubnode) //.setParentView(this)
+        return proto.clone().setNode(aSubnode) //.setParentView(this)
     },
     
     visibleSubnodes: function() {
@@ -137,12 +137,12 @@ NodeView = DivStyledView.extend().newSlots({
         var newSubviews = []
         var subnodes = this.visibleSubnodes()
         
-		subnodes.forEach((subnode) => {
+        subnodes.forEach((subnode) => {
             var subview = this.subviewForNode(subnode) // get the current view for the node, if there is one
             
             if (!subview) {
                 subview = this.newSubviewForSubnode(subnode)
-			}
+            }
             
             if(subview == null) {
                 throw new Error("null subview")
@@ -156,7 +156,7 @@ NodeView = DivStyledView.extend().newSlots({
             this.addSubviews(newSubviews)
         }
 
-		this.subviews().forEach((subview) => { subview.syncFromNode() })
+        this.subviews().forEach((subview) => { subview.syncFromNode() })
 
         return this
     },
@@ -187,7 +187,7 @@ NodeView = DivStyledView.extend().newSlots({
         return this
     },
 
-	// logging 
+    // logging 
     
     logName: function() {
         return this.type()
@@ -209,7 +209,7 @@ NodeView = DivStyledView.extend().newSlots({
     
     // visibility
     
-	onVisibility: function() {
+    onVisibility: function() {
 	    DivStyledView.onVisibility.apply(this)
 	    //console.log(this.typeId() + ".onVisibility()")
 	    var node = this.node()
@@ -218,12 +218,12 @@ NodeView = DivStyledView.extend().newSlots({
 	    }
 
 	    return this
-	},
+    },
     
     // value
     
     setValue: function(newValue) {
-		this.setInnerHTML(newValue)			
+        this.setInnerHTML(newValue)			
         return this
     },
     

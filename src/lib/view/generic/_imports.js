@@ -1,7 +1,7 @@
 "use strict"
 
 JSImporter.pushRelativePaths([
-	"_css.css",
+    "_css.css",
     "GenericView.js",
 ])
 

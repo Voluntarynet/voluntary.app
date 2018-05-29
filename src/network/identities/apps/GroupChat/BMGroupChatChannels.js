@@ -3,7 +3,7 @@
 
 window.BMGroupChatChannel = BMApplet.extend().newSlots({
     type: "BMGroupChatChannel",
-	name: "Untitled",
+    name: "Untitled",
 }).setSlots({
     init: function () {
         BMApplet.init.apply(this)
@@ -11,13 +11,13 @@ window.BMGroupChatChannel = BMApplet.extend().newSlots({
 
     },
 
-	title: function() {
-		return this.name()
-	},
+    title: function() {
+        return this.name()
+    },
 	
-	setTitle: function(aString) {
-		this.setName(aString)
-		return this
-	},	
+    setTitle: function(aString) {
+        this.setName(aString)
+        return this
+    },	
 })
 

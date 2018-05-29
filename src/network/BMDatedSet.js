@@ -9,8 +9,8 @@ window.BMDatedSet = BMStorableNode.extend().newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
-		this.setShouldStore(true)
-		this.setShouldStoreSubnodes(false)
+        this.setShouldStore(true)
+        this.setShouldStoreSubnodes(false)
 		
         this.setDict({})
         this.addStoredSlot("dict", "autoCheckPeriod", "maxAgeInSeconds")

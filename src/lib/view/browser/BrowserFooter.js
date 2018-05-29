@@ -3,30 +3,30 @@
 window.BrowserFooter = NodeView.extend().newSlots({
     type: "BrowserFooter",
 
-	leftActionsView: null,
-	textView: null,
-	rightActionsView: null,
+    leftActionsView: null,
+    textView: null,
+    rightActionsView: null,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
         this.setOwnsView(false)
 
-		this.setLeftActionsView(DivView.clone().setDivClassName("BrowserFooterLeftActionsView NodeView DivView"))
+        this.setLeftActionsView(DivView.clone().setDivClassName("BrowserFooterLeftActionsView NodeView DivView"))
 		
-		var textView = TextField.clone().setDivClassName("BrowserFooterTextView NodeView DivView") //.setUserSelect("none")
-		this.setTextView(textView)
+        var textView = TextField.clone().setDivClassName("BrowserFooterTextView NodeView DivView") //.setUserSelect("none")
+        this.setTextView(textView)
 	    this.textView().setContentEditable(true).setDoesClearOnReturn(true).setDoesHoldFocusOnReturn(true)
 						
-		this.setRightActionsView(DivView.clone().setDivClassName("BrowserFooterRightActionsView NodeView DivView"))
+        this.setRightActionsView(DivView.clone().setDivClassName("BrowserFooterRightActionsView NodeView DivView"))
 		
 		
-		this.setZIndex(2)
+        this.setZIndex(2)
         return this
     },
     
-	columnGroup: function() {
-		return this.parentView()
-	},
+    columnGroup: function() {
+        return this.parentView()
+    },
 	
     browser: function() {
         return this.columnGroup().parentView()

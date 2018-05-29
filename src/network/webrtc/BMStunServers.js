@@ -9,23 +9,23 @@ window.BMStunServers = BMStorableNode.extend().newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
-		this.setShouldStore(true)
+        this.setShouldStore(true)
         this.setTitle("STUN Servers")
         this.setNoteIsSubnodeCount(true)
         this.setNodeMinWidth(270)
         this.addAction("add")
-		this.setSubnodeProto(BMStunServer)
+        this.setSubnodeProto(BMStunServer)
     },
 
-	finalize: function() {
-		this.bootstrap()
-	},
+    finalize: function() {
+        this.bootstrap()
+    },
 
-	bootstrap: function() {
-		if (this.subnodes().length == 0) {
-			this.addSubnodesIfAbsent(this.bootStrapServers())
-		}		
-	},
+    bootstrap: function() {
+        if (this.subnodes().length == 0) {
+            this.addSubnodesIfAbsent(this.bootStrapServers())
+        }		
+    },
     
     addServer: function (aServer) {
         return this.addSubnode(aServer)
@@ -35,9 +35,9 @@ window.BMStunServers = BMStorableNode.extend().newSlots({
         return this.subnodes()
     }, 
 
-	defaultOptions: function() {
+    defaultOptions: function() {
 		
-		return {'iceServers': [
+        return {"iceServers": [
 		    { url:"stun:stun01.sipphone.com" },
 		    { url:"stun:stun.ekiga.net" },
 		    { url:"stun:stun.fwdnet.net" },
@@ -57,28 +57,28 @@ window.BMStunServers = BMStorableNode.extend().newSlots({
 		    { url:"stun:stun.voipstunt.com" },
 		    { url:"stun:stun.voxgratia.org" },
 		    { url:"stun:stun.xten.com" },
-		]}	
-	},
-
-    bootStrapServers: function (dict) {
-		var dicts = this.defaultOptions().iceServers
-		return dicts.map((dict) => {
-        	return BMStunServer.clone().setIceDict(dict) 
-		})
+        ]}	
     },
 
-	iceEntries: function() {
+    bootStrapServers: function (dict) {
+        var dicts = this.defaultOptions().iceServers
+        return dicts.map((dict) => {
+        	return BMStunServer.clone().setIceDict(dict) 
+        })
+    },
+
+    iceEntries: function() {
 	    if (this.servers()) {
 		    return this.servers().map((server) => { return server.iceDict() })
 	    }
 	    
         console.warn(this.type() + " WARNING: using defaultOptions")
         return this.defaultOptions()
-	},
+    },
 	
-	peerOptionsDict: function() {
-		var dict = this.iceEntries() 
-		//console.log("peerOptionsDict: " + JSON.stringify(dict))
-		return dict
-	},
+    peerOptionsDict: function() {
+        var dict = this.iceEntries() 
+        //console.log("peerOptionsDict: " + JSON.stringify(dict))
+        return dict
+    },
 })

@@ -4,34 +4,34 @@ window.ShelfItemView = NodeView.extend().newSlots({
     type: "ShelfItemView",
     isSelected: false,
     isSelectable: true,
-	restCloseButtonOpacity: 0.4,
-	iconView: null,
-	badgeView: null,
-	markerView: null,
-	destinationNode: null,
+    restCloseButtonOpacity: 0.4,
+    iconView: null,
+    badgeView: null,
+    markerView: null,
+    destinationNode: null,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
         this.setIsRegisteredForClicks(true)
         this.turnOffUserSelect()
-		this.setTransition("all 0.35s")
+        this.setTransition("all 0.35s")
 		
-		this.setIsRegisteredForMouse()
+        this.setIsRegisteredForMouse()
 		
-		var iv = DivView.clone().setDivClassName("ShelfIconView")
-		this.setIconView(iv)
+        var iv = DivView.clone().setDivClassName("ShelfIconView")
+        this.setIconView(iv)
         this.addSubview(iv)
-		iv.makeBackgroundNoRepeat()
-		//this.makeBackgroundContain()
-		iv.makeBackgroundCentered()
+        iv.makeBackgroundNoRepeat()
+        //this.makeBackgroundContain()
+        iv.makeBackgroundCentered()
 
-		// this.setupBadgeView()
-		this.setupMarkerView()
+        // this.setupBadgeView()
+        this.setupMarkerView()
 
         this.setItemWidthHeight(78, 70)
 
-		this.styles().selected().setOpacity(1)
-		this.styles().unselected().setOpacity(0.45)
+        this.styles().selected().setOpacity(1)
+        this.styles().unselected().setOpacity(0.45)
         return this
     },
     
@@ -40,19 +40,19 @@ window.ShelfItemView = NodeView.extend().newSlots({
         this.syncFromNode()
     },
 
-	setupBadgeView: function() {	
-		var v = DivView.clone().setDivClassName("ShelfBadgeView")
-		this.setBadgeView(v)
+    setupBadgeView: function() {	
+        var v = DivView.clone().setDivClassName("ShelfBadgeView")
+        this.setBadgeView(v)
 	    this.addSubview(v)
-		return this
-	},
+        return this
+    },
 	
-	setupMarkerView: function() {	
-		var v = DivView.clone().setDivClassName("ShelfMarkerView")
-		this.setMarkerView(v)
+    setupMarkerView: function() {	
+        var v = DivView.clone().setDivClassName("ShelfMarkerView")
+        this.setMarkerView(v)
 	    this.addSubview(v)
-		return this
-	},
+        return this
+    },
     
     name: function() {
         if (this.destinationNode()) {
@@ -61,45 +61,45 @@ window.ShelfItemView = NodeView.extend().newSlots({
         return this.typeId()
     },
 
-	syncFromNode: function() {
-		var node = this.node()
-		this.setDestinationNode(node)
-		var iconUrl = node.shelfIconUrl()
-		var iconName = node.shelfIconName()
+    syncFromNode: function() {
+        var node = this.node()
+        this.setDestinationNode(node)
+        var iconUrl = node.shelfIconUrl()
+        var iconName = node.shelfIconName()
 		
-		if (iconUrl) {
-			this.setImageDataUrl(iconUrl)
-		} else if (iconName) {
-			this.setIconName(iconName)
-		} else {
-			this.iconView().setBackgroundColor("#aaa")
-		}
+        if (iconUrl) {
+            this.setImageDataUrl(iconUrl)
+        } else if (iconName) {
+            this.setIconName(iconName)
+        } else {
+            this.iconView().setBackgroundColor("#aaa")
+        }
 		
-		this.applyStyles()
+        this.applyStyles()
 		
-		//console.log("vert align")
-		if (this.node().nodeViewShouldBadge()) {
-			this.markerView().setOpacity(0.5)
-		} else {
-			this.markerView().setOpacity(0)
-		}
-		//this.markerView().verticallyAlignAbsoluteNow()
+        //console.log("vert align")
+        if (this.node().nodeViewShouldBadge()) {
+            this.markerView().setOpacity(0.5)
+        } else {
+            this.markerView().setOpacity(0)
+        }
+        //this.markerView().verticallyAlignAbsoluteNow()
 		
-		return this
-	},
+        return this
+    },
 	
-	didChangeHeight: function() {
-		NodeView.didChangeHeight.apply(this)
+    didChangeHeight: function() {
+        NodeView.didChangeHeight.apply(this)
 	    SyncScheduler.scheduleTargetAndMethod(this.markerView(), "verticallyAlignAbsoluteNow", 0)
-		return this
-	},
+        return this
+    },
     
     setItemWidthHeight: function(itemWidth, itemHeight) {
-		//var itemWidth = 78
-		//var itemHeight = 70
+        //var itemWidth = 78
+        //var itemHeight = 70
 		
-		this.setMinAndMaxWidth(itemWidth)
-		this.setMinAndMaxHeight(itemHeight)
+        this.setMinAndMaxWidth(itemWidth)
+        this.setMinAndMaxHeight(itemHeight)
 		
         var iv = this.iconView()
         var iconWidth  = itemWidth  * 0.7
@@ -107,9 +107,9 @@ window.ShelfItemView = NodeView.extend().newSlots({
         iv.setPosition("relative")
         iv.setLeft((itemWidth-iconWidth)/2)
         iv.setTop((itemHeight-iconHeight)/2)
-		iv.setMinAndMaxWidth(iconWidth)
-		iv.setMinAndMaxHeight(iconHeight)
-		return this
+        iv.setMinAndMaxWidth(iconWidth)
+        iv.setMinAndMaxHeight(iconHeight)
+        return this
     },
     
     setDestinationNode: function(aNode) {
@@ -137,18 +137,18 @@ window.ShelfItemView = NodeView.extend().newSlots({
             iv.setBackgroundColor("#aaa")
         }
         
-		return this
-	},
+        return this
+    },
 	
     setIconName: function(name) {
         var iv = this.iconView()
-		iv.setBackgroundImageUrlPath(this.pathForIconName(name))        
-		iv.setBackgroundSizeWH(24, 24)
+        iv.setBackgroundImageUrlPath(this.pathForIconName(name))        
+        iv.setBackgroundSizeWH(24, 24)
         this.setItemWidthHeight(78, 45)
         return this
-	},
+    },
     
-	// --- selecting ---
+    // --- selecting ---
     
     onClick: function (event) {
         NodeView.onClick.apply(this, [event])
@@ -165,7 +165,7 @@ window.ShelfItemView = NodeView.extend().newSlots({
             App.shared().browser().setNode(destNode).scheduleSyncFromNode() 
         }
         
-		return false
+        return false
     },
 
 })

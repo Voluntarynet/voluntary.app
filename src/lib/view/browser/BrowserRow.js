@@ -8,11 +8,11 @@ window.BrowserRow = NodeView.extend().newSlots({
     type: "BrowserRow",
     isSelectable: true,
     closeButtonView: null,
-	defaultHeight: 60,
-	restCloseButtonOpacity: 0.4,
-	transitionStyle: "all 0.2s ease, width 0s, max-width 0s, min-width 0s",
-	selectedFlashColor: "#ccc",
-	shouldShowFlash: false,
+    defaultHeight: 60,
+    restCloseButtonOpacity: 0.4,
+    transitionStyle: "all 0.2s ease, width 0s, max-width 0s, min-width 0s",
+    selectedFlashColor: "#ccc",
+    shouldShowFlash: false,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
@@ -21,15 +21,15 @@ window.BrowserRow = NodeView.extend().newSlots({
         this.turnOffUserSelect()
         this.setAcceptsFirstResponder(false)
         
-		if (WebBrowserWindow.isTouchDevice()) {
-			this.setIsRegisteredForTouch(true)
-		} else {
+        if (WebBrowserWindow.isTouchDevice()) {
+            this.setIsRegisteredForTouch(true)
+        } else {
 	        this.setIsRegisteredForMouse(true)
-			this.addCloseButton()
-		}
+            this.addCloseButton()
+        }
 
-		this.setTransition(this.transitionStyle())
-		//this.animateOpen()
+        this.setTransition(this.transitionStyle())
+        //this.animateOpen()
         return this
     },
     
@@ -63,13 +63,13 @@ window.BrowserRow = NodeView.extend().newSlots({
      
     updateSubviews: function() {        
         if (this.node()) {
-           this.currentRowStyle().applyToView(this)
+            this.currentRowStyle().applyToView(this)
         }
         
         if (this.closeButtonView()) {
-			if (this.node()) {
-				this.closeButtonView().element().style.color = this.currentRowStyle().color()
-			}
+            if (this.node()) {
+                this.closeButtonView().element().style.color = this.currentRowStyle().color()
+            }
 			
             if (this.canDelete()) {
                 this.closeButtonView().setOpacity(this.restCloseButtonOpacity())
@@ -78,7 +78,7 @@ window.BrowserRow = NodeView.extend().newSlots({
             }
         }
         
-		this.applyStyles()
+        this.applyStyles()
 
         return this
     },
@@ -90,7 +90,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         this.scheduleSyncToNode() //this.syncToNode()
     },
     
-	// --- sync ---
+    // --- sync ---
 	
     syncFromNode: function () {
         // is this ever called?
@@ -102,9 +102,9 @@ window.BrowserRow = NodeView.extend().newSlots({
         console.log(this.type() + " onTabKeyUp")
     },
 
-	// --- colors ---
+    // --- colors ---
 	
-   applyStyles: function() {
+    applyStyles: function() {
         var node = this.node() 
         
         if (node) {
@@ -116,7 +116,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         //console.log(this.node().title() + " this.currentBgColor() = ", this.currentBgColor())
         //console.log("this.node().nodeRowStyles().selected().backgroundColor() = ", this.currentBgColor())
 
-/*
+        /*
         if (!this.isSelected() && this.selectedFlashColor()) {
             console.log("flashing")
             this.setTransition("0s all")
@@ -132,7 +132,7 @@ window.BrowserRow = NodeView.extend().newSlots({
             //setTimeout(() => { this.setBackgroundColor(this.selectedFlashColor()) }, 0)
             //setTimeout(() => { this.setBackgroundColor(this.currentBgColor()) }, 300)
         } else {
-           // this.setBackgroundColor(this.currentBgColor())
+            // this.setBackgroundColor(this.currentBgColor())
         }
         
         //this.setTransition("0.3s all")
@@ -144,42 +144,42 @@ window.BrowserRow = NodeView.extend().newSlots({
         return this
     },
     
-   willAcceptFirstResponder: function() {
+    willAcceptFirstResponder: function() {
         NodeView.willAcceptFirstResponder.apply(this)
 	    console.log(this.type() + ".willAcceptFirstResponder()")
-		return this
+        return this
     },
     
-	currentBgColor: function() {
-		if (this.isSelected()) {
-			return this.selectedBgColor()
-		} 
+    currentBgColor: function() {
+        if (this.isSelected()) {
+            return this.selectedBgColor()
+        } 
 		
-		return this.unselectedBgColor()
-	},
+        return this.unselectedBgColor()
+    },
 
     unselectedBgColor: function() {
-		if (this.node()) {
-			var c = this.node().nodeRowStyles().unselected().backgroundColor()
-			if (c) {
-				return c
-			}
-		}
+        if (this.node()) {
+            var c = this.node().nodeRowStyles().unselected().backgroundColor()
+            if (c) {
+                return c
+            }
+        }
 		
-		return "transparent"
+        return "transparent"
     },
     
     selectedBgColor: function() {
-		if (this.node()) {
-			var c = this.node().nodeRowStyles().selected().backgroundColor()
-			if (c) {
-				return c
-			}
-		}
+        if (this.node()) {
+            var c = this.node().nodeRowStyles().selected().backgroundColor()
+            if (c) {
+                return c
+            }
+        }
 		
-		if (!this.column()) {
-			return "transparent"
-		}
+        if (!this.column()) {
+            return "transparent"
+        }
 		
         return this.column().selectionColor()
     },
@@ -211,12 +211,12 @@ window.BrowserRow = NodeView.extend().newSlots({
     delete: function() {
         console.log("delete")
         if (this.canDelete()) {
-			this.setOpacity(0)
-			//this.setRight(-this.clientWidth())
-			this.setMinAndMaxHeight(0)
-			setTimeout(() => {
+            this.setOpacity(0)
+            //this.setRight(-this.clientWidth())
+            this.setMinAndMaxHeight(0)
+            setTimeout(() => {
 	            this.node().performAction("delete")
-			}, 240)
+            }, 240)
         }
     },
 
@@ -239,43 +239,43 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
     
 
-	// touch sliding
+    // touch sliding
 	
-	onTouchMove: function(event) {
-		console.log(this.type() + " onTouchMove diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
+    onTouchMove: function(event) {
+        console.log(this.type() + " onTouchMove diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
         if (this.canDelete()) {
             var diff = this.touchDownDiffWithEvent(event)
             //console.log("onMouseMove:" + JSON.stringify(diff))
             this.setTransition("all 0s")
-			var xd = diff.xd
+            var xd = diff.xd
 			
-			if (xd > 0) { 
-				xd = 0; 
-			}
+            if (xd > 0) { 
+                xd = 0; 
+            }
 			
             this.setRight(-xd)
         }
-	},
+    },
 	
-	onTouchCancel: function(event) {
-		console.log(this.type() + " onTouchCancel")
+    onTouchCancel: function(event) {
+        console.log(this.type() + " onTouchCancel")
         this._isTouchDown = false
         this.slideBack()
-	},
+    },
 	
-	onTouchEnd: function(event) {
-		console.log(this.type() + " onTouchEnd diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
+    onTouchEnd: function(event) {
+        console.log(this.type() + " onTouchEnd diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
 
-		if (this._isTouchDown) {
-			var diff = this.touchDownDiffWithEvent(event)
-			if ((-diff.xd) > this.clientWidth() * 0.25) {
-				this.delete()
-			} else {
+        if (this._isTouchDown) {
+            var diff = this.touchDownDiffWithEvent(event)
+            if ((-diff.xd) > this.clientWidth() * 0.25) {
+                this.delete()
+            } else {
 		        this.slideBack()
-			}
+            }
 	        this._isTouchDown = false
-		}
-	},
+        }
+    },
 	
     /*
     onMouseMove: function (event) {
@@ -314,16 +314,16 @@ window.BrowserRow = NodeView.extend().newSlots({
         this.slideBack()
     },
 
-	slideBack: function() {
+    slideBack: function() {
         if (this.canDelete()) {
             this.setTransition(this.transitionStyle())
             setTimeout(() => {
                 this.setRight(0)
             })
         }		
-	},
+    },
     
-	// --- selecting ---
+    // --- selecting ---
     
     /*
     requestSelectionOfRow: function() {
@@ -339,21 +339,21 @@ window.BrowserRow = NodeView.extend().newSlots({
         return this      
     },
 	
-	willAcceptFirstResponder: function() {
+    willAcceptFirstResponder: function() {
 	    console.log(this.type() + ".willAcceptFirstResponder()")
 	    this.requestSelection()
-	},
+    },
     
     onClick: function (event) {
         if (this.isSelectable()) {
             this.requestSelection()
         }
         event.stopPropagation()
-		return false
+        return false
     },
 
     didChangeIsSelected: function () {
-		NodeView.didChangeIsSelected.apply(this)
+        NodeView.didChangeIsSelected.apply(this)
 	    this.updateSubviews()
         return this
     },

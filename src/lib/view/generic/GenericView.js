@@ -20,8 +20,8 @@ window.GenericView = NodeView.extend().newSlots({
         this.setSubtitleView(NodeView.clone().setDivClassName("GenericSubtitleView"))
         this.middleView().addSubview(this.subtitleView())  
 
-		this.titleView().setSpellCheck(false)
-		this.subtitleView().setSpellCheck(false)
+        this.titleView().setSpellCheck(false)
+        this.subtitleView().setSpellCheck(false)
         
         this.setEditable(false)
         return this

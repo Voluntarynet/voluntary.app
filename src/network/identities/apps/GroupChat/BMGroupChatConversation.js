@@ -3,19 +3,19 @@
 
 window.BMGroupConversation = BMApplet.extend().newSlots({
     type: "BMGroupConversation",
-	remoteIdentity: null,
+    remoteIdentity: null,
 }).setSlots({
     init: function () {
         BMApplet.init.apply(this)
         
     },
 
-	title: function() {
-		this.remoteIdentity().title()
-	},
+    title: function() {
+        this.remoteIdentity().title()
+    },
 
-	messages: function() {
-		return this.subnodes()
-	},
+    messages: function() {
+        return this.subnodes()
+    },
 })
 

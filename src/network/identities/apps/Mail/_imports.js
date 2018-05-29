@@ -5,5 +5,5 @@ JSImporter.pushRelativePaths([
     "BMInbox.js",
     "BMSent.js",
     //"BMMail.js",
-	//"BMMailMessage.js",
+    //"BMMailMessage.js",
 ])

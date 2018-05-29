@@ -26,22 +26,22 @@ window.BMMail = BMApplet.extend().newSlots({
 
     
     handleMessage: function(msg) {
-		if (msg.type() == BMMailMessage.type()) {
-			this.handleSentMessage(msg)
-			this.handleReceivedMessage(msg)
-		}
+        if (msg.type() == BMMailMessage.type()) {
+            this.handleSentMessage(msg)
+            this.handleReceivedMessage(msg)
+        }
     },
 
-	handleSentMessage: function(msg) {
+    handleSentMessage: function(msg) {
         if (this.localIdentity().equals(msg.senderId())) {
-			this.sent().addSubnodeIfAbsent(msg)
-		}		
-	},
+            this.sent().addSubnodeIfAbsent(msg)
+        }		
+    },
 	
-	handleReceivedMessage: function(msg) {
-		if (this.localIdentity().equals(msg.receiverId())) {
-			this.inbox().addSubnodeIfAbsent(msg)
-		}		
-	},
+    handleReceivedMessage: function(msg) {
+        if (this.localIdentity().equals(msg.receiverId())) {
+            this.inbox().addSubnodeIfAbsent(msg)
+        }		
+    },
 })
 

@@ -11,62 +11,62 @@ window.BMApps = BMStorableNode.extend().newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
-		this.setTitle("apps")
+        this.setTitle("apps")
         this.setShouldStore(true)
-		this.addApps()
-    },	
+        this.addApps()
+    },
 
-	didLoadFromStore: function() {
-		this.addApps()
-		return this
-	},
-	
-	appProtos: function() {
-        return [BMChat] //BMMail, BMTwitter, BMGroupChat] //, BMChat, BMClassifieds, BMBitcoinWallet]
-	},
-
-    addApps: function() {
-		this.addAnyMisingApps()
-		this.removeAnyExtraApps()
+    didLoadFromStore: function () {
+        this.addApps()
         return this
     },
 
-	removeAnyExtraApps: function() {
-		// remove any apps not in appProtos
-		var types = this.appProtos().map((proto) => { return proto.type() })
-		var matches = this.apps().select((app) => { return types.contains(app.type()) })
-		this.setSubnodes(matches)		
-	},
+    appProtos: function () {
+        return [BMChat] //BMMail, BMTwitter, BMGroupChat] //, BMChat, BMClassifieds, BMBitcoinWallet]
+    },
 
-	addAnyMisingApps: function() {
+    addApps: function () {
+        this.addAnyMisingApps()
+        this.removeAnyExtraApps()
+        return this
+    },
+
+    removeAnyExtraApps: function () {
+        // remove any apps not in appProtos
+        var types = this.appProtos().map((proto) => { return proto.type() })
+        var matches = this.apps().select((app) => { return types.contains(app.type()) })
+        this.setSubnodes(matches)
+    },
+
+    addAnyMisingApps: function () {
         this.appProtos().forEach((appProto) => {
             this.addAppTypeIfMissing(appProto)
         })
-		return this
-	},
+        return this
+    },
 
-	addAppTypeIfMissing: function(appProto) {
-		//console.log(this.typeId() + ".addAppTypeIfMissing(" + appProto.type() + ")")
-		if (this.hasAppType(appProto) == false) {
-        	this.addSubnode(appProto.clone())
-		}
-		return this
-	},
-	
-	hasAppType: function(appProto) {
-		return this.apps().detect((app) => { return app.type() == appProto.type() }) != null
-	},
+    addAppTypeIfMissing: function (appProto) {
+        //console.log(this.typeId() + ".addAppTypeIfMissing(" + appProto.type() + ")")
+        if (this.hasAppType(appProto) == false) {
+            this.addSubnode(appProto.clone())
+        }
+        return this
+    },
 
-	apps: function() {
-		return this.subnodes()
-	},
-    
-    appNamed: function(name) {
+    hasAppType: function (appProto) {
+        return this.apps().detect((app) => { return app.type() == appProto.type() }) != null
+    },
+
+    apps: function () {
+        return this.subnodes()
+    },
+
+    appNamed: function (name) {
         return this.firstSubnodeWithTitle(name)
     },
 
-	handleAppMsg: function(aMessage) {
-		this.subnodes().forEach((app) => { app.handleAppMsg(aMessage) })
-	},
+    handleAppMsg: function (aMessage) {
+        this.subnodes().forEach((app) => { app.handleAppMsg(aMessage) })
+    },
 })
 

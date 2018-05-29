@@ -6,15 +6,15 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
     type: "BMPostDraftRowView",
     
     topView: null,
-        leftView: null,
-            iconView: null,
-        rightView: null,
-            placeHolderView: null,
-            contentView: null,
-            deleteButton: null,
+    leftView: null,
+    iconView: null,
+    rightView: null,
+    placeHolderView: null,
+    contentView: null,
+    deleteButton: null,
 
     bottomView: null,
-        sendButton: null,
+    sendButton: null,
         
     isSelected: false,
 }).setSlots({
@@ -23,57 +23,57 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         
         this.setTopView(this.addSubview(DivView.clone().setDivClassName("BMPostDraftRowTopView")))
 
-            // left view
-            this.setLeftView(this.topView().addSubview(DivView.clone().setDivClassName("BMPostDraftRowLeftView")))
+        // left view
+        this.setLeftView(this.topView().addSubview(DivView.clone().setDivClassName("BMPostDraftRowLeftView")))
 
-                // icon view
+        // icon view
     		    this.setIconView(this.leftView().addSubview(ImageView.clone().setDivClassName("BMPostAvatarView")))
-                this.iconView().setBackgroundSizeWH(64, 64)     
+        this.iconView().setBackgroundSizeWH(64, 64)     
 
-            // right view
-            this.setRightView(this.topView().addSubview(DivView.clone().setDivClassName("BMPostDraftRowRightView")))
+        // right view
+        this.setRightView(this.topView().addSubview(DivView.clone().setDivClassName("BMPostDraftRowRightView")))
         
-                // placeholder
-                this.setPlaceHolderView(this.rightView().addSubview(TextField.clone().setDivClassName("BMPostDraftRowPlaceHolderView")))
-                this.placeHolderView().setInnerHTML("What's happening?")
+        // placeholder
+        this.setPlaceHolderView(this.rightView().addSubview(TextField.clone().setDivClassName("BMPostDraftRowPlaceHolderView")))
+        this.placeHolderView().setInnerHTML("What's happening?")
                 
-                // content view
-                this.setContentView(this.rightView().addSubview(TextField.clone().setDivClassName("BMPostDraftRowContentView")))
-                this.contentView().setContentEditable(true)
+        // content view
+        this.setContentView(this.rightView().addSubview(TextField.clone().setDivClassName("BMPostDraftRowContentView")))
+        this.contentView().setContentEditable(true)
 
-                // delete button
-                this.setDeleteButton(this.rightView().addSubview(DivView.clone().setDivClassName("BMPostDraftRowCloseButton")))
-                this.deleteButton().setTarget(this).setAction("delete")
-                //this.deleteButton().setBackgroundSizeWH(20, 20) 
-                this.deleteButton().setBackgroundImageUrlPath(this.pathForIconName("close"))
-                this.deleteButton().makeBackgroundContain().makeBackgroundCentered().makeBackgroundNoRepeat()    
+        // delete button
+        this.setDeleteButton(this.rightView().addSubview(DivView.clone().setDivClassName("BMPostDraftRowCloseButton")))
+        this.deleteButton().setTarget(this).setAction("delete")
+        //this.deleteButton().setBackgroundSizeWH(20, 20) 
+        this.deleteButton().setBackgroundImageUrlPath(this.pathForIconName("close"))
+        this.deleteButton().makeBackgroundContain().makeBackgroundCentered().makeBackgroundNoRepeat()    
         
         this.setBottomView(this.addSubview(DivView.clone().setDivClassName("BMPostDraftRowBottomView")))
-                this.setSendButton(this.bottomView().addSubview(DivView.clone().setDivClassName("BMPostDraftRowSendButton")))
-                this.sendButton().setInnerHTML("Post")
-                this.sendButton().setTarget(this).setAction("post")
+        this.setSendButton(this.bottomView().addSubview(DivView.clone().setDivClassName("BMPostDraftRowSendButton")))
+        this.sendButton().setInnerHTML("Post")
+        this.sendButton().setTarget(this).setAction("post")
 
-		this.setupContentView()
-		this.updateSubviews()
-		this.setIsSelectable(true)
+        this.setupContentView()
+        this.updateSubviews()
+        this.setIsSelectable(true)
 		
-//        this.styles().setToBlackOnWhite()
+        //        this.styles().setToBlackOnWhite()
 
 				
         return this
     },
 
     setupContentView: function() {
-		var tv = this.contentView()
-		tv.insertDivClassName(this.type() + "Title")
-		//tv.setWidth("auto")
+        var tv = this.contentView()
+        tv.insertDivClassName(this.type() + "Title")
+        //tv.setWidth("auto")
 
-		tv.setPosition("relative")
-		tv.setMarginRight(0)
-		tv.setMarginLeft(0)
-		this.setPaddingBottom(0)
-		tv.setWhiteSpace("normal")
-		tv.setFontFamily("AppRegular")        
+        tv.setPosition("relative")
+        tv.setMarginRight(0)
+        tv.setMarginLeft(0)
+        this.setPaddingBottom(0)
+        tv.setWhiteSpace("normal")
+        tv.setFontFamily("AppRegular")        
     },
     
     setIconDataUrl: function(imageDataUrl) {
@@ -85,16 +85,16 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
             iv.setBackgroundColor("#aaa")
         }
         
-		return this
-	},
+        return this
+    },
 
     updateSubviews: function() {
-		BrowserRow.updateSubviews.apply(this)
+        BrowserRow.updateSubviews.apply(this)
 	
         var node = this.node()
         
         if (node) {
-/*
+            /*
             var placeText = this.contentView().innerHTML().length ? "" : "What's happening?"    
             this.placeHolderView().setInnerHTML(placeText)
 */
@@ -114,9 +114,9 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         this.scheduleSyncToNode()
     },
 
-	didInput: function() {
+    didInput: function() {
         this.scheduleSyncToNode() //this.syncToNode()
-	},
+    },
 
     // --- sync ---
 
@@ -131,7 +131,7 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
     syncFromNode: function () {
         var node = this.node()
         this.contentView().setString(node.content())
-		this.setIconDataUrl(node.avatarImageDataURL())
+        this.setIconDataUrl(node.avatarImageDataURL())
         this.updateSubviews()
         return this
     },

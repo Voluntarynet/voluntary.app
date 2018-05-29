@@ -9,7 +9,7 @@ window.BMDrafts = BMStorableNode.extend().newSlots({
  		this.setShouldStore(true)
         this.setNoteIsSubnodeCount(true)
         this.setSubnodeProto(BMMailMessage)
-		this.addAction("add")
+        this.addAction("add")
         this.setTitle("drafts")
     },
     
@@ -19,7 +19,7 @@ window.BMDrafts = BMStorableNode.extend().newSlots({
     
     add: function() {
         var newPrivateMsg = BMStorableNode.add.apply(this)
-		newPrivateMsg.setSenderPublicKeyString(this.localIdentity().publicKeyString()).setupInputsFromPubkeys()
+        newPrivateMsg.setSenderPublicKeyString(this.localIdentity().publicKeyString()).setupInputsFromPubkeys()
         this.didUpdateNode()
         return newPrivateMsg
     },

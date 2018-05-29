@@ -4,21 +4,21 @@
 
 window.BMRServer = BMFieldSetNode.extend().newSlots({
     type: "BMRServer",
-   // host: 'peers.bitmarkets.org',
-    host: '127.0.0.1',
+    // host: "peers.bitmarkets.org",
+    host: "127.0.0.1",
     port: 9000,
-    path: '',
+    path: "",
     isSecure: false,
     serverConnection: null,
-	bloomDistance: null,
-	error: null,
-	debug: true,
-	connectButton: null,
+    bloomDistance: null,
+    error: null,
+    debug: true,
+    connectButton: null,
 }).setSlots({
     init: function () {
         BMFieldSetNode.init.apply(this)
-		this.setShouldStore(true)
-		this.setShouldStoreSubnodes(true)
+        this.setShouldStore(true)
+        this.setShouldStoreSubnodes(true)
 		
         this.setServerConnection(BMServerConnection.clone().setServer(this))
         //this.addSubnode(this.serverConnection())
@@ -28,15 +28,15 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
         this.addAction("delete")
         this.setNodeMinWidth(500)
 	
-		this.addStoredField(BMField.clone().setKey("host"))
-		this.addStoredField(BMNumberField.clone().setKey("port").setValueIsEditable(true))
-		this.addStoredField(BMField.clone().setKey("path"))
-		this.addStoredField(BMBoolField.clone().setKey("isSecure").setValueIsEditable(true))
-		//this.justAddField(BMPointerField.clone().setKey("serverConnection"))
-		this.addSubnode(BMPointerField.clone().setKey("serverConnection"))
+        this.addStoredField(BMField.clone().setKey("host"))
+        this.addStoredField(BMNumberField.clone().setKey("port").setValueIsEditable(true))
+        this.addStoredField(BMField.clone().setKey("path"))
+        this.addStoredField(BMBoolField.clone().setKey("isSecure").setValueIsEditable(true))
+        //this.justAddField(BMPointerField.clone().setKey("serverConnection"))
+        this.addSubnode(BMPointerField.clone().setKey("serverConnection"))
 		
-		this.setConnectButton(BMActionField.clone().setKey("connect").setValue("connect"))
-		this.addSubnode(this.connectButton())
+        this.setConnectButton(BMActionField.clone().setKey("connect").setValue("connect"))
+        this.addSubnode(this.connectButton())
     },
 
     didUpdateNode: function() {
@@ -85,9 +85,9 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
             return "connected - " + this.remotePeerCount() + " peers"
         } 
 
-		if (this.serverConnection().error()) {
-			return this.serverConnection().error()
-		}
+        if (this.serverConnection().error()) {
+            return this.serverConnection().error()
+        }
 
         return "connecting..."
     }, 
@@ -107,7 +107,7 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
         return this          
     },
 
-	reconnect: function() {
+    reconnect: function() {
         this.serverConnection().reconnect()
         return this		
     },
@@ -150,29 +150,29 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
         return this.serverConnection().connectedRemotePeers()
     },
 
-	updateBloomDistance: function(bloomUint8Array) {
-		var hostHashUint8Array = this.host().sha256()
+    updateBloomDistance: function(bloomUint8Array) {
+        var hostHashUint8Array = this.host().sha256()
 
-		// make sure host bits are at least as long as bloom
-		while (hostHashUint8Array.length < bloomUint8Array.length) {
-			hostHashUint8Array = hostHashUint8Array.concat(hostHashUint8Array)
-		}
+        // make sure host bits are at least as long as bloom
+        while (hostHashUint8Array.length < bloomUint8Array.length) {
+            hostHashUint8Array = hostHashUint8Array.concat(hostHashUint8Array)
+        }
 		
-		// TODO: shouldn't need to calculate this often but 
-		// might when server count gets high or changes frequently. Optimize then.
+        // TODO: shouldn't need to calculate this often but 
+        // might when server count gets high or changes frequently. Optimize then.
 		
-		var s1 = new BitStream(bloomUint8Array);
-		var s2 = new BitStream(hostHashUint8Array);
+        var s1 = new BitStream(bloomUint8Array);
+        var s2 = new BitStream(hostHashUint8Array);
 		
-		var bitCount = hostHashUint8Array.length * 8
-		var diff = 0
-		for (var i = 0; i < bitCount; i ++) {
-			if (s1.readBoolean() != s2.readBoolean()) {
-				diff ++
-			}
-		}
+        var bitCount = hostHashUint8Array.length * 8
+        var diff = 0
+        for (var i = 0; i < bitCount; i ++) {
+            if (s1.readBoolean() != s2.readBoolean()) {
+                diff ++
+            }
+        }
 		
-		this.setBloomDistance(diff)
-		return this
-	},    
+        this.setBloomDistance(diff)
+        return this
+    },    
 })

@@ -10,22 +10,22 @@ window.BMActionField = BMField.extend().newSlots({
 }).setSlots({
     init: function () {
         BMField.init.apply(this)
-		this.setKeyIsEditable(false)
-		this.setValueIsEditable(false)
-		//this.setKeyIsVisible(false)
-		this.setValueIsVisible(true)
-		this.setNodeRowIsSelectable(true)
+        this.setKeyIsEditable(false)
+        this.setValueIsEditable(false)
+        //this.setKeyIsVisible(false)
+        this.setValueIsVisible(true)
+        this.setNodeRowIsSelectable(true)
     },
     
-	setValue: function(v) {
-		return this
-	},
+    setValue: function(v) {
+        return this
+    },
 
-	title: function() {
-		return this.value()
-	},
+    title: function() {
+        return this.value()
+    },
 	
-	/*
+    /*
 	subtitle: function() {
 		return null
 	},
@@ -35,7 +35,7 @@ window.BMActionField = BMField.extend().newSlots({
 	},
 	*/
 	
-	doAction: function() {
+    doAction: function() {
 	    var func = this.target()[this.value()]
 	    
 	    if (typeof(func) == "function") {
@@ -45,5 +45,5 @@ window.BMActionField = BMField.extend().newSlots({
 	    }
 	    
 	    return this
-	},
+    },
 })

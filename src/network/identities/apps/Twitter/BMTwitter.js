@@ -17,19 +17,19 @@ window.BMTwitter = BMApplet.extend().newSlots({
         this.setFeed(BMNode.clone())
         this.addSubnode(this.feed().setTitle("feed"))
                 
-		this.setNotifications(BMNode.clone().setTitle("notifications"))
+        this.setNotifications(BMNode.clone().setTitle("notifications"))
         this.addSubnode(this.notifications())
 
-		this.setMessages(BMNode.clone().setTitle("direct messages"))
+        this.setMessages(BMNode.clone().setTitle("direct messages"))
         this.addSubnode(this.messages())
         
-		this.setProfile(BMNode.clone().setTitle("profile"))
+        this.setProfile(BMNode.clone().setTitle("profile"))
         this.addSubnode(this.profile())
 
-		this.setFollowing(BMNode.clone().setTitle("following"))
+        this.setFollowing(BMNode.clone().setTitle("following"))
         this.addSubnode(this.following())
         
-		this.setFollowers(BMNode.clone().setTitle("followers"))
+        this.setFollowers(BMNode.clone().setTitle("followers"))
         this.addSubnode(this.followers())
     },
     

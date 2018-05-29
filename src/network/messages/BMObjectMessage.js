@@ -32,30 +32,30 @@
 
 "use strict"
 
-var BitcoreMessage = require('bitcore-message');
+var BitcoreMessage = require("bitcore-message");
 
 window.BMObjectMessage = BMMessage.extend().newSlots({
     type: "BMObjectMessage",
     msgType: "object",
     senderPublicKeyString: null,
     //receiverPublicKeyString: null,
-	timeStamp: null,
-	encryptedData: null,
-	data: null,
+    timeStamp: null,
+    encryptedData: null,
+    data: null,
     msgHash: null, // hash of data - computed as needed    
-	signature: null, // sender signature on msgHash
+    signature: null, // sender signature on msgHash
 }).setSlots({
     init: function () {
         BMMessage.init.apply(this)
-		this.setShouldStoreSubnodes(false)
+        this.setShouldStoreSubnodes(false)
         this.setMsgType("object")
         this.addStoredSlots(["msgType", "encryptedData", "data", "senderPublicKeyString", "timeStamp", "signature"])
         this.addAction("delete")
     },
     
     duplicate: function() {
-		var objMsg = BMObjectMessage.clone()
-		objMsg.setMsgDict(this.msgDict())
+        var objMsg = BMObjectMessage.clone()
+        objMsg.setMsgDict(this.msgDict())
         return objMsg
     },
     
@@ -66,7 +66,7 @@ window.BMObjectMessage = BMMessage.extend().newSlots({
     },
 
     network: function() {
-        return window.app.network()
+        return App.shared().network()
     },
     
     title: function () {
@@ -111,21 +111,21 @@ window.BMObjectMessage = BMMessage.extend().newSlots({
         return dict
     },
 
-	theDictToHash: function() {
-		var dict = this.msgDict()
-		delete dict.msgHash   // remove this slots as we are computing hash itself
-		delete dict.sig // remove this slot as signature is done on hash
-		return dict
-	},
+    theDictToHash: function() {
+        var dict = this.msgDict()
+        delete dict.msgHash   // remove this slots as we are computing hash itself
+        delete dict.sig // remove this slot as signature is done on hash
+        return dict
+    },
     
-	// hash
+    // hash
 	
-	computeMsgHash: function() {
-		var s = Object.toJsonStableString(this.theDictToHash())
-		var hash = s.sha256String()
-		//console.log(this.typeId() + "\n    dict: ", s, "\n    computed hash: " + hash)
-		return hash
-	},
+    computeMsgHash: function() {
+        var s = Object.toJsonStableString(this.theDictToHash())
+        var hash = s.sha256String()
+        //console.log(this.typeId() + "\n    dict: ", s, "\n    computed hash: " + hash)
+        return hash
+    },
 
     msgHash: function() {
         if (!this._msgHash) {
@@ -139,33 +139,33 @@ window.BMObjectMessage = BMMessage.extend().newSlots({
         return this.msgHash()
     },
 
-	// sign and verify
+    // sign and verify
 	
-	signWithSenderId: function(senderId) {
-		this.setSignature(senderId.signatureForMessageString(this.msgHash()))
-		return this
-	},
+    signWithSenderId: function(senderId) {
+        this.setSignature(senderId.signatureForMessageString(this.msgHash()))
+        return this
+    },
     
-	makeTimeStampNow: function() {
-		this.setTimeStamp(Math.floor(new Date().getTime()/1000))
-		return this
-	},
+    makeTimeStampNow: function() {
+        this.setTimeStamp(Math.floor(new Date().getTime()/1000))
+        return this
+    },
 	
-	ageInSeconds: function() {
-		var nowInSecs = new Date().getTime()/1000
-		return nowInSecs - this.timeStamp()
-	},
+    ageInSeconds: function() {
+        var nowInSecs = new Date().getTime()/1000
+        return nowInSecs - this.timeStamp()
+    },
 
-	hasValidSignature: function() {
-		var spk = new bitcore.PublicKey(this.senderPublicKeyString());
+    hasValidSignature: function() {
+        var spk = new bitcore.PublicKey(this.senderPublicKeyString());
         var isValid = BitcoreMessage(this.msgHash()).verify(spk.toAddress(), this.signature());
-		//console.log("hasValidSignature: " + verified)
-		return isValid
-	},
+        //console.log("hasValidSignature: " + verified)
+        return isValid
+    },
 	    
     send: function() {
-		this.scheduleSyncToStore()
-		//console.log(">>> "+ this.typeId() + ".send() adding to network messages")
+        this.scheduleSyncToStore()
+        //console.log(">>> "+ this.typeId() + ".send() adding to network messages")
         this.network().messages().addMessage(this)
         return this
     },
@@ -179,39 +179,39 @@ window.BMObjectMessage = BMMessage.extend().newSlots({
         return this
     },
 
-	hasValidationErrors: function() {
-		return this.validationErrors().length != 0
-	},
+    hasValidationErrors: function() {
+        return this.validationErrors().length != 0
+    },
 	
-	validationErrors: function() {
-		var errors = []
+    validationErrors: function() {
+        var errors = []
 
-		if (!this.senderPublicKeyString()) {
-			errors.push("missing senderPublicKeyString")
-		}
+        if (!this.senderPublicKeyString()) {
+            errors.push("missing senderPublicKeyString")
+        }
 				
-		if (!this.signature()) {
-			errors.push("missing signature")
-		}
+        if (!this.signature()) {
+            errors.push("missing signature")
+        }
 				
-		if (!this.timeStamp()) {
-			errors.push("missing timeStamp")
-		} else if (!this.hasValidSignature()) {
-			errors.push("invalid signature")
-		}
+        if (!this.timeStamp()) {
+            errors.push("missing timeStamp")
+        } else if (!this.hasValidSignature()) {
+            errors.push("invalid signature")
+        }
 			
-		if (!this.timeStamp()) {
-			errors.push("missing timeStamp")
-		} else if (this.ageInSeconds() < 0) {
-			errors.push("invalid timeStamp - not in the past")
-			return false
-		}
+        if (!this.timeStamp()) {
+            errors.push("missing timeStamp")
+        } else if (this.ageInSeconds() < 0) {
+            errors.push("invalid timeStamp - not in the past")
+            return false
+        }
 		
-		if (!this.encryptedData() && !this.data()) {
-			errors.push("no encryptedData or data fields")
-		}
+        if (!this.encryptedData() && !this.data()) {
+            errors.push("no encryptedData or data fields")
+        }
 		
-		return errors
-	},
+        return errors
+    },
 })
 

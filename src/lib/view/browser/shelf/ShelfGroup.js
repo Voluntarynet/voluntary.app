@@ -25,7 +25,7 @@ window.ShelfGroup = BMNode.extend().newSlots({
     
     setupSubnodes: function() {
         
-        var posts = this.addSubnode(BMNode.clone().setTitle(lid.title()).
+        var posts = this.addSubnode(BMNode.clone().setTitle(lid.title()))
         
         // my posts
         var imageUrl = lid.profile().profileImageDataUrl()

@@ -13,8 +13,8 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
         this.setTitleView(this.addSubview(BrowserRowTitle.clone()))
         this.setSubtitleView(this.addSubview(BrowserRowSubtitle.clone()))
         this.setNoteView(this.addSubview(BrowserRowNote.clone()))
-		this.updateSubviews()
-		this.setIsSelectable(true)
+        this.updateSubviews()
+        this.setIsSelectable(true)
         return this
     },
 
@@ -51,9 +51,9 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
     },
     
     updateSubviews: function() {
-		BrowserRow.updateSubviews.apply(this)
+        BrowserRow.updateSubviews.apply(this)
 	
-		this.setHasSubtitle(this.hasSubtitle())
+        this.setHasSubtitle(this.hasSubtitle())
 
         this.titleView().setContentEditable(node ? node.nodeTitleIsEditable() : false)
         this.subtitleView().setContentEditable(node ? node.nodeSubtitleIsEditable() : false)
@@ -91,9 +91,9 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
         this.scheduleSyncToNode()
     },
 
-	didInput: function() {
+    didInput: function() {
         this.scheduleSyncToNode() //this.syncToNode()
-	},
+    },
 
     // --- sync ---
 
@@ -117,11 +117,11 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
     
     // arrow
     
-	makeNoteRightArrow: function() {
-		this.noteView().setBackgroundImageUrlPath(this.pathForIconName("right-gray"))        
-		this.noteView().setBackgroundSizeWH(10, 10)
-		this.noteView().setMinAndMaxWidth(10).setMinAndMaxHeight(10)
-		//this.noteView().setOpacity(0.5)
-		return this		
-	},
+    makeNoteRightArrow: function() {
+        this.noteView().setBackgroundImageUrlPath(this.pathForIconName("right-gray"))        
+        this.noteView().setBackgroundSizeWH(10, 10)
+        this.noteView().setMinAndMaxWidth(10).setMinAndMaxHeight(10)
+        //this.noteView().setOpacity(0.5)
+        return this		
+    },
 })

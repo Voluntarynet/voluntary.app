@@ -9,16 +9,16 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
     connection: null,
     localIdentities: null, // set by parent 
     blacklists: null,
-	idsBloomFilter: null,
-	shared: null,
-	debug: false,
+    idsBloomFilter: null,
+    shared: null,
+    debug: false,
 }).setSlots({
     init: function () {
-		if (BMNetwork._shared) {
-			throw new Error("multiple instances of " + this.type() + " singleton")
-		}
+        if (BMNetwork._shared) {
+            throw new Error("multiple instances of " + this.type() + " singleton")
+        }
 		
-		BMNetwork._shared = this
+        BMNetwork._shared = this
 
         BMStorableNode.init.apply(this)
 		
@@ -27,37 +27,37 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
         this.setNodeMinWidth(200)
         
         this.setConnection(BMConnection.shared())
-		this.addSubnode(this.connection())
+        this.addSubnode(this.connection())
 
-		this.setServers(NodeStore.shared().rootInstanceWithPidForProto("_servers", BMRServers))
-		this.addSubnode(this.servers())
+        this.setServers(NodeStore.shared().rootInstanceWithPidForProto("_servers", BMRServers))
+        this.addSubnode(this.servers())
 
-		this.setStunServers(NodeStore.shared().rootInstanceWithPidForProto("_stunServers", BMStunServers))
-		this.addSubnode(this.stunServers())
+        this.setStunServers(NodeStore.shared().rootInstanceWithPidForProto("_stunServers", BMStunServers))
+        this.addSubnode(this.stunServers())
 						
-		this.setMessages(NodeStore.shared().rootInstanceWithPidForProto("_messages", BMMessages))
-		this.addSubnode(this.messages())
+        this.setMessages(NodeStore.shared().rootInstanceWithPidForProto("_messages", BMMessages))
+        this.addSubnode(this.messages())
 		
-		this.setBlacklists(NodeStore.shared().rootInstanceWithPidForProto("_blacklists", BMBlacklists))
-		this.addSubnode(this.blacklists())
+        this.setBlacklists(NodeStore.shared().rootInstanceWithPidForProto("_blacklists", BMBlacklists))
+        this.addSubnode(this.blacklists())
 		
-		//this.addStoredSlots(["messages", "blacklists"])
-		this.watchIdentities()
+        //this.addStoredSlots(["messages", "blacklists"])
+        this.watchIdentities()
     },
 
-	loadFinalize: function() {
-		//this.updateIdsBloomFilter()
-	},
+    loadFinalize: function() {
+        //this.updateIdsBloomFilter()
+    },
 
-	watchIdentities: function() {
-		if (!this._idsObservation) {
+    watchIdentities: function() {
+        if (!this._idsObservation) {
 	        this._idsObservation = NotificationCenter.shared().newObservation().setName("didChangeIdentity").setObserver(this).watch()
-		}
-	},
+        }
+    },
 
-	shared: function() {
-		return BMNetwork._shared
-	},
+    shared: function() {
+        return BMNetwork._shared
+    },
 
     connectedRemotePeers: function () {
         var remotePeers = []
@@ -80,13 +80,13 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
     subtitle: function() {
         var parts = []
 
-		var n = this.serverCount()
+        var n = this.serverCount()
         parts.push(n + " server" + ((n!=1) ? "s" : ""))
 
-		n = this.remotePeerCount()
+        n = this.remotePeerCount()
         parts.push(n + " peer" + ((n!=1) ? "s" : ""))
 
-		n = this.messages().messages().length
+        n = this.messages().messages().length
         parts.push(n + " msg" + ((n!=1) ? "s" : ""))
 
         return parts.join(", ")
@@ -117,7 +117,7 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
         this.scheduleSyncToView()
     },
 
-	// --- identities -----------------------------------------
+    // --- identities -----------------------------------------
     
     idWithPublicKeyString: function(publicKeyString) { 
         
@@ -126,49 +126,49 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
         }
         
         var ids = this.allIdentities()   
-		var result = ids.detect((id) => { 
-			return id.publicKeyString() == publicKeyString
-		})
+        var result = ids.detect((id) => { 
+            return id.publicKeyString() == publicKeyString
+        })
 		
-		if (!result) {		
+        if (!result) {		
 		    console.log(this.type() + ".idWithPublicKeyString(" + publicKeyString + ") = ", result)
 		    console.log("all ids: ", ids.map((id) => { return id.name() + ":" + id.publicKeyString() }))
 	    }
-		return result
+        return result
     },
 
-	allRemoteIdentities: function() {
-		var allRids = []
-		this.localIdentities().subnodes().forEach((id) => { 
-			var valids = id.remoteIdentities().validSubnodes()
-			//console.log(id.publicKeyString() + " valid rid count: " + valids.length)
-			valids.forEach((rid) => {
-				allRids.push(rid)
-			})
-		})
-		return allRids
-	},
+    allRemoteIdentities: function() {
+        var allRids = []
+        this.localIdentities().subnodes().forEach((id) => { 
+            var valids = id.remoteIdentities().validSubnodes()
+            //console.log(id.publicKeyString() + " valid rid count: " + valids.length)
+            valids.forEach((rid) => {
+                allRids.push(rid)
+            })
+        })
+        return allRids
+    },
 	
-	allIdentitiesMap: function() { // only uses valid remote identities
-		var ids = ideal.Map.clone()
-		this.localIdentities().subnodes().forEach((id) => { 
+    allIdentitiesMap: function() { // only uses valid remote identities
+        var ids = ideal.Map.clone()
+        this.localIdentities().subnodes().forEach((id) => { 
 		    ids.merge(id.allIdentitiesMap())
-		})
-		return ids
-	},
+        })
+        return ids
+    },
 
-	allIdentities: function() { // only uses valid remote identities
-		var ids = []
-		ids = this.localIdentities().subnodes().concat(this.allRemoteIdentities())
-		return ids
-	},
+    allIdentities: function() { // only uses valid remote identities
+        var ids = []
+        ids = this.localIdentities().subnodes().concat(this.allRemoteIdentities())
+        return ids
+    },
     
-	allIdentityPublicKeyStrings: function() {
+    allIdentityPublicKeyStrings: function() {
 	    return this.allIdentitiesMap().keys()
-		//return this.allIdentities().map((id) => { return id.publicKeyString(); })
-	},
+        //return this.allIdentities().map((id) => { return id.publicKeyString(); })
+    },
 	
-	/*
+    /*
 	allIdentityNames: function() {
 		return this.allIdentities().map((id) => { return id.name(); })
 	},
@@ -191,39 +191,39 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
 	},
 	*/	
 	
-	// --- bloom filter for matching ids -----------------------------------------
+    // --- bloom filter for matching ids -----------------------------------------
 	
-	newDefaultBloomFilter: function() { // proto method?
-		var falsePositiveRate = 0.01;
-		var maxElementSize = 1000		
-		var filter = JSBloom.newFilter(maxElementSize, falsePositiveRate)
-		return filter
-	},
+    newDefaultBloomFilter: function() { // proto method?
+        var falsePositiveRate = 0.01;
+        var maxElementSize = 1000		
+        var filter = JSBloom.newFilter(maxElementSize, falsePositiveRate)
+        return filter
+    },
 
-	didChangeIdentity: function() {
-		//console.log(this.typeId() + ".didChangeIdentity()")
-		this.updateIdsBloomFilter()
-	},
+    didChangeIdentity: function() {
+        //console.log(this.typeId() + ".didChangeIdentity()")
+        this.updateIdsBloomFilter()
+    },
 		
-	updateIdsBloomFilter: function() {
-		//console.log(this.typeId() + ".updateIdsBloomFilter()")
-		var oldFilter = this._idsBloomFilter
+    updateIdsBloomFilter: function() {
+        //console.log(this.typeId() + ".updateIdsBloomFilter()")
+        var oldFilter = this._idsBloomFilter
 	
-		var ids = this.allIdentities()
+        var ids = this.allIdentities()
 		
-		/*
+        /*
 		console.log(this.typeId() + ".updateIdsBloomFilter() with " + ids.length + " ids")
 		console.log("   local ids:  " + this.localIdentities().subnodes().length)
 		console.log("   remote ids: " + this.allRemoteIdentities().length)
 		*/
 		
-		this._idsBloomFilter = this.newDefaultBloomFilter()
+        this._idsBloomFilter = this.newDefaultBloomFilter()
 		
 				
-		ids.forEach((id) => {
-			this._idsBloomFilter.addEntry(id.publicKeyString());
+        ids.forEach((id) => {
+            this._idsBloomFilter.addEntry(id.publicKeyString());
 			
-			/*
+            /*
 			if(oldFilter) {
 				var f1 = oldFilter.serialized()
 				var f2 = this._idsBloomFilter.serialized()
@@ -231,63 +231,63 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
 				console.log("--f2: " + f2)
 			}
 			*/
-		})
+        })
 		
-		this.verifyIdsBloom()
+        this.verifyIdsBloom()
 		
-		if (oldFilter) {
-			var f1 = oldFilter.serialized()
-			var f2 = this._idsBloomFilter.serialized()
-			if (f1 != f2) {
-				this.didChangeIdsBloom()
-			}
-		}
+        if (oldFilter) {
+            var f1 = oldFilter.serialized()
+            var f2 = this._idsBloomFilter.serialized()
+            if (f1 != f2) {
+                this.didChangeIdsBloom()
+            }
+        }
 		
-		return this;		
-	},
+        return this;		
+    },
 	
-	didChangeIdsBloom: function() {
-		//console.log(this.typeId() + ".didChangeIdsBloom()")
-		//this._didChangeIdsBloomeNote = NotificationCenter.shared().newNotification().setSender(this.typeId()).setName("didChangeIdsBloom")
+    didChangeIdsBloom: function() {
+        //console.log(this.typeId() + ".didChangeIdsBloom()")
+        //this._didChangeIdsBloomeNote = NotificationCenter.shared().newNotification().setSender(this.typeId()).setName("didChangeIdsBloom")
         this.servers().subnodes().forEach((server) => {
-			server.reRequestPeerId()
-		})
-	},
+            server.reRequestPeerId()
+        })
+    },
 	
-	verifyIdsBloom: function() {
-		//console.log(this.typeId() + ".verifyIdsBloom: " + this.idsBloomFilter().serialized().sha256String().substring(0, 6) )
+    verifyIdsBloom: function() {
+        //console.log(this.typeId() + ".verifyIdsBloom: " + this.idsBloomFilter().serialized().sha256String().substring(0, 6) )
 	    this.allIdentities().forEach((id) => {
-			var k = id.publicKeyString()
-			var doesMatch = this.idsBloomFilter().checkEntry(k)
-			//console.log("    key: " + k + " " + doesMatch)
+            var k = id.publicKeyString()
+            var doesMatch = this.idsBloomFilter().checkEntry(k)
+            //console.log("    key: " + k + " " + doesMatch)
 	        if (!doesMatch) {
-				throw new Error("bloom is missing key " + k)
-			}
+                throw new Error("bloom is missing key " + k)
+            }
 	    })
-		//console.log("idsBloom verified!")
-	},
+        //console.log("idsBloom verified!")
+    },
 	
-	idsBloomFilter: function() {
-		if (this._idsBloomFilter == null) {
-			this.updateIdsBloomFilter()
-		}
-		return this._idsBloomFilter
-	},
+    idsBloomFilter: function() {
+        if (this._idsBloomFilter == null) {
+            this.updateIdsBloomFilter()
+        }
+        return this._idsBloomFilter
+    },
 	
-	hasIdentityMatchingBloomFilter: function(bloomFilter) {
-		//console.log(this.typeId() + ".hasIdentityMatchingBloomFilter: " + bloomFilter.serialized().sha256String().substring(0, 6) )
+    hasIdentityMatchingBloomFilter: function(bloomFilter) {
+        //console.log(this.typeId() + ".hasIdentityMatchingBloomFilter: " + bloomFilter.serialized().sha256String().substring(0, 6) )
 	    var match = this.allIdentities().detect((id) => {
-			var k = id.publicKeyString()
-			var doesMatch = bloomFilter.checkEntry(k)
-			//console.log("    key: " + k + " " + doesMatch)
+            var k = id.publicKeyString()
+            var doesMatch = bloomFilter.checkEntry(k)
+            //console.log("    key: " + k + " " + doesMatch)
 	        return doesMatch
 	    }) 
-		//console.log("hasIdentityMatchingBloomFilter match = ", match)
-		return match != null	        
-	},
+        //console.log("hasIdentityMatchingBloomFilter match = ", match)
+        return match != null	        
+    },
 
-	shouldRelayForSenderPublicKey: function(aPublicKeyString) {
-		return this.allIdentityPublicKeyStrings().includes(aPublicKeyString)
-	},
+    shouldRelayForSenderPublicKey: function(aPublicKeyString) {
+        return this.allIdentityPublicKeyStrings().includes(aPublicKeyString)
+    },
 	
 })

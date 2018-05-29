@@ -38,12 +38,12 @@ window.WebBrowserScreen = ideal.Proto.extend().newSlots({
         console.log(this.type() + " size " + this.width() + "x" + this.height())
     },
 
-	lesserOrientedSize: function() {
-		// lesser of window and oriented screen size
-		var w = Math.min(this.orientedWidth(), WebBrowserWindow.width())
-		var h = Math.min(this.orientedHeight(), WebBrowserWindow.height())
-		return { width: w, height: h }
-	},
+    lesserOrientedSize: function() {
+        // lesser of window and oriented screen size
+        var w = Math.min(this.orientedWidth(), WebBrowserWindow.width())
+        var h = Math.min(this.orientedHeight(), WebBrowserWindow.height())
+        return { width: w, height: h }
+    },
 
 })
 

@@ -147,7 +147,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     shared: function () {
         if (!this._shared) {
             this._shared = this.clone()
-            //this._shared.setFolder(window.app.storageFolder().folderNamed(this.folderName())) 
+            //this._shared.setFolder(App.shared().storageFolder().folderNamed(this.folderName())) 
         }
         return this._shared
     },

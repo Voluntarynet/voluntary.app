@@ -111,5 +111,5 @@ console.log("test.foo() = ", test.foo())
 
 */
 
-console.log("ProtoClass = ", ProtoClass)
-console.log("window.ProtoClass = ", window.ProtoClass)
+//console.log("ProtoClass = ", ProtoClass)
+//console.log("window.ProtoClass = ", window.ProtoClass)

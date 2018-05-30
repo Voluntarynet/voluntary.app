@@ -53,7 +53,8 @@
     position: absolute;
     top: 0px;
     left: 0px;
-    height: 40px;
+    min-height: 40px;
+    max-height: 40px;
     width: 100%;
     z-index: 3;
     background-color: #dbdbdb;

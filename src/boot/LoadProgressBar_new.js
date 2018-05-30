@@ -16,58 +16,77 @@
 
 */
 
+class LoadProgressBar {
 
-window.LoadProgressBar = {
-    type: function () { return "LoadProgressBar" },
-    _error: null,
+    static shared() {
+        if (!this.constructor.shared) {
+            this.constructor.shared = this.clone()
+        }
+        return this.constructor.shared
+    }
 
+    type() {
+        return this.constructor.name
+    }
+
+    static clone() {
+        var obj = new this()
+        obj.init()
+        return obj
+    }
+    
+    init() {
+        this._error = null;
+        // subclasses should override to initialize
+    }
+    
     // --- elements ------------------------------------------------
 
-    mainElement: function () {
+    mainElement () {
         return document.getElementById("SpinnerMain")
-    },
+    }
 
-    iconElement: function () {
+    iconElement () {
         return document.getElementById("SpinnerIcon")
-    },
+    }
 
-    middleElement: function () {
+    middleElement () {
         return document.getElementById("SpinnerMiddle")
-    },
+    }
 
 
-    titleElement: function () {
+    titleElement () {
         return document.getElementById("SpinnerTitle")
-    },
+    }
 
-    subtitleElement: function () {
+    subtitleElement () {
         return document.getElementById("SpinnerSubtitle")
-    },
+    }
 
-    itemElement: function () {
+    itemElement () {
         return document.getElementById("SpinnerItem")
-    },
+    }
 
-    errorElement: function () {
+    errorElement () {
         return document.getElementById("SpinnerError")
-    },
+    }
 
     // --- start ------------------------------------------------
 
-    canStart: function () {
+    canStart () {
         return window["JSImporter"] != null
-    },
+    }
 
-    startWhenReady: function () {
+    startWhenReady () {
         if (this.canStart()) {
             this.start()
         } else {
             setTimeout(() => { this.startWhenReady() }, 100)
         }
-    },
+    }
 
-    start: function () {
-        if (!JSImporter.shared().isDone()) {
+    start () {
+        if (!JSImporter.isDone()) {
             this.setupHtml()
             this.initTitle()
             this.registerForWindowError()
@@ -78,9 +97,9 @@ window.LoadProgressBar = {
             this.stop()
         }
         return this
-    },
+    }
 
-    setupHtml: function () {
+    setupHtml () {
         document.body.innerHTML = "<div id='SpinnerMain' style='position: absolute; width:100%; height: 100%; background-color: black; z-index: 100000; font-family: AppRegular; letter-spacing: 3px; font-size:13px;'> \
 <div id='SpinnerMiddle' \
 style='position: relative; top: 50%; transform: translateY(-50%); height: auto; width: 100%; text-align: center;'> \
@@ -108,40 +127,40 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
         */
 
         return this
-    },
+    }
 
-    initTitle: function () {
+    initTitle () {
         var title = this.titleElement()
         title.style.color = "#aaa"
         title.innerHTML = "PEER LOADING"
         return this
-    },
+    }
 
     // --- callabcks ------------------------------------------------
 
-    registerForImports: function () {
+    registerForImports () {
         this._importerUrlCallback = (url) => { this.didImportUrl(url) }
-        JSImporter.shared().pushUrlLoadingCallback(this._importerUrlCallback)
+        JSImporter.pushUrlLoadingCallback(this._importerUrlCallback)
 
         this._importerErrorCallback = (error) => { this.setError(error) }
-        JSImporter.shared().pushErrorCallback(this._importerErrorCallback)
+        JSImporter.pushErrorCallback(this._importerErrorCallback)
 
         return this
-    },
+    }
 
-    unregisterForImports: function () {
-        JSImporter.shared().removeUrlCallback(this._importerUrlCallback)
-        JSImporter.shared().removeErrorCallback(this._importerErrorCallback)
+    unregisterForImports () {
+        JSImporter.removeUrlCallback(this._importerUrlCallback)
+        JSImporter.removeErrorCallback(this._importerErrorCallback)
         return this
-    },
+    }
 
-    didImportUrl: function (url) {
+    didImportUrl (url) {
         this.incrementItemCount()
         this.setCurrentItem(url.split("/").pop())
         return this
-    },
+    }
 
-    handleError: function (errorMsg, url, lineNumber, column, errorObj) {
+    handleError (errorMsg, url, lineNumber, column, errorObj) {
         if (!this.titleElement()) {
             console.warn("should be unregistered?")
             return false
@@ -162,21 +181,21 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
 
         this.setError(s)
         return false;
-    },
+    }
 
-    registerForWindowError: function () {
+    registerForWindowError () {
         this._windowErrorCallback = (errorMsg, url, lineNumber, column, errorObj) => {
             return this.handleError(errorMsg, url, lineNumber, column, errorObj)
         }
         window.onerror = this._windowErrorCallback
-    },
+    }
 
-    unregisterForWindowError: function () {
+    unregisterForWindowError () {
         var isRegistered = window.onerror === this._windowErrorCallback
         if (isRegistered) {
             window.onerror = null
         }
-    },
+    }
 
     /*
     isPresent: function() {
@@ -184,16 +203,16 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
     },
     */
 
-    incrementItemCount: function () {
+    incrementItemCount () {
         var subtitle = this.subtitleElement()
         if (subtitle) {
             subtitle.style.color = "#666"
             subtitle.innerHTML += "."
         }
         return this
-    },
+    }
 
-    setCurrentItem: function (itemName) {
+    setCurrentItem (itemName) {
         var item = this.itemElement()
         //item.style.opacity = 0
         item.style.color = "#444"
@@ -207,27 +226,27 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
     	//}, 0)
 */
         return this
-    },
+    }
 
-    setError: function (error) {
+    setError (error) {
         this._error = error
         console.log("LoadProgressBar setError " + error)
         this.errorElement().innerHTML = error
         return this
-    },
+    }
 
-    error: function () {
+    error () {
         return this._error
-    },
+    }
 
-    removeMainElement: function () {
+    removeMainElement () {
         var e = this.mainElement()
         if (e) {
             e.parentNode.removeChild(e)
         }
-    },
+    }
 
-    stop: function () {
+    stop () {
         this.unregisterForWindowError()
 
         if (!this.error()) {
@@ -236,7 +255,7 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
             delete window[this.type()]
         }
         return this
-    },
+    }
 }
 
-window.LoadProgressBar.startWhenReady()
+LoadProgressBar.shared().startWhenReady()

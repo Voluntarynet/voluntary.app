@@ -23,8 +23,8 @@ Proto.setSlots({
 
     childProtos: function() {
         var result = Proto._allProtos.select((proto) => { return proto._parentProto == this })
-        console.log("Proto._allProtos = " + Proto._allProtos.map((obj) => { return obj.type() }))
-        console.log("'" + this.type() + "'.childProtos() = " + result.map((obj) => { return obj.type() }))
+        //console.log("Proto._allProtos = " + Proto._allProtos.map((obj) => { return obj.type() }))
+        //console.log("'" + this.type() + "'.childProtos() = " + result.map((obj) => { return obj.type() }))
 
         return result
     },

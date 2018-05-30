@@ -114,7 +114,7 @@ var JSScript = {
         },
     },
 
-    JSImporter = {
+    window.JSImporter = {
         _currentScript: null,
         _urls: [],
         _doneCallbacks: [],
@@ -243,7 +243,7 @@ var JSScript = {
             this._doneCallbacks.forEach((callback) => { callback() })
             if (window.JSImporterIsEmbedded != true) {
                 //this.showConcatCommand()
-                this.buildArchive()
+                //this.buildArchive()
             }
             return this
         },

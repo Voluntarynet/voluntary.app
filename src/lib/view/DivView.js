@@ -340,7 +340,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 	
     setBackgroundImageUrlPath: function(path) {
-        this.setBackgroundImage("url(\"" + path + "\)")
+        this.setBackgroundImage("url(\"" + path + "\")")
         return this
     },
 

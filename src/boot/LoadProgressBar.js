@@ -69,7 +69,7 @@ window.LoadProgressBar = {
     },
 
     start: function () {
-        if (!JSImporter.shared().isDone()) {
+        if (!JSImporter.isDone()) {
             this.setupHtml()
             this.initTitle()
             this.registerForWindowError()
@@ -123,17 +123,17 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
 
     registerForImports: function () {
         this._importerUrlCallback = (url) => { this.didImportUrl(url) }
-        JSImporter.shared().pushUrlLoadingCallback(this._importerUrlCallback)
+        JSImporter.pushUrlLoadingCallback(this._importerUrlCallback)
 
         this._importerErrorCallback = (error) => { this.setError(error) }
-        JSImporter.shared().pushErrorCallback(this._importerErrorCallback)
+        JSImporter.pushErrorCallback(this._importerErrorCallback)
 
         return this
     },
 
     unregisterForImports: function () {
-        JSImporter.shared().removeUrlCallback(this._importerUrlCallback)
-        JSImporter.shared().removeErrorCallback(this._importerErrorCallback)
+        JSImporter.removeUrlCallback(this._importerUrlCallback)
+        JSImporter.removeErrorCallback(this._importerErrorCallback)
         return this
     },
 

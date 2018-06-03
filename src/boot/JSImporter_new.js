@@ -29,13 +29,21 @@
 	Note: Should probably clean this up with promises.
 */
 
+if (!String.prototype.capitalized) {
+    String.prototype.capitalized = function () {
+        return this.replace(/\b[a-z]/g, function (match) {
+            return match.toUpperCase();
+        });
+    }
+}
+
 class JSImporterBase {
 
     static shared() {
-        if (!this.constructor.shared) {
-            this.constructor.shared = this.clone()
+        if (!this._shared) {
+            this._shared = this.clone()
         }
-        return this.constructor.shared
+        return this._shared
     }
 
     type() {
@@ -141,7 +149,15 @@ class JSScript extends JSImporterBase {
 
 // --- JSImporter -----------------------------------------------
 
-class JSImporter extends JSImporterBase {
+class JSImporterClass extends JSImporterBase {
+
+    static shared() {
+        if (!this._shared) {
+            this._shared = this.clone()
+        }
+        return this._shared
+    }
+
     init() {
         super.init()
         this.newSlot("currentScript", null);
@@ -182,7 +198,7 @@ class JSImporter extends JSImporterBase {
     }
 
     pushFilePaths (paths) {
-        this.seyUrls(paths.concat(this.urls()))
+        this.setUrls(paths.concat(this.urls()))
         return this
     }
 
@@ -260,7 +276,7 @@ class JSImporter extends JSImporterBase {
             //this.showConcatCommand()
             //this.buildArchive()
         }
-        
+
         return this
     }
 
@@ -329,6 +345,8 @@ class JSImporter extends JSImporterBase {
         this.setArchive(s)
     }
 }
+
+window.JSImporter = JSImporterClass.shared()
 
 if (window.JSImporterIsEmbedded != true) {
     JSImporter.pushRelativePaths(["_imports.js"]).run()

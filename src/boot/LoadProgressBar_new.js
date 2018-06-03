@@ -16,13 +16,13 @@
 
 */
 
-class LoadProgressBar {
+class LoadProgressBarClass {
 
     static shared() {
-        if (!this.constructor.shared) {
-            this.constructor.shared = this.clone()
+        if (!this._shared) {
+            this._shared = this.clone()
         }
-        return this.constructor.shared
+        return this._shared
     }
 
     type() {
@@ -53,7 +53,6 @@ class LoadProgressBar {
     middleElement () {
         return document.getElementById("SpinnerMiddle")
     }
-
 
     titleElement () {
         return document.getElementById("SpinnerTitle")
@@ -86,14 +85,14 @@ class LoadProgressBar {
     }
 
     start () {
-        if (!JSImporter.shared().isDone()) {
+        if (!JSImporterClass.shared().isDone()) {
             this.setupHtml()
             this.initTitle()
             this.registerForWindowError()
             this.registerForImports()
         }
 
-        if (JSImporter.shared().isDone()) {
+        if (JSImporterClass.shared().isDone()) {
             this.stop()
         }
         return this
@@ -140,17 +139,17 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
 
     registerForImports () {
         this._importerUrlCallback = (url) => { this.didImportUrl(url) }
-        JSImporter.shared().pushUrlLoadingCallback(this._importerUrlCallback)
+        JSImporterClass.shared().pushUrlLoadingCallback(this._importerUrlCallback)
 
         this._importerErrorCallback = (error) => { this.setError(error) }
-        JSImporter.shared().pushErrorCallback(this._importerErrorCallback)
+        JSImporterClass.shared().pushErrorCallback(this._importerErrorCallback)
 
         return this
     }
 
     unregisterForImports () {
-        JSImporter.shared().removeUrlCallback(this._importerUrlCallback)
-        JSImporter.shared().removeErrorCallback(this._importerErrorCallback)
+        JSImporterClass.shared().removeUrlCallback(this._importerUrlCallback)
+        JSImporterClass.shared().removeErrorCallback(this._importerErrorCallback)
         return this
     }
 
@@ -258,4 +257,5 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
     }
 }
 
-LoadProgressBar.shared().startWhenReady()
+window.LoadProgressBar = LoadProgressBarClass.clone()
+LoadProgressBar.startWhenReady()

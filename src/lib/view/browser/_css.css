@@ -122,7 +122,7 @@
     position: relative;
     width: 100%;
 	-webkit-overflow-scrolling: touch;
-	overflow-scrolling: touch;
+	overflow-scrolling: touch; /* todo: make sure this is actually being used */
 	overflow: hidden;
 	min-height: 100%;
 	-ms-overflow-style: none;

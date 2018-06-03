@@ -62,4 +62,21 @@ window.CSS = ideal.Proto.extend().newSlots({
         this.ruleAt(ruleName).applyToElement(anElement)
         return this
     },
+
+    asJSON: function() {
+        var dict = {}
+        var rules = {}
+        this.rules().forEach((k, ruleSet) => {
+            rules[k] = ruleSet.asJSON()
+        })
+        dict.rules = rules
+        return dict
+
+    },
+
+    fromJSON: function(json) {
+        json.rules.forEach((k, v) => {
+            this.ruleAt(k).fromJSON(v)
+        })
+    },
 })

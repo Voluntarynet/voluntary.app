@@ -72,7 +72,7 @@
 .BMFieldKeyView {
     color: #777;
 
-	display: inline-block;
+	display: block;
     position: relative;
 
 	overflow: hidden;

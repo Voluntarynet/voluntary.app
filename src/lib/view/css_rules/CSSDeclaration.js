@@ -31,12 +31,13 @@ window.CSSDeclaration = ideal.Proto.extend().newSlots({
     },
 
     setKey: function(k) {
-       this._key = assertDefined(k)
-       return this
+        this._key = assertDefined(k)
+        return this
     },
         
     setValue: function(v) {
-       this._value = assertDefined(v)
-       return this
+        this._value = assertDefined(v)
+        return this
     },
+
 })

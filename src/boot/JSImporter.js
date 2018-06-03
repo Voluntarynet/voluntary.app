@@ -93,7 +93,7 @@ var JSScript = {
             script.src = this._fullPath
 
             script.onload = () => {
-                //console.log("loaded script src:'" + script.src + "' type:'" + script.type + "' text:[[[" + script.text + "]]]")
+            //console.log("loaded script src:'" + script.src + "' type:'" + script.type + "' text:[[[" + script.text + "]]]")
                 this._doneCallback()
             }
 
@@ -114,7 +114,7 @@ var JSScript = {
         },
     },
 
-    window.JSImporter = {
+    JSImporter = {
         _currentScript: null,
         _urls: [],
         _doneCallbacks: [],
@@ -304,21 +304,21 @@ var JSScript = {
                 this.composeArchive()
             }
         },
-		
-        composeArchive: function() {
-            var s  = ""
+
+        composeArchive: function () {
+            var s = ""
             this.archiveFileList().forEach((src) => {
                 s += this._loadedArchiveFilesMap[src]
             })
             this.setArchive(s)
         },
-		
-        setArchive: function(s) {
+
+        setArchive: function (s) {
             this._archive = s;
             return this;
         },
 
-        archive: function() {
+        archive: function () {
             return this._archive
         }
 

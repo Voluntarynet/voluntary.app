@@ -34,4 +34,23 @@ window.CSSRuleSet = ideal.Proto.extend().newSlots({
         })
         return this
     },
+
+    asJSON: function() {
+        var dict = {}
+        dict.key = this.key()
+        var decs = {}
+        this.declarations().forEach((dec) => {
+            decs[dec.key()] = dec.value()
+        })
+        dict.declarations = decs
+        return dict
+
+    },
+
+    fromJSON: function(json) {
+        this.setKey(json.key)
+        json.declarations.forEach((k, v) => {
+            this.decAt(k).setValue(v)
+        })
+    },
 })

@@ -86,14 +86,14 @@ class LoadProgressBar {
     }
 
     start () {
-        if (!JSImporter.isDone()) {
+        if (!JSImporter.shared().isDone()) {
             this.setupHtml()
             this.initTitle()
             this.registerForWindowError()
             this.registerForImports()
         }
 
-        if (JSImporter.isDone()) {
+        if (JSImporter.shared().isDone()) {
             this.stop()
         }
         return this
@@ -140,17 +140,17 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
 
     registerForImports () {
         this._importerUrlCallback = (url) => { this.didImportUrl(url) }
-        JSImporter.pushUrlLoadingCallback(this._importerUrlCallback)
+        JSImporter.shared().pushUrlLoadingCallback(this._importerUrlCallback)
 
         this._importerErrorCallback = (error) => { this.setError(error) }
-        JSImporter.pushErrorCallback(this._importerErrorCallback)
+        JSImporter.shared().pushErrorCallback(this._importerErrorCallback)
 
         return this
     }
 
     unregisterForImports () {
-        JSImporter.removeUrlCallback(this._importerUrlCallback)
-        JSImporter.removeErrorCallback(this._importerErrorCallback)
+        JSImporter.shared().removeUrlCallback(this._importerUrlCallback)
+        JSImporter.shared().removeErrorCallback(this._importerErrorCallback)
         return this
     }
 

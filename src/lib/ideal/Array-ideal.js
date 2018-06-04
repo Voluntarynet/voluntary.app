@@ -1,7 +1,9 @@
 "use strict"
 
 Object.shallowCopyTo({
-    //read
+
+    // --- read operations ---
+
     isEmpty: function () {
         return this.length == 0;
     },
@@ -103,7 +105,7 @@ Object.shallowCopyTo({
         return this.split(Math.ceil(this.length / chunkSize));
     },
 
-    //write
+    // --- write operations ---
 
     atInsert: function (i, e) {
         this.splice(i, 0, e);
@@ -214,7 +216,8 @@ Object.shallowCopyTo({
         return this[Math.floor(Math.random() * this.length)];
     },
 
-    //iterate
+    // --- enumeration ---
+
     forEachCall: function (functionName) {
         var args = this.slice.call(arguments).slice(1);
         args.push(0);
@@ -679,6 +682,8 @@ Object.shallowCopyTo({
     diff: function (a) {
         return this.filter(function (i) { return a.indexOf(i) < 0; });
     },
+
+    // --- equality ---
 
     equals: function (array) {
         // we want this to work on any object that confroms to the array protocol, 

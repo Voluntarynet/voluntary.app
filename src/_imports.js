@@ -4,6 +4,7 @@ JSImporter.pushRelativePaths([
     "lib/_imports.js",
     "network/_imports.js",	
     "App.js",
+    //"test.json",
     // "_tests.js",
 ])
 

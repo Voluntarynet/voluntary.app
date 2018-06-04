@@ -24,7 +24,6 @@ class ByteFormatter extends ProtoClass {
     init() {
         super.init()
         this.newSlots({
-            type: "ByteFormatter",
             value: 0,
             usePostfix: true,
             useSpace: false,
@@ -68,6 +67,8 @@ class ByteFormatter extends ProtoClass {
         return v + space + orderName + postfix
     }
 }
+
+ClassManager.shared().registerClass(ByteFormatter)
 
 /*
 window.ByteFormatter = ideal.Proto.extend().newSlots({

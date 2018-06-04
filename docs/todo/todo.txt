@@ -1,17 +1,28 @@
 
 IDEAS
 
+ClassManager
+    - use with class browser
+    - support weak link instance browser?
+    
 unifying fields with normal browsing:
 always present a node field set in the browser but collapse it be default and select it's default subnodes pointer field
 
 applets:
-use javascript with() to implement sandboxes
+use javascript with()+proxies to implement sandboxes
 
 messages:
 unify forum messages, posts and direct messages with optional target field (needed for forums anyways)
 
+move css files to json
+    - allow control-click on DivStyleViews to modify attributes?
+    - would this allow move to import()? Issues: namespaces?
+    - ability to intropect CSS, auto convert to JS?
 
-
+documentation:
+    - build editable documentation into app
+    - support user created docs, shared via network
+    
 
 
 ----------------------------

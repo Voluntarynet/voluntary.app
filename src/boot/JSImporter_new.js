@@ -1,7 +1,8 @@
 "use strict"
 
 /*
-	A simple Javascript importing system.
+    A simple Javascript importing system.
+    Several classes are in this one file to avoid JS loading synchronization issues. TODO: move to import?
 	This runs _import.js which will then reference js and css files and
 	_import.js file in it's subfolders.
 	This makes source reorganizations easier and helps
@@ -120,7 +121,6 @@ class JSScript extends JSImporterBase {
     run () {
         var script = document.createElement("script")
 
-        //this.setFullPath("https://stevedekorte.github.io/p-e-e-r.net/" + this.fullPath())	
         //console.log("JSScript loading: '" + this.fullPath() + "'")
 
         script.src = this.fullPath()
@@ -151,12 +151,14 @@ class JSScript extends JSImporterBase {
 
 class JSImporterClass extends JSImporterBase {
 
+    /*
     static shared() {
         if (!this._shared) {
             this._shared = this.clone()
         }
         return this._shared
     }
+    */
 
     init() {
         super.init()

@@ -167,6 +167,10 @@ Proto.setSlots({
         return this;
     },
 
+    slotNames: function (obj) {
+        return Object.keys(this);
+    },
+
     canPerform: function (message) {
         return this[message] && typeof (this[message]) == "function";
     },

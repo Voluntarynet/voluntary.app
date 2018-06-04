@@ -20,6 +20,13 @@
 */
 
 class ProtoClass { 
+    static shared() {
+        if (!this._shared) {
+            this._shared = this.clone()
+        }
+        return this._shared
+    }
+
     constructor() {
     }
 
@@ -31,6 +38,10 @@ class ProtoClass {
     
     init() {
         // subclasses should override to initialize
+    }
+
+    static type() {
+        return this.name
     }
 
     type() {

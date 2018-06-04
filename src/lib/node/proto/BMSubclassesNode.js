@@ -5,8 +5,8 @@
 	Way to compose 
 */
 
-window.BMProtoNode = BMNode.extend().newSlots({
-    type: "BMProtoNode",
+window.BMSubclassesNode = BMNode.extend().newSlots({
+    type: "BMSubclassesNode",
     protoValue: Proto,
 }).setSlots({
     init: function () {
@@ -15,32 +15,26 @@ window.BMProtoNode = BMNode.extend().newSlots({
         //this.setViewClassName("BMDataStoreRecordView")
         //this.addAction("delete")
         this.setNodeMinWidth(300)
-        //this.setNoteIsSubnodeCount(true)
+        this.setNoteIsSubnodeCount(true)
     },
 
     title: function () {
-        if (this.protoValue()) {
-            return this.protoValue().type()
-        }
-
-        return "?"
-    },
-
-    nodeNode: function() {
-        return "&gt;"
+        return "subclasses"
     },
 
     subtitle: function () {
-  
         return null
     },
 
     setupSubnodes: function() {
+        console.log(this.type() + ".setupSubnodes()")
+        var childProtos = this.protoValue().childProtos()
+        console.log(this.type() + " childProtos = ", childProtos.map((obj) => { return obj.type() }))
 
-        var childNodes = [
-            BMMethodsNode.clone().setProtoValue(this.protoValue()), 
-            BMSubclassesNode.clone().setProtoValue(this.protoValue())
-        ]
+        var childNodes = childProtos.map((childProto) => {
+            return BMProtoNode.clone().setProtoValue(childProto);
+        })
+        console.log(this.type() + " childNodes = ", childNodes.map((obj) => { return obj.title() }))
 
         this.setSubnodes(childNodes);
         return this

@@ -119,7 +119,8 @@ window.BMLocalIdentity = BMKeyPair.extend().newSlots({
         })
 		
         this.apps().subnodes().forEach((app) => { 
-		    ids.merge(App.shared().allIdentitiesMap())
+            //console.log("App.shared().type() = ", App.shared().type())
+		    ids.merge(app.allIdentitiesMap())
         })
 		
         return ids

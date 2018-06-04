@@ -6,6 +6,7 @@ JSImporter.pushRelativePaths([
     "String-ideal.js",
     "Number-ideal.js",
     "ProtoClass.js",
+    "ClassManager.js",
     "Proto.js",
     "Map.js",
     "StackTrace.js",

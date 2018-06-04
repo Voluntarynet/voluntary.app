@@ -18,12 +18,14 @@
 
 class LoadProgressBarClass {
 
+    /*
     static shared() {
         if (!this._shared) {
             this._shared = this.clone()
         }
         return this._shared
     }
+    */
 
     type() {
         return this.constructor.name

@@ -354,12 +354,26 @@ window.BMNode = ideal.Proto.extend().newSlots({
         }
     },
     
-    /*
+    privatePrepareToAccess: function() {
+        if (!this._isPreparingToAccess) {
+            this._isPreparingToAccess = true
+
+            try {
+                this.prepareToAccess()
+            } catch(e) {
+                this._isPreparingToAccess = false
+                throw e
+            }
+            
+            this._isPreparingToAccess = false
+        }
+        return this
+    },
+
     subnodes: function() {
-        this.prepareToAccess()
+        this.privatePrepareToAccess() // causes access loop in some situations - use marker?
         return this._subnodes
     },
-    */
     
     // --- shelf ---
 	
@@ -378,7 +392,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     // ---------------------------------------
 	
     prepareToAccess: function() {
-        
+        // this should be called whenever subnodes need to be accessed
     },
     
     prepareToSyncToView: function() {

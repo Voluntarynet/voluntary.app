@@ -18,6 +18,8 @@ class ClassManager extends ProtoClass {
         super.init()
         this.newSlots({
             "classes": {},           
+            "allProtos": {}, 
+            "uniqueIdCounter": 0,          
         })
     }
 
@@ -25,6 +27,17 @@ class ClassManager extends ProtoClass {
         this.classes()[aClass.type()] = aClass
         return this
     }
+
+    registerProto (aProto) { // (aClass is a constructor) 
+        this.allProtos()[aProto.type()] = aProto
+        return this
+    }
+
+    newUniqueInstanceId () {
+        this.setUniqueIdCounter(this.uniqueIdCounter() + 1)
+        return this.uniqueIdCounter()
+    }
+
 }
 
 ClassManager.shared().registerClass(ProtoClass)

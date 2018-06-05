@@ -12,7 +12,7 @@ Map.__map = map;
 
 // --- Map ---------------------------
 
-ideal.Map = class Map extends ProtoClass {
+window.ideal.Map = class Map extends ProtoClass {
     static withJsMap (jsMap) {
         jsMap = jsMap || {}
         return this.clone().setJsMap(jsMap)
@@ -173,3 +173,5 @@ ideal.Map = class Map extends ProtoClass {
         }).join("&");
     }
 }
+
+ClassManager.shared().registerClass(window.ideal.Map)

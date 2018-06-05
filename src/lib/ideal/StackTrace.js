@@ -93,6 +93,8 @@ class StackTrace extends ProtoClass {
     }
 }
 
+ClassManager.shared().registerClass(StackTrace)
+
 /*
 window.StackTrace = ideal.Proto.extend().newSlots({
     type: "StackTrace",
@@ -197,3 +199,4 @@ Error.prototype.assertDefined = function(v) {
     }
     return v
 }
+

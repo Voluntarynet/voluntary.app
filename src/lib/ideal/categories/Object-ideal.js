@@ -168,6 +168,7 @@ Object.slotValues = function (obj) {
 
 // --- Objective-C like associations ---
 
+/*
 Object._globalAssocationWeakMap = new WeakMap()
 
 Object.associationDict = function (obj) {
@@ -179,6 +180,7 @@ Object.associationDict = function (obj) {
 
     return map.get(obj)
 }
+*/
 
 // --- forwardErrors ---------------------------
 

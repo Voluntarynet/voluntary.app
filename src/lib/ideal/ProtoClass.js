@@ -53,7 +53,7 @@ class ProtoClass {
         return this
     }
 
-    // -- instance ---
+    // ---- instance ---
 
     constructor() {
     }
@@ -131,21 +131,12 @@ class ProtoClass {
         // persistence system can hook this
     }
 
-    /*
-
-    allProtos () {
-        return ClassManager.shared().allProtos()
-    }
-
-    registerThisProto () {
-        ClassManager.shared().registerProto(this)
-        return this
-    }
 
     childProtos () {
-        var result = ClassManager.shared().allProtos().select((proto) => { return proto._parentProto == this })
+        var result = ProtoClass.allClasses().select((proto) => { return proto._parentProto == this })
         return result
     }
+    /*
 
     extend () {
         var obj = this.cloneWithoutInit()
@@ -154,6 +145,7 @@ class ProtoClass {
         //console.log("Proto._allProtos.length = ", Proto._allProtos.length)
         return obj;
     }
+    */
 
     uniqueId () {
         return this._uniqueId
@@ -209,78 +201,27 @@ class ProtoClass {
         return this;
     }
 
-    newSlot (slotName, initialValue) {
-        if (typeof (slotName) != "string") throw "name must be a string";
-
-        if (initialValue === undefined) { initialValue = null };
-
-        var privateName = "_" + slotName;
-        this[privateName] = initialValue;
-
-        if (!this[slotName]) {
-            this[slotName] = function () {
-                return this[privateName];
-            }
-        }
-
-        var setterName = "set" + slotName.capitalized()
-
-        if (!this[setterName]) {
-            this[setterName] = function (newValue) {
-                //this[privateName] = newValue;
-                this.updateSlot(slotName, privateName, newValue);
-                return this;
-            }
-        }
-
-        //this["addTo" + slotName.capitalized()] = function(amount)
-        //{
-        //    this[privateName] = (this[privateName] || 0) + amount;
-        //    return this;
-        //}
-
-        return this;
-    }
-
-    updateSlot (slotName, privateName, newValue) {
-        var oldValue = this[privateName];
-        if (oldValue != newValue) {
-            this[privateName] = newValue;
-            this.didUpdateSlot(slotName, oldValue, newValue)
-            //this.mySlotChanged(name, oldValue, newValue);
-        }
-
-        return this;
-    }
-
-    didUpdateSlot (slotName, oldValue, newValue) {
-        // persistence system can hook this
-    }
+    /*
 
     mySlotChanged (slotName, oldValue, newValue) {
         this.perform(slotName + "SlotChanged", oldValue, newValue);
     }
+    */
 
     ownsSlot (name) {
         return this.hasOwnProperty(name);
     }
 
+    /*
     aliasSlot (slotName, aliasName) {
         this[aliasName] = this[slotName];
         this["set" + aliasName.capitalized()] = this["set" + slotName.capitalized()];
         return this;
     }
+    */
 
     argsAsArray (args) {
         return Array.prototype.slice.call(args);
-    }
-
-    newSlots (slots) {
-        Object.eachSlot(slots, (slotName, initialValue) => {
-            this.newSlot(slotName, initialValue);
-        });
-
-        return this;
     }
 
     canPerform (message) {
@@ -301,14 +242,16 @@ class ProtoClass {
         return this;
     }
 
-    static var _setterNameMap = {};
+    setterNameMap () {
+        return this.getClassVariable("_setterNameMap", {})
+    }
 
     setterNameForSlot (name) {
         // cache these as there aren't too many and it will avoid extra string operations
-        var setter = this._setterNameMap[name]
+        var setter = this.setterNameMap()[name]
         if (!setter) {
             setter = "set" + name.capitalized()
-            this._setterNameMap[name] = setter
+            this.setterNameMap()[name] = setter
         }
         return setter
     }
@@ -338,7 +281,7 @@ class ProtoClass {
         return this._uniqueId
     }
 
-    isKindOf (aProto) {
+    isKindOf (aProto) { // TODO: test this for ES6 classes
         if (this.__proto__) {
             if (this.__proto__ === aProto) {
                 return true
@@ -358,7 +301,7 @@ class ProtoClass {
 
     // --- ancestors ---
 
-    ancestors () {
+    ancestors () { // TODO: test this for ES6 classes
         var results = []
         var obj = this;
         while (obj.__proto__ && obj.type) {
@@ -389,6 +332,5 @@ class ProtoClass {
 
         return result
     }
-     */
 }
 

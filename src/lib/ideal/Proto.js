@@ -65,6 +65,12 @@ Proto.setSlots({
         return Proto._uniqueInstanceId
     },
 
+    setType: function(typeString) {
+        this._type = typeString
+        //this.constructor.name = typeString
+        return this
+    },
+
     cloneWithoutInit: function () {
         var obj = Object.clone(this);
         obj.__proto__ = this;

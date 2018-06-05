@@ -2284,7 +2284,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
     
     scrollIntoView: function() {
-        var focusedView =  WebBrowserWindow.activeDivView()
+        var focusedView =  WebBrowserWindow.shared().activeDivView()
         //console.log("]]]]]]]]]]]] " + this.typeId() + ".scrollIntoView() needsRefocus = ", focusedView != this)
 
         if (focusedView && focusedView != this) {

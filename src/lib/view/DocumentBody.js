@@ -39,17 +39,17 @@ window.DocumentBody = DivView.extend().newSlots({
         
         this.setZoom(z)
         
-        //console.log("DocumentBody windowWidth: " + WebBrowserWindow.width() + " zoom: " + this.zoom() )
+        //console.log("DocumentBody windowWidth: " + WebBrowserWindow.shared().width() + " zoom: " + this.zoom() )
         */
         return this
     },
     
     zoomAdjustedWidth: function() {
-        return WebBrowserWindow.width() * this.zoomRatio()
+        return WebBrowserWindow.shared().width() * this.zoomRatio()
     },
     
     zoomAdjustedHeight: function() {
-        return WebBrowserWindow.width() * this.zoomRatio()
+        return WebBrowserWindow.shared().width() * this.zoomRatio()
     },
     
     zoomAdjustedSize: function() {

@@ -29,7 +29,7 @@ window.App = BaseApp.extend().newSlots({
     },
 
     setupPageTitle: function () {
-        var name = WebBrowserWindow.urlHostname()
+        var name = WebBrowserWindow.shared().urlHostname()
 
         if (name != "") {
             name = name.before(".").replaceAll("-", " ").toUpperCase()

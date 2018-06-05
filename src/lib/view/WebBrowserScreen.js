@@ -22,8 +22,8 @@ window.WebBrowserScreen = ideal.Proto.extend().newSlots({
     
     isRotated: function() { // screen aspect doesn't match window (only works on mobile)
         var a = this.aspectRatio() > 1 
-        var b = WebBrowserWindow.aspectRatio() > 1
-        return a != b && WebBrowserWindow.isOnMobile()
+        var b = WebBrowserWindow.shared().aspectRatio() > 1
+        return a != b && WebBrowserWindow.shared().isOnMobile()
     },
     
     orientedWidth: function() {
@@ -40,8 +40,8 @@ window.WebBrowserScreen = ideal.Proto.extend().newSlots({
 
     lesserOrientedSize: function() {
         // lesser of window and oriented screen size
-        var w = Math.min(this.orientedWidth(), WebBrowserWindow.width())
-        var h = Math.min(this.orientedHeight(), WebBrowserWindow.height())
+        var w = Math.min(this.orientedWidth(), WebBrowserWindow.shared().width())
+        var h = Math.min(this.orientedHeight(), WebBrowserWindow.shared().height())
         return { width: w, height: h }
     },
 

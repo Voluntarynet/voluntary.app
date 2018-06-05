@@ -21,7 +21,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         this.turnOffUserSelect()
         this.setAcceptsFirstResponder(false)
         
-        if (WebBrowserWindow.isTouchDevice()) {
+        if (WebBrowserWindow.shared().isTouchDevice()) {
             this.setIsRegisteredForTouch(true)
         } else {
 	        this.setIsRegisteredForMouse(true)

@@ -51,7 +51,7 @@ window.BaseApp = BMNode.extend().newSlots({
     },
     
     rootView: function() {
-        return  WebBrowserWindow.documentBody()
+        return  WebBrowserWindow.shared().documentBody()
     },
     
     setupBrowser: function() {	
@@ -100,7 +100,7 @@ window.BaseApp = BMNode.extend().newSlots({
 
     setName: function(aString) {
         this._name = aString
-        WebBrowserWindow.setTitle(this.name())
+        WebBrowserWindow.shared().setTitle(this.name())
         return this
     },
     

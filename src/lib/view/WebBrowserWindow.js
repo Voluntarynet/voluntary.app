@@ -2,7 +2,6 @@
 
 window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     type: "WebBrowserWindow",
-    //win: null,
     documentBody: DocumentBody.clone(),
 }).setSlots({
     init: function () {
@@ -20,14 +19,14 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     },
     
     /*  
-    win: function() {
-        if (!this._win) {
+    electronWindow: function() {
+        if (!this._electronWindow) {
             const remote = require("electron").remote;
-            this._win = remote.getCurrentWindow()
+            this._electronWindow = remote.getCurrentWindow()
         }
-        return this._win
+        return this._electronWindow
     },
-*/
+    */
 
     // prevent window level drop and only allow drop on elements that can handle it
 
@@ -211,4 +210,4 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
 })
 
 
-WebBrowserWindow.setup()
+WebBrowserWindow.shared().setup()

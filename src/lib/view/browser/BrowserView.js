@@ -147,7 +147,7 @@ window.BrowserView = NodeView.extend().newSlots({
         this.setIsSingleColumn(isSingle)
 
         // for debugging window resizing
-        //WebBrowserWindow.setTitle(size.width + " x " + size.height + " " + (isSingle ? "single" : "multi"))
+        //WebBrowserWindow.shared().setTitle(size.width + " x " + size.height + " " + (isSingle ? "single" : "multi"))
 
         //console.log("---")
         return this
@@ -636,13 +636,12 @@ window.BrowserView = NodeView.extend().newSlots({
     // --- hash paths ------------------------------------- 
     
     syncFromHashPath: function() {
-        //console.log("syncFromHashPath WebBrowserWindow.urlHash() = '" + WebBrowserWindow.urlHash() + "'")
-	    this.setNodePathString(WebBrowserWindow.urlHash())
+	    this.setNodePathString(WebBrowserWindow.shared().urlHash())
         return this	    
     },
 	
     syncToHashPath: function() {
-        WebBrowserWindow.setUrlHash(this.nodePathString())
+        WebBrowserWindow.shared().setUrlHash(this.nodePathString())
         return this
     },
 })

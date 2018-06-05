@@ -118,11 +118,11 @@ window.BrowserView = NodeView.extend().newSlots({
     updateSingleColumnMode: function() {
         //console.log("---")
         //var size = DocumentBody.zoomAdjustedSize()
-        //var w = WebBrowserScreen.orientedWidth()
-        //var h = WebBrowserScreen.orientedHeight()
+        //var w = WebBrowserScreen.shared().orientedWidth()
+        //var h = WebBrowserScreen.shared().orientedHeight()
         //console.log("WebBrowserScreen size = " + w + "x" + h)
 
-        var size = WebBrowserScreen.lesserOrientedSize()
+        var size = WebBrowserScreen.shared().lesserOrientedSize()
         var w = size.width
         var h = size.height
         var r = 1

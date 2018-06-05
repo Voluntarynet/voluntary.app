@@ -4,6 +4,28 @@ window.ideal = {}
 
 
 class ProtoClass { 
+
+    // --- class slots and variables ---
+    
+    static getClassVariable(key) {
+        return this[key]
+    }
+
+    static setClassVariable(key, value) {
+        this[key] = value
+        return this
+    }
+
+    static shared() {
+        if (!this.getClassVariable("_shared")) {
+            this.setClassVariable("_shared", this.clone())
+        }
+        return this.getClassVariable("_shared")
+    }
+
+
+    // -- instance ---
+
     constructor() {
     }
 
@@ -66,7 +88,6 @@ class ProtoClass {
         return this;
     }
 
-
     updateSlot(slotName, privateName, newValue) {
         var oldValue = this[privateName];
         if (oldValue != newValue) {
@@ -83,7 +104,6 @@ class ProtoClass {
     }
 
     // --------------------------
-
 
     setSlot(name, value) {
         this[name] = value;

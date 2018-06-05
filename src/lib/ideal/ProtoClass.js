@@ -20,12 +20,33 @@
 */
 
 class ProtoClass { 
+
+    // use a wrapper for these so we can easily isolate them later 
+    
+    static getClassVariable(key) {
+        return this[key]
+    }
+
+    static setClassVariable(key, value) {
+        this[key] = value
+        return this
+    }
+
+    static shared() {
+        if (!this.getClassVariable("_shared")) {
+            this.setClassVariable("_shared", this.clone())
+        }
+        return this.getClassVariable("_shared")
+    }
+
+    /*
     static shared() {
         if (!this._shared) {
             this._shared = this.clone()
         }
         return this._shared
     }
+    */
 
     constructor() {
     }

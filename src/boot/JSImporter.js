@@ -1,7 +1,8 @@
 "use strict"
 
 /*
-	A simple Javascript importing system.
+    A simple Javascript importing system.
+    Several classes are in this one file to avoid JS loading synchronization issues. TODO: move to import?
 	This runs _import.js which will then reference js and css files and
 	_import.js file in it's subfolders.
 	This makes source reorganizations easier and helps
@@ -29,300 +30,331 @@
 	Note: Should probably clean this up with promises.
 */
 
-var ObjectCloneFunction = function () {
-    var constructor = new Function
-    constructor.prototype = this
-    var instance = new constructor
-    if (instance.init) {
-        instance.init()
+if (!String.prototype.capitalized) {
+    String.prototype.capitalized = function () {
+        return this.replace(/\b[a-z]/g, function (match) {
+            return match.toUpperCase();
+        });
     }
-    return instance
 }
 
-var CSSLink = {
-    _fullPath: null,
-    clone: ObjectCloneFunction,
+class JSImporterBase {
 
-    setFullPath: function (aPath) {
-        this._fullPath = aPath
-        return this
-    },
+    static shared() {
+        if (!this._shared) {
+            this._shared = this.clone()
+        }
+        return this._shared
+    }
 
-    run: function () {
+    type() {
+        return this.constructor.name
+    }
+
+    static clone() {
+        var obj = new this()
+        obj.init()
+        return obj
+    }
+    
+    init() {
+        // subclasses should override to initialize
+    }
+
+    newSlot(slotName, initialValue) {
+        if (typeof (slotName) != "string") {
+            throw new Error("slot name must be a string"); 
+        }
+
+        if (initialValue === undefined) { 
+            initialValue = null 
+        };
+
+        var privateName = "_" + slotName;
+        this[privateName] = initialValue;
+
+        if (!this[slotName]) {
+            this[slotName] = function () {
+                return this[privateName];
+            }
+        }
+
+        var setterName = "set" + slotName.capitalized()
+
+        if (!this[setterName]) {
+            this[setterName] = function (newValue) {
+                this[privateName] = newValue;
+                //this.updateSlot(slotName, privateName, newValue);
+                return this;
+            }
+        }
+
+        return this;
+    }
+}
+
+// --- CSSLink ---------------------------------------------------
+
+class CSSLink extends JSImporterBase {
+    init() {
+        super.init()
+        this.newSlot("fullPath", null);
+        // subclasses should override to initialize
+    }
+
+    run () {
         var styles = document.createElement("link")
         styles.rel = "stylesheet"
         styles.type = "text/css"
         styles.media = "screen"
-        styles.href = this._fullPath
+        styles.href = this.fullPath()
         document.getElementsByTagName("head")[0].appendChild(styles)
-    },
+    }
 }
 
-var JSScript = {
-        _importer: null,
-        _fullPath: null,
-        _doneCallback: null,
+// --- JSScript ---------------------------------------------------
 
-        clone: ObjectCloneFunction,
+class JSScript extends JSImporterBase {
+    init() {
+        super.init()
+        this.newSlot("importer", null);
+        this.newSlot("fullPath", null);
+        this.newSlot("doneCallback", null);
+    }
 
-        setImporter: function (obj) {
-            this._importer = obj
-            return this
-        },
+    run () {
+        var script = document.createElement("script")
 
-        fullPath: function () {
-            return this._fullPath
-        },
+        //console.log("JSScript loading: '" + this.fullPath() + "'")
 
-        setDoneCallback: function (callback) {
-            this._doneCallback = callback
-            return this
-        },
+        script.src = this.fullPath()
 
-        setFullPath: function (aPath) {
-            this._fullPath = aPath
-            return this
-        },
-
-        run: function () {
-            var script = document.createElement("script")
-
-            //this._fullPath = "https://stevedekorte.github.io/p-e-e-r.net/" + this._fullPath		
-            //console.log("JSScript loading: '" + this._fullPath + "'")
-
-            script.src = this._fullPath
-
-            script.onload = () => {
+        script.onload = () => {
             //console.log("loaded script src:'" + script.src + "' type:'" + script.type + "' text:[[[" + script.text + "]]]")
-                this._doneCallback()
-            }
-
-            script.onerror = (error) => {
-                this._importer.setError(error)
-                throw new Error("missing url " + this._fullPath)
-            }
-
-            var parent = document.getElementsByTagName("head")[0] || document.body
-            parent.appendChild(script)
-        },
-
-        basePath: function () {
-            var parts = this.fullPath().split("/")
-            parts.pop()
-            var basePath = parts.join("/")
-            return basePath
-        },
-    },
-
-    JSImporter = {
-        _currentScript: null,
-        _urls: [],
-        _doneCallbacks: [],
-        _urlLoadingCallbacks: [],
-        _errorCallbacks: [],
-        _jsFilesLoaded: [],
-        _cssFilesLoaded: [],
-        _archive: null,
-
-        clone: ObjectCloneFunction,
-
-        currentScriptPath: function () {
-            if (this._currentScript) {
-                return this._currentScript.basePath()
-            }
-            return ""
-        },
-
-        absolutePathForRelativePath: function (aPath) {
-            var parts = this.currentScriptPath().split("/").concat(aPath.split("/"))
-            var rPath = parts.join("/")
-
-            if (rPath[0] == "/"[0]) {
-                rPath = "." + rPath
-            }
-
-            /*
-		if (rPath[0] == "/"[0]) {
-			rPath = rPath.substr(1)
-		}
-		
-		if (rPath[0] != "/"[0]) {
-			rPath = "/" + rPath
-		}
-		*/
-
-
-            return rPath
-        },
-
-        absolutePathsForRelativePaths: function (paths) {
-            return paths.map((aPath) => { return this.absolutePathForRelativePath(aPath) })
-        },
-
-        pushRelativePaths: function (paths) {
-            this.pushFilePaths(this.absolutePathsForRelativePaths(paths))
-            return this
-        },
-
-        pushFilePaths: function (paths) {
-            this._urls = paths.concat(this._urls)
-            return this
-        },
-
-        urls: function () {
-            return this._urls
-        },
-
-        pushDoneCallback: function (aCallback) {
-            this._doneCallbacks.push(aCallback)
-            return this
-        },
-
-        pushUrlLoadingCallback: function (aCallback) {
-            this._urlLoadingCallbacks.push(aCallback)
-            return this
-        },
-
-        pushErrorCallback: function (aCallback) {
-            this._errorCallbacks.push(aCallback)
-            return this
-        },
-
-        removeErrorCallback: function (aCallback) {
-            this._errorCallbacks.remove(aCallback)
-            return this
-        },
-
-        removeUrlCallback: function (aCallback) {
-            this._urlLoadingCallbacks.remove(aCallback)
-            return this
-        },
-
-
-        run: function () {
-            this.loadNext()
-        },
-
-        isDone: function () {
-            return this.urls().length == 0
-        },
-
-        loadNext: function () {
-            if (!this.isDone()) {
-                var url = this._urls.shift()
-                this.loadUrl(url)
-            } else {
-                this.done()
-            }
-            return this
-        },
-
-        loadUrl: function (url) {
-            this._urlLoadingCallbacks.forEach((callback) => { callback(url) })
-
-            var extension = url.split(".").pop()
-
-            if (extension == "js" || extension == "json") {
-                this._jsFilesLoaded.push(url)
-                this._currentScript = JSScript.clone().setImporter(this).setFullPath(url).setDoneCallback(() => { this.loadNext() })
-                //console.log("this._currentScript = ", this._currentScript)
-                this._currentScript.run()
-            } else if (extension == "css") {
-                this._cssFilesLoaded.push(url)
-                CSSLink.clone().setFullPath(url).run()
-                this.loadNext()
-            } else {
-                throw new Error("unrecognized extension on url '" + url + "'")
-            }
-
-            return this
-        },
-
-        done: function () {
-            //console.log("JSImporter.done() -----------------------------")
-            this._doneCallbacks.forEach((callback) => { callback() })
-            if (window.JSImporterIsEmbedded != true) {
-                //this.showConcatCommand()
-                //this.buildArchive()
-            }
-            return this
-        },
-
-        setError: function (error) {
-            this._errorCallbacks.forEach((callback) => { callback(error) })
-            return this
-        },
-
-        archiveFileList: function () {
-            var files = ["archive/top.html"]
-            files.appendItems(this._cssFilesLoaded)
-            files.append("archive/middle.html")
-            files.appendItems(["./src/boot/LoadProgressBar.js", "./src/boot/JSImporter.js"])
-            files.appendItems(this._jsFilesLoaded)
-            files.append("archive/bottom.html")
-            return files
-        },
-
-        showConcatCommand: function () {
-            // a unix cat command to embed all the css and js files into the html file
-            // other resources such as ttf fonts, svg files, images, etc will need to be loaded individually
-            // but using the embedded JS/css index file will tremendously speed up the load time (>10x)
-            // and provide a single source file to sign (still need to sign full archive too)
-
-            var files = this.archiveFileList()
-            var s = "cat " + files.map((p) => { return "\"" + p + "\"" }).join(" ") + " > index.html"
-            window.console.log(s)
-        },
-
-        // archive
-
-        buildArchive: function () {
-            this._unloadedArchiveFiles = this.archiveFileList()
-            this._loadedArchiveFilesMap = {}
-            this.loadArchiveFiles()
-        },
-
-        loadArchiveFiles: function () {
-            this.archiveFileList().forEach((src) => {
-                var xhr = new XMLHttpRequest()
-                xhr.open("GET", src)
-                var obj = this
-                xhr.onreadystatechange = () => {
-                    if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-                        obj.loadedArchiveFile(src, xhr.responseText)
-                    }
-                }
-                xhr.send()
-            })
-        },
-
-        loadedArchiveFile: function (src, text) {
-            this._loadedArchiveFilesMap[src] = text
-            window.console.log("the script " + src + " text content is ", text)
-            this._unloadedArchiveFiles.remove(src)
-            if (this._unloadedArchiveFiles.length == 0) {
-                this.composeArchive()
-            }
-        },
-
-        composeArchive: function () {
-            var s = ""
-            this.archiveFileList().forEach((src) => {
-                s += this._loadedArchiveFilesMap[src]
-            })
-            this.setArchive(s)
-        },
-
-        setArchive: function (s) {
-            this._archive = s;
-            return this;
-        },
-
-        archive: function () {
-            return this._archive
+            this._doneCallback()
         }
 
+        script.onerror = (error) => {
+            this.importer().setError(error)
+            throw new Error("missing url " + this.fullPath())
+        }
+
+        var parent = document.getElementsByTagName("head")[0] || document.body
+        parent.appendChild(script)
     }
+
+    basePath () {
+        var parts = this.fullPath().split("/")
+        parts.pop()
+        var basePath = parts.join("/")
+        return basePath
+    }
+}
+
+// --- JSImporter -----------------------------------------------
+
+class JSImporterClass extends JSImporterBase {
+
+    /*
+    static shared() {
+        if (!this._shared) {
+            this._shared = this.clone()
+        }
+        return this._shared
+    }
+    */
+
+    init() {
+        super.init()
+        this.newSlot("currentScript", null);
+        this.newSlot("urls", []);
+        this.newSlot("doneCallbacks", []),
+        this.newSlot("urlLoadingCallbacks", []);
+        this.newSlot("errorCallbacks", []);
+        this.newSlot("jsFilesLoaded", [])
+        this.newSlot("cssFilesLoaded", [])
+        this.newSlot("archive", null)
+    }
+
+    currentScriptPath () {
+        if (this.currentScript()) {
+            return this.currentScript().basePath()
+        }
+        return ""
+    }
+
+    absolutePathForRelativePath (aPath) {
+        var parts = this.currentScriptPath().split("/").concat(aPath.split("/"))
+        var rPath = parts.join("/")
+
+        if (rPath[0] == "/"[0]) {
+            rPath = "." + rPath
+        }
+
+        return rPath
+    }
+
+    absolutePathsForRelativePaths (paths) {
+        return paths.map((aPath) => { return this.absolutePathForRelativePath(aPath) })
+    }
+
+    pushRelativePaths (paths) {
+        this.pushFilePaths(this.absolutePathsForRelativePaths(paths))
+        return this
+    }
+
+    pushFilePaths (paths) {
+        this.setUrls(paths.concat(this.urls()))
+        return this
+    }
+
+    pushDoneCallback (aCallback) {
+        this.doneCallbacks().push(aCallback)
+        return this
+    }
+
+    pushUrlLoadingCallback (aCallback) {
+        this.urlLoadingCallbacks().push(aCallback)
+        return this
+    }
+
+    pushErrorCallback (aCallback) {
+        this.errorCallbacks().push(aCallback)
+        return this
+    }
+
+    removeErrorCallback (aCallback) {
+        this.errorCallbacks().remove(aCallback)
+        return this
+    }
+
+    removeUrlCallback (aCallback) {
+        this.urlLoadingCallbacks().remove(aCallback)
+        return this
+    }
+
+    // --- run ---
+
+    run () {
+        this.loadNext()
+    }
+
+    isDone () {
+        return this.urls().length == 0
+    }
+
+    loadNext () {
+        if (!this.isDone()) {
+            var url = this.urls().shift()
+            this.loadUrl(url)
+        } else {
+            this.done()
+        }
+        return this
+    }
+
+    loadUrl (url) {
+        this.urlLoadingCallbacks().forEach((callback) => { callback(url) })
+
+        var extension = url.split(".").pop()
+
+        if (extension == "js" || extension == "json") {
+            this.jsFilesLoaded().push(url)
+            this.setCurrentScript(JSScript.clone().setImporter(this).setFullPath(url).setDoneCallback(() => { this.loadNext() }))
+            //console.log("this.currentScript() = ", this.currentScript())
+            this.currentScript().run()
+        } else if (extension == "css") {
+            this.cssFilesLoaded().push(url)
+            CSSLink.clone().setFullPath(url).run()
+            this.loadNext()
+        } else {
+            throw new Error("unrecognized extension on url '" + url + "'")
+        }
+
+        return this
+    }
+
+    done () {
+        //console.log("JSImporter.done() -----------------------------")
+        this.doneCallbacks().forEach((callback) => { callback() })
+
+        if (window.JSImporterIsEmbedded != true) {
+            //this.showConcatCommand()
+            //this.buildArchive()
+        }
+
+        return this
+    }
+
+    setError (error) {
+        this.errorCallbacks().forEach((callback) => { callback(error) })
+        return this
+    }
+
+    // --- archive ---
+
+    archiveFileList () {
+        var files = ["archive/top.html"]
+        files.appendItems(this.cssFilesLoaded())
+        files.append("archive/middle.html")
+        files.appendItems(["./src/boot/LoadProgressBar.js", "./src/boot/JSImporter.js"])
+        files.appendItems(this.jsFilesLoaded())
+        files.append("archive/bottom.html")
+        return files
+    }
+
+    showConcatCommand () {
+        // a unix cat command to embed all the css and js files into the html file
+        // other resources such as ttf fonts, svg files, images, etc will need to be loaded individually
+        // but using the embedded JS/css index file will tremendously speed up the load time (>10x)
+        // and provide a single source file to sign (still need to sign full archive too)
+
+        var files = this.archiveFileList()
+        var s = "cat " + files.map((p) => { return "\"" + p + "\"" }).join(" ") + " > index.html"
+        window.console.log(s)
+    }
+
+    // archive
+
+    buildArchive () {
+        this.setUnloadedArchiveFiles(this.archiveFileList())
+        this.setLoadedArchiveFilesMap ({})
+        this.loadArchiveFiles()
+    }
+
+    loadArchiveFiles () {
+        this.archiveFileList().forEach((src) => {
+            var xhr = new XMLHttpRequest()
+            xhr.open("GET", src)
+            var obj = this
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                    obj.loadedArchiveFile(src, xhr.responseText)
+                }
+            }
+            xhr.send()
+        })
+    }
+
+    loadedArchiveFile (src, text) {
+        this.loadedArchiveFilesMap()[src] = text
+        window.console.log("the script " + src + " text content is ", text)
+        this.unloadedArchiveFiles().remove(src)
+        if (this.unloadedArchiveFiles().length == 0) {
+            this.composeArchive()
+        }
+    }
+    
+    composeArchive() {
+        var s  = ""
+        this.archiveFileList().forEach((src) => {
+            s += this.loadedArchiveFilesMap()[src]
+        })
+        this.setArchive(s)
+    }
+}
+
+window.JSImporter = JSImporterClass.shared()
 
 if (window.JSImporterIsEmbedded != true) {
     JSImporter.pushRelativePaths(["_imports.js"]).run()

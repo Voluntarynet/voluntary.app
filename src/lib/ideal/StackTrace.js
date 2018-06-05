@@ -93,7 +93,7 @@ class StackTrace extends ProtoClass {
     }
 }
 
-ClassManager.shared().registerClass(StackTrace)
+StackTrace.registerThisClass()
 
 /*
 window.StackTrace = ideal.Proto.extend().newSlots({

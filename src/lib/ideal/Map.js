@@ -174,4 +174,4 @@ window.ideal.Map = class Map extends ProtoClass {
     }
 }
 
-ClassManager.shared().registerClass(window.ideal.Map)
+window.ideal.Map.registerThisClass()

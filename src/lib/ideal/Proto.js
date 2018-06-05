@@ -20,16 +20,21 @@ Proto.setSlots = function (slots) {
 Proto.setSlots({
 
     allProtos: function() {
-        return ClassManager.shared().allProtos()
+        if (!Proto._allProtos) {
+            Proto._allProtos = []
+        }
+        return Proto._allProtos
     },
 
     registerThisProto: function() {
-        ClassManager.shared().registerProto(this)
+        if (this.allProtos().indexOf(this) == -1) {
+            this.allProtos().push(this)
+        }
         return this
     },
 
     childProtos: function() {
-        var result = ClassManager.shared().allProtos().select((proto) => { return proto._parentProto == this })
+        var result = this.allProtos().select((proto) => { return proto._parentProto == this })
         return result
     },
 
@@ -48,10 +53,22 @@ Proto.setSlots({
         return this.type() + this.uniqueId()
     },
 
+    /*
+    getClassVariable: function(name, defaultValue) {
+        if (this[name])
+
+    },
+    */
+
+    newUniqueInstanceId: function() {
+        Proto._uniqueInstanceId ++
+        return Proto._uniqueInstanceId
+    },
+
     cloneWithoutInit: function () {
         var obj = Object.clone(this);
         obj.__proto__ = this;
-        obj._uniqueId = ClassManager.shared().newUniqueInstanceId()
+        obj._uniqueId = this.newUniqueInstanceId()
         // Note: does the JS debugger expect constructor.__proto__.type?
         return obj;
     },

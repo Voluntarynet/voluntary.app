@@ -68,7 +68,7 @@ class ByteFormatter extends ProtoClass {
     }
 }
 
-ClassManager.shared().registerClass(ByteFormatter)
+ByteFormatter.registerThisClass()
 
 /*
 window.ByteFormatter = ideal.Proto.extend().newSlots({

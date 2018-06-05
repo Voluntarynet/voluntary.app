@@ -114,7 +114,7 @@ window.BMPeerId = BMNode.extend().newSlots({
     chooseRandomPeerId: function() {
         var s = ""
         var max = 10
-        for (var i = 0; i < max; i++) {
+        for (let i = 0; i < max; i++) {
             s = s + (Math.floor(Math.random()*1000000) % 10)
         }
         return s

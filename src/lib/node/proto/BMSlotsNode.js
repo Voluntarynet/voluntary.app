@@ -2,26 +2,66 @@
 window.BMSlotsNode = BMFieldSetNode.extend().newSlots({
     type: "BMSlotsNode",
     protoValue: null,
-    slotName: [],
 }).setSlots({
     init: function () {
         BMFieldSetNode.init.apply(this)
-
  		this.setShouldStore(false)
-        
-		
-        this.addFieldNamed("name").setValueMethod("name").setValueIsEditable(true)
-        this.addStoredField(BMIdentityField.clone().setValueMethod("publicKeyString").setKey("public key").setValueIsEditable(true))
-        //	this.addStoredField(BMIdentityField.clone().setValueMethod("privateKeyString").setKey("private key").setValueIsEditable(false))
-
-        // local fields
-        this.addFieldNamed("phone").setValueMethod("phone").setValueIsEditable(true)
-        this.addFieldNamed("address").setValueMethod("address").setValueIsEditable(true)
-        this.addFieldNamed("email").setValueMethod("email").setValueIsEditable(true)
-        this.addFieldNamed("twitter").setValueMethod("twitter").setValueIsEditable(true)
-        this.addFieldNamed("facebook").setValueMethod("facebook").setValueIsEditable(true)
-        this.addFieldNamed("linkedin").setValueMethod("linkedin").setValueIsEditable(true)
-        this.addFieldNamed("instagram").setValueMethod("instagram").setValueIsEditable(true)
         this.setNodeMinWidth(600)
+        this.setTitle("slots")
+    },
+
+    slotValueType: function() {
+        var v = this.slotValue()
+        var t = typeof(v)
+        
+        if (t == "object") {
+            if (typeof(v.type) == "function") {
+                t = "prototype"
+            }
+        }
+
+        return t
+    },
+
+    setupSubnodes: function() {
+        var childNodes = []
+        assert(this.protoValue())
+
+        this.protoValue().slotNames().forEach((slotName) => {
+
+            var childNode = null
+            var p = this.protoValue()
+            var v = p[slotName]
+            var t = typeof(v)
+            // console.log("proto: ", p.type(), " slot:", slotName, " value: ", p[slotName], " type: ", t)
+
+            if (t == "string") {
+                childNode = this.addFieldNamed(slotName).setValueMethod("slotValue").setValueIsEditable(false)
+                //childNode.setSubtitle("string")
+            }
+
+            if (t == "number") {
+                childNode = this.addField(BMNumberField.clone().setValueMethod("slotValue").setValueIsEditable(false))
+                //childNode.setSubtitle("number")
+            }
+
+            if (t == "function") {
+                childNode = this.addField(BMPointerField.clone().setValueMethod("slotValue").setValueIsEditable(false))
+                //childNode.setSubtitle("function")
+            }
+
+            if (childNode) {
+                childNodes.push(childNode)
+            }
+        })
+
+        this.setSubnodes(childNodes);
+        return this
+    },
+
+    prepareToAccess: function () {
+        if (this._subnodes.length == 0) {
+            this.setupSubnodes()
+        }
     },
 })

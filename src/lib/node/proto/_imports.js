@@ -2,7 +2,6 @@
 
 JSImporter.pushRelativePaths([
     "BMProtoNode.js",
-    "BMMethodsNode.js",
+    "BMSlotsNode.js",
     "BMSubclassesNode.js",
-    "BMMethodNode.js",
 ])

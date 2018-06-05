@@ -84,7 +84,7 @@
     text-align: right;
     font-size: 13px;
     white-space: nowrap;
-    text-transform: capitalize;
+    /*text-transform: capitalize;*/
 
 	
 	padding-top: 3px;
@@ -95,9 +95,11 @@
 	border: 0px dashed #aaa;
 }
 
+/*
 .BMFieldKeyView::after {
     content: ": "
 }
+*/
 
 /* --------------------------- Value --------------------------- */
 

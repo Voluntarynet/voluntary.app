@@ -15,7 +15,7 @@ window.SyncAction = ideal.Proto.extend().newSlots({
             this.send()
         } catch(error) {
             console.warn(this.typeId() + ".trySend(" + this.description() + ") caught exception: ")
-            StackTrace.showError(error)
+            StackTrace.shared().showError(error)
             return false
         }
         */

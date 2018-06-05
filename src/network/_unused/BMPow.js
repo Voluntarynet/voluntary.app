@@ -147,7 +147,7 @@ window.BMPow = ideal.Proto.extend().newSlots({
     
     syncFindOneLoop: function() {
         var max = this.syncTriesPerLoop();
-        for (var i = 0; i < max; i++) {
+        for (let i = 0; i < max; i++) {
             this.pickRandomPow()
             if (this.isValid()) {
                 this._tries += i;

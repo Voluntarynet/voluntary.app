@@ -107,7 +107,7 @@ Object.shallowCopyTo({
         var words = [];
         var start = -1;
         var capitalized = this.capitalized();
-        for (var i = 0; i < capitalized.length; i++) {
+        for (let i = 0; i < capitalized.length; i++) {
             if (capitalized.slice(i, i + 1).match(/[A-Z]/)) {
                 var word = capitalized.slice(start, i);
                 if (word) {
@@ -242,7 +242,7 @@ Object.shallowCopyTo({
         var randy = Math.floor(Math.random() * (maxWordCount - minWordCount)) + minWordCount;
         var ret = "";
         var needsCap = true
-        for (var i = 0; i < randy; i++) {
+        for (let i = 0; i < randy; i++) {
             var newTxt = loremIpsumWordBank[Math.floor(Math.random() * (loremIpsumWordBank.length - 1))];
 
             if (ret.substring(ret.length - 1, ret.length) == "." || ret.substring(ret.length - 1, ret.length) == "?") {

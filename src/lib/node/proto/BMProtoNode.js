@@ -36,9 +36,8 @@ window.BMProtoNode = BMNode.extend().newSlots({
     },
 
     setupSubnodes: function() {
-
         var childNodes = [
-            BMMethodsNode.clone().setProtoValue(this.protoValue()), 
+            BMSlotsNode.clone().setProtoValue(this.protoValue()), 
             BMSubclassesNode.clone().setProtoValue(this.protoValue())
         ]
 
@@ -47,15 +46,10 @@ window.BMProtoNode = BMNode.extend().newSlots({
     },
 
     prepareToAccess: function () {
-        console.log(this.type() + " prepareToAccess ")
+        //console.log(this.type() + " prepareToAccess this.protoValue() = ", this.protoValue().type())
         if (this._subnodes.length == 0) {
             this.setupSubnodes()
         }
     },
-
-    subnodes: function () {
-        this.prepareToAccess()
-        return BMNode.subnodes.apply(this)
-    }
 })
 

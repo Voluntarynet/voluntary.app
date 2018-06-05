@@ -166,7 +166,7 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
 		
         var bitCount = hostHashUint8Array.length * 8
         var diff = 0
-        for (var i = 0; i < bitCount; i ++) {
+        for (let i = 0; i < bitCount; i ++) {
             if (s1.readBoolean() != s2.readBoolean()) {
                 diff ++
             }

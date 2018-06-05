@@ -11,16 +11,16 @@
             try {
                 ...
             } catch(e) {
-                StackTrace.showError(e)
+                StackTrace.shared().showError(e)
             }
 
         try and catch:
 
-            StackTrace.try(() => {	 ... })
+            StackTrace.shared().try(() => {	 ... })
 
         show the current stack:
 
-            StackTrace.showCurrentStack()
+            StackTrace.shared().showCurrentStack()
 
 */
 
@@ -28,6 +28,7 @@ class StackTrace extends ProtoClass {
     init() {
         super.init()
         this.newSlots({
+
         })
     }
 

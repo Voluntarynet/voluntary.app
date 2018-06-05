@@ -174,7 +174,7 @@ window.BMPayload = ideal.Proto.extend().newSlots({
         var decryptedPayloadDict = decryptedString.toJsonDict();
 
         if (decryptedPayloadDict == null) {
-            throw "can't convert decrypted payload to JSON";    
+            throw new Error("can't convert decrypted payload to JSON");    
         }
         
         this.setDict(decryptedPayloadDict)

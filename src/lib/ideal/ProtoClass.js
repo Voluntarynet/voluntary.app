@@ -49,9 +49,13 @@ class ProtoClass {
     }
 
     newSlot(slotName, initialValue) {
-        if (typeof (slotName) != "string") throw "name must be a string";
+        if (typeof (slotName) != "string") {
+            throw new Error("name must be a string");
+        }
 
-        if (initialValue === undefined) { initialValue = null };
+        if (initialValue === undefined) { 
+            initialValue = null 
+        };
 
         var privateName = "_" + slotName;
         this[privateName] = initialValue;

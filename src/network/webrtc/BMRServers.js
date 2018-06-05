@@ -87,7 +87,7 @@ window.BMRServers = BMStorableNode.extend().newSlots({
         var unconnectedServers = this.unconnectedServers().shuffle()
         var connectionsToAdd = this.maxConnections() - this.connectionCount()
         
-        for (var i = 0; i < connectionsToAdd && i < unconnectedServers.length; i ++) {
+        for (let i = 0; i < connectionsToAdd && i < unconnectedServers.length; i ++) {
             var server = unconnectedServers[i]
             server.connect()
         }

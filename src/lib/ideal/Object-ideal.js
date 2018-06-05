@@ -8,7 +8,9 @@
 Object.clone = function (obj) {
     var Proto_constructor = new Function;
     Proto_constructor.prototype = obj;
-    return new Proto_constructor;
+    var instance = new Proto_constructor;
+    instance.constructor = Proto_constructor
+    return instance
 }
 
 Object.shallowCopyTo = function (fromObj, toObj) {
@@ -37,14 +39,14 @@ Object.lookupPath = function (obj, path) {
     return obj;
 },
 
-    Object.perform = function (obj, name) {
-        if (obj !== undefined && obj !== null && obj[name] && typeof (obj[name]) == "function") {
-            var args = Array.prototype.slice.call(arguments).slice(2);
-            return obj[name].apply(obj, args);
-        } else {
-            return obj;
-        }
+Object.perform = function (obj, name) {
+    if (obj !== undefined && obj !== null && obj[name] && typeof (obj[name]) == "function") {
+        var args = Array.prototype.slice.call(arguments).slice(2);
+        return obj[name].apply(obj, args);
+    } else {
+        return obj;
     }
+}
 
 Object.values = function (obj) {
     var values = [];

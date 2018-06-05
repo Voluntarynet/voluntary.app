@@ -36,8 +36,10 @@ window.BMField = BMNode.extend().newSlots({
     valueError: null,
 	
     target: null,
-	
-	
+
+    // new
+    getterFunc: null, // example fieldSlot.setGetterFunc((target) => { ... })
+    setterFunc: null,
 }).setSlots({
 
     init: function () {
@@ -67,13 +69,26 @@ window.BMField = BMNode.extend().newSlots({
         //console.log("setValue '" + v + "'")
         var target = this.target()
         var setter = this.setterNameForSlot(this.valueMethod())
+
+        if (this.setterFunc()) {
+            this.setterFunc(target, this.valueMethod(), v)()
+            target.didUpdateNode()
+            this.validate()
+        }
+
         if (!target[setter]) {
             console.warn("WARNING target = " + target.type() + " setter = '" + setter + "' missing")
         }
+
         v = this.normalizeThisValue(v)
-        target[setter].apply(target, [v])
-        target.didUpdateNode()
-        this.validate()
+        
+        if (target[setter]) {
+            target[setter].apply(target, [v])
+            target.didUpdateNode()
+            this.validate()
+        } else {
+            console.warn(this.type() + " target " + target.type() + " missing slot '" + setter + "'")
+        }
 		
         return this
     },
@@ -84,17 +99,31 @@ window.BMField = BMNode.extend().newSlots({
 	
     value: function() {
         var target = this.target()
-        var getter = this.valueMethod()
+        var slotName = this.valueMethod()
+
+        if (this.getterFunc()) {
+            return this.getterFunc(target, slotName)()
+        }
+
         //console.log("target = " + target.type() + " getter = '" + getter + "'")
-        var value = target[getter].apply(target)
-        return value
+        if (target[slotName]) {
+            var value = target[slotName].apply(target)
+            return value
+        } else {
+            console.warn(this.type() + " target " + target.type() + " missing slot '" + slotName + "'")
+        }
     },
 	
     note: function() {
         var target = this.target()
-        var noteGetter = this.noteMethod()
-        if (target && noteGetter) {
-            return target[noteGetter].apply(target)
+        var slotName = this.noteMethod()
+
+        if (target && slotName) {
+            if (target[slotName]) {
+                return target[slotName].apply(target)
+            } else {
+                console.warn(this.type() + " target " + target.type() + " missing note getter slot '" + slotName + "'")
+            }
         }
         return null
     },

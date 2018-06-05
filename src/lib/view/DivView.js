@@ -964,7 +964,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     setMinAndMaxWidth: function(v) {
         //console.log(this.type() + " setMinAndMaxWidth ", v)
-        //StackTrace.showCurrentStack()
+        //StackTrace.shared()./showCurrentStack()
         this.setMinWidth(v)
         this.setMaxWidth(v)
         return this        
@@ -1130,7 +1130,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 	
     hasChildElement: function(anElement) {
         var children = this.element().childNodes
-        for (var i = 0; i < children.length; i ++) {
+        for (let i = 0; i < children.length; i ++) {
             var child = children[i]
             if (anElement === child) {
                 return true
@@ -1144,7 +1144,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 
         if (!this.hasSubview(anSubview)) {
             console.warn(this.type() + " removeSubview " + anSubview.type() + " failed - no child found!")
-            StackTrace.showCurrentStack()
+            StackTrace.shared().showCurrentStack()
             return anSubview
         }
 		
@@ -1157,7 +1157,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 
         if (this.hasChildElement(anSubview.element())) {
             console.warn("WARNING: " + this.type() + " removeSubview " + anSubview.type() + " failed - still has element after remove")
-            StackTrace.showCurrentStack()
+            StackTrace.shared().showCurrentStack()
         }
 		
         anSubview.setParentView(null)
@@ -1274,7 +1274,7 @@ window.DivView = ideal.Proto.extend().newSlots({
             eventFunc()
         } catch (e) {
             //console.log(e)
-            StackTrace.showError(e)
+            StackTrace.shared().showError(e)
             //error = e
         }
 		
@@ -1495,7 +1495,7 @@ window.DivView = ideal.Proto.extend().newSlots({
         
         if (dataTransfer.files.length) {   
             var dataUrls = []
-            for (var i = 0; i < dataTransfer.files.length; i ++) {
+            for (let i = 0; i < dataTransfer.files.length; i ++) {
                 var file = dataTransfer.files[i]
                 //console.log("file: ", file)
                 

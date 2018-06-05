@@ -21,16 +21,20 @@ class ProtoClass {
         return this.constructor.name
     }
 
-    _uniqueIdCounter = 0;
+    static var _uniqueIdCounter = 0;
     static var _allProtos = [Proto];
 
     // --- slot create and update ---
 
 
     newSlot(slotName, initialValue) {
-        if (typeof (slotName) != "string") throw "name must be a string";
+        if (typeof (slotName) != "string") {
+            throw new Error("name must be a string");
+        }
 
-        if (initialValue === undefined) { initialValue = null };
+        if (initialValue === undefined) { 
+            initialValue = null 
+        };
 
         var privateName = "_" + slotName;
         this[privateName] = initialValue;
@@ -259,7 +263,7 @@ class ProtoClass {
         return this;
     }
 
-    _setterNameMap: {},
+    static var _setterNameMap = {};
 
     setterNameForSlot (name) {
         // cache these as there aren't too many and it will avoid extra string operations
@@ -352,7 +356,7 @@ class ProtoClass {
         return result
     }
 
-});
+}
 
 Proto.newSlot("type", "ideal.Proto");
 

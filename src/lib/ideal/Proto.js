@@ -50,6 +50,7 @@ Proto.setSlots({
         obj.__proto__ = this;
         Proto._uniqueIdCounter ++;
         obj._uniqueId = Proto._uniqueIdCounter;
+        // Note: does the JS debugger expect constructor.__proto__.type?
         //Proto._allProtos.push(obj)
         //console.log("Proto._allProtos.length = ", Proto._allProtos.length)
         return obj;
@@ -92,9 +93,13 @@ Proto.setSlots({
     },
 
     newSlot: function (slotName, initialValue) {
-        if (typeof (slotName) != "string") throw "name must be a string";
+        if (typeof (slotName) != "string") {
+            throw new Error("name must be a string");
+        }
 
-        if (initialValue === undefined) { initialValue = null };
+        if (initialValue === undefined) { 
+            initialValue = null 
+        };
 
         var privateName = "_" + slotName;
         this[privateName] = initialValue;

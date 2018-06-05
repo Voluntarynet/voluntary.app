@@ -270,7 +270,7 @@ window.BMStorableNode = BMNode.extend().newSlots({
     },
 	
     didUpdateSlot: function(slotName, oldValue, newValue) {
-	    if (!this._storedSlots) {
+	    if (!this._storedSlots || !this.shouldStore()) {
 	        // looks like StorableNode hasn't initialized yet
 	        return this
 	    }

@@ -222,12 +222,12 @@ window.BrowserView = NodeView.extend().newSlots({
     setColumnGroupCount: function(count) {
         //this.log("setColumnGroupCount " + count)
         if (count == 0) {
-            StackTrace.showCurrentStack()
+            StackTrace.shared().showCurrentStack()
         }
 
         /*
 		// collapse excess columns
-        for (var i = count; i < this.columnGroups().length - 1; i ++) {
+        for (let i = count; i < this.columnGroups().length - 1; i ++) {
             this.columnGroups()[i].collpase()
         }
         */
@@ -256,7 +256,7 @@ window.BrowserView = NodeView.extend().newSlots({
 
     clearColumnsGroupsAfterIndex: function(index) {
         var cgs = this.columnGroups()
-        for (var i = index + 1; i < cgs.length; i ++) {
+        for (let i = index + 1; i < cgs.length; i ++) {
             var cg = cgs[i]
             //console.log("clearing column group ", i)
             cg.setNode(null).syncFromNode()
@@ -563,7 +563,7 @@ window.BrowserView = NodeView.extend().newSlots({
         //console.log("selectNode " + aNode.nodePath())
         if (!aNode) {
             console.warn(this.type() + " selectNode called with null argument")
-            StackTrace.showCurrentStack()
+            StackTrace.shared().showCurrentStack()
             return this
         }
         this.selectNodePath(aNode.nodePath())

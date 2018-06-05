@@ -231,7 +231,7 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
 
     setError (error) {
         this._error = error
-        console.log("LoadProgressBar setError " + error)
+        console.log("LoadProgressBar setError ", error)
         this.errorElement().innerHTML = error
         return this
     }
@@ -259,5 +259,6 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
     }
 }
 
-window.LoadProgressBar = LoadProgressBarClass.clone()
+var LoadProgressBar = LoadProgressBarClass.clone()
+window.LoadProgressBar = LoadProgressBar
 LoadProgressBar.startWhenReady()

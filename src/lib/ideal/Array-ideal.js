@@ -11,7 +11,7 @@ Object.shallowCopyTo({
     isEqual: function (otherArray) {
         if (this.length != otherArray.length) { return false; }
 
-        for (var i = 0; i < this.length; i++) {
+        for (let i = 0; i < this.length; i++) {
             if (this[i] != otherArray[i]) return false;
         }
 
@@ -54,7 +54,7 @@ Object.shallowCopyTo({
     hasPrefix: function (otherArray) {
         if (this.length < otherArray.length) { return false; }
 
-        for (var i = 0; i < this.length; i++) {
+        for (let i = 0; i < this.length; i++) {
             if (this[i] != otherArray[i]) return false;
         }
 
@@ -87,7 +87,7 @@ Object.shallowCopyTo({
         var subArrays = [];
 
         var subArraySize = Math.ceil(this.length / subArrayCount);
-        for (var i = 0; i < this.length; i += subArraySize) {
+        for (let i = 0; i < this.length; i += subArraySize) {
             var subArray = this.slice(i, i + subArraySize);
             if (subArray.length < subArraySize) {
                 var lastSubArray = subArrays.pop();
@@ -332,7 +332,7 @@ Object.shallowCopyTo({
     },
 
     detect: function (callback) {
-        for (var i = 0; i < this.length; i++) {
+        for (let i = 0; i < this.length; i++) {
             if (callback(this[i])) {
                 return this[i];
             }
@@ -349,7 +349,7 @@ Object.shallowCopyTo({
     },
 
     detectSlot: function (slotName, slotValue) {
-        for (var i = 0; i < this.length; i++) {
+        for (let i = 0; i < this.length; i++) {
             if (this[i].perform(slotName) == slotValue) {
                 return this[i];
             }
@@ -359,7 +359,7 @@ Object.shallowCopyTo({
     },
 
     detectProperty: function (slotName, slotValue) {
-        for (var i = 0; i < this.length; i++) {
+        for (let i = 0; i < this.length; i++) {
             if (this[i][slotName] == slotValue) {
                 return this[i];
             }
@@ -369,7 +369,7 @@ Object.shallowCopyTo({
     },
 
     detectIndex: function (callback) {
-        for (var i = 0; i < this.length; i++) {
+        for (let i = 0; i < this.length; i++) {
             if (callback(this[i])) {
                 return i;
             }
@@ -468,7 +468,7 @@ Object.shallowCopyTo({
         var mObject = undefined;
         var length = this.length;
 
-        for (var i = 0; i < length; i++) {
+        for (let i = 0; i < length; i++) {
             var v = this[i];
             if (callback) v = callback(v);
 
@@ -486,7 +486,7 @@ Object.shallowCopyTo({
         var index = 0;
         var length = this.length;
 
-        for (var i = 0; i < length; i++) {
+        for (let i = 0; i < length; i++) {
             var v = this[i];
             if (callback) v = callback(v);
 
@@ -504,7 +504,7 @@ Object.shallowCopyTo({
         var mObject = undefined;
         var length = this.length;
 
-        for (var i = 0; i < length; i++) {
+        for (let i = 0; i < length; i++) {
             var v = this[i];
             if (callback) v = callback(v);
 
@@ -522,7 +522,7 @@ Object.shallowCopyTo({
         var index = 0;
         var length = this.length;
 
-        for (var i = 0; i < length; i++) {
+        for (let i = 0; i < length; i++) {
             var v = this[i];
             if (callback) v = callback(v);
 
@@ -540,7 +540,7 @@ Object.shallowCopyTo({
         var sum = 0;
         var length = this.length;
 
-        for (var i = 0; i < length; i++) {
+        for (let i = 0; i < length; i++) {
             var v = this[i];
             if (callback) v = callback(v);
 
@@ -604,7 +604,7 @@ Object.shallowCopyTo({
     select: function (callback) {
         var results = []
     
-        for (var i = 0; i < this.length; i++) {
+        for (let i = 0; i < this.length; i++) {
             var v = this[i];
     
             if (callback(v)) {
@@ -636,7 +636,7 @@ Object.shallowCopyTo({
     },
     
     replaceOccurancesOfWith: function (oldValue, newValue) {
-        for (var i = 0; i < this.length; i++) {
+        for (let i = 0; i < this.length; i++) {
             if (this[i] == oldValue) {
                 this[i] = newValue;
             }
@@ -699,7 +699,7 @@ Object.shallowCopyTo({
             return false;
         }
     
-        for (var i = 0, l = this.length; i < l; i++) {
+        for (let i = 0, l = this.length; i < l; i++) {
             var a = this[i]
             var b = array[i]
             
@@ -728,7 +728,7 @@ Object.shallowCopyTo({
 
     /*
     includes: function (b) {
-        for (var i = 0, l=this.length; i < l; i++) {
+        for (let i = 0, l=this.length; i < l; i++) {
             var a = this[i]
 
             if (a.equals) {

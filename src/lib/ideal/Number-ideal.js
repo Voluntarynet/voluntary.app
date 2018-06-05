@@ -28,7 +28,7 @@ Object.shallowCopyTo({
     */
 
     repeat: function (callback) {
-        for (var i = 0; i < this; i++) {
+        for (let i = 0; i < this; i++) {
             if (callback(i) === false) {
                 return this;
             }
@@ -38,7 +38,7 @@ Object.shallowCopyTo({
 
     map: function () {
         var a = [];
-        for (var i = 0; i < this; i++) {
+        for (let i = 0; i < this; i++) {
             a.push(i);
         }
         return Array.prototype.map.apply(a, arguments);

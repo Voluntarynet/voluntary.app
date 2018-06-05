@@ -166,7 +166,7 @@ window.SyncDB = ideal.Proto.extend().newSlots({
     totalBytes: function() {
         var byteCount = 0
         var dict = this._cache
-        for (var k in dict) {
+        for (let k in dict) {
 		   if (dict.hasOwnProperty(k)) {
                 var v = dict[k]
                 byteCount += k.length + v.length
@@ -215,7 +215,7 @@ window.SyncDB = ideal.Proto.extend().newSlots({
 	    var count = 0
         var d = this._writeCache
 		
-        for (var k in d) {
+        for (let k in d) {
 		   if (d.hasOwnProperty(k)) {
                 var entry = d[k]
                 

@@ -62,9 +62,13 @@ class JSImporterBase {
     }
 
     newSlot(slotName, initialValue) {
-        if (typeof (slotName) != "string") throw "name must be a string";
+        if (typeof (slotName) != "string") {
+            throw new Error("slot name must be a string"); 
+        }
 
-        if (initialValue === undefined) { initialValue = null };
+        if (initialValue === undefined) { 
+            initialValue = null 
+        };
 
         var privateName = "_" + slotName;
         this[privateName] = initialValue;
@@ -286,6 +290,8 @@ class JSImporterClass extends JSImporterBase {
         this.errorCallbacks().forEach((callback) => { callback(error) })
         return this
     }
+
+    // --- archive ---
 
     archiveFileList () {
         var files = ["archive/top.html"]

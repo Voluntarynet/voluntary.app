@@ -17,8 +17,6 @@ window.App = BaseApp.extend().newSlots({
         this.setName("NT3P")
     },
 
-
-
     setup: function () {
         BaseApp.setup.apply(this)
         //window.app = this
@@ -59,7 +57,7 @@ window.App = BaseApp.extend().newSlots({
 
         // network
 
-        this.setNetwork(BMNetwork.clone())
+        this.setNetwork(BMNetwork.shared())
         this.network().setLocalIdentities(this.localIdentities())
         this.about().addSubnode(this.network())
 

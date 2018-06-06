@@ -33,6 +33,11 @@ window.CSS = ideal.Proto.extend().newSlots({
     type: "CSS",
     rules: {},
 }).setSlots({
+    init: function () {
+        throw new Error("this class is meant to be used as singleton, for now")
+        return this
+    },
+    
     shared: function() {
         return this
     },

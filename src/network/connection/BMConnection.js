@@ -14,8 +14,6 @@ window.BMConnection = BMNode.extend().newSlots({
             throw new Error("multiple instances of " + this.type() + " singleton")
         }
 		
-        BMConnection._shared = this
-
         BMNode.init.apply(this)
 		
         this.setTitle("Connection")
@@ -30,6 +28,9 @@ window.BMConnection = BMNode.extend().newSlots({
     },
     
     shared: function() {
+        if (!BMConnection._shared) {
+            BMConnection._shared = BMConnection.clone()
+        }
         return BMConnection._shared
     },
     
@@ -116,5 +117,5 @@ window.BMConnection = BMNode.extend().newSlots({
 	
 })
 
-window.BMConnection.clone() // setup shared instance
+//window.BMConnection.shared() // setup shared instance, needed?
 

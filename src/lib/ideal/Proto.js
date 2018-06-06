@@ -40,7 +40,7 @@ Proto.setSlots({
 
     extend: function () {
         var obj = this.cloneWithoutInit()
-        this.registerThisProto()
+        obj.registerThisProto()
         obj._parentProto = this
         return obj;
     },

@@ -18,8 +18,6 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
             throw new Error("multiple instances of " + this.type() + " singleton")
         }
 		
-        BMNetwork._shared = this
-
         BMStorableNode.init.apply(this)
 		
         //this.setPid("_network")
@@ -56,6 +54,9 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
     },
 
     shared: function() {
+        if (!BMNetwork._shared) {
+            BMNetwork._shared = BMNetwork.clone()
+        }
         return BMNetwork._shared
     },
 

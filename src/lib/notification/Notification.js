@@ -1,16 +1,18 @@
 "use strict"
 
-window.Notification = ideal.Proto.extend().setType("Notification").newSlots({
-    name: null,
-    sender: null,
-    info: null,
-    center: null,
-    senderStack: null,
-}).setSlots({
-    init: function() {
-    },
+window.Notification = class Notification extends ProtoClass {
+    init() {
+        super.init()
+        this.newSlots({
+            name: null,
+            sender: null,
+            info: null,
+            center: null,
+            senderStack: null,
+        })
+    }
     
-    isEqual: function(obs) {
+    isEqual (obs) {
         if (this == obs) { 
             return true 
         }
@@ -20,9 +22,9 @@ window.Notification = ideal.Proto.extend().setType("Notification").newSlots({
         // TODO: testing equivalence of info?
         
         return sameName && sameSender
-    },
+    }
     
-    post: function() {
+    post () {
         if (this.center().isDebugging()) {
             //console.log(typeof(this.sender()) + "." + this.sender() + " posting note " + this.name() + " and recording stack for debug")
             var e = new Error()
@@ -34,10 +36,10 @@ window.Notification = ideal.Proto.extend().setType("Notification").newSlots({
        
         this.center().addNotification(this)
         return this
-    },
+    }
     
-    schedulePost: function() {
+    schedulePost () {
 	    SyncScheduler.scheduleTargetAndMethod(this, "post")
-    },
-})
+    }
+}
 

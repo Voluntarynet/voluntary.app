@@ -5,16 +5,16 @@
 
     problems and potential solutions:
 
-    P: auto setter and getters on _variables
-    S: call newSlots in init? What about introspection?
+    P: getting list of classes?
+    S: call registerClass() on each class after defined, use ProtoClass.allClasses() to get list
 
     P: inheriting proto ivars?
-    S: ?
+    S: Use class variables instead?
 
     P: protos as singletons?
-    S: always use ClassName.shared()?
+    S: Yse ClassName.shared() instead
 
-    P: interactively changing protos?
+    P: interactively adding, removing, changing protos?
     S: ?
 
 */

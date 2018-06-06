@@ -4,7 +4,7 @@
 
 "use strict"
 
-CSS.ruleAt("Browser").setDict({
+CSS.shared().ruleAt("Browser").setDict({
     overflow: "hidden",
     position: "absolute",
     top: "0px",

@@ -1,24 +1,24 @@
 "use strict"
 
-window.CSSRuleSet = ideal.Proto.extend().newSlots({
-    type: "CSSRuleSet",
-    declarations: null,
-    key: null,
-}).setSlots({
-    init: function() {
-        this.setDeclarations({})
-    },
+window.CSSRuleSet = class CSSRuleSet extends ProtoClass {
+    init() {
+        super.init()
+        this.newSlots({
+            declarations: {},
+            key: null,
+        })
+    }
     
-    decAt: function(k) {
+    decAt (k) {
         var dec = this.declarations()[k]
         if (!dec) {
             dec = CSSDeclaration.clone().setRuleSet(this).setKey(k)
             this.declarations()[k] = dec
         }
         return dec
-    },
+    }
 
-    applyToElement: function(anElement) {        
+    applyToElement (anElement) {        
         var dict = this.declarations()
         
         Object.slotValues(dict).forEach(function(declaration) {
@@ -26,16 +26,16 @@ window.CSSRuleSet = ideal.Proto.extend().newSlots({
         })
         
         return this
-    },
+    }
     
-    setDict: function(dict) {
+    setDict (dict) {
         Object.keys(dict).forEach((k) => {
             this.decAt(k).setValue(dict[k])
         })
         return this
-    },
+    }
 
-    asJSON: function() {
+    asJSON () {
         var dict = {}
         dict.key = this.key()
         var decs = {}
@@ -45,12 +45,12 @@ window.CSSRuleSet = ideal.Proto.extend().newSlots({
         dict.declarations = decs
         return dict
 
-    },
+    }
 
-    fromJSON: function(json) {
+    fromJSON (json) {
         this.setKey(json.key)
         json.declarations.forEach((k, v) => {
             this.decAt(k).setValue(v)
         })
-    },
-})
+    }
+}

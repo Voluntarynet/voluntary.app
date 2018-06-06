@@ -28,47 +28,43 @@
 
 */
 
-
-window.CSS = ideal.Proto.extend().newSlots({
-    type: "CSS",
-    rules: {},
-}).setSlots({
-    init: function () {
-        throw new Error("this class is meant to be used as singleton, for now")
+window.CSS = class CSS extends ProtoClass {
+    init() {
+        super.init()
+        this.newSlots({
+            rules: {},
+        })
+        
         return this
-    },
+    }
     
-    shared: function() {
-        return this
-    },
-    
-    hasRule: function(k) {
+    hasRule (k) {
         return k in this.rules()
-    },
+    }
     
-    ruleAt: function(k) {
+    ruleAt (k) {
         var rule = this.rules()[k]
         if (!rule) {
             rule = CSSRuleSet.clone().setKey(k)
             this.rules()[k] = rule
         }
         return rule        
-    },
+    }
     
-    assertRuleExists: function(ruleName) {
+    assertRuleExists (ruleName) {
         if (!this.hasRule(ruleName)) {
             throw new Error("CSS missing ruleset '" + ruleName + "'")
         }     
         return this   
-    },
+    }
     
-    applyEntryToElement: function(ruleName, anElement) {        
+    applyEntryToElement (ruleName, anElement) {        
         this.assertRuleExists(ruleName)
         this.ruleAt(ruleName).applyToElement(anElement)
         return this
-    },
+    }
 
-    asJSON: function() {
+    asJSON () {
         var dict = {}
         var rules = {}
         this.rules().forEach((k, ruleSet) => {
@@ -77,11 +73,11 @@ window.CSS = ideal.Proto.extend().newSlots({
         dict.rules = rules
         return dict
 
-    },
+    }
 
-    fromJSON: function(json) {
+    fromJSON (json) {
         json.rules.forEach((k, v) => {
             this.ruleAt(k).fromJSON(v)
         })
-    },
-})
+    }
+}

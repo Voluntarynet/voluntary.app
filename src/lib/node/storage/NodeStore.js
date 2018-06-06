@@ -106,7 +106,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     init: function () {
         this.setDirtyObjects({})
         this.setActiveObjectsDict({})
-        this.setSdb(SyncDB.clone())
+        this.setSdb(window.SyncDB.clone())
         //this.asyncOpen()
     },
 

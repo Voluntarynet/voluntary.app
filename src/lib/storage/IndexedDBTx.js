@@ -1,33 +1,33 @@
 "use strict"
 
-window.IndexedDBTx = ideal.Proto.extend().newSlots({
-    type: "IndexedDBTx",
-    dbFolder: null,
-    objectStore: null,
-    tx: null,
-    requests: null,
-    isCommitted: false,
-    debug: false,
-}).setSlots({
-    init: function () {
-        this.setRequests([])
-    },
+window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
+    init() {
+        super.init()
+        this.newSlots({
+            dbFolder: null,
+            objectStore: null,
+            tx: null,
+            requests: [],
+            isCommitted: false,
+            debug: false,
+        })
+    }
 
-    db: function() {
+    db () {
         return this.dbFolder().db()
-    },
+    }
     
-    storeName: function() {
+    storeName () {
         return this.dbFolder().storeName()
-    },
+    }
 	
     // --- being and commit ---
 
-    assertNotCommitted: function() {
+    assertNotCommitted () {
 	    assert(this.isCommitted() == false)
-    },
+    }
 
-    begin: function() {
+    begin () {
 	    this.assertNotCommitted()
 	
 	    var tx = this.db().transaction(this.storeName(), "readwrite")
@@ -45,30 +45,30 @@ window.IndexedDBTx = ideal.Proto.extend().newSlots({
         this.setObjectStore(objectStore)
         
         return this
-    },
+    }
 	
-    abort: function() {
+    abort () {
 	    this.assertNotCommitted()
 	    this.tx().abort()
 	    return this
-    },
+    }
 	
-    commit: function() {
+    commit () {
 	    this.setIsCommitted(true)
 	    return this
-    },
+    }
 	
     // --- helpers ---
 	
-    hasKey: function(key) {
+    hasKey (key) {
 	    var domStringList = this.objectStore().indexNames
 	    var hasKey = domStringList.contains(key) 
 	    console.log("domStringList.length : ", domStringList.length)
 	    console.log("domStringList['" + key + "'] exists ", hasKey)
 	    return hasKey
-    },
+    }
 	
-    pushRequest: function(aRequest) {
+    pushRequest (aRequest) {
 	    this.assertNotCommitted()
 
         var requestStack = this.debug() ? new Error().stack : null
@@ -82,9 +82,9 @@ window.IndexedDBTx = ideal.Proto.extend().newSlots({
         }
 	    this.requests().push(aRequest)
 	    return this
-    },
+    }
 	
-    entryForKeyAndValue: function(key, object) {
+    entryForKeyAndValue (key, object) {
         if (typeof(object) == "null" || typeof(object) == "undefined") {
             throw new Error(this.type() + ".entryForKeyAndValue('" + key + "', ...) can't add null value")
         }
@@ -95,11 +95,11 @@ window.IndexedDBTx = ideal.Proto.extend().newSlots({
         }
 		
         return { key: key, value: v }
-    },
+    }
 	
     // --- operations ----
 	
-    atPut: function(key, object) {
+    atPut (key, object) {
 	    this.assertNotCommitted()
 
         if (this.hasKey(key)) {
@@ -108,9 +108,9 @@ window.IndexedDBTx = ideal.Proto.extend().newSlots({
             this.atAdd(key, object)
         }
         return this
-    },
+    }
 	
-    atAdd: function(key, object) { 
+    atAdd (key, object) { 
 	    this.assertNotCommitted()
 
         var entry = this.entryForKeyAndValue(key, object)
@@ -119,9 +119,9 @@ window.IndexedDBTx = ideal.Proto.extend().newSlots({
         request._key = key 
         this.pushRequest(request)
         return this
-    },
+    }
 
-    atUpdate: function(key, object) {
+    atUpdate (key, object) {
 	    this.assertNotCommitted()
 
         var entry = this.entryForKeyAndValue(key, object)
@@ -130,9 +130,9 @@ window.IndexedDBTx = ideal.Proto.extend().newSlots({
         request._key = key
         this.pushRequest(request)
         return this
-    },
+    }
     
-    removeAt: function(key) {
+    removeAt (key) {
 	    this.assertNotCommitted()
 
         var request = this.objectStore().delete(key);
@@ -140,9 +140,11 @@ window.IndexedDBTx = ideal.Proto.extend().newSlots({
         request._key = key
         this.pushRequest(request)
         return this
-    },
+    }
     
-})
+}
+
+window.IndexedDBTx.registerThisClass()
 
 
 

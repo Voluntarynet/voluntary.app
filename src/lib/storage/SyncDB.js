@@ -14,30 +14,31 @@
 	TODO: auto sweep after a write if getting full?
 */
 
-window.SyncDB = ideal.Proto.extend().newSlots({
-    type: "SyncDB",
-    idb: null,
-    cache: null,
-    writeCache: null,
-    isOpen: false,
-    isSynced: false,
-    debug: false,
-}).setSlots({
-    init: function () {
+window.SyncDB = class SyncDB extends ProtoClass {
+    init() {
+        super.init()
+        this.newSlots({
+            idb: null,
+            cache: null,
+            writeCache: null,
+            isOpen: false,
+            isSynced: false,
+            debug: false,
+        })
+
         this.setCache({})
         this.setIdb(IndexedDBFolder.clone().setPath("SyncDB"))
-        //this.asyncOpen()
-    },
+    }
 
     // open
 
-    asyncOpen: function(callback) {
+    asyncOpen (callback) {
         //console.log("SyncDB asyncOpen()")
         this.idb().asyncOpenIfNeeded( () => { this.didOpen(callback) })
         return this
-    },
+    }
 	
-    didOpen: function(callback) {
+    didOpen (callback) {
         // load the cache
         //console.log("SyncDB didOpen() - loading cache")
 		
@@ -51,55 +52,55 @@ window.SyncDB = ideal.Proto.extend().newSlots({
             }
             //	this.verifySync()
         })
-    },
+    }
 	
-    assertOpen: function() {
+    assertOpen () {
         assert(this.isOpen())
         return this
-    },
+    }
 	
     // read
 	
     /*
-	hasKey: function(key) {
+	hasKey (key) {
 		this.assertOpen()
 		return key in this._cache;
 	},
 	
-	at: function(key) {
+	at (key) {
 		this.assertOpen()
 		return this._cache[key]
 	},
 	*/
 
-    keys: function() {
+    keys () {
         this.assertOpen()
         return Object.keys(this._cache);
-    },
+    }
 	
-    values: function() {
+    values () {
         this.assertOpen()
         return Object.values(this._cache);
-    },
+    }
 	
-    size: function() {
+    size () {
         this.assertOpen()
         return this.keys().length
-    },	
+    }	
 		
-    clear: function() {
+    clear () {
         throw new Error("SyncDB clear")
         this._cache = {}
         this.idb().asyncClear()
-    },
+    }
 	
-    asJson: function() {
+    asJson () {
         // WARNING: bad performance if called frequently
         var s = JSON.stringify(this._cache)
         return JSON.parse(this._cache)
-    },
+    }
 	
-    verifySync: function() {
+    verifySync () {
         var cache = this._cache
         this._isSynced = false
         this.idb().asyncAsJson( (json) => {
@@ -159,11 +160,11 @@ window.SyncDB = ideal.Proto.extend().newSlots({
 			}
 			*/
         })
-    },
+    }
 	
     // stats
 	
-    totalBytes: function() {
+    totalBytes () {
         var byteCount = 0
         var dict = this._cache
         for (let k in dict) {
@@ -173,20 +174,20 @@ window.SyncDB = ideal.Proto.extend().newSlots({
             }
         }
         return byteCount
-    },
+    }
 	
     // transactions
 	
-    hasBegun: function() {
+    hasBegun () {
 	    return (this.writeCache() != null)
-    },
+    }
 	
-    assertInTx: function() {
+    assertInTx () {
 	    assert(this.hasBegun())
 	    return this
-    },
+    }
 	
-    begin: function() {
+    begin () {
 	    assert(!this.hasBegun())
 	
         if (this.debug()) {
@@ -195,13 +196,13 @@ window.SyncDB = ideal.Proto.extend().newSlots({
 		
 	    this.setWriteCache({})
 	    return this
-    },
+    }
 	
-    hasWrites: function() {
+    hasWrites () {
         return Object.keys(this._writeCache).length > 0
-    },
+    }
 	
-    commit: function() {
+    commit () {
 	    // push to indexedDB tx and to SyncDb's read cache
 	    // TODO: only push to read cache on IndexedDB when tx complete callback received,
 	    // and block new writes until push to read cache
@@ -260,16 +261,16 @@ window.SyncDB = ideal.Proto.extend().newSlots({
         // TODO: use commit callback to clear writeCache instead of assuming it
         // will complete and setting it to null here
         this._writeCache = null
-    },
+    }
 	
     // NEW
 	
-    hasKey: function(key) {
+    hasKey (key) {
         this.assertOpen()
         return key in this._cache;
-    },
+    }
 	
-    at: function(key) {
+    at (key) {
         this.assertOpen()
 		
         if (this._writeCache) {
@@ -284,9 +285,9 @@ window.SyncDB = ideal.Proto.extend().newSlots({
     	}
 		
         return this._cache[key]
-    },
+    }
 	
-    atPut: function(key, value) {
+    atPut (key, value) {
         this.assertOpen()
 	    this.assertInTx()
 	    
@@ -295,9 +296,9 @@ window.SyncDB = ideal.Proto.extend().newSlots({
 	    }
 	    
         this._writeCache[key] = { _value: value }
-    },
+    }
 	
-    removeAt: function(key) {
+    removeAt (key) {
         this.assertOpen()
 	    this.assertInTx()
 	    
@@ -306,9 +307,11 @@ window.SyncDB = ideal.Proto.extend().newSlots({
 	    }
 	    
         this._writeCache[key] = { _isDelete: true }
-    },
+    }
 	
     // TODO: update keys, values and size method to use writeCache? Or just assert they are out of tx?
 	
-})
-	
+}
+    
+
+window.SyncDB.registerThisClass()

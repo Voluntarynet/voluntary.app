@@ -1,24 +1,25 @@
 "use strict"
 
-window.IndexedDBFolder = ideal.Proto.extend().newSlots({
-    type: "IndexedDBFolder",
-    path: "/", // path should end with pathSeparator
-    pathSeparator: "/",
-    db: null,
-    didRequestPersistence: false,
-    debug: false,
-}).setSlots({
-    init: function () {
-    },
+window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
+    init() {
+        super.init()
+        this.newSlots({
+            path: "/", // path should end with pathSeparator
+            pathSeparator: "/",
+            db: null,
+            didRequestPersistence: false,
+            debug: false,
+        })
+    }
 
-    requestPersistenceIfNeeded: function() {
+    requestPersistenceIfNeeded () {
         if (!IndexedDBFolder.didRequestPersistence()) {
             this.requestPersistence()
         }
         return this
-    },
+    }
 	
-    requestPersistence: function() {
+    requestPersistence () {
 		
         if (navigator.storage && navigator.storage.persist)
 		  navigator.storage.persist().then((granted) => {
@@ -31,31 +32,31 @@ window.IndexedDBFolder = ideal.Proto.extend().newSlots({
         IndexedDBFolder.setDidRequestPersistence(true)
 		
         return this
-    },
+    }
     
-    storeName: function() {
+    storeName () {
         return this.path()
-    },
+    }
     
-    root: function() {
+    root () {
         if (!IndexedDBFolder._root) {
             IndexedDBFolder._root = IndexedDBFolder.clone()
             // IndexedDBFolder._root.rootShow()
         }
         return IndexedDBFolder._root
-    },
+    }
     
-    isOpen: function() {
+    isOpen () {
         return (this.db() != null) 
-    },
+    }
     
-    asyncOpenIfNeeded: function(callback) {
+    asyncOpenIfNeeded (callback) {
         if (this.db() == null) {
             this.asyncOpen(callback)
         }
-    },
+    }
     
-    asyncOpen: function(callback) {
+    asyncOpen (callback) {
         if (this.debug()) {
             console.log(this.type() + " asyncOpen")
         }
@@ -89,24 +90,24 @@ window.IndexedDBFolder = ideal.Proto.extend().newSlots({
             }
         };
         return this
-    },
+    }
     
     // paths
     
-    folderAt: function(pathComponent) { 
+    folderAt (pathComponent) { 
         assert(!pathComponent.contains(this.pathSeparator())) 
         var db = IndexedDBFolder.clone().setPath(this.path() + pathComponent + this.pathSeparator())
         return db
-    },
+    }
     
-    pathForKey: function(key) {
+    pathForKey (key) {
         //assert(!key.contains(this.pathSeparator()))
         return this.path() + key
-    },
+    }
             
     // writing
     /*
-    asyncAt: function(key, callback) {
+    asyncAt (key, callback) {
         //console.log("asyncAt ", key)
         var objectStore = this.db().transaction(this.storeName(), "readonly").objectStore(this.storeName());
         var request = objectStore.get(key);
@@ -137,11 +138,11 @@ window.IndexedDBFolder = ideal.Proto.extend().newSlots({
         };
         
         return this
-    },
+    }
 */
 
     
-    asyncAsJson: function(callback) {   
+    asyncAsJson (callback) {   
         //console.log("asyncAsJson start")
 
         var cursorRequest = this.db().transaction(this.storeName(), "readonly").objectStore(this.storeName()).openCursor()
@@ -163,18 +164,18 @@ window.IndexedDBFolder = ideal.Proto.extend().newSlots({
             console.log(this.type() + " asyncAsJson cursorRequest.onerror ", event)
             throw newError("error requesting cursor")
         }
-    },
+    }
     
-    show: function() {
+    show () {
         this.asyncAsJson((json) => {
 	        console.log(this.type() + " " + this.path() + " = " + JSON.stringify(json, null, 2))
 
         })
-    },
+    }
     
     // removing
     
-    asyncClear: function(callback, errorCallback) {
+    asyncClear (callback, errorCallback) {
         var transaction = this.db().transaction([this.storeName()], "readwrite");
 
         transaction.onerror = function(event) {
@@ -191,9 +192,9 @@ window.IndexedDBFolder = ideal.Proto.extend().newSlots({
                 callback(event)
             }
         };
-    },
+    }
 	
-    asyncDelete: function() {
+    asyncDelete () {
         var request = window.indexedDB.deleteDatabase(this.storeName())
 		
         request.onerror = (event) => {
@@ -207,11 +208,11 @@ window.IndexedDBFolder = ideal.Proto.extend().newSlots({
         this.setDb(null)
 		
         return this
-    },
+    }
     
     // test
     
-    test: function() {
+    test () {
         var folder = IndexedDBFolder.clone()
         folder.asyncOpen(function() {
             folder.atPut("test", "x")
@@ -225,13 +226,13 @@ window.IndexedDBFolder = ideal.Proto.extend().newSlots({
             })
         })
         
-    },
+    }
     
-    newTx: function() {
-        return IndexedDBTx.clone().setDbFolder(this)
-    },
-})
+    newTx () {
+        return window.IndexedDBTx.clone().setDbFolder(this)
+    }
+}
 
-//IndexedDBFolder.test()
 
+window.IndexedDBFolder.registerThisClass()
 

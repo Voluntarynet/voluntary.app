@@ -226,7 +226,7 @@ window.BMStorableNode = BMNode.extend().newSlots({
     // --- udpates ---
 	
     scheduleLoadFinalize: function() {
-        SyncScheduler.scheduleTargetAndMethod(this, "loadFinalize")
+        window.SyncScheduler.shared().scheduleTargetAndMethod(this, "loadFinalize")
     },
     
     

@@ -39,7 +39,8 @@ window.Notification = class Notification extends ProtoClass {
     }
     
     schedulePost () {
-	    SyncScheduler.scheduleTargetAndMethod(this, "post")
+	     window.SyncScheduler.shared().scheduleTargetAndMethod(this, "post")
     }
 }
 
+window.Notification.registerThisClass()

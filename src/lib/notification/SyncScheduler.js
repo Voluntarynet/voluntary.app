@@ -16,33 +16,35 @@
     	
     example use:
     
-    SyncScheduler.scheduleTargetAndMethod(this, "syncToView")
+     window.SyncScheduler.shared().scheduleTargetAndMethod(this, "syncToView")
 */
 
-window.SyncScheduler = ideal.Proto.extend().newSlots({
-    type: "SyncScheduler",	
-    actions: ideal.Map.clone(),
-    syncSets: ideal.Map.clone(),
-    hasTimeout: false,
-    isProcessing: false,	
-    debug: false,
-    currentAction: null,
-}).setSlots({
+window.SyncScheduler = class Observation extends ProtoClass {
+    init() {
+        super.init()
+        this.newSlots({
+            actions: ideal.Map.clone(),
+            syncSets: ideal.Map.clone(),
+            hasTimeout: false,
+            isProcessing: false,	
+            debug: false,
+            currentAction: null,
+        })
+    }
 	
-
-    syncSet: function(syncMethod) {
+    syncSet (syncMethod) {
         var sets = this.syncSets()
         if (!sets.at(syncMethod)) {
             sets.atPut(syncMethod, ideal.Map.clone())
         }
         return sets.at(syncMethod)
-    },
+    }
 
-    newActionForTargetAndMethod: function(target, syncMethod, order) {
+    newActionForTargetAndMethod (target, syncMethod, order) {
         return SyncAction.clone().setTarget(target).setMethod(syncMethod).setOrder(order ? order : 0)
-    },
+    }
 	
-    scheduleTargetAndMethod: function(target, syncMethod, optionalOrder) { // higher order performed last
+    scheduleTargetAndMethod (target, syncMethod, optionalOrder) { // higher order performed last
         if (!this.hasScheduledTargetAndMethod(target, syncMethod)) {
             var action = this.newActionForTargetAndMethod(target, syncMethod, optionalOrder)
             this.actions().atIfAbsentPut(action.actionsKey(), action)
@@ -51,27 +53,27 @@ window.SyncScheduler = ideal.Proto.extend().newSlots({
         }
 		
         return false
-    },
+    }
 
-    hasScheduledTargetAndMethod: function(target, syncMethod) {
-        var actionKey = SyncAction.ActionKeyForTargetAndMethod(target, syncMethod)
+    hasScheduledTargetAndMethod (target, syncMethod) {
+        var actionKey = window.SyncAction.ActionKeyForTargetAndMethod(target, syncMethod)
     	return this.actions().hasKey(actionKey)
-    },
+    }
 
-    isSyncingTargetAndMethod: function(target, syncMethod) {
+    isSyncingTargetAndMethod (target, syncMethod) {
         var ca = this.currentAction()
         if (ca) {
             var action = this.newActionForTargetAndMethod(target, syncMethod)
     		return ca.equals(action)
         }
         return false
-    },
+    }
     
-    unscheduleTargetAndMethod: function(target, syncMethod) {
+    unscheduleTargetAndMethod (target, syncMethod) {
         this.actions().removeKey(this.newActionForTargetAndMethod(target, syncMethod).actionsKey())
-    },
+    }
 	
-    setTimeoutIfNeeded: function() {
+    setTimeoutIfNeeded () {
 	    if (!this.hasTimeout()) {
             this.setHasTimeout(true)
 	        setTimeout(() => { 
@@ -80,19 +82,19 @@ window.SyncScheduler = ideal.Proto.extend().newSlots({
 	        }, 0)
 	    }
 	    return this
-    },
+    }
 	
-    clearActions: function() {
+    clearActions () {
 	    this.setActions(ideal.Map.clone())
 	    return this
-    },
+    }
 	
-    orderedActions: function() {
+    orderedActions () {
         var sorter = function (a1, a2) { return a1.order() - a2.order() }
         return this.actions().values().sort(sorter)
-    },
+    }
 	
-    processSets: function() {
+    processSets () {
         assert(!this.isProcessing())
         this.setIsProcessing(true)
         var indent = "    "
@@ -127,9 +129,9 @@ window.SyncScheduler = ideal.Proto.extend().newSlots({
         }
         
         return this
-    },
+    }
 
-    description: function() {
+    description () {
         var parts = []
         var actions = this.orderedActions()
         
@@ -138,5 +140,7 @@ window.SyncScheduler = ideal.Proto.extend().newSlots({
         })
 		
         return this.type() + ":\n" + parts.join("\n")
-    },
-})
+    }
+}
+
+window.SyncScheduler.registerThisClass()

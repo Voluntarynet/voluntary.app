@@ -43,7 +43,7 @@ window.BMContactLinks = BMStorableNode.extend().newSlots({
 
     didChangeIdentity: function (aNote) {
         //console.log(this.nodePathString() + ".didChangeIdentities() <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
-        SyncScheduler.scheduleTargetAndMethod(this, "updatedContacts")
+        window.SyncScheduler.shared().scheduleTargetAndMethod(this, "updatedContacts")
     },
 
     chatApp: function () {

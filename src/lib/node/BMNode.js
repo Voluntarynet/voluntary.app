@@ -95,7 +95,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     // --- finalize ----------
 
     scheduleFinalize: function() {
-        SyncScheduler.scheduleTargetAndMethod(this, "finalize")
+        window.SyncScheduler.shared().scheduleTargetAndMethod(this, "finalize")
     },
     
     unscheduleFinalize: function() {
@@ -332,7 +332,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     
     scheduleSyncToView: function() {
         if (this.view()) {
-            SyncScheduler.scheduleTargetAndMethod(this, "syncToView")
+            window.SyncScheduler.shared().scheduleTargetAndMethod(this, "syncToView")
         }
         return this
     },

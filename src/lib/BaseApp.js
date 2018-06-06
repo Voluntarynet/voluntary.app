@@ -35,7 +35,7 @@ window.BaseApp = BMNode.extend().newSlots({
     },
 
     didOpenStore: function() {
-	    SyncScheduler.scheduleTargetAndMethod(this, "setup")
+	     window.SyncScheduler.shared().scheduleTargetAndMethod(this, "setup")
     },
     
     appDidInit: function() {
@@ -67,7 +67,7 @@ window.BaseApp = BMNode.extend().newSlots({
           
         this.browser().scheduleSyncFromNode() // this.browser().syncFromNode()
 
-	    SyncScheduler.scheduleTargetAndMethod(this, "fadeInBrowser")
+	     window.SyncScheduler.shared().scheduleTargetAndMethod(this, "fadeInBrowser")
 		
         //this.setupShelf()
         return this

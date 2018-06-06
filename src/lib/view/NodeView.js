@@ -177,13 +177,13 @@ NodeView = DivStyledView.extend().newSlots({
     
     scheduleSyncToNode: function() {
         //NodeViewSynchronizer.addToNode(this)  
-        SyncScheduler.scheduleTargetAndMethod(this, "syncToNode")
+        window.SyncScheduler.shared().scheduleTargetAndMethod(this, "syncToNode")
         return this
     },
     
     scheduleSyncFromNode: function() {
         //NodeViewSynchronizer.addFromNode(this)    
-        SyncScheduler.scheduleTargetAndMethod(this, "syncFromNode")
+        window.SyncScheduler.shared().scheduleTargetAndMethod(this, "syncFromNode")
         return this
     },
 

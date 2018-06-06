@@ -1,14 +1,17 @@
 "use strict"
 
-window.SyncAction = ideal.Proto.extend().newSlots({
-    type: "SyncAction",	
-    target: null,
-    method: null,
-    order: 0,
-    args: null,
-}).setSlots({
+window.SyncAction = class Observation extends ProtoClass {
+    init() {
+        super.init()
+        this.newSlots({
+            target: null,
+            method: null,
+            order: 0,
+            args: null,
+        })
+    }
 	
-    trySend: function() {
+    trySend () {
         this.send()
         /*
         try {
@@ -20,27 +23,29 @@ window.SyncAction = ideal.Proto.extend().newSlots({
         }
         */
         return true
-    },
+    }
 	
-    send: function() {
+    send () {
         //console.log("   sending " + this.description())
         this.target()[this.method()].apply(this.target(), this.args() ? this.args() : [])
-    },
+    }
 	
-    actionsKey: function() {
-        return this.ActionKeyForTargetAndMethod(this.target(), this.method())
-    },
+    actionsKey () {
+        return SyncAction.ActionKeyForTargetAndMethod(this.target(), this.method())
+    }
 	
-    equals: function(anAction) {
+    equals (anAction) {
         return anAction != null && (this.target() === anAction.target()) && (this.method() == anAction.method())
-    },
+    }
 	
-    description: function() {
+    description () {
         var t = this.target() ? this.target().typeId() : "null"
         return t+ "." + this.method() + "() order:" + this.order()
-    },
+    }
 	
-    ActionKeyForTargetAndMethod: function(target, method) {
+    static ActionKeyForTargetAndMethod (target, method) {
         return target.typeId() + "." + method
-    },
-})
+    }
+}
+
+window.SyncAction.registerThisClass()

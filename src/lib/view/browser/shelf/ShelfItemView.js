@@ -90,7 +90,7 @@ window.ShelfItemView = NodeView.extend().newSlots({
 	
     didChangeHeight: function() {
         NodeView.didChangeHeight.apply(this)
-	    SyncScheduler.scheduleTargetAndMethod(this.markerView(), "verticallyAlignAbsoluteNow", 0)
+	     window.SyncScheduler.shared().scheduleTargetAndMethod(this.markerView(), "verticallyAlignAbsoluteNow", 0)
         return this
     },
     

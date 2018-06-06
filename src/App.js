@@ -89,7 +89,7 @@ window.App = BaseApp.extend().newSlots({
         //console.log("App.appDidInit() --------------------------------")
         BaseApp.appDidInit.apply(this)
         window.LoadProgressBar.stop()
-        SyncScheduler.scheduleTargetAndMethod(this.browser(), "syncFromHashPath", 10)
+        window.SyncScheduler.shared().scheduleTargetAndMethod(this.browser(), "syncFromHashPath", 10)
     },
 })
 

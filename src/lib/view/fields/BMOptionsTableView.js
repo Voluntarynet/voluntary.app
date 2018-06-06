@@ -45,7 +45,7 @@ window.BMOptionsTableView = DivView.extend().newSlots({
             this.addSubview(optionRow)
         })
 		
-	    SyncScheduler.scheduleTargetAndMethod(this, "finishUpdatedValidValues")
+	     window.SyncScheduler.shared().scheduleTargetAndMethod(this, "finishUpdatedValidValues")
         return this
     },
 	

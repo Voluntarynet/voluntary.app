@@ -196,7 +196,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         if (!SyncScheduler.isSyncingTargetAndMethod(this, "storeDirtyObjects")) {
             if (!SyncScheduler.hasScheduledTargetAndMethod(this, "storeDirtyObjects")) {
                 //console.warn("scheduleStore currentAction = ", SyncScheduler.currentAction() ? SyncScheduler.currentAction().description() : null)
-                SyncScheduler.scheduleTargetAndMethod(this, "storeDirtyObjects", 1000)
+                window.SyncScheduler.shared().scheduleTargetAndMethod(this, "storeDirtyObjects", 1000)
             }
         }
         return this

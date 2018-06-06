@@ -51,7 +51,7 @@
 
 */
 
-window.NotificationCenter = class Notification extends ProtoClass {
+window.NotificationCenter = class NotificationCenter extends ProtoClass {
     init() {
         super.init()
 

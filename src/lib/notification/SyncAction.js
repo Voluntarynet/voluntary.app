@@ -1,6 +1,6 @@
 "use strict"
 
-window.SyncAction = class Observation extends ProtoClass {
+window.SyncAction = class SyncAction extends ProtoClass {
     init() {
         super.init()
         this.newSlots({

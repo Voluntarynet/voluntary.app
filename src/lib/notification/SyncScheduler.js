@@ -19,7 +19,7 @@
      window.SyncScheduler.shared().scheduleTargetAndMethod(this, "syncToView")
 */
 
-window.SyncScheduler = class Observation extends ProtoClass {
+window.SyncScheduler = class SyncScheduler extends ProtoClass {
     init() {
         super.init()
         this.newSlots({

@@ -4,38 +4,38 @@
 
 "use strict"
 
-window.DivTransitions = ideal.Proto.extend().newSlots({
-    type: "DivTransitions",
-    properties: null,
-    divView: null,
-}).setSlots({
-    init: function () {
+window.DivTransitions = class DivTransitions extends ProtoClass {
+    init() {
+        super.init()
+        this.newSlots({
+            properties: null,
+            divView: null,
+        })
         this.setProperties({})
-        return this
-    },
+    }
 
-    at: function(aName) {
+    at(aName) {
         var d = this.properties()
         if (!(name in d)) {
             d[name] = DivTransition.clone().setTransitions(this)
         }
         return d[name]
-    },
+    }
 
-    propertiesAsList: function() {
-        return Object.values(this.properties())	
-    },
-	
-    asString: function(aString) {
+    propertiesAsList() {
+        return Object.values(this.properties())
+    }
+
+    asString(aString) {
         return this.propertiesAsList().map((t) => { return t.asString() }).join(", ")
-    },
-	
-    syncToDiv: function() {
+    }
+
+    syncToDiv() {
         this.divView().setTransition(this.asString())
         return this
-    },
-	
-    syncFromDiv: function() {
+    }
+
+    syncFromDiv() {
         this.setProperties({})
 
         var s = this.divView().transition()
@@ -45,7 +45,10 @@ window.DivTransitions = ideal.Proto.extend().newSlots({
             var t = DivTransition.clone().setFromString(tString)
             this.properties()[t.property()] = t
         })
-		
+
         return this
-    },
-})
+    }
+}
+
+DivTransitions.registerThisClass()
+

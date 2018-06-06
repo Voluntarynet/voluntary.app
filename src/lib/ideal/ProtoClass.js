@@ -47,11 +47,60 @@ class ProtoClass {
     }
     
     static registerThisClass () {
+        //console.log("registerThisClass: ", this)
         if (this.allClasses().indexOf(this) == -1) {
             this.allClasses().push(this)
         }
         return this
     }
+
+    // adding instance slots via class ---
+
+    /*
+    static newSlot(slotName, initialValue) {
+        let proto = this.prototype
+
+        if (typeof (slotName) != "string") {
+            throw new Error("name must be a string");
+        }
+
+        if (initialValue === undefined) { 
+            initialValue = null; 
+        };
+
+        var privateName = "_" + slotName;
+        proto[privateName] = initialValue;
+
+        if (!proto[slotName]) {
+            proto[slotName] = function () {
+                return this[privateName];
+            }
+        }
+
+        var setterName = "set" + slotName.capitalized()
+
+        if (!proto[setterName]) {
+            proto[setterName] = function (newValue) {
+                //this[privateName] = newValue;
+                this.updateSlot(slotName, privateName, newValue);
+                return this;
+            }
+        }
+
+        return proto;
+    }
+    */
+
+    static newSlots(slots) {
+        this.prototype.newSlots(slots)
+        return this;
+    }
+
+    static setSlots(slots) {
+        this.prototype.setSlots(slots);
+        return this;
+    }
+
 
     // ---- instance ---
 
@@ -82,7 +131,7 @@ class ProtoClass {
         }
 
         if (initialValue === undefined) { 
-            initialValue = null 
+            initialValue = null; 
         };
 
         var privateName = "_" + slotName;

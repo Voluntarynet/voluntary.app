@@ -23,6 +23,7 @@
 class ByteFormatter extends ProtoClass {
     init() {
         super.init()
+        /*
         this.newSlots({
             value: 0,
             usePostfix: true,
@@ -40,6 +41,7 @@ class ByteFormatter extends ProtoClass {
                 "zettabytes", 
                 "yottabytes"],
         })
+        */
     }
 
     formattedValue() {
@@ -67,5 +69,24 @@ class ByteFormatter extends ProtoClass {
         return v + space + orderName + postfix
     }
 }
+
+StackTrace.newSlots({
+    value: 0,
+    usePostfix: true,
+    useSpace: false,
+    useLongNames: false,
+    orderNamesShort: ["bytes", "k", "M", "G", "T", "P", "E", "Z", "Y"],
+    orderNamesLong: [
+        "bytes", 
+        "kilobytes", 
+        "megabytes", 
+        "gigabytes", 
+        "terabytes", 
+        "petabytes", 
+        "exabytes", 
+        "zettabytes", 
+        "yottabytes"],
+})
+
 
 ByteFormatter.registerThisClass()

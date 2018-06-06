@@ -4,96 +4,98 @@
 
 "use strict"
 
-window.DivBorderRadius = ideal.Proto.extend().newSlots({
-    type: "DivBorderRadius",
-    divView: null,
+window.DivBorderRadius = class DivBorderRadius extends ProtoClass {
+    init() {
+        super.init()
+        this.newSlots({
+            divView: null,
 
-    topLeft: 0,
-    topRight: 0,
-    bottomRight: 0,
-    bottomLeft: 0,
-    partNames: ["topLeft", "topRight", "bottomRight", "bottomLeft"],
-}).setSlots({
-    init: function () {
-        return this
-    },
-    
-    clear: function() {
+            topLeft: 0,
+            topRight: 0,
+            bottomRight: 0,
+            bottomLeft: 0,
+            partNames: ["topLeft", "topRight", "bottomRight", "bottomLeft"],
+        })
+    }
+
+    clear() {
         this.setAll(0)
         return this
-    },
+    }
 
-    setAll: function(v) {
+    setAll(v) {
         if (!v) {
             v = 0
         }
-        
+
         this.partSetters().forEach((setter) => {
             this[setter].apply(this, [v])
         })
         return this
-    },
+    }
 
-    partSetters: function() {
+    partSetters() {
         return this.partNames().map((k) => { return k.asSetter() })
-    },
-    
-    partValues: function() {
-        return this.partNames().map((k) => { return this[k].apply(this) })
-    },
+    }
 
-    asString: function(aString) {
-        return this.partValues().map((v) => { return v + "px" }).join(" ")		
-    },
-	
-    setFromString: function(aString) {
+    partValues() {
+        return this.partNames().map((k) => { return this[k].apply(this) })
+    }
+
+    asString(aString) {
+        return this.partValues().map((v) => { return v + "px" }).join(" ")
+    }
+
+    setFromString(aString) {
         var parts = aString.split(" ").select((part) => { return part != "" })
-		
+
         this.clear()
-		
+
         if (parts.length == 1) {
-		    this.setAll(Number(parts[0]))
+            this.setAll(Number(parts[0]))
         }
 
         var v;
-		
-	    v = parts.removeFirst()
-        if (typeof(v) == "string") {
-		    this.setTopLeft(Number(v))
+
+        v = parts.removeFirst()
+        if (typeof (v) == "string") {
+            this.setTopLeft(Number(v))
         }
-		
-	    v = parts.removeFirst()
-        if (typeof(v) == "string") {
-		    this.setTopRight(Number(v))
-        }	
-		
-	    v = parts.removeFirst()
-        if (typeof(v) == "string") {
-		    this.setBottomRight(Number(v))
-        }	
-		
-	    v = parts.removeFirst()
-        if (typeof(v) == "string") {
-		    this.setBottomLeft(Number(v))
-        }	
+
+        v = parts.removeFirst()
+        if (typeof (v) == "string") {
+            this.setTopRight(Number(v))
+        }
+
+        v = parts.removeFirst()
+        if (typeof (v) == "string") {
+            this.setBottomRight(Number(v))
+        }
+
+        v = parts.removeFirst()
+        if (typeof (v) == "string") {
+            this.setBottomLeft(Number(v))
+        }
 
         return this
-    },
-	
-    syncToDiv: function() {
+    }
+
+    syncToDiv() {
         this.divView().setBorderRadius(this.asString())
         return this
-    },
-	
-    syncFromDiv: function() {
+    }
+
+    syncFromDiv() {
         var s = this.divView().borderRadius()
-		
+
         if (s) {
-		    this.setFromString(s)
+            this.setFromString(s)
         } else {
-		    this.clear()
+            this.clear()
         }
-		
+
         return this
-    },
-})
+    }
+}
+
+DivBorderRadius.registerThisClass()

@@ -81,3 +81,6 @@ window.CSS = class CSS extends ProtoClass {
         })
     }
 }
+
+window.CSS.registerThisClass()
+

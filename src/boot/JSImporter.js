@@ -155,15 +155,6 @@ class JSScript extends JSImporterBase {
 
 class JSImporterClass extends JSImporterBase {
 
-    /*
-    static shared() {
-        if (!this._shared) {
-            this._shared = this.clone()
-        }
-        return this._shared
-    }
-    */
-
     init() {
         super.init()
         this.newSlot("currentScript", null);

@@ -54,3 +54,6 @@ window.CSSRuleSet = class CSSRuleSet extends ProtoClass {
         })
     }
 }
+
+CSSRuleSet.registerThisClass()
+

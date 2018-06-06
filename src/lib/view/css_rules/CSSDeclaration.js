@@ -42,3 +42,5 @@ window.CSSDeclaration = class CSSDeclaration extends ProtoClass {
     }
 
 }
+
+CSSDeclaration.registerThisClass()

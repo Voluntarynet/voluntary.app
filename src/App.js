@@ -1,8 +1,11 @@
 "use strict"
 
 /*
-    App is a singleton that represents the application
-    It's superclass, BaseApp will set up the NodeStore and call App.setup after it's initialized.
+
+    App
+
+    A singleton that represents the application.
+    It's superclass, BaseApp will set up the NodeStore and call App. after it's initialized.
     After setup, appDidInit is called.
 */
 
@@ -17,10 +20,16 @@ window.App = BaseApp.extend().newSlots({
         this.setName("NT3P")
     },
 
+    shared: function() {        
+        if (!App._shared) {
+            App._shared = App.clone();
+        }
+        return App._shared;
+    },
+
     setup: function () {
-        BaseApp.setup.apply(this)
+        BaseApp.setupUI.apply(this)
         //window.app = this
-        this.setShared(this)
         this.setupPageTitle()
         this.setupSubnodes()
         return this

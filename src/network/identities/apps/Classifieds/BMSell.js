@@ -30,7 +30,6 @@ window.BMSell = BMStorableNode.extend().newSlots({
         console.log("BMSell didLoadFromStore setting post to be editable")
         //this.post().setIsEditable(true)
         //this.post().didUpdateNode()
-        //this.post().setNeedsSyncToView(true)
     },
 
 

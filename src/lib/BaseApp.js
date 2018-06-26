@@ -22,12 +22,6 @@ window.BaseApp = BMNode.extend().newSlots({
         return BaseApp._shared
     },
 
-    setShared: function(anApp) {
-        assert (!BaseApp._shared)
-        BaseApp._shared = anApp
-        return this
-    },
-
     init: function () {
         BMNode.init.apply(this)
         NodeStore.shared().asyncOpen( () => { this.didOpenStore() })
@@ -42,7 +36,7 @@ window.BaseApp = BMNode.extend().newSlots({
         // unused
     },
 	
-    setup: function() {
+    setupUI: function() {
         //console.log("baseSetup")
         //this.fixElectronDropBehavior()
         //this.watchAllAppEvents()
@@ -86,12 +80,12 @@ window.BaseApp = BMNode.extend().newSlots({
     fadeInBrowser: function() {
         this.browser().setOpacity(1)
     },
-    
-    shared: function() {        
-        if (!this._shared) {
-            this._shared = App.clone();
+
+
+    run: function() {
+        if (this.runTests) {
+		    this.runTests()
         }
-        return this._shared;
     },
     
     mainWindow: function () {

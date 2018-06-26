@@ -10,6 +10,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
             didRequestPersistence: false,
             debug: false,
         })
+        this.assertHasUniqueId()
     }
 
     requestPersistenceIfNeeded () {
@@ -20,7 +21,6 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
     }
 	
     requestPersistence () {
-		
         if (navigator.storage && navigator.storage.persist)
 		  navigator.storage.persist().then((granted) => {
 		    if (granted)
@@ -57,6 +57,8 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
     }
     
     asyncOpen (callback) {
+        this.assertHasUniqueId()
+
         if (this.debug()) {
             console.log(this.type() + " asyncOpen")
         }
@@ -89,6 +91,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
                 callback()
             }
         };
+        
         return this
     }
     
@@ -144,6 +147,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
     
     asyncAsJson (callback) {   
         //console.log("asyncAsJson start")
+        this.assertHasUniqueId()
 
         var cursorRequest = this.db().transaction(this.storeName(), "readonly").objectStore(this.storeName()).openCursor()
         var dict = {}

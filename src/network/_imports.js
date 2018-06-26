@@ -6,7 +6,6 @@ JSImporter.pushRelativePaths([
     "BMNetwork.js",
     //"BMPayload.js",
     //"BMPow.js",
-
     "webrtc/_imports.js",
     "messages/_imports.js",
     "identities/_imports.js",

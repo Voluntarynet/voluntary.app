@@ -18,7 +18,8 @@ Proto.setSlots = function (slots) {
 }
 
 Proto.setSlots({
-
+    _uniqueInstanceId: 0,
+    
     allProtos: function() {
         if (!Proto._allProtos) {
             Proto._allProtos = []
@@ -61,13 +62,14 @@ Proto.setSlots({
     */
 
     newUniqueInstanceId: function() {
+        Number.isInteger(Proto._uniqueInstanceId)
         Proto._uniqueInstanceId ++
         return Proto._uniqueInstanceId
     },
 
     setType: function(typeString) {
         this._type = typeString
-        //this.constructor.name = typeString
+        this.constructor.name = typeString
         return this
     },
 
@@ -75,8 +77,13 @@ Proto.setSlots({
         var obj = Object.clone(this);
         obj.__proto__ = this;
         obj._uniqueId = this.newUniqueInstanceId()
+        obj.assertHasUniqueId()
         // Note: does the JS debugger expect constructor.__proto__.type?
         return obj;
+    },
+
+    assertHasUniqueId: function() {
+        assert(Number.isInteger(this._uniqueId))
     },
 
     clone: function () {
@@ -157,6 +164,11 @@ Proto.setSlots({
         var oldValue = this[privateName];
         if (oldValue != newValue) {
             this[privateName] = newValue;
+            
+            if (privateName == "_type") {
+                this.contructor.name = newValue
+            }
+
             this.didUpdateSlot(slotName, oldValue, newValue)
             //this.mySlotChanged(name, oldValue, newValue);
         }

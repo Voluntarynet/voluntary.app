@@ -116,53 +116,6 @@ visible to passive network observer:
 	list of public rendezvous servers
 	
 -----------
-                    
-                    BMNode.sync: function() {
-                        this._isSyncing = true
-                        
-                        if (this._needsSyncToView) { 
-                            if (this._isSyncingToView) {
-                                throw new Error("sync to view loop detected")
-                            }
-                            this._isSyncingToView = true
-                            try {
-                                this.syncToView(); 
-                            } catch(e) {
-                            
-                            }
-                            this._needsSyncToView = false 
-                            if (e) { throw e }
-                        }
-                        ...
-                    }
-                    
-                    BMNode.syncAscpect: function(aspect) {
-                        var active = "_isDoing" + aspect
-                        var needs = "_need" + aspect
-                        var do = "do" + aspect
-                        
-                        if (this[active]) {
-                            throw new Error(aspect + " loop detected")
-                        }
-                        this[active] = true
-                        
-                        try {
-                            this[do].apply(this); 
-                        } catch(e) {
-                        
-                        }
-                        
-                        this[needs] + aspect = false 
-                        if (e) { 
-                            throw e 
-                        }
-                        ...
-                    }
-                
-            addObject(obj)
-        on sync sends:
-        
-
 
     store <- node -> view
     
@@ -175,13 +128,8 @@ visible to passive network observer:
     - model to view (any viewable set slot)
     - view to model (any modelled set slot during user input? timers?)
 
-- unify equals() with isEqual()
 
 --------
-
-Deleting msg?
-
-
 
 ChatMsg
     -> ObjMsgRecord 

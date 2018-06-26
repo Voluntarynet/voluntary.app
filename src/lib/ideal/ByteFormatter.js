@@ -70,7 +70,7 @@ class ByteFormatter extends ProtoClass {
     }
 }
 
-StackTrace.newSlots({
+ByteFormatter.newSlots({
     value: 0,
     usePostfix: true,
     useSpace: false,
@@ -86,6 +86,8 @@ StackTrace.newSlots({
         "exabytes", 
         "zettabytes", 
         "yottabytes"],
+}).setSlots({
+    
 })
 
 

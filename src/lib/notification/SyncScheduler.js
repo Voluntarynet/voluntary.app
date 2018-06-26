@@ -1,22 +1,43 @@
 "use strict"
 
 /*
-    expected syncMethods:
 
-        // store
-    	syncToStore
+    SyncScheduler
+
+    Many state changes can trigger the need to synchronize a given object 
+    with others within a given event loop, but we only want synchronization to 
+    happen at the end of an event loop, so a shared SyncScheduler instance is used to
+    track which sync actions should be sent at the end of the event loop and only sends each one once. 
+
+    SyncScheduler should be used to replace most cases where setTimeout() would otherwise be used.
+
+       example use:
+    
+        window.SyncScheduler.shared().scheduleTargetAndMethod(this, "syncToView")
+
+    Automatic sync loop detection
+
+    It will throw an error if a sync action is scheduled while another is being performed,
+    which ensures sync loops are avoided.
+
+    Ordering
+
+    Scheduled actions can also be given a priority via an optional 3rd argument:
+
+        window.SyncScheduler.shared().scheduleTargetAndMethod(this, "syncToView", 1)
+
+    Higher orders will be performed later than lower ones. 
+
+    Some typical sync methods:
 
         // node
+    	syncToStore
     	syncToView
-    	syncFromView
 
         // view
     	syncToNode	
     	syncFromNode
     	
-    example use:
-    
-     window.SyncScheduler.shared().scheduleTargetAndMethod(this, "syncToView")
 */
 
 window.SyncScheduler = class SyncScheduler extends ProtoClass {
@@ -47,6 +68,19 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
     scheduleTargetAndMethod (target, syncMethod, optionalOrder) { // higher order performed last
         if (!this.hasScheduledTargetAndMethod(target, syncMethod)) {
             var action = this.newActionForTargetAndMethod(target, syncMethod, optionalOrder)
+
+            /*
+            if (syncMethod.beginsWith("sync")) {
+                var ca = this.currentAction()
+                if (ca && ca.method().beginsWith("sync")) {
+                    var error = ""
+                    error += "  scheduleTargetAndMethod:     " + action.description() 
+                    error += "  while processing sync action " + ca.description()
+                    throw new Error(error)
+                }
+            }
+            */
+
             this.actions().atIfAbsentPut(action.actionsKey(), action)
 	    	this.setTimeoutIfNeeded()
             return true

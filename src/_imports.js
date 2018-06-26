@@ -9,8 +9,6 @@ JSImporter.pushRelativePaths([
 ])
 
 JSImporter.pushDoneCallback( () => {
-    App.shared()
-    if (App.runTests) {
-		    App.runTests()
-    }
+    App.shared().run()
+
 })

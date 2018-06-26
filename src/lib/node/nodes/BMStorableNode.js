@@ -263,6 +263,7 @@ window.BMStorableNode = BMNode.extend().newSlots({
         //console.log(this.typeId() + " scheduleSyncToStore this.hasPid() = ", this.hasPid())
 		
         if (this.hasPid() && this.shouldStore() && !this.isUnserializing()) {
+            //console.log(this.typeId() + " scheduleSyncToStore -> addDirtyObject")
         	NodeStore.shared().addDirtyObject(this)
             //this._refPids = null
         }
@@ -278,6 +279,7 @@ window.BMStorableNode = BMNode.extend().newSlots({
         // check so we don't mark dirty while loading
         // and use private ivars directly for performance
         if (slotName in this._storedSlots) { 
+            //console.log(this.type() + ".didUpdateSlot(" + slotName + ",...) -> scheduleSyncToStore")
             this.scheduleSyncToStore()
         }
 		

@@ -9,7 +9,7 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
             tx: null,
             requests: [],
             isCommitted: false,
-            debug: false,
+            debug: true,
         })
     }
 

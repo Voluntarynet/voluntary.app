@@ -54,42 +54,34 @@ class ProtoClass {
         return this
     }
 
-    // adding instance slots via class ---
+    static self () {
+        return this
+    }
+
+    self () {
+        return this
+    }
 
     /*
-    static newSlot(slotName, initialValue) {
-        let proto = this.prototype
+    static setupSlots () {
+        //super.setupSlotsIfNeeded()
+        console.log(this.type() + ".setupSlots()")
+    }
 
-        if (typeof (slotName) != "string") {
-            throw new Error("name must be a string");
-        }
-
-        if (initialValue === undefined) { 
-            initialValue = null; 
-        };
-
-        var privateName = "_" + slotName;
-        proto[privateName] = initialValue;
-
-        if (!proto[slotName]) {
-            proto[slotName] = function () {
-                return this[privateName];
+    static setupSlotsIfNeeded () {
+        if (!this.getClassVariable("_hasSetupSlots", false)) {
+            console.log("--- begin ---")
+            this.setupSlots()
+            if (this.type() != "ProtoClass") {
+                super.setupSlotsIfNeeded()
             }
+            console.log("--- end ---")
+            this.setClassVariable("_hasSetupSlots", true)
         }
-
-        var setterName = "set" + slotName.capitalized()
-
-        if (!proto[setterName]) {
-            proto[setterName] = function (newValue) {
-                //this[privateName] = newValue;
-                this.updateSlot(slotName, privateName, newValue);
-                return this;
-            }
-        }
-
-        return proto;
     }
     */
+
+    // adding instance slots via class ---
 
     static newSlots(slots) {
         this.prototype.newSlots(slots)
@@ -97,18 +89,20 @@ class ProtoClass {
     }
 
     static setSlots(slots) {
-        this.prototype.setSlots(slots);
+        this.prototype.setSlots(slots)
         return this;
     }
 
 
-    // ---- instance ---
+    // --- instance ---
 
     constructor() {
     }
 
-    static clone() {
+    static clone () {
+        //this.setupSlotsIfNeeded()
         var obj = new this()
+        obj.assignUniqueId()
         obj.init()
         return obj
     }
@@ -164,7 +158,6 @@ class ProtoClass {
         return this;
     }
 
-
     updateSlot(slotName, privateName, newValue) {
         var oldValue = this[privateName];
         if (oldValue != newValue) {
@@ -178,6 +171,18 @@ class ProtoClass {
 
     didUpdateSlot(slotName, oldValue, newValue) {
         // persistence system can hook this
+    }
+
+    setSlots(slots) {
+        Object.eachSlot(slots,  (name, initialValue) => {
+            this.setSlot(name, initialValue);
+        });
+        return this;
+    }
+
+    setSlot(name, initialValue) {
+        this[name] = initialValue
+        return this
     }
 
 
@@ -204,20 +209,31 @@ class ProtoClass {
         return this.type() + this.uniqueId()
     }
 
+    hasUniqueId () {
+        return Number.isInteger(this._uniqueId)
+    }
+
+    assertHasUniqueId () {
+        assert(this.hasUniqueId())
+    }
+
+    assignUniqueId () {
+        assert(!this.hasUniqueId())
+        this._uniqueId = ProtoClass.newUniqueId();
+        this.assertHasUniqueId()
+        return this
+    }
+
     cloneWithoutInit () {
         var obj = Object.clone(this);
         obj.__proto__ = this;
-        Proto._uniqueIdCounter ++;
-        obj._uniqueId = Proto._uniqueIdCounter;
-        //Proto._allProtos.push(obj)
-        //console.log("Proto._allProtos.length = ", Proto._allProtos.length)
+        obj.assignUniqueId();
         return obj;
     }
 
     clone () {
         var obj = this.cloneWithoutInit();
         obj.init();
-
         return obj;
     }
 
@@ -231,10 +247,6 @@ class ProtoClass {
 
     init () { 
         // subclasses should override to do initialization
-    }
-
-    uniqueId () {
-        return this._uniqueId;
     }
 
     toString () {
@@ -305,6 +317,7 @@ class ProtoClass {
         return setter
     }
 
+    /*
     performSet (name, value) {
         return this.perform("set" + name.capitalized(), value);
     }
@@ -324,6 +337,15 @@ class ProtoClass {
         });
 
         return object;
+    }
+    */
+
+    static newUniqueId() {
+        var key = "_uniqueIdCounter"
+        var uid = this.getClassVariable(key, 0)
+        uid ++;
+        this.setClassVariable(key, uid)
+        return uid
     }
 
     uniqueId () {

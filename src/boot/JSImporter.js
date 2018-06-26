@@ -1,10 +1,15 @@
 "use strict"
 
 /*
+
+    JSImporter
+
     A simple Javascript importing system.
+
     Several classes are in this one file to avoid JS loading synchronization issues. TODO: move to import?
 	This runs _import.js which will then reference js and css files and
-	_import.js file in it's subfolders.
+    _import.js file in it's subfolders.
+    
 	This makes source reorganizations easier and helps
 	keep folder organization aligned with dependency organization
 	

@@ -101,7 +101,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     sdb: null,
     isReadOnly: false,
 
-    debug: false,
+    debug: true,
 }).setSlots({
     init: function () {
         this.setDirtyObjects({})
@@ -127,6 +127,8 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     },
 
     asyncOpen: function (callback) {
+        this.assertHasUniqueId()
+
         if (this.isOpen()) {
             throw new Error(this.typeId() + ".asyncOpen() already open")
         }
@@ -140,13 +142,13 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     },
 
     didOpen: function () {
-
         this.collect()
     },
 
     shared: function () {
         if (!this._shared) {
             this._shared = this.clone()
+            this._shared.assertHasUniqueId()
             //this._shared.setFolder(App.shared().storageFolder().folderNamed(this.folderName())) 
         }
         return this._shared
@@ -193,8 +195,8 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     },
 
     scheduleStore: function () {
-        if (!SyncScheduler.isSyncingTargetAndMethod(this, "storeDirtyObjects")) {
-            if (!SyncScheduler.hasScheduledTargetAndMethod(this, "storeDirtyObjects")) {
+        if (!SyncScheduler.shared().isSyncingTargetAndMethod(this, "storeDirtyObjects")) {
+            if (!SyncScheduler.shared().hasScheduledTargetAndMethod(this, "storeDirtyObjects")) {
                 //console.warn("scheduleStore currentAction = ", SyncScheduler.currentAction() ? SyncScheduler.currentAction().description() : null)
                 window.SyncScheduler.shared().scheduleTargetAndMethod(this, "storeDirtyObjects", 1000)
             }
@@ -207,8 +209,10 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     // ----------------------------------------------------
 
     debugLog: function (s) {
+        this.assertHasUniqueId()
+
         if (this.debug()) {
-            console.log(this.type() + ": " + s)
+            console.log(this.typeId() + ": " + s)
         }
     },
 
@@ -217,12 +221,14 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     },
 
     storeDirtyObjects: function () {
-        //console.log(" --- storeDirtyObjects --- ")
+        console.log(" --- storeDirtyObjects --- ")
+        this.showDirtyObjects()
+
         //console.warn("   isSyncingTargetAndMethod = ", SyncScheduler.isSyncingTargetAndMethod(this, "storeDirtyObjects"))
 
         //console.log(" --- begin storeDirtyObjects --- ")
         if (!this.hasDirtyObjects()) {
-            console.log("no dirty objects to store Object.keys(this._dirtyObjects) = ", Object.keys(this._dirtyObjects))
+            console.log("no dirty objects to store Object.keys(this._dirtyObjects) = ", Reflect.ownKeys(this._dirtyObjects))
             return this
         }
 
@@ -407,6 +413,12 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         if (!nodeDict) {
             var error = "missing pid '" + pid + "'"
             console.warn("WARNING: " + error)
+
+            // TODO: add a modal panel to allow user to choose to export and clear data
+            if(!window.SyncScheduler.shared().hasScheduledTargetAndMethod(this, "clear")) {
+                console.warn("WARNING: clearing database because corruption found")
+                window.SyncScheduler.shared().scheduleTargetAndMethod(this, "clear")
+            }
             return null
             //throw new Error(error)
         }
@@ -701,7 +713,9 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     },
 
     clear: function () {
-        console.log("NodeStore clearing all data!")
+        console.warn("====================================")
+        console.warn("=== NodeStore clearing all data! ===")
+        console.warn("====================================")
         //throw new Error("NodeStore clearing all data!")
         this.sdb().clear();
     },
@@ -752,7 +766,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     showDirtyObjects: function () {
         var dirty = this._dirtyObjects
         //console.log("dirty objects: ")
-        console.log("dirty objects:  " + Object.keys(dirty).join(", "))
+        console.log("dirty objects:  " + Reflect.ownKeys(dirty).join(", "))
         /*
 		Object.keys(dirty).forEach((pid) => {
 			var obj = dirty[pid]

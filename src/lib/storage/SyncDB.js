@@ -1,17 +1,21 @@
 "use strict"
 /*
-	A cache on top of IndexedDB to allow us to do all synchronous reads and writes
-	On open, it reads the entire db into a dictionary
 
-	- reads are on the writeCache and then default to the cache 
+    SyncDB
+
+	A read&write cache on top of IndexedDB to allow us to do all synchronous reads and writes
+	On open, it reads the entire db into a read cache dictionary.
+
+	- Reads first checks the writeCache beforing checking the readCache.
 	
-	- begin() - writes can only be done after calling begin() or exception is raised
+	- begin() - writes can only be done after calling begin() or an exception is raised
 	- writes/removes are to the writeCache : format: "key" -> { _value: "", _isDelete: aBool }
-	- commit() flushes writeCache to indexedDBFolder 
+	- commit() flushes writeCache to indexedDBFolder, updates readCache
 	
 	- any exception between begin and commit should halt the app and require a restart to ensure consistency
 	
-	TODO: auto sweep after a write if getting full?
+    TODO: auto sweep after a write if getting full?
+    
 */
 
 window.SyncDB = class SyncDB extends ProtoClass {
@@ -19,11 +23,11 @@ window.SyncDB = class SyncDB extends ProtoClass {
         super.init()
         this.newSlots({
             idb: null,
-            cache: null,
+            cache: null, // TODO: rename to readCache
             writeCache: null,
             isOpen: false,
             isSynced: false,
-            debug: false,
+            debug: true,
         })
 
         this.setCache({})
@@ -89,7 +93,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
     }	
 		
     clear () {
-        throw new Error("SyncDB clear")
+        //throw new Error("SyncDB clear")
         this._cache = {}
         this.idb().asyncClear()
     }
@@ -240,10 +244,9 @@ window.SyncDB = class SyncDB extends ProtoClass {
                         if (this.debug()) {
                         	console.log(this.type() + " add ", k)
                         }
-                    }   
+                    }
                     
                     this._cache[k] = entry._value
-                    
                 }
                 count ++
             }
@@ -265,12 +268,12 @@ window.SyncDB = class SyncDB extends ProtoClass {
 	
     // NEW
 	
-    hasKey (key) {
+    hasKey(key) {
         this.assertOpen()
         return key in this._cache;
     }
 	
-    at (key) {
+    at(key) {
         this.assertOpen()
 		
         if (this._writeCache) {

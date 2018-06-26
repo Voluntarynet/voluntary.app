@@ -35,8 +35,6 @@ window.BMNode = ideal.Proto.extend().newSlots({
     // actions
     actions: null,
 
-    // sync
-    needsSyncToView: false, 
 
     // html
     acceptsFileDrop: false,
@@ -61,7 +59,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     init: function () {
         this._subnodes = []
         this._actions = []        
-        this._didUpdateNode = NotificationCenter.shared().newNotification().setSender(this._uniqueId).setName("didUpdateNode")
+        this._didUpdateNodeNote = NotificationCenter.shared().newNotification().setSender(this._uniqueId).setName("didUpdateNode")
         this._shouldFocusSubnode = NotificationCenter.shared().newNotification().setSender(this._uniqueId).setName("shouldFocusSubnode")
         this._nodeMinWidth = 180
         this.scheduleFinalize()	
@@ -338,15 +336,14 @@ window.BMNode = ideal.Proto.extend().newSlots({
     },
 
     didUpdateNode: function() {
-        if (this._didUpdateNode) {
-            this._didUpdateNode.post()
+        if (this._didUpdateNodeNote) {
+            this._didUpdateNodeNote.post()
         }
         
         this.scheduleSyncToView()
     },
     
     syncToView: function() {
-        //this._needsSyncToView = false
         if (this.view()) {
             this.view().didUpdateNode() // TODO: move to notifications?
         }  else {

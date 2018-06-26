@@ -166,7 +166,7 @@ window.ImageView = NodeView.extend().newSlots({
     
     didFetchDataURL: function(dataURL) {
         this.setFromDataURL(dataURL)
-        this.scheduleSyncToNode() //this.setNeedsSyncToNode(true)
+        this.scheduleSyncToNode() 
         return this
     },
     

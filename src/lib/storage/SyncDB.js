@@ -23,14 +23,14 @@ window.SyncDB = class SyncDB extends ProtoClass {
         super.init()
         this.newSlots({
             idb: null,
-            cache: null, // TODO: rename to readCache
+            readCache: null, // TODO: rename to readCache
             writeCache: null,
             isOpen: false,
             isSynced: false,
             debug: true,
         })
 
-        this.setCache({})
+        this.setReadCache({})
         this.setIdb(IndexedDBFolder.clone().setPath("SyncDB"))
     }
 
@@ -48,7 +48,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
 		
         this.idb().asyncAsJson( (dict) => {
             //	console.log("SyncDB didOpen() - loaded cache")
-            this._cache = dict
+            this._readCache = dict
             this.setIsOpen(true)
             this.setIsSynced(true)
             if (callback) {
@@ -68,23 +68,23 @@ window.SyncDB = class SyncDB extends ProtoClass {
     /*
 	hasKey (key) {
 		this.assertOpen()
-		return key in this._cache;
+		return key in this._readCache;
 	},
 	
 	at (key) {
 		this.assertOpen()
-		return this._cache[key]
+		return this._readCache[key]
 	},
 	*/
 
     keys () {
         this.assertOpen()
-        return Object.keys(this._cache);
+        return Object.keys(this._readCache);
     }
 	
     values () {
         this.assertOpen()
-        return Object.values(this._cache);
+        return Object.values(this._readCache);
     }
 	
     size () {
@@ -94,47 +94,47 @@ window.SyncDB = class SyncDB extends ProtoClass {
 		
     clear () {
         //throw new Error("SyncDB clear")
-        this._cache = {}
+        this._readCache = {}
         this.idb().asyncClear()
     }
 	
     asJson () {
         // WARNING: bad performance if called frequently
-        var s = JSON.stringify(this._cache)
-        return JSON.parse(this._cache)
+        var s = JSON.stringify(this._readCache)
+        return JSON.parse(this._readCache)
     }
 	
     verifySync () {
-        var cache = this._cache
+        var readCache = this._readCache
         this._isSynced = false
         this.idb().asyncAsJson( (json) => {
             var hasError = false
 			
             for (k in json) {
-                if (!(k in cache)) {
+                if (!(k in readCache)) {
                     //console.log("syncdb not in sync with idb - sdb missing key " + k)
                     hasError = true
-                } else if (json[k] != cache[k]) {
+                } else if (json[k] != readCache[k]) {
                     //console.log("syncdb not in sync with idb - diff values for key " + k )
                     hasError = true
                 }
 				
-                if (typeof(json[k]) == "undefined" || typeof(cache[k]) == "undefined") {
+                if (typeof(json[k]) == "undefined" || typeof(readCache[k]) == "undefined") {
                     hasError = true
                 }
             }
 			
 			
-            for (k in cache) {
+            for (k in readCache) {
                 if (!(k in json)) {
                     //console.log("syncdb not in sync with idb - idb missing key " + k)
                     hasError = true
-                } else if (json[k] != cache[k]) {
+                } else if (json[k] != readCache[k]) {
                     //console.log("syncdb not in sync with idb - diff values for key " + k )
                     hasError = true
                 }
 				
-                if (typeof(json[k]) == "undefined" || typeof(cache[k]) == "undefined") {
+                if (typeof(json[k]) == "undefined" || typeof(readCache[k]) == "undefined") {
                     hasError = true
                 }
             }
@@ -154,12 +154,12 @@ window.SyncDB = class SyncDB extends ProtoClass {
             }
 			
             /*
-			if(JSON.stableStringify(json) == JSON.stableStringify(this._cache)) {
+			if(JSON.stableStringify(json) == JSON.stableStringify(this._readCache)) {
 				console.log("syncdb in sync with idb")
 			} else {
 				console.log("---- out of sync ---")
 				console.log("idb: " + JSON.stableStringify(json))
-				console.log("sdb: " + JSON.stableStringify(this._cache))
+				console.log("sdb: " + JSON.stableStringify(this._readCache))
 				throw new Error("syncdb not in sync with idb")
 			}
 			*/
@@ -170,7 +170,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
 	
     totalBytes () {
         var byteCount = 0
-        var dict = this._cache
+        var dict = this._readCache
         for (let k in dict) {
 		   if (dict.hasOwnProperty(k)) {
                 var v = dict[k]
@@ -226,7 +226,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
                 
                 if (entry._isDelete) {
                     tx.removeAt(k)
-                    delete this._cache[k]
+                    delete this._readCache[k]
                     if (this.debug()) {
                     	console.log(this.type() + " delete ", k)
                     }
@@ -234,7 +234,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
                     var v = entry._value
                     //tx.atPut(k, v)
                     
-                    if (k in this._cache) {
+                    if (k in this._readCache) {
                         tx.atUpdate(k, v)
                         if (this.debug()) {
                         	console.log(this.type() + " update ", k)
@@ -246,7 +246,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
                         }
                     }
                     
-                    this._cache[k] = entry._value
+                    this._readCache[k] = entry._value
                 }
                 count ++
             }
@@ -270,7 +270,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
 	
     hasKey(key) {
         this.assertOpen()
-        return key in this._cache;
+        return key in this._readCache;
     }
 	
     at(key) {
@@ -287,14 +287,14 @@ window.SyncDB = class SyncDB extends ProtoClass {
     		}
     	}
 		
-        return this._cache[key]
+        return this._readCache[key]
     }
 	
     atPut (key, value) {
         this.assertOpen()
 	    this.assertInTx()
 	    
-	    if (!(key in this._writeCache) && this._cache[key] == value) {
+	    if (!(key in this._writeCache) && this._readCache[key] == value) {
 	        return
 	    }
 	    
@@ -305,7 +305,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
         this.assertOpen()
 	    this.assertInTx()
 	    
-	    if (!(key in this._writeCache) && !(key in this._cache)) {
+	    if (!(key in this._writeCache) && !(key in this._readCache)) {
 	        return
 	    }
 	    

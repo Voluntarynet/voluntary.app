@@ -101,7 +101,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     sdb: null,
     isReadOnly: false,
 
-    debug: true,
+    debug: false,
 }).setSlots({
     init: function () {
         this.setDirtyObjects({})

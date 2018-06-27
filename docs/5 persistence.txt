@@ -1,5 +1,11 @@
 
+
+
 PERSISTENCE
+
+Overview:
+
+    VIEWS <=> MODEL/NODES <=> NODESTORE <=> SYNCDB <=> INDEXEDDB
 
 By subclassing BMStorableNode and calling the following methods in your subclasses init method, the object will be automatically stored and loaded as needed.
 

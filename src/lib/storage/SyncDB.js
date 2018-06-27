@@ -1,4 +1,5 @@
 "use strict"
+
 /*
 
     SyncDB
@@ -15,7 +16,8 @@
 	- any exception between begin and commit should halt the app and require a restart to ensure consistency
 	
     TODO: auto sweep after a write if getting full?
-    
+    TODO: update keys, values and size method to use writeCache? Or just assert they are out of tx?
+
 */
 
 window.SyncDB = class SyncDB extends ProtoClass {
@@ -27,7 +29,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
             writeCache: null,
             isOpen: false,
             isSynced: false,
-            debug: true,
+            debug: false,
         })
 
         this.setReadCache({})
@@ -311,10 +313,6 @@ window.SyncDB = class SyncDB extends ProtoClass {
 	    
         this._writeCache[key] = { _isDelete: true }
     }
-	
-    // TODO: update keys, values and size method to use writeCache? Or just assert they are out of tx?
-	
 }
     
-
 window.SyncDB.registerThisClass()

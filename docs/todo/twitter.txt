@@ -1,0 +1,21 @@
+
+CHAT/TWITTER UI
+
+- click on post
+  - lazy create PostThread, fill items with post + any direct responses (time ordered?)
+  - make the post item a special view, disable clicks 
+- clicking on image should go to user profile
+
+- clicking on post should go to post + replies view
+    - lazy create PostThread, add the message and any responses (by searching feed)
+
+
+- only allow nodes to choose themes?
+
+- hasRead for ChatThreads
+- vertical divider line option?
+- thumbnail for direct messages
+
+- custom profile view?
+    - support a row header/footer views (diff from column header/footer)
+

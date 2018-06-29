@@ -250,7 +250,7 @@ class JSImporterClass extends JSImporterBase {
     }
 
     loadUrl (url) {
-        this.urlLoadingCallbacks().forEach((callback) => { callback(url) })
+        this.urlLoadingCallbacks().forEach(callback => callback(url))
 
         var extension = url.split(".").pop()
 
@@ -272,7 +272,7 @@ class JSImporterClass extends JSImporterBase {
 
     done () {
         //console.log("JSImporter.done() -----------------------------")
-        this.doneCallbacks().forEach((callback) => { callback() })
+        this.doneCallbacks().forEach(callback => callback())
 
         if (window.JSImporterIsEmbedded != true) {
             //this.showConcatCommand()
@@ -283,7 +283,7 @@ class JSImporterClass extends JSImporterBase {
     }
 
     setError (error) {
-        this.errorCallbacks().forEach((callback) => { callback(error) })
+        this.errorCallbacks().forEach(callback => callback(error))
         return this
     }
 

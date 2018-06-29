@@ -24,7 +24,7 @@ window.ShelfView = NodeView.extend().newSlots({
         this._idsObservation = NotificationCenter.shared().newObservation().setName("didChangeIdentities").setObserver(this).watch()
         this._idObservation = NotificationCenter.shared().newObservation().setName("didChangeIdentity").setObserver(this).watch()
         
-        var lids = App.shared().localIdentities()
+        var lids = PeerApp.shared().localIdentities()
         this.setNode(lids)
         this.scrollView().setNode(lids)
 

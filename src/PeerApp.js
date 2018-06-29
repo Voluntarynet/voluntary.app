@@ -1,53 +1,55 @@
 "use strict"
 
 /*
+    
+    PeerApp
 
-    App
 
-    A singleton that represents the application.
-    It's superclass, BaseApp will set up the NodeStore and call App. after it's initialized.
-    After setup, appDidInit is called.
+
 */
 
-window.App = BaseApp.extend().newSlots({
-    type: "App",
+window.PeerApp = App.extend().newSlots({
+    type: "PeerApp",
+
+    // model
+
+    about: null,
     localIdentities: null,
     network: null,
     dataStore: null,
-}).setSlots({
-    init: function () {
-        BaseApp.init.apply(this)
-        this.setName("NT3P")
-    },
 
-    shared: function() {        
-        if (!App._shared) {
-            App._shared = App.clone();
-        }
-        return App._shared;
+    // views
+
+    browser: null,
+    shelf: null,
+
+}).setSlots({
+
+    init: function () {
+        App.init.apply(this)
     },
 
     setup: function () {
-        BaseApp.setupUI.apply(this)
-        //window.app = this
-        this.setupPageTitle()
+        App.setup.apply(this)
+
+        // setup model
+        
+        this.setName("NT3P")
         this.setupSubnodes()
+
+        // setup views
+
+        this.setupBrowser()
+        //this.setupShelf()
+
+        // finish
+
+        this.appDidInit()
+
         return this
     },
 
-    setupPageTitle: function () {
-        var name = WebBrowserWindow.shared().urlHostname()
-
-        if (name != "") {
-            name = name.before(".").replaceAll("-", " ").toUpperCase()
-        } else {
-            name = "-"
-        }
-
-        this.setName(name)
-        this.setTitle(name)
-        return this
-    },
+    // setup model
 
     setupSubnodes: function () {
 
@@ -59,7 +61,6 @@ window.App = BaseApp.extend().newSlots({
         // about 
 
         this.setAbout(BMNode.clone().setTitle("Settings").setSubtitle(null))
-        this.about()
         this.addSubnode(this.about())
 
         // --- about subnodes --------------------
@@ -83,20 +84,44 @@ window.App = BaseApp.extend().newSlots({
         var protoNode = BMProtoNode.clone()
         this.about().addSubnode(protoNode)
 
-        this.appDidInit()
-
-        try {
-            this.network().servers().connect()
-        } catch (e) {
-            console.warn("App setupSubnodes caught exception: ", e)
-        }
+        this.network().servers().connect() // observe appDidInit instead?
 
         return this
     },
 
+    // --- setup views ---
+        
+    setupBrowser: function() {	
+        this.setBrowser(BrowserView.clone())
+    
+        this.browser().hideAndFadeIn()
+        this.browser().setNode(this)
+                
+        this.rootView().addSubview(this.browser())
+        this.browser().scheduleSyncFromNode()
+        
+        return this
+    },
+
+    setupShelf: function() {
+        this.setShelf(ShelfView.clone())
+        this.rootView().addSubview(this.shelf())
+
+        /*
+        this.shelf().appDidInit()
+        this.shelf().unhide() 
+        */
+
+        setTimeout(() => {  // without this delay, shelf doesn't see identities?
+            this.shelf().appDidInit() 
+            this.shelf().unhide() 
+        }, 100)
+
+        return this        
+    },
+
     appDidInit: function () {
-        //console.log("App.appDidInit() --------------------------------")
-        BaseApp.appDidInit.apply(this)
+        App.appDidInit.apply(this)
         window.LoadProgressBar.stop()
         window.SyncScheduler.shared().scheduleTargetAndMethod(this.browser(), "syncFromHashPath", 10)
     },

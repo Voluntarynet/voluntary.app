@@ -1,4 +1,5 @@
 "use strict"
+
 /*
     BMImagesNode 
 */  
@@ -10,7 +11,7 @@ window.BMImagesNode = BMStorableNode.extend().newSlots({
         BMStorableNode.init.apply(this)
 
         this.setViewClassName("ImageView")
-        this.setSubnodeProto("ImageNode"))
+        this.setSubnodeProto("ImageNode")
         
         this.setNodeTitleIsEditable(true)
         this.setNodeSubtitleIsEditable(false)

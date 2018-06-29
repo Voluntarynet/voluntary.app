@@ -45,8 +45,8 @@ window.BMPow = ideal.Proto.extend().newSlots({
     init: function () {
         this.setTargetDifficulty(BMMessages.globalMinDifficulty())
         this.pickRandomPow()
-        this._updateNote = NotificationCenter.shared().newNotification().setSender(this).setName("powUpdate")
-        this._doneNote = NotificationCenter.shared().newNotification().setSender(this).setName("powDone")
+        this._updateNote = NotificationCenter.shared().newNote().setSender(this).setName("powUpdate")
+        this._doneNote = NotificationCenter.shared().newNote().setSender(this).setName("powDone")
     },
         
     pickRandomPow: function() {

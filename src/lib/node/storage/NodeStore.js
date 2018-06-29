@@ -102,11 +102,14 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     isReadOnly: false,
 
     debug: false,
+
+    nodeStoreDidOpenNote: null,
 }).setSlots({
     init: function () {
         this.setDirtyObjects({})
         this.setActiveObjectsDict({})
         this.setSdb(window.SyncDB.clone())
+        this.setNodeStoreDidOpenNote(window.NotificationCenter.shared().newNote().setSender(this).setName("nodeStoreDidOpen"))
         //this.asyncOpen()
     },
 
@@ -138,6 +141,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
             if (callback) {
                 callback()
             }
+            this._nodeStoreDidOpenNote.post()
         })
     },
 

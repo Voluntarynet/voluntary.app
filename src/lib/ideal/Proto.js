@@ -43,7 +43,7 @@ Proto.setSlots({
         var obj = this.cloneWithoutInit()
         obj.registerThisProto()
         obj._parentProto = this
-        return obj;
+        return obj
     },
 
     uniqueId: function () {
@@ -76,6 +76,7 @@ Proto.setSlots({
     cloneWithoutInit: function () {
         var obj = Object.clone(this);
         obj.__proto__ = this;
+        //obj.constructor.name = this._type // can't assign to an anonymous Function
         obj._uniqueId = this.newUniqueInstanceId()
         obj.assertHasUniqueId()
         // Note: does the JS debugger expect constructor.__proto__.type?

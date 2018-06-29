@@ -6,5 +6,5 @@ JSImporter.pushRelativePaths([
     "storage/_imports.js",
     "node/_imports.js",
     "view/_imports.js",
-    "BaseApp.js",
+    "App.js",
 ])

@@ -14,7 +14,7 @@ window.BMRemoteIdentities = BMStorableNode.extend().newSlots({
         this.setNoteIsSubnodeCount(true)
         //this.setShouldStoreSubnodes(false)
         //this.loadIfPresent()
-        this._didChangeIdentitiesNote = NotificationCenter.shared().newNotification().setSender(this.uniqueId()).setName("didChangeIdentities")
+        this._didChangeIdentitiesNote = NotificationCenter.shared().newNote().setSender(this.uniqueId()).setName("didChangeIdentities")
         this.watchIdentity()
     },
 

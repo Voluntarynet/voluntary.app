@@ -67,21 +67,18 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
 	
     scheduleTargetAndMethod (target, syncMethod, optionalOrder) { // higher order performed last
         if (!this.hasScheduledTargetAndMethod(target, syncMethod)) {
-            var action = this.newActionForTargetAndMethod(target, syncMethod, optionalOrder)
+            let newAction = this.newActionForTargetAndMethod(target, syncMethod, optionalOrder)
 
-            /*
-            if (syncMethod.beginsWith("sync")) {
-                var ca = this.currentAction()
-                if (ca && ca.method().beginsWith("sync")) {
-                    var error = ""
-                    error += "  scheduleTargetAndMethod:     " + action.description() 
-                    error += "  while processing sync action " + ca.description()
+            if (syncMethod != "processPostQueue") {
+                if (this.currentAction() && this.currentAction().equals(newAction)) {
+                    var error = this.typeId()
+                    error += "  scheduleTargetAndMethod: \n" + newAction.description() 
+                    error += "  while processing: " + this.currentAction().description()
                     throw new Error(error)
                 }
             }
-            */
 
-            this.actions().atIfAbsentPut(action.actionsKey(), action)
+            this.actions().atIfAbsentPut(newAction.actionsKey(), newAction)
 	    	this.setTimeoutIfNeeded()
             return true
         }

@@ -26,7 +26,7 @@ window.BMMessages = BMStorableNode.extend().newSlots({
         this.setShouldStoreSubnodes(true)
 		
         this.setTitle("Messages")
-        this.setChangeNote(NotificationCenter.shared().newNotification().setSender(this).setName("newMessagesMessage"))
+        this.setChangeNote(NotificationCenter.shared().newNote().setSender(this).setName("newMessagesMessage"))
 
         this.setDeletedSet(BMDatedSet.clone())
         this.addStoredSlot("deletedSet")

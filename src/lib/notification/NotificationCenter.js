@@ -44,7 +44,7 @@
         NotificationCenter.shared().removeObserver(this)
         
         // post a notification
-        var note = NotificationCenter.shared().newNotification().setSender(this).setName("hello").post()
+        var note = NotificationCenter.shared().newNote().setSender(this).setName("hello").post()
 
         // repost same notification
         note.post()
@@ -115,7 +115,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
         return this
     }
 
-    newNotification () {
+    newNote () {
         return window.Notification.clone().setCenter(this)
     }
     

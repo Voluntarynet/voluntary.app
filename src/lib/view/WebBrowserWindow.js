@@ -1,5 +1,14 @@
 "use strict"
 
+/*
+
+    WebBrowserWindow
+
+    Abstraction for the main web browser window. 
+    Owns a DocumentBody view.
+
+*/
+
 window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     type: "WebBrowserWindow",
     documentBody: DocumentBody.clone(),
@@ -15,7 +24,6 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
 
     setup: function() {
         this.preventDrop()
-        //this.debugFocus()
     },
     
     /*  
@@ -143,7 +151,16 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
         document.title = aName
         return this
     },
-	
+    
+    activeDivView: function() {
+        var e = document.activeElement
+        if (e && e._divView) {
+            return e._divView
+        }
+        return null
+    },
+
+    /*
     debugFocus: function() {
         var focusFunc = (event) => { 
             var e = event.srcElement
@@ -156,58 +173,7 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
         //window.addEventListener ? window.addEventListener("blur', blurFunc, true) : window.attachEvent("onblur", blurFunc);
         return this
     },
-    
-    activeDivView: function() {
-        var e = document.activeElement
-        if (e && e._divView) {
-            return e._divView
-        }
-        return null
-    },
-	
-    /*
-    // firstResponder/activeElement - focus/blur
-
-    lastActiveElement: document.activeElement,
-
-    registerToWatchFocus: function() {
-        var focusFunc = () => { this.onElementFocus() }
-        var blurFunc = () => { this.onElementBlur() }
-        
-        window.addEventListener ? window.addEventListener("focus", focusFunc, true) : window.attachEvent("onfocusout", focusFunc);  
-        window.addEventListener ? window.addEventListener("blur", blurFunc, true) : window.attachEvent("onblur", blurFunc);
-        return this
-    },
-    
-    updateLastActiveElement: function() {
-        this.setLastActiveElement(document.activeElement);
-        return this
-    },
-    
-    didChangeFocus: function() {
-        return this.lastActiveElement() != currentActiveElement
-    },
-
-    onElementFocus: function() {
-        if (this.didChangeFocus()) {
-            var last = this.lastActiveElement()
-            if (last && last.) {
-                this.lastActiveElement().willReleaseFirstResponder()
-            }
-            if (document.activeElement) {
-                
-            }
-        }
-        
-        this.updateLastActiveElement()
-    },
-    
-    onElementBlur: function() {
-
-        this.updateLastActiveElement()
-    },  
     */
 })
-
 
 WebBrowserWindow.shared().setup()

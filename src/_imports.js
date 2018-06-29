@@ -3,12 +3,10 @@
 JSImporter.pushRelativePaths([
     "lib/_imports.js",
     "network/_imports.js",	
-    "App.js",
-    //"test.json",
+    "PeerApp.js",
     // "_tests.js",
 ])
 
 JSImporter.pushDoneCallback( () => {
-    App.shared().run()
-
+    PeerApp.shared().run()
 })

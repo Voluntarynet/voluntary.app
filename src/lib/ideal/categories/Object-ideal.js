@@ -1,4 +1,4 @@
-"use strict"
+//"use strict"
 
 /*
     Object isn't a prototype or class, it's more like a namespace to organize
@@ -49,8 +49,8 @@ Object.perform = function (obj, name) {
 }
 
 Object.values = function (obj) {
-    var values = [];
-    for (var name in obj) {
+    let values = [];
+    for (let name in obj) {
         if (obj.hasOwnProperty(name)) {
             values.push(obj[name]);
         }
@@ -59,8 +59,8 @@ Object.values = function (obj) {
 }
 
 Object.pop = function (obj) {
-    var k = Object.keys().last();
-    var v = obj[k];
+    let k = Object.keys().last();
+    let v = obj[k];
     delete obj[k];
     return v;
 }
@@ -82,7 +82,7 @@ Object.atDeepKey = function (obj, key, seenSet) {
 
     seenSet.add(obj)
 
-    for (var k in obj) {
+    for (let k in obj) {
         //console.log("k = ")
         if (obj.hasOwnProperty(k)) {
             if (k == key) {
@@ -91,7 +91,7 @@ Object.atDeepKey = function (obj, key, seenSet) {
         }
     }
 
-    for (var k in obj) {
+    for (let k in obj) {
         try {
             if (obj.hasOwnProperty(k)) {
                 var v = Object.atDeepKey(obj[k], key, seenSet);
@@ -112,9 +112,9 @@ Object.allAtDeepKey = function (obj, key) {
         return [];
     }
 
-    var objs = [];
+    let objs = [];
 
-    for (var k in obj) {
+    for (let k in obj) {
         if (obj.hasOwnProperty(k)) {
             if (k == key) {
                 objs.append(obj[k]);
@@ -156,8 +156,8 @@ Object.slotNames = function (obj) {
 }
 
 Object.slotValues = function (obj) {
-    var values = [];
-    for (var k in this) {
+    let values = [];
+    for (let k in this) {
         if (obj.hasOwnProperty(k)) {
             values.push(this[k]);
         }
@@ -186,7 +186,7 @@ Object.associationDict = function (obj) {
 
 Function.prototype.forwardErrors = function (fn) {
     return () => {
-        var e = arguments[0];
+        let e = arguments[0];
         if (e) {
             this(e);
         } else {

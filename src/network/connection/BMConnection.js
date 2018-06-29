@@ -77,7 +77,7 @@ window.BMConnection = BMNode.extend().newSlots({
     onNetworkInformationChange: function() {
         //console.log(this.type() + "Connection type changed from " + this.lastConnectionType() + " to " +  this.connectionType(), this.connection());	  
 
-        NotificationCenter.shared().newNotification().setSender(this).setName("onNetworkInformationChange").post()
+        NotificationCenter.shared().newNote().setSender(this).setName("onNetworkInformationChange").post()
         
         this.updateLastState()            
         this.didUpdateNode()
@@ -92,11 +92,11 @@ window.BMConnection = BMNode.extend().newSlots({
     },
 	
     onNetworkOnline: function() {
-        NotificationCenter.shared().newNotification().setSender(this).setName("onNetworkOnline").post()
+        NotificationCenter.shared().newNote().setSender(this).setName("onNetworkOnline").post()
     },
     
     onNetworkOffline: function() {
-        NotificationCenter.shared().newNotification().setSender(this).setName("onNetworkOffline").post()
+        NotificationCenter.shared().newNote().setSender(this).setName("onNetworkOffline").post()
     },
 	
     isOnline: function() {

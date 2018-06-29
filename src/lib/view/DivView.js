@@ -1080,7 +1080,15 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
     
     // --- fade animations ---
-	
+    
+    hideAndFadeIn: function() {
+        this.setOpacity(0)
+        this.setTransition("all 0.5s")
+        setTimeout( () => { 
+            this.setOpacity(1)
+        }, 0)	
+    },
+
     fadeInToDisplayInlineBlock: function() {
         this.setDisplay("inline-block")
         setTimeout( () => { 

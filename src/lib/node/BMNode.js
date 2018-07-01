@@ -44,6 +44,8 @@ window.BMNode = ideal.Proto.extend().newSlots({
     nodeContent: null,
     	
     // view style overrides
+    viewDict: null, 
+
     nodeColumnStyles: null,
     nodeRowStyles: null,
 
@@ -55,12 +57,16 @@ window.BMNode = ideal.Proto.extend().newSlots({
 
     // debug
     debug: false,
+
+    // notifications
+    didUpdateNodeNote: null,
+    shouldFocusSubnodeNote: null,
 }).setSlots({
     init: function () {
         this._subnodes = []
         this._actions = []        
-        this._didUpdateNodeNote = NotificationCenter.shared().newNote().setSender(this._uniqueId).setName("didUpdateNode")
-        this._shouldFocusSubnode = NotificationCenter.shared().newNote().setSender(this._uniqueId).setName("shouldFocusSubnode")
+        this.setDidUpdateNodeNote(NotificationCenter.shared().newNote().setSender(this._uniqueId).setName("didUpdateNode"))
+        this.setShouldFocusSubnodeNote(NotificationCenter.shared().newNote().setSender(this._uniqueId).setName("shouldFocusSubnode"))
         this._nodeMinWidth = 180
         this.scheduleFinalize()	
         
@@ -68,6 +74,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
         this.setNodeRowStyles(BMViewStyles.clone())
         this.nodeRowStyles().selected().setColor("white")
         this.nodeRowStyles().unselected().setColor("#aaa")
+        this.setViewDict({})
         return this
     },
 
@@ -329,26 +336,22 @@ window.BMNode = ideal.Proto.extend().newSlots({
     // --- update / sync system ----------------------------
     
     scheduleSyncToView: function() {
-        if (this.view()) {
-            window.SyncScheduler.shared().scheduleTargetAndMethod(this, "syncToView")
-        }
+        this.didUpdateNode()
+        //window.SyncScheduler.shared().scheduleTargetAndMethod(this, "syncToView")
         return this
     },
 
     didUpdateNode: function() {
-        if (this._didUpdateNodeNote) {
-            this._didUpdateNodeNote.post()
-        }
-        
-        this.scheduleSyncToView()
+        this.didUpdateNodeNote().post()
+        //this.scheduleSyncToView()
     },
     
     syncToView: function() {
+        /*
         if (this.view()) {
             this.view().didUpdateNode() // TODO: move to notifications?
-        }  else {
-            //console.log(this.typeId() + ".syncToView has no view")
-        }
+        }  
+        */
     },
     
     privatePrepareToAccess: function() {
@@ -482,8 +485,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     },
     
     postShouldFocusSubnode: function(aSubnode) {
-        this._shouldFocusSubnode.setInfo(aSubnode).post()
-        //this._shouldFocusSubnode.setInfo(aSubnode).schedulePost()
+        this.shouldFocusSubnodeNote().setInfo(aSubnode).post()
         return this
     },
     

@@ -9,7 +9,7 @@ window.BrowserFooter = NodeView.extend().newSlots({
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
-        this.setOwnsView(false)
+        //this.setOwnsView(false)
 
         this.setLeftActionsView(DivView.clone().setDivClassName("BrowserFooterLeftActionsView NodeView DivView"))
 		

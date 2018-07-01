@@ -11,7 +11,7 @@ window.BrowserHeader = NodeView.extend().newSlots({
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
-        this.setOwnsView(false)
+        //this.setOwnsView(false)
 
         var backArrowView = DivView.clone().setDivClassName("BackArrow").setTarget(this).setAction("didHitBackArrow")
         backArrowView.setBackgroundImageUrlPath(this.pathForIconName("left"))        

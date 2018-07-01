@@ -2,10 +2,11 @@
 NodeView = DivStyledView.extend().newSlots({
     type: "NodeView",
     node: null,
-    ownsView: true,
+    //ownsView: true,
     defaultSubnodeViewClass: null,
     overrideSubviewProto: null,
     styles: null,
+    nodeObservation: null,
 }).setSlots({
     
     // -------------------------------------
@@ -13,28 +14,36 @@ NodeView = DivStyledView.extend().newSlots({
     init: function () {
         DivStyledView.init.apply(this)
         //this._nodeObservation = NotificationCenter.shared().newObservation().setName("didUpdateNode").setObserver(this)
-        this._nodeObservation = NotificationCenter.shared().newObservation().setObserver(this) // observe all
+        this.setNodeObservation(NotificationCenter.shared().newObservation().setObserver(this)) // observe all
         this.setStyles(BMViewStyles.clone())
         return this
     },
 	
     setNode: function(aNode) {
+
         if (this._node != aNode) {
+
             this.stopWatchingNode()
             this._node = aNode
             this.startWatchingNode()
             
+            /*
             if (aNode && this.ownsView()) { 
                 //this.log(aNode.type() + " setView")
-                aNode.setView(this) 
+                aNode.setView(this)  // TODO: only used by browser - change so browser doesn't need it
             }
+            */
 
-            var nodeId = aNode ? this.node().type() + "-" + this.node().uniqueId() : "null"
-            this.element().id = this.type() + "-" + this._uniqueId + " for node " + nodeId
+            this.updateElementIdLabel()
             this.didChangeNode()
         }
 		
         return this
+    },
+
+    updateElementIdLabel: function() {
+        var nodeId = this.node() ? this.node().type() + "-" + this.node().uniqueId() : "null"
+        this.element().id = this.type() + "-" + this._uniqueId + " for node " + nodeId
     },
     
     didChangeNode: function() {
@@ -47,7 +56,7 @@ NodeView = DivStyledView.extend().newSlots({
     startWatchingNode: function() {
         if (this._node) {
             //console.log("startWatchingNode " + this._node + " observation count = " + NotificationCenter.shared().observations().length)
-            this._nodeObservation.setTarget(this._node._uniqueId).watch()
+            this.nodeObservation().setTarget(this._node._uniqueId).watch()
         }
         return this
     },
@@ -55,7 +64,7 @@ NodeView = DivStyledView.extend().newSlots({
     stopWatchingNode: function() {
         if (this._node) {
             //console.log("stopWatchingNode " + this._node + " observation count = " + NotificationCenter.shared().observations().length)
-            this._nodeObservation.stopWatching()
+            this.nodeObservation().stopWatching()
         }
         return this
     },
@@ -125,8 +134,8 @@ NodeView = DivStyledView.extend().newSlots({
     },
     
     syncFromNode: function () {
-        // only replace subviews if sync requires it
-        
+        // override this method if the view manages it's own subviews
+
         if (!this.node()) { 
             this.removeAllSubviews();
             return
@@ -137,6 +146,9 @@ NodeView = DivStyledView.extend().newSlots({
         var newSubviews = []
         var subnodes = this.visibleSubnodes()
         
+        // only replace subviews if sync requires it,
+        // and reuse subviews for subnodes which are still present 
+
         subnodes.forEach((subnode) => {
             var subview = this.subviewForNode(subnode) // get the current view for the node, if there is one
             
@@ -152,8 +164,10 @@ NodeView = DivStyledView.extend().newSlots({
         })
         
         if (!newSubviews.isEqual(this.subviews())) {
-            this.removeAllSubviews()
+            this.removeAllSubviews() 
             this.addSubviews(newSubviews)
+            // since node's don't hold a view reference, 
+            // subviews no longer referenced in subviews list will be collected
         }
 
         this.subviews().forEach((subview) => { subview.syncFromNode() })

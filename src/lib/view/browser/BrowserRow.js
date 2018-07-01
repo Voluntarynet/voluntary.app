@@ -16,7 +16,7 @@ window.BrowserRow = NodeView.extend().newSlots({
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
-        this.setOwnsView(false)
+        //this.setOwnsView(false)
         this.setIsRegisteredForClicks(true)
         this.turnOffUserSelect()
         this.setAcceptsFirstResponder(false)

@@ -19,6 +19,7 @@ window.BMStorableNode = BMNode.extend().newSlots({
         BMNode.init.apply(this)
         this.setStoredSlots({})
         this.scheduleSyncToStore()
+        //this.addStoredSlot("viewDict")
     },
     
     // --- overrides from parent class ---

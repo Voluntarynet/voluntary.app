@@ -24,5 +24,8 @@ JSImporter.pushRelativePaths([
     "ImageWellView.js",
     "ImageView.js",
     "PanelView.js",
+
+    "atom/_imports.js",
+
 ])
 

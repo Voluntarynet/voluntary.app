@@ -27,21 +27,12 @@ MODEL
 BMNodes call the following methods to initiate a sync:
 
     this.scheduleSyncToStore()
-    this.scheduleSyncToView()  (syncToView calls this.view().didUpdateNode() which calls this.scheduleSyncToNode() in view)
+    this.scheduleSyncToView()  (syncToView posts a didUpdateNode notification)
     
 
 When a BMNode changes it's state, it calls this.didUpdateNode() 
 The didUpdateNode will post a notification that the node changes and schedule a sync to it's view if it has one.
 
-
-     didUpdateNode: function() {
-        if (this._didUpdateNodeNote) {
-            this._didUpdateNodeNote.post()
-        }
-        
-        this.scheduleSyncToView()
-    },
-    
 	
 VIEW
 

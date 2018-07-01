@@ -1,7 +1,8 @@
 //var json = typeof JSON !== 'undefined' ? JSON : require('jsonify');
 
 JSON.stableStringify = function (obj, opts) {
-
+    var json = JSON
+    
     var isArray = Array.isArray || function (x) {
         return {}.toString.call(x) === '[object Array]';
     };

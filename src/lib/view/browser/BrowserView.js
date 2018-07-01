@@ -10,7 +10,7 @@ window.BrowserView = NodeView.extend().newSlots({
 }).setSlots({
 
     bgColors: function () {
-        //return this.bgColorsWarm()
+        //return this.bgColorsCool()
         return this.bgColorsGray()
     },
 
@@ -65,7 +65,6 @@ window.BrowserView = NodeView.extend().newSlots({
 
         this.setupDefaultStyles()
 
-        //this.setDefaultSubnodeViewClass(BrowserColumnGroup)
         this.setIsRegisterForWindowResize(true)
 
         var dh = DivView.clone().setDivClassName("BrowserDefaultHeader NodeView DivView")
@@ -75,7 +74,6 @@ window.BrowserView = NodeView.extend().newSlots({
         this.setBackgroundColor(this.bgColorForIndex(Math.round(this.bgColors().length / 2)))
         this.setColumnGroupCount(1)
         //.selectFirstColumn()
-
 
         return this
     },
@@ -88,7 +86,6 @@ window.BrowserView = NodeView.extend().newSlots({
         this.setDefaultRowStyles(BMViewStyles.clone())
         this.defaultRowStyles().unselected().setColor("#aaa")
         this.defaultRowStyles().selected().setColor("white")
-
         return this
     },
 

@@ -10,7 +10,6 @@ window.BrowserColumn = NodeView.extend().newSlots({
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
-        this.setDefaultSubnodeViewClass(BrowserTitledRow)
         //this.setOwnsView(false)
         this.setIsRegisteredForKeyboard(true)
         this.styles().selected().setBorderLeft("1px solid rgba(0, 0, 0, 0.15)")

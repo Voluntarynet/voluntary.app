@@ -65,7 +65,7 @@ window.BrowserView = NodeView.extend().newSlots({
 
         this.setupDefaultStyles()
 
-        this.setDefaultSubnodeViewClass(BrowserColumnGroup)
+        //this.setDefaultSubnodeViewClass(BrowserColumnGroup)
         this.setIsRegisterForWindowResize(true)
 
         var dh = DivView.clone().setDivClassName("BrowserDefaultHeader NodeView DivView")

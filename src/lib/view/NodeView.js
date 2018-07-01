@@ -3,7 +3,6 @@ NodeView = DivStyledView.extend().newSlots({
     type: "NodeView",
     node: null,
     //ownsView: true,
-    defaultSubnodeViewClass: null,
     overrideSubviewProto: null,
     styles: null,
     nodeObservation: null,
@@ -95,7 +94,8 @@ NodeView = DivStyledView.extend().newSlots({
     // --- syncing ---
     
     subviewForNode: function(aNode) {
-        return this.subviews().detect((aView) => { return aView.node() == aNode; })
+        //return this.subviews().detect((aView) => { return aView.node() == aNode; })
+        return this.subviews().detect(aView => aView.node() == aNode )
     },
 
     subviewProtoForSubnode: function(aSubnode) {
@@ -104,12 +104,6 @@ NodeView = DivStyledView.extend().newSlots({
         if (!proto) {
 		    proto = aSubnode.viewClass()
         }
-		
-        /*
-        if (!proto) {
-		    proto = this.defaultSubnodeViewClass()
-		}
-		*/
 				
         return proto      
     },

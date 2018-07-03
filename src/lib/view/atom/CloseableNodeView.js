@@ -1,7 +1,7 @@
 "use strict"
 
 window.CloseableNodeView = NodeView.extend().newSlots({
-    type: "AtomNodeView",
+    type: "CloseableNodeView",
     closeButton: null,
 }).setSlots({
     init: function () {

@@ -2215,7 +2215,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     // scroll actions
     
     scrollToTop: function() {
-        console.log("]]]]]]]]]]]] " + this.typeId() + ".scrollToTop()")
+        //console.log("]]]]]]]]]]]] " + this.typeId() + ".scrollToTop()")
         this.setScrollTop(0)
         return this       
     },
@@ -2223,7 +2223,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     scrollToBottom: function() {
         var focusedElement = document.activeElement
         var needsRefocus = focusedElement != this.element()
-        console.log("]]]]]]]]]]]] " + this.typeId() + ".scrollToTop() needsRefocus = ", needsRefocus)
+       // console.log("]]]]]]]]]]]] " + this.typeId() + ".scrollToTop() needsRefocus = ", needsRefocus)
         
         this.setScrollTop(this.scrollHeight())
         
@@ -2389,7 +2389,7 @@ window.DivView = ideal.Proto.extend().newSlots({
             entries.forEach(entry => {
                 if (entry.isIntersecting) { 
                     
-                    console.log("onVisibility!")
+                    //console.log("onVisibility!")
                     if (this._endScrollIntoViewFunc) {
             	        this._endScrollIntoViewFunc() 
             	        // hack around lack of end of scrollIntoView event 

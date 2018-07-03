@@ -29,6 +29,8 @@ window.ShelfView = NodeView.extend().newSlots({
         this.scrollView().setNode(lids)
 
         this.setupFooter()
+        
+        this.unhide()
         return this      
     },
     

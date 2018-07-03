@@ -5,7 +5,9 @@ window.AtomNodeView = CloseableNodeView.extend().newSlots({
     headView: null,
     tailView: null,
     isVertical: true,
-    viewDictSlots: ["isVertical"], // move to view?
+    headWidth: 100,
+    headHeight: 100,
+    viewDictSlots: ["isVertical", "headWidth", "headHeight"], // move to view?
 }).setSlots({
     init: function () {
         CloseableNodeView.init.apply(this)
@@ -22,6 +24,9 @@ window.AtomNodeView = CloseableNodeView.extend().newSlots({
     setupHeadView: function() {
         this.setHeadView(DivView.clone())
         this.addSubview(this.headView())
+
+        this.headView().setPosition("relative")
+        this.tailView().setPosition("relative")
     },
 
     setupTailview: function() {
@@ -31,19 +36,26 @@ window.AtomNodeView = CloseableNodeView.extend().newSlots({
 
     syncLayout: function() {
         if (this.isVertical()) {
-            /*
-            this.headView().setPosition()
-
-            */
+            this.layoutVertically()
+        } else {
+            this.layoutHorizontally()
         }
     },
 
     layoutVertically: function() {
+        this.headView().setDisplay("block")
+        this.headView().setWidth("100%").setHeight(this.headHeight())
 
+        this.tailView().setDisplay("block")
+        this.tailView().setWidth("100%").setHeight("auto")
     },
 
     layoutHorizontally: function() {
+        this.headView().setDisplay("inline-block")
+        this.headView().setWidth(this.headWidth()).setHeight("100%")
 
+        this.tailView().setDisplay("inline-block")
+        this.headView().setWidth("auto").setHeight("100%")
     },
 
     viewDict: function() { // move to view?

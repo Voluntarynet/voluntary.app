@@ -16,7 +16,8 @@ window.BMServerConnection = BMNode.extend().newSlots({
     sessionId: null,
     debug: false,
     statusLog: null,
-    pendingMessages: null
+    pendingMessages: null,
+    isOpen: false,
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)
@@ -264,6 +265,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
     },
     
     onOpen: function() {
+        this.setIsOpen(true)
         this.setTitle("Connection " + this.shortId())
         this.setStatus("connected")
         this.log("onOpen " + this.peerId().toString());
@@ -276,10 +278,12 @@ window.BMServerConnection = BMNode.extend().newSlots({
     },
 
     requestId: function() {
-        this.setPeerId(this.currentPeerId());
-        return this.send("requestId", { requestedId: this.peerId().toString() }).then(() => {
-            this.updatePeers();
-        }).catch(e => this.onError(e));
+        if (this.isOpen()) {
+            this.setPeerId(this.currentPeerId());
+            return this.send("requestId", { requestedId: this.peerId().toString() }).then(() => {
+                this.updatePeers();
+            }).catch(e => this.onError(e));
+        }
     },
 
     /*
@@ -298,6 +302,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
 */
 
     onClose: function(err) {
+        this.setIsOpen(false)
         clearInterval(this._pingInterval);
         this.log(this.type() + ".onClose " + err)
         this.setStatus("closed")
@@ -312,7 +317,8 @@ window.BMServerConnection = BMNode.extend().newSlots({
     },
     
     isConnected: function () {
-        return this.serverConn() != null
+        return this.isOpen()
+//        return this.serverConn() != null
     },
 
     //returns a Promise

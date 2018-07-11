@@ -212,7 +212,7 @@ Object.shallowCopyTo({
     /// String
 
     asSetter: function () {
-        return "set" + slotName.capitalized();
+        return "set" + this.capitalized();
     },
 
     firstCharacter: function () {

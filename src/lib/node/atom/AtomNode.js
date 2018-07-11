@@ -1,19 +1,24 @@
 "use strict"
 
 /*
-	BMItemNode
+	AtomNode
 */
 
-window.BMItemNode = BMNode.extend().newSlots({
-    type: "BMItemNode",
+window.AtomNode = BMStorableNode.extend().newSlots({
+    type: "AtomNode",
+    nodeViewDict: null,
 }).setSlots({
     init: function () {
-        BMNode.init.apply(this)
+        BMStorableNode.init.apply(this)
+
+        this.setNodeViewDict({})
+        this.addStoredSlot("nodeViewDict")
+       
         //this.setViewClassName("GenericView")
         this.setNodeMinWidth(300)
 
         this.setShouldStore(true)
-        this.setShouldSubnodes(true)
+        this.setShouldStoreSubnodes(true)
 
         this.setNoteIsSubnodeCount(false)
         
@@ -24,6 +29,7 @@ window.BMItemNode = BMNode.extend().newSlots({
         this.setNodeSubtitleIsEditable(true)
 
         this.addStoredSlot("nodeNote")
+
     },
 })
 

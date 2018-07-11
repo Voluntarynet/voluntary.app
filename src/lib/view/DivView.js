@@ -236,7 +236,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     // margin
 
     setMargin: function(aNumber) {
-        this.setCssAttribute("margin", aNumber + "px")
+        this.setCssAttribute("margin", this.pxNumberToString(aNumber))
         return this
     },
 
@@ -245,49 +245,49 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     setMarginLeft: function(aNumber) {
-        this.setCssAttribute("margin-left", aNumber + "px")
+        this.setCssAttribute("margin-left", this.pxNumberToString(aNumber))
         return this
     },
 	
     setMarginRight: function(aNumber) {
-        this.setCssAttribute("margin-right", aNumber + "px")
+        this.setCssAttribute("margin-right", this.pxNumberToString(aNumber))
         return this
     },
 
     setMarginTop: function(aNumber) {
-        this.setCssAttribute("margin-top", aNumber + "px")
+        this.setCssAttribute("margin-top", this.pxNumberToString(aNumber))
         return this
     },
 	
     setMarginBottom: function(aNumber) {
-        this.setCssAttribute("margin-bottom", aNumber + "px")
+        this.setCssAttribute("margin-bottom", this.pxNumberToString(aNumber))
         return this
     },
 
     // padding left
 
     setPadding: function(aNumber) {
-        this.setCssAttribute("padding", aNumber + "px")
+        this.setCssAttribute("padding", this.pxNumberToString(aNumber))
         return this
     },
 
     setPaddingRight: function(aNumber) {
-        this.setCssAttribute("padding-right", aNumber + "px")
+        this.setCssAttribute("padding-right", this.pxNumberToString(aNumber))
         return this
     },
 	
     setPaddingLeft: function(aNumber) {
-        this.setCssAttribute("padding-left", aNumber + "px")
+        this.setCssAttribute("padding-left", this.pxNumberToString(aNumber))
         return this
     },
 
     setPaddingTop: function(aNumber) {
-        this.setCssAttribute("padding-top", aNumber + "px")
+        this.setCssAttribute("padding-top", this.pxNumberToString(aNumber))
         return this
     },
 
     setPaddingBottom: function(aNumber) {
-        this.setCssAttribute("padding-bottom", aNumber + "px")
+        this.setCssAttribute("padding-bottom", this.pxNumberToString(aNumber))
         return this
     },
 
@@ -298,7 +298,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     // padding right
 	
     setPaddingRight: function(aNumber) {
-        this.setCssAttribute("padding-right", aNumber + "px")
+        this.setCssAttribute("padding-right", this.pxNumberToString(aNumber))
         return this
     },
 
@@ -541,7 +541,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     // left
 
     setLeft: function (aNumber) {
-        var s = aNumber + "px"
+        var s = this.pxNumberToString(aNumber)
         this.setCssAttribute("left", s)
         return this
     },
@@ -557,7 +557,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     // right
 	
     setRight: function (aNumber) {
-        var s = aNumber + "px"
+        var s = this.pxNumberToString(aNumber)
         this.setCssAttribute("right", s)
         return this
     },
@@ -573,7 +573,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     // bottom
 	
     setBottom: function (aNumber) {
-        var s = aNumber + "px"
+        var s = this.pxNumberToString(aNumber)
         this.setCssAttribute("bottom", s)
         return this
     },
@@ -768,6 +768,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     // over flow
 	
     setOverflow: function(s) {
+        assert(typeof(s) == "string")
         this.setCssAttribute("overflow", s)
         return this
     },
@@ -850,16 +851,20 @@ window.DivView = ideal.Proto.extend().newSlots({
     calcWidth: function() {
         return DivTextTapeMeasure.widthOfDivClassWithText(this.divClassName(), this.innerHTML())
     },
-	
-    setWidth: function(s) {
+    
+    setWidthString: function(s) {
 	    assert(typeof(s) == "string")
 	    this.setCssAttribute("width", s, () => { this.didChangeWidth() })
 	    return this
     },
+
+    setWidth: function(s) {
+	    this.setWidthString(s)
+	    return this
+    },
 	
     setWidthPercentage: function(aNumber) {
-	    assert(typeof(aNumber) == "number")
-        var newValue = aNumber + "%"
+        var newValue = this.percentageNumberToString(aNumber)
 	    this.setCssAttribute("width", newValue, () => { this.didChangeWidth() })
 	    return this
     },
@@ -971,25 +976,32 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     setMinAndMaxHeight: function(aNumber) {
-        assert(typeof(aNumber) == "number")
-        var newValue = aNumber + "px"
+        var newValue = this.pxNumberToString(aNumber)
         this.setCssAttribute("min-height", newValue, () => { this.didChangeHeight() })
         this.setCssAttribute("max-height", newValue, () => { this.didChangeHeight() })
         return this		
     },
 
-    setMinAndMaxHeightPercentage: function(aNumber) {
+    percentageNumberToString: function(aNumber) {
+        assert(typeof(aNumber) == "number" && (aNumber >= 0) && (aNumber <= 100))
+        return aNumber + "%"
+    },
+
+    pxNumberToString: function(aNumber) {
         assert(typeof(aNumber) == "number")
-        var newValue = aNumber + "%"
+        return aNumber + "px"
+    },
+
+    setMinAndMaxHeightPercentage: function(aNumber) {
+        var newValue = this.percentageNumberToString(aNumber)
         this.setCssAttribute("min-height", newValue, () => { this.didChangeHeight() })
         this.setCssAttribute("max-height", newValue, () => { this.didChangeHeight() })
         return this		
     },
 	
     setHeightPercentage: function(aNumber) {
-        assert(typeof(aNumber) == "number")
-        var newValue = aNumber + "%"
-        this.setCssAttribute("height", newValue, () => { this.didChangeHeight() })
+        var newValue = this.percentageNumberToString(aNumber)
+        this.setHeightString(newValue)
         return this		
     },
 	
@@ -1003,8 +1015,33 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this		
     },
 
-    setHeight: function(newValue) {
-        this.setCssAttribute("height", newValue, () => { this.didChangeHeight() })
+    setWidthPxNumber: function(aNumber) {
+        this.setWidthString(this.pxNumberToString(aNumber))
+        return this
+    },
+
+    setHeightPxNumber: function(aNumber) {
+        this.setHeightString(this.pxNumberToString(aNumber))
+        return this
+    },
+
+    setHeight: function(s) {
+        this.setHeightString(s)
+        return this		
+    },	
+
+    setWidthToAuto: function() {
+        this.setWidthString("auto")
+        return this
+    },
+
+    setHeightToAuto: function() {
+        this.setHeightString("auto")
+    },
+
+    setHeightString: function(aString) {
+        assert(typeof(aString) == "string")
+        this.setCssAttribute("height", aString, () => { this.didChangeHeight() })
         return this		
     },	
 	
@@ -1676,7 +1713,9 @@ window.DivView = ideal.Proto.extend().newSlots({
         if (aBool) {
             if (this._isRegisteredForMouse == false) {
                 this._isRegisteredForMouse = true
-	            this.element().onmousedown  =  (event) => { return this.onMouseDown(event) }
+                this.element().onmousedown  =  (event) => { 
+                    return this.onMouseDown(event) 
+                }
 	            this.element().onmousemove  =  (event) => { return this.onMouseMove(event) }
 	            this.element().onmouseout   =  (event) => { return this.onMouseOut(event) }
 	            this.element().onmouseover  =  (event) => { return this.onMouseOver(event) }
@@ -1738,6 +1777,14 @@ window.DivView = ideal.Proto.extend().newSlots({
 		*/
     },
     
+    onMouseEnter: function(event) {
+
+    },
+
+    onMouseLeave: function(event) {
+
+    },
+
     onMouseOut: function (event) {
         //console.log("onMouseOut")
     },
@@ -2223,7 +2270,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     scrollToBottom: function() {
         var focusedElement = document.activeElement
         var needsRefocus = focusedElement != this.element()
-       // console.log("]]]]]]]]]]]] " + this.typeId() + ".scrollToTop() needsRefocus = ", needsRefocus)
+        // console.log("]]]]]]]]]]]] " + this.typeId() + ".scrollToTop() needsRefocus = ", needsRefocus)
         
         this.setScrollTop(this.scrollHeight())
         
@@ -2346,6 +2393,11 @@ window.DivView = ideal.Proto.extend().newSlots({
             this.setPosition("absolute")
             this.setRight(pv.clientWidth()/2 - this.clientWidth()/2)
         }
+        return this
+    },
+
+    setVerticalAlign: function(s) {
+        this.setCssAttribute("vertical-align", s)
         return this
     },
 	

@@ -1,5 +1,5 @@
 "use strict"
 
 JSImporter.pushRelativePaths([
-    "BMItemNode.js",
+    "AtomNode.js",
 ])

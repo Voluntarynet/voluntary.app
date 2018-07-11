@@ -11,12 +11,17 @@ window.CloseButton = DivView.extend().newSlots({
         this.turnOffUserSelect()
 
         this.setDivClassName("ImageCloseButton")
-        this.setBackgroundImageUrlPath(this.pathForIconName("close"))
+        this.setIconName("close")
         this.setBackgroundSizeWH(10, 10) // use "contain" instead?
         this.setBackgroundPosition("center")
         this.makeBackgroundNoRepeat()
         this.setAction("close") //.setInnerHTML("&#10799;")
 
+        return this
+    },
+
+    setIconName: function(aString) {
+        this.setBackgroundImageUrlPath(this.pathForIconName(aString))
         return this
     },
 

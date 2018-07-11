@@ -128,31 +128,20 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
     processSets () {
         assert(!this.isProcessing())
         this.setIsProcessing(true)
-        var indent = "    "
-
+        let useTry = false
         var error = null
-        try {
-            //console.log(this.description())
-            if (this.debug()) { 
-            	console.log("Sync")
-            }
-			
-            var actions = this.orderedActions()
-            this.clearActions()
-            
-            //console.log("actions = ", actions.map(a => a.method()).join(","))
-            //console.log("--- sending ----")
-            actions.forEach((action) => {
-                this.setCurrentAction(action)
-                action.trySend()
-            })
-            //console.log("--- done sending ----")
-        } catch (e) {
-            error = e
-        } 
+
+        if (useTry) {
+            try {
+                this.justProcessSetsPRIVATE()
+            } catch (e) {
+                error = e
+            } 
+        } else {
+            this.justProcessSetsPRIVATE()
+        }
         
         this.setCurrentAction(null)
-		
         this.setIsProcessing(false)
         
         if (error) {
@@ -160,6 +149,24 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
         }
         
         return this
+    }
+
+    justProcessSetsPRIVATE() {
+        //console.log(this.description())
+        if (this.debug()) { 
+            console.log("Sync")
+        }
+        
+        var actions = this.orderedActions()
+        this.clearActions()
+        
+        //console.log("actions = ", actions.map(a => a.method()).join(","))
+        //console.log("--- sending ----")
+        actions.forEach((action) => {
+            this.setCurrentAction(action)
+            action.trySend()
+        })
+        //console.log("--- done sending ----")
     }
 
     description () {

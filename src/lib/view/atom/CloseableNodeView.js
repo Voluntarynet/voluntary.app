@@ -12,7 +12,7 @@ window.CloseableNodeView = NodeView.extend().newSlots({
         return this
     },
 
-    // --- set/get ---
+    // --- closable set/get ---
     
     setIsCloseable: function(aBool) {
         this.closeButton().setIsEnabled(aBool)
@@ -27,7 +27,7 @@ window.CloseableNodeView = NodeView.extend().newSlots({
     // --- close with collapse animation ---
 
     collapse: function() {
-        this.closeButtonView().setOpacity(0).setTarget(null)
+        this.closeButton().setOpacity(0).setTarget(null)
         this.setOpacity(0)
 		
         this.setWidth("0px")
@@ -45,10 +45,14 @@ window.CloseableNodeView = NodeView.extend().newSlots({
         this.collapse()
         
         setTimeout( () => { 
-            this.removeCloseButton()
+            //this.removeCloseButton()
             var parentView = this.parentView()
-            this.removeFromParentView()
-            parentView.scheduleSyncToNode() 
+            //this.removeFromParentView()
+            
+            this.node().removeFromParentNode()
+
+            //parentView.scheduleSyncToNode() 
+            // TODO: protocol to tell parent to remove subnode
 
         }, seconds * 1000)
     },

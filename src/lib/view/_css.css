@@ -44,13 +44,17 @@
 
 .ImageCloseButton {
     position: absolute;
-    bottom: 0px;
+	top: 0px;
+	right: 0px;
 	margin: 0px;
 	padding: 0px;	
-	width: 100%;
-	max-width: 100%;
-	min-width: 100%;
+
+	max-width: 30px;
+	min-width: 30px;
+
 	min-height: 30px;
+	max-height: 30px;
+
 	text-align: center;
 	opacity: 0.3;
 	z-index: 2;

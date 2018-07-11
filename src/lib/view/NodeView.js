@@ -107,7 +107,6 @@ NodeView = DivStyledView.extend().newSlots({
 				
         return proto      
     },
-
     
     newSubviewForSubnode: function(aSubnode) {
         if (!aSubnode) {

@@ -16,10 +16,14 @@ window.PeerApp = App.extend().newSlots({
     localIdentities: null,
     network: null,
     dataStore: null,
+    
+    atomNode: null,
 
     // views
     browser: null,
     shelf: null,
+
+    atomNodeView: null,
 
 }).setSlots({
 
@@ -31,11 +35,22 @@ window.PeerApp = App.extend().newSlots({
         App.setup.apply(this)
         
         this.setName("NT3P")
-        this.setupModel()
-        this.setupViews()
-        this.appDidInit()
 
+        if (false) {
+            this.setupAtom()
+        } else {
+            this.setupModel()
+            this.setupViews()
+        }
+
+        this.appDidInit()
         return this
+    },
+
+    setupAtom: function() {
+        this.setAtomNode(AtomNode.clone())
+        this.setAtomNodeView(AtomNodeView.clone().setNode(this.atomNode()))
+        this.rootView().addSubview(this.atomNodeView())
     },
 
     // --- setup model ---
@@ -72,6 +87,7 @@ window.PeerApp = App.extend().newSlots({
 
         this.network().servers().connect() // observe appDidInit instead?
 
+        
         return this
     },
 
@@ -90,7 +106,7 @@ window.PeerApp = App.extend().newSlots({
                 
         this.rootView().addSubview(this.browser())
         this.browser().scheduleSyncFromNode()
-        
+        window.SyncScheduler.shared().scheduleTargetAndMethod(this.browser(), "syncFromHashPath", 10)
         return this
     },
 
@@ -110,8 +126,6 @@ window.PeerApp = App.extend().newSlots({
         // what if we added a one-shot observation for it, or would that be more confusing?
 
         window.LoadProgressBar.stop() 
-
-        window.SyncScheduler.shared().scheduleTargetAndMethod(this.browser(), "syncFromHashPath", 10)
     },
 })
 

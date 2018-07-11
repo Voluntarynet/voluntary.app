@@ -185,7 +185,8 @@ window.NodeStore = ideal.Proto.extend().newSlots({
             } else {
                 console.warn("addDirtyObject: " + obj.typeId())
             }
-*/
+            */
+
 
             //console.log("addDirtyObject(" + obj.pid() + ")")
             // this.debugLog("addDirtyObject(" + obj.pid() + ")")
@@ -770,13 +771,10 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     showDirtyObjects: function () {
         var dirty = this._dirtyObjects
         //console.log("dirty objects: ")
-        console.log("dirty objects:  " + Reflect.ownKeys(dirty).join(", "))
-        /*
-		Object.keys(dirty).forEach((pid) => {
-			var obj = dirty[pid]
-			console.log("    " + pid + ": ", Object.keys(obj.nodeRefPids()))
-		})
-		*/
+        //console.log("dirty objects:  " + Reflect.ownKeys(dirty).join(", "))
+        console.log("dirty objects:  " + Object.keys(dirty).map((k) => dirty[k].typeId()).join(", "))
+
+
         return this
     },
 

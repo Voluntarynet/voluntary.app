@@ -343,6 +343,9 @@ window.BMNode = ideal.Proto.extend().newSlots({
 
     didUpdateNode: function() {
         this.didUpdateNodeNote().post()
+        if (this.parentNode()) {
+            this.parentNode().didUpdateNode()
+        }
         //this.scheduleSyncToView()
     },
     
@@ -499,7 +502,9 @@ window.BMNode = ideal.Proto.extend().newSlots({
     },
 
     removeFromParentNode: function() {
-        this.parentNode().removeSubnode(this)
+        if (this.parentNode()) {
+            this.parentNode().removeSubnode(this)
+        }
         return this
     },
 	

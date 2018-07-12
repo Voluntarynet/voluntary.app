@@ -53,7 +53,7 @@ window.BMPostMessage = BMAppMessage.extend().newSlots({
     
     ageDescription: function() {
         var seconds = this.ageInSeconds()
-        if (seconds == null) {
+        if (seconds === null) {
             return "?"
         }
         

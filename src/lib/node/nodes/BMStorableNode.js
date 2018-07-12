@@ -267,10 +267,10 @@ window.BMStorableNode = BMNode.extend().newSlots({
         let shouldStore = this.shouldStore()
         let isUnserializing = this.isUnserializing()
 
-        console.log(this.typeId() + " scheduleSyncToStore this.hasPid() = ", this.hasPid())
+        //console.log(this.typeId() + " scheduleSyncToStore this.hasPid() = ", this.hasPid())
 
         if (hasPid && shouldStore && !isUnserializing) {
-            console.log(this.typeId() + " scheduleSyncToStore -> addDirtyObject")
+            //console.log(this.typeId() + " scheduleSyncToStore -> addDirtyObject")
         	NodeStore.shared().addDirtyObject(this)
             //this._refPids = null
         }

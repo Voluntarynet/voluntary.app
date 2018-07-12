@@ -318,7 +318,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
     
     isConnected: function () {
         return this.isOpen()
-//        return this.serverConn() != null
+        //return this.serverConn() != null
     },
 
     //returns a Promise

@@ -42,7 +42,7 @@ window.BMChat = BMApplet.extend().newSlots({
 		this._threads = newValue
 		this.didUpdateSlot("threads", oldValue, newValue)
 		
-		if (newValue == null) {
+		if (newValue === null) {
 			console.warn(this.typeId() + ".setThreads oldValue:", oldValue, " newValue:", newValue)
 		}
 		return this

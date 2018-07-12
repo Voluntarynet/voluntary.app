@@ -12,7 +12,7 @@ window.BMContactLinks = BMStorableNode.extend().newSlots({
 
     setParentNode: function (aNode) {
         BMStorableNode.setParentNode.apply(this, [aNode])
-        if (aNode == null) {
+        if (aNode === null) {
             this.unwatchIdentities()
         } else {
             this.watchIdentities()

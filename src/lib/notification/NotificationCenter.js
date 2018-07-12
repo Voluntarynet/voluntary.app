@@ -134,7 +134,10 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
             this.setNotifications([])
             notes.forEach( (note) => {
                 this._currentNote = note;
+                //try { 
                 this.postNotificationNow(note)
+                //} catch (error) {
+                //}
             })
             this._isProcessing = false
         } else {
@@ -168,9 +171,8 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
                     console.log(this.type() + " sending ", note.name() + " to obs " + obs.type())
                 }
             
-                //try {
-                obs.sendNotification(note)       
-                /*         
+                try {
+                    obs.sendNotification(note)       
                 } catch(error) {
                     //console.log("Error", typeof(error), "  ", error);
                     console.log("NOTIFICATION EXCEPTION:");
@@ -180,7 +182,6 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
                         console.log("  SENDER (" + note.sender() + ") STACK: ", note.senderStack())
                     }
                 }
-                */
             }
         })        
         

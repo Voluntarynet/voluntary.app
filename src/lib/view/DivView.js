@@ -988,6 +988,10 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     pxNumberToString: function(aNumber) {
+        if (aNumber === null) {
+            return null
+        }
+
         assert(typeof(aNumber) == "number")
         return aNumber + "px"
     },

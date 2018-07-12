@@ -76,7 +76,7 @@ window.BMPayload = ideal.Proto.extend().newSlots({
     },
         
     assertType: function(typeName) {
-        if (this._data == null) {
+        if (this._data === null) {
             console.log("Payload object = ", this)
             throw new Error("payload has null data ")
         }

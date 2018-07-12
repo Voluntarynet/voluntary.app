@@ -122,7 +122,7 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
     
     idWithPublicKeyString: function(publicKeyString) { 
         
-        if (publicKeyString == null) {
+        if (publicKeyString === null) {
             console.warn("publicKeyString == null")
         }
         

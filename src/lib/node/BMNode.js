@@ -347,7 +347,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
         if (this.parentNode()) {
             this.parentNode().didUpdateNode()
         }
-        
+
         //this.scheduleSyncToView()
     },
     
@@ -395,9 +395,18 @@ window.BMNode = ideal.Proto.extend().newSlots({
     },
 
     // ---------------------------------------
-	
+    
+    prepareForFirstAccess: function() {
+        // subclasses can override 
+    },
+
     prepareToAccess: function() {
         // this should be called whenever subnodes need to be accessed
+
+        if (!this._didPrepareForFirstAccess) {
+            this._didPrepareForFirstAccess = true
+            this.prepareForFirstAccess()
+        }
     },
     
     prepareToSyncToView: function() {

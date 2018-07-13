@@ -63,7 +63,7 @@ window.PeerApp = App.extend().newSlots({
 
         // about 
 
-        this.setAbout(BMNode.clone().setTitle("Settings").setSubtitle(null))
+        this.setAbout(BMNode.clone().setTitle("Settings").setSubtitle(null).setNodeMinWidth(250))
         this.addSubnode(this.about())
 
         // --- about subnodes --------------------

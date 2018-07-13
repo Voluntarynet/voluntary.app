@@ -19,15 +19,15 @@ window.BMDataStoreRecord = BMFieldSetNode.extend().newSlots({
         this.setNodeMinWidth(300)
     },
 
+    prepareForFirstAccess: function() {
+        this.addStoredField(BMTextAreaField.clone().setKey("dict").setValueMethod("dictString").setValueIsEditable(false).setIsMono(true))
+    },
+
+    /*
     prepareToAccess: function () {
         BMFieldSetNode.prepareToAccess.apply(this)
-
-        if (!this._didSetupFields) {
-            //console.log(this.type() + " prepareToAccess")
-            this.addStoredField(BMTextAreaField.clone().setKey("dict").setValueMethod("dictString").setValueIsEditable(false).setIsMono(true))
-            this._didSetupFields = true
-        }
     },
+    */
 
     valuePid: function () {
         return this.title()

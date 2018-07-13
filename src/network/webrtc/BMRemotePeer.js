@@ -63,7 +63,7 @@ window.BMRemotePeer = BMNode.extend().newSlots({
     setStatus: function(s) {
         this._status = s
         //this.log(this.typeId() + ".setStatus(" + s + ")")
-        this.scheduleSyncToView()
+        this.didUpdateNode()
         return this
     },
 	

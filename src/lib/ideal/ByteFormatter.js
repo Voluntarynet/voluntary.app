@@ -59,7 +59,7 @@ class ByteFormatter extends ProtoClass {
             postfix = ""
         }
 
-        var v = Math.floor(b / Math.pow(10, order))
+        var v = Math.floor(b / Math.pow(10, order*3))
 		
         // remove plural if v == 1
         if (orderName[orderName.length-1] == "s" && v == 1) {

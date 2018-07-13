@@ -77,12 +77,17 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
     serverCount: function () {
         return this.servers().subnodesLength()
     },
+
+    connectedServerCount: function () {
+        return this.servers().connectedServers().length
+    },
     
     subtitle: function() {
         var parts = []
 
         var n = this.serverCount()
-        parts.push(n + " server" + ((n!=1) ? "s" : ""))
+        parts.push(this.connectedServerCount() + "/" + this.serverCount() + " servers")
+        // parts.push(n + " server" + ((n!=1) ? "s" : ""))
 
         n = this.remotePeerCount()
         parts.push(n + " peer" + ((n!=1) ? "s" : ""))

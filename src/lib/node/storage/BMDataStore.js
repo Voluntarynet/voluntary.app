@@ -1,9 +1,8 @@
 "use strict"
 
-/*
-	BMDataStore
-	A visible representation of the NodeStore
-*/
+//	BMDataStore
+//	A visible representation of the NodeStore
+
 
 window.BMDataStore = BMNode.extend().newSlots({
     type: "BMDataStore",

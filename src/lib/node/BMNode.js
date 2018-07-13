@@ -343,9 +343,11 @@ window.BMNode = ideal.Proto.extend().newSlots({
 
     didUpdateNode: function() {
         this.didUpdateNodeNote().post()
+
         if (this.parentNode()) {
             this.parentNode().didUpdateNode()
         }
+        
         //this.scheduleSyncToView()
     },
     

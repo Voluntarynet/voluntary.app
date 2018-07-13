@@ -55,11 +55,11 @@ window.BMRServers = BMStorableNode.extend().newSlots({
         return this.parentNode()
     },
     
-    /*
     subtitle: function () {
-        return this.connectedServers().length + " of " + this.servers().length + " connected"
+        return this.connectedServers().length + "/" + this.servers().length + " connected"
     },
 
+    /*
     subtitle: function () {
         return this.remotePeerCount() + " peers"
     },

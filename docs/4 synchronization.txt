@@ -1,5 +1,5 @@
 
-SYNCING
+SYNCHRONIZATION
 
 The BMNode frameworks help handle synchronization between the views, model objects, and storage:
 
@@ -12,7 +12,7 @@ Objects can post notifications globally using a shared instance of the Notificat
 
 SyncScheduler (See SyncScheduler.js for details.)
 
-Many state changes can trigger the need to synchronize a given object with others within a given event loop, but we only want synchronization to happen at the end of an event loop, so the share SyncScheduler singleton is used to track which sync actions should be sent at the end of the event loop and only sends each one once. 
+Many state changes can trigger the need to synchronize a given object with others within a given event loop, but we only want synchronization to happen at the end of an event loop, so the share SyncScheduler singleton is used to track which sync actions should be sent at the end of the event loop and only sends each one once. Example:
 
      window.SyncScheduler.shared().scheduleTargetAndMethod(this, "syncToView")
 
@@ -26,7 +26,7 @@ MODEL
 
 BMNodes call the following methods to initiate a sync:
 
-    this.scheduleSyncToStore()
+    this.scheduleSyncToStore() 
     this.scheduleSyncToView()  (syncToView posts a didUpdateNode notification)
     
 

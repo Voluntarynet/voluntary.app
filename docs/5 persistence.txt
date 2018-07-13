@@ -37,7 +37,7 @@ which will add the object to the NodeStore's dirty object list. On the next even
 	
 	2) Write all dirty nodes to SyncDB transaction.
 	   It checks the stored slots of each dirty object for unpersisted references.
-	   If found, it will marked those objects as dirty as well. 
+	   If found, it will marked those objects as dirty as well (and persist them)
 	   
 	3) Commits the SyncDB transaction, which bundles these write requests into a single IndexedDB transaction "commit".
 	   An IndexedDB tx commit just means that if it doesn't abort the tx before the end of the event loop, 

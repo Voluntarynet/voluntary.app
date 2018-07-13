@@ -287,7 +287,7 @@ window.BMStorableNode = BMNode.extend().newSlots({
         // check so we don't mark dirty while loading
         // and use private ivars directly for performance
         if (slotName in this._storedSlots) { 
-            console.log(this.type() + ".didUpdateSlot(" + slotName + ",...) -> scheduleSyncToStore")
+            //console.log(this.type() + ".didUpdateSlot(" + slotName + ",...) -> scheduleSyncToStore")
             this.scheduleSyncToStore()
         }
 		

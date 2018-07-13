@@ -262,9 +262,11 @@ window.BrowserColumn = NodeView.extend().newSlots({
 	
     scheduleSyncFromNode: function() {
         if (this.browser() == null || this.node() == null) {
+            /*
             console.warn("WARNING: skipping BrowserColumn.scheduleSyncFromNode")
             console.warn("  this.browser() = " , this.browser())
             console.warn("  this.node() = " , this.node())
+            */
             return this
         }	    
 	    NodeView.scheduleSyncFromNode.apply(this)

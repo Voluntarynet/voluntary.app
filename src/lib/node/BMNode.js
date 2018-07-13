@@ -402,7 +402,6 @@ window.BMNode = ideal.Proto.extend().newSlots({
 
     prepareToAccess: function() {
         // this should be called whenever subnodes need to be accessed
-
         if (!this._didPrepareForFirstAccess) {
             this._didPrepareForFirstAccess = true
             this.prepareForFirstAccess()

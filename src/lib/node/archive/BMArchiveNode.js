@@ -28,14 +28,8 @@ window.BMArchiveNode = BMFieldSetNode.extend().newSlots({
         return "N/A"
     },
 
-    prepareToAccess: function () {
-        BMFieldSetNode.prepareToAccess.apply(this)
-
-        if (!this._didSetupFields) {
-            //console.log(this.type() + " prepareToAccess")
-            this.addStoredField(BMTextAreaField.clone().setKey("data").setValueMethod("dataString").setValueIsEditable(false).setIsMono(true))
-            this._didSetupFields = true
-        }
+    prepareForFirstAccess: function () {
+        this.addStoredField(BMTextAreaField.clone().setKey("data").setValueMethod("dataString").setValueIsEditable(false).setIsMono(true))
     },
 
     /*

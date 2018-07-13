@@ -23,12 +23,6 @@ window.BMDataStoreRecord = BMFieldSetNode.extend().newSlots({
         this.addStoredField(BMTextAreaField.clone().setKey("dict").setValueMethod("dictString").setValueIsEditable(false).setIsMono(true))
     },
 
-    /*
-    prepareToAccess: function () {
-        BMFieldSetNode.prepareToAccess.apply(this)
-    },
-    */
-
     valuePid: function () {
         return this.title()
     },

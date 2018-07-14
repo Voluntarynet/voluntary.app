@@ -383,6 +383,14 @@ window.BMServerConnection = BMNode.extend().newSlots({
     connectedRemotePeers: function () {
         return this.remotePeers().connectedRemotePeers()
     },
+
+    connectedRemotePeerCount: function() {
+        return this.remotePeers().connectedRemotePeers().length
+    },
+
+    remotePeersCount : function() {
+        return this.remotePeers().count()
+    },
 })
 
 

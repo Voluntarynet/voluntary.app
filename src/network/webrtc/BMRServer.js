@@ -82,7 +82,7 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
     
     status: function() {
         if (this.serverConnection().isConnected()) {
-            return "connected - " + this.remotePeerCount() + " peers"
+            return this.connectedRemotePeerCount() + "/" + this.serverConnection().remotePeers().count() + " peers connected"
         } 
 
         if (this.serverConnection().error()) {
@@ -92,7 +92,7 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
         return "connecting..."
     }, 
     
-    remotePeerCount: function() {
+    connectedRemotePeerCount: function() {
         return this.serverConnection().connectedRemotePeers().length
     },
     
@@ -148,6 +148,11 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
     
     connectedRemotePeers: function () {
         return this.serverConnection().connectedRemotePeers()
+    },
+
+    connectedRemotePeers: function() {
+        return this.serverConnection().connectedRemotePeerCount()
+
     },
 
     updateBloomDistance: function(bloomUint8Array) {

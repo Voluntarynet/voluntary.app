@@ -16,7 +16,7 @@ window.BMStunServer = BMFieldSetNode.extend().newSlots({
     port: "", 
     //credential: null,
     //username: null,
-    note: "",
+    stunNote: "",
 }).setSlots({
     localServer: function() {
         return this.clone().setHost("127.0.0.1").setPort(3478)
@@ -34,15 +34,15 @@ window.BMStunServer = BMFieldSetNode.extend().newSlots({
 
         this.addStoredField(BMField.clone().setKey("host").setValueMethod("host")).setValueIsEditable(true)
         this.addStoredField(BMField.clone().setKey("port").setValueMethod("port")).setValueIsEditable(true)
-        this.addStoredField(BMField.clone().setKey("note").setValueMethod("note")).setValueIsEditable(true)
+        this.addStoredField(BMField.clone().setKey("note").setValueMethod("stunNote")).setValueIsEditable(true)
     },
 
     title: function () {
-        return this.host() 
+        return this.host() + " " + this.port()
     },
 
     subtitle: function () {
-        return this.port()
+        return this.stunNote()
     },
 	
     // ice entry - for Peer options

@@ -52,6 +52,9 @@ window.BMPostMessage = BMAppMessage.extend().newSlots({
     },
     
     ageDescription: function() {
+        return PeriodFormatter.clone().setAgeInSeconds(this.ageInSeconds()).formattedValue()
+
+        /*
         var seconds = this.ageInSeconds()
         if (seconds === null) {
             return "?"
@@ -69,6 +72,7 @@ window.BMPostMessage = BMAppMessage.extend().newSlots({
         
         var days = Math.floor(hours/24)
         return days + "d"
+        */
     },
     
     ageInSeconds: function() {

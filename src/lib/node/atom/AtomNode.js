@@ -28,7 +28,7 @@ window.AtomNode = BMStorableNode.extend().newSlots({
         this.addStoredSlot("subtitle")
         this.setNodeSubtitleIsEditable(true)
 
-        this.addStoredSlot("nodeNote")
+        this.addStoredSlot("note")
 
     },
 })

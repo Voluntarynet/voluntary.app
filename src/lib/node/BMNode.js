@@ -142,16 +142,16 @@ window.BMNode = ideal.Proto.extend().newSlots({
     // subtitle and note
     
     subtitle: function () {
-        if (this.subtitleIsSubnodeCount() && this.subnodesLength()) {
-            return this.subnodesLength()
+        if (this.subtitleIsSubnodeCount() && this.subnodesCount()) {
+            return this.subnodesCount()
         }
         
         return this._subtitle
     },
     
     note: function () {
-        if (this.noteIsSubnodeCount() && this.subnodesLength()) {
-            return this.subnodesLength()
+        if (this.noteIsSubnodeCount() && this.subnodesCount()) {
+            return this.subnodesCount()
         }
         
         return this._note
@@ -585,7 +585,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     
     // --- subnodes -----------------------------
     
-    subnodesLength: function() {
+    subnodesCount: function() {
         this.prepareToAccess()
         return this._subnodes.length
     },

@@ -68,14 +68,14 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
         return remotePeers
     },
     
-    remotePeerCount: function() {
+    connectedRemotePeerCount: function() {
         return this.servers().subnodes().sum(function (p) {
-            return p.remotePeerCount()
+            return p.connectedRemotePeerCount()
         })
     },
     
     serverCount: function () {
-        return this.servers().subnodesLength()
+        return this.servers().subnodesCount()
     },
 
     connectedServerCount: function () {
@@ -89,7 +89,7 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
         parts.push(this.connectedServerCount() + "/" + this.serverCount() + " servers")
         // parts.push(n + " server" + ((n!=1) ? "s" : ""))
 
-        n = this.remotePeerCount()
+        n = this.connectedRemotePeerCount()
         parts.push(n + " peer" + ((n!=1) ? "s" : ""))
 
         n = this.messages().messages().length
@@ -119,7 +119,7 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
         // messages will send inv msg
         this.messages().onRemotePeerConnect(remotePeer)
         
-        //this.log("Network onRemotePeerConnect this.remotePeerCount()  = " + this.remotePeerCount())
+        //this.log("Network onRemotePeerConnect this.connectedRemotePeerCount()  = " + this.connectedRemotePeerCount())
         this.scheduleSyncToView()
     },
 

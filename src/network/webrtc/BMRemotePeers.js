@@ -71,8 +71,10 @@ window.BMRemotePeers = BMNode.extend().newSlots({
     },
 
     connectedRemotePeers: function () {
-        return this.subnodes().filter((remotePeer) => {
-            return remotePeer.isConnected()
-        })        
+        return this.subnodes().filter(p => p.isConnected())
+    },
+
+    count: function() {
+        return this.subnodesCount()
     },
 })

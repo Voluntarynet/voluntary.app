@@ -27,6 +27,18 @@ window.BMMessage = BMFieldSetNode.extend().newSlots({
         return this.msgType()
     },
 
+    subtitle: function() {
+        if (this.msgDict()) {
+            let ts = this.msgDict().ts
+            if (ts) {
+                let t = Date.now()/1000
+                let dt = t - ts
+                return PeriodFormatter.clone().setValueInSeconds(dt).formattedValue()
+            }
+        }
+        return null
+    },
+
     prepareForFirstAccess: function() {
 	    // as this field is only needed when viewing the Message in the browser,
 	    // so create it as needed here instead of in the init method

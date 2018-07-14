@@ -47,6 +47,6 @@ window.BMPostDrafts = BMStorableNode.extend().newSlots({
     // badge - a badge without a title becomes a marker
 	
     nodeViewShouldBadge: function() {
-        return this.subnodesLength() > 0
+        return this.subnodesCount() > 0
     },
 })

@@ -106,13 +106,15 @@
 }
 
 .BMPostDraftRowCloseButton {
-    display: block;
+    display: inline-block;
     position: absolute;
     top: 10px;
     right: 13px;
     color: #aaa;
-    width: 11px;
-    height: 11px;
+    min-width: 11px;
+    max-width: 11px;
+    min-height: 11px;
+    max-height: 11px;
     border: 0px dashed #ddd;
     opacity: 0.4;
 }

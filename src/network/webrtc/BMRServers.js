@@ -56,18 +56,18 @@ window.BMRServers = BMStorableNode.extend().newSlots({
     },
     
     subtitle: function () {
-        return this.connectedServers().length + "/" + this.servers().length + " connected"
+        return this.connectedServers().length + "/" + this.servers().length + " servers connected"
     },
 
     /*
     subtitle: function () {
-        return this.remotePeerCount() + " peers"
+        return this.connectedRemotePeerCount() + " peers"
     },
     */
     
-    remotePeerCount: function() {
+    connectedRemotePeerCount: function() {
         return this.connectedServers().sum(function (server) {
-            return server.remotePeerCount()
+            return server.connectedRemotePeerCount()
         })
     },    
     

@@ -66,7 +66,7 @@ window.BMChat = BMApplet.extend().newSlots({
 		    
 		    if (senderId) {		        
 		        console.log("  placing in " + this.localIdentity().title() + " feedPosts")
-			    this.feedPosts().addSubnode(msg.duplicate())
+			    this.feedPosts().addSubnodeIfAbsent(msg.duplicate())
 		    } else {
                 console.log("  no senderId, can't put in feeds")
             }
@@ -75,9 +75,9 @@ window.BMChat = BMApplet.extend().newSlots({
 		    
 		    if (this.localIdentity().publicKeyString() == spk) {
 		        console.log("  placing in " + this.localIdentity().title() + " myPosts")
-			    this.myPosts().addSubnode(msg.duplicate())
+			    this.myPosts().addSubnodeIfAbsent(msg.duplicate())
 		    } else {
-                console.log("  sender isn't local id, can't put in myPosts")
+                //console.log("  sender isn't local id, can't put in myPosts")
             }
         }
     },

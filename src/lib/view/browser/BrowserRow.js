@@ -13,7 +13,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     transitionStyle: "all 0.2s ease, width 0s, max-width 0s, min-width 0s",
     selectedFlashColor: "#ccc",
     shouldShowFlash: false,
-    closeButtonContainer: null, // CenteredDivView
+    shouldCenterCloseButton: true, 
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
@@ -199,15 +199,10 @@ window.BrowserRow = NodeView.extend().newSlots({
             cb.makeBackgroundContain().makeBackgroundCentered().makeBackgroundNoRepeat()  
             cb.setMinAndMaxWidth(8).setMinAndMaxHeight(8)
             cb.setAction("delete")
-
-            //cb.setTarget(null).setAction("delete").setInnerHTML("&#10799;")
             cb.setOpacity(0).setTransition(this.transitionStyle())
-            /*
-            this.closeButtonView().setBackgroundImageUrlPath(this.pathForIconName(this.action()))
-    		this.closeButtonView().setBackgroundSizeWH(20, 20) // use "contain" instead?
-    		this.closeButtonView().setBackgroundPosition("center")
-            */
-            cb.verticallyCenterFromTopNow()
+            if (this.shouldCenterCloseButton()) {
+                cb.verticallyCenterFromTopNow()
+            }
         }
         return this
     },

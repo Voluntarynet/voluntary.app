@@ -19,6 +19,7 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
     isSelected: false,
 }).setSlots({
     init: function () {
+        this.setShouldCenterCloseButton(false) // hack, TODO: change this
         BrowserRow.init.apply(this)
         
         this.closeButtonView().setDivClassName("BrowserRowCloseButtonTopRight")

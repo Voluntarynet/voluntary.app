@@ -31,7 +31,7 @@
 }
 
 .BMPostDraftRowLeftView {
-    display: inline-block;
+    display: block;
     position: relative;
     flex: 1;
     flex-grow: 0;
@@ -168,12 +168,12 @@
     
     
     /*border: 0px solid #ccc;*/
-    background-color: #aaa; 
+    background-color: #000; 
     color: white;
     
     transition: all 0.15s ease;
 }
 
 .BMPostDraftRowSendButton:hover {
-    background-color: #888; 
+    background-color: #555;
 }

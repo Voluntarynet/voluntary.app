@@ -151,7 +151,7 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
     },
 
     connectedRemotePeers: function() {
-        return this.serverConnection().connectedRemotePeerCount()
+        return this.serverConnection().connectedRemotePeers()
 
     },
 

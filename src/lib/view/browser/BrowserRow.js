@@ -188,10 +188,17 @@ window.BrowserRow = NodeView.extend().newSlots({
     
     addCloseButton: function() {
         if (this.closeButtonView() == null) {
-            this.setCloseButtonView(NodeView.clone().setDivClassName("BrowserRowCloseButton"))
-            this.addSubview(this.closeButtonView()) 
-            this.closeButtonView().setTarget(null).setAction("delete").setInnerHTML("&#10799;")
-            this.closeButtonView().setOpacity(0).setTransition(this.transitionStyle())
+            let cb = DivView.clone().setDivClassName("BrowserRowCloseButton")
+            //this.setCloseButtonView(NodeView.clone().setDivClassName("BrowserRowCloseButton"))
+            this.setCloseButtonView(cb)
+            this.addSubview(cb) 
+            cb.setBackgroundImageUrlPath(this.pathForIconName("close-white"))
+            cb.makeBackgroundContain().makeBackgroundCentered().makeBackgroundNoRepeat()  
+            cb.setMinAndMaxWidth(10).setMinAndMaxHeight(10)
+            cb.setAction("delete")
+
+            //cb.setTarget(null).setAction("delete").setInnerHTML("&#10799;")
+            cb.setOpacity(0).setTransition(this.transitionStyle())
             /*
             this.closeButtonView().setBackgroundImageUrlPath(this.pathForIconName(this.action()))
     		this.closeButtonView().setBackgroundSizeWH(20, 20) // use "contain" instead?

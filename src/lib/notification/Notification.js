@@ -7,7 +7,7 @@ window.Notification = class Notification extends ProtoClass {
             name: null,
             sender: null,
             info: null,
-            center: null,
+            center: null, // NotificationCenter that owns this
             senderStack: null,
         })
     }

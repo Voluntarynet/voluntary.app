@@ -7,7 +7,7 @@ window.Observation = class Observation extends ProtoClass {
             target: null, // expects uniqueId string for target
             name: null,
             observer: null,
-            center: null,
+            center: null, // NotificationCenter that owns this
             debug: false,
         })
     }

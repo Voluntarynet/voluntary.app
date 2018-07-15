@@ -1097,6 +1097,40 @@ window.DivView = ideal.Proto.extend().newSlots({
         someSubviews.forEach(subview => this.addSubview(subview))
         return this
     },
+
+    orderSubviewFront: function(aSubview) {
+        if (this.subviews().last() != aSubview) {
+            this.removeSubview(aSubview)
+            this.addSubview(aSubview)
+        }
+        return this
+    },
+
+    orderFront: function() {
+        let pv = this.parentView()
+        if (pv) {
+            pv.orderSubviewFront(this)
+        }
+        return this
+    },
+
+    orderSubviewBack: function(aSubview) {
+        throw new Error("unimplemented")
+
+        //if (this.subviews().first() != aSubview) {
+        //    this.removeSubview(aSubview)
+        //    implement insertSubviewAt() with DomElement_atInsertElement()
+        //}
+        return this
+    },
+
+    orderBack: function() {
+        let pv = this.parentView()
+        if (pv) {
+            pv.orderSubviewBack(this)
+        }
+        return this
+    },
     
     atInsertSubview: function (anIndex, anSubview) {
         this.subviews().atInsert(anIndex, anSubview)

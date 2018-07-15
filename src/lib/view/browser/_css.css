@@ -295,6 +295,22 @@
     text-overflow: ellipsis;
 }
 
+.BrowserRowCloseButtonTopRight {
+    display: inline-block;
+    position: absolute;
+    top: 0px;
+    right: 13px;
+    color: #aaa;
+    min-width: 11px;
+    max-width: 11px;
+    min-height: 11px;
+    max-height: 11px;
+    border: 0px dashed #ddd;
+    opacity: 0.4;
+    margin: 0px;
+    padding: 0px;
+}
+
 .BrowserRowCloseButton {
     display: block;
     position: absolute;

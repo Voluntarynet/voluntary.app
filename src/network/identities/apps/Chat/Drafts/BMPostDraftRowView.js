@@ -11,7 +11,7 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
     rightView: null,
     placeHolderView: null,
     contentView: null,
-    deleteButton: null,
+    //deleteButton: null,
 
     bottomView: null,
     sendButton: null,
@@ -21,13 +21,15 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
     init: function () {
         BrowserRow.init.apply(this)
         
+        this.closeButtonView().setDivClassName("BrowserRowCloseButtonTopRight")
+
         this.setTopView(this.addSubview(DivView.clone().setDivClassName("BMPostDraftRowTopView")))
 
         // left view
         this.setLeftView(this.topView().addSubview(DivView.clone().setDivClassName("BMPostDraftRowLeftView")))
 
         // icon view
-    		    this.setIconView(this.leftView().addSubview(ImageView.clone().setDivClassName("BMPostAvatarView")))
+    	this.setIconView(this.leftView().addSubview(ImageView.clone().setDivClassName("BMPostAvatarView")))
         this.iconView().setBackgroundSizeWH(64, 64)     
 
         // right view
@@ -41,12 +43,16 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         this.setContentView(this.rightView().addSubview(TextField.clone().setDivClassName("BMPostDraftRowContentView")))
         this.contentView().setContentEditable(true)
 
+        this.closeButtonView().setBackgroundImageUrlPath(this.pathForIconName("close"))
+        this.closeButtonView().setTop(15).setRight(15).setMinAndMaxWidth(10).setMinAndMaxHeight(10)
         // delete button
+        /*
         this.setDeleteButton(this.rightView().addSubview(DivView.clone().setDivClassName("BMPostDraftRowCloseButton")))
         this.deleteButton().setTarget(this).setAction("delete")
         //this.deleteButton().setBackgroundSizeWH(20, 20) 
         this.deleteButton().setBackgroundImageUrlPath(this.pathForIconName("close"))
-        this.deleteButton().makeBackgroundContain().makeBackgroundCentered().makeBackgroundNoRepeat()    
+        this.deleteButton().makeBackgroundContain().makeBackgroundCentered().makeBackgroundNoRepeat()  
+        */  
         
         this.setBottomView(this.addSubview(DivView.clone().setDivClassName("BMPostDraftRowBottomView")))
         this.setSendButton(this.bottomView().addSubview(DivView.clone().setDivClassName("BMPostDraftRowSendButton")))
@@ -59,6 +65,7 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
 		
         //        this.styles().setToBlackOnWhite()
 
+        this.closeButtonView().orderFront()
 				
         return this
     },
@@ -143,9 +150,12 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         return this
     },
     
-    close: function() {
+    /*
+    delete: function() {
+        //this.delete()
         this.node().delete()
         return this
     },
+    */
 })
 

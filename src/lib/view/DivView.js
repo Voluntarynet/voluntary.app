@@ -2497,4 +2497,46 @@ window.DivView = ideal.Proto.extend().newSlots({
         this.setIsRegisteredForVisibility(true)
         return this
     },
+
+    // centering
+
+    verticallyCenterFromTopNow: function() {
+        if (this.parentView() === null) {
+            console.warn("verticallyCenterFromTopNow called on view with no superview")
+            return this
+        }
+
+        this.setPosition("absolute")
+        this.setDisplay("inline-block")
+
+        // timeout used to make sure div is placed and laid out first
+        // TODO: consider ordering issue
+        setTimeout(() => { 
+            let sh = this.parentView().clientHeight()
+            let h = this.clientHeight()
+            this.setTop(sh/2 - h/2)
+        }, 1)
+
+        return this
+    },
+
+    horiontallyCenterFromLeftNow: function() {
+        if (this.parentView() === null) {
+            console.warn("horiontallyCenterFromLeftNow called on view with no superview")
+            return this
+        }
+
+        this.setPosition("absolute")
+        this.setDisplay("inline-block")
+
+        // timeout used to make sure div is placed and laid out first
+        // TODO: consider ordering issue
+        setTimeout(() => { 
+            let sw = this.parentView().clientWidth()
+            let w = this.clientWidth()
+            this.setTop(sw/2 - w/2)
+        }, 1)
+
+        return this
+    },
 })

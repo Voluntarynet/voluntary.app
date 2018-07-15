@@ -6,6 +6,7 @@ JSImporter.pushRelativePaths([
     "div_attributes/_imports.js",
 	
     "DivView.js",
+    "CenteredDivView.js",
     "DivStyledView.js",
     "DivTextTapeMeasure.js",
     "NodeView.js",

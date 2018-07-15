@@ -13,6 +13,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     transitionStyle: "all 0.2s ease, width 0s, max-width 0s, min-width 0s",
     selectedFlashColor: "#ccc",
     shouldShowFlash: false,
+    closeButtonContainer: null, // CenteredDivView
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
@@ -188,13 +189,15 @@ window.BrowserRow = NodeView.extend().newSlots({
     
     addCloseButton: function() {
         if (this.closeButtonView() == null) {
+            //let c = CenteredDivView.clone()
+
             let cb = DivView.clone().setDivClassName("BrowserRowCloseButton")
             //this.setCloseButtonView(NodeView.clone().setDivClassName("BrowserRowCloseButton"))
             this.setCloseButtonView(cb)
             this.addSubview(cb) 
             cb.setBackgroundImageUrlPath(this.pathForIconName("close-white"))
             cb.makeBackgroundContain().makeBackgroundCentered().makeBackgroundNoRepeat()  
-            cb.setMinAndMaxWidth(10).setMinAndMaxHeight(10)
+            cb.setMinAndMaxWidth(8).setMinAndMaxHeight(8)
             cb.setAction("delete")
 
             //cb.setTarget(null).setAction("delete").setInnerHTML("&#10799;")
@@ -203,7 +206,8 @@ window.BrowserRow = NodeView.extend().newSlots({
             this.closeButtonView().setBackgroundImageUrlPath(this.pathForIconName(this.action()))
     		this.closeButtonView().setBackgroundSizeWH(20, 20) // use "contain" instead?
     		this.closeButtonView().setBackgroundPosition("center")
-    		*/
+            */
+            cb.verticallyCenterFromTopNow()
         }
         return this
     },

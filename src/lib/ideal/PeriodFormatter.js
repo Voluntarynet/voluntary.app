@@ -39,7 +39,7 @@ class PeriodFormatter extends ProtoClass {
         }
 
         if (seconds < 60) {
-            return seconds + periods.seconds
+            return Math.floor(seconds) + periods.seconds
         }
         
         let minutes = Math.floor(seconds/60)

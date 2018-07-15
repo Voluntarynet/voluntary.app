@@ -37,7 +37,9 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
             var tv = DivView.clone().setDivClassName("BrowserRowThumbnailView")
     		tv.makeBackgroundNoRepeat()
             tv.makeBackgroundCentered()
-            tv.makeBackgroundContain()
+            //tv.makeBackgroundContain()
+            tv.setBackgroundSizeWH(50, 50)
+
             
             this.setThumbnailView(tv)
             this.addSubview(tv)

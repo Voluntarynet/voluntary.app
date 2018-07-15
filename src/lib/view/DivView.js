@@ -2420,7 +2420,9 @@ window.DivView = ideal.Proto.extend().newSlots({
         var pv = this.parentView()
         if (pv) {
             this.setPosition("absolute")
-            this.setTop(pv.clientHeight()/2 - this.clientHeight()/2)
+            setTimeout(() => {
+                this.setTop(pv.clientHeight()/2 - this.clientHeight()/2)
+            }, 0)
         }
         return this
     },
@@ -2429,7 +2431,9 @@ window.DivView = ideal.Proto.extend().newSlots({
         var pv = this.parentView()
         if (pv) {
             this.setPosition("absolute")
-            this.setRight(pv.clientWidth()/2 - this.clientWidth()/2)
+            setTimeout(() => {
+                this.setRight(pv.clientWidth()/2 - this.clientWidth()/2)
+            }, 0)
         }
         return this
     },
@@ -2499,7 +2503,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     // centering
-
+/*
     verticallyCenterFromTopNow: function() {
         if (this.parentView() === null) {
             console.warn("verticallyCenterFromTopNow called on view with no superview")
@@ -2539,4 +2543,5 @@ window.DivView = ideal.Proto.extend().newSlots({
 
         return this
     },
+    */
 })

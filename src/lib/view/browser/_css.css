@@ -344,7 +344,8 @@
     top: 5px;
     min-height: 40px;
     min-width: 40px;
-    border-radius: 20px;
+    /*border-radius: 20px;*/
+    border-radius: 7px;
     background-color: transparent;
     border: 0px solid #aaa;
 }

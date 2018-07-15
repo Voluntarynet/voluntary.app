@@ -16,6 +16,7 @@ window.BMRemoteIdentities = BMStorableNode.extend().newSlots({
         //this.loadIfPresent()
         this._didChangeIdentitiesNote = NotificationCenter.shared().newNote().setSender(this.uniqueId()).setName("didChangeIdentities")
         this.watchIdentity()
+        this.setNodeMinWidth(240)
     },
 
     didLoadFromStore: function() {

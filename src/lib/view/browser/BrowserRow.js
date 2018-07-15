@@ -196,12 +196,14 @@ window.BrowserRow = NodeView.extend().newSlots({
             this.setCloseButtonView(cb)
             this.addSubview(cb) 
             cb.setBackgroundImageUrlPath(this.pathForIconName("close-white"))
-            cb.makeBackgroundContain().makeBackgroundCentered().makeBackgroundNoRepeat()  
+            cb.makeBackgroundContain()
+            cb.makeBackgroundCentered()
+            cb.makeBackgroundNoRepeat()  
             cb.setMinAndMaxWidth(8).setMinAndMaxHeight(8)
             cb.setAction("delete")
             cb.setOpacity(0).setTransition(this.transitionStyle())
             if (this.shouldCenterCloseButton()) {
-                cb.verticallyCenterFromTopNow()
+                cb.verticallyAlignAbsoluteNow()
             }
         }
         return this

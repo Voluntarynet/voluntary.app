@@ -15,6 +15,7 @@ window.BMChat = BMApplet.extend().newSlots({
         this.setShouldStoreSubnodes(false)
 		
         this.setTitle("Chat")
+        //this.setTitle("TWTR")
 
         this.initStoredSubnodeSlotWithProto("feedPosts", BMFeedPosts)	
         this.initStoredSubnodeSlotWithProto("myPosts",   BMMyPosts)

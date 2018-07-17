@@ -138,6 +138,11 @@ window.BMLocalIdentity = BMKeyPair.extend().newSlots({
         
         return [feed, posts, threads, profile, contacts, drafts]
     },
-        
+    
+    
+    nodeThumbnailUrl: function() {
+        //return this.profile().profileImageDataUrl()
+        return null
+    },
         
 })	

@@ -21,22 +21,22 @@ Object.shallowCopyTo({
 
     before: function (aString) {
         var index = this.indexOf(aString);
+        
         if (index == -1) {
-            return null;
+            return this;
         }
-        else {
-            return this.slice(0, index);
-        }
+
+        return this.slice(0, index);
     },
 
     after: function (aString) {
         var index = this.indexOf(aString);
+
         if (index == -1) {
-            return null;
+            return "";
         }
-        else {
-            return this.slice(index + aString.length);
-        }
+        
+        return this.slice(index + aString.length);
     },
 
     between: function (prefix, suffix) {

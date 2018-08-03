@@ -8,7 +8,7 @@ window.BMRServers = BMStorableNode.extend().newSlots({
     init: function () {
         BMStorableNode.init.apply(this)
         this.setShouldStore(true)
-        this.setTitle("PeerJS Servers")
+        this.setTitle("Rendezvous Servers")
         this.setNoteIsSubnodeCount(true)
         this.setNodeMinWidth(300)
         this.setSubnodeProto(BMRServer)

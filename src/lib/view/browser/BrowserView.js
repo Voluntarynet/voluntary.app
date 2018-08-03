@@ -608,6 +608,14 @@ window.BrowserView = NodeView.extend().newSlots({
         return this.activeColumnGroups().map((cg) => { return cg.node() })
     },
 
+    lastNode: function() {
+        let cg = this.lastActiveColumnGroup()
+        if (cg) {
+            return cg.node()
+        }
+        return null
+    },
+
     nodePathString: function () {
         var cg = this.lastActiveColumnGroup()
         if (cg) {
@@ -634,13 +642,49 @@ window.BrowserView = NodeView.extend().newSlots({
 
     // --- hash paths ------------------------------------- 
 
+    performHashCommandIfPresent: function() {
+        let hash = WebBrowserWindow.shared().urlHash()
+        let commandString = hash.after(";")
+        let command = HashCommand.clone().parseCommandString(commandString)
+        let node = this.lastNode()
+        command.setTarget(node).send()
+    },
+
     syncFromHashPath: function () {
-        this.setNodePathString(WebBrowserWindow.shared().urlHash())
+        let hash = WebBrowserWindow.shared().urlHash()
+        var j = ""
+
+        try {
+            j = JSON.parse(hash)
+        } catch(e) {
+            console.warn("can't parse json in URL hash")
+            return this
+        }
+
+        if (j) {
+            let nodePath = j.path
+            this.setNodePathString(nodePath)
+
+            let method = j.method
+            if (method) {
+                let args = j.args ? j.args : []
+                let target = this.lastNode()
+                if (target) {
+                    target.doHashCommand()
+                }
+            }
+        }
+        console.log("hash: " + hash + "")
+        let nodePathString = hash.before(";")
+        this.setNodePathString(hash)
+        this.performHashCommandIfPresent()
         return this
     },
 
     syncToHashPath: function () {
-        WebBrowserWindow.shared().setUrlHash(this.nodePathString())
+        let hash = this.nodePathString()
+
+        WebBrowserWindow.shared().setUrlHash(hash)
         return this
     },
 })

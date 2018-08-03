@@ -82,7 +82,12 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
     
     status: function() {
         if (this.serverConnection().isConnected()) {
-            return this.connectedRemotePeerCount() + "/" + this.serverConnection().remotePeers().count() + " peers connected"
+            var total = this.serverConnection().remotePeers().count()
+            var connected = this.connectedRemotePeerCount()
+            if (total == 0) {
+                return "no peers"
+            }
+            return connected + "/" + total + " peers connected"
         } 
 
         if (this.serverConnection().error()) {

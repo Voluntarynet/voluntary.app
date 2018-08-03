@@ -226,8 +226,8 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     },
 
     storeDirtyObjects: function () {
-        console.log(" --- storeDirtyObjects --- ")
-        this.showDirtyObjects()
+        //console.log(" --- storeDirtyObjects --- ")
+        this.showDirtyObjects("storing")
 
         //console.warn("   isSyncingTargetAndMethod = ", SyncScheduler.isSyncingTargetAndMethod(this, "storeDirtyObjects"))
 
@@ -748,11 +748,14 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         return this
     },
 
-    showDirtyObjects: function () {
-        var dirty = this._dirtyObjects
+    showDirtyObjects: function (prefixString) {
+        let dirty = this._dirtyObjects
+        if (!prefixString) {
+            prefixString = ""
+        }
         //console.log("dirty objects: ")
         //console.log("dirty objects:  " + Reflect.ownKeys(dirty).join(", "))
-        console.log("dirty objects:  " + Object.keys(dirty).map((k) => dirty[k].typeId()).join(", "))
+        console.log(prefixString + " dirty objects: " + Object.keys(dirty).map((k) => dirty[k].typeId()).join(", "))
 
 
         return this

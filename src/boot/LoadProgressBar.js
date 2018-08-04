@@ -101,7 +101,7 @@ class LoadProgressBarClass {
     }
 
     setupHtml () {
-        document.body.innerHTML = "<div id='SpinnerMain' style='position: absolute; width:100%; height: 100%; background-color: black; z-index: 100000; font-family: AppRegular; letter-spacing: 3px; font-size:13px;'> \
+        document.body.innerHTML = "<div id='SpinnerMain' style='position: absolute; width:100%; height: 100%; background-color: black; z-index: 100000; font-family: AppRegular, sans-serif; letter-spacing: 3px; font-size:13px;'> \
 <div id='SpinnerMiddle' \
 style='position: relative; top: 50%; transform: translateY(-50%); height: auto; width: 100%; text-align: center;'> \
 <div>\
@@ -121,7 +121,7 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
         style.transform = "translateY(-50%)"
         style.height = "auto"
         style.width = "100%"
-        style.fontFamily = "AppRegular"
+        style.fontFamily = "AppRegular, sans-serif"
         style.letterSpacing = "3px"
         style.color = "transparent"
         style.textAlign = "center"

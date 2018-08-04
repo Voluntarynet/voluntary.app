@@ -4,7 +4,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "archive",
+            "label": "create index.html",
             "type": "shell",
             "command": "node",
             "args": [
@@ -12,6 +12,22 @@
             ],
             "options": {
                 "cwd": "${workspaceRoot}/archive"
+            },
+            "presentation": {
+                "reveal": "silent",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "remove index.html",
+            "type": "shell",
+            "command": "rm",
+            "args": [
+                "index.html"
+            ],
+            "options": {
+                "cwd": "${workspaceRoot}"
             },
             "presentation": {
                 "reveal": "silent",

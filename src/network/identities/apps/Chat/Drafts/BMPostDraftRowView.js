@@ -81,7 +81,7 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         tv.setMarginLeft(0)
         this.setPaddingBottom(0)
         tv.setWhiteSpace("normal")
-        tv.setFontFamily("AppRegular")        
+        tv.setFontFamily("AppRegular, Sans-Serif")        
     },
     
     setIconDataUrl: function(imageDataUrl) {

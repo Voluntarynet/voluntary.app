@@ -3,8 +3,15 @@ APP OVERVIEW
 
 ABOUT
 
-This project is an in-browser webRTC-based decentralized messaging platform on which decentralized apps (dapps) can be built as applets. A decentralized Twitter app is included as an example.
-
+This project is:
+- an in-browser webRTC-based decentralized messaging platform 
+- a desktop-like (e.g. AppKit) UI framework in which apps can be built with no templates or html
+- a Miller column based scalable, reactive common UI system which automatically works on desktop, tablets and phones
+- a naked objects framework which can generate a UI based on model objects (most apps require no UI code)
+- an intergrated client-side transparent persistence framework (most apps require developer to declare stored objects and fields)
+- a notifications system which automatically synchronizes the UI, model, and persistence
+On top of this system, decentralized apps (dapps) can quicky be built with very little code. 
+A decentralized Twitter app is included as an example.
 
 FRAMEWORKS
 
@@ -14,9 +21,9 @@ These allow the developer to add new model objects without the need to write (al
 BASICS
 
 The system is built around the observations: 
-    - typically, there's a close correspondence between data, model, and view objects 
+    - there tends to be a close correspondence between data, model, and view objects 
     - the structure of the data, model and views can each be well described as hierarchy (with links)
-    - synchronization between data, model and views can be generalized
+    - synchronization between data, model and views can be generalized and automated
 	- an expanding miller column like UI can be generalized to work reactively on most devices
 	- form entry and it's mapping to model and data objects can be generalized for most use cases
 	

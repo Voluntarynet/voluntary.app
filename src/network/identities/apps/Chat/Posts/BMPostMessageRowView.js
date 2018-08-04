@@ -141,7 +141,7 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
         tv.setPaddingTop(0)
         tv.setPaddingBottom(4)
         tv.setWhiteSpace("normal")
-        tv.setFontFamily("AppRegular")
+        tv.setFontFamily("AppRegular, sans-serif")
     },
 
     showButtonNamed: function (name) {

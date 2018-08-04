@@ -9,7 +9,8 @@
             "request": "launch",
             "name": "Launch Index File",
             "url": "file:///${workspaceFolder}/index.html",
-            "webRoot": "${workspaceFolder}"
+            "webRoot": "${workspaceFolder}",
+            "preLaunchTask": "archive"
         },
         {
             "type": "chrome",

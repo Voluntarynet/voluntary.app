@@ -81044,7 +81044,7 @@ class ProtoClass {
     }
 
     assignUniqueId () {
-        assert(!this.hasUniqueId())
+        assert(!this.hasUniqueId()) // error may mean attempt to clone a singleton
         this._uniqueId = ProtoClass.newUniqueId();
         this.assertHasUniqueId()
         return this
@@ -96067,7 +96067,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
         statusNode._error = ""
         
         if (error) {	        
-	        statusNode._error = StackTrace.shared().clone().stringForError(error)
+	        statusNode._error = StackTrace.shared().stringForError(error)
 	        statusNode.setNote("&gt;")
 	        //statusNode.makeNoteRightArrow()
 	    }

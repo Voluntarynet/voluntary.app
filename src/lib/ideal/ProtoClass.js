@@ -218,7 +218,7 @@ class ProtoClass {
     }
 
     assignUniqueId () {
-        assert(!this.hasUniqueId())
+        assert(!this.hasUniqueId()) // error may mean attempt to clone a singleton
         this._uniqueId = ProtoClass.newUniqueId();
         this.assertHasUniqueId()
         return this

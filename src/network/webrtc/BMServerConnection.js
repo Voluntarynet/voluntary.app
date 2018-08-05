@@ -58,7 +58,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
         statusNode._error = ""
         
         if (error) {	        
-	        statusNode._error = StackTrace.shared().clone().stringForError(error)
+	        statusNode._error = StackTrace.shared().stringForError(error)
 	        statusNode.setNote("&gt;")
 	        //statusNode.makeNoteRightArrow()
 	    }

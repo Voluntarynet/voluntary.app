@@ -34,7 +34,7 @@ window.PeerApp = App.extend().newSlots({
     setup: function () {
         App.setup.apply(this)
         
-        this.setName("NT3P")
+        this.setName("voluntary.app")
 
         if (false) {
             this.setupAtom()

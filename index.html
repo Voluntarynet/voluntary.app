@@ -96268,8 +96268,10 @@ window.BMServerConnection = BMNode.extend().newSlots({
         if (error && !error.message.beginsWith("Could not connect to peer")) {
 	        this.setStatus(error.message, error)	        
             this.log(this.type() + " onError: " + error);
-            this._serverConn.removeEventListeners();
-	        this._serverConn = null
+            if (this._serverConn) {
+                this._serverConn.removeEventListeners();
+                this._serverConn = null
+            }
         }
     },
     
@@ -96668,7 +96670,7 @@ window.BMRServers = BMStorableNode.extend().newSlots({
     
     bootStrapServers: function () {
         return [
-            BMRServer.clone().setHost("rendezvous9000.voluntary.net").setPort(9000),
+            //BMRServer.clone().setHost("rendezvous9000.voluntary.net").setPort(9000),
             BMRServer.clone().setHost("peer-net-server.herokuapp.com").setPort(443).setIsSecure(true),
             //BMRServer.clone().setHost("127.0.0.1").setPort(9000) ,
             //BMRServer.clone().setHost("127.0.0.1").setPort(433) ,

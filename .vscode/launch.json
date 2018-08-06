@@ -16,7 +16,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "Launch Local File",
-            "url": "file:///${workspaceFolder}/index_incremental.html#{path:\"test\"}",
+            "url": "file:///${workspaceFolder}/index_incremental.html",
             "webRoot": "${workspaceFolder}"
         },
         {

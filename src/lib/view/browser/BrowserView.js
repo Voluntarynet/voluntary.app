@@ -674,7 +674,7 @@ window.BrowserView = NodeView.extend().newSlots({
                 }
             }
         }
-        console.log("hash: " + hash + "")
+        //console.log("hash: " + hash + "")
         let nodePathString = hash.before(";")
         this.setNodePathString(hash)
         this.performHashCommandIfPresent()
@@ -682,8 +682,8 @@ window.BrowserView = NodeView.extend().newSlots({
     },
 
     syncToHashPath: function () {
-        let hash = this.nodePathString()
-
+        let path = this.nodePathString()
+        let hash = JSON.stringify({ path: path })
         WebBrowserWindow.shared().setUrlHash(hash)
         return this
     },

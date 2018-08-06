@@ -259,8 +259,10 @@ window.BMServerConnection = BMNode.extend().newSlots({
         if (error && !error.message.beginsWith("Could not connect to peer")) {
 	        this.setStatus(error.message, error)	        
             this.log(this.type() + " onError: " + error);
-            this._serverConn.removeEventListeners();
-	        this._serverConn = null
+            if (this._serverConn) {
+                this._serverConn.removeEventListeners();
+                this._serverConn = null
+            }
         }
     },
     

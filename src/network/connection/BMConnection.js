@@ -124,7 +124,7 @@ window.BMConnection = BMNode.extend().newSlots({
     
     connectionDescription: function() {
         if (!this.isAvailable()) {
-            return "net connection status unknown"
+            return "status unknown"
         }
 
         if (!this.isOnline()) {

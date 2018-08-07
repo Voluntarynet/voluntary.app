@@ -19,7 +19,6 @@ html, body {
     zoom: 100%;
 
 	/* text-size-adjust fixes issue with contenteditable fonts being tiny */
-	
     text-size-adjust: 100%; 
     -ms-text-size-adjust: 100%; 
     -moz-text-size-adjust: 100%; 
@@ -101301,9 +101300,11 @@ window.BMConnection = BMNode.extend().newSlots({
     },
     
     connectionType: function() {
-        var s = this.connection().effectiveType
-        if (s) {
-            return s.toUpperCase()
+        if (this.connection()) {
+            var s = this.connection().effectiveType
+            if (s) {
+                return s.toUpperCase()
+            }
         }
         return "?"
     },

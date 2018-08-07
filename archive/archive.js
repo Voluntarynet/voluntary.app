@@ -1,3 +1,14 @@
+//
+// Achive.js
+// 
+// This script builds a index.html file for the app
+// containing all the css and js file content.
+//
+// The resulting index.html (with the font and icon folders) 
+// should be able to run the app on it's own.
+//
+
+// --- some helpful ultility methods ----
 
 Array.prototype.removeFirst = function () {
     return this.shift();
@@ -48,12 +59,12 @@ String.prototype.between = function (prefix, suffix) {
     }
 }
 
-// ---------------------------------------------------------------------------------
+// --- node.js imports -------------------------------------------------------------------
 
 var path = require("path");
 var fs = require("fs")
 
-// ---------------------------------------------------------------------------------
+// --- Archive ---
 
 class Archive { 
     constructor() {
@@ -97,20 +108,6 @@ class Archive {
         this.cssPaths().push(aPath)
     }
 
-    /*
-    readImports() {
-        while (this._importPaths.length > 0) {
-            var importPath = this._importPaths.removeFirst()
-            var folder = new SourceFolder()
-            folder.setFullPath(importPath)
-            folder.open()
-            this.filePaths().appendItems(folder.filePaths())
-            this.importPaths().appendItems(folder.importPaths())
-            this.cssPaths().appendItems(folder.cssPaths())
-        }
-    }
-    */
-
     createIndex() {
         console.log(this.filePaths().join("\n"))
         var indexPaths = []
@@ -129,22 +126,9 @@ class Archive {
         //console.log(index)
         fs.writeFileSync("../index.html", index, "utf8")
     }
-
-    /*
-    fileContent() {
-        return this.filePaths().map((path) => {
-            return fs.readFileSync(path,  "utf8")
-        }).join()
-    }
-
-
-    cssContent() {
-        return this.cssPaths().map((path) => {
-            return fs.readFileSync(path,  "utf8")
-        }).join()
-    }
-    */
 }
+
+// --- SourceFolder ---
 
 class SourceFolder { 
     constructor() {
@@ -196,3 +180,4 @@ class SourceFolder {
 
 var archive = new Archive()
 archive.open()
+

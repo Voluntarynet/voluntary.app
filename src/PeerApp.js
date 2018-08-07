@@ -78,8 +78,8 @@ window.PeerApp = App.extend().newSlots({
         this.about().addSubnode(this.dataStore())
 
         // archive
-        var archive = BMArchiveNode.clone()
-        this.about().addSubnode(archive)
+        //var archive = BMArchiveNode.clone()
+        //this.about().addSubnode(archive)
 
         // protos
         var protoNode = BMProtoNode.clone()

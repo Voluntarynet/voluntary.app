@@ -56,7 +56,7 @@ window.BMRServers = BMStorableNode.extend().newSlots({
     },
     
     subtitle: function () {
-        return this.connectedServers().length + "/" + this.servers().length + " servers connected"
+        return this.connectedServers().length + " of " + this.servers().length + " servers connected"
     },
 
     /*

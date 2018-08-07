@@ -43,7 +43,7 @@ window.BMConnection = BMNode.extend().newSlots({
     },
     
     connectionType: function() {
-        if (this.connection()) {
+        if (this.isAvailable()) {
             var s = this.connection().effectiveType
             if (s) {
                 return s.toUpperCase()
@@ -53,14 +53,14 @@ window.BMConnection = BMNode.extend().newSlots({
     },
     
     downlink: function() {
-        if (this.connection()) {
+        if (this.isAvailable()) {
             return this.connection().downlink
         }
         return null
     },
     
     rtt: function() {
-        if (this.connection()) {
+        if (this.isAvailable()) {
             return this.connection().rtt
         }
         return null
@@ -116,10 +116,17 @@ window.BMConnection = BMNode.extend().newSlots({
     },
 	
     isOnline: function() {
-        return this.rtt() != 0
+        if (this.isAvailable()) {
+            return this.rtt() != 0
+        }
+        return false
     },
     
     connectionDescription: function() {
+        if (!this.isAvailable()) {
+            return "net connection status unknown"
+        }
+
         if (!this.isOnline()) {
             return "offline"
         }
@@ -130,6 +137,13 @@ window.BMConnection = BMNode.extend().newSlots({
     subtitle: function() {
         return this.connectionDescription()
     },
+
+    isAvailable: function() {
+        if (this.connection()) {
+            return true
+        }
+        return false
+    }
 	
 })
 

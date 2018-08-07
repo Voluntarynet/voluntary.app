@@ -23,9 +23,11 @@ window.BMConnection = BMNode.extend().newSlots({
         //this.addSubnode(this.servers())
         
         let con = navigator.connection || navigator.mozConnection || navigator.webkitConnection
+
         if (!con) {
-            console.warn("Unable to get a network connection object. Does this browser support it?")
+            console.warn("Looks like this browser doesn't network connection info (e.g. navigator.connection).")
         }
+
         if (con) {
             this.setConnection(con)
             this.updateLastState()  

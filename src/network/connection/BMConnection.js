@@ -21,8 +21,10 @@ window.BMConnection = BMNode.extend().newSlots({
 
         //this.setServers(NodeStore.shared().rootInstanceWithPidForProto("_servers", BMRServers))
         //this.addSubnode(this.servers())
-		
-        this.setConnection(navigator.connection || navigator.mozConnection || navigator.webkitConnection)
+        
+        let con = navigator.connection || navigator.mozConnection || navigator.webkitConnection
+        assert(con)
+        this.setConnection(con)
         this.updateLastState()  
         this.registerForConnectionChange()
     },

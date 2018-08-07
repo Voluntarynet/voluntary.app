@@ -45,11 +45,17 @@ window.BMConnection = BMNode.extend().newSlots({
     },
     
     downlink: function() {
-        return this.connection().downlink
+        if (this.connection()) {
+            return this.connection().downlink
+        }
+        return null
     },
     
     rtt: function() {
-        return this.connection().rtt
+        if (this.connection()) {
+            return this.connection().rtt
+        }
+        return null
     },
     
     updateLastConnectionType: function() {

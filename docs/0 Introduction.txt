@@ -1,5 +1,5 @@
 
-DEVELOPER OVERVIEW
+# DEVELOPER OVERVIEW
 
 This project is a set of frameworks and an application for an in-browser webRTC-based secure p2p messaging app platform.
 
@@ -14,3 +14,12 @@ This project includes:
 
 On top of this system, decentralized apps (dapps) can quicky be built with very little code. 
 A decentralized Twitter app is included as an example.
+
+
+
+## History
+
+This app started as a port of [Bitmarkets](https://voluntary.net/bitmarkets/) Objective-C/OSX implementation to Electron/JS. 
+
+    
+	

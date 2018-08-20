@@ -18,5 +18,5 @@ html, body {
     -moz-text-size-adjust: 100%; 
     -webkit-text-size-adjust: 100%;
     
-	font-family: "Helvetica, Sans"; /* for font fallback while loading? */
+	font-family: "Helvetica", "Sans-Serif"; /* for font fallback while loading? */
 }

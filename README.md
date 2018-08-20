@@ -17,6 +17,11 @@ This project is a set of frameworks and an application for an in-browser webRTC-
 
 
 
+
+
+
+
+
 ## Developer Overview
 
 ### Components 
@@ -32,10 +37,3 @@ On top of this system, decentralized apps (dapps) can quicky be built with very 
 A decentralized Twitter app is included as an example.
 
 See the docs folder for more developer documentation.
-
-## History
-
-This app started as a port of [Bitmarkets](https://voluntary.net/bitmarkets/) Objective-C/OSX implementation to Electron/JS. 
-
-    
-	

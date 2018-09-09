@@ -155,6 +155,21 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this.cssStyle()[key]
     },
 
+    // css px attributes
+
+    setPxCssAttribute: function(name, value) {
+        this.setCssAttribute(name, this.pxNumberToString(value))
+        return this
+    },
+
+    getPxCssAttribute: function(name) {
+        let s = this.getCssAttribute(name)
+        if (s.length) {
+            return this.pxStringToNumber(s)
+        }
+        return 0
+    },
+
 
     // --- css properties ---
     /*	
@@ -292,7 +307,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     paddingLeft: function() {
-        return this.getCssAttribute("padding-left").before("px")
+        return this.psStringToNumber(this.getCssAttribute("padding-left"))
     },
 
     // padding right
@@ -303,7 +318,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     paddingRight: function() {
-        return this.getCssAttribute("padding-right").before("px")
+        return this.psStringToNumber(this.getCssAttribute("padding-right"))
     },
 
     // text align
@@ -523,67 +538,47 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     // top
 
-    setTop: function (y) {
-        var v = y + "px"
-        this.setCssAttribute("top", v)
-        //console.log("setTop " + v)
+    setTop: function (aNumber) {
+        this.setPxCssAttribute("top", aNumber)
         return this
     },
 
     top: function() {
-        var v = this.getCssAttribute("top")
-        if (v.length) {
-            return v.before("px")
-        }
-        return 0
+        return this.getPxCssAttribute("top")
     },
 	
     // left
 
     setLeft: function (aNumber) {
-        var s = this.pxNumberToString(aNumber)
-        this.setCssAttribute("left", s)
+        this.setPxCssAttribute("left", aNumber)
         return this
     },
 
     left: function() {
-        var s = this.getCssAttribute("left")
-        if (s.length) {
-            return Number(s.before("px"))
-        }
-        return 0
+        return this.getPxCssAttribute("left")
     },
-	
+    
+   
     // right
 	
     setRight: function (aNumber) {
-        var s = this.pxNumberToString(aNumber)
-        this.setCssAttribute("right", s)
+        this.setPxCssAttribute("right", aNumber)
         return this
     },
 
     right: function() {
-        var s = this.getCssAttribute("right")
-        if (s.length) {
-            return s.before("px")
-        }
-        return 0
+        return this.getPxCssAttribute("right")
     },	
 	
     // bottom
 	
     setBottom: function (aNumber) {
-        var s = this.pxNumberToString(aNumber)
-        this.setCssAttribute("bottom", s)
+        this.setPxCssAttribute("bottom", aNumber)
         return this
     },
 
     bottom: function() {
-        var s = this.getCssAttribute("bottom")
-        if (s.length) {
-            return s.before("px")
-        }
-        return 0
+        return this.getPxCssAttribute("bottom")
     },	
 	
     // float
@@ -664,6 +659,18 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this.getCssAttribute("border-radius")
     },
     
+    // line height
+
+    setLineHeight: function(aNumber) {
+        this.setPxCssAttribute("line-height", aNumber)
+        assert(this.lineHeight() == aNumber)
+        return this		
+    },
+	
+    lineHeight: function() {
+        return this.getPxCssAttribute("line-height")
+    },	
+	
     // alignment
 	
     setTextAlign: function(s) {
@@ -901,9 +908,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     
     minWidth: function() {
         var s = this.getCssAttribute("min-width")
-        assert(s.includes("px"))
-        var w = Number(s.replace("px", ""))
-        return w
+        return this.pxStringToNumber(s)
     },
 
     maxWidth: function() {
@@ -911,9 +916,7 @@ window.DivView = ideal.Proto.extend().newSlots({
         if (w == "") {
             return null
         }
-        assert(w.includes("px"))
-        w = Number(w.replace("px", ""))
-        return w
+        return this.pxStringToNumber(w)
     },
 
     cssStyle: function() {
@@ -928,7 +931,7 @@ window.DivView = ideal.Proto.extend().newSlots({
         } else if (type == "string") {
 	        newValue = v 
         } else if (type == "number") {
-	        newValue = v + "px"
+	        newValue = this.pxNumberToString(v)
         } else {
             throw new Error(type + " is invalid argument type")
         }
@@ -956,7 +959,7 @@ window.DivView = ideal.Proto.extend().newSlots({
         } else if (type == "string") {
 	        newValue = v 
         } else if (type == "number") {
-	        newValue = v + "px"
+	        newValue = this.pxNumberToString(v)
         } else {
             throw new Error(type + " is invalid argument type")
         }
@@ -992,8 +995,23 @@ window.DivView = ideal.Proto.extend().newSlots({
             return null
         }
 
+        if (typeof(aNumber) == "string") {
+            if (aNumber.beginsWith("calc") || aNumber.endsWith("px")) {
+                return aNumber
+            }
+        }
+
         assert(typeof(aNumber) == "number")
         return aNumber + "px"
+    },
+
+    pxStringToNumber: function(s) {
+        assert(typeof(s) == "string")
+        if (s == "") {
+            return 0
+        }
+        assert(s.endsWith("px"))
+        return Number(s.replace("px", ""))
     },
 
     setMinAndMaxHeightPercentage: function(aNumber) {

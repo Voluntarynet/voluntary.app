@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         {
             "type": "chrome",
             "request": "launch",
@@ -22,7 +23,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "Local",
-            "url": "file:///Users/steve/Desktop/peer/index_incremental.html",
+            "url": "file:///Users/steve/Desktop/voluntaryapp/index_incremental.html",
             "webRoot": "${workspaceFolder}"
         },
     ]

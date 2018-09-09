@@ -175,7 +175,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
                     obs.sendNotification(note)       
                 } catch(error) {
                     //console.log("Error", typeof(error), "  ", error);
-                    console.log("NOTIFICATION EXCEPTION:");
+                    console.log("NOTIFICATION EXCEPTION: '" + error.message + "'");
                     //console.log("NotificationCenter: while posting note: ", note, " got error: ", error.name)
                     console.log("  OBSERVER (" + obs.observer() + ") STACK: ", error.stack)
                     if (note.senderStack()) {

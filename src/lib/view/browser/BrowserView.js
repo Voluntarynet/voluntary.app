@@ -481,7 +481,7 @@ window.BrowserView = NodeView.extend().newSlots({
             var s = cg.name()
             if (cg.node() == null) { s += " [null node] " }
             //s += " " + (cg.isCollapsed() ? "collapsed" : "uncollapsed")
-            s += " " + cg.targetWidth() + "px"
+            s += " " + this.pxNumberToString(cg.targetWidth())
             return s
         }).join(" / ")
 
@@ -654,6 +654,11 @@ window.BrowserView = NodeView.extend().newSlots({
         let hash = WebBrowserWindow.shared().urlHash()
         var j = ""
 
+        if (hash == "") {
+            this.setNodePathString("/")
+            return this
+        }
+        console.log("hash = " + typeof(hash) + " " + hash)
         try {
             j = JSON.parse(hash)
         } catch(e) {

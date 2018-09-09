@@ -175,12 +175,14 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         if (node && node.nodeMinHeight()) {
             var e = this.element()
             if (node.nodeMinHeight() == -1) {
-                
-                e.style.height = "auto"
-                e.style.paddingBottom = "calc(100% - 20px)";
+                this.setHeight("auto")
+                //e.style.height = "auto"
+                this.setPaddingBottom("calc(100% - 20px)")
+                //e.style.paddingBottom = "calc(100% - 20px)";
 
             } else {
-                e.style.height = node.nodeMinHeight() + "px"
+                //e.style.height = node.nodeMinHeight() + "px"
+                this.setHeight(this.pxNumberToString(node.nodeMinHeight()))
             }
         }
         

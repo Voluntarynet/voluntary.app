@@ -44,5 +44,4 @@ window.CloseButton = DivView.extend().newSlots({
         }
         return this
     },
-
 })

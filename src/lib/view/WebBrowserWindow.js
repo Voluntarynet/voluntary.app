@@ -101,6 +101,21 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
         var agent = navigator.userAgent.toLowerCase()
         return agent
     },
+
+    agentIsSafari: function() {
+        var isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
+               navigator.userAgent &&
+               navigator.userAgent.indexOf('CriOS') == -1 &&
+               navigator.userAgent.indexOf('FxiOS') == -1;
+        return isSafari
+    },
+
+    agentIsChrome: function() {
+        var isChrome =  Boolean(window.chrome) //&& 
+        //navigator.userAgent.indexOf('Brave') == -1;
+        //console.log("window.chrome = ", window.chrome);
+        return isChrome
+    },
     
     isOnMobile: function() { 
         var agent = this.agent();
@@ -175,5 +190,9 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     },
     */
 })
+
+console.log("navigator.userAgent = ", navigator.userAgent);
+console.log("window.WebBrowserWindow.agentIsSafari() = ", window.WebBrowserWindow.agentIsSafari())
+console.log("window.WebBrowserWindow.agentIsChrome() = ", window.WebBrowserWindow.agentIsChrome())
 
 WebBrowserWindow.shared().setup()

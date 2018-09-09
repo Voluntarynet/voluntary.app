@@ -96,6 +96,8 @@ window.PeerApp = App.extend().newSlots({
     setupViews: function() {
         this.setupBrowser()
         //this.setupShelf()
+        var panel = window.PanelView.clone()
+        this.rootView().addSubview(panel)
     },
 
     setupBrowser: function() {	

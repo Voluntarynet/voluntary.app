@@ -289,6 +289,8 @@ class JSImporterClass extends JSImporterBase {
 
     // --- archive ---
 
+    /*
+
     archiveFileList () {
         var files = ["archive/top.html"]
         files.appendItems(this.cssFilesLoaded())
@@ -309,8 +311,6 @@ class JSImporterClass extends JSImporterBase {
         var s = "cat " + files.map((p) => { return "\"" + p + "\"" }).join(" ") + " > index.html"
         window.console.log(s)
     }
-
-    // archive
 
     buildArchive () {
         this.setUnloadedArchiveFiles(this.archiveFileList())
@@ -348,6 +348,7 @@ class JSImporterClass extends JSImporterBase {
         })
         this.setArchive(s)
     }
+    */
 }
 
 window.JSImporter = JSImporterClass.shared()
@@ -355,3 +356,4 @@ window.JSImporter = JSImporterClass.shared()
 if (window.JSImporterIsEmbedded != true) {
     JSImporter.pushRelativePaths(["_imports.js"]).run()
 }
+

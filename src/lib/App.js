@@ -37,6 +37,13 @@ window.App = BMNode.extend().newSlots({
     // 1. setup NodeStore
 
     run: function() {
+
+        if (!this.isBrowserCompatible()) {
+            window.LoadProgressBar.setError("Sorry, this app only works on<br>Chrome, FireFox, and Brave browsers.")
+            //this.showBrowserCompatibilityPanel()
+            return this
+        }
+
         this.nodeStoreDidOpenObs().watch()
         NodeStore.shared().asyncOpen() 
     },

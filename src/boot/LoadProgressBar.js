@@ -167,7 +167,7 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
             return false
         }
 
-        this.titleElement().innerHTML = "ERROR"
+        //this.titleElement().innerHTML = "ERROR"
         var s = "" + errorMsg
 
         if (url) {
@@ -232,6 +232,7 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
     setError (error) {
         this._error = error
         console.log("LoadProgressBar setError ", error)
+        this.itemElement().innerHTML = "ERROR"
         this.errorElement().innerHTML = error
         return this
     }

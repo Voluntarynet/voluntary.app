@@ -39,6 +39,7 @@ window.PeerApp = App.extend().newSlots({
         if (false) {
             this.setupAtom()
         } else {
+            
             this.setupModel()
             this.setupViews()
         }
@@ -94,12 +95,26 @@ window.PeerApp = App.extend().newSlots({
     // --- setup views ---
     
     setupViews: function() {
+
         this.setupBrowser()
         //this.setupShelf()
-        var panel = window.PanelView.clone()
-        this.rootView().addSubview(panel)
     },
 
+    isBrowserCompatible: function() {
+        if (WebBrowserWindow.agentIsSafari()) {
+            return false
+        }
+        return true
+    },
+
+    showBrowserCompatibilityPanel: function() {
+        var panel = window.PanelView.clone()
+        this.rootView().addSubview(panel)
+        panel.setTitle("Sorry, this app only works on<br>Chrome, FireFox, and Brave browsers.")
+        panel.orderFront()
+        panel.setZIndex(100)
+    },
+    
     setupBrowser: function() {	
         this.setBrowser(BrowserView.clone())
     

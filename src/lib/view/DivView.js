@@ -1,7 +1,7 @@
 "use strict"
 
 function DomElement_atInsertElement(el, index, child) {
-    var children = el.children
+    let children = el.children
     
     if (index < children.length) {
         el.insertBefore(children[index])
@@ -84,7 +84,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     setupDivClassName: function() {
-        var ancestorNames = this.ancestors().map((obj) => { 
+        let ancestorNames = this.ancestors().map((obj) => { 
             if (obj.type().contains(".")) {
                 return ""
             }
@@ -101,7 +101,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 	
     insertDivClassName: function(aName) {
-        var names = this.divClassName().split(" ")
+        let names = this.divClassName().split(" ")
         names.removeOccurancesOf(aName) // avoid duplicates
         names.atInsert(0, aName)
         this.setDivClassNames(names)
@@ -109,7 +109,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 	
     removeDivClassName: function(aName) {
-        var names = this.divClassName().split(" ")
+        let names = this.divClassName().split(" ")
         names.removeOccurancesOf(aName)
         this.setDivClassNames(names)
         return this
@@ -131,8 +131,8 @@ window.DivView = ideal.Proto.extend().newSlots({
     */
 
     setCssAttribute: function(key, newValue, didChangeCallbackFunc) {
-        var style = this.cssStyle()
-        var oldValue = style[key]
+        let style = this.cssStyle()
+        let oldValue = style[key]
         if(String(oldValue) != String(newValue)) {
             if (newValue == null) {
                 //console.log("deleting css key ", key)
@@ -773,7 +773,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     // visibility
     
     setIsVisible: function(aBool) {
-        var v = aBool ? "visible" : "hidden"
+        let v = aBool ? "visible" : "hidden"
         this.setCssAttribute("visibility", v)
         return this
     },
@@ -840,8 +840,8 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     userSelect: function() {
-        var style = this.cssStyle()
-        var result = this.userSelectKeys().detect(key => style[key])
+        let style = this.cssStyle()
+        let result = this.userSelectKeys().detect(key => style[key])
         result = result || style.userSelect
         return result 
     },
@@ -859,7 +859,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     // user selection 
 	
     setUserSelect: function(aString) {
-        var style = this.cssStyle()
+        let style = this.cssStyle()
         //console.log("'" + aString + "' this.userSelect() = '" + this.userSelect() + "' == ", this.userSelect() == aString)
         if (this.userSelect() != aString) {
             style.userSelect = aString
@@ -893,7 +893,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
     
     setWidthString: function(s) {
-	    assert(typeof(s) == "string")
+	    assert(typeof(s) == "string" || s === null)
 	    this.setCssAttribute("width", s, () => { this.didChangeWidth() })
 	    return this
     },
@@ -904,7 +904,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 	
     setWidthPercentage: function(aNumber) {
-        var newValue = this.percentageNumberToString(aNumber)
+        let newValue = this.percentageNumberToString(aNumber)
 	    this.setCssAttribute("width", newValue, () => { this.didChangeWidth() })
 	    return this
     },
@@ -940,12 +940,12 @@ window.DivView = ideal.Proto.extend().newSlots({
     // width
     
     minWidth: function() {
-        var s = this.getCssAttribute("min-width")
+        let s = this.getCssAttribute("min-width")
         return this.pxStringToNumber(s)
     },
 
     maxWidth: function() {
-        var w = this.getCssAttribute("max-width")
+        let w = this.getCssAttribute("max-width")
         if (w == "") {
             return null
         }
@@ -957,10 +957,10 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     setMinWidth: function(v) {
-        var type = typeof(v)
-        var newValue = null
+        let type = typeof(v)
+        let newValue = null
         if (v == null) {
-            newValue = null //""
+            newValue = null
         } else if (type == "string") {
 	        newValue = v 
         } else if (type == "number") {
@@ -981,14 +981,16 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     setMaxWidth: function(v) {
+        /*
         if (v == this._maxWidth) {
             return this
         }
+        */
 		
-        var type = typeof(v)
-        var newValue = null
+        let type = typeof(v)
+        let newValue = null
         if (v == null) {
-            newValue = ""
+            newValue = null
         } else if (type == "string") {
 	        newValue = v 
         } else if (type == "number") {
@@ -996,21 +998,21 @@ window.DivView = ideal.Proto.extend().newSlots({
         } else {
             throw new Error(type + " is invalid argument type")
         }
-        this._maxWidth = newValue
+        //this._maxWidth = newValue
 
         this.setCssAttribute("max-width", newValue, () => { this.didChangeWidth() })
         return this        
     },
 
     setMinAndMaxWidth: function(aNumber) {
-        var newValue = this.pxNumberToString(aNumber)
-        this.setCssAttribute("min-width", newValue, () => { this.didChangeWidth() })
+        let newValue = this.pxNumberToString(aNumber)
         this.setCssAttribute("max-width", newValue, () => { this.didChangeWidth() })
+        this.setCssAttribute("min-width", newValue, () => { this.didChangeWidth() })
         return this        
     },
 
     setMinAndMaxHeight: function(aNumber) {
-        var newValue = this.pxNumberToString(aNumber)
+        let newValue = this.pxNumberToString(aNumber)
         this.setCssAttribute("min-height", newValue, () => { this.didChangeHeight() })
         this.setCssAttribute("max-height", newValue, () => { this.didChangeHeight() })
         return this		
@@ -1046,14 +1048,14 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     setMinAndMaxHeightPercentage: function(aNumber) {
-        var newValue = this.percentageNumberToString(aNumber)
+        let newValue = this.percentageNumberToString(aNumber)
         this.setCssAttribute("min-height", newValue, () => { this.didChangeHeight() })
         this.setCssAttribute("max-height", newValue, () => { this.didChangeHeight() })
         return this		
     },
 	
     setHeightPercentage: function(aNumber) {
-        var newValue = this.percentageNumberToString(aNumber)
+        let newValue = this.percentageNumberToString(aNumber)
         this.setHeightString(newValue)
         return this		
     },
@@ -1079,6 +1081,9 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     setHeight: function(s) {
+        if (typeof(s) == "number") {
+            return this.setHeightPxNumber(s)
+        }
         this.setHeightString(s)
         return this		
     },	
@@ -1093,7 +1098,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     setHeightString: function(aString) {
-        assert(typeof(aString) == "string")
+        assert(typeof(aString) == "string" || aString === null)
         this.setCssAttribute("height", aString, () => { this.didChangeHeight() })
         return this		
     },	
@@ -1116,7 +1121,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     divClassName: function () {
         if (this.element()) {
-            var className = this.element().getAttribute("class");
+            let className = this.element().getAttribute("class");
             this._divClassName = className
             return className
         }
@@ -1263,7 +1268,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     hasChildElement: function(anElement) {
         var children = this.element().childNodes
         for (let i = 0; i < children.length; i ++) {
-            var child = children[i]
+            let child = children[i]
             if (anElement === child) {
                 return true
             }
@@ -1307,8 +1312,8 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     subviewAfter: function(anSubview) {
-        var index = this.indexOfSubview(anSubview)
-        var nextIndex = index + 1
+        let index = this.indexOfSubview(anSubview)
+        let nextIndex = index + 1
         if (nextIndex < this.subviews().length) {
             return this.subviews()[nextIndex]
         }
@@ -1338,7 +1343,7 @@ window.DivView = ideal.Proto.extend().newSlots({
             return this
         }
 
-        var isFocused = this.isActiveElementAndEditable()
+        let isFocused = this.isActiveElementAndEditable()
         
         if (isFocused) {
             this.blur()
@@ -1369,12 +1374,12 @@ window.DivView = ideal.Proto.extend().newSlots({
     // --- updates ---
 
     tellParentViews: function(msg, aView) {
-        var f = this[msg]
+        let f = this[msg]
         if (f && f.apply(this, [aView])) {
             return // stop propogation
         }
 
-        var p = this.parentView()
+        let p = this.parentView()
         if (p) {
             p.tellParentViews(msg, aView)
         }
@@ -1393,17 +1398,17 @@ window.DivView = ideal.Proto.extend().newSlots({
         return DivView._isHandlingEvent
     },
 
-    handleEventFunction: function(eventFunc) {
+    handleEventFunction: function(event, eventFunc) {
         //  a try gaurd to make sure isHandlingEvent has correct value
         //  isHandlingEvent is used to determine if view should inform node of changes
         //  - it should only while handling an event
 		
-        var error = null
+        let error = null
 		
         this.setIsHandlingEvent(true)
 		
         try {
-            eventFunc()
+            eventFunc(event)
         } catch (e) {
             //console.log(e)
             StackTrace.shared().showError(e)
@@ -1419,23 +1424,17 @@ window.DivView = ideal.Proto.extend().newSlots({
 	
     // --- window resize events ---
 	
-    windowResizeListenerFunc: function() {
-        if (!this._windowResizeListenerFunc) { // so callback is unique to this div        
-            this._windowResizeListenerFunc = (event) => { this.onWindowResize(event) }
-        }
-        return this._windowResizeListenerFunc	
-    },
 	
     setIsRegisterForWindowResize: function(aBool) {        
         if (aBool) {
             if (this._isRegisteredForWindowResize == false) {
                 this._isRegisteredForWindowResize = true
-            	window.addEventListener("resize", this.windowResizeListenerFunc(), false);
+            	window.addEventListener("resize", this.eventFuncForMethodName("onWindowResize"), false);
             }
         } else {
             if (this._isRegisteredForWindowResize == true) {
                 this._isRegisteredForWindowResize = false
-	            window.removeEventListener("resize", this.windowResizeListenerFunc());
+	            window.removeEventListener("resize", this.eventFuncForMethodName("onWindowResize"));
             }
         }
         
@@ -1444,30 +1443,37 @@ window.DivView = ideal.Proto.extend().newSlots({
     
     onWindowResize: function(event) {
         //console.log("onWindowResize")
-        //var r = document.body.getBoundingClientRect()
+        //let r = this.boundingClientRect()
         //console.log("onResize ")
         //console.log("onResize " + r.width + " x " + r.right)
         //console.log("onResize " + window.innerWidth + " x " + window.innerHeight)
         //console.log("onResize " + document.body.clientHeight + " x " + document.body.clientHeight)        
+        return true
     },
 	
     // --- onClick event, target & action ---
     
     setIsRegisteredForClicks: function (aBool) {
+        let e = this.element()
         if (aBool) {
             if (this._isRegisteredForClicks == false) {
                 this._isRegisteredForClicks = true
-	            this.element().onclick =  (event) =>{ 
-                    this.handleEventFunction( () => { this.onClick(event) })
+
+	            this.element().onclick = (event) =>{ 
+                    this.handleEventFunction(event, (event) => { this.onClick(event) })
                 }
-	            //this.element().ondblclick = function (event) { this.onDoubleClick(event) }
+
+                this.element().ondblclick = (event) => { 
+                    this.handleEventFunction(event, (event) => { this.onDoubleClick(event) })
+                }
+
                 this.makeCursorPointer()
             }
         } else {
             if (this._isRegisteredForClicks == true) {
                 this._isRegisteredForClicks = false
 	            this.element().onclick = null
-	            //this.element().ondbclick = null
+	            this.element().ondbclick = null
                 this.makeCursorDefault()
             }
         }
@@ -1493,7 +1499,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     onClick: function(event) {
         this.sendActionToTarget()
         event.stopPropagation()
-        return this
+        return false
     },
     
     sendActionToTarget: function() {
@@ -1501,12 +1507,12 @@ window.DivView = ideal.Proto.extend().newSlots({
             return null
         }
 
-        var t = this.target()
+        let t = this.target()
         if (!t) {
             throw new Error("no target for action " + this.action())
         }
         
-        var method = t[this.action()]
+        let method = t[this.action()]
         if (!method) {
             throw new Error("no target for action " + this.action())
         }
@@ -1515,7 +1521,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
     
     onDoubleClick: function (event) {
-        return this
+        return true
     },
     
     // drag & drop
@@ -1536,7 +1542,7 @@ window.DivView = ideal.Proto.extend().newSlots({
                 this._isRegisteredForDrop = false
 				
                 /*
-				var preventFunc = (event) => { 
+				let preventFunc = (event) => { 
 					if(event.preventDefault) { 
 						event.preventDefault(); 
 					}
@@ -1612,7 +1618,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     onDrop: function (event) {
         if (this.acceptsDrop()) {
-            //var file = event.dataTransfer.files[0];
+            //let file = event.dataTransfer.files[0];
             //console.log('onDrop ' + file.path);
             this.onDataTransfer(event.dataTransfer)
             this.dragUnhighlight()
@@ -1626,16 +1632,16 @@ window.DivView = ideal.Proto.extend().newSlots({
         //console.log('onDataTransfer ', dataTransfer);
         
         if (dataTransfer.files.length) {   
-            var dataUrls = []
+            let dataUrls = []
             for (let i = 0; i < dataTransfer.files.length; i ++) {
-                var file = dataTransfer.files[i]
+                let file = dataTransfer.files[i]
                 //console.log("file: ", file)
                 
                 if (!file.type.match("image.*")) {
                     continue;
                 }
 
-                var reader = new FileReader();
+                let reader = new FileReader();
                 reader.onload = ((event) => {
                     this.onDropImageDataUrl(event.target.result)
                 })
@@ -1737,8 +1743,8 @@ window.DivView = ideal.Proto.extend().newSlots({
         if (aBool) {
             if (this._isRegisteredForPaste == false) {
                 this._isRegisteredForPaste = true
-                //var b = Modernizr.passiveeventlisteners ? {passive: true} : false
-                var b = { passive: true}
+                //let b = Modernizr.passiveeventlisteners ? {passive: true} : false
+                let b = { passive: true}
 	        	this.element().addEventListener("touchstart",  this.touchstartListenerFunc(), b);
 	        	this.element().addEventListener("touchmove",   this.touchmoveListenerFunc(), b);
 	        	this.element().addEventListener("touchcancel", this.touchcancelListenerFunc(), b);
@@ -1759,9 +1765,9 @@ window.DivView = ideal.Proto.extend().newSlots({
     touchDownDiffWithEvent: function(event) {
         assert(this._onTouchDownEventPosition) 
 
-        var thisTouch = event.changedTouches[0]
-        var lastTouch = this._onTouchDownEventPosition
-        var d = {} 
+        let thisTouch = event.changedTouches[0]
+        let lastTouch = this._onTouchDownEventPosition
+        let d = {} 
         d.xd = thisTouch.screenX - lastTouch.screenX
         d.yd = thisTouch.screenY - lastTouch.screenY
         d.dist = Math.sqrt(d.xd*d.xd + d.yd*d.yd)
@@ -1793,129 +1799,123 @@ window.DivView = ideal.Proto.extend().newSlots({
         }
     },	
 
-    
     // mouse events
     
-    setIsRegisteredForMouse: function (aBool) {
+    eventFuncForMethodName: function (methodName) {
+        if (!this._listenerFuncs) {
+            this._listenerFuncs = {}
+        }
+
+        if (!this._listenerFuncs[methodName]) {
+            let f = (event) => { 
+                let result = this[methodName].apply(this, [event]) 
+                if (result == false) {
+                    event.stopPropagation()
+                }
+                return result
+            }
+            this._listenerFuncs[methodName] = f
+            //this._listenerFuncs[methodName] = (event) => { this.handleEventFunction(f, event) }
+        }
+        return this._listenerFuncs[methodName]
+    },
+
+    setIsRegisteredForMouse: function (aBool, useCapture) {
+        if (!useCapture) { 
+            useCapture = false; 
+        }
+
+        //console.log(this.type() + " setIsRegisteredForMouse(" + aBool + "," + useCapture + ")")
+
+        let e = this.element()
+
         if (aBool) {
             if (this._isRegisteredForMouse == false) {
-                this._isRegisteredForMouse = true
-                this.element().onmousedown  =  (event) => { 
-                    return this.onMouseDown(event) 
-                }
-	            this.element().onmousemove  =  (event) => { return this.onMouseMove(event) }
-	            this.element().onmouseout   =  (event) => { return this.onMouseOut(event) }
-	            this.element().onmouseover  =  (event) => { return this.onMouseOver(event) }
-	            this.element().onmouseup    =  (event) => { return this.onMouseUp(event) }
-	            
-	            this.element().onmouseenter =  (event) => { return this.onMouseEnter(event) }
-	            this.element().onmouseleave =  (event) => { return this.onMouseLeave(event) }
-
+                e.addEventListener("mousedown", this.eventFuncForMethodName("onMouseDown"), useCapture);
+                e.addEventListener("mousemove", this.eventFuncForMethodName("onMouseMove"), useCapture);
+                e.addEventListener("mouseout", this.eventFuncForMethodName("onMouseOut"), useCapture);
+                e.addEventListener("mouseover", this.eventFuncForMethodName("onMouseOver"), useCapture);
+                e.addEventListener("mouseup", this.eventFuncForMethodName("onMouseUp"), useCapture);
+                e.addEventListener("mouseenter", this.eventFuncForMethodName("onMouseEnter"), useCapture);
+                e.addEventListener("mouseleave", this.eventFuncForMethodName("onMouseLeave"), useCapture);
             }
         } else {
-            if (this._isRegisteredForMouse == true) {
-                this._isRegisteredForMouse = false
-	            this.element().onmousedown  = null
-	            this.element().onmousemove  = null
-	            this.element().onmouseout   = null
-	            this.element().onmouseover  = null
-	            this.element().onmouseup    = null
-
-	            this.element().onmouseenter = null
-	            this.element().onmouseleave = null
-
-            }
+            e.removeEventListener("mousedown", this.eventFuncForMethodName("onMouseDown"), useCapture);
+            e.removeEventListener("mousemove", this.eventFuncForMethodName("onMouseMove"), useCapture);
+            e.removeEventListener("mouseout", this.eventFuncForMethodName("onMouseOut"), useCapture);
+            e.removeEventListener("mouseover", this.eventFuncForMethodName("onMouseOver"), useCapture);
+            e.removeEventListener("mouseup", this.eventFuncForMethodName("onMouseUp"), useCapture);
+            e.removeEventListener("mouseenter", this.eventFuncForMethodName("onMouseEnter"), useCapture);
+            e.removeEventListener("mouseleave", this.eventFuncForMethodName("onMouseLeave"), useCapture);
         }
+        this._isRegisteredForMouse = aBool
+
         return this
     },    
     
     onMouseDown: function (event) {
         //console.log(this.typeId() + ".onMouseDown()")
-        this._isMouseDown = true
-        this._onMouseDownEventPosition = { x: event.clientX, y: event.clientY }
-        event.stopPropagation()
-    },
-    
-    mouseDownDiffWithEvent: function(event) {
-        assert(this._onMouseDownEventPosition) 
-        this._onMouseUpEventPosition = { x: event.clientX, y: event.clientY }
-        
-        var p1 = this._onMouseDownEventPosition
-        var p2 = this._onMouseUpEventPosition
-        
-        var d = {} 
-        d.xd = p1.x - p2.x
-        d.yd = p1.y - p2.y
-        d.dist = Math.sqrt(d.xd*d.xd + d.yd*d.yd)
-        
-        return d
-    },
-    
-    isMouseDown: function () {
-        return this._isMouseDown
+        //event.stopPropagation()
+        return true
     },
     
     onMouseMove: function (event) {
-	    /*
-        if (this.isMouseDown()) {
-            var diff = this.mouseDownDiffWithEvent(event)
-            console.log("onMouseMove:" + JSON.stringify(diff))
-        }
-		*/
+        return true
     },
     
     onMouseEnter: function(event) {
-
+        return true
     },
 
     onMouseLeave: function(event) {
-
+        return true
     },
 
     onMouseOut: function (event) {
         //console.log("onMouseOut")
+        return true
     },
     
     onMouseOver: function (event) {
+        return true
     },
 
     onMouseUp: function (event) {
         //console.log(this.typeId() + ".onMouseUp()")
-        this._isMouseDown = false
-        var diff = this.mouseDownDiffWithEvent(this._onMouseDownEventPosition) 
-        this._onMouseDownEventPosition = null 
-        event.stopPropagation()
+        //event.stopPropagation()
+        return true
     },
         
     // --- keyboard events ---
     
-    setIsRegisteredForKeyboard: function (aBool) {
+    setIsRegisteredForKeyboard: function (aBool, useCapture) {
+        if (!useCapture) {
+            useCapture = false
+        }
+
+        let e = this.element()
+
         if (aBool) {
             if (this._isRegisteredForKeyboard == false) {
                 this._isRegisteredForKeyboard = true
-	            /*
-	            this.element().onkeydown  =  (event) => {       
-	                return this.onKeyDown(event) 
-	            }
 
-	            this.element().onkeypress =  (event) => { return this.onKeyPress(event) }
-	            */
-	            this.element().onkeyup    =  (event) => { 
-	                //this._onkeyupInnerHTML = this.element().innerHTML // THIS NEEDS TO BE HERE OR DOM innerHTML ISN'T CONSISTENT?
-	                //console.log("onkeyup [" + this.element().innerHTML  + "]")
-	                return this.onKeyUp(event) 
-	            }
+                e.addEventListener("keyup", this.eventFuncForMethodName("onKeyUp"), useCapture);
+                //e.addEventListener("keydown", this.eventFuncForMethodName("onKeyDown"), useCapture);
+                //e.addEventListener("keypress", this.eventFuncForMethodName("onKeyPress"), useCapture);
+                
 	            DivView._tabCount ++
-	            this.element().tabIndex   = DivView._tabCount
+	            e.tabIndex = DivView._tabCount
                 this.setCssAttribute("outline", "none")
             }
         } else {
             if (this._isRegisteredForKeyboard == true) {
                 this._isRegisteredForKeyboard = false
-	            this.element().onkeydown  = null
-	            this.element().onkeypress = null
-	            this.element().onkeyup    = null
-	            delete this.element().tabindex 
+
+                e.removeEventListener("keyup", this.eventFuncForMethodName("onKeyUp"), useCapture);
+                e.removeEventListener("keydown", this.eventFuncForMethodName("onKeyDown"), useCapture);
+                e.removeEventListener("keypress", this.eventFuncForMethodName("onKeyPress"), useCapture);
+ 
+	            delete e.tabindex 
             }
         }
         return this
@@ -1989,14 +1989,15 @@ window.DivView = ideal.Proto.extend().newSlots({
 		        event.preventDefault()
             }
         }
+        return true
     },
     
     onKeyPress: function (event) {
         // console.log("onKeyPress")
+        return true
     },
     
     onKeyUp: function (event) {
-		
         var shouldPropogate = true
         event.specialKeyName = this.specialNameForKeyEvent(event)
         //		console.log(this.type() + " onKeyUp event.specialKeyName=", event.specialKeyName)
@@ -2035,20 +2036,20 @@ window.DivView = ideal.Proto.extend().newSlots({
         return shouldPropogate
     },
     
-    
     didEdit: function() {
         this.tellParentViews("onDidEdit", this)
         return this
     },
     
     onEnterKeyUp: function() {
-        return this
+        return true
     },
     
     // --- tabs and next key view ----
     
     onTabKeyDown: function() {
         this.selectNextKeyView()
+        return true
     },
 
     selectNextKeyView: function() {
@@ -2130,13 +2131,13 @@ window.DivView = ideal.Proto.extend().newSlots({
     onFocus: function() {
         // subclasses can override 
         //console.log(this.type() + " onFocus")
-        return this
+        return true
     },
 
     onBlur: function() {
         // subclasses can override 
         //console.log(this.type() + " onBlur")
-        return this
+        return true
     },
     
     innerText: function() {
@@ -2209,25 +2210,31 @@ window.DivView = ideal.Proto.extend().newSlots({
             this.replaceSelectedText(htmlToPlainTextFunc(rDataPText))
             return false; // prevent returning text in clipboard
         }
+        return true
     },
     
+    /*
     pasteListenerFunc: function () {
         if (!this._pasteListenerFunc) {
             this._pasteListenerFunc = (e) => { this.paste(e) }
         }
         return this._pasteListenerFunc
     },
+    */
     
-    setIsRegisteredForPaste: function(aBool) {
+    setIsRegisteredForPaste: function(aBool, useCapture) {
+        let e = this.element()
         if (aBool) {
             if (this._isRegisteredForPaste == false) {
                 this._isRegisteredForPaste = true
-	        	this.element().addEventListener("paste", this.pasteListenerFunc(), false);
+                e.addEventListener("paste", this.eventFuncForMethodName("paste"), useCapture);
+
+	        	//this.element().addEventListener("paste", this.pasteListenerFunc(), false);
             }
         } else {
             if (this._isRegisteredForPaste == true) {
                 this._isRegisteredForPaste = false
-	        	this.element().removeEventListener("paste", this.pasteListenerFunc());
+                e.removeEventListener("paste", this.eventFuncForMethodName("paste"), useCapture);
             }
         }
         return this
@@ -2454,19 +2461,61 @@ window.DivView = ideal.Proto.extend().newSlots({
         */
         return this
     },
+
+    boundingClientRect: function() {
+        return this.element().getBoundingClientRect()
+    },
     
     isScrolledIntoView: function() {
-        var e = this.element()
-        var top = e.getBoundingClientRect().top;
-        var bottom = e.getBoundingClientRect().bottom;
-        var isVisible = (top >= 0) && (bottom <= window.innerHeight);
+        let r = this.boundingClientRect()
+        let isVisible = (r.top >= 0) && (r.bottom <= window.innerHeight);
         return isVisible;
     },
 
     // helpers
-	
+
+    mouseUpPos: function() { 
+        return this.viewPosForWindowPos(Mouse.shared().upPos())
+    },
+
+    mouseCurrentPos: function() { 
+        return this.viewPosForWindowPos(Mouse.shared().currentPos())
+    },
+
+    mouseDownPos: function() { 
+        return this.viewPosForWindowPos(Mouse.shared().downPos())
+    },
+
+    viewPosForWindowPos: function(pos) {
+        let b = this.boundingClientRect()
+        return {
+            _x: pos._x - b.left,
+            _y: pos._y - b.top
+        }
+    },
+
+    viewPositionForEvent: function(event) {
+        let b = this.boundingClientRect()
+        return {
+            _x: event.clientX - b.left,
+            _y: event.clientY - b.top
+        }
+    },
+
+    /*
+    windowToViewX: function(x) {
+        let bounds = this.boundingClientRect()
+        return x - bounds.left
+    },
+
+    windowToViewY: function(y) {
+        let bounds = this.boundingClientRect()
+        return y - bounds.top
+    },
+    */
+
     verticallyAlignAbsoluteNow: function() {
-        var pv = this.parentView()
+        let pv = this.parentView()
         if (pv) {
             this.setPosition("absolute")
             setTimeout(() => {
@@ -2477,7 +2526,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 	
     horizontallyAlignAbsoluteNow: function() {
-        var pv = this.parentView()
+        let pv = this.parentView()
         if (pv) {
             this.setPosition("absolute")
             setTimeout(() => {
@@ -2497,11 +2546,11 @@ window.DivView = ideal.Proto.extend().newSlots({
     onVisibility: function() {
 	    //console.log(this.typeId() + ".onVisibility()")
 	    this.unregisterForVisibility()
-	    return this
+	    return true
     },
 	
     unregisterForVisibility: function() {
-	    var obs = this.intersectionObserver()
+	    let obs = this.intersectionObserver()
 	    if (obs) {
 	        obs.disconnect()
             this.setIntersectionObserver(null);
@@ -2515,20 +2564,20 @@ window.DivView = ideal.Proto.extend().newSlots({
 	        return this
 	    }
 	    
-	    var root = document.body
+	    let root = document.body
 	    
 	    if (this.parentView()) {
 	        root = this.parentView().parentView().element() // hack for scroll view - todo: make more general
 	        //root = this.parentView().element()
 	    }
 	    
-        var intersectionObserverOptions = {
+        let intersectionObserverOptions = {
             root: root, // watch for visibility in the viewport 
             rootMargin: "0px",
             threshold: 1.0
         }
     
-        var obs = new IntersectionObserver((entries, observer) => { 
+        let obs = new IntersectionObserver((entries, observer) => { 
             entries.forEach(entry => {
                 if (entry.isIntersecting) { 
                     
@@ -2569,7 +2618,6 @@ window.DivView = ideal.Proto.extend().newSlots({
         this.setPosition("absolute")
         this.setTop(0).setLeft(0).setRight(0).setBottom(0)
     },
-
 
     /*
     verticallyCenterFromTopNow: function() {
@@ -2612,4 +2660,8 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this
     },
     */
+
+    rootView: function() {
+        return  WebBrowserWindow.shared().documentBody()
+    },
 })

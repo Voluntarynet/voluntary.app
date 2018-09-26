@@ -284,17 +284,6 @@ window.BrowserRow = NodeView.extend().newSlots({
 	        this._isTouchDown = false
         }
     },
-	
-    /*
-    onMouseMove: function (event) {
-        if (this.isMouseDown() && this.canDelete()) {
-            var diff = this.mouseDownDiffWithEvent(event)
-            //console.log("onMouseMove:" + JSON.stringify(diff))
-            this.setTransition("all 0s")
-            this.setRight(diff.xd)
-        }
-    },
-    */
     
     hasCloseButton: function() {
         return this.closeButtonView() && this.closeButtonView().target() != null

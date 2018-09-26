@@ -34,12 +34,9 @@ window.BMConnection = BMNode.extend().newSlots({
             this.registerForConnectionChange()
         }
     },
-    
-    shared: function() {
-        if (!BMConnection._shared) {
-            BMConnection._shared = BMConnection.clone()
-        }
-        return BMConnection._shared
+
+    shared: function() {   
+        return this.sharedInstanceForClass(BMConnection)
     },
     
     connectionType: function() {

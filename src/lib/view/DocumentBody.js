@@ -6,7 +6,12 @@ window.DocumentBody = DivView.extend().newSlots({
     init: function () {
         DivView.init.apply(this)
         this.setIsRegisterForWindowResize(true)
-	    window.SyncScheduler.shared().scheduleTargetAndMethod(this, "autoAdjustZoomForMobile")
+        window.SyncScheduler.shared().scheduleTargetAndMethod(this, "autoAdjustZoomForMobile")
+
+        // using event intercept phase to grab all events and record them
+        // in Mouse.shared() and Keyboard.shared() objects
+        this.setIsRegisteredForKeyboard(true, true)
+        this.setIsRegisteredForMouse(true, true)
         return this
     },
     
@@ -55,5 +60,32 @@ window.DocumentBody = DivView.extend().newSlots({
     zoomAdjustedSize: function() {
         return { width: this.zoomAdjustedWidth(), height: this.zoomAdjustedHeight() }
     },
+
+    // --- event intercept keyboard ---
+
+    onKeyDown: function (event) {
+        return window.Keyboard.shared().onKeyDown(event)
+    },
+
+    onKeyUp: function (event) {
+        console.log(this.type() + " onKeyUp ")
+        return window.Keyboard.shared().onKeyUp(event)
+    },
+
+    // --- event intercept mouse ---
+
+    onMouseDown: function(event) {
+        console.log("DocumentBody onMouseDown")
+        return window.Mouse.shared().onMouseDown(event)
+    },
+
+    onMouseMove: function (event) {
+        return window.Mouse.shared().onMouseMove(event)
+    },
+
+    onMouseUp: function(event) {
+        return window.Mouse.shared().onMouseUp(event)
+    },  
+
 })
 

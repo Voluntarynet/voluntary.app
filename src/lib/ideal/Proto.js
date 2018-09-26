@@ -105,6 +105,13 @@ Proto.setSlots({
         // subclasses should override to do initialization
     },
 
+    sharedInstanceForClass: function(aClass) {   
+        if (!aClass._shared) {
+            aClass._shared = this.clone();
+        }
+        return aClass._shared;
+    },
+
     uniqueId: function () {
         return this._uniqueId;
     },

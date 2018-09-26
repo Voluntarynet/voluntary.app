@@ -26,10 +26,12 @@ window.DragBarView = DivView.extend().newSlots({
 
         this._mouseMoveTrackerFunc = (event) => {
             this.mouseMoveTracker(event)
+            return true
         }
 
         this._mouseUpTrackerFunc = (event) => {
-
+            this.mouseUpTracker(event)
+            return true
         }
 
         this.setBackgroundColor(this.normalColor())
@@ -47,6 +49,7 @@ window.DragBarView = DivView.extend().newSlots({
     setIsVertical: function(aBool) {
         if (this._isVertical != aBool) {
             this._isVertical = aBool
+            //console.log("this.hoverCursorType() = ", this.hoverCursorType())
             this.setCursor(this.hoverCursorType())
         }
         return this
@@ -90,12 +93,20 @@ window.DragBarView = DivView.extend().newSlots({
 
         if (this.isHighlighted()) {
             this.setBackgroundColor(this.highlightColor())
-            this.setCursor(this.hoverCursorType())
         } else {
             this.setBackgroundColor(this.normalColor())
+        }
+        this.syncCursor()
+
+        return this
+    },
+
+    syncCursor: function() {
+        if (this.isHighlighted()) {
+            this.setCursor(this.hoverCursorType())
+        } else {
             this.setCursor(null)
         }
-
         return this
     },
 
@@ -104,33 +115,68 @@ window.DragBarView = DivView.extend().newSlots({
     mouseMoveTracker: function(event) {
         //console.log("mouse pos: ", event.clientX, " x ", event.clientY)
         if (this.delegate()) {
-            this.delegate().didDragDivider(event.clientX, event.clientY)
+            this.delegate().didDragDivider(Math.floor(event.clientX), Math.floor(event.clientY))
         }
     },
 
-    onMouseDown: function (event) {
-        console.log("onMouseDown")
-        this.setIsDragging(true)
-        this.setBackgroundColor(this.dragColor())
+    mouseUpTracker: function(event) {
+        //console.log("mouse pos: ", event.clientX, " x ", event.clientY)
+        this.onMouseUp(event)
+    },
 
-        this.parentView().element().addEventListener("mousemove", this._mouseMoveTrackerFunc, false);
+    setIsDragging: function(b) {
+        this._isDragging = b;
+        if (b) {
+            this.setBackgroundColor(this.dragColor())
+            this.parentView().setBorder("1px dashed white")
+        } else {
+            this.setBackgroundColor(this.normalColor())
+            this.parentView().setBorder("0px dashed white")
+        }
+        return this
+    },
+
+    onMouseDown: function (event) {
+        //console.log(this.type() + " onMouseDown")
+        this.setIsDragging(true)
+
+        this.removeParentTracking()
+        return false
+    },
+
+    addParentTracking: function() {
+        let r = this.rootView()
+        r.element().removeEventListener("mousemove", this._mouseMoveTrackerFunc, false);
+        r.element().removeEventListener("mouseup", this._mouseUpTrackerFunc, false);
+        return this
+    },
+
+    removeParentTracking: function() {
+        let r = this.rootView()
+        r.element().addEventListener("mousemove", this._mouseMoveTrackerFunc, false);
+        r.element().addEventListener("mouseup", this._mouseUpTrackerFunc, false);
+        return this
     },
 
     onMouseMove: function (event) {
+        return false
     },
 
     onMouseOver: function(event) {
+        //console.log(this.type() + " onMouseOver")
         this.setIsHighlighted(true)
+        return false
     },
 
     onMouseOut: function(event) {
+        //console.log(this.type() + " onMouseOut")
         this.setIsHighlighted(false)
+        return false
     },
 
     onMouseUp: function(event) {
         this.setIsDragging(false)
-        this.setBackgroundColor(this.normalColor())
-        this.parentView().element().removeEventListener("mousemove", this._mouseMoveTrackerFunc, false);
+        this.addParentTracking()
+        return false
     },
-
 })

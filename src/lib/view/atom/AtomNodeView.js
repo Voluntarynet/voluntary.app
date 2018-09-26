@@ -17,6 +17,7 @@ window.AtomNodeView = NodeView.extend().newSlots({
     headWidth: 100,
     headHeight: 100,
 
+    gridSize: 50,
     // peristent attributes
     viewDictSlots: ["isVertical", "headWidth", "headHeight"], // move to view?
 
@@ -51,7 +52,7 @@ window.AtomNodeView = NodeView.extend().newSlots({
         this.setContentEditable(false)
         this.turnOffUserSelect()
         this.setTransition("all 0.3s")
-
+        this.setOverflow("hidden")
         this.syncLayout()
         return this
     },
@@ -62,11 +63,11 @@ window.AtomNodeView = NodeView.extend().newSlots({
     },
 
     setupHeadView: function() {
-        var v = DivView.clone()
+        var v = AtomPaneView.clone()
         this.setHeadView(v)
         v.setDivClassName("AtomHeadView")
         v.setPosition("relative")
-        v.setBackgroundColor("#000")
+        v.setBackgroundColor("black")
         this.addSubview(v)
     },
 
@@ -81,18 +82,15 @@ window.AtomNodeView = NodeView.extend().newSlots({
     },
 
     setupTailView: function() {
-        var v = DivView.clone()
+        var v = AtomPaneView.clone()
         this.setTailView(v)
-
         v.setDivClassName("AtomTailView")
         v.setPosition("relative")
-        v.setBackgroundColor("#000")
-
+        v.setBackgroundColor("black")
         this.addSubview(v)
     },
 
     syncLayout: function() {
-
         this.setWidthPercentage(100)
         this.setHeightPercentage(100)
 
@@ -101,53 +99,82 @@ window.AtomNodeView = NodeView.extend().newSlots({
         } else {
             this.layoutHorizontally()
         }
-
+        return this
     },
 
     layoutVertically: function() {
+        // vertical divider
 
-        var h = this.headView()
-        h.setDisplay("block")
-        h.setWidthPercentage(100)
-        h.setHeightPxNumber(this.headHeight())
+        if (true) {
+            var h = this.headView()
+            h.setDisplay("block")
+            h.setWidthPercentage(100)
+            h.setHeightPxNumber(this.headHeight())
+        }
 
-        let d = this.dividerView()
-        d.setDisplay("block")
-        d.setMinAndMaxHeight(d.thickness())
-        d.setWidthPercentage(100)
-        d.setIsVerticalDrag(true)
+        if (true) {
+            let d = this.dividerView()
+            d.setDisplay("block")
+            d.setMinAndMaxHeight(d.thickness())
+            d.setWidthPercentage(100)
+            d.setIsVerticalDrag(true)
+        }
 
-        let t = this.tailView()
-        t.setDisplay("block")
-        t.setWidthPercentage(100)
-        t.setHeightPercentage(100)
+        if (true) {
+            let t = this.tailView()
+            t.setDisplay("block")
+            t.setWidthPercentage(100)
+            t.setHeightPercentage(100)
+            t.setBackgroundColor("black")
+        }
     },
 
     layoutHorizontally: function() {
+        // horizontal divider
+
         this.setDisplay("table")
 
-        var h = this.headView()
-        h.setDisplay("table-cell")
-        h.setMinWidth(this.headWidth())
-        h.setMinHeight("100%")
-        h.setOverflow("auto")
+        if (true) {
+            let h = this.headView()
+            h.setDisplay("table-cell")
+            h.setMinAndMaxWidth(this.headWidth())
+            h.setWidth(null)
+            h.setMinHeight("100%")
+            h.setOverflow("auto")
+        }
 
-        let d = this.dividerView()
-        d.setDisplay("table-cell")
-        d.setMinAndMaxWidth(d.thickness())
-        d.setOverflow("auto")
-        d.setVerticalAlign("top")
-        d.setIsVerticalDrag(false)
+        if (true) {
+            let d = this.dividerView()
+            d.setDisplay("table-cell")
+            d.setWidth(null)
+            d.setMinAndMaxWidth(d.thickness())
+            d.setOverflow("auto")
+            d.setVerticalAlign("top")
+            d.setIsVerticalDrag(false)
+        }
 
-        let t = this.tailView()
-        t.setDisplay("table-cell")
-        t.setWidthPercentage(100)
-        t.setMinHeight("100%")
-        t.setOverflow("auto")
-        t.setVerticalAlign("top")
+        if (true) {
+            let t = this.tailView()
+            t.setDisplay("table-cell")
+            t.setWidthPercentage(100)
+            t.setMinHeight("100%")
+            t.setOverflow("auto")
+            t.setVerticalAlign("top")
+        }
     },
 
     didDragDivider: function(x, y) {
+        let bounds = this.boundingClientRect()
+
+        let g = this.gridSize()
+
+        x = Math.floor(Math.floor(x/g)*g)
+        y = Math.floor(Math.floor(y/g)*g)
+
+        y = y - bounds.top
+        x = x - bounds.left
+        x = Math.min(x, bounds.right  - bounds.left)
+        y = Math.min(y, bounds.bottom - bounds.top)
 
         if (this.isVertical()) {
             this.setHeadHeight(y)
@@ -184,7 +211,6 @@ window.AtomNodeView = NodeView.extend().newSlots({
     syncFromNode: function() {
         this.setViewDict(this.node().nodeViewDict()) // move to view?
     },
-
 
     // --- closable set/get ---
     
@@ -224,12 +250,20 @@ window.AtomNodeView = NodeView.extend().newSlots({
             //this.removeFromParentView()
             
             this.node().removeFromParentNode()
-
+            this.removeFromParentView()
             //parentView.scheduleSyncToNode() 
             // TODO: protocol to tell parent to remove subnode
 
         }, seconds * 1000)
     },
 
+    /*
+    // mouse
 
+    onDoubleClick: function(event) {
+        console.log("onDoubleClick")
+        let v = AtomNodeView.clone().setNode(AtomNode.clone())
+        this.addSubview(v)
+    },
+    */
 })

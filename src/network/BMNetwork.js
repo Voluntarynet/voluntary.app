@@ -53,11 +53,12 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
         }
     },
 
-    shared: function() {
-        if (!BMNetwork._shared) {
-            BMNetwork._shared = BMNetwork.clone()
+    shared: function() {   
+        var thisClass = BMNetwork     
+        if (!thisClass._shared) {
+            thisClass._shared = this.clone();
         }
-        return BMNetwork._shared
+        return thisClass._shared;
     },
 
     connectedRemotePeers: function () {

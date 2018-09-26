@@ -19,11 +19,8 @@ window.App = BMNode.extend().newSlots({
     appDidInitNote: null,
 }).setSlots({
 
-    shared: function() {        
-        if (!App._shared) {
-            App._shared = this.clone();
-        }
-        return App._shared;
+    shared: function() {   
+        return this.sharedInstanceForClass(App)
     },
 
     init: function () {
@@ -68,7 +65,8 @@ window.App = BMNode.extend().newSlots({
     },
 	
     rootView: function() {
-        return  WebBrowserWindow.shared().documentBody()
+        return DivView.rootView()
+        //return  WebBrowserWindow.shared().documentBody()
     },
 
     mainWindow: function () {

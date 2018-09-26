@@ -191,8 +191,10 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     */
 })
 
+/*
 console.log("navigator.userAgent = ", navigator.userAgent);
 console.log("window.WebBrowserWindow.agentIsSafari() = ", window.WebBrowserWindow.agentIsSafari())
 console.log("window.WebBrowserWindow.agentIsChrome() = ", window.WebBrowserWindow.agentIsChrome())
+*/
 
 WebBrowserWindow.shared().setup()

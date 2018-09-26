@@ -36,7 +36,7 @@ window.PeerApp = App.extend().newSlots({
         
         this.setName("voluntary.app")
 
-        if (false) {
+        if (true) {
             this.setupAtom()
         } else {
             
@@ -51,6 +51,7 @@ window.PeerApp = App.extend().newSlots({
     setupAtom: function() {
         this.setAtomNode(AtomNode.clone())
         this.setAtomNodeView(AtomNodeView.clone().setNode(this.atomNode()))
+        this.atomNodeView().setIsVertical(true).syncLayout()
         this.rootView().addSubview(this.atomNodeView())
     },
 

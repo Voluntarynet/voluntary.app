@@ -6,5 +6,6 @@ JSImporter.pushRelativePaths([
     "CloseableNodeView.js",
     "DragBarView.js",
     "AtomNodeView.js",
+    "AtomPaneView.js",
 ])
 

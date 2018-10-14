@@ -36,7 +36,7 @@ window.PeerApp = App.extend().newSlots({
         
         this.setName("voluntary.app")
 
-        if (true) {
+        if (false) {
             this.setupAtom()
         } else {
             

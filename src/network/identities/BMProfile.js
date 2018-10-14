@@ -18,12 +18,14 @@ window.BMProfile = BMFieldSetNode.extend().newSlots({
 
         // local fields
         this.addFieldNamed("phone").setValueMethod("phone").setValueIsEditable(true)
-        this.addFieldNamed("address").setValueMethod("address").setValueIsEditable(true)
         this.addFieldNamed("email").setValueMethod("email").setValueIsEditable(true)
+        /*
+        this.addFieldNamed("address").setValueMethod("address").setValueIsEditable(true)
         this.addFieldNamed("twitter").setValueMethod("twitter").setValueIsEditable(true)
         this.addFieldNamed("facebook").setValueMethod("facebook").setValueIsEditable(true)
         this.addFieldNamed("linkedin").setValueMethod("linkedin").setValueIsEditable(true)
         this.addFieldNamed("instagram").setValueMethod("instagram").setValueIsEditable(true)
+        */
         this.setNodeMinWidth(600)
     },
     

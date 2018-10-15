@@ -1394,7 +1394,7 @@ html, body {
 /* --- title -------------------------------- */
 
 .BMPostTitleBarView {
-  display: block;
+    display: block;
 	position: relative;
 	font-family: AppSemiBold, sans-serif;
 	width: calc(100% - 10px);
@@ -1405,28 +1405,28 @@ html, body {
 }
 
 .BMPostTitleBarTextView {
-  display: block;
-  position: relative;
-  float: left;
-  color: black;
-  border: 0px dashed blue;
+    display: inline-block;
+	position: relative;
+    float: left;
+    color: black;
+    border: 0px dashed blue;
 }
 
 .BMPostDateView {
-  display: block;
-  position: relative;
-  float: right;
-  opacity: 0.33;
-  min-width: 20px;
-  min-height: 20px;
+    display: inline-block;
+	position: relative;
+    float: right;
+    opacity: 0.33;
+	min-width: 20px;
+	min-height: 20px;
 
-  border: 0px dashed red;
+    border: 0px dashed red;
 }
 
 /* --- content -------------------------------- */
 
 .BMPostMessageRowViewContent {
-  display: block;
+    display: block;
 	width: calc(100% - 20px);
 
 	color: rgba(0,0,0, 0.9);
@@ -1452,24 +1452,24 @@ html, body {
 /* --- bottom bar -------------------------------- */
 
 .BMPostMessageRowViewBottomBar {
-  display: block;
+    display: block;
 	width: calc(100% - 20px); 
 	text-align: left;
 	height: 20px;
 	margin-bottom: 8px;
-  vertical-align: top; /* here */
+    vertical-align: top; /* here */
 	border: 0px dashed #ddd;
 }
 
 .BMPostMessageRowViewReplyButton {
-  display: inline-block;
-  position: relative;
-  min-width: 15px;
-  min-height: 20px;    
-  margin-top: 1px;    
-  opacity: 0.5;
-  border: 0px solid #aaa;
-  vertical-align: top; /* here */
+    display: inline-block;
+    position: relative;
+    min-width: 15px;
+    min-height: 20px;    
+    margin-top: 1px;    
+    opacity: 0.5;
+    border: 0px solid #aaa;
+    vertical-align: top; /* here */
 }
 
 .BMPostMessageRowViewRepostButton {
@@ -89045,6 +89045,8 @@ window.DivView = ideal.Proto.extend().newSlots({
 
         let e = this.element()
 
+        console.log(this.type() + ".setIsRegisteredForKeyboard() element=", e)
+
         if (aBool) {
             if (this._isRegisteredForKeyboard == false) {
                 this._isRegisteredForKeyboard = true
@@ -90761,12 +90763,18 @@ window.DocumentBody = DivView.extend().newSlots({
         this.setIsRegisteredForMouse(true, true)
         return this
     },
+
+    shared: function() {   
+        return this.sharedInstanceForClass(DocumentBody)
+    },
     
     setupElement: function() {
+        //this._element = document.body
         // get this from element override
     },
     
     element: function() {
+        console.log("returning document.body = ", document.body)
         return document.body
     },
     
@@ -90850,11 +90858,15 @@ window.DocumentBody = DivView.extend().newSlots({
 
 window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     type: "WebBrowserWindow",
-    documentBody: DocumentBody.clone(),
+    /*documentBody: DocumentBody.shared(),*/
 }).setSlots({
     init: function () {
         throw new Error("this class is meant to be used as singleton, for now")
         return this
+    },
+
+    documentBody: function() {
+        return DocumentBody.shared()
     },
     
     shared: function() {

@@ -1895,6 +1895,8 @@ window.DivView = ideal.Proto.extend().newSlots({
 
         let e = this.element()
 
+        console.log(this.type() + ".setIsRegisteredForKeyboard() element=", e)
+
         if (aBool) {
             if (this._isRegisteredForKeyboard == false) {
                 this._isRegisteredForKeyboard = true

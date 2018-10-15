@@ -14,12 +14,18 @@ window.DocumentBody = DivView.extend().newSlots({
         this.setIsRegisteredForMouse(true, true)
         return this
     },
+
+    shared: function() {   
+        return this.sharedInstanceForClass(DocumentBody)
+    },
     
     setupElement: function() {
+        //this._element = document.body
         // get this from element override
     },
     
     element: function() {
+        console.log("returning document.body = ", document.body)
         return document.body
     },
     

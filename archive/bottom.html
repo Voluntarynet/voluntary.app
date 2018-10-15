@@ -1,5 +1,9 @@
     
-    JSImporter.done()
+    
+      window.onload = function() { 
+        setTimeout(() => { JSImporter.done()  }, 200) // hack for startWhenReady for loading order issue        
+      }
+
     </script>
   </head>
   <body id="body"></body>

@@ -273,12 +273,6 @@ class JSImporterClass extends JSImporterBase {
     done () {
         //console.log("JSImporter.done() -----------------------------")
         this.doneCallbacks().forEach(callback => callback())
-
-        if (window.JSImporterIsEmbedded != true) {
-            //this.showConcatCommand()
-            //this.buildArchive()
-        }
-
         return this
     }
 
@@ -286,69 +280,6 @@ class JSImporterClass extends JSImporterBase {
         this.errorCallbacks().forEach(callback => callback(error))
         return this
     }
-
-    // --- archive ---
-
-    /*
-
-    archiveFileList () {
-        var files = ["archive/top.html"]
-        files.appendItems(this.cssFilesLoaded())
-        files.append("archive/middle.html")
-        files.appendItems(["./src/boot/LoadProgressBar.js", "./src/boot/JSImporter.js"])
-        files.appendItems(this.jsFilesLoaded())
-        files.append("archive/bottom.html")
-        return files
-    }
-
-    showConcatCommand () {
-        // a unix cat command to embed all the css and js files into the html file
-        // other resources such as ttf fonts, svg files, images, etc will need to be loaded individually
-        // but using the embedded JS/css index file will tremendously speed up the load time (>10x)
-        // and provide a single source file to sign (still need to sign full archive too)
-
-        var files = this.archiveFileList()
-        var s = "cat " + files.map((p) => { return "\"" + p + "\"" }).join(" ") + " > index.html"
-        window.console.log(s)
-    }
-
-    buildArchive () {
-        this.setUnloadedArchiveFiles(this.archiveFileList())
-        this.setLoadedArchiveFilesMap ({})
-        this.loadArchiveFiles()
-    }
-
-    loadArchiveFiles () {
-        this.archiveFileList().forEach((src) => {
-            var xhr = new XMLHttpRequest()
-            xhr.open("GET", src)
-            var obj = this
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-                    obj.loadedArchiveFile(src, xhr.responseText)
-                }
-            }
-            xhr.send()
-        })
-    }
-
-    loadedArchiveFile (src, text) {
-        this.loadedArchiveFilesMap()[src] = text
-        window.console.log("the script " + src + " text content is ", text)
-        this.unloadedArchiveFiles().remove(src)
-        if (this.unloadedArchiveFiles().length == 0) {
-            this.composeArchive()
-        }
-    }
-    
-    composeArchive() {
-        var s  = ""
-        this.archiveFileList().forEach((src) => {
-            s += this.loadedArchiveFilesMap()[src]
-        })
-        this.setArchive(s)
-    }
-    */
 }
 
 window.JSImporter = JSImporterClass.shared()

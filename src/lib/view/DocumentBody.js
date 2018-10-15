@@ -25,7 +25,7 @@ window.DocumentBody = DivView.extend().newSlots({
     },
     
     element: function() {
-        console.log("returning document.body = ", document.body)
+        //console.log("returning document.body = ", document.body)
         return document.body
     },
     

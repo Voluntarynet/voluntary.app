@@ -79,6 +79,8 @@ class LoadProgressBarClass {
     }
 
     startWhenReady () {
+        //console.log("LoadProgressBar.startWhenReady()")
+        //this.setupHtml()
         if (this.canStart()) {
             this.start()
         } else {
@@ -87,6 +89,7 @@ class LoadProgressBarClass {
     }
 
     start () {
+        //console.log("LoadProgressBar.start()")
         if (!JSImporterClass.shared().isDone()) {
             this.setupHtml()
             this.initTitle()
@@ -95,12 +98,14 @@ class LoadProgressBarClass {
         }
 
         if (JSImporterClass.shared().isDone()) {
+            //this.setupHtml()
             this.stop()
         }
         return this
     }
 
     setupHtml () {
+        //console.log("LoadProgressBar.setupHtml()")
         document.body.innerHTML = "<div id='SpinnerMain' style='position: absolute; width:100%; height: 100%; background-color: black; z-index: 100000; font-family: AppRegular, sans-serif; letter-spacing: 3px; font-size:13px;'> \
 <div id='SpinnerMiddle' \
 style='position: relative; top: 50%; transform: translateY(-50%); height: auto; width: 100%; text-align: center;'> \
@@ -113,20 +118,6 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
 <div id='SpinnerError' style='color: red; transition: all .6s ease-out; text-align: center; width: 100%;'></div> \
 </div> \
 </div>"
-
-	    /*
-	    var style = this.middleElement().style
-	    style.position = "relative"
-        style.top = "50%"
-        style.transform = "translateY(-50%)"
-        style.height = "auto"
-        style.width = "100%"
-        style.fontFamily = "AppRegular, sans-serif"
-        style.letterSpacing = "3px"
-        style.color = "transparent"
-        style.textAlign = "center"
-        */
-
         return this
     }
 
@@ -231,8 +222,10 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
 
     setError (error) {
         this._error = error
-        console.log("LoadProgressBar setError ", error)
-        //this.itemElement().innerHTML = "ERROR"
+        //console.trace()
+        //console.log("LoadProgressBar setError ", error)
+        //console.log("    document.body = ", document.body) 
+        //console.log("    his.errorElement() = ", this.errorElement()) 
         this.errorElement().innerHTML = error
         return this
     }
@@ -260,6 +253,9 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
     }
 }
 
+//console.log("loaded file LoadProgressBar - starting")
+
 var LoadProgressBar = LoadProgressBarClass.clone()
 window.LoadProgressBar = LoadProgressBar
 LoadProgressBar.startWhenReady()
+

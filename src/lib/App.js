@@ -36,6 +36,7 @@ window.App = BMNode.extend().newSlots({
     run: function() {
 
         if (!this.isBrowserCompatible()) {
+            console.log("App showBrowserCompatibilityPanel")
             window.LoadProgressBar.setError("Sorry, this app only works on<br>Chrome, FireFox, and Brave browsers.")
             //this.showBrowserCompatibilityPanel()
             return this
@@ -43,6 +44,16 @@ window.App = BMNode.extend().newSlots({
 
         this.nodeStoreDidOpenObs().watch()
         NodeStore.shared().asyncOpen() 
+    },
+
+    showBrowserCompatibilityPanel: function() {
+        console.log("showing panel")
+        var panel = window.PanelView.clone()
+        this.rootView().addSubview(panel)
+        panel.setTitle("Sorry, this app only works on<br>Chrome, FireFox, and Brave browsers.")
+        panel.orderFront()
+        panel.setZIndex(100)
+        console.log("showed panel")
     },
 
     // 2. setup 

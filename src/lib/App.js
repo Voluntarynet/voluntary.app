@@ -12,7 +12,7 @@
 
 window.App = BMNode.extend().newSlots({
     type: "App",
-    name: null,
+    name: "App",
     isDebugging: true,
     version: [0, 0],
     nodeStoreDidOpenObs: null,
@@ -85,4 +85,9 @@ window.App = BMNode.extend().newSlots({
     versionsString: function() {
         return this.version().join(".")
     },
+
+    showVersion: function() {
+        console.log("Application '" + this.name() + "' version " + this.versionsString())
+    },
 })
+

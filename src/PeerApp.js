@@ -11,6 +11,9 @@
 window.PeerApp = App.extend().newSlots({
     type: "PeerApp",
 
+    name: "voluntary.app",
+    version: [0, 5, 1, 0],
+
     // model
     about: null,
     localIdentities: null,
@@ -28,13 +31,15 @@ window.PeerApp = App.extend().newSlots({
 }).setSlots({
 
     init: function () {
+        //this.setName("voluntary.app")
+
         App.init.apply(this)
+
     },
 
     setup: function () {
         App.setup.apply(this)
         
-        this.setName("voluntary.app")
 
         if (false) {
             this.setupAtom()
@@ -146,4 +151,6 @@ window.PeerApp = App.extend().newSlots({
         window.LoadProgressBar.stop() 
     },
 })
+
+PeerApp.showVersion()
 

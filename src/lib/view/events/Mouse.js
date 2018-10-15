@@ -28,7 +28,7 @@ window.Mouse = ideal.Proto.extend().newSlots({
     // --- events ---
 
     onMouseDown: function(event) {
-        console.log("Mouse onMouseDown")
+        //console.log("Mouse onMouseDown")
         let mp = MousePosition.newForEvent(event)
         this.setIsDown(true);
         this.setDownPos(mp)

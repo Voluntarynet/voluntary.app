@@ -75,7 +75,7 @@ window.DocumentBody = DivView.extend().newSlots({
     // --- event intercept mouse ---
 
     onMouseDown: function(event) {
-        console.log("DocumentBody onMouseDown")
+        //console.log("DocumentBody onMouseDown")
         return window.Mouse.shared().onMouseDown(event)
     },
 

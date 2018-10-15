@@ -23,8 +23,8 @@ html, body {
     -ms-text-size-adjust: 100%; 
     -moz-text-size-adjust: 100%; 
     -webkit-text-size-adjust: 100%;
-    
-	font-family: "Helvetica, Sans"; /* for font fallback while loading? */
+
+	font-family: "AppLight", "Helvetica", "Sans-Serif"; /* for font fallback while loading? */
 }
 
 
@@ -77,6 +77,8 @@ html, body {
 }
 */
 
+/*--- Univ ---*/
+
 /* --- OpenSans --- */
 
 
@@ -94,6 +96,7 @@ html, body {
     font-family: "AppSemiBold";
     src: url("fonts/OpenSans/OpenSans-Semibold.ttf");
 }
+
 
 /*
 @font-face {
@@ -1391,7 +1394,7 @@ html, body {
 /* --- title -------------------------------- */
 
 .BMPostTitleBarView {
-    display: block;
+  display: block;
 	position: relative;
 	font-family: AppSemiBold, sans-serif;
 	width: calc(100% - 10px);
@@ -1402,28 +1405,28 @@ html, body {
 }
 
 .BMPostTitleBarTextView {
-    display: inline-block;
-	position: relative;
-    float: left;
-    color: black;
-    border: 0px dashed blue;
+  display: block;
+  position: relative;
+  float: left;
+  color: black;
+  border: 0px dashed blue;
 }
 
 .BMPostDateView {
-    display: inline-block;
-	position: relative;
-    float: right;
-    opacity: 0.33;
-	min-width: 20px;
-	min-height: 20px;
+  display: block;
+  position: relative;
+  float: right;
+  opacity: 0.33;
+  min-width: 20px;
+  min-height: 20px;
 
-    border: 0px dashed red;
+  border: 0px dashed red;
 }
 
 /* --- content -------------------------------- */
 
 .BMPostMessageRowViewContent {
-    display: block;
+  display: block;
 	width: calc(100% - 20px);
 
 	color: rgba(0,0,0, 0.9);
@@ -1449,24 +1452,24 @@ html, body {
 /* --- bottom bar -------------------------------- */
 
 .BMPostMessageRowViewBottomBar {
-    display: block;
+  display: block;
 	width: calc(100% - 20px); 
 	text-align: left;
 	height: 20px;
 	margin-bottom: 8px;
-    vertical-align: top; /* here */
+  vertical-align: top; /* here */
 	border: 0px dashed #ddd;
 }
 
 .BMPostMessageRowViewReplyButton {
-    display: inline-block;
-    position: relative;
-    min-width: 15px;
-    min-height: 20px;    
-    margin-top: 1px;    
-    opacity: 0.5;
-    border: 0px solid #aaa;
-    vertical-align: top; /* here */
+  display: inline-block;
+  position: relative;
+  min-width: 15px;
+  min-height: 20px;    
+  margin-top: 1px;    
+  opacity: 0.5;
+  border: 0px solid #aaa;
+  vertical-align: top; /* here */
 }
 
 .BMPostMessageRowViewRepostButton {
@@ -1687,7 +1690,7 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
             return false
         }
 
-        this.titleElement().innerHTML = "ERROR"
+        //this.titleElement().innerHTML = "ERROR"
         var s = "" + errorMsg
 
         if (url) {
@@ -1752,6 +1755,7 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
     setError (error) {
         this._error = error
         console.log("LoadProgressBar setError ", error)
+        //this.itemElement().innerHTML = "ERROR"
         this.errorElement().innerHTML = error
         return this
     }
@@ -2074,6 +2078,8 @@ class JSImporterClass extends JSImporterBase {
 
     // --- archive ---
 
+    /*
+
     archiveFileList () {
         var files = ["archive/top.html"]
         files.appendItems(this.cssFilesLoaded())
@@ -2094,8 +2100,6 @@ class JSImporterClass extends JSImporterBase {
         var s = "cat " + files.map((p) => { return "\"" + p + "\"" }).join(" ") + " > index.html"
         window.console.log(s)
     }
-
-    // archive
 
     buildArchive () {
         this.setUnloadedArchiveFiles(this.archiveFileList())
@@ -2133,6 +2137,7 @@ class JSImporterClass extends JSImporterBase {
         })
         this.setArchive(s)
     }
+    */
 }
 
 window.JSImporter = JSImporterClass.shared()
@@ -2140,6 +2145,7 @@ window.JSImporter = JSImporterClass.shared()
 if (window.JSImporterIsEmbedded != true) {
     JSImporter.pushRelativePaths(["_imports.js"]).run()
 }
+
 
 
 JSImporter.pushRelativePaths([
@@ -80600,6 +80606,13 @@ Proto.setSlots({
         // subclasses should override to do initialization
     },
 
+    sharedInstanceForClass: function(aClass) {   
+        if (!aClass._shared) {
+            aClass._shared = this.clone();
+        }
+        return aClass._shared;
+    },
+
     uniqueId: function () {
         return this._uniqueId;
     },
@@ -82171,7 +82184,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
                     obs.sendNotification(note)       
                 } catch(error) {
                     //console.log("Error", typeof(error), "  ", error);
-                    console.log("NOTIFICATION EXCEPTION:");
+                    console.log("NOTIFICATION EXCEPTION: '" + error.message + "'");
                     //console.log("NotificationCenter: while posting note: ", note, " got error: ", error.name)
                     console.log("  OBSERVER (" + obs.observer() + ") STACK: ", error.stack)
                     if (note.senderStack()) {
@@ -86145,7 +86158,8 @@ JSImporter.pushRelativePaths([
     "_css.css",
     "css_rules/_imports.js",
     "div_attributes/_imports.js",
-	
+    "events/_imports.js",
+
     "DivView.js",
     "CenteredDivView.js",
     "DivStyledView.js",
@@ -86165,10 +86179,10 @@ JSImporter.pushRelativePaths([
 
     "ImageWellView.js",
     "ImageView.js",
+    "ButtonView.js",
     "PanelView.js",
 
     "atom/_imports.js",
-
 ])
 
 
@@ -86753,8 +86767,391 @@ ViewAnimator.registerThisClass()
 
 "use strict"
 
+JSImporter.pushRelativePaths([
+    "KeyboardKey.js",
+    "Keyboard.js",
+    "MousePosition.js",
+    "Mouse.js",
+])
+
+
+"use strict"
+
+/*
+    Keyboard
+
+
+*/
+
+window.KeyboardKey = ideal.Proto.extend().newSlots({
+    type: "KeyboardKey",
+    isDown: false,
+    code: null,
+    name: "",
+}).setSlots({
+    init: function () {
+        ideal.Proto.init.apply(this)
+        return this
+    },
+
+    onKeyDown: function (event) {
+        let shouldPropogate = true
+        this.setIsDown(true)
+        return shouldPropogate
+    },
+
+    onKeyUp: function (event) {
+        let shouldPropogate = true
+        this.setIsDown(false)
+        return shouldPropogate
+    },
+})
+
+"use strict"
+
+/*
+    Keyboard
+
+
+*/
+
+window.Keyboard = ideal.Proto.extend().newSlots({
+    type: "Keyboard",
+    codeToKeys: null, // dictionary of KeyboardKey objects
+}).setSlots({
+    init: function () {
+        ideal.Proto.init.apply(this)
+        this.setupCodeToKeys()
+        return this
+    },
+
+    shared: function() {   
+        return this.sharedInstanceForClass(Keyboard)
+    },
+
+    setupCodeToKeys: function() {
+        let dict = {}
+        let k2c = this.keyNameToCodeMap()
+        Object.keys(k2c).forEach((name) => {
+            let code = k2c[name]
+            dict[code] = KeyboardKey.clone().setName(name).setCode(code)
+        })
+        this.setCodeToKeys(dict)
+        return this
+    },
+
+    keyForCode: function(aCode) {
+        return this.codeToKeys()[aCode]
+    },
+
+    nameForKeyCode: function(aCode) {
+        return this.keyForCode(aCode).name()
+    },
+
+    keyCodeForName: function(aName) {
+        return this.keyNameToCodeMap()[aName]
+    },
+
+    keyNameToCodeMap: function() {
+        return { 
+            backspace: 8,
+            tab: 9,
+            enter: 13,
+            shift: 16,
+            ctrl: 17,
+            alt: 18,
+            pauseBreak: 19,
+            capslock: 20,
+            esc: 27,
+            space: 32,
+            pageUp: 33,
+            pageDown: 34,
+            end: 35,
+            home: 36,
+            leftArrow: 37,
+            upArrow: 38,
+            rightArrow: 39,
+            downArrow: 40,
+            insert: 45,
+            delete: 46,
+            0: 48,
+            1: 49,
+            2: 50,
+            3: 51,
+            4: 52,
+            5: 53,
+            6: 54,
+            7: 55,
+            8: 56,
+            9: 57,
+            a: 65,
+            b: 66,
+            c: 67,
+            d: 68,
+            e: 69,
+            f: 70,
+            g: 71,
+            h: 72,
+            i: 73,
+            j: 74,
+            k: 75,
+            l: 76,
+            m: 77,
+            n: 78,
+            o: 79,
+            p: 80,
+            q: 81,
+            r: 82,
+            s: 83,
+            t: 84,
+            u: 85,
+            v: 86,
+            w: 87,
+            x: 88,
+            y: 89,
+            z: 90,
+            leftWindow: 91,
+            rightWindow: 92,
+            select: 93,
+            numpad0: 96,
+            numpad1: 97,
+            numpad2: 98,
+            numpad3: 99,
+            numpad4: 100,
+            numpad5: 101,
+            numpad6: 102,
+            numpad7: 103,
+            numpad8: 104,
+            numpad9: 105,
+            multiply: 106,
+            plus: 107,
+            minus: 109,
+            decimalPoint: 110,
+            divide: 111,
+            f1: 112,
+            f2: 113,
+            f3: 114,
+            f4: 115,
+            f5: 116,
+            f6: 117,
+            f7: 118,
+            f8: 119,
+            f9: 120,
+            f10: 121,
+            f11: 122,
+            f12: 123,
+            numLock: 144,
+            scrollLock: 145,
+            semicolon: 186,
+            equalsign: 187,
+            comma: 188,
+            dash: 189,
+            period: 190,
+            forwardSlash: 191,
+            graveAccent: 192,
+            openBracket: 219,
+            backslash: 220,
+            closeBracket: 221,
+            singleQuote: 222 
+        };
+    },
+
+    keyForCode: function(aCode) {
+        return this.keyDict()
+    },
+
+    // -- events ---
+
+    showCodeToKeys: function() {
+        console.log("Keyboard:")
+        Object.keys(this.codeToKeys()).forEach((code) => {
+            console.log("  code: ", code + " key name: ", this.codeToKeys()[code].name())
+        })
+        return this
+    },
+
+    keyForEvent: function(event) {
+        let code = event.keyCode
+        let key = this.codeToKeys()[code]
+        return key
+    },
+
+    onKeyDown: function (event) {
+        let shouldPropogate = true
+        this.keyForEvent(event).onKeyDown(event)
+        return shouldPropogate
+    },
+
+    onKeyUp: function (event) {
+        console.log("Keyboard onKeyUp")
+        let shouldPropogate = true
+        let key = this.keyForEvent(event)
+        key.onKeyUp(event)
+        return shouldPropogate
+    },
+    
+    // --- special ---
+
+    methodNameForKeyCode: function(keyCode) {
+        let key = this.keyForCode(keyCode)
+        let methodName = "on" + key.name() + "KeyDown";
+        return methodName
+    },
+
+    specialKeyCodes: function () { 
+        return {
+            8:  "delete", // "delete" on Apple keyboard
+            9:  "tab", 
+            13: "enter", 
+            16: "shift", 
+            17: "control", 
+            18: "alt", 
+            20: "capsLock", 
+            27: "escape", 
+            33: "pageUp", 
+            34: "pageDown", 
+            37: "leftArrow",  
+            38: "upArrow",  
+            39: "rightArrow", 
+            40: "downArrow",  
+            46: "delete", 
+            /* 
+			107: "add",  
+			109: "subtract",  
+			111: "divide",  
+			144: "numLock",  
+			145: "scrollLock",  
+			186: "semiColon",  
+			187: "equalsSign", 
+			*/ 
+        }
+    },
+	
+    specialNameForKeyEvent: function(event) {
+        var code = event.keyCode
+        var result = this.specialKeyCodes()[code]
+		
+        if (event.shiftKey && (code == 187)) {
+            return "plus"
+        }
+		
+        //console.log("specialNameForKeyEvent ", code, " = ", result)
+		
+        return result
+    },
+})
+
+"use strict"
+
+/*
+    MousePosition
+
+    Mouse position at a point in time.
+
+*/
+
+window.MousePosition = ideal.Proto.extend().newSlots({
+    type: "MousePosition",
+    x: 0,
+    y: 0,
+}).setSlots({
+    init: function () {
+        ideal.Proto.init.apply(this)
+        return this
+    },
+
+    newForEvent: function(event) {
+        let mp = MousePosition.clone()
+        mp.setX(event.clientX)
+        mp.setY(event.clientY)
+        return mp
+    },
+
+    /*
+    positionInView: function(aView) {
+        let bounds = aView.boundingClientRect()
+        return {
+            _x: this.x() - bounds.left,
+            _y: this.y() - bounds.top
+        }
+    },
+    */
+	
+})
+
+"use strict"
+
+/*
+    Mouse
+
+    Global shared instance that tracks current mouse state in window coordinates.
+    View has convenience methods to get this state into view coords.
+
+*/
+
+
+window.Mouse = ideal.Proto.extend().newSlots({
+    type: "Mouse",
+    isDown: false,
+    downPos: null,
+    currentPos: null,
+    upPos: null,
+}).setSlots({
+    init: function () {
+        ideal.Proto.init.apply(this)
+        return this
+    },
+
+    shared: function() {   
+        return this.sharedInstanceForClass(Mouse)
+    },
+
+    // --- events ---
+
+    onMouseDown: function(event) {
+        //console.log("Mouse onMouseDown")
+        let mp = MousePosition.newForEvent(event)
+        this.setIsDown(true);
+        this.setDownPos(mp)
+        return true
+    },
+
+    onMouseMove: function (event) {
+        let mp = MousePosition.newForEvent(event)
+        this.setCurrentPos(mp)
+        return true
+    },
+
+    onMouseUp: function(event) {
+        let mp = MousePosition.newForEvent(event)
+        this.setIsDown(false);
+        this.setUpPos(mp)
+        return true
+    },  
+
+    // -- helpers ---
+
+    dragVector: function(event) {
+        let v = { _x: 0, _y: 0 }
+        let dp = this.downPos()
+
+        if (dp) {
+            let cp = this.currentPos()
+            if (!this.isDown()) {
+                cp = this.upPos()
+            }
+            v._x = (cp._x - dp._x);
+            v._y = (cp._y - dp._y);
+        }
+
+        return v
+    },
+})
+
+"use strict"
+
 function DomElement_atInsertElement(el, index, child) {
-    var children = el.children
+    let children = el.children
     
     if (index < children.length) {
         el.insertBefore(children[index])
@@ -86837,7 +87234,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     setupDivClassName: function() {
-        var ancestorNames = this.ancestors().map((obj) => { 
+        let ancestorNames = this.ancestors().map((obj) => { 
             if (obj.type().contains(".")) {
                 return ""
             }
@@ -86854,7 +87251,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 	
     insertDivClassName: function(aName) {
-        var names = this.divClassName().split(" ")
+        let names = this.divClassName().split(" ")
         names.removeOccurancesOf(aName) // avoid duplicates
         names.atInsert(0, aName)
         this.setDivClassNames(names)
@@ -86862,7 +87259,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 	
     removeDivClassName: function(aName) {
-        var names = this.divClassName().split(" ")
+        let names = this.divClassName().split(" ")
         names.removeOccurancesOf(aName)
         this.setDivClassNames(names)
         return this
@@ -86881,14 +87278,17 @@ window.DivView = ideal.Proto.extend().newSlots({
         CSS.ruleAt(ruleName).applyToElement(this.element())
         return this
     },
-*/
+    */
 
     setCssAttribute: function(key, newValue, didChangeCallbackFunc) {
-        var style = this.cssStyle()
-        var oldValue = style[key]
+        let style = this.cssStyle()
+        let oldValue = style[key]
         if(String(oldValue) != String(newValue)) {
             if (newValue == null) {
-                delete style[key]
+                //console.log("deleting css key ", key)
+                //delete style[key]
+                style.removeProperty(key)
+                //console.log(this.cssStyle()[key])
             } else {
                 style[key] = newValue
             }
@@ -86906,6 +87306,21 @@ window.DivView = ideal.Proto.extend().newSlots({
             throw new Error("getCssAttribute called with 2 arguments")
         }
         return this.cssStyle()[key]
+    },
+
+    // css px attributes
+
+    setPxCssAttribute: function(name, value, didChangeCallbackFunc) {
+        this.setCssAttribute(name, this.pxNumberToString(value), didChangeCallbackFunc)
+        return this
+    },
+
+    getPxCssAttribute: function(name, errorCheck) {
+        let s = this.getCssAttribute(name, errorCheck)
+        if (s.length) {
+            return this.pxStringToNumber(s)
+        }
+        return 0
     },
 
 
@@ -86988,8 +87403,13 @@ window.DivView = ideal.Proto.extend().newSlots({
 	
     // margin
 
+    setMarginString: function(s) {
+        this.setCssAttribute("margin", s)
+        return this
+    },
+
     setMargin: function(aNumber) {
-        this.setCssAttribute("margin", this.pxNumberToString(aNumber))
+        this.setPxCssAttribute("margin", aNumber)
         return this
     },
 
@@ -86998,65 +87418,65 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     setMarginLeft: function(aNumber) {
-        this.setCssAttribute("margin-left", this.pxNumberToString(aNumber))
+        this.setPxCssAttribute("margin-left", aNumber)
         return this
     },
 	
     setMarginRight: function(aNumber) {
-        this.setCssAttribute("margin-right", this.pxNumberToString(aNumber))
+        this.setPxCssAttribute("margin-right", aNumber)
         return this
     },
 
     setMarginTop: function(aNumber) {
-        this.setCssAttribute("margin-top", this.pxNumberToString(aNumber))
+        this.setPxCssAttribute("margin-top", aNumber)
         return this
     },
 	
     setMarginBottom: function(aNumber) {
-        this.setCssAttribute("margin-bottom", this.pxNumberToString(aNumber))
+        this.setPxCssAttribute("margin-bottom", aNumber)
         return this
     },
 
     // padding left
 
     setPadding: function(aNumber) {
-        this.setCssAttribute("padding", this.pxNumberToString(aNumber))
+        this.setPxCssAttribute("padding", aNumber)
         return this
     },
 
     setPaddingRight: function(aNumber) {
-        this.setCssAttribute("padding-right", this.pxNumberToString(aNumber))
+        this.setPxCssAttribute("padding-right", aNumber)
         return this
     },
 	
     setPaddingLeft: function(aNumber) {
-        this.setCssAttribute("padding-left", this.pxNumberToString(aNumber))
+        this.setPxCssAttribute("padding-left", aNumber)
         return this
     },
 
     setPaddingTop: function(aNumber) {
-        this.setCssAttribute("padding-top", this.pxNumberToString(aNumber))
+        this.setPxCssAttribute("padding-top", aNumber)
         return this
     },
 
     setPaddingBottom: function(aNumber) {
-        this.setCssAttribute("padding-bottom", this.pxNumberToString(aNumber))
+        this.setPxCssAttribute("padding-bottom", aNumber)
         return this
     },
 
     paddingLeft: function() {
-        return this.getCssAttribute("padding-left").before("px")
+        return this.psStringToNumber(this.getCssAttribute("padding-left"))
     },
 
     // padding right
 	
     setPaddingRight: function(aNumber) {
-        this.setCssAttribute("padding-right", this.pxNumberToString(aNumber))
+        this.setPxCssAttribute("padding-right", aNumber)
         return this
     },
 
     paddingRight: function() {
-        return this.getCssAttribute("padding-right").before("px")
+        return this.psStringToNumber(this.getCssAttribute("padding-right"))
     },
 
     // text align
@@ -87276,67 +87696,68 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     // top
 
-    setTop: function (y) {
-        var v = y + "px"
-        this.setCssAttribute("top", v)
-        //console.log("setTop " + v)
+    setTopString: function (s) {
+        this.setCssAttribute("top", s)
+        return this
+    },
+
+    setTop: function (aNumber) {
+        this.setPxCssAttribute("top", aNumber)
         return this
     },
 
     top: function() {
-        var v = this.getCssAttribute("top")
-        if (v.length) {
-            return v.before("px")
-        }
-        return 0
+        return this.getPxCssAttribute("top")
     },
 	
     // left
 
-    setLeft: function (aNumber) {
-        var s = this.pxNumberToString(aNumber)
+
+    setLeftString: function (s) {
         this.setCssAttribute("left", s)
         return this
     },
 
-    left: function() {
-        var s = this.getCssAttribute("left")
-        if (s.length) {
-            return Number(s.before("px"))
-        }
-        return 0
+    setLeft: function (aNumber) {
+        this.setPxCssAttribute("left", aNumber)
+        return this
     },
-	
+
+    left: function() {
+        return this.getPxCssAttribute("left")
+    },
+    
+   
     // right
-	
-    setRight: function (aNumber) {
-        var s = this.pxNumberToString(aNumber)
+    
+    setRightString: function (s) {
         this.setCssAttribute("right", s)
         return this
     },
 
+    setRight: function (aNumber) {
+        this.setPxCssAttribute("right", aNumber)
+        return this
+    },
+
     right: function() {
-        var s = this.getCssAttribute("right")
-        if (s.length) {
-            return s.before("px")
-        }
-        return 0
+        return this.getPxCssAttribute("right")
     },	
 	
     // bottom
-	
-    setBottom: function (aNumber) {
-        var s = this.pxNumberToString(aNumber)
+    
+    setBottomString: function (s) {
         this.setCssAttribute("bottom", s)
         return this
     },
 
+    setBottom: function (aNumber) {
+        this.setPxCssAttribute("bottom", aNumber)
+        return this
+    },
+
     bottom: function() {
-        var s = this.getCssAttribute("bottom")
-        if (s.length) {
-            return s.before("px")
-        }
-        return 0
+        return this.getPxCssAttribute("bottom")
     },	
 	
     // float
@@ -87405,11 +87826,15 @@ window.DivView = ideal.Proto.extend().newSlots({
     borderRight: function() {
         return this.getCssAttribute("border-right")
     },
-		
+	
     // border radius
 	
     setBorderRadius: function(s) {
-        this.setCssAttribute("border-radius", s)
+        if (typeof(s) == "number") {
+            this.setPxCssAttribute("border-radius", s)
+        } else {
+            this.setCssAttribute("border-radius", s)
+        }
 	    return this
     },
 	
@@ -87417,6 +87842,18 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this.getCssAttribute("border-radius")
     },
     
+    // line height
+
+    setLineHeight: function(aNumber) {
+        this.setPxCssAttribute("line-height", aNumber)
+        assert(this.lineHeight() == aNumber)
+        return this		
+    },
+	
+    lineHeight: function() {
+        return this.getPxCssAttribute("line-height")
+    },	
+	
     // alignment
 	
     setTextAlign: function(s) {
@@ -87486,7 +87923,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     // visibility
     
     setIsVisible: function(aBool) {
-        var v = aBool ? "visible" : "hidden"
+        let v = aBool ? "visible" : "hidden"
         this.setCssAttribute("visibility", v)
         return this
     },
@@ -87553,8 +87990,8 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     userSelect: function() {
-        var style = this.cssStyle()
-        var result = this.userSelectKeys().detect(key => style[key])
+        let style = this.cssStyle()
+        let result = this.userSelectKeys().detect(key => style[key])
         result = result || style.userSelect
         return result 
     },
@@ -87572,7 +88009,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     // user selection 
 	
     setUserSelect: function(aString) {
-        var style = this.cssStyle()
+        let style = this.cssStyle()
         //console.log("'" + aString + "' this.userSelect() = '" + this.userSelect() + "' == ", this.userSelect() == aString)
         if (this.userSelect() != aString) {
             style.userSelect = aString
@@ -87606,7 +88043,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
     
     setWidthString: function(s) {
-	    assert(typeof(s) == "string")
+	    assert(typeof(s) == "string" || s === null)
 	    this.setCssAttribute("width", s, () => { this.didChangeWidth() })
 	    return this
     },
@@ -87617,7 +88054,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 	
     setWidthPercentage: function(aNumber) {
-        var newValue = this.percentageNumberToString(aNumber)
+        let newValue = this.percentageNumberToString(aNumber)
 	    this.setCssAttribute("width", newValue, () => { this.didChangeWidth() })
 	    return this
     },
@@ -87653,20 +88090,16 @@ window.DivView = ideal.Proto.extend().newSlots({
     // width
     
     minWidth: function() {
-        var s = this.getCssAttribute("min-width")
-        assert(s.includes("px"))
-        var w = Number(s.replace("px", ""))
-        return w
+        let s = this.getCssAttribute("min-width")
+        return this.pxStringToNumber(s)
     },
 
     maxWidth: function() {
-        var w = this.getCssAttribute("max-width")
+        let w = this.getCssAttribute("max-width")
         if (w == "") {
             return null
         }
-        assert(w.includes("px"))
-        w = Number(w.replace("px", ""))
-        return w
+        return this.pxStringToNumber(w)
     },
 
     cssStyle: function() {
@@ -87674,14 +88107,14 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     setMinWidth: function(v) {
-        var type = typeof(v)
-        var newValue = null
+        let type = typeof(v)
+        let newValue = null
         if (v == null) {
-            newValue = null //""
+            newValue = null
         } else if (type == "string") {
 	        newValue = v 
         } else if (type == "number") {
-	        newValue = v + "px"
+	        newValue = this.pxNumberToString(v)
         } else {
             throw new Error(type + " is invalid argument type")
         }
@@ -87698,38 +88131,38 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     setMaxWidth: function(v) {
+        /*
         if (v == this._maxWidth) {
             return this
         }
+        */
 		
-        var type = typeof(v)
-        var newValue = null
+        let type = typeof(v)
+        let newValue = null
         if (v == null) {
-            newValue = ""
+            newValue = null
         } else if (type == "string") {
 	        newValue = v 
         } else if (type == "number") {
-	        newValue = v + "px"
+	        newValue = this.pxNumberToString(v)
         } else {
             throw new Error(type + " is invalid argument type")
         }
-        this._maxWidth = newValue
+        //this._maxWidth = newValue
 
         this.setCssAttribute("max-width", newValue, () => { this.didChangeWidth() })
-				
         return this        
     },
 
-    setMinAndMaxWidth: function(v) {
-        //console.log(this.type() + " setMinAndMaxWidth ", v)
-        //StackTrace.shared()./showCurrentStack()
-        this.setMinWidth(v)
-        this.setMaxWidth(v)
+    setMinAndMaxWidth: function(aNumber) {
+        let newValue = this.pxNumberToString(aNumber)
+        this.setCssAttribute("max-width", newValue, () => { this.didChangeWidth() })
+        this.setCssAttribute("min-width", newValue, () => { this.didChangeWidth() })
         return this        
     },
 
     setMinAndMaxHeight: function(aNumber) {
-        var newValue = this.pxNumberToString(aNumber)
+        let newValue = this.pxNumberToString(aNumber)
         this.setCssAttribute("min-height", newValue, () => { this.didChangeHeight() })
         this.setCssAttribute("max-height", newValue, () => { this.didChangeHeight() })
         return this		
@@ -87745,19 +88178,34 @@ window.DivView = ideal.Proto.extend().newSlots({
             return null
         }
 
+        if (typeof(aNumber) == "string") {
+            if (aNumber.beginsWith("calc") || aNumber.endsWith("px")) {
+                return aNumber
+            }
+        }
+
         assert(typeof(aNumber) == "number")
         return aNumber + "px"
     },
 
+    pxStringToNumber: function(s) {
+        assert(typeof(s) == "string")
+        if (s == "") {
+            return 0
+        }
+        assert(s.endsWith("px"))
+        return Number(s.replace("px", ""))
+    },
+
     setMinAndMaxHeightPercentage: function(aNumber) {
-        var newValue = this.percentageNumberToString(aNumber)
+        let newValue = this.percentageNumberToString(aNumber)
         this.setCssAttribute("min-height", newValue, () => { this.didChangeHeight() })
         this.setCssAttribute("max-height", newValue, () => { this.didChangeHeight() })
         return this		
     },
 	
     setHeightPercentage: function(aNumber) {
-        var newValue = this.percentageNumberToString(aNumber)
+        let newValue = this.percentageNumberToString(aNumber)
         this.setHeightString(newValue)
         return this		
     },
@@ -87783,6 +88231,9 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     setHeight: function(s) {
+        if (typeof(s) == "number") {
+            return this.setHeightPxNumber(s)
+        }
         this.setHeightString(s)
         return this		
     },	
@@ -87797,7 +88248,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     setHeightString: function(aString) {
-        assert(typeof(aString) == "string")
+        assert(typeof(aString) == "string" || aString === null)
         this.setCssAttribute("height", aString, () => { this.didChangeHeight() })
         return this		
     },	
@@ -87820,7 +88271,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     divClassName: function () {
         if (this.element()) {
-            var className = this.element().getAttribute("class");
+            let className = this.element().getAttribute("class");
             this._divClassName = className
             return className
         }
@@ -87967,7 +88418,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     hasChildElement: function(anElement) {
         var children = this.element().childNodes
         for (let i = 0; i < children.length; i ++) {
-            var child = children[i]
+            let child = children[i]
             if (anElement === child) {
                 return true
             }
@@ -88011,8 +88462,8 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     subviewAfter: function(anSubview) {
-        var index = this.indexOfSubview(anSubview)
-        var nextIndex = index + 1
+        let index = this.indexOfSubview(anSubview)
+        let nextIndex = index + 1
         if (nextIndex < this.subviews().length) {
             return this.subviews()[nextIndex]
         }
@@ -88042,7 +88493,7 @@ window.DivView = ideal.Proto.extend().newSlots({
             return this
         }
 
-        var isFocused = this.isActiveElementAndEditable()
+        let isFocused = this.isActiveElementAndEditable()
         
         if (isFocused) {
             this.blur()
@@ -88073,12 +88524,12 @@ window.DivView = ideal.Proto.extend().newSlots({
     // --- updates ---
 
     tellParentViews: function(msg, aView) {
-        var f = this[msg]
+        let f = this[msg]
         if (f && f.apply(this, [aView])) {
             return // stop propogation
         }
 
-        var p = this.parentView()
+        let p = this.parentView()
         if (p) {
             p.tellParentViews(msg, aView)
         }
@@ -88097,17 +88548,17 @@ window.DivView = ideal.Proto.extend().newSlots({
         return DivView._isHandlingEvent
     },
 
-    handleEventFunction: function(eventFunc) {
+    handleEventFunction: function(event, eventFunc) {
         //  a try gaurd to make sure isHandlingEvent has correct value
         //  isHandlingEvent is used to determine if view should inform node of changes
         //  - it should only while handling an event
 		
-        var error = null
+        let error = null
 		
         this.setIsHandlingEvent(true)
 		
         try {
-            eventFunc()
+            eventFunc(event)
         } catch (e) {
             //console.log(e)
             StackTrace.shared().showError(e)
@@ -88123,23 +88574,17 @@ window.DivView = ideal.Proto.extend().newSlots({
 	
     // --- window resize events ---
 	
-    windowResizeListenerFunc: function() {
-        if (!this._windowResizeListenerFunc) { // so callback is unique to this div        
-            this._windowResizeListenerFunc = (event) => { this.onWindowResize(event) }
-        }
-        return this._windowResizeListenerFunc	
-    },
 	
     setIsRegisterForWindowResize: function(aBool) {        
         if (aBool) {
             if (this._isRegisteredForWindowResize == false) {
                 this._isRegisteredForWindowResize = true
-            	window.addEventListener("resize", this.windowResizeListenerFunc(), false);
+            	window.addEventListener("resize", this.eventFuncForMethodName("onWindowResize"), false);
             }
         } else {
             if (this._isRegisteredForWindowResize == true) {
                 this._isRegisteredForWindowResize = false
-	            window.removeEventListener("resize", this.windowResizeListenerFunc());
+	            window.removeEventListener("resize", this.eventFuncForMethodName("onWindowResize"));
             }
         }
         
@@ -88148,30 +88593,37 @@ window.DivView = ideal.Proto.extend().newSlots({
     
     onWindowResize: function(event) {
         //console.log("onWindowResize")
-        //var r = document.body.getBoundingClientRect()
+        //let r = this.boundingClientRect()
         //console.log("onResize ")
         //console.log("onResize " + r.width + " x " + r.right)
         //console.log("onResize " + window.innerWidth + " x " + window.innerHeight)
         //console.log("onResize " + document.body.clientHeight + " x " + document.body.clientHeight)        
+        return true
     },
 	
     // --- onClick event, target & action ---
     
     setIsRegisteredForClicks: function (aBool) {
+        let e = this.element()
         if (aBool) {
             if (this._isRegisteredForClicks == false) {
                 this._isRegisteredForClicks = true
-	            this.element().onclick =  (event) =>{ 
-                    this.handleEventFunction( () => { this.onClick(event) })
+
+	            this.element().onclick = (event) =>{ 
+                    this.handleEventFunction(event, (event) => { this.onClick(event) })
                 }
-	            //this.element().ondblclick = function (event) { this.onDoubleClick(event) }
+
+                this.element().ondblclick = (event) => { 
+                    this.handleEventFunction(event, (event) => { this.onDoubleClick(event) })
+                }
+
                 this.makeCursorPointer()
             }
         } else {
             if (this._isRegisteredForClicks == true) {
                 this._isRegisteredForClicks = false
 	            this.element().onclick = null
-	            //this.element().ondbclick = null
+	            this.element().ondbclick = null
                 this.makeCursorDefault()
             }
         }
@@ -88197,7 +88649,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     onClick: function(event) {
         this.sendActionToTarget()
         event.stopPropagation()
-        return this
+        return false
     },
     
     sendActionToTarget: function() {
@@ -88205,12 +88657,12 @@ window.DivView = ideal.Proto.extend().newSlots({
             return null
         }
 
-        var t = this.target()
+        let t = this.target()
         if (!t) {
             throw new Error("no target for action " + this.action())
         }
         
-        var method = t[this.action()]
+        let method = t[this.action()]
         if (!method) {
             throw new Error("no target for action " + this.action())
         }
@@ -88219,7 +88671,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
     
     onDoubleClick: function (event) {
-        return this
+        return true
     },
     
     // drag & drop
@@ -88240,7 +88692,7 @@ window.DivView = ideal.Proto.extend().newSlots({
                 this._isRegisteredForDrop = false
 				
                 /*
-				var preventFunc = (event) => { 
+				let preventFunc = (event) => { 
 					if(event.preventDefault) { 
 						event.preventDefault(); 
 					}
@@ -88316,7 +88768,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     onDrop: function (event) {
         if (this.acceptsDrop()) {
-            //var file = event.dataTransfer.files[0];
+            //let file = event.dataTransfer.files[0];
             //console.log('onDrop ' + file.path);
             this.onDataTransfer(event.dataTransfer)
             this.dragUnhighlight()
@@ -88330,16 +88782,16 @@ window.DivView = ideal.Proto.extend().newSlots({
         //console.log('onDataTransfer ', dataTransfer);
         
         if (dataTransfer.files.length) {   
-            var dataUrls = []
+            let dataUrls = []
             for (let i = 0; i < dataTransfer.files.length; i ++) {
-                var file = dataTransfer.files[i]
+                let file = dataTransfer.files[i]
                 //console.log("file: ", file)
                 
                 if (!file.type.match("image.*")) {
                     continue;
                 }
 
-                var reader = new FileReader();
+                let reader = new FileReader();
                 reader.onload = ((event) => {
                     this.onDropImageDataUrl(event.target.result)
                 })
@@ -88441,8 +88893,8 @@ window.DivView = ideal.Proto.extend().newSlots({
         if (aBool) {
             if (this._isRegisteredForPaste == false) {
                 this._isRegisteredForPaste = true
-                //var b = Modernizr.passiveeventlisteners ? {passive: true} : false
-                var b = { passive: true}
+                //let b = Modernizr.passiveeventlisteners ? {passive: true} : false
+                let b = { passive: true}
 	        	this.element().addEventListener("touchstart",  this.touchstartListenerFunc(), b);
 	        	this.element().addEventListener("touchmove",   this.touchmoveListenerFunc(), b);
 	        	this.element().addEventListener("touchcancel", this.touchcancelListenerFunc(), b);
@@ -88463,9 +88915,9 @@ window.DivView = ideal.Proto.extend().newSlots({
     touchDownDiffWithEvent: function(event) {
         assert(this._onTouchDownEventPosition) 
 
-        var thisTouch = event.changedTouches[0]
-        var lastTouch = this._onTouchDownEventPosition
-        var d = {} 
+        let thisTouch = event.changedTouches[0]
+        let lastTouch = this._onTouchDownEventPosition
+        let d = {} 
         d.xd = thisTouch.screenX - lastTouch.screenX
         d.yd = thisTouch.screenY - lastTouch.screenY
         d.dist = Math.sqrt(d.xd*d.xd + d.yd*d.yd)
@@ -88497,129 +88949,123 @@ window.DivView = ideal.Proto.extend().newSlots({
         }
     },	
 
-    
     // mouse events
     
-    setIsRegisteredForMouse: function (aBool) {
+    eventFuncForMethodName: function (methodName) {
+        if (!this._listenerFuncs) {
+            this._listenerFuncs = {}
+        }
+
+        if (!this._listenerFuncs[methodName]) {
+            let f = (event) => { 
+                let result = this[methodName].apply(this, [event]) 
+                if (result == false) {
+                    event.stopPropagation()
+                }
+                return result
+            }
+            this._listenerFuncs[methodName] = f
+            //this._listenerFuncs[methodName] = (event) => { this.handleEventFunction(f, event) }
+        }
+        return this._listenerFuncs[methodName]
+    },
+
+    setIsRegisteredForMouse: function (aBool, useCapture) {
+        if (!useCapture) { 
+            useCapture = false; 
+        }
+
+        //console.log(this.type() + " setIsRegisteredForMouse(" + aBool + "," + useCapture + ")")
+
+        let e = this.element()
+
         if (aBool) {
             if (this._isRegisteredForMouse == false) {
-                this._isRegisteredForMouse = true
-                this.element().onmousedown  =  (event) => { 
-                    return this.onMouseDown(event) 
-                }
-	            this.element().onmousemove  =  (event) => { return this.onMouseMove(event) }
-	            this.element().onmouseout   =  (event) => { return this.onMouseOut(event) }
-	            this.element().onmouseover  =  (event) => { return this.onMouseOver(event) }
-	            this.element().onmouseup    =  (event) => { return this.onMouseUp(event) }
-	            
-	            this.element().onmouseenter =  (event) => { return this.onMouseEnter(event) }
-	            this.element().onmouseleave =  (event) => { return this.onMouseLeave(event) }
-
+                e.addEventListener("mousedown", this.eventFuncForMethodName("onMouseDown"), useCapture);
+                e.addEventListener("mousemove", this.eventFuncForMethodName("onMouseMove"), useCapture);
+                e.addEventListener("mouseout", this.eventFuncForMethodName("onMouseOut"), useCapture);
+                e.addEventListener("mouseover", this.eventFuncForMethodName("onMouseOver"), useCapture);
+                e.addEventListener("mouseup", this.eventFuncForMethodName("onMouseUp"), useCapture);
+                e.addEventListener("mouseenter", this.eventFuncForMethodName("onMouseEnter"), useCapture);
+                e.addEventListener("mouseleave", this.eventFuncForMethodName("onMouseLeave"), useCapture);
             }
         } else {
-            if (this._isRegisteredForMouse == true) {
-                this._isRegisteredForMouse = false
-	            this.element().onmousedown  = null
-	            this.element().onmousemove  = null
-	            this.element().onmouseout   = null
-	            this.element().onmouseover  = null
-	            this.element().onmouseup    = null
-
-	            this.element().onmouseenter = null
-	            this.element().onmouseleave = null
-
-            }
+            e.removeEventListener("mousedown", this.eventFuncForMethodName("onMouseDown"), useCapture);
+            e.removeEventListener("mousemove", this.eventFuncForMethodName("onMouseMove"), useCapture);
+            e.removeEventListener("mouseout", this.eventFuncForMethodName("onMouseOut"), useCapture);
+            e.removeEventListener("mouseover", this.eventFuncForMethodName("onMouseOver"), useCapture);
+            e.removeEventListener("mouseup", this.eventFuncForMethodName("onMouseUp"), useCapture);
+            e.removeEventListener("mouseenter", this.eventFuncForMethodName("onMouseEnter"), useCapture);
+            e.removeEventListener("mouseleave", this.eventFuncForMethodName("onMouseLeave"), useCapture);
         }
+        this._isRegisteredForMouse = aBool
+
         return this
     },    
     
     onMouseDown: function (event) {
         //console.log(this.typeId() + ".onMouseDown()")
-        this._isMouseDown = true
-        this._onMouseDownEventPosition = { x: event.clientX, y: event.clientY }
-        event.stopPropagation()
-    },
-    
-    mouseDownDiffWithEvent: function(event) {
-        assert(this._onMouseDownEventPosition) 
-        this._onMouseUpEventPosition = { x: event.clientX, y: event.clientY }
-        
-        var p1 = this._onMouseDownEventPosition
-        var p2 = this._onMouseUpEventPosition
-        
-        var d = {} 
-        d.xd = p1.x - p2.x
-        d.yd = p1.y - p2.y
-        d.dist = Math.sqrt(d.xd*d.xd + d.yd*d.yd)
-        
-        return d
-    },
-    
-    isMouseDown: function () {
-        return this._isMouseDown
+        //event.stopPropagation()
+        return true
     },
     
     onMouseMove: function (event) {
-	    /*
-        if (this.isMouseDown()) {
-            var diff = this.mouseDownDiffWithEvent(event)
-            console.log("onMouseMove:" + JSON.stringify(diff))
-        }
-		*/
+        return true
     },
     
     onMouseEnter: function(event) {
-
+        return true
     },
 
     onMouseLeave: function(event) {
-
+        return true
     },
 
     onMouseOut: function (event) {
         //console.log("onMouseOut")
+        return true
     },
     
     onMouseOver: function (event) {
+        return true
     },
 
     onMouseUp: function (event) {
         //console.log(this.typeId() + ".onMouseUp()")
-        this._isMouseDown = false
-        var diff = this.mouseDownDiffWithEvent(this._onMouseDownEventPosition) 
-        this._onMouseDownEventPosition = null 
-        event.stopPropagation()
+        //event.stopPropagation()
+        return true
     },
         
     // --- keyboard events ---
     
-    setIsRegisteredForKeyboard: function (aBool) {
+    setIsRegisteredForKeyboard: function (aBool, useCapture) {
+        if (!useCapture) {
+            useCapture = false
+        }
+
+        let e = this.element()
+
         if (aBool) {
             if (this._isRegisteredForKeyboard == false) {
                 this._isRegisteredForKeyboard = true
-	            /*
-	            this.element().onkeydown  =  (event) => {       
-	                return this.onKeyDown(event) 
-	            }
 
-	            this.element().onkeypress =  (event) => { return this.onKeyPress(event) }
-	            */
-	            this.element().onkeyup    =  (event) => { 
-	                //this._onkeyupInnerHTML = this.element().innerHTML // THIS NEEDS TO BE HERE OR DOM innerHTML ISN'T CONSISTENT?
-	                //console.log("onkeyup [" + this.element().innerHTML  + "]")
-	                return this.onKeyUp(event) 
-	            }
+                e.addEventListener("keyup", this.eventFuncForMethodName("onKeyUp"), useCapture);
+                //e.addEventListener("keydown", this.eventFuncForMethodName("onKeyDown"), useCapture);
+                //e.addEventListener("keypress", this.eventFuncForMethodName("onKeyPress"), useCapture);
+                
 	            DivView._tabCount ++
-	            this.element().tabIndex   = DivView._tabCount
+	            e.tabIndex = DivView._tabCount
                 this.setCssAttribute("outline", "none")
             }
         } else {
             if (this._isRegisteredForKeyboard == true) {
                 this._isRegisteredForKeyboard = false
-	            this.element().onkeydown  = null
-	            this.element().onkeypress = null
-	            this.element().onkeyup    = null
-	            delete this.element().tabindex 
+
+                e.removeEventListener("keyup", this.eventFuncForMethodName("onKeyUp"), useCapture);
+                e.removeEventListener("keydown", this.eventFuncForMethodName("onKeyDown"), useCapture);
+                e.removeEventListener("keypress", this.eventFuncForMethodName("onKeyPress"), useCapture);
+ 
+	            delete e.tabindex 
             }
         }
         return this
@@ -88693,14 +89139,15 @@ window.DivView = ideal.Proto.extend().newSlots({
 		        event.preventDefault()
             }
         }
+        return true
     },
     
     onKeyPress: function (event) {
         // console.log("onKeyPress")
+        return true
     },
     
     onKeyUp: function (event) {
-		
         var shouldPropogate = true
         event.specialKeyName = this.specialNameForKeyEvent(event)
         //		console.log(this.type() + " onKeyUp event.specialKeyName=", event.specialKeyName)
@@ -88739,20 +89186,20 @@ window.DivView = ideal.Proto.extend().newSlots({
         return shouldPropogate
     },
     
-    
     didEdit: function() {
         this.tellParentViews("onDidEdit", this)
         return this
     },
     
     onEnterKeyUp: function() {
-        return this
+        return true
     },
     
     // --- tabs and next key view ----
     
     onTabKeyDown: function() {
         this.selectNextKeyView()
+        return true
     },
 
     selectNextKeyView: function() {
@@ -88834,13 +89281,13 @@ window.DivView = ideal.Proto.extend().newSlots({
     onFocus: function() {
         // subclasses can override 
         //console.log(this.type() + " onFocus")
-        return this
+        return true
     },
 
     onBlur: function() {
         // subclasses can override 
         //console.log(this.type() + " onBlur")
-        return this
+        return true
     },
     
     innerText: function() {
@@ -88913,25 +89360,31 @@ window.DivView = ideal.Proto.extend().newSlots({
             this.replaceSelectedText(htmlToPlainTextFunc(rDataPText))
             return false; // prevent returning text in clipboard
         }
+        return true
     },
     
+    /*
     pasteListenerFunc: function () {
         if (!this._pasteListenerFunc) {
             this._pasteListenerFunc = (e) => { this.paste(e) }
         }
         return this._pasteListenerFunc
     },
+    */
     
-    setIsRegisteredForPaste: function(aBool) {
+    setIsRegisteredForPaste: function(aBool, useCapture) {
+        let e = this.element()
         if (aBool) {
             if (this._isRegisteredForPaste == false) {
                 this._isRegisteredForPaste = true
-	        	this.element().addEventListener("paste", this.pasteListenerFunc(), false);
+                e.addEventListener("paste", this.eventFuncForMethodName("paste"), useCapture);
+
+	        	//this.element().addEventListener("paste", this.pasteListenerFunc(), false);
             }
         } else {
             if (this._isRegisteredForPaste == true) {
                 this._isRegisteredForPaste = false
-	        	this.element().removeEventListener("paste", this.pasteListenerFunc());
+                e.removeEventListener("paste", this.eventFuncForMethodName("paste"), useCapture);
             }
         }
         return this
@@ -89158,19 +89611,61 @@ window.DivView = ideal.Proto.extend().newSlots({
         */
         return this
     },
+
+    boundingClientRect: function() {
+        return this.element().getBoundingClientRect()
+    },
     
     isScrolledIntoView: function() {
-        var e = this.element()
-        var top = e.getBoundingClientRect().top;
-        var bottom = e.getBoundingClientRect().bottom;
-        var isVisible = (top >= 0) && (bottom <= window.innerHeight);
+        let r = this.boundingClientRect()
+        let isVisible = (r.top >= 0) && (r.bottom <= window.innerHeight);
         return isVisible;
     },
 
     // helpers
-	
+
+    mouseUpPos: function() { 
+        return this.viewPosForWindowPos(Mouse.shared().upPos())
+    },
+
+    mouseCurrentPos: function() { 
+        return this.viewPosForWindowPos(Mouse.shared().currentPos())
+    },
+
+    mouseDownPos: function() { 
+        return this.viewPosForWindowPos(Mouse.shared().downPos())
+    },
+
+    viewPosForWindowPos: function(pos) {
+        let b = this.boundingClientRect()
+        return {
+            _x: pos._x - b.left,
+            _y: pos._y - b.top
+        }
+    },
+
+    viewPositionForEvent: function(event) {
+        let b = this.boundingClientRect()
+        return {
+            _x: event.clientX - b.left,
+            _y: event.clientY - b.top
+        }
+    },
+
+    /*
+    windowToViewX: function(x) {
+        let bounds = this.boundingClientRect()
+        return x - bounds.left
+    },
+
+    windowToViewY: function(y) {
+        let bounds = this.boundingClientRect()
+        return y - bounds.top
+    },
+    */
+
     verticallyAlignAbsoluteNow: function() {
-        var pv = this.parentView()
+        let pv = this.parentView()
         if (pv) {
             this.setPosition("absolute")
             setTimeout(() => {
@@ -89181,7 +89676,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 	
     horizontallyAlignAbsoluteNow: function() {
-        var pv = this.parentView()
+        let pv = this.parentView()
         if (pv) {
             this.setPosition("absolute")
             setTimeout(() => {
@@ -89201,11 +89696,11 @@ window.DivView = ideal.Proto.extend().newSlots({
     onVisibility: function() {
 	    //console.log(this.typeId() + ".onVisibility()")
 	    this.unregisterForVisibility()
-	    return this
+	    return true
     },
 	
     unregisterForVisibility: function() {
-	    var obs = this.intersectionObserver()
+	    let obs = this.intersectionObserver()
 	    if (obs) {
 	        obs.disconnect()
             this.setIntersectionObserver(null);
@@ -89219,20 +89714,20 @@ window.DivView = ideal.Proto.extend().newSlots({
 	        return this
 	    }
 	    
-	    var root = document.body
+	    let root = document.body
 	    
 	    if (this.parentView()) {
 	        root = this.parentView().parentView().element() // hack for scroll view - todo: make more general
 	        //root = this.parentView().element()
 	    }
 	    
-        var intersectionObserverOptions = {
+        let intersectionObserverOptions = {
             root: root, // watch for visibility in the viewport 
             rootMargin: "0px",
             threshold: 1.0
         }
     
-        var obs = new IntersectionObserver((entries, observer) => { 
+        let obs = new IntersectionObserver((entries, observer) => { 
             entries.forEach(entry => {
                 if (entry.isIntersecting) { 
                     
@@ -89256,7 +89751,25 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     // centering
-/*
+
+    fillParentView: function() {
+        this.setWidthPercentage(100)
+        this.setHeightPercentage(100)
+        return this
+    },
+
+    centerInParentView: function() {
+        this.setMinAndMaxWidth(null)
+        this.setMinAndMaxHeight(null)
+        //this.setWidth("100%")
+        //this.setHeight("100%")
+        this.setOverflow("auto")
+        this.setMarginString("auto")
+        this.setPosition("absolute")
+        this.setTop(0).setLeft(0).setRight(0).setBottom(0)
+    },
+
+    /*
     verticallyCenterFromTopNow: function() {
         if (this.parentView() === null) {
             console.warn("verticallyCenterFromTopNow called on view with no superview")
@@ -89297,6 +89810,10 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this
     },
     */
+
+    rootView: function() {
+        return  WebBrowserWindow.shared().documentBody()
+    },
 })
 
 "use strict"
@@ -90236,7 +90753,12 @@ window.DocumentBody = DivView.extend().newSlots({
     init: function () {
         DivView.init.apply(this)
         this.setIsRegisterForWindowResize(true)
-	    window.SyncScheduler.shared().scheduleTargetAndMethod(this, "autoAdjustZoomForMobile")
+        window.SyncScheduler.shared().scheduleTargetAndMethod(this, "autoAdjustZoomForMobile")
+
+        // using event intercept phase to grab all events and record them
+        // in Mouse.shared() and Keyboard.shared() objects
+        this.setIsRegisteredForKeyboard(true, true)
+        this.setIsRegisteredForMouse(true, true)
         return this
     },
     
@@ -90285,6 +90807,33 @@ window.DocumentBody = DivView.extend().newSlots({
     zoomAdjustedSize: function() {
         return { width: this.zoomAdjustedWidth(), height: this.zoomAdjustedHeight() }
     },
+
+    // --- event intercept keyboard ---
+
+    onKeyDown: function (event) {
+        return window.Keyboard.shared().onKeyDown(event)
+    },
+
+    onKeyUp: function (event) {
+        console.log(this.type() + " onKeyUp ")
+        return window.Keyboard.shared().onKeyUp(event)
+    },
+
+    // --- event intercept mouse ---
+
+    onMouseDown: function(event) {
+        //console.log("DocumentBody onMouseDown")
+        return window.Mouse.shared().onMouseDown(event)
+    },
+
+    onMouseMove: function (event) {
+        return window.Mouse.shared().onMouseMove(event)
+    },
+
+    onMouseUp: function(event) {
+        return window.Mouse.shared().onMouseUp(event)
+    },  
+
 })
 
 
@@ -90391,6 +90940,21 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
         var agent = navigator.userAgent.toLowerCase()
         return agent
     },
+
+    agentIsSafari: function() {
+        var isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
+               navigator.userAgent &&
+               navigator.userAgent.indexOf('CriOS') == -1 &&
+               navigator.userAgent.indexOf('FxiOS') == -1;
+        return isSafari
+    },
+
+    agentIsChrome: function() {
+        var isChrome =  Boolean(window.chrome) //&& 
+        //navigator.userAgent.indexOf('Brave') == -1;
+        //console.log("window.chrome = ", window.chrome);
+        return isChrome
+    },
     
     isOnMobile: function() { 
         var agent = this.agent();
@@ -90466,8 +91030,13 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     */
 })
 
-WebBrowserWindow.shared().setup()
+/*
+console.log("navigator.userAgent = ", navigator.userAgent);
+console.log("window.WebBrowserWindow.agentIsSafari() = ", window.WebBrowserWindow.agentIsSafari())
+console.log("window.WebBrowserWindow.agentIsChrome() = ", window.WebBrowserWindow.agentIsChrome())
+*/
 
+WebBrowserWindow.shared().setup()
 "use strict"
 
 JSImporter.pushRelativePaths([
@@ -91040,7 +91609,7 @@ window.BrowserView = NodeView.extend().newSlots({
             var s = cg.name()
             if (cg.node() == null) { s += " [null node] " }
             //s += " " + (cg.isCollapsed() ? "collapsed" : "uncollapsed")
-            s += " " + cg.targetWidth() + "px"
+            s += " " + this.pxNumberToString(cg.targetWidth())
             return s
         }).join(" / ")
 
@@ -91213,6 +91782,11 @@ window.BrowserView = NodeView.extend().newSlots({
         let hash = WebBrowserWindow.shared().urlHash()
         var j = ""
 
+        if (hash == "") {
+            this.setNodePathString("/")
+            return this
+        }
+        console.log("hash = " + typeof(hash) + " " + hash)
         try {
             j = JSON.parse(hash)
         } catch(e) {
@@ -92665,17 +93239,6 @@ window.BrowserRow = NodeView.extend().newSlots({
 	        this._isTouchDown = false
         }
     },
-	
-    /*
-    onMouseMove: function (event) {
-        if (this.isMouseDown() && this.canDelete()) {
-            var diff = this.mouseDownDiffWithEvent(event)
-            //console.log("onMouseMove:" + JSON.stringify(diff))
-            this.setTransition("all 0s")
-            this.setRight(diff.xd)
-        }
-    },
-    */
     
     hasCloseButton: function() {
         return this.closeButtonView() && this.closeButtonView().target() != null
@@ -92947,11 +93510,15 @@ window.BrowserFieldRow = BrowserRow.extend().newSlots({
             var e = this.element()
             if (node.nodeMinHeight() == -1) {
                 
-                e.style.height = "auto"
-                e.style.paddingBottom = "calc(100% - 20px)";
+                this.setHeight("auto")
+                //e.style.height = "auto"
+                
+                this.setPaddingBottom("calc(100% - 20px)")
+                //e.style.paddingBottom = "calc(100% - 20px)";
 
             } else {
-                e.style.height = node.nodeMinHeight() + "px"
+                //e.style.height = node.nodeMinHeight() + "px"
+                this.setHeight(this.pxNumberToString(node.nodeMinHeight()))
             }
         }
         
@@ -93758,12 +94325,14 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         if (node && node.nodeMinHeight()) {
             var e = this.element()
             if (node.nodeMinHeight() == -1) {
-                
-                e.style.height = "auto"
-                e.style.paddingBottom = "calc(100% - 20px)";
+                this.setHeight("auto")
+                //e.style.height = "auto"
+                this.setPaddingBottom("calc(100% - 20px)")
+                //e.style.paddingBottom = "calc(100% - 20px)";
 
             } else {
-                e.style.height = node.nodeMinHeight() + "px"
+                //e.style.height = node.nodeMinHeight() + "px"
+                this.setHeight(this.pxNumberToString(node.nodeMinHeight()))
             }
         }
         
@@ -94530,21 +95099,164 @@ window.ImageView = NodeView.extend().newSlots({
     
 })
 
+
+window.ButtonView = DivView.extend().newSlots({
+    type: "ButtonView",
+    titleView: null,
+    isEnabled: true,
+}).setSlots({
+
+    init: function () {
+        DivView.init.apply(this)
+        this.setMinAndMaxWidth(200)
+        this.setButtonHeight(50)
+        this.turnOffUserSelect()
+        this.setBorder("1px solid black")
+        this.setBackgroundColor("#ccc")
+        this.setTextAlign("center")
+        this.setVerticalAlign("middle")
+        
+        this.setTitleView(TextField.clone())
+        this.addSubview(this.titleView())
+        this.titleView().fillParentView()
+        this.setTitle("")
+
+        /*
+        this.setIconName("close")
+        this.setBackgroundSizeWH(10, 10) // use "contain" instead?
+        this.setBackgroundPosition("center")
+        this.makeBackgroundNoRepeat()
+        this.setAction("close") //.setInnerHTML("&#10799;")
+        */
+
+        return this
+    },
+
+    setTitle: function(s) {
+        this.titleView().setValue(s)
+        return this
+    },
+
+    setButtonHeight: function(h) {
+        this.setMinAndMaxHeight(h)
+        this.setLineHeight(h)
+        return this
+    },
+    /*
+    setIconName: function(aString) {
+        this.setBackgroundImageUrlPath(this.pathForIconName(aString))
+        return this
+    },
+    */
+
+
+})
+
 "use strict"
 
 window.PanelView = DivView.extend().newSlots({
     type: "PanelView",
     titleView: null,
     subtitleView: null,
+    button1: null,
+
+    isDragging: false,
 }).setSlots({
     init: function () {
-        this.setTitleView(DivView.clone().setDivClassName("PanelTitleView"))
-        this.setSubtitleView(DivView.clone().setDivClassName("PanelSubtitleView"))
-		
+        DivView.init.apply(this)
+        this.setTitleView(TextField.clone().setDivClassName("PanelTitleView"))
+        this.addSubview(this.titleView())
+        this.titleView().setTextAlign("center")
+        this.titleView().setHeight("3em")
+        this.titleView().setWhiteSpace("normal")
+        this.titleView().centerInParentView()
+        this.titleView().setValue("hello")
+        this.titleView().setColor("white")
+
+        //this.setSubtitleView(TextField.clone().setDivClassName("PanelSubtitleView"))
+        //this.addSubview(this.subtitleView())
+
+        this.setButton1(ButtonView.clone())
+        this.addSubview(this.button1())
+        this.button1().setPosition("absolute").setRight(10).setBottom(10)
+        this.button1().setMinAndMaxWidth(100)
+        this.button1().setTitle("OK")
+        this.button1().setTarget(this).setAction("hitButton1")
+
+        this.setMinAndMaxWidth(500)
+        this.setMinAndMaxHeight(200)
+        this.setBackgroundColor("black")
+        //this.setBorder("1px solid #ccc")
+        this.setPosition("absolute")
+        this.setLeft(0)
+        this.setTop(0)
+        //this.setupForDraggingWithMouse()
+        this.setBorderRadius(5)
+        this.centerInParentView()
+
+        this._mouseMoveTrackerFunc = (event) => {
+            this.mouseMoveTracker(event)
+        }
+
+        /*
+        this._mouseUpTrackerFunc = (event) => {
+            //
+        }
+        */
+
+        return this
+    },
+
+    setTitle: function(s) {
+        this.titleView().setValue(s)
         return this
     },
 
 
+    // --- dragging ---
+
+    setupForDraggingWithMouse: function() {
+        this.setIsRegisteredForMouse(true)
+    },
+
+    mouseMoveTracker: function(event) {
+        //console.log("mouse pos: ", event.clientX, " x ", event.clientY)
+        if (this.isDragging()) {
+            this.setLeft(event.clientX - (this._startClientX - this._startLeft))
+            this.setTop(event.clientY  - (this._startClientY - this._startTop))
+        }
+    },
+
+    onMouseDown: function (event) {
+        //console.log("onMouseDown")
+        this.setIsDragging(true)
+
+        this.parentView().element().addEventListener("mousemove", this._mouseMoveTrackerFunc, false);
+
+        this._startLeft = this.left()
+        this._startTop = this.top()
+        this._startClientX = event.clientX
+        this._startClientY = event.clientY
+    },
+
+    onMouseMove: function (event) {
+    },
+
+    onMouseUp: function(event) {
+        this.setIsDragging(false)
+        //this.setBackgroundColor(this.normalColor())
+        this.parentView().element().removeEventListener("mousemove", this._mouseMoveTrackerFunc, false);
+    },
+
+    hitButton1: function() {
+        this.close()
+        return this
+    },
+
+    close: function() {
+        this.removeFromParentView()
+        return this
+    }
 })
 
 "use strict"
@@ -94555,6 +95267,7 @@ JSImporter.pushRelativePaths([
     "CloseableNodeView.js",
     "DragBarView.js",
     "AtomNodeView.js",
+    "AtomPaneView.js",
 ])
 
 
@@ -94571,7 +95284,7 @@ window.CloseButton = DivView.extend().newSlots({
         this.turnOffUserSelect()
 
         this.setDivClassName("ImageCloseButton")
-        this.setIconName("close")
+        this.setIconName("close-white")
         this.setBackgroundSizeWH(10, 10) // use "contain" instead?
         this.setBackgroundPosition("center")
         this.makeBackgroundNoRepeat()
@@ -94604,7 +95317,6 @@ window.CloseButton = DivView.extend().newSlots({
         }
         return this
     },
-
 })
 
 "use strict"
@@ -94696,10 +95408,12 @@ window.DragBarView = DivView.extend().newSlots({
 
         this._mouseMoveTrackerFunc = (event) => {
             this.mouseMoveTracker(event)
+            return true
         }
 
         this._mouseUpTrackerFunc = (event) => {
-
+            this.mouseUpTracker(event)
+            return true
         }
 
         this.setBackgroundColor(this.normalColor())
@@ -94717,6 +95431,7 @@ window.DragBarView = DivView.extend().newSlots({
     setIsVertical: function(aBool) {
         if (this._isVertical != aBool) {
             this._isVertical = aBool
+            //console.log("this.hoverCursorType() = ", this.hoverCursorType())
             this.setCursor(this.hoverCursorType())
         }
         return this
@@ -94760,12 +95475,20 @@ window.DragBarView = DivView.extend().newSlots({
 
         if (this.isHighlighted()) {
             this.setBackgroundColor(this.highlightColor())
-            this.setCursor(this.hoverCursorType())
         } else {
             this.setBackgroundColor(this.normalColor())
+        }
+        this.syncCursor()
+
+        return this
+    },
+
+    syncCursor: function() {
+        if (this.isHighlighted()) {
+            this.setCursor(this.hoverCursorType())
+        } else {
             this.setCursor(null)
         }
-
         return this
     },
 
@@ -94774,35 +95497,70 @@ window.DragBarView = DivView.extend().newSlots({
     mouseMoveTracker: function(event) {
         //console.log("mouse pos: ", event.clientX, " x ", event.clientY)
         if (this.delegate()) {
-            this.delegate().didDragDivider(event.clientX, event.clientY)
+            this.delegate().didDragDivider(Math.floor(event.clientX), Math.floor(event.clientY))
         }
     },
 
-    onMouseDown: function (event) {
-        console.log("onMouseDown")
-        this.setIsDragging(true)
-        this.setBackgroundColor(this.dragColor())
+    mouseUpTracker: function(event) {
+        //console.log("mouse pos: ", event.clientX, " x ", event.clientY)
+        this.onMouseUp(event)
+    },
 
-        this.parentView().element().addEventListener("mousemove", this._mouseMoveTrackerFunc, false);
+    setIsDragging: function(b) {
+        this._isDragging = b;
+        if (b) {
+            this.setBackgroundColor(this.dragColor())
+            this.parentView().setBorder("1px dashed white")
+        } else {
+            this.setBackgroundColor(this.normalColor())
+            this.parentView().setBorder("0px dashed white")
+        }
+        return this
+    },
+
+    onMouseDown: function (event) {
+        //console.log(this.type() + " onMouseDown")
+        this.setIsDragging(true)
+
+        this.removeParentTracking()
+        return false
+    },
+
+    addParentTracking: function() {
+        let r = this.rootView()
+        r.element().removeEventListener("mousemove", this._mouseMoveTrackerFunc, false);
+        r.element().removeEventListener("mouseup", this._mouseUpTrackerFunc, false);
+        return this
+    },
+
+    removeParentTracking: function() {
+        let r = this.rootView()
+        r.element().addEventListener("mousemove", this._mouseMoveTrackerFunc, false);
+        r.element().addEventListener("mouseup", this._mouseUpTrackerFunc, false);
+        return this
     },
 
     onMouseMove: function (event) {
+        return false
     },
 
     onMouseOver: function(event) {
+        //console.log(this.type() + " onMouseOver")
         this.setIsHighlighted(true)
+        return false
     },
 
     onMouseOut: function(event) {
+        //console.log(this.type() + " onMouseOut")
         this.setIsHighlighted(false)
+        return false
     },
 
     onMouseUp: function(event) {
         this.setIsDragging(false)
-        this.setBackgroundColor(this.normalColor())
-        this.parentView().element().removeEventListener("mousemove", this._mouseMoveTrackerFunc, false);
+        this.addParentTracking()
+        return false
     },
-
 })
 
 "use strict"
@@ -94824,6 +95582,7 @@ window.AtomNodeView = NodeView.extend().newSlots({
     headWidth: 100,
     headHeight: 100,
 
+    gridSize: 50,
     // peristent attributes
     viewDictSlots: ["isVertical", "headWidth", "headHeight"], // move to view?
 
@@ -94858,7 +95617,7 @@ window.AtomNodeView = NodeView.extend().newSlots({
         this.setContentEditable(false)
         this.turnOffUserSelect()
         this.setTransition("all 0.3s")
-
+        this.setOverflow("hidden")
         this.syncLayout()
         return this
     },
@@ -94869,11 +95628,11 @@ window.AtomNodeView = NodeView.extend().newSlots({
     },
 
     setupHeadView: function() {
-        var v = DivView.clone()
+        var v = AtomPaneView.clone()
         this.setHeadView(v)
         v.setDivClassName("AtomHeadView")
         v.setPosition("relative")
-        v.setBackgroundColor("#000")
+        v.setBackgroundColor("black")
         this.addSubview(v)
     },
 
@@ -94888,18 +95647,15 @@ window.AtomNodeView = NodeView.extend().newSlots({
     },
 
     setupTailView: function() {
-        var v = DivView.clone()
+        var v = AtomPaneView.clone()
         this.setTailView(v)
-
         v.setDivClassName("AtomTailView")
         v.setPosition("relative")
-        v.setBackgroundColor("#000")
-
+        v.setBackgroundColor("black")
         this.addSubview(v)
     },
 
     syncLayout: function() {
-
         this.setWidthPercentage(100)
         this.setHeightPercentage(100)
 
@@ -94908,53 +95664,82 @@ window.AtomNodeView = NodeView.extend().newSlots({
         } else {
             this.layoutHorizontally()
         }
-
+        return this
     },
 
     layoutVertically: function() {
+        // vertical divider
 
-        var h = this.headView()
-        h.setDisplay("block")
-        h.setWidthPercentage(100)
-        h.setHeightPxNumber(this.headHeight())
+        if (true) {
+            var h = this.headView()
+            h.setDisplay("block")
+            h.setWidthPercentage(100)
+            h.setHeightPxNumber(this.headHeight())
+        }
 
-        let d = this.dividerView()
-        d.setDisplay("block")
-        d.setMinAndMaxHeight(d.thickness())
-        d.setWidthPercentage(100)
-        d.setIsVerticalDrag(true)
+        if (true) {
+            let d = this.dividerView()
+            d.setDisplay("block")
+            d.setMinAndMaxHeight(d.thickness())
+            d.setWidthPercentage(100)
+            d.setIsVerticalDrag(true)
+        }
 
-        let t = this.tailView()
-        t.setDisplay("block")
-        t.setWidthPercentage(100)
-        t.setHeightPercentage(100)
+        if (true) {
+            let t = this.tailView()
+            t.setDisplay("block")
+            t.setWidthPercentage(100)
+            t.setHeightPercentage(100)
+            t.setBackgroundColor("black")
+        }
     },
 
     layoutHorizontally: function() {
+        // horizontal divider
+
         this.setDisplay("table")
 
-        var h = this.headView()
-        h.setDisplay("table-cell")
-        h.setMinWidth(this.headWidth())
-        h.setMinHeight("100%")
-        h.setOverflow("auto")
+        if (true) {
+            let h = this.headView()
+            h.setDisplay("table-cell")
+            h.setMinAndMaxWidth(this.headWidth())
+            h.setWidth(null)
+            h.setMinHeight("100%")
+            h.setOverflow("auto")
+        }
 
-        let d = this.dividerView()
-        d.setDisplay("table-cell")
-        d.setMinAndMaxWidth(d.thickness())
-        d.setOverflow("auto")
-        d.setVerticalAlign("top")
-        d.setIsVerticalDrag(false)
+        if (true) {
+            let d = this.dividerView()
+            d.setDisplay("table-cell")
+            d.setWidth(null)
+            d.setMinAndMaxWidth(d.thickness())
+            d.setOverflow("auto")
+            d.setVerticalAlign("top")
+            d.setIsVerticalDrag(false)
+        }
 
-        let t = this.tailView()
-        t.setDisplay("table-cell")
-        t.setWidthPercentage(100)
-        t.setMinHeight("100%")
-        t.setOverflow("auto")
-        t.setVerticalAlign("top")
+        if (true) {
+            let t = this.tailView()
+            t.setDisplay("table-cell")
+            t.setWidthPercentage(100)
+            t.setMinHeight("100%")
+            t.setOverflow("auto")
+            t.setVerticalAlign("top")
+        }
     },
 
     didDragDivider: function(x, y) {
+        let bounds = this.boundingClientRect()
+
+        let g = this.gridSize()
+
+        x = Math.floor(Math.floor(x/g)*g)
+        y = Math.floor(Math.floor(y/g)*g)
+
+        y = y - bounds.top
+        x = x - bounds.left
+        x = Math.min(x, bounds.right  - bounds.left)
+        y = Math.min(y, bounds.bottom - bounds.top)
 
         if (this.isVertical()) {
             this.setHeadHeight(y)
@@ -94991,7 +95776,6 @@ window.AtomNodeView = NodeView.extend().newSlots({
     syncFromNode: function() {
         this.setViewDict(this.node().nodeViewDict()) // move to view?
     },
-
 
     // --- closable set/get ---
     
@@ -95031,14 +95815,237 @@ window.AtomNodeView = NodeView.extend().newSlots({
             //this.removeFromParentView()
             
             this.node().removeFromParentNode()
-
+            this.removeFromParentView()
             //parentView.scheduleSyncToNode() 
             // TODO: protocol to tell parent to remove subnode
 
         }, seconds * 1000)
     },
 
+    /*
+    // mouse
 
+    onDoubleClick: function(event) {
+        console.log("onDoubleClick")
+        let v = AtomNodeView.clone().setNode(AtomNode.clone())
+        this.addSubview(v)
+    },
+    */
+})
+
+"use strict"
+
+window.AtomPaneView = DivView.extend().newSlots({
+    type: "AtomPaneView",
+    startView: null,
+    mouseIsDown: false,
+}).setSlots({
+    init: function () {
+        DivView.init.apply(this)
+        this.setOverflow("hidden")
+        this.setIsRegisteredForMouse(true)
+        this.setIsRegisteredForClicks(true)
+        return this
+    },
+
+    // mouse
+
+    onDoubleClick: function(event) {
+        console.log("onDoubleClick")
+
+    },
+
+    removeStartView: function() {
+        if (this.startView() && this.startView().parentView()) {
+            this.startView().removeFromParentView()
+        }
+    },
+
+    newStartView: function() {
+        let v = DivView.clone()
+        v.setMinAndMaxWidth(8)
+        v.setMinAndMaxHeight(8)
+        v.setBackgroundColor("#aaa")
+        v.setPosition("absolute")
+        v.setOpacity(0.2)
+        v.setLeft(this.mouseDownPos()._x - 4)
+        v.setTop(this.mouseDownPos()._y - 4)
+        return v
+    },
+
+    startView: function() {
+        //this.removeStartView()
+
+        if (!this._startView) {
+            let v = DivView.clone()
+            v.setMinAndMaxWidth(8)
+            v.setMinAndMaxHeight(8)
+            v.setBackgroundColor("#aaa")
+            v.setPosition("absolute")
+            v.setOpacity(0.2)
+            this.setStartView(v)
+        }
+
+        return this._startView
+    },
+
+    canAddPane: function() {
+        return this.subviews().length == 0
+    },
+
+    /*
+    onMouseOut: function(event) {
+        console.log(this.type() + " onMouseOut")
+
+        return true
+    },
+    */
+
+    onMouseDown: function(event) {
+        console.log(this.type() + " onMouseDown")
+        
+        if (!this.canAddPane()) {
+            return false
+        }
+
+
+        this.setMouseIsDown(true)
+        this.listenForRootMouseUp()
+
+        let mp = Mouse.shared().downPos()
+        let sv = this.startView()
+        sv.setLeft(mp._x - 4)
+        sv.setTop(mp._y - 4)
+
+        this.addSubview(sv)
+        return true
+    },
+
+    onMouseMove: function (event) {
+        if (this.mouseIsDown()) {
+            this._currentDragPos = this.viewPositionForEvent(event)
+
+            let sv = this.startView()
+            let dir = this.dragDirection(event)
+            let downPos = this.mouseDownPos()
+            //console.log("onMouseMove dir ", dir)
+
+            
+            if (dir == "x") {
+                //console.log("dir x")
+                sv.setMinAndMaxWidth(null)
+                sv.setMinAndMaxHeight(1)
+                sv.setWidth("100%")
+                sv.setHeight(null)
+                sv.setLeft(0)
+                sv.setTop(downPos._y)
+            } else if (dir == "y") {
+                //console.log("dir y")
+                sv.setMinAndMaxWidth(1)
+                sv.setMinAndMaxHeight(null)
+                sv.setWidth("100%")
+                sv.setHeight("100%")
+                sv.setLeft(downPos._x)
+                sv.setTop(0)
+            } else {
+                sv.setMinAndMaxWidth(8)
+                sv.setMinAndMaxHeight(8)
+                sv.setWidth(null)
+                sv.setHeight(null)
+                sv.setLeft(downPos._x)
+                sv.setTop(downPos._y)
+            }
+            //console.log("is moving ", event.clientX + "," + event.clientY)
+        }
+        return this
+    },
+
+    dragDirection: function(event) {
+        let dv = Mouse.shared().dragVector()
+        //console.log("dv = ", dv)
+        if (this.mouseDownPos()) {
+            let dx = Math.abs(dv._x)
+            let dy = Math.abs(dv._y)
+            let r = Math.sqrt(dx*dx + dy*dy)
+            let minR = 50
+            if (r > minR) {
+                if (dx > dy) {
+                    this._dragDir = "x"
+                } else {
+                    this._dragDir = "y"
+                }
+            } else {
+                this._dragDir = null
+            }
+            
+            let o = 0.2 + r/minR;
+            if (o > 1) { o = 1 }
+            this.startView().setOpacity(o)
+        }
+
+        return this._dragDir
+    },
+
+    onMouseOut: function() {
+
+    },
+
+    onMouseUp: function(event) {
+        if (this.mouseIsDown()) {
+            let dir = this.dragDirection()
+            let downPos = this.mouseDownPos()
+
+            if (dir) {
+                if (dir == "x") {
+                    this.addAtomAtY(downPos._y)
+                } else if (dir == "y") {
+                    this.addAtomAtX(downPos._x)
+                }
+            }
+            
+            this.removeStartView()
+        }
+        this.setMouseIsDown(false)
+        return this
+    },
+
+    addAtomAtX: function(x) {
+        // request new node from this.parentView().node()
+        let v = AtomNodeView.clone().setNode(AtomNode.clone())
+        v.setIsVertical(false).setHeadWidth(x)
+        v.syncLayout()
+        this.addSubview(v)
+    },
+
+    addAtomAtY: function(y) {
+        // request new node from this.parentView().node()
+        let v = AtomNodeView.clone().setNode(AtomNode.clone())
+        v.setIsVertical(true).setHeadHeight(y)
+        v.syncLayout()
+        this.addSubview(v)
+    },
+
+    onRootMouseUp: function(event) {
+        this.onMouseUp(event)
+        return true
+    },
+
+    rootMouseUpFunc: function() {
+        if (!this._rootMouseUpFunc) {
+            this._rootMouseUpFunc = (event) => { this.onRootMouseUp(event) }
+        }
+        return this._rootMouseUpFunc
+    },
+
+    listenForRootMouseUp: function() {
+        this.rootView().element().addEventListener("mouseup", this.rootMouseUpFunc(), false);
+        return this
+    },
+
+    unlistenForRootMouseUp: function() {
+        this.rootView().element().removeEventListener("mouseup", this.rootMouseUpFunc(), false);
+        return this
+    },
 })
 
 "use strict"
@@ -95055,18 +96062,15 @@ window.AtomNodeView = NodeView.extend().newSlots({
 
 window.App = BMNode.extend().newSlots({
     type: "App",
-    name: null,
+    name: "App",
     isDebugging: true,
     version: [0, 0],
     nodeStoreDidOpenObs: null,
     appDidInitNote: null,
 }).setSlots({
 
-    shared: function() {        
-        if (!App._shared) {
-            App._shared = this.clone();
-        }
-        return App._shared;
+    shared: function() {   
+        return this.sharedInstanceForClass(App)
     },
 
     init: function () {
@@ -95080,6 +96084,13 @@ window.App = BMNode.extend().newSlots({
     // 1. setup NodeStore
 
     run: function() {
+
+        if (!this.isBrowserCompatible()) {
+            window.LoadProgressBar.setError("Sorry, this app only works on<br>Chrome, FireFox, and Brave browsers.")
+            //this.showBrowserCompatibilityPanel()
+            return this
+        }
+
         this.nodeStoreDidOpenObs().watch()
         NodeStore.shared().asyncOpen() 
     },
@@ -95104,7 +96115,8 @@ window.App = BMNode.extend().newSlots({
     },
 	
     rootView: function() {
-        return  WebBrowserWindow.shared().documentBody()
+        return DivView.rootView()
+        //return  WebBrowserWindow.shared().documentBody()
     },
 
     mainWindow: function () {
@@ -95123,7 +96135,12 @@ window.App = BMNode.extend().newSlots({
     versionsString: function() {
         return this.version().join(".")
     },
+
+    showVersion: function() {
+        console.log("Application '" + this.name() + "' version " + this.versionsString())
+    },
 })
+
 
 "use strict"
 
@@ -95550,11 +96567,12 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
         }
     },
 
-    shared: function() {
-        if (!BMNetwork._shared) {
-            BMNetwork._shared = BMNetwork.clone()
+    shared: function() {   
+        var thisClass = BMNetwork     
+        if (!thisClass._shared) {
+            thisClass._shared = this.clone();
         }
-        return BMNetwork._shared
+        return thisClass._shared;
     },
 
     connectedRemotePeers: function () {
@@ -98557,12 +99575,14 @@ window.BMProfile = BMFieldSetNode.extend().newSlots({
 
         // local fields
         this.addFieldNamed("phone").setValueMethod("phone").setValueIsEditable(true)
-        this.addFieldNamed("address").setValueMethod("address").setValueIsEditable(true)
         this.addFieldNamed("email").setValueMethod("email").setValueIsEditable(true)
+        /*
+        this.addFieldNamed("address").setValueMethod("address").setValueIsEditable(true)
         this.addFieldNamed("twitter").setValueMethod("twitter").setValueIsEditable(true)
         this.addFieldNamed("facebook").setValueMethod("facebook").setValueIsEditable(true)
         this.addFieldNamed("linkedin").setValueMethod("linkedin").setValueIsEditable(true)
         this.addFieldNamed("instagram").setValueMethod("instagram").setValueIsEditable(true)
+        */
         this.setNodeMinWidth(600)
     },
     
@@ -101288,21 +102308,24 @@ window.BMConnection = BMNode.extend().newSlots({
         //this.addSubnode(this.servers())
         
         let con = navigator.connection || navigator.mozConnection || navigator.webkitConnection
-        assert(con)
-        this.setConnection(con)
-        this.updateLastState()  
-        this.registerForConnectionChange()
-    },
-    
-    shared: function() {
-        if (!BMConnection._shared) {
-            BMConnection._shared = BMConnection.clone()
+
+        if (!con) {
+            console.warn("Looks like this browser doesn't network connection info (e.g. navigator.connection).")
         }
-        return BMConnection._shared
+
+        if (con) {
+            this.setConnection(con)
+            this.updateLastState()  
+            this.registerForConnectionChange()
+        }
+    },
+
+    shared: function() {   
+        return this.sharedInstanceForClass(BMConnection)
     },
     
     connectionType: function() {
-        if (this.connection()) {
+        if (this.isAvailable()) {
             var s = this.connection().effectiveType
             if (s) {
                 return s.toUpperCase()
@@ -101312,14 +102335,14 @@ window.BMConnection = BMNode.extend().newSlots({
     },
     
     downlink: function() {
-        if (this.connection()) {
+        if (this.isAvailable()) {
             return this.connection().downlink
         }
         return null
     },
     
     rtt: function() {
-        if (this.connection()) {
+        if (this.isAvailable()) {
             return this.connection().rtt
         }
         return null
@@ -101375,10 +102398,17 @@ window.BMConnection = BMNode.extend().newSlots({
     },
 	
     isOnline: function() {
-        return this.rtt() != 0
+        if (this.isAvailable()) {
+            return this.rtt() != 0
+        }
+        return false
     },
     
     connectionDescription: function() {
+        if (!this.isAvailable()) {
+            return "status unknown"
+        }
+
         if (!this.isOnline()) {
             return "offline"
         }
@@ -101389,6 +102419,13 @@ window.BMConnection = BMNode.extend().newSlots({
     subtitle: function() {
         return this.connectionDescription()
     },
+
+    isAvailable: function() {
+        if (this.connection()) {
+            return true
+        }
+        return false
+    }
 	
 })
 
@@ -101408,6 +102445,9 @@ window.BMConnection = BMNode.extend().newSlots({
 window.PeerApp = App.extend().newSlots({
     type: "PeerApp",
 
+    name: "voluntary.app",
+    version: [0, 5, 1, 0],
+
     // model
     about: null,
     localIdentities: null,
@@ -101425,17 +102465,20 @@ window.PeerApp = App.extend().newSlots({
 }).setSlots({
 
     init: function () {
+        //this.setName("voluntary.app")
+
         App.init.apply(this)
+
     },
 
     setup: function () {
         App.setup.apply(this)
         
-        this.setName("voluntary.app")
 
         if (false) {
             this.setupAtom()
         } else {
+            
             this.setupModel()
             this.setupViews()
         }
@@ -101447,6 +102490,7 @@ window.PeerApp = App.extend().newSlots({
     setupAtom: function() {
         this.setAtomNode(AtomNode.clone())
         this.setAtomNodeView(AtomNodeView.clone().setNode(this.atomNode()))
+        this.atomNodeView().setIsVertical(true).syncLayout()
         this.rootView().addSubview(this.atomNodeView())
     },
 
@@ -101491,10 +102535,26 @@ window.PeerApp = App.extend().newSlots({
     // --- setup views ---
     
     setupViews: function() {
+
         this.setupBrowser()
         //this.setupShelf()
     },
 
+    isBrowserCompatible: function() {
+        if (WebBrowserWindow.agentIsSafari()) {
+            return false
+        }
+        return true
+    },
+
+    showBrowserCompatibilityPanel: function() {
+        var panel = window.PanelView.clone()
+        this.rootView().addSubview(panel)
+        panel.setTitle("Sorry, this app only works on<br>Chrome, FireFox, and Brave browsers.")
+        panel.orderFront()
+        panel.setZIndex(100)
+    },
+    
     setupBrowser: function() {	
         this.setBrowser(BrowserView.clone())
     
@@ -101525,6 +102585,8 @@ window.PeerApp = App.extend().newSlots({
         window.LoadProgressBar.stop() 
     },
 })
+
+PeerApp.showVersion()
 
 
     

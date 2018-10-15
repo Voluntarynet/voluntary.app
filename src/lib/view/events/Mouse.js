@@ -66,5 +66,3 @@ window.Mouse = ideal.Proto.extend().newSlots({
         return v
     },
 })
-
-console.log("window.Mouse loaded")

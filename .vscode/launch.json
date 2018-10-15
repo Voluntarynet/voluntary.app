@@ -7,15 +7,15 @@
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Launch Index File",
+            "name": "Launch Local Index File",
             "url": "file:///${workspaceFolder}/index.html",
             "webRoot": "${workspaceFolder}",
-            "preLaunchTask": "archive"
+            "preLaunchTask": "create index.html"
         },
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Launch Local File",
+            "name": "Launch Local Incremental File",
             "url": "file:///${workspaceFolder}/index_incremental.html",
             "webRoot": "${workspaceFolder}"
         },

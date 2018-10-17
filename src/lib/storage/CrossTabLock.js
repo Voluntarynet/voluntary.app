@@ -4,7 +4,7 @@
     CrossTabLock
     uses local storage to acquire and release locks across tabs
     
-    currently unused 
+    a work in progress - currently unused 
 
 */
 

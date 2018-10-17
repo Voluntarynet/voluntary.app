@@ -41,7 +41,7 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
     },        
     
     didUpdateField: function(aField) {
-		
+		// override to implement hooks
     },
 	
     // --- fields ---

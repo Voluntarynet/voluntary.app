@@ -1,9 +1,13 @@
 # voluntary.app
 
+This project is a set of frameworks and an application for an in-browser webRTC-based secure p2p messaging app platform. 
 
-## User Overview 
+
+
+## Getting Started as a User
 
 This project is a set of frameworks and an application for an in-browser webRTC-based secure p2p messaging app platform. 
+The following is a brief tutorial of how to get started:
 
 ### opening the app
 
@@ -39,18 +43,20 @@ If they add you as a contact too, they'll see your public posts and you'll be ab
 
 ### sending a direct message
 
+[forthcoming]
 
 
 ### posting, replying, reposting, liking
 
+[forthcoming]
 
 
 
 
 
+## Getting Started as a Developer
 
-
-## Developer Overview
+This project is a set of frameworks and an application for an in-browser webRTC-based secure p2p messaging app platform. The code 
 
 ### Components 
 
@@ -64,4 +70,10 @@ If they add you as a contact too, they'll see your public posts and you'll be ab
 On top of this system, decentralized apps (dapps) can quicky be built with very little code. 
 A decentralized Twitter app is included as an example.
 
-See the docs folder for more developer documentation.
+### Getting Started as a Developer
+
+#### Getting the Source
+
+
+
+

@@ -26,6 +26,13 @@
             "url": "https://voluntary.app",
             "webRoot": "${workspaceFolder}"
         },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch http://127.0.0.1:8080/index_incremental.html",
+            "url": "http://127.0.0.1:8080/index_incremental.html",
+            "webRoot": "${workspaceFolder}"
+        },
 
         {
             "type": "chrome",

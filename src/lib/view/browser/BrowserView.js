@@ -7,6 +7,7 @@ window.BrowserView = NodeView.extend().newSlots({
     defaultHeader: null,
     defaultColumnStyles: null,
     defaultRowStyles: null,
+    watchForNodeUpdates: false
 }).setSlots({
 
     bgColors: function () {
@@ -617,28 +618,33 @@ window.BrowserView = NodeView.extend().newSlots({
         return null
     },
 
+    nodePath: function() {
+        let lastNode = this.lastNode();
+        if (lastNode) {
+            return lastNode.nodePath();
+        }
+        return [];
+    },
+
     nodePathString: function () {
-        var cg = this.lastActiveColumnGroup()
-        if (cg) {
-            return cg.node().nodePathString() //.map((node) => { return node.title() }).join("/")
+        var lastNode = this.lastNode();
+        if (lastNode) {
+            return lastNode.nodePathString(); //.map((node) => { return node.title() }).join("/")
         }
         return ""
     },
 
-    setNodePathString: function (pathString) {
-        if (pathString == null || pathString.length == 0) {
-            return this
-        }
-        var parts = pathString.split("/")
-        parts.removeFirst()
-        pathString = parts.join("/")
-        var lastNode = this.node().nodeAtSubpathString(pathString)
-        // TODO: select as much of the path as exists if full path not valid
-        // console.log("lastNode = ", lastNode)
+    setNodePathComponents: function(nodePath) {
+        this.setWatchForNodeUpdates(true);
+        let lastNode = this.node().nodeAtSubpath(nodePath.slice(1));
         if (lastNode) {
-            this.selectNode(lastNode)
+            this.selectNode(lastNode);
         }
-        return this
+        return this;
+    },
+
+    setNodePathString: function (pathString) {
+        return this.setNodePathComponents(pathString.split("/"));
     },
 
     // --- hash paths ------------------------------------- 
@@ -656,10 +662,10 @@ window.BrowserView = NodeView.extend().newSlots({
         var j = ""
 
         if (hash == "") {
-            this.setNodePathString("/")
+            this.setNodePathComponents([""])
             return this
         }
-        console.log("hash = " + typeof(hash) + " " + hash)
+        //console.log("hash = " + typeof(hash) + " " + hash)
         try {
             j = JSON.parse(hash)
         } catch(e) {
@@ -669,7 +675,7 @@ window.BrowserView = NodeView.extend().newSlots({
 
         if (j) {
             let nodePath = j.path
-            this.setNodePathString(nodePath)
+            this.setNodePathComponents(nodePath)
 
             let method = j.method
             if (method) {
@@ -681,16 +687,23 @@ window.BrowserView = NodeView.extend().newSlots({
             }
         }
         //console.log("hash: " + hash + "")
+        /*
         let nodePathString = hash.before(";")
         this.setNodePathString(hash)
         this.performHashCommandIfPresent()
+        */
         return this
     },
 
     syncToHashPath: function () {
-        let path = this.nodePathString()
-        let hash = JSON.stringify({ path: path })
+        let hash = JSON.stringify({ path: this.nodePath().map(n => n.title()) });
         WebBrowserWindow.shared().setUrlHash(hash)
         return this
     },
+
+    didUpdateNode: function() {
+        if (this.watchForNodeUpdates()) {
+            this.syncToHashPath();
+        }
+    }
 })

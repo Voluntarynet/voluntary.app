@@ -74,7 +74,7 @@ window.DocumentBody = DivView.extend().newSlots({
     },
 
     onKeyUp: function (event) {
-        console.log(this.type() + " onKeyUp ")
+        //console.log(this.type() + " onKeyUp ")
         return window.Keyboard.shared().onKeyUp(event)
     },
 

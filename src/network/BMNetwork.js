@@ -1,7 +1,9 @@
 
 "use strict"
 
-window.BMNetwork = BMStorableNode.extend().newSlots({
+// BMStorableNode
+// BMFieldSetNode
+window.BMNetwork = BMFieldSetNode.extend().newSlots({
     type: "BMNetwork",
     servers: null,
     stunServers: null,
@@ -12,6 +14,7 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
     idsBloomFilter: null,
     shared: null,
     debug: false,
+    isOpenRelay: false,
 }).setSlots({
     init: function () {
         if (BMNetwork._shared) {
@@ -38,7 +41,9 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
 		
         this.setBlacklists(NodeStore.shared().rootInstanceWithPidForProto("_blacklists", BMBlacklists))
         this.addSubnode(this.blacklists())
-		
+        
+        //this.addStoredField(BMBoolField.clone().setKey("isOpenRelay").setValueIsEditable(true))
+
         //this.addStoredSlots(["messages", "blacklists"])
         this.watchIdentities()
     },

@@ -174,7 +174,7 @@ window.Keyboard = ideal.Proto.extend().newSlots({
     },
 
     onKeyUp: function (event) {
-        console.log("Keyboard onKeyUp")
+        //console.log("Keyboard onKeyUp")
         let shouldPropogate = true
         let key = this.keyForEvent(event)
         key.onKeyUp(event)

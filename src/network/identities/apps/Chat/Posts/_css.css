@@ -92,7 +92,7 @@
 }
 
 .BMPostTitleBarTextView {
-    display: inline-block;
+    display: block;
 	position: relative;
     float: left;
     color: black;
@@ -100,7 +100,7 @@
 }
 
 .BMPostDateView {
-    display: inline-block;
+    display: block;
 	position: relative;
     float: right;
     opacity: 0.33;
@@ -139,13 +139,13 @@
 /* --- bottom bar -------------------------------- */
 
 .BMPostMessageRowViewBottomBar {
-    display: block;
-	width: calc(100% - 20px); 
-	text-align: left;
-	height: 20px;
-	margin-bottom: 8px;
-    vertical-align: top; /* here */
-	border: 0px dashed #ddd;
+    display: inline-block;
+    width: calc(100% - 20px); 
+    text-align: left;
+    height: 20px;
+    margin-bottom: 8px;
+    vertical-align: top;
+    border: 0px dashed #ddd;
 }
 
 .BMPostMessageRowViewReplyButton {

@@ -72,6 +72,11 @@ A decentralized Twitter app is included as an example.
 
 ### Getting Started as a Developer
 
+The source code is available:
+
+    https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome
+
+
 #### Getting the Source
 
 

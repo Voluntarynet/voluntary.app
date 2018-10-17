@@ -1405,7 +1405,7 @@ html, body {
 }
 
 .BMPostTitleBarTextView {
-    display: inline-block;
+    display: block;
 	position: relative;
     float: left;
     color: black;
@@ -1413,7 +1413,7 @@ html, body {
 }
 
 .BMPostDateView {
-    display: inline-block;
+    display: block;
 	position: relative;
     float: right;
     opacity: 0.33;
@@ -1452,13 +1452,13 @@ html, body {
 /* --- bottom bar -------------------------------- */
 
 .BMPostMessageRowViewBottomBar {
-    display: block;
-	width: calc(100% - 20px); 
-	text-align: left;
-	height: 20px;
-	margin-bottom: 8px;
-    vertical-align: top; /* here */
-	border: 0px dashed #ddd;
+    display: inline-block;
+    width: calc(100% - 20px); 
+    text-align: left;
+    height: 20px;
+    margin-bottom: 8px;
+    vertical-align: top;
+    border: 0px dashed #ddd;
 }
 
 .BMPostMessageRowViewReplyButton {
@@ -85223,7 +85223,7 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
     },        
     
     didUpdateField: function(aField) {
-		
+        // override to implement hooks
     },
 	
     // --- fields ---
@@ -90263,6 +90263,8 @@ window.TextField = DivStyledView.extend().newSlots({
     doesClearOnReturn: false,
     doesHoldFocusOnReturn: false,
     doesTrim: true,
+    didTextInputNote: null,
+    didTextEditNote: null,
 }).setSlots({
     init: function () {
         DivView.init.apply(this)
@@ -90277,6 +90279,9 @@ window.TextField = DivStyledView.extend().newSlots({
         //this.setUnfocusOnEnterKey(true)
         //this.setIsRegisteredForKeyboard(true) // gets set by setContentEditable()
         this.formatValue()
+
+        //this.setDidTextInputNote(NotificationCenter.shared().newNote().setSender(this).setName("didTextInput"))
+        this.setDidTextEditNote(NotificationCenter.shared().newNote().setSender(this).setName("didTextEdit"))
         return this
     },
 	
@@ -90313,8 +90318,8 @@ window.TextField = DivStyledView.extend().newSlots({
     onEnterKeyUp: function(event) {
 	    //console.log(this.typeId() + ".onEnterKeyUp()")
 	    //this.didEdit()
-	    
-	    this.formatValue()
+
+        this.formatValue()
 
         this.tellParentViews("didInput", this) 
             
@@ -90326,6 +90331,10 @@ window.TextField = DivStyledView.extend().newSlots({
         if (this.doesClearOnReturn()) {
             this.setInnerHTML("")
             //this.focusAfterDelay(.125) // hack to get focus back after chat view scrolling - todo: fix this
+        }
+
+        if (this.didTextInputNote()) {
+            this.didTextInputNote().post()
         }
         
         return false
@@ -91140,7 +91149,13 @@ window.BrowserView = NodeView.extend().newSlots({
         this.setColumnGroupCount(1)
         //.selectFirstColumn()
 
+        this._didTextEditObs = NotificationCenter.shared().newObservation().setName("didTextEdit").setObserver(this).setTarget(null).watch()
+
         return this
+    },
+
+    didTextEdit: function(aNote) {
+        console.log(this.type() + " got didTextEdit notification")
     },
 
     setupDefaultStyles: function () {
@@ -96506,7 +96521,6 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
         
         this.addStoredField(BMBoolField.clone().setKey("isOpenRelay").setValueIsEditable(true))
 
-        //this.addStoredSlots(["messages", "blacklists"])
         this.watchIdentities()
     },
 

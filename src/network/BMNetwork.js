@@ -44,7 +44,6 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
         
         this.addStoredField(BMBoolField.clone().setKey("isOpenRelay").setValueIsEditable(true))
 
-        //this.addStoredSlots(["messages", "blacklists"])
         this.watchIdentities()
     },
 

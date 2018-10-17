@@ -78,6 +78,7 @@ window.BrowserView = NodeView.extend().newSlots({
         return this
     },
 
+
     setupDefaultStyles: function () {
         this.setDefaultColumnStyles(BMViewStyles.clone())
         this.defaultColumnStyles().unselected().setBackgroundColor("white")

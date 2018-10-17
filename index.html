@@ -1394,7 +1394,7 @@ html, body {
 /* --- title -------------------------------- */
 
 .BMPostTitleBarView {
-  display: block;
+    display: block;
 	position: relative;
 	font-family: AppSemiBold, sans-serif;
 	width: calc(100% - 10px);
@@ -1405,28 +1405,28 @@ html, body {
 }
 
 .BMPostTitleBarTextView {
-  display: block;
-  position: relative;
-  float: left;
-  color: black;
-  border: 0px dashed blue;
+    display: block;
+	position: relative;
+    float: left;
+    color: black;
+    border: 0px dashed blue;
 }
 
 .BMPostDateView {
-  display: block;
-  position: relative;
-  float: right;
-  opacity: 0.33;
-  min-width: 20px;
-  min-height: 20px;
+    display: block;
+	position: relative;
+    float: right;
+    opacity: 0.33;
+	min-width: 20px;
+	min-height: 20px;
 
-  border: 0px dashed red;
+    border: 0px dashed red;
 }
 
 /* --- content -------------------------------- */
 
 .BMPostMessageRowViewContent {
-  display: block;
+    display: block;
 	width: calc(100% - 20px);
 
 	color: rgba(0,0,0, 0.9);
@@ -1452,24 +1452,24 @@ html, body {
 /* --- bottom bar -------------------------------- */
 
 .BMPostMessageRowViewBottomBar {
-  display: block;
-	width: calc(100% - 20px); 
-	text-align: left;
-	height: 20px;
-	margin-bottom: 8px;
-  vertical-align: top; /* here */
-	border: 0px dashed #ddd;
+    display: inline-block;
+    width: calc(100% - 20px); 
+    text-align: left;
+    height: 20px;
+    margin-bottom: 8px;
+    vertical-align: top;
+    border: 0px dashed #ddd;
 }
 
 .BMPostMessageRowViewReplyButton {
-  display: inline-block;
-  position: relative;
-  min-width: 15px;
-  min-height: 20px;    
-  margin-top: 1px;    
-  opacity: 0.5;
-  border: 0px solid #aaa;
-  vertical-align: top; /* here */
+    display: inline-block;
+    position: relative;
+    min-width: 15px;
+    min-height: 20px;    
+    margin-top: 1px;    
+    opacity: 0.5;
+    border: 0px solid #aaa;
+    vertical-align: top; /* here */
 }
 
 .BMPostMessageRowViewRepostButton {
@@ -1602,6 +1602,8 @@ class LoadProgressBarClass {
     }
 
     startWhenReady () {
+        //console.log("LoadProgressBar.startWhenReady()")
+        //this.setupHtml()
         if (this.canStart()) {
             this.start()
         } else {
@@ -1610,6 +1612,7 @@ class LoadProgressBarClass {
     }
 
     start () {
+        //console.log("LoadProgressBar.start()")
         if (!JSImporterClass.shared().isDone()) {
             this.setupHtml()
             this.initTitle()
@@ -1618,12 +1621,14 @@ class LoadProgressBarClass {
         }
 
         if (JSImporterClass.shared().isDone()) {
+            //this.setupHtml()
             this.stop()
         }
         return this
     }
 
     setupHtml () {
+        //console.log("LoadProgressBar.setupHtml()")
         document.body.innerHTML = "<div id='SpinnerMain' style='position: absolute; width:100%; height: 100%; background-color: black; z-index: 100000; font-family: AppRegular, sans-serif; letter-spacing: 3px; font-size:13px;'> \
 <div id='SpinnerMiddle' \
 style='position: relative; top: 50%; transform: translateY(-50%); height: auto; width: 100%; text-align: center;'> \
@@ -1636,20 +1641,6 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
 <div id='SpinnerError' style='color: red; transition: all .6s ease-out; text-align: center; width: 100%;'></div> \
 </div> \
 </div>"
-
-	    /*
-	    var style = this.middleElement().style
-	    style.position = "relative"
-        style.top = "50%"
-        style.transform = "translateY(-50%)"
-        style.height = "auto"
-        style.width = "100%"
-        style.fontFamily = "AppRegular, sans-serif"
-        style.letterSpacing = "3px"
-        style.color = "transparent"
-        style.textAlign = "center"
-        */
-
         return this
     }
 
@@ -1754,8 +1745,10 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
 
     setError (error) {
         this._error = error
-        console.log("LoadProgressBar setError ", error)
-        //this.itemElement().innerHTML = "ERROR"
+        //console.trace()
+        //console.log("LoadProgressBar setError ", error)
+        //console.log("    document.body = ", document.body) 
+        //console.log("    his.errorElement() = ", this.errorElement()) 
         this.errorElement().innerHTML = error
         return this
     }
@@ -1783,9 +1776,12 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
     }
 }
 
+//console.log("loaded file LoadProgressBar - starting")
+
 var LoadProgressBar = LoadProgressBarClass.clone()
 window.LoadProgressBar = LoadProgressBar
 LoadProgressBar.startWhenReady()
+
 
 "use strict"
 
@@ -2062,12 +2058,6 @@ class JSImporterClass extends JSImporterBase {
     done () {
         //console.log("JSImporter.done() -----------------------------")
         this.doneCallbacks().forEach(callback => callback())
-
-        if (window.JSImporterIsEmbedded != true) {
-            //this.showConcatCommand()
-            //this.buildArchive()
-        }
-
         return this
     }
 
@@ -2075,69 +2065,6 @@ class JSImporterClass extends JSImporterBase {
         this.errorCallbacks().forEach(callback => callback(error))
         return this
     }
-
-    // --- archive ---
-
-    /*
-
-    archiveFileList () {
-        var files = ["archive/top.html"]
-        files.appendItems(this.cssFilesLoaded())
-        files.append("archive/middle.html")
-        files.appendItems(["./src/boot/LoadProgressBar.js", "./src/boot/JSImporter.js"])
-        files.appendItems(this.jsFilesLoaded())
-        files.append("archive/bottom.html")
-        return files
-    }
-
-    showConcatCommand () {
-        // a unix cat command to embed all the css and js files into the html file
-        // other resources such as ttf fonts, svg files, images, etc will need to be loaded individually
-        // but using the embedded JS/css index file will tremendously speed up the load time (>10x)
-        // and provide a single source file to sign (still need to sign full archive too)
-
-        var files = this.archiveFileList()
-        var s = "cat " + files.map((p) => { return "\"" + p + "\"" }).join(" ") + " > index.html"
-        window.console.log(s)
-    }
-
-    buildArchive () {
-        this.setUnloadedArchiveFiles(this.archiveFileList())
-        this.setLoadedArchiveFilesMap ({})
-        this.loadArchiveFiles()
-    }
-
-    loadArchiveFiles () {
-        this.archiveFileList().forEach((src) => {
-            var xhr = new XMLHttpRequest()
-            xhr.open("GET", src)
-            var obj = this
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-                    obj.loadedArchiveFile(src, xhr.responseText)
-                }
-            }
-            xhr.send()
-        })
-    }
-
-    loadedArchiveFile (src, text) {
-        this.loadedArchiveFilesMap()[src] = text
-        window.console.log("the script " + src + " text content is ", text)
-        this.unloadedArchiveFiles().remove(src)
-        if (this.unloadedArchiveFiles().length == 0) {
-            this.composeArchive()
-        }
-    }
-    
-    composeArchive() {
-        var s  = ""
-        this.archiveFileList().forEach((src) => {
-            s += this.loadedArchiveFilesMap()[src]
-        })
-        this.setArchive(s)
-    }
-    */
 }
 
 window.JSImporter = JSImporterClass.shared()
@@ -85296,7 +85223,7 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
     },        
     
     didUpdateField: function(aField) {
-		
+        // override to implement hooks
     },
 	
     // --- fields ---
@@ -86983,7 +86910,7 @@ window.Keyboard = ideal.Proto.extend().newSlots({
     },
 
     onKeyUp: function (event) {
-        console.log("Keyboard onKeyUp")
+        //console.log("Keyboard onKeyUp")
         let shouldPropogate = true
         let key = this.keyForEvent(event)
         key.onKeyUp(event)
@@ -90336,6 +90263,8 @@ window.TextField = DivStyledView.extend().newSlots({
     doesClearOnReturn: false,
     doesHoldFocusOnReturn: false,
     doesTrim: true,
+    didTextInputNote: null,
+    didTextEditNote: null,
 }).setSlots({
     init: function () {
         DivView.init.apply(this)
@@ -90350,6 +90279,9 @@ window.TextField = DivStyledView.extend().newSlots({
         //this.setUnfocusOnEnterKey(true)
         //this.setIsRegisteredForKeyboard(true) // gets set by setContentEditable()
         this.formatValue()
+
+        //this.setDidTextInputNote(NotificationCenter.shared().newNote().setSender(this).setName("didTextInput"))
+        this.setDidTextEditNote(NotificationCenter.shared().newNote().setSender(this).setName("didTextEdit"))
         return this
     },
 	
@@ -90386,8 +90318,8 @@ window.TextField = DivStyledView.extend().newSlots({
     onEnterKeyUp: function(event) {
 	    //console.log(this.typeId() + ".onEnterKeyUp()")
 	    //this.didEdit()
-	    
-	    this.formatValue()
+
+        this.formatValue()
 
         this.tellParentViews("didInput", this) 
             
@@ -90399,6 +90331,10 @@ window.TextField = DivStyledView.extend().newSlots({
         if (this.doesClearOnReturn()) {
             this.setInnerHTML("")
             //this.focusAfterDelay(.125) // hack to get focus back after chat view scrolling - todo: fix this
+        }
+
+        if (this.didTextInputNote()) {
+            this.didTextInputNote().post()
         }
         
         return false
@@ -90761,12 +90697,18 @@ window.DocumentBody = DivView.extend().newSlots({
         this.setIsRegisteredForMouse(true, true)
         return this
     },
+
+    shared: function() {   
+        return this.sharedInstanceForClass(DocumentBody)
+    },
     
     setupElement: function() {
+        //this._element = document.body
         // get this from element override
     },
     
     element: function() {
+        //console.log("returning document.body = ", document.body)
         return document.body
     },
     
@@ -90815,7 +90757,7 @@ window.DocumentBody = DivView.extend().newSlots({
     },
 
     onKeyUp: function (event) {
-        console.log(this.type() + " onKeyUp ")
+        //console.log(this.type() + " onKeyUp ")
         return window.Keyboard.shared().onKeyUp(event)
     },
 
@@ -90850,11 +90792,15 @@ window.DocumentBody = DivView.extend().newSlots({
 
 window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     type: "WebBrowserWindow",
-    documentBody: DocumentBody.clone(),
+    /*documentBody: DocumentBody.shared(),*/
 }).setSlots({
     init: function () {
         throw new Error("this class is meant to be used as singleton, for now")
         return this
+    },
+
+    documentBody: function() {
+        return DocumentBody.shared()
     },
     
     shared: function() {
@@ -91203,7 +91149,13 @@ window.BrowserView = NodeView.extend().newSlots({
         this.setColumnGroupCount(1)
         //.selectFirstColumn()
 
+        this._didTextEditObs = NotificationCenter.shared().newObservation().setName("didTextEdit").setObserver(this).setTarget(null).watch()
+
         return this
+    },
+
+    didTextEdit: function(aNote) {
+        console.log(this.type() + " got didTextEdit notification")
     },
 
     setupDefaultStyles: function () {
@@ -96086,6 +96038,7 @@ window.App = BMNode.extend().newSlots({
     run: function() {
 
         if (!this.isBrowserCompatible()) {
+            console.log("App showBrowserCompatibilityPanel")
             window.LoadProgressBar.setError("Sorry, this app only works on<br>Chrome, FireFox, and Brave browsers.")
             //this.showBrowserCompatibilityPanel()
             return this
@@ -96093,6 +96046,16 @@ window.App = BMNode.extend().newSlots({
 
         this.nodeStoreDidOpenObs().watch()
         NodeStore.shared().asyncOpen() 
+    },
+
+    showBrowserCompatibilityPanel: function() {
+        console.log("showing panel")
+        var panel = window.PanelView.clone()
+        this.rootView().addSubview(panel)
+        panel.setTitle("Sorry, this app only works on<br>Chrome, FireFox, and Brave browsers.")
+        panel.orderFront()
+        panel.setZIndex(100)
+        console.log("showed panel")
     },
 
     // 2. setup 
@@ -96515,7 +96478,9 @@ window.BMMessages = BMStorableNode.extend().newSlots({
 
 "use strict"
 
-window.BMNetwork = BMStorableNode.extend().newSlots({
+// BMStorableNode
+// BMFieldSetNode
+window.BMNetwork = BMFieldSetNode.extend().newSlots({
     type: "BMNetwork",
     servers: null,
     stunServers: null,
@@ -96526,6 +96491,7 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
     idsBloomFilter: null,
     shared: null,
     debug: false,
+    isOpenRelay: false,
 }).setSlots({
     init: function () {
         if (BMNetwork._shared) {
@@ -96552,8 +96518,9 @@ window.BMNetwork = BMStorableNode.extend().newSlots({
 		
         this.setBlacklists(NodeStore.shared().rootInstanceWithPidForProto("_blacklists", BMBlacklists))
         this.addSubnode(this.blacklists())
-		
-        //this.addStoredSlots(["messages", "blacklists"])
+        
+        this.addStoredField(BMBoolField.clone().setKey("isOpenRelay").setValueIsEditable(true))
+
         this.watchIdentities()
     },
 
@@ -102547,13 +102514,6 @@ window.PeerApp = App.extend().newSlots({
         return true
     },
 
-    showBrowserCompatibilityPanel: function() {
-        var panel = window.PanelView.clone()
-        this.rootView().addSubview(panel)
-        panel.setTitle("Sorry, this app only works on<br>Chrome, FireFox, and Brave browsers.")
-        panel.orderFront()
-        panel.setZIndex(100)
-    },
     
     setupBrowser: function() {	
         this.setBrowser(BrowserView.clone())
@@ -102590,7 +102550,11 @@ PeerApp.showVersion()
 
 
     
-    JSImporter.done()
+    
+      window.onload = function() { 
+        setTimeout(() => { JSImporter.done()  }, 200) // hack for startWhenReady for loading order issue        
+      }
+
     </script>
   </head>
   <body id="body"></body>

@@ -11,11 +11,15 @@
 
 window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     type: "WebBrowserWindow",
-    documentBody: DocumentBody.clone(),
+    /*documentBody: DocumentBody.shared(),*/
 }).setSlots({
     init: function () {
         throw new Error("this class is meant to be used as singleton, for now")
         return this
+    },
+
+    documentBody: function() {
+        return DocumentBody.shared()
     },
     
     shared: function() {

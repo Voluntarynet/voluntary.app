@@ -22,8 +22,8 @@
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Launch nt3p.org",
-            "url": "http://nt3p.org",
+            "name": "Launch voluntary.app",
+            "url": "https://voluntary.app",
             "webRoot": "${workspaceFolder}"
         },
         {
@@ -33,5 +33,25 @@
             "url": "http://127.0.0.1:8080/index_incremental.html",
             "webRoot": "${workspaceFolder}"
         },
+
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch voluntary.app incremental",
+            "url": "https://voluntary.app/index_incremental.html",
+            "webRoot": "${workspaceFolder}"
+        },
+
+        /*
+        // not supported
+        {
+            "type": "safari",
+            "request": "launch",
+            "name": "Safari Launch Local Index File",
+            "url": "file:///${workspaceFolder}/index.html",
+            "webRoot": "${workspaceFolder}",
+            "preLaunchTask": "create index.html"
+        },
+        */
     ]
 }

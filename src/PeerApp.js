@@ -113,13 +113,6 @@ window.PeerApp = App.extend().newSlots({
         return true
     },
 
-    showBrowserCompatibilityPanel: function() {
-        var panel = window.PanelView.clone()
-        this.rootView().addSubview(panel)
-        panel.setTitle("Sorry, this app only works on<br>Chrome, FireFox, and Brave browsers.")
-        panel.orderFront()
-        panel.setZIndex(100)
-    },
     
     setupBrowser: function() {	
         this.setBrowser(BrowserView.clone())

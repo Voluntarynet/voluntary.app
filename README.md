@@ -58,20 +58,6 @@ If they add you as a contact too, they'll see your public posts and you'll be ab
 
 This project is a set of frameworks and an application for an in-browser webRTC-based secure p2p messaging app platform. The code 
 
-### Components 
-
-- an in-browser webRTC-based decentralized messaging platform 
-- a desktop-like (e.g. AppKit) UI framework in which apps can be built with no templates or html
-- a Miller column based scalable, reactive common UI system which automatically works on desktop, tablets and phones
-- a naked objects framework which can generate a UI based on model objects (most apps require no UI code)
-- an intergrated client-side transparent persistence framework (most apps require developer to declare stored objects and fields)
-- a notifications system which automatically synchronizes the UI, model, and persistence
-
-On top of this system, decentralized apps (dapps) can quicky be built with very little code. 
-A decentralized Twitter app is included as an example.
-
-### Getting Started as a Developer
-
 The source code is available at:
 
     https://github.com/Voluntarynet/voluntary.app
@@ -80,7 +66,7 @@ Once you've cloned the repo, you can run the app by opening:
 
     index.html
 
-In your local Chrome browser. This a contatenation of all the JS and CSS resource in the project and is 
+in your local Chrome browser. index.html is a contcatenation of all the JS and CSS resource in the project and is 
 built by running the archive/archive.js script in nodejs. 
     
 Alternatively, you can open:
@@ -100,9 +86,18 @@ To get the build scripts to work, you'll need to install nodejs:
 To get the launch scripts and Chrome debugging to work, you'll need to install this VSCode debugger: 
 
     https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome
+    
+### Developer Overview
 
+- an in-browser webRTC-based decentralized messaging platform 
+- a desktop-like (e.g. AppKit) UI framework in which apps can be built with no templates or html
+- a Miller column based scalable, reactive common UI system which automatically works on desktop, tablets and phones
+- a naked objects framework which can generate a UI based on model objects (most apps require no UI code)
+- an intergrated client-side transparent persistence framework (most apps require developer to declare stored objects and fields)
+- a notifications system which automatically synchronizes the UI, model, and persistence
 
-
+On top of this system, decentralized apps (dapps) can quicky be built with very little code. 
+A decentralized Twitter app is included as an example.
 
 
 

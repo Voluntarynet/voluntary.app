@@ -72,12 +72,37 @@ A decentralized Twitter app is included as an example.
 
 ### Getting Started as a Developer
 
-The source code is available:
+The source code is available at:
+
+    https://github.com/Voluntarynet/voluntary.app
+
+Once you've cloned the repo, you can run the app by opening:
+
+    index.html
+
+In your local Chrome browser. This a contatenation of all the JS and CSS resource in the project and is 
+built by running the archive/archive.js script in nodejs. 
+    
+Alternatively, you can open:
+
+    index_incremental.html
+
+whice uses JS code to import all of the resources in the proper order.
+
+The development environment I use is VSCode. I strongly recommend using it as it 
+supports running the build scripts and connecting to the Chrome debugger which allows
+you to add break points and click on the stack trace to open and edit the related code.
+
+To get the build scripts to work, you'll need to install nodejs:
+
+    https://nodejs.org/en/
+
+To get the launch scripts and Chrome debugging to work, you'll need to install this VSCode debugger: 
 
     https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome
 
 
-#### Getting the Source
+
 
 
 

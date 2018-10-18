@@ -19,6 +19,7 @@ window.PeerApp = App.extend().newSlots({
     localIdentities: null,
     network: null,
     dataStore: null,
+    graphics: null,
     
     atomNode: null,
 
@@ -72,7 +73,7 @@ window.PeerApp = App.extend().newSlots({
 
         this.setAbout(BMNode.clone().setTitle("Settings").setSubtitle(null).setNodeMinWidth(250))
         this.addSubnode(this.about())
-
+		
         // --- about subnodes --------------------
 
         // network
@@ -94,7 +95,12 @@ window.PeerApp = App.extend().newSlots({
 
         this.network().servers().connect() // observe appDidInit instead?
 
-        
+		
+		// --- graphics subnodes --------------------
+		
+		this.setGraphics(BMGraphics.shared())
+        this.about().addSubnode(this.graphics())
+		
         return this
     },
 

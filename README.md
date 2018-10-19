@@ -124,6 +124,24 @@ The project contains a number of components:
 
 On top of this system, decentralized apps (dapps) can quicky be built with very little code. 
 
+#### Javascript and CSS importing
+
+When the app launches, it runs JSImporter.js and LoadProgressBar.js. 
+JSImporter looks in the root folder for an _imports.js file. 
+If found, it loads any paths (treated as relative paths) in the order they are found. 
+These paths can be Javascript (including other _import.js files), CSS. 
+This provides a means of doing relative library loading. The convention is to use one _import.js file per folder.
+The archive/archive.js script can be used to walk these imports to generate the index.html file when preparing a release.
+
+If your import requires some callback to be called after the imports are complete, 
+you can add a pushDoneCallback to the related _imports.js file. For example, the top level _imports.js ends with:
+
+    JSImporter.pushDoneCallback( () => {
+        PeerApp.shared().run()
+    })
+
+which starts the application.
+
 
 
 

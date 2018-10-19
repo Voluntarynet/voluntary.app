@@ -1,7 +1,24 @@
 # voluntary.app
 
 This project is a set of frameworks and an application for an in-browser webRTC-based secure p2p messaging app platform. 
-A decentralized Twitter-like app is included as an example.
+A decentralized Twitter-like app is included as an example. 
+
+Project website:
+
+    https//voluntary.net
+    
+Github page:
+
+    https://github.com/Voluntarynet/voluntary.app
+    
+Demo site:
+
+    https://voluntary.app
+    
+User & developer slack channels:
+
+	https://join.slack.com/t/voluntaryapp/shared_invite/enQtNDYwMjIyODQ4MTAzLWQ2YzRhMzAwZDI4OTFhZmY4MmYyNDc4YWJkY2ExMWU5M2U4ZjgyNDFhNjQxZTFjM2U0NThmZGJmYWFjZDU0ODQ
+
 
 
 ## Getting Started as a User

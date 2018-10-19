@@ -96,9 +96,9 @@ window.PeerApp = App.extend().newSlots({
         this.network().servers().connect() // observe appDidInit instead?
 
 		
-		// --- graphics subnodes --------------------
+        // --- graphics subnodes --------------------
 		
-		this.setGraphics(BMGraphics.clone())
+        this.setGraphics(BMGraphics.clone())
         this.about().addSubnode(this.graphics())
 		
         return this

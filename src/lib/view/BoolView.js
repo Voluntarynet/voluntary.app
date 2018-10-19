@@ -119,11 +119,14 @@ window.BoolView = DivStyledView.extend().newSlots({
 	*/
 	
     checkedIcon: function() {
-	   return "checkbox-circle-checked" 
+	   //Source: https://uxwing.com/wp-content/themes/uxwing/download/01-user_interface/toggle-on.svg
+	   //return "checkbox-circle-checked" 
+	   return "toggle-on" 
     },
 	
     uncheckedIcon: function() {
-	   return "checkbox-circle-unchecked" 
+	   //return "checkbox-circle-unchecked" 
+	   return "toggle-off" 
     },
 		
     currentIcon: function() {

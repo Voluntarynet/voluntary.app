@@ -5,19 +5,19 @@ A decentralized Twitter-like app is included as an example.
 
 Project website:
 
-https//voluntary.net
+[https//voluntary.net](https//voluntary.net)
     
 Github page:
 
-    [https://github.com/Voluntarynet/voluntary.app](https://github.com/Voluntarynet/voluntary.app)
+[https://github.com/Voluntarynet/voluntary.app](https://github.com/Voluntarynet/voluntary.app)
     
 Demo site:
 
-    https://voluntary.app
+[https://voluntary.app](https://voluntary.app)
     
 User & developer slack channels:
 
-	[https://join.slack.com/t/voluntaryapp/shared_invite/enQtNDYwMjIyODQ4MTAzLWQ2YzRhMzAwZDI4OTFhZmY4MmYyNDc4YWJkY2ExMWU5M2U4ZjgyNDFhNjQxZTFjM2U0NThmZGJmYWFjZDU0ODQ](https://join.slack.com/t/voluntaryapp/shared_invite/enQtNDYwMjIyODQ4MTAzLWQ2YzRhMzAwZDI4OTFhZmY4MmYyNDc4YWJkY2ExMWU5M2U4ZjgyNDFhNjQxZTFjM2U0NThmZGJmYWFjZDU0ODQ)
+[https://join.slack.com/t/voluntaryapp/shared_invite/enQtNDYwMjIyODQ4MTAzLWQ2YzRhMzAwZDI4OTFhZmY4MmYyNDc4YWJkY2ExMWU5M2U4ZjgyNDFhNjQxZTFjM2U0NThmZGJmYWFjZDU0ODQ](https://join.slack.com/t/voluntaryapp/shared_invite/enQtNDYwMjIyODQ4MTAzLWQ2YzRhMzAwZDI4OTFhZmY4MmYyNDc4YWJkY2ExMWU5M2U4ZjgyNDFhNjQxZTFjM2U0NThmZGJmYWFjZDU0ODQ)
 
 
 

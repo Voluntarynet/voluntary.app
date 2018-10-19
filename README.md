@@ -5,11 +5,12 @@ A decentralized Twitter-like app is included as an example.
 
 Project website:
 
-    https//voluntary.net
+
+    [https//voluntary.net](https//voluntary.net)
     
 Github page:
 
-    https://github.com/Voluntarynet/voluntary.app
+    [https://github.com/Voluntarynet/voluntary.app](https://github.com/Voluntarynet/voluntary.app)
     
 Demo site:
 
@@ -17,7 +18,7 @@ Demo site:
     
 User & developer slack channels:
 
-	https://join.slack.com/t/voluntaryapp/shared_invite/enQtNDYwMjIyODQ4MTAzLWQ2YzRhMzAwZDI4OTFhZmY4MmYyNDc4YWJkY2ExMWU5M2U4ZjgyNDFhNjQxZTFjM2U0NThmZGJmYWFjZDU0ODQ
+	[https://join.slack.com/t/voluntaryapp/shared_invite/enQtNDYwMjIyODQ4MTAzLWQ2YzRhMzAwZDI4OTFhZmY4MmYyNDc4YWJkY2ExMWU5M2U4ZjgyNDFhNjQxZTFjM2U0NThmZGJmYWFjZDU0ODQ](https://join.slack.com/t/voluntaryapp/shared_invite/enQtNDYwMjIyODQ4MTAzLWQ2YzRhMzAwZDI4OTFhZmY4MmYyNDc4YWJkY2ExMWU5M2U4ZjgyNDFhNjQxZTFjM2U0NThmZGJmYWFjZDU0ODQ)
 
 
 
@@ -77,7 +78,7 @@ This project is a set of frameworks and an application for an in-browser webRTC-
 
 The source code is available at:
 
-    https://github.com/Voluntarynet/voluntary.app
+    [https://github.com/Voluntarynet/voluntary.app](https://github.com/Voluntarynet/voluntary.app)
 
 Once you've cloned the repo, you can run the app by opening:
 
@@ -98,11 +99,11 @@ you to add break points and click on the stack trace to open and edit the relate
 
 To get the build scripts to work, you'll need to install nodejs:
 
-    https://nodejs.org/en/
+    [https://nodejs.org/en/](https://nodejs.org/en/)
 
 To get the launch scripts and Chrome debugging to work, you'll need to install this VSCode debugger: 
 
-    https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome
+    [https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome](https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome)
     
 When developing with the VSCode debugger, you'll want to click on the debugger tab, and use the "Launch Local Incremental File" script. 
 This will allow you to set breakpoints and stack browse via the source files (vs the compiled index.html).

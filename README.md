@@ -5,7 +5,7 @@ A decentralized Twitter-like app is included as an example.
 
 Project website:
 
-https//voluntary.net](https//voluntary.net
+https//voluntary.net
     
 Github page:
 

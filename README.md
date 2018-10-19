@@ -1,7 +1,7 @@
 # voluntary.app
 
 This project is a set of frameworks and an application for an in-browser webRTC-based secure p2p messaging app platform. 
-
+A decentralized Twitter-like app is included as an example.
 
 
 ## Getting Started as a User
@@ -87,17 +87,25 @@ To get the launch scripts and Chrome debugging to work, you'll need to install t
 
     https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome
     
+When developing with the VSCode debugger, you'll want to click on the debugger tab, and use the "Launch Local Incremental File" script. 
+This will allow you to set breakpoints and stack browse via the source files (vs the compiled index.html).
+
+When releasing a version to go to the voluntary.app or distributed for user to run locally, 
+you'll want to run the  "Launch Local Index File" script. This will build the index.html file from the JS and CSS files.
+
+
 ### Developer Overview
+
+The project contains a number of components:
 
 - an in-browser webRTC-based decentralized messaging platform 
 - a desktop-like (e.g. AppKit) UI framework in which apps can be built with no templates or html
-- a Miller column based scalable, reactive common UI system which automatically works on desktop, tablets and phones
-- a naked objects framework which can generate a UI based on model objects (most apps require no UI code)
+- a Miller column based scalable, reactive UI system which automatically adjusts to work on desktop and mobile
+- a naked objects framework which dynamically generate the UI based on model objects (most apps require no UI code)
 - an intergrated client-side transparent persistence framework (most apps require developer to declare stored objects and fields)
 - a notifications system which automatically synchronizes the UI, model, and persistence
 
 On top of this system, decentralized apps (dapps) can quicky be built with very little code. 
-A decentralized Twitter app is included as an example.
 
 
 

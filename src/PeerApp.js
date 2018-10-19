@@ -98,7 +98,7 @@ window.PeerApp = App.extend().newSlots({
 		
 		// --- graphics subnodes --------------------
 		
-		this.setGraphics(BMGraphics.shared())
+		this.setGraphics(BMGraphics.clone())
         this.about().addSubnode(this.graphics())
 		
         return this

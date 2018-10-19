@@ -41,6 +41,10 @@ window.CSSDeclaration = class CSSDeclaration extends ProtoClass {
         return this
     }
 
+    setFromStyleDeclaration (cssStyleDec) {
+        
+        return this
+    }
 }
 
 CSSDeclaration.registerThisClass()

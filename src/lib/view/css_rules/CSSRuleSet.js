@@ -8,6 +8,23 @@ window.CSSRuleSet = class CSSRuleSet extends ProtoClass {
             key: null,
         })
     }
+
+    /*
+    getStyleSheet() {
+        // enumerate sheets on document (items of type CSSStyleSheet)
+        for (var i = 0; i < document.styleSheets.length; i++) {
+            var mysheet = document.styleSheets[i];
+            // enumerate rules on sheet (items of type RuleList)
+            var myrules = mysheet.cssRules ? mysheet.cssRules : mysheet.rules;
+            for (var j = 0; j < myrules.length; j++) {
+                // enumerate rules in ruleList (items of type CSS*Rule, e.g. CSSFontFaceRule) 
+                if (myrules[j].selectorText && myrules[j].selectorText.toLowerCase() === selector) {
+                    return myrules[j].style[style];
+                }
+            }
+        }
+    }
+    */
     
     decAt (k) {
         var dec = this.declarations()[k]
@@ -52,6 +69,11 @@ window.CSSRuleSet = class CSSRuleSet extends ProtoClass {
         json.declarations.forEach((k, v) => {
             this.decAt(k).setValue(v)
         })
+    }
+
+    setupFromRawRule(aCSSStyleRule) {
+        this.setKey(aCSSStyleRule.selectorText)
+        return this
     }
 }
 

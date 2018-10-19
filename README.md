@@ -107,9 +107,6 @@ To get the launch scripts and Chrome debugging to work, you'll need to install t
 When developing with the VSCode debugger, you'll want to click on the debugger tab, and use the "Launch Local Incremental File" script. 
 This will allow you to set breakpoints and stack browse via the source files (vs the compiled index.html).
 
-When releasing a version to go to the voluntary.app or distributed for user to run locally, 
-you'll want to run the  "Launch Local Index File" script. This will build the index.html file from the JS and CSS files.
-
 
 ### Developer Overview
 

@@ -1,6 +1,23 @@
 # voluntary.app
 
 This project is a set of frameworks and an application for an in-browser webRTC-based secure p2p messaging app platform. 
+A decentralized Twitter-like app is included as an example. 
+
+Project website:
+
+[https//voluntary.net](https//voluntary.net)
+    
+Github page:
+
+[https://github.com/Voluntarynet/voluntary.app](https://github.com/Voluntarynet/voluntary.app)
+    
+Demo site:
+
+[https://voluntary.app](https://voluntary.app)
+    
+User & developer slack channels:
+
+[https://join.slack.com/t/voluntaryapp/shared_invite/enQtNDYwMjIyODQ4MTAzLWQ2YzRhMzAwZDI4OTFhZmY4MmYyNDc4YWJkY2ExMWU5M2U4ZjgyNDFhNjQxZTFjM2U0NThmZGJmYWFjZDU0ODQ](https://join.slack.com/t/voluntaryapp/shared_invite/enQtNDYwMjIyODQ4MTAzLWQ2YzRhMzAwZDI4OTFhZmY4MmYyNDc4YWJkY2ExMWU5M2U4ZjgyNDFhNjQxZTFjM2U0NThmZGJmYWFjZDU0ODQ)
 
 
 
@@ -60,7 +77,7 @@ This project is a set of frameworks and an application for an in-browser webRTC-
 
 The source code is available at:
 
-    https://github.com/Voluntarynet/voluntary.app
+[https://github.com/Voluntarynet/voluntary.app](https://github.com/Voluntarynet/voluntary.app)
 
 Once you've cloned the repo, you can run the app by opening:
 
@@ -81,23 +98,49 @@ you to add break points and click on the stack trace to open and edit the relate
 
 To get the build scripts to work, you'll need to install nodejs:
 
-    https://nodejs.org/en/
+[https://nodejs.org/en/](https://nodejs.org/en/)
 
 To get the launch scripts and Chrome debugging to work, you'll need to install this VSCode debugger: 
 
-    https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome
+[https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome](https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome)
     
+When developing with the VSCode debugger, you'll want to click on the debugger tab, and use the "Launch Local Incremental File" script. 
+This will allow you to set breakpoints and stack browse via the source files (vs the compiled index.html).
+
+
 ### Developer Overview
+
+The project contains a number of components:
 
 - an in-browser webRTC-based decentralized messaging platform 
 - a desktop-like (e.g. AppKit) UI framework in which apps can be built with no templates or html
-- a Miller column based scalable, reactive common UI system which automatically works on desktop, tablets and phones
-- a naked objects framework which can generate a UI based on model objects (most apps require no UI code)
-- an intergrated client-side transparent persistence framework (most apps require developer to declare stored objects and fields)
+- a Miller column based scalable, reactive UI system which automatically adjusts to work on desktop and mobile
+- a naked objects framework which dynamically generate the UI based on model objects (most apps require no UI code)
+- an intergrated client-side transparent persistence framework (most apps only require developer to declare stored objects and fields)
 - a notifications system which automatically synchronizes the UI, model, and persistence
 
 On top of this system, decentralized apps (dapps) can quicky be built with very little code. 
-A decentralized Twitter app is included as an example.
+
+#### Javascript and CSS importing
+
+When the app launches, it runs JSImporter.js and LoadProgressBar.js. 
+JSImporter handles importing JS and CSS, and LoadProgressBar presents a UI to show the progress of the loading.
+JSImporter looks in the root folder for an _imports.js file. 
+If found, it loads any paths (treated as relative paths) in the order they are found. 
+These paths can be Javascript (including other _import.js files), CSS. 
+This provides a means of doing relative library loading. 
+
+If your import requires some callback to be called after the imports are complete, 
+you can add a pushDoneCallback to the related _imports.js file. For example, the top level _imports.js ends with:
+
+    JSImporter.pushDoneCallback( () => {
+        PeerApp.shared().run()
+    })
+
+which starts the application.
+
+The convention is to use one _import.js file per folder, and to use a single css file per folder (if needed) named _css.css.
+The archive/archive.js script can be used to walk these imports to generate the index.html file when preparing a release.
 
 
 

@@ -8,7 +8,7 @@
                 "fontName" : "Open Sans",
                 "fontSize" : 16,
                 "color" : "#cccccc",
-                "align" : "center",
+                "align" : "center"
             },
 
             "password":
@@ -16,8 +16,8 @@
                 "fontName" : "Open Sans",
                 "fontSize" : 16,
                 "color" : "#cccccc",
-                "align" : "center",
-            },
+                "align" : "center"
+            }
         },
         
         "wallet":
@@ -27,8 +27,8 @@
                 "fontName" : "Open Sans",
                 "fontSize" : 16,
                 "color" : "#cccccc",
-                "align" : "center",
-            },
+                "align" : "center"
+            }
         },
         
         "table":
@@ -45,7 +45,7 @@
                 "fontName" : "Open Sans Light",
                 "fontSize" : 14,
                 "color" : "#888888",
-                "align" : "left",
+                "align" : "left"
             },
             
             "cell-right":
@@ -53,8 +53,8 @@
                 "fontName" : "Open Sans Light",
                 "fontSize" : 14,
                 "color" : "#888888",
-                "align" : "right",
-            },
+                "align" : "right"
+            }
         },
         
         "steps":
@@ -64,8 +64,7 @@
                 "fontName" : "Open Sans",
                 "fontSize" : 14,
                 "color" : "#888888",
-                "align" : "left",
-                
+                "align" : "left"
             },
             
             "status":
@@ -93,7 +92,7 @@
                     "fontName" : "Open Sans",
                     "fontSize" : 14,
                     "color" : "#FFFFFF",
-                    "backgroundColor" : "#000000",
+                    "backgroundColor" : "#000000"
                 },
                 
                 "button-disabled" :
@@ -101,9 +100,9 @@
                     "fontName" : "Open Sans",
                     "fontSize" : 14,
                     "color" : "#FFFFFF",
-                    "backgroundColor" : "#DDDDDD",
-                },
-            },
+                    "backgroundColor" : "#DDDDDD"
+                }
+            }
         },
         
         "code" :
@@ -122,7 +121,7 @@
                 "fontName" : "Open Sans",
                 "fontSize" : 14,
                 "color" : "#BBBBBB",
-                "align" : "left",
+                "align" : "left"
             },
             
             "line" :
@@ -130,7 +129,7 @@
                 "fontName" : "Open Sans",
                 "fontSize" : 14,
                 "color" : "#333333",
-                "align" : "left",
+                "align" : "left"
             },
             
             "line-unedited" :
@@ -138,7 +137,7 @@
                 "fontName" : "Open Sans Light Italic",
                 "fontSize" : 14,
                 "color" : "#DD0000",
-                "align" : "left",
+                "align" : "left"
             },
             
             "line-invalid" :
@@ -146,8 +145,8 @@
                 "fontName" : "Open Sans Light Italic",
                 "fontSize" : 14,
                 "color" : "#DD0000",
-                "align" : "left",
-            },
+                "align" : "left"
+            }
         },
         
         "qr" :
@@ -157,8 +156,8 @@
                 "fontName" : "Open Sans",
                 "fontSize" : 14,
                 "color" : "#000",
-                "align" : "center",
-           },
+                "align" : "center"
+           }
         },
         
         "sell" :
@@ -167,35 +166,35 @@
             {
                 "fontName" : "Open Sans",
                 "fontSize" : 22,
-                "color" : "#000000",
+                "color" : "#000000"
             },
             
             "title-unedited" :
             {
                 "fontName" : "Open Sans Light Italic",
                 "fontSize" : 22,
-                "color" : "#DD0000",
+                "color" : "#DD0000"
             },
             
             "title-invalid" :
             {
                 "fontName" : "Open Sans Light Italic",
                 "fontSize" : 22,
-                "color" : "#DD0000",
+                "color" : "#DD0000"
             },
             
             "price" :
             {
                 "fontName" : "Open Sans",
                 "fontSize" : 22,
-                "color" : "#CCCCCC",
+                "color" : "#CCCCCC"
             },
             
             "price-unedited" :
             {
                 "fontName" : "Open Sans Light Italic",
                 "fontSize" : 22,
-                "color" : "#DD0000",
+                "color" : "#DD0000"
             },
             
             
@@ -203,28 +202,28 @@
             {
                 "fontName" : "Open Sans Light Italic",
                 "fontSize" : 22,
-                "color" : "#DD0000",
+                "color" : "#DD0000"
             },
             
             "error" :
             {
                 "fontName" : "Open Sans Light Italic",
                 "fontSize" : 13,
-                "color" : "#DD0000",
+                "color" : "#DD0000"
             },
             
             "description" :
             {
                 "fontName" : "Open Sans",
                 "fontSize" : 13,
-                "color" : "#999999",
+                "color" : "#999999"
             },
             
             "description-unedited" :
             {
                 "fontName" : "Open Sans Light Italic",
                 "fontSize" : 13,
-                "color" : "#DD0000",
+                "color" : "#DD0000"
             },
             
             "draginstructions":
@@ -232,26 +231,26 @@
                 "fontName" : "Open Sans Italic",
                 "fontSize" : 13,
                 "color" : "#999999",
-                "align" : "center",
+                "align" : "center"
            },
             
             "label" :
             {
                 "fontName" : "Open Sans",
                 "fontSize" : 13,
-                "color" : "#999999",
+                "color" : "#999999"
             },
             
             "address" :
             {
                 "fontName" : "Open Sans Italic",
                 "fontSize" : 13,
-                "color" : "#999999",
+                "color" : "#999999"
             },
             
             "separator" :
             {
-                "backgroundColor" : "#CCCCCC",
+                "backgroundColor" : "#CCCCCC"
             },
             
             "button" :
@@ -259,7 +258,7 @@
                 "fontName" : "Open Sans",
                 "fontSize" : 14,
                 "color" : "#FFFFFF",
-                "backgroundColor" : "#000000",
+                "backgroundColor" : "#000000"
             },
             
             "button-disabled" :
@@ -267,8 +266,8 @@
                 "fontName" : "Open Sans",
                 "fontSize" : 14,
                 "color" : "#FFFFFF",
-                "backgroundColor" : "#DDDDDD",
-            },
+                "backgroundColor" : "#DDDDDD"
+            }
         },
         
         
@@ -280,22 +279,22 @@
                 {
                     "fontName" : "Open Sans",
                     "fontSize" : 13,
-                    "color" : "#CBCBCB",
+                    "color" : "#CBCBCB"
                 },
                 
                 "subtitle" :
                 {
                     "fontName" : "Open Sans Light",
                     "fontSize" : 11,
-                    "color" : "#989898",
+                    "color" : "#989898"
                 },
                 
                 "note" :
                 {
                     "fontName" : "Open Sans Light",
                     "fontSize" : 10,
-                    "color" : "#E7E7E7",
-                },
+                    "color" : "#E7E7E7"
+                }
             },
             
             "selected" :
@@ -304,22 +303,22 @@
                 {
                     "fontName" : "Open Sans",
                     "fontSize" : 13,
-                    "color" : "#FFFFFF",
+                    "color" : "#FFFFFF"
                 },
                 
                 "subtitle" :
                 {
                     "fontName" : "Open Sans",
                     "fontSize" : 11,
-                    "color" : "#FFFFFF",
+                    "color" : "#FFFFFF"
                 },
                 
                 "note" :
                 {
                     "fontName" : "Open Sans",
                     "fontSize" : 10,
-                    "color" : "#FFFFFF",
-                },
+                    "color" : "#FFFFFF"
+                }
             },
             
             "unread" :
@@ -328,23 +327,23 @@
                 {
                     "fontName" : "Open Sans",
                     "fontSize" : 13,
-                    "color" : "#81BAE5",
+                    "color" : "#81BAE5"
                 },
                 
                 "subtitle" :
                 {
                     "fontName" : "Open Sans Light",
                     "fontSize" : 11,
-                    "color" : "#81BAE5",
+                    "color" : "#81BAE5"
                 },
                 
                 "note" :
                 {
                     "fontName" : "Open Sans",
                     "fontSize" : 10,
-                    "color" : "#81BAE5",
-                },
-            },            
+                    "color" : "#81BAE5"
+                }
+            }         
         },
         
         
@@ -353,49 +352,49 @@
 		[
     		{
                 "unselectedBgColor": [0.12],
-                "selectedBgColor":   [0.09],
+                "selectedBgColor":   [0.09]
             },
     		
     		{
                 "unselectedBgColor": [0.09],
-                "selectedBgColor":   [0.07],
+                "selectedBgColor":   [0.07]
     		},
     		
     		{
                 "unselectedBgColor": [0.07],
-                "selectedBgColor":   [0.03],
+                "selectedBgColor":   [0.03]
             },
          
             {
                 "unselectedBgColor": [0.03],
-                "selectedBgColor":   [0.0],
+                "selectedBgColor":   [0.0]
             },
          
             {
                 "unselectedBgColor": [0.07],
-                "selectedBgColor":   [0.03],
+                "selectedBgColor":   [0.03]
             },
 
             {
                 "unselectedBgColor": [0.03],
-                "selectedBgColor":   [0.0],
+                "selectedBgColor":   [0.0]
             },
 
             {
                 "unselectedBgColor": [0.07],
-                "selectedBgColor":   [0.03],
-            },
+                "selectedBgColor":   [0.03]
+            }
 		],
         
 
-        "address":
+        "address2":
         {
             "label" :
             {
                 "fontName" : "Open Sans Light",
                 "fontSize" : 24,
                 "color" : "#FFFFFF",
-                "align" : "center",
+                "align" : "center"
             },
             
             "address" :
@@ -403,7 +402,7 @@
                 "fontName" : "Open Sans Light",
                 "fontSize" : 16,
                 "color" : "#8F8F8F",
-                "align" : "center",
+                "align" : "center"
             },
             
             "addressError" :
@@ -411,18 +410,18 @@
                 "fontName" : "Open Sans Light",
                 "fontSize" : 16,
                 "color" : "#FF0000",
-                "align" : "center",
+                "align" : "center"
             },
             
             "selected" :
             {
-                "backgroundColor" : "#555555",
+                "backgroundColor" : "#555555"
             },
             
             "background" :
             {
-                "backgroundColor" : "#000000",
-            },
+                "backgroundColor" : "#000000"
+            }
             
         },
         
@@ -445,14 +444,14 @@
             {
                 "fontName" : "Open Sans Light",
                 "fontSize" : 24,
-                "color" : "#FFFFFF",
+                "color" : "#FFFFFF"
             },
             
             "subtitle" :
             {
                 "fontName" : "Open Sans Light",
                 "fontSize" : 13,
-                "color" : "#BBBBBB",
+                "color" : "#BBBBBB"
             },
             
             "link" :
@@ -460,20 +459,20 @@
                 "fontName" : "Open Sans Light",
                 "fontSize" : 13,
                 "color" : "#EEEEEE",
-                "text-decoration": "none",
+                "text-decoration": "none"
             },
             
             "body" :
             {
                 "fontName" : "Open Sans Light",
                 "fontSize" : 13,
-                "color" : "#D3D3D3",
+                "color" : "#D3D3D3"
             },
             
             "background" :
             {
-                "backgroundColor" : "#000000",
-            },
+                "backgroundColor" : "#000000"
+            }
         },
         
         "draft" :
@@ -482,21 +481,21 @@
             {
                 "fontName" : "Open Sans",
                 "fontSize" : 13,
-                "color" : "#323232",
+                "color" : "#323232"
             },
             
             "field" :
             {
                 "fontName" : "Open Sans",
                 "fontSize" : 13,
-                "color" : "#8F8F8F",
+                "color" : "#8F8F8F"
             },
             
             "fieldError" :
             {
                 "fontName" : "Open Sans Bold",
                 "fontSize" : 13,
-                "color" : "#FF0000",
+                "color" : "#FF0000"
             },
             
             "body" :
@@ -504,13 +503,13 @@
                 "fontName" : "Open Sans",
                 "fontSize" : 13,
                 "color" : "#C2C2C2",
-                "backgroundColor" : "#FFFFFF",
+                "backgroundColor" : "#FFFFFF"
             },
             
             "separators":
             {
-                "backgroundColor" : "#EEEEEE",
-            },
+                "backgroundColor" : "#EEEEEE"
+            }
         },
 	
     
@@ -521,7 +520,7 @@
                 "fontName" : "Open Sans Bold",
                 "fontSize" : 16,
                 "color" : "#777777",
-                "align" : "center",
+                "align" : "center"
             },
 
             "subheader" :
@@ -529,7 +528,7 @@
                 "fontName" : "Open Sans Light",
                 "fontSize" : 16,
                 "color" : "#777777",
-                "align" : "center",
+                "align" : "center"
             },
             
             
@@ -538,7 +537,7 @@
                 "fontName" : "Open Sans",
                 "fontSize" : 16,
                 "color" : "#777777",
-                "align" : "center",
+                "align" : "center"
             },
             
             "item" :
@@ -546,7 +545,7 @@
                 "fontName" : "Open Sans Light",
                 "fontSize" : 16,
                 "color" : "#AAAAAA",
-                "align" : "center",
+                "align" : "center"
             },
             
             "item.alt" :
@@ -554,16 +553,16 @@
                 "fontName" : "Open Sans Light",
                 "fontSize" : 16,
                 "color" : "#DDDDDD",
-                "align" : "center",
+                "align" : "center"
             },
             
             
             "background":
             {
-                "backgroundColor" : "#191919",
-            },
+                "backgroundColor" : "#191919"
+            }
         }
     
     
-    },
+    }
 }

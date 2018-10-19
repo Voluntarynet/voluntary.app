@@ -3,6 +3,18 @@
 /*
     CSS Rule sets abstraction
     
+    CSS structure in JS is:
+
+        StyleSheetList array = document.styleSheets 
+        CSSRuleList array = sheet.cssRules
+        CSS*Rule rule = ruleList[i]
+        CSSStyleDeclaration dec = rule.style
+
+        dec.fontFamily
+        dec.cssText
+        etc
+
+
     example use:
     
     // define a rule set
@@ -79,6 +91,43 @@ window.CSS = class CSS extends ProtoClass {
         json.rules.forEach((k, v) => {
             this.ruleAt(k).fromJSON(v)
         })
+    }
+
+    /*
+    setupFromCSS() {
+        // enumerate sheets on document (items of type CSSStyleSheet)
+        for (var i = 0; i < document.styleSheets.length; i++) {
+            var mysheet = document.styleSheets[i];
+
+            // enumerate rules on sheet (c type RuleList)
+            var myrules = mysheet.cssRules ? mysheet.cssRules : mysheet.rules;
+            // enumerate rules in ruleList (items of type CSS*Rule, e.g. CSSFontFaceRule) 
+            for (var j = 0; j < myrules.length; j++) {
+                var rule = myrules[j]
+                var className = rule.selectorText
+                var ruleObj = this.ruleAt(className)
+                ruleObj.setupFromRawRule(rule)
+            }
+        }
+    }
+    */
+
+    rawCSSStyleRuleForClassName (className) {
+        // enumerate sheets on document (items of type CSSStyleSheet)
+        for (var i = 0; i < document.styleSheets.length; i++) {
+            var mysheet = document.styleSheets[i];
+
+            // enumerate rules on sheet (c type RuleList)
+            var myrules = mysheet.cssRules ? mysheet.cssRules : mysheet.rules;
+            // enumerate rules in ruleList (items of type CSS*Rule, e.g. CSSFontFaceRule) 
+            for (var j = 0; j < myrules.length; j++) {
+                var rule = myrules[j]
+                if(className == rule.selectorText) {
+                    return rule // usually a CSSStyleRule instance
+                }
+            }
+        }
+
     }
 }
 

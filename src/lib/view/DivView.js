@@ -130,6 +130,15 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
     */
 
+    setCssClassAttribute: function(name, value) {
+        var rule = "." + this.divClassName().split(" ")[0] + " { " + name + ": " + value +"; }"
+        console.log("adding CSS rule: " + rule + "")
+        var stylesheet = document.styleSheets[0]
+        stylesheet.insertRule(rule, stylesheet.cssRules.length); 
+        // todo: hack - add something to remove existing rule instead of inserting more
+        return this
+    },
+
     setCssAttribute: function(key, newValue, didChangeCallbackFunc) {
         let style = this.cssStyle()
         let oldValue = style[key]

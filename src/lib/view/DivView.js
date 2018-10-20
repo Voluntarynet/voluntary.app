@@ -153,14 +153,11 @@ window.DivView = ideal.Proto.extend().newSlots({
         return null
     },
 
+    /*
     setCssClassAttribute: function(name, value) {
-        var className = "."  + this.divClassName().split(" ")[0]
-        var rule = className + " { " + name + ": " + value +"; }"
-        console.log("adding CSS rule: " + rule + "")
-
-        var stylesheet = this.stylesheetWithClassName(className)
-        console.log(className + " stylesheet: ", stylesheet)
-        /*
+      
+        //var stylesheet = this.stylesheetWithClassName(className)
+        //console.log(className + " stylesheet: ", stylesheet)
         for (var i = 0; i < document.styleSheets.length; i++) {
             var stylesheet = document.styleSheets[i]
             if ("cssRules" in stylesheet) {
@@ -173,10 +170,10 @@ window.DivView = ideal.Proto.extend().newSlots({
                 }
             }
         }
-        */
         // todo: hack - add something to remove existing rule instead of inserting more
         return this
     },
+    */
 
     setCssAttribute: function(key, newValue, didChangeCallbackFunc) {
         let style = this.cssStyle()

@@ -65,29 +65,20 @@ Proto.setSlots({
     },
 
     allDescendantProtos: function() {
-        if (this._allDescendantProtos == null) {
-            this._allDescendantProtos = []
+        if (!this._allDescendantProtos) {
             var children = this.childProtos()
-            /*
-            console.log(this.type() + " -> ", children.map((child) => { return child.type() }))
-
-            if (children.contains(this)) {
-                console.log("loop!")
-            }
-            */
 
             var m = children.map(function (child) { 
-                //console.log("child.type() = ", child.type())
                 return child.allDescendantProtos() 
             })
 
             m.push(children)
             var result = m.flatten()
+            //return result
             this._allDescendantProtos = result
         }
         return this._allDescendantProtos
     },
-
 
     uniqueId: function () {
         return this._uniqueId

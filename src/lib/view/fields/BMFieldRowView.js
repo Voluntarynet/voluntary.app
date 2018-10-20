@@ -91,6 +91,10 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         console.log("  newValue =  '" + newValue + "'")
         */
         
+        if (newValue === null) { 
+            newValue = false; // todo: find better way to deal with adding/removing new field
+        } 
+
         valueView.setValue(newValue)
 		
         keyView.setIsVisible(node.keyIsVisible())

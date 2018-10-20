@@ -34,17 +34,60 @@ Proto.setSlots({
         return this
     },
 
-    childProtos: function() {
-        var result = this.allProtos().select((proto) => { return proto._parentProto == this })
-        return result
-    },
-
+    _childProtos: [],
+    _allDescendantProtos: null,
+    
     extend: function () {
         var obj = this.cloneWithoutInit()
         obj.registerThisProto()
         obj._parentProto = this
+        obj._childProtos = [] // need to create these slots so they won't be inherited
+        this.addChildProto(obj)
         return obj
     },
+
+    addChildProto: function(aProto) {
+        this._childProtos.push(aProto)
+
+        /*
+        if (this._childProtos.contains(this)) {
+            console.log(this.type())
+            console.log(this._childProtos.map(function(child) { return child.type() }))
+            throw "loop!"
+        }
+        */
+
+        return this
+    },
+
+    childProtos: function() {
+        return this._childProtos
+    },
+
+    allDescendantProtos: function() {
+        if (this._allDescendantProtos == null) {
+            this._allDescendantProtos = []
+            var children = this.childProtos()
+            /*
+            console.log(this.type() + " -> ", children.map((child) => { return child.type() }))
+
+            if (children.contains(this)) {
+                console.log("loop!")
+            }
+            */
+
+            var m = children.map(function (child) { 
+                //console.log("child.type() = ", child.type())
+                return child.allDescendantProtos() 
+            })
+
+            m.push(children)
+            var result = m.flatten()
+            this._allDescendantProtos = result
+        }
+        return this._allDescendantProtos
+    },
+
 
     uniqueId: function () {
         return this._uniqueId

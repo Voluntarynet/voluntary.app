@@ -190,8 +190,14 @@ class ProtoClass {
         var result = ProtoClass.allClasses().select((proto) => { return proto._parentProto == this })
         return result
     }
-    /*
 
+    /*
+    allDescendantProtos () {
+
+    }
+    */
+
+    /*
     extend () {
         var obj = this.cloneWithoutInit()
         Proto._allProtos.push(obj)

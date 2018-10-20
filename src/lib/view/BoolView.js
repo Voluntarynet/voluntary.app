@@ -9,6 +9,8 @@ window.BoolView = DivStyledView.extend().newSlots({
     doesHoldFocusOnReturn: false,
     value: false,
     isEditable: false,
+    checkedIcon: null, 
+    uncheckedIcon: null,
 }).setSlots({
     init: function () {
         DivView.init.apply(this)
@@ -23,9 +25,31 @@ window.BoolView = DivStyledView.extend().newSlots({
 		
         //this.setUnfocusOnEnterKey(true)
         //this.setIsRegisteredForKeyboard(true) // gets set by setContentEditable()
+
+        this.setupForRoundCheckbox()
+        //this.setupForSquareCheckbox()
+        //this.setupForToggleSwitch()
         return this
     },
     
+    setupForRoundCheckbox: function() {
+        this.setCheckedIcon("checkbox-circle-checked")
+        this.setUncheckedIcon("checkbox-circle-unchecked")
+        return this
+    },
+
+    setupForSquareCheckbox: function() {
+        this.setCheckedIcon("checkbox-square-checked")
+        this.setUncheckedIcon("checkbox-square-unchecked")
+        return this
+    },
+
+    setupForToggleSwitch: function() {
+        this.setCheckedIcon("toggle-on")
+        this.setUncheckedIcon("toggle-off")
+        return this
+    },
+
     // editable
     
     setIsEditable: function(aBool) {        
@@ -108,27 +132,6 @@ window.BoolView = DivStyledView.extend().newSlots({
 	
     // svg icon
 	
-    /*
-	checkedIcon: function() {
-	   return "checkbox-square-checked" 
-	},
-	
-	uncheckedIcon: function() {
-	   return "checkbox-square-unchecked" 
-	},
-	*/
-	
-    checkedIcon: function() {
-	   //Source: https://uxwing.com/wp-content/themes/uxwing/download/01-user_interface/toggle-on.svg
-	   //return "checkbox-circle-checked" 
-	   return "toggle-on" 
-    },
-	
-    uncheckedIcon: function() {
-	   //return "checkbox-circle-unchecked" 
-	   return "toggle-off" 
-    },
-		
     currentIcon: function() {
 	    return this.isChecked() ? this.checkedIcon() : this.uncheckedIcon();
     },

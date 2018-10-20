@@ -71,7 +71,7 @@ window.PeerApp = App.extend().newSlots({
 
         // about 
 
-        this.setAbout(BMNode.clone().setTitle("Settings").setSubtitle(null).setNodeMinWidth(250))
+        this.setAbout(BMStorableNode.clone().setTitle("Settings").setSubtitle(null).setNodeMinWidth(250))
         this.addSubnode(this.about())
 		
         // --- about subnodes --------------------
@@ -89,13 +89,12 @@ window.PeerApp = App.extend().newSlots({
         //var archive = BMArchiveNode.clone()
         //this.about().addSubnode(archive)
 
-        // protos
-        var protoNode = BMProtoNode.clone()
-        this.about().addSubnode(protoNode)
+        // protos inspector
+        //var protoNode = BMProtoNode.clone()
+        //this.about().addSubnode(protoNode)
 
         this.network().servers().connect() // observe appDidInit instead?
 
-		
         // --- graphics subnodes --------------------
 		
         this.setGraphics(BMGraphics.clone())
@@ -107,7 +106,6 @@ window.PeerApp = App.extend().newSlots({
     // --- setup views ---
     
     setupViews: function() {
-
         this.setupBrowser()
         //this.setupShelf()
     },
@@ -118,7 +116,6 @@ window.PeerApp = App.extend().newSlots({
         }
         return true
     },
-
     
     setupBrowser: function() {	
         this.setBrowser(BrowserView.clone())

@@ -1,5 +1,9 @@
 "use strict"
 
 JSImporter.pushRelativePaths([
-	"BMGraphics.js",
+    "BMGraphics.js",
+    "BMThemeClass.js",
+    "BMThemeClassState.js",
+    "BMTheme.js",
+    "BMThemes.js",
 ])

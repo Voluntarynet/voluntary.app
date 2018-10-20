@@ -130,11 +130,50 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
     */
 
+    stylesheetWithClassName: function(className) {
+        for (var i = 0; i < document.styleSheets.length; i++) {
+            var stylesheet = document.styleSheets[i]
+
+            if ("cssRules" in stylesheet) {
+                try {
+                    var rules = stylesheet.cssRules
+                    for (var j = 0; j < rules.length; j++) {
+                        var rule = rules[j]
+                        var ruleClassName = rule.selectorText.split(" ")[0]
+                        console.log("rule.selectorText: ", rule.selectorText)
+                        if (ruleClassName == className) {
+                            return stylesheet
+                        }
+                    }
+                } catch (e) {
+                    //console.log("couldn't add CSS rule: " + rule + "")
+                }
+            }
+        }
+        return null
+    },
+
     setCssClassAttribute: function(name, value) {
-        var rule = "." + this.divClassName().split(" ")[0] + " { " + name + ": " + value +"; }"
+        var className = "."  + this.divClassName().split(" ")[0]
+        var rule = className + " { " + name + ": " + value +"; }"
         console.log("adding CSS rule: " + rule + "")
-        var stylesheet = document.styleSheets[0]
-        stylesheet.insertRule(rule, stylesheet.cssRules.length); 
+
+        var stylesheet = this.stylesheetWithClassName(className)
+        console.log(className + " stylesheet: ", stylesheet)
+        /*
+        for (var i = 0; i < document.styleSheets.length; i++) {
+            var stylesheet = document.styleSheets[i]
+            if ("cssRules" in stylesheet) {
+                try {
+                    stylesheet.insertRule(rule, stylesheet.cssRules.length); 
+                    console.log("== added CSS rule: " + rule + "")
+                    break;
+                } catch (e) {
+                    console.log("couldn't add CSS rule: " + rule + "")
+                }
+            }
+        }
+        */
         // todo: hack - add something to remove existing rule instead of inserting more
         return this
     },

@@ -21,7 +21,6 @@ window.BMDataStore = BMNode.extend().newSlots({
         return NodeStore.shared()
     },
 
-
     prepareToSyncToView: function () {
         if (this.subnodes().length == 0) {
             this.refreshSubnodes()

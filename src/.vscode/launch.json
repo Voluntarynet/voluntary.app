@@ -8,23 +8,32 @@
         {
             "type": "chrome",
             "request": "launch",
-            "name": "voluntary.app Incremental",
+            "name": "voluntary.app incremental",
             "url": "http://voluntary.app/index_incremental.html",
             "webRoot": "${workspaceFolder}"
         },
         {
             "type": "chrome",
             "request": "launch",
-            "name": "voluntary.app",
+            "name": "voluntary.app index",
             "url": "https://voluntary.app",
             "webRoot": "${workspaceFolder}"
         },
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Local",
+            "name": "local incremental",
             "url": "file:///Users/steve/Desktop/voluntaryapp/index_incremental.html",
             "webRoot": "${workspaceFolder}"
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "local index",
+            "url": "file:///Users/steve/Desktop/voluntaryapp/index.html",
+            "webRoot": "${workspaceFolder}",
+            "preLaunchTask": "buildindex",
+
         },
     ]
 }

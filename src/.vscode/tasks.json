@@ -4,7 +4,7 @@
     "version": "0.0.1",
     "tasks": [
         {
-            "label": "build index.html",
+            "label": "buildindex",
             "type": "shell",
             "command": "node",
             "args": ["archive.js"],

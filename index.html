@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1">
     <title></title>
     <style>
 
@@ -26,6 +27,12 @@ html, body {
 
 	font-family: "AppLight", "Helvetica", "Sans-Serif"; /* for font fallback while loading? */
 }
+
+/*
+:root {
+    font-size: calc(1vw + 1vh + .5vmin);
+}
+*/
 
 
 /* --- mono --- */
@@ -498,7 +505,7 @@ html, body {
     width: calc(100% - 55px);
 	
     text-align: left;
-    font-size: 13px;
+    /*font-size: 13px;*/
     max-height: 17px;
 
     font-weight: normal;
@@ -819,7 +826,7 @@ html, body {
 	margin: auto;
 	
     text-align: right;
-    font-size: 13px;
+    /*font-size: 13px;*/
     white-space: nowrap;
     /*text-transform: capitalize;*/
 
@@ -854,7 +861,7 @@ html, body {
 
     color: #000;
     font-weight: normal;
-    font-size: 13px;
+    /*font-size: 13px;*/
 
 	/* 
 	border-radius: 5px;
@@ -915,7 +922,7 @@ html, body {
     text-transform: none;
     text-align: left;
 
-    font-size: 12px;
+    /*font-size: 12px;*/
     font-family: AppMono, monospace;
 	font-weight: lighter;
 }
@@ -935,7 +942,7 @@ html, body {
     white-space: pre-wrap;
 
     color: black;
-    font-size: 13px;
+    /*font-size: 13px;*/
     font-weight: normal;
     text-transform: none;
     text-align: left;
@@ -994,7 +1001,7 @@ html, body {
 	margin-left: 40px;
     top: 0px;
     left: 0px;
-    font-size: 13px;
+    /*font-size: 13px;*/
     font-weight: normal;
     text-transform: none;
 }
@@ -1044,7 +1051,7 @@ html, body {
     
     color: #000;
 
-    font-size: 13px;
+    /*font-size: 13px;*/
     font-weight: normal;
     text-transform: none;
 
@@ -1088,7 +1095,7 @@ html, body {
 	
 	width: auto;
 	
-    font-size: 13px;
+    /*font-size: 13px;*/
     font-weight: normal;
     text-transform: none;
 
@@ -1232,7 +1239,7 @@ html, body {
 	word-wrap: normal;
 	white-space: normal;
 	
-	font-size: 13px; 
+    /*font-size: 13px;*/
 	font-size-adjust: 0.5;
 	overflow: visible;
 
@@ -1442,7 +1449,7 @@ html, body {
 	word-wrap: normal;
 	white-space: normal;
 	
-	font-size: 13px; 
+    /*font-size: 13px;*/
 	font-size-adjust: 0.5;
 	overflow: visible;
 	
@@ -80463,46 +80470,55 @@ Proto.setSlots({
         return this
     },
 
-    childProtos: function() {
-        return this._childProtos
- 
-        //var result = this.allProtos().select((proto) => { return proto._parentProto == this })
-        //return result
-    },
-
-    addChildProtosToArray: function(results) {
-
-    },
-    allDescendantProtos: function() {
-        var children = this.childProtos()
-        console.log(this.type() + " -> ", children.map((child) => { return child.type() }))
-
-        var m = children.map(function (child) { 
-            console.log("child.type() = ", child.type())
-            return child.allDescendantProtos() 
-        })
-        m.push(children)
-        var result = m.flatten()
-        return result
-    },
-
+    _childProtos: [],
+    _allDescendantProtos: null,
+    
     extend: function () {
         var obj = this.cloneWithoutInit()
         obj.registerThisProto()
         obj._parentProto = this
+        obj._childProtos = [] // need to create these slots so they won't be inherited
         this.addChildProto(obj)
         return obj
     },
 
     addChildProto: function(aProto) {
-        if (this == aProto) {
-            console.log(this.type() + " attempting to add self as child ")
-        }
-        if (!this._childProtos) {
-            this._childProtos = []
-        }
         this._childProtos.push(aProto)
+
+        /*
+        if (this._childProtos.contains(this)) {
+            console.log(this.type())
+            console.log(this._childProtos.map(function(child) { return child.type() }))
+            throw "loop!"
+        }
+        */
+
         return this
+    },
+
+    childProtos: function() {
+        return this._childProtos
+    },
+
+    allDescendantProtos: function() {
+        if (!this._allDescendantProtos) {
+            var children = this.childProtos()
+
+            var m = children.map(function (child) { 
+                return child.allDescendantProtos() 
+            })
+
+            m.push(children)
+            var result = m.flatten()
+            //return result
+
+            result = result.sort(function (a, b) {
+                return a.type().localeCompare(b.type())
+            })
+
+            this._allDescendantProtos = result
+        }
+        return this._allDescendantProtos
     },
 
     uniqueId: function () {
@@ -82973,16 +82989,22 @@ JSImporter.pushRelativePaths([
 
 "use strict"
 
+/*
+    BMViewStyles
+    represents the set of styles for a NodeView, e.g. selected, unselected
+
+    todo: can we make view styles nodes? recursion?
+
+*/
+
 window.BMViewStyles = ideal.Proto.extend().newSlots({
     type: "BMViewStyles",
     name: "",
-
     unselected: null,
     selected: null,
     //hover: null,
     //enabled: null,
     //disabled: null,
-	
 }).setSlots({
     init: function () {
         this.setSelected(BMViewStyle.clone())
@@ -82990,6 +83012,15 @@ window.BMViewStyles = ideal.Proto.extend().newSlots({
         //this.setHover(BMViewStyle.clone())
         return this
     },
+
+    states: function() {
+        return [this.unselected(), this.selected()]
+    },
+
+    isEmpty: function() {
+        return this.states().detect((state) => { return !state.isEmpty() }) == null
+    },
+
     
     setToBlackOnWhite: function() {
         this.unselected().setColor("black")
@@ -83049,6 +83080,10 @@ window.BMViewStyle = ideal.Proto.extend().newSlots({
 }).setSlots({
     init: function () {
         return this
+    },
+
+    isEmpty: function() {
+        return this.styleNames().detect((styleName) => { return styleName != null }) == null
     },
 
     description: function() {
@@ -83842,6 +83877,53 @@ window.BMNode = ideal.Proto.extend().newSlots({
 	
     nodeBecameVisible: function() {
 	    return this
+    },
+
+    // json serialization
+
+    asJSON: function() {
+        var dict = {}
+        dict.type = this.type()
+        dict.title = this.title()
+        // todo: store persistent slots...
+        // todo: store subnodes if set to store them
+        if (this.subnodes().length) { // todo: use a count method?
+            dict.subnodes = this.subnodes().map((subnode) => {
+                return subnode.asJSON()
+            })
+        }
+        return dict
+    },
+
+    fromJSON: function(json) {
+        // todo: read persistent keys
+        if (json.title) {
+            this.setTitle(json.title)
+        }
+        if (json.subnodes) { 
+            this.setSubnodes(json.subnodes.map((subnodeDict) => {
+                var type = subnodeDict.type
+                return window[type].clone().fromJSON(subnodeDict)
+            }))
+        }
+        return this
+    },
+
+    asyncFromJSONFile: function(file) {
+        var rawFile = new XMLHttpRequest();
+        rawFile.open("GET", file, false);
+        rawFile.onreadystatechange = function ()
+        {
+            if(rawFile.readyState === 4)
+            {
+                if(rawFile.status === 200 || rawFile.status == 0)
+                {
+                    var json = rawFile.responseText;
+                    this.fromJSON(JSON.parse(json))
+                }
+            }
+        }
+        rawFile.send(null);
     },
 })
 
@@ -84673,7 +84755,6 @@ window.BMDataStore = BMNode.extend().newSlots({
         return NodeStore.shared()
     },
 
-
     prepareToSyncToView: function () {
         if (this.subnodes().length == 0) {
             this.refreshSubnodes()
@@ -85321,6 +85402,40 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
 
     isValid: function() {
         return this.validate() // could cache this later...
+    },
+
+    // json serialization
+    // todo: can this use persistent storage methods via skip pid use?
+
+    asJSON: function() {
+        var dict = {}
+        dict.type = this.type()
+        // todo: store persistent slots...
+        // todo: store subnodes if set to store them
+        if (this.subnodes().length) { // todo: use a count method?
+            // todo: check for BMField subclass?
+            dict.fields = {}
+            this.subnodes().forEach((field) => {
+                let v = field.value()
+                if (v) { // is empty or null value something we should store?
+                    dict.fields[field.key()] = v
+                }
+            })
+        }
+        return dict
+    },
+
+    fromJSON: function(json) {
+        // todo: read persistent keys
+        if (json.fields) { 
+            Map.withJsMap(json.fields).forEach((key, value) => {
+                var field = this.fieldNamed(key)
+                if (field) {
+                    field.setValue(value)
+                }
+            })
+        }
+        return this
     },
 })
 
@@ -86128,6 +86243,7 @@ JSImporter.pushRelativePaths([
     "CenteredDivView.js",
     "DivStyledView.js",
     "DivTextTapeMeasure.js",
+    "DivCSSInspector.js",
     "NodeView.js",
     "TextField.js",
     "BoolView.js",
@@ -87189,6 +87305,12 @@ window.Mouse = ideal.Proto.extend().newSlots({
 
 "use strict"
 
+/*
+
+
+
+*/
+
 function DomElement_atInsertElement(el, index, child) {
     let children = el.children
     
@@ -87342,14 +87464,11 @@ window.DivView = ideal.Proto.extend().newSlots({
         return null
     },
 
+    /*
     setCssClassAttribute: function(name, value) {
-        var className = "."  + this.divClassName().split(" ")[0]
-        var rule = className + " { " + name + ": " + value +"; }"
-        console.log("adding CSS rule: " + rule + "")
-
+      
         //var stylesheet = this.stylesheetWithClassName(className)
         //console.log(className + " stylesheet: ", stylesheet)
-        /*
         for (var i = 0; i < document.styleSheets.length; i++) {
             var stylesheet = document.styleSheets[i]
             if ("cssRules" in stylesheet) {
@@ -87362,10 +87481,10 @@ window.DivView = ideal.Proto.extend().newSlots({
                 }
             }
         }
-        */
         // todo: hack - add something to remove existing rule instead of inserting more
         return this
     },
+    */
 
     setCssAttribute: function(key, newValue, didChangeCallbackFunc) {
         let style = this.cssStyle()
@@ -90164,8 +90283,59 @@ window.DivTextTapeMeasure = ideal.Proto.extend().newSlots({
 	
 })
 
+/*
+    DivCSSInspector
+    Used to inspect class styles since css hides stylesheet.cssRules.
+    
+    example use:
+    var value = DivCSSInspector.shared().setDivClassName("..").cssStyle.fontFamily
 
-NodeView = DivStyledView.extend().newSlots({
+*/
+
+"use strict"
+
+window.DivCSSInspector = ideal.Proto.extend().newSlots({
+    type: "DivCSSInspector",
+    idName: "DivCSSInspector",
+    //divClassName: null,
+}).setSlots({
+    
+    shared: function() {
+        return this
+    },
+
+    testElement: function() {
+        if (!this._testElement) {
+            this._testElement = this.createTestElement()
+            document.body.appendChild(this._testElement);
+            if (!document.getElementById(this.idName())) {
+                throw new Error("missing element '" + this.idName() + "'")
+            }
+        }
+        return this._testElement
+    },
+	
+    createTestElement: function() {
+        var e = document.createElement("div");
+	    e.setAttribute("id", this.idName());
+        e.style.display = "none";
+        e.style.visibility = "hidden";
+        return e
+    },
+
+    setDivClassName: function(aName) {
+        this.testElement().setAttribute("class", aName);
+        return this
+    },
+
+    cssStyle: function(key) {
+        return this.testElement().style
+    },
+})
+
+"use strict"
+
+window.NodeView = DivStyledView.extend().newSlots({
     type: "NodeView",
     node: null,
     //ownsView: true,
@@ -91318,7 +91488,6 @@ window.BrowserView = NodeView.extend().newSlots({
 
         return this
     },
-
 
     setupDefaultStyles: function () {
         this.setDefaultColumnStyles(BMViewStyles.clone())
@@ -102580,12 +102749,51 @@ window.BMConnection = BMNode.extend().newSlots({
 "use strict"
 
 JSImporter.pushRelativePaths([
+    "BMThemeStyleSheet.js",
     "BMGraphics.js",
     "BMThemeClass.js",
     "BMThemeClassState.js",
     "BMTheme.js",
     "BMThemes.js",
 ])
+
+"use strict"
+
+window.BMThemeStyleSheet = ideal.Proto.extend().newSlots({
+    type: "BMThemeStyleSheet",
+}).setSlots({
+    init: function () {
+    },
+
+    shared: function() {
+        return this.sharedInstanceForClass(BMThemeStyleSheet)
+    },
+
+    sheet: function() {
+        if (!this._sheet) {
+            let sheetName = "ThemeStyleSheet"
+            let sheetElement = document.getElementById(sheetName) 
+            sheetElement = document.createElement("style")
+            sheetElement.id = sheetName
+            sheetElement.innerHTML = "";
+            document.body.appendChild(sheetElement);
+            this._sheet = document.styleSheets[document.styleSheets.length-1]
+        }
+
+        return this._sheet
+    },
+
+    setDivClassNameAttributeValue: function(divClassName, name, value) {
+        var className = "."  + divClassName.split(" ")[0]
+        var rule = className + " { " + name + ": " + value +"; }"
+
+
+        var sheet = this.sheet()
+        sheet.insertRule(rule, sheet.cssRules.length); 
+        console.log("added rule to theme sheet: " + rule + "")
+        return this
+    },
+})
 
 "use strict"
 
@@ -102615,24 +102823,18 @@ window.BMThemeClass = BMStorableNode.extend().newSlots({
     init: function () {
         BMStorableNode.init.apply(this)
         this.setShouldStore(true)
-
-        this.setSubtitle("class")
+        //this.setSubtitle("class")
         this.setNodeMinWidth(200)
-
         this.setupSubnodes()
     },
 
-  
     setupSubnodes: function() {
-        // ask each class for it's stateNames
-
         var classProto = window[this.title()]
         //var stateNames = classProto.stateNames()
         var stateNames = ["active", "inactive", "disabled"]
         var stateNodes = stateNames.map(function (stateName) {
-            return BMThemeClassState.clone().setTitle(stateName)
+            return BMThemeClassState.clone().setDivClassName(stateName)
         })
-
         this.setSubnodes(stateNodes);
         return this
     },
@@ -102644,71 +102846,61 @@ window.BMThemeClass = BMStorableNode.extend().newSlots({
 
 window.BMThemeClassState = BMFieldSetNode.extend().newSlots({
     type: "BMThemeClassState",
+    divClassName: null,
 }).setSlots({
     init: function () {
         BMFieldSetNode.init.apply(this)
         this.setShouldStore(true)
-
-        this.setSubtitle("state")
+        //this.setSubtitle("state")
         this.setNodeMinWidth(200)
-
         this.setupSubnodes()
     },
 
-  
-    setupSubnodes: function() {
+    attributeNames: function() {
+        // todo: request this from the view class, use view class theme state methods instead of direct css keys
+        //return ["background", "color", "border"] 
+        return BMViewStyle.styleNames()
+    },
 
-        var field = BMBoolField.clone().setKey("isDark").setValueIsEditable(true);
-        this.addStoredField(field)
-        /*
-        //Toggle Hook
-        BMFieldSetNode.didUpdateField = function (aField) {
-            if (aField.key() == "altScrollbars") {
-                aField.parentNode().toggleAltScrollbars()
-            }
-        }
-        */
-
+    setDivClassName: function(aName) {
+        this._divClassName = aName
+        this.setTitle(aName)
+        var style = DivCSSInspector.shared().setDivClassName(aName).cssStyle()
+        this.syncFromViewStyle()
         return this
     },
 
+    syncFromViewStyle: function() {
+  
+        return this
+    },
+
+    setupSubnodes: function() {
+        this.attributeNames().forEach((attributeName) => {
+            var field = BMField.clone().setKey(attributeName).setValueIsEditable("");
+            this.addStoredField(field)
+        })
+        return this
+    },
 
     didUpdateField: function(aField) {
-        console.log("didUpdateField: ", aField.value())
-        // note: this is just a test at the moment
-        // todo: use aField attributes for class and attribute name
+        console.log(this.type() + ".didUpdateField: " + aField.key() + ":", aField.value())
 
         if (aField.value()) { // dark mode
-            //BrowserDefaultHeader.clone().setCssClassAttribute("background", "black")
-            BrowserHeader.clone().setCssClassAttribute("background", "#999")
-            BrowserColumn.clone().setCssClassAttribute("background", "black")
-            BrowserColumn.clone().setCssClassAttribute("border-left", "10px solid white")
-            BMTextAreaFieldRowView.clone().setCssClassAttribute("background", "black")
+            BMThemeStyleSheet.shared().setDivClassNameAttributeValue(this.divClassName(), aField.key(), "#000")
         } else {
-            //BrowserDefaultHeader.clone().setCssClassAttribute("background", "#aaa")
-            BrowserHeader.clone().setCssClassAttribute("background", "#dbdbdb")
-            BrowserColumn.clone().setCssClassAttribute("background", "transparent")
-            BrowserColumn.clone().setCssClassAttribute("border-left", "0px solid white")
-            BMTextAreaFieldRowView.clone().setCssClassAttribute("background", "white")
+            BMThemeStyleSheet.shared().setDivClassNameAttributeValue(this.divClassName(), aField.key(), "white")
         }
-
-        /*
-        Scroll bars 
-        ::-webkit-scrollbar { width: 10px; } 
-        ::-webkit-scrollbar-track { background: #666; } 
-        ::-webkit-scrollbar-thumb { background-color: #f1f1f1; outline: 1px solid slategrey; } 
-        ::-webkit-scrollbar-thumb:hover { background: #b1b1b1; }
-        */
     },
-
-    /*
-    toggleAltScrollbars: function () {
-        CSS.ruleAt("Browser").decAt("position").setValue("relative")
-        CSS.rawCSSStyleRuleForClassName("Browser")
-        //Activate stylesheet or theme or something
-    },
-    */
 })
+
+/* 
+notes on Scroll bars theme options
+::-webkit-scrollbar { width: 10px; } 
+::-webkit-scrollbar-track { background: #666; } 
+::-webkit-scrollbar-thumb { background-color: #f1f1f1; outline: 1px solid slategrey; } 
+::-webkit-scrollbar-thumb:hover { background: #b1b1b1; }
+*/
 
 "use strict"
 
@@ -102726,6 +102918,9 @@ window.BMTheme = BMStorableNode.extend().newSlots({
         this.setupSubnodes()
 
         this.addAction("delete")
+        setTimeout(() => { 
+            console.log("theme as json: ", JSON.stringify(this.asJSON())) 
+        }, 1000)
     },
 
     loadFinalize: function() {
@@ -102733,17 +102928,21 @@ window.BMTheme = BMStorableNode.extend().newSlots({
         this.setupSubnodes()
     },
 
-  
     setupSubnodes: function() {
         // setup with all view classes
         
         var viewClasses = DivView.allDescendantProtos()
+
+        viewClasses = viewClasses.select((viewClass) => {
+            return ("styles" in viewClass)
+        }).select((viewClass) => { return !viewClass.styles().isEmpty() })
+
         //console.log("viewClasses:", viewClasses)
-        var childNodes = viewClasses.map((childProto) => {
+        var themeClasses = viewClasses.map((childProto) => {
             return BMThemeClass.clone().setTitle(childProto.type());
         })
 
-        this.setSubnodes(childNodes);
+        this.setSubnodes(themeClasses);
         return this
     },
 

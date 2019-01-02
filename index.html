@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=0.5, minimum-scale=0.1">
     <title></title>
     <style>
 
@@ -19,13 +19,44 @@ html, body {
 	background-color: black;
     zoom: 100%;
 
-	/* text-size-adjust fixes issue with contenteditable fonts being tiny */
+    /*
+    text-size-adjust: none; 
+    -ms-text-size-adjust: none;
+    -moz-text-size-adjust: none;
+    -webkit-text-size-adjust: none;
+*/
+    /* text-size-adjust fixes issue with contenteditable fonts being tiny */
     text-size-adjust: 100%; 
     -ms-text-size-adjust: 100%; 
     -moz-text-size-adjust: 100%; 
     -webkit-text-size-adjust: 100%;
 
-	font-family: "AppLight", "Helvetica", "Sans-Serif"; /* for font fallback while loading? */
+    font-family: "AppLight", "Helvetica", "Sans-Serif"; /* for font fallback while loading? */    
+}
+
+@media all  {
+    * {
+        text-size-adjust: 100%; 
+    }
+}
+ 
+
+/* an attempt to deal with tiny fonts on mobile */
+html * { 
+    /*
+    text-size-adjust: 100%; 
+    -ms-text-size-adjust: 100%; 
+    -moz-text-size-adjust: 100%; 
+    -webkit-text-size-adjust: 100%;
+*/
+    /*
+    text-size-adjust: none; 
+    -ms-text-size-adjust: none;
+    -moz-text-size-adjust: none;
+    -webkit-text-size-adjust: none;
+*/
+    min-height: 1px; 
+    max-height: 999999px; 
 }
 
 /*

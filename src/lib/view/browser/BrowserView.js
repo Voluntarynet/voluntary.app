@@ -79,7 +79,6 @@ window.BrowserView = NodeView.extend().newSlots({
         return this
     },
 
-
     setupDefaultStyles: function () {
         this.setDefaultColumnStyles(BMViewStyles.clone())
         this.defaultColumnStyles().unselected().setBackgroundColor("white")
@@ -139,11 +138,11 @@ window.BrowserView = NodeView.extend().newSlots({
 
 
         //console.log("lesserOrientedSize: " + w + "x" + h + " setZoomRatio(" + r + ")") 
-        DocumentBody.setZoomRatio(r)
+        //DocumentBody.setZoomRatio(r) // turning this off to see if it fixes mobile tiny fonts
 
         var isSingle = ((w < h) && (w < 800)) || (w < 400)
         //console.log("isSingle = ", isSingle)
-        this.setIsSingleColumn(isSingle)
+        this.setIsSingleColumn(isSingle) 
 
         // for debugging window resizing
         //WebBrowserWindow.shared().setTitle(size.width + " x " + size.height + " " + (isSingle ? "single" : "multi"))

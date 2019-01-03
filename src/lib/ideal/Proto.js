@@ -75,6 +75,11 @@ Proto.setSlots({
             m.push(children)
             var result = m.flatten()
             //return result
+
+            result = result.sort(function (a, b) {
+                return a.type().localeCompare(b.type())
+            })
+
             this._allDescendantProtos = result
         }
         return this._allDescendantProtos

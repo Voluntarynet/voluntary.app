@@ -731,4 +731,51 @@ window.BMNode = ideal.Proto.extend().newSlots({
     nodeBecameVisible: function() {
 	    return this
     },
+
+    // json serialization
+
+    asJSON: function() {
+        var dict = {}
+        dict.type = this.type()
+        dict.title = this.title()
+        // todo: store persistent slots...
+        // todo: store subnodes if set to store them
+        if (this.subnodes().length) { // todo: use a count method?
+            dict.subnodes = this.subnodes().map((subnode) => {
+                return subnode.asJSON()
+            })
+        }
+        return dict
+    },
+
+    fromJSON: function(json) {
+        // todo: read persistent keys
+        if (json.title) {
+            this.setTitle(json.title)
+        }
+        if (json.subnodes) { 
+            this.setSubnodes(json.subnodes.map((subnodeDict) => {
+                var type = subnodeDict.type
+                return window[type].clone().fromJSON(subnodeDict)
+            }))
+        }
+        return this
+    },
+
+    asyncFromJSONFile: function(file) {
+        var rawFile = new XMLHttpRequest();
+        rawFile.open("GET", file, false);
+        rawFile.onreadystatechange = function ()
+        {
+            if(rawFile.readyState === 4)
+            {
+                if(rawFile.status === 200 || rawFile.status == 0)
+                {
+                    var json = rawFile.responseText;
+                    this.fromJSON(JSON.parse(json))
+                }
+            }
+        }
+        rawFile.send(null);
+    },
 })

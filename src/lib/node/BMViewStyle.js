@@ -21,6 +21,10 @@ window.BMViewStyle = ideal.Proto.extend().newSlots({
         return this
     },
 
+    isEmpty: function() {
+        return this.styleNames().detect((styleName) => { return styleName != null }) == null
+    },
+
     description: function() {
         var parts = []
 		

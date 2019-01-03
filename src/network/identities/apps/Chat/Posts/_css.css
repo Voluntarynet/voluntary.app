@@ -129,8 +129,8 @@
 	word-wrap: normal;
 	white-space: normal;
 	
-	font-size: 13px; 
-	font-size-adjust: 0.5;
+    /*font-size: 0.813em;*/
+	/*font-size-adjust: 0.5;*/
 	overflow: visible;
 	
 	border: 0px dashed orange;

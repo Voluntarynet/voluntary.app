@@ -103,4 +103,38 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
     isValid: function() {
         return this.validate() // could cache this later...
     },
+
+    // json serialization
+    // todo: can this use persistent storage methods via skip pid use?
+
+    asJSON: function() {
+        var dict = {}
+        dict.type = this.type()
+        // todo: store persistent slots...
+        // todo: store subnodes if set to store them
+        if (this.subnodes().length) { // todo: use a count method?
+            // todo: check for BMField subclass?
+            dict.fields = {}
+            this.subnodes().forEach((field) => {
+                let v = field.value()
+                if (v) { // is empty or null value something we should store?
+                    dict.fields[field.key()] = v
+                }
+            })
+        }
+        return dict
+    },
+
+    fromJSON: function(json) {
+        // todo: read persistent keys
+        if (json.fields) { 
+            Map.withJsMap(json.fields).forEach((key, value) => {
+                var field = this.fieldNamed(key)
+                if (field) {
+                    field.setValue(value)
+                }
+            })
+        }
+        return this
+    },
 })

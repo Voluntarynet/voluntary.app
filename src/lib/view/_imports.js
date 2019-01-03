@@ -10,6 +10,7 @@ JSImporter.pushRelativePaths([
     "CenteredDivView.js",
     "DivStyledView.js",
     "DivTextTapeMeasure.js",
+    "DivCSSInspector.js",
     "NodeView.js",
     "TextField.js",
     "BoolView.js",

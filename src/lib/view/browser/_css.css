@@ -1,7 +1,7 @@
 
 .NodeView {
-	font-size: 13px; 
-	font-size-adjust: 0.5;
+	font-size: 1.063em; 
+	/*font-size-adjust: 0.5;*/
     font-family: "AppRegular", sans-serif;
     text-transform: none;
 }
@@ -241,7 +241,7 @@
     width: calc(100% - 55px);
 	
     text-align: left;
-    font-size: 13px;
+    /*font-size: 0.813em;*/
     max-height: 17px;
 
     font-weight: normal;

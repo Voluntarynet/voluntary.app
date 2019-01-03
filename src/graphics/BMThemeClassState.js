@@ -2,6 +2,7 @@
 
 window.BMThemeClassState = BMFieldSetNode.extend().newSlots({
     type: "BMThemeClassState",
+    divClassName: null,
 }).setSlots({
     init: function () {
         BMFieldSetNode.init.apply(this)
@@ -11,18 +12,28 @@ window.BMThemeClassState = BMFieldSetNode.extend().newSlots({
         this.setupSubnodes()
     },
 
-    divClassName: function() {
-        return this.parentNode().title()
-    },
-
     attributeNames: function() {
         // todo: request this from the view class, use view class theme state methods instead of direct css keys
-        return ["background", "color", "border"]
+        //return ["background", "color", "border"] 
+        return BMViewStyle.styleNames()
+    },
+
+    setDivClassName: function(aName) {
+        this._divClassName = aName
+        this.setTitle(aName)
+        var style = DivCSSInspector.shared().setDivClassName(aName).cssStyle()
+        this.syncFromViewStyle()
+        return this
+    },
+
+    syncFromViewStyle: function() {
+  
+        return this
     },
 
     setupSubnodes: function() {
         this.attributeNames().forEach((attributeName) => {
-            var field = BMBoolField.clone().setKey(attributeName).setValueIsEditable(true);
+            var field = BMField.clone().setKey(attributeName).setValueIsEditable("");
             this.addStoredField(field)
         })
         return this
@@ -31,12 +42,10 @@ window.BMThemeClassState = BMFieldSetNode.extend().newSlots({
     didUpdateField: function(aField) {
         console.log(this.type() + ".didUpdateField: " + aField.key() + ":", aField.value())
 
-        var divClassName = this.parentNode().title()
-
         if (aField.value()) { // dark mode
-            BMThemeStyleSheet.shared().setDivClassNameAttributeValue(divClassName, aField.key(), "#000")
+            BMThemeStyleSheet.shared().setDivClassNameAttributeValue(this.divClassName(), aField.key(), "#000")
         } else {
-            BMThemeStyleSheet.shared().setDivClassNameAttributeValue(divClassName, aField.key(), "white")
+            BMThemeStyleSheet.shared().setDivClassNameAttributeValue(this.divClassName(), aField.key(), "white")
         }
     },
 })

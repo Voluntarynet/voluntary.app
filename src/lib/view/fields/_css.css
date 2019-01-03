@@ -82,7 +82,7 @@
 	margin: auto;
 	
     text-align: right;
-    font-size: 13px;
+    /*font-size: 0.813em;*/
     white-space: nowrap;
     /*text-transform: capitalize;*/
 
@@ -117,7 +117,7 @@
 
     color: #000;
     font-weight: normal;
-    font-size: 13px;
+    /*font-size: 0.813em;*/
 
 	/* 
 	border-radius: 5px;
@@ -178,7 +178,7 @@
     text-transform: none;
     text-align: left;
 
-    font-size: 12px;
+    /*font-size: 12px;*/
     font-family: AppMono, monospace;
 	font-weight: lighter;
 }
@@ -198,7 +198,7 @@
     white-space: pre-wrap;
 
     color: black;
-    font-size: 13px;
+    /*font-size: 0.813em;*/
     font-weight: normal;
     text-transform: none;
     text-align: left;
@@ -257,7 +257,7 @@
 	margin-left: 40px;
     top: 0px;
     left: 0px;
-    font-size: 13px;
+    /*font-size: 0.813em;*/
     font-weight: normal;
     text-transform: none;
 }
@@ -307,7 +307,7 @@
     
     color: #000;
 
-    font-size: 13px;
+    /*font-size: 0.813em;*/
     font-weight: normal;
     text-transform: none;
 
@@ -351,7 +351,7 @@
 	
 	width: auto;
 	
-    font-size: 13px;
+    /*font-size: 0.813em;*/
     font-weight: normal;
     text-transform: none;
 

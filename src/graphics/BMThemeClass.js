@@ -16,7 +16,7 @@ window.BMThemeClass = BMStorableNode.extend().newSlots({
         //var stateNames = classProto.stateNames()
         var stateNames = ["active", "inactive", "disabled"]
         var stateNodes = stateNames.map(function (stateName) {
-            return BMThemeClassState.clone().setTitle(stateName)
+            return BMThemeClassState.clone().setDivClassName(stateName)
         })
         this.setSubnodes(stateNodes);
         return this

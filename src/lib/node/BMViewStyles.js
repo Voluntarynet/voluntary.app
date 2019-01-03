@@ -1,15 +1,21 @@
 "use strict"
 
+/*
+    BMViewStyles
+    represents the set of styles for a NodeView, e.g. selected, unselected
+
+    todo: can we make view styles nodes? recursion?
+
+*/
+
 window.BMViewStyles = ideal.Proto.extend().newSlots({
     type: "BMViewStyles",
     name: "",
-
     unselected: null,
     selected: null,
     //hover: null,
     //enabled: null,
     //disabled: null,
-	
 }).setSlots({
     init: function () {
         this.setSelected(BMViewStyle.clone())
@@ -17,6 +23,15 @@ window.BMViewStyles = ideal.Proto.extend().newSlots({
         //this.setHover(BMViewStyle.clone())
         return this
     },
+
+    states: function() {
+        return [this.unselected(), this.selected()]
+    },
+
+    isEmpty: function() {
+        return this.states().detect((state) => { return !state.isEmpty() }) == null
+    },
+
     
     setToBlackOnWhite: function() {
         this.unselected().setColor("black")

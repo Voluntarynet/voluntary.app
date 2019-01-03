@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+
+
+
+*/
+
 function DomElement_atInsertElement(el, index, child) {
     let children = el.children
     
@@ -264,6 +270,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 	
     setZoomRatio: function(r) {
+        console.log("setZoomRatio: ", r)
 	    this.setZoomPercentage(r*100)
         return this
     },

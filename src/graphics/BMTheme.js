@@ -14,6 +14,9 @@ window.BMTheme = BMStorableNode.extend().newSlots({
         this.setupSubnodes()
 
         this.addAction("delete")
+        setTimeout(() => { 
+            console.log("theme as json: ", JSON.stringify(this.asJSON())) 
+        }, 1000)
     },
 
     loadFinalize: function() {
@@ -21,17 +24,21 @@ window.BMTheme = BMStorableNode.extend().newSlots({
         this.setupSubnodes()
     },
 
-  
     setupSubnodes: function() {
         // setup with all view classes
         
         var viewClasses = DivView.allDescendantProtos()
+
+        viewClasses = viewClasses.select((viewClass) => {
+            return ("styles" in viewClass)
+        }).select((viewClass) => { return !viewClass.styles().isEmpty() })
+
         //console.log("viewClasses:", viewClasses)
-        var childNodes = viewClasses.map((childProto) => {
+        var themeClasses = viewClasses.map((childProto) => {
             return BMThemeClass.clone().setTitle(childProto.type());
         })
 
-        this.setSubnodes(childNodes);
+        this.setSubnodes(themeClasses);
         return this
     },
 

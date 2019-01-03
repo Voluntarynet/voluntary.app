@@ -20,6 +20,21 @@ User & developer slack channels:
 [https://join.slack.com/t/voluntaryapp/shared_invite/enQtNDYwMjIyODQ4MTAzLWQ2YzRhMzAwZDI4OTFhZmY4MmYyNDc4YWJkY2ExMWU5M2U4ZjgyNDFhNjQxZTFjM2U0NThmZGJmYWFjZDU0ODQ](https://join.slack.com/t/voluntaryapp/shared_invite/enQtNDYwMjIyODQ4MTAzLWQ2YzRhMzAwZDI4OTFhZmY4MmYyNDc4YWJkY2ExMWU5M2U4ZjgyNDFhNjQxZTFjM2U0NThmZGJmYWFjZDU0ODQ)
 
 
+## User Architecture Overview
+
+Voluntary.net is a P2P messaging system that works inside your browser. All of your data is stored using client side browser storage. There is no 
+"account" stored on a sever anywhere. Instead, the client side app creates a unique cyptographic key pair composed of a public key and a private key. 
+The public key pair is the equivalent of your email address. You can share it with others and they can use it as an address to send you messages.  
+The private key is stored inside your web browser and is used to cryptographically sign messages you send to others 
+(in a way that proves only you could have sent it) and decrypt messages sent by others to your public key address.
+
+When you send a message to another address, it encrypts the message so only the receiver can read it, 
+and signs the message in a way that proves that you sent it. When you are connected to the internet, 
+the client will try to find anyone in your contact list that's online and share the message with them, regardless of whether or not the message is for them.
+
+A contact that your client shares a message will check the message signature to make sure it's from you and that you are likewise in their contact list. If so, it will attempt to decrypt the message. If they can decrypt it, the message is for them. If not, it's for someone else and their client will store the message and share it with any of their contacts that are interested in your messages. In this way, your message will be propogated among your contacts until it reaches the intended recipient and but without revealing who that recipient is. 
+
+
 
 ## Getting Started as a User
 
@@ -113,9 +128,9 @@ This will allow you to set breakpoints and stack browse via the source files (vs
 The project contains a number of components:
 
 - an in-browser webRTC-based decentralized messaging platform 
-- a desktop-like (e.g. AppKit) UI framework in which apps can be built with no templates or html
-- a Miller column based scalable, reactive UI system which automatically adjusts to work on desktop and mobile
-- a naked objects framework which dynamically generate the UI based on model objects (most apps require no UI code)
+- a desktop-like (e.g. AppKit) UI framework in which single page browser apps can be built with no templates or html
+- a Miller column based reactive UI system with view system that automatically adjusts to work on desktop and mobile screen sizes
+- a naked objects framework which dynamically generates the UI based on model objects (most apps require little or no UI code)
 - an intergrated client-side transparent persistence framework (most apps only require developer to declare stored objects and fields)
 - a notifications system which automatically synchronizes the UI, model, and persistence
 
@@ -141,6 +156,15 @@ which starts the application.
 
 The convention is to use one _import.js file per folder, and to use a single css file per folder (if needed) named _css.css.
 The archive/archive.js script can be used to walk these imports to generate the index.html file when preparing a release.
+
+#### UI Framework
+
+The UI framework code can be found in src/lib/view/ folder. 
+
+All view classes inherit from DivView.js, which is an
+
+
+
 
 
 

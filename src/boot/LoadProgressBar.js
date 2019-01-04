@@ -2,6 +2,7 @@
 
 /*
     A full page panel that shows load progress.
+  
     While running, displays app name, progress bar, and current loading file name.
     On error, displays an error description.
     Used with JSImporter.
@@ -14,6 +15,9 @@
 
     		window.LoadProgressBar.stop()  
 
+    Notes:
+    This code is ugly because it doesn't have any library dependencies 
+    as we need to show it before we load the libraries & need it to tell us about any loading errors.
 */
 
 class LoadProgressBarClass {

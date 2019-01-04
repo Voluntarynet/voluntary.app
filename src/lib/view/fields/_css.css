@@ -3,7 +3,7 @@
 /* --- FieldView --------------------------- */
 
 .BMFieldRowView {
-	font-family: "AppRegular", sans-serif;
+	font-family: AppRegular;
     background-color: white;
     opacity: 1;
     
@@ -52,13 +52,13 @@
     border-width: 0px;
     border-color: black;
     
-	font-family: AppSemiBold, sans-serif;
+	font-family: AppSemiBold;
 
     text-align: center;
     line-height: 42px;
     /*overflow: hidden;*/
     text-transform: uppercase;
-    transition: all 0.3 ease;
+    transition: all 0.1 ease;
 }
 
 .BMActionFieldButtonView:hover {
@@ -206,7 +206,7 @@
 
 .BMPointerFieldRowView {
 	border-bottom: 1px solid #ddd;
-	font-family: "AppRegular", sans-serif;
+	font-family: AppRegular;
 }
 
 /* --------------------------- Image --------------------------- */

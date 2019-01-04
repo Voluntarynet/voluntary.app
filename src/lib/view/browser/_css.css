@@ -1,7 +1,7 @@
 
 .NodeView {
 	/*font-size-adjust: 0.5;*/
-    font-family: "AppRegular", sans-serif;
+    font-family: AppRegular;
     text-transform: none;
 }
 
@@ -116,13 +116,13 @@
 }
 
 .BrowserColumn {
-	display: flex;
-	flex-direction: column;
+    display: flex;
+    flex-direction: column;
     position: relative;
     width: 100%;
-	overflow: hidden;
+    overflow: hidden;
     min-height: 100%;
-	-webkit-overflow-scrolling: touch;
+    -webkit-overflow-scrolling: touch;
     overflow-scrolling: touch; /* todo: veirfy  this is used? */
     -ms-overflow-style: none;
 }
@@ -152,8 +152,6 @@
     background-repeat: no-repeat;
     background-position: right center;
     background-color: transparent;
-
-	/*border: 1px yellow dashed;*/
 }
 
 .BrowserHeaderAction {
@@ -204,7 +202,7 @@
 /* --- Browser Row --- */
 
 .BrowserRow {
-	font-family: AppLight, sans-serif;
+	font-family: AppLight;
     display: block;
     position: relative;
     width: 100%;
@@ -212,7 +210,6 @@
     max-height: 60px;
 
     color: rbga(255, 255, 255, 0.5);
-    /*border-bottom: 1px solid rgba(100,100,100, .4);*/
     transition: background-color .3s ease-out;
 
 	overflow: hidden;
@@ -220,16 +217,11 @@
     
     border-top: 1px solid transparent;
     border-bottom: 1px solid transparent;
+    /*border-bottom: 1px solid rgba(100,100,100, .3);*/
 	text-align: left;
 	margin: 0px;
 	padding: 0px;
 }
-
-/*
-.BrowserRow:hover  {
-	font-family: "AppRegular", sans-serif;
-}
-*/
 
 .BrowserRowTitle {
 	display: block;

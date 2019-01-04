@@ -12,6 +12,7 @@ html, body {
 	background-color: black;
     zoom: 100%;
 
+    font-family: AppRegular, sans-serif; /* for font fallback while loading */    
     font-size: 13px;
     text-size-adjust: 100%; 
 
@@ -29,35 +30,10 @@ html, body {
     -moz-text-size-adjust: 100%; 
     -webkit-text-size-adjust: 100%;
     */
-
-    font-family: "AppLight", "Helvetica", "Sans-Serif"; /* for font fallback while loading? */    
-
 }
-/* 
-@media only screen and (max-width: 600px) {
-    body {
-      border: 1px red solid;
-      zoom: 50%;
-    }
-  }
-*/
 
 /* an attempt to deal with tiny fonts on mobile */
 html * { 
-    /*
-    text-size-adjust: 150%; 
-    -ms-text-size-adjust: 150%; 
-    -moz-text-size-adjust: 150%; 
-    -webkit-text-size-adjust: 150%;
-    */
-    
-    /*    
-    text-size-adjust: none; 
-    -ms-text-size-adjust: none;
-    -moz-text-size-adjust: none;
-    -webkit-text-size-adjust: none;
-    */
-
     min-height: 1px; 
     max-height: 999999px; 
     zoom: 100%;

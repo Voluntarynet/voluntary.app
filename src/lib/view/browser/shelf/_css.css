@@ -27,6 +27,7 @@
     
     overflow-x: hidden;
     overflow-y: auto;
+    
     overflow-scrolling: touch;
     -webkit-overflow-scrolling: touch;
         
@@ -102,7 +103,7 @@
 	background-color: red;
 	color: white;
 	font-size: 10px;
-	font-family: AppSemiBold, sans-serif;
+	font-family: AppSemiBold;
 	padding-left: 4px;
 	padding-right: 4px;
 	margin: 0px;

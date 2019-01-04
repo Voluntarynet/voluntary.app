@@ -14,5 +14,5 @@
     "display": "standalone",
     "scope": "/",
     "theme_color": "#aaa",
-    ​​"orientation": "any",
+    ​​"orientation": "any"
   }

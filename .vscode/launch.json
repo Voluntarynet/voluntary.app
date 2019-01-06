@@ -23,8 +23,8 @@
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Launch Local HTTP incremental",
-            "url": "http://steves-laptop.local:8000/index_incremental.html",
+            "name": "Launch localhost HTTPS incremental",
+            "url": "https://localhost:4443/index_incremental.html",
             "webRoot": "${workspaceFolder}"
         },
 

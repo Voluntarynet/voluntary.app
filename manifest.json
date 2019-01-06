@@ -1,0 +1,16 @@
+{
+  "short_name": "Voluntary",
+  "name": "Voluntary.app",
+  "description": "",
+  "icons": [
+    {
+      "src": "icons/appicon-144x144.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    }
+  ],
+  "start_url": "index_incremental.html",
+  "background_color": "#000",
+  "display": "standalone",
+  "theme_color": "#aaa"
+}

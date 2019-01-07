@@ -562,12 +562,13 @@ window.BrowserView = NodeView.extend().newSlots({
     expandLastColumnIfNeeded: function () {
         var lastActiveCg = this.lastActiveColumnGroup()
 
-        var fillWidth = (this.browserWidth() - this.left()) - this.widthOfUncollapsedColumnsSansLastActive()
-        if (lastActiveCg.targetWidth() * 2 < fillWidth && lastActiveCg.targetWidth() < 500) {
-            fillWidth = lastActiveCg.targetWidth()
-        }
-        //console.log("fillWidth = ", fillWidth)
         if (lastActiveCg) {
+            var fillWidth = (this.browserWidth() - this.left()) - this.widthOfUncollapsedColumnsSansLastActive()
+            if (lastActiveCg.targetWidth() * 2 < fillWidth && lastActiveCg.targetWidth() < 500) {
+                fillWidth = lastActiveCg.targetWidth()
+            }
+            
+            //console.log("fillWidth = ", fillWidth)
             lastActiveCg.setFlexGrow(1)
             lastActiveCg.setFlexShrink(1)
             lastActiveCg.setFlexBasis(fillWidth)

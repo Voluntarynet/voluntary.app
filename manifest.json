@@ -4,9 +4,9 @@
   "description": "",
   "icons": [
     {
-      "src": "icons/appicon-144x144.png",
+      "src": "icons/appicon-black-600x600.png",
       "type": "image/png",
-      "sizes": "144x144"
+      "sizes": "600x600"
     }
   ],
   "start_url": "index_incremental.html",

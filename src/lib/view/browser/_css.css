@@ -123,7 +123,7 @@
     overflow: hidden;
     min-height: 100%;
     -webkit-overflow-scrolling: touch;
-    overflow-scrolling: touch; /* todo: veirfy  this is used? */
+    overflow-scrolling: touch; /* is this needed for MS browser? */
     -ms-overflow-style: none;
 }
 

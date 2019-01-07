@@ -73,6 +73,8 @@ window.App = BMNode.extend().newSlots({
         if (this.runTests) {
 		    this.runTests()
         }
+
+        this.registerServiceWorker()
     },
 	
     rootView: function() {
@@ -100,5 +102,32 @@ window.App = BMNode.extend().newSlots({
     showVersion: function() {
         console.log("Application '" + this.name() + "' version " + this.versionsString())
     },
+
+    // --- server worker ---
+
+    registerServiceWorker: function() {
+        // doesn't work
+        // "src/ServiceWorker.js"
+        // "/src/ServiceWorker.js"
+        // "../ServiceWorker.js"
+        var path = "ServiceWorker.js"
+        console.log("registering service worker '" + path + "'")
+        var promise = navigator.serviceWorker.register(path); //{ scope: ""../"}
+        
+        promise.then(function (registration) {
+            console.log("Service worker successfully registered on scope", registration.scope);
+        }).catch(function (error) {
+            console.log("Service worker failed to register:\n",
+                "  typeof(error): ", typeof(error), "\n", 
+                "  message:", error.message, "\n",
+                "  fileName:", error.fileName, "\n",
+                "  lineNumber:", error.lineNumber,  "\n",
+                "  stack:", error.stack,  "\n",
+                //"  JSON.stringify(error):", JSON.stringify(error),  "\n",
+                //"  toString:", error.toString()
+                );
+        });
+    }
+
 })
 

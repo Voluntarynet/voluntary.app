@@ -223,6 +223,10 @@ window.BrowserView = NodeView.extend().newSlots({
             StackTrace.shared().showCurrentStack()
         }
 
+        if (this.columnGroups().length == count) { // redundant?
+            return this
+        }
+
         /*
 		// collapse excess columns
         for (let i = count; i < this.columnGroups().length - 1; i ++) {
@@ -268,12 +272,27 @@ window.BrowserView = NodeView.extend().newSlots({
         this.clearColumnsGroupsAfterIndex(index)
     },
 
-    // --- column selection ---------------------------------------
+    // --- get selected column ---------------------------------------
+
+    selectedColumnGroup: function() {
+        return this.columnGroups().detect( (cg) => { return cg.isSelected() })
+    },
+
+    selectedColumn: function() {
+        const cg = this.selectedColumnGroup()
+        if (cg) {
+            return cg.column()
+        }
+        return null
+    },
+
+    // --- select column ---------------------------------------
 
     selectFirstColumn: function () {
         this.selectColumn(this.columns().first())
         return this
     },
+
 
     updateSelectedColumnTo: function (selectedColumn) {
         var selectedColumnGroup = selectedColumn.columnGroup()
@@ -294,8 +313,17 @@ window.BrowserView = NodeView.extend().newSlots({
         return this
     },
 
+    
+
     selectColumn: function (selectedColumn) {
-        var selectedColumnGroup = selectedColumn.columnGroup()
+
+        /*
+        if (this.selectedColumn() == selectedColumn) {
+            return this
+        }
+        */
+
+        const selectedColumnGroup = selectedColumn.columnGroup()
         this._selectedColumnGroup = selectedColumnGroup
 
         var index = this.columnGroups().indexOf(selectedColumn.columnGroup())

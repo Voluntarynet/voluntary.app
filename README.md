@@ -122,6 +122,17 @@ To get the launch scripts and Chrome debugging to work, you'll need to install t
 When developing with the VSCode debugger, you'll want to click on the debugger tab, and use the "Launch Local Incremental File" script. 
 This will allow you to set breakpoints and stack browse via the source files (vs the compiled index.html).
 
+#### Progressive web app testing
+
+To test the progressive web app (PSA) features, you'll need to run a local https server. From the root source folder, run:
+
+    python simple-https-server.py
+
+and start Chrome in a mode to ignore the lack of a DNS signed certificate:
+
+/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --user-data-dir=/tmp/foo --ignore-certificate-errors --unsafely-treat-insecure-origin-as-secure=https://localhost:4443
+
+
 
 ### Developer Overview
 

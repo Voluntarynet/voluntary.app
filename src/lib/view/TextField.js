@@ -126,4 +126,20 @@ window.TextField = DivStyledView.extend().newSlots({
         this.focus()
         return this
     },
+
+    /*
+    setSelectAllOnDoubleClick: function(aBool) {
+        this.setIsRegisteredForClicks(aBool)
+        return this
+    },
+
+    onDoubleClick: function (event) {
+        console.log(this.type() + ".onDoubleClick()")
+        //this.focus()
+        this.selectAll() // looses focus!
+        this.element().focus()
+        //this.focusAfterDelay(.125) 
+        return true
+    },
+    */
 })

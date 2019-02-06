@@ -22,6 +22,8 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
       
         this.valueView().setUserSelect("text")   // should the value view handle this?
         this.valueView().setSpellCheck(false)   // should the value view handle this?
+        this.valueView().setWidthPercentage(100) 
+
 		
         this.setNoteView(DivView.clone().setDivClassName("BMFieldRowViewNoteView"))
         this.addSubview(this.noteView())
@@ -32,7 +34,9 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
     },
 
     createValueView: function() {
-        return TextField.clone().setDivClassName("BMFieldValueView")
+        var tf = TextField.clone().setDivClassName("BMFieldValueView")
+        //tf.setSelectAllOnDoubleClick(true)
+        return tf
     },
 	
     // visible key and value
@@ -48,7 +52,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
     // sync 
     
     syncValueViewToNode: function() {
-        //console.log(this.type() + ".syncFromNode " + this.node().type())
+        //console.log(this.type() + ".syncValueViewToNode " + this.node().type())
 	    if (this.node().type() == "BMBoolField" && this.valueView().type() != "BoolView") {
 	        //console.log("syncValueViewToNode setup bool view")
 	        var boolView = BoolView.clone()
@@ -66,7 +70,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         //console.log(this.type() + " syncFromNode")
 		
         this.node().prepareToSyncToView()
-        this.syncValueViewToNode()
+        this.syncValueViewToNode() // (lazy) set up the value view to match the field's type
 
         var node = this.node()
         var keyView = this.keyView()
@@ -92,7 +96,8 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         */
         
         if (newValue === null) { 
-            newValue = false; // todo: find better way to deal with adding/removing new field
+            // commenting out - this causes a "false" to be displayed in new fields
+            //newValue = false; // todo: find better way to deal with adding/removing new field
         } 
 
         valueView.setValue(newValue)

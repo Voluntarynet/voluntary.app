@@ -15,6 +15,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
         this.styles().selected().setBorderLeft("1px solid rgba(0, 0, 0, 0.15)")
         this.styles().unselected().setBorderLeft("1px solid rgba(0, 0, 0, 0.15)")
         this.applyStyles()
+        this.setIsRegisteredForClicks(true)
         this.setAcceptsFirstResponder(true)
         return this
     },
@@ -339,7 +340,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
 
     // --- keyboard controls, arrow navigation -----------------------------
-	
+
     canNavigate: function() {
         return this.allowsCursorNavigation() && this.isActiveElement()
     },
@@ -559,6 +560,13 @@ window.BrowserColumn = NodeView.extend().newSlots({
             return row.calcWidth()
         })			
         return maxWidth	
+    },
+
+    // editing
+
+    onDoubleClick: function (event) {
+        console.log(this.type() + ".onDoubleClick()")
+        return true
     },
 	
 })

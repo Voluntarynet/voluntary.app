@@ -2,13 +2,14 @@
 
 /*
     Keyboard
-
+    A class to track the current state of all keyboard keys.
 
 */
 
 window.Keyboard = ideal.Proto.extend().newSlots({
     type: "Keyboard",
     codeToKeys: null, // dictionary of KeyboardKey objects
+    isDebugging: true,
 }).setSlots({
     init: function () {
         ideal.Proto.init.apply(this)
@@ -33,6 +34,11 @@ window.Keyboard = ideal.Proto.extend().newSlots({
 
     keyForCode: function(aCode) {
         return this.codeToKeys()[aCode]
+    },
+
+    keyForName: function(aName) {
+        let code = this.keyCodeForName(aName)
+        return this.keyForCode(code)
     },
 
     nameForKeyCode: function(aCode) {
@@ -148,7 +154,7 @@ window.Keyboard = ideal.Proto.extend().newSlots({
     },
 
     keyForCode: function(aCode) {
-        return this.keyDict()
+        return this.codeToKeys()[aCode]
     },
 
     // -- events ---
@@ -169,7 +175,11 @@ window.Keyboard = ideal.Proto.extend().newSlots({
 
     onKeyDown: function (event) {
         let shouldPropogate = true
-        this.keyForEvent(event).onKeyDown(event)
+        let key = this.keyForEvent(event)
+        key.onKeyDown(event)
+        if (this.isDebugging()) {
+            console.log(this.type() + ".onKeyDown " + key.name())
+        }
         return shouldPropogate
     },
 
@@ -229,5 +239,29 @@ window.Keyboard = ideal.Proto.extend().newSlots({
         //console.log("specialNameForKeyEvent ", code, " = ", result)
 		
         return result
+    },
+
+    // get key helpers
+
+    leftCommandKey: function() {
+        return this.keyForName("leftWindow")
+    },
+
+    rightCommandKey: function() {
+        return this.keyForName("select")
+    },
+
+    // get key state helpers
+
+    shiftIsDown: function() {
+        return this.keyForName("shift").isDown()
+    },
+
+    commandIsDown: function() {
+        return this.leftCommandKey().isDown() || this.rightCommandKey().isDown()
+    },
+
+    plusIsDown: function() {
+        return this.keyForName("plus").isDown()
     },
 })

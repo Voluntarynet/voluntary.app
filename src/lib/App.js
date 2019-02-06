@@ -74,7 +74,7 @@ window.App = BMNode.extend().newSlots({
 		    this.runTests()
         }
 
-        this.registerServiceWorker()
+        //this.registerServiceWorker() // not working yet
     },
 	
     rootView: function() {
@@ -113,7 +113,7 @@ window.App = BMNode.extend().newSlots({
         var path = "ServiceWorker.js"
         console.log("registering service worker '" + path + "'")
         var promise = navigator.serviceWorker.register(path); //{ scope: ""../"}
-        
+
         promise.then(function (registration) {
             console.log("Service worker successfully registered on scope", registration.scope);
         }).catch(function (error) {
@@ -122,10 +122,10 @@ window.App = BMNode.extend().newSlots({
                 "  message:", error.message, "\n",
                 "  fileName:", error.fileName, "\n",
                 "  lineNumber:", error.lineNumber,  "\n",
-                "  stack:", error.stack,  "\n",
+                "  stack:", error.stack,  "\n"
                 //"  JSON.stringify(error):", JSON.stringify(error),  "\n",
                 //"  toString:", error.toString()
-                );
+            );
         });
     }
 

@@ -1952,7 +1952,7 @@ window.DivView = ideal.Proto.extend().newSlots({
                 this._isRegisteredForKeyboard = true
 
                 e.addEventListener("keyup", this.eventFuncForMethodName("onKeyUp"), useCapture);
-                //e.addEventListener("keydown", this.eventFuncForMethodName("onKeyDown"), useCapture);
+                e.addEventListener("keydown", this.eventFuncForMethodName("onKeyDown"), useCapture);
                 //e.addEventListener("keypress", this.eventFuncForMethodName("onKeyPress"), useCapture);
                 
 	            DivView._tabCount ++

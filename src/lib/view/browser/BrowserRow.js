@@ -248,35 +248,70 @@ window.BrowserRow = NodeView.extend().newSlots({
     
 
     // touch sliding
+
+    didTouchStart: function() {
+        this._touchDeleteOffset = this.clientWidth() * 0.25;
+        this.setTransition("right 0s")
+        return this
+    },
 	
     onTouchMove: function(event) {
-        console.log(this.type() + " onTouchMove diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
+        //console.log(this.type() + " onTouchMove diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
         if (this.canDelete()) {
-            var diff = this.touchDownDiffWithEvent(event)
-            //console.log("onMouseMove:" + JSON.stringify(diff))
-            this.setTransition("all 0s")
-            var xd = diff.xd
+            this._touchMoveDiff = this.touchDownDiffWithEvent(event)
+            //console.log("onTouchMove:" + JSON.stringify(diff))
+            var xd = Math.floor(this._touchMoveDiff.xd)
 			
             if (xd > 0) { 
                 xd = 0; 
             }
-			
-            this.setRight(-xd)
+
+            if (this._lastXd != xd) {
+                this.setTouchRight(-xd)
+                this._lastXd = xd
+                this.setIsReadyToTouchDelete(-xd > this._touchDeleteOffset)
+            }
+        }
+    },
+
+    setTouchRight: function(right) {
+        //this.setTransform("translateX(" + (-right) + "px)");
+        this.setRight(right)
+        //this.setLeft(-right)
+    },
+
+    setIsReadyToTouchDelete: function(aBool) {
+        if (this._isReadyToTouchDelete != aBool) {
+            if (aBool) {
+
+            } else {
+
+            }
+            this._isReadyToTouchDelete = aBool
+            this.showTouchDeleteState()
+        }
+    },
+
+    showTouchDeleteState: function() {
+        if (this._isReadyToTouchDelete) {
+            this.setBorder("1px solid red")
+        } else {
+            this.setBorder(null)
         }
     },
 	
     onTouchCancel: function(event) {
-        console.log(this.type() + " onTouchCancel")
+        //console.log(this.type() + " onTouchCancel")
         this._isTouchDown = false
         this.slideBack()
     },
 	
     onTouchEnd: function(event) {
-        console.log(this.type() + " onTouchEnd diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
+        //console.log(this.type() + " onTouchEnd diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
 
         if (this._isTouchDown) {
             var diff = this.touchDownDiffWithEvent(event)
-            if ((-diff.xd) > this.clientWidth() * 0.25) {
+            if ((-diff.xd) > this._touchDeleteOffset) {
                 this.delete()
             } else {
 		        this.slideBack()
@@ -284,6 +319,22 @@ window.BrowserRow = NodeView.extend().newSlots({
 	        this._isTouchDown = false
         }
     },
+
+
+
+    /*
+    showTouchDeleteReady: function() {
+
+    },
+
+    showTouchDeleteButton: function() {
+
+    },
+
+    hideTouchDeleteButton: function() {
+
+    },
+    */
     
     hasCloseButton: function() {
         return this.closeButtonView() && this.closeButtonView().target() != null
@@ -315,7 +366,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         if (this.canDelete()) {
             this.setTransition(this.transitionStyle())
             setTimeout(() => {
-                this.setRight(0)
+                this.setTouchRight(0)
             })
         }		
     },

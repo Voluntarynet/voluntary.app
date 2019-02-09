@@ -507,6 +507,13 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this._transitions
     },
 
+    // transform
+
+    setTransform: function(s) {
+        this.setCssAttribute("transform", s)
+        return this
+    },
+
     // opacity
 
     setOpacity: function(v) {
@@ -1763,6 +1770,11 @@ window.DivView = ideal.Proto.extend().newSlots({
 	
     // touch events
 
+    setTouchAction: function(s) {
+        this.setCssAttribute("touch-action", s)
+        return this
+    },
+
     touchstartListenerFunc: function () {
         if (!this._touchstartListenerFunc) {
             this._touchstartListenerFunc = (e) => { this.onTouchStart(e) }
@@ -1802,6 +1814,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 	        	this.element().addEventListener("touchcancel", this.touchcancelListenerFunc(), b);
 	        	this.element().addEventListener("touchend",    this.touchendListenerFunc(), b);
             }
+            this.setTouchAction("none") // testing
         } else {
             if (this._isRegisteredForPaste == true) {
                 this._isRegisteredForPaste = false
@@ -1832,6 +1845,11 @@ window.DivView = ideal.Proto.extend().newSlots({
         //console.log(this.type() + " onTouchStart ", touches)
         this._onTouchDownEventPosition = { screenX: touches[0].screenX, screenY: touches[0].screenY }
         //console.log(this.type() + " onTouchStart  this._onTouchDownEventPosition ", this._onTouchDownEventPosition)
+        this.didTouchStart()
+    },
+
+    didTouchStart: function() {
+        // for subclasses to override
     },
 	
     onTouchMove: function(event) {

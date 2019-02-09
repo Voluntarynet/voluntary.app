@@ -112,7 +112,12 @@
 	background-color: transparent;
   	overflow-y: scroll; /* has to be scroll, not auto, for touch scroll momentum to work */
 	overflow-x: hidden;
-	-ms-overflow-style: none;
+    -ms-overflow-style: none; // removes scrollbars on IE 10+ 
+    overflow: -moz-scrollbars-none;  // removes scrollbars on Firefox
+}
+
+.BrowserScrollView::-webkit-scrollbar { 
+    display: none;  //  removes scrollbars on Safari and Chrome
 }
 
 .BrowserColumn {
@@ -122,8 +127,11 @@
     width: 100%;
     overflow: hidden;
     min-height: 100%;
-    -webkit-overflow-scrolling: touch;
-    overflow-scrolling: touch; /* is this needed for MS browser? */
+    -webkit-overflow-scrolling: regular; 
+    /*  -webkit-overflow-scrolling: touch seems recognized on Edge, invalid on Chrome */
+     /* mozilla says "-webkit-overflow-scrolling" is only supported on Safari */
+    /*-webkit-overflow-scrolling: touch;*/ /* touch is ok on Edge, invalid on Chrome */
+    /* overflow-scrolling: touch; // neither Edge or Chrome on Windows recognize this property*/
     -ms-overflow-style: none;
 }
 

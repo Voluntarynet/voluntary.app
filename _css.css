@@ -2,6 +2,8 @@
 html, body {
     position: absolute;
     overflow: hidden;
+    overscroll-behavior-x: none;
+    overscroll-behavior-y: none;
 	top: 0px;
 	left: 0px;
     height: 100%;

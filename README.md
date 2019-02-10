@@ -124,9 +124,12 @@ This will allow you to set breakpoints and stack browse via the source files (vs
 
 #### Progressive web app testing
 
-To test the progressive web app (PSA) features, you'll need to run a local https server. From the root source folder, run:
+To test the progressive web app (PSA) features, you'll need to run a local https server. 
+From the root source folder, run:
 
     python simple-https-server.py
+
+(this will run the server on port 4443)
 
 and start Chrome in a mode to ignore the lack of a DNS signed certificate:
 

@@ -41,6 +41,15 @@ window.BMViewStyles = ideal.Proto.extend().newSlots({
         this.selected().setBackgroundColor("#eee")
         return this
     },
+
+    setToWhiteOnBlack: function() {
+        this.unselected().setColor("white")
+        this.unselected().setBackgroundColor("black")
+        
+        this.selected().setColor("white")
+        this.selected().setBackgroundColor("#444") // change for column?
+        return this
+    },
     
     setToGrayOnTransparent: function() {        
         this.unselected().setColor("#aaa")

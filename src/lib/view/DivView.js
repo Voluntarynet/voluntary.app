@@ -242,6 +242,16 @@ window.DivView = ideal.Proto.extend().newSlots({
     position: function() {
         return this.getCssAttribute("position")
     },
+
+    // pointer events
+
+    setPointerEvents: function(s) {
+        return this.setCssAttribute("pointer-events", s)
+    },
+
+    pointerEvents: function() {
+        return this.getCssAttribute("pointer-events")
+    },
 	
     // transform
 	
@@ -875,6 +885,33 @@ window.DivView = ideal.Proto.extend().newSlots({
     overflow: function() {
         return this.getCssAttribute("overflow")
     },
+
+    // overflow x
+
+    setOverflowX: function(s) {
+        assert(typeof(s) == "string")
+        this.setCssAttribute("overflow-x", s)
+        return this
+    },
+    
+    overflowX: function() {
+        return this.getCssAttribute("overflow-x")
+    },
+
+    // overflow y
+
+    setOverflowY: function(s) {
+        assert(typeof(s) == "string")
+        this.setCssAttribute("overflow-y", s)
+        return this
+    },
+    
+    overflowY: function() {
+        return this.getCssAttribute("overflow-y")
+    },
+
+
+
 	
     // text over flow
 	
@@ -1189,6 +1226,10 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     // --- subviews ---
 
+    subviewCount: function() {
+        return this.subviews().length
+    },
+
     addSubview: function(anSubview) {
         if (anSubview == null) {
             throw new Error("anSubview can't be null")
@@ -1292,7 +1333,9 @@ window.DivView = ideal.Proto.extend().newSlots({
         }, 200)	
         return this
     },
-	
+    
+    // -----------------------
+
     removeFromParentView: function() {
         this.parentView().removeSubview(this)
         return this
@@ -1732,6 +1775,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     isEditable: function() {
         return this.isContentEditable()
     },
+    
     
     // --- content editing ---
     
@@ -2734,4 +2778,43 @@ window.DivView = ideal.Proto.extend().newSlots({
     rootView: function() {
         return  WebBrowserWindow.shared().documentBody()
     },
+
+    disablePointerEventsUntilTimeout: function(ms) {
+        this.setPointerEvents("none")
+        //console.log(this.type() + " disabling pointer events")
+
+        setTimeout(() => {
+            //console.log(this.type() + " enabling pointer events")
+            this.setPointerEvents("inherit")
+        }, ms)
+        
+        return this
+    },
+
+    containerize: function() {
+        // create a subview of same size as parent and put all other subviews in it
+        let container = DivView.clone()
+        container.setMinAndMaxHeight(this.clientHeight())
+        container.setMinAndMaxWidth(this.clientWidth())
+        this.moveAllSubviewsToView(container)
+        this.addSubview(container)
+        return container
+    },
+
+    uncontainerize: function() {
+        assert(this.subviewCount() == 1)
+        let container = this.subviews().first()
+        this.removeSubview(container)
+        container.moveAllSubviewsToView(this)
+        return this
+    },
+
+    moveAllSubviewsToView: function(aView) {
+        this.subviews().copy().forEach((sv) => {
+            this.remove(sv)
+            aView.addSubview(sv)
+        })
+        return this
+    },
+
 })

@@ -115,8 +115,15 @@ window.BrowserColumn = NodeView.extend().newSlots({
         
     },
     
+  
     selectedRows: function() {
-        return this.subviews().filter((row) => { return row.isSelected(); })
+        return this.subviews().filter((row) => { 
+            if (!row.isSelected) {
+                console.warn("===== missing isSelected method on row of type: ", row.type())
+                return false
+            }
+            return row.isSelected(); 
+        })
     },
 
     selectedRow: function() {

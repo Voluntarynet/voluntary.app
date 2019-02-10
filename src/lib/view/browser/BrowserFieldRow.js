@@ -1,3 +1,10 @@
+/*
+
+ A BrowserRow that overrides updateSubviews
+
+*/
+
+
 "use strict"
 
 window.BrowserFieldRow = BrowserRow.extend().newSlots({
@@ -14,6 +21,20 @@ window.BrowserFieldRow = BrowserRow.extend().newSlots({
 		
         return this
     },
+
+    
+    didChangeNode: function() {
+        BrowserRow.didUpdateNode.apply(this)
+        if (this.node() && this.node().nodeShouldUseLightTheme) {
+            if (this.node().nodeShouldUseLightTheme()) {
+                this.styles().setToBlackOnWhite()
+            } else {
+                this.styles().setToWhiteOnBlack()
+            }
+        }
+        return this
+    },
+    
     
     updateSubviews: function() {   
 	    BrowserRow.updateSubviews.apply(this)
@@ -24,14 +45,10 @@ window.BrowserFieldRow = BrowserRow.extend().newSlots({
             var e = this.element()
             if (node.nodeMinHeight() == -1) {
                 
-                this.setHeight("auto")
-                //e.style.height = "auto"
-                
+                this.setHeight("auto")                
                 this.setPaddingBottom("calc(100% - 20px)")
-                //e.style.paddingBottom = "calc(100% - 20px)";
 
             } else {
-                //e.style.height = node.nodeMinHeight() + "px"
                 this.setHeight(this.pxNumberToString(node.nodeMinHeight()))
             }
         }

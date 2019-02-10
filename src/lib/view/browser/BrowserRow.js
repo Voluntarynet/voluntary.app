@@ -113,32 +113,13 @@ window.BrowserRow = NodeView.extend().newSlots({
         }
         
         NodeView.applyStyles.apply(this)
+    
+        // flash
         
-        //console.log(this.node().title() + " this.currentBgColor() = ", this.currentBgColor())
-        //console.log("this.node().nodeRowStyles().selected().backgroundColor() = ", this.currentBgColor())
-
-        /*
-        if (!this.isSelected() && this.selectedFlashColor()) {
-            console.log("flashing")
-            this.setTransition("0s all")
-            this.setBackgroundColor(this.selectedFlashColor())
-            this.setTransition("0.3s all")
-        }
-        */
-
-        //this.setTransition("0.0s all")
-
         if (this.shouldShowFlash() && this.selectedFlashColor()) {
             this.setBackgroundColor(this.selectedFlashColor())
-            //setTimeout(() => { this.setBackgroundColor(this.selectedFlashColor()) }, 0)
-            //setTimeout(() => { this.setBackgroundColor(this.currentBgColor()) }, 300)
-        } else {
-            // this.setBackgroundColor(this.currentBgColor())
-        }
+        } 
         
-        //this.setTransition("0.3s all")
-        //this.setTransition("0.3s background-color")
-        //this.transitions().at("backgroundColor").setDuration(1)
         setTimeout(() => { this.setBackgroundColor(this.currentBgColor()) }, 100)
         this.setShouldShowFlash(false)
         
@@ -217,7 +198,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
     
     delete: function() {
-        console.log("delete")
+        //console.log("delete")
         if (this.canDelete()) {
             this.setOpacity(0)
             //this.setRight(-this.clientWidth())
@@ -245,14 +226,46 @@ window.BrowserRow = NodeView.extend().newSlots({
     canDelete: function() {
         return this.node() && this.node().hasAction("delete")
     },
-    
 
     // touch sliding
 
     didTouchStart: function() {
-        this._touchDeleteOffset = this.clientWidth() * 0.25;
+        this._touchDeleteOffset = this.clientWidth() * 0.5;
         this.setTransition("right 0s")
+        
+        this.addDeleteXView()
         return this
+    },
+
+    addDeleteXView: function() {
+        if (!this._dragDeleteView) {
+            var dv = DivView.clone().setPosition("absolute").setDivClassName("BrowserRowDeleteXView")
+            dv.setBackgroundColor("black")
+            var h = this.clientHeight()
+            dv.setMinAndMaxHeight(h+2)
+            dv.setMinAndMaxWidth(this.clientWidth())
+            dv.setTop(this.offsetTop())
+
+            var cb = CloseButton.clone().setTransition("opacity 0.1s")
+            cb.setMinAndMaxHeight(h)
+            cb.setMinAndMaxWidth(h)
+            dv.addSubview(cb)
+            this.parentView().addSubview(dv)
+
+            this.setBackgroundColor(this.column().columnGroup().backgroundColor())
+            this.setZIndex(10)
+            dv.setZIndex(0)
+            this._dragDeleteView = dv
+            this._dragDeleteButtonView = cb
+        }
+        return this
+    },
+
+    removeDeleteXView: function() {
+        if (this._dragDeleteView) {
+            this._dragDeleteView.removeFromParentView()
+            this._dragDeleteView = null
+        }
     },
 	
     onTouchMove: function(event) {
@@ -267,39 +280,35 @@ window.BrowserRow = NodeView.extend().newSlots({
             }
 
             if (this._lastXd != xd) {
-                this.setTouchRight(-xd)
+                this.setTouchLeft(xd)
                 this._lastXd = xd
-                this.setIsReadyToTouchDelete(-xd > this._touchDeleteOffset)
+
+                this._isReadyToTouchDelete  = -xd >= this._touchDeleteOffset
+                this._dragDeleteButtonView.setOpacity(this._isReadyToTouchDelete? 1 : 0.2)
+                /*
+                var dr = Math.min(Math.abs(xd), this._touchDeleteOffset) / this._touchDeleteOffset;
+                this._deleteReadiness = dr * dr*dr*dr;
+                var baseOp = 0.2
+                this._dragDeleteButtonView.setOpacity(baseOp + this._deleteReadiness*(1-baseOp))
+                */
             }
         }
     },
 
-    setTouchRight: function(right) {
+    setTouchLeft: function(right) {
         //this.setTransform("translateX(" + (-right) + "px)");
-        this.setRight(right)
+        this.setLeft(right)
+        if (this._dragDeleteView) {
+            //this._dragDeleteView.setLeft(-right)
+        }
+
         //this.setLeft(-right)
     },
 
-    setIsReadyToTouchDelete: function(aBool) {
-        if (this._isReadyToTouchDelete != aBool) {
-            if (aBool) {
-
-            } else {
-
-            }
-            this._isReadyToTouchDelete = aBool
-            this.showTouchDeleteState()
-        }
+    isReadyToTouchDelete: function() {
+        return this._isReadyToTouchDelete 
     },
 
-    showTouchDeleteState: function() {
-        if (this._isReadyToTouchDelete) {
-            this.setBorder("1px solid red")
-        } else {
-            this.setBorder(null)
-        }
-    },
-	
     onTouchCancel: function(event) {
         //console.log(this.type() + " onTouchCancel")
         this._isTouchDown = false
@@ -311,13 +320,61 @@ window.BrowserRow = NodeView.extend().newSlots({
 
         if (this._isTouchDown) {
             var diff = this.touchDownDiffWithEvent(event)
-            if ((-diff.xd) > this._touchDeleteOffset) {
-                this.delete()
+            if (this.isReadyToTouchDelete()) {
+                this.slideForwardAndDelete()
             } else {
 		        this.slideBack()
             }
-	        this._isTouchDown = false
+            this._isTouchDown = false
         }
+    },
+
+    slideForwardAndDelete: function() {
+        if (this.canDelete()) {
+            this.setBackgroundColor("black")
+            this.removeDeleteXView()
+            this.setTransition(this.transitionStyle())
+            this.delete()
+
+            /*
+            this.disableColumnUntilTimeout(400)
+
+            var t = 0.2;
+            this.setTransition("all linear " + t + "s")
+
+            setTimeout(() => {
+                this.setTouchLeft(- this.clientWidth())
+            })
+            
+            setTimeout(() => {
+                this.didCompleteSlide()
+                this.delete()
+            }, 300)
+            */
+        }		
+    },
+
+    slideBack: function() {
+        if (this.canDelete()) {
+            this.disableColumnUntilTimeout(400)
+
+            this.setTransition(this.transitionStyle())
+            setTimeout(() => {
+                this.setTouchLeft(0)
+            })
+            setTimeout(() => {
+                this.didCompleteSlide()
+            }, 300)
+        }		
+    },
+
+    disableColumnUntilTimeout: function(ms) {
+        this.column().columnGroup().disablePointerEventsUntilTimeout(ms)
+        //this.setPointerEvents("none")
+    },
+
+    didCompleteSlide: function() {
+        this.removeDeleteXView()
     },
 
 
@@ -344,8 +401,6 @@ window.BrowserRow = NodeView.extend().newSlots({
         if (this.canDelete() && this.closeButtonView()) {
             this.closeButtonView().setOpacity(1)
             this.closeButtonView().setTarget(this)
-            //console.log("this.closeButtonView().target() = ", this.closeButtonView().target())
-            //console.log("this.closeButtonView().action() = ", this.closeButtonView().action())
         }
     },
     
@@ -362,14 +417,6 @@ window.BrowserRow = NodeView.extend().newSlots({
         this.slideBack()
     },
 
-    slideBack: function() {
-        if (this.canDelete()) {
-            this.setTransition(this.transitionStyle())
-            setTimeout(() => {
-                this.setTouchRight(0)
-            })
-        }		
-    },
     
     // --- selecting ---
     

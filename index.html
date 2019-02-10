@@ -4,12 +4,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=0.1">
     <link rel="manifest" href="/manifest.json">
+    <meta name="Description" content="voluntary.app, an in-browser decentralized messaging and application platform">
+    <meta name="theme-color" content="#317EFB"/>
     <title>voluntary.app</title>
     <style>
 
 html, body {
     position: absolute;
     overflow: hidden;
+    overscroll-behavior-x: none;
+    overscroll-behavior-y: none;
 	top: 0px;
 	left: 0px;
     height: 100%;
@@ -38,6 +42,10 @@ html, body {
     -moz-text-size-adjust: 100%; 
     -webkit-text-size-adjust: 100%;
     */
+
+    touch-action:none; /* disable pinch-zoom browser action, but still available to JS */
+    -ms-scroll-chaining: none; /* disable left-right paging on windows surface */
+
 }
 
 /* an attempt to deal with tiny fonts on mobile */
@@ -45,6 +53,7 @@ html * {
     min-height: 1px; 
     max-height: 999999px; 
     zoom: 100%;
+    touch-action: none; /* to avoid slow/choppy handling of touchmove events */
 }
 
 /*
@@ -60,6 +69,7 @@ html * {
 	font-family: "AppMono";
     src: url("fonts/ShareTechMono/ShareTechMono.ttf");
 	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+    font-display: auto;
 }
 
 /* --- Blender --- */
@@ -111,16 +121,19 @@ html * {
 @font-face {
     font-family: "AppLight";
     src: url("fonts/OpenSans/OpenSans-Light.ttf");
+    font-display: auto;
 }
 
 @font-face {
     font-family: "AppRegular";
     src: url("fonts/OpenSans/OpenSans-Regular.ttf");
+    font-display: auto;
 }
 
 @font-face {
     font-family: "AppSemiBold";
     src: url("fonts/OpenSans/OpenSans-Semibold.ttf");
+    font-display: auto;
 }
 
 
@@ -395,7 +408,12 @@ html * {
 	background-color: transparent;
   	overflow-y: scroll; /* has to be scroll, not auto, for touch scroll momentum to work */
 	overflow-x: hidden;
-	-ms-overflow-style: none;
+    -ms-overflow-style: none; // removes scrollbars on IE 10+ 
+    overflow: -moz-scrollbars-none;  // removes scrollbars on Firefox
+}
+
+.BrowserScrollView::-webkit-scrollbar { 
+    display: none;  //  removes scrollbars on Safari and Chrome
 }
 
 .BrowserColumn {
@@ -405,8 +423,11 @@ html * {
     width: 100%;
     overflow: hidden;
     min-height: 100%;
-    -webkit-overflow-scrolling: touch;
-    overflow-scrolling: touch; /* todo: veirfy  this is used? */
+    -webkit-overflow-scrolling: regular; 
+    /*  -webkit-overflow-scrolling: touch seems recognized on Edge, invalid on Chrome */
+     /* mozilla says "-webkit-overflow-scrolling" is only supported on Safari */
+    /*-webkit-overflow-scrolling: touch;*/ /* touch is ok on Edge, invalid on Chrome */
+    /* overflow-scrolling: touch; // neither Edge or Chrome on Windows recognize this property*/
     -ms-overflow-style: none;
 }
 
@@ -503,7 +524,8 @@ html * {
     /*border-bottom: 1px solid rgba(100,100,100, .3);*/
 	text-align: left;
 	margin: 0px;
-	padding: 0px;
+    padding: 0px;
+    -webkit-overflow-scrolling: touch; 
 }
 
 .BrowserRowTitle {
@@ -653,8 +675,8 @@ html * {
     
     overflow-x: hidden;
     overflow-y: auto;
-    
-    overflow-scrolling: touch;
+
+    overflow-scrolling: touch; /* is this needed for MS browser? */
     -webkit-overflow-scrolling: touch;
         
     width: calc(100% - 2px);
@@ -83036,6 +83058,15 @@ window.BMViewStyles = ideal.Proto.extend().newSlots({
         this.selected().setBackgroundColor("#eee")
         return this
     },
+
+    setToWhiteOnBlack: function() {
+        this.unselected().setColor("white")
+        this.unselected().setBackgroundColor("black")
+        
+        this.selected().setColor("white")
+        this.selected().setBackgroundColor("#444") // change for column?
+        return this
+    },
     
     setToGrayOnTransparent: function() {        
         this.unselected().setColor("#aaa")
@@ -86972,13 +87003,14 @@ window.KeyboardKey = ideal.Proto.extend().newSlots({
 
 /*
     Keyboard
-
+    A class to track the current state of all keyboard keys.
 
 */
 
 window.Keyboard = ideal.Proto.extend().newSlots({
     type: "Keyboard",
     codeToKeys: null, // dictionary of KeyboardKey objects
+    isDebugging: true,
 }).setSlots({
     init: function () {
         ideal.Proto.init.apply(this)
@@ -87003,6 +87035,11 @@ window.Keyboard = ideal.Proto.extend().newSlots({
 
     keyForCode: function(aCode) {
         return this.codeToKeys()[aCode]
+    },
+
+    keyForName: function(aName) {
+        let code = this.keyCodeForName(aName)
+        return this.keyForCode(code)
     },
 
     nameForKeyCode: function(aCode) {
@@ -87118,7 +87155,7 @@ window.Keyboard = ideal.Proto.extend().newSlots({
     },
 
     keyForCode: function(aCode) {
-        return this.keyDict()
+        return this.codeToKeys()[aCode]
     },
 
     // -- events ---
@@ -87139,7 +87176,11 @@ window.Keyboard = ideal.Proto.extend().newSlots({
 
     onKeyDown: function (event) {
         let shouldPropogate = true
-        this.keyForEvent(event).onKeyDown(event)
+        let key = this.keyForEvent(event)
+        key.onKeyDown(event)
+        if (this.isDebugging()) {
+            console.log(this.type() + ".onKeyDown " + key.name())
+        }
         return shouldPropogate
     },
 
@@ -87199,6 +87240,30 @@ window.Keyboard = ideal.Proto.extend().newSlots({
         //console.log("specialNameForKeyEvent ", code, " = ", result)
 		
         return result
+    },
+
+    // get key helpers
+
+    leftCommandKey: function() {
+        return this.keyForName("leftWindow")
+    },
+
+    rightCommandKey: function() {
+        return this.keyForName("select")
+    },
+
+    // get key state helpers
+
+    shiftIsDown: function() {
+        return this.keyForName("shift").isDown()
+    },
+
+    commandIsDown: function() {
+        return this.leftCommandKey().isDown() || this.rightCommandKey().isDown()
+    },
+
+    plusIsDown: function() {
+        return this.keyForName("plus").isDown()
     },
 })
 
@@ -87553,6 +87618,16 @@ window.DivView = ideal.Proto.extend().newSlots({
     position: function() {
         return this.getCssAttribute("position")
     },
+
+    // pointer events
+
+    setPointerEvents: function(s) {
+        return this.setCssAttribute("pointer-events", s)
+    },
+
+    pointerEvents: function() {
+        return this.getCssAttribute("pointer-events")
+    },
 	
     // transform
 	
@@ -87816,6 +87891,13 @@ window.DivView = ideal.Proto.extend().newSlots({
             this._transitions = DivTransitions.clone().setDivView(this).syncFromDiv()
         }
         return this._transitions
+    },
+
+    // transform
+
+    setTransform: function(s) {
+        this.setCssAttribute("transform", s)
+        return this
     },
 
     // opacity
@@ -88179,6 +88261,33 @@ window.DivView = ideal.Proto.extend().newSlots({
     overflow: function() {
         return this.getCssAttribute("overflow")
     },
+
+    // overflow x
+
+    setOverflowX: function(s) {
+        assert(typeof(s) == "string")
+        this.setCssAttribute("overflow-x", s)
+        return this
+    },
+    
+    overflowX: function() {
+        return this.getCssAttribute("overflow-x")
+    },
+
+    // overflow y
+
+    setOverflowY: function(s) {
+        assert(typeof(s) == "string")
+        this.setCssAttribute("overflow-y", s)
+        return this
+    },
+    
+    overflowY: function() {
+        return this.getCssAttribute("overflow-y")
+    },
+
+
+
 	
     // text over flow
 	
@@ -88493,6 +88602,10 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     // --- subviews ---
 
+    subviewCount: function() {
+        return this.subviews().length
+    },
+
     addSubview: function(anSubview) {
         if (anSubview == null) {
             throw new Error("anSubview can't be null")
@@ -88596,7 +88709,9 @@ window.DivView = ideal.Proto.extend().newSlots({
         }, 200)	
         return this
     },
-	
+    
+    // -----------------------
+
     removeFromParentView: function() {
         this.parentView().removeSubview(this)
         return this
@@ -89037,6 +89152,7 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this.isContentEditable()
     },
     
+    
     // --- content editing ---
     
     setContentEditable: function (aBool) {
@@ -89073,6 +89189,11 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 	
     // touch events
+
+    setTouchAction: function(s) {
+        this.setCssAttribute("touch-action", s)
+        return this
+    },
 
     touchstartListenerFunc: function () {
         if (!this._touchstartListenerFunc) {
@@ -89113,6 +89234,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 	        	this.element().addEventListener("touchcancel", this.touchcancelListenerFunc(), b);
 	        	this.element().addEventListener("touchend",    this.touchendListenerFunc(), b);
             }
+            this.setTouchAction("none") // testing
         } else {
             if (this._isRegisteredForPaste == true) {
                 this._isRegisteredForPaste = false
@@ -89143,6 +89265,11 @@ window.DivView = ideal.Proto.extend().newSlots({
         //console.log(this.type() + " onTouchStart ", touches)
         this._onTouchDownEventPosition = { screenX: touches[0].screenX, screenY: touches[0].screenY }
         //console.log(this.type() + " onTouchStart  this._onTouchDownEventPosition ", this._onTouchDownEventPosition)
+        this.didTouchStart()
+    },
+
+    didTouchStart: function() {
+        // for subclasses to override
     },
 	
     onTouchMove: function(event) {
@@ -89263,7 +89390,7 @@ window.DivView = ideal.Proto.extend().newSlots({
                 this._isRegisteredForKeyboard = true
 
                 e.addEventListener("keyup", this.eventFuncForMethodName("onKeyUp"), useCapture);
-                //e.addEventListener("keydown", this.eventFuncForMethodName("onKeyDown"), useCapture);
+                e.addEventListener("keydown", this.eventFuncForMethodName("onKeyDown"), useCapture);
                 //e.addEventListener("keypress", this.eventFuncForMethodName("onKeyPress"), useCapture);
                 
 	            DivView._tabCount ++
@@ -90027,6 +90154,45 @@ window.DivView = ideal.Proto.extend().newSlots({
     rootView: function() {
         return  WebBrowserWindow.shared().documentBody()
     },
+
+    disablePointerEventsUntilTimeout: function(ms) {
+        this.setPointerEvents("none")
+        //console.log(this.type() + " disabling pointer events")
+
+        setTimeout(() => {
+            //console.log(this.type() + " enabling pointer events")
+            this.setPointerEvents("inherit")
+        }, ms)
+        
+        return this
+    },
+
+    containerize: function() {
+        // create a subview of same size as parent and put all other subviews in it
+        let container = DivView.clone()
+        container.setMinAndMaxHeight(this.clientHeight())
+        container.setMinAndMaxWidth(this.clientWidth())
+        this.moveAllSubviewsToView(container)
+        this.addSubview(container)
+        return container
+    },
+
+    uncontainerize: function() {
+        assert(this.subviewCount() == 1)
+        let container = this.subviews().first()
+        this.removeSubview(container)
+        container.moveAllSubviewsToView(this)
+        return this
+    },
+
+    moveAllSubviewsToView: function(aView) {
+        this.subviews().copy().forEach((sv) => {
+            this.remove(sv)
+            aView.addSubview(sv)
+        })
+        return this
+    },
+
 })
 
 "use strict"
@@ -90710,6 +90876,22 @@ window.TextField = DivStyledView.extend().newSlots({
         this.focus()
         return this
     },
+
+    /*
+    setSelectAllOnDoubleClick: function(aBool) {
+        this.setIsRegisteredForClicks(aBool)
+        return this
+    },
+
+    onDoubleClick: function (event) {
+        console.log(this.type() + ".onDoubleClick()")
+        //this.focus()
+        this.selectAll() // looses focus!
+        this.element().focus()
+        //this.focusAfterDelay(.125) 
+        return true
+    },
+    */
 })
 
 "use strict"
@@ -91979,12 +92161,13 @@ window.BrowserView = NodeView.extend().newSlots({
     expandLastColumnIfNeeded: function () {
         var lastActiveCg = this.lastActiveColumnGroup()
 
-        var fillWidth = (this.browserWidth() - this.left()) - this.widthOfUncollapsedColumnsSansLastActive()
-        if (lastActiveCg.targetWidth() * 2 < fillWidth && lastActiveCg.targetWidth() < 500) {
-            fillWidth = lastActiveCg.targetWidth()
-        }
-        //console.log("fillWidth = ", fillWidth)
         if (lastActiveCg) {
+            var fillWidth = (this.browserWidth() - this.left()) - this.widthOfUncollapsedColumnsSansLastActive()
+            if (lastActiveCg.targetWidth() * 2 < fillWidth && lastActiveCg.targetWidth() < 500) {
+                fillWidth = lastActiveCg.targetWidth()
+            }
+            
+            //console.log("fillWidth = ", fillWidth)
             lastActiveCg.setFlexGrow(1)
             lastActiveCg.setFlexShrink(1)
             lastActiveCg.setFlexBasis(fillWidth)
@@ -92169,6 +92352,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
         this.styles().selected().setBorderLeft("1px solid rgba(0, 0, 0, 0.15)")
         this.styles().unselected().setBorderLeft("1px solid rgba(0, 0, 0, 0.15)")
         this.applyStyles()
+        this.setIsRegisteredForClicks(true)
         this.setAcceptsFirstResponder(true)
         return this
     },
@@ -92268,8 +92452,15 @@ window.BrowserColumn = NodeView.extend().newSlots({
         
     },
     
+  
     selectedRows: function() {
-        return this.subviews().filter((row) => { return row.isSelected(); })
+        return this.subviews().filter((row) => { 
+            if (!row.isSelected) {
+                console.warn("===== missing isSelected method on row of type: ", row.type())
+                return false
+            }
+            return row.isSelected(); 
+        })
     },
 
     selectedRow: function() {
@@ -92493,7 +92684,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
 
     // --- keyboard controls, arrow navigation -----------------------------
-	
+
     canNavigate: function() {
         return this.allowsCursorNavigation() && this.isActiveElement()
     },
@@ -92713,6 +92904,13 @@ window.BrowserColumn = NodeView.extend().newSlots({
             return row.calcWidth()
         })			
         return maxWidth	
+    },
+
+    // editing
+
+    onDoubleClick: function (event) {
+        console.log(this.type() + ".onDoubleClick()")
+        return true
     },
 	
 })
@@ -93398,32 +93596,13 @@ window.BrowserRow = NodeView.extend().newSlots({
         }
         
         NodeView.applyStyles.apply(this)
+    
+        // flash
         
-        //console.log(this.node().title() + " this.currentBgColor() = ", this.currentBgColor())
-        //console.log("this.node().nodeRowStyles().selected().backgroundColor() = ", this.currentBgColor())
-
-        /*
-        if (!this.isSelected() && this.selectedFlashColor()) {
-            console.log("flashing")
-            this.setTransition("0s all")
-            this.setBackgroundColor(this.selectedFlashColor())
-            this.setTransition("0.3s all")
-        }
-        */
-
-        //this.setTransition("0.0s all")
-
         if (this.shouldShowFlash() && this.selectedFlashColor()) {
             this.setBackgroundColor(this.selectedFlashColor())
-            //setTimeout(() => { this.setBackgroundColor(this.selectedFlashColor()) }, 0)
-            //setTimeout(() => { this.setBackgroundColor(this.currentBgColor()) }, 300)
-        } else {
-            // this.setBackgroundColor(this.currentBgColor())
-        }
+        } 
         
-        //this.setTransition("0.3s all")
-        //this.setTransition("0.3s background-color")
-        //this.transitions().at("backgroundColor").setDuration(1)
         setTimeout(() => { this.setBackgroundColor(this.currentBgColor()) }, 100)
         this.setShouldShowFlash(false)
         
@@ -93502,7 +93681,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
     
     delete: function() {
-        console.log("delete")
+        //console.log("delete")
         if (this.canDelete()) {
             this.setOpacity(0)
             //this.setRight(-this.clientWidth())
@@ -93530,45 +93709,172 @@ window.BrowserRow = NodeView.extend().newSlots({
     canDelete: function() {
         return this.node() && this.node().hasAction("delete")
     },
-    
 
     // touch sliding
+
+    didTouchStart: function() {
+        this._touchDeleteOffset = this.clientWidth() * 0.5;
+        this.setTransition("right 0s")
+        
+        this.addDeleteXView()
+        return this
+    },
+
+    addDeleteXView: function() {
+        if (!this._dragDeleteView) {
+            var dv = DivView.clone().setPosition("absolute").setDivClassName("BrowserRowDeleteXView")
+            dv.setBackgroundColor("black")
+            var h = this.clientHeight()
+            dv.setMinAndMaxHeight(h+2)
+            dv.setMinAndMaxWidth(this.clientWidth())
+            dv.setTop(this.offsetTop())
+
+            var cb = CloseButton.clone().setTransition("opacity 0.1s")
+            cb.setMinAndMaxHeight(h)
+            cb.setMinAndMaxWidth(h)
+            dv.addSubview(cb)
+            this.parentView().addSubview(dv)
+
+            this.setBackgroundColor(this.column().columnGroup().backgroundColor())
+            this.setZIndex(10)
+            dv.setZIndex(0)
+            this._dragDeleteView = dv
+            this._dragDeleteButtonView = cb
+        }
+        return this
+    },
+
+    removeDeleteXView: function() {
+        if (this._dragDeleteView) {
+            this._dragDeleteView.removeFromParentView()
+            this._dragDeleteView = null
+        }
+    },
 	
     onTouchMove: function(event) {
-        console.log(this.type() + " onTouchMove diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
+        //console.log(this.type() + " onTouchMove diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
         if (this.canDelete()) {
-            var diff = this.touchDownDiffWithEvent(event)
-            //console.log("onMouseMove:" + JSON.stringify(diff))
-            this.setTransition("all 0s")
-            var xd = diff.xd
+            this._touchMoveDiff = this.touchDownDiffWithEvent(event)
+            //console.log("onTouchMove:" + JSON.stringify(diff))
+            var xd = Math.floor(this._touchMoveDiff.xd)
 			
             if (xd > 0) { 
                 xd = 0; 
             }
-			
-            this.setRight(-xd)
+
+            if (this._lastXd != xd) {
+                this.setTouchLeft(xd)
+                this._lastXd = xd
+
+                this._isReadyToTouchDelete  = -xd >= this._touchDeleteOffset
+                this._dragDeleteButtonView.setOpacity(this._isReadyToTouchDelete? 1 : 0.2)
+                /*
+                var dr = Math.min(Math.abs(xd), this._touchDeleteOffset) / this._touchDeleteOffset;
+                this._deleteReadiness = dr * dr*dr*dr;
+                var baseOp = 0.2
+                this._dragDeleteButtonView.setOpacity(baseOp + this._deleteReadiness*(1-baseOp))
+                */
+            }
         }
     },
-	
+
+    setTouchLeft: function(right) {
+        //this.setTransform("translateX(" + (-right) + "px)");
+        this.setLeft(right)
+        if (this._dragDeleteView) {
+            //this._dragDeleteView.setLeft(-right)
+        }
+
+        //this.setLeft(-right)
+    },
+
+    isReadyToTouchDelete: function() {
+        return this._isReadyToTouchDelete 
+    },
+
     onTouchCancel: function(event) {
-        console.log(this.type() + " onTouchCancel")
+        //console.log(this.type() + " onTouchCancel")
         this._isTouchDown = false
         this.slideBack()
     },
 	
     onTouchEnd: function(event) {
-        console.log(this.type() + " onTouchEnd diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
+        //console.log(this.type() + " onTouchEnd diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
 
         if (this._isTouchDown) {
             var diff = this.touchDownDiffWithEvent(event)
-            if ((-diff.xd) > this.clientWidth() * 0.25) {
-                this.delete()
+            if (this.isReadyToTouchDelete()) {
+                this.slideForwardAndDelete()
             } else {
 		        this.slideBack()
             }
-	        this._isTouchDown = false
+            this._isTouchDown = false
         }
     },
+
+    slideForwardAndDelete: function() {
+        if (this.canDelete()) {
+            this.setBackgroundColor("black")
+            this.removeDeleteXView()
+            this.setTransition(this.transitionStyle())
+            this.delete()
+
+            /*
+            this.disableColumnUntilTimeout(400)
+
+            var t = 0.2;
+            this.setTransition("all linear " + t + "s")
+
+            setTimeout(() => {
+                this.setTouchLeft(- this.clientWidth())
+            })
+            
+            setTimeout(() => {
+                this.didCompleteSlide()
+                this.delete()
+            }, 300)
+            */
+        }		
+    },
+
+    slideBack: function() {
+        if (this.canDelete()) {
+            this.disableColumnUntilTimeout(400)
+
+            this.setTransition(this.transitionStyle())
+            setTimeout(() => {
+                this.setTouchLeft(0)
+            })
+            setTimeout(() => {
+                this.didCompleteSlide()
+            }, 300)
+        }		
+    },
+
+    disableColumnUntilTimeout: function(ms) {
+        this.column().columnGroup().disablePointerEventsUntilTimeout(ms)
+        //this.setPointerEvents("none")
+    },
+
+    didCompleteSlide: function() {
+        this.removeDeleteXView()
+    },
+
+
+
+    /*
+    showTouchDeleteReady: function() {
+
+    },
+
+    showTouchDeleteButton: function() {
+
+    },
+
+    hideTouchDeleteButton: function() {
+
+    },
+    */
     
     hasCloseButton: function() {
         return this.closeButtonView() && this.closeButtonView().target() != null
@@ -93578,8 +93884,6 @@ window.BrowserRow = NodeView.extend().newSlots({
         if (this.canDelete() && this.closeButtonView()) {
             this.closeButtonView().setOpacity(1)
             this.closeButtonView().setTarget(this)
-            //console.log("this.closeButtonView().target() = ", this.closeButtonView().target())
-            //console.log("this.closeButtonView().action() = ", this.closeButtonView().action())
         }
     },
     
@@ -93596,14 +93900,6 @@ window.BrowserRow = NodeView.extend().newSlots({
         this.slideBack()
     },
 
-    slideBack: function() {
-        if (this.canDelete()) {
-            this.setTransition(this.transitionStyle())
-            setTimeout(() => {
-                this.setRight(0)
-            })
-        }		
-    },
     
     // --- selecting ---
     
@@ -93814,6 +94110,13 @@ window.BrowserRowTitle = TextField.extend().newSlots({
     },
 })
 
+/*
+
+ A BrowserRow that overrides updateSubviews
+
+*/
+
+
 "use strict"
 
 window.BrowserFieldRow = BrowserRow.extend().newSlots({
@@ -93830,6 +94133,20 @@ window.BrowserFieldRow = BrowserRow.extend().newSlots({
 		
         return this
     },
+
+    
+    didChangeNode: function() {
+        BrowserRow.didUpdateNode.apply(this)
+        if (this.node() && this.node().nodeShouldUseLightTheme) {
+            if (this.node().nodeShouldUseLightTheme()) {
+                this.styles().setToBlackOnWhite()
+            } else {
+                this.styles().setToWhiteOnBlack()
+            }
+        }
+        return this
+    },
+    
     
     updateSubviews: function() {   
 	    BrowserRow.updateSubviews.apply(this)
@@ -93840,14 +94157,10 @@ window.BrowserFieldRow = BrowserRow.extend().newSlots({
             var e = this.element()
             if (node.nodeMinHeight() == -1) {
                 
-                this.setHeight("auto")
-                //e.style.height = "auto"
-                
+                this.setHeight("auto")                
                 this.setPaddingBottom("calc(100% - 20px)")
-                //e.style.paddingBottom = "calc(100% - 20px)";
 
             } else {
-                //e.style.height = node.nodeMinHeight() + "px"
                 this.setHeight(this.pxNumberToString(node.nodeMinHeight()))
             }
         }
@@ -94502,6 +94815,8 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
       
         this.valueView().setUserSelect("text")   // should the value view handle this?
         this.valueView().setSpellCheck(false)   // should the value view handle this?
+        this.valueView().setWidthPercentage(100) 
+
 		
         this.setNoteView(DivView.clone().setDivClassName("BMFieldRowViewNoteView"))
         this.addSubview(this.noteView())
@@ -94512,7 +94827,9 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
     },
 
     createValueView: function() {
-        return TextField.clone().setDivClassName("BMFieldValueView")
+        var tf = TextField.clone().setDivClassName("BMFieldValueView")
+        //tf.setSelectAllOnDoubleClick(true)
+        return tf
     },
 	
     // visible key and value
@@ -94528,7 +94845,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
     // sync 
     
     syncValueViewToNode: function() {
-        //console.log(this.type() + ".syncFromNode " + this.node().type())
+        //console.log(this.type() + ".syncValueViewToNode " + this.node().type())
 	    if (this.node().type() == "BMBoolField" && this.valueView().type() != "BoolView") {
 	        //console.log("syncValueViewToNode setup bool view")
 	        var boolView = BoolView.clone()
@@ -94546,7 +94863,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         //console.log(this.type() + " syncFromNode")
 		
         this.node().prepareToSyncToView()
-        this.syncValueViewToNode()
+        this.syncValueViewToNode() // (lazy) set up the value view to match the field's type
 
         var node = this.node()
         var keyView = this.keyView()
@@ -94572,15 +94889,17 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         */
         
         if (newValue === null) { 
-            newValue = false; // todo: find better way to deal with adding/removing new field
+            // commenting out - this causes a "false" to be displayed in new fields
+            //newValue = false; // todo: find better way to deal with adding/removing new field
         } 
 
         valueView.setValue(newValue)
-		
+        
+        // visible
         keyView.setIsVisible(node.keyIsVisible())
         valueView.setIsVisible(node.valueIsVisible())
 		
-        
+        // editable
         keyView.setIsEditable(node.keyIsEditable())
         valueView.setIsEditable(node.valueIsEditable())
 
@@ -96457,6 +96776,8 @@ window.App = BMNode.extend().newSlots({
         if (this.runTests) {
 		    this.runTests()
         }
+
+        //this.registerServiceWorker() // not working yet
     },
 	
     rootView: function() {
@@ -96484,6 +96805,33 @@ window.App = BMNode.extend().newSlots({
     showVersion: function() {
         console.log("Application '" + this.name() + "' version " + this.versionsString())
     },
+
+    // --- server worker ---
+
+    registerServiceWorker: function() {
+        // doesn't work
+        // "src/ServiceWorker.js"
+        // "/src/ServiceWorker.js"
+        // "../ServiceWorker.js"
+        var path = "ServiceWorker.js"
+        console.log("registering service worker '" + path + "'")
+        var promise = navigator.serviceWorker.register(path); //{ scope: ""../"}
+
+        promise.then(function (registration) {
+            console.log("Service worker successfully registered on scope", registration.scope);
+        }).catch(function (error) {
+            console.log("Service worker failed to register:\n",
+                "  typeof(error): ", typeof(error), "\n", 
+                "  message:", error.message, "\n",
+                "  fileName:", error.fileName, "\n",
+                "  lineNumber:", error.lineNumber,  "\n",
+                "  stack:", error.stack,  "\n"
+                //"  JSON.stringify(error):", JSON.stringify(error),  "\n",
+                //"  toString:", error.toString()
+            );
+        });
+    }
+
 })
 
 
@@ -97158,6 +97506,10 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
 
     shouldRelayForSenderPublicKey: function(aPublicKeyString) {
         return this.allIdentityPublicKeyStrings().includes(aPublicKeyString)
+    },
+
+    nodeShouldUseLightTheme: function() {
+        return false
     },
 	
 })

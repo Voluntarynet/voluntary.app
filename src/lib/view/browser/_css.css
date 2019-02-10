@@ -228,7 +228,8 @@
     /*border-bottom: 1px solid rgba(100,100,100, .3);*/
 	text-align: left;
 	margin: 0px;
-	padding: 0px;
+    padding: 0px;
+    -webkit-overflow-scrolling: touch; 
 }
 
 .BrowserRowTitle {

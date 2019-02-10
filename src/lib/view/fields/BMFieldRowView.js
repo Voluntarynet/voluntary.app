@@ -101,11 +101,12 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         } 
 
         valueView.setValue(newValue)
-		
+        
+        // visible
         keyView.setIsVisible(node.keyIsVisible())
         valueView.setIsVisible(node.valueIsVisible())
 		
-        
+        // editable
         keyView.setIsEditable(node.keyIsEditable())
         valueView.setIsEditable(node.valueIsEditable())
 

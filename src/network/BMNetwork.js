@@ -300,5 +300,9 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
     shouldRelayForSenderPublicKey: function(aPublicKeyString) {
         return this.allIdentityPublicKeyStrings().includes(aPublicKeyString)
     },
+
+    nodeShouldUseLightTheme: function() {
+        return false
+    },
 	
 })

@@ -111,13 +111,13 @@
     height: calc(100% - 40px);
 	background-color: transparent;
   	overflow-y: scroll; /* has to be scroll, not auto, for touch scroll momentum to work */
-	overflow-x: hidden;
-    -ms-overflow-style: none; // removes scrollbars on IE 10+ 
-    overflow: -moz-scrollbars-none;  // removes scrollbars on Firefox
+    overflow-x: hidden;
+    -ms-overflow-style: none; /* removes scrollbars on IE 10+  */
+    overflow: -moz-scrollbars-none;  /* removes scrollbars on Firefox */
 }
 
 .BrowserScrollView::-webkit-scrollbar { 
-    display: none;  //  removes scrollbars on Safari and Chrome
+    display: none;  /*  removes scrollbars on Safari and Chrome */
 }
 
 .BrowserColumn {

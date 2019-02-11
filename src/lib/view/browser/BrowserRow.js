@@ -22,6 +22,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         this.turnOffUserSelect()
         this.setAcceptsFirstResponder(false)
         
+        //console.log("WebBrowserWindow.shared().isTouchDevice() = ", WebBrowserWindow.shared().isTouchDevice())
         if (WebBrowserWindow.shared().isTouchDevice()) {
             this.setIsRegisteredForTouch(true)
         } else {
@@ -30,6 +31,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         }
 
         this.setTransition(this.transitionStyle())
+        this.setTapHoldPeriod(500)
         //this.animateOpen()
         return this
     },
@@ -115,7 +117,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         NodeView.applyStyles.apply(this)
     
         // flash
-        
+
         if (this.shouldShowFlash() && this.selectedFlashColor()) {
             this.setBackgroundColor(this.selectedFlashColor())
         } 
@@ -230,10 +232,11 @@ window.BrowserRow = NodeView.extend().newSlots({
     // touch sliding
 
     didTouchStart: function() {
+        console.log(this.type() + " didTouchStart")
         this._touchDeleteOffset = this.clientWidth() * 0.5;
         this.setTransition("right 0s")
         
-        this.addDeleteXView()
+        //this.addDeleteXView()
         return this
     },
 
@@ -269,7 +272,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
 	
     onTouchMove: function(event) {
-        //console.log(this.type() + " onTouchMove diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
+        console.log(this.type() + " onTouchMove diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
         if (this.canDelete()) {
             this._touchMoveDiff = this.touchDownDiffWithEvent(event)
             //console.log("onTouchMove:" + JSON.stringify(diff))
@@ -284,13 +287,10 @@ window.BrowserRow = NodeView.extend().newSlots({
                 this._lastXd = xd
 
                 this._isReadyToTouchDelete  = -xd >= this._touchDeleteOffset
-                this._dragDeleteButtonView.setOpacity(this._isReadyToTouchDelete? 1 : 0.2)
-                /*
-                var dr = Math.min(Math.abs(xd), this._touchDeleteOffset) / this._touchDeleteOffset;
-                this._deleteReadiness = dr * dr*dr*dr;
-                var baseOp = 0.2
-                this._dragDeleteButtonView.setOpacity(baseOp + this._deleteReadiness*(1-baseOp))
-                */
+
+                if (this._dragDeleteView) {
+                    this._dragDeleteButtonView.setOpacity(this._isReadyToTouchDelete? 1 : 0.2)
+                }
             }
         }
     },
@@ -298,11 +298,6 @@ window.BrowserRow = NodeView.extend().newSlots({
     setTouchLeft: function(right) {
         //this.setTransform("translateX(" + (-right) + "px)");
         this.setLeft(right)
-        if (this._dragDeleteView) {
-            //this._dragDeleteView.setLeft(-right)
-        }
-
-        //this.setLeft(-right)
     },
 
     isReadyToTouchDelete: function() {
@@ -310,13 +305,13 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
 
     onTouchCancel: function(event) {
-        //console.log(this.type() + " onTouchCancel")
+        console.log(this.type() + " onTouchCancel")
         this._isTouchDown = false
         this.slideBack()
     },
 	
     onTouchEnd: function(event) {
-        //console.log(this.type() + " onTouchEnd diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
+        console.log(this.type() + " onTouchEnd")
 
         if (this._isTouchDown) {
             var diff = this.touchDownDiffWithEvent(event)
@@ -369,7 +364,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
 
     disableColumnUntilTimeout: function(ms) {
-        this.column().columnGroup().disablePointerEventsUntilTimeout(ms)
+        //this.column().columnGroup().disablePointerEventsUntilTimeout(ms)
         //this.setPointerEvents("none")
     },
 
@@ -411,12 +406,23 @@ window.BrowserRow = NodeView.extend().newSlots({
             this.closeButtonView().setTarget(null)
         }        
     },
-    
+
+    /*
+    onMouseDown: function (event) {
+        NodeView.onMouseDown.apply(this, [event])
+    },
+    */
+
     onMouseUp: function (event) {
         NodeView.onMouseUp.apply(this, [event])
         this.slideBack()
     },
 
+    // tap hold
+    
+    onTapHold: function(event) {
+        this.setBackgroundColor("red")
+    },
     
     // --- selecting ---
     

@@ -60,6 +60,8 @@ window.DivView = ideal.Proto.extend().newSlots({
     intersectionObserver: null,
     
     acceptsFirstResponder: false,
+
+    tapHoldPeriod: null,
 }).setSlots({
 
     
@@ -67,6 +69,7 @@ window.DivView = ideal.Proto.extend().newSlots({
         this._subviews = []
         this.setupElement()
         this.setIsRegisteredForDrop(false)
+        this.setTouchAction("none") // is this needed for touch to get touch events?
         return this
     },
 
@@ -1815,6 +1818,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     // touch events
 
     setTouchAction: function(s) {
+        this.setCssAttribute("-ms-touch-action", s) // needed?
         this.setCssAttribute("touch-action", s)
         return this
     },
@@ -1967,11 +1971,6 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this
     },    
     
-    onMouseDown: function (event) {
-        //console.log(this.typeId() + ".onMouseDown()")
-        //event.stopPropagation()
-        return true
-    },
     
     onMouseMove: function (event) {
         return true
@@ -1994,10 +1993,40 @@ window.DivView = ideal.Proto.extend().newSlots({
         return true
     },
 
+    //
+
+
+
+    onMouseDown: function (event) {
+        if (this.tapHoldPeriod()) {
+            this.startTapHoldTimer()
+        }
+    },
+
     onMouseUp: function (event) {
-        //console.log(this.typeId() + ".onMouseUp()")
-        //event.stopPropagation()
-        return true
+        if (this.tapHoldPeriod()) {
+            this.stopTapHoldTimer()
+        }
+    },
+
+    // tap hold event
+    
+    startTapHoldTimer: function() {
+        //console.log("startTapHoldTimer")
+        this._tapHoldTimeout = setTimeout((e) => { this.onTapHold(e) }, this.tapHoldPeriod())
+        return this
+    },
+
+    stopTapHoldTimer: function() {
+        //console.log("stopTapHoldTimer")
+        if (this._tapHoldTimeout) {
+            clearTimeout(this._tapHoldTimeout);
+            this._tapHoldTimeout = null
+        }
+        return this
+    },
+
+    onTapHold: function(event) {
     },
         
     // --- keyboard events ---
@@ -2781,10 +2810,10 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     disablePointerEventsUntilTimeout: function(ms) {
         this.setPointerEvents("none")
-        //console.log(this.type() + " disabling pointer events")
+        console.log(this.type() + " disabling pointer events")
 
         setTimeout(() => {
-            //console.log(this.type() + " enabling pointer events")
+            console.log(this.type() + " enabling pointer events")
             this.setPointerEvents("inherit")
         }, ms)
         

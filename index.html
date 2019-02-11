@@ -407,13 +407,13 @@ html * {
     height: calc(100% - 40px);
 	background-color: transparent;
   	overflow-y: scroll; /* has to be scroll, not auto, for touch scroll momentum to work */
-	overflow-x: hidden;
-    -ms-overflow-style: none; // removes scrollbars on IE 10+ 
-    overflow: -moz-scrollbars-none;  // removes scrollbars on Firefox
+    overflow-x: hidden;
+    -ms-overflow-style: none; /* removes scrollbars on IE 10+  */
+    overflow: -moz-scrollbars-none;  /* removes scrollbars on Firefox */
 }
 
 .BrowserScrollView::-webkit-scrollbar { 
-    display: none;  //  removes scrollbars on Safari and Chrome
+    display: none;  /*  removes scrollbars on Safari and Chrome */
 }
 
 .BrowserColumn {
@@ -90157,10 +90157,10 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     disablePointerEventsUntilTimeout: function(ms) {
         this.setPointerEvents("none")
-        //console.log(this.type() + " disabling pointer events")
+        console.log(this.type() + " disabling pointer events")
 
         setTimeout(() => {
-            //console.log(this.type() + " enabling pointer events")
+            console.log(this.type() + " enabling pointer events")
             this.setPointerEvents("inherit")
         }, ms)
         
@@ -91413,10 +91413,10 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     },
 
     agentIsSafari: function() {
-        var isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
+        var isSafari = navigator.vendor && navigator.vendor.indexOf("Apple") > -1 &&
                navigator.userAgent &&
-               navigator.userAgent.indexOf('CriOS') == -1 &&
-               navigator.userAgent.indexOf('FxiOS') == -1;
+               navigator.userAgent.indexOf("CriOS") == -1 &&
+               navigator.userAgent.indexOf("FxiOS") == -1;
         return isSafari
     },
 
@@ -91435,9 +91435,9 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
 
     isTouchDevice: function() {
         // via https://stackoverflow.com/questions/4817029/whats-the-best-way-to-detect-a-touch-screen-device-using-javascript
-        var result = "ontouchstart" in window        // works on most browsers 
-			|| navigator.maxTouchPoints;       // works on IE10/11 and Surface	
-        if (result === 0) { result = false; }		
+        var result = false 
+        if ("ontouchstart" in window) { result = true; }        // works on most browsers 
+        if (navigator.maxTouchPoints) { result = true; }       // works on IE10/11 and Surface	
         //console.log("WebBrowserWindow.isTouchDevice() = ", result)
         return result
     },
@@ -93505,6 +93505,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         this.turnOffUserSelect()
         this.setAcceptsFirstResponder(false)
         
+        console.log("WebBrowserWindow.shared().isTouchDevice() = ", WebBrowserWindow.shared().isTouchDevice())
         if (WebBrowserWindow.shared().isTouchDevice()) {
             this.setIsRegisteredForTouch(true)
         } else {
@@ -93598,7 +93599,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         NodeView.applyStyles.apply(this)
     
         // flash
-        
+
         if (this.shouldShowFlash() && this.selectedFlashColor()) {
             this.setBackgroundColor(this.selectedFlashColor())
         } 
@@ -93752,7 +93753,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
 	
     onTouchMove: function(event) {
-        //console.log(this.type() + " onTouchMove diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
+        console.log(this.type() + " onTouchMove diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
         if (this.canDelete()) {
             this._touchMoveDiff = this.touchDownDiffWithEvent(event)
             //console.log("onTouchMove:" + JSON.stringify(diff))
@@ -103011,7 +103012,7 @@ window.BMConnection = BMNode.extend().newSlots({
         let con = navigator.connection || navigator.mozConnection || navigator.webkitConnection
 
         if (!con) {
-            console.warn("Looks like this browser doesn't network connection info (e.g. navigator.connection).")
+            console.warn("Looks like this browser (IE or Safari>) doesn't network connection info (e.g. navigator.connection) -but this is only needed to show wifi etc connection state.")
         }
 
         if (con) {

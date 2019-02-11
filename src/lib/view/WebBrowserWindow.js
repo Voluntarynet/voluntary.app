@@ -107,10 +107,10 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     },
 
     agentIsSafari: function() {
-        var isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
+        var isSafari = navigator.vendor && navigator.vendor.indexOf("Apple") > -1 &&
                navigator.userAgent &&
-               navigator.userAgent.indexOf('CriOS') == -1 &&
-               navigator.userAgent.indexOf('FxiOS') == -1;
+               navigator.userAgent.indexOf("CriOS") == -1 &&
+               navigator.userAgent.indexOf("FxiOS") == -1;
         return isSafari
     },
 
@@ -129,9 +129,9 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
 
     isTouchDevice: function() {
         // via https://stackoverflow.com/questions/4817029/whats-the-best-way-to-detect-a-touch-screen-device-using-javascript
-        var result = "ontouchstart" in window        // works on most browsers 
-			|| navigator.maxTouchPoints;       // works on IE10/11 and Surface	
-        if (result === 0) { result = false; }		
+        var result = false 
+        if ("ontouchstart" in window) { result = true; }        // works on most browsers 
+        if (navigator.maxTouchPoints) { result = true; }       // works on IE10/11 and Surface	
         //console.log("WebBrowserWindow.isTouchDevice() = ", result)
         return result
     },

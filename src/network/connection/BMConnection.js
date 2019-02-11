@@ -25,7 +25,7 @@ window.BMConnection = BMNode.extend().newSlots({
         let con = navigator.connection || navigator.mozConnection || navigator.webkitConnection
 
         if (!con) {
-            console.warn("Looks like this browser doesn't network connection info (e.g. navigator.connection).")
+            console.warn("Looks like this browser (IE or Safari>) doesn't network connection info (e.g. navigator.connection) -but this is only needed to show wifi etc connection state.")
         }
 
         if (con) {

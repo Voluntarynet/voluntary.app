@@ -16,6 +16,7 @@ window.KeyboardListener = EventSetListener.extend().newSlots({
         this.addEventNameAndMethodName("keydown", "onKeyDown");
         //this.addEventNameAndMethodName("keypress", "onKeyPress");
         //this.addEventNameAndMethodName("change", "onChange");
+        //this.addEventNameAndMethodName("select", "onSelect");
         
         return this
     },

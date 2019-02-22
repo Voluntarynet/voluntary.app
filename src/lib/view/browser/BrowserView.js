@@ -66,7 +66,7 @@ window.BrowserView = NodeView.extend().newSlots({
 
         this.setupDefaultStyles()
 
-        this.setIsRegisterForWindowResize(true)
+        this.setIsRegisteredForDocumentResize(true)
 
         var dh = DivView.clone().setDivClassName("BrowserDefaultHeader NodeView DivView")
         this.setDefaultHeader(dh)
@@ -104,8 +104,8 @@ window.BrowserView = NodeView.extend().newSlots({
 
     // --- resizing ---------------------------------
 
-    onWindowResize: function (event) {
-        //console.log(this.type() + " onWindowResize")
+    onDocumentResize: function (event) {
+        //console.log(this.type() + " onDocumentResize")
         this.fitColumns()
         if (this._selectedColumnGroup) {
             this.selectColumn(this._selectedColumnGroup.column())

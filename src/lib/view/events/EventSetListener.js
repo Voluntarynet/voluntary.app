@@ -11,7 +11,7 @@
 
 window.EventSetListener = ideal.Proto.extend().newSlots({
     type: "EventSetListener",
-    view: null,
+    element: null,
     delegate: null,
     isListening: null,
     eventsDict: null, // should only write from within class & subclasses
@@ -20,6 +20,16 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
     init: function () {
         ideal.Proto.init.apply(this)
         this.setEventsDict({})
+        return this
+    },
+
+    view: function() {
+        return this.element()._divView
+    },
+
+    setElement: function(e) {
+        assert(e)
+        this._element = e
         return this
     },
 
@@ -63,22 +73,23 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
             return this
         }
 
-        assert(this.view())
-        let element = this.view().element()
+        let element = this.element()
         assert(element)
 
 
         this.forEachEventDict((eventName, dict) => {
             dict.handlerFunc = (event) => { 
-                let method = this.delegate()[dict.methodName]
+                let delegate = this.delegate()
+                let method = delegate[dict.methodName]
                 if (method) {
-                    //console.log("sending event: " + this.delegate().type() + "." + dict.methodName, "(" + event.type + ")" )
-                    return method.apply(this.view(), [event]); 
+                    //console.log("sending: " + delegate.type() + "." + dict.methodName, "(" + event.type + ")" )
+                    return method.apply(delegate, [event]); 
                 }
                 return true
             }
             dict.options = this.options()
-            //console.log(this.type() + " listening to ", eventName, " on element ", element)
+            //console.log(this.view().type() + " listening to " + eventName + " on element ", element)
+            //console.log(element.class + " element listening to " + eventName + " on element ", element)
             element.addEventListener(eventName, dict.handlerFunc, dict.options);
         })
 
@@ -90,8 +101,7 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
             return this
         }
 
-        assert(this.view())
-        let element = this.view().element()
+        let element = this.element()
         assert(element)
 
         this.forEachEventDict((eventName, dict) => {
@@ -102,3 +112,41 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
     },   
 
 })
+
+/*
+
+    // globally track whether we are inside an event 
+
+    setIsHandlingEvent: function() {
+        DivView._isHandlingEvent = true
+        return this
+    },
+	
+    isHandlingEvent: function() {
+        return DivView._isHandlingEvent
+    },
+
+    handleEventFunction: function(event, eventFunc) {
+        //  a try gaurd to make sure isHandlingEvent has correct value
+        //  isHandlingEvent is used to determine if view should inform node of changes
+        //  - it should only while handling an event
+		
+        let error = null
+		
+        this.setIsHandlingEvent(true)
+		
+        try {
+            eventFunc(event)
+        } catch (e) {
+            //console.log(e)
+            StackTrace.shared().showError(e)
+            //error = e
+        }
+		
+        this.setIsHandlingEvent(false)
+		
+        if (error) {
+            throw error
+        }
+    },
+*/

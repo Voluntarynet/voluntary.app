@@ -5,13 +5,18 @@ window.DocumentBody = DivView.extend().newSlots({
 }).setSlots({
     init: function () {
         DivView.init.apply(this)
-        this.setIsRegisterForWindowResize(true)
+
         window.SyncScheduler.shared().scheduleTargetAndMethod(this, "autoAdjustZoomForMobile")
 
         // using event intercept phase to grab all events and record them
         // in Mouse.shared() and Keyboard.shared() objects
         this.setIsRegisteredForKeyboard(true, true)
         this.setIsRegisteredForMouse(true, true)
+
+        setTimeout(() => {
+            this.setIsRegisteredForDocumentResize(true)
+        })
+        
         return this
     },
 
@@ -29,7 +34,7 @@ window.DocumentBody = DivView.extend().newSlots({
         return document.body
     },
     
-    onWindowResize: function() {
+    onDocumentResize: function() {
 	     window.SyncScheduler.shared().scheduleTargetAndMethod(this, "autoAdjustZoomForMobile")
         //this.autoAdjustZoomForMobile()
     },

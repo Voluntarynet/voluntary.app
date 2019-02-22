@@ -1502,9 +1502,27 @@ window.DivView = ideal.Proto.extend().newSlots({
         if (!dict[className]) {
             assert(className in window)
             var proto = window[className]
-            dict[className] = proto.clone().setView(this).setDelegate(this)
+            dict[className] = proto.clone().setElement(this.element()).setDelegate(this)
         } 
         return dict[className]
+    },
+
+    clipboardListener: function() {
+        return this.listenerNamed("ClipboardListener")
+    },
+
+    documentListener: function() {
+        let listener = this.listenerNamed("DocumentListener")
+        listener.setElement(window)
+        return listener
+    },
+
+    dragListener: function() {
+        return this.listenerNamed("DragListener")
+    },
+
+    focusListener: function() {
+        return this.listenerNamed("FocusListener")
     },
 
     mouseListener: function() {
@@ -1557,25 +1575,33 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 	
     // --- window resize events ---
-	
-    setIsRegisterForWindowResize: function(aBool) {        
+    
+    isRegisteredForDocumentResize: function() {
+        return this.documentListener().isListening()
+    },
+
+    setIsRegisteredForDocumentResize: function(aBool) {   
+        this.documentListener().setIsListening(aBool)
+
+        /*
         if (aBool) {
             if (this._isRegisteredForWindowResize == false) {
                 this._isRegisteredForWindowResize = true
-            	window.addEventListener("resize", this.eventFuncForMethodName("onWindowResize"), false);
+            	window.addEventListener("resize", this.eventFuncForMethodName("onDocumentResize"), false);
             }
         } else {
             if (this._isRegisteredForWindowResize == true) {
                 this._isRegisteredForWindowResize = false
-	            window.removeEventListener("resize", this.eventFuncForMethodName("onWindowResize"));
+	            window.removeEventListener("resize", this.eventFuncForMethodName("onDocumentResize"));
             }
         }
-        
+        */
+
         return this
     },
     
-    onWindowResize: function(event) {
-        //console.log("onWindowResize")
+    onDocumentResize: function(event) {
+        //console.log("onDocumentResize")
         //let r = this.boundingClientRect()
         //console.log("onResize ")
         //console.log("onResize " + r.width + " x " + r.right)

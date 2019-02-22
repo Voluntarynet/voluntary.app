@@ -4,8 +4,11 @@ JSImporter.pushRelativePaths([
     "_css.css",
     "css_rules/_imports.js",
     "div_attributes/_imports.js",
-    "events/_imports.js",
 
+    "Point.js",
+    "events/_imports.js",
+    "gestures/_imports.js",
+    
     "DivView.js",
     "CenteredDivView.js",
     "DivStyledView.js",

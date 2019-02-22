@@ -33,8 +33,8 @@ window.AtomPaneView = DivView.extend().newSlots({
         v.setBackgroundColor("#aaa")
         v.setPosition("absolute")
         v.setOpacity(0.2)
-        v.setLeft(this.mouseDownPos()._x - 4)
-        v.setTop(this.mouseDownPos()._y - 4)
+        v.setLeft(this.mouseDownPos().x() - 4)
+        v.setTop(this.mouseDownPos().y() - 4)
         return v
     },
 
@@ -79,8 +79,8 @@ window.AtomPaneView = DivView.extend().newSlots({
 
         let mp = Mouse.shared().downPos()
         let sv = this.startView()
-        sv.setLeft(mp._x - 4)
-        sv.setTop(mp._y - 4)
+        sv.setLeft(mp.x() - 4)
+        sv.setTop(mp.y() - 4)
 
         this.addSubview(sv)
         return true
@@ -103,22 +103,22 @@ window.AtomPaneView = DivView.extend().newSlots({
                 sv.setWidth("100%")
                 sv.setHeight(null)
                 sv.setLeft(0)
-                sv.setTop(downPos._y)
+                sv.setTop(downPos.y())
             } else if (dir == "y") {
                 //console.log("dir y")
                 sv.setMinAndMaxWidth(1)
                 sv.setMinAndMaxHeight(null)
                 sv.setWidth("100%")
                 sv.setHeight("100%")
-                sv.setLeft(downPos._x)
+                sv.setLeft(downPos.x)
                 sv.setTop(0)
             } else {
                 sv.setMinAndMaxWidth(8)
                 sv.setMinAndMaxHeight(8)
                 sv.setWidth(null)
                 sv.setHeight(null)
-                sv.setLeft(downPos._x)
-                sv.setTop(downPos._y)
+                sv.setLeft(downPos.x())
+                sv.setTop(downPos.y())
             }
             //console.log("is moving ", event.clientX + "," + event.clientY)
         }
@@ -129,8 +129,8 @@ window.AtomPaneView = DivView.extend().newSlots({
         let dv = Mouse.shared().dragVector()
         //console.log("dv = ", dv)
         if (this.mouseDownPos()) {
-            let dx = Math.abs(dv._x)
-            let dy = Math.abs(dv._y)
+            let dx = Math.abs(dv.x())
+            let dy = Math.abs(dv.y())
             let r = Math.sqrt(dx*dx + dy*dy)
             let minR = 50
             if (r > minR) {
@@ -162,9 +162,9 @@ window.AtomPaneView = DivView.extend().newSlots({
 
             if (dir) {
                 if (dir == "x") {
-                    this.addAtomAtY(downPos._y)
+                    this.addAtomAtY(downPos.y())
                 } else if (dir == "y") {
-                    this.addAtomAtX(downPos._x)
+                    this.addAtomAtX(downPos.x())
                 }
             }
             

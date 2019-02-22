@@ -62,14 +62,17 @@ window.DivView = ideal.Proto.extend().newSlots({
     acceptsFirstResponder: false,
 
     tapHoldPeriod: null,
-}).setSlots({
 
-    
+    gestureRecognizers: null,
+    eventListenersDict: null,
+}).setSlots({
     init: function () {
         this._subviews = []
         this.setupElement()
         this.setIsRegisteredForDrop(false)
-        this.setTouchAction("none") // is this needed for touch to get touch events?
+        this.setEventListenersDict({})
+        //this.setTouchAction("none") // is this needed for touch to get touch events?
+        // this.mouseListener().start()
         return this
     },
 
@@ -1491,7 +1494,33 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     // --- events --------------------------------------------------------------------
-    
+
+    // --- event listeners ---
+
+    listenerNamed: function(className) {
+        let dict = this.eventListenersDict()
+        if (!dict[className]) {
+            assert(className in window)
+            var proto = window[className]
+            dict[className] = proto.clone().setView(this).setDelegate(this)
+        } 
+        return dict[className]
+    },
+
+    mouseListener: function() {
+        return this.listenerNamed("MouseListener")
+    },
+
+    keyboardListener: function() {
+        return this.listenerNamed("KeyboardListener")
+    },
+
+    touchListener: function() {
+        return this.listenerNamed("TouchListener")
+    },
+
+    // ---
+
     // globally track whether we are inside an event 
 
     setIsHandlingEvent: function() {
@@ -1529,7 +1558,6 @@ window.DivView = ideal.Proto.extend().newSlots({
 	
     // --- window resize events ---
 	
-	
     setIsRegisterForWindowResize: function(aBool) {        
         if (aBool) {
             if (this._isRegisteredForWindowResize == false) {
@@ -1558,30 +1586,19 @@ window.DivView = ideal.Proto.extend().newSlots({
 	
     // --- onClick event, target & action ---
     
+    isRegisteredForClicks: function() {
+        return this.mouseListener().isListening()
+    },
+
     setIsRegisteredForClicks: function (aBool) {
-        let e = this.element()
+        this.mouseListener().setIsListening(aBool)
+
         if (aBool) {
-            if (this._isRegisteredForClicks == false) {
-                this._isRegisteredForClicks = true
-
-	            this.element().onclick = (event) =>{ 
-                    this.handleEventFunction(event, (event) => { this.onClick(event) })
-                }
-
-                this.element().ondblclick = (event) => { 
-                    this.handleEventFunction(event, (event) => { this.onDoubleClick(event) })
-                }
-
-                this.makeCursorPointer()
-            }
+            this.makeCursorPointer()
         } else {
-            if (this._isRegisteredForClicks == true) {
-                this._isRegisteredForClicks = false
-	            this.element().onclick = null
-	            this.element().ondbclick = null
-                this.makeCursorDefault()
-            }
+            this.makeCursorDefault()
         }
+
         return this
     },
     
@@ -1823,53 +1840,26 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this
     },
 
-    touchstartListenerFunc: function () {
-        if (!this._touchstartListenerFunc) {
-            this._touchstartListenerFunc = (e) => { this.onTouchStart(e) }
-        }
-        return this._touchstartListenerFunc
-    },
-
-    touchmoveListenerFunc: function () {
-        if (!this._touchmoveListenerFunc) {
-            this._touchmoveListenerFunc = (e) => { this.onTouchMove(e) }
-        }
-        return this._touchmoveListenerFunc
-    },
-
-    touchcancelListenerFunc: function () {
-        if (!this._touchcancelListenerFunc) {
-            this._touchcancelListenerFunc = (e) => { this.onTouchCancel(e) }
-        }
-        return this._touchcancelListenerFunc
-    },
-
-    touchendListenerFunc: function () {
-        if (!this._touchendListenerFunc) {
-            this._touchendListenerFunc = (e) => { this.onTouchEnd(e) }
-        }
-        return this._touchendListenerFunc
-    },
     
     setIsRegisteredForTouch: function(aBool) {
         if (aBool) {
-            if (this._isRegisteredForPaste == false) {
-                this._isRegisteredForPaste = true
+            if (this._isRegisteredForTouch == false) {
+                this._isRegisteredForTouch = true
                 //let b = Modernizr.passiveeventlisteners ? {passive: true} : false
                 let b = { passive: true}
-	        	this.element().addEventListener("touchstart",  this.touchstartListenerFunc(), b);
-	        	this.element().addEventListener("touchmove",   this.touchmoveListenerFunc(), b);
-	        	this.element().addEventListener("touchcancel", this.touchcancelListenerFunc(), b);
-	        	this.element().addEventListener("touchend",    this.touchendListenerFunc(), b);
+	        	this.element().addEventListener("touchstart",  this.eventFuncForMethodName("onTouchStart"), b);
+	        	this.element().addEventListener("touchmove",   this.eventFuncForMethodName("onTouchMove"), b);
+	        	this.element().addEventListener("touchcancel", this.eventFuncForMethodName("onTouchCancel"), b);
+	        	this.element().addEventListener("touchend",    this.eventFuncForMethodName("onTouchEnd"), b);
             }
             this.setTouchAction("none") // testing
         } else {
-            if (this._isRegisteredForPaste == true) {
-                this._isRegisteredForPaste = false
-	        	this.element().removeEventListener("touchstart",  this.touchstartListenerFunc());
-	        	this.element().removeEventListener("touchmove",   this.touchmoveListenerFunc());
-	        	this.element().removeEventListener("touchcancel", this.touchcancelListenerFunc());
-	        	this.element().removeEventListener("touchend",    this.touchendListenerFunc());
+            if (this._isRegisteredForTouch == true) {
+                this._isRegisteredForTouch = false
+	        	this.element().removeEventListener("touchstart",  this.eventFuncForMethodName("onTouchStart"));
+	        	this.element().removeEventListener("touchmove",   this.eventFuncForMethodName("onTouchMove"));
+	        	this.element().removeEventListener("touchcancel", this.eventFuncForMethodName("onTouchCancel"));
+	        	this.element().removeEventListener("touchend",    this.eventFuncForMethodName("onTouchEnd"));
             }
         }
         return this
@@ -1917,6 +1907,27 @@ window.DivView = ideal.Proto.extend().newSlots({
         }
     },	
 
+    /// GestureRecognizers
+
+
+    addGestureRecognizer: function(gestureRecognizer) {
+        if (!this._gestureRecognizers) {
+            this._gestureRecognizers = []
+        }
+        this._gestureRecognizers.append(gestureRecognizer)
+        gestureRecognizer.setTarget(this)
+        return this
+    },
+
+    removeGestureRecognizer: function(gestureRecognizer) {
+        if (this._gestureRecognizers) {
+            gestureRecognizer.setTarget(null)
+            this._gestureRecognizers.remove(gestureRecognizer)
+        }
+        return this
+    },
+
+
     // mouse events
     
     eventFuncForMethodName: function (methodName) {
@@ -1927,6 +1938,14 @@ window.DivView = ideal.Proto.extend().newSlots({
         if (!this._listenerFuncs[methodName]) {
             let f = (event) => { 
                 let result = this[methodName].apply(this, [event]) 
+
+                if (this.gestureRecognizers()) {
+                    this.gestureRecognizers().forEach((gestureRecognizer) => {
+                        var result = gestureRecognizer[methodName].apply(gestureRecognizer, [event])
+                        // do we let the result effect event propogation on gestures?
+                    })
+                }
+
                 if (result == false) {
                     event.stopPropagation()
                 }
@@ -1995,25 +2014,28 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     //
 
-
-
     onMouseDown: function (event) {
+        /*
         if (this.tapHoldPeriod()) {
-            this.startTapHoldTimer()
+            this.startTapHoldTimer(event)
         }
+        */
     },
 
     onMouseUp: function (event) {
+        /*
         if (this.tapHoldPeriod()) {
             this.stopTapHoldTimer()
         }
+        */
     },
 
     // tap hold event
     
-    startTapHoldTimer: function() {
+    /*
+    startTapHoldTimer: function(event) {
         //console.log("startTapHoldTimer")
-        this._tapHoldTimeout = setTimeout((e) => { this.onTapHold(e) }, this.tapHoldPeriod())
+        this._tapHoldTimeout = setTimeout(() => { this.onTapHold(event) }, this.tapHoldPeriod())
         return this
     },
 
@@ -2028,6 +2050,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     onTapHold: function(event) {
     },
+    */
         
     // --- keyboard events ---
     
@@ -2629,33 +2652,52 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this.viewPosForWindowPos(Mouse.shared().downPos())
     },
 
+    // view position helpers ----
+
+    setRelativePos: function(p) {
+        // why not a 2d transform?
+        this.setLeft(p.x())
+        this.setTop(p.y())
+        return this
+    },
+
+
+    winPosForEvent: function(event) {
+        let p = Point.clone().set(event.clientX, event.clientY)
+    },
+
+    parentPosForEvent: function(event) {
+        let p = this.winPosForEvent(event)
+        let pv = this.parentView()
+        if (pv) {
+            return p.subtract(pv.windowPos())
+        }
+        return p
+    },
+
+    viewPosForEvent: function(event) {
+        return this.winPosForEvent(event).subtract(this.windowPos())
+    },
+
+    windowPos: function() {
+        let b = this.boundingClientRect()
+        let p = Point.clone().set(b.x, b.y)
+        return p
+    },
+
+    relativePos: function() {
+        let pv = this.parentView()
+        if (pv) {
+            return pv.windowPos().subtract(this.windowPos())
+        }
+        return this.windowPos()
+    },
+
     viewPosForWindowPos: function(pos) {
-        let b = this.boundingClientRect()
-        return {
-            _x: pos._x - b.left,
-            _y: pos._y - b.top
-        }
+        return this.windowPos().subtract(pos)
     },
 
-    viewPositionForEvent: function(event) {
-        let b = this.boundingClientRect()
-        return {
-            _x: event.clientX - b.left,
-            _y: event.clientY - b.top
-        }
-    },
-
-    /*
-    windowToViewX: function(x) {
-        let bounds = this.boundingClientRect()
-        return x - bounds.left
-    },
-
-    windowToViewY: function(y) {
-        let bounds = this.boundingClientRect()
-        return y - bounds.top
-    },
-    */
+    // --------------
 
     verticallyAlignAbsoluteNow: function() {
         let pv = this.parentView()

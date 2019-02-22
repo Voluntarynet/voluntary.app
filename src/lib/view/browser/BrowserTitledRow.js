@@ -10,9 +10,17 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
 }).setSlots({
     init: function () {
         BrowserRow.init.apply(this)
+
+        /*
         this.setTitleView(this.addSubview(BrowserRowTitle.clone()))
         this.setSubtitleView(this.addSubview(BrowserRowSubtitle.clone()))
         this.setNoteView(this.addSubview(BrowserRowNote.clone()))
+        */
+
+        this.setTitleView(this.contentView().addSubview(BrowserRowTitle.clone()))
+        this.setSubtitleView(this.contentView().addSubview(BrowserRowSubtitle.clone()))
+        this.setNoteView(this.contentView().addSubview(BrowserRowNote.clone()))
+
         this.updateSubviews()
         this.setIsSelectable(true)
         return this
@@ -40,7 +48,6 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
             //tv.makeBackgroundContain()
             tv.setBackgroundSizeWH(50, 50)
 
-            
             this.setThumbnailView(tv)
             this.addSubview(tv)
             

@@ -14,6 +14,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     selectedFlashColor: "#ccc",
     shouldShowFlash: false,
     shouldCenterCloseButton: true, 
+    contentView: null,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
@@ -22,6 +23,8 @@ window.BrowserRow = NodeView.extend().newSlots({
         this.turnOffUserSelect()
         this.setAcceptsFirstResponder(false)
         
+        this.setupRowContentView()
+
         //console.log("WebBrowserWindow.shared().isTouchDevice() = ", WebBrowserWindow.shared().isTouchDevice())
         if (WebBrowserWindow.shared().isTouchDevice()) {
             this.setIsRegisteredForTouch(true)
@@ -31,8 +34,31 @@ window.BrowserRow = NodeView.extend().newSlots({
         }
 
         this.setTransition(this.transitionStyle())
-        this.setTapHoldPeriod(500)
+        this.setCanReorder(true)
+
         //this.animateOpen()
+
+        this.addGestureRecognizer(LongPressGestureRecognizer.clone())
+        this.addGestureRecognizer(SlideGestureRecognizer.clone())
+        return this
+    },
+
+    setCanReorder: function(aBool) {
+        if (aBool) {
+            this.setTapHoldPeriod(500)
+        } else {
+            this.setTapHoldPeriod(null)
+        }
+        return null
+    },
+
+    setupRowContentView: function() {
+        var cv = DivView.clone().setDivClassName("BrowserRowContentView")
+        cv.setWidthPercentage(100).setHeightPercentage(100) 
+        //cv.setBackgroundColor("blue").setZIndex(100)
+        cv.setPosition("absolute")
+        this.setContentView(cv)
+        this.addSubview(cv)
         return this
     },
     
@@ -177,7 +203,7 @@ window.BrowserRow = NodeView.extend().newSlots({
             let cb = DivView.clone().setDivClassName("BrowserRowCloseButton")
             //this.setCloseButtonView(NodeView.clone().setDivClassName("BrowserRowCloseButton"))
             this.setCloseButtonView(cb)
-            this.addSubview(cb) 
+            this.contentView().addSubview(cb) 
             cb.setBackgroundImageUrlPath(this.pathForIconName("close-white"))
             cb.makeBackgroundContain()
             cb.makeBackgroundCentered()
@@ -194,7 +220,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     
     removeCloseButton: function() {
         if (this.closeButtonView() != null) {
-            this.removeSubview(this.closeButtonView()) 
+            this.contentView().removeSubview(this.closeButtonView()) 
             this.setCloseButtonView(null)
         }
     },
@@ -372,8 +398,6 @@ window.BrowserRow = NodeView.extend().newSlots({
         this.removeDeleteXView()
     },
 
-
-
     /*
     showTouchDeleteReady: function() {
 
@@ -416,12 +440,39 @@ window.BrowserRow = NodeView.extend().newSlots({
     onMouseUp: function (event) {
         NodeView.onMouseUp.apply(this, [event])
         this.slideBack()
+        this._isDraggingView = false
     },
 
     // tap hold
     
-    onTapHold: function(event) {
+    onTapHoldGesture: function(gestureRecognizer) {
+        let event = gestureRecognizer.currentEvent()
         this.setBackgroundColor("red")
+        
+        this._isDraggingView = true
+        /*
+        this._initDragParentPos = this.parentPosForEvent(event)
+        this._initDragRelativePos = this.relativePos()
+        console.log("windowPos()         = ", this.windowPos().asString())
+        console.log("relativePos()         = ", this.relativePos().asString())
+        console.log("winPosForEvent      = ", this.winPosForEvent(event).asString())
+        console.log("viewPosForEvent     = ", this.viewPosForEvent(event).asString())
+        console.log("parentPosForEvent   = ", this.parentPosForEvent(event).asString())
+        //console.log("_initDragMousePos  = ", this._initDragMousePos.asString())
+        //console.log("_initDragViewPos   = ", this._initDragViewPos.asString())
+        */
+    },
+
+    onMouseMove: function(event) {
+        /*
+        if (this._isDraggingView) {
+            var mdiff = this.parentPosForEvent(event).subtract(this._initDragParentPos)
+            console.log("mdiff         = ", mdiff.asString())
+            var np = this._initDragRelativePos.add(mdiff)
+            this.setPosition("absolute")
+            this.setRelativePos(np)
+        }
+        */
     },
     
     // --- selecting ---

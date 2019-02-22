@@ -6,63 +6,75 @@
     Global shared instance that tracks current mouse state in window coordinates.
     View has convenience methods to get this state into view coords.
 
+    to decide: Should the document register for mouse events and set Mouse, 
+    or should the Mouse do this? What about gestures?
 */
 
 
 window.Mouse = ideal.Proto.extend().newSlots({
     type: "Mouse",
     isDown: false,
-    downPos: null,
-    currentPos: null,
-    upPos: null,
+    downEvent: null,
+    currentEvent: null,
+    upEvent: null,
 }).setSlots({
     init: function () {
         ideal.Proto.init.apply(this)
         return this
     },
 
-    shared: function() {   
+    shared: function() { 
         return this.sharedInstanceForClass(Mouse)
     },
 
-    // --- events ---
+    // positions
+
+    downPos: function() {
+        return this.pointForEvent(this.downEvent())
+    },
+
+    currentPos: function() {
+        return this.pointForEvent(this.currentEvent())
+    },
+
+    upPos: function() {
+        return this.pointForEvent(this.upEvent())
+    },
+
+    // events
 
     onMouseDown: function(event) {
-        //console.log("Mouse onMouseDown")
-        let mp = MousePosition.newForEvent(event)
+        this.setDownEvent(event)
+        this.setCurrentEvent(event)
         this.setIsDown(true);
-        this.setDownPos(mp)
         return true
     },
 
     onMouseMove: function (event) {
-        let mp = MousePosition.newForEvent(event)
-        this.setCurrentPos(mp)
+        this.setCurrentEvent(event)
         return true
     },
 
     onMouseUp: function(event) {
-        let mp = MousePosition.newForEvent(event)
+        this.setCurrentEvent(event)
+        this.setUpEvent(event)
         this.setIsDown(false);
-        this.setUpPos(mp)
         return true
     },  
 
     // -- helpers ---
 
-    dragVector: function(event) {
-        let v = { _x: 0, _y: 0 }
-        let dp = this.downPos()
-
-        if (dp) {
-            let cp = this.currentPos()
-            if (!this.isDown()) {
-                cp = this.upPos()
-            }
-            v._x = (cp._x - dp._x);
-            v._y = (cp._y - dp._y);
+    pointForEvent: function(p, event) {
+        if (event) {
+            return Point.clone().set(event.clientX, event.clientY).setTimeToNow()
         }
+        return Point.clone()
+    },
 
-        return v
+    dragVector: function(event) {
+        if (this.isDown()) {
+            return this.currentPos().subtract(this.downPos())
+        }
+        return Point.clone()
     },
 })

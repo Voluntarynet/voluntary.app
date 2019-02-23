@@ -13,9 +13,10 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
     type: "EventSetListener",
     element: null,
     delegate: null,
-    isListening: null,
+    isListening: false,
     eventsDict: null, // should only write from within class & subclasses
     options: null,
+    isDebugging: false,
 }).setSlots({
     init: function () {
         ideal.Proto.init.apply(this)
@@ -72,9 +73,11 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
         if (this.isListening()) {
             return this
         }
+        this._isListening = true;
 
         let element = this.element()
-        assert(element)
+        assert(typeof(element) != "null")
+        assert(typeof(element) != "undefined")
 
 
         this.forEachEventDict((eventName, dict) => {
@@ -82,14 +85,40 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
                 let delegate = this.delegate()
                 let method = delegate[dict.methodName]
                 if (method) {
-                    //console.log("sending: " + delegate.type() + "." + dict.methodName, "(" + event.type + ")" )
-                    return method.apply(delegate, [event]); 
+
+                    /*
+                    if (this.isDebugging()) {
+                        console.log("sending: " + delegate.type() + "." + dict.methodName, "(" + event.type + ")" )
+                    }
+                    */
+
+                    let result = method.apply(delegate, [event]); 
+                    if (this.isDebugging()) {
+                        console.log("sent: " + delegate.type() + "." + dict.methodName, "(" + event.type + ") and returned ", result)
+                        //console.log("    returning type: " + typeof(result) + " value: ", result)
+                    }
+
+                    return result
+                } else {
+                    if (this.isDebugging()) {
+                        console.log("MISSING method: " + delegate.type() + "." + dict.methodName, "(" + event.type + ")" )
+                    }
                 }
+
                 return true
             }
             dict.options = this.options()
-            //console.log(this.view().type() + " listening to " + eventName + " on element ", element)
-            //console.log(element.class + " element listening to " + eventName + " on element ", element)
+
+            if (this.isDebugging()) {
+                //console.log(this.view().type() + " listening to " + eventName + " on element ", element)
+                //console.log(element.class + " element listening to " + eventName + " on element ", element)
+                let elementName = element.getAttribute("id")
+                if (!elementName) {
+                    elementName = element.getAttribute("class")
+                }
+                console.log("'" + elementName +  "' element listening to " + eventName) // + " on element ", element)
+            }
+
             element.addEventListener(eventName, dict.handlerFunc, dict.options);
         })
 
@@ -100,6 +129,8 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
         if (!this.isListening()) {
             return this
         }
+
+        this._isListening = false;
 
         let element = this.element()
         assert(element)

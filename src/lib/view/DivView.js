@@ -69,8 +69,8 @@ window.DivView = ideal.Proto.extend().newSlots({
     init: function () {
         this._subviews = []
         this.setupElement()
-        this.setIsRegisteredForDrop(false)
         this.setEventListenersDict({})
+        this.setIsRegisteredForDrop(false)
         //this.setTouchAction("none") // is this needed for touch to get touch events?
         // this.mouseListener().start()
         return this
@@ -1521,6 +1521,10 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this.listenerNamed("DragListener")
     },
 
+    dropListener: function() {
+        return this.listenerNamed("DropListener")
+    },
+
     focusListener: function() {
         return this.listenerNamed("FocusListener")
     },
@@ -1582,31 +1586,10 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     setIsRegisteredForDocumentResize: function(aBool) {   
         this.documentListener().setIsListening(aBool)
-
-        /*
-        if (aBool) {
-            if (this._isRegisteredForWindowResize == false) {
-                this._isRegisteredForWindowResize = true
-            	window.addEventListener("resize", this.eventFuncForMethodName("onDocumentResize"), false);
-            }
-        } else {
-            if (this._isRegisteredForWindowResize == true) {
-                this._isRegisteredForWindowResize = false
-	            window.removeEventListener("resize", this.eventFuncForMethodName("onDocumentResize"));
-            }
-        }
-        */
-
         return this
     },
     
-    onDocumentResize: function(event) {
-        //console.log("onDocumentResize")
-        //let r = this.boundingClientRect()
-        //console.log("onResize ")
-        //console.log("onResize " + r.width + " x " + r.right)
-        //console.log("onResize " + window.innerWidth + " x " + window.innerHeight)
-        //console.log("onResize " + document.body.clientHeight + " x " + document.body.clientHeight)        
+    onDocumentResize: function(event) {   
         return true
     },
 	
@@ -1672,53 +1655,28 @@ window.DivView = ideal.Proto.extend().newSlots({
         return true
     },
     
-    // drag & drop
+    // -- dropping ---
     
+    isRegisteredForDrop: function() {
+        return this.dropListener().isListening()
+    },
+
     setIsRegisteredForDrop: function (aBool) {
-        if (aBool) {
-            if (this._isRegisteredForDrop == false) {
-                this._isRegisteredForDrop = true
-	            this.element().ondragstart  = (event) => { return this.onDragStart(event) }
-	            this.element().ondragover  =  (event) => { return this.onDragOver(event) }
-	            this.element().ondragenter  = (event) => { return this.onDragEnter(event) }
-	            this.element().ondragleave =  (event) => { return this.onDragLeave(event) }
-	            this.element().ondragend   =  (event) => { return this.onDragEnd(event) }
-	            this.element().ondrop      =  (event) => { return this.onDrop(event) }
-            }
-        } else {
-            if (this._isRegisteredForDrop == true) {
-                this._isRegisteredForDrop = false
-				
-                /*
-				let preventFunc = (event) => { 
-					if(event.preventDefault) { 
-						event.preventDefault(); 
-					}
-					event.returnValue = false; 
-					return false 
-				}
-				*/
-				
-	            this.element().ondragstart = null
-	            this.element().ondragover  = null
-	            this.element().ondragenter = null
-	            this.element().ondragleave = null
-	            this.element().ondragend   = null
-	            this.element().ondrop      = null
-            }
-        }
+        this.dropListener().setIsListening(aBool)
         return this
-    },   
-    
+    },
+
     acceptsDrop: function() {
         return true
     },    
         
-    onDragStart: function (event) {
-        return true;
-    },
+    // ---------------------
 	
-    onDragEnter: function (event) { // needed?
+    onDragEnter: function (event) { 
+        // triggered on drop target
+        console.log("onDragEnter acceptsDrop: ", this.acceptsDrop());
+        //event.preventDefault() // needed?
+
         if (this.acceptsDrop()) {
             this.onDragOverAccept(event)
             event.preventDefault()
@@ -1729,7 +1687,10 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 	
     onDragOver: function (event) {
-        //console.log("onDragOver ");
+        // triggered on drop target
+        console.log("onDragOver acceptsDrop: ", this.acceptsDrop(), " event:", event);
+        //event.preventDefault() // needed?
+        //event.dataTransfer.dropEffect = 'copy';
 
         if (this.acceptsDrop()) {
             this.onDragOverAccept(event)
@@ -1746,6 +1707,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
     
     onDragLeave: function (event) {
+        // triggered on drop target
         //console.log("onDragLeave ", this.acceptsDrop());
         this.dragUnhighlight()
         return this.acceptsDrop();
@@ -1758,13 +1720,9 @@ window.DivView = ideal.Proto.extend().newSlots({
     dragUnhighlight: function() {
         
     },
-    
-    onDragEnd: function (event) {
-        this.dragUnhighlight();
-        //console.log("onDragEnd");
-    },
 
     onDrop: function (event) {
+        // triggered on drop target
         if (this.acceptsDrop()) {
             //let file = event.dataTransfer.files[0];
             //console.log('onDrop ' + file.path);
@@ -1809,6 +1767,28 @@ window.DivView = ideal.Proto.extend().newSlots({
         console.log("onDropFiles " + filePaths);
         //this.node().onDropFiles(filePaths)
     },
+
+    // dragging
+
+    isRegisteredForDrag: function() {
+        return this.dragListener().isListening()
+    },
+
+    setIsRegisteredForDrag: function (aBool) {
+        this.dragListener().setIsListening(aBool)
+        return this
+    },
+
+    onDragStart: function (event) {
+        // triggered in element being dragged
+        return true; 
+    },
+    
+    onDragEnd: function (event) {
+        // triggered in element being dragged
+        this.dragUnhighlight();
+        //console.log("onDragEnd");
+    },
     
     // --- editing - abstracted from content editable for use in non text views ---
     
@@ -1821,7 +1801,6 @@ window.DivView = ideal.Proto.extend().newSlots({
     isEditable: function() {
         return this.isContentEditable()
     },
-    
     
     // --- content editing ---
     
@@ -1851,7 +1830,11 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
     
     isContentEditable: function() {
-        return this.element().contentEditable
+        let result = this.element().contentEditable
+        if (result == "inherit" && this.parentView()) {
+            return this.parentView().isContentEditable()
+        }
+        return this
     },
 
     contentEditable: function() {

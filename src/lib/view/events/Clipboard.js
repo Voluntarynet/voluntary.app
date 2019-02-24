@@ -12,7 +12,6 @@ window.Clipboard = ideal.Proto.extend().newSlots({
     init: function () {
         ideal.Proto.init.apply(this)
 
-        
         return this
     },
 

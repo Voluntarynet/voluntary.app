@@ -15,7 +15,7 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
     delegate: null,
     isListening: false,
     eventsDict: null, // should only write from within class & subclasses
-    options: null,
+    useCapture: false,
     isDebugging: false,
 }).setSlots({
     init: function () {
@@ -34,13 +34,20 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
         return this
     },
 
+    setUseCapture: function(v) {
+        if (v === true) { } else { v = false; }
+        this._useCapture = v
+        //console.log("setUseCapture(" + v + ")")
+        return this
+    },
+
     // ---
 
     addEventNameAndMethodName: function(eventName, methodName) {
         this.eventsDict()[eventName] = { 
             methodName: methodName, 
             handlerFunc: null,
-            options: null,
+            useCapture: null,
         }
         return this
     },
@@ -98,6 +105,10 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
                         //console.log("    returning type: " + typeof(result) + " value: ", result)
                     }
 
+                    if (result == false) {
+                        event.stopPropagation()
+                    }
+
                     return result
                 } else {
                     if (this.isDebugging()) {
@@ -107,19 +118,14 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
 
                 return true
             }
-            dict.options = this.options()
+            dict.useCapture = this.useCapture()
 
             if (this.isDebugging()) {
-                //console.log(this.view().type() + " listening to " + eventName + " on element ", element)
-                //console.log(element.class + " element listening to " + eventName + " on element ", element)
-                let elementName = element.getAttribute("id")
-                if (!elementName) {
-                    elementName = element.getAttribute("class")
-                }
-                console.log("'" + elementName +  "' element listening to " + eventName) // + " on element ", element)
+
+                console.log("'" +  DomElement_description(element) +  ".addEventListener('" + eventName + "', handler, " +  dict.useCapture + ")") 
             }
 
-            element.addEventListener(eventName, dict.handlerFunc, dict.options);
+            element.addEventListener(eventName, dict.handlerFunc, dict.useCapture);
         })
 
         return this
@@ -136,7 +142,7 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
         assert(element)
 
         this.forEachEventDict((eventName, dict) => {
-            element.removeEventListener(eventName, dict.handlerFunc, dict.options);
+            element.removeEventListener(eventName, dict.handlerFunc, dict.useCapture);
         })
 
         return this

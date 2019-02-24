@@ -22,6 +22,20 @@ function DomElement_atInsertElement(el, index, child) {
     throw new Error("invalid dom child index")
 }
 
+function DomElement_description(element) {
+    let s = element.getAttribute("id")
+
+    if (!s) {
+        s = element.getAttribute("class")
+    }
+
+    if (!s) {
+        s = element.tagName
+    }
+
+    return s
+}
+
 
 window.DivView = ideal.Proto.extend().newSlots({
     type: "DivView",
@@ -71,7 +85,6 @@ window.DivView = ideal.Proto.extend().newSlots({
         this.setupElement()
         this.setEventListenersDict({})
         this.setIsRegisteredForDrop(false)
-        //this.setTouchAction("none") // is this needed for touch to get touch events?
         // this.mouseListener().start()
         return this
     },
@@ -1849,7 +1862,21 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this
     },
 
+    isRegisteredForTouch: function() {
+        return this.touchListener().isListening()
+    },
+
+    setIsRegisteredForTouch: function(aBool) {
+        this.touchListener().setIsListening(aBool)
+
+        if (aBool) {
+            this.setTouchAction("none") // testing
+        }
+
+        return this
+    },
     
+    /*
     setIsRegisteredForTouch: function(aBool) {
         if (aBool) {
             if (this._isRegisteredForTouch == false) {
@@ -1873,6 +1900,7 @@ window.DivView = ideal.Proto.extend().newSlots({
         }
         return this
     },
+    */
 
     touchDownDiffWithEvent: function(event) {
         assert(this._onTouchDownEventPosition) 
@@ -1918,7 +1946,6 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     /// GestureRecognizers
 
-
     addGestureRecognizer: function(gestureRecognizer) {
         if (!this._gestureRecognizers) {
             this._gestureRecognizers = []
@@ -1936,7 +1963,6 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this
     },
 
-
     // mouse events
     
     eventFuncForMethodName: function (methodName) {
@@ -1946,6 +1972,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 
         if (!this._listenerFuncs[methodName]) {
             let f = (event) => { 
+                console.log("sending: " + this.type() + "." + methodName, "(" + event.type + ")" )
                 let result = this[methodName].apply(this, [event]) 
 
                 if (this.gestureRecognizers()) {
@@ -1966,38 +1993,14 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this._listenerFuncs[methodName]
     },
 
-    setIsRegisteredForMouse: function (aBool, useCapture) {
-        if (!useCapture) { 
-            useCapture = false; 
-        }
+    isRegisteredForMouse: function() {
+        return this.mouseListener().isListening()
+    },
 
-        //console.log(this.type() + " setIsRegisteredForMouse(" + aBool + "," + useCapture + ")")
-
-        let e = this.element()
-
-        if (aBool) {
-            if (this._isRegisteredForMouse == false) {
-                e.addEventListener("mousedown", this.eventFuncForMethodName("onMouseDown"), useCapture);
-                e.addEventListener("mousemove", this.eventFuncForMethodName("onMouseMove"), useCapture);
-                e.addEventListener("mouseout", this.eventFuncForMethodName("onMouseOut"), useCapture);
-                e.addEventListener("mouseover", this.eventFuncForMethodName("onMouseOver"), useCapture);
-                e.addEventListener("mouseup", this.eventFuncForMethodName("onMouseUp"), useCapture);
-                e.addEventListener("mouseenter", this.eventFuncForMethodName("onMouseEnter"), useCapture);
-                e.addEventListener("mouseleave", this.eventFuncForMethodName("onMouseLeave"), useCapture);
-            }
-        } else {
-            e.removeEventListener("mousedown", this.eventFuncForMethodName("onMouseDown"), useCapture);
-            e.removeEventListener("mousemove", this.eventFuncForMethodName("onMouseMove"), useCapture);
-            e.removeEventListener("mouseout", this.eventFuncForMethodName("onMouseOut"), useCapture);
-            e.removeEventListener("mouseover", this.eventFuncForMethodName("onMouseOver"), useCapture);
-            e.removeEventListener("mouseup", this.eventFuncForMethodName("onMouseUp"), useCapture);
-            e.removeEventListener("mouseenter", this.eventFuncForMethodName("onMouseEnter"), useCapture);
-            e.removeEventListener("mouseleave", this.eventFuncForMethodName("onMouseLeave"), useCapture);
-        }
-        this._isRegisteredForMouse = aBool
-
+    setIsRegisteredForMouse: function(aBool, useCapture) {
+        this.mouseListener().setIsListening(aBool).setUseCapture(useCapture) //.setIsDebugging(true)
         return this
-    },    
+    },
     
     
     onMouseMove: function (event) {
@@ -2021,80 +2024,35 @@ window.DivView = ideal.Proto.extend().newSlots({
         return true
     },
 
-    //
-
     onMouseDown: function (event) {
-        /*
-        if (this.tapHoldPeriod()) {
-            this.startTapHoldTimer(event)
-        }
-        */
+        return true
     },
 
     onMouseUp: function (event) {
-        /*
-        if (this.tapHoldPeriod()) {
-            this.stopTapHoldTimer()
-        }
-        */
+        return true
     },
-
-    // tap hold event
-    
-    /*
-    startTapHoldTimer: function(event) {
-        //console.log("startTapHoldTimer")
-        this._tapHoldTimeout = setTimeout(() => { this.onTapHold(event) }, this.tapHoldPeriod())
-        return this
-    },
-
-    stopTapHoldTimer: function() {
-        //console.log("stopTapHoldTimer")
-        if (this._tapHoldTimeout) {
-            clearTimeout(this._tapHoldTimeout);
-            this._tapHoldTimeout = null
-        }
-        return this
-    },
-
-    onTapHold: function(event) {
-    },
-    */
         
     // --- keyboard events ---
-    
-    setIsRegisteredForKeyboard: function (aBool, useCapture) {
-        if (!useCapture) {
-            useCapture = false
-        }
+
+    isRegisteredForKeyboard: function() {
+        return this.keyboardListener().isListening()
+    },
+
+    setIsRegisteredForKeyboard: function(aBool, useCapture) {
+        this.keyboardListener().setIsListening(aBool).setUseCapture(useCapture).setIsDebugging(true)
 
         let e = this.element()
-
         if (aBool) {
-            if (this._isRegisteredForKeyboard == false) {
-                this._isRegisteredForKeyboard = true
-
-                e.addEventListener("keyup", this.eventFuncForMethodName("onKeyUp"), useCapture);
-                e.addEventListener("keydown", this.eventFuncForMethodName("onKeyDown"), useCapture);
-                //e.addEventListener("keypress", this.eventFuncForMethodName("onKeyPress"), useCapture);
-                
-	            DivView._tabCount ++
-	            e.tabIndex = DivView._tabCount
-                this.setCssAttribute("outline", "none")
-            }
+            DivView._tabCount ++
+            e.tabIndex = DivView._tabCount // need this in order for focus to work on BrowserColumn?
+            //this.setCssAttribute("outline", "none"); // needed?
         } else {
-            if (this._isRegisteredForKeyboard == true) {
-                this._isRegisteredForKeyboard = false
-
-                e.removeEventListener("keyup", this.eventFuncForMethodName("onKeyUp"), useCapture);
-                e.removeEventListener("keydown", this.eventFuncForMethodName("onKeyDown"), useCapture);
-                e.removeEventListener("keypress", this.eventFuncForMethodName("onKeyPress"), useCapture);
- 
-	            delete e.tabindex 
-            }
+	        delete e.tabindex 
         }
+
         return this
-    },    
+    },
+    
     
     specialKeyCodes: function () { 
         return {

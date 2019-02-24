@@ -19,8 +19,7 @@ window.DropListener = EventSetListener.extend().newSlots({
         this.addEventNameAndMethodName("drop",       "onDrop");
         this.addEventNameAndMethodName("dragleave", "onDragLeave"); 
 
-
-        this.setIsDebugging(true)
+        //this.setIsDebugging(true)
 
         return this
     },

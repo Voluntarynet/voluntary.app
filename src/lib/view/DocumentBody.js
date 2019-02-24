@@ -10,6 +10,7 @@ window.DocumentBody = DivView.extend().newSlots({
 
         // using event intercept phase to grab all events and record them
         // in Mouse.shared() and Keyboard.shared() objects
+        
         this.setIsRegisteredForKeyboard(true, true)
         this.setIsRegisteredForMouse(true, true)
 

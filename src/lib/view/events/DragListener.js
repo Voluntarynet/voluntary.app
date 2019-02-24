@@ -18,7 +18,7 @@ window.DragListener = EventSetListener.extend().newSlots({
         this.addEventNameAndMethodName("drag",    "onDrag");
         this.addEventNameAndMethodName("dragend",   "onDragEnd");
 
-        this.setIsDebugging(true)
+        //this.setIsDebugging(true)
 
         return this
     },
@@ -28,14 +28,4 @@ window.DragListener = EventSetListener.extend().newSlots({
         this.element().ondragstart = (e) => { console.log("--------- ondragstart -------------"); }
         return this
     },
-
 })
-
-/*
-this.element().ondragstart  = (event) => { return this.onDragStart(event) }
-this.element().ondragover  =  (event) => { return this.onDragOver(event) }
-this.element().ondragenter  = (event) => { return this.onDragEnter(event) }
-this.element().ondragleave =  (event) => { return this.onDragLeave(event) }
-this.element().ondragend   =  (event) => { return this.onDragEnd(event) }
-this.element().ondrop      =  (event) => { return this.onDrop(event) }
-*/

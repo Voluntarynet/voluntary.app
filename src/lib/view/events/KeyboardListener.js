@@ -18,6 +18,7 @@ window.KeyboardListener = EventSetListener.extend().newSlots({
         //this.addEventNameAndMethodName("change", "onChange");
         //this.addEventNameAndMethodName("select", "onSelect");
         
+        this.setIsDebugging(true)
         return this
     },
 

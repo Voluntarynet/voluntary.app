@@ -1,19 +1,8 @@
 "use strict"
 
 JSImporter.pushRelativePaths([
-    "KeyboardKey.js",
-    "Keyboard.js",
-    "Mouse.js",
-    
-    "EventSetListener.js",
-
-    "ClipboardListener.js",
-    "DocumentListener.js",
-    "DragListener.js",
-    "DropListener.js",
-    "FocusListener.js",
-    "KeyboardListener.js",
-    "MouseListener.js",
-    "TouchListener.js"
+    "devices/_imports.js",
+    "listeners/_imports.js",
+    "gestures/_imports.js"
 ])
 

@@ -13,6 +13,10 @@ window.TouchListener = EventSetListener.extend().newSlots({
     init: function () {
         EventSetListener.init.apply(this)
 
+        return this
+    },
+
+    setupEventsDict: function() {
         this.addEventNameAndMethodName("touchstart",  "onTouchStart");
         this.addEventNameAndMethodName("touchmove",   "onTouchMove");
         this.addEventNameAndMethodName("touchcancel", "onTouchCancel");

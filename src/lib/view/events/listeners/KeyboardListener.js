@@ -12,14 +12,16 @@ window.KeyboardListener = EventSetListener.extend().newSlots({
     init: function () {
         EventSetListener.init.apply(this)
 
+        return this
+    },
+
+    setupEventsDict: function() {
         this.addEventNameAndMethodName("keyup", "onKeyUp");
         this.addEventNameAndMethodName("keydown", "onKeyDown");
         //this.addEventNameAndMethodName("keypress", "onKeyPress");
         //this.addEventNameAndMethodName("change", "onChange");
         //this.addEventNameAndMethodName("select", "onSelect");
         
-        this.setIsDebugging(true)
         return this
     },
-
 })

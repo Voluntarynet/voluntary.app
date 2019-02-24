@@ -21,6 +21,12 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
     init: function () {
         ideal.Proto.init.apply(this)
         this.setEventsDict({})
+        this.setupEventsDict()
+        return this
+    },
+
+    setupEventsDict: function() {
+        // subclasses override to call addEventNameAndMethodName() for their events
         return this
     },
 
@@ -35,20 +41,38 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
     },
 
     setUseCapture: function(v) {
-        if (v === true) { } else { v = false; }
-        this._useCapture = v
-        //console.log("setUseCapture(" + v + ")")
+        this._useCapture = v ? true : false;
+        this.setupEventsDict()
+
+        if (this.isListening()) {
+            this.stop()
+            this.start()
+        }
+
         return this
     },
 
     // ---
 
     addEventNameAndMethodName: function(eventName, methodName) {
-        this.eventsDict()[eventName] = { 
-            methodName: methodName, 
-            handlerFunc: null,
-            useCapture: null,
+        let methodSuffix = ""
+
+        if (this.useCapture()) {
+            methodSuffix = "Capture"
         }
+
+        this.eventsDict()[eventName] = { 
+            methodName: methodName + methodSuffix, 
+            handlerFunc: null,
+            useCapture: this.useCapture(),
+        }
+
+        /*
+        if (this.useCapture()) {
+            console.log("this.eventsDict()[eventName].methodName = ", this.eventsDict()[eventName].methodName)
+        }
+        */
+
         return this
     },
 
@@ -83,26 +107,18 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
         this._isListening = true;
 
         let element = this.element()
-        assert(typeof(element) != "null")
+        assert(element != null)
         assert(typeof(element) != "undefined")
-
 
         this.forEachEventDict((eventName, dict) => {
             dict.handlerFunc = (event) => { 
                 let delegate = this.delegate()
                 let method = delegate[dict.methodName]
                 if (method) {
-
-                    /*
-                    if (this.isDebugging()) {
-                        console.log("sending: " + delegate.type() + "." + dict.methodName, "(" + event.type + ")" )
-                    }
-                    */
-
                     let result = method.apply(delegate, [event]); 
+
                     if (this.isDebugging()) {
                         console.log("sent: " + delegate.type() + "." + dict.methodName, "(" + event.type + ") and returned ", result)
-                        //console.log("    returning type: " + typeof(result) + " value: ", result)
                     }
 
                     if (result == false) {
@@ -121,7 +137,6 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
             dict.useCapture = this.useCapture()
 
             if (this.isDebugging()) {
-
                 console.log("'" +  DomElement_description(element) +  ".addEventListener('" + eventName + "', handler, " +  dict.useCapture + ")") 
             }
 

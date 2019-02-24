@@ -1,24 +1,34 @@
-"use strict"
-
 /*
     Keyboard
-    A class to track the current state of all keyboard keys.
+
+    Global shared instance that tracks current keyboard state in window coordinates.
+    Registers for capture key events on document.body.
 
 */
+
+"use strict"
 
 window.Keyboard = ideal.Proto.extend().newSlots({
     type: "Keyboard",
     codeToKeys: null, // dictionary of KeyboardKey objects
     isDebugging: true,
+    keyboardListener: null,
 }).setSlots({
     init: function () {
         ideal.Proto.init.apply(this)
         this.setupCodeToKeys()
+        this.startListening()
         return this
     },
 
     shared: function() {   
         return this.sharedInstanceForClass(Keyboard)
+    },
+
+    startListening: function() {
+        this.setKeyboardListener(KeyboardListener.clone().setUseCapture(true).setElement(document.body).setDelegate(this))
+        this.keyboardListener().setIsListening(true)
+        return this
     },
 
     setupCodeToKeys: function() {
@@ -173,21 +183,27 @@ window.Keyboard = ideal.Proto.extend().newSlots({
         return key
     },
 
-    onKeyDown: function (event) {
+    onKeyDownCapture: function (event) {
         let shouldPropogate = true
         let key = this.keyForEvent(event)
         key.onKeyDown(event)
+
         if (this.isDebugging()) {
             console.log(this.type() + ".onKeyDown " + key.name())
         }
+        
         return shouldPropogate
     },
 
-    onKeyUp: function (event) {
-        //console.log("Keyboard onKeyUp")
+    onKeyUpCapture: function (event) {
         let shouldPropogate = true
         let key = this.keyForEvent(event)
         key.onKeyUp(event)
+
+        if (this.isDebugging()) {
+            console.log(this.type() + ".onKeyUp " + key.name())
+        }
+
         return shouldPropogate
     },
     

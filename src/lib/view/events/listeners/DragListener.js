@@ -13,12 +13,14 @@ window.DragListener = EventSetListener.extend().newSlots({
     init: function () {
         EventSetListener.init.apply(this)
 
+        return this
+    },
+
+    setupEventsDict: function() {
         // fired on draggable element
         this.addEventNameAndMethodName("dragstart", "onDragStart");
         this.addEventNameAndMethodName("drag",    "onDrag");
         this.addEventNameAndMethodName("dragend",   "onDragEnd");
-
-        //this.setIsDebugging(true)
 
         return this
     },

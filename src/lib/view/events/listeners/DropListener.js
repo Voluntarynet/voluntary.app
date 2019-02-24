@@ -13,13 +13,15 @@ window.DropListener = EventSetListener.extend().newSlots({
     init: function () {
         EventSetListener.init.apply(this)
 
+        return this
+    },
+
+    setupEventsDict: function() {
         // fired on drop target
         this.addEventNameAndMethodName("dragover",  "onDragOver"); // must prevent default
         this.addEventNameAndMethodName("dragenter", "onDragEnter"); // must prevent default
         this.addEventNameAndMethodName("drop",       "onDrop");
         this.addEventNameAndMethodName("dragleave", "onDragLeave"); 
-
-        //this.setIsDebugging(true)
 
         return this
     },

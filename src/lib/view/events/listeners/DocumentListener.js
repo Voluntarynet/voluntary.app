@@ -13,6 +13,10 @@ window.DocumentListener = EventSetListener.extend().newSlots({
     init: function () {
         EventSetListener.init.apply(this)
 
+        return this
+    },
+
+    setupEventsDict: function() {
         this.addEventNameAndMethodName("resize", "onDocumentResize");
 
         // not sure how to organize these other events yet

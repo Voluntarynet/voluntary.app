@@ -12,7 +12,10 @@ window.ClipboardListener = EventSetListener.extend().newSlots({
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)
+        return this
+    },
 
+    setupEventsDict: function() {
         this.addEventNameAndMethodName("copy", "onCopy");
         this.addEventNameAndMethodName("cut", "onCut");
         this.addEventNameAndMethodName("paste", "onPaste");

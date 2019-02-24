@@ -13,6 +13,10 @@ window.MouseListener = EventSetListener.extend().newSlots({
     init: function () {
         EventSetListener.init.apply(this)
 
+        return this
+    },
+
+    setupEventsDict: function() {
         this.addEventNameAndMethodName("mousedown", "onMouseDown");
         this.addEventNameAndMethodName("mouseup", "onMouseUp");
 

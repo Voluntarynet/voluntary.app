@@ -4,10 +4,7 @@
     Mouse
 
     Global shared instance that tracks current mouse state in window coordinates.
-    View has convenience methods to get this state into view coords.
-
-    to decide: Should the document register for mouse events and set Mouse, 
-    or should the Mouse do this? What about gestures?
+    Registers for capture mouse events on document.body.
 */
 
 
@@ -17,14 +14,22 @@ window.Mouse = ideal.Proto.extend().newSlots({
     downEvent: null,
     currentEvent: null,
     upEvent: null,
+    mouseListener: null,
 }).setSlots({
     init: function () {
         ideal.Proto.init.apply(this)
+        this.startListening()
         return this
     },
 
     shared: function() { 
         return this.sharedInstanceForClass(Mouse)
+    },
+
+    startListening: function() {
+        this.setMouseListener(MouseListener.clone().setUseCapture(true).setElement(document.body).setDelegate(this))
+        this.mouseListener().setIsListening(true)
+        return this
     },
 
     // positions
@@ -43,19 +48,19 @@ window.Mouse = ideal.Proto.extend().newSlots({
 
     // events
 
-    onMouseDown: function(event) {
+    onMouseDownCapture: function(event) {
         this.setDownEvent(event)
         this.setCurrentEvent(event)
         this.setIsDown(true);
         return true
     },
 
-    onMouseMove: function (event) {
+    onMouseMoveCapture: function (event) {
         this.setCurrentEvent(event)
         return true
     },
 
-    onMouseUp: function(event) {
+    onMouseUpCapture: function(event) {
         this.setCurrentEvent(event)
         this.setUpEvent(event)
         this.setIsDown(false);

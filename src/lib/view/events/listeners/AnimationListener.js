@@ -12,7 +12,10 @@ window.AnimationListener = EventSetListener.extend().newSlots({
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)
+        return this
+    },
 
+    setupEventsDict: function() {
         this.addEventNameAndMethodName("animationend", "onAnimationEnd");
         this.addEventNameAndMethodName("animationiteration", "onAnimationIteration");
         this.addEventNameAndMethodName("animationstart", "onAnimationStart");

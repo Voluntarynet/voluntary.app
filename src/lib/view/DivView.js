@@ -23,7 +23,15 @@ function DomElement_atInsertElement(el, index, child) {
 }
 
 function DomElement_description(element) {
-    let s = element.getAttribute("id")
+    let s = false
+
+    if (element === window) {
+        s = "window"
+    }
+
+    if (!s) {
+        s = element.getAttribute("id")
+    }
 
     if (!s) {
         s = element.getAttribute("class")
@@ -1701,7 +1709,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 	
     onDragOver: function (event) {
         // triggered on drop target
-        console.log("onDragOver acceptsDrop: ", this.acceptsDrop(), " event:", event);
+        //console.log("onDragOver acceptsDrop: ", this.acceptsDrop(), " event:", event);
         //event.preventDefault() // needed?
         //event.dataTransfer.dropEffect = 'copy';
 
@@ -1837,7 +1845,7 @@ window.DivView = ideal.Proto.extend().newSlots({
             this.turnOnUserSelect()
         } 
 
-        this.setIsRegisteredForPaste(aBool)
+        this.setIsRegisteredForClipboard(aBool)
 
         return this
     },
@@ -1875,32 +1883,6 @@ window.DivView = ideal.Proto.extend().newSlots({
 
         return this
     },
-    
-    /*
-    setIsRegisteredForTouch: function(aBool) {
-        if (aBool) {
-            if (this._isRegisteredForTouch == false) {
-                this._isRegisteredForTouch = true
-                //let b = Modernizr.passiveeventlisteners ? {passive: true} : false
-                let b = { passive: true}
-	        	this.element().addEventListener("touchstart",  this.eventFuncForMethodName("onTouchStart"), b);
-	        	this.element().addEventListener("touchmove",   this.eventFuncForMethodName("onTouchMove"), b);
-	        	this.element().addEventListener("touchcancel", this.eventFuncForMethodName("onTouchCancel"), b);
-	        	this.element().addEventListener("touchend",    this.eventFuncForMethodName("onTouchEnd"), b);
-            }
-            this.setTouchAction("none") // testing
-        } else {
-            if (this._isRegisteredForTouch == true) {
-                this._isRegisteredForTouch = false
-	        	this.element().removeEventListener("touchstart",  this.eventFuncForMethodName("onTouchStart"));
-	        	this.element().removeEventListener("touchmove",   this.eventFuncForMethodName("onTouchMove"));
-	        	this.element().removeEventListener("touchcancel", this.eventFuncForMethodName("onTouchCancel"));
-	        	this.element().removeEventListener("touchend",    this.eventFuncForMethodName("onTouchEnd"));
-            }
-        }
-        return this
-    },
-    */
 
     touchDownDiffWithEvent: function(event) {
         assert(this._onTouchDownEventPosition) 
@@ -1998,7 +1980,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     setIsRegisteredForMouse: function(aBool, useCapture) {
-        this.mouseListener().setIsListening(aBool).setUseCapture(useCapture) //.setIsDebugging(true)
+        this.mouseListener().setUseCapture(useCapture).setIsListening(aBool) //.setIsDebugging(true)
         return this
     },
     
@@ -2039,7 +2021,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     setIsRegisteredForKeyboard: function(aBool, useCapture) {
-        this.keyboardListener().setIsListening(aBool).setUseCapture(useCapture).setIsDebugging(true)
+        this.keyboardListener().setIsListening(aBool).setUseCapture(useCapture)
 
         let e = this.element()
         if (aBool) {
@@ -2313,7 +2295,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 	
     // --- paste from clipboard ---
 
-    paste: function (e) {
+    onPaste: function (e) {
         // prevent pasting text by default after event
         e.preventDefault(); 
 
@@ -2339,30 +2321,14 @@ window.DivView = ideal.Proto.extend().newSlots({
         return true
     },
     
-    /*
-    pasteListenerFunc: function () {
-        if (!this._pasteListenerFunc) {
-            this._pasteListenerFunc = (e) => { this.paste(e) }
-        }
-        return this._pasteListenerFunc
-    },
-    */
-    
-    setIsRegisteredForPaste: function(aBool, useCapture) {
-        let e = this.element()
-        if (aBool) {
-            if (this._isRegisteredForPaste == false) {
-                this._isRegisteredForPaste = true
-                e.addEventListener("paste", this.eventFuncForMethodName("paste"), useCapture);
+    // ------------
 
-	        	//this.element().addEventListener("paste", this.pasteListenerFunc(), false);
-            }
-        } else {
-            if (this._isRegisteredForPaste == true) {
-                this._isRegisteredForPaste = false
-                e.removeEventListener("paste", this.eventFuncForMethodName("paste"), useCapture);
-            }
-        }
+    isRegisteredForClipboard: function() {
+        return this.clipboardListener().isListening()
+    },
+
+    setIsRegisteredForClipboard: function(aBool) {
+        this.clipboardListener().setIsListening(aBool)
         return this
     },
 

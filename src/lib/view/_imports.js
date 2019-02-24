@@ -7,7 +7,6 @@ JSImporter.pushRelativePaths([
 
     "Point.js",
     "events/_imports.js",
-    "gestures/_imports.js",
     
     "DivView.js",
     "CenteredDivView.js",

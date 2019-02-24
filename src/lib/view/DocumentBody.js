@@ -11,12 +11,16 @@ window.DocumentBody = DivView.extend().newSlots({
         // using event intercept phase to grab all events and record them
         // in Mouse.shared() and Keyboard.shared() objects
         
-        this.setIsRegisteredForKeyboard(true, true)
-        this.setIsRegisteredForMouse(true, true)
+        //this.setIsRegisteredForKeyboard(true, true)
+        //this.setIsRegisteredForMouse(true, true)
 
         setTimeout(() => {
             this.setIsRegisteredForDocumentResize(true)
+
         })
+
+        Mouse.shared()
+        Keyboard.shared()
         
         return this
     },
@@ -75,29 +79,37 @@ window.DocumentBody = DivView.extend().newSlots({
 
     // --- event intercept keyboard ---
 
-    onKeyDown: function (event) {
+    /*
+    onKeyDownCapture: function (event) {
         return window.Keyboard.shared().onKeyDown(event)
     },
 
-    onKeyUp: function (event) {
+    onKeyUpCapture: function (event) {
         //console.log(this.type() + " onKeyUp ")
         return window.Keyboard.shared().onKeyUp(event)
     },
+    */
 
     // --- event intercept mouse ---
 
-    onMouseDown: function(event) {
+    /*
+    onMouseDownCapture: function(event) {
         //console.log("DocumentBody onMouseDown")
         return window.Mouse.shared().onMouseDown(event)
     },
 
-    onMouseMove: function (event) {
+    onMouseMoveCapture: function (event) {
         return window.Mouse.shared().onMouseMove(event)
     },
 
-    onMouseUp: function(event) {
+    onMouseUpCapture: function(event) {
         return window.Mouse.shared().onMouseUp(event)
     },  
+
+    onMouseLeaveCapture: function(event) {
+        return true
+    },  
+    */
 
 })
 

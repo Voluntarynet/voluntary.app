@@ -96,7 +96,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 	
     setElement: function(e) {
 	    this._element = e
-	    this.setIsRegisteredForFocus(true)
+	    setTimeout(() => { this.setIsRegisteredForFocus(true); }, 0)
 	    e._divView = this // try to avoid depending on this as much as possible - keep refs to divViews, not elements
 	    return this
     },
@@ -2203,21 +2203,12 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     // --- focus and blur event handling ---
     
+    isRegisteredForFocus: function() {
+        return this.focusListener().isListening()
+    },
+
     setIsRegisteredForFocus: function(aBool) {
-        if (aBool) {
-            if (this._isRegisteredForFocus == false) {
-                this._isRegisteredForFocus = true
-                //console.log(this.type() + " setIsRegisteredForFocus(" + aBool + ")")
-	            this.element().onfocus = () => { this.willAcceptFirstResponder(); this.onFocus() };
-	            this.element().onblur  = () => { this.didReleaseFirstResponder(); this.onBlur() };
-            }
-        } else {
-            if (this._isRegisteredForFocus == true) {
-                this._isRegisteredForFocus = false
-                this.element().onfocus = null
-                this.element().onblur = null
-            }
-        }
+        this.focusListener().setIsListening(aBool)
         return this
     },
     
@@ -2262,12 +2253,14 @@ window.DivView = ideal.Proto.extend().newSlots({
     // --------------------------------------------------------
 
     onFocus: function() {
+        this.willAcceptFirstResponder();
         // subclasses can override 
         //console.log(this.type() + " onFocus")
         return true
     },
 
     onBlur: function() {
+        this.didReleaseFirstResponder();
         // subclasses can override 
         //console.log(this.type() + " onBlur")
         return true

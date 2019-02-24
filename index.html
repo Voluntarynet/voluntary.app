@@ -89560,6 +89560,8 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     // --- focus and blur event handling ---
     
+    
+    /*
     setIsRegisteredForFocus: function(aBool) {
         if (aBool) {
             if (this._isRegisteredForFocus == false) {
@@ -89577,6 +89579,7 @@ window.DivView = ideal.Proto.extend().newSlots({
         }
         return this
     },
+    */
     
     willAcceptFirstResponder: function() {
 	    //console.log(this.type() + ".willAcceptFirstResponder()")
@@ -89619,19 +89622,21 @@ window.DivView = ideal.Proto.extend().newSlots({
     // --------------------------------------------------------
 
     onFocus: function() {
-        // subclasses can override 
-        //console.log(this.type() + " onFocus")
-        return true
+      this.willAcceptFirstResponder();
+      // subclasses can override 
+      //console.log(this.type() + " onFocus")
+      return true
     },
 
     onBlur: function() {
-        // subclasses can override 
-        //console.log(this.type() + " onBlur")
-        return true
+      this.didReleaseFirstResponder();
+      // subclasses can override 
+      //console.log(this.type() + " onBlur")
+      return true
     },
     
     innerText: function() {
-        var e = this.element()
+      let e = this.element()
 	    return e.textContent || e.innerText || "";		
     },
     

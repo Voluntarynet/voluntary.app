@@ -17,6 +17,7 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
     eventsDict: null, // should only write from within class & subclasses
     useCapture: false,
     isDebugging: false,
+    methodSuffix: "",
 }).setSlots({
     init: function () {
         ideal.Proto.init.apply(this)
@@ -42,7 +43,7 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
 
     setUseCapture: function(v) {
         this._useCapture = v ? true : false;
-        this.setupEventsDict()
+        //this.setupEventsDict()
 
         if (this.isListening()) {
             this.stop()
@@ -55,14 +56,16 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
     // ---
 
     addEventNameAndMethodName: function(eventName, methodName) {
-        let methodSuffix = ""
+        let suffix = ""
 
         if (this.useCapture()) {
-            methodSuffix = "Capture"
+            suffix = "Capture"
         }
 
+        suffix += this.methodSuffix()
+
         this.eventsDict()[eventName] = { 
-            methodName: methodName + methodSuffix, 
+            methodName: methodName + suffix, 
             handlerFunc: null,
             useCapture: this.useCapture(),
         }
@@ -137,7 +140,7 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
             dict.useCapture = this.useCapture()
 
             if (this.isDebugging()) {
-                console.log("'" +  DomElement_description(element) +  ".addEventListener('" + eventName + "', handler, " +  dict.useCapture + ")") 
+                console.log("'" +  DomElement_description(element) + ".addEventListener('" + eventName + "', handler, " + dict.useCapture + ")") 
             }
 
             element.addEventListener(eventName, dict.handlerFunc, dict.useCapture);

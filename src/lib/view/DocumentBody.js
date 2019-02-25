@@ -16,12 +16,11 @@ window.DocumentBody = DivView.extend().newSlots({
 
         setTimeout(() => {
             this.setIsRegisteredForDocumentResize(true)
-
         })
 
-        Mouse.shared()
-        Keyboard.shared()
-        
+        //Mouse.shared()
+        //Keyboard.shared()
+
         return this
     },
 

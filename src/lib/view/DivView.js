@@ -1928,19 +1928,21 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     /// GestureRecognizers
 
-    addGestureRecognizer: function(gestureRecognizer) {
+    addGestureRecognizer: function(gr) {
         if (!this._gestureRecognizers) {
             this._gestureRecognizers = []
         }
-        this._gestureRecognizers.append(gestureRecognizer)
-        gestureRecognizer.setTarget(this)
+        this._gestureRecognizers.append(gr)
+        gr.setViewTarget(this)
+        gr.start()
         return this
     },
 
-    removeGestureRecognizer: function(gestureRecognizer) {
+    removeGestureRecognizer: function(gr) {
         if (this._gestureRecognizers) {
-            gestureRecognizer.setTarget(null)
-            this._gestureRecognizers.remove(gestureRecognizer)
+            gr.stop()
+            gr.setViewTarget(null)
+            this._gestureRecognizers.remove(gr)
         }
         return this
     },
@@ -2021,7 +2023,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     setIsRegisteredForKeyboard: function(aBool, useCapture) {
-        this.keyboardListener().setIsListening(aBool).setUseCapture(useCapture)
+        this.keyboardListener().setUseCapture(useCapture).setIsListening(aBool)
 
         let e = this.element()
         if (aBool) {

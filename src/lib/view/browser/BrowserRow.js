@@ -39,7 +39,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         //this.animateOpen()
 
         this.addGestureRecognizer(LongPressGestureRecognizer.clone())
-        this.addGestureRecognizer(SlideGestureRecognizer.clone())
+        //this.addGestureRecognizer(SlideGestureRecognizer.clone())
         return this
     },
 
@@ -257,12 +257,11 @@ window.BrowserRow = NodeView.extend().newSlots({
 
     // touch sliding
 
-    didTouchStart: function() {
-        console.log(this.type() + " didTouchStart")
+    // didTouchStart
+    onSlideGestureBegin: function() {
+        console.log(this.type() + " onSlideGestureBegin")
         this._touchDeleteOffset = this.clientWidth() * 0.5;
-        this.setTransition("right 0s")
-        
-        //this.addDeleteXView()
+        this.setTransition("right 0s")        
         return this
     },
 
@@ -297,12 +296,12 @@ window.BrowserRow = NodeView.extend().newSlots({
         }
     },
 	
-    onTouchMove: function(event) {
-        console.log(this.type() + " onTouchMove diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
+    onSlideGestureMove: function(slideGesture) {
+        let event = slideGesture.currentEvent()
         if (this.canDelete()) {
-            this._touchMoveDiff = this.touchDownDiffWithEvent(event)
-            //console.log("onTouchMove:" + JSON.stringify(diff))
-            var xd = Math.floor(this._touchMoveDiff.xd)
+
+            let xd = slideGesture.dx()
+            console.log(">>> " + this.type() + " onSlideGestureMove ", xd)
 			
             if (xd > 0) { 
                 xd = 0; 
@@ -330,14 +329,16 @@ window.BrowserRow = NodeView.extend().newSlots({
         return this._isReadyToTouchDelete 
     },
 
-    onTouchCancel: function(event) {
+    /*
+    onSlideGestureCancel: function(event) {
         console.log(this.type() + " onTouchCancel")
         this._isTouchDown = false
         this.slideBack()
     },
+    */
 	
-    onTouchEnd: function(event) {
-        console.log(this.type() + " onTouchEnd")
+    onSlideGestureComplete: function(event) {
+        console.log(">>> " + this.type() + " onSlideGestureComplete")
 
         if (this._isTouchDown) {
             var diff = this.touchDownDiffWithEvent(event)
@@ -445,22 +446,16 @@ window.BrowserRow = NodeView.extend().newSlots({
 
     // tap hold
     
-    onTapHoldGesture: function(gestureRecognizer) {
-        let event = gestureRecognizer.currentEvent()
+    onLongPressGestureBegin: function(gesture) {
+    },
+
+    onLongPressGestureCancelled: function(gesture) {
+    },
+
+    onLongPressGestureComplete: function(aGesture) {
+        let event = aGesture.currentEvent()
         this.setBackgroundColor("red")
-        
         this._isDraggingView = true
-        /*
-        this._initDragParentPos = this.parentPosForEvent(event)
-        this._initDragRelativePos = this.relativePos()
-        console.log("windowPos()         = ", this.windowPos().asString())
-        console.log("relativePos()         = ", this.relativePos().asString())
-        console.log("winPosForEvent      = ", this.winPosForEvent(event).asString())
-        console.log("viewPosForEvent     = ", this.viewPosForEvent(event).asString())
-        console.log("parentPosForEvent   = ", this.parentPosForEvent(event).asString())
-        //console.log("_initDragMousePos  = ", this._initDragMousePos.asString())
-        //console.log("_initDragViewPos   = ", this._initDragViewPos.asString())
-        */
     },
 
     onMouseMove: function(event) {

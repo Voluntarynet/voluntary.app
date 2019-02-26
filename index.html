@@ -86277,7 +86277,6 @@ JSImporter.pushRelativePaths([
 
     "Point.js",
     "events/_imports.js",
-    "gestures/_imports.js",
     
     "DivView.js",
     "CenteredDivView.js",
@@ -86963,11 +86962,11 @@ ViewAnimator.registerThisClass()
 "use strict"
 
 /*
+    Point
 
-
+    Class to represent a 2d or 3d point, optionally with a time.
 
 */
-
 
 window.Point = ideal.Proto.extend().newSlots({
     type: "Point",
@@ -87029,36 +87028,41 @@ window.Point = ideal.Proto.extend().newSlots({
         return this
     },
 
+    floorInPlace: function() {
+        this._x = Math.floor(this._x)
+        this._y = Math.floor(this._y)
+        this._z = Math.floor(this._z)
+        return this
+    },
+
     add: function(p) {
-        return Point.clone.copyPoint(this).addInPlace(p)
+        return Point.clone().copyPoint(this).addInPlace(p)
     },
 
     subtract: function(p) {
-        return Point.clone.copyPoint(this).subtractInPlace(p)
+        return Point.clone().copyPoint(this).subtractInPlace(p)
     },
 
     asString: function() {
-        return "" + this._x + ", " + this._y + ", " + this._z + ", " + this._t
+        return "" + this._x + "x, " + this._y + "y, " + this._z + "z, " + this._t + "t"
     },
 })
 
 "use strict"
 
 JSImporter.pushRelativePaths([
+    "devices/_imports.js",
+    "listeners/_imports.js",
+    "gestures/_imports.js"
+])
+
+
+"use strict"
+
+JSImporter.pushRelativePaths([
     "KeyboardKey.js",
     "Keyboard.js",
-    "Mouse.js",
-    
-    "EventSetListener.js",
-
-    "ClipboardListener.js",
-    "DocumentListener.js",
-    "DragListener.js",
-    "DropListener.js",
-    "FocusListener.js",
-    "KeyboardListener.js",
-    "MouseListener.js",
-    "TouchListener.js"
+    "Mouse.js"
 ])
 
 
@@ -87098,23 +87102,34 @@ window.KeyboardKey = ideal.Proto.extend().newSlots({
 
 /*
     Keyboard
-    A class to track the current state of all keyboard keys.
+
+    Global shared instance that tracks current keyboard state in window coordinates.
+    Registers for capture key events on document.body.
 
 */
+
 
 window.Keyboard = ideal.Proto.extend().newSlots({
     type: "Keyboard",
     codeToKeys: null, // dictionary of KeyboardKey objects
-    isDebugging: false,
+    isDebugging: true,
+    keyboardListener: null,
 }).setSlots({
     init: function () {
         ideal.Proto.init.apply(this)
         this.setupCodeToKeys()
+        this.startListening()
         return this
     },
 
     shared: function() {   
         return this.sharedInstanceForClass(Keyboard)
+    },
+
+    startListening: function() {
+        this.setKeyboardListener(KeyboardListener.clone().setUseCapture(true).setElement(document.body).setDelegate(this))
+        this.keyboardListener().setIsListening(true)
+        return this
     },
 
     setupCodeToKeys: function() {
@@ -87269,21 +87284,27 @@ window.Keyboard = ideal.Proto.extend().newSlots({
         return key
     },
 
-    onKeyDown: function (event) {
+    onKeyDownCapture: function (event) {
         let shouldPropogate = true
         let key = this.keyForEvent(event)
         key.onKeyDown(event)
+
         if (this.isDebugging()) {
             console.log(this.type() + ".onKeyDown " + key.name())
         }
+        
         return shouldPropogate
     },
 
-    onKeyUp: function (event) {
-        //console.log("Keyboard onKeyUp")
+    onKeyUpCapture: function (event) {
         let shouldPropogate = true
         let key = this.keyForEvent(event)
         key.onKeyUp(event)
+
+        if (this.isDebugging()) {
+            console.log(this.type() + ".onKeyUp " + key.name())
+        }
+
         return shouldPropogate
     },
     
@@ -87368,10 +87389,7 @@ window.Keyboard = ideal.Proto.extend().newSlots({
     Mouse
 
     Global shared instance that tracks current mouse state in window coordinates.
-    View has convenience methods to get this state into view coords.
-
-    to decide: Should the document register for mouse events and set Mouse, 
-    or should the Mouse do this? What about gestures?
+    Registers for capture mouse events on document.body.
 */
 
 
@@ -87381,14 +87399,22 @@ window.Mouse = ideal.Proto.extend().newSlots({
     downEvent: null,
     currentEvent: null,
     upEvent: null,
+    mouseListener: null,
 }).setSlots({
     init: function () {
         ideal.Proto.init.apply(this)
+        this.startListening()
         return this
     },
 
     shared: function() { 
         return this.sharedInstanceForClass(Mouse)
+    },
+
+    startListening: function() {
+        this.setMouseListener(MouseListener.clone().setUseCapture(true).setElement(document.body).setDelegate(this))
+        this.mouseListener().setIsListening(true)
+        return this
     },
 
     // positions
@@ -87407,19 +87433,19 @@ window.Mouse = ideal.Proto.extend().newSlots({
 
     // events
 
-    onMouseDown: function(event) {
+    onMouseDownCapture: function(event) {
         this.setDownEvent(event)
         this.setCurrentEvent(event)
         this.setIsDown(true);
         return true
     },
 
-    onMouseMove: function (event) {
+    onMouseMoveCapture: function (event) {
         this.setCurrentEvent(event)
         return true
     },
 
-    onMouseUp: function(event) {
+    onMouseUpCapture: function(event) {
         this.setCurrentEvent(event)
         this.setUpEvent(event)
         this.setIsDown(false);
@@ -87445,6 +87471,22 @@ window.Mouse = ideal.Proto.extend().newSlots({
 
 "use strict"
 
+JSImporter.pushRelativePaths([
+    "EventSetListener.js",
+
+    "ClipboardListener.js",
+    "DocumentListener.js",
+    "DragListener.js",
+    "DropListener.js",
+    "FocusListener.js",
+    "KeyboardListener.js",
+    "MouseListener.js",
+    "TouchListener.js"
+])
+
+
+"use strict"
+
 /*
     EventSetListener
 
@@ -87462,10 +87504,17 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
     eventsDict: null, // should only write from within class & subclasses
     useCapture: false,
     isDebugging: false,
+    methodSuffix: "",
 }).setSlots({
     init: function () {
         ideal.Proto.init.apply(this)
         this.setEventsDict({})
+        this.setupEventsDict()
+        return this
+    },
+
+    setupEventsDict: function() {
+        // subclasses override to call addEventNameAndMethodName() for their events
         return this
     },
 
@@ -87480,19 +87529,35 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
     },
 
     setUseCapture: function(v) {
-        if (v === true) { } else { v = false; }
-        this._useCapture = v
-        //console.log("setUseCapture(" + v + ")")
+        this._useCapture = v ? true : false;
+        //this.setupEventsDict()
+
+        if (this.isListening()) {
+            this.stop()
+            this.start()
+        }
+
         return this
     },
 
     // ---
 
+    fullMethodNameFor: function(methodName) {
+        let suffix = ""
+
+        if (this.useCapture()) {
+            suffix = "Capture"
+        }
+
+        suffix += this.methodSuffix()
+        return methodName + suffix
+    },
+
     addEventNameAndMethodName: function(eventName, methodName) {
         this.eventsDict()[eventName] = { 
             methodName: methodName, 
             handlerFunc: null,
-            useCapture: null,
+            useCapture: this.useCapture(),
         }
         return this
     },
@@ -87528,26 +87593,19 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
         this._isListening = true;
 
         let element = this.element()
-        assert(typeof(element) != "null")
+        assert(element != null)
         assert(typeof(element) != "undefined")
 
-
         this.forEachEventDict((eventName, dict) => {
+            let fullMethodName = this.fullMethodNameFor(dict.methodName)
             dict.handlerFunc = (event) => { 
                 let delegate = this.delegate()
-                let method = delegate[dict.methodName]
+                let method = delegate[fullMethodName]
                 if (method) {
-
-                    /*
-                    if (this.isDebugging()) {
-                        console.log("sending: " + delegate.type() + "." + dict.methodName, "(" + event.type + ")" )
-                    }
-                    */
-
                     let result = method.apply(delegate, [event]); 
+
                     if (this.isDebugging()) {
-                        console.log("sent: " + delegate.type() + "." + dict.methodName, "(" + event.type + ") and returned ", result)
-                        //console.log("    returning type: " + typeof(result) + " value: ", result)
+                        console.log("sent: " + delegate.type() + "." + fullMethodName, "(" + event.type + ") and returned ", result)
                     }
 
                     if (result == false) {
@@ -87557,7 +87615,7 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
                     return result
                 } else {
                     if (this.isDebugging()) {
-                        console.log("MISSING method: " + delegate.type() + "." + dict.methodName, "(" + event.type + ")" )
+                        console.log(DomElement_description(element) + " MISSING method: " + delegate.type() + "." + fullMethodName, "(" + event.type + ")" )
                     }
                 }
 
@@ -87566,8 +87624,7 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
             dict.useCapture = this.useCapture()
 
             if (this.isDebugging()) {
-
-                console.log("'" +  DomElement_description(element) +  ".addEventListener('" + eventName + "', handler, " +  dict.useCapture + ")") 
+                console.log("'" +  DomElement_description(element) + ".addEventListener('" + eventName + "', handler, " + dict.useCapture + ") " + fullMethodName) 
             }
 
             element.addEventListener(eventName, dict.handlerFunc, dict.useCapture);
@@ -87646,7 +87703,10 @@ window.ClipboardListener = EventSetListener.extend().newSlots({
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)
+        return this
+    },
 
+    setupEventsDict: function() {
         this.addEventNameAndMethodName("copy", "onCopy");
         this.addEventNameAndMethodName("cut", "onCut");
         this.addEventNameAndMethodName("paste", "onPaste");
@@ -87671,6 +87731,10 @@ window.DocumentListener = EventSetListener.extend().newSlots({
     init: function () {
         EventSetListener.init.apply(this)
 
+        return this
+    },
+
+    setupEventsDict: function() {
         this.addEventNameAndMethodName("resize", "onDocumentResize");
 
         // not sure how to organize these other events yet
@@ -87712,6 +87776,10 @@ window.DragListener = EventSetListener.extend().newSlots({
     init: function () {
         EventSetListener.init.apply(this)
 
+        return this
+    },
+
+    setupEventsDict: function() {
         // fired on draggable element
         this.addEventNameAndMethodName("dragstart", "onDragStart");
         this.addEventNameAndMethodName("drag",    "onDrag");
@@ -87741,6 +87809,10 @@ window.DropListener = EventSetListener.extend().newSlots({
     init: function () {
         EventSetListener.init.apply(this)
 
+        return this
+    },
+
+    setupEventsDict: function() {
         // fired on drop target
         this.addEventNameAndMethodName("dragover",  "onDragOver"); // must prevent default
         this.addEventNameAndMethodName("dragenter", "onDragEnter"); // must prevent default
@@ -87778,6 +87850,10 @@ window.FocusListener = EventSetListener.extend().newSlots({
     init: function () {
         EventSetListener.init.apply(this)
 
+        return this
+    },
+
+    setupEventsDict: function() {
         this.addEventNameAndMethodName("blur", "onBlur");
         this.addEventNameAndMethodName("focus", "onFocus");
         this.addEventNameAndMethodName("focusin", "onFocusIn");
@@ -87796,18 +87872,22 @@ window.FocusListener = EventSetListener.extend().newSlots({
     Listens to a set of keyboard events.
 
 */
+
 window.KeyboardListener = EventSetListener.extend().newSlots({
     type: "KeyboardListener",
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)
+        //this.setIsDebugging(true)
+        return this
+    },
 
+    setupEventsDict: function() {
         this.addEventNameAndMethodName("keyup", "onKeyUp");
         this.addEventNameAndMethodName("keydown", "onKeyDown");
         //this.addEventNameAndMethodName("keypress", "onKeyPress");
         //this.addEventNameAndMethodName("change", "onChange");
         //this.addEventNameAndMethodName("select", "onSelect");
-        
         return this
     },
 })
@@ -87827,6 +87907,10 @@ window.MouseListener = EventSetListener.extend().newSlots({
     init: function () {
         EventSetListener.init.apply(this)
 
+        return this
+    },
+
+    setupEventsDict: function() {
         this.addEventNameAndMethodName("mousedown", "onMouseDown");
         this.addEventNameAndMethodName("mouseup", "onMouseUp");
 
@@ -87861,6 +87945,10 @@ window.TouchListener = EventSetListener.extend().newSlots({
     init: function () {
         EventSetListener.init.apply(this)
 
+        return this
+    },
+
+    setupEventsDict: function() {
         this.addEventNameAndMethodName("touchstart",  "onTouchStart");
         this.addEventNameAndMethodName("touchmove",   "onTouchMove");
         this.addEventNameAndMethodName("touchcancel", "onTouchCancel");
@@ -87880,353 +87968,280 @@ JSImporter.pushRelativePaths([
 ])
 
 
+"use strict"
+
 /*
     GestureRecognizer
 
-    How will these work?
-    DivView will have a list of gestureRecognizers. 
-    If any of it's event methods get called, they'll send a copy of the event to any
-    gestureRecognizers the view contains. 
+    A DivView has a list of gestureRecognizers. 
+    It forwards relevant events to it's recognizers. 
+    These can initiate the recognizer to start listening to document.body events.
 
-    The gestureRecognizers will send a message like onPinchGesture:, onLongPressGesture:, etc 
-    to the target.
+    Example:
 
-    When the target is set, the GestureRecognizer will tell it to register for any events it needs.
+        1. aView.onMouseDown -> forwarded to -> SlideGestureRecognizer
+        1.a. starts capturing on document.body
+        2. onMouseMoveCapture, if dx > min,  send:
+            targetView.requestActiveGesture(thisGesture)
+            if this returns true, set the gesture to isActive and
+            send theView.recognizedSlideGesture(this) on moves
+        3. onMouseUpCapture, if the gesture is active, 
+            send theView.recognizedSlideGestureComplete(this)
+        3.a. stop capturing on document.body
 
 */
 
-"use strict"
 
 window.GestureRecognizer = ideal.Proto.extend().newSlots({
     type: "GestureRecognizer",
     
-    target: null,
+    viewTarget: null,
     state: null,
 
-    eventsNeeded: null,   
     currentEvent: null, 
 
-    isListeningForTouchEvents: false,
-    isListeningForMouseEvents: false,
+    listenerClasses: null,
+    viewListeners: null, 
+    docListeners: null, 
+    isActive: false,
+
+    isDebugging: false,
+
+    //isCancelled: false,
 }).setSlots({
     init: function () {
-        this.setEventsNeeded([])
+        this.setListenerClasses([]) // subclasses override this in their
+        this.setDocListeners([])
+        this.setViewListeners([])
         return this
     },
 
-    setTarget: function(aTarget) {
-        this._target = aTarget
+    // --- listeners ---
 
-        // register eventsNeeded on target?
+    newListeners: function() {
+        return this.listenerClasses().map((className) => {
+            let proto = window[className];
+            let listener = proto.clone();
+            listener.setDelegate(this);
+            return listener
+        })
+    },
+
+    // --- view listeners ---
+
+    stopViewListeners: function() {
+        this.viewListeners().forEach((listener) => { listener.stop() })
+        this.setViewListeners([])
         return this
     },
 
-    // --- events --------------------------------------------------------------------
+    startViewListeners: function() {
+        this.stopViewListeners()
 
-
-    registerForEvents: function() {
-
+        let listeners = this.newListeners().map((listener) => {
+            listener.setElement(this.viewTarget().element())
+            listener.start()
+            return listener
+        })
+        this.setViewListeners(listeners)
+        return this
     },
 
-    unregisterForEvents: function() {
 
-    },
+    // --- doc listeners ---
 
-    // click events
-
-    /*
-    onClick: function(event) {
-        this.sendActionToTarget()
-        event.stopPropagation()
-        return false
-    },
-    */
-    
-    // touch events
-
-    touchDownDiffWithEvent: function(event) {
-        assert(this._onTouchDownEventPosition) 
-
-        let thisTouch = event.changedTouches[0]
-        let lastTouch = this._onTouchDownEventPosition
-        let d = {} 
-        d.xd = thisTouch.screenX - lastTouch.screenX
-        d.yd = thisTouch.screenY - lastTouch.screenY
-        d.dist = Math.sqrt(d.xd*d.xd + d.yd*d.yd)
-        return d
+    stopDocListeners: function() {
+        this.docListeners().forEach((listener) => { listener.stop() })
+        this.setDocListeners([])
+        return this
     },
 
-    onTouchStart: function(event) {
-        this._isTouchDown = true
-        var touches = event.changedTouches
-        //console.log(this.type() + " onTouchStart ", touches)
-        this._onTouchDownEventPosition = { screenX: touches[0].screenX, screenY: touches[0].screenY }
-        //console.log(this.type() + " onTouchStart  this._onTouchDownEventPosition ", this._onTouchDownEventPosition)
-        this.didTouchStart()
+    startDocListeners: function() {
+        this.stopDocListeners()
+
+        let listeners = this.newListeners().map((listener) => {
+            listener.setUseCapture(true)
+            listener.setElement(document.body)
+            //listener.setIsDebugging(true);
+            listener.start()
+            return listener
+        })
+        this.setDocListeners(listeners)
+        return this
     },
 
-    didTouchStart: function() {
-        // for subclasses to override
-    },
-	
-    onTouchMove: function(event) {
-        //console.log(this.type() + " onTouchMove diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
-    },
-	
-    onTouchCancel: function(event) {
-        //console.log(this.type() + " onTouchCancel")
-        this._isTouchDown = false
-    },
-	
-    onTouchEnd: function(event) {
-        //console.log(this.type() + " onTouchEnd diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
-        if (this._isTouchDown) {
+    // --- start / stop ---
 
-	        this._isTouchDown = false
-        }
-    },	
-
-    // mouse events
-    
-    onMouseMove: function (event) {
-        return true
-    },
-    
-    onMouseEnter: function(event) {
-        return true
+    start: function() {
+        this.startViewListeners()
+        //this.startDocListeners() // some view events will start and stop the doc listeners
+        return this
     },
 
-    onMouseLeave: function(event) {
-        return true
+    stop: function() {
+        this.stopViewListeners()
+        this.stopDocListeners()
+        return this
     },
 
-    onMouseOut: function (event) {
-        //console.log("onMouseOut")
-        return true
-    },
-    
-    onMouseOver: function (event) {
-        return true
-    },
+    // subclass helpers
 
-    onMouseDown: function (event) {
-
-    },
-
-    onMouseUp: function (event) {
-    },
-        
-    // --- keyboard events ---
-    
-    onKeyDown: function (event) {
-
-        return true
-    },
-    
-    onKeyPress: function (event) {
-        // console.log("onKeyPress")
-        return true
-    },
-    
-    onKeyUp: function (event) {
-   
-        return true
-    },
-
-    /*
-    onEnterKeyUp: function() {
-        return true
-    },
-    
-    // --- tabs and next key view ----
-    
-    onTabKeyDown: function() {
-        this.selectNextKeyView()
-        return true
-    },
-
-    selectNextKeyView: function() {
-        console.log(this.type() + " selectNextKeyView")
-        var nkv = this.nextKeyView()
-        if (nkv) {
-            //if (nkv.initialFirstResponder()) {
-            //nkv.focus()
-            //}
-        }	
-    },
-    */
-    
-    
-    // -- registering for events ----
-
-    eventFuncForMethodName: function (methodName) {
-        if (!this._listenerFuncs) {
-            this._listenerFuncs = {}
+    sendDelegateMessage: function(methodName) {
+        if (this.isDebugging()) {
+            console.log(this.type() + " sending " + methodName)
         }
 
-        if (!this._listenerFuncs[methodName]) {
-            let f = (event) => { 
-                let result = this[methodName].apply(this, [event]) 
-
-                if (this.gestureRecognizers()) {
-                    this.gestureRecognizers().forEach((gestureRecognizer) => {
-                        var result = gestureRecognizer[methodName].apply(gestureRecognizer, [event])
-                        // do we let the result effect event propogation on gestures?
-                    })
-                }
-
-                if (result == false) {
-                    event.stopPropagation()
-                }
-                return result
-            }
-            this._listenerFuncs[methodName] = f
-            //this._listenerFuncs[methodName] = (event) => { this.handleEventFunction(f, event) }
-        }
-        return this._listenerFuncs[methodName]
-    },
-    
-    listenForTouchEvents: function(aBool) {
-        if (aBool) {
-            if (this.isListeningForTouchEvents() == false) {
-                this.setIsListeningForTouchEvents(true)
-                //let b = Modernizr.passiveeventlisteners ? {passive: true} : false
-                let b = { passive: true}
-	        	this.element().addEventListener("touchstart",  this.eventFuncForMethodName("onTouchStart"), b);
-	        	this.element().addEventListener("touchmove",   this.eventFuncForMethodName("onTouchMove"), b);
-	        	this.element().addEventListener("touchcancel", this.eventFuncForMethodName("onTouchCancel"), b);
-	        	this.element().addEventListener("touchend",    this.eventFuncForMethodName("onTouchEnd"), b);
-            }
-            this.setTouchAction("none") // testing
+        let vt = this.viewTarget()
+        if (vt[methodName]) {
+            vt[methodName].apply(vt, [this])
         } else {
-            if (this.isListeningForTouchEvents() == true) {
-                this.setIsListeningForTouchEvents(false)
-	        	this.element().removeEventListener("touchstart",  this.eventFuncForMethodName("onTouchStart"));
-	        	this.element().removeEventListener("touchmove",   this.eventFuncForMethodName("onTouchMove"));
-	        	this.element().removeEventListener("touchcancel", this.eventFuncForMethodName("onTouchCancel"));
-	        	this.element().removeEventListener("touchend",    this.eventFuncForMethodName("onTouchEnd"));
+            if (this.isDebugging()) {
+                console.log("gesture delegate missing method " + methodName)
             }
         }
         return this
     },
 
 })
+
+//this.setTouchAction("none") // testing
+
+"use strict"
 
 /*
     LongPressGestureRecognizer
 
+    Notes:
+
+        Should gesture cancel if press moves:
+        
+            1. outside of a distance from start point or
+            2. outside of the view
+
+
+    Delegate messages:
+
+        onLongPressBegin
+        onLongPressGestureComplete
+        onLongPressGestureCancelled
+
     
 */
 
-"use strict"
 
 window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
     type: "LongPressGestureRecognizer",
-    tapHoldPeriod: 1000, 
-    tapHoldTimeoutId: null,
+    pressHoldPeriod: 1000, 
+    timeoutId: null,
 }).setSlots({
     
     init: function () {
         GestureRecognizer.init.apply(this)
+        this.setListenerClasses(["MouseListener", "TouchListener"])
+        this.setIsDebugging(true) 
+        return this
+    },
+
+    // --- timer ---
+
+    startPressHoldTimer: function(event) {
+        if (this.timeoutId()) {
+            this.stopTimer()
+        }
+        let tid = setTimeout(() => { this.onLongPress(event) }, this.pressHoldPeriod());
+        this.setTimeoutId(tid)
+        //console.log("startPressHoldTimer id",   this.timeoutId())
+        return this
+    },
+
+    stopTimer: function() {
+        if (this.hasTimer()) {
+            clearTimeout(this.timeoutId());
+            this.setTimeoutId(null)
+        }
+        return this
+    },
+
+    hasTimer: function() {
+        return this.timeoutId() != null
+    },
+
+    // -- the completed gesture ---
+
+    onLongPress: function(event) {
+        this.setCurrentEvent(event)
+        this.setTimeoutId(null)
+        this.sendDelegateMessage("onLongPressGestureComplete")
+    },
+
+    // -- single action for mouse and touch up/down ---
+
+    onPressDown: function (event) {
+        this.startPressHoldTimer(event)
+        this.sendDelegateMessage("onLongPressGestureBegin")
+        return true
+    },
+
+    onPressUp: function (event) {
+        this.cancel()
+        return true
+    },
+
+    cancel: function() {
+        if (this.hasTimer()) {
+            this.stopTimer()
+            this.sendDelegateMessage("onLongPressGestureCancelled")
+        }
         return this
     },
 
     // --- events --------------------------------------------------------------------
 
-    // tap hold event
-
-    startTapHoldTimer: function(event) {
-        if (this._tapHoldTimeoutId) {
-            this.stopTapHoldTimer()
-        }
-        this._tapHoldTimeoutId = setTimeout(() => { this.onTapHold(event) }, this.tapHoldPeriod())
-        //console.log("startTapHoldTimer id",   this._tapHoldTimeoutId)
-        return this
-    },
-
-    stopTapHoldTimer: function() {
-        if (this._tapHoldTimeoutId) {
-            //console.log("stopTapHoldTimer id ",  this._tapHoldTimeoutId)
-            clearTimeout(this._tapHoldTimeoutId);
-            this._tapHoldTimeoutId = null
-        }
-        return this
-    },
-
-    onTapHold: function(event) {
-        this.setCurrentEvent(event)
-        this._tapHoldTimeoutId = null
-        console.log("onTapHold")
-        let t = this.target()
-        if (t) {
-            if (t.onTapHoldGesture) {
-                t.onTapHoldGesture(this)
-            }
-        }
-    },
-
-    // tap events
-
-    onTapDown: function (event) {
-        if (this.tapHoldPeriod()) {
-            this.startTapHoldTimer(event)
-        }
-        return true
-    },
-
-    onTapUp: function (event) {
-        if (this.tapHoldPeriod()) {
-            this.stopTapHoldTimer()
-        }
-        return true
-    },
-
-
     // mouse events
 
     onMouseDown: function (event) {
-        GestureRecognizer.onMouseDown.apply(this, [event])
-        return this.onTapDown(event)
+        return this.onPressDown(event)
     },
 
     onMouseUp: function (event) {
-        GestureRecognizer.onMouseUp.apply(this, [event])
-        return this.onTapUp(event)
+        return this.onPressUp(event)
     },
+
+    /*
+    onMouseUpCapture: function (event) {
+        return this.onPressUp(event)
+    },
+    */
 
     // touch events
 
     onTouchStart: function(event) {
-        GestureRecognizer.onTouchStart.apply(this, [event])
-        return this.onTapDown(event)
+        return this.onPressDown(event)
     },
 
-	
-    onTouchCancel: function(event) {
-        GestureRecognizer.onTouchCancel.apply(this, [event])
-        return this.onTapUp(event)
-    },
-	
     onTouchEnd: function(event) {
-        GestureRecognizer.onTouchEnd.apply(this, [event])
-        return this.onTapUp(event)
+        return this.onPressUp(event)
     },	
 
-    // --- keyboard events ---
-    
+    // touch capture
+
     /*
-    onKeyDown: function (event) {
-        GestureRecognizer.onKeyDown.apply(this, [event])
-        return this.onTapDown(event)
+    onTouchMoveCapture: function(event) {
+        //return this.onPressUp(event)
     },
-    
-    onKeyUp: function (event) {
-        GestureRecognizer.onKeyUp.apply(this, [event])
-        return this.onTapUp(event)
+
+    onTouchCancelCapture: function(event) {
+        //return this.onPressUp(event)
     },
+	
+    onTouchEndCapture: function(event) {
+        //return this.onPressUp(event)
+    },	
     */
 
 })
+
+"use strict"
 
 /*
     SlideGestureRecognizer
@@ -88236,10 +88251,24 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
     a down event and then remove them after the up event. 
     
     We ignore the view's own move and up events.
+
+    Delegate messages :
+
+        onSlideGestureBegin(slideGestureRecognizer)
+        onSlideGestureMove(slideGestureRecognizer)
+        onSlideGestureComplete(slideGestureRecognizer)
+        
+        //onSlideGestureCancel(slideGestureRecognizer)
     
+    Gesture state info methods:
+
+        isHorizontal()
+        dx()
+        dy()
+        downPosInView()
+
 */
 
-"use strict"
 
 window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     type: "SlideGestureRecognizer",
@@ -88249,10 +88278,14 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     downPosition: null,
     currentPosition: null,
     upPosition: null,
+    isHorizontal: true,
+    minDist: 10,
 }).setSlots({
     
     init: function () {
         GestureRecognizer.init.apply(this)
+        this.setListenerClasses(["MouseListener"])
+        //this.setListenerClasses(["MouseListener", "TouchListener"]) 
         return this
     },
 
@@ -88261,10 +88294,13 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     // tap events
 
     onPressDownPos: function (pos) {
+        console.log(this.type() + ".onPressDownPos(" + pos.asString() + ")")
         this.setIsPressing(true)
         this.setDownPosition(pos)
         this.setCurrentPosition(pos)
-        this.setDownPositionInTarget(this.target().windowPos())
+        this.setDownPositionInTarget(this.viewTarget().windowPos())
+
+        this.startDocListeners()
         return true
     },
 
@@ -88272,87 +88308,121 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
         if (this.isPressing()) {
             this.setCurrentPosition(pos)
 
-            
+            if (!this.isActive() && this.hasMovedEnough()) {
+                let vt = this.viewTarget()
+                console.log(this.type() + " requestActiveGesture ")
+
+                if(vt.requestActiveGesture()) {
+                    this.setIsActive(true)
+                    this.sendDelegateMessage("onSlideGestureBegin")
+                }
+            }
+        }
+
+        if (this.isActive()) {
+            this.sendDelegateMessage("onSlideGestureMove")
         }
     },
 
+    // -----------
+
     onPressUpPos: function (pos) {
-        this.setIsPressing(false)
-        this.setCurrentPosition(pos)
-        this.setUpPosition(pos)
+        if (this.isPressing()) {
+            this.setIsPressing(false)
+            this.setCurrentPosition(pos)
+            this.setUpPosition(pos)
+            this.stopDocListeners()
+            this.setIsActive(false)
+
+            if (this.isActive()) {
+                this.sendDelegateMessage("onSlideGestureComplete")
+            }
+        }
+
         return true
     },
 
-    pressDiffPos: function() {
-        return this.currentPosition().subtract(this.downPosition())
+    cancel: function() {
+        this.setActive(false)
+        return this
     },
 
+    // ----------------------------------
 
-    // mouse events
+    hasMovedEnough: function() {
+        let dp = this.pressDiffPos()
+        if(this.isHorizontal()) {
+            if (Math.abs(dp.x()) > this.minDist()) {
+                return true
+            }
+        } else {
+            if (Math.abs(dp.y()) > this.minDist()) {
+                return true
+            }
+        }
+        return false
+    },
+
+    // ------------------------------
+
+    pressDiffPos: function() {
+        return this.currentPosition().subtract(this.downPosition()).floorInPlace() // floor here?
+    },
+
+    // --- mouse events ---
 
     onMouseDown: function (event) {
-        GestureRecognizer.onMouseDown.apply(this, [event])
         let p = Point.clone().setToMouseEventWinPos(event)
         return this.onPressDownPos(p)
     },
 
-    onMouseMove: function(event) {
-        GestureRecognizer.onMouseMove.apply(this, [event])
+    onMouseMoveCapture: function(event) {
         let p = Point.clone().setToMouseEventWinPos(event)
         this.onPressMovePos(p)
     },
 
-    onMouseUp: function (event) {
-        GestureRecognizer.onMouseUp.apply(this, [event])
+    onMouseUpCapture: function (event) {
         let p = Point.clone().setToMouseEventWinPos(event)
         return this.onPressUpPos(p)
     },
 
-    
-    // touch events
+    // --- touch events ---
 
     onTouchStart: function(event) {
-        GestureRecognizer.onTouchStart.apply(this, [event])
-        //return this.onPressDown(event)
-    },
-    
-    onTouchMove: function(event) {
-        /*
-        console.log(this.type() + " onTouchMove diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
-        if (this.canDelete()) {
-            this._touchMoveDiff = this.touchDownDiffWithEvent(event)
-            //console.log("onTouchMove:" + JSON.stringify(diff))
-            var xd = Math.floor(this._touchMoveDiff.xd)
-            
-            if (xd > 0) { 
-                xd = 0; 
-            }
-
-            if (this._lastXd != xd) {
-                this.setTouchLeft(xd)
-                this._lastXd = xd
-
-                this._isReadyToTouchDelete  = -xd >= this._touchDeleteOffset
-
-                if (this._dragDeleteView) {
-                    this._dragDeleteButtonView.setOpacity(this._isReadyToTouchDelete? 1 : 0.2)
-                }
-            }
-        }
-        */
+        let aTouch = event.changedTouches.item(0)
+        let p = Point.clone().set(aTouch.screenX, aTouch.screenX)
+        return this.onPressDownPos(p)
     },
 
-	
-    onTouchCancel: function(event) {
-        GestureRecognizer.onTouchCancel.apply(this, [event])
-        return this.onPressUp(event)
+    onTouchMoveCapture: function(event) {
+        let aTouch = event.changedTouches.item(0)
+        let p = Point.clone().set(aTouch.screenX, aTouch.screenX)
+        return this.onPressMovePos(p)
+    },
+
+    onTouchCancelCapture: function(event) {
+        let aTouch = event.changedTouches.item(0)
+        let p = Point.clone().set(aTouch.screenX, aTouch.screenX)
+        return this.onPressUpPos(p)
     },
 	
-    onTouchEnd: function(event) {
-        GestureRecognizer.onTouchEnd.apply(this, [event])
-        return this.onPressUp(event)
+    onTouchEndCapture: function(event) {
+        let aTouch = event.changedTouches.item(0)
+        let p = Point.clone().set(aTouch.screenX, aTouch.screenX)
+        return this.onPressUpPos(p)
     },	
 
+    // --- helpers ----
+
+    dx: function() {
+        let dp = this.pressDiffPos()
+        return dp.x()
+    },
+
+    dy: function() {
+        let dp = this.pressDiffPos()
+        return dp.y()
+    },
 })
 
 "use strict"
@@ -88380,7 +88450,15 @@ function DomElement_atInsertElement(el, index, child) {
 }
 
 function DomElement_description(element) {
-    let s = element.getAttribute("id")
+    let s = false
+
+    if (element === window) {
+        s = "window"
+    }
+
+    if (!s) {
+        s = element.getAttribute("id")
+    }
 
     if (!s) {
         s = element.getAttribute("class")
@@ -90277,62 +90355,64 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     /// GestureRecognizers
 
-    addGestureRecognizer: function(gestureRecognizer) {
+    addGestureRecognizer: function(gr) {
         if (!this._gestureRecognizers) {
             this._gestureRecognizers = []
         }
-        this._gestureRecognizers.append(gestureRecognizer)
-        gestureRecognizer.setTarget(this)
+        this._gestureRecognizers.append(gr)
+        gr.setViewTarget(this)
+        gr.start()
         return this
     },
 
-    removeGestureRecognizer: function(gestureRecognizer) {
+    removeGestureRecognizer: function(gr) {
         if (this._gestureRecognizers) {
-            gestureRecognizer.setTarget(null)
-            this._gestureRecognizers.remove(gestureRecognizer)
+            gr.stop()
+            gr.setViewTarget(null)
+            this._gestureRecognizers.remove(gr)
         }
+        return this
+    },
+
+    firstActiveGesture: function() {
+        return this._gestureRecognizers.select((gr) => {
+            return gr.isActive()
+        })
+    },
+
+    requestActiveGesture: function(aGesture) {
+        let first = this.firstActiveGesture()
+        if (!first) {
+            this.cancelAllGesturesExcept(aGesture)
+            return true
+        }
+        
+        if (first == aGesture) {
+            return true
+        }
+
+        return false
+    },
+
+    cancelAllGesturesExcept: function(aGesture) {
+        this._gestureRecognizer.forEach((gr) => {
+            if (gr != aGesture) {
+                gr.cancel()
+            }
+        })
         return this
     },
 
     // mouse events
-    
-    eventFuncForMethodName: function (methodName) {
-        if (!this._listenerFuncs) {
-            this._listenerFuncs = {}
-        }
-
-        if (!this._listenerFuncs[methodName]) {
-            let f = (event) => { 
-                console.log("sending: " + this.type() + "." + methodName, "(" + event.type + ")" )
-                let result = this[methodName].apply(this, [event]) 
-
-                if (this.gestureRecognizers()) {
-                    this.gestureRecognizers().forEach((gestureRecognizer) => {
-                        var result = gestureRecognizer[methodName].apply(gestureRecognizer, [event])
-                        // do we let the result effect event propogation on gestures?
-                    })
-                }
-
-                if (result == false) {
-                    event.stopPropagation()
-                }
-                return result
-            }
-            this._listenerFuncs[methodName] = f
-            //this._listenerFuncs[methodName] = (event) => { this.handleEventFunction(f, event) }
-        }
-        return this._listenerFuncs[methodName]
-    },
 
     isRegisteredForMouse: function() {
         return this.mouseListener().isListening()
     },
 
     setIsRegisteredForMouse: function(aBool, useCapture) {
-        this.mouseListener().setIsListening(aBool).setUseCapture(useCapture) //.setIsDebugging(true)
+        this.mouseListener().setUseCapture(useCapture).setIsListening(aBool) //.setIsDebugging(true)
         return this
     },
-    
     
     onMouseMove: function (event) {
         return true
@@ -90370,7 +90450,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     setIsRegisteredForKeyboard: function(aBool, useCapture) {
-        this.keyboardListener().setIsListening(aBool).setUseCapture(useCapture)
+        this.keyboardListener().setUseCapture(useCapture).setIsListening(aBool)
 
         let e = this.element()
         if (aBool) {
@@ -92189,13 +92269,16 @@ window.DocumentBody = DivView.extend().newSlots({
         // using event intercept phase to grab all events and record them
         // in Mouse.shared() and Keyboard.shared() objects
         
-        this.setIsRegisteredForKeyboard(true, true)
-        this.setIsRegisteredForMouse(true, true)
+        //this.setIsRegisteredForKeyboard(true, true)
+        //this.setIsRegisteredForMouse(true, true)
 
         setTimeout(() => {
             this.setIsRegisteredForDocumentResize(true)
         })
-        
+
+        //Mouse.shared()
+        //Keyboard.shared()
+
         return this
     },
 
@@ -92253,29 +92336,37 @@ window.DocumentBody = DivView.extend().newSlots({
 
     // --- event intercept keyboard ---
 
-    onKeyDown: function (event) {
+    /*
+    onKeyDownCapture: function (event) {
         return window.Keyboard.shared().onKeyDown(event)
     },
 
-    onKeyUp: function (event) {
+    onKeyUpCapture: function (event) {
         //console.log(this.type() + " onKeyUp ")
         return window.Keyboard.shared().onKeyUp(event)
     },
+    */
 
     // --- event intercept mouse ---
 
-    onMouseDown: function(event) {
+    /*
+    onMouseDownCapture: function(event) {
         //console.log("DocumentBody onMouseDown")
         return window.Mouse.shared().onMouseDown(event)
     },
 
-    onMouseMove: function (event) {
+    onMouseMoveCapture: function (event) {
         return window.Mouse.shared().onMouseMove(event)
     },
 
-    onMouseUp: function(event) {
+    onMouseUpCapture: function(event) {
         return window.Mouse.shared().onMouseUp(event)
     },  
+
+    onMouseLeaveCapture: function(event) {
+        return true
+    },  
+    */
 
 })
 
@@ -92461,21 +92552,6 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
         }
         return null
     },
-
-    /*
-    debugFocus: function() {
-        var focusFunc = (event) => { 
-            var e = event.srcElement
-            var name = e._divView ? e._divView.typeId() : (e.id ? e.id : e)
-            console.log(">>>>>>>>>>>> Window focused element ", name) 
-        }
-        //var blurFunc = (e) => { console.log("window blurred element ", e._divView ? e._divView.typeId() : e)}
-        
-        window.addEventListener ? window.addEventListener("focus", focusFunc, true) : window.attachEvent("onfocusout", focusFunc);  
-        //window.addEventListener ? window.addEventListener("blur', blurFunc, true) : window.attachEvent("onblur", blurFunc);
-        return this
-    },
-    */
 })
 
 /*
@@ -94499,7 +94575,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         //this.animateOpen()
 
         this.addGestureRecognizer(LongPressGestureRecognizer.clone())
-        this.addGestureRecognizer(SlideGestureRecognizer.clone())
+        //this.addGestureRecognizer(SlideGestureRecognizer.clone())
         return this
     },
 
@@ -94717,12 +94793,11 @@ window.BrowserRow = NodeView.extend().newSlots({
 
     // touch sliding
 
-    didTouchStart: function() {
-        console.log(this.type() + " didTouchStart")
+    // didTouchStart
+    onSlideGestureBegin: function() {
+        console.log(this.type() + " onSlideGestureBegin")
         this._touchDeleteOffset = this.clientWidth() * 0.5;
-        this.setTransition("right 0s")
-        
-        //this.addDeleteXView()
+        this.setTransition("right 0s")        
         return this
     },
 
@@ -94757,12 +94832,12 @@ window.BrowserRow = NodeView.extend().newSlots({
         }
     },
 	
-    onTouchMove: function(event) {
-        console.log(this.type() + " onTouchMove diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
+    onSlideGestureMove: function(slideGesture) {
+        let event = slideGesture.currentEvent()
         if (this.canDelete()) {
-            this._touchMoveDiff = this.touchDownDiffWithEvent(event)
-            //console.log("onTouchMove:" + JSON.stringify(diff))
-            var xd = Math.floor(this._touchMoveDiff.xd)
+
+            let xd = slideGesture.dx()
+            console.log(">>> " + this.type() + " onSlideGestureMove ", xd)
 			
             if (xd > 0) { 
                 xd = 0; 
@@ -94790,14 +94865,16 @@ window.BrowserRow = NodeView.extend().newSlots({
         return this._isReadyToTouchDelete 
     },
 
-    onTouchCancel: function(event) {
+    /*
+    onSlideGestureCancel: function(event) {
         console.log(this.type() + " onTouchCancel")
         this._isTouchDown = false
         this.slideBack()
     },
+    */
 	
-    onTouchEnd: function(event) {
-        console.log(this.type() + " onTouchEnd")
+    onSlideGestureComplete: function(event) {
+        console.log(">>> " + this.type() + " onSlideGestureComplete")
 
         if (this._isTouchDown) {
             var diff = this.touchDownDiffWithEvent(event)
@@ -94905,22 +94982,16 @@ window.BrowserRow = NodeView.extend().newSlots({
 
     // tap hold
     
-    onTapHoldGesture: function(gestureRecognizer) {
-        let event = gestureRecognizer.currentEvent()
+    onLongPressGestureBegin: function(gesture) {
+    },
+
+    onLongPressGestureCancelled: function(gesture) {
+    },
+
+    onLongPressGestureComplete: function(aGesture) {
+        let event = aGesture.currentEvent()
         this.setBackgroundColor("red")
-        
         this._isDraggingView = true
-        /*
-        this._initDragParentPos = this.parentPosForEvent(event)
-        this._initDragRelativePos = this.relativePos()
-        console.log("windowPos()         = ", this.windowPos().asString())
-        console.log("relativePos()         = ", this.relativePos().asString())
-        console.log("winPosForEvent      = ", this.winPosForEvent(event).asString())
-        console.log("viewPosForEvent     = ", this.viewPosForEvent(event).asString())
-        console.log("parentPosForEvent   = ", this.parentPosForEvent(event).asString())
-        //console.log("_initDragMousePos  = ", this._initDragMousePos.asString())
-        //console.log("_initDragViewPos   = ", this._initDragViewPos.asString())
-        */
     },
 
     onMouseMove: function(event) {
@@ -96793,6 +96864,7 @@ window.ImageView = NodeView.extend().newSlots({
     
 })
 
+"use strict"
 
 window.ButtonView = DivView.extend().newSlots({
     type: "ButtonView",

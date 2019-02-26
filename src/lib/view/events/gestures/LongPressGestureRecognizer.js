@@ -3,6 +3,20 @@
 /*
     LongPressGestureRecognizer
 
+    Notes:
+
+        Should gesture cancel if press moves:
+        
+            1. outside of a distance from start point or
+            2. outside of the view
+
+
+    Delegate messages:
+
+        onLongPressBegin
+        onLongPressGestureComplete
+        onLongPressGestureCancelled
+
     
 */
 
@@ -10,63 +24,66 @@
 window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
     type: "LongPressGestureRecognizer",
     pressHoldPeriod: 1000, 
-    pressHoldTimeoutId: null,
+    timeoutId: null,
 }).setSlots({
     
     init: function () {
         GestureRecognizer.init.apply(this)
-        this.setListenerClasses(["MouseListener", "TouchListener"]) 
+        this.setListenerClasses(["MouseListener", "TouchListener"])
+        this.setIsDebugging(true) 
         return this
     },
 
     // --- timer ---
 
     startPressHoldTimer: function(event) {
-        if (this._pressHoldTimeoutId) {
-            this.stopPressHoldTimer()
+        if (this.timeoutId()) {
+            this.stopTimer()
         }
-        this._pressHoldTimeoutId = setTimeout(() => { this.onLongPress(event) }, this.pressHoldPeriod())
-        //console.log("startPressHoldTimer id",   this._pressHoldTimeoutId)
+        let tid = setTimeout(() => { this.onLongPress(event) }, this.pressHoldPeriod());
+        this.setTimeoutId(tid)
+        //console.log("startPressHoldTimer id",   this.timeoutId())
         return this
     },
 
-    stopPressHoldTimer: function() {
-        if (this._pressHoldTimeoutId) {
-            //console.log("stopPressHoldTimer id ",  this._pressHoldTimeoutId)
-            clearTimeout(this._pressHoldTimeoutId);
-            this._pressHoldTimeoutId = null
+    stopTimer: function() {
+        if (this.hasTimer()) {
+            clearTimeout(this.timeoutId());
+            this.setTimeoutId(null)
         }
         return this
+    },
+
+    hasTimer: function() {
+        return this.timeoutId() != null
     },
 
     // -- the completed gesture ---
 
     onLongPress: function(event) {
         this.setCurrentEvent(event)
-        this._pressHoldTimeoutId = null
-        console.log("onLongPressGesture")
-        let t = this.viewTarget()
-        if (t) {
-            if (t.onLongPressGesture) {
-                t.onLongPressGesture(this)
-            }
-        }
+        this.setTimeoutId(null)
+        this.sendDelegateMessage("onLongPressGestureComplete")
     },
 
     // -- single action for mouse and touch up/down ---
 
     onPressDown: function (event) {
         this.startPressHoldTimer(event)
+        this.sendDelegateMessage("onLongPressGestureBegin")
         return true
     },
 
     onPressUp: function (event) {
-        this.stopPressHoldTimer()
+        this.cancel()
         return true
     },
 
     cancel: function() {
-        this.stopPressHoldTimer()
+        if (this.hasTimer()) {
+            this.stopTimer()
+            this.sendDelegateMessage("onLongPressGestureCancelled")
+        }
         return this
     },
 
@@ -78,9 +95,15 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
         return this.onPressDown(event)
     },
 
+    onMouseUp: function (event) {
+        return this.onPressUp(event)
+    },
+
+    /*
     onMouseUpCapture: function (event) {
         return this.onPressUp(event)
     },
+    */
 
     // touch events
 
@@ -88,12 +111,24 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
         return this.onPressDown(event)
     },
 
-    onTouchCancelCapture: function(event) {
+    onTouchEnd: function(event) {
         return this.onPressUp(event)
+    },	
+
+    // touch capture
+
+    /*
+    onTouchMoveCapture: function(event) {
+        //return this.onPressUp(event)
+    },
+
+    onTouchCancelCapture: function(event) {
+        //return this.onPressUp(event)
     },
 	
     onTouchEndCapture: function(event) {
-        return this.onPressUp(event)
+        //return this.onPressUp(event)
     },	
+    */
 
 })

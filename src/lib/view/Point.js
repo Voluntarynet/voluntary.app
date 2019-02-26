@@ -67,6 +67,13 @@ window.Point = ideal.Proto.extend().newSlots({
         return this
     },
 
+    floorInPlace: function() {
+        this._x = Math.floor(this._x)
+        this._y = Math.floor(this._y)
+        this._z = Math.floor(this._z)
+        return this
+    },
+
     add: function(p) {
         return Point.clone().copyPoint(this).addInPlace(p)
     },

@@ -1959,6 +1959,11 @@ window.DivView = ideal.Proto.extend().newSlots({
             this.cancelAllGesturesExcept(aGesture)
             return true
         }
+        
+        if (first == aGesture) {
+            return true
+        }
+
         return false
     },
 
@@ -1972,34 +1977,6 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     // mouse events
-    
-    eventFuncForMethodName: function (methodName) {
-        if (!this._listenerFuncs) {
-            this._listenerFuncs = {}
-        }
-
-        if (!this._listenerFuncs[methodName]) {
-            let f = (event) => { 
-                console.log("sending: " + this.type() + "." + methodName, "(" + event.type + ")" )
-                let result = this[methodName].apply(this, [event]) 
-
-                if (this.gestureRecognizers()) {
-                    this.gestureRecognizers().forEach((gestureRecognizer) => {
-                        var result = gestureRecognizer[methodName].apply(gestureRecognizer, [event])
-                        // do we let the result effect event propogation on gestures?
-                    })
-                }
-
-                if (result == false) {
-                    event.stopPropagation()
-                }
-                return result
-            }
-            this._listenerFuncs[methodName] = f
-            //this._listenerFuncs[methodName] = (event) => { this.handleEventFunction(f, event) }
-        }
-        return this._listenerFuncs[methodName]
-    },
 
     isRegisteredForMouse: function() {
         return this.mouseListener().isListening()
@@ -2009,7 +1986,6 @@ window.DivView = ideal.Proto.extend().newSlots({
         this.mouseListener().setUseCapture(useCapture).setIsListening(aBool) //.setIsDebugging(true)
         return this
     },
-    
     
     onMouseMove: function (event) {
         return true

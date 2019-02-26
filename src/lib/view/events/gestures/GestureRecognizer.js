@@ -33,7 +33,11 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     listenerClasses: null,
     viewListeners: null, 
     docListeners: null, 
-    isActive: true,
+    isActive: false,
+
+    isDebugging: false,
+
+    //isCancelled: false,
 }).setSlots({
     init: function () {
         this.setListenerClasses([]) // subclasses override this in their
@@ -107,6 +111,24 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     stop: function() {
         this.stopViewListeners()
         this.stopDocListeners()
+        return this
+    },
+
+    // subclass helpers
+
+    sendDelegateMessage: function(methodName) {
+        if (this.isDebugging()) {
+            console.log(this.type() + " sending " + methodName)
+        }
+
+        let vt = this.viewTarget()
+        if (vt[methodName]) {
+            vt[methodName].apply(vt, [this])
+        } else {
+            if (this.isDebugging()) {
+                console.log("gesture delegate missing method " + methodName)
+            }
+        }
         return this
     },
 

@@ -55,7 +55,7 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
 
     // ---
 
-    addEventNameAndMethodName: function(eventName, methodName) {
+    fullMethodNameFor: function(methodName) {
         let suffix = ""
 
         if (this.useCapture()) {
@@ -63,19 +63,15 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
         }
 
         suffix += this.methodSuffix()
+        return methodName + suffix
+    },
 
+    addEventNameAndMethodName: function(eventName, methodName) {
         this.eventsDict()[eventName] = { 
-            methodName: methodName + suffix, 
+            methodName: methodName, 
             handlerFunc: null,
             useCapture: this.useCapture(),
         }
-
-        /*
-        if (this.useCapture()) {
-            console.log("this.eventsDict()[eventName].methodName = ", this.eventsDict()[eventName].methodName)
-        }
-        */
-
         return this
     },
 
@@ -114,14 +110,15 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
         assert(typeof(element) != "undefined")
 
         this.forEachEventDict((eventName, dict) => {
+            let fullMethodName = this.fullMethodNameFor(dict.methodName)
             dict.handlerFunc = (event) => { 
                 let delegate = this.delegate()
-                let method = delegate[dict.methodName]
+                let method = delegate[fullMethodName]
                 if (method) {
                     let result = method.apply(delegate, [event]); 
 
                     if (this.isDebugging()) {
-                        console.log("sent: " + delegate.type() + "." + dict.methodName, "(" + event.type + ") and returned ", result)
+                        console.log("sent: " + delegate.type() + "." + fullMethodName, "(" + event.type + ") and returned ", result)
                     }
 
                     if (result == false) {
@@ -131,7 +128,7 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
                     return result
                 } else {
                     if (this.isDebugging()) {
-                        console.log("MISSING method: " + delegate.type() + "." + dict.methodName, "(" + event.type + ")" )
+                        console.log(DomElement_description(element) + " MISSING method: " + delegate.type() + "." + fullMethodName, "(" + event.type + ")" )
                     }
                 }
 
@@ -140,7 +137,7 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
             dict.useCapture = this.useCapture()
 
             if (this.isDebugging()) {
-                console.log("'" +  DomElement_description(element) + ".addEventListener('" + eventName + "', handler, " + dict.useCapture + ")") 
+                console.log("'" +  DomElement_description(element) + ".addEventListener('" + eventName + "', handler, " + dict.useCapture + ") " + fullMethodName) 
             }
 
             element.addEventListener(eventName, dict.handlerFunc, dict.useCapture);

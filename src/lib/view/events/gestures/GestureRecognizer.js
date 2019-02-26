@@ -1,3 +1,5 @@
+"use strict"
+
 /*
     GestureRecognizer
 
@@ -9,13 +11,16 @@
 
         1. aView.onMouseDown -> forwarded to -> SlideGestureRecognizer
         1.a. starts capturing on document.body
-        2. onMouseMoveCapture, if dx > min,  send theView.recognizedSlideGesture(this);
-        3. onMouseUpCapture, send theView.recognizedSlideGestureComplete(this)
+        2. onMouseMoveCapture, if dx > min,  send:
+            targetView.requestActiveGesture(thisGesture)
+            if this returns true, set the gesture to isActive and
+            send theView.recognizedSlideGesture(this) on moves
+        3. onMouseUpCapture, if the gesture is active, 
+            send theView.recognizedSlideGestureComplete(this)
         3.a. stop capturing on document.body
 
 */
 
-"use strict"
 
 window.GestureRecognizer = ideal.Proto.extend().newSlots({
     type: "GestureRecognizer",
@@ -28,9 +33,10 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     listenerClasses: null,
     viewListeners: null, 
     docListeners: null, 
+    isActive: true,
 }).setSlots({
     init: function () {
-        this.setListenerClasses([]) // subclasses override this in their init
+        this.setListenerClasses([]) // subclasses override this in their
         this.setDocListeners([])
         this.setViewListeners([])
         return this
@@ -58,9 +64,10 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     startViewListeners: function() {
         this.stopViewListeners()
 
-        let listeners = this.newListeners().forEach((listener) => {
+        let listeners = this.newListeners().map((listener) => {
             listener.setElement(this.viewTarget().element())
             listener.start()
+            return listener
         })
         this.setViewListeners(listeners)
         return this
@@ -78,9 +85,12 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     startDocListeners: function() {
         this.stopDocListeners()
 
-        let listeners = this.newListeners().forEach((listener) => {
+        let listeners = this.newListeners().map((listener) => {
+            listener.setUseCapture(true)
             listener.setElement(document.body)
+            //listener.setIsDebugging(true);
             listener.start()
+            return listener
         })
         this.setDocListeners(listeners)
         return this

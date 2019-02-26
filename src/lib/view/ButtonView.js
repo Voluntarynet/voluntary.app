@@ -1,3 +1,4 @@
+"use strict"
 
 window.ButtonView = DivView.extend().newSlots({
     type: "ButtonView",

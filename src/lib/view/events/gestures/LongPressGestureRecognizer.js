@@ -1,10 +1,11 @@
+"use strict"
+
 /*
     LongPressGestureRecognizer
 
     
 */
 
-"use strict"
 
 window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
     type: "LongPressGestureRecognizer",
@@ -24,7 +25,7 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
         if (this._pressHoldTimeoutId) {
             this.stopPressHoldTimer()
         }
-        this._pressHoldTimeoutId = setTimeout(() => { this.onPressHold(event) }, this.pressHoldPeriod())
+        this._pressHoldTimeoutId = setTimeout(() => { this.onLongPress(event) }, this.pressHoldPeriod())
         //console.log("startPressHoldTimer id",   this._pressHoldTimeoutId)
         return this
     },
@@ -40,14 +41,14 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     // -- the completed gesture ---
 
-    onPressHold: function(event) {
+    onLongPress: function(event) {
         this.setCurrentEvent(event)
         this._pressHoldTimeoutId = null
-        console.log("onPressHold")
+        console.log("onLongPressGesture")
         let t = this.viewTarget()
         if (t) {
-            if (t.onPressHoldGesture) {
-                t.onPressHoldGesture(this)
+            if (t.onLongPressGesture) {
+                t.onLongPressGesture(this)
             }
         }
     },
@@ -62,6 +63,11 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
     onPressUp: function (event) {
         this.stopPressHoldTimer()
         return true
+    },
+
+    cancel: function() {
+        this.stopPressHoldTimer()
+        return this
     },
 
     // --- events --------------------------------------------------------------------

@@ -1,3 +1,5 @@
+"use strict"
+
 /*
     Keyboard
 
@@ -6,7 +8,6 @@
 
 */
 
-"use strict"
 
 window.Keyboard = ideal.Proto.extend().newSlots({
     type: "Keyboard",

@@ -1,3 +1,5 @@
+"use strict"
+
 /*
     SlideGestureRecognizer
 
@@ -9,7 +11,6 @@
     
 */
 
-"use strict"
 
 window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     type: "SlideGestureRecognizer",
@@ -19,10 +20,14 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     downPosition: null,
     currentPosition: null,
     upPosition: null,
+    isHorizontal: true,
+    minDist: 10,
 }).setSlots({
     
     init: function () {
         GestureRecognizer.init.apply(this)
+        this.setListenerClasses(["MouseListener"])
+        //this.setListenerClasses(["MouseListener", "TouchListener"]) 
         return this
     },
 
@@ -31,49 +36,95 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     // tap events
 
     onPressDownPos: function (pos) {
+        //console.log(this.type() + ".onPressDownPos(" + pos.asString() + ")")
+
         this.setIsPressing(true)
         this.setDownPosition(pos)
         this.setCurrentPosition(pos)
-        this.setDownPositionInTarget(this.target().windowPos())
+        this.setDownPositionInTarget(this.viewTarget().windowPos())
+
+        this.startDocListeners()
         return true
     },
 
     onPressMovePos: function(pos) {
+        //console.log(this.type() + ".onPressMovePos(" + pos.asString() + ")")
         if (this.isPressing()) {
             this.setCurrentPosition(pos)
+            let dp = this.pressDiffPos()
 
-            
+            if (!this.isActive()) {
+                if(this.isHorizontal()) {
+                    if (Math.abs(dp.x()) > this.minDist()) {
+                        this.didMoveEnough()
+                        //console.log("dx: ", dp.x())
+                    }
+                } else {
+                    if (Math.abs(dp.y()) > this.minDist()) {
+                        this.didMoveEnough()
+                        //console.log("dy: ", dp.y())
+                    }
+                }
+            }
+
+            if (this.isActive()) {
+                let v = this.viewTarget()
+                if (v.onSlideGesture) {
+                    v.onSlideGesture.apply(v, [this])
+                }
+                console.log("onSlideGesture ", dp.toString())
+            }
         }
+    },
+
+    didMoveEnough: function() {
+        this.viewTarget().requestActiveGesture()
+        this.setIsActive(true)
     },
 
     onPressUpPos: function (pos) {
         this.setIsPressing(false)
         this.setCurrentPosition(pos)
         this.setUpPosition(pos)
+        
+    
+        if (this.isActive()) {
+            let v = this.viewTarget()
+            if (v.onSlideGestureComplete) {
+                v.onSlideGestureComplete.apply(v, [this])
+            }
+            console.log("onSlideGestureComplete ")
+        }
+
+        this.stopDocListeners()
+        this.setIsActive(false)
         return true
     },
+
+    cancel: function() {
+        this.setActive(false)
+        return this
+    },
+
+    // -----------
 
     pressDiffPos: function() {
         return this.currentPosition().subtract(this.downPosition())
     },
 
-
     // mouse events
 
     onMouseDown: function (event) {
-        GestureRecognizer.onMouseDown.apply(this, [event])
         let p = Point.clone().setToMouseEventWinPos(event)
         return this.onPressDownPos(p)
     },
 
-    onMouseMove: function(event) {
-        GestureRecognizer.onMouseMove.apply(this, [event])
+    onMouseMoveCapture: function(event) {
         let p = Point.clone().setToMouseEventWinPos(event)
         this.onPressMovePos(p)
     },
 
-    onMouseUp: function (event) {
-        GestureRecognizer.onMouseUp.apply(this, [event])
+    onMouseUpCapture: function (event) {
         let p = Point.clone().setToMouseEventWinPos(event)
         return this.onPressUpPos(p)
     },
@@ -82,11 +133,10 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     // touch events
 
     onTouchStart: function(event) {
-        GestureRecognizer.onTouchStart.apply(this, [event])
         //return this.onPressDown(event)
     },
     
-    onTouchMove: function(event) {
+    onTouchMoveCapture: function(event) {
         /*
         console.log(this.type() + " onTouchMove diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
         if (this.canDelete()) {
@@ -114,12 +164,10 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
 
 	
     onTouchCancel: function(event) {
-        GestureRecognizer.onTouchCancel.apply(this, [event])
         return this.onPressUp(event)
     },
 	
     onTouchEnd: function(event) {
-        GestureRecognizer.onTouchEnd.apply(this, [event])
         return this.onPressUp(event)
     },	
 

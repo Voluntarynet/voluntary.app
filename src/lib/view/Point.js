@@ -1,11 +1,11 @@
 "use strict"
 
 /*
+    Point
 
-
+    Class to represent a 2d or 3d point, optionally with a time.
 
 */
-
 
 window.Point = ideal.Proto.extend().newSlots({
     type: "Point",
@@ -68,14 +68,14 @@ window.Point = ideal.Proto.extend().newSlots({
     },
 
     add: function(p) {
-        return Point.clone.copyPoint(this).addInPlace(p)
+        return Point.clone().copyPoint(this).addInPlace(p)
     },
 
     subtract: function(p) {
-        return Point.clone.copyPoint(this).subtractInPlace(p)
+        return Point.clone().copyPoint(this).subtractInPlace(p)
     },
 
     asString: function() {
-        return "" + this._x + ", " + this._y + ", " + this._z + ", " + this._t
+        return "" + this._x + "x, " + this._y + "y, " + this._z + "z, " + this._t + "t"
     },
 })

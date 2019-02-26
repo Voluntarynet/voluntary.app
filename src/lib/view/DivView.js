@@ -1947,6 +1947,30 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this
     },
 
+    firstActiveGesture: function() {
+        return this._gestureRecognizers.select((gr) => {
+            return gr.isActive()
+        })
+    },
+
+    requestActiveGesture: function(aGesture) {
+        let first = this.firstActiveGesture()
+        if (!first) {
+            this.cancelAllGesturesExcept(aGesture)
+            return true
+        }
+        return false
+    },
+
+    cancelAllGesturesExcept: function(aGesture) {
+        this._gestureRecognizer.forEach((gr) => {
+            if (gr != aGesture) {
+                gr.cancel()
+            }
+        })
+        return this
+    },
+
     // mouse events
     
     eventFuncForMethodName: function (methodName) {

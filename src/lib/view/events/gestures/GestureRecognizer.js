@@ -77,7 +77,6 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         return this
     },
 
-
     // --- doc listeners ---
 
     stopDocListeners: function() {

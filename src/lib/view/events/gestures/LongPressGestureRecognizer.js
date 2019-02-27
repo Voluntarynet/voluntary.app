@@ -3,6 +3,8 @@
 /*
     LongPressGestureRecognizer
 
+    Recognize a long press and hold in (roughly) one location.
+
     Notes:
 
         Should gesture cancel if press moves:
@@ -17,20 +19,19 @@
         onLongPressGestureComplete
         onLongPressGestureCancelled
 
-    
 */
 
 
 window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
     type: "LongPressGestureRecognizer",
-    pressHoldPeriod: 1000, 
-    timeoutId: null,
+    longHoldPeriod: 1000, // miliseconds
+    timeoutId: null, // private
 }).setSlots({
     
     init: function () {
         GestureRecognizer.init.apply(this)
         this.setListenerClasses(["MouseListener", "TouchListener"])
-        this.setIsDebugging(true) 
+        //this.setIsDebugging(true) 
         return this
     },
 
@@ -40,7 +41,7 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
         if (this.timeoutId()) {
             this.stopTimer()
         }
-        let tid = setTimeout(() => { this.onLongPress(event) }, this.pressHoldPeriod());
+        let tid = setTimeout(() => { this.onLongPress(event) }, this.longHoldPeriod());
         this.setTimeoutId(tid)
         //console.log("startPressHoldTimer id",   this.timeoutId())
         return this
@@ -63,7 +64,10 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
     onLongPress: function(event) {
         this.setCurrentEvent(event)
         this.setTimeoutId(null)
-        this.sendDelegateMessage("onLongPressGestureComplete")
+        let r = this.viewTarget().requestActiveGesture()
+        if (r) {
+            this.sendDelegateMessage("onLongPressGestureComplete")
+        }
     },
 
     // -- single action for mouse and touch up/down ---

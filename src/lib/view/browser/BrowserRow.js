@@ -38,18 +38,22 @@ window.BrowserRow = NodeView.extend().newSlots({
 
         //this.animateOpen()
 
-        this.addGestureRecognizer(LongPressGestureRecognizer.clone())
-        //this.addGestureRecognizer(SlideGestureRecognizer.clone())
+        //this.addGestureRecognizer(LongPressGestureRecognizer.clone())
+        this.addGestureRecognizer(SlideGestureRecognizer.clone())
         return this
     },
 
     setCanReorder: function(aBool) {
+        // should we do this now, or always register and decide what to do with event when it happens?
+        /*
+        let lgr = LongPressGestureRecognizer.clone().setLongHoldPeriod(500)
         if (aBool) {
-            this.setTapHoldPeriod(500)
+            this.addGestureRecognizer(lgr)
         } else {
-            this.setTapHoldPeriod(null)
+            this.removeGestureRecognizer(lgr)
         }
-        return null
+        */
+        return this
     },
 
     setupRowContentView: function() {
@@ -66,7 +70,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         return this.parentView()
     },
     
-    // node style dict 
+    // node style dict
     
     currentRowStyle: function() {
         var styles = this.node().nodeRowStyles()
@@ -261,7 +265,9 @@ window.BrowserRow = NodeView.extend().newSlots({
     onSlideGestureBegin: function() {
         console.log(this.type() + " onSlideGestureBegin")
         this._touchDeleteOffset = this.clientWidth() * 0.5;
-        this.setTransition("right 0s")        
+        //this.setTransition("right 0s")       
+        this.setTransition("all 0s")       
+        //this.addDeleteXView() 
         return this
     },
 
@@ -301,7 +307,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         if (this.canDelete()) {
 
             let xd = slideGesture.dx()
-            console.log(">>> " + this.type() + " onSlideGestureMove ", xd)
+            //console.log(">>> " + this.type() + " onSlideGestureMove ", xd)
 			
             if (xd > 0) { 
                 xd = 0; 
@@ -337,11 +343,11 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
     */
 	
-    onSlideGestureComplete: function(event) {
+    onSlideGestureComplete: function(slideGesture) {
         console.log(">>> " + this.type() + " onSlideGestureComplete")
 
         if (this._isTouchDown) {
-            var diff = this.touchDownDiffWithEvent(event)
+            var diff = slideGesture.dx()
             if (this.isReadyToTouchDelete()) {
                 this.slideForwardAndDelete()
             } else {
@@ -349,6 +355,10 @@ window.BrowserRow = NodeView.extend().newSlots({
             }
             this._isTouchDown = false
         }
+    },
+
+    onSlideGestureCancelled: function(aGesture) {
+        this.onSlideGestureComplete(aGesture)
     },
 
     slideForwardAndDelete: function() {

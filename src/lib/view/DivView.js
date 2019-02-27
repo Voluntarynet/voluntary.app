@@ -97,6 +97,13 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this
     },
 
+    gestureRecognizers: function() {
+        if (this._gestureRecognizers == null) {
+            this._gestureRecognizers = []
+        }
+        return this._gestureRecognizers
+    },
+
     setDivId: function(aString) {
         this.element().id = aString
         return this
@@ -1928,33 +1935,52 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     /// GestureRecognizers
 
-    addGestureRecognizer: function(gr) {
-        if (!this._gestureRecognizers) {
-            this._gestureRecognizers = []
+    hasGestureType: function(typeName) {
+        let alreadyHasIt = this.gestureRecognizers().map((r) => { return r.type() }).contains(typeName)
+        return alreadyHasIt
+    },
+
+    addGestureRecognizerIfAbsent: function(gr) {
+        if (!this.hasGestureType(gr.type())) {
+            this.addGestureRecognizer(gr)
         }
-        this._gestureRecognizers.append(gr)
-        gr.setViewTarget(this)
-        gr.start()
+        return this
+    },
+
+    addGestureRecognizer: function(gr) {
+        if (this.hasGestureType(gr.type())) {
+            console.error(this.type() + ".addGestureRecognizer(" + gr.type() + ") attempted to add duplicate gesture type")
+        } else {
+            this.gestureRecognizers().append(gr)
+            gr.setViewTarget(this)
+            gr.start()
+        }
         return this
     },
 
     removeGestureRecognizer: function(gr) {
-        if (this._gestureRecognizers) {
+        if (this.gestureRecognizers()) {
             gr.stop()
             gr.setViewTarget(null)
-            this._gestureRecognizers.remove(gr)
+            this.gestureRecognizers().remove(gr)
         }
         return this
     },
 
     firstActiveGesture: function() {
-        return this._gestureRecognizers.select((gr) => {
-            return gr.isActive()
-        })
+        if (this.gestureRecognizers()) {
+            return this.gestureRecognizers().detect((gr) => {
+                return gr.isActive()
+            })
+        }
+        return null
     },
 
     requestActiveGesture: function(aGesture) {
+        assert(aGesture)
+        
         let first = this.firstActiveGesture()
+
         if (!first) {
             this.cancelAllGesturesExcept(aGesture)
             return true
@@ -1968,9 +1994,9 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     cancelAllGesturesExcept: function(aGesture) {
-        this._gestureRecognizer.forEach((gr) => {
-            if (gr != aGesture) {
-                gr.cancel()
+        this.gestureRecognizers().forEach((gr) => {
+            if (gr.type() != aGesture.type()) {
+                    gr.cancel()
             }
         })
         return this

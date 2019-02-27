@@ -42,6 +42,7 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     init: function () {
         GestureRecognizer.init.apply(this)
         this.setListenerClasses(["MouseListener"])
+        this.setIsDebugging(true)
         //this.setListenerClasses(["MouseListener", "TouchListener"]) 
         return this
     },
@@ -51,7 +52,7 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     // tap events
 
     onPressDownPos: function (pos) {
-        console.log(this.type() + ".onPressDownPos(" + pos.asString() + ")")
+        //console.log(this.type() + ".onPressDownPos(" + pos.asString() + ")")
         this.setIsPressing(true)
         this.setDownPosition(pos)
         this.setCurrentPosition(pos)
@@ -67,17 +68,19 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
 
             if (!this.isActive() && this.hasMovedEnough()) {
                 let vt = this.viewTarget()
-                console.log(this.type() + " requestActiveGesture ")
+                let r = vt.requestActiveGesture(this)
+                //console.log(this.type() + " requestActiveGesture ", r)
 
-                if(vt.requestActiveGesture()) {
+                if(r) {
                     this.setIsActive(true)
                     this.sendDelegateMessage("onSlideGestureBegin")
                 }
             }
-        }
-
-        if (this.isActive()) {
-            this.sendDelegateMessage("onSlideGestureMove")
+        
+            if (this.isActive()) {
+                console.log(this.dx())
+                this.sendDelegateMessage("onSlideGestureMove")
+            }
         }
     },
 
@@ -87,10 +90,7 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
         if (this.isPressing()) {
             this.setIsPressing(false)
             this.setCurrentPosition(pos)
-            this.setUpPosition(pos)
-            this.stopDocListeners()
-            this.setIsActive(false)
-
+            this.finish()
             if (this.isActive()) {
                 this.sendDelegateMessage("onSlideGestureComplete")
             }
@@ -100,7 +100,14 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     },
 
     cancel: function() {
-        this.setActive(false)
+        this.finish()
+        return this
+    },
+
+    finish: function() {
+        console.log(this.type() + ".finish()")
+        this.setIsActive(false)
+        this.stopDocListeners()
         return this
     },
 

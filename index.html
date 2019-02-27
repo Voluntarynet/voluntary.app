@@ -88047,7 +88047,6 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         return this
     },
 
-
     // --- doc listeners ---
 
     stopDocListeners: function() {
@@ -88125,7 +88124,6 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         onLongPressGestureComplete
         onLongPressGestureCancelled
 
-    
 */
 
 
@@ -88310,9 +88308,10 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
 
             if (!this.isActive() && this.hasMovedEnough()) {
                 let vt = this.viewTarget()
-                console.log(this.type() + " requestActiveGesture ")
+                let r = vt.requestActiveGesture(this)
+                console.log(this.type() + " requestActiveGesture ", r)
 
-                if(vt.requestActiveGesture()) {
+                if(r) {
                     this.setIsActive(true)
                     this.sendDelegateMessage("onSlideGestureBegin")
                 }
@@ -94575,7 +94574,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         //this.animateOpen()
 
         this.addGestureRecognizer(LongPressGestureRecognizer.clone())
-        //this.addGestureRecognizer(SlideGestureRecognizer.clone())
+        this.addGestureRecognizer(SlideGestureRecognizer.clone())
         return this
     },
 

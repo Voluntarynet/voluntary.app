@@ -53,7 +53,7 @@ window.BMLocalIdentities = BMStorableNode.extend().newSlots({
     },
     
     handleObjMsg: function(objMsg) {
-        var result = false
+        let result = false
         
         //console.log("========== this.identities() = ", this.identities().length)
         this.identities().forEach((id) => {

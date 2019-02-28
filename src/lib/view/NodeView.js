@@ -42,7 +42,7 @@ window.NodeView = DivStyledView.extend().newSlots({
     },
 
     updateElementIdLabel: function() {
-        var nodeId = this.node() ? this.node().type() + "-" + this.node().uniqueId() : "null"
+        let nodeId = this.node() ? this.node().type() + "-" + this.node().uniqueId() : "null"
         this.element().id = this.type() + "-" + this._uniqueId + " for node " + nodeId
     },
     
@@ -78,7 +78,7 @@ window.NodeView = DivStyledView.extend().newSlots({
     subviewProto: function() {
         //console.log("looking for subviewProto")
         if (this.node()) {
-            var vc = this.node().nodeRowViewClass()
+            let vc = this.node().nodeRowViewClass()
             if (vc) { 
                 return vc
             }
@@ -100,7 +100,7 @@ window.NodeView = DivStyledView.extend().newSlots({
     },
 
     subviewProtoForSubnode: function(aSubnode) {
-        var proto = this.overrideSubviewProto()
+        let proto = this.overrideSubviewProto()
 		
         if (!proto) {
 		    proto = aSubnode.viewClass()
@@ -114,7 +114,7 @@ window.NodeView = DivStyledView.extend().newSlots({
             throw new Error("null aSubnode")
         }
         
-        var proto = this.subviewProtoForSubnode(aSubnode)
+        let proto = this.subviewProtoForSubnode(aSubnode)
 		
         if (!proto) {
             throw new Error("no subviewProto for subnode " + aSubnode.typeId())
@@ -137,14 +137,14 @@ window.NodeView = DivStyledView.extend().newSlots({
         
         this.node().prepareToSyncToView()
        
-        var newSubviews = []
-        var subnodes = this.visibleSubnodes()
+        let newSubviews = []
+        let subnodes = this.visibleSubnodes()
         
         // only replace subviews if sync requires it,
         // and reuse subviews for subnodes which are still present 
 
         subnodes.forEach((subnode) => {
-            var subview = this.subviewForNode(subnode) // get the current view for the node, if there is one
+            let subview = this.subviewForNode(subnode) // get the current view for the node, if there is one
             
             if (!subview) {
                 subview = this.newSubviewForSubnode(subnode)
@@ -170,7 +170,7 @@ window.NodeView = DivStyledView.extend().newSlots({
     },
     
     syncToNode: function () {
-        var node = this.node()
+        let node = this.node()
         if (node) {
             node.didUpdateNode()
             //node.scheduleSyncToStore()
@@ -202,13 +202,13 @@ window.NodeView = DivStyledView.extend().newSlots({
     },
     
     log: function(msg) {
-        var s = "[" + this.logName() + "] " + msg
+        let s = "[" + this.logName() + "] " + msg
         console.log(s)
         return this
     },
     
     onDropFiles: function(filePaths) {
-        var node = this.node()
+        let node = this.node()
         if (node && node.onDropFiles) {
             node.onDropFiles(filePaths)
         }
@@ -220,7 +220,7 @@ window.NodeView = DivStyledView.extend().newSlots({
     onVisibility: function() {
 	    DivStyledView.onVisibility.apply(this)
 	    //console.log(this.typeId() + ".onVisibility()")
-	    var node = this.node()
+	    let node = this.node()
 	    if (node && node.nodeBecameVisible) {
 	        node.nodeBecameVisible()
 	    }

@@ -163,7 +163,7 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
         }
 
         //this.titleElement().innerHTML = "ERROR"
-        var s = "" + errorMsg
+        let s = "" + errorMsg
 
         if (url) {
             s += " in " + url.split("/").pop() + " Line: " + lineNumber;  //+ " Column: "" + column;
@@ -259,7 +259,6 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
 
 //console.log("loaded file LoadProgressBar - starting")
 
-var LoadProgressBar = LoadProgressBarClass.clone()
-window.LoadProgressBar = LoadProgressBar
-LoadProgressBar.startWhenReady()
+window.LoadProgressBar = LoadProgressBarClass.clone()
+window.LoadProgressBar.startWhenReady()
 

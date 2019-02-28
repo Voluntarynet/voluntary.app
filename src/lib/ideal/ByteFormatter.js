@@ -7,7 +7,7 @@
 
 	example use:
 
-	var stringVersion = ByteFormatter.clone().setValue(aNumberOfBytes).formattedValue()
+	let stringVersion = ByteFormatter.clone().setValue(aNumberOfBytes).formattedValue()
 
 	example output:
 
@@ -45,21 +45,21 @@ class ByteFormatter extends ProtoClass {
     }
 
     formattedValue() {
-        var b = Math.floor(this.value());
-        var postfix = this.usePostfix() ? "B" : "";
-        var space = this.useSpace() ? " " : "";
+        let b = Math.floor(this.value());
+        let postfix = this.usePostfix() ? "B" : "";
+        let space = this.useSpace() ? " " : "";
 		
-        var orderNames = this.useLongNames() ? this.orderNamesLong() : this.orderNamesShort();
-        var order = Math.floor(Math.log10(b)/3)
+        let orderNames = this.useLongNames() ? this.orderNamesLong() : this.orderNamesShort();
+        let order = Math.floor(Math.log10(b)/3)
         order = Math.min(order, orderNames.length - 1)
-        var orderName = orderNames[order]
+        let orderName = orderNames[order]
 
         if (order == 0 || this.useLongNames()) {
             space = " "
             postfix = ""
         }
 
-        var v = Math.floor(b / Math.pow(10, order*3))
+        let v = Math.floor(b / Math.pow(10, order*3))
 		
         // remove plural if v == 1
         if (orderName[orderName.length-1] == "s" && v == 1) {

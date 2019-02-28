@@ -39,7 +39,7 @@ window.SyncAction = class SyncAction extends ProtoClass {
     }
 	
     description () {
-        var t = this.target() ? this.target().typeId() : "null"
+        let t = this.target() ? this.target().typeId() : "null"
         return t+ "." + this.method() + "() order:" + this.order()
     }
 	

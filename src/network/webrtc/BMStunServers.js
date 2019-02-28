@@ -61,7 +61,7 @@ window.BMStunServers = BMStorableNode.extend().newSlots({
     },
 
     bootStrapServers: function (dict) {
-        var dicts = this.defaultOptions().iceServers
+        let dicts = this.defaultOptions().iceServers
         return dicts.map((dict) => {
         	return BMStunServer.clone().setIceDict(dict) 
         })
@@ -77,7 +77,7 @@ window.BMStunServers = BMStorableNode.extend().newSlots({
     },
 	
     peerOptionsDict: function() {
-        var dict = this.iceEntries() 
+        let dict = this.iceEntries() 
         //console.log("peerOptionsDict: " + JSON.stringify(dict))
         return dict
     },

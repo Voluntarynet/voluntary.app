@@ -65,13 +65,13 @@ window.BMMessage = BMFieldSetNode.extend().newSlots({
     },
     
     messageForString: function(aString) {
-        var dict = JSON.parse(aString)
-        var msgType = dict.msgType
+        let dict = JSON.parse(aString)
+        let msgType = dict.msgType
         
         if (this.msgTypes().contains(msgType)) {
-            var className = "BM" + msgType.capitalized() + "Message"
+            let className = "BM" + msgType.capitalized() + "Message"
             //this.log("className '" + className + "'")
-            var proto = window[className]
+            let proto = window[className]
             return proto.clone().setMsgDict(dict)
         }
         

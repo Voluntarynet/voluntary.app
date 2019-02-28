@@ -11,7 +11,7 @@ window.BMInvMessage = BMMessage.extend().newSlots({
     },
     
     addMsgHash: function(msgHash) {
-        //var f = this.bloomFilter()
+        //let f = this.bloomFilter()
         //if (f == null || f.checkEntry(
         this.data().push(msgHash)
         return this

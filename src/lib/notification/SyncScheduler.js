@@ -54,7 +54,7 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
     }
 	
     syncSet (syncMethod) {
-        var sets = this.syncSets()
+        let sets = this.syncSets()
         if (!sets.at(syncMethod)) {
             sets.atPut(syncMethod, ideal.Map.clone())
         }
@@ -71,7 +71,7 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
 
             if (syncMethod != "processPostQueue") {
                 if (this.currentAction() && this.currentAction().equals(newAction)) {
-                    var error = this.typeId()
+                    let error = this.typeId()
                     error += "  scheduleTargetAndMethod: \n" + newAction.description() 
                     error += "  while processing: " + this.currentAction().description()
                     throw new Error(error)
@@ -87,14 +87,14 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
     }
 
     hasScheduledTargetAndMethod (target, syncMethod) {
-        var actionKey = window.SyncAction.ActionKeyForTargetAndMethod(target, syncMethod)
+        let actionKey = window.SyncAction.ActionKeyForTargetAndMethod(target, syncMethod)
     	return this.actions().hasKey(actionKey)
     }
 
     isSyncingTargetAndMethod (target, syncMethod) {
-        var ca = this.currentAction()
+        let ca = this.currentAction()
         if (ca) {
-            var action = this.newActionForTargetAndMethod(target, syncMethod)
+            let action = this.newActionForTargetAndMethod(target, syncMethod)
     		return ca.equals(action)
         }
         return false
@@ -121,7 +121,7 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
     }
 	
     orderedActions () {
-        var sorter = function (a1, a2) { return a1.order() - a2.order() }
+        let sorter = function (a1, a2) { return a1.order() - a2.order() }
         return this.actions().values().sort(sorter)
     }
 	
@@ -129,7 +129,7 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
         assert(!this.isProcessing())
         this.setIsProcessing(true)
         let useTry = false
-        var error = null
+        let error = null
 
         if (useTry) {
             try {
@@ -157,7 +157,7 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
             console.log("Sync")
         }
         
-        var actions = this.orderedActions()
+        let actions = this.orderedActions()
         this.clearActions()
         
         //console.log("actions = ", actions.map(a => a.method()).join(","))
@@ -170,8 +170,8 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
     }
 
     description () {
-        var parts = []
-        var actions = this.orderedActions()
+        let parts = []
+        let actions = this.orderedActions()
         
         actions.forEach((action) => {
 		    parts.push("    " + action.description())

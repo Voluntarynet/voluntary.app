@@ -3,7 +3,7 @@
     Used to inspect class styles since css hides stylesheet.cssRules.
     
     example use:
-    var value = DivCSSInspector.shared().setDivClassName("..").cssStyle.fontFamily
+    let value = DivCSSInspector.shared().setDivClassName("..").cssStyle.fontFamily
 
 */
 
@@ -31,7 +31,7 @@ window.DivCSSInspector = ideal.Proto.extend().newSlots({
     },
 	
     createTestElement: function() {
-        var e = document.createElement("div");
+        let e = document.createElement("div");
 	    e.setAttribute("id", this.idName());
         e.style.display = "none";
         e.style.visibility = "hidden";

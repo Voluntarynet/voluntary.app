@@ -44,7 +44,7 @@ window.ImageView = NodeView.extend().newSlots({
 
     addCloseButton: function() {
         if (this.closeButtonView() == null) {
-            var cb = NodeView.clone().setDivClassName("ImageCloseButton")
+            let cb = NodeView.clone().setDivClassName("ImageCloseButton")
             this.setCloseButtonView(cb)
             this.addSubview(cb) 
             cb.setTarget(this).setAction("close") //.setInnerHTML("&#10799;")
@@ -80,7 +80,7 @@ window.ImageView = NodeView.extend().newSlots({
         //this.imageContainer().setMinAndMaxWidth(0)
         //this.setMinAndMaxWidth(0)
         /*
-        var style = this.cssStyle();
+        let style = this.cssStyle();
         style.paddingLeft = "0px";
         style.paddingRight = "0px";
         style.marginLeft = "0px";
@@ -89,13 +89,13 @@ window.ImageView = NodeView.extend().newSlots({
     },
     
     close: function() {
-        var seconds = 0.3
+        let seconds = 0.3
 		
         this.collapse()
         
         setTimeout( () => { 
             this.removeCloseButton()
-            var parentView = this.parentView()
+            let parentView = this.parentView()
             this.removeFromParentView()
             //console.log(this.typeId() + ".close complete parentView = ", parentView)
             parentView.scheduleSyncToNode() //parentView.syncToNode()
@@ -125,7 +125,7 @@ window.ImageView = NodeView.extend().newSlots({
         this.removeRawImageView()
         this.setDataURL(dataURL)
 
-        var image = new Image();
+        let image = new Image();
         image.src = dataURL;
 
         this.setRawImageView(DivView.clone().setElement(image).setDivClassName("ImageViewImageObject"))
@@ -138,16 +138,16 @@ window.ImageView = NodeView.extend().newSlots({
         if (src.beginsWith("data:")) {
 	        this.setFromDataURL(src)
         } else {
-		    var img = new Image();
+		    let img = new Image();
             img.crossOrigin = "Anonymous";
         
 	        img.onload = () => {
-	            var canvas = document.createElement("CANVAS");
-	            var ctx = canvas.getContext("2d");
+	            let canvas = document.createElement("CANVAS");
+	            let ctx = canvas.getContext("2d");
 	            canvas.height = this.height;
 	            canvas.width = this.width;
 	            ctx.drawImage(img, 0, 0);
-	            var data = canvas.toDataURL("image/jpeg");
+	            let data = canvas.toDataURL("image/jpeg");
 	            this.didFetchDataURL(data)
 	        };
 

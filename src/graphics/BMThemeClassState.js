@@ -21,7 +21,7 @@ window.BMThemeClassState = BMFieldSetNode.extend().newSlots({
     setDivClassName: function(aName) {
         this._divClassName = aName
         this.setTitle(aName)
-        var style = DivCSSInspector.shared().setDivClassName(aName).cssStyle()
+        let style = DivCSSInspector.shared().setDivClassName(aName).cssStyle()
         this.syncFromViewStyle()
         return this
     },
@@ -33,7 +33,7 @@ window.BMThemeClassState = BMFieldSetNode.extend().newSlots({
 
     setupSubnodes: function() {
         this.attributeNames().forEach((attributeName) => {
-            var field = BMField.clone().setKey(attributeName).setValueIsEditable("");
+            let field = BMField.clone().setKey(attributeName).setValueIsEditable("");
             this.addStoredField(field)
         })
         return this

@@ -13,8 +13,8 @@ window.Observation = class Observation extends ProtoClass {
     }
 
     matchesNotification(note) {
-        var matchesTarget = (note.sender() == this.target()) || (this.target() == null)
-        var matchesName = (note.name() == this.name()) || (this.name() === null)
+        let matchesTarget = (note.sender() == this.target()) || (this.target() == null)
+        let matchesName = (note.name() == this.name()) || (this.name() === null)
         return matchesTarget && matchesName
     }
 
@@ -22,7 +22,7 @@ window.Observation = class Observation extends ProtoClass {
         if (this.center().isDebugging()) {
             //console.log(this._observer + " received note " + note.name() + " from " + note.sender() )
         }
-        var method = this._observer[note.name()]
+        let method = this._observer[note.name()]
         if (method) {
             method.apply(this._observer, [note])
         } else {
@@ -33,9 +33,9 @@ window.Observation = class Observation extends ProtoClass {
     }
 
     isEqual(obs) {
-        var sameName = this.name() == obs.name()
-        var sameObserver = this.observer() == obs.observer()
-        var sameTarget = this.target() == obs.target()
+        let sameName = this.name() == obs.name()
+        let sameObserver = this.observer() == obs.observer()
+        let sameTarget = this.target() == obs.target()
         return sameName && sameObserver && sameTarget
     }
 

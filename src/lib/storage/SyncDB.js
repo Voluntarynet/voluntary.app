@@ -102,15 +102,15 @@ window.SyncDB = class SyncDB extends ProtoClass {
 	
     asJson () {
         // WARNING: bad performance if called frequently
-        var s = JSON.stringify(this._readCache)
+        let s = JSON.stringify(this._readCache)
         return JSON.parse(this._readCache)
     }
 	
     verifySync () {
-        var readCache = this._readCache
+        let readCache = this._readCache
         this._isSynced = false
         this.idb().asyncAsJson( (json) => {
-            var hasError = false
+            let hasError = false
 			
             for (k in json) {
                 if (!(k in readCache)) {
@@ -171,11 +171,11 @@ window.SyncDB = class SyncDB extends ProtoClass {
     // stats
 	
     totalBytes () {
-        var byteCount = 0
-        var dict = this._readCache
+        let byteCount = 0
+        let dict = this._readCache
         for (let k in dict) {
 		   if (dict.hasOwnProperty(k)) {
-                var v = dict[k]
+                let v = dict[k]
                 byteCount += k.length + v.length
             }
         }
@@ -215,16 +215,16 @@ window.SyncDB = class SyncDB extends ProtoClass {
 	    
 	    this.assertInTx()
 	    
-	    var tx = this.idb().newTx()
+	    let tx = this.idb().newTx()
 	    
 	    tx.begin()
 	    
-	    var count = 0
-        var d = this._writeCache
+	    let count = 0
+        let d = this._writeCache
 		
         for (let k in d) {
 		   if (d.hasOwnProperty(k)) {
-                var entry = d[k]
+                let entry = d[k]
                 
                 if (entry._isDelete) {
                     tx.removeAt(k)
@@ -233,7 +233,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
                     	console.log(this.type() + " delete ", k)
                     }
                 } else {
-                    var v = entry._value
+                    let v = entry._value
                     //tx.atPut(k, v)
                     
                     if (k in this._readCache) {
@@ -279,7 +279,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
         this.assertOpen()
 		
         if (this._writeCache) {
-    		var e = this._writeCache[key]
+    		let e = this._writeCache[key]
     		if (e) {
     		    if (e._isDelete) {
     		        return null

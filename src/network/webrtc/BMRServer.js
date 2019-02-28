@@ -47,7 +47,7 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
     },
     
     updateButtons: function() {
-        var cb = this.connectButton()
+        let cb = this.connectButton()
         if (cb) {
             if (this.serverConnection().isConnected()) {
                 cb.setKey("disconnect").setValue("disconnect")
@@ -82,8 +82,8 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
     
     status: function() {
         if (this.serverConnection().isConnected()) {
-            var total = this.serverConnection().remotePeers().count()
-            var connected = this.connectedRemotePeerCount()
+            let total = this.serverConnection().remotePeers().count()
+            let connected = this.connectedRemotePeerCount()
             if (total == 0) {
                 return "no peers"
             }
@@ -161,7 +161,7 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
     },
 
     updateBloomDistance: function(bloomUint8Array) {
-        var hostHashUint8Array = this.host().sha256()
+        let hostHashUint8Array = this.host().sha256()
 
         // make sure host bits are at least as long as bloom
         while (hostHashUint8Array.length < bloomUint8Array.length) {
@@ -171,11 +171,11 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
         // TODO: shouldn't need to calculate this often but 
         // might when server count gets high or changes frequently. Optimize then.
 		
-        var s1 = new BitStream(bloomUint8Array);
-        var s2 = new BitStream(hostHashUint8Array);
+        let s1 = new BitStream(bloomUint8Array);
+        let s2 = new BitStream(hostHashUint8Array);
 		
-        var bitCount = hostHashUint8Array.length * 8
-        var diff = 0
+        let bitCount = hostHashUint8Array.length * 8
+        let diff = 0
         for (let i = 0; i < bitCount; i ++) {
             if (s1.readBoolean() != s2.readBoolean()) {
                 diff ++

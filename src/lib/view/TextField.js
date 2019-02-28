@@ -54,7 +54,7 @@ window.TextField = DivStyledView.extend().newSlots({
     // ------------------
 
     setValue: function(newValue) {
-        //var newValue = this.visibleValue()
+        //let newValue = this.visibleValue()
 	    this.setInnerHTML(newValue)
         return this
     },	
@@ -94,8 +94,8 @@ window.TextField = DivStyledView.extend().newSlots({
     },
 	
     formatValue: function() {
-	    var oldValue = this.innerHTML()
-	    var newValue = this.innerText() // removes returns
+	    let oldValue = this.innerHTML()
+	    let newValue = this.innerText() // removes returns
         
         if (this.doesTrim()) {
             newValue = newValue.trim()
@@ -110,9 +110,9 @@ window.TextField = DivStyledView.extend().newSlots({
     
     /*
     setInput: function(s) {
-        var n = this.node()
+        let n = this.node()
         if (n) {
-            var m = n.nodeInputFieldMethod()
+            let m = n.nodeInputFieldMethod()
             if (m) {
                 n[m].apply(n, [s])
             }

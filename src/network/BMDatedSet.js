@@ -57,7 +57,7 @@ window.BMDatedSet = BMStorableNode.extend().newSlots({
     
     ageInSecondsOfKey: function(h) {
         if (this.hasKey(h)) {
-            var ageInSeconds = Date.now() - this.dict()[h]
+            let ageInSeconds = Date.now() - this.dict()[h]
             return ageInSeconds
         }
         
@@ -65,8 +65,8 @@ window.BMDatedSet = BMStorableNode.extend().newSlots({
     },
 
     deleteExpiredKeys: function() {
-        var max = this.maxAgeInSeconds()
-        var keys = Object.keys(this.dict())
+        let max = this.maxAgeInSeconds()
+        let keys = Object.keys(this.dict())
         
         keys.forEach((k) => {
             if (this.ageInSecondsOfKey(k) > max) {

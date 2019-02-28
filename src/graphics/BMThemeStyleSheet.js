@@ -25,11 +25,11 @@ window.BMThemeStyleSheet = ideal.Proto.extend().newSlots({
     },
 
     setDivClassNameAttributeValue: function(divClassName, name, value) {
-        var className = "."  + divClassName.split(" ")[0]
-        var rule = className + " { " + name + ": " + value +"; }"
+        let className = "."  + divClassName.split(" ")[0]
+        let rule = className + " { " + name + ": " + value +"; }"
 
 
-        var sheet = this.sheet()
+        let sheet = this.sheet()
         sheet.insertRule(rule, sheet.cssRules.length); 
         console.log("added rule to theme sheet: " + rule + "")
         return this

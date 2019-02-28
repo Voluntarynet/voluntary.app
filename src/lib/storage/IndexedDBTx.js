@@ -30,10 +30,10 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
     begin () {
 	    this.assertNotCommitted()
 	
-	    var tx = this.db().transaction(this.storeName(), "readwrite")
+	    let tx = this.db().transaction(this.storeName(), "readwrite")
         this.setTx(tx)
 
-        var requestStack = this.debug() ? new Error().stack : null
+        let requestStack = this.debug() ? new Error().stack : null
         tx.onerror = (event) => {
 		    if (requestStack) { 
                 console.log("error stack ", requestStack)
@@ -41,7 +41,7 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
 		  	throw new Error("tx error " + event.target.error)
         }
 		        
-        var objectStore = tx.objectStore(this.storeName());
+        let objectStore = tx.objectStore(this.storeName());
         this.setObjectStore(objectStore)
         
         return this
@@ -61,8 +61,8 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
     // --- helpers ---
 	
     hasKey (key) {
-	    var domStringList = this.objectStore().indexNames
-	    var hasKey = domStringList.contains(key) 
+	    let domStringList = this.objectStore().indexNames
+	    let hasKey = domStringList.contains(key) 
 	    console.log("domStringList.length : ", domStringList.length)
 	    console.log("domStringList['" + key + "'] exists ", hasKey)
 	    return hasKey
@@ -71,9 +71,9 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
     pushRequest (aRequest) {
 	    this.assertNotCommitted()
 
-        var requestStack = this.debug() ? new Error().stack : null
+        let requestStack = this.debug() ? new Error().stack : null
         aRequest.onerror = (event) => {
-		    var fullDescription = aRequest.description + " on objectStore [" + this.storeName() + "] " + event.target.error
+		    let fullDescription = aRequest.description + " on objectStore [" + this.storeName() + "] " + event.target.error
 		    if (requestStack) { 
                 console.log("error stack ", requestStack)
             }
@@ -89,7 +89,7 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
             throw new Error(this.type() + ".entryForKeyAndValue('" + key + "', ...) can't add null value")
         }
 		
-        var v = JSON.stringify(object)
+        let v = JSON.stringify(object)
         if (v == null) {
             throw new Error("can't add null value")
         }
@@ -113,8 +113,8 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
     atAdd (key, object) { 
 	    this.assertNotCommitted()
 
-        var entry = this.entryForKeyAndValue(key, object)
-        var request = this.objectStore().add(entry);
+        let entry = this.entryForKeyAndValue(key, object)
+        let request = this.objectStore().add(entry);
         request._action = "add"
         request._key = key 
         this.pushRequest(request)
@@ -124,8 +124,8 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
     atUpdate (key, object) {
 	    this.assertNotCommitted()
 
-        var entry = this.entryForKeyAndValue(key, object)
-        var request = this.objectStore().put(entry);
+        let entry = this.entryForKeyAndValue(key, object)
+        let request = this.objectStore().put(entry);
         request._action = "put"
         request._key = key
         this.pushRequest(request)
@@ -135,7 +135,7 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
     removeAt (key) {
 	    this.assertNotCommitted()
 
-        var request = this.objectStore().delete(key);
+        let request = this.objectStore().delete(key);
         request._action = "remove"
         request._key = key
         this.pushRequest(request)

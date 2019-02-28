@@ -93,7 +93,7 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     /*
     isOnPhone: function()
     {
-       var userAgent = navigator.userAgent.toLowerCase()
+       let userAgent = navigator.userAgent.toLowerCase()
        console.log("userAgent: '" + userAgent + "'")
     },
     */
@@ -103,12 +103,12 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     },
 
     agent: function() {
-        var agent = navigator.userAgent.toLowerCase()
+        let agent = navigator.userAgent.toLowerCase()
         return agent
     },
 
     agentIsSafari: function() {
-        var isSafari = navigator.vendor && navigator.vendor.indexOf("Apple") > -1 &&
+        let isSafari = navigator.vendor && navigator.vendor.indexOf("Apple") > -1 &&
                navigator.userAgent &&
                navigator.userAgent.indexOf("CriOS") == -1 &&
                navigator.userAgent.indexOf("FxiOS") == -1;
@@ -116,21 +116,21 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     },
 
     agentIsChrome: function() {
-        var isChrome =  Boolean(window.chrome) //&& 
+        let isChrome =  Boolean(window.chrome) //&& 
         //navigator.userAgent.indexOf('Brave') == -1;
         //console.log("window.chrome = ", window.chrome);
         return isChrome
     },
     
     isOnMobile: function() { 
-        var agent = this.agent();
-        var match = this.mobileNames().detect((name) => { return agent.contains(name); })
+        let agent = this.agent();
+        let match = this.mobileNames().detect((name) => { return agent.contains(name); })
         return !(match === null)
     },
 
     isTouchDevice: function() {
         // via https://stackoverflow.com/questions/4817029/whats-the-best-way-to-detect-a-touch-screen-device-using-javascript
-        var result = false 
+        let result = false 
         if ("ontouchstart" in window) { result = true; }        // works on most browsers 
         if (navigator.maxTouchPoints) { result = true; }       // works on IE10/11 and Surface	
         //console.log("WebBrowserWindow.isTouchDevice() = ", result)
@@ -149,7 +149,7 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     },
     
     descriptionDict: function() {
-        var dict = {
+        let dict = {
             agent: this.agent(),
             size: this.width() + "x" + this.height(),
             isOnMobile: this.isOnMobile()
@@ -158,9 +158,9 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     },
 
     urlHostname: function() {
-        var parser = document.createElement("a")
+        let parser = document.createElement("a")
         parser.href = window.location.href
-        var name = parser.hostname
+        let name = parser.hostname
         if (!name) {
 		    name = ""
         }
@@ -173,7 +173,7 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     },
     
     activeDivView: function() {
-        var e = document.activeElement
+        let e = document.activeElement
         if (e && e._divView) {
             return e._divView
         }

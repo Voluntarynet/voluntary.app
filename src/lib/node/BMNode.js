@@ -125,7 +125,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     // --- fields ---
     
     addLinkFieldForNode: function(aNode) {
-        var field = BMLinkField.clone().setName(aNode.title()).setValue(aNode)
+        let field = BMLinkField.clone().setName(aNode.title()).setValue(aNode)
         return this.addStoredField(field)
     },
     
@@ -174,7 +174,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
 */
     
     viewClass: function () {        
-        var name = this.viewClassName()
+        let name = this.viewClassName()
         if (name) {
             return window[name]
         }
@@ -245,12 +245,12 @@ window.BMNode = ideal.Proto.extend().newSlots({
     },
 
     addSubnodeProtoForSlotIfAbsent: function(aProto, slotName) {
-        var getter = this[slotName]
+        let getter = this[slotName]
         if (!getter) {
             throw new Error(this.type() + "." + slotName + " slot missing")
         }
 		
-        var slotValue = this[slotName].apply(this)
+        let slotValue = this[slotName].apply(this)
         assert(aProto)
 		
         console.log(this.type() + ".addSubnodeProtoForSlotIfAbsent(" + aProto.type() + ", " + slotName + ")")
@@ -260,7 +260,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
 		    
             slotValue = aProto.clone()
             //console.log(this.type() + "." + setterName + "(", obj, ")")
-            var setterName = this.setterNameForSlot(slotName)
+            let setterName = this.setterNameForSlot(slotName)
             this[setterName].apply(this, [slotValue])
         }
         // TODO: this doesn't preserve ordering - how to address this?
@@ -413,12 +413,12 @@ window.BMNode = ideal.Proto.extend().newSlots({
     },
     
     tellParentNodes: function(msg, aNode) {
-        var f = this[msg]
+        let f = this[msg]
         if (f && f.apply(this, [aNode])) {
             return
         }
 
-        var p = this.parentNode()
+        let p = this.parentNode()
         if (p) {
             p.tellParentNodes(msg, aNode)
         }
@@ -428,7 +428,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     
     nodePath: function () {
         if (this.parentNode()) {
-            var parts = this.parentNode().nodePath()
+            let parts = this.parentNode().nodePath()
             parts.push(this)
             return parts
         }
@@ -446,7 +446,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     
     nodeAtSubpath: function(subpathArray) {
         if (subpathArray.length > 0) {
-            var subnode = this.firstSubnodeWithTitle(subpathArray[0])
+            let subnode = this.firstSubnodeWithTitle(subpathArray[0])
             if (subnode) {
                 return subnode.nodeAtSubpath(subpathArray.slice(1))
             }
@@ -458,7 +458,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     // --- log ------------------------
     
     log: function(msg) {
-        //var s = this.nodePathString() + " --  " + msg
+        //let s = this.nodePathString() + " --  " + msg
         if (this.debug()) {
         	console.log("[" +  this.nodePathString() + "] " + msg)
         }
@@ -503,7 +503,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     },
     
     add: function () {  
-        var newSubnode = this.subnodeProto().clone()
+        let newSubnode = this.subnodeProto().clone()
         //console.log(this.typeId() + " add " + newSubnode.type())
         this.addSubnode(newSubnode)
         this.didUpdateNode()
@@ -538,8 +538,8 @@ window.BMNode = ideal.Proto.extend().newSlots({
     },
 
     parentNodes: function() {
-        var node = this.parentNode()
-        var results = []
+        let node = this.parentNode()
+        let results = []
 		
         while (node) {
             results.push(node)
@@ -555,7 +555,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     // --- subnode lookup -----------------------------
     
     subnodesSans: function(aSubnode) {
-	    var results = this.subnodes().select((subnode) => { return subnode != aSubnode })
+	    let results = this.subnodes().select((subnode) => { return subnode != aSubnode })
 	    return results
     },
 	
@@ -604,7 +604,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     },
     
     verifySubnodesHaveParentNodes: function() {
-        var missing = this.subnodes().detect(function (subnode) { return !subnode.parentNode() })
+        let missing = this.subnodes().detect(function (subnode) { return !subnode.parentNode() })
         if (missing) {
             throw new Error("missing parent node on subnode " + missing.type())
         }
@@ -648,7 +648,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     },
 	
     removeSubnodeWithHash: function(h) {
-	    var subnode = this.subnodeWithHash(h)
+	    let subnode = this.subnodeWithHash(h)
 	    if (subnode) {
 	        this.removeSubnode(subnode)
 	    }
@@ -667,13 +667,13 @@ window.BMNode = ideal.Proto.extend().newSlots({
             throw new Error(this.type() + " missing hash method on subnode of type " + subnode.typeId())
 	    }
 	    
-        var h = subnode.hash()
+        let h = subnode.hash()
         
         if (h == null) {
             throw new Error(this.type() + " null subnode hash")
         }
         
-        var index = this._subnodeIndex
+        let index = this._subnodeIndex
         
         if (h in index) {
             throw new Error(this.type() + " duplicate subnode hash " + h + " in indexed node")
@@ -691,12 +691,12 @@ window.BMNode = ideal.Proto.extend().newSlots({
     },
 	
     reindexSubnodes: function() { // private
-	    //var shouldDeleteDuplicates = true // temporary
+	    //let shouldDeleteDuplicates = true // temporary
 	    
         this.assertHasSubnodeIndex()
         this._subnodeIndex = {}
         
-	    var index = this._subnodeIndex
+	    let index = this._subnodeIndex
 	    this.subnodes().forEach((subnode) => {
 	        /*
 	        if (shouldDeleteDuplicates && this.hasSubnodeWithHash(subnode.hash())) {
@@ -735,7 +735,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     // json serialization
 
     asJSON: function() {
-        var dict = {}
+        let dict = {}
         dict.type = this.type()
         dict.title = this.title()
         // todo: store persistent slots...
@@ -755,7 +755,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
         }
         if (json.subnodes) { 
             this.setSubnodes(json.subnodes.map((subnodeDict) => {
-                var type = subnodeDict.type
+                let type = subnodeDict.type
                 return window[type].clone().fromJSON(subnodeDict)
             }))
         }
@@ -763,7 +763,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     },
 
     asyncFromJSONFile: function(file) {
-        var rawFile = new XMLHttpRequest();
+        let rawFile = new XMLHttpRequest();
         rawFile.open("GET", file, false);
         rawFile.onreadystatechange = function ()
         {
@@ -771,7 +771,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
             {
                 if(rawFile.status === 200 || rawFile.status == 0)
                 {
-                    var json = rawFile.responseText;
+                    let json = rawFile.responseText;
                     this.fromJSON(JSON.parse(json))
                 }
             }

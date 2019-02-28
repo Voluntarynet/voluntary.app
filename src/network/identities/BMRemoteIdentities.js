@@ -54,7 +54,7 @@ window.BMRemoteIdentities = BMStorableNode.extend().newSlots({
     },
     
     addIdWithPublicKeyString: function(publicKeyString) {
-        var id = BMRemoteIdentity.clone().setPublicKeyString(publicKeyString)
+        let id = BMRemoteIdentity.clone().setPublicKeyString(publicKeyString)
         this.addSubnode(id)
         return id
     },
@@ -80,7 +80,7 @@ window.BMRemoteIdentities = BMStorableNode.extend().newSlots({
     },
     
     handleObjMsg: function(objMsg) {
-        var result = false
+        let result = false
         this.subnodes().forEach((id) => {
             console.log(" remote ------------- " + this.typeId() + " " + id.title() + ".handleObjMsg()")
             result |= id.handleObjMsg(objMsg)

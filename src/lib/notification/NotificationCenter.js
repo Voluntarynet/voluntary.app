@@ -44,7 +44,7 @@
         NotificationCenter.shared().removeObserver(this)
         
         // post a notification
-        var note = NotificationCenter.shared().newNote().setSender(this).setName("hello").post()
+        let note = NotificationCenter.shared().newNote().setSender(this).setName("hello").post()
 
         // repost same notification
         note.post()
@@ -84,7 +84,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
     }
     
     removeObservation (anObservation) {  
-        var filtered = this.observations().filter(function (obs) {
+        let filtered = this.observations().filter(function (obs) {
             return !obs.isEqual(anObservation)
         })
         this.setObservations(filtered)
@@ -92,7 +92,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
     }
     
     removeObserver (anObserver) {        
-        var filtered = this.observations().filter(function (obs) {
+        let filtered = this.observations().filter(function (obs) {
             return obs.observer() != anObserver
         })
         this.setObservations(filtered)
@@ -130,7 +130,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
             this._isProcessing = true
             //console.log("processPostQueue " + this.notifications().length)
         
-            var notes = this.notifications()
+            let notes = this.notifications()
             this.setNotifications([])
             notes.forEach( (note) => {
                 this._currentNote = note;
@@ -162,7 +162,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
             this.showObservers()
         }
         
-        var observations = this.observations().copy()  
+        let observations = this.observations().copy()  
       
         observations.forEach( (obs) => {
             if (obs.matchesNotification(note)) {
@@ -189,7 +189,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
     }
     
     showObservers () {
-        var observations = this.observations() 
+        let observations = this.observations() 
         console.log("observations:\n" + observations.map((obs) => { 
             return "    " + obs.observer().type() + " listening to " + obs.target() + " " + obs.name()
         }).join("\n") )

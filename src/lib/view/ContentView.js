@@ -10,7 +10,7 @@ window.ContentView = NodeView.extend().newSlots({
     },
 */
     syncFromNode: function () {
-        var node = this.node()
+        let node = this.node()
         if (node.nodeContent) {
             this.element().setInnerHTML(node.nodeContent())
         }
@@ -18,7 +18,7 @@ window.ContentView = NodeView.extend().newSlots({
     },
     
     syncToNode: function () {
-        var node = this.node()
+        let node = this.node()
         if (node.setNodeContent) {
             node.setNodeContent(this.element().innerHTML())
         }

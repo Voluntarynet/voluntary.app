@@ -171,15 +171,15 @@ window.DivView = ideal.Proto.extend().newSlots({
     */
 
     stylesheetWithClassName: function(className) {
-        for (var i = 0; i < document.styleSheets.length; i++) {
-            var stylesheet = document.styleSheets[i]
+        for (let i = 0; i < document.styleSheets.length; i++) {
+            let stylesheet = document.styleSheets[i]
 
             if ("cssRules" in stylesheet) {
                 try {
-                    var rules = stylesheet.cssRules
-                    for (var j = 0; j < rules.length; j++) {
-                        var rule = rules[j]
-                        var ruleClassName = rule.selectorText.split(" ")[0]
+                    let rules = stylesheet.cssRules
+                    for (let j = 0; j < rules.length; j++) {
+                        let rule = rules[j]
+                        let ruleClassName = rule.selectorText.split(" ")[0]
                         console.log("rule.selectorText: ", rule.selectorText)
                         if (ruleClassName == className) {
                             return stylesheet
@@ -196,10 +196,10 @@ window.DivView = ideal.Proto.extend().newSlots({
     /*
     setCssClassAttribute: function(name, value) {
       
-        //var stylesheet = this.stylesheetWithClassName(className)
+        //let stylesheet = this.stylesheetWithClassName(className)
         //console.log(className + " stylesheet: ", stylesheet)
-        for (var i = 0; i < document.styleSheets.length; i++) {
-            var stylesheet = document.styleSheets[i]
+        for (let i = 0; i < document.styleSheets.length; i++) {
+            let stylesheet = document.styleSheets[i]
             if ("cssRules" in stylesheet) {
                 try {
                     stylesheet.insertRule(rule, stylesheet.cssRules.length); 
@@ -1402,7 +1402,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 	
     hasChildElement: function(anElement) {
-        var children = this.element().childNodes
+        let children = this.element().childNodes
         for (let i = 0; i < children.length; i ++) {
             let child = children[i]
             if (anElement === child) {
@@ -1529,7 +1529,7 @@ window.DivView = ideal.Proto.extend().newSlots({
         let dict = this.eventListenersDict()
         if (!dict[className]) {
             assert(className in window)
-            var proto = window[className]
+            let proto = window[className]
             dict[className] = proto.clone().setElement(this.element()).setDelegate(this)
         } 
         return dict[className]
@@ -1905,7 +1905,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     onTouchStart: function(event) {
         this._isTouchDown = true
-        var touches = event.changedTouches
+        let touches = event.changedTouches
         //console.log(this.type() + " onTouchStart ", touches)
         this._onTouchDownEventPosition = { screenX: touches[0].screenX, screenY: touches[0].screenY }
         //console.log(this.type() + " onTouchStart  this._onTouchDownEventPosition ", this._onTouchDownEventPosition)
@@ -2095,8 +2095,8 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 	
     specialNameForKeyEvent: function(event) {
-        var code = event.keyCode
-        var result = this.specialKeyCodes()[code]
+        let code = event.keyCode
+        let result = this.specialKeyCodes()[code]
 		
         if (event.shiftKey && (code == 187)) {
             return "plus"
@@ -2127,7 +2127,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 		
         // onEnterKeyDown onLeftArrowKeyUp
         if (event.specialKeyName) {
-            var name = "on" + event.specialKeyName.capitalized() + "KeyDown"
+            let name = "on" + event.specialKeyName.capitalized() + "KeyDown"
             if (this[name]) {
                 this[name].apply(this, [event])
 		        event.preventDefault()
@@ -2142,7 +2142,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
     
     onKeyUp: function (event) {
-        var shouldPropogate = true
+        let shouldPropogate = true
         event.specialKeyName = this.specialNameForKeyEvent(event)
         //		console.log(this.type() + " onKeyUp event.specialKeyName=", event.specialKeyName)
 
@@ -2168,7 +2168,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 
         if (event.specialKeyName) {
 		    // onEnterKeyUp onLeftArrowKeyUp
-            var name = "on" + event.specialKeyName.capitalized() + "KeyUp"
+            let name = "on" + event.specialKeyName.capitalized() + "KeyUp"
             if (this[name]) {
                 shouldPropogate = this[name].apply(this, [event])
 		        event.preventDefault()
@@ -2198,7 +2198,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     selectNextKeyView: function() {
         console.log(this.type() + " selectNextKeyView")
-        var nkv = this.nextKeyView()
+        let nkv = this.nextKeyView()
         if (nkv) {
             //if (nkv.initialFirstResponder()) {
             //nkv.focus()
@@ -2278,15 +2278,15 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
     
     innerText: function() {
-        var e = this.element()
+        let e = this.element()
 	    return e.textContent || e.innerText || "";		
     },
     
     // --- set caret ----
     
     moveCaretToEnd: function() {
-        var contentEditableElement = this.element()
-        var range, selection;
+        let contentEditableElement = this.element()
+        let range, selection;
         
         if(document.createRange)//Firefox, Chrome, Opera, Safari, IE 9+
         {
@@ -2311,11 +2311,11 @@ window.DivView = ideal.Proto.extend().newSlots({
     
     selectAll: function() {
         if (document.selection) {
-            var range = document.body.createTextRange();
+            let range = document.body.createTextRange();
             range.moveToElementText(this.element());
             range.select();
         } else if (window.getSelection) {
-            var range = document.createRange();
+            let range = document.createRange();
             range.selectNode(this.element());
             window.getSelection().removeAllRanges();
             window.getSelection().addRange(range);
@@ -2328,12 +2328,12 @@ window.DivView = ideal.Proto.extend().newSlots({
         // prevent pasting text by default after event
         e.preventDefault(); 
 
-        var clipboardData = e.clipboardData;
-        var rDataHTML = clipboardData.getData("text/html");
-        var rDataPText = clipboardData.getData("text/plain");
+        let clipboardData = e.clipboardData;
+        let rDataHTML = clipboardData.getData("text/html");
+        let rDataPText = clipboardData.getData("text/plain");
 
-        var htmlToPlainTextFunc = function (html) {
-            var tmp = document.createElement("DIV");
+        let htmlToPlainTextFunc = function (html) {
+            let tmp = document.createElement("DIV");
             tmp.innerHTML = html;
             return tmp.textContent || tmp.innerText || "";
         }
@@ -2362,9 +2362,9 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     replaceSelectedText: function(replacementText) {
-        var range;
+        let range;
         if (window.getSelection) {
-            var sel = window.getSelection();
+            let sel = window.getSelection();
             if (sel.rangeCount) {
                 range = sel.getRangeAt(0);
                 range.deleteContents();
@@ -2391,11 +2391,11 @@ window.DivView = ideal.Proto.extend().newSlots({
     // untested
 
     setCaretPosition: function(caretPos) {
-        var elem = this.element();
+        let elem = this.element();
 
         if(elem != null) {
             if(elem.createTextRange) {
-                var range = elem.createTextRange();
+                let range = elem.createTextRange();
                 range.move("character", caretPos);
                 range.select();
             }
@@ -2421,11 +2421,11 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
     
     setContentAfterOrBeforeString: function(aString, afterOrBefore) {
-        var uniqueClassName = "UniqueClass_" + this._uniqueId
-        var e = this.element()
+        let uniqueClassName = "UniqueClass_" + this._uniqueId
+        let e = this.element()
         if (e.className.indexOf(uniqueClassName) == -1) {
-            var newRuleKey = "DivView" + uniqueClassName + ":" + afterOrBefore
-            var newRuleValue = "content: \"" + aString + "\;"
+            let newRuleKey = "DivView" + uniqueClassName + ":" + afterOrBefore
+            let newRuleValue = "content: \"" + aString + "\;"
             //console.log("newRule '" + newRuleKey + "', '" + newRuleValue + "'")
             document.styleSheets[0].addRule(newRuleKey, newRuleValue);
             e.className += " " + uniqueClassName
@@ -2483,8 +2483,8 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
     
     scrollToBottom: function() {
-        var focusedElement = document.activeElement
-        var needsRefocus = focusedElement != this.element()
+        let focusedElement = document.activeElement
+        let needsRefocus = focusedElement != this.element()
         // console.log("]]]]]]]]]]]] " + this.typeId() + ".scrollToTop() needsRefocus = ", needsRefocus)
         
         this.setScrollTop(this.scrollHeight())
@@ -2516,23 +2516,23 @@ window.DivView = ideal.Proto.extend().newSlots({
             duration = 200
         }
         //duration = 1500
-        var startTime = Date.now();
+        let startTime = Date.now();
         
-        var step = () => {
-            var dt = (Date.now() - startTime)
-            var r =  dt / duration
+        let step = () => {
+            let dt = (Date.now() - startTime)
+            let r =  dt / duration
             r = Math.sin(r*Math.PI/2)
             r = r*r*r
 
-            var currentValue = valueFunc()
-            var currentTargetValue = targetFunc()
+            let currentValue = valueFunc()
+            let currentTargetValue = targetFunc()
             
             //console.log("time: ", dt, " /", duration, " r:", r, " top:", currentValue, "/", currentTargetValue)
             
             if (dt > duration) {
                 setterFunc(currentTargetValue)
             } else {
-                var newValue = currentValue + (currentTargetValue - currentValue) * r
+                let newValue = currentValue + (currentTargetValue - currentValue) * r
                 setterFunc(newValue)
                 window.requestAnimationFrame(step);
             }
@@ -2554,7 +2554,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
     
     scrollIntoView: function() {
-        var focusedView =  WebBrowserWindow.shared().activeDivView()
+        let focusedView =  WebBrowserWindow.shared().activeDivView()
         //console.log("]]]]]]]]]]]] " + this.typeId() + ".scrollIntoView() needsRefocus = ", focusedView != this)
 
         if (focusedView && focusedView != this) {

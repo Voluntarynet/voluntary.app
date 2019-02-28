@@ -53,7 +53,7 @@ window.BMMessages = BMStorableNode.extend().newSlots({
     // --- deletedSet -----------------------------------------
 
     deleteObjMsg: function(objMsg) {
-        var h = objMsg.hash()
+        let h = objMsg.hash()
         this.deletedSet().addKey(h)
         this.placedSet().removeKey(h)
         //this.getQueueSet().removeKey(h)
@@ -129,7 +129,7 @@ window.BMMessages = BMStorableNode.extend().newSlots({
             return true
         } 
 		
-        var didPlace = this.network().localIdentities().handleObjMsg(objMsg)
+        let didPlace = this.network().localIdentities().handleObjMsg(objMsg)
 
         if (didPlace) {
             this.markPlacedObjMsg(objMsg) 
@@ -157,7 +157,7 @@ window.BMMessages = BMStorableNode.extend().newSlots({
 
     broadcastMessage: function(msg) {
 	    // tell peers
-	    var peers = this.network().connectedRemotePeers()
+	    let peers = this.network().connectedRemotePeers()
 	    console.log("broadcasting to " + peers.length + " peers")
 	    peers.forEach(function (peer) {
 	        peer.addedObjMsg(msg)
@@ -177,14 +177,14 @@ window.BMMessages = BMStorableNode.extend().newSlots({
     },
 	
     needsMessageWithHash: function(h) {
-        var wasDeleted = this.deletedSet().hasKey(h)
-        var isMissing = this.subnodeWithHash(h) == null
+        let wasDeleted = this.deletedSet().hasKey(h)
+        let isMissing = this.subnodeWithHash(h) == null
         return (!wasDeleted) && isMissing
     },
 	
     inv: function(invMsg) {
-        var remoteInv = invMsg.data()        
-        var getMsg = BMGetDataMessage.clone().setRemotePeer(invMsg.remotePeer())
+        let remoteInv = invMsg.data()        
+        let getMsg = BMGetDataMessage.clone().setRemotePeer(invMsg.remotePeer())
         
         remoteInv.forEach( (h) => {
             if (this.needsMessageWithHash(h)) {
@@ -205,7 +205,7 @@ window.BMMessages = BMStorableNode.extend().newSlots({
     },
     
     object: function(msg) {
-        var h = msg.msgHash()
+        let h = msg.msgHash()
         
         // remove from the queue
         //delete this._queue[h]
@@ -215,7 +215,7 @@ window.BMMessages = BMStorableNode.extend().newSlots({
     
     getData: function(msg) {
         msg.data().forEach((aHash) => {
-            var objMsg = this.messageWithHash(aHash)
+            let objMsg = this.messageWithHash(aHash)
             if (objMsg) {
                 msg.remotePeer().sendMsg(objMsg)
             }
@@ -226,8 +226,8 @@ window.BMMessages = BMStorableNode.extend().newSlots({
     
     onRemotePeerConnect: function(remotePeer) {
         // send inv
-        //var invMsg = this.currentInvMsg()
-        var invMsg = BMInvMessage.clone().addMessages(this.messagesMatchingBloom(remotePeer.peerId().bloomFilter()))
+        //let invMsg = this.currentInvMsg()
+        let invMsg = BMInvMessage.clone().addMessages(this.messagesMatchingBloom(remotePeer.peerId().bloomFilter()))
 
         console.log("onRemotePeerConnect send inv " + invMsg.data().length)
 
@@ -250,12 +250,12 @@ window.BMMessages = BMStorableNode.extend().newSlots({
         // this gets slow for large msg count but target is short term
         // ephemeral messages for now 
 		
-        var pubkeys = BMNetwork.shared().allIdentityPublicKeyStrings()
-        var count = 0
+        let pubkeys = BMNetwork.shared().allIdentityPublicKeyStrings()
+        let count = 0
 				
         this.messages().copy().forEach( (objMsg) => {
             //console.log("objMsg: ", objMsg)
-            var senderPK = objMsg.senderPublicKeyString()
+            let senderPK = objMsg.senderPublicKeyString()
             if (!pubkeys.contains(senderPK)) {
                 this.removeMessage(objMsg)
                 count ++

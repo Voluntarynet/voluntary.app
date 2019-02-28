@@ -47,7 +47,7 @@ window.ImageWellView = NodeView.extend().newSlots({
     },
     
     acceptsDrop: function(event) {
-        var accepts = (!this.isFull()) && (this.isEditable() != false)
+        let accepts = (!this.isFull()) && (this.isEditable() != false)
         //console.log(this.typeId() + " isFull:" + this.isFull() + " count:" + this.imageCount() + "/" + this.maxImageCount() + " accepts:" + accepts)
         return accepts        
     },
@@ -69,7 +69,7 @@ window.ImageWellView = NodeView.extend().newSlots({
         if (this.isFull()) {
             return this
         }
-        var imageView = ImageView.clone().fetchDataURLFromSrc(dataURL)
+        let imageView = ImageView.clone().fetchDataURLFromSrc(dataURL)
         imageView.setIsEditable(this.isEditable())
         imageView.setMaxHeight(180)
         this.addSubview(imageView);    
@@ -77,7 +77,7 @@ window.ImageWellView = NodeView.extend().newSlots({
     },
     
     imageDataURLs: function() {
-        var urls =  this.subviews().map(function (imageView) { return imageView.dataURL(); })
+        let urls =  this.subviews().map(function (imageView) { return imageView.dataURL(); })
         urls = urls.select(function (url) { return url != null; })
         return urls
     },

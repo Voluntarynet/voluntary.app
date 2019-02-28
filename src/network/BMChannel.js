@@ -15,8 +15,8 @@ window.BMChannel = BMStorableNode.extend().newSlots({
     },
     
     privateKey: function() {
-        var hexName = this.name().toString(16)
-        var privateKey = new bitcore.PrivateKey(hexName);
+        let hexName = this.name().toString(16)
+        let privateKey = new bitcore.PrivateKey(hexName);
         return privateKey
     },
     

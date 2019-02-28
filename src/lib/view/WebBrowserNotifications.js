@@ -112,7 +112,7 @@ window.WebBrowserNotification = ideal.Proto.extend().newSlots({
     },
 
     justPost: function() {
-        var note = new Notification(this.title(), { body: this.body(), icon: this.icon() });
+        let note = new Notification(this.title(), { body: this.body(), icon: this.icon() });
         this.setNotificationRef(note)
         this.startTimeout()
         return this

@@ -45,12 +45,12 @@ window.DocumentBody = DivView.extend().newSlots({
     
     autoAdjustZoomForMobile: function() {
         /*
-        var w = WebBrowserScreen.shared().width();
-        var h = WebBrowserScreen.shared().height();
+        let w = WebBrowserScreen.shared().width();
+        let h = WebBrowserScreen.shared().height();
         
         console.log("screen " + w + "x" + h)
 
-        var z = "100%"
+        let z = "100%"
         
         if (w < 800) {
             z = "300%"

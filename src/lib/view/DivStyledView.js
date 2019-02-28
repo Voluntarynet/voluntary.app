@@ -22,7 +22,7 @@ window.DivStyledView = DivView.extend().newSlots({
     },
 	
     applyStyles: function() {
-        var style = null
+        let style = null
         if (this.isSelected()) {
             style = this.styles().selected()
             //console.log(this.typeId() + ".applyStyles() selected ", style.description())

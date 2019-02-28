@@ -101,7 +101,7 @@ class ProtoClass {
 
     static clone () {
         //this.setupSlotsIfNeeded()
-        var obj = new this()
+        let obj = new this()
         obj.assignUniqueId()
         obj.init()
         return obj
@@ -128,7 +128,7 @@ class ProtoClass {
             initialValue = null; 
         };
 
-        var privateName = "_" + slotName;
+        let privateName = "_" + slotName;
         this[privateName] = initialValue;
 
         if (!this[slotName]) {
@@ -137,7 +137,7 @@ class ProtoClass {
             }
         }
 
-        var setterName = "set" + slotName.capitalized()
+        let setterName = "set" + slotName.capitalized()
 
         if (!this[setterName]) {
             this[setterName] = function (newValue) {
@@ -159,7 +159,7 @@ class ProtoClass {
     }
 
     updateSlot(slotName, privateName, newValue) {
-        var oldValue = this[privateName];
+        let oldValue = this[privateName];
         if (oldValue != newValue) {
             this[privateName] = newValue;
             this.didUpdateSlot(slotName, oldValue, newValue)
@@ -187,7 +187,7 @@ class ProtoClass {
 
 
     childProtos () {
-        var result = ProtoClass.allClasses().select((proto) => { return proto._parentProto == this })
+        let result = ProtoClass.allClasses().select((proto) => { return proto._parentProto == this })
         return result
     }
 
@@ -199,7 +199,7 @@ class ProtoClass {
 
     /*
     extend () {
-        var obj = this.cloneWithoutInit()
+        let obj = this.cloneWithoutInit()
         Proto._allProtos.push(obj)
         obj._parentProto = this
         //console.log("Proto._allProtos.length = ", Proto._allProtos.length)
@@ -231,14 +231,14 @@ class ProtoClass {
     }
 
     cloneWithoutInit () {
-        var obj = Object.clone(this);
+        let obj = Object.clone(this);
         obj.__proto__ = this;
         obj.assignUniqueId();
         return obj;
     }
 
     clone () {
-        var obj = this.cloneWithoutInit();
+        let obj = this.cloneWithoutInit();
         obj.init();
         return obj;
     }
@@ -315,7 +315,7 @@ class ProtoClass {
 
     setterNameForSlot (name) {
         // cache these as there aren't too many and it will avoid extra string operations
-        var setter = this.setterNameMap()[name]
+        let setter = this.setterNameMap()[name]
         if (!setter) {
             setter = "set" + name.capitalized()
             this.setterNameMap()[name] = setter
@@ -337,7 +337,7 @@ class ProtoClass {
     }
 
     performGets (slots) {
-        var object = {};
+        let object = {};
         slots.forEach( (slot) => {
             object[slot] = this.perform(slot);
         });
@@ -347,8 +347,8 @@ class ProtoClass {
     */
 
     static newUniqueId() {
-        var key = "_uniqueIdCounter"
-        var uid = this.getClassVariable(key, 0)
+        let key = "_uniqueIdCounter"
+        let uid = this.getClassVariable(key, 0)
         uid ++;
         this.setClassVariable(key, uid)
         return uid
@@ -379,8 +379,8 @@ class ProtoClass {
     // --- ancestors ---
 
     ancestors () { // TODO: test this for ES6 classes
-        var results = []
-        var obj = this;
+        let results = []
+        let obj = this;
         while (obj.__proto__ && obj.type) {
             results.push(obj)
             if (results.length > 100) {
@@ -400,12 +400,12 @@ class ProtoClass {
         // existing class with the same name as the ancestor + the given postfix
         // useful for things like type + "View" or type + "RowView", etc
         //console.log(this.type() + " firstAncestorWithMatchingPostfixClass(" + aPostfix + ")")
-        var match = this.ancestors().detect((obj) => {
-            var name = obj.type() + aPostfix
-            var proto = window[name]
+        let match = this.ancestors().detect((obj) => {
+            let name = obj.type() + aPostfix
+            let proto = window[name]
             return proto
         })
-        var result = match ? window[match.type() + aPostfix] : null
+        let result = match ? window[match.type() + aPostfix] : null
 
         return result
     }

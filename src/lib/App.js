@@ -48,7 +48,7 @@ window.App = BMNode.extend().newSlots({
 
     showBrowserCompatibilityPanel: function() {
         console.log("showing panel")
-        var panel = window.PanelView.clone()
+        let panel = window.PanelView.clone()
         this.rootView().addSubview(panel)
         panel.setTitle("Sorry, this app only works on<br>Chrome, FireFox, and Brave browsers.")
         panel.orderFront()
@@ -110,9 +110,9 @@ window.App = BMNode.extend().newSlots({
         // "src/ServiceWorker.js"
         // "/src/ServiceWorker.js"
         // "../ServiceWorker.js"
-        var path = "ServiceWorker.js"
+        let path = "ServiceWorker.js"
         console.log("registering service worker '" + path + "'")
-        var promise = navigator.serviceWorker.register(path); //{ scope: ""../"}
+        let promise = navigator.serviceWorker.register(path); //{ scope: ""../"}
 
         promise.then(function (registration) {
             console.log("Service worker successfully registered on scope", registration.scope);

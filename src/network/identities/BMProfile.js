@@ -51,7 +51,7 @@ window.BMProfile = BMFieldSetNode.extend().newSlots({
     didUpdateSlot: function(slotName, oldValue, newValue) {
         BMFieldSetNode.didUpdateSlot.apply(this, [slotName, oldValue, newValue])
         if (slotName == "avatars") {
-		    var parentNode = this.parentNode()
+		    let parentNode = this.parentNode()
 		    if (parentNode && parentNode.didUpdateSubnode) {
 		        parentNode.didUpdateSubnode(this)
 		    }

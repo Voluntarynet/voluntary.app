@@ -15,7 +15,7 @@
  
     // sending
  
-        var m = BMObjectMessage.clone()
+        let m = BMObjectMessage.clone()
         m.setSenderPublicKeyString(localId.publicKeyString())
         m.setEncryptedData(remoteId.encryptJson(dataDict)) // content assumed to be a dict
         m.makeTimeStampNow()
@@ -26,7 +26,7 @@
     // will get keys from localIdentities to attempt decryption
     // returns null is failed
     
-        var content = m.content()     
+        let content = m.content()     
         
 */
 
@@ -54,7 +54,7 @@ window.BMObjectMessage = BMMessage.extend().newSlots({
     },
     
     duplicate: function() {
-        var objMsg = BMObjectMessage.clone()
+        let objMsg = BMObjectMessage.clone()
         objMsg.setMsgDict(this.msgDict())
         return objMsg
     },
@@ -70,7 +70,7 @@ window.BMObjectMessage = BMMessage.extend().newSlots({
     },
     
     title: function () {
-        var h = this.msgHash() ? this.msgHash().slice(0, 4) : "null"
+        let h = this.msgHash() ? this.msgHash().slice(0, 4) : "null"
         return this.msgType() + " " + h
     },
     
@@ -91,7 +91,7 @@ window.BMObjectMessage = BMMessage.extend().newSlots({
     },
     
     msgDict: function() {
-        var dict = {
+        let dict = {
             msgType: this.msgType(),
             sender: this.senderPublicKeyString(),
             //receiver: this.receiverPublicKeyString(),
@@ -112,7 +112,7 @@ window.BMObjectMessage = BMMessage.extend().newSlots({
     },
 
     theDictToHash: function() {
-        var dict = this.msgDict()
+        let dict = this.msgDict()
         delete dict.msgHash   // remove this slots as we are computing hash itself
         delete dict.sig // remove this slot as signature is done on hash
         return dict
@@ -121,8 +121,8 @@ window.BMObjectMessage = BMMessage.extend().newSlots({
     // hash
 	
     computeMsgHash: function() {
-        var s = Object.toJsonStableString(this.theDictToHash())
-        var hash = s.sha256String()
+        let s = Object.toJsonStableString(this.theDictToHash())
+        let hash = s.sha256String()
         //console.log(this.typeId() + "\n    dict: ", s, "\n    computed hash: " + hash)
         return hash
     },
@@ -152,13 +152,13 @@ window.BMObjectMessage = BMMessage.extend().newSlots({
     },
 	
     ageInSeconds: function() {
-        var nowInSecs = new Date().getTime()/1000
+        let nowInSecs = new Date().getTime()/1000
         return nowInSecs - this.timeStamp()
     },
 
     hasValidSignature: function() {
-        var spk = new bitcore.PublicKey(this.senderPublicKeyString());
-        var isValid = BitcoreMessage(this.msgHash()).verify(spk.toAddress(), this.signature());
+        let spk = new bitcore.PublicKey(this.senderPublicKeyString());
+        let isValid = BitcoreMessage(this.msgHash()).verify(spk.toAddress(), this.signature());
         //console.log("hasValidSignature: " + verified)
         return isValid
     },
@@ -184,7 +184,7 @@ window.BMObjectMessage = BMMessage.extend().newSlots({
     },
 	
     validationErrors: function() {
-        var errors = []
+        let errors = []
 
         if (!this.senderPublicKeyString()) {
             errors.push("missing senderPublicKeyString")

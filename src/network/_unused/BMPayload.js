@@ -20,21 +20,21 @@
     
         // sending
     
-        var payload = BMPayload.clone()
+        let payload = BMPayload.clone()
         payload.setData(originalMsgDict)
         payload.encrypt(senderPrivateKey, receiverPublicKey)
         payload.pow()
-        var wrappedMsgDict = payload.data()
+        let wrappedMsgDict = payload.data()
         
         // receiving - throws exception on error
         
         try {
-            var payload = BMPayload.clone()
+            let payload = BMPayload.clone()
             payload.setData(wrappedMsgDict)  
             payload.unpow()
             payload.unencrypt(receiverPrivateKey)
-            var originalMsgDict =  payload.data()  
-            var senderPublicKey = payload.senderPublicKey()
+            let originalMsgDict =  payload.data()  
+            let senderPublicKey = payload.senderPublicKey()
         } catch(error) {
             ...
         }
@@ -97,22 +97,22 @@ window.BMPayload = ideal.Proto.extend().newSlots({
     // bitcoin curve is sjcl.ecc.curves.k256	    
     /*
         // Must be ECDSA!
-        var pair = sjcl.ecc.ecdsa.generateKeys(256)
+        let pair = sjcl.ecc.ecdsa.generateKeys(256)
 
-        var sig = pair.sec.sign(sjcl.hash.sha256.hash("Hello World!"))
+        let sig = pair.sec.sign(sjcl.hash.sha256.hash("Hello World!"))
         // [ 799253862, -791427911, -170134622, ...
 
-        var ok = pair.pub.verify(sjcl.hash.sha256.hash("Hello World!"), sig)
+        let ok = pair.pub.verify(sjcl.hash.sha256.hash("Hello World!"), sig)
         // Either `true` or an error will be thrown.
     */
     
     /// sign / unsign
 
     sign: function(senderKeyPair) {
-        var payload = Object.toJsonStableString(this.data());
-        var payloadHash = sjcl.hash.sha256.hash(payload);
-        var sig = senderKeyPair.sec.sign(payloadHash);
-        var senderPublicKeyHex = sjcl.codec.hex.fromBits(senderKeyPair.pub);
+        let payload = Object.toJsonStableString(this.data());
+        let payloadHash = sjcl.hash.sha256.hash(payload);
+        let sig = senderKeyPair.sec.sign(payloadHash);
+        let senderPublicKeyHex = sjcl.codec.hex.fromBits(senderKeyPair.pub);
        
         this.setData({ 
             type: "SignedPayload",
@@ -127,10 +127,10 @@ window.BMPayload = ideal.Proto.extend().newSlots({
     unsign: function() {
         this.assertType("SignedPayload")
         
-        var senderPublicKeyHex = this.data().senderAddress;
-        var senderPublicKeyBits = sjcl.codec.hex.toBits(senderPublicKeyHex);
+        let senderPublicKeyHex = this.data().senderAddress;
+        let senderPublicKeyBits = sjcl.codec.hex.toBits(senderPublicKeyHex);
         
-        var ok = pair.pub.verify(this.data().payload, sig);
+        let ok = pair.pub.verify(this.data().payload, sig);
         
         if (ok) {
             this.setData(this.data().payload);
@@ -143,17 +143,17 @@ window.BMPayload = ideal.Proto.extend().newSlots({
     /// encrypt / unencrypt
     
     /*
-    var pair = sjcl.ecc.elGamal.generateKeys(256)
+    let pair = sjcl.ecc.elGamal.generateKeys(256)
 
-        var ct = sjcl.encrypt(pair.pub, "Hello World!")
-        var pt = sjcl.decrypt(pair.sec, ct)
+        let ct = sjcl.encrypt(pair.pub, "Hello World!")
+        let pt = sjcl.decrypt(pair.sec, ct)
     */
 
     encrypt: function(receiverPublicKeyHex) {
-        var receiverPublicKeyBits = sjcl.codec.hex.toBits(receiverPublicKeyHex);
-        //var unencryptedBits = sjcl.codec.utf8String(Object.toJsonStableString(this.data()));
-        var encryptedBits = sjcl.encrypt(receiverPublicKeyBits, Object.toJsonStableString(this.data()));
-        var encryptedBase64 = sjcl.codec.base64.fromBits(encryptedBits);
+        let receiverPublicKeyBits = sjcl.codec.hex.toBits(receiverPublicKeyHex);
+        //let unencryptedBits = sjcl.codec.utf8String(Object.toJsonStableString(this.data()));
+        let encryptedBits = sjcl.encrypt(receiverPublicKeyBits, Object.toJsonStableString(this.data()));
+        let encryptedBase64 = sjcl.codec.base64.fromBits(encryptedBits);
         
         this.setData({ 
             type: "EncryptedPayload",
@@ -166,12 +166,12 @@ window.BMPayload = ideal.Proto.extend().newSlots({
     unencrypt: function(receiverPrivateKeyHex) {
         this.assertType("EncryptedPayload")
 
-        var receiverPrivateKeyBits = sjcl.codec.hex.toBits(receiverPrivateKeyHex)
-        var encryptedBase64 = this.data().payload;
-        var encryptedBits = sjcl.codec.base64.toBits(encryptedBase64)
-        var decryptedBits = sjcl.decrypt(receiverPrivateKeyBits, encryptedBits)
-        var decryptedString = sjcl.codec.utf8String.fromBits(encryptedBits)
-        var decryptedPayloadDict = decryptedString.toJsonDict();
+        let receiverPrivateKeyBits = sjcl.codec.hex.toBits(receiverPrivateKeyHex)
+        let encryptedBase64 = this.data().payload;
+        let encryptedBits = sjcl.codec.base64.toBits(encryptedBase64)
+        let decryptedBits = sjcl.decrypt(receiverPrivateKeyBits, encryptedBits)
+        let decryptedString = sjcl.codec.utf8String.fromBits(encryptedBits)
+        let decryptedPayloadDict = decryptedString.toJsonDict();
 
         if (decryptedPayloadDict == null) {
             throw new Error("can't convert decrypted payload to JSON");    
@@ -187,8 +187,8 @@ window.BMPayload = ideal.Proto.extend().newSlots({
     pow: function() {
         // data -> { type: "PowedPayload", payload: data, pow: powString }
         
-        var hash = Object.toJsonStableString(this.data()).sha256String();
-        var pow = this.powObject()
+        let hash = Object.toJsonStableString(this.data()).sha256String();
+        let pow = this.powObject()
         pow.setHash(hash)
         pow.syncFind()
         this.setData({ type: "PowedPayload", payload: this.data(), pow: pow.powHex() })
@@ -198,8 +198,8 @@ window.BMPayload = ideal.Proto.extend().newSlots({
     asyncPow: function() {
         // data -> { type: "PowedPayload", payload: data, pow: powString }
         
-        var hash = Object.toJsonStableString(this.data()).sha256String();
-        var pow = this.powObject()
+        let hash = Object.toJsonStableString(this.data()).sha256String();
+        let pow = this.powObject()
         pow.setHash(hash)
         pow.setDoneCallback(() => { this.powDone() })
         pow.asyncFind()
@@ -222,8 +222,8 @@ window.BMPayload = ideal.Proto.extend().newSlots({
         
         console.log("unpow")
 
-        var hash = Object.toJsonStableString(this.data().payload).sha256String();
-        var pow = BMPow.clone().setHash(hash).setPowHex(this.data().pow)
+        let hash = Object.toJsonStableString(this.data().payload).sha256String();
+        let pow = BMPow.clone().setHash(hash).setPowHex(this.data().pow)
 
         if (pow.isValid()) {
             //pow.show()
@@ -243,8 +243,8 @@ window.BMPayload = ideal.Proto.extend().newSlots({
         
         this.assertType("PowedPayload")
 
-        var hash = Object.toJsonStableString(this.data().payload).sha256String();
-        var pow = BMPow.clone().setHash(hash).setPowHex(this.data().pow)
+        let hash = Object.toJsonStableString(this.data().payload).sha256String();
+        let pow = BMPow.clone().setHash(hash).setPowHex(this.data().pow)
         return pow.actualPowDifficulty()
     },    
     

@@ -6,7 +6,7 @@
 
 	example use:
 
-	var stringVersion = PeriodFormatter.clone().setValueInSeconds(seconds).formattedValue()
+	let stringVersion = PeriodFormatter.clone().setValueInSeconds(seconds).formattedValue()
 
 	example output:
 
@@ -24,7 +24,7 @@ class PeriodFormatter extends ProtoClass {
     }
 
     formattedValue() {
-        var periods = {
+        let periods = {
             seconds: "s", 
             minutes: "m", 
             hours: "h", 

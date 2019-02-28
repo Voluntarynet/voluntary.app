@@ -2,7 +2,7 @@
 
 window.ideal = {}
 
-var Proto = new Object;
+let Proto = new Object;
 ideal.Proto = Proto
 
 Proto.setSlot = function (name, value) {
@@ -38,7 +38,7 @@ Proto.setSlots({
     _allDescendantProtos: null,
     
     extend: function () {
-        var obj = this.cloneWithoutInit()
+        let obj = this.cloneWithoutInit()
         obj.registerThisProto()
         obj._parentProto = this
         obj._childProtos = [] // need to create these slots so they won't be inherited
@@ -66,14 +66,14 @@ Proto.setSlots({
 
     allDescendantProtos: function() {
         if (!this._allDescendantProtos) {
-            var children = this.childProtos()
+            let children = this.childProtos()
 
-            var m = children.map(function (child) { 
+            let m = children.map(function (child) { 
                 return child.allDescendantProtos() 
             })
 
             m.push(children)
-            var result = m.flatten()
+            let result = m.flatten()
             //return result
 
             result = result.sort(function (a, b) {
@@ -113,7 +113,7 @@ Proto.setSlots({
     },
 
     cloneWithoutInit: function () {
-        var obj = Object.clone(this);
+        let obj = Object.clone(this);
         obj.__proto__ = this;
         //obj.constructor.name = this._type // can't assign to an anonymous Function
         obj._uniqueId = this.newUniqueInstanceId()
@@ -127,7 +127,7 @@ Proto.setSlots({
     },
 
     clone: function () {
-        var obj = this.cloneWithoutInit();
+        let obj = this.cloneWithoutInit();
         obj.init();
         return obj;
     },
@@ -177,7 +177,7 @@ Proto.setSlots({
             initialValue = null 
         };
 
-        var privateName = "_" + slotName;
+        let privateName = "_" + slotName;
         this[privateName] = initialValue;
 
         if (!this[slotName]) {
@@ -186,7 +186,7 @@ Proto.setSlots({
             }
         }
 
-        var setterName = "set" + slotName.capitalized()
+        let setterName = "set" + slotName.capitalized()
 
         if (!this[setterName]) {
             this[setterName] = function (newValue) {
@@ -208,7 +208,7 @@ Proto.setSlots({
     },
 
     updateSlot: function (slotName, privateName, newValue) {
-        var oldValue = this[privateName];
+        let oldValue = this[privateName];
         if (oldValue != newValue) {
             this[privateName] = newValue;
             
@@ -279,7 +279,7 @@ Proto.setSlots({
 
     setterNameForSlot: function (name) {
         // cache these as there aren't too many and it will avoid extra string operations
-        var setter = this._setterNameMap[name]
+        let setter = this._setterNameMap[name]
         if (!setter) {
             setter = "set" + name.capitalized()
             this._setterNameMap[name] = setter
@@ -300,7 +300,7 @@ Proto.setSlots({
     },
 
     performGets: function (slots) {
-        var object = {};
+        let object = {};
         slots.forEach( (slot) => {
             object[slot] = this.perform(slot);
         });
@@ -333,8 +333,8 @@ Proto.setSlots({
     // --- ancestors ---
 
     ancestors: function () {
-        var results = []
-        var obj = this;
+        let results = []
+        let obj = this;
         while (obj.__proto__ && obj.type) {
             results.push(obj)
             if (results.length > 100) {
@@ -354,12 +354,12 @@ Proto.setSlots({
         // existing class with the same name as the ancestor + the given postfix
         // useful for things like type + "View" or type + "RowView", etc
         //console.log(this.type() + " firstAncestorWithMatchingPostfixClass(" + aPostfix + ")")
-        var match = this.ancestors().detect((obj) => {
-            var name = obj.type() + aPostfix
-            var proto = window[name]
+        let match = this.ancestors().detect((obj) => {
+            let name = obj.type() + aPostfix
+            let proto = window[name]
             return proto
         })
-        var result = match ? window[match.type() + aPostfix] : null
+        let result = match ? window[match.type() + aPostfix] : null
         /*
         if (result) { 
             console.log("FOUND " + result.type())

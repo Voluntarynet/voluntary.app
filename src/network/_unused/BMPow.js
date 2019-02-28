@@ -2,12 +2,12 @@
 /*
     find pow:
     
-        var pow = BMPow.clone().setHash(hh).findPow()
+        let pow = BMPow.clone().setHash(hh).findPow()
         console.log("found pow = ", pow.powHex())
     
     verify pow:
 
-        var isValid = BMPow.clone().setHash(hh).setPow(ph).isValid()
+        let isValid = BMPow.clone().setHash(hh).setPow(ph).isValid()
         console.log("pow is valid = ", isValid)    
         
     notes:
@@ -50,7 +50,7 @@ window.BMPow = ideal.Proto.extend().newSlots({
     },
         
     pickRandomPow: function() {
-        var numBytes = 32;
+        let numBytes = 32;
         this.setPowBits(sjcl.random.randomWords(numBytes/4));
         return this        
     },
@@ -88,7 +88,7 @@ window.BMPow = ideal.Proto.extend().newSlots({
     
     asyncFind: function () {
         this.setStatus("starting")
-        var currentTime = new Date().getTime()
+        let currentTime = new Date().getTime()
         this.setAsyncEndTime(currentTime + this.asyncTimeoutPeriod())
         if (!this.isFinding()) {
             this.setIsFinding(true)
@@ -102,12 +102,12 @@ window.BMPow = ideal.Proto.extend().newSlots({
     },
 
     asyncTimedOut: function() {
-        var currentTime = new Date().getTime()
+        let currentTime = new Date().getTime()
         return currentTime > this.asyncEndTime()        
     },
     
     PRIVATE_findPowLoop: function() {
-        var found = this.syncFind() // sync has a timeout period
+        let found = this.syncFind() // sync has a timeout period
         
         if (this.asyncTimedOut()) {
             throw new Error("Pow asyncTimedOut " + new Date().getTime() + " > "  + this.asyncEndTime())
@@ -134,19 +134,19 @@ window.BMPow = ideal.Proto.extend().newSlots({
     },
 
     syncFind: function() {
-        var syncEndTime = new Date().getTime() + this.syncTimeoutPeriod()
-        var done = false;
+        let syncEndTime = new Date().getTime() + this.syncTimeoutPeriod()
+        let done = false;
         do {
             done = this.syncFindOneLoop()
-            var currentTime = new Date().getTime()
-            var syncTimedOut = currentTime > syncEndTime;
+            let currentTime = new Date().getTime()
+            let syncTimedOut = currentTime > syncEndTime;
         } while (!done && syncTimedOut);
         
         return done
     },
     
     syncFindOneLoop: function() {
-        var max = this.syncTriesPerLoop();
+        let max = this.syncTriesPerLoop();
         for (let i = 0; i < max; i++) {
             this.pickRandomPow()
             if (this.isValid()) {
@@ -170,7 +170,7 @@ window.BMPow = ideal.Proto.extend().newSlots({
     },
  
     estimatedPercentageDone: function() {
-        var p = this.estimatedRatioDone()*100
+        let p = this.estimatedRatioDone()*100
         if (p < 1) { 
             return Math.floor(p*100)/100
         }
@@ -195,20 +195,20 @@ window.BMPow = ideal.Proto.extend().newSlots({
     },
     
     estimateTimeDescription: function() {
-        var value = null
-        var unit = null
+        let value = null
+        let unit = null
         
-        var secs = this.estimateTimeInMsForTargetDifficulty()/1000
+        let secs = this.estimateTimeInMsForTargetDifficulty()/1000
         value = Math.floor(secs) 
         unit = "seconds"
         
-        var mins = secs / 60
+        let mins = secs / 60
         if (mins > 1) {
             value = Math.floor(mins)
             unit = "minutes"
         }
          
-        var hours = secs / (60*60)
+        let hours = secs / (60*60)
         if (hours > 1) {
             value = Math.floor(hours*10)/10;
             unit = "hours"
@@ -224,7 +224,7 @@ window.BMPow = ideal.Proto.extend().newSlots({
     
     globalEstimateTriesPerMs: function() {
         if (this._globalEstimateTriesPerMs == null) {
-            var pow = BMPow.clone()
+            let pow = BMPow.clone()
             pow.setTargetDifficulty(this.maxDifficulty()) // to make sure we don't find it
             this.setTries(0)
             pow.syncFind()
@@ -236,7 +236,7 @@ window.BMPow = ideal.Proto.extend().newSlots({
     /*
     findPowSync: function () {   
         // not efficient but simple and we can cache the bufs later
-        var tries = 0;
+        let tries = 0;
         while (tries < this._maxTries) {
             tries ++;
             this._totalTries ++;
@@ -259,7 +259,7 @@ window.BMPow = ideal.Proto.extend().newSlots({
     },
     
     catShaBits: function() {
-        var catBits  = sjcl.bitArray.concat(this.hashBits(), this.powBits());
+        let catBits  = sjcl.bitArray.concat(this.hashBits(), this.powBits());
         return sjcl.hash.sha256.hash(catBits);
     },
     
@@ -314,7 +314,7 @@ window.BMPow = ideal.Proto.extend().newSlots({
     },
     
     boundsCheckTargetDifficulty: function() {
-        var d = this.targetDifficulty() 
+        let d = this.targetDifficulty() 
         if (d < 0) { d = 0; }        
         if (d > this.maxDifficulty()) { d = this.maxDifficulty(); }  
         this.setTargetDifficulty(d)      

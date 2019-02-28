@@ -63,7 +63,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
             console.log(this.type() + " asyncOpen")
         }
 		
-        var request = window.indexedDB.open(this.path(), 2);
+        let request = window.indexedDB.open(this.path(), 2);
         
         request.onerror = (event) => {
             console.log(this.type() + " open db error ", event);
@@ -72,7 +72,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
         request.onupgradeneeded = (event) => { 
             console.log(this.type() + " onupgradeneeded - likely setting up local database for the first time")
 
-            var db = event.target.result;
+            let db = event.target.result;
 
             db.onerror = function(event) {
                 console.log("db error ", event)
@@ -80,7 +80,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
 
             this.setDb(db)
 
-            var objectStore = db.createObjectStore(this.storeName(), { keyPath: "key" }, false);          
+            let objectStore = db.createObjectStore(this.storeName(), { keyPath: "key" }, false);          
             objectStore.createIndex("key", "key", { unique: true });
         };
 
@@ -99,7 +99,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
     
     folderAt (pathComponent) { 
         assert(!pathComponent.contains(this.pathSeparator())) 
-        var db = IndexedDBFolder.clone().setPath(this.path() + pathComponent + this.pathSeparator())
+        let db = IndexedDBFolder.clone().setPath(this.path() + pathComponent + this.pathSeparator())
         return db
     }
     
@@ -112,10 +112,10 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
     /*
     asyncAt (key, callback) {
         //console.log("asyncAt ", key)
-        var objectStore = this.db().transaction(this.storeName(), "readonly").objectStore(this.storeName());
-        var request = objectStore.get(key);
+        let objectStore = this.db().transaction(this.storeName(), "readonly").objectStore(this.storeName());
+        let request = objectStore.get(key);
 
-        var stack = new Error().stack
+        let stack = new Error().stack
         
         request.onerror = (event) => {
             console.log("asyncAt('" + key + "') onerror", event.target.error)
@@ -128,8 +128,8 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
             try {
                 if (typeof(request.result) != "undefined") {
                     //console.log("asyncAt('" + key + "') onsuccess request.result = ", request.result)
-                    var entry = request.result
-                    var value = JSON.parse(entry.value)
+                    let entry = request.result
+                    let value = JSON.parse(entry.value)
                     callback(value)
                 } else {
                     //console.log("asyncAt('" + key + "') onsuccess request.result = ", request.result)
@@ -149,11 +149,11 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
         //console.log("asyncAsJson start")
         this.assertHasUniqueId()
 
-        var cursorRequest = this.db().transaction(this.storeName(), "readonly").objectStore(this.storeName()).openCursor()
-        var dict = {}
+        let cursorRequest = this.db().transaction(this.storeName(), "readonly").objectStore(this.storeName()).openCursor()
+        let dict = {}
     
         cursorRequest.onsuccess = (event) => {
-            var cursor = event.target.result;
+            let cursor = event.target.result;
 
             if (cursor) {
                 dict[cursor.value.key] = JSON.parse(cursor.value.value)
@@ -180,7 +180,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
     // removing
     
     asyncClear (callback, errorCallback) {
-        var transaction = this.db().transaction([this.storeName()], "readwrite");
+        let transaction = this.db().transaction([this.storeName()], "readwrite");
 
         transaction.onerror = function(event) {
             if (errorCallback) {
@@ -188,8 +188,8 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
             }
         };
 
-        var objectStore = transaction.objectStore(this.storeName());
-        var request = objectStore.clear();
+        let objectStore = transaction.objectStore(this.storeName());
+        let request = objectStore.clear();
 
         request.onsuccess = function(event) {
             if (callback) {
@@ -199,7 +199,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
     }
 	
     asyncDelete () {
-        var request = window.indexedDB.deleteDatabase(this.storeName())
+        let request = window.indexedDB.deleteDatabase(this.storeName())
 		
         request.onerror = (event) => {
   			console.log(this.type() +  "Error deleting '" + this.storeName() + "'");
@@ -217,7 +217,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
     // test
     
     test () {
-        var folder = IndexedDBFolder.clone()
+        let folder = IndexedDBFolder.clone()
         folder.asyncOpen(function() {
             folder.atPut("test", "x")
             

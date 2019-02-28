@@ -41,7 +41,7 @@ window.BMConnection = BMNode.extend().newSlots({
     
     connectionType: function() {
         if (this.isAvailable()) {
-            var s = this.connection().effectiveType
+            let s = this.connection().effectiveType
             if (s) {
                 return s.toUpperCase()
             }

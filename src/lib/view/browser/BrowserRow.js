@@ -42,6 +42,7 @@ window.BrowserRow = NodeView.extend().newSlots({
 
         this.addGestureRecognizer(LongPressGestureRecognizer.clone())
         this.addGestureRecognizer(SlideGestureRecognizer.clone())
+        this.addGestureRecognizer(TapGestureRecognizer.clone())
         return this
     },
 
@@ -260,6 +261,13 @@ window.BrowserRow = NodeView.extend().newSlots({
         return this.node() && this.node().hasAction("delete")
     },
 
+    // -- tap gesture ---
+
+    onSlideGestureComplete: function() {
+        console.log(this.type() + ".onSlideGestureComplete()")
+        return this
+    },
+    
     // -- slide gesture ---
 
     onSlideGestureBegin: function() {

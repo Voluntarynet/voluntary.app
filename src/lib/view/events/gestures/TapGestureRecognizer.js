@@ -3,7 +3,7 @@
 /*
     TapGestureRecognizer
 
-    Recognize a double tap in (roughly) one location withing timePeriod.
+    Recognize a number of taps in a viewTarget within a timePeriod.
 
     Event sequence:
     
@@ -19,20 +19,23 @@
 
         Track touch ids for multi-touch?
 
+        onDown:
+        let targetStartedTouches = event.touches.select(t => t.target = this.viewTarget());
+        if 
+        
 
     On first tap, start timer. If second tap occurs before it's expired, 
     it's a double tap. Otherwise, restart timer.
 
     Delegate messages:
 
-        onDoubleTapBegin
-        onDoubleTapComplete
-        onDoubleTapCancelled
+        onTapBegin
+        onTapComplete
+        onTapCancelled
 
-        Typically, delegate will ignore onDoubleTapBegin & onDoubleTapCancelled.
+        Typically, delegate will ignore onTapBegin & onTapCancelled.
 
 */
-
 
 window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
     type: "TapGestureRecognizer",
@@ -41,14 +44,15 @@ window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
     timeoutId: null, // private
     lastEvent: event,
 
-    numberOfTapsRequired: 1,
-    numberOfTouchesRequired: 1,
+    numberOfTapsRequired: 3,
+    numberOfFingersRequired: 1,
+    tapCount: 0,
 }).setSlots({
     
     init: function () {
         GestureRecognizer.init.apply(this)
         this.setListenerClasses(["MouseListener", "TouchListener"])
-        //this.setIsDebugging(true) 
+        this.setIsDebugging(true) 
         return this
     },
 
@@ -67,6 +71,7 @@ window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
         if (this.hasTimer()) {
             clearTimeout(this.timeoutId());
             this.setTimeoutId(null)
+            this.setTapCount(0)
         }
         return this
     },
@@ -77,23 +82,45 @@ window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     // -- the completed gesture ---
 
-    onDoubleTap: function() {
-        this.setTimeoutId(null)
+    complete: function() {
+        this.stopTimer()
         let r = this.viewTarget().requestActiveGesture(this)
         if (r) {
-            this.sendDelegateMessage("onDoubleTapComplete")
+            this.sendDelegateMessage("onTapComplete")
         }
     },
 
     // -- single action for mouse and touch up/down ---
 
-    onPressDown: function (event) {
-        if (this.hasTimer()) {
-            this.onDoubleTap()
-        } else {
-            this.startTimer()
-            this.sendDelegateMessage("onDoubleTapBegin")
+    hasEnoughFingersOnEvent: function(event) {
+        // if touch event, make sure it has enough fingers
+        if (event.touches) {
+            let targetStartedTouches = event.touches.select(t => t.target = this.viewTarget());
+            return (targetStartedTouches.length >= this.numberOfFingersRequired())
         }
+
+        // otherwise, the device only supports 1 "finger"? 
+        // Or should we count mouse buttons as fingers?
+        return this.numberOfFingersRequired() == 1
+    },
+
+    onPressDown: function (event) {
+        if (!this.hasEnoughFingersOnEvent(event)) {
+            return this
+        }
+
+        if (!this.hasTimer()) {
+            this.setTapCount(1)
+            this.startTimer()
+            this.sendDelegateMessage("onTapBegin")
+        } else {
+            this.setTapCount(this.tapCount() + 1)
+        }
+
+        if (this.tapCount() == this.numberOfTapsRequired()) {
+            this.complete()
+        }
+
         return true
     },
 
@@ -104,7 +131,7 @@ window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
     cancel: function() {
         if (this.hasTimer()) {
             this.stopTimer()
-            this.sendDelegateMessage("onDoubleTapCancelled")
+            this.sendDelegateMessage("onTapCancelled")
         }
         return this
     },

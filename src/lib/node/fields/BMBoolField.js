@@ -13,12 +13,12 @@ window.BMBoolField = BMField.extend().newSlots({
     },
 
     valueIsBool: function() {
-        var b = this.value()
+        let  b = this.value()
         return typeof(b) == "boolean";
     },
 	
     validate: function() {
-        var isValid = this.valueIsBool()
+        let  isValid = this.valueIsBool()
 		
         if (!isValid) {
             this.setValueError("this needs to be a boolean (true or false)")

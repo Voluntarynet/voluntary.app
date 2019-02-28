@@ -47,7 +47,7 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
     // --- fields ---
 
     addStoredField: function(aField) {
-        var name = aField.valueMethod()
+        let  name = aField.valueMethod()
         this.addStoredSlot(name)
         if (!this[name]) {
             this.newSlot(name, null)
@@ -62,7 +62,7 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
     },
 
     addFieldNamed: function(name) {	
-        var field = BMField.clone().setKey(name)
+        let  field = BMField.clone().setKey(name)
         field.setValueMethod(name)
         this.addStoredField(field)
         return field
@@ -80,7 +80,7 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
 
     copyFieldsFrom: function(sourceObj) {
         this.subnodes().forEach((targetField) => {
-            var sourceField = sourceObj.fieldNamed(targetField.valueMethod())
+            let  sourceField = sourceObj.fieldNamed(targetField.valueMethod())
             targetField.setValue(sourceField.value())
             //console.log("target field " + targetField.valueMethod() + " set to '" + targetField.value() + "'")
         })
@@ -108,7 +108,7 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
     // todo: can this use persistent storage methods via skip pid use?
 
     asJSON: function() {
-        var dict = {}
+        let  dict = {}
         dict.type = this.type()
         // todo: store persistent slots...
         // todo: store subnodes if set to store them
@@ -129,7 +129,7 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
         // todo: read persistent keys
         if (json.fields) { 
             Map.withJsMap(json.fields).forEach((key, value) => {
-                var field = this.fieldNamed(key)
+                let  field = this.fieldNamed(key)
                 if (field) {
                     field.setValue(value)
                 }

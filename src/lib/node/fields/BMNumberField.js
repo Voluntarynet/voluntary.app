@@ -17,12 +17,12 @@ window.BMNumberField = BMField.extend().newSlots({
     },
 
     valueIsNumeric: function() {
-        var n = this.value()
+        let  n = this.value()
         return !isNaN(parseFloat(n)) && isFinite(n);
     },
 	
     validate: function() {
-        var isValid = this.valueIsNumeric()
+        let  isValid = this.valueIsNumeric()
 		
         if (!isValid) {
             this.setValueError("this needs to be a number")

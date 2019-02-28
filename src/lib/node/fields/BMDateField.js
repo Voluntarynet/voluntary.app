@@ -17,7 +17,7 @@ window.BMDateField = BMField.extend().newSlots({
     },
 
     visibleValue: function() {
-        var v = this.value()
+        let  v = this.value()
         if (!v) { 
             return this.unsetVisibleValue()
         }

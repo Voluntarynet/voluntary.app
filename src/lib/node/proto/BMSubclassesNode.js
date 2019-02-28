@@ -27,8 +27,8 @@ window.BMSubclassesNode = BMNode.extend().newSlots({
     },
 
     setupSubnodes: function() {
-        var childProtos = this.protoValue().childProtos()
-        var childNodes = childProtos.map((childProto) => {
+        let  childProtos = this.protoValue().childProtos()
+        let  childNodes = childProtos.map((childProto) => {
             return BMProtoNode.clone().setProtoValue(childProto);
         })
 

@@ -95,7 +95,7 @@ window.BMStorableNode = BMNode.extend().newSlots({
     // --- add / remove stored slots ---
     
     initStoredSubnodeSlotWithProto: function(name, proto) {
-        var obj = proto.clone()
+        let  obj = proto.clone()
         this.newSlot(name, obj)
         this.justAddSubnode(obj)
         this.addStoredSlot(name)
@@ -123,14 +123,14 @@ window.BMStorableNode = BMNode.extend().newSlots({
     // --- get storage dictionary ---
 
     nodeDictForProperties: function () {
-        var dict = { }
+        let  dict = { }
         dict.type = this.type()
  
         //console.log(this.type() + " storedSlots = " + JSON.stringify(this.storedSlots()))
        
-        var slots = this.storedSlots()
+        let  slots = this.storedSlots()
         Object.keys(slots).forEach((k) => {
-            var v = null
+            let  v = null
             if (k.beginsWith("_")) {
                 v = this[k]
             } else {
@@ -149,7 +149,7 @@ window.BMStorableNode = BMNode.extend().newSlots({
     },
 
     nodeDict: function () {
-        var dict = this.nodeDictForProperties()
+        let  dict = this.nodeDictForProperties()
         
         if (this.subnodes().length && this.shouldStoreSubnodes()) {
             dict.children = this.subnodePids()
@@ -176,23 +176,23 @@ window.BMStorableNode = BMNode.extend().newSlots({
     prepareToAccess: function() {
         BMNode.prepareToAccess.apply(this)
         if (this.doesLazyLoadChildren()) {
-            var dict = BMNodeStore.shared().nodeDictAtPid(this.pid())
+            let  dict = BMNodeStore.shared().nodeDictAtPid(this.pid())
             this.setNodeDictForProperties(dict)
         }
         return this
     },
     
     setNodeDictForProperties: function (aDict) {
-        var hadMissingSetter = false 
+        let  hadMissingSetter = false 
         Object.keys(aDict).forEach((k) => {
             if (k != "children" && k != "type") {
-                var v = aDict[k]
+                let  v = aDict[k]
                 v = NodeStore.shared().unrefValueIfNeeded(v)
                 
                 if (k.beginsWith("_")) {
                     this[k] = v
                 } else {
-                    var setter = "set" + k.capitalized();
+                    let  setter = "set" + k.capitalized();
                     if (this[setter]) {
                         this[setter].apply(this, [v])
                     } else {
@@ -212,7 +212,7 @@ window.BMStorableNode = BMNode.extend().newSlots({
     },
 
     setNodeDictForChildren: function (aDict) {
-        var newPids = aDict.children
+        let  newPids = aDict.children
         if (newPids) {
             if (this.loadsUnionOfChildren()) {
                 throw new Error("loadsUnionOfChildren") // checking if this is being used
@@ -250,8 +250,8 @@ window.BMStorableNode = BMNode.extend().newSlots({
         // as well as this object itself
 
         Object.keys(this._storedSlots).forEach((slotName) => {
-            var obj = this[slotName].apply(this)
-            var isRef = obj != null && obj.typeId
+            let  obj = this[slotName].apply(this)
+            let  isRef = obj != null && obj.typeId
             if (isRef && !obj.hasPid()) {
                 obj.pid()
                 NodeStore.shared().addDirtyObject(this)
@@ -285,7 +285,7 @@ window.BMStorableNode = BMNode.extend().newSlots({
 	    }
 	    
         // check so we don't mark dirty while loading
-        // and use private ivars directly for performance
+        // and use private ilet s directly for performance
         if (slotName in this._storedSlots) { 
             //console.log(this.type() + ".didUpdateSlot(" + slotName + ",...) -> scheduleSyncToStore")
             this.scheduleSyncToStore()
@@ -301,7 +301,7 @@ window.BMStorableNode = BMNode.extend().newSlots({
     // StorableNode
 	
     subnodePids: function() {
-        var pids = []
+        let  pids = []
         
         this.subnodes().forEach((subnode) => {
             if (subnode.shouldStore() == true) {
@@ -313,7 +313,7 @@ window.BMStorableNode = BMNode.extend().newSlots({
     },
     
     setSubnodePids: function(pids) {
-        var subnodes = pids.map((pid) => {
+        let  subnodes = pids.map((pid) => {
             return NodeStore.shared().objectForPid(pid)
         })
 
@@ -329,13 +329,13 @@ window.BMStorableNode = BMNode.extend().newSlots({
     },
     
     pidRefsFromNodeDict: function(nodeDict) {
-        var pids = []
+        let  pids = []
 
         if (nodeDict) {
             // property pids
             Object.keys(nodeDict).forEach((k) => {
-                var v = nodeDict[k]
-                var childPid = this.pidIfRef(v)
+                let  v = nodeDict[k]
+                let  childPid = this.pidIfRef(v)
                 if (childPid) {
                     pids.push(childPid);
                 }
@@ -353,13 +353,13 @@ window.BMStorableNode = BMNode.extend().newSlots({
     },
 
     nodePidRefsFromNodeDict: function(nodeDict) {
-        var pids = []
+        let  pids = []
 
         if (nodeDict) {
             // property pids
             Object.keys(nodeDict).forEach((k) => {
-                var v = nodeDict[k]
-                var childPid = NodeStore.shared().pidIfRef(v)
+                let  v = nodeDict[k]
+                let  childPid = NodeStore.shared().pidIfRef(v)
                 if (childPid) {
                     pids.push(childPid);
                 }
@@ -379,15 +379,15 @@ window.BMStorableNode = BMNode.extend().newSlots({
     /*
 	nodeRefPids: function() {
 		if (this._refPids == null) {
-			var refs = {}
-			var dict = this.nodeDict()
-			var keys = Object.keys(dict)
+			let  refs = {}
+			let  dict = this.nodeDict()
+			let  keys = Object.keys(dict)
 		
-			var name = this.typeId()
+			let  name = this.typeId()
 			//debugger;
 			// stored slots
 			keys.forEach((k) => {
-				var v = dict[k]
+				let  v = dict[k]
 				if (k != "children" && typeof(v) == "object") {
 					if (v.pid != "null") {
 						refs[v.pid] = true

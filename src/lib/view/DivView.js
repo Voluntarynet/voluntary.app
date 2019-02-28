@@ -1940,21 +1940,19 @@ window.DivView = ideal.Proto.extend().newSlots({
         return alreadyHasIt
     },
 
+    /*
     addGestureRecognizerIfAbsent: function(gr) {
         if (!this.hasGestureType(gr.type())) {
             this.addGestureRecognizer(gr)
         }
         return this
     },
+    */
 
     addGestureRecognizer: function(gr) {
-        if (this.hasGestureType(gr.type())) {
-            console.error(this.type() + ".addGestureRecognizer(" + gr.type() + ") attempted to add duplicate gesture type")
-        } else {
-            this.gestureRecognizers().append(gr)
-            gr.setViewTarget(this)
-            gr.start()
-        }
+        this.gestureRecognizers().append(gr)
+        gr.setViewTarget(this)
+        gr.start()
         return this
     },
 

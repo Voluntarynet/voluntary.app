@@ -42,7 +42,7 @@ window.BrowserRow = NodeView.extend().newSlots({
 
         this.addGestureRecognizer(LongPressGestureRecognizer.clone())
         this.addGestureRecognizer(SlideGestureRecognizer.clone())
-        this.addGestureRecognizer(TapGestureRecognizer.clone())
+        //this.addGestureRecognizer(TapGestureRecognizer.clone())
         return this
     },
 
@@ -263,11 +263,11 @@ window.BrowserRow = NodeView.extend().newSlots({
 
     // -- tap gesture ---
 
-    onSlideGestureComplete: function() {
-        console.log(this.type() + ".onSlideGestureComplete()")
+    onTapComplete: function() {
+        console.log(this.type() + ".onTapComplete()")
         return this
     },
-    
+
     // -- slide gesture ---
 
     onSlideGestureBegin: function() {

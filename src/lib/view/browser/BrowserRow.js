@@ -255,22 +255,19 @@ window.BrowserRow = NodeView.extend().newSlots({
 		}, 0)		
 	},
 	*/
-
-    // sliding
     
     canDelete: function() {
         return this.node() && this.node().hasAction("delete")
     },
 
-    // touch sliding
+    // -- slide gesture ---
 
-    // didTouchStart
     onSlideGestureBegin: function() {
-        //console.log(this.type() + " onSlideGestureBegin")
-        this.setTouchDeleteOffset(this.clientWidth() * 0.5);
-        //this.setTransition("right 0s")       
-        this.setTransition("all 0s")       
-        this.addDeleteXView() 
+        if (this.canDelete()) {
+            this.setTouchDeleteOffset(this.clientWidth() * 0.5);
+            this.setTransition("all 0s")       
+            this.addDeleteXView() 
+        }
         return this
     },
 

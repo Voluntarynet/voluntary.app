@@ -7,13 +7,13 @@
 
     Event sequence:
     
-        down event
+        down event(s)
         < maxHoldPeriod
-        up event
+        up event(s)
         < maxBetweenPeriod
-        down event
+        down event(s)
         < maxHoldPeriod
-        up event
+        up event(s)
 
     Questions:
 

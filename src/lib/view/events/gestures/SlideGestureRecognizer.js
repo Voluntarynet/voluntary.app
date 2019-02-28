@@ -24,6 +24,8 @@
 
     TODO
 
+        make multitouch
+
         optimization: floor the move event points and only send delegate messages if
         new position is different from last?
 
@@ -35,7 +37,7 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     isPressing: false,
 
     // new stuff
-    direction: "left", // valid values are up, down, left, right
+    direction: "left", 
     validDirectionsDict: { left: 1, right: 2, up: 3, down: 4 },
     numberOfTouchesRequired: 1,
     minDistToBegin: 10,
@@ -57,6 +59,12 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     setDirection: function(directionName) {
         assert(directionName in this.validDirectionsDict());
         this._direction = directionName
+        return this
+    },
+
+    setNumberOfTouchesRequired: function(n) {
+        asset(n == 1) // need to add multi-touch support
+        this._numberOfTouchesRequired = n
         return this
     },
 

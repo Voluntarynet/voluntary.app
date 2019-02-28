@@ -1,6 +1,9 @@
 "use strict"
 
 /*
+
+    *** currently unused ***
+    
     GestureSet
 
     Manages an ordered set of gesture recognizers for a given view.

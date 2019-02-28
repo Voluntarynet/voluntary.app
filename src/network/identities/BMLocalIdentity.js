@@ -32,6 +32,7 @@ window.BMLocalIdentity = BMKeyPair.extend().newSlots({
         this.addAction("delete")
         this._didChangeIdentityNote = NotificationCenter.shared().newNote().setSender(this.uniqueId()).setName("didChangeIdentity")
 
+        this.setNodeTitleIsEditable(false)
     },
     
     didUpdateSubnode: function(aSubnode) {

@@ -1,33 +1,48 @@
 "use strict"
 
 /*
-    LongPressGestureRecognizer
+    TapGestureRecognizer
 
-    Recognize a long press and hold in (roughly) one location.
+    Recognize a double tap in (roughly) one location withing timePeriod.
 
-    Notes:
+    Event sequence:
+    
+        down event
+        < maxHoldPeriod
+        up event
+        < maxBetweenPeriod
+        down event
+        < maxHoldPeriod
+        up event
 
-        Should gesture cancel if press moves?:
-        
-            1. outside of a distance from start point or
-            2. outside of the view
+    Questions:
 
+        Track touch ids for multi-touch?
+
+
+    On first tap, start timer. If second tap occurs before it's expired, 
+    it's a double tap. Otherwise, restart timer.
 
     Delegate messages:
 
-        onLongPressBegin
-        onLongPressGestureComplete
-        onLongPressGestureCancelled
+        onDoubleTapBegin
+        onDoubleTapComplete
+        onDoubleTapCancelled
+
+        Typically, delegate will ignore onDoubleTapBegin & onDoubleTapCancelled.
 
 */
 
 
-window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
-    type: "LongPressGestureRecognizer",
-    timePeriod: 1000, // miliseconds
+window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
+    type: "TapGestureRecognizer",
+    maxHoldPeriod: 500, // milliseconds per tap
+    timePeriod: 500, // miliseconds from first down event to last up event
     timeoutId: null, // private
-    downEvent: null,
-    upEvent: null,
+    lastEvent: event,
+
+    numberOfTapsRequired: 1,
+    numberOfTouchesRequired: 1,
 }).setSlots({
     
     init: function () {
@@ -39,13 +54,12 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     // --- timer ---
 
-    startTimer: function() {
+    startTimer: function(event) {
         if (this.timeoutId()) {
             this.stopTimer()
         }
-        let tid = setTimeout(() => { this.onLongPress() }, this.timePeriod());
+        let tid = setTimeout(() => { this.cancel() }, this.timePeriod());
         this.setTimeoutId(tid)
-        //console.log("startTimer id",   this.timeoutId())
         return this
     },
 
@@ -63,33 +77,34 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     // -- the completed gesture ---
 
-    onLongPress: function() {
+    onDoubleTap: function() {
         this.setTimeoutId(null)
         let r = this.viewTarget().requestActiveGesture(this)
         if (r) {
-            this.sendDelegateMessage("onLongPressGestureComplete")
+            this.sendDelegateMessage("onDoubleTapComplete")
         }
     },
 
     // -- single action for mouse and touch up/down ---
 
     onPressDown: function (event) {
-        this.setDownEvent(event)
-        this.startTimer()
-        this.sendDelegateMessage("onLongPressGestureBegin")
+        if (this.hasTimer()) {
+            this.onDoubleTap()
+        } else {
+            this.startTimer()
+            this.sendDelegateMessage("onDoubleTapBegin")
+        }
         return true
     },
 
     onPressUp: function (event) {
-        this.setUpEvent(event)
-        this.cancel()
         return true
     },
 
     cancel: function() {
         if (this.hasTimer()) {
             this.stopTimer()
-            this.sendDelegateMessage("onLongPressGestureCancelled")
+            this.sendDelegateMessage("onDoubleTapCancelled")
         }
         return this
     },
@@ -138,10 +153,4 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
     },	
     */
 
-    // helpers
-
-    position: function() {
-        let p = Point.clone().setToMouseEventWinPos(this.downEvent())
-
-    },
 })

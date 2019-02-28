@@ -1978,7 +1978,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     requestActiveGesture: function(aGesture) {
         assert(aGesture)
-        
+
         let first = this.firstActiveGesture()
 
         if (!first) {
@@ -1986,7 +1986,7 @@ window.DivView = ideal.Proto.extend().newSlots({
             return true
         }
         
-        if (first == aGesture) {
+        if (first === aGesture) {
             return true
         }
 
@@ -1995,8 +1995,9 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     cancelAllGesturesExcept: function(aGesture) {
         this.gestureRecognizers().forEach((gr) => {
-            if (gr.type() != aGesture.type()) {
-                    gr.cancel()
+            //if (gr.type() != aGesture.type()) {
+            if (gr != aGesture) {
+                gr.cancel()
             }
         })
         return this

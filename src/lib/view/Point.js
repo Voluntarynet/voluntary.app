@@ -13,6 +13,7 @@ window.Point = ideal.Proto.extend().newSlots({
     y: 0,
     z: 0,
     t: 0,
+    id: null, 
 }).setSlots({
 
     init: function () {

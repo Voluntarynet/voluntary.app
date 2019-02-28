@@ -11,18 +11,21 @@
 
     Delegate messages :
 
-        onSlideGestureBegin(slideGestureRecognizer)
-        onSlideGestureMove(slideGestureRecognizer)
-        onSlideGestureComplete(slideGestureRecognizer)
-        
-        //onSlideGestureCancel(slideGestureRecognizer)
+        onSlideGestureBegin
+        onSlideGestureMove
+        onSlideGestureComplete
+        onSlideGestureCancelled
     
     Gesture state info methods:
 
-        isHorizontal()
-        dx()
-        dy()
+        direction()
+        distance() 
         downPosInView()
+
+    TODO
+
+        optimization: floor the move event points and only send delegate messages if
+        new position is different from last?
 
 */
 
@@ -31,19 +34,29 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     type: "SlideGestureRecognizer",
     isPressing: false,
 
+    // new stuff
+    direction: "left", // valid values are up, down, left, right
+    validDirectionsDict: { left: 1, right: 2, up: 3, down: 4 },
+    numberOfTouchesRequired: 1,
+    minDistToBegin: 10,
+
     downPositionInTarget: null,
     downPosition: null,
     currentPosition: null,
     upPosition: null,
-    isHorizontal: true,
-    minDist: 10,
 }).setSlots({
     
     init: function () {
         GestureRecognizer.init.apply(this)
         this.setListenerClasses(["MouseListener"])
-        this.setIsDebugging(true)
+        //this.setIsDebugging(true)
         //this.setListenerClasses(["MouseListener", "TouchListener"]) 
+        return this
+    },
+
+    setDirection: function(directionName) {
+        assert(directionName in this.validDirectionsDict());
+        this._direction = directionName
         return this
     },
 
@@ -69,8 +82,6 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
             if (!this.isActive() && this.hasMovedEnough()) {
                 let vt = this.viewTarget()
                 let r = vt.requestActiveGesture(this)
-                //console.log(this.type() + " requestActiveGesture ", r)
-
                 if(r) {
                     this.setIsActive(true)
                     this.sendDelegateMessage("onSlideGestureBegin")
@@ -78,7 +89,6 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
             }
         
             if (this.isActive()) {
-                console.log(this.dx())
                 this.sendDelegateMessage("onSlideGestureMove")
             }
         }
@@ -90,22 +100,25 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
         if (this.isPressing()) {
             this.setIsPressing(false)
             this.setCurrentPosition(pos)
-            this.finish()
             if (this.isActive()) {
                 this.sendDelegateMessage("onSlideGestureComplete")
             }
+            this.finish()
         }
 
         return true
     },
 
     cancel: function() {
+        if (this.isActive()) {
+            this.sendDelegateMessage("onSlideGestureCancelled")
+        }
         this.finish()
         return this
     },
 
     finish: function() {
-        console.log(this.type() + ".finish()")
+        //console.log(this.type() + ".finish()")
         this.setIsActive(false)
         this.stopDocListeners()
         return this
@@ -115,16 +128,17 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     hasMovedEnough: function() {
         let dp = this.pressDiffPos()
-        if(this.isHorizontal()) {
-            if (Math.abs(dp.x()) > this.minDist()) {
-                return true
-            }
-        } else {
-            if (Math.abs(dp.y()) > this.minDist()) {
-                return true
-            }
+        let m = this.minDistToBegin()
+
+        let funcs = {
+            left:  (dx, dy, m) => -dx > m,
+            right: (dx, dy, m) =>  dx > m,
+            up:    (dx, dy, m) =>  dy > m,
+            down:  (dx, dy, m) => -dy > m
         }
-        return false
+
+        let r =  funcs[this.direction()](dp.x(), dp.y(), m)
+        return r
     },
 
     // ------------------------------
@@ -178,13 +192,16 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     // --- helpers ----
 
-    dx: function() {
+    distance: function() {
         let dp = this.pressDiffPos()
-        return dp.x()
-    },
-
-    dy: function() {
-        let dp = this.pressDiffPos()
-        return dp.y()
+        let dx = Math.abs(dp.x())
+        let dy = Math.abs(dp.y())
+        let funcs = {
+            left:  (dx, dy) => dx,
+            right: (dx, dy) => dx,
+            up:    (dx, dy) => dy,
+            down:  (dx, dy) => dy
+        }
+        return funcs[this.direction()](dx, dy)
     },
 })

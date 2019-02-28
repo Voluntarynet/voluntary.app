@@ -36,7 +36,7 @@ class LoadProgressBarClass {
     }
 
     static clone() {
-        var obj = new this()
+        let obj = new this()
         obj.init()
         return obj
     }
@@ -126,7 +126,7 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
     }
 
     initTitle () {
-        var title = this.titleElement()
+        let title = this.titleElement()
         title.style.color = "#aaa"
         title.innerHTML = "PEER LOADING"
         return this
@@ -187,7 +187,7 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
     }
 
     unregisterForWindowError () {
-        var isRegistered = window.onerror === this._windowErrorCallback
+        let isRegistered = window.onerror === this._windowErrorCallback
         if (isRegistered) {
             window.onerror = null
         }
@@ -200,7 +200,7 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
     */
 
     incrementItemCount () {
-        var subtitle = this.subtitleElement()
+        let subtitle = this.subtitleElement()
         if (subtitle) {
             subtitle.style.color = "#666"
             subtitle.innerHTML += "."
@@ -209,7 +209,7 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
     }
 
     setCurrentItem (itemName) {
-        var item = this.itemElement()
+        let item = this.itemElement()
         //item.style.opacity = 0
         item.style.color = "#444"
         //item.currentValue = itemName	
@@ -239,7 +239,7 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
     }
 
     removeMainElement () {
-        var e = this.mainElement()
+        let e = this.mainElement()
         if (e) {
             e.parentNode.removeChild(e)
         }

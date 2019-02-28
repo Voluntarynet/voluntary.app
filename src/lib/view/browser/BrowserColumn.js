@@ -23,6 +23,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     applyStyles: function() {
         //console.log(this.typeId() + ".applyStyles()")
         NodeView.applyStyles.apply(this)
+        this._rows = []
         return this
     },
     
@@ -38,6 +39,24 @@ window.BrowserColumn = NodeView.extend().newSlots({
     columnGroup: function () {
         return this.parentView().parentView()
     },
+
+    // rows
+
+    /*
+    rows: function() {
+        return this._rows
+    },
+
+    addRow: function(v) {
+        this._rows.append(v)
+        return this.addSubview(v)
+    },
+
+    removeRow: function(v) {
+        this._rows.remove(v)
+        return this.removeSubview(v)
+    },
+    */
 
     // rows
 
@@ -86,7 +105,11 @@ window.BrowserColumn = NodeView.extend().newSlots({
         // unselect all other rows
         rows.forEach((row) => {
             if (row != selectedRow) {
-                row.unselect()
+                if (row.unselect) {
+                    row.unselect()
+                } else {
+                    console.warn(this.type() + " found a row of type " + row.type() + " that doesn't respond to unselect")
+                }
             }
         })
         
@@ -117,7 +140,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     
   
     selectedRows: function() {
-        return this.subviews().filter((row) => { 
+        return this.rows().filter((row) => { 
             if (!row.isSelected) {
                 console.warn("===== missing isSelected method on row of type: ", row.type())
                 return false
@@ -248,7 +271,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
     
     scrollToBottom: function() {
-        var last = this.subviews().last()
+        var last = this.rows().last()
 
         if (last) { 
             last.scrollIntoView()
@@ -262,7 +285,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
 
         if (this.node() && this.node().nodeRowsStartAtBottom()) {
             setTimeout(() => { this.scrollToBottom() }, 0)
-            //this.subviews().last().scrollIntoView()
+            //this.row().last().scrollIntoView()
         }
 
         return this
@@ -402,7 +425,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     onRightArrowKeyUp: function(event) {
         if (!this.canNavigate()) { return }	
 
-        if (this.nextColumn() && this.nextColumn().subviews().length > 0) {
+        if (this.nextColumn() && this.nextColumn().rows().length > 0) {
         	this.selectNextColumn()
         }
         return false
@@ -439,7 +462,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
         var sNode = this.selectedNode()
         if (sNode && sNode.hasAction("delete")) { 
 			sNode.performAction("delete") 
-			if (this.subviews().length == 0) {
+			if (this.rows().length == 0) {
 				this.selectPreviousColumn()
 			}
 		}

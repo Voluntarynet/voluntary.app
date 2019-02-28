@@ -19,7 +19,7 @@ window.BMPointerFieldRowView = BrowserTitledRow.extend().newSlots({
     updateSubviews: function () {	
         BrowserTitledRow.updateSubviews.apply(this)
 		
-        var node = this.node()
+        let  node = this.node()
 
         if (this.isSelected()) {
             this.noteView().setOpacity(1)	

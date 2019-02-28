@@ -25,15 +25,15 @@ window.ShelfGroup = BMNode.extend().newSlots({
     
     setupSubnodes: function() {
         
-        var posts = this.addSubnode(BMNode.clone().setTitle(lid.title()))
+        let  posts = this.addSubnode(BMNode.clone().setTitle(lid.title()))
         
         // my posts
-        var imageUrl = lid.profile().profileImageDataUrl()
-        var feedNode = lid.apps().appNamed("Chat").feedPosts()
+        let  imageUrl = lid.profile().profileImageDataUrl()
+        let  feedNode = lid.apps().appNamed("Chat").feedPosts()
         group.newShelfItem().setImageDataUrl(imageUrl).setDestinationNode(feedNode).setToolTip(lid.title())
         
         // feed
-        var myPostsNode = lid.apps().appNamed("Chat").myPosts()
+        let  myPostsNode = lid.apps().appNamed("Chat").myPosts()
         group.newShelfItem().setIconName("home3-white").setDestinationNode(myPostsNode).setToolTip("My Posts")
         
         // notifications

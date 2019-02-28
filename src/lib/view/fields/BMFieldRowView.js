@@ -34,7 +34,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
     },
 
     createValueView: function() {
-        var tf = TextField.clone().setDivClassName("BMFieldValueView")
+        let  tf = TextField.clone().setDivClassName("BMFieldValueView")
         //tf.setSelectAllOnDoubleClick(true)
         return tf
     },
@@ -55,7 +55,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         //console.log(this.type() + ".syncValueViewToNode " + this.node().type())
 	    if (this.node().type() == "BMBoolField" && this.valueView().type() != "BoolView") {
 	        //console.log("syncValueViewToNode setup bool view")
-	        var boolView = BoolView.clone()
+	        let  boolView = BoolView.clone()
             this.removeSubview(this.valueView())  
             this.setValueView(boolView)
             this.addSubview(this.valueView())  
@@ -72,9 +72,9 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         this.node().prepareToSyncToView()
         this.syncValueViewToNode() // (lazy) set up the value view to match the field's type
 
-        var node = this.node()
-        var keyView = this.keyView()
-        var valueView = this.valueView()
+        let  node = this.node()
+        let  keyView = this.keyView()
+        let  valueView = this.valueView()
 		
         if (node.isVisible()) {
             this.setDisplay("block")
@@ -84,7 +84,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
 
         keyView.setInnerHTML(this.visibleKey())
 
-        var newValue = this.visibleValue()
+        let  newValue = this.visibleValue()
 		
         /*
         console.log("")
@@ -119,7 +119,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
 		
         // change color if value is invalid
 		
-        var color = valueView.color()
+        let  color = valueView.color()
 		
         if (node.valueError()) {
             valueView.setColor(this.errorColor())
@@ -154,7 +154,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
     },
     
     syncToNode: function () {
-        var node = this.node()
+        let  node = this.node()
 
         if (node.keyIsEditable()) {
         	node.setKey(this.keyView().value())
@@ -180,10 +180,10 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
     updateSubviews: function() {
         BrowserFieldRow.updateSubviews.apply(this)
 		
-        var node = this.node()
+        let  node = this.node()
 
         if (node && node.nodeMinHeight()) {
-            var e = this.element()
+            let  e = this.element()
             if (node.nodeMinHeight() == -1) {
                 this.setHeight("auto")
                 //e.style.height = "auto"

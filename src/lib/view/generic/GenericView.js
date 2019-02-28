@@ -28,7 +28,7 @@ window.GenericView = NodeView.extend().newSlots({
     },
 
     syncFromNode: function () {
-        var node = this.node()
+        let  node = this.node()
 
         this.titleView().setInnerHTML(node.title())
         this.subtitleView().setInnerHTML(node.subtitle())
@@ -40,7 +40,7 @@ window.GenericView = NodeView.extend().newSlots({
     },
     
     syncToNode: function () {
-        var node = this.node()
+        let  node = this.node()
         //this.log("syncToNode " + this.titleView().innerHTML())
         node.setTitle(this.titleView().innerHTML())
         node.setSubtitle(this.subtitleView().innerHTML())

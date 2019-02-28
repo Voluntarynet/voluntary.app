@@ -40,13 +40,13 @@ window.CloseableNodeView = NodeView.extend().newSlots({
     },
     
     close: function() {
-        var seconds = 0.3
+        let  seconds = 0.3
 		
         this.collapse()
         
         setTimeout( () => { 
             //this.removeCloseButton()
-            var parentView = this.parentView()
+            let  parentView = this.parentView()
             //this.removeFromParentView()
             
             this.node().removeFromParentNode()

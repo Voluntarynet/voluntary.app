@@ -13,7 +13,7 @@ window.BrowserFooter = NodeView.extend().newSlots({
 
         this.setLeftActionsView(DivView.clone().setDivClassName("BrowserFooterLeftActionsView NodeView DivView"))
 		
-        var textView = TextField.clone().setDivClassName("BrowserFooterTextView NodeView DivView") //.setUserSelect("none")
+        let  textView = TextField.clone().setDivClassName("BrowserFooterTextView NodeView DivView") //.setUserSelect("none")
         this.setTextView(textView)
 	    this.textView().setContentEditable(true).setDoesClearOnReturn(true).setDoesHoldFocusOnReturn(true)
 						
@@ -49,9 +49,9 @@ window.BrowserFooter = NodeView.extend().newSlots({
     setInput: function(s) {
         //console.trace(this.typeId() + ".setInput('" + s + "')")
         
-        var n = this.node()
+        let  n = this.node()
         if (n) {
-            var m = n.nodeInputFieldMethod()
+            let  m = n.nodeInputFieldMethod()
             if (m) {
                 n[m].apply(n, [s])
             }
@@ -87,7 +87,7 @@ window.BrowserFooter = NodeView.extend().newSlots({
     },
     
     syncFromNode: function() {
-        var node = this.node()
+        let  node = this.node()
         this.removeAllSubviews()
         
         if (node) {

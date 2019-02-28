@@ -38,8 +38,8 @@ window.BMOptionsTableView = DivView.extend().newSlots({
         this.setOpacity(0)
 		
         this._validValues.forEach((v) => {
-            var optionRow = DivView.clone().setDivClassName("BMOptionsTableRowView")//.setTarget(this).setAction("select")
-            var optionColumn = DivView.clone().setDivClassName("BMOptionsTableColumnView").setInnerHTML(v).setTarget(this).setAction("select")
+            let  optionRow = DivView.clone().setDivClassName("BMOptionsTableRowView")//.setTarget(this).setAction("select")
+            let  optionColumn = DivView.clone().setDivClassName("BMOptionsTableColumnView").setInnerHTML(v).setTarget(this).setAction("select")
             optionRow.addSubview(optionColumn)
             optionColumn.validValue = v
             this.addSubview(optionRow)
@@ -69,21 +69,21 @@ window.BMOptionsTableView = DivView.extend().newSlots({
     },
 	
     adjustOptionWidths: function() {
-        var maxWidth = this.maxOptionTextWidth()
+        let  maxWidth = this.maxOptionTextWidth()
 		
-        var leftPad = 10
-        var rightPad = 10
+        let  leftPad = 10
+        let  rightPad = 10
 		
         this.setOptionWidths(maxWidth)
 		
-        var subviewsPerRow = 1
+        let  subviewsPerRow = 1
 		
         if (this.subviews().length > 10) {
             subviewsPerRow = Math.ceil(Math.sqrt(this.subviews().length))
         }
 		
-        var fullWidth = maxWidth * subviewsPerRow 
-        var w = fullWidth + leftPad + rightPad
+        let  fullWidth = maxWidth * subviewsPerRow 
+        let  w = fullWidth + leftPad + rightPad
 		
         //this.setMinAndMaxWidth(w)
 		
@@ -94,8 +94,8 @@ window.BMOptionsTableView = DivView.extend().newSlots({
             subview.setMinAndMaxWidth(w)
         })
 		
-        //var rowCount = this.subviews().length / subviewsPerRow
-        //var h = rowCount * 26
+        //let  rowCount = this.subviews().length / subviewsPerRow
+        //let  h = rowCount * 26
         //console.log("maxHeight = ", h)
         //this.setMinAndMaxHeight(h)
 		

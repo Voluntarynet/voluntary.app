@@ -25,7 +25,7 @@ window.BMActionFieldRowView = BrowserRow.extend().newSlots({
     updateSubviews: function () {	
         BrowserRow.updateSubviews.apply(this)
 		
-        var bv = this.buttonView()
+        let  bv = this.buttonView()
         bv.setInnerHTML(this.node().key())
         
         if (this.node().isEnabled()) {

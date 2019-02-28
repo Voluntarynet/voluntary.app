@@ -8,7 +8,7 @@ window.ShelfFooterView = DivView.extend().newSlots({
         this.turnOffUserSelect()
         this.setTransition("all 0.35s")
 		
-        var itemSize = 80
+        let  itemSize = 80
         this.setMinAndMaxWidth(itemSize)
 
         return this
@@ -52,7 +52,7 @@ window.ShelfFooterView = DivView.extend().newSlots({
             }
         })
         
-        var node = clickedItem.destinationNode()
+        let  node = clickedItem.destinationNode()
         if (node) {
             //App.shared().browser().selectNode(node)
             App.shared().browser().setNode(node).scheduleSyncFromNode() // this.browser().syncFromNode()
@@ -62,14 +62,14 @@ window.ShelfFooterView = DivView.extend().newSlots({
     },
     
     newShelfItem: function() {
-        var item = ShelfItemView.clone()
+        let  item = ShelfItemView.clone()
         this.addItem(item)
         item.showUnselected()
         return item
     },
     
     firstItemHeight: function() {
-        var fs = this.firstItem()    
+        let  fs = this.firstItem()    
         return fs ? fs.clientHeight() : 0
     },
     
@@ -101,9 +101,9 @@ window.ShelfFooterView = DivView.extend().newSlots({
     uncompact: function() {
         if (this._isCompacted) {
             this._isCompacted = false
-            var fs = this.firstItem()
+            let  fs = this.firstItem()
             if (fs) {
-                var newHeight = this.sumOfSubviewHeights()
+                let  newHeight = this.sumOfSubviewHeights()
                 this.setMinAndMaxHeight(newHeight)
                 fs.select()
             }

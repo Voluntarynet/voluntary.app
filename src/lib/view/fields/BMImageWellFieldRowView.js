@@ -21,7 +21,7 @@ window.BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
     },
 
     syncFromNode: function () {
-        var field = this.node()
+        let  field = this.node()
 
         if (this.imageWellView()) {
             //console.log("field = ", field.type())
@@ -35,7 +35,7 @@ window.BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
     },
 
     syncToNode: function () {
-        var field = this.node()
+        let  field = this.node()
 		
         //console.log(this.typeId() + ".syncToNode() imageDataURLs: ", this.dataUrls())
 		
@@ -54,7 +54,7 @@ window.BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
     },
     
     updateKeyView: function() {
-        var opacity = 1
+        let  opacity = 1
         
         if(this.node().onlyShowsKeyWhenEmpty()) {
 		    opacity = this.dataUrls().length ? 0 : 1

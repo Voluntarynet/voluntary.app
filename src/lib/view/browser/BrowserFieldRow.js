@@ -39,10 +39,10 @@ window.BrowserFieldRow = BrowserRow.extend().newSlots({
     updateSubviews: function() {   
 	    BrowserRow.updateSubviews.apply(this)
 	
-        var node = this.node()
+        let  node = this.node()
 
         if (node && node.nodeMinHeight()) {
-            var e = this.element()
+            let  e = this.element()
             if (node.nodeMinHeight() == -1) {
                 
                 this.setHeight("auto")                

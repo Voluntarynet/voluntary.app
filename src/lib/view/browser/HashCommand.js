@@ -13,7 +13,7 @@ window.HashCommand = ideal.Proto.extend().newSlots({
     },
 
     parseCommandString: function(s) {
-        var j = []
+        let  j = []
         try {
             j = JSON.parse(s)
         } catch (e) {

@@ -24,9 +24,9 @@ window.BrowserHeaderAction = NodeView.extend().newSlots({
 
         /*
 		if (this.target() && this.target().subnodeProto() && this.target().subnodeProto().nodeVisibleClassName()) {
-			var noun = this.target().subnodeProto().nodeVisibleClassName().toLowerCase()
-			var beginsWithVowel = ["a", "e", "i", "o", "u"].contains(noun[0])
-			var article = beginsWithVowel ? "an" : "a";
+			let  noun = this.target().subnodeProto().nodeVisibleClassName().toLowerCase()
+			let  beginsWithVowel = ["a", "e", "i", "o", "u"].contains(noun[0])
+			let  article = beginsWithVowel ? "an" : "a";
 			this.setToolTip(this.action() + " " + article + " " + noun)
 		}
 		*/

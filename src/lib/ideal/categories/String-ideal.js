@@ -11,7 +11,7 @@ Object.shallowCopyTo({
     },
 
     endsWith: function (suffix) {
-        var index = this.lastIndexOf(suffix);
+        let index = this.lastIndexOf(suffix);
         return (index > -1) && (this.lastIndexOf(suffix) == this.length - suffix.length);
     },
 
@@ -20,7 +20,7 @@ Object.shallowCopyTo({
     },
 
     before: function (aString) {
-        var index = this.indexOf(aString);
+        let index = this.indexOf(aString);
         
         if (index == -1) {
             return this;
@@ -30,7 +30,7 @@ Object.shallowCopyTo({
     },
 
     after: function (aString) {
-        var index = this.indexOf(aString);
+        let index = this.indexOf(aString);
 
         if (index == -1) {
             return "";
@@ -40,9 +40,9 @@ Object.shallowCopyTo({
     },
 
     between: function (prefix, suffix) {
-        var after = this.after(prefix);
+        let after = this.after(prefix);
         if (after != null) {
-            var before = after.before(suffix);
+            let before = after.before(suffix);
             if (before != null) {
                 return before;
             }
@@ -68,8 +68,8 @@ Object.shallowCopyTo({
     },
 
     repeated: function (times) {
-        var result = "";
-        var aString = this;
+        let result = "";
+        let aString = this;
         times.repeat(function () { result += aString });
         return result
     },
@@ -104,12 +104,12 @@ Object.shallowCopyTo({
     //move to libraries?
     humanized: function () //someMethodName -> Some Method Name
     {
-        var words = [];
-        var start = -1;
-        var capitalized = this.capitalized();
+        let words = [];
+        let start = -1;
+        let capitalized = this.capitalized();
         for (let i = 0; i < capitalized.length; i++) {
             if (capitalized.slice(i, i + 1).match(/[A-Z]/)) {
-                var word = capitalized.slice(start, i);
+                let word = capitalized.slice(start, i);
                 if (word) {
                     words.append(word);
                 }
@@ -163,7 +163,7 @@ Object.shallowCopyTo({
     },
 
     sansLastPathComponent: function () {
-        var c = this.pathComponents()
+        let c = this.pathComponents()
         c.removeLast();
         return c.join("/");
     },
@@ -173,12 +173,12 @@ Object.shallowCopyTo({
     },
 
     fileNameSuffix: function () {
-        var suffix = this.split(".").last();
+        let suffix = this.split(".").last();
         return suffix;
     },
 
     padLeft: function (length, padding) {
-        var str = this;
+        let str = this;
         while (str.length < length) {
             str = padString + str;
         }
@@ -187,7 +187,7 @@ Object.shallowCopyTo({
     },
 
     padRight: function (length, padding) {
-        var str = this;
+        let str = this;
         while (str.length < length) {
             str = str + padding;
         }
@@ -237,13 +237,13 @@ Object.shallowCopyTo({
         if (!minWordCount) { minWordCount = 10; }
         if (!maxWordCount) { maxWordCount = 40; }
 
-        var loremIpsumWordBank = new Array("lorem", "ipsum", "dolor", "sit", "amet,", "consectetur", "adipisicing", "elit,", "sed", "do", "eiusmod", "tempor", "incididunt", "ut", "labore", "et", "dolore", "magna", "aliqua.", "enim", "ad", "minim", "veniam,", "quis", "nostrud", "exercitation", "ullamco", "laboris", "nisi", "ut", "aliquip", "ex", "ea", "commodo", "consequat.", "duis", "aute", "irure", "dolor", "in", "reprehenderit", "in", "voluptate", "velit", "esse", "cillum", "dolore", "eu", "fugiat", "nulla", "pariatur.", "excepteur", "sint", "occaecat", "cupidatat", "non", "proident,", "sunt", "in", "culpa", "qui", "officia", "deserunt", "mollit", "anim", "id", "est", "laborum.", "sed", "ut", "perspiciatis,", "unde", "omnis", "iste", "natus", "error", "sit", "voluptatem", "accusantium", "doloremque", "laudantium,", "totam", "rem", "aperiam", "eaque", "ipsa,", "quae", "ab", "illo", "inventore", "veritatis", "et", "quasi", "architecto", "beatae", "vitae", "dicta", "sunt,", "explicabo.", "nemo", "enim", "ipsam", "voluptatem,", "quia", "voluptas", "sit,", "aspernatur", "aut", "odit", "aut", "fugit,", "sed", "quia", "consequuntur", "magni", "dolores", "eos,", "qui", "ratione", "voluptatem", "sequi", "nesciunt,", "neque", "porro", "quisquam", "est,", "qui", "dolorem", "ipsum,", "quia", "dolor", "sit,", "amet,", "consectetur,", "adipisci", "velit,", "sed", "quia", "non", "numquam", "eius", "modi", "tempora", "incidunt,", "ut", "labore", "et", "dolore", "magnam", "aliquam", "quaerat", "voluptatem.", "ut", "enim", "ad", "minima", "veniam,", "quis", "nostrum", "exercitationem", "ullam", "corporis", "suscipit", "laboriosam,", "nisi", "ut", "aliquid", "ex", "ea", "commodi", "consequatur?", "quis", "autem", "vel", "eum", "iure", "reprehenderit,", "qui", "in", "ea", "voluptate", "velit", "esse,", "quam", "nihil", "molestiae", "consequatur,", "vel", "illum,", "qui", "dolorem", "eum", "fugiat,", "quo", "voluptas", "nulla", "pariatur?", "at", "vero", "eos", "et", "accusamus", "et", "iusto", "odio", "dignissimos", "ducimus,", "qui", "blanditiis", "praesentium", "voluptatum", "deleniti", "atque", "corrupti,", "quos", "dolores", "et", "quas", "molestias", "excepturi", "sint,", "obcaecati", "cupiditate", "non", "provident,", "similique", "sunt", "in", "culpa,", "qui", "officia", "deserunt", "mollitia", "animi,", "id", "est", "laborum", "et", "dolorum", "fuga.", "harum", "quidem", "rerum", "facilis", "est", "et", "expedita", "distinctio.", "Nam", "libero", "tempore,", "cum", "soluta", "nobis", "est", "eligendi", "optio,", "cumque", "nihil", "impedit,", "quo", "minus", "id,", "quod", "maxime", "placeat,", "facere", "possimus,", "omnis", "voluptas", "assumenda", "est,", "omnis", "dolor", "repellendus.", "temporibus", "autem", "quibusdam", "aut", "officiis", "debitis", "aut", "rerum", "necessitatibus", "saepe", "eveniet,", "ut", "et", "voluptates", "repudiandae", "sint", "molestiae", "non", "recusandae.", "itaque", "earum", "rerum", "hic", "tenetur", "a", "sapiente", "delectus,", "aut", "reiciendis", "voluptatibus", "maiores", "alias", "consequatur", "aut", "perferendis", "doloribus", "asperiores", "repellat");
+        let loremIpsumWordBank = new Array("lorem", "ipsum", "dolor", "sit", "amet,", "consectetur", "adipisicing", "elit,", "sed", "do", "eiusmod", "tempor", "incididunt", "ut", "labore", "et", "dolore", "magna", "aliqua.", "enim", "ad", "minim", "veniam,", "quis", "nostrud", "exercitation", "ullamco", "laboris", "nisi", "ut", "aliquip", "ex", "ea", "commodo", "consequat.", "duis", "aute", "irure", "dolor", "in", "reprehenderit", "in", "voluptate", "velit", "esse", "cillum", "dolore", "eu", "fugiat", "nulla", "pariatur.", "excepteur", "sint", "occaecat", "cupidatat", "non", "proident,", "sunt", "in", "culpa", "qui", "officia", "deserunt", "mollit", "anim", "id", "est", "laborum.", "sed", "ut", "perspiciatis,", "unde", "omnis", "iste", "natus", "error", "sit", "voluptatem", "accusantium", "doloremque", "laudantium,", "totam", "rem", "aperiam", "eaque", "ipsa,", "quae", "ab", "illo", "inventore", "veritatis", "et", "quasi", "architecto", "beatae", "vitae", "dicta", "sunt,", "explicabo.", "nemo", "enim", "ipsam", "voluptatem,", "quia", "voluptas", "sit,", "aspernatur", "aut", "odit", "aut", "fugit,", "sed", "quia", "consequuntur", "magni", "dolores", "eos,", "qui", "ratione", "voluptatem", "sequi", "nesciunt,", "neque", "porro", "quisquam", "est,", "qui", "dolorem", "ipsum,", "quia", "dolor", "sit,", "amet,", "consectetur,", "adipisci", "velit,", "sed", "quia", "non", "numquam", "eius", "modi", "tempora", "incidunt,", "ut", "labore", "et", "dolore", "magnam", "aliquam", "quaerat", "voluptatem.", "ut", "enim", "ad", "minima", "veniam,", "quis", "nostrum", "exercitationem", "ullam", "corporis", "suscipit", "laboriosam,", "nisi", "ut", "aliquid", "ex", "ea", "commodi", "consequatur?", "quis", "autem", "vel", "eum", "iure", "reprehenderit,", "qui", "in", "ea", "voluptate", "velit", "esse,", "quam", "nihil", "molestiae", "consequatur,", "vel", "illum,", "qui", "dolorem", "eum", "fugiat,", "quo", "voluptas", "nulla", "pariatur?", "at", "vero", "eos", "et", "accusamus", "et", "iusto", "odio", "dignissimos", "ducimus,", "qui", "blanditiis", "praesentium", "voluptatum", "deleniti", "atque", "corrupti,", "quos", "dolores", "et", "quas", "molestias", "excepturi", "sint,", "obcaecati", "cupiditate", "non", "provident,", "similique", "sunt", "in", "culpa,", "qui", "officia", "deserunt", "mollitia", "animi,", "id", "est", "laborum", "et", "dolorum", "fuga.", "harum", "quidem", "rerum", "facilis", "est", "et", "expedita", "distinctio.", "Nam", "libero", "tempore,", "cum", "soluta", "nobis", "est", "eligendi", "optio,", "cumque", "nihil", "impedit,", "quo", "minus", "id,", "quod", "maxime", "placeat,", "facere", "possimus,", "omnis", "voluptas", "assumenda", "est,", "omnis", "dolor", "repellendus.", "temporibus", "autem", "quibusdam", "aut", "officiis", "debitis", "aut", "rerum", "necessitatibus", "saepe", "eveniet,", "ut", "et", "voluptates", "repudiandae", "sint", "molestiae", "non", "recusandae.", "itaque", "earum", "rerum", "hic", "tenetur", "a", "sapiente", "delectus,", "aut", "reiciendis", "voluptatibus", "maiores", "alias", "consequatur", "aut", "perferendis", "doloribus", "asperiores", "repellat");
 
-        var randy = Math.floor(Math.random() * (maxWordCount - minWordCount)) + minWordCount;
-        var ret = "";
-        var needsCap = true
+        let randy = Math.floor(Math.random() * (maxWordCount - minWordCount)) + minWordCount;
+        let ret = "";
+        let needsCap = true
         for (let i = 0; i < randy; i++) {
-            var newTxt = loremIpsumWordBank[Math.floor(Math.random() * (loremIpsumWordBank.length - 1))];
+            let newTxt = loremIpsumWordBank[Math.floor(Math.random() * (loremIpsumWordBank.length - 1))];
 
             if (ret.substring(ret.length - 1, ret.length) == "." || ret.substring(ret.length - 1, ret.length) == "?") {
                 newTxt = newTxt.substring(0, 1).toUpperCase() + newTxt.substring(1, newTxt.length);
@@ -262,7 +262,7 @@ Object.shallowCopyTo({
 
     escapeHtml: function () {
         return this.replace(/[&<>"'\/]/g, function (s) {
-            var entityMap = {
+            let entityMap = {
                 "&": "&amp;",
                 "<": "&lt;",
                 ">": "&gt;",

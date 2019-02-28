@@ -62,7 +62,7 @@ Object.shallowCopyTo({
     },
 
     itemAfter: function (v) {
-        var i = this.indexOf(v);
+        let i = this.indexOf(v);
         if (i == -1) return null;
         i = i + 1;
         if (i > this.length - 1) return null;
@@ -71,7 +71,7 @@ Object.shallowCopyTo({
     },
 
     itemBefore: function (v) {
-        var i = this.indexOf(v);
+        let i = this.indexOf(v);
         if (i == -1) return null;
         i = i - 1;
         if (i < 0) return null;
@@ -84,13 +84,13 @@ Object.shallowCopyTo({
     },
 
     split: function (subArrayCount) {
-        var subArrays = [];
+        let subArrays = [];
 
-        var subArraySize = Math.ceil(this.length / subArrayCount);
+        let subArraySize = Math.ceil(this.length / subArrayCount);
         for (let i = 0; i < this.length; i += subArraySize) {
-            var subArray = this.slice(i, i + subArraySize);
+            let subArray = this.slice(i, i + subArraySize);
             if (subArray.length < subArraySize) {
-                var lastSubArray = subArrays.pop();
+                let lastSubArray = subArrays.pop();
                 if (lastSubArray) {
                     subArray = lastSubArray.concat(subArray);
                 }
@@ -148,7 +148,7 @@ Object.shallowCopyTo({
     },
 
     remove: function (e) {
-        var i = this.indexOf(e);
+        let i = this.indexOf(e);
         if (i > -1) {
             this.removeAt(i);
         }
@@ -180,7 +180,7 @@ Object.shallowCopyTo({
     },
 
     replace: function (obj, withObj) {
-        var i = this.indexOf(obj);
+        let i = this.indexOf(obj);
         if (i > -1) {
             this.removeAt(i);
             this.atInsert(i, withObj);
@@ -189,8 +189,8 @@ Object.shallowCopyTo({
     },
 
     swap: function (e1, e2) {
-        var i1 = this.indexOf(e1);
-        var i2 = this.indexOf(e2);
+        let i1 = this.indexOf(e1);
+        let i2 = this.indexOf(e2);
 
         this[i1] = e2;
         this[i2] = e1;
@@ -199,12 +199,12 @@ Object.shallowCopyTo({
     },
 
     shuffle: function () {
-        var i = this.length;
+        let i = this.length;
         if (i == 0) return false;
         while (--i) {
-            var j = Math.floor(Math.random() * (i + 1));
-            var tempi = this[i];
-            var tempj = this[j];
+            let j = Math.floor(Math.random() * (i + 1));
+            let tempi = this[i];
+            let tempj = this[j];
             this[i] = tempj;
             this[j] = tempi;
         }
@@ -219,12 +219,12 @@ Object.shallowCopyTo({
     // --- enumeration ---
 
     forEachCall: function (functionName) {
-        var args = this.slice.call(arguments).slice(1);
+        let args = this.slice.call(arguments).slice(1);
         args.push(0);
         this.forEach(function (e, i) {
             args[args.length - 1] = i;
             if (e) {
-                var fn = e[functionName];
+                let fn = e[functionName];
                 if (fn) {
                     fn.apply(e, args);
                 }
@@ -241,10 +241,10 @@ Object.shallowCopyTo({
     },
 
     sortPerform: function (functionName) {
-        var args = this.slice.call(arguments).slice(1);
+        let args = this.slice.call(arguments).slice(1);
         return this.sort(function (x, y) {
-            var xRes = x[functionName].apply(x, args);
-            var yRes = y[functionName].apply(y, args);
+            let xRes = x[functionName].apply(x, args);
+            let yRes = y[functionName].apply(y, args);
             if (xRes < yRes) {
                 return -1;
             }
@@ -258,16 +258,16 @@ Object.shallowCopyTo({
     },
 
     parallelPerform: function () {
-        var args = this.slice.call(arguments).slice();
-        var fn = args.pop();
+        let args = this.slice.call(arguments).slice();
+        let fn = args.pop();
 
         if (this.length == 0) {
             fn(null);
             return;
         }
 
-        var remaining = this.length;
-        var err = null;
+        let remaining = this.length;
+        let err = null;
         args.push(function (error) {
             err = error;
             remaining--;
@@ -276,23 +276,23 @@ Object.shallowCopyTo({
             }
         });
 
-        var ops = this.mapPerform.apply(this, args);
+        let ops = this.mapPerform.apply(this, args);
         return this;
     },
 
     serialPerform: function (functionName) {
-        var args = this.slice.call(arguments).slice(1);
-        var fn = args.pop();
+        let args = this.slice.call(arguments).slice(1);
+        let fn = args.pop();
 
         if (this.length == 0) {
             fn(null);
             return;
         }
 
-        var i = 0;
-        var next = () => {
+        let i = 0;
+        let next = () => {
             if (i < this.length) {
-                var e = this[i];
+                let e = this[i];
                 i++;
                 e[functionName].apply(e, args);
             } else {
@@ -314,7 +314,7 @@ Object.shallowCopyTo({
     },
 
     mapPerform: function () {
-        var args = Array.prototype.slice.call(arguments);
+        let args = Array.prototype.slice.call(arguments);
         args.unshift(null);
         args.push(-1);
 
@@ -342,7 +342,7 @@ Object.shallowCopyTo({
     },
 
     detectPerform: function (functionName) {
-        var args = this.slice.call(arguments).slice(1);
+        let args = this.slice.call(arguments).slice(1);
         return this.detect(function (e, i) {
             return e[functionName].apply(e, args);
         });
@@ -385,7 +385,7 @@ Object.shallowCopyTo({
     },
 
     everyProperty: function (slotName, expectedValue) {
-        var args = arguments;
+        let args = arguments;
         return this.every(function (obj) {
             if (args.length == 2) {
                 return obj[slotName] == expectedValue;
@@ -396,14 +396,14 @@ Object.shallowCopyTo({
     },
 
     everyPerform: function () {
-        var args = arguments;
+        let args = arguments;
         return this.every(function (obj) {
             return obj.perform.apply(obj, args);
         });
     },
 
     filterPerform: function () {
-        var args = Array.prototype.slice.call(arguments);
+        let args = Array.prototype.slice.call(arguments);
         args.unshift(null);
         args.push(0);
         return this.filter(function (e, i) {
@@ -420,7 +420,7 @@ Object.shallowCopyTo({
     },
 
     filterProperty: function (slotName, expectedValue) {
-        var args = arguments;
+        let args = arguments;
         return this.filter(function (obj) {
             if (args.length == 2) {
                 return obj[slotName] == expectedValue;
@@ -431,7 +431,7 @@ Object.shallowCopyTo({
     },
 
     rejectPerform: function () {
-        var args = this.slice.call(arguments);
+        let args = this.slice.call(arguments);
         args.shift(null);
         args.push(0);
         return this.filter(function (e, i) {
@@ -448,7 +448,7 @@ Object.shallowCopyTo({
     },
 
     minValue: function (callback, theDefault) {
-        var obj = this.min(callback);
+        let obj = this.min(callback);
         if (obj == undefined) {
             return theDefault;
         }
@@ -456,7 +456,7 @@ Object.shallowCopyTo({
     },
 
     maxValue: function (callback, theDefault) {
-        var obj = this.max(callback);
+        let obj = this.max(callback);
         if (obj == undefined) {
             return theDefault;
         }
@@ -464,12 +464,12 @@ Object.shallowCopyTo({
     },
 
     max: function (callback) {
-        var m = undefined;
-        var mObject = undefined;
-        var length = this.length;
+        let m = undefined;
+        let mObject = undefined;
+        let length = this.length;
 
         for (let i = 0; i < length; i++) {
-            var v = this[i];
+            let v = this[i];
             if (callback) v = callback(v);
 
             if (m == undefined || v > m) {
@@ -482,12 +482,12 @@ Object.shallowCopyTo({
     },
 
     maxIndex: function (callback) {
-        var m = undefined;
-        var index = 0;
-        var length = this.length;
+        let m = undefined;
+        let index = 0;
+        let length = this.length;
 
         for (let i = 0; i < length; i++) {
-            var v = this[i];
+            let v = this[i];
             if (callback) v = callback(v);
 
             if (m == undefined || v > m) {
@@ -500,12 +500,12 @@ Object.shallowCopyTo({
     },
 
     min: function (callback) {
-        var m = undefined;
-        var mObject = undefined;
-        var length = this.length;
+        let m = undefined;
+        let mObject = undefined;
+        let length = this.length;
 
         for (let i = 0; i < length; i++) {
-            var v = this[i];
+            let v = this[i];
             if (callback) v = callback(v);
 
             if (m == undefined || v < m) {
@@ -518,12 +518,12 @@ Object.shallowCopyTo({
     },
 
     minIndex: function (callback) {
-        var m = undefined;
-        var index = 0;
-        var length = this.length;
+        let m = undefined;
+        let index = 0;
+        let length = this.length;
 
         for (let i = 0; i < length; i++) {
-            var v = this[i];
+            let v = this[i];
             if (callback) v = callback(v);
 
             if (m == undefined || v < m) {
@@ -536,12 +536,12 @@ Object.shallowCopyTo({
     },
 
     sum: function (callback) {
-        var m = undefined;
-        var sum = 0;
-        var length = this.length;
+        let m = undefined;
+        let sum = 0;
+        let length = this.length;
 
         for (let i = 0; i < length; i++) {
-            var v = this[i];
+            let v = this[i];
             if (callback) v = callback(v);
 
             sum = sum + v;
@@ -559,7 +559,7 @@ Object.shallowCopyTo({
     },
 
     flatten: function () {
-        var flattened = [];
+        let flattened = [];
         this.forEach(function (array) {
             flattened.appendItems(array);
         });
@@ -571,7 +571,7 @@ Object.shallowCopyTo({
     },
 
     unique: function () {
-        var a = [];
+        let a = [];
         this.forEach(function (e) {
             a.appendIfAbsent(e);
         });
@@ -602,10 +602,10 @@ Object.shallowCopyTo({
     isArray: true,
 
     select: function (callback) {
-        var results = []
+        let results = []
     
         for (let i = 0; i < this.length; i++) {
-            var v = this[i];
+            let v = this[i];
     
             if (callback(v)) {
                 results.push(v)
@@ -616,7 +616,7 @@ Object.shallowCopyTo({
     },
     
     after: function (v) {
-        var index = this.indexOf(v);
+        let index = this.indexOf(v);
     
         if (index == -1) {
             return [];
@@ -626,7 +626,7 @@ Object.shallowCopyTo({
     },
     
     before: function (v) {
-        var index = this.indexOf(v);
+        let index = this.indexOf(v);
     
         if (index == -1) {
             return this.slice();
@@ -645,7 +645,7 @@ Object.shallowCopyTo({
     },
     
     removeOccurancesOf: function (e) {
-        var i = this.indexOf(e);
+        let i = this.indexOf(e);
         while (i > -1) {
             this.removeAt(i);
             i = this.indexOf(e)
@@ -666,7 +666,7 @@ Object.shallowCopyTo({
     },
 
     itemsBefore: function (item) {
-        var index = this.indexOf(item);
+        let index = this.indexOf(item);
         if (index != -1) {
             return this.slice(0, index);
         }
@@ -674,7 +674,7 @@ Object.shallowCopyTo({
     },
     
     union: function (a) {
-        var r = this.slice(0);
+        let r = this.slice(0);
         a.forEach(function (i) { if (r.indexOf(i) < 0) r.push(i); });
         return r;
     },
@@ -700,8 +700,8 @@ Object.shallowCopyTo({
         }
     
         for (let i = 0, l = this.length; i < l; i++) {
-            var a = this[i]
-            var b = array[i]
+            let a = this[i]
+            let b = array[i]
             
             // Check if we have nested arrays
             /*
@@ -729,7 +729,7 @@ Object.shallowCopyTo({
     /*
     includes: function (b) {
         for (let i = 0, l=this.length; i < l; i++) {
-            var a = this[i]
+            let a = this[i]
 
             if (a.equals) {
                 if (!a.equals(b)) {

@@ -12,7 +12,7 @@ Object.shallowCopyTo({
     },
 
     map: function () {
-        var a = [];
+        let a = [];
         for (let i = 0; i < this; i++) {
             a.push(i);
         }

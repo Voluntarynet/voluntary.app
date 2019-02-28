@@ -64,10 +64,11 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
 	
         this.setHasSubtitle(this.hasSubtitle())
 
+        let node = this.node()
+
         this.titleView().setContentEditable(node ? node.nodeTitleIsEditable() : false)
         this.subtitleView().setContentEditable(node ? node.nodeSubtitleIsEditable() : false)
             
-        var node = this.node()
         
         if (node) {
             var b = this.isSelected()

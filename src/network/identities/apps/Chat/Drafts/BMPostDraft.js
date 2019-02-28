@@ -28,7 +28,7 @@ window.BMPostDraft = BMStorableNode.extend().newSlots({
     },
 	
     contentDict: function() {
-        var contentDict = {}
+        let contentDict = {}
         contentDict.content = this.content()
         return contentDict
     },
@@ -48,7 +48,7 @@ window.BMPostDraft = BMStorableNode.extend().newSlots({
     },
 	
     post: function() {
-        var msg = BMPostMessage.clone()
+        let msg = BMPostMessage.clone()
         msg.setContent(this.content())
         msg.postFromSender(this.localIdentity())
         this.delete()

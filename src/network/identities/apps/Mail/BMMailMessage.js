@@ -24,7 +24,7 @@ window.BMMailMessage = BMAppMessage.extend().newSlots({
     didUpdateField: function(aField) {
         BMFieldSetNode.didUpdateField.apply(this)
 
-        var name = aField.valueMethod()
+        let name = aField.valueMethod()
         //console.log("didUpdateField(" + name + ")")
 
         if (name == "toContact") {
@@ -54,7 +54,7 @@ window.BMMailMessage = BMAppMessage.extend().newSlots({
     // ids
 
     setupReceiverPubkeyFromInput: function() { // called on edits
-        var receiverId = App.shared().network().idWithNameOrPubkey(this.toContact())
+        let receiverId = App.shared().network().idWithNameOrPubkey(this.toContact())
         this.setReceiverPublicKeyString(receiverId? receiverId.publicKeyString() : null)
         return this
     },
@@ -66,19 +66,19 @@ window.BMMailMessage = BMAppMessage.extend().newSlots({
         // if pubkey matches a contact name, set to name
         // otherwise, set to the pubkey
 
-        var senderId = App.shared().network().idWithNameOrPubkey(this.senderPublicKeyString())      
+        let senderId = App.shared().network().idWithNameOrPubkey(this.senderPublicKeyString())      
         //console.log(this.type() + " senderId = " + senderId)
-        var from = senderId ? senderId.name() : ""
+        let from = senderId ? senderId.name() : ""
         if (from != this.fromContact()) { this.setFromContact(from) }
 
-        var receiverId = App.shared().network().idWithNameOrPubkey(this.receiverPublicKeyString())      
-        var to = receiverId ? receiverId.name() : ""
+        let receiverId = App.shared().network().idWithNameOrPubkey(this.receiverPublicKeyString())      
+        let to = receiverId ? receiverId.name() : ""
         if (to != this.toContact()) { this.setToContact(to) }
     },
 
     toContactNames: function() {
-        var localNames = App.shared().network().localIdentityNames()
-        var remoteNames = this.localIdentity().remoteIdentities().names()
+        let localNames = App.shared().network().localIdentityNames()
+        let remoteNames = this.localIdentity().remoteIdentities().names()
         return localNames.concat(remoteNames)
     },
 
@@ -93,7 +93,7 @@ window.BMMailMessage = BMAppMessage.extend().newSlots({
             return this.localIdentity().title()
         }
 		
-        var s = this.toContact()
+        let s = this.toContact()
         if (s) {
             return s
         }			
@@ -101,7 +101,7 @@ window.BMMailMessage = BMAppMessage.extend().newSlots({
     },
 
     subtitle: function () {
-        var s = this.subject()
+        let s = this.subject()
         if (s) {
             return s
         }
@@ -111,7 +111,7 @@ window.BMMailMessage = BMAppMessage.extend().newSlots({
     // ------------------------
 
     contentDict: function() {
-        var contentDict = {}
+        let contentDict = {}
         contentDict.subject = this.subject()
         contentDict.body = this.body()
         return contentDict

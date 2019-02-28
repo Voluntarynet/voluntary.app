@@ -25,7 +25,7 @@ window.BMChatMessage = BMAppMessage.extend().newSlots({
     },
 	
     contentDict: function() {
-        var contentDict = {}
+        let contentDict = {}
         contentDict.content = this.content()
         return contentDict
     },

@@ -18,7 +18,7 @@ window.BMDrafts = BMStorableNode.extend().newSlots({
     },
     
     add: function() {
-        var newPrivateMsg = BMStorableNode.add.apply(this)
+        let newPrivateMsg = BMStorableNode.add.apply(this)
         newPrivateMsg.setSenderPublicKeyString(this.localIdentity().publicKeyString()).setupInputsFromPubkeys()
         this.didUpdateNode()
         return newPrivateMsg

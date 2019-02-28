@@ -72,7 +72,7 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
     },
 
     setupContentView: function() {
-        var tv = this.contentView()
+        let tv = this.contentView()
         tv.insertDivClassName(this.type() + "Title")
         //tv.setWidth("auto")
 
@@ -85,7 +85,7 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
     },
     
     setIconDataUrl: function(imageDataUrl) {
-        var iv = this.iconView()
+        let iv = this.iconView()
         
         if (imageDataUrl) {
     		iv.setBackgroundImageUrlPath(imageDataUrl)        
@@ -99,14 +99,14 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
     updateSubviews: function() {
         BrowserRow.updateSubviews.apply(this)
 	
-        var node = this.node()
+        let node = this.node()
         
         if (node) {
             /*
-            var placeText = this.contentView().innerHTML().length ? "" : "What's happening?"    
+            let placeText = this.contentView().innerHTML().length ? "" : "What's happening?"    
             this.placeHolderView().setInnerHTML(placeText)
 */
-            var opacity = this.contentView().innerHTML().length ? 0 : 1
+            let opacity = this.contentView().innerHTML().length ? 0 : 1
             this.placeHolderView().setOpacity(opacity)
         }
 
@@ -137,7 +137,7 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
     },
 
     syncFromNode: function () {
-        var node = this.node()
+        let node = this.node()
         this.contentView().setString(node.content())
         this.setIconDataUrl(node.avatarImageDataURL())
         this.updateSubviews()

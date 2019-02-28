@@ -101,11 +101,11 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
 
     /*
 	setupIconView: function() {
-		var iv = DivView.clone().setDivClassName("ShelfIconView")
+		let iv = DivView.clone().setDivClassName("ShelfIconView")
 		this.setIconView(iv)
         this.leftView().addSubview(iv)
         
-        var iconSize = 46
+        let iconSize = 46
         iv.setPosition("relative")
         iv.setLeft((itemSize-iconSize)/2)
         iv.setTop((itemSize-iconSize)/2)
@@ -121,7 +121,7 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
     */
 
     setIconDataUrl: function (imageDataUrl) {
-        var iv = this.iconView()
+        let iv = this.iconView()
 
         if (imageDataUrl) {
             iv.setBackgroundImageUrlPath(imageDataUrl)
@@ -133,7 +133,7 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
     },
 
     setupContentView: function () {
-        var tv = this.textView()
+        let tv = this.textView()
         tv.setMinWidth("50px")
         //tv.setPosition("relative")
         tv.setMarginRight(0)
@@ -146,11 +146,11 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
 
     showButtonNamed: function (name) {
         // TODO: abstract this into something like a PostAttributeButton 
-        var node = this.node()
-        var countView = this.perform(name + "CountView")
-        var button = this.perform(name + "Button")
-        var count = node.perform(name + "Count")
-        var did = node.perform("did" + name.capitalized())
+        let node = this.node()
+        let countView = this.perform(name + "CountView")
+        let button = this.perform(name + "Button")
+        let count = node.perform(name + "Count")
+        let did = node.perform("did" + name.capitalized())
 
         if (count) {
             countView.setInnerHTML(count)
@@ -170,7 +170,7 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
     updateSubviews: function () {
         BrowserRow.updateSubviews.apply(this)
 
-        var node = this.node()
+        let node = this.node()
 
         if (node) {
             this.titleBarTextView().setInnerHTML(node.senderName())
@@ -209,7 +209,7 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
     },
 
     syncFromNode: function () {
-        var node = this.node()
+        let node = this.node()
         this.setIconDataUrl(node.avatarImageDataURL())
         this.textView().setString(node.content())
         this.updateSubviews()

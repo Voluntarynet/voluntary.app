@@ -73,7 +73,7 @@ window.BMContactLinks = BMStorableNode.extend().newSlots({
     addLinkForEveryContact: function () {
         this.chatTargetIds().forEach((rid) => {
             if (!this.linkForContact(rid)) {
-                var link = this.linkProto().clone().setRemoteIdentity(rid)
+                let link = this.linkProto().clone().setRemoteIdentity(rid)
                 this.addSubnode(link)
             }
         })
@@ -98,7 +98,7 @@ window.BMContactLinks = BMStorableNode.extend().newSlots({
     },
 
     sortSubnodes: function () {
-        var contactLinks = this.contactLinks().slice()
+        let contactLinks = this.contactLinks().slice()
 
         contactLinks.sort((linkA, linkB) => {
             return linkA.title().localeCompare(linkB.title())

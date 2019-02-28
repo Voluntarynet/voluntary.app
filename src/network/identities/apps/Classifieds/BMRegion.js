@@ -18,14 +18,14 @@ window.BMRegion = BMNode.extend().newSlots({
     },
     
     sumOfSubnodeNotes: function() {
-        var sum = 0
+        let sum = 0
         this.subnodes().forEach((subnode) => {
             if (subnode.title() == "All") {
                 return;
             }
             
             if (subnode.type() == "BMRegion") {
-                var v = subnode.note()
+                let v = subnode.note()
                 if (v) {
                     sum += v
                 }
@@ -68,11 +68,11 @@ window.BMRegion = BMNode.extend().newSlots({
     
     addChildrenDicts: function(children) {
         if (children) {
-            var max = children.length
-            for(var i = 0; i < max; i++) {
-                var childDict = children[i]
-                //var child = window[childDict._type].clone().setNodeDict(childDict)
-                var child = BMRegion.clone().setNodeDict(childDict)
+            let max = children.length
+            for(let i = 0; i < max; i++) {
+                let childDict = children[i]
+                //let child = window[childDict._type].clone().setNodeDict(childDict)
+                let child = BMRegion.clone().setNodeDict(childDict)
                 this.justAddSubnode(child)
             }
         }  
@@ -104,7 +104,7 @@ window.BMRegion = BMNode.extend().newSlots({
     prepareToAccess: function() {
         if(this._lazyChildrenDict != null) {
             console.log(this.type() + " " + this.title() + " lazy load")
-            var ld = this._lazyChildrenDict
+            let ld = this._lazyChildrenDict
             this._lazyChildrenDict = null
             this.addChildrenDicts(ld.children)
             this.setupCategoryLeaves()
@@ -112,21 +112,21 @@ window.BMRegion = BMNode.extend().newSlots({
     },
     
     postPathString: function() {
-        var path = this.nodePath()
+        let path = this.nodePath()
         path.removeFirst()
-        var pathString = path.map(function (p) { return p.title() }).join("/")	
+        let pathString = path.map(function (p) { return p.title() }).join("/")	
         return pathString
     },
 	
     add: function () {  
         /*
-        var sell = BMSell.clone()
+        let sell = BMSell.clone()
         App.shared().sells().addSubnode(sell)
         App.shared().browser().selectNode(sell)
-        var post = sell.post()
+        let post = sell.post()
         */
 
-        var post = BMClassifiedPost.clone()
+        let post = BMClassifiedPost.clone()
         post.setPath(this.postPathString())
         post.setIsEditable(true)
         App.shared().appNamed("Classifieds").sells().addSubnode(post)

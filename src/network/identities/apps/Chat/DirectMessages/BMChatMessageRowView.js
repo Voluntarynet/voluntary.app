@@ -68,7 +68,7 @@ window.BMChatMessageRowView = BrowserTitledRow.extend().newSlots({
     updateSubviews: function() {
         BrowserTitledRow.updateSubviews.apply(this)
 		
-        var node = this.node()
+        let node = this.node()
         if (node) {
             //console.log(this.typeId() + " updateSubviews node = " + node.typeId() + " content = ", this.node().content())
             this.titleView().setInnerHTML(node.title())

@@ -84,11 +84,11 @@ window.BMRServers = BMStorableNode.extend().newSlots({
     },
     
     connect: function () {
-        var unconnectedServers = this.unconnectedServers().shuffle()
-        var connectionsToAdd = this.maxConnections() - this.connectionCount()
+        let unconnectedServers = this.unconnectedServers().shuffle()
+        let connectionsToAdd = this.maxConnections() - this.connectionCount()
         
         for (let i = 0; i < connectionsToAdd && i < unconnectedServers.length; i ++) {
-            var server = unconnectedServers[i]
+            let server = unconnectedServers[i]
             server.connect()
         }
 
@@ -97,7 +97,7 @@ window.BMRServers = BMStorableNode.extend().newSlots({
     
     /*
     connectedRemotePeers: function () {
-        var peers = []
+        let peers = []
         this.connectedServers().forEach(function (server) {
             peers.appendItems(server.connectedRemotePeers())
         })        
@@ -115,7 +115,7 @@ window.BMRServers = BMStorableNode.extend().newSlots({
     },
     
     currentAddrMsg: function () {
-        var msg = BMAddrMessage.clone()
+        let msg = BMAddrMessage.clone()
         this.servers().forEach(function (server) {
             msg.addAddrDict(server.addrDict())
         })
@@ -124,7 +124,7 @@ window.BMRServers = BMStorableNode.extend().newSlots({
     
     onRemotePeerConnect: function(remotePeer) {
         // send addr
-        var msg = this.currentAddrMsg()
+        let msg = this.currentAddrMsg()
         this.log("sendMsg " + msg.type())
         remotePeer.sendMsg(msg)
     },
@@ -140,7 +140,7 @@ window.BMRServers = BMStorableNode.extend().newSlots({
         // walk the hosts and add any we don't have
         // TODO: check to see if we can connect *before* adding server
         
-        var entries = msg.data()
+        let entries = msg.data()
         entries.forEach( (addrDict) => {
             if (!this.hasAddrDict(addrDict)) {
                 this.addServer(BMRServer.clone().setAddrDict(addrDict))
@@ -156,11 +156,11 @@ window.BMRServers = BMStorableNode.extend().newSlots({
         // this distance metric should help minimize number of servers we need to 
         // connect to, to find friends - particularly since friends connections tend to overlap
 		
-        var bloomUint8Array = aBloomFilter.asUncompactedUint8BitArray();
+        let bloomUint8Array = aBloomFilter.asUncompactedUint8BitArray();
 		
-        var servers = this.subnodes()
+        let servers = this.subnodes()
         servers.forEach((server) => { server.updateBloomDistance(bloomUint8Array) })
-        var sorted = servers.slice().sort((serverA, serverB) => {
+        let sorted = servers.slice().sort((serverA, serverB) => {
             return serverA.bloomDistance() - serverB.bloomDistance() // smallest distance first	
         })
 		

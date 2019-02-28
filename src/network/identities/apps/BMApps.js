@@ -33,8 +33,8 @@ window.BMApps = BMStorableNode.extend().newSlots({
 
     removeAnyExtraApps: function () {
         // remove any apps not in appProtos
-        var types = this.appProtos().map((proto) => { return proto.type() })
-        var matches = this.apps().select((app) => { return types.contains(app.type()) })
+        let types = this.appProtos().map((proto) => { return proto.type() })
+        let matches = this.apps().select((app) => { return types.contains(app.type()) })
         this.setSubnodes(matches)
     },
 

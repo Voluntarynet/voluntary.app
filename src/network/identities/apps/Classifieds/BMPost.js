@@ -45,18 +45,18 @@ window.BMPost = BMStorableNode.extend().newSlots({
     send: function () {
         this.log("post")
 
-        var objMsg = BMObjectMessage.clone()
+        let objMsg = BMObjectMessage.clone()
         
         objMsg.setContentDict(this.postDict())
         
-        var myId = App.shared().network().localIdentities().current()
-        var toId = App.shared().network().openIdentity().current()
+        let myId = App.shared().network().localIdentities().current()
+        let toId = App.shared().network().openIdentity().current()
 
         objMsg.send()
     },
     
     onDropFiles: function(filePaths) {
-        var parts = []
+        let parts = []
     },
 
 })

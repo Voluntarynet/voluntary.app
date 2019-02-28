@@ -90,7 +90,7 @@ window.BMClassifiedPost = BMFieldSetNode.extend().newSlots({
 	
     currencyName: function() {
         if (this.currency()) {
-            var dict = CurrenciesDict[this.currency()]
+            let dict = CurrenciesDict[this.currency()]
             if (dict) {
                 return dict.name
             }
@@ -102,7 +102,7 @@ window.BMClassifiedPost = BMFieldSetNode.extend().newSlots({
     // images
     
     setEncodedImages: function(base64images) {
-        var imgs = base64images.map(function (b64) { return ImageNode.clone().setBase64Encoded(b64); });
+        let imgs = base64images.map(function (b64) { return ImageNode.clone().setBase64Encoded(b64); });
         this.setImages(imgs)
         return this
     },
@@ -160,16 +160,16 @@ window.BMClassifiedPost = BMFieldSetNode.extend().newSlots({
     syncSend: function () {
         this.objMsg().setContent(this.postDict())
         
-        //var myId = App.shared().network().localIdentities().current()
-        //var toId = App.shared().network().openIdentity().current()        
+        //let myId = App.shared().network().localIdentities().current()
+        //let toId = App.shared().network().openIdentity().current()        
         this.objMsg().send()
     },
 
     choosePostDate: function() {
-        var currentTime = new Date().getTime()
+        let currentTime = new Date().getTime()
         // add a random time interval of 5 mintues so a receiving node
         // can't guess that a sender is the source if the dt is very small
-        var randomInterval = Math.random() * 1000 * 60 * 5; 
+        let randomInterval = Math.random() * 1000 * 60 * 5; 
         this.setPostDate(currentTime + randomInterval)	
         return this	
     },
@@ -185,8 +185,8 @@ window.BMClassifiedPost = BMFieldSetNode.extend().newSlots({
         this.prepareToSend()
         this.setIsEditable(false)
         
-        //var myId = App.shared().network().localIdentities().current()
-        //var toId = App.shared().network().openIdentity().current()
+        //let myId = App.shared().network().localIdentities().current()
+        //let toId = App.shared().network().openIdentity().current()
         
         this.watchPow() // watch for pow update and done notifications
         this.objMsg().asyncPackContent() // will send notification when pow ready        
@@ -240,32 +240,32 @@ window.BMClassifiedPost = BMFieldSetNode.extend().newSlots({
     /////////////////////////
     descriptionOfMsTimePeriod: function(ms) {
         
-        var seconds = Math.floor(ms / 1000);
+        let seconds = Math.floor(ms / 1000);
         /*
         if (seconds < 60) {
             return seconds + " seconds"
         }
         */
         
-        var minutes = Math.floor(seconds / 60);
+        let minutes = Math.floor(seconds / 60);
         /*
         if (minutes < 60) {
             return minutes + " minutes"
         }
         */
         
-        var hours = Math.floor(minutes / 60);
+        let hours = Math.floor(minutes / 60);
         if (hours < 24) {
             //return hours + " hours"
             return "today"
         }
         
-        var days = Math.ceil(hours / 24);
+        let days = Math.ceil(hours / 24);
         return days + " days"
     },
     
     expireDescription: function() {
-        var ms = this.remainingPeriodInMs();
+        let ms = this.remainingPeriodInMs();
         return this.descriptionOfMsTimePeriod(ms)
     },
     
@@ -286,13 +286,13 @@ window.BMClassifiedPost = BMFieldSetNode.extend().newSlots({
     },
     
     onDropFiles: function(filePaths) {
-        var parts = []
+        let parts = []
     },
     
     placeInPathString: function(pathString) {
-        var rootNode = App.shared()
-        var pathComponents = pathString.split("/")
-        var region = rootNode.nodeAtSubpath(pathComponents)
+        let rootNode = App.shared()
+        let pathComponents = pathString.split("/")
+        let region = rootNode.nodeAtSubpath(pathComponents)
         if (region) {
             //console.log("inserting post " + this.hash() + " into region path " + pathString + " ", this.postDict().title)
             if (!region.containsSubnode(this)) {
@@ -301,7 +301,7 @@ window.BMClassifiedPost = BMFieldSetNode.extend().newSlots({
                 console.log("can't insert duplicate subnode")
             }
         } else {
-            var error = "missing region for path '" + pathString + "'"
+            let error = "missing region for path '" + pathString + "'"
             console.log("-----------\n".repeat(3) + "WARNING: " + error + "\n" + "-----------\n".repeat(3))
             //throw new Error(error)
         }
@@ -344,12 +344,12 @@ window.BMClassifiedPost = BMFieldSetNode.extend().newSlots({
     },
     
     compare: function(other) {
-        var d1 = this.powObj().actualPowDifficulty()
-        var d2 = other.powObj().actualPowDifficulty()
-        var p1 = this.postDate()
-        var p2 = other.postDate()
+        let d1 = this.powObj().actualPowDifficulty()
+        let d2 = other.powObj().actualPowDifficulty()
+        let p1 = this.postDate()
+        let p2 = other.postDate()
         
-        var c = d1 - d2
+        let c = d1 - d2
         if (c == 0) { 
             c = p1 - p2;
         }

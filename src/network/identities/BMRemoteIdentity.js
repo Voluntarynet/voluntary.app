@@ -50,7 +50,7 @@ window.BMRemoteIdentity = BMStorableNode.extend().newSlots({
 	
     localIdentity: function() {
         /*
-		var localIdentity = this.parentNode().parentNode()
+		let localIdentity = this.parentNode().parentNode()
 		assert(localIdentity.type() == "BMLocalIdentity")
 		return localIdentity
 		*/
@@ -93,21 +93,21 @@ window.BMRemoteIdentity = BMStorableNode.extend().newSlots({
     },
 
     isValid: function() {
-        var s = this.publicKeyString()
+        let s = this.publicKeyString()
         return bitcore.PublicKey.isValid(s)
     },
 	
     publicKey: function() {
         if (this.isValid()) {
-            var s = this.publicKeyString()
+            let s = this.publicKeyString()
             return new bitcore.PublicKey(s)
         }
         return null
     },
 
     verifySignatureForMessage: function(signature, msgString) {
-        var address = this.publicKey().toAddress()
-        var verified = Message(msgString).verify(address, signature);
+        let address = this.publicKey().toAddress()
+        let verified = Message(msgString).verify(address, signature);
         return verified
     },
 
@@ -119,9 +119,9 @@ window.BMRemoteIdentity = BMStorableNode.extend().newSlots({
 
         console.log(this.title() + " >>> " + this.typeId() + ".handleObjMsg(" + objMsg.type() + ") encryptedData:", objMsg.encryptedData())
 		
-        var dict = this.decryptJson(objMsg.encryptedData())
+        let dict = this.decryptJson(objMsg.encryptedData())
         if (dict) {
-            var appMsg = BMAppMessage.fromDataDict(dict)
+            let appMsg = BMAppMessage.fromDataDict(dict)
             //console.log("created ", appMsg.typeId())
 			
             if (appMsg) {
@@ -141,7 +141,7 @@ window.BMRemoteIdentity = BMStorableNode.extend().newSlots({
 	
     encryptJson: function(dataDict) {
         assert(dataDict)
-        var encryptedData = this.localIdentity().encryptMessageForReceiverId(JSON.stringify(dataDict), this)
+        let encryptedData = this.localIdentity().encryptMessageForReceiverId(JSON.stringify(dataDict), this)
         assert(encryptedData)
 	    // TODO: use sessionKeys
 	    return encryptedData.toString()	    
@@ -153,7 +153,7 @@ window.BMRemoteIdentity = BMStorableNode.extend().newSlots({
             if(!encryptedData) {
                 throw new Error("encryptedData is null")
             }
-            var decryptedData = this.localIdentity().decryptMessageFromSenderPublicKeyString(encryptedData, this.publicKeyString())
+            let decryptedData = this.localIdentity().decryptMessageFromSenderPublicKeyString(encryptedData, this.publicKeyString())
             if (decryptedData) {
 			    return JSON.parse(decryptedData)	    
 		    }
@@ -162,7 +162,7 @@ window.BMRemoteIdentity = BMStorableNode.extend().newSlots({
     },
 	
     allIdentitiesMap: function() { // only uses valid remote identities
-        var ids = ideal.Map.clone()
+        let ids = ideal.Map.clone()
         ids.atPut(this.publicKeyString(), this)
         return ids
     },

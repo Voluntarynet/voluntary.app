@@ -39,7 +39,7 @@ window.BMChat = BMApplet.extend().newSlots({
 
     /*
 	setThreads: function(newValue) {
-		var oldValue = this._threads
+		let oldValue = this._threads
 		this._threads = newValue
 		this.didUpdateSlot("threads", oldValue, newValue)
 		
@@ -61,8 +61,8 @@ window.BMChat = BMApplet.extend().newSlots({
         if (msg.type() == BMPostMessage.type()) {
 		    //console.log("found BMPostMessage")
 		    
-		    var spk = msg.senderPublicKeyString()
-            var senderId = this.localIdentity().idForPublicKeyString(spk)
+		    let spk = msg.senderPublicKeyString()
+            let senderId = this.localIdentity().idForPublicKeyString(spk)
 		    //console.log("this.localIdentity().idForPublicKeyString(spk) = ", this.localIdentity().idForPublicKeyString(spk))
 		    
 		    if (senderId) {		        
@@ -85,7 +85,7 @@ window.BMChat = BMApplet.extend().newSlots({
 
     handleSentMessage: function(msg) {
         if (msg.senderId() && msg.senderId().equals(this.localIdentity())) {
-            var thread = this.threads().linkForContact(msg.receiverId())
+            let thread = this.threads().linkForContact(msg.receiverId())
             if (thread) {
                 thread.addMessage(msg.duplicate())
             }
@@ -98,7 +98,7 @@ window.BMChat = BMApplet.extend().newSlots({
             //console.log("msg.receiverId() = ", msg.receiverId().type())
             if (msg.receiverId().equals(this.localIdentity())) {
  	            //console.log(this.nodePathString() + " handleReceivedMessage adding " + msg.typeId() + "  ", msg.dataDict())
-   				var thread = this.threads().linkForContact(msg.senderId())
+   				let thread = this.threads().linkForContact(msg.senderId())
     			if (thread) {
     				thread.addMessage(msg)
     				//thread.addMessage(msg.duplicate())

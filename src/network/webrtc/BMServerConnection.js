@@ -52,7 +52,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
 	*/
     
     addLog: function(s, error) {
-        var statusNode = BMFieldSetNode.clone().setTitle(s).setSubtitle(new Date().toString())
+        let statusNode = BMFieldSetNode.clone().setTitle(s).setSubtitle(new Date().toString())
         //this.statusLog().addSubnode(statusNode)
         statusNode.error = function () { return this._error }
         statusNode._error = ""
@@ -63,7 +63,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
 	        //statusNode.makeNoteRightArrow()
 	    }
 	    
-        //var entry = BMDataStoreRecord.clone().setNodeColumnBackgroundColor("white").setNodeMinWidth(300)
+        //let entry = BMDataStoreRecord.clone().setNodeColumnBackgroundColor("white").setNodeMinWidth(300)
         statusNode.addStoredField(BMTextAreaField.clone().setKey("dict").setValueMethod("error").setValueIsEditable(false).setIsMono(true))
         //entry.setTitle(s)
         //entry.setSubtitle(new Date().toString())
@@ -120,7 +120,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
     // --- connection id ----
 	
     currentPeerId: function() {
-        var peerId = BMPeerId.clone()
+        let peerId = BMPeerId.clone()
         peerId.setPublicKeyString(this.sessionId().publicKeyString())
         peerId.setBloomFilter(BMNetwork.shared().idsBloomFilter())
         //this.log("currentPeerId = '" + peerId.toString() + "'")
@@ -376,7 +376,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
     },
     
     receivedMsgFrom: function(msg, remotePeer) {
-        var d = this.delegate()
+        let d = this.delegate()
         if (d && d.receivedMsgFrom) {
             d.receivedMsgFrom.apply(d, [msg, remotePeer])
         }

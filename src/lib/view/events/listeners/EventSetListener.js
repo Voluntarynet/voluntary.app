@@ -166,7 +166,6 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
 })
 
 /*
-
     // globally track whether we are inside an event 
 
     setIsHandlingEvent: function() {

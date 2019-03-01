@@ -18,6 +18,14 @@ window.NodeView = DivStyledView.extend().newSlots({
         this.setStyles(BMViewStyles.clone())
         return this
     },
+
+    
+    managedSubviews: function() {
+        // use managedSubviews inside NodeView and subclasses so we can separate the
+        // views with the NodeView syncs with the Node and it's subviews
+        return this.subviews()
+    },
+	
 	
     setNode: function(aNode) {
 
@@ -91,12 +99,13 @@ window.NodeView = DivStyledView.extend().newSlots({
     applyStyle: function() {
 		
     },
-	
+
+
     // --- syncing ---
     
     subviewForNode: function(aNode) {
-        //return this.subviews().detect((aView) => { return aView.node() == aNode; })
-        return this.subviews().detect(aView => aView.node() == aNode )
+        //return this.managedSubviews().detect((aView) => { return aView.node() == aNode; })
+        return this.managedSubviews().detect(aView => aView.node() == aNode )
     },
 
     subviewProtoForSubnode: function(aSubnode) {
@@ -131,7 +140,7 @@ window.NodeView = DivStyledView.extend().newSlots({
         // override this method if the view manages it's own subviews
 
         if (!this.node()) { 
-            this.removeAllSubviews();
+            this.removeAllManagedSubviews();
             return
         }
         
@@ -157,15 +166,21 @@ window.NodeView = DivStyledView.extend().newSlots({
             newSubviews.push(subview)   
         })
         
-        if (!newSubviews.isEqual(this.subviews())) {
-            this.removeAllSubviews() 
+        if (!newSubviews.isEqual(this.managedSubviews())) {
+            //this.removeAllSubviews() 
+            this.removeAllManagedSubviews()
             this.addSubviews(newSubviews)
             // since node's don't hold a view reference, 
             // subviews no longer referenced in subviews list will be collected
         }
 
-        this.subviews().forEach((subview) => { subview.syncFromNode() })
+        this.managedSubviews().forEach((subview) => { subview.syncFromNode() })
 
+        return this
+    },
+
+    removeAllManagedSubviews: function() {
+        this.managedSubviews().copy().forEach((aView) => { this.removeSubview(aView) })
         return this
     },
     

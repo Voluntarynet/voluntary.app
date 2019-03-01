@@ -9,10 +9,14 @@ Object.shallowCopyTo({
     },
 
     isEqual: function (otherArray) {
-        if (this.length != otherArray.length) { return false; }
+        if (this.length != otherArray.length) { 
+            return false; 
+        }
 
         for (let i = 0; i < this.length; i++) {
-            if (this[i] != otherArray[i]) return false;
+            if (this[i] != otherArray[i]) {
+                return false;
+            }
         }
 
         return true;

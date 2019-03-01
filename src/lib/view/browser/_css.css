@@ -45,7 +45,8 @@
     color: rgba(255, 255, 255, 0.5);
     text-align: center;
     transition: all .3s ease, width 0s, max-width 0.3s, min-width 0.3s;
-	overflow: hidden;
+    overflow: hidden;
+    user-select: none;
 }
 
 .BrowserHeader {
@@ -133,6 +134,7 @@
     /*-webkit-overflow-scrolling: touch;*/ /* touch is ok on Edge, invalid on Chrome */
     /* overflow-scrolling: touch; // neither Edge or Chrome on Windows recognize this property*/
     -ms-overflow-style: none;
+    user-select: none;
 }
 
 .BrowserColumnEmptyLabel {

@@ -17,13 +17,13 @@ window.BrowserColumn = NodeView.extend().newSlots({
         this.applyStyles()
         this.setIsRegisteredForClicks(true)
         this.setAcceptsFirstResponder(true)
+        this._rows = []
         return this
     },
     
     applyStyles: function() {
         //console.log(this.typeId() + ".applyStyles()")
         NodeView.applyStyles.apply(this)
-        this._rows = []
         return this
     },
     
@@ -40,9 +40,14 @@ window.BrowserColumn = NodeView.extend().newSlots({
         return this.parentView().parentView()
     },
 
+    
     // rows
 
     /*
+    managedSubviews: function() {
+        return this.rows()
+    },
+    
     rows: function() {
         return this._rows
     },
@@ -57,7 +62,8 @@ window.BrowserColumn = NodeView.extend().newSlots({
         return this.removeSubview(v)
     },
     */
-
+    
+    
     // rows
 
     rows: function() {
@@ -71,6 +77,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     removeRow: function(v) {
         return this.removeSubview(v)
     },
+    
 
     // selection
 	
@@ -256,7 +263,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
 		    //subview.dynamicScrollIntoView()
         } else {
             console.warn("BrowserColumn for node " + this.node().typeId() + " has no matching subview for shouldFocusSubnode " + subnode.typeId())
-            //console.log("subview nodes = ", this.subviews().map(subview => subview.node().typeId()) )
+            //console.log("row nodes = ", this.rows().map(row => row.node().typeId()) )
 	    }
 
 	    return this 

@@ -1,49 +1,11 @@
 "use strict"
 
 /*
+    DivView
 
-
+    Base view class. Wraps a dom element.
 
 */
-
-function DomElement_atInsertElement(el, index, child) {
-    let children = el.children
-    
-    if (index < children.length) {
-        el.insertBefore(children[index])
-        return
-    }
-    
-    if (index == children.length) {
-        el.appendChild(child)
-        return
-    }
-    
-    throw new Error("invalid dom child index")
-}
-
-function DomElement_description(element) {
-    let s = false
-
-    if (element === window) {
-        s = "window"
-    }
-
-    if (!s) {
-        s = element.getAttribute("id")
-    }
-
-    if (!s) {
-        s = element.getAttribute("class")
-    }
-
-    if (!s) {
-        s = element.tagName
-    }
-
-    return s
-}
-
 
 window.DivView = ideal.Proto.extend().newSlots({
     type: "DivView",
@@ -61,7 +23,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     tabCount: 0,
     validColor: null,
     invalidColor: null,
-    isHandlingEvent: false,
+    //isHandlingEvent: false,
 	
     // key views
     interceptsTab: true,
@@ -70,30 +32,19 @@ window.DivView = ideal.Proto.extend().newSlots({
     unfocusOnEnterKey: false,
 	
     // event handling
-    isRegisteredForDrop: false,
-    isRegisteredForWindowResize: false,
-    isRegisteredForClicks: false,
-    isRegisteredForKeyboard: false,
-    isRegisteredForMouse: false,
-    isRegisteredForFocus: false,
-    isRegisteredForPaste: false,
     isRegisteredForVisibility: false,
-	
     intersectionObserver: null,
     
     acceptsFirstResponder: false,
-
-    tapHoldPeriod: null,
 
     gestureRecognizers: null,
     eventListenersDict: null,
 }).setSlots({
     init: function () {
-        this._subviews = []
+        this.setSubviews([])
         this.setupElement()
         this.setEventListenersDict({})
         this.setIsRegisteredForDrop(false)
-        // this.mouseListener().start()
         return this
     },
 
@@ -260,13 +211,6 @@ window.DivView = ideal.Proto.extend().newSlots({
 
 
     // --- css properties ---
-    /*	
-	setDivComment: function(s) {
-		this.element().id =  "comment-" + s
-		console.log("data-comment = " + s)
-		return this
-	},
-	*/
 	
     setPosition: function(s) {
         this.setCssAttribute("position", s)
@@ -493,7 +437,6 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this
     },
 
-
     setBackgroundRepeat: function(s) {
 	    assert(typeof(s) == "string")
         this.setCssAttribute("background-repeat", s)
@@ -665,7 +608,6 @@ window.DivView = ideal.Proto.extend().newSlots({
 	
     // left
 
-
     setLeftString: function (s) {
         this.setCssAttribute("left", s)
         return this
@@ -679,7 +621,6 @@ window.DivView = ideal.Proto.extend().newSlots({
     left: function() {
         return this.getPxCssAttribute("left")
     },
-    
    
     // right
     
@@ -1269,12 +1210,12 @@ window.DivView = ideal.Proto.extend().newSlots({
             throw new Error("anSubview can't be null")
         }
         
-        this._subviews.append(anSubview)
+        this.subviews().append(anSubview)
         
         if (anSubview.element() == null) {
-            //console.log("anSubview = ", anSubview)
             throw new Error("null anSubview.element()")
         }
+
         this.element().appendChild(anSubview.element());
         anSubview.setParentView(this)
         this.didChangeSubviewList()
@@ -1422,10 +1363,12 @@ window.DivView = ideal.Proto.extend().newSlots({
         }
 		
         anSubview.willRemove()
-        this._subviews.remove(anSubview)
+        this.subviews().remove(anSubview)
 
         if (this.hasChildElement(anSubview.element())) {
         	this.element().removeChild(anSubview.element());
+        } else {
+            console.warn("WARNING: " + this.type() + " removeSubview " + anSubview.type() + " missing element")
         }
 
         if (this.hasChildElement(anSubview.element())) {
@@ -1571,40 +1514,6 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     // ---
 
-    // globally track whether we are inside an event 
-
-    setIsHandlingEvent: function() {
-        DivView._isHandlingEvent = true
-        return this
-    },
-	
-    isHandlingEvent: function() {
-        return DivView._isHandlingEvent
-    },
-
-    handleEventFunction: function(event, eventFunc) {
-        //  a try gaurd to make sure isHandlingEvent has correct value
-        //  isHandlingEvent is used to determine if view should inform node of changes
-        //  - it should only while handling an event
-		
-        let error = null
-		
-        this.setIsHandlingEvent(true)
-		
-        try {
-            eventFunc(event)
-        } catch (e) {
-            //console.log(e)
-            StackTrace.shared().showError(e)
-            //error = e
-        }
-		
-        this.setIsHandlingEvent(false)
-		
-        if (error) {
-            throw error
-        }
-    },
 	
     // --- window resize events ---
     
@@ -1788,12 +1697,10 @@ window.DivView = ideal.Proto.extend().newSlots({
     
     onDropImageDataUrl: function(dataUrl) {
         console.log("onDropImageDataUrl: ", dataUrl);
-        //this.node().onDropFiles(filePaths)
     },
     
     onDropFiles: function(filePaths) {
         console.log("onDropFiles " + filePaths);
-        //this.node().onDropFiles(filePaths)
     },
 
     // dragging
@@ -1891,46 +1798,16 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this
     },
 
-    touchDownDiffWithEvent: function(event) {
-        assert(this._onTouchDownEventPosition) 
-
-        let thisTouch = event.changedTouches[0]
-        let lastTouch = this._onTouchDownEventPosition
-        let d = {} 
-        d.xd = thisTouch.screenX - lastTouch.screenX
-        d.yd = thisTouch.screenY - lastTouch.screenY
-        d.dist = Math.sqrt(d.xd*d.xd + d.yd*d.yd)
-        return d
-    },
-
     onTouchStart: function(event) {
-        this._isTouchDown = true
-        let touches = event.changedTouches
-        //console.log(this.type() + " onTouchStart ", touches)
-        this._onTouchDownEventPosition = { screenX: touches[0].screenX, screenY: touches[0].screenY }
-        //console.log(this.type() + " onTouchStart  this._onTouchDownEventPosition ", this._onTouchDownEventPosition)
-        this.didTouchStart()
     },
 
-    didTouchStart: function() {
-        // for subclasses to override
-    },
-	
     onTouchMove: function(event) {
-        //console.log(this.type() + " onTouchMove diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
     },
 	
     onTouchCancel: function(event) {
-        //console.log(this.type() + " onTouchCancel")
-        this._isTouchDown = false
     },
 	
     onTouchEnd: function(event) {
-        //console.log(this.type() + " onTouchEnd diff ", JSON.stringify(this.touchDownDiffWithEvent(event)))
-        if (this._isTouchDown) {
-
-	        this._isTouchDown = false
-        }
     },	
 
     /// GestureRecognizers
@@ -1939,15 +1816,6 @@ window.DivView = ideal.Proto.extend().newSlots({
         let alreadyHasIt = this.gestureRecognizers().map((r) => { return r.type() }).contains(typeName)
         return alreadyHasIt
     },
-
-    /*
-    addGestureRecognizerIfAbsent: function(gr) {
-        if (!this.hasGestureType(gr.type())) {
-            this.addGestureRecognizer(gr)
-        }
-        return this
-    },
-    */
 
     addGestureRecognizer: function(gr) {
         this.gestureRecognizers().append(gr)
@@ -2001,7 +1869,7 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this
     },
 
-    // mouse events
+    // --- mouse events ---
 
     isRegisteredForMouse: function() {
         return this.mouseListener().isListening()
@@ -2061,40 +1929,10 @@ window.DivView = ideal.Proto.extend().newSlots({
 
         return this
     },
-    
-    
-    specialKeyCodes: function () { 
-        return {
-            8:  "delete", // "delete" on Apple keyboard
-            9:  "tab", 
-            13:  "enter", 
-            16:  "shift", 
-            17:  "control", 
-            18:  "alt", 
-            20:  "capsLock", 
-            27:  "escape", 
-            33:  "pageUp", 
-            34:  "pageDown", 
-            37: "leftArrow",  
-            38: "upArrow",  
-            39: "rightArrow", 
-            40: "downArrow",  
-            46: "delete", 
-            /* 
-			107: "add",  
-			109: "subtract",  
-			111: "divide",  
-			144: "numLock",  
-			145: "scrollLock",  
-			186: "semiColon",  
-			187: "equalsSign", 
-			*/ 
-        }
-    },
 	
     specialNameForKeyEvent: function(event) {
         let code = event.keyCode
-        let result = this.specialKeyCodes()[code]
+        let result = Keyboard.specialKeyCodes()[code]
 		
         if (event.shiftKey && (code == 187)) {
             return "plus"
@@ -2475,7 +2313,6 @@ window.DivView = ideal.Proto.extend().newSlots({
     // scroll actions
     
     scrollToTop: function() {
-        //console.log("]]]]]]]]]]]] " + this.typeId() + ".scrollToTop()")
         this.setScrollTop(0)
         return this       
     },
@@ -2593,6 +2430,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     // helpers
 
+    /*
     mouseUpPos: function() { 
         return this.viewPosForWindowPos(Mouse.shared().upPos())
     },
@@ -2600,6 +2438,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     mouseCurrentPos: function() { 
         return this.viewPosForWindowPos(Mouse.shared().currentPos())
     },
+    */
 
     mouseDownPos: function() { 
         return this.viewPosForWindowPos(Mouse.shared().downPos())

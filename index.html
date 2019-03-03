@@ -88130,8 +88130,8 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     Delegate messages:
 
         onLongPressBegin
-        onLongPressGestureComplete
-        onLongPressGestureCancelled
+        onLongPressComplete
+        onLongPressCancelled
 
 */
 
@@ -88181,7 +88181,7 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
         this.setTimeoutId(null)
         let r = this.viewTarget().requestActiveGesture(this)
         if (r) {
-            this.sendDelegateMessage("onLongPressGestureComplete")
+            this.sendDelegateMessage("onLongPressComplete")
         }
     },
 
@@ -88190,7 +88190,7 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
     onPressDown: function (event) {
         this.setDownEvent(event)
         this.startTimer()
-        this.sendDelegateMessage("onLongPressGestureBegin")
+        this.sendDelegateMessage("onLongPressBegin")
         return true
     },
 
@@ -88203,7 +88203,7 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
     cancel: function() {
         if (this.hasTimer()) {
             this.stopTimer()
-            this.sendDelegateMessage("onLongPressGestureCancelled")
+            this.sendDelegateMessage("onLongPressCancelled")
         }
         return this
     },
@@ -88273,10 +88273,10 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     Delegate messages :
 
-        onSlideGestureBegin
-        onSlideGestureMove
-        onSlideGestureComplete
-        onSlideGestureCancelled
+        onSlideBegin
+        onSlideMove
+        onSlideComplete
+        onSlideCancelled
     
     Gesture state info methods:
 
@@ -88325,7 +88325,7 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     },
 
     setNumberOfTouchesRequired: function(n) {
-        asset(n == 1) // need to add multi-touch support
+        assert(n == 1) // need to add multi-touch support
         this._numberOfTouchesRequired = n
         return this
     },
@@ -88354,12 +88354,12 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
                 let r = vt.requestActiveGesture(this)
                 if(r) {
                     this.setIsActive(true)
-                    this.sendDelegateMessage("onSlideGestureBegin")
+                    this.sendDelegateMessage("onSlideBegin")
                 }
             }
         
             if (this.isActive()) {
-                this.sendDelegateMessage("onSlideGestureMove")
+                this.sendDelegateMessage("onSlideMove")
             }
         }
     },
@@ -88371,7 +88371,7 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
             this.setIsPressing(false)
             this.setCurrentPosition(pos)
             if (this.isActive()) {
-                this.sendDelegateMessage("onSlideGestureComplete")
+                this.sendDelegateMessage("onSlideComplete")
             }
             this.finish()
         }
@@ -88381,7 +88381,7 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     cancel: function() {
         if (this.isActive()) {
-            this.sendDelegateMessage("onSlideGestureCancelled")
+            this.sendDelegateMessage("onSlideCancelled")
         }
         this.finish()
         return this
@@ -88397,7 +88397,7 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     // ----------------------------------
 
     hasMovedEnough: function() {
-        let dp = this.pressDiffPos()
+        let dp = this.diffPos()
         let m = this.minDistToBegin()
 
         let funcs = {
@@ -88413,7 +88413,7 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     // ------------------------------
 
-    pressDiffPos: function() {
+    diffPos: function() {
         return this.currentPosition().subtract(this.downPosition()).floorInPlace() // floor here?
     },
 
@@ -88437,25 +88437,25 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     // --- touch events ---
 
     onTouchStart: function(event) {
-        let aTouch = event.changedTouches.item(0)
+        let aTouch = event.touches.item(0)
         let p = Point.clone().set(aTouch.screenX, aTouch.screenX)
         return this.onPressDownPos(p)
     },
 
     onTouchMoveCapture: function(event) {
-        let aTouch = event.changedTouches.item(0)
+        let aTouch = event.touches.item(0)
         let p = Point.clone().set(aTouch.screenX, aTouch.screenX)
         return this.onPressMovePos(p)
     },
 
     onTouchCancelCapture: function(event) {
-        let aTouch = event.changedTouches.item(0)
+        let aTouch = event.touches.item(0)
         let p = Point.clone().set(aTouch.screenX, aTouch.screenX)
         return this.onPressUpPos(p)
     },
 	
     onTouchEndCapture: function(event) {
-        let aTouch = event.changedTouches.item(0)
+        let aTouch = event.touches.item(0)
         let p = Point.clone().set(aTouch.screenX, aTouch.screenX)
         return this.onPressUpPos(p)
     },	
@@ -88463,7 +88463,7 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     // --- helpers ----
 
     distance: function() {
-        let dp = this.pressDiffPos()
+        let dp = this.diffPos()
         let dx = Math.abs(dp.x())
         let dy = Math.abs(dp.y())
         let funcs = {
@@ -89953,21 +89953,21 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this.subviews().length
     },
 
-    addSubview: function(anSubview) {
-        if (anSubview == null) {
-            throw new Error("anSubview can't be null")
+    addSubview: function(aSubview) {
+        if (aSubview == null) {
+            throw new Error("aSubview can't be null")
         }
         
-        this.subviews().append(anSubview)
+        this.subviews().append(aSubview)
         
-        if (anSubview.element() == null) {
-            throw new Error("null anSubview.element()")
+        if (aSubview.element() == null) {
+            throw new Error("null aSubview.element()")
         }
 
-        this.element().appendChild(anSubview.element());
-        anSubview.setParentView(this)
+        this.element().appendChild(aSubview.element());
+        aSubview.setParentView(this)
         this.didChangeSubviewList()
-        return anSubview
+        return aSubview
     },
     
     addSubviews: function(someSubviews) {
@@ -90009,10 +90009,10 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this
     },
     
-    atInsertSubview: function (anIndex, anSubview) {
-        this.subviews().atInsert(anIndex, anSubview)
-        DomElement_atInsertElement(this.element(), anIndex, anSubview.element())
-        return anSubview
+    atInsertSubview: function (anIndex, aSubview) {
+        this.subviews().atInsert(anIndex, aSubview)
+        DomElement_atInsertElement(this.element(), anIndex, aSubview.element())
+        return aSubview
     },
 
     // --- subview utilities ---
@@ -90101,32 +90101,32 @@ window.DivView = ideal.Proto.extend().newSlots({
         return false		
     },
 	
-    removeSubview: function (anSubview) {
-        //console.warn("WARNING: " + this.type() + " removeSubview " + anSubview.type())
+    removeSubview: function (aSubview) {
+        //console.warn("WARNING: " + this.type() + " removeSubview " + aSubview.type())
 
-        if (!this.hasSubview(anSubview)) {
-            console.warn(this.type() + " removeSubview " + anSubview.type() + " failed - no child found!")
+        if (!this.hasSubview(aSubview)) {
+            console.warn(this.type() + " removeSubview " + aSubview.type() + " failed - no child found!")
             StackTrace.shared().showCurrentStack()
-            return anSubview
+            return aSubview
         }
 		
-        anSubview.willRemove()
-        this.subviews().remove(anSubview)
+        aSubview.willRemove()
+        this.subviews().remove(aSubview)
 
-        if (this.hasChildElement(anSubview.element())) {
-        	this.element().removeChild(anSubview.element());
+        if (this.hasChildElement(aSubview.element())) {
+        	this.element().removeChild(aSubview.element());
         } else {
-            console.warn("WARNING: " + this.type() + " removeSubview " + anSubview.type() + " missing element")
+            console.warn("WARNING: " + this.type() + " removeSubview " + aSubview.type() + " missing element")
         }
 
-        if (this.hasChildElement(anSubview.element())) {
-            console.warn("WARNING: " + this.type() + " removeSubview " + anSubview.type() + " failed - still has element after remove")
+        if (this.hasChildElement(aSubview.element())) {
+            console.warn("WARNING: " + this.type() + " removeSubview " + aSubview.type() + " failed - still has element after remove")
             StackTrace.shared().showCurrentStack()
         }
 		
-        anSubview.setParentView(null)
+        aSubview.setParentView(null)
         this.didChangeSubviewList()
-        return anSubview
+        return aSubview
     },
     
     removeAllSubviews: function() {
@@ -90134,12 +90134,12 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this
     },
 
-    indexOfSubview: function(anSubview) {
-        return this.subviews().indexOf(anSubview)
+    indexOfSubview: function(aSubview) {
+        return this.subviews().indexOf(aSubview)
     },
 
-    subviewAfter: function(anSubview) {
-        let index = this.indexOfSubview(anSubview)
+    subviewAfter: function(aSubview) {
+        let index = this.indexOfSubview(aSubview)
         let nextIndex = index + 1
         if (nextIndex < this.subviews().length) {
             return this.subviews()[nextIndex]
@@ -95036,7 +95036,7 @@ window.BrowserRow = NodeView.extend().newSlots({
 
     // -- slide gesture ---
 
-    onSlideGestureBegin: function() {
+    onSlideBegin: function() {
         if (this.canDelete()) {
             this.setTouchDeleteOffset(this.clientWidth() * 0.5);
             this.setTransition("all 0s")       
@@ -95076,7 +95076,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         }
     },
 	
-    onSlideGestureMove: function(slideGesture) {
+    onSlideMove: function(slideGesture) {
         if (this.canDelete()) {
 
             let d = slideGesture.distance()
@@ -95099,8 +95099,8 @@ window.BrowserRow = NodeView.extend().newSlots({
         this.setRight(v)
     },
 	
-    onSlideGestureComplete: function(slideGesture) {
-        //console.log(">>> " + this.type() + " onSlideGestureComplete")
+    onSlideComplete: function(slideGesture) {
+        //console.log(">>> " + this.type() + " onSlideComplete")
         
         let d = slideGesture.distance()
         let isReadyToDelete  = d >= this._touchDeleteOffset
@@ -95112,7 +95112,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         }
     },
 
-    onSlideGestureCancelled: function(aGesture) {
+    onSlideCancelled: function(aGesture) {
         this.slideBack()
     },
 
@@ -95199,13 +95199,13 @@ window.BrowserRow = NodeView.extend().newSlots({
 
     // tap hold
     
-    onLongPressGestureBegin: function(gesture) {
+    onLongPressBegin: function(gesture) {
     },
 
-    onLongPressGestureCancelled: function(gesture) {
+    onLongPressCancelled: function(gesture) {
     },
 
-    onLongPressGestureComplete: function(aGesture) {
+    onLongPressComplete: function(aGesture) {
         let event = aGesture.currentEvent()
         this.setBackgroundColor("red")
         this._isDraggingView = true

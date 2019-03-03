@@ -11,10 +11,10 @@
 
     Delegate messages :
 
-        onSlideGestureBegin
-        onSlideGestureMove
-        onSlideGestureComplete
-        onSlideGestureCancelled
+        onSlideBegin
+        onSlideMove
+        onSlideComplete
+        onSlideCancelled
     
     Gesture state info methods:
 
@@ -39,7 +39,7 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     // new stuff
     direction: "left", 
     validDirectionsDict: { left: 1, right: 2, up: 3, down: 4 },
-    numberOfTouchesRequired: 1,
+    numberOfFingerRequired: 1,
     minDistToBegin: 10,
 
     downPositionInTarget: null,
@@ -50,9 +50,8 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     
     init: function () {
         GestureRecognizer.init.apply(this)
-        this.setListenerClasses(["MouseListener"])
+        this.setListenerClasses(["MouseListener", "TouchListener"]) 
         //this.setIsDebugging(true)
-        //this.setListenerClasses(["MouseListener", "TouchListener"]) 
         return this
     },
 
@@ -63,24 +62,29 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     },
 
     setNumberOfTouchesRequired: function(n) {
-        asset(n == 1) // need to add multi-touch support
+        assert(n == 1) // need to add multi-touch support
         this._numberOfTouchesRequired = n
         return this
     },
 
     // --- events --------------------------------------------------------------------
 
-    // tap events
-
     onPressDownPos: function (pos) {
-        //console.log(this.type() + ".onPressDownPos(" + pos.asString() + ")")
-        this.setIsPressing(true)
-        this.setDownPosition(pos)
-        this.setCurrentPosition(pos)
-        this.setDownPositionInTarget(this.viewTarget().windowPos())
+        if (!this.isPressing()) {
+            let points = this.pointsForEvent(event)
 
-        this.startDocListeners()
-        return true
+            if (points.length < this.numberOfFingerRequired()) {
+                return this
+            }
+
+            //console.log(this.type() + ".onPressDownPos(" + pos.asString() + ")")
+            this.setIsPressing(true)
+            this.setDownPosition(pos)
+            this.setCurrentPosition(pos)
+            this.setDownPositionInTarget(this.viewTarget().windowPos())
+
+            this.startDocListeners()
+        }
     },
 
     onPressMovePos: function(pos) {
@@ -92,12 +96,12 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
                 let r = vt.requestActiveGesture(this)
                 if(r) {
                     this.setIsActive(true)
-                    this.sendDelegateMessage("onSlideGestureBegin")
+                    this.sendDelegateMessage("onSlideBegin")
                 }
             }
         
             if (this.isActive()) {
-                this.sendDelegateMessage("onSlideGestureMove")
+                this.sendDelegateMessage("onSlideMove")
             }
         }
     },
@@ -109,7 +113,7 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
             this.setIsPressing(false)
             this.setCurrentPosition(pos)
             if (this.isActive()) {
-                this.sendDelegateMessage("onSlideGestureComplete")
+                this.sendDelegateMessage("onSlideComplete")
             }
             this.finish()
         }
@@ -119,7 +123,7 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     cancel: function() {
         if (this.isActive()) {
-            this.sendDelegateMessage("onSlideGestureCancelled")
+            this.sendDelegateMessage("onSlideCancelled")
         }
         this.finish()
         return this
@@ -129,13 +133,14 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
         //console.log(this.type() + ".finish()")
         this.setIsActive(false)
         this.stopDocListeners()
+        this.didFinish()
         return this
     },
 
     // ----------------------------------
 
     hasMovedEnough: function() {
-        let dp = this.pressDiffPos()
+        let dp = this.diffPos()
         let m = this.minDistToBegin()
 
         let funcs = {
@@ -151,57 +156,53 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     // ------------------------------
 
-    pressDiffPos: function() {
+    diffPos: function() {
         return this.currentPosition().subtract(this.downPosition()).floorInPlace() // floor here?
     },
 
     // --- mouse events ---
 
     onMouseDown: function (event) {
-        let p = Point.clone().setToMouseEventWinPos(event)
+        let p = this.pointsForEvent(event).first()
         return this.onPressDownPos(p)
     },
 
     onMouseMoveCapture: function(event) {
-        let p = Point.clone().setToMouseEventWinPos(event)
+        let p = this.pointsForEvent(event).first()
         this.onPressMovePos(p)
     },
 
     onMouseUpCapture: function (event) {
-        let p = Point.clone().setToMouseEventWinPos(event)
+        let p = this.pointsForEvent(event).first()
         return this.onPressUpPos(p)
     },
 
     // --- touch events ---
 
     onTouchStart: function(event) {
-        let aTouch = event.changedTouches.item(0)
-        let p = Point.clone().set(aTouch.screenX, aTouch.screenX)
+        let p = this.pointsForEvent(event).first()
         return this.onPressDownPos(p)
     },
 
     onTouchMoveCapture: function(event) {
-        let aTouch = event.changedTouches.item(0)
-        let p = Point.clone().set(aTouch.screenX, aTouch.screenX)
+        let p = this.pointsForEvent(event).first()
         return this.onPressMovePos(p)
     },
 
     onTouchCancelCapture: function(event) {
-        let aTouch = event.changedTouches.item(0)
-        let p = Point.clone().set(aTouch.screenX, aTouch.screenX)
+        let p = this.pointsForEvent(event).first()
         return this.onPressUpPos(p)
     },
 	
     onTouchEndCapture: function(event) {
-        let aTouch = event.changedTouches.item(0)
-        let p = Point.clone().set(aTouch.screenX, aTouch.screenX)
+        let p = this.pointsForEvent(event).first()
         return this.onPressUpPos(p)
     },	
 
     // --- helpers ----
 
     distance: function() {
-        let dp = this.pressDiffPos()
+        let dp = this.diffPos()
         let dx = Math.abs(dp.x())
         let dy = Math.abs(dp.y())
         let funcs = {

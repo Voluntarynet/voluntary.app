@@ -37,11 +37,12 @@ window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
     numberOfTapsRequired: 3,
     numberOfFingersRequired: 1,
     tapCount: 0,
-    tapCountDict: null,
+    //tapCountDict: null,
 
     beginMessage: "onTapBegin",
     cancelledMessage: "onTapCancelled",
     completeMessage: "onTapComplete",
+    downPoints: null,
 }).setSlots({
     
     init: function () {
@@ -57,6 +58,103 @@ window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
         //this.setTapCountDict({})
         return this
     },
+
+    // --- timer ---
+
+    startTimer: function(event) {
+        if (this.timeoutId()) {
+            this.stopTimer()
+        }
+        let tid = setTimeout(() => { this.cancel() }, this.timePeriod());
+        this.setTimeoutId(tid)
+        return this
+    },
+
+    stopTimer: function() {
+        if (this.hasTimer()) {
+            clearTimeout(this.timeoutId());
+            this.setTimeoutId(null)
+            this.resetTapCount()
+        }
+        return this
+    },
+
+    hasTimer: function() {
+        return this.timeoutId() != null
+    },
+
+    // -- single action for mouse and touch up/down ---
+
+    onPressDown: function (event) {
+        let points = this.pointsForEvent(event)
+        
+        if (points.length < this.numberOfFingersRequired()) {
+            return this
+        }
+
+        if (!this.hasTimer()) {
+            this.setDownPoints(points)
+            this.setTapCount(1)
+            this.startTimer()
+            this.sendDelegateMessage(this.beginMessage())
+        } else {
+            this.setTapCount(this.tapCount() + 1)
+        }
+
+        if (this.tapCount() == this.numberOfTapsRequired()) {
+            this.complete()
+        }
+
+        return true
+    },
+
+    onPressUp: function (event) {
+        return true
+    },
+
+    // end states
+
+    complete: function() {
+        this.stopTimer()
+        let r = this.viewTarget().requestActiveGesture(this)
+        if (r) {
+            this.sendDelegateMessage(this.completeMessage())
+            //this.completeMessageForCount(this.numberOfTapsRequired())
+            this.didFinish()
+        }
+    },
+
+    cancel: function() {
+        if (this.hasTimer()) {
+            this.stopTimer()
+            this.sendDelegateMessage(this.cancelledMessage())
+            this.didFinish()
+        }
+        return this
+    },
+
+    // --- events --------------------------------------------------------------------
+
+    // mouse events
+
+    onMouseDown: function (event) {
+        return this.onPressDown(event)
+    },
+
+    onMouseUp: function (event) {
+        return this.onPressUp(event)
+    },
+
+    // touch events
+
+    onTouchStart: function(event) {
+        return this.onPressDown(event)
+    },
+
+    onTouchEnd: function(event) {
+        return this.onPressUp(event)
+    },	
+
 
     /*
     // was going to do some auto-naming but decided against it for now
@@ -93,131 +191,6 @@ window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
     cancelledMessageForCount: function(n) {
         return "on" + this.nameForCount(n) + "TapCancelled"
     },
-    */
-
-    // --- timer ---
-
-    startTimer: function(event) {
-        if (this.timeoutId()) {
-            this.stopTimer()
-        }
-        let tid = setTimeout(() => { this.cancel() }, this.timePeriod());
-        this.setTimeoutId(tid)
-        return this
-    },
-
-    stopTimer: function() {
-        if (this.hasTimer()) {
-            clearTimeout(this.timeoutId());
-            this.setTimeoutId(null)
-            this.resetTapCount()
-        }
-        return this
-    },
-
-    hasTimer: function() {
-        return this.timeoutId() != null
-    },
-
-    // -- the completed gesture ---
-
-    complete: function() {
-        this.stopTimer()
-        let r = this.viewTarget().requestActiveGesture(this)
-        if (r) {
-            this.sendDelegateMessage(this.completeMessage())
-            //this.completeMessageForCount(this.numberOfTapsRequired())
-        }
-    },
-
-    // -- single action for mouse and touch up/down ---
-
-    hasEnoughFingersOnEvent: function(event) {
-        // if touch event, make sure it has enough fingers
-        if (event.touches) {
-            let targetStartedTouches = event.touches.select(t => t.target = this.viewTarget());
-            return (targetStartedTouches.length >= this.numberOfFingersRequired())
-        }
-
-        // otherwise, the device only supports 1 "finger"? 
-        // Or should we count mouse buttons as fingers?
-        return this.numberOfFingersRequired() == 1
-    },
-
-    onPressDown: function (event) {
-        if (!this.hasEnoughFingersOnEvent(event)) {
-            return this
-        }
-
-        if (!this.hasTimer()) {
-            this.setTapCount(1)
-            this.startTimer()
-            this.sendDelegateMessage(this.beginMessage())
-        } else {
-            this.setTapCount(this.tapCount() + 1)
-        }
-
-        if (this.tapCount() == this.numberOfTapsRequired()) {
-            this.complete()
-        }
-
-        return true
-    },
-
-    onPressUp: function (event) {
-        return true
-    },
-
-    cancel: function() {
-        if (this.hasTimer()) {
-            this.stopTimer()
-            this.sendDelegateMessage(this.cancelledMessage())
-        }
-        return this
-    },
-
-    // --- events --------------------------------------------------------------------
-
-    // mouse events
-
-    onMouseDown: function (event) {
-        return this.onPressDown(event)
-    },
-
-    onMouseUp: function (event) {
-        return this.onPressUp(event)
-    },
-
-    /*
-    onMouseUpCapture: function (event) {
-        return this.onPressUp(event)
-    },
-    */
-
-    // touch events
-
-    onTouchStart: function(event) {
-        return this.onPressDown(event)
-    },
-
-    onTouchEnd: function(event) {
-        return this.onPressUp(event)
-    },	
-
-    // touch capture
-
-    /*
-    onTouchMoveCapture: function(event) {
-        //return this.onPressUp(event)
-    },
-
-    onTouchCancelCapture: function(event) {
-        //return this.onPressUp(event)
-    },
-	
-    onTouchEndCapture: function(event) {
-        //return this.onPressUp(event)
-    },	
     */
 
 })

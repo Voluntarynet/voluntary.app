@@ -1205,21 +1205,22 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this.subviews().length
     },
 
-    addSubview: function(anSubview) {
-        if (anSubview == null) {
-            throw new Error("anSubview can't be null")
+    addSubview: function(aSubview) {
+        if (aSubview == null) {
+            throw new Error("aSubview can't be null")
         }
         
-        this.subviews().append(anSubview)
+        this.willAddSubview(aSubview)
+        this.subviews().append(aSubview)
         
-        if (anSubview.element() == null) {
-            throw new Error("null anSubview.element()")
+        if (aSubview.element() == null) {
+            throw new Error("null aSubview.element()")
         }
 
-        this.element().appendChild(anSubview.element());
-        anSubview.setParentView(this)
+        this.element().appendChild(aSubview.element());
+        aSubview.setParentView(this)
         this.didChangeSubviewList()
-        return anSubview
+        return aSubview
     },
     
     addSubviews: function(someSubviews) {
@@ -1261,10 +1262,10 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this
     },
     
-    atInsertSubview: function (anIndex, anSubview) {
-        this.subviews().atInsert(anIndex, anSubview)
-        DomElement_atInsertElement(this.element(), anIndex, anSubview.element())
-        return anSubview
+    atInsertSubview: function (anIndex, aSubview) {
+        this.subviews().atInsert(anIndex, aSubview)
+        DomElement_atInsertElement(this.element(), anIndex, aSubview.element())
+        return aSubview
     },
 
     // --- subview utilities ---
@@ -1352,33 +1353,42 @@ window.DivView = ideal.Proto.extend().newSlots({
         }
         return false		
     },
-	
-    removeSubview: function (anSubview) {
-        //console.warn("WARNING: " + this.type() + " removeSubview " + anSubview.type())
+    
+    willAddSubview: function (aSubview) {
+        // for subclasses to over-ride
+    },
 
-        if (!this.hasSubview(anSubview)) {
-            console.warn(this.type() + " removeSubview " + anSubview.type() + " failed - no child found!")
+    willRemoveSubview: function (aSubview) {
+        // for subclasses to over-ride
+    },
+
+    removeSubview: function (aSubview) {
+        //console.warn("WARNING: " + this.type() + " removeSubview " + aSubview.type())
+
+        if (!this.hasSubview(aSubview)) {
+            console.warn(this.type() + " removeSubview " + aSubview.typeId() + " failed - no child found among: ", this.subviews().map(view => view.typeId()))
             StackTrace.shared().showCurrentStack()
-            return anSubview
+            return aSubview
         }
+        this.willRemoveSubview(aSubview)
 		
-        anSubview.willRemove()
-        this.subviews().remove(anSubview)
+        aSubview.willRemove()
+        this.subviews().remove(aSubview)
 
-        if (this.hasChildElement(anSubview.element())) {
-        	this.element().removeChild(anSubview.element());
+        if (this.hasChildElement(aSubview.element())) {
+        	this.element().removeChild(aSubview.element());
         } else {
-            console.warn("WARNING: " + this.type() + " removeSubview " + anSubview.type() + " missing element")
+            //console.warn("WARNING: " + this.type() + " removeSubview " + aSubview.type() + " missing element")
         }
 
-        if (this.hasChildElement(anSubview.element())) {
-            console.warn("WARNING: " + this.type() + " removeSubview " + anSubview.type() + " failed - still has element after remove")
+        if (this.hasChildElement(aSubview.element())) {
+            console.warn("WARNING: " + this.type() + " removeSubview " + aSubview.type() + " failed - still has element after remove")
             StackTrace.shared().showCurrentStack()
         }
 		
-        anSubview.setParentView(null)
+        aSubview.setParentView(null)
         this.didChangeSubviewList()
-        return anSubview
+        return aSubview
     },
     
     removeAllSubviews: function() {
@@ -1386,12 +1396,12 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this
     },
 
-    indexOfSubview: function(anSubview) {
-        return this.subviews().indexOf(anSubview)
+    indexOfSubview: function(aSubview) {
+        return this.subviews().indexOf(aSubview)
     },
 
-    subviewAfter: function(anSubview) {
-        let index = this.indexOfSubview(anSubview)
+    subviewAfter: function(aSubview) {
+        let index = this.indexOfSubview(aSubview)
         let nextIndex = index + 1
         if (nextIndex < this.subviews().length) {
             return this.subviews()[nextIndex]
@@ -1813,15 +1823,15 @@ window.DivView = ideal.Proto.extend().newSlots({
     /// GestureRecognizers
 
     hasGestureType: function(typeName) {
-        let alreadyHasIt = this.gestureRecognizers().map((r) => { return r.type() }).contains(typeName)
-        return alreadyHasIt
+        return this.gesturesOfType(typeName).length > 0
+        
     },
 
     addGestureRecognizer: function(gr) {
         this.gestureRecognizers().append(gr)
         gr.setViewTarget(this)
         gr.start()
-        return this
+        return gr
     },
 
     removeGestureRecognizer: function(gr) {
@@ -1833,13 +1843,21 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this
     },
 
-    firstActiveGesture: function() {
+    gesturesOfType: function(typeName) {
+        return this.gestureRecognizers().select(gr => gr.type() == typeName)
+    },
+
+    removeGestureRecognizersOfType: function(typeName) {
         if (this.gestureRecognizers()) {
-            return this.gestureRecognizers().detect((gr) => {
-                return gr.isActive()
-            })
+            this.gestureRecognizers().select(gr => gr.type() == typeName).forEach(gr => this.removeGestureRecognizer(gr))
         }
-        return null
+        return this
+    },
+
+    firstActiveGesture: function() {
+        return this.gestureRecognizers().detect((gr) => {
+            return gr.isActive()
+        })
     },
 
     requestActiveGesture: function(aGesture) {
@@ -2471,18 +2489,48 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this.winPosForEvent(event).subtract(this.windowPos())
     },
 
+    /*
     windowPos: function() {
         let b = this.boundingClientRect()
         let p = Point.clone().set(b.x, b.y)
+        return p
+    },
+    */
+
+    windowPos: function() {
+        let elem = this.element()
+        let box = elem.getBoundingClientRect();
+    
+        let body = document.body;
+        let docEl = document.documentElement;
+    
+        let scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
+        let scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
+    
+        let clientTop = docEl.clientTop || body.clientTop || 0;
+        let clientLeft = docEl.clientLeft || body.clientLeft || 0;
+    
+        let top  = box.top +  scrollTop - clientTop;
+        let left = box.left + scrollLeft - clientLeft;
+    
+        return Point.clone().set(Math.round(left), Math.round(top));
         return p
     },
 
     relativePos: function() {
         let pv = this.parentView()
         if (pv) {
-            return pv.windowPos().subtract(this.windowPos())
+            return this.windowPos().subtract(pv.windowPos())
+            //return pv.windowPos().subtract(this.windowPos())
         }
         return this.windowPos()
+    },
+
+    setRelativePos: function(p) {
+        //this.setPosition("absolute")
+        this.setLeft(p.x())
+        this.setTop(p.y())
+        return this
     },
 
     viewPosForWindowPos: function(pos) {

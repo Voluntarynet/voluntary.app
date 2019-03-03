@@ -16,15 +16,14 @@
     Delegate messages:
 
         onLongPressBegin
-        onLongPressGestureComplete
-        onLongPressGestureCancelled
+        onLongPressComplete
+        onLongPressCancelled
 
 */
 
-
 window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
     type: "LongPressGestureRecognizer",
-    timePeriod: 1000, // miliseconds
+    timePeriod: 500, // miliseconds
     timeoutId: null, // private
     downEvent: null,
     upEvent: null,
@@ -67,20 +66,24 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
         this.setTimeoutId(null)
         let r = this.viewTarget().requestActiveGesture(this)
         if (r) {
-            this.sendDelegateMessage("onLongPressGestureComplete")
+            this.sendDelegateMessage("onLongPressComplete")
+            this.didFinish()
         }
     },
 
     // -- single action for mouse and touch up/down ---
 
-    onPressDown: function (event) {
+    onDown: function (event) {
+        let points = this.pointsForEvent(event)
+        this.setCurrentEvent(event)
         this.setDownEvent(event)
         this.startTimer()
-        this.sendDelegateMessage("onLongPressGestureBegin")
+        this.sendDelegateMessage("onLongPressBegin")
         return true
     },
 
-    onPressUp: function (event) {
+    onUp: function (event) {
+        this.setCurrentEvent(event)
         this.setUpEvent(event)
         this.cancel()
         return true
@@ -89,7 +92,8 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
     cancel: function() {
         if (this.hasTimer()) {
             this.stopTimer()
-            this.sendDelegateMessage("onLongPressGestureCancelled")
+            this.sendDelegateMessage("onLongPressCancelled")
+            this.didFinish()
         }
         return this
     },
@@ -99,49 +103,27 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
     // mouse events
 
     onMouseDown: function (event) {
-        return this.onPressDown(event)
+        return this.onDown(event)
     },
 
     onMouseUp: function (event) {
-        return this.onPressUp(event)
+        return this.onUp(event)
     },
 
-    /*
-    onMouseUpCapture: function (event) {
-        return this.onPressUp(event)
-    },
-    */
 
     // touch events
 
     onTouchStart: function(event) {
-        return this.onPressDown(event)
+        return this.onDown(event)
     },
 
     onTouchEnd: function(event) {
-        return this.onPressUp(event)
+        return this.onUp(event)
     },	
-
-    // touch capture
-
-    /*
-    onTouchMoveCapture: function(event) {
-        //return this.onPressUp(event)
-    },
-
-    onTouchCancelCapture: function(event) {
-        //return this.onPressUp(event)
-    },
-	
-    onTouchEndCapture: function(event) {
-        //return this.onPressUp(event)
-    },	
-    */
 
     // helpers
 
     position: function() {
-        let p = Point.clone().setToMouseEventWinPos(this.downEvent())
-
+        return this.pointsForEvent(this.downEvent()).first()
     },
 })

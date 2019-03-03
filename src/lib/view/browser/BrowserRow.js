@@ -270,7 +270,7 @@ window.BrowserRow = NodeView.extend().newSlots({
 
     // -- slide gesture ---
 
-    onSlideGestureBegin: function() {
+    onSlideBegin: function() {
         if (this.canDelete()) {
             this.setTouchDeleteOffset(this.clientWidth() * 0.5);
             this.setTransition("all 0s")       
@@ -310,7 +310,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         }
     },
 	
-    onSlideGestureMove: function(slideGesture) {
+    onSlideMove: function(slideGesture) {
         if (this.canDelete()) {
 
             let d = slideGesture.distance()
@@ -333,8 +333,8 @@ window.BrowserRow = NodeView.extend().newSlots({
         this.setRight(v)
     },
 	
-    onSlideGestureComplete: function(slideGesture) {
-        //console.log(">>> " + this.type() + " onSlideGestureComplete")
+    onSlideComplete: function(slideGesture) {
+        //console.log(">>> " + this.type() + " onSlideComplete")
         
         let d = slideGesture.distance()
         let isReadyToDelete  = d >= this._touchDeleteOffset
@@ -346,7 +346,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         }
     },
 
-    onSlideGestureCancelled: function(aGesture) {
+    onSlideCancelled: function(aGesture) {
         this.slideBack()
     },
 
@@ -433,16 +433,81 @@ window.BrowserRow = NodeView.extend().newSlots({
 
     // tap hold
     
-    onLongPressGestureBegin: function(gesture) {
+    onLongPressBegin: function(aGesture) {
     },
 
-    onLongPressGestureCancelled: function(gesture) {
+    onLongPressCancelled: function(aGesture) {
     },
 
-    onLongPressGestureComplete: function(aGesture) {
+    onLongPressComplete: function(aGesture) {
         let event = aGesture.currentEvent()
+        let pan = this.addPanGesture()
+        pan.onDown(event)
         this.setBackgroundColor("red")
-        this._isDraggingView = true
+    },
+
+    // --- pan gesture ----
+
+    addPanGesture: function() {
+        return this.addGestureRecognizer(PanGestureRecognizer.clone())
+    },
+
+    removePanGesture: function() {
+        this.removeGestureRecognizersOfType("PanGestureRecognizer")
+        return this
+    },
+
+    onPanBegin: function(aGesture) {
+        if (!this._isDraggingView) {
+
+            console.log("onPanBegin")
+            this.setBackgroundColor("blue")
+            this._isDraggingView = true
+
+            this.setTransition("all 0s")
+
+            this.parentView().absolutePositionRows()
+
+            this._dragStartPos = this.relativePos()
+            //console.log("aGesture.currentPos().y() = ", aGesture.currentPosition().y())
+
+            console.log("onPanBegin top = ", this.top())
+            console.log("onPanBegin y = ", this._dragStartPos.y())
+
+            //let parentView = this.parentView()
+            //this.removeFromParentView()
+            this.setPosition("absolute")
+            this.setTop(this._dragStartPos.y())
+            this.setZIndex(100)
+            //parentView.addSubview(this)
+        }
+    },
+
+    onPanMove: function(aGesture) {
+        if (this._isDraggingView) {
+            let np = this._dragStartPos.add(aGesture.diffPos()) 
+            //console.log("aGesture.diffPos.y() = ", aGesture.diffPos().y())
+            //console.log("onPanMove y = ", np.y())
+            this.setTop(np.y())
+        }
+    },
+
+    onPanComplete: function(aGesture) {
+        if (this._isDraggingView) {
+            this._isDraggingView = false
+            this.setTransition(this.transitionStyle())
+
+            //let parentView = this.parentView()
+            //this.removeFromParentView()
+
+            this.setPosition("relative")
+            this.setBackgroundColor("black")
+            this.setZIndex(0)
+            this.parentView().relativePositionRows()
+
+
+            //parentView.addSubview(this)
+        }
     },
 
     onMouseMove: function(event) {

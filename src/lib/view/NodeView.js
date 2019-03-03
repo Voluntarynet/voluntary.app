@@ -18,13 +18,6 @@ window.NodeView = DivStyledView.extend().newSlots({
         this.setStyles(BMViewStyles.clone())
         return this
     },
-
-    
-    managedSubviews: function() {
-        // use managedSubviews inside NodeView and subclasses so we can separate the
-        // views with the NodeView syncs with the Node and it's subviews
-        return this.subviews()
-    },
 	
 	
     setNode: function(aNode) {
@@ -103,8 +96,14 @@ window.NodeView = DivStyledView.extend().newSlots({
 
     // --- syncing ---
     
+    managedSubviews: function() {
+        // use managedSubviews inside NodeView and subclasses so we can separate the
+        // views with the NodeView syncs with the Node and it's subviews
+        return this.subviews()
+    },
+
     subviewForNode: function(aNode) {
-        //return this.managedSubviews().detect((aView) => { return aView.node() == aNode; })
+        // TODO: optimize with a dictionary? 
         return this.managedSubviews().detect(aView => aView.node() == aNode )
     },
 
@@ -147,12 +146,11 @@ window.NodeView = DivStyledView.extend().newSlots({
         this.node().prepareToSyncToView()
        
         let newSubviews = []
-        let subnodes = this.visibleSubnodes()
         
         // only replace subviews if sync requires it,
         // and reuse subviews for subnodes which are still present 
 
-        subnodes.forEach((subnode) => {
+        this.visibleSubnodes().forEach((subnode) => {
             let subview = this.subviewForNode(subnode) // get the current view for the node, if there is one
             
             if (!subview) {
@@ -169,13 +167,18 @@ window.NodeView = DivStyledView.extend().newSlots({
         if (!newSubviews.isEqual(this.managedSubviews())) {
             //this.removeAllSubviews() 
             this.removeAllManagedSubviews()
-            this.addSubviews(newSubviews)
+            this.addManagedSubviews(newSubviews)
             // since node's don't hold a view reference, 
             // subviews no longer referenced in subviews list will be collected
         }
 
-        this.managedSubviews().forEach((subview) => { subview.syncFromNode() })
+        this.managedSubviews().forEach(subview => subview.syncFromNode())
 
+        return this
+    },
+
+    addManagedSubviews: function(newSubviews) {
+        newSubviews.forEach(subview => this.addSubview(subview))
         return this
     },
 

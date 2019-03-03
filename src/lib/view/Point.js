@@ -13,7 +13,8 @@ window.Point = ideal.Proto.extend().newSlots({
     y: 0,
     z: 0,
     t: 0,
-    id: null, 
+    id: null,
+    target: null, 
 }).setSlots({
 
     init: function () {
@@ -23,6 +24,7 @@ window.Point = ideal.Proto.extend().newSlots({
     setToMouseEventWinPos: function(event) {
         this.set(event.clientX, event.clientY)
         this.setTimeToNow()
+        this.setTarget(event.target)
         return this
     },
 
@@ -86,4 +88,45 @@ window.Point = ideal.Proto.extend().newSlots({
     asString: function() {
         return "" + this._x + "x, " + this._y + "y, " + this._z + "z, " + this._t + "t"
     },
+
+    distanceFromOrigin: function() {
+        let ds = Math.pow(this.x(), 2) + Math.pow(this.y(), 2) + Math.pow(this.z(), 2)
+        return Math.sqrt(ds)
+    },
+
+    // eqaulity
+
+    isEqual: function(p) {
+        return (this.x() == p.x()) && (this.y() == p.y()) && (this.z() == p.z()) // && (this.t() == p.t())
+    },
+
+    isEqualWithTime: function(p) { // not ideal
+        return (this.x() == p.x()) && (this.y() == p.y()) && (this.z() == p.z()) && (this.t() == p.t())
+    },
+
+    // difference with another point
+
+    dxFrom: function(p) {
+        return this.x() - p.x()
+    },
+
+    dyFrom: function(p) {
+        return this.y() - p.y()
+    },
+
+    dzFrom: function(p) {
+        return this.z() - p.z()
+    },
+
+    dtFrom: function(p) {
+        return this.t() - p.t()
+    },
+
+    distanceFrom: function(p) {
+        let dx = this.dxFrom(p)
+        let dy = this.dyFrom(p)
+        let dz = this.dzFrom(p)
+        return Math.sqrt(dx*dx + dy*dy + dz*dz)
+    },
+
 })

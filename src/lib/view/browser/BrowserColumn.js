@@ -39,17 +39,43 @@ window.BrowserColumn = NodeView.extend().newSlots({
     columnGroup: function () {
         return this.parentView().parentView()
     },
-
     
     // rows
 
-    /*
+    willAddSubview: function (aSubview) {
+        // for subclasses to over-ride
+        if(!this._rows.contains(aSubview)) {
+            //console.warn("")
+            this._rows.append(aSubview)
+        }
+    },
+
+    willRemoveSubview: function (aSubview) {
+        // for subclasses to over-ride
+        if(!this._rows.contains(aSubview)) {
+            //console.warn("")
+        }
+    },
+
     managedSubviews: function() {
         return this.rows()
     },
+
+    removeAllManagedSubviews: function() {
+        this._rows = []
+        NodeView.removeAllManagedSubviews.apply(this)
+        return this
+    },
+
+    addManagedSubviews: function(subviews) {
+        NodeView.addManagedSubviews.apply(this, [subviews])
+        this.rows().appendItems(subviews)
+        return this
+    },
     
     rows: function() {
-        return this._rows
+        return this.subviews()
+        //return this._rows
     },
 
     addRow: function(v) {
@@ -61,11 +87,9 @@ window.BrowserColumn = NodeView.extend().newSlots({
         this._rows.remove(v)
         return this.removeSubview(v)
     },
-    */
-    
     
     // rows
-
+    /*
     rows: function() {
         return this.subviews()
     },
@@ -77,7 +101,8 @@ window.BrowserColumn = NodeView.extend().newSlots({
     removeRow: function(v) {
         return this.removeSubview(v)
     },
-    
+    */
+
 
     // selection
 	
@@ -604,6 +629,42 @@ window.BrowserColumn = NodeView.extend().newSlots({
     onDoubleClick: function (event) {
         console.log(this.type() + ".onDoubleClick()")
         return true
+    },
+
+    // reordering support
+
+    absolutePositionRows: function() {
+        //console.log("absolutePositionRows")
+        this.rows().reverse().forEach((row) => {
+            let y = row.relativePos().y()
+            let i = this.rows().indexOf(row)
+            //console.log("  " + i + " y:" + y + " h:", row.clientHeight());
+            //row.setPosition("absolute")
+            row.setTop(y)
+            row.setPosition("absolute")
+        })
+        /*
+        this.rows().forEach((row) => {
+            row.setPosition("absolute")
+        })
+        */
+        
+        return this
+    },
+
+    relativePositionRows: function() {
+        // should we calc a new subview ordering based on sorting by top values?
+        let orderedRows = this.rows().copy().sortPerform("top")
+
+        this.rows().forEach((row) => {
+            let y = row.relativePos().y()
+            row.setPosition("relative")
+            row.setTop(null)
+        })
+
+        this.removeAllManagedSubviews()
+        this.addManagedSubviews(orderedRows)
+        return this
     },
 	
 })

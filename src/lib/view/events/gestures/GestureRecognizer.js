@@ -37,6 +37,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
 
     isDebugging: false,
 
+    shouldRemoveOnComplete: false,
     //isCancelled: false,
 }).setSlots({
     init: function () {
@@ -113,6 +114,14 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         return this
     },
 
+    didFinish: function() {
+        if (this.shouldRemoveOnComplete()) {
+            this.stop()
+            this.viewTarget().removeGestureRecognizer(this)
+        }
+        return this
+    },
+
     // subclass helpers
 
     sendDelegateMessage: function(methodName) {
@@ -131,6 +140,64 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         return this
     },
 
+    /*
+    sendStateMessage: function(state) {
+        let g = this.type().before("GestureRecognizer")
+        let msg = "on" + this.type() + state
+        this.sendDelegateMessage(msg)
+        return this
+    },
+
+    sendBeginMessage: function() {
+        this.sendStateMessage("Begin")
+        //this.didBegin()
+        return this
+    },
+
+    sendMoveMessage: function() {
+        return this.sendStateMessage("Move")
+    },
+
+    sendCompleteMessage: function() {
+        this.sendStateMessage("Complete")
+        this.didFinish()
+        return this
+    },
+
+    sendCancelledMessage: function() {
+        this.sendStateMessage("Cancelled")
+        this.didFinish()
+        return this
+    },
+    */
+
+    // points helper
+    // maps mouse and touch events to a common list of points (with times and ids) format
+    // so we can share the event handling code for both devices 
+
+    pointsForEvent: function(event) {
+        if (event.__proto__.constructor === MouseEvent) {
+            let points = []
+            let b = event.buttons
+            if (b == 0) {
+                points.append(Point.clone().setToMouseEventWinPos(event).setId("mouse"))
+            } else if (b & 1) {
+                points.append(Point.clone().setToMouseEventWinPos(event).setId("mouseWithButton1")) // primary button
+            } else if (b & 2) {
+                points.append(Point.clone().setToMouseEventWinPos(event).setId("mouseWithButton2"))
+            } else if (b & 4) {
+                points.append(Point.clone().setToMouseEventWinPos(event).setId("mouseWithButton3"))
+            }
+            return points
+        } else if (event.__proto__.constructor === TouchEvent) {  // mouse event
+            let points = []
+            event.touches.forEach((touch) => {
+                points.append(Point.clone().set(touch.screenX, touch.screenY).setId(touch.identifier).setTarget(touch.target))
+            })
+            return points
+        }
+        new Error("can't handle this event type yet: ", event)
+    },
 })
 
 //this.setTouchAction("none") // testing

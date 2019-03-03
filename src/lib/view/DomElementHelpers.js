@@ -2,7 +2,11 @@
 
 /*
 
-
+`   DomElement_...
+`
+    Helper functions for DOM elements.
+    Mostly for use inside DivView.
+    Not for general consumption as elements typically shouldn't be interacted with directly. 
 
 */
 

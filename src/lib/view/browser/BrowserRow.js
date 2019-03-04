@@ -16,7 +16,6 @@ window.BrowserRow = NodeView.extend().newSlots({
     shouldCenterCloseButton: true, 
     contentView: null,
     touchDeleteOffset: 0,
-    canReorder: false,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
@@ -29,36 +28,21 @@ window.BrowserRow = NodeView.extend().newSlots({
 
         //console.log("WebBrowserWindow.shared().isTouchDevice() = ", WebBrowserWindow.shared().isTouchDevice())
         if (WebBrowserWindow.shared().isTouchDevice()) {
-            this.setIsRegisteredForTouch(true)
+            this.setIsRegisteredForTouch(true) // is this needed now that we have gestures?
         } else {
 	        this.setIsRegisteredForMouse(true)
             this.addCloseButton()
         }
 
         this.setTransition(this.transitionStyle())
-        this.setCanReorder(true)
 
         //this.animateOpen()
 
-        this.addGestureRecognizer(LongPressGestureRecognizer.clone())
-        this.addGestureRecognizer(SlideGestureRecognizer.clone())
+        this.addGestureRecognizer(LongPressGestureRecognizer.clone()) // for long press & pan reordering
+        this.addGestureRecognizer(SlideGestureRecognizer.clone()) // for slide delete
         //this.addGestureRecognizer(TapGestureRecognizer.clone())
         return this
     },
-
-    /*
-    setCanReorder: function(aBool) {
-        this._canReorder = aBool
-        // should we do this now, or always register and decide what to do with event when it happens?
-        let lgr = LongPressGestureRecognizer.clone().setTimePeriod(500)
-        if (aBool) {
-            this.addGestureRecognizer(lgr)
-        } else {
-            this.removeGestureRecognizer(lgr)
-        }
-        return this
-    },
-    */
 
     setupRowContentView: function() {
         let cv = DivView.clone().setDivClassName("BrowserRowContentView")
@@ -439,11 +423,13 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
 
     onLongPressComplete: function(aGesture) {
-        let pan = this.addPanGesture()
-        //pan.onDown(event)
-        pan.setMinDistToBegin(0)
-        pan.onDown(aGesture.currentEvent())
-        this.setBackgroundColor("red")
+        if (this.column().canReorder()) {
+            let pan = this.addPanGesture()
+            //pan.onDown(event)
+            pan.setMinDistToBegin(0)
+            pan.onDown(aGesture.currentEvent())
+            this.setBackgroundColor("red")
+        }
     },
 
     // --- pan gesture ----
@@ -466,21 +452,17 @@ window.BrowserRow = NodeView.extend().newSlots({
             //this.setTransform("scale(1.5)")
             this.setTransition("top 0s")
 
-            this.browserColumn().absolutePositionRows()
+            this.column().absolutePositionRows()
 
             this._dragStartPos = this.relativePos()
-            // this.browserColumn().stackRows()
+            // this.column().stackRows()
 
             //this.setPosition("absolute")
             this.setTop(this._dragStartPos.y())
             this.setZIndex(1)
-            this.browserColumn().setPosition("relative")
-            console.log("this.browserColumn().position() = ", this.browserColumn().position())
+            this.column().setPosition("relative")
+            console.log("this.column().position() = ", this.column().position())
         }
-    },
-
-    browserColumn: function() {
-        return this.parentView()
     },
 
     onPanMove: function(aGesture) {
@@ -489,8 +471,8 @@ window.BrowserRow = NodeView.extend().newSlots({
             //console.log("aGesture.diffPos.y() = ", aGesture.diffPos().y())
             //console.log("onPanMove y = ", np.y())
             this.setTop(np.y())
-            this.browserColumn().stackRows()
-            //this.browserColumn().orderRows()
+            this.column().stackRows()
+            //this.column().orderRows()
             this.setTop(np.y())
         }
     },
@@ -502,7 +484,7 @@ window.BrowserRow = NodeView.extend().newSlots({
             this.setPosition("relative")
             this.setBackgroundColor(this.currentBgColor())
             this.setZIndex(null)
-            this.browserColumn().relativePositionRows()
+            this.column().relativePositionRows()
 
             this.setTransition(this.transitionStyle())
         }

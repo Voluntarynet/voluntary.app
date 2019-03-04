@@ -1,6 +1,9 @@
 /*
 
- A BrowserRow that overrides updateSubviews
+    BrowserFieldRow
+ 
+       A BrowserRow that overrides updateSubviews 
+       to fill in remaining space in column when requested.
 
 */
 
@@ -17,7 +20,8 @@ window.BrowserFieldRow = BrowserRow.extend().newSlots({
         this.makeCursorDefault()
         this.setSpellCheck(false)
 		
-        this.styles().setToBlackOnWhite()
+        //this.styles().setToBlackOnWhite()
+        this.styles().setToWhiteOnBlack()
 		
         return this
     },
@@ -44,10 +48,8 @@ window.BrowserFieldRow = BrowserRow.extend().newSlots({
         if (node && node.nodeMinHeight()) {
             let  e = this.element()
             if (node.nodeMinHeight() == -1) {
-                
                 this.setHeight("auto")                
                 this.setPaddingBottom("calc(100% - 20px)")
-
             } else {
                 this.setHeight(this.pxNumberToString(node.nodeMinHeight()))
             }

@@ -16,6 +16,7 @@ window.BMLocalIdentities = BMStorableNode.extend().newSlots({
         //this.setPidSymbol("_localIdentities")  
         this._didChangeIdentitiesNote = NotificationCenter.shared().newNote().setSender(this.uniqueId()).setName("didChangeIdentities")
         this.setNodeMinWidth(240)
+        this.setNodeCanReorder(true)
     },
 
     current: function() {

@@ -700,6 +700,10 @@ window.BrowserColumn = NodeView.extend().newSlots({
 
         return this
     },
+
+    canReorder: function() {
+        return this.node().nodeCanReorder()
+    },
 	
 })
 

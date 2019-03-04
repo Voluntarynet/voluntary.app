@@ -1814,16 +1814,20 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     onTouchStart: function(event) {
+        //this.onPointsStart(points)
     },
 
     onTouchMove: function(event) {
+        //this.onPointsMove(points)
     },
 	
     onTouchCancel: function(event) {
-    },
+        //this.onPointsCancel(points)
+},
 	
     onTouchEnd: function(event) {
-    },	
+        //this.onPointsEnd(points)
+},	
 
     /// GestureRecognizers
 
@@ -1952,24 +1956,12 @@ window.DivView = ideal.Proto.extend().newSlots({
 
         return this
     },
-	
-    specialNameForKeyEvent: function(event) {
-        let code = event.keyCode
-        let result = Keyboard.specialKeyCodes()[code]
-		
-        if (event.shiftKey && (code == 187)) {
-            return "plus"
-        }
-		
-        //console.log("specialNameForKeyEvent ", code, " = ", result)
-		
-        return result
-    },
+
 	
     onKeyDown: function (event) {
-        event.specialKeyName = this.specialNameForKeyEvent(event)
+        let specialKeyName = Keyboard.specialNameForKeyEvent(event)
 		
-        if (event.specialKeyName == "enter" && this.unfocusOnEnterKey()) {
+        if (specialKeyName == "enter" && this.unfocusOnEnterKey()) {
             console.log(" releasing focus")
             // this.releaseFocus() // todo: implement something to pass focus up view chain to whoever wants it
             this.element().parentElement.focus()
@@ -1985,8 +1977,8 @@ window.DivView = ideal.Proto.extend().newSlots({
 		*/    
 		
         // onEnterKeyDown onLeftArrowKeyUp
-        if (event.specialKeyName) {
-            let name = "on" + event.specialKeyName.capitalized() + "KeyDown"
+        if (especialKeyName) {
+            let name = "on" + specialKeyName.capitalized() + "KeyDown"
             if (this[name]) {
                 this[name].apply(this, [event])
 		        event.preventDefault()
@@ -2002,8 +1994,8 @@ window.DivView = ideal.Proto.extend().newSlots({
     
     onKeyUp: function (event) {
         let shouldPropogate = true
-        event.specialKeyName = this.specialNameForKeyEvent(event)
-        //		console.log(this.type() + " onKeyUp event.specialKeyName=", event.specialKeyName)
+        let specialKeyName = Keyboard.specialNameForKeyEvent(event)
+        //console.log(this.type() + " onKeyUp specialKeyName=", specialKeyName)
 
         /*
 		if (this.interceptsTab()) {
@@ -2025,9 +2017,9 @@ window.DivView = ideal.Proto.extend().newSlots({
             }
         }
 
-        if (event.specialKeyName) {
+        if (specialKeyName) {
 		    // onEnterKeyUp onLeftArrowKeyUp
-            let name = "on" + event.specialKeyName.capitalized() + "KeyUp"
+            let name = "on" + specialKeyName.capitalized() + "KeyUp"
             if (this[name]) {
                 shouldPropogate = this[name].apply(this, [event])
 		        event.preventDefault()

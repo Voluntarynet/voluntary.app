@@ -34,7 +34,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
 
     // actions
     actions: null,
-
+    nodeCanReorder: false,
 
     // html
     acceptsFileDrop: false,
@@ -70,28 +70,31 @@ window.BMNode = ideal.Proto.extend().newSlots({
         this._nodeMinWidth = 180
         this.scheduleFinalize()	
         
-        this.setNodeColumnStyles(this.sharedNodeColumnStyles())
-        this.setNodeRowStyles(this.sharedNodeRowStyles())
+        //this.setNodeColumnStyles(this.sharedNodeColumnStyles())
+        //this.setNodeRowStyles(this.sharedNodeRowStyles())
+
+        this.setNodeColumnStyles(BMViewStyles.clone())
+        this.setNodeRowStyles(BMViewStyles.clone())
         this.setViewDict({})
         return this
     },
 
     customizeNodeRowStyles: function() {
-        if (!this._nodeRowStyles) {
+        if (!this.hasOwnProperty("_nodeRowStyles")) {
             let styles = BMViewStyles.clone()
-            this._nodeRowStyles = styles
             styles.selected().setColor("white")
             styles.unselected().setColor("#aaa")
+            this._nodeRowStyles = styles
         }
         return this._nodeRowStyles
     },
 
     sharedNodeColumnStyles: function() {
-        if (!BMNode._nodeColumnStyles) {
+        if (!BMNode.hasOwnProperty("_nodeColumnStyles")) {
             let styles = BMViewStyles.clone()
-            BMNode._nodeColumnStyles = styles
             //styles.selected().setColor("white")
             //styles.unselected().setColor("#aaa")
+            BMNode._nodeColumnStyles = styles
         }
         return BMNode._nodeColumnStyles
     },
@@ -124,6 +127,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
 	    }
 	    return null
     },
+
     
     // --- finalize ----------
 

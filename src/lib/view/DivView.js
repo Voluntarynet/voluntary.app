@@ -1977,7 +1977,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 		*/    
 		
         // onEnterKeyDown onLeftArrowKeyUp
-        if (especialKeyName) {
+        if (specialKeyName) {
             let name = "on" + specialKeyName.capitalized() + "KeyDown"
             if (this[name]) {
                 this[name].apply(this, [event])

@@ -28,9 +28,9 @@ window.BrowserRow = NodeView.extend().newSlots({
 
         //console.log("WebBrowserWindow.shared().isTouchDevice() = ", WebBrowserWindow.shared().isTouchDevice())
         if (WebBrowserWindow.shared().isTouchDevice()) {
-            this.setIsRegisteredForTouch(true) // is this needed now that we have gestures?
+
         } else {
-	        this.setIsRegisteredForMouse(true)
+	        this.setIsRegisteredForMouse(true) // TODO: replace with TapGesture?
             this.addCloseButton()
         }
 
@@ -38,6 +38,7 @@ window.BrowserRow = NodeView.extend().newSlots({
 
         //this.animateOpen()
 
+        
         this.addGestureRecognizer(LongPressGestureRecognizer.clone()) // for long press & pan reordering
         this.addGestureRecognizer(SlideGestureRecognizer.clone()) // for slide delete
         //this.addGestureRecognizer(TapGestureRecognizer.clone())
@@ -487,6 +488,7 @@ window.BrowserRow = NodeView.extend().newSlots({
             this.column().relativePositionRows()
 
             this.setTransition(this.transitionStyle())
+            this.column().didReorderRows()
         }
     },
 

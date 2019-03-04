@@ -364,6 +364,12 @@ window.BMNode = ideal.Proto.extend().newSlots({
         this.didUpdateNode()
         return this
     },
+
+    nodeReorderSudnodesTo: function(newSubnodes) {
+        this.setSubnodes(newSubnodes)
+        this.didChangeSubnodeList()
+        return this
+    },
     
     // --- update / sync system ----------------------------
     

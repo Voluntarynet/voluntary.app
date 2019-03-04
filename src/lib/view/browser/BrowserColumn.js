@@ -704,6 +704,13 @@ window.BrowserColumn = NodeView.extend().newSlots({
     canReorder: function() {
         return this.node().nodeCanReorder()
     },
+
+    didReorderRows: function() { 
+        // TODO: make a more scaleable API
+        let subnodes = this.rows().map(row => row.node())
+        this.node().nodeReorderSudnodesTo(subnodes)
+        return this
+    },
 	
 })
 

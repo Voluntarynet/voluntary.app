@@ -94829,7 +94829,6 @@ window.BrowserRow = NodeView.extend().newSlots({
     setupRowContentView: function() {
         let cv = DivView.clone().setDivClassName("BrowserRowContentView")
         cv.setWidthPercentage(100).setHeightPercentage(100) 
-        //cv.setBackgroundColor("blue").setZIndex(100)
         cv.setPosition("absolute")
         this.setContentView(cv)
         this.addSubview(cv)

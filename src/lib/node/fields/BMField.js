@@ -44,7 +44,7 @@ window.BMField = BMNode.extend().newSlots({
 
     init: function () {
         BMNode.init.apply(this)
-        this.nodeRowStyles().setToBlackOnWhite()
+        this.customizeNodeRowStyles().setToBlackOnWhite()
         return this
     },  
 	

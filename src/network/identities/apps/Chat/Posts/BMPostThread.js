@@ -9,7 +9,7 @@ window.BMPostThread = BMAppMessage.extend().newSlots({
     
     init: function () {
         BMAppMessage.init.apply(this)	
-        this.nodeRowStyles().setToBlackOnWhite()
+        this.customizeNodeRowStyles().setToBlackOnWhite()
     },
     
     title: function() {

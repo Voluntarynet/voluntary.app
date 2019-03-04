@@ -70,12 +70,40 @@ window.BMNode = ideal.Proto.extend().newSlots({
         this._nodeMinWidth = 180
         this.scheduleFinalize()	
         
-        this.setNodeColumnStyles(BMViewStyles.clone())
-        this.setNodeRowStyles(BMViewStyles.clone())
-        this.nodeRowStyles().selected().setColor("white")
-        this.nodeRowStyles().unselected().setColor("#aaa")
+        this.setNodeColumnStyles(this.sharedNodeColumnStyles())
+        this.setNodeRowStyles(this.sharedNodeRowStyles())
         this.setViewDict({})
         return this
+    },
+
+    customizeNodeRowStyles: function() {
+        if (!this._nodeRowStyles) {
+            let styles = BMViewStyles.clone()
+            this._nodeRowStyles = styles
+            styles.selected().setColor("white")
+            styles.unselected().setColor("#aaa")
+        }
+        return this._nodeRowStyles
+    },
+
+    sharedNodeColumnStyles: function() {
+        if (!BMNode._nodeColumnStyles) {
+            let styles = BMViewStyles.clone()
+            BMNode._nodeColumnStyles = styles
+            //styles.selected().setColor("white")
+            //styles.unselected().setColor("#aaa")
+        }
+        return BMNode._nodeColumnStyles
+    },
+
+    sharedNodeRowStyles: function() {
+        if (!BMNode._nodeRowStyles) {
+            let styles = BMViewStyles.clone()
+            BMNode._nodeRowStyles = styles
+            styles.selected().setColor("white")
+            styles.unselected().setColor("#aaa")
+        }
+        return BMNode._nodeRowStyles
     },
 
     // column view style

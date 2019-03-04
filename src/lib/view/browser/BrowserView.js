@@ -12,12 +12,18 @@ window.BrowserView = NodeView.extend().newSlots({
 
     bgColors: function () {
         //return this.bgColorsCool()
-        return this.bgColorsGray()
+        //return this.bgColorsGray()
+        return this.bgColorsWhite()
+    },
+
+    bgColorsWhite: function () {
+        return [
+            [255, 255, 255],
+        ]
     },
 
     bgColorsGray: function () {
         return [
-            //"#404040", 
             //[64/255, 64/255, 64/255],
             [60 / 255, 60 / 255, 60 / 255],
             [48 / 255, 48 / 255, 48 / 255],

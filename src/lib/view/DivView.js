@@ -1209,6 +1209,10 @@ window.DivView = ideal.Proto.extend().newSlots({
         if (aSubview == null) {
             throw new Error("aSubview can't be null")
         }
+
+        if (this.subviews().contains(aSubview)) {
+            throw new Error(this.type() + ".addSubview(" + aSubview.type() + ") attempt to add duplicate subview ")
+        }
         
         this.willAddSubview(aSubview)
         this.subviews().append(aSubview)
@@ -1393,6 +1397,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     
     removeAllSubviews: function() {
         this.subviews().copy().forEach((aView) => { this.removeSubview(aView) })
+        assert(this.subviews().length == 0)
         return this
     },
 

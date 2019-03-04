@@ -46,7 +46,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
         // for subclasses to over-ride
         if(!this._rows.contains(aSubview)) {
             //console.warn("")
-            this._rows.append(aSubview)
+            //this._rows.append(aSubview)
         }
     },
 
@@ -69,7 +69,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
 
     addManagedSubviews: function(subviews) {
         NodeView.addManagedSubviews.apply(this, [subviews])
-        this.rows().appendItems(subviews)
+        //this.rows().appendItems(subviews)
         return this
     },
     
@@ -79,12 +79,12 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
 
     addRow: function(v) {
-        this._rows.append(v)
+        //this._rows.append(v)
         return this.addSubview(v)
     },
 
     removeRow: function(v) {
-        this._rows.remove(v)
+        //this._rows.remove(v)
         return this.removeSubview(v)
     },
     
@@ -155,21 +155,20 @@ window.BrowserColumn = NodeView.extend().newSlots({
     didClickRow: function(clickedRow) {
         this.unselectRowsBesides(clickedRow)
 
+        /*
         // follow it if we can 
         if (clickedRow.nodeRowLink()) {
 		    //console.log(this.typeId() + ".didClickRow(" + clickedRow.node().title() + ") selecting column ", this.node().title())
         //	this.browser().selectColumn(this)
         }
+        */
         
         this.browser().selectColumn(this)
-
         return true
     },
     
     rowRequestsAddColumnForNode: function(aNode) {
-        
     },
-    
   
     selectedRows: function() {
         return this.rows().filter((row) => { 
@@ -635,19 +634,21 @@ window.BrowserColumn = NodeView.extend().newSlots({
 
     absolutePositionRows: function() {
         //console.log("absolutePositionRows")
-        this.rows().reverse().forEach((row) => {
-            let y = row.relativePos().y()
-            let i = this.rows().indexOf(row)
-            //console.log("  " + i + " y:" + y + " h:", row.clientHeight());
-            //row.setPosition("absolute")
-            row.setTop(y)
-            row.setPosition("absolute")
-        })
-        /*
+        let ys = []
         this.rows().forEach((row) => {
-            row.setPosition("absolute")
+            let y = row.relativePos().y()
+            ys.append(y)
         })
-        */
+
+        let i = 0
+        this.rows().forEach((row) => {
+            let y = ys[i]
+            i ++
+            row.setDisplay("block")
+            row.setPosition("absolute")
+            row.setTop(y)
+            //console.log("i" + i + " : y" + y)
+        })
         
         return this
     },
@@ -656,14 +657,47 @@ window.BrowserColumn = NodeView.extend().newSlots({
         // should we calc a new subview ordering based on sorting by top values?
         let orderedRows = this.rows().copy().sortPerform("top")
 
-        this.rows().forEach((row) => {
+        orderedRows.forEach((row) => {
             let y = row.relativePos().y()
             row.setPosition("relative")
+            row.setDisplay("inline")
             row.setTop(null)
         })
 
-        this.removeAllManagedSubviews()
-        this.addManagedSubviews(orderedRows)
+        //this.removeAllSubviews()
+        this.removeAllSubviews()
+        this.addSubviews(orderedRows)
+        //this.addManagedSubviews(orderedRows)
+        return this
+    },
+
+    orderRows: function() {
+        let orderedRows = this.rows().copy().sortPerform("top")
+
+        this.rows().forEach((row) => {
+            row.setPosition("absolute")
+            row.setDisplay("block")
+        })
+
+        this.removeAllSubviews()
+        this.addSubviews(orderedRows)
+        return this
+    },
+
+    stackRows: function() {
+        let orderedRows = this.rows().copy().sortPerform("top")
+
+        let y = 0
+        //console.log("stackRows")
+        orderedRows.forEach((row) => {
+            let h = row.clientHeight() 
+            row.setPosition("absolute")
+            row.setDisplay("block")
+            //console.log("y:", y + " h:", h)
+            row.setTop(y)
+            y += h + 2
+        })
+
         return this
     },
 	

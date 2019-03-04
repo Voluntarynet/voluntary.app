@@ -57,6 +57,8 @@ window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
         return this
     },
 
+ 
+
     onMove: function(event) {
         if (this.isPressing()) {
             let pos = this.pointsForEvent(event).first()

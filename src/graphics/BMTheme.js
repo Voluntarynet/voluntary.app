@@ -15,7 +15,7 @@ window.BMTheme = BMStorableNode.extend().newSlots({
 
         this.addAction("delete")
         setTimeout(() => { 
-            console.log("theme as json: ", JSON.stringify(this.asJSON())) 
+            //console.log("theme as json: ", JSON.stringify(this.asJSON())) 
         }, 1000)
     },
 

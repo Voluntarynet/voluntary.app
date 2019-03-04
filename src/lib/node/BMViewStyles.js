@@ -2,7 +2,8 @@
 
 /*
     BMViewStyles
-    represents the set of styles for a NodeView, e.g. selected, unselected
+
+    Represents the set of styles for a NodeView, e.g. selected, unselected.
 
     todo: can we make view styles nodes? recursion?
 
@@ -13,7 +14,7 @@ window.BMViewStyles = ideal.Proto.extend().newSlots({
     name: "",
     unselected: null,
     selected: null,
-    //hover: null,
+    //hover: null, 
     //enabled: null,
     //disabled: null,
 }).setSlots({
@@ -32,7 +33,6 @@ window.BMViewStyles = ideal.Proto.extend().newSlots({
         return this.states().detect((state) => { return !state.isEmpty() }) == null
     },
 
-    
     setToBlackOnWhite: function() {
         this.unselected().setColor("black")
         this.unselected().setBackgroundColor("white")

@@ -5,7 +5,6 @@ window.NodeView = DivStyledView.extend().newSlots({
     node: null,
     //ownsView: true,
     overrideSubviewProto: null,
-    styles: null,
     nodeObservation: null,
 }).setSlots({
     
@@ -13,9 +12,9 @@ window.NodeView = DivStyledView.extend().newSlots({
     
     init: function () {
         DivStyledView.init.apply(this)
-        //this._nodeObservation = NotificationCenter.shared().newObservation().setName("didUpdateNode").setObserver(this)
+        //this.setNodeObservation(NotificationCenter.shared().newObservation().setName("didUpdateNode").setObserver(this))
         this.setNodeObservation(NotificationCenter.shared().newObservation().setObserver(this)) // observe all
-        this.setStyles(BMViewStyles.clone())
+        //this.setStyles(BMViewStyles.clone())
         return this
     },
 	
@@ -55,16 +54,16 @@ window.NodeView = DivStyledView.extend().newSlots({
     },
  
     startWatchingNode: function() {
-        if (this._node) {
-            //console.log("startWatchingNode " + this._node + " observation count = " + NotificationCenter.shared().observations().length)
-            this.nodeObservation().setTarget(this._node._uniqueId).watch()
+        if (this.node()) {
+            //console.log("startWatchingNode " + this.node() + " observation count = " + NotificationCenter.shared().observations().length)
+            this.nodeObservation().setTarget(this.node()._uniqueId).watch()
         }
         return this
     },
        
     stopWatchingNode: function() {
-        if (this._node) {
-            //console.log("stopWatchingNode " + this._node + " observation count = " + NotificationCenter.shared().observations().length)
+        if (this.node()) {
+            //console.log("stopWatchingNode " + this.node() + " observation count = " + NotificationCenter.shared().observations().length)
             this.nodeObservation().stopWatching()
         }
         return this
@@ -87,13 +86,6 @@ window.NodeView = DivStyledView.extend().newSlots({
         return DivStyledView.subviewProto.apply(this)
     },
 
-    // styles
-
-    applyStyle: function() {
-		
-    },
-
-
     // --- syncing ---
     
     managedSubviews: function() {
@@ -102,9 +94,23 @@ window.NodeView = DivStyledView.extend().newSlots({
         return this.subviews()
     },
 
+    /*
     subviewForNode: function(aNode) {
         // TODO: optimize with a dictionary? 
         return this.managedSubviews().detect(aView => aView.node() == aNode )
+    },
+    */
+
+    subviewForNode: function(aNode) {
+        assert(this._subnodeToSubview)
+        return this._subnodeToSubview[aNode]
+    },
+
+    updateSubnodeToSubviewMap: function() {
+        let dict = {}
+        this.subviews().forEach(subview => dict[subview.node()] = subview)
+        this._subnodeToSubview = dict
+        return this
     },
 
     subviewProtoForSubnode: function(aSubnode) {
@@ -116,6 +122,7 @@ window.NodeView = DivStyledView.extend().newSlots({
 				
         return proto      
     },
+
     
     newSubviewForSubnode: function(aSubnode) {
         if (!aSubnode) {
@@ -144,6 +151,7 @@ window.NodeView = DivStyledView.extend().newSlots({
         }
         
         this.node().prepareToSyncToView()
+        this.updateSubnodeToSubviewMap() // not ideal - move this to update on subview add/remove
        
         let newSubviews = []
         

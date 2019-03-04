@@ -1,13 +1,43 @@
 "use strict"
 
+/*
+    DivStyledView
+
+    A base view to handle styles in a uniform way. 
+    Holds an instance of BMViewStyles which holds a set of BMViewStyle instances, one for each style.
+
+    Overview:
+
+        DivStyledView
+          styles -> BMViewStyles
+                        selected -> BMViewStyle
+                        unselected -> BMViewStyle
+                                        color
+                                        backgroundColor
+                                        opacity
+                                        borderLeft
+                                        borderRight
+
+                       
+    
+                                        
+    Supported styles:
+
+    - unselected
+    - selected
+
+    
+
+
+*/
+
 window.DivStyledView = DivView.extend().newSlots({
     type: "DivStyledView",
     styles: null,
     isSelected: false,
-}).setSlots({    
+}).setSlots({
     init: function () {
         DivView.init.apply(this)
-        //this.setStyles(BMViewStyles.clone()) 
         return this
     },
 

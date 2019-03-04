@@ -63,7 +63,6 @@ window.BrowserRow = NodeView.extend().newSlots({
     setupRowContentView: function() {
         let cv = DivView.clone().setDivClassName("BrowserRowContentView")
         cv.setWidthPercentage(100).setHeightPercentage(100) 
-        //cv.setBackgroundColor("blue").setZIndex(100)
         cv.setPosition("absolute")
         this.setContentView(cv)
         this.addSubview(cv)
@@ -296,7 +295,7 @@ window.BrowserRow = NodeView.extend().newSlots({
 
             this.setBackgroundColor(this.column().columnGroup().backgroundColor())
             this.setZIndex(10)
-            dv.setZIndex(0)
+            dv.setZIndex(null)
             this._dragDeleteView = dv
             this._dragDeleteButtonView = cb
         }
@@ -440,9 +439,10 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
 
     onLongPressComplete: function(aGesture) {
-        let event = aGesture.currentEvent()
         let pan = this.addPanGesture()
-        pan.onDown(event)
+        //pan.onDown(event)
+        pan.setMinDistToBegin(0)
+        pan.onDown(aGesture.currentEvent())
         this.setBackgroundColor("red")
     },
 
@@ -459,28 +459,28 @@ window.BrowserRow = NodeView.extend().newSlots({
 
     onPanBegin: function(aGesture) {
         if (!this._isDraggingView) {
-
-            console.log("onPanBegin")
-            this.setBackgroundColor("blue")
+            //this.setBackgroundColor("blue")
             this._isDraggingView = true
 
-            this.setTransition("all 0s")
+            //this.setTransition("color 0.3s, top 0s")
+            //this.setTransform("scale(1.5)")
+            this.setTransition("top 0s")
 
-            this.parentView().absolutePositionRows()
+            this.browserColumn().absolutePositionRows()
 
             this._dragStartPos = this.relativePos()
-            //console.log("aGesture.currentPos().y() = ", aGesture.currentPosition().y())
+            // this.browserColumn().stackRows()
 
-            console.log("onPanBegin top = ", this.top())
-            console.log("onPanBegin y = ", this._dragStartPos.y())
-
-            //let parentView = this.parentView()
-            //this.removeFromParentView()
-            this.setPosition("absolute")
+            //this.setPosition("absolute")
             this.setTop(this._dragStartPos.y())
-            this.setZIndex(100)
-            //parentView.addSubview(this)
+            this.setZIndex(1)
+            this.browserColumn().setPosition("relative")
+            console.log("this.browserColumn().position() = ", this.browserColumn().position())
         }
+    },
+
+    browserColumn: function() {
+        return this.parentView()
     },
 
     onPanMove: function(aGesture) {
@@ -489,37 +489,26 @@ window.BrowserRow = NodeView.extend().newSlots({
             //console.log("aGesture.diffPos.y() = ", aGesture.diffPos().y())
             //console.log("onPanMove y = ", np.y())
             this.setTop(np.y())
+            this.browserColumn().stackRows()
+            //this.browserColumn().orderRows()
+            this.setTop(np.y())
         }
     },
 
     onPanComplete: function(aGesture) {
         if (this._isDraggingView) {
             this._isDraggingView = false
-            this.setTransition(this.transitionStyle())
-
-            //let parentView = this.parentView()
-            //this.removeFromParentView()
 
             this.setPosition("relative")
-            this.setBackgroundColor("black")
-            this.setZIndex(0)
-            this.parentView().relativePositionRows()
+            this.setBackgroundColor(this.currentBgColor())
+            this.setZIndex(null)
+            this.browserColumn().relativePositionRows()
 
-
-            //parentView.addSubview(this)
+            this.setTransition(this.transitionStyle())
         }
     },
 
     onMouseMove: function(event) {
-        /*
-        if (this._isDraggingView) {
-            let mdiff = this.parentPosForEvent(event).subtract(this._initDragParentPos)
-            console.log("mdiff         = ", mdiff.asString())
-            let np = this._initDragRelativePos.add(mdiff)
-            this.setPosition("absolute")
-            this.setRelativePos(np)
-        }
-        */
     },
     
     // --- selecting ---

@@ -85,9 +85,11 @@ Proto.setSlots({
         return this._allDescendantProtos
     },
 
+    /*
     uniqueId: function () {
         return this._uniqueId
     },
+    */
 
     typeId: function () {
         return this.type() + this.uniqueId()
@@ -151,9 +153,11 @@ Proto.setSlots({
         return aClass._shared;
     },
 
+    /*
     uniqueId: function () {
         return this._uniqueId;
     },
+    */
 
     toString: function () {
         return this._type;

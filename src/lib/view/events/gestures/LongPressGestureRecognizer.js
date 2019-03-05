@@ -24,7 +24,7 @@
 
 window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
     type: "LongPressGestureRecognizer",
-    timePeriod: 500, // miliseconds
+    timePeriod: 1500, // miliseconds
     timeoutId: null, // private
     downEvent: null,
     upEvent: null,
@@ -47,7 +47,7 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
         }
         let tid = setTimeout(() => { this.onLongPress() }, this.timePeriod());
         this.setTimeoutId(tid)
-        //console.log("startTimer id",   this.timeoutId())
+        this.startDocListeners() // didFinish will stop listing
         return this
     },
 
@@ -69,27 +69,30 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
         return this.currentEvent().target._divView
     },
 
-    onLongPress: function() {
-
-        this.setTimeoutId(null)
-        //console.log("this.viewTarget() = ", this.viewTarget())
-        //console.log("this.currentViewTarget() = ", this.currentViewTarget())
+    currentEventIsOnTargetView: function() {
         let points = this.pointsForEvent(this.currentEvent())
-        
         let p = points.first()
-        console.log("onLongPress p:", p.asString())
-        if(!this.viewTarget().winBounds().containsPoint(p)) {
-            console.log("onLongPress")
+        let bounds = this.viewTarget().winBounds()
+        return bounds.containsPoint(p)
+    },
+    
+    onLongPress: function() {
+        this.setTimeoutId(null)
+
+        if(!this.currentEventIsOnTargetView()) {
+            //console.log("p: ", p.asString())
+            //console.log("bounds: ", bounds.asString())
+            return this
         }
 
-        //if (this.viewTarget() == this.currentViewTarget()) {
         let r = this.viewTarget().requestActiveGesture(this)
         if (r) {
             //this.setBeginPosition(this.currentEvent())
             this.sendDelegateMessage("onLongPressComplete")
             this.didFinish()
         }
-        //}
+
+        return this
     },
 
     // -- single action for mouse and touch up/down ---
@@ -100,14 +103,23 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
         this.setDownEvent(event)
         this.startTimer()
         this.sendDelegateMessage("onLongPressBegin")
-        return true
+    },
+
+    onMove: function(event) {
+        if (this.hasTimer()) {
+            this.setCurrentEvent(event)
+            let points = this.pointsForEvent(this.currentEvent())
+            let p = points.first()
+            console.log("move p: ", p.asString())
+        }
     },
 
     onUp: function (event) {
-        this.setCurrentEvent(event)
-        this.setUpEvent(event)
-        this.cancel()
-        return true
+        if (this.hasTimer()) {
+            this.setCurrentEvent(event)
+            this.setUpEvent(event)
+            this.cancel()
+        }
     },
 
     cancel: function() {
@@ -119,6 +131,7 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
         return this
     },
 
+
     // --- events --------------------------------------------------------------------
 
     // mouse events
@@ -127,15 +140,30 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
         return this.onDown(event)
     },
 
+    onMouseMove: function (event) {
+        return this.onMove(event)
+    },
+
+    onMouseMoveCapture: function (event) {
+        return this.onMove(event)
+    },
+
     onMouseUp: function (event) {
         return this.onUp(event)
     },
-
 
     // touch events
 
     onTouchStart: function(event) {
         return this.onDown(event)
+    },
+
+    onTouchMove: function (event) {
+        return this.onMove(event)
+    },
+
+    onTouchMoveCapture: function (event) {
+        return this.onMove(event)
     },
 
     onTouchEnd: function(event) {

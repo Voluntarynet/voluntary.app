@@ -86,7 +86,17 @@ window.Point = ideal.Proto.extend().newSlots({
     },
 
     asString: function() {
-        return "" + this._x + "x, " + this._y + "y, " + this._z + "z, " + this._t + "t"
+        let s = "Point(" + this._x + ", " + this._y 
+
+        if (this._z) { 
+            s += ", " + this._z
+        }
+
+        if (this._t) { 
+            s += ", " + this._t + "t" 
+        }
+
+        return s + ")"
     },
 
     distanceFromOrigin: function() {
@@ -132,19 +142,19 @@ window.Point = ideal.Proto.extend().newSlots({
     // comparison 
 
     isGreaterThan: function(p) {
-        return p.x() > this.x() && p.y() > this.y()
+        return this.x() > p.x() && this.y() > p.y()
     },
 
     isLessThan: function(p) {
-        return p.x() < this.x() && p.y() < this.y()
+        return this.x() < p.x() && this.y() < p.y()
     },
 
     isGreaterThanOrEqualTo: function(p) {
-        return p.x() >= this.x() && p.y() >= this.y()
+        return this.x() >= p.x() && this.y() >= p.y()
     },
 
     isLessThanOrEqualTo: function(p) {
-        return p.x() <= this.x() && p.y() <= this.y()
+        return this.x() <= p.x() && this.y() <= p.y()
     },
 
 })

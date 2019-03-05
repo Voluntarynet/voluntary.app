@@ -1823,11 +1823,11 @@ window.DivView = ideal.Proto.extend().newSlots({
 	
     onTouchCancel: function(event) {
         //this.onPointsCancel(points)
-},
+    },
 	
     onTouchEnd: function(event) {
         //this.onPointsEnd(points)
-},	
+    },	
 
     /// GestureRecognizers
 

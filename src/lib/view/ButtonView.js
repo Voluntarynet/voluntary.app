@@ -4,6 +4,7 @@
 
     ButtonView
 
+    A simple push button view with a TextView label.
 
 */
 
@@ -49,12 +50,11 @@ window.ButtonView = DivView.extend().newSlots({
         this.setLineHeight(h)
         return this
     },
+
     /*
     setIconName: function(aString) {
         this.setBackgroundImageUrlPath(this.pathForIconName(aString))
         return this
     },
     */
-
-
 })

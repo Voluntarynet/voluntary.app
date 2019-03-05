@@ -1,5 +1,13 @@
 "use strict"
 
+/*
+
+    String-ideal
+
+    Some extra methods for the Javascript String primitive.
+
+*/
+
 Object.shallowCopyTo({
     isEmpty: function () {
         return this.length == 0;

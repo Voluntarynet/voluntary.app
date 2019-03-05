@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+
+    CSSRuleSet
+         
+*/
+
 window.CSSRuleSet = class CSSRuleSet extends ProtoClass {
     init() {
         super.init()

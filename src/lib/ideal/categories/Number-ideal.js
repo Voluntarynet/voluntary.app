@@ -1,5 +1,13 @@
 "use strict"
 
+/*
+
+    Number-ideal
+
+    Some extra methods for the Javascript Number primitive.
+
+*/
+
 Object.shallowCopyTo({
 
     repeat: function (callback) {

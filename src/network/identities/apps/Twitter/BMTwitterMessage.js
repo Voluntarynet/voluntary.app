@@ -1,6 +1,12 @@
 
 "use strict"
 
+/*
+
+    BMTwitterMessage
+
+*/
+
 window.BMTwitterMessage = BMAppMessage.extend().newSlots({
     type: "BMTwitterMessage",
 }).setSlots({

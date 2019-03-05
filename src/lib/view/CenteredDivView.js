@@ -2,35 +2,37 @@
 
 /*
 
-From a StackExchange answer:
+    CenteredDivView
 
-.outer {
-  display: table;
-  position: absolute;
-  height: 100%;
-  width: 100%;
-}
+      From a StackExchange answer:
 
-.middle {
-  display: table-cell;
-  vertical-align: middle;
-}
+      .outer {
+        display: table;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+      }
 
-.inner {
-  margin-left: auto;
-  margin-right: auto;
-  width: 400px;
-  //whatever width you want
-}
+      .middle {
+        display: table-cell;
+        vertical-align: middle;
+      }
 
-<div class="outer">
-  <div class="middle">
-    <div class="inner">
-      <h1>The Content</h1>
-      <p>Once upon a midnight dreary...</p>
-    </div>
-  </div>
-</div>
+      .inner {
+        margin-left: auto;
+        margin-right: auto;
+        width: 400px;
+        //whatever width you want
+      }
+
+      <div class="outer">
+        <div class="middle">
+          <div class="inner">
+            <h1>The Content</h1>
+            <p>Once upon a midnight dreary...</p>
+          </div>
+        </div>
+      </div>
 
 */
 

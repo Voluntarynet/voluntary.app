@@ -1,5 +1,12 @@
 "use strict"
 
+/*
+
+    BoolView
+
+
+*/
+
 window.BoolView = DivStyledView.extend().newSlots({
     type: "BoolView",
     isSelected: false,

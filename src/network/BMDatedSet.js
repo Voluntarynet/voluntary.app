@@ -1,6 +1,12 @@
 
 "use strict"
 
+/*
+
+    BMDatedSet
+
+*/
+
 window.BMDatedSet = BMStorableNode.extend().newSlots({
     type: "BMDatedSet",
     maxAgeInSeconds: 30*24*60*60,

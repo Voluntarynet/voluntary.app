@@ -1,6 +1,9 @@
 //"use strict"
 
 /*
+
+    Object-ideal
+    
     Object isn't a prototype or class, it's more like a namespace to organize
     some functions that take an object as an argument. JS ugliness.
 */

@@ -12,7 +12,6 @@ window.TouchListener = EventSetListener.extend().newSlots({
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)
-
         return this
     },
 
@@ -21,7 +20,6 @@ window.TouchListener = EventSetListener.extend().newSlots({
         this.addEventNameAndMethodName("touchmove",   "onTouchMove");
         this.addEventNameAndMethodName("touchcancel", "onTouchCancel");
         this.addEventNameAndMethodName("touchend",    "onTouchEnd");
-    
         return this
     },
 

@@ -1,6 +1,12 @@
 
 "use strict"
 
+/*
+
+    BMApplet
+
+*/
+
 window.BMApplet = BMStorableNode.extend().newSlots({
     type: "BMApplet",
 }).setSlots({

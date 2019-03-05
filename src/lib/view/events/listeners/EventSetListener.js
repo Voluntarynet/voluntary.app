@@ -83,7 +83,6 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
         } else {
             this.stop()
         }
-
         return this
     },
 

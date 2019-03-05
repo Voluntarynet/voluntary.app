@@ -1,10 +1,12 @@
 "use strict"
 
 /*
+    
     StackTrace
+    
     A stack printout that understands objects.
 
-    example uses:
+    Example uses:
 
         showing a caught error:
 

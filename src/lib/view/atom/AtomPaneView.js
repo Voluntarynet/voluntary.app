@@ -1,5 +1,12 @@
 "use strict"
 
+/* 
+
+    AtomPaneView
+
+*/
+
+
 window.AtomPaneView = DivView.extend().newSlots({
     type: "AtomPaneView",
     startView: null,

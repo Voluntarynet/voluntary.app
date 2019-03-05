@@ -1,8 +1,9 @@
 "use strict"
 
 /*
-	BMArchiveNode
-	Way to compose 
+
+    BMProtoNode
+    
 */
 
 window.BMProtoNode = BMNode.extend().newSlots({

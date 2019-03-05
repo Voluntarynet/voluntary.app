@@ -1,8 +1,11 @@
+"use strict"
+
 /*
 
+    BMStunServers
+    
 */
 
-"use strict"
 
 window.BMStunServers = BMStorableNode.extend().newSlots({
     type: "BMStunServers",

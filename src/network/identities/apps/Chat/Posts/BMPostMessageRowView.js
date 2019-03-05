@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+
+    BMPostMessageRowView
+
+*/
+
 window.BMPostMessageRowView = BrowserRow.extend().newSlots({
     type: "BMPostMessageRowView",
     leftView: null,

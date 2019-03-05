@@ -1,5 +1,14 @@
 "use strict"
 
+/*
+
+    Array-ideal
+
+    Some extra methods for the Javascript Array primitive.
+
+*/
+
+
 Object.shallowCopyTo({
 
     // --- read operations ---

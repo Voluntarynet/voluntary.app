@@ -1,5 +1,10 @@
-
 "use strict"
+
+/*
+
+    BMPostDrafts
+
+*/
 
 window.BMPostDrafts = BMStorableNode.extend().newSlots({
     type: "BMPostDrafts",

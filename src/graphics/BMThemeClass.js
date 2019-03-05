@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+
+    BMThemeClass
+
+*/
+
 window.BMThemeClass = BMStorableNode.extend().newSlots({
     type: "BMThemeClass",
 }).setSlots({

@@ -5,6 +5,12 @@ var Buffer = bitcore.deps.Buffer;
 
 "use strict"
 
+/*
+
+    BMLocalIdentity
+    
+*/
+
 window.BMLocalIdentity = BMKeyPair.extend().newSlots({
     type: "BMLocalIdentity",
     name: "",

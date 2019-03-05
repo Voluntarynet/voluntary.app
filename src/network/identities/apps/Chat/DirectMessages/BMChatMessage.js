@@ -1,6 +1,12 @@
 
 "use strict"
 
+/*
+
+    BMChatMessage
+
+*/
+
 window.BMChatMessage = BMAppMessage.extend().newSlots({
     type: "BMChatMessage",
     content: "",

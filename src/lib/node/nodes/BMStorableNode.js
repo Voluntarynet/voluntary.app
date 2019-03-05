@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+
+    BMStorableNode
+    
+*/
+
 window.BMStorableNode = BMNode.extend().newSlots({
     type: "BMStorableNode",
 

@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+
+    BMContactLinks
+
+*/
+
 window.BMContactLinks = BMStorableNode.extend().newSlots({
     type: "BMContactLinks",
     linkProto: null,

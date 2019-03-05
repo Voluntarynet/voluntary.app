@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+
+    BMAddrMessage
+
+*/
+
 window.BMAddrMessage = BMMessage.extend().newSlots({
     type: "BMAddrMessage",
 }).setSlots({

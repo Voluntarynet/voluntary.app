@@ -1,6 +1,12 @@
 
 "use strict"
 
+/*
+
+    BMMailMessage
+
+*/
+
 window.BMMailMessage = BMAppMessage.extend().newSlots({
     type: "BMMailMessage",
     //canReceive: false,

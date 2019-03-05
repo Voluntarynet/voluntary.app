@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+    
+    BrowserView
+    
+*/
+
 window.BrowserView = NodeView.extend().newSlots({
     type: "BrowserView",
     columns: null,

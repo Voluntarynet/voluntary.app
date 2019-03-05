@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+
+    ImageView
+
+*/
+
 window.ImageView = NodeView.extend().newSlots({
     type: "ImageView",
     closeButtonView: null,

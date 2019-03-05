@@ -19,7 +19,6 @@ window.ClipboardListener = EventSetListener.extend().newSlots({
         this.addEventNameAndMethodName("copy", "onCopy");
         this.addEventNameAndMethodName("cut", "onCut");
         this.addEventNameAndMethodName("paste", "onPaste");
-        
         return this
     },
 

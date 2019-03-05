@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+
+    BMThemeStyleSheet
+
+*/
+
 window.BMThemeStyleSheet = ideal.Proto.extend().newSlots({
     type: "BMThemeStyleSheet",
 }).setSlots({

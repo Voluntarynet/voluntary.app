@@ -1,5 +1,11 @@
 "use strict"
 
+/* 
+
+    IndexedDBTx
+
+*/
+
 window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
     init() {
         super.init()

@@ -12,7 +12,6 @@ window.DocumentListener = EventSetListener.extend().newSlots({
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)
-
         return this
     },
 
@@ -40,5 +39,4 @@ window.DocumentListener = EventSetListener.extend().newSlots({
     element: function() {
         return window // is this the best way to handle this?
     },
-
 })

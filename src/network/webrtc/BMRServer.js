@@ -1,6 +1,12 @@
-// A Rendezvous Server
-
 "use strict"
+
+/*
+
+    BMRServer
+
+    A Rendezvous Server.
+
+*/
 
 window.BMRServer = BMFieldSetNode.extend().newSlots({
     type: "BMRServer",

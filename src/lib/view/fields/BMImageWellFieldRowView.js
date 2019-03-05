@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+
+    BMImageWellFieldRowView
+
+*/
+
 window.BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
     type: "BMImageWellFieldView",
 }).setSlots({

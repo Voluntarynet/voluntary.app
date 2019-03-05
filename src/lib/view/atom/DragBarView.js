@@ -1,5 +1,11 @@
 "use strict"
 
+/* 
+
+    DragBarView
+
+*/
+
 window.DragBarView = DivView.extend().newSlots({
     type: "DragBarView",
     isEnabled: true,

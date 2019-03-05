@@ -1,7 +1,9 @@
 "use strict"
 
 /*
-	AtomNode
+    
+    AtomNode
+    
 */
 
 window.AtomNode = BMStorableNode.extend().newSlots({

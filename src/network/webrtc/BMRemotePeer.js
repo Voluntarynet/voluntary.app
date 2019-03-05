@@ -1,5 +1,10 @@
-
 "use strict"
+
+/*
+
+    BMRemotePeer
+
+*/
 
 window.BMRemotePeer = BMNode.extend().newSlots({
     type: "BMRemotePeer",

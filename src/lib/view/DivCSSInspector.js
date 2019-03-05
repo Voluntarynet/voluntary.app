@@ -1,3 +1,5 @@
+"use strict"
+
 /*
     DivCSSInspector
     Used to inspect class styles since css hides stylesheet.cssRules.
@@ -6,8 +8,6 @@
     let value = DivCSSInspector.shared().setDivClassName("..").cssStyle.fontFamily
 
 */
-
-"use strict"
 
 window.DivCSSInspector = ideal.Proto.extend().newSlots({
     type: "DivCSSInspector",

@@ -1,14 +1,16 @@
 "use strict"
 
 /*
-    PeriodFormatter 
-    takes a number of seconds and formats in a compact format
+    
+PeriodFormatter 
 
-	example use:
+    Takes a number of seconds and formats in a compact format.
+
+	Example use:
 
 	let stringVersion = PeriodFormatter.clone().setValueInSeconds(seconds).formattedValue()
 
-	example output:
+	Example output:
 
 	if seconds was 10, stringVersion would be 10s.
 	if seconds was 60, stringVersion would be 1m.

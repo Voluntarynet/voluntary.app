@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+
+    BMGraphics
+
+*/
+
 window.BMGraphics = BMStorableNode.extend().newSlots({
     type: "BMGraphics",
     shared: null,

@@ -1,7 +1,9 @@
 "use strict"
 
 /*
+
     WebBrowserNotifications
+
     Simple interface to browser notifications. Takes care of:
     - only checking for permissions once
     - sending any waiting notifications after permission is gained

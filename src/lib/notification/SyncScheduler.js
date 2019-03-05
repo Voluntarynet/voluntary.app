@@ -4,7 +4,7 @@
 
     SyncScheduler
 
-    Many state changes can trigger the need to synchronize a given object 
+    Many state changes can cause the need to synchronize a given object 
     with others within a given event loop, but we only want synchronization to 
     happen at the end of an event loop, so a shared SyncScheduler instance is used to
     track which sync actions should be sent at the end of the event loop and only sends each one once. 

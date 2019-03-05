@@ -1,3 +1,5 @@
+"use strict"
+
 /*
 	PeerId
 	
@@ -6,7 +8,6 @@
 
 */
 
-"use strict"
 
 window.BMPeerId = BMNode.extend().newSlots({
     type: "BMPeerId",

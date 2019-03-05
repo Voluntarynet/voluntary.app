@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+
+    BMGetDataMessage
+
+*/
+
 window.BMGetDataMessage = BMMessage.extend().newSlots({
     type: "BMGetDataMessage",
 }).setSlots({

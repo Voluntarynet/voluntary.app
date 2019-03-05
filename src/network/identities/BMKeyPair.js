@@ -5,6 +5,12 @@ var Buffer = bitcore.deps.Buffer;
 
 "use strict"
 
+/*
+
+    BMKeyPair
+    
+*/
+
 window.BMKeyPair = BMStorableNode.extend().newSlots({
     type: "BMKeyPair",
     name: "",

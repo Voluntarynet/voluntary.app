@@ -1,7 +1,8 @@
 "use strict"
 
 /*
-    NodeStore: 
+
+    NodeStore
 
 		An object store for BMStorableNode objects, that supports 
 		- read reference cache of "activeObjects" so re-loading an object will reference the same instance

@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+
+    BrowserFooter
+
+*/
+
 window.BrowserFooter = NodeView.extend().newSlots({
     type: "BrowserFooter",
 

@@ -1,5 +1,11 @@
 "use strict"
 
+/* 
+
+    IndexedDBFolder
+
+*/
+
 window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
     init() {
         super.init()

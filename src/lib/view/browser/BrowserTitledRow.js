@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+    
+    BrowserTitledRow
+    
+*/
+
 window.BrowserTitledRow = BrowserRow.extend().newSlots({
     type: "BrowserTitledRow",
     titleView: null,

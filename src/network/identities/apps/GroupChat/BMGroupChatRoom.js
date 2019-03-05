@@ -1,6 +1,12 @@
 
 "use strict"
 
+/*
+
+    BMGroupChatRoom
+
+*/
+
 window.BMGroupChatRoom = BMApplet.extend().newSlots({
     type: "BMGroupChatRoom",
     name: "Untitled",

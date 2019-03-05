@@ -1,8 +1,11 @@
 "use strict"
 
 /*
-	BMDataStoreRecord
-	A visible representation of the NodeStore object record
+    
+    BMDataStoreRecord
+    
+    A visible representation of the NodeStore object record.
+    
 */
 
 window.BMDataStoreRecord = BMFieldSetNode.extend().newSlots({

@@ -1,6 +1,9 @@
 "use strict"
 
 /*
+
+    CSSDeclaration
+    
     move to styleSheets implementation, e.g.:
          
          document.styleSheets[0].addRule(newRuleKey, newRuleValue);

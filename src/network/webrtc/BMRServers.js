@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+
+    BMRServers
+
+*/
+
 window.BMRServers = BMStorableNode.extend().newSlots({
     type: "BMRServers",
     maxConnections: 8,

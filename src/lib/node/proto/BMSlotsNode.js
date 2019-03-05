@@ -1,3 +1,10 @@
+"use strict"
+
+/*
+
+    BMSlotsNode
+    
+*/
 
 window.BMSlotsNode = BMFieldSetNode.extend().newSlots({
     type: "BMSlotsNode",

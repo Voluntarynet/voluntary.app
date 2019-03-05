@@ -1,27 +1,30 @@
 "use strict"
 
 /*
-        FormNode is useful for node's which are to be viewed and interacted with as forms
-        
-        child nodes are of type BMField and should only be added via addFieldNamed()
-                        
-        example use in subclass 
-    
-        BMCustomFormNode = BMFieldSetNode.extend().newSlots({
-            type: "BMCustomFormNode",
-        }).setSlots({
-        
-        init: function () {
-            BMFieldSetNode.init.apply(this)
 
-            this.addFieldNamed("from")
-            this.addFieldNamed("to")
-            this.addFieldNamed("subject")
-            this.addFieldNamed("body").setNodeMinHeight(-1)
+    BMFieldSetNode
 
-            this.setActions(["send", "delete"])
-        },
+    Useful for node's which are to be viewed and interacted with as forms
     
+    child nodes are of type BMField and should only be added via addFieldNamed()
+                    
+    example use in subclass 
+
+    BMCustomFormNode = BMFieldSetNode.extend().newSlots({
+        type: "BMCustomFormNode",
+    }).setSlots({
+    
+    init: function () {
+        BMFieldSetNode.init.apply(this)
+
+        this.addFieldNamed("from")
+        this.addFieldNamed("to")
+        this.addFieldNamed("subject")
+        this.addFieldNamed("body").setNodeMinHeight(-1)
+
+        this.setActions(["send", "delete"])
+    },
+
 */  
         
 

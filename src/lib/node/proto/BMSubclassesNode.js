@@ -1,8 +1,9 @@
 "use strict"
 
 /*
-	BMArchiveNode
-	Way to compose 
+
+    BMSubclassesNode
+
 */
 
 window.BMSubclassesNode = BMNode.extend().newSlots({

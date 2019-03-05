@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+
+    BMRemoteIdentity
+    
+*/
+
 var bitcore = require("bitcore-lib")
 
 window.BMRemoteIdentity = BMStorableNode.extend().newSlots({

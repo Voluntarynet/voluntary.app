@@ -1,7 +1,11 @@
 "use strict"
-/*
 
-	base row view, just knows about selected, selectable and colors
+/*
+    
+    BrowserRow
+
+    base row view, just knows about selected, selectable and colors
+    
 */
 
 window.BrowserRow = NodeView.extend().newSlots({

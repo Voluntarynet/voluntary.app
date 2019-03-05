@@ -1,8 +1,10 @@
 "use strict"
 
 /*
-	BMArchiveNode
-	Way to compose 
+    
+    BMArchiveNode
+    
+	
 */
 
 window.BMArchiveNode = BMFieldSetNode.extend().newSlots({

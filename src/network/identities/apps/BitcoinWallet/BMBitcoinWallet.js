@@ -1,5 +1,12 @@
+"use strict"
 
-BMBitcoinWallet = BMApplet.extend().newSlots({
+/*
+
+    BMBitcoinWallet
+
+*/
+
+window.BMBitcoinWallet = BMApplet.extend().newSlots({
     type: "BMBitcoinWallet",
 }).setSlots({
 

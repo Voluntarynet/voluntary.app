@@ -1,6 +1,10 @@
-
-
 "use strict"
+
+/*
+
+    BMPostDraftRowView
+
+*/
 
 window.BMPostDraftRowView = BrowserRow.extend().newSlots({
     type: "BMPostDraftRowView",

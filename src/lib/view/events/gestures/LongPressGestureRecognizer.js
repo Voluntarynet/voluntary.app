@@ -1,6 +1,7 @@
 "use strict"
 
 /*
+
     LongPressGestureRecognizer
 
     Recognize a long press and hold in (roughly) one location.
@@ -69,15 +70,26 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
     },
 
     onLongPress: function() {
+
         this.setTimeoutId(null)
-        if (this.viewTarget() == this.currentViewTarget()) {
-            let r = this.viewTarget().requestActiveGesture(this)
-            if (r) {
-                //this.setBeginPosition(this.currentEvent())
-                this.sendDelegateMessage("onLongPressComplete")
-                this.didFinish()
-            }
+        //console.log("this.viewTarget() = ", this.viewTarget())
+        //console.log("this.currentViewTarget() = ", this.currentViewTarget())
+        let points = this.pointsForEvent(this.currentEvent())
+        
+        let p = points.first()
+        console.log("onLongPress p:", p.asString())
+        if(!this.viewTarget().winBounds().containsPoint(p)) {
+            console.log("onLongPress")
         }
+
+        //if (this.viewTarget() == this.currentViewTarget()) {
+        let r = this.viewTarget().requestActiveGesture(this)
+        if (r) {
+            //this.setBeginPosition(this.currentEvent())
+            this.sendDelegateMessage("onLongPressComplete")
+            this.didFinish()
+        }
+        //}
     },
 
     // -- single action for mouse and touch up/down ---

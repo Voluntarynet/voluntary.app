@@ -19,7 +19,6 @@ window.AnimationListener = EventSetListener.extend().newSlots({
         this.addEventNameAndMethodName("animationend", "onAnimationEnd");
         this.addEventNameAndMethodName("animationiteration", "onAnimationIteration");
         this.addEventNameAndMethodName("animationstart", "onAnimationStart");
-
         return this
     },
 

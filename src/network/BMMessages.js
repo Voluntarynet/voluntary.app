@@ -1,14 +1,18 @@
+"use strict"
 
 /*
-BMGetDataItem = BMNode.extend().newSlots({
-    type: "BMGetDataItem",
-    hash: null,
-    fromMsg: null,
-}).setSlots({
-})
-*/
 
-"use strict"
+    BMMessages
+
+
+    BMGetDataItem = BMNode.extend().newSlots({
+        type: "BMGetDataItem",
+        hash: null,
+        fromMsg: null,
+    }).setSlots({
+    })
+    
+*/
 
 window.BMMessages = BMStorableNode.extend().newSlots({
     type: "BMMessages",

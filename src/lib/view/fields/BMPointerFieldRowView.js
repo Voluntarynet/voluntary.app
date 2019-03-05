@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+
+    BMPointerFieldRowView
+
+*/
+
 window.BMPointerFieldRowView = BrowserTitledRow.extend().newSlots({
     type: "BMPointerFieldRowView",
 }).setSlots({

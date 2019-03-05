@@ -1,5 +1,10 @@
-
 "use strict"
+
+/*
+
+    BMChatThreads
+
+*/
 
 window.BMChatThreads = BMContactLinks.extend().newSlots({
     type: "BMChatThreads",

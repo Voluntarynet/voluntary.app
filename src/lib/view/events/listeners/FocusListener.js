@@ -12,7 +12,6 @@ window.FocusListener = EventSetListener.extend().newSlots({
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)
-
         return this
     },
 
@@ -20,8 +19,7 @@ window.FocusListener = EventSetListener.extend().newSlots({
         this.addEventNameAndMethodName("blur", "onBlur");
         this.addEventNameAndMethodName("focus", "onFocus");
         this.addEventNameAndMethodName("focusin", "onFocusIn");
-        this.addEventNameAndMethodName("focusout", "onFocusOut");
-        
+        this.addEventNameAndMethodName("focusout", "onFocusOut"); 
         return this
     },
 

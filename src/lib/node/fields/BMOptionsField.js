@@ -2,7 +2,8 @@
 
 /*
 
-
+    BMOptionsField
+    
 */
 
 window.BMOptionsField = BMField.extend().newSlots({

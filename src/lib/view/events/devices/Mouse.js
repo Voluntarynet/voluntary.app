@@ -5,6 +5,7 @@
 
     Global shared instance that tracks current mouse state in window coordinates.
     Registers for capture mouse events on document.body.
+
 */
 
 

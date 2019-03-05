@@ -1,5 +1,10 @@
-
 "use strict"
+
+/*
+
+    BMPostThread
+
+*/
 
 window.BMPostThread = BMAppMessage.extend().newSlots({
     type: "BMPostThread",

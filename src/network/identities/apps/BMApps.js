@@ -1,10 +1,12 @@
+"use strict"
+
 /*
-	a per-identity instantiated collection of apps
+
+    BMApps
+
+    A per-identity instantiated collection of apps.
 
 */
-
-
-"use strict"
 
 window.BMApps = BMStorableNode.extend().newSlots({
     type: "BMApps",

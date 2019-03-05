@@ -1,13 +1,16 @@
+"use strict"
 
 /*
-  A record for a WebRTC STUN (Session Traversal Utilities for NAT) Server 
-  these help us get around NAT (Network Address Traversal) routers
-  we just use these objects to maintain the list passed to new Peer()
-  
-  See: https://en.wikipedia.org/wiki/STUN
-*/
 
-"use strict"
+    BMStunServer
+
+    A record for a WebRTC STUN (Session Traversal Utilities for NAT) Server 
+    these help us get around NAT (Network Address Traversal) routers
+    we just use these objects to maintain the list passed to new Peer()
+
+    See: https://en.wikipedia.org/wiki/STUN
+    
+*/
 
 window.BMStunServer = BMFieldSetNode.extend().newSlots({
     type: "BMStunServer",

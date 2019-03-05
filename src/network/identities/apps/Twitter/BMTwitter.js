@@ -1,6 +1,12 @@
 
 "use strict"
 
+/*
+
+    BMTwitter
+
+*/
+
 window.BMTwitter = BMApplet.extend().newSlots({
     type: "BMTwitter",
     feed: null,

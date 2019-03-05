@@ -1,5 +1,12 @@
 "use strict"
 
+
+/* 
+
+    ShelfItemGroupView
+
+*/
+
 window.ShelfItemGroupView = NodeView.extend().newSlots({
     type: "ShelfItemGroupView",
     isCompacted: true,

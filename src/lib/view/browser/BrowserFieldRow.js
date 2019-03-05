@@ -1,14 +1,14 @@
+"use strict"
+
 /*
 
     BrowserFieldRow
  
-       A BrowserRow that overrides updateSubviews 
-       to fill in remaining space in column when requested.
+    A BrowserRow that overrides updateSubviews 
+    to fill in remaining space in column when requested.
 
 */
 
-
-"use strict"
 
 window.BrowserFieldRow = BrowserRow.extend().newSlots({
     type: "BrowserFieldRow",

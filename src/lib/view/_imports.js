@@ -5,7 +5,7 @@ JSImporter.pushRelativePaths([
     "css_rules/_imports.js",
     "div_attributes/_imports.js",
 
-    "Point.js",
+    "geometry/_imports.js",
     "events/_imports.js",
     
     "DomElementHelpers.js",

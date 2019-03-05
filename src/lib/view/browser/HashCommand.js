@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+    
+    HashCommand
+    
+*/
+
 window.HashCommand = ideal.Proto.extend().newSlots({
     type: "HashCommand",
     target: null,

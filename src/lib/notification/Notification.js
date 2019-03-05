@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+
+    Notification
+
+*/
+
 window.Notification = class Notification extends ProtoClass {
     init() {
         super.init()

@@ -12,7 +12,6 @@ window.DropListener = EventSetListener.extend().newSlots({
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)
-
         return this
     },
 
@@ -21,8 +20,7 @@ window.DropListener = EventSetListener.extend().newSlots({
         this.addEventNameAndMethodName("dragover",  "onDragOver"); // must prevent default
         this.addEventNameAndMethodName("dragenter", "onDragEnter"); // must prevent default
         this.addEventNameAndMethodName("drop",       "onDrop");
-        this.addEventNameAndMethodName("dragleave", "onDragLeave"); 
-
+        this.addEventNameAndMethodName("dragleave", "onDragLeave");
         return this
     },
 

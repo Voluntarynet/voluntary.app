@@ -1,6 +1,10 @@
-
-
 "use strict"
+
+/*
+
+    BMRemoteIdentities
+    
+*/
 
 window.BMRemoteIdentities = BMStorableNode.extend().newSlots({
     type: "BMRemoteIdentities",

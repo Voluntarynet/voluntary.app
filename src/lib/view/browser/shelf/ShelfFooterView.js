@@ -1,5 +1,11 @@
 "use strict"
 
+/* 
+
+    ShelfFooterView
+
+*/
+
 window.ShelfFooterView = DivView.extend().newSlots({
     type: "ShelfFooterView",
 }).setSlots({

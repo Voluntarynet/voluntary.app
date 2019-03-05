@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+
+    BMNodeSlot
+    
+*/
+
 window.BMNodeSlot = ideal.Proto.extend().newSlots({
     type: "BMNodeSlot",
     

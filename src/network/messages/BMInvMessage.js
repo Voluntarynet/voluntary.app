@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+
+    BMInvMessage
+
+*/
+
 window.BMInvMessage = BMMessage.extend().newSlots({
     type: "BMInvMessage",
     //bloomFilter: null, // used to filter senders

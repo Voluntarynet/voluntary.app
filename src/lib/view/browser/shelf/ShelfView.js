@@ -1,5 +1,11 @@
 "use strict"
 
+/* 
+
+    ShelfView
+
+*/
+
 window.ShelfView = NodeView.extend().newSlots({
     type: "ShelfView",
     browser: null,

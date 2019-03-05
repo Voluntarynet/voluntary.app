@@ -1,5 +1,10 @@
-
 "use strict"
+
+/*
+
+    BMServerMessage
+
+*/
 
 window.BMServerMessage = ideal.Proto.extend().newSlots({
     type: "BMServerMessage",

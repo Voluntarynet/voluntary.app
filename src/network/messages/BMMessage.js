@@ -1,12 +1,16 @@
+"use strict"
+
 /*
-    subclasses:
+
+    BMMessage
+
+       subclasses:
         BMAddrMessage
         BMInvMessage
         BMObjectMessage
 
 */
 
-"use strict"
 
 window.BMMessage = BMFieldSetNode.extend().newSlots({
     type: "BMMessage",

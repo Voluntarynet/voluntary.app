@@ -1,9 +1,12 @@
+"use strict"
+
+
 /*
 
+    BMBlacklistedServers
 
+    
 */
-
-"use strict"
 
 window.BMBlacklistedServers = BMBlacklist.extend().newSlots({
     type: "BMBlacklistedServers",

@@ -1,10 +1,13 @@
+"use strict"
+
 /*
+
+    BMRegion
+    
 	BMRegion represents a regional market category (Country, State, City, etc)
 	It does some tricks with lazy loading children as needed so we don't have to read everything in immediately.
 	If can also propogate subnode count sum updates.
 */
-
-"use strict"
 
 window.BMRegion = BMNode.extend().newSlots({
     type: "BMRegion",

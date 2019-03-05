@@ -1,6 +1,7 @@
 "use strict"
 
 /*
+
     SlideGestureRecognizer
 
     This gets tricky as we need to follow movement outside the view.

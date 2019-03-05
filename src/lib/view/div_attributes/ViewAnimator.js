@@ -1,7 +1,12 @@
 
-
 "use strict"
 
+/*
+
+    ViewAnimator
+         
+
+*/
 
 window.ViewAnimator = class ViewAnimator extends ProtoClass {
     init() {

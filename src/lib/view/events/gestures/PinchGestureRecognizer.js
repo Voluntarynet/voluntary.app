@@ -1,9 +1,10 @@
 "use strict"
 
 /*
+
     PinchGestureRecognizer
 
-     Delegate messages :
+    Delegate messages:
 
         onPinchBegin
         onPinchMove

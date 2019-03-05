@@ -1,6 +1,7 @@
 "use strict"
 
 /*
+
     TapGestureRecognizer
 
     Recognize a number of taps inside a viewTarget and within a timePeriod.

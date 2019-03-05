@@ -1,5 +1,10 @@
-
 "use strict"
+
+/*
+
+    BMPostMessage
+
+*/
 
 window.BMPostMessage = BMAppMessage.extend().newSlots({
     type: "BMPostMessage",

@@ -1,8 +1,13 @@
+"use strict"
+
 /*
-	Used to measure rendered text dimensions given a string and a style.
+
+    DivTextTapeMeasure
+
+    Used to measure rendered text dimensions given a string and a style.
+    
 */
 
-"use strict"
 
 window.DivTextTapeMeasure = ideal.Proto.extend().newSlots({
     idName: "DivTextTapeMeasure",

@@ -1,7 +1,10 @@
 "use strict"
 
 /*
-    A field that's a pointer to another node 
+
+    BMPointerField
+
+    A field that's a pointer to another node.
     (sometimes the other node is used as a list of items, but not always)
 
 */

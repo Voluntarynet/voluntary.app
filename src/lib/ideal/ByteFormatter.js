@@ -2,6 +2,8 @@
 
 /*
 
+    ByteFormatter
+    
 	ByteFormatter takes a number of bytes and returns a string with the order of magnitude in 
 	standard SI decimal ditial information format.
 

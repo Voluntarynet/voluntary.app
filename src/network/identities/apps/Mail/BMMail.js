@@ -1,6 +1,12 @@
 
 "use strict"
 
+/*
+
+    BMMail
+
+*/
+
 window.BMMail = BMApplet.extend().newSlots({
     type: "BMMail",
     feed: null,

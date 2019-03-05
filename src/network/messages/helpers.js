@@ -1,5 +1,10 @@
 "use strict"
 
+/*
+
+    Some categories for json, sha256, buffer
+    
+*/
 
 Object.toJsonStableString = function(obj) {
     return JSON.stableStringify(obj, null, 2)

@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+
+    BMActionFieldRowView
+
+*/
+
 window.BMActionFieldRowView = BrowserRow.extend().newSlots({
     type: "BMActionFieldRowView",
     buttonView: null,

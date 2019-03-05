@@ -1,5 +1,12 @@
 "use strict"
 
+
+/*
+
+    SyncAction
+
+*/
+
 window.SyncAction = class SyncAction extends ProtoClass {
     init() {
         super.init()

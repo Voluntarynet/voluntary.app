@@ -1,9 +1,11 @@
+"use strict"
+
 /*
 
+    BMBlacklistedContacts
 
 */
 
-"use strict"
 
 window.BMBlacklistedContacts = BMBlacklist.extend().newSlots({
     type: "BMBlacklistedContacts",

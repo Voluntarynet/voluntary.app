@@ -1,9 +1,10 @@
+"use strict"
+
 /*
 
+    BMBlacklists
 
 */
-
-"use strict"
 
 window.BMBlacklists = BMStorableNode.extend().newSlots({
     type: "BMBlacklists",

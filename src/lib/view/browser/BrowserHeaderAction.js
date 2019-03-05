@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+
+    BrowserHeaderAction
+
+*/
+
 window.BrowserHeaderAction = NodeView.extend().newSlots({
     type: "BrowserHeaderAction",
     canClick: true,

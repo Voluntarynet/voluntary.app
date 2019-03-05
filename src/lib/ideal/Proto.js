@@ -1,5 +1,12 @@
 "use strict"
 
+
+/*
+
+    Proto
+
+*/
+
 window.ideal = {}
 
 let Proto = new Object;

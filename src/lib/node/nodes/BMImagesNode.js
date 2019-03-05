@@ -1,7 +1,9 @@
 "use strict"
 
 /*
+    
     BMImagesNode 
+
 */  
 
 window.BMImagesNode = BMStorableNode.extend().newSlots({

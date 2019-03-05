@@ -1,5 +1,10 @@
-
 "use strict"
+
+/*
+
+    BMRegions
+
+*/
 
 window.BMRegions = BMRegion.extend().newSlots({
     type: "BMRegions",

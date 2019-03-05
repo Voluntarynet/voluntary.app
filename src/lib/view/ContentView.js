@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+
+    ContentView
+
+*/
+
 window.ContentView = NodeView.extend().newSlots({
     type: "ContentView",
 }).setSlots({
@@ -8,7 +14,8 @@ window.ContentView = NodeView.extend().newSlots({
         NodeView.init.apply(this)
         return this
     },
-*/
+    */
+
     syncFromNode: function () {
         let node = this.node()
         if (node.nodeContent) {

@@ -94,16 +94,6 @@ window.Point = ideal.Proto.extend().newSlots({
         return Math.sqrt(ds)
     },
 
-    // eqaulity
-
-    isEqual: function(p) {
-        return (this.x() == p.x()) && (this.y() == p.y()) && (this.z() == p.z()) // && (this.t() == p.t())
-    },
-
-    isEqualWithTime: function(p) { // not ideal
-        return (this.x() == p.x()) && (this.y() == p.y()) && (this.z() == p.z()) && (this.t() == p.t())
-    },
-
     // difference with another point
 
     dxFrom: function(p) {
@@ -127,6 +117,34 @@ window.Point = ideal.Proto.extend().newSlots({
         let dy = this.dyFrom(p)
         let dz = this.dzFrom(p)
         return Math.sqrt(dx*dx + dy*dy + dz*dz)
+    },
+
+    // eqaulity
+
+    isEqual: function(p) {
+        return (this.x() == p.x()) && (this.y() == p.y()) && (this.z() == p.z()) // && (this.t() == p.t())
+    },
+
+    isEqualWithTime: function(p) { // not ideal
+        return (this.x() == p.x()) && (this.y() == p.y()) && (this.z() == p.z()) && (this.t() == p.t())
+    },
+
+    // comparison 
+
+    isGreaterThan: function(p) {
+        return p.x() > this.x() && p.y() > this.y()
+    },
+
+    isLessThan: function(p) {
+        return p.x() < this.x() && p.y() < this.y()
+    },
+
+    isGreaterThanOrEqualTo: function(p) {
+        return p.x() >= this.x() && p.y() >= this.y()
+    },
+
+    isLessThanOrEqualTo: function(p) {
+        return p.x() <= this.x() && p.y() <= this.y()
     },
 
 })

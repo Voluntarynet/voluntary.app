@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+
+    Observation
+
+*/
+
 window.Observation = class Observation extends ProtoClass {
     init() {
         super.init()

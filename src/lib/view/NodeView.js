@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+
+    NodeView
+
+*/
+
 window.NodeView = DivStyledView.extend().newSlots({
     type: "NodeView",
     node: null,

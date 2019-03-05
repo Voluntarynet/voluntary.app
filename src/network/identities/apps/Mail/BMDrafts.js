@@ -1,6 +1,12 @@
 
 "use strict"
 
+/*
+
+    BMDrafts
+
+*/
+
 window.BMDrafts = BMStorableNode.extend().newSlots({
     type: "BMDrafts",
 }).setSlots({

@@ -1,16 +1,19 @@
 "use strict"
 
-// -----------------------------------------
-
 /*
-function map(obj) {
-    return Map.withJsMap(obj);
-}
 
-Map.__map = map;
+    Map
+
 */
 
-// --- Map ---------------------------
+/*
+    function map(obj) {
+        return Map.withJsMap(obj);
+    }
+
+    Map.__map = map;
+*/
+
 
 window.ideal.Map = class Map extends ProtoClass {
     static withJsMap (jsMap) {

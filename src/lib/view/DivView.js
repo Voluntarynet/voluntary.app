@@ -2436,6 +2436,10 @@ window.DivView = ideal.Proto.extend().newSlots({
     boundingClientRect: function() {
         return this.element().getBoundingClientRect()
     },
+
+    containsWinPoint: function() {
+
+    },
     
     isScrolledIntoView: function() {
         let r = this.boundingClientRect()
@@ -2493,6 +2497,16 @@ window.DivView = ideal.Proto.extend().newSlots({
         return p
     },
     */
+   
+    winBounds: function() {
+        let p = this.windowPos()
+        let s = this.size()
+        return Rectangle.clone().setOrigin(p).setSize(s)
+    },
+
+    size: function() {
+        return Point.clone().set(this.clientWidth(), this.clientHeight());
+    },
 
     windowPos: function() {
         let elem = this.element()
@@ -2511,7 +2525,7 @@ window.DivView = ideal.Proto.extend().newSlots({
         let left = box.left + scrollLeft - clientLeft;
     
         return Point.clone().set(Math.round(left), Math.round(top));
-        return p
+        //return p
     },
 
     relativePos: function() {

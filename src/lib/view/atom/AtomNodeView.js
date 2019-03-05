@@ -1,5 +1,12 @@
 "use strict"
 
+/* 
+
+    AtomNodeView
+
+*/
+
+
 window.AtomNodeView = NodeView.extend().newSlots({
     type: "AtomNodeView",
 

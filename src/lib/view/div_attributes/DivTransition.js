@@ -1,6 +1,13 @@
 
 "use strict"
 
+/*
+
+    DivTransition
+         
+
+*/
+
 window.DivTransition = class DivTransition extends ProtoClass {
     init() {
         super.init()

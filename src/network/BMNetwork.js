@@ -1,8 +1,11 @@
-
 "use strict"
 
-// BMStorableNode
-// BMFieldSetNode
+/*
+
+    BMNetwork
+
+*/
+
 window.BMNetwork = BMFieldSetNode.extend().newSlots({
     type: "BMNetwork",
     servers: null,

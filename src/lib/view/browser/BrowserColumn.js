@@ -1,5 +1,11 @@
 "use strict"
 
+/* 
+
+    BrowserColumn
+
+*/
+
 window.BrowserColumn = NodeView.extend().newSlots({
     type: "BrowserColumn",
     rows: null,

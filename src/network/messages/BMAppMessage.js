@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+
+    BMAppMessage
+
+*/
+
 window.BMAppMessage = BMFieldSetNode.extend().newSlots({
     type: "BMAppMessage",
     objMsg: null,

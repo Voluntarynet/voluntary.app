@@ -1,6 +1,7 @@
 "use strict"
 
 /*
+
     PanGestureRecognizer
 
     Gesture begins when the minimal number of fingers have moved the minimal distance.

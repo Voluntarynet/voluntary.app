@@ -1,5 +1,10 @@
-
 "use strict"
+
+/*
+
+    BMFeedPosts
+
+*/
 
 window.BMFeedPosts = BMStorableNode.extend().newSlots({
     type: "BMFeedPosts",

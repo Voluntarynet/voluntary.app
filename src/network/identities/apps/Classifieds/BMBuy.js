@@ -1,5 +1,10 @@
-
 "use strict"
+
+/*
+
+    BMBuy
+
+*/
 
 window.BMBuy = BMStorableNode.extend().newSlots({
     type: "BMBuy",

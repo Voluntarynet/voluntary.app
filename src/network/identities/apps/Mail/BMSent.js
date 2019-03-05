@@ -1,6 +1,12 @@
 
 "use strict"
 
+/*
+
+    BMSent
+
+*/
+
 window.BMSent = BMStorableNode.extend().newSlots({
     type: "BMSent",
 }).setSlots({

@@ -1,6 +1,9 @@
 "use strict"
 
 /*
+
+    ProtoClass
+    
     working on moving Proto to ES6 classes
 
     problems and potential solutions:

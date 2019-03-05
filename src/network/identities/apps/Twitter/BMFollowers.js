@@ -1,6 +1,12 @@
 
 "use strict"
 
+/*
+
+    BMFollowers
+
+*/
+
 window.BMFollowers = BMStorableNode.extend().newSlots({
     type: "BMFollowers",
 }).setSlots({

@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+
+    ImageWellView
+
+*/
+
 window.ImageWellView = NodeView.extend().newSlots({
     type: "ImageWellView",
     imageView: null,
@@ -87,5 +93,4 @@ window.ImageWellView = NodeView.extend().newSlots({
         this.scheduleSyncToNode() //this.syncToNode()
         return this        
     },
-    
 })

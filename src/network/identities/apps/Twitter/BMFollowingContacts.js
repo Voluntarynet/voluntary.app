@@ -1,6 +1,12 @@
 
 "use strict"
 
+/*
+
+    BMFollowingContacts
+
+*/
+
 window.BMFollowingContacts = BMStorableNode.extend().newSlots({
     type: "BMFollowingContacts",
 }).setSlots({

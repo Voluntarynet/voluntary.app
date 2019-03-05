@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+
+    BMImageNode
+    
+*/
+
 window.BMImageNode = BMStorableNode.extend().newSlots({
     type: "BMImageNode",
     dataURL: null,

@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+
+    BrowserHeader
+
+*/
+
 window.BrowserHeader = NodeView.extend().newSlots({
     type: "BrowserHeader",
     backArrowView: null,

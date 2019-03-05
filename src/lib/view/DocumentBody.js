@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+
+    DocumentBody
+
+*/
+
 window.DocumentBody = DivView.extend().newSlots({
     type: "DocumentBody",
 }).setSlots({

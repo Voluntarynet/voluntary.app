@@ -1,8 +1,13 @@
+"use strict"
+
 /*
--     transition: width 2s linear 1s, height 2s ease 1s; 1st time is duration, 2nd time is delay
+
+    DivTransition
+         
+    transition: width 2s linear 1s, height 2s ease 1s; 1st time is duration, 2nd time is delay
+
 */
 
-"use strict"
 
 window.DivTransitions = class DivTransitions extends ProtoClass {
     init() {

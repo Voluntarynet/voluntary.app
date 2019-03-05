@@ -1,5 +1,10 @@
-
 "use strict"
+
+/*
+
+    BMServerConnection
+
+*/
 
 window.BMServerConnection = BMNode.extend().newSlots({
     type: "BMServerConnection",

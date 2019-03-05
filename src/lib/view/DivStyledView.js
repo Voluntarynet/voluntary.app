@@ -20,14 +20,11 @@
 
                        
     
-                                        
+
     Supported styles:
 
     - unselected
     - selected
-
-    
-
 
 */
 

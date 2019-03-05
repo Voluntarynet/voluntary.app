@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+
+    BMThemeClassState
+
+*/
+
 window.BMThemeClassState = BMFieldSetNode.extend().newSlots({
     type: "BMThemeClassState",
     divClassName: null,

@@ -1,5 +1,11 @@
 "use strict"
 
+/* 
+
+    ShelfGroup
+
+*/
+
 window.ShelfGroup = BMNode.extend().newSlots({
     type: "ShelfGroup",
     refNode: null,

@@ -1,6 +1,7 @@
 "use strict"
 
 /*
+
     BMViewStyles
 
     Represents the set of styles for a NodeView, e.g. selected, unselected.

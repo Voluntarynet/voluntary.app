@@ -1,6 +1,12 @@
 
 "use strict"
 
+/*
+
+    BMLocalIdentities
+    
+*/
+
 window.BMLocalIdentities = BMStorableNode.extend().newSlots({
     type: "BMLocalIdentities",
 }).setSlots({

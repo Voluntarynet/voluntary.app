@@ -1,5 +1,10 @@
-
 "use strict"
+
+/*
+
+    BMClassifiedPost
+
+*/
 
 window.BMClassifiedPost = BMFieldSetNode.extend().newSlots({
     type: "BMClassifiedPost",

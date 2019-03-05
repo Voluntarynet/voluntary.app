@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+
+    BMViewStyle
+
+*/
+
 window.BMViewStyle = ideal.Proto.extend().newSlots({
     type: "BMViewStyle",
     name: "",

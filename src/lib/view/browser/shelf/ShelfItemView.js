@@ -1,5 +1,11 @@
 "use strict"
 
+/* 
+
+    ShelfItemView
+
+*/
+
 window.ShelfItemView = NodeView.extend().newSlots({
     type: "ShelfItemView",
     isSelected: false,

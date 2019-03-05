@@ -1,5 +1,11 @@
 "use strict"
 
+/* 
+
+    CloseableNodeView
+
+*/
+
 window.CloseableNodeView = NodeView.extend().newSlots({
     type: "CloseableNodeView",
     closeButton: null,

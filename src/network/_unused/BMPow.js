@@ -1,5 +1,9 @@
+"use strict"
 
 /*
+
+    BMPow
+
     find pow:
     
         let pow = BMPow.clone().setHash(hh).findPow()
@@ -13,9 +17,9 @@
     notes:
     
         setDifficulty() method available
+
 */
 
-"use strict"
 
 window.BMPow = ideal.Proto.extend().newSlots({
     type: "BMPow",

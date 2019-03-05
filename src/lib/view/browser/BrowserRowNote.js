@@ -1,5 +1,11 @@
 "use strict"
 
+/*
+    
+    BrowserRowNote
+    
+*/
+
 window.BrowserRowNote = TextField.extend().newSlots({
     type: "BrowserRowNote",
 }).setSlots({

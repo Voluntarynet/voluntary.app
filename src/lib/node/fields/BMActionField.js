@@ -1,6 +1,9 @@
 "use strict"
 
 /*
+
+    BMActionField
+    
     An abstraction of a UI visibleaction that can be performed on an object.
     the value is the action method name, the target is the field owner
 */

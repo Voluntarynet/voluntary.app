@@ -1,5 +1,12 @@
 "use strict"
 
+
+/* 
+
+    CloseButton
+
+*/
+
 window.CloseButton = DivView.extend().newSlots({
     type: "CloseButton",
     isEnabled: true,

@@ -1,5 +1,12 @@
 "use strict"
-        
+      
+/*
+
+    BMBoolField
+
+    
+*/
+
 window.BMBoolField = BMField.extend().newSlots({
     type: "BMBoolField",
     unsetVisibleValue: "unset",

@@ -1,5 +1,10 @@
-
 "use strict"
+
+/*
+
+    BMClassifiedPosts
+
+*/
 
 window.BMClassifiedPosts = BMStorableNode.extend().newSlots({
     type: "BMClassifiedPosts",

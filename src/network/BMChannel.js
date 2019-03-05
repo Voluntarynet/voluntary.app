@@ -1,5 +1,10 @@
-
 "use strict"
+
+/*
+
+    BMChannel
+
+*/
 
 window.BMChannel = BMStorableNode.extend().newSlots({
     type: "BMChannel",

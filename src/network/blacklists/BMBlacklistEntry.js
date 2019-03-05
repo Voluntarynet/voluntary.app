@@ -1,6 +1,12 @@
 
 "use strict"
 
+/*
+
+    BMBlacklistEntry
+
+*/
+
 window.BMBlacklistEntry = BMFieldSetNode.extend().newSlots({
     type: "BMBlacklistEntry",
 }).setSlots({

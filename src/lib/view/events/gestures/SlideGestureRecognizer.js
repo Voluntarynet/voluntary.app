@@ -157,7 +157,18 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     // ------------------------------
 
     diffPos: function() {
-        return this.currentPosition().subtract(this.downPosition()).floorInPlace() // floor here?
+        let p = this.currentPosition().subtract(this.downPosition()).floorInPlace() // floor here?
+        let dx = p.x()
+        let dy = p.y()
+        let funcs = {
+            left:  (p) => p.setX(Math.min(dx, 0)),
+            right: (p) => p.setX(Math.max(dx, 0)),
+            up:    (p) => p.setY(Math.max(dy, 0)),
+            down:  (p) => p.setY(Math.min(dy, 0))
+        }
+
+        funcs[this.direction()](p)
+        return p
     },
 
     // --- mouse events ---

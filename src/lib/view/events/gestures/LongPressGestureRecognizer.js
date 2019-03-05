@@ -27,6 +27,8 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
     timeoutId: null, // private
     downEvent: null,
     upEvent: null,
+    beginPosition: null,
+    completePosition: null,
 }).setSlots({
     
     init: function () {
@@ -62,12 +64,19 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     // -- the completed gesture ---
 
+    currentViewTarget: function() {
+        return this.currentEvent().target._divView
+    },
+
     onLongPress: function() {
         this.setTimeoutId(null)
-        let r = this.viewTarget().requestActiveGesture(this)
-        if (r) {
-            this.sendDelegateMessage("onLongPressComplete")
-            this.didFinish()
+        if (this.viewTarget() == this.currentViewTarget()) {
+            let r = this.viewTarget().requestActiveGesture(this)
+            if (r) {
+                //this.setBeginPosition(this.currentEvent())
+                this.sendDelegateMessage("onLongPressComplete")
+                this.didFinish()
+            }
         }
     },
 

@@ -38,7 +38,11 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     isDebugging: false,
 
     shouldRemoveOnComplete: false,
-    //isCancelled: false,
+
+    downEvent: null,
+    beginEvent: null,
+    currentEvent: null,
+    upEvent: null,
 }).setSlots({
     init: function () {
         this.setListenerClasses([]) // subclasses override this in their
@@ -46,6 +50,53 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         this.setViewListeners([])
         return this
     },
+
+    // -- event helpers --
+
+    clearEvents: function() {
+        this.setDownEvent(null)
+        this.setBeginEvent(null)
+        this.setCurrentEvent(null)
+        return this
+    },
+
+    /*
+    setDownEvent: function(event) {
+        this._downEvent = event
+        //this.setDownPositionInTarget(this.viewTarget().windowPos())
+        return this
+    },
+    */
+
+
+    currentPosition: function() {
+        return this.pointsForEvent(this.currentEvent()).first()
+    },
+
+    downPosition: function() {
+        return this.pointsForEvent(this.downEvent()).first()
+    },
+
+    beginPosition: function() {
+        return this.pointsForEvent(this.beginEvent()).first()
+    },
+
+    upPosition: function() {
+        return this.pointsForEvent(this.upEvent()).first()
+    },
+
+    currentFingersDown: function() {
+        let points = this.pointsForEvent(this.currentEvent())
+        return points.length
+    },
+
+    currentEventIsOnTargetView: function() {
+        let points = this.pointsForEvent(this.currentEvent())
+        let p = points.first()
+        let bounds = this.viewTarget().winBounds()
+        return bounds.containsPoint(p)
+    },
+
 
     // --- listeners ---
 
@@ -176,8 +227,16 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     // so we can share the event handling code for both devices 
 
     pointsForEvent: function(event) {
+        if (event == null) {
+            console.warn(this.type() + ".pointsForEvent() event == null")
+        }
+        if (event._gestureRecognizerPoints) {
+            return event._gestureRecognizerPoints
+        }
+
+        let points = []
+
         if (event.__proto__.constructor === MouseEvent) {
-            let points = []
             let b = event.buttons
             if (b == 0) {
                 points.append(Point.clone().setToMouseEventWinPos(event).setId("mouse"))
@@ -188,15 +247,103 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
             } else if (b & 4) {
                 points.append(Point.clone().setToMouseEventWinPos(event).setId("mouseWithButton3"))
             }
-            return points
         } else if (event.__proto__.constructor === TouchEvent) {  // mouse event
-            let points = []
             event.touches.forEach((touch) => {
                 points.append(Point.clone().set(touch.screenX, touch.screenY).setId(touch.identifier).setTarget(touch.target))
             })
-            return points
+        } else {
+            console.warn(this.type() + " can't handle this event type yet: ", event)
         }
-        new Error("can't handle this event type yet: ", event)
+
+        event._gestureRecognizerPoints = points
+        return points
+    },
+
+
+    // --- events --------------------------------------------------------------------
+
+    onDown: function (event) {
+    },
+
+    onMove: function(event) {
+    },
+
+    onUp: function (event) {
+    },
+
+    // mouse events
+
+    onMouseDown: function (event) {
+        this.onDown(event)
+    },
+
+    onMouseMove: function (event) {
+        this.onMove(event)
+    },
+
+    onMouseUp: function (event) {
+        this.onUp(event)
+    },
+
+    // mouse capture events
+
+    onMouseDownCapture: function (event) {
+        this.onDown(event)
+    },
+
+    onMouseMoveCapture: function (event) {
+        this.onMove(event)
+    },
+
+    onMouseUpCapture: function (event) {
+        this.onUp(event)
+    },
+
+    // touch events
+
+    onTouchStart: function(event) {
+        this.onDown(event)
+    },
+
+    onTouchMove: function (event) {
+        this.onMove(event)
+    },
+
+    onTouchEnd: function(event) {
+        this.onUp(event)
+    },
+    
+    // touch capture events
+
+    onTouchStartCapture: function(event) {
+        this.onDown(event)
+    },
+
+    onTouchMoveCapture: function (event) {
+        this.onMove(event)
+    },
+
+    onTouchEndCapture: function(event) {
+        this.onUp(event)
+    },
+
+    // diff position helper
+
+    diffPos: function() {
+        return this.currentPosition().subtract(this.beginPosition()).floorInPlace() // floor here?
+    },
+
+    distance: function() {
+        let dp = this.diffPos()
+        let dx = Math.abs(dp.x())
+        let dy = Math.abs(dp.y())
+        let funcs = {
+            left:  (dx, dy) => dx,
+            right: (dx, dy) => dx,
+            up:    (dx, dy) => dy,
+            down:  (dx, dy) => dy
+        }
+        return funcs[this.direction()](dx, dy)
     },
 })
 

@@ -79183,6 +79183,9 @@ JSImporter.pushRelativePaths([
 //"use strict"
 
 /*
+
+    Object-ideal
+    
     Object isn't a prototype or class, it's more like a namespace to organize
     some functions that take an object as an argument. JS ugliness.
 */
@@ -79378,6 +79381,15 @@ Function.prototype.forwardErrors = function (fn) {
 }
 
 "use strict"
+
+/*
+
+    Array-ideal
+
+    Some extra methods for the Javascript Array primitive.
+
+*/
+
 
 Object.shallowCopyTo({
 
@@ -80144,6 +80156,14 @@ Object.defineProperty(Array.prototype, "equals", {
 
 "use strict"
 
+/*
+
+    String-ideal
+
+    Some extra methods for the Javascript String primitive.
+
+*/
+
 Object.shallowCopyTo({
     isEmpty: function () {
         return this.length == 0;
@@ -80438,6 +80458,14 @@ Object.shallowCopyTo({
 
 "use strict"
 
+/*
+
+    Number-ideal
+
+    Some extra methods for the Javascript Number primitive.
+
+*/
+
 Object.shallowCopyTo({
 
     repeat: function (callback) {
@@ -80468,6 +80496,13 @@ Object.shallowCopyTo({
 }, Number.prototype);
 
 "use strict"
+
+
+/*
+
+    Proto
+
+*/
 
 window.ideal = {}
 
@@ -80850,6 +80885,9 @@ Proto.newSlot("type", "ideal.Proto");
 "use strict"
 
 /*
+
+    ProtoClass
+    
     working on moving Proto to ES6 classes
 
     problems and potential solutions:
@@ -81263,17 +81301,20 @@ class ProtoClass {
 
 "use strict"
 
-// -----------------------------------------
-
 /*
-function map(obj) {
-    return Map.withJsMap(obj);
-}
 
-Map.__map = map;
+    Map
+
 */
 
-// --- Map ---------------------------
+/*
+    function map(obj) {
+        return Map.withJsMap(obj);
+    }
+
+    Map.__map = map;
+*/
+
 
 window.ideal.Map = class Map extends ProtoClass {
     static withJsMap (jsMap) {
@@ -81441,10 +81482,12 @@ window.ideal.Map.registerThisClass()
 "use strict"
 
 /*
+    
     StackTrace
+    
     A stack printout that understands objects.
 
-    example uses:
+    Example uses:
 
         showing a caught error:
 
@@ -81571,6 +81614,8 @@ Error.prototype.assertDefined = function(v) {
 
 /*
 
+    ByteFormatter
+    
 	ByteFormatter takes a number of bytes and returns a string with the order of magnitude in 
 	standard SI decimal ditial information format.
 
@@ -81665,14 +81710,16 @@ ByteFormatter.registerThisClass()
 "use strict"
 
 /*
-    PeriodFormatter 
-    takes a number of seconds and formats in a compact format
+    
+PeriodFormatter 
 
-	example use:
+    Takes a number of seconds and formats in a compact format.
+
+	Example use:
 
 	let stringVersion = PeriodFormatter.clone().setValueInSeconds(seconds).formattedValue()
 
-	example output:
+	Example output:
 
 	if seconds was 10, stringVersion would be 10s.
 	if seconds was 60, stringVersion would be 1m.
@@ -81742,6 +81789,13 @@ JSImporter.pushRelativePaths([
 
 "use strict"
 
+
+/*
+
+    SyncAction
+
+*/
+
 window.SyncAction = class SyncAction extends ProtoClass {
     init() {
         super.init()
@@ -81798,7 +81852,7 @@ window.SyncAction.registerThisClass()
 
     SyncScheduler
 
-    Many state changes can trigger the need to synchronize a given object 
+    Many state changes can cause the need to synchronize a given object 
     with others within a given event loop, but we only want synchronization to 
     happen at the end of an event loop, so a shared SyncScheduler instance is used to
     track which sync actions should be sent at the end of the event loop and only sends each one once. 
@@ -81978,6 +82032,12 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
 window.SyncScheduler.registerThisClass()
 
 "use strict"
+
+/*
+
+    Notification
+
+*/
 
 window.Notification = class Notification extends ProtoClass {
     init() {
@@ -82234,6 +82294,12 @@ window.NotificationCenter.registerThisClass()
 
 "use strict"
 
+/*
+
+    Observation
+
+*/
+
 window.Observation = class Observation extends ProtoClass {
     init() {
         super.init()
@@ -82295,6 +82361,12 @@ JSImporter.pushRelativePaths([
 ])
 
 "use strict"
+
+/* 
+
+    IndexedDBFolder
+
+*/
 
 window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
     init() {
@@ -82538,6 +82610,12 @@ window.IndexedDBFolder.registerThisClass()
 
 
 "use strict"
+
+/* 
+
+    IndexedDBTx
+
+*/
 
 window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
     init() {
@@ -83027,6 +83105,7 @@ JSImporter.pushRelativePaths([
 "use strict"
 
 /*
+
     BMViewStyles
 
     Represents the set of styles for a NodeView, e.g. selected, unselected.
@@ -83106,6 +83185,12 @@ window.BMViewStyles = ideal.Proto.extend().newSlots({
 })
 
 "use strict"
+
+/*
+
+    BMViewStyle
+
+*/
 
 window.BMViewStyle = ideal.Proto.extend().newSlots({
     type: "BMViewStyle",
@@ -83192,6 +83277,12 @@ window.BMViewStyle = ideal.Proto.extend().newSlots({
 })
 
 "use strict"
+
+/*
+
+    BMNode
+
+*/
 
 window.BMNode = ideal.Proto.extend().newSlots({
     type: "BMNode",
@@ -83555,6 +83646,12 @@ window.BMNode = ideal.Proto.extend().newSlots({
     didChangeSubnodeList: function() {
         this.sortIfNeeded() // TODO: move to a scheduleSort system - triggered before syncToStore and didUpdateNode?
         this.didUpdateNode()
+        return this
+    },
+
+    nodeReorderSudnodesTo: function(newSubnodes) {
+        this.setSubnodes(newSubnodes)
+        this.didChangeSubnodeList()
         return this
     },
     
@@ -84016,7 +84113,8 @@ JSImporter.pushRelativePaths([
 "use strict"
 
 /*
-    NodeStore: 
+
+    NodeStore
 
 		An object store for BMStorableNode objects, that supports 
 		- read reference cache of "activeObjects" so re-loading an object will reference the same instance
@@ -84812,8 +84910,13 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 
 "use strict"
 
-//	BMDataStore
-//	A visible representation of the NodeStore
+/*
+
+    BMDataStore
+
+    A visible representation of the NodeStore
+    
+*/
 
 
 window.BMDataStore = BMNode.extend().newSlots({
@@ -84883,6 +84986,12 @@ JSImporter.pushRelativePaths([
 ])
 
 "use strict"
+
+/*
+
+    BMStorableNode
+    
+*/
 
 window.BMStorableNode = BMNode.extend().newSlots({
     type: "BMStorableNode",
@@ -85336,6 +85445,12 @@ window.BMInfoNode = BMStorableNode.extend().newSlots({
 
 "use strict"
 
+/*
+
+    BMImageNode
+    
+*/
+
 window.BMImageNode = BMStorableNode.extend().newSlots({
     type: "BMImageNode",
     dataURL: null,
@@ -85379,27 +85494,30 @@ JSImporter.pushRelativePaths([
 "use strict"
 
 /*
-        FormNode is useful for node's which are to be viewed and interacted with as forms
-        
-        child nodes are of type BMField and should only be added via addFieldNamed()
-                        
-        example use in subclass 
-    
-        BMCustomFormNode = BMFieldSetNode.extend().newSlots({
-            type: "BMCustomFormNode",
-        }).setSlots({
-        
-        init: function () {
-            BMFieldSetNode.init.apply(this)
 
-            this.addFieldNamed("from")
-            this.addFieldNamed("to")
-            this.addFieldNamed("subject")
-            this.addFieldNamed("body").setNodeMinHeight(-1)
+    BMFieldSetNode
 
-            this.setActions(["send", "delete"])
-        },
+    Useful for node's which are to be viewed and interacted with as forms
     
+    child nodes are of type BMField and should only be added via addFieldNamed()
+                    
+    example use in subclass 
+
+    BMCustomFormNode = BMFieldSetNode.extend().newSlots({
+        type: "BMCustomFormNode",
+    }).setSlots({
+    
+    init: function () {
+        BMFieldSetNode.init.apply(this)
+
+        this.addFieldNamed("from")
+        this.addFieldNamed("to")
+        this.addFieldNamed("subject")
+        this.addFieldNamed("body").setNodeMinHeight(-1)
+
+        this.setActions(["send", "delete"])
+    },
+
 */  
         
 
@@ -85521,6 +85639,7 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
 
 /*
 
+    BMField
 
 */
         
@@ -85669,6 +85788,9 @@ window.BMField = BMNode.extend().newSlots({
 "use strict"
 
 /*
+
+    BMActionField
+    
     An abstraction of a UI visibleaction that can be performed on an object.
     the value is the action method name, the target is the field owner
 */
@@ -85720,6 +85842,7 @@ window.BMActionField = BMField.extend().newSlots({
 
 /*
 
+    BMImageWellField
 
 */
         
@@ -85761,7 +85884,8 @@ window.BMImageWellField = BMField.extend().newSlots({
 
 /*
 
-
+    BMTextAreaField
+    
 */
 
         
@@ -85779,6 +85903,7 @@ window.BMTextAreaField = BMField.extend().newSlots({
 
 /*
 
+    BMStampField
 
 */
         
@@ -85797,6 +85922,12 @@ window.BMStampField = BMField.extend().newSlots({
 })
 
 "use strict"
+
+/*
+
+    BMIdentityField
+
+*/
 
 window.BMIdentityField = BMField.extend().newSlots({
     type: "BMIdentityField",
@@ -85844,6 +85975,7 @@ window.BMIdentityField = BMField.extend().newSlots({
 
 /*
 
+    BMDateField
 
 */
         
@@ -85871,6 +86003,7 @@ window.BMDateField = BMField.extend().newSlots({
 
 /*
 
+    BMNumberField
 
 */
         
@@ -85909,7 +86042,14 @@ window.BMNumberField = BMField.extend().newSlots({
 })
 
 "use strict"
-        
+      
+/*
+
+    BMBoolField
+
+    
+*/
+
 window.BMBoolField = BMField.extend().newSlots({
     type: "BMBoolField",
     unsetVisibleValue: "unset",
@@ -85954,7 +86094,8 @@ window.BMBoolField = BMField.extend().newSlots({
 
 /*
 
-
+    BMOptionsField
+    
 */
 
 window.BMOptionsField = BMField.extend().newSlots({
@@ -86003,7 +86144,10 @@ window.BMOptionsField = BMField.extend().newSlots({
 "use strict"
 
 /*
-    A field that's a pointer to another node 
+
+    BMPointerField
+
+    A field that's a pointer to another node.
     (sometimes the other node is used as a list of items, but not always)
 
 */
@@ -86047,8 +86191,11 @@ window.BMPointerField = BMField.extend().newSlots({
 "use strict"
 
 /*
-	BMDataStoreRecord
-	A visible representation of the NodeStore object record
+    
+    BMDataStoreRecord
+    
+    A visible representation of the NodeStore object record.
+    
 */
 
 window.BMDataStoreRecord = BMFieldSetNode.extend().newSlots({
@@ -86101,8 +86248,9 @@ JSImporter.pushRelativePaths([
 "use strict"
 
 /*
-	BMArchiveNode
-	Way to compose 
+
+    BMProtoNode
+    
 */
 
 window.BMProtoNode = BMNode.extend().newSlots({
@@ -86154,6 +86302,13 @@ window.BMProtoNode = BMNode.extend().newSlots({
 })
 
 
+"use strict"
+
+/*
+
+    BMSlotsNode
+    
+*/
 
 window.BMSlotsNode = BMFieldSetNode.extend().newSlots({
     type: "BMSlotsNode",
@@ -86224,8 +86379,9 @@ window.BMSlotsNode = BMFieldSetNode.extend().newSlots({
 "use strict"
 
 /*
-	BMArchiveNode
-	Way to compose 
+
+    BMSubclassesNode
+
 */
 
 window.BMSubclassesNode = BMNode.extend().newSlots({
@@ -86276,7 +86432,9 @@ JSImporter.pushRelativePaths([
 "use strict"
 
 /*
-	AtomNode
+    
+    AtomNode
+    
 */
 
 window.AtomNode = BMStorableNode.extend().newSlots({
@@ -86316,7 +86474,7 @@ JSImporter.pushRelativePaths([
     "css_rules/_imports.js",
     "div_attributes/_imports.js",
 
-    "Point.js",
+    "geometry/_imports.js",
     "events/_imports.js",
     
     "DomElementHelpers.js",
@@ -86360,6 +86518,9 @@ JSImporter.pushRelativePaths([
 "use strict"
 
 /*
+
+    CSSDeclaration
+    
     move to styleSheets implementation, e.g.:
          
          document.styleSheets[0].addRule(newRuleKey, newRuleValue);
@@ -86409,6 +86570,12 @@ window.CSSDeclaration = class CSSDeclaration extends ProtoClass {
 CSSDeclaration.registerThisClass()
 
 "use strict"
+
+/*
+
+    CSSRuleSet
+         
+*/
 
 window.CSSRuleSet = class CSSRuleSet extends ProtoClass {
     init() {
@@ -86626,12 +86793,15 @@ window.CSS = class CSS extends ProtoClass {
 window.CSS.registerThisClass()
 
 
-
-/*
-
-
 "use strict"
 
+/*
+    
+    
+    
+*/
+
+/*
 CSS.shared().ruleAt("Browser").setDict({
     overflow: "hidden",
     position: "absolute",
@@ -86655,6 +86825,13 @@ JSImporter.pushRelativePaths([
 ])
 
 "use strict"
+
+/*
+
+    DivTransition
+         
+
+*/
 
 window.DivTransition = class DivTransition extends ProtoClass {
     init() {
@@ -86730,11 +86907,16 @@ window.DivTransition = class DivTransition extends ProtoClass {
 DivTransition.registerThisClass()
 
 
+"use strict"
+
 /*
--     transition: width 2s linear 1s, height 2s ease 1s; 1st time is duration, 2nd time is delay
+
+    DivTransition
+         
+    transition: width 2s linear 1s, height 2s ease 1s; 1st time is duration, 2nd time is delay
+
 */
 
-"use strict"
 
 window.DivTransitions = class DivTransitions extends ProtoClass {
     init() {
@@ -86786,10 +86968,18 @@ DivTransitions.registerThisClass()
 
 
 
-// this.titleView().setBorderRadius("8px 8px 0px 8px") // top-left, top-right,  bottom-right, bottom-left
-// TODO: em vs px support?
-
 "use strict"
+
+/*
+
+    CSSRuleSet
+         
+
+    // this.titleView().setBorderRadius("8px 8px 0px 8px") // top-left, top-right,  bottom-right, bottom-left
+    // TODO: em vs px support?
+
+*/
+
 
 window.DivBorderRadius = class DivBorderRadius extends ProtoClass {
     init() {
@@ -86888,9 +87078,14 @@ window.DivBorderRadius = class DivBorderRadius extends ProtoClass {
 DivBorderRadius.registerThisClass()
 
 
-
 "use strict"
 
+/*
+
+    ViewAnimator
+         
+
+*/
 
 window.ViewAnimator = class ViewAnimator extends ProtoClass {
     init() {
@@ -87003,6 +87198,14 @@ ViewAnimator.registerThisClass()
 
 "use strict"
 
+JSImporter.pushRelativePaths([
+    "Point.js",
+    "Rectangle.js",
+])
+
+
+"use strict"
+
 /*
     Point
 
@@ -87089,22 +87292,22 @@ window.Point = ideal.Proto.extend().newSlots({
     },
 
     asString: function() {
-        return "" + this._x + "x, " + this._y + "y, " + this._z + "z, " + this._t + "t"
+        let s = "Point(" + this._x + ", " + this._y 
+
+        if (this._z) { 
+            s += ", " + this._z
+        }
+
+        if (this._t) { 
+            s += ", " + this._t + "t" 
+        }
+
+        return s + ")"
     },
 
     distanceFromOrigin: function() {
         let ds = Math.pow(this.x(), 2) + Math.pow(this.y(), 2) + Math.pow(this.z(), 2)
         return Math.sqrt(ds)
-    },
-
-    // eqaulity
-
-    isEqual: function(p) {
-        return (this.x() == p.x()) && (this.y() == p.y()) && (this.z() == p.z()) // && (this.t() == p.t())
-    },
-
-    isEqualWithTime: function(p) { // not ideal
-        return (this.x() == p.x()) && (this.y() == p.y()) && (this.z() == p.z()) && (this.t() == p.t())
     },
 
     // difference with another point
@@ -87132,6 +87335,74 @@ window.Point = ideal.Proto.extend().newSlots({
         return Math.sqrt(dx*dx + dy*dy + dz*dz)
     },
 
+    // eqaulity
+
+    isEqual: function(p) {
+        return (this.x() == p.x()) && (this.y() == p.y()) && (this.z() == p.z()) // && (this.t() == p.t())
+    },
+
+    isEqualWithTime: function(p) { // not ideal
+        return (this.x() == p.x()) && (this.y() == p.y()) && (this.z() == p.z()) && (this.t() == p.t())
+    },
+
+    // comparison 
+
+    isGreaterThan: function(p) {
+        return this.x() > p.x() && this.y() > p.y()
+    },
+
+    isLessThan: function(p) {
+        return this.x() < p.x() && this.y() < p.y()
+    },
+
+    isGreaterThanOrEqualTo: function(p) {
+        return this.x() >= p.x() && this.y() >= p.y()
+    },
+
+    isLessThanOrEqualTo: function(p) {
+        return this.x() <= p.x() && this.y() <= p.y()
+    },
+
+})
+
+"use strict"
+
+/*
+    Rectangle
+
+    Class to represent a 2d rectangle.
+
+*/
+
+window.Rectangle = ideal.Proto.extend().newSlots({
+    type: "Rectangle",
+    origin: null,
+    size: null,
+}).setSlots({
+
+    init: function () {
+        this.setOrigin(Point.clone())
+        this.setSize(Point.clone())
+        return this
+    },
+    
+    containsPoint: function(p) {
+        let a = p.isGreaterThanOrEqualTo(this.origin()) 
+        let b = p.isLessThanOrEqualTo(this.maxPoint())
+        return a && b
+    },
+
+    containsRectangle: function(r) {
+        return r.origin().isGreaterThanOrEqualTo(this.origin()) && r.maxPoint().isLessThanOrEqualTo(this.maxPoint())
+    },
+
+    maxPoint: function() {
+        return this.origin().add(this.size())
+    },
+
+    asString: function() {
+        return "Rectangle(" + this.origin().asString() + ", " + this.size().asString() + ")"
+    },
 })
 
 "use strict"
@@ -87155,7 +87426,7 @@ JSImporter.pushRelativePaths([
 "use strict"
 
 /*
-    Keyboard
+    KeyboardKey
 
 
 */
@@ -87476,6 +87747,7 @@ window.Keyboard = ideal.Proto.extend().newSlots({
 
     Global shared instance that tracks current mouse state in window coordinates.
     Registers for capture mouse events on document.body.
+
 */
 
 
@@ -87656,7 +87928,6 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
         } else {
             this.stop()
         }
-
         return this
     },
 
@@ -87795,7 +88066,6 @@ window.ClipboardListener = EventSetListener.extend().newSlots({
         this.addEventNameAndMethodName("copy", "onCopy");
         this.addEventNameAndMethodName("cut", "onCut");
         this.addEventNameAndMethodName("paste", "onPaste");
-        
         return this
     },
 
@@ -87815,7 +88085,6 @@ window.DocumentListener = EventSetListener.extend().newSlots({
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)
-
         return this
     },
 
@@ -87843,7 +88112,6 @@ window.DocumentListener = EventSetListener.extend().newSlots({
     element: function() {
         return window // is this the best way to handle this?
     },
-
 })
 
 "use strict"
@@ -87860,22 +88128,20 @@ window.DragListener = EventSetListener.extend().newSlots({
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)
-
         return this
     },
 
     setupEventsDict: function() {
         // fired on draggable element
         this.addEventNameAndMethodName("dragstart", "onDragStart");
-        this.addEventNameAndMethodName("drag",    "onDrag");
+        this.addEventNameAndMethodName("drag",      "onDrag");
         this.addEventNameAndMethodName("dragend",   "onDragEnd");
-
         return this
     },
 
     start: function() {
         EventSetListener.start.apply(this)
-        this.element().ondragstart = (e) => { console.log("--------- ondragstart -------------"); }
+        this.element().ondragstart = (e) => { console.log("--- ondragstart ---"); }
         return this
     },
 })
@@ -87893,7 +88159,6 @@ window.DropListener = EventSetListener.extend().newSlots({
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)
-
         return this
     },
 
@@ -87902,8 +88167,7 @@ window.DropListener = EventSetListener.extend().newSlots({
         this.addEventNameAndMethodName("dragover",  "onDragOver"); // must prevent default
         this.addEventNameAndMethodName("dragenter", "onDragEnter"); // must prevent default
         this.addEventNameAndMethodName("drop",       "onDrop");
-        this.addEventNameAndMethodName("dragleave", "onDragLeave"); 
-
+        this.addEventNameAndMethodName("dragleave", "onDragLeave");
         return this
     },
 
@@ -87934,7 +88198,6 @@ window.FocusListener = EventSetListener.extend().newSlots({
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)
-
         return this
     },
 
@@ -87942,8 +88205,7 @@ window.FocusListener = EventSetListener.extend().newSlots({
         this.addEventNameAndMethodName("blur", "onBlur");
         this.addEventNameAndMethodName("focus", "onFocus");
         this.addEventNameAndMethodName("focusin", "onFocusIn");
-        this.addEventNameAndMethodName("focusout", "onFocusOut");
-        
+        this.addEventNameAndMethodName("focusout", "onFocusOut"); 
         return this
     },
 
@@ -87991,7 +88253,6 @@ window.MouseListener = EventSetListener.extend().newSlots({
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)
-
         return this
     },
 
@@ -88029,7 +88290,6 @@ window.TouchListener = EventSetListener.extend().newSlots({
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)
-
         return this
     },
 
@@ -88038,7 +88298,6 @@ window.TouchListener = EventSetListener.extend().newSlots({
         this.addEventNameAndMethodName("touchmove",   "onTouchMove");
         this.addEventNameAndMethodName("touchcancel", "onTouchCancel");
         this.addEventNameAndMethodName("touchend",    "onTouchEnd");
-    
         return this
     },
 
@@ -88097,7 +88356,11 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     isDebugging: false,
 
     shouldRemoveOnComplete: false,
-    //isCancelled: false,
+
+    downEvent: null,
+    beginEvent: null,
+    currentEvent: null,
+    upEvent: null,
 }).setSlots({
     init: function () {
         this.setListenerClasses([]) // subclasses override this in their
@@ -88105,6 +88368,53 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         this.setViewListeners([])
         return this
     },
+
+    // -- event helpers --
+
+    clearEvents: function() {
+        this.setDownEvent(null)
+        this.setBeginEvent(null)
+        this.setCurrentEvent(null)
+        return this
+    },
+
+    /*
+    setDownEvent: function(event) {
+        this._downEvent = event
+        //this.setDownPositionInTarget(this.viewTarget().windowPos())
+        return this
+    },
+    */
+
+
+    currentPosition: function() {
+        return this.pointsForEvent(this.currentEvent()).first()
+    },
+
+    downPosition: function() {
+        return this.pointsForEvent(this.downEvent()).first()
+    },
+
+    beginPosition: function() {
+        return this.pointsForEvent(this.beginEvent()).first()
+    },
+
+    upPosition: function() {
+        return this.pointsForEvent(this.upEvent()).first()
+    },
+
+    currentFingersDown: function() {
+        let points = this.pointsForEvent(this.currentEvent())
+        return points.length
+    },
+
+    currentEventIsOnTargetView: function() {
+        let points = this.pointsForEvent(this.currentEvent())
+        let p = points.first()
+        let bounds = this.viewTarget().winBounds()
+        return bounds.containsPoint(p)
+    },
+
 
     // --- listeners ---
 
@@ -88235,8 +88545,16 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     // so we can share the event handling code for both devices 
 
     pointsForEvent: function(event) {
+        if (event == null) {
+            console.warn(this.type() + ".pointsForEvent() event == null")
+        }
+        if (event._gestureRecognizerPoints) {
+            return event._gestureRecognizerPoints
+        }
+
+        let points = []
+
         if (event.__proto__.constructor === MouseEvent) {
-            let points = []
             let b = event.buttons
             if (b == 0) {
                 points.append(Point.clone().setToMouseEventWinPos(event).setId("mouse"))
@@ -88247,15 +88565,103 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
             } else if (b & 4) {
                 points.append(Point.clone().setToMouseEventWinPos(event).setId("mouseWithButton3"))
             }
-            return points
         } else if (event.__proto__.constructor === TouchEvent) {  // mouse event
-            let points = []
             event.touches.forEach((touch) => {
                 points.append(Point.clone().set(touch.screenX, touch.screenY).setId(touch.identifier).setTarget(touch.target))
             })
-            return points
+        } else {
+            console.warn(this.type() + " can't handle this event type yet: ", event)
         }
-        new Error("can't handle this event type yet: ", event)
+
+        event._gestureRecognizerPoints = points
+        return points
+    },
+
+
+    // --- events --------------------------------------------------------------------
+
+    onDown: function (event) {
+    },
+
+    onMove: function(event) {
+    },
+
+    onUp: function (event) {
+    },
+
+    // mouse events
+
+    onMouseDown: function (event) {
+        this.onDown(event)
+    },
+
+    onMouseMove: function (event) {
+        this.onMove(event)
+    },
+
+    onMouseUp: function (event) {
+        this.onUp(event)
+    },
+
+    // mouse capture events
+
+    onMouseDownCapture: function (event) {
+        this.onDown(event)
+    },
+
+    onMouseMoveCapture: function (event) {
+        this.onMove(event)
+    },
+
+    onMouseUpCapture: function (event) {
+        this.onUp(event)
+    },
+
+    // touch events
+
+    onTouchStart: function(event) {
+        this.onDown(event)
+    },
+
+    onTouchMove: function (event) {
+        this.onMove(event)
+    },
+
+    onTouchEnd: function(event) {
+        this.onUp(event)
+    },
+    
+    // touch capture events
+
+    onTouchStartCapture: function(event) {
+        this.onDown(event)
+    },
+
+    onTouchMoveCapture: function (event) {
+        this.onMove(event)
+    },
+
+    onTouchEndCapture: function(event) {
+        this.onUp(event)
+    },
+
+    // diff position helper
+
+    diffPos: function() {
+        return this.currentPosition().subtract(this.beginPosition()).floorInPlace() // floor here?
+    },
+
+    distance: function() {
+        let dp = this.diffPos()
+        let dx = Math.abs(dp.x())
+        let dy = Math.abs(dp.y())
+        let funcs = {
+            left:  (dx, dy) => dx,
+            right: (dx, dy) => dx,
+            up:    (dx, dy) => dy,
+            down:  (dx, dy) => dy
+        }
+        return funcs[this.direction()](dx, dy)
     },
 })
 
@@ -88264,6 +88670,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
 "use strict"
 
 /*
+
     LongPressGestureRecognizer
 
     Recognize a long press and hold in (roughly) one location.
@@ -88288,8 +88695,6 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
     type: "LongPressGestureRecognizer",
     timePeriod: 500, // miliseconds
     timeoutId: null, // private
-    downEvent: null,
-    upEvent: null,
 }).setSlots({
     
     init: function () {
@@ -88307,7 +88712,7 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
         }
         let tid = setTimeout(() => { this.onLongPress() }, this.timePeriod());
         this.setTimeoutId(tid)
-        //console.log("startTimer id",   this.timeoutId())
+        this.startDocListeners() // didFinish will stop listing
         return this
     },
 
@@ -88325,31 +88730,47 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     // -- the completed gesture ---
 
+    /*
+    currentViewTarget: function() {
+        return this.currentEvent().target._divView
+    },
+    */
+    
     onLongPress: function() {
         this.setTimeoutId(null)
-        let r = this.viewTarget().requestActiveGesture(this)
-        if (r) {
-            this.sendDelegateMessage("onLongPressComplete")
-            this.didFinish()
+
+        if(this.currentEventIsOnTargetView()) {
+            //this.currentEventIsOnTargetView()
+            if (this.viewTarget().requestActiveGesture(this)) {
+                this.sendDelegateMessage("onLongPressComplete")
+                this.didFinish()
+            }
         }
     },
 
     // -- single action for mouse and touch up/down ---
 
     onDown: function (event) {
-        let points = this.pointsForEvent(event)
         this.setCurrentEvent(event)
         this.setDownEvent(event)
+        
         this.startTimer()
+        this.setBeginEvent(event)
         this.sendDelegateMessage("onLongPressBegin")
-        return true
+    },
+
+    onMove: function (event) {
+        if (this.hasTimer()) {
+            this.setCurrentEvent(event)
+        }
     },
 
     onUp: function (event) {
-        this.setCurrentEvent(event)
-        this.setUpEvent(event)
-        this.cancel()
-        return true
+        if (this.hasTimer()) {
+            this.setCurrentEvent(event)
+            this.setUpEvent(event)
+            this.cancel()
+        }
     },
 
     cancel: function() {
@@ -88360,40 +88781,12 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
         }
         return this
     },
-
-    // --- events --------------------------------------------------------------------
-
-    // mouse events
-
-    onMouseDown: function (event) {
-        return this.onDown(event)
-    },
-
-    onMouseUp: function (event) {
-        return this.onUp(event)
-    },
-
-
-    // touch events
-
-    onTouchStart: function(event) {
-        return this.onDown(event)
-    },
-
-    onTouchEnd: function(event) {
-        return this.onUp(event)
-    },	
-
-    // helpers
-
-    position: function() {
-        return this.pointsForEvent(this.downEvent()).first()
-    },
 })
 
 "use strict"
 
 /*
+
     SlideGestureRecognizer
 
     This gets tricky as we need to follow movement outside the view.
@@ -88429,18 +88822,13 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     type: "SlideGestureRecognizer",
     isPressing: false,
 
-    // new stuff
     direction: "left", 
     validDirectionsDict: { left: 1, right: 2, up: 3, down: 4 },
     numberOfFingerRequired: 1,
     minDistToBegin: 10,
-
-    downPositionInTarget: null,
-    downPosition: null,
-    currentPosition: null,
-    upPosition: null,
+    maxPerpendicularDistToBegin: 10, // will not begin if this is exceeded
+    //downPositionInTarget: null,
 }).setSlots({
-    
     init: function () {
         GestureRecognizer.init.apply(this)
         this.setListenerClasses(["MouseListener", "TouchListener"]) 
@@ -88462,33 +88850,42 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     // --- events --------------------------------------------------------------------
 
-    onPressDownPos: function (pos) {
+    onDown: function (event) {
+        console.log(this.type() + ".onDown()")
+
+        if (this.isPressing()) {
+            console.warn(this.type() + ".onDown() isPressing")
+        }
+
+        if (this.isActive()) {
+            console.warn(this.type() + ".onDown() isActive")
+        }
+
         if (!this.isPressing()) {
-            let points = this.pointsForEvent(event)
-
-            if (points.length < this.numberOfFingerRequired()) {
-                return this
+            this.setCurrentEvent(event)
+            if (this.currentFingersDown() >= this.numberOfFingerRequired()) {
+                this.setIsPressing(true)
+                this.setBeginEvent(event)
+                this.startDocListeners()
             }
-
-            //console.log(this.type() + ".onPressDownPos(" + pos.asString() + ")")
-            this.setIsPressing(true)
-            this.setDownPosition(pos)
-            this.setCurrentPosition(pos)
-            this.setDownPositionInTarget(this.viewTarget().windowPos())
-
-            this.startDocListeners()
         }
     },
 
-    onPressMovePos: function(pos) {
+    onMove: function(event) {
         if (this.isPressing()) {
-            this.setCurrentPosition(pos)
+            this.setCurrentEvent(event)
+
+            if (this.hasMovedTooMuchPerpendicular()) {
+                this.cancel()
+                return this
+            }
 
             if (!this.isActive() && this.hasMovedEnough()) {
                 let vt = this.viewTarget()
                 let r = vt.requestActiveGesture(this)
                 if(r) {
                     this.setIsActive(true)
+                    this.setBeginEvent(event)
                     this.sendDelegateMessage("onSlideBegin")
                 }
             }
@@ -88501,10 +88898,10 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     // -----------
 
-    onPressUpPos: function (pos) {
+    onUp: function (event) {
         if (this.isPressing()) {
             this.setIsPressing(false)
-            this.setCurrentPosition(pos)
+            this.setCurrentEvent(event)
             if (this.isActive()) {
                 this.sendDelegateMessage("onSlideComplete")
             }
@@ -88524,6 +88921,7 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     finish: function() {
         //console.log(this.type() + ".finish()")
+        this.setIsPressing(false)
         this.setIsActive(false)
         this.stopDocListeners()
         this.didFinish()
@@ -88532,85 +88930,72 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     // ----------------------------------
 
-    hasMovedEnough: function() {
+    hasMovedTooMuchPerpendicular: function() {
+        let m = this.maxPerpendicularDistToBegin()
         let dp = this.diffPos()
-        let m = this.minDistToBegin()
 
         let funcs = {
-            left:  (dx, dy, m) => -dx > m,
-            right: (dx, dy, m) =>  dx > m,
-            up:    (dx, dy, m) =>  dy > m,
-            down:  (dx, dy, m) => -dy > m
+            left:  (dx, dy) => dy,
+            right: (dx, dy) => dy,
+            up:    (dx, dy) => dx,
+            down:  (dx, dy) => dx
         }
 
-        let r =  funcs[this.direction()](dp.x(), dp.y(), m)
+        let r = Math.abs(funcs[this.direction()](dp.x(), dp.y())) > m
         return r
     },
 
-    // ------------------------------
+    hasMovedEnough: function() {
+        let m = this.minDistToBegin()
+        let dp = this.diffPos()
 
-    diffPos: function() {
-        return this.currentPosition().subtract(this.downPosition()).floorInPlace() // floor here?
+        let funcs = {
+            left:  (dx, dy) => -dx,
+            right: (dx, dy) =>  dx,
+            up:    (dx, dy) =>  dy,
+            down:  (dx, dy) => -dy
+        }
+
+        let r = funcs[this.direction()](dp.x(), dp.y()) > m
+        return r
     },
-
-    // --- mouse events ---
-
-    onMouseDown: function (event) {
-        let p = this.pointsForEvent(event).first()
-        return this.onPressDownPos(p)
-    },
-
-    onMouseMoveCapture: function(event) {
-        let p = this.pointsForEvent(event).first()
-        this.onPressMovePos(p)
-    },
-
-    onMouseUpCapture: function (event) {
-        let p = this.pointsForEvent(event).first()
-        return this.onPressUpPos(p)
-    },
-
-    // --- touch events ---
-
-    onTouchStart: function(event) {
-        let p = this.pointsForEvent(event).first()
-        return this.onPressDownPos(p)
-    },
-
-    onTouchMoveCapture: function(event) {
-        let p = this.pointsForEvent(event).first()
-        return this.onPressMovePos(p)
-    },
-
-    onTouchCancelCapture: function(event) {
-        let p = this.pointsForEvent(event).first()
-        return this.onPressUpPos(p)
-    },
-	
-    onTouchEndCapture: function(event) {
-        let p = this.pointsForEvent(event).first()
-        return this.onPressUpPos(p)
-    },	
 
     // --- helpers ----
 
+    diffPos: function() {
+        let p = this.currentPosition().subtract(this.beginPosition()).floorInPlace() // floor here?
+        let dx = p.x()
+        let dy = p.y()
+        let funcs = {
+            left:  (p) => p.setX(Math.min(dx, 0)),
+            right: (p) => p.setX(Math.max(dx, 0)),
+            up:    (p) => p.setY(Math.max(dy, 0)),
+            down:  (p) => p.setY(Math.min(dy, 0))
+        }
+
+        funcs[this.direction()](p)
+        return p
+    },
+
     distance: function() {
-        let dp = this.diffPos()
-        let dx = Math.abs(dp.x())
-        let dy = Math.abs(dp.y())
+        let p = this.diffPos()
+        let dx = p.x()
+        let dy = p.y()
         let funcs = {
             left:  (dx, dy) => dx,
             right: (dx, dy) => dx,
             up:    (dx, dy) => dy,
             down:  (dx, dy) => dy
         }
-        return funcs[this.direction()](dx, dy)
+        return Math.abs(funcs[this.direction()](dx, dy))
     },
+
 })
 
 "use strict"
 
 /*
+
     TapGestureRecognizer
 
     Recognize a number of taps inside a viewTarget and within a timePeriod.
@@ -88808,38 +89193,34 @@ window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
 "use strict"
 
 /*
+
     PanGestureRecognizer
 
     Gesture begins when the minimal number of fingers have moved the minimal distance.
+    Will requestActiveGesture before beginning.
 
     Delegate messages:
 
-    onPanBegin
-    onPanMove
-    onPanComplete
-    onPanCancelled
+        onPanBegin
+        onPanMove
+        onPanComplete
+        onPanCancelled
 
 */
 
 window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
     type: "PanGestureRecognizer",
     isPressing: false,
-
     minNumberOfFingersRequired: 1,
     maxNumberOfFingersAllowed: 1,
     minDistToBegin: 10,
-
     //downPositionInTarget: null,
-    downPosition: null, // where to start measuring if we've moved enough to begin
-    beginPosition: null, // where pan began
-    currentPosition: null,
-    upPosition: null,
 }).setSlots({
     
     init: function () {
         GestureRecognizer.init.apply(this)
         this.setListenerClasses(["MouseListener", "TouchListener"]) 
-        1//this.setIsDebugging(true)
+        //this.setIsDebugging(true)
         return this
     },
 
@@ -88848,15 +89229,23 @@ window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
     // tap events
 
     onDown: function (event) {
+        console.log(this.type() + ".onDown()")
+
+        if (this.isPressing()) {
+            console.warn(this.type() + ".onDown() isPressing")
+        }
+
+        if (this.isActive()) {
+            console.warn(this.type() + ".onDown() isActive")
+        }
+
         if (!this.isPressing()) {
             this.setCurrentEvent(event)
-            let points = this.pointsForEvent(event)
-            if (points.length >= this.minNumberOfFingersRequired() &&
-                points.length <= this.maxNumberOfFingersAllowed()) {
+            let fingers = this.currentFingersDown()
+            if (fingers >= this.minNumberOfFingersRequired() &&
+                fingers <= this.maxNumberOfFingersAllowed()) {
                 this.setIsPressing(true)
-                let pos = points.first()
-                this.setCurrentPosition(pos)
-                this.setDownPosition(pos)
+                this.setDownEvent(event)
                 //this.setDownPositionInTarget(this.viewTarget().windowPos())
                 this.startDocListeners()
             }
@@ -88864,19 +89253,16 @@ window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
         return this
     },
 
- 
-
     onMove: function(event) {
         if (this.isPressing()) {
-            let pos = this.pointsForEvent(event).first()
-            this.setCurrentPosition(pos)
+            this.setCurrentEvent(event)
 
             if (!this.isActive() && this.hasMovedEnough()) {
-                this.setBeginPosition(pos)
                 let vt = this.viewTarget()
                 let r = vt.requestActiveGesture(this)
                 if(r) {
                     this.setIsActive(true)
+                    this.setBeginEvent(event)
                     this.sendDelegateMessage("onPanBegin")
                 }
             }
@@ -88891,11 +89277,7 @@ window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
     onUp: function (event) {
         //let points = this.pointsForEvent(event)
         if (this.isPressing()) {
-            this.setIsPressing(false)
-
-            let pos = this.pointsForEvent(event).first()
-            this.setUpPosition(pos)
-            this.setCurrentPosition(pos)
+            this.setCurrentEvent(event)
 
             if (this.isActive()) {
                 this.sendDelegateMessage("onPanComplete")
@@ -88917,6 +89299,7 @@ window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     finish: function() {
         //console.log(this.type() + ".finish()")
+        this.setIsPressing(false)
         this.setIsActive(false)
         this.stopDocListeners()
         this.didFinish()
@@ -88931,58 +89314,10 @@ window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
         return d >= m
     },
 
-    // ------------------------------
-
-    diffPos: function() {
-        return this.currentPosition().subtract(this.beginPosition()).floorInPlace() // floor here?
-    },
-
-    // --- mouse events ---
-
-    onMouseDown: function (event) {
-        return this.onDown(event)
-    },
-
-    onMouseMoveCapture: function(event) {
-        this.onMove(event)
-    },
-
-    onMouseUpCapture: function (event) {
-        return this.onUp(event)
-    },
-
-    // --- touch events ---
-
-    onTouchStart: function(event) {
-        return this.onDown(event)
-    },
-
-    onTouchMoveCapture: function(event) {
-        return this.onMove(event)
-    },
-
-    onTouchCancelCapture: function(event) {
-        return this.onCancel(event)
-    },
-	
-    onTouchEndCapture: function(event) {
-        return this.onUp(event)
-    },	
-
-    // --- helpers ----
-
     distance: function() {
-        let dp = this.diffPos()
-        let dx = Math.abs(dp.x())
-        let dy = Math.abs(dp.y())
-        let funcs = {
-            left:  (dx, dy) => dx,
-            right: (dx, dy) => dx,
-            up:    (dx, dy) => dy,
-            down:  (dx, dy) => dy
-        }
-        return funcs[this.direction()](dx, dy)
+        return this.currentPosition().distanceFrom(this.beginPosition())
     },
+
 })
 
 "use strict"
@@ -90860,11 +91195,11 @@ window.DivView = ideal.Proto.extend().newSlots({
 	
     onTouchCancel: function(event) {
         //this.onPointsCancel(points)
-},
+    },
 	
     onTouchEnd: function(event) {
         //this.onPointsEnd(points)
-},	
+    },	
 
     /// GestureRecognizers
 
@@ -90994,21 +91329,6 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this
     },
 
-    /*
-
-    specialNameForKeyEvent: function(event) {
-        let code = event.keyCode
-        let result = Keyboard.specialKeyCodes()[code]
-		
-        if (event.shiftKey && (code == 187)) {
-            return "plus"
-        }
-		
-        //console.log("specialNameForKeyEvent ", code, " = ", result)
-		
-        return result
-    },
-    */
 	
     onKeyDown: function (event) {
         let specialKeyName = Keyboard.specialNameForKeyEvent(event)
@@ -91029,7 +91349,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 		*/    
 		
         // onEnterKeyDown onLeftArrowKeyUp
-        if (especialKeyName) {
+        if (specialKeyName) {
             let name = "on" + specialKeyName.capitalized() + "KeyDown"
             if (this[name]) {
                 this[name].apply(this, [event])
@@ -91488,6 +91808,10 @@ window.DivView = ideal.Proto.extend().newSlots({
     boundingClientRect: function() {
         return this.element().getBoundingClientRect()
     },
+
+    containsWinPoint: function() {
+
+    },
     
     isScrolledIntoView: function() {
         let r = this.boundingClientRect()
@@ -91545,6 +91869,16 @@ window.DivView = ideal.Proto.extend().newSlots({
         return p
     },
     */
+   
+    winBounds: function() {
+        let p = this.windowPos()
+        let s = this.size()
+        return Rectangle.clone().setOrigin(p).setSize(s)
+    },
+
+    size: function() {
+        return Point.clone().set(this.clientWidth(), this.clientHeight());
+    },
 
     windowPos: function() {
         let elem = this.element()
@@ -91563,7 +91897,7 @@ window.DivView = ideal.Proto.extend().newSlots({
         let left = box.left + scrollLeft - clientLeft;
     
         return Point.clone().set(Math.round(left), Math.round(top));
-        return p
+        //return p
     },
 
     relativePos: function() {
@@ -91783,35 +92117,37 @@ window.DivView = ideal.Proto.extend().newSlots({
 
 /*
 
-From a StackExchange answer:
+    CenteredDivView
 
-.outer {
-  display: table;
-  position: absolute;
-  height: 100%;
-  width: 100%;
-}
+      From a StackExchange answer:
 
-.middle {
-  display: table-cell;
-  vertical-align: middle;
-}
+      .outer {
+        display: table;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+      }
 
-.inner {
-  margin-left: auto;
-  margin-right: auto;
-  width: 400px;
-  //whatever width you want
-}
+      .middle {
+        display: table-cell;
+        vertical-align: middle;
+      }
 
-<div class="outer">
-  <div class="middle">
-    <div class="inner">
-      <h1>The Content</h1>
-      <p>Once upon a midnight dreary...</p>
-    </div>
-  </div>
-</div>
+      .inner {
+        margin-left: auto;
+        margin-right: auto;
+        width: 400px;
+        //whatever width you want
+      }
+
+      <div class="outer">
+        <div class="middle">
+          <div class="inner">
+            <h1>The Content</h1>
+            <p>Once upon a midnight dreary...</p>
+          </div>
+        </div>
+      </div>
 
 */
 
@@ -91902,14 +92238,11 @@ window.CenteredDivView = DivView.extend().newSlots({
 
                        
     
-                                        
+
     Supported styles:
 
     - unselected
     - selected
-
-    
-
 
 */
 
@@ -91992,11 +92325,16 @@ window.DivStyledView = DivView.extend().newSlots({
 	
 })
 
+"use strict"
+
 /*
-	Used to measure rendered text dimensions given a string and a style.
+
+    DivTextTapeMeasure
+
+    Used to measure rendered text dimensions given a string and a style.
+    
 */
 
-"use strict"
 
 window.DivTextTapeMeasure = ideal.Proto.extend().newSlots({
     idName: "DivTextTapeMeasure",
@@ -92070,6 +92408,8 @@ window.DivTextTapeMeasure = ideal.Proto.extend().newSlots({
 	
 })
 
+"use strict"
+
 /*
     DivCSSInspector
     Used to inspect class styles since css hides stylesheet.cssRules.
@@ -92078,8 +92418,6 @@ window.DivTextTapeMeasure = ideal.Proto.extend().newSlots({
     let value = DivCSSInspector.shared().setDivClassName("..").cssStyle.fontFamily
 
 */
-
-"use strict"
 
 window.DivCSSInspector = ideal.Proto.extend().newSlots({
     type: "DivCSSInspector",
@@ -92121,6 +92459,12 @@ window.DivCSSInspector = ideal.Proto.extend().newSlots({
 })
 
 "use strict"
+
+/*
+
+    NodeView
+
+*/
 
 window.NodeView = DivStyledView.extend().newSlots({
     type: "NodeView",
@@ -92391,6 +92735,9 @@ window.NodeView = DivStyledView.extend().newSlots({
 "use strict"
 
 /*
+
+    TextField
+    
     A view for a single line of text. 
     For multi-line text, use TextArea.
     
@@ -92535,6 +92882,13 @@ window.TextField = DivStyledView.extend().newSlots({
 })
 
 "use strict"
+
+/*
+
+    BoolView
+
+
+*/
 
 window.BoolView = DivStyledView.extend().newSlots({
     type: "BoolView",
@@ -92684,6 +93038,12 @@ window.BoolView = DivStyledView.extend().newSlots({
 
 "use strict"
 
+/*
+
+    ContentView
+
+*/
+
 window.ContentView = NodeView.extend().newSlots({
     type: "ContentView",
 }).setSlots({
@@ -92692,7 +93052,8 @@ window.ContentView = NodeView.extend().newSlots({
         NodeView.init.apply(this)
         return this
     },
-*/
+    */
+
     syncFromNode: function () {
         let node = this.node()
         if (node.nodeContent) {
@@ -92731,6 +93092,12 @@ JSImporter.pushRelativePaths([
 
 
 "use strict"
+
+/*
+
+    GenericView
+
+*/
 
 window.GenericView = NodeView.extend().newSlots({
     type: "GenericView",
@@ -92794,6 +93161,12 @@ window.GenericView = NodeView.extend().newSlots({
 
 "use strict"
 
+/*
+
+    WebBrowserScreen
+
+*/
+
 window.WebBrowserScreen = ideal.Proto.extend().newSlots({
     type: "WebBrowserScreen",
 }).setSlots({
@@ -92847,6 +93220,12 @@ window.WebBrowserScreen = ideal.Proto.extend().newSlots({
 
 
 "use strict"
+
+/*
+
+    DocumentBody
+
+*/
 
 window.DocumentBody = DivView.extend().newSlots({
     type: "DocumentBody",
@@ -93176,6 +93555,12 @@ JSImporter.pushRelativePaths([
 
 "use strict"
 
+/*
+    
+    HashCommand
+    
+*/
+
 window.HashCommand = ideal.Proto.extend().newSlots({
     type: "HashCommand",
     target: null,
@@ -93241,6 +93626,12 @@ window.HashCommand = ideal.Proto.extend().newSlots({
 })
 
 "use strict"
+
+/*
+    
+    BrowserView
+    
+*/
 
 window.BrowserView = NodeView.extend().newSlots({
     type: "BrowserView",
@@ -93986,6 +94377,12 @@ window.BrowserView = NodeView.extend().newSlots({
 
 "use strict"
 
+/* 
+
+    BrowserColumn
+
+*/
+
 window.BrowserColumn = NodeView.extend().newSlots({
     type: "BrowserColumn",
     rows: null,
@@ -94690,11 +95087,24 @@ window.BrowserColumn = NodeView.extend().newSlots({
     canReorder: function() {
         return this.node().nodeCanReorder()
     },
+
+    didReorderRows: function() { 
+        // TODO: make a more scaleable API
+        let subnodes = this.rows().map(row => row.node())
+        this.node().nodeReorderSudnodesTo(subnodes)
+        return this
+    },
 	
 })
 
 
 "use strict"
+
+/* 
+
+    BrowserColumnGroup
+
+*/
 
 window.BrowserColumnGroup = NodeView.extend().newSlots({
     type: "BrowserColumnGroup",
@@ -94994,6 +95404,12 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
 
 "use strict"
 
+/*
+
+    BrowserHeader
+
+*/
+
 window.BrowserHeader = NodeView.extend().newSlots({
     type: "BrowserHeader",
     backArrowView: null,
@@ -95107,6 +95523,12 @@ window.BrowserHeader = NodeView.extend().newSlots({
 
 "use strict"
 
+/*
+
+    BrowserHeaderAction
+
+*/
+
 window.BrowserHeaderAction = NodeView.extend().newSlots({
     type: "BrowserHeaderAction",
     canClick: true,
@@ -95158,6 +95580,12 @@ window.BrowserHeaderAction = NodeView.extend().newSlots({
 })
 
 "use strict"
+
+/*
+
+    BrowserFooter
+
+*/
 
 window.BrowserFooter = NodeView.extend().newSlots({
     type: "BrowserFooter",
@@ -95260,9 +95688,13 @@ window.BrowserFooter = NodeView.extend().newSlots({
 
 
 "use strict"
-/*
 
-	base row view, just knows about selected, selectable and colors
+/*
+    
+    BrowserRow
+
+    base row view, just knows about selected, selectable and colors
+    
 */
 
 window.BrowserRow = NodeView.extend().newSlots({
@@ -95289,9 +95721,9 @@ window.BrowserRow = NodeView.extend().newSlots({
 
         //console.log("WebBrowserWindow.shared().isTouchDevice() = ", WebBrowserWindow.shared().isTouchDevice())
         if (WebBrowserWindow.shared().isTouchDevice()) {
-            this.setIsRegisteredForTouch(true) // is this needed now that we have gestures?
+
         } else {
-	        this.setIsRegisteredForMouse(true)
+	        this.setIsRegisteredForMouse(true) // TODO: replace with TapGesture?
             this.addCloseButton()
         }
 
@@ -95299,6 +95731,7 @@ window.BrowserRow = NodeView.extend().newSlots({
 
         //this.animateOpen()
 
+        
         this.addGestureRecognizer(LongPressGestureRecognizer.clone()) // for long press & pan reordering
         this.addGestureRecognizer(SlideGestureRecognizer.clone()) // for slide delete
         //this.addGestureRecognizer(TapGestureRecognizer.clone())
@@ -95508,7 +95941,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     // -- tap gesture ---
 
     onTapComplete: function() {
-        console.log(this.type() + ".onTapComplete()")
+        //console.log(this.type() + ".onTapComplete()")
         return this
     },
 
@@ -95518,39 +95951,46 @@ window.BrowserRow = NodeView.extend().newSlots({
         if (this.canDelete()) {
             this.setTouchDeleteOffset(this.clientWidth() * 0.5);
             this.setTransition("all 0s")       
-            this.addDeleteXView() 
+            this.setupSlide() 
         }
         return this
     },
 
-    addDeleteXView: function() {
-        if (!this._dragDeleteView) {
+    setupSlide: function() {
+        if (!this._dragDeleteButtonView) {
+            let h = this.clientHeight()
+
+            /*
             let dv = DivView.clone().setPosition("absolute").setDivClassName("BrowserRowDeleteXView")
             dv.setBackgroundColor("black")
-            let h = this.clientHeight()
             dv.setMinAndMaxHeight(h+2)
             dv.setMinAndMaxWidth(this.clientWidth())
             dv.setTop(this.offsetTop())
+            dv.setZIndex(null)
+            this._dragDeleteView = dv
+            */
 
+            this.setBackgroundColor("black")
+            this.contentView().setBackgroundColor(this.column().columnGroup().backgroundColor())
             let cb = CloseButton.clone().setTransition("opacity 0.1s")
             cb.setMinAndMaxHeight(h)
             cb.setMinAndMaxWidth(h)
-            dv.addSubview(cb)
-            this.parentView().addSubview(dv)
-
-            this.setBackgroundColor(this.column().columnGroup().backgroundColor())
-            this.setZIndex(10)
-            dv.setZIndex(null)
-            this._dragDeleteView = dv
+            this.addSubview(cb)
+            //this.parentView().addSubview(dv)
+            //this.setBackgroundColor(this.column().columnGroup().backgroundColor())
+            cb.setZIndex(0)
+            this.contentView().setZIndex(1)
             this._dragDeleteButtonView = cb
         }
         return this
     },
 
-    removeDeleteXView: function() {
-        if (this._dragDeleteView) {
-            this._dragDeleteView.removeFromParentView()
-            this._dragDeleteView = null
+    cleanupSlide: function() {
+        if (this._dragDeleteButtonView) {
+            this._dragDeleteButtonView.removeFromParentView()
+            this._dragDeleteButtonView = null
+            this.setBackgroundColor(null)
+
         }
     },
 	
@@ -95574,7 +96014,8 @@ window.BrowserRow = NodeView.extend().newSlots({
     setTouchRight: function(v) {
         //this.setTransform("translateX(" + (v) + "px)");
         //this.setLeft(-v)
-        this.setRight(v)
+        //this.setRight(v)
+        this.contentView().setRight(v)
     },
 	
     onSlideComplete: function(slideGesture) {
@@ -95599,7 +96040,7 @@ window.BrowserRow = NodeView.extend().newSlots({
             //console.log("-this.clientWidth() = ", -this.clientWidth())
             this.setTouchRight(this.clientWidth())
             this.setBackgroundColor("black")
-            this.removeDeleteXView()
+            this.cleanupSlide()
             this.setTransition(this.transitionStyle())
             this.delete()
         }
@@ -95627,7 +96068,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
 
     didCompleteSlide: function() {
-        this.removeDeleteXView()
+        this.cleanupSlide()
     },
 
     /*
@@ -95686,7 +96127,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     onLongPressComplete: function(aGesture) {
         if (this.column().canReorder()) {
             let pan = this.addPanGesture()
-            //pan.onDown(event)
+            pan.setShouldRemoveOnComplete(true)
             pan.setMinDistToBegin(0)
             pan.onDown(aGesture.currentEvent())
             this.setBackgroundColor("red")
@@ -95722,7 +96163,6 @@ window.BrowserRow = NodeView.extend().newSlots({
             this.setTop(this._dragStartPos.y())
             this.setZIndex(1)
             this.column().setPosition("relative")
-            console.log("this.column().position() = ", this.column().position())
         }
     },
 
@@ -95748,6 +96188,7 @@ window.BrowserRow = NodeView.extend().newSlots({
             this.column().relativePositionRows()
 
             this.setTransition(this.transitionStyle())
+            this.column().didReorderRows()
         }
     },
 
@@ -95796,6 +96237,12 @@ window.BrowserRow = NodeView.extend().newSlots({
 })
 
 "use strict"
+
+/*
+    
+    BrowserTitledRow
+    
+*/
 
 window.BrowserTitledRow = BrowserRow.extend().newSlots({
     type: "BrowserTitledRow",
@@ -95935,6 +96382,12 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
 
 "use strict"
 
+/*
+    
+    BrowserRowNote
+    
+*/
+
 window.BrowserRowNote = TextField.extend().newSlots({
     type: "BrowserRowNote",
 }).setSlots({
@@ -95945,6 +96398,12 @@ window.BrowserRowNote = TextField.extend().newSlots({
 })
 
 "use strict"
+
+/*
+    
+    BrowserRowSubtitle
+    
+*/
 
 window.BrowserRowSubtitle = TextField.extend().newSlots({
     type: "BrowserRowSubtitle",
@@ -95982,17 +96441,17 @@ window.BrowserRowTitle = TextField.extend().newSlots({
     },
 })
 
+"use strict"
+
 /*
 
     BrowserFieldRow
  
-       A BrowserRow that overrides updateSubviews 
-       to fill in remaining space in column when requested.
+    A BrowserRow that overrides updateSubviews 
+    to fill in remaining space in column when requested.
 
 */
 
-
-"use strict"
 
 window.BrowserFieldRow = BrowserRow.extend().newSlots({
     type: "BrowserFieldRow",
@@ -96057,6 +96516,12 @@ JSImporter.pushRelativePaths([
 ])
 
 "use strict"
+
+/* 
+
+    ShelfView
+
+*/
 
 window.ShelfView = NodeView.extend().newSlots({
     type: "ShelfView",
@@ -96206,6 +96671,12 @@ window.ShelfView = NodeView.extend().newSlots({
 
 
 "use strict"
+
+/* 
+
+    ShelfItemView
+
+*/
 
 window.ShelfItemView = NodeView.extend().newSlots({
     type: "ShelfItemView",
@@ -96379,6 +96850,13 @@ window.ShelfItemView = NodeView.extend().newSlots({
 
 "use strict"
 
+
+/* 
+
+    ShelfItemGroupView
+
+*/
+
 window.ShelfItemGroupView = NodeView.extend().newSlots({
     type: "ShelfItemGroupView",
     isCompacted: true,
@@ -96529,6 +97007,12 @@ window.ShelfItemGroupView = NodeView.extend().newSlots({
 
 "use strict"
 
+/* 
+
+    ShelfFooterView
+
+*/
+
 window.ShelfFooterView = DivView.extend().newSlots({
     type: "ShelfFooterView",
 }).setSlots({
@@ -96666,6 +97150,12 @@ JSImporter.pushRelativePaths([
 ])
 
 "use strict"
+
+/*
+
+    BMFieldRowView
+
+*/
 
 window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
     type: "BMFieldRowView",
@@ -96877,6 +97367,12 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
 
 "use strict"
 
+/*
+
+    BMActionFieldRowView
+
+*/
+
 window.BMActionFieldRowView = BrowserRow.extend().newSlots({
     type: "BMActionFieldRowView",
     buttonView: null,
@@ -96938,6 +97434,13 @@ window.BMActionFieldRowView = BrowserRow.extend().newSlots({
 
 "use strict"
 
+/*
+
+    BMTextAreaFieldRowView
+
+*/
+
+
 window.BMTextAreaFieldRowView = BMFieldRowView.extend().newSlots({
     type: "BMTextAreaFieldRowView",
 }).setSlots({
@@ -96981,6 +97484,12 @@ window.BMTextAreaFieldRowView = BMFieldRowView.extend().newSlots({
 })
 
 "use strict"
+
+/*
+
+    BMImageWellFieldRowView
+
+*/
 
 window.BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
     type: "BMImageWellFieldView",
@@ -97055,6 +97564,13 @@ window.BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
 })
 
 "use strict"
+
+/*
+
+    BMOptionsFieldRowView
+
+*/
+
 
 window.BMOptionsFieldRowView = BMFieldRowView.extend().newSlots({
     type: "BMOptionsFieldRowView",
@@ -97189,6 +97705,12 @@ BMOptionsTableRowView = NodeView.extend().newSlots({
 })
 */
 "use strict"
+
+/*
+
+    BMOptionsTableView
+
+*/
 
 window.BMOptionsTableView = DivView.extend().newSlots({
     type: "BMOptionsTableView",
@@ -97327,6 +97849,12 @@ window.BMOptionsTableView = DivView.extend().newSlots({
 
 "use strict"
 
+/*
+
+    BMPointerFieldRowView
+
+*/
+
 window.BMPointerFieldRowView = BrowserTitledRow.extend().newSlots({
     type: "BMPointerFieldRowView",
 }).setSlots({
@@ -97361,6 +97889,12 @@ window.BMPointerFieldRowView = BrowserTitledRow.extend().newSlots({
 })
 
 "use strict"
+
+/*
+
+    ImageWellView
+
+*/
 
 window.ImageWellView = NodeView.extend().newSlots({
     type: "ImageWellView",
@@ -97449,10 +97983,15 @@ window.ImageWellView = NodeView.extend().newSlots({
         this.scheduleSyncToNode() //this.syncToNode()
         return this        
     },
-    
 })
 
 "use strict"
+
+/*
+
+    ImageView
+
+*/
 
 window.ImageView = NodeView.extend().newSlots({
     type: "ImageView",
@@ -97628,6 +98167,14 @@ window.ImageView = NodeView.extend().newSlots({
 
 "use strict"
 
+/*
+
+    ButtonView
+
+    A simple push button view with a TextView label.
+
+*/
+
 window.ButtonView = DivView.extend().newSlots({
     type: "ButtonView",
     titleView: null,
@@ -97670,17 +98217,22 @@ window.ButtonView = DivView.extend().newSlots({
         this.setLineHeight(h)
         return this
     },
+
     /*
     setIconName: function(aString) {
         this.setBackgroundImageUrlPath(this.pathForIconName(aString))
         return this
     },
     */
-
-
 })
 
 "use strict"
+
+/*
+
+    PanelView
+
+*/
 
 window.PanelView = DivView.extend().newSlots({
     type: "PanelView",
@@ -97801,6 +98353,13 @@ JSImporter.pushRelativePaths([
 
 "use strict"
 
+
+/* 
+
+    CloseButton
+
+*/
+
 window.CloseButton = DivView.extend().newSlots({
     type: "CloseButton",
     isEnabled: true,
@@ -97848,6 +98407,12 @@ window.CloseButton = DivView.extend().newSlots({
 })
 
 "use strict"
+
+/* 
+
+    CloseableNodeView
+
+*/
 
 window.CloseableNodeView = NodeView.extend().newSlots({
     type: "CloseableNodeView",
@@ -97909,6 +98474,12 @@ window.CloseableNodeView = NodeView.extend().newSlots({
 })
 
 "use strict"
+
+/* 
+
+    DragBarView
+
+*/
 
 window.DragBarView = DivView.extend().newSlots({
     type: "DragBarView",
@@ -98092,6 +98663,13 @@ window.DragBarView = DivView.extend().newSlots({
 })
 
 "use strict"
+
+/* 
+
+    AtomNodeView
+
+*/
+
 
 window.AtomNodeView = NodeView.extend().newSlots({
     type: "AtomNodeView",
@@ -98362,6 +98940,13 @@ window.AtomNodeView = NodeView.extend().newSlots({
 })
 
 "use strict"
+
+/* 
+
+    AtomPaneView
+
+*/
+
 
 window.AtomPaneView = DivView.extend().newSlots({
     type: "AtomPaneView",
@@ -98728,6 +99313,12 @@ JSImporter.pushRelativePaths([
 
 "use strict"
 
+/*
+
+    BMDatedSet
+
+*/
+
 window.BMDatedSet = BMStorableNode.extend().newSlots({
     type: "BMDatedSet",
     maxAgeInSeconds: 30*24*60*60,
@@ -98805,17 +99396,21 @@ window.BMDatedSet = BMStorableNode.extend().newSlots({
     },
 })
 
+"use strict"
 
 /*
-BMGetDataItem = BMNode.extend().newSlots({
-    type: "BMGetDataItem",
-    hash: null,
-    fromMsg: null,
-}).setSlots({
-})
-*/
 
-"use strict"
+    BMMessages
+
+
+    BMGetDataItem = BMNode.extend().newSlots({
+        type: "BMGetDataItem",
+        hash: null,
+        fromMsg: null,
+    }).setSlots({
+    })
+    
+*/
 
 window.BMMessages = BMStorableNode.extend().newSlots({
     type: "BMMessages",
@@ -99080,11 +99675,14 @@ window.BMMessages = BMStorableNode.extend().newSlots({
     },
 })
 
-
 "use strict"
 
-// BMStorableNode
-// BMFieldSetNode
+/*
+
+    BMNetwork
+
+*/
+
 window.BMNetwork = BMFieldSetNode.extend().newSlots({
     type: "BMNetwork",
     servers: null,
@@ -99404,6 +100002,8 @@ JSImporter.pushRelativePaths([
     "WebSocketExtensions.js"
 ])
 
+"use strict"
+
 /*
 	PeerId
 	
@@ -99412,7 +100012,6 @@ JSImporter.pushRelativePaths([
 
 */
 
-"use strict"
 
 window.BMPeerId = BMNode.extend().newSlots({
     type: "BMPeerId",
@@ -99536,8 +100135,13 @@ window.BMPeerId = BMNode.extend().newSlots({
 
 
 
-
 "use strict"
+
+/*
+
+    BMServerConnection
+
+*/
 
 window.BMServerConnection = BMNode.extend().newSlots({
     type: "BMServerConnection",
@@ -99936,8 +100540,13 @@ window.BMServerConnection = BMNode.extend().newSlots({
 
 
 
-
 "use strict"
+
+/*
+
+    BMServerMessage
+
+*/
 
 window.BMServerMessage = ideal.Proto.extend().newSlots({
     type: "BMServerMessage",
@@ -99979,9 +100588,15 @@ window.BMServerMessage = ideal.Proto.extend().newSlots({
         this._reject(reason);
     }
 });
-// A Rendezvous Server
-
 "use strict"
+
+/*
+
+    BMRServer
+
+    A Rendezvous Server.
+
+*/
 
 window.BMRServer = BMFieldSetNode.extend().newSlots({
     type: "BMRServer",
@@ -100170,6 +100785,12 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
 
 "use strict"
 
+/*
+
+    BMRServers
+
+*/
+
 window.BMRServers = BMStorableNode.extend().newSlots({
     type: "BMRServers",
     maxConnections: 8,
@@ -100341,8 +100962,13 @@ window.BMRServers = BMStorableNode.extend().newSlots({
     
 })
 
-
 "use strict"
+
+/*
+
+    BMRemotePeer
+
+*/
 
 window.BMRemotePeer = BMNode.extend().newSlots({
     type: "BMRemotePeer",
@@ -100646,6 +101272,12 @@ window.BMRemotePeer = BMNode.extend().newSlots({
 
 "use strict"
 
+/*
+
+    BMRemotePeers
+
+*/
+
 window.BMRemotePeers = BMNode.extend().newSlots({
     type: "BMRemotePeers",
 }).setSlots({
@@ -100725,16 +101357,19 @@ window.BMRemotePeers = BMNode.extend().newSlots({
     },
 })
 
+"use strict"
 
 /*
-  A record for a WebRTC STUN (Session Traversal Utilities for NAT) Server 
-  these help us get around NAT (Network Address Traversal) routers
-  we just use these objects to maintain the list passed to new Peer()
-  
-  See: https://en.wikipedia.org/wiki/STUN
-*/
 
-"use strict"
+    BMStunServer
+
+    A record for a WebRTC STUN (Session Traversal Utilities for NAT) Server 
+    these help us get around NAT (Network Address Traversal) routers
+    we just use these objects to maintain the list passed to new Peer()
+
+    See: https://en.wikipedia.org/wiki/STUN
+    
+*/
 
 window.BMStunServer = BMFieldSetNode.extend().newSlots({
     type: "BMStunServer",
@@ -100796,11 +101431,14 @@ window.BMStunServer = BMFieldSetNode.extend().newSlots({
     },
 })
 
+"use strict"
+
 /*
 
+    BMStunServers
+    
 */
 
-"use strict"
 
 window.BMStunServers = BMStorableNode.extend().newSlots({
     type: "BMStunServers",
@@ -100883,6 +101521,12 @@ window.BMStunServers = BMStorableNode.extend().newSlots({
 
 "use strict"
 
+/*
+
+    WebSocketExtensions
+    
+*/
+
 WebSocket.prototype.removeEventListeners = function() {
     if (this._eventListeners) {
         this._eventListeners.forEach(eventListener => {
@@ -100921,6 +101565,11 @@ JSImporter.pushRelativePaths([
 
 "use strict"
 
+/*
+
+    Some categories for json, sha256, buffer
+    
+*/
 
 Object.toJsonStableString = function(obj) {
     return JSON.stableStringify(obj, null, 2)
@@ -100957,15 +101606,19 @@ String.prototype.toBuffer = function () {
 }
 
 
+"use strict"
+
 /*
-    subclasses:
+
+    BMMessage
+
+       subclasses:
         BMAddrMessage
         BMInvMessage
         BMObjectMessage
 
 */
 
-"use strict"
 
 window.BMMessage = BMFieldSetNode.extend().newSlots({
     type: "BMMessage",
@@ -101045,6 +101698,12 @@ window.BMMessage = BMFieldSetNode.extend().newSlots({
 
 "use strict"
 
+/*
+
+    BMAddrMessage
+
+*/
+
 window.BMAddrMessage = BMMessage.extend().newSlots({
     type: "BMAddrMessage",
 }).setSlots({
@@ -101069,6 +101728,12 @@ window.BMAddrMessage = BMMessage.extend().newSlots({
 
 
 "use strict"
+
+/*
+
+    BMGetDataMessage
+
+*/
 
 window.BMGetDataMessage = BMMessage.extend().newSlots({
     type: "BMGetDataMessage",
@@ -101100,6 +101765,12 @@ window.BMGetDataMessage = BMMessage.extend().newSlots({
 })
 
 "use strict"
+
+/*
+
+    BMInvMessage
+
+*/
 
 window.BMInvMessage = BMMessage.extend().newSlots({
     type: "BMInvMessage",
@@ -101354,6 +102025,12 @@ window.BMObjectMessage = BMMessage.extend().newSlots({
 
 "use strict"
 
+/*
+
+    BMPingMessage
+    
+*/
+
 window.BMPingMessage = BMMessage.extend().newSlots({
     type: "BMPingMessage",
 }).setSlots({
@@ -101372,6 +102049,12 @@ window.BMPingMessage = BMMessage.extend().newSlots({
 
 "use strict"
 
+/*
+
+    BMPongMessage
+    
+*/
+
 window.BMPongMessage = BMMessage.extend().newSlots({
     type: "BMPongMessage",
 }).setSlots({
@@ -101388,6 +102071,12 @@ window.BMPongMessage = BMMessage.extend().newSlots({
 })
 
 "use strict"
+
+/*
+
+    BMAppMessage
+
+*/
 
 window.BMAppMessage = BMFieldSetNode.extend().newSlots({
     type: "BMAppMessage",
@@ -101570,6 +102259,12 @@ var Buffer = bitcore.deps.Buffer;
 
 "use strict"
 
+/*
+
+    BMKeyPair
+    
+*/
+
 window.BMKeyPair = BMStorableNode.extend().newSlots({
     type: "BMKeyPair",
     name: "",
@@ -101653,6 +102348,12 @@ window.BMKeyPair = BMStorableNode.extend().newSlots({
 
 "use strict"
 
+/*
+
+    BMLocalIdentities
+    
+*/
+
 window.BMLocalIdentities = BMStorableNode.extend().newSlots({
     type: "BMLocalIdentities",
 }).setSlots({
@@ -101723,6 +102424,12 @@ var ECIES = require("bitcore-ecies");
 var Buffer = bitcore.deps.Buffer;
 
 "use strict"
+
+/*
+
+    BMLocalIdentity
+    
+*/
 
 window.BMLocalIdentity = BMKeyPair.extend().newSlots({
     type: "BMLocalIdentity",
@@ -101866,9 +102573,13 @@ window.BMLocalIdentity = BMKeyPair.extend().newSlots({
     },
         
 })	
-
-
 "use strict"
+
+/*
+
+    BMRemoteIdentities
+    
+*/
 
 window.BMRemoteIdentities = BMStorableNode.extend().newSlots({
     type: "BMRemoteIdentities",
@@ -101963,6 +102674,12 @@ window.BMRemoteIdentities = BMStorableNode.extend().newSlots({
 })
 
 "use strict"
+
+/*
+
+    BMRemoteIdentity
+    
+*/
 
 var bitcore = require("bitcore-lib")
 
@@ -102135,6 +102852,12 @@ window.BMRemoteIdentity = BMStorableNode.extend().newSlots({
 
 "use strict"
 
+/*
+
+    BMProfile
+    
+*/
+
 window.BMProfile = BMFieldSetNode.extend().newSlots({
     type: "BMProfile",
     avatars: [],
@@ -102218,6 +102941,12 @@ JSImporter.pushRelativePaths([
 
 "use strict"
 
+/*
+
+    BMApplet
+
+*/
+
 window.BMApplet = BMStorableNode.extend().newSlots({
     type: "BMApplet",
 }).setSlots({
@@ -102257,8 +102986,13 @@ JSImporter.pushRelativePaths([
     "BMClassifiedPost.js",
 ])
 
-
 "use strict"
+
+/*
+
+    BMBuy
+
+*/
 
 window.BMBuy = BMStorableNode.extend().newSlots({
     type: "BMBuy",
@@ -102284,8 +103018,13 @@ window.BMBuy = BMStorableNode.extend().newSlots({
 
 })
 
-
 "use strict"
+
+/*
+
+    BMBuys
+
+*/
 
 window.BMBuys = BMStorableNode.extend().newSlots({
     type: "BMBuys",
@@ -102300,13 +103039,16 @@ window.BMBuys = BMStorableNode.extend().newSlots({
     },
 })
 
+"use strict"
+
 /*
+
+    BMRegion
+    
 	BMRegion represents a regional market category (Country, State, City, etc)
 	It does some tricks with lazy loading children as needed so we don't have to read everything in immediately.
 	If can also propogate subnode count sum updates.
 */
-
-"use strict"
 
 window.BMRegion = BMNode.extend().newSlots({
     type: "BMRegion",
@@ -102445,8 +103187,13 @@ window.BMRegion = BMNode.extend().newSlots({
 
 window.Region = BMRegion
 
-
 "use strict"
+
+/*
+
+    BMRegions
+
+*/
 
 window.BMRegions = BMRegion.extend().newSlots({
     type: "BMRegions",
@@ -102483,8 +103230,13 @@ window.BMRegions = BMRegion.extend().newSlots({
 })
 
 
-
 "use strict"
+
+/*
+
+    BMClassifieds
+
+*/
 
 window.BMClassifieds = BMApplet.extend().newSlots({
     type: "BMClassifieds",
@@ -102505,8 +103257,13 @@ window.BMClassifieds = BMApplet.extend().newSlots({
 })
 
 
-
 "use strict"
+
+/*
+
+    BMPost
+
+*/
 
 window.BMPost = BMStorableNode.extend().newSlots({
     type: "BMPost",
@@ -102568,8 +103325,13 @@ window.BMPost = BMStorableNode.extend().newSlots({
 
 })
 
-
 "use strict"
+
+/*
+
+    BMSell
+
+*/
 
 window.BMSell = BMStorableNode.extend().newSlots({
     type: "BMSell",
@@ -102605,8 +103367,13 @@ window.BMSell = BMStorableNode.extend().newSlots({
 
 })
 
-
 "use strict"
+
+/*
+
+    BMSells
+
+*/
 
 window.BMSells = BMStorableNode.extend().newSlots({
     type: "BMSells",
@@ -102627,8 +103394,13 @@ window.BMSells = BMStorableNode.extend().newSlots({
 
 })
 
-
 "use strict"
+
+/*
+
+    BMClassifiedPosts
+
+*/
 
 window.BMClassifiedPosts = BMStorableNode.extend().newSlots({
     type: "BMClassifiedPosts",
@@ -102642,8 +103414,13 @@ window.BMClassifiedPosts = BMStorableNode.extend().newSlots({
     },
 })
 
-
 "use strict"
+
+/*
+
+    BMClassifiedPost
+
+*/
 
 window.BMClassifiedPost = BMFieldSetNode.extend().newSlots({
     type: "BMClassifiedPost",
@@ -103020,6 +103797,12 @@ JSImporter.pushRelativePaths([
 
 "use strict"
 
+/*
+
+    BMTwitter
+
+*/
+
 window.BMTwitter = BMApplet.extend().newSlots({
     type: "BMTwitter",
     feed: null,
@@ -103062,6 +103845,12 @@ window.BMTwitter = BMApplet.extend().newSlots({
 
 "use strict"
 
+/*
+
+    BMFollowingContacts
+
+*/
+
 window.BMFollowingContacts = BMStorableNode.extend().newSlots({
     type: "BMFollowingContacts",
 }).setSlots({
@@ -103079,6 +103868,12 @@ window.BMFollowingContacts = BMStorableNode.extend().newSlots({
 
 
 "use strict"
+
+/*
+
+    BMFollowingContact
+
+*/
 
 window.BMFollowingContact = BMStorableNode.extend().newSlots({
     type: "BMFollowingContact",
@@ -103100,8 +103895,15 @@ JSImporter.pushRelativePaths([
     "BMBitcoinWallet.js",
 ])
 
+"use strict"
 
-BMBitcoinWallet = BMApplet.extend().newSlots({
+/*
+
+    BMBitcoinWallet
+
+*/
+
+window.BMBitcoinWallet = BMApplet.extend().newSlots({
     type: "BMBitcoinWallet",
 }).setSlots({
 
@@ -103122,8 +103924,13 @@ JSImporter.pushRelativePaths([
     "Drafts/_imports.js",
     "Posts/_imports.js",
 ])
-
 "use strict"
+
+/*
+
+    BMApplet
+
+*/
 
 window.BMChat = BMApplet.extend().newSlots({
     type: "BMChat",
@@ -103247,6 +104054,12 @@ JSImporter.pushRelativePaths([
 
 "use strict"
 
+/*
+
+    BMContactLinks
+
+*/
+
 window.BMContactLinks = BMStorableNode.extend().newSlots({
     type: "BMContactLinks",
     linkProto: null,
@@ -103362,8 +104175,13 @@ window.BMContactLinks = BMStorableNode.extend().newSlots({
         return this
     },
 })
-
 "use strict"
+
+/*
+
+    BMChatThreads
+
+*/
 
 window.BMChatThreads = BMContactLinks.extend().newSlots({
     type: "BMChatThreads",
@@ -103387,6 +104205,12 @@ window.BMChatThreads = BMContactLinks.extend().newSlots({
 })
 
 "use strict"
+
+/*
+
+    BMChatThread
+
+*/
 
 window.BMChatThread = BMStorableNode.extend().newSlots({
     type: "BMChatThread",
@@ -103486,6 +104310,12 @@ window.BMChatThread = BMStorableNode.extend().newSlots({
 
 "use strict"
 
+/*
+
+    BMChatMessage
+
+*/
+
 window.BMChatMessage = BMAppMessage.extend().newSlots({
     type: "BMChatMessage",
     content: "",
@@ -103535,9 +104365,13 @@ window.BMChatMessage = BMAppMessage.extend().newSlots({
 })
 
 
-
-
 "use strict"
+
+/*
+
+    BMChatMessageRowView
+
+*/
 
 window.BMChatMessageRowView = BrowserTitledRow.extend().newSlots({
     type: "BMChatMessageRowView",
@@ -103647,8 +104481,13 @@ JSImporter.pushRelativePaths([
     "BMPostDraft.js",
     "BMPostDraftRowView.js"
 ])
-
 "use strict"
+
+/*
+
+    BMPostDrafts
+
+*/
 
 window.BMPostDrafts = BMStorableNode.extend().newSlots({
     type: "BMPostDrafts",
@@ -103699,8 +104538,13 @@ window.BMPostDrafts = BMStorableNode.extend().newSlots({
         return this.subnodesCount() > 0
     },
 })
-
 "use strict"
+
+/*
+
+    BMPostDraft
+
+*/
 
 window.BMPostDraft = BMStorableNode.extend().newSlots({
     type: "BMPostDraft",
@@ -103758,9 +104602,13 @@ window.BMPostDraft = BMStorableNode.extend().newSlots({
 })
 
 
-
-
 "use strict"
+
+/*
+
+    BMPostDraftRowView
+
+*/
 
 window.BMPostDraftRowView = BrowserRow.extend().newSlots({
     type: "BMPostDraftRowView",
@@ -103931,8 +104779,13 @@ JSImporter.pushRelativePaths([
     "BMPostThread.js",
     "BMPostMessageRowView.js",
 ])
-
 "use strict"
+
+/*
+
+    BMFeedPosts
+
+*/
 
 window.BMFeedPosts = BMStorableNode.extend().newSlots({
     type: "BMFeedPosts",
@@ -104008,8 +104861,13 @@ window.BMFeedPosts = BMStorableNode.extend().newSlots({
         return !this.hasRead()
     },
 })
-
 "use strict"
+
+/*
+
+    BMMyPosts
+
+*/
 
 window.BMMyPosts = BMStorableNode.extend().newSlots({
     type: "BMMyPosts",
@@ -104048,8 +104906,13 @@ window.BMMyPosts = BMStorableNode.extend().newSlots({
         //	    return "home3-white"
     },
 })
-
 "use strict"
+
+/*
+
+    BMPostMessage
+
+*/
 
 window.BMPostMessage = BMAppMessage.extend().newSlots({
     type: "BMPostMessage",
@@ -104209,8 +105072,13 @@ window.BMPostMessage = BMAppMessage.extend().newSlots({
 })
 
 
-
 "use strict"
+
+/*
+
+    BMPostThread
+
+*/
 
 window.BMPostThread = BMAppMessage.extend().newSlots({
     type: "BMPostThread",
@@ -104243,6 +105111,12 @@ window.BMPostThread = BMAppMessage.extend().newSlots({
 
 
 "use strict"
+
+/*
+
+    BMPostMessageRowView
+
+*/
 
 window.BMPostMessageRowView = BrowserRow.extend().newSlots({
     type: "BMPostMessageRowView",
@@ -104494,8 +105368,13 @@ JSImporter.pushRelativePaths([
     "BMGroupChatConversation.js",
 ])
 
-
 "use strict"
+
+/*
+
+    BMGroupChat
+
+*/
 
 window.BMGroupChat = BMApplet.extend().newSlots({
     type: "BMGroupChat",
@@ -104518,6 +105397,12 @@ window.BMGroupChat = BMApplet.extend().newSlots({
 
 
 "use strict"
+
+/*
+
+    BMGroupChatRoom
+
+*/
 
 window.BMGroupChatRoom = BMApplet.extend().newSlots({
     type: "BMGroupChatRoom",
@@ -104545,8 +105430,13 @@ window.BMGroupChatRoom = BMApplet.extend().newSlots({
 })
 
 
-
 "use strict"
+
+/*
+
+    BMGroupChatChannel
+
+*/
 
 window.BMGroupChatChannel = BMApplet.extend().newSlots({
     type: "BMGroupChatChannel",
@@ -104574,8 +105464,13 @@ window.BMGroupChatChannel = BMApplet.extend().newSlots({
 })
 
 
-
 "use strict"
+
+/*
+
+    BMGroupConversation
+
+*/
 
 window.BMGroupConversation = BMApplet.extend().newSlots({
     type: "BMGroupConversation",
@@ -104609,6 +105504,12 @@ JSImporter.pushRelativePaths([
 
 "use strict"
 
+/*
+
+    BMInbox
+
+*/
+
 window.BMInbox = BMStorableNode.extend().newSlots({
     type: "BMInbox",
 }).setSlots({
@@ -104623,6 +105524,12 @@ window.BMInbox = BMStorableNode.extend().newSlots({
 
 "use strict"
 
+/*
+
+    BMSent
+
+*/
+
 window.BMSent = BMStorableNode.extend().newSlots({
     type: "BMSent",
 }).setSlots({
@@ -104634,13 +105541,15 @@ window.BMSent = BMStorableNode.extend().newSlots({
         this.setTitle("sent")
     },
 })
+"use strict"
+
 /*
-	a per-identity instantiated collection of apps
+
+    BMApps
+
+    A per-identity instantiated collection of apps.
 
 */
-
-
-"use strict"
 
 window.BMApps = BMStorableNode.extend().newSlots({
     type: "BMApps",
@@ -104720,12 +105629,13 @@ JSImporter.pushRelativePaths([
     "BMBlacklistedContacts.js",
 ])
 
+"use strict"
+
 /*
 
+    BMBlacklists
 
 */
-
-"use strict"
 
 window.BMBlacklists = BMStorableNode.extend().newSlots({
     type: "BMBlacklists",
@@ -104750,6 +105660,12 @@ window.BMBlacklists = BMStorableNode.extend().newSlots({
 
 
 "use strict"
+
+/*
+
+    BMBlacklistEntry
+
+*/
 
 window.BMBlacklistEntry = BMFieldSetNode.extend().newSlots({
     type: "BMBlacklistEntry",
@@ -104777,12 +105693,13 @@ window.BMBlacklistEntry = BMFieldSetNode.extend().newSlots({
 	
 })
 
+"use strict"
+
 /*
 
-
+    BMBlacklist
+    
 */
-
-"use strict"
 
 window.BMBlacklist = BMStorableNode.extend().newSlots({
     type: "BMBlacklist",
@@ -104799,12 +105716,15 @@ window.BMBlacklist = BMStorableNode.extend().newSlots({
 	
 })
 
+"use strict"
+
+
 /*
 
+    BMBlacklistedServers
 
+    
 */
-
-"use strict"
 
 window.BMBlacklistedServers = BMBlacklist.extend().newSlots({
     type: "BMBlacklistedServers",
@@ -104819,12 +105739,15 @@ window.BMBlacklistedServers = BMBlacklist.extend().newSlots({
 	
 })
 
+"use strict"
+
 /*
 
+    BMBlacklistedPeers
 
+    
 */
 
-"use strict"
 
 window.BMBlacklistedPeers = BMBlacklist.extend().newSlots({
     type: "BMBlacklistedPeers",
@@ -104837,12 +105760,14 @@ window.BMBlacklistedPeers = BMBlacklist.extend().newSlots({
 	
 })
 
+"use strict"
+
 /*
 
+    BMBlacklistedContacts
 
 */
 
-"use strict"
 
 window.BMBlacklistedContacts = BMBlacklist.extend().newSlots({
     type: "BMBlacklistedContacts",
@@ -104861,8 +105786,13 @@ JSImporter.pushRelativePaths([
     "BMConnection.js",
 ])
 
-
 "use strict"
+
+/*
+
+    BMConnection
+
+*/
 
 window.BMConnection = BMNode.extend().newSlots({
     type: "BMConnection",
@@ -105023,6 +105953,12 @@ JSImporter.pushRelativePaths([
 
 "use strict"
 
+/*
+
+    BMThemeStyleSheet
+
+*/
+
 window.BMThemeStyleSheet = ideal.Proto.extend().newSlots({
     type: "BMThemeStyleSheet",
 }).setSlots({
@@ -105061,6 +105997,12 @@ window.BMThemeStyleSheet = ideal.Proto.extend().newSlots({
 
 "use strict"
 
+/*
+
+    BMGraphics
+
+*/
+
 window.BMGraphics = BMStorableNode.extend().newSlots({
     type: "BMGraphics",
     shared: null,
@@ -105080,6 +106022,12 @@ window.BMGraphics = BMStorableNode.extend().newSlots({
 })
 
 "use strict"
+
+/*
+
+    BMThemeClass
+
+*/
 
 window.BMThemeClass = BMStorableNode.extend().newSlots({
     type: "BMThemeClass",
@@ -105107,6 +106055,12 @@ window.BMThemeClass = BMStorableNode.extend().newSlots({
 })
 
 "use strict"
+
+/*
+
+    BMThemeClassState
+
+*/
 
 window.BMThemeClassState = BMFieldSetNode.extend().newSlots({
     type: "BMThemeClassState",
@@ -105168,6 +106122,12 @@ notes on Scroll bars theme options
 
 "use strict"
 
+/*
+
+    BMTheme
+
+*/
+
 window.BMTheme = BMStorableNode.extend().newSlots({
     type: "BMTheme",
 }).setSlots({
@@ -105213,6 +106173,13 @@ window.BMTheme = BMStorableNode.extend().newSlots({
 })
 
 "use strict"
+
+/*
+
+    BMThemes
+
+*/
+
 
 window.BMThemes = BMStorableNode.extend().newSlots({
     type: "BMThemes",

@@ -252,7 +252,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     // -- tap gesture ---
 
     onTapComplete: function() {
-        console.log(this.type() + ".onTapComplete()")
+        //console.log(this.type() + ".onTapComplete()")
         return this
     },
 
@@ -262,39 +262,46 @@ window.BrowserRow = NodeView.extend().newSlots({
         if (this.canDelete()) {
             this.setTouchDeleteOffset(this.clientWidth() * 0.5);
             this.setTransition("all 0s")       
-            this.addDeleteXView() 
+            this.setupSlide() 
         }
         return this
     },
 
-    addDeleteXView: function() {
-        if (!this._dragDeleteView) {
+    setupSlide: function() {
+        if (!this._dragDeleteButtonView) {
+            let h = this.clientHeight()
+
+            /*
             let dv = DivView.clone().setPosition("absolute").setDivClassName("BrowserRowDeleteXView")
             dv.setBackgroundColor("black")
-            let h = this.clientHeight()
             dv.setMinAndMaxHeight(h+2)
             dv.setMinAndMaxWidth(this.clientWidth())
             dv.setTop(this.offsetTop())
+            dv.setZIndex(null)
+            this._dragDeleteView = dv
+            */
 
+            this.setBackgroundColor("black")
+            this.contentView().setBackgroundColor(this.column().columnGroup().backgroundColor())
             let cb = CloseButton.clone().setTransition("opacity 0.1s")
             cb.setMinAndMaxHeight(h)
             cb.setMinAndMaxWidth(h)
-            dv.addSubview(cb)
-            this.parentView().addSubview(dv)
-
-            this.setBackgroundColor(this.column().columnGroup().backgroundColor())
-            this.setZIndex(10)
-            dv.setZIndex(null)
-            this._dragDeleteView = dv
+            this.addSubview(cb)
+            //this.parentView().addSubview(dv)
+            //this.setBackgroundColor(this.column().columnGroup().backgroundColor())
+            cb.setZIndex(0)
+            this.contentView().setZIndex(1)
             this._dragDeleteButtonView = cb
         }
         return this
     },
 
-    removeDeleteXView: function() {
-        if (this._dragDeleteView) {
-            this._dragDeleteView.removeFromParentView()
-            this._dragDeleteView = null
+    cleanupSlide: function() {
+        if (this._dragDeleteButtonView) {
+            this._dragDeleteButtonView.removeFromParentView()
+            this._dragDeleteButtonView = null
+            this.setBackgroundColor(null)
+
         }
     },
 	
@@ -318,7 +325,8 @@ window.BrowserRow = NodeView.extend().newSlots({
     setTouchRight: function(v) {
         //this.setTransform("translateX(" + (v) + "px)");
         //this.setLeft(-v)
-        this.setRight(v)
+        //this.setRight(v)
+        this.contentView().setRight(v)
     },
 	
     onSlideComplete: function(slideGesture) {
@@ -343,7 +351,7 @@ window.BrowserRow = NodeView.extend().newSlots({
             //console.log("-this.clientWidth() = ", -this.clientWidth())
             this.setTouchRight(this.clientWidth())
             this.setBackgroundColor("black")
-            this.removeDeleteXView()
+            this.cleanupSlide()
             this.setTransition(this.transitionStyle())
             this.delete()
         }
@@ -371,7 +379,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
 
     didCompleteSlide: function() {
-        this.removeDeleteXView()
+        this.cleanupSlide()
     },
 
     /*
@@ -430,7 +438,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     onLongPressComplete: function(aGesture) {
         if (this.column().canReorder()) {
             let pan = this.addPanGesture()
-            //pan.onDown(event)
+            pan.setShouldRemoveOnComplete(true)
             pan.setMinDistToBegin(0)
             pan.onDown(aGesture.currentEvent())
             this.setBackgroundColor("red")
@@ -466,7 +474,6 @@ window.BrowserRow = NodeView.extend().newSlots({
             this.setTop(this._dragStartPos.y())
             this.setZIndex(1)
             this.column().setPosition("relative")
-            console.log("this.column().position() = ", this.column().position())
         }
     },
 

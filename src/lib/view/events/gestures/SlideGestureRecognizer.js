@@ -37,18 +37,13 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     type: "SlideGestureRecognizer",
     isPressing: false,
 
-    // new stuff
     direction: "left", 
     validDirectionsDict: { left: 1, right: 2, up: 3, down: 4 },
     numberOfFingerRequired: 1,
     minDistToBegin: 10,
-
-    downPositionInTarget: null,
-    downPosition: null,
-    currentPosition: null,
-    upPosition: null,
+    maxPerpendicularDistToBegin: 10, // will not begin if this is exceeded
+    //downPositionInTarget: null,
 }).setSlots({
-    
     init: function () {
         GestureRecognizer.init.apply(this)
         this.setListenerClasses(["MouseListener", "TouchListener"]) 
@@ -70,33 +65,42 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     // --- events --------------------------------------------------------------------
 
-    onPressDownPos: function (pos) {
+    onDown: function (event) {
+        console.log(this.type() + ".onDown()")
+
+        if (this.isPressing()) {
+            console.warn(this.type() + ".onDown() isPressing")
+        }
+
+        if (this.isActive()) {
+            console.warn(this.type() + ".onDown() isActive")
+        }
+
         if (!this.isPressing()) {
-            let points = this.pointsForEvent(event)
-
-            if (points.length < this.numberOfFingerRequired()) {
-                return this
+            this.setCurrentEvent(event)
+            if (this.currentFingersDown() >= this.numberOfFingerRequired()) {
+                this.setIsPressing(true)
+                this.setBeginEvent(event)
+                this.startDocListeners()
             }
-
-            //console.log(this.type() + ".onPressDownPos(" + pos.asString() + ")")
-            this.setIsPressing(true)
-            this.setDownPosition(pos)
-            this.setCurrentPosition(pos)
-            this.setDownPositionInTarget(this.viewTarget().windowPos())
-
-            this.startDocListeners()
         }
     },
 
-    onPressMovePos: function(pos) {
+    onMove: function(event) {
         if (this.isPressing()) {
-            this.setCurrentPosition(pos)
+            this.setCurrentEvent(event)
+
+            if (this.hasMovedTooMuchPerpendicular()) {
+                this.cancel()
+                return this
+            }
 
             if (!this.isActive() && this.hasMovedEnough()) {
                 let vt = this.viewTarget()
                 let r = vt.requestActiveGesture(this)
                 if(r) {
                     this.setIsActive(true)
+                    this.setBeginEvent(event)
                     this.sendDelegateMessage("onSlideBegin")
                 }
             }
@@ -109,10 +113,10 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     // -----------
 
-    onPressUpPos: function (pos) {
+    onUp: function (event) {
         if (this.isPressing()) {
             this.setIsPressing(false)
-            this.setCurrentPosition(pos)
+            this.setCurrentEvent(event)
             if (this.isActive()) {
                 this.sendDelegateMessage("onSlideComplete")
             }
@@ -132,6 +136,7 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     finish: function() {
         //console.log(this.type() + ".finish()")
+        this.setIsPressing(false)
         this.setIsActive(false)
         this.stopDocListeners()
         this.didFinish()
@@ -140,25 +145,40 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     // ----------------------------------
 
-    hasMovedEnough: function() {
+    hasMovedTooMuchPerpendicular: function() {
+        let m = this.maxPerpendicularDistToBegin()
         let dp = this.diffPos()
-        let m = this.minDistToBegin()
 
         let funcs = {
-            left:  (dx, dy, m) => -dx > m,
-            right: (dx, dy, m) =>  dx > m,
-            up:    (dx, dy, m) =>  dy > m,
-            down:  (dx, dy, m) => -dy > m
+            left:  (dx, dy) => dy,
+            right: (dx, dy) => dy,
+            up:    (dx, dy) => dx,
+            down:  (dx, dy) => dx
         }
 
-        let r =  funcs[this.direction()](dp.x(), dp.y(), m)
+        let r = Math.abs(funcs[this.direction()](dp.x(), dp.y())) > m
         return r
     },
 
-    // ------------------------------
+    hasMovedEnough: function() {
+        let m = this.minDistToBegin()
+        let dp = this.diffPos()
+
+        let funcs = {
+            left:  (dx, dy) => -dx,
+            right: (dx, dy) =>  dx,
+            up:    (dx, dy) =>  dy,
+            down:  (dx, dy) => -dy
+        }
+
+        let r = funcs[this.direction()](dp.x(), dp.y()) > m
+        return r
+    },
+
+    // --- helpers ----
 
     diffPos: function() {
-        let p = this.currentPosition().subtract(this.downPosition()).floorInPlace() // floor here?
+        let p = this.currentPosition().subtract(this.beginPosition()).floorInPlace() // floor here?
         let dx = p.x()
         let dy = p.y()
         let funcs = {
@@ -172,57 +192,17 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
         return p
     },
 
-    // --- mouse events ---
-
-    onMouseDown: function (event) {
-        let p = this.pointsForEvent(event).first()
-        return this.onPressDownPos(p)
-    },
-
-    onMouseMoveCapture: function(event) {
-        let p = this.pointsForEvent(event).first()
-        this.onPressMovePos(p)
-    },
-
-    onMouseUpCapture: function (event) {
-        let p = this.pointsForEvent(event).first()
-        return this.onPressUpPos(p)
-    },
-
-    // --- touch events ---
-
-    onTouchStart: function(event) {
-        let p = this.pointsForEvent(event).first()
-        return this.onPressDownPos(p)
-    },
-
-    onTouchMoveCapture: function(event) {
-        let p = this.pointsForEvent(event).first()
-        return this.onPressMovePos(p)
-    },
-
-    onTouchCancelCapture: function(event) {
-        let p = this.pointsForEvent(event).first()
-        return this.onPressUpPos(p)
-    },
-	
-    onTouchEndCapture: function(event) {
-        let p = this.pointsForEvent(event).first()
-        return this.onPressUpPos(p)
-    },	
-
-    // --- helpers ----
-
     distance: function() {
-        let dp = this.diffPos()
-        let dx = Math.abs(dp.x())
-        let dy = Math.abs(dp.y())
+        let p = this.diffPos()
+        let dx = p.x()
+        let dy = p.y()
         let funcs = {
             left:  (dx, dy) => dx,
             right: (dx, dy) => dx,
             up:    (dx, dy) => dy,
             down:  (dx, dy) => dy
         }
-        return funcs[this.direction()](dx, dy)
+        return Math.abs(funcs[this.direction()](dx, dy))
     },
+
 })

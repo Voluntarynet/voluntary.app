@@ -17,14 +17,8 @@ window.PinchGestureRecognizer = GestureRecognizer.extend().newSlots({
     type: "PinchGestureRecognizer",
     isPressing: false,
 
-    // new stuff
     numberOfTouchesRequired: 1,
     minDistToBegin: 10,
-
-    downPositionInTarget: null,
-    downPosition: null,
-    currentPosition: null,
-    upPosition: null,
 }).setSlots({
     
     init: function () {
@@ -33,7 +27,5 @@ window.PinchGestureRecognizer = GestureRecognizer.extend().newSlots({
         this.setListenerClasses(["MouseListener", "TouchListener"]) 
         return this
     },
-
-
 
 })

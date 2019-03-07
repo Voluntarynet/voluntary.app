@@ -153,7 +153,7 @@ window.BMMessages = BMStorableNode.extend().newSlots({
     },
 
     addSubnode: function(msg) {
-        //console.log(this.type() + " addSubnode " + msg.pid())
+        //console.log(this.typeId() + " addSubnode " + msg.pid())
         BMStorableNode.addSubnode.apply(this, [msg])
         this.notifyChange()
         return this

@@ -143,7 +143,7 @@ window.DragBarView = DivView.extend().newSlots({
     },
 
     onMouseDown: function (event) {
-        //console.log(this.type() + " onMouseDown")
+        //console.log(this.typeId() + " onMouseDown")
         this.setIsDragging(true)
 
         this.removeParentTracking()
@@ -169,13 +169,13 @@ window.DragBarView = DivView.extend().newSlots({
     },
 
     onMouseOver: function(event) {
-        //console.log(this.type() + " onMouseOver")
+        //console.log(this.typeId() + " onMouseOver")
         this.setIsHighlighted(true)
         return false
     },
 
     onMouseOut: function(event) {
-        //console.log(this.type() + " onMouseOut")
+        //console.log(this.typeId() + " onMouseOut")
         this.setIsHighlighted(false)
         return false
     },

@@ -46,7 +46,7 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
 }).setSlots({
     init: function () {
         GestureRecognizer.init.apply(this)
-        this.setListenerClasses(["MouseListener", "TouchListener"]) 
+        this.setListenerClasses(["MouseListener", "TouchListener"])     
         //this.setIsDebugging(true)
         return this
     },
@@ -66,16 +66,6 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     // --- events --------------------------------------------------------------------
 
     onDown: function (event) {
-        console.log(this.type() + ".onDown()")
-
-        if (this.isPressing()) {
-            console.warn(this.type() + ".onDown() isPressing")
-        }
-
-        if (this.isActive()) {
-            console.warn(this.type() + ".onDown() isActive")
-        }
-
         if (!this.isPressing()) {
             this.setCurrentEvent(event)
             if (this.currentFingersDown() >= this.numberOfFingerRequired()) {
@@ -100,13 +90,12 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
                 let r = vt.requestActiveGesture(this)
                 if(r) {
                     this.setIsActive(true)
-                    this.setBeginEvent(event)
-                    this.sendDelegateMessage("onSlideBegin")
+                    this.sendBeginMessage() // being
                 }
             }
         
             if (this.isActive()) {
-                this.sendDelegateMessage("onSlideMove")
+                this.sendMoveMessage() // move
             }
         }
     },
@@ -118,7 +107,7 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
             this.setIsPressing(false)
             this.setCurrentEvent(event)
             if (this.isActive()) {
-                this.sendDelegateMessage("onSlideComplete")
+                this.sendCompleteMessage() // complete
             }
             this.finish()
         }
@@ -128,14 +117,14 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     cancel: function() {
         if (this.isActive()) {
-            this.sendDelegateMessage("onSlideCancelled")
+            this.sendCancelledMessage()
         }
         this.finish()
         return this
     },
 
     finish: function() {
-        //console.log(this.type() + ".finish()")
+        //console.log(this.typeId() + ".finish()")
         this.setIsPressing(false)
         this.setIsActive(false)
         this.stopDocListeners()

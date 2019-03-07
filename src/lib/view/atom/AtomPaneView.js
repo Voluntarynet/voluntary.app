@@ -67,14 +67,14 @@ window.AtomPaneView = DivView.extend().newSlots({
 
     /*
     onMouseOut: function(event) {
-        console.log(this.type() + " onMouseOut")
+        console.log(this.typeId() + " onMouseOut")
 
         return true
     },
     */
 
     onMouseDown: function(event) {
-        console.log(this.type() + " onMouseDown")
+        console.log(this.typeId() + " onMouseDown")
         
         if (!this.canAddPane()) {
             return false

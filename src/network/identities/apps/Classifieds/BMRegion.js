@@ -106,7 +106,7 @@ window.BMRegion = BMNode.extend().newSlots({
 
     prepareToAccess: function() {
         if(this._lazyChildrenDict != null) {
-            console.log(this.type() + " " + this.title() + " lazy load")
+            console.log(this.typeId() + " " + this.title() + " lazy load")
             let ld = this._lazyChildrenDict
             this._lazyChildrenDict = null
             this.addChildrenDicts(ld.children)

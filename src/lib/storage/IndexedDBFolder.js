@@ -66,17 +66,17 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
         this.assertHasUniqueId()
 
         if (this.debug()) {
-            console.log(this.type() + " asyncOpen")
+            console.log(this.typeId() + " asyncOpen")
         }
 		
         let request = window.indexedDB.open(this.path(), 2);
         
         request.onerror = (event) => {
-            console.log(this.type() + " open db error ", event);
+            console.log(this.typeId() + " open db error ", event);
         };
          
         request.onupgradeneeded = (event) => { 
-            console.log(this.type() + " onupgradeneeded - likely setting up local database for the first time")
+            console.log(this.typeId() + " onupgradeneeded - likely setting up local database for the first time")
 
             let db = event.target.result;
 
@@ -91,7 +91,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
         };
 
         request.onsuccess =  (event) => {
-            //console.log(this.type() + " db open onsuccess ", event)
+            //console.log(this.typeId() + " db open onsuccess ", event)
             this.setDb(event.target.result)
             if (callback) {
                 callback()
@@ -142,7 +142,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
                     callback(undefined)
                 }
             } catch (e) {
-                console.log(this.type() + " asyncAt('" +  key + "') caught stack ", stack)
+                console.log(this.typeId() + " asyncAt('" +  key + "') caught stack ", stack)
             }
         };
         
@@ -165,20 +165,20 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
                 dict[cursor.value.key] = JSON.parse(cursor.value.value)
                 cursor.continue();
             } else {
-                //console.log(this.type() + " asyncAsJson returning dict ", JSON.stringify(dict))
+                //console.log(this.typeId() + " asyncAsJson returning dict ", JSON.stringify(dict))
                 callback(dict)
             }
         };
         
         cursorRequest.onerror = (event) => {
-            console.log(this.type() + " asyncAsJson cursorRequest.onerror ", event)
+            console.log(this.typeId() + " asyncAsJson cursorRequest.onerror ", event)
             throw newError("error requesting cursor")
         }
     }
     
     show () {
         this.asyncAsJson((json) => {
-	        console.log(this.type() + " " + this.path() + " = " + JSON.stringify(json, null, 2))
+	        console.log(this.typeId() + " " + this.path() + " = " + JSON.stringify(json, null, 2))
 
         })
     }
@@ -208,11 +208,11 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
         let request = window.indexedDB.deleteDatabase(this.storeName())
 		
         request.onerror = (event) => {
-  			console.log(this.type() +  "Error deleting '" + this.storeName() + "'");
+  			console.log(this.typeId() +  "Error deleting '" + this.storeName() + "'");
         }
  
         request.onsuccess = (event) => {
-            console.log(this.type() + " deleted successfully '" + this.storeName()  + "'");
+            console.log(this.typeId() + " deleted successfully '" + this.storeName()  + "'");
     	}
 		
         this.setDb(null)

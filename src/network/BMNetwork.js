@@ -145,7 +145,7 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
         })
 		
         if (!result) {		
-		    console.log(this.type() + ".idWithPublicKeyString(" + publicKeyString + ") = ", result)
+		    console.log(this.typeId() + ".idWithPublicKeyString(" + publicKeyString + ") = ", result)
 		    console.log("all ids: ", ids.map((id) => { return id.name() + ":" + id.publicKeyString() }))
 	    }
         return result

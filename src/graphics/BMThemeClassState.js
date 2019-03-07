@@ -46,7 +46,7 @@ window.BMThemeClassState = BMFieldSetNode.extend().newSlots({
     },
 
     didUpdateField: function(aField) {
-        console.log(this.type() + ".didUpdateField: " + aField.key() + ":", aField.value())
+        console.log(this.typeId() + ".didUpdateField: " + aField.key() + ":", aField.value())
 
         if (aField.value()) { // dark mode
             BMThemeStyleSheet.shared().setDivClassNameAttributeValue(this.divClassName(), aField.key(), "#000")

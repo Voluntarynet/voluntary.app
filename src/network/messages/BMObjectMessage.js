@@ -77,7 +77,7 @@ window.BMObjectMessage = BMMessage.extend().newSlots({
     // dict 
     
     setMsgDict: function(dict) {
-        //console.log(this.type() + " setMsgDict ", dict)
+        //console.log(this.typeId() + " setMsgDict ", dict)
         //this.setPow(dict.pow)
         //this.setSignature(dict.signature)
         this.setMsgType(dict.msgType)

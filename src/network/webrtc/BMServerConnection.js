@@ -246,7 +246,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
     /*  
     log: function(s) {
         if (this.debug()) {
-            console.log(this.type() + " " + s)
+            console.log(this.typeId() + " " + s)
         }
         return this
     },

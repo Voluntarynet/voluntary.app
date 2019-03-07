@@ -33,7 +33,7 @@ window.Observation = class Observation extends ProtoClass {
             method.apply(this._observer, [note])
         } else {
             if (this.debug()) {
-                console.log(this.type() + " no method found for note name " + note.name())
+                console.log(this.typeId() + " no method found for note name " + note.name())
             }
         }
     }

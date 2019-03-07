@@ -121,7 +121,7 @@ window.BMAppMessage = BMFieldSetNode.extend().newSlots({
             return null
         }
         
-        //console.log(this.type() + " fromDataDict() dataDict = ", dataDict)
+        //console.log(this.typeId() + " fromDataDict() dataDict = ", dataDict)
         return proto.clone().setDataDict(dataDict)
     },
 

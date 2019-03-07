@@ -107,7 +107,7 @@ window.TextField = DivStyledView.extend().newSlots({
         this.setInnerHTML(newValue)
         
 	    //console.trace(this.type() + " formatValue '" + oldValue + "' -> '" + this.innerHTML() + "'")
-        //console.log(this.type() + " after formatValue: '" + this.innerHTML() + "'")
+        //console.log(this.typeId() + " after formatValue: '" + this.innerHTML() + "'")
         return this
     },
     
@@ -137,7 +137,7 @@ window.TextField = DivStyledView.extend().newSlots({
     },
 
     onDoubleClick: function (event) {
-        console.log(this.type() + ".onDoubleClick()")
+        console.log(this.typeId() + ".onDoubleClick()")
         //this.focus()
         this.selectAll() // looses focus!
         this.element().focus()

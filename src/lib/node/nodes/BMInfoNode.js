@@ -24,7 +24,7 @@ window.BMInfoNode = BMStorableNode.extend().newSlots({
     },        
     
     onDidEditNode: function() {
-        console.log(this.type() + " onDidEditNode")
+        console.log(this.typeId() + " onDidEditNode")
         this.scheduleSyncToStore()
     },
 })

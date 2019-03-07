@@ -26,9 +26,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     type: "GestureRecognizer",
     
     viewTarget: null,
-    state: null,
-
-    currentEvent: null, 
+    //state: null,
 
     listenerClasses: null,
     viewListeners: null, 
@@ -39,15 +37,22 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
 
     shouldRemoveOnComplete: false,
 
+    didBegin: false,
     downEvent: null,
     beginEvent: null,
     currentEvent: null,
     upEvent: null,
+
+    beginMessage: null,     //"on<GestureName>Begin",
+    moveMessage: null,      //"on<GestureName>Move",
+    cancelledMessage: null, // "on<GestureName>Cancelled",
+    completeMessage: null,  // "on<GestureName>Complete",
 }).setSlots({
     init: function () {
         this.setListenerClasses([]) // subclasses override this in their
         this.setDocListeners([])
         this.setViewListeners([])
+        this.autoSetMessageNames()
         return this
     },
 
@@ -67,7 +72,6 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         return this
     },
     */
-
 
     currentPosition: function() {
         return this.pointsForEvent(this.currentEvent()).first()
@@ -96,6 +100,12 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         let bounds = this.viewTarget().winBounds()
         return bounds.containsPoint(p)
     },
+
+    /*
+    currentViewTarget: function() {
+        return this.currentEvent().target._divView
+    },
+    */
 
 
     // --- listeners ---
@@ -166,7 +176,12 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     },
 
     didFinish: function() {
-        if (this.shouldRemoveOnComplete()) {
+        this.setDidBegin(false)
+        this.setIsActive(false)
+
+        if (this.shouldRemoveOnComplete() && this.viewTarget()) {
+            //let vt = this.viewTarget()
+            //console.log(this.typeId() + ".shouldRemoveOnComplete() this.viewTarget() = " + (vt ? vt.typeId() : "null"))
             this.stop()
             this.viewTarget().removeGestureRecognizer(this)
         }
@@ -176,8 +191,10 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     // subclass helpers
 
     sendDelegateMessage: function(methodName) {
+        assert(methodName != null)
+
         if (this.isDebugging()) {
-            console.log(this.type() + " sending " + methodName)
+            console.log(this.typeId() + " sending " + methodName)
         }
 
         let vt = this.viewTarget()
@@ -191,45 +208,15 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         return this
     },
 
-    /*
-    sendStateMessage: function(state) {
-        let g = this.type().before("GestureRecognizer")
-        let msg = "on" + this.type() + state
-        this.sendDelegateMessage(msg)
-        return this
-    },
-
-    sendBeginMessage: function() {
-        this.sendStateMessage("Begin")
-        //this.didBegin()
-        return this
-    },
-
-    sendMoveMessage: function() {
-        return this.sendStateMessage("Move")
-    },
-
-    sendCompleteMessage: function() {
-        this.sendStateMessage("Complete")
-        this.didFinish()
-        return this
-    },
-
-    sendCancelledMessage: function() {
-        this.sendStateMessage("Cancelled")
-        this.didFinish()
-        return this
-    },
-    */
-
     // points helper
     // maps mouse and touch events to a common list of points (with times and ids) format
     // so we can share the event handling code for both devices 
 
     pointsForEvent: function(event) {
         if (event == null) {
-            console.warn(this.type() + ".pointsForEvent() event == null")
+            throw new Error(this.type() + ".pointsForEvent() event == null")
         }
+
         if (event._gestureRecognizerPoints) {
             return event._gestureRecognizerPoints
         }
@@ -263,12 +250,15 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     // --- events --------------------------------------------------------------------
 
     onDown: function (event) {
+        this.setCurrentEvent(event)
     },
 
     onMove: function(event) {
+        this.setCurrentEvent(event)
     },
 
     onUp: function (event) {
+        this.setCurrentEvent(event)
     },
 
     // mouse events
@@ -344,6 +334,46 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
             down:  (dx, dy) => dy
         }
         return funcs[this.direction()](dx, dy)
+    },
+
+    defaultMessageForState: function(state) {
+        let name = this.type().before("GestureRecognizer")
+        let msg = "on" + name + state.capitalized()
+        return msg
+    },
+
+    autoSetMessageNames: function() {
+        this.setBeginMessage(this.defaultMessageForState("Begin"))
+        this.setMoveMessage(this.defaultMessageForState("Move"))
+        this.setCancelledMessage(this.defaultMessageForState("Cancelled"))
+        this.setCompleteMessage(this.defaultMessageForState("Complete"))
+        return this
+    },
+
+
+    sendBeginMessage: function() {
+        this.setDidBegin(true)
+        this.setBeginEvent(this.currentEvent())
+        this.sendDelegateMessage(this.beginMessage())
+        return this
+    },
+
+    sendMoveMessage: function() {
+        this.sendDelegateMessage(this.moveMessage())
+        //this.didMove()
+        return this
+    },
+
+    sendCompleteMessage: function() {
+        this.sendDelegateMessage(this.completeMessage())
+        this.didFinish()
+        return this
+    },
+
+    sendCancelledMessage: function() {
+        this.sendDelegateMessage(this.cancelledMessage())
+        this.didFinish()
+        return this
     },
 })
 

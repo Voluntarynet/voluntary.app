@@ -93,7 +93,7 @@ window.BMConnection = BMNode.extend().newSlots({
     },
 	
     onNetworkInformationChange: function() {
-        //console.log(this.type() + "Connection type changed from " + this.lastConnectionType() + " to " +  this.connectionType(), this.connection());	  
+        //console.log(this.typeId() + "Connection type changed from " + this.lastConnectionType() + " to " +  this.connectionType(), this.connection());	  
 
         NotificationCenter.shared().newNote().setSender(this).setName("onNetworkInformationChange").post()
         

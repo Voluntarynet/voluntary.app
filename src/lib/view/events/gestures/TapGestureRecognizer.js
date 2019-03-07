@@ -31,19 +31,12 @@
 window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
     type: "TapGestureRecognizer",
     maxHoldPeriod: 500, // milliseconds per tap
-    timePeriod: 500, // miliseconds from first down event to last up event
+    timePeriod: 500, // miliseconds from first down event to up event
     timeoutId: null, // private
-    lastEvent: event,
 
     numberOfTapsRequired: 3,
     numberOfFingersRequired: 1,
     tapCount: 0,
-    //tapCountDict: null,
-
-    beginMessage: "onTapBegin",
-    cancelledMessage: "onTapCancelled",
-    completeMessage: "onTapComplete",
-    downPoints: null,
 }).setSlots({
     
     init: function () {
@@ -56,7 +49,6 @@ window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     resetTapCount: function() {
         this.setTapCount(0)
-        //this.setTapCountDict({})
         return this
     },
 
@@ -66,6 +58,7 @@ window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
         if (this.timeoutId()) {
             this.stopTimer()
         }
+
         let tid = setTimeout(() => { this.cancel() }, this.timePeriod());
         this.setTimeoutId(tid)
         return this
@@ -86,18 +79,17 @@ window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     // -- single action for mouse and touch up/down ---
 
-    onPressDown: function (event) {
-        let points = this.pointsForEvent(event)
+    onDown: function (event) {
+        this.setCurrentEvent(event)
         
-        if (points.length < this.numberOfFingersRequired()) {
+        if (this.currentFingersDown() < this.numberOfFingersRequired()) {
             return this
         }
 
         if (!this.hasTimer()) {
-            this.setDownPoints(points)
             this.setTapCount(1)
             this.startTimer()
-            this.sendDelegateMessage(this.beginMessage())
+            this.sendBeginMessage() // begin
         } else {
             this.setTapCount(this.tapCount() + 1)
         }
@@ -109,9 +101,10 @@ window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
         return true
     },
 
-    onPressUp: function (event) {
-        return true
+    /*
+    onUp: function (event) {
     },
+    */
 
     // end states
 
@@ -119,43 +112,17 @@ window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
         this.stopTimer()
         let r = this.viewTarget().requestActiveGesture(this)
         if (r) {
-            this.sendDelegateMessage(this.completeMessage())
-            //this.completeMessageForCount(this.numberOfTapsRequired())
-            this.didFinish()
+            this.sendCompleteMessage() // complete
         }
     },
 
     cancel: function() {
         if (this.hasTimer()) {
             this.stopTimer()
-            this.sendDelegateMessage(this.cancelledMessage())
-            this.didFinish()
+            this.sendCancelledMessage() // cancelled
         }
         return this
     },
-
-    // --- events --------------------------------------------------------------------
-
-    // mouse events
-
-    onMouseDown: function (event) {
-        return this.onPressDown(event)
-    },
-
-    onMouseUp: function (event) {
-        return this.onPressUp(event)
-    },
-
-    // touch events
-
-    onTouchStart: function(event) {
-        return this.onPressDown(event)
-    },
-
-    onTouchEnd: function(event) {
-        return this.onPressUp(event)
-    },	
-
 
     /*
     // was going to do some auto-naming but decided against it for now

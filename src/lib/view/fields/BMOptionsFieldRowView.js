@@ -41,7 +41,7 @@ window.BMOptionsFieldRowView = BMFieldRowView.extend().newSlots({
 	
     open: function() {
         if(!this.isOpen()) {
-            //console.log(this.type() + " open")
+            //console.log(this.typeId() + " open")
             this.updateValidValues()
             this.optionsView().fadeInToDisplayInlineBlock()
             this.noteView().fadeOutToDisplayNone()
@@ -52,14 +52,14 @@ window.BMOptionsFieldRowView = BMFieldRowView.extend().newSlots({
 	
     close: function() {
         if(this.isOpen()) {
-            //console.log(this.type() + " close")
+            //console.log(this.typeId() + " close")
             this.optionsView().fadeOutToDisplayNone()
             this.noteView().fadeInToDisplayInlineBlock() 
         }
     },
 	
     select: function(validValue) {
-        //console.log(this.type() + " selected " + validValue)
+        //console.log(this.typeId() + " selected " + validValue)
         //this.setInnerHTML(validValue)
         this.node().setValue(validValue)
         this.node().didUpdateView(this)
@@ -113,7 +113,7 @@ window.BMOptionsFieldRowView = BMFieldRowView.extend().newSlots({
 	
     onDidEdit: function() {
         let  returnValue = BMFieldRowView.onDidEdit.apply(this)
-        //	console.log(this.type() + " onDidEdit")
+        //	console.log(this.typeId() + " onDidEdit")
 		
         let  currentValidValues = this.currentValidValues()
 		

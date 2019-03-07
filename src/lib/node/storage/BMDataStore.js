@@ -33,7 +33,7 @@ window.BMDataStore = BMNode.extend().newSlots({
     },
 
     refreshSubnodes: function () {
-        //console.log(this.type() + " refreshSubnodes")
+        //console.log(this.typeId() + " refreshSubnodes")
         this.removeAllSubnodes()
         this.store().sdb().keys().sort().forEach((key) => {
             let  subnode = BMDataStoreRecord.clone().setTitle(key)

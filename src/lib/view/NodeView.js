@@ -211,7 +211,7 @@ window.NodeView = DivStyledView.extend().newSlots({
     },
 
     didUpdateNode: function () {
-        //console.log(this.type() + " didUpdateNode " + this.node().type())
+        //console.log(this.typeId() + " didUpdateNode " + this.node().type())
         this.scheduleSyncFromNode()
     },
     

@@ -190,7 +190,7 @@ window.Keyboard = ideal.Proto.extend().newSlots({
         key.onKeyDown(event)
 
         if (this.isDebugging()) {
-            console.log(this.type() + ".onKeyDown " + key.name())
+            console.log(this.typeId() + ".onKeyDown " + key.name())
         }
         
         return shouldPropogate
@@ -202,7 +202,7 @@ window.Keyboard = ideal.Proto.extend().newSlots({
         key.onKeyUp(event)
 
         if (this.isDebugging()) {
-            console.log(this.type() + ".onKeyUp " + key.name())
+            console.log(this.typeId() + ".onKeyUp " + key.name())
         }
 
         return shouldPropogate

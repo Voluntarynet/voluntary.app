@@ -291,13 +291,13 @@ window.BMNode = ideal.Proto.extend().newSlots({
         let slotValue = this[slotName].apply(this)
         assert(aProto)
 		
-        console.log(this.type() + ".addSubnodeProtoForSlotIfAbsent(" + aProto.type() + ", " + slotName + ")")
-        console.log(this.type() + " slotValue = " + slotValue)
+        console.log(this.typeId() + ".addSubnodeProtoForSlotIfAbsent(" + aProto.type() + ", " + slotName + ")")
+        console.log(this.typeId() + " slotValue = " + slotValue)
 		
         if (slotValue == null) {
 		    
             slotValue = aProto.clone()
-            //console.log(this.type() + "." + setterName + "(", obj, ")")
+            //console.log(this.typeId() + "." + setterName + "(", obj, ")")
             let setterName = this.setterNameForSlot(slotName)
             this[setterName].apply(this, [slotValue])
         }

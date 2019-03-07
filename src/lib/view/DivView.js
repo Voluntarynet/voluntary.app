@@ -1995,7 +1995,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     onKeyUp: function (event) {
         let shouldPropogate = true
         let specialKeyName = Keyboard.specialNameForKeyEvent(event)
-        //console.log(this.type() + " onKeyUp specialKeyName=", specialKeyName)
+        //console.log(this.typeId() + " onKeyUp specialKeyName=", specialKeyName)
 
         /*
 		if (this.interceptsTab()) {
@@ -2048,7 +2048,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     selectNextKeyView: function() {
-        console.log(this.type() + " selectNextKeyView")
+        console.log(this.typeId() + " selectNextKeyView")
         let nkv = this.nextKeyView()
         if (nkv) {
             //if (nkv.initialFirstResponder()) {
@@ -2075,7 +2075,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
     
     willAcceptFirstResponder: function() {
-	    //console.log(this.type() + ".willAcceptFirstResponder()")
+	    //console.log(this.typeId() + ".willAcceptFirstResponder()")
         return this
     },
     
@@ -2103,7 +2103,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     releaseFirstResponder: function() {
 	    // walk up parent view chain and focus on the first view to 
 	    // answer true for the acceptsFirstResponder message
-	    //console.log(this.type() + ".releaseFirstResponder()")
+	    //console.log(this.typeId() + ".releaseFirstResponder()")
 	    
 	    this.blur()
 	    if (this.parentView()) {
@@ -2117,14 +2117,14 @@ window.DivView = ideal.Proto.extend().newSlots({
     onFocus: function() {
         this.willAcceptFirstResponder();
         // subclasses can override 
-        //console.log(this.type() + " onFocus")
+        //console.log(this.typeId() + " onFocus")
         return true
     },
 
     onBlur: function() {
         this.didReleaseFirstResponder();
         // subclasses can override 
-        //console.log(this.type() + " onBlur")
+        //console.log(this.typeId() + " onBlur")
         return true
     },
     
@@ -2703,10 +2703,10 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     disablePointerEventsUntilTimeout: function(ms) {
         this.setPointerEvents("none")
-        console.log(this.type() + " disabling pointer events")
+        console.log(this.typeId() + " disabling pointer events")
 
         setTimeout(() => {
-            console.log(this.type() + " enabling pointer events")
+            console.log(this.typeId() + " enabling pointer events")
             this.setPointerEvents("inherit")
         }, ms)
         

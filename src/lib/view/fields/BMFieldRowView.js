@@ -58,7 +58,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
     // sync 
     
     syncValueViewToNode: function() {
-        //console.log(this.type() + ".syncValueViewToNode " + this.node().type())
+        //console.log(this.typeId() + ".syncValueViewToNode " + this.node().type())
 	    if (this.node().type() == "BMBoolField" && this.valueView().type() != "BoolView") {
 	        //console.log("syncValueViewToNode setup bool view")
 	        let  boolView = BoolView.clone()
@@ -73,7 +73,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
     
     syncFromNode: function () {
         BrowserFieldRow.syncFromNode.apply(this)
-        //console.log(this.type() + " syncFromNode")
+        //console.log(this.typeId() + " syncFromNode")
 		
         this.node().prepareToSyncToView()
         this.syncValueViewToNode() // (lazy) set up the value view to match the field's type
@@ -206,7 +206,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
     },
     
     onEnterKeyUp: function() {
-        //console.log(this.type() + ".onEnterKeyUp()")
+        //console.log(this.typeId() + ".onEnterKeyUp()")
         if(this.valueView().activate) {
             this.valueView().activate()
         }

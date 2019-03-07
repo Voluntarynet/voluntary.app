@@ -60,18 +60,11 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
     },
 
     // -- the completed gesture ---
-
-    /*
-    currentViewTarget: function() {
-        return this.currentEvent().target._divView
-    },
-    */
     
     onLongPress: function() {
         this.setTimeoutId(null)
 
         if(this.currentEventIsOnTargetView()) {
-            //this.currentEventIsOnTargetView()
             if (this.viewTarget().requestActiveGesture(this)) {
                 this.sendDelegateMessage("onLongPressComplete")
                 this.didFinish()

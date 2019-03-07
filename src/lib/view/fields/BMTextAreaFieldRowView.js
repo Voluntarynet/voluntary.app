@@ -37,7 +37,7 @@ window.BMTextAreaFieldRowView = BMFieldRowView.extend().newSlots({
 	
     fillBottomOfColumnIfAvailable: function() {
         if (this.column().rows().last() == this) {
-            //console.log(this.type() + " update height")
+            //console.log(this.typeId() + " update height")
             this.setMinAndMaxHeightPercentage(100)
             this.setFlexGrow(100)
             this.setBorderBottom("0px")

@@ -37,16 +37,6 @@ window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
     // tap events
 
     onDown: function (event) {
-        console.log(this.type() + ".onDown()")
-
-        if (this.isPressing()) {
-            console.warn(this.type() + ".onDown() isPressing")
-        }
-
-        if (this.isActive()) {
-            console.warn(this.type() + ".onDown() isActive")
-        }
-
         if (!this.isPressing()) {
             this.setCurrentEvent(event)
             let fingers = this.currentFingersDown()
@@ -54,7 +44,6 @@ window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
                 fingers <= this.maxNumberOfFingersAllowed()) {
                 this.setIsPressing(true)
                 this.setDownEvent(event)
-                //this.setDownPositionInTarget(this.viewTarget().windowPos())
                 this.startDocListeners()
             }
         }
@@ -71,26 +60,25 @@ window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
                 if(r) {
                     this.setIsActive(true)
                     this.setBeginEvent(event)
-                    this.sendDelegateMessage("onPanBegin")
+                    this.sendBeginMessage() // begin
                 }
             }
         
             if (this.isActive()) {
-                this.sendDelegateMessage("onPanMove")
+                this.sendMoveMessage() // move
             }
         }
         return this
     },
 
     onUp: function (event) {
-        //let points = this.pointsForEvent(event)
         if (this.isPressing()) {
             this.setCurrentEvent(event)
 
             if (this.isActive()) {
-                this.sendDelegateMessage("onPanComplete")
+                this.sendCompleteMessage() // complete
             }
-            this.finish()
+            this.didFinish()
         }
         return this
     },
@@ -99,16 +87,15 @@ window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     cancel: function() {
         if (this.isActive()) {
-            this.sendDelegateMessage("onPanCancelled")
+            this.sendCancelledMessage()
         }
-        this.finish()
+        this.didFinish()
         return this
     },
 
-    finish: function() {
-        //console.log(this.type() + ".finish()")
+    didFinish: function() {
+        GestureRecognizer.didFinish.apply(this)
         this.setIsPressing(false)
-        this.setIsActive(false)
         this.stopDocListeners()
         this.didFinish()
         return this

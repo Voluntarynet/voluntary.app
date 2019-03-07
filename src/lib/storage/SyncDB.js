@@ -230,7 +230,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
                     tx.removeAt(k)
                     delete this._readCache[k]
                     if (this.debug()) {
-                    	console.log(this.type() + " delete ", k)
+                    	console.log(this.typeId() + " delete ", k)
                     }
                 } else {
                     let v = entry._value
@@ -239,12 +239,12 @@ window.SyncDB = class SyncDB extends ProtoClass {
                     if (k in this._readCache) {
                         tx.atUpdate(k, v)
                         if (this.debug()) {
-                        	console.log(this.type() + " update ", k)
+                        	console.log(this.typeId() + " update ", k)
                         }
                     } else {
                         tx.atAdd(k, v)
                         if (this.debug()) {
-                        	console.log(this.type() + " add ", k)
+                        	console.log(this.typeId() + " add ", k)
                         }
                     }
                     

@@ -45,7 +45,7 @@ window.WebBrowserScreen = ideal.Proto.extend().newSlots({
     },
         
     show: function() {
-        console.log(this.type() + " size " + this.width() + "x" + this.height())
+        console.log(this.typeId() + " size " + this.width() + "x" + this.height())
     },
 
     lesserOrientedSize: function() {

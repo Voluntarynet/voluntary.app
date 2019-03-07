@@ -106,10 +106,10 @@ window.BMOptionsTableView = DivView.extend().newSlots({
         //this.setMinAndMaxHeight(h)
 		
         /*
-		console.log(this.type() + " maxWidth: ", maxWidth)
-		console.log(this.type() + " subviewsPerRow: ", subviewsPerRow)
-		console.log(this.type() + " fullWidth: ", fullWidth)
-		console.log(this.type() + " setMinAndMaxWidth: ", w)
+		console.log(this.typeId() + " maxWidth: ", maxWidth)
+		console.log(this.typeId() + " subviewsPerRow: ", subviewsPerRow)
+		console.log(this.typeId() + " fullWidth: ", fullWidth)
+		console.log(this.typeId() + " setMinAndMaxWidth: ", w)
 		*/
 		
         /*

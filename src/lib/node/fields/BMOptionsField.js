@@ -37,7 +37,7 @@ window.BMOptionsField = BMField.extend().newSlots({
     },
 	
     validate: function() {
-        //console.log(this.type() + " validate")
+        //console.log(this.typeId() + " validate")
 		 
         if(!this.validValues().contains(this.value())) {	
             this.setValueError("invalid value")

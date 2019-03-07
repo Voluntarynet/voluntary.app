@@ -471,7 +471,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     // --- enter key begins row editing ---------------------------
 	
     onEnterKeyUp: function(event) {
-        //console.log(this.type() + ".onEnterKeyUp()")
+        //console.log(this.typeId() + ".onEnterKeyUp()")
         
         if (!this.canNavigate()) { return }
 	
@@ -532,7 +532,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
         
         let si = this.selectedRowIndex()
 
-        //console.log(this.type() + ".selectNextRow(), selectedRowIndex:" + this.selectedRowIndex() + "/" + this.rows().length)
+        //console.log(this.typeId() + ".selectNextRow(), selectedRowIndex:" + this.selectedRowIndex() + "/" + this.rows().length)
 
         let rows = this.rows()
         if (si == -1) {
@@ -569,7 +569,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
             this.setSelectedRowIndex(0)
         }
 
-        //console.log(this.type() + " focus")
+        //console.log(this.typeId() + " focus")
         return this
     },
     
@@ -632,7 +632,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     // editing
 
     onDoubleClick: function (event) {
-        console.log(this.type() + ".onDoubleClick()")
+        console.log(this.typeId() + ".onDoubleClick()")
         return true
     },
 

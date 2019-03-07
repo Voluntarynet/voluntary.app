@@ -68,7 +68,7 @@ class ProtoClass {
     /*
     static setupSlots () {
         //super.setupSlotsIfNeeded()
-        console.log(this.type() + ".setupSlots()")
+        console.log(this.typeId() + ".setupSlots()")
     }
 
     static setupSlotsIfNeeded () {
@@ -402,7 +402,7 @@ class ProtoClass {
         // not a great name but this walks back the ancestors and tries to find an
         // existing class with the same name as the ancestor + the given postfix
         // useful for things like type + "View" or type + "RowView", etc
-        //console.log(this.type() + " firstAncestorWithMatchingPostfixClass(" + aPostfix + ")")
+        //console.log(this.typeId() + " firstAncestorWithMatchingPostfixClass(" + aPostfix + ")")
         let match = this.ancestors().detect((obj) => {
             let name = obj.type() + aPostfix
             let proto = window[name]

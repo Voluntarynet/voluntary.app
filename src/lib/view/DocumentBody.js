@@ -35,6 +35,7 @@ window.DocumentBody = DivView.extend().newSlots({
     },
     
     setupElement: function() {
+        document.body._divView = this
         //this._element = document.body
         // get this from element override
     },
@@ -90,7 +91,7 @@ window.DocumentBody = DivView.extend().newSlots({
     },
 
     onKeyUpCapture: function (event) {
-        //console.log(this.type() + " onKeyUp ")
+        //console.log(this.typeId() + " onKeyUp ")
         return window.Keyboard.shared().onKeyUp(event)
     },
     */

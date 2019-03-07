@@ -213,7 +213,7 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
     /*
     setMinAndMaxWidth: function(w) {
         StackTrace.shared().showCurrentStack()
-		console.log(this.type() + " / " + (this.node() ? this.node().type() : "?") + " nodeMinWidth = " + w)
+		console.log(this.typeId() + " / " + (this.node() ? this.node().type() : "?") + " nodeMinWidth = " + w)
         NodeView.setMinAndMaxWidth.apply(this, [w])
         return this
     },

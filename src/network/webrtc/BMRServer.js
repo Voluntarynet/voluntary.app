@@ -47,7 +47,7 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
 
     didUpdateNode: function() {
         BMFieldSetNode.didUpdateNode.apply(this)
-        //console.log(this.type() + ".didUpdateNode()")
+        //console.log(this.typeId() + ".didUpdateNode()")
         this.updateButtons()
         return this
     },

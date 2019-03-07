@@ -108,7 +108,7 @@ window.BrowserView = NodeView.extend().newSlots({
     },
 
     prepareToSyncToView: function () {
-        //console.log(this.type() + " prepareToSyncToView")
+        //console.log(this.typeId() + " prepareToSyncToView")
         NodeView.prepareToSyncToView.apply(this)
         this.fitColumns()
         return this
@@ -117,7 +117,7 @@ window.BrowserView = NodeView.extend().newSlots({
     // --- resizing ---------------------------------
 
     onDocumentResize: function (event) {
-        //console.log(this.type() + " onDocumentResize")
+        //console.log(this.typeId() + " onDocumentResize")
         this.fitColumns()
         if (this._selectedColumnGroup) {
             this.selectColumn(this._selectedColumnGroup.column())
@@ -340,7 +340,7 @@ window.BrowserView = NodeView.extend().newSlots({
 
         let  index = this.columnGroups().indexOf(selectedColumn.columnGroup())
 
-        //console.log(this.type() + " selectColumn " + selectedColumn.node().type() + " index " + index)
+        //console.log(this.typeId() + " selectColumn " + selectedColumn.node().type() + " index " + index)
 
         if (this.isSingleColumn()) {
             this.setColumnGroupCount(index + 2)
@@ -430,7 +430,7 @@ window.BrowserView = NodeView.extend().newSlots({
     // --- fitting columns in browser ---------------------------------------------
 
     fitColumns: function () {
-        //console.log(this.type() + " fitColumns")
+        //console.log(this.typeId() + " fitColumns")
         this.updateSingleColumnMode()
 
         let  lastActiveCg = this.lastActiveColumnGroup()

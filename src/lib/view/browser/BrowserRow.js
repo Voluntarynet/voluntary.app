@@ -124,7 +124,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
     
     onTabKeyUp: function() {
-        console.log(this.type() + " onTabKeyUp")
+        console.log(this.typeId() + " onTabKeyUp")
     },
 
     // --- colors ---
@@ -152,7 +152,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     
     willAcceptFirstResponder: function() {
         NodeView.willAcceptFirstResponder.apply(this)
-	    console.log(this.type() + ".willAcceptFirstResponder()")
+	    console.log(this.typeId() + ".willAcceptFirstResponder()")
         return this
     },
     
@@ -252,7 +252,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     // -- tap gesture ---
 
     onTapComplete: function() {
-        //console.log(this.type() + ".onTapComplete()")
+        //console.log(this.typeId() + ".onTapComplete()")
         return this
     },
 
@@ -408,7 +408,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
     
     onMouseLeave: function(event) {
-        //console.log(this.type() + " onMouseLeave")
+        //console.log(this.typeId() + " onMouseLeave")
         if (this.hasCloseButton()) {
             this.closeButtonView().setOpacity(this.restCloseButtonOpacity())
             this.closeButtonView().setTarget(null)
@@ -516,14 +516,14 @@ window.BrowserRow = NodeView.extend().newSlots({
     
     requestSelection: function () {
         this.select()
-        //console.log(this.type() + " tellParentViews didClickRow")
+        //console.log(this.typeId() + " tellParentViews didClickRow")
         //this.tellParentViews("didClickRow", this)
         this.tellParentViews("requestSelectionOfRow", this)
         return this      
     },
 	
     willAcceptFirstResponder: function() {
-	    console.log(this.type() + ".willAcceptFirstResponder()")
+	    console.log(this.typeId() + ".willAcceptFirstResponder()")
 	    this.requestSelection()
     },
     

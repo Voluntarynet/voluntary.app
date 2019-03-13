@@ -6,7 +6,6 @@ JSImporter.pushRelativePaths([
     "SlideGestureRecognizer.js",
     "TapGestureRecognizer.js",
     "PanGestureRecognizer.js",
-    //"PinchGestureRecognizer.js",
-    //"RotationGestureRecognizer.js",
+    "PinchGestureRecognizer.js",
 ])
 

@@ -18,8 +18,22 @@
         onPinchCancelled
 
     Helper methods:
-        rotationInDegrees
-        centerPosition
+
+        points:
+            beginPoints // initial 1st two fingers down
+            activePoints // current locations of the 1st two fingers down
+
+        position:
+            beginCenterPosition //  initial midpoint between 1st two fingers down
+            currentCenterPosition // current midpoint between 1st two fingers down
+            diffPosition // currentCenterPosition - beginCenterPosition
+
+        rotation:
+            activeAngleInDegress // current angle between 1st two fingers down
+            rotationInDegrees // difference between initial angle between 1st two fingers down and their current angle
+
+        scale:
+            scale // current distance between 1st to fingers down divided by their intitial distance  
 
 */
 
@@ -36,7 +50,7 @@ window.PinchGestureRecognizer = GestureRecognizer.extend().newSlots({
     init: function () {
         GestureRecognizer.init.apply(this)
         this.setListenerClasses(["MouseListener", "TouchListener"]) 
-        //this.setIsDebugging(true)
+        this.setIsDebugging(true)
         return this
     },
 
@@ -45,12 +59,21 @@ window.PinchGestureRecognizer = GestureRecognizer.extend().newSlots({
     onDown: function (event) {
         if (!this.isPressing()) {
             this.setCurrentEvent(event)
-            if (this.numberOfFingersDown() >= this.numberOfFingerRequired()) {
+            let downCount = this.numberOfFingersDown()
+            if (downCount >= this.minFingersRequired() &&
+                downCount <= this.maxFingersAllowed()
+            ) {
                 this.setIsPressing(true)
                 this.setBeginEvent(event)
                 this.startDocListeners()
             }
         }
+    },
+
+    hasMovedEnough: function() {
+        let m = this.minDistToBegin()
+        let d = this.currentPosition().distanceFrom(this.downPosition())
+        return d >= m
     },
 
     canBegin: function() {
@@ -114,33 +137,37 @@ window.PinchGestureRecognizer = GestureRecognizer.extend().newSlots({
         return this
     },
 
+    // points - move to GestureRecognizer?
+
+    downPoints: function() {
+        let p = this.pointsForEvent(this.downEvent())
+        return [p[0], p[1]]
+    },
+
     beginPoints: function() {
-        let bp = this.pointsForEvent(this.beginEvent())
-        return [bp[0], bp[1]]
+        let p = this.pointsForEvent(this.beginEvent())
+        return [p[0], p[1]]
     },
 
     activePoints: function() {
+        // looks for two current points whose id matchs those of the two down points
         let currentPoints = this.pointsForEvent(this.currentEvent())
-        let beginIds = this.beginPoints().map(bp => bp.id())
-        return this.currentPoints().select(cp => beginIds.contains(cp.id()) )
+        let ids = this.downPoints().map(p => p.id())
+        return currentPoints.select(p => ids.contains(p.id()) )
     },
 
-    beginAngleInDegress: function() {
-        let bp = this.beginPoints()
-        let a = bp[0].angleInDegreesTo(bp[1])
-        return a
-    },
+    // position
 
-    activeAngleInDegress: function() {
-        let ap = this.activePoints()
-        let a = ap[0].angleInDegreesTo(ap[1])
-        return a
+    /*
+    centerForPoints: function(p) {
+        return p[0].midpointTo(p[1])
     },
+    */
 
-    rotationInDegrees: function() {
-        let a1 = this.beginAngleInDegress()
-        let a2 = this.activeAngleInDegress()
-        return a2 - a2
+    downCenterPosition: function() {
+        let p = this.downPoints()
+        let mp = p[0].midpointTo(p[1])
+        return mp
     },
 
     beginCenterPosition: function() {
@@ -153,6 +180,77 @@ window.PinchGestureRecognizer = GestureRecognizer.extend().newSlots({
         let p = this.activePoints()
         let mp = p[0].midpointTo(p[1])
         return mp
+    },
+
+    diffPosition: function() {
+        return this.currentCenterPosition().subtract(this.beginCenterPosition())
+    },
+
+    // rotation
+
+    /*
+    angleInDegreesForPoints: function(p) {
+        return p[0].angleInDegreesTo(p[1])
+    },
+    */
+
+    downAngleInDegress: function() {
+        let p = this.downPoints()
+        let a = p[0].angleInDegreesTo(p[1])
+        return a
+    },
+
+    beginAngleInDegress: function() {
+        let p = this.beginPoints()
+        let a = p[0].angleInDegreesTo(p[1])
+        return a
+    },
+
+    activeAngleInDegress: function() {
+        let p = this.activePoints()
+        let a = p[0].angleInDegreesTo(p[1])
+        return a
+    },
+
+    rotationInDegrees: function() {
+        // difference between initial angle between 1st two fingers down and their current angle
+        let a1 = this.beginAngleInDegress()
+        let a2 = this.activeAngleInDegress()
+        return a2 - a2
+    },
+
+    // scale
+
+    /*
+    spreadForPoints: function(p) {
+        return p[0].distanceTo(p[1])
+    },
+    */
+
+    downSpread: function() {
+        // initial distance between first two fingers down
+        let p = this.downPoints()
+        let d = p[0].distanceTo(p[1])
+        return d
+    },
+
+    beginSpread: function() {
+        // initial distance between first two fingers down
+        let p = this.beginPoints()
+        let d = p[0].distanceTo(p[1])
+        return d
+    },
+
+    currentSpread: function() {
+        // current distance between first two fingers down
+        let p = this.activePoints()
+        let d = p[0].distanceTo(p[1])
+        return d
+    },
+
+    scale: function() {
+        let s = this.currentSpread()/this.beginSpread()
+        return s
     },
 
 })

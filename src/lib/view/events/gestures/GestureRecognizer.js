@@ -41,6 +41,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     downEvent: null,
     beginEvent: null,
     currentEvent: null,
+    lastEvent: null,
     upEvent: null,
 
     beginMessage: null,     //"on<GestureName>Begin",
@@ -72,6 +73,15 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         return this
     },
     */
+
+    setCurrentEvent: function(event) {
+        if (this._currentEvent) {
+            this.setLastEvent(this._currentEvent)
+        } else {
+            this.setLastEvent(event)
+        }
+        this._currentEvent = event
+    },
 
     currentPosition: function() {
         return this.pointsForEvent(this.currentEvent()).first()

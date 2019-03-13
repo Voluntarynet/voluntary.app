@@ -39,7 +39,7 @@ window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
     onDown: function (event) {
         if (!this.isPressing()) {
             this.setCurrentEvent(event)
-            let fingers = this.currentFingersDown()
+            let fingers = this.numberOfFingersDown()
             if (fingers >= this.minNumberOfFingersRequired() &&
                 fingers <= this.maxNumberOfFingersAllowed()) {
                 this.setIsPressing(true)
@@ -97,7 +97,6 @@ window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
         GestureRecognizer.didFinish.apply(this)
         this.setIsPressing(false)
         this.stopDocListeners()
-        this.didFinish()
         return this
     },
 

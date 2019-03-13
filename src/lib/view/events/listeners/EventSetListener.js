@@ -155,14 +155,7 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
         let element = this.element()
         assert(element)
         this.forEachEventDict((eventName, dict) => {
-            console.log(this.delegate().typeId() + " will stop listening for " + dict.methodName)
-            /*
-            if (this.view()) {
-                console.log(this.view().typeId() + " will stop listening for " + eventName)
-            } else {
-                console.log(DomElement_description(this.element()) + " will stop listening for " + eventName)
-            }
-            */
+            //console.log(this.delegate().typeId() + " will stop listening for " + dict.methodName)
             element.removeEventListener(eventName, dict.handlerFunc, dict.useCapture);
         })
 

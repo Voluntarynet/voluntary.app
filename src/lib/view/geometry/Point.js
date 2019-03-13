@@ -157,4 +157,33 @@ window.Point = ideal.Proto.extend().newSlots({
         return this.x() <= p.x() && this.y() <= p.y()
     },
 
+    angleInRadians: function() {
+        return Math.atan2(y, x);
+    },
+
+    angleInDegrees: function() {
+        return this.angleInRadians() * 180 / Math.PI;
+    },
+
+    angleInRadiansTo: function(p) {
+        return p.subtract(this).angleInRadians()
+    },
+
+    angleInDegreesTo: function(p) {
+        return p.subtract(this).angleInDegrees()
+    },
+
+    midpointTo: function(p) {
+        return this.add(p).divideByScalar(2)
+    },
+
+    multiplyByScalar: function(v) {
+        let p = Point.clone()
+        p.set(this.x() * v, this.y() * v, this.z() * v)
+        return p
+    },
+
+    divideByScalar: function(v) {
+        return this.multiplyByScalar(1/v)
+    },
 })

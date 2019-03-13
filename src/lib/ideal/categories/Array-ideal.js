@@ -52,6 +52,10 @@ Object.shallowCopyTo({
         return this[0];
     },
 
+    second: function () {
+        return this[1];
+    },
+
     rest: function () {
         return this.slice(1);
     },

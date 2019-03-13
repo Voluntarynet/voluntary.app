@@ -82,7 +82,7 @@ window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
     onDown: function (event) {
         this.setCurrentEvent(event)
         
-        if (this.currentFingersDown() < this.numberOfFingersRequired()) {
+        if (this.numberOfFingersDown() < this.numberOfFingersRequired()) {
             return this
         }
 

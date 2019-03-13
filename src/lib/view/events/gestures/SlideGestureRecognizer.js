@@ -68,7 +68,7 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     onDown: function (event) {
         if (!this.isPressing()) {
             this.setCurrentEvent(event)
-            if (this.currentFingersDown() >= this.numberOfFingerRequired()) {
+            if (this.numberOfFingersDown() >= this.numberOfFingerRequired()) {
                 this.setIsPressing(true)
                 this.setBeginEvent(event)
                 this.startDocListeners()

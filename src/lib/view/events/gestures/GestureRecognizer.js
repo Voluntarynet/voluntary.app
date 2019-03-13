@@ -89,7 +89,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         return this.pointsForEvent(this.upEvent()).first()
     },
 
-    currentFingersDown: function() {
+    numberOfFingersDown: function() {
         let points = this.pointsForEvent(this.currentEvent())
         return points.length
     },

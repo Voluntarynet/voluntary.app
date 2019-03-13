@@ -79434,6 +79434,10 @@ Object.shallowCopyTo({
         return this[0];
     },
 
+    second: function () {
+        return this[1];
+    },
+
     rest: function () {
         return this.slice(1);
     },
@@ -87363,6 +87367,35 @@ window.Point = ideal.Proto.extend().newSlots({
         return this.x() <= p.x() && this.y() <= p.y()
     },
 
+    angleInRadians: function() {
+        return Math.atan2(y, x);
+    },
+
+    angleInDegrees: function() {
+        return this.angleInRadians() * 180 / Math.PI;
+    },
+
+    angleInRadiansTo: function(p) {
+        return p.subtract(this).angleInRadians()
+    },
+
+    angleInDegreesTo: function(p) {
+        return p.subtract(this).angleInDegrees()
+    },
+
+    midpointTo: function(p) {
+        return this.add(p).divideByScalar(2)
+    },
+
+    multiplyByScalar: function(v) {
+        let p = Point.clone()
+        p.set(this.x() * v, this.y() * v, this.z() * v)
+        return p
+    },
+
+    divideByScalar: function(v) {
+        return this.multiplyByScalar(1/v)
+    },
 })
 
 "use strict"
@@ -87999,8 +88032,8 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
 
         let element = this.element()
         assert(element)
-
         this.forEachEventDict((eventName, dict) => {
+            //console.log(this.delegate().typeId() + " will stop listening for " + dict.methodName)
             element.removeEventListener(eventName, dict.handlerFunc, dict.useCapture);
         })
 
@@ -88407,7 +88440,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         return this.pointsForEvent(this.upEvent()).first()
     },
 
-    currentFingersDown: function() {
+    numberOfFingersDown: function() {
         let points = this.pointsForEvent(this.currentEvent())
         return points.length
     },
@@ -88497,7 +88530,9 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         this.setDidBegin(false)
         this.setIsActive(false)
 
-        if (this.shouldRemoveOnComplete()) {
+        if (this.shouldRemoveOnComplete() && this.viewTarget()) {
+            //let vt = this.viewTarget()
+            //console.log(this.typeId() + ".shouldRemoveOnComplete() this.viewTarget() = " + (vt ? vt.typeId() : "null"))
             this.stop()
             this.viewTarget().removeGestureRecognizer(this)
         }
@@ -88874,7 +88909,7 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     onDown: function (event) {
         if (!this.isPressing()) {
             this.setCurrentEvent(event)
-            if (this.currentFingersDown() >= this.numberOfFingerRequired()) {
+            if (this.numberOfFingersDown() >= this.numberOfFingerRequired()) {
                 this.setIsPressing(true)
                 this.setBeginEvent(event)
                 this.startDocListeners()
@@ -89086,7 +89121,7 @@ window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
     onDown: function (event) {
         this.setCurrentEvent(event)
         
-        if (this.currentFingersDown() < this.numberOfFingersRequired()) {
+        if (this.numberOfFingersDown() < this.numberOfFingersRequired()) {
             return this
         }
 
@@ -89208,7 +89243,7 @@ window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
     onDown: function (event) {
         if (!this.isPressing()) {
             this.setCurrentEvent(event)
-            let fingers = this.currentFingersDown()
+            let fingers = this.numberOfFingersDown()
             if (fingers >= this.minNumberOfFingersRequired() &&
                 fingers <= this.maxNumberOfFingersAllowed()) {
                 this.setIsPressing(true)
@@ -89247,7 +89282,7 @@ window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
             if (this.isActive()) {
                 this.sendCompleteMessage() // complete
             }
-            this.finish()
+            this.didFinish()
         }
         return this
     },
@@ -89258,14 +89293,14 @@ window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
         if (this.isActive()) {
             this.sendCancelledMessage()
         }
-        this.finish()
+        this.didFinish()
         return this
     },
 
-    finish: function() {
+    didFinish: function() {
+        GestureRecognizer.didFinish.apply(this)
         this.setIsPressing(false)
         this.stopDocListeners()
-        this.didFinish()
         return this
     },
 
@@ -93219,6 +93254,7 @@ window.DocumentBody = DivView.extend().newSlots({
     },
     
     setupElement: function() {
+        document.body._divView = this
         //this._element = document.body
         // get this from element override
     },

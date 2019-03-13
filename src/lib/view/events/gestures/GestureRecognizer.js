@@ -245,7 +245,14 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
                 points.append(Point.clone().setToMouseEventWinPos(event).setId("mouseWithButton3"))
             }
         } else if (event.__proto__.constructor === TouchEvent) {  // mouse event
-            event.touches.forEach((touch) => {
+            
+            // event.touches isn't a proper array :/
+            let touches = []
+            for (var i = 0; i < event.touches.length; i++) {
+                touches.push(event.touches[i])
+            }
+
+            touches.forEach((touch) => {
                 points.append(Point.clone().set(touch.screenX, touch.screenY).setId(touch.identifier).setTarget(touch.target))
             })
         } else {

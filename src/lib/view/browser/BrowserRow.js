@@ -45,7 +45,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         
         this.addGestureRecognizer(LongPressGestureRecognizer.clone()) // for long press & pan reordering
         this.addGestureRecognizer(SlideGestureRecognizer.clone()) // for slide delete
-        this.addGestureRecognizer(PinchGestureRecognizer.clone()) // for slide delete
+        this.addGestureRecognizer(OrientGestureRecognizer.clone()) // for slide delete
         //this.addGestureRecognizer(TapGestureRecognizer.clone())
         return this
     },
@@ -502,6 +502,24 @@ window.BrowserRow = NodeView.extend().newSlots({
             this.setTransition(this.transitionStyle())
             this.column().didReorderRows()
         }
+    },
+
+    // orient testing
+
+    onOrientBegin: function(aGesture) {
+        console.log(this.typeId() + ".onOrientBegin()")
+        aGesture.show()
+    },
+
+    onOrientMove: function(aGesture) {
+        console.log(this.typeId() + ".onOrientMove()")
+        aGesture.show()
+
+    },
+
+    onOrientComplete: function(aGesture) {
+        console.log(this.typeId() + ".onOrientComplete()")
+        aGesture.show()
     },
 
     onMouseMove: function(event) {

@@ -31,7 +31,7 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
     init: function () {
         GestureRecognizer.init.apply(this)
         this.setListenerClasses(["MouseListener", "TouchListener"])
-        //this.setIsDebugging(true) 
+        this.setIsDebugging(true) 
         return this
     },
 
@@ -66,7 +66,7 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
 
         if(this.currentEventIsOnTargetView()) {
             if (this.viewTarget().requestActiveGesture(this)) {
-                this.sendDelegateMessage("onLongPressComplete")
+                this.sendCompleteMessage()
                 this.didFinish()
             }
         }
@@ -80,7 +80,7 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
         
         this.startTimer()
         this.setBeginEvent(event)
-        this.sendDelegateMessage("onLongPressBegin")
+        this.sendBeginMessage()
     },
 
     onMove: function (event) {
@@ -100,7 +100,7 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
     cancel: function() {
         if (this.hasTimer()) {
             this.stopTimer()
-            this.sendDelegateMessage("onLongPressCancelled")
+            this.sendCancelledMessage()
             this.didFinish()
         }
         return this

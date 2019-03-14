@@ -20,11 +20,34 @@ window.Point = ideal.Proto.extend().newSlots({
     init: function () {
         return this
     },
+
+    // helpers for events , TODO: move to a UIEvent class
+
+    setToTouchEventWinPos: function(touch) {
+        this.set(touch.pageX, event.pageY)
+        this.setId(touch.identifier)
+        this.setTarget(touch.target)
+        this.setTimeToNow()
+        return this
+    },
     
     setToMouseEventWinPos: function(event) {
-        this.set(event.clientX, event.clientY)
-        this.setTimeToNow()
+        let b = event.buttons
+        let id = "UnknownMouseButtonState"
+        if (b == 0) {
+            id = "mouse" // no button, e.g. mouse move event sans button
+        } else if (b & 1) {
+            id = "mouseWithButton1" // primary button
+        } else if (b & 2) {
+            id = "mouseWithButton2" // secondary button
+        } else if (b & 4) {
+            id = "mouseWithButton3"
+        }
+        this.setId(id)
+
+        this.set(event.pageX, event.pageY)
         this.setTarget(event.target)
+        this.setTimeToNow()
         return this
     },
 

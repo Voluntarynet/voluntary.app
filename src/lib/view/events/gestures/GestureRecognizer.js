@@ -108,6 +108,11 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         let points = this.pointsForEvent(this.currentEvent())
         let p = points.first()
         let bounds = this.viewTarget().winBounds()
+        /*
+        console.log(this.typeId() + ".currentEventIsOnTargetView()")
+        console.log("        p = ", p.asString())
+        console.log("   bounds = ", bounds.asString())
+        */
         return bounds.containsPoint(p)
     },
 
@@ -223,27 +228,18 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     // so we can share the event handling code for both devices 
 
     pointsForEvent: function(event) {
-        if (event == null) {
-            throw new Error(this.type() + ".pointsForEvent() event == null")
-        }
-
         if (event._gestureRecognizerPoints) {
             return event._gestureRecognizerPoints
+        }
+        
+        if (event == null) {
+            throw new Error(this.type() + ".pointsForEvent() event == null")
         }
 
         let points = []
 
         if (event.__proto__.constructor === MouseEvent) {
-            let b = event.buttons
-            if (b == 0) {
-                points.append(Point.clone().setToMouseEventWinPos(event).setId("mouse"))
-            } else if (b & 1) {
-                points.append(Point.clone().setToMouseEventWinPos(event).setId("mouseWithButton1")) // primary button
-            } else if (b & 2) {
-                points.append(Point.clone().setToMouseEventWinPos(event).setId("mouseWithButton2"))
-            } else if (b & 4) {
-                points.append(Point.clone().setToMouseEventWinPos(event).setId("mouseWithButton3"))
-            }
+            points.append(Point.clone().setToMouseEventWinPos(event))
         } else if (event.__proto__.constructor === TouchEvent) {  // mouse event
             
             // event.touches isn't a proper array :/
@@ -253,13 +249,13 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
             }
 
             touches.forEach((touch) => {
-                points.append(Point.clone().set(touch.screenX, touch.screenY).setId(touch.identifier).setTarget(touch.target))
+                points.append(Point.clone().setToTouchEventWinPos(touch))
             })
         } else {
             console.warn(this.type() + " can't handle this event type yet: ", event)
         }
 
-        event._gestureRecognizerPoints = points
+        event._gestureRecognizerPoints = points // we can cache this as it won't change
         return points
     },
 

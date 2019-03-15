@@ -225,8 +225,12 @@
 	overflow: hidden;
     white-space: nowrap;
     
-    border-top: 1px solid transparent;
-    border-bottom: 1px solid transparent;
+    border-style: solid;
+    border-color: transparent;
+    border-left: 0px;
+    border-right: 0px;
+    border-top: 1px;
+    border-bottom: 1px;
     /*border-bottom: 1px solid rgba(100,100,100, .3);*/
 	text-align: left;
 	margin: 0px;

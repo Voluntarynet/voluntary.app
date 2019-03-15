@@ -514,7 +514,6 @@ window.BrowserRow = NodeView.extend().newSlots({
     onOrientMove: function(aGesture) {
         console.log(this.typeId() + ".onOrientMove()")
         aGesture.show()
-
     },
 
     onOrientComplete: function(aGesture) {

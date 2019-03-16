@@ -50,18 +50,22 @@ window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
         return this
     },
 
+    attemptBegin: function() {
+        let vt = this.viewTarget()
+        let r = vt.requestActiveGesture(this)
+        if(r) {
+            this.setIsActive(true)
+            this.setBeginEvent(event)
+            this.sendBeginMessage() // begin
+        }
+    },
+
     onMove: function(event) {
         if (this.isPressing()) {
             this.setCurrentEvent(event)
 
             if (!this.isActive() && this.hasMovedEnough()) {
-                let vt = this.viewTarget()
-                let r = vt.requestActiveGesture(this)
-                if(r) {
-                    this.setIsActive(true)
-                    this.setBeginEvent(event)
-                    this.sendBeginMessage() // begin
-                }
+                this.attemptBegin()
             }
         
             if (this.isActive()) {

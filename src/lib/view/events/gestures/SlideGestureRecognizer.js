@@ -80,7 +80,7 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
         if (this.isPressing()) {
             this.setCurrentEvent(event)
 
-            if (this.hasMovedTooMuchPerpendicular()) {
+            if (!this.isActive() && this.hasMovedTooMuchPerpendicular()) {
                 this.cancel()
                 return this
             }

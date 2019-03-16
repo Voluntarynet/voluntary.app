@@ -701,7 +701,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
             row.setDisplay("block")
             //console.log("y:", y + " h:", h)
             row.setTop(y)
-            y += h + 2
+            y += h + 0
         })
 
         return this

@@ -664,6 +664,17 @@ window.DivView = ideal.Proto.extend().newSlots({
     float: function() {
         return this.getCssAttribute("float")
     },
+
+    // box shadow
+
+    setBoxShadow: function(s) {
+        this.setCssAttribute("box-shadow", s)
+        return this
+    },
+	
+    border: function() {
+        return this.getCssAttribute("box-shadow")
+    },
 	
     // border 
 	

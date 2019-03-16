@@ -272,16 +272,6 @@ window.BrowserRow = NodeView.extend().newSlots({
         if (!this._dragDeleteButtonView) {
             let h = this.clientHeight()
 
-            /*
-            let dv = DivView.clone().setPosition("absolute").setDivClassName("BrowserRowDeleteXView")
-            dv.setBackgroundColor("black")
-            dv.setMinAndMaxHeight(h+2)
-            dv.setMinAndMaxWidth(this.clientWidth())
-            dv.setTop(this.offsetTop())
-            dv.setZIndex(null)
-            this._dragDeleteView = dv
-            */
-
             this.setBackgroundColor("black")
             this.contentView().setBackgroundColor(this.column().columnGroup().backgroundColor())
             let cb = CloseButton.clone().setTransition("opacity 0.1s")
@@ -308,16 +298,15 @@ window.BrowserRow = NodeView.extend().newSlots({
 	
     onSlideMove: function(slideGesture) {
         if (this.canDelete()) {
-
             let d = slideGesture.distance()
             let isReadyToDelete  = d >= this._touchDeleteOffset
 
-            //console.log("slideGesture.dx() = ", slideGesture.dx())
+            //console.log("slideGesture.distance() = ", d)
             //console.log("isReadyToDelete = ", isReadyToDelete)
-            //this.setTouchLeft(d)
+
             this.setTouchRight(d)
 
-            if (this._dragDeleteView) {
+            if (this._dragDeleteButtonView) {
                 this._dragDeleteButtonView.setOpacity(isReadyToDelete ? 1 : 0.2)
             }
         }
@@ -442,6 +431,7 @@ window.BrowserRow = NodeView.extend().newSlots({
             pan.setShouldRemoveOnComplete(true)
             pan.setMinDistToBegin(0)
             pan.onDown(aGesture.currentEvent())
+            pan.attemptBegin()
             this.setBackgroundColor("red")
         }
     },
@@ -454,6 +444,16 @@ window.BrowserRow = NodeView.extend().newSlots({
 
     removePanGesture: function() {
         this.removeGestureRecognizersOfType("PanGestureRecognizer")
+        return this
+    },
+
+    addShadow: function() {
+        this.setBoxShadow("0px 0px 20px 10px rgba(0, 0, 0, 0.5)")
+        return this
+    },
+
+    removeShadow: function() {
+        this.setBoxShadow("none")
         return this
     },
 
@@ -475,6 +475,7 @@ window.BrowserRow = NodeView.extend().newSlots({
             this.setTop(this._dragStartPos.y())
             this.setZIndex(1)
             this.column().setPosition("relative")
+            this.addShadow()
         }
     },
 
@@ -490,17 +491,27 @@ window.BrowserRow = NodeView.extend().newSlots({
         }
     },
 
+    onPanCancelled: function(aGesture) {
+        this.onPanComplete(aGesture) // needed?
+        return this
+    },
+
     onPanComplete: function(aGesture) {
         if (this._isDraggingView) {
             this._isDraggingView = false
 
-            this.setPosition("relative")
-            this.setBackgroundColor(this.currentBgColor())
+            //this.setPosition("relative")
             this.setZIndex(null)
-            this.column().relativePositionRows()
-
             this.setTransition(this.transitionStyle())
-            this.column().didReorderRows()
+            this.removeShadow()
+
+            this.column().stackRows()
+
+            setTimeout(() => {
+                this.setBackgroundColor(this.currentBgColor())
+                this.column().relativePositionRows()
+                this.column().didReorderRows()
+            }, 500)
         }
     },
 

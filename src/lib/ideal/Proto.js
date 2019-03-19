@@ -35,7 +35,7 @@ Proto.setSlots({
     },
 
     registerThisProto: function() {
-        if (this.allProtos().indexOf(this) == -1) {
+        if (this.allProtos().indexOf(this) === -1) {
             this.allProtos().push(this)
         }
         return this

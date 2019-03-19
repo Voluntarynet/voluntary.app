@@ -190,7 +190,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
 
         if (node && node.nodeMinHeight()) {
             let  e = this.element()
-            if (node.nodeMinHeight() == -1) {
+            if (node.nodeMinHeight() === -1) {
                 this.setHeight("auto")
                 //e.style.height = "auto"
                 this.setPaddingBottom("calc(100% - 20px)")

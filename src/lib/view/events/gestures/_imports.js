@@ -1,6 +1,7 @@
 "use strict"
 
 JSImporter.pushRelativePaths([
+    "GestureManager.js",
     "GestureRecognizer.js",
     "LongPressGestureRecognizer.js",
     "SlideGestureRecognizer.js",

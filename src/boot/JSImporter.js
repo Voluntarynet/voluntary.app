@@ -236,7 +236,7 @@ class JSImporterClass extends JSImporterBase {
     }
 
     isDone () {
-        return this.urls().length == 0
+        return this.urls().length === 0
     }
 
     loadNext () {

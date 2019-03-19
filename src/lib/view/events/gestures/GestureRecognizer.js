@@ -12,7 +12,7 @@
         1. aView.onMouseDown -> forwarded to -> SlideGestureRecognizer
         1.a. starts capturing on document.body
         2. onMouseMoveCapture, if dx > min,  send:
-            targetView.requestActiveGesture(thisGesture)
+            this.requestActiveGesture()
             if this returns true, set the gesture to isActive and
             send theView.recognizedSlideGesture(this) on moves
         3. onMouseUpCapture, if the gesture is active, 
@@ -48,12 +48,15 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     moveMessage: null,      //"on<GestureName>Move",
     cancelledMessage: null, // "on<GestureName>Cancelled",
     completeMessage: null,  // "on<GestureName>Complete",
+
+    isEmulatingTouch: false, // assumes touch and mouse events aren't mixed
 }).setSlots({
     init: function () {
         this.setListenerClasses([]) // subclasses override this in their
         this.setDocListeners([])
         this.setViewListeners([])
         this.autoSetMessageNames()
+        this.setIsEmulatingTouch(true)
         return this
     },
 
@@ -190,6 +193,21 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         return this
     },
 
+    // active
+
+    requestActive: function() {
+        let vt = this.viewTarget()
+        assert(vt)
+        let r = vt.requestActiveGesture(this)
+        if(r) {
+            this.setIsActive(true)
+            return true
+        }
+        return this
+    },
+
+    // finish
+
     didFinish: function() {
         this.setDidBegin(false)
         this.setIsActive(false)
@@ -263,6 +281,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     // --- events --------------------------------------------------------------------
 
     onDown: function (event) {
+        this.setDownEvent(event)
         this.setCurrentEvent(event)
     },
 
@@ -271,16 +290,59 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     },
 
     onUp: function (event) {
+        this.setUpEvent(event)
         this.setCurrentEvent(event)
     },
 
     // mouse events
 
-    onMouseDown: function (event) {
+    shouldEmulateEvent: function(event) {
+        return this.isEmulatingTouch() && 
+                event.shiftKey && 
+                event._gestureRecognizerPoints && 
+                event._gestureRecognizerPoints.length == 1;
+    },
+
+    emulateDownIfNeeded: function(event) {
+        let p1 = this.pointsForEvent(event).first()
+
+        if (this.shouldEmulateEvent(event)) {
+            // make a duplicate of the down event point with a different id
+            let p2 = p1.copy().setId("emulatedTouch")
+            p2.setX(p2.x() + 10)
+            p2.setY(p2.y() + 10)
+            let points = event._gestureRecognizerPoints
+            points.push(p2)
+            //console.log("down:" + points[0].asString() + " " + points[1].asString())
+        }
+        return this
+    },
+
+    onMouseDown: function (event) {        
+        this.emulateDownIfNeeded(event)
+        this.setDownEvent(event)
         this.onDown(event)
     },
 
+    emulateMoveIfNeeded: function(event) {
+        let p2 = this.pointsForEvent(event).first()
+
+        if (this.shouldEmulateEvent(event) && this.downEvent()) {      
+            // get down point and current point and add a point on the other side
+            // add it to the cache event._gestureRecognizerPoints
+            let p1 = this.pointsForEvent(this.downEvent()).first()
+            let v = p2.subtract(p1).negated()
+            let p3 = p1.add(v).setId("emulatedTouch")
+            let points = event._gestureRecognizerPoints
+            points.push(p3)
+            //console.log("move: ", points[0].asString() + " " + points[1].asString())
+        }
+
+        return this
+    },
+
     onMouseMove: function (event) {
+        this.emulateMoveIfNeeded(event)
         this.onMove(event)
     },
 
@@ -291,10 +353,12 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     // mouse capture events
 
     onMouseDownCapture: function (event) {
+        this.emulateDownIfNeeded(event)
         this.onDown(event)
     },
 
     onMouseMoveCapture: function (event) {
+        this.emulateMoveIfNeeded(event)
         this.onMove(event)
     },
 
@@ -386,6 +450,13 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     sendCancelledMessage: function() {
         this.sendDelegateMessage(this.cancelledMessage())
         this.didFinish()
+        return this
+    },
+
+    cleanup: function() {
+        this.setDownEvent(null)
+        this.setCurrentEvent(null)
+        this.setUpEvent(null)
         return this
     },
 })

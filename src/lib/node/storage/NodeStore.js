@@ -282,7 +282,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 
             totalStoreCount += thisLoopStoreCount
             //console.log("totalStoreCount: ", totalStoreCount)
-            if (thisLoopStoreCount == 0) {
+            if (thisLoopStoreCount === 0) {
                 break
             }
         }

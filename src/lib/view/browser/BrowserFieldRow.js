@@ -47,7 +47,7 @@ window.BrowserFieldRow = BrowserRow.extend().newSlots({
 
         if (node && node.nodeMinHeight()) {
             let  e = this.element()
-            if (node.nodeMinHeight() == -1) {
+            if (node.nodeMinHeight() === -1) {
                 this.setHeight("auto")                
                 this.setPaddingBottom("calc(100% - 20px)")
             } else {

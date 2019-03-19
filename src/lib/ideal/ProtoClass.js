@@ -51,7 +51,7 @@ class ProtoClass {
     
     static registerThisClass () {
         //console.log("registerThisClass: ", this)
-        if (this.allClasses().indexOf(this) == -1) {
+        if (this.allClasses().indexOf(this) === -1) {
             this.allClasses().push(this)
         }
         return this

@@ -24,6 +24,9 @@ window.BrowserColumn = NodeView.extend().newSlots({
         this.setIsRegisteredForClicks(true)
         this.setAcceptsFirstResponder(true)
         this._rows = []
+
+        this.setUserSelect("none")
+        this.addGestureRecognizer(PinchGestureRecognizer.clone()) // for pinch open to add row
         return this
     },
     
@@ -499,7 +502,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
         let sNode = this.selectedNode()
         if (sNode && sNode.hasAction("delete")) { 
 			sNode.performAction("delete") 
-			if (this.rows().length == 0) {
+			if (this.rows().length === 0) {
 				this.selectPreviousColumn()
 			}
 		}
@@ -535,7 +538,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
         //console.log(this.typeId() + ".selectNextRow(), selectedRowIndex:" + this.selectedRowIndex() + "/" + this.rows().length)
 
         let rows = this.rows()
-        if (si == -1) {
+        if (si === -1) {
             this.setSelectedRowIndex(0)
         } else {
             this.setSelectedRowIndex(si + 1)
@@ -546,7 +549,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     selectPreviousRow: function() {
         let si = this.selectedRowIndex()
         //let rows = this.rows()
-        if (si == -1) {
+        if (si === -1) {
             this.setSelectedRowIndex(0)
         } else {
             this.setSelectedRowIndex(si - 1)
@@ -565,7 +568,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     focus: function() {
         NodeView.focus.apply(this)
 		
-	    if (this.selectedRowIndex() == -1) {
+	    if (this.selectedRowIndex() === -1) {
             this.setSelectedRowIndex(0)
         }
 
@@ -717,6 +720,83 @@ window.BrowserColumn = NodeView.extend().newSlots({
         this.node().nodeReorderSudnodesTo(subnodes)
         return this
     },
-	
+
+    // pinch
+
+    rowContainingPoint: function(aPoint) {
+        return this.rows().detect((row) => {
+            return row.winBounds().containsPoint(aPoint)
+        })
+    },
+
+    onPinchBegin: function(aGesture) {
+        // if node supports add actions:
+        // - calc insert index
+        // - create new subnode,
+        // - move it to insert index 
+        // - sync with node to add row view for it
+        // - set new row view height to zero and 
+        //   reference it with _temporaryPinchSubnode so we
+        //   can delete it if pinch doesn't complete with enough height
+
+        console.log(this.typeId() + ".onPinchBegin()")
+        let p = aGesture.beginCenterPosition()
+        let r = this.rowContainingPoint(p)
+        if (!r) {
+            r = this.rowContainingPoint(p)
+            return this
+        }
+        let insertIndex = this.rows().indexOf(r)
+
+        //console.log("insertIndex: ", insertIndex)
+
+        if (this.node().hasAction("add")) {
+            let newSubnode = this.node().add()
+            let subnodes = this.node().subnodes().copy()
+            subnodes.remove(newSubnode)
+            subnodes.atInsert(insertIndex, newSubnode)
+
+            this.node().nodeReorderSudnodesTo(subnodes)
+
+            this.syncFromNode()
+
+            let newRow = this.subviewForNode(newSubnode)
+            //newRow.setHeight(0)
+            this._temporaryPinchSubnode = newSubnode
+        } else {
+            aGesture.cancel()
+        }        
+    },
+    
+    onPinchMove: function(aGesture) {
+        let s = Math.floor(aGesture.spread())
+        console.log(this.typeId() + ".onPinchMove() spread = " + s)
+
+        if (this._temporaryPinchSubnode) {
+            let newRow = this.subviewForNode(this._temporaryPinchSubnode)
+            if (!newRow) {
+                newRow = this.subviewForNode(this._temporaryPinchSubnode)
+            }
+            newRow.setHeight(s)
+        }
+
+        // adjust size of temporary row and positions of other rows
+        // have temp row content max at normal size but outer view streatch to pinch size
+        // restack all views
+    },
+
+    onPinchCompleted: function(aGesture) {
+        console.log(this.typeId() + ".onPinchCompleted()")
+        // if pinch is tall enough, keep new row, sync with 
+    },
+
+    onPinchCancelled: function(aGesture) {
+        console.log(this.typeId() + ".onPinchCancelled()")
+        if (this._temporaryPinchSubnode) {
+            this.node().removeSubnode(this._temporaryPinchSubnode)
+            this._temporaryPinchSubnode = null
+        }
+    },
+
 })
 

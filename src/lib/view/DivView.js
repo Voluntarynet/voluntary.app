@@ -1408,7 +1408,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     
     removeAllSubviews: function() {
         this.subviews().copy().forEach((aView) => { this.removeSubview(aView) })
-        assert(this.subviews().length == 0)
+        assert(this.subviews().length === 0)
         return this
     },
 
@@ -1874,6 +1874,11 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this
     },
 
+    requestActiveGesture: function(aGesture) {
+        return GestureManager.shared().requestActiveGesture(aGesture);
+    },
+
+    /*
     firstActiveGesture: function() {
         return this.gestureRecognizers().detect((gr) => {
             return gr.isActive()
@@ -1906,6 +1911,7 @@ window.DivView = ideal.Proto.extend().newSlots({
         })
         return this
     },
+    */
 
     // --- mouse events ---
 
@@ -2285,7 +2291,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     setContentAfterOrBeforeString: function(aString, afterOrBefore) {
         let uniqueClassName = "UniqueClass_" + this._uniqueId
         let e = this.element()
-        if (e.className.indexOf(uniqueClassName) == -1) {
+        if (e.className.indexOf(uniqueClassName) === -1) {
             let newRuleKey = "DivView" + uniqueClassName + ":" + afterOrBefore
             let newRuleValue = "content: \"" + aString + "\;"
             //console.log("newRule '" + newRuleKey + "', '" + newRuleValue + "'")

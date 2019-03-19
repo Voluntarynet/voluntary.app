@@ -51,7 +51,7 @@ window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
     init: function () {
         GestureRecognizer.init.apply(this)
         this.setListenerClasses(["MouseListener", "TouchListener"]) 
-        this.setIsDebugging(true)
+        this.setIsDebugging(false)
         return this
     },
 
@@ -61,6 +61,8 @@ window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
         if (!this.isPressing()) {
             this.setCurrentEvent(event)
             this.setDownEvent(event)
+            //console.log("this.numberOfFingersDown() = ", this.numberOfFingersDown())
+            //console.log("this.minFingersRequired() = ", this.minFingersRequired())
             let downCount = this.numberOfFingersDown()
             if (downCount >= this.minFingersRequired() &&
                 downCount <= this.maxFingersAllowed()
@@ -83,12 +85,14 @@ window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
         return !this.isActive() && 
                 this.hasMovedEnough() && 
                 this.numberOfFingersDown() >= this.minFingersRequired() &&
-                this.viewTarget().requestActiveGesture(this);
+                this.requestActive(); // TODO: should this be in a "can" method?
     },
 
     onMove: function(event) {
         if (this.isPressing()) {
             this.setCurrentEvent(event)
+
+            //console.log(this.typeId() + " canBegin: ", this.canBegin())
 
             if (this.canBegin()) {
                 this.setIsActive(true)
@@ -102,7 +106,7 @@ window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
             }
         
             if (this.isActive()) {
-                if(this.activeFingers().length >= this.minFingersRequired()) {
+                if(this.activePoints().length >= this.minFingersRequired()) {
                     this.sendMoveMessage()
                 } else {
                     this.onUp(event)
@@ -216,7 +220,7 @@ window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
     // scale
 
     spreadForPoints: function(p) {
-        return p[0].distanceTo(p[1])
+        return p[0].distanceFrom(p[1])
     },
 
     downSpread: function() {
@@ -234,8 +238,15 @@ window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
         return this.spreadForPoints(this.activePoints())
     },
 
+    spread: function() {
+        let s = this.currentSpread() - this.beginSpread();
+        //console.log("spread = " + s + " = " + this.currentSpread() + " - " + this.beginSpread() )
+        return s
+    },
+
     scale: function() {
         let s = this.currentSpread() / this.beginSpread();
+        //console.log("scale = " + s + " = " + this.currentSpread() + "/" + this.beginSpread() )
         return s
     },
 

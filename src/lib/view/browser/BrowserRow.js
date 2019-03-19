@@ -43,10 +43,11 @@ window.BrowserRow = NodeView.extend().newSlots({
         //this.animateOpen()
 
         
+        /*
         this.addGestureRecognizer(LongPressGestureRecognizer.clone()) // for long press & pan reordering
         this.addGestureRecognizer(SlideGestureRecognizer.clone()) // for slide delete
-        this.addGestureRecognizer(OrientGestureRecognizer.clone()) // for slide delete
-        //this.addGestureRecognizer(TapGestureRecognizer.clone())
+        this.addGestureRecognizer(OrientGestureRecognizer.clone()) //
+        */
         return this
     },
 
@@ -501,7 +502,7 @@ window.BrowserRow = NodeView.extend().newSlots({
             this._isDraggingView = false
 
             //this.setPosition("relative")
-            this.setZIndex(null)
+            this.setZIndex(0)
             this.setTransition(this.transitionStyle())
             this.removeShadow()
 

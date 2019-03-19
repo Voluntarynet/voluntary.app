@@ -38,7 +38,7 @@ window.BMSubclassesNode = BMNode.extend().newSlots({
     },
 
     prepareToAccess: function () {
-        if (this._subnodes.length == 0) {
+        if (this._subnodes.length === 0) {
             this.setupSubnodes()
         }
     },

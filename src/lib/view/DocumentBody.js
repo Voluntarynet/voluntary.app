@@ -25,7 +25,7 @@ window.DocumentBody = DivView.extend().newSlots({
         })
 
         //Mouse.shared()
-        //Keyboard.shared()
+        Keyboard.shared()
 
         return this
     },

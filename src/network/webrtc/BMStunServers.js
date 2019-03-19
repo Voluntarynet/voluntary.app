@@ -25,7 +25,7 @@ window.BMStunServers = BMStorableNode.extend().newSlots({
     },
 
     bootstrap: function() {
-        if (this.subnodes().length == 0) {
+        if (this.subnodes().length === 0) {
             this.addSubnodesIfAbsent(this.bootStrapServers())
         }		
     },

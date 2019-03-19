@@ -28,7 +28,7 @@ window.BMOptionsField = BMField.extend().newSlots({
     },
 	
     validValues: function() {
-        if (this._validValues.length == 0 && this.validValuesMethod()) {
+        if (this._validValues.length === 0 && this.validValuesMethod()) {
             let  t = this.target()
             return t[this.validValuesMethod()].apply(t)
         }

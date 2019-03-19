@@ -41,6 +41,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     // actions
     actions: null,
     nodeCanReorder: false,
+    
 
     // html
     acceptsFileDrop: false,
@@ -813,7 +814,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
         {
             if(rawFile.readyState === 4)
             {
-                if(rawFile.status === 200 || rawFile.status == 0)
+                if(rawFile.status === 200 || rawFile.status === 0)
                 {
                     let json = rawFile.responseText;
                     this.fromJSON(JSON.parse(json))

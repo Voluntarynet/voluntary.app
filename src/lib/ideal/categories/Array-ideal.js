@@ -14,7 +14,7 @@ Object.shallowCopyTo({
     // --- read operations ---
 
     isEmpty: function () {
-        return this.length == 0;
+        return this.length === 0;
     },
 
     isEqual: function (otherArray) {
@@ -80,7 +80,7 @@ Object.shallowCopyTo({
 
     itemAfter: function (v) {
         let i = this.indexOf(v);
-        if (i == -1) return null;
+        if (i === -1) return null;
         i = i + 1;
         if (i > this.length - 1) return null;
         if (this[i] != undefined) { return this[i]; }
@@ -89,7 +89,7 @@ Object.shallowCopyTo({
 
     itemBefore: function (v) {
         let i = this.indexOf(v);
-        if (i == -1) return null;
+        if (i === -1) return null;
         i = i - 1;
         if (i < 0) return null;
         if (this[i]) { return this[i]; }
@@ -126,6 +126,7 @@ Object.shallowCopyTo({
 
     atInsert: function (i, e) {
         this.splice(i, 0, e);
+        return this
     },
 
     append: function () {
@@ -150,7 +151,7 @@ Object.shallowCopyTo({
 
     appendIfAbsent: function () {
         this.slice.call(arguments).forEach((value) => {
-            if (this.indexOf(value) == -1) {
+            if (this.indexOf(value) === -1) {
                 this.push(value);
                 return true;
             }
@@ -217,7 +218,7 @@ Object.shallowCopyTo({
 
     shuffle: function () {
         let i = this.length;
-        if (i == 0) return false;
+        if (i === 0) return false;
         while (--i) {
             let j = Math.floor(Math.random() * (i + 1));
             let tempi = this[i];
@@ -278,7 +279,7 @@ Object.shallowCopyTo({
         let args = this.slice.call(arguments).slice();
         let fn = args.pop();
 
-        if (this.length == 0) {
+        if (this.length === 0) {
             fn(null);
             return;
         }
@@ -288,7 +289,7 @@ Object.shallowCopyTo({
         args.push(function (error) {
             err = error;
             remaining--;
-            if (remaining == 0) {
+            if (remaining === 0) {
                 fn(err, ops);
             }
         });
@@ -301,7 +302,7 @@ Object.shallowCopyTo({
         let args = this.slice.call(arguments).slice(1);
         let fn = args.pop();
 
-        if (this.length == 0) {
+        if (this.length === 0) {
             fn(null);
             return;
         }
@@ -635,7 +636,7 @@ Object.shallowCopyTo({
     after: function (v) {
         let index = this.indexOf(v);
     
-        if (index == -1) {
+        if (index === -1) {
             return [];
         }
     
@@ -645,7 +646,7 @@ Object.shallowCopyTo({
     before: function (v) {
         let index = this.indexOf(v);
     
-        if (index == -1) {
+        if (index === -1) {
             return this.slice();
         }
     

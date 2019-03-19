@@ -62,7 +62,7 @@ window.AtomPaneView = DivView.extend().newSlots({
     },
 
     canAddPane: function() {
-        return this.subviews().length == 0
+        return this.subviews().length === 0
     },
 
     /*

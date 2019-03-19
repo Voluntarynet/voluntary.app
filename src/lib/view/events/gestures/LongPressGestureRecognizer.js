@@ -65,7 +65,7 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
         this.setTimeoutId(null)
 
         if(this.currentEventIsOnTargetView()) {
-            if (this.viewTarget().requestActiveGesture(this)) {
+            if (this.requestActive()) {
                 this.sendCompleteMessage()
                 this.didFinish()
             }

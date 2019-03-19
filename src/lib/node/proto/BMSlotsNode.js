@@ -67,7 +67,7 @@ window.BMSlotsNode = BMFieldSetNode.extend().newSlots({
     },
 
     prepareForFirstAccess: function () {
-        if (this._subnodes.length == 0) {
+        if (this._subnodes.length === 0) {
             this.setupSubnodes()
         }
     },

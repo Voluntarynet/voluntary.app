@@ -26,7 +26,7 @@ window.BMLocalIdentities = BMStorableNode.extend().newSlots({
     },
 
     current: function() {
-        if (this.subnodesCount() == 0) {
+        if (this.subnodesCount() === 0) {
             this.add()
         }
         

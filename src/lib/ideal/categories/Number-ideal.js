@@ -28,7 +28,7 @@ Object.shallowCopyTo({
     },
 
     isEven: function () {
-        return this % 2 == 0;
+        return this % 2 === 0;
     },
 
     isOdd: function () {

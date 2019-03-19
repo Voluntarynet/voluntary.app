@@ -110,14 +110,14 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     agentIsSafari: function() {
         let isSafari = navigator.vendor && navigator.vendor.indexOf("Apple") > -1 &&
                navigator.userAgent &&
-               navigator.userAgent.indexOf("CriOS") == -1 &&
-               navigator.userAgent.indexOf("FxiOS") == -1;
+               navigator.userAgent.indexOf("CriOS") === -1 &&
+               navigator.userAgent.indexOf("FxiOS") === -1;
         return isSafari
     },
 
     agentIsChrome: function() {
         let isChrome =  Boolean(window.chrome) //&& 
-        //navigator.userAgent.indexOf('Brave') == -1;
+        //navigator.userAgent.indexOf('Brave') === -1;
         //console.log("window.chrome = ", window.chrome);
         return isChrome
     },

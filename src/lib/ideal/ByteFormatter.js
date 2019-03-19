@@ -56,7 +56,7 @@ class ByteFormatter extends ProtoClass {
         order = Math.min(order, orderNames.length - 1)
         let orderName = orderNames[order]
 
-        if (order == 0 || this.useLongNames()) {
+        if (order === 0 || this.useLongNames()) {
             space = " "
             postfix = ""
         }

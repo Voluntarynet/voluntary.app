@@ -164,7 +164,7 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
     updateEmptyLabel: function() {
         let  node = this.node()
         if (node) {
-            if (node.subnodes().length == 0 && node.nodeEmptyLabel()) {
+            if (node.subnodes().length === 0 && node.nodeEmptyLabel()) {
                 this.setEmptyLabelText(node.nodeEmptyLabel())
                 return this
             }

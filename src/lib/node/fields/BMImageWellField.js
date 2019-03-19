@@ -29,7 +29,7 @@ window.BMImageWellField = BMField.extend().newSlots({
 	
     /*
 	updateKey: function() {
-		if (this.value().length == 0) {
+		if (this.value().length === 0) {
 			this.setKey("drop images here")
 		} else {
 			this.setKey("")

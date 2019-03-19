@@ -355,7 +355,7 @@ window.BMClassifiedPost = BMFieldSetNode.extend().newSlots({
         let p2 = other.postDate()
         
         let c = d1 - d2
-        if (c == 0) { 
+        if (c === 0) { 
             c = p1 - p2;
         }
         

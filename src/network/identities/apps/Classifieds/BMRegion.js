@@ -85,7 +85,7 @@ window.BMRegion = BMNode.extend().newSlots({
         if (!this.allowsSubregions()) {
             return this
         }
-        if (this._subnodes.length == 0) {
+        if (this._subnodes.length === 0) {
             this._lazyChildrenDict = aDict
             //this._subnodes.forEach( (subnode) => { subnode.setNoteIsSubnodeCount(true) }) // Categories
             //this.addChildrenDicts(aDict.children)
@@ -96,7 +96,7 @@ window.BMRegion = BMNode.extend().newSlots({
     },
     
     setupCategoryLeaves: function() {
-        if (this._subnodes.length == 0) {
+        if (this._subnodes.length === 0) {
             this.addAction("add")
             this.setSubnodeProto(BMClassifiedPost)
         } else {

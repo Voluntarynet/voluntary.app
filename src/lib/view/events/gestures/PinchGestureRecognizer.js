@@ -28,13 +28,14 @@ window.PinchGestureRecognizer = OrientGestureRecognizer.extend().newSlots({
     init: function () {
         OrientGestureRecognizer.init.apply(this)
         this.setListenerClasses(["MouseListener", "TouchListener"]) 
-        this.setIsDebugging(true)
+        this.setIsDebugging(false)
         return this
     },
 
     hasMovedEnough: function() {
         let m = this.minDistToBegin()
         let d = this.currentPosition().distanceFrom(this.downPosition())
+        //console.log(this.typeId() + ".hasMovedEnough() " + d + ">= min " + m)
         return d >= m
     },
 })

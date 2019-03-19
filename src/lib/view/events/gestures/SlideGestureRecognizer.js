@@ -86,10 +86,8 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
             }
 
             if (!this.isActive() && this.hasMovedEnough()) {
-                let vt = this.viewTarget()
-                let r = vt.requestActiveGesture(this)
-                if(r) {
-                    this.setIsActive(true)
+                if(this.requestActive()) {
+                    //this.setIsActive(true)
                     this.sendBeginMessage() // being
                 }
             }
@@ -167,7 +165,13 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     // --- helpers ----
 
     diffPos: function() {
-        let p = this.currentPosition().subtract(this.beginPosition()).floorInPlace() // floor here?
+        let cp = this.currentPosition()
+        let bp = this.beginPosition()
+
+        assert(cp)
+        assert(bp)
+        
+        let p = cp.subtract(bp).floorInPlace() // floor here?
         let dx = p.x()
         let dy = p.y()
         let funcs = {

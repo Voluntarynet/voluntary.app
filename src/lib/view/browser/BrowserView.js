@@ -231,7 +231,7 @@ window.BrowserView = NodeView.extend().newSlots({
 
     setColumnGroupCount: function (count) {
         //this.log("setColumnGroupCount " + count)
-        if (count == 0) {
+        if (count === 0) {
             StackTrace.shared().showCurrentStack()
         }
 

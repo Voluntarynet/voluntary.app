@@ -12,7 +12,7 @@
 window.Keyboard = ideal.Proto.extend().newSlots({
     type: "Keyboard",
     codeToKeys: null, // dictionary of KeyboardKey objects
-    isDebugging: true,
+    isDebugging: false,
     keyboardListener: null,
 }).setSlots({
     init: function () {
@@ -185,6 +185,8 @@ window.Keyboard = ideal.Proto.extend().newSlots({
     },
 
     onKeyDownCapture: function (event) {
+        //console.log("event.metaKey = ", event.metaKey)
+        
         let shouldPropogate = true
         let key = this.keyForEvent(event)
         key.onKeyDown(event)

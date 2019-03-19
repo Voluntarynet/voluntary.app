@@ -48,7 +48,7 @@ window.BMProtoNode = BMNode.extend().newSlots({
 
     prepareToAccess: function () {
         //console.log(this.typeId() + " prepareToAccess this.protoValue() = ", this.protoValue().type())
-        if (this._subnodes.length == 0) {
+        if (this._subnodes.length === 0) {
             this.setupSubnodes()
         }
     },

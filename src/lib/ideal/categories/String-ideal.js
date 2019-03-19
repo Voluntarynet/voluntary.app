@@ -10,12 +10,12 @@
 
 Object.shallowCopyTo({
     isEmpty: function () {
-        return this.length == 0;
+        return this.length === 0;
     },
 
     beginsWith: function (prefix) {
         if (!prefix) return false;
-        return this.indexOf(prefix) == 0;
+        return this.indexOf(prefix) === 0;
     },
 
     endsWith: function (suffix) {
@@ -30,7 +30,7 @@ Object.shallowCopyTo({
     before: function (aString) {
         let index = this.indexOf(aString);
         
-        if (index == -1) {
+        if (index === -1) {
             return this;
         }
 
@@ -40,7 +40,7 @@ Object.shallowCopyTo({
     after: function (aString) {
         let index = this.indexOf(aString);
 
-        if (index == -1) {
+        if (index === -1) {
             return "";
         }
         

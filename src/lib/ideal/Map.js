@@ -105,7 +105,7 @@ window.ideal.Map = class Map extends ProtoClass {
     }
 
     isEmpty () {
-        return Object.keys(this.jsMap()).length == 0;
+        return Object.keys(this.jsMap()).length === 0;
     }
 
     lowerCased () {

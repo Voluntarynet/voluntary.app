@@ -5,7 +5,7 @@
     PanGestureRecognizer
 
     Gesture begins when the minimal number of fingers have moved the minimal distance.
-    Will requestActiveGesture before beginning.
+    Will requestActive before beginning.
 
     Delegate messages:
 
@@ -51,9 +51,7 @@ window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
     },
 
     attemptBegin: function() {
-        let vt = this.viewTarget()
-        let r = vt.requestActiveGesture(this)
-        if(r) {
+        if(this.requestActive()) {
             this.setIsActive(true)
             this.setBeginEvent(event)
             this.sendBeginMessage() // begin

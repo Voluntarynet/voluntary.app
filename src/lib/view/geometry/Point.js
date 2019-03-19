@@ -34,7 +34,7 @@ window.Point = ideal.Proto.extend().newSlots({
     setToMouseEventWinPos: function(event) {
         let b = event.buttons
         let id = "UnknownMouseButtonState"
-        if (b == 0) {
+        if (b === 0) {
             id = "mouse" // no button, e.g. mouse move event sans button
         } else if (b & 1) {
             id = "mouseWithButton1" // primary button
@@ -68,10 +68,10 @@ window.Point = ideal.Proto.extend().newSlots({
     set: function(x, y, z, t) {
         this._x = x;
         this._y = y;
-        if (z || z == 0) {
+        if (z || z === 0) {
             this._z = z
         }
-        if (t || t == 0) {
+        if (t || t === 0) {
             this._t = t
         }
         return this
@@ -100,12 +100,16 @@ window.Point = ideal.Proto.extend().newSlots({
         return this
     },
 
+    copy: function() {
+        return Point.clone().copyPoint(this)
+    },
+
     add: function(p) {
-        return Point.clone().copyPoint(this).addInPlace(p)
+        return this.copy().addInPlace(p)
     },
 
     subtract: function(p) {
-        return Point.clone().copyPoint(this).subtractInPlace(p)
+        return this.copy().subtractInPlace(p)
     },
 
     asString: function() {
@@ -115,9 +119,11 @@ window.Point = ideal.Proto.extend().newSlots({
             s += ", " + this._z
         }
 
+        /*
         if (this._t) { 
             s += ", " + this._t + "t" 
         }
+        */
 
         return s + ")"
     },
@@ -208,5 +214,9 @@ window.Point = ideal.Proto.extend().newSlots({
 
     divideByScalar: function(v) {
         return this.multiplyByScalar(1/v)
+    },
+
+    negated: function(p) {
+        return this.multiplyByScalar(-1)
     },
 })

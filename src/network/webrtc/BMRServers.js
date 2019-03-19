@@ -26,7 +26,7 @@ window.BMRServers = BMStorableNode.extend().newSlots({
     },
 
     bootstrap: function() { 
-        if (this.servers().length == 0) {
+        if (this.servers().length === 0) {
 		    this.bootStrapServers().forEach((server) => {
 	            this.addServer(server)		
 	        })	

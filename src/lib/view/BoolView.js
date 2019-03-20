@@ -100,7 +100,7 @@ window.BoolView = DivStyledView.extend().newSlots({
     // ------------------
     
     setValue: function(v) {
-	    assert(typeof(v) === "boolean")
+	    assert(Type.isBoolean(v))
 	    this._value = v
 
         //this.updateUnicode()

@@ -66,22 +66,22 @@ window.DivBorderRadius = class DivBorderRadius extends ProtoClass {
         let v;
 
         v = parts.removeFirst()
-        if (typeof(v) === "string") {
+        if (Type.isString(v)) {
             this.setTopLeft(Number(v))
         }
 
         v = parts.removeFirst()
-        if (typeof(v) === "string") {
+        if (Type.isString(v)) {
             this.setTopRight(Number(v))
         }
 
         v = parts.removeFirst()
-        if (typeof(v) === "string") {
+        if (Type.isString(v)) {
             this.setBottomRight(Number(v))
         }
 
         v = parts.removeFirst()
-        if (typeof(v) === "string") {
+        if (Type.isString(v)) {
             this.setBottomLeft(Number(v))
         }
 

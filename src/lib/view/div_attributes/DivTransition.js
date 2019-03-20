@@ -23,7 +23,7 @@ window.DivTransition = class DivTransition extends ProtoClass {
 
     durationString() {
         let v = this.duration()
-        if (typeof(v) === "number") {
+        if (Type.isNumber(v)) {
             return v + "s"
         }
         return v
@@ -31,7 +31,7 @@ window.DivTransition = class DivTransition extends ProtoClass {
 
     delayString() {
         let v = this.duration()
-        if (typeof(v) === "number") {
+        if (Type.isNumber(v)) {
             return v + "s"
         }
         return v

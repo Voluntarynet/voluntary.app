@@ -30,7 +30,7 @@ window.BMAppMessage = BMFieldSetNode.extend().newSlots({
     // ------------------------
 	
     duplicate: function() {
-	    assert(this.objMsg() != null)
+	    assert(this.objMsg() !== null)
         let obj = window[this.type()].clone()
         obj.setSenderId(this.senderId())
         obj.setReceiverId(this.receiverId())
@@ -68,7 +68,7 @@ window.BMAppMessage = BMFieldSetNode.extend().newSlots({
     },
 	
     isSent: function() {
-        return this.objMsg() != null
+        return this.objMsg() !== null
     },
 	
     canEdit: function() {

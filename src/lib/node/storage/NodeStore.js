@@ -482,8 +482,8 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     //
 
     refValueIfNeeded: function (v) {
-        if (typeof(v) === "object") {
-            if (v == null || typeof(v.type) === "function") {
+        if (Type.isObject(v)) {
+            if (v == null || Type.isFunction(v.type)) {
                 return this.refForObject(v)
             }
         }
@@ -491,7 +491,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     },
 
     pidIfRef: function (ref) {
-        if (typeof(ref) === "object") {
+        if (Type.isObject(ref)) {
             if (this.dictIsObjRef(ref)) {
                 return ref[this.objRefKey()]
             }
@@ -515,14 +515,14 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 
     dictIsObjRef: function (dict) {
         let k = this.objRefKey()
-        return typeof(dict[k]) === "string"
+        return Type.isString(dict[k])
     },
 
     refForObject: function (obj) {
         let k = this.objRefKey()
         let ref = {}
 
-        if (obj === null && typeof(obj) === "object") {
+        if (obj === null && Type.isObject(obj)) {
             ref[k] = "null"
         } else {
             ref[k] = obj.pid()
@@ -664,7 +664,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         let pids = this.sdb().keys()
 
         pids.forEach((pid) => {
-            if (this._marked[pid] != true) {
+            if (this._marked[pid] !== true) {
                 this.debugLog("deletePid(" + pid + ")")
                 this.sdb().removeAt(pid)
                 deleteCount++

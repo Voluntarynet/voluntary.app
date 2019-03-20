@@ -220,7 +220,7 @@ Proto.setSlots({
 
     updateSlot: function (slotName, privateName, newValue) {
         let oldValue = this[privateName];
-        if (oldValue != newValue) {
+        if (oldValue !== newValue) {
             this[privateName] = newValue;
             
             if (privateName === "_type") {

@@ -263,7 +263,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 	
     setZoomPercentage: function(aNumber) {
-	    assert(typeof(aNumber) === "number") 
+	    assert(Type.isNumber(aNumber)) 
         this.setCssAttribute("zoom", aNumber + "%")
 	    return this
     },
@@ -414,7 +414,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 	
     setBackgroundSize: function(s) {
-	    assert(typeof(s) === "string")
+	    assert(Type.isString(s))
         this.setCssAttribute("background-size", s)
         return this
     },
@@ -437,7 +437,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     setBackgroundRepeat: function(s) {
-	    assert(typeof(s) === "string")
+	    assert(Type.isString(s))
         this.setCssAttribute("background-repeat", s)
         return this
     },
@@ -734,7 +734,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     // border radius
 	
     setBorderRadius: function(s) {
-        if (typeof(s) === "number") {
+        if (Type.isNumber(s)) {
             this.setPxCssAttribute("border-radius", s)
         } else {
             this.setCssAttribute("border-radius", s)
@@ -862,7 +862,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     // over flow
 	
     setOverflow: function(s) {
-        assert(typeof(s) === "string")
+        assert(Type.isString(s))
         this.setCssAttribute("overflow", s)
         return this
     },
@@ -874,7 +874,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     // overflow x
 
     setOverflowX: function(s) {
-        assert(typeof(s) === "string")
+        assert(Type.isString(s))
         this.setCssAttribute("overflow-x", s)
         return this
     },
@@ -886,7 +886,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     // overflow y
 
     setOverflowY: function(s) {
-        assert(typeof(s) === "string")
+        assert(Type.isString(s))
         this.setCssAttribute("overflow-y", s)
         return this
     },
@@ -974,7 +974,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
     
     setWidthString: function(s) {
-	    assert(typeof(s) === "string" || s === null)
+	    assert(Type.isString(s) || s === null)
 	    this.setCssAttribute("width", s, () => { this.didChangeWidth() })
 	    return this
     },
@@ -1100,7 +1100,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     percentageNumberToString: function(aNumber) {
-        assert(typeof(aNumber) === "number" && (aNumber >= 0) && (aNumber <= 100))
+        assert(Type.isNumber(aNumber) && (aNumber >= 0) && (aNumber <= 100))
         return aNumber + "%"
     },
 
@@ -1115,12 +1115,12 @@ window.DivView = ideal.Proto.extend().newSlots({
             }
         }
 
-        assert(typeof(aNumber) === "number")
+        assert(Type.isNumber(aNumber))
         return aNumber + "px"
     },
 
     pxStringToNumber: function(s) {
-        assert(typeof(s) === "string")
+        assert(Type.isString(s))
         if (s === "") {
             return 0
         }
@@ -1162,7 +1162,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     setHeight: function(s) {
-        if (typeof(s) === "number") {
+        if (Type.isNumber(s)) {
             return this.setHeightPxNumber(s)
         }
         this.setHeightString(s)
@@ -1178,9 +1178,9 @@ window.DivView = ideal.Proto.extend().newSlots({
         this.setHeightString("auto")
     },
 
-    setHeightString: function(aString) {
-        assert(typeof(aString) === "string" || aString === null)
-        this.setCssAttribute("height", aString, () => { this.didChangeHeight() })
+    setHeightString: function(s) {
+        assert(Type.isString(s) || s === null)
+        this.setCssAttribute("height", s, () => { this.didChangeHeight() })
         return this		
     },	
 	

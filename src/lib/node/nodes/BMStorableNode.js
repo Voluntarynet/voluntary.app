@@ -191,7 +191,7 @@ window.BMStorableNode = BMNode.extend().newSlots({
     setNodeDictForProperties: function (aDict) {
         let hadMissingSetter = false 
         Object.keys(aDict).forEach((k) => {
-            if (k != "children" && k != "type") {
+            if (k !== "children" && k !== "type") {
                 let v = aDict[k]
                 v = NodeStore.shared().unrefValueIfNeeded(v)
                 
@@ -257,7 +257,7 @@ window.BMStorableNode = BMNode.extend().newSlots({
 
         Object.keys(this._storedSlots).forEach((slotName) => {
             let obj = this[slotName].apply(this)
-            let isRef = obj != null && obj.typeId
+            let isRef = obj !== null && obj !== undefined && obj.typeId !== undefined
             if (isRef && !obj.hasPid()) {
                 obj.pid()
                 NodeStore.shared().addDirtyObject(this)
@@ -394,7 +394,7 @@ window.BMStorableNode = BMNode.extend().newSlots({
 			// stored slots
 			keys.forEach((k) => {
 				let v = dict[k]
-				if (k != "children" && typeof(v) === "object") {
+				if (k !== "children" && Type.isObject(v)) {
 					if (v.pid != "null") {
 						refs[v.pid] = true
 					}

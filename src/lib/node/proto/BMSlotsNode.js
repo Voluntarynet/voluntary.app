@@ -22,7 +22,7 @@ window.BMSlotsNode = BMFieldSetNode.extend().newSlots({
         let t = typeof(v)
         
         if (t === "object") {
-            if (typeof(v.type) === "function") {
+            if (Type.isFunction(v.type)) {
                 t = "prototype"
             }
         }
@@ -45,14 +45,10 @@ window.BMSlotsNode = BMFieldSetNode.extend().newSlots({
             if (t === "string") {
                 childNode = this.addFieldNamed(slotName).setValueMethod("slotValue").setValueIsEditable(false)
                 //childNode.setSubtitle("string")
-            }
-
-            if (t === "number") {
+            } else if (t === "number") {
                 childNode = this.addField(BMNumberField.clone().setValueMethod("slotValue").setValueIsEditable(false))
                 //childNode.setSubtitle("number")
-            }
-
-            if (t === "function") {
+            } else if (t === "function") {
                 childNode = this.addField(BMPointerField.clone().setValueMethod("slotValue").setValueIsEditable(false))
                 //childNode.setSubtitle("function")
             }

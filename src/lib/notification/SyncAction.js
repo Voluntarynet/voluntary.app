@@ -42,7 +42,7 @@ window.SyncAction = class SyncAction extends ProtoClass {
     }
 	
     equals (anAction) {
-        return anAction != null && (this.target() === anAction.target()) && (this.method() === anAction.method())
+        return anAction !== null && (this.target() === anAction.target()) && (this.method() === anAction.method())
     }
 	
     description () {

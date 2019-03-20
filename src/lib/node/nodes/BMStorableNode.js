@@ -394,7 +394,7 @@ window.BMStorableNode = BMNode.extend().newSlots({
 			// stored slots
 			keys.forEach((k) => {
 				let  v = dict[k]
-				if (k != "children" && typeof(v) == "object") {
+				if (k != "children" && typeof(v) === "object") {
 					if (v.pid != "null") {
 						refs[v.pid] = true
 					}
@@ -405,7 +405,7 @@ window.BMStorableNode = BMNode.extend().newSlots({
 			// children
 			if (dict.children) {
 				dict.children.forEach((pid) => {
-					if (pid == null || pid == "null") {
+					if (pid == null || pid === "null") {
 						debugger;
 					}
 					refs[pid] = true

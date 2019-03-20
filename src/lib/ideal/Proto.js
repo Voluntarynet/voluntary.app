@@ -223,7 +223,7 @@ Proto.setSlots({
         if (oldValue != newValue) {
             this[privateName] = newValue;
             
-            if (privateName == "_type") {
+            if (privateName === "_type") {
                 this.contructor.name = newValue
             }
 
@@ -269,7 +269,7 @@ Proto.setSlots({
     },
 
     canPerform: function (message) {
-        return this[message] && typeof (this[message]) == "function";
+        return this[message] && typeof (this[message]) === "function";
     },
 
     performWithArgList: function (message, argList) {

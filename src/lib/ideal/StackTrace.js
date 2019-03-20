@@ -108,7 +108,7 @@ function assert(v) {
 }
 
 function assertDefined(v) {
-    if(typeof(v) == "undefined") {
+    if(typeof(v) === "undefined") {
         throw new Error("assert failed - undefined value")
     }
     return v
@@ -122,7 +122,7 @@ Error.prototype.assert = function(v) {
 }
 
 Error.prototype.assertDefined = function(v) {
-    if(typeof(v) == "undefined") {
+    if(typeof(v) === "undefined") {
         throw new Error("assert failed - undefined value")
     }
     return v

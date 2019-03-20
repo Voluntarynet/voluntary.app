@@ -59,7 +59,7 @@ window.BrowserHeader = NodeView.extend().newSlots({
     showsAction: function(actionName) {
         return actionName != "delete" // uses row delete action instead of column header action now
         /*
-		if (actionName == "delete" && !WebBrowserWindow.shared().isOnMobile()) {
+		if (actionName === "delete" && !WebBrowserWindow.shared().isOnMobile()) {
 			return false
 		}
 		return true

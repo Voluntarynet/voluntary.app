@@ -26,7 +26,7 @@ String.prototype.contains = function (aString) {
 String.prototype.before = function (aString) {
     var index = this.indexOf(aString);
     
-    if (index == -1) {
+    if (index === -1) {
         return this;
     }
 
@@ -36,7 +36,7 @@ String.prototype.before = function (aString) {
 String.prototype.after = function (aString) {
     var index = this.indexOf(aString);
 
-    if (index == -1) {
+    if (index === -1) {
         return "";
     }
     

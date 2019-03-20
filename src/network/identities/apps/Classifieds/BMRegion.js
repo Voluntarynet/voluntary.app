@@ -23,11 +23,11 @@ window.BMRegion = BMNode.extend().newSlots({
     sumOfSubnodeNotes: function() {
         let sum = 0
         this.subnodes().forEach((subnode) => {
-            if (subnode.title() == "All") {
+            if (subnode.title() === "All") {
                 return;
             }
             
-            if (subnode.type() == "BMRegion") {
+            if (subnode.type() === "BMRegion") {
                 let v = subnode.note()
                 if (v) {
                     sum += v
@@ -135,7 +135,7 @@ window.BMRegion = BMNode.extend().newSlots({
         App.shared().appNamed("Classifieds").sells().addSubnode(post)
         App.shared().browser().selectNode(post)
 
-        if (this.title() == "Tests") {
+        if (this.title() === "Tests") {
             post.fillWithTestData()
         }
 

@@ -22,7 +22,7 @@ window.CSSDeclaration = class CSSDeclaration extends ProtoClass {
     
     applyToElement (anElement) {
         anElement.style[this.key()] = this.value()
-        if (this.key() == "left") {
+        if (this.key() === "left") {
             console.log("apply " + this.ruleSet().key() + " " + this.key() + ":" + this.value())
         }
         return this

@@ -264,7 +264,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 	
     setZoomPercentage: function(aNumber) {
-	    assert(typeof(aNumber) == "number") 
+	    assert(typeof(aNumber) === "number") 
         this.setCssAttribute("zoom", aNumber + "%")
 	    return this
     },
@@ -415,7 +415,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 	
     setBackgroundSize: function(s) {
-	    assert(typeof(s) == "string")
+	    assert(typeof(s) === "string")
         this.setCssAttribute("background-size", s)
         return this
     },
@@ -438,7 +438,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     setBackgroundRepeat: function(s) {
-	    assert(typeof(s) == "string")
+	    assert(typeof(s) === "string")
         this.setCssAttribute("background-repeat", s)
         return this
     },
@@ -735,7 +735,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     // border radius
 	
     setBorderRadius: function(s) {
-        if (typeof(s) == "number") {
+        if (typeof(s) === "number") {
             this.setPxCssAttribute("border-radius", s)
         } else {
             this.setCssAttribute("border-radius", s)
@@ -863,7 +863,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     // over flow
 	
     setOverflow: function(s) {
-        assert(typeof(s) == "string")
+        assert(typeof(s) === "string")
         this.setCssAttribute("overflow", s)
         return this
     },
@@ -875,7 +875,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     // overflow x
 
     setOverflowX: function(s) {
-        assert(typeof(s) == "string")
+        assert(typeof(s) === "string")
         this.setCssAttribute("overflow-x", s)
         return this
     },
@@ -887,7 +887,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     // overflow y
 
     setOverflowY: function(s) {
-        assert(typeof(s) == "string")
+        assert(typeof(s) === "string")
         this.setCssAttribute("overflow-y", s)
         return this
     },
@@ -942,7 +942,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 	
     setUserSelect: function(aString) {
         let style = this.cssStyle()
-        //console.log("'" + aString + "' this.userSelect() = '" + this.userSelect() + "' == ", this.userSelect() == aString)
+        //console.log("'" + aString + "' this.userSelect() = '" + this.userSelect() + "' === ", this.userSelect() == aString)
         if (this.userSelect() != aString) {
             style.userSelect = aString
             this.userSelectKeys().forEach(key => style[key] = aString)
@@ -975,7 +975,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
     
     setWidthString: function(s) {
-	    assert(typeof(s) == "string" || s === null)
+	    assert(typeof(s) === "string" || s === null)
 	    this.setCssAttribute("width", s, () => { this.didChangeWidth() })
 	    return this
     },
@@ -1028,7 +1028,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     maxWidth: function() {
         let w = this.getCssAttribute("max-width")
-        if (w == "") {
+        if (w === "") {
             return null
         }
         return this.pxStringToNumber(w)
@@ -1043,9 +1043,9 @@ window.DivView = ideal.Proto.extend().newSlots({
         let newValue = null
         if (v == null) {
             newValue = null
-        } else if (type == "string") {
+        } else if (type === "string") {
 	        newValue = v 
-        } else if (type == "number") {
+        } else if (type === "number") {
 	        newValue = this.pxNumberToString(v)
         } else {
             throw new Error(type + " is invalid argument type")
@@ -1073,9 +1073,9 @@ window.DivView = ideal.Proto.extend().newSlots({
         let newValue = null
         if (v == null) {
             newValue = null
-        } else if (type == "string") {
+        } else if (type === "string") {
 	        newValue = v 
-        } else if (type == "number") {
+        } else if (type === "number") {
 	        newValue = this.pxNumberToString(v)
         } else {
             throw new Error(type + " is invalid argument type")
@@ -1101,7 +1101,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     percentageNumberToString: function(aNumber) {
-        assert(typeof(aNumber) == "number" && (aNumber >= 0) && (aNumber <= 100))
+        assert(typeof(aNumber) === "number" && (aNumber >= 0) && (aNumber <= 100))
         return aNumber + "%"
     },
 
@@ -1110,19 +1110,19 @@ window.DivView = ideal.Proto.extend().newSlots({
             return null
         }
 
-        if (typeof(aNumber) == "string") {
+        if (typeof(aNumber) === "string") {
             if (aNumber.beginsWith("calc") || aNumber.endsWith("px")) {
                 return aNumber
             }
         }
 
-        assert(typeof(aNumber) == "number")
+        assert(typeof(aNumber) === "number")
         return aNumber + "px"
     },
 
     pxStringToNumber: function(s) {
-        assert(typeof(s) == "string")
-        if (s == "") {
+        assert(typeof(s) === "string")
+        if (s === "") {
             return 0
         }
         assert(s.endsWith("px"))
@@ -1163,7 +1163,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     setHeight: function(s) {
-        if (typeof(s) == "number") {
+        if (typeof(s) === "number") {
             return this.setHeightPxNumber(s)
         }
         this.setHeightString(s)
@@ -1180,7 +1180,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     setHeightString: function(aString) {
-        assert(typeof(aString) == "string" || aString === null)
+        assert(typeof(aString) === "string" || aString === null)
         this.setCssAttribute("height", aString, () => { this.didChangeHeight() })
         return this		
     },	
@@ -1792,14 +1792,14 @@ window.DivView = ideal.Proto.extend().newSlots({
     
     isContentEditable: function() {
         let result = this.element().contentEditable
-        if (result == "inherit" && this.parentView()) {
+        if (result === "inherit" && this.parentView()) {
             return this.parentView().isContentEditable()
         }
         return this
     },
 
     contentEditable: function() {
-        return this.element().contentEditable == "true"
+        return this.element().contentEditable === "true"
     },
 	
     // touch events
@@ -1978,7 +1978,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     onKeyDown: function (event) {
         let specialKeyName = Keyboard.specialNameForKeyEvent(event)
 		
-        if (specialKeyName == "enter" && this.unfocusOnEnterKey()) {
+        if (specialKeyName === "enter" && this.unfocusOnEnterKey()) {
             console.log(" releasing focus")
             // this.releaseFocus() // todo: implement something to pass focus up view chain to whoever wants it
             this.element().parentElement.focus()
@@ -1986,7 +1986,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 		
         /*
 		if (this.interceptsTab()) {
-	        if (event.keyId == "tab") {
+	        if (event.keyId === "tab") {
 		        event.preventDefault()
 	            this.onTabKeyDown()
 	        }
@@ -2016,7 +2016,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 
         /*
 		if (this.interceptsTab()) {
-	        if (event.keyId == "tab") {
+	        if (event.keyId === "tab") {
 	            event.preventDefault()
 				return
 	        }

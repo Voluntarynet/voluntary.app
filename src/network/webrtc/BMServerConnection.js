@@ -253,7 +253,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
 */
 
     onError: function(error) {
-        if (typeof(error) == "undefined") {
+        if (typeof(error) === "undefined") {
             // closed connection?
             return
         }

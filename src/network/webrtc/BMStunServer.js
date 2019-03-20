@@ -54,7 +54,7 @@ window.BMStunServer = BMFieldSetNode.extend().newSlots({
 	    let url = dict.url
         let parts = url.split(":")
         let type = parts[0]
-        assert(type == "stun")
+        assert(type === "stun")
         let host = parts[1]
         let port = parts[2]
         this.setHost(host)

@@ -601,7 +601,7 @@ Object.shallowCopyTo({
     },
 
     asPath: function () {
-        if (this.length == 1 && this.first() == "") {
+        if (this.length == 1 && this.first() === "") {
             return "/";
         }
         else {
@@ -610,7 +610,7 @@ Object.shallowCopyTo({
     },
 
     isAbsolutePath: function () {
-        return this.first() == "";
+        return this.first() === "";
     },
 
     isRelativePath: function () {
@@ -708,7 +708,7 @@ Object.shallowCopyTo({
         // not just objects of the same JS type
         // but how do we test for the [] accessor?
     
-        if(typeof(array.length) == "undefined") {
+        if(typeof(array.length) === "undefined") {
             return false;
         }
     

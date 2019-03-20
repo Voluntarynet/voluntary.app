@@ -33,7 +33,7 @@ window.BMMailMessage = BMAppMessage.extend().newSlots({
         let name = aField.valueMethod()
         //console.log("didUpdateField(" + name + ")")
 
-        if (name == "toContact") {
+        if (name === "toContact") {
             this.setupReceiverPubkeyFromInput()
             this.updateCanSend()
         }

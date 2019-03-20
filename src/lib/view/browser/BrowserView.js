@@ -200,7 +200,7 @@ window.BrowserView = NodeView.extend().newSlots({
 
         this.columnGroups().forEach((cg) => {
 
-            if (cg.column().type() == "BrowserColumn") {
+            if (cg.column().type() === "BrowserColumn") {
                 let  bgColor = this.bgColorForIndex(i)
 
                 if (cg.node()) {
@@ -701,7 +701,7 @@ window.BrowserView = NodeView.extend().newSlots({
         let hash = WebBrowserWindow.shared().urlHash()
         let  j = ""
 
-        if (hash == "") {
+        if (hash === "") {
             this.setNodePathComponents([""])
             return this
         }

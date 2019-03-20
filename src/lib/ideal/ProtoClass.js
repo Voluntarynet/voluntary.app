@@ -295,7 +295,7 @@ class ProtoClass {
     }
 
     canPerform (message) {
-        return this[message] && typeof (this[message]) == "function";
+        return this[message] && typeof (this[message]) === "function";
     }
 
     performWithArgList (message, argList) {

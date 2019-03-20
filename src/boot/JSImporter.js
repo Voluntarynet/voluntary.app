@@ -183,7 +183,7 @@ class JSImporterClass extends JSImporterBase {
         let parts = this.currentScriptPath().split("/").concat(aPath.split("/"))
         let rPath = parts.join("/")
 
-        if (rPath[0] == "/"[0]) {
+        if (rPath[0] === "/"[0]) {
             rPath = "." + rPath
         }
 
@@ -254,12 +254,12 @@ class JSImporterClass extends JSImporterBase {
 
         let extension = url.split(".").pop()
 
-        if (extension == "js" || extension == "json") {
+        if (extension === "js" || extension === "json") {
             this.jsFilesLoaded().push(url)
             this.setCurrentScript(JSScript.clone().setImporter(this).setFullPath(url).setDoneCallback(() => { this.loadNext() }))
             //console.log("this.currentScript() = ", this.currentScript())
             this.currentScript().run()
-        } else if (extension == "css") {
+        } else if (extension === "css") {
             this.cssFilesLoaded().push(url)
             CSSLink.clone().setFullPath(url).run()
             this.loadNext()

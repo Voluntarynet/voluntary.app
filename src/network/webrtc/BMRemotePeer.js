@@ -152,7 +152,7 @@ window.BMRemotePeer = BMNode.extend().newSlots({
     },
     
     isConnected: function () {
-        return this.status() == "connected"
+        return this.status() === "connected"
     },
 
     onOpen: function(c) {

@@ -159,10 +159,10 @@ Object.shallowCopyTo({
     },
 
     pathComponents: function () {
-        if (this == "/") {
+        if (this === "/") {
             return [""];
         }
-        else if (this == "") {
+        else if (this === "") {
             return [];
         }
         else {
@@ -253,7 +253,7 @@ Object.shallowCopyTo({
         for (let i = 0; i < randy; i++) {
             let newTxt = loremIpsumWordBank[Math.floor(Math.random() * (loremIpsumWordBank.length - 1))];
 
-            if (ret.substring(ret.length - 1, ret.length) == "." || ret.substring(ret.length - 1, ret.length) == "?") {
+            if (ret.substring(ret.length - 1, ret.length) === "." || ret.substring(ret.length - 1, ret.length) === "?") {
                 newTxt = newTxt.substring(0, 1).toUpperCase() + newTxt.substring(1, newTxt.length);
             }
 

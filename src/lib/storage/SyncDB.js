@@ -121,7 +121,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
                     hasError = true
                 }
 				
-                if (typeof(json[k]) == "undefined" || typeof(readCache[k]) == "undefined") {
+                if (typeof(json[k]) === "undefined" || typeof(readCache[k]) === "undefined") {
                     hasError = true
                 }
             }
@@ -136,7 +136,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
                     hasError = true
                 }
 				
-                if (typeof(json[k]) == "undefined" || typeof(readCache[k]) == "undefined") {
+                if (typeof(json[k]) === "undefined" || typeof(readCache[k]) === "undefined") {
                     hasError = true
                 }
             }

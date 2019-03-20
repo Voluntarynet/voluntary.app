@@ -44,7 +44,7 @@ Object.lookupPath = function (obj, path) {
 },
 
 Object.perform = function (obj, name) {
-    if (obj !== undefined && obj !== null && obj[name] && typeof (obj[name]) == "function") {
+    if (obj !== undefined && obj !== null && obj[name] && typeof (obj[name]) === "function") {
         let args = Array.prototype.slice.call(arguments).slice(2);
         return obj[name].apply(obj, args);
     } else {
@@ -133,7 +133,7 @@ Object.allAtDeepKey = function (obj, key) {
 }
 
 Object.atPath = function (obj, pathList) {
-    if (typeof (pathList) == "string") {
+    if (typeof (pathList) === "string") {
         pathList = pathList.split("/");
     }
 
@@ -148,7 +148,7 @@ Object.atPath = function (obj, pathList) {
         return Object.atPath(obj[k], pathList);
     }
 
-    if (k == "") {
+    if (k === "") {
         return obj;
     }
 

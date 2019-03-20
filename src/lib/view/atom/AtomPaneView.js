@@ -103,7 +103,7 @@ window.AtomPaneView = DivView.extend().newSlots({
             //console.log("onMouseMove dir ", dir)
 
             
-            if (dir == "x") {
+            if (dir === "x") {
                 //console.log("dir x")
                 sv.setMinAndMaxWidth(null)
                 sv.setMinAndMaxHeight(1)
@@ -111,7 +111,7 @@ window.AtomPaneView = DivView.extend().newSlots({
                 sv.setHeight(null)
                 sv.setLeft(0)
                 sv.setTop(downPos.y())
-            } else if (dir == "y") {
+            } else if (dir === "y") {
                 //console.log("dir y")
                 sv.setMinAndMaxWidth(1)
                 sv.setMinAndMaxHeight(null)
@@ -168,9 +168,9 @@ window.AtomPaneView = DivView.extend().newSlots({
             let downPos = this.mouseDownPos()
 
             if (dir) {
-                if (dir == "x") {
+                if (dir === "x") {
                     this.addAtomAtY(downPos.y())
-                } else if (dir == "y") {
+                } else if (dir === "y") {
                     this.addAtomAtX(downPos.x())
                 }
             }

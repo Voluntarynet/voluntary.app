@@ -272,7 +272,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
                     throw new Error("attempt to double store " + pid)
                 }
 
-                //if (pid[0] == "_" || this.objectIsReferencedByActiveObjects(obj)) {
+                //if (pid[0] === "_" || this.objectIsReferencedByActiveObjects(obj)) {
                 this.storeObject(obj)
                 justStoredPids[pid] = obj
                 //}
@@ -395,7 +395,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     },
 
     objectForPid: function (pid) {
-        if (pid == "null") {
+        if (pid === "null") {
             return null
         }
 
@@ -478,12 +478,12 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     // 
     //          { <objRefKey>: "<pid>" }
     //
-    //      if pid == "null" then object is null
+    //      if pid === "null" then object is null
     //
 
     refValueIfNeeded: function (v) {
-        if (typeof (v) == "object") {
-            if (v == null || typeof (v.type) == "function") {
+        if (typeof (v) === "object") {
+            if (v == null || typeof (v.type) === "function") {
                 return this.refForObject(v)
             }
         }
@@ -491,7 +491,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     },
 
     pidIfRef: function (ref) {
-        if (typeof (ref) == "object") {
+        if (typeof (ref) === "object") {
             if (this.dictIsObjRef(ref)) {
                 return ref[this.objRefKey()]
             }
@@ -515,7 +515,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 
     dictIsObjRef: function (dict) {
         let  k = this.objRefKey()
-        return typeof (dict[k]) == "string"
+        return typeof (dict[k]) === "string"
     },
 
     refForObject: function (obj) {
@@ -534,7 +534,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     objectForRef: function (ref) {
         let  k = this.objRefKey()
         let  pid = ref[k]
-        if (pid == "null") {
+        if (pid === "null") {
             return null
         }
 
@@ -593,7 +593,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         // to delete them you'll need to call removeEntryForPid()
 
         return this.sdb().keys().select(function (pid) {
-            return pid[0] == "_"
+            return pid[0] === "_"
         })
     },
 
@@ -731,7 +731,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         let  replacer = function (key, value) {
             value = stringReplacer(value)
 
-            if (typeof(value) == "array") {
+            if (typeof(value) === "array") {
                 return value.map(stringReplacer)
             }
             return value;

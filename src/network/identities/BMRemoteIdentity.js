@@ -57,7 +57,7 @@ window.BMRemoteIdentity = BMStorableNode.extend().newSlots({
     localIdentity: function() {
         /*
 		let localIdentity = this.parentNode().parentNode()
-		assert(localIdentity.type() == "BMLocalIdentity")
+		assert(localIdentity.type() === "BMLocalIdentity")
 		return localIdentity
 		*/
         return this.parentNodeOfType("BMLocalIdentity")
@@ -66,7 +66,7 @@ window.BMRemoteIdentity = BMStorableNode.extend().newSlots({
     didUpdateSlot: function(slotName, oldValue, newValue) {
         BMStorableNode.didUpdateSlot.apply(this, [slotName, oldValue, newValue])
         
-        if (slotName == "publicKeyString") {
+        if (slotName === "publicKeyString") {
             this.postChange()
         }
         
@@ -80,7 +80,7 @@ window.BMRemoteIdentity = BMStorableNode.extend().newSlots({
     },
     
     title: function () {
-        if (this.name() == "") {
+        if (this.name() === "") {
             return "Untitled"
         }
         return this.name()

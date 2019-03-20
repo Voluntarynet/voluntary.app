@@ -56,7 +56,7 @@ window.BMDataStore = BMNode.extend().newSlots({
     addRecord: function (aRecord) {
         let  className = aRecord.title().split("_").first()
 
-        if (className == "") {
+        if (className === "") {
             className = "roots"
         }
 

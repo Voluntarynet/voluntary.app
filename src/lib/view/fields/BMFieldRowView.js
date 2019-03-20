@@ -59,7 +59,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
     
     syncValueViewToNode: function() {
         //console.log(this.typeId() + ".syncValueViewToNode " + this.node().type())
-	    if (this.node().type() == "BMBoolField" && this.valueView().type() != "BoolView") {
+	    if (this.node().type() === "BMBoolField" && this.valueView().type() != "BoolView") {
 	        //console.log("syncValueViewToNode setup bool view")
 	        let  boolView = BoolView.clone()
             this.removeSubview(this.valueView())  
@@ -95,9 +95,9 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         /*
         console.log("")
         console.log("FieldRow.syncFromNode:")
-        console.log("  valueView.type() == ", valueView.type())
+        console.log("  valueView.type() === ", valueView.type())
         console.log("  valueView.innerHTML() == '" + valueView.innerHTML() + "'")
-        console.log("  valueView.value == ", valueView.value)
+        console.log("  valueView.value === ", valueView.value)
         console.log("  newValue =  '" + newValue + "'")
         */
         

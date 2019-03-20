@@ -18,7 +18,7 @@ function DomElement_atInsertElement(el, index, child) {
         return
     }
     
-    if (index == children.length) {
+    if (index === children.length) {
         el.appendChild(child)
         return
     }

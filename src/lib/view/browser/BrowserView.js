@@ -235,7 +235,7 @@ window.BrowserView = NodeView.extend().newSlots({
             StackTrace.shared().showCurrentStack()
         }
 
-        if (this.columnGroups().length == count) { // redundant?
+        if (this.columnGroups().length === count) { // redundant?
             return this
         }
 
@@ -264,7 +264,7 @@ window.BrowserView = NodeView.extend().newSlots({
         //this.updateColumnPositions()
         this.setupColumnGroupColors()
         //this.log("this.columnGroups().length = " + this.columnGroups().length)
-        //assert(this.columnGroups().length  == count)
+        //assert(this.columnGroups().length  === count)
         return this
     },
 

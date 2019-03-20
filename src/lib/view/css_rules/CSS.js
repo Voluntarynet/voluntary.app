@@ -122,7 +122,7 @@ window.CSS = class CSS extends ProtoClass {
             // enumerate rules in ruleList (items of type CSS*Rule, e.g. CSSFontFaceRule) 
             for (let j = 0; j < myrules.length; j++) {
                 let rule = myrules[j]
-                if(className == rule.selectorText) {
+                if(className === rule.selectorText) {
                     return rule // usually a CSSStyleRule instance
                 }
             }

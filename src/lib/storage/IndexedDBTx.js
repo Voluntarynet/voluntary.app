@@ -30,7 +30,7 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
     // --- being and commit ---
 
     assertNotCommitted () {
-	    assert(this.isCommitted() == false)
+	    assert(this.isCommitted() === false)
     }
 
     begin () {

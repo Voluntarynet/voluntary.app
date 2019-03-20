@@ -73,7 +73,7 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
     
     fieldNamed: function(aName) {
         return this.subnodes().detect(function (subnode) { 
-            return subnode.valueMethod() == aName || subnode.key() == aName
+            return subnode.valueMethod() === aName || subnode.key() === aName
         })
     },
     

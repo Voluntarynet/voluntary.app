@@ -103,7 +103,7 @@ window.NodeView = DivStyledView.extend().newSlots({
     /*
     subviewForNode: function(aNode) {
         // TODO: optimize with a dictionary? 
-        return this.managedSubviews().detect(aView => aView.node() == aNode )
+        return this.managedSubviews().detect(aView => aView.node() === aNode )
     },
     */
 

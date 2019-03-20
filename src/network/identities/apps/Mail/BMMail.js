@@ -32,7 +32,7 @@ window.BMMail = BMApplet.extend().newSlots({
 
     
     handleMessage: function(msg) {
-        if (msg.type() == BMMailMessage.type()) {
+        if (msg.type() === BMMailMessage.type()) {
             this.handleSentMessage(msg)
             this.handleReceivedMessage(msg)
         }

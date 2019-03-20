@@ -640,7 +640,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     markPid: function (pid) {
         //this.debugLog("markPid(" + pid + ")")
 
-        if (this._marked[pid] == true) {
+        if (this._marked[pid] === true) {
             return false // already marked it
         }
         this._marked[pid] = true

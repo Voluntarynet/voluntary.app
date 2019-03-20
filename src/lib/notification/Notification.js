@@ -19,12 +19,12 @@ window.Notification = class Notification extends ProtoClass {
     }
     
     isEqual (obs) {
-        if (this == obs) { 
+        if (this === obs) { 
             return true 
         }
         
-        let sameName = this.name() == obs.name() 
-        let sameSender = this.sender() == obs.sender() 
+        let sameName = this.name() === obs.name() 
+        let sameSender = this.sender() === obs.sender() 
         // TODO: testing equivalence of info?
         
         return sameName && sameSender

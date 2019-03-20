@@ -571,7 +571,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     // --- utility -----------------------------
     
     parentNodeOfType: function(className) {
-        if (this.type() == className) {
+        if (this.type() === className) {
             return this
         }
         
@@ -608,7 +608,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
         this.prepareToAccess(); // put guard on subnodes instead?
 
         return this.subnodes().detect(function (subnode) {
-            return subnode.type() == aProto.type()
+            return subnode.type() === aProto.type()
         })
     },
 
@@ -616,7 +616,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
         this.prepareToAccess(); // put guard on subnodes instead?
 
         return this.subnodes().detect(function (subnode) {
-            return subnode.subtitle() == aString
+            return subnode.subtitle() === aString
         })
     },
         
@@ -624,7 +624,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
         this.prepareToAccess(); // put guard on subnodes instead?
 
         return this.subnodes().detect(function (subnode) {
-            return subnode.title() == aString
+            return subnode.title() === aString
         })
     },
     

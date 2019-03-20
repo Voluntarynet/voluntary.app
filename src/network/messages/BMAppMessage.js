@@ -103,7 +103,7 @@ window.BMAppMessage = BMFieldSetNode.extend().newSlots({
     },
 	
     isEqual: function(other) {
-        return this.hash() == other.hash()
+        return this.hash() === other.hash()
     },
 	    
     fromDataDict: function(dataDict) {

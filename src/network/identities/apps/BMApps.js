@@ -49,14 +49,14 @@ window.BMApps = BMStorableNode.extend().newSlots({
 
     addAppTypeIfMissing: function (appProto) {
         //console.log(this.typeId() + ".addAppTypeIfMissing(" + appProto.type() + ")")
-        if (this.hasAppType(appProto) == false) {
+        if (this.hasAppType(appProto) === false) {
             this.addSubnode(appProto.clone())
         }
         return this
     },
 
     hasAppType: function (appProto) {
-        return this.apps().detect((app) => { return app.type() == appProto.type() }) != null
+        return this.apps().detect((app) => { return app.type() === appProto.type() }) != null
     },
 
     apps: function () {

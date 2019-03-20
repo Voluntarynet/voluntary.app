@@ -257,7 +257,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         }
         
         if (event == null) {
-            throw new Error(this.type() + ".pointsForEvent() event == null")
+            throw new Error(this.type() + ".pointsForEvent() event is null")
         }
 
         let points = []

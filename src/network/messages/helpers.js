@@ -21,7 +21,7 @@ String.prototype.toJsonDict = function() {
 String.prototype.sha256String = function() {
     let h1 = bitcore.crypto.Hash.sha256(this.toBuffer()).toString("hex")
     //let h2 = bitcore.crypto.Hash.sha256(("" + this).toBuffer()).toString('hex')
-    //assert(h1 == h2)
+    //assert(h1 === h2)
     return h1
 /*
 	let s = "" + this
@@ -31,7 +31,7 @@ String.prototype.sha256String = function() {
     let h2 = bitcore.crypto.Hash.sha256(this.toBuffer()).toString('hex')
 	console.log("shaHex = ", shaHex)
 	console.log("h2 = ", h2)
-	assert(shaHex == h2)
+	assert(shaHex === h2)
     return shaHex;             
 */   
 }

@@ -136,12 +136,12 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
     idWithPublicKeyString: function(publicKeyString) { 
         
         if (publicKeyString === null) {
-            console.warn("publicKeyString == null")
+            console.warn("publicKeyString is null")
         }
         
         let ids = this.allIdentities()   
         let result = ids.detect((id) => { 
-            return id.publicKeyString() == publicKeyString
+            return id.publicKeyString() === publicKeyString
         })
 		
         if (!result) {		
@@ -194,13 +194,13 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
 	
 	idWithName: function(aString) {
 		return this.allIdentities().detect((id) => { 
-			return id.name() == aString
+			return id.name() === aString
 		})
 	},
 	
 	idWithNameOrPubkey: function(aString) {
 		return this.allIdentities().detect((id) => { 
-			return id.name() == aString || id.publicKeyString() == aString
+			return id.name() === aString || id.publicKeyString() === aString
 		})
 	},
 	*/	

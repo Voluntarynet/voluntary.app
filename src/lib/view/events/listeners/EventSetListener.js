@@ -120,7 +120,7 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
                         console.log("sent: " + delegate.type() + "." + fullMethodName, "(" + event.type + ") and returned ", result)
                     }
 
-                    if (result == false) {
+                    if (result === false) {
                         event.stopPropagation()
                     }
 

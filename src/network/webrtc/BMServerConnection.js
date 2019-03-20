@@ -198,7 +198,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
     },
 
     receiveSignalFromPeer(data) {
-        let remotePeer = this.remotePeers().subnodes().detect(p => p.peerId().toString() == data.fromPeer);
+        let remotePeer = this.remotePeers().subnodes().detect(p => p.peerId().toString() === data.fromPeer);
         if (remotePeer == null) {
             remotePeer = this.remotePeers().addRemotePeerForId(data.fromPeer);
             remotePeer.setConn(new SimplePeer({

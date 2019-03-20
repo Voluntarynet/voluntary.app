@@ -58,12 +58,12 @@ window.BMChat = BMApplet.extend().newSlots({
     handleAppMsg: function(msg) {
         console.log("  " + this.localIdentity().title() + " app " + this.typeId() + ".handleAppMsg(" + msg.typeId() + ") ") //, msg.dataDict())
 		
-        if (msg.type() == BMChatMessage.type()) {
+        if (msg.type() === BMChatMessage.type()) {
             this.handleSentMessage(msg)
             this.handleReceivedMessage(msg)
         }
 		
-        if (msg.type() == BMPostMessage.type()) {
+        if (msg.type() === BMPostMessage.type()) {
 		    //console.log("found BMPostMessage")
 		    
 		    let spk = msg.senderPublicKeyString()
@@ -79,7 +79,7 @@ window.BMChat = BMApplet.extend().newSlots({
 		    
 		    //console.log(this.localIdentity().title() + " " + this.localIdentity().publicKeyString() + " =?= " + spk)
 		    
-		    if (this.localIdentity().publicKeyString() == spk) {
+		    if (this.localIdentity().publicKeyString() === spk) {
 		        console.log("  placing in " + this.localIdentity().title() + " myPosts")
 			    this.myPosts().addSubnodeIfAbsent(msg.duplicate())
 		    } else {

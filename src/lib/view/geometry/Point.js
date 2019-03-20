@@ -161,11 +161,11 @@ window.Point = ideal.Proto.extend().newSlots({
     // eqaulity
 
     isEqual: function(p) {
-        return (this.x() == p.x()) && (this.y() == p.y()) && (this.z() == p.z()) // && (this.t() == p.t())
+        return (this.x() === p.x()) && (this.y() === p.y()) && (this.z() === p.z()) // && (this.t() === p.t())
     },
 
     isEqualWithTime: function(p) { // not ideal
-        return (this.x() == p.x()) && (this.y() == p.y()) && (this.z() == p.z()) && (this.t() == p.t())
+        return (this.x() === p.x()) && (this.y() === p.y()) && (this.z() === p.z()) && (this.t() === p.t())
     },
 
     // comparison 

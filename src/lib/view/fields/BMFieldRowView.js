@@ -96,7 +96,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         console.log("")
         console.log("FieldRow.syncFromNode:")
         console.log("  valueView.type() === ", valueView.type())
-        console.log("  valueView.innerHTML() == '" + valueView.innerHTML() + "'")
+        console.log("  valueView.innerHTML() === '" + valueView.innerHTML() + "'")
         console.log("  valueView.value === ", valueView.value)
         console.log("  newValue =  '" + newValue + "'")
         */

@@ -87,7 +87,7 @@ window.BMKeyPair = BMStorableNode.extend().newSlots({
     },
 
     equals: function(anIdentity) {
-        return anIdentity != null && this.publicKeyString() == anIdentity.publicKeyString()
+        return anIdentity != null && this.publicKeyString() === anIdentity.publicKeyString()
     },
 
 })

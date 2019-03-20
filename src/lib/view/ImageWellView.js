@@ -59,7 +59,7 @@ window.ImageWellView = NodeView.extend().newSlots({
     },
     
     setImageDataURLs: function(dataURLs) {
-        if (JSON.stringify(dataURLs) == JSON.stringify(this.imageDataURLs())) {
+        if (JSON.stringify(dataURLs) === JSON.stringify(this.imageDataURLs())) {
             return this
         }
         

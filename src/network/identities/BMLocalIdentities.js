@@ -35,13 +35,13 @@ window.BMLocalIdentities = BMStorableNode.extend().newSlots({
     
     idWithPublicKeyString: function(s) {
         return this.subnodes().detect(function (id) {            
-            return id.publicKey().toString() == s
+            return id.publicKey().toString() === s
         })
     },
 
     idWithName: function(s) {
         return this.subnodes().detect(function (id) {            
-            return id.name() == s
+            return id.name() === s
         })
     },
 	

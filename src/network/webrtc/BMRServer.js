@@ -70,7 +70,7 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
     /*
     setPort: function(aPort) {
         this._port = aPort
-        if (this._port == 443) {
+        if (this._port === 443) {
             this.setIsSecure(true)
         }
         return this
@@ -151,10 +151,10 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
     },
     
     isAddrDict: function(addrDict) {
-        return  this.host() == addrDict.host && 
-                this.port() == addrDict.port &&
-                this.path() == addrDict.path &&
-                this.isSecure() == addrDict.isSecure
+        return  this.host() === addrDict.host && 
+                this.port() === addrDict.port &&
+                this.path() === addrDict.path &&
+                this.isSecure() === addrDict.isSecure
     },
     
     connectedRemotePeers: function () {

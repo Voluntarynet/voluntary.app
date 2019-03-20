@@ -53,7 +53,7 @@ window.BMRemoteIdentities = BMStorableNode.extend().newSlots({
 
     idWithPublicKeyString: function(publicKeyString) { // limits to valid nodes
         return this.validSubnodes().detect(function (id) {
-            return id.publicKeyString().toString() == publicKeyString
+            return id.publicKeyString().toString() === publicKeyString
         })
     },
     
@@ -65,7 +65,7 @@ window.BMRemoteIdentities = BMStorableNode.extend().newSlots({
 
     idWithName: function(s) {
         return this.subnodes().detect(function (id) {            
-            return id.name() == s
+            return id.name() === s
         })
     },
 	

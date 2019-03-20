@@ -156,7 +156,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
             }
 			
             /*
-			if(JSON.stableStringify(json) == JSON.stableStringify(this._readCache)) {
+			if(JSON.stableStringify(json) === JSON.stableStringify(this._readCache)) {
 				console.log("syncdb in sync with idb")
 			} else {
 				console.log("---- out of sync ---")
@@ -296,7 +296,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
         this.assertOpen()
 	    this.assertInTx()
 	    
-	    if (!(key in this._writeCache) && this._readCache[key] == value) {
+	    if (!(key in this._writeCache) && this._readCache[key] === value) {
 	        return
 	    }
 	    

@@ -85,11 +85,11 @@ window.BMConnection = BMNode.extend().newSlots({
     },
 	
     didComeOnline: function() {
-	    return this.lastIsOnline() == false && this.isOnline() == true
+	    return this.lastIsOnline() === false && this.isOnline() === true
     },
 	
     didGoOffline: function() {
-	    return this.lastIsOnline() == true && this.isOnline() == false
+	    return this.lastIsOnline() === true && this.isOnline() === false
     },
 	
     onNetworkInformationChange: function() {

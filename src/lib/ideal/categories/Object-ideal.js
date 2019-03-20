@@ -89,7 +89,7 @@ Object.atDeepKey = function (obj, key, seenSet) {
     for (let k in obj) {
         //console.log("k = ")
         if (obj.hasOwnProperty(k)) {
-            if (k == key) {
+            if (k === key) {
                 return obj[k];
             }
         }
@@ -120,7 +120,7 @@ Object.allAtDeepKey = function (obj, key) {
 
     for (let k in obj) {
         if (obj.hasOwnProperty(k)) {
-            if (k == key) {
+            if (k === key) {
                 objs.append(obj[k]);
             }
             else {

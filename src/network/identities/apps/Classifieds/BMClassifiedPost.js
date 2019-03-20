@@ -323,7 +323,7 @@ window.BMClassifiedPost = BMFieldSetNode.extend().newSlots({
     },
     
     isEqual: function(aPost) {
-        return this.hash() == aPost.hash()
+        return this.hash() === aPost.hash()
     },
     
     hash: function() {

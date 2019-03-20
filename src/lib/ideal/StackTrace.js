@@ -101,7 +101,7 @@ StackTrace.registerThisClass()
 // --- helper functions ---
 
 function assert(v) {
-    if(v == false || v == null) {
+    if(v === false || v == null) {
         throw new Error("assert failed - false value")
     }
     return v
@@ -115,7 +115,7 @@ function assertDefined(v) {
 }
 
 Error.prototype.assert = function(v) {
-    if(v == false || v == null) {
+    if(v === false || v == null) {
         throw new Error("assert failed - false value")
     }
     return v

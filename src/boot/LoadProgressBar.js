@@ -216,7 +216,7 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
         item.innerHTML = itemName
         /*
     	//setTimeout(() => { 
-    	    if (item.currentValue == item.innerHTML) {
+    	    if (item.currentValue === item.innerHTML) {
     	        item.style.opacity = 1
 	        }
     	//}, 0)

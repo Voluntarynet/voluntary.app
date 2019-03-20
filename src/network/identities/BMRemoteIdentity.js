@@ -142,7 +142,7 @@ window.BMRemoteIdentity = BMStorableNode.extend().newSlots({
     },
 	
     equals: function(anIdentity) {
-        return anIdentity != null && anIdentity.publicKeyString && (this.publicKeyString() == anIdentity.publicKeyString())
+        return anIdentity != null && anIdentity.publicKeyString && (this.publicKeyString() === anIdentity.publicKeyString())
     },
 	
     encryptJson: function(dataDict) {

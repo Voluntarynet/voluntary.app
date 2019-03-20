@@ -39,9 +39,9 @@ window.Observation = class Observation extends ProtoClass {
     }
 
     isEqual(obs) {
-        let sameName = this.name() == obs.name()
-        let sameObserver = this.observer() == obs.observer()
-        let sameTarget = this.target() == obs.target()
+        let sameName = this.name() === obs.name()
+        let sameObserver = this.observer() === obs.observer()
+        let sameTarget = this.target() === obs.target()
         return sameName && sameObserver && sameTarget
     }
 

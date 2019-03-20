@@ -12,7 +12,7 @@ for(i = 0; i < 1000; i ++) {
 
 	var h2 = bitcore.crypto.Hash.sha256(s.toBuffer()).toString('hex')
 	
-	console.log(s,  ":", h1 == h2)
+	console.log(s,  ":", h1 === h2)
 }
 */
 
@@ -144,7 +144,7 @@ console.log("encryptedBuffer = ", encryptedBuffer)
 var bob = ECIES().privateKey(bobPrivateKey).publicKey(alicePrivateKey.publicKey);
 var decrypted = bob.decrypt(encryptedBuffer).toString();
 
-console.log("'" + decrypted + "' " + ((decrypted == message) ? "==" : "!=" ) + " '" + message + "'")
+console.log("'" + decrypted + "' " + ((decrypted === message) ? "==" : "!=" ) + " '" + message + "'")
 
 console.log("------ END TESTS ------")
 */
@@ -265,7 +265,7 @@ function TestElGamalEncryptDecrypt() {
     
     var cipherText = sjcl.encrypt(pair.pub, inputPlainText)
     var outputPlainText = sjcl.decrypt(pair.sec, cipherText)
-    assert(outputPlainText == inputPlainText)		        
+    assert(outputPlainText === inputPlainText)		        
     //console.log("encryption test cipherText: [" + cipherText + "]")
     console.log("encryption test outputPlainText: [" + outputPlainText + "]")
     console.log("TestSig TestElGamalEncryptDecrypt")
@@ -281,7 +281,7 @@ function TestSig() {
 
     var ok = pair.pub.verify(sjcl.hash.sha256.hash(inputPlainText), sig)
     // Either `true` or an error will be thrown.
-    assert(ok == true)		        
+    assert(ok === true)		        
     console.log("TestSig passed")
 }
 
@@ -298,7 +298,7 @@ function TestSig2() {
 
     var ok = pair.pub.verify(sjcl.hash.sha256.hash(inputPlainText), sig)
     // Either `true` or an error will be thrown.
-    assert(ok == true)		        
+    assert(ok === true)		        
     console.log("TestSig passed")
 }
 

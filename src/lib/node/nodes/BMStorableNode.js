@@ -81,7 +81,7 @@ window.BMStorableNode = BMNode.extend().newSlots({
     
     pid: function() {
         if (!this.shouldStore()) {
-            throw new Error("attempt to prepare to store a node of type '" + this.type() + "' which has shouldStore == false, use this.setShouldStore(true)")
+            throw new Error("attempt to prepare to store a node of type '" + this.type() + "' which has shouldStore === false, use this.setShouldStore(true)")
         }
 		
         if (!this._pid) {
@@ -310,7 +310,7 @@ window.BMStorableNode = BMNode.extend().newSlots({
         let pids = []
         
         this.subnodes().forEach((subnode) => {
-            if (subnode.shouldStore() == true) {
+            if (subnode.shouldStore() === true) {
                 pids.push(subnode.pid())
             }
         })

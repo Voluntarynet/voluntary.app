@@ -35,7 +35,7 @@ class CrossTabLock extends ProtoClass {
     }
 
     isLocked() {
-        return this.lockNumber() == this.currentLockNumber
+        return this.lockNumber() === this.currentLockNumber
     }
 
     lock() {

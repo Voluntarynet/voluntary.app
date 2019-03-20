@@ -190,7 +190,7 @@ class ProtoClass {
 
 
     childProtos () {
-        let result = ProtoClass.allClasses().select((proto) => { return proto._parentProto == this })
+        let result = ProtoClass.allClasses().select((proto) => { return proto._parentProto === this })
         return result
     }
 

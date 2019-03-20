@@ -80186,7 +80186,7 @@ Object.shallowCopyTo({
 
     endsWith: function (suffix) {
         let index = this.lastIndexOf(suffix);
-        return (index > -1) && (this.lastIndexOf(suffix) == this.length - suffix.length);
+        return (index > -1) && (this.lastIndexOf(suffix) === this.length - suffix.length);
     },
 
     contains: function (aString) {
@@ -81084,7 +81084,7 @@ class ProtoClass {
 
 
     childProtos () {
-        let result = ProtoClass.allClasses().select((proto) => { return proto._parentProto == this })
+        let result = ProtoClass.allClasses().select((proto) => { return proto._parentProto === this })
         return result
     }
 
@@ -82323,8 +82323,8 @@ window.Observation = class Observation extends ProtoClass {
     }
 
     matchesNotification(note) {
-        let matchesTarget = (note.sender() == this.target()) || (this.target() == null)
-        let matchesName = (note.name() == this.name()) || (this.name() === null)
+        let matchesTarget = (note.sender() === this.target()) || (this.target() == null)
+        let matchesName = (note.name() === this.name()) || (this.name() === null)
         return matchesTarget && matchesName
     }
 
@@ -83620,7 +83620,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     justRemoveSubnode: function(aSubnode) { // private method 
         this.subnodes().remove(aSubnode)
         
-        if (aSubnode.parentNode() == this) {
+        if (aSubnode.parentNode() === this) {
             aSubnode.setParentNode(null)
         }
         
@@ -89403,7 +89403,7 @@ window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
             this.setTapCount(this.tapCount() + 1)
         }
 
-        if (this.tapCount() == this.numberOfTapsRequired()) {
+        if (this.tapCount() === this.numberOfTapsRequired()) {
             this.complete()
         }
 
@@ -91065,7 +91065,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     setMaxWidth: function(v) {
         /*
-        if (v == this._maxWidth) {
+        if (v === this._maxWidth) {
             return this
         }
         */
@@ -91429,7 +91429,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     // --- active element ---
 
     isActiveElement: function() {
-        return document.activeElement == this.element() 
+        return document.activeElement === this.element() 
     },
 	
     isActiveElementAndEditable: function() {
@@ -91445,7 +91445,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 		
         v = "" + v
 		
-        if (v == this.element().innerHTML) {
+        if (v === this.element().innerHTML) {
             return this
         }
 
@@ -92030,7 +92030,7 @@ window.DivView = ideal.Proto.extend().newSlots({
         if ((!this.isValid()) && (this.invalidColor() != null)) {
             this.setColor(this.invalidColor())
         } else {
-            if (this.color() == this.invalidColor()) {
+            if (this.color() === this.invalidColor()) {
                 this.setColor(null)
             }
         }
@@ -96085,7 +96085,7 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
     },
     
     setNode: function(aNode) {
-        if (aNode == this._node) {
+        if (aNode === this._node) {
             //return
         }
          
@@ -96195,7 +96195,7 @@ window.BrowserHeader = NodeView.extend().newSlots({
     },
 	
     shouldShowTitle: function() {
-        return this.browser().isSingleColumn() && this.browser().lastActiveColumnGroup() == this.columnGroup()
+        return this.browser().isSingleColumn() && this.browser().lastActiveColumnGroup() === this.columnGroup()
     },
 	
     showsAction: function(actionName) {
@@ -96358,7 +96358,7 @@ window.BrowserFooter = NodeView.extend().newSlots({
     },
 
     setNode: function(aNode) {
-        if (aNode == this._node) {
+        if (aNode === this._node) {
             //return
         }
         
@@ -98238,7 +98238,7 @@ window.BMTextAreaFieldRowView = BMFieldRowView.extend().newSlots({
     },
 	
     fillBottomOfColumnIfAvailable: function() {
-        if (this.column().rows().last() == this) {
+        if (this.column().rows().last() === this) {
             //console.log(this.typeId() + " update height")
             this.setMinAndMaxHeightPercentage(100)
             this.setFlexGrow(100)
@@ -98450,7 +98450,7 @@ window.BMOptionsFieldRowView = BMFieldRowView.extend().newSlots({
 		
         let currentValidValues = this.currentValidValues()
 		
-        if (currentValidValues.length === 1 && currentValidValues[0] == this.currentValue()) {
+        if (currentValidValues.length === 1 && currentValidValues[0] === this.currentValue()) {
             this.close()
             return
         }
@@ -103379,7 +103379,7 @@ window.BMRemoteIdentities = BMStorableNode.extend().newSlots({
     },
 	
     didChangeIdentity: function(aNote) {
-        if (aNote.info() == this) {
+        if (aNote.info() === this) {
         	this.postChangeNote()
         }
     },
@@ -104398,7 +104398,7 @@ window.BMClassifiedPost = BMFieldSetNode.extend().newSlots({
     },
     
     powUpdate: function(note) {
-        if (note.sender() == this.powObj()) {
+        if (note.sender() === this.powObj()) {
             //console.log("got powUpdate")
             this.didUpdateNode()
         }
@@ -104411,7 +104411,7 @@ window.BMClassifiedPost = BMFieldSetNode.extend().newSlots({
     },
     
     powDone: function(note) {
-        if (note.sender() == this.powObj()) {
+        if (note.sender() === this.powObj()) {
             //console.log("got powDone")
             this.unwatchPow()
             if (this.powObj().isValid()) {

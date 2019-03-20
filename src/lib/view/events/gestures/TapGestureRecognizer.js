@@ -94,7 +94,7 @@ window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
             this.setTapCount(this.tapCount() + 1)
         }
 
-        if (this.tapCount() == this.numberOfTapsRequired()) {
+        if (this.tapCount() === this.numberOfTapsRequired()) {
             this.complete()
         }
 

@@ -247,7 +247,7 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
     },
     
     setNode: function(aNode) {
-        if (aNode == this._node) {
+        if (aNode === this._node) {
             //return
         }
          

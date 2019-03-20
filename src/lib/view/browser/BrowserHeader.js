@@ -53,7 +53,7 @@ window.BrowserHeader = NodeView.extend().newSlots({
     },
 	
     shouldShowTitle: function() {
-        return this.browser().isSingleColumn() && this.browser().lastActiveColumnGroup() == this.columnGroup()
+        return this.browser().isSingleColumn() && this.browser().lastActiveColumnGroup() === this.columnGroup()
     },
 	
     showsAction: function(actionName) {

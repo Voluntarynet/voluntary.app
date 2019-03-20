@@ -36,7 +36,7 @@ window.BMRemoteIdentities = BMStorableNode.extend().newSlots({
     },
 	
     didChangeIdentity: function(aNote) {
-        if (aNote.info() == this) {
+        if (aNote.info() === this) {
         	this.postChangeNote()
         }
     },

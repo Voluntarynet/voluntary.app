@@ -1064,7 +1064,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     setMaxWidth: function(v) {
         /*
-        if (v == this._maxWidth) {
+        if (v === this._maxWidth) {
             return this
         }
         */
@@ -1428,7 +1428,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     // --- active element ---
 
     isActiveElement: function() {
-        return document.activeElement == this.element() 
+        return document.activeElement === this.element() 
     },
 	
     isActiveElementAndEditable: function() {
@@ -1444,7 +1444,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 		
         v = "" + v
 		
-        if (v == this.element().innerHTML) {
+        if (v === this.element().innerHTML) {
             return this
         }
 
@@ -2029,7 +2029,7 @@ window.DivView = ideal.Proto.extend().newSlots({
         if ((!this.isValid()) && (this.invalidColor() != null)) {
             this.setColor(this.invalidColor())
         } else {
-            if (this.color() == this.invalidColor()) {
+            if (this.color() === this.invalidColor()) {
                 this.setColor(null)
             }
         }

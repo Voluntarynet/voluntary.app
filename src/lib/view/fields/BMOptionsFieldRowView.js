@@ -117,7 +117,7 @@ window.BMOptionsFieldRowView = BMFieldRowView.extend().newSlots({
 		
         let currentValidValues = this.currentValidValues()
 		
-        if (currentValidValues.length === 1 && currentValidValues[0] == this.currentValue()) {
+        if (currentValidValues.length === 1 && currentValidValues[0] === this.currentValue()) {
             this.close()
             return
         }

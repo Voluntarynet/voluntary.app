@@ -214,7 +214,7 @@ window.BMClassifiedPost = BMFieldSetNode.extend().newSlots({
     },
     
     powUpdate: function(note) {
-        if (note.sender() == this.powObj()) {
+        if (note.sender() === this.powObj()) {
             //console.log("got powUpdate")
             this.didUpdateNode()
         }
@@ -227,7 +227,7 @@ window.BMClassifiedPost = BMFieldSetNode.extend().newSlots({
     },
     
     powDone: function(note) {
-        if (note.sender() == this.powObj()) {
+        if (note.sender() === this.powObj()) {
             //console.log("got powDone")
             this.unwatchPow()
             if (this.powObj().isValid()) {

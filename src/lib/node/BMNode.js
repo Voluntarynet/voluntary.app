@@ -332,7 +332,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     justRemoveSubnode: function(aSubnode) { // private method 
         this.subnodes().remove(aSubnode)
         
-        if (aSubnode.parentNode() == this) {
+        if (aSubnode.parentNode() === this) {
             aSubnode.setParentNode(null)
         }
         

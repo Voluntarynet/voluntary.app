@@ -251,7 +251,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     },
 	
     justAddSubnode: function(aSubnode) {
-        if (this.subnodes() == null) {
+        if (this.subnodes() === null) {
             throw new Error("subnodes is null")
         }
         this.subnodes().push(aSubnode)
@@ -295,8 +295,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
         console.log(this.typeId() + ".addSubnodeProtoForSlotIfAbsent(" + aProto.type() + ", " + slotName + ")")
         console.log(this.typeId() + " slotValue = " + slotValue)
 		
-        if (slotValue == null) {
-		    
+        if (slotValue === null) {
             slotValue = aProto.clone()
             //console.log(this.typeId() + "." + setterName + "(", obj, ")")
             let setterName = this.setterNameForSlot(slotName)
@@ -714,7 +713,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
 	    
         let h = subnode.hash()
         
-        if (h == null) {
+        if (h === null) {
             throw new Error(this.type() + " null subnode hash")
         }
         

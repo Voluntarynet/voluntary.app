@@ -20,7 +20,7 @@ window.BMOptionsField = BMField.extend().newSlots({
     setValidValues: function(v) {
         this._validValues = v
 		
-        if (this.value() == null && v.length) {
+        if (this.value() === null && v.length) {
             this.setValue(v[0])
         }
 

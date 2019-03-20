@@ -27,7 +27,7 @@ window.NodeView = DivStyledView.extend().newSlots({
 	
     setNode: function(aNode) {
 
-        if (this._node != aNode) {
+        if (this._node !== aNode) {
 
             this.stopWatchingNode()
             this._node = aNode

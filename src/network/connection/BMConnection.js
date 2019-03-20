@@ -119,7 +119,7 @@ window.BMConnection = BMNode.extend().newSlots({
 	
     isOnline: function() {
         if (this.isAvailable()) {
-            return this.rtt() != 0
+            return this.rtt() !== 0
         }
         return false
     },

@@ -252,7 +252,7 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
         if (oldFilter) {
             let f1 = oldFilter.serialized()
             let f2 = this._idsBloomFilter.serialized()
-            if (f1 != f2) {
+            if (f1 !== f2) {
                 this.didChangeIdsBloom()
             }
         }

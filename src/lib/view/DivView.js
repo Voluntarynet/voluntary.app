@@ -209,7 +209,6 @@ window.DivView = ideal.Proto.extend().newSlots({
         return 0
     },
 
-
     // --- css properties ---
 	
     setPosition: function(s) {
@@ -2206,12 +2205,12 @@ window.DivView = ideal.Proto.extend().newSlots({
             return tmp.textContent || tmp.innerText || "";
         }
 
-        if (rDataHTML && rDataHTML.trim().length != 0) {
+        if (rDataHTML && rDataHTML.trim().length !== 0) {
             this.replaceSelectedText(htmlToPlainTextFunc(rDataHTML))
             return false; // prevent returning text in clipboard
         }
 
-        if (rDataPText && rDataPText.trim().length != 0) {
+        if (rDataPText && rDataPText.trim().length !== 0) {
             this.replaceSelectedText(htmlToPlainTextFunc(rDataPText))
             return false; // prevent returning text in clipboard
         }

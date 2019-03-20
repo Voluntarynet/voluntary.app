@@ -64,7 +64,7 @@ window.ImageView = NodeView.extend().newSlots({
     },
     
     removeCloseButton: function() {
-        if (this.closeButtonView() != null) {
+        if (this.closeButtonView() !== null) {
             this.removeSubview(this.closeButtonView()) 
             this.setCloseButtonView(null)
         }

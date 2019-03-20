@@ -368,7 +368,7 @@ Object.shallowCopyTo({
 
     detectSlot: function (slotName, slotValue) {
         for (let i = 0; i < this.length; i++) {
-            if (this[i].perform(slotName) == slotValue) {
+            if (this[i].perform(slotName) === slotValue) {
                 return this[i];
             }
         }
@@ -378,7 +378,7 @@ Object.shallowCopyTo({
 
     detectProperty: function (slotName, slotValue) {
         for (let i = 0; i < this.length; i++) {
-            if (this[i][slotName] == slotValue) {
+            if (this[i][slotName] === slotValue) {
                 return this[i];
             }
         }
@@ -398,15 +398,15 @@ Object.shallowCopyTo({
 
     everySlot: function (slotName, expectedValue) {
         return this.every(function (obj) {
-            return obj.perform(slotName) == expectedValue;
+            return obj.perform(slotName) === expectedValue;
         });
     },
 
     everyProperty: function (slotName, expectedValue) {
         let args = arguments;
         return this.every(function (obj) {
-            if (args.length == 2) {
-                return obj[slotName] == expectedValue;
+            if (args.length === 2) {
+                return obj[slotName] === expectedValue;
             } else {
                 return obj[slotName];
             }
@@ -433,15 +433,15 @@ Object.shallowCopyTo({
 
     filterSlot: function (slotName, expectedValue) {
         return this.filter(function (obj) {
-            return obj && (obj.perform(slotName) == expectedValue);
+            return obj && (obj.perform(slotName) === expectedValue);
         });
     },
 
     filterProperty: function (slotName, expectedValue) {
         let args = arguments;
         return this.filter(function (obj) {
-            if (args.length == 2) {
-                return obj[slotName] == expectedValue;
+            if (args.length === 2) {
+                return obj[slotName] === expectedValue;
             } else {
                 return obj[slotName];
             }
@@ -467,7 +467,7 @@ Object.shallowCopyTo({
 
     minValue: function (callback, theDefault) {
         let obj = this.min(callback);
-        if (obj == undefined) {
+        if (typeof(obj) === "undefined") {
             return theDefault;
         }
         return callback(obj);
@@ -475,7 +475,7 @@ Object.shallowCopyTo({
 
     maxValue: function (callback, theDefault) {
         let obj = this.max(callback);
-        if (obj == undefined) {
+        if (typeof(obj) === "undefined") {
             return theDefault;
         }
         return callback(obj);
@@ -490,7 +490,7 @@ Object.shallowCopyTo({
             let v = this[i];
             if (callback) v = callback(v);
 
-            if (m == undefined || v > m) {
+            if (typeof(m) === "undefined" || v > m) {
                 m = v;
                 mObject = this[i];
             }
@@ -508,7 +508,7 @@ Object.shallowCopyTo({
             let v = this[i];
             if (callback) v = callback(v);
 
-            if (m == undefined || v > m) {
+            if (typeof(m) === "undefined" || v > m) {
                 m = v;
                 index = i;
             }
@@ -526,7 +526,7 @@ Object.shallowCopyTo({
             let v = this[i];
             if (callback) v = callback(v);
 
-            if (m == undefined || v < m) {
+            if (typeof(m) === "undefined" || v < m) {
                 m = v;
                 mObject = this[i];
             }
@@ -544,7 +544,7 @@ Object.shallowCopyTo({
             let v = this[i];
             if (callback) v = callback(v);
 
-            if (m == undefined || v < m) {
+            if (typeof(m) === "undefined" || v < m) {
                 m = v;
                 index = i;
             }
@@ -614,7 +614,7 @@ Object.shallowCopyTo({
     },
 
     isRelativePath: function () {
-        return this.first() != "";
+        return this.first() !== "";
     },
 
     isArray: true,
@@ -655,7 +655,7 @@ Object.shallowCopyTo({
     
     replaceOccurancesOfWith: function (oldValue, newValue) {
         for (let i = 0; i < this.length; i++) {
-            if (this[i] == oldValue) {
+            if (this[i] === oldValue) {
                 this[i] = newValue;
             }
         }

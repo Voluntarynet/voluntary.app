@@ -230,7 +230,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     // subclass helpers
 
     sendDelegateMessage: function(methodName) {
-        assert(methodName != null)
+        assert(methodName !== null)
 
         if (this.isDebugging()) {
             console.log(this.typeId() + " sending " + methodName)

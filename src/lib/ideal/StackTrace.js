@@ -53,7 +53,7 @@ class StackTrace extends ProtoClass {
                 out.push(["....", line.after("at ").split("/").pop()])
             } else {
                 let line = line.after("at ")
-                if (line == null) {
+                if (line === "") {
                     return;
                 }
                 let obj = line.before(".")
@@ -61,7 +61,7 @@ class StackTrace extends ProtoClass {
                 let path = line.after("(").before(")")
                 let filePart = path.split("/").pop()
                 let file = filePart.before(":")
-                if (file == null) { 
+                if (file === "") { 
                     file = "???.js:??:?"
                 }
                 let className = file.before(".js")
@@ -101,7 +101,8 @@ StackTrace.registerThisClass()
 // --- helper functions ---
 
 function assert(v) {
-    if(v === false || v == null) {
+    //if(v === false || v === null || typeof(v) === "undefined") {
+    if(!Boolean(v)) {
         throw new Error("assert failed - false value")
     }
     return v
@@ -115,7 +116,8 @@ function assertDefined(v) {
 }
 
 Error.prototype.assert = function(v) {
-    if(v === false || v == null) {
+    //if(v === false || v === null || typeof(v) === "undefined") {
+    if(!Boolean(v)) {
         throw new Error("assert failed - false value")
     }
     return v

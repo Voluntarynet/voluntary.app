@@ -32,7 +32,7 @@ Object.shallowCopyTo({
     },
 
     isOdd: function () {
-        return this % 2 != 0;
+        return this % 2 !== 0;
     },
     
 }, Number.prototype);

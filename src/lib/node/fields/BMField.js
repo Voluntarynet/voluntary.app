@@ -59,7 +59,7 @@ window.BMField = BMNode.extend().newSlots({
 	
     valueMethod: function() {
         // defaults to key 
-        if (this._valueMethod == null) {
+        if (this._valueMethod === null) {
             return this.key()
         }
 		

@@ -196,7 +196,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
     }
     
     showCurrentNoteStack () {
-        if (this.currentNote() == null) {
+        if (this.currentNote() === null) {
             //console.log("NotificationCenter.showCurrentNoteStack() warning - no current post")
         } else {
             console.log("current post sender stack: ", this.currentNote().senderStack())

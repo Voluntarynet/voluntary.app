@@ -57,7 +57,7 @@ window.ViewAnimator = class ViewAnimator extends ProtoClass {
         let newValue = Math.ceil((this.timeRatioDone() * (this.currentValue() - this.startValue())) + this.startValue());
         this.setValue(newValue)
 
-        if (tr != 1) {
+        if (tr !== 1) {
             requestAnimationFrame(() => { this.nextFrame() })
         } else {
             this.didComplete()

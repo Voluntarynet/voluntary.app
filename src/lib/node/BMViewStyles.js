@@ -31,7 +31,7 @@ window.BMViewStyles = ideal.Proto.extend().newSlots({
     },
 
     isEmpty: function() {
-        return this.states().detect((state) => { return !state.isEmpty() }) == null
+        return this.states().detect(state => !state.isEmpty()) === null
     },
 
     setToBlackOnWhite: function() {

@@ -35,7 +35,7 @@ window.BMOptionsFieldRowView = BMFieldRowView.extend().newSlots({
     },
 	
     isOpen: function() {
-        return this.optionsView().display() != "none"
+        return this.optionsView().display() !== "none"
     },
 	
 	

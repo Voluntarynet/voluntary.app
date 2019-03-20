@@ -82,7 +82,7 @@ window.DivStyledView = DivView.extend().newSlots({
     // select
 	
     setIsSelected: function(aBool) {
-        if (aBool != this._isSelected) {
+        if (aBool !== this._isSelected) {
 	    	this._isSelected = aBool
 	    	this.didChangeIsSelected()
         }

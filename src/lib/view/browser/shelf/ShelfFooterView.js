@@ -51,8 +51,8 @@ window.ShelfFooterView = DivView.extend().newSlots({
     
     didClickItem: function(clickedItem) {
         this.items().forEach((item) => {
-            if (item != clickedItem) {
-                if (item != this.firstItem()) {
+            if (item !== clickedItem) {
+                if (item !== this.firstItem()) {
                     item.unselect()
                 }
             }

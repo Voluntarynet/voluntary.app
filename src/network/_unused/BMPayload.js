@@ -68,7 +68,7 @@ window.BMPayload = ideal.Proto.extend().newSlots({
     },
     
     setData: function(d) {
-        if (typeof(d) != "object") {
+        if (typeof(d) !== "object") {
             throw new Error("attempt to set data to non object type of '" + typeof(d) + "'")
         }
         this._data = d
@@ -81,16 +81,16 @@ window.BMPayload = ideal.Proto.extend().newSlots({
             throw new Error("payload has null data ")
         }
         
-        if (typeof(this._data.type) != "string") {
+        if (typeof(this._data.type) !== "string") {
             console.log(this._data)
             throw new Error("Payload data type is a " + typeof(this._data.type))
         }
         
-        if (this._data.type != typeName) {
+        if (this._data.type !== typeName) {
             console.log("expected type '" + typeName + "' but found '" + this._data.type + "' for payload:")
             console.log(this._data)
             //console.log(JSON.stringify(this._data))
-            this.throwError(this._data.type + " != " + typeName)
+            this.throwError(this._data.type + " is not equal to " + typeName)
         }
     },
         

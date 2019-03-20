@@ -142,7 +142,7 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     },
     
     setUrlHash: function(aString) {
-        if (this.urlHash() != aString) {
+        if (this.urlHash() !== aString) {
             window.location.hash = encodeURI(aString)
         }
         return this

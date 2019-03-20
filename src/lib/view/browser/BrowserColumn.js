@@ -270,7 +270,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
 
     setNode: function(aNode) {
-        if (this.node() != aNode) {
+        if (this.node() !== aNode) {
             NodeView.setNode.apply(this, [aNode])
             this.unselectAllRows() // move to didChangeNode
             //"shouldFocusSubnode"
@@ -332,7 +332,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
 	
     scheduleSyncFromNode: function() {
-        if (this.browser() == null || this.node() == null) {
+        if (this.browser() === null || this.node() === null) {
             /*
             console.warn("WARNING: skipping BrowserColumn.scheduleSyncFromNode")
             console.warn("  this.browser() = " , this.browser())
@@ -347,8 +347,8 @@ window.BrowserColumn = NodeView.extend().newSlots({
     syncFromNode: function () {
         
         /*
-        if (this.browser() == null) {
-            console.warn("WARNING: skipping BrowserColumn.syncFromNode because this.browser() == null")
+        if (this.browser() === null) {
+            console.warn("WARNING: skipping BrowserColumn.syncFromNode because this.browser() is null")
             console.warn("this.node() = " , this.node())
             //console.warn("this.node().title() = " , this.node().title())
             return
@@ -358,12 +358,12 @@ window.BrowserColumn = NodeView.extend().newSlots({
         // remember the selection        
         let selectedIndex = this.selectedRowIndex()
         // console.log(this.node().title() + "  selectedIndex 1: " + selectedIndex)
-        let thereWasASelection = selectedIndex != -1
+        let thereWasASelection = selectedIndex !== -1
         let lastSelectedNode = this.selectedNode()
         
         NodeView.syncFromNode.apply(this)
         
-        if (this.node() == null) {
+        if (this.node() === null) {
             this.setIsRegisteredForDrop(false)
             return
         }

@@ -75,11 +75,11 @@ window.BMMailMessage = BMAppMessage.extend().newSlots({
         let senderId = App.shared().network().idWithNameOrPubkey(this.senderPublicKeyString())      
         //console.log(this.typeId() + " senderId = " + senderId)
         let from = senderId ? senderId.name() : ""
-        if (from != this.fromContact()) { this.setFromContact(from) }
+        if (from !== this.fromContact()) { this.setFromContact(from) }
 
         let receiverId = App.shared().network().idWithNameOrPubkey(this.receiverPublicKeyString())      
         let to = receiverId ? receiverId.name() : ""
-        if (to != this.toContact()) { this.setToContact(to) }
+        if (to !== this.toContact()) { this.setToContact(to) }
     },
 
     toContactNames: function() {

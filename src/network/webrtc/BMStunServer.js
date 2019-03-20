@@ -65,7 +65,7 @@ window.BMStunServer = BMFieldSetNode.extend().newSlots({
 	
     iceDict: function() {
         let url = "stun:" + this.host()
-        if (this.port() != null && this.port() != "") {
+        if (this.port() != null && this.port() !== "") {
             url += ":" + this.port()
         }
         return { url: url }

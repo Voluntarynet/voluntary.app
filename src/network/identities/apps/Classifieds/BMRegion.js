@@ -63,7 +63,7 @@ window.BMRegion = BMNode.extend().newSlots({
     
     setNodeDict: function(aDict) {
         this.setTitle(aDict.name.titleized())
-        this.setAllowsSubregions(aDict._allowsSubregions != false) // All
+        this.setAllowsSubregions(aDict._allowsSubregions !== false) // All
         //this.setNoteIsSubnodeCount(aDict._allowsSubregions === false) // All
         this.addChildrenDicts(aDict.children)
         return this

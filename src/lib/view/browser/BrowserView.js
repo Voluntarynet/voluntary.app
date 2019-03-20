@@ -368,8 +368,8 @@ window.BrowserView = NodeView.extend().newSlots({
                     //nextCg.column().setTitle(selectedColumn.selectedRowTitle())            
                     nextCg.syncFromNode()
 
-                    //if ((nextNode.view().type() != "BrowserColumnGroup") || nextNode.isKindOf(BMFieldSetNode)) { // TODO: use a better rule here
-                    if ((nextNode.viewClassName() != "BrowserColumnGroup") || nextNode.isKindOf(BMFieldSetNode)) { // TODO: use a better rule here
+                    //if ((nextNode.view().type() !== "BrowserColumnGroup") || nextNode.isKindOf(BMFieldSetNode)) { // TODO: use a better rule here
+                    if ((nextNode.viewClassName() !== "BrowserColumnGroup") || nextNode.isKindOf(BMFieldSetNode)) { // TODO: use a better rule here
                         this.setColumnGroupCount(index + 2)
                     }
                     
@@ -477,7 +477,7 @@ window.BrowserView = NodeView.extend().newSlots({
         let lastActiveCg = this.lastActiveColumnGroup()
 
         this.columnGroups().forEach((cg) => {
-            if (cg != lastActiveCg) {
+            if (cg !== lastActiveCg) {
                 cg.setFlexGrow(0)
                 cg.setIsCollapsed(true)
                 cg.setMinAndMaxWidth(0)
@@ -563,7 +563,7 @@ window.BrowserView = NodeView.extend().newSlots({
         // collapse columns from left to right until they all fit
         this.columnGroups().forEach((cg) => {
             let usedWidth = this.widthOfUncollapsedColumns()
-            let shouldCollapse = (usedWidth > this.browserWidth()) && (cg != lastActiveCg)
+            let shouldCollapse = (usedWidth > this.browserWidth()) && (cg !== lastActiveCg)
             shouldCollapse = shouldCollapse || (cg.node() == null)
             //console.log(cg.name() + " shouldCollapse:" + shouldCollapse + " usedWidth: " + usedWidth + " browserWidth:" + this.browserWidth())
             cg.setIsCollapsed(shouldCollapse)

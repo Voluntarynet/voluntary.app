@@ -25,7 +25,7 @@ window.BMDatedSet = BMStorableNode.extend().newSlots({
     },
     
     setAutoCheckPeriod: function(seconds) {
-        if (seconds && this._autoCheckPeriod != seconds) {
+        if (seconds && this._autoCheckPeriod !== seconds) {
             this._autoCheckPeriod = seconds
             this.autoCheck()
         }

@@ -75,7 +75,7 @@ window.BMPow = ideal.Proto.extend().newSlots({
     },
     
     status: function() {
-        if (this._status != null) {
+        if (this._status !== null) {
             return this._status;
         }
         
@@ -272,7 +272,7 @@ window.BMPow = ideal.Proto.extend().newSlots({
     },
     
     setHash: function(v) {
-        if (this._hash != v) {
+        if (this._hash !== v) {
             this._hash = v
             this._isValid = null
         }

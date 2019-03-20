@@ -55,7 +55,7 @@ window.DivBorderRadius = class DivBorderRadius extends ProtoClass {
     }
 
     setFromString(aString) {
-        let parts = aString.split(" ").select((part) => { return part != "" })
+        let parts = aString.split(" ").select((part) => { return part !== "" })
 
         this.clear()
 

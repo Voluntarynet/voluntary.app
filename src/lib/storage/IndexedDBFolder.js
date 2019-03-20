@@ -57,7 +57,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
     }
     
     asyncOpenIfNeeded (callback) {
-        if (this.db() == null) {
+        if (this.db() === null) {
             this.asyncOpen(callback)
         }
     }

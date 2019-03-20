@@ -54,8 +54,8 @@ window.ShelfItemGroupView = NodeView.extend().newSlots({
         //this.scrollView().performOnSubviewsExcept("unselect", clickedItem)
 
         this.items().forEach((item) => {
-            if (item != clickedItem) {
-                if (item != this.firstItem()) {
+            if (item !== clickedItem) {
+                if (item !== this.firstItem()) {
                     item.unselect()
                 }
             }

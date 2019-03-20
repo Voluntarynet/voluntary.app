@@ -180,7 +180,7 @@ window.BMObjectMessage = BMMessage.extend().newSlots({
     },
 
     hasValidationErrors: function() {
-        return this.validationErrors().length != 0
+        return this.validationErrors().length !== 0
     },
 	
     validationErrors: function() {

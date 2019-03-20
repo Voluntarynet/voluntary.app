@@ -44,7 +44,7 @@ window.BrowserHeader = NodeView.extend().newSlots({
     },
     
     setShouldShowTitle: function(aBool) {
-        if (this._shouldShowTitle != aBool) {
+        if (this._shouldShowTitle !== aBool) {
             this._shouldShowTitle = aBool
             this.scheduleSyncFromNode()
             //console.log(" ----- " + (this.node() ? this.node().title() : null) + " setShouldShowTitle ", aBool)
@@ -57,7 +57,7 @@ window.BrowserHeader = NodeView.extend().newSlots({
     },
 	
     showsAction: function(actionName) {
-        return actionName != "delete" // uses row delete action instead of column header action now
+        return actionName !== "delete" // uses row delete action instead of column header action now
         /*
 		if (actionName === "delete" && !WebBrowserWindow.shared().isOnMobile()) {
 			return false
@@ -106,7 +106,7 @@ window.BrowserHeader = NodeView.extend().newSlots({
     },
 	
     setDoesShowBackArrow: function(aBool) {
-        if (this._doesShowBackArrow != aBool) {
+        if (this._doesShowBackArrow !== aBool) {
             //console.log(this.node().title() + " setDoesShowBackArrow " + aBool)
             this._doesShowBackArrow = aBool
             this.scheduleSyncFromNode()

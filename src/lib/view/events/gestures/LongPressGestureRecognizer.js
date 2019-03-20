@@ -56,7 +56,7 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
     },
 
     hasTimer: function() {
-        return this.timeoutId() != null
+        return this.timeoutId() !== null
     },
 
     // -- the completed gesture ---

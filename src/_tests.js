@@ -58,7 +58,7 @@ App.runTests = function() {
 	
 	var hash = sha256.hex(msg.data)
 	var verifySig = cryptico.decrypt(msg.signature, knownRSAkey);
-	var isVerified = (verifySig.plaintext == hash) && (verifySig.signature === "verified");
+	var isVerified = (verifySig.plaintext === hash) && (verifySig.signature === "verified");
 	console.log("verifySig: ", verifySig)
 	console.log("     hash: ", msg.hash)
 	console.log("   verify: ", isVerified)

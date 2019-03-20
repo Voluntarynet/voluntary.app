@@ -51,7 +51,7 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
     },
     
     setHasFooter: function(aBool) {
-        if (this.hasFooter() != aBool) {
+        if (this.hasFooter() !== aBool) {
             if (aBool) {
                 this.addSubview(this.footer())
             } else {
@@ -120,7 +120,7 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
     // collapsing
 	
     setIsCollapsed: function(aBool) {
-        if (this._isCollapsed != aBool) {		
+        if (this._isCollapsed !== aBool) {		
             if (aBool) {
                 this.collapse()
             } else {
@@ -200,7 +200,7 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
 */
     
     setColumnClass: function(columnClass) {
-        if (this.column().type() != columnClass.type()) {
+        if (this.column().type() !== columnClass.type()) {
             let view = columnClass.clone().setNode(this.node())
             this.scrollView().removeSubview(this.column())
             this.setColumn(view)
@@ -233,7 +233,6 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
                 assert (w != null) 
             }
         }
-		
 			
         return w		
     },

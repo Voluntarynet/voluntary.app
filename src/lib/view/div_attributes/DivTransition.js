@@ -49,7 +49,7 @@ window.DivTransition = class DivTransition extends ProtoClass {
     }
 
     setFromString(aString) {
-        let parts = aString.split(" ").select((part) => { return part != "" })
+        let parts = aString.split(" ").select((part) => { return part !== "" })
 
         let v = parts.removeFirst()
         assert(v != null)

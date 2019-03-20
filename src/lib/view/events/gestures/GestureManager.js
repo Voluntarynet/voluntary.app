@@ -25,7 +25,7 @@ window.GestureManager = ideal.Proto.extend().newSlots({
         assert(aGesture)
 
         this.releaseActiveGestureIfDormant()
-        assert(aGesture != this.activeGesture())
+        assert(aGesture !== this.activeGesture())
 
         if (!this.activeGesture()) {
             this.setActiveGesture(aGesture)

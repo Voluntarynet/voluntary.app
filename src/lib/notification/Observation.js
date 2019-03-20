@@ -19,7 +19,7 @@ window.Observation = class Observation extends ProtoClass {
     }
 
     matchesNotification(note) {
-        let matchesTarget = (note.sender() === this.target()) || (this.target() == null)
+        let matchesTarget = (note.sender() === this.target()) || (this.target() === null)
         let matchesName = (note.name() === this.name()) || (this.name() === null)
         return matchesTarget && matchesName
     }

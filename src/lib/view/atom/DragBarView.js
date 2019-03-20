@@ -53,7 +53,7 @@ window.DragBarView = DivView.extend().newSlots({
     },
 
     setIsVertical: function(aBool) {
-        if (this._isVertical != aBool) {
+        if (this._isVertical !== aBool) {
             this._isVertical = aBool
             //console.log("this.hoverCursorType() = ", this.hoverCursorType())
             this.setCursor(this.hoverCursorType())
@@ -64,7 +64,7 @@ window.DragBarView = DivView.extend().newSlots({
     // --- editable ---
     
     setIsEnabled: function(aBool) {
-        if (this._isEnabled != aBool) {
+        if (this._isEnabled !== aBool) {
             this._isEnabled = aBool
             this.syncEnabled()
         }
@@ -84,7 +84,7 @@ window.DragBarView = DivView.extend().newSlots({
     // --- highlighted ---
     
     setIsHighlighted: function(aBool) {
-        if (this._isHighlighted != aBool) {
+        if (this._isHighlighted !== aBool) {
             this._isHighlighted = aBool
             this.syncHighlighted()
         }

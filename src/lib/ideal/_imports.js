@@ -1,10 +1,7 @@
 "use strict"
 
 JSImporter.pushRelativePaths([
-    "categories/Object-ideal.js",
-    "categories/Array-ideal.js",
-    "categories/String-ideal.js",
-    "categories/Number-ideal.js",
+    "categories/_imports.js",
     "Proto.js",
     "ProtoClass.js",
     "Map.js",

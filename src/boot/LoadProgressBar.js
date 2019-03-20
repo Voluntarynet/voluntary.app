@@ -79,7 +79,7 @@ class LoadProgressBarClass {
     // --- start ------------------------------------------------
 
     canStart () {
-        return window["JSImporter"] != null
+        return window["JSImporter"] !== undefined
     }
 
     startWhenReady () {
@@ -195,7 +195,7 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
 
     /*
     isPresent: function() {
-        return this.mainElement() != null
+        return this.mainElement() !== null
     },
     */
 

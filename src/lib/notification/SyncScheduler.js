@@ -69,7 +69,7 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
         if (!this.hasScheduledTargetAndMethod(target, syncMethod)) {
             let newAction = this.newActionForTargetAndMethod(target, syncMethod, optionalOrder)
 
-            if (syncMethod != "processPostQueue") {
+            if (syncMethod !== "processPostQueue") {
                 if (this.currentAction() && this.currentAction().equals(newAction)) {
                     let error = this.typeId()
                     error += "  scheduleTargetAndMethod: \n" + newAction.description() 

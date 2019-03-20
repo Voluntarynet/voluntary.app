@@ -72,7 +72,7 @@ Object.pop = function (obj) {
 // --- deep keys ---
 
 Object.atDeepKey = function (obj, key, seenSet) {
-    if (typeof(obj) != "object" /* || (Object.getPrototypeOf(obj) != Object.prototype)*/) {
+    if (typeof(obj) !== "object" /* || (Object.getPrototypeOf(obj) !== Object.prototype)*/) {
         return null;
     }
 
@@ -112,7 +112,7 @@ Object.atDeepKey = function (obj, key, seenSet) {
 }
 
 Object.allAtDeepKey = function (obj, key) {
-    if (typeof(obj) !== "object" || (Object.getPrototypeOf(obj) != Object.prototype)) {
+    if (typeof(obj) !== "object" || (Object.getPrototypeOf(obj) !== Object.prototype)) {
         return [];
     }
 
@@ -137,7 +137,7 @@ Object.atPath = function (obj, pathList) {
         pathList = pathList.split("/");
     }
 
-    if (typeof(obj) !== "object" || (Object.getPrototypeOf(obj) != Object.prototype) || !pathList.length) {
+    if (typeof(obj) !== "object" || (Object.getPrototypeOf(obj) !== Object.prototype) || !pathList.length) {
         return null;
     }
 

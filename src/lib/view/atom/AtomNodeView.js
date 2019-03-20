@@ -204,7 +204,7 @@ window.AtomNodeView = NodeView.extend().newSlots({
     setViewDict: function(dict) { // move to view?
         this.viewDictSlots().forEach((slotName) => {
             let value = dict[slotName]
-            if (typeof(value) != "undefined") {
+            if (value !== undefined) {
                 this[slotName.asSetter()].apply(this, [value])
             }
         })

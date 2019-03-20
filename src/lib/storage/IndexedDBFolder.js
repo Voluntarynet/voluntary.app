@@ -53,7 +53,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
     }
     
     isOpen () {
-        return (this.db() != null) 
+        return (this.db() !== null) 
     }
     
     asyncOpenIfNeeded (callback) {
@@ -132,7 +132,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
             //console.log("asyncAt onsuccess ", event)
             // request.result is undefined if value not in DB
             try {
-                if (typeof(request.result) != "undefined") {
+                if (!Type.isUndefined(request.result)) {
                     //console.log("asyncAt('" + key + "') onsuccess request.result = ", request.result)
                     let entry = request.result
                     let value = JSON.parse(entry.value)

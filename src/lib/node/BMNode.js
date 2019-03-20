@@ -599,7 +599,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     // --- subnode lookup -----------------------------
     
     subnodesSans: function(aSubnode) {
-	    let results = this.subnodes().select((subnode) => { return subnode != aSubnode })
+	    let results = this.subnodes().select((subnode) => { return subnode !== aSubnode })
 	    return results
     },
 	
@@ -658,7 +658,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     // subnode sorting
 	
     setSubnodeSortFunc: function(f) {
-	    if (this._subnodeSortFunc != f) {
+	    if (this._subnodeSortFunc !== f) {
 	        this._subnodeSortFunc = f
 	        this.sortIfNeeded()
 	    }
@@ -666,7 +666,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     },
 	
     doesSortSubnodes: function() {
-	    return this._subnodeSortFunc != null
+	    return this._subnodeSortFunc !== null
     },
 	
     sortIfNeeded: function() {

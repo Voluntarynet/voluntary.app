@@ -35,7 +35,7 @@ window.CloseButton = DivView.extend().newSlots({
     // --- editable ---
     
     setIsEnabled: function(aBool) {
-        if (this._isEnabled != aBool) {
+        if (this._isEnabled !== aBool) {
             this._isEnabled = aBool
             this.syncEnabled()
         }

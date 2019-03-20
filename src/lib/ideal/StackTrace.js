@@ -101,7 +101,6 @@ StackTrace.registerThisClass()
 // --- helper functions ---
 
 function assert(v) {
-    //if(v === false || v === null || typeof(v) === "undefined") {
     if(!Boolean(v)) {
         throw new Error("assert failed - false value")
     }
@@ -109,14 +108,13 @@ function assert(v) {
 }
 
 function assertDefined(v) {
-    if(typeof(v) === "undefined") {
+    if(v === undefined) {
         throw new Error("assert failed - undefined value")
     }
     return v
 }
 
 Error.prototype.assert = function(v) {
-    //if(v === false || v === null || typeof(v) === "undefined") {
     if(!Boolean(v)) {
         throw new Error("assert failed - false value")
     }
@@ -124,7 +122,7 @@ Error.prototype.assert = function(v) {
 }
 
 Error.prototype.assertDefined = function(v) {
-    if(typeof(v) === "undefined") {
+    if(v === undefined) {
         throw new Error("assert failed - undefined value")
     }
     return v

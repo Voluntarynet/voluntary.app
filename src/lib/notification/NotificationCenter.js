@@ -93,7 +93,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
     
     removeObserver (anObserver) {        
         let filtered = this.observations().filter(function (obs) {
-            return obs.observer() != anObserver
+            return obs.observer() !== anObserver
         })
         this.setObservations(filtered)
         return this;

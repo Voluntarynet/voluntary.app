@@ -42,7 +42,7 @@ window.WebBrowserNotifications = ideal.Proto.extend().newSlots({
     },
 
     hasAskedForPermission: function () {
-        return this.permissionRequestResult() != null
+        return this.permissionRequestResult() !== null
     },
 
     requestPermissionIfNeeded: function () {

@@ -74,7 +74,7 @@ window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
     },
 
     hasTimer: function() {
-        return this.timeoutId() != null
+        return this.timeoutId() !== null
     },
 
     // -- single action for mouse and touch up/down ---

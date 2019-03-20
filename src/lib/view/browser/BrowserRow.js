@@ -217,7 +217,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
     
     removeCloseButton: function() {
-        if (this.closeButtonView() != null) {
+        if (this.closeButtonView() !== null) {
             this.contentView().removeSubview(this.closeButtonView()) 
             this.setCloseButtonView(null)
         }

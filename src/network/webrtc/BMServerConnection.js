@@ -253,7 +253,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
 */
 
     onError: function(error) {
-        if (typeof(error) === "undefined") {
+        if (error === undefined) {
             // closed connection?
             return
         }
@@ -325,7 +325,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
     
     isConnected: function () {
         return this.isOpen()
-        //return this.serverConn() != null
+        //return this.serverConn() !== null
     },
 
     //returns a Promise

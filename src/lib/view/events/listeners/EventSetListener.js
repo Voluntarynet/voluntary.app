@@ -105,8 +105,8 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
         this._isListening = true;
 
         let element = this.element()
-        assert(element != null)
-        assert(typeof(element) != "undefined")
+        assert(element !== null)
+        assert(element !== undefined)
 
         this.forEachEventDict((eventName, dict) => {
             let fullMethodName = this.fullMethodNameFor(dict.methodName)

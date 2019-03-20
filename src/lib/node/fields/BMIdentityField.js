@@ -36,7 +36,7 @@ window.BMIdentityField = BMField.extend().newSlots({
             newValue = validPart
         }
 
-        if (inValue != newValue) {
+        if (inValue !== newValue) {
             this.scheduleSyncToView() 
         }
         

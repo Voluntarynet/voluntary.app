@@ -353,7 +353,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     },
 
     pidOfObj: function (obj) {
-        if (!("_pid" in obj) || obj._pid == null) {
+        if (typeof(obj._pid) === undefined || obj._pid === null) {
             obj._pid = obj.type() + "_" + this.newPid()
         }
         return obj._pid

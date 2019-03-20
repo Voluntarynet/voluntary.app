@@ -46,7 +46,7 @@ window.BMPeerId = BMNode.extend().newSlots({
 	
     /*
 	encodedBloomString: function() {
-		assert(this.bloomFilter() != null)
+		assert(this.bloomFilter() !== null)
 		let s = this.bloomFilter().exportData();
 		s = s.replaceAll("+", "_0")
 		s = s.replaceAll("/", "_1")
@@ -67,7 +67,7 @@ window.BMPeerId = BMNode.extend().newSlots({
 	*/
 	
     encodedBloomString: function() {
-        assert(this.bloomFilter() != null)
+        assert(this.bloomFilter() !== null)
         return this.bloomFilter().serialized()
     },
 	
@@ -103,9 +103,9 @@ window.BMPeerId = BMNode.extend().newSlots({
             return null
         }
 		
-        assert(this.publicKeyString() != null)
-        assert(this.bloomFilter() != null)
-        assert(this.encodedBloomString() != null)
+        assert(this.publicKeyString() !== null)
+        assert(this.bloomFilter() !== null)
+        assert(this.encodedBloomString() !== null)
 		
         //console.log("parsed peerid publicKeyString [" + this.publicKeyString() + "] bloom [ " + this.encodedBloomString() + "]")
 		

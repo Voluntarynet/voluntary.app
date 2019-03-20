@@ -75,7 +75,7 @@ class ProtoClass {
         if (!this.getClassVariable("_hasSetupSlots", false)) {
             console.log("--- begin ---")
             this.setupSlots()
-            if (this.type() != "ProtoClass") {
+            if (this.type() !== "ProtoClass") {
                 super.setupSlotsIfNeeded()
             }
             console.log("--- end ---")
@@ -123,7 +123,7 @@ class ProtoClass {
     }
 
     newSlot(slotName, initialValue) {
-        if (typeof(slotName) != "string") {
+        if (typeof(slotName) !== "string") {
             throw new Error("name must be a string");
         }
 
@@ -163,7 +163,7 @@ class ProtoClass {
 
     updateSlot(slotName, privateName, newValue) {
         let oldValue = this[privateName];
-        if (oldValue != newValue) {
+        if (oldValue !== newValue) {
             this[privateName] = newValue;
             this.didUpdateSlot(slotName, oldValue, newValue)
             //this.mySlotChanged(name, oldValue, newValue);

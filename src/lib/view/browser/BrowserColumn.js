@@ -145,7 +145,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
 
         // unselect all other rows
         rows.forEach((row) => {
-            if (row != selectedRow) {
+            if (row !== selectedRow) {
                 if (row.unselect) {
                     row.unselect()
                 } else {
@@ -205,7 +205,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     setSelectedRowIndex: function(index) {
         let oldIndex = this.selectedRowIndex()
         //console.log("this.setSelectedRowIndex(" + index + ") oldIndex=", oldIndex)
-        if (index != oldIndex) {
+        if (index !== oldIndex) {
             let rows = this.rows()
             if (index < rows.length && index > -1) {
                 let row = rows[index]
@@ -222,7 +222,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     
     clickRowWithNode: function(aNode) {
         let index = this.indexOfRowWithNode(aNode);
-        if (index != null) {
+        if (index !== null) {
             this.setSelectedRowIndex(index)
         }
         return this
@@ -240,7 +240,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
             selectedRow.setIsSelected(true)
 			
             this.rows().forEach((aRow) => {
-                if (aRow != selectedRow) {
+                if (aRow !== selectedRow) {
                     aRow.unselect()
                 }
             })

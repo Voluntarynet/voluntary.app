@@ -169,7 +169,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     setCssAttribute: function(key, newValue, didChangeCallbackFunc) {
         let style = this.cssStyle()
         let oldValue = style[key]
-        if(String(oldValue) != String(newValue)) {
+        if(String(oldValue) !== String(newValue)) {
             if (newValue == null) {
                 //console.log("deleting css key ", key)
                 //delete style[key]
@@ -833,7 +833,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     isVisible: function() {
-        return this.getCssAttribute("visibility") != "hidden";
+        return this.getCssAttribute("visibility") !== "hidden";
     },
     
     // display
@@ -942,7 +942,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     setUserSelect: function(aString) {
         let style = this.cssStyle()
         //console.log("'" + aString + "' this.userSelect() = '" + this.userSelect() + "' === ", this.userSelect() == aString)
-        if (this.userSelect() != aString) {
+        if (this.userSelect() !== aString) {
             style.userSelect = aString
             this.userSelectKeys().forEach(key => style[key] = aString)
         }
@@ -1191,7 +1191,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     // --- div class name ---
 
     setDivClassName: function (aName) {
-        if (this._divClassName != aName) {
+        if (this._divClassName !== aName) {
 	        this._divClassName = aName
 	        if (this.element()) {
 	            this.element().setAttribute("class", aName);
@@ -1243,7 +1243,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     orderSubviewFront: function(aSubview) {
-        if (this.subviews().last() != aSubview) {
+        if (this.subviews().last() !== aSubview) {
             this.removeSubview(aSubview)
             this.addSubview(aSubview)
         }
@@ -1261,7 +1261,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     orderSubviewBack: function(aSubview) {
         throw new Error("unimplemented")
 
-        //if (this.subviews().first() != aSubview) {
+        //if (this.subviews().first() !== aSubview) {
         //    this.removeSubview(aSubview)
         //    implement insertSubviewAt() with DomElement_atInsertElement()
         //}
@@ -1290,7 +1290,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     performOnSubviewsExcept: function(methodName, exceptedSubview) {
         this.subviews().forEach(subview => {
-            if (subview != exceptedSubview) {
+            if (subview !== exceptedSubview) {
                 subview[methodName].apply(subview)
             }
         })
@@ -1354,7 +1354,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 	
     hasSubview: function(aSubview) {
-        return this.subviews().indexOf(aSubview) != -1
+        return this.subviews().indexOf(aSubview) !== -1
     },
 	
     hasChildElement: function(anElement) {
@@ -1574,7 +1574,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
     
     hasTargetAndAction: function() {
-        return (this.target() != null) && (this.action() != null)
+        return (this.target() !== null) && (this.action() !== null)
     },
     
     setTarget: function(anObject) {
@@ -1903,8 +1903,8 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     cancelAllGesturesExcept: function(aGesture) {
         this.gestureRecognizers().forEach((gr) => {
-            //if (gr.type() != aGesture.type()) {
-            if (gr != aGesture) {
+            //if (gr.type() !== aGesture.type()) {
+            if (gr !== aGesture) {
                 gr.cancel()
             }
         })
@@ -2350,7 +2350,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     
     scrollToBottom: function() {
         let focusedElement = document.activeElement
-        let needsRefocus = focusedElement != this.element()
+        let needsRefocus = focusedElement !== this.element()
         // console.log("]]]]]]]]]]]] " + this.typeId() + ".scrollToTop() needsRefocus = ", needsRefocus)
         
         this.setScrollTop(this.scrollHeight())
@@ -2421,9 +2421,9 @@ window.DivView = ideal.Proto.extend().newSlots({
     
     scrollIntoView: function() {
         let focusedView =  WebBrowserWindow.shared().activeDivView()
-        //console.log("]]]]]]]]]]]] " + this.typeId() + ".scrollIntoView() needsRefocus = ", focusedView != this)
+        //console.log("]]]]]]]]]]]] " + this.typeId() + ".scrollIntoView() needsRefocus = ", focusedView !== this)
 
-        if (focusedView && focusedView != this) {
+        if (focusedView && focusedView !== this) {
             //console.log("scrollIntoView - registerForVisibility")
             // this hack is needed to return focus that scrollIntoView grabs from other elements
             // need to do this before element().scrollIntoView appearently
@@ -2442,7 +2442,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 
         
         /*
-        if (focusedView != this) {
+        if (focusedView !== this) {
             focusedView.focusAfterDelay(0.5) // todo: get this value from transition property
         }
         */

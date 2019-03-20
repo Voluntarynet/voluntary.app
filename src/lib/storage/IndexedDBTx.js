@@ -91,7 +91,7 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
     }
 	
     entryForKeyAndValue (key, object) {
-        if (typeof(object) === "null" || typeof(object) === "undefined") {
+        if (Type.isNullOrUndefined(object)) {
             throw new Error(this.type() + ".entryForKeyAndValue('" + key + "', ...) can't add null value")
         }
 		

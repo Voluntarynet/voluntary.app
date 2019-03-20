@@ -59,7 +59,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
     
     syncValueViewToNode: function() {
         //console.log(this.typeId() + ".syncValueViewToNode " + this.node().type())
-	    if (this.node().type() === "BMBoolField" && this.valueView().type() != "BoolView") {
+	    if (this.node().type() === "BMBoolField" && this.valueView().type() !== "BoolView") {
 	        //console.log("syncValueViewToNode setup bool view")
 	        let boolView = BoolView.clone()
             this.removeSubview(this.valueView())  

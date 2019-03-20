@@ -89,7 +89,7 @@ window.BrowserFooter = NodeView.extend().newSlots({
     },
     
     shouldShowTextView: function() {
-        return this.node() && (this.node().nodeInputFieldMethod() != null)
+        return this.node() && (this.node().nodeInputFieldMethod() !== null)
     },
     
     syncFromNode: function() {

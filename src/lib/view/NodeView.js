@@ -113,8 +113,9 @@ window.NodeView = DivStyledView.extend().newSlots({
     },
 
     updateSubnodeToSubviewMap: function() {
+        // TODO: make this more efficient with add/remove hooks
         let dict = {}
-        this.subviews().forEach(subview => dict[subview.node()] = subview)
+        this.subviews().forEach((sv) => { dict[sv.node()] = sv })
         this._subnodeToSubview = dict
         return this
     },
@@ -182,6 +183,7 @@ window.NodeView = DivStyledView.extend().newSlots({
             //this.removeAllSubviews() 
             this.removeAllManagedSubviews()
             this.addManagedSubviews(newSubviews)
+            this.updateSubnodeToSubviewMap()
             // since node's don't hold a view reference, 
             // subviews no longer referenced in subviews list will be collected
         }

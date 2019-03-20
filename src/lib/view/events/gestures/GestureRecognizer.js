@@ -33,7 +33,6 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     docListeners: null, 
     isActive: false,
 
-    isDebugging: false,
 
     shouldRemoveOnComplete: false,
 
@@ -50,6 +49,10 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     completeMessage: null,  // "on<GestureName>Complete",
 
     isEmulatingTouch: false, // assumes touch and mouse events aren't mixed
+
+    isDebugging: false,
+    isVisualDebugging: false,
+    fingerViewDict: null,
 }).setSlots({
     init: function () {
         this.setListenerClasses([]) // subclasses override this in their
@@ -57,6 +60,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         this.setViewListeners([])
         this.autoSetMessageNames()
         this.setIsEmulatingTouch(true)
+        this.setFingerViewDict({})
         return this
     },
 
@@ -218,6 +222,8 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
             this.stop()
             this.viewTarget().removeGestureRecognizer(this)
         }
+
+        this.removeFingerViews()
         return this
     },
 
@@ -277,24 +283,97 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         return points
     },
 
-
-    // --- events --------------------------------------------------------------------
+    // --- events ---
 
     onDown: function (event) {
         this.setDownEvent(event)
         this.setCurrentEvent(event)
+        this.showFingersIfNeeded()
     },
 
     onMove: function(event) {
         this.setCurrentEvent(event)
+        this.showFingersIfNeeded()
     },
 
     onUp: function (event) {
         this.setUpEvent(event)
         this.setCurrentEvent(event)
+        if (this.pointsForEvent(event).length === 0) {
+            this.removeFingerViews()
+        }
+        this.showFingersIfNeeded()
     },
 
-    // mouse events
+    // --- show fingers ---
+
+    newFingerView: function() {
+        let v = DivView.clone()
+        DocumentBody.shared().addSubview(v)
+        v.setPointerEvents("none")
+        v.setMinAndMaxHeight(10)
+        v.setMinAndMaxWidth(10)
+        v.setBackgroundColor("white")
+        v.setPosition("absolute")
+        v.setZIndex(10000)
+        return v
+    },
+
+    viewForFingerId: function(id) {
+        let fvs = this.fingerViewDict()
+        let v = fvs[id]
+        if (!v) {
+            v = this.newFingerView()
+            fvs[id] = v
+        }
+        return v
+    },
+
+    removeFingerViews: function() {
+        let dict = this.fingerViewDict()
+        for (let id in dict) {
+            if (dict.hasOwnProperty(id)) {           
+                let fingerView = dict[id]
+                fingerView.removeFromParentView()
+            }
+        }
+        this.setFingerViewDict({})
+        return this
+    },
+
+    showFingers: function() {
+        let points = this.pointsForEvent(this.currentEvent());
+        let idsToRemove = Object.getOwnPropertyNames(this.fingerViewDict()) // TODO: move to dict
+
+        points.forEach((point) => {
+            let id = point.id()
+            let v = this.viewForFingerId(id);
+            idsToRemove.remove(id) 
+            let nx = point.x() - v.clientWidth()/2;
+            let ny = point.y() - v.clientHeight()/2;
+            v.setLeft(nx);
+            v.setTop(ny);
+        })
+
+        let fvd = this.fingerViewDict()
+        idsToRemove.forEach((id) => {
+            let fingerView = fvd[id]
+            assert(fingerView)
+            fingerView.removeFromParentView()
+            delete fvd[id]
+        })
+
+        return this
+    },
+
+    showFingersIfNeeded: function() {
+        if (this.isVisualDebugging()) {
+            this.showFingers()
+        }
+        return this
+    },
+
+    // --- mouse events ---
 
     shouldEmulateEvent: function(event) {
         return this.isEmulatingTouch() && 

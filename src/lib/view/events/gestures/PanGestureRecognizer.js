@@ -37,8 +37,9 @@ window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
     // tap events
 
     onDown: function (event) {
+        GestureRecognizer.onDown.apply(this, [event])
+
         if (!this.isPressing()) {
-            this.setCurrentEvent(event)
             let fingers = this.numberOfFingersDown()
             if (fingers >= this.minNumberOfFingersRequired() &&
                 fingers <= this.maxNumberOfFingersAllowed()) {
@@ -47,6 +48,7 @@ window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
                 this.startDocListeners()
             }
         }
+        
         return this
     },
 
@@ -59,9 +61,9 @@ window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
     },
 
     onMove: function(event) {
-        if (this.isPressing()) {
-            this.setCurrentEvent(event)
+        GestureRecognizer.onMove.apply(this, [event])
 
+        if (this.isPressing()) {
             if (!this.isActive() && this.hasMovedEnough()) {
                 this.attemptBegin()
             }
@@ -74,9 +76,9 @@ window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
     },
 
     onUp: function (event) {
-        if (this.isPressing()) {
-            this.setCurrentEvent(event)
+        GestureRecognizer.onUp.apply(this, [event])
 
+        if (this.isPressing()) {
             if (this.isActive()) {
                 this.sendCompleteMessage() // complete
             }

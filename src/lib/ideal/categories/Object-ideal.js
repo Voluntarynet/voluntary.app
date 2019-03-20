@@ -8,6 +8,7 @@
     some functions that take an object as an argument. JS ugliness.
 */
 
+
 Object.clone = function (obj) {
     let Proto_constructor = new Function;
     Proto_constructor.prototype = obj;
@@ -141,7 +142,7 @@ Object.atPath = function (obj, pathList) {
     }
 
     let k = pathList.first();
-    let pathList = pathList.rest();
+    pathList = pathList.rest();
 
     if (pathList.length) {
         return Object.atPath(obj[k], pathList);

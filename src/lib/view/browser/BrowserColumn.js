@@ -635,7 +635,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     // editing
 
     onDoubleClick: function (event) {
-        console.log(this.typeId() + ".onDoubleClick()")
+        //console.log(this.typeId() + ".onDoubleClick()")
         return true
     },
 
@@ -753,15 +753,24 @@ window.BrowserColumn = NodeView.extend().newSlots({
         if (this.node().hasAction("add")) {
             let newSubnode = this.node().add()
             let subnodes = this.node().subnodes().copy()
+            console.log("subnodes1: ", subnodes.map(v => v.typeId()))
             subnodes.remove(newSubnode)
+            console.log("insertIndex:", insertIndex)
             subnodes.atInsert(insertIndex, newSubnode)
+            console.log("subnodes2: ", subnodes.map(v => v.typeId()))
 
+            let subviews = this.subviews()
+            console.log("subviews before sync: ", subviews.map(sv => sv.node().typeId()))
             this.node().nodeReorderSudnodesTo(subnodes)
-
             this.syncFromNode()
+            console.log("subviews after sync:  ", subviews.map(sv => sv.node().typeId()))
 
             let newRow = this.subviewForNode(newSubnode)
-            //newRow.setHeight(0)
+            if (!newRow) {
+                newRow = this.subviewForNode(newSubnode)
+            }
+            newRow.setMinAndMaxHeight(0)
+
             this._temporaryPinchSubnode = newSubnode
         } else {
             aGesture.cancel()
@@ -777,7 +786,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
             if (!newRow) {
                 newRow = this.subviewForNode(this._temporaryPinchSubnode)
             }
-            newRow.setHeight(s)
+            newRow.setMinAndMaxHeight(s)
         }
 
         // adjust size of temporary row and positions of other rows

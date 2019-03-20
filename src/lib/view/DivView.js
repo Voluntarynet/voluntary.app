@@ -2425,12 +2425,12 @@ window.DivView = ideal.Proto.extend().newSlots({
         //console.log("]]]]]]]]]]]] " + this.typeId() + ".scrollIntoView() needsRefocus = ", focusedView != this)
 
         if (focusedView && focusedView != this) {
-            console.log("scrollIntoView - registerForVisibility")
+            //console.log("scrollIntoView - registerForVisibility")
             // this hack is needed to return focus that scrollIntoView grabs from other elements
             // need to do this before element().scrollIntoView appearently
             this.registerForVisibility()
             this._endScrollIntoViewFunc = () => {
-                console.log("_endScrollIntoViewFunc - returning focus")
+                //console.log("_endScrollIntoViewFunc - returning focus")
                 //focusedView.focus()
                 // need delay to allow scroll to finish - hack - todo: check for full visibility
                 focusedView.focusAfterDelay(0.2)

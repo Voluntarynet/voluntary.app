@@ -66,8 +66,9 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     // --- events --------------------------------------------------------------------
 
     onDown: function (event) {
+        GestureRecognizer.onDown.apply(this, [event])
+
         if (!this.isPressing()) {
-            this.setCurrentEvent(event)
             if (this.numberOfFingersDown() >= this.numberOfFingerRequired()) {
                 this.setIsPressing(true)
                 this.setBeginEvent(event)
@@ -77,9 +78,9 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     },
 
     onMove: function(event) {
-        if (this.isPressing()) {
-            this.setCurrentEvent(event)
+        GestureRecognizer.onMove.apply(this, [event])
 
+        if (this.isPressing()) {
             if (!this.isActive() && this.hasMovedTooMuchPerpendicular()) {
                 this.cancel()
                 return this
@@ -101,9 +102,10 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     // -----------
 
     onUp: function (event) {
+        GestureRecognizer.onUp.apply(this, [event])
+
         if (this.isPressing()) {
             this.setIsPressing(false)
-            this.setCurrentEvent(event)
             if (this.isActive()) {
                 this.sendCompleteMessage() // complete
             }

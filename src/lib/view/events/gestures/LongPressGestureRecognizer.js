@@ -75,6 +75,7 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
     // -- single action for mouse and touch up/down ---
 
     onDown: function (event) {
+        GestureRecognizer.onDown.apply(this, [event])
         this.setCurrentEvent(event)
         this.setDownEvent(event)
         
@@ -84,12 +85,16 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
     },
 
     onMove: function (event) {
+        GestureRecognizer.onMove.apply(this, [event])
+
         if (this.hasTimer()) {
             this.setCurrentEvent(event)
         }
     },
 
     onUp: function (event) {
+        GestureRecognizer.onUp.apply(this, [event])
+
         if (this.hasTimer()) {
             this.setCurrentEvent(event)
             this.setUpEvent(event)

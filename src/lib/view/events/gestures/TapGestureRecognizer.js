@@ -80,7 +80,7 @@ window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
     // -- single action for mouse and touch up/down ---
 
     onDown: function (event) {
-        this.setCurrentEvent(event)
+        GestureRecognizer.onDown.apply(this, [event])
         
         if (this.numberOfFingersDown() < this.numberOfFingersRequired()) {
             return this
@@ -103,6 +103,7 @@ window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     /*
     onUp: function (event) {
+        GestureRecognizer.onUp.apply(this, [event])
     },
     */
 

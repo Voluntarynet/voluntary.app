@@ -58,9 +58,9 @@ window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
     // events
 
     onDown: function (event) {
+        GestureRecognizer.onDown.apply(this, [event])
+
         if (!this.isPressing()) {
-            this.setCurrentEvent(event)
-            this.setDownEvent(event)
             //console.log("this.numberOfFingersDown() = ", this.numberOfFingersDown())
             //console.log("this.minFingersRequired() = ", this.minFingersRequired())
             let downCount = this.numberOfFingersDown()
@@ -89,9 +89,9 @@ window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
     },
 
     onMove: function(event) {
-        if (this.isPressing()) {
-            this.setCurrentEvent(event)
+        GestureRecognizer.onMove.apply(this, [event])
 
+        if (this.isPressing()) {
             //console.log(this.typeId() + " canBegin: ", this.canBegin())
 
             if (this.canBegin()) {
@@ -118,9 +118,10 @@ window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
     // -----------
 
     onUp: function (event) {
+        GestureRecognizer.onUp.apply(this, [event])
+
         if (this.isPressing()) {
             this.setIsPressing(false)
-            this.setCurrentEvent(event)
             if (this.isActive()) {
                 this.sendCompleteMessage()
             }

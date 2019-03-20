@@ -24,7 +24,7 @@ window.BMArchiveNode = BMFieldSetNode.extend().newSlots({
 
     subtitle: function() {
         if (this.value()) {
-            let  b = this.value().length
+            let b = this.value().length
             return ByteFormatter.clone().setValue(b).formattedValue()
         }
         return "N/A"
@@ -45,7 +45,7 @@ window.BMArchiveNode = BMFieldSetNode.extend().newSlots({
 	*/
 
     value: function () {
-        let  s = JSImporter.archive()
+        let s = JSImporter.archive()
         if (s) {
             return s.escapeHtml()
         }

@@ -43,10 +43,10 @@ window.BrowserFieldRow = BrowserRow.extend().newSlots({
     updateSubviews: function() {   
 	    BrowserRow.updateSubviews.apply(this)
 	
-        let  node = this.node()
+        let node = this.node()
 
         if (node && node.nodeMinHeight()) {
-            let  e = this.element()
+            let e = this.element()
             if (node.nodeMinHeight() === -1) {
                 this.setHeight("auto")                
                 this.setPaddingBottom("calc(100% - 20px)")

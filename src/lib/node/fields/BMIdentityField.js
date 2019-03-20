@@ -27,11 +27,11 @@ window.BMIdentityField = BMField.extend().newSlots({
 	
     setValue: function(inValue) { // called by View on edit
 	    //console.log("inValue = '" + inValue + "'")
-	    let  newValue = inValue.strip()
+	    let newValue = inValue.strip()
 	    
-        let  parts = newValue.split(" ").concat(newValue.split("\n")).concat(newValue.split(","))
+        let parts = newValue.split(" ").concat(newValue.split("\n")).concat(newValue.split(","))
 	    //console.log("parts = '", parts)
-        let  validPart = parts.detect((part) => { return bitcore.PublicKey.isValid(part) })
+        let validPart = parts.detect((part) => { return bitcore.PublicKey.isValid(part) })
         if (validPart) {
             newValue = validPart
         }

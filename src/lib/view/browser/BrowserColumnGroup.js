@@ -63,11 +63,11 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
     },
     
     updateScrollView: function() {
-        let  headerHeight = 40
-        let  footerHeight = 40
+        let headerHeight = 40
+        let footerHeight = 40
         
-        let  heightOffset = 0
-        let  top = 0
+        let heightOffset = 0
+        let top = 0
         
         if (this.hasHeader()) { 
             heightOffset += headerHeight
@@ -98,13 +98,13 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
     },
 	
     previousColumnGroup: function() {
-        let  prevCol = this.column().previousColumn()
+        let prevCol = this.column().previousColumn()
         if (prevCol) { return prevCol.columnGroup() }
         return null
     },
 	
     isFirstUncollapsed: function() {
-        let  pcg = this.previousColumnGroup()
+        let pcg = this.previousColumnGroup()
         return (!this.isCollapsed()) && (!pcg || pcg.isCollapsed())
     },
 	
@@ -162,7 +162,7 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
 
     /*
     updateEmptyLabel: function() {
-        let  node = this.node()
+        let node = this.node()
         if (node) {
             if (node.subnodes().length === 0 && node.nodeEmptyLabel()) {
                 this.setEmptyLabelText(node.nodeEmptyLabel())
@@ -201,7 +201,7 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
     
     setColumnClass: function(columnClass) {
         if (this.column().type() != columnClass.type()) {
-            let  view = columnClass.clone().setNode(this.node())
+            let view = columnClass.clone().setNode(this.node())
             this.scrollView().removeSubview(this.column())
             this.setColumn(view)
             this.scrollView().addSubview(this.column())
@@ -220,7 +220,7 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
     */
 
     targetWidth: function() {
-        let  w = 0
+        let w = 0
 		
         if (this.node()) {
 	        w = this.node().nodeMinWidth()
@@ -239,7 +239,7 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
     },
 
     matchNodeMinWidth: function() {
-        let  w = this.targetWidth()
+        let w = this.targetWidth()
         if (w) {
             this.setMinAndMaxWidth(w)
         }
@@ -259,7 +259,7 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
         if (aNode) {
             // obey node's width preferences
             // use custom class for column if node wants it
-            let  customViewClass = aNode.viewClass()
+            let customViewClass = aNode.viewClass()
             if (customViewClass) {
                 this.setColumnClass(customViewClass)
             }

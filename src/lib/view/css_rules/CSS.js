@@ -55,7 +55,7 @@ window.CSS = class CSS extends ProtoClass {
     }
     
     ruleAt (k) {
-        let  rule = this.rules()[k]
+        let rule = this.rules()[k]
         if (!rule) {
             rule = CSSRuleSet.clone().setKey(k)
             this.rules()[k] = rule
@@ -77,8 +77,8 @@ window.CSS = class CSS extends ProtoClass {
     }
 
     asJSON () {
-        let  dict = {}
-        let  rules = {}
+        let dict = {}
+        let rules = {}
         this.rules().forEach((k, ruleSet) => {
             rules[k] = ruleSet.asJSON()
         })
@@ -96,16 +96,16 @@ window.CSS = class CSS extends ProtoClass {
     /*
     setupFromCSS() {
         // enumerate sheets on document (items of type CSSStyleSheet)
-        for (let  i = 0; i < document.styleSheets.length; i++) {
-            let  mysheet = document.styleSheets[i];
+        for (let i = 0; i < document.styleSheets.length; i++) {
+            let mysheet = document.styleSheets[i];
 
             // enumerate rules on sheet (c type RuleList)
-            let  myrules = mysheet.cssRules ? mysheet.cssRules : mysheet.rules;
+            let myrules = mysheet.cssRules ? mysheet.cssRules : mysheet.rules;
             // enumerate rules in ruleList (items of type CSS*Rule, e.g. CSSFontFaceRule) 
-            for (let  j = 0; j < myrules.length; j++) {
-                let  rule = myrules[j]
-                let  className = rule.selectorText
-                let  ruleObj = this.ruleAt(className)
+            for (let j = 0; j < myrules.length; j++) {
+                let rule = myrules[j]
+                let className = rule.selectorText
+                let ruleObj = this.ruleAt(className)
                 ruleObj.setupFromRawRule(rule)
             }
         }
@@ -114,14 +114,14 @@ window.CSS = class CSS extends ProtoClass {
 
     rawCSSStyleRuleForClassName (className) {
         // enumerate sheets on document (items of type CSSStyleSheet)
-        for (let  i = 0; i < document.styleSheets.length; i++) {
-            let  mysheet = document.styleSheets[i];
+        for (let i = 0; i < document.styleSheets.length; i++) {
+            let mysheet = document.styleSheets[i];
 
             // enumerate rules on sheet (c type RuleList)
-            let  myrules = mysheet.cssRules ? mysheet.cssRules : mysheet.rules;
+            let myrules = mysheet.cssRules ? mysheet.cssRules : mysheet.rules;
             // enumerate rules in ruleList (items of type CSS*Rule, e.g. CSSFontFaceRule) 
-            for (let  j = 0; j < myrules.length; j++) {
-                let  rule = myrules[j]
+            for (let j = 0; j < myrules.length; j++) {
+                let rule = myrules[j]
                 if(className == rule.selectorText) {
                     return rule // usually a CSSStyleRule instance
                 }

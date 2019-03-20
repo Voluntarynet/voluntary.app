@@ -248,8 +248,8 @@ window.Keyboard = ideal.Proto.extend().newSlots({
     },
 	
     specialNameForKeyEvent: function(event) {
-        let  code = event.keyCode
-        let  result = this.specialKeyCodes()[code]
+        let code = event.keyCode
+        let result = this.specialKeyCodes()[code]
 		
         if (event.shiftKey && (code === 187)) {
             return "plus"

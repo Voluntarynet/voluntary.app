@@ -17,7 +17,7 @@ window.ShelfItemGroupView = NodeView.extend().newSlots({
         this.turnOffUserSelect()
         this.setTransition("all 0.35s")
 		
-        let  itemSize = 80
+        let itemSize = 80
         this.setMinAndMaxWidth(itemSize)
         this.setOverrideSubviewProto(ShelfItemView)
         return this
@@ -28,7 +28,7 @@ window.ShelfItemGroupView = NodeView.extend().newSlots({
     },
     /*
     newSubviewForSubnode: function(aSubnode) {
-        let  newSubview = NodeView.newSubviewForSubnode(aSubnode)
+        let newSubview = NodeView.newSubviewForSubnode(aSubnode)
         newSubview.setOverrideSubviewProto(ShelfItemView)
         return newSubview
     },
@@ -81,7 +81,7 @@ window.ShelfItemGroupView = NodeView.extend().newSlots({
     },
 
     firstItemHeight: function() {
-        let  fs = this.firstItem()    
+        let fs = this.firstItem()    
         return fs ? fs.clientHeight() : 0
     },
     
@@ -109,7 +109,7 @@ window.ShelfItemGroupView = NodeView.extend().newSlots({
         if (this.isCompacted()) {
         	this.setMinAndMaxHeight(this.firstItemHeight())
         } else {
-            let  newHeight = this.sumOfSubviewHeights()
+            let newHeight = this.sumOfSubviewHeights()
             this.setMinAndMaxHeight(newHeight)			
         }
         return this
@@ -135,7 +135,7 @@ window.ShelfItemGroupView = NodeView.extend().newSlots({
 
             this.showCompaction()
 
-            let  fs = this.firstItem()
+            let fs = this.firstItem()
             if (fs) {
                 fs.select()
             }

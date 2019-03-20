@@ -18,8 +18,8 @@ window.BMSlotsNode = BMFieldSetNode.extend().newSlots({
     },
 
     slotValueType: function() {
-        let  v = this.slotValue()
-        let  t = typeof(v)
+        let v = this.slotValue()
+        let t = typeof(v)
         
         if (t === "object") {
             if (typeof(v.type) === "function") {
@@ -31,15 +31,15 @@ window.BMSlotsNode = BMFieldSetNode.extend().newSlots({
     },
 
     setupSubnodes: function() {
-        let  childNodes = []
+        let childNodes = []
         assert(this.protoValue())
 
         this.protoValue().slotNames().forEach((slotName) => {
 
-            let  childNode = null
-            let  p = this.protoValue()
-            let  v = p[slotName]
-            let  t = typeof(v)
+            let childNode = null
+            let p = this.protoValue()
+            let v = p[slotName]
+            let t = typeof(v)
             // console.log("proto: ", p.type(), " slot:", slotName, " value: ", p[slotName], " type: ", t)
 
             if (t === "string") {

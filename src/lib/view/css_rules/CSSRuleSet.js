@@ -18,11 +18,11 @@ window.CSSRuleSet = class CSSRuleSet extends ProtoClass {
     /*
     getStyleSheet() {
         // enumerate sheets on document (items of type CSSStyleSheet)
-        for (let  i = 0; i < document.styleSheets.length; i++) {
-            let  mysheet = document.styleSheets[i];
+        for (let i = 0; i < document.styleSheets.length; i++) {
+            let mysheet = document.styleSheets[i];
             // enumerate rules on sheet (items of type RuleList)
-            let  myrules = mysheet.cssRules ? mysheet.cssRules : mysheet.rules;
-            for (let  j = 0; j < myrules.length; j++) {
+            let myrules = mysheet.cssRules ? mysheet.cssRules : mysheet.rules;
+            for (let j = 0; j < myrules.length; j++) {
                 // enumerate rules in ruleList (items of type CSS*Rule, e.g. CSSFontFaceRule) 
                 if (myrules[j].selectorText && myrules[j].selectorText.toLowerCase() === selector) {
                     return myrules[j].style[style];
@@ -33,7 +33,7 @@ window.CSSRuleSet = class CSSRuleSet extends ProtoClass {
     */
     
     decAt (k) {
-        let  dec = this.declarations()[k]
+        let dec = this.declarations()[k]
         if (!dec) {
             dec = CSSDeclaration.clone().setRuleSet(this).setKey(k)
             this.declarations()[k] = dec
@@ -42,7 +42,7 @@ window.CSSRuleSet = class CSSRuleSet extends ProtoClass {
     }
 
     applyToElement (anElement) {        
-        let  dict = this.declarations()
+        let dict = this.declarations()
         
         Object.slotValues(dict).forEach(function(declaration) {
             declaration.applyToElement(anElement)
@@ -59,9 +59,9 @@ window.CSSRuleSet = class CSSRuleSet extends ProtoClass {
     }
 
     asJSON () {
-        let  dict = {}
+        let dict = {}
         dict.key = this.key()
-        let  decs = {}
+        let decs = {}
         this.declarations().forEach((dec) => {
             decs[dec.key()] = dec.value()
         })

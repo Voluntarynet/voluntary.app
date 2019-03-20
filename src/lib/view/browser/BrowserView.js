@@ -80,7 +80,7 @@ window.BrowserView = NodeView.extend().newSlots({
 
         this.setIsRegisteredForDocumentResize(true)
 
-        let  dh = DivView.clone().setDivClassName("BrowserDefaultHeader NodeView DivView")
+        let dh = DivView.clone().setDivClassName("BrowserDefaultHeader NodeView DivView")
         this.setDefaultHeader(dh)
         this.addSubview(dh)
 
@@ -103,7 +103,7 @@ window.BrowserView = NodeView.extend().newSlots({
     },
 
     updateBackground: function () {
-        let  n = this.activeColumnGroups().length
+        let n = this.activeColumnGroups().length
         this.setBackgroundColor(this.bgColorForIndex(n + 1))
     },
 
@@ -127,15 +127,15 @@ window.BrowserView = NodeView.extend().newSlots({
 
     updateSingleColumnMode: function () {
         //console.log("---")
-        //let  size = DocumentBody.zoomAdjustedSize()
-        //let  w = WebBrowserScreen.shared().orientedWidth()
-        //let  h = WebBrowserScreen.shared().orientedHeight()
+        //let size = DocumentBody.zoomAdjustedSize()
+        //let w = WebBrowserScreen.shared().orientedWidth()
+        //let h = WebBrowserScreen.shared().orientedHeight()
         //console.log("WebBrowserScreen size = " + w + "x" + h)
 
-        let  size = WebBrowserScreen.shared().lesserOrientedSize()
-        let  w = size.width
-        let  h = size.height
-        let  r = 1
+        let size = WebBrowserScreen.shared().lesserOrientedSize()
+        let w = size.width
+        let h = size.height
+        let r = 1
 
         if (w < 900 && WebBrowserWindow.shared().isOnMobile()) {
             //console.log("w = " , w)
@@ -152,7 +152,7 @@ window.BrowserView = NodeView.extend().newSlots({
         //console.log("lesserOrientedSize: " + w + "x" + h + " setZoomRatio(" + r + ")") 
         //DocumentBody.setZoomRatio(r) // turning this off to see if it fixes mobile tiny fonts
 
-        let  isSingle = ((w < h) && (w < 800)) || (w < 400)
+        let isSingle = ((w < h) && (w < 800)) || (w < 400)
         //console.log("isSingle = ", isSingle)
         this.setIsSingleColumn(isSingle) 
 
@@ -184,27 +184,27 @@ window.BrowserView = NodeView.extend().newSlots({
     // --- column background colors ----------------------------
 
     bgColorForIndex: function (i) {
-        let  colors = this.bgColors()
-        let  rcolors = this.bgColors().reversed()
+        let colors = this.bgColors()
+        let rcolors = this.bgColors().reversed()
         rcolors.removeFirst()
         colors = colors.copy().appendItems(rcolors)
 
-        let  rgb = colors.atModLength(i)
-        let  s = "rgb(" + rgb.map((v) => { return Math.round(v * 255) }).join(",") + ")"
+        let rgb = colors.atModLength(i)
+        let s = "rgb(" + rgb.map((v) => { return Math.round(v * 255) }).join(",") + ")"
         //console.log("bgColorForIndex = '" + s + "'")
         return s
     },
 
     setupColumnGroupColors: function () {
-        let  i = 0
+        let i = 0
 
         this.columnGroups().forEach((cg) => {
 
             if (cg.column().type() === "BrowserColumn") {
-                let  bgColor = this.bgColorForIndex(i)
+                let bgColor = this.bgColorForIndex(i)
 
                 if (cg.node()) {
-                    let  color = cg.node().nodeColumnBackgroundColor()
+                    let color = cg.node().nodeColumnBackgroundColor()
                     if (color) {
                         //console.log("found  nodeColumnBackgroundColor " + color + " for ", cg.node().typeId() + " " + cg.node().title())
                         bgColor = color
@@ -255,7 +255,7 @@ window.BrowserView = NodeView.extend().newSlots({
 
         // add columns as needed
         while (this.columnGroups().length < count) {
-            let  newCg = BrowserColumnGroup.clone()
+            let newCg = BrowserColumnGroup.clone()
             this.addColumnGroup(newCg)
             newCg.setMinAndMaxWidth(0)
             newCg.setFlexGrow(0)
@@ -269,9 +269,9 @@ window.BrowserView = NodeView.extend().newSlots({
     },
 
     clearColumnsGroupsAfterIndex: function (index) {
-        let  cgs = this.columnGroups()
+        let cgs = this.columnGroups()
         for (let i = index + 1; i < cgs.length; i++) {
-            let  cg = cgs[i]
+            let cg = cgs[i]
             //console.log("clearing column group ", i)
             cg.setNode(null).syncFromNode()
         }
@@ -279,8 +279,8 @@ window.BrowserView = NodeView.extend().newSlots({
     },
 
     clearColumnsGroupsAfter: function (selectedCg) {
-        let  cgs = this.columnGroups()
-        let  index = cgs.indexOf(selectedCg)
+        let cgs = this.columnGroups()
+        let index = cgs.indexOf(selectedCg)
         this.clearColumnsGroupsAfterIndex(index)
     },
 
@@ -307,7 +307,7 @@ window.BrowserView = NodeView.extend().newSlots({
 
 
     updateSelectedColumnTo: function (selectedColumn) {
-        let  selectedColumnGroup = selectedColumn.columnGroup()
+        let selectedColumnGroup = selectedColumn.columnGroup()
         this.columnGroups().forEach(function (cg) {
             cg.setIsSelected(cg === selectedColumnGroup)
         })
@@ -317,7 +317,7 @@ window.BrowserView = NodeView.extend().newSlots({
 
     popLastActiveColumn: function () {
         //console.log("popLastActiveColumn this.activeColumnGroups().length = ", this.activeColumnGroups().length)
-        let  n = this.activeColumnGroups().length - 1
+        let n = this.activeColumnGroups().length - 1
         if (n < 0) { n = 0; }
         this.setColumnGroupCount(n) // TODO: collapse cg instead?
         this.fitColumns()
@@ -338,7 +338,7 @@ window.BrowserView = NodeView.extend().newSlots({
         const selectedColumnGroup = selectedColumn.columnGroup()
         this._selectedColumnGroup = selectedColumnGroup
 
-        let  index = this.columnGroups().indexOf(selectedColumn.columnGroup())
+        let index = this.columnGroups().indexOf(selectedColumn.columnGroup())
 
         //console.log(this.typeId() + " selectColumn " + selectedColumn.node().type() + " index " + index)
 
@@ -350,15 +350,15 @@ window.BrowserView = NodeView.extend().newSlots({
 
         //console.log("selectColumn index: " + index + " cg " + this.columnGroups().length)
 
-        let  nextCg = this.columnGroups().itemAfter(selectedColumnGroup)
+        let nextCg = this.columnGroups().itemAfter(selectedColumnGroup)
 
         if (nextCg) {
-            let  selectedRow = selectedColumnGroup.column().selectedRow()
+            let selectedRow = selectedColumnGroup.column().selectedRow()
 
             selectedColumnGroup.matchNodeMinWidth() // testing
 
             if (selectedRow) {
-                let  nextNode = selectedRow.nodeRowLink() // returns receiver by default
+                let nextNode = selectedRow.nodeRowLink() // returns receiver by default
                 //console.log("selectedRow title:  ", selectedRow.node().title())
 
                 if (nextNode) {
@@ -397,7 +397,7 @@ window.BrowserView = NodeView.extend().newSlots({
 
     syncFromNode: function () {
         //this.log("syncFromNode")
-        let  columnGroups = this.columnGroups()
+        let columnGroups = this.columnGroups()
         columnGroups.first().setNode(this.node())
 
         columnGroups.forEach((cg) => {
@@ -410,7 +410,7 @@ window.BrowserView = NodeView.extend().newSlots({
     },
 
     clipToColumnGroup: function (cg) {
-        let  index = this.columnGroups().indexOf(cg)
+        let index = this.columnGroups().indexOf(cg)
         this.setColumnGroupCount(index + 1)
         return this
     },
@@ -433,7 +433,7 @@ window.BrowserView = NodeView.extend().newSlots({
         //console.log(this.typeId() + " fitColumns")
         this.updateSingleColumnMode()
 
-        let  lastActiveCg = this.lastActiveColumnGroup()
+        let lastActiveCg = this.lastActiveColumnGroup()
 
         //console.log("this.isSingleColumn(): ", this.isSingleColumn())
 
@@ -455,9 +455,9 @@ window.BrowserView = NodeView.extend().newSlots({
 
     makeLastActiveColumnFillRemainingSpace: function () {
         // TODO: merge with this code in multi column fit
-        let  lastActiveCg = this.lastActiveColumnGroup()
+        let lastActiveCg = this.lastActiveColumnGroup()
 
-        let  fillWidth = (this.browserWidth() - this.left()) - this.widthOfUncollapsedColumnsSansLastActive()
+        let fillWidth = (this.browserWidth() - this.left()) - this.widthOfUncollapsedColumnsSansLastActive()
         /*
 		if (lastActiveCg.targetWidth() *2 < fillWidth && lastActiveCg.targetWidth() < 500) {
 			fillWidth = lastActiveCg.targetWidth()
@@ -474,7 +474,7 @@ window.BrowserView = NodeView.extend().newSlots({
     },
 
     fitForSingleColumn: function () {
-        let  lastActiveCg = this.lastActiveColumnGroup()
+        let lastActiveCg = this.lastActiveColumnGroup()
 
         this.columnGroups().forEach((cg) => {
             if (cg != lastActiveCg) {
@@ -503,8 +503,8 @@ window.BrowserView = NodeView.extend().newSlots({
     },
 
     widthOfUncollapsedColumnsSansLastActive: function () {
-        let  lastActiveCg = this.lastActiveColumnGroup()
-        let  cgs = this.uncollapsedColumns()
+        let lastActiveCg = this.lastActiveColumnGroup()
+        let cgs = this.uncollapsedColumns()
         cgs.remove(lastActiveCg)
         return cgs.sum((cg) => { return cg.targetWidth(); })
     },
@@ -517,9 +517,9 @@ window.BrowserView = NodeView.extend().newSlots({
     },
 
     columnDescription: function () {
-        let  d = this.columnGroups().map((cg) => {
+        let d = this.columnGroups().map((cg) => {
             if (cg.isCollapsed()) { return "" }
-            let  s = cg.name()
+            let s = cg.name()
             if (cg.node() == null) { s += " [null node] " }
             //s += " " + (cg.isCollapsed() ? "collapsed" : "uncollapsed")
             s += " " + this.pxNumberToString(cg.targetWidth())
@@ -558,12 +558,12 @@ window.BrowserView = NodeView.extend().newSlots({
     },
 
     collapseLeftColumnsUntilRightColumnsFit: function () {
-        let  lastActiveCg = this.lastActiveColumnGroup()
-        let  browserWidth = this.browserWidth()
+        let lastActiveCg = this.lastActiveColumnGroup()
+        let browserWidth = this.browserWidth()
         // collapse columns from left to right until they all fit
         this.columnGroups().forEach((cg) => {
-            let  usedWidth = this.widthOfUncollapsedColumns()
-            let  shouldCollapse = (usedWidth > this.browserWidth()) && (cg != lastActiveCg)
+            let usedWidth = this.widthOfUncollapsedColumns()
+            let shouldCollapse = (usedWidth > this.browserWidth()) && (cg != lastActiveCg)
             shouldCollapse = shouldCollapse || (cg.node() == null)
             //console.log(cg.name() + " shouldCollapse:" + shouldCollapse + " usedWidth: " + usedWidth + " browserWidth:" + this.browserWidth())
             cg.setIsCollapsed(shouldCollapse)
@@ -572,10 +572,10 @@ window.BrowserView = NodeView.extend().newSlots({
     },
 
     expandLastColumnIfNeeded: function () {
-        let  lastActiveCg = this.lastActiveColumnGroup()
+        let lastActiveCg = this.lastActiveColumnGroup()
 
         if (lastActiveCg) {
-            let  fillWidth = (this.browserWidth() - this.left()) - this.widthOfUncollapsedColumnsSansLastActive()
+            let fillWidth = (this.browserWidth() - this.left()) - this.widthOfUncollapsedColumnsSansLastActive()
             if (lastActiveCg.targetWidth() * 2 < fillWidth && lastActiveCg.targetWidth() < 500) {
                 fillWidth = lastActiveCg.targetWidth()
             }
@@ -617,7 +617,7 @@ window.BrowserView = NodeView.extend().newSlots({
         this.setColumnGroupCount(1)
 
 
-        let  column = this.columns().first()
+        let column = this.columns().first()
 
         if (nodePathArray.first() === column.node()) {
             //console.log("selectNodePath removeFirst column " + column.node().title())
@@ -667,7 +667,7 @@ window.BrowserView = NodeView.extend().newSlots({
     },
 
     nodePathString: function () {
-        let  lastNode = this.lastNode();
+        let lastNode = this.lastNode();
         if (lastNode) {
             return lastNode.nodePathString(); //.map((node) => { return node.title() }).join("/")
         }
@@ -699,7 +699,7 @@ window.BrowserView = NodeView.extend().newSlots({
 
     syncFromHashPath: function () {
         let hash = WebBrowserWindow.shared().urlHash()
-        let  j = ""
+        let j = ""
 
         if (hash === "") {
             this.setNodePathComponents([""])

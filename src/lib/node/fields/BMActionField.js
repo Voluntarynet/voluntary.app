@@ -39,7 +39,7 @@ window.BMActionField = BMField.extend().newSlots({
 	*/
 	
     doAction: function() {
-	    let  func = this.target()[this.value()]
+	    let func = this.target()[this.value()]
 	    
 	    if (typeof(func) === "function") {
 	        func.apply(this.target())

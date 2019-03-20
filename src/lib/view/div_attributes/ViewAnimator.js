@@ -24,7 +24,7 @@ window.ViewAnimator = class ViewAnimator extends ProtoClass {
     }
 
     currentValue() {
-        let  view = this.view()
+        let view = this.view()
         return view[this.viewProperty()].apply(view)
     }
 
@@ -53,8 +53,8 @@ window.ViewAnimator = class ViewAnimator extends ProtoClass {
     }
 
     nextFrame() {
-        let  tr = this.timeRatioDone()
-        let  newValue = Math.ceil((this.timeRatioDone() * (this.currentValue() - this.startValue())) + this.startValue());
+        let tr = this.timeRatioDone()
+        let newValue = Math.ceil((this.timeRatioDone() * (this.currentValue() - this.startValue())) + this.startValue());
         this.setValue(newValue)
 
         if (tr != 1) {

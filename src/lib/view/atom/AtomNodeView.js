@@ -70,7 +70,7 @@ window.AtomNodeView = NodeView.extend().newSlots({
     },
 
     setupHeadView: function() {
-        let  v = AtomPaneView.clone()
+        let v = AtomPaneView.clone()
         this.setHeadView(v)
         v.setDivClassName("AtomHeadView")
         v.setPosition("relative")
@@ -79,7 +79,7 @@ window.AtomNodeView = NodeView.extend().newSlots({
     },
 
     setupDividerView: function() {
-        let  v = DragBarView.clone()
+        let v = DragBarView.clone()
         this.setDividerView(v)
         //v.setDivClassName("AtomDividerView")
         v.setPosition("relative")
@@ -89,7 +89,7 @@ window.AtomNodeView = NodeView.extend().newSlots({
     },
 
     setupTailView: function() {
-        let  v = AtomPaneView.clone()
+        let v = AtomPaneView.clone()
         this.setTailView(v)
         v.setDivClassName("AtomTailView")
         v.setPosition("relative")
@@ -113,7 +113,7 @@ window.AtomNodeView = NodeView.extend().newSlots({
         // vertical divider
 
         if (true) {
-            let  h = this.headView()
+            let h = this.headView()
             h.setDisplay("block")
             h.setWidthPercentage(100)
             h.setHeightPxNumber(this.headHeight())
@@ -193,7 +193,7 @@ window.AtomNodeView = NodeView.extend().newSlots({
     },
 
     viewDict: function() { // move to view?
-        let  dict = {}
+        let dict = {}
         this.viewDictSlots().forEach((slotName) => {
             let value = this[slotName].apply(this)
             dict[slotName] = value
@@ -247,13 +247,13 @@ window.AtomNodeView = NodeView.extend().newSlots({
     },
     
     close: function() {
-        let  seconds = 0.3
+        let seconds = 0.3
 		
         this.collapse()
         
         setTimeout( () => { 
             //this.removeCloseButton()
-            let  parentView = this.parentView()
+            let parentView = this.parentView()
             //this.removeFromParentView()
             
             this.node().removeFromParentNode()

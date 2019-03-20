@@ -84143,7 +84143,7 @@ JSImporter.pushRelativePaths([
 		
         Example:
  
-				let  people = NodeStore.rootInstanceWithPidForProto("_people", PeopleNode) 
+				let people = NodeStore.rootInstanceWithPidForProto("_people", PeopleNode) 
 		
 		This instantiates the object if it's not persisted, loads it if it is, and returns any already 
 		unpersisted instance if there is one.
@@ -84179,11 +84179,11 @@ JSImporter.pushRelativePaths([
 
         Example use:
     
-                let  store = NodeStore.clone().setFolderName("store")
+                let store = NodeStore.clone().setFolderName("store")
             
             // need to define a root
             
-                let  root = BMStorableNode.clone()
+                let root = BMStorableNode.clone()
                 store.setRootObject(root)
                 store.load()
             
@@ -84191,7 +84191,7 @@ JSImporter.pushRelativePaths([
             // or call scheduleSyncToStore() on it, it will be marked as needing to be persisted in the
             // next event loop
             
-                let  test = BMNode.clone()
+                let test = BMNode.clone()
                 root.this.addSubnode(test) // this marks root as dirty
                 test.this.addSubnode(foo) // this marks test as dirty
                         
@@ -84245,7 +84245,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         if (!this.isOpen()) {
             return "closed"
         }
-        let  b = this.sdb().totalBytes()
+        let b = this.sdb().totalBytes()
         return this.sdb().size() + " objects, " + ByteFormatter.clone().setValue(b).formattedValue()
     },
 
@@ -84300,7 +84300,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         // don't use pid for these keys so we can
         // use pid to see if the obj gets referrenced when walked from a stored node
 
-        let  objId = obj.uniqueId()
+        let objId = obj.uniqueId()
         if (!(objId in this._dirtyObjects)) {
 
             /*
@@ -84377,19 +84377,19 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         // it's ok to add dirty objects via setPid() while this is
         // working as it will pick it up and won't cause a loop
 
-        let  totalStoreCount = 0
+        let totalStoreCount = 0
 
-        let  justStoredPids = {}
+        let justStoredPids = {}
 
         while (true) {
 
-            let  thisLoopStoreCount = 0
-            let  dirtyBucket = this._dirtyObjects
+            let thisLoopStoreCount = 0
+            let dirtyBucket = this._dirtyObjects
             this._dirtyObjects = {}
 
             Object.keys(dirtyBucket).forEach((objId) => {
-                let  obj = dirtyBucket[objId]
-                let  pid = obj.pid()
+                let obj = dirtyBucket[objId]
+                let pid = obj.pid()
 
                 if (justStoredPids[pid]) {
                     throw new Error("attempt to double store " + pid)
@@ -84444,14 +84444,14 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         this.debugLog("storeObject(" + obj.pid() + ")")
         this.assertIsWritable()
 
-        let  aDict = obj.nodeDict()
+        let aDict = obj.nodeDict()
 
         if (obj.willStore) {
             obj.willStore(aDict)
         }
 
 
-        let  serializedString = JSON.stringify(aDict)
+        let serializedString = JSON.stringify(aDict)
         this.sdb().atPut(obj.pid(), serializedString)
 
         /*
@@ -84489,7 +84489,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 
     loadObject: function (obj) {
         try {
-            let  nodeDict = this.nodeDictAtPid(obj.pid())
+            let nodeDict = this.nodeDictAtPid(obj.pid())
             if (nodeDict) {
                 //obj.setExistsInStore(true)
                 obj.setNodeDict(nodeDict)
@@ -84506,7 +84506,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     },
 
     nodeDictAtPid: function (pid) {
-        let  v = this.sdb().at(pid)
+        let v = this.sdb().at(pid)
         if (v == null) {
             return null
         }
@@ -84524,7 +84524,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 
         //console.log("NodeStore.objectForPid(" + pid + ")")
 
-        let  activeObj = this.activeObjectsDict()[pid]
+        let activeObj = this.activeObjectsDict()[pid]
         if (activeObj) {
             //this.debugLog("objectForPid(" + pid + ") found in mem")
             return activeObj
@@ -84532,9 +84532,9 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 
         //this.debugLog("objectForPid(" + pid + ")")
 
-        let  nodeDict = this.nodeDictAtPid(pid)
+        let nodeDict = this.nodeDictAtPid(pid)
         if (!nodeDict) {
-            let  error = "missing pid '" + pid + "'"
+            let error = "missing pid '" + pid + "'"
             console.warn("WARNING: " + error)
 
             // TODO: add a modal panel to allow user to choose to export and clear data
@@ -84546,12 +84546,12 @@ window.NodeStore = ideal.Proto.extend().newSlots({
             //throw new Error(error)
         }
 
-        let  proto = window[nodeDict.type]
+        let proto = window[nodeDict.type]
         if (!proto) {
             throw new Error("missing proto '" + nodeDict.type + "'")
         }
 
-        let  obj = proto.clone()
+        let obj = proto.clone()
 
         if (!obj.justSetPid) {
             throw new Error("stored object of type '" + nodeDict.type + "' missing justSetPid() method")
@@ -84623,7 +84623,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     },
 
     unrefValueIfNeeded: function (v) {
-        let  pid = this.pidIfRef(v)
+        let pid = this.pidIfRef(v)
 
         if (pid) {
             return this.objectForPid(pid)
@@ -84637,13 +84637,13 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     },
 
     dictIsObjRef: function (dict) {
-        let  k = this.objRefKey()
+        let k = this.objRefKey()
         return typeof (dict[k]) === "string"
     },
 
     refForObject: function (obj) {
-        let  k = this.objRefKey()
-        let  ref = {}
+        let k = this.objRefKey()
+        let ref = {}
 
         if (obj === null && typeof (obj) === "object") {
             ref[k] = "null"
@@ -84655,8 +84655,8 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     },
 
     objectForRef: function (ref) {
-        let  k = this.objRefKey()
-        let  pid = ref[k]
+        let k = this.objRefKey()
+        let pid = ref[k]
         if (pid === "null") {
             return null
         }
@@ -84665,12 +84665,12 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     },
 
     pidRefsFromPid: function (pid) {
-        let  nodeDict = this.nodeDictAtPid(pid)
+        let nodeDict = this.nodeDictAtPid(pid)
         if (!nodeDict) {
             return []
         }
 
-        let  proto = window[nodeDict.type]
+        let proto = window[nodeDict.type]
         if (!proto) {
             console.warn(this.type() + "pidRefsFromPid(" + pid + ") missing type " + nodeDict.type)
             proto = BMStorableNode
@@ -84681,15 +84681,15 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 
     /*
     pidRefsFromNodeDict: function(nodeDict) {
-        let  pids = []
+        let pids = []
 
         if (nodeDict) {
             // property pids
 
 			Object.keys(nodeDict).forEach((k) => {
 
-                    let  v = nodeDict[k]
-                    let  childPid = this.pidIfRef(v)
+                    let v = nodeDict[k]
+                    let childPid = this.pidIfRef(v)
                     if (childPid) {
                         pids.push(childPid);
                     }
@@ -84745,7 +84745,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 
         //this.markActiveObjects() // not needed if assert(!this.hasDirtyObjects()) is above
 
-        let  deleteCount = this.sweep()
+        let deleteCount = this.sweep()
         this._marked = null
 
         this.debugLog("--- end collect - collected " + deleteCount + " pids ---")
@@ -84768,7 +84768,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         }
         this._marked[pid] = true
 
-        let  refPids = this.pidRefsFromPid(pid)
+        let refPids = this.pidRefsFromPid(pid)
         //this.debugLog("markPid " + pid + " w refs " + JSON.stringify(refPids))
 
         refPids.forEach((refPid) => {
@@ -84783,8 +84783,8 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         // delete all unmarked records
         this.sdb().begin()
 
-        let  deleteCount = 0
-        let  pids = this.sdb().keys()
+        let deleteCount = 0
+        let pids = this.sdb().keys()
 
         pids.forEach((pid) => {
             if (this._marked[pid] != true) {
@@ -84844,14 +84844,14 @@ window.NodeStore = ideal.Proto.extend().newSlots({
             return
         }
 
-        let  stringReplacer = function (value) {
+        let stringReplacer = function (value) {
             if (typeof (value) === "string" && value.length > 100) {
                 return value.substring(0, 100) + "...";
             }
             return value
         }
 
-        let  replacer = function (key, value) {
+        let replacer = function (key, value) {
             value = stringReplacer(value)
 
             if (typeof(value) === "array") {
@@ -84860,8 +84860,8 @@ window.NodeStore = ideal.Proto.extend().newSlots({
             return value;
         }
 
-        let  indent = "   ".repeat(level)
-        let  nodeDict = this.nodeDictAtPid(pid)
+        let indent = "   ".repeat(level)
+        let nodeDict = this.nodeDictAtPid(pid)
         console.log(indent + pid + ": " + JSON.stringify(nodeDict, replacer, 2 + indent.length))
 
         if (nodeDict.children) {
@@ -84886,16 +84886,16 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     },
 
     showActiveObjects: function () {
-        let  active = this.activeObjectsDict()
+        let active = this.activeObjectsDict()
         console.log("active objects: ")
 
         Object.keys(active).forEach((pid) => {
-            let  obj = active[pid]
+            let obj = active[pid]
             console.log("    " + pid + ": ", Object.keys(obj.nodeRefPids()))
         })
 
-        let  pid = "_localIdentities"
-        let  obj = active[pid]
+        let pid = "_localIdentities"
+        let obj = active[pid]
         //debugger;
         console.log("    " + pid + ": ", Object.keys(obj.nodeRefPids()))
 
@@ -84903,12 +84903,12 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     },
 
     objectIsReferencedByActiveObjects: function (aNode) {
-        let  nodePid = aNode.pid()
-        let  active = this.activeObjectsDict()
+        let nodePid = aNode.pid()
+        let active = this.activeObjectsDict()
 
-        let  result = Object.keys(active).detect((pid) => {
-            let  obj = active[pid]
-            let  match = (!(obj === aNode)) && obj.nodeReferencesPid(nodePid)
+        let result = Object.keys(active).detect((pid) => {
+            let obj = active[pid]
+            let match = (!(obj === aNode)) && obj.nodeReferencesPid(nodePid)
             return match
         }) != null
 
@@ -84957,16 +84957,16 @@ window.BMDataStore = BMNode.extend().newSlots({
         //console.log(this.typeId() + " refreshSubnodes")
         this.removeAllSubnodes()
         this.store().sdb().keys().sort().forEach((key) => {
-            let  subnode = BMDataStoreRecord.clone().setTitle(key)
-            let  size = this.store().sdb().at(key).length
-            let  sizeDescription = ByteFormatter.clone().setValue(size).formattedValue()
+            let subnode = BMDataStoreRecord.clone().setTitle(key)
+            let size = this.store().sdb().at(key).length
+            let sizeDescription = ByteFormatter.clone().setValue(size).formattedValue()
             subnode.setSubtitle(sizeDescription)
             this.addRecord(subnode)
         })
     },
 
     subnodeForClassName: function (aClassName) {
-        let  subnode = this.firstSubnodeWithTitle(aClassName)
+        let subnode = this.firstSubnodeWithTitle(aClassName)
         if (!subnode) {
             subnode = BMNode.clone().setTitle(aClassName).setNoteIsSubnodeCount(true)
             this.justAddSubnode(subnode)
@@ -84975,13 +84975,13 @@ window.BMDataStore = BMNode.extend().newSlots({
     },
 
     addRecord: function (aRecord) {
-        let  className = aRecord.title().split("_").first()
+        let className = aRecord.title().split("_").first()
 
         if (className === "") {
             className = "roots"
         }
 
-        let  classNode = this.subnodeForClassName(className)
+        let classNode = this.subnodeForClassName(className)
         classNode.setNodeMinWidth(300)
         classNode.justAddSubnode(aRecord)
         return this
@@ -85099,7 +85099,7 @@ window.BMStorableNode = BMNode.extend().newSlots({
     // --- add / remove stored slots ---
     
     initStoredSubnodeSlotWithProto: function(name, proto) {
-        let  obj = proto.clone()
+        let obj = proto.clone()
         this.newSlot(name, obj)
         this.justAddSubnode(obj)
         this.addStoredSlot(name)
@@ -85127,14 +85127,14 @@ window.BMStorableNode = BMNode.extend().newSlots({
     // --- get storage dictionary ---
 
     nodeDictForProperties: function () {
-        let  dict = { }
+        let dict = { }
         dict.type = this.type()
  
         //console.log(this.typeId() + " storedSlots = " + JSON.stringify(this.storedSlots()))
        
-        let  slots = this.storedSlots()
+        let slots = this.storedSlots()
         Object.keys(slots).forEach((k) => {
-            let  v = null
+            let v = null
             if (k.beginsWith("_")) {
                 v = this[k]
             } else {
@@ -85153,7 +85153,7 @@ window.BMStorableNode = BMNode.extend().newSlots({
     },
 
     nodeDict: function () {
-        let  dict = this.nodeDictForProperties()
+        let dict = this.nodeDictForProperties()
         
         if (this.subnodes().length && this.shouldStoreSubnodes()) {
             dict.children = this.subnodePids()
@@ -85180,23 +85180,23 @@ window.BMStorableNode = BMNode.extend().newSlots({
     prepareToAccess: function() {
         BMNode.prepareToAccess.apply(this)
         if (this.doesLazyLoadChildren()) {
-            let  dict = BMNodeStore.shared().nodeDictAtPid(this.pid())
+            let dict = BMNodeStore.shared().nodeDictAtPid(this.pid())
             this.setNodeDictForProperties(dict)
         }
         return this
     },
     
     setNodeDictForProperties: function (aDict) {
-        let  hadMissingSetter = false 
+        let hadMissingSetter = false 
         Object.keys(aDict).forEach((k) => {
             if (k != "children" && k != "type") {
-                let  v = aDict[k]
+                let v = aDict[k]
                 v = NodeStore.shared().unrefValueIfNeeded(v)
                 
                 if (k.beginsWith("_")) {
                     this[k] = v
                 } else {
-                    let  setter = "set" + k.capitalized();
+                    let setter = "set" + k.capitalized();
                     if (this[setter]) {
                         this[setter].apply(this, [v])
                     } else {
@@ -85216,7 +85216,7 @@ window.BMStorableNode = BMNode.extend().newSlots({
     },
 
     setNodeDictForChildren: function (aDict) {
-        let  newPids = aDict.children
+        let newPids = aDict.children
         if (newPids) {
             if (this.loadsUnionOfChildren()) {
                 throw new Error("loadsUnionOfChildren") // checking if this is being used
@@ -85254,8 +85254,8 @@ window.BMStorableNode = BMNode.extend().newSlots({
         // as well as this object itself
 
         Object.keys(this._storedSlots).forEach((slotName) => {
-            let  obj = this[slotName].apply(this)
-            let  isRef = obj != null && obj.typeId
+            let obj = this[slotName].apply(this)
+            let isRef = obj != null && obj.typeId
             if (isRef && !obj.hasPid()) {
                 obj.pid()
                 NodeStore.shared().addDirtyObject(this)
@@ -85305,7 +85305,7 @@ window.BMStorableNode = BMNode.extend().newSlots({
     // StorableNode
 	
     subnodePids: function() {
-        let  pids = []
+        let pids = []
         
         this.subnodes().forEach((subnode) => {
             if (subnode.shouldStore() == true) {
@@ -85317,7 +85317,7 @@ window.BMStorableNode = BMNode.extend().newSlots({
     },
     
     setSubnodePids: function(pids) {
-        let  subnodes = pids.map((pid) => {
+        let subnodes = pids.map((pid) => {
             return NodeStore.shared().objectForPid(pid)
         })
 
@@ -85333,13 +85333,13 @@ window.BMStorableNode = BMNode.extend().newSlots({
     },
     
     pidRefsFromNodeDict: function(nodeDict) {
-        let  pids = []
+        let pids = []
 
         if (nodeDict) {
             // property pids
             Object.keys(nodeDict).forEach((k) => {
-                let  v = nodeDict[k]
-                let  childPid = this.pidIfRef(v)
+                let v = nodeDict[k]
+                let childPid = this.pidIfRef(v)
                 if (childPid) {
                     pids.push(childPid);
                 }
@@ -85357,13 +85357,13 @@ window.BMStorableNode = BMNode.extend().newSlots({
     },
 
     nodePidRefsFromNodeDict: function(nodeDict) {
-        let  pids = []
+        let pids = []
 
         if (nodeDict) {
             // property pids
             Object.keys(nodeDict).forEach((k) => {
-                let  v = nodeDict[k]
-                let  childPid = NodeStore.shared().pidIfRef(v)
+                let v = nodeDict[k]
+                let childPid = NodeStore.shared().pidIfRef(v)
                 if (childPid) {
                     pids.push(childPid);
                 }
@@ -85383,15 +85383,15 @@ window.BMStorableNode = BMNode.extend().newSlots({
     /*
 	nodeRefPids: function() {
 		if (this._refPids == null) {
-			let  refs = {}
-			let  dict = this.nodeDict()
-			let  keys = Object.keys(dict)
+			let refs = {}
+			let dict = this.nodeDict()
+			let keys = Object.keys(dict)
 		
-			let  name = this.typeId()
+			let name = this.typeId()
 			//debugger;
 			// stored slots
 			keys.forEach((k) => {
-				let  v = dict[k]
+				let v = dict[k]
 				if (k != "children" && typeof(v) === "object") {
 					if (v.pid != "null") {
 						refs[v.pid] = true
@@ -85554,7 +85554,7 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
     // --- fields ---
 
     addStoredField: function(aField) {
-        let  name = aField.valueMethod()
+        let name = aField.valueMethod()
         this.addStoredSlot(name)
         if (!this[name]) {
             this.newSlot(name, null)
@@ -85569,7 +85569,7 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
     },
 
     addFieldNamed: function(name) {	
-        let  field = BMField.clone().setKey(name)
+        let field = BMField.clone().setKey(name)
         field.setValueMethod(name)
         this.addStoredField(field)
         return field
@@ -85587,7 +85587,7 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
 
     copyFieldsFrom: function(sourceObj) {
         this.subnodes().forEach((targetField) => {
-            let  sourceField = sourceObj.fieldNamed(targetField.valueMethod())
+            let sourceField = sourceObj.fieldNamed(targetField.valueMethod())
             targetField.setValue(sourceField.value())
             //console.log("target field " + targetField.valueMethod() + " set to '" + targetField.value() + "'")
         })
@@ -85615,7 +85615,7 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
     // todo: can this use persistent storage methods via skip pid use?
 
     asJSON: function() {
-        let  dict = {}
+        let dict = {}
         dict.type = this.type()
         // todo: store persistent slots...
         // todo: store subnodes if set to store them
@@ -85636,7 +85636,7 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
         // todo: read persistent keys
         if (json.fields) { 
             Map.withJsMap(json.fields).forEach((key, value) => {
-                let  field = this.fieldNamed(key)
+                let field = this.fieldNamed(key)
                 if (field) {
                     field.setValue(value)
                 }
@@ -85716,8 +85716,8 @@ window.BMField = BMNode.extend().newSlots({
 	
     setValue: function(v) { // called by View on edit
         //console.log("setValue '" + v + "'")
-        let  target = this.target()
-        let  setter = this.setterNameForSlot(this.valueMethod())
+        let target = this.target()
+        let setter = this.setterNameForSlot(this.valueMethod())
 
         if (this.setterFunc()) {
             this.setterFunc(target, this.valueMethod(), v)()
@@ -85747,8 +85747,8 @@ window.BMField = BMNode.extend().newSlots({
     },
 	
     value: function() {
-        let  target = this.target()
-        let  slotName = this.valueMethod()
+        let target = this.target()
+        let slotName = this.valueMethod()
 
         if (this.getterFunc()) {
             return this.getterFunc(target, slotName)()
@@ -85756,7 +85756,7 @@ window.BMField = BMNode.extend().newSlots({
 
         //console.log("target = " + target.type() + " getter = '" + getter + "'")
         if (target[slotName]) {
-            let  value = target[slotName].apply(target)
+            let value = target[slotName].apply(target)
             return value
         } else {
             console.warn(this.type() + " target " + target.type() + " missing slot '" + slotName + "'")
@@ -85764,8 +85764,8 @@ window.BMField = BMNode.extend().newSlots({
     },
 	
     note: function() {
-        let  target = this.target()
-        let  slotName = this.noteMethod()
+        let target = this.target()
+        let slotName = this.noteMethod()
 
         if (target && slotName) {
             if (target[slotName]) {
@@ -85837,7 +85837,7 @@ window.BMActionField = BMField.extend().newSlots({
 	*/
 	
     doAction: function() {
-	    let  func = this.target()[this.value()]
+	    let func = this.target()[this.value()]
 	    
 	    if (typeof(func) === "function") {
 	        func.apply(this.target())
@@ -85961,11 +85961,11 @@ window.BMIdentityField = BMField.extend().newSlots({
 	
     setValue: function(inValue) { // called by View on edit
 	    //console.log("inValue = '" + inValue + "'")
-	    let  newValue = inValue.strip()
+	    let newValue = inValue.strip()
 	    
-        let  parts = newValue.split(" ").concat(newValue.split("\n")).concat(newValue.split(","))
+        let parts = newValue.split(" ").concat(newValue.split("\n")).concat(newValue.split(","))
 	    //console.log("parts = '", parts)
-        let  validPart = parts.detect((part) => { return bitcore.PublicKey.isValid(part) })
+        let validPart = parts.detect((part) => { return bitcore.PublicKey.isValid(part) })
         if (validPart) {
             newValue = validPart
         }
@@ -86002,7 +86002,7 @@ window.BMDateField = BMField.extend().newSlots({
     },
 
     visibleValue: function() {
-        let  v = this.value()
+        let v = this.value()
         if (!v) { 
             return this.unsetVisibleValue()
         }
@@ -86030,12 +86030,12 @@ window.BMNumberField = BMField.extend().newSlots({
     },
 
     valueIsNumeric: function() {
-        let  n = this.value()
+        let n = this.value()
         return !isNaN(parseFloat(n)) && isFinite(n);
     },
 	
     validate: function() {
-        let  isValid = this.valueIsNumeric()
+        let isValid = this.valueIsNumeric()
 		
         if (!isValid) {
             this.setValueError("this needs to be a number")
@@ -86074,12 +86074,12 @@ window.BMBoolField = BMField.extend().newSlots({
     },
 
     valueIsBool: function() {
-        let  b = this.value()
+        let b = this.value()
         return typeof(b) === "boolean";
     },
 	
     validate: function() {
-        let  isValid = this.valueIsBool()
+        let isValid = this.valueIsBool()
 		
         if (!isValid) {
             this.setValueError("this needs to be a boolean (true or false)")
@@ -86132,7 +86132,7 @@ window.BMOptionsField = BMField.extend().newSlots({
 	
     validValues: function() {
         if (this._validValues.length === 0 && this.validValuesMethod()) {
-            let  t = this.target()
+            let t = this.target()
             return t[this.validValuesMethod()].apply(t)
         }
 		
@@ -86295,7 +86295,7 @@ window.BMProtoNode = BMNode.extend().newSlots({
     },
 
     setupSubnodes: function() {
-        let  childNodes = [
+        let childNodes = [
             BMSlotsNode.clone().setProtoValue(this.protoValue()), 
             BMSubclassesNode.clone().setProtoValue(this.protoValue())
         ]
@@ -86333,8 +86333,8 @@ window.BMSlotsNode = BMFieldSetNode.extend().newSlots({
     },
 
     slotValueType: function() {
-        let  v = this.slotValue()
-        let  t = typeof(v)
+        let v = this.slotValue()
+        let t = typeof(v)
         
         if (t === "object") {
             if (typeof(v.type) === "function") {
@@ -86346,15 +86346,15 @@ window.BMSlotsNode = BMFieldSetNode.extend().newSlots({
     },
 
     setupSubnodes: function() {
-        let  childNodes = []
+        let childNodes = []
         assert(this.protoValue())
 
         this.protoValue().slotNames().forEach((slotName) => {
 
-            let  childNode = null
-            let  p = this.protoValue()
-            let  v = p[slotName]
-            let  t = typeof(v)
+            let childNode = null
+            let p = this.protoValue()
+            let v = p[slotName]
+            let t = typeof(v)
             // console.log("proto: ", p.type(), " slot:", slotName, " value: ", p[slotName], " type: ", t)
 
             if (t === "string") {
@@ -86417,8 +86417,8 @@ window.BMSubclassesNode = BMNode.extend().newSlots({
     },
 
     setupSubnodes: function() {
-        let  childProtos = this.protoValue().childProtos()
-        let  childNodes = childProtos.map((childProto) => {
+        let childProtos = this.protoValue().childProtos()
+        let childNodes = childProtos.map((childProto) => {
             return BMProtoNode.clone().setProtoValue(childProto);
         })
 
@@ -86600,11 +86600,11 @@ window.CSSRuleSet = class CSSRuleSet extends ProtoClass {
     /*
     getStyleSheet() {
         // enumerate sheets on document (items of type CSSStyleSheet)
-        for (let  i = 0; i < document.styleSheets.length; i++) {
-            let  mysheet = document.styleSheets[i];
+        for (let i = 0; i < document.styleSheets.length; i++) {
+            let mysheet = document.styleSheets[i];
             // enumerate rules on sheet (items of type RuleList)
-            let  myrules = mysheet.cssRules ? mysheet.cssRules : mysheet.rules;
-            for (let  j = 0; j < myrules.length; j++) {
+            let myrules = mysheet.cssRules ? mysheet.cssRules : mysheet.rules;
+            for (let j = 0; j < myrules.length; j++) {
                 // enumerate rules in ruleList (items of type CSS*Rule, e.g. CSSFontFaceRule) 
                 if (myrules[j].selectorText && myrules[j].selectorText.toLowerCase() === selector) {
                     return myrules[j].style[style];
@@ -86615,7 +86615,7 @@ window.CSSRuleSet = class CSSRuleSet extends ProtoClass {
     */
     
     decAt (k) {
-        let  dec = this.declarations()[k]
+        let dec = this.declarations()[k]
         if (!dec) {
             dec = CSSDeclaration.clone().setRuleSet(this).setKey(k)
             this.declarations()[k] = dec
@@ -86624,7 +86624,7 @@ window.CSSRuleSet = class CSSRuleSet extends ProtoClass {
     }
 
     applyToElement (anElement) {        
-        let  dict = this.declarations()
+        let dict = this.declarations()
         
         Object.slotValues(dict).forEach(function(declaration) {
             declaration.applyToElement(anElement)
@@ -86641,9 +86641,9 @@ window.CSSRuleSet = class CSSRuleSet extends ProtoClass {
     }
 
     asJSON () {
-        let  dict = {}
+        let dict = {}
         dict.key = this.key()
-        let  decs = {}
+        let decs = {}
         this.declarations().forEach((dec) => {
             decs[dec.key()] = dec.value()
         })
@@ -86725,7 +86725,7 @@ window.CSS = class CSS extends ProtoClass {
     }
     
     ruleAt (k) {
-        let  rule = this.rules()[k]
+        let rule = this.rules()[k]
         if (!rule) {
             rule = CSSRuleSet.clone().setKey(k)
             this.rules()[k] = rule
@@ -86747,8 +86747,8 @@ window.CSS = class CSS extends ProtoClass {
     }
 
     asJSON () {
-        let  dict = {}
-        let  rules = {}
+        let dict = {}
+        let rules = {}
         this.rules().forEach((k, ruleSet) => {
             rules[k] = ruleSet.asJSON()
         })
@@ -86766,16 +86766,16 @@ window.CSS = class CSS extends ProtoClass {
     /*
     setupFromCSS() {
         // enumerate sheets on document (items of type CSSStyleSheet)
-        for (let  i = 0; i < document.styleSheets.length; i++) {
-            let  mysheet = document.styleSheets[i];
+        for (let i = 0; i < document.styleSheets.length; i++) {
+            let mysheet = document.styleSheets[i];
 
             // enumerate rules on sheet (c type RuleList)
-            let  myrules = mysheet.cssRules ? mysheet.cssRules : mysheet.rules;
+            let myrules = mysheet.cssRules ? mysheet.cssRules : mysheet.rules;
             // enumerate rules in ruleList (items of type CSS*Rule, e.g. CSSFontFaceRule) 
-            for (let  j = 0; j < myrules.length; j++) {
-                let  rule = myrules[j]
-                let  className = rule.selectorText
-                let  ruleObj = this.ruleAt(className)
+            for (let j = 0; j < myrules.length; j++) {
+                let rule = myrules[j]
+                let className = rule.selectorText
+                let ruleObj = this.ruleAt(className)
                 ruleObj.setupFromRawRule(rule)
             }
         }
@@ -86784,14 +86784,14 @@ window.CSS = class CSS extends ProtoClass {
 
     rawCSSStyleRuleForClassName (className) {
         // enumerate sheets on document (items of type CSSStyleSheet)
-        for (let  i = 0; i < document.styleSheets.length; i++) {
-            let  mysheet = document.styleSheets[i];
+        for (let i = 0; i < document.styleSheets.length; i++) {
+            let mysheet = document.styleSheets[i];
 
             // enumerate rules on sheet (c type RuleList)
-            let  myrules = mysheet.cssRules ? mysheet.cssRules : mysheet.rules;
+            let myrules = mysheet.cssRules ? mysheet.cssRules : mysheet.rules;
             // enumerate rules in ruleList (items of type CSS*Rule, e.g. CSSFontFaceRule) 
-            for (let  j = 0; j < myrules.length; j++) {
-                let  rule = myrules[j]
+            for (let j = 0; j < myrules.length; j++) {
+                let rule = myrules[j]
                 if(className == rule.selectorText) {
                     return rule // usually a CSSStyleRule instance
                 }
@@ -86858,7 +86858,7 @@ window.DivTransition = class DivTransition extends ProtoClass {
     }
 
     durationString() {
-        let  v = this.duration()
+        let v = this.duration()
         if (typeof (v) === "number") {
             return v + "s"
         }
@@ -86866,7 +86866,7 @@ window.DivTransition = class DivTransition extends ProtoClass {
     }
 
     delayString() {
-        let  v = this.duration()
+        let v = this.duration()
         if (typeof (v) === "number") {
             return v + "s"
         }
@@ -86874,7 +86874,7 @@ window.DivTransition = class DivTransition extends ProtoClass {
     }
 
     asString(aString) {
-        let  parts = [
+        let parts = [
             this.property(),
             this.durationString(),
             this.timingFunction(),
@@ -86885,9 +86885,9 @@ window.DivTransition = class DivTransition extends ProtoClass {
     }
 
     setFromString(aString) {
-        let  parts = aString.split(" ").select((part) => { return part != "" })
+        let parts = aString.split(" ").select((part) => { return part != "" })
 
-        let  v = parts.removeFirst()
+        let v = parts.removeFirst()
         assert(v != null)
         this.setProperty(v)
 
@@ -86940,7 +86940,7 @@ window.DivTransitions = class DivTransitions extends ProtoClass {
     }
 
     at(aName) {
-        let  d = this.properties()
+        let d = this.properties()
         if (!(name in d)) {
             d[name] = DivTransition.clone().setTransitions(this)
         }
@@ -86963,11 +86963,11 @@ window.DivTransitions = class DivTransitions extends ProtoClass {
     syncFromDiv() {
         this.setProperties({})
 
-        let  s = this.divView().transition()
-        let  transitionStrings = s.split(",")
+        let s = this.divView().transition()
+        let transitionStrings = s.split(",")
 
         transitionStrings.forEach((tString) => {
-            let  t = DivTransition.clone().setFromString(tString)
+            let t = DivTransition.clone().setFromString(tString)
             this.properties()[t.property()] = t
         })
 
@@ -87035,7 +87035,7 @@ window.DivBorderRadius = class DivBorderRadius extends ProtoClass {
     }
 
     setFromString(aString) {
-        let  parts = aString.split(" ").select((part) => { return part != "" })
+        let parts = aString.split(" ").select((part) => { return part != "" })
 
         this.clear()
 
@@ -87043,7 +87043,7 @@ window.DivBorderRadius = class DivBorderRadius extends ProtoClass {
             this.setAll(Number(parts[0]))
         }
 
-        let  v;
+        let v;
 
         v = parts.removeFirst()
         if (typeof (v) === "string") {
@@ -87074,7 +87074,7 @@ window.DivBorderRadius = class DivBorderRadius extends ProtoClass {
     }
 
     syncFromDiv() {
-        let  s = this.divView().borderRadius()
+        let s = this.divView().borderRadius()
 
         if (s) {
             this.setFromString(s)
@@ -87114,7 +87114,7 @@ window.ViewAnimator = class ViewAnimator extends ProtoClass {
     }
 
     currentValue() {
-        let  view = this.view()
+        let view = this.view()
         return view[this.viewProperty()].apply(view)
     }
 
@@ -87143,8 +87143,8 @@ window.ViewAnimator = class ViewAnimator extends ProtoClass {
     }
 
     nextFrame() {
-        let  tr = this.timeRatioDone()
-        let  newValue = Math.ceil((this.timeRatioDone() * (this.currentValue() - this.startValue())) + this.startValue());
+        let tr = this.timeRatioDone()
+        let newValue = Math.ceil((this.timeRatioDone() * (this.currentValue() - this.startValue())) + this.startValue());
         this.setValue(newValue)
 
         if (tr != 1) {
@@ -87778,8 +87778,8 @@ window.Keyboard = ideal.Proto.extend().newSlots({
     },
 	
     specialNameForKeyEvent: function(event) {
-        let  code = event.keyCode
-        let  result = this.specialKeyCodes()[code]
+        let code = event.keyCode
+        let result = this.specialKeyCodes()[code]
 		
         if (event.shiftKey && (code === 187)) {
             return "plus"
@@ -93775,7 +93775,7 @@ window.GenericView = NodeView.extend().newSlots({
     },
 
     syncFromNode: function () {
-        let  node = this.node()
+        let node = this.node()
 
         this.titleView().setInnerHTML(node.title())
         this.subtitleView().setInnerHTML(node.subtitle())
@@ -93787,7 +93787,7 @@ window.GenericView = NodeView.extend().newSlots({
     },
     
     syncToNode: function () {
-        let  node = this.node()
+        let node = this.node()
         //this.log("syncToNode " + this.titleView().innerHTML())
         node.setTitle(this.titleView().innerHTML())
         node.setSubtitle(this.subtitleView().innerHTML())
@@ -94223,7 +94223,7 @@ window.HashCommand = ideal.Proto.extend().newSlots({
     },
 
     parseCommandString: function(s) {
-        let  j = []
+        let j = []
         try {
             j = JSON.parse(s)
         } catch (e) {
@@ -94356,7 +94356,7 @@ window.BrowserView = NodeView.extend().newSlots({
 
         this.setIsRegisteredForDocumentResize(true)
 
-        let  dh = DivView.clone().setDivClassName("BrowserDefaultHeader NodeView DivView")
+        let dh = DivView.clone().setDivClassName("BrowserDefaultHeader NodeView DivView")
         this.setDefaultHeader(dh)
         this.addSubview(dh)
 
@@ -94379,7 +94379,7 @@ window.BrowserView = NodeView.extend().newSlots({
     },
 
     updateBackground: function () {
-        let  n = this.activeColumnGroups().length
+        let n = this.activeColumnGroups().length
         this.setBackgroundColor(this.bgColorForIndex(n + 1))
     },
 
@@ -94403,15 +94403,15 @@ window.BrowserView = NodeView.extend().newSlots({
 
     updateSingleColumnMode: function () {
         //console.log("---")
-        //let  size = DocumentBody.zoomAdjustedSize()
-        //let  w = WebBrowserScreen.shared().orientedWidth()
-        //let  h = WebBrowserScreen.shared().orientedHeight()
+        //let size = DocumentBody.zoomAdjustedSize()
+        //let w = WebBrowserScreen.shared().orientedWidth()
+        //let h = WebBrowserScreen.shared().orientedHeight()
         //console.log("WebBrowserScreen size = " + w + "x" + h)
 
-        let  size = WebBrowserScreen.shared().lesserOrientedSize()
-        let  w = size.width
-        let  h = size.height
-        let  r = 1
+        let size = WebBrowserScreen.shared().lesserOrientedSize()
+        let w = size.width
+        let h = size.height
+        let r = 1
 
         if (w < 900 && WebBrowserWindow.shared().isOnMobile()) {
             //console.log("w = " , w)
@@ -94428,7 +94428,7 @@ window.BrowserView = NodeView.extend().newSlots({
         //console.log("lesserOrientedSize: " + w + "x" + h + " setZoomRatio(" + r + ")") 
         //DocumentBody.setZoomRatio(r) // turning this off to see if it fixes mobile tiny fonts
 
-        let  isSingle = ((w < h) && (w < 800)) || (w < 400)
+        let isSingle = ((w < h) && (w < 800)) || (w < 400)
         //console.log("isSingle = ", isSingle)
         this.setIsSingleColumn(isSingle) 
 
@@ -94460,27 +94460,27 @@ window.BrowserView = NodeView.extend().newSlots({
     // --- column background colors ----------------------------
 
     bgColorForIndex: function (i) {
-        let  colors = this.bgColors()
-        let  rcolors = this.bgColors().reversed()
+        let colors = this.bgColors()
+        let rcolors = this.bgColors().reversed()
         rcolors.removeFirst()
         colors = colors.copy().appendItems(rcolors)
 
-        let  rgb = colors.atModLength(i)
-        let  s = "rgb(" + rgb.map((v) => { return Math.round(v * 255) }).join(",") + ")"
+        let rgb = colors.atModLength(i)
+        let s = "rgb(" + rgb.map((v) => { return Math.round(v * 255) }).join(",") + ")"
         //console.log("bgColorForIndex = '" + s + "'")
         return s
     },
 
     setupColumnGroupColors: function () {
-        let  i = 0
+        let i = 0
 
         this.columnGroups().forEach((cg) => {
 
             if (cg.column().type() === "BrowserColumn") {
-                let  bgColor = this.bgColorForIndex(i)
+                let bgColor = this.bgColorForIndex(i)
 
                 if (cg.node()) {
-                    let  color = cg.node().nodeColumnBackgroundColor()
+                    let color = cg.node().nodeColumnBackgroundColor()
                     if (color) {
                         //console.log("found  nodeColumnBackgroundColor " + color + " for ", cg.node().typeId() + " " + cg.node().title())
                         bgColor = color
@@ -94531,7 +94531,7 @@ window.BrowserView = NodeView.extend().newSlots({
 
         // add columns as needed
         while (this.columnGroups().length < count) {
-            let  newCg = BrowserColumnGroup.clone()
+            let newCg = BrowserColumnGroup.clone()
             this.addColumnGroup(newCg)
             newCg.setMinAndMaxWidth(0)
             newCg.setFlexGrow(0)
@@ -94545,9 +94545,9 @@ window.BrowserView = NodeView.extend().newSlots({
     },
 
     clearColumnsGroupsAfterIndex: function (index) {
-        let  cgs = this.columnGroups()
+        let cgs = this.columnGroups()
         for (let i = index + 1; i < cgs.length; i++) {
-            let  cg = cgs[i]
+            let cg = cgs[i]
             //console.log("clearing column group ", i)
             cg.setNode(null).syncFromNode()
         }
@@ -94555,8 +94555,8 @@ window.BrowserView = NodeView.extend().newSlots({
     },
 
     clearColumnsGroupsAfter: function (selectedCg) {
-        let  cgs = this.columnGroups()
-        let  index = cgs.indexOf(selectedCg)
+        let cgs = this.columnGroups()
+        let index = cgs.indexOf(selectedCg)
         this.clearColumnsGroupsAfterIndex(index)
     },
 
@@ -94583,7 +94583,7 @@ window.BrowserView = NodeView.extend().newSlots({
 
 
     updateSelectedColumnTo: function (selectedColumn) {
-        let  selectedColumnGroup = selectedColumn.columnGroup()
+        let selectedColumnGroup = selectedColumn.columnGroup()
         this.columnGroups().forEach(function (cg) {
             cg.setIsSelected(cg === selectedColumnGroup)
         })
@@ -94593,7 +94593,7 @@ window.BrowserView = NodeView.extend().newSlots({
 
     popLastActiveColumn: function () {
         //console.log("popLastActiveColumn this.activeColumnGroups().length = ", this.activeColumnGroups().length)
-        let  n = this.activeColumnGroups().length - 1
+        let n = this.activeColumnGroups().length - 1
         if (n < 0) { n = 0; }
         this.setColumnGroupCount(n) // TODO: collapse cg instead?
         this.fitColumns()
@@ -94614,7 +94614,7 @@ window.BrowserView = NodeView.extend().newSlots({
         const selectedColumnGroup = selectedColumn.columnGroup()
         this._selectedColumnGroup = selectedColumnGroup
 
-        let  index = this.columnGroups().indexOf(selectedColumn.columnGroup())
+        let index = this.columnGroups().indexOf(selectedColumn.columnGroup())
 
         //console.log(this.typeId() + " selectColumn " + selectedColumn.node().type() + " index " + index)
 
@@ -94626,15 +94626,15 @@ window.BrowserView = NodeView.extend().newSlots({
 
         //console.log("selectColumn index: " + index + " cg " + this.columnGroups().length)
 
-        let  nextCg = this.columnGroups().itemAfter(selectedColumnGroup)
+        let nextCg = this.columnGroups().itemAfter(selectedColumnGroup)
 
         if (nextCg) {
-            let  selectedRow = selectedColumnGroup.column().selectedRow()
+            let selectedRow = selectedColumnGroup.column().selectedRow()
 
             selectedColumnGroup.matchNodeMinWidth() // testing
 
             if (selectedRow) {
-                let  nextNode = selectedRow.nodeRowLink() // returns receiver by default
+                let nextNode = selectedRow.nodeRowLink() // returns receiver by default
                 //console.log("selectedRow title:  ", selectedRow.node().title())
 
                 if (nextNode) {
@@ -94673,7 +94673,7 @@ window.BrowserView = NodeView.extend().newSlots({
 
     syncFromNode: function () {
         //this.log("syncFromNode")
-        let  columnGroups = this.columnGroups()
+        let columnGroups = this.columnGroups()
         columnGroups.first().setNode(this.node())
 
         columnGroups.forEach((cg) => {
@@ -94686,7 +94686,7 @@ window.BrowserView = NodeView.extend().newSlots({
     },
 
     clipToColumnGroup: function (cg) {
-        let  index = this.columnGroups().indexOf(cg)
+        let index = this.columnGroups().indexOf(cg)
         this.setColumnGroupCount(index + 1)
         return this
     },
@@ -94709,7 +94709,7 @@ window.BrowserView = NodeView.extend().newSlots({
         //console.log(this.typeId() + " fitColumns")
         this.updateSingleColumnMode()
 
-        let  lastActiveCg = this.lastActiveColumnGroup()
+        let lastActiveCg = this.lastActiveColumnGroup()
 
         //console.log("this.isSingleColumn(): ", this.isSingleColumn())
 
@@ -94731,9 +94731,9 @@ window.BrowserView = NodeView.extend().newSlots({
 
     makeLastActiveColumnFillRemainingSpace: function () {
         // TODO: merge with this code in multi column fit
-        let  lastActiveCg = this.lastActiveColumnGroup()
+        let lastActiveCg = this.lastActiveColumnGroup()
 
-        let  fillWidth = (this.browserWidth() - this.left()) - this.widthOfUncollapsedColumnsSansLastActive()
+        let fillWidth = (this.browserWidth() - this.left()) - this.widthOfUncollapsedColumnsSansLastActive()
         /*
 		if (lastActiveCg.targetWidth() *2 < fillWidth && lastActiveCg.targetWidth() < 500) {
 			fillWidth = lastActiveCg.targetWidth()
@@ -94750,7 +94750,7 @@ window.BrowserView = NodeView.extend().newSlots({
     },
 
     fitForSingleColumn: function () {
-        let  lastActiveCg = this.lastActiveColumnGroup()
+        let lastActiveCg = this.lastActiveColumnGroup()
 
         this.columnGroups().forEach((cg) => {
             if (cg != lastActiveCg) {
@@ -94779,8 +94779,8 @@ window.BrowserView = NodeView.extend().newSlots({
     },
 
     widthOfUncollapsedColumnsSansLastActive: function () {
-        let  lastActiveCg = this.lastActiveColumnGroup()
-        let  cgs = this.uncollapsedColumns()
+        let lastActiveCg = this.lastActiveColumnGroup()
+        let cgs = this.uncollapsedColumns()
         cgs.remove(lastActiveCg)
         return cgs.sum((cg) => { return cg.targetWidth(); })
     },
@@ -94793,9 +94793,9 @@ window.BrowserView = NodeView.extend().newSlots({
     },
 
     columnDescription: function () {
-        let  d = this.columnGroups().map((cg) => {
+        let d = this.columnGroups().map((cg) => {
             if (cg.isCollapsed()) { return "" }
-            let  s = cg.name()
+            let s = cg.name()
             if (cg.node() == null) { s += " [null node] " }
             //s += " " + (cg.isCollapsed() ? "collapsed" : "uncollapsed")
             s += " " + this.pxNumberToString(cg.targetWidth())
@@ -94834,12 +94834,12 @@ window.BrowserView = NodeView.extend().newSlots({
     },
 
     collapseLeftColumnsUntilRightColumnsFit: function () {
-        let  lastActiveCg = this.lastActiveColumnGroup()
-        let  browserWidth = this.browserWidth()
+        let lastActiveCg = this.lastActiveColumnGroup()
+        let browserWidth = this.browserWidth()
         // collapse columns from left to right until they all fit
         this.columnGroups().forEach((cg) => {
-            let  usedWidth = this.widthOfUncollapsedColumns()
-            let  shouldCollapse = (usedWidth > this.browserWidth()) && (cg != lastActiveCg)
+            let usedWidth = this.widthOfUncollapsedColumns()
+            let shouldCollapse = (usedWidth > this.browserWidth()) && (cg != lastActiveCg)
             shouldCollapse = shouldCollapse || (cg.node() == null)
             //console.log(cg.name() + " shouldCollapse:" + shouldCollapse + " usedWidth: " + usedWidth + " browserWidth:" + this.browserWidth())
             cg.setIsCollapsed(shouldCollapse)
@@ -94848,10 +94848,10 @@ window.BrowserView = NodeView.extend().newSlots({
     },
 
     expandLastColumnIfNeeded: function () {
-        let  lastActiveCg = this.lastActiveColumnGroup()
+        let lastActiveCg = this.lastActiveColumnGroup()
 
         if (lastActiveCg) {
-            let  fillWidth = (this.browserWidth() - this.left()) - this.widthOfUncollapsedColumnsSansLastActive()
+            let fillWidth = (this.browserWidth() - this.left()) - this.widthOfUncollapsedColumnsSansLastActive()
             if (lastActiveCg.targetWidth() * 2 < fillWidth && lastActiveCg.targetWidth() < 500) {
                 fillWidth = lastActiveCg.targetWidth()
             }
@@ -94893,7 +94893,7 @@ window.BrowserView = NodeView.extend().newSlots({
         this.setColumnGroupCount(1)
 
 
-        let  column = this.columns().first()
+        let column = this.columns().first()
 
         if (nodePathArray.first() === column.node()) {
             //console.log("selectNodePath removeFirst column " + column.node().title())
@@ -94943,7 +94943,7 @@ window.BrowserView = NodeView.extend().newSlots({
     },
 
     nodePathString: function () {
-        let  lastNode = this.lastNode();
+        let lastNode = this.lastNode();
         if (lastNode) {
             return lastNode.nodePathString(); //.map((node) => { return node.title() }).join("/")
         }
@@ -94975,7 +94975,7 @@ window.BrowserView = NodeView.extend().newSlots({
 
     syncFromHashPath: function () {
         let hash = WebBrowserWindow.shared().urlHash()
-        let  j = ""
+        let j = ""
 
         if (hash === "") {
             this.setNodePathComponents([""])
@@ -95901,11 +95901,11 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
     },
     
     updateScrollView: function() {
-        let  headerHeight = 40
-        let  footerHeight = 40
+        let headerHeight = 40
+        let footerHeight = 40
         
-        let  heightOffset = 0
-        let  top = 0
+        let heightOffset = 0
+        let top = 0
         
         if (this.hasHeader()) { 
             heightOffset += headerHeight
@@ -95936,13 +95936,13 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
     },
 	
     previousColumnGroup: function() {
-        let  prevCol = this.column().previousColumn()
+        let prevCol = this.column().previousColumn()
         if (prevCol) { return prevCol.columnGroup() }
         return null
     },
 	
     isFirstUncollapsed: function() {
-        let  pcg = this.previousColumnGroup()
+        let pcg = this.previousColumnGroup()
         return (!this.isCollapsed()) && (!pcg || pcg.isCollapsed())
     },
 	
@@ -96000,7 +96000,7 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
 
     /*
     updateEmptyLabel: function() {
-        let  node = this.node()
+        let node = this.node()
         if (node) {
             if (node.subnodes().length === 0 && node.nodeEmptyLabel()) {
                 this.setEmptyLabelText(node.nodeEmptyLabel())
@@ -96039,7 +96039,7 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
     
     setColumnClass: function(columnClass) {
         if (this.column().type() != columnClass.type()) {
-            let  view = columnClass.clone().setNode(this.node())
+            let view = columnClass.clone().setNode(this.node())
             this.scrollView().removeSubview(this.column())
             this.setColumn(view)
             this.scrollView().addSubview(this.column())
@@ -96058,7 +96058,7 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
     */
 
     targetWidth: function() {
-        let  w = 0
+        let w = 0
 		
         if (this.node()) {
 	        w = this.node().nodeMinWidth()
@@ -96077,7 +96077,7 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
     },
 
     matchNodeMinWidth: function() {
-        let  w = this.targetWidth()
+        let w = this.targetWidth()
         if (w) {
             this.setMinAndMaxWidth(w)
         }
@@ -96097,7 +96097,7 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
         if (aNode) {
             // obey node's width preferences
             // use custom class for column if node wants it
-            let  customViewClass = aNode.viewClass()
+            let customViewClass = aNode.viewClass()
             if (customViewClass) {
                 this.setColumnClass(customViewClass)
             }
@@ -96161,13 +96161,13 @@ window.BrowserHeader = NodeView.extend().newSlots({
         NodeView.init.apply(this)
         //this.setOwnsView(false)
 
-        let  backArrowView = DivView.clone().setDivClassName("BackArrow").setTarget(this).setAction("didHitBackArrow")
+        let backArrowView = DivView.clone().setDivClassName("BackArrow").setTarget(this).setAction("didHitBackArrow")
         backArrowView.setBackgroundImageUrlPath(this.pathForIconName("left"))        
         backArrowView.setBackgroundSizeWH(10, 10)
         backArrowView.setOpacity(0.6)
         this.setBackArrowView(backArrowView)
 		
-        let  titleView = DivView.clone().setDivClassName("BrowserHeaderTitleView NodeView DivView").setInnerHTML("").setUserSelect("none")
+        let titleView = DivView.clone().setDivClassName("BrowserHeaderTitleView NodeView DivView").setInnerHTML("").setUserSelect("none")
         this.setTitleView(titleView)
 		
         this.setRightActionsView(DivView.clone().setDivClassName("BrowserFooterRightActionsView"))
@@ -96209,7 +96209,7 @@ window.BrowserHeader = NodeView.extend().newSlots({
     },
 
     syncFromNode: function() {
-        let  node = this.node()
+        let node = this.node()
         this.removeAllSubviews()
         
         if (node && this.browser()) {
@@ -96224,7 +96224,7 @@ window.BrowserHeader = NodeView.extend().newSlots({
 
             node.actions().forEach((action) => {
                 if (this.showsAction(action)) {
-	                let  button = BrowserHeaderAction.clone()
+	                let button = BrowserHeaderAction.clone()
 	                button.setTarget(node).setAction(action)
 	                button.setCanClick(this.nodeHasAction(action))
 	                this.addSubview(button).syncFromNode()
@@ -96291,9 +96291,9 @@ window.BrowserHeaderAction = NodeView.extend().newSlots({
 
         /*
 		if (this.target() && this.target().subnodeProto() && this.target().subnodeProto().nodeVisibleClassName()) {
-			let  noun = this.target().subnodeProto().nodeVisibleClassName().toLowerCase()
-			let  beginsWithVowel = ["a", "e", "i", "o", "u"].contains(noun[0])
-			let  article = beginsWithVowel ? "an" : "a";
+			let noun = this.target().subnodeProto().nodeVisibleClassName().toLowerCase()
+			let beginsWithVowel = ["a", "e", "i", "o", "u"].contains(noun[0])
+			let article = beginsWithVowel ? "an" : "a";
 			this.setToolTip(this.action() + " " + article + " " + noun)
 		}
 		*/
@@ -96338,7 +96338,7 @@ window.BrowserFooter = NodeView.extend().newSlots({
 
         this.setLeftActionsView(DivView.clone().setDivClassName("BrowserFooterLeftActionsView NodeView DivView"))
 		
-        let  textView = TextField.clone().setDivClassName("BrowserFooterTextView NodeView DivView") //.setUserSelect("none")
+        let textView = TextField.clone().setDivClassName("BrowserFooterTextView NodeView DivView") //.setUserSelect("none")
         this.setTextView(textView)
 	    this.textView().setContentEditable(true).setDoesClearOnReturn(true).setDoesHoldFocusOnReturn(true)
 						
@@ -96374,9 +96374,9 @@ window.BrowserFooter = NodeView.extend().newSlots({
     setInput: function(s) {
         //console.trace(this.typeId() + ".setInput('" + s + "')")
         
-        let  n = this.node()
+        let n = this.node()
         if (n) {
-            let  m = n.nodeInputFieldMethod()
+            let m = n.nodeInputFieldMethod()
             if (m) {
                 n[m].apply(n, [s])
             }
@@ -96412,7 +96412,7 @@ window.BrowserFooter = NodeView.extend().newSlots({
     },
     
     syncFromNode: function() {
-        let  node = this.node()
+        let node = this.node()
         this.removeAllSubviews()
         
         if (node) {
@@ -97054,7 +97054,7 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
     
     setupThumbnailViewIfAbsent: function() {
         if (!this.thumbnailView()) {
-            let  tv = DivView.clone().setDivClassName("BrowserRowThumbnailView")
+            let tv = DivView.clone().setDivClassName("BrowserRowThumbnailView")
     		tv.makeBackgroundNoRepeat()
             tv.makeBackgroundCentered()
             //tv.makeBackgroundContain()
@@ -97064,7 +97064,7 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
             this.addSubview(tv)
             
             // TODO: make this dynamic with subview for title & subtitle
-            let  offset = 60
+            let offset = 60
             this.titleView().setLeft(offset)
             this.subtitleView().setLeft(offset)
         }
@@ -97083,13 +97083,13 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
             
         
         if (node) {
-            let  b = this.isSelected()
+            let b = this.isSelected()
             this.titleView().setIsSelected(b)
             this.subtitleView().setIsSelected(b)
             this.noteView().setIsSelected(b)
             
             if (node) {
-                let  imageUrl = node.nodeThumbnailUrl()
+                let imageUrl = node.nodeThumbnailUrl()
                 if (imageUrl) {
                     this.setupThumbnailViewIfAbsent()
                     this.thumbnailView().verticallyAlignAbsoluteNow() // TODO: optimize this
@@ -97129,7 +97129,7 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
     },
 
     syncFromNode: function () {
-        let  node = this.node()
+        let node = this.node()
         this.titleView().setString(node.title())
         this.subtitleView().setString(node.subtitle())
         this.noteView().setString(this.node().note())
@@ -97254,10 +97254,10 @@ window.BrowserFieldRow = BrowserRow.extend().newSlots({
     updateSubviews: function() {   
 	    BrowserRow.updateSubviews.apply(this)
 	
-        let  node = this.node()
+        let node = this.node()
 
         if (node && node.nodeMinHeight()) {
-            let  e = this.element()
+            let e = this.element()
             if (node.nodeMinHeight() === -1) {
                 this.setHeight("auto")                
                 this.setPaddingBottom("calc(100% - 20px)")
@@ -97315,7 +97315,7 @@ window.ShelfView = NodeView.extend().newSlots({
         this._idsObservation = NotificationCenter.shared().newObservation().setName("didChangeIdentities").setObserver(this).watch()
         this._idObservation = NotificationCenter.shared().newObservation().setName("didChangeIdentity").setObserver(this).watch()
         
-        let  lids = PeerApp.shared().localIdentities()
+        let lids = PeerApp.shared().localIdentities()
         this.setNode(lids)
         this.scrollView().setNode(lids)
 
@@ -97382,7 +97382,7 @@ window.ShelfView = NodeView.extend().newSlots({
 
     /*
     selectFirstGroup: function() {
-        let  firstGroup = this.groups()[0]
+        let firstGroup = this.groups()[0]
         if (firstGroup) {
             firstGroup.uncompact()
         }        
@@ -97405,7 +97405,7 @@ window.ShelfView = NodeView.extend().newSlots({
     // create identity 
 
     addCreateIdentityGroup: function() {
-        let  item = this.newFooterItem()
+        let item = this.newFooterItem()
         //item.setIconName("add-user-white")
         item.setIconName("chat/new_identity")
         item.setTarget(this).setAction("createIdentity").setToolTip("Create New Identity")
@@ -97414,22 +97414,22 @@ window.ShelfView = NodeView.extend().newSlots({
     },
 
     createIdentity: function() {     
-        let  newLid = App.shared().localIdentities().add()
+        let newLid = App.shared().localIdentities().add()
         this.scheduleSyncFromNode()
         this.setNeedsToSelectLastItem(true)
     },
 
     clickLastGroupProfile: function() {
-        let  group = this.scrollView().subviews().last()
-        let  item = group.items()[0]
+        let group = this.scrollView().subviews().last()
+        let item = group.items()[0]
         item.onClick(null)
     },
 
     // settings 
 
     addSettingsGroup: function() {
-        let  item = this.newFooterItem()
-        let  settings = App.shared().about()
+        let item = this.newFooterItem()
+        let settings = App.shared().about()
         //item.setIconName("gear-filled-white")
         item.setIconName("chat/system")
         item.setDestinationNode(settings).setToolTip("Settings")   
@@ -97464,7 +97464,7 @@ window.ShelfItemView = NodeView.extend().newSlots({
 		
         this.setIsRegisteredForMouse()
 		
-        let  iv = DivView.clone().setDivClassName("ShelfIconView")
+        let iv = DivView.clone().setDivClassName("ShelfIconView")
         this.setIconView(iv)
         this.addSubview(iv)
         iv.makeBackgroundNoRepeat()
@@ -97487,14 +97487,14 @@ window.ShelfItemView = NodeView.extend().newSlots({
     },
 
     setupBadgeView: function() {	
-        let  v = DivView.clone().setDivClassName("ShelfBadgeView")
+        let v = DivView.clone().setDivClassName("ShelfBadgeView")
         this.setBadgeView(v)
 	    this.addSubview(v)
         return this
     },
 	
     setupMarkerView: function() {	
-        let  v = DivView.clone().setDivClassName("ShelfMarkerView")
+        let v = DivView.clone().setDivClassName("ShelfMarkerView")
         this.setMarkerView(v)
 	    this.addSubview(v)
         return this
@@ -97508,10 +97508,10 @@ window.ShelfItemView = NodeView.extend().newSlots({
     },
 
     syncFromNode: function() {
-        let  node = this.node()
+        let node = this.node()
         this.setDestinationNode(node)
-        let  iconUrl = node.shelfIconUrl()
-        let  iconName = node.shelfIconName()
+        let iconUrl = node.shelfIconUrl()
+        let iconName = node.shelfIconName()
 		
         if (iconUrl) {
             this.setImageDataUrl(iconUrl)
@@ -97541,15 +97541,15 @@ window.ShelfItemView = NodeView.extend().newSlots({
     },
     
     setItemWidthHeight: function(itemWidth, itemHeight) {
-        //let  itemWidth = 78
-        //let  itemHeight = 70
+        //let itemWidth = 78
+        //let itemHeight = 70
 		
         this.setMinAndMaxWidth(itemWidth)
         this.setMinAndMaxHeight(itemHeight)
 		
-        let  iv = this.iconView()
-        let  iconWidth  = itemWidth  * 0.7
-        let  iconHeight = itemHeight * 0.7
+        let iv = this.iconView()
+        let iconWidth  = itemWidth  * 0.7
+        let iconHeight = itemHeight * 0.7
         iv.setPosition("relative")
         iv.setLeft((itemWidth-iconWidth)/2)
         iv.setTop((itemHeight-iconHeight)/2)
@@ -97573,7 +97573,7 @@ window.ShelfItemView = NodeView.extend().newSlots({
     */
 
     setImageDataUrl: function(imageDataUrl) {
-        let  iv = this.iconView()
+        let iv = this.iconView()
         
         if (imageDataUrl) {
     		iv.setBackgroundImageUrlPath(imageDataUrl)        
@@ -97587,7 +97587,7 @@ window.ShelfItemView = NodeView.extend().newSlots({
     },
 	
     setIconName: function(name) {
-        let  iv = this.iconView()
+        let iv = this.iconView()
         iv.setBackgroundImageUrlPath(this.pathForIconName(name))        
         iv.setBackgroundSizeWH(24, 24)
         this.setItemWidthHeight(78, 45)
@@ -97606,7 +97606,7 @@ window.ShelfItemView = NodeView.extend().newSlots({
 
         }
 
-        let  destNode = this.destinationNode()
+        let destNode = this.destinationNode()
         if (destNode) {
             App.shared().browser().setNode(destNode).scheduleSyncFromNode() 
         }
@@ -97635,7 +97635,7 @@ window.ShelfItemGroupView = NodeView.extend().newSlots({
         this.turnOffUserSelect()
         this.setTransition("all 0.35s")
 		
-        let  itemSize = 80
+        let itemSize = 80
         this.setMinAndMaxWidth(itemSize)
         this.setOverrideSubviewProto(ShelfItemView)
         return this
@@ -97646,7 +97646,7 @@ window.ShelfItemGroupView = NodeView.extend().newSlots({
     },
     /*
     newSubviewForSubnode: function(aSubnode) {
-        let  newSubview = NodeView.newSubviewForSubnode(aSubnode)
+        let newSubview = NodeView.newSubviewForSubnode(aSubnode)
         newSubview.setOverrideSubviewProto(ShelfItemView)
         return newSubview
     },
@@ -97699,7 +97699,7 @@ window.ShelfItemGroupView = NodeView.extend().newSlots({
     },
 
     firstItemHeight: function() {
-        let  fs = this.firstItem()    
+        let fs = this.firstItem()    
         return fs ? fs.clientHeight() : 0
     },
     
@@ -97727,7 +97727,7 @@ window.ShelfItemGroupView = NodeView.extend().newSlots({
         if (this.isCompacted()) {
         	this.setMinAndMaxHeight(this.firstItemHeight())
         } else {
-            let  newHeight = this.sumOfSubviewHeights()
+            let newHeight = this.sumOfSubviewHeights()
             this.setMinAndMaxHeight(newHeight)			
         }
         return this
@@ -97753,7 +97753,7 @@ window.ShelfItemGroupView = NodeView.extend().newSlots({
 
             this.showCompaction()
 
-            let  fs = this.firstItem()
+            let fs = this.firstItem()
             if (fs) {
                 fs.select()
             }
@@ -97789,7 +97789,7 @@ window.ShelfFooterView = DivView.extend().newSlots({
         this.turnOffUserSelect()
         this.setTransition("all 0.35s")
 		
-        let  itemSize = 80
+        let itemSize = 80
         this.setMinAndMaxWidth(itemSize)
 
         return this
@@ -97833,7 +97833,7 @@ window.ShelfFooterView = DivView.extend().newSlots({
             }
         })
         
-        let  node = clickedItem.destinationNode()
+        let node = clickedItem.destinationNode()
         if (node) {
             //App.shared().browser().selectNode(node)
             App.shared().browser().setNode(node).scheduleSyncFromNode() // this.browser().syncFromNode()
@@ -97843,14 +97843,14 @@ window.ShelfFooterView = DivView.extend().newSlots({
     },
     
     newShelfItem: function() {
-        let  item = ShelfItemView.clone()
+        let item = ShelfItemView.clone()
         this.addItem(item)
         item.showUnselected()
         return item
     },
     
     firstItemHeight: function() {
-        let  fs = this.firstItem()    
+        let fs = this.firstItem()    
         return fs ? fs.clientHeight() : 0
     },
     
@@ -97882,9 +97882,9 @@ window.ShelfFooterView = DivView.extend().newSlots({
     uncompact: function() {
         if (this._isCompacted) {
             this._isCompacted = false
-            let  fs = this.firstItem()
+            let fs = this.firstItem()
             if (fs) {
-                let  newHeight = this.sumOfSubviewHeights()
+                let newHeight = this.sumOfSubviewHeights()
                 this.setMinAndMaxHeight(newHeight)
                 fs.select()
             }
@@ -97959,7 +97959,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
     },
 
     createValueView: function() {
-        let  tf = TextField.clone().setDivClassName("BMFieldValueView")
+        let tf = TextField.clone().setDivClassName("BMFieldValueView")
         //tf.setSelectAllOnDoubleClick(true)
         return tf
     },
@@ -97980,7 +97980,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         //console.log(this.typeId() + ".syncValueViewToNode " + this.node().type())
 	    if (this.node().type() === "BMBoolField" && this.valueView().type() != "BoolView") {
 	        //console.log("syncValueViewToNode setup bool view")
-	        let  boolView = BoolView.clone()
+	        let boolView = BoolView.clone()
             this.removeSubview(this.valueView())  
             this.setValueView(boolView)
             this.addSubview(this.valueView())  
@@ -97997,9 +97997,9 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         this.node().prepareToSyncToView()
         this.syncValueViewToNode() // (lazy) set up the value view to match the field's type
 
-        let  node = this.node()
-        let  keyView = this.keyView()
-        let  valueView = this.valueView()
+        let node = this.node()
+        let keyView = this.keyView()
+        let valueView = this.valueView()
 		
         if (node.isVisible()) {
             this.setDisplay("block")
@@ -98009,7 +98009,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
 
         keyView.setInnerHTML(this.visibleKey())
 
-        let  newValue = this.visibleValue()
+        let newValue = this.visibleValue()
 		
         /*
         console.log("")
@@ -98044,7 +98044,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
 		
         // change color if value is invalid
 		
-        let  color = valueView.color()
+        let color = valueView.color()
 		
         if (node.valueError()) {
             valueView.setColor(this.errorColor())
@@ -98079,7 +98079,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
     },
     
     syncToNode: function () {
-        let  node = this.node()
+        let node = this.node()
 
         if (node.keyIsEditable()) {
         	node.setKey(this.keyView().value())
@@ -98105,10 +98105,10 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
     updateSubviews: function() {
         BrowserFieldRow.updateSubviews.apply(this)
 		
-        let  node = this.node()
+        let node = this.node()
 
         if (node && node.nodeMinHeight()) {
-            let  e = this.element()
+            let e = this.element()
             if (node.nodeMinHeight() === -1) {
                 this.setHeight("auto")
                 //e.style.height = "auto"
@@ -98166,7 +98166,7 @@ window.BMActionFieldRowView = BrowserRow.extend().newSlots({
     updateSubviews: function () {	
         BrowserRow.updateSubviews.apply(this)
 		
-        let  bv = this.buttonView()
+        let bv = this.buttonView()
         bv.setInnerHTML(this.node().key())
         
         if (this.node().isEnabled()) {
@@ -98280,7 +98280,7 @@ window.BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
     },
 
     syncFromNode: function () {
-        let  field = this.node()
+        let field = this.node()
 
         if (this.imageWellView()) {
             //console.log("field = ", field.type())
@@ -98294,7 +98294,7 @@ window.BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
     },
 
     syncToNode: function () {
-        let  field = this.node()
+        let field = this.node()
 		
         //console.log(this.typeId() + ".syncToNode() imageDataURLs: ", this.dataUrls())
 		
@@ -98313,7 +98313,7 @@ window.BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
     },
     
     updateKeyView: function() {
-        let  opacity = 1
+        let opacity = 1
         
         if(this.node().onlyShowsKeyWhenEmpty()) {
 		    opacity = this.dataUrls().length ? 0 : 1
@@ -98426,8 +98426,8 @@ window.BMOptionsFieldRowView = BMFieldRowView.extend().newSlots({
     },
 	
     currentValidValues: function() {
-        let  validValues = this.node().validValues()
-        let  value = this.currentValue().strip()
+        let validValues = this.node().validValues()
+        let value = this.currentValue().strip()
 		
         if (value.length) {
             validValues = validValues.select(function (v) { return v.beginsWith(value) || v.contains(value) })
@@ -98445,10 +98445,10 @@ window.BMOptionsFieldRowView = BMFieldRowView.extend().newSlots({
     },
 	
     onDidEdit: function() {
-        let  returnValue = BMFieldRowView.onDidEdit.apply(this)
+        let returnValue = BMFieldRowView.onDidEdit.apply(this)
         //	console.log(this.typeId() + " onDidEdit")
 		
-        let  currentValidValues = this.currentValidValues()
+        let currentValidValues = this.currentValidValues()
 		
         if (currentValidValues.length === 1 && currentValidValues[0] == this.currentValue()) {
             this.close()
@@ -98518,8 +98518,8 @@ window.BMOptionsTableView = DivView.extend().newSlots({
         this.setOpacity(0)
 		
         this._validValues.forEach((v) => {
-            let  optionRow = DivView.clone().setDivClassName("BMOptionsTableRowView")//.setTarget(this).setAction("select")
-            let  optionColumn = DivView.clone().setDivClassName("BMOptionsTableColumnView").setInnerHTML(v).setTarget(this).setAction("select")
+            let optionRow = DivView.clone().setDivClassName("BMOptionsTableRowView")//.setTarget(this).setAction("select")
+            let optionColumn = DivView.clone().setDivClassName("BMOptionsTableColumnView").setInnerHTML(v).setTarget(this).setAction("select")
             optionRow.addSubview(optionColumn)
             optionColumn.validValue = v
             this.addSubview(optionRow)
@@ -98549,21 +98549,21 @@ window.BMOptionsTableView = DivView.extend().newSlots({
     },
 	
     adjustOptionWidths: function() {
-        let  maxWidth = this.maxOptionTextWidth()
+        let maxWidth = this.maxOptionTextWidth()
 		
-        let  leftPad = 10
-        let  rightPad = 10
+        let leftPad = 10
+        let rightPad = 10
 		
         this.setOptionWidths(maxWidth)
 		
-        let  subviewsPerRow = 1
+        let subviewsPerRow = 1
 		
         if (this.subviews().length > 10) {
             subviewsPerRow = Math.ceil(Math.sqrt(this.subviews().length))
         }
 		
-        let  fullWidth = maxWidth * subviewsPerRow 
-        let  w = fullWidth + leftPad + rightPad
+        let fullWidth = maxWidth * subviewsPerRow 
+        let w = fullWidth + leftPad + rightPad
 		
         //this.setMinAndMaxWidth(w)
 		
@@ -98574,8 +98574,8 @@ window.BMOptionsTableView = DivView.extend().newSlots({
             subview.setMinAndMaxWidth(w)
         })
 		
-        //let  rowCount = this.subviews().length / subviewsPerRow
-        //let  h = rowCount * 26
+        //let rowCount = this.subviews().length / subviewsPerRow
+        //let h = rowCount * 26
         //console.log("maxHeight = ", h)
         //this.setMinAndMaxHeight(h)
 		
@@ -98642,7 +98642,7 @@ window.BMPointerFieldRowView = BrowserTitledRow.extend().newSlots({
     updateSubviews: function () {	
         BrowserTitledRow.updateSubviews.apply(this)
 		
-        let  node = this.node()
+        let node = this.node()
 
         if (this.isSelected()) {
             this.noteView().setOpacity(1)	
@@ -99222,13 +99222,13 @@ window.CloseableNodeView = NodeView.extend().newSlots({
     },
     
     close: function() {
-        let  seconds = 0.3
+        let seconds = 0.3
 		
         this.collapse()
         
         setTimeout( () => { 
             //this.removeCloseButton()
-            let  parentView = this.parentView()
+            let parentView = this.parentView()
             //this.removeFromParentView()
             
             this.node().removeFromParentNode()
@@ -99502,7 +99502,7 @@ window.AtomNodeView = NodeView.extend().newSlots({
     },
 
     setupHeadView: function() {
-        let  v = AtomPaneView.clone()
+        let v = AtomPaneView.clone()
         this.setHeadView(v)
         v.setDivClassName("AtomHeadView")
         v.setPosition("relative")
@@ -99511,7 +99511,7 @@ window.AtomNodeView = NodeView.extend().newSlots({
     },
 
     setupDividerView: function() {
-        let  v = DragBarView.clone()
+        let v = DragBarView.clone()
         this.setDividerView(v)
         //v.setDivClassName("AtomDividerView")
         v.setPosition("relative")
@@ -99521,7 +99521,7 @@ window.AtomNodeView = NodeView.extend().newSlots({
     },
 
     setupTailView: function() {
-        let  v = AtomPaneView.clone()
+        let v = AtomPaneView.clone()
         this.setTailView(v)
         v.setDivClassName("AtomTailView")
         v.setPosition("relative")
@@ -99545,7 +99545,7 @@ window.AtomNodeView = NodeView.extend().newSlots({
         // vertical divider
 
         if (true) {
-            let  h = this.headView()
+            let h = this.headView()
             h.setDisplay("block")
             h.setWidthPercentage(100)
             h.setHeightPxNumber(this.headHeight())
@@ -99625,7 +99625,7 @@ window.AtomNodeView = NodeView.extend().newSlots({
     },
 
     viewDict: function() { // move to view?
-        let  dict = {}
+        let dict = {}
         this.viewDictSlots().forEach((slotName) => {
             let value = this[slotName].apply(this)
             dict[slotName] = value
@@ -99679,13 +99679,13 @@ window.AtomNodeView = NodeView.extend().newSlots({
     },
     
     close: function() {
-        let  seconds = 0.3
+        let seconds = 0.3
 		
         this.collapse()
         
         setTimeout( () => { 
             //this.removeCloseButton()
-            let  parentView = this.parentView()
+            let parentView = this.parentView()
             //this.removeFromParentView()
             
             this.node().removeFromParentNode()

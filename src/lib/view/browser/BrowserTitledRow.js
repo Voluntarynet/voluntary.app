@@ -48,7 +48,7 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
     
     setupThumbnailViewIfAbsent: function() {
         if (!this.thumbnailView()) {
-            let  tv = DivView.clone().setDivClassName("BrowserRowThumbnailView")
+            let tv = DivView.clone().setDivClassName("BrowserRowThumbnailView")
     		tv.makeBackgroundNoRepeat()
             tv.makeBackgroundCentered()
             //tv.makeBackgroundContain()
@@ -58,7 +58,7 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
             this.addSubview(tv)
             
             // TODO: make this dynamic with subview for title & subtitle
-            let  offset = 60
+            let offset = 60
             this.titleView().setLeft(offset)
             this.subtitleView().setLeft(offset)
         }
@@ -77,13 +77,13 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
             
         
         if (node) {
-            let  b = this.isSelected()
+            let b = this.isSelected()
             this.titleView().setIsSelected(b)
             this.subtitleView().setIsSelected(b)
             this.noteView().setIsSelected(b)
             
             if (node) {
-                let  imageUrl = node.nodeThumbnailUrl()
+                let imageUrl = node.nodeThumbnailUrl()
                 if (imageUrl) {
                     this.setupThumbnailViewIfAbsent()
                     this.thumbnailView().verticallyAlignAbsoluteNow() // TODO: optimize this
@@ -123,7 +123,7 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
     },
 
     syncFromNode: function () {
-        let  node = this.node()
+        let node = this.node()
         this.titleView().setString(node.title())
         this.subtitleView().setString(node.subtitle())
         this.noteView().setString(this.node().note())

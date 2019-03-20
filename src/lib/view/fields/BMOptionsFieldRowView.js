@@ -93,8 +93,8 @@ window.BMOptionsFieldRowView = BMFieldRowView.extend().newSlots({
     },
 	
     currentValidValues: function() {
-        let  validValues = this.node().validValues()
-        let  value = this.currentValue().strip()
+        let validValues = this.node().validValues()
+        let value = this.currentValue().strip()
 		
         if (value.length) {
             validValues = validValues.select(function (v) { return v.beginsWith(value) || v.contains(value) })
@@ -112,10 +112,10 @@ window.BMOptionsFieldRowView = BMFieldRowView.extend().newSlots({
     },
 	
     onDidEdit: function() {
-        let  returnValue = BMFieldRowView.onDidEdit.apply(this)
+        let returnValue = BMFieldRowView.onDidEdit.apply(this)
         //	console.log(this.typeId() + " onDidEdit")
 		
-        let  currentValidValues = this.currentValidValues()
+        let currentValidValues = this.currentValidValues()
 		
         if (currentValidValues.length === 1 && currentValidValues[0] == this.currentValue()) {
             this.close()

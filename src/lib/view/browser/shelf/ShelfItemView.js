@@ -24,7 +24,7 @@ window.ShelfItemView = NodeView.extend().newSlots({
 		
         this.setIsRegisteredForMouse()
 		
-        let  iv = DivView.clone().setDivClassName("ShelfIconView")
+        let iv = DivView.clone().setDivClassName("ShelfIconView")
         this.setIconView(iv)
         this.addSubview(iv)
         iv.makeBackgroundNoRepeat()
@@ -47,14 +47,14 @@ window.ShelfItemView = NodeView.extend().newSlots({
     },
 
     setupBadgeView: function() {	
-        let  v = DivView.clone().setDivClassName("ShelfBadgeView")
+        let v = DivView.clone().setDivClassName("ShelfBadgeView")
         this.setBadgeView(v)
 	    this.addSubview(v)
         return this
     },
 	
     setupMarkerView: function() {	
-        let  v = DivView.clone().setDivClassName("ShelfMarkerView")
+        let v = DivView.clone().setDivClassName("ShelfMarkerView")
         this.setMarkerView(v)
 	    this.addSubview(v)
         return this
@@ -68,10 +68,10 @@ window.ShelfItemView = NodeView.extend().newSlots({
     },
 
     syncFromNode: function() {
-        let  node = this.node()
+        let node = this.node()
         this.setDestinationNode(node)
-        let  iconUrl = node.shelfIconUrl()
-        let  iconName = node.shelfIconName()
+        let iconUrl = node.shelfIconUrl()
+        let iconName = node.shelfIconName()
 		
         if (iconUrl) {
             this.setImageDataUrl(iconUrl)
@@ -101,15 +101,15 @@ window.ShelfItemView = NodeView.extend().newSlots({
     },
     
     setItemWidthHeight: function(itemWidth, itemHeight) {
-        //let  itemWidth = 78
-        //let  itemHeight = 70
+        //let itemWidth = 78
+        //let itemHeight = 70
 		
         this.setMinAndMaxWidth(itemWidth)
         this.setMinAndMaxHeight(itemHeight)
 		
-        let  iv = this.iconView()
-        let  iconWidth  = itemWidth  * 0.7
-        let  iconHeight = itemHeight * 0.7
+        let iv = this.iconView()
+        let iconWidth  = itemWidth  * 0.7
+        let iconHeight = itemHeight * 0.7
         iv.setPosition("relative")
         iv.setLeft((itemWidth-iconWidth)/2)
         iv.setTop((itemHeight-iconHeight)/2)
@@ -133,7 +133,7 @@ window.ShelfItemView = NodeView.extend().newSlots({
     */
 
     setImageDataUrl: function(imageDataUrl) {
-        let  iv = this.iconView()
+        let iv = this.iconView()
         
         if (imageDataUrl) {
     		iv.setBackgroundImageUrlPath(imageDataUrl)        
@@ -147,7 +147,7 @@ window.ShelfItemView = NodeView.extend().newSlots({
     },
 	
     setIconName: function(name) {
-        let  iv = this.iconView()
+        let iv = this.iconView()
         iv.setBackgroundImageUrlPath(this.pathForIconName(name))        
         iv.setBackgroundSizeWH(24, 24)
         this.setItemWidthHeight(78, 45)
@@ -166,7 +166,7 @@ window.ShelfItemView = NodeView.extend().newSlots({
 
         }
 
-        let  destNode = this.destinationNode()
+        let destNode = this.destinationNode()
         if (destNode) {
             App.shared().browser().setNode(destNode).scheduleSyncFromNode() 
         }

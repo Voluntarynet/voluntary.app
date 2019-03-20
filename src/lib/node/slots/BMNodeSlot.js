@@ -64,8 +64,8 @@ window.BMNodeSlot = ideal.Proto.extend().newSlots({
 	
     setValue: function(v) { // called by View on edit
         //console.log("setValue '" + v + "'")
-        let  target = this.target()
-        let  setter = this.setterNameForSlot(this.valueMethod())
+        let target = this.target()
+        let setter = this.setterNameForSlot(this.valueMethod())
         if (!target[setter]) {
             console.warn("WARNING target = " + target.type() + " setter = '" + setter + "' missing")
         }
@@ -77,16 +77,16 @@ window.BMNodeSlot = ideal.Proto.extend().newSlots({
     },
 	
     value: function() {
-        let  target = this.target()
-        let  getter = this.valueMethod()
+        let target = this.target()
+        let getter = this.valueMethod()
         //console.log("target = " + target.type() + " getter = '" + getter + "'")
-        let  value = target[getter].apply(target)
+        let value = target[getter].apply(target)
         return value
     },
 	
     note: function() {
-        let  target = this.target()
-        let  noteGetter = this.noteMethod()
+        let target = this.target()
+        let noteGetter = this.noteMethod()
         if (target && noteGetter) {
             return target[noteGetter].apply(target)
         }

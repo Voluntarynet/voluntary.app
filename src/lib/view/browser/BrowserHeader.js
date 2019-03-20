@@ -19,13 +19,13 @@ window.BrowserHeader = NodeView.extend().newSlots({
         NodeView.init.apply(this)
         //this.setOwnsView(false)
 
-        let  backArrowView = DivView.clone().setDivClassName("BackArrow").setTarget(this).setAction("didHitBackArrow")
+        let backArrowView = DivView.clone().setDivClassName("BackArrow").setTarget(this).setAction("didHitBackArrow")
         backArrowView.setBackgroundImageUrlPath(this.pathForIconName("left"))        
         backArrowView.setBackgroundSizeWH(10, 10)
         backArrowView.setOpacity(0.6)
         this.setBackArrowView(backArrowView)
 		
-        let  titleView = DivView.clone().setDivClassName("BrowserHeaderTitleView NodeView DivView").setInnerHTML("").setUserSelect("none")
+        let titleView = DivView.clone().setDivClassName("BrowserHeaderTitleView NodeView DivView").setInnerHTML("").setUserSelect("none")
         this.setTitleView(titleView)
 		
         this.setRightActionsView(DivView.clone().setDivClassName("BrowserFooterRightActionsView"))
@@ -67,7 +67,7 @@ window.BrowserHeader = NodeView.extend().newSlots({
     },
 
     syncFromNode: function() {
-        let  node = this.node()
+        let node = this.node()
         this.removeAllSubviews()
         
         if (node && this.browser()) {
@@ -82,7 +82,7 @@ window.BrowserHeader = NodeView.extend().newSlots({
 
             node.actions().forEach((action) => {
                 if (this.showsAction(action)) {
-	                let  button = BrowserHeaderAction.clone()
+	                let button = BrowserHeaderAction.clone()
 	                button.setTarget(node).setAction(action)
 	                button.setCanClick(this.nodeHasAction(action))
 	                this.addSubview(button).syncFromNode()

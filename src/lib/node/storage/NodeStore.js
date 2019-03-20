@@ -20,7 +20,7 @@
 		
         Example:
  
-				let  people = NodeStore.rootInstanceWithPidForProto("_people", PeopleNode) 
+				let people = NodeStore.rootInstanceWithPidForProto("_people", PeopleNode) 
 		
 		This instantiates the object if it's not persisted, loads it if it is, and returns any already 
 		unpersisted instance if there is one.
@@ -56,11 +56,11 @@
 
         Example use:
     
-                let  store = NodeStore.clone().setFolderName("store")
+                let store = NodeStore.clone().setFolderName("store")
             
             // need to define a root
             
-                let  root = BMStorableNode.clone()
+                let root = BMStorableNode.clone()
                 store.setRootObject(root)
                 store.load()
             
@@ -68,7 +68,7 @@
             // or call scheduleSyncToStore() on it, it will be marked as needing to be persisted in the
             // next event loop
             
-                let  test = BMNode.clone()
+                let test = BMNode.clone()
                 root.this.addSubnode(test) // this marks root as dirty
                 test.this.addSubnode(foo) // this marks test as dirty
                         
@@ -122,7 +122,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         if (!this.isOpen()) {
             return "closed"
         }
-        let  b = this.sdb().totalBytes()
+        let b = this.sdb().totalBytes()
         return this.sdb().size() + " objects, " + ByteFormatter.clone().setValue(b).formattedValue()
     },
 
@@ -177,7 +177,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         // don't use pid for these keys so we can
         // use pid to see if the obj gets referrenced when walked from a stored node
 
-        let  objId = obj.uniqueId()
+        let objId = obj.uniqueId()
         if (!(objId in this._dirtyObjects)) {
 
             /*
@@ -254,19 +254,19 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         // it's ok to add dirty objects via setPid() while this is
         // working as it will pick it up and won't cause a loop
 
-        let  totalStoreCount = 0
+        let totalStoreCount = 0
 
-        let  justStoredPids = {}
+        let justStoredPids = {}
 
         while (true) {
 
-            let  thisLoopStoreCount = 0
-            let  dirtyBucket = this._dirtyObjects
+            let thisLoopStoreCount = 0
+            let dirtyBucket = this._dirtyObjects
             this._dirtyObjects = {}
 
             Object.keys(dirtyBucket).forEach((objId) => {
-                let  obj = dirtyBucket[objId]
-                let  pid = obj.pid()
+                let obj = dirtyBucket[objId]
+                let pid = obj.pid()
 
                 if (justStoredPids[pid]) {
                     throw new Error("attempt to double store " + pid)
@@ -321,14 +321,14 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         this.debugLog("storeObject(" + obj.pid() + ")")
         this.assertIsWritable()
 
-        let  aDict = obj.nodeDict()
+        let aDict = obj.nodeDict()
 
         if (obj.willStore) {
             obj.willStore(aDict)
         }
 
 
-        let  serializedString = JSON.stringify(aDict)
+        let serializedString = JSON.stringify(aDict)
         this.sdb().atPut(obj.pid(), serializedString)
 
         /*
@@ -366,7 +366,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 
     loadObject: function (obj) {
         try {
-            let  nodeDict = this.nodeDictAtPid(obj.pid())
+            let nodeDict = this.nodeDictAtPid(obj.pid())
             if (nodeDict) {
                 //obj.setExistsInStore(true)
                 obj.setNodeDict(nodeDict)
@@ -383,7 +383,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     },
 
     nodeDictAtPid: function (pid) {
-        let  v = this.sdb().at(pid)
+        let v = this.sdb().at(pid)
         if (v == null) {
             return null
         }
@@ -401,7 +401,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 
         //console.log("NodeStore.objectForPid(" + pid + ")")
 
-        let  activeObj = this.activeObjectsDict()[pid]
+        let activeObj = this.activeObjectsDict()[pid]
         if (activeObj) {
             //this.debugLog("objectForPid(" + pid + ") found in mem")
             return activeObj
@@ -409,9 +409,9 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 
         //this.debugLog("objectForPid(" + pid + ")")
 
-        let  nodeDict = this.nodeDictAtPid(pid)
+        let nodeDict = this.nodeDictAtPid(pid)
         if (!nodeDict) {
-            let  error = "missing pid '" + pid + "'"
+            let error = "missing pid '" + pid + "'"
             console.warn("WARNING: " + error)
 
             // TODO: add a modal panel to allow user to choose to export and clear data
@@ -423,12 +423,12 @@ window.NodeStore = ideal.Proto.extend().newSlots({
             //throw new Error(error)
         }
 
-        let  proto = window[nodeDict.type]
+        let proto = window[nodeDict.type]
         if (!proto) {
             throw new Error("missing proto '" + nodeDict.type + "'")
         }
 
-        let  obj = proto.clone()
+        let obj = proto.clone()
 
         if (!obj.justSetPid) {
             throw new Error("stored object of type '" + nodeDict.type + "' missing justSetPid() method")
@@ -500,7 +500,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     },
 
     unrefValueIfNeeded: function (v) {
-        let  pid = this.pidIfRef(v)
+        let pid = this.pidIfRef(v)
 
         if (pid) {
             return this.objectForPid(pid)
@@ -514,13 +514,13 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     },
 
     dictIsObjRef: function (dict) {
-        let  k = this.objRefKey()
+        let k = this.objRefKey()
         return typeof (dict[k]) === "string"
     },
 
     refForObject: function (obj) {
-        let  k = this.objRefKey()
-        let  ref = {}
+        let k = this.objRefKey()
+        let ref = {}
 
         if (obj === null && typeof (obj) === "object") {
             ref[k] = "null"
@@ -532,8 +532,8 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     },
 
     objectForRef: function (ref) {
-        let  k = this.objRefKey()
-        let  pid = ref[k]
+        let k = this.objRefKey()
+        let pid = ref[k]
         if (pid === "null") {
             return null
         }
@@ -542,12 +542,12 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     },
 
     pidRefsFromPid: function (pid) {
-        let  nodeDict = this.nodeDictAtPid(pid)
+        let nodeDict = this.nodeDictAtPid(pid)
         if (!nodeDict) {
             return []
         }
 
-        let  proto = window[nodeDict.type]
+        let proto = window[nodeDict.type]
         if (!proto) {
             console.warn(this.type() + "pidRefsFromPid(" + pid + ") missing type " + nodeDict.type)
             proto = BMStorableNode
@@ -558,15 +558,15 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 
     /*
     pidRefsFromNodeDict: function(nodeDict) {
-        let  pids = []
+        let pids = []
 
         if (nodeDict) {
             // property pids
 
 			Object.keys(nodeDict).forEach((k) => {
 
-                    let  v = nodeDict[k]
-                    let  childPid = this.pidIfRef(v)
+                    let v = nodeDict[k]
+                    let childPid = this.pidIfRef(v)
                     if (childPid) {
                         pids.push(childPid);
                     }
@@ -622,7 +622,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 
         //this.markActiveObjects() // not needed if assert(!this.hasDirtyObjects()) is above
 
-        let  deleteCount = this.sweep()
+        let deleteCount = this.sweep()
         this._marked = null
 
         this.debugLog("--- end collect - collected " + deleteCount + " pids ---")
@@ -645,7 +645,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         }
         this._marked[pid] = true
 
-        let  refPids = this.pidRefsFromPid(pid)
+        let refPids = this.pidRefsFromPid(pid)
         //this.debugLog("markPid " + pid + " w refs " + JSON.stringify(refPids))
 
         refPids.forEach((refPid) => {
@@ -660,8 +660,8 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         // delete all unmarked records
         this.sdb().begin()
 
-        let  deleteCount = 0
-        let  pids = this.sdb().keys()
+        let deleteCount = 0
+        let pids = this.sdb().keys()
 
         pids.forEach((pid) => {
             if (this._marked[pid] != true) {
@@ -721,14 +721,14 @@ window.NodeStore = ideal.Proto.extend().newSlots({
             return
         }
 
-        let  stringReplacer = function (value) {
+        let stringReplacer = function (value) {
             if (typeof (value) === "string" && value.length > 100) {
                 return value.substring(0, 100) + "...";
             }
             return value
         }
 
-        let  replacer = function (key, value) {
+        let replacer = function (key, value) {
             value = stringReplacer(value)
 
             if (typeof(value) === "array") {
@@ -737,8 +737,8 @@ window.NodeStore = ideal.Proto.extend().newSlots({
             return value;
         }
 
-        let  indent = "   ".repeat(level)
-        let  nodeDict = this.nodeDictAtPid(pid)
+        let indent = "   ".repeat(level)
+        let nodeDict = this.nodeDictAtPid(pid)
         console.log(indent + pid + ": " + JSON.stringify(nodeDict, replacer, 2 + indent.length))
 
         if (nodeDict.children) {
@@ -763,16 +763,16 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     },
 
     showActiveObjects: function () {
-        let  active = this.activeObjectsDict()
+        let active = this.activeObjectsDict()
         console.log("active objects: ")
 
         Object.keys(active).forEach((pid) => {
-            let  obj = active[pid]
+            let obj = active[pid]
             console.log("    " + pid + ": ", Object.keys(obj.nodeRefPids()))
         })
 
-        let  pid = "_localIdentities"
-        let  obj = active[pid]
+        let pid = "_localIdentities"
+        let obj = active[pid]
         //debugger;
         console.log("    " + pid + ": ", Object.keys(obj.nodeRefPids()))
 
@@ -780,12 +780,12 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     },
 
     objectIsReferencedByActiveObjects: function (aNode) {
-        let  nodePid = aNode.pid()
-        let  active = this.activeObjectsDict()
+        let nodePid = aNode.pid()
+        let active = this.activeObjectsDict()
 
-        let  result = Object.keys(active).detect((pid) => {
-            let  obj = active[pid]
-            let  match = (!(obj === aNode)) && obj.nodeReferencesPid(nodePid)
+        let result = Object.keys(active).detect((pid) => {
+            let obj = active[pid]
+            let match = (!(obj === aNode)) && obj.nodeReferencesPid(nodePid)
             return match
         }) != null
 

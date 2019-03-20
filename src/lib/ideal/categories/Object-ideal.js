@@ -44,7 +44,7 @@ Object.lookupPath = function (obj, path) {
 },
 
 Object.perform = function (obj, name) {
-    if (obj !== undefined && obj !== null && obj[name] && typeof (obj[name]) === "function") {
+    if (obj !== undefined && obj !== null && obj[name] && typeof(obj[name]) === "function") {
         let args = Array.prototype.slice.call(arguments).slice(2);
         return obj[name].apply(obj, args);
     } else {
@@ -72,7 +72,7 @@ Object.pop = function (obj) {
 // --- deep keys ---
 
 Object.atDeepKey = function (obj, key, seenSet) {
-    if (typeof (obj) != "object" /* || (Object.getPrototypeOf(obj) != Object.prototype)*/) {
+    if (typeof(obj) != "object" /* || (Object.getPrototypeOf(obj) != Object.prototype)*/) {
         return null;
     }
 
@@ -112,7 +112,7 @@ Object.atDeepKey = function (obj, key, seenSet) {
 }
 
 Object.allAtDeepKey = function (obj, key) {
-    if (typeof (obj) !== "object" || (Object.getPrototypeOf(obj) != Object.prototype)) {
+    if (typeof(obj) !== "object" || (Object.getPrototypeOf(obj) != Object.prototype)) {
         return [];
     }
 
@@ -133,11 +133,11 @@ Object.allAtDeepKey = function (obj, key) {
 }
 
 Object.atPath = function (obj, pathList) {
-    if (typeof (pathList) === "string") {
+    if (typeof(pathList) === "string") {
         pathList = pathList.split("/");
     }
 
-    if (typeof (obj) !== "object" || (Object.getPrototypeOf(obj) != Object.prototype) || !pathList.length) {
+    if (typeof(obj) !== "object" || (Object.getPrototypeOf(obj) != Object.prototype) || !pathList.length) {
         return null;
     }
 

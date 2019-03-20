@@ -67,7 +67,7 @@ class JSImporterBase {
     }
 
     newSlot(slotName, initialValue) {
-        if (typeof (slotName) != "string") {
+        if (typeof(slotName) != "string") {
             throw new Error("slot name must be a string"); 
         }
 

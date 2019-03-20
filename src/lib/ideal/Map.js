@@ -47,7 +47,7 @@ window.ideal.Map = class Map extends ProtoClass {
 
     mapAt (k) {
         let v = this.at(k);
-        if (typeof (v) !== "object" || (Object.getPrototypeOf(v) != Object.prototype)) {
+        if (typeof(v) !== "object" || (Object.getPrototypeOf(v) != Object.prototype)) {
             return v;
         }
         else {

@@ -123,7 +123,7 @@ class ProtoClass {
     }
 
     newSlot(slotName, initialValue) {
-        if (typeof (slotName) != "string") {
+        if (typeof(slotName) != "string") {
             throw new Error("name must be a string");
         }
 
@@ -295,7 +295,7 @@ class ProtoClass {
     }
 
     canPerform (message) {
-        return this[message] && typeof (this[message]) === "function";
+        return this[message] && typeof(this[message]) === "function";
     }
 
     performWithArgList (message, argList) {

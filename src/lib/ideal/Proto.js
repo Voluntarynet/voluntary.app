@@ -180,7 +180,7 @@ Proto.setSlots({
     },
 
     newSlot: function (slotName, initialValue) {
-        if (typeof (slotName) != "string") {
+        if (typeof(slotName) != "string") {
             throw new Error("name must be a string");
         }
 
@@ -269,7 +269,7 @@ Proto.setSlots({
     },
 
     canPerform: function (message) {
-        return this[message] && typeof (this[message]) === "function";
+        return this[message] && typeof(this[message]) === "function";
     },
 
     performWithArgList: function (message, argList) {

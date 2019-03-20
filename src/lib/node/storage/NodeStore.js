@@ -482,8 +482,8 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     //
 
     refValueIfNeeded: function (v) {
-        if (typeof (v) === "object") {
-            if (v == null || typeof (v.type) === "function") {
+        if (typeof(v) === "object") {
+            if (v == null || typeof(v.type) === "function") {
                 return this.refForObject(v)
             }
         }
@@ -491,7 +491,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     },
 
     pidIfRef: function (ref) {
-        if (typeof (ref) === "object") {
+        if (typeof(ref) === "object") {
             if (this.dictIsObjRef(ref)) {
                 return ref[this.objRefKey()]
             }
@@ -515,14 +515,14 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 
     dictIsObjRef: function (dict) {
         let k = this.objRefKey()
-        return typeof (dict[k]) === "string"
+        return typeof(dict[k]) === "string"
     },
 
     refForObject: function (obj) {
         let k = this.objRefKey()
         let ref = {}
 
-        if (obj === null && typeof (obj) === "object") {
+        if (obj === null && typeof(obj) === "object") {
             ref[k] = "null"
         } else {
             ref[k] = obj.pid()
@@ -722,7 +722,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         }
 
         let stringReplacer = function (value) {
-            if (typeof (value) === "string" && value.length > 100) {
+            if (typeof(value) === "string" && value.length > 100) {
                 return value.substring(0, 100) + "...";
             }
             return value

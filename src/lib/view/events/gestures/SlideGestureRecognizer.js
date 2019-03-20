@@ -58,7 +58,7 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     },
 
     setNumberOfTouchesRequired: function(n) {
-        assert(n == 1) // need to add multi-touch support
+        assert(n === 1) // need to add multi-touch support
         this._numberOfTouchesRequired = n
         return this
     },

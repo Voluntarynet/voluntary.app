@@ -79988,7 +79988,7 @@ Object.shallowCopyTo({
     },
 
     asPath: function () {
-        if (this.length == 1 && this.first() === "") {
+        if (this.length === 1 && this.first() === "") {
             return "/";
         }
         else {
@@ -81685,8 +81685,8 @@ class ByteFormatter extends ProtoClass {
 
         let v = Math.floor(b / Math.pow(10, order*3))
 		
-        // remove plural if v == 1
-        if (orderName[orderName.length-1] === "s" && v == 1) {
+        // remove plural if v === 1
+        if (orderName[orderName.length-1] === "s" && v === 1) {
             orderName = orderName.substring(0, orderName - 2)
         }
 		
@@ -86091,7 +86091,7 @@ window.BMBoolField = BMField.extend().newSlots({
     },
 	
     normalizeThisValue: function(v) {
-	    if (v === true || v === "t" || v === "true" | v == 1) { return true; }
+	    if (v === true || v === "t" || v === "true" | v === 1) { return true; }
 	    return false
     },
 	
@@ -87039,7 +87039,7 @@ window.DivBorderRadius = class DivBorderRadius extends ProtoClass {
 
         this.clear()
 
-        if (parts.length == 1) {
+        if (parts.length === 1) {
             this.setAll(Number(parts[0]))
         }
 
@@ -87781,7 +87781,7 @@ window.Keyboard = ideal.Proto.extend().newSlots({
         let  code = event.keyCode
         let  result = this.specialKeyCodes()[code]
 		
-        if (event.shiftKey && (code == 187)) {
+        if (event.shiftKey && (code === 187)) {
             return "plus"
         }
 		
@@ -88826,7 +88826,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         return this.isEmulatingTouch() && 
                 event.shiftKey && 
                 event._gestureRecognizerPoints && 
-                event._gestureRecognizerPoints.length == 1;
+                event._gestureRecognizerPoints.length === 1;
     },
 
     emulateDownIfNeeded: function(event) {
@@ -89163,7 +89163,7 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     },
 
     setNumberOfTouchesRequired: function(n) {
-        assert(n == 1) // need to add multi-touch support
+        assert(n === 1) // need to add multi-touch support
         this._numberOfTouchesRequired = n
         return this
     },
@@ -89450,7 +89450,7 @@ window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     
     nameForCount: function(n) {
-        if (n == 1) { return "Single" }
+        if (n === 1) { return "Single" }
         if (n == 2) { return "Double" }
         if (n == 3) { return "Triple"; }
         if (n == 4) { return "Quadruple"; }
@@ -92742,7 +92742,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     uncontainerize: function() {
-        assert(this.subviewCount() == 1)
+        assert(this.subviewCount() === 1)
         let container = this.subviews().first()
         this.removeSubview(container)
         container.moveAllSubviewsToView(this)
@@ -98450,7 +98450,7 @@ window.BMOptionsFieldRowView = BMFieldRowView.extend().newSlots({
 		
         let  currentValidValues = this.currentValidValues()
 		
-        if (currentValidValues.length == 1 && currentValidValues[0] == this.currentValue()) {
+        if (currentValidValues.length === 1 && currentValidValues[0] == this.currentValue()) {
             this.close()
             return
         }
@@ -98587,7 +98587,7 @@ window.BMOptionsTableView = DivView.extend().newSlots({
 		*/
 		
         /*
-		if (subviewsPerRow == 1) {
+		if (subviewsPerRow === 1) {
 			this.subviews().forEach(function(subview) {
 				subview.setTextAlign("left")
 				subview.setPaddingLeft(leftPad)

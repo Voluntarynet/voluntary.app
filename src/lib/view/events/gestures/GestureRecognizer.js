@@ -379,7 +379,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         return this.isEmulatingTouch() && 
                 event.shiftKey && 
                 event._gestureRecognizerPoints && 
-                event._gestureRecognizerPoints.length == 1;
+                event._gestureRecognizerPoints.length === 1;
     },
 
     emulateDownIfNeeded: function(event) {

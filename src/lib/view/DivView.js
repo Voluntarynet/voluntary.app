@@ -2741,7 +2741,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     uncontainerize: function() {
-        assert(this.subviewCount() == 1)
+        assert(this.subviewCount() === 1)
         let container = this.subviews().first()
         this.removeSubview(container)
         container.moveAllSubviewsToView(this)

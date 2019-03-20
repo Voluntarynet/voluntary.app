@@ -601,7 +601,7 @@ Object.shallowCopyTo({
     },
 
     asPath: function () {
-        if (this.length == 1 && this.first() === "") {
+        if (this.length === 1 && this.first() === "") {
             return "/";
         }
         else {

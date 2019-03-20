@@ -59,7 +59,7 @@ window.DivBorderRadius = class DivBorderRadius extends ProtoClass {
 
         this.clear()
 
-        if (parts.length == 1) {
+        if (parts.length === 1) {
             this.setAll(Number(parts[0]))
         }
 

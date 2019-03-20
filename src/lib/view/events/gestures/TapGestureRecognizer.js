@@ -141,7 +141,7 @@ window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     
     nameForCount: function(n) {
-        if (n == 1) { return "Single" }
+        if (n === 1) { return "Single" }
         if (n == 2) { return "Double" }
         if (n == 3) { return "Triple"; }
         if (n == 4) { return "Quadruple"; }

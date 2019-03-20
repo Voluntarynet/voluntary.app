@@ -37,7 +37,7 @@ window.BMBoolField = BMField.extend().newSlots({
     },
 	
     normalizeThisValue: function(v) {
-	    if (v === true || v === "t" || v === "true" | v == 1) { return true; }
+	    if (v === true || v === "t" || v === "true" | v === 1) { return true; }
 	    return false
     },
 	

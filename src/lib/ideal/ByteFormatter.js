@@ -63,8 +63,8 @@ class ByteFormatter extends ProtoClass {
 
         let v = Math.floor(b / Math.pow(10, order*3))
 		
-        // remove plural if v == 1
-        if (orderName[orderName.length-1] === "s" && v == 1) {
+        // remove plural if v === 1
+        if (orderName[orderName.length-1] === "s" && v === 1) {
             orderName = orderName.substring(0, orderName - 2)
         }
 		

@@ -113,7 +113,7 @@ window.BMOptionsTableView = DivView.extend().newSlots({
 		*/
 		
         /*
-		if (subviewsPerRow == 1) {
+		if (subviewsPerRow === 1) {
 			this.subviews().forEach(function(subview) {
 				subview.setTextAlign("left")
 				subview.setPaddingLeft(leftPad)

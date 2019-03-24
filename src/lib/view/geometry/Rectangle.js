@@ -20,8 +20,8 @@ window.Rectangle = ideal.Proto.extend().newSlots({
     },
     
     containsPoint: function(p) {
-        let a = p.isGreaterThanOrEqualTo(this.origin()) 
-        let b = p.isLessThanOrEqualTo(this.maxPoint())
+        const a = p.isGreaterThanOrEqualTo(this.origin()) 
+        const b = p.isLessThanOrEqualTo(this.maxPoint())
         return a && b
     },
 

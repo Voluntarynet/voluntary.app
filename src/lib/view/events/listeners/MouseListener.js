@@ -19,13 +19,13 @@ window.MouseListener = EventSetListener.extend().newSlots({
         this.addEventNameAndMethodName("mousedown", "onMouseDown");
         this.addEventNameAndMethodName("mouseup",   "onMouseUp");
 
-        this.addEventNameAndMethodName("mouseover",  "onMouseOver"); // triggered only when mouse enters element
+        this.addEventNameAndMethodName("mouseover",  "onMouseOver");  // triggered only when mouse enters element
         this.addEventNameAndMethodName("mouseleave", "onMouseLeave"); // triggered only when mouse exits element
 
         this.addEventNameAndMethodName("mousemove", "onMouseMove");
 
         // NOTE: don't see a good use case for these, so commenting out for now
-        //this.addEventNameAndMethodName("mouseout",   "onMouseOut"); // triggered when mouse exits any child element        
+        //this.addEventNameAndMethodName("mouseout",   "onMouseOut");   // triggered when mouse exits any child element        
         //this.addEventNameAndMethodName("mouseenter", "onMouseEnter"); // triggered when mouse enters any child element
 
         this.addEventNameAndMethodName("click",    "onClick");

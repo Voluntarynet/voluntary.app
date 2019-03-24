@@ -33,10 +33,10 @@ window.Keyboard = ideal.Proto.extend().newSlots({
     },
 
     setupCodeToKeys: function() {
-        let dict = {}
-        let k2c = this.keyNameToCodeMap()
+        const dict = {}
+        const k2c = this.keyNameToCodeMap()
         Object.keys(k2c).forEach((name) => {
-            let code = k2c[name]
+            const code = k2c[name]
             dict[code] = KeyboardKey.clone().setName(name).setCode(code)
         })
         this.setCodeToKeys(dict)
@@ -48,7 +48,7 @@ window.Keyboard = ideal.Proto.extend().newSlots({
     },
 
     keyForName: function(aName) {
-        let code = this.keyCodeForName(aName)
+        const code = this.keyCodeForName(aName)
         return this.keyForCode(code)
     },
 
@@ -179,16 +179,16 @@ window.Keyboard = ideal.Proto.extend().newSlots({
     },
 
     keyForEvent: function(event) {
-        let code = event.keyCode
-        let key = this.codeToKeys()[code]
+        const code = event.keyCode
+        const key = this.codeToKeys()[code]
         return key
     },
 
     onKeyDownCapture: function (event) {
         //console.log("event.metaKey = ", event.metaKey)
         
-        let shouldPropogate = true
-        let key = this.keyForEvent(event)
+        const shouldPropogate = true
+        const key = this.keyForEvent(event)
         key.onKeyDown(event)
 
         if (this.isDebugging()) {
@@ -199,8 +199,8 @@ window.Keyboard = ideal.Proto.extend().newSlots({
     },
 
     onKeyUpCapture: function (event) {
-        let shouldPropogate = true
-        let key = this.keyForEvent(event)
+        const shouldPropogate = true
+        const key = this.keyForEvent(event)
         key.onKeyUp(event)
 
         if (this.isDebugging()) {
@@ -213,8 +213,8 @@ window.Keyboard = ideal.Proto.extend().newSlots({
     // --- special ---
 
     methodNameForKeyCode: function(keyCode) {
-        let key = this.keyForCode(keyCode)
-        let methodName = "on" + key.name() + "KeyDown";
+        const key = this.keyForCode(keyCode)
+        const methodName = "on" + key.name() + "KeyDown";
         return methodName
     },
 
@@ -248,8 +248,8 @@ window.Keyboard = ideal.Proto.extend().newSlots({
     },
 	
     specialNameForKeyEvent: function(event) {
-        let code = event.keyCode
-        let result = this.specialKeyCodes()[code]
+        const code = event.keyCode
+        const result = this.specialKeyCodes()[code]
 		
         if (event.shiftKey && (code === 187)) {
             return "plus"

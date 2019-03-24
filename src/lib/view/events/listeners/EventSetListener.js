@@ -87,11 +87,11 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
     },
 
     forEachEventDict: function(func) {
-        let eventsDict = this.eventsDict()
+        const eventsDict = this.eventsDict()
         for (let k in eventsDict) {
             if (eventsDict.hasOwnProperty(k)) {
-                let eventName = k;
-                let eventDict = eventsDict[eventName]
+                const eventName = k;
+                const eventDict = eventsDict[eventName]
                 func(eventName, eventDict);
             }
         }
@@ -104,17 +104,17 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
         }
         this._isListening = true;
 
-        let element = this.element()
+        const element = this.element()
         assert(element !== null)
         assert(element !== undefined)
 
         this.forEachEventDict((eventName, dict) => {
-            let fullMethodName = this.fullMethodNameFor(dict.methodName)
+            const fullMethodName = this.fullMethodNameFor(dict.methodName)
             dict.handlerFunc = (event) => { 
-                let delegate = this.delegate()
-                let method = delegate[fullMethodName]
+                const delegate = this.delegate()
+                const method = delegate[fullMethodName]
                 if (method) {
-                    let result = method.apply(delegate, [event]); 
+                    const result = method.apply(delegate, [event]); 
 
                     if (this.isDebugging()) {
                         console.log("sent: " + delegate.type() + "." + fullMethodName, "(" + event.type + ") and returned ", result)
@@ -152,7 +152,7 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
 
         this._isListening = false;
 
-        let element = this.element()
+        const element = this.element()
         assert(element)
         this.forEachEventDict((eventName, dict) => {
             //console.log(this.delegate().typeId() + " will stop listening for " + dict.methodName)

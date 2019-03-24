@@ -57,7 +57,7 @@ window.BMPostMessage = BMAppMessage.extend().newSlots({
     },
     
     ageDescription: function() {
-        return PeriodFormatter.clone().setValueInSeconds(this.ageInSeconds()).formattedValue()
+        return TimePeriodFormatter.clone().setValueInSeconds(this.ageInSeconds()).formattedValue()
     },
     
     ageInSeconds: function() {

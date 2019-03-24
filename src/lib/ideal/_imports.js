@@ -7,6 +7,6 @@ JSImporter.pushRelativePaths([
     "Map.js",
     "StackTrace.js",
     "ByteFormatter.js",
-    "PeriodFormatter.js",
+    "TimePeriodFormatter.js",
 ]);
 

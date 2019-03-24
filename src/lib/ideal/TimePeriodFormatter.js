@@ -2,13 +2,13 @@
 
 /*
     
-PeriodFormatter 
+TimePeriodFormatter 
 
     Takes a number of seconds and formats in a compact format.
 
 	Example use:
 
-	let stringVersion = PeriodFormatter.clone().setValueInSeconds(seconds).formattedValue()
+	let stringVersion = TimePeriodFormatter.clone().setValueInSeconds(seconds).formattedValue()
 
 	Example output:
 
@@ -20,7 +20,7 @@ PeriodFormatter
 
 */
 
-class PeriodFormatter extends ProtoClass {
+class TimePeriodFormatter extends ProtoClass {
     init() {
         super.init()
     }
@@ -59,11 +59,11 @@ class PeriodFormatter extends ProtoClass {
     }
 }
 
-PeriodFormatter.newSlots({
+TimePeriodFormatter.newSlots({
     valueInSeconds: 0,
 }).setSlots({
     
 })
 
 
-PeriodFormatter.registerThisClass()
+TimePeriodFormatter.registerThisClass()

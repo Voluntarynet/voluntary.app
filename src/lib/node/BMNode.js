@@ -169,7 +169,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     },
     
     addField: function(aField) {
-        throw new Error("addField shouldn't be called")
+        throw new Error("addField shouldn't be called - use BMFieldSetNode")
         return this.addSubnode(aField)
     },
         

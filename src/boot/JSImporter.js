@@ -57,7 +57,7 @@ class JSImporterBase {
     }
 
     static clone() {
-        let obj = new this()
+        const obj = new this()
         obj.init()
         return obj
     }
@@ -75,7 +75,7 @@ class JSImporterBase {
             initialValue = null 
         };
 
-        let privateName = "_" + slotName;
+        const privateName = "_" + slotName;
         this[privateName] = initialValue;
 
         if (!this[slotName]) {
@@ -84,7 +84,7 @@ class JSImporterBase {
             }
         }
 
-        let setterName = "set" + slotName.capitalized()
+        const setterName = "set" + slotName.capitalized()
 
         if (!this[setterName]) {
             this[setterName] = function (newValue) {
@@ -108,7 +108,7 @@ class CSSLink extends JSImporterBase {
     }
 
     run () {
-        let styles = document.createElement("link")
+        const styles = document.createElement("link")
         styles.rel = "stylesheet"
         styles.type = "text/css"
         styles.media = "screen"
@@ -128,7 +128,7 @@ class JSScript extends JSImporterBase {
     }
 
     run () {
-        let script = document.createElement("script")
+        const script = document.createElement("script")
 
         //console.log("JSScript loading: '" + this.fullPath() + "'")
 
@@ -144,14 +144,14 @@ class JSScript extends JSImporterBase {
             throw new Error("missing url " + this.fullPath())
         }
 
-        let parent = document.getElementsByTagName("head")[0] || document.body
+        const parent = document.getElementsByTagName("head")[0] || document.body
         parent.appendChild(script)
     }
 
     basePath () {
-        let parts = this.fullPath().split("/")
+        const parts = this.fullPath().split("/")
         parts.pop()
-        let basePath = parts.join("/")
+        const basePath = parts.join("/")
         return basePath
     }
 }
@@ -180,7 +180,7 @@ class JSImporterClass extends JSImporterBase {
     }
 
     absolutePathForRelativePath (aPath) {
-        let parts = this.currentScriptPath().split("/").concat(aPath.split("/"))
+        const parts = this.currentScriptPath().split("/").concat(aPath.split("/"))
         let rPath = parts.join("/")
 
         if (rPath[0] === "/"[0]) {
@@ -252,7 +252,7 @@ class JSImporterClass extends JSImporterBase {
     loadUrl (url) {
         this.urlLoadingCallbacks().forEach(callback => callback(url))
 
-        let extension = url.split(".").pop()
+        const extension = url.split(".").pop()
 
         if (extension === "js" || extension === "json") {
             this.jsFilesLoaded().push(url)
@@ -287,4 +287,3 @@ window.JSImporter = JSImporterClass.shared()
 if (window.JSImporterIsEmbedded !== true) {
     JSImporter.pushRelativePaths(["_imports.js"]).run()
 }
-

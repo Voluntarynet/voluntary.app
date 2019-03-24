@@ -37,7 +37,7 @@ window.BMMessage = BMFieldSetNode.extend().newSlots({
             if (ts) {
                 let t = Date.now()/1000
                 let dt = t - ts
-                return PeriodFormatter.clone().setValueInSeconds(dt).formattedValue()
+                return TimePeriodFormatter.clone().setValueInSeconds(dt).formattedValue()
             }
         }
         return null

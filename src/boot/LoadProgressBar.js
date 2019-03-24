@@ -1,6 +1,9 @@
 "use strict"
 
 /*
+
+    LoadProgressBarClass
+
     A full page panel that shows load progress.
   
     While running, displays app name, progress bar, and current loading file name.
@@ -16,7 +19,7 @@
     		window.LoadProgressBar.stop()  
 
     Notes:
-    This code is ugly because it doesn't have any library dependencies 
+    This code is a bit ugly because it doesn't have any library dependencies 
     as we need to show it before we load the libraries & need it to tell us about any loading errors.
 */
 
@@ -36,7 +39,7 @@ class LoadProgressBarClass {
     }
 
     static clone() {
-        let obj = new this()
+        const obj = new this()
         obj.init()
         return obj
     }
@@ -126,7 +129,7 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
     }
 
     initTitle () {
-        let title = this.titleElement()
+        const title = this.titleElement()
         title.style.color = "#aaa"
         title.innerHTML = "PEER LOADING"
         return this
@@ -187,7 +190,7 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
     }
 
     unregisterForWindowError () {
-        let isRegistered = window.onerror === this._windowErrorCallback
+        const isRegistered = window.onerror === this._windowErrorCallback
         if (isRegistered) {
             window.onerror = null
         }
@@ -200,7 +203,7 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
     */
 
     incrementItemCount () {
-        let subtitle = this.subtitleElement()
+        const subtitle = this.subtitleElement()
         if (subtitle) {
             subtitle.style.color = "#666"
             subtitle.innerHTML += "."
@@ -209,7 +212,7 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
     }
 
     setCurrentItem (itemName) {
-        let item = this.itemElement()
+        const item = this.itemElement()
         //item.style.opacity = 0
         item.style.color = "#444"
         //item.currentValue = itemName	
@@ -239,7 +242,7 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
     }
 
     removeMainElement () {
-        let e = this.mainElement()
+        const e = this.mainElement()
         if (e) {
             e.parentNode.removeChild(e)
         }

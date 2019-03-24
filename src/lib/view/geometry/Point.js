@@ -89,7 +89,7 @@ window.Point = ideal.Proto.extend().newSlots({
     },
 
     asString: function() {
-        let s = "Point(" + this._x + ", " + this._y 
+        let s = this.type() + "(" + this._x + ", " + this._y 
 
         if (this._z) { 
             s += ", " + this._z
@@ -196,16 +196,4 @@ window.Point = ideal.Proto.extend().newSlots({
         return this.multiplyByScalar(-1)
     },
 
-    findOverview: function() {
-        let e = document.elementFromPoint(p.x(), p.y());
-        while (e) {
-            let view = e._divView
-            if (view) {
-                this.setOverview(view)
-                return view
-            }
-            e = e.parentElement
-        }
-        return null
-    },
 })

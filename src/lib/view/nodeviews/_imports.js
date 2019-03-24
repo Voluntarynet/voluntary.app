@@ -8,5 +8,7 @@ JSImporter.pushRelativePaths([
     "ImageView.js",
     "generic/_imports.js",
     "browser/_imports.js",
+    "fields/_imports.js",
+    "atom/_imports.js",
 ])
 

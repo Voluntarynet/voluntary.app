@@ -2485,7 +2485,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 
 
     winPosForEvent: function(event) {
-        let p = Point.clone().set(event.clientX, event.clientY)
+        let p = EventPoint.clone().set(event.clientX, event.clientY)
     },
 
     parentPosForEvent: function(event) {
@@ -2504,7 +2504,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     /*
     windowPos: function() {
         let b = this.boundingClientRect()
-        let p = Point.clone().set(b.x, b.y)
+        let p = EventPoint.clone().set(b.x, b.y)
         return p
     },
     */
@@ -2516,7 +2516,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 
     size: function() {
-        return Point.clone().set(this.clientWidth(), this.clientHeight());
+        return EventPoint.clone().set(this.clientWidth(), this.clientHeight());
     },
 
     windowPos: function() {
@@ -2535,7 +2535,7 @@ window.DivView = ideal.Proto.extend().newSlots({
         let top  = box.top +  scrollTop - clientTop;
         let left = box.left + scrollLeft - clientLeft;
     
-        return Point.clone().set(Math.round(left), Math.round(top));
+        return EventPoint.clone().set(Math.round(left), Math.round(top));
         //return p
     },
 

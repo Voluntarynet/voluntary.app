@@ -3,7 +3,6 @@
 JSImporter.pushRelativePaths([
     "BMViewStyles.js",
     "BMViewStyle.js",
-	
     "BMNode.js",
 	
     "storage/_imports.js",

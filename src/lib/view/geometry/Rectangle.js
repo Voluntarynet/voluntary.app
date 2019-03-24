@@ -3,7 +3,7 @@
 /*
     Rectangle
 
-    Class to represent a 2d rectangle.
+    Class to represent a rectangle.
 
 */
 
@@ -34,7 +34,7 @@ window.Rectangle = ideal.Proto.extend().newSlots({
     },
 
     asString: function() {
-        return "Rectangle(" + this.origin().asString() + ", " + this.size().asString() + ")"
+        return this.type() + "(" + this.origin().asString() + ", " + this.size().asString() + ")"
     },
 
     x: function() {

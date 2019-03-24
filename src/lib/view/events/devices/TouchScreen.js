@@ -85,7 +85,7 @@ window.TouchScreen = ideal.Proto.extend().newSlots({
 
     pointForTouch: function(touch) {
         assert(event.__proto__.constructor === TouchEvent)
-        let p = Point.clone()
+        let p = EventPoint.clone()
         p.setId(touch.identifier)
         p.setTarget(touch.target)
         p.set(touch.pageX, touch.pageY)

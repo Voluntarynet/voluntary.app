@@ -48,7 +48,7 @@ window.NodeView = DivStyledView.extend().newSlots({
     },
 
     updateElementIdLabel: function() {
-        let nodeId = this.node() ? this.node().type() + "-" + this.node().uniqueId() : "null"
+        const nodeId = this.node() ? this.node().type() + "-" + this.node().uniqueId() : "null"
         this.element().id = this.type() + "-" + this._uniqueId + " for node " + nodeId
     },
     
@@ -84,7 +84,7 @@ window.NodeView = DivStyledView.extend().newSlots({
     subviewProto: function() {
         //console.log("looking for subviewProto")
         if (this.node()) {
-            let vc = this.node().nodeRowViewClass()
+            const vc = this.node().nodeRowViewClass()
             if (vc) { 
                 return vc
             }
@@ -114,7 +114,7 @@ window.NodeView = DivStyledView.extend().newSlots({
 
     updateSubnodeToSubviewMap: function() {
         // TODO: make this more efficient with add/remove hooks
-        let dict = {}
+        const dict = {}
         this.subviews().forEach((sv) => { dict[sv.node()] = sv })
         this._subnodeToSubview = dict
         return this
@@ -136,7 +136,7 @@ window.NodeView = DivStyledView.extend().newSlots({
             throw new Error("null aSubnode")
         }
         
-        let proto = this.subviewProtoForSubnode(aSubnode)
+        const proto = this.subviewProtoForSubnode(aSubnode)
 		
         if (!proto) {
             throw new Error("no subviewProto for subnode " + aSubnode.typeId())
@@ -160,7 +160,7 @@ window.NodeView = DivStyledView.extend().newSlots({
         this.node().prepareToSyncToView()
         this.updateSubnodeToSubviewMap() // not ideal - move this to update on subview add/remove
        
-        let newSubviews = []
+        const newSubviews = []
         
         // only replace subviews if sync requires it,
         // and reuse subviews for subnodes which are still present 
@@ -204,7 +204,7 @@ window.NodeView = DivStyledView.extend().newSlots({
     },
     
     syncToNode: function () {
-        let node = this.node()
+        const node = this.node()
         if (node) {
             node.didUpdateNode()
             //node.scheduleSyncToStore()
@@ -236,13 +236,13 @@ window.NodeView = DivStyledView.extend().newSlots({
     },
     
     log: function(msg) {
-        let s = "[" + this.logName() + "] " + msg
+        const s = "[" + this.logName() + "] " + msg
         console.log(s)
         return this
     },
     
     onDropFiles: function(filePaths) {
-        let node = this.node()
+        const node = this.node()
         if (node && node.onDropFiles) {
             node.onDropFiles(filePaths)
         }
@@ -254,7 +254,7 @@ window.NodeView = DivStyledView.extend().newSlots({
     onVisibility: function() {
 	    DivStyledView.onVisibility.apply(this)
 	    //console.log(this.typeId() + ".onVisibility()")
-	    let node = this.node()
+	    const node = this.node()
 	    if (node && node.nodeBecameVisible) {
 	        node.nodeBecameVisible()
 	    }

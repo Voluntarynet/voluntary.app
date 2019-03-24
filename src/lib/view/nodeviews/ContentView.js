@@ -4,6 +4,8 @@
 
     ContentView
 
+    Useful for inspecting some text within a view.
+
 */
 
 window.ContentView = NodeView.extend().newSlots({

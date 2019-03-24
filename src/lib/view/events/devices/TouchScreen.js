@@ -77,6 +77,58 @@ window.TouchScreen = ideal.Proto.extend().newSlots({
         return true
     },
 
+    onTouchEndCapture: function(event) {
+        this.setCurrentEvent(event)
+        //this.handleLeave(event)
+        return true
+    },
+
+    pointForTouch: function(touch) {
+        let p = Point.clone()
+        p.setId(touch.identifier)
+        p.setTarget(touch.target)
+        p.set(touch.pageX, touch.pageY)
+        p.setTimeToNow()
+        p.setToTouchEventWinPos(touch)
+        p.setIsDown(true)
+        //p.findOverview()
+        return p
+    },
+
+    justPointsForEvent: function(event) {
+        let points = []
+        // event.touches isn't a proper array, so we can't enumerate it normally
+        let touches = event.touches // all current touches
+        for (var i = 0; i < touches.length; i++) {
+            let touch = touches[i]
+            let p = this.pointForTouch(touch)
+            points.append(p)
+        }
+
+        return points
+    },
+
+    pointsForEvent: function(event) {
+        assert(event.__proto__.constructor === TouchEvent)
+
+        if (!event._points) {
+            event._points = this.justPointsForEvent(event)
+        }
+
+        return event._points
+    },
+
+    currentPoints: function() {
+        if (this.currentEvent()) {
+            return this.pointsForEvent(this.currentEvent())
+        }
+        return []
+    },
+
+    // There are no standard onTouchLeave & onTouchOver events,
+    // so this is an attempt to add them. Only really need them
+    // for visual gesture debugging at the moment though.
+    
     /*
     sendEventToView: function(eventName, event, aView) {
         // send to listeners instead?
@@ -109,50 +161,4 @@ window.TouchScreen = ideal.Proto.extend().newSlots({
         return this
     },
     */
-
-    onTouchEndCapture: function(event) {
-        this.setCurrentEvent(event)
-        //this.handleLeave(event)
-        return true
-    },
-
-    pointForTouch: function(touch) {
-        let p = Point.clone()
-        p.setId(touch.identifier)
-        p.setTarget(touch.target)
-        p.set(touch.pageX, touch.pageY)
-        p.setTimeToNow()
-        p.setToTouchEventWinPos(touch)
-        p.setIsDown(true)
-        p.findOverview()
-        return p
-    },
-
-    pointsForEvent: function(event) {
-        assert(event.__proto__.constructor === TouchEvent)
-        if (event._points) {
-            return event._points
-        }
-
-        let points = []
-
-        // event.touches isn't a proper array, so we can't enumerate it normally
-        let touches = event.touches // all current touches
-        for (var i = 0; i < touches.length; i++) {
-            let touch = touches[i]
-            let p = this.pointForTouch(touch)
-            points.append(p)
-        }
-
-        event._points = points
-        return points
-    },
-
-    currentPoints: function() {
-        if (this.currentEvent()) {
-            return this.pointsForEvent(this.currentEvent())
-        }
-        return []
-    },
-
 })

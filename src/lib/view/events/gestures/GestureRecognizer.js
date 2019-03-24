@@ -67,7 +67,8 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         this.setIsEmulatingTouch(true)
         this.setFingerViewDict({})
 
-        this.setIsVisualDebugging(true)
+        this.setIsDebugging(false)
+        this.setIsVisualDebugging(false)
         return this
     },
 
@@ -284,9 +285,11 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     // all events hook
 
     onEvent: function(event) {
-        this.updateOutlineView()
-        this.updateFingerViews()
-        //this.updateDebugTimer()
+        if (this.isVisualDebugging()) {
+            this.updateOutlineView()
+            this.updateFingerViews()
+            //this.updateDebugTimer()
+        }
     },
 
     // --- events ---
@@ -523,16 +526,16 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     },
 
     updateOutlineView: function() {
-        //if (this.isVisualDebugging()) { 
-        let v = this.outlineView()
+    //if (this.isVisualDebugging()) { 
         if (this.shouldShowVisualDebugger()) {
             this.showOutlineView()
         } else {
+            let v = this.outlineView()
             if (v.parentView()) {
                 v.removeFromParentView()
             }
         }
-    // }
+    //}
     },
 
     showOutlineView: function() {
@@ -618,7 +621,6 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     },
 
     updateFingerViews: function() {
-        //if (this.isVisualDebugging()) {
         if (this.shouldShowVisualDebugger()) {
             this.showFingers()
         } else {            

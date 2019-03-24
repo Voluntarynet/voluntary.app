@@ -79,17 +79,13 @@ window.Mouse = ideal.Proto.extend().newSlots({
         p.setTimeToNow()
         p.setId("mouse")
         p.setState(event.buttons)
-
-        let b = event.buttons
-        p.setIsDown(b !== 0)
-
-        //let e = document.elementFromPoint(p.x(), p.y());
-        //p.setOverView(e._divView)
+        p.setIsDown(event.buttons !== 0)
+        //p.findOverview()
 
         return p
     },
 
-    dragVector: function(event) {
+    dragVector: function(event) {        
         if (this.isDown()) {
             return this.currentPos().subtract(this.downPos())
         }
@@ -97,13 +93,13 @@ window.Mouse = ideal.Proto.extend().newSlots({
     },
 
     pointsForEvent: function(event) {
-        if (event._points) {
-            return event._points
+        assert(event.__proto__.constructor === MouseEvent)
+
+        if (!event._points) {
+            event._points = [this.pointForEvent(event)]
         }
 
-        let points = [this.pointForEvent(event)]
-        event._points = points
-        return points
+        return event._points
     },
 
     currentPoints: function() {

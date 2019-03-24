@@ -29,7 +29,9 @@ window.GestureManager = ideal.Proto.extend().newSlots({
         assert(aGesture !== this.activeGesture())
 
         if (!this.activeGesture()) {
+            aGesture.viewTarget().cancelAllGesturesExcept(aGesture)
             this.setActiveGesture(aGesture)
+            console.log(this.type() + " activating " + aGesture.typeId())
             return true
         }
 
@@ -37,7 +39,9 @@ window.GestureManager = ideal.Proto.extend().newSlots({
     },
 
     releaseActiveGestureIfDormant: function() {
-        if (this.activeGesture() && !this.activeGesture().isActive()) {
+        let ag = this.activeGesture()
+        if (ag && !ag.isActive()) {
+            console.log(this.type() + " releasing " + ag.typeId())
             this.setActiveGesture(null)
         }
         return this

@@ -93,8 +93,6 @@ window.Mouse = ideal.Proto.extend().newSlots({
     },
 
     pointsForEvent: function(event) {
-        assert(event.__proto__.constructor === MouseEvent)
-
         if (!event._points) {
             event._points = [this.pointForEvent(event)]
         }

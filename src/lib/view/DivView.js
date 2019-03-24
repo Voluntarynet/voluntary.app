@@ -1900,6 +1900,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 
         return false
     },
+`   */
 
     cancelAllGesturesExcept: function(aGesture) {
         this.gestureRecognizers().forEach((gr) => {
@@ -1910,7 +1911,6 @@ window.DivView = ideal.Proto.extend().newSlots({
         })
         return this
     },
-    */
 
     // --- mouse events ---
 

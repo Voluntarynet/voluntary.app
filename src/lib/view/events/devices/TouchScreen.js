@@ -84,6 +84,7 @@ window.TouchScreen = ideal.Proto.extend().newSlots({
     },
 
     pointForTouch: function(touch) {
+        assert(event.__proto__.constructor === TouchEvent)
         let p = Point.clone()
         p.setId(touch.identifier)
         p.setTarget(touch.target)
@@ -99,7 +100,7 @@ window.TouchScreen = ideal.Proto.extend().newSlots({
         let points = []
         // event.touches isn't a proper array, so we can't enumerate it normally
         let touches = event.touches // all current touches
-        for (var i = 0; i < touches.length; i++) {
+        for (let i = 0; i < touches.length; i++) {
             let touch = touches[i]
             let p = this.pointForTouch(touch)
             points.append(p)
@@ -109,8 +110,6 @@ window.TouchScreen = ideal.Proto.extend().newSlots({
     },
 
     pointsForEvent: function(event) {
-        assert(event.__proto__.constructor === TouchEvent)
-
         if (!event._points) {
             event._points = this.justPointsForEvent(event)
         }

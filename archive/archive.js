@@ -20,7 +20,7 @@ Array.prototype.appendItems = function (elements) {
 }
 
 String.prototype.contains = function (aString) {
-    return this.indexOf(aString) > -1;
+    return this.indexOf(aString) !== -1;
 }
 
 String.prototype.before = function (aString) {

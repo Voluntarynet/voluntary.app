@@ -207,7 +207,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
         //console.log("this.setSelectedRowIndex(" + index + ") oldIndex=", oldIndex)
         if (index !== oldIndex) {
             let rows = this.rows()
-            if (index < rows.length && index > -1) {
+            if (index < rows.length && index !== -1) {
                 let row = rows[index]
                 row.select()
                 this.didClickRow(row)
@@ -396,8 +396,8 @@ window.BrowserColumn = NodeView.extend().newSlots({
                 //console.log(this.node().title() + " selectedIndex : " + selectedIndex)
                 //this.log("selectedIndex < this.rows().length: " + (selectedIndex < this.rows().length) )
                 
-                if (selectedIndex > -1 && selectedIndex < this.rows().length) {
-                    let row = this.rows()[selectedIndex]
+                if (selectedIndex !== -1 && selectedIndex < this.rows().length) {
+                    row = this.rows()[selectedIndex]
                     //this.log("selecting row titled '" + row.title().innerHTML() + "'")
                     row.setIsSelected(true)
                     this.didClickRow(row)
@@ -448,7 +448,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
             return 
         }
 		
-        let pc = this.previousColumn()	
+        const pc = this.previousColumn()	
         if (pc) {		
             if (this.selectedRow()) { 
                 this.selectedRow().unselect() 
@@ -478,7 +478,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
         
         if (!this.canNavigate()) { return }
 	
-        let row = this.selectedRow()
+        const row = this.selectedRow()
         if (row) { 
 		    row.onEnterKeyUp(event)
 		    /*
@@ -513,9 +513,9 @@ window.BrowserColumn = NodeView.extend().newSlots({
     onPlusKeyUp: function(event) {
         if (!this.canNavigate()) { return }		
 
-        let sNode = this.selectedNode()
+        const sNode = this.selectedNode()
         if (sNode && sNode.hasAction("add")) { 
-            let newNode = sNode.performAction("add") 
+            const newNode = sNode.performAction("add") 
 	        this.selectNextColumn()
             this.nextColumn().selectRowWithNode(newNode)
         }
@@ -526,18 +526,12 @@ window.BrowserColumn = NodeView.extend().newSlots({
     
     columnIndex: function() {
         return this.browser().columnGroups().indexOf(this.columnGroup())
-        //return this.browser().columns().indexOf(this)
     },
 
     // nextRow
 
     selectNextRow: function() {
-        
-        let si = this.selectedRowIndex()
-
-        //console.log(this.typeId() + ".selectNextRow(), selectedRowIndex:" + this.selectedRowIndex() + "/" + this.rows().length)
-
-        let rows = this.rows()
+        const si = this.selectedRowIndex()
         if (si === -1) {
             this.setSelectedRowIndex(0)
         } else {
@@ -547,8 +541,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
     
     selectPreviousRow: function() {
-        let si = this.selectedRowIndex()
-        //let rows = this.rows()
+        const si = this.selectedRowIndex()
         if (si === -1) {
             this.setSelectedRowIndex(0)
         } else {
@@ -560,8 +553,8 @@ window.BrowserColumn = NodeView.extend().newSlots({
     // next column
     
     nextColumn: function() {
-        let i = this.columnIndex()
-        let nextColumn = this.browser().columns()[i+1]
+        const i = this.columnIndex()
+        const nextColumn = this.browser().columns()[i+1]
         return nextColumn
     },
 

@@ -108,7 +108,7 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     },
 
     agentIsSafari: function() {
-        let isSafari = navigator.vendor && navigator.vendor.indexOf("Apple") > -1 &&
+        let isSafari = navigator.vendor && navigator.vendor.indexOf("Apple") !== -1 &&
                navigator.userAgent &&
                navigator.userAgent.indexOf("CriOS") === -1 &&
                navigator.userAgent.indexOf("FxiOS") === -1;
@@ -125,7 +125,7 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     isOnMobile: function() { 
         let agent = this.agent();
         let match = this.mobileNames().detect((name) => { return agent.contains(name); })
-        return !(match === null)
+        return match !== null
     },
 
     isTouchDevice: function() {

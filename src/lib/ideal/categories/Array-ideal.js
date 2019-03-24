@@ -65,7 +65,7 @@ Object.shallowCopyTo({
     },
 
     contains: function (element) {
-        return this.indexOf(element) > -1;
+        return this.indexOf(element) !== -1;
     },
 
     hasPrefix: function (otherArray) {
@@ -191,7 +191,7 @@ Object.shallowCopyTo({
 
     remove: function (e) {
         let i = this.indexOf(e);
-        if (i > -1) {
+        if (i !== -1) {
             this.removeAt(i);
         }
         return this;
@@ -223,7 +223,7 @@ Object.shallowCopyTo({
 
     replace: function (obj, withObj) {
         let i = this.indexOf(obj);
-        if (i > -1) {
+        if (i !== -1) {
             this.removeAt(i);
             this.atInsert(i, withObj);
         }
@@ -698,7 +698,7 @@ Object.shallowCopyTo({
     
     removeOccurancesOf: function (e) {
         let i = this.indexOf(e);
-        while (i > -1) {
+        while (i !== -1) {
             this.removeAt(i);
             i = this.indexOf(e)
         }

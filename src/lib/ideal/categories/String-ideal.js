@@ -20,11 +20,11 @@ Object.shallowCopyTo({
 
     endsWith: function (suffix) {
         let index = this.lastIndexOf(suffix);
-        return (index > -1) && (this.lastIndexOf(suffix) === this.length - suffix.length);
+        return (index !== -1) && (this.lastIndexOf(suffix) === this.length - suffix.length);
     },
 
     contains: function (aString) {
-        return this.indexOf(aString) > -1;
+        return this.indexOf(aString) !== -1;
     },
 
     before: function (aString) {

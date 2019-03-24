@@ -70,11 +70,23 @@ window.Mouse = ideal.Proto.extend().newSlots({
 
     // -- helpers ---
 
-    pointForEvent: function(p, event) {
-        if (event) {
-            return Point.clone().set(event.clientX, event.clientY).setTimeToNow()
-        }
-        return Point.clone()
+    pointForEvent: function(event) {
+        assert(event.__proto__.constructor === MouseEvent)
+
+        let p = Point.clone()
+        p.set(event.pageX, event.pageY)
+        p.setTarget(event.target)
+        p.setTimeToNow()
+        p.setId("mouse")
+        p.setState(event.buttons)
+
+        let b = event.buttons
+        p.setIsDown(b !== 0)
+
+        //let e = document.elementFromPoint(p.x(), p.y());
+        //p.setOverView(e._divView)
+
+        return p
     },
 
     dragVector: function(event) {
@@ -82,5 +94,22 @@ window.Mouse = ideal.Proto.extend().newSlots({
             return this.currentPos().subtract(this.downPos())
         }
         return Point.clone()
+    },
+
+    pointsForEvent: function(event) {
+        if (event._points) {
+            return event._points
+        }
+
+        let points = [this.pointForEvent(event)]
+        event._points = points
+        return points
+    },
+
+    currentPoints: function() {
+        if (this.currentEvent()) {
+            return this.pointsForEvent(this.currentEvent())
+        }
+        return []
     },
 })

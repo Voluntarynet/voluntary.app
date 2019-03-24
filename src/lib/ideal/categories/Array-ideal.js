@@ -617,11 +617,17 @@ Object.shallowCopyTo({
     },
 
     unique: function () {
+        const set = new Set(this)
+        let results = Array.from(set);
+        return results
+
+        /*
         let a = [];
         this.forEach(function (e) {
             a.appendIfAbsent(e);
         });
         return a;
+        */
     },
 
     reversed: function () {
@@ -718,16 +724,56 @@ Object.shallowCopyTo({
         }
         return this
     },
+
+    /*
+    const setDifference = (a, b) => new Set([...a].filter(x => !b.has(x)));
+    const setIntersection = (a, b) => new Set([...a].filter(x => b.has(x)));
+    const setUnion = (a, b) => new Set([...a, ...b]);
+    */
     
-    union: function (a) {
-        let r = this.slice(0);
-        a.forEach(function (i) { if (r.indexOf(i) < 0) r.push(i); });
+    union: function (other) {
+        let r = this.concat(other).unique()
         return r;
     },
-    
-    diff: function (a) {
-        return this.filter(function (i) { return a.indexOf(i) < 0; });
+
+    intersection: function(other) {
+        const thisSet = new Set(this)
+        return other.filter((v) => { 
+            return thisSet.has(v); 
+        });
     },
+    
+    difference: function (other) {
+        const thisSet = new Set(this)
+        return other.filter((v) => { 
+            return !thisSet.has(v); 
+        });
+    },
+
+    symmetricDifference: function (other) {
+        let all = this.concat(other)
+        const thisSet = new Set(this)
+        const otherSet = new Set(other)
+        return all.filter((v) => { 
+            return !thisSet.has(v) || !otherSet.has(v)
+        });
+    },
+
+    /*
+    intersectionWithSelector: function (a, methodName) {
+        return this.select((e1) => { 
+            return a.detect(e2 => e1[methodName].apply(e1) === e2[methodName].apply(e2)) !== null 
+        })
+    },
+    
+    diffWithSelector: function (otherArray, methodName) {
+        let thisIdSet = new Set(this.map(v => v[methodName].apply(v)))
+        let otherIdSet = new Set(otherArray.map(v => v[methodName].apply(v)))
+
+        return otherArray.select(v => !idSet.has(v.id()) )
+    },
+    */
+    
 
     // --- equality ---
 

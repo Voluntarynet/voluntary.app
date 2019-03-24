@@ -43,11 +43,10 @@ window.BrowserRow = NodeView.extend().newSlots({
         //this.animateOpen()
 
         
-        /*
         this.addGestureRecognizer(LongPressGestureRecognizer.clone()) // for long press & pan reordering
         this.addGestureRecognizer(SlideGestureRecognizer.clone()) // for slide delete
-        this.addGestureRecognizer(OrientGestureRecognizer.clone()) //
-        */
+        //this.addGestureRecognizer(OrientGestureRecognizer.clone()) //
+
         return this
     },
 
@@ -391,7 +390,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         return this.closeButtonView() && this.closeButtonView().target() != null
     },
     
-    onMouseEnter: function(event) {
+    onMouseOver: function(event) {
         if (this.canDelete() && this.closeButtonView()) {
             this.closeButtonView().setOpacity(1)
             this.closeButtonView().setTarget(this)

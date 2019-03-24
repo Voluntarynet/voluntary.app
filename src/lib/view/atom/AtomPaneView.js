@@ -66,8 +66,8 @@ window.AtomPaneView = DivView.extend().newSlots({
     },
 
     /*
-    onMouseOut: function(event) {
-        console.log(this.typeId() + " onMouseOut")
+    onMouseLeave: function(event) {
+        console.log(this.typeId() + " onMouseLeave")
 
         return true
     },
@@ -158,7 +158,7 @@ window.AtomPaneView = DivView.extend().newSlots({
         return this._dragDir
     },
 
-    onMouseOut: function() {
+    onMouseLeave: function() {
 
     },
 

@@ -36,4 +36,21 @@ window.Rectangle = ideal.Proto.extend().newSlots({
     asString: function() {
         return "Rectangle(" + this.origin().asString() + ", " + this.size().asString() + ")"
     },
+
+    x: function() {
+        return this.origin().x();
+    },
+
+    y: function() {
+        return this.origin().y();
+    },
+
+    width: function() {
+        return this.size().x();
+    },
+
+    height: function() {
+        return this.size().y();
+    },
+
 })

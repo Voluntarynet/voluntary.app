@@ -13,6 +13,7 @@ window.GestureManager = ideal.Proto.extend().newSlots({
     type: "GestureManager",
     activeGesture: null,
 }).setSlots({
+
     init: function () {
         return this
     },

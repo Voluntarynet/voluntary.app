@@ -36,6 +36,9 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
 
     shouldRemoveOnComplete: false,
 
+    overEvent: null,
+    leaveEvent: null,
+
     didBegin: false,
     downEvent: null,
     beginEvent: null,
@@ -43,16 +46,18 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     lastEvent: null,
     upEvent: null,
 
-    beginMessage: null,     //"on<GestureName>Begin",
-    moveMessage: null,      //"on<GestureName>Move",
-    cancelledMessage: null, // "on<GestureName>Cancelled",
-    completeMessage: null,  // "on<GestureName>Complete",
+    beginMessage: null,     //"on<GestureType>Begin",
+    moveMessage: null,      //"on<GestureType>Move",
+    cancelledMessage: null, // "on<GestureType>Cancelled",
+    completeMessage: null,  // "on<GestureType>Complete",
 
     isEmulatingTouch: false, // assumes touch and mouse events aren't mixed
 
     isDebugging: false,
     isVisualDebugging: false,
     fingerViewDict: null,
+
+    isPressing: false,
 }).setSlots({
     init: function () {
         this.setListenerClasses([]) // subclasses override this in their
@@ -61,6 +66,8 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         this.autoSetMessageNames()
         this.setIsEmulatingTouch(true)
         this.setFingerViewDict({})
+
+        this.setIsVisualDebugging(true)
         return this
     },
 
@@ -81,13 +88,13 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     },
     */
 
+    
     setCurrentEvent: function(event) {
-        if (this._currentEvent) {
+        if (this._currentEvent !== event) {
             this.setLastEvent(this._currentEvent)
-        } else {
-            this.setLastEvent(event)
+            this._currentEvent = event
         }
-        this._currentEvent = event
+        return this
     },
 
     currentPosition: function() {
@@ -263,18 +270,9 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         let points = []
 
         if (event.__proto__.constructor === MouseEvent) {
-            points.append(Point.clone().setToMouseEventWinPos(event))
-        } else if (event.__proto__.constructor === TouchEvent) {  // mouse event
-            
-            // event.touches isn't a proper array :/
-            let touches = []
-            for (var i = 0; i < event.touches.length; i++) {
-                touches.push(event.touches[i])
-            }
-
-            touches.forEach((touch) => {
-                points.append(Point.clone().setToTouchEventWinPos(touch))
-            })
+            points = Mouse.shared().pointsForEvent(event)
+        } else if (event.__proto__.constructor === TouchEvent) {  // mouse event      
+            points = TouchScreen.shared().pointsForTouchEvent(event)
         } else {
             console.warn(this.type() + " can't handle this event type yet: ", event)
         }
@@ -283,94 +281,43 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         return points
     },
 
+    // all events hook
+
+    onEvent: function(event) {
+        this.updateOutlineView()
+        this.updateFingerViews()
+        //this.updateDebugTimer()
+    },
+
     // --- events ---
+
+    onOver: function(event) {
+        this.setOverEvent(event)
+        this.setCurrentEvent(event)
+        this.onEvent(event)
+    },
 
     onDown: function (event) {
         this.setDownEvent(event)
         this.setCurrentEvent(event)
-        this.showFingersIfNeeded()
+        this.onEvent(event)
     },
 
     onMove: function(event) {
         this.setCurrentEvent(event)
-        this.showFingersIfNeeded()
+        this.onEvent(event)
     },
 
     onUp: function (event) {
         this.setUpEvent(event)
         this.setCurrentEvent(event)
-        if (this.pointsForEvent(event).length === 0) {
-            this.removeFingerViews()
-        }
-        this.showFingersIfNeeded()
+        this.onEvent(event)
     },
 
-    // --- show fingers ---
-
-    newFingerView: function() {
-        let v = DivView.clone()
-        DocumentBody.shared().addSubview(v)
-        v.setPointerEvents("none")
-        v.setMinAndMaxHeight(10)
-        v.setMinAndMaxWidth(10)
-        v.setBackgroundColor("white")
-        v.setPosition("absolute")
-        v.setZIndex(10000)
-        return v
-    },
-
-    viewForFingerId: function(id) {
-        let fvs = this.fingerViewDict()
-        let v = fvs[id]
-        if (!v) {
-            v = this.newFingerView()
-            fvs[id] = v
-        }
-        return v
-    },
-
-    removeFingerViews: function() {
-        let dict = this.fingerViewDict()
-        for (let id in dict) {
-            if (dict.hasOwnProperty(id)) {           
-                let fingerView = dict[id]
-                fingerView.removeFromParentView()
-            }
-        }
-        this.setFingerViewDict({})
-        return this
-    },
-
-    showFingers: function() {
-        let points = this.pointsForEvent(this.currentEvent());
-        let idsToRemove = Object.getOwnPropertyNames(this.fingerViewDict()) // TODO: move to dict
-
-        points.forEach((point) => {
-            let id = point.id()
-            let v = this.viewForFingerId(id);
-            idsToRemove.remove(id) 
-            let nx = point.x() - v.clientWidth()/2;
-            let ny = point.y() - v.clientHeight()/2;
-            v.setLeft(nx);
-            v.setTop(ny);
-        })
-
-        let fvd = this.fingerViewDict()
-        idsToRemove.forEach((id) => {
-            let fingerView = fvd[id]
-            assert(fingerView)
-            fingerView.removeFromParentView()
-            delete fvd[id]
-        })
-
-        return this
-    },
-
-    showFingersIfNeeded: function() {
-        if (this.isVisualDebugging()) {
-            this.showFingers()
-        }
-        return this
+    onLeave: function(event) {
+        this.setLeaveEvent(event)
+        this.setCurrentEvent(event)
+        this.onEvent(event)
     },
 
     // --- mouse events ---
@@ -429,7 +376,15 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         this.onUp(event)
     },
 
+    onMouseLeave: function (event) {
+        this.onLeave(event)
+    },
+
     // mouse capture events
+
+    onMouseOverCapture: function (event) {
+        this.onOver(event)
+    },
 
     onMouseDownCapture: function (event) {
         this.emulateDownIfNeeded(event)
@@ -443,6 +398,10 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
 
     onMouseUpCapture: function (event) {
         this.onUp(event)
+    },
+
+    onMouseLeaveCapture: function (event) {
+        this.onLeave(event)
     },
 
     // touch events
@@ -537,6 +496,185 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         this.setCurrentEvent(null)
         this.setUpEvent(null)
         return this
+    },
+
+    // ---  outline view for debugging ---
+
+    shouldShowVisualDebugger: function() {
+        return this.hasDownPointsInView() || this.isActive() // || this.isPressing());
+    },
+
+    newOutlineView: function() {
+        let v = DivView.clone()
+        v.setPointerEvents("none")
+        v.setBorder("1px dashed white")
+        v.setBackgroundColor("transparent")
+        v.setPosition("absolute")
+        v.setZIndex(10000)
+        return v
+    },
+
+    outlineView: function() {
+        if (!this._outlineView) {
+            let v = this.newOutlineView()
+            this._outlineView = v
+        }
+        return this._outlineView
+    },
+
+    updateOutlineView: function() {
+        //if (this.isVisualDebugging()) { 
+        let v = this.outlineView()
+        if (this.shouldShowVisualDebugger()) {
+            this.showOutlineView()
+        } else {
+            if (v.parentView()) {
+                v.removeFromParentView()
+            }
+        }
+    // }
+    },
+
+    showOutlineView: function() {
+        let v = this.outlineView()
+        if (!v.parentView()) {
+            DocumentBody.shared().addSubview(v)
+        }
+        let vt = this.viewTarget()
+        let bounds = vt.winBounds()
+
+        v.setMinAndMaxHeight(bounds.height())
+        v.setMinAndMaxWidth(bounds.width())
+        v.setLeft(bounds.x())
+        v.setTop(bounds.y())
+    },
+
+
+
+    // --- finger views for debugging ---
+
+    newFingerView: function() {
+        let v = DivView.clone()
+        v.setPointerEvents("none")
+
+        let size = 20
+        v.setMinAndMaxHeight(size)
+        v.setMinAndMaxWidth(size)
+        v.setBorderRadius(size/2)
+        v.setBorder("1px dashed white")
+        //v.setBackgroundColor("rgba(255, 255, 255, 0.5)")
+        v.setPosition("absolute")
+        v.setZIndex(10000)
+        return v
+    },
+
+    viewForFingerId: function(id) {
+        let fvs = this.fingerViewDict()
+        let v = fvs[id]
+        if (!v) {
+            v = this.newFingerView()
+            DocumentBody.shared().addSubview(v)
+            fvs[id] = v
+        }
+        return v
+    },
+
+    removeFingerViews: function() {
+        let dict = this.fingerViewDict()
+        for (let id in dict) {
+            if (dict.hasOwnProperty(id)) {           
+                let fingerView = dict[id]
+                fingerView.removeFromParentView()
+            }
+        }
+        this.setFingerViewDict({})
+        return this
+    },
+
+    showFingers: function() {
+        let points = this.pointsForEvent(this.currentEvent());
+        let idsToRemove = Object.getOwnPropertyNames(this.fingerViewDict()) // TODO: move to dict
+
+        points.forEach((point) => {
+            let id = point.id()
+            let v = this.viewForFingerId(id);
+            idsToRemove.remove(id) 
+            let nx = point.x() - v.clientWidth()/2;
+            let ny = point.y() - v.clientHeight()/2;
+            v.setLeft(nx);
+            v.setTop(ny);
+            //v.setBorder("1px dashed white")
+        })
+
+        let fvd = this.fingerViewDict()
+        idsToRemove.forEach((id) => {
+            let fingerView = fvd[id]
+            assert(fingerView)
+            fingerView.removeFromParentView()
+            delete fvd[id]
+        })
+
+        return this
+    },
+
+    updateFingerViews: function() {
+        //if (this.isVisualDebugging()) {
+        if (this.shouldShowVisualDebugger()) {
+            this.showFingers()
+        } else {            
+            this.removeFingerViews()
+        }
+
+        return this
+    },
+
+    updateDebugger: function() {
+        this.updateOutlineView() 
+        this.updateFingerViews()
+        if (this.viewTarget()) {
+            console.log(this.viewTarget().typeId() + ".updateDebugger")
+        }
+    },
+
+    updateDebugTimer: function() {
+        if (this._debugTimerId) {
+            clearTimeout(this._debugTimerId) 
+            this._debugTimerId = null
+        }
+
+        this._debugTimerId = setTimeout(() => { 
+            this._debugTimerId = null
+            this.updateDebugger() 
+        }, 100);
+
+        return this
+    },
+
+    // down points
+
+    hasDownPointsInView: function() {
+        if (!this.viewTarget()) {
+            return false
+        }
+
+        let bounds = this.viewTarget().winBounds();
+        let points = this.allDownPoints();
+        let match = points.detect(p => bounds.containsPoint(p)) 
+        //console.log("all points.length:", points.length, " has match:", match != null)
+
+        return match != null
+    },
+
+    allPoints: function() { // TODO: some better abstraction for Touch+Mouse?
+        let points = []
+        points.appendItems(TouchScreen.shared().currentPoints())
+        points.appendItems(Mouse.shared().currentPoints())
+        return points
+    },
+
+    allDownPoints: function() { // TODO: some better abstraction for Touch+Mouse?
+        let points = this.allPoints().select(p => p.isDown())
+        return points
     },
 })
 

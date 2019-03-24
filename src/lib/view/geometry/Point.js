@@ -5,6 +5,8 @@
 
     Class to represent a 2d or 3d point, optionally with a time.
 
+    TODO: create a separate EventPoint class...
+
 */
 
 window.Point = ideal.Proto.extend().newSlots({
@@ -14,40 +16,14 @@ window.Point = ideal.Proto.extend().newSlots({
     z: 0,
     t: 0,
     id: null,
+    state: null,
     target: null, 
+    isDown: false,
+    //overElement: null,
+    //overView: null,
 }).setSlots({
 
     init: function () {
-        return this
-    },
-
-    // helpers for events , TODO: move to a UIEvent class
-
-    setToTouchEventWinPos: function(touch) {
-        this.set(touch.pageX, event.pageY)
-        this.setId(touch.identifier)
-        this.setTarget(touch.target)
-        this.setTimeToNow()
-        return this
-    },
-    
-    setToMouseEventWinPos: function(event) {
-        let b = event.buttons
-        let id = "UnknownMouseButtonState"
-        if (b === 0) {
-            id = "mouse" // no button, e.g. mouse move event sans button
-        } else if (b & 1) {
-            id = "mouseWithButton1" // primary button
-        } else if (b & 2) {
-            id = "mouseWithButton2" // secondary button
-        } else if (b & 4) {
-            id = "mouseWithButton3"
-        }
-        this.setId(id)
-
-        this.set(event.pageX, event.pageY)
-        this.setTarget(event.target)
-        this.setTimeToNow()
         return this
     },
 
@@ -218,5 +194,18 @@ window.Point = ideal.Proto.extend().newSlots({
 
     negated: function(p) {
         return this.multiplyByScalar(-1)
+    },
+
+    findOverview: function() {
+        let e = document.elementFromPoint(p.x(), p.y());
+        while (e) {
+            let view = e._divView
+            if (view) {
+                this.setOverview(view)
+                return view
+            }
+            e = e.parentElement
+        }
+        return null
     },
 })

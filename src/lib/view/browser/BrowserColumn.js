@@ -753,23 +753,26 @@ window.BrowserColumn = NodeView.extend().newSlots({
         if (this.node().hasAction("add")) {
             let newSubnode = this.node().add()
             let subnodes = this.node().subnodes().copy()
-            console.log("subnodes1: ", subnodes.map(v => v.typeId()))
+            //console.log("subnodes1: ", subnodes.map(v => v.typeId()))
             subnodes.remove(newSubnode)
-            console.log("insertIndex:", insertIndex)
+            //console.log("insertIndex:", insertIndex)
             subnodes.atInsert(insertIndex, newSubnode)
             console.log("subnodes2: ", subnodes.map(v => v.typeId()))
 
             let subviews = this.subviews()
-            console.log("subviews before sync: ", subviews.map(sv => sv.node().typeId()))
+            //console.log("subviews before sync: ", subviews.map(sv => sv.node().typeId()))
             this.node().nodeReorderSudnodesTo(subnodes)
             this.syncFromNode()
-            console.log("subviews after sync:  ", subviews.map(sv => sv.node().typeId()))
+            //console.log("subviews after sync:  ", subviews.map(sv => sv.node().typeId()))
 
             let newRow = this.subviewForNode(newSubnode)
             if (!newRow) {
                 newRow = this.subviewForNode(newSubnode)
             }
             newRow.setMinAndMaxHeight(0)
+            newRow.contentView().setMinAndMaxHeight(64)
+            newRow.setBackgroundColor("black")
+            newRow.setTransition("all 0s")
 
             this._temporaryPinchSubnode = newSubnode
         } else {

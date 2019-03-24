@@ -1927,16 +1927,11 @@ window.DivView = ideal.Proto.extend().newSlots({
         return true
     },
     
-    onMouseEnter: function(event) {
+    onMouseOver: function(event) {
         return true
     },
 
     onMouseLeave: function(event) {
-        return true
-    },
-
-    onMouseOut: function (event) {
-        //console.log("onMouseOut")
         return true
     },
     

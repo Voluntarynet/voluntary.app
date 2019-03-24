@@ -174,8 +174,8 @@ window.DragBarView = DivView.extend().newSlots({
         return false
     },
 
-    onMouseOut: function(event) {
-        //console.log(this.typeId() + " onMouseOut")
+    onMouseLeave: function(event) {
+        //console.log(this.typeId() + " onMouseLeave")
         this.setIsHighlighted(false)
         return false
     },

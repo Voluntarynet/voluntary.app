@@ -49,7 +49,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
         return this.parentView().parentView()
     },
     
-    // rows
+    // subviews
 
     willAddSubview: function (aSubview) {
         // for subclasses to over-ride
@@ -66,6 +66,8 @@ window.BrowserColumn = NodeView.extend().newSlots({
         }
     },
 
+    // --- managedSubviews ---
+
     managedSubviews: function() {
         return this.rows()
     },
@@ -81,6 +83,8 @@ window.BrowserColumn = NodeView.extend().newSlots({
         //this.rows().appendItems(subviews)
         return this
     },
+
+    // --- rows ---
     
     rows: function() {
         return this.subviews()
@@ -128,11 +132,11 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
 
     rowWithNode: function(aNode) {
-        return this.rows().detect((row) => { return row.node() === aNode })
+        return this.rows().detect(row => row.node() === aNode)
     },
     
     didClickRowWithNode: function(aNode) {
-        let row = this.rowWithNode(aNode)
+        const row = this.rowWithNode(aNode)
         if (!row) {
             throw new Error("column  missing row for node '" + aNode.title() + "'")
         }
@@ -141,7 +145,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
     
     unselectRowsBesides: function(selectedRow) {
-        let rows = this.rows()
+        const rows = this.rows()
 
         // unselect all other rows
         rows.forEach((row) => {
@@ -194,7 +198,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
     
     selectedNode: function() {
-        let row = this.selectedRow()
+        const row = this.selectedRow()
         return row ? row.node() : null
     },
     
@@ -203,12 +207,12 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
     
     setSelectedRowIndex: function(index) {
-        let oldIndex = this.selectedRowIndex()
+        const oldIndex = this.selectedRowIndex()
         //console.log("this.setSelectedRowIndex(" + index + ") oldIndex=", oldIndex)
         if (index !== oldIndex) {
-            let rows = this.rows()
+            const rows = this.rows()
             if (index < rows.length && index !== -1) {
-                let row = rows[index]
+                const row = rows[index]
                 row.select()
                 this.didClickRow(row)
             }
@@ -221,7 +225,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
     
     clickRowWithNode: function(aNode) {
-        let index = this.indexOfRowWithNode(aNode);
+        const index = this.indexOfRowWithNode(aNode);
         if (index !== null) {
             this.setSelectedRowIndex(index)
         }
@@ -234,7 +238,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
 	
     selectRowWithNode: function (aNode) {
-        let selectedRow = this.rows().detect(row => row.node() === aNode)
+        const selectedRow = this.rows().detect(row => row.node() === aNode)
 		
         if (selectedRow) {
             selectedRow.setIsSelected(true)
@@ -250,7 +254,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
     
     selectedRowTitle: function () {
-        let row = this.selectedRow()
+        const row = this.selectedRow()
         if (row) { 
             return row.title().innerHTML() 
         }
@@ -279,7 +283,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
 	
     shouldFocusSubnode: function(aNote) {
-	    let subnode = aNote.info()
+	    const subnode = aNote.info()
 	    this.clickRowWithNode(subnode)
 
 	    let subview = this.subviewForNode(subnode)
@@ -290,7 +294,6 @@ window.BrowserColumn = NodeView.extend().newSlots({
         } 
 
         if (subview) {
-	        let subview = this.subviewForNode(subnode)
 		    this.selectRowWithNode(subnode)
 		    subview.scrollIntoView()
 		    //subview.dynamicScrollIntoView()
@@ -304,14 +307,14 @@ window.BrowserColumn = NodeView.extend().newSlots({
 	
     scrollToSubnode: function(aSubnode) {
 	    //console.log(this.typeId() + ".scrollToSubnode")
-	    let subview = this.subviewForNode(aSubnode)
+	    const subview = this.subviewForNode(aSubnode)
 	    assert(subview)
 	    this.columnGroup().scrollView().setScrollTop(subview.offsetTop())
 	    return this 	    
     },
     
     scrollToBottom: function() {
-        let last = this.rows().last()
+        const last = this.rows().last()
 
         if (last) { 
             last.scrollIntoView()
@@ -355,56 +358,39 @@ window.BrowserColumn = NodeView.extend().newSlots({
         }
         */
         
-        // remember the selection        
+        // remember the selection before sync
         let selectedIndex = this.selectedRowIndex()
-        // console.log(this.node().title() + "  selectedIndex 1: " + selectedIndex)
-        let thereWasASelection = selectedIndex !== -1
-        let lastSelectedNode = this.selectedNode()
+        const lastSelectedNode = this.selectedNode()
         
         NodeView.syncFromNode.apply(this)
         
         if (this.node() === null) {
             this.setIsRegisteredForDrop(false)
-            return
+            return this
         }
         
         this.setIsRegisteredForDrop(this.node().acceptsFileDrop())
 
-        if (!thereWasASelection) {
+        if (selectedIndex === -1) {
             this.browser().clearColumnsGroupsAfter(this.columnGroup())
         } else {
- 
             // select the row matching the last selected node
             let row = this.selectRowWithNode(lastSelectedNode)
 
             if (row) {
-                //this.log("selecting row titled '" + row.title().innerHTML() + "'")
+                // there's a row for the lastSelectedNode, so let's select it
                 if (!row.isSelected()) {
+                    //this.log("selecting row titled '" + row.title().innerHTML() + "'")
                     row.setIsSelected(true)
                     this.didClickRow(row)
                 }
             } else {
-                //this.log(this.title() + " syncFromNode with new selection")
-                //this.log("this.rows().length: " + this.rows().length)
-                //this.log("selectedIndex: " + selectedIndex)
-                
                 // otherwise, select close to last selected index
-                if (selectedIndex >= this.rows().length) {
-                    selectedIndex = this.rows().length - 1
-                }
-                
-                //console.log(this.node().title() + " selectedIndex : " + selectedIndex)
-                //this.log("selectedIndex < this.rows().length: " + (selectedIndex < this.rows().length) )
-                
-                if (selectedIndex !== -1 && selectedIndex < this.rows().length) {
-                    row = this.rows()[selectedIndex]
-                    //this.log("selecting row titled '" + row.title().innerHTML() + "'")
-                    row.setIsSelected(true)
-                    this.didClickRow(row)
-                } else {
-                    //this.log("clear other columns")
-                    this.browser().clearColumnsGroupsAfter(this.columnGroup())
-                }
+                const rowCount = Math.min(selectedIndex, this.rows().length - 1)
+                row = this.rows()[selectedIndex]
+                //this.log("selecting row titled '" + row.title().innerHTML() + "'")
+                row.setIsSelected(true)
+                this.didClickRow(row)
             }
         }
     },
@@ -454,7 +440,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
                 this.selectedRow().unselect() 
             }
 			
-            let newSelectedRow = pc.selectedRow()
+            const newSelectedRow = pc.selectedRow()
             newSelectedRow.setShouldShowFlash(true).updateSubviews()
             pc.didClickRow(newSelectedRow)
         	this.selectPreviousColumn()
@@ -570,7 +556,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
     
     selectNextColumn: function() {
-        let nextColumn = this.nextColumn()
+        const nextColumn = this.nextColumn()
         if (nextColumn) {
             this.blur()
             //console.log("nextColumn.focus()")
@@ -582,14 +568,14 @@ window.BrowserColumn = NodeView.extend().newSlots({
     // previous column
 	
     previousColumn: function() {
-        let i = this.columnIndex()
-        let prevColumn = this.browser().columns()[i-1]
+        const i = this.columnIndex()
+        const prevColumn = this.browser().columns()[i - 1]
         return prevColumn
     },
 
     selectPreviousColumn: function() {
         //this.log("selectPreviousColumn this.columnIndex() = " + this.columnIndex())
-        let prevColumn = this.previousColumn()
+        const prevColumn = this.previousColumn()
         if (prevColumn) {
             this.blur()
             prevColumn.focus()
@@ -619,7 +605,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
 
     maxRowWidth: function() {
-        let maxWidth = this.rows().maxValue(function(row) {
+        const maxWidth = this.rows().maxValue(function(row) {
             return row.calcWidth()
         })			
         return maxWidth	
@@ -636,7 +622,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
 
     absolutePositionRows: function() {
         //console.log("absolutePositionRows")
-        let ys = []
+        const ys = []
         this.rows().forEach((row) => {
             let y = row.relativePos().y()
             ys.append(y)
@@ -657,7 +643,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
 
     relativePositionRows: function() {
         // should we calc a new subview ordering based on sorting by top values?
-        let orderedRows = this.rows().copy().sortPerform("top")
+        const orderedRows = this.rows().copy().sortPerform("top")
 
         orderedRows.forEach((row) => {
             let y = row.relativePos().y()
@@ -674,7 +660,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
 
     orderRows: function() {
-        let orderedRows = this.rows().copy().sortPerform("top")
+        const orderedRows = this.rows().copy().sortPerform("top")
 
         this.rows().forEach((row) => {
             row.setPosition("absolute")
@@ -687,12 +673,12 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
 
     stackRows: function() {
-        let orderedRows = this.rows().copy().sortPerform("top")
+        const orderedRows = this.rows().copy().sortPerform("top")
 
         let y = 0
         //console.log("stackRows")
         orderedRows.forEach((row) => {
-            let h = row.clientHeight() 
+            const h = row.clientHeight() 
             row.setPosition("absolute")
             row.setDisplay("block")
             //console.log("y:", y + " h:", h)
@@ -709,7 +695,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
 
     didReorderRows: function() { 
         // TODO: make a more scaleable API
-        let subnodes = this.rows().map(row => row.node())
+        const subnodes = this.rows().map(row => row.node())
         this.node().nodeReorderSudnodesTo(subnodes)
         return this
     },
@@ -733,27 +719,23 @@ window.BrowserColumn = NodeView.extend().newSlots({
         //   can delete it if pinch doesn't complete with enough height
 
         console.log(this.typeId() + ".onPinchBegin()")
-        let p = aGesture.beginCenterPosition()
+        const p = aGesture.beginCenterPosition()
         let r = this.rowContainingPoint(p)
         if (!r) {
             r = this.rowContainingPoint(p)
-            return this
+            assert(r)
         }
-        let insertIndex = this.rows().indexOf(r)
+        const insertIndex = this.rows().indexOf(r)
 
         //console.log("insertIndex: ", insertIndex)
 
         if (this.node().hasAction("add")) {
             let newSubnode = this.node().add()
             let subnodes = this.node().subnodes().copy()
-            //console.log("subnodes1: ", subnodes.map(v => v.typeId()))
             subnodes.remove(newSubnode)
-            //console.log("insertIndex:", insertIndex)
             subnodes.atInsert(insertIndex, newSubnode)
-            //console.log("subnodes2: ", subnodes.map(v => v.typeId()))
 
-            let subviews = this.subviews()
-            //console.log("subviews before sync: ", subviews.map(sv => sv.node().typeId()))
+            const subviews = this.subviews()
             this.node().nodeReorderSudnodesTo(subnodes)
             this.syncFromNode()
             //console.log("subviews after sync:  ", subviews.map(sv => sv.node().typeId()))
@@ -761,6 +743,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
             let newRow = this.subviewForNode(newSubnode)
             if (!newRow) {
                 newRow = this.subviewForNode(newSubnode)
+                assert(newRow)
             }
             newRow.setMinAndMaxHeight(0)
             newRow.contentView().setMinAndMaxHeight(64)

@@ -103,12 +103,12 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     },
 
     agent: function() {
-        let agent = navigator.userAgent.toLowerCase()
+        const agent = navigator.userAgent.toLowerCase()
         return agent
     },
 
     agentIsSafari: function() {
-        let isSafari = navigator.vendor && navigator.vendor.indexOf("Apple") !== -1 &&
+        const isSafari = navigator.vendor && navigator.vendor.indexOf("Apple") !== -1 &&
                navigator.userAgent &&
                navigator.userAgent.indexOf("CriOS") === -1 &&
                navigator.userAgent.indexOf("FxiOS") === -1;
@@ -116,15 +116,15 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     },
 
     agentIsChrome: function() {
-        let isChrome =  Boolean(window.chrome) //&& 
+        const isChrome =  Boolean(window.chrome) //&& 
         //navigator.userAgent.indexOf('Brave') === -1;
         //console.log("window.chrome = ", window.chrome);
         return isChrome
     },
     
     isOnMobile: function() { 
-        let agent = this.agent();
-        let match = this.mobileNames().detect((name) => { return agent.contains(name); })
+        const agent = this.agent();
+        const match = this.mobileNames().detect((name) => { return agent.contains(name); })
         return match !== null
     },
 

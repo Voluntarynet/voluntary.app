@@ -48,7 +48,7 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
     
     setupThumbnailViewIfAbsent: function() {
         if (!this.thumbnailView()) {
-            let tv = DivView.clone().setDivClassName("BrowserRowThumbnailView")
+            const tv = DivView.clone().setDivClassName("BrowserRowThumbnailView")
     		tv.makeBackgroundNoRepeat()
             tv.makeBackgroundCentered()
             //tv.makeBackgroundContain()
@@ -58,7 +58,7 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
             this.addSubview(tv)
             
             // TODO: make this dynamic with subview for title & subtitle
-            let offset = 60
+            const offset = 60
             this.titleView().setLeft(offset)
             this.subtitleView().setLeft(offset)
         }
@@ -70,20 +70,20 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
 	
         this.setHasSubtitle(this.hasSubtitle())
 
-        let node = this.node()
+        const node = this.node()
 
         this.titleView().setContentEditable(node ? node.nodeTitleIsEditable() : false)
         this.subtitleView().setContentEditable(node ? node.nodeSubtitleIsEditable() : false)
             
         
         if (node) {
-            let b = this.isSelected()
+            const b = this.isSelected()
             this.titleView().setIsSelected(b)
             this.subtitleView().setIsSelected(b)
             this.noteView().setIsSelected(b)
             
             if (node) {
-                let imageUrl = node.nodeThumbnailUrl()
+                const imageUrl = node.nodeThumbnailUrl()
                 if (imageUrl) {
                     this.setupThumbnailViewIfAbsent()
                     this.thumbnailView().verticallyAlignAbsoluteNow() // TODO: optimize this
@@ -115,15 +115,16 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
 
     syncToNode: function () {   
         //console.log("syncToNode")
-        this.node().setTitle(this.titleView().innerHTML())
-        this.node().setSubtitle(this.subtitleView().innerHTML())
-        this.node().tellParentNodes("onDidEditNode", this.node())  
-        this.node().scheduleSyncToStore()
+        const node = this.node()
+        node.setTitle(this.titleView().innerHTML())
+        node.setSubtitle(this.subtitleView().innerHTML())
+        node.tellParentNodes("onDidEditNode", this.node())  
+        node.scheduleSyncToStore()
         return this
     },
 
     syncFromNode: function () {
-        let node = this.node()
+        const node = this.node()
         this.titleView().setString(node.title())
         this.subtitleView().setString(node.subtitle())
         this.noteView().setString(this.node().note())
@@ -134,10 +135,12 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
     // arrow
     
     makeNoteRightArrow: function() {
-        this.noteView().setBackgroundImageUrlPath(this.pathForIconName("right-gray"))        
-        this.noteView().setBackgroundSizeWH(10, 10)
-        this.noteView().setMinAndMaxWidth(10).setMinAndMaxHeight(10)
-        //this.noteView().setOpacity(0.5)
+        const nv = this.noteView()
+        nv.setBackgroundImageUrlPath(this.pathForIconName("right-gray"))        
+        nv.setBackgroundSizeWH(10, 10)
+        nv.setMinAndMaxWidth(10)
+        nv.setMinAndMaxHeight(10)
+        //nv.setOpacity(0.5)
         return this		
     },
 })

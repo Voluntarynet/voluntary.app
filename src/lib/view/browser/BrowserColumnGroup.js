@@ -63,8 +63,8 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
     },
     
     updateScrollView: function() {
-        let headerHeight = 40
-        let footerHeight = 40
+        const headerHeight = 40
+        const footerHeight = 40
         
         let heightOffset = 0
         let top = 0
@@ -98,13 +98,17 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
     },
 	
     previousColumnGroup: function() {
-        let prevCol = this.column().previousColumn()
-        if (prevCol) { return prevCol.columnGroup() }
+        const prevCol = this.column().previousColumn()
+
+        if (prevCol) { 
+            return prevCol.columnGroup() 
+        }
+
         return null
     },
 	
     isFirstUncollapsed: function() {
-        let pcg = this.previousColumnGroup()
+        const pcg = this.previousColumnGroup()
         return (!this.isCollapsed()) && (!pcg || pcg.isCollapsed())
     },
 	
@@ -201,7 +205,7 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
     
     setColumnClass: function(columnClass) {
         if (this.column().type() !== columnClass.type()) {
-            let view = columnClass.clone().setNode(this.node())
+            const view = columnClass.clone().setNode(this.node())
             this.scrollView().removeSubview(this.column())
             this.setColumn(view)
             this.scrollView().addSubview(this.column())
@@ -238,7 +242,7 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
     },
 
     matchNodeMinWidth: function() {
-        let w = this.targetWidth()
+        const w = this.targetWidth()
         if (w) {
             this.setMinAndMaxWidth(w)
         }
@@ -258,7 +262,7 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
         if (aNode) {
             // obey node's width preferences
             // use custom class for column if node wants it
-            let customViewClass = aNode.viewClass()
+            const customViewClass = aNode.viewClass()
             if (customViewClass) {
                 this.setColumnClass(customViewClass)
             }

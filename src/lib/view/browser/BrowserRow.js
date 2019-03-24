@@ -51,7 +51,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
 
     setupRowContentView: function() {
-        let cv = DivView.clone().setDivClassName("BrowserRowContentView")
+        const cv = DivView.clone().setDivClassName("BrowserRowContentView")
         cv.setWidthPercentage(100).setHeightPercentage(100) 
         cv.setPosition("absolute")
         this.setContentView(cv)
@@ -66,7 +66,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     // node style dict
     
     currentRowStyle: function() {
-        let styles = this.node().nodeRowStyles()
+        const styles = this.node().nodeRowStyles()
         //styles.selected().set
         
         if (this.isSelected()) {
@@ -131,7 +131,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     // --- colors ---
 	
     applyStyles: function() {
-        let node = this.node() 
+        const node = this.node() 
         
         if (node) {
             this.styles().copyFrom(node.nodeRowStyles())
@@ -167,7 +167,7 @@ window.BrowserRow = NodeView.extend().newSlots({
 
     unselectedBgColor: function() {
         if (this.node()) {
-            let c = this.node().nodeRowStyles().unselected().backgroundColor()
+            const c = this.node().nodeRowStyles().unselected().backgroundColor()
             if (c) {
                 return c
             }
@@ -178,7 +178,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     
     selectedBgColor: function() {
         if (this.node()) {
-            let c = this.node().nodeRowStyles().selected().backgroundColor()
+            const c = this.node().nodeRowStyles().selected().backgroundColor()
             if (c) {
                 return c
             }
@@ -197,7 +197,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         if (this.closeButtonView() == null) {
             //let c = CenteredDivView.clone()
 
-            let cb = DivView.clone().setDivClassName("BrowserRowCloseButton")
+            const cb = DivView.clone().setDivClassName("BrowserRowCloseButton")
             //this.setCloseButtonView(NodeView.clone().setDivClassName("BrowserRowCloseButton"))
             this.setCloseButtonView(cb)
             this.contentView().addSubview(cb) 
@@ -270,7 +270,7 @@ window.BrowserRow = NodeView.extend().newSlots({
 
     setupSlide: function() {
         if (!this._dragDeleteButtonView) {
-            let h = this.clientHeight()
+            const h = this.clientHeight()
 
             this.setBackgroundColor("black")
             this.contentView().setBackgroundColor(this.column().columnGroup().backgroundColor())
@@ -298,8 +298,8 @@ window.BrowserRow = NodeView.extend().newSlots({
 	
     onSlideMove: function(slideGesture) {
         if (this.canDelete()) {
-            let d = slideGesture.distance()
-            let isReadyToDelete  = d >= this._touchDeleteOffset
+            const d = slideGesture.distance()
+            const isReadyToDelete  = d >= this._touchDeleteOffset
 
             //console.log("slideGesture.distance() = ", d)
             //console.log("isReadyToDelete = ", isReadyToDelete)
@@ -322,8 +322,8 @@ window.BrowserRow = NodeView.extend().newSlots({
     onSlideComplete: function(slideGesture) {
         //console.log(">>> " + this.type() + " onSlideComplete")
         
-        let d = slideGesture.distance()
-        let isReadyToDelete  = d >= this._touchDeleteOffset
+        const d = slideGesture.distance()
+        const isReadyToDelete  = d >= this._touchDeleteOffset
 
         if (isReadyToDelete) {
             this.finishSlideAndDelete()
@@ -481,7 +481,7 @@ window.BrowserRow = NodeView.extend().newSlots({
 
     onPanMove: function(aGesture) {
         if (this._isDraggingView) {
-            let np = this._dragStartPos.add(aGesture.diffPos()) 
+            const np = this._dragStartPos.add(aGesture.diffPos()) 
             //console.log("aGesture.diffPos.y() = ", aGesture.diffPos().y())
             //console.log("onPanMove y = ", np.y())
             this.setTop(np.y())

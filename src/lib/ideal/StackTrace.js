@@ -43,35 +43,35 @@ class StackTrace extends ProtoClass {
     }
 	
     stringForError(error) {
-        let lines = error.stack.split("\n")
-        let firstLine = lines.removeFirst()
-        let out = []
-        let indent = "    "
+        const lines = error.stack.split("\n")
+        const firstLine = lines.removeFirst()
+        const out = []
+        const indent = "    "
 		
         lines.forEach(function (line) {
             if (line.contains("at file")) {
                 out.push(["....", line.after("at ").split("/").pop()])
             } else {
-                let line = line.after("at ")
+                const line = line.after("at ")
                 if (line === "") {
                     return;
                 }
-                let obj = line.before(".")
-                let method = line.after(".").before(" (")
-                let path = line.after("(").before(")")
-                let filePart = path.split("/").pop()
+                const obj = line.before(".")
+                const method = line.after(".").before(" (")
+                const path = line.after("(").before(")")
+                const filePart = path.split("/").pop()
                 let file = filePart.before(":")
                 if (file === "") { 
                     file = "???.js:??:?"
                 }
-                let className = file.before(".js")
-                let location = filePart.after(":")
+                const className = file.before(".js")
+                const location = filePart.after(":")
                 out.push([className + " " + method + "()      ", file + ":" + location])
             }
         })
 		
         let s = firstLine + "\n"
-        let m = out.maxValue(function(entry) { return entry[0].length })
+        const m = out.maxValue(function(entry) { return entry[0].length })
         out.forEach(function (entry) {
             s += indent + entry[0] + " ".repeat(m + 1 - entry[0].length) + entry[1] + "\n"
         })
@@ -82,13 +82,12 @@ class StackTrace extends ProtoClass {
     }
 	
     showError(error) {
-        let s = this.stringForError(error)
+        const s = this.stringForError(error)
         console.warn(s)
-
     }
 
     showCurrentStack() {
-        let e = new Error()
+        const e = new Error()
         e.name = "STACK TRACE"
         e.message = ""
         console.log( e.stack );

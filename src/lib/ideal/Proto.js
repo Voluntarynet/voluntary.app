@@ -73,9 +73,9 @@ Proto.setSlots({
 
     allDescendantProtos: function() {
         if (!this._allDescendantProtos) {
-            let children = this.childProtos()
+            const children = this.childProtos()
 
-            let m = children.map(function (child) { 
+            const m = children.map(function (child) { 
                 return child.allDescendantProtos() 
             })
 
@@ -122,7 +122,7 @@ Proto.setSlots({
     },
 
     cloneWithoutInit: function () {
-        let obj = Object.clone(this);
+        const obj = Object.clone(this);
         obj.__proto__ = this;
         //obj.constructor.name = this._type // can't assign to an anonymous Function
         obj._uniqueId = this.newUniqueInstanceId()
@@ -136,7 +136,7 @@ Proto.setSlots({
     },
 
     clone: function () {
-        let obj = this.cloneWithoutInit();
+        const obj = this.cloneWithoutInit();
         obj.init();
         return obj;
     },
@@ -188,7 +188,7 @@ Proto.setSlots({
             initialValue = null 
         };
 
-        let privateName = "_" + slotName;
+        const privateName = "_" + slotName;
         this[privateName] = initialValue;
 
         if (!this[slotName]) {
@@ -197,7 +197,7 @@ Proto.setSlots({
             }
         }
 
-        let setterName = "set" + slotName.capitalized()
+        const setterName = "set" + slotName.capitalized()
 
         if (!this[setterName]) {
             this[setterName] = function (newValue) {
@@ -219,7 +219,7 @@ Proto.setSlots({
     },
 
     updateSlot: function (slotName, privateName, newValue) {
-        let oldValue = this[privateName];
+        const oldValue = this[privateName];
         if (oldValue !== newValue) {
             this[privateName] = newValue;
             
@@ -311,7 +311,7 @@ Proto.setSlots({
     },
 
     performGets: function (slots) {
-        let object = {};
+        const object = {};
         slots.forEach( (slot) => {
             object[slot] = this.perform(slot);
         });
@@ -344,7 +344,7 @@ Proto.setSlots({
     // --- ancestors ---
 
     ancestors: function () {
-        let results = []
+        const results = []
         let obj = this;
         while (obj.__proto__ && obj.type) {
             results.push(obj)
@@ -365,12 +365,12 @@ Proto.setSlots({
         // existing class with the same name as the ancestor + the given postfix
         // useful for things like type + "View" or type + "RowView", etc
         //console.log(this.typeId() + " firstAncestorWithMatchingPostfixClass(" + aPostfix + ")")
-        let match = this.ancestors().detect((obj) => {
-            let name = obj.type() + aPostfix
-            let proto = window[name]
+        const match = this.ancestors().detect((obj) => {
+            const name = obj.type() + aPostfix
+            const proto = window[name]
             return proto
         })
-        let result = match ? window[match.type() + aPostfix] : null
+        const result = match ? window[match.type() + aPostfix] : null
         /*
         if (result) { 
             console.log("FOUND " + result.type())

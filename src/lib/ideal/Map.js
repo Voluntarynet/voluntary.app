@@ -46,7 +46,7 @@ window.ideal.Map = class Map extends ProtoClass {
     }
 
     mapAt (k) {
-        let v = this.at(k);
+        const v = this.at(k);
         if (typeof(v) !== "object" || (Object.getPrototypeOf(v) !== Object.prototype)) {
             return v;
         }
@@ -89,10 +89,10 @@ window.ideal.Map = class Map extends ProtoClass {
     }
 
     filtered (fn) {
-        let map = Map.clone();
-        let jsMap = this.jsMap();
+        const map = Map.clone();
+        const jsMap = this.jsMap();
         this.keys().forEach(function (k) {
-            let v = jsMap[k];
+            const v = jsMap[k];
             if (fn(k, v)) {
                 map.atPut(k, v);
             }
@@ -109,7 +109,7 @@ window.ideal.Map = class Map extends ProtoClass {
     }
 
     lowerCased () {
-        let map = Map.clone();
+        const map = Map.clone();
         this.forEach(function (k, v) {
             map.atPut(k.toLowerCase(), v);
         });
@@ -137,7 +137,7 @@ window.ideal.Map = class Map extends ProtoClass {
     }
 
     merge (aMap) {
-        let jsMap = this.jsMap();
+        const jsMap = this.jsMap();
         aMap.forEach(function (k, v) {
             jsMap[k] = v;
         });
@@ -153,7 +153,7 @@ window.ideal.Map = class Map extends ProtoClass {
     }
 
     atRemove (k) {
-        let m = this.jsMap();
+        const m = this.jsMap();
         delete m[k];
         return this;
     }

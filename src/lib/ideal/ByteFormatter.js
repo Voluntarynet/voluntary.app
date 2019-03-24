@@ -47,21 +47,21 @@ class ByteFormatter extends ProtoClass {
     }
 
     formattedValue() {
-        let b = Math.floor(this.value());
+        const b = Math.floor(this.value());
         let postfix = this.usePostfix() ? "B" : "";
         let space = this.useSpace() ? " " : "";
 		
-        let orderNames = this.useLongNames() ? this.orderNamesLong() : this.orderNamesShort();
+        const orderNames = this.useLongNames() ? this.orderNamesLong() : this.orderNamesShort();
         let order = Math.floor(Math.log10(b)/3)
         order = Math.min(order, orderNames.length - 1)
-        let orderName = orderNames[order]
+        const orderName = orderNames[order]
 
         if (order === 0 || this.useLongNames()) {
             space = " "
             postfix = ""
         }
 
-        let v = Math.floor(b / Math.pow(10, order*3))
+        const v = Math.floor(b / Math.pow(10, order*3))
 		
         // remove plural if v === 1
         if (orderName[orderName.length-1] === "s" && v === 1) {

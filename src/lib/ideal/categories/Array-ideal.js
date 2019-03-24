@@ -190,7 +190,7 @@ Object.shallowCopyTo({
     },
 
     remove: function (e) {
-        let i = this.indexOf(e);
+        const i = this.indexOf(e);
         if (i !== -1) {
             this.removeAt(i);
         }
@@ -222,7 +222,7 @@ Object.shallowCopyTo({
     },
 
     replace: function (obj, withObj) {
-        let i = this.indexOf(obj);
+        const i = this.indexOf(obj);
         if (i !== -1) {
             this.removeAt(i);
             this.atInsert(i, withObj);
@@ -231,8 +231,8 @@ Object.shallowCopyTo({
     },
 
     swap: function (e1, e2) {
-        let i1 = this.indexOf(e1);
-        let i2 = this.indexOf(e2);
+        const i1 = this.indexOf(e1);
+        const i2 = this.indexOf(e2);
 
         this[i1] = e2;
         this[i2] = e1;
@@ -248,9 +248,9 @@ Object.shallowCopyTo({
         }
 
         while (--i) {
-            let j = Math.floor(Math.random() * (i + 1));
-            let tempi = this[i];
-            let tempj = this[j];
+            const j = Math.floor(Math.random() * (i + 1));
+            const tempi = this[i];
+            const tempj = this[j];
             this[i] = tempj;
             this[j] = tempi;
         }
@@ -265,12 +265,12 @@ Object.shallowCopyTo({
     // --- enumeration ---
 
     forEachCall: function (functionName) {
-        let args = this.slice.call(arguments).slice(1);
+        const args = this.slice.call(arguments).slice(1);
         args.push(0);
-        this.forEach(function (e, i) {
+        this.forEach((e, i) => {
             args[args.length - 1] = i;
             if (e) {
-                let fn = e[functionName];
+                const fn = e[functionName];
                 if (fn) {
                     fn.apply(e, args);
                 }
@@ -287,10 +287,10 @@ Object.shallowCopyTo({
     },
 
     sortPerform: function (functionName) {
-        let args = this.slice.call(arguments).slice(1);
+        const args = this.slice.call(arguments).slice(1);
         return this.sort(function (x, y) {
-            let xRes = x[functionName].apply(x, args);
-            let yRes = y[functionName].apply(y, args);
+            const xRes = x[functionName].apply(x, args);
+            const yRes = y[functionName].apply(y, args);
             if (xRes < yRes) {
                 return -1;
             }
@@ -304,8 +304,8 @@ Object.shallowCopyTo({
     },
 
     parallelPerform: function () {
-        let args = this.slice.call(arguments).slice();
-        let fn = args.pop();
+        const args = this.slice.call(arguments).slice();
+        const fn = args.pop();
 
         if (this.length === 0) {
             fn(null);
@@ -316,7 +316,7 @@ Object.shallowCopyTo({
         let err = null;
         args.push(function (error) {
             err = error;
-            remaining--;
+            remaining --;
             if (remaining === 0) {
                 fn(err, ops);
             }

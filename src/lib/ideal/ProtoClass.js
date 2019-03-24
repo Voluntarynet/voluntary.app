@@ -104,7 +104,7 @@ class ProtoClass {
 
     static clone () {
         //this.setupSlotsIfNeeded()
-        let obj = new this()
+        const obj = new this()
         obj.assignUniqueId()
         obj.init()
         return obj
@@ -131,7 +131,7 @@ class ProtoClass {
             initialValue = null; 
         };
 
-        let privateName = "_" + slotName;
+        const privateName = "_" + slotName;
         this[privateName] = initialValue;
 
         if (!this[slotName]) {
@@ -140,7 +140,7 @@ class ProtoClass {
             }
         }
 
-        let setterName = "set" + slotName.capitalized()
+        const setterName = "set" + slotName.capitalized()
 
         if (!this[setterName]) {
             this[setterName] = function (newValue) {
@@ -162,7 +162,7 @@ class ProtoClass {
     }
 
     updateSlot(slotName, privateName, newValue) {
-        let oldValue = this[privateName];
+        const oldValue = this[privateName];
         if (oldValue !== newValue) {
             this[privateName] = newValue;
             this.didUpdateSlot(slotName, oldValue, newValue)
@@ -190,7 +190,7 @@ class ProtoClass {
 
 
     childProtos () {
-        let result = ProtoClass.allClasses().select((proto) => { return proto._parentProto === this })
+        const result = ProtoClass.allClasses().select((proto) => { return proto._parentProto === this })
         return result
     }
 
@@ -234,14 +234,14 @@ class ProtoClass {
     }
 
     cloneWithoutInit () {
-        let obj = Object.clone(this);
+        const obj = Object.clone(this);
         obj.__proto__ = this;
         obj.assignUniqueId();
         return obj;
     }
 
     clone () {
-        let obj = this.cloneWithoutInit();
+        const obj = this.cloneWithoutInit();
         obj.init();
         return obj;
     }
@@ -382,7 +382,7 @@ class ProtoClass {
     // --- ancestors ---
 
     ancestors () { // TODO: test this for ES6 classes
-        let results = []
+        const results = []
         let obj = this;
         while (obj.__proto__ && obj.type) {
             results.push(obj)
@@ -403,12 +403,12 @@ class ProtoClass {
         // existing class with the same name as the ancestor + the given postfix
         // useful for things like type + "View" or type + "RowView", etc
         //console.log(this.typeId() + " firstAncestorWithMatchingPostfixClass(" + aPostfix + ")")
-        let match = this.ancestors().detect((obj) => {
-            let name = obj.type() + aPostfix
-            let proto = window[name]
+        const match = this.ancestors().detect((obj) => {
+            const name = obj.type() + aPostfix
+            const proto = window[name]
             return proto
         })
-        let result = match ? window[match.type() + aPostfix] : null
+        const result = match ? window[match.type() + aPostfix] : null
 
         return result
     }

@@ -207,10 +207,11 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
 
     // active
 
-    requestActive: function() {
-        let vt = this.viewTarget()
-        assert(vt)
-        let r = vt.requestActiveGesture(this)
+    requestActivation: function() {
+        //let vt = this.viewTarget()
+        //assert(vt)
+        //let r = vt.requestActiveGesture(this)
+        let r = GestureManager.shared().requestActiveGesture(this);
         if(r) {
             this.setIsActive(true)
             return true
@@ -218,11 +219,17 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         return this
     },
 
+    deactivate: function() {
+        this.setIsActive(false)
+        GestureManager.shared().deactivateGesture(this);
+        return this
+    },
+
     // finish
 
     didFinish: function() {
         this.setDidBegin(false)
-        this.setIsActive(false)
+        this.deactivate()
 
         if (this.shouldRemoveOnComplete() && this.viewTarget()) {
             //let vt = this.viewTarget()

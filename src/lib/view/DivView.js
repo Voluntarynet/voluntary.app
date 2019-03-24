@@ -1873,11 +1873,11 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this
     },
 
+    /*
     requestActiveGesture: function(aGesture) {
         return GestureManager.shared().requestActiveGesture(aGesture);
     },
 
-    /*
     firstActiveGesture: function() {
         return this.gestureRecognizers().detect((gr) => {
             return gr.isActive()

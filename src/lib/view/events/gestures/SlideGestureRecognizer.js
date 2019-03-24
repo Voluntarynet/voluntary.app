@@ -87,7 +87,7 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
             }
 
             if (!this.isActive() && this.hasMovedEnough()) {
-                if(this.requestActive()) {
+                if(this.requestActivation()) {
                     //this.setIsActive(true)
                     this.sendBeginMessage() // being
                 }
@@ -126,7 +126,7 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     finish: function() {
         //console.log(this.typeId() + ".finish()")
         this.setIsPressing(false)
-        this.setIsActive(false)
+        this.deactivate()
         this.stopDocListeners()
         this.didFinish()
         return this

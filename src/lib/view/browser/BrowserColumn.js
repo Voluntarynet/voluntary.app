@@ -757,7 +757,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
             subnodes.remove(newSubnode)
             //console.log("insertIndex:", insertIndex)
             subnodes.atInsert(insertIndex, newSubnode)
-            console.log("subnodes2: ", subnodes.map(v => v.typeId()))
+            //console.log("subnodes2: ", subnodes.map(v => v.typeId()))
 
             let subviews = this.subviews()
             //console.log("subviews before sync: ", subviews.map(sv => sv.node().typeId()))
@@ -782,7 +782,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     
     onPinchMove: function(aGesture) {
         let s = Math.floor(aGesture.spread())
-        console.log(this.typeId() + ".onPinchMove() spread = " + s)
+        //console.log(this.typeId() + ".onPinchMove() spread = " + s)
 
         if (this._temporaryPinchSubnode) {
             let newRow = this.subviewForNode(this._temporaryPinchSubnode)

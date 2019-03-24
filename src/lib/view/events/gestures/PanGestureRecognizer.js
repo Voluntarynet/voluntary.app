@@ -53,7 +53,7 @@ window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
     },
 
     attemptBegin: function() {
-        if(this.requestActive()) {
+        if(this.requestActivation()) {
             this.setIsActive(true)
             this.setBeginEvent(event)
             this.sendBeginMessage() // begin

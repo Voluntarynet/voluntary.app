@@ -25,7 +25,7 @@ window.GestureManager = ideal.Proto.extend().newSlots({
     requestActiveGesture: function(aGesture) {
         assert(aGesture)
 
-        this.releaseActiveGestureIfDormant()
+        this.releaseActiveGestureIfInactive()
         assert(aGesture !== this.activeGesture())
 
         if (!this.activeGesture()) {
@@ -38,7 +38,7 @@ window.GestureManager = ideal.Proto.extend().newSlots({
         return false
     },
 
-    releaseActiveGestureIfDormant: function() {
+    releaseActiveGestureIfInactive: function() {
         let ag = this.activeGesture()
         if (ag && !ag.isActive()) {
             console.log(this.type() + " releasing " + ag.typeId())
@@ -47,10 +47,9 @@ window.GestureManager = ideal.Proto.extend().newSlots({
         return this
     },
 
-    /*
-    releaseActiveGesture: function(aGesture) {
-
+    deactivateGesture: function(aGesture) {
+        this.setActiveGesture(null)
+        return this
     },
-    */
 
 })

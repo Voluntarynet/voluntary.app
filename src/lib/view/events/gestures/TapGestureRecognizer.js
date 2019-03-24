@@ -111,7 +111,7 @@ window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     complete: function() {
         this.stopTimer()
-        if (this.requestActive()) {
+        if (this.requestActivation()) {
             this.sendCompleteMessage() // complete
         }
     },

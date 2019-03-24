@@ -85,7 +85,7 @@ window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
         return !this.isActive() && 
                 this.hasMovedEnough() && 
                 this.numberOfFingersDown() >= this.minFingersRequired() &&
-                this.requestActive(); // TODO: should this be in a "can" method?
+                this.requestActivation(); // TODO: should this be in a "can" method?
     },
 
     onMove: function(event) {
@@ -140,7 +140,7 @@ window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
     didFinish: function() {
         GestureRecognizer.didFinish.apply(this)
         this.setIsPressing(false)
-        this.setIsActive(false)
+        this.deactivate()
         this.stopDocListeners()
         return this
     },

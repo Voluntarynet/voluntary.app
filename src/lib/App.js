@@ -37,7 +37,7 @@ window.App = BMNode.extend().newSlots({
 
         if (!this.isBrowserCompatible()) {
             console.log("App showBrowserCompatibilityPanel")
-            window.LoadProgressBar.setError("Sorry, this app only works on<br>Chrome, FireFox, and Brave browsers.")
+            window.JSImporterPanel.setError("Sorry, this app only works on<br>Chrome, FireFox, and Brave browsers.")
             //this.showBrowserCompatibilityPanel()
             return this
         }

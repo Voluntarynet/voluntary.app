@@ -152,8 +152,8 @@ On top of this system, decentralized apps (dapps) can quicky be built with very 
 
 #### Javascript and CSS importing
 
-When the app launches, it runs JSImporter.js and LoadProgressBar.js. 
-JSImporter handles importing JS and CSS, and LoadProgressBar presents a UI to show the progress of the loading.
+When the app launches, it runs JSImporter.js and JSImporterPanel.js. 
+JSImporter handles importing JS and CSS, and JSImporterPanel presents a UI to show the progress of the loading.
 JSImporter looks in the root folder for an _imports.js file. 
 If found, it loads any paths (treated as relative paths) in the order they are found. 
 These paths can be Javascript (including other _import.js files), CSS. 

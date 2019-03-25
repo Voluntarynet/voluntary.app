@@ -141,10 +141,10 @@ window.PeerApp = App.extend().newSlots({
     appDidInit: function () {
         App.appDidInit.apply(this)
         
-        // LoadProgressBar can't use notification as it's a boot object
+        // JSImporterPanel can't use notification as it's a boot object
         // what if we added a one-shot observation for it, or would that be more confusing?
 
-        window.LoadProgressBar.stop() 
+        window.JSImporterPanel.stop() 
     },
 })
 

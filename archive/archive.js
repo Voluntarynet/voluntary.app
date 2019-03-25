@@ -114,7 +114,7 @@ class Archive {
         indexPaths.push("top.html")
         indexPaths.appendItems(this.cssPaths())
         indexPaths.push("middle.html")
-        indexPaths.push("../src/boot/LoadProgressBar.js")
+        indexPaths.push("../src/boot/JSImporterPanel.js")
         indexPaths.push("../src/boot/JSImporter.js")
         indexPaths.appendItems(this.filePaths())
         indexPaths.push("bottom.html")

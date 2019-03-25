@@ -1569,11 +1569,11 @@ window.JSImporterIsEmbedded = true
 
     Automatically sets up in the document when loading this file via:
 
-        window.LoadProgressBar.startWhenReady()
+        window.JSImporterPanel.startWhenReady()
 
     When all loading is finished, external code should call:
 
-    		window.LoadProgressBar.stop()  
+    		window.JSImporterPanel.stop()  
 
     Notes:
     This code is ugly because it doesn't have any library dependencies 
@@ -1643,7 +1643,7 @@ class LoadProgressBarClass {
     }
 
     startWhenReady () {
-        //console.log("LoadProgressBar.startWhenReady()")
+        //console.log("JSImporterPanel.startWhenReady()")
         //this.setupHtml()
         if (this.canStart()) {
             this.start()
@@ -1653,7 +1653,7 @@ class LoadProgressBarClass {
     }
 
     start () {
-        //console.log("LoadProgressBar.start()")
+        //console.log("JSImporterPanel.start()")
         if (!JSImporterClass.shared().isDone()) {
             this.setupHtml()
             this.initTitle()
@@ -1669,7 +1669,7 @@ class LoadProgressBarClass {
     }
 
     setupHtml () {
-        //console.log("LoadProgressBar.setupHtml()")
+        //console.log("JSImporterPanel.setupHtml()")
         document.body.innerHTML = "<div id='SpinnerMain' style='position: absolute; width:100%; height: 100%; background-color: black; z-index: 100000; font-family: AppRegular, sans-serif; letter-spacing: 3px; font-size:13px;'> \
 <div id='SpinnerMiddle' \
 style='position: relative; top: 50%; transform: translateY(-50%); height: auto; width: 100%; text-align: center;'> \
@@ -1787,7 +1787,7 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
     setError (error) {
         this._error = error
         //console.trace()
-        //console.log("LoadProgressBar setError ", error)
+        //console.log("JSImporterPanel setError ", error)
         //console.log("    document.body = ", document.body) 
         //console.log("    his.errorElement() = ", this.errorElement()) 
         this.errorElement().innerHTML = error
@@ -1817,10 +1817,10 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
     }
 }
 
-//console.log("loaded file LoadProgressBar - starting")
+//console.log("loaded file JSImporterPanel - starting")
 
-window.LoadProgressBar = LoadProgressBarClass.clone()
-window.LoadProgressBar.startWhenReady()
+window.JSImporterPanel = LoadProgressBarClass.clone()
+window.JSImporterPanel.startWhenReady()
 
 
 "use strict"
@@ -99968,7 +99968,7 @@ window.App = BMNode.extend().newSlots({
 
         if (!this.isBrowserCompatible()) {
             console.log("App showBrowserCompatibilityPanel")
-            window.LoadProgressBar.setError("Sorry, this app only works on<br>Chrome, FireFox, and Brave browsers.")
+            window.JSImporterPanel.setError("Sorry, this app only works on<br>Chrome, FireFox, and Brave browsers.")
             //this.showBrowserCompatibilityPanel()
             return this
         }
@@ -107108,10 +107108,10 @@ window.PeerApp = App.extend().newSlots({
     appDidInit: function () {
         App.appDidInit.apply(this)
         
-        // LoadProgressBar can't use notification as it's a boot object
+        // JSImporterPanel can't use notification as it's a boot object
         // what if we added a one-shot observation for it, or would that be more confusing?
 
-        window.LoadProgressBar.stop() 
+        window.JSImporterPanel.stop() 
     },
 })
 

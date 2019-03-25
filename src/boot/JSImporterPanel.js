@@ -2,7 +2,7 @@
 
 /*
 
-    LoadProgressBarClass
+    ImporterPanelClass
 
     A full page panel that shows load progress.
   
@@ -12,18 +12,18 @@
 
     Automatically sets up in the document when loading this file via:
 
-        window.LoadProgressBar.startWhenReady()
+        window.JSImporterPanel.startWhenReady()
 
     When all loading is finished, external code should call:
 
-    		window.LoadProgressBar.stop()  
+    		window.JSImporterPanel.stop()  
 
     Notes:
     This code is a bit ugly because it doesn't have any library dependencies 
     as we need to show it before we load the libraries & need it to tell us about any loading errors.
 */
 
-class LoadProgressBarClass {
+class JSImporterPanelClass {
 
     /*
     static shared() {
@@ -86,7 +86,7 @@ class LoadProgressBarClass {
     }
 
     startWhenReady () {
-        //console.log("LoadProgressBar.startWhenReady()")
+        //console.log("JSImporterPanel.startWhenReady()")
         //this.setupHtml()
         if (this.canStart()) {
             this.start()
@@ -96,7 +96,7 @@ class LoadProgressBarClass {
     }
 
     start () {
-        //console.log("LoadProgressBar.start()")
+        //console.log("JSImporterPanel.start()")
         if (!JSImporterClass.shared().isDone()) {
             this.setupHtml()
             this.initTitle()
@@ -112,7 +112,7 @@ class LoadProgressBarClass {
     }
 
     setupHtml () {
-        //console.log("LoadProgressBar.setupHtml()")
+        //console.log("JSImporterPanel.setupHtml()")
         document.body.innerHTML = "<div id='SpinnerMain' style='position: absolute; width:100%; height: 100%; background-color: black; z-index: 100000; font-family: AppRegular, sans-serif; letter-spacing: 3px; font-size:13px;'> \
 <div id='SpinnerMiddle' \
 style='position: relative; top: 50%; transform: translateY(-50%); height: auto; width: 100%; text-align: center;'> \
@@ -230,7 +230,7 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
     setError (error) {
         this._error = error
         //console.trace()
-        //console.log("LoadProgressBar setError ", error)
+        //console.log("JSImporterPanel setError ", error)
         //console.log("    document.body = ", document.body) 
         //console.log("    his.errorElement() = ", this.errorElement()) 
         this.errorElement().innerHTML = error
@@ -260,8 +260,8 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
     }
 }
 
-//console.log("loaded file LoadProgressBar - starting")
+//console.log("loaded file JSImporterPanel - starting")
 
-window.LoadProgressBar = LoadProgressBarClass.clone()
-window.LoadProgressBar.startWhenReady()
+window.JSImporterPanel = JSImporterPanelClass.clone()
+window.JSImporterPanel.startWhenReady()
 

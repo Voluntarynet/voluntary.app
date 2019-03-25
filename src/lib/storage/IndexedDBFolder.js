@@ -148,7 +148,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
         
         return this
     }
-*/
+    */
 
     
     asyncAsJson (callback) {   

@@ -33,7 +33,7 @@ html, body {
     -webkit-text-size-adjust: 100%;
     */
 
-    touch-action:none; /* disable pinch-zoom browser action, but still available to JS */
+    touch-action: none; /* disable pinch-zoom browser action, but still available to JS */
     -ms-scroll-chaining: none; /* disable left-right paging on windows surface */
 
 }

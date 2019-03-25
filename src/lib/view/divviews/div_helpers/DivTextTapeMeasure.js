@@ -26,7 +26,7 @@ window.DivTextTapeMeasure = ideal.Proto.extend().newSlots({
     },
 	
     createTestElement: function() {
-        let e = document.createElement("div");
+        const e = document.createElement("div");
 	    e.setAttribute("id", this.idName());
         document.body.appendChild(e);
         e.style.display = "block";
@@ -39,10 +39,10 @@ window.DivTextTapeMeasure = ideal.Proto.extend().newSlots({
     },
 	
     widthOfDivWithText: function(div, text) { 
-        let e = this.testElement()
+        const e = this.testElement()
 		
         this.stylesToCopy().forEach(function (styleName) {
-            let v = DivView.style[styleName]
+            const v = DivView.style[styleName]
             if (v) {
                 e.style[styleName] = v
             } else {
@@ -53,18 +53,18 @@ window.DivTextTapeMeasure = ideal.Proto.extend().newSlots({
         e.innerHTML = DivView.innerHTML
 		
         //let height = (e.clientHeight + 1)
-        let width = (e.clientWidth + 1) 
+        const width = (e.clientWidth + 1) 
         this.clean()
         return width
     },
 	
     widthOfDivClassWithText: function(divClassName, text) { 
-        let e = this.testElement()
+        const e = this.testElement()
         e.className = divClassName
         e.innerHTML = text
 		
         //let height = (e.clientHeight + 1)
-        let width = (e.clientWidth + 1) 
+        const width = (e.clientWidth + 1) 
         e.innerHTML = ""
         //console.log(divClassName, " '" + text + "' width = ", width)
         //this.clean()
@@ -72,11 +72,10 @@ window.DivTextTapeMeasure = ideal.Proto.extend().newSlots({
     },
 	
     clean: function() {
-        let e = this.testElement()
+        const e = this.testElement()
         e.innerHTML = ""
-        this.stylesToCopy().forEach(function (styleName) {
-            delete e.style[styleName]
-        })		
+        this.stylesToCopy().forEach(styleName => delete e.style[styleName] )
+        return this	
     },
 	
 })

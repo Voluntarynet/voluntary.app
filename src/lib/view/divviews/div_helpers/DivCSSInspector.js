@@ -31,7 +31,7 @@ window.DivCSSInspector = ideal.Proto.extend().newSlots({
     },
 	
     createTestElement: function() {
-        let e = document.createElement("div");
+        const e = document.createElement("div");
 	    e.setAttribute("id", this.idName());
         e.style.display = "none";
         e.style.visibility = "hidden";

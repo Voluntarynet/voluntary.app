@@ -55,7 +55,7 @@ window.DivBorderRadius = class DivBorderRadius extends ProtoClass {
     }
 
     setFromString(aString) {
-        let parts = aString.split(" ").select((part) => { return part !== "" })
+        const parts = aString.split(" ").select((part) => { return part !== "" })
 
         this.clear()
 
@@ -94,7 +94,7 @@ window.DivBorderRadius = class DivBorderRadius extends ProtoClass {
     }
 
     syncFromDiv() {
-        let s = this.divView().borderRadius()
+        const s = this.divView().borderRadius()
 
         if (s) {
             this.setFromString(s)

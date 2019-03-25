@@ -20,7 +20,7 @@ window.DivTransitions = class DivTransitions extends ProtoClass {
     }
 
     at(aName) {
-        let d = this.properties()
+        const d = this.properties()
         if (!(name in d)) {
             d[name] = DivTransition.clone().setTransitions(this)
         }
@@ -32,7 +32,7 @@ window.DivTransitions = class DivTransitions extends ProtoClass {
     }
 
     asString(aString) {
-        return this.propertiesAsList().map((t) => { return t.asString() }).join(", ")
+        return this.propertiesAsList().map(t => t.asString()).join(", ")
     }
 
     syncToDiv() {
@@ -43,11 +43,11 @@ window.DivTransitions = class DivTransitions extends ProtoClass {
     syncFromDiv() {
         this.setProperties({})
 
-        let s = this.divView().transition()
-        let transitionStrings = s.split(",")
+        const s = this.divView().transition()
+        const transitionStrings = s.split(",")
 
         transitionStrings.forEach((tString) => {
-            let t = DivTransition.clone().setFromString(tString)
+            const t = DivTransition.clone().setFromString(tString)
             this.properties()[t.property()] = t
         })
 

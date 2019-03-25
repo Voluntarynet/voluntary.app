@@ -33,7 +33,7 @@ window.CSSRuleSet = class CSSRuleSet extends ProtoClass {
     */
     
     decAt (k) {
-        let dec = this.declarations()[k]
+        const dec = this.declarations()[k]
         if (!dec) {
             dec = CSSDeclaration.clone().setRuleSet(this).setKey(k)
             this.declarations()[k] = dec
@@ -42,7 +42,7 @@ window.CSSRuleSet = class CSSRuleSet extends ProtoClass {
     }
 
     applyToElement (anElement) {        
-        let dict = this.declarations()
+        const dict = this.declarations()
         
         Object.slotValues(dict).forEach(function(declaration) {
             declaration.applyToElement(anElement)
@@ -59,9 +59,9 @@ window.CSSRuleSet = class CSSRuleSet extends ProtoClass {
     }
 
     asJSON () {
-        let dict = {}
+        const dict = {}
         dict.key = this.key()
-        let decs = {}
+        const decs = {}
         this.declarations().forEach((dec) => {
             decs[dec.key()] = dec.value()
         })

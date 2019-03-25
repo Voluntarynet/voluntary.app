@@ -22,7 +22,7 @@ window.DivTransition = class DivTransition extends ProtoClass {
     }
 
     durationString() {
-        let v = this.duration()
+        const v = this.duration()
         if (Type.isNumber(v)) {
             return v + "s"
         }
@@ -30,7 +30,7 @@ window.DivTransition = class DivTransition extends ProtoClass {
     }
 
     delayString() {
-        let v = this.duration()
+        const v = this.duration()
         if (Type.isNumber(v)) {
             return v + "s"
         }
@@ -38,7 +38,7 @@ window.DivTransition = class DivTransition extends ProtoClass {
     }
 
     asString(aString) {
-        let parts = [
+        const parts = [
             this.property(),
             this.durationString(),
             this.timingFunction(),
@@ -49,7 +49,7 @@ window.DivTransition = class DivTransition extends ProtoClass {
     }
 
     setFromString(aString) {
-        let parts = aString.split(" ").select((part) => { return part !== "" })
+        const parts = aString.split(" ").select((part) => { return part !== "" })
 
         let v = parts.removeFirst()
         assert(v != null)

@@ -102,17 +102,17 @@ window.SyncDB = class SyncDB extends ProtoClass {
 	
     asJson () {
         // WARNING: bad performance if called frequently
-        let s = JSON.stringify(this._readCache)
+        //let s = JSON.stringify(this._readCache)
         return JSON.parse(this._readCache)
     }
 	
     verifySync () {
-        let readCache = this._readCache
+        const readCache = this._readCache
         this._isSynced = false
         this.idb().asyncAsJson( (json) => {
             let hasError = false
 			
-            for (k in json) {
+            for (let k in json) {
                 if (!(k in readCache)) {
                     //console.log("syncdb not in sync with idb - sdb missing key " + k)
                     hasError = true
@@ -127,7 +127,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
             }
 			
 			
-            for (k in readCache) {
+            for (let k in readCache) {
                 if (!(k in json)) {
                     //console.log("syncdb not in sync with idb - idb missing key " + k)
                     hasError = true
@@ -172,7 +172,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
 	
     totalBytes () {
         let byteCount = 0
-        let dict = this._readCache
+        const dict = this._readCache
         for (let k in dict) {
 		   if (dict.hasOwnProperty(k)) {
                 let v = dict[k]
@@ -215,12 +215,12 @@ window.SyncDB = class SyncDB extends ProtoClass {
 	    
 	    this.assertInTx()
 	    
-	    let tx = this.idb().newTx()
+	    const tx = this.idb().newTx()
 	    
 	    tx.begin()
 	    
 	    let count = 0
-        let d = this._writeCache
+        const d = this._writeCache
 		
         for (let k in d) {
 		   if (d.hasOwnProperty(k)) {
@@ -279,7 +279,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
         this.assertOpen()
 		
         if (this._writeCache) {
-    		let e = this._writeCache[key]
+    		const e = this._writeCache[key]
     		if (e) {
     		    if (e._isDelete) {
     		        return null

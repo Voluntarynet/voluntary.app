@@ -69,7 +69,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
     // --- observations ----
     
     hasObservation (obs) {
-        return this.observations().detect(function (ob) { return ob.isEqual(obs) })
+        return this.observations().detect(ob => ob.isEqual(obs))
     }
     
     addObservation (obs) {
@@ -84,7 +84,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
     }
     
     removeObservation (anObservation) {  
-        let filtered = this.observations().filter(function (obs) {
+        const filtered = this.observations().filter(function (obs) {
             return !obs.isEqual(anObservation)
         })
         this.setObservations(filtered)
@@ -92,9 +92,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
     }
     
     removeObserver (anObserver) {        
-        let filtered = this.observations().filter(function (obs) {
-            return obs.observer() !== anObserver
-        })
+        const filtered = this.observations().filter(obs => obs.observer() !== anObserver)
         this.setObservations(filtered)
         return this;
     }
@@ -102,9 +100,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
     // --- notifying ----
     
     hasNotification (note) {
-        return this.notifications().detect(function (n) { 
-            return n.isEqual(note) 
-        })
+        return this.notifications().detect(n => n.isEqual(note))
     }
     
     addNotification (note) {
@@ -130,7 +126,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
             this._isProcessing = true
             //console.log("processPostQueue " + this.notifications().length)
         
-            let notes = this.notifications()
+            const notes = this.notifications()
             this.setNotifications([])
             notes.forEach( (note) => {
                 this._currentNote = note;
@@ -162,7 +158,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
             this.showObservers()
         }
         
-        let observations = this.observations().copy()  
+        const observations = this.observations().copy()  
       
         observations.forEach( (obs) => {
             if (obs.matchesNotification(note)) {
@@ -189,7 +185,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
     }
     
     showObservers () {
-        let observations = this.observations() 
+        const observations = this.observations() 
         console.log("observations:\n" + observations.map((obs) => { 
             return "    " + obs.observer().type() + " listening to " + obs.target() + " " + obs.name()
         }).join("\n") )

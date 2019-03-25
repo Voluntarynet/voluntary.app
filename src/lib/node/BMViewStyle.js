@@ -32,10 +32,10 @@ window.BMViewStyle = ideal.Proto.extend().newSlots({
     },
 
     description: function() {
-        let parts = []
+        const parts = []
 		
         this.styleNames().forEach( (name) => { 
-            let v = this[name].apply(this)
+            const v = this[name].apply(this)
             if (v != null) {
                 parts.push(name + ":" + v)
             }
@@ -59,7 +59,7 @@ window.BMViewStyle = ideal.Proto.extend().newSlots({
 	
     applyToView: function(aView) {		
         this.styleNames().forEach( (name) => { 
-            let v = this[name].apply(this)
+            const v = this[name].apply(this)
             if (v != null) {
                 aView[aView.setterNameForSlot(name)].apply(aView, [v])
             }

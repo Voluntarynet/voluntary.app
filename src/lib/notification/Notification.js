@@ -23,8 +23,8 @@ window.Notification = class Notification extends ProtoClass {
             return true 
         }
         
-        let sameName = this.name() === obs.name() 
-        let sameSender = this.sender() === obs.sender() 
+        const sameName = this.name() === obs.name() 
+        const sameSender = this.sender() === obs.sender() 
         // TODO: testing equivalence of info?
         
         return sameName && sameSender
@@ -33,7 +33,7 @@ window.Notification = class Notification extends ProtoClass {
     post () {
         if (this.center().isDebugging()) {
             //console.log(typeof(this.sender()) + "." + this.sender() + " posting note " + this.name() + " and recording stack for debug")
-            let e = new Error()
+            const e = new Error()
             e.name = "" //"Notification Post Stack"
             e.message = this.sender() + " posting note '" + this.name() + "'" 
             this.setSenderStack(e.stack);

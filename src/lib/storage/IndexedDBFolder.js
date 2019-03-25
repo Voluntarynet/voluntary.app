@@ -69,7 +69,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
             console.log(this.typeId() + " asyncOpen")
         }
 		
-        let request = window.indexedDB.open(this.path(), 2);
+        const request = window.indexedDB.open(this.path(), 2);
         
         request.onerror = (event) => {
             console.log(this.typeId() + " open db error ", event);
@@ -78,7 +78,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
         request.onupgradeneeded = (event) => { 
             console.log(this.typeId() + " onupgradeneeded - likely setting up local database for the first time")
 
-            let db = event.target.result;
+            const db = event.target.result;
 
             db.onerror = function(event) {
                 console.log("db error ", event)
@@ -86,7 +86,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
 
             this.setDb(db)
 
-            let objectStore = db.createObjectStore(this.storeName(), { keyPath: "key" }, false);          
+            const objectStore = db.createObjectStore(this.storeName(), { keyPath: "key" }, false);          
             objectStore.createIndex("key", "key", { unique: true });
         };
 
@@ -105,7 +105,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
     
     folderAt (pathComponent) { 
         assert(!pathComponent.contains(this.pathSeparator())) 
-        let db = IndexedDBFolder.clone().setPath(this.path() + pathComponent + this.pathSeparator())
+        const db = IndexedDBFolder.clone().setPath(this.path() + pathComponent + this.pathSeparator())
         return db
     }
     
@@ -155,8 +155,8 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
         //console.log("asyncAsJson start")
         this.assertHasUniqueId()
 
-        let cursorRequest = this.db().transaction(this.storeName(), "readonly").objectStore(this.storeName()).openCursor()
-        let dict = {}
+        const cursorRequest = this.db().transaction(this.storeName(), "readonly").objectStore(this.storeName()).openCursor()
+        const dict = {}
     
         cursorRequest.onsuccess = (event) => {
             let cursor = event.target.result;
@@ -186,7 +186,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
     // removing
     
     asyncClear (callback, errorCallback) {
-        let transaction = this.db().transaction([this.storeName()], "readwrite");
+        const transaction = this.db().transaction([this.storeName()], "readwrite");
 
         transaction.onerror = function(event) {
             if (errorCallback) {
@@ -194,8 +194,8 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
             }
         };
 
-        let objectStore = transaction.objectStore(this.storeName());
-        let request = objectStore.clear();
+        const objectStore = transaction.objectStore(this.storeName());
+        const request = objectStore.clear();
 
         request.onsuccess = function(event) {
             if (callback) {
@@ -205,7 +205,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
     }
 	
     asyncDelete () {
-        let request = window.indexedDB.deleteDatabase(this.storeName())
+        const request = window.indexedDB.deleteDatabase(this.storeName())
 		
         request.onerror = (event) => {
   			console.log(this.typeId() +  "Error deleting '" + this.storeName() + "'");
@@ -223,8 +223,8 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
     // test
     
     test () {
-        let folder = IndexedDBFolder.clone()
-        folder.asyncOpen(function() {
+        const folder = IndexedDBFolder.clone()
+        folder.asyncOpen(() => {
             folder.atPut("test", "x")
             
             folder.asyncAsJson(function (dict) {

@@ -69,7 +69,9 @@ Object.shallowCopyTo({
     },
 
     hasPrefix: function (otherArray) {
-        if (this.length < otherArray.length) { return false; }
+        if (this.length < otherArray.length) { 
+            return false; 
+        }
 
         for (let i = 0; i < this.length; i++) {
             if (this[i] !== otherArray[i]) {
@@ -125,9 +127,9 @@ Object.shallowCopyTo({
     },
 
     split: function (subArrayCount) {
-        let subArrays = [];
+        const subArrays = [];
+        const subArraySize = Math.ceil(this.length / subArrayCount);
 
-        let subArraySize = Math.ceil(this.length / subArrayCount);
         for (let i = 0; i < this.length; i += subArraySize) {
             let subArray = this.slice(i, i + subArraySize);
             if (subArray.length < subArraySize) {
@@ -372,15 +374,14 @@ Object.shallowCopyTo({
     },
 
     mapProperty: function (propertyName) {
-        return this.map(function (e) {
-            return e[propertyName];
-        });
+        return this.map(e => e[propertyName]);
     },
 
     detect: function (callback) {
         for (let i = 0; i < this.length; i++) {
-            if (callback(this[i])) {
-                return this[i];
+            const v = this[i]
+            if (callback(v, i)) {
+                return v;
             }
         }
 
@@ -388,16 +389,17 @@ Object.shallowCopyTo({
     },
 
     detectPerform: function (functionName) {
-        let args = this.slice.call(arguments).slice(1);
-        return this.detect(function (e, i) {
-            return e[functionName].apply(e, args);
+        const args = this.slice.call(arguments).slice(1);
+        return this.detect((value, index) => {
+            return value[functionName].apply(value, args);
         });
     },
 
     detectSlot: function (slotName, slotValue) {
         for (let i = 0; i < this.length; i++) {
-            if (this[i].perform(slotName) === slotValue) {
-                return this[i];
+            const v = this[i]
+            if (v.perform(slotName) === slotValue) {
+                return v;
             }
         }
 
@@ -406,8 +408,9 @@ Object.shallowCopyTo({
 
     detectProperty: function (slotName, slotValue) {
         for (let i = 0; i < this.length; i++) {
-            if (this[i][slotName] === slotValue) {
-                return this[i];
+            const v = this[i]
+            if (v[slotName] === slotValue) {
+                return v;
             }
         }
 
@@ -416,7 +419,7 @@ Object.shallowCopyTo({
 
     detectIndex: function (callback) {
         for (let i = 0; i < this.length; i++) {
-            if (callback(this[i])) {
+            if (callback(this[i], i)) {
                 return i;
             }
         }
@@ -449,7 +452,7 @@ Object.shallowCopyTo({
     },
 
     filterPerform: function () {
-        let args = Array.prototype.slice.call(arguments);
+        const args = Array.prototype.slice.call(arguments);
         args.unshift(null);
         args.push(0);
         return this.filter(function (e, i) {
@@ -466,7 +469,7 @@ Object.shallowCopyTo({
     },
 
     filterProperty: function (slotName, expectedValue) {
-        let args = arguments;
+        const args = arguments;
         return this.filter(function (obj) {
             if (args.length === 2) {
                 return obj[slotName] === expectedValue;
@@ -477,10 +480,10 @@ Object.shallowCopyTo({
     },
 
     rejectPerform: function () {
-        let args = this.slice.call(arguments);
+        const args = this.slice.call(arguments);
         args.shift(null);
         args.push(0);
-        return this.filter(function (e, i) {
+        return this.filter((e, i) => {
             args[0] = e;
             args[args.length - 1] = i; //TODO: should we append i?  Receiver might not expect this ...
             return e && !Object.perform.apply(Object, args);
@@ -488,13 +491,11 @@ Object.shallowCopyTo({
     },
 
     rejectSlot: function (slotName, expectedValue) {
-        return this.filter(function (obj) {
-            return obj.perform(slotName) !== expectedValue;
-        });
+        return this.filter( obj => obj.perform(slotName) !== expectedValue );
     },
 
     minValue: function (callback, theDefault) {
-        let obj = this.min(callback);
+        const obj = this.min(callback);
         if (obj === undefined) {
             return theDefault;
         }
@@ -502,7 +503,7 @@ Object.shallowCopyTo({
     },
 
     maxValue: function (callback, theDefault) {
-        let obj = this.max(callback);
+        const obj = this.max(callback);
         if (obj === undefined) {
             return theDefault;
         }
@@ -512,11 +513,13 @@ Object.shallowCopyTo({
     max: function (callback) {
         let m = undefined;
         let mObject = undefined;
-        let length = this.length;
+        const length = this.length;
 
         for (let i = 0; i < length; i++) {
             let v = this[i];
-            if (callback) v = callback(v);
+            if (callback) {
+                v = callback(v);
+            }
 
             if (m === undefined || v > m) {
                 m = v;
@@ -530,11 +533,13 @@ Object.shallowCopyTo({
     maxIndex: function (callback) {
         let m = undefined;
         let index = 0;
-        let length = this.length;
+        const length = this.length;
 
         for (let i = 0; i < length; i++) {
             let v = this[i];
-            if (callback) v = callback(v);
+            if (callback) {
+                v = callback(v);
+            }
 
             if (m === undefined || v > m) {
                 m = v;
@@ -548,11 +553,13 @@ Object.shallowCopyTo({
     min: function (callback) {
         let m = undefined;
         let mObject = undefined;
-        let length = this.length;
+        const length = this.length;
 
         for (let i = 0; i < length; i++) {
             let v = this[i];
-            if (callback) v = callback(v);
+            if (callback) {
+                v = callback(v);
+            }
 
             if (m === undefined || v < m) {
                 m = v;
@@ -566,11 +573,13 @@ Object.shallowCopyTo({
     minIndex: function (callback) {
         let m = undefined;
         let index = 0;
-        let length = this.length;
+        const length = this.length;
 
         for (let i = 0; i < length; i++) {
             let v = this[i];
-            if (callback) v = callback(v);
+            if (callback) {
+                v = callback(v);
+            }
 
             if (m === undefined || v < m) {
                 m = v;
@@ -584,11 +593,13 @@ Object.shallowCopyTo({
     sum: function (callback) {
         let m = undefined;
         let sum = 0;
-        let length = this.length;
+        const length = this.length;
 
         for (let i = 0; i < length; i++) {
             let v = this[i];
-            if (callback) v = callback(v);
+            if (callback) {
+                v = callback(v);
+            }
 
             sum = sum + v;
         }
@@ -605,7 +616,7 @@ Object.shallowCopyTo({
     },
 
     flatten: function () {
-        let flattened = [];
+        const flattened = [];
         this.forEach(function (array) {
             flattened.appendItems(array);
         });
@@ -618,16 +629,8 @@ Object.shallowCopyTo({
 
     unique: function () {
         const set = new Set(this)
-        let results = Array.from(set);
+        const results = Array.from(set);
         return results
-
-        /*
-        let a = [];
-        this.forEach(function (e) {
-            a.appendIfAbsent(e);
-        });
-        return a;
-        */
     },
 
     reversed: function () {
@@ -654,10 +657,10 @@ Object.shallowCopyTo({
     isArray: true,
 
     select: function (callback) {
-        let results = []
+        const results = []
     
         for (let i = 0; i < this.length; i++) {
-            let v = this[i];
+            const v = this[i];
     
             if (callback(v)) {
                 results.push(v)
@@ -668,7 +671,7 @@ Object.shallowCopyTo({
     },
     
     after: function (v) {
-        let index = this.indexOf(v);
+        const index = this.indexOf(v);
     
         if (index === -1) {
             return [];
@@ -678,7 +681,7 @@ Object.shallowCopyTo({
     },
     
     before: function (v) {
-        let index = this.indexOf(v);
+        const index = this.indexOf(v);
     
         if (index === -1) {
             return this.slice();
@@ -718,7 +721,7 @@ Object.shallowCopyTo({
     },
 
     itemsBefore: function (item) {
-        let index = this.indexOf(item);
+        const index = this.indexOf(item);
         if (index !== -1) {
             return this.slice(0, index);
         }
@@ -745,18 +748,14 @@ Object.shallowCopyTo({
     
     difference: function (other) {
         const thisSet = new Set(this)
-        return other.filter((v) => { 
-            return !thisSet.has(v); 
-        });
+        return other.filter(v => !thisSet.has(v) );
     },
 
     symmetricDifference: function (other) {
         let all = this.concat(other)
         const thisSet = new Set(this)
         const otherSet = new Set(other)
-        return all.filter((v) => { 
-            return !thisSet.has(v) || !otherSet.has(v)
-        });
+        return all.filter(v => !thisSet.has(v) || !otherSet.has(v));
     },
 
     /*
@@ -792,8 +791,8 @@ Object.shallowCopyTo({
         }
     
         for (let i = 0, l = this.length; i < l; i++) {
-            let a = this[i]
-            let b = array[i]
+            const a = this[i]
+            const b = array[i]
             
             // Check if we have nested arrays
             /*
@@ -807,9 +806,7 @@ Object.shallowCopyTo({
             
             if (a.equals && !a.equals(b)) {
                 return false;
-            }
-            
-            if (a !== b) {
+            } else if (a !== b) {
                 // Warning - two different object instances will never be equal: {x:20} !== {x:20}
                 return false;
             }
@@ -818,8 +815,7 @@ Object.shallowCopyTo({
     },
 
 
-    /*
-    includes: function (b) {
+    containsEquals: function (b) {
         for (let i = 0, l=this.length; i < l; i++) {
             let a = this[i]
 
@@ -827,14 +823,12 @@ Object.shallowCopyTo({
                 if (!a.equals(b)) {
                     return false;  
                 }
-            }
-            else if (a !== b) { 
+            } else if (a !== b) { 
                 return false;   
-            }           
+            }
         }    
-        return false;
+        return true;
     },
-    */
     
 }, Array.prototype);
 

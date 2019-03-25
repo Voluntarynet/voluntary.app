@@ -24,7 +24,7 @@ String.prototype.contains = function (aString) {
 }
 
 String.prototype.before = function (aString) {
-    var index = this.indexOf(aString);
+    const index = this.indexOf(aString);
     
     if (index === -1) {
         return this;
@@ -34,7 +34,7 @@ String.prototype.before = function (aString) {
 }
 
 String.prototype.after = function (aString) {
-    var index = this.indexOf(aString);
+    const index = this.indexOf(aString);
 
     if (index === -1) {
         return "";
@@ -44,9 +44,9 @@ String.prototype.after = function (aString) {
 }
 
 String.prototype.between = function (prefix, suffix) {
-    var after = this.after(prefix);
+    const after = this.after(prefix);
     if (after != null) {
-        var before = after.before(suffix);
+        const before = after.before(suffix);
         if (before != null) {
             return before;
         }
@@ -86,6 +86,7 @@ class IndexBuilder {
     }
 
     run() {
+        console.log("IndexBuilder: finding imports")
         this.addImportPath("../_imports.js")
         //this.readImports()
         this.createIndex()
@@ -110,8 +111,9 @@ class IndexBuilder {
     }
 
     createIndex() {
-        console.log("IndexBuilder: finding imports")
+        console.log("IndexBuilder: inserting imports between templates to create index.html")
         console.log(this.filePaths().join("\n"))
+
         const indexPaths = []
         indexPaths.push("templates/top.html")
         indexPaths.appendItems(this.cssPaths())
@@ -127,7 +129,7 @@ class IndexBuilder {
 
         //console.log(index)
         fs.writeFileSync("../index.html", index, "utf8")
-        console.log("SUCCESS: created index.html")
+        console.log("IndexBuilder: SUCCESS: created index.html")
     }
 }
 

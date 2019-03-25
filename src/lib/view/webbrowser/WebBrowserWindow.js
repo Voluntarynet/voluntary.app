@@ -176,7 +176,7 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     },
     
     activeDivView: function() {
-        let e = document.activeElement
+        const e = document.activeElement
         if (e && e._divView) {
             return e._divView
         }

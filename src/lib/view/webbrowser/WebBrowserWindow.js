@@ -89,29 +89,28 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     show: function() {
         console.log("Window size " + this.width() + "x" + this.height())
     },
-
-    /*
-    isOnPhone: function()
-    {
-       let userAgent = navigator.userAgent.toLowerCase()
-       console.log("userAgent: '" + userAgent + "'")
-    },
-    */
     
     mobileNames: function() {
         return ["android", "webos", "iphone", "ipad", "ipod", "blackBerry", "windows phone"]  
     },
 
     agent: function() {
-        const agent = navigator.userAgent.toLowerCase()
-        return agent
+        return navigator.userAgent.toLowerCase()
+    },
+
+    vendor: function() {
+        return navigator.vendor.toLowerCase()
     },
 
     agentIsSafari: function() {
-        const isSafari = navigator.vendor && navigator.vendor.indexOf("Apple") !== -1 &&
-               navigator.userAgent &&
-               navigator.userAgent.indexOf("CriOS") === -1 &&
-               navigator.userAgent.indexOf("FxiOS") === -1;
+        const vendor = navigator.vendor;
+        const agent = navigator.userAgent;
+        
+        const isSafari = vendor && 
+                vendor.indexOf("Apple") !== -1 &&
+                agenta &&
+                agent.indexOf("CriOS") === -1 &&
+                agent.indexOf("FxiOS") === -1;
         return isSafari
     },
 
@@ -149,7 +148,7 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     },
     
     descriptionDict: function() {
-        let dict = {
+        const dict = {
             agent: this.agent(),
             size: this.width() + "x" + this.height(),
             isOnMobile: this.isOnMobile()
@@ -158,7 +157,7 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     },
 
     urlHostname: function() {
-        let parser = document.createElement("a")
+        const parser = document.createElement("a")
         parser.href = window.location.href
         let name = parser.hostname
         if (!name) {
@@ -170,6 +169,10 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     setTitle: function(aName) {
         document.title = aName
         return this
+    },
+
+    title: function() {
+        return document.title
     },
     
     activeDivView: function() {

@@ -51,9 +51,13 @@ window.BrowserColumn = NodeView.extend().newSlots({
     
     // subviews
 
+    hasRow: function(aRow) {
+        return this._rows.contains(aRow)
+    },
+
     willAddSubview: function (aSubview) {
         // for subclasses to over-ride
-        if(!this._rows.contains(aSubview)) {
+        if(!this.hasRow(aSubview)) {
             //console.warn("")
             //this._rows.append(aSubview)
         }
@@ -61,7 +65,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
 
     willRemoveSubview: function (aSubview) {
         // for subclasses to over-ride
-        if(!this._rows.contains(aSubview)) {
+        if(!this.hasRow(aSubview)) {
             //console.warn("")
         }
     },
@@ -720,12 +724,12 @@ window.BrowserColumn = NodeView.extend().newSlots({
 
         console.log(this.typeId() + ".onPinchBegin()")
         const p = aGesture.beginCenterPosition()
-        let r = this.rowContainingPoint(p)
-        if (!r) {
-            r = this.rowContainingPoint(p)
-            assert(r)
+        let row = this.rowContainingPoint(p)
+        if (!row) {
+            row = this.rowContainingPoint(p)
+            assert(row)
         }
-        const insertIndex = this.rows().indexOf(r)
+        const insertIndex = this.rows().indexOf(row)
 
         //console.log("insertIndex: ", insertIndex)
 

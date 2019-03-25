@@ -61,12 +61,12 @@ String.prototype.between = function (prefix, suffix) {
 
 // --- node.js imports -------------------------------------------------------------------
 
-var path = require("path");
-var fs = require("fs")
+const path = require("path");
+const fs = require("fs")
 
-// --- Archive ---
+// --- IndexBuilder ---
 
-class Archive { 
+class IndexBuilder { 
     constructor() {
         this._filePaths = []
         this._importPaths = []
@@ -85,7 +85,7 @@ class Archive {
         return this._cssPaths
     }
 
-    open() {
+    run() {
         this.addImportPath("../_imports.js")
         //this.readImports()
         this.createIndex()
@@ -97,8 +97,9 @@ class Archive {
 
     addImportPath(aPath) {
         this.addFilePath(aPath)
-        var folder = new SourceFolder()
+        const folder = new SourceFolder()
         folder.setFullPath(aPath)
+        folder.setIndexBuilder(this)
         folder.open()
 
         //this.importPaths().push(aPath)
@@ -109,22 +110,24 @@ class Archive {
     }
 
     createIndex() {
+        console.log("IndexBuilder: finding imports")
         console.log(this.filePaths().join("\n"))
-        var indexPaths = []
-        indexPaths.push("top.html")
+        const indexPaths = []
+        indexPaths.push("templates/top.html")
         indexPaths.appendItems(this.cssPaths())
-        indexPaths.push("middle.html")
+        indexPaths.push("templates/middle.html")
         indexPaths.push("../src/boot/JSImporterPanel.js")
         indexPaths.push("../src/boot/JSImporter.js")
         indexPaths.appendItems(this.filePaths())
-        indexPaths.push("bottom.html")
+        indexPaths.push("templates/bottom.html")
 
-        var index = indexPaths.map((path) => {
+        const index = indexPaths.map((path) => {
             return fs.readFileSync(path,  "utf8")
         }).join("\n")
 
         //console.log(index)
         fs.writeFileSync("../index.html", index, "utf8")
+        console.log("SUCCESS: created index.html")
     }
 }
 
@@ -133,19 +136,24 @@ class Archive {
 class SourceFolder { 
     constructor() {
         this._fullPath = null
+        /*
         this._importPaths = []
         this._filePaths = []
         this._cssPaths = []
+        */
+        this._indexBuilder = null
     }
 
     setFullPath(aString) {
         this._fullPath = aString
+        return this
     }
 
     fullPath() {
         return this._fullPath
     }
 
+    /*
     importPaths() {
         return this._importPaths
     }
@@ -157,27 +165,37 @@ class SourceFolder {
     cssPaths() {
         return this._cssPaths
     }
+    */
+
+    setIndexBuilder(v) {
+        this._indexBuilder = v
+        return this
+    }
+
+    indexBuilder() {
+        return this._indexBuilder
+    }
 
     open() {
-        var dirPath = this.fullPath().before("_imports.js")
-        var data = fs.readFileSync(this.fullPath(),  "utf8");
-        var s = data.between("JSImporter.pushRelativePaths(", ")")
-        var rPaths = eval(s)
+        const dirPath = this.fullPath().before("_imports.js")
+        const data = fs.readFileSync(this.fullPath(),  "utf8");
+        const s = data.between("JSImporter.pushRelativePaths(", ")")
+        const rPaths = eval(s)
+        const builder = this.indexBuilder()
 
         rPaths.forEach((relativePath) => {
-            var fullPath = path.join(dirPath, relativePath)
+            const fullPath = path.join(dirPath, relativePath)
 
             if (fullPath.contains("_imports.js")) {
-                archive.addImportPath(fullPath)
+                builder.addImportPath(fullPath)
             } else if (fullPath.contains(".css")) {
-                archive.addCssPath(fullPath)
+                builder.addCssPath(fullPath)
             } else {
-                archive.addFilePath(fullPath)
+                builder.addFilePath(fullPath)
             }
         })
     }
 }
 
-var archive = new Archive()
-archive.open()
+new IndexBuilder().run() 
 

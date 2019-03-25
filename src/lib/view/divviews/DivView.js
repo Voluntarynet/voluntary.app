@@ -1215,12 +1215,16 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this.subviews().length
     },
 
+    hasSubview: function(aSubview) {
+        return this.subviews().contains(aSubview)
+    },
+
     addSubview: function(aSubview) {
         if (aSubview == null) {
             throw new Error("aSubview can't be null")
         }
 
-        if (this.subviews().contains(aSubview)) {
+        if (this.hasSubview(aSubview)) {
             throw new Error(this.type() + ".addSubview(" + aSubview.type() + ") attempt to add duplicate subview ")
         }
         
@@ -1354,7 +1358,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 	
     hasSubview: function(aSubview) {
-        return this.subviews().indexOf(aSubview) !== -1
+        return this.subviews().indexOf(aSubview) !== -1;
     },
 	
     hasChildElement: function(anElement) {
@@ -2359,7 +2363,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     
     scrollSubviewToTop: function(aSubview) {
         console.log("]]]]]]]]]]]] " + this.typeId() + ".scrollSubviewToTop()")
-        assert(this.subviews().contains(aSubview))
+        assert(this.hasSubview(aSubview))
         //this.setScrollTop(aSubview.offsetTop())
         //this.setScrollTopSmooth(aSubview.offsetTop())
         //this.setScrollTop(aSubview.offsetTop() + aSubview.scrollHeight())

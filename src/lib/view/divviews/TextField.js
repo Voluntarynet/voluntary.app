@@ -46,12 +46,8 @@ window.TextField = DivStyledView.extend().newSlots({
     },
 	
     containsReturns: function() {
-        returnStrings.forEach((returnString) => {
-            if (s.contains(returnString)) {
-                return true
-            }
-        })		
-        return false
+        const value = this.value() // correct?
+        return returnStrings.detect(returnString => value.contains(returnString))		
     },
 	
     // ------------------

@@ -8,10 +8,10 @@
             "type": "shell",
             "command": "node",
             "args": [
-                "archive.js"
+                "IndexBuilder.js"
             ],
             "options": {
-                "cwd": "${workspaceRoot}/archive"
+                "cwd": "${workspaceRoot}/indexbuilder"
             },
             "presentation": {
                 "reveal": "silent",

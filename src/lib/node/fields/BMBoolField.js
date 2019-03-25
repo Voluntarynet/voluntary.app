@@ -20,12 +20,12 @@ window.BMBoolField = BMField.extend().newSlots({
     },
 
     valueIsBool: function() {
-        let b = this.value()
+        const b = this.value()
         return Type.isBoolean(b);
     },
 	
     validate: function() {
-        let isValid = this.valueIsBool()
+        const isValid = this.valueIsBool()
 		
         if (!isValid) {
             this.setValueError("this needs to be a boolean (true or false)")

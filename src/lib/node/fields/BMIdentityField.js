@@ -29,9 +29,10 @@ window.BMIdentityField = BMField.extend().newSlots({
 	    //console.log("inValue = '" + inValue + "'")
 	    let newValue = inValue.strip()
 	    
-        let parts = newValue.split(" ").concat(newValue.split("\n")).concat(newValue.split(","))
+        const parts = newValue.split(" ").concat(newValue.split("\n")).concat(newValue.split(","))
 	    //console.log("parts = '", parts)
-        let validPart = parts.detect((part) => { return bitcore.PublicKey.isValid(part) })
+        const validPart = parts.detect((part) => { return bitcore.PublicKey.isValid(part) })
+
         if (validPart) {
             newValue = validPart
         }

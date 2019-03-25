@@ -68,8 +68,8 @@ window.BMField = BMNode.extend().newSlots({
 	
     setValue: function(v) { // called by View on edit
         //console.log("setValue '" + v + "'")
-        let target = this.target()
-        let setter = this.setterNameForSlot(this.valueMethod())
+        const target = this.target()
+        const setter = this.setterNameForSlot(this.valueMethod())
 
         if (this.setterFunc()) {
             this.setterFunc(target, this.valueMethod(), v)()
@@ -99,8 +99,8 @@ window.BMField = BMNode.extend().newSlots({
     },
 	
     value: function() {
-        let target = this.target()
-        let slotName = this.valueMethod()
+        const target = this.target()
+        const slotName = this.valueMethod()
 
         if (this.getterFunc()) {
             return this.getterFunc(target, slotName)()
@@ -108,7 +108,7 @@ window.BMField = BMNode.extend().newSlots({
 
         //console.log("target = " + target.type() + " getter = '" + getter + "'")
         if (target[slotName]) {
-            let value = target[slotName].apply(target)
+            const value = target[slotName].apply(target)
             return value
         } else {
             console.warn(this.type() + " target " + target.type() + " missing slot '" + slotName + "'")
@@ -116,8 +116,8 @@ window.BMField = BMNode.extend().newSlots({
     },
 	
     note: function() {
-        let target = this.target()
-        let slotName = this.noteMethod()
+        const target = this.target()
+        const slotName = this.noteMethod()
 
         if (target && slotName) {
             if (target[slotName]) {

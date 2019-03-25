@@ -37,9 +37,9 @@ window.BMSlotsNode = BMFieldSetNode.extend().newSlots({
         this.protoValue().slotNames().forEach((slotName) => {
 
             let childNode = null
-            let p = this.protoValue()
-            let v = p[slotName]
-            let t = typeof(v)
+            const p = this.protoValue()
+            const v = p[slotName]
+            const t = typeof(v)
             // console.log("proto: ", p.type(), " slot:", slotName, " value: ", p[slotName], " type: ", t)
 
             if (t === "string") {

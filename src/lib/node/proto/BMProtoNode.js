@@ -37,7 +37,7 @@ window.BMProtoNode = BMNode.extend().newSlots({
     },
 
     setupSubnodes: function() {
-        let childNodes = [
+        const childNodes = [
             BMSlotsNode.clone().setProtoValue(this.protoValue()), 
             BMSubclassesNode.clone().setProtoValue(this.protoValue())
         ]

@@ -28,7 +28,7 @@ window.ImageWellView = NodeView.extend().newSlots({
     
     setIsEditable: function(aBool) {
         this._isEditable = aBool
-        this.subviews().forEach(function (imageView) { imageView.setIsEditable(aBool); })
+        this.subviews().forEach(imageView => imageView.setIsEditable(aBool))
         return this
     },
     
@@ -53,7 +53,7 @@ window.ImageWellView = NodeView.extend().newSlots({
     },
     
     acceptsDrop: function(event) {
-        let accepts = (!this.isFull()) && (this.isEditable() !== false)
+        const accepts = (!this.isFull()) && (this.isEditable() !== false)
         //console.log(this.typeId() + " isFull:" + this.isFull() + " count:" + this.imageCount() + "/" + this.maxImageCount() + " accepts:" + accepts)
         return accepts        
     },
@@ -75,7 +75,7 @@ window.ImageWellView = NodeView.extend().newSlots({
         if (this.isFull()) {
             return this
         }
-        let imageView = ImageView.clone().fetchDataURLFromSrc(dataURL)
+        const imageView = ImageView.clone().fetchDataURLFromSrc(dataURL)
         imageView.setIsEditable(this.isEditable())
         imageView.setMaxHeight(180)
         this.addSubview(imageView);    
@@ -83,9 +83,9 @@ window.ImageWellView = NodeView.extend().newSlots({
     },
     
     imageDataURLs: function() {
-        let urls =  this.subviews().map(function (imageView) { return imageView.dataURL(); })
-        urls = urls.select(function (url) { return url != null; })
-        return urls
+        let urls = this.subviews().map(imageView => imageView.dataURL())
+        const imageDataURLs = urls.select(url => url != null)
+        return imageDataURLs
     },
     
     onDropImageDataUrl: function(dataURL) {

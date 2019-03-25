@@ -50,7 +50,7 @@ window.ImageView = NodeView.extend().newSlots({
 
     addCloseButton: function() {
         if (this.closeButtonView() == null) {
-            let cb = NodeView.clone().setDivClassName("ImageCloseButton")
+            const cb = NodeView.clone().setDivClassName("ImageCloseButton")
             this.setCloseButtonView(cb)
             this.addSubview(cb) 
             cb.setTarget(this).setAction("close") //.setInnerHTML("&#10799;")
@@ -95,13 +95,13 @@ window.ImageView = NodeView.extend().newSlots({
     },
     
     close: function() {
-        let seconds = 0.3
+        const seconds = 0.3
 		
         this.collapse()
         
         setTimeout( () => { 
             this.removeCloseButton()
-            let parentView = this.parentView()
+            const parentView = this.parentView()
             this.removeFromParentView()
             //console.log(this.typeId() + ".close complete parentView = ", parentView)
             parentView.scheduleSyncToNode() //parentView.syncToNode()
@@ -131,7 +131,7 @@ window.ImageView = NodeView.extend().newSlots({
         this.removeRawImageView()
         this.setDataURL(dataURL)
 
-        let image = new Image();
+        const image = new Image();
         image.src = dataURL;
 
         this.setRawImageView(DivView.clone().setElement(image).setDivClassName("ImageViewImageObject"))
@@ -144,7 +144,7 @@ window.ImageView = NodeView.extend().newSlots({
         if (src.beginsWith("data:")) {
 	        this.setFromDataURL(src)
         } else {
-		    let img = new Image();
+		    const img = new Image();
             img.crossOrigin = "Anonymous";
         
 	        img.onload = () => {

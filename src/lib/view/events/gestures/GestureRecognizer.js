@@ -427,6 +427,10 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     onTouchEnd: function(event) {
         this.onUp(event)
     },
+
+    onTouchCancel: function(event) {
+        this.onUp(event)
+    },
     
     // touch capture events
 
@@ -439,6 +443,10 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     },
 
     onTouchEndCapture: function(event) {
+        this.onUp(event)
+    },
+
+    onTouchCancelCapture: function(event) {
         this.onUp(event)
     },
 

@@ -761,14 +761,12 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
     
     onPinchMove: function(aGesture) {
+        console.log(this.typeId() + ".onPinchMove()")
         let s = Math.floor(aGesture.spread())
         //console.log(this.typeId() + ".onPinchMove() spread = " + s)
 
         if (this._temporaryPinchSubnode) {
             let newRow = this.subviewForNode(this._temporaryPinchSubnode)
-            if (!newRow) {
-                newRow = this.subviewForNode(this._temporaryPinchSubnode)
-            }
             newRow.setMinAndMaxHeight(s)
         }
 
@@ -777,9 +775,23 @@ window.BrowserColumn = NodeView.extend().newSlots({
         // restack all views
     },
 
-    onPinchCompleted: function(aGesture) {
+    onPinchComplete: function(aGesture) {
         console.log(this.typeId() + ".onPinchCompleted()")
         // if pinch is tall enough, keep new row, sync with 
+
+        if (this._temporaryPinchSubnode) {
+            const newRow = this.subviewForNode(this._temporaryPinchSubnode)
+            const minHeight = BrowserRow.defaultHeight()
+            if (newRow.clientHeight() < minHeight) {
+                this.removeRow(newRow)
+            } else {
+                newRow.setTransition("all 0.3s")
+                setTimeout(() => { newRow.setMinAndMaxHeight(minHeight) }, 0)
+            }
+
+            this._temporaryPinchSubnode = null
+        }
+
     },
 
     onPinchCancelled: function(aGesture) {

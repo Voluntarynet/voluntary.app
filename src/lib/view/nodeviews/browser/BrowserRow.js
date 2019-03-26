@@ -432,7 +432,7 @@ window.BrowserRow = NodeView.extend().newSlots({
             pan.setMinDistToBegin(0)
             pan.onDown(aGesture.currentEvent())
             pan.attemptBegin()
-            this.setBackgroundColor("red")
+            this.setBackgroundColor("blue")
         }
     },
 
@@ -459,7 +459,6 @@ window.BrowserRow = NodeView.extend().newSlots({
 
     onPanBegin: function(aGesture) {
         if (!this._isDraggingView) {
-            //this.setBackgroundColor("blue")
             this._isDraggingView = true
 
             //this.setTransition("color 0.3s, top 0s")

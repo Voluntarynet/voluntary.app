@@ -148,14 +148,14 @@ window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
     // points - move to GestureRecognizer?
 
     downPoints: function() {
-        let p = this.pointsForEvent(this.downEvent())
+        const p = this.pointsForEvent(this.downEvent())
         return [p[0], p[1]]
     },
 
     activeForEvent: function(event) {
         // looks for two points whose id matchs those of the two down points
-        let points = this.pointsForEvent(event)
-        let ids = this.downPoints().map(p => p.id())
+        const points = this.pointsForEvent(event)
+        const ids = this.downPoints().map(p => p.id())
         return points.select(p => ids.contains(p.id()) )
     },
 
@@ -213,8 +213,8 @@ window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     rotationInDegrees: function() {
         // difference between initial angle between 1st two fingers down and their current angle
-        let a1 = this.beginAngleInDegress();
-        let a2 = this.activeAngleInDegress();
+        const a1 = this.beginAngleInDegress();
+        const a2 = this.activeAngleInDegress();
         return a2 - a2;
     },
 
@@ -254,7 +254,7 @@ window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
     // show
 
     debugJson: function() {
-        let dp = this.diffPosition()
+        const dp = this.diffPosition()
         return {
             id: this.typeId(),
             dx: dp.x(),

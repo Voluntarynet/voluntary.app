@@ -390,8 +390,8 @@ window.BrowserColumn = NodeView.extend().newSlots({
                 }
             } else {
                 // otherwise, select close to last selected index
-                const rowCount = Math.min(selectedIndex, this.rows().length - 1)
-                row = this.rows()[selectedIndex]
+                const i = Math.min(selectedIndex, this.rows().length - 1)
+                row = this.rows()[i]
                 //this.log("selecting row titled '" + row.title().innerHTML() + "'")
                 row.setIsSelected(true)
                 this.didClickRow(row)
@@ -712,6 +712,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
         })
     },
 
+
     onPinchBegin: function(aGesture) {
         // if node supports add actions:
         // - calc insert index
@@ -723,28 +724,29 @@ window.BrowserColumn = NodeView.extend().newSlots({
         //   can delete it if pinch doesn't complete with enough height
 
         console.log(this.typeId() + ".onPinchBegin()")
+
         const p = aGesture.beginCenterPosition()
-        let row = this.rowContainingPoint(p)
+        const row = this.rowContainingPoint(p)
         if (!row) {
             row = this.rowContainingPoint(p)
             assert(row)
         }
+
         const insertIndex = this.rows().indexOf(row)
 
         //console.log("insertIndex: ", insertIndex)
 
         if (this.node().hasAction("add")) {
-            let newSubnode = this.node().add()
-            let subnodes = this.node().subnodes().copy()
+            const newSubnode = this.node().add()
+            const subnodes = this.node().subnodes().copy()
             subnodes.remove(newSubnode)
             subnodes.atInsert(insertIndex, newSubnode)
 
-            const subviews = this.subviews()
             this.node().nodeReorderSudnodesTo(subnodes)
             this.syncFromNode()
             //console.log("subviews after sync:  ", subviews.map(sv => sv.node().typeId()))
 
-            let newRow = this.subviewForNode(newSubnode)
+            const newRow = this.subviewForNode(newSubnode)
             if (!newRow) {
                 newRow = this.subviewForNode(newSubnode)
                 assert(newRow)
@@ -754,6 +756,12 @@ window.BrowserColumn = NodeView.extend().newSlots({
             newRow.setBackgroundColor("black")
             newRow.setTransition("all 0s")
 
+            const minHeight = BrowserRow.defaultHeight()
+            newRow.setBackgroundColor("black")
+            const cv = newRow.contentView()
+            cv.setBackgroundColor(this.columnGroup().backgroundColor())
+            cv.setMinAndMaxHeight(minHeight)
+
             this._temporaryPinchSubnode = newSubnode
         } else {
             aGesture.cancel()
@@ -761,22 +769,22 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
     
     onPinchMove: function(aGesture) {
-        console.log(this.typeId() + ".onPinchMove()")
-        let s = Math.floor(aGesture.spread())
-        //console.log(this.typeId() + ".onPinchMove() spread = " + s)
+        const s = Math.floor(aGesture.spread())
+        //console.log(this.typeId() + ".onPinchMove() s = ", s)
 
         if (this._temporaryPinchSubnode) {
+            const minHeight = BrowserRow.defaultHeight()
             let newRow = this.subviewForNode(this._temporaryPinchSubnode)
+            newRow.setBackgroundColor("black")
             newRow.setMinAndMaxHeight(s)
+            let t = Math.floor(s/2 - minHeight/2);
+            newRow.contentView().setTop(t)
         }
-
-        // adjust size of temporary row and positions of other rows
-        // have temp row content max at normal size but outer view streatch to pinch size
-        // restack all views
+        // do we need to restack views?
     },
 
     onPinchComplete: function(aGesture) {
-        console.log(this.typeId() + ".onPinchCompleted()")
+        //console.log(this.typeId() + ".onPinchCompleted()")
         // if pinch is tall enough, keep new row, sync with 
 
         if (this._temporaryPinchSubnode) {
@@ -785,13 +793,16 @@ window.BrowserColumn = NodeView.extend().newSlots({
             if (newRow.clientHeight() < minHeight) {
                 this.removeRow(newRow)
             } else {
+                newRow.contentView().setTransition("all 0.15s")
                 newRow.setTransition("all 0.3s")
-                setTimeout(() => { newRow.setMinAndMaxHeight(minHeight) }, 0)
+                setTimeout(() => { 
+                    newRow.contentView().setTop(0)
+                    newRow.setMinAndMaxHeight(minHeight) 
+                }, 0)
             }
 
             this._temporaryPinchSubnode = null
         }
-
     },
 
     onPinchCancelled: function(aGesture) {

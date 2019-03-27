@@ -500,6 +500,13 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this
     },
 
+    // perspective
+
+    setPerspective: function(n) {
+        this.setPxCssAttribute("perspective", n)
+        return this
+    },
+
     // opacity
 
     setOpacity: function(v) {

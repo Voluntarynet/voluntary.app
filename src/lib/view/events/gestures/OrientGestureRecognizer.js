@@ -62,22 +62,15 @@ window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
         //console.log(this.shortTypeId() + ".onDown() this.isPressing() = ", this.isPressing())
 
         if (!this.isPressing()) {
-            //console.log("this.numberOfFingersDown() = ", this.numberOfFingersDown())
-            //console.log("this.minFingersRequired() = ", this.minFingersRequired())
             const downCount = this.numberOfFingersDown()
             if (downCount >= this.minFingersRequired() &&
                 downCount <= this.maxFingersAllowed()
             ) {
-                //console.log(this.shortTypeId() + ".onDown() pressing")
                 this.setIsPressing(true)
-                this.setBeginEvent(event)
+                //this.setBeginEvent(event)
                 this.startDocListeners()
-            } else {
-                //console.log(this.shortTypeId() + " invalid downCount = ", downCount)
             }
-        } else {
-            //console.log(this.shortTypeId() + ".onDown() already pressed")
-        }
+        } 
     },
 
     hasMovedEnough: function() {
@@ -99,10 +92,8 @@ window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
 
         if (this.isPressing()) {
             if (this.canBegin()) {
-                //console.log(this.shortTypeId() + ".onMove() canBegin: ", this.canBegin())
                 if (this.requestActivation()) {
                     this.sendBeginMessage()
-                    //console.log(this.shortTypeId() + " SENT BEGIN MESSAGE <---")
                 }
             }
 
@@ -173,7 +164,7 @@ window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
         return this.activeForEvent(this.lastEvent())
     },
 
-    activePoints: function() {
+    activePoints: function() { // current points that were in down points
         return this.activeForEvent(this.currentEvent())
     },
 

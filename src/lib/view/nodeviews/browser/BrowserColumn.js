@@ -781,6 +781,17 @@ window.BrowserColumn = NodeView.extend().newSlots({
             newRow.setMinAndMaxHeight(s)
             const t = Math.floor(s/2 - minHeight/2);
             newRow.contentView().setTop(t)
+
+            const h = BrowserRow.defaultHeight()
+
+            if (s < h) {
+                const rot = Math.floor((1 - s/h) * 90);
+                //newRow.setPerspective(1000)
+                newRow.contentView().setTransform("rotateX(" + rot + "deg)")
+            } else {
+                newRow.setPerspective(null)
+                newRow.contentView().setTransform(null)                
+            }
         } else {
             console.warn(this.typeId() + ".onPinchMove() missing this._temporaryPinchSubnode")
         }

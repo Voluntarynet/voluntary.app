@@ -55,6 +55,8 @@ window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
     attemptBegin: function() {
         if(this.requestActivation()) {
             this.sendBeginMessage() // begin
+        } else {
+            console.log(this.shortTypeId() + ".attemptBegin() FAILED")
         }
     },
 

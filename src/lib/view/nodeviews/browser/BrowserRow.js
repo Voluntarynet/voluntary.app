@@ -501,7 +501,7 @@ window.BrowserRow = NodeView.extend().newSlots({
             this.removeShadow()
 
             this.column().stackRows()
-
+            
             setTimeout(() => {
                 this.contentView().setBackgroundColor(this.currentBgColor())
                 this.column().relativePositionRows()

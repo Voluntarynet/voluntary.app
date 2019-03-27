@@ -29,10 +29,8 @@ window.GestureManager = ideal.Proto.extend().newSlots({
 
     requestActiveGesture: function(aGesture) {
         assert(aGesture)
-
-        this.releaseActiveGestureIfInactive()
+        //this.releaseActiveGestureIfInactive()
         assert(aGesture !== this.activeGesture())
-
 
         if (!this.activeGesture()) {
             aGesture.viewTarget().cancelAllGesturesExcept(aGesture)
@@ -51,18 +49,12 @@ window.GestureManager = ideal.Proto.extend().newSlots({
         return false
     },
 
-    releaseActiveGestureIfInactive: function() {
-        let ag = this.activeGesture()
-        if (ag && !ag.isActive()) {
-            if (this.isDebugging()) {
-                console.log(this.type() + " releasing " + ag.typeId())
-            }
-            this.setActiveGesture(null)
-        }
-        return this
-    },
-
     deactivateGesture: function(aGesture) {
+        /*
+        if (this.activeGesture() !== aGesture) {
+            console.warn(this.type() + ".deactivateGesture(" + aGesture.shortTypeId() + ") on non-active gesture")
+        }
+        */
         this.setActiveGesture(null)
         return this
     },

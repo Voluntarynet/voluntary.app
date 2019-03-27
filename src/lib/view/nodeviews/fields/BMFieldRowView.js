@@ -103,7 +103,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         
         if (newValue === null) { 
             // commenting out - this causes a "false" to be displayed in new fields
-            //newValue = false; // todo: find better way to deal with adding/removing new field
+            //newValue = false; // TODO: find better way to deal with adding/removing new field
         } 
 
         valueView.setValue(newValue)

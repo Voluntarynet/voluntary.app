@@ -425,14 +425,15 @@ window.BrowserRow = NodeView.extend().newSlots({
     onLongPressCancelled: function(aGesture) {
     },
 
-    onLongPressComplete: function(aGesture) {
+    onLongPressComplete: function(longPressGesture) {
         if (this.column().canReorder()) {
+            longPressGesture.deactivate()
             let pan = this.addPanGesture()
             pan.setShouldRemoveOnComplete(true)
             pan.setMinDistToBegin(0)
-            pan.onDown(aGesture.currentEvent())
+            pan.onDown(longPressGesture.currentEvent())
             pan.attemptBegin()
-            this.setBackgroundColor("blue")
+            this.contentView().setBackgroundColor("blue")
         }
     },
 
@@ -468,9 +469,7 @@ window.BrowserRow = NodeView.extend().newSlots({
             this.column().absolutePositionRows()
 
             this._dragStartPos = this.relativePos()
-            // this.column().stackRows()
 
-            //this.setPosition("absolute")
             this.setTop(this._dragStartPos.y())
             this.setZIndex(1)
             this.column().setPosition("relative")
@@ -481,11 +480,8 @@ window.BrowserRow = NodeView.extend().newSlots({
     onPanMove: function(aGesture) {
         if (this._isDraggingView) {
             const np = this._dragStartPos.add(aGesture.diffPos()) 
-            //console.log("aGesture.diffPos.y() = ", aGesture.diffPos().y())
-            //console.log("onPanMove y = ", np.y())
             this.setTop(np.y())
             this.column().stackRows()
-            //this.column().orderRows()
             this.setTop(np.y())
         }
     },
@@ -507,15 +503,17 @@ window.BrowserRow = NodeView.extend().newSlots({
             this.column().stackRows()
 
             setTimeout(() => {
-                this.setBackgroundColor(this.currentBgColor())
+                this.contentView().setBackgroundColor(this.currentBgColor())
                 this.column().relativePositionRows()
                 this.column().didReorderRows()
             }, 500)
         }
+        this.removePanGesture()
     },
 
     // orient testing
 
+    /*
     onOrientBegin: function(aGesture) {
         console.log(this.typeId() + ".onOrientBegin()")
         aGesture.show()
@@ -530,6 +528,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         console.log(this.typeId() + ".onOrientComplete()")
         aGesture.show()
     },
+    */
 
     onMouseMove: function(event) {
     },

@@ -12,6 +12,7 @@
 window.GestureManager = ideal.Proto.extend().newSlots({
     type: "GestureManager",
     activeGesture: null,
+    isDebugging: false,
 }).setSlots({
 
     init: function () {
@@ -22,17 +23,29 @@ window.GestureManager = ideal.Proto.extend().newSlots({
         return this.sharedInstanceForClass(GestureManager)
     },
 
+    hasActiveGesture: function() {
+        return this.activeGesture() && this.activeGesture().isActive()
+    },
+
     requestActiveGesture: function(aGesture) {
         assert(aGesture)
 
         this.releaseActiveGestureIfInactive()
         assert(aGesture !== this.activeGesture())
 
+
         if (!this.activeGesture()) {
             aGesture.viewTarget().cancelAllGesturesExcept(aGesture)
             this.setActiveGesture(aGesture)
-            console.log(this.type() + " activating " + aGesture.typeId())
+            if (this.isDebugging()) {
+                console.log(this.type() + " activating " + aGesture.description())
+            }
             return true
+        } else {
+            if (this.isDebugging()) {
+                console.log(this.type() + " rejecting " + aGesture.description())
+                console.log(this.type() + " already active " + this.activeGesture().description())
+            }
         }
 
         return false
@@ -41,7 +54,9 @@ window.GestureManager = ideal.Proto.extend().newSlots({
     releaseActiveGestureIfInactive: function() {
         let ag = this.activeGesture()
         if (ag && !ag.isActive()) {
-            console.log(this.type() + " releasing " + ag.typeId())
+            if (this.isDebugging()) {
+                console.log(this.type() + " releasing " + ag.typeId())
+            }
             this.setActiveGesture(null)
         }
         return this

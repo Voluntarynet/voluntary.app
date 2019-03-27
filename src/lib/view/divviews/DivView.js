@@ -161,7 +161,7 @@ window.DivView = ideal.Proto.extend().newSlots({
                 }
             }
         }
-        // todo: hack - add something to remove existing rule instead of inserting more
+        // TODO: hack - add something to remove existing rule instead of inserting more
         return this
     },
     */
@@ -1978,7 +1978,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 		
         if (specialKeyName === "enter" && this.unfocusOnEnterKey()) {
             console.log(" releasing focus")
-            // this.releaseFocus() // todo: implement something to pass focus up view chain to whoever wants it
+            // this.releaseFocus() // TODO: implement something to pass focus up view chain to whoever wants it
             this.element().parentElement.focus()
         }
 		
@@ -2430,7 +2430,7 @@ window.DivView = ideal.Proto.extend().newSlots({
             this._endScrollIntoViewFunc = () => {
                 //console.log("_endScrollIntoViewFunc - returning focus")
                 //focusedView.focus()
-                // need delay to allow scroll to finish - hack - todo: check for full visibility
+                // need delay to allow scroll to finish - hack - TODO: check for full visibility
                 focusedView.focusAfterDelay(0.2)
             }
         }
@@ -2442,7 +2442,7 @@ window.DivView = ideal.Proto.extend().newSlots({
         
         /*
         if (focusedView !== this) {
-            focusedView.focusAfterDelay(0.5) // todo: get this value from transition property
+            focusedView.focusAfterDelay(0.5) // TODO: get this value from transition property
         }
         */
         return this
@@ -2513,6 +2513,10 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
     */
    
+    containsPoint: function(aPoint) {
+        return this.winBounds().containsPoint(aPoint)
+    },
+
     winBounds: function() {
         let p = this.windowPos()
         let s = this.size()
@@ -2618,7 +2622,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 	    let root = document.body
 	    
 	    if (this.parentView()) {
-	        root = this.parentView().parentView().element() // hack for scroll view - todo: make more general
+	        root = this.parentView().parentView().element() // hack for scroll view - TODO: make more general
 	        //root = this.parentView().element()
 	    }
 	    

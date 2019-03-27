@@ -6,7 +6,7 @@
 
     Represents the set of styles for a NodeView, e.g. selected, unselected.
 
-    todo: can we make view styles nodes? recursion?
+    TODO: can we make view styles nodes? recursion?
 
 */
 

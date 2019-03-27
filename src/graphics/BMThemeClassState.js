@@ -19,7 +19,7 @@ window.BMThemeClassState = BMFieldSetNode.extend().newSlots({
     },
 
     attributeNames: function() {
-        // todo: request this from the view class, use view class theme state methods instead of direct css keys
+        // TODO: request this from the view class, use view class theme state methods instead of direct css keys
         //return ["background", "color", "border"] 
         return BMViewStyle.styleNames()
     },

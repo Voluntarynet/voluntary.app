@@ -782,9 +782,9 @@ window.BMNode = ideal.Proto.extend().newSlots({
         let dict = {}
         dict.type = this.type()
         dict.title = this.title()
-        // todo: store persistent slots...
-        // todo: store subnodes if set to store them
-        if (this.subnodes().length) { // todo: use a count method?
+        // TODO: store persistent slots...
+        // TODO: store subnodes if set to store them
+        if (this.subnodes().length) { // TODO: use a count method?
             dict.subnodes = this.subnodes().map((subnode) => {
                 return subnode.asJSON()
             })
@@ -793,7 +793,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     },
 
     fromJSON: function(json) {
-        // todo: read persistent keys
+        // TODO: read persistent keys
         if (json.title) {
             this.setTitle(json.title)
         }

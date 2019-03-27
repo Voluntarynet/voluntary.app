@@ -148,7 +148,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
         // use a copy of the observations list in 
         // case any are added while we are posting 
         //
-        // TODO: add an dictionary index to optimize? 
+        // TODO: add an dictionary index for efficiency
         
 
         this.setCurrentNote(note)

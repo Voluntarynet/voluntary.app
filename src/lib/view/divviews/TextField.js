@@ -82,7 +82,7 @@ window.TextField = DivStyledView.extend().newSlots({
         
         if (this.doesClearOnReturn()) {
             this.setInnerHTML("")
-            //this.focusAfterDelay(.125) // hack to get focus back after chat view scrolling - todo: fix this
+            //this.focusAfterDelay(.125) // hack to get focus back after chat view scrolling - TODO: fix this
         }
 
         if (this.didTextInputNote()) {

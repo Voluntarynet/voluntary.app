@@ -25,7 +25,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
         super.init()
         this.newSlots({
             idb: null,
-            readCache: null, // TODO: rename to readCache
+            readCache: null,
             writeCache: null,
             isOpen: false,
             isSynced: false,

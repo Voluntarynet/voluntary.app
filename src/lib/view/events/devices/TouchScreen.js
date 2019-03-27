@@ -109,12 +109,14 @@ window.TouchScreen = ideal.Proto.extend().newSlots({
         return points
     },
 
+
     pointsForEvent: function(event) {
-        if (!event._points) {
-            event._points = this.justPointsForEvent(event)
+        if (!Event_hasCachedPoints(event)) {
+            const points = this.justPointsForEvent(event)
+            Event_setCachedPoints(event, points)
         }
 
-        return event._points
+        return Event_cachedPoints(event)
     },
 
     currentPoints: function() {

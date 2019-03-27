@@ -96,7 +96,7 @@ window.BMRemotePeer = BMNode.extend().newSlots({
     },
 
     // --- peer connection options -------------------
-    // todo: move to BMRemotePeer
+    // TODO: move to BMRemotePeer
 	
     peerConnectionOptions: function () {
         return { 

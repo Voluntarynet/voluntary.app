@@ -6,7 +6,7 @@
 
     A simple Javascript importing system.
 
-    Several classes are in this one file to avoid JS loading synchronization issues. TODO: move to import?
+    Several classes are in this one file to avoid JS loading synchronization issues.
 	This runs _import.js which will then reference js and css files and
     _import.js file in it's subfolders.
     

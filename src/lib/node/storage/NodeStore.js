@@ -228,7 +228,9 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 
     storeDirtyObjects: function () {
         //console.log(" --- storeDirtyObjects --- ")
-        this.showDirtyObjects("storing")
+        if (this.debug()) {
+            this.showDirtyObjects("storing")
+        }
 
         //console.warn("   isSyncingTargetAndMethod = ", SyncScheduler.isSyncingTargetAndMethod(this, "storeDirtyObjects"))
 

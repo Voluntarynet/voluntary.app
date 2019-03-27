@@ -353,14 +353,14 @@ window.BrowserColumn = NodeView.extend().newSlots({
 	
     syncFromNode: function () {
         
-        /*
+        
         if (this.browser() === null) {
             console.warn("WARNING: skipping BrowserColumn.syncFromNode because this.browser() is null")
             console.warn("this.node() = " , this.node())
             //console.warn("this.node().title() = " , this.node().title())
             return
         }
-        */
+        
         
         // remember the selection before sync
         let selectedIndex = this.selectedRowIndex()
@@ -407,7 +407,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
 	
     showSelected: function() {
         /*
-        todo: add check if visible
+        TODO: add check if visible
         if (this.selectedRow()) {
             this.selectedRow().scrollIntoView()
         }
@@ -723,13 +723,14 @@ window.BrowserColumn = NodeView.extend().newSlots({
         //   reference it with _temporaryPinchSubnode so we
         //   can delete it if pinch doesn't complete with enough height
 
-        console.log(this.typeId() + ".onPinchBegin()")
+        //console.log(this.typeId() + ".onPinchBegin()")
 
         const p = aGesture.beginCenterPosition()
         const row = this.rowContainingPoint(p)
         if (!row) {
-            row = this.rowContainingPoint(p)
-            assert(row)
+            // don't allow pinch if it's bellow all the rows
+            // use a tap gesture to create a row there instead?
+            return this
         }
 
         const insertIndex = this.rows().indexOf(row)
@@ -738,6 +739,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
 
         if (this.node().hasAction("add")) {
             const newSubnode = this.node().add()
+            this._temporaryPinchSubnode = newSubnode
             const subnodes = this.node().subnodes().copy()
             subnodes.remove(newSubnode)
             subnodes.atInsert(insertIndex, newSubnode)
@@ -755,37 +757,39 @@ window.BrowserColumn = NodeView.extend().newSlots({
             newRow.contentView().setMinAndMaxHeight(64)
             newRow.setBackgroundColor("black")
             newRow.setTransition("all 0s")
+            newRow.setBackgroundColor("black")
 
             const minHeight = BrowserRow.defaultHeight()
-            newRow.setBackgroundColor("black")
             const cv = newRow.contentView()
             cv.setBackgroundColor(this.columnGroup().backgroundColor())
             cv.setMinAndMaxHeight(minHeight)
 
-            this._temporaryPinchSubnode = newSubnode
         } else {
+            //console.log(this.typeId() + ".onPinchBegin() cancelling due to no add action")
+
             aGesture.cancel()
         }        
     },
     
     onPinchMove: function(aGesture) {
-        const s = Math.floor(aGesture.spread())
-        //console.log(this.typeId() + ".onPinchMove() s = ", s)
-
         if (this._temporaryPinchSubnode) {
+            const s = Math.floor(aGesture.spread())
+            //console.log(this.typeId() + ".onPinchMove() s = ", s)
             const minHeight = BrowserRow.defaultHeight()
-            let newRow = this.subviewForNode(this._temporaryPinchSubnode)
+            const newRow = this.subviewForNode(this._temporaryPinchSubnode)
             newRow.setBackgroundColor("black")
             newRow.setMinAndMaxHeight(s)
-            let t = Math.floor(s/2 - minHeight/2);
+            const t = Math.floor(s/2 - minHeight/2);
             newRow.contentView().setTop(t)
+        } else {
+            console.warn(this.typeId() + ".onPinchMove() missing this._temporaryPinchSubnode")
         }
         // do we need to restack views?
     },
 
     onPinchComplete: function(aGesture) {
         //console.log(this.typeId() + ".onPinchCompleted()")
-        // if pinch is tall enough, keep new row, sync with 
+        // if pinch is tall enough, keep new row
 
         if (this._temporaryPinchSubnode) {
             const newRow = this.subviewForNode(this._temporaryPinchSubnode)
@@ -806,7 +810,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
 
     onPinchCancelled: function(aGesture) {
-        console.log(this.typeId() + ".onPinchCancelled()")
+        //console.log(this.typeId() + ".onPinchCancelled()")
         if (this._temporaryPinchSubnode) {
             this.node().removeSubnode(this._temporaryPinchSubnode)
             this._temporaryPinchSubnode = null

@@ -31,7 +31,7 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
     init: function () {
         GestureRecognizer.init.apply(this)
         this.setListenerClasses(["MouseListener", "TouchListener"])
-        //this.setIsDebugging(true) 
+        this.setIsDebugging(false) 
         return this
     },
 
@@ -41,7 +41,8 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
         if (this.timeoutId()) {
             this.stopTimer()
         }
-        let tid = setTimeout(() => { this.onLongPress() }, this.timePeriod());
+
+        const tid = setTimeout(() => { this.onLongPress() }, this.timePeriod());
         this.setTimeoutId(tid)
         this.startDocListeners() // didFinish will stop listing
         return this
@@ -69,6 +70,8 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
                 this.sendCompleteMessage()
                 this.didFinish()
             }
+        } else {
+            this.cancel()
         }
     },
 
@@ -76,28 +79,32 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     onDown: function (event) {
         GestureRecognizer.onDown.apply(this, [event])
-        this.setCurrentEvent(event)
-        this.setDownEvent(event)
         
-        this.startTimer()
-        this.setBeginEvent(event)
-        this.sendBeginMessage()
+        const isWithin = this.currentEventIsOnTargetView();
+
+        if (isWithin && !GestureManager.shared().hasActiveGesture()) {
+            this.startTimer()
+            this.sendBeginMessage()
+        }
     },
 
     onMove: function (event) {
         GestureRecognizer.onMove.apply(this, [event])
-
-        if (this.hasTimer()) {
-            this.setCurrentEvent(event)
+    
+        if (this.hasTimer()) { // TODO: also check move distance?
+            if(this.currentEventIsOnTargetView()) {
+                this.setCurrentEvent(event)
+            } else {
+                this.cancel()
+            }
         }
+
     },
 
     onUp: function (event) {
         GestureRecognizer.onUp.apply(this, [event])
 
         if (this.hasTimer()) {
-            this.setCurrentEvent(event)
-            this.setUpEvent(event)
             this.cancel()
         }
     },

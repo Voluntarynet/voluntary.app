@@ -63,59 +63,16 @@ html * {
 */
 
 
-/* --- mono --- */
-
-@font-face {
-	font-family: "AppMono";
-    src: url("fonts/ShareTechMono/ShareTechMono.ttf");
-	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
-    font-display: auto;
-}
-
-/* --- Blender --- */
 /*
+    IMPORTANT: 
+    
+        This needs to be in the top level folder so the paths are 
+        correct when it's css is embedded into index.html.
 
-// blender didnt work that well
-
-@font-face {
-    font-family: "AppLight";
-    src: url("fonts/Blender/Blender-THIN.ttf");
-}
-
-@font-face {
-    font-family: "AppRegular";
-    src: url("fonts/Blender/Blender-BOOK.ttf");
-}
-
-@font-face {
-    font-family: "AppSemiBold";
-    src: url("fonts/Blender/Blender-BOLD.ttf");
-}
+    NOTES: 
+    
+        Oher interesting fonts: Blender, Montserrat, MateriaPro, Univ 
 */
-
-
-/* --- MateriaPro --- */
-
-/*
-@font-face {
-    font-family: "AppLight";
-    src: url("fonts/OpenSans/MateriaPro-Light.ttf");
-}
-
-@font-face {
-    font-family: "AppRegular";
-    src: url("fonts/OpenSans/MateriaPro-Light.ttf");
-}
-
-@font-face {
-    font-family: "AppSemiBold";
-    src: url("fonts/OpenSans/MateriaPro-Regular.ttf");
-}
-*/
-
-/*--- Univ ---*/
-
-/* --- OpenSans --- */
 
 
 @font-face {
@@ -136,49 +93,19 @@ html * {
     font-display: auto;
 }
 
-
-/*
-@font-face {
-    font-family:"AppBold";
-    src: url("fonts/OpenSans/OpenSans-Bold.ttf");
-}
-
 @font-face {
     font-family:"AppExtraBold";
     src: url("fonts/OpenSans/OpenSans-ExtraBold.ttf");
 }
-*/
 
-
-/* --- Montserrat --- */
-
-/*
-@font-face {
-    font-family:"AppLight";
-    src: url("fonts/Montserrat/Montserrat-Thin.otf");
-}
+/* --- Mono --- */
 
 @font-face {
-    font-family:"AppRegular";
-    src: url("fonts/Montserrat/Montserrat-Light.otf");
+	font-family: "AppMono";
+    src: url("fonts/ShareTechMono/ShareTechMono.ttf");
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+    font-display: auto;
 }
-
-@font-face {
-    font-family:"AppSemiBold";
-    src: url("fonts/Montserrat/Montserrat-Regular.otf");
-}
-
-@font-face {
-    font-family:"AppBold";
-    src: url("fonts/Montserrat/Montserrat-SemiBold.otf");
-}
-
-@font-face {
-    font-family:"AppExtraBold";
-    src: url("fonts/Montserrat/Montserrat-ExtraBold.otf");
-}
-*/
-
 
 
 
@@ -1836,7 +1763,7 @@ window.JSImporterPanel.startWhenReady()
 
     A simple Javascript importing system.
 
-    Several classes are in this one file to avoid JS loading synchronization issues. TODO: move to import?
+    Several classes are in this one file to avoid JS loading synchronization issues.
 	This runs _import.js which will then reference js and css files and
     _import.js file in it's subfolders.
     
@@ -82453,7 +82380,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
         // use a copy of the observations list in 
         // case any are added while we are posting 
         //
-        // TODO: add an dictionary index to optimize? 
+        // TODO: add an dictionary index for efficiency
         
 
         this.setCurrentNote(note)
@@ -83008,7 +82935,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
         super.init()
         this.newSlots({
             idb: null,
-            readCache: null, // TODO: rename to readCache
+            readCache: null,
             writeCache: null,
             isOpen: false,
             isSynced: false,
@@ -83324,7 +83251,7 @@ JSImporter.pushRelativePaths([
 
     Represents the set of styles for a NodeView, e.g. selected, unselected.
 
-    todo: can we make view styles nodes? recursion?
+    TODO: can we make view styles nodes? recursion?
 
 */
 
@@ -84274,9 +84201,9 @@ window.BMNode = ideal.Proto.extend().newSlots({
         let dict = {}
         dict.type = this.type()
         dict.title = this.title()
-        // todo: store persistent slots...
-        // todo: store subnodes if set to store them
-        if (this.subnodes().length) { // todo: use a count method?
+        // TODO: store persistent slots...
+        // TODO: store subnodes if set to store them
+        if (this.subnodes().length) { // TODO: use a count method?
             dict.subnodes = this.subnodes().map((subnode) => {
                 return subnode.asJSON()
             })
@@ -84285,7 +84212,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     },
 
     fromJSON: function(json) {
-        // todo: read persistent keys
+        // TODO: read persistent keys
         if (json.title) {
             this.setTitle(json.title)
         }
@@ -84554,7 +84481,9 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 
     storeDirtyObjects: function () {
         //console.log(" --- storeDirtyObjects --- ")
-        this.showDirtyObjects("storing")
+        if (this.debug()) {
+            this.showDirtyObjects("storing")
+        }
 
         //console.warn("   isSyncingTargetAndMethod = ", SyncScheduler.isSyncingTargetAndMethod(this, "storeDirtyObjects"))
 
@@ -85815,15 +85744,15 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
     },
 
     // json serialization
-    // todo: can this use persistent storage methods via skip pid use?
+    // TODO: can this use persistent storage methods via skip pid use?
 
     asJSON: function() {
         const dict = {}
         dict.type = this.type()
-        // todo: store persistent slots...
-        // todo: store subnodes if set to store them
-        if (this.subnodes().length) { // todo: use a count method?
-            // todo: check for BMField subclass?
+        // TODO: store persistent slots...
+        // TODO: store subnodes if set to store them
+        if (this.subnodes().length) { // TODO: use a count method?
+            // TODO: check for BMField subclass?
             dict.fields = {}
             this.subnodes().forEach((field) => {
                 let v = field.value()
@@ -85836,7 +85765,7 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
     },
 
     fromJSON: function(json) {
-        // todo: read persistent keys
+        // TODO: read persistent keys
         if (json.fields) { 
             Map.withJsMap(json.fields).forEach((key, value) => {
                 const field = this.fieldNamed(key)
@@ -87050,6 +86979,25 @@ JSImporter.pushRelativePaths([
 
 */
 
+window.Event_hasCachedPoints = function(event) {
+    return event._cachedPoints !== undefined
+}
+
+window.Event_setCachedPoints = function(event, points) {
+    event._cachedPoints = points
+}
+
+window.Event_cachedPoints = function(event) {
+    return event._cachedPoints
+}
+
+window.Event_pushCachedPoint = function(event, point) {
+    assert(event._cachedPoints)
+    event._cachedPoints.push(point)
+}
+
+// ----------------
+
 window.EventPoint = window.Point.extend().newSlots({
     type: "EventPoint",
     id: null,
@@ -87492,11 +87440,12 @@ window.Mouse = ideal.Proto.extend().newSlots({
     },
 
     pointsForEvent: function(event) {
-        if (!event._points) {
-            event._points = [this.pointForEvent(event)]
+        if (!Event_hasCachedPoints(event)) {
+            const points = [this.pointForEvent(event)]
+            Event_setCachedPoints(event, points)
         }
 
-        return event._points
+        return Event_cachedPoints(event)
     },
 
     currentPoints: function() {
@@ -87618,12 +87567,14 @@ window.TouchScreen = ideal.Proto.extend().newSlots({
         return points
     },
 
+
     pointsForEvent: function(event) {
-        if (!event._points) {
-            event._points = this.justPointsForEvent(event)
+        if (!Event_hasCachedPoints(event)) {
+            const points = this.justPointsForEvent(event)
+            Event_setCachedPoints(event, points)
         }
 
-        return event._points
+        return Event_cachedPoints(event)
     },
 
     currentPoints: function() {
@@ -88178,6 +88129,7 @@ JSImporter.pushRelativePaths([
 window.GestureManager = ideal.Proto.extend().newSlots({
     type: "GestureManager",
     activeGesture: null,
+    isDebugging: false,
 }).setSlots({
 
     init: function () {
@@ -88188,17 +88140,29 @@ window.GestureManager = ideal.Proto.extend().newSlots({
         return this.sharedInstanceForClass(GestureManager)
     },
 
+    hasActiveGesture: function() {
+        return this.activeGesture() && this.activeGesture().isActive()
+    },
+
     requestActiveGesture: function(aGesture) {
         assert(aGesture)
 
         this.releaseActiveGestureIfInactive()
         assert(aGesture !== this.activeGesture())
 
+
         if (!this.activeGesture()) {
             aGesture.viewTarget().cancelAllGesturesExcept(aGesture)
             this.setActiveGesture(aGesture)
-            console.log(this.type() + " activating " + aGesture.typeId())
+            if (this.isDebugging()) {
+                console.log(this.type() + " activating " + aGesture.description())
+            }
             return true
+        } else {
+            if (this.isDebugging()) {
+                console.log(this.type() + " rejecting " + aGesture.description())
+                console.log(this.type() + " already active " + this.activeGesture().description())
+            }
         }
 
         return false
@@ -88207,7 +88171,9 @@ window.GestureManager = ideal.Proto.extend().newSlots({
     releaseActiveGestureIfInactive: function() {
         let ag = this.activeGesture()
         if (ag && !ag.isActive()) {
-            console.log(this.type() + " releasing " + ag.typeId())
+            if (this.isDebugging()) {
+                console.log(this.type() + " releasing " + ag.typeId())
+            }
             this.setActiveGesture(null)
         }
         return this
@@ -88289,8 +88255,8 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         this.setIsEmulatingTouch(true)
         this.setFingerViewDict({})
 
-        this.setIsDebugging(false)
-        this.setIsVisualDebugging(false)
+        this.setIsDebugging(true)
+        this.setIsVisualDebugging(true)
         return this
     },
 
@@ -88337,20 +88303,16 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     },
 
     numberOfFingersDown: function() {
-        let points = this.pointsForEvent(this.currentEvent())
+        const points = this.pointsForEvent(this.currentEvent())
         return points.length
     },
 
     currentEventIsOnTargetView: function() {
-        let points = this.pointsForEvent(this.currentEvent())
-        let p = points.first()
-        let bounds = this.viewTarget().winBounds()
-        /*
-        console.log(this.typeId() + ".currentEventIsOnTargetView()")
-        console.log("        p = ", p.asString())
-        console.log("   bounds = ", bounds.asString())
-        */
-        return bounds.containsPoint(p)
+        const points = this.pointsForEvent(this.currentEvent())
+        const p = points.first()
+        const view = this.viewTarget()
+        return view.containsPoint(p)
+        //return points.detect(p1 => !view.containsPoint(p1)) === null
     },
 
     /*
@@ -88359,13 +88321,12 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     },
     */
 
-
     // --- listeners ---
 
     newListeners: function() {
         return this.listenerClasses().map((className) => {
-            let proto = window[className];
-            let listener = proto.clone();
+            const proto = window[className];
+            const listener = proto.clone();
             listener.setDelegate(this);
             return listener
         })
@@ -88382,7 +88343,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     startViewListeners: function() {
         this.stopViewListeners()
 
-        let listeners = this.newListeners().map((listener) => {
+        const listeners = this.newListeners().map((listener) => {
             listener.setElement(this.viewTarget().element())
             listener.start()
             return listener
@@ -88402,7 +88363,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     startDocListeners: function() {
         this.stopDocListeners()
 
-        let listeners = this.newListeners().map((listener) => {
+        const listeners = this.newListeners().map((listener) => {
             listener.setUseCapture(true)
             listener.setElement(document.body)
             //listener.setIsDebugging(true);
@@ -88433,7 +88394,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         //let vt = this.viewTarget()
         //assert(vt)
         //let r = vt.requestActiveGesture(this)
-        let r = GestureManager.shared().requestActiveGesture(this);
+        const r = GestureManager.shared().requestActiveGesture(this);
         if(r) {
             this.setIsActive(true)
             return true
@@ -88455,7 +88416,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
 
         if (this.shouldRemoveOnComplete() && this.viewTarget()) {
             //let vt = this.viewTarget()
-            //console.log(this.typeId() + ".shouldRemoveOnComplete() this.viewTarget() = " + (vt ? vt.typeId() : "null"))
+            //console.log(this.shortTypeId() + ".shouldRemoveOnComplete() this.viewTarget() = " + (vt ? vt.typeId() : "null"))
             this.stop()
             this.viewTarget().removeGestureRecognizer(this)
         }
@@ -88468,12 +88429,12 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
 
     sendDelegateMessage: function(methodName) {
         assert(methodName !== null)
+        const vt = this.viewTarget()
 
         if (this.isDebugging()) {
-            console.log(this.typeId() + " sending " + methodName)
+            console.log(this.shortTypeId() + " sending " + methodName + " to " + vt.typeId())
         }
 
-        let vt = this.viewTarget()
         if (vt[methodName]) {
             vt[methodName].apply(vt, [this])
         } else {
@@ -88489,25 +88450,22 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     // so we can share the event handling code for both devices 
 
     pointsForEvent: function(event) {
-        if (event._gestureRecognizerPoints) {
-            return event._gestureRecognizerPoints
-        }
-        
         if (event == null) {
             throw new Error(this.type() + ".pointsForEvent() event is null")
         }
 
+        const eventClass = event.__proto__.constructor;
+
         let points = []
 
-        if (event.__proto__.constructor === MouseEvent) {
+        if (eventClass === MouseEvent) {
             points = Mouse.shared().pointsForEvent(event)
-        } else if (event.__proto__.constructor === TouchEvent) {  // mouse event      
-            points = TouchScreen.shared().pointsForTouchEvent(event)
+        } else if (eventClass === TouchEvent) {  // mouse event      
+            points = TouchScreen.shared().pointsForEvent(event)
         } else {
             console.warn(this.type() + " can't handle this event type yet: ", event)
         }
 
-        event._gestureRecognizerPoints = points // we can cache this as it won't change
         return points
     },
 
@@ -88557,20 +88515,21 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     shouldEmulateEvent: function(event) {
         return this.isEmulatingTouch() && 
                 event.shiftKey && 
-                event._gestureRecognizerPoints && 
-                event._gestureRecognizerPoints.length === 1;
+                event.__proto__.constructor === MouseEvent &&
+                this.pointsForEvent(event).length === 1;
+               // Event_hasCachedPoints(event);
     },
 
     emulateDownIfNeeded: function(event) {
-        let p1 = this.pointsForEvent(event).first()
+        const p1 = this.pointsForEvent(event).first()
 
         if (this.shouldEmulateEvent(event)) {
             // make a duplicate of the down event point with a different id
-            let p2 = p1.copy().setId("emulatedTouch")
+            const p2 = p1.copy().setId("emulatedTouch")
             p2.setX(p2.x() + 10)
             p2.setY(p2.y() + 10)
-            let points = event._gestureRecognizerPoints
-            points.push(p2)
+
+            Event_pushCachedPoint(event, p2)
             //console.log("down:" + points[0].asString() + " " + points[1].asString())
         }
         return this
@@ -88583,16 +88542,14 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     },
 
     emulateMoveIfNeeded: function(event) {
-        let p2 = this.pointsForEvent(event).first()
+        const p2 = this.pointsForEvent(event).first()
 
         if (this.shouldEmulateEvent(event) && this.downEvent()) {      
             // get down point and current point and add a point on the other side
-            // add it to the cache event._gestureRecognizerPoints
-            let p1 = this.pointsForEvent(this.downEvent()).first()
-            let v = p2.subtract(p1).negated()
-            let p3 = p1.add(v).setId("emulatedTouch")
-            let points = event._gestureRecognizerPoints
-            points.push(p3)
+            const p1 = this.pointsForEvent(this.downEvent()).first()
+            const v = p2.subtract(p1).negated()
+            const extraPoint = p1.add(v).setId("emulatedTouch")
+            Event_pushCachedPoint(event, extraPoint)
             //console.log("move: ", points[0].asString() + " " + points[1].asString())
         }
 
@@ -88649,6 +88606,10 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     onTouchEnd: function(event) {
         this.onUp(event)
     },
+
+    onTouchCancel: function(event) {
+        this.onUp(event)
+    },
     
     // touch capture events
 
@@ -88664,6 +88625,10 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         this.onUp(event)
     },
 
+    onTouchCancelCapture: function(event) {
+        this.onUp(event)
+    },
+
     // diff position helper
 
     diffPos: function() {
@@ -88671,10 +88636,10 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     },
 
     distance: function() {
-        let dp = this.diffPos()
-        let dx = Math.abs(dp.x())
-        let dy = Math.abs(dp.y())
-        let funcs = {
+        const dp = this.diffPos()
+        const dx = Math.abs(dp.x())
+        const dy = Math.abs(dp.y())
+        const funcs = {
             left:  (dx, dy) => dx,
             right: (dx, dy) => dx,
             up:    (dx, dy) => dy,
@@ -88684,8 +88649,8 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     },
 
     defaultMessageForState: function(state) {
-        let name = this.type().before("GestureRecognizer")
-        let msg = "on" + name + state.capitalized()
+        const name = this.type().before("GestureRecognizer")
+        const msg = "on" + name + state.capitalized()
         return msg
     },
 
@@ -88730,14 +88695,14 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         return this
     },
 
-    // ---  outline view for debugging ---
-
     shouldShowVisualDebugger: function() {
         return this.hasDownPointsInView() || this.isActive() // || this.isPressing());
     },
 
+    // ---  outline view for debugging ---
+
     newOutlineView: function() {
-        let v = DivView.clone()
+        const v = DivView.clone()
         v.setPointerEvents("none")
         v.setBorder("1px dashed white")
         v.setBackgroundColor("transparent")
@@ -88748,32 +88713,32 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
 
     outlineView: function() {
         if (!this._outlineView) {
-            let v = this.newOutlineView()
+            const v = this.newOutlineView()
             this._outlineView = v
         }
         return this._outlineView
     },
 
     updateOutlineView: function() {
-    //if (this.isVisualDebugging()) { 
+        /*
         if (this.shouldShowVisualDebugger()) {
             this.showOutlineView()
         } else {
-            let v = this.outlineView()
+            const v = this.outlineView()
             if (v.parentView()) {
                 v.removeFromParentView()
             }
         }
-    //}
+        */
     },
 
     showOutlineView: function() {
-        let v = this.outlineView()
+        const v = this.outlineView()
         if (!v.parentView()) {
             DocumentBody.shared().addSubview(v)
         }
-        let vt = this.viewTarget()
-        let bounds = vt.winBounds()
+        const vt = this.viewTarget()
+        const bounds = vt.winBounds()
 
         v.setMinAndMaxHeight(bounds.height())
         v.setMinAndMaxWidth(bounds.width())
@@ -88786,10 +88751,10 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     // --- finger views for debugging ---
 
     newFingerView: function() {
-        let v = DivView.clone()
+        const v = DivView.clone()
         v.setPointerEvents("none")
 
-        let size = 20
+        const size = 20
         v.setMinAndMaxHeight(size)
         v.setMinAndMaxWidth(size)
         v.setBorderRadius(size/2)
@@ -88801,7 +88766,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     },
 
     viewForFingerId: function(id) {
-        let fvs = this.fingerViewDict()
+        const fvs = this.fingerViewDict()
         let v = fvs[id]
         if (!v) {
             v = this.newFingerView()
@@ -88812,10 +88777,10 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     },
 
     removeFingerViews: function() {
-        let dict = this.fingerViewDict()
+        const dict = this.fingerViewDict()
         for (let id in dict) {
             if (dict.hasOwnProperty(id)) {           
-                let fingerView = dict[id]
+                const fingerView = dict[id]
                 fingerView.removeFromParentView()
             }
         }
@@ -88824,23 +88789,23 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     },
 
     showFingers: function() {
-        let points = this.pointsForEvent(this.currentEvent());
-        let idsToRemove = Object.getOwnPropertyNames(this.fingerViewDict()) // TODO: move to dict
+        const points = this.pointsForEvent(this.currentEvent());
+        const idsToRemove = Object.getOwnPropertyNames(this.fingerViewDict()) // TODO: move to dict
 
         points.forEach((point) => {
-            let id = point.id()
-            let v = this.viewForFingerId(id);
+            const id = point.id()
+            const v = this.viewForFingerId(id);
             idsToRemove.remove(id) 
-            let nx = point.x() - v.clientWidth()/2;
-            let ny = point.y() - v.clientHeight()/2;
+            const nx = point.x() - v.clientWidth()/2;
+            const ny = point.y() - v.clientHeight()/2;
             v.setLeft(nx);
             v.setTop(ny);
             //v.setBorder("1px dashed white")
         })
 
-        let fvd = this.fingerViewDict()
+        const fvd = this.fingerViewDict()
         idsToRemove.forEach((id) => {
-            let fingerView = fvd[id]
+            const fingerView = fvd[id]
             assert(fingerView)
             fingerView.removeFromParentView()
             delete fvd[id]
@@ -88888,24 +88853,31 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
             return false
         }
 
-        let bounds = this.viewTarget().winBounds();
-        let points = this.allDownPoints();
-        let match = points.detect(p => bounds.containsPoint(p)) 
+        const view = this.viewTarget();
+        const points = this.allDownPoints();
+        const match = points.detect(p => view.containsPoint(p)) 
         //console.log("all points.length:", points.length, " has match:", match != null)
-
-        return match != null
+        return match !== null
     },
 
     allPoints: function() { // TODO: some better abstraction for Touch+Mouse?
-        let points = []
+        const points = []
         points.appendItems(TouchScreen.shared().currentPoints())
         points.appendItems(Mouse.shared().currentPoints())
         return points
     },
 
     allDownPoints: function() { // TODO: some better abstraction for Touch+Mouse?
-        let points = this.allPoints().select(p => p.isDown())
+        const points = this.allPoints().select(p => p.isDown())
         return points
+    },
+
+    shortTypeId: function() {
+        return this.typeId().replaceAll("GestureRecognizer", "")
+    },
+
+    description: function() {
+        return this.shortTypeId() + " on " + this.viewTarget().typeId()
     },
 })
 
@@ -88944,7 +88916,7 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
     init: function () {
         GestureRecognizer.init.apply(this)
         this.setListenerClasses(["MouseListener", "TouchListener"])
-        //this.setIsDebugging(true) 
+        this.setIsDebugging(false) 
         return this
     },
 
@@ -88954,7 +88926,8 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
         if (this.timeoutId()) {
             this.stopTimer()
         }
-        let tid = setTimeout(() => { this.onLongPress() }, this.timePeriod());
+
+        const tid = setTimeout(() => { this.onLongPress() }, this.timePeriod());
         this.setTimeoutId(tid)
         this.startDocListeners() // didFinish will stop listing
         return this
@@ -88982,6 +88955,8 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
                 this.sendCompleteMessage()
                 this.didFinish()
             }
+        } else {
+            this.cancel()
         }
     },
 
@@ -88989,28 +88964,32 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     onDown: function (event) {
         GestureRecognizer.onDown.apply(this, [event])
-        this.setCurrentEvent(event)
-        this.setDownEvent(event)
         
-        this.startTimer()
-        this.setBeginEvent(event)
-        this.sendBeginMessage()
+        const isWithin = this.currentEventIsOnTargetView();
+
+        if (isWithin && !GestureManager.shared().hasActiveGesture()) {
+            this.startTimer()
+            this.sendBeginMessage()
+        }
     },
 
     onMove: function (event) {
         GestureRecognizer.onMove.apply(this, [event])
-
-        if (this.hasTimer()) {
-            this.setCurrentEvent(event)
+    
+        if (this.hasTimer()) { // TODO: also check move distance?
+            if(this.currentEventIsOnTargetView()) {
+                this.setCurrentEvent(event)
+            } else {
+                this.cancel()
+            }
         }
+
     },
 
     onUp: function (event) {
         GestureRecognizer.onUp.apply(this, [event])
 
         if (this.hasTimer()) {
-            this.setCurrentEvent(event)
-            this.setUpEvent(event)
             this.cancel()
         }
     },
@@ -89074,7 +89053,7 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     init: function () {
         GestureRecognizer.init.apply(this)
         this.setListenerClasses(["MouseListener", "TouchListener"])     
-        //this.setIsDebugging(true)
+        this.setIsDebugging(false)
         return this
     },
 
@@ -89447,7 +89426,7 @@ window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
     init: function () {
         GestureRecognizer.init.apply(this)
         this.setListenerClasses(["MouseListener", "TouchListener"]) 
-        this.setIsDebugging(false)
+        //this.setIsDebugging(true)
         return this
     },
 
@@ -89455,45 +89434,51 @@ window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     onDown: function (event) {
         GestureRecognizer.onDown.apply(this, [event])
+        //console.log(this.shortTypeId() + ".onDown() this.isPressing() = ", this.isPressing())
 
         if (!this.isPressing()) {
             //console.log("this.numberOfFingersDown() = ", this.numberOfFingersDown())
             //console.log("this.minFingersRequired() = ", this.minFingersRequired())
-            let downCount = this.numberOfFingersDown()
+            const downCount = this.numberOfFingersDown()
             if (downCount >= this.minFingersRequired() &&
                 downCount <= this.maxFingersAllowed()
             ) {
+                //console.log(this.shortTypeId() + ".onDown() pressing")
                 this.setIsPressing(true)
                 this.setBeginEvent(event)
                 this.startDocListeners()
+            } else {
+                //console.log(this.shortTypeId() + " invalid downCount = ", downCount)
             }
+        } else {
+            //console.log(this.shortTypeId() + ".onDown() already pressed")
         }
     },
 
     hasMovedEnough: function() {
         // intended to be overridden by subclasses
-        let m = this.minDistToBegin()
-        let d = this.currentPosition().distanceFrom(this.downPosition())
+        // e.g. a rotation recognizer might look at how much first two fingers have rotated
+        const m = this.minDistToBegin()
+        const d = this.currentPosition().distanceFrom(this.downPosition())
         return d >= m
     },
 
     canBegin: function() {
         return !this.isActive() && 
                 this.hasMovedEnough() && 
-                this.numberOfFingersDown() >= this.minFingersRequired() &&
-                this.requestActivation(); // TODO: should this be in a "can" method?
+                this.numberOfFingersDown() >= this.minFingersRequired(); // TODO: should this be in a "can" method?
     },
 
     onMove: function(event) {
         GestureRecognizer.onMove.apply(this, [event])
 
         if (this.isPressing()) {
-            //console.log(this.typeId() + " canBegin: ", this.canBegin())
-
             if (this.canBegin()) {
-                this.setIsActive(true)
-                this.setBeginEvent(event)
-                this.sendBeginMessage()
+                //console.log(this.shortTypeId() + ".onMove() canBegin: ", this.canBegin())
+                if (this.requestActivation()) {
+                    this.sendBeginMessage()
+                    //console.log(this.shortTypeId() + " SENT BEGIN MESSAGE <---")
+                }
             }
 
             if (this.activePoints().length < this.minFingersRequired()) {
@@ -89544,14 +89529,14 @@ window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
     // points - move to GestureRecognizer?
 
     downPoints: function() {
-        let p = this.pointsForEvent(this.downEvent())
+        const p = this.pointsForEvent(this.downEvent())
         return [p[0], p[1]]
     },
 
     activeForEvent: function(event) {
         // looks for two points whose id matchs those of the two down points
-        let points = this.pointsForEvent(event)
-        let ids = this.downPoints().map(p => p.id())
+        const points = this.pointsForEvent(event)
+        const ids = this.downPoints().map(p => p.id())
         return points.select(p => ids.contains(p.id()) )
     },
 
@@ -89609,8 +89594,8 @@ window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     rotationInDegrees: function() {
         // difference between initial angle between 1st two fingers down and their current angle
-        let a1 = this.beginAngleInDegress();
-        let a2 = this.activeAngleInDegress();
+        const a1 = this.beginAngleInDegress();
+        const a2 = this.activeAngleInDegress();
         return a2 - a2;
     },
 
@@ -89650,7 +89635,7 @@ window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
     // show
 
     debugJson: function() {
-        let dp = this.diffPosition()
+        const dp = this.diffPosition()
         return {
             id: this.typeId(),
             dx: dp.x(),
@@ -89696,7 +89681,7 @@ window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
     init: function () {
         GestureRecognizer.init.apply(this)
         this.setListenerClasses(["MouseListener", "TouchListener"]) 
-        //this.setIsDebugging(true)
+        this.setIsDebugging(false)
         return this
     },
 
@@ -89722,8 +89707,6 @@ window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     attemptBegin: function() {
         if(this.requestActivation()) {
-            this.setIsActive(true)
-            this.setBeginEvent(event)
             this.sendBeginMessage() // begin
         }
     },
@@ -89821,9 +89804,9 @@ window.PinchGestureRecognizer = OrientGestureRecognizer.extend().newSlots({
     },
 
     hasMovedEnough: function() {
-        let m = this.minDistToBegin()
-        let d = this.currentPosition().distanceFrom(this.downPosition())
-        //console.log(this.typeId() + ".hasMovedEnough() " + d + ">= min " + m)
+        const m = this.minDistToBegin()
+        const d = this.currentPosition().distanceFrom(this.downPosition())
+        //console.log(this.shortTypeId() + ".hasMovedEnough() " + d + ">= min " + m)
         return d >= m
     },
 })
@@ -90120,7 +90103,7 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     },
     
     activeDivView: function() {
-        let e = document.activeElement
+        const e = document.activeElement
         if (e && e._divView) {
             return e._divView
         }
@@ -90608,7 +90591,7 @@ DivTransitions.registerThisClass()
 
 /*
 
-    CSSRuleSet
+    DivBorderRadius
          
 
     // this.titleView().setBorderRadius("8px 8px 0px 8px") // top-left, top-right,  bottom-right, bottom-left
@@ -91185,7 +91168,7 @@ window.DivView = ideal.Proto.extend().newSlots({
                 }
             }
         }
-        // todo: hack - add something to remove existing rule instead of inserting more
+        // TODO: hack - add something to remove existing rule instead of inserting more
         return this
     },
     */
@@ -93002,7 +92985,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 		
         if (specialKeyName === "enter" && this.unfocusOnEnterKey()) {
             console.log(" releasing focus")
-            // this.releaseFocus() // todo: implement something to pass focus up view chain to whoever wants it
+            // this.releaseFocus() // TODO: implement something to pass focus up view chain to whoever wants it
             this.element().parentElement.focus()
         }
 		
@@ -93454,7 +93437,7 @@ window.DivView = ideal.Proto.extend().newSlots({
             this._endScrollIntoViewFunc = () => {
                 //console.log("_endScrollIntoViewFunc - returning focus")
                 //focusedView.focus()
-                // need delay to allow scroll to finish - hack - todo: check for full visibility
+                // need delay to allow scroll to finish - hack - TODO: check for full visibility
                 focusedView.focusAfterDelay(0.2)
             }
         }
@@ -93466,7 +93449,7 @@ window.DivView = ideal.Proto.extend().newSlots({
         
         /*
         if (focusedView !== this) {
-            focusedView.focusAfterDelay(0.5) // todo: get this value from transition property
+            focusedView.focusAfterDelay(0.5) // TODO: get this value from transition property
         }
         */
         return this
@@ -93537,6 +93520,10 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
     */
    
+    containsPoint: function(aPoint) {
+        return this.winBounds().containsPoint(aPoint)
+    },
+
     winBounds: function() {
         let p = this.windowPos()
         let s = this.size()
@@ -93642,7 +93629,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 	    let root = document.body
 	    
 	    if (this.parentView()) {
-	        root = this.parentView().parentView().element() // hack for scroll view - todo: make more general
+	        root = this.parentView().parentView().element() // hack for scroll view - TODO: make more general
 	        //root = this.parentView().element()
 	    }
 	    
@@ -94078,7 +94065,7 @@ window.TextField = DivStyledView.extend().newSlots({
         
         if (this.doesClearOnReturn()) {
             this.setInnerHTML("")
-            //this.focusAfterDelay(.125) // hack to get focus back after chat view scrolling - todo: fix this
+            //this.focusAfterDelay(.125) // hack to get focus back after chat view scrolling - TODO: fix this
         }
 
         if (this.didTextInputNote()) {
@@ -96471,14 +96458,14 @@ window.BrowserColumn = NodeView.extend().newSlots({
 	
     syncFromNode: function () {
         
-        /*
+        
         if (this.browser() === null) {
             console.warn("WARNING: skipping BrowserColumn.syncFromNode because this.browser() is null")
             console.warn("this.node() = " , this.node())
             //console.warn("this.node().title() = " , this.node().title())
             return
         }
-        */
+        
         
         // remember the selection before sync
         let selectedIndex = this.selectedRowIndex()
@@ -96508,8 +96495,8 @@ window.BrowserColumn = NodeView.extend().newSlots({
                 }
             } else {
                 // otherwise, select close to last selected index
-                const rowCount = Math.min(selectedIndex, this.rows().length - 1)
-                row = this.rows()[selectedIndex]
+                const i = Math.min(selectedIndex, this.rows().length - 1)
+                row = this.rows()[i]
                 //this.log("selecting row titled '" + row.title().innerHTML() + "'")
                 row.setIsSelected(true)
                 this.didClickRow(row)
@@ -96525,7 +96512,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
 	
     showSelected: function() {
         /*
-        todo: add check if visible
+        TODO: add check if visible
         if (this.selectedRow()) {
             this.selectedRow().scrollIntoView()
         }
@@ -96830,6 +96817,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
         })
     },
 
+
     onPinchBegin: function(aGesture) {
         // if node supports add actions:
         // - calc insert index
@@ -96840,29 +96828,32 @@ window.BrowserColumn = NodeView.extend().newSlots({
         //   reference it with _temporaryPinchSubnode so we
         //   can delete it if pinch doesn't complete with enough height
 
-        console.log(this.typeId() + ".onPinchBegin()")
+        //console.log(this.typeId() + ".onPinchBegin()")
+
         const p = aGesture.beginCenterPosition()
-        let row = this.rowContainingPoint(p)
+        const row = this.rowContainingPoint(p)
         if (!row) {
-            row = this.rowContainingPoint(p)
-            assert(row)
+            // don't allow pinch if it's bellow all the rows
+            // use a tap gesture to create a row there instead?
+            return this
         }
+
         const insertIndex = this.rows().indexOf(row)
 
         //console.log("insertIndex: ", insertIndex)
 
         if (this.node().hasAction("add")) {
-            let newSubnode = this.node().add()
-            let subnodes = this.node().subnodes().copy()
+            const newSubnode = this.node().add()
+            this._temporaryPinchSubnode = newSubnode
+            const subnodes = this.node().subnodes().copy()
             subnodes.remove(newSubnode)
             subnodes.atInsert(insertIndex, newSubnode)
 
-            const subviews = this.subviews()
             this.node().nodeReorderSudnodesTo(subnodes)
             this.syncFromNode()
             //console.log("subviews after sync:  ", subviews.map(sv => sv.node().typeId()))
 
-            let newRow = this.subviewForNode(newSubnode)
+            const newRow = this.subviewForNode(newSubnode)
             if (!newRow) {
                 newRow = this.subviewForNode(newSubnode)
                 assert(newRow)
@@ -96871,37 +96862,60 @@ window.BrowserColumn = NodeView.extend().newSlots({
             newRow.contentView().setMinAndMaxHeight(64)
             newRow.setBackgroundColor("black")
             newRow.setTransition("all 0s")
+            newRow.setBackgroundColor("black")
 
-            this._temporaryPinchSubnode = newSubnode
+            const minHeight = BrowserRow.defaultHeight()
+            const cv = newRow.contentView()
+            cv.setBackgroundColor(this.columnGroup().backgroundColor())
+            cv.setMinAndMaxHeight(minHeight)
+
         } else {
+            //console.log(this.typeId() + ".onPinchBegin() cancelling due to no add action")
+
             aGesture.cancel()
         }        
     },
     
     onPinchMove: function(aGesture) {
-        let s = Math.floor(aGesture.spread())
-        //console.log(this.typeId() + ".onPinchMove() spread = " + s)
-
         if (this._temporaryPinchSubnode) {
-            let newRow = this.subviewForNode(this._temporaryPinchSubnode)
-            if (!newRow) {
-                newRow = this.subviewForNode(this._temporaryPinchSubnode)
-            }
+            const s = Math.floor(aGesture.spread())
+            //console.log(this.typeId() + ".onPinchMove() s = ", s)
+            const minHeight = BrowserRow.defaultHeight()
+            const newRow = this.subviewForNode(this._temporaryPinchSubnode)
+            newRow.setBackgroundColor("black")
             newRow.setMinAndMaxHeight(s)
+            const t = Math.floor(s/2 - minHeight/2);
+            newRow.contentView().setTop(t)
+        } else {
+            console.warn(this.typeId() + ".onPinchMove() missing this._temporaryPinchSubnode")
         }
-
-        // adjust size of temporary row and positions of other rows
-        // have temp row content max at normal size but outer view streatch to pinch size
-        // restack all views
+        // do we need to restack views?
     },
 
-    onPinchCompleted: function(aGesture) {
-        console.log(this.typeId() + ".onPinchCompleted()")
-        // if pinch is tall enough, keep new row, sync with 
+    onPinchComplete: function(aGesture) {
+        //console.log(this.typeId() + ".onPinchCompleted()")
+        // if pinch is tall enough, keep new row
+
+        if (this._temporaryPinchSubnode) {
+            const newRow = this.subviewForNode(this._temporaryPinchSubnode)
+            const minHeight = BrowserRow.defaultHeight()
+            if (newRow.clientHeight() < minHeight) {
+                this.removeRow(newRow)
+            } else {
+                newRow.contentView().setTransition("all 0.15s")
+                newRow.setTransition("all 0.3s")
+                setTimeout(() => { 
+                    newRow.contentView().setTop(0)
+                    newRow.setMinAndMaxHeight(minHeight) 
+                }, 0)
+            }
+
+            this._temporaryPinchSubnode = null
+        }
     },
 
     onPinchCancelled: function(aGesture) {
-        console.log(this.typeId() + ".onPinchCancelled()")
+        //console.log(this.typeId() + ".onPinchCancelled()")
         if (this._temporaryPinchSubnode) {
             this.node().removeSubnode(this._temporaryPinchSubnode)
             this._temporaryPinchSubnode = null
@@ -97930,14 +97944,15 @@ window.BrowserRow = NodeView.extend().newSlots({
     onLongPressCancelled: function(aGesture) {
     },
 
-    onLongPressComplete: function(aGesture) {
+    onLongPressComplete: function(longPressGesture) {
         if (this.column().canReorder()) {
+            longPressGesture.deactivate()
             let pan = this.addPanGesture()
             pan.setShouldRemoveOnComplete(true)
             pan.setMinDistToBegin(0)
-            pan.onDown(aGesture.currentEvent())
+            pan.onDown(longPressGesture.currentEvent())
             pan.attemptBegin()
-            this.setBackgroundColor("red")
+            this.contentView().setBackgroundColor("blue")
         }
     },
 
@@ -97964,7 +97979,6 @@ window.BrowserRow = NodeView.extend().newSlots({
 
     onPanBegin: function(aGesture) {
         if (!this._isDraggingView) {
-            //this.setBackgroundColor("blue")
             this._isDraggingView = true
 
             //this.setTransition("color 0.3s, top 0s")
@@ -97974,9 +97988,7 @@ window.BrowserRow = NodeView.extend().newSlots({
             this.column().absolutePositionRows()
 
             this._dragStartPos = this.relativePos()
-            // this.column().stackRows()
 
-            //this.setPosition("absolute")
             this.setTop(this._dragStartPos.y())
             this.setZIndex(1)
             this.column().setPosition("relative")
@@ -97987,11 +97999,8 @@ window.BrowserRow = NodeView.extend().newSlots({
     onPanMove: function(aGesture) {
         if (this._isDraggingView) {
             const np = this._dragStartPos.add(aGesture.diffPos()) 
-            //console.log("aGesture.diffPos.y() = ", aGesture.diffPos().y())
-            //console.log("onPanMove y = ", np.y())
             this.setTop(np.y())
             this.column().stackRows()
-            //this.column().orderRows()
             this.setTop(np.y())
         }
     },
@@ -98013,15 +98022,17 @@ window.BrowserRow = NodeView.extend().newSlots({
             this.column().stackRows()
 
             setTimeout(() => {
-                this.setBackgroundColor(this.currentBgColor())
+                this.contentView().setBackgroundColor(this.currentBgColor())
                 this.column().relativePositionRows()
                 this.column().didReorderRows()
             }, 500)
         }
+        this.removePanGesture()
     },
 
     // orient testing
 
+    /*
     onOrientBegin: function(aGesture) {
         console.log(this.typeId() + ".onOrientBegin()")
         aGesture.show()
@@ -98036,6 +98047,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         console.log(this.typeId() + ".onOrientComplete()")
         aGesture.show()
     },
+    */
 
     onMouseMove: function(event) {
     },
@@ -99102,7 +99114,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         
         if (newValue === null) { 
             // commenting out - this causes a "false" to be displayed in new fields
-            //newValue = false; // todo: find better way to deal with adding/removing new field
+            //newValue = false; // TODO: find better way to deal with adding/removing new field
         } 
 
         valueView.setValue(newValue)
@@ -102457,7 +102469,7 @@ window.BMRemotePeer = BMNode.extend().newSlots({
     },
 
     // --- peer connection options -------------------
-    // todo: move to BMRemotePeer
+    // TODO: move to BMRemotePeer
 	
     peerConnectionOptions: function () {
         return { 
@@ -107472,7 +107484,7 @@ window.BMThemeClassState = BMFieldSetNode.extend().newSlots({
     },
 
     attributeNames: function() {
-        // todo: request this from the view class, use view class theme state methods instead of direct css keys
+        // TODO: request this from the view class, use view class theme state methods instead of direct css keys
         //return ["background", "color", "border"] 
         return BMViewStyle.styleNames()
     },

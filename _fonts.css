@@ -1,0 +1,45 @@
+
+/*
+    IMPORTANT: 
+    
+        This needs to be in the top level folder so the paths are 
+        correct when it's css is embedded into index.html.
+
+    NOTES: 
+    
+        Oher interesting fonts: Blender, Montserrat, MateriaPro, Univ 
+*/
+
+
+@font-face {
+    font-family: "AppLight";
+    src: url("fonts/OpenSans/OpenSans-Light.ttf");
+    font-display: auto;
+}
+
+@font-face {
+    font-family: "AppRegular";
+    src: url("fonts/OpenSans/OpenSans-Regular.ttf");
+    font-display: auto;
+}
+
+@font-face {
+    font-family: "AppSemiBold";
+    src: url("fonts/OpenSans/OpenSans-Semibold.ttf");
+    font-display: auto;
+}
+
+@font-face {
+    font-family:"AppExtraBold";
+    src: url("fonts/OpenSans/OpenSans-ExtraBold.ttf");
+}
+
+/* --- Mono --- */
+
+@font-face {
+	font-family: "AppMono";
+    src: url("fonts/ShareTechMono/ShareTechMono.ttf");
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+    font-display: auto;
+}
+

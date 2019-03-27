@@ -51,7 +51,7 @@ window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
     init: function () {
         GestureRecognizer.init.apply(this)
         this.setListenerClasses(["MouseListener", "TouchListener"]) 
-        this.setIsDebugging(false)
+        //this.setIsDebugging(true)
         return this
     },
 
@@ -59,45 +59,51 @@ window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     onDown: function (event) {
         GestureRecognizer.onDown.apply(this, [event])
+        //console.log(this.shortTypeId() + ".onDown() this.isPressing() = ", this.isPressing())
 
         if (!this.isPressing()) {
             //console.log("this.numberOfFingersDown() = ", this.numberOfFingersDown())
             //console.log("this.minFingersRequired() = ", this.minFingersRequired())
-            let downCount = this.numberOfFingersDown()
+            const downCount = this.numberOfFingersDown()
             if (downCount >= this.minFingersRequired() &&
                 downCount <= this.maxFingersAllowed()
             ) {
+                //console.log(this.shortTypeId() + ".onDown() pressing")
                 this.setIsPressing(true)
                 this.setBeginEvent(event)
                 this.startDocListeners()
+            } else {
+                //console.log(this.shortTypeId() + " invalid downCount = ", downCount)
             }
+        } else {
+            //console.log(this.shortTypeId() + ".onDown() already pressed")
         }
     },
 
     hasMovedEnough: function() {
         // intended to be overridden by subclasses
-        let m = this.minDistToBegin()
-        let d = this.currentPosition().distanceFrom(this.downPosition())
+        // e.g. a rotation recognizer might look at how much first two fingers have rotated
+        const m = this.minDistToBegin()
+        const d = this.currentPosition().distanceFrom(this.downPosition())
         return d >= m
     },
 
     canBegin: function() {
         return !this.isActive() && 
                 this.hasMovedEnough() && 
-                this.numberOfFingersDown() >= this.minFingersRequired() &&
-                this.requestActivation(); // TODO: should this be in a "can" method?
+                this.numberOfFingersDown() >= this.minFingersRequired(); // TODO: should this be in a "can" method?
     },
 
     onMove: function(event) {
         GestureRecognizer.onMove.apply(this, [event])
 
         if (this.isPressing()) {
-            //console.log(this.typeId() + " canBegin: ", this.canBegin())
-
             if (this.canBegin()) {
-                this.setIsActive(true)
-                this.setBeginEvent(event)
-                this.sendBeginMessage()
+                //console.log(this.shortTypeId() + ".onMove() canBegin: ", this.canBegin())
+                if (this.requestActivation()) {
+                    this.sendBeginMessage()
+                    //console.log(this.shortTypeId() + " SENT BEGIN MESSAGE <---")
+                }
             }
 
             if (this.activePoints().length < this.minFingersRequired()) {

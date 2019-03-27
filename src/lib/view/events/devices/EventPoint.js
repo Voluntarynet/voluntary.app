@@ -7,6 +7,25 @@
 
 */
 
+window.Event_hasCachedPoints = function(event) {
+    return event._cachedPoints !== undefined
+}
+
+window.Event_setCachedPoints = function(event, points) {
+    event._cachedPoints = points
+}
+
+window.Event_cachedPoints = function(event) {
+    return event._cachedPoints
+}
+
+window.Event_pushCachedPoint = function(event, point) {
+    assert(event._cachedPoints)
+    event._cachedPoints.push(point)
+}
+
+// ----------------
+
 window.EventPoint = window.Point.extend().newSlots({
     type: "EventPoint",
     id: null,

@@ -93,11 +93,12 @@ window.Mouse = ideal.Proto.extend().newSlots({
     },
 
     pointsForEvent: function(event) {
-        if (!event._points) {
-            event._points = [this.pointForEvent(event)]
+        if (!Event_hasCachedPoints(event)) {
+            const points = [this.pointForEvent(event)]
+            Event_setCachedPoints(event, points)
         }
 
-        return event._points
+        return Event_cachedPoints(event)
     },
 
     currentPoints: function() {

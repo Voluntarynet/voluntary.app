@@ -33,9 +33,9 @@ window.PinchGestureRecognizer = OrientGestureRecognizer.extend().newSlots({
     },
 
     hasMovedEnough: function() {
-        let m = this.minDistToBegin()
-        let d = this.currentPosition().distanceFrom(this.downPosition())
-        //console.log(this.typeId() + ".hasMovedEnough() " + d + ">= min " + m)
+        const m = this.minDistToBegin()
+        const d = this.currentPosition().distanceFrom(this.downPosition())
+        //console.log(this.shortTypeId() + ".hasMovedEnough() " + d + ">= min " + m)
         return d >= m
     },
 })

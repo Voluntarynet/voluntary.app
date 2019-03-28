@@ -11,8 +11,8 @@
 window.GamePad = ideal.Proto.extend().newSlots({
     type: "GamePad",
     gamePadManager: null,
-    id: null,
     index: null,
+    id: null,
     timestamp: null,
     buttons: null,
     axes: null,
@@ -23,7 +23,8 @@ window.GamePad = ideal.Proto.extend().newSlots({
 
     init: function () {
         ideal.Proto.init.apply(this)
-        this.setCurrentButtons([])
+        this.setButtons([])
+        this.setAxes([])
         return this
     },
 
@@ -33,7 +34,7 @@ window.GamePad = ideal.Proto.extend().newSlots({
         if (gp.timestamp !== this.timestamp()) {
             this.setTimestamp(gp.timestamp)
             this.updateButtons(gp.buttons)
-            //this.updateAxes(gp.axes)
+            this.updateAxes(gp.axes)
         }
     },
 
@@ -55,7 +56,7 @@ window.GamePad = ideal.Proto.extend().newSlots({
                 }
             }
         } else {
-            this.setButtons(buttons.copy())
+            this.setButtons(newButtons.copy())
         }
 
         return this
@@ -65,6 +66,38 @@ window.GamePad = ideal.Proto.extend().newSlots({
         const note = NotificationCenter.shared().newNote().setSender(this)
         note.setName("onGamePadButton" + index + (isDown ? "Down" : "Up")) // TODO: optimize
         note.setInfo(isDown)
+        note.post()
+        return this
+    },
+
+    // axes
+
+    updateAxes: function(newAxes) {
+        // make sure number of buttons is correct
+        const currentAxes = this.axes()
+        while (currentAxes.length < newAxes.length) {
+            currentAxes.push(0)
+        }
+
+        if (this.shouldSendNotes()) {
+            // check for differences
+            for (let i = 0; i < newAxes.length; i ++) {
+                if (currentAxes[i] !== newAxes[i]) {
+                    currentAxes[i] = newAxes[i]
+                    this.changedAxesIndexTo(i, newAxes[i])
+                }
+            }
+        } else {
+            this.setAxes(newAxes.copy())
+        }
+
+        return this
+    },
+
+    changedAxesIndexTo: function(index, value) {
+        const note = NotificationCenter.shared().newNote().setSender(this)
+        note.setName("onGamePadAxis" + index + "Changed") // TODO: optimize
+        note.setInfo(value)
         note.post()
         return this
     },

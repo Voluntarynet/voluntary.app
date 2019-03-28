@@ -50,12 +50,9 @@ window.GestureManager = ideal.Proto.extend().newSlots({
     },
 
     deactivateGesture: function(aGesture) {
-        /*
-        if (this.activeGesture() !== aGesture) {
-            console.warn(this.type() + ".deactivateGesture(" + aGesture.shortTypeId() + ") on non-active gesture")
+        if (this.activeGesture() === aGesture) {
+            this.setActiveGesture(null)
         }
-        */
-        this.setActiveGesture(null)
         return this
     },
 

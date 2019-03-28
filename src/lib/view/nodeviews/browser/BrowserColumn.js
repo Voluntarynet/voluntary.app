@@ -785,9 +785,14 @@ window.BrowserColumn = NodeView.extend().newSlots({
             const h = BrowserRow.defaultHeight()
 
             if (s < h) {
-                const rot = Math.floor((1 - s/h) * 90);
-                //newRow.setPerspective(1000)
+                const f = s/h;
+                const rot = Math.floor((1 - f) * 180);
+                newRow.setPerspective(1000)
+                newRow.setTransformOrigin(0)
+                //newRow.contentView().setTransformOriginPercentage(0)
                 newRow.contentView().setTransform("rotateX(" + rot + "deg)")
+                const z = -100 * f;
+                //newRow.contentView().setTransform("translateZ(" + z + "dg)")
             } else {
                 newRow.setPerspective(null)
                 newRow.contentView().setTransform(null)                

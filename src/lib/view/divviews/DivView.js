@@ -5,6 +5,7 @@
 
     Base view class. Wraps a dom element.
 
+    TODO: add dict[propertyName] -> validValueSet and check css values when set
 */
 
 window.DivView = ideal.Proto.extend().newSlots({
@@ -493,12 +494,28 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this._transitions
     },
 
-    // transform
+    // transforms
 
     setTransform: function(s) {
         this.setCssAttribute("transform", s)
         return this
     },
+
+    setTransformOrigin: function(s) {
+        //transform-origin: x-axis y-axis z-axis|initial|inherit;
+        //const percentageString = this.percentageNumberToString(aNumber)
+        this.setCssAttribute("transform-origin", s)
+        return this
+    },
+
+    /*
+    TODO: add setter/getters for:
+
+        perspective-origin: x-axis y-axis|initial|inherit;
+        transform-style: flat|preserve-3d|initial|inherit;
+        backface-visibility: hidden | visible;
+
+    */
 
     // perspective
 
@@ -992,7 +1009,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 	
     setWidthPercentage: function(aNumber) {
-        let newValue = this.percentageNumberToString(aNumber)
+        const newValue = this.percentageNumberToString(aNumber)
 	    this.setCssAttribute("width", newValue, () => { this.didChangeWidth() })
 	    return this
     },

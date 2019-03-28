@@ -5,6 +5,8 @@ JSImporter.pushRelativePaths([
     "KeyboardKey.js",
     "Keyboard.js",
     "Mouse.js",
-    "TouchScreen.js"
+    "TouchScreen.js",
+    "GamePadManager.js",
+    "GamePad.js"
 ])
 

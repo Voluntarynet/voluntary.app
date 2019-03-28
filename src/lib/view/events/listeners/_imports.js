@@ -10,6 +10,7 @@ JSImporter.pushRelativePaths([
     "FocusListener.js",
     "KeyboardListener.js",
     "MouseListener.js",
-    "TouchListener.js"
+    "TouchListener.js",
+    "GamePadListener.js"
 ])
 

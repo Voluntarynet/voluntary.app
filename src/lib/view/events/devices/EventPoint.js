@@ -32,7 +32,6 @@ window.EventPoint = window.Point.extend().newSlots({
     state: null,
     target: null, 
     isDown: false,
-    //overElement: null,
     overView: null,
 }).setSlots({
     init: function () {
@@ -40,10 +39,17 @@ window.EventPoint = window.Point.extend().newSlots({
         return this
     },
 
+    overView: function() {
+        if (this._overView === null) {
+            this._overView = this.findOverview()
+        }
+        return this._overView
+    },
+
     findOverview: function() {
         let e = document.elementFromPoint(p.x(), p.y());
         while (e) {
-            let view = e._divView
+            const view = e._divView
             if (view) {
                 this.setOverview(view)
                 return view

@@ -15,16 +15,20 @@ window.Point = ideal.Proto.extend().newSlots({
     y: 0,
     z: 0,
     t: 0,
+    /*
     id: null,
     state: null,
     target: null, 
     isDown: false,
-    //overElement: null,
-    //overView: null,
+    */
 }).setSlots({
 
     init: function () {
         return this
+    },
+
+    valueArray: function() {
+        return [this._x, this._y, this._z]
     },
 
     setTimeToNow: function() {

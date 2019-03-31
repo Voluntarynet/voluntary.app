@@ -576,12 +576,10 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
 
     removeFingerViews: function() {
         const dict = this.fingerViewDict()
-        for (let id in dict) {
-            if (dict.hasOwnProperty(id)) {           
-                const fingerView = dict[id]
-                fingerView.removeFromParentView()
-            }
-        }
+        Reflect.ownKeys(dict).forEach((id) => {
+            const fingerView = dict[id]
+            fingerView.removeFromParentView()
+        })
         this.setFingerViewDict({})
         return this
     },

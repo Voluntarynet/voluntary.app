@@ -41,7 +41,6 @@ window.BrowserRow = NodeView.extend().newSlots({
         this.setTransition(this.transitionStyle())
 
         //this.animateOpen()
-
         
         this.addGestureRecognizer(LongPressGestureRecognizer.clone()) // for long press & pan reordering
         this.addGestureRecognizer(SlideGestureRecognizer.clone()) // for slide delete

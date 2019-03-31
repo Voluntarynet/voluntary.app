@@ -200,4 +200,26 @@ window.Point = ideal.Proto.extend().newSlots({
         return this.multiplyByScalar(-1)
     },
 
+    // css
+
+    asCssStringWithUnitSuffix: function(name, unitSuffix) {
+        if (!unitSuffix) { 
+            unitSuffix = ""
+        }
+        const s = this.valueArray().map(v => v + unitSuffix).join(",")
+        return name + "(" + s + ")"
+    },
+
+    asCssTranslate3dString: function() {
+        return this.asCssStringWithUnitSuffix("translate3d", "px")
+    },
+
+    asCssRotate3dDegreesString: function() {
+        return this.asCssStringWithUnitSuffix("rotate3d", "deg")
+    },
+
+    asCssScale3dString: function() {
+        return this.asCssStringWithUnitSuffix("scale3d", "")
+    },
+
 })

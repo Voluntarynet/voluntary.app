@@ -8,13 +8,31 @@
     - creates and removes GamePad instances to match current state
     - can send notification of state changes for each GamePad
 
+    Since Chrome doesn't support gamePadListener, I'm just implementing
+    it to work without it, though this requires polling for game pad connected.
+
+    Example use:
+
+    // check for game pad support
+    const isSupported = GamePadManager.shared().isSupported()
+    
+    // start monitoring gamepads
+    GamePadManager.shared().startPolling()
+
+    // get array of connected game pads
+    let pads = GamePadManager.shared().connectedGamePads()
+
+    // each pad will have a unique id to identiy it
+    pads.forEach( (pad) => { 
+        console.log("pad id:", pad.id()) 
+    })
+
 */
 
 
 window.GamePadManager = ideal.Proto.extend().newSlots({
     type: "GamePadManager",
-    currentEvent: null,
-    gamePadListener: null,
+    //gamePadListener: null,
     gamePadsDict: null,
     isDebugging: true,
     pollPeriod: 1000, // milliseconds
@@ -32,6 +50,11 @@ window.GamePadManager = ideal.Proto.extend().newSlots({
         return this
     },
 
+    connectedGamePads: function() {
+        const dict = this.gamePadsDict()
+        return Reflect.ownKeys(dict).map(k => dict[k])
+    },
+    
     /*
     canListenForConnect: function() {
         return ("ongamepadconnected" in window); 

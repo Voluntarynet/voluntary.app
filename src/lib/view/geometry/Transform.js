@@ -29,24 +29,12 @@ window.Transform = ideal.Proto.extend().newSlots({
 
     // css
 
-    translate3dString: function() {
-        const s = this.position().valueArray().map(v => v + "px").join(",")
-        return "translate3d(" + s + ")"
-    },
-
-    rotate3dString: function() {
-        const s = this.rotation().valueArray().map(v => v + "deg").join(",")
-        return "rotate3d(" + s + ")"
-    },
-
-    scale3dString: function() {
-        const s = this.scale().valueArray().join(",")
-        return "scale3d(" + s + ")"
-    },
-
     cssString: function() {
         // NOTE: multiple transform one line directives are applied from right to left
-        const s = this.scale3dString() + " " + this.translate3dString() + " " + this.rotate3dString() // is this the expected order?
+        const s = 
+          this.scale().asCssTranslate3dString() + " " 
+        + this.position().asCssTranslate3dString() + " " 
+        + this.rotation().asCssRotate3dDegreesString(); // is this the expected order?
         return s
     },
 

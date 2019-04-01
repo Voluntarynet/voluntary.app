@@ -77,32 +77,32 @@ html * {
 
 @font-face {
     font-family: "AppLight";
-    src: url("fonts/OpenSans/OpenSans-Light.ttf");
+    src: url("resources/fonts/OpenSans/OpenSans-Light.ttf");
     font-display: auto;
 }
 
 @font-face {
     font-family: "AppRegular";
-    src: url("fonts/OpenSans/OpenSans-Regular.ttf");
+    src: url("resources/fonts/OpenSans/OpenSans-Regular.ttf");
     font-display: auto;
 }
 
 @font-face {
     font-family: "AppSemiBold";
-    src: url("fonts/OpenSans/OpenSans-Semibold.ttf");
+    src: url("resources/fonts/OpenSans/OpenSans-Semibold.ttf");
     font-display: auto;
 }
 
 @font-face {
     font-family:"AppExtraBold";
-    src: url("fonts/OpenSans/OpenSans-ExtraBold.ttf");
+    src: url("resources/fonts/OpenSans/OpenSans-ExtraBold.ttf");
 }
 
 /* --- Mono --- */
 
 @font-face {
 	font-family: "AppMono";
-    src: url("fonts/ShareTechMono/ShareTechMono.ttf");
+    src: url("resources/fonts/ShareTechMono/ShareTechMono.ttf");
 	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
     font-display: auto;
 }
@@ -1606,7 +1606,7 @@ class JSImporterPanelClass {
 <div id='SpinnerMiddle' \
 style='position: relative; top: 50%; transform: translateY(-50%); height: auto; width: 100%; text-align: center;'> \
 <div>\
-<div id='SpinnerIcon' style='opacity: 0.7; border: 0px dashed yellow; transition: all .6s ease-out; background-image:url(\"icons/appicon.svg\"); background-position: center; background-repeat: no-repeat; height: 60px; width: 100%; background-size: contain;'></div><br> \
+<div id='SpinnerIcon' style='opacity: 0.7; border: 0px dashed yellow; transition: all .6s ease-out; background-image:url(\"resources/icons/appicon.svg\"); background-position: center; background-repeat: no-repeat; height: 60px; width: 100%; background-size: contain;'></div><br> \
 </div>\
 <div id='SpinnerTitle' style='transition: all .6s ease-out;'></div><br> \
 <div id='SpinnerSubtitle' style='transition: all .3s ease-out; letter-spacing: -2.5px;'></div><br> \
@@ -1775,7 +1775,7 @@ window.JSImporterPanel.startWhenReady()
 	JSImporter.pushRelativePaths([
 		"_css.css", 
 		"external_libs/_imports.js",
-		"data/_imports.js",
+		"resources/data/_imports.js",
 		"src/_imports.js",
 		"MyApp.js",
 	])
@@ -2050,7 +2050,7 @@ JSImporter.pushRelativePaths([
     "_css.css",
     "_fonts.css",
     "external_libs/_imports.js",
-    //"data/_imports.js",
+    //"resources/data/_imports.js",
     "src/_imports.js",
 ]);
 
@@ -79096,6 +79096,7 @@ JSImporter.pushRelativePaths([
     "storage/_imports.js",
     "node/_imports.js",
     "view/_imports.js",
+    "game/_imports.js",
     "App.js",
 ])
 
@@ -86690,6 +86691,7 @@ JSImporter.pushRelativePaths([
 JSImporter.pushRelativePaths([
     "Point.js",
     "Rectangle.js",
+    "Transform.js",
 ])
 
 
@@ -86710,16 +86712,14 @@ window.Point = ideal.Proto.extend().newSlots({
     y: 0,
     z: 0,
     t: 0,
-    id: null,
-    state: null,
-    target: null, 
-    isDown: false,
-    //overElement: null,
-    //overView: null,
 }).setSlots({
 
     init: function () {
         return this
+    },
+
+    valueArray: function() {
+        return [this._x, this._y, this._z]
     },
 
     setTimeToNow: function() {
@@ -86891,6 +86891,31 @@ window.Point = ideal.Proto.extend().newSlots({
         return this.multiplyByScalar(-1)
     },
 
+    // css
+
+    asCssStringWithUnitSuffix: function(name, unitSuffix) {
+        if (!unitSuffix) { 
+            unitSuffix = ""
+        }
+
+        const us = unitSuffix;
+        return name + "(" + this._x + us + "," + this._y + us + "," + this._z + us + ")"
+        //const s = this.valueArray().map(v => v + unitSuffix).join(",")
+        //return name + "(" + s + ")"
+    },
+
+    asCssTranslate3dString: function() {
+        return this.asCssStringWithUnitSuffix("translate3d", "px")
+    },
+
+    asCssRotate3dDegreesString: function() {
+        return this.asCssStringWithUnitSuffix("rotate3d", "deg")
+    },
+
+    asCssScale3dString: function() {
+        return this.asCssStringWithUnitSuffix("scale3d", "")
+    },
+
 })
 
 "use strict"
@@ -86950,6 +86975,85 @@ window.Rectangle = ideal.Proto.extend().newSlots({
 
 })
 
+
+"use strict"
+
+/*
+
+    DivTransform
+         
+
+    // this.titleView().setBorderRadius("8px 8px 0px 8px") // top-left, top-right,  bottom-right, bottom-left
+    // TODO: em vs px support?
+
+*/
+
+
+
+window.Transform = ideal.Proto.extend().newSlots({
+    type: "ThingView",
+    position: null, // in px units 
+    rotation: null, // in degrees units
+    scale: null,
+}).setSlots({
+    init: function () {
+        ideal.Proto.init.apply(this)
+        this.setPosition(Point.clone())
+        this.setRotation(Point.clone())
+        this.setScale(Point.clone())
+        return this
+    },
+
+    // css
+
+    cssString: function() {
+        // NOTE: multiple transform one line directives are applied from right to left
+        const s = 
+          this.scale().asCssTranslate3dString() + " " 
+        + this.position().asCssTranslate3dString() + " " 
+        + this.rotation().asCssRotate3dDegreesString(); // is this the expected order?
+        return s
+    },
+
+    // operations
+
+    copy: function() {
+        const t = Transform.clone()
+        t.position().copy(this.position())
+        t.rotation().copy(this.rotation())
+        t.scale().copy(this.scale())
+        return t
+    },
+
+
+    addInPlace: function(otherTransform) {
+        this.position().addInPlace(otherTransform.position())
+        this.rotation().addInPlace(otherTransform.rotation())
+        this.scale().addInPlace(otherTransform.scale())
+        return this
+    },
+
+    /*
+    add: function(aTransform) {
+        const t = this.copy()
+        t.position().addInPlace(aTransform.position())
+        t.rotation().addInPlace(aTransform.rotation())
+        t.scale().addInPlace(aTransform.scale())
+        return t
+    },
+
+
+    subtract: function(aTransform) {
+        const t = this.copy()
+        t.position().subtractInPlace(aTransform.position())
+        t.rotation().subtractInPlace(aTransform.rotation())
+        t.scale().subtractInPlace(aTransform.scale())
+        return t
+    },
+    */
+
+
+})
 "use strict"
 
 JSImporter.pushRelativePaths([
@@ -86966,7 +87070,9 @@ JSImporter.pushRelativePaths([
     "KeyboardKey.js",
     "Keyboard.js",
     "Mouse.js",
-    "TouchScreen.js"
+    "TouchScreen.js",
+    "GamePadManager.js",
+    "GamePad.js"
 ])
 
 
@@ -87004,7 +87110,6 @@ window.EventPoint = window.Point.extend().newSlots({
     state: null,
     target: null, 
     isDown: false,
-    //overElement: null,
     overView: null,
 }).setSlots({
     init: function () {
@@ -87012,10 +87117,17 @@ window.EventPoint = window.Point.extend().newSlots({
         return this
     },
 
+    overView: function() {
+        if (this._overView === null) {
+            this._overView = this.findOverview()
+        }
+        return this._overView
+    },
+
     findOverview: function() {
         let e = document.elementFromPoint(p.x(), p.y());
         while (e) {
-            let view = e._divView
+            const view = e._divView
             if (view) {
                 this.setOverview(view)
                 return view
@@ -87624,6 +87736,287 @@ window.TouchScreen = ideal.Proto.extend().newSlots({
 
 "use strict"
 
+/*
+    GamePadManager
+
+    - checks if gamepad API is supported
+    - polls navigator gamepads state
+    - creates and removes GamePad instances to match current state
+    - can send notification of state changes for each GamePad
+
+    Since Chrome doesn't support gamePadListener, I'm just implementing
+    it to work without it, though this requires polling for game pad connected.
+
+    Example use:
+
+    // check for game pad support
+    const isSupported = GamePadManager.shared().isSupported()
+    
+    // start monitoring gamepads
+    GamePadManager.shared().startPolling()
+
+    // get array of connected game pads
+    let pads = GamePadManager.shared().connectedGamePads()
+
+    // each pad will have a unique id to identiy it
+    pads.forEach( (pad) => { 
+        console.log("pad id:", pad.id()) 
+    })
+
+*/
+
+
+window.GamePadManager = ideal.Proto.extend().newSlots({
+    type: "GamePadManager",
+    //gamePadListener: null,
+    gamePadsDict: null,
+    isDebugging: true,
+    pollPeriod: 1000, // milliseconds
+}).setSlots({
+
+    shared: function() { 
+        return this.sharedInstanceForClass(GamePadManager)
+    },
+
+    init: function () {
+        ideal.Proto.init.apply(this)
+        this.setGamePadsDict({})
+        //this.startListening()
+        this.startPollingIfSupported() // could delay this until connection if listen API is supported
+        return this
+    },
+
+    connectedGamePads: function() {
+        const dict = this.gamePadsDict()
+        return Reflect.ownKeys(dict).map(k => dict[k])
+    },
+    
+    /*
+    canListenForConnect: function() {
+        return ("ongamepadconnected" in window); 
+    },
+
+    startListening: function() {
+        if (this.canListenForConnect()) {
+            this.setGamePadListener(GamePadListener.clone().setUseCapture(true).setElement(window).setDelegate(this))
+            this.gamePadListener().setIsListening(true)
+        }
+        return this
+    },
+    
+    // listener events
+
+    
+    onGamePadConnected: function(event) {
+        this.poll()
+        return true
+    },
+
+    onGamePadDisconnected: function(event) {
+        this.poll()
+        return true
+    },
+    */
+
+    startPollingIfSupported: function() {
+        if (this.isSupported()) {
+            this.startPolling()
+        }
+    },
+
+    isSupported: function() {
+        return this.navigatorGamepads() !== null
+    },
+
+    navigatorGamepads: function() {
+        if (navigator.getGamepads) {
+            return navigator.getGamepads()
+        } 
+        
+        if (navigator.webkitGetGamepads) {
+            return navigator.webkitGetGamepads;
+        }
+
+        return null
+    },
+
+    startPolling: function() {
+        if (!this._intervalId) {
+            console.log(this.type() + ".startPolling()")
+            this._intervalId = setInterval(() => { this.poll() }, this.pollPeriod());
+        }
+    },
+
+    stopPolling: function() {
+        if (this.intervalId()) {
+            clearInterval(this.intervalId());
+            this.setIntervalId(null)
+        }
+    },
+
+    newGamePad: function(index) {
+        return GamePad.clone().setGamePadManager(this)
+    },
+
+    poll: function() {
+        const gamepads = this.navigatorGamepads()
+        //console.log(this.type() + ".poll() gamepads.length = ", gamepads.length)
+        const padDict = this.gamePadsDict()
+
+        for (let i = 0; i < gamepads.length; i++) {
+            const gp = gamepads[i];
+            let gamePad = padDict[i]
+
+            if (gp) {
+                if (!gamePad) {
+                    gamePad = this.newGamePad().setIndex(i).setId(gp.id)
+                    gamePad.onConnected()
+                    this.gamePadsDict()[i] = gamePad
+                }
+                gamePad.updateData(gp)
+
+                if (this.isDebugging()) {
+                    console.log("Gamepad index:" + gp.index + " id:" + gp.id + 
+                    ". buttonCount:" + gp.buttons.length + " axisCount:" + gp.axes.length);
+                }
+            } else {
+                if (gamePad) {
+                    gamePad.onDisconnected()
+                    padDict[i] = null
+                }
+            }
+        }
+    },
+
+
+})
+
+"use strict"
+
+/*
+    GamePad
+
+    A single GamePad with a unique id.
+
+*/
+
+
+window.GamePad = ideal.Proto.extend().newSlots({
+    type: "GamePad",
+    gamePadManager: null,
+    index: null,
+    id: null,
+    timestamp: null,
+    buttons: null,
+    axes: null,
+    isConnected: false,
+    isDebugging: true,
+    shouldSendNotes: false
+}).setSlots({
+
+    init: function () {
+        ideal.Proto.init.apply(this)
+        this.setButtons([])
+        this.setAxes([])
+        return this
+    },
+
+    updateData: function(gp) {
+        assert(gp.id() === this.id()) // quick sanity check
+
+        if (gp.timestamp !== this.timestamp()) {
+            this.setTimestamp(gp.timestamp)
+            this.updateButtons(gp.buttons)
+            this.updateAxes(gp.axes)
+        }
+    },
+
+    // buttons
+
+    updateButtons: function(newButtons) {
+        // make sure number of buttons is correct
+        const currentButtons = this.buttons()
+        while (currentButtons.length < newButtons.length) {
+            currentButtons.push(0)
+        }
+
+        if (this.shouldSendNotes()) {
+            // check for differences
+            for (let i = 0; i < newButtons.length; i ++) {
+                if (currentButtons[i] !== newButtons[i]) {
+                    currentButtons[i] = newButtons[i]
+                    this.changedButtonIndexTo(i, newButtons[i])
+                }
+            }
+        } else {
+            this.setButtons(newButtons.copy())
+        }
+
+        return this
+    },
+
+    changedButtonIndexTo: function(index, isDown) {
+        const note = NotificationCenter.shared().newNote().setSender(this)
+        note.setName("onGamePadButton" + index + (isDown ? "Down" : "Up")) // TODO: optimize
+        note.setInfo(isDown)
+        note.post()
+        return this
+    },
+
+    // axes
+
+    updateAxes: function(newAxes) {
+        // make sure number of buttons is correct
+        const currentAxes = this.axes()
+        while (currentAxes.length < newAxes.length) {
+            currentAxes.push(0)
+        }
+
+        if (this.shouldSendNotes()) {
+            // check for differences
+            for (let i = 0; i < newAxes.length; i ++) {
+                if (currentAxes[i] !== newAxes[i]) {
+                    currentAxes[i] = newAxes[i]
+                    this.changedAxesIndexTo(i, newAxes[i])
+                }
+            }
+        } else {
+            this.setAxes(newAxes.copy())
+        }
+
+        return this
+    },
+
+    changedAxesIndexTo: function(index, value) {
+        const note = NotificationCenter.shared().newNote().setSender(this)
+        note.setName("onGamePadAxis" + index + "Changed") // TODO: optimize
+        note.setInfo(value)
+        note.post()
+        return this
+    },
+
+    // connecting
+
+    onConnected: function() {
+        this.setIsConnected(true)
+        const note = NotificationCenter.shared().newNote().setSender(this)
+        note.setName("onGamePadConnected")
+        note.post()
+        return this
+    },
+
+    onDisconnected: function() {
+        this.setIsConnected(false)
+        const note = NotificationCenter.shared().newNote().setSender(this)
+        note.setName("onGamePadDisconnected")
+        note.post()
+        return this
+    },
+
+})
+
+"use strict"
+
 JSImporter.pushRelativePaths([
     "EventSetListener.js",
 
@@ -87634,7 +88027,8 @@ JSImporter.pushRelativePaths([
     "FocusListener.js",
     "KeyboardListener.js",
     "MouseListener.js",
-    "TouchListener.js"
+    "TouchListener.js",
+    "GamePadListener.js"
 ])
 
 
@@ -88102,6 +88496,32 @@ window.TouchListener = EventSetListener.extend().newSlots({
 
 "use strict"
 
+/*
+    GamePadListener
+
+    Listens to a set of mouse events.
+
+*/
+
+window.GamePadListener = EventSetListener.extend().newSlots({
+    type: "GamePadListener",
+}).setSlots({
+    init: function () {
+        EventSetListener.init.apply(this)
+        return this
+    },
+
+    setupEventsDict: function() {
+        this.addEventNameAndMethodName("gamepadconnected",   "onGamePadConnected");
+        this.addEventNameAndMethodName("gamepaddisconnected", "onGamePadDisconnected");
+        return this
+    },
+
+})
+
+
+"use strict"
+
 JSImporter.pushRelativePaths([
     "GestureManager.js",
     "GestureRecognizer.js",
@@ -88167,10 +88587,9 @@ window.GestureManager = ideal.Proto.extend().newSlots({
     },
 
     deactivateGesture: function(aGesture) {
-        if (this.activeGesture() !== aGesture) {
-            console.warn(this.type() + ".deactivateGesture(" + aGesture.shortTypeId() + ") on non-active gesture")
+        if (this.activeGesture() === aGesture) {
+            this.setActiveGesture(null)
         }
-        this.setActiveGesture(null)
         return this
     },
 
@@ -88754,12 +89173,10 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
 
     removeFingerViews: function() {
         const dict = this.fingerViewDict()
-        for (let id in dict) {
-            if (dict.hasOwnProperty(id)) {           
-                const fingerView = dict[id]
-                fingerView.removeFromParentView()
-            }
-        }
+        Reflect.ownKeys(dict).forEach((id) => {
+            const fingerView = dict[id]
+            fingerView.removeFromParentView()
+        })
         this.setFingerViewDict({})
         return this
     },
@@ -90981,6 +91398,7 @@ function DomElement_description(element) {
 
     Base view class. Wraps a dom element.
 
+    TODO: add dict[propertyName] -> validValueSet and check css values when set
 */
 
 window.DivView = ideal.Proto.extend().newSlots({
@@ -91441,7 +91859,8 @@ window.DivView = ideal.Proto.extend().newSlots({
     // icons - TODO: find a better place for this
 	
     pathForIconName: function(aName) { 
-        return "icons/" + aName + ".svg"
+        const pathSeparator = "/"
+        return ["resources", "icons", aName + ".svg"].join(pathSeparator)
     },    
 	
     // transition
@@ -91469,12 +91888,28 @@ window.DivView = ideal.Proto.extend().newSlots({
         return this._transitions
     },
 
-    // transform
+    // transforms
 
     setTransform: function(s) {
         this.setCssAttribute("transform", s)
         return this
     },
+
+    setTransformOrigin: function(s) {
+        //transform-origin: x-axis y-axis z-axis|initial|inherit;
+        //const percentageString = this.percentageNumberToString(aNumber)
+        this.setCssAttribute("transform-origin", s)
+        return this
+    },
+
+    /*
+    TODO: add setter/getters for:
+
+        perspective-origin: x-axis y-axis|initial|inherit;
+        transform-style: flat|preserve-3d|initial|inherit;
+        backface-visibility: hidden | visible;
+
+    */
 
     // perspective
 
@@ -91968,7 +92403,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
 	
     setWidthPercentage: function(aNumber) {
-        let newValue = this.percentageNumberToString(aNumber)
+        const newValue = this.percentageNumberToString(aNumber)
 	    this.setCssAttribute("width", newValue, () => { this.didChangeWidth() })
 	    return this
     },
@@ -96866,9 +97301,14 @@ window.BrowserColumn = NodeView.extend().newSlots({
             const h = BrowserRow.defaultHeight()
 
             if (s < h) {
-                const rot = Math.floor((1 - s/h) * 90);
-                //newRow.setPerspective(1000)
+                const f = s/h;
+                const rot = Math.floor((1 - f) * 180);
+                newRow.setPerspective(1000)
+                newRow.setTransformOrigin(0)
+                //newRow.contentView().setTransformOriginPercentage(0)
                 newRow.contentView().setTransform("rotateX(" + rot + "deg)")
+                const z = -100 * f;
+                //newRow.contentView().setTransform("translateZ(" + z + "dg)")
             } else {
                 newRow.setPerspective(null)
                 newRow.contentView().setTransform(null)                
@@ -97547,7 +97987,6 @@ window.BrowserRow = NodeView.extend().newSlots({
         this.setTransition(this.transitionStyle())
 
         //this.animateOpen()
-
         
         this.addGestureRecognizer(LongPressGestureRecognizer.clone()) // for long press & pan reordering
         this.addGestureRecognizer(SlideGestureRecognizer.clone()) // for slide delete
@@ -100557,6 +100996,122 @@ window.AtomPaneView = DivView.extend().newSlots({
     },
 })
 
+"use strict"
+
+JSImporter.pushRelativePaths([
+    "GameNode.js",
+    "GameView.js",
+])
+
+"use strict"
+
+/*
+
+    GameNode
+    
+    
+*/  
+        
+window.GameNode = BMStorableNode.extend().newSlots({
+    type: "GameNode",
+}).setSlots({
+    init: function () {
+        BMStorableNode.init.apply(this)
+        this.setNodeTitleIsEditable(true)
+        this.setNodeSubtitleIsEditable(true)
+        this.setTitle("Game")
+        this.setSubtitle("test")
+        this.setNodeMinWidth(2000)
+        
+        //this.setSubnodeProto(BMInfoNode)
+        //this.addActions(["add", "delete"])
+        //this.addStoredSlots(["title", "subtitle"])
+    },        
+    
+    /*
+    onDidEditNode: function() {
+        console.log(this.typeId() + " onDidEditNode")
+        this.scheduleSyncToStore()
+    },
+    */
+})
+
+"use strict"
+
+/*
+
+    GameView
+
+*/
+
+window.GameView = DivView.extend().newSlots({
+    type: "GameView",
+    things: null,
+    ship1: null,
+    ship2: null,
+}).setSlots({
+    init: function () {
+        DivView.init.apply(this)
+        this.setThings([])
+        this.turnOffUserSelect()
+        this.setTransition("all 0s")
+        this.setBackgroundColor("blue")
+        return this
+    },
+
+    addShips: function() {
+        this.setShip1(ShipView.clone())
+        this.addThing(this.ship1())
+
+        this.setShip2(ShipView.clone())
+        this.addThing(this.ship2())
+
+        return this
+    },
+})
+
+
+window.ThingView = DivView.extend().newSlots({
+    type: "ThingView",
+    transform: null,
+    transformSpeed: null,
+    mass: 1,
+    icon: null,
+}).setSlots({
+    init: function () {
+        DivView.init.apply(this)
+        this.setTransform(Transform.clone())
+        this.setRransformSpeed(Transform.clone())
+        this.turnOffUserSelect()
+        this.setTransition("all 0s")
+        return this
+    },
+
+    setIcon: function(iconName) {
+        return this
+    },
+
+    timeStep: function() {
+        this.transform().addInPlace(this.transformSpeed())
+        this.setTransform(this.transform().cssString())
+    },
+})
+
+window.ShipView = ThingView.extend().newSlots({
+    type: "ShipView",
+}).setSlots({
+    init: function () {
+        ThingView.init.apply(this)
+
+        return this
+    },
+
+    update: function() {
+        ThingView.update.apply(this)
+    },
+
+
+})
 "use strict"
 
 /*
@@ -107681,12 +108236,16 @@ window.PeerApp = App.extend().newSlots({
         this.about().addSubnode(this.dataStore())
 
         // archive
-        let archive = BMArchiveNode.clone()
+        const archive = BMArchiveNode.clone()
         this.about().addSubnode(archive)
 
         // protos inspector
-        let protoNode = BMProtoNode.clone()
+        const protoNode = BMProtoNode.clone()
         this.about().addSubnode(protoNode)
+
+        // protos inspector
+        const gameNode = GameNode.clone()
+        this.about().addSubnode(gameNode)
 
         this.network().servers().connect() // observe appDidInit instead?
 

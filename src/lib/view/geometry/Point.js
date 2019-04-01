@@ -15,12 +15,6 @@ window.Point = ideal.Proto.extend().newSlots({
     y: 0,
     z: 0,
     t: 0,
-    /*
-    id: null,
-    state: null,
-    target: null, 
-    isDown: false,
-    */
 }).setSlots({
 
     init: function () {
@@ -206,8 +200,11 @@ window.Point = ideal.Proto.extend().newSlots({
         if (!unitSuffix) { 
             unitSuffix = ""
         }
-        const s = this.valueArray().map(v => v + unitSuffix).join(",")
-        return name + "(" + s + ")"
+
+        const us = unitSuffix;
+        return name + "(" + this._x + us + "," + this._y + us + "," + this._z + us + ")"
+        //const s = this.valueArray().map(v => v + unitSuffix).join(",")
+        //return name + "(" + s + ")"
     },
 
     asCssTranslate3dString: function() {

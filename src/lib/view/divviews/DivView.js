@@ -466,7 +466,8 @@ window.DivView = ideal.Proto.extend().newSlots({
     // icons - TODO: find a better place for this
 	
     pathForIconName: function(aName) { 
-        return "icons/" + aName + ".svg"
+        const pathSeparator = "/"
+        return ["resources", "icons", aName + ".svg"].join(pathSeparator)
     },    
 	
     // transition

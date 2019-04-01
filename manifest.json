@@ -1,16 +1,16 @@
 {
-  "short_name": "Voluntary",
-  "name": "Voluntary.app",
-  "description": "",
-  "icons": [
-    {
-      "src": "icons/appicon-black-600x600.png",
-      "type": "image/png",
-      "sizes": "600x600"
-    }
-  ],
-  "start_url": "index_incremental.html",
-  "background_color": "#000",
-  "display": "standalone",
-  "theme_color": "#aaa"
+    "short_name": "Voluntary",
+    "name": "Voluntary.app",
+    "description": "",
+    "icons": [
+        {
+          "src": "resources/icons/appicon-black-600x600.png",
+          "type": "image/png",
+          "sizes": "600x600"
+        }
+    ],
+    "start_url": "index_incremental.html",
+    "background_color": "#000",
+    "display": "standalone",
+    "theme_color": "#aaa"
 }

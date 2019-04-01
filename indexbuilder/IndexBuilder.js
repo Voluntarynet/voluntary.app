@@ -60,6 +60,11 @@ String.prototype.between = function (prefix, suffix) {
     }
 }
 
+
+String.prototype.replaceAll = function (target, replacement) {
+    return this.split(target).join(replacement);
+}
+
 // --- node.js imports -------------------------------------------------------------------
 
 const path = require("path");
@@ -111,7 +116,34 @@ class IndexBuilder {
         this.cssPaths().push(aPath)
     }
 
+    stringForPaths(filePaths) {
+        return filePaths.map(path => fs.readFileSync(path,  "utf8")).join("\n")
+    }
+
+    allScriptPaths() {
+        const scriptPaths =  []
+        scriptPaths.push("../src/boot/JSImporterPanel.js")
+        scriptPaths.push("../src/boot/JSImporter.js")
+        scriptPaths.appendItems(this.filePaths())
+        return scriptPaths
+    }
+
     createIndex() {
+        console.log("IndexBuilder: inserting imports between templates to create index.html")
+        console.log(this.filePaths().join("\n"))
+
+        const css      = this.stringForPaths(this.cssPaths())
+        const script   = this.stringForPaths(this.allScriptPaths())
+        let index = this.stringForPaths(["template.html"])
+        index = index.replaceAll("/* INSERT CSS HERE */", css)
+        index = index.replaceAll("/* INSERT SCRIPT HERE */", script)
+
+        //console.log(index)
+        fs.writeFileSync("../index.html", index, "utf8")
+        console.log("IndexBuilder: SUCCESS: created index.html")
+    }
+
+    createIndex_OLD() {
         console.log("IndexBuilder: inserting imports between templates to create index.html")
         console.log(this.filePaths().join("\n"))
 

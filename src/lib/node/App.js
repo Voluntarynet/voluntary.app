@@ -33,6 +33,11 @@ window.App = BMNode.extend().newSlots({
     // run and setup sequence in order of which methods are called
     // 1. setup NodeStore
 
+    isBrowserCompatible: function() {
+        // subclasses can override to do their own checks
+        return true
+    },
+
     run: function() {
 
         if (!this.isBrowserCompatible()) {

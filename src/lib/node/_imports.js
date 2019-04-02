@@ -11,5 +11,7 @@ JSImporter.pushRelativePaths([
     "storage/BMDataStoreRecord.js",
     "archive/_imports.js",
     "proto/_imports.js",
-    "atom/_imports.js"
+    "atom/_imports.js",
+    
+    "App.js"
 ])

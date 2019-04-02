@@ -93,10 +93,6 @@ window.PeerApp = App.extend().newSlots({
         const protoNode = BMProtoNode.clone()
         this.about().addSubnode(protoNode)
 
-        // protos inspector
-        const gameNode = GameNode.clone()
-        this.about().addSubnode(gameNode)
-
         this.network().servers().connect() // observe appDidInit instead?
 
         // --- graphics subnodes --------------------

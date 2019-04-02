@@ -122,8 +122,8 @@ class IndexBuilder {
 
     allScriptPaths() {
         const scriptPaths =  []
-        scriptPaths.push("../src/boot/JSImporterPanel.js")
-        scriptPaths.push("../src/boot/JSImporter.js")
+        scriptPaths.push("../source/boot/JSImporterPanel.js")
+        scriptPaths.push("../source/boot/JSImporter.js")
         scriptPaths.appendItems(this.filePaths())
         return scriptPaths
     }
@@ -151,8 +151,8 @@ class IndexBuilder {
         indexPaths.push("templates/top.html")
         indexPaths.appendItems(this.cssPaths())
         indexPaths.push("templates/middle.html")
-        indexPaths.push("../src/boot/JSImporterPanel.js")
-        indexPaths.push("../src/boot/JSImporter.js")
+        indexPaths.push("../source/boot/JSImporterPanel.js")
+        indexPaths.push("../source/boot/JSImporter.js")
         indexPaths.appendItems(this.filePaths())
         indexPaths.push("templates/bottom.html")
 

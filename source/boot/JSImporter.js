@@ -19,7 +19,7 @@
 		"_css.css", 
 		"external_libs/_imports.js",
 		"resources/data/_imports.js",
-		"src/_imports.js",
+		"source/_imports.js",
 		"MyApp.js",
 	])
 	

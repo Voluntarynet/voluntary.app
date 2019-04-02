@@ -1777,7 +1777,7 @@ window.JSImporterPanel.startWhenReady()
 		"_css.css", 
 		"external_libs/_imports.js",
 		"resources/data/_imports.js",
-		"src/_imports.js",
+		"source/_imports.js",
 		"MyApp.js",
 	])
 	
@@ -2052,7 +2052,7 @@ JSImporter.pushRelativePaths([
     "_fonts.css",
     "external_libs/_imports.js",
     //"resources/data/_imports.js",
-    "src/_imports.js",
+    "source/_imports.js",
 ]);
 
 
@@ -79081,13 +79081,10 @@ JSImporter.pushRelativePaths([
     "lib/_imports.js",
     "network/_imports.js",	
     "graphics/_imports.js",	
-    "PeerApp.js",
+    "apps/Peer/_imports.js",
     // "_tests.js",
 ])
 
-JSImporter.pushDoneCallback( () => {
-    PeerApp.shared().run()
-})
 
 "use strict"
 
@@ -79097,8 +79094,7 @@ JSImporter.pushRelativePaths([
     "storage/_imports.js",
     "node/_imports.js",
     "view/_imports.js",
-    "game/_imports.js",
-    "App.js",
+    //"App.js",
 ])
 
 "use strict"
@@ -83242,7 +83238,9 @@ JSImporter.pushRelativePaths([
     "storage/BMDataStoreRecord.js",
     "archive/_imports.js",
     "proto/_imports.js",
-    "atom/_imports.js"
+    "atom/_imports.js",
+    
+    "App.js"
 ])
 
 "use strict"
@@ -86672,6 +86670,145 @@ window.AtomNode = BMStorableNode.extend().newSlots({
         this.addStoredSlot("note")
 
     },
+})
+
+
+"use strict"
+
+/*
+    App 
+    
+    A singleton that represents the application. For your application, 
+    create a subclass called App and implement a custom setup method.
+
+    Handles starting up NodeStore.
+
+*/
+
+window.App = BMNode.extend().newSlots({
+    type: "App",
+    name: "App",
+    isDebugging: true,
+    version: [0, 0],
+    nodeStoreDidOpenObs: null,
+    appDidInitNote: null,
+}).setSlots({
+
+    shared: function() {   
+        return this.sharedInstanceForClass(App)
+    },
+
+    init: function () {
+        BMNode.init.apply(this)
+        this.setAppDidInitNote(window.NotificationCenter.shared().newNote().setSender(this).setName("appDidInit"))
+        this.setNodeStoreDidOpenObs(window.NotificationCenter.shared().newObservation())
+        this.nodeStoreDidOpenObs().setName("nodeStoreDidOpen").setObserver(this).setTarget(NodeStore.shared())
+    },
+
+    // run and setup sequence in order of which methods are called
+    // 1. setup NodeStore
+
+    isBrowserCompatible: function() {
+        // subclasses can override to do their own checks
+        return true
+    },
+
+    run: function() {
+
+        if (!this.isBrowserCompatible()) {
+            console.log("App showBrowserCompatibilityPanel")
+            window.JSImporterPanel.setError("Sorry, this app only works on<br>Chrome, FireFox, and Brave browsers.")
+            //this.showBrowserCompatibilityPanel()
+            return this
+        }
+
+        this.nodeStoreDidOpenObs().watch()
+        NodeStore.shared().asyncOpen() 
+    },
+
+    showBrowserCompatibilityPanel: function() {
+        console.log("showing panel")
+        const panel = window.PanelView.clone()
+        this.rootView().addSubview(panel)
+        panel.setTitle("Sorry, this app only works on<br>Chrome, FireFox, and Brave browsers.")
+        panel.orderFront()
+        panel.setZIndex(100)
+        console.log("showed panel")
+    },
+
+    // 2. setup 
+
+    nodeStoreDidOpen: function() {
+        this.nodeStoreDidOpenObs().stopWatching()
+        this.setup()
+    },
+
+    setup: function() {
+        return this        
+    },
+
+    appDidInit: function() {
+        this.appDidInitNote().post()
+
+        if (this.runTests) {
+		    this.runTests()
+        }
+
+        //this.registerServiceWorker() // not working yet
+    },
+	
+    rootView: function() {
+        return DivView.rootView()
+        //return  WebBrowserWindow.shared().documentBody()
+    },
+
+    mainWindow: function () {
+        return Window
+    },
+
+    setName: function(aString) {
+        this._name = aString
+        this.setTitle(aString)
+        WebBrowserWindow.shared().setTitle(aString)
+        return this
+    },
+    
+    // --- version ---
+
+    versionsString: function() {
+        return this.version().join(".")
+    },
+
+    showVersion: function() {
+        console.log("Application '" + this.name() + "' version " + this.versionsString())
+    },
+
+    // --- server worker ---
+
+    registerServiceWorker: function() {
+        // doesn't work
+        // "srsourcec/ServiceWorker.js"
+        // "/source/ServiceWorker.js"
+        // "../ServiceWorker.js"
+        const path = "ServiceWorker.js"
+        console.log("registering service worker '" + path + "'")
+        const promise = navigator.serviceWorker.register(path); //{ scope: ""../"}
+
+        promise.then(function (registration) {
+            console.log("Service worker successfully registered on scope", registration.scope);
+        }).catch(function (error) {
+            console.log("Service worker failed to register:\n",
+                "  typeof(error): ", typeof(error), "\n", 
+                "  message:", error.message, "\n",
+                "  fileName:", error.fileName, "\n",
+                "  lineNumber:", error.lineNumber,  "\n",
+                "  stack:", error.stack,  "\n"
+                //"  JSON.stringify(error):", JSON.stringify(error),  "\n",
+                //"  toString:", error.toString()
+            );
+        });
+    }
+
 })
 
 
@@ -101000,256 +101137,6 @@ window.AtomPaneView = DivView.extend().newSlots({
 "use strict"
 
 JSImporter.pushRelativePaths([
-    "GameNode.js",
-    "GameView.js",
-])
-
-"use strict"
-
-/*
-
-    GameNode
-    
-    
-*/  
-        
-window.GameNode = BMStorableNode.extend().newSlots({
-    type: "GameNode",
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
-        this.setNodeTitleIsEditable(true)
-        this.setNodeSubtitleIsEditable(true)
-        this.setTitle("Game")
-        this.setSubtitle("test")
-        this.setNodeMinWidth(2000)
-        
-        //this.setSubnodeProto(BMInfoNode)
-        //this.addActions(["add", "delete"])
-        //this.addStoredSlots(["title", "subtitle"])
-    },        
-    
-    /*
-    onDidEditNode: function() {
-        console.log(this.typeId() + " onDidEditNode")
-        this.scheduleSyncToStore()
-    },
-    */
-})
-
-"use strict"
-
-/*
-
-    GameView
-
-*/
-
-window.GameView = DivView.extend().newSlots({
-    type: "GameView",
-    things: null,
-    ship1: null,
-    ship2: null,
-}).setSlots({
-    init: function () {
-        DivView.init.apply(this)
-        this.setThings([])
-        this.turnOffUserSelect()
-        this.setTransition("all 0s")
-        this.setBackgroundColor("blue")
-        return this
-    },
-
-    addShips: function() {
-        this.setShip1(ShipView.clone())
-        this.addThing(this.ship1())
-
-        this.setShip2(ShipView.clone())
-        this.addThing(this.ship2())
-
-        return this
-    },
-})
-
-
-window.ThingView = DivView.extend().newSlots({
-    type: "ThingView",
-    transform: null,
-    transformSpeed: null,
-    mass: 1,
-    icon: null,
-}).setSlots({
-    init: function () {
-        DivView.init.apply(this)
-        this.setTransform(Transform.clone())
-        this.setRransformSpeed(Transform.clone())
-        this.turnOffUserSelect()
-        this.setTransition("all 0s")
-        return this
-    },
-
-    setIcon: function(iconName) {
-        return this
-    },
-
-    timeStep: function() {
-        this.transform().addInPlace(this.transformSpeed())
-        this.setTransform(this.transform().cssString())
-    },
-})
-
-window.ShipView = ThingView.extend().newSlots({
-    type: "ShipView",
-}).setSlots({
-    init: function () {
-        ThingView.init.apply(this)
-
-        return this
-    },
-
-    update: function() {
-        ThingView.update.apply(this)
-    },
-
-
-})
-"use strict"
-
-/*
-    App 
-    
-    A singleton that represents the application. For your application, 
-    create a subclass called App and implement a custom setup method.
-
-    Handles starting up NodeStore.
-
-*/
-
-window.App = BMNode.extend().newSlots({
-    type: "App",
-    name: "App",
-    isDebugging: true,
-    version: [0, 0],
-    nodeStoreDidOpenObs: null,
-    appDidInitNote: null,
-}).setSlots({
-
-    shared: function() {   
-        return this.sharedInstanceForClass(App)
-    },
-
-    init: function () {
-        BMNode.init.apply(this)
-        this.setAppDidInitNote(window.NotificationCenter.shared().newNote().setSender(this).setName("appDidInit"))
-        this.setNodeStoreDidOpenObs(window.NotificationCenter.shared().newObservation())
-        this.nodeStoreDidOpenObs().setName("nodeStoreDidOpen").setObserver(this).setTarget(NodeStore.shared())
-    },
-
-    // run and setup sequence in order of which methods are called
-    // 1. setup NodeStore
-
-    run: function() {
-
-        if (!this.isBrowserCompatible()) {
-            console.log("App showBrowserCompatibilityPanel")
-            window.JSImporterPanel.setError("Sorry, this app only works on<br>Chrome, FireFox, and Brave browsers.")
-            //this.showBrowserCompatibilityPanel()
-            return this
-        }
-
-        this.nodeStoreDidOpenObs().watch()
-        NodeStore.shared().asyncOpen() 
-    },
-
-    showBrowserCompatibilityPanel: function() {
-        console.log("showing panel")
-        const panel = window.PanelView.clone()
-        this.rootView().addSubview(panel)
-        panel.setTitle("Sorry, this app only works on<br>Chrome, FireFox, and Brave browsers.")
-        panel.orderFront()
-        panel.setZIndex(100)
-        console.log("showed panel")
-    },
-
-    // 2. setup 
-
-    nodeStoreDidOpen: function() {
-        this.nodeStoreDidOpenObs().stopWatching()
-        this.setup()
-    },
-
-    setup: function() {
-        return this        
-    },
-
-    appDidInit: function() {
-        this.appDidInitNote().post()
-
-        if (this.runTests) {
-		    this.runTests()
-        }
-
-        //this.registerServiceWorker() // not working yet
-    },
-	
-    rootView: function() {
-        return DivView.rootView()
-        //return  WebBrowserWindow.shared().documentBody()
-    },
-
-    mainWindow: function () {
-        return Window
-    },
-
-    setName: function(aString) {
-        this._name = aString
-        this.setTitle(aString)
-        WebBrowserWindow.shared().setTitle(aString)
-        return this
-    },
-    
-    // --- version ---
-
-    versionsString: function() {
-        return this.version().join(".")
-    },
-
-    showVersion: function() {
-        console.log("Application '" + this.name() + "' version " + this.versionsString())
-    },
-
-    // --- server worker ---
-
-    registerServiceWorker: function() {
-        // doesn't work
-        // "src/ServiceWorker.js"
-        // "/src/ServiceWorker.js"
-        // "../ServiceWorker.js"
-        const path = "ServiceWorker.js"
-        console.log("registering service worker '" + path + "'")
-        const promise = navigator.serviceWorker.register(path); //{ scope: ""../"}
-
-        promise.then(function (registration) {
-            console.log("Service worker successfully registered on scope", registration.scope);
-        }).catch(function (error) {
-            console.log("Service worker failed to register:\n",
-                "  typeof(error): ", typeof(error), "\n", 
-                "  message:", error.message, "\n",
-                "  fileName:", error.fileName, "\n",
-                "  lineNumber:", error.lineNumber,  "\n",
-                "  stack:", error.stack,  "\n"
-                //"  JSON.stringify(error):", JSON.stringify(error),  "\n",
-                //"  toString:", error.toString()
-            );
-        });
-    }
-
-})
-
-
-"use strict"
-
-JSImporter.pushRelativePaths([
     "BMDatedSet.js",
     "BMMessages.js",
     "BMNetwork.js",
@@ -108151,6 +108038,16 @@ window.BMThemes = BMStorableNode.extend().newSlots({
 
 "use strict"
 
+JSImporter.pushRelativePaths([
+    "PeerApp.js",
+])
+
+JSImporter.pushDoneCallback( () => {
+    PeerApp.shared().run()
+})
+
+"use strict"
+
 /*
     
     PeerApp
@@ -108243,10 +108140,6 @@ window.PeerApp = App.extend().newSlots({
         // protos inspector
         const protoNode = BMProtoNode.clone()
         this.about().addSubnode(protoNode)
-
-        // protos inspector
-        const gameNode = GameNode.clone()
-        this.about().addSubnode(gameNode)
 
         this.network().servers().connect() // observe appDidInit instead?
 

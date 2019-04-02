@@ -112,8 +112,8 @@ window.App = BMNode.extend().newSlots({
 
     registerServiceWorker: function() {
         // doesn't work
-        // "src/ServiceWorker.js"
-        // "/src/ServiceWorker.js"
+        // "srsourcec/ServiceWorker.js"
+        // "/source/ServiceWorker.js"
         // "../ServiceWorker.js"
         const path = "ServiceWorker.js"
         console.log("registering service worker '" + path + "'")

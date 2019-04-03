@@ -29,7 +29,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
             writeCache: null,
             isOpen: false,
             isSynced: false,
-            debug: false,
+            isDebugging: false,
         })
 
         this.setReadCache({})
@@ -196,7 +196,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
     begin () {
 	    assert(!this.hasBegun())
 	
-        if (this.debug()) {
+        if (this.isDebugging()) {
             console.log("---- " + this.type() + " begin tx ----")
         }
 		
@@ -229,7 +229,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
                 if (entry._isDelete) {
                     tx.removeAt(k)
                     delete this._readCache[k]
-                    if (this.debug()) {
+                    if (this.isDebugging()) {
                     	console.log(this.typeId() + " delete ", k)
                     }
                 } else {
@@ -238,12 +238,12 @@ window.SyncDB = class SyncDB extends ProtoClass {
                     
                     if (k in this._readCache) {
                         tx.atUpdate(k, v)
-                        if (this.debug()) {
+                        if (this.isDebugging()) {
                         	console.log(this.typeId() + " update ", k)
                         }
                     } else {
                         tx.atAdd(k, v)
-                        if (this.debug()) {
+                        if (this.isDebugging()) {
                         	console.log(this.typeId() + " add ", k)
                         }
                     }
@@ -259,7 +259,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
 		 
         tx.commit() 
 		
-        if (this.debug()) {
+        if (this.isDebugging()) {
             console.log("---- " + this.type() + " committed tx with " + count + " writes ----")
         }
 		

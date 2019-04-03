@@ -9,7 +9,7 @@
 window.BMRServers = BMStorableNode.extend().newSlots({
     type: "BMRServers",
     maxConnections: 8,
-    debug: false,
+    isDebugging: false,
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)

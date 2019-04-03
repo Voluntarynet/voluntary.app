@@ -19,7 +19,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
     error: null,
     //log: null,
     sessionId: null,
-    debug: false,
+    isDebugging: false,
     statusLog: null,
     pendingMessages: null,
     isOpen: false,
@@ -118,7 +118,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
             secure: this.server().isSecure(),
             //config: BMNetwork.shared().stunServers().peerOptionsDict(),
             //config: this.defaultConfig()
-            //debug: 3, 
+            //isDebugging: 3, 
         }
     },
 
@@ -245,7 +245,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
   
     /*  
     log: function(s) {
-        if (this.debug()) {
+        if (this.isDebugging()) {
             console.log(this.typeId() + " " + s)
         }
         return this

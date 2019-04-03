@@ -20,7 +20,7 @@ window.BMMessages = BMStorableNode.extend().newSlots({
     network: null,
     // TODO: deal with timeouts
     globalMinDifficulty: 16,
-    debug: false,
+    isDebugging: false,
     placedSet: null,
     deletedSet: null,
 }).setSlots({

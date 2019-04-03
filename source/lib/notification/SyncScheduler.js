@@ -48,7 +48,7 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
             syncSets: ideal.Map.clone(),
             hasTimeout: false,
             isProcessing: false,	
-            debug: false,
+            isDebugging: false,
             currentAction: null,
         })
     }
@@ -153,7 +153,7 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
 
     justProcessSetsPRIVATE() {
         //console.log(this.description())
-        if (this.debug()) { 
+        if (this.isDebugging()) { 
             console.log("Sync")
         }
         

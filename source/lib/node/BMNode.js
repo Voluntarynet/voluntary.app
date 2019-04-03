@@ -63,7 +63,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     subnodeSortFunc: null,
 
     // debug
-    debug: false,
+    isDebugging: false,
 
     // notifications
     didUpdateNodeNote: null,
@@ -210,7 +210,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
         
         return this._viewClassName
     },
-*/
+    */
     
     viewClass: function () {        
         let name = this.viewClassName()
@@ -503,7 +503,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     
     log: function(msg) {
         //let s = this.nodePathString() + " --  " + msg
-        if (this.debug()) {
+        if (this.isDebugging()) {
         	console.log("[" +  this.nodePathString() + "] " + msg)
         }
     },

@@ -16,7 +16,7 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
     blacklists: null,
     idsBloomFilter: null,
     shared: null,
-    debug: false,
+    isDebugging: false,
     isOpenRelay: false,
 }).setSlots({
     init: function () {

@@ -18,7 +18,7 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
     serverConnection: null,
     bloomDistance: null,
     error: null,
-    debug: true,
+    isDebugging: true,
     connectButton: null,
 }).setSlots({
     init: function () {

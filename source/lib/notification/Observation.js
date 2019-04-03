@@ -14,7 +14,7 @@ window.Observation = class Observation extends ProtoClass {
             name: null,
             observer: null,
             center: null, // NotificationCenter that owns this
-            debug: false,
+            isDebugging: false,
         })
     }
 
@@ -32,7 +32,7 @@ window.Observation = class Observation extends ProtoClass {
         if (method) {
             method.apply(this._observer, [note])
         } else {
-            if (this.debug()) {
+            if (this.isDebugging()) {
                 console.log(this.typeId() + " no method found for note name " + note.name())
             }
         }

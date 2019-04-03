@@ -14,7 +14,7 @@ window.BMRemotePeer = BMNode.extend().newSlots({
     status: null,
     remoteInventory: null,
     peerId: null,
-    debug: false,
+    isDebugging: false,
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)
@@ -38,7 +38,7 @@ window.BMRemotePeer = BMNode.extend().newSlots({
     },
     
     log: function(s) {
-        if(this.debug()) {
+        if(this.isDebugging()) {
         	console.log(this.fullShortId() + " " + s)
         }
         return this

@@ -11,7 +11,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     rows: null,
     selectionColor: "#aaa",
     allowsCursorNavigation: true,
-    debug: true,
+    isDebugging: true,
     defaultRowStyles: null,
 }).setSlots({
     init: function () {

@@ -15,7 +15,7 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
             tx: null,
             requests: [],
             isCommitted: false,
-            debug: true,
+            isDebugging: true,
         })
     }
 
@@ -39,7 +39,7 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
 	    const tx = this.db().transaction(this.storeName(), "readwrite")
         this.setTx(tx)
 
-        const requestStack = this.debug() ? new Error().stack : null
+        const requestStack = this.isDebugging() ? new Error().stack : null
         tx.onerror = (event) => {
 		    if (requestStack) { 
                 console.log("error stack ", requestStack)
@@ -77,7 +77,7 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
     pushRequest (aRequest) {
 	    this.assertNotCommitted()
 
-        const requestStack = this.debug() ? new Error().stack : null
+        const requestStack = this.isDebugging() ? new Error().stack : null
         aRequest.onerror = (event) => {
 		    const fullDescription = aRequest.description + " on objectStore [" + this.storeName() + "] " + event.target.error
 		    if (requestStack) { 

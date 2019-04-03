@@ -12,7 +12,7 @@ window.BMConnection = BMNode.extend().newSlots({
     connection: null,
     lastConnectionType: null,
     lastIsOnline: 0,
-    debug: false,
+    isDebugging: false,
 }).setSlots({
     init: function () {
         if (BMConnection._shared) {

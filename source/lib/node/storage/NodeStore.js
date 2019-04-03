@@ -102,7 +102,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     sdb: null,
     isReadOnly: false,
 
-    debug: false,
+    isDebugging: false,
 
     nodeStoreDidOpenNote: null,
 }).setSlots({
@@ -217,7 +217,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     debugLog: function (s) {
         this.assertHasUniqueId()
 
-        if (this.debug()) {
+        if (this.isDebugging()) {
             console.log(this.typeId() + ": " + s)
         }
     },
@@ -228,7 +228,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 
     storeDirtyObjects: function () {
         //console.log(" --- storeDirtyObjects --- ")
-        if (this.debug()) {
+        if (this.isDebugging()) {
             this.showDirtyObjects("storing")
         }
 
@@ -293,7 +293,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         this.debugLog("NodeStore.storeDirtyObjects stored " + totalStoreCount + " objects")
 
         /*
-		if (this.debug()) {
+		if (this.isDebugging()) {
 			this.show()
 		}
 		*/
@@ -302,7 +302,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         //console.log("--- commit ---")
 
         /*
-		if (this.debug()) {
+		if (this.isDebugging()) {
 			this.collect()
 		}
 		*/

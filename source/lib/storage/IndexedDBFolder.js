@@ -14,7 +14,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
             pathSeparator: "/",
             db: null,
             didRequestPersistence: false,
-            debug: false,
+            isDebugging: false,
         })
         this.assertHasUniqueId()
     }
@@ -65,7 +65,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
     asyncOpen (callback) {
         this.assertHasUniqueId()
 
-        if (this.debug()) {
+        if (this.isDebugging()) {
             console.log(this.typeId() + " asyncOpen")
         }
 		

@@ -82040,7 +82040,7 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
             syncSets: ideal.Map.clone(),
             hasTimeout: false,
             isProcessing: false,	
-            debug: false,
+            isDebugging: false,
             currentAction: null,
         })
     }
@@ -82145,7 +82145,7 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
 
     justProcessSetsPRIVATE() {
         //console.log(this.description())
-        if (this.debug()) { 
+        if (this.isDebugging()) { 
             console.log("Sync")
         }
         
@@ -82448,7 +82448,7 @@ window.Observation = class Observation extends ProtoClass {
             name: null,
             observer: null,
             center: null, // NotificationCenter that owns this
-            debug: false,
+            isDebugging: false,
         })
     }
 
@@ -82466,7 +82466,7 @@ window.Observation = class Observation extends ProtoClass {
         if (method) {
             method.apply(this._observer, [note])
         } else {
-            if (this.debug()) {
+            if (this.isDebugging()) {
                 console.log(this.typeId() + " no method found for note name " + note.name())
             }
         }
@@ -82516,7 +82516,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
             pathSeparator: "/",
             db: null,
             didRequestPersistence: false,
-            debug: false,
+            isDebugging: false,
         })
         this.assertHasUniqueId()
     }
@@ -82567,7 +82567,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
     asyncOpen (callback) {
         this.assertHasUniqueId()
 
-        if (this.debug()) {
+        if (this.isDebugging()) {
             console.log(this.typeId() + " asyncOpen")
         }
 		
@@ -82766,7 +82766,7 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
             tx: null,
             requests: [],
             isCommitted: false,
-            debug: true,
+            isDebugging: true,
         })
     }
 
@@ -82790,7 +82790,7 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
 	    const tx = this.db().transaction(this.storeName(), "readwrite")
         this.setTx(tx)
 
-        const requestStack = this.debug() ? new Error().stack : null
+        const requestStack = this.isDebugging() ? new Error().stack : null
         tx.onerror = (event) => {
 		    if (requestStack) { 
                 console.log("error stack ", requestStack)
@@ -82828,7 +82828,7 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
     pushRequest (aRequest) {
 	    this.assertNotCommitted()
 
-        const requestStack = this.debug() ? new Error().stack : null
+        const requestStack = this.isDebugging() ? new Error().stack : null
         aRequest.onerror = (event) => {
 		    const fullDescription = aRequest.description + " on objectStore [" + this.storeName() + "] " + event.target.error
 		    if (requestStack) { 
@@ -82937,7 +82937,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
             writeCache: null,
             isOpen: false,
             isSynced: false,
-            debug: false,
+            isDebugging: false,
         })
 
         this.setReadCache({})
@@ -83104,7 +83104,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
     begin () {
 	    assert(!this.hasBegun())
 	
-        if (this.debug()) {
+        if (this.isDebugging()) {
             console.log("---- " + this.type() + " begin tx ----")
         }
 		
@@ -83137,7 +83137,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
                 if (entry._isDelete) {
                     tx.removeAt(k)
                     delete this._readCache[k]
-                    if (this.debug()) {
+                    if (this.isDebugging()) {
                     	console.log(this.typeId() + " delete ", k)
                     }
                 } else {
@@ -83146,12 +83146,12 @@ window.SyncDB = class SyncDB extends ProtoClass {
                     
                     if (k in this._readCache) {
                         tx.atUpdate(k, v)
-                        if (this.debug()) {
+                        if (this.isDebugging()) {
                         	console.log(this.typeId() + " update ", k)
                         }
                     } else {
                         tx.atAdd(k, v)
-                        if (this.debug()) {
+                        if (this.isDebugging()) {
                         	console.log(this.typeId() + " add ", k)
                         }
                     }
@@ -83167,7 +83167,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
 		 
         tx.commit() 
 		
-        if (this.debug()) {
+        if (this.isDebugging()) {
             console.log("---- " + this.type() + " committed tx with " + count + " writes ----")
         }
 		
@@ -83482,7 +83482,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     subnodeSortFunc: null,
 
     // debug
-    debug: false,
+    isDebugging: false,
 
     // notifications
     didUpdateNodeNote: null,
@@ -83629,7 +83629,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
         
         return this._viewClassName
     },
-*/
+    */
     
     viewClass: function () {        
         let name = this.viewClassName()
@@ -83922,7 +83922,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     
     log: function(msg) {
         //let s = this.nodePathString() + " --  " + msg
-        if (this.debug()) {
+        if (this.isDebugging()) {
         	console.log("[" +  this.nodePathString() + "] " + msg)
         }
     },
@@ -84355,7 +84355,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     sdb: null,
     isReadOnly: false,
 
-    debug: false,
+    isDebugging: false,
 
     nodeStoreDidOpenNote: null,
 }).setSlots({
@@ -84470,7 +84470,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     debugLog: function (s) {
         this.assertHasUniqueId()
 
-        if (this.debug()) {
+        if (this.isDebugging()) {
             console.log(this.typeId() + ": " + s)
         }
     },
@@ -84481,7 +84481,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 
     storeDirtyObjects: function () {
         //console.log(" --- storeDirtyObjects --- ")
-        if (this.debug()) {
+        if (this.isDebugging()) {
             this.showDirtyObjects("storing")
         }
 
@@ -84546,7 +84546,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         this.debugLog("NodeStore.storeDirtyObjects stored " + totalStoreCount + " objects")
 
         /*
-		if (this.debug()) {
+		if (this.isDebugging()) {
 			this.show()
 		}
 		*/
@@ -84555,7 +84555,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         //console.log("--- commit ---")
 
         /*
-		if (this.debug()) {
+		if (this.isDebugging()) {
 			this.collect()
 		}
 		*/
@@ -96665,7 +96665,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     rows: null,
     selectionColor: "#aaa",
     allowsCursorNavigation: true,
-    debug: true,
+    isDebugging: true,
     defaultRowStyles: null,
 }).setSlots({
     init: function () {
@@ -101257,7 +101257,7 @@ window.BMMessages = BMStorableNode.extend().newSlots({
     network: null,
     // TODO: deal with timeouts
     globalMinDifficulty: 16,
-    debug: false,
+    isDebugging: false,
     placedSet: null,
     deletedSet: null,
 }).setSlots({
@@ -101532,7 +101532,7 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
     blacklists: null,
     idsBloomFilter: null,
     shared: null,
-    debug: false,
+    isDebugging: false,
     isOpenRelay: false,
 }).setSlots({
     init: function () {
@@ -101995,7 +101995,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
     error: null,
     //log: null,
     sessionId: null,
-    debug: false,
+    isDebugging: false,
     statusLog: null,
     pendingMessages: null,
     isOpen: false,
@@ -102094,7 +102094,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
             secure: this.server().isSecure(),
             //config: BMNetwork.shared().stunServers().peerOptionsDict(),
             //config: this.defaultConfig()
-            //debug: 3, 
+            //isDebugging: 3, 
         }
     },
 
@@ -102221,7 +102221,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
   
     /*  
     log: function(s) {
-        if (this.debug()) {
+        if (this.isDebugging()) {
             console.log(this.typeId() + " " + s)
         }
         return this
@@ -102447,7 +102447,7 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
     serverConnection: null,
     bloomDistance: null,
     error: null,
-    debug: true,
+    isDebugging: true,
     connectButton: null,
 }).setSlots({
     init: function () {
@@ -102633,7 +102633,7 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
 window.BMRServers = BMStorableNode.extend().newSlots({
     type: "BMRServers",
     maxConnections: 8,
-    debug: false,
+    isDebugging: false,
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
@@ -102817,7 +102817,7 @@ window.BMRemotePeer = BMNode.extend().newSlots({
     status: null,
     remoteInventory: null,
     peerId: null,
-    debug: false,
+    isDebugging: false,
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)
@@ -102841,7 +102841,7 @@ window.BMRemotePeer = BMNode.extend().newSlots({
     },
     
     log: function(s) {
-        if(this.debug()) {
+        if(this.isDebugging()) {
         	console.log(this.fullShortId() + " " + s)
         }
         return this
@@ -107639,7 +107639,7 @@ window.BMConnection = BMNode.extend().newSlots({
     connection: null,
     lastConnectionType: null,
     lastIsOnline: 0,
-    debug: false,
+    isDebugging: false,
 }).setSlots({
     init: function () {
         if (BMConnection._shared) {

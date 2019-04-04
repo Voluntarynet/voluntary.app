@@ -5,6 +5,8 @@
 
     SyncAction
 
+    An action managed by the SyncScheduler.
+
 */
 
 window.SyncAction = class SyncAction extends ProtoClass {
@@ -42,12 +44,14 @@ window.SyncAction = class SyncAction extends ProtoClass {
     }
 	
     equals (anAction) {
-        return anAction !== null && (this.target() === anAction.target()) && (this.method() === anAction.method())
+        return   anAction !== null && 
+                (this.target() === anAction.target()) && 
+                (this.method() === anAction.method())
     }
 	
     description () {
-        let t = this.target() ? this.target().typeId() : "null"
-        return t+ "." + this.method() + "() order:" + this.order()
+        const t = this.target() ? this.target().typeId() : "null"
+        return t + "." + this.method() + "() order:" + this.order()
     }
 	
     static ActionKeyForTargetAndMethod (target, method) {

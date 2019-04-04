@@ -4,6 +4,10 @@
 
     Observation
 
+    An abstraction for a NotificationCenter observation. 
+    Holds references to which notification message is a given observer is wants
+    notifications for. 
+
 */
 
 window.Observation = class Observation extends ProtoClass {
@@ -28,6 +32,7 @@ window.Observation = class Observation extends ProtoClass {
         if (this.center().isDebugging()) {
             //console.log(this._observer + " received note " + note.name() + " from " + note.sender() )
         }
+
         const method = this._observer[note.name()]
         if (method) {
             method.apply(this._observer, [note])
@@ -39,9 +44,9 @@ window.Observation = class Observation extends ProtoClass {
     }
 
     isEqual(obs) {
-        const sameName = this.name() === obs.name()
+        const sameName     = this.name()     === obs.name()
         const sameObserver = this.observer() === obs.observer()
-        const sameTarget = this.target() === obs.target()
+        const sameTarget   = this.target()   === obs.target()
         return sameName && sameObserver && sameTarget
     }
 

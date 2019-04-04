@@ -26,7 +26,7 @@
 
         window.SyncScheduler.shared().scheduleTargetAndMethod(this, "syncToView", 1)
 
-    Higher orders will be performed later than lower ones. 
+    Higher orders will be performed *later* than lower ones. 
 
     Some typical sync methods:
 
@@ -55,9 +55,11 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
 	
     syncSet (syncMethod) {
         const sets = this.syncSets()
+
         if (!sets.at(syncMethod)) {
             sets.atPut(syncMethod, ideal.Map.clone())
         }
+        
         return sets.at(syncMethod)
     }
 
@@ -164,7 +166,8 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
         //console.log("--- sending ----")
         actions.forEach((action) => {
             this.setCurrentAction(action)
-            action.trySend()
+            //action.trySend()
+            action.send()
         })
         //console.log("--- done sending ----")
     }

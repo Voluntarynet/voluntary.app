@@ -50,7 +50,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
 
     setupRowContentView: function() {
-        const cv = DivView.clone().setDivClassName("BrowserRowContentView")
+        const cv = DomView.clone().setDivClassName("BrowserRowContentView")
         cv.setWidthPercentage(100).setHeightPercentage(100) 
         cv.setPosition("absolute")
         this.setContentView(cv)
@@ -196,7 +196,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         if (this.closeButtonView() == null) {
             //let c = CenteredDivView.clone()
 
-            const cb = DivView.clone().setDivClassName("BrowserRowCloseButton")
+            const cb = DomView.clone().setDivClassName("BrowserRowCloseButton")
             //this.setCloseButtonView(NodeView.clone().setDivClassName("BrowserRowCloseButton"))
             this.setCloseButtonView(cb)
             this.contentView().addSubview(cb) 

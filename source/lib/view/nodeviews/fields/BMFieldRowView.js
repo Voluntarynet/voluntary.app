@@ -18,7 +18,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
     init: function () {
         BrowserFieldRow.init.apply(this)
         
-        this.setKeyView(DivView.clone().setDivClassName("BMFieldKeyView"))
+        this.setKeyView(DomView.clone().setDivClassName("BMFieldKeyView"))
         this.addSubview(this.keyView())     
    		this.keyView().turnOffUserSelect().setSpellCheck(false)   
         //this.keyView().setMinAndMaxWidth("200")
@@ -31,7 +31,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         this.valueView().setWidthPercentage(100) 
 
 		
-        this.setNoteView(DivView.clone().setDivClassName("BMFieldRowViewNoteView"))
+        this.setNoteView(DomView.clone().setDivClassName("BMFieldRowViewNoteView"))
         this.addSubview(this.noteView())
         this.noteView().setUserSelect("text")
         

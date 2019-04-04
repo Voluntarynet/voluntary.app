@@ -19,7 +19,7 @@ window.BMActionFieldRowView = BrowserRow.extend().newSlots({
         this.styles().selected().setColor("#888")
         this.styles().selected().setBackgroundColor("#eee")
 		
-        this.setButtonView(DivView.clone().setDivClassName("BMActionFieldButtonView"))
+        this.setButtonView(DomView.clone().setDivClassName("BMActionFieldButtonView"))
 	    this.buttonView().setTarget(this).setAction("didClickButton")
 	    this.buttonView().setTransition("all 0.3s")
 

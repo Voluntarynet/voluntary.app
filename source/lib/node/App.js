@@ -83,7 +83,7 @@ window.App = BMNode.extend().newSlots({
     },
 	
     rootView: function() {
-        return DivView.rootView()
+        return DomView.rootView()
         //return  WebBrowserWindow.shared().documentBody()
     },
 

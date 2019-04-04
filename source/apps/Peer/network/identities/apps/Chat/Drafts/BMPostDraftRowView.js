@@ -28,17 +28,17 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         
         this.closeButtonView().setDivClassName("BrowserRowCloseButtonTopRight")
 
-        this.setTopView(this.addSubview(DivView.clone().setDivClassName("BMPostDraftRowTopView")))
+        this.setTopView(this.addSubview(DomView.clone().setDivClassName("BMPostDraftRowTopView")))
 
         // left view
-        this.setLeftView(this.topView().addSubview(DivView.clone().setDivClassName("BMPostDraftRowLeftView")))
+        this.setLeftView(this.topView().addSubview(DomView.clone().setDivClassName("BMPostDraftRowLeftView")))
 
         // icon view
     	this.setIconView(this.leftView().addSubview(ImageView.clone().setDivClassName("BMPostAvatarView")))
         this.iconView().setBackgroundSizeWH(64, 64)     
 
         // right view
-        this.setRightView(this.topView().addSubview(DivView.clone().setDivClassName("BMPostDraftRowRightView")))
+        this.setRightView(this.topView().addSubview(DomView.clone().setDivClassName("BMPostDraftRowRightView")))
         
         // placeholder
         this.setPlaceHolderView(this.rightView().addSubview(TextField.clone().setDivClassName("BMPostDraftRowPlaceHolderView")))
@@ -52,15 +52,15 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         this.closeButtonView().setTop(15).setRight(15).setMinAndMaxWidth(10).setMinAndMaxHeight(10)
         // delete button
         /*
-        this.setDeleteButton(this.rightView().addSubview(DivView.clone().setDivClassName("BMPostDraftRowCloseButton")))
+        this.setDeleteButton(this.rightView().addSubview(DomView.clone().setDivClassName("BMPostDraftRowCloseButton")))
         this.deleteButton().setTarget(this).setAction("delete")
         //this.deleteButton().setBackgroundSizeWH(20, 20) 
         this.deleteButton().setBackgroundImageUrlPath(this.pathForIconName("close"))
         this.deleteButton().makeBackgroundContain().makeBackgroundCentered().makeBackgroundNoRepeat()  
         */  
         
-        this.setBottomView(this.addSubview(DivView.clone().setDivClassName("BMPostDraftRowBottomView")))
-        this.setSendButton(this.bottomView().addSubview(DivView.clone().setDivClassName("BMPostDraftRowSendButton")))
+        this.setBottomView(this.addSubview(DomView.clone().setDivClassName("BMPostDraftRowBottomView")))
+        this.setSendButton(this.bottomView().addSubview(DomView.clone().setDivClassName("BMPostDraftRowSendButton")))
         this.sendButton().setInnerHTML("Post")
         this.sendButton().setTarget(this).setAction("post")
 

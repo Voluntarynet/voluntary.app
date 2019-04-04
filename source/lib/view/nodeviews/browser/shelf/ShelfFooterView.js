@@ -6,11 +6,11 @@
 
 */
 
-window.ShelfFooterView = DivView.extend().newSlots({
+window.ShelfFooterView = DomView.extend().newSlots({
     type: "ShelfFooterView",
 }).setSlots({
     init: function () {
-        DivView.init.apply(this)
+        DomView.init.apply(this)
         this.turnOffUserSelect()
         this.setTransition("all 0.35s")
 		

@@ -80,7 +80,7 @@ window.BrowserView = NodeView.extend().newSlots({
 
         this.setIsRegisteredForDocumentResize(true)
 
-        let dh = DivView.clone().setDivClassName("BrowserDefaultHeader NodeView DivView")
+        let dh = DomView.clone().setDivClassName("BrowserDefaultHeader NodeView DomView")
         this.setDefaultHeader(dh)
         this.addSubview(dh)
 

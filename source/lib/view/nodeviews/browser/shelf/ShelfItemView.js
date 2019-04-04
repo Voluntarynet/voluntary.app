@@ -24,7 +24,7 @@ window.ShelfItemView = NodeView.extend().newSlots({
 		
         this.setIsRegisteredForMouse()
 		
-        let iv = DivView.clone().setDivClassName("ShelfIconView")
+        let iv = DomView.clone().setDivClassName("ShelfIconView")
         this.setIconView(iv)
         this.addSubview(iv)
         iv.makeBackgroundNoRepeat()
@@ -47,14 +47,14 @@ window.ShelfItemView = NodeView.extend().newSlots({
     },
 
     setupBadgeView: function() {	
-        let v = DivView.clone().setDivClassName("ShelfBadgeView")
+        let v = DomView.clone().setDivClassName("ShelfBadgeView")
         this.setBadgeView(v)
 	    this.addSubview(v)
         return this
     },
 	
     setupMarkerView: function() {	
-        let v = DivView.clone().setDivClassName("ShelfMarkerView")
+        let v = DomView.clone().setDivClassName("ShelfMarkerView")
         this.setMarkerView(v)
 	    this.addSubview(v)
         return this

@@ -3,7 +3,7 @@
 /*
     GestureRecognizer
 
-    A DivView has a list of gestureRecognizers. 
+    A DomView has a list of gestureRecognizers. 
     It forwards relevant events to it's recognizers. 
     These can initiate the recognizer to start listening to document.body events.
 
@@ -500,7 +500,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     // ---  outline view for debugging ---
 
     newOutlineView: function() {
-        const v = DivView.clone()
+        const v = DomView.clone()
         v.setPointerEvents("none")
         v.setBorder("1px dashed white")
         v.setBackgroundColor("transparent")
@@ -549,7 +549,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     // --- finger views for debugging ---
 
     newFingerView: function() {
-        const v = DivView.clone()
+        const v = DomView.clone()
         v.setPointerEvents("none")
 
         const size = 20

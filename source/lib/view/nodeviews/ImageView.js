@@ -18,7 +18,7 @@ window.ImageView = NodeView.extend().newSlots({
         NodeView.init.apply(this)
         this.setIsRegisteredForDrop(false)
         
-        this.setImageContainer(DivView.clone().setDivClassName("ImageViewImageContainer"))
+        this.setImageContainer(DomView.clone().setDivClassName("ImageViewImageContainer"))
         this.addSubview(this.imageContainer())
         
         //this.setEditable(false)
@@ -134,7 +134,7 @@ window.ImageView = NodeView.extend().newSlots({
         const image = new Image();
         image.src = dataURL;
 
-        this.setRawImageView(DivView.clone().setElement(image).setDivClassName("ImageViewImageObject"))
+        this.setRawImageView(DomView.clone().setElement(image).setDivClassName("ImageViewImageObject"))
         this.imageContainer().addSubview(this.rawImageView())
 	
         return this

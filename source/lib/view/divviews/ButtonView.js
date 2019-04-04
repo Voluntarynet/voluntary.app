@@ -8,14 +8,14 @@
 
 */
 
-window.ButtonView = DivView.extend().newSlots({
+window.ButtonView = DomView.extend().newSlots({
     type: "ButtonView",
     titleView: null,
     isEnabled: true,
 }).setSlots({
 
     init: function () {
-        DivView.init.apply(this)
+        DomView.init.apply(this)
         this.setMinAndMaxWidth(200)
         this.setButtonHeight(50)
         this.turnOffUserSelect()

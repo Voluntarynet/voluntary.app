@@ -6,7 +6,7 @@
 
 */
 
-window.ShelfScrollView = DivView.extend().newSlots({
+window.ShelfScrollView = DomView.extend().newSlots({
     type: "ShelfScrollView",
 }).setSlots({
     init: function () {

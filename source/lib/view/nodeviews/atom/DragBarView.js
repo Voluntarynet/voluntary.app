@@ -6,7 +6,7 @@
 
 */
 
-window.DragBarView = DivView.extend().newSlots({
+window.DragBarView = DomView.extend().newSlots({
     type: "DragBarView",
     isEnabled: true,
     isHighlighted: false,
@@ -20,7 +20,7 @@ window.DragBarView = DivView.extend().newSlots({
 }).setSlots({
 
     init: function () {
-        DivView.init.apply(this)
+        DomView.init.apply(this)
 
         this.turnOffUserSelect()
 

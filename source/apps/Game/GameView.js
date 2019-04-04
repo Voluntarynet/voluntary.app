@@ -6,14 +6,14 @@
 
 */
 
-window.GameView = DivView.extend().newSlots({
+window.GameView = DomView.extend().newSlots({
     type: "GameView",
     things: null,
     ship1: null,
     ship2: null,
 }).setSlots({
     init: function () {
-        DivView.init.apply(this)
+        DomView.init.apply(this)
         this.setThings([])
         this.turnOffUserSelect()
         this.setTransition("all 0s")
@@ -33,7 +33,7 @@ window.GameView = DivView.extend().newSlots({
 })
 
 
-window.ThingView = DivView.extend().newSlots({
+window.ThingView = DomView.extend().newSlots({
     type: "ThingView",
     transform: null,
     transformSpeed: null,
@@ -41,7 +41,7 @@ window.ThingView = DivView.extend().newSlots({
     icon: null,
 }).setSlots({
     init: function () {
-        DivView.init.apply(this)
+        DomView.init.apply(this)
         this.setTransform(Transform.clone())
         this.setRransformSpeed(Transform.clone())
         this.turnOffUserSelect()

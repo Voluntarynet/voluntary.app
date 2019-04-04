@@ -31,7 +31,7 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
    
         //this.setColumnWrapper(this)
 
-        this.setScrollView(DivView.clone().setDivClassName("BrowserScrollView"))
+        this.setScrollView(DomView.clone().setDivClassName("BrowserScrollView"))
         this.addSubview(this.scrollView())
         
         this.setColumn(BrowserColumn.clone())
@@ -180,7 +180,7 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
     
     addEmptyLabelIfMissing: function() {
         if (!this.emptyLabel()) {
-            this.setEmptyLabel(DivView.clone().setDivClassName("BrowserColumnEmptyLabel"))
+            this.setEmptyLabel(DomView.clone().setDivClassName("BrowserColumnEmptyLabel"))
             this.setEmptyLabelText("").turnOffUserSelect()
             this.addSubview(this.emptyLabel())            
         }

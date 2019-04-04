@@ -17,13 +17,13 @@ window.BrowserFooter = NodeView.extend().newSlots({
         NodeView.init.apply(this)
         //this.setOwnsView(false)
 
-        this.setLeftActionsView(DivView.clone().setDivClassName("BrowserFooterLeftActionsView NodeView DivView"))
+        this.setLeftActionsView(DomView.clone().setDivClassName("BrowserFooterLeftActionsView NodeView DomView"))
 		
-        const textView = TextField.clone().setDivClassName("BrowserFooterTextView NodeView DivView") //.setUserSelect("none")
+        const textView = TextField.clone().setDivClassName("BrowserFooterTextView NodeView DomView") //.setUserSelect("none")
         this.setTextView(textView)
 	    this.textView().setContentEditable(true).setDoesClearOnReturn(true).setDoesHoldFocusOnReturn(true)
 						
-        this.setRightActionsView(DivView.clone().setDivClassName("BrowserFooterRightActionsView NodeView DivView"))
+        this.setRightActionsView(DomView.clone().setDivClassName("BrowserFooterRightActionsView NodeView DomView"))
 		
 		
         this.setZIndex(2)

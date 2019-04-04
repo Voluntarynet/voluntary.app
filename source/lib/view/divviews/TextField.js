@@ -23,7 +23,7 @@ window.TextField = DivStyledView.extend().newSlots({
     didTextEditNote: null,
 }).setSlots({
     init: function () {
-        DivView.init.apply(this)
+        DomView.init.apply(this)
         this.setDisplay("inline-block")
         this.turnOffUserSelect()
         this.setWhiteSpace("nowrap")

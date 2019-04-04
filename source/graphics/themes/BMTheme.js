@@ -33,7 +33,7 @@ window.BMTheme = BMStorableNode.extend().newSlots({
     setupSubnodes: function() {
         // setup with all view classes
         
-        let viewClasses = DivView.allDescendantProtos()
+        let viewClasses = DomView.allDescendantProtos()
 
         viewClasses = viewClasses.select((viewClass) => {
             return ("styles" in viewClass)

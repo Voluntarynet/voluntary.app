@@ -31,51 +31,51 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
         BrowserRow.init.apply(this)
 
         // left view
-        this.setLeftView(this.addSubview(DivView.clone().setDivClassName("BMPostMessageRowLeftView")))
+        this.setLeftView(this.addSubview(DomView.clone().setDivClassName("BMPostMessageRowLeftView")))
         this.setIconView(this.leftView().addSubview(ImageView.clone().setDivClassName("BMPostAvatarView")))
         this.iconView().setBackgroundSizeWH(64, 64).setTarget(this).setAction("clickedIconView")
 
         // middle view
-        this.setMiddleView(this.addSubview(DivView.clone().setDivClassName("BMPostMessageRowMiddleView")))
+        this.setMiddleView(this.addSubview(DomView.clone().setDivClassName("BMPostMessageRowMiddleView")))
 
         // title view
-        this.setTitleBarView(this.middleView().addSubview(DivView.clone().setDivClassName("BMPostTitleBarView")))
+        this.setTitleBarView(this.middleView().addSubview(DomView.clone().setDivClassName("BMPostTitleBarView")))
 
-        this.setTitleBarTextView(this.titleBarView().addSubview(DivView.clone().setDivClassName("BMPostTitleBarTextView")))
-        this.setDateView(this.titleBarView().addSubview(DivView.clone().setDivClassName("BMPostDateView")))
+        this.setTitleBarTextView(this.titleBarView().addSubview(DomView.clone().setDivClassName("BMPostTitleBarTextView")))
+        this.setDateView(this.titleBarView().addSubview(DomView.clone().setDivClassName("BMPostDateView")))
 
         // content
         this.setTextView(this.middleView().addSubview(TextField.clone().setDivClassName("BMPostMessageRowViewContent")))
 
         // bottom bar
-        this.setBottomBarView(this.middleView().addSubview(DivView.clone().setDivClassName("BMPostMessageRowViewBottomBar")))
+        this.setBottomBarView(this.middleView().addSubview(DomView.clone().setDivClassName("BMPostMessageRowViewBottomBar")))
 
         // reply
-        this.setReplyButton(this.bottomBarView().addSubview(DivView.clone().setDivClassName("BMPostMessageRowViewReplyButton")))
+        this.setReplyButton(this.bottomBarView().addSubview(DomView.clone().setDivClassName("BMPostMessageRowViewReplyButton")))
         this.replyButton().setTarget(this).setAction("reply")
         this.replyButton().setBackgroundImageUrlPath(this.pathForIconName("reply"))
         this.replyButton().makeBackgroundContain().makeBackgroundNoRepeat()
         this.replyButton().setToolTip("reply")
-        this.setReplyCountView(this.bottomBarView().addSubview(DivView.clone().setDivClassName("BMPostMessageRowViewCountView")))
+        this.setReplyCountView(this.bottomBarView().addSubview(DomView.clone().setDivClassName("BMPostMessageRowViewCountView")))
 
         // repost
-        this.setRepostButton(this.bottomBarView().addSubview(DivView.clone().setDivClassName("BMPostMessageRowViewRepostButton")))
+        this.setRepostButton(this.bottomBarView().addSubview(DomView.clone().setDivClassName("BMPostMessageRowViewRepostButton")))
         this.repostButton().setTarget(this).setAction("repost")
         this.repostButton().setBackgroundImageUrlPath(this.pathForIconName("repost"))
         this.repostButton().makeBackgroundContain().makeBackgroundNoRepeat()
         this.repostButton().setToolTip("repost")
-        this.setRepostCountView(this.bottomBarView().addSubview(DivView.clone().setDivClassName("BMPostMessageRowViewCountView")))
+        this.setRepostCountView(this.bottomBarView().addSubview(DomView.clone().setDivClassName("BMPostMessageRowViewCountView")))
 
         // like
-        this.setLikeButton(this.bottomBarView().addSubview(DivView.clone().setDivClassName("BMPostMessageRowViewLikeButton")))
+        this.setLikeButton(this.bottomBarView().addSubview(DomView.clone().setDivClassName("BMPostMessageRowViewLikeButton")))
         this.likeButton().setTarget(this).setAction("like")
         this.likeButton().setBackgroundImageUrlPath(this.pathForIconName("heart-black-filled"))
         this.likeButton().makeBackgroundContain().makeBackgroundNoRepeat()
         this.likeButton().setToolTip("like")
-        this.setLikeCountView(this.bottomBarView().addSubview(DivView.clone().setDivClassName("BMPostMessageRowViewCountView")))
+        this.setLikeCountView(this.bottomBarView().addSubview(DomView.clone().setDivClassName("BMPostMessageRowViewCountView")))
 
         // right view
-        //this.setRightView(this.addSubview(DivView.clone().setDivClassName("BMPostMessageRowRightView")))
+        //this.setRightView(this.addSubview(DomView.clone().setDivClassName("BMPostMessageRowRightView")))
 
 
         this.setupContentView()
@@ -107,7 +107,7 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
 
     /*
 	setupIconView: function() {
-		let iv = DivView.clone().setDivClassName("ShelfIconView")
+		let iv = DomView.clone().setDivClassName("ShelfIconView")
 		this.setIconView(iv)
         this.leftView().addSubview(iv)
         

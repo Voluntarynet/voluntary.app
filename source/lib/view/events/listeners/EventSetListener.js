@@ -168,12 +168,12 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
     // globally track whether we are inside an event 
 
     setIsHandlingEvent: function() {
-        DivView._isHandlingEvent = true
+        DomView._isHandlingEvent = true
         return this
     },
 	
     isHandlingEvent: function() {
-        return DivView._isHandlingEvent
+        return DomView._isHandlingEvent
     },
 
     handleEventFunction: function(event, eventFunc) {

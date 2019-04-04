@@ -6,11 +6,11 @@
 
 */
 
-window.DocumentBody = DivView.extend().newSlots({
+window.DocumentBody = DomView.extend().newSlots({
     type: "DocumentBody",
 }).setSlots({
     init: function () {
-        DivView.init.apply(this)
+        DomView.init.apply(this)
 
         window.SyncScheduler.shared().scheduleTargetAndMethod(this, "autoAdjustZoomForMobile")
 

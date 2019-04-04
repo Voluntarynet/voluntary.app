@@ -30,13 +30,13 @@
 
 */
 
-window.DivStyledView = DivView.extend().newSlots({
+window.DivStyledView = DomView.extend().newSlots({
     type: "DivStyledView",
     styles: null,
     isSelected: false,
 }).setSlots({
     init: function () {
-        DivView.init.apply(this)
+        DomView.init.apply(this)
         return this
     },
 

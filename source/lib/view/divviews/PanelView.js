@@ -6,7 +6,7 @@
 
 */
 
-window.PanelView = DivView.extend().newSlots({
+window.PanelView = DomView.extend().newSlots({
     type: "PanelView",
     titleView: null,
     subtitleView: null,
@@ -15,7 +15,7 @@ window.PanelView = DivView.extend().newSlots({
     isDragging: false,
 }).setSlots({
     init: function () {
-        DivView.init.apply(this)
+        DomView.init.apply(this)
         this.setTitleView(TextField.clone().setDivClassName("PanelTitleView"))
         this.addSubview(this.titleView())
         this.titleView().setTextAlign("center")

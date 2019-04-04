@@ -48,7 +48,7 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
     
     setupThumbnailViewIfAbsent: function() {
         if (!this.thumbnailView()) {
-            const tv = DivView.clone().setDivClassName("BrowserRowThumbnailView")
+            const tv = DomView.clone().setDivClassName("BrowserRowThumbnailView")
     		tv.makeBackgroundNoRepeat()
             tv.makeBackgroundCentered()
             //tv.makeBackgroundContain()

@@ -175,7 +175,7 @@ The archive/archive.js script can be used to walk these imports to generate the 
 
 The UI framework code can be found in source/lib/view/ folder. 
 
-All view classes inherit from DivView.js.
+All view classes inherit from DomView.js.
 
 
 

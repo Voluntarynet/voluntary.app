@@ -6,12 +6,12 @@
 
 */
 
-window.BMOptionsTableView = DivView.extend().newSlots({
+window.BMOptionsTableView = DomView.extend().newSlots({
     type: "BMOptionsTableView",
     validValues: null,
 }).setSlots({
     init: function () {
-        DivView.init.apply(this)
+        DomView.init.apply(this)
         this.turnOffUserSelect()
         return this
     },
@@ -44,8 +44,8 @@ window.BMOptionsTableView = DivView.extend().newSlots({
         this.setOpacity(0)
 		
         this._validValues.forEach((v) => {
-            let optionRow = DivView.clone().setDivClassName("BMOptionsTableRowView")//.setTarget(this).setAction("select")
-            let optionColumn = DivView.clone().setDivClassName("BMOptionsTableColumnView").setInnerHTML(v).setTarget(this).setAction("select")
+            let optionRow = DomView.clone().setDivClassName("BMOptionsTableRowView")//.setTarget(this).setAction("select")
+            let optionColumn = DomView.clone().setDivClassName("BMOptionsTableColumnView").setInnerHTML(v).setTarget(this).setAction("select")
             optionRow.addSubview(optionColumn)
             optionColumn.validValue = v
             this.addSubview(optionRow)

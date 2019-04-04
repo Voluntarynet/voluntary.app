@@ -42,7 +42,7 @@ window.DivTextTapeMeasure = ideal.Proto.extend().newSlots({
         const e = this.testElement()
 		
         this.stylesToCopy().forEach(function (styleName) {
-            const v = DivView.style[styleName]
+            const v = DomView.style[styleName]
             if (v) {
                 e.style[styleName] = v
             } else {
@@ -50,7 +50,7 @@ window.DivTextTapeMeasure = ideal.Proto.extend().newSlots({
             }
         })
 		
-        e.innerHTML = DivView.innerHTML
+        e.innerHTML = DomView.innerHTML
 		
         //let height = (e.clientHeight + 1)
         const width = (e.clientWidth + 1) 

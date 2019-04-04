@@ -1,15 +1,15 @@
 "use strict"
 
 /*
-    DivView
+    DomView
 
     Base view class. Wraps a dom element.
 
     TODO: add dict[propertyName] -> validValueSet and check css values when set
 */
 
-window.DivView = ideal.Proto.extend().newSlots({
-    type: "DivView",
+window.DomView = ideal.Proto.extend().newSlots({
+    type: "DomView",
     divClassName: "",
     elementType: "div",
     element: null,
@@ -492,7 +492,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 	
     transitions: function() {
         if (this._transitions == null) {
-            this._transitions = DivTransitions.clone().setDivView(this).syncFromDiv()
+            this._transitions = DivTransitions.clone().setDomView(this).syncFromDiv()
         }
         return this._transitions
     },
@@ -1989,8 +1989,8 @@ window.DivView = ideal.Proto.extend().newSlots({
 
         let e = this.element()
         if (aBool) {
-            DivView._tabCount ++
-            e.tabIndex = DivView._tabCount // need this in order for focus to work on BrowserColumn?
+            DomView._tabCount ++
+            e.tabIndex = DomView._tabCount // need this in order for focus to work on BrowserColumn?
             //this.setCssAttribute("outline", "none"); // needed?
         } else {
 	        delete e.tabindex 
@@ -2317,7 +2317,7 @@ window.DivView = ideal.Proto.extend().newSlots({
         let uniqueClassName = "UniqueClass_" + this._uniqueId
         let e = this.element()
         if (e.className.indexOf(uniqueClassName) === -1) {
-            let newRuleKey = "DivView" + uniqueClassName + ":" + afterOrBefore
+            let newRuleKey = "DomView" + uniqueClassName + ":" + afterOrBefore
             let newRuleValue = "content: \"" + aString + "\;"
             //console.log("newRule '" + newRuleKey + "', '" + newRuleValue + "'")
             document.styleSheets[0].addRule(newRuleKey, newRuleValue);
@@ -2446,7 +2446,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
     
     scrollIntoView: function() {
-        let focusedView =  WebBrowserWindow.shared().activeDivView()
+        let focusedView =  WebBrowserWindow.shared().activeDomView()
         //console.log("]]]]]]]]]]]] " + this.typeId() + ".scrollIntoView() needsRefocus = ", focusedView !== this)
 
         if (focusedView && focusedView !== this) {
@@ -2761,7 +2761,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     containerize: function() {
         // create a subview of same size as parent and put all other subviews in it
-        let container = DivView.clone()
+        let container = DomView.clone()
         container.setMinAndMaxHeight(this.clientHeight())
         container.setMinAndMaxWidth(this.clientWidth())
         this.moveAllSubviewsToView(container)

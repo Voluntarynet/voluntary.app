@@ -7,13 +7,13 @@
 */
 
 
-window.AtomPaneView = DivView.extend().newSlots({
+window.AtomPaneView = DomView.extend().newSlots({
     type: "AtomPaneView",
     startView: null,
     mouseIsDown: false,
 }).setSlots({
     init: function () {
-        DivView.init.apply(this)
+        DomView.init.apply(this)
         this.setOverflow("hidden")
         this.setIsRegisteredForMouse(true)
         this.setIsRegisteredForClicks(true)
@@ -34,7 +34,7 @@ window.AtomPaneView = DivView.extend().newSlots({
     },
 
     newStartView: function() {
-        let v = DivView.clone()
+        let v = DomView.clone()
         v.setMinAndMaxWidth(8)
         v.setMinAndMaxHeight(8)
         v.setBackgroundColor("#aaa")
@@ -49,7 +49,7 @@ window.AtomPaneView = DivView.extend().newSlots({
         //this.removeStartView()
 
         if (!this._startView) {
-            let v = DivView.clone()
+            let v = DomView.clone()
             v.setMinAndMaxWidth(8)
             v.setMinAndMaxHeight(8)
             v.setBackgroundColor("#aaa")

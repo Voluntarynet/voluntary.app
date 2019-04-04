@@ -36,13 +36,13 @@
 
 */
 
-window.CenteredDivView = DivView.extend().newSlots({
+window.CenteredDivView = DomView.extend().newSlots({
     type: "CenteredDivView",
     middleView: null,
     innerView: null,
 }).setSlots({
     init: function () {
-        DivView.init.apply(this)
+        DomView.init.apply(this)
         this.setupOuterView()
         this.setupMiddleView()
         this.setupInnerView()
@@ -59,7 +59,7 @@ window.CenteredDivView = DivView.extend().newSlots({
     },
 
     setupMiddleView: function() {
-        let v = DivView.clone()
+        let v = DomView.clone()
         v.setDivClassName("CenteredDivView_middleView")
         v.setDisplay("table-cell")
         v.setVerticalAlign("middle")
@@ -68,7 +68,7 @@ window.CenteredDivView = DivView.extend().newSlots({
     },
 
     setupInnerView: function() {
-        let v = DivView.clone()
+        let v = DomView.clone()
         v.setDivClassName("CenteredDivView_innerView")
         v.setDisplay("block")
         v.setMarginLeft("auto")

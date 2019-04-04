@@ -7,13 +7,13 @@
 
 */
 
-window.CloseButton = DivView.extend().newSlots({
+window.CloseButton = DomView.extend().newSlots({
     type: "CloseButton",
     isEnabled: true,
 }).setSlots({
 
     init: function () {
-        DivView.init.apply(this)
+        DomView.init.apply(this)
 
         this.turnOffUserSelect()
 

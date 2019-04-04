@@ -2,8 +2,10 @@
 
 /*
 
-    WebSocketExtensions categories
+    WebSocket-network category
     
+    A few helper methods.
+
 */
 
 WebSocket.prototype.removeEventListeners = function() {
@@ -20,9 +22,11 @@ WebSocket.prototype.addEventListener = function(name, fn) {
     if (!this._eventListeners) {
         this._eventListeners = [];
     }
+
     this._eventListeners.push({
         name: name,
         fn: fn
     });
+    
     this.addEventListenerWithoutExtensions(name, fn);
 }

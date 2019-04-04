@@ -10,5 +10,5 @@ JSImporter.pushRelativePaths([
     "BMRemotePeers.js",
     "BMStunServer.js",
     "BMStunServers.js",
-    "WebSocketExtensions.js"
+    "WebSocket-network.js"
 ])

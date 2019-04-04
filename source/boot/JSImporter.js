@@ -265,7 +265,6 @@ class JSImporterClass extends JSImporterBase {
             CSSLink.clone().setFullPath(url).run()
             this.loadNext()
         } else if (extension === "ttf") {
-            console.log("found font: ", url)
             this.ttfFilePaths().push(url)
             this.loadNext()
         } else {

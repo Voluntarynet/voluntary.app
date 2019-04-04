@@ -25,7 +25,6 @@ window.BMFont = BMNode.extend().newSlots({
     setPath: function(aPath) {
         this._path = aPath
         this.setName(this.fontNameFromPath())
-        console.log("setup font: ", this.name())
         return this
     },
 

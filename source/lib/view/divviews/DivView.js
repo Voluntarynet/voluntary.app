@@ -11,6 +11,7 @@
 window.DivView = ideal.Proto.extend().newSlots({
     type: "DivView",
     divClassName: "",
+    elementType: "div",
     element: null,
     
     // parent view and subviews
@@ -67,9 +68,10 @@ window.DivView = ideal.Proto.extend().newSlots({
 	    e._divView = this // try to avoid depending on this as much as possible - keep refs to divViews, not elements
 	    return this
     },
-	    
+    
+
     setupElement: function() {
-        this.setElement(document.createElement("div"))
+        this.setElement(document.createElement(this.elementType()))
         this.setDivId(this.type() + "-" + this._uniqueId)
         this.setupDivClassName()      
         return this  

@@ -1,7 +1,6 @@
 "use strict"
 
 JSImporter.pushRelativePaths([
-    "BMDatedSet.js",
     "BMMessages.js",
     "BMNetwork.js",
     //"BMPayload.js",

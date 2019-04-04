@@ -2,7 +2,7 @@
 
 /*
 
-    WebSocketExtensions
+    WebSocketExtensions categories
     
 */
 

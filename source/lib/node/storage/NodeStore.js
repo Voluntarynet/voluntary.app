@@ -425,7 +425,8 @@ window.NodeStore = ideal.Proto.extend().newSlots({
             //throw new Error(error)
         }
 
-        let proto = window[nodeDict.type]
+        const nodeType = this.translateNodeType(nodeDict.type)
+        let proto = window[nodeType]
         if (!proto) {
             throw new Error("missing proto '" + nodeDict.type + "'")
         }
@@ -534,8 +535,8 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     },
 
     objectForRef: function (ref) {
-        let k = this.objRefKey()
-        let pid = ref[k]
+        const k = this.objRefKey()
+        const pid = ref[k]
         if (pid === "null") {
             return null
         }
@@ -543,13 +544,27 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         return this.objectForPid(pid)
     },
 
+    nodeTypeTranslationDict: function() {
+        return {
+            "BMDatedSet": "BMStoredDatedSetNode",
+        }
+    },
+
+    translateNodeType: function(typeName) {
+        const dict = this.nodeTypeTranslationDict();
+        const v = dict[typeName];
+        return v ? v : typeName;
+    },
+
     pidRefsFromPid: function (pid) {
-        let nodeDict = this.nodeDictAtPid(pid)
+        const nodeDict = this.nodeDictAtPid(pid)
         if (!nodeDict) {
             return []
         }
 
-        let proto = window[nodeDict.type]
+        const nodeType = this.translateNodeType(nodeDict.type)
+
+        let proto = window[nodeType]
         if (!proto) {
             console.warn(this.type() + "pidRefsFromPid(" + pid + ") missing type " + nodeDict.type)
             proto = BMStorableNode

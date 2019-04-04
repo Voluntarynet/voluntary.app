@@ -2,15 +2,20 @@
 html, body {
     position: absolute;
     overflow: hidden;
+    
     overscroll-behavior-x: none;
     overscroll-behavior-y: none;
+    
 	top: 0px;
 	left: 0px;
+	
     height: 100%;
     width: 100%;
+	
 	padding: 0px;
 	margin: 0px;
     border: 0px;
+    
 	background-color: black;
     zoom: 100%;
 

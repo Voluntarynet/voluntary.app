@@ -6,6 +6,7 @@
     <link rel="manifest" href="/manifest.json">
     <meta name="Description" content="voluntary.app, an in-browser decentralized messaging and application platform">
     <meta name="theme-color" content="#317EFB"/>
+    <link rel="icon" href="resources/favicons/favicon.ico">
     <title>voluntary.app</title>
     <style>
 
@@ -13,15 +14,20 @@
 html, body {
     position: absolute;
     overflow: hidden;
+    
     overscroll-behavior-x: none;
     overscroll-behavior-y: none;
+    
 	top: 0px;
 	left: 0px;
+	
     height: 100%;
     width: 100%;
+	
 	padding: 0px;
 	margin: 0px;
     border: 0px;
+    
 	background-color: black;
     zoom: 100%;
 
@@ -101137,7 +101143,7 @@ window.AtomPaneView = DivView.extend().newSlots({
 "use strict"
 
 JSImporter.pushRelativePaths([
-    "BMDatedSet.js",
+    "BMStoredDatedSetNode.js",
     "BMMessages.js",
     "BMNetwork.js",
     //"BMPayload.js",
@@ -101154,12 +101160,12 @@ JSImporter.pushRelativePaths([
 
 /*
 
-    BMDatedSet
+    BMStoredDatedSetNode
 
 */
 
-window.BMDatedSet = BMStorableNode.extend().newSlots({
-    type: "BMDatedSet",
+window.BMStoredDatedSetNode = BMStorableNode.extend().newSlots({
+    type: "BMStoredDatedSetNode",
     maxAgeInSeconds: 30*24*60*60,
     autoCheckPeriod: 1*60*60,
     dict: null,
@@ -101269,10 +101275,10 @@ window.BMMessages = BMStorableNode.extend().newSlots({
         this.setTitle("Messages")
         this.setChangeNote(NotificationCenter.shared().newNote().setSender(this).setName("newMessagesMessage"))
 
-        this.setDeletedSet(BMDatedSet.clone())
+        this.setDeletedSet(BMStoredDatedSetNode.clone())
         this.addStoredSlot("deletedSet")
 
-        this.setPlacedSet(BMDatedSet.clone())
+        this.setPlacedSet(BMStoredDatedSetNode.clone())
         this.addStoredSlot("placedSet")
         
         this.setNoteIsSubnodeCount(true)

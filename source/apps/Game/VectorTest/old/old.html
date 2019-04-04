@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=0.1">
+        <style type="text/css">
+
+        body {
+            background-color: black;
+            color: white;
+            font-family: "AppLight";
+            text-shadow: 0px 0px 1px white, 0px 0px 3px white, 0 0 5px white;
+            letter-spacing: 1px;
+        }
+        
+        @font-face {
+            font-family: "AppLight";
+            src: url("fonts/hyperspace/Hyperspace Bold.ttf");
+            font-display: auto;
+        }
+        
+    </style>
+    
+    <script type="text/javascript" src="three.js"></script>
+
+  </head>
+  <body>
+      
+<svg id="ship1" width="40" height="40" style="background: transparent; position: absolute;">  
+    <defs>
+      <filter id="white-glow" x="-50%" y="-50%" width="200%" height="200%">
+          <feFlood result="flood" flood-color="#ffffff" flood-opacity="0.4"></feFlood>
+          <feComposite in="flood" result="mask" in2="SourceGraphic" operator="in"></feComposite>
+          <feMorphology in="mask" result="dilated" operator="dilate" radius="1"></feMorphology>
+          <feGaussianBlur in="dilated" result="blurred" stdDeviation="1"></feGaussianBlur>
+          <feMerge>
+              <feMergeNode in="blurred"></feMergeNode>
+              <feMergeNode in="SourceGraphic"></feMergeNode>
+          </feMerge>
+      </filter>
+
+        
+    </defs>
+    
+    <g transform="translate(0,10) scale(1, 1)">
+                <path d="M10,20 L20,0" 
+              fill="none"
+              stroke="rgba(255, 255, 255, 0.7)"
+              stroke-width="0.5" 
+              filter="url(#white-glow)" 
+              stroke-linecap="round"
+              />
+              
+        <path d="M20,0 L30,20" 
+              fill="none"
+              stroke="rgba(255, 255, 255, 0.7)"
+              stroke-width="0.5" 
+              filter="url(#white-glow)"
+              stroke-linecap="round" 
+              />
+              
+        <path d="M30,20 L10,20" 
+              fill="none"
+              stroke="rgba(255, 255, 255, 0.7)"
+              stroke-width="0.5" 
+              filter="url(#white-glow)" 
+              stroke-linecap="round"
+              />
+              
+        <path d="M10,20 L20,0 L30,20 z" 
+              fill="rgba(0, 0, 0, 0.5)"
+              stroke="none"
+              />
+              
+        <!-- 
+        <circle cx="10" cy="20" r="0.4" fill="rgba(255, 255, 255, 0.8)"/>
+        <circle cx="20" cy="0" r="0.4" fill="rgba(255, 255, 255, 0.8)"/>
+        <circle cx="30" cy="20" r="0.4" fill="rgba(255, 255, 255, 0.8)"/>
+        -->
+    </g>
+</svg>
+
+
+      
+<svg id="ship2" width="40" height="40" style="background: transparent; position: absolute;">  
+    <defs>
+      <filter id="white-glow" x="-50%" y="-50%" width="200%" height="200%">
+          <feFlood result="flood" flood-color="#ffffff" flood-opacity="0.4"></feFlood>
+          <feComposite in="flood" result="mask" in2="SourceGraphic" operator="in"></feComposite>
+          <feMorphology in="mask" result="dilated" operator="dilate" radius="1"></feMorphology>
+          <feGaussianBlur in="dilated" result="blurred" stdDeviation="1"></feGaussianBlur>
+          <feMerge>
+              <feMergeNode in="blurred"></feMergeNode>
+              <feMergeNode in="SourceGraphic"></feMergeNode>
+          </feMerge>
+      </filter>
+
+        
+    </defs>
+    
+    <g transform="translate(0,10) scale(1, 1)">
+                <path d="M10,20 L20,0" 
+              fill="none"
+              stroke="rgba(255, 255, 255, 0.7)"
+              stroke-width="0.5" 
+              filter="url(#white-glow)" 
+              stroke-linecap="round"
+              />
+              
+        <path d="M20,0 L30,20" 
+              fill="none"
+              stroke="rgba(255, 255, 255, 0.7)"
+              stroke-width="0.5" 
+              filter="url(#white-glow)"
+              stroke-linecap="round" 
+              />
+              
+        <path d="M30,20 L10,20" 
+              fill="none"
+              stroke="rgba(255, 255, 255, 0.7)"
+              stroke-width="0.5" 
+              filter="url(#white-glow)" 
+              stroke-linecap="round"
+              />
+              
+        <path d="M10,20 L20,0 L30,20 z" 
+              fill="rgba(0, 0, 0, 0.5)"
+              stroke="none"
+              />
+              
+        <!-- 
+        <circle cx="10" cy="20" r="0.4" fill="rgba(255, 255, 255, 0.8)"/>
+        <circle cx="20" cy="0" r="0.4" fill="rgba(255, 255, 255, 0.8)"/>
+        <circle cx="30" cy="20" r="0.4" fill="rgba(255, 255, 255, 0.8)"/>
+        -->
+    </g>
+</svg>
+
+
+<script>
+    var shipElement1 = document.getElementById("ship1");
+    var shipElement2 = document.getElementById("ship2");
+    //shipElement2.style.display = "none"
+    var angle = 0
+    setInterval(() => {
+        angle += 0.25
+        //  shipElement1.style.transform = "rotate3d(1, 0, 0, " + angle + "deg) translate(0px, 0px) scale(2,2)";
+        shipElement2.style.transform = "rotate3d(1, 0, 0, " + (-angle) + "deg) translate(0px, 0px) scale(2,2)";
+    }, 1000/120)
+    
+    
+
+</script>
+
+<!-- 
+
+
+function createVector(x, y, z, camera, width, height) {
+        var p = new THREE.Vector3(x, y, z);
+        var vector = p.project(camera);
+
+        vector.x = (vector.x + 1) / 2 * width;
+        vector.y = -(vector.y - 1) / 2 * height;
+
+        return vector;
+    }
+    
+    
+    
+var vector = new THREE.Vector3();
+var canvas = renderer.domElement;
+
+vector.set( 1, 2, 3 );
+
+// map to normalized device coordinate (NDC) space
+vector.project( camera );
+
+// map to 2D screen space
+vector.x = Math.round( (   vector.x + 1 ) * canvas.width  / 2 );
+vector.y = Math.round( ( - vector.y + 1 ) * canvas.height / 2 );
+vector.z = 0;
+
+-->
+
+  </body>
+</html>

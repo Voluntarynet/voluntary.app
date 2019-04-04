@@ -1,0 +1,66 @@
+
+PEER TODOS
+
+----------
+
+    Chris suggested features: 
+        twitter posts and private message
+        images (maybe video)
+        links
+        fix for multi-line chat bubbles
+        use slack style chat?
+
+    URL PATH to app,
+    # to object path
+    ? for arguments applied to path object?
+
+    - get website up to date
+
+    - way to share "add contact" link to self
+
+
+    GET DEMO READY
+    - make sure all twitter and direct message features work
+    -- repost
+        --- new postmessage with embedded reposted message
+    -- reply
+        --- new postmessage with reference to original message hash
+    -- like
+
+    MAYBE
+    -- follow button on non contacts (e.g. repost reference)
+
+
+    LATER
+    - drop images into posts
+    -- post tags and filters
+
+    - unify inspector with subnode browser?
+
+    - default avatar image?
+    - node code to generate html page?
+ 
+
+    -------------
+
+    field:
+    	type: number, string, enum,
+    		- color, int range, float range, int vector range
+    	defaultValue:
+
+    -------------
+
+    BMViewStyles notes:
+
+    BMNode
+           this.setNodeColumnStyles(BMViewStyles.clone())
+           this.setNodeRowStyles(BMViewStyles.clone())
+
+    -------------
+
+    voluntary todo:
+
+        - false showing up in new profile fields
+        - merge field browser columns with normal columns???
+
+

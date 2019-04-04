@@ -170,6 +170,7 @@ class JSImporterClass extends JSImporterBase {
         this.newSlot("jsFilesLoaded", [])
         this.newSlot("cssFilesLoaded", [])
         this.newSlot("archive", null)
+        this.newSlot("ttfFilePaths", [])
     }
 
     currentScriptPath () {
@@ -262,6 +263,10 @@ class JSImporterClass extends JSImporterBase {
         } else if (extension === "css") {
             this.cssFilesLoaded().push(url)
             CSSLink.clone().setFullPath(url).run()
+            this.loadNext()
+        } else if (extension === "ttf") {
+            console.log("found font: ", url)
+            this.ttfFilePaths().push(url)
             this.loadNext()
         } else {
             throw new Error("unrecognized extension on url '" + url + "'")

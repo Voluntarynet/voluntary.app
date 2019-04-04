@@ -1,0 +1,91 @@
+
+
+NEW VIEWS
+
+    Grid View?
+        Top Shelf
+        TableView Browser Column
+        Horizontal Browser Column
+
+    Hierarchical Column view
+
+
+    Grid Browser Column
+
+-------------------------------------
+
+-- support for adding/removing field set items, storing result
+
+-- double tap to edit BrowserTitledRow title?
+	- method to add double tap gesture on TextArea/Textfield?
+
+-- dark theme for BMFieldRow when not in FieldSet?
+
+-- Dragging from anywhere in window
+	- standard long press with 2-3 fingers to drag?
+	- ask if target allows drag
+	- determine type of drag (move/copy) using modifier keys and or finger count?
+	- determine how to display drag view - some common standard of icon + label?
+	- create drag view and add to DocumentBody(?)
+	- add PanGesture to drag view, start panBegin
+	- onPanMove calcs new location using PanGesture downPositionInTarget (add helper method for calc?)
+	
+	Drop areas
+	- default to highlight drop area if allowed but can override 
+
+	ColumnBrowser onDrop
+	- check if allows drop and specific drop type
+	- create empty browser row 
+	- pause syncing from model
+
+    - support multi BrowserRow selection 
+        - UI interaction?
+            - mouse: hold command or shift and click
+            - touch: hold one item and tap on or slide across others?
+
+    -- ability to switch dark/light theme
+
+-----------------------------------------------------------------------------------
+
+    Browser features:  
+        - copy/paste on rows?
+        - double tap to inline edit row text?
+        - pinch apart to add row?
+        - tap on column to add row?
+        - stretch to add row?
+
+    How to expand/compact Node to edit properties?
+      - icons at top? gesture? 
+         - hold click on top? 
+         - hold click on column divider?
+         - horizontal pinch apart columns - pinch together to compact?  
+         - how to visually display option to edit?
+
+    TopShelf vs LeftShelf? TopDragShelf?
+    - compact/expand top shelf?
+
+    Small fixes:
+    - figure out when to use white/dark theme on rows consistently
+    - use dark for non property navigation?
+
+    Editing a Node:
+    - when adding row, insert a special place-holder row and navigate into it
+      next column shows options for which type of row to add, navigate to choice
+      further options and "ok" displayed to complete action?
+    - how to edit an existing row? special click to navigate to it's options?
+
+    - some way to collapse/expand Node to show all properties or treat some default as it's subnodes? 
+
+    Questions:
+    - How to distinguish meta edit operations? 
+    - When is it normal or meta?
+
+--------------------
+
+Simple -> Start the app and commicate (on all devices)
+Minimum features -> Feed, Chat, Groups, Events, Friends
+Fast -> No one will use a slow App
+Ownership -> All self-owned data can be removed from everywhere
+Decentralized -> And no one else can remove your data
+Privacy -> With simple sharing control
+

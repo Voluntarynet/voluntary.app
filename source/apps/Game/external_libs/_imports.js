@@ -1,7 +1,7 @@
 "use strict"
 
 JSImporter.pushRelativePaths([
-    "threejs/threejs.js",
+    "threejs/three.js",
 ])
 
 

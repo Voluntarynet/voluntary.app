@@ -1,76 +1,94 @@
+"use strict"
 
-class SVGCircle extends ObjectBase {
-    init() {
-        super.init()
-        this.newSlot("element", null);
-        this.newSlot("position", new THREE.Vector3())
-        this.newSlot("x", 0);
-        this.newSlot("y", 0);
-        this.newSlot("radius", 10);
-        this.newSlot("fill", "white");
-        this.createElement()
-    }
+/*
+
+    SVGCircle
+
+*/
+
+
+window.SVGCircle = DomView.extend().newSlots({
+    type: "SVGCircle",
+    x: 0,
+    y: 0,
+    radius: 10,
+    fill: "white",
+    stroke: "none",
+}).setSlots({
+    init: function () {
+        DomView.init.apply(this)
+        return this
+    },
     
-    setX(v) {
+    private_setAttributeNS: function(key, newValue) {
+        // TODO: type checking? type conversion?
+
+        /*
+        const oldValue = this.private_GetAttributeNS(key)
+        if (oldValue !== value) {
+            this.willUpdateAttributeNS(key, newValue)
+            this.element().setAttributeNS(null, key, newValue);
+            this.didUpdateAttributeNS(key, newValue)
+        }
+        */
+
+        this.element().setAttributeNS(null, key, newValue);
+
+        return this
+    },
+
+    private_GetAttributeNS: function(key) {
+        let v = this.element().getAttributeNS(key);
+        return v
+    },
+
+    setX: function (v) {
         this._x = v;
-        this.element().setAttributeNS(null,"cx", v);
+        this.private_setAttributeNS("cx", v);
         return this
-    }
+    },
     
-    setY(v) {
+    setY: function(v) {
         this._y = v;
-        this.element().setAttributeNS(null,"cy", v);
+        this.private_setAttributeNS("cy", v);
         return this
-    }
+    },
     
-    setRadius(v) {
+    setRadius: function(v) {
         this._radius = v
-        this.element().setAttributeNS(null,"r", v);
+        this.private_setAttributeNS("r", v);
         return this
-    }
+    },
     
-    setFill(v) {
+    setFill: function(v) {
         this._fill = v;
-        this.element().setAttributeNS(null,"fill", v);
+        this.private_setAttributeNS("fill", v);
         return this
-    }
+    },
     
-    createElement() {
-        var svgNS = "http://www.w3.org/2000/svg";  
-        var e = document.createElementNS(svgNS, "circle"); //to create a circle. for rectangle use "rectangle"
-        //e.setAttributeNS(null,"id","mycircle");
-        e.setAttributeNS(null,"cx", this.x());
-        e.setAttributeNS(null,"cy", this.y());
-        e.setAttributeNS(null,"r", this.radius());
-        e.setAttributeNS(null,"fill", this.fill());
-        e.setAttributeNS(null,"stroke","none");
-        e.style.position = "absolute"
-        this.setElement(e)
-        document.getElementById("mySVG").appendChild(e);
+    setStroke: function(v) {
+        this._stroke = v;
+        this.private_setAttributeNS("stroke", v);
         return this
-    }     
+    },
+    
+    createElement: function() {
+        const svgNS = "http://www.w3.org/2000/svg";  
+        const e = document.createElementNS(svgNS, "circle"); //to create a circle. for rectangle use "rectangle"
+        return e
+    },
     
 
-    mapToScreen() {
-        const w = window.renderer.domElement.clientWidth;
-        const h = window.renderer.domElement.clientHeight;
-        const p = this.position()
-        const v1 = new THREE.Vector3().set(p.x, p.y, p.z)
-        const v = v1.project(window.camera);
-
-        v.x = Math.round( (v.x + 1) / 2 * w);
-        v.y = Math.round(-(v.y - 1) / 2 * h);
-        this.setX(v.x)
-        this.setY(v.y)
-        return this;
-    }
+    mapToScreen: function() {
+        // this.threeJSView().screenPositionForPoint()
+    },
     
-
-    show() {
+    show: function() {
         const v = this.position()
         console.log("3d position: " + v.x + ", " + v.y + ", " + v.z)
         console.log("  screen xy: " + this.x() + ", " + this.y())
         return this
-    }
-
-}
+    },
+    
+})
+    

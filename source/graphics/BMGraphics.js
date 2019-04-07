@@ -11,6 +11,7 @@ window.BMGraphics = BMStorableNode.extend().newSlots({
     shared: null,
     themes: null,
     fonts: null,
+    sounds: null,
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
@@ -25,5 +26,8 @@ window.BMGraphics = BMStorableNode.extend().newSlots({
 
         this.setFonts(BMFontManager.shared())
         this.addSubnode(this.fonts())
+
+        this.setSounds(BMSoundManager.shared())
+        this.addSubnode(this.sounds())
     },
 })

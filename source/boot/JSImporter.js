@@ -170,7 +170,8 @@ class JSImporterClass extends JSImporterBase {
         this.newSlot("jsFilesLoaded", [])
         this.newSlot("cssFilesLoaded", [])
         this.newSlot("archive", null)
-        this.newSlot("ttfFilePaths", [])
+        this.newSlot("fontFilePaths", [])
+        this.newSlot("audioFilePaths", [])
     }
 
     currentScriptPath () {
@@ -254,6 +255,8 @@ class JSImporterClass extends JSImporterBase {
         this.urlLoadingCallbacks().forEach(callback => callback(url))
 
         const extension = url.split(".").pop()
+        const fontExtensions = ["ttf"]
+        const audioExtensions = ["wav", "mp3", "m4a", "mp4", "oga", "ogg"]
 
         if (extension === "js" || extension === "json") {
             this.jsFilesLoaded().push(url)
@@ -264,8 +267,12 @@ class JSImporterClass extends JSImporterBase {
             this.cssFilesLoaded().push(url)
             CSSLink.clone().setFullPath(url).run()
             this.loadNext()
-        } else if (extension === "ttf") {
-            this.ttfFilePaths().push(url)
+        } else if (fontExtensions.contains(extension)) {
+            this.fontFilePaths().push(url)
+            this.loadNext()
+        } else if (audioExtensions.contains(extension)) {
+            console.log("found audio url:", url)
+            this.audioFilePaths().push(url)
             this.loadNext()
         } else {
             throw new Error("unrecognized extension on url '" + url + "'")

@@ -69,9 +69,14 @@ window.DomView = ideal.Proto.extend().newSlots({
 	    return this
     },
     
+    createElement: function() {
+        const e = document.createElement(this.elementType())
+        return e
+    },
 
     setupElement: function() {
-        this.setElement(document.createElement(this.elementType()))
+        const e = this.createElement()
+        this.setElement(e)
         this.setDivId(this.type() + "-" + this._uniqueId)
         this.setupDivClassName()      
         return this  
@@ -873,6 +878,17 @@ window.DomView = ideal.Proto.extend().newSlots({
     
     display: function() {
         return this.getCssAttribute("display")
+    },
+
+    // visibility
+
+    setVisibility: function(s) {
+        this.setCssAttribute("visibility", s)
+        return this
+    },
+    
+    visibility: function() {
+        return this.getCssAttribute("visibility")
     },
 	
     // white space

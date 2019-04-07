@@ -34,7 +34,7 @@ window.BMFontManager = BMNode.extend().newSlots({
     },
 
     setupSubnodes: function() {
-        const fontPaths = JSImporter.ttfFilePaths()
+        const fontPaths = JSImporter.fontFilePaths()
 
         fontPaths.forEach((path) => {
             this.addFontWithPath(path)

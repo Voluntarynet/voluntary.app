@@ -5,6 +5,8 @@ JSImporter.pushRelativePaths([
     "svg/_imports.js",
     "GameNode.js",
     "GameView.js",
+    "ThingView.js",
+    "ShipView.js",
     "GameApp.js"
 ])
 

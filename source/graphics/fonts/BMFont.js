@@ -25,6 +25,7 @@ window.BMFont = BMNode.extend().newSlots({
     setPath: function(aPath) {
         this._path = aPath
         this.setName(this.fontNameFromPath())
+        setTimeout(() => { this.createFontElement() }, 10) // TODO: timeout needed?
         return this
     },
 
@@ -34,4 +35,10 @@ window.BMFont = BMNode.extend().newSlots({
         return fontName
     },
 
+    createFontElement: function() {
+        const fe = BMFontFace.clone().setUrl(this.path())
+        document.head.appendChild(fe.element());
+        // TODO: create DocumentHead class, ask it's share instance if it already contains this font link element
+        return this
+    },
 })

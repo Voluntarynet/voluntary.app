@@ -158,6 +158,8 @@ Object.shallowCopyTo({
         return this.stringCount("\n");
     },
 
+    // --- paths ---
+
     pathComponents: function () {
         if (this === "/") {
             return [""];
@@ -180,10 +182,24 @@ Object.shallowCopyTo({
         return this.pathComponents().last();
     },
 
-    fileNameSuffix: function () {
-        const suffix = this.split(".").last();
-        return suffix;
+    fileName: function() {
+        return this.lastPathComponent().sansExtension()
     },
+
+    sansExtension: function () {
+        const parts = this.split(".")
+        if (parts.length > 1) {
+            parts.pop()
+        }
+        return parts.join(".")
+    },
+
+    pathExtension: function() {
+        const extension = this.split(".").last();
+        return extension;
+    },
+
+    // ----------
 
     padLeft: function (length, padding) {
         let str = this;

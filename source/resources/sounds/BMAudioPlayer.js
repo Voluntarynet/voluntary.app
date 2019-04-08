@@ -15,8 +15,7 @@
 
 window.BMAudioPlayer = DomView.extend().newSlots({
     type: "BMAudioPlayer",
-    path: null,
-    name: null,
+    path: "",
     sourceElement: null,
 }).setSlots({
 
@@ -44,14 +43,11 @@ window.BMAudioPlayer = DomView.extend().newSlots({
         if (!this.path()) {
             return ""
         }
-        return this.path().split("/").last().before(".")
+        return this.path().fileName()
     },
 
     pathExtension: function() {
-        if (!this.path()) {
-            return ""
-        }
-        return this.path().split("/").last().after(".")
+        return this.path().pathExtension()
     },
 
     createElement: function() {
@@ -87,11 +83,10 @@ window.BMAudioPlayer = DomView.extend().newSlots({
     setPath: function(aUrlString) {
         console.log(this.typeId() +  ".setPath:'" + aUrlString + "'")
         this.sourceElement().setAttribute("src", aUrlString);
-        //console.log("pathExtension = ", this.pathExtension())
-        const type = this.audioTypeForExtension(this.pathExtension());
-        //console.log("type = ", type)
+        const type = this.audioTypeForExtension(aUrlString.pathExtension());
+        console.log("type = ", type)
         this.sourceElement().setAttribute("type", type);
-        //this.load() 
+        this.load() 
         return this
     },
 

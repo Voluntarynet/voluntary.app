@@ -95,7 +95,7 @@ window.GameApp = App.extend().newSlots({
 
         // --- graphics subnodes --------------------
 		
-        this.setGraphics(BMGraphics.clone())
+        this.setResources(BMResources.clone())
         this.about().addSubnode(this.graphics())
 		
         return this

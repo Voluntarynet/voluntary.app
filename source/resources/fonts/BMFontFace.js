@@ -1,6 +1,5 @@
 "use strict"
 
-
 /*
 
     FontFace
@@ -11,36 +10,58 @@
 */
 
 
-
-
-window.BMFontFace = DomView.extend().newSlots({
+window.BMFontFace = BMNode.extend().newSlots({
     type: "BMFontFace",
     path: null,
     name: null,
     url: "https://fonts.googleapis.com/css?family=Open+Sans:400italic,400,300,700", // example
+    options: {},
+    isDebugging: false,
 }).setSlots({
     init: function () {
-        this.setElementType("link") // TODO: use a method override instead?
-        DomView.init.apply(this)
+        //this.setElementType("link") // TODO: use a method override instead?
+        BMNode.init.apply(this)
+        this.setOptions({})
     },
 
-
-    createElement: function() {
-        const e = document.createElement(this.elementType())
-        e.setAttribute('rel', 'stylesheet');
-        e.setAttribute('type', 'text/css');
-        //e.setAttribute('href', this.url());
-        //this.setUrl(this.url())
-        return e
+    name: function() {
+        return this.url().fileName()
     },
 
     setUrl: function(aUrlString) {
-        this.element().setAttribute('href', aUrlString);
+        this._url = aUrlString
+        this.load()
         return this
     },
 
-    url: function() {
-        return this.element().getAttribute("href");
+    load: function() {
+        const name = this.url().fileName()
+        const urlString = "url('" + this.url() + "')"
+        const options = this.options() // example options { style: 'normal', weight: 700 }
+        const aFontFace = new FontFace(name, urlString, options); 
+
+        aFontFace.load().then((loadedFace) => {
+            this.didLoad()
+        }).catch((error) => {
+            this.onLoadError(error)
+        });
+
+        return this
+    },
+
+    didLoad: function() {
+        if (this.isDebugging()) {
+            console.log(this.typeId() + ".didLoad(" + this.name() + ") " + this.url())
+            //console.log(this.typeId() + ".didLoad('" + this.name() + "')")
+        }
+        return this
+    },
+
+    onLoadError: function() {
+        if (this.isDebugging()) {
+            console.log(this.typeId() + ".onLoadError() ", error)
+        }
+        return this
     },
 
 })

@@ -13,25 +13,25 @@
 
 @font-face {
     font-family: "AppLight";
-    src: url("resources/fonts/OpenSans/OpenSans-Light.ttf");
+    src: url("resources/fonts/OpenSans/OpenSans Light.ttf");
     font-display: auto;
 }
 
 @font-face {
     font-family: "AppRegular";
-    src: url("resources/fonts/OpenSans/OpenSans-Regular.ttf");
+    src: url("resources/fonts/OpenSans/OpenSans Regular.ttf");
     font-display: auto;
 }
 
 @font-face {
     font-family: "AppSemiBold";
-    src: url("resources/fonts/OpenSans/OpenSans-Semibold.ttf");
+    src: url("resources/fonts/OpenSans/OpenSans Semibold.ttf");
     font-display: auto;
 }
 
 @font-face {
     font-family:"AppExtraBold";
-    src: url("resources/fonts/OpenSans/OpenSans-ExtraBold.ttf");
+    src: url("resources/fonts/OpenSans/OpenSans ExtraBold.ttf");
 }
 
 /* --- Mono --- */

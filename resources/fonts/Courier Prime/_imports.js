@@ -10,6 +10,6 @@ JSImporter.pushRelativePaths([
     "Sans/Courier Prime Sans Bold.ttf",
     "Sans/Courier Prime Sans Italic.ttf",
     "Sans/Courier Prime Sans.ttf",
-    "SemiBold/CourierPrime-Medium.ttf",
-    "SemiBold/CourierPrime-SemiBold.ttf",
+    "Semibold/CourierPrime Medium.ttf",
+    "Semibold/CourierPrime Semibold.ttf",
 ]);

@@ -37,7 +37,6 @@ window.BMFont = BMNode.extend().newSlots({
 
     createFontElement: function() {
         const fe = BMFontFace.clone().setUrl(this.path())
-        document.head.appendChild(fe.element());
         // TODO: create DocumentHead class, ask it's share instance if it already contains this font link element
         return this
     },

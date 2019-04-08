@@ -11,7 +11,6 @@
 window.BMSound = BMNode.extend().newSlots({
     type: "BMSound",
     path: null,
-    name: null,
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)
@@ -22,11 +21,16 @@ window.BMSound = BMNode.extend().newSlots({
         return this.name()
     },
 
+    subtitle: function() {
+        return this.path().pathExtension()
+    },
+
     name: function() {
-        return this.path().split("/").last() //.before(".")
+        return this.path().lastPathComponent().sansExtension()
     },
 
     setPath: function(aPath) {
+        // update if playing?
         this._path = aPath
         return this
     },

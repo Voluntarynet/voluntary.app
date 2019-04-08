@@ -2,12 +2,12 @@
 
 /*
 
-    BMGraphics
+    BMResources
 
 */
 
-window.BMGraphics = BMStorableNode.extend().newSlots({
-    type: "BMGraphics",
+window.BMResources = BMStorableNode.extend().newSlots({
+    type: "BMResources",
     shared: null,
     themes: null,
     fonts: null,
@@ -17,7 +17,7 @@ window.BMGraphics = BMStorableNode.extend().newSlots({
         BMStorableNode.init.apply(this)
         this.setShouldStore(true)
 
-        this.setTitle("Graphics")
+        this.setTitle("Resources")
         this.setSubtitle("")
         this.setNodeMinWidth(200)
 

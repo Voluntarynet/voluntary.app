@@ -149,4 +149,17 @@ window.BMAudioPlayer = DomView.extend().newSlots({
         return e.duration > 0 && !e.paused
     },
 
+    currentTime: function() {
+        return this.element().currentTime
+    },
+
+    playbackRate: function() {
+        return this.element().playbackRate
+    },
+
+    setPlaybackRate: function(r) {
+        this.element().playbackRate = r
+        return this
+    }
+
 })

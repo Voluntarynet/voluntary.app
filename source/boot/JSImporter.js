@@ -271,7 +271,6 @@ class JSImporterClass extends JSImporterBase {
             this.fontFilePaths().push(url)
             this.loadNext()
         } else if (audioExtensions.contains(extension)) {
-            console.log("found audio url:", url)
             this.audioFilePaths().push(url)
             this.loadNext()
         } else {

@@ -22,20 +22,17 @@ window.BMFont = BMNode.extend().newSlots({
         return this.name()
     },
 
+    name: function() {
+        return this.path().fileName()
+    },
+
     setPath: function(aPath) {
         this._path = aPath
-        this.setName(this.fontNameFromPath())
-        setTimeout(() => { this.createFontElement() }, 10) // TODO: timeout needed?
+        this.load()
         return this
     },
 
-    fontNameFromPath: function() {
-        const lastComponent = this.path().split("/").last()
-        const fontName = lastComponent.before(".")
-        return fontName
-    },
-
-    createFontElement: function() {
+    load: function() {
         const fe = BMFontFace.clone().setUrl(this.path())
         // TODO: create DocumentHead class, ask it's share instance if it already contains this font link element
         return this

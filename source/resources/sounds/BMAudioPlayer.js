@@ -46,47 +46,57 @@ window.BMAudioPlayer = DomView.extend().newSlots({
         return this.path().fileName()
     },
 
-    pathExtension: function() {
-        return this.path().pathExtension()
-    },
-
     createElement: function() {
-        const e = document.createElement(this.elementType())
+        const e = document.createElement("audio")
         e.setAttribute("autoplay", "");
-        e.setAttribute("type", "audio/mpeg");
+        //e.setAttribute("type", "audio/mpeg");
         e.appendChild(this.createSourceElement())
+
+        e.addEventListener('playing', () => { this.onPlaying(); },false); 
+
         return e
     },
 
+    onPlaying: function(event) {
+        console.log(this.typeId() + ".onPlaying() ", event)
+        return this
+    },
+
     createSourceElement: function() {
-        const e = document.createElement(this.elementType())
-        e.setAttribute("src", "stylesheet");
-        e.setAttribute("type", "audio/mpeg");
+        const e = document.createElement("source")
         this.setSourceElement(e)
         return e
     },
 
     audioTypeForExtension: function(extString) {
-        const extToType = {
-            "mp3": "audio/mpeg",
-            "wav": "audio/wav",
-            "mp4": "audio/mp4",
-            "mpa": "audio/mp4",
-            "ogg": "audio/ogg",
-            "oga": "audio/ogg",
+        const fileExtensionToType = {
+            "mp3": "mpeg",
+            "wav": "wav",
+            "mp4": "mp4",
+            "mpa": "mp4",
+            "ogg": "ogg",
+            "oga": "ogg",
         }
-        const type =  extToType[extString]
+        const type =  "audio/" + fileExtensionToType[extString.toLowerCase()]
         assert(type)
         return type
     },
 
-    setPath: function(aUrlString) {
-        console.log(this.typeId() +  ".setPath:'" + aUrlString + "'")
-        this.sourceElement().setAttribute("src", aUrlString);
-        const type = this.audioTypeForExtension(aUrlString.pathExtension());
-        console.log("type = ", type)
-        this.sourceElement().setAttribute("type", type);
-        this.load() 
+    setPath: function(aPath) {
+        if (this._path != aPath) {
+            this._path = aPath
+        
+            this.stop()
+
+            console.log(this.typeId() +  ".setPath:'" + aPath + "'")
+        
+            const source = this.sourceElement()
+            source.src = aPath;
+
+            const type = this.audioTypeForExtension(aPath.pathExtension());
+            source.setAttribute("type", type);
+            this.load() 
+        }
         return this
     },
 
@@ -95,19 +105,19 @@ window.BMAudioPlayer = DomView.extend().newSlots({
     },
 
     load: function() {
-        console.log(this.typeId() +  ".load path:'" + this.path() + "'")
+        console.log(this.typeId() +  ".load() '" + this.path() + "'")
         //setTimeout(() => { this.element().load() }, 10)
-        //const promise = 
         this.element().load()
-        /*
-        promise.catch((e) => {
-            console.log("audio load exception: ", e)
-        })
-        */
+
         return this
     },
 
     play: function() {
+        if (this.isPlaying()) {
+            return this
+        }
+        console.log(this.typeId() +  ".play() '" + this.path() + "'")
+
         const promise = this.element().play()
         promise.catch((e) => {
             console.log("audio play exception: ", e)
@@ -116,9 +126,27 @@ window.BMAudioPlayer = DomView.extend().newSlots({
 
     },
 
+    stop: function() {
+        console.log(this.typeId() +  ".stop() '" + this.path() + "'")
+        const e = this.element()
+        e.pause();
+        e.currentTime = 0;
+        return this
+    },
+
     pause: function() {
         this.element().pause()
         return this
+    },
+
+    isPaused: function() {
+        const e = this.element()
+        return e.paused
+    },
+
+    isPlaying: function() {
+        const e = this.element()
+        return e.duration > 0 && !e.paused
     },
 
 })

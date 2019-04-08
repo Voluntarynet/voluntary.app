@@ -29,20 +29,18 @@ window.BMSound = BMNode.extend().newSlots({
         return this.path().lastPathComponent().sansExtension()
     },
 
+    /*
     setPath: function(aPath) {
         // update if playing?
         this._path = aPath
         return this
     },
+    */
 
     play: function() {
-        if (!this._didPlay) {
-            const audioPlayer = BMAudioPlayer.shared()
-            audioPlayer.setPath(this.path())
-            audioPlayer.load()
-            audioPlayer.play()
-            this._didPlay = true
-        }
+        const audioPlayer = BMAudioPlayer.shared()
+        audioPlayer.setPath(this.path())
+        audioPlayer.play()
         return this
     },
 
@@ -50,4 +48,6 @@ window.BMSound = BMNode.extend().newSlots({
         BMNode.prepareToAccess.apply(this)
         this.play()
     },
+
+    //audio.src = 'data:audio/wav;base64,UklGR...;
 })

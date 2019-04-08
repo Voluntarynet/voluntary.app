@@ -4,7 +4,7 @@
 
     BMSound
 
-    Managed by BMSoundManager.
+    Managed by BMSounds.
 
 */
 

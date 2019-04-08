@@ -172,6 +172,7 @@ class JSImporterClass extends JSImporterBase {
         this.newSlot("archive", null)
         this.newSlot("fontFilePaths", [])
         this.newSlot("audioFilePaths", [])
+        this.newSlot("imageFilePaths", [])
     }
 
     currentScriptPath () {
@@ -254,9 +255,10 @@ class JSImporterClass extends JSImporterBase {
     loadUrl (url) {
         this.urlLoadingCallbacks().forEach(callback => callback(url))
 
-        const extension = url.split(".").pop()
+        const extension = url.split(".").pop().toLowerCase()
         const fontExtensions = ["ttf"]
         const audioExtensions = ["wav", "mp3", "m4a", "mp4", "oga", "ogg"]
+        const imageExtensions = ["png", "jpg", "jpeg", "gif", "tiff", "bmp"]
 
         if (extension === "js" || extension === "json") {
             this.jsFilesLoaded().push(url)
@@ -272,6 +274,9 @@ class JSImporterClass extends JSImporterBase {
             this.loadNext()
         } else if (audioExtensions.contains(extension)) {
             this.audioFilePaths().push(url)
+            this.loadNext()
+        } else if (imageExtensions.contains(extension)) {
+            this.imageFilePaths().push(url)
             this.loadNext()
         } else {
             throw new Error("unrecognized extension on url '" + url + "'")

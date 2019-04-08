@@ -27,7 +27,7 @@ window.BMResources = BMStorableNode.extend().newSlots({
         this.setFonts(BMFontManager.shared())
         this.addSubnode(this.fonts())
 
-        this.setSounds(BMSoundManager.shared())
+        this.setSounds(BMSounds.shared())
         this.addSubnode(this.sounds())
     },
 })

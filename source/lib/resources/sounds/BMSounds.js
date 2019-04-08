@@ -2,15 +2,16 @@
 
 /*
 
-    BMSoundManager
+    BMSounds
 
 */
 
-window.BMSoundManager = BMNode.extend().newSlots({
-    type: "BMSoundManager",
+window.BMSounds = BMNode.extend().newSlots({
+    type: "BMSounds",
+    appDidInitObservation: null,
 }).setSlots({
     shared: function() {   
-        return this.sharedInstanceForClass(BMSoundManager)
+        return this.sharedInstanceForClass(BMSounds)
     },
 
     init: function () {
@@ -19,11 +20,15 @@ window.BMSoundManager = BMNode.extend().newSlots({
         this.setTitle("Sounds")
         this.setNodeMinWidth(270)
 
-        setTimeout(() => { 
-            this.setupSubnodes() // really want to do this on AppDidInit
-        }, 10)
+        const obs = NotificationCenter.shared().newObservation().setName("appDidInit").setObserver(this).watch()
+        this.setAppDidInitObservation(obs)
     },
 
+    appDidInit: function() {
+        console.log(this.typeId() + ".appDidInit()")
+        this.setupSubnodes()
+        return this
+    },
 
     setupSubnodes: function() {
         const paths = JSImporter.audioFilePaths()

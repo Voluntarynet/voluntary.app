@@ -156,6 +156,7 @@ class IndexBuilder {
         indexPaths.appendItems(this.filePaths())
         indexPaths.push("templates/bottom.html")
 
+        console.log("indexPaths: ", indexPaths.join("\n"))
         const index = indexPaths.map((path) => {
             return fs.readFileSync(path,  "utf8")
         }).join("\n")
@@ -225,8 +226,10 @@ class SourceFolder {
                 builder.addImportPath(fullPath)
             } else if (fullPath.contains(".css")) {
                 builder.addCssPath(fullPath)
-            } else {
+            } else if (fullPath.contains(".js")) {
                 builder.addFilePath(fullPath)
+            } else {
+                console.log("skipping file path:", fullPath)
             }
         })
     }

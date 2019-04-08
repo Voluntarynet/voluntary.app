@@ -8,6 +8,7 @@
 
 window.BMFontManager = BMNode.extend().newSlots({
     type: "BMFontManager",
+    appDidInitObservation: null,
 }).setSlots({
     shared: function() {   
         return this.sharedInstanceForClass(BMFontManager)
@@ -19,9 +20,15 @@ window.BMFontManager = BMNode.extend().newSlots({
         this.setTitle("Fonts")
         this.setNodeMinWidth(270)
 
-        setTimeout(() => { 
-            this.setupSubnodes() // really want to do this on AppDidInit
-        }, 10)
+        const obs = NotificationCenter.shared().newObservation().setName("appDidInit").setObserver(this).watch()
+        this.setAppDidInitObservation(obs)
+        
+        return this
+    },
+
+    appDidInit: function() {
+        this.setupSubnodes()
+        return this
     },
     
     addFamily: function(aFontFamily) {

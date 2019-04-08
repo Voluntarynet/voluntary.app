@@ -21,6 +21,12 @@ window.BMFontFamily = BMNode.extend().newSlots({
         return this.name()
     },
 
+    /*
+    subtitle: function () {
+        return "font family"
+    },
+    */
+
     addFontWithPath: function(aPath) {
         const font = BMFont.clone().setPath(aPath)
         this.addSubnode(font)

@@ -84,25 +84,25 @@ html * {
 
 @font-face {
     font-family: "AppLight";
-    src: url("resources/fonts/OpenSans/OpenSans-Light.ttf");
+    src: url("resources/fonts/OpenSans/OpenSans Light.ttf");
     font-display: auto;
 }
 
 @font-face {
     font-family: "AppRegular";
-    src: url("resources/fonts/OpenSans/OpenSans-Regular.ttf");
+    src: url("resources/fonts/OpenSans/OpenSans Regular.ttf");
     font-display: auto;
 }
 
 @font-face {
     font-family: "AppSemiBold";
-    src: url("resources/fonts/OpenSans/OpenSans-Semibold.ttf");
+    src: url("resources/fonts/OpenSans/OpenSans Semibold.ttf");
     font-display: auto;
 }
 
 @font-face {
     font-family:"AppExtraBold";
-    src: url("resources/fonts/OpenSans/OpenSans-ExtraBold.ttf");
+    src: url("resources/fonts/OpenSans/OpenSans ExtraBold.ttf");
 }
 
 /* --- Mono --- */
@@ -1934,6 +1934,9 @@ class JSImporterClass extends JSImporterBase {
         this.newSlot("jsFilesLoaded", [])
         this.newSlot("cssFilesLoaded", [])
         this.newSlot("archive", null)
+        this.newSlot("fontFilePaths", [])
+        this.newSlot("audioFilePaths", [])
+        this.newSlot("imageFilePaths", [])
     }
 
     currentScriptPath () {
@@ -2016,7 +2019,10 @@ class JSImporterClass extends JSImporterBase {
     loadUrl (url) {
         this.urlLoadingCallbacks().forEach(callback => callback(url))
 
-        const extension = url.split(".").pop()
+        const extension = url.split(".").pop().toLowerCase()
+        const fontExtensions = ["ttf"]
+        const audioExtensions = ["wav", "mp3", "m4a", "mp4", "oga", "ogg"]
+        const imageExtensions = ["png", "jpg", "jpeg", "gif", "tiff", "bmp"]
 
         if (extension === "js" || extension === "json") {
             this.jsFilesLoaded().push(url)
@@ -2026,6 +2032,15 @@ class JSImporterClass extends JSImporterBase {
         } else if (extension === "css") {
             this.cssFilesLoaded().push(url)
             CSSLink.clone().setFullPath(url).run()
+            this.loadNext()
+        } else if (fontExtensions.contains(extension)) {
+            this.fontFilePaths().push(url)
+            this.loadNext()
+        } else if (audioExtensions.contains(extension)) {
+            this.audioFilePaths().push(url)
+            this.loadNext()
+        } else if (imageExtensions.contains(extension)) {
+            this.imageFilePaths().push(url)
             this.loadNext()
         } else {
             throw new Error("unrecognized extension on url '" + url + "'")
@@ -2059,6 +2074,7 @@ JSImporter.pushRelativePaths([
     "external_libs/_imports.js",
     //"resources/data/_imports.js",
     "source/_imports.js",
+    "resources/_imports.js",
 ]);
 
 
@@ -79085,10 +79101,7 @@ if (typeof exports !== "undefined") {
 
 JSImporter.pushRelativePaths([
     "lib/_imports.js",
-    "network/_imports.js",	
-    "graphics/_imports.js",	
-    "apps/Peer/_imports.js",
-    // "_tests.js",
+    "apps/_imports.js",
 ])
 
 
@@ -79100,7 +79113,7 @@ JSImporter.pushRelativePaths([
     "storage/_imports.js",
     "node/_imports.js",
     "view/_imports.js",
-    //"App.js",
+    "resources/_imports.js",
 ])
 
 "use strict"
@@ -79113,6 +79126,7 @@ JSImporter.pushRelativePaths([
     "StackTrace.js",
     "ByteFormatter.js",
     "TimePeriodFormatter.js",
+    //"FilePath.js",
 ]);
 
 
@@ -80391,6 +80405,8 @@ Object.shallowCopyTo({
         return this.stringCount("\n");
     },
 
+    // --- paths ---
+
     pathComponents: function () {
         if (this === "/") {
             return [""];
@@ -80413,10 +80429,24 @@ Object.shallowCopyTo({
         return this.pathComponents().last();
     },
 
-    fileNameSuffix: function () {
-        const suffix = this.split(".").last();
-        return suffix;
+    fileName: function() {
+        return this.lastPathComponent().sansExtension()
     },
+
+    sansExtension: function () {
+        const parts = this.split(".")
+        if (parts.length > 1) {
+            parts.pop()
+        }
+        return parts.join(".")
+    },
+
+    pathExtension: function() {
+        const extension = this.split(".").last();
+        return extension;
+    },
+
+    // ----------
 
     padLeft: function (length, padding) {
         let str = this;
@@ -81944,6 +81974,8 @@ JSImporter.pushRelativePaths([
 
     SyncAction
 
+    An action managed by the SyncScheduler.
+
 */
 
 window.SyncAction = class SyncAction extends ProtoClass {
@@ -81981,12 +82013,14 @@ window.SyncAction = class SyncAction extends ProtoClass {
     }
 	
     equals (anAction) {
-        return anAction !== null && (this.target() === anAction.target()) && (this.method() === anAction.method())
+        return   anAction !== null && 
+                (this.target() === anAction.target()) && 
+                (this.method() === anAction.method())
     }
 	
     description () {
-        let t = this.target() ? this.target().typeId() : "null"
-        return t+ "." + this.method() + "() order:" + this.order()
+        const t = this.target() ? this.target().typeId() : "null"
+        return t + "." + this.method() + "() order:" + this.order()
     }
 	
     static ActionKeyForTargetAndMethod (target, method) {
@@ -82024,7 +82058,7 @@ window.SyncAction.registerThisClass()
 
         window.SyncScheduler.shared().scheduleTargetAndMethod(this, "syncToView", 1)
 
-    Higher orders will be performed later than lower ones. 
+    Higher orders will be performed *later* than lower ones. 
 
     Some typical sync methods:
 
@@ -82053,9 +82087,11 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
 	
     syncSet (syncMethod) {
         const sets = this.syncSets()
+
         if (!sets.at(syncMethod)) {
             sets.atPut(syncMethod, ideal.Map.clone())
         }
+        
         return sets.at(syncMethod)
     }
 
@@ -82162,7 +82198,8 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
         //console.log("--- sending ----")
         actions.forEach((action) => {
             this.setCurrentAction(action)
-            action.trySend()
+            //action.trySend()
+            action.send()
         })
         //console.log("--- done sending ----")
     }
@@ -82444,6 +82481,10 @@ window.NotificationCenter.registerThisClass()
 
     Observation
 
+    An abstraction for a NotificationCenter observation. 
+    Holds references to which notification message is a given observer is wants
+    notifications for. 
+
 */
 
 window.Observation = class Observation extends ProtoClass {
@@ -82468,6 +82509,7 @@ window.Observation = class Observation extends ProtoClass {
         if (this.center().isDebugging()) {
             //console.log(this._observer + " received note " + note.name() + " from " + note.sender() )
         }
+
         const method = this._observer[note.name()]
         if (method) {
             method.apply(this._observer, [note])
@@ -82479,9 +82521,9 @@ window.Observation = class Observation extends ProtoClass {
     }
 
     isEqual(obs) {
-        const sameName = this.name() === obs.name()
+        const sameName     = this.name()     === obs.name()
         const sameObserver = this.observer() === obs.observer()
-        const sameTarget = this.target() === obs.target()
+        const sameTarget   = this.target()   === obs.target()
         return sameName && sameObserver && sameTarget
     }
 
@@ -84684,7 +84726,8 @@ window.NodeStore = ideal.Proto.extend().newSlots({
             //throw new Error(error)
         }
 
-        let proto = window[nodeDict.type]
+        const nodeType = this.translateNodeType(nodeDict.type)
+        let proto = window[nodeType]
         if (!proto) {
             throw new Error("missing proto '" + nodeDict.type + "'")
         }
@@ -84793,8 +84836,8 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     },
 
     objectForRef: function (ref) {
-        let k = this.objRefKey()
-        let pid = ref[k]
+        const k = this.objRefKey()
+        const pid = ref[k]
         if (pid === "null") {
             return null
         }
@@ -84802,13 +84845,27 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         return this.objectForPid(pid)
     },
 
+    nodeTypeTranslationDict: function() {
+        return {
+            "BMDatedSet": "BMStoredDatedSetNode",
+        }
+    },
+
+    translateNodeType: function(typeName) {
+        const dict = this.nodeTypeTranslationDict();
+        const v = dict[typeName];
+        return v ? v : typeName;
+    },
+
     pidRefsFromPid: function (pid) {
-        let nodeDict = this.nodeDictAtPid(pid)
+        const nodeDict = this.nodeDictAtPid(pid)
         if (!nodeDict) {
             return []
         }
 
-        let proto = window[nodeDict.type]
+        const nodeType = this.translateNodeType(nodeDict.type)
+
+        let proto = window[nodeType]
         if (!proto) {
             console.warn(this.type() + "pidRefsFromPid(" + pid + ") missing type " + nodeDict.type)
             proto = BMStorableNode
@@ -85132,6 +85189,7 @@ JSImporter.pushRelativePaths([
     "BMStorableNode.js",
     "BMInfoNode.js",
     "BMImageNode.js",
+    "BMStoredDatedSetNode.js",
 ])
 
 "use strict"
@@ -85620,6 +85678,92 @@ window.BMImageNode = BMStorableNode.extend().newSlots({
     onDidEditNode: function() {
         console.log(this.typeId() + " onDidEditNode")
         this.scheduleSyncToStore()
+    },
+})
+
+
+"use strict"
+
+/*
+
+    BMStoredDatedSetNode
+
+*/
+
+window.BMStoredDatedSetNode = BMStorableNode.extend().newSlots({
+    type: "BMStoredDatedSetNode",
+    maxAgeInSeconds: 30*24*60*60,
+    autoCheckPeriod: 1*60*60,
+    dict: null,
+}).setSlots({
+    init: function () {
+        BMStorableNode.init.apply(this)
+        this.setShouldStore(true)
+        this.setShouldStoreSubnodes(false)
+		
+        this.setDict({})
+        this.addStoredSlot("dict", "autoCheckPeriod", "maxAgeInSeconds")
+
+        //this.setNoteIsSubnodeCount(true)
+    },
+    
+    setAutoCheckPeriod: function(seconds) {
+        if (seconds && this._autoCheckPeriod !== seconds) {
+            this._autoCheckPeriod = seconds
+            this.autoCheck()
+        }
+    },
+    
+    autoCheck: function() {
+        this.deleteExpiredKeys()
+        setTimeout(() => { this.autoCheck() }, this.autoCheckPeriod()*1000)
+    },
+    
+    didLoadFromStore: function() {
+        BMStorableNode.didLoadFromStore.apply(this)
+        this.deleteExpiredKeys()
+    },
+
+    addKey: function(h) {
+        if (!this.dict()[h]) {
+            this.dict()[h] = Date.now()
+            this.scheduleSyncToStore()
+        }
+        return this
+    },
+    
+    hasKey: function(h) {
+        return h in this.dict()
+    },
+    
+    removeKey: function(h) {
+        if (this.dict()[h]) {
+            delete this.dict()[h]
+            this.scheduleSyncToStore()
+        }
+        return this
+    },
+    
+    ageInSecondsOfKey: function(h) {
+        if (this.hasKey(h)) {
+            let ageInSeconds = Date.now() - this.dict()[h]
+            return ageInSeconds
+        }
+        
+        return null
+    },
+
+    deleteExpiredKeys: function() {
+        let max = this.maxAgeInSeconds()
+        let keys = Object.keys(this.dict())
+        
+        keys.forEach((k) => {
+            if (this.ageInSecondsOfKey(k) > max) {
+                this.removeKey(k)
+            }
+        })
+
+        return this
     },
 })
 
@@ -86764,7 +86908,7 @@ window.App = BMNode.extend().newSlots({
     },
 	
     rootView: function() {
-        return DivView.rootView()
+        return DomView.rootView()
         //return  WebBrowserWindow.shared().documentBody()
     },
 
@@ -88346,12 +88490,12 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
     // globally track whether we are inside an event 
 
     setIsHandlingEvent: function() {
-        DivView._isHandlingEvent = true
+        DomView._isHandlingEvent = true
         return this
     },
 	
     isHandlingEvent: function() {
-        return DivView._isHandlingEvent
+        return DomView._isHandlingEvent
     },
 
     handleEventFunction: function(event, eventFunc) {
@@ -88744,7 +88888,7 @@ window.GestureManager = ideal.Proto.extend().newSlots({
 /*
     GestureRecognizer
 
-    A DivView has a list of gestureRecognizers. 
+    A DomView has a list of gestureRecognizers. 
     It forwards relevant events to it's recognizers. 
     These can initiate the recognizer to start listening to document.body events.
 
@@ -89241,7 +89385,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     // ---  outline view for debugging ---
 
     newOutlineView: function() {
-        const v = DivView.clone()
+        const v = DomView.clone()
         v.setPointerEvents("none")
         v.setBorder("1px dashed white")
         v.setBackgroundColor("transparent")
@@ -89290,7 +89434,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     // --- finger views for debugging ---
 
     newFingerView: function() {
-        const v = DivView.clone()
+        const v = DomView.clone()
         v.setPointerEvents("none")
 
         const size = 20
@@ -90632,7 +90776,7 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
         return document.title
     },
     
-    activeDivView: function() {
+    activeDomView: function() {
         const e = document.activeElement
         if (e && e._divView) {
             return e._divView
@@ -90953,7 +91097,7 @@ JSImporter.pushRelativePaths([
     "div_attributes/_imports.js",
     "div_helpers/_imports.js",
     "DomElementHelpers.js",
-    "DivView.js",
+    "DomView.js",
     "CenteredDivView.js",
     "DivStyledView.js",
     "TextField.js",
@@ -91397,7 +91541,7 @@ window.DivTextTapeMeasure = ideal.Proto.extend().newSlots({
         const e = this.testElement()
 		
         this.stylesToCopy().forEach(function (styleName) {
-            const v = DivView.style[styleName]
+            const v = DomView.style[styleName]
             if (v) {
                 e.style[styleName] = v
             } else {
@@ -91405,7 +91549,7 @@ window.DivTextTapeMeasure = ideal.Proto.extend().newSlots({
             }
         })
 		
-        e.innerHTML = DivView.innerHTML
+        e.innerHTML = DomView.innerHTML
 		
         //let height = (e.clientHeight + 1)
         const width = (e.clientWidth + 1) 
@@ -91492,7 +91636,7 @@ window.DivCSSInspector = ideal.Proto.extend().newSlots({
 `   DomElement_...
 `
     Helper functions for DOM elements.
-    Mostly for use inside DivView.
+    Mostly for use inside DomView.
     Not for general consumption as elements typically shouldn't be interacted with directly. 
 
 */
@@ -91538,16 +91682,17 @@ function DomElement_description(element) {
 "use strict"
 
 /*
-    DivView
+    DomView
 
     Base view class. Wraps a dom element.
 
     TODO: add dict[propertyName] -> validValueSet and check css values when set
 */
 
-window.DivView = ideal.Proto.extend().newSlots({
-    type: "DivView",
+window.DomView = ideal.Proto.extend().newSlots({
+    type: "DomView",
     divClassName: "",
+    elementType: "div",
     element: null,
     
     // parent view and subviews
@@ -91604,9 +91749,15 @@ window.DivView = ideal.Proto.extend().newSlots({
 	    e._divView = this // try to avoid depending on this as much as possible - keep refs to divViews, not elements
 	    return this
     },
-	    
+    
+    createElement: function() {
+        const e = document.createElement(this.elementType())
+        return e
+    },
+
     setupElement: function() {
-        this.setElement(document.createElement("div"))
+        const e = this.createElement()
+        this.setElement(e)
         this.setDivId(this.type() + "-" + this._uniqueId)
         this.setupDivClassName()      
         return this  
@@ -92027,7 +92178,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 	
     transitions: function() {
         if (this._transitions == null) {
-            this._transitions = DivTransitions.clone().setDivView(this).syncFromDiv()
+            this._transitions = DivTransitions.clone().setDomView(this).syncFromDiv()
         }
         return this._transitions
     },
@@ -92408,6 +92559,17 @@ window.DivView = ideal.Proto.extend().newSlots({
     
     display: function() {
         return this.getCssAttribute("display")
+    },
+
+    // visibility
+
+    setVisibility: function(s) {
+        this.setCssAttribute("visibility", s)
+        return this
+    },
+    
+    visibility: function() {
+        return this.getCssAttribute("visibility")
     },
 	
     // white space
@@ -93524,8 +93686,8 @@ window.DivView = ideal.Proto.extend().newSlots({
 
         let e = this.element()
         if (aBool) {
-            DivView._tabCount ++
-            e.tabIndex = DivView._tabCount // need this in order for focus to work on BrowserColumn?
+            DomView._tabCount ++
+            e.tabIndex = DomView._tabCount // need this in order for focus to work on BrowserColumn?
             //this.setCssAttribute("outline", "none"); // needed?
         } else {
 	        delete e.tabindex 
@@ -93852,7 +94014,7 @@ window.DivView = ideal.Proto.extend().newSlots({
         let uniqueClassName = "UniqueClass_" + this._uniqueId
         let e = this.element()
         if (e.className.indexOf(uniqueClassName) === -1) {
-            let newRuleKey = "DivView" + uniqueClassName + ":" + afterOrBefore
+            let newRuleKey = "DomView" + uniqueClassName + ":" + afterOrBefore
             let newRuleValue = "content: \"" + aString + "\;"
             //console.log("newRule '" + newRuleKey + "', '" + newRuleValue + "'")
             document.styleSheets[0].addRule(newRuleKey, newRuleValue);
@@ -93981,7 +94143,7 @@ window.DivView = ideal.Proto.extend().newSlots({
     },
     
     scrollIntoView: function() {
-        let focusedView =  WebBrowserWindow.shared().activeDivView()
+        let focusedView =  WebBrowserWindow.shared().activeDomView()
         //console.log("]]]]]]]]]]]] " + this.typeId() + ".scrollIntoView() needsRefocus = ", focusedView !== this)
 
         if (focusedView && focusedView !== this) {
@@ -94296,7 +94458,7 @@ window.DivView = ideal.Proto.extend().newSlots({
 
     containerize: function() {
         // create a subview of same size as parent and put all other subviews in it
-        let container = DivView.clone()
+        let container = DomView.clone()
         container.setMinAndMaxHeight(this.clientHeight())
         container.setMinAndMaxWidth(this.clientWidth())
         this.moveAllSubviewsToView(container)
@@ -94360,13 +94522,13 @@ window.DivView = ideal.Proto.extend().newSlots({
 
 */
 
-window.CenteredDivView = DivView.extend().newSlots({
+window.CenteredDivView = DomView.extend().newSlots({
     type: "CenteredDivView",
     middleView: null,
     innerView: null,
 }).setSlots({
     init: function () {
-        DivView.init.apply(this)
+        DomView.init.apply(this)
         this.setupOuterView()
         this.setupMiddleView()
         this.setupInnerView()
@@ -94383,7 +94545,7 @@ window.CenteredDivView = DivView.extend().newSlots({
     },
 
     setupMiddleView: function() {
-        let v = DivView.clone()
+        let v = DomView.clone()
         v.setDivClassName("CenteredDivView_middleView")
         v.setDisplay("table-cell")
         v.setVerticalAlign("middle")
@@ -94392,7 +94554,7 @@ window.CenteredDivView = DivView.extend().newSlots({
     },
 
     setupInnerView: function() {
-        let v = DivView.clone()
+        let v = DomView.clone()
         v.setDivClassName("CenteredDivView_innerView")
         v.setDisplay("block")
         v.setMarginLeft("auto")
@@ -94457,13 +94619,13 @@ window.CenteredDivView = DivView.extend().newSlots({
 
 */
 
-window.DivStyledView = DivView.extend().newSlots({
+window.DivStyledView = DomView.extend().newSlots({
     type: "DivStyledView",
     styles: null,
     isSelected: false,
 }).setSlots({
     init: function () {
-        DivView.init.apply(this)
+        DomView.init.apply(this)
         return this
     },
 
@@ -94561,7 +94723,7 @@ window.TextField = DivStyledView.extend().newSlots({
     didTextEditNote: null,
 }).setSlots({
     init: function () {
-        DivView.init.apply(this)
+        DomView.init.apply(this)
         this.setDisplay("inline-block")
         this.turnOffUserSelect()
         this.setWhiteSpace("nowrap")
@@ -94703,7 +94865,7 @@ window.BoolView = DivStyledView.extend().newSlots({
     uncheckedIcon: null,
 }).setSlots({
     init: function () {
-        DivView.init.apply(this)
+        DomView.init.apply(this)
         this.setDisplay("inline-block")
         this.turnOffUserSelect()
         this.setWhiteSpace("nowrap")
@@ -94844,11 +95006,11 @@ window.BoolView = DivStyledView.extend().newSlots({
 
 */
 
-window.DocumentBody = DivView.extend().newSlots({
+window.DocumentBody = DomView.extend().newSlots({
     type: "DocumentBody",
 }).setSlots({
     init: function () {
-        DivView.init.apply(this)
+        DomView.init.apply(this)
 
         window.SyncScheduler.shared().scheduleTargetAndMethod(this, "autoAdjustZoomForMobile")
 
@@ -94968,14 +95130,14 @@ window.DocumentBody = DivView.extend().newSlots({
 
 */
 
-window.ButtonView = DivView.extend().newSlots({
+window.ButtonView = DomView.extend().newSlots({
     type: "ButtonView",
     titleView: null,
     isEnabled: true,
 }).setSlots({
 
     init: function () {
-        DivView.init.apply(this)
+        DomView.init.apply(this)
         this.setMinAndMaxWidth(200)
         this.setButtonHeight(50)
         this.turnOffUserSelect()
@@ -95027,7 +95189,7 @@ window.ButtonView = DivView.extend().newSlots({
 
 */
 
-window.PanelView = DivView.extend().newSlots({
+window.PanelView = DomView.extend().newSlots({
     type: "PanelView",
     titleView: null,
     subtitleView: null,
@@ -95036,7 +95198,7 @@ window.PanelView = DivView.extend().newSlots({
     isDragging: false,
 }).setSlots({
     init: function () {
-        DivView.init.apply(this)
+        DomView.init.apply(this)
         this.setTitleView(TextField.clone().setDivClassName("PanelTitleView"))
         this.addSubview(this.titleView())
         this.titleView().setTextAlign("center")
@@ -95589,7 +95751,7 @@ window.ImageView = NodeView.extend().newSlots({
         NodeView.init.apply(this)
         this.setIsRegisteredForDrop(false)
         
-        this.setImageContainer(DivView.clone().setDivClassName("ImageViewImageContainer"))
+        this.setImageContainer(DomView.clone().setDivClassName("ImageViewImageContainer"))
         this.addSubview(this.imageContainer())
         
         //this.setEditable(false)
@@ -95705,7 +95867,7 @@ window.ImageView = NodeView.extend().newSlots({
         const image = new Image();
         image.src = dataURL;
 
-        this.setRawImageView(DivView.clone().setElement(image).setDivClassName("ImageViewImageObject"))
+        this.setRawImageView(DomView.clone().setElement(image).setDivClassName("ImageViewImageObject"))
         this.imageContainer().addSubview(this.rawImageView())
 	
         return this
@@ -95780,7 +95942,7 @@ window.GenericView = NodeView.extend().newSlots({
         this.setTitleView(NodeView.clone().setDivClassName("GenericTitleView"))
         this.middleView().addSubview(this.titleView())        
 
-        this.middleView().addSubview(DivView.clone())        
+        this.middleView().addSubview(DomView.clone())        
 
         this.setSubtitleView(NodeView.clone().setDivClassName("GenericSubtitleView"))
         this.middleView().addSubview(this.subtitleView())  
@@ -96002,7 +96164,7 @@ window.BrowserView = NodeView.extend().newSlots({
 
         this.setIsRegisteredForDocumentResize(true)
 
-        let dh = DivView.clone().setDivClassName("BrowserDefaultHeader NodeView DivView")
+        let dh = DomView.clone().setDivClassName("BrowserDefaultHeader NodeView DomView")
         this.setDefaultHeader(dh)
         this.addSubview(dh)
 
@@ -97529,7 +97691,7 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
    
         //this.setColumnWrapper(this)
 
-        this.setScrollView(DivView.clone().setDivClassName("BrowserScrollView"))
+        this.setScrollView(DomView.clone().setDivClassName("BrowserScrollView"))
         this.addSubview(this.scrollView())
         
         this.setColumn(BrowserColumn.clone())
@@ -97678,7 +97840,7 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
     
     addEmptyLabelIfMissing: function() {
         if (!this.emptyLabel()) {
-            this.setEmptyLabel(DivView.clone().setDivClassName("BrowserColumnEmptyLabel"))
+            this.setEmptyLabel(DomView.clone().setDivClassName("BrowserColumnEmptyLabel"))
             this.setEmptyLabelText("").turnOffUserSelect()
             this.addSubview(this.emptyLabel())            
         }
@@ -97824,16 +97986,16 @@ window.BrowserHeader = NodeView.extend().newSlots({
         NodeView.init.apply(this)
         //this.setOwnsView(false)
 
-        let backArrowView = DivView.clone().setDivClassName("BackArrow").setTarget(this).setAction("didHitBackArrow")
+        let backArrowView = DomView.clone().setDivClassName("BackArrow").setTarget(this).setAction("didHitBackArrow")
         backArrowView.setBackgroundImageUrlPath(this.pathForIconName("left"))        
         backArrowView.setBackgroundSizeWH(10, 10)
         backArrowView.setOpacity(0.6)
         this.setBackArrowView(backArrowView)
 		
-        let titleView = DivView.clone().setDivClassName("BrowserHeaderTitleView NodeView DivView").setInnerHTML("").setUserSelect("none")
+        let titleView = DomView.clone().setDivClassName("BrowserHeaderTitleView NodeView DomView").setInnerHTML("").setUserSelect("none")
         this.setTitleView(titleView)
 		
-        this.setRightActionsView(DivView.clone().setDivClassName("BrowserFooterRightActionsView"))
+        this.setRightActionsView(DomView.clone().setDivClassName("BrowserFooterRightActionsView"))
         this.addSubview(this.rightActionsView())
 		
         this.setZIndex(2)
@@ -97999,13 +98161,13 @@ window.BrowserFooter = NodeView.extend().newSlots({
         NodeView.init.apply(this)
         //this.setOwnsView(false)
 
-        this.setLeftActionsView(DivView.clone().setDivClassName("BrowserFooterLeftActionsView NodeView DivView"))
+        this.setLeftActionsView(DomView.clone().setDivClassName("BrowserFooterLeftActionsView NodeView DomView"))
 		
-        const textView = TextField.clone().setDivClassName("BrowserFooterTextView NodeView DivView") //.setUserSelect("none")
+        const textView = TextField.clone().setDivClassName("BrowserFooterTextView NodeView DomView") //.setUserSelect("none")
         this.setTextView(textView)
 	    this.textView().setContentEditable(true).setDoesClearOnReturn(true).setDoesHoldFocusOnReturn(true)
 						
-        this.setRightActionsView(DivView.clone().setDivClassName("BrowserFooterRightActionsView NodeView DivView"))
+        this.setRightActionsView(DomView.clone().setDivClassName("BrowserFooterRightActionsView NodeView DomView"))
 		
 		
         this.setZIndex(2)
@@ -98140,7 +98302,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
 
     setupRowContentView: function() {
-        const cv = DivView.clone().setDivClassName("BrowserRowContentView")
+        const cv = DomView.clone().setDivClassName("BrowserRowContentView")
         cv.setWidthPercentage(100).setHeightPercentage(100) 
         cv.setPosition("absolute")
         this.setContentView(cv)
@@ -98286,7 +98448,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         if (this.closeButtonView() == null) {
             //let c = CenteredDivView.clone()
 
-            const cb = DivView.clone().setDivClassName("BrowserRowCloseButton")
+            const cb = DomView.clone().setDivClassName("BrowserRowCloseButton")
             //this.setCloseButtonView(NodeView.clone().setDivClassName("BrowserRowCloseButton"))
             this.setCloseButtonView(cb)
             this.contentView().addSubview(cb) 
@@ -98713,7 +98875,7 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
     
     setupThumbnailViewIfAbsent: function() {
         if (!this.thumbnailView()) {
-            const tv = DivView.clone().setDivClassName("BrowserRowThumbnailView")
+            const tv = DomView.clone().setDivClassName("BrowserRowThumbnailView")
     		tv.makeBackgroundNoRepeat()
             tv.makeBackgroundCentered()
             //tv.makeBackgroundContain()
@@ -99126,7 +99288,7 @@ window.ShelfItemView = NodeView.extend().newSlots({
 		
         this.setIsRegisteredForMouse()
 		
-        let iv = DivView.clone().setDivClassName("ShelfIconView")
+        let iv = DomView.clone().setDivClassName("ShelfIconView")
         this.setIconView(iv)
         this.addSubview(iv)
         iv.makeBackgroundNoRepeat()
@@ -99149,14 +99311,14 @@ window.ShelfItemView = NodeView.extend().newSlots({
     },
 
     setupBadgeView: function() {	
-        let v = DivView.clone().setDivClassName("ShelfBadgeView")
+        let v = DomView.clone().setDivClassName("ShelfBadgeView")
         this.setBadgeView(v)
 	    this.addSubview(v)
         return this
     },
 	
     setupMarkerView: function() {	
-        let v = DivView.clone().setDivClassName("ShelfMarkerView")
+        let v = DomView.clone().setDivClassName("ShelfMarkerView")
         this.setMarkerView(v)
 	    this.addSubview(v)
         return this
@@ -99443,11 +99605,11 @@ window.ShelfItemGroupView = NodeView.extend().newSlots({
 
 */
 
-window.ShelfFooterView = DivView.extend().newSlots({
+window.ShelfFooterView = DomView.extend().newSlots({
     type: "ShelfFooterView",
 }).setSlots({
     init: function () {
-        DivView.init.apply(this)
+        DomView.init.apply(this)
         this.turnOffUserSelect()
         this.setTransition("all 0.35s")
 		
@@ -99599,7 +99761,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
     init: function () {
         BrowserFieldRow.init.apply(this)
         
-        this.setKeyView(DivView.clone().setDivClassName("BMFieldKeyView"))
+        this.setKeyView(DomView.clone().setDivClassName("BMFieldKeyView"))
         this.addSubview(this.keyView())     
    		this.keyView().turnOffUserSelect().setSpellCheck(false)   
         //this.keyView().setMinAndMaxWidth("200")
@@ -99612,7 +99774,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         this.valueView().setWidthPercentage(100) 
 
 		
-        this.setNoteView(DivView.clone().setDivClassName("BMFieldRowViewNoteView"))
+        this.setNoteView(DomView.clone().setDivClassName("BMFieldRowViewNoteView"))
         this.addSubview(this.noteView())
         this.noteView().setUserSelect("text")
         
@@ -99816,7 +99978,7 @@ window.BMActionFieldRowView = BrowserRow.extend().newSlots({
         this.styles().selected().setColor("#888")
         this.styles().selected().setBackgroundColor("#eee")
 		
-        this.setButtonView(DivView.clone().setDivClassName("BMActionFieldButtonView"))
+        this.setButtonView(DomView.clone().setDivClassName("BMActionFieldButtonView"))
 	    this.buttonView().setTarget(this).setAction("didClickButton")
 	    this.buttonView().setTransition("all 0.3s")
 
@@ -99882,7 +100044,7 @@ window.BMTextAreaFieldRowView = BMFieldRowView.extend().newSlots({
     },
 
     createValueView: function() {
-        return NodeView.clone().setDivClassName("BMTextAreaFieldValueView NodeView DivView")
+        return NodeView.clone().setDivClassName("BMTextAreaFieldValueView NodeView DomView")
     },
 	
     updateSubviews: function() {   
@@ -99890,10 +100052,10 @@ window.BMTextAreaFieldRowView = BMFieldRowView.extend().newSlots({
         this.fillBottomOfColumnIfAvailable()
 		
         if (this.node().isMono()) {
-            this.valueView().setDivClassName("BMMonoTextAreaFieldValueView NodeView DivView")
+            this.valueView().setDivClassName("BMMonoTextAreaFieldValueView NodeView DomView")
             this.valueView().set
         } else {
-            this.valueView().setDivClassName("BMTextAreaFieldValueView NodeView DivView")
+            this.valueView().setDivClassName("BMTextAreaFieldValueView NodeView DomView")
         }
 		
         return this
@@ -100142,12 +100304,12 @@ BMOptionsTableRowView = NodeView.extend().newSlots({
 
 */
 
-window.BMOptionsTableView = DivView.extend().newSlots({
+window.BMOptionsTableView = DomView.extend().newSlots({
     type: "BMOptionsTableView",
     validValues: null,
 }).setSlots({
     init: function () {
-        DivView.init.apply(this)
+        DomView.init.apply(this)
         this.turnOffUserSelect()
         return this
     },
@@ -100180,8 +100342,8 @@ window.BMOptionsTableView = DivView.extend().newSlots({
         this.setOpacity(0)
 		
         this._validValues.forEach((v) => {
-            let optionRow = DivView.clone().setDivClassName("BMOptionsTableRowView")//.setTarget(this).setAction("select")
-            let optionColumn = DivView.clone().setDivClassName("BMOptionsTableColumnView").setInnerHTML(v).setTarget(this).setAction("select")
+            let optionRow = DomView.clone().setDivClassName("BMOptionsTableRowView")//.setTarget(this).setAction("select")
+            let optionColumn = DomView.clone().setDivClassName("BMOptionsTableColumnView").setInnerHTML(v).setTarget(this).setAction("select")
             optionRow.addSubview(optionColumn)
             optionColumn.validValue = v
             this.addSubview(optionRow)
@@ -100339,13 +100501,13 @@ JSImporter.pushRelativePaths([
 
 */
 
-window.CloseButton = DivView.extend().newSlots({
+window.CloseButton = DomView.extend().newSlots({
     type: "CloseButton",
     isEnabled: true,
 }).setSlots({
 
     init: function () {
-        DivView.init.apply(this)
+        DomView.init.apply(this)
 
         this.turnOffUserSelect()
 
@@ -100460,7 +100622,7 @@ window.CloseableNodeView = NodeView.extend().newSlots({
 
 */
 
-window.DragBarView = DivView.extend().newSlots({
+window.DragBarView = DomView.extend().newSlots({
     type: "DragBarView",
     isEnabled: true,
     isHighlighted: false,
@@ -100474,7 +100636,7 @@ window.DragBarView = DivView.extend().newSlots({
 }).setSlots({
 
     init: function () {
-        DivView.init.apply(this)
+        DomView.init.apply(this)
 
         this.turnOffUserSelect()
 
@@ -100927,13 +101089,13 @@ window.AtomNodeView = NodeView.extend().newSlots({
 */
 
 
-window.AtomPaneView = DivView.extend().newSlots({
+window.AtomPaneView = DomView.extend().newSlots({
     type: "AtomPaneView",
     startView: null,
     mouseIsDown: false,
 }).setSlots({
     init: function () {
-        DivView.init.apply(this)
+        DomView.init.apply(this)
         this.setOverflow("hidden")
         this.setIsRegisteredForMouse(true)
         this.setIsRegisteredForClicks(true)
@@ -100954,7 +101116,7 @@ window.AtomPaneView = DivView.extend().newSlots({
     },
 
     newStartView: function() {
-        let v = DivView.clone()
+        let v = DomView.clone()
         v.setMinAndMaxWidth(8)
         v.setMinAndMaxHeight(8)
         v.setBackgroundColor("#aaa")
@@ -100969,7 +101131,7 @@ window.AtomPaneView = DivView.extend().newSlots({
         //this.removeStartView()
 
         if (!this._startView) {
-            let v = DivView.clone()
+            let v = DomView.clone()
             v.setMinAndMaxWidth(8)
             v.setMinAndMaxHeight(8)
             v.setBackgroundColor("#aaa")
@@ -101143,7 +101305,825 @@ window.AtomPaneView = DivView.extend().newSlots({
 "use strict"
 
 JSImporter.pushRelativePaths([
-    "BMStoredDatedSetNode.js",
+    "fonts/_imports.js",
+    "sounds/_imports.js",
+    "themes/_imports.js",
+    "BMResources.js",
+])
+
+"use strict"
+
+JSImporter.pushRelativePaths([
+    "BMFontManager.js",
+    "BMFontFamily.js",
+    "BMFont.js",
+    "BMFontFace.js",
+])
+
+"use strict"
+
+/*
+
+    BMFontManager
+
+*/
+
+window.BMFontManager = BMNode.extend().newSlots({
+    type: "BMFontManager",
+    appDidInitObservation: null,
+}).setSlots({
+    shared: function() {   
+        return this.sharedInstanceForClass(BMFontManager)
+    },
+
+    init: function () {
+        BMNode.init.apply(this)
+
+        this.setTitle("Fonts")
+        this.setNodeMinWidth(270)
+
+        const obs = NotificationCenter.shared().newObservation().setName("appDidInit").setObserver(this).watch()
+        this.setAppDidInitObservation(obs)
+        
+        return this
+    },
+
+    appDidInit: function() {
+        this.setupSubnodes()
+        return this
+    },
+    
+    addFamily: function(aFontFamily) {
+        this.addSubnode(aFontFamily)
+        return this
+    },
+
+    families: function() {
+        return this.subnodes()
+    },
+
+    setupSubnodes: function() {
+        const fontPaths = JSImporter.fontFilePaths()
+
+        fontPaths.forEach((path) => {
+            this.addFontWithPath(path)
+        })
+
+        return this
+    },
+
+    fontFamilyNamed: function(aName) {
+        let family = this.families().detect(family => family.name() === aName);
+
+        if (!family) {
+            family = BMFontFamily.clone().setName(aName)
+            this.addFamily(family)
+        }
+
+        return family
+    },
+
+    addFontWithPath: function(aPath) {
+        const components = aPath.split("/")
+        //console.log("components = ", components)
+
+        // verify path is in expected format 
+
+        const dot = components.removeFirst()
+        assert(dot === ".")
+
+        const resources = components.removeFirst()
+        assert(resources === "resources")
+
+        const fonts = components.removeFirst()
+        assert(fonts === "fonts")
+
+        const familyName = components.removeFirst()
+        const family = this.fontFamilyNamed(familyName) 
+        family.addFontWithPath(aPath)
+
+        return this
+    },
+
+})
+
+"use strict"
+
+/*
+
+    BMFontFamily
+
+
+*/
+
+window.BMFontFamily = BMNode.extend().newSlots({
+    type: "BMFontFamily",
+    name: null,
+    fonts: null,
+}).setSlots({
+    init: function () {
+        BMNode.init.apply(this)
+        this.setNodeMinWidth(270)
+    },
+
+    title: function() {
+        return this.name()
+    },
+
+    /*
+    subtitle: function () {
+        return "font family"
+    },
+    */
+
+    addFontWithPath: function(aPath) {
+        const font = BMFont.clone().setPath(aPath)
+        this.addSubnode(font)
+        return this
+    },
+
+})
+
+"use strict"
+
+/*
+
+    BMFont
+
+    Managed by BMFontManager.
+
+*/
+
+window.BMFont = BMNode.extend().newSlots({
+    type: "BMFont",
+    path: null,
+    name: null,
+}).setSlots({
+    init: function () {
+        BMNode.init.apply(this)
+        this.setNodeMinWidth(270)
+    },
+
+    title: function() {
+        return this.name()
+    },
+
+    name: function() {
+        return this.path().fileName()
+    },
+
+    setPath: function(aPath) {
+        this._path = aPath
+        this.load()
+        return this
+    },
+
+    load: function() {
+        const fe = BMFontFace.clone().setUrl(this.path())
+        // TODO: create DocumentHead class, ask it's share instance if it already contains this font link element
+        return this
+    },
+})
+
+"use strict"
+
+/*
+
+    BMFontFace
+
+    Uses FontFace API to load a font file with a particular set of options.
+
+*/
+
+
+window.BMFontFace = BMNode.extend().newSlots({
+    type: "BMFontFace",
+    url: "https://fonts.googleapis.com/css?family=Open+Sans:400italic,400,300,700", // example
+    options: {},
+    isDebugging: false,
+}).setSlots({
+    init: function () {
+        //this.setElementType("link") // TODO: use a method override instead?
+        BMNode.init.apply(this)
+        this.setOptions({})
+    },
+
+    name: function() {
+        return this.url().fileName()
+    },
+
+    setUrl: function(aUrlString) {
+        this._url = aUrlString
+        this.load()
+        return this
+    },
+
+    load: function() {
+        const name = this.url().fileName()
+        const urlString = "url('" + this.url() + "')"
+        const options = this.options() // example options { style: 'normal', weight: 700 }
+        const aFontFace = new FontFace(name, urlString, options); 
+
+        aFontFace.load().then((loadedFace) => {
+            this.didLoad()
+        }).catch((error) => {
+            this.onLoadError(error)
+        });
+
+        return this
+    },
+
+    didLoad: function() {
+        if (this.isDebugging()) {
+            console.log(this.typeId() + ".didLoad(" + this.name() + ") " + this.url())
+            //console.log(this.typeId() + ".didLoad('" + this.name() + "')")
+        }
+        return this
+    },
+
+    onLoadError: function() {
+        if (this.isDebugging()) {
+            console.log(this.typeId() + ".onLoadError() ", error)
+        }
+        return this
+    },
+
+})
+
+"use strict"
+
+JSImporter.pushRelativePaths([
+    "BMSounds.js",
+    "BMSound.js",
+    "BMAudioPlayer.js",
+])
+
+"use strict"
+
+/*
+
+    BMSounds
+
+*/
+
+window.BMSounds = BMNode.extend().newSlots({
+    type: "BMSounds",
+    appDidInitObservation: null,
+}).setSlots({
+    shared: function() {   
+        return this.sharedInstanceForClass(BMSounds)
+    },
+
+    init: function () {
+        BMNode.init.apply(this)
+
+        this.setTitle("Sounds")
+        this.setNodeMinWidth(270)
+
+        const obs = NotificationCenter.shared().newObservation().setName("appDidInit").setObserver(this).watch()
+        this.setAppDidInitObservation(obs)
+    },
+
+    appDidInit: function() {
+        console.log(this.typeId() + ".appDidInit()")
+        this.setupSubnodes()
+        return this
+    },
+
+    setupSubnodes: function() {
+        const paths = JSImporter.audioFilePaths()
+
+        paths.forEach((path) => {
+            this.addSoundWithPath(path)
+        })
+
+        return this
+    },
+
+    addSoundWithPath: function(aPath) {
+        const sound = BMSound.clone().setPath(aPath)
+        this.addSound(sound)
+        return this
+    },
+
+    addSound: function(aSound) {
+        this.addSubnode(aSound)
+        return this
+    },
+
+    sounds: function() {
+        return this.subnodes()
+    },
+
+})
+
+"use strict"
+
+/*
+
+    BMSound
+
+    Managed by BMSounds.
+
+*/
+
+window.BMSound = BMNode.extend().newSlots({
+    type: "BMSound",
+    path: null,
+}).setSlots({
+    init: function () {
+        BMNode.init.apply(this)
+        this.setNodeMinWidth(270)
+    },
+
+    title: function() {
+        return this.name()
+    },
+
+    subtitle: function() {
+        return this.path().pathExtension()
+    },
+
+    name: function() {
+        return this.path().lastPathComponent().sansExtension()
+    },
+
+    /*
+    setPath: function(aPath) {
+        // update if playing?
+        this._path = aPath
+        return this
+    },
+    */
+
+    play: function() {
+        const audioPlayer = BMAudioPlayer.shared()
+        audioPlayer.setPath(this.path())
+        audioPlayer.play()
+        return this
+    },
+
+    prepareToAccess: function() {
+        BMNode.prepareToAccess.apply(this)
+        this.play()
+    },
+
+    //audio.src = 'data:audio/wav;base64,UklGR...;
+})
+
+"use strict"
+
+
+/*
+
+    BMAudioPlayer
+
+    Adds a body element like this:
+
+      <audio id="audio" autoplay>
+        <source id="audioSource" src="sounds/test.mp3" type="audio/mpeg"/ >
+      </audio>
+
+*/
+
+window.BMAudioPlayer = DomView.extend().newSlots({
+    type: "BMAudioPlayer",
+    path: "",
+    sourceElement: null,
+}).setSlots({
+
+    shared: function() {   
+        const shared =  this.sharedInstanceForClass(BMAudioPlayer)
+        shared.addToDocumentIfNeeded()
+        return shared
+    },
+
+    addToDocumentIfNeeded: function() {   
+        const d = DocumentBody.shared()
+        if (!d.hasSubview(this)) {
+            d.addSubview(this)
+            this.setVisibility("hidden");
+        }
+        return this
+    },
+
+    init: function () {
+        this.setElementType("audio") // TODO: use a method override instead?
+        DomView.init.apply(this)
+    },
+
+    name: function() {
+        if (!this.path()) {
+            return ""
+        }
+        return this.path().fileName()
+    },
+
+    createElement: function() {
+        const e = document.createElement("audio")
+        e.setAttribute("autoplay", "");
+        //e.setAttribute("type", "audio/mpeg");
+        e.appendChild(this.createSourceElement())
+
+        e.addEventListener('playing', () => { this.onPlaying(); },false); 
+
+        return e
+    },
+
+    onPlaying: function(event) {
+        console.log(this.typeId() + ".onPlaying() ", event)
+        return this
+    },
+
+    createSourceElement: function() {
+        const e = document.createElement("source")
+        this.setSourceElement(e)
+        return e
+    },
+
+    audioTypeForExtension: function(extString) {
+        const fileExtensionToType = {
+            "mp3": "mpeg",
+            "wav": "wav",
+            "mp4": "mp4",
+            "mpa": "mp4",
+            "ogg": "ogg",
+            "oga": "ogg",
+        }
+        const type =  "audio/" + fileExtensionToType[extString.toLowerCase()]
+        assert(type)
+        return type
+    },
+
+    setPath: function(aPath) {
+        if (this._path != aPath) {
+            this._path = aPath
+        
+            this.stop()
+
+            console.log(this.typeId() +  ".setPath:'" + aPath + "'")
+        
+            const source = this.sourceElement()
+            source.src = aPath;
+
+            const type = this.audioTypeForExtension(aPath.pathExtension());
+            source.setAttribute("type", type);
+            this.load() 
+        }
+        return this
+    },
+
+    path: function() {
+        return this.sourceElement().getAttribute("src");
+    },
+
+    load: function() {
+        console.log(this.typeId() +  ".load() '" + this.path() + "'")
+        //setTimeout(() => { this.element().load() }, 10)
+        this.element().load()
+
+        return this
+    },
+
+    play: function() {
+        if (this.isPlaying()) {
+            return this
+        }
+        console.log(this.typeId() +  ".play() '" + this.path() + "'")
+
+        const promise = this.element().play()
+        promise.catch((e) => {
+            console.log("audio play exception: ", e)
+        })
+        return this
+
+    },
+
+    stop: function() {
+        console.log(this.typeId() +  ".stop() '" + this.path() + "'")
+        const e = this.element()
+        e.pause();
+        e.currentTime = 0;
+        return this
+    },
+
+    pause: function() {
+        this.element().pause()
+        return this
+    },
+
+    isPaused: function() {
+        const e = this.element()
+        return e.paused
+    },
+
+    isPlaying: function() {
+        const e = this.element()
+        return e.duration > 0 && !e.paused
+    },
+
+    currentTime: function() {
+        return this.element().currentTime
+    },
+
+    playbackRate: function() {
+        return this.element().playbackRate
+    },
+
+    setPlaybackRate: function(r) {
+        this.element().playbackRate = r
+        return this
+    }
+
+})
+
+"use strict"
+
+JSImporter.pushRelativePaths([
+    "BMThemeStyleSheet.js",
+    "BMThemeClass.js",
+    "BMThemeClassState.js",
+    "BMTheme.js",
+    "BMThemes.js",
+])
+
+"use strict"
+
+/*
+
+    BMThemeStyleSheet
+
+*/
+
+window.BMThemeStyleSheet = ideal.Proto.extend().newSlots({
+    type: "BMThemeStyleSheet",
+}).setSlots({
+    init: function () {
+    },
+
+    shared: function() {
+        return this.sharedInstanceForClass(BMThemeStyleSheet)
+    },
+
+    sheet: function() {
+        if (!this._sheet) {
+            let sheetName = "ThemeStyleSheet"
+            let sheetElement = document.getElementById(sheetName) 
+            sheetElement = document.createElement("style")
+            sheetElement.id = sheetName
+            sheetElement.innerHTML = "";
+            document.body.appendChild(sheetElement);
+            this._sheet = document.styleSheets[document.styleSheets.length-1]
+        }
+
+        return this._sheet
+    },
+
+    setDivClassNameAttributeValue: function(divClassName, name, value) {
+        let className = "."  + divClassName.split(" ")[0]
+        let rule = className + " { " + name + ": " + value +"; }"
+
+
+        let sheet = this.sheet()
+        sheet.insertRule(rule, sheet.cssRules.length); 
+        console.log("added rule to theme sheet: " + rule + "")
+        return this
+    },
+})
+
+"use strict"
+
+/*
+
+    BMThemeClass
+
+*/
+
+window.BMThemeClass = BMStorableNode.extend().newSlots({
+    type: "BMThemeClass",
+}).setSlots({
+    init: function () {
+        BMStorableNode.init.apply(this)
+        this.setShouldStore(true)
+        //this.setSubtitle("class")
+        this.setNodeMinWidth(200)
+        this.setupSubnodes()
+    },
+
+    setupSubnodes: function() {
+        let classProto = window[this.title()]
+        //let stateNames = classProto.stateNames()
+        let stateNames = ["active", "inactive", "disabled"]
+        let stateNodes = stateNames.map(function (stateName) {
+            return BMThemeClassState.clone().setDivClassName(stateName)
+        })
+        this.setSubnodes(stateNodes);
+        return this
+    },
+
+
+})
+
+"use strict"
+
+/*
+
+    BMThemeClassState
+
+*/
+
+window.BMThemeClassState = BMFieldSetNode.extend().newSlots({
+    type: "BMThemeClassState",
+    divClassName: null,
+}).setSlots({
+    init: function () {
+        BMFieldSetNode.init.apply(this)
+        this.setShouldStore(true)
+        //this.setSubtitle("state")
+        this.setNodeMinWidth(200)
+        this.setupSubnodes()
+    },
+
+    attributeNames: function() {
+        // TODO: request this from the view class, use view class theme state methods instead of direct css keys
+        //return ["background", "color", "border"] 
+        return BMViewStyle.styleNames()
+    },
+
+    setDivClassName: function(aName) {
+        this._divClassName = aName
+        this.setTitle(aName)
+        let style = DivCSSInspector.shared().setDivClassName(aName).cssStyle()
+        this.syncFromViewStyle()
+        return this
+    },
+
+    syncFromViewStyle: function() {
+  
+        return this
+    },
+
+    setupSubnodes: function() {
+        this.attributeNames().forEach((attributeName) => {
+            let field = BMField.clone().setKey(attributeName).setValueIsEditable("");
+            this.addStoredField(field)
+        })
+        return this
+    },
+
+    didUpdateField: function(aField) {
+        console.log(this.typeId() + ".didUpdateField: " + aField.key() + ":", aField.value())
+
+        if (aField.value()) { // dark mode
+            BMThemeStyleSheet.shared().setDivClassNameAttributeValue(this.divClassName(), aField.key(), "#000")
+        } else {
+            BMThemeStyleSheet.shared().setDivClassNameAttributeValue(this.divClassName(), aField.key(), "white")
+        }
+    },
+})
+
+/* 
+notes on Scroll bars theme options
+::-webkit-scrollbar { width: 10px; } 
+::-webkit-scrollbar-track { background: #666; } 
+::-webkit-scrollbar-thumb { background-color: #f1f1f1; outline: 1px solid slategrey; } 
+::-webkit-scrollbar-thumb:hover { background: #b1b1b1; }
+*/
+
+"use strict"
+
+/*
+
+    BMTheme
+
+*/
+
+window.BMTheme = BMStorableNode.extend().newSlots({
+    type: "BMTheme",
+}).setSlots({
+    init: function () {
+        BMStorableNode.init.apply(this)
+        this.setShouldStore(true)
+
+        this.setNodeTitleIsEditable(true)
+
+        this.setTitle("Untitled Theme")
+        this.setNodeMinWidth(270)
+        this.setupSubnodes()
+
+        this.addAction("delete")
+        setTimeout(() => { 
+            //console.log("theme as json: ", JSON.stringify(this.asJSON())) 
+        }, 1000)
+    },
+
+    loadFinalize: function() {
+        // called after all objects loaded within this event cycle
+        this.setupSubnodes()
+    },
+
+    setupSubnodes: function() {
+        // setup with all view classes
+        
+        let viewClasses = DomView.allDescendantProtos()
+
+        viewClasses = viewClasses.select((viewClass) => {
+            return ("styles" in viewClass)
+        }).select((viewClass) => { return !viewClass.styles().isEmpty() })
+
+        //console.log("viewClasses:", viewClasses)
+        let themeClasses = viewClasses.map((childProto) => {
+            return BMThemeClass.clone().setTitle(childProto.type());
+        })
+
+        this.setSubnodes(themeClasses);
+        return this
+    },
+
+})
+
+"use strict"
+
+/*
+
+    BMThemes
+
+*/
+
+
+window.BMThemes = BMStorableNode.extend().newSlots({
+    type: "BMThemes",
+    shared: null,
+}).setSlots({
+    init: function () {
+        BMStorableNode.init.apply(this)
+        this.setShouldStore(true)
+        
+        this.setTitle("Themes")
+        this.setNoteIsSubnodeCount(true)
+        this.setNodeMinWidth(270)
+        this.addAction("add")
+        this.setSubnodeProto(BMTheme)
+    },
+})
+
+"use strict"
+
+/*
+
+    BMResources
+
+*/
+
+window.BMResources = BMStorableNode.extend().newSlots({
+    type: "BMResources",
+    shared: null,
+    themes: null,
+    fonts: null,
+    sounds: null,
+}).setSlots({
+    init: function () {
+        BMStorableNode.init.apply(this)
+        this.setShouldStore(true)
+
+        this.setTitle("Resources")
+        this.setSubtitle("")
+        this.setNodeMinWidth(200)
+
+        this.setThemes(NodeStore.shared().rootInstanceWithPidForProto("_themes", BMThemes))
+        this.addSubnode(this.themes())
+
+        this.setFonts(BMFontManager.shared())
+        this.addSubnode(this.fonts())
+
+        this.setSounds(BMSounds.shared())
+        this.addSubnode(this.sounds())
+    },
+})
+
+"use strict"
+
+JSImporter.pushRelativePaths([
+    //"Atom/_imports.js",
+    //"Game/_imports.js",
+    "Peer/_imports.js",
+])
+
+
+"use strict"
+
+JSImporter.pushRelativePaths([
+    "network/_imports.js",
+    "PeerApp.js",
+])
+
+JSImporter.pushDoneCallback( () => {
+    PeerApp.shared().run()
+})
+
+"use strict"
+
+JSImporter.pushRelativePaths([
     "BMMessages.js",
     "BMNetwork.js",
     //"BMPayload.js",
@@ -101154,92 +102134,6 @@ JSImporter.pushRelativePaths([
     "blacklists/_imports.js",
     "connection/_imports.js",
 ])
-
-
-"use strict"
-
-/*
-
-    BMStoredDatedSetNode
-
-*/
-
-window.BMStoredDatedSetNode = BMStorableNode.extend().newSlots({
-    type: "BMStoredDatedSetNode",
-    maxAgeInSeconds: 30*24*60*60,
-    autoCheckPeriod: 1*60*60,
-    dict: null,
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
-        this.setShouldStore(true)
-        this.setShouldStoreSubnodes(false)
-		
-        this.setDict({})
-        this.addStoredSlot("dict", "autoCheckPeriod", "maxAgeInSeconds")
-
-        //this.setNoteIsSubnodeCount(true)
-    },
-    
-    setAutoCheckPeriod: function(seconds) {
-        if (seconds && this._autoCheckPeriod !== seconds) {
-            this._autoCheckPeriod = seconds
-            this.autoCheck()
-        }
-    },
-    
-    autoCheck: function() {
-        this.deleteExpiredKeys()
-        setTimeout(() => { this.autoCheck() }, this.autoCheckPeriod()*1000)
-    },
-    
-    didLoadFromStore: function() {
-        BMStorableNode.didLoadFromStore.apply(this)
-        this.deleteExpiredKeys()
-    },
-
-    addKey: function(h) {
-        if (!this.dict()[h]) {
-            this.dict()[h] = Date.now()
-            this.scheduleSyncToStore()
-        }
-        return this
-    },
-    
-    hasKey: function(h) {
-        return h in this.dict()
-    },
-    
-    removeKey: function(h) {
-        if (this.dict()[h]) {
-            delete this.dict()[h]
-            this.scheduleSyncToStore()
-        }
-        return this
-    },
-    
-    ageInSecondsOfKey: function(h) {
-        if (this.hasKey(h)) {
-            let ageInSeconds = Date.now() - this.dict()[h]
-            return ageInSeconds
-        }
-        
-        return null
-    },
-
-    deleteExpiredKeys: function() {
-        let max = this.maxAgeInSeconds()
-        let keys = Object.keys(this.dict())
-        
-        keys.forEach((k) => {
-            if (this.ageInSecondsOfKey(k) > max) {
-                this.removeKey(k)
-            }
-        })
-
-        return this
-    },
-})
 
 "use strict"
 
@@ -101844,7 +102738,7 @@ JSImporter.pushRelativePaths([
     "BMRemotePeers.js",
     "BMStunServer.js",
     "BMStunServers.js",
-    "WebSocketExtensions.js"
+    "WebSocket-network.js"
 ])
 
 "use strict"
@@ -103368,8 +104262,10 @@ window.BMStunServers = BMStorableNode.extend().newSlots({
 
 /*
 
-    WebSocketExtensions
+    WebSocket-network category
     
+    A few helper methods.
+
 */
 
 WebSocket.prototype.removeEventListeners = function() {
@@ -103386,10 +104282,12 @@ WebSocket.prototype.addEventListener = function(name, fn) {
     if (!this._eventListeners) {
         this._eventListeners = [];
     }
+
     this._eventListeners.push({
         name: name,
         fn: fn
     });
+    
     this.addEventListenerWithoutExtensions(name, fn);
 }
 
@@ -106477,17 +107375,17 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         
         this.closeButtonView().setDivClassName("BrowserRowCloseButtonTopRight")
 
-        this.setTopView(this.addSubview(DivView.clone().setDivClassName("BMPostDraftRowTopView")))
+        this.setTopView(this.addSubview(DomView.clone().setDivClassName("BMPostDraftRowTopView")))
 
         // left view
-        this.setLeftView(this.topView().addSubview(DivView.clone().setDivClassName("BMPostDraftRowLeftView")))
+        this.setLeftView(this.topView().addSubview(DomView.clone().setDivClassName("BMPostDraftRowLeftView")))
 
         // icon view
     	this.setIconView(this.leftView().addSubview(ImageView.clone().setDivClassName("BMPostAvatarView")))
         this.iconView().setBackgroundSizeWH(64, 64)     
 
         // right view
-        this.setRightView(this.topView().addSubview(DivView.clone().setDivClassName("BMPostDraftRowRightView")))
+        this.setRightView(this.topView().addSubview(DomView.clone().setDivClassName("BMPostDraftRowRightView")))
         
         // placeholder
         this.setPlaceHolderView(this.rightView().addSubview(TextField.clone().setDivClassName("BMPostDraftRowPlaceHolderView")))
@@ -106501,15 +107399,15 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         this.closeButtonView().setTop(15).setRight(15).setMinAndMaxWidth(10).setMinAndMaxHeight(10)
         // delete button
         /*
-        this.setDeleteButton(this.rightView().addSubview(DivView.clone().setDivClassName("BMPostDraftRowCloseButton")))
+        this.setDeleteButton(this.rightView().addSubview(DomView.clone().setDivClassName("BMPostDraftRowCloseButton")))
         this.deleteButton().setTarget(this).setAction("delete")
         //this.deleteButton().setBackgroundSizeWH(20, 20) 
         this.deleteButton().setBackgroundImageUrlPath(this.pathForIconName("close"))
         this.deleteButton().makeBackgroundContain().makeBackgroundCentered().makeBackgroundNoRepeat()  
         */  
         
-        this.setBottomView(this.addSubview(DivView.clone().setDivClassName("BMPostDraftRowBottomView")))
-        this.setSendButton(this.bottomView().addSubview(DivView.clone().setDivClassName("BMPostDraftRowSendButton")))
+        this.setBottomView(this.addSubview(DomView.clone().setDivClassName("BMPostDraftRowBottomView")))
+        this.setSendButton(this.bottomView().addSubview(DomView.clone().setDivClassName("BMPostDraftRowSendButton")))
         this.sendButton().setInnerHTML("Post")
         this.sendButton().setTarget(this).setAction("post")
 
@@ -106988,51 +107886,51 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
         BrowserRow.init.apply(this)
 
         // left view
-        this.setLeftView(this.addSubview(DivView.clone().setDivClassName("BMPostMessageRowLeftView")))
+        this.setLeftView(this.addSubview(DomView.clone().setDivClassName("BMPostMessageRowLeftView")))
         this.setIconView(this.leftView().addSubview(ImageView.clone().setDivClassName("BMPostAvatarView")))
         this.iconView().setBackgroundSizeWH(64, 64).setTarget(this).setAction("clickedIconView")
 
         // middle view
-        this.setMiddleView(this.addSubview(DivView.clone().setDivClassName("BMPostMessageRowMiddleView")))
+        this.setMiddleView(this.addSubview(DomView.clone().setDivClassName("BMPostMessageRowMiddleView")))
 
         // title view
-        this.setTitleBarView(this.middleView().addSubview(DivView.clone().setDivClassName("BMPostTitleBarView")))
+        this.setTitleBarView(this.middleView().addSubview(DomView.clone().setDivClassName("BMPostTitleBarView")))
 
-        this.setTitleBarTextView(this.titleBarView().addSubview(DivView.clone().setDivClassName("BMPostTitleBarTextView")))
-        this.setDateView(this.titleBarView().addSubview(DivView.clone().setDivClassName("BMPostDateView")))
+        this.setTitleBarTextView(this.titleBarView().addSubview(DomView.clone().setDivClassName("BMPostTitleBarTextView")))
+        this.setDateView(this.titleBarView().addSubview(DomView.clone().setDivClassName("BMPostDateView")))
 
         // content
         this.setTextView(this.middleView().addSubview(TextField.clone().setDivClassName("BMPostMessageRowViewContent")))
 
         // bottom bar
-        this.setBottomBarView(this.middleView().addSubview(DivView.clone().setDivClassName("BMPostMessageRowViewBottomBar")))
+        this.setBottomBarView(this.middleView().addSubview(DomView.clone().setDivClassName("BMPostMessageRowViewBottomBar")))
 
         // reply
-        this.setReplyButton(this.bottomBarView().addSubview(DivView.clone().setDivClassName("BMPostMessageRowViewReplyButton")))
+        this.setReplyButton(this.bottomBarView().addSubview(DomView.clone().setDivClassName("BMPostMessageRowViewReplyButton")))
         this.replyButton().setTarget(this).setAction("reply")
         this.replyButton().setBackgroundImageUrlPath(this.pathForIconName("reply"))
         this.replyButton().makeBackgroundContain().makeBackgroundNoRepeat()
         this.replyButton().setToolTip("reply")
-        this.setReplyCountView(this.bottomBarView().addSubview(DivView.clone().setDivClassName("BMPostMessageRowViewCountView")))
+        this.setReplyCountView(this.bottomBarView().addSubview(DomView.clone().setDivClassName("BMPostMessageRowViewCountView")))
 
         // repost
-        this.setRepostButton(this.bottomBarView().addSubview(DivView.clone().setDivClassName("BMPostMessageRowViewRepostButton")))
+        this.setRepostButton(this.bottomBarView().addSubview(DomView.clone().setDivClassName("BMPostMessageRowViewRepostButton")))
         this.repostButton().setTarget(this).setAction("repost")
         this.repostButton().setBackgroundImageUrlPath(this.pathForIconName("repost"))
         this.repostButton().makeBackgroundContain().makeBackgroundNoRepeat()
         this.repostButton().setToolTip("repost")
-        this.setRepostCountView(this.bottomBarView().addSubview(DivView.clone().setDivClassName("BMPostMessageRowViewCountView")))
+        this.setRepostCountView(this.bottomBarView().addSubview(DomView.clone().setDivClassName("BMPostMessageRowViewCountView")))
 
         // like
-        this.setLikeButton(this.bottomBarView().addSubview(DivView.clone().setDivClassName("BMPostMessageRowViewLikeButton")))
+        this.setLikeButton(this.bottomBarView().addSubview(DomView.clone().setDivClassName("BMPostMessageRowViewLikeButton")))
         this.likeButton().setTarget(this).setAction("like")
         this.likeButton().setBackgroundImageUrlPath(this.pathForIconName("heart-black-filled"))
         this.likeButton().makeBackgroundContain().makeBackgroundNoRepeat()
         this.likeButton().setToolTip("like")
-        this.setLikeCountView(this.bottomBarView().addSubview(DivView.clone().setDivClassName("BMPostMessageRowViewCountView")))
+        this.setLikeCountView(this.bottomBarView().addSubview(DomView.clone().setDivClassName("BMPostMessageRowViewCountView")))
 
         // right view
-        //this.setRightView(this.addSubview(DivView.clone().setDivClassName("BMPostMessageRowRightView")))
+        //this.setRightView(this.addSubview(DomView.clone().setDivClassName("BMPostMessageRowRightView")))
 
 
         this.setupContentView()
@@ -107064,7 +107962,7 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
 
     /*
 	setupIconView: function() {
-		let iv = DivView.clone().setDivClassName("ShelfIconView")
+		let iv = DomView.clone().setDivClassName("ShelfIconView")
 		this.setIconView(iv)
         this.leftView().addSubview(iv)
         
@@ -107787,273 +108685,6 @@ window.BMConnection = BMNode.extend().newSlots({
 
 "use strict"
 
-JSImporter.pushRelativePaths([
-    "BMThemeStyleSheet.js",
-    "BMGraphics.js",
-    "BMThemeClass.js",
-    "BMThemeClassState.js",
-    "BMTheme.js",
-    "BMThemes.js",
-])
-
-"use strict"
-
-/*
-
-    BMThemeStyleSheet
-
-*/
-
-window.BMThemeStyleSheet = ideal.Proto.extend().newSlots({
-    type: "BMThemeStyleSheet",
-}).setSlots({
-    init: function () {
-    },
-
-    shared: function() {
-        return this.sharedInstanceForClass(BMThemeStyleSheet)
-    },
-
-    sheet: function() {
-        if (!this._sheet) {
-            let sheetName = "ThemeStyleSheet"
-            let sheetElement = document.getElementById(sheetName) 
-            sheetElement = document.createElement("style")
-            sheetElement.id = sheetName
-            sheetElement.innerHTML = "";
-            document.body.appendChild(sheetElement);
-            this._sheet = document.styleSheets[document.styleSheets.length-1]
-        }
-
-        return this._sheet
-    },
-
-    setDivClassNameAttributeValue: function(divClassName, name, value) {
-        let className = "."  + divClassName.split(" ")[0]
-        let rule = className + " { " + name + ": " + value +"; }"
-
-
-        let sheet = this.sheet()
-        sheet.insertRule(rule, sheet.cssRules.length); 
-        console.log("added rule to theme sheet: " + rule + "")
-        return this
-    },
-})
-
-"use strict"
-
-/*
-
-    BMGraphics
-
-*/
-
-window.BMGraphics = BMStorableNode.extend().newSlots({
-    type: "BMGraphics",
-    shared: null,
-    themes: null,
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
-        this.setShouldStore(true)
-
-        this.setTitle("Graphics")
-        this.setSubtitle("")
-        this.setNodeMinWidth(200)
-
-        this.setThemes(NodeStore.shared().rootInstanceWithPidForProto("_themes", BMThemes))
-        this.addSubnode(this.themes())
-    },
-})
-
-"use strict"
-
-/*
-
-    BMThemeClass
-
-*/
-
-window.BMThemeClass = BMStorableNode.extend().newSlots({
-    type: "BMThemeClass",
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
-        this.setShouldStore(true)
-        //this.setSubtitle("class")
-        this.setNodeMinWidth(200)
-        this.setupSubnodes()
-    },
-
-    setupSubnodes: function() {
-        let classProto = window[this.title()]
-        //let stateNames = classProto.stateNames()
-        let stateNames = ["active", "inactive", "disabled"]
-        let stateNodes = stateNames.map(function (stateName) {
-            return BMThemeClassState.clone().setDivClassName(stateName)
-        })
-        this.setSubnodes(stateNodes);
-        return this
-    },
-
-
-})
-
-"use strict"
-
-/*
-
-    BMThemeClassState
-
-*/
-
-window.BMThemeClassState = BMFieldSetNode.extend().newSlots({
-    type: "BMThemeClassState",
-    divClassName: null,
-}).setSlots({
-    init: function () {
-        BMFieldSetNode.init.apply(this)
-        this.setShouldStore(true)
-        //this.setSubtitle("state")
-        this.setNodeMinWidth(200)
-        this.setupSubnodes()
-    },
-
-    attributeNames: function() {
-        // TODO: request this from the view class, use view class theme state methods instead of direct css keys
-        //return ["background", "color", "border"] 
-        return BMViewStyle.styleNames()
-    },
-
-    setDivClassName: function(aName) {
-        this._divClassName = aName
-        this.setTitle(aName)
-        let style = DivCSSInspector.shared().setDivClassName(aName).cssStyle()
-        this.syncFromViewStyle()
-        return this
-    },
-
-    syncFromViewStyle: function() {
-  
-        return this
-    },
-
-    setupSubnodes: function() {
-        this.attributeNames().forEach((attributeName) => {
-            let field = BMField.clone().setKey(attributeName).setValueIsEditable("");
-            this.addStoredField(field)
-        })
-        return this
-    },
-
-    didUpdateField: function(aField) {
-        console.log(this.typeId() + ".didUpdateField: " + aField.key() + ":", aField.value())
-
-        if (aField.value()) { // dark mode
-            BMThemeStyleSheet.shared().setDivClassNameAttributeValue(this.divClassName(), aField.key(), "#000")
-        } else {
-            BMThemeStyleSheet.shared().setDivClassNameAttributeValue(this.divClassName(), aField.key(), "white")
-        }
-    },
-})
-
-/* 
-notes on Scroll bars theme options
-::-webkit-scrollbar { width: 10px; } 
-::-webkit-scrollbar-track { background: #666; } 
-::-webkit-scrollbar-thumb { background-color: #f1f1f1; outline: 1px solid slategrey; } 
-::-webkit-scrollbar-thumb:hover { background: #b1b1b1; }
-*/
-
-"use strict"
-
-/*
-
-    BMTheme
-
-*/
-
-window.BMTheme = BMStorableNode.extend().newSlots({
-    type: "BMTheme",
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
-        this.setShouldStore(true)
-
-        this.setNodeTitleIsEditable(true)
-
-        this.setTitle("Untitled Theme")
-        this.setNodeMinWidth(270)
-        this.setupSubnodes()
-
-        this.addAction("delete")
-        setTimeout(() => { 
-            //console.log("theme as json: ", JSON.stringify(this.asJSON())) 
-        }, 1000)
-    },
-
-    loadFinalize: function() {
-        // called after all objects loaded within this event cycle
-        this.setupSubnodes()
-    },
-
-    setupSubnodes: function() {
-        // setup with all view classes
-        
-        let viewClasses = DivView.allDescendantProtos()
-
-        viewClasses = viewClasses.select((viewClass) => {
-            return ("styles" in viewClass)
-        }).select((viewClass) => { return !viewClass.styles().isEmpty() })
-
-        //console.log("viewClasses:", viewClasses)
-        let themeClasses = viewClasses.map((childProto) => {
-            return BMThemeClass.clone().setTitle(childProto.type());
-        })
-
-        this.setSubnodes(themeClasses);
-        return this
-    },
-
-})
-
-"use strict"
-
-/*
-
-    BMThemes
-
-*/
-
-
-window.BMThemes = BMStorableNode.extend().newSlots({
-    type: "BMThemes",
-    shared: null,
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
-        this.setShouldStore(true)
-        
-        this.setTitle("Themes")
-        this.setNoteIsSubnodeCount(true)
-        this.setNodeMinWidth(270)
-        this.addAction("add")
-        this.setSubnodeProto(BMTheme)
-    },
-})
-
-"use strict"
-
-JSImporter.pushRelativePaths([
-    "PeerApp.js",
-])
-
-JSImporter.pushDoneCallback( () => {
-    PeerApp.shared().run()
-})
-
-"use strict"
-
 /*
     
     PeerApp
@@ -108073,7 +108704,7 @@ window.PeerApp = App.extend().newSlots({
     localIdentities: null,
     network: null,
     dataStore: null,
-    graphics: null,
+    resources: null,
     
     atomNode: null,
 
@@ -108151,8 +108782,8 @@ window.PeerApp = App.extend().newSlots({
 
         // --- graphics subnodes --------------------
 		
-        this.setGraphics(BMGraphics.clone())
-        this.about().addSubnode(this.graphics())
+        this.setResources(BMResources.clone())
+        this.about().addSubnode(this.resources())
 		
         return this
     },
@@ -108204,6 +108835,63 @@ window.PeerApp = App.extend().newSlots({
 
 PeerApp.showVersion()
 
+
+
+JSImporter.pushRelativePaths([
+    "fonts/_imports.js",
+    "sounds/_imports.js",
+]);
+
+
+JSImporter.pushRelativePaths([
+    "Courier Prime/_imports.js",
+    "OpenSans/_imports.js",
+    "ShareTechMono/_imports.js",
+]);
+
+
+JSImporter.pushRelativePaths([
+    "Code/Courier Prime Code Italic.ttf",
+    "Code/Courier Prime Code.ttf",
+    "Default/Courier Prime Bold Italic.ttf",
+    "Default/Courier Prime Bold.ttf",
+    "Default/Courier Prime Italic.ttf",
+    "Default/Courier Prime.ttf",
+    "Sans/Courier Prime Sans Bold Italic.ttf",
+    "Sans/Courier Prime Sans Bold.ttf",
+    "Sans/Courier Prime Sans Italic.ttf",
+    "Sans/Courier Prime Sans.ttf",
+    "Semibold/CourierPrime Medium.ttf",
+    "Semibold/CourierPrime Semibold.ttf",
+]);
+
+
+JSImporter.pushRelativePaths([
+    "OpenSans Bold.ttf",
+    "OpenSans Bold Italic.ttf",
+    "OpenSans Condensed Bold.ttf",
+    "OpenSans Condensed Light.ttf",
+    "OpenSans Condensed Light Italic.ttf",
+    "OpenSans Extra Bold.ttf",
+    "OpenSans Extra Bold Italic.ttf",
+    "OpenSans Italic.ttf",
+    "OpenSans Light.ttf",
+    "OpenSans Light Italic.ttf",
+    "OpenSans Regular.ttf",
+    "OpenSans Semibold.ttf",
+    "OpenSans Semibold Italic.ttf",
+]);
+
+
+JSImporter.pushRelativePaths([
+    "ShareTechMono.ttf",
+]);
+
+
+JSImporter.pushRelativePaths([
+    "beep_06.wav",
+    "bleep_04.wav",
+]);
 
 
       window.onload = function() { 

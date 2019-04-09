@@ -256,14 +256,14 @@ class JSImporterClass extends JSImporterBase {
         this.urlLoadingCallbacks().forEach(callback => callback(url))
 
         const extension = url.split(".").pop().toLowerCase()
-        const fontExtensions = ["ttf"]
+        const fontExtensions = ["ttf", "woff"]
         const audioExtensions = ["wav", "mp3", "m4a", "mp4", "oga", "ogg"]
         const imageExtensions = ["png", "jpg", "jpeg", "gif", "tiff", "bmp"]
 
         if (extension === "js" || extension === "json") {
             this.jsFilesLoaded().push(url)
-            this.setCurrentScript(JSScript.clone().setImporter(this).setFullPath(url).setDoneCallback(() => { this.loadNext() }))
-            //console.log("this.currentScript() = ", this.currentScript())
+            const script = JSScript.clone().setImporter(this).setFullPath(url).setDoneCallback(() => { this.loadNext() })
+            this.setCurrentScript(script)
             this.currentScript().run()
         } else if (extension === "css") {
             this.cssFilesLoaded().push(url)

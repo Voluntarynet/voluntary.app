@@ -32,6 +32,7 @@
 @font-face {
     font-family:"AppExtraBold";
     src: url("resources/fonts/OpenSans/OpenSans ExtraBold.ttf");
+    font-display: auto;
 }
 
 /* --- Mono --- */

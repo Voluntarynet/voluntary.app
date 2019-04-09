@@ -8,7 +8,6 @@
 
 window.BMFontManager = BMNode.extend().newSlots({
     type: "BMFontManager",
-    appDidInitObservation: null,
 }).setSlots({
     shared: function() {   
         return this.sharedInstanceForClass(BMFontManager)
@@ -20,9 +19,8 @@ window.BMFontManager = BMNode.extend().newSlots({
         this.setTitle("Fonts")
         this.setNodeMinWidth(270)
 
-        const obs = NotificationCenter.shared().newObservation().setName("appDidInit").setObserver(this).watch()
-        this.setAppDidInitObservation(obs)
-        
+        const obs = NotificationCenter.shared().newObservation().setName("appDidInit").setObserver(this)
+        obs.setIsOneShot(true).watch()
         return this
     },
 

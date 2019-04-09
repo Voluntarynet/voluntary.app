@@ -8,7 +8,7 @@
 
 window.BMImages = BMNode.extend().newSlots({
     type: "BMImages",
-    appDidInitObservation:null,
+    appObservation:null,
 }).setSlots({
     shared: function() {   
         return this.sharedInstanceForClass(BMImages)
@@ -19,9 +19,10 @@ window.BMImages = BMNode.extend().newSlots({
 
         this.setTitle("Images")
         this.setNodeMinWidth(270)
+        this.setSubnodeProto(BMURLImage)
 
-        const obs = NotificationCenter.shared().newObservation().setName("appDidInit").setObserver(this).watch()
-        this.setAppDidInitObservation(obs)
+        const obs = NotificationCenter.shared().newObservation().setName("appDidInit").setObserver(this)
+        obs.setIsOneShot(true).watch()
         
         return this
     },
@@ -35,6 +36,7 @@ window.BMImages = BMNode.extend().newSlots({
         const paths = JSImporter.imageFilePaths()
 
         paths.forEach((path) => {
+
             this.addImageWithPath(path)
         })
 
@@ -42,18 +44,9 @@ window.BMImages = BMNode.extend().newSlots({
     },
 
     addImageWithPath: function(aPath) {
-        const image = BMImage.clone().setPath(aPath)
-        this.addImage(image)
+        const image = this.justAdd()
+        image.setPath(aPath)
         return this
-    },
-
-    addImage: function(anImage) {
-        this.addSubnode(anImage)
-        return this
-    },
-
-    images: function() {
-        return this.subnodes()
     },
 
 })

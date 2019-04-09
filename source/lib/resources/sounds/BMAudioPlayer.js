@@ -7,9 +7,16 @@
 
     Adds a body element like this:
 
-      <audio id="audio" autoplay>
-        <source id="audioSource" src="sounds/test.mp3" type="audio/mpeg"/ >
-      </audio>
+        <audio id="audio" autoplay>
+            <source id="audioSource" src="sounds/test.mp3" type="audio/mpeg"/ >
+        </audio>
+
+    Example use:
+
+        const audioPlayer = BMAudioPlayer.shared().setPath(urlToAudioFile)
+        audioPlayer.play()
+        ...
+        audioPlayer.stop()
 
 */
 
@@ -17,21 +24,14 @@ window.BMAudioPlayer = DomView.extend().newSlots({
     type: "BMAudioPlayer",
     path: "",
     sourceElement: null,
+    isDebugging: false,
 }).setSlots({
 
     shared: function() {   
-        const shared =  this.sharedInstanceForClass(BMAudioPlayer)
-        shared.addToDocumentIfNeeded()
+        const shared = this.sharedInstanceForClass(BMAudioPlayer)
+        shared.setVisibility("hidden");
+        DocumentBody.shared().addSubviewIfAbsent(shared)
         return shared
-    },
-
-    addToDocumentIfNeeded: function() {   
-        const d = DocumentBody.shared()
-        if (!d.hasSubview(this)) {
-            d.addSubview(this)
-            this.setVisibility("hidden");
-        }
-        return this
     },
 
     init: function () {
@@ -49,16 +49,13 @@ window.BMAudioPlayer = DomView.extend().newSlots({
     createElement: function() {
         const e = document.createElement("audio")
         e.setAttribute("autoplay", "");
-        //e.setAttribute("type", "audio/mpeg");
         e.appendChild(this.createSourceElement())
-
-        e.addEventListener('playing', () => { this.onPlaying(); },false); 
-
+        e.addEventListener('playing', (event) => { this.onPlaying(event); }, false); 
         return e
     },
 
-    onPlaying: function(event) {
-        console.log(this.typeId() + ".onPlaying() ", event)
+    onPlaying: function() {
+        console.log(this.typeId() + ".onPlaying() ")
         return this
     },
 

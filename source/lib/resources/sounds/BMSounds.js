@@ -25,7 +25,6 @@ window.BMSounds = BMNode.extend().newSlots({
     },
 
     appDidInit: function() {
-        console.log(this.typeId() + ".appDidInit()")
         this.setupSubnodes()
         return this
     },

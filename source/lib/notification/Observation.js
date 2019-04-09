@@ -19,6 +19,7 @@ window.Observation = class Observation extends ProtoClass {
             observer: null,
             center: null, // NotificationCenter that owns this
             isDebugging: false,
+            isOneShot: false,
         })
     }
 
@@ -40,6 +41,10 @@ window.Observation = class Observation extends ProtoClass {
             if (this.isDebugging()) {
                 console.log(this.typeId() + " no method found for note name " + note.name())
             }
+        }
+
+        if (this.isOneShot()) {
+            this.stopWatching()
         }
     }
 

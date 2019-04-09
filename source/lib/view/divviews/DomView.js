@@ -1262,6 +1262,13 @@ window.DomView = ideal.Proto.extend().newSlots({
         return this.subviews().contains(aSubview)
     },
 
+    addSubviewIfAbsent: function(aSubview) {
+        if (!this.hasSubview(aSubview)) {
+            this.addSubview(aSubview)
+        }
+        return this
+    },
+
     addSubview: function(aSubview) {
         if (aSubview == null) {
             throw new Error("aSubview can't be null")

@@ -2,5 +2,5 @@
 
 JSImporter.pushRelativePaths([
     "BMImages.js",
-    "BMImage.js",
+    "BMURLImage.js",
 ])

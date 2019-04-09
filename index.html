@@ -103,6 +103,7 @@ html * {
 @font-face {
     font-family:"AppExtraBold";
     src: url("resources/fonts/OpenSans/OpenSans ExtraBold.ttf");
+    font-display: auto;
 }
 
 /* --- Mono --- */
@@ -2020,14 +2021,14 @@ class JSImporterClass extends JSImporterBase {
         this.urlLoadingCallbacks().forEach(callback => callback(url))
 
         const extension = url.split(".").pop().toLowerCase()
-        const fontExtensions = ["ttf"]
+        const fontExtensions = ["ttf", "woff"]
         const audioExtensions = ["wav", "mp3", "m4a", "mp4", "oga", "ogg"]
         const imageExtensions = ["png", "jpg", "jpeg", "gif", "tiff", "bmp"]
 
         if (extension === "js" || extension === "json") {
             this.jsFilesLoaded().push(url)
-            this.setCurrentScript(JSScript.clone().setImporter(this).setFullPath(url).setDoneCallback(() => { this.loadNext() }))
-            //console.log("this.currentScript() = ", this.currentScript())
+            const script = JSScript.clone().setImporter(this).setFullPath(url).setDoneCallback(() => { this.loadNext() })
+            this.setCurrentScript(script)
             this.currentScript().run()
         } else if (extension === "css") {
             this.cssFilesLoaded().push(url)
@@ -101307,6 +101308,7 @@ window.AtomPaneView = DomView.extend().newSlots({
 JSImporter.pushRelativePaths([
     "fonts/_imports.js",
     "sounds/_imports.js",
+    "images/_imports.js",
     "themes/_imports.js",
     "BMResources.js",
 ])
@@ -101478,11 +101480,39 @@ window.BMFont = BMNode.extend().newSlots({
         return this
     },
 
+    // loading 
+
     load: function() {
-        const fe = BMFontFace.clone().setUrl(this.path())
-        // TODO: create DocumentHead class, ask it's share instance if it already contains this font link element
+        const name = this.path().fileName()
+        const urlString = "url('" + this.path() + "')"
+        const options = this.options() // example options { style: 'normal', weight: 700 }
+        //const aFontFace = new FontFace(name, urlString, options); 
+        const aFontFace = new FontFace("AppLight", urlString, options); 
+
+        aFontFace.load().then((loadedFace) => {
+            this.didLoad()
+        }).catch((error) => {
+            this.onLoadError(error)
+        });
+
         return this
     },
+
+    didLoad: function() {
+        if (this.isDebugging()) {
+            console.log(this.typeId() + ".didLoad(" + this.name() + ") " + this.path())
+            //console.log(this.typeId() + ".didLoad('" + this.name() + "')")
+        }
+        return this
+    },
+
+    onLoadError: function() {
+        if (this.isDebugging()) {
+            console.log(this.typeId() + ".onLoadError() ", error)
+        }
+        return this
+    },
+
 })
 
 "use strict"
@@ -101522,7 +101552,8 @@ window.BMFontFace = BMNode.extend().newSlots({
         const name = this.url().fileName()
         const urlString = "url('" + this.url() + "')"
         const options = this.options() // example options { style: 'normal', weight: 700 }
-        const aFontFace = new FontFace(name, urlString, options); 
+        //const aFontFace = new FontFace(name, urlString, options); 
+        const aFontFace = new FontFace("AppLight", urlString, options); 
 
         aFontFace.load().then((loadedFace) => {
             this.didLoad()
@@ -101550,6 +101581,32 @@ window.BMFontFace = BMNode.extend().newSlots({
 
 })
 
+/*
+function setFontTo(fontName) {
+    const styleId = 'font-style-sheet';
+  
+    // Get a reference to the current in-use stylesheet, if there is one.
+    var fontStyleSheet = document.getElementById(styleId);
+  
+    // Then define a new stylesheet with an updated @font-face rule:
+    var newFontStyleSheet = document.createElement("style");
+    newFontStyleSheet.id = styleId;
+    newFontStyleSheet.textContent = `
+      @font-face {
+        font-family: 'main-dynamic-font';
+        src: url(assets/fonts/${fontName}.woff) format('woff');
+      }
+    `;
+  
+    // Then we swap: add the new rule first, then remove the old one.
+    // That way you don't get a flash of unstyled text.
+    document.head.appendChild(newFontStyleSheet);
+  
+    if (fontStyleSheet) {
+      fontStyleSheet.parent.removeChild(fontStyleSheet);
+    }
+  }
+  */
 "use strict"
 
 JSImporter.pushRelativePaths([
@@ -101834,6 +101891,73 @@ window.BMAudioPlayer = DomView.extend().newSlots({
         this.element().playbackRate = r
         return this
     }
+
+})
+
+"use strict"
+
+JSImporter.pushRelativePaths([
+    "BMImages.js",
+    //"BMImage.js",
+])
+
+"use strict"
+
+/*
+
+    BMSounds
+
+*/
+
+window.BMImages = BMNode.extend().newSlots({
+    type: "BMImages",
+    appDidInitObservation:null,
+}).setSlots({
+    shared: function() {   
+        return this.sharedInstanceForClass(BMImages)
+    },
+
+    init: function () {
+        BMNode.init.apply(this)
+
+        this.setTitle("Images")
+        this.setNodeMinWidth(270)
+
+        const obs = NotificationCenter.shared().newObservation().setName("appDidInit").setObserver(this).watch()
+        this.setAppDidInitObservation(obs)
+        
+        return this
+    },
+
+    appDidInit: function() {
+        this.setupSubnodes()
+        return this
+    },
+
+    setupSubnodes: function() {
+        const paths = JSImporter.imageFilePaths()
+
+        paths.forEach((path) => {
+            this.addImageWithPath(path)
+        })
+
+        return this
+    },
+
+    addImageWithPath: function(aPath) {
+        const image = BMImage.clone().setPath(aPath)
+        this.addImage(image)
+        return this
+    },
+
+    addImage: function(anImage) {
+        this.addSubnode(anImage)
+        return this
+    },
+
+    images: function() {
+        return this.subnodes()
+    },
 
 })
 

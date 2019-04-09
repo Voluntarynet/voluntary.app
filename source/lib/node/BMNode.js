@@ -546,10 +546,15 @@ window.BMNode = ideal.Proto.extend().newSlots({
         return this
     },
     
-    add: function () {  
+    justAdd: function () {  
         let newSubnode = this.subnodeProto().clone()
         //console.log(this.typeId() + " add " + newSubnode.type())
         this.addSubnode(newSubnode)
+        return newSubnode
+    },
+
+    add: function () {  
+        let newSubnode = this.justAdd()
         this.didUpdateNode()
         this.postShouldFocusSubnode(newSubnode)
         return newSubnode

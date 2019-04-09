@@ -229,7 +229,8 @@ class SourceFolder {
             } else if (fullPath.contains(".js")) {
                 builder.addFilePath(fullPath)
             } else {
-                console.log("skipping file path:", fullPath)
+                // skip other resource files
+                //console.log("skipping file path:", fullPath)
             }
         })
     }

@@ -1,0 +1,20 @@
+
+JSImporter.pushRelativePaths([
+    "PublicSans-Black.woff2",
+    "PublicSans-BlackItalic.woff2",
+    "PublicSans-Bold.woff2",
+    "PublicSans-BoldItalic.woff2",
+    "PublicSans-ExtraBold.woff2",
+    "PublicSans-ExtraLight.woff2",
+    "PublicSans-ExtraLightItalic.woff2",
+    "PublicSans-Italic.woff2",
+    "PublicSans-Light.woff2",
+    "PublicSans-LightItalic.woff2",
+    "PublicSans-Medium.woff2",
+    "PublicSans-MediumItalic.woff2",
+    "PublicSans-Regular.woff2",
+    "PublicSans-SemiBold.woff2",
+    "PublicSans-SemiBoldItalic.woff2",
+    "PublicSans-Thin.woff2",
+    "PublicSans-ThinItalic.woff2",
+]);

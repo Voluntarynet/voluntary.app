@@ -22,6 +22,13 @@ window.BMResources = BMStorableNode.extend().newSlots({
         this.setSubtitle("")
         this.setNodeMinWidth(200)
 
+        this.setupSubnodes()
+
+        //this.watchOnceForNote("appDidInit")
+    },
+
+    setupSubnodes: function() {
+
         this.setThemes(NodeStore.shared().rootInstanceWithPidForProto("_themes", BMThemes))
         this.addSubnode(this.themes())
 
@@ -33,5 +40,24 @@ window.BMResources = BMStorableNode.extend().newSlots({
 
         this.setImages(BMImages.shared())
         this.addSubnode(this.images())
+
+        return this
     },
+
+    /*
+    appDidInit: function() {
+        this.findResources()
+    },
+
+    findResources: function() {
+        this.sendRespondingSubnodes("findResources")
+        return this
+    },
+
+    loadResources: function() {
+        this.sendRespondingSubnodes("loadResources")
+        return this
+    },
+    */
+
 })

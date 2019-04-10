@@ -1430,6 +1430,13 @@ window.DomView = ideal.Proto.extend().newSlots({
         // for subclasses to over-ride
     },
 
+    removeSubviewIfPresent: function (aSubview) {
+        if (this.hasSubview(aSubview)) {
+            this.removeSubview(aSubview)
+        }
+        return this
+    },
+
     removeSubview: function (aSubview) {
         //console.warn("WARNING: " + this.type() + " removeSubview " + aSubview.type())
 

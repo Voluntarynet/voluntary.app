@@ -631,6 +631,15 @@ window.BMNode = ideal.Proto.extend().newSlots({
             return subnode.title() === aString
         })
     },
+
+    sendRespondingSubnodes: function(aMethodName) {
+        this.subnodes().forEach((subnode) => { 
+            if (subnode[aMethodName]) {
+                subnode[aMethodName].apply(subnode)
+            }
+        })
+        return this
+    },
     
     // --- subnodes -----------------------------
     
@@ -827,4 +836,31 @@ window.BMNode = ideal.Proto.extend().newSlots({
         }
         rawFile.send(null);
     },
+
+    // notification helpers - yeah, not ideal
+
+    watchOnceForNote: function(aNoteName) {
+        const obs = NotificationCenter.shared().newObservation()
+        obs.setName(aNoteName)
+        obs.setObserver(this)
+        obs.setIsOneShot(true)
+        obs.watch()
+        //this._obsTest = obs
+        console.log(this.typeId() + ".watchOnceForNote('" + aNoteName + "')")
+        return obs
+    },
+
+    postNoteNamed: function(aNoteName) {
+        const note = window.NotificationCenter.shared().newNote()
+        note.setSender(this)
+        note.setName(aNoteName)
+        note.post()
+        console.log(this.typeId() + ".postNoteNamed('" + aNoteName + "')")
+        return note
+    },
+
+    scheduleSelfFor: function(aMethodName, milliseconds) {
+        return window.SyncScheduler.shared().scheduleTargetAndMethod(this, aMethodName, milliseconds)
+    },
+
 })

@@ -212,7 +212,7 @@
 /* --- Browser Row --- */
 
 .BrowserRow {
-	font-family: AppLight;
+	font-family: "PublicSans-Light", AppLight;
     display: block;
     position: relative;
     width: 100%;

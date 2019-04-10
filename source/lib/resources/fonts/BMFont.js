@@ -13,11 +13,13 @@ window.BMFont = BMNode.extend().newSlots({
     path: null,
     name: null,
     options: null,
+    isDebugging: false,
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)
         this.setNodeMinWidth(270)
         this.setOptions({})  // example options { style: 'normal', weight: 700 }  
+        //this.setIsDebugging(true)
     },
 
     title: function() {
@@ -31,14 +33,6 @@ window.BMFont = BMNode.extend().newSlots({
 
         return this.path().fileName()
     },
-
-    /*
-    setPath: function(aPath) {
-        this._path = aPath
-        //this.load()
-        return this
-    },
-    */
 
     // loading 
 
@@ -65,7 +59,7 @@ window.BMFont = BMNode.extend().newSlots({
         return this
     },
 
-    onLoadError: function() {
+    onLoadError: function(error) {
         if (this.isDebugging()) {
             console.log(this.typeId() + ".onLoadError() ", error)
         }

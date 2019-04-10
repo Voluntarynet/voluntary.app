@@ -29,41 +29,51 @@ window.BMAudioPlayer = DomView.extend().newSlots({
 
     shared: function() {   
         const shared = this.sharedInstanceForClass(BMAudioPlayer)
-        shared.setVisibility("hidden");
-        DocumentBody.shared().addSubviewIfAbsent(shared)
+        shared.open()
         return shared
     },
 
     init: function () {
         this.setElementType("audio") // TODO: use a method override instead?
         DomView.init.apply(this)
-    },
-
-    name: function() {
-        if (!this.path()) {
-            return ""
-        }
-        return this.path().fileName()
-    },
-
-    createElement: function() {
-        const e = document.createElement("audio")
-        e.setAttribute("autoplay", "");
-        e.appendChild(this.createSourceElement())
-        e.addEventListener('playing', (event) => { this.onPlaying(event); }, false); 
-        return e
-    },
-
-    onPlaying: function() {
-        console.log(this.typeId() + ".onPlaying() ")
         return this
     },
 
-    createSourceElement: function() {
-        const e = document.createElement("source")
-        this.setSourceElement(e)
-        return e
+    // open / close
+
+    open: function() {
+        this.setVisibility("hidden");
+        DocumentBody.shared().addSubviewIfAbsent(this)
+        return this
     },
+
+    close: function() {
+        DocumentBody.shared().removeSubviewIfPresent(this)
+        return this
+    },
+
+    // element
+
+    createElement: function() {
+        const audio = document.createElement("audio")
+        audio.setAttribute("autoplay", "");
+
+        const source = document.createElement("source")
+        this.setSourceElement(source)
+
+        audio.appendChild(source)
+        audio.addEventListener("playing", event => this.onPlaying(event), false); 
+        return audio
+    },
+
+    onPlaying: function() {
+        if (this.isDebugging()) {
+            console.log(this.typeId() + ".onPlaying() ")
+        }
+        return this
+    },
+
+    // path
 
     audioTypeForExtension: function(extString) {
         const fileExtensionToType = {
@@ -85,8 +95,10 @@ window.BMAudioPlayer = DomView.extend().newSlots({
         
             this.stop()
 
-            console.log(this.typeId() +  ".setPath:'" + aPath + "'")
-        
+            if (this.isDebugging()) {
+                console.log(this.typeId() +  ".setPath:'" + aPath + "'")
+            }
+
             const source = this.sourceElement()
             source.src = aPath;
 
@@ -101,19 +113,33 @@ window.BMAudioPlayer = DomView.extend().newSlots({
         return this.sourceElement().getAttribute("src");
     },
 
-    load: function() {
-        console.log(this.typeId() +  ".load() '" + this.path() + "'")
-        //setTimeout(() => { this.element().load() }, 10)
-        this.element().load()
+    name: function() {
+        if (!this.path()) {
+            return ""
+        }
+        return this.path().fileName()
+    },
 
+    // loading
+
+    load: function() {
+        if (this.isDebugging()) {
+            console.log(this.typeId() +  ".load() '" + this.path() + "'")
+        }
+        this.element().load()
         return this
     },
+
+    // playing / pausing / stopping
 
     play: function() {
         if (this.isPlaying()) {
             return this
         }
-        console.log(this.typeId() +  ".play() '" + this.path() + "'")
+
+        if (this.isDebugging()) {
+            console.log(this.typeId() +  ".play() '" + this.path() + "'")
+        }
 
         const promise = this.element().play()
         promise.catch((e) => {
@@ -123,13 +149,12 @@ window.BMAudioPlayer = DomView.extend().newSlots({
 
     },
 
-    stop: function() {
-        console.log(this.typeId() +  ".stop() '" + this.path() + "'")
+    isPlaying: function() {
         const e = this.element()
-        e.pause();
-        e.currentTime = 0;
-        return this
+        return e.duration > 0 && !e.paused
     },
+
+    // pausing
 
     pause: function() {
         this.element().pause()
@@ -141,22 +166,38 @@ window.BMAudioPlayer = DomView.extend().newSlots({
         return e.paused
     },
 
-    isPlaying: function() {
-        const e = this.element()
-        return e.duration > 0 && !e.paused
+    // stopping
+
+    stop: function() {
+        if (this.isDebugging()) {
+            console.log(this.typeId() +  ".stop() '" + this.path() + "'")
+        }
+
+        this.pause();
+        this.setCurrentTime(0);
+        return this
+    },
+
+    // current time
+
+    setCurrentTime: function(t) {
+        this.element().currentTime = t;
+        return this;
     },
 
     currentTime: function() {
-        return this.element().currentTime
+        return this.element().currentTime;
     },
 
+    // playback rate
+
     playbackRate: function() {
-        return this.element().playbackRate
+        return this.element().playbackRate;
     },
 
     setPlaybackRate: function(r) {
-        this.element().playbackRate = r
-        return this
+        this.element().playbackRate = r;
+        return this;
     }
 
 })

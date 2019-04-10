@@ -19,12 +19,19 @@ window.BMFontManager = BMNode.extend().newSlots({
         this.setTitle("Fonts")
         this.setNodeMinWidth(270)
 
-        const obs = NotificationCenter.shared().newObservation().setName("appDidInit").setObserver(this)
-        obs.setIsOneShot(true).watch()
+        // this.watchOnceForNote("appDidInit")
+
+        const obs = NotificationCenter.shared().newObservation()
+        obs.setName("appDidInit")
+        obs.setObserver(this)
+        //obs.setIsOneShot(true)
+        obs.watch()
+
         return this
     },
 
     appDidInit: function() {
+        console.log(this.typeId() + ".appDidInit()")
         this.setupSubnodes()
         return this
     },
@@ -61,10 +68,8 @@ window.BMFontManager = BMNode.extend().newSlots({
 
     addFontWithPath: function(aPath) {
         const components = aPath.split("/")
-        //console.log("components = ", components)
 
         // verify path is in expected format 
-
         const dot = components.removeFirst()
         assert(dot === ".")
 

@@ -8,7 +8,6 @@
 
 window.BMSounds = BMNode.extend().newSlots({
     type: "BMSounds",
-    appDidInitObservation: null,
 }).setSlots({
     shared: function() {   
         return this.sharedInstanceForClass(BMSounds)
@@ -20,8 +19,7 @@ window.BMSounds = BMNode.extend().newSlots({
         this.setTitle("Sounds")
         this.setNodeMinWidth(270)
 
-        const obs = NotificationCenter.shared().newObservation().setName("appDidInit").setObserver(this).watch()
-        this.setAppDidInitObservation(obs)
+        this.watchOnceForNote("appDidInit")
     },
 
     appDidInit: function() {

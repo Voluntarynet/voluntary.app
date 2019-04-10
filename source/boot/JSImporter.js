@@ -256,7 +256,7 @@ class JSImporterClass extends JSImporterBase {
         this.urlLoadingCallbacks().forEach(callback => callback(url))
 
         const extension = url.split(".").pop().toLowerCase()
-        const fontExtensions = ["ttf", "woff"]
+        const fontExtensions = ["ttf", "woff", "woff2"]
         const audioExtensions = ["wav", "mp3", "m4a", "mp4", "oga", "ogg"]
         const imageExtensions = ["png", "jpg", "jpeg", "gif", "tiff", "bmp"]
 

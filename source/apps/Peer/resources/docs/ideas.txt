@@ -35,7 +35,7 @@ defaultColumnStyles
 - add multi marker support?
 - need delete button for user (in shelf?)
 - verify panel
-- select last selected node on shelf on addDidInit
+- select last selected node on shelf on appDidInit
 
 - integrate shelf with columns?
     - separate column didClickRow(aRow) and addColumnForNode(aNode)

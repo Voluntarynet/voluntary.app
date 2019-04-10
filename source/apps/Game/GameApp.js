@@ -123,7 +123,8 @@ window.GameApp = App.extend().newSlots({
                 
         this.rootView().addSubview(this.browser())
         this.browser().scheduleSyncFromNode()
-        window.SyncScheduler.shared().scheduleTargetAndMethod(this.browser(), "syncFromHashPath", 10)
+        this.browser().scheduleSelfFor("syncFromHashPath", 10)
+        //window.SyncScheduler.shared().scheduleTargetAndMethod(this.browser(), "syncFromHashPath", 10)
         return this
     },
 
@@ -131,6 +132,7 @@ window.GameApp = App.extend().newSlots({
         this.setShelf(ShelfView.clone())
         this.rootView().addSubview(this.shelf())
 
+        //this.shelf().scheduleSelfFor("appDidInit", 10)
         window.SyncScheduler.shared().scheduleTargetAndMethod(this.shelf(), "appDidInit", 10)
         return this        
     },

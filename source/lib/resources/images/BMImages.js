@@ -20,9 +20,6 @@ window.BMImages = BMNode.extend().newSlots({
         this.setTitle("Images")
         this.setNodeMinWidth(270)
         this.setSubnodeProto(BMURLImage)
-
-        const obs = NotificationCenter.shared().newObservation().setName("appDidInit").setObserver(this)
-        obs.setIsOneShot(true).watch()
         
         return this
     },

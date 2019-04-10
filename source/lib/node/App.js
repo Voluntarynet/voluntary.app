@@ -16,7 +16,6 @@ window.App = BMNode.extend().newSlots({
     isDebugging: true,
     version: [0, 0],
     nodeStoreDidOpenObs: null,
-    appDidInitNote: null,
 }).setSlots({
 
     shared: function() {   
@@ -25,7 +24,6 @@ window.App = BMNode.extend().newSlots({
 
     init: function () {
         BMNode.init.apply(this)
-        this.setAppDidInitNote(window.NotificationCenter.shared().newNote().setSender(this).setName("appDidInit"))
         this.setNodeStoreDidOpenObs(window.NotificationCenter.shared().newObservation())
         this.nodeStoreDidOpenObs().setName("nodeStoreDidOpen").setObserver(this).setTarget(NodeStore.shared())
     },
@@ -73,7 +71,9 @@ window.App = BMNode.extend().newSlots({
     },
 
     appDidInit: function() {
-        this.appDidInitNote().post()
+        //this.postNoteNamed("appDidInit")
+        let note = NotificationCenter.shared().newNote().setSender(this).setName("appDidInit")
+        note.post()
 
         if (this.runTests) {
 		    this.runTests()

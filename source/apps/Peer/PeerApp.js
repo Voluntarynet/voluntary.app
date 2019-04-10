@@ -51,6 +51,7 @@ window.PeerApp = App.extend().newSlots({
         }
 
         this.appDidInit()
+
         return this
     },
 

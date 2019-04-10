@@ -845,8 +845,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
         obs.setObserver(this)
         obs.setIsOneShot(true)
         obs.watch()
-        //this._obsTest = obs
-        console.log(this.typeId() + ".watchOnceForNote('" + aNoteName + "')")
+        //console.log(this.typeId() + ".watchOnceForNote('" + aNoteName + "')")
         return obs
     },
 
@@ -855,7 +854,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
         note.setSender(this)
         note.setName(aNoteName)
         note.post()
-        console.log(this.typeId() + ".postNoteNamed('" + aNoteName + "')")
+        //console.log(this.typeId() + ".postNoteNamed('" + aNoteName + "')")
         return note
     },
 

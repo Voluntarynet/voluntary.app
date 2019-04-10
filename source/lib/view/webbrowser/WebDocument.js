@@ -12,6 +12,7 @@ window.WebDocument = ideal.Proto.extend().newSlots({
     type: "WebDocument",
 }).setSlots({
     init: function () {
+        ideal.Proto.init.apply(this)
         return this
     },
 
@@ -28,11 +29,16 @@ window.WebDocument = ideal.Proto.extend().newSlots({
         const sheets = []
 
         for (let i = 0; i < elements.length; i ++) {
-            const e = elements[i];
-            sheets.push(StyleSheet.clone().setSheet(e))
+            const sheetElement = elements[i];
+            sheets.push(StyleSheet.clone().setSheetElement(sheetElement))
         }
 
         return sheets
+    },
+
+    show: function() {
+        console.log(this.typeId() + ":")
+        this.styleSheets().forEach(sheet => sheet.show())
     },
 
 })

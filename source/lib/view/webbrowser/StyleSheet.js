@@ -14,12 +14,12 @@ window.StyleSheet = ideal.Proto.extend().newSlots({
 }).setSlots({
     init: function () {
         ideal.Proto.init.apply(this)
-
         return this
     },
 
-
-    //document.styleSheets
+    href: function() {
+        return this.sheetElement().href
+    },
 
     changeStylesheetRule: function(selector, property, value) {
         const sheet = this.sheetElement()
@@ -40,6 +40,10 @@ window.StyleSheet = ideal.Proto.extend().newSlots({
         // Add it if it does not
         sheet.insertRule(selector + " { " + property + ": " + value + "; }", 0);
         return this;
+    },
+
+    show: function() {
+        console.log("sheetElement:", this.sheetElement())
     },
 
 })

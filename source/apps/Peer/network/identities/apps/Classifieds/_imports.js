@@ -1,6 +1,6 @@
 "use strict"
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     "BMBuy.js",
     "BMBuys.js",
     "BMRegion.js",

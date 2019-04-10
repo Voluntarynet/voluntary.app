@@ -1,4 +1,4 @@
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     "ShareTechMono Regular.ttf",
 ]);

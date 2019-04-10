@@ -45,7 +45,7 @@ window.BMArchiveNode = BMFieldSetNode.extend().newSlots({
 	*/
 
     value: function () {
-        let s = JSImporter.archive()
+        let s = ResourceLoader.archive()
         if (s) {
             return s.escapeHtml()
         }

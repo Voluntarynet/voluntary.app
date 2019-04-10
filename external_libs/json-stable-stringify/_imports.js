@@ -1,5 +1,5 @@
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     "json-stable-stringify.js"
 ]);
 

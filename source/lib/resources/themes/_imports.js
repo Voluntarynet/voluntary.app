@@ -1,6 +1,6 @@
 "use strict"
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     "BMThemeStyleSheet.js",
     "BMThemeClass.js",
     "BMThemeClassState.js",

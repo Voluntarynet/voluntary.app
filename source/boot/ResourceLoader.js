@@ -2,7 +2,7 @@
 
 /*
 
-    JSImporter
+    ResourceLoader
 
     A simple Javascript importing system.
 
@@ -15,7 +15,7 @@
 	
 	Add an _imports.js file - here's an example. Notice you can reference css files as well.
 	
-	JSImporter.pushRelativePaths([
+	ResourceLoader.pushRelativePaths([
 		"_css.css", 
 		"external_libs/_imports.js",
 		"resources/data/_imports.js",
@@ -26,9 +26,9 @@
 	The paths in each _imports.js file are relative to the folder it is found within.
 
 	If you need to call some initialization functions after everything is loaded, 
-	you can call JSImporter.pushDoneCallback() in the related folder's _imports.js
+	you can call ResourceLoader.pushDoneCallback() in the related folder's _imports.js
 
-		JSImporter.pushDoneCallback( () => {
+		ResourceLoader.pushDoneCallback( () => {
 			sjcl.random.startCollectors();
 		})		
 
@@ -43,7 +43,7 @@ if (!String.prototype.capitalized) {
     }
 }
 
-class JSImporterBase {
+class ResourceLoaderBase {
 
     static shared() {
         if (!this._shared) {
@@ -100,7 +100,7 @@ class JSImporterBase {
 
 // --- CSSLink ---------------------------------------------------
 
-class CSSLink extends JSImporterBase {
+class CSSLink extends ResourceLoaderBase {
     init() {
         super.init()
         this.newSlot("fullPath", null);
@@ -119,7 +119,7 @@ class CSSLink extends JSImporterBase {
 
 // --- JSScript ---------------------------------------------------
 
-class JSScript extends JSImporterBase {
+class JSScript extends ResourceLoaderBase {
     init() {
         super.init()
         this.newSlot("importer", null);
@@ -156,9 +156,9 @@ class JSScript extends JSImporterBase {
     }
 }
 
-// --- JSImporter -----------------------------------------------
+// --- ResourceLoader -----------------------------------------------
 
-class JSImporterClass extends JSImporterBase {
+class ResourceLoaderClass extends ResourceLoaderBase {
 
     init() {
         super.init()
@@ -286,7 +286,7 @@ class JSImporterClass extends JSImporterBase {
     }
 
     done () {
-        //console.log("JSImporter.done() -----------------------------")
+        //console.log("ResourceLoader.done() -----------------------------")
         this.doneCallbacks().forEach(callback => callback())
         return this
     }
@@ -297,8 +297,8 @@ class JSImporterClass extends JSImporterBase {
     }
 }
 
-window.JSImporter = JSImporterClass.shared()
+window.ResourceLoader = ResourceLoaderClass.shared()
 
-if (window.JSImporterIsEmbedded !== true) {
-    JSImporter.pushRelativePaths(["_imports.js"]).run()
+if (window.ResourceLoaderIsEmbedded !== true) {
+    ResourceLoader.pushRelativePaths(["_imports.js"]).run()
 }

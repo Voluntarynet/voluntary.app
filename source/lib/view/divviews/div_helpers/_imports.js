@@ -1,6 +1,6 @@
 "use strict"
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     "DivTextTapeMeasure.js",
     "DivCSSInspector.js",
 ])

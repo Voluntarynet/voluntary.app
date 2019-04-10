@@ -1,6 +1,6 @@
 "use strict"
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     "_css.css",
     "HashCommand.js",
     "BrowserView.js",

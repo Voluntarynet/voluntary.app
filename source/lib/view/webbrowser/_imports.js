@@ -1,6 +1,6 @@
 "use strict"
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     "WebBrowserScreen.js",
     "WebBrowserWindow.js",
     "WebBrowserNotifications.js",

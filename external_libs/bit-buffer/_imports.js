@@ -1,5 +1,5 @@
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     "bit-buffer.js"
 ]);
 

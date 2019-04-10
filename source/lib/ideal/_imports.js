@@ -1,6 +1,6 @@
 "use strict"
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     "categories/_imports.js",
     "Proto.js",
     "ProtoClass.js",

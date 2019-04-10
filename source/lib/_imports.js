@@ -1,6 +1,6 @@
 "use strict"
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     "ideal/_imports.js",
     "notification/_imports.js",
     "storage/_imports.js",

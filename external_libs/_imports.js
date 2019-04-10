@@ -1,5 +1,5 @@
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     "bitcore/_imports.js",
     "bit-buffer/_imports.js",
     "json-stable-stringify/_imports.js",

@@ -2,28 +2,28 @@
 
 /*
 
-    ImporterPanelClass
+    ResourceLoaderPanel
 
     A full page panel that shows load progress.
   
     While running, displays app name, progress bar, and current loading file name.
     On error, displays an error description.
-    Used with JSImporter.
+    Used with ResourceLoader.
 
     Automatically sets up in the document when loading this file via:
 
-        window.JSImporterPanel.startWhenReady()
+        window.ResourceLoaderPanel.startWhenReady()
 
     When all loading is finished, external code should call:
 
-    		window.JSImporterPanel.stop()  
+    		window.ResourceLoaderPanel.stop()  
 
     Notes:
     This code is a bit ugly because it doesn't have any library dependencies 
     as we need to show it before we load the libraries & need it to tell us about any loading errors.
 */
 
-class JSImporterPanelClass {
+class ResourceLoaderPanelClass {
 
     /*
     static shared() {
@@ -82,11 +82,11 @@ class JSImporterPanelClass {
     // --- start ------------------------------------------------
 
     canStart () {
-        return window["JSImporter"] !== undefined
+        return window["ResourceLoader"] !== undefined
     }
 
     startWhenReady () {
-        //console.log("JSImporterPanel.startWhenReady()")
+        //console.log("ResourceLoaderPanel.startWhenReady()")
         //this.setupHtml()
         if (this.canStart()) {
             this.start()
@@ -96,15 +96,15 @@ class JSImporterPanelClass {
     }
 
     start () {
-        //console.log("JSImporterPanel.start()")
-        if (!JSImporterClass.shared().isDone()) {
+        //console.log("ResourceLoaderPanel.start()")
+        if (!ResourceLoaderClass.shared().isDone()) {
             this.setupHtml()
             this.initTitle()
             this.registerForWindowError()
             this.registerForImports()
         }
 
-        if (JSImporterClass.shared().isDone()) {
+        if (ResourceLoaderClass.shared().isDone()) {
             //this.setupHtml()
             this.stop()
         }
@@ -112,7 +112,7 @@ class JSImporterPanelClass {
     }
 
     setupHtml () {
-        //console.log("JSImporterPanel.setupHtml()")
+        //console.log("ResourceLoaderPanel.setupHtml()")
         document.body.innerHTML = "<div id='SpinnerMain' style='position: absolute; width:100%; height: 100%; background-color: black; z-index: 100000; font-family: AppRegular, sans-serif; letter-spacing: 3px; font-size:13px;'> \
 <div id='SpinnerMiddle' \
 style='position: relative; top: 50%; transform: translateY(-50%); height: auto; width: 100%; text-align: center;'> \
@@ -139,17 +139,17 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
 
     registerForImports () {
         this._importerUrlCallback = (url) => { this.didImportUrl(url) }
-        JSImporterClass.shared().pushUrlLoadingCallback(this._importerUrlCallback)
+        ResourceLoaderClass.shared().pushUrlLoadingCallback(this._importerUrlCallback)
 
         this._importerErrorCallback = (error) => { this.setError(error) }
-        JSImporterClass.shared().pushErrorCallback(this._importerErrorCallback)
+        ResourceLoaderClass.shared().pushErrorCallback(this._importerErrorCallback)
 
         return this
     }
 
     unregisterForImports () {
-        JSImporterClass.shared().removeUrlCallback(this._importerUrlCallback)
-        JSImporterClass.shared().removeErrorCallback(this._importerErrorCallback)
+        ResourceLoaderClass.shared().removeUrlCallback(this._importerUrlCallback)
+        ResourceLoaderClass.shared().removeErrorCallback(this._importerErrorCallback)
         return this
     }
 
@@ -230,7 +230,7 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
     setError (error) {
         this._error = error
         //console.trace()
-        //console.log("JSImporterPanel setError ", error)
+        //console.log("ResourceLoaderPanel setError ", error)
         //console.log("    document.body = ", document.body) 
         //console.log("    his.errorElement() = ", this.errorElement()) 
         this.errorElement().innerHTML = error
@@ -260,8 +260,8 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
     }
 }
 
-//console.log("loaded file JSImporterPanel - starting")
+//console.log("loaded file ResourceLoaderPanel - starting")
 
-window.JSImporterPanel = JSImporterPanelClass.clone()
-window.JSImporterPanel.startWhenReady()
+window.ResourceLoaderPanel = ResourceLoaderPanelClass.clone()
+window.ResourceLoaderPanel.startWhenReady()
 

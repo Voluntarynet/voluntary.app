@@ -1,5 +1,5 @@
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     "bloom.js",
 ]).pushDoneCallback(() => {
     JSBloom.newFilter = function (a, b) {

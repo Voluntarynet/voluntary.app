@@ -1,6 +1,6 @@
 "use strict"
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     "_css.css",
     "BMPostDrafts.js",
     "BMPostDraft.js",

@@ -1,6 +1,6 @@
 "use strict"
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     "Type-ideal.js",
     "Object-ideal.js",
     "Array-ideal.js",

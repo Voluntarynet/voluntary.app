@@ -1,3 +1,3 @@
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
 ]);

@@ -1,6 +1,6 @@
 "use strict"
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     "CSSDeclaration.js",
     "CSSRuleSet.js",
     "CSS.js",

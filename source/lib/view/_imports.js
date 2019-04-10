@@ -1,6 +1,6 @@
 "use strict"
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     //"css_rules/_imports.js",
     "geometry/_imports.js",
     "events/_imports.js",

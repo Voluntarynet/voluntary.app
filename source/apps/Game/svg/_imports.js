@@ -1,6 +1,6 @@
 "use strict"
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     "SVGContainerView.js",
     "SVGCircle.js",
     "SVGLine.js",

@@ -1,6 +1,6 @@
 "use strict"
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     "BMFieldSetNode.js",
     "BMField.js",
     "BMActionField.js",

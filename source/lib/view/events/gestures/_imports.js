@@ -1,6 +1,6 @@
 "use strict"
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     "GestureManager.js",
     "GestureRecognizer.js",
     "LongPressGestureRecognizer.js",

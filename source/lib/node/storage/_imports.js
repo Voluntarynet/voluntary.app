@@ -1,6 +1,6 @@
 "use strict"
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     "NodeStore.js",
     "BMDataStore.js",
     //"BMDataStoreRecord.js",

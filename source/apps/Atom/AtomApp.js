@@ -49,7 +49,7 @@ window.AtomApp = App.extend().newSlots({
 
     appDidInit: function () {
         App.appDidInit.apply(this)
-        window.JSImporterPanel.stop() 
+        window.ResourceLoaderPanel.stop() 
     },
 }).showVersion()
 

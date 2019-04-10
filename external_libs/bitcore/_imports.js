@@ -1,5 +1,5 @@
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     //"bower_components/bitcore/bitcore.js",
     "bower_components/bitcore-lib/bitcore-lib.js",
     "bower_components/bitcore-mnemonic/bitcore-mnemonic.js",

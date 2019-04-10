@@ -30,7 +30,7 @@ window.BMImageResources = BMNode.extend().newSlots({
     },
 
     setupSubnodes: function() {
-        const paths = JSImporter.imageFilePaths()
+        const paths = ResourceLoader.imageFilePaths()
 
         paths.forEach((path) => {
 

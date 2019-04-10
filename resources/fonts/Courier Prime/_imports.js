@@ -1,5 +1,5 @@
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     "Code/Courier Prime Code Italic.ttf",
     "Code/Courier Prime Code.ttf",
     "Default/Courier Prime Bold Italic.ttf",

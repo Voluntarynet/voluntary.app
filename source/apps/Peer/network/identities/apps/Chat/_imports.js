@@ -1,6 +1,6 @@
 "use strict"
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     "_css.css",
     "BMChat.js",
     "DirectMessages/_imports.js",

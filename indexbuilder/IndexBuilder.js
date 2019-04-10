@@ -122,8 +122,8 @@ class IndexBuilder {
 
     allScriptPaths() {
         const scriptPaths =  []
-        scriptPaths.push("../source/boot/JSImporterPanel.js")
-        scriptPaths.push("../source/boot/JSImporter.js")
+        scriptPaths.push("../source/boot/ResourceLoaderPanel.js")
+        scriptPaths.push("../source/boot/ResourceLoader.js")
         scriptPaths.appendItems(this.filePaths())
         return scriptPaths
     }
@@ -151,8 +151,8 @@ class IndexBuilder {
         indexPaths.push("templates/top.html")
         indexPaths.appendItems(this.cssPaths())
         indexPaths.push("templates/middle.html")
-        indexPaths.push("../source/boot/JSImporterPanel.js")
-        indexPaths.push("../source/boot/JSImporter.js")
+        indexPaths.push("../source/boot/ResourceLoaderPanel.js")
+        indexPaths.push("../source/boot/ResourceLoader.js")
         indexPaths.appendItems(this.filePaths())
         indexPaths.push("templates/bottom.html")
 
@@ -215,7 +215,7 @@ class SourceFolder {
     open() {
         const dirPath = this.fullPath().before("_imports.js")
         const data = fs.readFileSync(this.fullPath(),  "utf8");
-        const s = data.between("JSImporter.pushRelativePaths(", ")")
+        const s = data.between("ResourceLoader.pushRelativePaths(", ")")
         const rPaths = eval(s)
         const builder = this.indexBuilder()
 

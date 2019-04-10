@@ -1,6 +1,6 @@
 "use strict"
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     "BMGroupChat.js",
     "BMGroupChatRoom.js",
     "BMGroupChatChannel.js",

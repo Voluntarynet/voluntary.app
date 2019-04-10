@@ -152,9 +152,9 @@ On top of this system, decentralized apps (dapps) can quicky be built with very 
 
 #### Javascript and CSS importing
 
-When the app launches, it runs JSImporter.js and JSImporterPanel.js. 
-JSImporter handles importing JS and CSS, and JSImporterPanel presents a UI to show the progress of the loading.
-JSImporter looks in the root folder for an _imports.js file. 
+When the app launches, it runs ResourceLoader.js and ResourceLoaderPanel.js. 
+ResourceLoader handles importing JS and CSS, and ResourceLoaderPanel presents a UI to show the progress of the loading.
+ResourceLoader looks in the root folder for an _imports.js file. 
 If found, it loads any paths (treated as relative paths) in the order they are found. 
 These paths can be Javascript (including other _import.js files), CSS. 
 This provides a means of doing relative library loading. 
@@ -162,7 +162,7 @@ This provides a means of doing relative library loading.
 If your import requires some callback to be called after the imports are complete, 
 you can add a pushDoneCallback to the related _imports.js file. For example, the top level _imports.js ends with:
 
-    JSImporter.pushDoneCallback( () => {
+    ResourceLoader.pushDoneCallback( () => {
         PeerApp.shared().run()
     })
 

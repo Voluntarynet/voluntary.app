@@ -1,10 +1,10 @@
 "use strict"
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     "AtomApp.js"
 ])
 
-JSImporter.pushDoneCallback( () => {
+ResourceLoader.pushDoneCallback( () => {
     AtomApp.shared().run()
 })
 

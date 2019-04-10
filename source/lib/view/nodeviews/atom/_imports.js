@@ -1,6 +1,6 @@
 "use strict"
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     "_css.css",
     "CloseButton.js",
     "CloseableNodeView.js",

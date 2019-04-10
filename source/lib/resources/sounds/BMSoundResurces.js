@@ -28,7 +28,7 @@ window.BMSoundResurces = BMNode.extend().newSlots({
     },
 
     setupSubnodes: function() {
-        const paths = JSImporter.audioFilePaths()
+        const paths = ResourceLoader.audioFilePaths()
 
         paths.forEach((path) => {
             this.addSoundWithPath(path)

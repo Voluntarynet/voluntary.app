@@ -1,6 +1,6 @@
 "use strict"
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     "helpers.js",
     "BMMessage.js",
     "BMAddrMessage.js",

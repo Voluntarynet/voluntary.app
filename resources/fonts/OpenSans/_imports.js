@@ -1,5 +1,5 @@
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     "OpenSans Bold.ttf",
     "OpenSans Bold Italic.ttf",
     "OpenSans Condensed Bold.ttf",

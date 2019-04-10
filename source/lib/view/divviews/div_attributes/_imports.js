@@ -1,6 +1,6 @@
 "use strict"
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     "DivTransition.js",
     "DivTransitions.js",
     "DivBorderRadius.js",

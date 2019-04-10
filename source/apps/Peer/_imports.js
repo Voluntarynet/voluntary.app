@@ -1,10 +1,10 @@
 "use strict"
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     "network/_imports.js",
     "PeerApp.js",
 ])
 
-JSImporter.pushDoneCallback( () => {
+ResourceLoader.pushDoneCallback( () => {
     PeerApp.shared().run()
 })

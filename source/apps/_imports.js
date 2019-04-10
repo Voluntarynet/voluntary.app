@@ -1,6 +1,6 @@
 "use strict"
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     //"Atom/_imports.js",
     //"Game/_imports.js",
     "Peer/_imports.js",

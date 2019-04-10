@@ -1,5 +1,5 @@
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     "PublicSans-Black.woff2",
     "PublicSans-BlackItalic.woff2",
     "PublicSans-Bold.woff2",

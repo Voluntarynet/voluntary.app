@@ -1,6 +1,6 @@
 "use strict"
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     "external_libs/_imports.js",
     "svg/_imports.js",
     "GameNode.js",
@@ -11,7 +11,7 @@ JSImporter.pushRelativePaths([
 ])
 
 
-JSImporter.pushDoneCallback( () => {
+ResourceLoader.pushDoneCallback( () => {
     GameApp.shared().run()
 })
 

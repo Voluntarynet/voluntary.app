@@ -1,4 +1,4 @@
 
-JSImporter.pushRelativePaths([
+ResourceLoader.pushRelativePaths([
     "webfonts/_imports.js",
 ]);

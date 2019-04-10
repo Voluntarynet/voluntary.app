@@ -39,6 +39,18 @@ window.EventPoint = window.Point.extend().newSlots({
         return this
     },
 
+    copyPoint: function(p) {
+        window.Point.copyPoint.apply(this, [p])
+        this._id = p._id
+        this._state = p._state
+        this._target = p._target
+        return this
+    },
+
+    copy: function() {
+        return EventPoint.clone().copyPoint(this)
+    },
+
     overView: function() {
         if (this._overView === null) {
             this._overView = this.findOverview()

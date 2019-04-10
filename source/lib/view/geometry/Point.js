@@ -38,6 +38,10 @@ window.Point = ideal.Proto.extend().newSlots({
         this._t = p._t
         return this
     },
+
+    copy: function() {
+        return Point.clone().copyPoint(this)
+    },
     
     set: function(x, y, z, t) {
         this._x = x;
@@ -74,9 +78,6 @@ window.Point = ideal.Proto.extend().newSlots({
         return this
     },
 
-    copy: function() {
-        return Point.clone().copyPoint(this)
-    },
 
     add: function(p) {
         return this.copy().addInPlace(p)

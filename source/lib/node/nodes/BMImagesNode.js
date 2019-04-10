@@ -2,12 +2,12 @@
 
 /*
     
-    BMImagesNode 
+    BMImageResourcesNode 
 
 */  
 
-window.BMImagesNode = BMStorableNode.extend().newSlots({
-    type: "BMImagesNode",
+window.BMImageResourcesNode = BMStorableNode.extend().newSlots({
+    type: "BMImageResourcesNode",
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)

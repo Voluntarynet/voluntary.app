@@ -5,6 +5,8 @@ JSImporter.pushRelativePaths([
     "WebBrowserWindow.js",
     "WebBrowserNotifications.js",
     "WebBrowserNotifications.js",
-    "WebBrowserNotification.js"
+    "WebBrowserNotification.js",
+    "WebDocument.js",
+    "StyleSheet.js",
 ])
 

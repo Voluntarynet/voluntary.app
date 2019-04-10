@@ -1,6 +1,6 @@
 "use strict"
 
 JSImporter.pushRelativePaths([
-    "BMImages.js",
+    "BMImageResources.js",
     "BMURLImage.js",
 ])

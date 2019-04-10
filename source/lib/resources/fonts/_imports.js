@@ -1,7 +1,7 @@
 "use strict"
 
 JSImporter.pushRelativePaths([
-    "BMFontManager.js",
+    "BMFontResources.js",
     "BMFontFamily.js",
     "BMFont.js",
 ])

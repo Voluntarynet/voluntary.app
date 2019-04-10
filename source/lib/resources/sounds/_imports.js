@@ -1,7 +1,7 @@
 "use strict"
 
 JSImporter.pushRelativePaths([
-    "BMSounds.js",
+    "BMSoundResurces.js",
     "BMSound.js",
     "BMAudioPlayer.js",
 ])

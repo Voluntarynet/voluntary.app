@@ -1,4 +1,4 @@
 
 JSImporter.pushRelativePaths([
-    "ShareTechMono.ttf",
+    "ShareTechMono Regular.ttf",
 ]);

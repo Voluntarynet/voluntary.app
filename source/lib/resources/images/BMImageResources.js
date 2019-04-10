@@ -2,16 +2,16 @@
 
 /*
 
-    BMSounds
+    BMSoundResurces
 
 */
 
-window.BMImages = BMNode.extend().newSlots({
-    type: "BMImages",
+window.BMImageResources = BMNode.extend().newSlots({
+    type: "BMImageResources",
     appObservation:null,
 }).setSlots({
     shared: function() {   
-        return this.sharedInstanceForClass(BMImages)
+        return this.sharedInstanceForClass(BMImageResources)
     },
 
     init: function () {

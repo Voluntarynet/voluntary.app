@@ -4,7 +4,7 @@
 
     BMFont
 
-    Managed by BMFontManager.
+    Managed by BMFontResources.
 
 */
 

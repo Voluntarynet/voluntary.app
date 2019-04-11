@@ -811,6 +811,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
         if (json.title) {
             this.setTitle(json.title)
         }
+        
         if (json.subnodes) { 
             this.setSubnodes(json.subnodes.map((subnodeDict) => {
                 let type = subnodeDict.type

@@ -8,6 +8,7 @@
 
 window.BMSoundResurces = BMNode.extend().newSlots({
     type: "BMSoundResurces",
+    extensions: ["wav", "mp3", "m4a", "mp4", "oga", "ogg"],
 }).setSlots({
     shared: function() {   
         return this.sharedInstanceForClass(BMSoundResurces)
@@ -27,13 +28,12 @@ window.BMSoundResurces = BMNode.extend().newSlots({
         return this
     },
 
+    resourcePaths: function() {
+        return ResourceLoader.resourceFilePathsWithExtensions(this.extensions())
+    },
+
     setupSubnodes: function() {
-        const paths = ResourceLoader.audioFilePaths()
-
-        paths.forEach((path) => {
-            this.addSoundWithPath(path)
-        })
-
+        this.resourcePaths().forEach(path => this.addSoundWithPath(path))
         return this
     },
 

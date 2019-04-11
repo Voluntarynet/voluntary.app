@@ -8,7 +8,6 @@
 
 window.BMResources = BMStorableNode.extend().newSlots({
     type: "BMResources",
-    shared: null,
     themes: null,
     fonts: null,
     sounds: null,
@@ -25,6 +24,10 @@ window.BMResources = BMStorableNode.extend().newSlots({
         this.setupSubnodes()
 
         //this.watchOnceForNote("appDidInit")
+    },
+
+    shared: function() {   
+        return this.sharedInstanceForClass(BMResources)
     },
 
     setupSubnodes: function() {

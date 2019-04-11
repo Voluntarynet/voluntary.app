@@ -1932,12 +1932,17 @@ class ResourceLoaderClass extends ResourceLoaderBase {
         this.newSlot("doneCallbacks", []),
         this.newSlot("urlLoadingCallbacks", []);
         this.newSlot("errorCallbacks", []);
-        this.newSlot("jsFilesLoaded", [])
-        this.newSlot("cssFilesLoaded", [])
-        this.newSlot("archive", null)
-        this.newSlot("fontFilePaths", [])
-        this.newSlot("audioFilePaths", [])
-        this.newSlot("imageFilePaths", [])
+        
+        this.newSlot("jsFilesLoaded", []) // these may be embedded in index.html
+        this.newSlot("cssFilesLoaded", [])  // these may be embedded in index.html
+
+        //this.newSlot("archive", null)
+
+        this.newSlot("resourceFilePaths", [])
+    }
+
+    resourceFilePathsWithExtensions(extensions) {
+        return this.resourceFilePaths().select(path => extensions.contains(path.pathExtension().toLowerCase()))
     }
 
     currentScriptPath () {
@@ -2021,9 +2026,9 @@ class ResourceLoaderClass extends ResourceLoaderBase {
         this.urlLoadingCallbacks().forEach(callback => callback(url))
 
         const extension = url.split(".").pop().toLowerCase()
-        const fontExtensions = ["ttf", "woff", "woff2"]
-        const audioExtensions = ["wav", "mp3", "m4a", "mp4", "oga", "ogg"]
-        const imageExtensions = ["png", "jpg", "jpeg", "gif", "tiff", "bmp"]
+        //const fontExtensions = ["ttf", "woff", "woff2"]
+        //const audioExtensions = ["wav", "mp3", "m4a", "mp4", "oga", "ogg"]
+        //const imageExtensions = ["png", "jpg", "jpeg", "gif", "tiff", "bmp"]
 
         if (extension === "js" || extension === "json") {
             this.jsFilesLoaded().push(url)
@@ -2032,8 +2037,14 @@ class ResourceLoaderClass extends ResourceLoaderBase {
             this.currentScript().run()
         } else if (extension === "css") {
             this.cssFilesLoaded().push(url)
-            CSSLink.clone().setFullPath(url).run()
+            CSSLink.clone().setFullPath(url).run() // move to CSSResources?
             this.loadNext()
+        } else {
+            this.resourceFilePaths().push(url)
+            this.loadNext()
+        }
+
+        /*
         } else if (fontExtensions.contains(extension)) {
             this.fontFilePaths().push(url)
             this.loadNext()
@@ -2046,6 +2057,7 @@ class ResourceLoaderClass extends ResourceLoaderBase {
         } else {
             throw new Error("unrecognized extension on url '" + url + "'")
         }
+        */
 
         return this
     }
@@ -83293,7 +83305,7 @@ ResourceLoader.pushRelativePaths([
     "nodes/_imports.js",
     "fields/_imports.js",
     "storage/BMDataStoreRecord.js",
-    "archive/_imports.js",
+    //"archive/_imports.js",
     "proto/_imports.js",
     "atom/_imports.js",
     
@@ -84287,6 +84299,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
         if (json.title) {
             this.setTitle(json.title)
         }
+        
         if (json.subnodes) { 
             this.setSubnodes(json.subnodes.map((subnodeDict) => {
                 let type = subnodeDict.type
@@ -86576,72 +86589,6 @@ window.BMDataStoreRecord = BMFieldSetNode.extend().newSlots({
         //NodeStore.shared().justRemoveObject(this.value())
         NodeStore.shared().justRemovePid(this.valuePid())
         return this
-    },
-})
-
-
-"use strict"
-
-ResourceLoader.pushRelativePaths([
-    "BMArchiveNode.js",
-])
-
-"use strict"
-
-/*
-    
-    BMArchiveNode
-    
-	
-*/
-
-window.BMArchiveNode = BMFieldSetNode.extend().newSlots({
-    type: "BMArchiveNode",
-    key: null,
-    didSetupFields: false,
-}).setSlots({
-    init: function () {
-        BMFieldSetNode.init.apply(this)
-        //this.setViewClassName("GenericView")
-        //this.setViewClassName("BMDataStoreRecordView")
-        //this.addAction("delete")
-        this.setNodeColumnBackgroundColor("white")
-        this.setNodeMinWidth(300)
-        this.setTitle("Archive")
-    },
-
-    subtitle: function() {
-        if (this.value()) {
-            let b = this.value().length
-            return ByteFormatter.clone().setValue(b).formattedValue()
-        }
-        return "N/A"
-    },
-
-    prepareForFirstAccess: function () {
-        this.addStoredField(BMTextAreaField.clone().setKey("data").setValueMethod("dataString").setValueIsEditable(false).setIsMono(true))
-    },
-
-    /*
-	subtitle: function() {
-		return this.value().length + " bytes"
-	},
-
-    escapeHtml: function(unsafe) {
-        return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-    },
-	*/
-
-    value: function () {
-        let s = ResourceLoader.archive()
-        if (s) {
-            return s.escapeHtml()
-        }
-        return null
-    },
-
-    dataString: function () {
-        return this.value()
     },
 })
 
@@ -95291,7 +95238,7 @@ window.DocumentBody = DomView.extend().newSlots({
     */
 
     allDomElements: function() {
-        const domElements = this.element().getElementsByTagName('*');
+        const domElements = this.element().getElementsByTagName("*");
         return domElements
     },
 })
@@ -101507,6 +101454,7 @@ ResourceLoader.pushRelativePaths([
 
 window.BMFontResources = BMNode.extend().newSlots({
     type: "BMFontResources",
+    extensions: ["ttf", "woff", "woff2"],
 }).setSlots({
     shared: function() {   
         return this.sharedInstanceForClass(BMFontResources)
@@ -101544,13 +101492,13 @@ window.BMFontResources = BMNode.extend().newSlots({
         return this.subnodes()
     },
 
+    resourcePaths: function() {
+        return ResourceLoader.resourceFilePathsWithExtensions(this.extensions())
+    },
+
     setupSubnodes: function() {
-        const fontPaths = ResourceLoader.fontFilePaths()
-
-        fontPaths.forEach((path) => {
-            this.addFontWithPath(path)
-        })
-
+        console.log("font paths = ", this.resourcePaths())
+        this.resourcePaths().forEach(path => this.addFontWithPath(path))
         return this
     },
 
@@ -101713,6 +101661,7 @@ ResourceLoader.pushRelativePaths([
 
 window.BMSoundResurces = BMNode.extend().newSlots({
     type: "BMSoundResurces",
+    extensions: ["wav", "mp3", "m4a", "mp4", "oga", "ogg"],
 }).setSlots({
     shared: function() {   
         return this.sharedInstanceForClass(BMSoundResurces)
@@ -101732,13 +101681,12 @@ window.BMSoundResurces = BMNode.extend().newSlots({
         return this
     },
 
+    resourcePaths: function() {
+        return ResourceLoader.resourceFilePathsWithExtensions(this.extensions())
+    },
+
     setupSubnodes: function() {
-        const paths = ResourceLoader.audioFilePaths()
-
-        paths.forEach((path) => {
-            this.addSoundWithPath(path)
-        })
-
+        this.resourcePaths().forEach(path => this.addSoundWithPath(path))
         return this
     },
 
@@ -102034,7 +101982,7 @@ ResourceLoader.pushRelativePaths([
 
 window.BMImageResources = BMNode.extend().newSlots({
     type: "BMImageResources",
-    appObservation:null,
+    extensions: ["png", "jpg", "jpeg", "gif", "tiff", "bmp"],
 }).setSlots({
     shared: function() {   
         return this.sharedInstanceForClass(BMImageResources)
@@ -102042,27 +101990,23 @@ window.BMImageResources = BMNode.extend().newSlots({
 
     init: function () {
         BMNode.init.apply(this)
-
         this.setTitle("Images")
         this.setNodeMinWidth(270)
         this.setSubnodeProto(BMURLImage)
-        
         return this
     },
 
+    resourcePaths: function() {
+        return ResourceLoader.resourceFilePathsWithExtensions(this.extensions())
+    },
+    
     appDidInit: function() {
         this.setupSubnodes()
         return this
     },
 
     setupSubnodes: function() {
-        const paths = ResourceLoader.imageFilePaths()
-
-        paths.forEach((path) => {
-
-            this.addImageWithPath(path)
-        })
-
+        this.resourcePaths().forEach(path => this.addImageWithPath(path))
         return this
     },
 
@@ -102403,7 +102347,6 @@ window.BMThemes = BMStorableNode.extend().newSlots({
 
 window.BMResources = BMStorableNode.extend().newSlots({
     type: "BMResources",
-    shared: null,
     themes: null,
     fonts: null,
     sounds: null,
@@ -102420,6 +102363,10 @@ window.BMResources = BMStorableNode.extend().newSlots({
         this.setupSubnodes()
 
         //this.watchOnceForNote("appDidInit")
+    },
+
+    shared: function() {   
+        return this.sharedInstanceForClass(BMResources)
     },
 
     setupSubnodes: function() {
@@ -107147,7 +107094,7 @@ ResourceLoader.pushRelativePaths([
     "BMChatThreads.js",
     "BMChatThread.js",
     "BMChatMessage.js",
-	"BMChatMessageRowView.js",
+    "BMChatMessageRowView.js",
 ])
 
 
@@ -109127,10 +109074,6 @@ window.PeerApp = App.extend().newSlots({
         this.setDataStore(BMDataStore.clone())
         this.about().addSubnode(this.dataStore())
 
-        // archive
-        const archive = BMArchiveNode.clone()
-        this.about().addSubnode(archive)
-
         // protos inspector
         const protoNode = BMProtoNode.clone()
         this.about().addSubnode(protoNode)
@@ -109139,7 +109082,7 @@ window.PeerApp = App.extend().newSlots({
 
         // --- graphics subnodes --------------------
 		
-        this.setResources(BMResources.clone())
+        this.setResources(BMResources.shared())
         this.about().addSubnode(this.resources())
 		
         return this
@@ -109282,6 +109225,8 @@ ResourceLoader.pushRelativePaths([
 ResourceLoader.pushRelativePaths([
     "appicon-black-600x600.png",
 ]);
+
+ResourceLoader.setResourceFilePaths(["./resources/fonts/Courier Prime/Code/Courier Prime Code Italic.ttf","./resources/fonts/Courier Prime/Code/Courier Prime Code.ttf","./resources/fonts/Courier Prime/Default/Courier Prime Bold Italic.ttf","./resources/fonts/Courier Prime/Default/Courier Prime Bold.ttf","./resources/fonts/Courier Prime/Default/Courier Prime Italic.ttf","./resources/fonts/Courier Prime/Default/Courier Prime.ttf","./resources/fonts/Courier Prime/Sans/Courier Prime Sans Bold Italic.ttf","./resources/fonts/Courier Prime/Sans/Courier Prime Sans Bold.ttf","./resources/fonts/Courier Prime/Sans/Courier Prime Sans Italic.ttf","./resources/fonts/Courier Prime/Sans/Courier Prime Sans.ttf","./resources/fonts/Courier Prime/Semibold/CourierPrime Medium.ttf","./resources/fonts/Courier Prime/Semibold/CourierPrime Semibold.ttf","./resources/fonts/OpenSans/OpenSans Bold.ttf","./resources/fonts/OpenSans/OpenSans Bold Italic.ttf","./resources/fonts/OpenSans/OpenSans Condensed Bold.ttf","./resources/fonts/OpenSans/OpenSans Condensed Light.ttf","./resources/fonts/OpenSans/OpenSans Condensed Light Italic.ttf","./resources/fonts/OpenSans/OpenSans Extra Bold.ttf","./resources/fonts/OpenSans/OpenSans Extra Bold Italic.ttf","./resources/fonts/OpenSans/OpenSans Italic.ttf","./resources/fonts/OpenSans/OpenSans Light.ttf","./resources/fonts/OpenSans/OpenSans Light Italic.ttf","./resources/fonts/OpenSans/OpenSans Regular.ttf","./resources/fonts/OpenSans/OpenSans Semibold.ttf","./resources/fonts/OpenSans/OpenSans Semibold Italic.ttf","./resources/fonts/ShareTechMono/ShareTechMono Regular.ttf","./resources/fonts/PublicSans/webfonts/PublicSans-Black.woff2","./resources/fonts/PublicSans/webfonts/PublicSans-BlackItalic.woff2","./resources/fonts/PublicSans/webfonts/PublicSans-Bold.woff2","./resources/fonts/PublicSans/webfonts/PublicSans-BoldItalic.woff2","./resources/fonts/PublicSans/webfonts/PublicSans-ExtraBold.woff2","./resources/fonts/PublicSans/webfonts/PublicSans-ExtraLight.woff2","./resources/fonts/PublicSans/webfonts/PublicSans-ExtraLightItalic.woff2","./resources/fonts/PublicSans/webfonts/PublicSans-Italic.woff2","./resources/fonts/PublicSans/webfonts/PublicSans-Light.woff2","./resources/fonts/PublicSans/webfonts/PublicSans-LightItalic.woff2","./resources/fonts/PublicSans/webfonts/PublicSans-Medium.woff2","./resources/fonts/PublicSans/webfonts/PublicSans-MediumItalic.woff2","./resources/fonts/PublicSans/webfonts/PublicSans-Regular.woff2","./resources/fonts/PublicSans/webfonts/PublicSans-SemiBold.woff2","./resources/fonts/PublicSans/webfonts/PublicSans-SemiBoldItalic.woff2","./resources/fonts/PublicSans/webfonts/PublicSans-Thin.woff2","./resources/fonts/PublicSans/webfonts/PublicSans-ThinItalic.woff2","./resources/sounds/beep_06.wav","./resources/sounds/bleep_04.wav","./resources/images/appicon-black-600x600.png"]);
 
 
       window.onload = function() { 

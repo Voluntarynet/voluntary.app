@@ -79,15 +79,7 @@ window.GameApp = App.extend().newSlots({
         this.setDataStore(BMDataStore.clone())
         this.about().addSubnode(this.dataStore())
 
-        // archive
-        const archive = BMArchiveNode.clone()
-        this.about().addSubnode(archive)
-
-        // protos inspector
-        const protoNode = BMProtoNode.clone()
-        this.about().addSubnode(protoNode)
-
-        // protos inspector
+        // game
         const gameNode = GameNode.clone()
         this.about().addSubnode(gameNode)
 
@@ -95,8 +87,8 @@ window.GameApp = App.extend().newSlots({
 
         // --- graphics subnodes --------------------
 		
-        this.setResources(BMResources.clone())
-        this.about().addSubnode(this.graphics())
+        this.setResources(BMResources.shared())
+        this.about().addSubnode(this.resources())
 		
         return this
     },

@@ -167,12 +167,17 @@ class ResourceLoaderClass extends ResourceLoaderBase {
         this.newSlot("doneCallbacks", []),
         this.newSlot("urlLoadingCallbacks", []);
         this.newSlot("errorCallbacks", []);
-        this.newSlot("jsFilesLoaded", [])
-        this.newSlot("cssFilesLoaded", [])
-        this.newSlot("archive", null)
-        this.newSlot("fontFilePaths", [])
-        this.newSlot("audioFilePaths", [])
-        this.newSlot("imageFilePaths", [])
+        
+        this.newSlot("jsFilesLoaded", []) // these may be embedded in index.html
+        this.newSlot("cssFilesLoaded", [])  // these may be embedded in index.html
+
+        //this.newSlot("archive", null)
+
+        this.newSlot("resourceFilePaths", [])
+    }
+
+    resourceFilePathsWithExtensions(extensions) {
+        return this.resourceFilePaths().select(path => extensions.contains(path.pathExtension().toLowerCase()))
     }
 
     currentScriptPath () {
@@ -256,9 +261,9 @@ class ResourceLoaderClass extends ResourceLoaderBase {
         this.urlLoadingCallbacks().forEach(callback => callback(url))
 
         const extension = url.split(".").pop().toLowerCase()
-        const fontExtensions = ["ttf", "woff", "woff2"]
-        const audioExtensions = ["wav", "mp3", "m4a", "mp4", "oga", "ogg"]
-        const imageExtensions = ["png", "jpg", "jpeg", "gif", "tiff", "bmp"]
+        //const fontExtensions = ["ttf", "woff", "woff2"]
+        //const audioExtensions = ["wav", "mp3", "m4a", "mp4", "oga", "ogg"]
+        //const imageExtensions = ["png", "jpg", "jpeg", "gif", "tiff", "bmp"]
 
         if (extension === "js" || extension === "json") {
             this.jsFilesLoaded().push(url)
@@ -267,8 +272,14 @@ class ResourceLoaderClass extends ResourceLoaderBase {
             this.currentScript().run()
         } else if (extension === "css") {
             this.cssFilesLoaded().push(url)
-            CSSLink.clone().setFullPath(url).run()
+            CSSLink.clone().setFullPath(url).run() // move to CSSResources?
             this.loadNext()
+        } else {
+            this.resourceFilePaths().push(url)
+            this.loadNext()
+        }
+
+        /*
         } else if (fontExtensions.contains(extension)) {
             this.fontFilePaths().push(url)
             this.loadNext()
@@ -281,6 +292,7 @@ class ResourceLoaderClass extends ResourceLoaderBase {
         } else {
             throw new Error("unrecognized extension on url '" + url + "'")
         }
+        */
 
         return this
     }

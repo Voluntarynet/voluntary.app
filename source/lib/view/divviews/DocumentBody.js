@@ -118,7 +118,7 @@ window.DocumentBody = DomView.extend().newSlots({
     */
 
     allDomElements: function() {
-        const domElements = this.element().getElementsByTagName('*');
+        const domElements = this.element().getElementsByTagName("*");
         return domElements
     },
 })

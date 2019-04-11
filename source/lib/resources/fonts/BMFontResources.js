@@ -8,6 +8,7 @@
 
 window.BMFontResources = BMNode.extend().newSlots({
     type: "BMFontResources",
+    extensions: ["ttf", "woff", "woff2"],
 }).setSlots({
     shared: function() {   
         return this.sharedInstanceForClass(BMFontResources)
@@ -45,13 +46,13 @@ window.BMFontResources = BMNode.extend().newSlots({
         return this.subnodes()
     },
 
+    resourcePaths: function() {
+        return ResourceLoader.resourceFilePathsWithExtensions(this.extensions())
+    },
+
     setupSubnodes: function() {
-        const fontPaths = ResourceLoader.fontFilePaths()
-
-        fontPaths.forEach((path) => {
-            this.addFontWithPath(path)
-        })
-
+        console.log("font paths = ", this.resourcePaths())
+        this.resourcePaths().forEach(path => this.addFontWithPath(path))
         return this
     },
 

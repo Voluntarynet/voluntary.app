@@ -8,7 +8,7 @@
 
 window.BMImageResources = BMNode.extend().newSlots({
     type: "BMImageResources",
-    appObservation:null,
+    extensions: ["png", "jpg", "jpeg", "gif", "tiff", "bmp"],
 }).setSlots({
     shared: function() {   
         return this.sharedInstanceForClass(BMImageResources)
@@ -16,27 +16,23 @@ window.BMImageResources = BMNode.extend().newSlots({
 
     init: function () {
         BMNode.init.apply(this)
-
         this.setTitle("Images")
         this.setNodeMinWidth(270)
         this.setSubnodeProto(BMURLImage)
-        
         return this
     },
 
+    resourcePaths: function() {
+        return ResourceLoader.resourceFilePathsWithExtensions(this.extensions())
+    },
+    
     appDidInit: function() {
         this.setupSubnodes()
         return this
     },
 
     setupSubnodes: function() {
-        const paths = ResourceLoader.imageFilePaths()
-
-        paths.forEach((path) => {
-
-            this.addImageWithPath(path)
-        })
-
+        this.resourcePaths().forEach(path => this.addImageWithPath(path))
         return this
     },
 

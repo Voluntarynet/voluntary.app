@@ -77,6 +77,7 @@ class IndexBuilder {
         this._filePaths = []
         this._importPaths = []
         this._cssPaths = []
+        this._resourceFilePaths = []
     }
 
     filePaths() {
@@ -116,6 +117,13 @@ class IndexBuilder {
         this.cssPaths().push(aPath)
     }
 
+    addResourceFilePath(aPath) {
+        // since indexbuilder isn't on top level, but index.html will be,
+        // we need to fix the path
+        aPath = aPath.replaceAll("../", "./") 
+        this._resourceFilePaths.push(aPath)
+    }
+
     stringForPaths(filePaths) {
         return filePaths.map(path => fs.readFileSync(path,  "utf8")).join("\n")
     }
@@ -133,7 +141,8 @@ class IndexBuilder {
         console.log(this.filePaths().join("\n"))
 
         const css      = this.stringForPaths(this.cssPaths())
-        const script   = this.stringForPaths(this.allScriptPaths())
+        let script   = this.stringForPaths(this.allScriptPaths())
+        script += "\nResourceLoader.setResourceFilePaths(" + JSON.stringify(this._resourceFilePaths) + ");\n"
         let index = this.stringForPaths(["template.html"])
         index = index.replaceAll("/* INSERT CSS HERE */", css)
         index = index.replaceAll("/* INSERT SCRIPT HERE */", script)
@@ -229,8 +238,7 @@ class SourceFolder {
             } else if (fullPath.contains(".js")) {
                 builder.addFilePath(fullPath)
             } else {
-                // skip other resource files
-                //console.log("skipping file path:", fullPath)
+                builder.addResourceFilePath(fullPath)
             }
         })
     }

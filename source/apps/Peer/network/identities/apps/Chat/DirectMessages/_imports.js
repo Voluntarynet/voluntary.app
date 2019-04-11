@@ -5,6 +5,6 @@ ResourceLoader.pushRelativePaths([
     "BMChatThreads.js",
     "BMChatThread.js",
     "BMChatMessage.js",
-	"BMChatMessageRowView.js",
+    "BMChatMessageRowView.js",
 ])
 

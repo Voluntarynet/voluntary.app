@@ -84,6 +84,31 @@ html * {
 
 @font-face {
     font-family: "AppLight";
+    src: url("resources/fonts/PublicSans/PublicSans Light.woff2");
+    font-display: auto;
+}
+
+@font-face {
+    font-family: "AppRegular";
+    src: url("resources/fonts/PublicSans/PublicSans Regular.woff2");
+    font-display: auto;
+}
+
+@font-face {
+    font-family: "AppSemiBold";
+    src: url("resources/fonts/PublicSans/PublicSans Semibold.woff2");
+    font-display: auto;
+}
+
+@font-face {
+    font-family:"AppExtraBold";
+    src: url("resources/fonts/PublicSans/PublicSans Extra Bold.woff2");
+    font-display: auto;
+}
+
+/*
+@font-face {
+    font-family: "AppLight";
     src: url("resources/fonts/OpenSans/OpenSans Light.ttf");
     font-display: auto;
 }
@@ -105,6 +130,7 @@ html * {
     src: url("resources/fonts/OpenSans/OpenSans ExtraBold.ttf");
     font-display: auto;
 }
+*/
 
 /* --- Mono --- */
 
@@ -445,7 +471,7 @@ html * {
 /* --- Browser Row --- */
 
 .BrowserRow {
-	font-family: "PublicSans-Light", AppLight;
+	font-family: AppLight;
     display: block;
     position: relative;
     width: 100%;
@@ -83729,6 +83755,8 @@ window.BMNode = ideal.Proto.extend().newSlots({
             //StackTrace.shared().showCurrentStack()
             return this
         }
+
+        assert(aNode !== this)
 		
         if (this._parentNode && aNode) {
             console.warn(this.type() + " setParentNode(" + aNode.type() + ")  already has parent " + this._parentNode.type())
@@ -83877,6 +83905,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
         this.didUpdateNodeNote().post()
 
         if (this.parentNode()) {
+            assert(this.parentNode() !== this)
             this.parentNode().didUpdateNode()
         }
 
@@ -85192,7 +85221,7 @@ window.BMDataStore = BMNode.extend().newSlots({
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)
-        this.setTitle("DataStore")
+        this.setTitle("Storage")
         this.setNodeMinWidth(300)
     },
 
@@ -85906,6 +85935,10 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
         this.justAddField(aField)
         return aField	
     },
+
+    addField: function(aField) {
+        return this.justAddField(aField)
+    },
 	
     justAddField: function(aField) {
         this.addSubnode(aField)
@@ -86563,7 +86596,7 @@ window.BMDataStoreRecord = BMFieldSetNode.extend().newSlots({
         BMFieldSetNode.init.apply(this)
         //this.setViewClassName("GenericView")
         //this.setViewClassName("BMDataStoreRecordView")
-        this.addAction("delete")
+        //this.addAction("delete") // not safe for non-developers
         this.setNodeColumnBackgroundColor("white")
         this.setNodeMinWidth(300)
     },
@@ -86598,7 +86631,10 @@ window.BMDataStoreRecord = BMFieldSetNode.extend().newSlots({
 ResourceLoader.pushRelativePaths([
     "BMProtoNode.js",
     "BMSlotsNode.js",
+    "BMSlotNode.js",
     "BMSubclassesNode.js",
+    "BMClassBrowser.js",
+    "BMFunctionNode.js",
 ])
 
 "use strict"
@@ -86624,25 +86660,36 @@ window.BMProtoNode = BMNode.extend().newSlots({
 
     title: function () {
         if (this.protoValue()) {
-            return this.protoValue().type()
+            let type = this.protoValue().type()
+            const unwantedPrefix = "ideal."
+            if (type.beginsWith(unwantedPrefix)) {
+                type = type.after(unwantedPrefix)
+            }
+            return type
         }
 
         return "?"
     },
 
-    nodeNode: function() {
-        return "&gt;"
+    decendantCount: function() {
+        return this.protoValue().allDescendantProtos().length
     },
 
-    subtitle: function () {
-  
-        return null
+    subtitle: function() {
+        const count = this.decendantCount()
+        return count ? count : null;
+    },
+
+    note: function() {
+        const count = this.decendantCount()
+        return count ? "&gt;" : null;
+
     },
 
     setupSubnodes: function() {
         const childNodes = [
             BMSlotsNode.clone().setProtoValue(this.protoValue()), 
-            BMSubclassesNode.clone().setProtoValue(this.protoValue())
+            BMSubclassesNode.clone().setProtoValue(this.protoValue()).setupSubnodes()
         ]
 
         this.setSubnodes(childNodes);
@@ -86666,13 +86713,15 @@ window.BMProtoNode = BMNode.extend().newSlots({
     
 */
 
-window.BMSlotsNode = BMFieldSetNode.extend().newSlots({
+//window.BMSlotsNode = BMFieldSetNode.extend().newSlots({
+window.BMSlotsNode = BMNode.extend().newSlots({
     type: "BMSlotsNode",
     protoValue: null,
 }).setSlots({
     init: function () {
-        BMFieldSetNode.init.apply(this)
- 		this.setShouldStore(false)
+        //BMFieldSetNode.init.apply(this)
+        BMNode.init.apply(this)
+ 		//this.setShouldStore(false)
         this.setNodeMinWidth(600)
         this.setTitle("slots")
     },
@@ -86692,30 +86741,45 @@ window.BMSlotsNode = BMFieldSetNode.extend().newSlots({
 
     setupSubnodes: function() {
         let childNodes = []
-        assert(this.protoValue())
+        const protoValue = this.protoValue()
+        assert(protoValue)
 
-        this.protoValue().slotNames().forEach((slotName) => {
+        protoValue.slotNames().sort().forEach((slotName) => {
 
             let childNode = null
-            const p = this.protoValue()
-            const v = p[slotName]
+            const v = protoValue[slotName]
             const t = typeof(v)
+
+            const slotNode = BMSlotNode.clone()
+            slotNode.setProtoValue(protoValue)
+            slotNode.setSlotName(slotName)
+            slotNode.setSlotValue("[value]")
+            childNodes.push(slotNode)
+
             // console.log("proto: ", p.type(), " slot:", slotName, " value: ", p[slotName], " type: ", t)
 
+            /*
             if (t === "string") {
                 childNode = this.addFieldNamed(slotName).setValueMethod("slotValue").setValueIsEditable(false)
+                childNode.setTarget(slotNode)
                 //childNode.setSubtitle("string")
-            } else if (t === "number") {
+            } 
+            else if (t === "number") {
                 childNode = this.addField(BMNumberField.clone().setValueMethod("slotValue").setValueIsEditable(false))
+                childNode.setTarget(slotNode)
                 //childNode.setSubtitle("number")
             } else if (t === "function") {
                 childNode = this.addField(BMPointerField.clone().setValueMethod("slotValue").setValueIsEditable(false))
+                childNode.setTarget(slotNode)
+                //const functionNode = BMFunctionNode.clone()
+                //childNode.setValue(functionNode)
                 //childNode.setSubtitle("function")
             }
-
+           
             if (childNode) {
                 childNodes.push(childNode)
             }
+            */
         })
 
         this.setSubnodes(childNodes);
@@ -86732,13 +86796,39 @@ window.BMSlotsNode = BMFieldSetNode.extend().newSlots({
 
 /*
 
+    BMSlotNode
+    
+*/
+
+window.BMSlotNode = BMFieldSetNode.extend().newSlots({
+    type: "BMSlotNode",
+    protoValue: null,
+    slotName: null,
+    slotValue: null,
+}).setSlots({
+    init: function () {
+        BMFieldSetNode.init.apply(this)
+ 		this.setShouldStore(false)
+        this.setNodeMinWidth(600)
+    },
+
+    title: function() {
+        return this.slotName()
+    },
+
+
+})
+"use strict"
+
+/*
+
     BMSubclassesNode
 
 */
 
 window.BMSubclassesNode = BMNode.extend().newSlots({
     type: "BMSubclassesNode",
-    protoValue: Proto,
+    protoValue: null,
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)
@@ -86747,6 +86837,7 @@ window.BMSubclassesNode = BMNode.extend().newSlots({
         //this.addAction("delete")
         this.setNodeMinWidth(300)
         this.setNoteIsSubnodeCount(true)
+        //this.setupSubnodes()
     },
 
     title: function () {
@@ -86767,14 +86858,71 @@ window.BMSubclassesNode = BMNode.extend().newSlots({
         return this
     },
 
+    /*
     prepareToAccess: function () {
         if (this._subnodes.length === 0) {
             this.setupSubnodes()
         }
     },
+    */
 })
 
 
+"use strict"
+
+/*
+
+    BMClassBrowser
+    
+*/
+
+window.BMClassBrowser = BMNode.extend().newSlots({
+    type: "BMClassBrowser",
+}).setSlots({
+    init: function () {
+        BMNode.init.apply(this)
+        this.setNodeMinWidth(300)
+
+        this.setTitle("Classes")
+
+        // protos inspector
+        const protoNode = BMProtoNode.clone()
+        this.addSubnode(protoNode)
+    },
+
+})
+
+
+"use strict"
+
+/*
+
+    BMFunctionNode
+    
+*/
+
+window.BMFunctionNode = BMFieldSetNode.extend().newSlots({
+    type: "BMFunctionNode",
+    functionValue: null,
+}).setSlots({
+    init: function () {
+        BMFieldSetNode.init.apply(this)
+ 		this.setShouldStore(false)
+        this.setNodeMinWidth(600)
+        this.setTitle("function")
+    },
+
+    setupSubnodes: function() {
+     
+        return this
+    },
+
+    prepareForFirstAccess: function () {
+        if (this._subnodes.length === 0) {
+            this.setupSubnodes()
+        }
+    },
+})
 "use strict"
 
 ResourceLoader.pushRelativePaths([
@@ -101497,7 +101645,6 @@ window.BMFontResources = BMNode.extend().newSlots({
     },
 
     setupSubnodes: function() {
-        console.log("font paths = ", this.resourcePaths())
         this.resourcePaths().forEach(path => this.addFontWithPath(path))
         return this
     },
@@ -102321,13 +102468,17 @@ window.BMTheme = BMStorableNode.extend().newSlots({
 */
 
 
-window.BMThemeResources = BMStorableNode.extend().newSlots({
+//window.BMThemeResources = BMStorableNode.extend().newSlots({
+window.BMThemeResources = BMNode.extend().newSlots({
     type: "BMThemeResources",
-    shared: null,
 }).setSlots({
+    shared: function() {   
+        return this.sharedInstanceForClass(BMThemeResources)
+    },
+    
     init: function () {
-        BMStorableNode.init.apply(this)
-        this.setShouldStore(true)
+        BMNode.init.apply(this)
+        //this.setShouldStore(true)
         
         this.setTitle("Themes")
         this.setNoteIsSubnodeCount(true)
@@ -102371,7 +102522,8 @@ window.BMResources = BMStorableNode.extend().newSlots({
 
     setupSubnodes: function() {
 
-        this.setThemes(NodeStore.shared().rootInstanceWithPidForProto("_themes", BMThemeResources))
+        //this.setThemes(NodeStore.shared().rootInstanceWithPidForProto("_themes", BMThemeResources))
+        this.setThemes(BMThemeResources.shared())
         this.addSubnode(this.themes())
 
         this.setFonts(BMFontResources.shared())
@@ -109075,8 +109227,8 @@ window.PeerApp = App.extend().newSlots({
         this.about().addSubnode(this.dataStore())
 
         // protos inspector
-        const protoNode = BMProtoNode.clone()
-        this.about().addSubnode(protoNode)
+        const classBrowser = BMClassBrowser.clone()
+        this.about().addSubnode(classBrowser)
 
         this.network().servers().connect() // observe appDidInit instead?
 
@@ -109191,28 +109343,26 @@ ResourceLoader.pushRelativePaths([
 
 
 ResourceLoader.pushRelativePaths([
-    "webfonts/_imports.js",
-]);
-
-
-ResourceLoader.pushRelativePaths([
-    "PublicSans-Black.woff2",
-    "PublicSans-BlackItalic.woff2",
-    "PublicSans-Bold.woff2",
-    "PublicSans-BoldItalic.woff2",
-    "PublicSans-ExtraBold.woff2",
-    "PublicSans-ExtraLight.woff2",
-    "PublicSans-ExtraLightItalic.woff2",
-    "PublicSans-Italic.woff2",
-    "PublicSans-Light.woff2",
-    "PublicSans-LightItalic.woff2",
-    "PublicSans-Medium.woff2",
-    "PublicSans-MediumItalic.woff2",
-    "PublicSans-Regular.woff2",
-    "PublicSans-SemiBold.woff2",
-    "PublicSans-SemiBoldItalic.woff2",
-    "PublicSans-Thin.woff2",
-    "PublicSans-ThinItalic.woff2",
+    //"LICENSE.txt",
+    //"CREDITS.txt",
+    //"README.md",
+    "PublicSans Black.woff2",
+    "PublicSans Black Italic.woff2",
+    "PublicSans Bold.woff2",
+    "PublicSans Bold Italic.woff2",
+    "PublicSans Extra Bold.woff2",
+    "PublicSans Extra Light.woff2",
+    "PublicSans Extra Light Italic.woff2",
+    "PublicSans Italic.woff2",
+    "PublicSans Light.woff2",
+    "PublicSans Light Italic.woff2",
+    "PublicSans Medium.woff2",
+    "PublicSans Medium Italic.woff2",
+    "PublicSans Regular.woff2",
+    "PublicSans Semibold.woff2",
+    "PublicSans Semibold Italic.woff2",
+    "PublicSans Thin.woff2",
+    "PublicSans Thin Italic.woff2",
 ]);
 
 
@@ -109226,7 +109376,7 @@ ResourceLoader.pushRelativePaths([
     "appicon-black-600x600.png",
 ]);
 
-ResourceLoader.setResourceFilePaths(["./resources/fonts/Courier Prime/Code/Courier Prime Code Italic.ttf","./resources/fonts/Courier Prime/Code/Courier Prime Code.ttf","./resources/fonts/Courier Prime/Default/Courier Prime Bold Italic.ttf","./resources/fonts/Courier Prime/Default/Courier Prime Bold.ttf","./resources/fonts/Courier Prime/Default/Courier Prime Italic.ttf","./resources/fonts/Courier Prime/Default/Courier Prime.ttf","./resources/fonts/Courier Prime/Sans/Courier Prime Sans Bold Italic.ttf","./resources/fonts/Courier Prime/Sans/Courier Prime Sans Bold.ttf","./resources/fonts/Courier Prime/Sans/Courier Prime Sans Italic.ttf","./resources/fonts/Courier Prime/Sans/Courier Prime Sans.ttf","./resources/fonts/Courier Prime/Semibold/CourierPrime Medium.ttf","./resources/fonts/Courier Prime/Semibold/CourierPrime Semibold.ttf","./resources/fonts/OpenSans/OpenSans Bold.ttf","./resources/fonts/OpenSans/OpenSans Bold Italic.ttf","./resources/fonts/OpenSans/OpenSans Condensed Bold.ttf","./resources/fonts/OpenSans/OpenSans Condensed Light.ttf","./resources/fonts/OpenSans/OpenSans Condensed Light Italic.ttf","./resources/fonts/OpenSans/OpenSans Extra Bold.ttf","./resources/fonts/OpenSans/OpenSans Extra Bold Italic.ttf","./resources/fonts/OpenSans/OpenSans Italic.ttf","./resources/fonts/OpenSans/OpenSans Light.ttf","./resources/fonts/OpenSans/OpenSans Light Italic.ttf","./resources/fonts/OpenSans/OpenSans Regular.ttf","./resources/fonts/OpenSans/OpenSans Semibold.ttf","./resources/fonts/OpenSans/OpenSans Semibold Italic.ttf","./resources/fonts/ShareTechMono/ShareTechMono Regular.ttf","./resources/fonts/PublicSans/webfonts/PublicSans-Black.woff2","./resources/fonts/PublicSans/webfonts/PublicSans-BlackItalic.woff2","./resources/fonts/PublicSans/webfonts/PublicSans-Bold.woff2","./resources/fonts/PublicSans/webfonts/PublicSans-BoldItalic.woff2","./resources/fonts/PublicSans/webfonts/PublicSans-ExtraBold.woff2","./resources/fonts/PublicSans/webfonts/PublicSans-ExtraLight.woff2","./resources/fonts/PublicSans/webfonts/PublicSans-ExtraLightItalic.woff2","./resources/fonts/PublicSans/webfonts/PublicSans-Italic.woff2","./resources/fonts/PublicSans/webfonts/PublicSans-Light.woff2","./resources/fonts/PublicSans/webfonts/PublicSans-LightItalic.woff2","./resources/fonts/PublicSans/webfonts/PublicSans-Medium.woff2","./resources/fonts/PublicSans/webfonts/PublicSans-MediumItalic.woff2","./resources/fonts/PublicSans/webfonts/PublicSans-Regular.woff2","./resources/fonts/PublicSans/webfonts/PublicSans-SemiBold.woff2","./resources/fonts/PublicSans/webfonts/PublicSans-SemiBoldItalic.woff2","./resources/fonts/PublicSans/webfonts/PublicSans-Thin.woff2","./resources/fonts/PublicSans/webfonts/PublicSans-ThinItalic.woff2","./resources/sounds/beep_06.wav","./resources/sounds/bleep_04.wav","./resources/images/appicon-black-600x600.png"]);
+ResourceLoader.setResourceFilePaths(["./resources/fonts/Courier Prime/Code/Courier Prime Code Italic.ttf","./resources/fonts/Courier Prime/Code/Courier Prime Code.ttf","./resources/fonts/Courier Prime/Default/Courier Prime Bold Italic.ttf","./resources/fonts/Courier Prime/Default/Courier Prime Bold.ttf","./resources/fonts/Courier Prime/Default/Courier Prime Italic.ttf","./resources/fonts/Courier Prime/Default/Courier Prime.ttf","./resources/fonts/Courier Prime/Sans/Courier Prime Sans Bold Italic.ttf","./resources/fonts/Courier Prime/Sans/Courier Prime Sans Bold.ttf","./resources/fonts/Courier Prime/Sans/Courier Prime Sans Italic.ttf","./resources/fonts/Courier Prime/Sans/Courier Prime Sans.ttf","./resources/fonts/Courier Prime/Semibold/CourierPrime Medium.ttf","./resources/fonts/Courier Prime/Semibold/CourierPrime Semibold.ttf","./resources/fonts/OpenSans/OpenSans Bold.ttf","./resources/fonts/OpenSans/OpenSans Bold Italic.ttf","./resources/fonts/OpenSans/OpenSans Condensed Bold.ttf","./resources/fonts/OpenSans/OpenSans Condensed Light.ttf","./resources/fonts/OpenSans/OpenSans Condensed Light Italic.ttf","./resources/fonts/OpenSans/OpenSans Extra Bold.ttf","./resources/fonts/OpenSans/OpenSans Extra Bold Italic.ttf","./resources/fonts/OpenSans/OpenSans Italic.ttf","./resources/fonts/OpenSans/OpenSans Light.ttf","./resources/fonts/OpenSans/OpenSans Light Italic.ttf","./resources/fonts/OpenSans/OpenSans Regular.ttf","./resources/fonts/OpenSans/OpenSans Semibold.ttf","./resources/fonts/OpenSans/OpenSans Semibold Italic.ttf","./resources/fonts/ShareTechMono/ShareTechMono Regular.ttf","./resources/fonts/PublicSans/PublicSans Black.woff2","./resources/fonts/PublicSans/PublicSans Black Italic.woff2","./resources/fonts/PublicSans/PublicSans Bold.woff2","./resources/fonts/PublicSans/PublicSans Bold Italic.woff2","./resources/fonts/PublicSans/PublicSans Extra Bold.woff2","./resources/fonts/PublicSans/PublicSans Extra Light.woff2","./resources/fonts/PublicSans/PublicSans Extra Light Italic.woff2","./resources/fonts/PublicSans/PublicSans Italic.woff2","./resources/fonts/PublicSans/PublicSans Light.woff2","./resources/fonts/PublicSans/PublicSans Light Italic.woff2","./resources/fonts/PublicSans/PublicSans Medium.woff2","./resources/fonts/PublicSans/PublicSans Medium Italic.woff2","./resources/fonts/PublicSans/PublicSans Regular.woff2","./resources/fonts/PublicSans/PublicSans Semibold.woff2","./resources/fonts/PublicSans/PublicSans Semibold Italic.woff2","./resources/fonts/PublicSans/PublicSans Thin.woff2","./resources/fonts/PublicSans/PublicSans Thin Italic.woff2","./resources/sounds/beep_06.wav","./resources/sounds/bleep_04.wav","./resources/images/appicon-black-600x600.png"]);
 
 
       window.onload = function() { 

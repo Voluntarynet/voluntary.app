@@ -32,19 +32,25 @@ window.BMProtoNode = BMNode.extend().newSlots({
         return "?"
     },
 
-    nodeNode: function() {
-        return "&gt;"
+    decendantCount: function() {
+        return this.protoValue().allDescendantProtos().length
     },
 
-    subtitle: function () {
-  
-        return null
+    subtitle: function() {
+        const count = this.decendantCount()
+        return count ? count : null;
+    },
+
+    note: function() {
+        const count = this.decendantCount()
+        return count ? "&gt;" : null;
+
     },
 
     setupSubnodes: function() {
         const childNodes = [
             BMSlotsNode.clone().setProtoValue(this.protoValue()), 
-            BMSubclassesNode.clone().setProtoValue(this.protoValue())
+            BMSubclassesNode.clone().setProtoValue(this.protoValue()).setupSubnodes()
         ]
 
         this.setSubnodes(childNodes);

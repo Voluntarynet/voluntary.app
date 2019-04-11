@@ -8,7 +8,7 @@
 
 window.BMSubclassesNode = BMNode.extend().newSlots({
     type: "BMSubclassesNode",
-    protoValue: Proto,
+    protoValue: null,
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)
@@ -17,7 +17,7 @@ window.BMSubclassesNode = BMNode.extend().newSlots({
         //this.addAction("delete")
         this.setNodeMinWidth(300)
         this.setNoteIsSubnodeCount(true)
-        this.setupSubnodes()
+        //this.setupSubnodes()
     },
 
     title: function () {

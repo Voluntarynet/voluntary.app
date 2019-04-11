@@ -14,7 +14,7 @@ window.BMDataStore = BMNode.extend().newSlots({
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)
-        this.setTitle("DataStore")
+        this.setTitle("Storage")
         this.setNodeMinWidth(300)
     },
 

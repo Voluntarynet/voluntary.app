@@ -21,7 +21,12 @@ window.BMProtoNode = BMNode.extend().newSlots({
 
     title: function () {
         if (this.protoValue()) {
-            return this.protoValue().type()
+            let type = this.protoValue().type()
+            const unwantedPrefix = "ideal."
+            if (type.beginsWith(unwantedPrefix)) {
+                type = type.after(unwantedPrefix)
+            }
+            return type
         }
 
         return "?"

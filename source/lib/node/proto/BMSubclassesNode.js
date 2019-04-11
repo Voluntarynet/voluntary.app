@@ -17,6 +17,7 @@ window.BMSubclassesNode = BMNode.extend().newSlots({
         //this.addAction("delete")
         this.setNodeMinWidth(300)
         this.setNoteIsSubnodeCount(true)
+        this.setupSubnodes()
     },
 
     title: function () {
@@ -37,10 +38,12 @@ window.BMSubclassesNode = BMNode.extend().newSlots({
         return this
     },
 
+    /*
     prepareToAccess: function () {
         if (this._subnodes.length === 0) {
             this.setupSubnodes()
         }
     },
+    */
 })
 

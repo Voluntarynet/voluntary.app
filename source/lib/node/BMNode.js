@@ -241,6 +241,8 @@ window.BMNode = ideal.Proto.extend().newSlots({
             //StackTrace.shared().showCurrentStack()
             return this
         }
+
+        assert(aNode !== this)
 		
         if (this._parentNode && aNode) {
             console.warn(this.type() + " setParentNode(" + aNode.type() + ")  already has parent " + this._parentNode.type())
@@ -389,6 +391,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
         this.didUpdateNodeNote().post()
 
         if (this.parentNode()) {
+            assert(this.parentNode() !== this)
             this.parentNode().didUpdateNode()
         }
 

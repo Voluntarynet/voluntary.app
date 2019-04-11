@@ -58,6 +58,10 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
         this.justAddField(aField)
         return aField	
     },
+
+    addField: function(aField) {
+        return this.justAddField(aField)
+    },
 	
     justAddField: function(aField) {
         this.addSubnode(aField)

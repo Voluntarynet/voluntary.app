@@ -5,5 +5,5 @@ ResourceLoader.pushRelativePaths([
     "BMThemeClass.js",
     "BMThemeClassState.js",
     "BMTheme.js",
-    "BMThemes.js",
+    "BMThemeResources.js",
 ])

@@ -32,7 +32,8 @@ window.BMResources = BMStorableNode.extend().newSlots({
 
     setupSubnodes: function() {
 
-        this.setThemes(NodeStore.shared().rootInstanceWithPidForProto("_themes", BMThemes))
+        //this.setThemes(NodeStore.shared().rootInstanceWithPidForProto("_themes", BMThemeResources))
+        this.setThemes(BMThemeResources.shared())
         this.addSubnode(this.themes())
 
         this.setFonts(BMFontResources.shared())

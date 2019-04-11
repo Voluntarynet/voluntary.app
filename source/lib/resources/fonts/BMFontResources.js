@@ -51,7 +51,6 @@ window.BMFontResources = BMNode.extend().newSlots({
     },
 
     setupSubnodes: function() {
-        console.log("font paths = ", this.resourcePaths())
         this.resourcePaths().forEach(path => this.addFontWithPath(path))
         return this
     },

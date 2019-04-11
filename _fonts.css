@@ -13,6 +13,31 @@
 
 @font-face {
     font-family: "AppLight";
+    src: url("resources/fonts/PublicSans/PublicSans Light.woff2");
+    font-display: auto;
+}
+
+@font-face {
+    font-family: "AppRegular";
+    src: url("resources/fonts/PublicSans/PublicSans Regular.woff2");
+    font-display: auto;
+}
+
+@font-face {
+    font-family: "AppSemiBold";
+    src: url("resources/fonts/PublicSans/PublicSans Semibold.woff2");
+    font-display: auto;
+}
+
+@font-face {
+    font-family:"AppExtraBold";
+    src: url("resources/fonts/PublicSans/PublicSans Extra Bold.woff2");
+    font-display: auto;
+}
+
+/*
+@font-face {
+    font-family: "AppLight";
     src: url("resources/fonts/OpenSans/OpenSans Light.ttf");
     font-display: auto;
 }
@@ -34,6 +59,7 @@
     src: url("resources/fonts/OpenSans/OpenSans ExtraBold.ttf");
     font-display: auto;
 }
+*/
 
 /* --- Mono --- */
 

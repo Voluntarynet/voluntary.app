@@ -102114,7 +102114,7 @@ ResourceLoader.pushRelativePaths([
     "BMThemeClass.js",
     "BMThemeClassState.js",
     "BMTheme.js",
-    "BMThemes.js",
+    "BMThemeResources.js",
 ])
 
 "use strict"
@@ -102316,13 +102316,13 @@ window.BMTheme = BMStorableNode.extend().newSlots({
 
 /*
 
-    BMThemes
+    BMThemeResources
 
 */
 
 
-window.BMThemes = BMStorableNode.extend().newSlots({
-    type: "BMThemes",
+window.BMThemeResources = BMStorableNode.extend().newSlots({
+    type: "BMThemeResources",
     shared: null,
 }).setSlots({
     init: function () {
@@ -102371,7 +102371,7 @@ window.BMResources = BMStorableNode.extend().newSlots({
 
     setupSubnodes: function() {
 
-        this.setThemes(NodeStore.shared().rootInstanceWithPidForProto("_themes", BMThemes))
+        this.setThemes(NodeStore.shared().rootInstanceWithPidForProto("_themes", BMThemeResources))
         this.addSubnode(this.themes())
 
         this.setFonts(BMFontResources.shared())

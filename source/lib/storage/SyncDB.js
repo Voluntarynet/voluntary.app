@@ -4,7 +4,7 @@
 
     SyncDB
 
-	A read&write cache on top of IndexedDB to allow us to do all synchronous reads and writes
+	A read & write cache on top of IndexedDB to allow us to do all synchronous reads and writes
 	On open, it reads the entire db into a read cache dictionary.
 
 	- Reads first checks the writeCache beforing checking the readCache.
@@ -24,6 +24,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
     init() {
         super.init()
         this.newSlots({
+            name: "SyncDB", // default name
             idb: null,
             readCache: null,
             writeCache: null,
@@ -33,7 +34,14 @@ window.SyncDB = class SyncDB extends ProtoClass {
         })
 
         this.setReadCache({})
-        this.setIdb(IndexedDBFolder.clone().setPath("SyncDB"))
+
+        // idb
+        this.setIdb(IndexedDBFolder.clone())
+    }
+
+    setName (aName) {
+        this.idb().setPath(aName)
+        return this
     }
 
     // open
@@ -66,18 +74,6 @@ window.SyncDB = class SyncDB extends ProtoClass {
     }
 	
     // read
-	
-    /*
-	hasKey (key) {
-		this.assertOpen()
-		return key in this._readCache;
-	},
-	
-	at (key) {
-		this.assertOpen()
-		return this._readCache[key]
-	},
-	*/
 
     keys () {
         this.assertOpen()

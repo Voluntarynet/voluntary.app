@@ -46,7 +46,7 @@ window.App = BMNode.extend().newSlots({
         }
 
         this.nodeStoreDidOpenObs().watch()
-        NodeStore.shared().asyncOpen() 
+        NodeStore.shared().setName(this.name()).asyncOpen() 
     },
 
     showBrowserCompatibilityPanel: function() {

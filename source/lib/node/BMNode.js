@@ -374,8 +374,12 @@ window.BMNode = ideal.Proto.extend().newSlots({
 
     didChangeSubnodeList: function() {
         this.sortIfNeeded() // TODO: move to a scheduleSort system - triggered before syncToStore and didUpdateNode?
+        this.subnodes().forEach(subnode => subnode.didReorderParentSubnodes())
         this.didUpdateNode()
         return this
+    },
+
+    didReorderParentSubnodes: function() {
     },
 
     nodeReorderSudnodesTo: function(newSubnodes) {

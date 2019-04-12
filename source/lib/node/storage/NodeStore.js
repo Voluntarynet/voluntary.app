@@ -93,8 +93,9 @@
 
 window.NodeStore = ideal.Proto.extend().newSlots({
     type: "NodeStore",
-    folderName: "NodeStore",
-    folder: null,
+    name: "defaultStoreName",
+    //folderName: "NodeStore",
+    //folder: null,
 
     dirtyObjects: null,
     activeObjectsDict: null,
@@ -111,7 +112,6 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         this.setActiveObjectsDict({})
         this.setSdb(window.SyncDB.clone())
         this.setNodeStoreDidOpenNote(window.NotificationCenter.shared().newNote().setSender(this).setName("nodeStoreDidOpen"))
-        //this.asyncOpen()
     },
 
     descriptionForByteCount: function (b) {
@@ -136,6 +136,9 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         if (this.isOpen()) {
             throw new Error(this.typeId() + ".asyncOpen() already open")
         }
+        
+        this.sdb().setName(this.name())
+
         this.sdb().asyncOpen(() => {
             this.didOpen()
             //this.clear()

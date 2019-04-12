@@ -17,6 +17,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
             isDebugging: false,
         })
         this.assertHasUniqueId()
+        //this.requestPersistenceIfNeeded()
     }
 
     requestPersistenceIfNeeded () {

@@ -1,5 +1,8 @@
 
 
+
+--------------------
+
 Prevent left swipe from doing click on browser view *in single column mode*
 
 

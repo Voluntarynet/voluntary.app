@@ -21,10 +21,13 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
         this.addAction("delete")
         //this.setNodeColumnBackgroundColor("white")
         this.setNodeMinWidth(300)
+
         this.setTitle("title")
-        //this.setSubtitle("subtitle")
         this.setNodeTitleIsEditable(true)
+
+        //this.setSubtitle("subtitle")
         //this.setNodeSubtitleIsEditable(true)
+
         this.setSubnodeProto(BMFlexNode)
         this.setNodeCanReorder(true)
         this.addStoredSlot("label")
@@ -74,6 +77,18 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
         //this._nodeRowStyles.active().setBackgroundColor(c.copy().lighten(0.75).cssColorString())
         return this._nodeRowStyles
     },
+
+    /*
+    didReorderParentSubnodes: function() {
+        BMNode.didReorderParentSubnodes.apply(this)
+        this.scheduleSyncToView()
+        return this
+    },
+
+    didUpdateParentNode: function() {
+
+    },
+    */
 
 })
 

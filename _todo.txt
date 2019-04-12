@@ -1,5 +1,79 @@
 
 
+Prevent left swipe from doing click on browser view *in single column mode*
+
+
+Generic content creator Node
+
+Themes? Use StorableNode?
+
+
+--------------------------------------------------
+
+
+- copy/paste identity private key
+
+-- test gestures on surface pro
+  -- make diagraming app
+  -- test rotation / orientation
+
+
+-- support for adding/removing field set items, storing result
+-- top shelf
+
+-- double tap to edit BrowserTitledRow title?
+	- method to add double tap gesture on TextArea/Textfield?
+
+-- ability to switch themes
+
+-- dark theme for BMFieldRow when not in FieldSet?
+
+-- Dragging from anywhere in window
+	- standard long press with 2-3 fingers to drag?
+	- ask if target allows drag
+	- determine type of drag (move/copy) using modifier keys and or finger count?
+	- determine how to display drag view - some common standard of icon + label?
+	- create drag view and add to DocumentBody(?)
+	- add PanGesture to drag view, start panBegin
+	- onPanMove calcs new location using PanGesture downPositionInTarget (add helper method for calc?)
+	
+	Drop areas
+	- default to highlight drop area if allowed but can override 
+
+	ColumnBrowser onDrop
+	- check if allows drop and specific drop type
+	- create empty browser row 
+	- pause syncing from model
+
+- support multi BrowserRow selection
+
+-------------------------
+
+
+When creating a new subitem from UI add button, select it's path
+
+select all text on double touch tap
+
+copy / paste /duplicate rows?
+
+------------------------
+
+BrowserColumn -> *Row
+Node          -> subitems 
+         node.subitems -> BMField
+
+Network Node.subitems = [BMBoolField
+
+
+
+BrowserColumn? / BrowserInspector? / BrowserColumn?
+
+BrowserInspector subclass of BrowserColumn that rev
+
+
+
+----------------
+
 NEW VIEWS
 
     Grid View?

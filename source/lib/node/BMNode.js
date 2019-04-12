@@ -78,10 +78,10 @@ window.BMNode = ideal.Proto.extend().newSlots({
         this.scheduleFinalize()	
         
         //this.setNodeColumnStyles(this.sharedNodeColumnStyles())
-        //this.setNodeRowStyles(this.sharedNodeRowStyles())
+        this.setNodeRowStyles(this.sharedNodeRowStyles())
 
         this.setNodeColumnStyles(BMViewStyles.clone())
-        this.setNodeRowStyles(BMViewStyles.clone())
+        //this.setNodeRowStyles(BMViewStyles.clone())
         this.setViewDict({})
         return this
     },
@@ -249,7 +249,12 @@ window.BMNode = ideal.Proto.extend().newSlots({
         }
 		
         this._parentNode = aNode
+        this.didChangeParentNode()
         return this
+    },
+
+    didChangeParentNode: function() {
+        // for subclasses to override
     },
 	
     justAddSubnode: function(aSubnode) {
@@ -426,7 +431,27 @@ window.BMNode = ideal.Proto.extend().newSlots({
         this.privatePrepareToAccess() // causes access loop in some situations - use marker?
         return this._subnodes
     },
-    
+
+    indexOfSubnode: function(aSubnode) {
+        return this.subnodes().indexOf(aSubnode);
+    },
+
+    subnodeIndex: function() {
+        const p = this.parentNode()
+        if (p) {
+            return p.indexOfSubnode(this)
+        }
+        return 0
+    },
+
+    nodeDepth: function() {
+        const p = this.parentNode()
+        if (p) {
+            return p.nodeDepth() + 1
+        }
+        return 0
+    },
+
     // --- shelf ---
 	
     shelfSubnodes: function() {

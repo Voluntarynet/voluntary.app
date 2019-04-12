@@ -353,7 +353,6 @@ window.BrowserColumn = NodeView.extend().newSlots({
 	
     syncFromNode: function () {
         
-        
         if (this.browser() === null) {
             console.warn("WARNING: skipping BrowserColumn.syncFromNode because this.browser() is null")
             console.warn("this.node() = " , this.node())
@@ -379,6 +378,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
             this.browser().clearColumnsGroupsAfter(this.columnGroup())
         } else {
             // select the row matching the last selected node
+
             let row = this.selectRowWithNode(lastSelectedNode)
 
             if (row) {
@@ -389,12 +389,14 @@ window.BrowserColumn = NodeView.extend().newSlots({
                     this.didClickRow(row)
                 }
             } else {
-                // otherwise, select close to last selected index
-                const i = Math.min(selectedIndex, this.rows().length - 1)
-                row = this.rows()[i]
-                //this.log("selecting row titled '" + row.title().innerHTML() + "'")
-                row.setIsSelected(true)
-                this.didClickRow(row)
+                if (this.rows().length) {
+                    // otherwise, select close to last selected index
+                    const i = Math.min(selectedIndex, this.rows().length - 1)
+                    row = this.rows()[i]
+                    //this.log("selecting row titled '" + row.title().innerHTML() + "'")
+                    row.setIsSelected(true)
+                    this.didClickRow(row)
+                }
             }
         }
     },

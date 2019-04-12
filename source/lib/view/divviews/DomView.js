@@ -699,11 +699,12 @@ window.DomView = ideal.Proto.extend().newSlots({
     // box shadow
 
     setBoxShadow: function(s) {
+        //console.log(this.typeId() + ".setBoxShadow(" + s + ")")
         this.setCssAttribute("box-shadow", s)
         return this
     },
 	
-    border: function() {
+    boxShadow: function() {
         return this.getCssAttribute("box-shadow")
     },
 	
@@ -1836,9 +1837,15 @@ window.DomView = ideal.Proto.extend().newSlots({
 
         this.element().contentEditable = aBool ? "true" : "false"
         
+        /*
         if (this.showsHaloWhenEditable()) {
-            this.setCssAttribute("box-shadow", aBool ? "0px 0px 5px #ddd" : "none")
+            this.setBoxShadow(aBool ? "0px 0px 5px #ddd" : "none")
         }
+        */
+        
+        //this.element().style.hideFocus = true
+        this.element().style.outline = "none"
+
         this.setIsRegisteredForKeyboard(aBool)
         
         if (aBool) {

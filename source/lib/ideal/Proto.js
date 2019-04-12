@@ -357,7 +357,7 @@ Proto.setSlots({
     },
 
     ancestorTypes: function () {
-        return this.ancestors().map((obj) => { return obj.type() })
+        return this.ancestors().map(obj => obj.type())
     },
 
     firstAncestorWithMatchingPostfixClass: function (aPostfix) {
@@ -379,6 +379,14 @@ Proto.setSlots({
         return result
     },
 
+    /*
+    Can't use this yet because freeze also make's it's prototype immutable
+    Will need to copy whole object and prototype chain before freezing.
+    
+    asImmutable: function() {
+        Object.freeze(this)
+    }
+    */
 });
 
 Proto.newSlot("type", "ideal.Proto");

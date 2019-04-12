@@ -20,19 +20,12 @@ window.BMFontResources = BMNode.extend().newSlots({
         this.setTitle("Fonts")
         this.setNodeMinWidth(270)
 
-        // this.watchOnceForNote("appDidInit")
-
-        const obs = NotificationCenter.shared().newObservation()
-        obs.setName("appDidInit")
-        obs.setObserver(this)
-        //obs.setIsOneShot(true)
-        obs.watch()
-
+        this.watchOnceForNote("appDidInit")
         return this
     },
 
     appDidInit: function() {
-        console.log(this.typeId() + ".appDidInit()")
+        //console.log(this.typeId() + ".appDidInit()")
         this.setupSubnodes()
         return this
     },

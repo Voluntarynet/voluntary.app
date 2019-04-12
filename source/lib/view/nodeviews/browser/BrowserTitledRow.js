@@ -103,7 +103,7 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
     // --- edit ---
 
     onDidEdit: function (changedView) {   
-        console.log(this.typeId() + ".onDidEdit")
+        //console.log(this.typeId() + ".onDidEdit")
         this.scheduleSyncToNode()
     },
 

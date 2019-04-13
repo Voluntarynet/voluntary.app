@@ -23,7 +23,6 @@ window.BrowserRow = NodeView.extend().newSlots({
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
-        //this.setOwnsView(false)
         this.setIsRegisteredForClicks(true)
         this.turnOffUserSelect()
         this.setAcceptsFirstResponder(false)
@@ -32,7 +31,7 @@ window.BrowserRow = NodeView.extend().newSlots({
 
         //console.log("WebBrowserWindow.shared().isTouchDevice() = ", WebBrowserWindow.shared().isTouchDevice())
         if (WebBrowserWindow.shared().isTouchDevice()) {
-
+            //
         } else {
 	        this.setIsRegisteredForMouse(true) // TODO: replace with TapGesture?
             this.addCloseButton()
@@ -554,7 +553,9 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
     
     onClick: function (event) {
+        //console.log(this.typeId() + ".onClick()")
         if (this.isSelectable()) {
+            //console.log(this.typeId() + ".requestSelection()")
             this.requestSelection()
         }
         event.stopPropagation()

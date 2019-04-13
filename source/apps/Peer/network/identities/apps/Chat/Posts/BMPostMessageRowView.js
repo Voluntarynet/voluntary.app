@@ -140,7 +140,7 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
 
     setupContentView: function () {
         let tv = this.textView()
-        tv.setMinWidth("50px")
+        tv.setMinWidth(50)
         //tv.setPosition("relative")
         tv.setMarginRight(0)
         tv.setMarginLeft(0)

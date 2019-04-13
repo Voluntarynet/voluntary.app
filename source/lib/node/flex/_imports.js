@@ -2,5 +2,4 @@
 
 ResourceLoader.pushRelativePaths([
     "BMFlexNode.js",
-    "BMColor.js",
 ])

@@ -31,6 +31,7 @@ window.TextField = DivStyledView.extend().newSlots({
         this.setDisplay("inline-block")
         this.setTextOverflow("ellipsis")
         this.setSpellCheck(false)
+        this.setMinWidth(10)
 		
         //this.setUnfocusOnEnterKey(true)
         //this.setIsRegisteredForKeyboard(true) // gets set by setContentEditable()
@@ -38,6 +39,14 @@ window.TextField = DivStyledView.extend().newSlots({
 
         //this.setDidTextInputNote(NotificationCenter.shared().newNote().setSender(this).setName("didTextInput"))
         //this.setDidTextEditNote(NotificationCenter.shared().newNote().setSender(this).setName("didTextEdit"))
+
+        return this
+    },
+
+    setContentEditable: function(aBool) {
+        DivStyledView.setContentEditable.apply(this, [aBool])
+        //console.log(this.typeId() + ".setContentEditable(" + aBool + ") = ", this.isContentEditable())
+        this.setIsRegisteredForClicks(this.isContentEditable()) 
         return this
     },
 	
@@ -141,4 +150,19 @@ window.TextField = DivStyledView.extend().newSlots({
         return true
     },
     */
+
+    
+    onClick: function(event) {
+        // to prevent click-to-edit event from selecting the background row
+        //console.log(this.typeId() + ".onClick()")
+
+        if (this.isContentEditable()) {
+            this.sendActionToTarget()
+            event.stopPropagation()
+            return false
+        }
+
+        return DivStyledView.onClick.apply(this, [event])
+    },
+
 })

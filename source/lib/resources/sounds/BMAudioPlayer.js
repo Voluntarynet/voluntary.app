@@ -143,7 +143,7 @@ window.BMAudioPlayer = DomView.extend().newSlots({
 
         const promise = this.element().play()
         promise.catch((e) => {
-            console.log("audio play exception: ", e)
+            console.log("audio play exception: ", e.message)
         })
         return this
 

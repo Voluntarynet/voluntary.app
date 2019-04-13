@@ -1,5 +1,10 @@
 
+Use correct row color when pinch adding row
+Use clear style row coloring adjustment?
+highlight mode - selected, unselected, unselectedDuringSelection?
+Column darkenUnselectedMode
 
+Separate click to edit from click row select
 
 --------------------
 
@@ -12,7 +17,6 @@ Themes? Use StorableNode?
 
 
 --------------------------------------------------
-
 
 - copy/paste identity private key
 

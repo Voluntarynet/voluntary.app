@@ -13,5 +13,6 @@ ResourceLoader.pushRelativePaths([
     "DocumentBody.js",
     "ButtonView.js",
     "PanelView.js",
+    "BMColor.js",
 ])
 

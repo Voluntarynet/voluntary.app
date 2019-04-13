@@ -28,7 +28,7 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
 		
         //this.setPid("_network")
         this.setTitle("Network")
-        this.setNodeMinWidth(200)
+        this.setNodeMinWidth(250)
         
         this.setConnection(BMConnection.shared())
         this.addSubnode(this.connection())

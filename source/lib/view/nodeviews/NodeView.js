@@ -32,13 +32,6 @@ window.NodeView = DivStyledView.extend().newSlots({
             this.stopWatchingNode()
             this._node = aNode
             this.startWatchingNode()
-            
-            /*
-            if (aNode && this.ownsView()) { 
-                //this.log(aNode.type() + " setView")
-                aNode.setView(this)  // TODO: only used by browser - change so browser doesn't need it
-            }
-            */
 
             this.updateElementIdLabel()
             this.didChangeNode()

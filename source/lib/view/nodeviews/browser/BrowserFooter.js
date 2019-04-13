@@ -15,7 +15,6 @@ window.BrowserFooter = NodeView.extend().newSlots({
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
-        //this.setOwnsView(false)
 
         this.setLeftActionsView(DomView.clone().setDivClassName("BrowserFooterLeftActionsView NodeView DomView"))
 		

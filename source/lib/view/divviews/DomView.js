@@ -1652,6 +1652,7 @@ window.DomView = ideal.Proto.extend().newSlots({
     },
     
     onClick: function(event) {
+        //console.log(this.typeId() + ".onClick()")
         this.sendActionToTarget()
         event.stopPropagation()
         return false
@@ -1858,11 +1859,13 @@ window.DomView = ideal.Proto.extend().newSlots({
     },
     
     isContentEditable: function() {
-        let result = this.element().contentEditable
-        if (result === "inherit" && this.parentView()) {
+        //var v = window.getComputedStyle(this.element(), null).getPropertyValue("contentEditable");
+        let s = this.element().contentEditable
+        if (s === "inherit" && this.parentView()) {
             return this.parentView().isContentEditable()
         }
-        return this
+        const aBool = (s === "true" || s === true)
+        return aBool
     },
 
     contentEditable: function() {

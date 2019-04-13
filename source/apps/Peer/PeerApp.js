@@ -90,10 +90,6 @@ window.PeerApp = App.extend().newSlots({
         const classBrowser = BMClassBrowser.clone()
         this.about().addSubnode(classBrowser)
 
-        //const flexNode = BMFlexNode.clone()
-        const flexNode = NodeStore.shared().rootInstanceWithPidForProto("_flexNode", BMFlexNode);
-        this.about().addSubnode(flexNode)
-
         this.network().servers().connect() // observe appDidInit instead?
 
         // --- graphics subnodes --------------------

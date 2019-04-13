@@ -17,15 +17,14 @@ window.BrowserHeader = NodeView.extend().newSlots({
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
-        //this.setOwnsView(false)
 
-        let backArrowView = DomView.clone().setDivClassName("BackArrow").setTarget(this).setAction("didHitBackArrow")
+        const backArrowView = DomView.clone().setDivClassName("BackArrow").setTarget(this).setAction("didHitBackArrow")
         backArrowView.setBackgroundImageUrlPath(this.pathForIconName("left"))        
         backArrowView.setBackgroundSizeWH(10, 10)
         backArrowView.setOpacity(0.6)
         this.setBackArrowView(backArrowView)
 		
-        let titleView = DomView.clone().setDivClassName("BrowserHeaderTitleView NodeView DomView").setInnerHTML("").setUserSelect("none")
+        const titleView = DomView.clone().setDivClassName("BrowserHeaderTitleView NodeView DomView").setInnerHTML("").setUserSelect("none")
         this.setTitleView(titleView)
 		
         this.setRightActionsView(DomView.clone().setDivClassName("BrowserFooterRightActionsView"))

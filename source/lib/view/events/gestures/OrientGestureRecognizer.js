@@ -237,13 +237,13 @@ window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
     },
 
     spread: function() {
-        let s = this.currentSpread() - this.beginSpread();
+        const s = this.currentSpread() - this.beginSpread();
         //console.log("spread = " + s + " = " + this.currentSpread() + " - " + this.beginSpread() )
         return s
     },
 
     scale: function() {
-        let s = this.currentSpread() / this.beginSpread();
+        const s = this.currentSpread() / this.beginSpread();
         //console.log("scale = " + s + " = " + this.currentSpread() + "/" + this.beginSpread() )
         return s
     },

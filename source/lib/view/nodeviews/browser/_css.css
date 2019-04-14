@@ -201,11 +201,11 @@
 }
 
 .BrowserColumn:focus {
-  border: 1px dashed white;
+    border: 1px dashed white;
 }
 
 .BrowserRow_Selected:focus {
-  border: 1px dashed white;
+    border: 1px dashed white;
 }
 */
 

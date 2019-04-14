@@ -353,8 +353,8 @@ window.BrowserColumn = NodeView.extend().newSlots({
     syncFromNode: function () {
         
         if (this.browser() === null) {
-            console.warn("WARNING: skipping BrowserColumn.syncFromNode because this.browser() is null")
-            console.warn("this.node() = " , this.node())
+            // must have been removed from parentView
+            //console.warn("WARNING: skipping BrowserColumn.syncFromNode on node '" + this.node().typeId() + "' because this.browser() is null")
             //console.warn("this.node().title() = " , this.node().title())
             return
         }

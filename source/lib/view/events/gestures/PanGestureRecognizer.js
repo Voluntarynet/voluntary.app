@@ -36,13 +36,23 @@ window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     // tap events
 
+    hasOkFingerCount: function() {
+        const n = this.numberOfFingersDown()
+        const min = this.minNumberOfFingersRequired()
+        const max = this.maxNumberOfFingersAllowed()
+        return (n >= min && n <= max)
+    },
+
+    isReadyToBegin: function() {
+        return this.hasOkFingerCount();
+    },
+
+
     onDown: function (event) {
         GestureRecognizer.onDown.apply(this, [event])
 
         if (!this.isPressing()) {
-            let fingers = this.numberOfFingersDown()
-            if (fingers >= this.minNumberOfFingersRequired() &&
-                fingers <= this.maxNumberOfFingersAllowed()) {
+            if (this.isReadyToBegin()) {
                 this.setIsPressing(true)
                 this.setDownEvent(event)
                 this.startDocListeners()
@@ -82,7 +92,7 @@ window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
             if (this.isActive()) {
                 this.sendCompleteMessage() // complete
             }
-            this.didFinish()
+            this.didFinish() // will set isPressing to false
         }
         return this
     },
@@ -107,8 +117,8 @@ window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
     // ----------------------------------
 
     hasMovedEnough: function() {
-        let m = this.minDistToBegin()
-        let d = this.currentPosition().distanceFrom(this.downPosition())
+        const m = this.minDistToBegin()
+        const d = this.currentPosition().distanceFrom(this.downPosition())
         return d >= m
     },
 

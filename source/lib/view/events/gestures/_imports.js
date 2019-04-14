@@ -9,6 +9,7 @@ ResourceLoader.pushRelativePaths([
     "OrientGestureRecognizer.js",
     "PanGestureRecognizer.js",
     "PinchGestureRecognizer.js",
-    "RotationGestureRecognizer.js"
+    "RotationGestureRecognizer.js",
+    "edges/_imports.js",
 ])
 

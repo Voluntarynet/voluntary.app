@@ -80,6 +80,7 @@ window.Mouse = ideal.Proto.extend().newSlots({
         p.setId("mouse")
         p.setState(event.buttons)
         p.setIsDown(event.buttons !== 0)
+        p.setEvent(event)
         //p.findOverview()
 
         return p

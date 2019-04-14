@@ -88,8 +88,51 @@ window.BrowserView = NodeView.extend().newSlots({
         this.setColumnGroupCount(1)
         //.selectFirstColumn()
 
+        this.addGestureRecognizer(ScreenLeftEdgePanGestureRecognizer.clone()) 
+        this.addGestureRecognizer(ScreenRightEdgePanGestureRecognizer.clone()) 
+
         return this
     },
+
+    // right screen edge pan
+
+    onScreenRightEdgePanBegin: function(aGesture) {
+        console.log("onScreenRightEdgePanBegin")
+    },
+    
+    onScreenRightEdgePanMove: function(aGesture) {
+        console.log("onScreenRightEdgePanMove")
+
+    },
+
+    onScreenRightEdgePanComplete: function(aGesture) {
+
+    },
+
+    onScreenRightEdgePanCancelled: function(aGesture) {
+
+    },
+
+    // left screen edge pan
+
+    onScreenLeftEdgePanBegin: function(aGesture) {
+        console.log("onScreenLeftEdgePanBegin")
+
+    },
+
+    onScreenLeftEdgePanMove: function(aGesture) {
+        console.log("onScreenLeftEdgePanMove")
+
+    },
+
+    onScreenLeftEdgePanComplete: function(aGesture) {
+
+    },
+
+    onScreenLeftEdgePanCancelled: function(aGesture) {
+
+    },
+
 
     setupDefaultStyles: function () {
         this.setDefaultColumnStyles(BMViewStyles.clone())

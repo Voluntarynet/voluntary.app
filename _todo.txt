@@ -1,6 +1,6 @@
 
-Use correct row color when pinch adding row
-Use clear style row coloring adjustment?
+Use non transparent row background color
+
 highlight mode - selected, unselected, unselectedDuringSelection?
 Column darkenUnselectedMode
 

@@ -33,6 +33,7 @@ window.EventPoint = window.Point.extend().newSlots({
     target: null, 
     isDown: false,
     overView: null,
+    event: null,
 }).setSlots({
     init: function () {
         window.Point.init.apply(this)
@@ -69,5 +70,31 @@ window.EventPoint = window.Point.extend().newSlots({
             e = e.parentElement
         }
         return null
+    },
+
+    // viewport helpers
+
+    viewportHeight: function() {
+        return window.innerHeight
+    },
+
+    viewportWidth: function() {
+        return window.innerWidth
+    },
+
+    distFromTopOfViewport: function() {
+        return this.event().clientY
+    },
+
+    distFromBottomOfViewport: function() {
+        return this.viewportHeight() - this.distFromTopOfViewport()
+    },
+
+    distFromLeftOfViewport: function() {
+        return this.event().clientX
+    },
+
+    distFromRightOfViewport: function() {
+        return this.viewportWidth() - this.distFromLeftOfViewport()
     },
 })

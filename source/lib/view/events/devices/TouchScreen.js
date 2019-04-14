@@ -92,6 +92,7 @@ window.TouchScreen = ideal.Proto.extend().newSlots({
         p.setTimeToNow()
         p.setToTouchEventWinPos(touch)
         p.setIsDown(true)
+        p.setEvent(touch)
         //p.findOverview()
         return p
     },

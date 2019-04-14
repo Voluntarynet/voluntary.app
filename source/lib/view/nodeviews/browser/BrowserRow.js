@@ -14,7 +14,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     closeButtonView: null,
     defaultHeight: 60,
     restCloseButtonOpacity: 0.4,
-    transitionStyle: "all 0.2s ease, width 0s, max-width 0s, min-width 0s",
+    transitionStyle: "all 0.2s ease, width 0s, max-width 0s, min-width 0s, zoom 0.3s",
     selectedFlashColor: "#ccc",
     shouldShowFlash: false,
     shouldCenterCloseButton: true, 
@@ -451,9 +451,31 @@ window.BrowserRow = NodeView.extend().newSlots({
             pan.setMinDistToBegin(0)
             pan.onDown(longPressGesture.currentEvent())
             pan.attemptBegin()
-            this.contentView().setBackgroundColor("blue")
+            //this.contentView().setBackgroundColor("blue")
+            this.setTransition("all 0s, transform 0.2s, min-height 1s, max-height 1s")
+            this.contentView().setTransition("transform 0.2s")
+            setTimeout(() => { 
+                this.zoomForPan()
+            })
         }
     },
+
+    zoomForPan: function() {
+        const r = 1.1
+        this._prePanHeight = this.clientHeight()
+        //this.setMinAndMaxHeight(this._prePanHeight * r)
+        this.setTransform("scale(" + r + ")")
+        //this.contentView().setTransform("scale(" + r + ")")
+        return this
+    },
+
+    unzoomForPan: function() {
+        //this.setMinAndMaxHeight(this._prePanHeight)
+        this.setTransform("scale(1)")
+        //this.contentView().setTransform("scale(1)")
+        return this
+    },
+
 
     // --- pan gesture ----
 
@@ -510,6 +532,8 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
 
     onPanComplete: function(aGesture) {
+
+
         if (this._isDraggingView) {
             this._isDraggingView = false
 
@@ -520,8 +544,9 @@ window.BrowserRow = NodeView.extend().newSlots({
 
             this.column().stackRows()
             
+            this.unzoomForPan()
             setTimeout(() => {
-                this.contentView().setBackgroundColor(this.currentBgColor())
+                //this.contentView().setBackgroundColor(this.currentBgColor())
                 this.column().relativePositionRows()
                 this.column().didReorderRows()
             }, 500)

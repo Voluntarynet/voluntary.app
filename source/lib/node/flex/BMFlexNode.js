@@ -54,6 +54,10 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
     },
 
     nodeBackgroundColorObject: function() {
+        if (!this.parentNode()) {
+            return BMColor.whiteColor()
+        }
+
         const colorPair = this.colorPairForDepth(this.nodeDepth())
         const index = this.subnodeIndex()
         const ratio = index / this.parentNode().subnodes().length
@@ -89,6 +93,10 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
 
     },
     */
+
+    didChangeParentNode: function() {
+        this.scheduleSyncToView()
+    },
 
 })
 

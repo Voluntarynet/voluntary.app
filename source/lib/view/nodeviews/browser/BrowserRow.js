@@ -48,6 +48,9 @@ window.BrowserRow = NodeView.extend().newSlots({
         return this
     },
 
+    // -- contentView -- a special subview within the BrowserRow for it's content
+    // we route style methods to it
+
     setupRowContentView: function() {
         const cv = DomView.clone().setDivClassName("BrowserRowContentView")
         cv.setWidthPercentage(100).setHeightPercentage(100) 
@@ -56,6 +59,23 @@ window.BrowserRow = NodeView.extend().newSlots({
         this.addSubview(cv)
         return this
     },
+
+    setBackgroundColor: function(s) {
+        this.contentView().setBackgroundColor(s)
+        return this
+    },
+
+    setColor: function(s) {
+        this.contentView().setColor(s)
+        return this
+    },
+
+    setOpacity: function(v) {
+        this.contentView().setOpacity(v)
+        return this
+    },
+
+    // -----------
     
     column: function () {
         return this.parentView()

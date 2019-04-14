@@ -715,17 +715,9 @@ window.BrowserColumn = NodeView.extend().newSlots({
 
 
     onPinchBegin: function(aGesture) {
-        // if node supports add actions:
-        // - calc insert index
-        // - create new subnode,
-        // - move it to insert index 
-        // - sync with node to add row view for it
-        // - set new row view height to zero and 
-        //   reference it with _temporaryPinchSubnode so we
-        //   can delete it if pinch doesn't complete with enough height
-
         //console.log(this.typeId() + ".onPinchBegin()")
 
+        // - calc insert index
         const p = aGesture.beginCenterPosition()
         const row = this.rowContainingPoint(p)
         if (!row) {
@@ -739,32 +731,30 @@ window.BrowserColumn = NodeView.extend().newSlots({
         //console.log("insertIndex: ", insertIndex)
 
         if (this.node().hasAction("add")) {
-            const newSubnode = this.node().add()
+            // create new subnode at index
+            const newSubnode = this.node().addAt(insertIndex)
+
+            // reference it with _temporaryPinchSubnode so we
+            // can delete it if pinch doesn't complete with enough height
             this._temporaryPinchSubnode = newSubnode
-            const subnodes = this.node().subnodes().copy()
-            subnodes.remove(newSubnode)
-            subnodes.atInsert(insertIndex, newSubnode)
 
-            this.node().nodeReorderSudnodesTo(subnodes)
+            // sync with node to add row view for it
             this.syncFromNode()
-            //console.log("subviews after sync:  ", subviews.map(sv => sv.node().typeId()))
 
+            // find new row and prepare it
             const newRow = this.subviewForNode(newSubnode)
-            if (!newRow) {
-                newRow = this.subviewForNode(newSubnode)
-                assert(newRow)
-            }
             newRow.setMinAndMaxHeight(0)
             newRow.contentView().setMinAndMaxHeight(64)
-            newRow.setBackgroundColor("black")
             newRow.setTransition("all 0s")
             newRow.setBackgroundColor("black")
 
+            // set new row view height to zero and 
             const minHeight = BrowserRow.defaultHeight()
             const cv = newRow.contentView()
             cv.setBackgroundColor(this.columnGroup().backgroundColor())
             cv.setMinAndMaxHeight(minHeight)
-
+//            newRow.scheduleSyncFromNode()
+            //this._temporaryPinchSubnode.didUpdateNode()
         } else {
             //console.log(this.typeId() + ".onPinchBegin() cancelling due to no add action")
 
@@ -778,7 +768,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
             //console.log(this.typeId() + ".onPinchMove() s = ", s)
             const minHeight = BrowserRow.defaultHeight()
             const newRow = this.subviewForNode(this._temporaryPinchSubnode)
-            newRow.setBackgroundColor("black")
+            //newRow.setBackgroundColor("black")
             newRow.setMinAndMaxHeight(s)
             const t = Math.floor(s/2 - minHeight/2);
             newRow.contentView().setTop(t)

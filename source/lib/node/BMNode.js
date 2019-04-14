@@ -256,13 +256,22 @@ window.BMNode = ideal.Proto.extend().newSlots({
     didChangeParentNode: function() {
         // for subclasses to override
     },
-	
+
+    subnodeCount: function() {
+        return this.subnodes().length
+    },
+
     justAddSubnode: function(aSubnode) {
+        return this.justAddSubnodeAt(aSubnode, this.subnodeCount())
+    },
+	
+    justAddSubnodeAt: function(aSubnode, anIndex) {
         if (this.subnodes() === null) {
             throw new Error("subnodes is null")
         }
-        this.subnodes().push(aSubnode)
         
+        this.subnodes().atInsert(anIndex, aSubnode)
+
         if (this._subnodeIndex) {
             this.addSubnodeToIndex(aSubnode)
         }
@@ -271,14 +280,18 @@ window.BMNode = ideal.Proto.extend().newSlots({
         return aSubnode        
     },
 
-    addSubnode: function(aSubnode) {
-        this.justAddSubnode(aSubnode)
+    addSubnodeAt: function(aSubnode, anIndex) {
+        this.justAddSubnodeAt(aSubnode, anIndex)
         this.didChangeSubnodeList()
         return aSubnode
     },
 
+    addSubnode: function(aSubnode) {
+        return this.addSubnodeAt(aSubnode, this.subnodeCount())
+    },
+
     addSubnodesIfAbsent: function(subnodes) {
-        subnodes.forEach((subnode) => { this.addSubnodeIfAbsent(subnode) })
+        subnodes.forEach(subnode => this.addSubnodeIfAbsent(subnode))
         return this
     },
     
@@ -291,7 +304,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     },
 
     addSubnodeProtoForSlotIfAbsent: function(aProto, slotName) {
-        let getter = this[slotName]
+        const getter = this[slotName]
         if (!getter) {
             throw new Error(this.type() + "." + slotName + " slot missing")
         }
@@ -305,7 +318,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
         if (slotValue === null) {
             slotValue = aProto.clone()
             //console.log(this.typeId() + "." + setterName + "(", obj, ")")
-            let setterName = this.setterNameForSlot(slotName)
+            const setterName = this.setterNameForSlot(slotName)
             this[setterName].apply(this, [slotValue])
         }
         // TODO: this doesn't preserve ordering - how to address this?
@@ -578,18 +591,25 @@ window.BMNode = ideal.Proto.extend().newSlots({
         return this
     },
     
-    justAdd: function () {  
-        let newSubnode = this.subnodeProto().clone()
-        //console.log(this.typeId() + " add " + newSubnode.type())
-        this.addSubnode(newSubnode)
+    justAddAt: function (anIndex) {  
+        const newSubnode = this.subnodeProto().clone()
+        this.addSubnodeAt(newSubnode, anIndex)
+        return newSubnode
+    },
+
+    justAdd: function (anIndex) {  
+        return this.justAddAt(this.subnodeCount())
+    },
+
+    addAt: function(anIndex) {
+        const newSubnode = this.justAddAt(anIndex)
+        this.didUpdateNode()
+        this.postShouldFocusSubnode(newSubnode)
         return newSubnode
     },
 
     add: function () {  
-        let newSubnode = this.justAdd()
-        this.didUpdateNode()
-        this.postShouldFocusSubnode(newSubnode)
-        return newSubnode
+        return this.addAt(this.subnodeCount())
     },
 
     removeFromParentNode: function() {

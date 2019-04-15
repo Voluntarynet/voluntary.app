@@ -98,8 +98,16 @@ window.BrowserView = NodeView.extend().newSlots({
 
     onScreenRightEdgePanBegin: function(aGesture) {
         console.log("onScreenRightEdgePanBegin")
+        //if(this.isSingleColumn()) {
+        const column = this.selectedColumn()
+        if (column) {
+            column.moveRight()
+        }
+        //}
+        aGesture.cancel()
     },
     
+    /*
     onScreenRightEdgePanMove: function(aGesture) {
         console.log("onScreenRightEdgePanMove")
 
@@ -112,14 +120,23 @@ window.BrowserView = NodeView.extend().newSlots({
     onScreenRightEdgePanCancelled: function(aGesture) {
 
     },
+    */
 
     // left screen edge pan
 
-    onScreenLeftEdgePanBegin: function(aGesture) {
-        console.log("onScreenLeftEdgePanBegin")
-
+    canMoveLeft: function() {
+        return this.activeColumnGroups().length > 1
     },
 
+    onScreenLeftEdgePanBegin: function(aGesture) {
+        console.log("onScreenLeftEdgePanBegin")
+        if (this.canMoveLeft()) {
+            this.popLastActiveColumn()
+        }
+        aGesture.cancel()
+    },
+
+    /*
     onScreenLeftEdgePanMove: function(aGesture) {
         console.log("onScreenLeftEdgePanMove")
 
@@ -132,6 +149,9 @@ window.BrowserView = NodeView.extend().newSlots({
     onScreenLeftEdgePanCancelled: function(aGesture) {
 
     },
+    */
+
+    // -------------------
 
 
     setupDefaultStyles: function () {
@@ -355,6 +375,7 @@ window.BrowserView = NodeView.extend().newSlots({
         return this
     },
 
+
     popLastActiveColumn: function () {
         //console.log("popLastActiveColumn this.activeColumnGroups().length = ", this.activeColumnGroups().length)
         let n = this.activeColumnGroups().length - 1
@@ -421,7 +442,6 @@ window.BrowserView = NodeView.extend().newSlots({
         this.setupColumnGroupColors()
         this.fitColumns()
         this.updateSelectedColumnTo(selectedColumn)
-
         return this
     },
 

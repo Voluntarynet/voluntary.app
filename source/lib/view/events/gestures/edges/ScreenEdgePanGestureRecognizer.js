@@ -19,7 +19,7 @@
 window.ScreenEdgePanGestureRecognizer = PanGestureRecognizer.extend().newSlots({
     type: "ScreenEdgePanGestureRecognizer",
     edgeName: null,
-    maxStartDistance: 5,
+    maxStartDistance: 15,
 }).setSlots({
     init: function () {
         PanGestureRecognizer.init.apply(this)

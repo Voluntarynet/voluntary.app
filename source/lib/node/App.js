@@ -28,6 +28,10 @@ window.App = BMNode.extend().newSlots({
         this.nodeStoreDidOpenObs().setName("nodeStoreDidOpen").setObserver(this).setTarget(NodeStore.shared())
     },
 
+    title: function() {
+        return this.name()
+    },
+    
     // run and setup sequence in order of which methods are called
     // 1. setup NodeStore
 

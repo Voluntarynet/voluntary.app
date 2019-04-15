@@ -403,7 +403,8 @@ window.BrowserColumn = NodeView.extend().newSlots({
     // --- keyboard controls, arrow navigation -----------------------------
 
     canNavigate: function() {
-        return this.allowsCursorNavigation() && this.isActiveElement()
+        return this.allowsCursorNavigation() 
+        //return this.allowsCursorNavigation() && this.isActiveElement()
     },
 	
     showSelected: function() {
@@ -433,14 +434,10 @@ window.BrowserColumn = NodeView.extend().newSlots({
         this.showSelected()
         return false
     },
-	
-    onLeftArrowKeyUp: function(event) {
-        if (!this.canNavigate()) { 
-            return 
-        }
-		
+
+    moveLeft: function() {
         const pc = this.previousColumn()	
-        if (pc) {		
+        if (pc) {
             if (this.selectedRow()) { 
                 this.selectedRow().unselect() 
             }
@@ -450,16 +447,31 @@ window.BrowserColumn = NodeView.extend().newSlots({
             pc.didClickRow(newSelectedRow)
         	this.selectPreviousColumn()
         }
-        return false
+        return this
     },
-	
-    onRightArrowKeyUp: function(event) {
-        if (!this.canNavigate()) { return }	
 
+    moveRight: function() {
         if (this.nextColumn() && this.nextColumn().rows().length > 0) {
         	this.selectNextColumn()
         }
-        return false
+
+        return this
+    },
+	
+    onLeftArrowKeyUp: function(event) {
+        if (!this.canNavigate()) { 
+            return this
+        }	
+
+        this.moveLeft()
+    },
+	
+    onRightArrowKeyUp: function(event) {
+        if (!this.canNavigate()) { 
+            return this
+        }	
+
+        this.moveRight()
     },	
 	
     // --- enter key begins row editing ---------------------------

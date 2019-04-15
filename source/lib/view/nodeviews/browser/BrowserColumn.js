@@ -789,7 +789,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
 
             if (s < h) {
                 const f = s/h;
-                const rot = Math.floor((1 - f) * 180);
+                const rot = Math.floor((1 - f) * 90);
                 newRow.setPerspective(1000)
                 newRow.setTransformOrigin(0)
                 //newRow.contentView().setTransformOriginPercentage(0)

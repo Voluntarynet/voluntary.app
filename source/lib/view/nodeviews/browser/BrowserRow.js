@@ -290,8 +290,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         if (!this._dragDeleteButtonView) {
             const h = this.clientHeight()
 
-            this.setBackgroundColor("black")
-            this.contentView().setBackgroundColor(this.column().columnGroup().backgroundColor())
+            this.element().style.backgroundColor = "black"
             let cb = CloseButton.clone().setTransition("opacity 0.1s")
             cb.setMinAndMaxHeight(h)
             cb.setMinAndMaxWidth(h)
@@ -309,8 +308,6 @@ window.BrowserRow = NodeView.extend().newSlots({
         if (this._dragDeleteButtonView) {
             this._dragDeleteButtonView.removeFromParentView()
             this._dragDeleteButtonView = null
-            this.setBackgroundColor(null)
-
         }
     },
 	
@@ -358,7 +355,6 @@ window.BrowserRow = NodeView.extend().newSlots({
         if (this.canDelete()) {
             //console.log("-this.clientWidth() = ", -this.clientWidth())
             this.setTouchRight(this.clientWidth())
-            this.setBackgroundColor("black")
             this.cleanupSlide()
             this.setTransition(this.transitionStyle())
             this.delete()

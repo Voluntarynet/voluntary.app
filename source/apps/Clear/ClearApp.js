@@ -5,12 +5,10 @@
     ClearApp
 
 
-
 */
 
 window.ClearApp = App.extend().newSlots({
     type: "ClearApp",
-
     name: "Clear.app",
     version: [0, 0, 0, 0],
 

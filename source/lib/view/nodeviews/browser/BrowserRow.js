@@ -14,7 +14,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     closeButtonView: null,
     defaultHeight: 60,
     restCloseButtonOpacity: 0.4,
-    transitionStyle: "all 0.2s ease, width 0s, max-width 0s, min-width 0s, zoom 0.3s",
+    transitionStyle: "all 0.2s ease, width 0s, max-width 0s, min-width 0s",
     selectedFlashColor: "#ccc",
     shouldShowFlash: false,
     shouldCenterCloseButton: true, 
@@ -190,7 +190,6 @@ window.BrowserRow = NodeView.extend().newSlots({
             if (this.column()) {
                 if(this.node().nodeUsesColumnBackgroundColor()) {
                     const c = this.columnGroup().backgroundColor()
-                    //console.log("column bg color:'" + c + "'")
                     return c
                 }
             }
@@ -298,7 +297,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     onSlideBegin: function() {
         if (this.canDelete()) {
             this.setTouchDeleteOffset(this.clientWidth() * 0.5);
-            this.setTransition("all 0s")       
+            this.contentView().setTransition("all 0s")       
             this.setupSlide() 
         }
         return this
@@ -383,10 +382,11 @@ window.BrowserRow = NodeView.extend().newSlots({
         if (this.canDelete()) {
             this.disableColumnUntilTimeout(400)
 
-            this.setTransition(this.transitionStyle())
+            this.contentView().setTransition("all 0.2s ease")
 
             setTimeout(() => {
                 this.setTouchRight(0)
+                this.contentView().setTransition(this.transitionStyle())
             })
 
             setTimeout(() => {

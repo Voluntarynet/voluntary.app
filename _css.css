@@ -51,6 +51,8 @@ html * {
     touch-action: none; /* to avoid slow/choppy handling of touchmove events */
 }
 
+html * :focus { outline: none; }
+
 /*
 :root {
     font-size: calc(1vw + 1vh + .5vmin);

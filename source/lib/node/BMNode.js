@@ -845,7 +845,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     // json serialization
 
     asJSON: function() {
-        let dict = {}
+        const dict = {}
         dict.type = this.type()
         dict.title = this.title()
         // TODO: store persistent slots...
@@ -858,7 +858,12 @@ window.BMNode = ideal.Proto.extend().newSlots({
         return dict
     },
 
+    isLoadingFromJSON: function() {
+        return this._isLoadingFromJSON
+    },
+    
     fromJSON: function(json) {
+        this._isLoadingFromJSON = true
         // TODO: read persistent keys
         if (json.title) {
             this.setTitle(json.title)
@@ -866,15 +871,16 @@ window.BMNode = ideal.Proto.extend().newSlots({
         
         if (json.subnodes) { 
             this.setSubnodes(json.subnodes.map((subnodeDict) => {
-                let type = subnodeDict.type
+                const type = subnodeDict.type
                 return window[type].clone().fromJSON(subnodeDict)
             }))
         }
+        delete this._isLoadingFromJSON
         return this
     },
 
     asyncFromJSONFile: function(file) {
-        let rawFile = new XMLHttpRequest();
+        const rawFile = new XMLHttpRequest();
         rawFile.open("GET", file, false);
         rawFile.onreadystatechange = function ()
         {

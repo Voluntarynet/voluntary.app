@@ -29,6 +29,8 @@ window.BrowserRow = NodeView.extend().newSlots({
         
         this.setupRowContentView()
 
+        this.contentView().setTransition("all 0.2s ease, transform 0s, left 0s, right 0s")
+
         //console.log("WebBrowserWindow.shared().isTouchDevice() = ", WebBrowserWindow.shared().isTouchDevice())
         if (WebBrowserWindow.shared().isTouchDevice()) {
             //
@@ -43,7 +45,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         
         this.addGestureRecognizer(LongPressGestureRecognizer.clone()) // for long press & pan reordering
         this.addGestureRecognizer(SlideGestureRecognizer.clone()) // for slide delete
-        //this.addGestureRecognizer(OrientGestureRecognizer.clone()) //
+        this.addGestureRecognizer(TapGestureRecognizer.clone()) 
 
         return this
     },
@@ -270,8 +272,16 @@ window.BrowserRow = NodeView.extend().newSlots({
 
     // -- tap gesture ---
 
+    justTap: function() {
+        if (this.isSelectable()) {
+            //console.log(this.typeId() + ".requestSelection()")
+            this.requestSelection()
+        }
+    },
+
     onTapComplete: function() {
         //console.log(this.typeId() + ".onTapComplete()")
+        this.justTap()
         return this
     },
 
@@ -448,7 +458,7 @@ window.BrowserRow = NodeView.extend().newSlots({
             pan.onDown(longPressGesture.currentEvent())
             pan.attemptBegin()
             //this.contentView().setBackgroundColor("blue")
-            this.setTransition("all 0s, transform 0.2s, min-height 1s, max-height 1s")
+            this.setTransition("all 0s, transform 0.2s") //, min-height 1s, max-height 1s")
             this.contentView().setTransition("transform 0.2s")
             setTimeout(() => { 
                 this.zoomForPan()
@@ -494,6 +504,10 @@ window.BrowserRow = NodeView.extend().newSlots({
         return this
     },
 
+    columnGroup: function() {
+        return this.column().columnGroup()
+    },
+
     onPanBegin: function(aGesture) {
         if (!this._isDraggingView) {
             this._isDraggingView = true
@@ -501,6 +515,13 @@ window.BrowserRow = NodeView.extend().newSlots({
             //this.setTransition("color 0.3s, top 0s")
             //this.setTransform("scale(1.5)")
             this.setTransition("top 0s")
+            //this.setOverflow("visible")
+            //this.contentView().setOverflow("visible")
+            /*
+            this.column().setOverflow("visible")
+            this.columnGroup().setOverflow("visible")
+            this.columnGroup().scrollView().setOverflow("visible")
+            */
 
             this.column().absolutePositionRows()
 
@@ -595,19 +616,29 @@ window.BrowserRow = NodeView.extend().newSlots({
     
     onClick: function (event) {
         //console.log(this.typeId() + ".onClick()")
-        if (this.isSelectable()) {
-            //console.log(this.typeId() + ".requestSelection()")
-            this.requestSelection()
-        }
+        //this.justTap()
         event.stopPropagation()
         return false
     },
 
     didChangeIsSelected: function () {
         NodeView.didChangeIsSelected.apply(this)
+        /*
+        if (this.isSelected()) {
+            this.setOpacity(1)
+        } else {
+            this.setOpacity(0.25)
+        }
+        */
 	    this.updateSubviews()
         return this
     },
+
+    /*
+    sibilingDidChangeSelection: function() {
+
+    },
+    */
     
     nodeRowLink: function() {
         return this.node().nodeRowLink()

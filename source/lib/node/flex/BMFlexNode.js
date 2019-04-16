@@ -42,6 +42,7 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
 
     setTitle: function(aString) {
         this.setLabel(aString)
+        this.tellParentNodes("onDidEditNode", this)
         return this
     },
 
@@ -73,10 +74,16 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
         const c = this.nodeBackgroundColorObject()
 
         styles.unselected().setBackgroundColor(c.cssColorString())
-        styles.unselected().setColor(BMColor.whiteColor().cssColorString())
+        styles.unselected().setColor(c.copy().lighten(0.55).cssColorString())
+        //styles.unselected().setColor(BMColor.whiteColor().darken(0.75).cssColorString())
+        //styles.unselected().setBorderTop("1px solid " + c.cssColorString())
+        //styles.unselected().setBorderBottom("1px solid " + c.cssColorString())
 
-        styles.selected().setBackgroundColor(c.copy().darken(0.75).cssColorString())
+        //styles.selected().setBackgroundColor(c.copy().darken(0.75).cssColorString())
+        styles.selected().setBackgroundColor(c.copy().cssColorString())
         styles.selected().setColor(BMColor.whiteColor().cssColorString())
+        //styles.selected().setBorderTop("1px solid white")
+        //styles.selected().setBorderBottom("1px solid white")
 
         //this._nodeRowStyles.active().setBackgroundColor(c.copy().lighten(0.75).cssColorString())
         return this._nodeRowStyles
@@ -97,6 +104,33 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
     didChangeParentNode: function() {
         this.scheduleSyncToView()
     },
+
+    isFlexRoot: function() {
+        return this.parentNode().type() !== this.type()
+    },
+
+    onDidEditNode: function(aNode) {
+        if (this.parentNode() && this.isFlexRoot() && !this.isLoadingFromJSON()) {
+            //const json = this.asJSON()
+            //console.log(this.asJSON())
+            //this.fromJSON(json)
+        }
+    },
+
+    /*
+    asJSON: function() {
+        const json = BMStorableNode.asJSON.apply(this)
+        json._label = this.label()
+        return json
+    },
+
+    fromJSON: function(json) {
+        const obj = this.fromJSON.apply(this, [json])
+        obj.setLabel(json._label)
+        return obj
+    },
+
+    */
 
 })
 

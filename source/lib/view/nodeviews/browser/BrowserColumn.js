@@ -765,7 +765,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
             const cv = newRow.contentView()
             cv.setBackgroundColor(this.columnGroup().backgroundColor())
             cv.setMinAndMaxHeight(minHeight)
-//            newRow.scheduleSyncFromNode()
+            //newRow.scheduleSyncFromNode()
             //this._temporaryPinchSubnode.didUpdateNode()
         } else {
             //console.log(this.typeId() + ".onPinchBegin() cancelling due to no add action")

@@ -4,7 +4,7 @@
 
     TapGestureRecognizer
 
-    Recognize a number of taps inside a viewTarget and within a timePeriod.
+    Recognize a number of taps inside a viewTarget and within a maxHoldPeriod.
         
     On first tap for finger count, start timer. 
     If second tap for finger count occurs before it's expired, it's recognized. 
@@ -30,11 +30,10 @@
 
 window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
     type: "TapGestureRecognizer",
-    maxHoldPeriod: 500, // milliseconds per tap
-    timePeriod: 500, // miliseconds from first down event to up event
+    maxHoldPeriod: 1000, // milliseconds per tap
     timeoutId: null, // private
 
-    numberOfTapsRequired: 3,
+    numberOfTapsRequired: 1,
     numberOfFingersRequired: 1,
     tapCount: 0,
 }).setSlots({
@@ -59,7 +58,7 @@ window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
             this.stopTimer()
         }
 
-        let tid = setTimeout(() => { this.cancel() }, this.timePeriod());
+        let tid = setTimeout(() => { this.cancel() }, this.maxHoldPeriod());
         this.setTimeoutId(tid)
         return this
     },
@@ -94,18 +93,21 @@ window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
             this.setTapCount(this.tapCount() + 1)
         }
 
-        if (this.tapCount() === this.numberOfTapsRequired()) {
-            this.complete()
-        }
-
         return true
     },
 
-    /*
     onUp: function (event) {
         GestureRecognizer.onUp.apply(this, [event])
+ 
+        if (this.hasTimer()) {
+            if (this.tapCount() === this.numberOfTapsRequired()) {
+                this.stopTimer()
+                this.complete()
+            }
+        } else {
+            //this.cancel()
+        }
     },
-    */
 
     // end states
 

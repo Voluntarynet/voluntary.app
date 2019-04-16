@@ -187,6 +187,14 @@ window.BrowserRow = NodeView.extend().newSlots({
 
     unselectedBgColor: function() {
         if (this.node()) {
+            if (this.column()) {
+                if(this.node().nodeUsesColumnBackgroundColor()) {
+                    const c = this.columnGroup().backgroundColor()
+                    //console.log("column bg color:'" + c + "'")
+                    return c
+                }
+            }
+
             const c = this.node().nodeRowStyles().unselected().backgroundColor()
             if (c) {
                 return c
@@ -495,7 +503,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
 
     addShadow: function() {
-        this.setBoxShadow("0px 0px 20px 10px rgba(0, 0, 0, 0.5)")
+        this.setBoxShadow("0px 0px 10px 10px rgba(0, 0, 0, 0.5)")
         return this
     },
 

@@ -397,6 +397,10 @@ window.DomView = ideal.Proto.extend().newSlots({
     backgroundColor: function() {
         return this.getCssAttribute("background-color")
     },
+
+    computedBackgroundColor: function() {
+        return window.getComputedStyle(this.element()).getPropertyValue("background-color")
+    },
 	
     // background image
 	

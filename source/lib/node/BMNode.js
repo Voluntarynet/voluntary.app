@@ -68,6 +68,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     // notifications
     didUpdateNodeNote: null,
     shouldFocusSubnodeNote: null,
+    nodeUsesColumnBackgroundColor: true,
 }).setSlots({
     init: function () {
         this._subnodes = []

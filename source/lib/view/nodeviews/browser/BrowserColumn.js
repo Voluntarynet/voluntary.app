@@ -758,6 +758,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
             newRow.setMinAndMaxHeight(0)
             newRow.contentView().setMinAndMaxHeight(64)
             newRow.setTransition("all 0s")
+            newRow.contentView().setTransition("all 0s")
             newRow.setBackgroundColor("black")
 
             // set new row view height to zero and 

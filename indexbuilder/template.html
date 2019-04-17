@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta http-equiv="cache-control" content="no-cache">    
+    <meta http-equiv="pragma" content="no-cache">      
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=0.1">
     <link rel="manifest" href="/manifest.json">
@@ -20,7 +22,7 @@ window.ResourceLoaderIsEmbedded = true
       /* INSERT SCRIPT HERE */
 
       window.onload = function() { 
-        setTimeout(() => { ResourceLoader.done()  }, 200) // hack for startWhenReady for loading order issue        
+        setTimeout(() => { ResourceLoader.done() }, 200) // hack for startWhenReady for loading order issue        
       }
 
     </script>

@@ -34,6 +34,8 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
 
         this.setNodeColumnStyles(BMViewStyles.clone())
         this.setNodeRowStyles(BMViewStyles.clone())
+
+        this.setNodeUsesColumnBackgroundColor(false)
     },
 
     title: function() {
@@ -131,6 +133,13 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
     },
 
     */
+
+    didChangeParentNode: function() {
+        BMStorableNode.didChangeParentNode.apply(this)
+        if (this.isFlexRoot()) {
+            this.removeAction("delete")
+        }
+    },
 
 })
 

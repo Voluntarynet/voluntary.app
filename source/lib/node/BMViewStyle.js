@@ -46,14 +46,6 @@ window.BMViewStyle = ideal.Proto.extend().newSlots({
         return "{" + parts.join(", ") + "}"	
     },
 	
-    /*
-	setBackgroundColor: function(c) {
-		this._backgroundColor = c
-		console.warn(this.typeId() + ".setBackgroundColor(" + c + ")")
-		return this
-	},
-	*/
-	
     copyFrom: function(aViewStyle) {
         aViewStyle.applyToView(this) // since it uses the same methods
         return this
@@ -69,25 +61,6 @@ window.BMViewStyle = ideal.Proto.extend().newSlots({
 		
         return this
     },
-	
-    /*
-	applyToView: function(aView) {
-
-        if (this.color() != null) {
-            aView.setColor(this.color()) 
-        }
-        
-        if (this.backgroundColor() != null) {
-            aView.setBackgroundColor(this.backgroundColor()) 
-        }
-
-        if (this.opacity() != null) {
-            aView.setOpacity(this.opacity()) 
-        }
-
-		return this
-	},
-	*/
     
 
 })

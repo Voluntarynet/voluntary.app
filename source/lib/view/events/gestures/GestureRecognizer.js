@@ -215,7 +215,8 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
 
     didFinish: function() {
         this.setDidBegin(false)
-        this.deactivate()
+        //this.deactivate()
+        setTimeout(() => { this.deactivate() }, 0)
 
         if (this.shouldRemoveOnComplete() && this.viewTarget()) {
             this.stop()

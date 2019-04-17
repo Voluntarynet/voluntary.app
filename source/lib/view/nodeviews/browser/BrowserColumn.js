@@ -20,12 +20,13 @@ window.BrowserColumn = NodeView.extend().newSlots({
         //this.styles().selected().setBorderLeft("1px solid rgba(0, 0, 0, 0.15)")
         //this.styles().unselected().setBorderLeft("1px solid rgba(0, 0, 0, 0.15)")
         this.applyStyles()
-        this.setIsRegisteredForClicks(true)
+        //this.setIsRegisteredForClicks(true)
         this.setAcceptsFirstResponder(true)
         this._rows = []
 
         this.setUserSelect("none")
         this.addGestureRecognizer(PinchGestureRecognizer.clone()) // for pinch open to add row
+        this.addGestureRecognizer(TapGestureRecognizer.clone()) // for pinch open to add row
         return this
     },
     
@@ -527,6 +528,16 @@ window.BrowserColumn = NodeView.extend().newSlots({
 	
     // -----------------------------
     
+    onTapComplete: function() {
+        //console.log(this.typeId() + ".onTapComplete()")
+        if (this.node()) {
+            this.node().add()
+        }
+        return this
+    },
+
+    // -----------------------------
+
     columnIndex: function() {
         return this.browser().columnGroups().indexOf(this.columnGroup())
     },

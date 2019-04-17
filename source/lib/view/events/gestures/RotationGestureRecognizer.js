@@ -30,13 +30,13 @@ window.RotationGestureRecognizer = OrientGestureRecognizer.extend().newSlots({
     init: function () {
         OrientGestureRecognizer.init.apply(this)
         this.setListenerClasses(["MouseListener", "TouchListener"]) 
-        this.setIsDebugging(true)
+        //this.setIsDebugging(true)
         return this
     },
 
     hasMovedEnough: function() {
-        let ma = this.minRotatationInDegreesToBegin()
-        let a = this.activeAngleInDegress()
+        const ma = this.minRotatationInDegreesToBegin()
+        const a = this.activeAngleInDegress()
         return a >= ma
     },
 })

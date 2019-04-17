@@ -108,7 +108,7 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
     },
 
     isFlexRoot: function() {
-        return this.parentNode().type() !== this.type()
+        return this.parentNode() && ( this.parentNode().type() !== this.type() )
     },
 
     onDidEditNode: function(aNode) {

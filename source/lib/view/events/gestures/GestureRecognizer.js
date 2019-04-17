@@ -76,8 +76,8 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         this.setIsEmulatingTouch(true)
         this.setFingerViewDict({})
 
-        this.setIsDebugging(false)
-        this.setIsVisualDebugging(false)
+        //this.setIsDebugging(true)
+        //this.setIsVisualDebugging(true)
         return this
     },
 
@@ -674,7 +674,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     },
 
     description: function() {
-        return this.shortTypeId() + " on " + this.viewTarget().typeId()
+        return this.shortTypeId() + " on " + (this.viewTarget() ? this.viewTarget().typeId() : "null view target")
     },
 })
 

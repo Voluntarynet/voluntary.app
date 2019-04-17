@@ -30,6 +30,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         this.setupRowContentView()
 
         this.contentView().setTransition("all 0.2s ease, transform 0s, left 0s, right 0s")
+        this.contentView().setZIndex(1)
 
         //console.log("WebBrowserWindow.shared().isTouchDevice() = ", WebBrowserWindow.shared().isTouchDevice())
         if (WebBrowserWindow.shared().isTouchDevice()) {
@@ -315,7 +316,6 @@ window.BrowserRow = NodeView.extend().newSlots({
             //this.parentView().addSubview(dv)
             //this.setBackgroundColor(this.column().columnGroup().backgroundColor())
             cb.setZIndex(0)
-            this.contentView().setZIndex(1)
             this._dragDeleteButtonView = cb
         }
         return this
@@ -525,18 +525,19 @@ window.BrowserRow = NodeView.extend().newSlots({
             this.setTransition("top 0s")
             //this.setOverflow("visible")
             //this.contentView().setOverflow("visible")
-            /*
+            
+            // visibility
             this.column().setOverflow("visible")
             this.columnGroup().setOverflow("visible")
             this.columnGroup().scrollView().setOverflow("visible")
-            */
+            this.setZIndex(3)
+            
 
             this.column().absolutePositionRows()
 
             this._dragStartPos = this.relativePos()
 
             this.setTop(this._dragStartPos.y())
-            this.setZIndex(1)
             this.column().setPosition("relative")
             this.addShadow()
         }
@@ -562,8 +563,13 @@ window.BrowserRow = NodeView.extend().newSlots({
         if (this._isDraggingView) {
             this._isDraggingView = false
 
+            // visibility
+            this.column().setOverflow("hidden")
+            this.columnGroup().setOverflow("hidden")
+            this.columnGroup().scrollView().setOverflow("hidden")
+            this.setZIndex(null)
+
             //this.setPosition("relative")
-            this.setZIndex(0)
             this.setTransition(this.transitionStyle())
             this.removeShadow()
 

@@ -528,10 +528,14 @@ window.BrowserColumn = NodeView.extend().newSlots({
 	
     // -----------------------------
     
-    onTapComplete: function() {
+    onTapComplete: function(aGesture) {
         //console.log(this.typeId() + ".onTapComplete()")
         if (this.node()) {
-            this.node().add()
+            // make sure tap isn't on a row
+            const p = aGesture.upPosition()
+            if (p.event().target === this.element()) {
+                this.node().add()
+            }
         }
         return this
     },

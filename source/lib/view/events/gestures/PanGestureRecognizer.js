@@ -28,7 +28,7 @@ window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
     init: function () {
         GestureRecognizer.init.apply(this)
         this.setListenerClasses(["MouseListener", "TouchListener"]) 
-        this.setIsDebugging(false)
+        //this.setIsDebugging(false)
         return this
     },
 

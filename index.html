@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta http-equiv="cache-control" content="no-cache">    
+    <meta http-equiv="pragma" content="no-cache">      
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=0.1">
     <link rel="manifest" href="/manifest.json">
@@ -83074,14 +83076,6 @@ window.BMViewStyle = ideal.Proto.extend().newSlots({
         return "{" + parts.join(", ") + "}"	
     },
 	
-    /*
-	setBackgroundColor: function(c) {
-		this._backgroundColor = c
-		console.warn(this.typeId() + ".setBackgroundColor(" + c + ")")
-		return this
-	},
-	*/
-	
     copyFrom: function(aViewStyle) {
         aViewStyle.applyToView(this) // since it uses the same methods
         return this
@@ -83097,25 +83091,6 @@ window.BMViewStyle = ideal.Proto.extend().newSlots({
 		
         return this
     },
-	
-    /*
-	applyToView: function(aView) {
-
-        if (this.color() != null) {
-            aView.setColor(this.color()) 
-        }
-        
-        if (this.backgroundColor() != null) {
-            aView.setBackgroundColor(this.backgroundColor()) 
-        }
-
-        if (this.opacity() != null) {
-            aView.setOpacity(this.opacity()) 
-        }
-
-		return this
-	},
-	*/
     
 
 })
@@ -98882,6 +98857,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         this.setupRowContentView()
 
         this.contentView().setTransition("all 0.2s ease, transform 0s, left 0s, right 0s")
+        this.contentView().setZIndex(1)
 
         //console.log("WebBrowserWindow.shared().isTouchDevice() = ", WebBrowserWindow.shared().isTouchDevice())
         if (WebBrowserWindow.shared().isTouchDevice()) {
@@ -99167,7 +99143,6 @@ window.BrowserRow = NodeView.extend().newSlots({
             //this.parentView().addSubview(dv)
             //this.setBackgroundColor(this.column().columnGroup().backgroundColor())
             cb.setZIndex(0)
-            this.contentView().setZIndex(1)
             this._dragDeleteButtonView = cb
         }
         return this
@@ -99377,18 +99352,19 @@ window.BrowserRow = NodeView.extend().newSlots({
             this.setTransition("top 0s")
             //this.setOverflow("visible")
             //this.contentView().setOverflow("visible")
-            /*
+            
+            // visibility
             this.column().setOverflow("visible")
             this.columnGroup().setOverflow("visible")
             this.columnGroup().scrollView().setOverflow("visible")
-            */
+            this.setZIndex(3)
+            
 
             this.column().absolutePositionRows()
 
             this._dragStartPos = this.relativePos()
 
             this.setTop(this._dragStartPos.y())
-            this.setZIndex(1)
             this.column().setPosition("relative")
             this.addShadow()
         }
@@ -99414,8 +99390,13 @@ window.BrowserRow = NodeView.extend().newSlots({
         if (this._isDraggingView) {
             this._isDraggingView = false
 
+            // visibility
+            this.column().setOverflow("hidden")
+            this.columnGroup().setOverflow("hidden")
+            this.columnGroup().scrollView().setOverflow("hidden")
+            this.setZIndex(null)
+
             //this.setPosition("relative")
-            this.setZIndex(0)
             this.setTransition(this.transitionStyle())
             this.removeShadow()
 
@@ -103173,7 +103154,7 @@ ResourceLoader.setResourceFilePaths(["./resources/fonts/Courier Prime/Code/Couri
 
 
       window.onload = function() { 
-        setTimeout(() => { ResourceLoader.done()  }, 200) // hack for startWhenReady for loading order issue        
+        setTimeout(() => { ResourceLoader.done() }, 200) // hack for startWhenReady for loading order issue        
       }
 
     </script>

@@ -46,7 +46,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         
         this.addGestureRecognizer(LongPressGestureRecognizer.clone()) // for long press & pan reordering
         this.addGestureRecognizer(SlideGestureRecognizer.clone()) // for slide delete
-        this.addGestureRecognizer(TapGestureRecognizer.clone()) 
+        //this.addGestureRecognizer(TapGestureRecognizer.clone()) 
 
         return this
     },
@@ -289,7 +289,7 @@ window.BrowserRow = NodeView.extend().newSlots({
 
     onTapComplete: function() {
         //console.log(this.typeId() + ".onTapComplete()")
-        this.justTap()
+        //this.justTap()
         return this
     },
 
@@ -630,7 +630,8 @@ window.BrowserRow = NodeView.extend().newSlots({
     
     onClick: function (event) {
         //console.log(this.typeId() + ".onClick()")
-        //this.justTap()
+        this.justTap()
+        GestureManager.shared().cancelAllBegunGestures()
         event.stopPropagation()
         return false
     },

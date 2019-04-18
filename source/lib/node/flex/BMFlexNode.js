@@ -7,6 +7,9 @@
 	
 */
 
+
+
+
 window.BMFlexNode = BMStorableNode.extend().newSlots({
     type: "BMFlexNode",
     label: "",
@@ -32,31 +35,33 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
         this.setNodeCanReorder(true)
         this.addStoredSlot("label")
 
-        this.setNodeColumnStyles(BMViewStyles.clone())
-        this.setNodeRowStyles(BMViewStyles.clone())
+        //this.setNodeColumnStyles(BMViewStyles.clone())
+        //this.setNodeRowStyles(BMViewStyles.clone())
 
-        this.setNodeUsesColumnBackgroundColor(false)
+        //this.setNodeUsesColumnBackgroundColor(false)
     },
 
-    title: function() {
+    title: function () {
         return this.label()
     },
 
-    setTitle: function(aString) {
+    setTitle: function (aString) {
         this.setLabel(aString)
         this.tellParentNodes("onDidEditNode", this)
         return this
     },
 
-    colorPairForDepth: function(depthNumber) {
+    /*
+    colorPairForDepth: function (depthNumber) {
         if (depthNumber % 2 === 1) {
             return [BMColor.redColor(), BMColor.yellowColor()]
-        } 
-        
+        }
+
         return [BMColor.blueColor(), BMColor.blueColor().copy().lighten(0.75)]
     },
 
-    nodeBackgroundColorObject: function() {
+
+    nodeBackgroundColorObject: function () {
         if (!this.parentNode()) {
             return BMColor.whiteColor()
         }
@@ -71,25 +76,32 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
         return c
     },
 
-    nodeRowStyles: function() {
+    nodeRowStylesOld: function () {
+        // const nextColor = this.colorPairForDepth(this.nodeDepth()+1)[0]
+
         const styles = this._nodeRowStyles
         const c = this.nodeBackgroundColorObject()
 
         styles.unselected().setBackgroundColor(c.cssColorString())
-        styles.unselected().setColor(c.copy().lighten(0.55).cssColorString())
-        //styles.unselected().setColor(BMColor.whiteColor().darken(0.75).cssColorString())
+        //styles.unselected().setBackgroundColor(c.copy().darken(0.5).cssColorString())
+        //styles.unselected().setColor(c.copy().lighten(0.55).cssColorString())
+        styles.unselected().setColor(BMColor.whiteColor().cssColorString())
         //styles.unselected().setBorderTop("1px solid " + c.cssColorString())
         //styles.unselected().setBorderBottom("1px solid " + c.cssColorString())
 
-        //styles.selected().setBackgroundColor(c.copy().darken(0.75).cssColorString())
-        styles.selected().setBackgroundColor(c.copy().cssColorString())
+        styles.selected().setBackgroundColor(BMColor.grayColor().cssColorString())
         styles.selected().setColor(BMColor.whiteColor().cssColorString())
+
+        //styles.selected().setBackgroundColor(c.copy().darken(0.75).cssColorString())
+        //styles.selected().setBackgroundColor(c.copy().cssColorString())
+        //styles.selected().setColor(BMColor.whiteColor().cssColorString())
         //styles.selected().setBorderTop("1px solid white")
         //styles.selected().setBorderBottom("1px solid white")
 
         //this._nodeRowStyles.active().setBackgroundColor(c.copy().lighten(0.75).cssColorString())
         return this._nodeRowStyles
     },
+    */
 
     /*
     didReorderParentSubnodes: function() {
@@ -103,15 +115,15 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
     },
     */
 
-    didChangeParentNode: function() {
+    didChangeParentNode: function () {
         this.scheduleSyncToView()
     },
 
-    isFlexRoot: function() {
-        return this.parentNode() && ( this.parentNode().type() !== this.type() )
+    isFlexRoot: function () {
+        return this.parentNode() && (this.parentNode().type() !== this.type())
     },
 
-    onDidEditNode: function(aNode) {
+    onDidEditNode: function (aNode) {
         if (this.parentNode() && this.isFlexRoot() && !this.isLoadingFromJSON()) {
             //const json = this.asJSON()
             //console.log(this.asJSON())
@@ -134,12 +146,13 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
 
     */
 
-    didChangeParentNode: function() {
+    didChangeParentNode: function () {
         BMStorableNode.didChangeParentNode.apply(this)
         if (this.isFlexRoot()) {
             this.removeAction("delete")
         }
     },
+
 
 })
 

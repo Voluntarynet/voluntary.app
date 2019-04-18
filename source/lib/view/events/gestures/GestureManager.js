@@ -13,9 +13,11 @@ window.GestureManager = ideal.Proto.extend().newSlots({
     type: "GestureManager",
     activeGesture: null,
     isDebugging: false,
+    begunGestures: null,
 }).setSlots({
 
     init: function () {
+        this.setBegunGestures({})
         return this
     },
 
@@ -30,10 +32,14 @@ window.GestureManager = ideal.Proto.extend().newSlots({
     requestActiveGesture: function(aGesture) {
         assert(aGesture)
         //this.releaseActiveGestureIfInactive()
-        assert(aGesture !== this.activeGesture())
+        if(aGesture == this.activeGesture()) {
+            console.warn("attempt to activeate an already active gesture ", aGesture.typeId())
+            return false
+        }
 
         if (!this.activeGesture()) {
             aGesture.viewTarget().cancelAllGesturesExcept(aGesture)
+            this.cancelBegunGesturesExcept(aGesture)
             this.setActiveGesture(aGesture)
             if (this.isDebugging()) {
                 console.log(this.type() + " activating " + aGesture.description())
@@ -56,4 +62,27 @@ window.GestureManager = ideal.Proto.extend().newSlots({
         return this
     },
 
+    addBegunGesture: function(aGesture) {
+        this.begunGestures()[aGesture.typeId()] = aGesture
+        return this
+    },
+
+    removeBegunGesture: function(aGesture) {
+        delete this.begunGestures()[aGesture.typeId()]
+        return this
+    },
+
+    cancelAllBegunGestures: function() {
+        Object.values(this.begunGestures()).forEach(g => g.cancel() );
+        return this
+    },
+
+    cancelBegunGesturesExcept: function(aGesture) {
+        Object.values(this.begunGestures()).forEach((g) => {
+            if (g !== aGesture) {
+                g.cancel()
+            }
+        });
+        return this
+    },
 })

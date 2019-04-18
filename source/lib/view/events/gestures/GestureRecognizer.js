@@ -215,6 +215,8 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
 
     didFinish: function() {
         this.setDidBegin(false)
+        GestureManager.shared().removeBegunGesture(this)
+
         //this.deactivate()
         setTimeout(() => { this.deactivate() }, 0)
 
@@ -300,7 +302,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
 
     onUp: function (event) {
         this.setUpEvent(event)
-        this.setCurrentEvent(event)
+        //this.setCurrentEvent(event) // on Windows, the up event may not have any positions
         this.onEvent(event)
     },
 
@@ -404,7 +406,8 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     },
 
     onTouchCancel: function(event) {
-        this.onUp(event)
+        //this.onUp(event)
+        this.cancel()
     },
     
     // touch capture events
@@ -422,7 +425,8 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     },
 
     onTouchCancelCapture: function(event) {
-        this.onUp(event)
+        //this.onUp(event)
+        this.cancel()
     },
 
     // diff position helper
@@ -464,6 +468,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         this.setDidBegin(true)
         this.setBeginEvent(this.currentEvent())
         this.sendDelegateMessage(this.beginMessage())
+        GestureManager.shared().addBegunGesture(this)
         return this
     },
 

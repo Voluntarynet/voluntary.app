@@ -13,6 +13,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     allowsCursorNavigation: true,
     isDebugging: true,
     defaultRowStyles: null,
+    //shouldDarkenUnselected: true,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
@@ -135,6 +136,24 @@ window.BrowserColumn = NodeView.extend().newSlots({
         return this
     },
 
+    darkenUnselectedRows: function() {
+        const darkenOpacity = 0.5
+        this.rows().forEach((row) => {
+            if (row.isSelected()) {
+                row.setOpacity(1)
+            } else {
+                row.setOpacity(darkenOpacity)
+            }
+        })
+        return this
+    },
+
+    undarkenAllRows: function() {
+        this.rows().forEach((row) => {
+            row.setOpacity(1)
+        })
+    },
+
     rowWithNode: function(aNode) {
         return this.rows().detect(row => row.node() === aNode)
     },
@@ -171,6 +190,16 @@ window.BrowserColumn = NodeView.extend().newSlots({
     
     didClickRow: function(clickedRow) {
         this.unselectRowsBesides(clickedRow)
+
+        /*
+        if (this.shouldDarkenUnselected()) {
+            if (this.selectedRows().length > 0) {
+                this.darkenUnselectedRows()
+            } else {
+                this.undarkenAllRows()
+            }
+        }
+        */
 
         /*
         // follow it if we can 
@@ -532,7 +561,8 @@ window.BrowserColumn = NodeView.extend().newSlots({
         //console.log(this.typeId() + ".onTapComplete()")
         if (this.node()) {
             // make sure tap isn't on a row
-            const p = aGesture.upPosition()
+            const p = aGesture.downPosition() // there may not be an up position on windows?
+            //console.log(this.typeId() + ".onTapComplete() ", aGesture.upEvent())
             if (p.event().target === this.element()) {
                 this.node().add()
             }

@@ -1,5 +1,6 @@
 
-Use non transparent row background color
+Don't click on row when tapping on editable title/subtitle.
+
 
 highlight mode - selected, unselected, unselectedDuringSelection?
 Column darkenUnselectedMode

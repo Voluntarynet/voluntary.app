@@ -76,6 +76,10 @@ window.TextField = DivStyledView.extend().newSlots({
 	
     // ------------------
     
+    onKeyDown: function(event) {
+        return DivStyledView.onKeyDown.apply(this, [event])
+    },
+
     onEnterKeyUp: function(event) {
 	    //console.log(this.typeId() + ".onEnterKeyUp()")
 	    //this.didEdit()

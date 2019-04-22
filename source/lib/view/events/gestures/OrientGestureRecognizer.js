@@ -41,16 +41,16 @@
 
 window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
     type: "OrientGestureRecognizer",
-    isPressing: false,
-
-    minFingersRequired: 2,
-    maxFingersAllowed: 4,
-    minDistToBegin: 10,
 }).setSlots({
     
     init: function () {
         GestureRecognizer.init.apply(this)
-        this.setListenerClasses(["MouseListener", "TouchListener"]) 
+        this.setListenerClasses(["MouseListener", "TouchListener"])
+
+        this.setMinFingersRequired(2)
+        this.setMaxFingersAllowed(4)
+        this.setMinDistToBegin(10)
+
         //this.setIsDebugging(true)
         return this
     },
@@ -73,6 +73,7 @@ window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
         } 
     },
 
+    /*
     hasMovedEnough: function() {
         // intended to be overridden by subclasses
         // e.g. a rotation recognizer might look at how much first two fingers have rotated
@@ -81,11 +82,18 @@ window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
         return d >= m
     },
 
+    hasAcceptableFingerCount: function() {
+        const n = this.numberOfFingersDown()
+        return  n >= this.minFingersRequired() &&
+                n <= this.maxFingersAllowed();
+    },
+
     canBegin: function() {
         return !this.isActive() && 
                 this.hasMovedEnough() && 
-                this.numberOfFingersDown() >= this.minFingersRequired(); // TODO: should this be in a "can" method?
+                this.hasAcceptableFingerCount();
     },
+    */
 
     onMove: function(event) {
         GestureRecognizer.onMove.apply(this, [event])
@@ -240,6 +248,34 @@ window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
         const s = this.currentSpread() - this.beginSpread();
         //console.log("spread = " + s + " = " + this.currentSpread() + " - " + this.beginSpread() )
         return s
+    },
+
+    downSpreadX: function() {
+        const p = this.downPoints()
+        return Math.abs(p[0].x() - p[1].x())
+    },
+
+    downSpreadY: function() {
+        const p = this.downPoints()
+        return Math.abs(p[0].y() - p[1].y())
+    },
+
+    currentSpreadX: function() {
+        const p = this.activePoints()
+        return Math.abs(p[0].x() - p[1].x())
+    },
+
+    currentSpreadY: function() {
+        const p = this.activePoints()
+        return Math.abs(p[0].y() - p[1].y())
+    },
+
+    spreadX: function() {
+        return this.currentSpreadX() - this.downSpreadX()
+    },
+
+    spreadY: function() {
+        return this.currentSpreadY() - this.downSpreadY()
     },
 
     scale: function() {

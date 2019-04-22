@@ -549,8 +549,10 @@ window.BrowserColumn = NodeView.extend().newSlots({
         const sNode = this.selectedNode()
         if (sNode && sNode.hasAction("add")) { 
             const newNode = sNode.performAction("add") 
-	        this.selectNextColumn()
-            this.nextColumn().selectRowWithNode(newNode)
+            this.selectNextColumn()
+            if (this.nextColumn()) {
+                this.nextColumn().selectRowWithNode(newNode)
+            }
         }
         return false		
     },
@@ -822,7 +824,10 @@ window.BrowserColumn = NodeView.extend().newSlots({
     
     onPinchMove: function(aGesture) {
         if (this._temporaryPinchSubnode) {
-            const s = Math.floor(aGesture.spread())
+            let s = Math.floor(aGesture.spreadY())
+            if (s < 0) {
+                s = 0
+            }
             //console.log(this.typeId() + ".onPinchMove() s = ", s)
             const minHeight = BrowserRow.defaultHeight()
             const newRow = this.subviewForNode(this._temporaryPinchSubnode)
@@ -879,6 +884,14 @@ window.BrowserColumn = NodeView.extend().newSlots({
         if (this._temporaryPinchSubnode) {
             this.node().removeSubnode(this._temporaryPinchSubnode)
             this._temporaryPinchSubnode = null
+        }
+    },
+
+    selectNextKeyView: function() {
+        this.selectNextRow()
+        const row = this.selectedRow()
+        if (row) {
+
         }
     },
 

@@ -39,7 +39,6 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     direction: "left", 
     validDirectionsDict: { left: 1, right: 2, up: 3, down: 4 },
-    numberOfFingerRequired: 1,
     minDistToBegin: 10,
     maxPerpendicularDistToBegin: 10, // will not begin if this is exceeded
     //downPositionInTarget: null,
@@ -47,6 +46,9 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
     init: function () {
         GestureRecognizer.init.apply(this)
         this.setListenerClasses(["MouseListener", "TouchListener"])     
+        this.setMinFingersRequired(1)
+        this.setMaxFingersAllowed(1)
+        this.setMinDistToBegin(10)
         //this.setIsDebugging(false)
         return this
     },
@@ -69,7 +71,7 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
         GestureRecognizer.onDown.apply(this, [event])
 
         if (!this.isPressing()) {
-            if (this.numberOfFingersDown() >= this.numberOfFingerRequired()) {
+            if (this.hasAcceptableFingerCount()) {
                 this.setIsPressing(true)
                 this.setBeginEvent(event)
                 this.startDocListeners()

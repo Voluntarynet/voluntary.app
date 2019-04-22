@@ -37,6 +37,11 @@ window.BMFont = BMNode.extend().newSlots({
     // loading 
 
     load: function() {
+        if (!window["FontFace"]) {
+            console.warn("this browser is missing FontFace class")
+            return this
+        }
+
         const urlString = "url('" + this.path() + "')"
         const aFontFace = new FontFace(this.name(), urlString, this.options()); 
         

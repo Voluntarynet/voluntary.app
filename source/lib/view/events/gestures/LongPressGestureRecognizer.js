@@ -32,6 +32,10 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
         GestureRecognizer.init.apply(this)
         this.setListenerClasses(["MouseListener", "TouchListener"])
         this.setIsDebugging(false) 
+
+        this.setMinFingersRequired(1)
+        this.setMaxFingersAllowed(1)
+        this.setMinDistToBegin(null)
         return this
     },
 
@@ -82,7 +86,9 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
         
         const isWithin = this.currentEventIsOnTargetView();
 
-        if (isWithin && !GestureManager.shared().hasActiveGesture()) {
+        if (isWithin && 
+            this.hasAcceptableFingerCount() && 
+            !GestureManager.shared().hasActiveGesture()) {
             this.startTimer()
             this.sendBeginMessage()
         }

@@ -19,4 +19,17 @@ window.BrowserRowTitle = TextField.extend().newSlots({
         //this.setMinAndMaxHeight(17)
         return this
     },
+
+    row: function() {
+        return this.parentView().parentView()
+    },
+
+    selectNextKeyView: function() {
+        /*
+        console.log(this.typeId() + ".selectNextKeyView()")
+        const row = this.parentView().parentView();
+        const nextRow = this.row().column().selectNextRow()
+        */
+        return true
+    },
 })

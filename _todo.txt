@@ -1,16 +1,12 @@
 
 Don't click on row when tapping on editable title/subtitle.
 
-
 highlight mode - selected, unselected, unselectedDuringSelection?
 Column darkenUnselectedMode
-
-Separate click to edit from click row select
 
 --------------------
 
 Prevent left swipe from doing click on browser view *in single column mode*
-
 
 Generic content creator Node
 

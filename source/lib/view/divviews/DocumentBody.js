@@ -26,6 +26,7 @@ window.DocumentBody = DomView.extend().newSlots({
 
         //Mouse.shared()
         Keyboard.shared()
+        TouchScreen.shared()
 
         return this
     },

@@ -14,10 +14,19 @@ window.TouchScreen = ideal.Proto.extend().newSlots({
     currentEvent: null,
     lastEvent: null,
     touchListener: null,
+    //isVisualDebugging: false,
+    isDebugging: true,
 }).setSlots({
+    shared: function() { 
+        return this.sharedInstanceForClass(TouchScreen)
+    },
+
     init: function () {
         ideal.Proto.init.apply(this)
         this.startListening()
+        if (this.isDebugging()) {
+            console.log(this.type() + ".init()")
+        }
         return this
     },
 
@@ -25,12 +34,11 @@ window.TouchScreen = ideal.Proto.extend().newSlots({
         if (this._currentEvent !== event) {
             this.setLastEvent(this._currentEvent)
             this._currentEvent = event
+            if (this.isDebugging()) {
+                console.log(this.type() + " touch count: " + this.currentPoints().length)
+            }
         }
         return this
-    },
-
-    shared: function() { 
-        return this.sharedInstanceForClass(TouchScreen)
     },
 
     startListening: function() {
@@ -42,6 +50,9 @@ window.TouchScreen = ideal.Proto.extend().newSlots({
     // events
 
     onTouchBeginCapture: function(event) {
+        if (this.isDebugging()) {
+            console.log(this.type() + ".onTouchBeginCapture()")
+        }
         this.setCurrentEvent(event)
         //this.handleLeave(event)
         return true
@@ -97,6 +108,10 @@ window.TouchScreen = ideal.Proto.extend().newSlots({
     },
 
     justPointsForEvent: function(event) {
+        //if (this.isDebugging()) {
+            //console.log("touches.length = ", event.touches.length)
+        //}
+
         let points = []
         // event.touches isn't a proper array, so we can't enumerate it normally
         let touches = event.touches // all current touches
@@ -112,6 +127,8 @@ window.TouchScreen = ideal.Proto.extend().newSlots({
 
     pointsForEvent: function(event) {
         if (!Event_hasCachedPoints(event)) {
+            event.preventDefault() // needed to prevent browser from handling touches?
+
             const points = this.justPointsForEvent(event)
             Event_setCachedPoints(event, points)
         }

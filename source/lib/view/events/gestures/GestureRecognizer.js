@@ -67,6 +67,11 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     fingerViewDict: null,
 
     isPressing: false,
+
+    minFingersRequired: 2,
+    maxFingersAllowed: 4,
+    minDistToBegin: 10,
+    //maxDistToBegin: null,
 }).setSlots({
     init: function () {
         this.setListenerClasses([]) // subclasses override this in their
@@ -75,7 +80,6 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         this.autoSetMessageNames()
         this.setIsEmulatingTouch(true)
         this.setFingerViewDict({})
-
         //this.setIsDebugging(true)
         //this.setIsVisualDebugging(true)
         return this
@@ -180,6 +184,28 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         return this
     },
 
+    // condition helpers
+
+    hasMovedEnough: function() {
+        // intended to be overridden by subclasses
+        // e.g. a rotation recognizer might look at how much first two fingers have rotated
+        const m = this.minDistToBegin()
+        const d = this.currentPosition().distanceFrom(this.downPosition())
+        return d >= m
+    },
+
+    hasAcceptableFingerCount: function() {
+        const n = this.numberOfFingersDown()
+        return  n >= this.minFingersRequired() &&
+                n <= this.maxFingersAllowed();
+    },
+
+    canBegin: function() {
+        return !this.isActive() && 
+                this.hasMovedEnough() && 
+                this.hasAcceptableFingerCount();
+    },
+
     // --- start / stop ---
 
     start: function() {
@@ -261,8 +287,10 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         const eventClass = event.__proto__.constructor;
 
         if (eventClass === MouseEvent) {
+            //console.log(this.typeId() + " got mouse")
             return Mouse.shared().pointsForEvent(event)
-        } else if (eventClass === TouchEvent) {    
+        } else if (eventClass === TouchEvent) {   
+            //console.log(this.typeId() + " got touch")
             return TouchScreen.shared().pointsForEvent(event)
         }
         
@@ -443,7 +471,9 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
             left:  (dx, dy) => dx,
             right: (dx, dy) => dx,
             up:    (dx, dy) => dy,
-            down:  (dx, dy) => dy
+            down:  (dx, dy) => dy,
+            x:     (dx, dy) => dx,
+            y:     (dx, dy) => dy
         }
         return funcs[this.direction()](dx, dy)
     },
@@ -558,14 +588,18 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         const v = DomView.clone()
         v.setPointerEvents("none")
 
-        const size = 20
+        const size = 50
         v.setMinAndMaxHeight(size)
         v.setMinAndMaxWidth(size)
         v.setBorderRadius(size/2)
         v.setBorder("1px dashed white")
         //v.setBackgroundColor("rgba(255, 255, 255, 0.5)")
         v.setPosition("absolute")
+        v.setTextAlign("center")
         v.setZIndex(10000)
+        v.setInnerHTML(this.type())
+        v.setFontSize(10)
+        v.setColor("white")
         return v
     },
 
@@ -590,9 +624,14 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         return this
     },
 
+    titleForFingerNumber: function(n) {
+        return "&nbsp;".repeat(26) + this.type() + "&nbsp;" + n + "&nbsp;of&nbsp;" + this.numberOfFingersDown() 
+    },
+
     showFingers: function() {
         const points = this.pointsForEvent(this.currentEvent());
         const idsToRemove = Object.getOwnPropertyNames(this.fingerViewDict()) // TODO: move to dict
+        let count = 1
 
         points.forEach((point) => {
             const id = point.id()
@@ -602,7 +641,16 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
             const ny = point.y() - v.clientHeight()/2;
             v.setLeft(nx);
             v.setTop(ny);
-            //v.setBorder("1px dashed white")
+            v.setInnerHTML(this.titleForFingerNumber(count))
+            v.setBorder("1px dashed white")
+            if(this.isPressing()) {
+                v.setBorder("1px solid white")
+                v.setColor("white")
+            } else {
+                v.setBorder("1px dashed #888")
+                v.setColor("#888")
+            }
+            count ++
         })
 
         const fvd = this.fingerViewDict()

@@ -297,6 +297,18 @@ window.DomView = ideal.Proto.extend().newSlots({
     fontWeight: function() {
         return this.getCssAttribute("font-weight")
     },
+
+	
+    // font size
+	
+    setFontSize: function(s) {
+        this.setPxCssAttribute("font-size", s)
+        return this
+    },
+	
+    fontSize: function() {
+        return this.getPxCssAttribute("font-size")
+    },
 	
     // margin
 
@@ -2066,8 +2078,11 @@ window.DomView = ideal.Proto.extend().newSlots({
         if (specialKeyName) {
             let name = "on" + specialKeyName.capitalized() + "KeyDown"
             if (this[name]) {
-                this[name].apply(this, [event])
-		        event.preventDefault()
+                const stopProp = this[name].apply(this, [event])
+                event.preventDefault()
+                if (stopProp === false) {
+                    event.stopPropagation()
+                }
             }
         }
         return true
@@ -2130,7 +2145,7 @@ window.DomView = ideal.Proto.extend().newSlots({
     
     onTabKeyDown: function() {
         this.selectNextKeyView()
-        return true
+        return false
     },
 
     selectNextKeyView: function() {

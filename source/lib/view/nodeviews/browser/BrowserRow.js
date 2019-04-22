@@ -20,6 +20,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     shouldCenterCloseButton: true, 
     contentView: null,
     touchDeleteOffset: 0,
+    isDeleting: false,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
@@ -256,6 +257,7 @@ window.BrowserRow = NodeView.extend().newSlots({
             this.setOpacity(0)
             //this.setRight(-this.clientWidth())
             this.setMinAndMaxHeight(0)
+            this.setIsDeleting(true)
             setTimeout(() => {
 	            this.node().performAction("delete")
             }, 240)
@@ -370,6 +372,7 @@ window.BrowserRow = NodeView.extend().newSlots({
 
     finishSlideAndDelete: function() {
         if (this.canDelete()) {
+            this.setIsDeleting(true)
             //console.log("-this.clientWidth() = ", -this.clientWidth())
             this.setTouchRight(this.clientWidth())
             this.cleanupSlide()
@@ -629,6 +632,9 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
     
     onClick: function (event) {
+        if (this.isDeleting()) {
+            return false
+        }
         //console.log(this.typeId() + ".onClick()")
         this.justTap()
         GestureManager.shared().cancelAllBegunGestures()
@@ -658,5 +664,6 @@ window.BrowserRow = NodeView.extend().newSlots({
     nodeRowLink: function() {
         return this.node().nodeRowLink()
     },
+
 
 })

@@ -243,8 +243,10 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         this.setDidBegin(false)
         GestureManager.shared().removeBegunGesture(this)
 
-        //this.deactivate()
-        setTimeout(() => { this.deactivate() }, 0)
+        setTimeout(() => { 
+            GestureManager.shared().removeBegunGesture(this)
+            this.deactivate();
+        }, 0)
 
         if (this.shouldRemoveOnComplete() && this.viewTarget()) {
             this.stop()
@@ -264,14 +266,18 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         if (this.isDebugging()) {
             console.log(this.shortTypeId() + " sending " + methodName + " to " + vt.typeId())
         }
-
-        if (vt[methodName]) {
-            vt[methodName].apply(vt, [this])
-        } else {
-            if (this.isDebugging()) {
-                console.log("gesture delegate missing method " + methodName)
+        try {
+            if (vt[methodName]) {
+                vt[methodName].apply(vt, [this])
+            } else {
+                if (this.isDebugging()) {
+                    console.log("gesture delegate missing method " + methodName)
+                }
             }
+        } catch(e) {
+            console.warn(this.typeId() + ".sendDelegateMessage(" + methodName + ") caught exception ", e)
         }
+
         return this
     },
 

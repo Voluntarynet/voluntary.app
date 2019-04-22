@@ -1,17 +1,12 @@
 
-Don't click on row when tapping on editable title/subtitle.
-
 highlight mode - selected, unselected, unselectedDuringSelection?
 Column darkenUnselectedMode
 
 --------------------
 
-Prevent left swipe from doing click on browser view *in single column mode*
-
 Generic content creator Node
 
 Themes? Use StorableNode?
-
 
 --------------------------------------------------
 
@@ -20,7 +15,6 @@ Themes? Use StorableNode?
 -- test gestures on surface pro
   -- make diagraming app
   -- test rotation / orientation
-
 
 -- support for adding/removing field set items, storing result
 -- top shelf

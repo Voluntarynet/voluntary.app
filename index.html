@@ -83383,6 +83383,7 @@ window.BMViewStyles = ideal.Proto.extend().newSlots({
     //hover: null, 
     //enabled: null,
     //disabled: null,
+    isMutable: true,
 }).setSlots({
     init: function () {
         this.setSelected(BMViewStyle.clone())
@@ -83399,7 +83400,22 @@ window.BMViewStyles = ideal.Proto.extend().newSlots({
         return this.states().detect(state => !state.isEmpty()) === null
     },
 
+    sharedBlackOnWhiteStyle: function() {
+        if (BMViewStyles._sharedBlackOnWhiteStyle) {
+            BMViewStyles._sharedBlackOnWhiteStyle = BMViewStyles.clone().setToBlackOnWhite().setIsMutable(false)
+        }
+        return BMViewStyles._sharedBlackOnWhiteStyle
+    },
+
+    sharedWhiteOnBlackStyle: function() {
+        if (BMViewStyles._sharedWhiteOnBlackStyle) {
+            BMViewStyles._sharedWhiteOnBlackStyle = BMViewStyles.clone().setToBlackOnWhite().setIsMutable(false)
+        }
+        return BMViewStyles._sharedWhiteOnBlackStyle
+    },
+
     setToBlackOnWhite: function() {
+        assert(this.isMutable())
         this.unselected().setColor("black")
         this.unselected().setBackgroundColor("white")
         this.unselected().setBorderBottom("1px solid #ddd") 
@@ -83411,6 +83427,7 @@ window.BMViewStyles = ideal.Proto.extend().newSlots({
     },
 
     setToWhiteOnBlack: function() {
+        assert(this.isMutable())
         this.unselected().setColor("white")
         this.unselected().setBackgroundColor("black")
         this.unselected().setBorderBottom("none") 
@@ -83422,6 +83439,7 @@ window.BMViewStyles = ideal.Proto.extend().newSlots({
     },
     
     setToGrayOnTransparent: function() {        
+        assert(this.isMutable())
         this.unselected().setColor("#aaa")
         this.unselected().setBackgroundColor("transparent")
         
@@ -86133,6 +86151,7 @@ window.BMField = BMNode.extend().newSlots({
 
     init: function () {
         BMNode.init.apply(this)
+        //this.setNodeRowStyles(BMViewStyles.sharedBlackOnWhiteStyle())
         this.customizeNodeRowStyles().setToBlackOnWhite()
         return this
     },  
@@ -99680,7 +99699,6 @@ window.BrowserRow = NodeView.extend().newSlots({
         return this.contentView().removeSubview(aView)
     },
 
-
     setBackgroundColor: function(s) {
         this.contentView().setBackgroundColor(s)
         return this
@@ -100521,24 +100539,25 @@ window.BrowserFieldRow = BrowserRow.extend().newSlots({
         this.makeCursorDefault()
         this.setSpellCheck(false)
 		
-        //this.styles().setToBlackOnWhite()
-        this.styles().setToWhiteOnBlack()
-		
+        this.setStyles(BMViewStyles.sharedBlackOnWhiteStyle())
         return this
     },
 
-    
+    /*
     didChangeNode: function() {
         BrowserRow.didUpdateNode.apply(this)
         if (this.node() && this.node().nodeShouldUseLightTheme) {
             if (this.node().nodeShouldUseLightTheme()) {
-                this.styles().setToBlackOnWhite()
+                this.setStyles(BMViewStyles.sharedBlackOnWhiteStyle())
+
             } else {
-                this.styles().setToWhiteOnBlack()
+                this.setStyles(BMViewStyles.sharedWhiteOnBlackStyle())
+
             }
         }
         return this
     },
+    */
     
     
     updateSubviews: function() {   

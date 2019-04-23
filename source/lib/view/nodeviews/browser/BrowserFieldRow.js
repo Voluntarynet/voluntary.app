@@ -24,7 +24,7 @@ window.BrowserFieldRow = BrowserRow.extend().newSlots({
         return this
     },
 
-    
+    /*
     didChangeNode: function() {
         BrowserRow.didUpdateNode.apply(this)
         if (this.node() && this.node().nodeShouldUseLightTheme) {
@@ -38,6 +38,7 @@ window.BrowserFieldRow = BrowserRow.extend().newSlots({
         }
         return this
     },
+    */
     
     
     updateSubviews: function() {   

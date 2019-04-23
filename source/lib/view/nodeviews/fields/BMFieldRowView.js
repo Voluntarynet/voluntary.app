@@ -22,7 +22,8 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         this.addContentSubview(this.keyView())     
    		this.keyView().turnOffUserSelect().setSpellCheck(false)   
         //this.keyView().setMinAndMaxWidth("200")
-		
+        
+        this.contentView().setPaddingLeft(20)
         this.setValueView(this.createValueView())
         this.addContentSubview(this.valueView())  
       
@@ -35,9 +36,26 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         this.addContentSubview(this.noteView())
         this.noteView().setUserSelect("text")
         
+        //this.setBorderBottom("1px solid #ddd")
+        //this.updateBorder()
+
         //this.setEditable(false)
         return this
     },
+
+    /*
+    updateBorder: function() {
+        const bg = this.contentView().backgroundColor()
+        console.log(this.typeId() + " bg: '" + bg + "'")
+        if (bg === "white") {
+            this.setBorderBottom("1px solid #ddd")
+        } else {
+            this.setBorderBottom("none")
+            this.setBorder("none")
+        }
+        return this
+    },
+    */
 
     createValueView: function() {
         let tf = TextField.clone().setDivClassName("BMFieldValueView")
@@ -61,7 +79,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         //console.log(this.typeId() + ".syncValueViewToNode " + this.node().type())
 	    if (this.node().type() === "BMBoolField" && this.valueView().type() !== "BoolView") {
 	        //console.log("syncValueViewToNode setup bool view")
-	        let boolView = BoolView.clone()
+	        const boolView = BoolView.clone()
             this.removeContentSubview(this.valueView())  
             this.setValueView(boolView)
             this.addContentSubview(this.valueView())  
@@ -78,9 +96,9 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         this.node().prepareToSyncToView()
         this.syncValueViewToNode() // (lazy) set up the value view to match the field's type
 
-        let node = this.node()
-        let keyView = this.keyView()
-        let valueView = this.valueView()
+        const node = this.node()
+        const keyView = this.keyView()
+        const valueView = this.valueView()
 		
         if (node.isVisible()) {
             this.setDisplay("block")
@@ -204,6 +222,13 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         
         return this
     },
+
+    /*
+    applyStyles: function() {
+        BrowserFieldRow.applyStyles.apply(this)
+        return this
+    },
+    */
     
     onEnterKeyUp: function() {
         //console.log(this.typeId() + ".onEnterKeyUp()")

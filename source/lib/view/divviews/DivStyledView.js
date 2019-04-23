@@ -49,8 +49,8 @@ window.DivStyledView = DomView.extend().newSlots({
         }
         return this._styles
     },
-	
-    applyStyles: function() {
+
+    currentStyle: function() {
         let style = null
         if (this.isSelected()) {
             style = this.styles().selected()
@@ -59,6 +59,11 @@ window.DivStyledView = DomView.extend().newSlots({
             style = this.styles().unselected()
             //console.log(this.typeId() + ".applyStyles() unselected ", style.description())
         }
+        return style
+    },
+	
+    applyStyles: function() {
+        const style = this.currentStyle()
 		
         style.applyToView(this)
         //setTimeout(() => { style.applyToView(this) }, 0)

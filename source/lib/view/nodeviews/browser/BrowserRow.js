@@ -179,7 +179,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         const node = this.node() 
         
         if (node) {
-            this.styles().copyFrom(node.nodeRowStyles())
+            this.styles().copyFrom(node.nodeRowStyles()) // TODO: optimize this 
         }
         
         NodeView.applyStyles.apply(this)

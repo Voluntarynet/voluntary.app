@@ -10,6 +10,7 @@
 
 */
 
+
 window.BMViewStyles = ideal.Proto.extend().newSlots({
     type: "BMViewStyles",
     name: "",
@@ -37,18 +38,22 @@ window.BMViewStyles = ideal.Proto.extend().newSlots({
     setToBlackOnWhite: function() {
         this.unselected().setColor("black")
         this.unselected().setBackgroundColor("white")
-        
+        this.unselected().setBorderBottom("1px solid #ddd") 
+
         this.selected().setColor("black")
         this.selected().setBackgroundColor("#eee")
+        this.selected().setBorderBottom("1px solid #ddd") // "1px solid #ddd"
         return this
     },
 
     setToWhiteOnBlack: function() {
         this.unselected().setColor("white")
         this.unselected().setBackgroundColor("black")
-        
+        this.unselected().setBorderBottom("none") 
+
         this.selected().setColor("white")
         this.selected().setBackgroundColor("#444") // change for column?
+        this.selected().setBorderBottom("none") 
         return this
     },
     

@@ -36,7 +36,9 @@ window.BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
 		    this.updateKeyView()
 		    this.imageWellView().setMaxImageCount(this.node().maxImageCount())
         }
-		
+        
+        this.applyStyles() // normally this would happen in updateSubviews
+
         return this
     },
 
@@ -50,7 +52,7 @@ window.BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
         if (field.valueIsEditable()) {
         	field.setValue(this.imageWellView().imageDataURLs())
         }
-		
+        
         //NodeView.syncToNode.apply(this)
         return this
     },

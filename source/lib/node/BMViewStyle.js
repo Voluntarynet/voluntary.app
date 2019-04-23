@@ -47,7 +47,7 @@ window.BMViewStyle = ideal.Proto.extend().newSlots({
     },
 	
     copyFrom: function(aViewStyle) {
-        aViewStyle.applyToView(this) // since it uses the same methods
+        aViewStyle.applyToView(this) // we're not a view but this works since we use the same methods/protocol
         return this
     },
 	

@@ -31,17 +31,14 @@ window.BMActionFieldRowView = BrowserRow.extend().newSlots({
     updateSubviews: function () {	
         BrowserRow.updateSubviews.apply(this)
 		
-        let bv = this.buttonView()
+        const bv = this.buttonView()
         bv.setInnerHTML(this.node().key())
         
         if (this.node().isEnabled()) {
-            //bv.setBackgroundColor("black").setColor("white")
             bv.setOpacity(1)	
         } else {
             bv.setOpacity(0.5)	
         }
-
-        this.applyStyles()
 		
         return this
     },

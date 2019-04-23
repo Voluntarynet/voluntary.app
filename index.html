@@ -101481,17 +101481,14 @@ window.BMActionFieldRowView = BrowserRow.extend().newSlots({
     updateSubviews: function () {	
         BrowserRow.updateSubviews.apply(this)
 		
-        let bv = this.buttonView()
+        const bv = this.buttonView()
         bv.setInnerHTML(this.node().key())
         
         if (this.node().isEnabled()) {
-            //bv.setBackgroundColor("black").setColor("white")
             bv.setOpacity(1)	
         } else {
             bv.setOpacity(0.5)	
         }
-
-        this.applyStyles()
 		
         return this
     },
@@ -105865,6 +105862,7 @@ window.BMStunServers = BMStorableNode.extend().newSlots({
         this.setNodeMinWidth(270)
         this.addAction("add")
         this.setSubnodeProto(BMStunServer)
+        this.setNodeCanReorder(true)
     },
 
     finalize: function() {
@@ -110343,7 +110341,8 @@ window.BMConnection = BMNode.extend().newSlots({
     },
     
     subtitle: function() {
-        return this.connectionDescription()
+        return this.connectionType()
+        //return this.connectionDescription()
     },
 
     isAvailable: function() {

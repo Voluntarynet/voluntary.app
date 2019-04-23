@@ -18,6 +18,7 @@ window.BMStunServers = BMStorableNode.extend().newSlots({
         this.setNodeMinWidth(270)
         this.addAction("add")
         this.setSubnodeProto(BMStunServer)
+        this.setNodeCanReorder(true)
     },
 
     finalize: function() {

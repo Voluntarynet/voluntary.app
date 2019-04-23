@@ -20,9 +20,7 @@ window.BrowserFieldRow = BrowserRow.extend().newSlots({
         this.makeCursorDefault()
         this.setSpellCheck(false)
 		
-        //this.styles().setToBlackOnWhite()
-        this.styles().setToWhiteOnBlack()
-		
+        this.setStyles(BMViewStyles.sharedBlackOnWhiteStyle())
         return this
     },
 
@@ -31,9 +29,11 @@ window.BrowserFieldRow = BrowserRow.extend().newSlots({
         BrowserRow.didUpdateNode.apply(this)
         if (this.node() && this.node().nodeShouldUseLightTheme) {
             if (this.node().nodeShouldUseLightTheme()) {
-                this.styles().setToBlackOnWhite()
+                this.setStyles(BMViewStyles.sharedBlackOnWhiteStyle())
+
             } else {
-                this.styles().setToWhiteOnBlack()
+                this.setStyles(BMViewStyles.sharedWhiteOnBlackStyle())
+
             }
         }
         return this

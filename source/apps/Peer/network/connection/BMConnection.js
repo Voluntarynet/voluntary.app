@@ -137,7 +137,8 @@ window.BMConnection = BMNode.extend().newSlots({
     },
     
     subtitle: function() {
-        return this.connectionDescription()
+        return this.connectionType()
+        //return this.connectionDescription()
     },
 
     isAvailable: function() {

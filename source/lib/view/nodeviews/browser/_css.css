@@ -244,18 +244,19 @@
     top: 15px;
     left: 20px;
 
-    /*width: calc(100% - 55px);*/
-	min-width: 20px;
+    max-width: calc(100% - 55px);
+    min-width: 20px;
     text-align: left;
     max-height: 17px;
 
     font-weight: normal;
 
 	text-align: left;
-    text-overflow: ellipsis;
+    /*text-overflow: clip;*/
     white-space: nowrap;
     overflow: hidden;
-	margin-right: 20px;
+    margin-right: 20px;
+    word-wrap: normal;
 
     /*border: dashed 1px yellow;*/
 }
@@ -265,7 +266,7 @@
     top: 32px;
     left: 20px;
     
-	width: calc(100% - 50px);
+	width: calc(100% - 55px);
     max-height: 17px;
     
 /*

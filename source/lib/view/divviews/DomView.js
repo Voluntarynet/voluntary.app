@@ -957,8 +957,32 @@ window.DomView = ideal.Proto.extend().newSlots({
 
 
 
-	
+    /*	
+
     // text over flow
+
+    // Overflow behavior at line end
+    // Right end if ltr, left end if rtl 
+    text-overflow: clip;
+    text-overflow: ellipsis;
+    text-overflow: "…";
+    text-overflow: fade;
+    text-overflow: fade(10px);
+    text-overflow: fade(5%);
+
+    // Overflow behavior at left end | at right end
+    // Directionality has no influence 
+    text-overflow: clip ellipsis;
+    text-overflow: "…" "…";
+    text-overflow: fade clip;
+    text-overflow: fade(10px) fade(10px);
+    text-overflow: fade(5%) fade(5%);
+
+    // Global values 
+    text-overflow: inherit;
+    text-overflow: initial;
+    text-overflow: unset;
+    */
 	
     setTextOverflow: function(s) {
         this.setCssAttribute("text-overflow", s)

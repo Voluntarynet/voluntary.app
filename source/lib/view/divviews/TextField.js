@@ -29,7 +29,7 @@ window.TextField = DivStyledView.extend().newSlots({
         this.setWhiteSpace("nowrap")
         this.setOverflow("hidden")
         this.setDisplay("inline-block")
-        this.setTextOverflow("ellipsis")
+        this.setTextOverflow("clip")
         this.setSpellCheck(false)
         this.setMinWidth(10)
 		

@@ -64,6 +64,20 @@ window.BrowserRow = NodeView.extend().newSlots({
         return this
     },
 
+    /*
+    setMinAndMaxWidth: function(w) {
+        NodeView.setMinAndMaxWidth.apply(this, [w])
+        this.contentView().setMinAndMaxWidth(w)
+        return this
+    },
+
+    setMinAndMaxHeight: function(w) {
+        NodeView.setMinAndMaxHeight.apply(this, [w])
+        this.contentView().setMinAndMaxHeight(w)
+        return this
+    },
+    */
+
     addContentSubview: function(aView) {
         return this.contentView().addSubview(aView)
     },

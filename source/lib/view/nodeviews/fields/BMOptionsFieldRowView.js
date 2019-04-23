@@ -16,7 +16,7 @@ window.BMOptionsFieldRowView = BMFieldRowView.extend().newSlots({
 
         this.setOptionsView(BMOptionsTableView.clone())
         this.optionsView().setDisplay("none")
-        this.addSubview(this.optionsView())
+        this.addContentSubview(this.optionsView())
 
         this.valueView().setIsRegisteredForFocus(true)
         this.valueView().onBlur = () => { this.close() }

@@ -64,6 +64,15 @@ window.BrowserRow = NodeView.extend().newSlots({
         return this
     },
 
+    addContentSubview: function(aView) {
+        return this.contentView().addSubview(aView)
+    },
+
+    removeContentSubview: function(aView) {
+        return this.contentView().removeSubview(aView)
+    },
+
+
     setBackgroundColor: function(s) {
         this.contentView().setBackgroundColor(s)
         return this

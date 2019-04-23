@@ -1,8 +1,8 @@
+//"LICENSE.txt",
+//"CREDITS.txt",
+//"README.md",
 
 ResourceLoader.pushRelativePaths([
-    //"LICENSE.txt",
-    //"CREDITS.txt",
-    //"README.md",
     "PublicSans Black.woff2",
     "PublicSans Black Italic.woff2",
     "PublicSans Bold.woff2",

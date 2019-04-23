@@ -1,4 +1,8 @@
 
+
+prevent onClick when finishing row reording
+
+
 highlight mode - selected, unselected, unselectedDuringSelection?
 Column darkenUnselectedMode
 
@@ -23,7 +27,6 @@ Themes? Use StorableNode?
 	- method to add double tap gesture on TextArea/Textfield?
 
 -- ability to switch themes
-
 -- dark theme for BMFieldRow when not in FieldSet?
 
 -- Dragging from anywhere in window

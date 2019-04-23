@@ -19,12 +19,12 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         BrowserFieldRow.init.apply(this)
         
         this.setKeyView(DomView.clone().setDivClassName("BMFieldKeyView"))
-        this.addSubview(this.keyView())     
+        this.addContentSubview(this.keyView())     
    		this.keyView().turnOffUserSelect().setSpellCheck(false)   
         //this.keyView().setMinAndMaxWidth("200")
 		
         this.setValueView(this.createValueView())
-        this.addSubview(this.valueView())  
+        this.addContentSubview(this.valueView())  
       
         this.valueView().setUserSelect("text")   // should the value view handle this?
         this.valueView().setSpellCheck(false)   // should the value view handle this?
@@ -32,7 +32,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
 
 		
         this.setNoteView(DomView.clone().setDivClassName("BMFieldRowViewNoteView"))
-        this.addSubview(this.noteView())
+        this.addContentSubview(this.noteView())
         this.noteView().setUserSelect("text")
         
         //this.setEditable(false)
@@ -62,9 +62,9 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
 	    if (this.node().type() === "BMBoolField" && this.valueView().type() !== "BoolView") {
 	        //console.log("syncValueViewToNode setup bool view")
 	        let boolView = BoolView.clone()
-            this.removeSubview(this.valueView())  
+            this.removeContentSubview(this.valueView())  
             this.setValueView(boolView)
-            this.addSubview(this.valueView())  
+            this.addContentSubview(this.valueView())  
             //this.valueView().setUserSelect("text")   // should the value view handle this?
 		    //this.valueView().setSpellCheck(false)   // should the value view handle this?	        
 		    //return TextField.clone().setDivClassName("BMFieldValueView")

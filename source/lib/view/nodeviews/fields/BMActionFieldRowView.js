@@ -23,7 +23,7 @@ window.BMActionFieldRowView = BrowserRow.extend().newSlots({
 	    this.buttonView().setTarget(this).setAction("didClickButton")
 	    this.buttonView().setTransition("all 0.3s")
 
-        this.addSubview(this.buttonView())
+        this.addContentSubview(this.buttonView())
         this.setMinHeight(64)
         return this
     },

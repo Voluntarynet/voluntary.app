@@ -1,7 +1,7 @@
 
 ResourceLoader.pushRelativePaths([
-    //"Courier Prime/_imports.js",
-    //"OpenSans/_imports.js",
+    "Courier Prime/_imports.js",
+    "OpenSans/_imports.js",
     "ShareTechMono/_imports.js",
     "PublicSans/_imports.js",
 ]);

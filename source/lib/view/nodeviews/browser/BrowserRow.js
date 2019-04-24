@@ -131,10 +131,12 @@ window.BrowserRow = NodeView.extend().newSlots({
     
     // update
      
-    updateSubviews: function() {        
+    updateSubviews: function() {   
+        /*     
         if (this.node()) {
             this.currentRowStyle().applyToView(this)
         }
+        */
         
         if (this.closeButtonView()) {
             if (this.node()) {
@@ -187,10 +189,10 @@ window.BrowserRow = NodeView.extend().newSlots({
 
         if (this.shouldShowFlash() && this.selectedFlashColor()) {
             this.setBackgroundColor(this.selectedFlashColor())
+            setTimeout(() => { this.setBackgroundColor(this.currentBgColor()) }, 100)
+            this.setShouldShowFlash(false)
         } 
-        
-        setTimeout(() => { this.setBackgroundColor(this.currentBgColor()) }, 100)
-        this.setShouldShowFlash(false)
+
         
         return this
     },
@@ -556,7 +558,7 @@ window.BrowserRow = NodeView.extend().newSlots({
             this.columnGroup().setOverflow("visible")
             this.columnGroup().scrollView().setOverflow("visible")
             this.setZIndex(3)
-            
+            //this.setBorder("1px solid rgba(255, 255, 255, 0.05)")
 
             this.column().absolutePositionRows()
 
@@ -587,6 +589,7 @@ window.BrowserRow = NodeView.extend().newSlots({
 
         if (this._isDraggingView) {
             this._isDraggingView = false
+            //this.setBorder(null)
 
             // visibility
             this.column().setOverflow("hidden")

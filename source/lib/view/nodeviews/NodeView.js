@@ -137,6 +137,11 @@ window.NodeView = DivStyledView.extend().newSlots({
 		
         return proto.clone().setNode(aSubnode) //.setParentView(this)
     },
+
+    updateSubviews: function() {
+        // for subclasses to override
+        return this
+    },
     
     visibleSubnodes: function() {
         return this.node().subnodes()

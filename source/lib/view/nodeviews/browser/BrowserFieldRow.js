@@ -21,6 +21,8 @@ window.BrowserFieldRow = BrowserRow.extend().newSlots({
         this.setSpellCheck(false)
 		
         this.setStyles(BMViewStyles.sharedBlackOnWhiteStyle())
+        //this.setStyles(BMViewStyles.sharedWhiteOnBlackStyle())
+
         return this
     },
 
@@ -40,14 +42,13 @@ window.BrowserFieldRow = BrowserRow.extend().newSlots({
     },
     */
     
-    
     updateSubviews: function() {   
 	    BrowserRow.updateSubviews.apply(this)
 	
-        let node = this.node()
+        const node = this.node()
 
         if (node && node.nodeMinHeight()) {
-            let e = this.element()
+            const e = this.element()
             if (node.nodeMinHeight() === -1) {
                 this.setHeight("auto")                
                 this.setPaddingBottom("calc(100% - 20px)")

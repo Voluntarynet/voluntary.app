@@ -1,5 +1,7 @@
 
 
+on BrowserRow slide, switch from static to relative?
+
 prevent onClick when finishing row reording
 
 

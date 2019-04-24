@@ -45,4 +45,5 @@ window.BMBoolField = BMField.extend().newSlots({
         this.validate()
         return BMField.didUpdateNode.apply(this)
     },
+
 })

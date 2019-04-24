@@ -1,16 +1,21 @@
+
 .BMPostDraftRowView {
     display: flex;
-	flex-direction: column;
+    flex-direction: column;
+
 	height: auto;
 
 	min-height: fit-content;
-	max-height: auto;
+    max-height: none;
+
+    
 
 	border-bottom: 1px solid #ddd;
 	margin: 0px;
 	padding: 0px;
-	overflow: hidden;
+    overflow: hidden;
 }
+
 
 .BMPostDraftRowTopView {
     display: flex;

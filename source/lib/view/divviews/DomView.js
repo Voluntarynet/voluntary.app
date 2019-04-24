@@ -817,6 +817,30 @@ window.DomView = ideal.Proto.extend().newSlots({
     textAlign: function() {
         return this.getCssAttribute("text-align")
     },	
+
+    // clear
+ 	
+    setClear: function(v) {
+        // clear: none|left|right|both|initial|inherit;
+        this.setCssAttribute("clear", v)
+        return this
+    },
+
+    clear: function() {
+        return this.getCssAttribute("clear")
+    },
+	   
+
+    // flex direction
+	
+    setFlexDirection: function(v) {
+        this.setCssAttribute("flex-direction", v)
+        return this
+    },
+
+    flexDirection: function() {
+        return this.getCssAttribute("flex-direction")
+    },
 	
     // flex grow
 	
@@ -1226,11 +1250,13 @@ window.DomView = ideal.Proto.extend().newSlots({
     },
 	
     setMinHeight: function(newValue) {
+        // <length> | <percentage> | auto | max-content | min-content | fit-content | fill-available
         this.setCssAttribute("min-height", newValue, () => { this.didChangeHeight() })
         return this		
     },
 	
-    setMaxHeight: function(newValue) {
+    setMaxHeight: function(newValue) { 
+        // <length> | <percentage> | none | max-content | min-content | fit-content | fill-available
         this.setCssAttribute("max-height", newValue, () => { this.didChangeHeight() })
         return this		
     },
@@ -1246,6 +1272,8 @@ window.DomView = ideal.Proto.extend().newSlots({
     },
 
     setHeight: function(s) {
+        // height: auto|length|initial|inherit;
+
         if (Type.isNumber(s)) {
             return this.setHeightPxNumber(s)
         }

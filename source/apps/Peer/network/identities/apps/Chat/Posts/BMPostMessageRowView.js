@@ -30,13 +30,16 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
     init: function () {
         BrowserRow.init.apply(this)
 
+        this.setMinHeight(100)
+        //this.contentView()
+
         // left view
-        this.setLeftView(this.addSubview(DomView.clone().setDivClassName("BMPostMessageRowLeftView")))
+        this.setLeftView(this.addContentSubview(DomView.clone().setDivClassName("BMPostMessageRowLeftView")))
         this.setIconView(this.leftView().addSubview(ImageView.clone().setDivClassName("BMPostAvatarView")))
         this.iconView().setBackgroundSizeWH(64, 64).setTarget(this).setAction("clickedIconView")
 
         // middle view
-        this.setMiddleView(this.addSubview(DomView.clone().setDivClassName("BMPostMessageRowMiddleView")))
+        this.setMiddleView(this.addContentSubview(DomView.clone().setDivClassName("BMPostMessageRowMiddleView")))
 
         // title view
         this.setTitleBarView(this.middleView().addSubview(DomView.clone().setDivClassName("BMPostTitleBarView")))
@@ -75,7 +78,7 @@ window.BMPostMessageRowView = BrowserRow.extend().newSlots({
         this.setLikeCountView(this.bottomBarView().addSubview(DomView.clone().setDivClassName("BMPostMessageRowViewCountView")))
 
         // right view
-        //this.setRightView(this.addSubview(DomView.clone().setDivClassName("BMPostMessageRowRightView")))
+        //this.setRightView(this.addContentSubview(DomView.clone().setDivClassName("BMPostMessageRowRightView")))
 
 
         this.setupContentView()

@@ -178,7 +178,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
     },
     
     syncToNode: function () {
-        let node = this.node()
+        const node = this.node()
 
         if (node.keyIsEditable()) {
         	node.setKey(this.keyView().value())
@@ -204,18 +204,14 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
     updateSubviews: function() {
         BrowserFieldRow.updateSubviews.apply(this)
 		
-        let node = this.node()
+        const node = this.node()
 
         if (node && node.nodeMinHeight()) {
-            let e = this.element()
             if (node.nodeMinHeight() === -1) {
                 this.setHeight("auto")
-                //e.style.height = "auto"
                 this.setPaddingBottom("calc(100% - 20px)")
-                //e.style.paddingBottom = "calc(100% - 20px)";
 
             } else {
-                //e.style.height = node.nodeMinHeight() + "px"
                 this.setHeight(this.pxNumberToString(node.nodeMinHeight()))
             }
         }
@@ -235,6 +231,17 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         if(this.valueView().activate) {
             this.valueView().activate()
         }
+        return this
+    },
+
+    setBackgroundColor: function(c) {
+        /*
+        console.log(this.typeId() + ".setBackgroundColor ", c)
+        if (c !== "white") {
+            console.log("not white")
+        }
+        */
+        BrowserFieldRow.setBackgroundColor.apply(this, [c])
         return this
     },
 })

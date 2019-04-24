@@ -4,7 +4,7 @@
 
 	height: auto;
 
-	min-height: fit-content;
+	/*min-height: fit-content;*/
 	max-height: auto;
 
 	border-bottom: 1px solid #ddd;

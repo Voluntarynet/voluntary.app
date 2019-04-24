@@ -4,6 +4,8 @@
 
     BMPostDraftRowView
 
+
+
 */
 
 window.BMPostDraftRowView = BrowserRow.extend().newSlots({
@@ -14,7 +16,7 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
     iconView: null,
     rightView: null,
     placeHolderView: null,
-    contentView: null,
+    textContentView: null,
     //deleteButton: null,
 
     bottomView: null,
@@ -26,9 +28,34 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         this.setShouldCenterCloseButton(false) // hack, TODO: change this
         BrowserRow.init.apply(this)
         
+        /*
+        //this.setDivClassName("X")
+        this.setDisplay("block")
+        this.setPosition("static")
+        */
+        this.setHeight("auto")
+        this.setMinHeight("fit-content")
+        this.setMaxHeight("fit-content")
+        
+
+        //this.setBorder("1px dashed blue")
+
+        // ------------------------------------------
+        
+        this.contentView().setDisplay("block")
+        this.contentView().setPosition("static")
+        //this.contentView().setBorder("1px dashed red")
+        this.contentView().setHeight("auto")
+        this.contentView().setMinHeight("fit-content")
+        this.contentView().setMaxHeight("fit-content")
+        //this.contentView().setColor("black")
+
+
+        // --------------------------------------------------
+
         this.closeButtonView().setDivClassName("BrowserRowCloseButtonTopRight")
 
-        this.setTopView(this.addSubview(DomView.clone().setDivClassName("BMPostDraftRowTopView")))
+        this.setTopView(this.addContentSubview(DomView.clone().setDivClassName("BMPostDraftRowTopView")))
 
         // left view
         this.setLeftView(this.topView().addSubview(DomView.clone().setDivClassName("BMPostDraftRowLeftView")))
@@ -40,13 +67,15 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         // right view
         this.setRightView(this.topView().addSubview(DomView.clone().setDivClassName("BMPostDraftRowRightView")))
         
+
+
         // placeholder
         this.setPlaceHolderView(this.rightView().addSubview(TextField.clone().setDivClassName("BMPostDraftRowPlaceHolderView")))
         this.placeHolderView().setInnerHTML("What's happening?")
                 
         // content view
-        this.setContentView(this.rightView().addSubview(TextField.clone().setDivClassName("BMPostDraftRowContentView")))
-        this.contentView().setContentEditable(true)
+        this.setTextContentView(this.rightView().addSubview(TextField.clone().setDivClassName("BMPostDraftRowContentView")))
+        this.textContentView().setContentEditable(true)
 
         this.closeButtonView().setBackgroundImageUrlPath(this.pathForIconName("close"))
         this.closeButtonView().setTop(15).setRight(15).setMinAndMaxWidth(10).setMinAndMaxHeight(10)
@@ -59,24 +88,25 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         this.deleteButton().makeBackgroundContain().makeBackgroundCentered().makeBackgroundNoRepeat()  
         */  
         
-        this.setBottomView(this.addSubview(DomView.clone().setDivClassName("BMPostDraftRowBottomView")))
+        this.setBottomView(this.addContentSubview(DomView.clone().setDivClassName("BMPostDraftRowBottomView")))
         this.setSendButton(this.bottomView().addSubview(DomView.clone().setDivClassName("BMPostDraftRowSendButton")))
         this.sendButton().setInnerHTML("Post")
         this.sendButton().setTarget(this).setAction("post")
 
-        this.setupContentView()
+        this.setupTextContentView()
         this.updateSubviews()
         this.setIsSelectable(true)
 		
         //        this.styles().setToBlackOnWhite()
 
         this.closeButtonView().orderFront()
+        
 				
         return this
     },
 
-    setupContentView: function() {
-        let tv = this.contentView()
+    setupTextContentView: function() {
+        const tv = this.textContentView()
         tv.insertDivClassName(this.type() + "Title")
         //tv.setWidth("auto")
 
@@ -101,20 +131,21 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
     },
 
     updateSubviews: function() {
+
         BrowserRow.updateSubviews.apply(this)
-	
-        let node = this.node()
+    
+        const node = this.node()
         
-        if (node) {
+        if (node && this.textContentView()) {
             /*
-            let placeText = this.contentView().innerHTML().length ? "" : "What's happening?"    
+            let placeText = this.textContentView().innerHTML().length ? "" : "What's happening?"    
             this.placeHolderView().setInnerHTML(placeText)
-*/
-            let opacity = this.contentView().innerHTML().length ? 0 : 1
+            */
+
+            const opacity = this.textContentView().innerHTML().length ? 0 : 1
             this.placeHolderView().setOpacity(opacity)
         }
 
-		
         return this
     },
 
@@ -132,21 +163,23 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
 
     // --- sync ---
 
+    
     syncToNode: function () {   
         //console.log("syncToNode")
-        this.node().setContent(this.contentView().innerHTML())
+        this.node().setContent(this.textContentView().innerHTML())
         this.node().tellParentNodes("onDidEditNode", this.node())  
         this.node().scheduleSyncToStore()
         return this
     },
 
     syncFromNode: function () {
-        let node = this.node()
-        this.contentView().setString(node.content())
+        const node = this.node()
+        this.textContentView().setString(node.content())
         this.setIconDataUrl(node.avatarImageDataURL())
         this.updateSubviews()
         return this
     },
+    
     
     // actions
     

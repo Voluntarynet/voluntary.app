@@ -425,7 +425,8 @@ window.BrowserView = NodeView.extend().newSlots({
                     nextCg.setNode(nextNode)
                     this.clearColumnsGroupsAfter(nextCg)
                     //nextCg.column().setTitle(selectedColumn.selectedRowTitle())            
-                    nextCg.syncFromNode()
+                    //nextCg.syncFromNode()
+                    nextCg.scheduleSyncFromNode()
 
                     //if ((nextNode.view().type() !== "BrowserColumnGroup") || nextNode.isKindOf(BMFieldSetNode)) { // TODO: use a better rule here
                     if ((nextNode.viewClassName() !== "BrowserColumnGroup") || nextNode.isKindOf(BMFieldSetNode)) { // TODO: use a better rule here

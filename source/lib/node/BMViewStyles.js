@@ -70,7 +70,7 @@ window.BMViewStyles = ideal.Proto.extend().newSlots({
 
         this.selected().setColor("white")
         this.selected().setBackgroundColor("#444") // change for column?
-        this.selected().setBorderBottom("none") 
+        this.selected().setBorderBottom("none")
         return this
     },
     
@@ -85,6 +85,7 @@ window.BMViewStyles = ideal.Proto.extend().newSlots({
     },
     
     copyFrom: function(styles) {
+        assert(this.isMutable())
         this.selected().copyFrom(styles.selected())
         this.unselected().copyFrom(styles.unselected())
         return this

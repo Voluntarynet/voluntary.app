@@ -4,16 +4,13 @@
     flex-direction: column;
 
 	height: auto;
-
 	min-height: fit-content;
-    max-height: none;
-
+    max-height: fit-content;
     
-
-	border-bottom: 1px solid #ddd;
 	margin: 0px;
 	padding: 0px;
     overflow: hidden;
+	border-bottom: 1px solid #ddd;
 }
 
 

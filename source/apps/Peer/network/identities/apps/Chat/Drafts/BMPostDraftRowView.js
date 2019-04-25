@@ -27,29 +27,18 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
     init: function () {
         this.setShouldCenterCloseButton(false) // hack, TODO: change this
         BrowserRow.init.apply(this)
-        
-        /*
-        //this.setDivClassName("X")
-        this.setDisplay("block")
-        this.setPosition("static")
-        */
+
         this.setHeight("auto")
         this.setMinHeight("fit-content")
         this.setMaxHeight("fit-content")
-        
-
-        //this.setBorder("1px dashed blue")
 
         // ------------------------------------------
         
         this.contentView().setDisplay("block")
-        this.contentView().setPosition("static")
-        //this.contentView().setBorder("1px dashed red")
+        this.contentView().setPosition("relative")
         this.contentView().setHeight("auto")
         this.contentView().setMinHeight("fit-content")
         this.contentView().setMaxHeight("fit-content")
-        //this.contentView().setColor("black")
-
 
         // --------------------------------------------------
 
@@ -97,10 +86,9 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         this.updateSubviews()
         this.setIsSelectable(true)
 		
-        //        this.styles().setToBlackOnWhite()
+        //this.styles().setToBlackOnWhite()
 
         this.closeButtonView().orderFront()
-        
 				
         return this
     },
@@ -109,7 +97,6 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         const tv = this.textContentView()
         tv.insertDivClassName(this.type() + "Title")
         //tv.setWidth("auto")
-
         tv.setPosition("relative")
         tv.setMarginRight(0)
         tv.setMarginLeft(0)

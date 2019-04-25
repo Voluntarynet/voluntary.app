@@ -1,12 +1,13 @@
 
 
-on BrowserRow slide, switch from static to relative?
-
 prevent onClick when finishing row reording
 
+fix row background /transparent issues
 
-highlight mode - selected, unselected, unselectedDuringSelection?
-Column darkenUnselectedMode
+Transitions abstraction work
+
+
+Column darkenUnselectedMode?
 
 --------------------
 

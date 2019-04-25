@@ -32,6 +32,10 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         this.setMinHeight("fit-content")
         this.setMaxHeight("fit-content")
 
+        // trying to avoid height animation but this isn't working
+        this.setTransition("all 0.2s, height 0s")
+        //this.contentView().setTransition("all 0.2s, height 0s")
+
         // ------------------------------------------
         
         this.contentView().setDisplay("block")
@@ -43,7 +47,6 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         // --------------------------------------------------
 
         this.closeButtonView().setDivClassName("BrowserRowCloseButtonTopRight")
-
         this.setTopView(this.addContentSubview(DomView.clone().setDivClassName("BMPostDraftRowTopView")))
 
         // left view
@@ -56,7 +59,6 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         // right view
         this.setRightView(this.topView().addSubview(DomView.clone().setDivClassName("BMPostDraftRowRightView")))
         
-
 
         // placeholder
         this.setPlaceHolderView(this.rightView().addSubview(TextField.clone().setDivClassName("BMPostDraftRowPlaceHolderView")))
@@ -89,6 +91,8 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         //this.styles().setToBlackOnWhite()
 
         this.closeButtonView().orderFront()
+
+        //this.sendAllViewDecendants("setTransition", ["all 0s"])
 				
         return this
     },
@@ -102,7 +106,9 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         tv.setMarginLeft(0)
         this.setPaddingBottom(0)
         tv.setWhiteSpace("normal")
-        tv.setFontFamily("AppRegular, Sans-Serif")        
+        tv.setFontFamily("AppRegular, Sans-Serif")       
+        tv.setTransition("all 0s")
+        return this
     },
     
     setIconDataUrl: function(imageDataUrl) {
@@ -118,7 +124,6 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
     },
 
     updateSubviews: function() {
-
         BrowserRow.updateSubviews.apply(this)
     
         const node = this.node()
@@ -133,13 +138,15 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
             this.placeHolderView().setOpacity(opacity)
         }
 
+        //this.sendAllViewDecendants("setTransition", ["all 0s"])
+
         return this
     },
 
     // --- edit ---
 
     onDidEdit: function (changedView) {   
-        console.log(this.typeId() + ".onDidEdit")
+        //console.log(this.typeId() + ".onDidEdit")
         this.updateSubviews()
         this.scheduleSyncToNode()
     },
@@ -149,7 +156,6 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
     },
 
     // --- sync ---
-
     
     syncToNode: function () {   
         //console.log("syncToNode")
@@ -167,7 +173,6 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         return this
     },
     
-    
     // actions
     
     post: function() {
@@ -177,8 +182,10 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
     
     /*
     delete: function() {
+        this.sendAllViewDecendants("setTransition", ["all 0.2s"])
+        setTimeout(() => { this.node().delete() })
         //this.delete()
-        this.node().delete()
+        //this.node().delete()
         return this
     },
     */

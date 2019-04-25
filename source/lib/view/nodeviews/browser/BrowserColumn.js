@@ -9,10 +9,10 @@
 window.BrowserColumn = NodeView.extend().newSlots({
     type: "BrowserColumn",
     rows: null,
-    selectionColor: "#aaa",
     allowsCursorNavigation: true,
     isDebugging: true,
     defaultRowStyles: null,
+    rowStyles: null,
     //shouldDarkenUnselected: true,
 }).setSlots({
     init: function () {
@@ -28,9 +28,22 @@ window.BrowserColumn = NodeView.extend().newSlots({
         this.setUserSelect("none")
         this.addGestureRecognizer(PinchGestureRecognizer.clone()) // for pinch open to add row
         this.addGestureRecognizer(TapGestureRecognizer.clone()) // for pinch open to add row
+
+        this.setRowStyles(BMViewStyles.clone().setToWhiteOnBlack())
+        //this.rowStyles().selected().setBackgroundColor("red")
         return this
     },
-    
+
+    setRowBackgroundColor: function(aColor) {
+        this.rowStyles().unselected().setBackgroundColor(aColor)
+        return this
+    },
+
+    setRowSelectionColor: function(aColor) {
+        this.rowStyles().selected().setBackgroundColor(aColor)
+        return this
+    },
+
     applyStyles: function() {
         //console.log(this.typeId() + ".applyStyles()")
         NodeView.applyStyles.apply(this)
@@ -774,6 +787,8 @@ window.BrowserColumn = NodeView.extend().newSlots({
 
 
     onPinchBegin: function(aGesture) {
+        // TODO: move row specific code to BrowserRow
+
         //console.log(this.typeId() + ".onPinchBegin()")
 
         // - calc insert index

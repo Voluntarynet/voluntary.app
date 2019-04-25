@@ -15,7 +15,7 @@ window.TouchScreen = ideal.Proto.extend().newSlots({
     lastEvent: null,
     touchListener: null,
     //isVisualDebugging: false,
-    isDebugging: true,
+    isDebugging: false,
 }).setSlots({
     shared: function() { 
         return this.sharedInstanceForClass(TouchScreen)
@@ -25,7 +25,7 @@ window.TouchScreen = ideal.Proto.extend().newSlots({
         ideal.Proto.init.apply(this)
         this.startListening()
         if (this.isDebugging()) {
-            console.log(this.type() + ".init()")
+            console.log(this.typeId() + ".init()")
         }
         return this
     },
@@ -109,7 +109,7 @@ window.TouchScreen = ideal.Proto.extend().newSlots({
 
     justPointsForEvent: function(event) {
         //if (this.isDebugging()) {
-            //console.log("touches.length = ", event.touches.length)
+        //  console.log("touches.length = ", event.touches.length)
         //}
 
         let points = []

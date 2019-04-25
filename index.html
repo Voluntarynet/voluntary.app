@@ -100216,7 +100216,7 @@ window.BrowserRow = NodeView.extend().newSlots({
             this._dragStartPos = this.relativePos()
 
             this.setTop(this._dragStartPos.y())
-            this.column().setPosition("relative")
+            //this.column().setPosition("relative")
             this.addShadow()
         }
     },
@@ -109174,10 +109174,9 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         this.updateSubviews()
         this.setIsSelectable(true)
 		
-        //        this.styles().setToBlackOnWhite()
+        //this.styles().setToBlackOnWhite()
 
         this.closeButtonView().orderFront()
-        
 				
         return this
     },
@@ -109186,7 +109185,6 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         const tv = this.textContentView()
         tv.insertDivClassName(this.type() + "Title")
         //tv.setWidth("auto")
-
         tv.setPosition("relative")
         tv.setMarginRight(0)
         tv.setMarginLeft(0)

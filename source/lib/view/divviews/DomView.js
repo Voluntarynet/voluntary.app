@@ -1321,6 +1321,20 @@ window.DomView = ideal.Proto.extend().newSlots({
         return this._divClassName
     },
 
+    // --- parentView ---
+
+    setParentView: function(aView) {
+        if (this._parentView != aView) {
+            this._parentView = aView
+            this.didChangeParentView()
+        }
+        return this
+    },
+
+    didChangeParentView: function() {
+        return this
+    },
+
     // --- subviews ---
 
     subviewCount: function() {
@@ -1552,6 +1566,14 @@ window.DomView = ideal.Proto.extend().newSlots({
             return this.subviews()[nextIndex]
         }
         return null
+    },
+
+    sendAllViewDecendants: function(methodName, argList) {
+        this.subviews().forEach((v) => {
+            v[methodName].apply(v, argList)
+            v.sendAllViewDecendants(methodName, argList)
+        })
+        return this
     },
 
     // --- active element ---

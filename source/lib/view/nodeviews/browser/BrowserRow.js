@@ -6,6 +6,17 @@
 
     base row view, just knows about selected, selectable and colors
     
+
+    NOTES
+
+    Sources of row styles: node, the row itself, the row's column
+    
+    Styles lookup order:
+
+    node -> (fallback to) -> row -> (fallback to) -> column
+
+    See lookedUpStyles method.
+
 */
 
 window.BrowserRow = NodeView.extend().newSlots({
@@ -109,6 +120,55 @@ window.BrowserRow = NodeView.extend().newSlots({
     
     // node style dict
     
+    rowStyles: function() {
+        return null
+    },
+
+    didChangeParentView: function() {
+        NodeView.didChangeParentView.apply(this)
+        //window.SyncScheduler.shared().scheduleTargetAndMethod(this, "applyStyles", 0)
+        this.applyStyles()
+        return this
+    },
+
+    lookedUpStyles: function() {
+        const debugStyles = false
+
+        if (this.node()) {
+            const ns = this.node().nodeRowStyles()
+            if (ns) {
+                if (debugStyles) {
+                    console.log(this.typeId() + " using nodeRowStyles")
+                }
+                return ns
+            }
+        }
+
+        const rs = this.rowStyles()
+        if (rs) {
+            if (debugStyles) {
+                console.log(this.typeId() + " using rowStyles")
+            }
+            return rs
+        }
+
+        if (this.column()) {
+            const cs = this.column().rowStyles()
+            if (cs) {
+                if (debugStyles) {
+                    console.log(this.typeId() + " using column().rowStyles()")
+                }
+                return cs
+            }
+        } else if (debugStyles) {
+            const title = this.node() ? this.node().title() : "no node yet"
+            console.log(this.typeId() + " (" + title + ") has no column yet")
+        }
+
+        return BMViewStyles.sharedWhiteOnBlackStyle()
+    },
+
+    /*
     currentRowStyle: function() {
         const styles = this.node().nodeRowStyles()
         //styles.selected().set
@@ -119,6 +179,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         
         return styles.unselected()
     },
+    */
     
     select: function() {
         if (!this.isSelected()) {
@@ -132,15 +193,9 @@ window.BrowserRow = NodeView.extend().newSlots({
     // update
      
     updateSubviews: function() {   
-        /*     
-        if (this.node()) {
-            this.currentRowStyle().applyToView(this)
-        }
-        */
-        
         if (this.closeButtonView()) {
             if (this.node()) {
-                this.closeButtonView().element().style.color = this.currentRowStyle().color()
+                this.closeButtonView().setColor(this.currentStyle().color()) // needed?
             }
 			
             if (this.canDelete()) {
@@ -174,24 +229,38 @@ window.BrowserRow = NodeView.extend().newSlots({
         console.log(this.typeId() + " onTabKeyUp")
     },
 
-    // --- colors ---
-	
+    // --- styles ---
+    
+    styles: function() { 
+        const lookedUpStyles = this.lookedUpStyles()
+        if (lookedUpStyles) {
+            return lookedUpStyles
+        } else {
+            this.lookedUpStyles()
+        }
+        throw new Error("missing styles")
+    },
+
     applyStyles: function() {
+        /*
         const node = this.node() 
         
         if (node) {
             this.styles().copyFrom(node.nodeRowStyles()) // TODO: optimize this 
         }
-        
+        */
         NodeView.applyStyles.apply(this)
     
         // flash
 
+        /*
         if (this.shouldShowFlash() && this.selectedFlashColor()) {
             this.setBackgroundColor(this.selectedFlashColor())
-            setTimeout(() => { this.setBackgroundColor(this.currentBgColor()) }, 100)
+            //setTimeout(() => { this.setBackgroundColor(this.currentBgColor()) }, 100)
+            setTimeout(() => { NodeView.applyStyles.apply(this) }, 100)
             this.setShouldShowFlash(false)
         } 
+        */
 
         
         return this
@@ -202,47 +271,7 @@ window.BrowserRow = NodeView.extend().newSlots({
 	    console.log(this.typeId() + ".willAcceptFirstResponder()")
         return this
     },
-    
-    currentBgColor: function() {
-        if (this.isSelected()) {
-            return this.selectedBgColor()
-        } 
-		
-        return this.unselectedBgColor()
-    },
 
-    unselectedBgColor: function() {
-        if (this.node()) {
-            if (this.column()) {
-                if(this.node().nodeUsesColumnBackgroundColor()) {
-                    const c = this.columnGroup().backgroundColor()
-                    return c
-                }
-            }
-
-            const c = this.node().nodeRowStyles().unselected().backgroundColor()
-            if (c) {
-                return c
-            }
-        }
-		
-        return "transparent"
-    },
-    
-    selectedBgColor: function() {
-        if (this.node()) {
-            const c = this.node().nodeRowStyles().selected().backgroundColor()
-            if (c) {
-                return c
-            }
-        }
-		
-        if (!this.column()) {
-            return "transparent"
-        }
-		
-        return this.column().selectionColor()
-    },
     
     // close button
     
@@ -565,7 +594,7 @@ window.BrowserRow = NodeView.extend().newSlots({
             this._dragStartPos = this.relativePos()
 
             this.setTop(this._dragStartPos.y())
-            this.column().setPosition("relative")
+            //this.column().setPosition("relative")
             this.addShadow()
         }
     },

@@ -37,15 +37,15 @@ window.BMViewStyles = ideal.Proto.extend().newSlots({
     },
 
     sharedBlackOnWhiteStyle: function() {
-        if (BMViewStyles._sharedBlackOnWhiteStyle) {
+        if (!BMViewStyles._sharedBlackOnWhiteStyle) {
             BMViewStyles._sharedBlackOnWhiteStyle = BMViewStyles.clone().setToBlackOnWhite().setIsMutable(false)
         }
         return BMViewStyles._sharedBlackOnWhiteStyle
     },
 
     sharedWhiteOnBlackStyle: function() {
-        if (BMViewStyles._sharedWhiteOnBlackStyle) {
-            BMViewStyles._sharedWhiteOnBlackStyle = BMViewStyles.clone().setToBlackOnWhite().setIsMutable(false)
+        if (!BMViewStyles._sharedWhiteOnBlackStyle) {
+            BMViewStyles._sharedWhiteOnBlackStyle = BMViewStyles.clone().setToWhiteOnBlack().setIsMutable(false)
         }
         return BMViewStyles._sharedWhiteOnBlackStyle
     },
@@ -64,7 +64,7 @@ window.BMViewStyles = ideal.Proto.extend().newSlots({
 
     setToWhiteOnBlack: function() {
         assert(this.isMutable())
-        this.unselected().setColor("white")
+        this.unselected().setColor("#aaa")
         this.unselected().setBackgroundColor("black")
         this.unselected().setBorderBottom("none") 
 
@@ -74,6 +74,7 @@ window.BMViewStyles = ideal.Proto.extend().newSlots({
         return this
     },
     
+    /*
     setToGrayOnTransparent: function() {        
         assert(this.isMutable())
         this.unselected().setColor("#aaa")
@@ -83,6 +84,7 @@ window.BMViewStyles = ideal.Proto.extend().newSlots({
         this.selected().setBackgroundColor("transparent")        
         return this
     },
+    */
     
     copyFrom: function(styles) {
         assert(this.isMutable())

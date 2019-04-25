@@ -79,7 +79,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
         this.scheduleFinalize()	
         
         //this.setNodeColumnStyles(this.sharedNodeColumnStyles())
-        this.setNodeRowStyles(this.sharedNodeRowStyles())
+        //this.setNodeRowStyles(this.sharedNodeRowStyles())
 
         this.setNodeColumnStyles(BMViewStyles.clone())
         //this.setNodeRowStyles(BMViewStyles.clone())

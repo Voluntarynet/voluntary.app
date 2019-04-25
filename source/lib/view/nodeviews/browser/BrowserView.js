@@ -279,7 +279,8 @@ window.BrowserView = NodeView.extend().newSlots({
                 //cg.styles().unselected().setBackgroundColor(bgColor)
                 //this.defaultColumnStyles().selected().applyToView(cg)
                 cg.setBackgroundColor(bgColor)
-                cg.column().setSelectionColor(this.bgColorForIndex(i + 1))
+                cg.column().setRowBackgroundColor(bgColor)
+                cg.column().setRowSelectionColor(this.bgColorForIndex(i + 1))
             }
             i ++
         })

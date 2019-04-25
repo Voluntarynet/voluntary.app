@@ -41,6 +41,10 @@ window.DivStyledView = DomView.extend().newSlots({
     },
 
     // styles
+
+    lookedUpStyles: function() {
+        return null
+    },
 	
     styles: function() { 
         // since not all views use them, do lazy style setup 
@@ -48,6 +52,10 @@ window.DivStyledView = DomView.extend().newSlots({
             this.setStyles(BMViewStyles.clone()) 
         }
         return this._styles
+    },
+
+    currentBgColor: function() {
+        return this.currentStyle().backgroundColor()
     },
 
     currentStyle: function() {
@@ -64,27 +72,9 @@ window.DivStyledView = DomView.extend().newSlots({
 	
     applyStyles: function() {
         const style = this.currentStyle()
-		
-        style.applyToView(this)
-        //setTimeout(() => { style.applyToView(this) }, 0)
-		
+        style.applyToView(this)		
         return this
     },
-	
-    // TODO: add hover style support on mouse over event?
-    // or apply to this element's hover CSS settings?
-	
-    setSelectedColor: function(c) {
-        this.styles().selected().setColor(c)
-        return this
-    },
-	
-    /*
-	setSelectedBackgroundColor: function(c) {
-		this.styles().selected().setBackgroundColor(c)
-		return this
-	},
-	*/
 
     // select
 	

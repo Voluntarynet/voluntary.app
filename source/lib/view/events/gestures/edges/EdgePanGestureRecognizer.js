@@ -35,7 +35,7 @@ window.EdgePanGestureRecognizer = PanGestureRecognizer.extend().newSlots({
         PanGestureRecognizer.init.apply(this)
         this.setListenerClasses(this.defaultListenerClasses()) 
         this.setMinDistToBegin(5)
-        this.setIsDebugging(true)
+        //this.setIsDebugging(true)
         return this
     },
 
@@ -87,7 +87,7 @@ window.EdgePanGestureRecognizer = PanGestureRecognizer.extend().newSlots({
         const f = vt.frameInDocument()
 
         // use maxValue to make sure all fingers are close to the edge
-        
+
         return {
             top:    points.maxValue(p => Math.abs(f.top()    - p.y()), max),
             bottom: points.maxValue(p => Math.abs(f.bottom() - p.y()), max),

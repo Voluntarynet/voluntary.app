@@ -91243,11 +91243,12 @@ window.RotationGestureRecognizer = OrientGestureRecognizer.extend().newSlots({
 "use strict"
 
 ResourceLoader.pushRelativePaths([
-    "ScreenEdgePanGestureRecognizer.js",
-    "ScreenTopEdgePanGestureRecognizer.js",
-    "ScreenBottomEdgePanGestureRecognizer.js",
-    "ScreenLeftEdgePanGestureRecognizer.js",
-    "ScreenRightEdgePanGestureRecognizer.js",
+    //"screen/_imports.js",
+    "EdgePanGestureRecognizer.js",
+    "TopEdgePanGestureRecognizer.js",
+    "BottomEdgePanGestureRecognizer.js",
+    "LeftEdgePanGestureRecognizer.js",
+    "RightEdgePanGestureRecognizer.js",
 ])
 
 
@@ -91255,17 +91256,17 @@ ResourceLoader.pushRelativePaths([
 
 /*
 
-    ScreenEdgePanGestureRecognizer
+    EdgePanGestureRecognizer
 
-    Subclass of PanGestureRecognizer that limits pan detection to gestures starting at the edge. 
+    Subclass of PanGestureRecognizer that limits pan detection to gestures starting at the edge fo the view. 
     Don't use this class directed - instead use it's subclass for the edge you're interested in.
 
     Delegate messages:
 
-        onScreenEdgePanBegin
-        onScreenEdgePanMove
-        onScreenEdgePanComplete
-        onScreenEdgePanCancelled
+        onEdgePanBegin
+        onEdgePanMove
+        onEdgePanComplete
+        onSEdgePanCancelled
 
 
     for distance, ask the target for it's frameInViewport and compare with
@@ -91279,8 +91280,8 @@ ResourceLoader.pushRelativePaths([
         
 */
 
-window.ScreenEdgePanGestureRecognizer = PanGestureRecognizer.extend().newSlots({
-    type: "ScreenEdgePanGestureRecognizer",
+window.EdgePanGestureRecognizer = PanGestureRecognizer.extend().newSlots({
+    type: "EdgePanGestureRecognizer",
     edgeName: null,
     maxStartDistance: 15,
 }).setSlots({
@@ -91294,6 +91295,8 @@ window.ScreenEdgePanGestureRecognizer = PanGestureRecognizer.extend().newSlots({
 
     start: function() {
         this.startDocListeners() // only want to listen to the document
+        // TODO: do we always want to listen outside the view? 
+        // is listening only inside both more efficient and good enough?
         return this
     },
 
@@ -91327,12 +91330,23 @@ window.ScreenEdgePanGestureRecognizer = PanGestureRecognizer.extend().newSlots({
 
     currentEdgeDistances: function() {
         const max = this.maxEdgeDistance()
-        const points = this.allPoints()
+        const points = this.allPoints() // event points are in document coordinates
+        const vt = this.viewTarget()
+
+        if (!vt) {
+            console.log(this.typeId() + " missing viewTarget")
+            return max
+        }
+        
+        const f = vt.frameInDocument()
+
+        // use maxValue to make sure all fingers are close to the edge
+
         return {
-            top:    points.minValue(p => p.distFromTopOfViewport(),    max),
-            bottom: points.minValue(p => p.distFromBottomOfViewport(), max),
-            left:   points.minValue(p => p.distFromLeftOfViewport(),   max),
-            right:  points.minValue(p => p.distFromRightOfViewport(),  max)
+            top:    points.maxValue(p => Math.abs(f.top()    - p.y()), max),
+            bottom: points.maxValue(p => Math.abs(f.bottom() - p.y()), max),
+            left:   points.maxValue(p => Math.abs(f.left()   - p.x()), max),
+            right:  points.maxValue(p => Math.abs(f.right()  - p.x()), max)
         }
     },
 })
@@ -91341,22 +91355,22 @@ window.ScreenEdgePanGestureRecognizer = PanGestureRecognizer.extend().newSlots({
 
 /*
 
-    ScreenTopEdgePanGestureRecognizer
+    TopEdgePanGestureRecognizer
 
     Delegate messages:
 
-        onScreenTopEdgePanBegin
-        onScreenTopEdgePanMove
-        onScreenTopEdgePanComplete
-        onScreenTopEdgePanCancelled
+        onTopEdgePanBegin
+        onTopEdgePanMove
+        onTopEdgePanComplete
+        onTopEdgePanCancelled
 
 */
 
-window.ScreenTopEdgePanGestureRecognizer = ScreenEdgePanGestureRecognizer.extend().newSlots({
-    type: "ScreenTopEdgePanGestureRecognizer",
+window.TopEdgePanGestureRecognizer = EdgePanGestureRecognizer.extend().newSlots({
+    type: "TopEdgePanGestureRecognizer",
 }).setSlots({
     init: function () {
-        ScreenEdgePanGestureRecognizer.init.apply(this)
+        EdgePanGestureRecognizer.init.apply(this)
         this.setEdgeName("top")
         return this
     },
@@ -91367,48 +91381,47 @@ window.ScreenTopEdgePanGestureRecognizer = ScreenEdgePanGestureRecognizer.extend
 
 /*
 
-    ScreenBottomEdgePanGestureRecognizer
+    BottomEdgePanGestureRecognizer
 
     Delegate messages:
 
-        onScreenBottomEdgePanBegin
-        onScreenBottomEdgePanMove
-        onScreenBottomEdgePanComplete
-        onScreenBottomEdgePanCancelled
+        onBottomEdgePanBegin
+        onBottomEdgePanMove
+        onBottomEdgePanComplete
+        onBottomEdgePanCancelled
 
 */
 
-window.ScreenBottomEdgePanGestureRecognizer = ScreenEdgePanGestureRecognizer.extend().newSlots({
-    type: "ScreenBottomEdgePanGestureRecognizer",
+window.BottomEdgePanGestureRecognizer = EdgePanGestureRecognizer.extend().newSlots({
+    type: "BottomEdgePanGestureRecognizer",
 }).setSlots({
     init: function () {
-        ScreenEdgePanGestureRecognizer.init.apply(this)
+        EdgePanGestureRecognizer.init.apply(this)
         this.setEdgeName("bottom")
         return this
     },
-
 })
 
 "use strict"
 
 /*
 
-    ScreenLeftEdgePanGestureRecognizer
+    LeftEdgePanGestureRecognizer
 
     Delegate messages:
 
-        onScreenLeftEdgePanBegin
-        onScreenLeftEdgePanMove
-        onScreenLeftEdgePanComplete
-        onScreenLeftEdgePanCancelled
+        onLeftEdgePanBegin
+        onLeftEdgePanMove
+        onLeftEdgePanComplete
+        onLeftEdgePanCancelled
 
 */
 
-window.ScreenLeftEdgePanGestureRecognizer = ScreenEdgePanGestureRecognizer.extend().newSlots({
-    type: "ScreenLeftEdgePanGestureRecognizer",
+window.LeftEdgePanGestureRecognizer = EdgePanGestureRecognizer.extend().newSlots({
+    type: "LeftEdgePanGestureRecognizer",
 }).setSlots({
     init: function () {
-        ScreenEdgePanGestureRecognizer.init.apply(this)
+        EdgePanGestureRecognizer.init.apply(this)
         this.setEdgeName("left")
         return this
     },
@@ -91419,22 +91432,22 @@ window.ScreenLeftEdgePanGestureRecognizer = ScreenEdgePanGestureRecognizer.exten
 
 /*
 
-    ScreenRightEdgePanGestureRecognizer
+    RightEdgePanGestureRecognizer
 
     Delegate messages:
 
-        onScreenRightEdgePanBegin
-        onScreenRightEdgePanMove
-        onScreenRightEdgePanComplete
-        onScreenRightEdgePanCancelled
+        onRightEdgePanBegin
+        onRightEdgePanMove
+        onRightEdgePanComplete
+        onRightEdgePanCancelled
 
 */
 
-window.ScreenRightEdgePanGestureRecognizer = ScreenEdgePanGestureRecognizer.extend().newSlots({
-    type: "ScreenRightEdgePanGestureRecognizer",
+window.RightEdgePanGestureRecognizer = EdgePanGestureRecognizer.extend().newSlots({
+    type: "RightEdgePanGestureRecognizer",
 }).setSlots({
     init: function () {
-        ScreenEdgePanGestureRecognizer.init.apply(this)
+        EdgePanGestureRecognizer.init.apply(this)
         this.setEdgeName("right")
         return this
     },
@@ -97567,7 +97580,7 @@ window.BrowserView = NodeView.extend().newSlots({
 
         this.setIsRegisteredForDocumentResize(true)
 
-        let dh = DomView.clone().setDivClassName("BrowserDefaultHeader NodeView DomView")
+        const dh = DomView.clone().setDivClassName("BrowserDefaultHeader NodeView DomView")
         this.setDefaultHeader(dh)
         this.addSubview(dh)
 
@@ -97575,16 +97588,17 @@ window.BrowserView = NodeView.extend().newSlots({
         this.setColumnGroupCount(1)
         //.selectFirstColumn()
 
-        this.addGestureRecognizer(ScreenLeftEdgePanGestureRecognizer.clone()) 
-        this.addGestureRecognizer(ScreenRightEdgePanGestureRecognizer.clone()) 
+        this.addGestureRecognizer(LeftEdgePanGestureRecognizer.clone()) 
+        this.addGestureRecognizer(RightEdgePanGestureRecognizer.clone()) 
 
         return this
     },
 
-    // right screen edge pan
+    // edge pan
 
-    onScreenRightEdgePanBegin: function(aGesture) {
-        console.log("onScreenRightEdgePanBegin")
+    onRightEdgePanBegin: function(aGesture) {
+        // TODO: animate this until complete
+        //console.log("onRightEdgePanBegin")
         //if(this.isSingleColumn()) {
         const column = this.selectedColumn()
         if (column) {
@@ -97593,21 +97607,7 @@ window.BrowserView = NodeView.extend().newSlots({
         //}
         aGesture.cancel()
     },
-    
-    /*
-    onScreenRightEdgePanMove: function(aGesture) {
-        console.log("onScreenRightEdgePanMove")
 
-    },
-
-    onScreenRightEdgePanComplete: function(aGesture) {
-
-    },
-
-    onScreenRightEdgePanCancelled: function(aGesture) {
-
-    },
-    */
 
     // left screen edge pan
 
@@ -97615,28 +97615,15 @@ window.BrowserView = NodeView.extend().newSlots({
         return this.activeColumnGroups().length > 1
     },
 
-    onScreenLeftEdgePanBegin: function(aGesture) {
+    onLeftEdgePanBegin: function(aGesture) {
         console.log("onScreenLeftEdgePanBegin")
+        console.log("  this.activeColumnGroups().length = ", this.activeColumnGroups().length)
+
         if (this.canMoveLeft()) {
             this.popLastActiveColumn()
         }
         aGesture.cancel()
     },
-
-    /*
-    onScreenLeftEdgePanMove: function(aGesture) {
-        console.log("onScreenLeftEdgePanMove")
-
-    },
-
-    onScreenLeftEdgePanComplete: function(aGesture) {
-
-    },
-
-    onScreenLeftEdgePanCancelled: function(aGesture) {
-
-    },
-    */
 
     // -------------------
 

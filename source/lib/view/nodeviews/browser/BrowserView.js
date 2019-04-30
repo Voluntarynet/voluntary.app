@@ -98,7 +98,7 @@ window.BrowserView = NodeView.extend().newSlots({
 
     onRightEdgePanBegin: function(aGesture) {
         // TODO: animate this until complete
-        console.log("onRightEdgePanBegin")
+        //console.log("onRightEdgePanBegin")
         //if(this.isSingleColumn()) {
         const column = this.selectedColumn()
         if (column) {
@@ -117,6 +117,8 @@ window.BrowserView = NodeView.extend().newSlots({
 
     onLeftEdgePanBegin: function(aGesture) {
         console.log("onScreenLeftEdgePanBegin")
+        console.log("  this.activeColumnGroups().length = ", this.activeColumnGroups().length)
+
         if (this.canMoveLeft()) {
             this.popLastActiveColumn()
         }

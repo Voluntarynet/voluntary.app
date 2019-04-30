@@ -5,6 +5,16 @@
 
     Class to represent a rectangle.
 
+    NOTES
+
+    For top & bottom, we assume we are using screen coordinates so:
+
+        top = x
+    
+    and:
+
+        bottom = x + height
+
 */
 
 window.Rectangle = ideal.Proto.extend().newSlots({
@@ -37,6 +47,8 @@ window.Rectangle = ideal.Proto.extend().newSlots({
         return this.type() + "(" + this.origin().asString() + ", " + this.size().asString() + ")"
     },
 
+    // x, y
+
     x: function() {
         return this.origin().x();
     },
@@ -45,12 +57,34 @@ window.Rectangle = ideal.Proto.extend().newSlots({
         return this.origin().y();
     },
 
+    // width, height
+
     width: function() {
         return this.size().x();
     },
 
     height: function() {
         return this.size().y();
+    },
+
+    // top, bottom
+
+    top: function() {
+        return this.y() 
+    },
+
+    bottom: function() {
+        return this.y() + this.height() 
+    },
+
+    // left, right
+
+    left: function() {
+        return this.x() 
+    },
+
+    right: function() {
+        return this.x() + this.width() 
     },
 
 })

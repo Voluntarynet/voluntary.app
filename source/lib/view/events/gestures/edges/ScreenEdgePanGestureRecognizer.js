@@ -18,7 +18,7 @@
     for distance, ask the target for it's frameInViewport and compare with
     event's posInWindow:
 
-        const frame = target.frameInViewport()
+        const frame = target.frameInDocument()
         frame.top()
         frame.bottom()
         frame.left()

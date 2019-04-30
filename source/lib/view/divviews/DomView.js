@@ -2617,8 +2617,8 @@ window.DomView = ideal.Proto.extend().newSlots({
     },
     
     isScrolledIntoView: function() {
-        let r = this.boundingClientRect()
-        let isVisible = (r.top >= 0) && (r.bottom <= window.innerHeight);
+        const r = this.boundingClientRect()
+        const isVisible = (r.top >= 0) && (r.bottom <= window.innerHeight);
         return isVisible;
     },
 
@@ -2646,40 +2646,38 @@ window.DomView = ideal.Proto.extend().newSlots({
         this.setTop(p.y())
         return this
     },
-
-    /*
-    winPosForEvent: function(event) {
-        const p = EventPoint.clone().set(event.clientX, event.clientY)
-        return p
-    },
-
-    parentPosForEvent: function(event) {
-        const p = this.winPosForEvent(event)
-        const pv = this.parentView()
-        if (pv) {
-            return p.subtract(pv.positionInDocument())
-        }
-        return p
-    },
-
-    viewPosForEvent: function(event) {
-        return this.winPosForEvent(event).subtract(this.positionInDocument())
-    },
-    */
    
     containsPoint: function(aPoint) {
+        // point must be in document coordinates
         return this.frameInDocument().containsPoint(aPoint)
     },
+
+    // viewport coordinates helpers
+
+    frameInViewport: function() {
+        const origin = this.positionInViewport()
+        const size = this.sizeInViewport()
+        const frame = Rectangle.clone().setOrigin(origin).setSize(size)
+        return frame
+    },
+
+    positionInViewport: function() {
+        const box = this.element().getBoundingClientRect();
+        return Point.clone().set(Math.round(box.left), Math.round(box.top));
+    },
+
+    sizeInViewport: function() {
+        const box = this.element().getBoundingClientRect();
+        return Point.clone().set(Math.round(box.width), Math.round(box.height));
+    },
+
+    // document coordinates helpers
 
     frameInDocument: function() {
         const origin = this.positionInDocument()
         const size = this.size()
         const frame = Rectangle.clone().setOrigin(origin).setSize(size)
         return frame
-    },
-
-    size: function() {
-        return EventPoint.clone().set(this.clientWidth(), this.clientHeight());
     },
 
     positionInDocument: function() {
@@ -2702,6 +2700,12 @@ window.DomView = ideal.Proto.extend().newSlots({
         const p = Point.clone().set(Math.round(left), Math.round(top));
         return p
     },
+
+    size: function() {
+        return EventPoint.clone().set(this.clientWidth(), this.clientHeight());
+    },
+
+    // ---------------------
 
     relativePos: function() {
         const pv = this.parentView()

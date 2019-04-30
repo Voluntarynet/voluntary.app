@@ -527,13 +527,6 @@ window.BrowserColumn = NodeView.extend().newSlots({
         const row = this.selectedRow()
         if (row) { 
 		    row.onEnterKeyUp(event)
-		    /*
-			//row.title().focus() 
-			setTimeout(() => {
-				row.title().selectAll() 
-				setTimeout(() => { row.title().focus() })
-			})
-			*/
         }
 
         return false

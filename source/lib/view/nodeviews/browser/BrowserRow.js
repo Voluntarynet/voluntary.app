@@ -305,7 +305,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     
     addCloseButton: function() {
         if (this.closeButtonView() == null) {
-            //let c = CenteredDivView.clone()
+            //const c = CenteredDivView.clone()
 
             const cb = DomView.clone().setDivClassName("BrowserRowCloseButton")
             //this.setCloseButtonView(NodeView.clone().setDivClassName("BrowserRowCloseButton"))
@@ -392,7 +392,7 @@ window.BrowserRow = NodeView.extend().newSlots({
             const h = this.clientHeight()
 
             this.element().style.backgroundColor = "black"
-            let cb = CloseButton.clone().setTransition("opacity 0.1s")
+            const cb = CloseButton.clone().setTransition("opacity 0.1s")
             cb.setMinAndMaxHeight(h)
             cb.setMinAndMaxWidth(h)
             this.addSubview(cb)
@@ -544,7 +544,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     onLongPressComplete: function(longPressGesture) {
         if (this.column().canReorder()) {
             longPressGesture.deactivate()
-            let pan = this.addPanGesture()
+            const pan = this.addPanGesture()
             pan.setShouldRemoveOnComplete(true)
             pan.setMinDistToBegin(0)
             pan.onDown(longPressGesture.currentEvent())

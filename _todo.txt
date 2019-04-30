@@ -1,4 +1,20 @@
-skip loading screen when using an index file?
+
+abstract edge drag to resize?
+
+use right edge gesture to adjust column sizes
+
+move to dynamic row layout so title, subtitle locations and size change with font size
+
+
+should we abstract style so we can:
+- unify style and computed style
+- simplify storing and copying style
+- separate style specific helpers (e.g. PX stuff) from DomView 
+
+need generic way to open an inspector for currently focused item?
+e.g. inspect TextField currently editing to change font size
+- multi-finger long tap on touch? function-click with mouse?
+
 
 protocol to check editability of and store adjusted row size, font size, etc?
 option +, option - to adjust font size of text field being edited

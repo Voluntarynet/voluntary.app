@@ -262,6 +262,14 @@ window.Keyboard = ideal.Proto.extend().newSlots({
 
     // get key helpers
 
+    shiftKey: function() {
+        return this.keyForName("shift")
+    },
+
+    controlKey: function() {
+        return this.keyForName("ctrl")
+    },
+
     leftCommandKey: function() {
         return this.keyForName("leftWindow")
     },
@@ -273,15 +281,28 @@ window.Keyboard = ideal.Proto.extend().newSlots({
     // get key state helpers
 
     shiftIsDown: function() {
-        return this.keyForName("shift").isDown()
+        return this.shiftKey().isDown()
     },
 
     commandIsDown: function() {
         return this.leftCommandKey().isDown() || this.rightCommandKey().isDown()
     },
 
+
+    equalSignKey: function() {
+        return this.keyForName("equalsign")
+    },
+
+    minusKey: function() {
+        return this.keyForName("dash")
+    },
+
+    plusKey: function() {
+        return this.keyForName("plus")
+    },
+
     plusIsDown: function() {
-        return this.keyForName("plus").isDown()
+        return this.plusKey().isDown()
     },
 
     currentlyDownKeys: function() {
@@ -294,5 +315,13 @@ window.Keyboard = ideal.Proto.extend().newSlots({
 
     hasKeysDown: function() {
         return this.currentlyUpKeys().length !== 0
+    },
+
+    downKeyNames: function() {
+        return Keyboard.shared().currentlyDownKeys().map(k => k.name())
+    },
+
+    show: function() {
+        console.log(this.typeId() + " downKeys: ", this.downKeyNames())
     },
 })

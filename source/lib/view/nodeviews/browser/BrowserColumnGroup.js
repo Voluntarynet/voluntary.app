@@ -39,8 +39,37 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
 
         this.updateScrollView()
         
+        this.addGestureRecognizer(RightEdgePanGestureRecognizer.clone()) 
+
         return this
     },
+
+    // edge pan
+
+    onRightEdgePanBegin: function(aGesture) {
+        this._beforeEdgePanBorderRight = this.borderRight()
+        this.setBorderRight("1px dashed red")
+        this.setTransition("min-width 0s, max-width 0s")
+    },
+
+    onRightEdgePanMove: function(aGesture) {
+        const p = aGesture.currentPosition() // position in document coords
+        const f = this.frameInDocument()
+        const h = p.x() - f.x()
+        const minWidth = this.node() ? this.node().nodeMinWidth() : 10;
+        if (h >= minWidth) {
+            this.setMinAndMaxWidth(h) // need to do same for contentView?
+        } else {
+            this.setMinAndMaxWidth(minWidth) 
+        }
+        return this
+    },
+
+    onRightEdgePanComplete: function(aGesture) {
+        this.setBorderRight(this._beforeEdgePanBorderRight)
+    },
+
+    // -------------------------------------
     
     hasHeader: function() {
         return true

@@ -309,7 +309,11 @@ window.DomView = ideal.Proto.extend().newSlots({
     fontSize: function() {
         return this.getPxCssAttribute("font-size")
     },
-	
+    
+    computedFontSize: function() {
+        return window.getComputedStyle(this.element()).getPropertyValue("font-size")
+    },
+
     // margin
 
     setMarginString: function(s) {

@@ -77,6 +77,28 @@ window.TextField = DivStyledView.extend().newSlots({
     // ------------------
     
     onKeyDown: function(event) {
+        const controlDown = Keyboard.shared().controlKey().isDown()
+        const equalSignDown = Keyboard.shared().equalSignKey().isDown()
+        const minusDown = Keyboard.shared().minusKey().isDown()
+
+
+        if (controlDown) {
+            const fontSize = this.computedFontSize()
+            let n = fontSize.before("px").asNumber()
+
+            console.log("font size: ", fontSize)
+            console.log("font size n : ", n)
+            if (equalSignDown) {
+                console.log("+")
+                n++
+                this.setFontSize(n + "px")
+            } else if (minusDown) {
+                n --
+                if (n < 1) { n = 1; }
+                this.setFontSize(n + "px")
+            }
+        }
+
         return DivStyledView.onKeyDown.apply(this, [event])
     },
 
@@ -106,7 +128,7 @@ window.TextField = DivStyledView.extend().newSlots({
     },
 	
     formatValue: function() {
-	    let oldValue = this.innerHTML()
+	    const oldValue = this.innerHTML()
 	    let newValue = this.innerText() // removes returns
         
         if (this.doesTrim()) {

@@ -1,4 +1,12 @@
+skip loading screen when using an index file?
 
+protocol to check editability of and store adjusted row size, font size, etc?
+option +, option - to adjust font size of text field being edited
+change font color, bg color, column color settings
+column orientation
+
+copy/paste style
+store/edit style at row prototype level
 
 
 
@@ -29,12 +37,6 @@ Transitions abstraction work
 
 
 Column darkenUnselectedMode?
-
---------------------
-
-Generic content creator Node
-
-Themes? Use StorableNode?
 
 --------------------------------------------------
 
@@ -73,9 +75,6 @@ Themes? Use StorableNode?
 - support multi BrowserRow selection
 
 -------------------------
-
-
-When creating a new subitem from UI add button, select it's path
 
 select all text on double touch tap
 

@@ -68,6 +68,7 @@ window.BrowserRow = NodeView.extend().newSlots({
 
 
     onBottomEdgePanBegin: function(aGesture) {
+        this._beforeEdgePanBorderBottom = this.borderBottom()
         this.setBorderBottom("1px dashed red")
         this.setTransition("min-height 0s, max-height 0s")
     },
@@ -86,7 +87,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
 
     onBottomEdgePanComplete: function(aGesture) {
-        this.setBorderBottom("none")
+        this.setBorderBottom(this._beforeEdgePanBorderBottom)
     },
 
 

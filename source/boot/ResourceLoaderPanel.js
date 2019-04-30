@@ -131,7 +131,13 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
     initTitle () {
         const title = this.titleElement()
         title.style.color = "#aaa"
-        title.innerHTML = "PEER LOADING"
+        title.innerHTML = "LOADING"
+
+        if (window.ResourceLoaderIsEmbedded) {
+            this.mainElement().style.visibility = "hidden"
+            this.titleElement().style.visibility = "hidden"
+        }
+
         return this
     }
 

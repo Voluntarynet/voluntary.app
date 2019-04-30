@@ -80,7 +80,7 @@ window.BrowserView = NodeView.extend().newSlots({
 
         this.setIsRegisteredForDocumentResize(true)
 
-        let dh = DomView.clone().setDivClassName("BrowserDefaultHeader NodeView DomView")
+        const dh = DomView.clone().setDivClassName("BrowserDefaultHeader NodeView DomView")
         this.setDefaultHeader(dh)
         this.addSubview(dh)
 
@@ -88,16 +88,17 @@ window.BrowserView = NodeView.extend().newSlots({
         this.setColumnGroupCount(1)
         //.selectFirstColumn()
 
-        this.addGestureRecognizer(ScreenLeftEdgePanGestureRecognizer.clone()) 
-        this.addGestureRecognizer(ScreenRightEdgePanGestureRecognizer.clone()) 
+        this.addGestureRecognizer(LeftEdgePanGestureRecognizer.clone()) 
+        this.addGestureRecognizer(RightEdgePanGestureRecognizer.clone()) 
 
         return this
     },
 
-    // right screen edge pan
+    // edge pan
 
-    onScreenRightEdgePanBegin: function(aGesture) {
-        console.log("onScreenRightEdgePanBegin")
+    onRightEdgePanBegin: function(aGesture) {
+        // TODO: animate this until complete
+        console.log("onRightEdgePanBegin")
         //if(this.isSingleColumn()) {
         const column = this.selectedColumn()
         if (column) {
@@ -106,21 +107,7 @@ window.BrowserView = NodeView.extend().newSlots({
         //}
         aGesture.cancel()
     },
-    
-    /*
-    onScreenRightEdgePanMove: function(aGesture) {
-        console.log("onScreenRightEdgePanMove")
 
-    },
-
-    onScreenRightEdgePanComplete: function(aGesture) {
-
-    },
-
-    onScreenRightEdgePanCancelled: function(aGesture) {
-
-    },
-    */
 
     // left screen edge pan
 
@@ -128,28 +115,13 @@ window.BrowserView = NodeView.extend().newSlots({
         return this.activeColumnGroups().length > 1
     },
 
-    onScreenLeftEdgePanBegin: function(aGesture) {
+    onLeftEdgePanBegin: function(aGesture) {
         console.log("onScreenLeftEdgePanBegin")
         if (this.canMoveLeft()) {
             this.popLastActiveColumn()
         }
         aGesture.cancel()
     },
-
-    /*
-    onScreenLeftEdgePanMove: function(aGesture) {
-        console.log("onScreenLeftEdgePanMove")
-
-    },
-
-    onScreenLeftEdgePanComplete: function(aGesture) {
-
-    },
-
-    onScreenLeftEdgePanCancelled: function(aGesture) {
-
-    },
-    */
 
     // -------------------
 

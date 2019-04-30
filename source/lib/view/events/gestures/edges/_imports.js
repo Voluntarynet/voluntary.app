@@ -1,10 +1,11 @@
 "use strict"
 
 ResourceLoader.pushRelativePaths([
-    "ScreenEdgePanGestureRecognizer.js",
-    "ScreenTopEdgePanGestureRecognizer.js",
-    "ScreenBottomEdgePanGestureRecognizer.js",
-    "ScreenLeftEdgePanGestureRecognizer.js",
-    "ScreenRightEdgePanGestureRecognizer.js",
+    //"screen/_imports.js",
+    "EdgePanGestureRecognizer.js",
+    "TopEdgePanGestureRecognizer.js",
+    "BottomEdgePanGestureRecognizer.js",
+    "LeftEdgePanGestureRecognizer.js",
+    "RightEdgePanGestureRecognizer.js",
 ])
 

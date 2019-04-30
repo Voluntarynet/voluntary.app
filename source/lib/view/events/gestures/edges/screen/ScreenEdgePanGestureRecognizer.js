@@ -5,7 +5,7 @@
     ScreenEdgePanGestureRecognizer
 
     Subclass of PanGestureRecognizer that limits pan detection to gestures starting at the edge. 
-    Don't use this class directed - instead use it's subclass for the edge you're interested in.
+    Don't use this class directly - instead use it's subclass for the edge you're interested in.
 
     Delegate messages:
 

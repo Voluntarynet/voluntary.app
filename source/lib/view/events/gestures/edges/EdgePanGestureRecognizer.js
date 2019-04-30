@@ -39,21 +39,25 @@ window.EdgePanGestureRecognizer = PanGestureRecognizer.extend().newSlots({
         return this
     },
 
+    /*
     start: function() {
         this.startDocListeners() // only want to listen to the document
         // TODO: do we always want to listen outside the view? 
         // is listening only inside both more efficient and good enough?
         return this
     },
+    */
 
     // --- events --------------------------------------------------------------------
 
+    /*
     didFinish: function() {
         GestureRecognizer.didFinish.apply(this)
         this.setIsPressing(false)
-        //this.stopDocListeners()
+        this.stopDocListeners()
         return this
     },
+    */
 
     isReadyToBegin: function() {
         return this.hasOkFingerCount() &&

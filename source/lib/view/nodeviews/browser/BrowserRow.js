@@ -60,8 +60,35 @@ window.BrowserRow = NodeView.extend().newSlots({
         this.addGestureRecognizer(SlideGestureRecognizer.clone()) // for slide delete
         //this.addGestureRecognizer(TapGestureRecognizer.clone()) 
 
+        //this.addGestureRecognizer(RightEdgePanGestureRecognizer.clone()) // use to adjust width?
+        this.addGestureRecognizer(BottomEdgePanGestureRecognizer.clone()) // use to adjust height?
+
         return this
     },
+
+
+    onBottomEdgePanBegin: function(aGesture) {
+        this.setBorderBottom("1px dashed red")
+        this.setTransition("min-height 0s, max-height 0s")
+    },
+
+    onBottomEdgePanMove: function(aGesture) {
+        const p = aGesture.currentPosition() // position in document coords
+        const f = this.frameInDocument()
+        const h = p.y() - f.y()
+        const minHeight = this.node() ? this.node().nodeMinHeight() : 10;
+        if (h >= minHeight) {
+            this.setMinAndMaxHeight(h) // need to do same for contentView?
+        } else {
+            this.setMinAndMaxHeight(minHeight) 
+        }
+        return this
+    },
+
+    onBottomEdgePanComplete: function(aGesture) {
+        this.setBorderBottom("none")
+    },
+
 
     // -- contentView -- a special subview within the BrowserRow for it's content
     // we route style methods to it

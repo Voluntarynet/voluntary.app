@@ -40,7 +40,7 @@ window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
     
     init: function () {
         GestureRecognizer.init.apply(this)
-        this.setListenerClasses(["MouseListener", "TouchListener"])
+        this.setListenerClasses(this.defaultListenerClasses())
         //this.setIsDebugging(true) 
         this.resetTapCount()
         return this

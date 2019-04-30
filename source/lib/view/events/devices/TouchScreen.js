@@ -99,7 +99,7 @@ window.TouchScreen = ideal.Proto.extend().newSlots({
         let p = EventPoint.clone()
         p.setId(touch.identifier)
         p.setTarget(touch.target)
-        p.set(touch.pageX, touch.pageY)
+        p.set(touch.pageX, touch.pageY)  // document position
         p.setTimeToNow()
         p.setIsDown(true)
         p.setEvent(touch)

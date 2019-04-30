@@ -14,6 +14,16 @@
         onScreenEdgePanComplete
         onScreenEdgePanCancelled
 
+
+    for distance, ask the target for it's frameInViewport and compare with
+    event's posInWindow:
+
+        const frame = target.frameInViewport()
+        frame.top()
+        frame.bottom()
+        frame.left()
+        frame.right()
+        
 */
 
 window.ScreenEdgePanGestureRecognizer = PanGestureRecognizer.extend().newSlots({
@@ -23,7 +33,7 @@ window.ScreenEdgePanGestureRecognizer = PanGestureRecognizer.extend().newSlots({
 }).setSlots({
     init: function () {
         PanGestureRecognizer.init.apply(this)
-        this.setListenerClasses(["MouseListener", "TouchListener"]) 
+        this.setListenerClasses(this.defaultListenerClasses()) 
         this.setMinDistToBegin(5)
         //this.setIsDebugging(true)
         return this

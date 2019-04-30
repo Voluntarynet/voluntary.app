@@ -781,7 +781,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
 
     rowContainingPoint: function(aPoint) {
         return this.rows().detect((row) => {
-            return row.winBounds().containsPoint(aPoint)
+            return row.frameInDocument().containsPoint(aPoint)
         })
     },
 

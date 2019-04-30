@@ -67,10 +67,23 @@ html * {
 
 /* avoid outlines */
 
-html * { outline: none; -moz-outline-style: none; }
-html * :focus { outline: none; -moz-outline-style: none; }
-html * :active { outline: none; -moz-outline-style: none; }
-    
+html * { 
+    outline: none; 
+    outline-style: none; 
+    -moz-outline-style: none; 
+  }
+  
+  html * :focus { 
+    outline: none; 
+    outline-style: none; 
+    -moz-outline-style: none; 
+  }
+  
+  html * :active { 
+    outline: none; 
+    outline-style: none; 
+    -moz-outline-style: none; 
+  }
     
 /*
 :root {
@@ -83403,15 +83416,15 @@ window.BMViewStyles = ideal.Proto.extend().newSlots({
     },
 
     sharedBlackOnWhiteStyle: function() {
-        if (BMViewStyles._sharedBlackOnWhiteStyle) {
+        if (!BMViewStyles._sharedBlackOnWhiteStyle) {
             BMViewStyles._sharedBlackOnWhiteStyle = BMViewStyles.clone().setToBlackOnWhite().setIsMutable(false)
         }
         return BMViewStyles._sharedBlackOnWhiteStyle
     },
 
     sharedWhiteOnBlackStyle: function() {
-        if (BMViewStyles._sharedWhiteOnBlackStyle) {
-            BMViewStyles._sharedWhiteOnBlackStyle = BMViewStyles.clone().setToBlackOnWhite().setIsMutable(false)
+        if (!BMViewStyles._sharedWhiteOnBlackStyle) {
+            BMViewStyles._sharedWhiteOnBlackStyle = BMViewStyles.clone().setToWhiteOnBlack().setIsMutable(false)
         }
         return BMViewStyles._sharedWhiteOnBlackStyle
     },
@@ -83430,7 +83443,7 @@ window.BMViewStyles = ideal.Proto.extend().newSlots({
 
     setToWhiteOnBlack: function() {
         assert(this.isMutable())
-        this.unselected().setColor("white")
+        this.unselected().setColor("#aaa")
         this.unselected().setBackgroundColor("black")
         this.unselected().setBorderBottom("none") 
 
@@ -83440,6 +83453,7 @@ window.BMViewStyles = ideal.Proto.extend().newSlots({
         return this
     },
     
+    /*
     setToGrayOnTransparent: function() {        
         assert(this.isMutable())
         this.unselected().setColor("#aaa")
@@ -83449,6 +83463,7 @@ window.BMViewStyles = ideal.Proto.extend().newSlots({
         this.selected().setBackgroundColor("transparent")        
         return this
     },
+    */
     
     copyFrom: function(styles) {
         assert(this.isMutable())
@@ -83618,7 +83633,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
         this.scheduleFinalize()	
         
         //this.setNodeColumnStyles(this.sharedNodeColumnStyles())
-        this.setNodeRowStyles(this.sharedNodeRowStyles())
+        //this.setNodeRowStyles(this.sharedNodeRowStyles())
 
         this.setNodeColumnStyles(BMViewStyles.clone())
         //this.setNodeRowStyles(BMViewStyles.clone())
@@ -87771,6 +87786,12 @@ ResourceLoader.pushRelativePaths([
 
     Class to represent a 2d or 3d point, optionally with a time.
 
+    NOTES
+
+    Event's positions are set to the document (event.pageX, event.pageY) coordinates.
+    To get the viewport coordinates (event.clientX, event.clientY), 
+    use the viewportPosition() method.
+
 */
 
 window.Event_hasCachedPoints = function(event) {
@@ -87840,6 +87861,12 @@ window.EventPoint = window.Point.extend().newSlots({
 
     // viewport helpers
 
+    viewportPosition: function() {
+        const e = this.event()
+        const p = Point.clone().set(e.clientX, e.clientY)
+        return p
+    },
+
     viewportHeight: function() {
         return window.innerHeight
     },
@@ -87895,6 +87922,10 @@ window.KeyboardKey = ideal.Proto.extend().newSlots({
         this.setIsDown(false)
         return shouldPropogate
     },
+
+    isUp: function() {
+        return !this.isDown()
+    }
 })
 
 "use strict"
@@ -87914,15 +87945,15 @@ window.Keyboard = ideal.Proto.extend().newSlots({
     isDebugging: false,
     keyboardListener: null,
 }).setSlots({
+    shared: function() {   
+        return this.sharedInstanceForClass(Keyboard)
+    },
+
     init: function () {
         ideal.Proto.init.apply(this)
         this.setupCodeToKeys()
         this.startListening()
         return this
-    },
-
-    shared: function() {   
-        return this.sharedInstanceForClass(Keyboard)
     },
 
     startListening: function() {
@@ -88182,6 +88213,18 @@ window.Keyboard = ideal.Proto.extend().newSlots({
     plusIsDown: function() {
         return this.keyForName("plus").isDown()
     },
+
+    currentlyDownKeys: function() {
+        return Object.values(this.codeToKeys()).select(key => key.isDown())
+    },
+
+    currentlyUpKeys: function() {
+        return Object.values(this.codeToKeys()).select(key => !key.isDown())
+    },
+
+    hasKeysDown: function() {
+        return this.currentlyUpKeys().length !== 0
+    },
 })
 
 "use strict"
@@ -88260,7 +88303,7 @@ window.Mouse = ideal.Proto.extend().newSlots({
         assert(event.__proto__.constructor === MouseEvent)
 
         let p = EventPoint.clone()
-        p.set(event.pageX, event.pageY)
+        p.set(event.pageX, event.pageY) // document position
         p.setTarget(event.target)
         p.setTimeToNow()
         p.setId("mouse")
@@ -88313,7 +88356,7 @@ window.TouchScreen = ideal.Proto.extend().newSlots({
     lastEvent: null,
     touchListener: null,
     //isVisualDebugging: false,
-    isDebugging: true,
+    isDebugging: false,
 }).setSlots({
     shared: function() { 
         return this.sharedInstanceForClass(TouchScreen)
@@ -88323,7 +88366,7 @@ window.TouchScreen = ideal.Proto.extend().newSlots({
         ideal.Proto.init.apply(this)
         this.startListening()
         if (this.isDebugging()) {
-            console.log(this.type() + ".init()")
+            console.log(this.typeId() + ".init()")
         }
         return this
     },
@@ -88397,7 +88440,7 @@ window.TouchScreen = ideal.Proto.extend().newSlots({
         let p = EventPoint.clone()
         p.setId(touch.identifier)
         p.setTarget(touch.target)
-        p.set(touch.pageX, touch.pageY)
+        p.set(touch.pageX, touch.pageY)  // document position
         p.setTimeToNow()
         p.setIsDown(true)
         p.setEvent(touch)
@@ -88407,7 +88450,7 @@ window.TouchScreen = ideal.Proto.extend().newSlots({
 
     justPointsForEvent: function(event) {
         //if (this.isDebugging()) {
-            //console.log("touches.length = ", event.touches.length)
+        //  console.log("touches.length = ", event.touches.length)
         //}
 
         let points = []
@@ -89409,13 +89452,17 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     type: "GestureRecognizer",
     
     viewTarget: null,
+    shouldRemoveOnComplete: false,
+
+    // listeners
 
     listenerClasses: null,
     viewListeners: null, 
     docListeners: null, 
     //isActive: false,
+    defaultListenerClasses: ["MouseListener", "TouchListener"],
 
-    shouldRemoveOnComplete: false,
+    // events
 
     overEvent: null,
     leaveEvent: null,
@@ -89427,10 +89474,14 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     lastEvent: null,
     upEvent: null,
 
+    // standard messages
+
     beginMessage: null,     //"on<GestureType>Begin",
     moveMessage: null,      //"on<GestureType>Move",
     cancelledMessage: null, // "on<GestureType>Cancelled",
     completeMessage: null,  // "on<GestureType>Complete",
+
+    // debugging
 
     isEmulatingTouch: false, // assumes touch and mouse events aren't mixed
 
@@ -89438,12 +89489,16 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     isVisualDebugging: false,
     fingerViewDict: null,
 
+    // begin pressing 
+
     isPressing: false,
 
     minFingersRequired: 2,
     maxFingersAllowed: 4,
     minDistToBegin: 10,
     //maxDistToBegin: null,
+    allowsKeyboardKeys: false,
+    requiresKeyboardKeys: null, 
 }).setSlots({
     init: function () {
         this.setListenerClasses([]) // subclasses override this in their
@@ -89572,10 +89627,27 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
                 n <= this.maxFingersAllowed();
     },
 
+    hasAcceptableKeyboardState: function() {
+        if (!this.allowsKeyboardKeys()) {
+            if (!Keyboard.shared().hasKeysDown()) {
+
+                // make exception for shift key since we use it to emulate multi-touch
+                if (keyboard.currentlyDownKeys().length === 1) {
+                    if(keyboard.shiftIsDown()) {
+                        return true
+                    }
+                }
+                return false
+            }
+        }
+        return true
+    },
+
     canBegin: function() {
         return !this.isActive() && 
                 this.hasMovedEnough() && 
-                this.hasAcceptableFingerCount();
+                this.hasAcceptableFingerCount() &&
+                this.hasAcceptableKeyboardState();
     },
 
     // --- start / stop ---
@@ -89950,7 +90022,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
             DocumentBody.shared().addSubview(v)
         }
         const vt = this.viewTarget()
-        const bounds = vt.winBounds()
+        const bounds = vt.frameInDocument()
 
         v.setMinAndMaxHeight(bounds.height())
         v.setMinAndMaxWidth(bounds.width())
@@ -90143,7 +90215,7 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
     
     init: function () {
         GestureRecognizer.init.apply(this)
-        this.setListenerClasses(["MouseListener", "TouchListener"])
+        this.setListenerClasses(this.defaultListenerClasses())
         this.setIsDebugging(false) 
 
         this.setMinFingersRequired(1)
@@ -90285,7 +90357,7 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
 }).setSlots({
     init: function () {
         GestureRecognizer.init.apply(this)
-        this.setListenerClasses(["MouseListener", "TouchListener"])     
+        this.setListenerClasses(this.defaultListenerClasses())     
         this.setMinFingersRequired(1)
         this.setMaxFingersAllowed(1)
         this.setMinDistToBegin(10)
@@ -90486,7 +90558,7 @@ window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
     
     init: function () {
         GestureRecognizer.init.apply(this)
-        this.setListenerClasses(["MouseListener", "TouchListener"])
+        this.setListenerClasses(this.defaultListenerClasses())
         //this.setIsDebugging(true) 
         this.resetTapCount()
         return this
@@ -90658,7 +90730,7 @@ window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
     
     init: function () {
         GestureRecognizer.init.apply(this)
-        this.setListenerClasses(["MouseListener", "TouchListener"])
+        this.setListenerClasses(this.defaultListenerClasses())
 
         this.setMinFingersRequired(2)
         this.setMaxFingersAllowed(4)
@@ -90945,7 +91017,7 @@ window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
     
     init: function () {
         GestureRecognizer.init.apply(this)
-        this.setListenerClasses(["MouseListener", "TouchListener"]) 
+        this.setListenerClasses(this.defaultListenerClasses()) 
         //this.setIsDebugging(false)
         return this
     },
@@ -91075,7 +91147,7 @@ window.PinchGestureRecognizer = OrientGestureRecognizer.extend().newSlots({
 }).setSlots({
     init: function () {
         OrientGestureRecognizer.init.apply(this)
-        this.setListenerClasses(["MouseListener", "TouchListener"]) 
+        this.setListenerClasses(this.defaultListenerClasses()) 
         //this.setIsDebugging(false)
         //this.setIsVisualDebugging(true)
         this.setMinFingersRequired(2)
@@ -91122,7 +91194,7 @@ window.RotationGestureRecognizer = OrientGestureRecognizer.extend().newSlots({
 }).setSlots({
     init: function () {
         OrientGestureRecognizer.init.apply(this)
-        this.setListenerClasses(["MouseListener", "TouchListener"]) 
+        this.setListenerClasses(this.defaultListenerClasses()) 
         //this.setIsDebugging(true)
         return this
     },
@@ -91161,6 +91233,16 @@ ResourceLoader.pushRelativePaths([
         onScreenEdgePanComplete
         onScreenEdgePanCancelled
 
+
+    for distance, ask the target for it's frameInViewport and compare with
+    event's posInWindow:
+
+        const frame = target.frameInViewport()
+        frame.top()
+        frame.bottom()
+        frame.left()
+        frame.right()
+        
 */
 
 window.ScreenEdgePanGestureRecognizer = PanGestureRecognizer.extend().newSlots({
@@ -91170,7 +91252,7 @@ window.ScreenEdgePanGestureRecognizer = PanGestureRecognizer.extend().newSlots({
 }).setSlots({
     init: function () {
         PanGestureRecognizer.init.apply(this)
-        this.setListenerClasses(["MouseListener", "TouchListener"]) 
+        this.setListenerClasses(this.defaultListenerClasses()) 
         this.setMinDistToBegin(5)
         //this.setIsDebugging(true)
         return this
@@ -93897,6 +93979,20 @@ window.DomView = ideal.Proto.extend().newSlots({
         return this._divClassName
     },
 
+    // --- parentView ---
+
+    setParentView: function(aView) {
+        if (this._parentView != aView) {
+            this._parentView = aView
+            this.didChangeParentView()
+        }
+        return this
+    },
+
+    didChangeParentView: function() {
+        return this
+    },
+
     // --- subviews ---
 
     subviewCount: function() {
@@ -94128,6 +94224,14 @@ window.DomView = ideal.Proto.extend().newSlots({
             return this.subviews()[nextIndex]
         }
         return null
+    },
+
+    sendAllViewDecendants: function(methodName, argList) {
+        this.subviews().forEach((v) => {
+            v[methodName].apply(v, argList)
+            v.sendAllViewDecendants(methodName, argList)
+        })
+        return this
     },
 
     // --- active element ---
@@ -95201,73 +95305,69 @@ window.DomView = ideal.Proto.extend().newSlots({
         return this
     },
 
-
+    /*
     winPosForEvent: function(event) {
-        let p = EventPoint.clone().set(event.clientX, event.clientY)
+        const p = EventPoint.clone().set(event.clientX, event.clientY)
+        return p
     },
 
     parentPosForEvent: function(event) {
-        let p = this.winPosForEvent(event)
-        let pv = this.parentView()
+        const p = this.winPosForEvent(event)
+        const pv = this.parentView()
         if (pv) {
-            return p.subtract(pv.windowPos())
+            return p.subtract(pv.positionInDocument())
         }
         return p
     },
 
     viewPosForEvent: function(event) {
-        return this.winPosForEvent(event).subtract(this.windowPos())
-    },
-
-    /*
-    windowPos: function() {
-        let b = this.boundingClientRect()
-        let p = EventPoint.clone().set(b.x, b.y)
-        return p
+        return this.winPosForEvent(event).subtract(this.positionInDocument())
     },
     */
    
     containsPoint: function(aPoint) {
-        return this.winBounds().containsPoint(aPoint)
+        return this.frameInDocument().containsPoint(aPoint)
     },
 
-    winBounds: function() {
-        let p = this.windowPos()
-        let s = this.size()
-        return Rectangle.clone().setOrigin(p).setSize(s)
+    frameInDocument: function() {
+        const origin = this.positionInDocument()
+        const size = this.size()
+        const frame = Rectangle.clone().setOrigin(origin).setSize(size)
+        return frame
     },
 
     size: function() {
         return EventPoint.clone().set(this.clientWidth(), this.clientHeight());
     },
 
-    windowPos: function() {
-        let elem = this.element()
-        let box = elem.getBoundingClientRect();
+    positionInDocument: function() {
+        const box = this.element().getBoundingClientRect();
+
+        // return Point.clone().set(Math.round(box.left), Math.round(box.top));
+
+        const body = document.body;
+        const docEl = document.documentElement;
     
-        let body = document.body;
-        let docEl = document.documentElement;
+        const scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
+        const scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
     
-        let scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
-        let scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
+        const clientTop = docEl.clientTop || body.clientTop || 0;
+        const clientLeft = docEl.clientLeft || body.clientLeft || 0;
     
-        let clientTop = docEl.clientTop || body.clientTop || 0;
-        let clientLeft = docEl.clientLeft || body.clientLeft || 0;
+        const top  = box.top +  scrollTop - clientTop;
+        const left = box.left + scrollLeft - clientLeft;
     
-        let top  = box.top +  scrollTop - clientTop;
-        let left = box.left + scrollLeft - clientLeft;
-    
-        return EventPoint.clone().set(Math.round(left), Math.round(top));
-        //return p
+        const p = Point.clone().set(Math.round(left), Math.round(top));
+        return p
     },
 
     relativePos: function() {
-        let pv = this.parentView()
+        const pv = this.parentView()
         if (pv) {
-            return this.windowPos().subtract(pv.windowPos())
-            //return pv.windowPos().subtract(this.windowPos())
+            return this.positionInDocument().subtract(pv.positionInDocument())
+            //return pv.positionInDocument().subtract(this.positionInDocument())
         }
-        return this.windowPos()
+        return this.positionInDocument()
     },
 
     setRelativePos: function(p) {
@@ -95278,13 +95378,13 @@ window.DomView = ideal.Proto.extend().newSlots({
     },
 
     viewPosForWindowPos: function(pos) {
-        return this.windowPos().subtract(pos)
+        return this.positionInDocument().subtract(pos)
     },
 
     // --------------
 
     verticallyAlignAbsoluteNow: function() {
-        let pv = this.parentView()
+        const pv = this.parentView()
         if (pv) {
             this.setPosition("absolute")
             setTimeout(() => {
@@ -95295,7 +95395,7 @@ window.DomView = ideal.Proto.extend().newSlots({
     },
 	
     horizontallyAlignAbsoluteNow: function() {
-        let pv = this.parentView()
+        const pv = this.parentView()
         if (pv) {
             this.setPosition("absolute")
             setTimeout(() => {
@@ -95319,7 +95419,7 @@ window.DomView = ideal.Proto.extend().newSlots({
     },
 	
     unregisterForVisibility: function() {
-	    let obs = this.intersectionObserver()
+	    const obs = this.intersectionObserver()
 	    if (obs) {
 	        obs.disconnect()
             this.setIntersectionObserver(null);
@@ -95340,13 +95440,13 @@ window.DomView = ideal.Proto.extend().newSlots({
 	        //root = this.parentView().element()
 	    }
 	    
-        let intersectionObserverOptions = {
+        const intersectionObserverOptions = {
             root: root, // watch for visibility in the viewport 
             rootMargin: "0px",
             threshold: 1.0
         }
     
-        let obs = new IntersectionObserver((entries, observer) => { 
+        const obs = new IntersectionObserver((entries, observer) => { 
             entries.forEach(entry => {
                 if (entry.isIntersecting) { 
                     
@@ -95448,7 +95548,7 @@ window.DomView = ideal.Proto.extend().newSlots({
 
     containerize: function() {
         // create a subview of same size as parent and put all other subviews in it
-        let container = DomView.clone()
+        const container = DomView.clone()
         container.setMinAndMaxHeight(this.clientHeight())
         container.setMinAndMaxWidth(this.clientWidth())
         this.moveAllSubviewsToView(container)
@@ -95458,7 +95558,7 @@ window.DomView = ideal.Proto.extend().newSlots({
 
     uncontainerize: function() {
         assert(this.subviewCount() === 1)
-        let container = this.subviews().first()
+        const container = this.subviews().first()
         this.removeSubview(container)
         container.moveAllSubviewsToView(this)
         return this
@@ -95620,6 +95720,10 @@ window.DivStyledView = DomView.extend().newSlots({
     },
 
     // styles
+
+    lookedUpStyles: function() {
+        return null
+    },
 	
     styles: function() { 
         // since not all views use them, do lazy style setup 
@@ -95627,6 +95731,10 @@ window.DivStyledView = DomView.extend().newSlots({
             this.setStyles(BMViewStyles.clone()) 
         }
         return this._styles
+    },
+
+    currentBgColor: function() {
+        return this.currentStyle().backgroundColor()
     },
 
     currentStyle: function() {
@@ -95643,27 +95751,9 @@ window.DivStyledView = DomView.extend().newSlots({
 	
     applyStyles: function() {
         const style = this.currentStyle()
-		
-        style.applyToView(this)
-        //setTimeout(() => { style.applyToView(this) }, 0)
-		
+        style.applyToView(this)		
         return this
     },
-	
-    // TODO: add hover style support on mouse over event?
-    // or apply to this element's hover CSS settings?
-	
-    setSelectedColor: function(c) {
-        this.styles().selected().setColor(c)
-        return this
-    },
-	
-    /*
-	setSelectedBackgroundColor: function(c) {
-		this.styles().selected().setBackgroundColor(c)
-		return this
-	},
-	*/
 
     // select
 	
@@ -97638,7 +97728,8 @@ window.BrowserView = NodeView.extend().newSlots({
                 //cg.styles().unselected().setBackgroundColor(bgColor)
                 //this.defaultColumnStyles().selected().applyToView(cg)
                 cg.setBackgroundColor(bgColor)
-                cg.column().setSelectionColor(this.bgColorForIndex(i + 1))
+                cg.column().setRowBackgroundColor(bgColor)
+                cg.column().setRowSelectionColor(this.bgColorForIndex(i + 1))
             }
             i ++
         })
@@ -98170,10 +98261,10 @@ window.BrowserView = NodeView.extend().newSlots({
 window.BrowserColumn = NodeView.extend().newSlots({
     type: "BrowserColumn",
     rows: null,
-    selectionColor: "#aaa",
     allowsCursorNavigation: true,
     isDebugging: true,
     defaultRowStyles: null,
+    rowStyles: null,
     //shouldDarkenUnselected: true,
 }).setSlots({
     init: function () {
@@ -98189,9 +98280,22 @@ window.BrowserColumn = NodeView.extend().newSlots({
         this.setUserSelect("none")
         this.addGestureRecognizer(PinchGestureRecognizer.clone()) // for pinch open to add row
         this.addGestureRecognizer(TapGestureRecognizer.clone()) // for pinch open to add row
+
+        this.setRowStyles(BMViewStyles.clone().setToWhiteOnBlack())
+        //this.rowStyles().selected().setBackgroundColor("red")
         return this
     },
-    
+
+    setRowBackgroundColor: function(aColor) {
+        this.rowStyles().unselected().setBackgroundColor(aColor)
+        return this
+    },
+
+    setRowSelectionColor: function(aColor) {
+        this.rowStyles().selected().setBackgroundColor(aColor)
+        return this
+    },
+
     applyStyles: function() {
         //console.log(this.typeId() + ".applyStyles()")
         NodeView.applyStyles.apply(this)
@@ -98929,12 +99033,14 @@ window.BrowserColumn = NodeView.extend().newSlots({
 
     rowContainingPoint: function(aPoint) {
         return this.rows().detect((row) => {
-            return row.winBounds().containsPoint(aPoint)
+            return row.frameInDocument().containsPoint(aPoint)
         })
     },
 
 
     onPinchBegin: function(aGesture) {
+        // TODO: move row specific code to BrowserRow
+
         //console.log(this.typeId() + ".onPinchBegin()")
 
         // - calc insert index
@@ -99657,6 +99763,17 @@ window.BrowserFooter = NodeView.extend().newSlots({
 
     base row view, just knows about selected, selectable and colors
     
+
+    NOTES
+
+    Sources of row styles: node, the row itself, the row's column
+    
+    Styles lookup order:
+
+    node -> (fallback to) -> row -> (fallback to) -> column
+
+    See lookedUpStyles method.
+
 */
 
 window.BrowserRow = NodeView.extend().newSlots({
@@ -99760,6 +99877,55 @@ window.BrowserRow = NodeView.extend().newSlots({
     
     // node style dict
     
+    rowStyles: function() {
+        return null
+    },
+
+    didChangeParentView: function() {
+        NodeView.didChangeParentView.apply(this)
+        //window.SyncScheduler.shared().scheduleTargetAndMethod(this, "applyStyles", 0)
+        this.applyStyles()
+        return this
+    },
+
+    lookedUpStyles: function() {
+        const debugStyles = false
+
+        if (this.node()) {
+            const ns = this.node().nodeRowStyles()
+            if (ns) {
+                if (debugStyles) {
+                    console.log(this.typeId() + " using nodeRowStyles")
+                }
+                return ns
+            }
+        }
+
+        const rs = this.rowStyles()
+        if (rs) {
+            if (debugStyles) {
+                console.log(this.typeId() + " using rowStyles")
+            }
+            return rs
+        }
+
+        if (this.column()) {
+            const cs = this.column().rowStyles()
+            if (cs) {
+                if (debugStyles) {
+                    console.log(this.typeId() + " using column().rowStyles()")
+                }
+                return cs
+            }
+        } else if (debugStyles) {
+            const title = this.node() ? this.node().title() : "no node yet"
+            console.log(this.typeId() + " (" + title + ") has no column yet")
+        }
+
+        return BMViewStyles.sharedWhiteOnBlackStyle()
+    },
+
+    /*
     currentRowStyle: function() {
         const styles = this.node().nodeRowStyles()
         //styles.selected().set
@@ -99770,6 +99936,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         
         return styles.unselected()
     },
+    */
     
     select: function() {
         if (!this.isSelected()) {
@@ -99783,15 +99950,9 @@ window.BrowserRow = NodeView.extend().newSlots({
     // update
      
     updateSubviews: function() {   
-        /*     
-        if (this.node()) {
-            this.currentRowStyle().applyToView(this)
-        }
-        */
-        
         if (this.closeButtonView()) {
             if (this.node()) {
-                this.closeButtonView().element().style.color = this.currentRowStyle().color()
+                this.closeButtonView().setColor(this.currentStyle().color()) // needed?
             }
 			
             if (this.canDelete()) {
@@ -99825,24 +99986,38 @@ window.BrowserRow = NodeView.extend().newSlots({
         console.log(this.typeId() + " onTabKeyUp")
     },
 
-    // --- colors ---
-	
+    // --- styles ---
+    
+    styles: function() { 
+        const lookedUpStyles = this.lookedUpStyles()
+        if (lookedUpStyles) {
+            return lookedUpStyles
+        } else {
+            this.lookedUpStyles()
+        }
+        throw new Error("missing styles")
+    },
+
     applyStyles: function() {
+        /*
         const node = this.node() 
         
         if (node) {
             this.styles().copyFrom(node.nodeRowStyles()) // TODO: optimize this 
         }
-        
+        */
         NodeView.applyStyles.apply(this)
     
         // flash
 
+        /*
         if (this.shouldShowFlash() && this.selectedFlashColor()) {
             this.setBackgroundColor(this.selectedFlashColor())
-            setTimeout(() => { this.setBackgroundColor(this.currentBgColor()) }, 100)
+            //setTimeout(() => { this.setBackgroundColor(this.currentBgColor()) }, 100)
+            setTimeout(() => { NodeView.applyStyles.apply(this) }, 100)
             this.setShouldShowFlash(false)
         } 
+        */
 
         
         return this
@@ -99853,47 +100028,7 @@ window.BrowserRow = NodeView.extend().newSlots({
 	    console.log(this.typeId() + ".willAcceptFirstResponder()")
         return this
     },
-    
-    currentBgColor: function() {
-        if (this.isSelected()) {
-            return this.selectedBgColor()
-        } 
-		
-        return this.unselectedBgColor()
-    },
 
-    unselectedBgColor: function() {
-        if (this.node()) {
-            if (this.column()) {
-                if(this.node().nodeUsesColumnBackgroundColor()) {
-                    const c = this.columnGroup().backgroundColor()
-                    return c
-                }
-            }
-
-            const c = this.node().nodeRowStyles().unselected().backgroundColor()
-            if (c) {
-                return c
-            }
-        }
-		
-        return "transparent"
-    },
-    
-    selectedBgColor: function() {
-        if (this.node()) {
-            const c = this.node().nodeRowStyles().selected().backgroundColor()
-            if (c) {
-                return c
-            }
-        }
-		
-        if (!this.column()) {
-            return "transparent"
-        }
-		
-        return this.column().selectionColor()
-    },
     
     // close button
     
@@ -108945,7 +109080,8 @@ window.BMChatMessageRowView = BrowserTitledRow.extend().newSlots({
     styleAsReceived: function() {
         this.alignToLeft()
     },
-	
+    
+    /*
     unselectedBgColor: function() {
         return "white"
     },
@@ -108953,6 +109089,7 @@ window.BMChatMessageRowView = BrowserTitledRow.extend().newSlots({
     selectedBgColor: function() {
         return "white"
     },
+    */
 
 })
 
@@ -109120,6 +109257,10 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         this.setMinHeight("fit-content")
         this.setMaxHeight("fit-content")
 
+        // trying to avoid height animation but this isn't working
+        this.setTransition("all 0.2s, height 0s")
+        //this.contentView().setTransition("all 0.2s, height 0s")
+
         // ------------------------------------------
         
         this.contentView().setDisplay("block")
@@ -109131,7 +109272,6 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         // --------------------------------------------------
 
         this.closeButtonView().setDivClassName("BrowserRowCloseButtonTopRight")
-
         this.setTopView(this.addContentSubview(DomView.clone().setDivClassName("BMPostDraftRowTopView")))
 
         // left view
@@ -109144,7 +109284,6 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         // right view
         this.setRightView(this.topView().addSubview(DomView.clone().setDivClassName("BMPostDraftRowRightView")))
         
-
 
         // placeholder
         this.setPlaceHolderView(this.rightView().addSubview(TextField.clone().setDivClassName("BMPostDraftRowPlaceHolderView")))
@@ -109177,6 +109316,8 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         //this.styles().setToBlackOnWhite()
 
         this.closeButtonView().orderFront()
+
+        //this.sendAllViewDecendants("setTransition", ["all 0s"])
 				
         return this
     },
@@ -109190,7 +109331,9 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         tv.setMarginLeft(0)
         this.setPaddingBottom(0)
         tv.setWhiteSpace("normal")
-        tv.setFontFamily("AppRegular, Sans-Serif")        
+        tv.setFontFamily("AppRegular, Sans-Serif")       
+        tv.setTransition("all 0s")
+        return this
     },
     
     setIconDataUrl: function(imageDataUrl) {
@@ -109206,7 +109349,6 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
     },
 
     updateSubviews: function() {
-
         BrowserRow.updateSubviews.apply(this)
     
         const node = this.node()
@@ -109221,13 +109363,15 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
             this.placeHolderView().setOpacity(opacity)
         }
 
+        //this.sendAllViewDecendants("setTransition", ["all 0s"])
+
         return this
     },
 
     // --- edit ---
 
     onDidEdit: function (changedView) {   
-        console.log(this.typeId() + ".onDidEdit")
+        //console.log(this.typeId() + ".onDidEdit")
         this.updateSubviews()
         this.scheduleSyncToNode()
     },
@@ -109237,7 +109381,6 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
     },
 
     // --- sync ---
-
     
     syncToNode: function () {   
         //console.log("syncToNode")
@@ -109255,7 +109398,6 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         return this
     },
     
-    
     // actions
     
     post: function() {
@@ -109265,8 +109407,10 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
     
     /*
     delete: function() {
+        this.sendAllViewDecendants("setTransition", ["all 0.2s"])
+        setTimeout(() => { this.node().delete() })
         //this.delete()
-        this.node().delete()
+        //this.node().delete()
         return this
     },
     */

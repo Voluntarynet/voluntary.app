@@ -27,7 +27,7 @@ window.PinchGestureRecognizer = OrientGestureRecognizer.extend().newSlots({
 }).setSlots({
     init: function () {
         OrientGestureRecognizer.init.apply(this)
-        this.setListenerClasses(["MouseListener", "TouchListener"]) 
+        this.setListenerClasses(this.defaultListenerClasses()) 
         //this.setIsDebugging(false)
         //this.setIsVisualDebugging(true)
         this.setMinFingersRequired(2)

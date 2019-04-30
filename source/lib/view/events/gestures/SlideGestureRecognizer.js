@@ -45,7 +45,7 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
 }).setSlots({
     init: function () {
         GestureRecognizer.init.apply(this)
-        this.setListenerClasses(["MouseListener", "TouchListener"])     
+        this.setListenerClasses(this.defaultListenerClasses())     
         this.setMinFingersRequired(1)
         this.setMaxFingersAllowed(1)
         this.setMinDistToBegin(10)

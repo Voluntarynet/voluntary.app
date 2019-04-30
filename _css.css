@@ -53,10 +53,23 @@ html * {
 
 /* avoid outlines */
 
-html * { outline: none; -moz-outline-style: none; }
-html * :focus { outline: none; -moz-outline-style: none; }
-html * :active { outline: none; -moz-outline-style: none; }
-    
+html * { 
+    outline: none; 
+    outline-style: none; 
+    -moz-outline-style: none; 
+  }
+  
+  html * :focus { 
+    outline: none; 
+    outline-style: none; 
+    -moz-outline-style: none; 
+  }
+  
+  html * :active { 
+    outline: none; 
+    outline-style: none; 
+    -moz-outline-style: none; 
+  }
     
 /*
 :root {

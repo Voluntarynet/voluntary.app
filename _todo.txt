@@ -1,5 +1,23 @@
 
+dynamically add field rows?
+- option-long-click / double-long-press to inspect element to choose field type?
 
+    Node
+        - fields
+        - subnodes (short cuts to an array field
+        
+    Field types:
+        Boolean
+        Text / TextArea
+        Number
+        Date
+        Time
+        Options (can point to node containing list of options, or it's own local set?)
+        Pointer
+        Array
+        Method?
+        
+        
 prevent onClick when finishing row reording
 
 fix row background /transparent issues

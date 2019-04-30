@@ -45,7 +45,7 @@ window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
     
     init: function () {
         GestureRecognizer.init.apply(this)
-        this.setListenerClasses(["MouseListener", "TouchListener"])
+        this.setListenerClasses(this.defaultListenerClasses())
 
         this.setMinFingersRequired(2)
         this.setMaxFingersAllowed(4)

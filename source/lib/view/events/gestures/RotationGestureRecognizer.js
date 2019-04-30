@@ -29,7 +29,7 @@ window.RotationGestureRecognizer = OrientGestureRecognizer.extend().newSlots({
 }).setSlots({
     init: function () {
         OrientGestureRecognizer.init.apply(this)
-        this.setListenerClasses(["MouseListener", "TouchListener"]) 
+        this.setListenerClasses(this.defaultListenerClasses()) 
         //this.setIsDebugging(true)
         return this
     },

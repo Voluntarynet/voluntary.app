@@ -37,13 +37,17 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     type: "GestureRecognizer",
     
     viewTarget: null,
+    shouldRemoveOnComplete: false,
+
+    // listeners
 
     listenerClasses: null,
     viewListeners: null, 
     docListeners: null, 
     //isActive: false,
+    defaultListenerClasses: ["MouseListener", "TouchListener"],
 
-    shouldRemoveOnComplete: false,
+    // events
 
     overEvent: null,
     leaveEvent: null,
@@ -55,10 +59,14 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     lastEvent: null,
     upEvent: null,
 
+    // standard messages
+
     beginMessage: null,     //"on<GestureType>Begin",
     moveMessage: null,      //"on<GestureType>Move",
     cancelledMessage: null, // "on<GestureType>Cancelled",
     completeMessage: null,  // "on<GestureType>Complete",
+
+    // debugging
 
     isEmulatingTouch: false, // assumes touch and mouse events aren't mixed
 
@@ -66,12 +74,16 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     isVisualDebugging: false,
     fingerViewDict: null,
 
+    // begin pressing 
+
     isPressing: false,
 
     minFingersRequired: 2,
     maxFingersAllowed: 4,
     minDistToBegin: 10,
     //maxDistToBegin: null,
+    allowsKeyboardKeys: false,
+    requiresKeyboardKeys: null, 
 }).setSlots({
     init: function () {
         this.setListenerClasses([]) // subclasses override this in their
@@ -200,10 +212,27 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
                 n <= this.maxFingersAllowed();
     },
 
+    hasAcceptableKeyboardState: function() {
+        if (!this.allowsKeyboardKeys()) {
+            if (!Keyboard.shared().hasKeysDown()) {
+
+                // make exception for shift key since we use it to emulate multi-touch
+                if (keyboard.currentlyDownKeys().length === 1) {
+                    if(keyboard.shiftIsDown()) {
+                        return true
+                    }
+                }
+                return false
+            }
+        }
+        return true
+    },
+
     canBegin: function() {
         return !this.isActive() && 
                 this.hasMovedEnough() && 
-                this.hasAcceptableFingerCount();
+                this.hasAcceptableFingerCount() &&
+                this.hasAcceptableKeyboardState();
     },
 
     // --- start / stop ---
@@ -578,7 +607,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
             DocumentBody.shared().addSubview(v)
         }
         const vt = this.viewTarget()
-        const bounds = vt.winBounds()
+        const bounds = vt.frameInDocument()
 
         v.setMinAndMaxHeight(bounds.height())
         v.setMinAndMaxWidth(bounds.width())

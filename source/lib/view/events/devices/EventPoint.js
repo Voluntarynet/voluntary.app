@@ -5,6 +5,12 @@
 
     Class to represent a 2d or 3d point, optionally with a time.
 
+    NOTES
+
+    Event's positions are set to the document (event.pageX, event.pageY) coordinates.
+    To get the viewport coordinates (event.clientX, event.clientY), 
+    use the viewportPosition() method.
+
 */
 
 window.Event_hasCachedPoints = function(event) {
@@ -73,6 +79,12 @@ window.EventPoint = window.Point.extend().newSlots({
     },
 
     // viewport helpers
+
+    viewportPosition: function() {
+        const e = this.event()
+        const p = Point.clone().set(e.clientX, e.clientY)
+        return p
+    },
 
     viewportHeight: function() {
         return window.innerHeight

@@ -2647,73 +2647,69 @@ window.DomView = ideal.Proto.extend().newSlots({
         return this
     },
 
-
+    /*
     winPosForEvent: function(event) {
-        let p = EventPoint.clone().set(event.clientX, event.clientY)
+        const p = EventPoint.clone().set(event.clientX, event.clientY)
+        return p
     },
 
     parentPosForEvent: function(event) {
-        let p = this.winPosForEvent(event)
-        let pv = this.parentView()
+        const p = this.winPosForEvent(event)
+        const pv = this.parentView()
         if (pv) {
-            return p.subtract(pv.windowPos())
+            return p.subtract(pv.positionInDocument())
         }
         return p
     },
 
     viewPosForEvent: function(event) {
-        return this.winPosForEvent(event).subtract(this.windowPos())
-    },
-
-    /*
-    windowPos: function() {
-        let b = this.boundingClientRect()
-        let p = EventPoint.clone().set(b.x, b.y)
-        return p
+        return this.winPosForEvent(event).subtract(this.positionInDocument())
     },
     */
    
     containsPoint: function(aPoint) {
-        return this.winBounds().containsPoint(aPoint)
+        return this.frameInDocument().containsPoint(aPoint)
     },
 
-    winBounds: function() {
-        let p = this.windowPos()
-        let s = this.size()
-        return Rectangle.clone().setOrigin(p).setSize(s)
+    frameInDocument: function() {
+        const origin = this.positionInDocument()
+        const size = this.size()
+        const frame = Rectangle.clone().setOrigin(origin).setSize(size)
+        return frame
     },
 
     size: function() {
         return EventPoint.clone().set(this.clientWidth(), this.clientHeight());
     },
 
-    windowPos: function() {
-        let elem = this.element()
-        let box = elem.getBoundingClientRect();
+    positionInDocument: function() {
+        const box = this.element().getBoundingClientRect();
+
+        // return Point.clone().set(Math.round(box.left), Math.round(box.top));
+
+        const body = document.body;
+        const docEl = document.documentElement;
     
-        let body = document.body;
-        let docEl = document.documentElement;
+        const scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
+        const scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
     
-        let scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
-        let scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
+        const clientTop = docEl.clientTop || body.clientTop || 0;
+        const clientLeft = docEl.clientLeft || body.clientLeft || 0;
     
-        let clientTop = docEl.clientTop || body.clientTop || 0;
-        let clientLeft = docEl.clientLeft || body.clientLeft || 0;
+        const top  = box.top +  scrollTop - clientTop;
+        const left = box.left + scrollLeft - clientLeft;
     
-        let top  = box.top +  scrollTop - clientTop;
-        let left = box.left + scrollLeft - clientLeft;
-    
-        return EventPoint.clone().set(Math.round(left), Math.round(top));
-        //return p
+        const p = Point.clone().set(Math.round(left), Math.round(top));
+        return p
     },
 
     relativePos: function() {
-        let pv = this.parentView()
+        const pv = this.parentView()
         if (pv) {
-            return this.windowPos().subtract(pv.windowPos())
-            //return pv.windowPos().subtract(this.windowPos())
+            return this.positionInDocument().subtract(pv.positionInDocument())
+            //return pv.positionInDocument().subtract(this.positionInDocument())
         }
-        return this.windowPos()
+        return this.positionInDocument()
     },
 
     setRelativePos: function(p) {
@@ -2724,13 +2720,13 @@ window.DomView = ideal.Proto.extend().newSlots({
     },
 
     viewPosForWindowPos: function(pos) {
-        return this.windowPos().subtract(pos)
+        return this.positionInDocument().subtract(pos)
     },
 
     // --------------
 
     verticallyAlignAbsoluteNow: function() {
-        let pv = this.parentView()
+        const pv = this.parentView()
         if (pv) {
             this.setPosition("absolute")
             setTimeout(() => {
@@ -2741,7 +2737,7 @@ window.DomView = ideal.Proto.extend().newSlots({
     },
 	
     horizontallyAlignAbsoluteNow: function() {
-        let pv = this.parentView()
+        const pv = this.parentView()
         if (pv) {
             this.setPosition("absolute")
             setTimeout(() => {
@@ -2765,7 +2761,7 @@ window.DomView = ideal.Proto.extend().newSlots({
     },
 	
     unregisterForVisibility: function() {
-	    let obs = this.intersectionObserver()
+	    const obs = this.intersectionObserver()
 	    if (obs) {
 	        obs.disconnect()
             this.setIntersectionObserver(null);
@@ -2786,13 +2782,13 @@ window.DomView = ideal.Proto.extend().newSlots({
 	        //root = this.parentView().element()
 	    }
 	    
-        let intersectionObserverOptions = {
+        const intersectionObserverOptions = {
             root: root, // watch for visibility in the viewport 
             rootMargin: "0px",
             threshold: 1.0
         }
     
-        let obs = new IntersectionObserver((entries, observer) => { 
+        const obs = new IntersectionObserver((entries, observer) => { 
             entries.forEach(entry => {
                 if (entry.isIntersecting) { 
                     
@@ -2894,7 +2890,7 @@ window.DomView = ideal.Proto.extend().newSlots({
 
     containerize: function() {
         // create a subview of same size as parent and put all other subviews in it
-        let container = DomView.clone()
+        const container = DomView.clone()
         container.setMinAndMaxHeight(this.clientHeight())
         container.setMinAndMaxWidth(this.clientWidth())
         this.moveAllSubviewsToView(container)
@@ -2904,7 +2900,7 @@ window.DomView = ideal.Proto.extend().newSlots({
 
     uncontainerize: function() {
         assert(this.subviewCount() === 1)
-        let container = this.subviews().first()
+        const container = this.subviews().first()
         this.removeSubview(container)
         container.moveAllSubviewsToView(this)
         return this

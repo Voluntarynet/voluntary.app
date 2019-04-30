@@ -30,7 +30,7 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
     
     init: function () {
         GestureRecognizer.init.apply(this)
-        this.setListenerClasses(["MouseListener", "TouchListener"])
+        this.setListenerClasses(this.defaultListenerClasses())
         this.setIsDebugging(false) 
 
         this.setMinFingersRequired(1)

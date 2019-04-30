@@ -28,4 +28,8 @@ window.KeyboardKey = ideal.Proto.extend().newSlots({
         this.setIsDown(false)
         return shouldPropogate
     },
+
+    isUp: function() {
+        return !this.isDown()
+    }
 })

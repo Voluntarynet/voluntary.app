@@ -15,15 +15,15 @@ window.Keyboard = ideal.Proto.extend().newSlots({
     isDebugging: false,
     keyboardListener: null,
 }).setSlots({
+    shared: function() {   
+        return this.sharedInstanceForClass(Keyboard)
+    },
+
     init: function () {
         ideal.Proto.init.apply(this)
         this.setupCodeToKeys()
         this.startListening()
         return this
-    },
-
-    shared: function() {   
-        return this.sharedInstanceForClass(Keyboard)
     },
 
     startListening: function() {
@@ -282,5 +282,17 @@ window.Keyboard = ideal.Proto.extend().newSlots({
 
     plusIsDown: function() {
         return this.keyForName("plus").isDown()
+    },
+
+    currentlyDownKeys: function() {
+        return Object.values(this.codeToKeys()).select(key => key.isDown())
+    },
+
+    currentlyUpKeys: function() {
+        return Object.values(this.codeToKeys()).select(key => !key.isDown())
+    },
+
+    hasKeysDown: function() {
+        return this.currentlyUpKeys().length !== 0
     },
 })

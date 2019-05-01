@@ -1688,12 +1688,23 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
         title.innerHTML = "LOADING"
 
         if (window.ResourceLoaderIsEmbedded) {
-            this.mainElement().style.visibility = "hidden"
-            this.titleElement().style.visibility = "hidden"
+            this.hide()
         }
 
         return this
     }
+
+    hide() {
+        this.mainElement().style.visibility = "hidden"
+        this.titleElement().style.visibility = "hidden"
+    }
+
+    show () {
+        this.mainElement().style.visibility = "visible"
+        this.titleElement().style.visibility = "visible"
+    }
+
+
 
     // --- callabcks ------------------------------------------------
 
@@ -1794,6 +1805,7 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
         //console.log("    document.body = ", document.body) 
         //console.log("    his.errorElement() = ", this.errorElement()) 
         this.errorElement().innerHTML = error
+        this.show()
         return this
     }
 

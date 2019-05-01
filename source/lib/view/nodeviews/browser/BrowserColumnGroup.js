@@ -19,6 +19,7 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
 
     isCollapsed: false,
     animatesCollapse: true,
+
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
@@ -45,6 +46,11 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
     },
 
     // edge pan
+
+    acceptsRightEdgePan: function() {
+        //if (this.node() && this.node().allowsResizeWidth && this.node().allowsResizeWidth()) {
+        return false
+    },
 
     onRightEdgePanBegin: function(aGesture) {
         this._beforeEdgePanBorderRight = this.borderRight()

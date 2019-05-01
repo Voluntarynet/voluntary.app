@@ -377,12 +377,14 @@ window.BrowserRow = NodeView.extend().newSlots({
 
     // -- slide gesture ---
 
+    acceptsSlide: function() {
+        return this.canDelete()
+    },
+
     onSlideBegin: function() {
-        if (this.canDelete()) {
-            this.setTouchDeleteOffset(this.clientWidth() * 0.5);
-            this.contentView().setTransition("all 0s")       
-            this.setupSlide() 
-        }
+        this.setTouchDeleteOffset(this.clientWidth() * 0.5);
+        this.contentView().setTransition("all 0s")       
+        this.setupSlide() 
         return this
     },
 
@@ -411,18 +413,16 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
 	
     onSlideMove: function(slideGesture) {
-        if (this.canDelete()) {
-            const d = slideGesture.distance()
-            const isReadyToDelete  = d >= this._touchDeleteOffset
+        const d = slideGesture.distance()
+        const isReadyToDelete  = d >= this._touchDeleteOffset
 
-            //console.log("slideGesture.distance() = ", d)
-            //console.log("isReadyToDelete = ", isReadyToDelete)
+        //console.log("slideGesture.distance() = ", d)
+        //console.log("isReadyToDelete = ", isReadyToDelete)
 
-            this.setTouchRight(d)
+        this.setTouchRight(d)
 
-            if (this._dragDeleteButtonView) {
-                this._dragDeleteButtonView.setOpacity(isReadyToDelete ? 1 : 0.2)
-            }
+        if (this._dragDeleteButtonView) {
+            this._dragDeleteButtonView.setOpacity(isReadyToDelete ? 1 : 0.2)
         }
     },
 
@@ -435,7 +435,6 @@ window.BrowserRow = NodeView.extend().newSlots({
 	
     onSlideComplete: function(slideGesture) {
         //console.log(">>> " + this.type() + " onSlideComplete")
-        
         const d = slideGesture.distance()
         const isReadyToDelete  = d >= this._touchDeleteOffset
 
@@ -451,37 +450,33 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
 
     finishSlideAndDelete: function() {
-        if (this.canDelete()) {
-            this.setIsDeleting(true)
-            const dt = 0.08 // seconds
-            this.contentView().setTransition("right " + dt + "s")
-            this.setTransition(this.transitionStyle())
-            
+        this.setIsDeleting(true)
+        const dt = 0.08 // seconds
+        this.contentView().setTransition("right " + dt + "s")
+        this.setTransition(this.transitionStyle())
+        
+        setTimeout(() => {
+            this.setTouchRight(this.clientWidth())
             setTimeout(() => {
-                this.setTouchRight(this.clientWidth())
-                setTimeout(() => {
-                    this.cleanupSlide()
-                    this.delete()
-                }, dt*1000)
-            }, 0)
-        }
+                this.cleanupSlide()
+                this.delete()
+            }, dt*1000)
+        }, 0)
     },
 
     slideBack: function() {
-        if (this.canDelete()) {
-            this.disableColumnUntilTimeout(400)
+        this.disableColumnUntilTimeout(400)
 
-            this.contentView().setTransition("all 0.2s ease")
+        this.contentView().setTransition("all 0.2s ease")
 
-            setTimeout(() => {
-                this.setTouchRight(0)
-                this.contentView().setTransition(this.transitionStyle())
-            })
+        setTimeout(() => {
+            this.setTouchRight(0)
+            this.contentView().setTransition(this.transitionStyle())
+        })
 
-            setTimeout(() => {
-                this.didCompleteSlide()
-            }, 300)
-        }		
+        setTimeout(() => {
+            this.didCompleteSlide()
+        }, 300)
     },
 
     disableColumnUntilTimeout: function(ms) {
@@ -534,11 +529,13 @@ window.BrowserRow = NodeView.extend().newSlots({
 
     onMouseUp: function (event) {
         NodeView.onMouseUp.apply(this, [event])
-        //this.slideBack()
-        //this._isDraggingView = false
     },
 
     // tap hold
+
+    acceptsLongPress: function() {
+        return this.column().canReorder()
+    },
     
     onLongPressBegin: function(aGesture) {
     },
@@ -547,20 +544,20 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
 
     onLongPressComplete: function(longPressGesture) {
-        if (this.column().canReorder()) {
-            longPressGesture.deactivate()
-            const pan = this.addPanGesture()
-            pan.setShouldRemoveOnComplete(true)
-            pan.setMinDistToBegin(0)
-            pan.onDown(longPressGesture.currentEvent())
-            pan.attemptBegin()
-            //this.contentView().setBackgroundColor("blue")
-            this.setTransition("all 0s, transform 0.2s") //, min-height 1s, max-height 1s")
-            this.contentView().setTransition("transform 0.2s")
-            setTimeout(() => { 
-                this.zoomForPan()
-            })
-        }
+        longPressGesture.deactivate() // needed?
+
+        const pan = this.addPanGesture()
+        pan.setShouldRemoveOnComplete(true)
+        pan.setMinDistToBegin(0)
+        pan.onDown(longPressGesture.currentEvent())
+        this._isReordering = true
+        pan.attemptBegin()
+        //this.contentView().setBackgroundColor("blue")
+        this.setTransition("all 0s, transform 0.2s") //, min-height 1s, max-height 1s")
+        this.contentView().setTransition("transform 0.2s")
+        setTimeout(() => { 
+            this.zoomForPan()
+        })
     },
 
     zoomForPan: function() {
@@ -605,40 +602,34 @@ window.BrowserRow = NodeView.extend().newSlots({
         return this.column().columnGroup()
     },
 
+    acceptsPan: function() {
+        return this._isReordering
+    },
+
     onPanBegin: function(aGesture) {
-        if (!this._isDraggingView) {
-            this._isDraggingView = true
+        this.setTransition("top 0s")
+        
+        // visibility
+        this.column().setOverflow("visible")
+        this.columnGroup().setOverflow("visible")
+        this.columnGroup().scrollView().setOverflow("visible")
+        this.setZIndex(3)
+        //this.setBorder("1px solid rgba(255, 255, 255, 0.05)")
 
-            //this.setTransition("color 0.3s, top 0s")
-            //this.setTransform("scale(1.5)")
-            this.setTransition("top 0s")
-            //this.setOverflow("visible")
-            //this.contentView().setOverflow("visible")
-            
-            // visibility
-            this.column().setOverflow("visible")
-            this.columnGroup().setOverflow("visible")
-            this.columnGroup().scrollView().setOverflow("visible")
-            this.setZIndex(3)
-            //this.setBorder("1px solid rgba(255, 255, 255, 0.05)")
+        this.column().absolutePositionRows()
 
-            this.column().absolutePositionRows()
+        this._dragStartPos = this.relativePos()
 
-            this._dragStartPos = this.relativePos()
-
-            this.setTop(this._dragStartPos.y())
-            //this.column().setPosition("relative")
-            this.addShadow()
-        }
+        this.setTop(this._dragStartPos.y())
+        //this.column().setPosition("relative")
+        this.addShadow()
     },
 
     onPanMove: function(aGesture) {
-        if (this._isDraggingView) {
-            const np = this._dragStartPos.add(aGesture.diffPos()) 
-            this.setTop(np.y())
-            this.column().stackRows()
-            this.setTop(np.y())
-        }
+        const np = this._dragStartPos.add(aGesture.diffPos()) 
+        this.setTop(np.y())
+        this.column().stackRows()
+        this.setTop(np.y())
     },
 
     onPanCancelled: function(aGesture) {
@@ -647,32 +638,25 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
 
     onPanComplete: function(aGesture) {
+        // visibility
+        this.column().setOverflow("hidden")
+        this.columnGroup().setOverflow("hidden")
+        this.columnGroup().scrollView().setOverflow("hidden")
+        this.setZIndex(null)
 
+        this.setTransition(this.transitionStyle())
+        this.removeShadow()
 
-        if (this._isDraggingView) {
-            this._isDraggingView = false
-            //this.setBorder(null)
+        this.column().stackRows()
+        
+        this.unzoomForPan()
+        setTimeout(() => {
+            this.column().relativePositionRows()
+            this.column().didReorderRows()
+        }, 500)
 
-            // visibility
-            this.column().setOverflow("hidden")
-            this.columnGroup().setOverflow("hidden")
-            this.columnGroup().scrollView().setOverflow("hidden")
-            this.setZIndex(null)
-
-            //this.setPosition("relative")
-            this.setTransition(this.transitionStyle())
-            this.removeShadow()
-
-            this.column().stackRows()
-            
-            this.unzoomForPan()
-            setTimeout(() => {
-                //this.contentView().setBackgroundColor(this.currentBgColor())
-                this.column().relativePositionRows()
-                this.column().didReorderRows()
-            }, 500)
-        }
         this.removePanGesture()
+        this._isReordering = false
     },
 
     // orient testing

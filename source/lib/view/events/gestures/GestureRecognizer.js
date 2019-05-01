@@ -61,6 +61,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
 
     // standard messages
 
+    acceptMessage: null,    //"accepts<GestureType>Begin"
     beginMessage: null,     //"on<GestureType>Begin",
     moveMessage: null,      //"on<GestureType>Move",
     cancelledMessage: null, // "on<GestureType>Cancelled",
@@ -289,6 +290,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     // subclass helpers
 
     sendDelegateMessage: function(methodName) {
+        let result = null
         assert(methodName !== null)
         const vt = this.viewTarget()
 
@@ -297,17 +299,19 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         }
         try {
             if (vt[methodName]) {
-                vt[methodName].apply(vt, [this])
+                result = vt[methodName].apply(vt, [this])
             } else {
                 if (this.isDebugging()) {
                     console.log("gesture delegate missing method " + methodName)
                 }
+                result = false
             }
         } catch(e) {
             console.warn(this.typeId() + ".sendDelegateMessage(" + methodName + ") caught exception ", e)
+            result = false
         }
 
-        return this
+        return result
     },
 
     // points helper
@@ -513,13 +517,20 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         return funcs[this.direction()](dx, dy)
     },
 
+    gestureName: function() {
+        return this.type().before("GestureRecognizer")
+    },
+
     defaultMessageForState: function(state) {
-        const name = this.type().before("GestureRecognizer")
-        const msg = "on" + name + state.capitalized()
-        return msg
+        return "on" + this.gestureName() + state.capitalized()
+    },
+
+    defaultAcceptMessage: function() {
+        return "accepts" + this.gestureName()
     },
 
     autoSetMessageNames: function() {
+        this.setAcceptMessage(this.defaultAcceptMessage())
         this.setBeginMessage(this.defaultMessageForState("Begin"))
         this.setMoveMessage(this.defaultMessageForState("Move"))
         this.setCancelledMessage(this.defaultMessageForState("Cancelled"))
@@ -530,6 +541,16 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     // sending delegate messages
 
     sendBeginMessage: function() {
+
+        // see if view accepts the gesture before we begin
+        const vt = this.viewTarget()
+        if (vt[this.acceptMessage()]) {
+            if (!this.sendDelegateMessage(this.acceptMessage())) {
+                this.cancel()
+                return false
+            }
+        }
+
         this.setDidBegin(true)
         this.setBeginEvent(this.currentEvent())
         this.sendDelegateMessage(this.beginMessage())

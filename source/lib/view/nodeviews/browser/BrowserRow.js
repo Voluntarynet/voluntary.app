@@ -453,20 +453,17 @@ window.BrowserRow = NodeView.extend().newSlots({
     finishSlideAndDelete: function() {
         if (this.canDelete()) {
             this.setIsDeleting(true)
-            this.setTransition("right 0.3s")
+            const dt = 0.08 // seconds
+            this.contentView().setTransition("right " + dt + "s")
+            this.setTransition(this.transitionStyle())
             
             setTimeout(() => {
                 this.setTouchRight(this.clientWidth())
-
                 setTimeout(() => {
-                    this.setTransition(this.transitionStyle())
                     this.cleanupSlide()
                     this.delete()
-                }, 100)
-
+                }, dt*1000)
             }, 0)
-
-
         }
     },
 

@@ -2,16 +2,11 @@
 use control-edge drag or double finger drag to apply to prototype?
 store on parent node's field?
 
-adjust min height of title and subtitle with font size
-
-
 separate nodeRowMinHeight and nodeMinHeight
 
 abstract edge drag to resize?
 
 gesture to add subtitle?
-
-
 
 
 should we abstract style so we can:
@@ -31,8 +26,6 @@ column orientation
 
 copy/paste style
 store/edit style at row prototype level
-
-
 
 dynamically add field rows?
 - option-long-click / double-long-press to inspect element to choose field type?

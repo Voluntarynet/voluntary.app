@@ -217,6 +217,20 @@ window.DomView = ideal.Proto.extend().newSlots({
         return 0
     },
 
+    // computed style
+
+    getComputedCssAttribute: function(name, errorCheck) {
+        return window.getComputedStyle(this.element()).getPropertyValue(name)
+    },
+
+    getComputedPxCssAttribute: function(name, errorCheck) {
+        let s = this.getComputedCssAttribute(name, errorCheck)
+        if (s.length) {
+            return this.pxStringToNumber(s)
+        }
+        return 0
+    },
+    
     // --- css properties ---
 	
     setPosition: function(s) {
@@ -311,7 +325,7 @@ window.DomView = ideal.Proto.extend().newSlots({
     },
     
     computedFontSize: function() {
-        return window.getComputedStyle(this.element()).getPropertyValue("font-size")
+        return this.getComputedPxCssAttribute("font-size")
     },
 
     // margin
@@ -415,7 +429,7 @@ window.DomView = ideal.Proto.extend().newSlots({
     },
 
     computedBackgroundColor: function() {
-        return window.getComputedStyle(this.element()).getPropertyValue("background-color")
+        return this.getComputedCssAttribute("background-color")
     },
 	
     // background image

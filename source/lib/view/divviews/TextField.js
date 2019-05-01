@@ -43,6 +43,12 @@ window.TextField = DivStyledView.extend().newSlots({
         return this
     },
 
+    setFontSize: function(aNumber) {
+        DivStyledView.setFontSize.apply(this, [aNumber])
+        this.setMinAndMaxHeight(aNumber) // make sure TextfField can fit font size
+        return this
+    },
+
     setContentEditable: function(aBool) {
         DivStyledView.setContentEditable.apply(this, [aBool])
         //console.log(this.typeId() + ".setContentEditable(" + aBool + ") = ", this.isContentEditable())
@@ -77,25 +83,20 @@ window.TextField = DivStyledView.extend().newSlots({
     // ------------------
     
     onKeyDown: function(event) {
-        const controlDown = Keyboard.shared().controlKey().isDown()
+        const controlDown   = Keyboard.shared().controlKey().isDown()
         const equalSignDown = Keyboard.shared().equalSignKey().isDown()
-        const minusDown = Keyboard.shared().minusKey().isDown()
+        const minusDown     = Keyboard.shared().minusKey().isDown()
 
 
         if (controlDown) {
             const fontSize = this.computedFontSize()
-            let n = fontSize.before("px").asNumber()
 
-            console.log("font size: ", fontSize)
-            console.log("font size n : ", n)
             if (equalSignDown) {
-                console.log("+")
-                n++
-                this.setFontSize(n + "px")
+                this.setFontSize(fontSize + 1)
             } else if (minusDown) {
-                n --
-                if (n < 1) { n = 1; }
-                this.setFontSize(n + "px")
+                if (fontSize > 1) { 
+                    this.setFontSize(fontSize - 1)
+                }
             }
         }
 

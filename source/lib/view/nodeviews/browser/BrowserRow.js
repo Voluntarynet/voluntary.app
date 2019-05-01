@@ -41,9 +41,6 @@ window.BrowserRow = NodeView.extend().newSlots({
         
         this.setupRowContentView()
 
-        this.contentView().setTransition("all 0.2s ease, transform 0s, left 0s, right 0s")
-        this.contentView().setZIndex(1)
-
         //console.log("WebBrowserWindow.shared().isTouchDevice() = ", WebBrowserWindow.shared().isTouchDevice())
         if (WebBrowserWindow.shared().isTouchDevice()) {
             //
@@ -98,6 +95,8 @@ window.BrowserRow = NodeView.extend().newSlots({
         const cv = DomView.clone().setDivClassName("BrowserRowContentView")
         cv.setWidthPercentage(100).setHeightPercentage(100) 
         cv.setPosition("absolute")
+        cv.setTransition("all 0.2s ease, transform 0s, left 0s, right 0s")
+        cv.setZIndex(1)
         this.setContentView(cv)
         this.addSubview(cv)
         return this
@@ -454,11 +453,20 @@ window.BrowserRow = NodeView.extend().newSlots({
     finishSlideAndDelete: function() {
         if (this.canDelete()) {
             this.setIsDeleting(true)
-            //console.log("-this.clientWidth() = ", -this.clientWidth())
-            this.setTouchRight(this.clientWidth())
-            this.cleanupSlide()
-            this.setTransition(this.transitionStyle())
-            this.delete()
+            this.setTransition("right 0.3s")
+            
+            setTimeout(() => {
+                this.setTouchRight(this.clientWidth())
+
+                setTimeout(() => {
+                    this.setTransition(this.transitionStyle())
+                    this.cleanupSlide()
+                    this.delete()
+                }, 100)
+
+            }, 0)
+
+
         }
     },
 
@@ -529,8 +537,8 @@ window.BrowserRow = NodeView.extend().newSlots({
 
     onMouseUp: function (event) {
         NodeView.onMouseUp.apply(this, [event])
-        this.slideBack()
-        this._isDraggingView = false
+        //this.slideBack()
+        //this._isDraggingView = false
     },
 
     // tap hold

@@ -1,9 +1,17 @@
 
+use control-edge drag or double finger drag to apply to prototype?
+store on parent node's field?
+
+adjust min height of title and subtitle with font size
+
+
+separate nodeRowMinHeight and nodeMinHeight
+
 abstract edge drag to resize?
 
-use right edge gesture to adjust column sizes
+gesture to add subtitle?
 
-move to dynamic row layout so title, subtitle locations and size change with font size
+
 
 
 should we abstract style so we can:

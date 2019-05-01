@@ -32,9 +32,11 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
 
     setHasSubtitle: function(aBool) {        
         if (aBool) {
-            this.titleView().setTop(10)
+            //this.titleView().setTop(10)
+            this.titleView().setMarginTop(10)
         } else {
-            this.titleView().setTop(22)      
+            //this.titleView().setTop(22)      
+            this.titleView().setMarginTop(22)      
         }
 
         return this

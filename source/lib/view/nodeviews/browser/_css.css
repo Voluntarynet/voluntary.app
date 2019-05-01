@@ -239,10 +239,9 @@
 }
 
 .BrowserRowTitle {
-	display: block;
-    position: absolute;
-    top: 15px;
-    left: 20px;
+    display: block;
+    margin-top: 15px;
+    margin-left: 20px;
 
     max-width: calc(100% - 55px);
     min-width: 20px;
@@ -262,9 +261,8 @@
 }
 
 .BrowserRowSubtitle {
-    position: absolute;
-    top: 32px;
-    left: 20px;
+    display: block;
+    margin-left: 20px;
     
 	width: calc(100% - 55px);
     max-height: 17px;

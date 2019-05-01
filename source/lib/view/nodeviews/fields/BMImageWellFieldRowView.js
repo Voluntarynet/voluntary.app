@@ -27,7 +27,7 @@ window.BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
     },
 
     syncFromNode: function () {
-        let field = this.node()
+        const field = this.node()
 
         if (this.imageWellView()) {
             //console.log("field = ", field.type())
@@ -43,7 +43,7 @@ window.BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
     },
 
     syncToNode: function () {
-        let field = this.node()
+        const field = this.node()
 		
         //console.log(this.typeId() + ".syncToNode() imageDataURLs: ", this.dataUrls())
 		

@@ -85,6 +85,7 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
         return this.fieldNamed(aName).value()
     },
 
+    /*
     copyFieldsFrom: function(sourceObj) {
         this.subnodes().forEach((targetField) => {
             const sourceField = sourceObj.fieldNamed(targetField.valueMethod())
@@ -93,6 +94,7 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
         })
         return this
     },
+    */
     
     onDidEditNode: function() {
         this.scheduleSyncToStore()
@@ -100,11 +102,11 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
     },
 
     validate: function() {
-        return this.subnodes().detect((subnode) => { return !subnode.validate() }) != null
+        return this.invalidSubnodes().length === 0
     },
 
     invalidSubnodes: function() {
-        return this.subnodes().detect((subnode) => { subnode.validate() })
+        return this.subnodes().select(subnode => !subnode.validate())
     },
 
     isValid: function() {

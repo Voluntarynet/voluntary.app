@@ -35,10 +35,13 @@ dynamically add field rows?
         - subnodes (short cuts to an array field
         
     Field types:
-        Boolean
-        Text / TextArea
-        Number
-        Date
+        Button      BMActionField
+        Boolean     BMBoolField  
+        Date        BMDateField
+        Text 
+        TextArea    BMTextAreaField
+        Identity    BMIdentityField
+        Number      BMNumberField
         Time
         Options (can point to node containing list of options, or it's own local set?)
         Pointer

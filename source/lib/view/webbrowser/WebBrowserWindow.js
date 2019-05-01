@@ -108,7 +108,7 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
         
         const isSafari = vendor && 
                 vendor.indexOf("Apple") !== -1 &&
-                agenta &&
+                agent &&
                 agent.indexOf("CriOS") === -1 &&
                 agent.indexOf("FxiOS") === -1;
         return isSafari

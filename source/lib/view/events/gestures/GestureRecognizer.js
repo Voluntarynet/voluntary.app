@@ -543,6 +543,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     sendBeginMessage: function() {
 
         // see if view accepts the gesture before we begin
+        // for now, assume it accepts if it doesn't implement the accept<GestureType> method
         const vt = this.viewTarget()
         if (vt[this.acceptMessage()]) {
             if (!this.sendDelegateMessage(this.acceptMessage())) {

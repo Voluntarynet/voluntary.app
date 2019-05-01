@@ -527,10 +527,9 @@ html * {
 }
 
 .BrowserRowTitle {
-	display: block;
-    position: absolute;
-    top: 15px;
-    left: 20px;
+    display: block;
+    margin-top: 15px;
+    margin-left: 20px;
 
     max-width: calc(100% - 55px);
     min-width: 20px;
@@ -550,9 +549,8 @@ html * {
 }
 
 .BrowserRowSubtitle {
-    position: absolute;
-    top: 32px;
-    left: 20px;
+    display: block;
+    margin-left: 20px;
     
 	width: calc(100% - 55px);
     max-height: 17px;
@@ -1690,7 +1688,7 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
         title.innerHTML = "LOADING"
 
         if (window.ResourceLoaderIsEmbedded) {
-            //this.mainElement().style.visibility = "hidden"
+            this.mainElement().style.visibility = "hidden"
             this.titleElement().style.visibility = "hidden"
         }
 
@@ -86067,6 +86065,7 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
         return this.fieldNamed(aName).value()
     },
 
+    /*
     copyFieldsFrom: function(sourceObj) {
         this.subnodes().forEach((targetField) => {
             const sourceField = sourceObj.fieldNamed(targetField.valueMethod())
@@ -86075,6 +86074,7 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
         })
         return this
     },
+    */
     
     onDidEditNode: function() {
         this.scheduleSyncToStore()
@@ -86082,11 +86082,11 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
     },
 
     validate: function() {
-        return this.subnodes().detect((subnode) => { return !subnode.validate() }) != null
+        return this.invalidSubnodes().length === 0
     },
 
     invalidSubnodes: function() {
-        return this.subnodes().detect((subnode) => { subnode.validate() })
+        return this.subnodes().select(subnode => !subnode.validate())
     },
 
     isValid: function() {
@@ -88232,6 +88232,14 @@ window.Keyboard = ideal.Proto.extend().newSlots({
 
     // get key helpers
 
+    shiftKey: function() {
+        return this.keyForName("shift")
+    },
+
+    controlKey: function() {
+        return this.keyForName("ctrl")
+    },
+
     leftCommandKey: function() {
         return this.keyForName("leftWindow")
     },
@@ -88243,15 +88251,28 @@ window.Keyboard = ideal.Proto.extend().newSlots({
     // get key state helpers
 
     shiftIsDown: function() {
-        return this.keyForName("shift").isDown()
+        return this.shiftKey().isDown()
     },
 
     commandIsDown: function() {
         return this.leftCommandKey().isDown() || this.rightCommandKey().isDown()
     },
 
+
+    equalSignKey: function() {
+        return this.keyForName("equalsign")
+    },
+
+    minusKey: function() {
+        return this.keyForName("dash")
+    },
+
+    plusKey: function() {
+        return this.keyForName("plus")
+    },
+
     plusIsDown: function() {
-        return this.keyForName("plus").isDown()
+        return this.plusKey().isDown()
     },
 
     currentlyDownKeys: function() {
@@ -88264,6 +88285,14 @@ window.Keyboard = ideal.Proto.extend().newSlots({
 
     hasKeysDown: function() {
         return this.currentlyUpKeys().length !== 0
+    },
+
+    downKeyNames: function() {
+        return Keyboard.shared().currentlyDownKeys().map(k => k.name())
+    },
+
+    show: function() {
+        console.log(this.typeId() + " downKeys: ", this.downKeyNames())
     },
 })
 
@@ -91096,7 +91125,9 @@ window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
         if(this.requestActivation()) {
             this.sendBeginMessage() // begin
         } else {
-            console.log(this.shortTypeId() + ".attemptBegin() FAILED")
+            if (this.isDebugging()) {
+                console.log(this.shortTypeId() + ".attemptBegin() FAILED")
+            }
         }
     },
 
@@ -91646,16 +91677,16 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
         const agent = navigator.userAgent;
         
         const isSafari = vendor && 
-                vendor.indexOf("Apple") !== -1 &&
-                agenta &&
-                agent.indexOf("CriOS") === -1 &&
-                agent.indexOf("FxiOS") === -1;
+                vendor.contains("Apple") &&
+                agent &&
+                !agent.contains("CriOS") &&
+                !agent.contains("FxiOS");
         return isSafari
     },
 
     agentIsChrome: function() {
         const isChrome =  Boolean(window.chrome) //&& 
-        //navigator.userAgent.indexOf('Brave') === -1;
+        //!navigator.userAgent.contains('Brave');
         //console.log("window.chrome = ", window.chrome);
         return isChrome
     },
@@ -92932,6 +92963,20 @@ window.DomView = ideal.Proto.extend().newSlots({
         return 0
     },
 
+    // computed style
+
+    getComputedCssAttribute: function(name, errorCheck) {
+        return window.getComputedStyle(this.element()).getPropertyValue(name)
+    },
+
+    getComputedPxCssAttribute: function(name, errorCheck) {
+        let s = this.getComputedCssAttribute(name, errorCheck)
+        if (s.length) {
+            return this.pxStringToNumber(s)
+        }
+        return 0
+    },
+    
     // --- css properties ---
 	
     setPosition: function(s) {
@@ -93024,7 +93069,11 @@ window.DomView = ideal.Proto.extend().newSlots({
     fontSize: function() {
         return this.getPxCssAttribute("font-size")
     },
-	
+    
+    computedFontSize: function() {
+        return this.getComputedPxCssAttribute("font-size")
+    },
+
     // margin
 
     setMarginString: function(s) {
@@ -93126,7 +93175,7 @@ window.DomView = ideal.Proto.extend().newSlots({
     },
 
     computedBackgroundColor: function() {
-        return window.getComputedStyle(this.element()).getPropertyValue("background-color")
+        return this.getComputedCssAttribute("background-color")
     },
 	
     // background image
@@ -95889,6 +95938,12 @@ window.TextField = DivStyledView.extend().newSlots({
         return this
     },
 
+    setFontSize: function(aNumber) {
+        DivStyledView.setFontSize.apply(this, [aNumber])
+        this.setMinAndMaxHeight(aNumber) // make sure TextfField can fit font size
+        return this
+    },
+
     setContentEditable: function(aBool) {
         DivStyledView.setContentEditable.apply(this, [aBool])
         //console.log(this.typeId() + ".setContentEditable(" + aBool + ") = ", this.isContentEditable())
@@ -95923,6 +95978,23 @@ window.TextField = DivStyledView.extend().newSlots({
     // ------------------
     
     onKeyDown: function(event) {
+        const controlDown   = Keyboard.shared().controlKey().isDown()
+        const equalSignDown = Keyboard.shared().equalSignKey().isDown()
+        const minusDown     = Keyboard.shared().minusKey().isDown()
+
+
+        if (controlDown) {
+            const fontSize = this.computedFontSize()
+
+            if (equalSignDown) {
+                this.setFontSize(fontSize + 1)
+            } else if (minusDown) {
+                if (fontSize > 1) { 
+                    this.setFontSize(fontSize - 1)
+                }
+            }
+        }
+
         return DivStyledView.onKeyDown.apply(this, [event])
     },
 
@@ -95952,7 +96024,7 @@ window.TextField = DivStyledView.extend().newSlots({
     },
 	
     formatValue: function() {
-	    let oldValue = this.innerHTML()
+	    const oldValue = this.innerHTML()
 	    let newValue = this.innerText() // removes returns
         
         if (this.doesTrim()) {
@@ -97674,9 +97746,9 @@ window.BrowserView = NodeView.extend().newSlots({
 
     updateSingleColumnMode: function () {
         //console.log("---")
-        //let size = DocumentBody.zoomAdjustedSize()
-        //let w = WebBrowserScreen.shared().orientedWidth()
-        //let h = WebBrowserScreen.shared().orientedHeight()
+        //const size = DocumentBody.zoomAdjustedSize()
+        //const w = WebBrowserScreen.shared().orientedWidth()
+        //const h = WebBrowserScreen.shared().orientedHeight()
         //console.log("WebBrowserScreen size = " + w + "x" + h)
 
         const size = WebBrowserScreen.shared().lesserOrientedSize()
@@ -98814,13 +98886,6 @@ window.BrowserColumn = NodeView.extend().newSlots({
         const row = this.selectedRow()
         if (row) { 
 		    row.onEnterKeyUp(event)
-		    /*
-			//row.title().focus() 
-			setTimeout(() => {
-				row.title().selectAll() 
-				setTimeout(() => { row.title().focus() })
-			})
-			*/
         }
 
         return false
@@ -99241,8 +99306,37 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
 
         this.updateScrollView()
         
+        this.addGestureRecognizer(RightEdgePanGestureRecognizer.clone()) 
+
         return this
     },
+
+    // edge pan
+
+    onRightEdgePanBegin: function(aGesture) {
+        this._beforeEdgePanBorderRight = this.borderRight()
+        this.setBorderRight("1px dashed red")
+        this.setTransition("min-width 0s, max-width 0s")
+    },
+
+    onRightEdgePanMove: function(aGesture) {
+        const p = aGesture.currentPosition() // position in document coords
+        const f = this.frameInDocument()
+        const h = p.x() - f.x()
+        const minWidth = this.node() ? this.node().nodeMinWidth() : 10;
+        if (h >= minWidth) {
+            this.setMinAndMaxWidth(h) // need to do same for contentView?
+        } else {
+            this.setMinAndMaxWidth(minWidth) 
+        }
+        return this
+    },
+
+    onRightEdgePanComplete: function(aGesture) {
+        this.setBorderRight(this._beforeEdgePanBorderRight)
+    },
+
+    // -------------------------------------
     
     hasHeader: function() {
         return true
@@ -99833,9 +99927,6 @@ window.BrowserRow = NodeView.extend().newSlots({
         
         this.setupRowContentView()
 
-        this.contentView().setTransition("all 0.2s ease, transform 0s, left 0s, right 0s")
-        this.contentView().setZIndex(1)
-
         //console.log("WebBrowserWindow.shared().isTouchDevice() = ", WebBrowserWindow.shared().isTouchDevice())
         if (WebBrowserWindow.shared().isTouchDevice()) {
             //
@@ -99890,6 +99981,8 @@ window.BrowserRow = NodeView.extend().newSlots({
         const cv = DomView.clone().setDivClassName("BrowserRowContentView")
         cv.setWidthPercentage(100).setHeightPercentage(100) 
         cv.setPosition("absolute")
+        cv.setTransition("all 0.2s ease, transform 0s, left 0s, right 0s")
+        cv.setZIndex(1)
         this.setContentView(cv)
         this.addSubview(cv)
         return this
@@ -100097,7 +100190,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     
     addCloseButton: function() {
         if (this.closeButtonView() == null) {
-            //let c = CenteredDivView.clone()
+            //const c = CenteredDivView.clone()
 
             const cb = DomView.clone().setDivClassName("BrowserRowCloseButton")
             //this.setCloseButtonView(NodeView.clone().setDivClassName("BrowserRowCloseButton"))
@@ -100184,7 +100277,7 @@ window.BrowserRow = NodeView.extend().newSlots({
             const h = this.clientHeight()
 
             this.element().style.backgroundColor = "black"
-            let cb = CloseButton.clone().setTransition("opacity 0.1s")
+            const cb = CloseButton.clone().setTransition("opacity 0.1s")
             cb.setMinAndMaxHeight(h)
             cb.setMinAndMaxWidth(h)
             this.addSubview(cb)
@@ -100246,11 +100339,17 @@ window.BrowserRow = NodeView.extend().newSlots({
     finishSlideAndDelete: function() {
         if (this.canDelete()) {
             this.setIsDeleting(true)
-            //console.log("-this.clientWidth() = ", -this.clientWidth())
-            this.setTouchRight(this.clientWidth())
-            this.cleanupSlide()
+            const dt = 0.08 // seconds
+            this.contentView().setTransition("right " + dt + "s")
             this.setTransition(this.transitionStyle())
-            this.delete()
+            
+            setTimeout(() => {
+                this.setTouchRight(this.clientWidth())
+                setTimeout(() => {
+                    this.cleanupSlide()
+                    this.delete()
+                }, dt*1000)
+            }, 0)
         }
     },
 
@@ -100321,8 +100420,8 @@ window.BrowserRow = NodeView.extend().newSlots({
 
     onMouseUp: function (event) {
         NodeView.onMouseUp.apply(this, [event])
-        this.slideBack()
-        this._isDraggingView = false
+        //this.slideBack()
+        //this._isDraggingView = false
     },
 
     // tap hold
@@ -100336,7 +100435,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     onLongPressComplete: function(longPressGesture) {
         if (this.column().canReorder()) {
             longPressGesture.deactivate()
-            let pan = this.addPanGesture()
+            const pan = this.addPanGesture()
             pan.setShouldRemoveOnComplete(true)
             pan.setMinDistToBegin(0)
             pan.onDown(longPressGesture.currentEvent())
@@ -100576,9 +100675,11 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
 
     setHasSubtitle: function(aBool) {        
         if (aBool) {
-            this.titleView().setTop(10)
+            //this.titleView().setTop(10)
+            this.titleView().setMarginTop(10)
         } else {
-            this.titleView().setTop(22)      
+            //this.titleView().setTop(22)      
+            this.titleView().setMarginTop(22)      
         }
 
         return this
@@ -100713,6 +100814,8 @@ window.BrowserRowSubtitle = TextField.extend().newSlots({
     init: function () {
         TextField.init.apply(this)
         //this.setMinAndMaxHeight(13)
+        this.setDisplay("block")
+
         return this
     },
 
@@ -101858,7 +101961,7 @@ window.BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
     },
 
     syncFromNode: function () {
-        let field = this.node()
+        const field = this.node()
 
         if (this.imageWellView()) {
             //console.log("field = ", field.type())
@@ -101874,7 +101977,7 @@ window.BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
     },
 
     syncToNode: function () {
-        let field = this.node()
+        const field = this.node()
 		
         //console.log(this.typeId() + ".syncToNode() imageDataURLs: ", this.dataUrls())
 		
@@ -109239,7 +109342,7 @@ window.BMPostDraft = BMStorableNode.extend().newSlots({
         BMStorableNode.init.apply(this)
         this.addStoredSlots(["content"])
         this.addAction("delete")
-        this.setContent("...".loremIpsum(40, 100))	
+        //this.setContent("...".loremIpsum(40, 100))	
         this.setShouldStore(true)	
         this.customizeNodeRowStyles().setToBlackOnWhite()
     },

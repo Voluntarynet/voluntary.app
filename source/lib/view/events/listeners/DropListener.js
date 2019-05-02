@@ -26,13 +26,13 @@ window.DropListener = EventSetListener.extend().newSlots({
 
     start: function() {
         EventSetListener.start.apply(this)
-        this.element().__isListeningForDrop___ = true
+        this.listenTarget().__isListeningForDrop___ = true
         return this
     },
 
     stop: function() {
         EventSetListener.stop.apply(this)
-        this.element().__isListeningForDrop___ = false // breaks if multiple drop listeners on same element
+        this.listenTarget().__isListeningForDrop___ = false // breaks if multiple drop listeners on same element
         return this
     },
 })

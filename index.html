@@ -805,12 +805,12 @@ html * {
 }
 
 /*
-.BMActionFieldRowView {
+.BMActionNodeRowView {
     border-bottom: 1px solid #ddd; 
 }
 */
 
-.BMActionFieldButtonView {
+.BMActionNodeButtonView {
     height: 42px;
     width: auto;
     margin-top: 8px;
@@ -835,7 +835,7 @@ html * {
     transition: all 0.1 ease;
 }
 
-.BMActionFieldButtonView:hover {
+.BMActionNodeButtonView:hover {
     background-color: #555;
     transition: opacity background-color 1s ease;
 }
@@ -85978,7 +85978,7 @@ window.BMStoredDatedSetNode = BMStorableNode.extend().newSlots({
 ResourceLoader.pushRelativePaths([
     "BMFieldSetNode.js",
     "BMField.js",
-    "BMActionField.js",
+    "BMActionNode.js",
     "BMImageWellField.js",
     "BMTextAreaField.js",
     "BMStampField.js",
@@ -86295,14 +86295,14 @@ window.BMField = BMNode.extend().newSlots({
 
 /*
 
-    BMActionField
+    BMActionNode
     
     An abstraction of a UI visibleaction that can be performed on an object.
     the value is the action method name, the target is the field owner
 */
         
-window.BMActionField = BMField.extend().newSlots({
-    type: "BMActionField",
+window.BMActionNode = BMField.extend().newSlots({
+    type: "BMActionNode",
 }).setSlots({
     init: function () {
         BMField.init.apply(this)
@@ -101573,7 +101573,7 @@ window.ShelfFooterView = DomView.extend().newSlots({
 ResourceLoader.pushRelativePaths([
     "_css.css",
     "BMFieldRowView.js",
-    "BMActionFieldRowView.js",
+    "BMActionNodeRowView.js",
     "BMTextAreaFieldRowView.js",
     "BMImageWellFieldRowView.js",
     "BMOptionsFieldRowView.js",
@@ -101833,12 +101833,12 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
 
 /*
 
-    BMActionFieldRowView
+    BMActionNodeRowView
 
 */
 
-window.BMActionFieldRowView = BrowserRow.extend().newSlots({
-    type: "BMActionFieldRowView",
+window.BMActionNodeRowView = BrowserRow.extend().newSlots({
+    type: "BMActionNodeRowView",
     buttonView: null,
 }).setSlots({
     init: function () {
@@ -101850,7 +101850,7 @@ window.BMActionFieldRowView = BrowserRow.extend().newSlots({
         this.styles().selected().setColor("#888")
         this.styles().selected().setBackgroundColor("#eee")
 		
-        this.setButtonView(DomView.clone().setDivClassName("BMActionFieldButtonView"))
+        this.setButtonView(DomView.clone().setDivClassName("BMActionNodeButtonView"))
 	    this.buttonView().setTarget(this).setAction("didClickButton")
 	    this.buttonView().setTransition("all 0.3s")
 
@@ -105423,7 +105423,7 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
         //this.justAddField(BMPointerField.clone().setKey("serverConnection"))
         this.addSubnode(BMPointerField.clone().setKey("serverConnection"))
 		
-        this.setConnectButton(BMActionField.clone().setKey("connect").setValue("connect"))
+        this.setConnectButton(BMActionNode.clone().setKey("connect").setValue("connect"))
         this.addSubnode(this.connectButton())
     },
 

@@ -1668,7 +1668,7 @@ window.DomView = ideal.Proto.extend().newSlots({
         if (!dict[className]) {
             assert(className in window)
             let proto = window[className]
-            dict[className] = proto.clone().setElement(this.element()).setDelegate(this)
+            dict[className] = proto.clone().setListenTarget(this.element()).setDelegate(this)
         } 
         return dict[className]
     },
@@ -1678,9 +1678,7 @@ window.DomView = ideal.Proto.extend().newSlots({
     },
 
     documentListener: function() {
-        let listener = this.listenerNamed("DocumentListener")
-        listener.setElement(window)
-        return listener
+        return this.listenerNamed("DocumentListener") // listen target will be the window
     },
 
     dragListener: function() {

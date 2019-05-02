@@ -11,7 +11,7 @@
 
 window.EventSetListener = ideal.Proto.extend().newSlots({
     type: "EventSetListener",
-    element: null,
+    listenTarget: null,
     delegate: null,
     isListening: false,
     eventsDict: null, // should only write from within class & subclasses
@@ -31,15 +31,29 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
         return this
     },
 
+    /*
     view: function() {
         return this.element()._divView
     },
+    */
 
-    setElement: function(e) {
-        assert(e)
-        this._element = e
+    setListenTarget: function(t) {
+        assert(t)
+        this._listenTarget = t
         return this
     },
+
+    listenTargetDescription: function() {
+        const type = typeof(this.listenTarget())
+        /*
+        if (type === "Element") { // right type?
+            return DomElement_description(this.listenTarget())
+        }
+        */
+        return type
+    },
+
+    // --------------
 
     setUseCapture: function(v) {
         this._useCapture = v ? true : false;
@@ -98,15 +112,20 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
         return this
     },
 
+    assertHasListenTarget: function() {
+        const t = this.listenTarget()
+        assert(t !== null)
+        assert(t !== undefined)
+        return this
+    },
+
     start: function() {
         if (this.isListening()) {
             return this
         }
         this._isListening = true;
 
-        const element = this.element()
-        assert(element !== null)
-        assert(element !== undefined)
+        this.assertHasListenTarget()
 
         this.forEachEventDict((eventName, dict) => {
             const fullMethodName = this.fullMethodNameFor(dict.methodName)
@@ -127,7 +146,7 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
                     return result
                 } else {
                     if (this.isDebugging()) {
-                        console.log(DomElement_description(element) + " MISSING method: " + delegate.type() + "." + fullMethodName, "(" + event.type + ")" )
+                        console.log(this.listenTargetDescription() + " MISSING method: " + delegate.type() + "." + fullMethodName, "(" + event.type + ")" )
                     }
                 }
 
@@ -136,10 +155,10 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
             dict.useCapture = this.useCapture()
 
             if (this.isDebugging()) {
-                console.log("'" +  DomElement_description(element) + ".addEventListener('" + eventName + "', handler, " + dict.useCapture + ") " + fullMethodName) 
+                console.log("'" + this.listenTargetDescription() + ".addEventListener('" + eventName + "', handler, " + dict.useCapture + ") " + fullMethodName) 
             }
 
-            element.addEventListener(eventName, dict.handlerFunc, dict.useCapture);
+            this.listenTarget().addEventListener(eventName, dict.handlerFunc, dict.useCapture);
         })
 
         return this
@@ -152,11 +171,12 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
 
         this._isListening = false;
 
-        const element = this.element()
-        assert(element)
+        this.assertHasListenTarget()
+
+        const t = this.listenTarget()
         this.forEachEventDict((eventName, dict) => {
             //console.log(this.delegate().typeId() + " will stop listening for " + dict.methodName)
-            element.removeEventListener(eventName, dict.handlerFunc, dict.useCapture);
+            t.removeEventListener(eventName, dict.handlerFunc, dict.useCapture);
         })
 
         return this

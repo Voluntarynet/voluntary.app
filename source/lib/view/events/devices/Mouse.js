@@ -28,7 +28,7 @@ window.Mouse = ideal.Proto.extend().newSlots({
     },
 
     startListening: function() {
-        this.setMouseListener(MouseListener.clone().setUseCapture(true).setElement(document.body).setDelegate(this))
+        this.setMouseListener(MouseListener.clone().setUseCapture(true).setListenTarget(document.body).setDelegate(this))
         this.mouseListener().setIsListening(true)
         return this
     },

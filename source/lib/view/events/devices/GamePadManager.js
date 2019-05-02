@@ -62,7 +62,7 @@ window.GamePadManager = ideal.Proto.extend().newSlots({
 
     startListening: function() {
         if (this.canListenForConnect()) {
-            this.setGamePadListener(GamePadListener.clone().setUseCapture(true).setElement(window).setDelegate(this))
+            this.setGamePadListener(GamePadListener.clone().setUseCapture(true).setListenTarget(window).setDelegate(this))
             this.gamePadListener().setIsListening(true)
         }
         return this

@@ -25,7 +25,7 @@ window.DragListener = EventSetListener.extend().newSlots({
 
     start: function() {
         EventSetListener.start.apply(this)
-        this.element().ondragstart = (e) => { console.log("--- ondragstart ---"); }
+        this.listenTarget().ondragstart = (e) => { console.log("--- ondragstart ---"); }
         return this
     },
 })

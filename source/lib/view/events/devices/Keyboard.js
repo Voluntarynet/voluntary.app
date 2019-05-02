@@ -27,7 +27,7 @@ window.Keyboard = ideal.Proto.extend().newSlots({
     },
 
     startListening: function() {
-        this.setKeyboardListener(KeyboardListener.clone().setUseCapture(true).setElement(document.body).setDelegate(this))
+        this.setKeyboardListener(KeyboardListener.clone().setUseCapture(true).setListenTarget(document.body).setDelegate(this))
         this.keyboardListener().setIsListening(true)
         return this
     },

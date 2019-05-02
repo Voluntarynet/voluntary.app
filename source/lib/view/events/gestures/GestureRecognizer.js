@@ -167,7 +167,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         this.stopViewListeners()
 
         const listeners = this.newListeners().map((listener) => {
-            listener.setElement(this.viewTarget().element())
+            listener.setListenTarget(this.viewTarget().element())
             listener.start()
             return listener
         })
@@ -188,7 +188,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
 
         const listeners = this.newListeners().map((listener) => {
             listener.setUseCapture(true)
-            listener.setElement(document.body)
+            listener.setListenTarget(document.body)
             //listener.setIsDebugging(true);
             listener.start()
             return listener

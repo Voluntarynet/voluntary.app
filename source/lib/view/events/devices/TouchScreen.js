@@ -42,7 +42,7 @@ window.TouchScreen = ideal.Proto.extend().newSlots({
     },
 
     startListening: function() {
-        this.setTouchListener(TouchListener.clone().setUseCapture(true).setElement(document.body).setDelegate(this))
+        this.setTouchListener(TouchListener.clone().setUseCapture(true).setListenTarget(document.body).setDelegate(this))
         this.touchListener().setIsListening(true)
         return this
     },

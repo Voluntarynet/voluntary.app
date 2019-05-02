@@ -10,6 +10,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
     type: "BMServerConnection",
     server: null,
     serverConn: null,
+    webSocketListener: null,
     peerId: null,
     remotePeers: null,
     delegate: null,
@@ -135,47 +136,41 @@ window.BMServerConnection = BMNode.extend().newSlots({
     serverConnUrl: function() {
         return "ws" + (this.server().isSecure() ? "s" : "") + "://" + this.server().host() + ":" + this.server().port();
     },
-			
+            
+    startListening: function() {
+        assert(this.serverConn() !== null)
+        this.setWebSocketListener(WebSocketListener.clone().setListenTarget(this.serverConn()).setDelegate(this))
+        this.webSocketListener().start()
+        return this
+    },
+
+    stopListening: function() {
+        if (this.webSocketListener()) {
+            this.webSocketListener().stop()
+        }
+        return this
+    },
+
+
     connect: function () {
         // TODO: add timeout and tell server when it occurs
 
-        if (!this._serverConn) {
+        if (!this.serverConn()) {
             this.setStatus("connecting...")
             this.setTitle("Connection")
 			
             this.setPeerId(this.currentPeerId())
 			
             try {
-                this._serverConn = new WebSocket(this.serverConnUrl());
-            } catch(e) {
-                this.onError(e)
+                this.setServerConn(new WebSocket(this.serverConnUrl()));
+            } catch(error) {
+                this.handleError(error)
                 return this
             }
             
             this.log("Server " +  this.shortId() + ".connect()")
 
-            this._serverConn.addEventListener("open", e => {
-                this.onOpen();
-            });
-
-            this._serverConn.addEventListener("close", e => {
-                this.onClose();
-            });
-
-            this._serverConn.addEventListener("error", e => {
-                this.onError(e.data);
-            });
-            
-            this._serverConn.addEventListener("message", event => {
-                try {
-                    //console.log("BMServerConnection receive: " + event.data);
-                    const msg = JSON.parse(event.data);
-                    this.perform("receive" + msg.name.capitalized(), msg.data);
-                }
-                catch (error) {
-                    this.onError(error);
-                }
-            });
+            this.startListening()
         }
 
         return this;
@@ -193,7 +188,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
             }
         }
         else {
-            this.onError("Received invalid response: " + JSON.stringify(msg));
+            this.handleError(new Error("Received invalid response: " + JSON.stringify(msg)));
         }
     },
 
@@ -222,10 +217,10 @@ window.BMServerConnection = BMNode.extend().newSlots({
         //this.remotePeers().forEach((peer) => { peer.close() })
         //this.removeAllSubnodes()
 		
-        if (this._serverConn) {
-            this._serverConn.removeEventListeners();
-            this._serverConn.close()
-            this._serverConn = null
+        if (this.serverConn()) {
+            this.stopListening() // do we want to do this before calling close?
+            this.serverConn().close()
+            this.setServerConn(null)
         }
         this.setStatus("offline")
 
@@ -252,7 +247,10 @@ window.BMServerConnection = BMNode.extend().newSlots({
     },
 */
 
-    onError: function(error) {
+
+    // --- handling errors ---
+    
+    handleError: function(error) {
         if (error === undefined) {
             // closed connection?
             return
@@ -264,11 +262,17 @@ window.BMServerConnection = BMNode.extend().newSlots({
         if (error && !error.message.beginsWith("Could not connect to peer")) {
 	        this.setStatus(error.message, error)	        
             this.log(this.type() + " onError: " + error);
-            if (this._serverConn) {
-                this._serverConn.removeEventListeners();
-                this._serverConn = null
+            if (this.serverConn()) {
+                this.stopListening()
+                this.setServerConn(null)
             }
         }
+    },
+
+    // --- handling web socket events ---
+
+    onError: function(event) {
+        this.handleError(new Error(event.data))
     },
     
     onOpen: function() {
@@ -280,16 +284,41 @@ window.BMServerConnection = BMNode.extend().newSlots({
             this.send("ping");
         }, 15000);
         this.requestId();
-        
-        
     },
 
+    onClose: function(err) {
+        this.setIsOpen(false)
+        clearInterval(this._pingInterval);
+        this.log(this.type() + ".onClose " + err)
+        this.setStatus("closed")
+        if (err) {
+            this.setLastError("close error: " + err)
+        }
+
+        if (this.serverConn()) {
+            this.stopListening()
+            this.setServerConn(null);
+        }
+    },
+
+    onMessage: function(event) {
+        try {
+            //console.log("BMServerConnection receive: " + event.data);
+            const msg = JSON.parse(event.data);
+            this.perform("receive" + msg.name.capitalized(), msg.data);
+        } catch (error) {
+            this.handleError(error);
+        }
+    },
+
+    // ----------------------------------
+    
     requestId: function() {
         if (this.isOpen()) {
             this.setPeerId(this.currentPeerId());
             return this.send("requestId", { requestedId: this.peerId().toString() }).then(() => {
                 this.updatePeers();
-            }).catch(e => this.onError(e));
+            }).catch(error => this.handleError(error));
         }
     },
 
@@ -306,23 +335,8 @@ window.BMServerConnection = BMNode.extend().newSlots({
 			}, 60*5)
 		}
 	},
-*/
+    */
 
-    onClose: function(err) {
-        this.setIsOpen(false)
-        clearInterval(this._pingInterval);
-        this.log(this.type() + ".onClose " + err)
-        this.setStatus("closed")
-        if (err) {
-            this.setLastError("close error: " + err)
-        }
-
-        if (this._serverConn) {
-            this._serverConn.removeEventListeners();
-            this._serverConn = null;
-        }
-    },
-    
     isConnected: function () {
         return this.isOpen()
         //return this.serverConn() !== null
@@ -349,7 +363,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
         //this.log("updatePeers");
         this.send("listAllPeers")
             .then((peerIds) => this.setPeerIds(peerIds))
-            .catch((e) => this.onError(e));
+            .catch(error => this.handleError(error));
     },
 
     setPeerIds: function(ids) {

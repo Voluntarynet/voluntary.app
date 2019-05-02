@@ -10,5 +10,4 @@ ResourceLoader.pushRelativePaths([
     "BMRemotePeers.js",
     "BMStunServer.js",
     "BMStunServers.js",
-    "WebSocket-network.js"
 ])

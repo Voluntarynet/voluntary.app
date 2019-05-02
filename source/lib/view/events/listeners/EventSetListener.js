@@ -7,6 +7,13 @@
     using a (potentially different) method name. Subclasses override init to define the
     event set by calling this.addEventNameAndMethodName(...) for each event.
 
+    Example use:
+
+    const mouseListener = MouseListener.clone().setListenTarget(element).setDelegate(anObject)
+
+    will send onMouseDown(event), onMouseOver(event) etc to anObject when those events occur on the element.
+
+
 */
 
 window.EventSetListener = ideal.Proto.extend().newSlots({

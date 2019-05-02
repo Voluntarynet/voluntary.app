@@ -32,12 +32,12 @@
 }
 
 /*
-.BMActionFieldRowView {
+.BMActionNodeRowView {
     border-bottom: 1px solid #ddd; 
 }
 */
 
-.BMActionFieldButtonView {
+.BMActionNodeButtonView {
     height: 42px;
     width: auto;
     margin-top: 8px;
@@ -62,7 +62,7 @@
     transition: all 0.1 ease;
 }
 
-.BMActionFieldButtonView:hover {
+.BMActionNodeButtonView:hover {
     background-color: #555;
     transition: opacity background-color 1s ease;
 }

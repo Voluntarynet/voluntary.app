@@ -1,7 +1,6 @@
 "use strict"
 
 ResourceLoader.pushRelativePaths([
-    "BMActionField.js",
     "BMImageWellField.js",
     "BMTextAreaField.js",
     "BMStampField.js",

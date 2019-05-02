@@ -3,7 +3,7 @@
 ResourceLoader.pushRelativePaths([
     "_css.css",
     "BMFieldRowView.js",
-    "BMActionFieldRowView.js",
+    "BMActionNodeRowView.js",
     "BMTextAreaFieldRowView.js",
     "BMImageWellFieldRowView.js",
     "BMOptionsFieldRowView.js",

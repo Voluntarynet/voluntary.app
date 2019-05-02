@@ -41,7 +41,7 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
         //this.justAddField(BMPointerField.clone().setKey("serverConnection"))
         this.addSubnode(BMPointerField.clone().setKey("serverConnection"))
 		
-        this.setConnectButton(BMActionField.clone().setKey("connect").setValue("connect"))
+        this.setConnectButton(BMActionNode.clone().setTitle("connect").setMethodName("connect").setTarget(this))
         this.addSubnode(this.connectButton())
     },
 
@@ -56,9 +56,9 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
         let cb = this.connectButton()
         if (cb) {
             if (this.serverConnection().isConnected()) {
-                cb.setKey("disconnect").setValue("disconnect")
+                cb.setTitle("disconnect").setMethodName("disconnect")
             } else {
-                cb.setKey("connect").setValue("connect")
+                cb.setTitle("connect").setMethodName("connect")
             }
         }
     },

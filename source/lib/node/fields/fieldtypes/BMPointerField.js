@@ -11,7 +11,6 @@
         
 window.BMPointerField = BMField.extend().newSlots({
     type: "BMPointerField",
-	
 }).setSlots({
     init: function () {
         BMField.init.apply(this)

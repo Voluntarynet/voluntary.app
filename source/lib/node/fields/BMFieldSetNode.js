@@ -36,11 +36,8 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
     init: function () {
         BMStorableNode.init.apply(this)
         this.setNodeMinWidth(500)
-        //this.setViewClassName("BrowserFieldsColumn")
         this.setShouldStoreSubnodes(false)
         this.setNodeColumnBackgroundColor("white")
-        //this.setViewClassName(null)
-        //console.log("BMFieldSetNode viewClassName = '" + this.viewClassName() + "'")
     },        
     
     didUpdateField: function(aField) {
@@ -55,8 +52,9 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
         if (!this[name]) {
             this.newSlot(name, null)
         }
+
         this.justAddField(aField)
-        return aField	
+        return aField
     },
 
     addField: function(aField) {
@@ -101,6 +99,8 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
         this.didUpdateNode()
     },
 
+    // --- validation ---
+
     validate: function() {
         return this.invalidSubnodes().length === 0
     },
@@ -113,9 +113,10 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
         return this.validate() // could cache this later...
     },
 
-    // json serialization
+    // --- json serialization ---
     // TODO: can this use persistent storage methods via skip pid use?
 
+    /*
     asJSON: function() {
         const dict = {}
         dict.type = this.type()
@@ -146,4 +147,5 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
         }
         return this
     },
+    */
 })

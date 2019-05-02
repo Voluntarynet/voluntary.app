@@ -1,6 +1,6 @@
 
 use control-edge drag or double finger drag to apply to prototype?
-store on parent node's field?
+store width hint on parent node's field?
 
 separate nodeRowMinHeight and nodeMinHeight
 
@@ -18,7 +18,6 @@ need generic way to open an inspector for currently focused item?
 e.g. inspect TextField currently editing to change font size
 - multi-finger long tap on touch? function-click with mouse?
 
-
 protocol to check editability of and store adjusted row size, font size, etc?
 option +, option - to adjust font size of text field being edited
 change font color, bg color, column color settings
@@ -34,8 +33,11 @@ dynamically add field rows?
         - fields
         - subnodes (short cuts to an array field
         
+    A field is a type of node used to represent a property of a node.
+    
     Field types:
-        Button      BMActionField
+        Creator     BMCreatorField
+        Button      BMActionNode
         Boolean     BMBoolField  
         Date        BMDateField
         Text 

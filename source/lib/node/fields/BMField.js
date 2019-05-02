@@ -4,6 +4,9 @@
 
     BMField
 
+    A BMNode that has a key, value, and valueMethod (among other properties),
+    that's useful for automatically constructing a UI to interact with properties of a parent Node.
+    
 */
         
 window.BMField = BMNode.extend().newSlots({

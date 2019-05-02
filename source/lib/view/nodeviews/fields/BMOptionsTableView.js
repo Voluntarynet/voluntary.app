@@ -44,8 +44,8 @@ window.BMOptionsTableView = DomView.extend().newSlots({
         this.setOpacity(0)
 		
         this._validValues.forEach((v) => {
-            let optionRow = DomView.clone().setDivClassName("BMOptionsTableRowView")//.setTarget(this).setAction("select")
-            let optionColumn = DomView.clone().setDivClassName("BMOptionsTableColumnView").setInnerHTML(v).setTarget(this).setAction("select")
+            const optionRow = DomView.clone().setDivClassName("BMOptionsTableRowView")//.setTarget(this).setAction("select")
+            const optionColumn = DomView.clone().setDivClassName("BMOptionsTableColumnView").setInnerHTML(v).setTarget(this).setAction("select")
             optionRow.addSubview(optionColumn)
             optionColumn.validValue = v
             this.addSubview(optionRow)
@@ -75,21 +75,21 @@ window.BMOptionsTableView = DomView.extend().newSlots({
     },
 	
     adjustOptionWidths: function() {
-        let maxWidth = this.maxOptionTextWidth()
+        const maxWidth = this.maxOptionTextWidth()
 		
-        let leftPad = 10
-        let rightPad = 10
+        const leftPad = 10
+        const rightPad = 10
 		
         this.setOptionWidths(maxWidth)
 		
-        let subviewsPerRow = 1
+        const subviewsPerRow = 1
 		
         if (this.subviews().length > 10) {
             subviewsPerRow = Math.ceil(Math.sqrt(this.subviews().length))
         }
 		
-        let fullWidth = maxWidth * subviewsPerRow 
-        let w = fullWidth + leftPad + rightPad
+        const fullWidth = maxWidth * subviewsPerRow 
+        const w = fullWidth + leftPad + rightPad
 		
         //this.setMinAndMaxWidth(w)
 		
@@ -100,8 +100,8 @@ window.BMOptionsTableView = DomView.extend().newSlots({
             subview.setMinAndMaxWidth(w)
         })
 		
-        //let rowCount = this.subviews().length / subviewsPerRow
-        //let h = rowCount * 26
+        //const rowCount = this.subviews().length / subviewsPerRow
+        //const h = rowCount * 26
         //console.log("maxHeight = ", h)
         //this.setMinAndMaxHeight(h)
 		

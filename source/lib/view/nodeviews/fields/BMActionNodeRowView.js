@@ -2,12 +2,12 @@
 
 /*
 
-    BMActionFieldRowView
+    BMActionNodeRowView
 
 */
 
-window.BMActionFieldRowView = BrowserRow.extend().newSlots({
-    type: "BMActionFieldRowView",
+window.BMActionNodeRowView = BrowserRow.extend().newSlots({
+    type: "BMActionNodeRowView",
     buttonView: null,
 }).setSlots({
     init: function () {
@@ -19,7 +19,7 @@ window.BMActionFieldRowView = BrowserRow.extend().newSlots({
         this.styles().selected().setColor("#888")
         this.styles().selected().setBackgroundColor("#eee")
 		
-        this.setButtonView(DomView.clone().setDivClassName("BMActionFieldButtonView"))
+        this.setButtonView(DomView.clone().setDivClassName("BMActionNodeButtonView"))
 	    this.buttonView().setTarget(this).setAction("didClickButton")
 	    this.buttonView().setTransition("all 0.3s")
 
@@ -32,7 +32,7 @@ window.BMActionFieldRowView = BrowserRow.extend().newSlots({
         BrowserRow.updateSubviews.apply(this)
 		
         const bv = this.buttonView()
-        bv.setInnerHTML(this.node().key())
+        bv.setInnerHTML(this.node().title())
         
         if (this.node().isEnabled()) {
             bv.setOpacity(1)	

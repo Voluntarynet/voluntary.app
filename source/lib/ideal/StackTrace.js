@@ -52,7 +52,7 @@ class StackTrace extends ProtoClass {
             if (line.contains("at file")) {
                 out.push(["....", line.after("at ").split("/").pop()])
             } else {
-                const line = line.after("at ")
+                line = line.after("at ")
                 if (line === "") {
                     return;
                 }

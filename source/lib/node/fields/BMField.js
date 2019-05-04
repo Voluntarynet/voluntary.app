@@ -70,6 +70,11 @@ window.BMField = BMStorableNode.extend().newSlots({
         return this.parentNode()
     },
     */
+
+    setKey: function(s) {
+        this._key = s
+        return this
+    },
     
     setValue: function(v) { // called by View on edit
         this._value = v
@@ -140,6 +145,8 @@ window.BMField = BMStorableNode.extend().newSlots({
     },
 	
     didUpdateView: function(aFieldView) {
+        this.scheduleSyncToStore()
+        
         const parentNode = this.parentNode()
         if (parentNode.didUpdateField) {
             parentNode.didUpdateField(this)

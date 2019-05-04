@@ -65,7 +65,6 @@ window.BMCreatorNode = BMStorableNode.extend().newSlots({
         const typeName = actionNode.info()
         const proto = window[typeName]
         const newNode = proto.clone()
-        this.parentNode().replaceSubnodeWith(this, newNode)
 
         if (newNode.setKeyIsEditable) {
             newNode.setKeyIsEditable(true)
@@ -77,7 +76,9 @@ window.BMCreatorNode = BMStorableNode.extend().newSlots({
         }
 
         newNode.setNodeTitleIsEditable(true)
-       
+        //this.column().selectThisColumn()
+
+        this.parentNode().replaceSubnodeWith(this, newNode)
 
         return this
     },

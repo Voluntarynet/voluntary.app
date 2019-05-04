@@ -120,7 +120,7 @@ window.BrowserView = NodeView.extend().newSlots({
         console.log("  this.activeColumnGroups().length = ", this.activeColumnGroups().length)
 
         if (this.canMoveLeft()) {
-            this.popLastActiveColumn()
+            this.previous()
         }
         aGesture.cancel()
     },
@@ -350,6 +350,11 @@ window.BrowserView = NodeView.extend().newSlots({
         return this
     },
 
+
+    previous: function() {
+        this.popLastActiveColumn()
+        return this
+    },
 
     popLastActiveColumn: function () {
         //console.log("popLastActiveColumn this.activeColumnGroups().length = ", this.activeColumnGroups().length)

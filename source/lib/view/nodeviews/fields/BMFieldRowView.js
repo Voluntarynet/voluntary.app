@@ -21,8 +21,9 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         this.setKeyView(TextField.clone().setDivClassName("BMFieldKeyView"))
         this.addContentSubview(this.keyView())     
    		this.keyView().turnOffUserSelect().setSpellCheck(false)   
-        
-        this.contentView().setPaddingLeft(20)
+        this.keyView().setMarginLeft(20)
+
+        //this.contentView().setPaddingLeft(20)
         this.setValueView(this.createValueView())
         this.addContentSubview(this.valueView())  
       
@@ -174,6 +175,8 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
     
     onDidEdit: function (changedView) {     
         //this.log(this.type() + " onDidEdit")   
+        this.node().setKey(this.keyView().value())
+        this.node().setValue(this.valueView().value())
         this.node().didUpdateView(this)
         this.scheduleSyncFromNode() // needed for validation?
     },

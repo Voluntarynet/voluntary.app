@@ -144,6 +144,10 @@ window.BrowserRow = NodeView.extend().newSlots({
 
     // -----------
     
+    browser: function() {
+        return this.column().browser()
+    },
+
     column: function () {
         return this.parentView()
     },
@@ -410,7 +414,6 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
 
     setupSlide: function() {
-        //console.log(this.typeId() + ".setupSlide()")
         if (!this.dragDeleteButtonView()) {
             const h = this.clientHeight()
 
@@ -433,6 +436,7 @@ window.BrowserRow = NodeView.extend().newSlots({
             this.dragDeleteButtonView().removeFromParentView()
             this.setDragDeleteButtonView(null)
         }
+        this.setTouchRight(null)
     },
 	
     onSlideMove: function(slideGesture) {

@@ -222,8 +222,13 @@ window.BrowserColumn = NodeView.extend().newSlots({
         }
         */
         
-        this.browser().selectColumn(this)
+        this.selectThisColumn()
         return true
+    },
+
+    selectThisColumn: function() {
+        this.browser().selectColumn(this)
+        return this
     },
     
     rowRequestsAddColumnForNode: function(aNode) {

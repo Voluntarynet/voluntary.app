@@ -16,11 +16,11 @@ window.ButtonView = DomView.extend().newSlots({
 
     init: function () {
         DomView.init.apply(this)
-        this.setMinAndMaxWidth(200)
-        this.setButtonHeight(50)
+        //this.setMinAndMaxWidth(200)
+        //this.setButtonHeight(50)
         this.turnOffUserSelect()
-        this.setBorder("1px solid black")
-        this.setBackgroundColor("#ccc")
+        //this.setBorder("1px solid black")
+        //this.setBackgroundColor("#ccc")
         this.setTextAlign("center")
         this.setVerticalAlign("middle")
         
@@ -57,4 +57,20 @@ window.ButtonView = DomView.extend().newSlots({
         return this
     },
     */
+
+    setIsEditable: function(aBool) {
+        this.titleView().setIsEditable(aBool)
+        return this
+    },
+
+    isEditable: function() {
+        return this.titleView().isEditable()
+    },
+
+    sendActionToTarget: function() {
+        if (!this.isEditable()) {
+            DomView.sendActionToTarget.apply(this)
+        }
+        return this
+    },
 })

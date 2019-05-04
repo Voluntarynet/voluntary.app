@@ -1,4 +1,8 @@
 
+Fields
+- make statefull and have them sync with parent nodes if they have targetGetter/setters
+
+
 use control-edge drag or double finger drag to apply to prototype?
 store width hint on parent node's field?
 

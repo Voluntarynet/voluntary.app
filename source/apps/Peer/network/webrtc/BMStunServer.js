@@ -14,7 +14,6 @@
 
 window.BMStunServer = BMFieldSetNode.extend().newSlots({
     type: "BMStunServer",
-   	//host: 'stun.bitmarkets.org',
     host: "",
     port: "", 
     //credential: null,

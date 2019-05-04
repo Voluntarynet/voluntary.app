@@ -4,7 +4,8 @@
     
     BMFlexNode
     
-	
+    A node that supports adding, reordering, etc other nodes to it within the UI.
+    
 */
 
 
@@ -20,8 +21,8 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
         this.setShouldStoreSubnodes(true)
         //this.setViewClassName("GenericView")
         //this.setViewClassName("BMDataStoreRecordView")
-        this.addAction("add")
         this.addAction("delete")
+        this.addAction("add")
         //this.setNodeColumnBackgroundColor("white")
         this.setNodeMinWidth(300)
 
@@ -31,8 +32,9 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
         //this.setSubtitle("subtitle")
         //this.setNodeSubtitleIsEditable(true)
 
-        this.setSubnodeProto(BMFlexNode)
-        this.setNodeCanReorder(true)
+        //this.setSubnodeProto(BMFlexNode)
+        this.setSubnodeProto(BMCreatorNode)
+        this.setNodeCanReorderSubnodes(true)
         this.addStoredSlot("label")
 
         //this.setNodeColumnStyles(BMViewStyles.clone())
@@ -146,12 +148,14 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
 
     */
 
+    /*
     didChangeParentNode: function () {
         BMStorableNode.didChangeParentNode.apply(this)
         if (this.isFlexRoot()) {
             this.removeAction("delete")
         }
     },
+    */
 
 
 })

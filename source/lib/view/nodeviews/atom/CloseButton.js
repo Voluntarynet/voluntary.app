@@ -19,7 +19,7 @@ window.CloseButton = DomView.extend().newSlots({
 
         this.setDivClassName("ImageCloseButton")
         this.setIconName("close-white")
-        this.setBackgroundSizeWH(10, 10) // use "contain" instead?
+        this.setBackgroundSizeWH(9, 9) // use "contain" instead?
         this.setBackgroundPosition("center")
         this.makeBackgroundNoRepeat()
         this.setAction("close") //.setInnerHTML("&#10799;")

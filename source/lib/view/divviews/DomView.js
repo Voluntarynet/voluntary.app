@@ -812,7 +812,18 @@ window.DomView = ideal.Proto.extend().newSlots({
     borderRadius: function() {
         return this.getCssAttribute("border-radius")
     },
+
+    // outline
     
+    setOutline: function(s) {
+        this.setCssAttribute("outline", s)
+	    return this
+    },
+	
+    outline: function() {
+        return this.getCssAttribute("outline")
+    },
+
     // line height
 
     setLineHeight: function(aNumber) {

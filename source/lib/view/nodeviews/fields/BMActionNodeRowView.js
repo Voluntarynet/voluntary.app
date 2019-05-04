@@ -19,7 +19,7 @@ window.BMActionNodeRowView = BrowserRow.extend().newSlots({
         this.styles().selected().setColor("#888")
         this.styles().selected().setBackgroundColor("#eee")
 		
-        this.setButtonView(DomView.clone().setDivClassName("BMActionNodeButtonView"))
+        this.setButtonView(ButtonView.clone().setDivClassName("BMActionNodeButtonView"))
 	    this.buttonView().setTarget(this).setAction("didClickButton")
 	    this.buttonView().setTransition("all 0.3s")
 
@@ -32,8 +32,10 @@ window.BMActionNodeRowView = BrowserRow.extend().newSlots({
         BrowserRow.updateSubviews.apply(this)
 		
         const bv = this.buttonView()
-        bv.setInnerHTML(this.node().title())
+        bv.setTitle(this.node().title())
         
+        this.buttonView().setIsEditable(this.node().nodeTitleIsEditable())
+
         if (this.node().isEnabled()) {
             bv.setOpacity(1)	
         } else {

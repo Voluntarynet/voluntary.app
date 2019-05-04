@@ -40,7 +40,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
 
     // actions
     actions: null,
-    nodeCanReorder: false,
+    nodeCanReorderSubnodes: false,
     
 
     // html
@@ -69,6 +69,8 @@ window.BMNode = ideal.Proto.extend().newSlots({
     didUpdateNodeNote: null,
     shouldFocusSubnodeNote: null,
     nodeUsesColumnBackgroundColor: true,
+
+    canDelete: false,
 }).setSlots({
     init: function () {
         this._subnodes = []
@@ -159,7 +161,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
             return this._nodeVisibleClassName
         }
 		
-        return this.type().prefixRemoved("BM")
+        return this.type().sansPrefix("BM")
     },
 
     // --- fields ---
@@ -206,7 +208,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     /*
     viewClassName: function() {
         if (!this._viewClassName) {
-            return this.type() + "View" //.prefixRemoved("BM")
+            return this.type() + "View" //.sansPrefix("BM")
         }
         
         return this._viewClassName
@@ -287,8 +289,21 @@ window.BMNode = ideal.Proto.extend().newSlots({
         return aSubnode
     },
 
+    replaceSubnodeWith: function(aSubnode, newSubnode) {
+        const index = this.indexOfSubnode(aSubnode)
+        assert(index !== -1)
+        this.removeSubnode(aSubnode)
+        this.addSubnodeAt(newSubnode, index)
+        return newSubnode
+    },
+
     addSubnode: function(aSubnode) {
         return this.addSubnodeAt(aSubnode, this.subnodeCount())
+    },
+
+    addSubnodes: function(subnodes) {
+        subnodes.forEach(subnode => this.addSubnode(subnode))
+        return this
     },
 
     addSubnodesIfAbsent: function(subnodes) {
@@ -623,6 +638,14 @@ window.BMNode = ideal.Proto.extend().newSlots({
     delete: function () {
         this.removeFromParentNode()
         return this
+    },
+
+    canDelete: function() {
+        const p = this.parentNode()
+        if (p && p.hasAction("delete")) {
+            return true
+        }
+        return this._canDelete
     },
 
     // --- utility -----------------------------

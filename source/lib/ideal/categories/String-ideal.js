@@ -82,11 +82,11 @@ Object.shallowCopyTo({
         return result
     },
 
-    prefixRemoved: function (prefix) {
+    sansPrefix: function (prefix) {
         return this.substring(this.beginsWith(prefix) ? prefix.length : 0);
     },
 
-    suffixRemoved: function (suffix) {
+    sansSuffix: function (suffix) {
         if (this.endsWith(suffix)) {
             return this.substr(0, this.length - suffix.length);
         }

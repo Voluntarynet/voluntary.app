@@ -80417,11 +80417,11 @@ Object.shallowCopyTo({
         return result
     },
 
-    prefixRemoved: function (prefix) {
+    sansPrefix: function (prefix) {
         return this.substring(this.beginsWith(prefix) ? prefix.length : 0);
     },
 
-    suffixRemoved: function (suffix) {
+    sansSuffix: function (suffix) {
         if (this.endsWith(suffix)) {
             return this.substr(0, this.length - suffix.length);
         }
@@ -83610,7 +83610,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
 
     // actions
     actions: null,
-    nodeCanReorder: false,
+    nodeCanReorderSubnodes: false,
     
 
     // html
@@ -83729,7 +83729,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
             return this._nodeVisibleClassName
         }
 		
-        return this.type().prefixRemoved("BM")
+        return this.type().sansPrefix("BM")
     },
 
     // --- fields ---
@@ -83776,7 +83776,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     /*
     viewClassName: function() {
         if (!this._viewClassName) {
-            return this.type() + "View" //.prefixRemoved("BM")
+            return this.type() + "View" //.sansPrefix("BM")
         }
         
         return this._viewClassName
@@ -86785,7 +86785,7 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
         //this.setNodeSubtitleIsEditable(true)
 
         this.setSubnodeProto(BMFlexNode)
-        this.setNodeCanReorder(true)
+        this.setNodeCanReorderSubnodes(true)
         this.addStoredSlot("label")
 
         //this.setNodeColumnStyles(BMViewStyles.clone())
@@ -99131,7 +99131,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
 
     canReorder: function() {
-        return this.node().nodeCanReorder()
+        return this.node().nodeCanReorderSubnodes()
     },
 
     didReorderRows: function() { 
@@ -99928,7 +99928,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     shouldShowFlash: false,
     shouldCenterCloseButton: true, 
     contentView: null,
-    touchDeleteOffset: 0,
+    slideDeleteOffset: 0,
     isDeleting: false,
 }).setSlots({
     init: function () {
@@ -100311,7 +100311,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     onSlideMove: function(slideGesture) {
         if (this.canDelete()) {
             const d = slideGesture.distance()
-            const isReadyToDelete  = d >= this._touchDeleteOffset
+            const isReadyToDelete  = d >= this._slideDeleteOffset
 
             //console.log("slideGesture.distance() = ", d)
             //console.log("isReadyToDelete = ", isReadyToDelete)
@@ -100335,7 +100335,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         //console.log(">>> " + this.type() + " onSlideComplete")
         
         const d = slideGesture.distance()
-        const isReadyToDelete  = d >= this._touchDeleteOffset
+        const isReadyToDelete  = d >= this._slideDeleteOffset
 
         if (isReadyToDelete) {
             this.finishSlideAndDelete()
@@ -106243,7 +106243,7 @@ window.BMStunServers = BMStorableNode.extend().newSlots({
         this.setNodeMinWidth(270)
         this.addAction("add")
         this.setSubnodeProto(BMStunServer)
-        this.setNodeCanReorder(true)
+        this.setNodeCanReorderSubnodes(true)
     },
 
     finalize: function() {
@@ -107166,7 +107166,7 @@ window.BMLocalIdentities = BMStorableNode.extend().newSlots({
         //this.setPidSymbol("_localIdentities")  
         this._didChangeIdentitiesNote = NotificationCenter.shared().newNote().setSender(this.uniqueId()).setName("didChangeIdentities")
         this.setNodeMinWidth(240)
-        this.setNodeCanReorder(true)
+        this.setNodeCanReorderSubnodes(true)
     },
 
     current: function() {

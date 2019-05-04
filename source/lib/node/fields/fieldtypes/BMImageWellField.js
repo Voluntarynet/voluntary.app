@@ -10,6 +10,7 @@ window.BMImageWellField = BMField.extend().newSlots({
     type: "BMImageWellField",
     onlyShowsKeyWhenEmpty: true,
     maxImageCount: 1,
+    isEditable: true,
 }).setSlots({
     init: function () {
         BMField.init.apply(this)
@@ -18,6 +19,8 @@ window.BMImageWellField = BMField.extend().newSlots({
         this.setKey("drop images here")
         this.setKeyIsEditable(false)
         this.setValueIsEditable(false)
+        //this.addStoredSlot("imageDataURLs")
+
     },
 
     setValue: function(v) {

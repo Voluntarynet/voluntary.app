@@ -4,16 +4,18 @@
     
     BrowserRow
 
-    base row view, just knows about selected, selectable and colors
+    Base row view.  
     
-
+    Features:
+    - applying styles to match state
+    - supports slide-to-delete and pan-to-reorder gestures.
+    - right side delete button
+    
     NOTES
-
-    Sources of row styles: node, the row itself, the row's column
     
-    Styles lookup order:
+    Row styles lookup order:
 
-    node -> (fallback to) -> row -> (fallback to) -> column
+        node -> (fallback to) -> row -> (fallback to) -> column
 
     See lookedUpStyles method.
 
@@ -30,7 +32,9 @@ window.BrowserRow = NodeView.extend().newSlots({
     shouldShowFlash: false,
     shouldCenterCloseButton: true, 
     contentView: null,
-    touchDeleteOffset: 0,
+
+    slideDeleteOffset: 0,
+    dragDeleteButtonView: null,
     isDeleting: false,
 }).setSlots({
     init: function () {
@@ -62,7 +66,6 @@ window.BrowserRow = NodeView.extend().newSlots({
 
         return this
     },
-
 
     onBottomEdgePanBegin: function(aGesture) {
         this._beforeEdgePanBorderBottom = this.borderBottom()
@@ -96,7 +99,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         cv.setWidthPercentage(100).setHeightPercentage(100) 
         cv.setPosition("absolute")
         cv.setTransition("all 0.2s ease, transform 0s, left 0s, right 0s")
-        cv.setZIndex(1)
+        cv.setZIndex(1) // so it will be above other views like the slide delete button 
         this.setContentView(cv)
         this.addSubview(cv)
         return this
@@ -231,6 +234,20 @@ window.BrowserRow = NodeView.extend().newSlots({
                 this.closeButtonView().setOpacity(0)
             }
         }
+
+        /*
+        // take up full height if node asks for it
+        const node = this.node()
+        if (node && node.nodeMinHeight()) {
+            const e = this.element()
+            if (node.nodeMinHeight() === -1) {
+                this.setHeight("auto")                
+                this.setPaddingBottom("calc(100% - 20px)")
+            } else {
+                this.setHeight(this.pxNumberToString(node.nodeMinHeight()))
+            }
+        }
+        */
         
         this.applyStyles()
 
@@ -357,7 +374,9 @@ window.BrowserRow = NodeView.extend().newSlots({
 	*/
     
     canDelete: function() {
-        return this.node() && this.node().hasAction("delete")
+        const canDelete = this.node() && this.node().canDelete() //hasAction("delete")
+        //console.log(this.typeId() + ".canDelete() = ", canDelete)
+        return canDelete
     },
 
     // -- tap gesture ---
@@ -382,42 +401,43 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
 
     onSlideBegin: function() {
-        this.setTouchDeleteOffset(this.clientWidth() * 0.5);
-        this.contentView().setTransition("all 0s")       
+        //console.log(this.typeId() + ".onSlideBegin()")
+
+        this.setSlideDeleteOffset(this.clientWidth() * 0.5);
+        this.contentView().setTransition("all 0s") 
         this.setupSlide() 
         return this
     },
 
     setupSlide: function() {
-        if (!this._dragDeleteButtonView) {
+        //console.log(this.typeId() + ".setupSlide()")
+        if (!this.dragDeleteButtonView()) {
             const h = this.clientHeight()
 
             this.element().style.backgroundColor = "black"
+            //this.element().style.outline = "1px dashed blue"
             const cb = CloseButton.clone().setTransition("opacity 0.1s")
             cb.setMinAndMaxHeight(h)
-            cb.setMinAndMaxWidth(h)
+            cb.setPosition("absolute")
+            cb.setTop(0)
+            cb.setRight(10)
             this.addSubview(cb)
-            //this.parentView().addSubview(dv)
-            //this.setBackgroundColor(this.column().columnGroup().backgroundColor())
             cb.setZIndex(0)
-            this._dragDeleteButtonView = cb
+            this.setDragDeleteButtonView(cb)
         }
         return this
     },
 
     cleanupSlide: function() {
-        if (this._dragDeleteButtonView) {
-            this._dragDeleteButtonView.removeFromParentView()
-            this._dragDeleteButtonView = null
+        if (this.dragDeleteButtonView()) {
+            this.dragDeleteButtonView().removeFromParentView()
+            this.setDragDeleteButtonView(null)
         }
     },
 	
     onSlideMove: function(slideGesture) {
         const d = slideGesture.distance()
-        const isReadyToDelete  = d >= this._touchDeleteOffset
-
-        //console.log("slideGesture.distance() = ", d)
-        //console.log("isReadyToDelete = ", isReadyToDelete)
+        const isReadyToDelete = d >= this._slideDeleteOffset
 
         this.setTouchRight(d)
 
@@ -436,7 +456,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     onSlideComplete: function(slideGesture) {
         //console.log(">>> " + this.type() + " onSlideComplete")
         const d = slideGesture.distance()
-        const isReadyToDelete  = d >= this._touchDeleteOffset
+        const isReadyToDelete  = d >= this._slideDeleteOffset
 
         if (isReadyToDelete) {
             this.finishSlideAndDelete()
@@ -490,15 +510,12 @@ window.BrowserRow = NodeView.extend().newSlots({
 
     /*
     showTouchDeleteReady: function() {
-
     },
 
     showTouchDeleteButton: function() {
-
     },
 
     hideTouchDeleteButton: function() {
-
     },
     */
     
@@ -520,12 +537,6 @@ window.BrowserRow = NodeView.extend().newSlots({
             this.closeButtonView().setTarget(null)
         }        
     },
-
-    /*
-    onMouseDown: function (event) {
-        NodeView.onMouseDown.apply(this, [event])
-    },
-    */
 
     onMouseUp: function (event) {
         NodeView.onMouseUp.apply(this, [event])
@@ -552,7 +563,6 @@ window.BrowserRow = NodeView.extend().newSlots({
         pan.onDown(longPressGesture.currentEvent())
         this._isReordering = true
         pan.attemptBegin()
-        //this.contentView().setBackgroundColor("blue")
         this.setTransition("all 0s, transform 0.2s") //, min-height 1s, max-height 1s")
         this.contentView().setTransition("transform 0.2s")
         setTimeout(() => { 
@@ -562,17 +572,12 @@ window.BrowserRow = NodeView.extend().newSlots({
 
     zoomForPan: function() {
         const r = 1.1
-        this._prePanHeight = this.clientHeight()
-        //this.setMinAndMaxHeight(this._prePanHeight * r)
         this.setTransform("scale(" + r + ")")
-        //this.contentView().setTransform("scale(" + r + ")")
         return this
     },
 
     unzoomForPan: function() {
-        //this.setMinAndMaxHeight(this._prePanHeight)
         this.setTransform("scale(1)")
-        //this.contentView().setTransform("scale(1)")
         return this
     },
 
@@ -614,6 +619,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         this.columnGroup().setOverflow("visible")
         this.columnGroup().scrollView().setOverflow("visible")
         this.setZIndex(3)
+
         //this.setBorder("1px solid rgba(255, 255, 255, 0.05)")
 
         this.column().absolutePositionRows()
@@ -621,7 +627,6 @@ window.BrowserRow = NodeView.extend().newSlots({
         this._dragStartPos = this.relativePos()
 
         this.setTop(this._dragStartPos.y())
-        //this.column().setPosition("relative")
         this.addShadow()
     },
 
@@ -642,7 +647,6 @@ window.BrowserRow = NodeView.extend().newSlots({
         this.column().setOverflow("hidden")
         this.columnGroup().setOverflow("hidden")
         this.columnGroup().scrollView().setOverflow("hidden")
-        this.setZIndex(null)
 
         this.setTransition(this.transitionStyle())
         this.removeShadow()
@@ -653,9 +657,10 @@ window.BrowserRow = NodeView.extend().newSlots({
         setTimeout(() => {
             this.column().relativePositionRows()
             this.column().didReorderRows()
+            this.setZIndex(null)
         }, 500)
 
-        this.removePanGesture()
+        //this.removePanGesture() // this will happen automatically
         this._isReordering = false
     },
 
@@ -736,5 +741,12 @@ window.BrowserRow = NodeView.extend().newSlots({
         return this.node().nodeRowLink()
     },
 
+    /*
+    show: function() {
+        const d = this.getComputedCssAttribute("display")
+        const p = this.getComputedCssAttribute("position")
+        console.log("row display:" + d + " position:" + p)
+    },
+    */
 
 })

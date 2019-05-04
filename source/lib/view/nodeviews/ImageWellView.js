@@ -18,6 +18,8 @@ window.ImageWellView = NodeView.extend().newSlots({
         this.dragUnhighlight()
         this.turnOffUserSelect()
         this.setTransition("all 0.3s")
+
+
         return this
     },
 
@@ -54,11 +56,15 @@ window.ImageWellView = NodeView.extend().newSlots({
     
     acceptsDrop: function(event) {
         const accepts = (!this.isFull()) && (this.isEditable() !== false)
-        //console.log(this.typeId() + " isFull:" + this.isFull() + " count:" + this.imageCount() + "/" + this.maxImageCount() + " accepts:" + accepts)
+        console.log(this.typeId() + "isEditable:" + this.isEditable() + " isFull:" + this.isFull() + " count:" + this.imageCount() + "/" + this.maxImageCount() + " accepts:" + accepts)
         return accepts        
     },
     
     setImageDataURLs: function(dataURLs) {
+        if (dataURLs === null) {
+            dataURLs = []
+        }
+
         if (JSON.stringify(dataURLs) === JSON.stringify(this.imageDataURLs())) {
             return this
         }

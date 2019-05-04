@@ -4,8 +4,6 @@
 
     BrowserFieldRow
  
-    A BrowserRow that overrides updateSubviews 
-    to fill in remaining space in column when requested.
 
 */
 
@@ -20,28 +18,13 @@ window.BrowserFieldRow = BrowserRow.extend().newSlots({
         this.makeCursorDefault()
         this.setSpellCheck(false)
 		
-        this.setStyles(BMViewStyles.sharedBlackOnWhiteStyle())
+        //this.setStyles(BMViewStyles.sharedBlackOnWhiteStyle())
         //this.setStyles(BMViewStyles.sharedWhiteOnBlackStyle())
 
         return this
     },
 
     /*
-    didChangeNode: function() {
-        BrowserRow.didUpdateNode.apply(this)
-        if (this.node() && this.node().nodeShouldUseLightTheme) {
-            if (this.node().nodeShouldUseLightTheme()) {
-                this.setStyles(BMViewStyles.sharedBlackOnWhiteStyle())
-
-            } else {
-                this.setStyles(BMViewStyles.sharedWhiteOnBlackStyle())
-
-            }
-        }
-        return this
-    },
-    */
-    
     updateSubviews: function() {   
 	    BrowserRow.updateSubviews.apply(this)
 	
@@ -56,10 +39,9 @@ window.BrowserFieldRow = BrowserRow.extend().newSlots({
                 this.setHeight(this.pxNumberToString(node.nodeMinHeight()))
             }
         }
-        
-        //this.applyStyles()
-        
+                
         return this
     },
+    */
  
 })

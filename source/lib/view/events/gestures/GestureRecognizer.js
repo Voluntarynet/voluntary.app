@@ -307,7 +307,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
                 result = false
             }
         } catch(e) {
-            console.warn(this.typeId() + ".sendDelegateMessage(" + methodName + ") caught exception ", e)
+            console.error(this.typeId() + ".sendDelegateMessage(" + methodName + ") caught exception ", e)
             result = false
         }
 

@@ -691,20 +691,23 @@ window.BrowserColumn = NodeView.extend().newSlots({
     // reordering support
 
     absolutePositionRows: function() {
-        //console.log("absolutePositionRows")
         const ys = []
         this.rows().forEach((row) => {
-            let y = row.relativePos().y()
+            const y = row.relativePos().y()
             ys.append(y)
         })
 
         let i = 0
         this.rows().forEach((row) => {
-            let y = ys[i]
+            const y = ys[i]
             i ++
             row.setDisplay("block")
             row.setPosition("absolute")
             row.setTop(y)
+            row.setLeft(0)
+            row.setRight(null)
+            row.setBottom(null)
+            row.setWidthPercentage(100)
             //console.log("i" + i + " : y" + y)
         })
         
@@ -716,19 +719,21 @@ window.BrowserColumn = NodeView.extend().newSlots({
         const orderedRows = this.rows().copy().sortPerform("top")
 
         orderedRows.forEach((row) => {
-            let y = row.relativePos().y()
+            row.setDisplay("block")
             row.setPosition("relative")
-            row.setDisplay("inline")
+
             row.setTop(null)
+            row.setLeft(null)
+            row.setRight(null)
+            row.setBottom(null)
         })
 
-        //this.removeAllSubviews()
         this.removeAllSubviews()
         this.addSubviews(orderedRows)
-        //this.addManagedSubviews(orderedRows)
         return this
     },
 
+    /*
     orderRows: function() {
         const orderedRows = this.rows().copy().sortPerform("top")
 
@@ -741,6 +746,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
         this.addSubviews(orderedRows)
         return this
     },
+    */
 
     stackRows: function() {
         const orderedRows = this.rows().copy().sortPerform("top")
@@ -760,7 +766,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
 
     canReorder: function() {
-        return this.node().nodeCanReorder()
+        return this.node().nodeCanReorderSubnodes()
     },
 
     didReorderRows: function() { 

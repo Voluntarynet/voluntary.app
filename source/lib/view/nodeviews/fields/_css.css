@@ -31,12 +31,6 @@
     margin-left: 5px;
 }
 
-/*
-.BMActionNodeRowView {
-    border-bottom: 1px solid #ddd; 
-}
-*/
-
 .BMActionNodeButtonView {
     height: 42px;
     width: auto;
@@ -58,7 +52,7 @@
     text-align: center;
     line-height: 42px;
     /*overflow: hidden;*/
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
     transition: all 0.1 ease;
 }
 

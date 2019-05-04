@@ -60,7 +60,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
 	*/
     
     addLog: function(s, error) {
-        let statusNode = BMFieldSetNode.clone().setTitle(s).setSubtitle(new Date().toString())
+        const statusNode = BMFieldSetNode.clone().setTitle(s).setSubtitle(new Date().toString())
         //this.statusLog().addSubnode(statusNode)
         statusNode.error = function () { return this._error }
         statusNode._error = ""
@@ -71,7 +71,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
 	        //statusNode.makeNoteRightArrow()
 	    }
 	    
-        //let entry = BMDataStoreRecord.clone().setNodeColumnBackgroundColor("white").setNodeMinWidth(300)
+        //const entry = BMDataStoreRecord.clone().setNodeColumnBackgroundColor("white").setNodeMinWidth(300)
         statusNode.addStoredField(BMTextAreaField.clone().setKey("dict").setValueMethod("error").setValueIsEditable(false).setIsMono(true))
         //entry.setTitle(s)
         //entry.setSubtitle(new Date().toString())
@@ -267,7 +267,6 @@ window.BMServerConnection = BMNode.extend().newSlots({
             return
         }
 
-
         console.error(this.typeId() + " ERROR: ", error);
         this.setError(error)
 
@@ -415,7 +414,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
     },
     
     receivedMsgFrom: function(msg, remotePeer) {
-        let d = this.delegate()
+        const d = this.delegate()
         if (d && d.receivedMsgFrom) {
             d.receivedMsgFrom.apply(d, [msg, remotePeer])
         }

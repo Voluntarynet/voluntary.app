@@ -73,10 +73,6 @@ window.BoolView = DivStyledView.extend().newSlots({
         return this
     },
     
-    isEditable: function() {
-        return this._isEditable
-    },
-    
     // clicks
     
     onClick: function(event) {
@@ -100,7 +96,10 @@ window.BoolView = DivStyledView.extend().newSlots({
     // ------------------
     
     setValue: function(v) {
-	    assert(Type.isBoolean(v))
+        if (v === null) {
+            v = false;
+        }
+        
 	    this._value = v
 
         //this.updateUnicode()

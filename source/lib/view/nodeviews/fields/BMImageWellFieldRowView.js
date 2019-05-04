@@ -10,6 +10,7 @@ window.BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
     type: "BMImageWellFieldView",
 }).setSlots({
     init: function () {
+        //BrowserRow.init.apply(this)
         BMFieldRowView.init.apply(this)
         this.keyView().setDivClassName("BMImageWellKeyField") //.setDisplay("none")
         //this.valueView().setContentEditable(false)
@@ -34,7 +35,7 @@ window.BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
             this.keyView().setInnerHTML(field.key())
             this.imageWellView().setImageDataURLs(field.value())
 		    this.updateKeyView()
-		    this.imageWellView().setMaxImageCount(this.node().maxImageCount())
+		    this.imageWellView().setMaxImageCount(field.maxImageCount())
         }
         
         this.applyStyles() // normally this would happen in updateSubviews

@@ -47,9 +47,9 @@ window.ClearApp = App.extend().newSlots({
     setupModel: function () {
 	
         // flex
-        const flexNode = NodeStore.shared().rootInstanceWithPidForProto("_flexNode", BMFlexNode);
-        flexNode.setTitle("MyLists")
-        this.addSubnode(flexNode)
+        const myLists = NodeStore.shared().rootInstanceWithPidForProto("_flexNode", BMFlexNode);
+        myLists.setTitle("MyLists")
+        this.addSubnode(myLists)
 
         // about 
         this.setSettings(BMStorableNode.clone().setTitle("Settings").setSubtitle(null).setNodeMinWidth(250))

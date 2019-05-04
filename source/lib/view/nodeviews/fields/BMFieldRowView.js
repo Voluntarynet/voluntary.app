@@ -18,10 +18,9 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
     init: function () {
         BrowserFieldRow.init.apply(this)
         
-        this.setKeyView(DomView.clone().setDivClassName("BMFieldKeyView"))
+        this.setKeyView(TextField.clone().setDivClassName("BMFieldKeyView"))
         this.addContentSubview(this.keyView())     
    		this.keyView().turnOffUserSelect().setSpellCheck(false)   
-        //this.keyView().setMinAndMaxWidth("200")
         
         this.contentView().setPaddingLeft(20)
         this.setValueView(this.createValueView())
@@ -31,34 +30,15 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         this.valueView().setSpellCheck(false)   // should the value view handle this?
         this.valueView().setWidthPercentage(100) 
 
-		
         this.setNoteView(DomView.clone().setDivClassName("BMFieldRowViewNoteView"))
         this.addContentSubview(this.noteView())
         this.noteView().setUserSelect("text")
         
-        //this.setBorderBottom("1px solid #ddd")
-        //this.updateBorder()
-
-        //this.setEditable(false)
         return this
     },
-
-    /*
-    updateBorder: function() {
-        const bg = this.contentView().backgroundColor()
-        console.log(this.typeId() + " bg: '" + bg + "'")
-        if (bg === "white") {
-            this.setBorderBottom("1px solid #ddd")
-        } else {
-            this.setBorderBottom("none")
-            this.setBorder("none")
-        }
-        return this
-    },
-    */
 
     createValueView: function() {
-        let tf = TextField.clone().setDivClassName("BMFieldValueView")
+        const tf = TextField.clone().setDivClassName("BMFieldValueView")
         //tf.setSelectAllOnDoubleClick(true)
         return tf
     },
@@ -143,7 +123,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
 		
         // change color if value is invalid
 		
-        let color = valueView.color()
+        const color = valueView.color()
 		
         if (node.valueError()) {
             valueView.setColor(this.errorColor())
@@ -194,10 +174,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
     
     onDidEdit: function (changedView) {     
         //this.log(this.type() + " onDidEdit")   
-        this.scheduleSyncToNode() //this.syncToNode()
-        
         this.node().didUpdateView(this)
-        //this.node().tellParentNodes("onDidEditNode", this.node())   
         this.scheduleSyncFromNode() // needed for validation?
     },
 

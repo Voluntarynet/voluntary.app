@@ -34,6 +34,7 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
 
         //this.setSubnodeProto(BMFlexNode)
         this.setSubnodeProto(BMCreatorNode)
+        
         this.setNodeCanReorderSubnodes(true)
         this.addStoredSlot("label")
 
@@ -53,7 +54,7 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
         return this
     },
 
-    /*
+    
     colorPairForDepth: function (depthNumber) {
         if (depthNumber % 2 === 1) {
             return [BMColor.redColor(), BMColor.yellowColor()]
@@ -78,8 +79,12 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
         return c
     },
 
-    nodeRowStylesOld: function () {
+    
+    nodeRowStyles: function () {
         // const nextColor = this.colorPairForDepth(this.nodeDepth()+1)[0]
+        if (!this._nodeRowStyles) {
+            this.customizeNodeRowStyles()
+        }
 
         const styles = this._nodeRowStyles
         const c = this.nodeBackgroundColorObject()
@@ -91,10 +96,11 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
         //styles.unselected().setBorderTop("1px solid " + c.cssColorString())
         //styles.unselected().setBorderBottom("1px solid " + c.cssColorString())
 
-        styles.selected().setBackgroundColor(BMColor.grayColor().cssColorString())
+        //styles.selected().setBackgroundColor(BMColor.grayColor().cssColorString())
         styles.selected().setColor(BMColor.whiteColor().cssColorString())
 
-        //styles.selected().setBackgroundColor(c.copy().darken(0.75).cssColorString())
+        styles.selected().setBackgroundColor(c.copy().darken(0.8).cssColorString())
+        //styles.selected().setBackgroundColor(c.copy().lighten(0.2).cssColorString())
         //styles.selected().setBackgroundColor(c.copy().cssColorString())
         //styles.selected().setColor(BMColor.whiteColor().cssColorString())
         //styles.selected().setBorderTop("1px solid white")
@@ -103,7 +109,15 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
         //this._nodeRowStyles.active().setBackgroundColor(c.copy().lighten(0.75).cssColorString())
         return this._nodeRowStyles
     },
+    /*
+    note: function() {
+        if (this.node().isSelected()) {
+            return "&gt"
+        }
+        return ""
+    },
     */
+    
 
     /*
     didReorderParentSubnodes: function() {

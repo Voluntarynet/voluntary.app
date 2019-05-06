@@ -34,12 +34,12 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
         this.addAction("delete")
         this.setNodeMinWidth(500)
 	
-        this.addStoredField(BMField.clone().setKey("host"))
-        this.addStoredField(BMNumberField.clone().setKey("port").setValueIsEditable(true))
-        this.addStoredField(BMField.clone().setKey("path"))
-        this.addStoredField(BMBoolField.clone().setKey("isSecure").setValueIsEditable(true))
-        //this.justAddField(BMPointerField.clone().setKey("serverConnection"))
-        this.addSubnode(BMPointerField.clone().setKey("serverConnection"))
+        this.addStoredField(BMField.clone().setKey("host").setValueMethod("host"))
+        this.addStoredField(BMNumberField.clone().setKey("port").setValueMethod("port").setValueIsEditable(true))
+        this.addStoredField(BMField.clone().setKey("path").setValueMethod("path"))
+        this.addStoredField(BMBoolField.clone().setKey("isSecure").setValueMethod("isSecure").setValueIsEditable(true))
+        //this.justAddField(BMPointerField.clone().setKey("serverConnection").setValueMethod("serverConnection").)
+        this.addSubnode(BMPointerField.clone().setKey("serverConnection").setValueMethod("serverConnection"))
 		
         this.setConnectButton(BMActionNode.clone().setTitle("connect").setMethodName("connect").setTarget(this))
         this.addSubnode(this.connectButton())

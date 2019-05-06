@@ -16,6 +16,7 @@ window.ClearApp = App.extend().newSlots({
     flexNode: null,
     settings: null,
     resources: null,
+    dataStore: null,
 
     // views
     browser: null,
@@ -58,7 +59,11 @@ window.ClearApp = App.extend().newSlots({
         // resources
         this.setResources(BMResources.shared())
         this.settings().addSubnode(this.resources())
-		
+        
+        // data store
+        this.setDataStore(BMDataStore.clone())
+        this.settings().addSubnode(this.dataStore())
+
         return this
     },
 

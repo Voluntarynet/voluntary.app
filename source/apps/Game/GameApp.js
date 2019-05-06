@@ -16,6 +16,7 @@ window.GameApp = App.extend().newSlots({
 
     // model
     about: null,
+    about: null,
 
     // views
     browser: null,
@@ -59,10 +60,6 @@ window.GameApp = App.extend().newSlots({
 
     setupModel: function () {
 
-        // identities
-        this.setLocalIdentities(NodeStore.shared().rootInstanceWithPidForProto("_localIdentities", BMLocalIdentities))
-        this.addSubnode(this.localIdentities())
-
         // about 
 
         this.setAbout(BMStorableNode.clone().setTitle("Settings").setSubtitle(null).setNodeMinWidth(250))
@@ -70,20 +67,15 @@ window.GameApp = App.extend().newSlots({
 		
         // --- about subnodes --------------------
 
-        // network
-        this.setNetwork(BMNetwork.shared())
-        this.network().setLocalIdentities(this.localIdentities())
-        this.about().addSubnode(this.network())
-
+        /*
         // data store
         this.setDataStore(BMDataStore.clone())
         this.about().addSubnode(this.dataStore())
+        */
 
         // game
         const gameNode = GameNode.clone()
         this.about().addSubnode(gameNode)
-
-        this.network().servers().connect() // observe appDidInit instead?
 
         // --- graphics subnodes --------------------
 		

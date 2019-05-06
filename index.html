@@ -804,12 +804,6 @@ html * {
     margin-left: 5px;
 }
 
-/*
-.BMActionNodeRowView {
-    border-bottom: 1px solid #ddd; 
-}
-*/
-
 .BMActionNodeButtonView {
     height: 42px;
     width: auto;
@@ -831,7 +825,7 @@ html * {
     text-align: center;
     line-height: 42px;
     /*overflow: hidden;*/
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
     transition: all 0.1 ease;
 }
 
@@ -80947,7 +80941,7 @@ Proto.setSlots({
 
     newSlot: function (slotName, initialValue) {
         if (typeof(slotName) !== "string") {
-            throw new Error("name must be a string");
+            throw new Error("slotName must be a string, not a " + typeof(slotName));
         }
 
         if (initialValue === undefined) { 
@@ -81810,7 +81804,7 @@ class StackTrace extends ProtoClass {
             if (line.contains("at file")) {
                 out.push(["....", line.after("at ").split("/").pop()])
             } else {
-                const line = line.after("at ")
+                line = line.after("at ")
                 if (line === "") {
                     return;
                 }
@@ -83385,7 +83379,6 @@ ResourceLoader.pushRelativePaths([
     "nodes/_imports.js",
     "fields/_imports.js",
     "storage/BMDataStoreRecord.js",
-    //"archive/_imports.js",
     "flex/_imports.js",
     "proto/_imports.js",
     "atom/_imports.js",
@@ -83639,6 +83632,8 @@ window.BMNode = ideal.Proto.extend().newSlots({
     didUpdateNodeNote: null,
     shouldFocusSubnodeNote: null,
     nodeUsesColumnBackgroundColor: true,
+
+    canDelete: false,
 }).setSlots({
     init: function () {
         this._subnodes = []
@@ -83857,8 +83852,21 @@ window.BMNode = ideal.Proto.extend().newSlots({
         return aSubnode
     },
 
+    replaceSubnodeWith: function(aSubnode, newSubnode) {
+        const index = this.indexOfSubnode(aSubnode)
+        assert(index !== -1)
+        this.removeSubnode(aSubnode)
+        this.addSubnodeAt(newSubnode, index)
+        return newSubnode
+    },
+
     addSubnode: function(aSubnode) {
         return this.addSubnodeAt(aSubnode, this.subnodeCount())
+    },
+
+    addSubnodes: function(subnodes) {
+        subnodes.forEach(subnode => this.addSubnode(subnode))
+        return this
     },
 
     addSubnodesIfAbsent: function(subnodes) {
@@ -84193,6 +84201,14 @@ window.BMNode = ideal.Proto.extend().newSlots({
     delete: function () {
         this.removeFromParentNode()
         return this
+    },
+
+    canDelete: function() {
+        const p = this.parentNode()
+        if (p && p.hasAction("delete")) {
+            return true
+        }
+        return this._canDelete
     },
 
     // --- utility -----------------------------
@@ -85978,16 +85994,10 @@ window.BMStoredDatedSetNode = BMStorableNode.extend().newSlots({
 ResourceLoader.pushRelativePaths([
     "BMFieldSetNode.js",
     "BMField.js",
+    
     "BMActionNode.js",
-    "BMImageWellField.js",
-    "BMTextAreaField.js",
-    "BMStampField.js",
-    "BMIdentityField.js",
-    "BMDateField.js",
-    "BMNumberField.js",
-    "BMBoolField.js",
-    "BMOptionsField.js",
-    "BMPointerField.js",
+    "BMCreatorNode.js",
+    "fieldtypes/_imports.js"
 ])
 
 "use strict"
@@ -86028,11 +86038,8 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
     init: function () {
         BMStorableNode.init.apply(this)
         this.setNodeMinWidth(500)
-        //this.setViewClassName("BrowserFieldsColumn")
         this.setShouldStoreSubnodes(false)
         this.setNodeColumnBackgroundColor("white")
-        //this.setViewClassName(null)
-        //console.log("BMFieldSetNode viewClassName = '" + this.viewClassName() + "'")
     },        
     
     didUpdateField: function(aField) {
@@ -86047,8 +86054,9 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
         if (!this[name]) {
             this.newSlot(name, null)
         }
+
         this.justAddField(aField)
-        return aField	
+        return aField
     },
 
     addField: function(aField) {
@@ -86093,6 +86101,8 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
         this.didUpdateNode()
     },
 
+    // --- validation ---
+
     validate: function() {
         return this.invalidSubnodes().length === 0
     },
@@ -86105,9 +86115,10 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
         return this.validate() // could cache this later...
     },
 
-    // json serialization
+    // --- json serialization ---
     // TODO: can this use persistent storage methods via skip pid use?
 
+    /*
     asJSON: function() {
         const dict = {}
         dict.type = this.type()
@@ -86138,6 +86149,7 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
         }
         return this
     },
+    */
 })
 
 "use strict"
@@ -86146,25 +86158,27 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
 
     BMField
 
+    A BMStorageNode that has a key, value, and valueMethod (among other properties),
+    that's useful for automatically constructing a UI to interact with properties of a parent Node.
+    
 */
         
-window.BMField = BMNode.extend().newSlots({
+window.BMField = BMStorableNode.extend().newSlots({
     type: "BMField",
     
-    key: null,
-    //value: "test value",
-
     isVisible: true,
     isEnabled: true,
-	
-    keyIsVisible: true,
-    valueIsVisible: true,
 
+    // key
+    key: "key",
+    keyIsVisible: true,
     keyIsEditable: false,
+
+    // value
+    value: null,
+    valueIsVisible: true,
     valueIsEditable: true, 
-	
-    canRemove: null,
-	
+		
     link: null,
     ownsLink: null,
 	
@@ -86179,19 +86193,29 @@ window.BMField = BMNode.extend().newSlots({
     valueError: null,
 	
     target: null,
-
-    // new
-    getterFunc: null, // example fieldSlot.setGetterFunc((target) => { ... })
-    setterFunc: null,
 }).setSlots({
 
     init: function () {
-        BMNode.init.apply(this)
+        BMStorableNode.init.apply(this)
+        this.setShouldStore(true)
+
+        this.addStoredSlot("key")
+        this.addStoredSlot("keyIsVisible")
+        this.addStoredSlot("keyIsEditable")
+
+        this.addStoredSlot("value")
+        this.addStoredSlot("valueIsVisible")
+        this.addStoredSlot("valueIsEditable")
+
+        this.addStoredSlot("valuePrefix")
+        this.addStoredSlot("valuePostfix")
+
         //this.setNodeRowStyles(BMViewStyles.sharedBlackOnWhiteStyle())
         this.customizeNodeRowStyles().setToBlackOnWhite()
         return this
     },  
-	
+    
+    /*
     target: function() {
         if (this._target) {
             return this._target
@@ -86199,30 +86223,27 @@ window.BMField = BMNode.extend().newSlots({
 		
         return this.parentNode()
     },
-	
-    valueMethod: function() {
-        // defaults to key 
-        if (this._valueMethod === null) {
-            return this.key()
-        }
-		
-        return this._valueMethod
+    */
+
+    setKey: function(s) {
+        this._key = s
+        return this
     },
-	
+    
     setValue: function(v) { // called by View on edit
+        this._value = v
+
+        if (this.target() && this.valueMethod()) {
+            this.setValueOnTarget(v)
+        }
+
+        return this
+    },
+
+    setValueOnTarget: function(v) { // called by View on edit
         //console.log("setValue '" + v + "'")
         const target = this.target()
         const setter = this.setterNameForSlot(this.valueMethod())
-
-        if (this.setterFunc()) {
-            this.setterFunc(target, this.valueMethod(), v)()
-            target.didUpdateNode()
-            this.validate()
-        }
-
-        if (!target[setter]) {
-            console.warn("WARNING target = " + target.type() + " setter = '" + setter + "' missing")
-        }
 
         v = this.normalizeThisValue(v)
         
@@ -86242,12 +86263,15 @@ window.BMField = BMNode.extend().newSlots({
     },
 	
     value: function() {
+        if (this.target()) {
+            this._value = this.getValueFromTarget()
+        }
+        return this._value
+    },
+
+    getValueFromTarget: function() {
         const target = this.target()
         const slotName = this.valueMethod()
-
-        if (this.getterFunc()) {
-            return this.getterFunc(target, slotName)()
-        }
 
         //console.log("target = " + target.type() + " getter = '" + getter + "'")
         if (target[slotName]) {
@@ -86256,6 +86280,8 @@ window.BMField = BMNode.extend().newSlots({
         } else {
             console.warn(this.type() + " target " + target.type() + " missing slot '" + slotName + "'")
         }
+
+        return null
     },
 	
     note: function() {
@@ -86273,7 +86299,12 @@ window.BMField = BMNode.extend().newSlots({
     },
 	
     didUpdateView: function(aFieldView) {
-        this.parentNode().didUpdateField(this)
+        this.scheduleSyncToStore()
+        
+        const parentNode = this.parentNode()
+        if (parentNode.didUpdateField) {
+            parentNode.didUpdateField(this)
+        }
         return this
     },
 	
@@ -86291,58 +86322,163 @@ window.BMField = BMNode.extend().newSlots({
     },
 })
 
+
+/*
+valueMethod: function() {
+    // defaults to key 
+    if (this._valueMethod === null) {
+        return this.key()
+    }
+    
+    return this._valueMethod
+},
+*/
+
 "use strict"
 
 /*
 
     BMActionNode
     
-    An abstraction of a UI visibleaction that can be performed on an object.
-    the value is the action method name, the target is the field owner
+    An abstraction of a UI visible action that can be performed on an object.
+    the value is the action method name, the target is the field owner.
+
 */
         
-window.BMActionNode = BMField.extend().newSlots({
+window.BMActionNode = BMStorableNode.extend().newSlots({
     type: "BMActionNode",
+    target: null,
+    methodName: null,
+    info: null,
+    isEnabled: true,
+    isEditable: false,
 }).setSlots({
     init: function () {
-        BMField.init.apply(this)
-        this.setKeyIsEditable(false)
-        this.setValueIsEditable(false)
-        //this.setKeyIsVisible(false)
-        this.setValueIsVisible(true)
+        BMStorableNode.init.apply(this)
         this.setNodeRowIsSelectable(true)
     },
-    
-    setValue: function(v) {
-        return this
+
+    canDoAction: function() {
+        return this.target() && this.target()[this.methodName()]
     },
 
-    title: function() {
-        return this.value()
-    },
-	
-    /*
-	subtitle: function() {
-		return null
-	},
-	
-	note: function() {
-		return null
-	},
-	*/
-	
     doAction: function() {
-	    const func = this.target()[this.value()]
-	    
-	    if (Type.isFunction(func)) {
-	        func.apply(this.target())
-	    } else {
-	        this.setValueError("no method with this name")
-	    }
+        if (this.canDoAction()) {
+            const func = this.target()[this.methodName()]
+            
+            if (Type.isFunction(func)) {
+                func.apply(this.target(), [this])
+            } else {
+                //this.setValueError("no method with this name")
+                console.warn("no method with this name")
+            }
+        } else {
+            console.log(this.typeId() + "can't perform action ", this.methodName(), " on ", this.target())
+        }
 	    
 	    return this
     },
 })
+
+"use strict"
+
+/*
+
+    BMCreatorNode
+    
+    A stand-in node that let's the user select field to replace it with.
+
+*/
+        
+window.BMCreatorNode = BMStorableNode.extend().newSlots({
+    type: "BMCreatorNode",
+}).setSlots({
+
+}).setSlots({
+    init: function () {
+        BMStorableNode.init.apply(this)
+        this.setShouldStore(true)
+        this.setShouldStoreSubnodes(false)
+        this.setNodeCanReorderSubnodes(false)
+        this.setupSubnodes()
+        //this.setCanDelete(true)
+    },
+
+    title: function() {
+        return "Choose type"
+    },
+
+    /*
+    note: function() {
+        return "&gt;"
+    },
+    */
+
+    fieldTypes: function() {
+        return [
+            "BMFlexNode", 
+            "BMActionNode", 
+            "BMBoolField", 
+            "BMDateField", 
+            //"BMIdentityField", 
+            "BMImageWellField", 
+            "BMNumberField", 
+            "BMFlexNode", 
+            "BMOptionsField"
+        ]
+    },
+
+    setupSubnodes: function() {
+        const newSubnodes = this.fieldTypes().map((typeName) => {
+            let name = typeName
+            name = name.sansPrefix("BM")
+            name = name.sansSuffix("Field")
+            name = name.sansSuffix("Node")
+            const newNode = BMActionNode.clone()
+            newNode.setTitle(name).setTarget(this).setMethodName("didChoose").setInfo(typeName)
+            //newNode.setCanDelete(true)
+            return newNode
+        })
+        this.addSubnodes(newSubnodes)
+        return this
+    },
+
+    didChoose: function(actionNode) {
+        const typeName = actionNode.info()
+        const proto = window[typeName]
+        const newNode = proto.clone()
+
+        if (newNode.setKeyIsEditable) {
+            newNode.setKeyIsEditable(true)
+            newNode.setValueIsEditable(true)
+        }
+
+        if (newNode.setIsEditable) {
+            newNode.setIsEditable(true)
+        }
+
+        newNode.setNodeTitleIsEditable(true)
+        //this.column().selectThisColumn()
+
+        this.parentNode().replaceSubnodeWith(this, newNode)
+
+        return this
+    },
+})
+
+"use strict"
+
+ResourceLoader.pushRelativePaths([
+    "BMImageWellField.js",
+    "BMTextAreaField.js",
+    "BMStampField.js",
+    "BMIdentityField.js",
+    "BMDateField.js",
+    "BMNumberField.js",
+    "BMBoolField.js",
+    "BMOptionsField.js",
+    "BMPointerField.js",
+])
 
 "use strict"
 
@@ -86356,6 +86492,7 @@ window.BMImageWellField = BMField.extend().newSlots({
     type: "BMImageWellField",
     onlyShowsKeyWhenEmpty: true,
     maxImageCount: 1,
+    isEditable: true,
 }).setSlots({
     init: function () {
         BMField.init.apply(this)
@@ -86364,6 +86501,8 @@ window.BMImageWellField = BMField.extend().newSlots({
         this.setKey("drop images here")
         this.setKeyIsEditable(false)
         this.setValueIsEditable(false)
+        //this.addStoredSlot("imageDataURLs")
+
     },
 
     setValue: function(v) {
@@ -86662,7 +86801,6 @@ window.BMOptionsField = BMField.extend().newSlots({
         
 window.BMPointerField = BMField.extend().newSlots({
     type: "BMPointerField",
-	
 }).setSlots({
     init: function () {
         BMField.init.apply(this)
@@ -86757,7 +86895,8 @@ ResourceLoader.pushRelativePaths([
     
     BMFlexNode
     
-	
+    A node that supports adding, reordering, etc other nodes to it within the UI.
+    
 */
 
 
@@ -86773,8 +86912,8 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
         this.setShouldStoreSubnodes(true)
         //this.setViewClassName("GenericView")
         //this.setViewClassName("BMDataStoreRecordView")
-        this.addAction("add")
         this.addAction("delete")
+        this.addAction("add")
         //this.setNodeColumnBackgroundColor("white")
         this.setNodeMinWidth(300)
 
@@ -86784,7 +86923,9 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
         //this.setSubtitle("subtitle")
         //this.setNodeSubtitleIsEditable(true)
 
-        this.setSubnodeProto(BMFlexNode)
+        //this.setSubnodeProto(BMFlexNode)
+        this.setSubnodeProto(BMCreatorNode)
+        
         this.setNodeCanReorderSubnodes(true)
         this.addStoredSlot("label")
 
@@ -86804,7 +86945,7 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
         return this
     },
 
-    /*
+    
     colorPairForDepth: function (depthNumber) {
         if (depthNumber % 2 === 1) {
             return [BMColor.redColor(), BMColor.yellowColor()]
@@ -86829,8 +86970,12 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
         return c
     },
 
-    nodeRowStylesOld: function () {
+    
+    nodeRowStyles: function () {
         // const nextColor = this.colorPairForDepth(this.nodeDepth()+1)[0]
+        if (!this._nodeRowStyles) {
+            this.customizeNodeRowStyles()
+        }
 
         const styles = this._nodeRowStyles
         const c = this.nodeBackgroundColorObject()
@@ -86842,10 +86987,11 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
         //styles.unselected().setBorderTop("1px solid " + c.cssColorString())
         //styles.unselected().setBorderBottom("1px solid " + c.cssColorString())
 
-        styles.selected().setBackgroundColor(BMColor.grayColor().cssColorString())
+        //styles.selected().setBackgroundColor(BMColor.grayColor().cssColorString())
         styles.selected().setColor(BMColor.whiteColor().cssColorString())
 
-        //styles.selected().setBackgroundColor(c.copy().darken(0.75).cssColorString())
+        styles.selected().setBackgroundColor(c.copy().darken(0.8).cssColorString())
+        //styles.selected().setBackgroundColor(c.copy().lighten(0.2).cssColorString())
         //styles.selected().setBackgroundColor(c.copy().cssColorString())
         //styles.selected().setColor(BMColor.whiteColor().cssColorString())
         //styles.selected().setBorderTop("1px solid white")
@@ -86854,7 +87000,15 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
         //this._nodeRowStyles.active().setBackgroundColor(c.copy().lighten(0.75).cssColorString())
         return this._nodeRowStyles
     },
+    /*
+    note: function() {
+        if (this.node().isSelected()) {
+            return "&gt"
+        }
+        return ""
+    },
     */
+    
 
     /*
     didReorderParentSubnodes: function() {
@@ -86899,12 +87053,14 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
 
     */
 
+    /*
     didChangeParentNode: function () {
         BMStorableNode.didChangeParentNode.apply(this)
         if (this.isFlexRoot()) {
             this.removeAction("delete")
         }
     },
+    */
 
 
 })
@@ -88009,7 +88165,7 @@ window.Keyboard = ideal.Proto.extend().newSlots({
     },
 
     startListening: function() {
-        this.setKeyboardListener(KeyboardListener.clone().setUseCapture(true).setElement(document.body).setDelegate(this))
+        this.setKeyboardListener(KeyboardListener.clone().setUseCapture(true).setListenTarget(document.body).setDelegate(this))
         this.keyboardListener().setIsListening(true)
         return this
     },
@@ -88338,7 +88494,7 @@ window.Mouse = ideal.Proto.extend().newSlots({
     },
 
     startListening: function() {
-        this.setMouseListener(MouseListener.clone().setUseCapture(true).setElement(document.body).setDelegate(this))
+        this.setMouseListener(MouseListener.clone().setUseCapture(true).setListenTarget(document.body).setDelegate(this))
         this.mouseListener().setIsListening(true)
         return this
     },
@@ -88439,6 +88595,15 @@ window.TouchScreen = ideal.Proto.extend().newSlots({
     //isVisualDebugging: false,
     isDebugging: false,
 }).setSlots({
+
+    isSupported: function() {
+        // return WebBrowserWindow.isTouchDevice()
+        let result = false 
+        if ("ontouchstart" in window) { result = true; } // works on most browsers 
+        if (navigator.maxTouchPoints) { result = true; } // works on IE10/11 and Surface	
+        return result
+    },
+
     shared: function() { 
         return this.sharedInstanceForClass(TouchScreen)
     },
@@ -88464,7 +88629,7 @@ window.TouchScreen = ideal.Proto.extend().newSlots({
     },
 
     startListening: function() {
-        this.setTouchListener(TouchListener.clone().setUseCapture(true).setElement(document.body).setDelegate(this))
+        this.setTouchListener(TouchListener.clone().setUseCapture(true).setListenTarget(document.body).setDelegate(this))
         this.touchListener().setIsListening(true)
         return this
     },
@@ -88667,7 +88832,7 @@ window.GamePadManager = ideal.Proto.extend().newSlots({
 
     startListening: function() {
         if (this.canListenForConnect()) {
-            this.setGamePadListener(GamePadListener.clone().setUseCapture(true).setElement(window).setDelegate(this))
+            this.setGamePadListener(GamePadListener.clone().setUseCapture(true).setListenTarget(window).setDelegate(this))
             this.gamePadListener().setIsListening(true)
         }
         return this
@@ -88897,7 +89062,8 @@ ResourceLoader.pushRelativePaths([
     "KeyboardListener.js",
     "MouseListener.js",
     "TouchListener.js",
-    "GamePadListener.js"
+    "GamePadListener.js",
+    "WebSocketListener.js"
 ])
 
 
@@ -88910,11 +89076,18 @@ ResourceLoader.pushRelativePaths([
     using a (potentially different) method name. Subclasses override init to define the
     event set by calling this.addEventNameAndMethodName(...) for each event.
 
+    Example use:
+
+    const mouseListener = MouseListener.clone().setListenTarget(element).setDelegate(anObject)
+
+    will send onMouseDown(event), onMouseOver(event) etc to anObject when those events occur on the element.
+
+
 */
 
 window.EventSetListener = ideal.Proto.extend().newSlots({
     type: "EventSetListener",
-    element: null,
+    listenTarget: null,
     delegate: null,
     isListening: false,
     eventsDict: null, // should only write from within class & subclasses
@@ -88934,15 +89107,29 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
         return this
     },
 
+    /*
     view: function() {
         return this.element()._divView
     },
+    */
 
-    setElement: function(e) {
-        assert(e)
-        this._element = e
+    setListenTarget: function(t) {
+        assert(t)
+        this._listenTarget = t
         return this
     },
+
+    listenTargetDescription: function() {
+        const type = typeof(this.listenTarget())
+        /*
+        if (type === "Element") { // right type?
+            return DomElement_description(this.listenTarget())
+        }
+        */
+        return type
+    },
+
+    // --------------
 
     setUseCapture: function(v) {
         this._useCapture = v ? true : false;
@@ -89001,15 +89188,20 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
         return this
     },
 
+    assertHasListenTarget: function() {
+        const t = this.listenTarget()
+        assert(t !== null)
+        assert(t !== undefined)
+        return this
+    },
+
     start: function() {
         if (this.isListening()) {
             return this
         }
         this._isListening = true;
 
-        const element = this.element()
-        assert(element !== null)
-        assert(element !== undefined)
+        this.assertHasListenTarget()
 
         this.forEachEventDict((eventName, dict) => {
             const fullMethodName = this.fullMethodNameFor(dict.methodName)
@@ -89030,7 +89222,7 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
                     return result
                 } else {
                     if (this.isDebugging()) {
-                        console.log(DomElement_description(element) + " MISSING method: " + delegate.type() + "." + fullMethodName, "(" + event.type + ")" )
+                        console.log(this.listenTargetDescription() + " MISSING method: " + delegate.type() + "." + fullMethodName, "(" + event.type + ")" )
                     }
                 }
 
@@ -89039,10 +89231,10 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
             dict.useCapture = this.useCapture()
 
             if (this.isDebugging()) {
-                console.log("'" +  DomElement_description(element) + ".addEventListener('" + eventName + "', handler, " + dict.useCapture + ") " + fullMethodName) 
+                console.log("'" + this.listenTargetDescription() + ".addEventListener('" + eventName + "', handler, " + dict.useCapture + ") " + fullMethodName) 
             }
 
-            element.addEventListener(eventName, dict.handlerFunc, dict.useCapture);
+            this.listenTarget().addEventListener(eventName, dict.handlerFunc, dict.useCapture);
         })
 
         return this
@@ -89055,11 +89247,12 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
 
         this._isListening = false;
 
-        const element = this.element()
-        assert(element)
+        this.assertHasListenTarget()
+
+        const t = this.listenTarget()
         this.forEachEventDict((eventName, dict) => {
             //console.log(this.delegate().typeId() + " will stop listening for " + dict.methodName)
-            element.removeEventListener(eventName, dict.handlerFunc, dict.useCapture);
+            t.removeEventListener(eventName, dict.handlerFunc, dict.useCapture);
         })
 
         return this
@@ -89167,7 +89360,7 @@ window.DocumentListener = EventSetListener.extend().newSlots({
         return this
     },
 
-    element: function() {
+    listenTarget: function() {
         return window // is this the best way to handle this?
     },
 })
@@ -89199,7 +89392,7 @@ window.DragListener = EventSetListener.extend().newSlots({
 
     start: function() {
         EventSetListener.start.apply(this)
-        this.element().ondragstart = (e) => { console.log("--- ondragstart ---"); }
+        this.listenTarget().ondragstart = (e) => { console.log("--- ondragstart ---"); }
         return this
     },
 })
@@ -89231,13 +89424,13 @@ window.DropListener = EventSetListener.extend().newSlots({
 
     start: function() {
         EventSetListener.start.apply(this)
-        this.element().__isListeningForDrop___ = true
+        this.listenTarget().__isListeningForDrop___ = true
         return this
     },
 
     stop: function() {
         EventSetListener.stop.apply(this)
-        this.element().__isListeningForDrop___ = false // breaks if multiple drop listeners on same element
+        this.listenTarget().__isListeningForDrop___ = false // breaks if multiple drop listeners on same element
         return this
     },
 })
@@ -89391,6 +89584,35 @@ window.GamePadListener = EventSetListener.extend().newSlots({
 
 "use strict"
 
+/*
+    WebSocketListener
+
+    Listens to a set of web socket events.
+
+*/
+
+window.WebSocketListener = EventSetListener.extend().newSlots({
+    type: "WebSocketListener",
+}).setSlots({
+    /*
+    init: function () {
+        EventSetListener.init.apply(this)
+        return this
+    },
+    */
+
+    setupEventsDict: function() {
+        this.addEventNameAndMethodName("open", "onOpen");
+        this.addEventNameAndMethodName("close", "onClose");
+        this.addEventNameAndMethodName("error", "onError");
+        this.addEventNameAndMethodName("message", "onMessage");
+        return this
+    },
+
+})
+
+"use strict"
+
 ResourceLoader.pushRelativePaths([
     "GestureManager.js",
     "GestureRecognizer.js",
@@ -89499,22 +89721,26 @@ window.GestureManager = ideal.Proto.extend().newSlots({
 /*
     GestureRecognizer
 
-    A DomView has a list of gestureRecognizers. 
-    It forwards relevant events to it's recognizers. 
-    These can initiate the recognizer to start listening to document.body events.
+    An abstraction for sets of event listeners and logic to
+    detect gestures, coordinate which gestures are active with a GestureManager,
+    and send delegate messages for gesture state changes.
 
-    Example:
+    Listeners are typically on a particular view's element. document.body listeners
+    are usually added once the gesture has begun, in order to track events outside 
+    the element. The document listeners are then removed once the gesture has ended or cancelled.
 
-        1. aView.onMouseDown -> forwarded to -> SlideGestureRecognizer
-        1.a. starts capturing on document.body
-        2. onMouseMoveCapture, if dx > min,  send:
-            this.requestActiveGesture()
-            if this returns true, set the gesture to isActive and
-            send theView.recognizedSlideGesture(this) on moves
-        3. onMouseUpCapture, if the gesture is active, 
-            send theView.recognizedSlideGestureComplete(this)
-        3.a. stop capturing on document.body
+    State change delegate messages are send to the viewTarget. These are typically:
+    
+        accepts<GestureType>(aGesture)
+        on<GestureType>Begin(aGesture)
+        on<GestureType>Move(aGesture)
+        on<GestureType>End(aGesture)
+        on<GestureType>Cancel(aGesture)
 
+    NOTES
+
+    Holding the SHIFT key and click dragging the mouse can be used to simulate 2 finger 
+    gestures on non-touch devices.
 
     Marked event semantics:
 
@@ -89523,9 +89749,7 @@ window.GestureManager = ideal.Proto.extend().newSlots({
         activePoints() - returns downEvent points for fingers contained in currentEvent
         upEvent - usually set on complete, not used much yet
 
-    TODO:
-
-        - move visualizer to separate class?
+    TODO: move visualizer to separate class?
 */
 
 
@@ -89557,6 +89781,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
 
     // standard messages
 
+    acceptMessage: null,    //"accepts<GestureType>Begin"
     beginMessage: null,     //"on<GestureType>Begin",
     moveMessage: null,      //"on<GestureType>Move",
     cancelledMessage: null, // "on<GestureType>Cancelled",
@@ -89580,6 +89805,8 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     //maxDistToBegin: null,
     allowsKeyboardKeys: false,
     requiresKeyboardKeys: null, 
+
+    shouldRequestActivation: true,
 }).setSlots({
     init: function () {
         this.setListenerClasses([]) // subclasses override this in their
@@ -89662,7 +89889,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         this.stopViewListeners()
 
         const listeners = this.newListeners().map((listener) => {
-            listener.setElement(this.viewTarget().element())
+            listener.setListenTarget(this.viewTarget().element())
             listener.start()
             return listener
         })
@@ -89683,7 +89910,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
 
         const listeners = this.newListeners().map((listener) => {
             listener.setUseCapture(true)
-            listener.setElement(document.body)
+            listener.setListenTarget(document.body)
             //listener.setIsDebugging(true);
             listener.start()
             return listener
@@ -89749,16 +89976,26 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
 
     // active
 
-    requestActivation: function() {
-        return GestureManager.shared().requestActiveGesture(this);
+    requestActivationIfNeeded: function() {
+        if (this.shouldRequestActivation()) {
+            return GestureManager.shared().requestActiveGesture(this);
+        }
+        this._isActive = true
+        return true
     },
 
     isActive: function() {
-        return GestureManager.shared().activeGesture() === this
+        if (this.shouldRequestActivation()) {
+            return GestureManager.shared().activeGesture() === this
+        }
+        return this._isActive
     },
 
     deactivate: function() {
-        GestureManager.shared().deactivateGesture(this);
+        if (this.shouldRequestActivation()) {
+            GestureManager.shared().deactivateGesture(this);
+        }
+        this._isActive = false
         return this
     },
 
@@ -89785,6 +90022,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     // subclass helpers
 
     sendDelegateMessage: function(methodName) {
+        let result = null
         assert(methodName !== null)
         const vt = this.viewTarget()
 
@@ -89793,17 +90031,19 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         }
         try {
             if (vt[methodName]) {
-                vt[methodName].apply(vt, [this])
+                result = vt[methodName].apply(vt, [this])
             } else {
                 if (this.isDebugging()) {
                     console.log("gesture delegate missing method " + methodName)
                 }
+                result = false
             }
         } catch(e) {
-            console.warn(this.typeId() + ".sendDelegateMessage(" + methodName + ") caught exception ", e)
+            console.error(this.typeId() + ".sendDelegateMessage(" + methodName + ") caught exception ", e.stack)
+            result = false
         }
 
-        return this
+        return result
     },
 
     // points helper
@@ -90009,13 +90249,20 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         return funcs[this.direction()](dx, dy)
     },
 
+    gestureName: function() {
+        return this.type().before("GestureRecognizer")
+    },
+
     defaultMessageForState: function(state) {
-        const name = this.type().before("GestureRecognizer")
-        const msg = "on" + name + state.capitalized()
-        return msg
+        return "on" + this.gestureName() + state.capitalized()
+    },
+
+    defaultAcceptMessage: function() {
+        return "accepts" + this.gestureName()
     },
 
     autoSetMessageNames: function() {
+        this.setAcceptMessage(this.defaultAcceptMessage())
         this.setBeginMessage(this.defaultMessageForState("Begin"))
         this.setMoveMessage(this.defaultMessageForState("Move"))
         this.setCancelledMessage(this.defaultMessageForState("Cancelled"))
@@ -90026,6 +90273,17 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     // sending delegate messages
 
     sendBeginMessage: function() {
+
+        // see if view accepts the gesture before we begin
+        // for now, assume it accepts if it doesn't implement the accept<GestureType> method
+        const vt = this.viewTarget()
+        if (vt[this.acceptMessage()]) {
+            if (!this.sendDelegateMessage(this.acceptMessage())) {
+                this.cancel()
+                return false
+            }
+        }
+
         this.setDidBegin(true)
         this.setBeginEvent(this.currentEvent())
         this.sendDelegateMessage(this.beginMessage())
@@ -90336,7 +90594,7 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
         this.setTimeoutId(null)
 
         if(this.currentEventIsOnTargetView()) {
-            if (this.requestActivation()) {
+            if (this.requestActivationIfNeeded()) {
                 this.sendCompleteMessage()
                 this.didFinish()
             }
@@ -90482,7 +90740,7 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
             }
 
             if (!this.isActive() && this.hasMovedEnough()) {
-                if(this.requestActivation()) {
+                if(this.requestActivationIfNeeded()) {
                     //this.setIsActive(true)
                     this.sendBeginMessage() // being
                 }
@@ -90712,7 +90970,7 @@ window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
 
     complete: function() {
         this.stopTimer()
-        if (this.requestActivation()) {
+        if (this.requestActivationIfNeeded()) {
             this.sendCompleteMessage() // complete
         }
     },
@@ -90866,7 +91124,7 @@ window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
 
         if (this.isPressing()) {
             if (this.canBegin()) {
-                if (this.requestActivation()) {
+                if (this.requestActivationIfNeeded()) {
                     this.sendBeginMessage()
                 }
             }
@@ -91134,7 +91392,7 @@ window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
     },
 
     attemptBegin: function() {
-        if(this.requestActivation()) {
+        if(this.requestActivationIfNeeded()) {
             this.sendBeginMessage() // begin
         } else {
             if (this.isDebugging()) {
@@ -91315,17 +91573,7 @@ ResourceLoader.pushRelativePaths([
         onEdgePanBegin
         onEdgePanMove
         onEdgePanComplete
-        onSEdgePanCancelled
-
-
-    for distance, ask the target for it's frameInViewport and compare with
-    event's posInWindow:
-
-        const frame = target.frameInDocument()
-        frame.top()
-        frame.bottom()
-        frame.left()
-        frame.right()
+        onEdgePanCancelled
         
 */
 
@@ -93570,7 +93818,18 @@ window.DomView = ideal.Proto.extend().newSlots({
     borderRadius: function() {
         return this.getCssAttribute("border-radius")
     },
+
+    // outline
     
+    setOutline: function(s) {
+        this.setCssAttribute("outline", s)
+	    return this
+    },
+	
+    outline: function() {
+        return this.getCssAttribute("outline")
+    },
+
     // line height
 
     setLineHeight: function(aNumber) {
@@ -94426,7 +94685,7 @@ window.DomView = ideal.Proto.extend().newSlots({
         if (!dict[className]) {
             assert(className in window)
             let proto = window[className]
-            dict[className] = proto.clone().setElement(this.element()).setDelegate(this)
+            dict[className] = proto.clone().setListenTarget(this.element()).setDelegate(this)
         } 
         return dict[className]
     },
@@ -94436,9 +94695,7 @@ window.DomView = ideal.Proto.extend().newSlots({
     },
 
     documentListener: function() {
-        let listener = this.listenerNamed("DocumentListener")
-        listener.setElement(window)
-        return listener
+        return this.listenerNamed("DocumentListener") // listen target will be the window
     },
 
     dragListener: function() {
@@ -96176,10 +96433,6 @@ window.BoolView = DivStyledView.extend().newSlots({
         return this
     },
     
-    isEditable: function() {
-        return this._isEditable
-    },
-    
     // clicks
     
     onClick: function(event) {
@@ -96203,7 +96456,10 @@ window.BoolView = DivStyledView.extend().newSlots({
     // ------------------
     
     setValue: function(v) {
-	    assert(Type.isBoolean(v))
+        if (v === null) {
+            v = false;
+        }
+        
 	    this._value = v
 
         //this.updateUnicode()
@@ -96401,11 +96657,11 @@ window.ButtonView = DomView.extend().newSlots({
 
     init: function () {
         DomView.init.apply(this)
-        this.setMinAndMaxWidth(200)
-        this.setButtonHeight(50)
+        //this.setMinAndMaxWidth(200)
+        //this.setButtonHeight(50)
         this.turnOffUserSelect()
-        this.setBorder("1px solid black")
-        this.setBackgroundColor("#ccc")
+        //this.setBorder("1px solid black")
+        //this.setBackgroundColor("#ccc")
         this.setTextAlign("center")
         this.setVerticalAlign("middle")
         
@@ -96442,6 +96698,22 @@ window.ButtonView = DomView.extend().newSlots({
         return this
     },
     */
+
+    setIsEditable: function(aBool) {
+        this.titleView().setIsEditable(aBool)
+        return this
+    },
+
+    isEditable: function() {
+        return this.titleView().isEditable()
+    },
+
+    sendActionToTarget: function() {
+        if (!this.isEditable()) {
+            DomView.sendActionToTarget.apply(this)
+        }
+        return this
+    },
 })
 
 "use strict"
@@ -97164,6 +97436,8 @@ window.ImageWellView = NodeView.extend().newSlots({
         this.dragUnhighlight()
         this.turnOffUserSelect()
         this.setTransition("all 0.3s")
+
+
         return this
     },
 
@@ -97200,11 +97474,15 @@ window.ImageWellView = NodeView.extend().newSlots({
     
     acceptsDrop: function(event) {
         const accepts = (!this.isFull()) && (this.isEditable() !== false)
-        //console.log(this.typeId() + " isFull:" + this.isFull() + " count:" + this.imageCount() + "/" + this.maxImageCount() + " accepts:" + accepts)
+        console.log(this.typeId() + "isEditable:" + this.isEditable() + " isFull:" + this.isFull() + " count:" + this.imageCount() + "/" + this.maxImageCount() + " accepts:" + accepts)
         return accepts        
     },
     
     setImageDataURLs: function(dataURLs) {
+        if (dataURLs === null) {
+            dataURLs = []
+        }
+
         if (JSON.stringify(dataURLs) === JSON.stringify(this.imageDataURLs())) {
             return this
         }
@@ -97714,7 +97992,7 @@ window.BrowserView = NodeView.extend().newSlots({
         console.log("  this.activeColumnGroups().length = ", this.activeColumnGroups().length)
 
         if (this.canMoveLeft()) {
-            this.popLastActiveColumn()
+            this.previous()
         }
         aGesture.cancel()
     },
@@ -97944,6 +98222,11 @@ window.BrowserView = NodeView.extend().newSlots({
         return this
     },
 
+
+    previous: function() {
+        this.popLastActiveColumn()
+        return this
+    },
 
     popLastActiveColumn: function () {
         //console.log("popLastActiveColumn this.activeColumnGroups().length = ", this.activeColumnGroups().length)
@@ -98593,8 +98876,13 @@ window.BrowserColumn = NodeView.extend().newSlots({
         }
         */
         
-        this.browser().selectColumn(this)
+        this.selectThisColumn()
         return true
+    },
+
+    selectThisColumn: function() {
+        this.browser().selectColumn(this)
+        return this
     },
     
     rowRequestsAddColumnForNode: function(aNode) {
@@ -99062,20 +99350,23 @@ window.BrowserColumn = NodeView.extend().newSlots({
     // reordering support
 
     absolutePositionRows: function() {
-        //console.log("absolutePositionRows")
         const ys = []
         this.rows().forEach((row) => {
-            let y = row.relativePos().y()
+            const y = row.relativePos().y()
             ys.append(y)
         })
 
         let i = 0
         this.rows().forEach((row) => {
-            let y = ys[i]
+            const y = ys[i]
             i ++
             row.setDisplay("block")
             row.setPosition("absolute")
             row.setTop(y)
+            row.setLeft(0)
+            row.setRight(null)
+            row.setBottom(null)
+            row.setWidthPercentage(100)
             //console.log("i" + i + " : y" + y)
         })
         
@@ -99087,19 +99378,21 @@ window.BrowserColumn = NodeView.extend().newSlots({
         const orderedRows = this.rows().copy().sortPerform("top")
 
         orderedRows.forEach((row) => {
-            let y = row.relativePos().y()
+            row.setDisplay("block")
             row.setPosition("relative")
-            row.setDisplay("inline")
+
             row.setTop(null)
+            row.setLeft(null)
+            row.setRight(null)
+            row.setBottom(null)
         })
 
-        //this.removeAllSubviews()
         this.removeAllSubviews()
         this.addSubviews(orderedRows)
-        //this.addManagedSubviews(orderedRows)
         return this
     },
 
+    /*
     orderRows: function() {
         const orderedRows = this.rows().copy().sortPerform("top")
 
@@ -99112,6 +99405,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
         this.addSubviews(orderedRows)
         return this
     },
+    */
 
     stackRows: function() {
         const orderedRows = this.rows().copy().sortPerform("top")
@@ -99298,6 +99592,7 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
 
     isCollapsed: false,
     animatesCollapse: true,
+
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
@@ -99324,6 +99619,11 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
     },
 
     // edge pan
+
+    acceptsRightEdgePan: function() {
+        //if (this.node() && this.node().allowsResizeWidth && this.node().allowsResizeWidth()) {
+        return false
+    },
 
     onRightEdgePanBegin: function(aGesture) {
         this._beforeEdgePanBorderRight = this.borderRight()
@@ -99715,7 +100015,7 @@ window.BrowserHeader = NodeView.extend().newSlots({
 
     didHitBackArrow: function() {
         //console.log(this.typeId() + " back")
-        this.browser().popLastActiveColumn()
+        this.browser().previous()
         //this.columnGroup().column().selectPreviousColumn()
     },
 	
@@ -99902,16 +100202,18 @@ window.BrowserFooter = NodeView.extend().newSlots({
     
     BrowserRow
 
-    base row view, just knows about selected, selectable and colors
+    Base row view.  
     
-
+    Features:
+    - applying styles to match state
+    - supports slide-to-delete and pan-to-reorder gestures.
+    - right side delete button
+    
     NOTES
-
-    Sources of row styles: node, the row itself, the row's column
     
-    Styles lookup order:
+    Row styles lookup order:
 
-    node -> (fallback to) -> row -> (fallback to) -> column
+        node -> (fallback to) -> row -> (fallback to) -> column
 
     See lookedUpStyles method.
 
@@ -99928,7 +100230,9 @@ window.BrowserRow = NodeView.extend().newSlots({
     shouldShowFlash: false,
     shouldCenterCloseButton: true, 
     contentView: null,
+
     slideDeleteOffset: 0,
+    dragDeleteButtonView: null,
     isDeleting: false,
 }).setSlots({
     init: function () {
@@ -99940,7 +100244,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         this.setupRowContentView()
 
         //console.log("WebBrowserWindow.shared().isTouchDevice() = ", WebBrowserWindow.shared().isTouchDevice())
-        if (WebBrowserWindow.shared().isTouchDevice()) {
+        if (TouchScreen.shared().isSupported() || true) { // testing 
             //
         } else {
 	        this.setIsRegisteredForMouse(true) // TODO: replace with TapGesture?
@@ -99960,7 +100264,6 @@ window.BrowserRow = NodeView.extend().newSlots({
 
         return this
     },
-
 
     onBottomEdgePanBegin: function(aGesture) {
         this._beforeEdgePanBorderBottom = this.borderBottom()
@@ -99994,7 +100297,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         cv.setWidthPercentage(100).setHeightPercentage(100) 
         cv.setPosition("absolute")
         cv.setTransition("all 0.2s ease, transform 0s, left 0s, right 0s")
-        cv.setZIndex(1)
+        cv.setZIndex(1) // so it will be above other views like the slide delete button 
         this.setContentView(cv)
         this.addSubview(cv)
         return this
@@ -100039,6 +100342,10 @@ window.BrowserRow = NodeView.extend().newSlots({
 
     // -----------
     
+    browser: function() {
+        return this.column().browser()
+    },
+
     column: function () {
         return this.parentView()
     },
@@ -100129,6 +100436,20 @@ window.BrowserRow = NodeView.extend().newSlots({
                 this.closeButtonView().setOpacity(0)
             }
         }
+
+        /*
+        // take up full height if node asks for it
+        const node = this.node()
+        if (node && node.nodeMinHeight()) {
+            const e = this.element()
+            if (node.nodeMinHeight() === -1) {
+                this.setHeight("auto")                
+                this.setPaddingBottom("calc(100% - 20px)")
+            } else {
+                this.setHeight(this.pxNumberToString(node.nodeMinHeight()))
+            }
+        }
+        */
         
         this.applyStyles()
 
@@ -100255,7 +100576,9 @@ window.BrowserRow = NodeView.extend().newSlots({
 	*/
     
     canDelete: function() {
-        return this.node() && this.node().hasAction("delete")
+        const canDelete = this.node() && this.node().canDelete() //hasAction("delete")
+        //console.log(this.typeId() + ".canDelete() = ", canDelete)
+        return canDelete
     },
 
     // -- tap gesture ---
@@ -100275,52 +100598,53 @@ window.BrowserRow = NodeView.extend().newSlots({
 
     // -- slide gesture ---
 
+    acceptsSlide: function() {
+        return this.canDelete()
+    },
+
     onSlideBegin: function() {
-        if (this.canDelete()) {
-            this.setTouchDeleteOffset(this.clientWidth() * 0.5);
-            this.contentView().setTransition("all 0s")       
-            this.setupSlide() 
-        }
+        //console.log(this.typeId() + ".onSlideBegin()")
+
+        this.setSlideDeleteOffset(this.clientWidth() * 0.5);
+        this.contentView().setTransition("all 0s") 
+        this.setupSlide() 
         return this
     },
 
     setupSlide: function() {
-        if (!this._dragDeleteButtonView) {
+        if (!this.dragDeleteButtonView()) {
             const h = this.clientHeight()
 
             this.element().style.backgroundColor = "black"
+            //this.element().style.outline = "1px dashed blue"
             const cb = CloseButton.clone().setTransition("opacity 0.1s")
             cb.setMinAndMaxHeight(h)
-            cb.setMinAndMaxWidth(h)
+            cb.setPosition("absolute")
+            cb.setTop(0)
+            cb.setRight(10)
             this.addSubview(cb)
-            //this.parentView().addSubview(dv)
-            //this.setBackgroundColor(this.column().columnGroup().backgroundColor())
             cb.setZIndex(0)
-            this._dragDeleteButtonView = cb
+            this.setDragDeleteButtonView(cb)
         }
         return this
     },
 
     cleanupSlide: function() {
-        if (this._dragDeleteButtonView) {
-            this._dragDeleteButtonView.removeFromParentView()
-            this._dragDeleteButtonView = null
+        if (this.dragDeleteButtonView()) {
+            this.dragDeleteButtonView().removeFromParentView()
+            this.setDragDeleteButtonView(null)
         }
+        this.setTouchRight(null)
     },
 	
     onSlideMove: function(slideGesture) {
-        if (this.canDelete()) {
-            const d = slideGesture.distance()
-            const isReadyToDelete  = d >= this._slideDeleteOffset
+        const d = slideGesture.distance()
+        const isReadyToDelete = d >= this._slideDeleteOffset
 
-            //console.log("slideGesture.distance() = ", d)
-            //console.log("isReadyToDelete = ", isReadyToDelete)
+        this.setTouchRight(d)
 
-            this.setTouchRight(d)
-
-            if (this._dragDeleteButtonView) {
-                this._dragDeleteButtonView.setOpacity(isReadyToDelete ? 1 : 0.2)
-            }
+        if (this._dragDeleteButtonView) {
+            this._dragDeleteButtonView.setOpacity(isReadyToDelete ? 1 : 0.2)
         }
     },
 
@@ -100333,7 +100657,6 @@ window.BrowserRow = NodeView.extend().newSlots({
 	
     onSlideComplete: function(slideGesture) {
         //console.log(">>> " + this.type() + " onSlideComplete")
-        
         const d = slideGesture.distance()
         const isReadyToDelete  = d >= this._slideDeleteOffset
 
@@ -100349,37 +100672,33 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
 
     finishSlideAndDelete: function() {
-        if (this.canDelete()) {
-            this.setIsDeleting(true)
-            const dt = 0.08 // seconds
-            this.contentView().setTransition("right " + dt + "s")
-            this.setTransition(this.transitionStyle())
-            
+        this.setIsDeleting(true)
+        const dt = 0.08 // seconds
+        this.contentView().setTransition("right " + dt + "s")
+        this.setTransition(this.transitionStyle())
+        
+        setTimeout(() => {
+            this.setTouchRight(this.clientWidth())
             setTimeout(() => {
-                this.setTouchRight(this.clientWidth())
-                setTimeout(() => {
-                    this.cleanupSlide()
-                    this.delete()
-                }, dt*1000)
-            }, 0)
-        }
+                this.cleanupSlide()
+                this.delete()
+            }, dt*1000)
+        }, 0)
     },
 
     slideBack: function() {
-        if (this.canDelete()) {
-            this.disableColumnUntilTimeout(400)
+        this.disableColumnUntilTimeout(400)
 
-            this.contentView().setTransition("all 0.2s ease")
+        this.contentView().setTransition("all 0.2s ease")
 
-            setTimeout(() => {
-                this.setTouchRight(0)
-                this.contentView().setTransition(this.transitionStyle())
-            })
+        setTimeout(() => {
+            this.setTouchRight(0)
+            this.contentView().setTransition(this.transitionStyle())
+        })
 
-            setTimeout(() => {
-                this.didCompleteSlide()
-            }, 300)
-        }		
+        setTimeout(() => {
+            this.didCompleteSlide()
+        }, 300)
     },
 
     disableColumnUntilTimeout: function(ms) {
@@ -100393,15 +100712,12 @@ window.BrowserRow = NodeView.extend().newSlots({
 
     /*
     showTouchDeleteReady: function() {
-
     },
 
     showTouchDeleteButton: function() {
-
     },
 
     hideTouchDeleteButton: function() {
-
     },
     */
     
@@ -100424,19 +100740,15 @@ window.BrowserRow = NodeView.extend().newSlots({
         }        
     },
 
-    /*
-    onMouseDown: function (event) {
-        NodeView.onMouseDown.apply(this, [event])
-    },
-    */
-
     onMouseUp: function (event) {
         NodeView.onMouseUp.apply(this, [event])
-        //this.slideBack()
-        //this._isDraggingView = false
     },
 
     // tap hold
+
+    acceptsLongPress: function() {
+        return this.column().canReorder()
+    },
     
     onLongPressBegin: function(aGesture) {
     },
@@ -100445,35 +100757,29 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
 
     onLongPressComplete: function(longPressGesture) {
-        if (this.column().canReorder()) {
-            longPressGesture.deactivate()
-            const pan = this.addPanGesture()
-            pan.setShouldRemoveOnComplete(true)
-            pan.setMinDistToBegin(0)
-            pan.onDown(longPressGesture.currentEvent())
-            pan.attemptBegin()
-            //this.contentView().setBackgroundColor("blue")
-            this.setTransition("all 0s, transform 0.2s") //, min-height 1s, max-height 1s")
-            this.contentView().setTransition("transform 0.2s")
-            setTimeout(() => { 
-                this.zoomForPan()
-            })
-        }
+        longPressGesture.deactivate() // needed?
+
+        const pan = this.addPanGesture()
+        pan.setShouldRemoveOnComplete(true)
+        pan.setMinDistToBegin(0)
+        pan.onDown(longPressGesture.currentEvent())
+        this._isReordering = true
+        pan.attemptBegin()
+        this.setTransition("all 0s, transform 0.2s") //, min-height 1s, max-height 1s")
+        this.contentView().setTransition("transform 0.2s")
+        setTimeout(() => { 
+            this.zoomForPan()
+        })
     },
 
     zoomForPan: function() {
         const r = 1.1
-        this._prePanHeight = this.clientHeight()
-        //this.setMinAndMaxHeight(this._prePanHeight * r)
         this.setTransform("scale(" + r + ")")
-        //this.contentView().setTransform("scale(" + r + ")")
         return this
     },
 
     unzoomForPan: function() {
-        //this.setMinAndMaxHeight(this._prePanHeight)
         this.setTransform("scale(1)")
-        //this.contentView().setTransform("scale(1)")
         return this
     },
 
@@ -100503,40 +100809,34 @@ window.BrowserRow = NodeView.extend().newSlots({
         return this.column().columnGroup()
     },
 
+    acceptsPan: function() {
+        return this._isReordering
+    },
+
     onPanBegin: function(aGesture) {
-        if (!this._isDraggingView) {
-            this._isDraggingView = true
+        this.setTransition("top 0s")
+        
+        // visibility
+        this.column().setOverflow("visible")
+        this.columnGroup().setOverflow("visible")
+        this.columnGroup().scrollView().setOverflow("visible")
+        this.setZIndex(3)
 
-            //this.setTransition("color 0.3s, top 0s")
-            //this.setTransform("scale(1.5)")
-            this.setTransition("top 0s")
-            //this.setOverflow("visible")
-            //this.contentView().setOverflow("visible")
-            
-            // visibility
-            this.column().setOverflow("visible")
-            this.columnGroup().setOverflow("visible")
-            this.columnGroup().scrollView().setOverflow("visible")
-            this.setZIndex(3)
-            //this.setBorder("1px solid rgba(255, 255, 255, 0.05)")
+        //this.setBorder("1px solid rgba(255, 255, 255, 0.05)")
 
-            this.column().absolutePositionRows()
+        this.column().absolutePositionRows()
 
-            this._dragStartPos = this.relativePos()
+        this._dragStartPos = this.relativePos()
 
-            this.setTop(this._dragStartPos.y())
-            //this.column().setPosition("relative")
-            this.addShadow()
-        }
+        this.setTop(this._dragStartPos.y())
+        this.addShadow()
     },
 
     onPanMove: function(aGesture) {
-        if (this._isDraggingView) {
-            const np = this._dragStartPos.add(aGesture.diffPos()) 
-            this.setTop(np.y())
-            this.column().stackRows()
-            this.setTop(np.y())
-        }
+        const np = this._dragStartPos.add(aGesture.diffPos()) 
+        this.setTop(np.y())
+        this.column().stackRows()
+        this.setTop(np.y())
     },
 
     onPanCancelled: function(aGesture) {
@@ -100545,32 +100845,25 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
 
     onPanComplete: function(aGesture) {
+        // visibility
+        this.column().setOverflow("hidden")
+        this.columnGroup().setOverflow("hidden")
+        this.columnGroup().scrollView().setOverflow("hidden")
 
+        this.setTransition(this.transitionStyle())
+        this.removeShadow()
 
-        if (this._isDraggingView) {
-            this._isDraggingView = false
-            //this.setBorder(null)
-
-            // visibility
-            this.column().setOverflow("hidden")
-            this.columnGroup().setOverflow("hidden")
-            this.columnGroup().scrollView().setOverflow("hidden")
+        this.column().stackRows()
+        
+        this.unzoomForPan()
+        setTimeout(() => {
+            this.column().relativePositionRows()
+            this.column().didReorderRows()
             this.setZIndex(null)
+        }, 500)
 
-            //this.setPosition("relative")
-            this.setTransition(this.transitionStyle())
-            this.removeShadow()
-
-            this.column().stackRows()
-            
-            this.unzoomForPan()
-            setTimeout(() => {
-                //this.contentView().setBackgroundColor(this.currentBgColor())
-                this.column().relativePositionRows()
-                this.column().didReorderRows()
-            }, 500)
-        }
-        this.removePanGesture()
+        //this.removePanGesture() // this will happen automatically
+        this._isReordering = false
     },
 
     // orient testing
@@ -100650,6 +100943,13 @@ window.BrowserRow = NodeView.extend().newSlots({
         return this.node().nodeRowLink()
     },
 
+    /*
+    show: function() {
+        const d = this.getComputedCssAttribute("display")
+        const p = this.getComputedCssAttribute("position")
+        console.log("row display:" + d + " position:" + p)
+    },
+    */
 
 })
 
@@ -100877,8 +101177,6 @@ window.BrowserRowTitle = TextField.extend().newSlots({
 
     BrowserFieldRow
  
-    A BrowserRow that overrides updateSubviews 
-    to fill in remaining space in column when requested.
 
 */
 
@@ -100893,28 +101191,13 @@ window.BrowserFieldRow = BrowserRow.extend().newSlots({
         this.makeCursorDefault()
         this.setSpellCheck(false)
 		
-        this.setStyles(BMViewStyles.sharedBlackOnWhiteStyle())
+        //this.setStyles(BMViewStyles.sharedBlackOnWhiteStyle())
         //this.setStyles(BMViewStyles.sharedWhiteOnBlackStyle())
 
         return this
     },
 
     /*
-    didChangeNode: function() {
-        BrowserRow.didUpdateNode.apply(this)
-        if (this.node() && this.node().nodeShouldUseLightTheme) {
-            if (this.node().nodeShouldUseLightTheme()) {
-                this.setStyles(BMViewStyles.sharedBlackOnWhiteStyle())
-
-            } else {
-                this.setStyles(BMViewStyles.sharedWhiteOnBlackStyle())
-
-            }
-        }
-        return this
-    },
-    */
-    
     updateSubviews: function() {   
 	    BrowserRow.updateSubviews.apply(this)
 	
@@ -100929,11 +101212,10 @@ window.BrowserFieldRow = BrowserRow.extend().newSlots({
                 this.setHeight(this.pxNumberToString(node.nodeMinHeight()))
             }
         }
-        
-        //this.applyStyles()
-        
+                
         return this
     },
+    */
  
 })
 
@@ -101601,12 +101883,12 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
     init: function () {
         BrowserFieldRow.init.apply(this)
         
-        this.setKeyView(DomView.clone().setDivClassName("BMFieldKeyView"))
+        this.setKeyView(TextField.clone().setDivClassName("BMFieldKeyView"))
         this.addContentSubview(this.keyView())     
    		this.keyView().turnOffUserSelect().setSpellCheck(false)   
-        //this.keyView().setMinAndMaxWidth("200")
-        
-        this.contentView().setPaddingLeft(20)
+        this.keyView().setMarginLeft(20)
+
+        //this.contentView().setPaddingLeft(20)
         this.setValueView(this.createValueView())
         this.addContentSubview(this.valueView())  
       
@@ -101614,34 +101896,15 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         this.valueView().setSpellCheck(false)   // should the value view handle this?
         this.valueView().setWidthPercentage(100) 
 
-		
         this.setNoteView(DomView.clone().setDivClassName("BMFieldRowViewNoteView"))
         this.addContentSubview(this.noteView())
         this.noteView().setUserSelect("text")
         
-        //this.setBorderBottom("1px solid #ddd")
-        //this.updateBorder()
-
-        //this.setEditable(false)
         return this
     },
-
-    /*
-    updateBorder: function() {
-        const bg = this.contentView().backgroundColor()
-        console.log(this.typeId() + " bg: '" + bg + "'")
-        if (bg === "white") {
-            this.setBorderBottom("1px solid #ddd")
-        } else {
-            this.setBorderBottom("none")
-            this.setBorder("none")
-        }
-        return this
-    },
-    */
 
     createValueView: function() {
-        let tf = TextField.clone().setDivClassName("BMFieldValueView")
+        const tf = TextField.clone().setDivClassName("BMFieldValueView")
         //tf.setSelectAllOnDoubleClick(true)
         return tf
     },
@@ -101726,7 +101989,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
 		
         // change color if value is invalid
 		
-        let color = valueView.color()
+        const color = valueView.color()
 		
         if (node.valueError()) {
             valueView.setColor(this.errorColor())
@@ -101777,10 +102040,9 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
     
     onDidEdit: function (changedView) {     
         //this.log(this.type() + " onDidEdit")   
-        this.scheduleSyncToNode() //this.syncToNode()
-        
+        this.node().setKey(this.keyView().value())
+        this.node().setValue(this.valueView().value())
         this.node().didUpdateView(this)
-        //this.node().tellParentNodes("onDidEditNode", this.node())   
         this.scheduleSyncFromNode() // needed for validation?
     },
 
@@ -101850,7 +102112,7 @@ window.BMActionNodeRowView = BrowserRow.extend().newSlots({
         this.styles().selected().setColor("#888")
         this.styles().selected().setBackgroundColor("#eee")
 		
-        this.setButtonView(DomView.clone().setDivClassName("BMActionNodeButtonView"))
+        this.setButtonView(ButtonView.clone().setDivClassName("BMActionNodeButtonView"))
 	    this.buttonView().setTarget(this).setAction("didClickButton")
 	    this.buttonView().setTransition("all 0.3s")
 
@@ -101863,8 +102125,10 @@ window.BMActionNodeRowView = BrowserRow.extend().newSlots({
         BrowserRow.updateSubviews.apply(this)
 		
         const bv = this.buttonView()
-        bv.setInnerHTML(this.node().key())
+        bv.setTitle(this.node().title())
         
+        this.buttonView().setIsEditable(this.node().nodeTitleIsEditable())
+
         if (this.node().isEnabled()) {
             bv.setOpacity(1)	
         } else {
@@ -101956,6 +102220,7 @@ window.BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
     type: "BMImageWellFieldView",
 }).setSlots({
     init: function () {
+        //BrowserRow.init.apply(this)
         BMFieldRowView.init.apply(this)
         this.keyView().setDivClassName("BMImageWellKeyField") //.setDisplay("none")
         //this.valueView().setContentEditable(false)
@@ -101980,7 +102245,7 @@ window.BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
             this.keyView().setInnerHTML(field.key())
             this.imageWellView().setImageDataURLs(field.value())
 		    this.updateKeyView()
-		    this.imageWellView().setMaxImageCount(this.node().maxImageCount())
+		    this.imageWellView().setMaxImageCount(field.maxImageCount())
         }
         
         this.applyStyles() // normally this would happen in updateSubviews
@@ -102213,8 +102478,8 @@ window.BMOptionsTableView = DomView.extend().newSlots({
         this.setOpacity(0)
 		
         this._validValues.forEach((v) => {
-            let optionRow = DomView.clone().setDivClassName("BMOptionsTableRowView")//.setTarget(this).setAction("select")
-            let optionColumn = DomView.clone().setDivClassName("BMOptionsTableColumnView").setInnerHTML(v).setTarget(this).setAction("select")
+            const optionRow = DomView.clone().setDivClassName("BMOptionsTableRowView")//.setTarget(this).setAction("select")
+            const optionColumn = DomView.clone().setDivClassName("BMOptionsTableColumnView").setInnerHTML(v).setTarget(this).setAction("select")
             optionRow.addSubview(optionColumn)
             optionColumn.validValue = v
             this.addSubview(optionRow)
@@ -102244,21 +102509,21 @@ window.BMOptionsTableView = DomView.extend().newSlots({
     },
 	
     adjustOptionWidths: function() {
-        let maxWidth = this.maxOptionTextWidth()
+        const maxWidth = this.maxOptionTextWidth()
 		
-        let leftPad = 10
-        let rightPad = 10
+        const leftPad = 10
+        const rightPad = 10
 		
         this.setOptionWidths(maxWidth)
 		
-        let subviewsPerRow = 1
+        const subviewsPerRow = 1
 		
         if (this.subviews().length > 10) {
             subviewsPerRow = Math.ceil(Math.sqrt(this.subviews().length))
         }
 		
-        let fullWidth = maxWidth * subviewsPerRow 
-        let w = fullWidth + leftPad + rightPad
+        const fullWidth = maxWidth * subviewsPerRow 
+        const w = fullWidth + leftPad + rightPad
 		
         //this.setMinAndMaxWidth(w)
 		
@@ -102269,8 +102534,8 @@ window.BMOptionsTableView = DomView.extend().newSlots({
             subview.setMinAndMaxWidth(w)
         })
 		
-        //let rowCount = this.subviews().length / subviewsPerRow
-        //let h = rowCount * 26
+        //const rowCount = this.subviews().length / subviewsPerRow
+        //const h = rowCount * 26
         //console.log("maxHeight = ", h)
         //this.setMinAndMaxHeight(h)
 		
@@ -102384,7 +102649,7 @@ window.CloseButton = DomView.extend().newSlots({
 
         this.setDivClassName("ImageCloseButton")
         this.setIconName("close-white")
-        this.setBackgroundSizeWH(10, 10) // use "contain" instead?
+        this.setBackgroundSizeWH(9, 9) // use "contain" instead?
         this.setBackgroundPosition("center")
         this.makeBackgroundNoRepeat()
         this.setAction("close") //.setInnerHTML("&#10799;")
@@ -103979,7 +104244,7 @@ window.BMThemeClassState = BMFieldSetNode.extend().newSlots({
 
     setupSubnodes: function() {
         this.attributeNames().forEach((attributeName) => {
-            let field = BMField.clone().setKey(attributeName).setValueIsEditable("");
+            let field = BMField.clone().setKey(attributeName).setValueIsEditable(""); // TODO: no .setValueMethod()??
             this.addStoredField(field)
         })
         return this
@@ -104514,7 +104779,7 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
         this.setBlacklists(NodeStore.shared().rootInstanceWithPidForProto("_blacklists", BMBlacklists))
         this.addSubnode(this.blacklists())
         
-        this.addStoredField(BMBoolField.clone().setKey("isOpenRelay").setValueIsEditable(true))
+        this.addStoredField(BMBoolField.clone().setKey("isOpenRelay").setValueMethod("isOpenRelay").setValueIsEditable(true))
 
         this.watchIdentities()
     },
@@ -104791,7 +105056,6 @@ ResourceLoader.pushRelativePaths([
     "BMRemotePeers.js",
     "BMStunServer.js",
     "BMStunServers.js",
-    "WebSocket-network.js"
 ])
 
 "use strict"
@@ -104939,6 +105203,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
     type: "BMServerConnection",
     server: null,
     serverConn: null,
+    webSocketListener: null,
     peerId: null,
     remotePeers: null,
     delegate: null,
@@ -104952,6 +105217,8 @@ window.BMServerConnection = BMNode.extend().newSlots({
     statusLog: null,
     pendingMessages: null,
     isOpen: false,
+
+    pingInterval: null,
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)
@@ -104986,7 +105253,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
 	*/
     
     addLog: function(s, error) {
-        let statusNode = BMFieldSetNode.clone().setTitle(s).setSubtitle(new Date().toString())
+        const statusNode = BMFieldSetNode.clone().setTitle(s).setSubtitle(new Date().toString())
         //this.statusLog().addSubnode(statusNode)
         statusNode.error = function () { return this._error }
         statusNode._error = ""
@@ -104997,7 +105264,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
 	        //statusNode.makeNoteRightArrow()
 	    }
 	    
-        //let entry = BMDataStoreRecord.clone().setNodeColumnBackgroundColor("white").setNodeMinWidth(300)
+        //const entry = BMDataStoreRecord.clone().setNodeColumnBackgroundColor("white").setNodeMinWidth(300)
         statusNode.addStoredField(BMTextAreaField.clone().setKey("dict").setValueMethod("error").setValueIsEditable(false).setIsMono(true))
         //entry.setTitle(s)
         //entry.setSubtitle(new Date().toString())
@@ -105054,7 +105321,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
     // --- connection id ----
 	
     currentPeerId: function() {
-        let peerId = BMPeerId.clone()
+        const peerId = BMPeerId.clone()
         peerId.setPublicKeyString(this.sessionId().publicKeyString())
         peerId.setBloomFilter(BMNetwork.shared().idsBloomFilter())
         //this.log("currentPeerId = '" + peerId.toString() + "'")
@@ -105064,47 +105331,41 @@ window.BMServerConnection = BMNode.extend().newSlots({
     serverConnUrl: function() {
         return "ws" + (this.server().isSecure() ? "s" : "") + "://" + this.server().host() + ":" + this.server().port();
     },
-			
+            
+    startListening: function() {
+        assert(this.serverConn() !== null)
+        this.setWebSocketListener(WebSocketListener.clone().setListenTarget(this.serverConn()).setDelegate(this))
+        this.webSocketListener().start()
+        return this
+    },
+
+    stopListening: function() {
+        if (this.webSocketListener()) {
+            this.webSocketListener().stop()
+        }
+        return this
+    },
+
+
     connect: function () {
         // TODO: add timeout and tell server when it occurs
 
-        if (!this._serverConn) {
+        if (!this.serverConn()) {
             this.setStatus("connecting...")
             this.setTitle("Connection")
 			
             this.setPeerId(this.currentPeerId())
 			
             try {
-                this._serverConn = new WebSocket(this.serverConnUrl());
-            } catch(e) {
-                this.onError(e)
+                this.setServerConn(new WebSocket(this.serverConnUrl()));
+            } catch(error) {
+                this.handleError(error)
                 return this
             }
             
             this.log("Server " +  this.shortId() + ".connect()")
 
-            this._serverConn.addEventListener("open", e => {
-                this.onOpen();
-            });
-
-            this._serverConn.addEventListener("close", e => {
-                this.onClose();
-            });
-
-            this._serverConn.addEventListener("error", e => {
-                this.onError(e.data);
-            });
-            
-            this._serverConn.addEventListener("message", event => {
-                try {
-                    //console.log("BMServerConnection receive: " + event.data);
-                    const msg = JSON.parse(event.data);
-                    this.perform("receive" + msg.name.capitalized(), msg.data);
-                }
-                catch (error) {
-                    this.onError(error);
-                }
-            });
+            this.startListening()
         }
 
         return this;
@@ -105122,7 +105383,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
             }
         }
         else {
-            this.onError("Received invalid response: " + JSON.stringify(msg));
+            this.handleError(new Error("Received invalid response: " + JSON.stringify(msg)));
         }
     },
 
@@ -105147,19 +105408,28 @@ window.BMServerConnection = BMNode.extend().newSlots({
     close: function() {
         this.setStatus("closing...")
         this.remotePeers().closeAll()
-        clearInterval(this._pingInterval);
+        this.stopPingInterval()
         //this.remotePeers().forEach((peer) => { peer.close() })
         //this.removeAllSubnodes()
 		
-        if (this._serverConn) {
-            this._serverConn.removeEventListeners();
-            this._serverConn.close()
-            this._serverConn = null
+        if (this.serverConn()) {
+            this.stopListening() // do we want to do this before calling close?
+            this.serverConn().close()
+            this.setServerConn(null)
         }
+
         this.setStatus("offline")
 
         this.onClose();
         return this
+    },
+
+    finish: function() { // for internal use
+        if (this.serverConn()) {
+            this.stopListening() // do we want to do this before calling close?
+            //this.serverConn().close()
+            this.setServerConn(null)
+        }
     },
 
     showPeers: function() {
@@ -105181,23 +105451,30 @@ window.BMServerConnection = BMNode.extend().newSlots({
     },
 */
 
-    onError: function(error) {
+
+    // --- handling errors ---
+    
+    handleError: function(error) {
         if (error === undefined) {
             // closed connection?
             return
         }
 
-
         console.error(this.typeId() + " ERROR: ", error);
         this.setError(error)
+
+        // special case
         if (error && !error.message.beginsWith("Could not connect to peer")) {
 	        this.setStatus(error.message, error)	        
             this.log(this.type() + " onError: " + error);
-            if (this._serverConn) {
-                this._serverConn.removeEventListeners();
-                this._serverConn = null
-            }
+            this.finish()
         }
+    },
+
+    // --- handling web socket events ---
+
+    onError: function(event) {
+        this.handleError(new Error(event.data))
     },
     
     onOpen: function() {
@@ -105205,20 +105482,55 @@ window.BMServerConnection = BMNode.extend().newSlots({
         this.setTitle("Connection " + this.shortId())
         this.setStatus("connected")
         this.log("onOpen " + this.peerId().toString());
-        this._pingInterval = setInterval(() => {
-            this.send("ping");
-        }, 15000);
+        this.startPingInterval()
         this.requestId();
-        
-        
     },
 
+    startPingInterval: function() {
+        assert(this.pingInterval() === null)
+        const p = setInterval(() => { this.send("ping"); }, 15000)
+        this.setPingInterval(p)
+        return this
+    },
+
+    stopPingInterval: function() {
+        if (this.pingInterval()) {
+            clearInterval(this.pingInterval());
+            this.setPingInterval(null)
+        }
+        return this
+    },
+
+    onClose: function(err) {
+        this.setIsOpen(false)
+        this.stopPingInterval()
+        this.log(this.type() + ".onClose " + err)
+        this.setStatus("closed")
+        if (err) {
+            this.setLastError("close error: " + err)
+        }
+
+        this.finish()
+    },
+
+    onMessage: function(event) {
+        try {
+            //console.log("BMServerConnection receive: " + event.data);
+            const msg = JSON.parse(event.data);
+            this.perform("receive" + msg.name.capitalized(), msg.data);
+        } catch (error) {
+            this.handleError(error);
+        }
+    },
+
+    // ----------------------------------
+    
     requestId: function() {
         if (this.isOpen()) {
             this.setPeerId(this.currentPeerId());
             return this.send("requestId", { requestedId: this.peerId().toString() }).then(() => {
                 this.updatePeers();
-            }).catch(e => this.onError(e));
+            }).catch(error => this.handleError(error));
         }
     },
 
@@ -105235,23 +105547,8 @@ window.BMServerConnection = BMNode.extend().newSlots({
 			}, 60*5)
 		}
 	},
-*/
+    */
 
-    onClose: function(err) {
-        this.setIsOpen(false)
-        clearInterval(this._pingInterval);
-        this.log(this.type() + ".onClose " + err)
-        this.setStatus("closed")
-        if (err) {
-            this.setLastError("close error: " + err)
-        }
-
-        if (this._serverConn) {
-            this._serverConn.removeEventListeners();
-            this._serverConn = null;
-        }
-    },
-    
     isConnected: function () {
         return this.isOpen()
         //return this.serverConn() !== null
@@ -105278,7 +105575,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
         //this.log("updatePeers");
         this.send("listAllPeers")
             .then((peerIds) => this.setPeerIds(peerIds))
-            .catch((e) => this.onError(e));
+            .catch(error => this.handleError(error));
     },
 
     setPeerIds: function(ids) {
@@ -105310,7 +105607,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
     },
     
     receivedMsgFrom: function(msg, remotePeer) {
-        let d = this.delegate()
+        const d = this.delegate()
         if (d && d.receivedMsgFrom) {
             d.receivedMsgFrom.apply(d, [msg, remotePeer])
         }
@@ -105416,14 +105713,14 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
         this.addAction("delete")
         this.setNodeMinWidth(500)
 	
-        this.addStoredField(BMField.clone().setKey("host"))
-        this.addStoredField(BMNumberField.clone().setKey("port").setValueIsEditable(true))
-        this.addStoredField(BMField.clone().setKey("path"))
-        this.addStoredField(BMBoolField.clone().setKey("isSecure").setValueIsEditable(true))
-        //this.justAddField(BMPointerField.clone().setKey("serverConnection"))
-        this.addSubnode(BMPointerField.clone().setKey("serverConnection"))
+        this.addStoredField(BMField.clone().setKey("host").setValueMethod("host"))
+        this.addStoredField(BMNumberField.clone().setKey("port").setValueMethod("port").setValueIsEditable(true))
+        this.addStoredField(BMField.clone().setKey("path").setValueMethod("path"))
+        this.addStoredField(BMBoolField.clone().setKey("isSecure").setValueMethod("isSecure").setValueIsEditable(true))
+        //this.justAddField(BMPointerField.clone().setKey("serverConnection").setValueMethod("serverConnection").)
+        this.addSubnode(BMPointerField.clone().setKey("serverConnection").setValueMethod("serverConnection"))
 		
-        this.setConnectButton(BMActionNode.clone().setKey("connect").setValue("connect"))
+        this.setConnectButton(BMActionNode.clone().setTitle("connect").setMethodName("connect").setTarget(this))
         this.addSubnode(this.connectButton())
     },
 
@@ -105438,9 +105735,9 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
         let cb = this.connectButton()
         if (cb) {
             if (this.serverConnection().isConnected()) {
-                cb.setKey("disconnect").setValue("disconnect")
+                cb.setTitle("disconnect").setMethodName("disconnect")
             } else {
-                cb.setKey("connect").setValue("connect")
+                cb.setTitle("connect").setMethodName("connect")
             }
         }
     },
@@ -106165,7 +106462,6 @@ window.BMRemotePeers = BMNode.extend().newSlots({
 
 window.BMStunServer = BMFieldSetNode.extend().newSlots({
     type: "BMStunServer",
-   	//host: 'stun.bitmarkets.org',
     host: "",
     port: "", 
     //credential: null,
@@ -106311,39 +106607,6 @@ window.BMStunServers = BMStorableNode.extend().newSlots({
         return dict
     },
 })
-
-"use strict"
-
-/*
-
-    WebSocket-network category
-    
-    A few helper methods.
-
-*/
-
-WebSocket.prototype.removeEventListeners = function() {
-    if (this._eventListeners) {
-        this._eventListeners.forEach(eventListener => {
-            this.removeEventListener(eventListener.name, eventListener.fn);
-        });
-    }
-}
-
-WebSocket.prototype.addEventListenerWithoutExtensions = WebSocket.prototype.addEventListener;
-
-WebSocket.prototype.addEventListener = function(name, fn) {
-    if (!this._eventListeners) {
-        this._eventListeners = [];
-    }
-
-    this._eventListeners.push({
-        name: name,
-        fn: fn
-    });
-    
-    this.addEventListenerWithoutExtensions(name, fn);
-}
 
 "use strict"
 

@@ -39,7 +39,7 @@ window.BMThemeClassState = BMFieldSetNode.extend().newSlots({
 
     setupSubnodes: function() {
         this.attributeNames().forEach((attributeName) => {
-            let field = BMField.clone().setKey(attributeName).setValueIsEditable("");
+            let field = BMField.clone().setKey(attributeName).setValueIsEditable(""); // TODO: no .setValueMethod()??
             this.addStoredField(field)
         })
         return this

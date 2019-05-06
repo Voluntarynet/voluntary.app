@@ -17,6 +17,15 @@ window.TouchScreen = ideal.Proto.extend().newSlots({
     //isVisualDebugging: false,
     isDebugging: false,
 }).setSlots({
+
+    isSupported: function() {
+        // return WebBrowserWindow.isTouchDevice()
+        let result = false 
+        if ("ontouchstart" in window) { result = true; } // works on most browsers 
+        if (navigator.maxTouchPoints) { result = true; } // works on IE10/11 and Surface	
+        return result
+    },
+
     shared: function() { 
         return this.sharedInstanceForClass(TouchScreen)
     },

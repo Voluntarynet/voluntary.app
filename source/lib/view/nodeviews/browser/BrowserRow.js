@@ -46,7 +46,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         this.setupRowContentView()
 
         //console.log("WebBrowserWindow.shared().isTouchDevice() = ", WebBrowserWindow.shared().isTouchDevice())
-        if (WebBrowserWindow.shared().isTouchDevice()) {
+        if (TouchScreen.shared().isSupported() || true) { // testing 
             //
         } else {
 	        this.setIsRegisteredForMouse(true) // TODO: replace with TapGesture?

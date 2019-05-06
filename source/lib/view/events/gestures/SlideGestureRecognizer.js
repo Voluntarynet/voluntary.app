@@ -89,7 +89,7 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
             }
 
             if (!this.isActive() && this.hasMovedEnough()) {
-                if(this.requestActivation()) {
+                if(this.requestActivationIfNeeded()) {
                     //this.setIsActive(true)
                     this.sendBeginMessage() // being
                 }

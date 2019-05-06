@@ -100,7 +100,7 @@ window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
 
         if (this.isPressing()) {
             if (this.canBegin()) {
-                if (this.requestActivation()) {
+                if (this.requestActivationIfNeeded()) {
                     this.sendBeginMessage()
                 }
             }

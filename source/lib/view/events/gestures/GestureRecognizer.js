@@ -3,22 +3,19 @@
 /*
     GestureRecognizer
 
-    A DomView has a list of gestureRecognizers. 
-    It forwards relevant events to it's recognizers. 
-    These can initiate the recognizer to start listening to document.body events.
+    An abstraction for sets of event listeners and logic to
+    detect gestures, coordinate which gestestures are active with a GestureManager.
 
-    Example:
+    Listeners are on typically a particular element and then add document.body listeners
+    once the gesture has begun to track events outside the view.
 
-        1. aView.onMouseDown -> forwarded to -> SlideGestureRecognizer
-        1.a. starts capturing on document.body
-        2. onMouseMoveCapture, if dx > min,  send:
-            this.requestActiveGesture()
-            if this returns true, set the gesture to isActive and
-            send theView.recognizedSlideGesture(this) on moves
-        3. onMouseUpCapture, if the gesture is active, 
-            send theView.recognizedSlideGestureComplete(this)
-        3.a. stop capturing on document.body
-
+    State change delegate messages are send to the viewTarget. These are typically:
+    
+        accepts<GestureType>(aGesture)
+        on<GestureType>Begin(aGesture)
+        on<GestureType>Move(aGesture)
+        on<GestureType>End(aGesture)
+        on<GestureType>Cancel(aGesture)
 
     Marked event semantics:
 
@@ -85,6 +82,8 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     //maxDistToBegin: null,
     allowsKeyboardKeys: false,
     requiresKeyboardKeys: null, 
+
+    shouldRequestActivation: true,
 }).setSlots({
     init: function () {
         this.setListenerClasses([]) // subclasses override this in their
@@ -254,16 +253,26 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
 
     // active
 
-    requestActivation: function() {
-        return GestureManager.shared().requestActiveGesture(this);
+    requestActivationIfNeeded: function() {
+        if (this.shouldRequestActivation()) {
+            return GestureManager.shared().requestActiveGesture(this);
+        }
+        this._isActive = true
+        return true
     },
 
     isActive: function() {
-        return GestureManager.shared().activeGesture() === this
+        if (this.shouldRequestActivation()) {
+            return GestureManager.shared().activeGesture() === this
+        }
+        return this._isActive
     },
 
     deactivate: function() {
-        GestureManager.shared().deactivateGesture(this);
+        if (this.shouldRequestActivation()) {
+            GestureManager.shared().deactivateGesture(this);
+        }
+        this._isActive = false
         return this
     },
 
@@ -307,7 +316,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
                 result = false
             }
         } catch(e) {
-            console.error(this.typeId() + ".sendDelegateMessage(" + methodName + ") caught exception ", e)
+            console.error(this.typeId() + ".sendDelegateMessage(" + methodName + ") caught exception ", e.stack)
             result = false
         }
 

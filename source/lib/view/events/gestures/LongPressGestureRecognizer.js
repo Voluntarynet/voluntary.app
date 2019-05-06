@@ -70,7 +70,7 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
         this.setTimeoutId(null)
 
         if(this.currentEventIsOnTargetView()) {
-            if (this.requestActivation()) {
+            if (this.requestActivationIfNeeded()) {
                 this.sendCompleteMessage()
                 this.didFinish()
             }

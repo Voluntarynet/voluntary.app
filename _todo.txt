@@ -1,4 +1,10 @@
 
+
+BMOptionRow - sends this.parentNode().selectOption(this) when clicked
+
+rename canReorder to canReorderSubnodes
+canDelete cs canDeleteSubnodes
+
 Fields
 - make statefull and have them sync with parent nodes if they have targetGetter/setters
 

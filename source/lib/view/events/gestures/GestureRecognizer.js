@@ -37,6 +37,17 @@
         activePoints() - returns downEvent points for fingers contained in currentEvent
         upEvent - usually set on complete, not used much yet
 
+    NOTES
+
+    Browsers may implement their own touch gestures. To prevent these from 
+    interfering with our own, be sure to call:
+
+        aView.setTouchAction("none")
+
+    On related views (or probably all views, to be safe) or set these in the CSS e.g.
+
+        html * { touch-action: none; }
+
     TODO: move visualizer to separate class?
 */
 
@@ -806,4 +817,3 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     },
 })
 
-//this.setTouchAction("none") // testing

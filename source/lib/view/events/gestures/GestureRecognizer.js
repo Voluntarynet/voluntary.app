@@ -5,11 +5,17 @@
 
     An abstraction for sets of event listeners and logic to
     detect gestures, coordinate which gestures are active with a GestureManager,
-    and send delegate messages for gesture state changes.
+    and send delegate messages for gesture state changes. This class supported general
+    gesture logic and helper methods and is intended to be sublclasses to implement
+    particular gesture types e.g. see SlideGestureRecognizer.
+
+    Event Listeners
 
     Listeners are typically on a particular view's element. document.body listeners
     are usually added once the gesture has begun, in order to track events outside 
     the element. The document listeners are then removed once the gesture has ended or cancelled.
+
+    Delegate Messages
 
     State change delegate messages are send to the viewTarget. These are typically:
     
@@ -19,9 +25,9 @@
         on<GestureType>End(aGesture)
         on<GestureType>Cancel(aGesture)
 
-    NOTES
+    Simulating Touches with the Mouse
 
-    Holding the SHIFT key and click dragging the mouse can be used to simulate 2 finger 
+    Holding the SHIFT key and click-dragging the mouse can be used to simulate 2 finger 
     gestures on non-touch devices.
 
     Marked event semantics:

@@ -11,6 +11,7 @@ window.KeyboardKey = ideal.Proto.extend().newSlots({
     isDown: false,
     code: null,
     name: "",
+    keyboard: null,
 }).setSlots({
     init: function () {
         ideal.Proto.init.apply(this)
@@ -31,5 +32,9 @@ window.KeyboardKey = ideal.Proto.extend().newSlots({
 
     isUp: function() {
         return !this.isDown()
-    }
+    },
+
+    isOnlyKeyDown: function() {
+        return this.isDown() && this.keyboard().currentlyDownKeys().length
+    },
 })

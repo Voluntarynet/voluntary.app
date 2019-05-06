@@ -69,7 +69,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
 
     // standard messages
 
-    acceptMessage: null,    //"accepts<GestureType>Begin"
+    acceptMessage: null,    //"accepts<GestureType>"
     beginMessage: null,     //"on<GestureType>Begin",
     moveMessage: null,      //"on<GestureType>Move",
     cancelledMessage: null, // "on<GestureType>Cancelled",
@@ -95,6 +95,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
     requiresKeyboardKeys: null, 
 
     shouldRequestActivation: true,
+    isActive: false, // only used if shouldRequestActivation === false
 }).setSlots({
     init: function () {
         this.setListenerClasses([]) // subclasses override this in their
@@ -225,13 +226,10 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
 
     hasAcceptableKeyboardState: function() {
         if (!this.allowsKeyboardKeys()) {
-            if (!Keyboard.shared().hasKeysDown()) {
-
+            if (Keyboard.shared().hasKeysDown()) {
                 // make exception for shift key since we use it to emulate multi-touch
-                if (keyboard.currentlyDownKeys().length === 1) {
-                    if(keyboard.shiftIsDown()) {
-                        return true
-                    }
+                if(Keyboard.shared().shiftKey().isOnlyKeyDown()) {
+                    return true
                 }
                 return false
             }
@@ -268,7 +266,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         if (this.shouldRequestActivation()) {
             return GestureManager.shared().requestActiveGesture(this);
         }
-        this._isActive = true
+        this.setIsActive(true)
         return true
     },
 
@@ -283,7 +281,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         if (this.shouldRequestActivation()) {
             GestureManager.shared().deactivateGesture(this);
         }
-        this._isActive = false
+        this.setIsActive(false)
         return this
     },
 

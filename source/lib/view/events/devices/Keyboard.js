@@ -37,7 +37,7 @@ window.Keyboard = ideal.Proto.extend().newSlots({
         const k2c = this.keyNameToCodeMap()
         Object.keys(k2c).forEach((name) => {
             const code = k2c[name]
-            dict[code] = KeyboardKey.clone().setName(name).setCode(code)
+            dict[code] = KeyboardKey.clone().setName(name).setCode(code).setKeyboard(this)
         })
         this.setCodeToKeys(dict)
         return this

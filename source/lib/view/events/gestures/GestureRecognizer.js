@@ -3,11 +3,11 @@
 /*
     GestureRecognizer
 
-    An abstraction for sets of event listeners and logic to
-    detect gestures, coordinate which gestures are active with a GestureManager,
-    and send delegate messages for gesture state changes. This class supported general
-    gesture logic and helper methods and is intended to be sublclasses to implement
-    particular gesture types e.g. see SlideGestureRecognizer.
+    Listens for events and uses logic to detect gestures, 
+    coordinate which gestures are active with a GestureManager,
+    and send delegate messages for gesture state changes. This class supports general
+    gesture logic & helper methods, and is intended to be sublclassed to implement
+    particular gesture types. See SlideGestureRecognizer, for an example subclass.
 
     Event Listeners
 

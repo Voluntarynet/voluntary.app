@@ -13,11 +13,11 @@ window.DomView = ideal.Proto.extend().newSlots({
     divClassName: "",
     elementType: "div",
     element: null,
-    
+
     // parent view and subviews
     parentView: null,
     subviews: null,
-    
+
     // target / action
     target: null,
     action: null,
@@ -26,17 +26,17 @@ window.DomView = ideal.Proto.extend().newSlots({
     validColor: null,
     invalidColor: null,
     //isHandlingEvent: false,
-	
+
     // key views
     interceptsTab: true,
     nextKeyView: null,
     canMakeKey: true,
     unfocusOnEnterKey: false,
-	
+
     // event handling
     isRegisteredForVisibility: false,
     intersectionObserver: null,
-    
+
     acceptsFirstResponder: false,
 
     gestureRecognizers: null,
@@ -50,75 +50,75 @@ window.DomView = ideal.Proto.extend().newSlots({
         return this
     },
 
-    gestureRecognizers: function() {
+    gestureRecognizers: function () {
         if (this._gestureRecognizers == null) {
             this._gestureRecognizers = []
         }
         return this._gestureRecognizers
     },
 
-    setDivId: function(aString) {
+    setDivId: function (aString) {
         this.element().id = aString
         return this
     },
-	
-    setElement: function(e) {
-	    this._element = e
-	    setTimeout(() => { this.setIsRegisteredForFocus(true); }, 0)
-	    e._divView = this // try to avoid depending on this as much as possible - keep refs to divViews, not elements
-	    return this
+
+    setElement: function (e) {
+        this._element = e
+        setTimeout(() => { this.setIsRegisteredForFocus(true); }, 0)
+        e._divView = this // try to avoid depending on this as much as possible - keep refs to divViews, not elements
+        return this
     },
-    
-    createElement: function() {
+
+    createElement: function () {
         const e = document.createElement(this.elementType())
         return e
     },
 
-    setupElement: function() {
+    setupElement: function () {
         const e = this.createElement()
         this.setElement(e)
         this.setDivId(this.type() + "-" + this._uniqueId)
-        this.setupDivClassName()      
-        return this  
+        this.setupDivClassName()
+        return this
     },
 
-    setupDivClassName: function() {
-        let ancestorNames = this.ancestors().map((obj) => { 
+    setupDivClassName: function () {
+        const ancestorNames = this.ancestors().map((obj) => {
             if (obj.type().contains(".")) {
                 return ""
             }
-            return obj.type() 
+            return obj.type()
         })
-		
+
         // small hack to remove duplicate first name (as instance and first proto names are the same)
         if (ancestorNames.length > 1 && ancestorNames[0] == ancestorNames[1]) {
-		    ancestorNames.removeFirst()
+            ancestorNames.removeFirst()
         }
-		
+
         this.setDivClassName(ancestorNames.join(" ").strip())
         return this
     },
-	
-    insertDivClassName: function(aName) {
-        let names = this.divClassName().split(" ")
+
+    insertDivClassName: function (aName) {
+        const names = this.divClassName().split(" ")
         names.removeOccurancesOf(aName) // avoid duplicates
         names.atInsert(0, aName)
         this.setDivClassNames(names)
         return this
     },
-	
-    removeDivClassName: function(aName) {
-        let names = this.divClassName().split(" ")
+
+    removeDivClassName: function (aName) {
+        const names = this.divClassName().split(" ")
         names.removeOccurancesOf(aName)
         this.setDivClassNames(names)
         return this
     },
-	
-    setDivClassNames: function(names) {
+
+    setDivClassNames: function (names) {
         this.setDivClassName(names.join(" "))
-        return this		
+        return this
     },
-	
+
     /*    
     applyCSS: function(ruleName) {
         if (ruleName == null) { 
@@ -129,18 +129,18 @@ window.DomView = ideal.Proto.extend().newSlots({
     },
     */
 
-    stylesheetWithClassName: function(className) {
+    stylesheetWithClassName: function (className) {
         for (let i = 0; i < document.styleSheets.length; i++) {
-            let stylesheet = document.styleSheets[i]
+            const stylesheet = document.styleSheets[i]
 
             if ("cssRules" in stylesheet) {
                 try {
-                    let rules = stylesheet.cssRules
+                    const rules = stylesheet.cssRules
                     for (let j = 0; j < rules.length; j++) {
-                        let rule = rules[j]
-                        let ruleClassName = rule.selectorText.split(" ")[0]
+                        const rule = rules[j]
+                        const ruleClassName = rule.selectorText.split(" ")[0]
                         console.log("rule.selectorText: ", rule.selectorText)
-                        if (ruleClassName == className) {
+                        if (ruleClassName === className) {
                             return stylesheet
                         }
                     }
@@ -174,10 +174,10 @@ window.DomView = ideal.Proto.extend().newSlots({
     },
     */
 
-    setCssAttribute: function(key, newValue, didChangeCallbackFunc) {
-        let style = this.cssStyle()
-        let oldValue = style[key]
-        if(String(oldValue) !== String(newValue)) {
+    setCssAttribute: function (key, newValue, didChangeCallbackFunc) {
+        const style = this.cssStyle()
+        const oldValue = style[key]
+        if (String(oldValue) !== String(newValue)) {
             if (newValue == null) {
                 //console.log("deleting css key ", key)
                 //delete style[key]
@@ -186,17 +186,17 @@ window.DomView = ideal.Proto.extend().newSlots({
             } else {
                 style[key] = newValue
             }
-			
+
             if (didChangeCallbackFunc) {
                 didChangeCallbackFunc()
             }
         }
-		
+
         return this
     },
-	
-    getCssAttribute: function(key, errorCheck) {
-        if(errorCheck) {
+
+    getCssAttribute: function (key, errorCheck) {
+        if (errorCheck) {
             throw new Error("getCssAttribute called with 2 arguments")
         }
         return this.cssStyle()[key]
@@ -204,13 +204,13 @@ window.DomView = ideal.Proto.extend().newSlots({
 
     // css px attributes
 
-    setPxCssAttribute: function(name, value, didChangeCallbackFunc) {
+    setPxCssAttribute: function (name, value, didChangeCallbackFunc) {
         this.setCssAttribute(name, this.pxNumberToString(value), didChangeCallbackFunc)
         return this
     },
 
-    getPxCssAttribute: function(name, errorCheck) {
-        let s = this.getCssAttribute(name, errorCheck)
+    getPxCssAttribute: function (name, errorCheck) {
+        const s = this.getCssAttribute(name, errorCheck)
         if (s.length) {
             return this.pxStringToNumber(s)
         }
@@ -219,317 +219,317 @@ window.DomView = ideal.Proto.extend().newSlots({
 
     // computed style
 
-    getComputedCssAttribute: function(name, errorCheck) {
+    getComputedCssAttribute: function (name, errorCheck) {
         return window.getComputedStyle(this.element()).getPropertyValue(name)
     },
 
-    getComputedPxCssAttribute: function(name, errorCheck) {
-        let s = this.getComputedCssAttribute(name, errorCheck)
+    getComputedPxCssAttribute: function (name, errorCheck) {
+        const s = this.getComputedCssAttribute(name, errorCheck)
         if (s.length) {
             return this.pxStringToNumber(s)
         }
         return 0
     },
-    
+
     // --- css properties ---
-	
-    setPosition: function(s) {
+
+    setPosition: function (s) {
         this.setCssAttribute("position", s)
-        return this		
+        return this
     },
-	
-    position: function() {
+
+    position: function () {
         return this.getCssAttribute("position")
     },
 
     // pointer events
 
-    setPointerEvents: function(s) {
+    setPointerEvents: function (s) {
         return this.setCssAttribute("pointer-events", s)
     },
 
-    pointerEvents: function() {
+    pointerEvents: function () {
         return this.getCssAttribute("pointer-events")
     },
-	
+
     // transform
-	
-    setTextTransform: function(s) {
+
+    setTextTransform: function (s) {
         this.setCssAttribute("text-transform", s)
         return this
     },
-	
-    textTransform: function() {
+
+    textTransform: function () {
         return this.getCssAttribute("text-transform")
     },
-	
+
     // zoom
-	
-    setZoom: function(s) {
+
+    setZoom: function (s) {
         this.setCssAttribute("zoom", s)
         return this
     },
-	
-    zoom: function() {
+
+    zoom: function () {
         return this.getCssAttribute("zoom")
     },
-	
-    zoomRatio: function() {
-        return Number(this.zoom().before("%"))/100
+
+    zoomRatio: function () {
+        return Number(this.zoom().before("%")) / 100
     },
-	
-    setZoomRatio: function(r) {
+
+    setZoomRatio: function (r) {
         console.log("setZoomRatio: ", r)
-	    this.setZoomPercentage(r*100)
+        this.setZoomPercentage(r * 100)
         return this
     },
-	
-    setZoomPercentage: function(aNumber) {
-	    assert(Type.isNumber(aNumber)) 
+
+    setZoomPercentage: function (aNumber) {
+        assert(Type.isNumber(aNumber))
         this.setCssAttribute("zoom", aNumber + "%")
-	    return this
+        return this
     },
 
     // font family
 
-    setFontFamily: function(s) {
+    setFontFamily: function (s) {
         this.setCssAttribute("font-family", s)
         return this
     },
-	
-    fontFamily: function() {
+
+    fontFamily: function () {
         return this.getCssAttribute("font-family")
-    },	
-	
+    },
+
     // font weight
-	
-    setFontWeight: function(s) {
+
+    setFontWeight: function (s) {
         this.setCssAttribute("font-weight", s)
         return this
     },
-	
-    fontWeight: function() {
+
+    fontWeight: function () {
         return this.getCssAttribute("font-weight")
     },
 
-	
+
     // font size
-	
-    setFontSize: function(s) {
+
+    setFontSize: function (s) {
         this.setPxCssAttribute("font-size", s)
         return this
     },
-	
-    fontSize: function() {
+
+    fontSize: function () {
         return this.getPxCssAttribute("font-size")
     },
-    
-    computedFontSize: function() {
+
+    computedFontSize: function () {
         return this.getComputedPxCssAttribute("font-size")
     },
 
     // margin
 
-    setMarginString: function(s) {
+    setMarginString: function (s) {
         this.setCssAttribute("margin", s)
         return this
     },
 
-    setMargin: function(aNumber) {
+    setMargin: function (aNumber) {
         this.setPxCssAttribute("margin", aNumber)
         return this
     },
 
-    margin: function() {
+    margin: function () {
         return this.getCssAttribute("margin")
     },
 
-    setMarginLeft: function(aNumber) {
+    setMarginLeft: function (aNumber) {
         this.setPxCssAttribute("margin-left", aNumber)
         return this
     },
-	
-    setMarginRight: function(aNumber) {
+
+    setMarginRight: function (aNumber) {
         this.setPxCssAttribute("margin-right", aNumber)
         return this
     },
 
-    setMarginTop: function(aNumber) {
+    setMarginTop: function (aNumber) {
         this.setPxCssAttribute("margin-top", aNumber)
         return this
     },
-	
-    setMarginBottom: function(aNumber) {
+
+    setMarginBottom: function (aNumber) {
         this.setPxCssAttribute("margin-bottom", aNumber)
         return this
     },
 
     // padding left
 
-    setPadding: function(aNumber) {
+    setPadding: function (aNumber) {
         this.setPxCssAttribute("padding", aNumber)
         return this
     },
 
-    setPaddingRight: function(aNumber) {
+    setPaddingRight: function (aNumber) {
         this.setPxCssAttribute("padding-right", aNumber)
         return this
     },
-	
-    setPaddingLeft: function(aNumber) {
+
+    setPaddingLeft: function (aNumber) {
         this.setPxCssAttribute("padding-left", aNumber)
         return this
     },
 
-    setPaddingTop: function(aNumber) {
+    setPaddingTop: function (aNumber) {
         this.setPxCssAttribute("padding-top", aNumber)
         return this
     },
 
-    setPaddingBottom: function(aNumber) {
+    setPaddingBottom: function (aNumber) {
         this.setPxCssAttribute("padding-bottom", aNumber)
         return this
     },
 
-    paddingLeft: function() {
+    paddingLeft: function () {
         return this.psStringToNumber(this.getCssAttribute("padding-left"))
     },
 
     // padding right
-	
-    setPaddingRight: function(aNumber) {
+
+    setPaddingRight: function (aNumber) {
         this.setPxCssAttribute("padding-right", aNumber)
         return this
     },
 
-    paddingRight: function() {
+    paddingRight: function () {
         return this.psStringToNumber(this.getCssAttribute("padding-right"))
     },
 
     // text align
 
-    setTextAlign: function(s) {
+    setTextAlign: function (s) {
         this.setCssAttribute("text-align", s)
         return this
     },
 
-    textAlign: function() {
+    textAlign: function () {
         return this.getCssAttribute("text-align")
     },
 
     // background color
-	
-    setBackgroundColor: function(v) {
+
+    setBackgroundColor: function (v) {
         this.setCssAttribute("background-color", v)
         return this
     },
 
-    backgroundColor: function() {
+    backgroundColor: function () {
         return this.getCssAttribute("background-color")
     },
 
-    computedBackgroundColor: function() {
+    computedBackgroundColor: function () {
         return this.getComputedCssAttribute("background-color")
     },
-	
+
     // background image
-	
-    setBackgroundImage: function(v) {
+
+    setBackgroundImage: function (v) {
         this.setCssAttribute("background-image", v)
         return this
     },
 
-    backgroundImage: function() {
+    backgroundImage: function () {
         return this.getCssAttribute("background-image")
     },
-	
-    setBackgroundImageUrlPath: function(path) {
+
+    setBackgroundImageUrlPath: function (path) {
         this.setBackgroundImage("url(\"" + path + "\")")
         return this
     },
 
     // background size
-    
-    setBackgroundSizeWH: function(x, y) {
+
+    setBackgroundSizeWH: function (x, y) {
         this.setCssAttribute("background-size", x + "px " + y + "px")
         return this
     },
-	
-    setBackgroundSize: function(s) {
-	    assert(Type.isString(s))
+
+    setBackgroundSize: function (s) {
+        assert(Type.isString(s))
         this.setCssAttribute("background-size", s)
         return this
     },
-	
-    makeBackgroundCover: function() {
-	    this.setBackgroundSize("cover")
-	    return this
-    },
-	
-    makeBackgroundContain: function() {
-	    this.setBackgroundSize("contain")
-	    return this
-    },
-	
-    // background repeat
-	
-    makeBackgroundNoRepeat: function() {
-	    this.setBackgroundRepeat("no-repeat")
+
+    makeBackgroundCover: function () {
+        this.setBackgroundSize("cover")
         return this
     },
 
-    setBackgroundRepeat: function(s) {
-	    assert(Type.isString(s))
+    makeBackgroundContain: function () {
+        this.setBackgroundSize("contain")
+        return this
+    },
+
+    // background repeat
+
+    makeBackgroundNoRepeat: function () {
+        this.setBackgroundRepeat("no-repeat")
+        return this
+    },
+
+    setBackgroundRepeat: function (s) {
+        assert(Type.isString(s))
         this.setCssAttribute("background-repeat", s)
         return this
     },
 
-    backgroundRepeat: function() {
+    backgroundRepeat: function () {
         return this.getCssAttribute("background-repeat")
     },
-	
+
     // background position
-	
-    makeBackgroundCentered: function() {
+
+    makeBackgroundCentered: function () {
         this.setBackgroundPosition("center")
         return this
     },
-	
-    setBackgroundPosition: function(s) {
+
+    setBackgroundPosition: function (s) {
         this.setCssAttribute("background-position", s)
         return this
     },
-	
-    backgroundPosition: function() {
+
+    backgroundPosition: function () {
         return this.getCssAttribute("background-position")
     },
 
     // icons - TODO: find a better place for this
-	
-    pathForIconName: function(aName) { 
+
+    pathForIconName: function (aName) {
         const pathSeparator = "/"
         return ["resources", "icons", aName + ".svg"].join(pathSeparator)
-    },    
-	
+    },
+
     // transition
-	
-    setTransition: function(s) {
+
+    setTransition: function (s) {
         this.setCssAttribute("transition", s)
-		
+
         if (this._transitions) {
             this.transitions().syncFromDiv()
         }
-		
+
         return this
-    },	
-	
-    transition: function() {
+    },
+
+    transition: function () {
         return this.getCssAttribute("transition")
-    },	
+    },
 
     // transitions
-	
-    transitions: function() {
+
+    transitions: function () {
         if (this._transitions == null) {
             this._transitions = DivTransitions.clone().setDomView(this).syncFromDiv()
         }
@@ -538,12 +538,12 @@ window.DomView = ideal.Proto.extend().newSlots({
 
     // transforms
 
-    setTransform: function(s) {
+    setTransform: function (s) {
         this.setCssAttribute("transform", s)
         return this
     },
 
-    setTransformOrigin: function(s) {
+    setTransformOrigin: function (s) {
         //transform-origin: x-axis y-axis z-axis|initial|inherit;
         //const percentageString = this.percentageNumberToString(aNumber)
         this.setCssAttribute("transform-origin", s)
@@ -561,92 +561,92 @@ window.DomView = ideal.Proto.extend().newSlots({
 
     // perspective
 
-    setPerspective: function(n) {
+    setPerspective: function (n) {
         this.setPxCssAttribute("perspective", n)
         return this
     },
 
     // opacity
 
-    setOpacity: function(v) {
+    setOpacity: function (v) {
         this.setCssAttribute("opacity", v)
         return this
     },
-	
-    opacity: function() {
+
+    opacity: function () {
         return this.getCssAttribute("opacity")
     },
 
     // z index 
-	
-    setZIndex: function(v) {
+
+    setZIndex: function (v) {
         this.setCssAttribute("z-index", v)
         return this
     },
-	
-    zIndex: function() {
+
+    zIndex: function () {
         return this.getCssAttribute("z-index")
     },
 
     // cursor 
-	
-    setCursor: function(s) {
+
+    setCursor: function (s) {
         this.setCssAttribute("cursor", s)
         return this
     },
 
-    cursor: function() {
+    cursor: function () {
         return this.getCssAttribute("cursor")
     },
 
-    makeCursorDefault: function() {
+    makeCursorDefault: function () {
         this.setCursor("default")
         return this
     },
-	
-    makeCursorPointer: function() {
+
+    makeCursorPointer: function () {
         this.setCursor("pointer")
         return this
     },
 
-    makeCursorText: function() {
+    makeCursorText: function () {
         this.setCursor("text")
         return this
     },
-	
-    makeCursorGrab: function() {
+
+    makeCursorGrab: function () {
         this.setCursor("grab")
         return this
     },
-	
-    makeCursorGrabbing: function() {
+
+    makeCursorGrabbing: function () {
         this.setCursor("grab")
         return this
     },
-	
+
     // --- focus and blur ---
 
-    focus: function() {
+    focus: function () {
         if (!this.isActiveElement()) {
-    	    
-    	    //console.log(this.typeId() + ".focus() " + document.activeElement._divView)
-    	    
-            setTimeout( () => {
+
+            //console.log(this.typeId() + ".focus() " + document.activeElement._divView)
+
+            setTimeout(() => {
                 this.element().focus()
                 //console.log(this.typeId() + " did refocus after 0 timeout? " + this.isActiveElement())
             }, 0)
         }
         return this
     },
-    
-    focusAfterDelay: function(seconds) {
-        setTimeout( () => {
+
+    focusAfterDelay: function (seconds) {
+        setTimeout(() => {
             this.element().focus()
-        }, seconds*1000)
+        }, seconds * 1000)
         return this
     },
 
-    hasFocus: function() {
+    hasFocus: function () {
         return this.isActiveElement()
     },
 
@@ -667,10 +667,10 @@ window.DomView = ideal.Proto.extend().newSlots({
         return this
     },
 
-    top: function() {
+    top: function () {
         return this.getPxCssAttribute("top")
     },
-	
+
     // left
 
     setLeftString: function (s) {
@@ -683,12 +683,12 @@ window.DomView = ideal.Proto.extend().newSlots({
         return this
     },
 
-    left: function() {
+    left: function () {
         return this.getPxCssAttribute("left")
     },
-   
+
     // right
-    
+
     setRightString: function (s) {
         this.setCssAttribute("right", s)
         return this
@@ -699,12 +699,12 @@ window.DomView = ideal.Proto.extend().newSlots({
         return this
     },
 
-    right: function() {
+    right: function () {
         return this.getPxCssAttribute("right")
-    },	
-	
+    },
+
     // bottom
-    
+
     setBottomString: function (s) {
         this.setCssAttribute("bottom", s)
         return this
@@ -715,296 +715,296 @@ window.DomView = ideal.Proto.extend().newSlots({
         return this
     },
 
-    bottom: function() {
+    bottom: function () {
         return this.getPxCssAttribute("bottom")
-    },	
-	
+    },
+
     // float
-	
-    setFloat: function(s) {
+
+    setFloat: function (s) {
         this.setCssAttribute("float", s)
         return this
     },
-	
-    float: function() {
+
+    float: function () {
         return this.getCssAttribute("float")
     },
 
     // box shadow
 
-    setBoxShadow: function(s) {
+    setBoxShadow: function (s) {
         //console.log(this.typeId() + ".setBoxShadow(" + s + ")")
         this.setCssAttribute("box-shadow", s)
         return this
     },
-	
-    boxShadow: function() {
+
+    boxShadow: function () {
         return this.getCssAttribute("box-shadow")
     },
-	
+
     // border 
-	
-    setBorder: function(s) {
+
+    setBorder: function (s) {
         this.setCssAttribute("border", s)
         return this
     },
-	
-    border: function() {
+
+    border: function () {
         return this.getCssAttribute("border")
     },
-	
+
     // border top
-	
-    setBorderTop: function(s) {
+
+    setBorderTop: function (s) {
         this.setCssAttribute("border-top", s)
         return this
     },
-	
-    borderTop: function() {
+
+    borderTop: function () {
         return this.getCssAttribute("border-top")
     },
-	
+
     // border bottom
 
-    setBorderBottom: function(s) {
+    setBorderBottom: function (s) {
         this.setCssAttribute("border-bottom", s)
         return this
     },
-	
-    borderBottom: function() {
+
+    borderBottom: function () {
         return this.getCssAttribute("border-bottom")
     },
-	
+
     // border left
 
-    setBorderLeft: function(s) {
-	    //console.log(this.typeId() + " border-left set '", s, "'")
+    setBorderLeft: function (s) {
+        //console.log(this.typeId() + " border-left set '", s, "'")
         this.setCssAttribute("border-left", s)
         return this
     },
-	
-    borderLeft: function() {
+
+    borderLeft: function () {
         return this.getCssAttribute("border-left")
     },
 
     // border right
 
-    setBorderRight: function(s) {
+    setBorderRight: function (s) {
         this.setCssAttribute("border-right", s)
         return this
     },
 
-    borderRight: function() {
+    borderRight: function () {
         return this.getCssAttribute("border-right")
     },
-	
+
     // border radius
-	
-    setBorderRadius: function(s) {
+
+    setBorderRadius: function (s) {
         if (Type.isNumber(s)) {
             this.setPxCssAttribute("border-radius", s)
         } else {
             this.setCssAttribute("border-radius", s)
         }
-	    return this
+        return this
     },
-	
-    borderRadius: function() {
+
+    borderRadius: function () {
         return this.getCssAttribute("border-radius")
     },
 
     // outline
-    
-    setOutline: function(s) {
+
+    setOutline: function (s) {
         this.setCssAttribute("outline", s)
-	    return this
+        return this
     },
-	
-    outline: function() {
+
+    outline: function () {
         return this.getCssAttribute("outline")
     },
 
     // line height
 
-    setLineHeight: function(aNumber) {
+    setLineHeight: function (aNumber) {
         this.setPxCssAttribute("line-height", aNumber)
         assert(this.lineHeight() == aNumber)
-        return this		
+        return this
     },
-	
-    lineHeight: function() {
+
+    lineHeight: function () {
         return this.getPxCssAttribute("line-height")
-    },	
-	
-    // alignment
-	
-    setTextAlign: function(s) {
-        this.setCssAttribute("text-align", s)
-        return this		
     },
-	
-    textAlign: function() {
+
+    // alignment
+
+    setTextAlign: function (s) {
+        this.setCssAttribute("text-align", s)
+        return this
+    },
+
+    textAlign: function () {
         return this.getCssAttribute("text-align")
-    },	
+    },
 
     // clear
- 	
-    setClear: function(v) {
+
+    setClear: function (v) {
         // clear: none|left|right|both|initial|inherit;
         this.setCssAttribute("clear", v)
         return this
     },
 
-    clear: function() {
+    clear: function () {
         return this.getCssAttribute("clear")
     },
-	   
+
 
     // flex direction
-	
-    setFlexDirection: function(v) {
+
+    setFlexDirection: function (v) {
         this.setCssAttribute("flex-direction", v)
         return this
     },
 
-    flexDirection: function() {
+    flexDirection: function () {
         return this.getCssAttribute("flex-direction")
     },
-	
+
     // flex grow
-	
-    setFlexGrow: function(v) {
+
+    setFlexGrow: function (v) {
         this.setCssAttribute("flex-grow", v)
         return this
     },
 
-    flexGrow: function() {
+    flexGrow: function () {
         return this.getCssAttribute("flex-grow")
     },
-	
+
     // flex shrink
 
-    setFlexShrink: function(v) {
+    setFlexShrink: function (v) {
         this.setCssAttribute("flex-shrink", v)
         return this
     },
 
-    flexShrink: function() {
+    flexShrink: function () {
         return this.getCssAttribute("flex-shrink")
     },
-	
+
     // flex basis
-	
-    setFlexBasis: function(v) {
+
+    setFlexBasis: function (v) {
         this.setCssAttribute("flex-basis", v)
         return this
     },
 
-    flexBasis: function() {
+    flexBasis: function () {
         return this.getCssAttribute("flex-basis")
     },
-			
+
     // color
-	
-    setColor: function(v) {
+
+    setColor: function (v) {
         this.setCssAttribute("color", v)
         return this
     },
-    
-    color: function() {
+
+    color: function () {
         return this.getCssAttribute("color")
     },
-    
+
     // filters
 
-    setFilter: function(s) {
+    setFilter: function (s) {
         this.setCssAttribute("filter", s)
         return this
     },
-    
-    filter: function() {
+
+    filter: function () {
         return this.getCssAttribute("filter")
-    },    
-    
+    },
+
     // visibility
-    
-    setIsVisible: function(aBool) {
-        let v = aBool ? "visible" : "hidden"
+
+    setIsVisible: function (aBool) {
+        const v = aBool ? "visible" : "hidden"
         this.setCssAttribute("visibility", v)
         return this
     },
 
-    isVisible: function() {
+    isVisible: function () {
         return this.getCssAttribute("visibility") !== "hidden";
     },
-    
+
     // display
 
-    setDisplay: function(s) {
+    setDisplay: function (s) {
         //assert(s in { "none", ...} );
         this.setCssAttribute("display", s)
         return this
     },
-    
-    display: function() {
+
+    display: function () {
         return this.getCssAttribute("display")
     },
 
     // visibility
 
-    setVisibility: function(s) {
+    setVisibility: function (s) {
         this.setCssAttribute("visibility", s)
         return this
     },
-    
-    visibility: function() {
+
+    visibility: function () {
         return this.getCssAttribute("visibility")
     },
-	
+
     // white space
-	
-    setWhiteSpace: function(s) {
+
+    setWhiteSpace: function (s) {
         this.setCssAttribute("white-space", s)
         return this
     },
-    
-    whiteSpace: function() {
+
+    whiteSpace: function () {
         return this.getCssAttribute("white-space")
     },
-	
+
     // over flow
-	
-    setOverflow: function(s) {
+
+    setOverflow: function (s) {
         assert(Type.isString(s))
         this.setCssAttribute("overflow", s)
         return this
     },
-    
-    overflow: function() {
+
+    overflow: function () {
         return this.getCssAttribute("overflow")
     },
 
     // overflow x
 
-    setOverflowX: function(s) {
+    setOverflowX: function (s) {
         assert(Type.isString(s))
         this.setCssAttribute("overflow-x", s)
         return this
     },
-    
-    overflowX: function() {
+
+    overflowX: function () {
         return this.getCssAttribute("overflow-x")
     },
 
     // overflow y
 
-    setOverflowY: function(s) {
+    setOverflowY: function (s) {
         assert(Type.isString(s))
         this.setCssAttribute("overflow-y", s)
         return this
     },
-    
-    overflowY: function() {
+
+    overflowY: function () {
         return this.getCssAttribute("overflow-y")
     },
 
@@ -1036,48 +1036,48 @@ window.DomView = ideal.Proto.extend().newSlots({
     text-overflow: initial;
     text-overflow: unset;
     */
-	
-    setTextOverflow: function(s) {
+
+    setTextOverflow: function (s) {
         this.setCssAttribute("text-overflow", s)
         return this
     },
-    
-    textOverflow: function() {
+
+    textOverflow: function () {
         return this.getCssAttribute("text-overflow")
     },
-	
+
     // user select
-	
-    userSelectKeys: function() {
+
+    userSelectKeys: function () {
         return [
-            "-moz-user-select", 
-            "-khtml-user-select", 
-            "-webkit-user-select", 
+            "-moz-user-select",
+            "-khtml-user-select",
+            "-webkit-user-select",
             "-o-user-select"
         ]
     },
 
-    userSelect: function() {
-        let style = this.cssStyle()
+    userSelect: function () {
+        const style = this.cssStyle()
         let result = this.userSelectKeys().detect(key => style[key])
         result = result || style.userSelect
-        return result 
+        return result
     },
-	
-    turnOffUserSelect: function() {
+
+    turnOffUserSelect: function () {
         this.setUserSelect("none");
         return this
     },
 
-    turnOnUserSelect: function() {
+    turnOnUserSelect: function () {
         this.setUserSelect("text")
         return this
     },
-	
+
     // user selection 
-	
-    setUserSelect: function(aString) {
-        let style = this.cssStyle()
+
+    setUserSelect: function (aString) {
+        const style = this.cssStyle()
         //console.log("'" + aString + "' this.userSelect() = '" + this.userSelect() + "' === ", this.userSelect() == aString)
         if (this.userSelect() !== aString) {
             style.userSelect = aString
@@ -1085,46 +1085,46 @@ window.DomView = ideal.Proto.extend().newSlots({
         }
         return this
     },
-	
+
     // spell check
-	
-    setSpellCheck: function(aBool) {
+
+    setSpellCheck: function (aBool) {
         this.element().setAttribute("spellcheck", aBool);
         return this
     },
-	
+
     // tool tip
-	
-    setToolTip: function(aName) {	
-        if (aName) {	
+
+    setToolTip: function (aName) {
+        if (aName) {
             this.element().setAttribute("title", aName);
         } else {
             this.element().removeAttribute("title");
         }
         return this
     },
-	
+
     // width and height
-	
-    calcWidth: function() {
+
+    calcWidth: function () {
         return DivTextTapeMeasure.widthOfDivClassWithText(this.divClassName(), this.innerHTML())
     },
-    
-    setWidthString: function(s) {
-	    assert(Type.isString(s) || s === null)
-	    this.setCssAttribute("width", s, () => { this.didChangeWidth() })
-	    return this
+
+    setWidthString: function (s) {
+        assert(Type.isString(s) || s === null)
+        this.setCssAttribute("width", s, () => { this.didChangeWidth() })
+        return this
     },
 
-    setWidth: function(s) {
-	    this.setWidthString(s)
-	    return this
+    setWidth: function (s) {
+        this.setWidthString(s)
+        return this
     },
-	
-    setWidthPercentage: function(aNumber) {
+
+    setWidthPercentage: function (aNumber) {
         const newValue = this.percentageNumberToString(aNumber)
-	    this.setCssAttribute("width", newValue, () => { this.didChangeWidth() })
-	    return this
+        this.setCssAttribute("width", newValue, () => { this.didChangeWidth() })
+        return this
     },
 
     /*
@@ -1134,119 +1134,119 @@ window.DomView = ideal.Proto.extend().newSlots({
 	    return this
     },
     */
-    
+
     // clientX - includes padding but not scrollbar, border, or margin
-        
-    clientWidth: function() {
+
+    clientWidth: function () {
         return this.element().clientWidth
     },
-    
-    clientHeight: function() {
+
+    clientHeight: function () {
         return this.element().clientHeight
     },
-    
+
     // offsetX - includes borders, padding, scrollbar 
-    
-    offsetWidth: function() {
+
+    offsetWidth: function () {
         return this.element().offsetWidth
     },
-    
-    offsetHeight: function() { 
+
+    offsetHeight: function () {
         return this.element().offsetHeight
     },
-    
+
     // width
-    
-    minWidth: function() {
-        let s = this.getCssAttribute("min-width")
+
+    minWidth: function () {
+        const s = this.getCssAttribute("min-width")
         return this.pxStringToNumber(s)
     },
 
-    maxWidth: function() {
-        let w = this.getCssAttribute("max-width")
+    maxWidth: function () {
+        const w = this.getCssAttribute("max-width")
         if (w === "") {
             return null
         }
         return this.pxStringToNumber(w)
     },
 
-    cssStyle: function() {
+    cssStyle: function () {
         return this.element().style
     },
 
-    setMinWidth: function(v) {
-        let type = typeof(v)
+    setMinWidth: function (v) {
+        const type = typeof (v)
         let newValue = null
         if (v == null) {
             newValue = null
         } else if (type === "string") {
-	        newValue = v 
+            newValue = v
         } else if (type === "number") {
-	        newValue = this.pxNumberToString(v)
+            newValue = this.pxNumberToString(v)
         } else {
             throw new Error(type + " is invalid argument type")
         }
-		
+
         this.setCssAttribute("min-width", newValue, () => { this.didChangeWidth() })
 
-        return this        
+        return this
     },
 
-    didChangeWidth: function() {
-    },
-	
-    didChangeHeight: function() {	
+    didChangeWidth: function () {
     },
 
-    setMaxWidth: function(v) {
+    didChangeHeight: function () {
+    },
+
+    setMaxWidth: function (v) {
         /*
         if (v === this._maxWidth) {
             return this
         }
         */
-		
-        let type = typeof(v)
+
+        const type = typeof (v)
         let newValue = null
         if (v == null) {
             newValue = null
         } else if (type === "string") {
-	        newValue = v 
+            newValue = v
         } else if (type === "number") {
-	        newValue = this.pxNumberToString(v)
+            newValue = this.pxNumberToString(v)
         } else {
             throw new Error(type + " is invalid argument type")
         }
         //this._maxWidth = newValue
 
         this.setCssAttribute("max-width", newValue, () => { this.didChangeWidth() })
-        return this        
+        return this
     },
 
-    setMinAndMaxWidth: function(aNumber) {
-        let newValue = this.pxNumberToString(aNumber)
+    setMinAndMaxWidth: function (aNumber) {
+        const newValue = this.pxNumberToString(aNumber)
         this.setCssAttribute("max-width", newValue, () => { this.didChangeWidth() })
         this.setCssAttribute("min-width", newValue, () => { this.didChangeWidth() })
-        return this        
+        return this
     },
 
-    setMinAndMaxHeight: function(aNumber) {
-        let newValue = this.pxNumberToString(aNumber)
+    setMinAndMaxHeight: function (aNumber) {
+        const newValue = this.pxNumberToString(aNumber)
         this.setCssAttribute("min-height", newValue, () => { this.didChangeHeight() })
         this.setCssAttribute("max-height", newValue, () => { this.didChangeHeight() })
-        return this		
+        return this
     },
 
-    percentageNumberToString: function(aNumber) {
+    percentageNumberToString: function (aNumber) {
         assert(Type.isNumber(aNumber) && (aNumber >= 0) && (aNumber <= 100))
         return aNumber + "%"
     },
 
-    pxNumberToString: function(aNumber) {
+    pxNumberToString: function (aNumber) {
         if (aNumber === null) {
             return null
         }
 
-        if (typeof(aNumber) === "string") {
+        if (typeof (aNumber) === "string") {
             if (aNumber.beginsWith("calc") || aNumber.endsWith("px")) {
                 return aNumber
             }
@@ -1256,7 +1256,7 @@ window.DomView = ideal.Proto.extend().newSlots({
         return aNumber + "px"
     },
 
-    pxStringToNumber: function(s) {
+    pxStringToNumber: function (s) {
         assert(Type.isString(s))
         if (s === "") {
             return 0
@@ -1265,85 +1265,85 @@ window.DomView = ideal.Proto.extend().newSlots({
         return Number(s.replace("px", ""))
     },
 
-    setMinAndMaxHeightPercentage: function(aNumber) {
-        let newValue = this.percentageNumberToString(aNumber)
+    setMinAndMaxHeightPercentage: function (aNumber) {
+        const newValue = this.percentageNumberToString(aNumber)
         this.setCssAttribute("min-height", newValue, () => { this.didChangeHeight() })
         this.setCssAttribute("max-height", newValue, () => { this.didChangeHeight() })
-        return this		
-    },
-	
-    setHeightPercentage: function(aNumber) {
-        let newValue = this.percentageNumberToString(aNumber)
-        this.setHeightString(newValue)
-        return this		
-    },
-	
-    setMinHeight: function(newValue) {
-        // <length> | <percentage> | auto | max-content | min-content | fit-content | fill-available
-        this.setCssAttribute("min-height", newValue, () => { this.didChangeHeight() })
-        return this		
-    },
-	
-    setMaxHeight: function(newValue) { 
-        // <length> | <percentage> | none | max-content | min-content | fit-content | fill-available
-        this.setCssAttribute("max-height", newValue, () => { this.didChangeHeight() })
-        return this		
+        return this
     },
 
-    setWidthPxNumber: function(aNumber) {
+    setHeightPercentage: function (aNumber) {
+        const newValue = this.percentageNumberToString(aNumber)
+        this.setHeightString(newValue)
+        return this
+    },
+
+    setMinHeight: function (newValue) {
+        // <length> | <percentage> | auto | max-content | min-content | fit-content | fill-available
+        this.setCssAttribute("min-height", newValue, () => { this.didChangeHeight() })
+        return this
+    },
+
+    setMaxHeight: function (newValue) {
+        // <length> | <percentage> | none | max-content | min-content | fit-content | fill-available
+        this.setCssAttribute("max-height", newValue, () => { this.didChangeHeight() })
+        return this
+    },
+
+    setWidthPxNumber: function (aNumber) {
         this.setWidthString(this.pxNumberToString(aNumber))
         return this
     },
 
-    setHeightPxNumber: function(aNumber) {
+    setHeightPxNumber: function (aNumber) {
         this.setHeightString(this.pxNumberToString(aNumber))
         return this
     },
 
-    setHeight: function(s) {
+    setHeight: function (s) {
         // height: auto|length|initial|inherit;
 
         if (Type.isNumber(s)) {
             return this.setHeightPxNumber(s)
         }
         this.setHeightString(s)
-        return this		
-    },	
+        return this
+    },
 
-    setWidthToAuto: function() {
+    setWidthToAuto: function () {
         this.setWidthString("auto")
         return this
     },
 
-    setHeightToAuto: function() {
+    setHeightToAuto: function () {
         this.setHeightString("auto")
     },
 
-    setHeightString: function(s) {
+    setHeightString: function (s) {
         assert(Type.isString(s) || s === null)
         this.setCssAttribute("height", s, () => { this.didChangeHeight() })
-        return this		
-    },	
-	
-    height: function() {
+        return this
+    },
+
+    height: function () {
         return this.getCssAttribute("height")
     },
-	
+
     // --- div class name ---
 
     setDivClassName: function (aName) {
         if (this._divClassName !== aName) {
-	        this._divClassName = aName
-	        if (this.element()) {
-	            this.element().setAttribute("class", aName);
-	        }
+            this._divClassName = aName
+            if (this.element()) {
+                this.element().setAttribute("class", aName);
+            }
         }
         return this
     },
 
     divClassName: function () {
         if (this.element()) {
-            let className = this.element().getAttribute("class");
+            const className = this.element().getAttribute("class");
             this._divClassName = className
             return className
         }
@@ -1352,7 +1352,7 @@ window.DomView = ideal.Proto.extend().newSlots({
 
     // --- parentView ---
 
-    setParentView: function(aView) {
+    setParentView: function (aView) {
         if (this._parentView != aView) {
             this._parentView = aView
             this.didChangeParentView()
@@ -1360,28 +1360,28 @@ window.DomView = ideal.Proto.extend().newSlots({
         return this
     },
 
-    didChangeParentView: function() {
+    didChangeParentView: function () {
         return this
     },
 
     // --- subviews ---
 
-    subviewCount: function() {
+    subviewCount: function () {
         return this.subviews().length
     },
 
-    hasSubview: function(aSubview) {
+    hasSubview: function (aSubview) {
         return this.subviews().contains(aSubview)
     },
 
-    addSubviewIfAbsent: function(aSubview) {
+    addSubviewIfAbsent: function (aSubview) {
         if (!this.hasSubview(aSubview)) {
             this.addSubview(aSubview)
         }
         return this
     },
 
-    addSubview: function(aSubview) {
+    addSubview: function (aSubview) {
         if (aSubview == null) {
             throw new Error("aSubview can't be null")
         }
@@ -1389,10 +1389,10 @@ window.DomView = ideal.Proto.extend().newSlots({
         if (this.hasSubview(aSubview)) {
             throw new Error(this.type() + ".addSubview(" + aSubview.type() + ") attempt to add duplicate subview ")
         }
-        
+
         this.willAddSubview(aSubview)
         this.subviews().append(aSubview)
-        
+
         if (aSubview.element() == null) {
             throw new Error("null aSubview.element()")
         }
@@ -1402,13 +1402,13 @@ window.DomView = ideal.Proto.extend().newSlots({
         this.didChangeSubviewList()
         return aSubview
     },
-    
-    addSubviews: function(someSubviews) {
+
+    addSubviews: function (someSubviews) {
         someSubviews.forEach(subview => this.addSubview(subview))
         return this
     },
 
-    orderSubviewFront: function(aSubview) {
+    orderSubviewFront: function (aSubview) {
         if (this.subviews().last() !== aSubview) {
             this.removeSubview(aSubview)
             this.addSubview(aSubview)
@@ -1416,15 +1416,15 @@ window.DomView = ideal.Proto.extend().newSlots({
         return this
     },
 
-    orderFront: function() {
-        let pv = this.parentView()
+    orderFront: function () {
+        const pv = this.parentView()
         if (pv) {
             pv.orderSubviewFront(this)
         }
         return this
     },
 
-    orderSubviewBack: function(aSubview) {
+    orderSubviewBack: function (aSubview) {
         throw new Error("unimplemented")
 
         //if (this.subviews().first() !== aSubview) {
@@ -1434,14 +1434,14 @@ window.DomView = ideal.Proto.extend().newSlots({
         return this
     },
 
-    orderBack: function() {
-        let pv = this.parentView()
+    orderBack: function () {
+        const pv = this.parentView()
         if (pv) {
             pv.orderSubviewBack(this)
         }
         return this
     },
-    
+
     atInsertSubview: function (anIndex, aSubview) {
         this.subviews().atInsert(anIndex, aSubview)
         DomElement_atInsertElement(this.element(), anIndex, aSubview.element())
@@ -1449,12 +1449,12 @@ window.DomView = ideal.Proto.extend().newSlots({
     },
 
     // --- subview utilities ---
-    
-    sumOfSubviewHeights: function() {
+
+    sumOfSubviewHeights: function () {
         return this.subviews().sum(subview => subview.clientHeight())
     },
 
-    performOnSubviewsExcept: function(methodName, exceptedSubview) {
+    performOnSubviewsExcept: function (methodName, exceptedSubview) {
         this.subviews().forEach(subview => {
             if (subview !== exceptedSubview) {
                 subview[methodName].apply(subview)
@@ -1463,77 +1463,77 @@ window.DomView = ideal.Proto.extend().newSlots({
 
         return this
     },
-    
+
     // --- fade animations ---
-    
-    hideAndFadeIn: function() {
+
+    hideAndFadeIn: function () {
         this.setOpacity(0)
         this.setTransition("all 0.5s")
-        setTimeout( () => { 
+        setTimeout(() => {
             this.setOpacity(1)
-        }, 0)	
+        }, 0)
     },
 
-    fadeInToDisplayInlineBlock: function() {
+    fadeInToDisplayInlineBlock: function () {
         this.setDisplay("inline-block")
-        setTimeout( () => { 
+        setTimeout(() => {
             this.setOpacity(1)
-        }, 0)	
-        return this
-    },	
-
-    fadeOutToDisplayNone: function() {
-        this.setOpacity(0)
-        setTimeout( () => { 
-            this.setDisplay("none")
-        }, 200)	
+        }, 0)
         return this
     },
-    
+
+    fadeOutToDisplayNone: function () {
+        this.setOpacity(0)
+        setTimeout(() => {
+            this.setDisplay("none")
+        }, 200)
+        return this
+    },
+
     // -----------------------
 
-    removeFromParentView: function() {
+    removeFromParentView: function () {
         this.parentView().removeSubview(this)
         return this
     },
-    
-    removeAfterFadeDelay: function(delayInSeconds) {
+
+    removeAfterFadeDelay: function (delayInSeconds) {
         // call removeSubview for a direct actions
         // use justRemoteSubview for internal changes
-        
+
         this.setTransition("all " + delayInSeconds + "s")
-        setTimeout( () => { 
+        setTimeout(() => {
             this.setOpacity(0)
         }, 0)
-        
-        setTimeout( () => { 
+
+        setTimeout(() => {
             this.parentView().removeSubview(this)
-        }, delayInSeconds*1000)        
-        
+        }, delayInSeconds * 1000)
+
         return this
     },
-    
-    willRemove: function() {
+
+    willRemove: function () {
     },
-    
-    didChangeSubviewList: function() {
+
+    didChangeSubviewList: function () {
     },
-	
-    hasSubview: function(aSubview) {
+
+    hasSubview: function (aSubview) {
         return this.subviews().indexOf(aSubview) !== -1;
     },
-	
-    hasChildElement: function(anElement) {
-        let children = this.element().childNodes
-        for (let i = 0; i < children.length; i ++) {
-            let child = children[i]
+
+    hasChildElement: function (anElement) {
+        const children = this.element().childNodes
+        for (let i = 0; i < children.length; i++) {
+            const child = children[i]
             if (anElement === child) {
                 return true
             }
         }
-        return false		
+        return false
     },
-    
+
     willAddSubview: function (aSubview) {
         // for subclasses to over-ride
     },
@@ -1558,12 +1558,12 @@ window.DomView = ideal.Proto.extend().newSlots({
             return aSubview
         }
         this.willRemoveSubview(aSubview)
-		
+
         aSubview.willRemove()
         this.subviews().remove(aSubview)
 
         if (this.hasChildElement(aSubview.element())) {
-        	this.element().removeChild(aSubview.element());
+            this.element().removeChild(aSubview.element());
         } else {
             //console.warn("WARNING: " + this.type() + " removeSubview " + aSubview.type() + " missing element")
         }
@@ -1572,32 +1572,32 @@ window.DomView = ideal.Proto.extend().newSlots({
             console.warn("WARNING: " + this.type() + " removeSubview " + aSubview.type() + " failed - still has element after remove")
             StackTrace.shared().showCurrentStack()
         }
-		
+
         aSubview.setParentView(null)
         this.didChangeSubviewList()
         return aSubview
     },
-    
-    removeAllSubviews: function() {
+
+    removeAllSubviews: function () {
         this.subviews().copy().forEach((aView) => { this.removeSubview(aView) })
         assert(this.subviews().length === 0)
         return this
     },
 
-    indexOfSubview: function(aSubview) {
+    indexOfSubview: function (aSubview) {
         return this.subviews().indexOf(aSubview)
     },
 
-    subviewAfter: function(aSubview) {
-        let index = this.indexOfSubview(aSubview)
-        let nextIndex = index + 1
+    subviewAfter: function (aSubview) {
+        const index = this.indexOfSubview(aSubview)
+        const nextIndex = index + 1
         if (nextIndex < this.subviews().length) {
             return this.subviews()[nextIndex]
         }
         return null
     },
 
-    sendAllViewDecendants: function(methodName, argList) {
+    sendAllViewDecendants: function (methodName, argList) {
         this.subviews().forEach((v) => {
             v[methodName].apply(v, argList)
             v.sendAllViewDecendants(methodName, argList)
@@ -1607,50 +1607,50 @@ window.DomView = ideal.Proto.extend().newSlots({
 
     // --- active element ---
 
-    isActiveElement: function() {
-        return document.activeElement === this.element() 
+    isActiveElement: function () {
+        return document.activeElement === this.element()
     },
-	
-    isActiveElementAndEditable: function() {
+
+    isActiveElementAndEditable: function () {
         return this.isActiveElement() && this.contentEditable()
     },
-	
+
     // --- inner html ---
 
-    setInnerHTML: function(v) {
-        if (v == null) { 
-            v = "" 
+    setInnerHTML: function (v) {
+        if (v == null) {
+            v = ""
         }
-		
+
         v = "" + v
-		
+
         if (v === this.element().innerHTML) {
             return this
         }
 
-        let isFocused = this.isActiveElementAndEditable()
-        
+        const isFocused = this.isActiveElementAndEditable()
+
         if (isFocused) {
             this.blur()
         }
-        
+
         this.element().innerHTML = v
-            
+
         if (isFocused) {
             this.focus()
         }
 
-	    return this
+        return this
     },
 
-    innerHTML: function() {
+    innerHTML: function () {
         return this.element().innerHTML
     },
 
     setString: function (v) {
         return this.setInnerHTML(v)
     },
-    
+
     loremIpsum: function (maxWordCount) {
         this.setInnerHTML("".loremIpsum(10, 40))
         return this
@@ -1658,13 +1658,13 @@ window.DomView = ideal.Proto.extend().newSlots({
 
     // --- updates ---
 
-    tellParentViews: function(msg, aView) {
-        let f = this[msg]
+    tellParentViews: function (msg, aView) {
+        const f = this[msg]
         if (f && f.apply(this, [aView])) {
             return // stop propogation
         }
 
-        let p = this.parentView()
+        const p = this.parentView()
         if (p) {
             p.tellParentViews(msg, aView)
         }
@@ -1674,69 +1674,69 @@ window.DomView = ideal.Proto.extend().newSlots({
 
     // --- event listeners ---
 
-    listenerNamed: function(className) {
-        let dict = this.eventListenersDict()
+    listenerNamed: function (className) {
+        const dict = this.eventListenersDict()
         if (!dict[className]) {
             assert(className in window)
-            let proto = window[className]
+            const proto = window[className]
             dict[className] = proto.clone().setListenTarget(this.element()).setDelegate(this)
-        } 
+        }
         return dict[className]
     },
 
-    clipboardListener: function() {
+    clipboardListener: function () {
         return this.listenerNamed("ClipboardListener")
     },
 
-    documentListener: function() {
+    documentListener: function () {
         return this.listenerNamed("DocumentListener") // listen target will be the window
     },
 
-    dragListener: function() {
+    dragListener: function () {
         return this.listenerNamed("DragListener")
     },
 
-    dropListener: function() {
+    dropListener: function () {
         return this.listenerNamed("DropListener")
     },
 
-    focusListener: function() {
+    focusListener: function () {
         return this.listenerNamed("FocusListener")
     },
 
-    mouseListener: function() {
+    mouseListener: function () {
         return this.listenerNamed("MouseListener")
     },
 
-    keyboardListener: function() {
+    keyboardListener: function () {
         return this.listenerNamed("KeyboardListener")
     },
 
-    touchListener: function() {
+    touchListener: function () {
         return this.listenerNamed("TouchListener")
     },
 
     // ---
 
-	
+
     // --- window resize events ---
-    
-    isRegisteredForDocumentResize: function() {
+
+    isRegisteredForDocumentResize: function () {
         return this.documentListener().isListening()
     },
 
-    setIsRegisteredForDocumentResize: function(aBool) {   
+    setIsRegisteredForDocumentResize: function (aBool) {
         this.documentListener().setIsListening(aBool)
         return this
     },
-    
-    onDocumentResize: function(event) {   
+
+    onDocumentResize: function (event) {
         return true
     },
-	
+
     // --- onClick event, target & action ---
-    
-    isRegisteredForClicks: function() {
+
+    isRegisteredForClicks: function () {
         return this.mouseListener().isListening()
     },
 
@@ -1751,55 +1751,55 @@ window.DomView = ideal.Proto.extend().newSlots({
 
         return this
     },
-    
-    hasTargetAndAction: function() {
+
+    hasTargetAndAction: function () {
         return (this.target() !== null) && (this.action() !== null)
     },
-    
-    setTarget: function(anObject) {
+
+    setTarget: function (anObject) {
         this._target = anObject
-        this.setIsRegisteredForClicks(this.hasTargetAndAction())    
+        this.setIsRegisteredForClicks(this.hasTargetAndAction())
         return this
     },
-    
+
     setAction: function (anActionString) {
         this._action = anActionString
         this.setIsRegisteredForClicks(this.hasTargetAndAction())
-        return this       
+        return this
     },
-    
-    onClick: function(event) {
+
+    onClick: function (event) {
         //console.log(this.typeId() + ".onClick()")
         this.sendActionToTarget()
         event.stopPropagation()
         return false
     },
-    
-    sendActionToTarget: function() {
+
+    sendActionToTarget: function () {
         if (!this.action()) {
             return null
         }
 
-        let t = this.target()
+        const t = this.target()
         if (!t) {
             throw new Error("no target for action " + this.action())
         }
-        
-        let method = t[this.action()]
+
+        const method = t[this.action()]
         if (!method) {
             throw new Error("no target for action " + this.action())
         }
 
         return method.apply(t, [this])
     },
-    
+
     onDoubleClick: function (event) {
         return true
     },
-    
+
     // -- dropping ---
-    
-    isRegisteredForDrop: function() {
+
+    isRegisteredForDrop: function () {
         return this.dropListener().isListening()
     },
 
@@ -1808,13 +1808,13 @@ window.DomView = ideal.Proto.extend().newSlots({
         return this
     },
 
-    acceptsDrop: function() {
+    acceptsDrop: function () {
         return true
-    },    
-        
+    },
+
     // ---------------------
-	
-    onDragEnter: function (event) { 
+
+    onDragEnter: function (event) {
         // triggered on drop target
         console.log("onDragEnter acceptsDrop: ", this.acceptsDrop());
         //event.preventDefault() // needed?
@@ -1827,7 +1827,7 @@ window.DomView = ideal.Proto.extend().newSlots({
 
         return false;
     },
-	
+
     onDragOver: function (event) {
         // triggered on drop target
         //console.log("onDragOver acceptsDrop: ", this.acceptsDrop(), " event:", event);
@@ -1842,31 +1842,31 @@ window.DomView = ideal.Proto.extend().newSlots({
 
         return false;
     },
-    
-    onDragOverAccept: function(event) {
+
+    onDragOverAccept: function (event) {
         //console.log("onDragOverAccept ");
         this.dragHighlight()
     },
-    
+
     onDragLeave: function (event) {
         // triggered on drop target
         //console.log("onDragLeave ", this.acceptsDrop());
         this.dragUnhighlight()
         return this.acceptsDrop();
     },
-    
-    dragHighlight: function() {
-        
+
+    dragHighlight: function () {
+
     },
-    
-    dragUnhighlight: function() {
-        
+
+    dragUnhighlight: function () {
+
     },
 
     onDrop: function (event) {
         // triggered on drop target
         if (this.acceptsDrop()) {
-            //let file = event.dataTransfer.files[0];
+            //const file = event.dataTransfer.files[0];
             //console.log('onDrop ' + file.path);
             this.onDataTransfer(event.dataTransfer)
             this.dragUnhighlight()
@@ -1875,21 +1875,21 @@ window.DomView = ideal.Proto.extend().newSlots({
         }
         return false
     },
-   
-    onDataTransfer: function(dataTransfer) {     
+
+    onDataTransfer: function (dataTransfer) {
         //console.log('onDataTransfer ', dataTransfer);
-        
-        if (dataTransfer.files.length) {   
-            let dataUrls = []
-            for (let i = 0; i < dataTransfer.files.length; i ++) {
-                let file = dataTransfer.files[i]
+
+        if (dataTransfer.files.length) {
+            const dataUrls = []
+            for (let i = 0; i < dataTransfer.files.length; i++) {
+                const file = dataTransfer.files[i]
                 //console.log("file: ", file)
-                
+
                 if (!file.type.match("image.*")) {
                     continue;
                 }
 
-                let reader = new FileReader();
+                const reader = new FileReader();
                 reader.onload = ((event) => {
                     this.onDropImageDataUrl(event.target.result)
                 })
@@ -1899,18 +1899,18 @@ window.DomView = ideal.Proto.extend().newSlots({
         }
 
     },
-    
-    onDropImageDataUrl: function(dataUrl) {
+
+    onDropImageDataUrl: function (dataUrl) {
         console.log("onDropImageDataUrl: ", dataUrl);
     },
-    
-    onDropFiles: function(filePaths) {
+
+    onDropFiles: function (filePaths) {
         console.log("onDropFiles " + filePaths);
     },
 
     // dragging
 
-    isRegisteredForDrag: function() {
+    isRegisteredForDrag: function () {
         return this.dragListener().isListening()
     },
 
@@ -1921,63 +1921,63 @@ window.DomView = ideal.Proto.extend().newSlots({
 
     onDragStart: function (event) {
         // triggered in element being dragged
-        return true; 
+        return true;
     },
-    
+
     onDragEnd: function (event) {
         // triggered in element being dragged
         this.dragUnhighlight();
         //console.log("onDragEnd");
     },
-    
+
     // --- editing - abstracted from content editable for use in non text views ---
-    
-    setIsEditable: function(aBool) {
+
+    setIsEditable: function (aBool) {
         // subclasses can override for non text editing behaviors e.g. a checkbox, toggle switch, etc
         this.setContentEditable(aBool)
         return this
     },
-    
-    isEditable: function() {
+
+    isEditable: function () {
         return this.isContentEditable()
     },
-    
+
     // --- content editing ---
-    
+
     setContentEditable: function (aBool) {
         //console.log(this.divClassName() + " setContentEditable(" + aBool + ")")
         if (aBool) {
-        	this.makeCursorText()
+            this.makeCursorText()
             //this.element().ondblclick =  (event) => { this.selectAll();	}
         } else {
             this.element().ondblclick = null
         }
 
         this.element().contentEditable = aBool ? "true" : "false"
-        
+
         /*
         if (this.showsHaloWhenEditable()) {
             this.setBoxShadow(aBool ? "0px 0px 5px #ddd" : "none")
         }
         */
-        
+
         //this.element().style.hideFocus = true
         this.element().style.outline = "none"
 
         this.setIsRegisteredForKeyboard(aBool)
-        
+
         if (aBool) {
             this.turnOnUserSelect()
-        } 
+        }
 
         this.setIsRegisteredForClipboard(aBool)
 
         return this
     },
-    
-    isContentEditable: function() {
+
+    isContentEditable: function () {
         //var v = window.getComputedStyle(this.element(), null).getPropertyValue("contentEditable");
-        let s = this.element().contentEditable
+        const s = this.element().contentEditable
         if (s === "inherit" && this.parentView()) {
             return this.parentView().isContentEditable()
         }
@@ -1985,23 +1985,23 @@ window.DomView = ideal.Proto.extend().newSlots({
         return aBool
     },
 
-    contentEditable: function() {
+    contentEditable: function () {
         return this.element().contentEditable === "true"
     },
-	
+
     // touch events
 
-    setTouchAction: function(s) {
+    setTouchAction: function (s) {
         this.setCssAttribute("-ms-touch-action", s) // needed?
         this.setCssAttribute("touch-action", s)
         return this
     },
 
-    isRegisteredForTouch: function() {
+    isRegisteredForTouch: function () {
         return this.touchListener().isListening()
     },
 
-    setIsRegisteredForTouch: function(aBool) {
+    setIsRegisteredForTouch: function (aBool) {
         this.touchListener().setIsListening(aBool)
 
         if (aBool) {
@@ -2011,37 +2011,37 @@ window.DomView = ideal.Proto.extend().newSlots({
         return this
     },
 
-    onTouchStart: function(event) {
+    onTouchStart: function (event) {
         //this.onPointsStart(points)
     },
 
-    onTouchMove: function(event) {
+    onTouchMove: function (event) {
         //this.onPointsMove(points)
     },
-	
-    onTouchCancel: function(event) {
+
+    onTouchCancel: function (event) {
         //this.onPointsCancel(points)
     },
-	
-    onTouchEnd: function(event) {
+
+    onTouchEnd: function (event) {
         //this.onPointsEnd(points)
-    },	
+    },
 
     /// GestureRecognizers
 
-    hasGestureType: function(typeName) {
+    hasGestureType: function (typeName) {
         return this.gesturesOfType(typeName).length > 0
-        
+
     },
 
-    addGestureRecognizer: function(gr) {
+    addGestureRecognizer: function (gr) {
         this.gestureRecognizers().append(gr)
         gr.setViewTarget(this)
         gr.start()
         return gr
     },
 
-    removeGestureRecognizer: function(gr) {
+    removeGestureRecognizer: function (gr) {
         if (this.gestureRecognizers()) {
             gr.stop()
             gr.setViewTarget(null)
@@ -2050,11 +2050,11 @@ window.DomView = ideal.Proto.extend().newSlots({
         return this
     },
 
-    gesturesOfType: function(typeName) {
+    gesturesOfType: function (typeName) {
         return this.gestureRecognizers().select(gr => gr.type() == typeName)
     },
 
-    removeGestureRecognizersOfType: function(typeName) {
+    removeGestureRecognizersOfType: function (typeName) {
         if (this.gestureRecognizers()) {
             this.gestureRecognizers().select(gr => gr.type() == typeName).forEach(gr => this.removeGestureRecognizer(gr))
         }
@@ -2075,7 +2075,7 @@ window.DomView = ideal.Proto.extend().newSlots({
     requestActiveGesture: function(aGesture) {
         assert(aGesture)
 
-        let first = this.firstActiveGesture()
+        const first = this.firstActiveGesture()
 
         if (!first) {
             this.cancelAllGesturesExcept(aGesture)
@@ -2090,7 +2090,7 @@ window.DomView = ideal.Proto.extend().newSlots({
     },
 `   */
 
-    cancelAllGesturesExcept: function(aGesture) {
+    cancelAllGesturesExcept: function (aGesture) {
         this.gestureRecognizers().forEach((gr) => {
             //if (gr.type() !== aGesture.type()) {
             if (gr !== aGesture) {
@@ -2102,27 +2102,27 @@ window.DomView = ideal.Proto.extend().newSlots({
 
     // --- mouse events ---
 
-    isRegisteredForMouse: function() {
+    isRegisteredForMouse: function () {
         return this.mouseListener().isListening()
     },
 
-    setIsRegisteredForMouse: function(aBool, useCapture) {
+    setIsRegisteredForMouse: function (aBool, useCapture) {
         this.mouseListener().setUseCapture(useCapture).setIsListening(aBool) //.setIsDebugging(true)
         return this
     },
-    
+
     onMouseMove: function (event) {
         return true
     },
-    
-    onMouseOver: function(event) {
+
+    onMouseOver: function (event) {
         return true
     },
 
-    onMouseLeave: function(event) {
+    onMouseLeave: function (event) {
         return true
     },
-    
+
     onMouseOver: function (event) {
         return true
     },
@@ -2134,38 +2134,38 @@ window.DomView = ideal.Proto.extend().newSlots({
     onMouseUp: function (event) {
         return true
     },
-        
+
     // --- keyboard events ---
 
-    isRegisteredForKeyboard: function() {
+    isRegisteredForKeyboard: function () {
         return this.keyboardListener().isListening()
     },
 
-    setIsRegisteredForKeyboard: function(aBool, useCapture) {
+    setIsRegisteredForKeyboard: function (aBool, useCapture) {
         this.keyboardListener().setUseCapture(useCapture).setIsListening(aBool)
 
-        let e = this.element()
+        const e = this.element()
         if (aBool) {
-            DomView._tabCount ++
+            DomView._tabCount++
             e.tabIndex = DomView._tabCount // need this in order for focus to work on BrowserColumn?
             //this.setCssAttribute("outline", "none"); // needed?
         } else {
-	        delete e.tabindex 
+            delete e.tabindex
         }
 
         return this
     },
 
-	
+
     onKeyDown: function (event) {
-        let specialKeyName = Keyboard.specialNameForKeyEvent(event)
-		
+        const specialKeyName = Keyboard.specialNameForKeyEvent(event)
+
         if (specialKeyName === "enter" && this.unfocusOnEnterKey()) {
             console.log(" releasing focus")
             // this.releaseFocus() // TODO: implement something to pass focus up view chain to whoever wants it
             this.element().parentElement.focus()
         }
-		
+
         /*
 		if (this.interceptsTab()) {
 	        if (event.keyId === "tab") {
@@ -2173,11 +2173,11 @@ window.DomView = ideal.Proto.extend().newSlots({
 	            this.onTabKeyDown()
 	        }
 		}
-		*/    
-		
+		*/
+
         // onEnterKeyDown onLeftArrowKeyUp
         if (specialKeyName) {
-            let name = "on" + specialKeyName.capitalized() + "KeyDown"
+            const name = "on" + specialKeyName.capitalized() + "KeyDown"
             if (this[name]) {
                 const stopProp = this[name].apply(this, [event])
                 event.preventDefault()
@@ -2188,15 +2188,15 @@ window.DomView = ideal.Proto.extend().newSlots({
         }
         return true
     },
-    
+
     onKeyPress: function (event) {
         // console.log("onKeyPress")
         return true
     },
-    
+
     onKeyUp: function (event) {
         let shouldPropogate = true
-        let specialKeyName = Keyboard.specialNameForKeyEvent(event)
+        const specialKeyName = Keyboard.specialNameForKeyEvent(event)
         //console.log(this.typeId() + " onKeyUp specialKeyName=", specialKeyName)
 
         /*
@@ -2207,10 +2207,10 @@ window.DomView = ideal.Proto.extend().newSlots({
 	        }
 		}
 		*/
-        
+
         //console.log("event: ", event)
         //event.preventDefault()
-        
+
         if ((!this.isValid()) && (this.invalidColor() != null)) {
             this.setColor(this.invalidColor())
         } else {
@@ -2220,128 +2220,128 @@ window.DomView = ideal.Proto.extend().newSlots({
         }
 
         if (specialKeyName) {
-		    // onEnterKeyUp onLeftArrowKeyUp
-            let name = "on" + specialKeyName.capitalized() + "KeyUp"
+            // onEnterKeyUp onLeftArrowKeyUp
+            const name = "on" + specialKeyName.capitalized() + "KeyUp"
             if (this[name]) {
                 shouldPropogate = this[name].apply(this, [event])
-		        event.preventDefault()
+                event.preventDefault()
                 //console.log("shouldPropogate = ", shouldPropogate)
             }
         }
-        
+
         this.didEdit()
         return shouldPropogate
     },
-    
-    didEdit: function() {
+
+    didEdit: function () {
         this.tellParentViews("onDidEdit", this)
         return this
     },
-    
-    onEnterKeyUp: function() {
+
+    onEnterKeyUp: function () {
         return true
     },
-    
+
     // --- tabs and next key view ----
-    
-    onTabKeyDown: function() {
+
+    onTabKeyDown: function () {
         this.selectNextKeyView()
         return false
     },
 
-    selectNextKeyView: function() {
+    selectNextKeyView: function () {
         console.log(this.typeId() + " selectNextKeyView")
-        let nkv = this.nextKeyView()
+        const nkv = this.nextKeyView()
         if (nkv) {
             //if (nkv.initialFirstResponder()) {
             //nkv.focus()
             //}
-        }	
+        }
     },
-	
+
     // --- error checking ---
-    
-    isValid: function() {
+
+    isValid: function () {
         return true
     },
 
     // --- focus and blur event handling ---
-    
-    isRegisteredForFocus: function() {
+
+    isRegisteredForFocus: function () {
         return this.focusListener().isListening()
     },
 
-    setIsRegisteredForFocus: function(aBool) {
+    setIsRegisteredForFocus: function (aBool) {
         this.focusListener().setIsListening(aBool)
         return this
     },
-    
-    willAcceptFirstResponder: function() {
-	    //console.log(this.typeId() + ".willAcceptFirstResponder()")
+
+    willAcceptFirstResponder: function () {
+        //console.log(this.typeId() + ".willAcceptFirstResponder()")
         return this
     },
-    
-    didReleaseFirstResponder: function() {
+
+    didReleaseFirstResponder: function () {
         // called on focus event from browser
         return this
     },
-	
+
     // firstResponder
-	
-    willBecomeFirstResponder: function() {
+
+    willBecomeFirstResponder: function () {
         // called if becomeFirstResponder accepts
     },
-	
-    becomeFirstResponder: function() {
-	    if (this.acceptsFirstResponder()) {
-	        this.willBecomeFirstResponder()
-	        this.focus()
-	    } else if (this.parentView()) {
-	        this.parentView().becomeFirstResponder()
-	    }
-	    return this
+
+    becomeFirstResponder: function () {
+        if (this.acceptsFirstResponder()) {
+            this.willBecomeFirstResponder()
+            this.focus()
+        } else if (this.parentView()) {
+            this.parentView().becomeFirstResponder()
+        }
+        return this
     },
-	
-    releaseFirstResponder: function() {
-	    // walk up parent view chain and focus on the first view to 
-	    // answer true for the acceptsFirstResponder message
-	    //console.log(this.typeId() + ".releaseFirstResponder()")
-	    
-	    this.blur()
-	    if (this.parentView()) {
-	        this.parentView().becomeFirstResponder()
-	    }
-	    return this
+
+    releaseFirstResponder: function () {
+        // walk up parent view chain and focus on the first view to 
+        // answer true for the acceptsFirstResponder message
+        //console.log(this.typeId() + ".releaseFirstResponder()")
+
+        this.blur()
+        if (this.parentView()) {
+            this.parentView().becomeFirstResponder()
+        }
+        return this
     },
-	
+
     // --------------------------------------------------------
 
-    onFocus: function() {
+    onFocus: function () {
         this.willAcceptFirstResponder();
         // subclasses can override 
         //console.log(this.typeId() + " onFocus")
         return true
     },
 
-    onBlur: function() {
+    onBlur: function () {
         this.didReleaseFirstResponder();
         // subclasses can override 
         //console.log(this.typeId() + " onBlur")
         return true
     },
-    
-    innerText: function() {
-        let e = this.element()
-	    return e.textContent || e.innerText || "";		
+
+    innerText: function () {
+        const e = this.element()
+        return e.textContent || e.innerText || "";
     },
-    
+
     // --- set caret ----
-    
-    moveCaretToEnd: function() {
-        let contentEditableElement = this.element()
+
+    moveCaretToEnd: function () {
+        const contentEditableElement = this.element()
         let range, selection;
-        
-        if(document.createRange)//Firefox, Chrome, Opera, Safari, IE 9+
+
+        if (document.createRange)//Firefox, Chrome, Opera, Safari, IE 9+
         {
             range = document.createRange();//Create a range (a range is a like the selection but invisible)
             range.selectNodeContents(contentEditableElement);//Select the entire contents of the element with the range
@@ -2350,8 +2350,8 @@ window.DomView = ideal.Proto.extend().newSlots({
             selection.removeAllRanges();//remove any selections already made
             selection.addRange(range);//make the range you have just created the visible selection
         }
-        else if(document.selection)//IE 8 and lower
-        { 
+        else if (document.selection)//IE 8 and lower
+        {
             range = document.body.createTextRange();//Create a range (a range is a like the selection but invisible)
             range.moveToElementText(contentEditableElement);//Select the entire contents of the element with the range
             range.collapse(false);//collapse the range to the end point. false means collapse to end rather than the start
@@ -2361,32 +2361,32 @@ window.DomView = ideal.Proto.extend().newSlots({
     },
 
     // --- text selection ------------------
-    
-    selectAll: function() {
+
+    selectAll: function () {
         if (document.selection) {
-            let range = document.body.createTextRange();
+            const range = document.body.createTextRange();
             range.moveToElementText(this.element());
             range.select();
         } else if (window.getSelection) {
-            let range = document.createRange();
+            const range = document.createRange();
             range.selectNode(this.element());
             window.getSelection().removeAllRanges();
             window.getSelection().addRange(range);
         }
     },
-	
+
     // --- paste from clipboard ---
 
     onPaste: function (e) {
         // prevent pasting text by default after event
-        e.preventDefault(); 
+        e.preventDefault();
 
-        let clipboardData = e.clipboardData;
-        let rDataHTML = clipboardData.getData("text/html");
-        let rDataPText = clipboardData.getData("text/plain");
+        const clipboardData = e.clipboardData;
+        const rDataHTML = clipboardData.getData("text/html");
+        const rDataPText = clipboardData.getData("text/plain");
 
-        let htmlToPlainTextFunc = function (html) {
-            let tmp = document.createElement("DIV");
+        const htmlToPlainTextFunc = function (html) {
+            const tmp = document.createElement("DIV");
             tmp.innerHTML = html;
             return tmp.textContent || tmp.innerText || "";
         }
@@ -2402,28 +2402,28 @@ window.DomView = ideal.Proto.extend().newSlots({
         }
         return true
     },
-    
+
     // ------------
 
-    isRegisteredForClipboard: function() {
+    isRegisteredForClipboard: function () {
         return this.clipboardListener().isListening()
     },
 
-    setIsRegisteredForClipboard: function(aBool) {
+    setIsRegisteredForClipboard: function (aBool) {
         this.clipboardListener().setIsListening(aBool)
         return this
     },
 
-    replaceSelectedText: function(replacementText) {
+    replaceSelectedText: function (replacementText) {
         let range;
         if (window.getSelection) {
-            let sel = window.getSelection();
+            const sel = window.getSelection();
             if (sel.rangeCount) {
                 range = sel.getRangeAt(0);
                 range.deleteContents();
                 range.insertNode(document.createTextNode(replacementText));
             }
-            
+
 
             console.log("inserted node")
         } else if (document.selection && document.selection.createRange) {
@@ -2436,7 +2436,7 @@ window.DomView = ideal.Proto.extend().newSlots({
             // now move the selection to just the end of the range
             range.setStart(range.endContainer, range.endOffset);
         }
-        
+
         return this
     },
 
@@ -2444,11 +2444,11 @@ window.DomView = ideal.Proto.extend().newSlots({
     // untested
 
     setCaretPosition: function(caretPos) {
-        let elem = this.element();
+        const elem = this.element();
 
         if(elem != null) {
             if(elem.createTextRange) {
-                let range = elem.createTextRange();
+                const range = elem.createTextRange();
                 range.move("character", caretPos);
                 range.select();
             }
@@ -2463,8 +2463,8 @@ window.DomView = ideal.Proto.extend().newSlots({
         }
     },
     */
-    
-    clearSelection: function() {
+
+    clearSelection: function () {
         if (window.getSelection) {
             window.getSelection().removeAllRanges();
         } else if (document.selection) {
@@ -2472,141 +2472,141 @@ window.DomView = ideal.Proto.extend().newSlots({
         }
         return this
     },
-    
-    setContentAfterOrBeforeString: function(aString, afterOrBefore) {
-        let uniqueClassName = "UniqueClass_" + this._uniqueId
-        let e = this.element()
+
+    setContentAfterOrBeforeString: function (aString, afterOrBefore) {
+        const uniqueClassName = "UniqueClass_" + this._uniqueId
+        const e = this.element()
         if (e.className.indexOf(uniqueClassName) === -1) {
-            let newRuleKey = "DomView" + uniqueClassName + ":" + afterOrBefore
-            let newRuleValue = "content: \"" + aString + "\;"
+            const newRuleKey = "DomView" + uniqueClassName + ":" + afterOrBefore
+            const newRuleValue = "content: \"" + aString + "\;"
             //console.log("newRule '" + newRuleKey + "', '" + newRuleValue + "'")
             document.styleSheets[0].addRule(newRuleKey, newRuleValue);
             e.className += " " + uniqueClassName
         }
         return this
     },
-       
-    setContentAfterString: function(aString) {
+
+    setContentAfterString: function (aString) {
         this.setContentAfterOrBeforeString(aString, "after")
         return this
     },
-    
-    setContentBeforeString: function(aString) {
+
+    setContentBeforeString: function (aString) {
         this.setContentAfterOrBeforeString(aString, "before")
         return this
-    },    
-    
+    },
+
     // scroll top
-    
-    setScrollTop: function(v) {
+
+    setScrollTop: function (v) {
         this.element().scrollTop = v
         return this
     },
 
-    scrollTop: function() {
+    scrollTop: function () {
         return this.element().scrollTop
     },
-    
+
     // scroll width & scroll height
-  
-    scrollWidth: function() {
+
+    scrollWidth: function () {
         return this.element().scrollWidth // a read-only value
     },
-      
-    scrollHeight: function() {
+
+    scrollHeight: function () {
         return this.element().scrollHeight // a read-only value
     },
-    
+
     // offset width & offset height
-    
-    offsetLeft: function() {
+
+    offsetLeft: function () {
         return this.element().offsetLeft // a read-only value
     },
-      
-    offsetTop: function() {
+
+    offsetTop: function () {
         return this.element().offsetTop // a read-only value
-    },        
-    
-    // scroll actions
-    
-    scrollToTop: function() {
-        this.setScrollTop(0)
-        return this       
     },
-    
-    scrollToBottom: function() {
-        let focusedElement = document.activeElement
-        let needsRefocus = focusedElement !== this.element()
+
+    // scroll actions
+
+    scrollToTop: function () {
+        this.setScrollTop(0)
+        return this
+    },
+
+    scrollToBottom: function () {
+        const focusedElement = document.activeElement
+        const needsRefocus = focusedElement !== this.element()
         // console.log("]]]]]]]]]]]] " + this.typeId() + ".scrollToTop() needsRefocus = ", needsRefocus)
-        
+
         this.setScrollTop(this.scrollHeight())
-        
+
         if (needsRefocus) {
             focusedElement.focus()
         }
         //e.animate({ scrollTop: offset }, 500); // TODO: why doesn't this work?
         return this
     },
-    
-    scrollSubviewToTop: function(aSubview) {
+
+    scrollSubviewToTop: function (aSubview) {
         console.log("]]]]]]]]]]]] " + this.typeId() + ".scrollSubviewToTop()")
         assert(this.hasSubview(aSubview))
         //this.setScrollTop(aSubview.offsetTop())
         //this.setScrollTopSmooth(aSubview.offsetTop())
         //this.setScrollTop(aSubview.offsetTop() + aSubview.scrollHeight())
         this.animateValue(
-            () => { return aSubview.offsetTop() }, 
-            () => { return this.scrollTop() }, 
-            (v) => { this.setScrollTop(v) }, 
+            () => { return aSubview.offsetTop() },
+            () => { return this.scrollTop() },
+            (v) => { this.setScrollTop(v) },
             200)
         return this
     },
-    
-    animateValue: function(targetFunc, valueFunc, setterFunc, duration) { // duration in milliseconds         
+
+    animateValue: function (targetFunc, valueFunc, setterFunc, duration) { // duration in milliseconds         
         console.log("]]]]]]]]]]]] " + this.typeId() + ".animateValue()")
         if (duration == null) {
             duration = 200
         }
         //duration = 1500
-        let startTime = Date.now();
-        
-        let step = () => {
-            let dt = (Date.now() - startTime)
-            let r =  dt / duration
-            r = Math.sin(r*Math.PI/2)
-            r = r*r*r
+        const startTime = Date.now();
 
-            let currentValue = valueFunc()
-            let currentTargetValue = targetFunc()
-            
+        const step = () => {
+            const dt = (Date.now() - startTime)
+            let r = dt / duration
+            r = Math.sin(r * Math.PI / 2)
+            r = r * r * r
+
+            const currentValue = valueFunc()
+            const currentTargetValue = targetFunc()
+
             //console.log("time: ", dt, " /", duration, " r:", r, " top:", currentValue, "/", currentTargetValue)
-            
+
             if (dt > duration) {
                 setterFunc(currentTargetValue)
             } else {
-                let newValue = currentValue + (currentTargetValue - currentValue) * r
+                const newValue = currentValue + (currentTargetValue - currentValue) * r
                 setterFunc(newValue)
                 window.requestAnimationFrame(step);
             }
         }
-        
+
         window.requestAnimationFrame(step);
-        
-        return this    
+
+        return this
     },
-    
-    setScrollTopSmooth: function(newScrollTop, scrollDuration) { 
+
+    setScrollTopSmooth: function (newScrollTop, scrollDuration) {
         this.animateValue(() => { return newScrollTop }, () => { return this.scrollTop() }, (v) => { this.setScrollTop(v) }, scrollDuration)
-        return this    
+        return this
     },
-    
-    dynamicScrollIntoView: function() {
+
+    dynamicScrollIntoView: function () {
         this.parentView().scrollSubviewToTop(this)
         return this
     },
-    
-    scrollIntoView: function() {
-        let focusedView =  WebBrowserWindow.shared().activeDomView()
+
+    scrollIntoView: function () {
+        const focusedView = WebBrowserWindow.shared().activeDomView()
         //console.log("]]]]]]]]]]]] " + this.typeId() + ".scrollIntoView() needsRefocus = ", focusedView !== this)
 
         if (focusedView && focusedView !== this) {
@@ -2624,9 +2624,9 @@ window.DomView = ideal.Proto.extend().newSlots({
         setTimeout(() => {
             this.element().scrollIntoView({ block: "start", inline: "nearest", behavior: "smooth", })
         }, 0)
-        
 
-        
+
+
         /*
         if (focusedView !== this) {
             focusedView.focusAfterDelay(0.5) // TODO: get this value from transition property
@@ -2635,15 +2635,15 @@ window.DomView = ideal.Proto.extend().newSlots({
         return this
     },
 
-    boundingClientRect: function() {
+    boundingClientRect: function () {
         return this.element().getBoundingClientRect()
     },
 
-    containsWinPoint: function() {
+    containsWinPoint: function () {
 
     },
-    
-    isScrolledIntoView: function() {
+
+    isScrolledIntoView: function () {
         const r = this.boundingClientRect()
         const isVisible = (r.top >= 0) && (r.bottom <= window.innerHeight);
         return isVisible;
@@ -2661,80 +2661,80 @@ window.DomView = ideal.Proto.extend().newSlots({
     },
     */
 
-    mouseDownPos: function() { 
+    mouseDownPos: function () {
         return this.viewPosForWindowPos(Mouse.shared().downPos())
     },
 
     // view position helpers ----
 
-    setRelativePos: function(p) {
+    setRelativePos: function (p) {
         // why not a 2d transform?
         this.setLeft(p.x())
         this.setTop(p.y())
         return this
     },
-   
-    containsPoint: function(aPoint) {
+
+    containsPoint: function (aPoint) {
         // point must be in document coordinates
         return this.frameInDocument().containsPoint(aPoint)
     },
 
     // viewport coordinates helpers
 
-    frameInViewport: function() {
+    frameInViewport: function () {
         const origin = this.positionInViewport()
         const size = this.sizeInViewport()
         const frame = Rectangle.clone().setOrigin(origin).setSize(size)
         return frame
     },
 
-    positionInViewport: function() {
+    positionInViewport: function () {
         const box = this.element().getBoundingClientRect();
         return Point.clone().set(Math.round(box.left), Math.round(box.top));
     },
 
-    sizeInViewport: function() {
+    sizeInViewport: function () {
         const box = this.element().getBoundingClientRect();
         return Point.clone().set(Math.round(box.width), Math.round(box.height));
     },
 
     // document coordinates helpers
 
-    frameInDocument: function() {
+    frameInDocument: function () {
         const origin = this.positionInDocument()
         const size = this.size()
         const frame = Rectangle.clone().setOrigin(origin).setSize(size)
         return frame
     },
 
-    positionInDocument: function() {
+    positionInDocument: function () {
         const box = this.element().getBoundingClientRect();
 
         // return Point.clone().set(Math.round(box.left), Math.round(box.top));
 
         const body = document.body;
         const docEl = document.documentElement;
-    
+
         const scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
         const scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
-    
+
         const clientTop = docEl.clientTop || body.clientTop || 0;
         const clientLeft = docEl.clientLeft || body.clientLeft || 0;
-    
-        const top  = box.top +  scrollTop - clientTop;
+
+        const top = box.top + scrollTop - clientTop;
         const left = box.left + scrollLeft - clientLeft;
-    
+
         const p = Point.clone().set(Math.round(left), Math.round(top));
         return p
     },
 
-    size: function() {
+    size: function () {
         return EventPoint.clone().set(this.clientWidth(), this.clientHeight());
     },
 
     // ---------------------
 
-    relativePos: function() {
+    relativePos: function () {
         const pv = this.parentView()
         if (pv) {
             return this.positionInDocument().subtract(pv.positionInDocument())
@@ -2743,98 +2743,98 @@ window.DomView = ideal.Proto.extend().newSlots({
         return this.positionInDocument()
     },
 
-    setRelativePos: function(p) {
+    setRelativePos: function (p) {
         //this.setPosition("absolute")
         this.setLeft(p.x())
         this.setTop(p.y())
         return this
     },
 
-    viewPosForWindowPos: function(pos) {
+    viewPosForWindowPos: function (pos) {
         return this.positionInDocument().subtract(pos)
     },
 
     // --------------
 
-    verticallyAlignAbsoluteNow: function() {
+    verticallyAlignAbsoluteNow: function () {
         const pv = this.parentView()
         if (pv) {
             this.setPosition("absolute")
             setTimeout(() => {
-                this.setTop(pv.clientHeight()/2 - this.clientHeight()/2)
-            }, 0)
-        }
-        return this
-    },
-	
-    horizontallyAlignAbsoluteNow: function() {
-        const pv = this.parentView()
-        if (pv) {
-            this.setPosition("absolute")
-            setTimeout(() => {
-                this.setRight(pv.clientWidth()/2 - this.clientWidth()/2)
+                this.setTop(pv.clientHeight() / 2 - this.clientHeight() / 2)
             }, 0)
         }
         return this
     },
 
-    setVerticalAlign: function(s) {
+    horizontallyAlignAbsoluteNow: function () {
+        const pv = this.parentView()
+        if (pv) {
+            this.setPosition("absolute")
+            setTimeout(() => {
+                this.setRight(pv.clientWidth() / 2 - this.clientWidth() / 2)
+            }, 0)
+        }
+        return this
+    },
+
+    setVerticalAlign: function (s) {
         this.setCssAttribute("vertical-align", s)
         return this
     },
-	
+
     // visibility event
-	
-    onVisibility: function() {
-	    //console.log(this.typeId() + ".onVisibility()")
-	    this.unregisterForVisibility()
-	    return true
+
+    onVisibility: function () {
+        //console.log(this.typeId() + ".onVisibility()")
+        this.unregisterForVisibility()
+        return true
     },
-	
-    unregisterForVisibility: function() {
-	    const obs = this.intersectionObserver()
-	    if (obs) {
-	        obs.disconnect()
+
+    unregisterForVisibility: function () {
+        const obs = this.intersectionObserver()
+        if (obs) {
+            obs.disconnect()
             this.setIntersectionObserver(null);
             this.setIsRegisteredForVisibility(false)
-	    }
-	    return this
+        }
+        return this
     },
-	
-    registerForVisibility: function() {
-	    if (this.isRegisteredForVisibility()) {
-	        return this
-	    }
-	    
-	    let root = document.body
-	    
-	    if (this.parentView()) {
-	        root = this.parentView().parentView().element() // hack for scroll view - TODO: make more general
-	        //root = this.parentView().element()
-	    }
-	    
+
+    registerForVisibility: function () {
+        if (this.isRegisteredForVisibility()) {
+            return this
+        }
+
+        let root = document.body
+
+        if (this.parentView()) {
+            root = this.parentView().parentView().element() // hack for scroll view - TODO: make more general
+            //root = this.parentView().element()
+        }
+
         const intersectionObserverOptions = {
             root: root, // watch for visibility in the viewport 
             rootMargin: "0px",
             threshold: 1.0
         }
-    
-        const obs = new IntersectionObserver((entries, observer) => { 
+
+        const obs = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) { 
-                    
+                if (entry.isIntersecting) {
+
                     //console.log("onVisibility!")
                     if (this._endScrollIntoViewFunc) {
-            	        this._endScrollIntoViewFunc() 
-            	        // hack around lack of end of scrollIntoView event 
-            	        // needed to return focus that scrollIntoView grabs from other elements
-            	    }
-	    
-                    this.onVisibility() 
+                        this._endScrollIntoViewFunc()
+                        // hack around lack of end of scrollIntoView event 
+                        // needed to return focus that scrollIntoView grabs from other elements
+                    }
+
+                    this.onVisibility()
                 }
             })
         }, intersectionObserverOptions)
-        
+
         this.setIntersectionObserver(obs);
         obs.observe(this.element());
 
@@ -2844,13 +2844,13 @@ window.DomView = ideal.Proto.extend().newSlots({
 
     // centering
 
-    fillParentView: function() {
+    fillParentView: function () {
         this.setWidthPercentage(100)
         this.setHeightPercentage(100)
         return this
     },
 
-    centerInParentView: function() {
+    centerInParentView: function () {
         this.setMinAndMaxWidth(null)
         this.setMinAndMaxHeight(null)
         //this.setWidth("100%")
@@ -2903,11 +2903,11 @@ window.DomView = ideal.Proto.extend().newSlots({
     },
     */
 
-    rootView: function() {
-        return  WebBrowserWindow.shared().documentBody()
+    rootView: function () {
+        return WebBrowserWindow.shared().documentBody()
     },
 
-    disablePointerEventsUntilTimeout: function(ms) {
+    disablePointerEventsUntilTimeout: function (ms) {
         this.setPointerEvents("none")
         console.log(this.typeId() + " disabling pointer events")
 
@@ -2915,11 +2915,11 @@ window.DomView = ideal.Proto.extend().newSlots({
             console.log(this.typeId() + " enabling pointer events")
             this.setPointerEvents("inherit")
         }, ms)
-        
+
         return this
     },
 
-    containerize: function() {
+    containerize: function () {
         // create a subview of same size as parent and put all other subviews in it
         const container = DomView.clone()
         container.setMinAndMaxHeight(this.clientHeight())
@@ -2929,7 +2929,7 @@ window.DomView = ideal.Proto.extend().newSlots({
         return container
     },
 
-    uncontainerize: function() {
+    uncontainerize: function () {
         assert(this.subviewCount() === 1)
         const container = this.subviews().first()
         this.removeSubview(container)
@@ -2937,7 +2937,7 @@ window.DomView = ideal.Proto.extend().newSlots({
         return this
     },
 
-    moveAllSubviewsToView: function(aView) {
+    moveAllSubviewsToView: function (aView) {
         this.subviews().copy().forEach((sv) => {
             this.remove(sv)
             aView.addSubview(sv)

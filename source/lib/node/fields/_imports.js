@@ -6,5 +6,6 @@ ResourceLoader.pushRelativePaths([
     
     "BMActionNode.js",
     "BMCreatorNode.js",
+    "BMOptionNode.js",
     "fieldtypes/_imports.js"
 ])

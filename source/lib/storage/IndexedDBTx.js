@@ -4,6 +4,8 @@
 
     IndexedDBTx
 
+    Abstraction of a single IndexedDB transaction.
+
 */
 
 window.IndexedDBTx = class IndexedDBTx extends ProtoClass {

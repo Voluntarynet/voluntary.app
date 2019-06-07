@@ -82,12 +82,12 @@ window.TouchScreen = ideal.Proto.extend().newSlots({
     */
 
     lastPointForId: function(id) {
-        let lastPoints  = this.pointsForEvent(this.lastEvent())
+        const lastPoints = this.pointsForEvent(this.lastEvent())
         return lastPoints.detect(p => p.id() === id)
     },
 
     currentPointForId: function(id) {
-        let currentPoints = this.pointsForEvent(this.currentEvent())
+        const currentPoints = this.pointsForEvent(this.currentEvent())
         return currentPoints.detect(p => p.id() === id)
     },
 
@@ -105,7 +105,7 @@ window.TouchScreen = ideal.Proto.extend().newSlots({
 
     pointForTouch: function(touch) {
         assert(event.__proto__.constructor === TouchEvent)
-        let p = EventPoint.clone()
+        const p = EventPoint.clone()
         p.setId(touch.identifier)
         p.setTarget(touch.target)
         p.set(touch.pageX, touch.pageY)  // document position
@@ -121,12 +121,12 @@ window.TouchScreen = ideal.Proto.extend().newSlots({
         //  console.log("touches.length = ", event.touches.length)
         //}
 
-        let points = []
+        const points = []
         // event.touches isn't a proper array, so we can't enumerate it normally
-        let touches = event.touches // all current touches
+        const touches = event.touches // all current touches
         for (let i = 0; i < touches.length; i++) {
-            let touch = touches[i]
-            let p = this.pointForTouch(touch)
+            const touch = touches[i]
+            const p = this.pointForTouch(touch)
             points.append(p)
         }
 
@@ -167,13 +167,13 @@ window.TouchScreen = ideal.Proto.extend().newSlots({
 
     handleLeave: function(event) {
         // an attempt to add onTouchLeave and onTouchOver events
-        let currentPoints = this.pointsForEvent(this.currentEvent())
+        const currentPoints = this.pointsForEvent(this.currentEvent())
 
         currentPoints.forEach((cp) => {
-            let lp = this.lastPointForId(cp.id())
+            const lp = this.lastPointForId(cp.id())
             if (lp) {
-                let lastView    = lp.overview()
-                let currentView = cp.overview()
+                const lastView    = lp.overview()
+                const currentView = cp.overview()
 
                 // check if overView is the same
                 if (lastView !== currentView) {

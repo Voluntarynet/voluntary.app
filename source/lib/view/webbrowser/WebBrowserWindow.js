@@ -128,6 +128,8 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     },
 
     isTouchDevice: function() {
+        //return TouchScreen.shared().isSupported()
+
         // via https://stackoverflow.com/questions/4817029/whats-the-best-way-to-detect-a-touch-screen-device-using-javascript
         let result = false 
         if ("ontouchstart" in window) { result = true; }        // works on most browsers 

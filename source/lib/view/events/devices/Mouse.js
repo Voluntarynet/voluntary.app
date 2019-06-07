@@ -73,7 +73,7 @@ window.Mouse = ideal.Proto.extend().newSlots({
     pointForEvent: function(event) {
         assert(event.__proto__.constructor === MouseEvent)
 
-        let p = EventPoint.clone()
+        const p = EventPoint.clone()
         p.set(event.pageX, event.pageY) // document position
         p.setTarget(event.target)
         p.setTimeToNow()

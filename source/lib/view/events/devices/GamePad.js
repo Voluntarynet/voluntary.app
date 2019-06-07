@@ -96,7 +96,7 @@ window.GamePad = ideal.Proto.extend().newSlots({
 
     changedAxesIndexTo: function(index, value) {
         const note = NotificationCenter.shared().newNote().setSender(this)
-        note.setName("onGamePadAxis" + index + "Changed") // TODO: optimize
+        note.setName("onGamePadAxis" + index + "Changed") // TODO: optimize?
         note.setInfo(value)
         note.post()
         return this

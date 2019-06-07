@@ -94,24 +94,25 @@ The source code is available at:
 
 [https://github.com/Voluntarynet/voluntary.app](https://github.com/Voluntarynet/voluntary.app)
 
-Once you've cloned the repo, you can run the app by opening:
+Once you've cloned the repo, you can run the app either by opening:
 
     index.html
 
-in your local Chrome browser. index.html is a contcatenation of all the JS and CSS resource in the project and is 
-built by running the archive/archive.js script in nodejs. 
+in your local Chrome browser (index.html is a contcatenation of all the JS and CSS resources in the project and is 
+built by running the archive/archive.js script in nodejs)
     
-Alternatively, you can open:
+or you can open:
 
     index_incremental.html
 
-whice uses JS code to import all of the resources in the proper order.
+whice uses JS code to import all of the resources in the proper order. This is slower to load, but
+prefered for debugging as breakpoints and errors can be connected to the proper source files. 
+The index.html build is used to distribution.
 
 The development environment I use is VSCode. I strongly recommend using it as it 
-supports running the build scripts and connecting to the Chrome debugger which allows
-you to add break points and click on the stack trace to open and edit the related code.
+supports automatically running the index.html build script, as well as launch scripts which connect to the Chrome debugger.
 
-To get the build scripts to work, you'll need to install nodejs:
+To get the build script to work, you'll need to install nodejs:
 
 [https://nodejs.org/en/](https://nodejs.org/en/)
 
@@ -120,9 +121,10 @@ To get the launch scripts and Chrome debugging to work, you'll need to install t
 [https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome](https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome)
     
 When developing with the VSCode debugger, you'll want to click on the debugger tab, and use the "Launch Local Incremental File" script. 
-This will allow you to set breakpoints and stack browse via the source files (vs the compiled index.html).
 
 #### Progressive web app testing
+
+This is a new feature and may not be working yet but...
 
 To test the progressive web app (PSA) features, you'll need to run a local https server. 
 From the root source folder, run:
@@ -148,7 +150,7 @@ The project contains a number of components:
 - an intergrated client-side transparent persistence framework (most apps only require developer to declare stored objects and fields)
 - a notifications system which automatically synchronizes the UI, model, and persistence
 
-On top of this system, decentralized apps (dapps) can quicky be built with very little code. 
+On top of this system, decentralized apps (dapps) can be quicky built with very little code. 
 
 #### Javascript and CSS importing
 

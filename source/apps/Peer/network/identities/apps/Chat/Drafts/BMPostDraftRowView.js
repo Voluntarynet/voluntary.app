@@ -112,7 +112,7 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
     },
     
     setIconDataUrl: function(imageDataUrl) {
-        let iv = this.iconView()
+        const iv = this.iconView()
         
         if (imageDataUrl) {
     		iv.setBackgroundImageUrlPath(imageDataUrl)        
@@ -130,7 +130,7 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         
         if (node && this.textContentView()) {
             /*
-            let placeText = this.textContentView().innerHTML().length ? "" : "What's happening?"    
+            const placeText = this.textContentView().innerHTML().length ? "" : "What's happening?"    
             this.placeHolderView().setInnerHTML(placeText)
             */
 

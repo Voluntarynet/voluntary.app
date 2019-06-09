@@ -6,12 +6,12 @@
 
     find pow:
     
-        let pow = BMPow.clone().setHash(hh).findPow()
+        const pow = BMPow.clone().setHash(hh).findPow()
         console.log("found pow = ", pow.powHex())
     
     verify pow:
 
-        let isValid = BMPow.clone().setHash(hh).setPow(ph).isValid()
+        const isValid = BMPow.clone().setHash(hh).setPow(ph).isValid()
         console.log("pow is valid = ", isValid)    
         
     notes:
@@ -54,7 +54,7 @@ window.BMPow = ideal.Proto.extend().newSlots({
     },
         
     pickRandomPow: function() {
-        let numBytes = 32;
+        const numBytes = 32;
         this.setPowBits(sjcl.random.randomWords(numBytes/4));
         return this        
     },
@@ -92,7 +92,7 @@ window.BMPow = ideal.Proto.extend().newSlots({
     
     asyncFind: function () {
         this.setStatus("starting")
-        let currentTime = new Date().getTime()
+        const currentTime = new Date().getTime()
         this.setAsyncEndTime(currentTime + this.asyncTimeoutPeriod())
         if (!this.isFinding()) {
             this.setIsFinding(true)
@@ -106,12 +106,12 @@ window.BMPow = ideal.Proto.extend().newSlots({
     },
 
     asyncTimedOut: function() {
-        let currentTime = new Date().getTime()
+        const currentTime = new Date().getTime()
         return currentTime > this.asyncEndTime()        
     },
     
     PRIVATE_findPowLoop: function() {
-        let found = this.syncFind() // sync has a timeout period
+        const found = this.syncFind() // sync has a timeout period
         
         if (this.asyncTimedOut()) {
             throw new Error("Pow asyncTimedOut " + new Date().getTime() + " > "  + this.asyncEndTime())
@@ -138,8 +138,8 @@ window.BMPow = ideal.Proto.extend().newSlots({
     },
 
     syncFind: function() {
-        let syncEndTime = new Date().getTime() + this.syncTimeoutPeriod()
-        let done = false;
+        const syncEndTime = new Date().getTime() + this.syncTimeoutPeriod()
+        const done = false;
         do {
             done = this.syncFindOneLoop()
             let currentTime = new Date().getTime()
@@ -150,7 +150,7 @@ window.BMPow = ideal.Proto.extend().newSlots({
     },
     
     syncFindOneLoop: function() {
-        let max = this.syncTriesPerLoop();
+        const  max = this.syncTriesPerLoop();
         for (let i = 0; i < max; i++) {
             this.pickRandomPow()
             if (this.isValid()) {
@@ -174,7 +174,7 @@ window.BMPow = ideal.Proto.extend().newSlots({
     },
  
     estimatedPercentageDone: function() {
-        let p = this.estimatedRatioDone()*100
+        const  p = this.estimatedRatioDone() * 100
         if (p < 1) { 
             return Math.floor(p*100)/100
         }
@@ -199,6 +199,8 @@ window.BMPow = ideal.Proto.extend().newSlots({
     },
     
     estimateTimeDescription: function() {
+        // move to use TimePeriodFormatter?
+        
         let value = null
         let unit = null
         

@@ -22,7 +22,7 @@ window.BMPostThread = BMAppMessage.extend().newSlots({
     },
     
     findThreadItems: function() {
-        let items = []
+        const items = []
         items.push(this.postMessage())
         items.appendItems(this.postMessage().replies())
         return items

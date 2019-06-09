@@ -35,7 +35,7 @@ self.addEventListener("install", event => {
 
 self.addEventListener("fetch", (e) => {
     // All requests made to the server will pass through here.
-    let response = fetch(e.request)
+    const response = fetch(e.request)
         .then((response) => response)
         // If one fails, return the offline page from the cache.
         // caches.match doesn"t require the name of the specific

@@ -48,7 +48,7 @@ window.BMChatThread = BMStorableNode.extend().newSlots({
     },
 	
     setInputFieldValue: function(s) {
-        let msg = BMChatMessage.clone()
+        const msg = BMChatMessage.clone()
 
         msg.setContent(s)
         msg.sendToRemoteId(this.remoteIdentity())
@@ -79,8 +79,8 @@ window.BMChatThread = BMStorableNode.extend().newSlots({
     },
 	
     hasValidRemoteIdentity: function() {
-	    let result = this.threads().chatTargetIds().detect((id) => { return id === this.remoteIdentity() })
-	    //let result = this.localIdentity().remoteIdentities().idWithPublicKeyString(this.remoteIdentity().publicKeyString()) 
+	    const result = this.threads().chatTargetIds().detect((id) => { return id === this.remoteIdentity() })
+	    //const result = this.localIdentity().remoteIdentities().idWithPublicKeyString(this.remoteIdentity().publicKeyString()) 
 	    //console.log(this.typeId() + " " + this.remoteIdentity().title() + ".hasValidRemoteIdentity() = " + result)
 	    return result != null
     },

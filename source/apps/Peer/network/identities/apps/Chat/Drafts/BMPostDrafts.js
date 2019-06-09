@@ -30,7 +30,7 @@ window.BMPostDrafts = BMStorableNode.extend().newSlots({
 	
 
     add: function() {
-        let result = BMStorableNode.add.apply(this)
+        const result = BMStorableNode.add.apply(this)
         this.scheduleSyncToStore()
         this.didUpdateNode()
         return result

@@ -27,7 +27,7 @@ window.BMConnection = BMNode.extend().newSlots({
         //this.setServers(NodeStore.shared().rootInstanceWithPidForProto("_servers", BMRServers))
         //this.addSubnode(this.servers())
         
-        let con = navigator.connection || navigator.mozConnection || navigator.webkitConnection
+        const con = navigator.connection || navigator.mozConnection || navigator.webkitConnection
 
         if (!con) {
             console.warn("Looks like this browser (IE or Safari>) doesn't network connection info (e.g. navigator.connection) -but this is only needed to show wifi etc connection state.")
@@ -46,7 +46,7 @@ window.BMConnection = BMNode.extend().newSlots({
     
     connectionType: function() {
         if (this.isAvailable()) {
-            let s = this.connection().effectiveType
+            const s = this.connection().effectiveType
             if (s) {
                 return s.toUpperCase()
             }

@@ -61,7 +61,7 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
     },
 
     shared: function() {   
-        let thisClass = BMNetwork     
+        const thisClass = BMNetwork     
         if (!thisClass._shared) {
             thisClass._shared = this.clone();
         }
@@ -69,7 +69,7 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
     },
 
     connectedRemotePeers: function () {
-        let remotePeers = []
+        const remotePeers = []
         this.servers().connectedServers().forEach(function (server) {
             remotePeers.appendItems(server.connectedRemotePeers())
         })        
@@ -91,17 +91,16 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
     },
     
     subtitle: function() {
-        let parts = []
+        const parts = []
 
-        let n = this.serverCount()
         parts.push(this.connectedServerCount() + " of " + this.serverCount() + " servers")
         // parts.push(n + " server" + ((n!=1) ? "s" : ""))
 
-        n = this.connectedRemotePeerCount()
-        parts.push(n + " peer" + ((n!=1) ? "s" : ""))
+        const peerCount = this.connectedRemotePeerCount()
+        parts.push(peerCount + " peer" + ((peerCount!=1) ? "s" : ""))
 
-        n = this.messages().messages().length
-        parts.push(n + " msg" + ((n!=1) ? "s" : ""))
+        const msgCount = this.messages().messages().length
+        parts.push(msgCount + " msg" + ((msgCount!=1) ? "s" : ""))
 
         return parts.join(", ")
     },
@@ -139,8 +138,8 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
             console.warn("publicKeyString is null")
         }
         
-        let ids = this.allIdentities()   
-        let result = ids.detect((id) => { 
+        const ids = this.allIdentities()   
+        const result = ids.detect((id) => { 
             return id.publicKeyString() === publicKeyString
         })
 		
@@ -152,9 +151,9 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
     },
 
     allRemoteIdentities: function() {
-        let allRids = []
+        const allRids = []
         this.localIdentities().subnodes().forEach((id) => { 
-            let valids = id.remoteIdentities().validSubnodes()
+            const valids = id.remoteIdentities().validSubnodes()
             //console.log(id.publicKeyString() + " valid rid count: " + valids.length)
             valids.forEach((rid) => {
                 allRids.push(rid)
@@ -164,7 +163,7 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
     },
 	
     allIdentitiesMap: function() { // only uses valid remote identities
-        let ids = ideal.Map.clone()
+        const ids = ideal.Map.clone()
         this.localIdentities().subnodes().forEach((id) => { 
 		    ids.merge(id.allIdentitiesMap())
         })
@@ -172,8 +171,7 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
     },
 
     allIdentities: function() { // only uses valid remote identities
-        let ids = []
-        ids = this.localIdentities().subnodes().concat(this.allRemoteIdentities())
+        const ids = this.localIdentities().subnodes().concat(this.allRemoteIdentities())
         return ids
     },
     
@@ -208,9 +206,9 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
     // --- bloom filter for matching ids -----------------------------------------
 	
     newDefaultBloomFilter: function() { // proto method?
-        let falsePositiveRate = 0.01;
-        let maxElementSize = 1000		
-        let filter = JSBloom.newFilter(maxElementSize, falsePositiveRate)
+        const falsePositiveRate = 0.01;
+        const maxElementSize = 1000		
+        const filter = JSBloom.newFilter(maxElementSize, falsePositiveRate)
         return filter
     },
 
@@ -221,9 +219,9 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
 		
     updateIdsBloomFilter: function() {
         //console.log(this.typeId() + ".updateIdsBloomFilter()")
-        let oldFilter = this._idsBloomFilter
+        const oldFilter = this._idsBloomFilter
 	
-        let ids = this.allIdentities()
+        const ids = this.allIdentities()
 		
         /*
 		console.log(this.typeId() + ".updateIdsBloomFilter() with " + ids.length + " ids")
@@ -239,8 +237,8 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
 			
             /*
 			if(oldFilter) {
-				let f1 = oldFilter.serialized()
-				let f2 = this._idsBloomFilter.serialized()
+				const f1 = oldFilter.serialized()
+				const f2 = this._idsBloomFilter.serialized()
 				console.log("--f1: " + f1)
 				console.log("--f2: " + f2)
 			}
@@ -250,8 +248,8 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
         this.verifyIdsBloom()
 		
         if (oldFilter) {
-            let f1 = oldFilter.serialized()
-            let f2 = this._idsBloomFilter.serialized()
+            const f1 = oldFilter.serialized()
+            const f2 = this._idsBloomFilter.serialized()
             if (f1 !== f2) {
                 this.didChangeIdsBloom()
             }
@@ -271,8 +269,8 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
     verifyIdsBloom: function() {
         //console.log(this.typeId() + ".verifyIdsBloom: " + this.idsBloomFilter().serialized().sha256String().substring(0, 6) )
 	    this.allIdentities().forEach((id) => {
-            let k = id.publicKeyString()
-            let doesMatch = this.idsBloomFilter().checkEntry(k)
+            const k = id.publicKeyString()
+            const doesMatch = this.idsBloomFilter().checkEntry(k)
             //console.log("    key: " + k + " " + doesMatch)
 	        if (!doesMatch) {
                 throw new Error("bloom is missing key " + k)

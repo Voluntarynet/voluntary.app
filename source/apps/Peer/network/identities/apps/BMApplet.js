@@ -24,7 +24,7 @@ window.BMApplet = BMStorableNode.extend().newSlots({
     },
 	
     allIdentitiesMap: function() { // only uses valid remote identities
-        let ids = ideal.Map.clone()
+        const ids = ideal.Map.clone()
         return ids
     },
 

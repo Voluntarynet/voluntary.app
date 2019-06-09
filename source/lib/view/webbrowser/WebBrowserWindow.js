@@ -43,10 +43,10 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     // prevent window level drop and only allow drop on elements that can handle it
 
     dropCheck : function(event) {
-        let element = event.target
-        let elementMayWantDrop = element.ondrop
-        let view = element._divView
-        let viewMayWantDrop = view && view.dropListener().isListening()
+        const element = event.target
+        const elementMayWantDrop = element.ondrop
+        const view = element._divView
+        const viewMayWantDrop = view && view.dropListener().isListening()
 
         if (!elementMayWantDrop && !viewMayWantDrop) {
             event.preventDefault();

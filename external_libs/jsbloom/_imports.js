@@ -3,7 +3,7 @@ ResourceLoader.pushRelativePaths([
     "bloom.js",
 ]).pushDoneCallback(() => {
     JSBloom.newFilter = function (a, b) {
-        let filter = JSBloom.filter(a, b)
+        const filter = JSBloom.filter(a, b)
 
         filter.asUncompactedUint8BitArray = function () {
             return this.info.raw_buffer

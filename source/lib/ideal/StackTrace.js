@@ -30,7 +30,6 @@ class StackTrace extends ProtoClass {
     init() {
         super.init()
         this.newSlots({
-
         })
     }
 
@@ -92,9 +91,16 @@ class StackTrace extends ProtoClass {
         e.message = ""
         console.log( e.stack );
     }
+
+    static callingScriptURL () {
+        const urls = new Error().stackURLs()
+        return urls[1]
+    }
 }
 
 StackTrace.registerThisClass()
+
+
 
 
 // --- helper functions ---
@@ -127,3 +133,23 @@ Error.prototype.assertDefined = function(v) {
     return v
 }
 
+Error.prototype.stackURLs = function(v) {
+    let urls = this.stack.split("at")
+    urls.removeFirst()
+    urls = urls.map(url => {
+        
+        if (url.contains("(")) {
+            url = url.after("(")
+        }
+
+        url = url.strip()
+
+        const parts = url.split(":")
+        parts.removeLast()
+        parts.removeLast()
+        return parts.join(":")
+    })
+    return urls
+}
+
+//console.log("Currently running script:", StackTrace.callingScriptURL())

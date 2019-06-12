@@ -32,8 +32,8 @@ window.BMRegions = BMRegion.extend().newSlots({
     
     /*
     receivedMsgFrom: function(msg, remotePeer) {
-        let postDict = JSON.parse(msg)
-        let post = BMPost.clone().setPostDict(postDict)
+        const postDict = JSON.parse(msg)
+        const post = BMPost.clone().setPostDict(postDict)
         this.addSubnode(post)
         this.didUpdateNode() 
     }

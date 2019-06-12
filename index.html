@@ -78781,7 +78781,7 @@ ResourceLoader.pushRelativePaths([
     "bloom.js",
 ]).pushDoneCallback(() => {
     JSBloom.newFilter = function (a, b) {
-        let filter = JSBloom.filter(a, b)
+        const filter = JSBloom.filter(a, b)
 
         filter.asUncompactedUint8BitArray = function () {
             return this.info.raw_buffer
@@ -79210,6 +79210,7 @@ ResourceLoader.pushRelativePaths([
     "TimePeriodFormatter.js",
     //"FilePath.js",
 ]);
+
 
 
 "use strict"
@@ -81782,7 +81783,6 @@ class StackTrace extends ProtoClass {
     init() {
         super.init()
         this.newSlots({
-
         })
     }
 
@@ -81844,9 +81844,16 @@ class StackTrace extends ProtoClass {
         e.message = ""
         console.log( e.stack );
     }
+
+    static callingScriptURL () {
+        const urls = new Error().stackURLs()
+        return urls[1]
+    }
 }
 
 StackTrace.registerThisClass()
+
+
 
 
 // --- helper functions ---
@@ -81879,6 +81886,26 @@ Error.prototype.assertDefined = function(v) {
     return v
 }
 
+Error.prototype.stackURLs = function(v) {
+    let urls = this.stack.split("at")
+    urls.removeFirst()
+    urls = urls.map(url => {
+        
+        if (url.contains("(")) {
+            url = url.after("(")
+        }
+
+        url = url.strip()
+
+        const parts = url.split(":")
+        parts.removeLast()
+        parts.removeLast()
+        return parts.join(":")
+    })
+    return urls
+}
+
+//console.log("Currently running script:", StackTrace.callingScriptURL())
 
 "use strict"
 
@@ -85415,6 +85442,8 @@ ResourceLoader.pushRelativePaths([
     "BMImageNode.js",
     "BMStoredDatedSetNode.js",
 ])
+
+//console.log("Currently running script:", StackTrace.callingScriptURL())
 
 "use strict"
 
@@ -91929,10 +91958,10 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     // prevent window level drop and only allow drop on elements that can handle it
 
     dropCheck : function(event) {
-        let element = event.target
-        let elementMayWantDrop = element.ondrop
-        let view = element._divView
-        let viewMayWantDrop = view && view.dropListener().isListening()
+        const element = event.target
+        const elementMayWantDrop = element.ondrop
+        const view = element._divView
+        const viewMayWantDrop = view && view.dropListener().isListening()
 
         if (!elementMayWantDrop && !viewMayWantDrop) {
             event.preventDefault();
@@ -104570,7 +104599,7 @@ window.BMMessages = BMStorableNode.extend().newSlots({
     // --- deletedSet -----------------------------------------
 
     deleteObjMsg: function(objMsg) {
-        let h = objMsg.hash()
+        const h = objMsg.hash()
         this.deletedSet().addKey(h)
         this.placedSet().removeKey(h)
         //this.getQueueSet().removeKey(h)
@@ -104646,7 +104675,7 @@ window.BMMessages = BMStorableNode.extend().newSlots({
             return true
         } 
 		
-        let didPlace = this.network().localIdentities().handleObjMsg(objMsg)
+        const didPlace = this.network().localIdentities().handleObjMsg(objMsg)
 
         if (didPlace) {
             this.markPlacedObjMsg(objMsg) 
@@ -104674,7 +104703,7 @@ window.BMMessages = BMStorableNode.extend().newSlots({
 
     broadcastMessage: function(msg) {
 	    // tell peers
-	    let peers = this.network().connectedRemotePeers()
+	    const peers = this.network().connectedRemotePeers()
 	    console.log("broadcasting to " + peers.length + " peers")
 	    peers.forEach(function (peer) {
 	        peer.addedObjMsg(msg)
@@ -104694,14 +104723,14 @@ window.BMMessages = BMStorableNode.extend().newSlots({
     },
 	
     needsMessageWithHash: function(h) {
-        let wasDeleted = this.deletedSet().hasKey(h)
-        let isMissing = this.subnodeWithHash(h) == null
+        const wasDeleted = this.deletedSet().hasKey(h)
+        const isMissing = this.subnodeWithHash(h) == null
         return (!wasDeleted) && isMissing
     },
 	
     inv: function(invMsg) {
-        let remoteInv = invMsg.data()        
-        let getMsg = BMGetDataMessage.clone().setRemotePeer(invMsg.remotePeer())
+        const remoteInv = invMsg.data()        
+        const getMsg = BMGetDataMessage.clone().setRemotePeer(invMsg.remotePeer())
         
         remoteInv.forEach( (h) => {
             if (this.needsMessageWithHash(h)) {
@@ -104722,7 +104751,7 @@ window.BMMessages = BMStorableNode.extend().newSlots({
     },
     
     object: function(msg) {
-        let h = msg.msgHash()
+        const h = msg.msgHash()
         
         // remove from the queue
         //delete this._queue[h]
@@ -104732,7 +104761,7 @@ window.BMMessages = BMStorableNode.extend().newSlots({
     
     getData: function(msg) {
         msg.data().forEach((aHash) => {
-            let objMsg = this.messageWithHash(aHash)
+            const objMsg = this.messageWithHash(aHash)
             if (objMsg) {
                 msg.remotePeer().sendMsg(objMsg)
             }
@@ -104743,8 +104772,8 @@ window.BMMessages = BMStorableNode.extend().newSlots({
     
     onRemotePeerConnect: function(remotePeer) {
         // send inv
-        //let invMsg = this.currentInvMsg()
-        let invMsg = BMInvMessage.clone().addMessages(this.messagesMatchingBloom(remotePeer.peerId().bloomFilter()))
+        //const invMsg = this.currentInvMsg()
+        const invMsg = BMInvMessage.clone().addMessages(this.messagesMatchingBloom(remotePeer.peerId().bloomFilter()))
 
         console.log("onRemotePeerConnect send inv " + invMsg.data().length)
 
@@ -104767,12 +104796,12 @@ window.BMMessages = BMStorableNode.extend().newSlots({
         // this gets slow for large msg count but target is short term
         // ephemeral messages for now 
 		
-        let pubkeys = BMNetwork.shared().allIdentityPublicKeyStrings()
+        const pubkeys = BMNetwork.shared().allIdentityPublicKeyStrings()
         let count = 0
 				
         this.messages().copy().forEach( (objMsg) => {
             //console.log("objMsg: ", objMsg)
-            let senderPK = objMsg.senderPublicKeyString()
+            const senderPK = objMsg.senderPublicKeyString()
             if (!pubkeys.contains(senderPK)) {
                 this.removeMessage(objMsg)
                 count ++
@@ -104853,7 +104882,7 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
     },
 
     shared: function() {   
-        let thisClass = BMNetwork     
+        const thisClass = BMNetwork     
         if (!thisClass._shared) {
             thisClass._shared = this.clone();
         }
@@ -104861,7 +104890,7 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
     },
 
     connectedRemotePeers: function () {
-        let remotePeers = []
+        const remotePeers = []
         this.servers().connectedServers().forEach(function (server) {
             remotePeers.appendItems(server.connectedRemotePeers())
         })        
@@ -104883,17 +104912,16 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
     },
     
     subtitle: function() {
-        let parts = []
+        const parts = []
 
-        let n = this.serverCount()
         parts.push(this.connectedServerCount() + " of " + this.serverCount() + " servers")
         // parts.push(n + " server" + ((n!=1) ? "s" : ""))
 
-        n = this.connectedRemotePeerCount()
-        parts.push(n + " peer" + ((n!=1) ? "s" : ""))
+        const peerCount = this.connectedRemotePeerCount()
+        parts.push(peerCount + " peer" + ((peerCount!=1) ? "s" : ""))
 
-        n = this.messages().messages().length
-        parts.push(n + " msg" + ((n!=1) ? "s" : ""))
+        const msgCount = this.messages().messages().length
+        parts.push(msgCount + " msg" + ((msgCount!=1) ? "s" : ""))
 
         return parts.join(", ")
     },
@@ -104931,8 +104959,8 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
             console.warn("publicKeyString is null")
         }
         
-        let ids = this.allIdentities()   
-        let result = ids.detect((id) => { 
+        const ids = this.allIdentities()   
+        const result = ids.detect((id) => { 
             return id.publicKeyString() === publicKeyString
         })
 		
@@ -104944,9 +104972,9 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
     },
 
     allRemoteIdentities: function() {
-        let allRids = []
+        const allRids = []
         this.localIdentities().subnodes().forEach((id) => { 
-            let valids = id.remoteIdentities().validSubnodes()
+            const valids = id.remoteIdentities().validSubnodes()
             //console.log(id.publicKeyString() + " valid rid count: " + valids.length)
             valids.forEach((rid) => {
                 allRids.push(rid)
@@ -104956,7 +104984,7 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
     },
 	
     allIdentitiesMap: function() { // only uses valid remote identities
-        let ids = ideal.Map.clone()
+        const ids = ideal.Map.clone()
         this.localIdentities().subnodes().forEach((id) => { 
 		    ids.merge(id.allIdentitiesMap())
         })
@@ -104964,8 +104992,7 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
     },
 
     allIdentities: function() { // only uses valid remote identities
-        let ids = []
-        ids = this.localIdentities().subnodes().concat(this.allRemoteIdentities())
+        const ids = this.localIdentities().subnodes().concat(this.allRemoteIdentities())
         return ids
     },
     
@@ -105000,9 +105027,9 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
     // --- bloom filter for matching ids -----------------------------------------
 	
     newDefaultBloomFilter: function() { // proto method?
-        let falsePositiveRate = 0.01;
-        let maxElementSize = 1000		
-        let filter = JSBloom.newFilter(maxElementSize, falsePositiveRate)
+        const falsePositiveRate = 0.01;
+        const maxElementSize = 1000		
+        const filter = JSBloom.newFilter(maxElementSize, falsePositiveRate)
         return filter
     },
 
@@ -105013,9 +105040,9 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
 		
     updateIdsBloomFilter: function() {
         //console.log(this.typeId() + ".updateIdsBloomFilter()")
-        let oldFilter = this._idsBloomFilter
+        const oldFilter = this._idsBloomFilter
 	
-        let ids = this.allIdentities()
+        const ids = this.allIdentities()
 		
         /*
 		console.log(this.typeId() + ".updateIdsBloomFilter() with " + ids.length + " ids")
@@ -105031,8 +105058,8 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
 			
             /*
 			if(oldFilter) {
-				let f1 = oldFilter.serialized()
-				let f2 = this._idsBloomFilter.serialized()
+				const f1 = oldFilter.serialized()
+				const f2 = this._idsBloomFilter.serialized()
 				console.log("--f1: " + f1)
 				console.log("--f2: " + f2)
 			}
@@ -105042,8 +105069,8 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
         this.verifyIdsBloom()
 		
         if (oldFilter) {
-            let f1 = oldFilter.serialized()
-            let f2 = this._idsBloomFilter.serialized()
+            const f1 = oldFilter.serialized()
+            const f2 = this._idsBloomFilter.serialized()
             if (f1 !== f2) {
                 this.didChangeIdsBloom()
             }
@@ -105063,8 +105090,8 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
     verifyIdsBloom: function() {
         //console.log(this.typeId() + ".verifyIdsBloom: " + this.idsBloomFilter().serialized().sha256String().substring(0, 6) )
 	    this.allIdentities().forEach((id) => {
-            let k = id.publicKeyString()
-            let doesMatch = this.idsBloomFilter().checkEntry(k)
+            const k = id.publicKeyString()
+            const doesMatch = this.idsBloomFilter().checkEntry(k)
             //console.log("    key: " + k + " " + doesMatch)
 	        if (!doesMatch) {
                 throw new Error("bloom is missing key " + k)
@@ -105082,9 +105109,9 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
 	
     hasIdentityMatchingBloomFilter: function(bloomFilter) {
         //console.log(this.typeId() + ".hasIdentityMatchingBloomFilter: " + bloomFilter.serialized().sha256String().substring(0, 6) )
-	    let match = this.allIdentities().detect((id) => {
-            let k = id.publicKeyString()
-            let doesMatch = bloomFilter.checkEntry(k)
+	    const match = this.allIdentities().detect((id) => {
+            const k = id.publicKeyString()
+            const doesMatch = bloomFilter.checkEntry(k)
             //console.log("    key: " + k + " " + doesMatch)
 	        return doesMatch
 	    }) 
@@ -108082,7 +108109,7 @@ window.BMApplet = BMStorableNode.extend().newSlots({
     },
 	
     allIdentitiesMap: function() { // only uses valid remote identities
-        let ids = ideal.Map.clone()
+        const ids = ideal.Map.clone()
         return ids
     },
 
@@ -108339,8 +108366,8 @@ window.BMRegions = BMRegion.extend().newSlots({
     
     /*
     receivedMsgFrom: function(msg, remotePeer) {
-        let postDict = JSON.parse(msg)
-        let post = BMPost.clone().setPostDict(postDict)
+        const postDict = JSON.parse(msg)
+        const post = BMPost.clone().setPostDict(postDict)
         this.addSubnode(post)
         this.didUpdateNode() 
     }
@@ -109088,7 +109115,7 @@ window.BMChat = BMApplet.extend().newSlots({
 
     /*
 	setThreads: function(newValue) {
-		let oldValue = this._threads
+		const oldValue = this._threads
 		this._threads = newValue
 		this.didUpdateSlot("threads", oldValue, newValue)
 		
@@ -109110,8 +109137,8 @@ window.BMChat = BMApplet.extend().newSlots({
         if (msg.type() === BMPostMessage.type()) {
 		    //console.log("found BMPostMessage")
 		    
-		    let spk = msg.senderPublicKeyString()
-            let senderId = this.localIdentity().idForPublicKeyString(spk)
+		    const spk = msg.senderPublicKeyString()
+            const senderId = this.localIdentity().idForPublicKeyString(spk)
 		    //console.log("this.localIdentity().idForPublicKeyString(spk) = ", this.localIdentity().idForPublicKeyString(spk))
 		    
 		    if (senderId) {		        
@@ -109134,7 +109161,7 @@ window.BMChat = BMApplet.extend().newSlots({
 
     handleSentMessage: function(msg) {
         if (msg.senderId() && msg.senderId().equals(this.localIdentity())) {
-            let thread = this.threads().linkForContact(msg.receiverId())
+            const thread = this.threads().linkForContact(msg.receiverId())
             if (thread) {
                 thread.addMessage(msg.duplicate())
             }
@@ -109147,7 +109174,7 @@ window.BMChat = BMApplet.extend().newSlots({
             //console.log("msg.receiverId() = ", msg.receiverId().type())
             if (msg.receiverId().equals(this.localIdentity())) {
  	            //console.log(this.nodePathString() + " handleReceivedMessage adding " + msg.typeId() + "  ", msg.dataDict())
-   				let thread = this.threads().linkForContact(msg.senderId())
+   				const thread = this.threads().linkForContact(msg.senderId())
     			if (thread) {
     				thread.addMessage(msg)
     				//thread.addMessage(msg.duplicate())
@@ -109251,7 +109278,7 @@ window.BMContactLinks = BMStorableNode.extend().newSlots({
     addLinkForEveryContact: function () {
         this.chatTargetIds().forEach((rid) => {
             if (!this.linkForContact(rid)) {
-                let link = this.linkProto().clone().setRemoteIdentity(rid)
+                const link = this.linkProto().clone().setRemoteIdentity(rid)
                 this.addSubnode(link)
             }
         })
@@ -109276,7 +109303,7 @@ window.BMContactLinks = BMStorableNode.extend().newSlots({
     },
 
     sortSubnodes: function () {
-        let contactLinks = this.contactLinks().slice()
+        const contactLinks = this.contactLinks().slice()
 
         contactLinks.sort((linkA, linkB) => {
             return linkA.title().localeCompare(linkB.title())
@@ -109371,7 +109398,7 @@ window.BMChatThread = BMStorableNode.extend().newSlots({
     },
 	
     setInputFieldValue: function(s) {
-        let msg = BMChatMessage.clone()
+        const msg = BMChatMessage.clone()
 
         msg.setContent(s)
         msg.sendToRemoteId(this.remoteIdentity())
@@ -109402,8 +109429,8 @@ window.BMChatThread = BMStorableNode.extend().newSlots({
     },
 	
     hasValidRemoteIdentity: function() {
-	    let result = this.threads().chatTargetIds().detect((id) => { return id === this.remoteIdentity() })
-	    //let result = this.localIdentity().remoteIdentities().idWithPublicKeyString(this.remoteIdentity().publicKeyString()) 
+	    const result = this.threads().chatTargetIds().detect((id) => { return id === this.remoteIdentity() })
+	    //const result = this.localIdentity().remoteIdentities().idWithPublicKeyString(this.remoteIdentity().publicKeyString()) 
 	    //console.log(this.typeId() + " " + this.remoteIdentity().title() + ".hasValidRemoteIdentity() = " + result)
 	    return result != null
     },
@@ -109458,7 +109485,7 @@ window.BMChatMessage = BMAppMessage.extend().newSlots({
     },
 	
     contentDict: function() {
-        let contentDict = {}
+        const contentDict = {}
         contentDict.content = this.content()
         return contentDict
     },
@@ -109557,7 +109584,7 @@ window.BMChatMessageRowView = BrowserTitledRow.extend().newSlots({
     updateSubviews: function() {
         BrowserTitledRow.updateSubviews.apply(this)
 		
-        let node = this.node()
+        const node = this.node()
         if (node) {
             //console.log(this.typeId() + " updateSubviews node = " + node.typeId() + " content = ", this.node().content())
             this.titleView().setInnerHTML(node.title())
@@ -109633,7 +109660,7 @@ window.BMPostDrafts = BMStorableNode.extend().newSlots({
 	
 
     add: function() {
-        let result = BMStorableNode.add.apply(this)
+        const result = BMStorableNode.add.apply(this)
         this.scheduleSyncToStore()
         this.didUpdateNode()
         return result
@@ -109693,7 +109720,7 @@ window.BMPostDraft = BMStorableNode.extend().newSlots({
     },
 	
     contentDict: function() {
-        let contentDict = {}
+        const contentDict = {}
         contentDict.content = this.content()
         return contentDict
     },
@@ -109713,7 +109740,7 @@ window.BMPostDraft = BMStorableNode.extend().newSlots({
     },
 	
     post: function() {
-        let msg = BMPostMessage.clone()
+        const msg = BMPostMessage.clone()
         msg.setContent(this.content())
         msg.postFromSender(this.localIdentity())
         this.delete()
@@ -109836,7 +109863,7 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
     },
     
     setIconDataUrl: function(imageDataUrl) {
-        let iv = this.iconView()
+        const iv = this.iconView()
         
         if (imageDataUrl) {
     		iv.setBackgroundImageUrlPath(imageDataUrl)        
@@ -109854,7 +109881,7 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         
         if (node && this.textContentView()) {
             /*
-            let placeText = this.textContentView().innerHTML().length ? "" : "What's happening?"    
+            const placeText = this.textContentView().innerHTML().length ? "" : "What's happening?"    
             this.placeHolderView().setInnerHTML(placeText)
             */
 
@@ -110135,7 +110162,7 @@ window.BMPostMessage = BMAppMessage.extend().newSlots({
     },
 	
     contentDict: function() {
-        let contentDict = {}
+        const contentDict = {}
         contentDict.content = this.content()
         return contentDict
     },
@@ -110243,7 +110270,7 @@ window.BMPostThread = BMAppMessage.extend().newSlots({
     },
     
     findThreadItems: function() {
-        let items = []
+        const items = []
         items.push(this.postMessage())
         items.appendItems(this.postMessage().replies())
         return items
@@ -110728,8 +110755,8 @@ window.BMApps = BMStorableNode.extend().newSlots({
 
     removeAnyExtraApps: function () {
         // remove any apps not in appProtos
-        let types = this.appProtos().map((proto) => { return proto.type() })
-        let matches = this.apps().select((app) => { return types.contains(app.type()) })
+        const types = this.appProtos().map((proto) => { return proto.type() })
+        const matches = this.apps().select((app) => { return types.contains(app.type()) })
         this.setSubnodes(matches)
     },
 
@@ -110965,7 +110992,7 @@ window.BMConnection = BMNode.extend().newSlots({
         //this.setServers(NodeStore.shared().rootInstanceWithPidForProto("_servers", BMRServers))
         //this.addSubnode(this.servers())
         
-        let con = navigator.connection || navigator.mozConnection || navigator.webkitConnection
+        const con = navigator.connection || navigator.mozConnection || navigator.webkitConnection
 
         if (!con) {
             console.warn("Looks like this browser (IE or Safari>) doesn't network connection info (e.g. navigator.connection) -but this is only needed to show wifi etc connection state.")
@@ -110984,7 +111011,7 @@ window.BMConnection = BMNode.extend().newSlots({
     
     connectionType: function() {
         if (this.isAvailable()) {
-            let s = this.connection().effectiveType
+            const s = this.connection().effectiveType
             if (s) {
                 return s.toUpperCase()
             }

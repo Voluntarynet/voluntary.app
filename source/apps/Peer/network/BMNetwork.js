@@ -288,9 +288,9 @@ window.BMNetwork = BMFieldSetNode.extend().newSlots({
 	
     hasIdentityMatchingBloomFilter: function(bloomFilter) {
         //console.log(this.typeId() + ".hasIdentityMatchingBloomFilter: " + bloomFilter.serialized().sha256String().substring(0, 6) )
-	    let match = this.allIdentities().detect((id) => {
-            let k = id.publicKeyString()
-            let doesMatch = bloomFilter.checkEntry(k)
+	    const match = this.allIdentities().detect((id) => {
+            const k = id.publicKeyString()
+            const doesMatch = bloomFilter.checkEntry(k)
             //console.log("    key: " + k + " " + doesMatch)
 	        return doesMatch
 	    }) 

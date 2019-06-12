@@ -142,7 +142,7 @@ class IndexBuilder {
 
         const css      = this.stringForPaths(this.cssPaths())
         const script   = this.stringForPaths(this.allScriptPaths()) + "\nResourceLoader.setResourceFilePaths(" + JSON.stringify(this._resourceFilePaths) + ");\n"
-        const index = this.stringForPaths(["template.html"])
+        let index = this.stringForPaths(["template.html"])
         index = index.replaceAll("/* INSERT CSS HERE */", css)
         index = index.replaceAll("/* INSERT SCRIPT HERE */", script)
 

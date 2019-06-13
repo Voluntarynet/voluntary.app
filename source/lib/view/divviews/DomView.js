@@ -1554,7 +1554,7 @@ window.DomView = ideal.Proto.extend().newSlots({
 
         if (!this.hasSubview(aSubview)) {
             console.warn(this.type() + " removeSubview " + aSubview.typeId() + " failed - no child found among: ", this.subviews().map(view => view.typeId()))
-            StackTrace.shared().showCurrentStack()
+            Error.showCurrentStack()
             return aSubview
         }
         this.willRemoveSubview(aSubview)
@@ -1570,7 +1570,7 @@ window.DomView = ideal.Proto.extend().newSlots({
 
         if (this.hasChildElement(aSubview.element())) {
             console.warn("WARNING: " + this.type() + " removeSubview " + aSubview.type() + " failed - still has element after remove")
-            StackTrace.shared().showCurrentStack()
+            Error.showCurrentStack()
         }
 
         aSubview.setParentView(null)

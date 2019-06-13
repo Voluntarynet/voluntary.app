@@ -27,7 +27,7 @@ window.SyncAction = class SyncAction extends ProtoClass {
             this.send()
         } catch(error) {
             console.warn(this.typeId() + ".trySend(" + this.description() + ") caught exception: ")
-            StackTrace.shared().showError(error)
+            error.show()
             return false
         }
         */

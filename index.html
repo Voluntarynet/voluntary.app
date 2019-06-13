@@ -79221,7 +79221,8 @@ ResourceLoader.pushRelativePaths([
     "Array-ideal.js",
     "String-ideal.js",
     "Number-ideal.js",
-    "Set-ideal.js"
+    "Set-ideal.js",
+    "Error-ideal.js"
 ]);
 
 
@@ -80529,7 +80530,7 @@ Object.shallowCopyTo({
         return extension;
     },
 
-    // ----------
+    // --- pad / strip -------
 
     padLeft: function (length, padding) {
         let str = this;
@@ -80759,6 +80760,152 @@ Object.shallowCopyTo({
     
 }, Set.prototype);
 
+"use strict"
+
+/*
+
+    Error-ideal
+
+    Some extra methods for the Javascript Error primitive.
+
+*/
+
+Error.assert = function(v) {
+    if(!Boolean(v)) {
+        throw new Error("assert failed - false value")
+    }
+    return v
+}
+
+Error.assertDefined = function(v) {
+    if(v === undefined) {
+        throw new Error("assert failed - undefined value")
+    }
+    return v
+}
+
+Error.showCurrentStack = function() {
+    const e = new Error()
+    e.name = "STACK TRACE"
+    e.message = ""
+    console.log( e.stack );
+}
+
+
+Error.try = function(func) {
+    try {
+        func()
+    } catch (error) {
+        this.showError(error)
+    }
+}
+
+Error.callingScriptURL = function() {
+    const urls = new Error().stackURLs()
+    return urls[1]
+}
+
+
+Object.shallowCopyTo({
+
+    // --- assert ---
+
+    /*
+    assert: function(v) {
+        if(!Boolean(v)) {
+            throw new Error("assert failed - false value")
+        }
+        return v
+    },
+    
+    assertDefined: function(v) {
+        if(v === undefined) {
+            throw new Error("assert failed - undefined value")
+        }
+        return v
+    },
+    */
+
+    // --- assert ---
+    
+    stackURLs: function(v) {
+        let urls = this.stack.split("at")
+        urls.removeFirst()
+        urls = urls.map(url => {
+            
+            if (url.contains("(")) {
+                url = url.after("(")
+            }
+    
+            url = url.strip()
+    
+            const parts = url.split(":")
+            parts.removeLast()
+            parts.removeLast()
+            return parts.join(":")
+        })
+        return urls
+    },
+
+    // ------------------------
+
+    description: function() {
+        const error = this
+        const lines = error.stack.split("\n")
+        const firstLine = lines.removeFirst()
+        const out = []
+        const indent = "    "
+		
+        lines.forEach(function (line) {
+            if (line.contains("at file")) {
+                out.push(["....", line.after("at ").split("/").pop()])
+            } else {
+                line = line.after("at ")
+                if (line === "") {
+                    return;
+                }
+                const obj = line.before(".")
+                const method = line.after(".").before(" (")
+                const path = line.after("(").before(")")
+                const filePart = path.split("/").pop()
+                let file = filePart.before(":")
+                if (file === "") { 
+                    file = "???.js:??:?"
+                }
+                const className = file.before(".js")
+                const location = filePart.after(":")
+                out.push([className + " " + method + "()      ", file + ":" + location])
+            }
+        })
+		
+        let s = firstLine + "\n"
+        const m = out.maxValue(function(entry) { return entry[0].length })
+        out.forEach(function (entry) {
+            s += indent + entry[0] + " ".repeat(m + 1 - entry[0].length) + entry[1] + "\n"
+        })
+		
+        //s = error.message + "\n" + s
+        s = s.replaceAll("<br>", "\n")
+        return s
+    },
+	
+    show: function() {
+        console.warn(this.description())
+    },
+
+
+    
+}, Error.prototype);
+
+// --- helper functions ---
+
+function assert(v) {
+    return Error.assert(v)
+}
+
+function assertDefined(v) {
+    return Error.assertDefined(v)
+}
 "use strict"
 
 
@@ -81757,44 +81904,33 @@ window.ideal.Map.registerThisClass()
     
     StackTrace
     
-    A stack printout that understands objects.
+    Class that can parse a JS stack trace, into StackFrame objects.
 
-    Example uses:
-
-        showing a caught error:
-
-            try {
-                ...
-            } catch(e) {
-                StackTrace.shared().showError(e)
-            }
-
-        try and catch:
-
-            StackTrace.shared().try(() => {	 ... })
-
-        show the current stack:
-
-            StackTrace.shared().showCurrentStack()
 
 */
+
+class StackFrame extends ProtoClass {
+    init() {
+        super.init()
+        this.newSlots({
+            functionName: null,
+            filePath: null,
+            line: null,
+            character: null,
+        })
+    }
+}
 
 class StackTrace extends ProtoClass {
     init() {
         super.init()
         this.newSlots({
+            error: null,
+            stackFrames: [],
         })
     }
-
-    try(func) {
-        try {
-            func()
-        } catch (error) {
-            this.showError(error)
-        }
-    }
 	
-    stringForError(error) {
+    setError(error) {
         const lines = error.stack.split("\n")
         const firstLine = lines.removeFirst()
         const out = []
@@ -81832,23 +81968,7 @@ class StackTrace extends ProtoClass {
         s = s.replaceAll("<br>", "\n")
         return s
     }
-	
-    showError(error) {
-        const s = this.stringForError(error)
-        console.warn(s)
-    }
 
-    showCurrentStack() {
-        const e = new Error()
-        e.name = "STACK TRACE"
-        e.message = ""
-        console.log( e.stack );
-    }
-
-    static callingScriptURL () {
-        const urls = new Error().stackURLs()
-        return urls[1]
-    }
 }
 
 StackTrace.registerThisClass()
@@ -81856,56 +81976,9 @@ StackTrace.registerThisClass()
 
 
 
-// --- helper functions ---
 
-function assert(v) {
-    if(!Boolean(v)) {
-        throw new Error("assert failed - false value")
-    }
-    return v
-}
 
-function assertDefined(v) {
-    if(v === undefined) {
-        throw new Error("assert failed - undefined value")
-    }
-    return v
-}
-
-Error.prototype.assert = function(v) {
-    if(!Boolean(v)) {
-        throw new Error("assert failed - false value")
-    }
-    return v
-}
-
-Error.prototype.assertDefined = function(v) {
-    if(v === undefined) {
-        throw new Error("assert failed - undefined value")
-    }
-    return v
-}
-
-Error.prototype.stackURLs = function(v) {
-    let urls = this.stack.split("at")
-    urls.removeFirst()
-    urls = urls.map(url => {
-        
-        if (url.contains("(")) {
-            url = url.after("(")
-        }
-
-        url = url.strip()
-
-        const parts = url.split(":")
-        parts.removeLast()
-        parts.removeLast()
-        return parts.join(":")
-    })
-    return urls
-}
-
-//console.log("Currently running script:", StackTrace.callingScriptURL())
+//console.log("Currently running script:", Error.callingScriptURL())
 
 "use strict"
 
@@ -82113,7 +82186,7 @@ window.SyncAction = class SyncAction extends ProtoClass {
             this.send()
         } catch(error) {
             console.warn(this.typeId() + ".trySend(" + this.description() + ") caught exception: ")
-            StackTrace.shared().showError(error)
+            error.show()
             return false
         }
         */
@@ -82528,7 +82601,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
             })
             this._isProcessing = false
         } else {
-            StackTrace.shared().showCurrentStack()
+            Error.showCurrentStack()
             console.warn("WARNING: attempt to call processPostQueue recursively while on note: ", this._currentNote)
         }
         
@@ -83833,7 +83906,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     setParentNode: function(aNode) {
         if (aNode === this._parentNode) {
             //console.warn(this.type() + " setParentNode(" + aNode.type() + ")  already has parent ", this._parentNode.type())
-            //StackTrace.shared().showCurrentStack()
+            //Error.showCurrentStack()
             return this
         }
 
@@ -85443,7 +85516,7 @@ ResourceLoader.pushRelativePaths([
     "BMStoredDatedSetNode.js",
 ])
 
-//console.log("Currently running script:", StackTrace.callingScriptURL())
+//console.log("Currently running script:", Error.callingScriptURL())
 
 "use strict"
 
@@ -89356,7 +89429,7 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
             eventFunc(event)
         } catch (e) {
             //console.log(e)
-            StackTrace.shared().showError(e)
+            e.show()
             //error = e
         }
 		
@@ -94647,7 +94720,7 @@ window.DomView = ideal.Proto.extend().newSlots({
 
         if (!this.hasSubview(aSubview)) {
             console.warn(this.type() + " removeSubview " + aSubview.typeId() + " failed - no child found among: ", this.subviews().map(view => view.typeId()))
-            StackTrace.shared().showCurrentStack()
+            Error.showCurrentStack()
             return aSubview
         }
         this.willRemoveSubview(aSubview)
@@ -94663,7 +94736,7 @@ window.DomView = ideal.Proto.extend().newSlots({
 
         if (this.hasChildElement(aSubview.element())) {
             console.warn("WARNING: " + this.type() + " removeSubview " + aSubview.type() + " failed - still has element after remove")
-            StackTrace.shared().showCurrentStack()
+            Error.showCurrentStack()
         }
 
         aSubview.setParentView(null)
@@ -98228,7 +98301,7 @@ window.BrowserView = NodeView.extend().newSlots({
     setColumnGroupCount: function (count) {
         //this.log("setColumnGroupCount " + count)
         if (count === 0) {
-            StackTrace.shared().showCurrentStack()
+            Error.showCurrentStack()
         }
 
         if (this.columnGroups().length === count) { // redundant?
@@ -98595,7 +98668,7 @@ window.BrowserView = NodeView.extend().newSlots({
         //console.log("selectNode " + aNode.nodePath())
         if (!aNode) {
             console.warn(this.type() + " selectNode called with null argument")
-            StackTrace.shared().showCurrentStack()
+            Error.showCurrentStack()
             return this
         }
         this.selectNodePath(aNode.nodePath())
@@ -99911,7 +99984,7 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
     
     /*
     setMinAndMaxWidth: function(w) {
-        StackTrace.shared().showCurrentStack()
+        Error.showCurrentStack()
 		console.log(this.typeId() + " / " + (this.node() ? this.node().type() : "?") + " nodeMinWidth = " + w)
         NodeView.setMinAndMaxWidth.apply(this, [w])
         return this
@@ -105344,7 +105417,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
         statusNode._error = ""
         
         if (error) {	        
-	        statusNode._error = StackTrace.shared().stringForError(error)
+	        statusNode._error = error.description()
 	        statusNode.setNote("&gt;")
 	        //statusNode.makeNoteRightArrow()
 	    }

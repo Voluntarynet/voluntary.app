@@ -269,7 +269,7 @@ window.BrowserView = NodeView.extend().newSlots({
     setColumnGroupCount: function (count) {
         //this.log("setColumnGroupCount " + count)
         if (count === 0) {
-            StackTrace.shared().showCurrentStack()
+            Error.showCurrentStack()
         }
 
         if (this.columnGroups().length === count) { // redundant?
@@ -636,7 +636,7 @@ window.BrowserView = NodeView.extend().newSlots({
         //console.log("selectNode " + aNode.nodePath())
         if (!aNode) {
             console.warn(this.type() + " selectNode called with null argument")
-            StackTrace.shared().showCurrentStack()
+            Error.showCurrentStack()
             return this
         }
         this.selectNodePath(aNode.nodePath())

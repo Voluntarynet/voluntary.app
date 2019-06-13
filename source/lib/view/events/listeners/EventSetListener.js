@@ -216,7 +216,7 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
             eventFunc(event)
         } catch (e) {
             //console.log(e)
-            StackTrace.shared().showError(e)
+            e.show()
             //error = e
         }
 		

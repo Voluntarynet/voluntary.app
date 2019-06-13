@@ -4,44 +4,33 @@
     
     StackTrace
     
-    A stack printout that understands objects.
+    Class that can parse a JS stack trace, into StackFrame objects.
 
-    Example uses:
-
-        showing a caught error:
-
-            try {
-                ...
-            } catch(e) {
-                StackTrace.shared().showError(e)
-            }
-
-        try and catch:
-
-            StackTrace.shared().try(() => {	 ... })
-
-        show the current stack:
-
-            StackTrace.shared().showCurrentStack()
 
 */
+
+class StackFrame extends ProtoClass {
+    init() {
+        super.init()
+        this.newSlots({
+            functionName: null,
+            filePath: null,
+            line: null,
+            character: null,
+        })
+    }
+}
 
 class StackTrace extends ProtoClass {
     init() {
         super.init()
         this.newSlots({
+            error: null,
+            stackFrames: [],
         })
     }
-
-    try(func) {
-        try {
-            func()
-        } catch (error) {
-            this.showError(error)
-        }
-    }
 	
-    stringForError(error) {
+    setError(error) {
         const lines = error.stack.split("\n")
         const firstLine = lines.removeFirst()
         const out = []
@@ -79,23 +68,7 @@ class StackTrace extends ProtoClass {
         s = s.replaceAll("<br>", "\n")
         return s
     }
-	
-    showError(error) {
-        const s = this.stringForError(error)
-        console.warn(s)
-    }
 
-    showCurrentStack() {
-        const e = new Error()
-        e.name = "STACK TRACE"
-        e.message = ""
-        console.log( e.stack );
-    }
-
-    static callingScriptURL () {
-        const urls = new Error().stackURLs()
-        return urls[1]
-    }
 }
 
 StackTrace.registerThisClass()
@@ -103,53 +76,6 @@ StackTrace.registerThisClass()
 
 
 
-// --- helper functions ---
 
-function assert(v) {
-    if(!Boolean(v)) {
-        throw new Error("assert failed - false value")
-    }
-    return v
-}
 
-function assertDefined(v) {
-    if(v === undefined) {
-        throw new Error("assert failed - undefined value")
-    }
-    return v
-}
-
-Error.prototype.assert = function(v) {
-    if(!Boolean(v)) {
-        throw new Error("assert failed - false value")
-    }
-    return v
-}
-
-Error.prototype.assertDefined = function(v) {
-    if(v === undefined) {
-        throw new Error("assert failed - undefined value")
-    }
-    return v
-}
-
-Error.prototype.stackURLs = function(v) {
-    let urls = this.stack.split("at")
-    urls.removeFirst()
-    urls = urls.map(url => {
-        
-        if (url.contains("(")) {
-            url = url.after("(")
-        }
-
-        url = url.strip()
-
-        const parts = url.split(":")
-        parts.removeLast()
-        parts.removeLast()
-        return parts.join(":")
-    })
-    return urls
-}
-
-//console.log("Currently running script:", StackTrace.callingScriptURL())
+//console.log("Currently running script:", Error.callingScriptURL())

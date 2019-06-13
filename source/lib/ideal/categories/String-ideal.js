@@ -199,7 +199,7 @@ Object.shallowCopyTo({
         return extension;
     },
 
-    // ----------
+    // --- pad / strip -------
 
     padLeft: function (length, padding) {
         let str = this;

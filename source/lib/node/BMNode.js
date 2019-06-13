@@ -241,7 +241,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     setParentNode: function(aNode) {
         if (aNode === this._parentNode) {
             //console.warn(this.type() + " setParentNode(" + aNode.type() + ")  already has parent ", this._parentNode.type())
-            //StackTrace.shared().showCurrentStack()
+            //Error.showCurrentStack()
             return this
         }
 

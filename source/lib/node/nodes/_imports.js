@@ -7,4 +7,4 @@ ResourceLoader.pushRelativePaths([
     "BMStoredDatedSetNode.js",
 ])
 
-//console.log("Currently running script:", StackTrace.callingScriptURL())
+//console.log("Currently running script:", Error.callingScriptURL())

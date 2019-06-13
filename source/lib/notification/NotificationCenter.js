@@ -138,7 +138,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
             })
             this._isProcessing = false
         } else {
-            StackTrace.shared().showCurrentStack()
+            Error.showCurrentStack()
             console.warn("WARNING: attempt to call processPostQueue recursively while on note: ", this._currentNote)
         }
         

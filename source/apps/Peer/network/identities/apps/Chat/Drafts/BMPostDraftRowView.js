@@ -45,7 +45,8 @@ window.BMPostDraftRowView = BrowserRow.extend().newSlots({
         this.contentView().setMaxHeight("fit-content")
 
         // --------------------------------------------------
-
+        this.addCloseButton()
+        
         this.closeButtonView().setDivClassName("BrowserRowCloseButtonTopRight")
         this.setTopView(this.addContentSubview(DomView.clone().setDivClassName("BMPostDraftRowTopView")))
 

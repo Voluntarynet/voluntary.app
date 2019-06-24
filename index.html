@@ -81974,6 +81974,12 @@ class StackTrace extends ProtoClass {
 StackTrace.registerThisClass()
 
 
+try {
+    throw(new Error("test error"))
+} catch(e) {
+    StackTrace.clone().setError(e)
+}
+
 
 
 

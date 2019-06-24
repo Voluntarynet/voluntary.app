@@ -14,10 +14,44 @@ class StackFrame extends ProtoClass {
         super.init()
         this.newSlots({
             functionName: null,
-            filePath: null,
-            line: null,
-            character: null,
+            url: null,
+            lineNumber: null,
+            characterNumber: null,
         })
+    }
+
+    fromLine(line) {
+        line = line.after("at ")
+
+        if (line.contains("(")) {
+            const functionName = line.before("(").strip()
+            this.setFunctionName(functionName)
+            line = line.between("(", ")").strip()
+        }
+        
+        const parts = line.split(":")
+        if (parts.length !== 4) {
+            console.log("unexpected stacktrace line format: '" + line + "'")
+            return this
+        }
+        const lineNumber = parts.removeLast()
+        this.setLineNumber(Number(lineNumber))
+
+        const characterNumber = parts.removeLast()
+        this.setCharacterNumber(Number(characterNumber))
+
+        const url = parts.join(":")
+        this.setUrl(url)
+
+        return this
+    }
+
+    description() {
+        return "  " + this.functionName() + "() line " + this.lineNumber()
+    }
+
+    show() {
+        console.log(this.description())
     }
 }
 
@@ -31,51 +65,43 @@ class StackTrace extends ProtoClass {
     }
 	
     setError(error) {
+        this._error = error
+
         const lines = error.stack.split("\n")
         const firstLine = lines.removeFirst()
-        const out = []
-        const indent = "    "
 		
-        lines.forEach(function (line) {
-            if (line.contains("at file")) {
-                out.push(["....", line.after("at ").split("/").pop()])
-            } else {
-                line = line.after("at ")
-                if (line === "") {
-                    return;
-                }
-                const obj = line.before(".")
-                const method = line.after(".").before(" (")
-                const path = line.after("(").before(")")
-                const filePart = path.split("/").pop()
-                let file = filePart.before(":")
-                if (file === "") { 
-                    file = "???.js:??:?"
-                }
-                const className = file.before(".js")
-                const location = filePart.after(":")
-                out.push([className + " " + method + "()      ", file + ":" + location])
-            }
+        const frames = lines.map((line) => {
+            return StackFrame.clone().fromLine(line)
         })
-		
-        let s = firstLine + "\n"
-        const m = out.maxValue(function(entry) { return entry[0].length })
-        out.forEach(function (entry) {
-            s += indent + entry[0] + " ".repeat(m + 1 - entry[0].length) + entry[1] + "\n"
-        })
-		
-        //s = error.message + "\n" + s
-        s = s.replaceAll("<br>", "\n")
-        return s
+        this.setStackFrames(frames)
+
+        return this
     }
 
+    show() {
+        console.log(this.type() + ": '" + this.error().message + "'")
+        this.stackFrames().forEach(frame => frame.show())
+    }
+
+    test() {
+        const f1 = function() {
+            try {
+                throw(new Error("test error"))
+            } catch(e) {
+                StackTrace.clone().setError(e).show()
+            }
+        }
+        
+        const f2 = function() { f1() }
+        const f3 = function() { f2() }
+        f3()        
+    }
 }
 
 StackTrace.registerThisClass()
+ 
 
-
-
-
+//StackTrace.clone().test()
 
 
 //console.log("Currently running script:", Error.callingScriptURL())

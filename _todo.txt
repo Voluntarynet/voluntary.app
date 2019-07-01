@@ -1,5 +1,14 @@
 
 
+IMPORTANT CLEANUP
+
+- separate Node.actions into Node.actions and Node.subnodeActions
+  to avoid confusion, also chance names into add->addSubnode, delete->deleteSubnode
+
+- add a default user image, so formatting of messages isn't weird 
+
+---------------
+
 BMOptionRow - sends this.parentNode().selectOption(this) when clicked
 
 rename canReorder to canReorderSubnodes

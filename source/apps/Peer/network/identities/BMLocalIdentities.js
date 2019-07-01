@@ -15,7 +15,7 @@ window.BMLocalIdentities = BMStorableNode.extend().newSlots({
         this.setShouldStore(true)
         this.setTitle("My identities")
         
-        this.setActions(["add"])
+        this.setActions(["add", "delete"])
         this.setSubnodeProto(BMLocalIdentity)
         this.setNoteIsSubnodeCount(true)
         

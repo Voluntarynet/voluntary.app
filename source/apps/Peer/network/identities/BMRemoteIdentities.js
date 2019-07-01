@@ -14,7 +14,7 @@ window.BMRemoteIdentities = BMStorableNode.extend().newSlots({
         this.setShouldStore(true)
         this.setTitle("contacts")
         
-        this.setActions(["add"]).setSubnodeProto(BMRemoteIdentity)
+        this.setActions(["add", "delete"]).setSubnodeProto(BMRemoteIdentity)
         this.setNoteIsSubnodeCount(true)
         //this.setShouldStoreSubnodes(false)
         //this.loadIfPresent()

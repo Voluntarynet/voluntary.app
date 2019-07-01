@@ -378,9 +378,11 @@ window.BrowserRow = NodeView.extend().newSlots({
 	*/
     
     canDelete: function() {
-        const canDelete = this.node() && this.node().canDelete() //hasAction("delete")
-        //console.log(this.typeId() + ".canDelete() = ", canDelete)
-        return canDelete
+        if (this.node()) {
+            let canDelete = this.node().canDelete()
+            return canDelete
+        }
+        return false
     },
 
     // -- tap gesture ---
@@ -406,7 +408,6 @@ window.BrowserRow = NodeView.extend().newSlots({
 
     onSlideBegin: function() {
         //console.log(this.typeId() + ".onSlideBegin()")
-
         this.setSlideDeleteOffset(this.clientWidth() * 0.5);
         this.contentView().setTransition("all 0s") 
         this.setupSlide() 

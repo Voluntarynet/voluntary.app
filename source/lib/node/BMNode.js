@@ -648,6 +648,10 @@ window.BMNode = ideal.Proto.extend().newSlots({
         return this._canDelete
     },
 
+    canAddSubnode: function() {
+        return this.hasAction("add")
+    },
+
     // --- utility -----------------------------
     
     parentNodeOfType: function(className) {

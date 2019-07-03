@@ -577,7 +577,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
             const p = aGesture.downPosition() // there may not be an up position on windows?
             //console.log(this.typeId() + ".onTapComplete() ", aGesture.upEvent())
             if (p.event().target === this.element()) {
-                if (this.node().canAddSubnode()) {
+                if (this.node().canAddSubnodes()) {
                     this.node().add()
                 }
             }

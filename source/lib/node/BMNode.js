@@ -640,15 +640,20 @@ window.BMNode = ideal.Proto.extend().newSlots({
         return this
     },
 
-    canDelete: function() {
+    nodeParentHasDeleteAction: function() {
         const p = this.parentNode()
-        if (p && p.hasAction("delete")) {
-            return true
-        }
-        return this._canDelete
+        return p && p.hasAction("delete")
     },
 
-    canAddSubnode: function() {
+    canDelete: function() {
+        if (this._canDelete) {
+            return true
+        }
+
+        return this.nodeParentHasDeleteAction()
+    },
+
+    canAddSubnodes: function() {
         return this.hasAction("add")
     },
 

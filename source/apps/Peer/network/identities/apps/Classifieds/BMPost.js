@@ -14,7 +14,7 @@ window.BMPost = BMStorableNode.extend().newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
-        this.setActions(["delete"])
+        this.setCanDelete(true)
         this.setNodeMinWidth(550)
         
         this.setTitle("Untitled")

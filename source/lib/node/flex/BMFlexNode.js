@@ -21,7 +21,7 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
         this.setShouldStoreSubnodes(true)
         //this.setViewClassName("GenericView")
         //this.setViewClassName("BMDataStoreRecordView")
-        this.addAction("delete")
+        this.setCanDelete(true)
         this.addAction("add")
         //this.setNodeColumnBackgroundColor("white")
         this.setNodeMinWidth(300)

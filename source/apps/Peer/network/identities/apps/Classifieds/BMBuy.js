@@ -13,7 +13,7 @@ window.BMBuy = BMStorableNode.extend().newSlots({
     init: function () {
         BMStorableNode.init.apply(this)
         this.setTitle("Buy")
-        this.setActions(["delete"])
+        this.setCanDelete(true)
         this.setSubtitle(Math.floor(Math.random()*10000))
         this.addStoredSlot("subtitle")
     },

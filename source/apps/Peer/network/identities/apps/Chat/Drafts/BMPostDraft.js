@@ -14,7 +14,7 @@ window.BMPostDraft = BMStorableNode.extend().newSlots({
     init: function () {
         BMStorableNode.init.apply(this)
         this.addStoredSlots(["content"])
-        this.addAction("delete")
+        this.setCanDelete(true)
         //this.setContent("...".loremIpsum(40, 100))	
         this.setShouldStore(true)	
         this.customizeNodeRowStyles().setToBlackOnWhite()

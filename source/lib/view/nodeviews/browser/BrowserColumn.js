@@ -544,7 +544,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
 
         /*
         let sNode = this.selectedNode()
-        if (sNode && sNode.hasAction("delete")) { 
+        if (sNode && sNode.canDelete()) { 
 			sNode.performAction("delete") 
 			if (this.rows().length === 0) {
 				this.selectPreviousColumn()

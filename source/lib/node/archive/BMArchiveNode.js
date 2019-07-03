@@ -16,7 +16,7 @@ window.BMArchiveNode = BMFieldSetNode.extend().newSlots({
         BMFieldSetNode.init.apply(this)
         //this.setViewClassName("GenericView")
         //this.setViewClassName("BMDataStoreRecordView")
-        //this.addAction("delete")
+        this.setCanDelete(true)
         this.setNodeColumnBackgroundColor("white")
         this.setNodeMinWidth(300)
         this.setTitle("Archive")

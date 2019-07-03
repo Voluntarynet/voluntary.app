@@ -59,7 +59,9 @@ window.BMClassifiedPost = BMFieldSetNode.extend().newSlots({
         this._powDoneObs   = NotificationCenter.shared().newObservation().setName("powDone").setObserver(this)
         this._powUpdateObs = NotificationCenter.shared().newObservation().setName("powUpdate").setObserver(this)
 
-        this.setActions(["send", "delete"])
+        this.setActions(["send"])
+        this.setCanDelete(true)
+
         this.validate()
     },
 
@@ -71,9 +73,11 @@ window.BMClassifiedPost = BMFieldSetNode.extend().newSlots({
 	
     syncDeleteAction: function() {
         if (this.parentNode() && this.parentNode().isKindOf(Region)) {
-            this.removeAction("delete")
+            //this.removeAction("delete")
+            this.setCanDelete(false)
         } else {
-            this.addAction("delete")
+            //this.addAction("delete")
+            this.setCanDelete(true)
         }
         return this
     },

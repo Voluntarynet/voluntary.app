@@ -16,7 +16,7 @@ window.BMPostDrafts = BMStorableNode.extend().newSlots({
         this.setShouldStoreSubnodes(true)	
         this.setNodeMinWidth(450)
         this.setSubnodeProto(BMPostDraft)
-        this.addActions(["add", "delete"])
+        this.addActions(["add"])
 
         this.setNodeColumnBackgroundColor("white")
         this.setNoteIsSubnodeCount(true)

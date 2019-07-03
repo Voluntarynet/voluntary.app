@@ -50,7 +50,7 @@ window.BMObjectMessage = BMMessage.extend().newSlots({
         this.setShouldStoreSubnodes(false)
         this.setMsgType("object")
         this.addStoredSlots(["msgType", "encryptedData", "data", "senderPublicKeyString", "timeStamp", "signature"])
-        this.addAction("delete")
+        this.setCanDelete(true)
     },
     
     duplicate: function() {

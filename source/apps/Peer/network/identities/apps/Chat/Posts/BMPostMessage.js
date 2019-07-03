@@ -24,7 +24,7 @@ window.BMPostMessage = BMAppMessage.extend().newSlots({
     init: function () {
         BMAppMessage.init.apply(this)
         this.addStoredSlots(["content", "hasRead", "replyCount", "repostCount", "likeCount"])
-        this.addAction("delete")
+        this.setCanDelete(true)
         this.setShouldStore(true)	
         this.setContent("...".loremIpsum(4, 100))	
         this.customizeNodeRowStyles().setToBlackOnWhite()

@@ -38,7 +38,7 @@ window.BMRemoteIdentity = BMStorableNode.extend().newSlots({
 
         this.profile().fieldNamed("publicKeyString").setValueIsEditable(true)
 		
-        this.addAction("delete")
+        this.setCanDelete(true)
         this._didChangeIdentityNote = NotificationCenter.shared().newNote().setSender(this.uniqueId()).setName("didChangeIdentity").setInfo(this)
     },
     

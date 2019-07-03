@@ -640,11 +640,14 @@ window.BMNode = ideal.Proto.extend().newSlots({
         return this
     },
 
+    /*
     nodeParentHasDeleteAction: function() {
         const p = this.parentNode()
         return p && p.hasAction("delete")
     },
+    */
 
+    /*
     canDelete: function() {
         if (this._canDelete) {
             return true
@@ -652,6 +655,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
 
         return this.nodeParentHasDeleteAction()
     },
+    */
 
     canAddSubnodes: function() {
         return this.hasAction("add")

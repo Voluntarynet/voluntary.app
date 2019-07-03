@@ -31,7 +31,7 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
         //this.setTitle("RTC Server")
         this.addStoredSlots(["host", "port"])
         this.setShouldStoreSubnodes(false)
-        this.addAction("delete")
+        this.setCanDelete(true)
         this.setNodeMinWidth(500)
 	
         this.addStoredField(BMField.clone().setKey("host").setValueMethod("host"))

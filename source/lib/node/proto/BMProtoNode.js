@@ -14,7 +14,8 @@ window.BMProtoNode = BMNode.extend().newSlots({
         BMNode.init.apply(this)
         //this.setViewClassName("GenericView")
         //this.setViewClassName("BMDataStoreRecordView")
-        //this.addAction("delete")
+        //this.setCanDelete(true)
+
         this.setNodeMinWidth(300)
         //this.setNoteIsSubnodeCount(true)
     },

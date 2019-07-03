@@ -18,8 +18,8 @@ window.BMTheme = BMStorableNode.extend().newSlots({
         this.setTitle("Untitled Theme")
         this.setNodeMinWidth(270)
         this.setupSubnodes()
+        this.setCanDelete(true)
 
-        this.addAction("delete")
         setTimeout(() => { 
             //console.log("theme as json: ", JSON.stringify(this.asJSON())) 
         }, 1000)

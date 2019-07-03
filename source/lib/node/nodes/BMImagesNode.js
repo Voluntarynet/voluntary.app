@@ -21,7 +21,9 @@ window.BMImageResourcesNode = BMStorableNode.extend().newSlots({
         this.setTitle(null)
         this.setSubtitle(null)
         
-        //this.addActions(["add", "delete"])
+        //this.addActions(["add"])
+        //this.setCanDelete(true)
+
         //this.addStoredSlots(["title", "dataURL"])
     },        
     

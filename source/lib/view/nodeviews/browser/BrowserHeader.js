@@ -66,7 +66,7 @@ window.BrowserHeader = NodeView.extend().newSlots({
     },
 
     syncFromNode: function() {
-        let node = this.node()
+        const node = this.node()
         this.removeAllSubviews()
         
         if (node && this.browser()) {
@@ -81,7 +81,7 @@ window.BrowserHeader = NodeView.extend().newSlots({
 
             node.actions().forEach((action) => {
                 if (this.showsAction(action)) {
-	                let button = BrowserHeaderAction.clone()
+	                const button = BrowserHeaderAction.clone()
 	                button.setTarget(node).setAction(action)
 	                button.setCanClick(this.nodeHasAction(action))
 	                this.addSubview(button).syncFromNode()

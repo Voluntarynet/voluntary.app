@@ -15,7 +15,7 @@ window.BMChatMessage = BMAppMessage.extend().newSlots({
     init: function () {
         BMAppMessage.init.apply(this)
         this.addStoredSlots(["content"])
-        //this.addAction("delete")
+        this.setCanDelete(true)
     },	
 	
     nodeRowLink: function() {

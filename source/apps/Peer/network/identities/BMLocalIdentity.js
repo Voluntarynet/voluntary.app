@@ -29,13 +29,14 @@ window.BMLocalIdentity = BMKeyPair.extend().newSlots({
         this.initStoredSubnodeSlotWithProto("remoteIdentities", BMRemoteIdentities)
         
         this.addStoredSlots(["name", "privateKeyString"])
-		
+        this.setCanDelete(true)
+
         this.setName("Untitled")
 
         this.profile().fieldNamed("publicKeyString").setValueIsEditable(false)
         //console.log("is editable = ", this.profile().fieldNamed("publicKeyString").valueIsEditable())
         this.generatePrivateKey()
-        //this.addAction("delete")
+        this.setCanDelete(true)
         this._didChangeIdentityNote = NotificationCenter.shared().newNote().setSender(this.uniqueId()).setName("didChangeIdentity")
 
         this.setNodeTitleIsEditable(true)

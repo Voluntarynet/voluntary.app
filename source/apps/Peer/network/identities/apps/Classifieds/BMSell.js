@@ -17,7 +17,7 @@ window.BMSell = BMStorableNode.extend().newSlots({
         this.setShouldStoreSubnodes(true)
 		
         this.setTitle("Sell")
-        this.setActions(["delete"])
+        this.setCanDelete(true)
         //this.setSubtitle(Math.floor(Math.random()*10000))
         this.addStoredSlots(["subtitle", "hasSent"])
         

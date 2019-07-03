@@ -19,7 +19,9 @@ window.BMInfoNode = BMStorableNode.extend().newSlots({
         this.setSubtitle("...")
         
         this.setSubnodeProto(BMInfoNode)
-        this.addActions(["add", "delete"])
+        this.addActions(["add"])
+        this.setCanDelete(true)
+
         this.addStoredSlots(["title", "subtitle"])
     },        
     

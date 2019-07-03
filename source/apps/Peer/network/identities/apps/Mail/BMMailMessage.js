@@ -20,7 +20,9 @@ window.BMMailMessage = BMAppMessage.extend().newSlots({
 
         this.addStoredField(BMTextAreaField.clone().setKey("body").setValueMethod("body"))
 
-        this.setActions(["send", "delete"])
+        this.setActions(["send"])
+        this.setCanDelete(true)
+
         this.setNodeMinWidth(600)
         this.setNodeColumnBackgroundColor("white")
     },

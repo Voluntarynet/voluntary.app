@@ -22,7 +22,8 @@
         this.addFieldNamed("subject")
         this.addFieldNamed("body").setNodeMinHeight(-1)
 
-        this.setActions(["send", "delete"])
+        this.setActions(["send"])
+        this.setCanDelete(true)
     },
 
 */  

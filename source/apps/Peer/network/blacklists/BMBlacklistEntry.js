@@ -20,7 +20,7 @@ window.BMBlacklistEntry = BMFieldSetNode.extend().newSlots({
         //this.addFieldNamed("creationDate").setValueMethod("creationDate").setValueIsEditable(false).setValue("")
         //this.addFieldNamed("expirationDate").setValueMethod("expirationDate").setValueIsEditable(false).setValue("")
 		
-	    this.addAction("delete")
+        this.setCanDelete(true)
     },
     
     title: function() {

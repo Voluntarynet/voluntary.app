@@ -711,33 +711,18 @@ window.BrowserRow = NodeView.extend().newSlots({
 	    console.log(this.typeId() + ".willAcceptFirstResponder()")
 	    this.requestSelection()
     },
-    
+
     onClick: function (event) {
         if (this.isDeleting()) {
             return false
         }
 
-        let modifierNames = ""
-
-        if (event.altKey) {
-            modifierNames += "Alt"
-        } 
-         
-        if (event.ctrlKey) {
-            modifierNames += "Control"
-        }
-        
-        if (event.metaKey) {
-            modifierNames += "Meta"
-        } 
-        
-        if (event.shiftKey) {
-            modifierNames += "Shift"
-        }
+        const modifierNames = Mouse.modifierNamesForEvent(event)
 
         if (modifierNames.length != 0) {
-            const methodName = "on" + modifierNames + "Click"
+            const methodName = "on" + modifierNames.join("") + "Click"
             // examples: onShiftClick, onAltMetaClick, etc
+            //console.log("methodName = ", methodName)
             if (this[methodName]) {
                 this[methodName].apply(this, [event])
             }
@@ -752,15 +737,12 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
 
     onControlClick: function() {
-
     },
 
     onAltClick: function() {
-
     },
 
     onShiftClick: function() {
-
     },
 
     // -------------------------

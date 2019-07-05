@@ -108,4 +108,28 @@ window.Mouse = ideal.Proto.extend().newSlots({
         }
         return []
     },
+
+    modifierNamesForEvent: function(event) {
+        let modifierNames = []
+
+        // event names are ordered alphabetically to avoid ambiguity
+
+        if (event.altKey) {
+            modifierNames.push("Alt")
+        } 
+        
+        if (event.ctrlKey) {
+            modifierNames.push("Control")
+        }
+        
+        if (event.metaKey) {
+            modifierNames.push("Meta")
+        } 
+        
+        if (event.shiftKey) {
+            modifierNames.push("Shift")
+        }
+
+        return modifierNames
+    },
 })

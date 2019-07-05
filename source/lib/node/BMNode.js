@@ -46,8 +46,8 @@ window.BMNode = ideal.Proto.extend().newSlots({
     // html
     acceptsFileDrop: false,
 
-    nodeMinHeight: 0, // tall fields like draft body
-
+    nodeRowMinHeight: 0, // tall fields like draft body
+    
     nodeContent: null,
     	
     // view style overrides

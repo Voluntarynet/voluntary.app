@@ -1,22 +1,21 @@
 
 
-IMPORTANT CLEANUP
+**Fields**
+- make statefull and have them sync with parent nodes if they have targetGetter/setters (Done?)
+BMOptionRow - sends this.parentNode().selectOption(this) when clicked
 
-- separate Node.actions into Node.actions and Node.subnodeActions
-  to avoid confusion, also chance names into add->addSubnode, delete->deleteSubnode
+- need a way to persist canDelete on fields so we can delete items we've added to a flex node?
+- mode for non white background on fields - persist styles?
+
 
 - add a default user image, so formatting of messages isn't weird 
 
+- use onShiftClick and two finger long press to inspect a node?
+
 ---------------
 
-BMOptionRow - sends this.parentNode().selectOption(this) when clicked
 
 rename canReorder to canReorderSubnodes
-canDelete cs canDeleteSubnodes
-
-Fields
-- make statefull and have them sync with parent nodes if they have targetGetter/setters
-
 
 use control-edge drag or double finger drag to apply to prototype?
 store width hint on parent node's field?

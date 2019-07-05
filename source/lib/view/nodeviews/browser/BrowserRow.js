@@ -77,7 +77,7 @@ window.BrowserRow = NodeView.extend().newSlots({
         const p = aGesture.currentPosition() // position in document coords
         const f = this.frameInDocument()
         const h = p.y() - f.y()
-        const minHeight = this.node() ? this.node().nodeMinHeight() : 10;
+        const minHeight = this.node() ? this.node().nodeRowMinHeight() : 10;
         if (h >= minHeight) {
             this.setMinAndMaxHeight(h) // need to do same for contentView?
         } else {
@@ -242,13 +242,13 @@ window.BrowserRow = NodeView.extend().newSlots({
         /*
         // take up full height if node asks for it
         const node = this.node()
-        if (node && node.nodeMinHeight()) {
+        if (node && node.nodeRowMinHeight()) {
             const e = this.element()
-            if (node.nodeMinHeight() === -1) {
+            if (node.nodeRowMinHeight() === -1) {
                 this.setHeight("auto")                
                 this.setPaddingBottom("calc(100% - 20px)")
             } else {
-                this.setHeight(this.pxNumberToString(node.nodeMinHeight()))
+                this.setHeight(this.pxNumberToString(node.nodeRowMinHeight()))
             }
         }
         */
@@ -550,7 +550,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     // tap hold
 
     acceptsLongPress: function() {
-        return this.column().canReorder()
+        return this.column().canReorderRows()
     },
     
     onLongPressBegin: function(aGesture) {
@@ -716,12 +716,54 @@ window.BrowserRow = NodeView.extend().newSlots({
         if (this.isDeleting()) {
             return false
         }
+
+        let modifierNames = ""
+
+        if (event.altKey) {
+            modifierNames += "Alt"
+        } 
+         
+        if (event.ctrlKey) {
+            modifierNames += "Control"
+        }
+        
+        if (event.metaKey) {
+            modifierNames += "Meta"
+        } 
+        
+        if (event.shiftKey) {
+            modifierNames += "Shift"
+        }
+
+        if (modifierNames.length != 0) {
+            const methodName = "on" + modifierNames + "Click"
+            // examples: onShiftClick, onAltMetaClick, etc
+            if (this[methodName]) {
+                this[methodName].apply(this, [event])
+            }
+        } else {
+            this.justTap()
+        }
+
         //console.log(this.typeId() + ".onClick()")
-        this.justTap()
         GestureManager.shared().cancelAllBegunGestures()
         event.stopPropagation()
         return false
     },
+
+    onControlClick: function() {
+
+    },
+
+    onAltClick: function() {
+
+    },
+
+    onShiftClick: function() {
+
+    },
+
+    // -------------------------
 
     didChangeIsSelected: function () {
         NodeView.didChangeIsSelected.apply(this)

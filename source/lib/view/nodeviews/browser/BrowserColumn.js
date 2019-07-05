@@ -538,11 +538,9 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
 
     // --- keyboard controls, add and delete actions -----------------------------
-		
-    onDeleteKeyUp: function(event) {
-        if (!this.canNavigate()) { return }
 
-        /*
+    /*
+    deleteSelectedRow: function() {
         let sNode = this.selectedNode()
         if (sNode && sNode.canDelete()) { 
 			sNode.performAction("delete") 
@@ -550,7 +548,12 @@ window.BrowserColumn = NodeView.extend().newSlots({
 				this.selectPreviousColumn()
 			}
 		}
-		*/
+    },
+    */
+
+    onDeleteKeyUp: function(event) {
+        if (!this.canNavigate()) { return }
+        //this.deleteSelectedRow()
         return false
     },
 	
@@ -772,7 +775,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
         return this
     },
 
-    canReorder: function() {
+    canReorderRows: function() {
         return this.node().nodeCanReorderSubnodes()
     },
 

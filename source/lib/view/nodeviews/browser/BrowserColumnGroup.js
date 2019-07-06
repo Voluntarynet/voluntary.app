@@ -49,13 +49,14 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
 
     acceptsRightEdgePan: function() {
         //if (this.node() && this.node().allowsResizeWidth && this.node().allowsResizeWidth()) {
-        return false
+        return true
     },
 
     onRightEdgePanBegin: function(aGesture) {
         this._beforeEdgePanBorderRight = this.borderRight()
         this.setBorderRight("1px dashed red")
         this.setTransition("min-width 0s, max-width 0s")
+        this.setTransition("0s")
     },
 
     onRightEdgePanMove: function(aGesture) {

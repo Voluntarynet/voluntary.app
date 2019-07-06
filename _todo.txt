@@ -4,6 +4,8 @@
 - make statefull and have them sync with parent nodes if they have targetGetter/setters (Done?)
 BMOptionRow - sends this.parentNode().selectOption(this) when clicked
 
+- a row duplicate feature?
+
 - need a way to persist canDelete on fields so we can delete items we've added to a flex node?
 - mode for non white background on fields - persist styles?
 
@@ -14,13 +16,8 @@ BMOptionRow - sends this.parentNode().selectOption(this) when clicked
 
 ---------------
 
-
-rename canReorder to canReorderSubnodes
-
 use control-edge drag or double finger drag to apply to prototype?
 store width hint on parent node's field?
-
-separate nodeRowMinHeight and nodeMinHeight
 
 abstract edge drag to resize?
 

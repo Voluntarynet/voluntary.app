@@ -302,6 +302,8 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
         this.setDidBegin(false)
         GestureManager.shared().removeBegunGesture(this)
 
+        // why do we do this with a delay?
+        // is it needed now to prevent a move
         setTimeout(() => { 
             GestureManager.shared().removeBegunGesture(this)
             this.deactivate();
@@ -569,7 +571,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
 
     // sending delegate messages
 
-    sendBeginMessage: function() {
+    doesTargetAccept: function() {
 
         // see if view accepts the gesture before we begin
         // for now, assume it accepts if it doesn't implement the accept<GestureType> method
@@ -581,6 +583,14 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
             }
         }
 
+        return true
+    },
+
+    sendBeginMessage: function() {
+        if (!this.doesTargetAccept()) {
+            return this
+        }
+        
         this.setDidBegin(true)
         this.setBeginEvent(this.currentEvent())
         this.sendDelegateMessage(this.beginMessage())

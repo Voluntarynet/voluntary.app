@@ -57,6 +57,7 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
         this.setBorderRight("1px dashed red")
         this.setTransition("min-width 0s, max-width 0s")
         this.setTransition("0s")
+        //this.makeCursorColResize()
     },
 
     onRightEdgePanMove: function(aGesture) {
@@ -74,6 +75,7 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
 
     onRightEdgePanComplete: function(aGesture) {
         this.setBorderRight(this._beforeEdgePanBorderRight)
+        //this.makeCursorDefault()
     },
 
     // -------------------------------------

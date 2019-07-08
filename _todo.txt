@@ -1,4 +1,7 @@
 
+- fix storage inspector
+
+- support edge drag on ColumnGroup
 
 **Fields**
 - make statefull and have them sync with parent nodes if they have targetGetter/setters (Done?)

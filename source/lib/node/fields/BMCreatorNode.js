@@ -75,6 +75,7 @@ window.BMCreatorNode = BMStorableNode.extend().newSlots({
             newNode.setIsEditable(true)
         }
 
+        newNode.setCanDelete(true)
         newNode.setNodeTitleIsEditable(true)
         //this.column().selectThisColumn()
 

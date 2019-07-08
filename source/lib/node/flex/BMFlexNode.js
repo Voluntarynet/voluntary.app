@@ -44,6 +44,12 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
         //this.setNodeUsesColumnBackgroundColor(false)
     },
 
+    didLoadFromStore: function() {
+        BMStorableNode.didLoadFromStore.apply(this)
+        this.subnodes().forEach( (subnode) => { subnode.setCanDelete(true) });
+        return this
+    },
+
     title: function () {
         return this.label()
     },

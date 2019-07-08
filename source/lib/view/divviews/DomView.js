@@ -620,7 +620,17 @@ window.DomView = ideal.Proto.extend().newSlots({
     },
 
     makeCursorGrabbing: function () {
-        this.setCursor("grab")
+        this.setCursor("grabbing")
+        return this
+    },
+
+    makeCursorColResize: function () {
+        this.setCursor("col-resize")
+        return this
+    },
+
+    makeCursorRowResize: function () {
+        this.setCursor("row-resize")
         return this
     },
 

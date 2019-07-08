@@ -106,6 +106,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     isDebugging: false,
 
     nodeStoreDidOpenNote: null,
+    lastSyncTime: null,
 }).setSlots({
     init: function () {
         this.setDirtyObjects({})
@@ -113,6 +114,17 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         this.setSdb(window.SyncDB.clone())
         this.setNodeStoreDidOpenNote(window.NotificationCenter.shared().newNote().setSender(this).setName("nodeStoreDidOpen"))
     },
+
+    updateLastSyncTime: function() {
+        this.setLastSyncTime(Date.now())
+        return this
+    },
+
+    /*
+    secondsSinceLastSync: function() {
+        return (Date.now() - this.lastSyncTime())/1000
+    },
+    */
 
     descriptionForByteCount: function (b) {
         return ByteFormatter.clone().setValue(b).formattedValue()
@@ -150,6 +162,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
     },
 
     didOpen: function () {
+        this.updateLastSyncTime()
         this.collect()
     },
 
@@ -180,7 +193,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
         // don't use pid for these keys so we can
         // use pid to see if the obj gets referrenced when walked from a stored node
 
-        let objId = obj.uniqueId()
+        const objId = obj.uniqueId()
         if (!(objId in this._dirtyObjects)) {
 
             /*
@@ -302,6 +315,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 		*/
 
         this.sdb().commit() // flushes write cache
+        this.updateLastSyncTime()
         //console.log("--- commit ---")
 
         /*

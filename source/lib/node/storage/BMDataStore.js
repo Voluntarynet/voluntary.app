@@ -11,6 +11,7 @@
 
 window.BMDataStore = BMNode.extend().newSlots({
     type: "BMDataStore",
+    lastSyncTime: 0,
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)
@@ -26,8 +27,15 @@ window.BMDataStore = BMNode.extend().newSlots({
         return NodeStore.shared()
     },
 
+    storeHasChanged: function() {
+        return NodeStore.shared().lastSyncTime() !== this.lastSyncTime()
+    },
+
     prepareToSyncToView: function () {
-        if (this.subnodes().length === 0) {
+        //console.log("this.storeHasChanged() = ", this.storeHasChanged())
+
+        if (this.subnodes().length === 0 || this.storeHasChanged()) {
+            this.setLastSyncTime(NodeStore.shared().lastSyncTime())
             this.refreshSubnodes()
         }
     },

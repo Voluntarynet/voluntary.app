@@ -656,7 +656,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 
         //this.markActiveObjects() // not needed if assert(!this.hasDirtyObjects()) is above
 
-        let deleteCount = this.sweep()
+        const deleteCount = this.sweep()
         this._marked = null
 
         this.debugLog("--- end collect - collected " + deleteCount + " pids ---")

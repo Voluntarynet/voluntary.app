@@ -19,6 +19,8 @@ window.BMActionNode = BMStorableNode.extend().newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
+        this.setShouldStore(true)
+        this.addStoredSlots(["title", "methodName", "info", "isEnabled", "isEditable"])
         this.setNodeRowIsSelectable(true)
     },
 

@@ -35,6 +35,7 @@ window.BMDataStore = BMNode.extend().newSlots({
         //console.log("this.storeHasChanged() = ", this.storeHasChanged())
 
         if (this.subnodes().length === 0 || this.storeHasChanged()) {
+            NodeStore.shared().collect()
             this.setLastSyncTime(NodeStore.shared().lastSyncTime())
             this.refreshSubnodes()
         }

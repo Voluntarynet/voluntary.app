@@ -27,7 +27,7 @@ window.BMThemeClassState = BMFieldSetNode.extend().newSlots({
     setDivClassName: function(aName) {
         this._divClassName = aName
         this.setTitle(aName)
-        let style = DivCSSInspector.shared().setDivClassName(aName).cssStyle()
+        let style = DomCSSInspector.shared().setDivClassName(aName).cssStyle()
         this.syncFromViewStyle()
         return this
     },

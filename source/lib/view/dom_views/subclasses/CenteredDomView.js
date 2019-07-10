@@ -2,7 +2,7 @@
 
 /*
 
-    CenteredDivView
+    CenteredDomView
 
       From a StackExchange answer:
 
@@ -36,8 +36,8 @@
 
 */
 
-window.CenteredDivView = DomView.extend().newSlots({
-    type: "CenteredDivView",
+window.CenteredDomView = DomView.extend().newSlots({
+    type: "CenteredDomView",
     middleView: null,
     innerView: null,
 }).setSlots({
@@ -50,7 +50,7 @@ window.CenteredDivView = DomView.extend().newSlots({
     },
 
     setupOuterView: function() {
-        //this.setDivClassName("CenteredDivView")
+        //this.setDivClassName("CenteredDomView")
         this.setDisplay("table")
         this.setPosition("absolute")
         this.setHeightPercentage(100)
@@ -60,7 +60,7 @@ window.CenteredDivView = DomView.extend().newSlots({
 
     setupMiddleView: function() {
         let v = DomView.clone()
-        v.setDivClassName("CenteredDivView_middleView")
+        v.setDivClassName("CenteredDomView_middleView")
         v.setDisplay("table-cell")
         v.setVerticalAlign("middle")
         this.addSubview(v)
@@ -69,7 +69,7 @@ window.CenteredDivView = DomView.extend().newSlots({
 
     setupInnerView: function() {
         let v = DomView.clone()
-        v.setDivClassName("CenteredDivView_innerView")
+        v.setDivClassName("CenteredDomView_innerView")
         v.setDisplay("block")
         v.setMarginLeft("auto")
         v.setMarginRight("auto")

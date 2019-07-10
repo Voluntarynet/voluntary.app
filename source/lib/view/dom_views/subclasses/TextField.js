@@ -11,7 +11,7 @@
     On Return/Enter key, it passes focus to the nextResponder/parent.
 */
 
-window.TextField = DivStyledView.extend().newSlots({
+window.TextField = DomStyledView.extend().newSlots({
     type: "TextField",
     isSelected: false,
     selectedColor: null,
@@ -44,13 +44,13 @@ window.TextField = DivStyledView.extend().newSlots({
     },
 
     setFontSize: function(aNumber) {
-        DivStyledView.setFontSize.apply(this, [aNumber])
+        DomStyledView.setFontSize.apply(this, [aNumber])
         this.setMinAndMaxHeight(aNumber) // make sure TextfField can fit font size
         return this
     },
 
     setContentEditable: function(aBool) {
-        DivStyledView.setContentEditable.apply(this, [aBool])
+        DomStyledView.setContentEditable.apply(this, [aBool])
         //console.log(this.typeId() + ".setContentEditable(" + aBool + ") = ", this.isContentEditable())
         this.setIsRegisteredForClicks(this.isContentEditable()) 
         return this
@@ -100,7 +100,7 @@ window.TextField = DivStyledView.extend().newSlots({
             }
         }
 
-        return DivStyledView.onKeyDown.apply(this, [event])
+        return DomStyledView.onKeyDown.apply(this, [event])
     },
 
     onEnterKeyUp: function(event) {
@@ -189,7 +189,7 @@ window.TextField = DivStyledView.extend().newSlots({
             return false
         }
 
-        return DivStyledView.onClick.apply(this, [event])
+        return DomStyledView.onClick.apply(this, [event])
     },
 
 })

@@ -325,7 +325,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     
     addCloseButton: function() {
         if (this.closeButtonView() == null) {
-            //const c = CenteredDivView.clone()
+            //const c = CenteredDomView.clone()
 
             const cb = DomView.clone().setDivClassName("BrowserRowCloseButton")
             //this.setCloseButtonView(NodeView.clone().setDivClassName("BrowserRowCloseButton"))

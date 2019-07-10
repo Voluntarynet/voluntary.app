@@ -1,7 +1,7 @@
 "use strict"
 
 /*
-    DivStyledView
+    DomStyledView
 
     (one step towards eliminating the remaining css files)
 
@@ -10,7 +10,7 @@
 
     Overview:
 
-        DivStyledView
+        DomStyledView
           styles -> BMViewStyles
                         selected -> BMViewStyle
                         unselected -> BMViewStyle
@@ -30,8 +30,8 @@
 
 */
 
-window.DivStyledView = DomView.extend().newSlots({
-    type: "DivStyledView",
+window.DomStyledView = DomView.extend().newSlots({
+    type: "DomStyledView",
     styles: null,
     isSelected: false,
 }).setSlots({

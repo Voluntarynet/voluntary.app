@@ -2,15 +2,15 @@
 
 /*
 
-    DivTextTapeMeasure
+    DomTextTapeMeasure
 
     Used to measure rendered text dimensions given a string and a style.
     
 */
 
 
-window.DivTextTapeMeasure = ideal.Proto.extend().newSlots({
-    idName: "DivTextTapeMeasure",
+window.DomTextTapeMeasure = ideal.Proto.extend().newSlots({
+    idName: "DomTextTapeMeasure",
     type: "Div",
     stylesToCopy: ["fontSize","fontStyle", "fontWeight", "fontFamily","lineHeight", "textTransform", "letterSpacing"],
 }).setSlots({

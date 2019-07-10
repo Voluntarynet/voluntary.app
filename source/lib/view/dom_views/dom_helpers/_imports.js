@@ -1,8 +1,9 @@
 "use strict"
 
 ResourceLoader.pushRelativePaths([
-    "DivTextTapeMeasure.js",
-    "DivCSSInspector.js",
-    "BMColor.js",
+    "DomTextTapeMeasure.js",
+    "DomCSSInspector.js",
+    "CSSColor.js",
+    "DomElementHelpers.js"
 ])
 

@@ -63,16 +63,16 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
     /*
     colorPairForDepth: function (depthNumber) {
         if (depthNumber % 2 === 1) {
-            return [BMColor.redColor(), BMColor.yellowColor()]
+            return [CSSColor.redColor(), CSSColor.yellowColor()]
         }
 
-        return [BMColor.blueColor(), BMColor.blueColor().copy().lighten(0.75)]
+        return [CSSColor.blueColor(), CSSColor.blueColor().copy().lighten(0.75)]
     },
 
 
     nodeBackgroundColorObject: function () {
         if (!this.parentNode()) {
-            return BMColor.whiteColor()
+            return CSSColor.whiteColor()
         }
 
         const colorPair = this.colorPairForDepth(this.nodeDepth())
@@ -98,17 +98,17 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
         styles.unselected().setBackgroundColor(c.cssColorString())
         //styles.unselected().setBackgroundColor(c.copy().darken(0.5).cssColorString())
         //styles.unselected().setColor(c.copy().lighten(0.55).cssColorString())
-        styles.unselected().setColor(BMColor.whiteColor().cssColorString())
+        styles.unselected().setColor(CSSColor.whiteColor().cssColorString())
         //styles.unselected().setBorderTop("1px solid " + c.cssColorString())
         //styles.unselected().setBorderBottom("1px solid " + c.cssColorString())
 
-        //styles.selected().setBackgroundColor(BMColor.grayColor().cssColorString())
-        styles.selected().setColor(BMColor.whiteColor().cssColorString())
+        //styles.selected().setBackgroundColor(CSSColor.grayColor().cssColorString())
+        styles.selected().setColor(CSSColor.whiteColor().cssColorString())
 
         styles.selected().setBackgroundColor(c.copy().darken(0.8).cssColorString())
         //styles.selected().setBackgroundColor(c.copy().lighten(0.2).cssColorString())
         //styles.selected().setBackgroundColor(c.copy().cssColorString())
-        //styles.selected().setColor(BMColor.whiteColor().cssColorString())
+        //styles.selected().setColor(CSSColor.whiteColor().cssColorString())
         //styles.selected().setBorderTop("1px solid white")
         //styles.selected().setBorderBottom("1px solid white")
 

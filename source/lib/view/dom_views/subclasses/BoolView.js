@@ -7,7 +7,7 @@
 
 */
 
-window.BoolView = DivStyledView.extend().newSlots({
+window.BoolView = DomStyledView.extend().newSlots({
     type: "BoolView",
     isSelected: false,
     selectedColor: null,
@@ -76,7 +76,7 @@ window.BoolView = DivStyledView.extend().newSlots({
     // clicks
     
     onClick: function(event) {
-        DivStyledView.onClick.apply(this, [event])
+        DomStyledView.onClick.apply(this, [event])
         this.toggle()
         return this
     },

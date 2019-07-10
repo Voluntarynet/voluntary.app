@@ -1,17 +1,17 @@
 "use strict"
 
 /*
-    DivCSSInspector
+    DomCSSInspector
     Used to inspect class styles since css hides stylesheet.cssRules.
     
     example use:
-    let value = DivCSSInspector.shared().setDivClassName("..").cssStyle.fontFamily
+    let value = DomCSSInspector.shared().setDivClassName("..").cssStyle.fontFamily
 
 */
 
-window.DivCSSInspector = ideal.Proto.extend().newSlots({
-    type: "DivCSSInspector",
-    idName: "DivCSSInspector",
+window.DomCSSInspector = ideal.Proto.extend().newSlots({
+    type: "DomCSSInspector",
+    idName: "DomCSSInspector",
     //divClassName: null,
 }).setSlots({
     

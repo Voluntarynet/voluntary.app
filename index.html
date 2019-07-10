@@ -87093,16 +87093,16 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
     
     colorPairForDepth: function (depthNumber) {
         if (depthNumber % 2 === 1) {
-            return [BMColor.redColor(), BMColor.yellowColor()]
+            return [CSSColor.redColor(), CSSColor.yellowColor()]
         }
 
-        return [BMColor.blueColor(), BMColor.blueColor().copy().lighten(0.75)]
+        return [CSSColor.blueColor(), CSSColor.blueColor().copy().lighten(0.75)]
     },
 
 
     nodeBackgroundColorObject: function () {
         if (!this.parentNode()) {
-            return BMColor.whiteColor()
+            return CSSColor.whiteColor()
         }
 
         const colorPair = this.colorPairForDepth(this.nodeDepth())
@@ -87128,17 +87128,17 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
         styles.unselected().setBackgroundColor(c.cssColorString())
         //styles.unselected().setBackgroundColor(c.copy().darken(0.5).cssColorString())
         //styles.unselected().setColor(c.copy().lighten(0.55).cssColorString())
-        styles.unselected().setColor(BMColor.whiteColor().cssColorString())
+        styles.unselected().setColor(CSSColor.whiteColor().cssColorString())
         //styles.unselected().setBorderTop("1px solid " + c.cssColorString())
         //styles.unselected().setBorderBottom("1px solid " + c.cssColorString())
 
-        //styles.selected().setBackgroundColor(BMColor.grayColor().cssColorString())
-        styles.selected().setColor(BMColor.whiteColor().cssColorString())
+        //styles.selected().setBackgroundColor(CSSColor.grayColor().cssColorString())
+        styles.selected().setColor(CSSColor.whiteColor().cssColorString())
 
         styles.selected().setBackgroundColor(c.copy().darken(0.8).cssColorString())
         //styles.selected().setBackgroundColor(c.copy().lighten(0.2).cssColorString())
         //styles.selected().setBackgroundColor(c.copy().cssColorString())
-        //styles.selected().setColor(BMColor.whiteColor().cssColorString())
+        //styles.selected().setColor(CSSColor.whiteColor().cssColorString())
         //styles.selected().setBorderTop("1px solid white")
         //styles.selected().setBorderBottom("1px solid white")
 
@@ -92588,14 +92588,14 @@ ResourceLoader.pushRelativePaths([
     "div_helpers/_imports.js",
     "DomElementHelpers.js",
     "DomView.js",
-    "CenteredDivView.js",
-    "DivStyledView.js",
+    "CenteredDomView.js",
+    "DomStyledView.js",
     "TextField.js",
     "BoolView.js",
     "DocumentBody.js",
     "ButtonView.js",
     "PanelView.js",
-    "BMColor.js",
+    "CSSColor.js",
 ])
 
 
@@ -92983,8 +92983,8 @@ ViewAnimator.registerThisClass()
 "use strict"
 
 ResourceLoader.pushRelativePaths([
-    "DivTextTapeMeasure.js",
-    "DivCSSInspector.js",
+    "DomTextTapeMeasure.js",
+    "DomCSSInspector.js",
 ])
 
 
@@ -92992,15 +92992,15 @@ ResourceLoader.pushRelativePaths([
 
 /*
 
-    DivTextTapeMeasure
+    DomTextTapeMeasure
 
     Used to measure rendered text dimensions given a string and a style.
     
 */
 
 
-window.DivTextTapeMeasure = ideal.Proto.extend().newSlots({
-    idName: "DivTextTapeMeasure",
+window.DomTextTapeMeasure = ideal.Proto.extend().newSlots({
+    idName: "DomTextTapeMeasure",
     type: "Div",
     stylesToCopy: ["fontSize","fontStyle", "fontWeight", "fontFamily","lineHeight", "textTransform", "letterSpacing"],
 }).setSlots({
@@ -93073,17 +93073,17 @@ window.DivTextTapeMeasure = ideal.Proto.extend().newSlots({
 "use strict"
 
 /*
-    DivCSSInspector
+    DomCSSInspector
     Used to inspect class styles since css hides stylesheet.cssRules.
     
     example use:
-    let value = DivCSSInspector.shared().setDivClassName("..").cssStyle.fontFamily
+    let value = DomCSSInspector.shared().setDivClassName("..").cssStyle.fontFamily
 
 */
 
-window.DivCSSInspector = ideal.Proto.extend().newSlots({
-    type: "DivCSSInspector",
-    idName: "DivCSSInspector",
+window.DomCSSInspector = ideal.Proto.extend().newSlots({
+    type: "DomCSSInspector",
+    idName: "DomCSSInspector",
     //divClassName: null,
 }).setSlots({
     
@@ -94279,7 +94279,7 @@ window.DomView = ideal.Proto.extend().newSlots({
     // width and height
 
     calcWidth: function () {
-        return DivTextTapeMeasure.widthOfDivClassWithText(this.divClassName(), this.innerHTML())
+        return DomTextTapeMeasure.widthOfDivClassWithText(this.divClassName(), this.innerHTML())
     },
 
     setWidthString: function (s) {
@@ -96123,7 +96123,7 @@ window.DomView = ideal.Proto.extend().newSlots({
 
 /*
 
-    CenteredDivView
+    CenteredDomView
 
       From a StackExchange answer:
 
@@ -96157,8 +96157,8 @@ window.DomView = ideal.Proto.extend().newSlots({
 
 */
 
-window.CenteredDivView = DomView.extend().newSlots({
-    type: "CenteredDivView",
+window.CenteredDomView = DomView.extend().newSlots({
+    type: "CenteredDomView",
     middleView: null,
     innerView: null,
 }).setSlots({
@@ -96171,7 +96171,7 @@ window.CenteredDivView = DomView.extend().newSlots({
     },
 
     setupOuterView: function() {
-        //this.setDivClassName("CenteredDivView")
+        //this.setDivClassName("CenteredDomView")
         this.setDisplay("table")
         this.setPosition("absolute")
         this.setHeightPercentage(100)
@@ -96181,7 +96181,7 @@ window.CenteredDivView = DomView.extend().newSlots({
 
     setupMiddleView: function() {
         let v = DomView.clone()
-        v.setDivClassName("CenteredDivView_middleView")
+        v.setDivClassName("CenteredDomView_middleView")
         v.setDisplay("table-cell")
         v.setVerticalAlign("middle")
         this.addSubview(v)
@@ -96190,7 +96190,7 @@ window.CenteredDivView = DomView.extend().newSlots({
 
     setupInnerView: function() {
         let v = DomView.clone()
-        v.setDivClassName("CenteredDivView_innerView")
+        v.setDivClassName("CenteredDomView_innerView")
         v.setDisplay("block")
         v.setMarginLeft("auto")
         v.setMarginRight("auto")
@@ -96225,7 +96225,7 @@ window.CenteredDivView = DomView.extend().newSlots({
 "use strict"
 
 /*
-    DivStyledView
+    DomStyledView
 
     (one step towards eliminating the remaining css files)
 
@@ -96234,7 +96234,7 @@ window.CenteredDivView = DomView.extend().newSlots({
 
     Overview:
 
-        DivStyledView
+        DomStyledView
           styles -> BMViewStyles
                         selected -> BMViewStyle
                         unselected -> BMViewStyle
@@ -96254,8 +96254,8 @@ window.CenteredDivView = DomView.extend().newSlots({
 
 */
 
-window.DivStyledView = DomView.extend().newSlots({
-    type: "DivStyledView",
+window.DomStyledView = DomView.extend().newSlots({
+    type: "DomStyledView",
     styles: null,
     isSelected: false,
 }).setSlots({
@@ -96341,7 +96341,7 @@ window.DivStyledView = DomView.extend().newSlots({
     On Return/Enter key, it passes focus to the nextResponder/parent.
 */
 
-window.TextField = DivStyledView.extend().newSlots({
+window.TextField = DomStyledView.extend().newSlots({
     type: "TextField",
     isSelected: false,
     selectedColor: null,
@@ -96374,13 +96374,13 @@ window.TextField = DivStyledView.extend().newSlots({
     },
 
     setFontSize: function(aNumber) {
-        DivStyledView.setFontSize.apply(this, [aNumber])
+        DomStyledView.setFontSize.apply(this, [aNumber])
         this.setMinAndMaxHeight(aNumber) // make sure TextfField can fit font size
         return this
     },
 
     setContentEditable: function(aBool) {
-        DivStyledView.setContentEditable.apply(this, [aBool])
+        DomStyledView.setContentEditable.apply(this, [aBool])
         //console.log(this.typeId() + ".setContentEditable(" + aBool + ") = ", this.isContentEditable())
         this.setIsRegisteredForClicks(this.isContentEditable()) 
         return this
@@ -96430,7 +96430,7 @@ window.TextField = DivStyledView.extend().newSlots({
             }
         }
 
-        return DivStyledView.onKeyDown.apply(this, [event])
+        return DomStyledView.onKeyDown.apply(this, [event])
     },
 
     onEnterKeyUp: function(event) {
@@ -96519,7 +96519,7 @@ window.TextField = DivStyledView.extend().newSlots({
             return false
         }
 
-        return DivStyledView.onClick.apply(this, [event])
+        return DomStyledView.onClick.apply(this, [event])
     },
 
 })
@@ -96533,7 +96533,7 @@ window.TextField = DivStyledView.extend().newSlots({
 
 */
 
-window.BoolView = DivStyledView.extend().newSlots({
+window.BoolView = DomStyledView.extend().newSlots({
     type: "BoolView",
     isSelected: false,
     selectedColor: null,
@@ -96602,7 +96602,7 @@ window.BoolView = DivStyledView.extend().newSlots({
     // clicks
     
     onClick: function(event) {
-        DivStyledView.onClick.apply(this, [event])
+        DomStyledView.onClick.apply(this, [event])
         this.toggle()
         return this
     },
@@ -96999,7 +96999,7 @@ window.PanelView = DomView.extend().newSlots({
 
 /*
     
-    BMColor
+    CSSColor
     
     Helpful for manipulating css colors.
 	
@@ -97072,8 +97072,8 @@ const max3 = function(a, b, c) {
     return (a > b) ? ((a > c) ? a : c) : ((b > c) ? b : c);
 }
 
-window.BMColor = ideal.Proto.extend().newSlots({
-    type: "BMColor",
+window.CSSColor = ideal.Proto.extend().newSlots({
+    type: "CSSColor",
     red: 0, // values between 0.0 and 1.0
     green: 0,
     blue: 0,
@@ -97085,7 +97085,7 @@ window.BMColor = ideal.Proto.extend().newSlots({
     },
 
     copy: function() {
-        return BMColor.clone().set(this.red(), this.green(), this.blue(), this.opacity())
+        return CSSColor.clone().set(this.red(), this.green(), this.blue(), this.opacity())
     },
 
     set: function(r, g, b, opacity) {
@@ -97160,7 +97160,7 @@ window.BMColor = ideal.Proto.extend().newSlots({
         const b = this.interpV1V2Ratio(b1, b2, v)
         const o = this.interpV1V2Ratio(o1, o2, v)
 
-        const result = BMColor.clone().set(r, g, b, o)
+        const result = CSSColor.clone().set(r, g, b, o)
         return result
     },
 
@@ -97187,39 +97187,39 @@ window.BMColor = ideal.Proto.extend().newSlots({
     },
 
     whiteColor: function() {
-        return BMColor.clone().set(1, 1, 1, 1)
+        return CSSColor.clone().set(1, 1, 1, 1)
     },
 
     blackColor: function() {
-        return BMColor.clone().set(0, 0, 0, 1)
+        return CSSColor.clone().set(0, 0, 0, 1)
     },
 
     lightGrayColor: function() {
-        return BMColor.clone().set(0.75, 0.75, 0.55, 1)
+        return CSSColor.clone().set(0.75, 0.75, 0.55, 1)
     },
 
     grayColor: function() {
-        return BMColor.clone().set(0.5, 0.5, 0.5, 1)
+        return CSSColor.clone().set(0.5, 0.5, 0.5, 1)
     },
 
     darkGrayColor: function() {
-        return BMColor.clone().set(0.25, 0.25, 0.25, 1)
+        return CSSColor.clone().set(0.25, 0.25, 0.25, 1)
     },
 
     redColor: function() {
-        return BMColor.clone().set(1, 0, 0, 1)
+        return CSSColor.clone().set(1, 0, 0, 1)
     },
 
     greenColor: function() {
-        return BMColor.clone().set(0, 1, 0, 1)
+        return CSSColor.clone().set(0, 1, 0, 1)
     },
 
     blueColor: function() {
-        return BMColor.clone().set(0, 0, 1, 1)
+        return CSSColor.clone().set(0, 0, 1, 1)
     },
 
     yellowColor: function() {
-        return BMColor.clone().set(1, 1, 0, 1)
+        return CSSColor.clone().set(1, 1, 0, 1)
     },
 
     asDict255: function() {
@@ -97238,7 +97238,7 @@ window.BMColor = ideal.Proto.extend().newSlots({
         let temphsv = RGB2HSV(temprgb);
         temphsv.hue = HueShift(temphsv.hue,180.0);
         temprgb = HSV2RGB(temphsv);
-        return BMColor.clone().fromDict255(temprgb)
+        return CSSColor.clone().fromDict255(temprgb)
     },
 
 })
@@ -97267,7 +97267,7 @@ ResourceLoader.pushRelativePaths([
 
 */
 
-window.NodeView = DivStyledView.extend().newSlots({
+window.NodeView = DomStyledView.extend().newSlots({
     type: "NodeView",
     node: null,
     //ownsView: true,
@@ -97278,7 +97278,7 @@ window.NodeView = DivStyledView.extend().newSlots({
     // -------------------------------------
     
     init: function () {
-        DivStyledView.init.apply(this)
+        DomStyledView.init.apply(this)
         //this.setNodeObservation(NotificationCenter.shared().newObservation().setName("didUpdateNode").setObserver(this))
         this.setNodeObservation(NotificationCenter.shared().newObservation().setObserver(this)) // observe all
         //this.setStyles(BMViewStyles.clone())
@@ -97330,7 +97330,7 @@ window.NodeView = DivStyledView.extend().newSlots({
     },
     
     willRemove: function() {
-        DivStyledView.willRemove.apply(this)
+        DomStyledView.willRemove.apply(this)
         this.stopWatchingNode()
         return this
     },
@@ -97343,7 +97343,7 @@ window.NodeView = DivStyledView.extend().newSlots({
                 return vc
             }
         }
-        return DivStyledView.subviewProto.apply(this)
+        return DomStyledView.subviewProto.apply(this)
     },
 
     // --- syncing ---
@@ -97511,7 +97511,7 @@ window.NodeView = DivStyledView.extend().newSlots({
     // visibility
     
     onVisibility: function() {
-	    DivStyledView.onVisibility.apply(this)
+	    DomStyledView.onVisibility.apply(this)
 	    //console.log(this.typeId() + ".onVisibility()")
 	    const node = this.node()
 	    if (node && node.nodeBecameVisible) {
@@ -100689,7 +100689,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     
     addCloseButton: function() {
         if (this.closeButtonView() == null) {
-            //const c = CenteredDivView.clone()
+            //const c = CenteredDomView.clone()
 
             const cb = DomView.clone().setDivClassName("BrowserRowCloseButton")
             //this.setCloseButtonView(NodeView.clone().setDivClassName("BrowserRowCloseButton"))
@@ -102670,7 +102670,7 @@ window.BMOptionsTableView = DomView.extend().newSlots({
 	
     maxOptionTextWidth: function() {
         return this.subviews().maxValue(function(subview) {
-            return DivTextTapeMeasure.widthOfDivClassWithText("BMOptionsTableRowView", subview.innerHTML())
+            return DomTextTapeMeasure.widthOfDivClassWithText("BMOptionsTableRowView", subview.innerHTML())
         })			
     },
 	
@@ -104398,7 +104398,7 @@ window.BMThemeClassState = BMFieldSetNode.extend().newSlots({
     setDivClassName: function(aName) {
         this._divClassName = aName
         this.setTitle(aName)
-        let style = DivCSSInspector.shared().setDivClassName(aName).cssStyle()
+        let style = DomCSSInspector.shared().setDivClassName(aName).cssStyle()
         this.syncFromViewStyle()
         return this
     },

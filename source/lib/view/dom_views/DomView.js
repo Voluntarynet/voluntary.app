@@ -1117,7 +1117,7 @@ window.DomView = ideal.Proto.extend().newSlots({
     // width and height
 
     calcWidth: function () {
-        return DivTextTapeMeasure.widthOfDivClassWithText(this.divClassName(), this.innerHTML())
+        return DomTextTapeMeasure.widthOfDivClassWithText(this.divClassName(), this.innerHTML())
     },
 
     setWidthString: function (s) {

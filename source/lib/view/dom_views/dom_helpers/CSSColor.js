@@ -2,7 +2,7 @@
 
 /*
     
-    BMColor
+    CSSColor
     
     Helpful for manipulating css colors.
 	
@@ -75,8 +75,8 @@ const max3 = function(a, b, c) {
     return (a > b) ? ((a > c) ? a : c) : ((b > c) ? b : c);
 }
 
-window.BMColor = ideal.Proto.extend().newSlots({
-    type: "BMColor",
+window.CSSColor = ideal.Proto.extend().newSlots({
+    type: "CSSColor",
     red: 0, // values between 0.0 and 1.0
     green: 0,
     blue: 0,
@@ -88,7 +88,7 @@ window.BMColor = ideal.Proto.extend().newSlots({
     },
 
     copy: function() {
-        return BMColor.clone().set(this.red(), this.green(), this.blue(), this.opacity())
+        return CSSColor.clone().set(this.red(), this.green(), this.blue(), this.opacity())
     },
 
     set: function(r, g, b, opacity) {
@@ -163,7 +163,7 @@ window.BMColor = ideal.Proto.extend().newSlots({
         const b = this.interpV1V2Ratio(b1, b2, v)
         const o = this.interpV1V2Ratio(o1, o2, v)
 
-        const result = BMColor.clone().set(r, g, b, o)
+        const result = CSSColor.clone().set(r, g, b, o)
         return result
     },
 
@@ -190,39 +190,39 @@ window.BMColor = ideal.Proto.extend().newSlots({
     },
 
     whiteColor: function() {
-        return BMColor.clone().set(1, 1, 1, 1)
+        return CSSColor.clone().set(1, 1, 1, 1)
     },
 
     blackColor: function() {
-        return BMColor.clone().set(0, 0, 0, 1)
+        return CSSColor.clone().set(0, 0, 0, 1)
     },
 
     lightGrayColor: function() {
-        return BMColor.clone().set(0.75, 0.75, 0.55, 1)
+        return CSSColor.clone().set(0.75, 0.75, 0.55, 1)
     },
 
     grayColor: function() {
-        return BMColor.clone().set(0.5, 0.5, 0.5, 1)
+        return CSSColor.clone().set(0.5, 0.5, 0.5, 1)
     },
 
     darkGrayColor: function() {
-        return BMColor.clone().set(0.25, 0.25, 0.25, 1)
+        return CSSColor.clone().set(0.25, 0.25, 0.25, 1)
     },
 
     redColor: function() {
-        return BMColor.clone().set(1, 0, 0, 1)
+        return CSSColor.clone().set(1, 0, 0, 1)
     },
 
     greenColor: function() {
-        return BMColor.clone().set(0, 1, 0, 1)
+        return CSSColor.clone().set(0, 1, 0, 1)
     },
 
     blueColor: function() {
-        return BMColor.clone().set(0, 0, 1, 1)
+        return CSSColor.clone().set(0, 0, 1, 1)
     },
 
     yellowColor: function() {
-        return BMColor.clone().set(1, 1, 0, 1)
+        return CSSColor.clone().set(1, 1, 0, 1)
     },
 
     asDict255: function() {
@@ -241,7 +241,7 @@ window.BMColor = ideal.Proto.extend().newSlots({
         let temphsv = RGB2HSV(temprgb);
         temphsv.hue = HueShift(temphsv.hue,180.0);
         temprgb = HSV2RGB(temphsv);
-        return BMColor.clone().fromDict255(temprgb)
+        return CSSColor.clone().fromDict255(temprgb)
     },
 
 })

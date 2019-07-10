@@ -70,7 +70,7 @@ window.BMOptionsTableView = DomView.extend().newSlots({
 	
     maxOptionTextWidth: function() {
         return this.subviews().maxValue(function(subview) {
-            return DivTextTapeMeasure.widthOfDivClassWithText("BMOptionsTableRowView", subview.innerHTML())
+            return DomTextTapeMeasure.widthOfDivClassWithText("BMOptionsTableRowView", subview.innerHTML())
         })			
     },
 	

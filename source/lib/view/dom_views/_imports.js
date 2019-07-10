@@ -2,8 +2,8 @@
 
 ResourceLoader.pushRelativePaths([
     "_css.css",
-    "div_attributes/_imports.js",
-    "div_helpers/_imports.js",
+    "dom_attributes/_imports.js",
+    "dom_helpers/_imports.js",
     "DomElementHelpers.js",
     "DomView.js",
     "CenteredDivView.js",
@@ -12,7 +12,6 @@ ResourceLoader.pushRelativePaths([
     "BoolView.js",
     "DocumentBody.js",
     "ButtonView.js",
-    "PanelView.js",
-    "BMColor.js",
+    "PanelView.js"
 ])
 

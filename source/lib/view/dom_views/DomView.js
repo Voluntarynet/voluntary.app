@@ -531,7 +531,7 @@ window.DomView = ideal.Proto.extend().newSlots({
 
     transitions: function () {
         if (this._transitions == null) {
-            this._transitions = DivTransitions.clone().setDomView(this).syncFromDiv()
+            this._transitions = DomTransitions.clone().setDomView(this).syncFromDiv()
         }
         return this._transitions
     },

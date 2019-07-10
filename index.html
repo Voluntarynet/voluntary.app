@@ -92602,9 +92602,9 @@ ResourceLoader.pushRelativePaths([
 "use strict"
 
 ResourceLoader.pushRelativePaths([
-    "DivTransition.js",
-    "DivTransitions.js",
-    "DivBorderRadius.js",
+    "DomTransition.js",
+    "DomTransitions.js",
+    "DomBorderRadius.js",
     "ViewAnimator.js",
 ])
 
@@ -92612,12 +92612,12 @@ ResourceLoader.pushRelativePaths([
 
 /*
 
-    DivTransition
+    DomTransition
          
 
 */
 
-window.DivTransition = class DivTransition extends ProtoClass {
+window.DomTransition = class DomTransition extends ProtoClass {
     init() {
         super.init()
         this.newSlots({
@@ -92688,21 +92688,21 @@ window.DivTransition = class DivTransition extends ProtoClass {
     }
 }
 
-DivTransition.registerThisClass()
+DomTransition.registerThisClass()
 
 
 "use strict"
 
 /*
 
-    DivTransition
+    DomTransition
          
     transition: width 2s linear 1s, height 2s ease 1s; 1st time is duration, 2nd time is delay
 
 */
 
 
-window.DivTransitions = class DivTransitions extends ProtoClass {
+window.DomTransitions = class DomTransitions extends ProtoClass {
     init() {
         super.init()
         this.newSlots({
@@ -92715,7 +92715,7 @@ window.DivTransitions = class DivTransitions extends ProtoClass {
     at(aName) {
         const d = this.properties()
         if (!(name in d)) {
-            d[name] = DivTransition.clone().setTransitions(this)
+            d[name] = DomTransition.clone().setTransitions(this)
         }
         return d[name]
     }
@@ -92740,7 +92740,7 @@ window.DivTransitions = class DivTransitions extends ProtoClass {
         const transitionStrings = s.split(",")
 
         transitionStrings.forEach((tString) => {
-            const t = DivTransition.clone().setFromString(tString)
+            const t = DomTransition.clone().setFromString(tString)
             this.properties()[t.property()] = t
         })
 
@@ -92748,7 +92748,7 @@ window.DivTransitions = class DivTransitions extends ProtoClass {
     }
 }
 
-DivTransitions.registerThisClass()
+DomTransitions.registerThisClass()
 
 
 
@@ -92756,7 +92756,7 @@ DivTransitions.registerThisClass()
 
 /*
 
-    DivBorderRadius
+    DomBorderRadius
          
 
     // this.titleView().setBorderRadius("8px 8px 0px 8px") // top-left, top-right,  bottom-right, bottom-left
@@ -92765,7 +92765,7 @@ DivTransitions.registerThisClass()
 */
 
 
-window.DivBorderRadius = class DivBorderRadius extends ProtoClass {
+window.DomBorderRadius = class DomBorderRadius extends ProtoClass {
     init() {
         super.init()
         this.newSlots({
@@ -92859,7 +92859,7 @@ window.DivBorderRadius = class DivBorderRadius extends ProtoClass {
     }
 }
 
-DivBorderRadius.registerThisClass()
+DomBorderRadius.registerThisClass()
 
 
 "use strict"
@@ -93703,7 +93703,7 @@ window.DomView = ideal.Proto.extend().newSlots({
 
     transitions: function () {
         if (this._transitions == null) {
-            this._transitions = DivTransitions.clone().setDomView(this).syncFromDiv()
+            this._transitions = DomTransitions.clone().setDomView(this).syncFromDiv()
         }
         return this._transitions
     },

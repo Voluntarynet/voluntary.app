@@ -3,12 +3,12 @@
 
 /*
 
-    DivTransition
+    DomTransition
          
 
 */
 
-window.DivTransition = class DivTransition extends ProtoClass {
+window.DomTransition = class DomTransition extends ProtoClass {
     init() {
         super.init()
         this.newSlots({
@@ -79,5 +79,5 @@ window.DivTransition = class DivTransition extends ProtoClass {
     }
 }
 
-DivTransition.registerThisClass()
+DomTransition.registerThisClass()
 

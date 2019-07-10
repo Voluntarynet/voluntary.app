@@ -60,7 +60,7 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
         return this
     },
 
-    
+    /*
     colorPairForDepth: function (depthNumber) {
         if (depthNumber % 2 === 1) {
             return [BMColor.redColor(), BMColor.yellowColor()]
@@ -115,6 +115,8 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
         //this._nodeRowStyles.active().setBackgroundColor(c.copy().lighten(0.75).cssColorString())
         return this._nodeRowStyles
     },
+    */
+
     /*
     note: function() {
         if (this.node().isSelected()) {

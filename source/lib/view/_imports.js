@@ -5,7 +5,7 @@ ResourceLoader.pushRelativePaths([
     "geometry/_imports.js",
     "events/_imports.js",
     "webbrowser/_imports.js",
-    "divviews/_imports.js",
-    "nodeviews/_imports.js",
+    "dom_views/_imports.js",
+    "node_views/_imports.js",
 ])
 

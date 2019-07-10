@@ -1,17 +1,27 @@
 
-- fix storage inspector
+NODES -> RowViews
 
-- support edge drag on ColumnGroup
+Action 
+Boolean
+Date
+Image
+Menu (title, subtitle)
+Number (range, format, useSlider?) 
+Options 
+Pointer
+TextField
+TextArea
+Color
+
+---------------------------
 
 **Fields**
 - make statefull and have them sync with parent nodes if they have targetGetter/setters (Done?)
 BMOptionRow - sends this.parentNode().selectOption(this) when clicked
 
-- a row duplicate feature?
+- a row duplicate feature? (command D? command copy/paste? three finger long press?)
 
-- need a way to persist canDelete on fields so we can delete items we've added to a flex node?
 - mode for non white background on fields - persist styles?
-
 
 - add a default user image, so formatting of messages isn't weird 
 

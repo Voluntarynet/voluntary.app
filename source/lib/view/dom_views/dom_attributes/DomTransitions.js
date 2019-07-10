@@ -2,14 +2,14 @@
 
 /*
 
-    DivTransition
+    DomTransition
          
     transition: width 2s linear 1s, height 2s ease 1s; 1st time is duration, 2nd time is delay
 
 */
 
 
-window.DivTransitions = class DivTransitions extends ProtoClass {
+window.DomTransitions = class DomTransitions extends ProtoClass {
     init() {
         super.init()
         this.newSlots({
@@ -22,7 +22,7 @@ window.DivTransitions = class DivTransitions extends ProtoClass {
     at(aName) {
         const d = this.properties()
         if (!(name in d)) {
-            d[name] = DivTransition.clone().setTransitions(this)
+            d[name] = DomTransition.clone().setTransitions(this)
         }
         return d[name]
     }
@@ -47,7 +47,7 @@ window.DivTransitions = class DivTransitions extends ProtoClass {
         const transitionStrings = s.split(",")
 
         transitionStrings.forEach((tString) => {
-            const t = DivTransition.clone().setFromString(tString)
+            const t = DomTransition.clone().setFromString(tString)
             this.properties()[t.property()] = t
         })
 
@@ -55,5 +55,5 @@ window.DivTransitions = class DivTransitions extends ProtoClass {
     }
 }
 
-DivTransitions.registerThisClass()
+DomTransitions.registerThisClass()
 

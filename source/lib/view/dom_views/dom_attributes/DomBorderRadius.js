@@ -3,7 +3,7 @@
 
 /*
 
-    DivBorderRadius
+    DomBorderRadius
          
 
     // this.titleView().setBorderRadius("8px 8px 0px 8px") // top-left, top-right,  bottom-right, bottom-left
@@ -12,7 +12,7 @@
 */
 
 
-window.DivBorderRadius = class DivBorderRadius extends ProtoClass {
+window.DomBorderRadius = class DomBorderRadius extends ProtoClass {
     init() {
         super.init()
         this.newSlots({
@@ -106,4 +106,4 @@ window.DivBorderRadius = class DivBorderRadius extends ProtoClass {
     }
 }
 
-DivBorderRadius.registerThisClass()
+DomBorderRadius.registerThisClass()

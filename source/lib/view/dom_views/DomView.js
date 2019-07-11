@@ -2761,7 +2761,7 @@ window.DomView = ideal.Proto.extend().newSlots({
     },
 
     viewPosForWindowPos: function (pos) {
-        return this.positionInDocument().subtract(pos)
+        return pos.subtract(this.positionInDocument())
     },
 
     // --------------

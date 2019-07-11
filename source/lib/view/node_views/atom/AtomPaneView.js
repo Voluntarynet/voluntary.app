@@ -11,12 +11,20 @@ window.AtomPaneView = DomView.extend().newSlots({
     type: "AtomPaneView",
     startView: null,
     mouseIsDown: false,
+    titleView: null,
 }).setSlots({
     init: function () {
         DomView.init.apply(this)
         this.setOverflow("hidden")
         this.setIsRegisteredForMouse(true)
         this.setIsRegisteredForClicks(true)
+
+        /*
+        const t = DomView.clone().setInnerHTML("title").setColor("white")
+        this.setTitleView(t)
+        t.setPosition("absolute")
+        this.addSubview(t)
+        */
         return this
     },
 
@@ -24,7 +32,6 @@ window.AtomPaneView = DomView.extend().newSlots({
 
     onDoubleClick: function(event) {
         console.log("onDoubleClick")
-
     },
 
     removeStartView: function() {
@@ -62,7 +69,14 @@ window.AtomPaneView = DomView.extend().newSlots({
     },
 
     canAddPane: function() {
-        return this.subviews().length === 0
+        
+        this.subviews().forEach((subview) => { 
+            if(subview.type() === "AtomPaneView") {
+                return false
+            } })
+            return true
+        
+       // return this.subviews().length === 0
     },
 
     /*
@@ -76,16 +90,16 @@ window.AtomPaneView = DomView.extend().newSlots({
     onMouseDown: function(event) {
         console.log(this.typeId() + " onMouseDown")
         
+        
         if (!this.canAddPane()) {
             return false
         }
 
-
         this.setMouseIsDown(true)
         this.listenForRootMouseUp()
 
-        let mp = Mouse.shared().downPos()
-        let sv = this.startView()
+        const mp = Mouse.pointForEvent(event)
+        const sv = this.startView()
         sv.setLeft(mp.x() - 4)
         sv.setTop(mp.y() - 4)
 
@@ -94,17 +108,20 @@ window.AtomPaneView = DomView.extend().newSlots({
     },
 
     onMouseMove: function (event) {
-        if (this.mouseIsDown()) {
-            this._currentDragPos = this.viewPositionForEvent(event)
+        const debug = true
 
-            let sv = this.startView()
-            let dir = this.dragDirection(event)
-            let downPos = this.mouseDownPos()
+        if (this.mouseIsDown()) {
+            const wp = Mouse.pointForEvent(event)
+            this._currentDragPos = this.viewPosForWindowPos(wp)
+
+            const sv = this.startView()
+            const dir = this.dragDirection(event)
+            const downPos = this.mouseDownPos()
             //console.log("onMouseMove dir ", dir)
 
             
             if (dir === "x") {
-                //console.log("dir x")
+                if (debug) { console.log("dir x") }
                 sv.setMinAndMaxWidth(null)
                 sv.setMinAndMaxHeight(1)
                 sv.setWidth("100%")
@@ -112,14 +129,15 @@ window.AtomPaneView = DomView.extend().newSlots({
                 sv.setLeft(0)
                 sv.setTop(downPos.y())
             } else if (dir === "y") {
-                //console.log("dir y")
+                if (debug) { console.log("dir y") }
                 sv.setMinAndMaxWidth(1)
                 sv.setMinAndMaxHeight(null)
                 sv.setWidth("100%")
                 sv.setHeight("100%")
-                sv.setLeft(downPos.x)
+                sv.setLeft(downPos.x())
                 sv.setTop(0)
             } else {
+                if (debug) { console.log("no dir ") }
                 sv.setMinAndMaxWidth(8)
                 sv.setMinAndMaxHeight(8)
                 sv.setWidth(null)
@@ -136,10 +154,10 @@ window.AtomPaneView = DomView.extend().newSlots({
         let dv = Mouse.shared().dragVector()
         //console.log("dv = ", dv)
         if (this.mouseDownPos()) {
-            let dx = Math.abs(dv.x())
-            let dy = Math.abs(dv.y())
-            let r = Math.sqrt(dx*dx + dy*dy)
-            let minR = 50
+            const dx = Math.abs(dv.x())
+            const dy = Math.abs(dv.y())
+            const r = Math.sqrt(dx*dx + dy*dy)
+            const minR = 50
             if (r > minR) {
                 if (dx > dy) {
                     this._dragDir = "x"
@@ -164,8 +182,8 @@ window.AtomPaneView = DomView.extend().newSlots({
 
     onMouseUp: function(event) {
         if (this.mouseIsDown()) {
-            let dir = this.dragDirection()
-            let downPos = this.mouseDownPos()
+            const dir = this.dragDirection()
+            const downPos = this.mouseDownPos()
 
             if (dir) {
                 if (dir === "x") {
@@ -183,7 +201,7 @@ window.AtomPaneView = DomView.extend().newSlots({
 
     addAtomAtX: function(x) {
         // request new node from this.parentView().node()
-        let v = AtomNodeView.clone().setNode(AtomNode.clone())
+        const v = AtomNodeView.clone().setNode(AtomNode.clone())
         v.setIsVertical(false).setHeadWidth(x)
         v.syncLayout()
         this.addSubview(v)
@@ -191,7 +209,7 @@ window.AtomPaneView = DomView.extend().newSlots({
 
     addAtomAtY: function(y) {
         // request new node from this.parentView().node()
-        let v = AtomNodeView.clone().setNode(AtomNode.clone())
+        const v = AtomNodeView.clone().setNode(AtomNode.clone())
         v.setIsVertical(true).setHeadHeight(y)
         v.syncLayout()
         this.addSubview(v)

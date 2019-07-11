@@ -86,10 +86,15 @@ window.Mouse = ideal.Proto.extend().newSlots({
         return p
     },
 
-    dragVector: function(event) {        
+    dragVector: function(event) {   
+        if (this.downPos()) {
+            return this.currentPos().subtract(this.downPos())
+        }
+        /*  
         if (this.isDown()) {
             return this.currentPos().subtract(this.downPos())
         }
+        */
         return Point.clone()
     },
 

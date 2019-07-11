@@ -5,6 +5,6 @@ ResourceLoader.pushRelativePaths([
 ])
 
 ResourceLoader.pushDoneCallback( () => {
-    AtomApp.shared().run()
+    window.AtomApp.shared().run()
 })
 

@@ -27,7 +27,7 @@ window.AtomApp = App.extend().newSlots({
         App.setup.apply(this)
         
         this.setupAtom()
-
+        Mouse.shared()
         this.appDidInit()
         return this
     },
@@ -51,5 +51,7 @@ window.AtomApp = App.extend().newSlots({
         App.appDidInit.apply(this)
         window.ResourceLoaderPanel.stop() 
     },
-}).showVersion()
+})
+
+window.AtomApp.showVersion()
 

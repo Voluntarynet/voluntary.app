@@ -464,6 +464,29 @@ window.BrowserColumn = NodeView.extend().newSlots({
         */
         return this	    
     },
+
+    onKeyUp: function(event) {
+        NodeView.onKeyUp.apply(this, [event])
+        //console.log(this.typeId() + ".onKeyUp ", event)
+        if (event.altKey) {
+            const keyName = Keyboard.shared().nameForKeyCode(event.keyCode)
+            if (keyName === "c") {
+
+            }
+        }
+    }, 
+
+    onAltdKeyUp: function(event) {
+        // duplicate?
+    },
+
+    onControlcKeyUp: function(event) {
+        // copy?
+    },
+
+    onControlpKeyUp: function(event) {
+        // paste?
+    },
 	
     onUpArrowKeyUp: function(event) {
         if (!this.canNavigate()) { 

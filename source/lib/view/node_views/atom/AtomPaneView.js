@@ -18,6 +18,8 @@ window.AtomPaneView = DomView.extend().newSlots({
         this.setOverflow("hidden")
         this.setIsRegisteredForMouse(true)
         this.setIsRegisteredForClicks(true)
+        this.setBackgroundColor(CSSColor.randomColor().cssColorString())
+        this.setBackgroundColor("red")
 
         /*
         const t = DomView.clone().setInnerHTML("title").setColor("white")
@@ -74,9 +76,9 @@ window.AtomPaneView = DomView.extend().newSlots({
             if(subview.type() === "AtomPaneView") {
                 return false
             } })
-            return true
+        return true
         
-       // return this.subviews().length === 0
+        // return this.subviews().length === 0
     },
 
     /*

@@ -45,7 +45,7 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     dropCheck : function(event) {
         const element = event.target
         const elementMayWantDrop = element.ondrop
-        const view = element._divView
+        const view = element._domView
         const viewMayWantDrop = view && view.dropListener().isListening()
 
         if (!elementMayWantDrop && !viewMayWantDrop) {
@@ -179,8 +179,8 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     
     activeDomView: function() {
         const e = document.activeElement
-        if (e && e._divView) {
-            return e._divView
+        if (e && e._domView) {
+            return e._domView
         }
         return null
     },

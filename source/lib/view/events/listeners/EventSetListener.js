@@ -40,7 +40,7 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
 
     /*
     view: function() {
-        return this.element()._divView
+        return this.element()._domView
     },
     */
 

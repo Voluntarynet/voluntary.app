@@ -97,6 +97,4 @@ window.CenteredDomView = DomView.extend().newSlots({
         this.innerView().setWidth(400)
         return this
     },
-
-
 })

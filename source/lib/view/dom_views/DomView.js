@@ -65,7 +65,7 @@ window.DomView = ideal.Proto.extend().newSlots({
     setElement: function (e) {
         this._element = e
         setTimeout(() => { this.setIsRegisteredForFocus(true); }, 0)
-        e._divView = this // try to avoid depending on this as much as possible - keep refs to divViews, not elements
+        e._domView = this // try to avoid depending on this as much as possible - keep refs to divViews, not elements
         return this
     },
 
@@ -639,7 +639,7 @@ window.DomView = ideal.Proto.extend().newSlots({
     focus: function () {
         if (!this.isActiveElement()) {
 
-            //console.log(this.typeId() + ".focus() " + document.activeElement._divView)
+            //console.log(this.typeId() + ".focus() " + document.activeElement._domView)
 
             setTimeout(() => {
                 this.element().focus()
@@ -2168,9 +2168,11 @@ window.DomView = ideal.Proto.extend().newSlots({
 
 
     onKeyDown: function (event) {
-        const specialKeyName = Keyboard.specialNameForKeyEvent(event)
+        //Keyboard.shared().showEvent(event)
 
-        if (specialKeyName === "enter" && this.unfocusOnEnterKey()) {
+        const isEnterKey = Keyboard.shared().nameForKeyCode(event.keyCode) === "Enter";
+
+        if (isEnterKey && this.unfocusOnEnterKey()) {
             console.log(" releasing focus")
             // this.releaseFocus() // TODO: implement something to pass focus up view chain to whoever wants it
             this.element().parentElement.focus()
@@ -2183,17 +2185,22 @@ window.DomView = ideal.Proto.extend().newSlots({
 	            this.onTabKeyDown()
 	        }
 		}
-		*/
+        */
+        
+        const methodName = Keyboard.shared().downMethodNameForEvent(event)
+        this.invokeMethodNameForEvent(methodName, event)
 
-        // onEnterKeyDown onLeftArrowKeyUp
-        if (specialKeyName) {
-            const name = "on" + specialKeyName.capitalized() + "KeyDown"
-            if (this[name]) {
-                const stopProp = this[name].apply(this, [event])
-                event.preventDefault()
-                if (stopProp === false) {
-                    event.stopPropagation()
-                }
+        return true
+    },
+
+    invokeMethodNameForEvent: function(methodName, event) {
+        //console.log(this.typeId() + ".invokeMethodNameForEvent() methodName: ", methodName)
+        if (this[methodName]) {
+            const stopProp = this[methodName].apply(this, [event])
+            event.preventDefault()
+            if (stopProp === false) {
+                event.stopPropagation()
+                return false
             }
         }
         return true
@@ -2206,7 +2213,6 @@ window.DomView = ideal.Proto.extend().newSlots({
 
     onKeyUp: function (event) {
         let shouldPropogate = true
-        const specialKeyName = Keyboard.specialNameForKeyEvent(event)
         //console.log(this.typeId() + " onKeyUp specialKeyName=", specialKeyName)
 
         /*
@@ -2229,15 +2235,8 @@ window.DomView = ideal.Proto.extend().newSlots({
             }
         }
 
-        if (specialKeyName) {
-            // onEnterKeyUp onLeftArrowKeyUp
-            const name = "on" + specialKeyName.capitalized() + "KeyUp"
-            if (this[name]) {
-                shouldPropogate = this[name].apply(this, [event])
-                event.preventDefault()
-                //console.log("shouldPropogate = ", shouldPropogate)
-            }
-        }
+        const methodName = Keyboard.shared().upMethodNameForEvent(event)
+        this.invokeMethodNameForEvent(methodName, event)
 
         this.didEdit()
         return shouldPropogate

@@ -27,7 +27,7 @@ window.AtomApp = App.extend().newSlots({
         App.setup.apply(this)
         
         this.setupAtom()
-        Mouse.shared()
+        //Mouse.shared()
         this.appDidInit()
         return this
     },

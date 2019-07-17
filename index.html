@@ -88202,7 +88202,7 @@ window.EventPoint = window.Point.extend().newSlots({
     findOverview: function() {
         let e = document.elementFromPoint(p.x(), p.y());
         while (e) {
-            const view = e._divView
+            const view = e._domView
             if (view) {
                 this.setOverview(view)
                 return view
@@ -89259,7 +89259,7 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
 
     /*
     view: function() {
-        return this.element()._divView
+        return this.element()._domView
     },
     */
 
@@ -92039,7 +92039,7 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     dropCheck : function(event) {
         const element = event.target
         const elementMayWantDrop = element.ondrop
-        const view = element._divView
+        const view = element._domView
         const viewMayWantDrop = view && view.dropListener().isListening()
 
         if (!elementMayWantDrop && !viewMayWantDrop) {
@@ -92173,8 +92173,8 @@ window.WebBrowserWindow = ideal.Proto.extend().newSlots({
     
     activeDomView: function() {
         const e = document.activeElement
-        if (e && e._divView) {
-            return e._divView
+        if (e && e._domView) {
+            return e._domView
         }
         return null
     },
@@ -93237,7 +93237,7 @@ window.DomView = ideal.Proto.extend().newSlots({
     setElement: function (e) {
         this._element = e
         setTimeout(() => { this.setIsRegisteredForFocus(true); }, 0)
-        e._divView = this // try to avoid depending on this as much as possible - keep refs to divViews, not elements
+        e._domView = this // try to avoid depending on this as much as possible - keep refs to divViews, not elements
         return this
     },
 
@@ -93801,7 +93801,7 @@ window.DomView = ideal.Proto.extend().newSlots({
     focus: function () {
         if (!this.isActiveElement()) {
 
-            //console.log(this.typeId() + ".focus() " + document.activeElement._divView)
+            //console.log(this.typeId() + ".focus() " + document.activeElement._domView)
 
             setTimeout(() => {
                 this.element().focus()
@@ -96716,7 +96716,7 @@ window.DocumentBody = DomView.extend().newSlots({
     },
     
     setupElement: function() {
-        document.body._divView = this
+        document.body._domView = this
         //this._element = document.body
         // get this from element override
     },

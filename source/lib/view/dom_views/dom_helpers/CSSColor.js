@@ -87,6 +87,13 @@ window.CSSColor = ideal.Proto.extend().newSlots({
         ideal.Proto.init.apply(this)
     },
 
+    randomize: function() {
+        this.setRed(Math.random())
+        this.setGreen(Math.random())
+        this.setBlue(Math.random())
+        return this
+    },
+
     copy: function() {
         return CSSColor.clone().set(this.red(), this.green(), this.blue(), this.opacity())
     },
@@ -223,6 +230,10 @@ window.CSSColor = ideal.Proto.extend().newSlots({
 
     yellowColor: function() {
         return CSSColor.clone().set(1, 1, 0, 1)
+    },
+
+    randomColor: function() {
+        return CSSColor.clone().randomize()
     },
 
     asDict255: function() {

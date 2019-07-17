@@ -68,7 +68,7 @@ window.EventPoint = window.Point.extend().newSlots({
     findOverview: function() {
         let e = document.elementFromPoint(p.x(), p.y());
         while (e) {
-            const view = e._divView
+            const view = e._domView
             if (view) {
                 this.setOverview(view)
                 return view

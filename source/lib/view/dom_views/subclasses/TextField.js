@@ -84,7 +84,7 @@ window.TextField = DomStyledView.extend().newSlots({
     
     onKeyDown: function(event) {
         const controlDown   = Keyboard.shared().controlKey().isDown()
-        const equalSignDown = Keyboard.shared().equalSignKey().isDown()
+        const equalSignDown = Keyboard.shared().equalsSignKey().isDown()
         const minusDown     = Keyboard.shared().minusKey().isDown()
 
 

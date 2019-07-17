@@ -717,7 +717,7 @@ window.BrowserRow = NodeView.extend().newSlots({
             return false
         }
 
-        const modifierNames = Mouse.modifierNamesForEvent(event)
+        const modifierNames = Keyboard.shared().modifierNamesForEvent(event)
 
         if (modifierNames.length != 0) {
             const methodName = "on" + modifierNames.join("") + "Click"

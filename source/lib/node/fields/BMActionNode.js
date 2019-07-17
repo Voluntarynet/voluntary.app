@@ -25,7 +25,9 @@ window.BMActionNode = BMStorableNode.extend().newSlots({
     },
 
     canDoAction: function() {
-        return this.target() && this.target()[this.methodName()]
+        const t = this.target()
+        const m = this.methodName()
+        return t && t[m]
     },
 
     doAction: function() {
@@ -39,7 +41,7 @@ window.BMActionNode = BMStorableNode.extend().newSlots({
                 console.warn("no method with this name")
             }
         } else {
-            console.log(this.typeId() + "can't perform action ", this.methodName(), " on ", this.target())
+            console.log(this.typeId() + " can't perform action ", this.methodName(), " on ", this.target())
         }
 	    
 	    return this

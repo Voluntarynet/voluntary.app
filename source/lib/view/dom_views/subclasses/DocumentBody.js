@@ -24,7 +24,7 @@ window.DocumentBody = DomView.extend().newSlots({
             this.setIsRegisteredForDocumentResize(true)
         })
 
-        //Mouse.shared()
+        Mouse.shared()
         Keyboard.shared()
         TouchScreen.shared()
 
@@ -36,7 +36,7 @@ window.DocumentBody = DomView.extend().newSlots({
     },
     
     setupElement: function() {
-        document.body._divView = this
+        document.body._domView = this
         //this._element = document.body
         // get this from element override
     },
@@ -83,40 +83,6 @@ window.DocumentBody = DomView.extend().newSlots({
     zoomAdjustedSize: function() {
         return { width: this.zoomAdjustedWidth(), height: this.zoomAdjustedHeight() }
     },
-
-    // --- event intercept keyboard ---
-
-    /*
-    onKeyDownCapture: function (event) {
-        return window.Keyboard.shared().onKeyDown(event)
-    },
-
-    onKeyUpCapture: function (event) {
-        //console.log(this.typeId() + " onKeyUp ")
-        return window.Keyboard.shared().onKeyUp(event)
-    },
-    */
-
-    // --- event intercept mouse ---
-
-    /*
-    onMouseDownCapture: function(event) {
-        //console.log("DocumentBody onMouseDown")
-        return window.Mouse.shared().onMouseDown(event)
-    },
-
-    onMouseMoveCapture: function (event) {
-        return window.Mouse.shared().onMouseMove(event)
-    },
-
-    onMouseUpCapture: function(event) {
-        return window.Mouse.shared().onMouseUp(event)
-    },  
-
-    onMouseLeaveCapture: function(event) {
-        return true
-    },  
-    */
 
     allDomElements: function() {
         const domElements = this.element().getElementsByTagName("*");

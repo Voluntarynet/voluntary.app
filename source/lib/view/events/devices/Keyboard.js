@@ -34,9 +34,9 @@ window.Keyboard = ideal.Proto.extend().newSlots({
 
     setupCodeToKeys: function() {
         const dict = {}
-        const k2c = this.keyNameToCodeMap()
-        Object.keys(k2c).forEach((name) => {
-            const code = k2c[name]
+        const c2k = this.keyCodesToNamesDict()
+        Object.keys(c2k).forEach((code) => {
+            const name = c2k[code]
             dict[code] = KeyboardKey.clone().setName(name).setCode(code).setKeyboard(this)
         })
         this.setCodeToKeys(dict)
@@ -53,171 +53,170 @@ window.Keyboard = ideal.Proto.extend().newSlots({
     },
 
     nameForKeyCode: function(aCode) {
-        return this.keyForCode(aCode).name()
+        const key = this.keyForCode(aCode)
+        if (key) {
+            return key.name()
+        }
+        return null
+    },
+
+    k2c: function() {
+        if (!this._k2c) {
+            this._k2c = {}
+            const c2k = this.keyCodesToNamesDict()
+            Object.keys(c2k).forEach((c) => {
+                const k = c2k[c]
+                this._k2c[k] = c
+            })
+        }
+        return this._k2c
     },
 
     keyCodeForName: function(aName) {
-        return this.keyNameToCodeMap()[aName]
+        return this.k2c()[aName]
     },
 
-    keyNameToCodeMap: function() {
-        return { 
-            backspace: 8,
-            tab: 9,
-            enter: 13,
-            shift: 16,
-            ctrl: 17,
-            alt: 18,
-            pauseBreak: 19,
-            capslock: 20,
-            esc: 27,
-            space: 32,
-            pageUp: 33,
-            pageDown: 34,
-            end: 35,
-            home: 36,
-            leftArrow: 37,
-            upArrow: 38,
-            rightArrow: 39,
-            downArrow: 40,
-            insert: 45,
-            delete: 46,
-            0: 48,
-            1: 49,
-            2: 50,
-            3: 51,
-            4: 52,
-            5: 53,
-            6: 54,
-            7: 55,
-            8: 56,
-            9: 57,
-            a: 65,
-            b: 66,
-            c: 67,
-            d: 68,
-            e: 69,
-            f: 70,
-            g: 71,
-            h: 72,
-            i: 73,
-            j: 74,
-            k: 75,
-            l: 76,
-            m: 77,
-            n: 78,
-            o: 79,
-            p: 80,
-            q: 81,
-            r: 82,
-            s: 83,
-            t: 84,
-            u: 85,
-            v: 86,
-            w: 87,
-            x: 88,
-            y: 89,
-            z: 90,
-            leftWindow: 91,
-            rightWindow: 92,
-            select: 93,
-            numpad0: 96,
-            numpad1: 97,
-            numpad2: 98,
-            numpad3: 99,
-            numpad4: 100,
-            numpad5: 101,
-            numpad6: 102,
-            numpad7: 103,
-            numpad8: 104,
-            numpad9: 105,
-            multiply: 106,
-            plus: 107,
-            minus: 109,
-            decimalPoint: 110,
-            divide: 111,
-            f1: 112,
-            f2: 113,
-            f3: 114,
-            f4: 115,
-            f5: 116,
-            f6: 117,
-            f7: 118,
-            f8: 119,
-            f9: 120,
-            f10: 121,
-            f11: 122,
-            f12: 123,
-            numLock: 144,
-            scrollLock: 145,
-            semicolon: 186,
-            equalsign: 187,
-            comma: 188,
-            dash: 189,
-            period: 190,
-            forwardSlash: 191,
-            graveAccent: 192,
-            openBracket: 219,
-            backslash: 220,
-            closeBracket: 221,
-            singleQuote: 222 
-        };
-    },
-
-    keyForCode: function(aCode) {
-        return this.codeToKeys()[aCode]
-    },
-
-    // -- events ---
-
-    showCodeToKeys: function() {
-        console.log("Keyboard:")
-        Object.keys(this.codeToKeys()).forEach((code) => {
-            console.log("  code: ", code + " key name: ", this.codeToKeys()[code].name())
-        })
-        return this
-    },
-
-    keyForEvent: function(event) {
-        const code = event.keyCode
-        const key = this.codeToKeys()[code]
-        return key
-    },
-
-    onKeyDownCapture: function (event) {
-        //console.log("event.metaKey = ", event.metaKey)
-        
-        const shouldPropogate = true
-        const key = this.keyForEvent(event)
-        key.onKeyDown(event)
-
-        if (this.isDebugging()) {
-            console.log(this.typeId() + ".onKeyDown " + key.name())
-        }
-        
-        return shouldPropogate
-    },
-
-    onKeyUpCapture: function (event) {
-        const shouldPropogate = true
-        const key = this.keyForEvent(event)
-        key.onKeyUp(event)
-
-        if (this.isDebugging()) {
-            console.log(this.typeId() + ".onKeyUp " + key.name())
-        }
-
-        return shouldPropogate
-    },
     
-    // --- special ---
-
-    methodNameForKeyCode: function(keyCode) {
-        const key = this.keyForCode(keyCode)
-        const methodName = "on" + key.name() + "KeyDown";
-        return methodName
+    eventIsJustModifierKey: function(event) {
+        const name = this.nameForKeyCode(event.keyCode)
+        return this.allModifierNames().contains(name)
     },
 
+
+    keyCodesToNamesDict: function() {
+        return {
+            8: "Backspace",
+            9: "Tab",
+            13: "Enter",
+            16: "Shift",
+            17: "Control",
+            18: "Alternate",
+            19: "PauseBreak",
+            20: "Capslock",
+            27: "Escape",
+            32: "Space",
+            33: "PageUp",
+            34: "PageDown",
+            35: "End",
+            36: "Home",
+            37: "LeftArrow",
+            38: "UpArrow",
+            39: "RightArrow",
+            40: "DownArrow",
+            45: "Insert",
+            46: "Delete",
+            48: "0",
+            49: "1",
+            50: "2",
+            51: "3",
+            52: "4",
+            53: "5",
+            54: "6",
+            55: "7",
+            56: "8",
+            57: "9",
+            65: "a", // characters are the same code for upper and lower case in JS
+            66: "b",
+            67: "c",
+            68: "d",
+            69: "e",
+            70: "f",
+            71: "g",
+            72: "h",
+            73: "i",
+            74: "j",
+            75: "k",
+            76: "l",
+            77: "m",
+            78: "n",
+            79: "o",
+            80: "p",
+            81: "q",
+            82: "r",
+            83: "s",
+            84: "t",
+            85: "u",
+            86: "v",
+            87: "w",
+            88: "x",
+            89: "y",
+            90: "z",
+            91: "MetaLeft",
+            92: "RightWindow", // correct?
+            93: "MetaRight",
+            96: "NumberPad0",
+            97: "NumberPad1",
+            98: "NumberPad2",
+            99: "NumberPad3",
+            100: "NumberPad4",
+            101: "NumberPad5",
+            102: "NumberPad6",
+            103: "NumberPad7",
+            104: "NumberPad8",
+            105: "NumberPad9",
+            106: "Multiply",
+            107: "Plus",
+            109: "Minus",
+            110: "DecimalPoint",
+            111: "Divide",
+            112: "Function1",
+            113: "Function2",
+            114: "Function3",
+            115: "Function4",
+            116: "Function5",
+            117: "Function6",
+            118: "Function7",
+            119: "Function8",
+            120: "Function9",
+            121: "Function10",
+            122: "Function11",
+            123: "Function12",
+            144: "NumberLock",
+            145: "ScrollLock",
+            186: "Semicolon",
+            187: "EqualsSign",
+            188: "Comma",
+            189: "Dash",
+            190: "Period",
+            191: "ForwardSlash",
+            192: "GraveAccent",
+            219: "OpenBracket",
+            220: "Backslash",
+            221: "CloseBracket",
+            222: "SingleQuote",
+        }
+    },
+
+    shiftChangingKeysDict: function() {
+        // Based on a Macbook Pro keyboard. 
+        // Not sure if this is platform specific.
+
+        return {
+            "\`": ["Tilda", "~"],
+            "1": ["ExclaimationPoint", "!"],
+            "2": ["AtSymbol", "@"],
+            "3": ["Hash", "#"],
+            "4": ["DollarSign", "$"],
+            "5": ["Percent", "%"],
+            "6": ["Carot"],
+            "7": ["Ampersand", "&"],
+            "8": ["Asterisk", "*"],
+            "9": ["OpenParenthesis", "("],
+            "0": ["CloseParenthesis", ")"],
+            "-": ["Underscore", "_"],
+            "=": ["Plus", "+"],
+            "[": ["OpenCurlyBracket", "{"],
+            "]": ["CloseCurlyBracket", "}"],
+            "\\": ["Pipe", "|"],
+            ";": ["Colon", ":"],
+            "'": ["DoubleQuote", "\""],
+            ",": ["LessThan", "<"],
+            ".": ["GreaterThan", ">"],
+            "/": ["QuestionMark", "?"],
+        }
+    },
+
+    /*
     specialKeyCodes: function () { 
         return {
             8:  "delete", // "delete" on Apple keyboard
@@ -235,47 +234,140 @@ window.Keyboard = ideal.Proto.extend().newSlots({
             39: "rightArrow", 
             40: "downArrow",  
             46: "delete", 
-            /* 
-			107: "add",  
-			109: "subtract",  
-			111: "divide",  
-			144: "numLock",  
-			145: "scrollLock",  
-			186: "semiColon",  
-			187: "equalsSign", 
-			*/ 
+
         }
     },
-	
-    specialNameForKeyEvent: function(event) {
+    */
+
+    keyForCode: function(aCode) {
+        return this.codeToKeys()[aCode]
+    },
+
+    // -- events ---
+
+    showCodeToKeys: function() {
+        const c2k = this.keyCodesToNamesDict()
+
+        //const s = JSON.stringify(c2k, null, 4)
+
+        let s = "{\n"
+        Object.keys(c2k).forEach((code) => {
+            s += "    " + code + ": \"" + this.codeToKeys()[code].name() + "\",\n"
+        })
+        s += "}\n"
+        console.log("c2k:", s)
+
+        /*
+        console.log("Keyboard:")
+        Object.keys(this.codeToKeys()).forEach((code) => {
+            console.log("  code: ", code + " key name: ", this.codeToKeys()[code].name())
+        })
+        */
+        return this
+    },
+
+    keyForEvent: function(event) {
         const code = event.keyCode
-        const result = this.specialKeyCodes()[code]
-		
-        if (event.shiftKey && (code === 187)) {
-            return "plus"
-        }
-		
-        //console.log("specialNameForKeyEvent ", code, " = ", result)
-		
-        return result
+        const key = this.codeToKeys()[code]
+        return key
     },
+
+    onKeyDownCapture: function (event) {
+        //console.log("event.metaKey = ", event.metaKey)
+        
+        const shouldPropogate = true
+        const key = this.keyForEvent(event)
+
+        if (key) {
+            key.onKeyDown(event)
+
+            if (this.isDebugging()) {
+                console.log(this.typeId() + ".onKeyDown " + key.name())
+            }
+        } else {
+            console.warn("Keyboard.shared() no key found for event ", event)
+        }
+            
+        return shouldPropogate
+    },
+
+    onKeyUpCapture: function (event) {
+        const shouldPropogate = true
+        const key = this.keyForEvent(event)
+        key.onKeyUp(event)
+
+        if (this.isDebugging()) {
+            console.log(this.typeId() + ".onKeyUp " + key.name())
+        }
+
+        return shouldPropogate
+    },
+    
+    // --- event handling method names ---
+
+    downMethodNameForEvent: function(event) {
+        return "on" + this.modsAndKeyNameForEvent(event) + "KeyDown"
+    },
+
+    upMethodNameForEvent: function(event) {
+        return "on" + this.modsAndKeyNameForEvent(event) + "KeyUp"
+    },
+
+    eventIsAlphabetical: function(event) {
+        const c = event.keyCode
+        return c >= 65 && c <= 90
+    },
+
+    modsAndKeyNameForEvent: function(event) {
+        // examples: AltB AltShiftB
+        // Note that shift is explicit and the B key is always uppercase
+        const key = this.keyForCode(event.keyCode)
+        const isJustModifier = this.eventIsJustModifierKey(event)
+        const modifiers = this.modifierNamesForEvent(event)
+        const isAlpabetical = this.eventIsAlphabetical(event)
+        let keyName = key ? key.name() : event.code
+
+        if (isJustModifier) {
+            return keyName
+        }
+
+        if (isAlpabetical) {
+            if (event.shiftKey) {
+                keyName = keyName.capitalized()
+                modifiers.remove("Shift")
+            }
+        }
+
+        return modifiers.join("") + keyName
+    },
+
+
+    methodNameForKeyCode: function(keyCode) {
+        const key = this.keyForCode(keyCode)
+        const methodName = "on" + key.name() + "KeyDown";
+        return methodName
+    },
+
+    // --- special ---
+
+
 
     // get key helpers
 
     shiftKey: function() {
-        return this.keyForName("shift")
+        return this.keyForName("Shift")
     },
 
     controlKey: function() {
-        return this.keyForName("ctrl")
+        return this.keyForName("Control")
     },
 
     leftCommandKey: function() {
-        return this.keyForName("leftWindow")
+        return this.keyForName("MetaLeft")
     },
 
     rightCommandKey: function() {
-        return this.keyForName("select")
+        return this.keyForName("MetaRight")
     },
 
     // get key state helpers
@@ -289,16 +381,16 @@ window.Keyboard = ideal.Proto.extend().newSlots({
     },
 
 
-    equalSignKey: function() {
-        return this.keyForName("equalsign")
+    equalsSignKey: function() {
+        return this.keyForName("EqualsSign")
     },
 
     minusKey: function() {
-        return this.keyForName("dash")
+        return this.keyForName("Dash")
     },
 
     plusKey: function() {
-        return this.keyForName("plus")
+        return this.keyForName("Plus")
     },
 
     plusIsDown: function() {
@@ -323,5 +415,54 @@ window.Keyboard = ideal.Proto.extend().newSlots({
 
     show: function() {
         console.log(this.typeId() + " downKeys: ", this.downKeyNames())
+    },
+
+    allModifierNames: function() {
+        return [
+            "Alternate", 
+            "Control", 
+            "MetaLeft", 
+            "MetaRight", 
+            "Shift", 
+        ]
+    },
+
+    modifierNamesForEvent: function(event) {
+        let modifierNames = []
+
+        // event names are ordered alphabetically to avoid ambiguity
+
+        if (event.altKey) {
+            modifierNames.push("Alternate")
+        } 
+        
+        if (event.ctrlKey) {
+            modifierNames.push("Control")
+        }
+        
+        if (event.metaKey) {
+            if (event.location === 1) {
+                modifierNames.push("MetaLeft")
+            } else {
+                modifierNames.push("MetaRight")
+            }
+        } 
+        
+        if (event.shiftKey) {
+            modifierNames.push("Shift")
+        }
+
+        return modifierNames
+    },
+
+    showEvent: function(event) {
+        console.log("---")
+        console.log("Keyboard.showEvent():")
+        console.log("  code: ", event.keyCode)
+        console.log("  name: ", Keyboard.shared().nameForKeyCode(event.keyCode))
+        console.log("  is modifier: ", Keyboard.shared().eventIsJustModifierKey(event))
+        console.log("  modifierNames: ", Keyboard.shared().modifierNamesForEvent(event))
+        console.log("  modsAndKeyName: ", Keyboard.shared().modsAndKeyNameForEvent(event))
+        console.log("---")
     },
 })

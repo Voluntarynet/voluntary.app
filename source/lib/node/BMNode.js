@@ -69,8 +69,9 @@ window.BMNode = ideal.Proto.extend().newSlots({
     didUpdateNodeNote: null,
     shouldFocusSubnodeNote: null,
     nodeUsesColumnBackgroundColor: true,
-    nodeInspectorSubnodes: null,
+    nodeInspector: null,
     canDelete: false,
+    nodeCanInspect: false,
 }).setSlots({
     init: function () {
         this._subnodes = []
@@ -86,6 +87,23 @@ window.BMNode = ideal.Proto.extend().newSlots({
         this.setNodeColumnStyles(BMViewStyles.clone())
         //this.setNodeRowStyles(BMViewStyles.clone())
         this.setViewDict({})
+        return this
+    },
+
+    initNodeInspector: function() {
+
+    },
+
+    nodeInspector: function(aField) {
+        if (!this._nodeInspector) {
+            this._nodeInspector = BMNode.clone()
+            this.initNodeInspector()
+        }
+        return this._nodeInspector
+    },
+
+    addInspectorField: function(aField) {
+        this.inspector().addSubnode(aField)
         return this
     },
 

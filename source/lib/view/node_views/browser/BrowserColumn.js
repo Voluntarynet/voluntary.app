@@ -477,6 +477,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     }, 
 
     isInspecting: function() {
+        // see if the row that selected this column is being inspected
         const prev = this.previousColumn() 
         if (prev) {
             const row = prev.selectedRow()
@@ -488,6 +489,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
 
     onControl_i_KeyUp: function(event) {
+        // forward method to selected row and resync next column 
         const row = this.selectedRow()
         if (row) {
             const result = row.onControl_i_KeyUp(event)
@@ -503,7 +505,9 @@ window.BrowserColumn = NodeView.extend().newSlots({
         // duplicate?
         if (this.selectedRow()) { 
             console.log(this.typeId() + " duplicate selected row " + this.selectedRow().node().title())
-            //this.selectedRow().unselect() 
+            //this.selectedRow()
+            
+            this.scheduleSyncFromNode()
         }
     },
 

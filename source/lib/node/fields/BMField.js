@@ -147,7 +147,11 @@ window.BMField = BMStorableNode.extend().newSlots({
     didUpdateView: function(aFieldView) {
         this.scheduleSyncToStore()
         
-        const parentNode = this.parentNode()
+        let parentNode = this.parentNode()
+        if (!parentNode) {
+            parentNode = this.target()
+        }
+
         if (parentNode.didUpdateField) {
             parentNode.didUpdateField(this)
         }

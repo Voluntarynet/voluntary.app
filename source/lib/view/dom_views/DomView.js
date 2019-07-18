@@ -2194,7 +2194,7 @@ window.DomView = ideal.Proto.extend().newSlots({
     },
 
     invokeMethodNameForEvent: function(methodName, event) {
-        console.log(this.typeId() + ".invokeMethodNameForEvent('" + methodName + "')")
+        //console.log(this.typeId() + ".invokeMethodNameForEvent('" + methodName + "')")
         if (this[methodName]) {
             const stopProp = this[methodName].apply(this, [event])
             event.preventDefault()

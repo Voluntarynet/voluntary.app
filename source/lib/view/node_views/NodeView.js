@@ -145,9 +145,9 @@ window.NodeView = DomStyledView.extend().newSlots({
     },
     
     visibleSubnodes: function() {
-        console.log(this.typeId() + ".visibleSubnodes() isInspecting:" + this.isInspecting())
+        //console.log(this.typeId() + ".visibleSubnodes() isInspecting:" + this.isInspecting())
         if (this.isInspecting()) {
-            const subnodes = this.node().nodeInspectorSubnodes()
+            const subnodes = this.node().nodeInspector().subnodes()
             if (subnodes) {
                 return subnodes
             }

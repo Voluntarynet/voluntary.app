@@ -23,6 +23,7 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
         //this.setViewClassName("GenericView")
         //this.setViewClassName("BMDataStoreRecordView")
         this.setCanDelete(true)
+        this.setNodeCanInspect(true)
         this.addAction("add")
         //this.setNodeColumnBackgroundColor("white")
         this.setNodeMinWidth(300)
@@ -44,22 +45,16 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
 
         //this.setNodeUsesColumnBackgroundColor(false)
 
-        this.addInspectorField(BMBoolField.clone().setValueMethod("hasTest"))
+        //this.addInspectorField(BMBoolField.clone().setKey("test").setValueMethod("hasTest").setValueIsEditable(true).setTarget(this))
 
     },
 
 
-    addInspectorField: function(aField) {
-        if (!this.nodeInspectorSubnodes()) {
-            this.setNodeInspectorSubnodes([])
-        }
-        this.nodeInspectorSubnodes().push(aField)
-        return this
-    },
 
     didLoadFromStore: function() {
         BMStorableNode.didLoadFromStore.apply(this)
         this.subnodes().forEach( (subnode) => { subnode.setCanDelete(true) });
+        this.subnodes().forEach( (subnode) => { subnode.setNodeCanInspect(true) });
         return this
     },
 

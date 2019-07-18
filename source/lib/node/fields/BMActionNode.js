@@ -24,6 +24,12 @@ window.BMActionNode = BMStorableNode.extend().newSlots({
         this.setNodeRowIsSelectable(true)
     },
 
+    initNodeInspector: function() {
+        BMStorableNode.initNodeInspector.apply(this)
+        const titleField = BMField.clone().setKey("title").setValueMethod("title").setValueIsEditable(true).setTarget(this)
+        this.nodeInspector().addSubnode(titleField)
+    },
+
     canDoAction: function() {
         const t = this.target()
         const m = this.methodName()

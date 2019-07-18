@@ -12,6 +12,7 @@ window.NodeView = DomStyledView.extend().newSlots({
     //ownsView: true,
     overrideSubviewProto: null,
     nodeObservation: null,
+    isInspecting: false,
 }).setSlots({
     
     // -------------------------------------
@@ -144,6 +145,13 @@ window.NodeView = DomStyledView.extend().newSlots({
     },
     
     visibleSubnodes: function() {
+        console.log(this.typeId() + ".visibleSubnodes() isInspecting:" + this.isInspecting())
+        if (this.isInspecting()) {
+            const subnodes = this.node().nodeInspectorSubnodes()
+            if (subnodes) {
+                return subnodes
+            }
+        }
         return this.node().subnodes()
     },
     

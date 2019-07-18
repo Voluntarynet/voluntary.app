@@ -14,6 +14,7 @@
 window.BMFlexNode = BMStorableNode.extend().newSlots({
     type: "BMFlexNode",
     label: "",
+    hasTest: false,
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
@@ -42,6 +43,18 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
         //this.setNodeRowStyles(BMViewStyles.clone())
 
         //this.setNodeUsesColumnBackgroundColor(false)
+
+        this.addInspectorField(BMBoolField.clone().setValueMethod("hasTest"))
+
+    },
+
+
+    addInspectorField: function(aField) {
+        if (!this.nodeInspectorSubnodes()) {
+            this.setNodeInspectorSubnodes([])
+        }
+        this.nodeInspectorSubnodes().push(aField)
+        return this
     },
 
     didLoadFromStore: function() {

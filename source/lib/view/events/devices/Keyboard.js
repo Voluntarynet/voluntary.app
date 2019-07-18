@@ -321,17 +321,20 @@ window.Keyboard = ideal.Proto.extend().newSlots({
     modsAndKeyNameForEvent: function(event) {
         // examples: AltB AltShiftB
         // Note that shift is explicit and the B key is always uppercase
+
         const key = this.keyForCode(event.keyCode)
         const isJustModifier = this.eventIsJustModifierKey(event)
         const modifiers = this.modifierNamesForEvent(event)
         const isAlpabetical = this.eventIsAlphabetical(event)
         let keyName = key ? key.name() : event.code
 
+        
         if (isJustModifier) {
             return keyName
         }
 
         if (isAlpabetical) {
+            keyName = "_" + keyName + "_"
             if (event.shiftKey) {
                 keyName = keyName.capitalized()
                 modifiers.remove("Shift")
@@ -339,13 +342,6 @@ window.Keyboard = ideal.Proto.extend().newSlots({
         }
 
         return modifiers.join("") + keyName
-    },
-
-
-    methodNameForKeyCode: function(keyCode) {
-        const key = this.keyForCode(keyCode)
-        const methodName = "on" + key.name() + "KeyDown";
-        return methodName
     },
 
     // --- special ---

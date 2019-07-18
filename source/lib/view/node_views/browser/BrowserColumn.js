@@ -476,15 +476,42 @@ window.BrowserColumn = NodeView.extend().newSlots({
         }
     }, 
 
-    onAltdKeyUp: function(event) {
-        // duplicate?
+    isInspecting: function() {
+        const prev = this.previousColumn() 
+        if (prev) {
+            const row = prev.selectedRow()
+            if (row) {
+                return row.isInspecting()
+            }
+        }
+        return false
     },
 
-    onControlcKeyUp: function(event) {
+    onControl_i_KeyUp: function(event) {
+        const row = this.selectedRow()
+        if (row) {
+            const result = row.onControl_i_KeyUp(event)
+            const nextColumn = this.nextColumn()
+            if (nextColumn) {
+                nextColumn.scheduleSyncFromNode()
+            }
+            return result
+        }
+    },
+
+    onControl_d_KeyUp: function(event) {
+        // duplicate?
+        if (this.selectedRow()) { 
+            console.log(this.typeId() + " duplicate selected row " + this.selectedRow().node().title())
+            //this.selectedRow().unselect() 
+        }
+    },
+
+    onControl_c_KeyUp: function(event) {
         // copy?
     },
 
-    onControlpKeyUp: function(event) {
+    onControl_p_KeyUp: function(event) {
         // paste?
     },
 	
@@ -672,8 +699,8 @@ window.BrowserColumn = NodeView.extend().newSlots({
 	
     previousColumn: function() {
         const i = this.columnIndex()
-        const prevColumn = this.browser().columns()[i - 1]
-        return prevColumn
+        const previousColumn = this.browser().columns()[i - 1]
+        return previousColumn
     },
 
     selectPreviousColumn: function() {

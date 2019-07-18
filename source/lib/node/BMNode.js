@@ -69,7 +69,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     didUpdateNodeNote: null,
     shouldFocusSubnodeNote: null,
     nodeUsesColumnBackgroundColor: true,
-
+    nodeInspectorSubnodes: null,
     canDelete: false,
 }).setSlots({
     init: function () {
@@ -237,6 +237,7 @@ window.BMNode = ideal.Proto.extend().newSlots({
     },
 
     // --- subnodes ----------------------------------------
+    
     
     setParentNode: function(aNode) {
         if (aNode === this._parentNode) {

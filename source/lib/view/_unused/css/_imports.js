@@ -3,7 +3,8 @@
 ResourceLoader.pushRelativePaths([
     "CSSDeclaration.js",
     "CSSRuleSet.js",
-    "CSS.js",
+    "CSSSheet.js",
     "CSS_rules.js",
+    "CSS.js",
 ])
 

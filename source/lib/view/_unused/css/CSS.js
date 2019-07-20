@@ -1,18 +1,39 @@
 "use strict"
 
 /*
+
+    IMPORTANT:
+
+        Browsers block JS access to CSS so this model won't work.
+        We'll need to set all element's style directly if we want full control over
+        styling from JS. Hopefully, this won't be a performance issue... :(
+
+
     CSS Rule sets abstraction
     
     CSS structure in JS is:
 
-        StyleSheetList array = document.styleSheets 
-        CSSRuleList array = sheet.cssRules
-        CSS*Rule rule = ruleList[i]
-        CSSStyleDeclaration dec = rule.style
+        DOCUMENT:
+        document
 
-        dec.fontFamily
-        dec.cssText
-        etc
+        SHEETS: 
+        StyleSheetList sheets = document.styleSheets 
+
+        SHEETS: 
+        CSSStyleSheet sheet = sheets[i]
+
+        RULELIST:
+        CSSRuleList ruleList = sheet.cssRules
+
+        RULE:
+        CSS*Rule rule = ruleList[i]
+
+        STYLE DECLARATION:
+        CSSStyleDeclaration styleDec = rule.style
+
+        PROPERTIES:
+        styleDec.fontFamily
+        ...
 
 
     example use:
@@ -39,51 +60,41 @@
     CSS.ruleAt("Browser").applyToElement(e)
 
 */
+  
 
 window.CSS = class CSS extends ProtoClass {
     init() {
         super.init()
         this.newSlots({
-            rules: {},
+            sheets: [],
+            rules: [],
         })
         
-        return this
-    }
-    
-    hasRule (k) {
-        return k in this.rules()
-    }
-    
-    ruleAt (k) {
-        const rule = this.rules()[k]
-        if (!rule) {
-            rule = CSSRuleSet.clone().setKey(k)
-            this.rules()[k] = rule
-        }
-        return rule        
-    }
-    
-    assertRuleExists (ruleName) {
-        if (!this.hasRule(ruleName)) {
-            throw new Error("CSS missing ruleset '" + ruleName + "'")
-        }     
-        return this   
-    }
-    
-    applyEntryToElement (ruleName, anElement) {        
-        this.assertRuleExists(ruleName)
-        this.ruleAt(ruleName).applyToElement(anElement)
+        this.syncFromDocument()
+
         return this
     }
 
+    syncFromDocument() {
+        const sheets = document.styleSheets; // sheets is a StyleSheetList
+        for (let i = 0; i < sheets.length; i ++) {
+            const sheet = sheets[i] // sheet is a CSSStyleSheet
+            const cssSheet = CSSSheet.clone().setSheetRef(sheet)
+        }
+    }
+    
+    hasRule (k) {
+        return this.rules().detect(rule => rule.name() === k)
+    }
+
     asJSON () {
-        const dict = {}
-        const rules = {}
-        this.rules().forEach((k, ruleSet) => {
-            rules[k] = ruleSet.asJSON()
+        const cssJson = {}
+        const jsonSheets = []
+        this.sheets().forEach((sheet) => {
+            json.push(sheet.asJSON())
         })
-        dict.rules = rules
-        return dict
+        cssJson.jsonSheets = jsonSheets
+        return cssJson
 
     }
 
@@ -133,3 +144,4 @@ window.CSS = class CSS extends ProtoClass {
 
 window.CSS.registerThisClass()
 
+window.CSS.shared()

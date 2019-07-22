@@ -6,6 +6,5 @@ ResourceLoader.pushRelativePaths([
     "events/_imports.js",
     "webbrowser/_imports.js",
     "dom_views/_imports.js",
-    "node_views/_imports.js",
 ])
 

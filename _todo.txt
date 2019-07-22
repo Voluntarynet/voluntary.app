@@ -15,6 +15,10 @@ Field
 
 A Field is a Row that is a container for a 
 
+
+Move from .node() to nodeMirror() ?
+
+
 NODES -> RowViews
 
 Action 

@@ -1,5 +1,6 @@
 "use strict"
 
 ResourceLoader.pushRelativePaths([
-    "AtomNode.js",
+    "BMViewStyles.js",
+    "BMViewStyle.js",
 ])

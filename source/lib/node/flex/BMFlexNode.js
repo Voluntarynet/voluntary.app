@@ -4,11 +4,9 @@
     
     BMFlexNode
     
-    A node that supports adding, reordering, etc other nodes to it within the UI.
+    A node that supports for adding, reordering, etc other nodes to it within the UI.
     
 */
-
-
 
 
 window.BMFlexNode = BMStorableNode.extend().newSlots({
@@ -20,7 +18,6 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
         BMStorableNode.init.apply(this)
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(true)
-        //this.setViewClassName("GenericView")
         //this.setViewClassName("BMDataStoreRecordView")
         this.setCanDelete(true)
         this.setNodeCanInspect(true)

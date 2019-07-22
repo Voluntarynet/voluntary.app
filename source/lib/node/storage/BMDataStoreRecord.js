@@ -15,8 +15,6 @@ window.BMDataStoreRecord = BMFieldSetNode.extend().newSlots({
 }).setSlots({
     init: function () {
         BMFieldSetNode.init.apply(this)
-        //this.setViewClassName("GenericView")
-        //this.setViewClassName("BMDataStoreRecordView")
         //this.setCanDelete(true) // not safe for non-developers
         this.setNodeColumnBackgroundColor("white")
         this.setNodeMinWidth(300)

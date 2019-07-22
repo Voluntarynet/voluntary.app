@@ -43,7 +43,6 @@ window.BMServerConnection = BMNode.extend().newSlots({
         
         this.setTitle("Server Connection")
         this.setNoteIsSubnodeCount(false)
-        //this.setViewClassName("GenericView")
         //this.setLog(BMNode.clone())
 
         this.setSessionId(BMKeyPair.clone().generatePrivateKey())

@@ -19,7 +19,7 @@ window.BMCreatorNode = BMStorableNode.extend().newSlots({
         this.setShouldStoreSubnodes(false)
         this.setNodeCanReorderSubnodes(false)
         this.setupSubnodes()
-        //this.setCanDelete(true)
+        this.setCanDelete(true)
     },
 
     title: function() {

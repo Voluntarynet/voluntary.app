@@ -1,4 +1,20 @@
 
+
+Node -> NodeView
+
+A Field is a Node that represents a Slot.
+A Slot has key, value, and other properties (canEdit, valid values, validator, etc)
+
+Field 
+    key / isVisible / isEditable / error
+    value / isVisible / isEditable / error
+    isValid
+    target
+    valueSetter
+    valueGetter
+
+A Field is a Row that is a container for a 
+
 NODES -> RowViews
 
 Action 
@@ -13,36 +29,7 @@ TextField
 TextArea
 Color
 
-Optional inspector
-is inspection a state of the view, node, or both?
-how to intercept normal subnodes browsing? At node or view?
-If view, add a nodeSubnodesMethodName slot? Single intercept at NodeView.visibleSubnodes()
-add View.isInspecting
-
-View.visibleSubnodes: function() {
-    if (node.hasInspector() && this.isInspecting()) {
-        return.node().nodeInspectorSubnodes()
-    }
-    return this.node().subnodes()
-},
-hasInspector()
-
-
-[nodeSubclass].init: function() {
-    this.addInspectorSubnode(BMBoolField.clone().setTarget(this).setMethodNode("slot"))
-    ...
-}
-
-addInspectorSubnode: function(node) {
-    this.nodeInspectorSubnodes().push(node)
-    return this
-}
-
-BMNode.nodeInspectorSubnodes: function() {
-    
-}
-
----------------------------
+-----------
 
 **Fields**
 - make statefull and have them sync with parent nodes if they have targetGetter/setters (Done?)

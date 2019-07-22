@@ -490,6 +490,8 @@ window.BrowserColumn = NodeView.extend().newSlots({
 
     onControl_i_KeyUp: function(event) {
         // forward method to selected row and resync next column 
+        console.log(this.typeId() + ".onControl_i_KeyUp()")
+
         const row = this.selectedRow()
         if (row) {
             const result = row.onControl_i_KeyUp(event)
@@ -502,11 +504,14 @@ window.BrowserColumn = NodeView.extend().newSlots({
     },
 
     onControl_d_KeyUp: function(event) {
+        //console.log(this.typeId() + ".onControl_d_KeyUp()")
         // duplicate?
-        if (this.selectedRow()) { 
+        const node = this.node()
+        const row = this.selectedRow()
+        if (row && node.canAddSubnodes() && row.node().duplicate) { 
             console.log(this.typeId() + " duplicate selected row " + this.selectedRow().node().title())
             //this.selectedRow()
-            
+            node.addSubnode(row.node().duplicate())
             this.scheduleSyncFromNode()
         }
     },

@@ -67,6 +67,17 @@ window.BrowserRow = NodeView.extend().newSlots({
         return this
     },
 
+    // bottom edge pan 
+
+    acceptsBottomEdgePan: function() {
+        if (this.node().canEditRowHeight) {
+            if (this.node().canEditRowHeight()) {
+                return true
+            }
+        }
+        return false
+    },
+
     onBottomEdgePanBegin: function(aGesture) {
         this._beforeEdgePanBorderBottom = this.borderBottom()
         this.setBorderBottom("1px dashed red")
@@ -89,7 +100,6 @@ window.BrowserRow = NodeView.extend().newSlots({
     onBottomEdgePanComplete: function(aGesture) {
         this.setBorderBottom(this._beforeEdgePanBorderBottom)
     },
-
 
     // -- contentView -- a special subview within the BrowserRow for it's content
     // we route style methods to it

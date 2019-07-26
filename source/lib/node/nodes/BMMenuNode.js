@@ -69,7 +69,6 @@ window.BMMenuNode = BMStorableNode.extend().newSlots({
         return [CSSColor.blueColor(), CSSColor.blueColor().copy().lighten(0.75)]
     },
 
-
     nodeBackgroundColorObject: function () {
         if (!this.parentNode()) {
             return CSSColor.whiteColor()
@@ -85,7 +84,6 @@ window.BMMenuNode = BMStorableNode.extend().newSlots({
         return c
     },
 
-    
     nodeRowStyles: function () {
         // const nextColor = this.colorPairForDepth(this.nodeDepth()+1)[0]
         if (!this._nodeRowStyles) {
@@ -116,12 +114,10 @@ window.BMMenuNode = BMStorableNode.extend().newSlots({
         return this._nodeRowStyles
     },
     */
-
     
     note: function() {
         return "&gt"
     },
-    
 
     didChangeParentNode: function () {
         this.scheduleSyncToView()

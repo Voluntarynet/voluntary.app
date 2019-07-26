@@ -1,4 +1,6 @@
 
+- make BrowserRow note view vertically centered
+
 nodeRowLink -> nodeRowLinkMethods?
 defaultNodeRowLinkMethod?
 notification didUpdateDodeRowLinkMethods

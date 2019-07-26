@@ -49,7 +49,7 @@ window.ClearApp = App.extend().newSlots({
 	
         // flex
         const myLists = NodeStore.shared().rootInstanceWithPidForProto("_menuNode", BMMenuNode);
-        myLists.setTitle("MyLists")
+        myLists.setTitle("Notepad")
         this.addSubnode(myLists)
 
         // about 

@@ -6,6 +6,15 @@
     Global shared instance that tracks current keyboard state in window coordinates.
     Registers for capture key events on document.body.
 
+    MacOS/iOS notes:
+
+    These Mac keys use different names in JS events:
+    CommandLeft -> MetaLeft
+    CommandRight -> MetaRight
+    Option/Alt -> Alternate
+    Control -> Control
+    Function -> [not seen by JS either as key event or modifier]
+
 */
 
 
@@ -187,6 +196,7 @@ window.Keyboard = ideal.Proto.extend().newSlots({
         }
     },
 
+    /*
     shiftChangingKeysDict: function() {
         // Based on a Macbook Pro keyboard. 
         // Not sure if this is platform specific.
@@ -213,6 +223,36 @@ window.Keyboard = ideal.Proto.extend().newSlots({
             ",": ["LessThan", "<"],
             ".": ["GreaterThan", ">"],
             "/": ["QuestionMark", "?"],
+        }
+    },
+    */
+
+    shiftDict: function() {
+        // Based on a Macbook Pro keyboard. 
+        // Not sure if this is platform specific.
+
+        return {
+            "~": "Tilda",
+            "!": "ExclaimationPoint",
+            "@": "AtSymbol",
+            "#": "Hash",
+            "$": "DollarSign",
+            "%": "Percent",
+            "^": "Carot",
+            "&": "Ampersand",
+            "*": "Asterisk",
+            "(": "OpenParenthesis",
+            ")": "CloseParenthesis",
+            "_": "Underscore",
+            "+": "Plus",
+            "{": "OpenCurlyBracket",
+            "}": "CloseCurlyBracket",
+            "|": "Pipe",
+            ":": "Colon",
+            "\\": "DoubleQuote",
+            "<": "LessThan",
+            ">": "GreaterThan",
+            "?": "QuestionMark",
         }
     },
 
@@ -331,6 +371,19 @@ window.Keyboard = ideal.Proto.extend().newSlots({
         
         if (isJustModifier) {
             return keyName
+        }
+
+        if (event.shiftKey) {
+            // Note: if another modifier besides the shift key is down, 
+            // the non-shift version of event.key is use e.g.
+            // shift-equals is "Plus"
+            // control-shift-equals is "ControlShiftEquals"
+            // this follows the Javascript event.key convention
+
+            const shiftName = this.shiftDict()[event.key]
+            if (shiftName) {
+                keyName = shiftName
+            }
         }
 
         if (isAlpabetical) {

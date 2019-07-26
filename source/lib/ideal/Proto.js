@@ -246,6 +246,12 @@ Proto.setSlots({
         return this.hasOwnProperty(name);
     },
 
+    respondsTo: function(methodName) {
+        const func = this[methodName];
+        const doesRespond = Type.isFunction(func);
+        return doesRespond;
+    },
+
     aliasSlot: function (slotName, aliasName) {
         this[aliasName] = this[slotName];
         this["set" + aliasName.capitalized()] = this["set" + slotName.capitalized()];

@@ -44,10 +44,13 @@ window.BMViewStyles = ideal.Proto.extend().newSlots({
     },
 
     sharedWhiteOnBlackStyle: function() {
+        return this.sharedBlackOnWhiteStyle()
+        /*
         if (!BMViewStyles._sharedWhiteOnBlackStyle) {
             BMViewStyles._sharedWhiteOnBlackStyle = BMViewStyles.clone().setToWhiteOnBlack().setIsMutable(false)
         }
         return BMViewStyles._sharedWhiteOnBlackStyle
+        */
     },
 
     setToBlackOnWhite: function() {

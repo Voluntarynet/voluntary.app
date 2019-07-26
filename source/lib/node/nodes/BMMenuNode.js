@@ -18,11 +18,9 @@ window.BMMenuNode = BMStorableNode.extend().newSlots({
         BMStorableNode.init.apply(this)
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(true)
-        //this.setViewClassName("BMDataStoreRecordView")
         this.setCanDelete(true)
         this.setNodeCanInspect(true)
         this.addAction("add")
-        //this.setNodeColumnBackgroundColor("white")
         this.setNodeMinWidth(300)
 
         this.setTitle("title")
@@ -43,10 +41,7 @@ window.BMMenuNode = BMStorableNode.extend().newSlots({
         //this.setNodeUsesColumnBackgroundColor(false)
 
         //this.addInspectorField(BMBoolField.clone().setKey("test").setValueMethod("hasTest").setValueIsEditable(true).setTarget(this))
-
     },
-
-
 
     didLoadFromStore: function() {
         BMStorableNode.didLoadFromStore.apply(this)
@@ -122,27 +117,11 @@ window.BMMenuNode = BMStorableNode.extend().newSlots({
     },
     */
 
-    /*
-    note: function() {
-        if (this.node().isSelected()) {
-            return "&gt"
-        }
-        return ""
-    },
-    */
     
-
-    /*
-    didReorderParentSubnodes: function() {
-        BMNode.didReorderParentSubnodes.apply(this)
-        this.scheduleSyncToView()
-        return this
+    note: function() {
+        return "&gt"
     },
-
-    didUpdateParentNode: function() {
-
-    },
-    */
+    
 
     didChangeParentNode: function () {
         this.scheduleSyncToView()

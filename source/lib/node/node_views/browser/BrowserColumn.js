@@ -118,21 +118,6 @@ window.BrowserColumn = NodeView.extend().newSlots({
         //this._rows.remove(v)
         return this.removeSubview(v)
     },
-    
-    // rows
-    /*
-    rows: function() {
-        return this.subviews()
-    },
-
-    addRow: function(v) {
-        return this.addSubview(v)
-    },
-
-    removeRow: function(v) {
-        return this.removeSubview(v)
-    },
-    */
 
 
     // selection

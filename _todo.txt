@@ -1,4 +1,56 @@
 
+nodeRowLink -> nodeRowLinkMethods?
+defaultNodeRowLinkMethod?
+notification didUpdateDodeRowLinkMethods
+
+OPTION 0
+Keep columns unaware that a node was skipped?
+
+
+OPTION 1
+Let the node manage what the column sees?
+Row (for NodeA) -> select -> Column (for NodeA)
+Row (for NodeA) -> select -> Column (for NodeA.visibleNode())
+
+OPTION 2
+Let the column manage what the column sees?
+Row (for NodeA) -> select -> Column (for NodeA)
+Row (for NodeA) -> select -> Column (for NodeA.visibleNodesOrder()[index])
+
+OPTION 3
+Use compacted column to jump?
+Node 
+- columnCompactsByDefault()
+- compactedColumnDefaultSelectedSubnode()
+
+NodeA.defaultColumnNode() (this or some subnode?)
+
+1. advantages - keeps logic on view side
+                expand animatations 
+                have special button or gesture on row to "uncompact" subnodes
+                keeps paths consistent
+                
+2. disadvantages - need to make Columns navigation aware when it should skip the compacted columns
+
+Will most nodes be "compacted"?
+Can we skip creating that view entirely? If so, just special case paths?
+
+
+Node
+    attributeSlots
+    subnodes
+    
+Node
+    subnodes attributes
+             someList
+             anotherList
+    
+node
+    subnodes
+    inspectorNode FieldSetNode
+    node can return 
+
+
 
 Node -> NodeView
 

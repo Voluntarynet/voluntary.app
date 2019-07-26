@@ -274,17 +274,16 @@ window.BrowserRow = NodeView.extend().newSlots({
     },
     
     onTabKeyUp: function() {
-        console.log(this.typeId() + " onTabKeyUp")
+        console.log(this.typeId() + ".onTabKeyUp()")
     },
 
     onControl_i_KeyUp: function(event) {
-        if (this.node().nodeCanInspect()) {
+        if (this.node().nodeCanInspect()) { 
             this.setIsInspecting(!this.isInspecting())
             //console.log(this.typeId() + ".isInspecting() = ", this.isInspecting())
             this.scheduleSyncToNode()
         }
     },
-
 
     // --- styles ---
     

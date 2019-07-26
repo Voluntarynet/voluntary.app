@@ -199,6 +199,35 @@ window.BMNode = ideal.Proto.extend().newSlots({
         return this
     },    
 
+    // nodeRowLinkMethods
+    // used by UI row views to choose the node ref to use for the next column
+    // if returns null, the row won't open another column
+    // 
+    // The two typical use cases are :
+    //
+    // 1) A pointer row which links to some other node.
+    //
+    // 2) A means to toggle between viewing the row's node or
+    //    skipping to one of its subnodes. This allows a node
+    //    to have inspector separated from "subnode" browsing.
+    //    Example: a Server object might have the subnodes:
+    //    [ StringFieldNode (for server name),  
+    //      ActionNode (to connect/disconnect),
+    //      ServerClientsNode (holds list of connected server clients)
+    //
+
+    thisNode: function() {
+        return this
+    },
+
+    nodeRowLinkMethods: function() {
+        return ["thisNode"]
+    },
+
+    defaultNodeRowLinkMethod: function() {
+
+    },
+
     // subtitle and note
     
     subtitle: function () {

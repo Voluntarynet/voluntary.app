@@ -2,15 +2,15 @@
 
 /*
     
-    BMFlexNode
+    BMMenuNode
     
     A node that supports for adding, reordering, etc other nodes to it within the UI.
     
 */
 
 
-window.BMFlexNode = BMStorableNode.extend().newSlots({
-    type: "BMFlexNode",
+window.BMMenuNode = BMStorableNode.extend().newSlots({
+    type: "BMMenuNode",
     label: "",
     hasTest: false,
 }).setSlots({
@@ -31,7 +31,7 @@ window.BMFlexNode = BMStorableNode.extend().newSlots({
         //this.setSubtitle("subtitle")
         //this.setNodeSubtitleIsEditable(true)
 
-        //this.setSubnodeProto(BMFlexNode)
+        //this.setSubnodeProto(BMMenuNode)
         this.setSubnodeProto(BMCreatorNode)
         
         this.setNodeCanReorderSubnodes(true)

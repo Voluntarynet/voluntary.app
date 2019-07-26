@@ -87,8 +87,8 @@ window.PeerApp = App.extend().newSlots({
         this.about().addSubnode(this.dataStore())
 
         // protos inspector
-        const classBrowser = BMClassBrowser.clone()
-        this.about().addSubnode(classBrowser)
+        //const classBrowser = BMClassBrowser.clone()
+        //this.about().addSubnode(classBrowser)
 
         this.network().servers().connect() // observe appDidInit instead?
 

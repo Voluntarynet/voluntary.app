@@ -3,6 +3,8 @@
 /*
     
     HashCommand
+
+    Work in progress.
     
 */
 

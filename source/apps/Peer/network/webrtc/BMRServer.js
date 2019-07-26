@@ -39,7 +39,7 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
         this.addStoredField(BMField.clone().setKey("path").setValueMethod("path"))
         this.addStoredField(BMBoolField.clone().setKey("isSecure").setValueMethod("isSecure").setValueIsEditable(true))
         //this.justAddField(BMPointerField.clone().setKey("serverConnection").setValueMethod("serverConnection").)
-        this.addSubnode(BMPointerField.clone().setKey("serverConnection").setValueMethod("serverConnection"))
+        this.addField(BMPointerField.clone().setKey("serverConnection").setValueMethod("serverConnection"))
 		
         this.setConnectButton(BMActionNode.clone().setTitle("connect").setMethodName("connect").setTarget(this))
         this.addSubnode(this.connectButton())
@@ -53,7 +53,7 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
     },
     
     updateButtons: function() {
-        let cb = this.connectButton()
+        const cb = this.connectButton()
         if (cb) {
             if (this.serverConnection().isConnected()) {
                 cb.setTitle("disconnect").setMethodName("disconnect")
@@ -88,8 +88,8 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
     
     status: function() {
         if (this.serverConnection().isConnected()) {
-            let total = this.serverConnection().remotePeers().count()
-            let connected = this.connectedRemotePeerCount()
+            const total = this.serverConnection().remotePeers().count()
+            const connected = this.connectedRemotePeerCount()
             if (total === 0) {
                 return "no peers"
             }
@@ -177,10 +177,10 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
         // TODO: shouldn't need to calculate this often but 
         // might when server count gets high or changes frequently. Optimize then.
 		
-        let s1 = new BitStream(bloomUint8Array);
-        let s2 = new BitStream(hostHashUint8Array);
+        const s1 = new BitStream(bloomUint8Array);
+        const s2 = new BitStream(hostHashUint8Array);
 		
-        let bitCount = hostHashUint8Array.length * 8
+        const bitCount = hostHashUint8Array.length * 8
         let diff = 0
         for (let i = 0; i < bitCount; i ++) {
             if (s1.readBoolean() !== s2.readBoolean()) {

@@ -34,14 +34,14 @@ window.BMCreatorNode = BMStorableNode.extend().newSlots({
 
     fieldTypes: function() {
         return [
-            "BMFlexNode", 
+            "BMMenuNode", 
             "BMActionNode", 
             "BMBoolField", 
             "BMDateField", 
             //"BMIdentityField", 
             "BMImageWellField", 
             "BMNumberField", 
-            "BMFlexNode", 
+            "BMMenuNode", 
             "BMOptionsField"
         ]
     },

@@ -63,12 +63,14 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
     },
 	
     justAddField: function(aField) {
+        aField.setTarget(this)
         this.addSubnode(aField)
         return aField
     },
 
     addFieldNamed: function(name) {	
         const field = BMField.clone().setKey(name)
+        field.setTarget(this)
         field.setValueMethod(name)
         this.addStoredField(field)
         return field

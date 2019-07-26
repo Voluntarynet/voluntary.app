@@ -95,7 +95,8 @@ window.BrowserHeader = NodeView.extend().newSlots({
     },
     
     nodeHasAction: function(anAction) {
-        return (anAction in this.node())
+        return this.node().respondsTo(anAction)
+        //return (anAction in this.node())
     },
 
     didHitBackArrow: function() {

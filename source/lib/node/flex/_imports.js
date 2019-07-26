@@ -1,5 +1,5 @@
 "use strict"
 
 ResourceLoader.pushRelativePaths([
-    "BMFlexNode.js",
+    "BMMenuNode.js",
 ])

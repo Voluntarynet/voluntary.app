@@ -4,7 +4,10 @@
 
 .BMFieldRowView {
 	font-family: AppRegular;
-    background-color: white;
+    /*
+    background-color: red;
+    color: #CBCBCB;
+    */
     opacity: 1;
     
     display: block;
@@ -12,7 +15,6 @@
     position: relative;
 
     width: auto;
-    color: #CBCBCB;
     transition: background-color .3s ease-out;
 
 	/*padding-left: 20px;*/
@@ -66,7 +68,9 @@
 /* --------------------------- Key --------------------------- */
 
 .BMFieldKeyView {
+    /*
     color: #777;
+    */
 
 	display: block;
     position: relative;
@@ -109,7 +113,9 @@
     white-space: nowrap;
     text-transform: none;	
 
+    /*
     color: #000;
+    */
     font-weight: normal;
 
 	/* 
@@ -207,7 +213,8 @@
 /* --------------------------- Image --------------------------- */
 
 .BMImageWellFieldView {
-    background-color: #fff;
+    /*background-color: #fff;*/
+
     opacity: 1;
     
     display: block;
@@ -231,7 +238,7 @@
 	margin-bottom: 15px;
 	width: auto;
 	text-transform: uppercase;
-	text-align:center;
+	text-align: left;
 	font-size: 12px;
 }
 

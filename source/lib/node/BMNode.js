@@ -109,7 +109,10 @@ window.BMNode = ideal.Proto.extend().newSlots({
 
     customizeNodeRowStyles: function() {
         if (!this.hasOwnProperty("_nodeRowStyles")) {
-            let styles = BMViewStyles.clone()
+            //const styles = BMViewStyles.sharedWhiteOnBlackStyle().setIsMutable(false)
+            // NOTE: We can't use the shared style because column bg colors change
+
+            const styles = BMViewStyles.clone()
             styles.selected().setColor("white")
             styles.unselected().setColor("#aaa")
             this._nodeRowStyles = styles

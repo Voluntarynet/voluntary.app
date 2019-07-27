@@ -141,15 +141,6 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
         } else {
             this.noteView().setInnerHTML("")
         }
-		
-        /*
-		this.setBackgroundColor("white")
-		if (this.isSelected()) {
-			this.setBackgroundColor("CBCBCB")
-		} else {
-			this.setBackgroundColor("white")
-		}
-		*/
 
         return this
     },

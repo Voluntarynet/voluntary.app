@@ -448,7 +448,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
             throw new Error("missing proto '" + nodeDict.type + "'")
         }
 
-        let obj = proto.clone()
+        const obj = proto.clone()
 
         if (!obj.justSetPid) {
             throw new Error("stored object of type '" + nodeDict.type + "' missing justSetPid() method")

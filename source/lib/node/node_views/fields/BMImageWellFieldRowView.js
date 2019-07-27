@@ -10,9 +10,8 @@ window.BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
     type: "BMImageWellFieldView",
 }).setSlots({
     init: function () {
-        //BrowserRow.init.apply(this)
         BMFieldRowView.init.apply(this)
-        this.keyView().setDivClassName("BMImageWellKeyField") //.setDisplay("none")
+        //this.keyView().setDivClassName("BMImageWellKeyField") //.setDisplay("none")
         //this.valueView().setContentEditable(false)
         this.turnOffUserSelect()
         this.keyView().setTransition("all 0.3s")
@@ -65,7 +64,7 @@ window.BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
     updateKeyView: function() {
         let opacity = 1
         
-        if(this.node().onlyShowsKeyWhenEmpty()) {
+        if(this.node().onlyShowsKeyWhenEmpty && this.node().onlyShowsKeyWhenEmpty()) {
 		    opacity = this.dataUrls().length ? 0 : 1
 	    }
 	    

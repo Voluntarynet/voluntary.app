@@ -57,7 +57,8 @@ window.BMField = BMStorableNode.extend().newSlots({
         this.addStoredSlot("valuePostfix")
 
         //this.setNodeRowStyles(BMViewStyles.sharedBlackOnWhiteStyle())
-        this.customizeNodeRowStyles().setToBlackOnWhite()
+        //this.setNodeRowStyles(BMViewStyles.sharedWhiteOnBlackStyle())
+        //this.customizeNodeRowStyles().setToBlackOnWhite()
         return this
     },  
     

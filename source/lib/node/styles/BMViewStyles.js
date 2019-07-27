@@ -6,8 +6,21 @@
 
     Represents the set of styles for a NodeView, e.g. selected, unselected.
 
+  
     TODO: can we make view styles nodes? recursion?
 
+
+    NOTE: 
+    
+    Because rows need to be able to use the background and select colors of their columns,
+
+    Row colors are looked up in:
+    BrowserRow.lookedUpStyles
+
+        which asks the node, then itself, then the columns for rowStyles()
+        and uses the first non-null result .
+
+        
 */
 
 
@@ -19,6 +32,7 @@ window.BMViewStyles = ideal.Proto.extend().newSlots({
     //hover: null, 
     //enabled: null,
     //disabled: null,
+    //error: null,
     isMutable: true,
 }).setSlots({
     init: function () {
@@ -38,19 +52,21 @@ window.BMViewStyles = ideal.Proto.extend().newSlots({
 
     sharedBlackOnWhiteStyle: function() {
         if (!BMViewStyles._sharedBlackOnWhiteStyle) {
-            BMViewStyles._sharedBlackOnWhiteStyle = BMViewStyles.clone().setToBlackOnWhite().setIsMutable(false)
+            const vs = BMViewStyles.clone()
+            vs.setToBlackOnWhite()
+            vs.setIsMutable(false)
+            vs.setName("BlackOnWhite")
+            BMViewStyles._sharedBlackOnWhiteStyle = vs
         }
         return BMViewStyles._sharedBlackOnWhiteStyle
     },
 
     sharedWhiteOnBlackStyle: function() {
-        return this.sharedBlackOnWhiteStyle()
-        /*
+        //return this.sharedBlackOnWhiteStyle()
         if (!BMViewStyles._sharedWhiteOnBlackStyle) {
-            BMViewStyles._sharedWhiteOnBlackStyle = BMViewStyles.clone().setToWhiteOnBlack().setIsMutable(false)
+            BMViewStyles._sharedWhiteOnBlackStyle = BMViewStyles.clone().setToWhiteOnBlack().setIsMutable(false).setName("WhiteOnBlack")
         }
         return BMViewStyles._sharedWhiteOnBlackStyle
-        */
     },
 
     setToBlackOnWhite: function() {

@@ -80939,26 +80939,28 @@ Proto.setSlots({
         return this._superClass
     },
     
+    /*
     superProxy: function() {
-        // need to be carefull with this - doesn't handle comparison, etc
-        // just for calling super methods for now
+        // work in progress
+        // need a way to track where each method is invoked
 
         const getHandler = {}
         getHandler.get = function(target, methodName, receiver) {
-            return () => {
+            return function() {
                 console.log("----------------------------------")
                 const superClass = target.superClass()
-                const superClassMethod = target.superClass()[methodName]
-                console.log("target = " + target.type())
-                console.log("methodName = " + methodName)
-                console.log("superClass = " + superClass.type())
+                console.log(target.typeId() + "." + methodName)
+                console.log("superClass = " + superClass.typeId())
+                const superClassMethod = superClass[methodName]
                 console.log("superClassMethod = ", superClassMethod)
-                console.log("arguments = ", arguments)
+
+
                 return superClassMethod.apply(target, arguments)
             }
         }
         return new Proxy(this, getHandler);
     },
+    */
 
     extend: function () {
         const obj = this.cloneWithoutInit()
@@ -81387,6 +81389,10 @@ class ProtoClass {
         return this
     }
 
+    static superClass () {
+        return Object.getPrototypeOf(this)
+    }
+
     /*
     static setupSlots () {
         //super.setupSlotsIfNeeded()
@@ -81763,7 +81769,7 @@ class Documentation extends ProtoClass {
             console.log("duplicate class ", aClass.type())
         }
         this.classes().push(aClass)
-        console.log("register class ", aClass.type())
+        console.log("registering class " + aClass.type() + " subclass of " + aClass.superClass().type())
     }
 
     asJson() {
@@ -97336,8 +97342,8 @@ DomStyledView.newSubclassNamed("NodeView").newSlots({
     // -------------------------------------
     
     init: function () {
-        //DomStyledView.init.apply(this)
-        this.superProxy().init()
+        DomStyledView.init.apply(this)
+        //this.superProxy().init()
         //this.setNodeObservation(NotificationCenter.shared().newObservation().setName("didUpdateNode").setObserver(this))
         this.setNodeObservation(NotificationCenter.shared().newObservation().setObserver(this)) // observe all
         //this.setStyles(BMViewStyles.clone())

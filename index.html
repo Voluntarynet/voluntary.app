@@ -80924,7 +80924,7 @@ Proto.setSlots({
     newSubclassNamed: function(name) {
         const newClass = this.extend()
         newClass._type = name
-        newClass._super = this
+        newClass._superClass = this
         window[name] = newClass
 
         const Documentation = window["Documentation"]
@@ -80935,10 +80935,31 @@ Proto.setSlots({
         return newClass
     },
 
-    super: function() {
-        return this._super
+    superClass: function() {
+        return this._superClass
     },
     
+    superProxy: function() {
+        // need to be carefull with this - doesn't handle comparison, etc
+        // just for calling super methods for now
+
+        const getHandler = {}
+        getHandler.get = function(target, methodName, receiver) {
+            return () => {
+                console.log("----------------------------------")
+                const superClass = target.superClass()
+                const superClassMethod = target.superClass()[methodName]
+                console.log("target = " + target.type())
+                console.log("methodName = " + methodName)
+                console.log("superClass = " + superClass.type())
+                console.log("superClassMethod = ", superClassMethod)
+                console.log("arguments = ", arguments)
+                return superClassMethod.apply(target, arguments)
+            }
+        }
+        return new Proxy(this, getHandler);
+    },
+
     extend: function () {
         const obj = this.cloneWithoutInit()
         obj.registerThisProto()
@@ -97315,7 +97336,8 @@ DomStyledView.newSubclassNamed("NodeView").newSlots({
     // -------------------------------------
     
     init: function () {
-        DomStyledView.init.apply(this)
+        //DomStyledView.init.apply(this)
+        this.superProxy().init()
         //this.setNodeObservation(NotificationCenter.shared().newObservation().setName("didUpdateNode").setObserver(this))
         this.setNodeObservation(NotificationCenter.shared().newObservation().setObserver(this)) // observe all
         //this.setStyles(BMViewStyles.clone())

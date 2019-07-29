@@ -47,7 +47,7 @@ Proto.setSlots({
     newSubclassNamed: function(name) {
         const newClass = this.extend()
         newClass._type = name
-        newClass._super = this
+        newClass._superClass = this
         window[name] = newClass
 
         const Documentation = window["Documentation"]
@@ -58,10 +58,33 @@ Proto.setSlots({
         return newClass
     },
 
-    super: function() {
-        return this._super
+    superClass: function() {
+        return this._superClass
     },
     
+    /*
+    superProxy: function() {
+        // work in progress
+        // need a way to track where each method is invoked
+
+        const getHandler = {}
+        getHandler.get = function(target, methodName, receiver) {
+            return function() {
+                console.log("----------------------------------")
+                const superClass = target.superClass()
+                console.log(target.typeId() + "." + methodName)
+                console.log("superClass = " + superClass.typeId())
+                const superClassMethod = superClass[methodName]
+                console.log("superClassMethod = ", superClassMethod)
+
+
+                return superClassMethod.apply(target, arguments)
+            }
+        }
+        return new Proxy(this, getHandler);
+    },
+    */
+
     extend: function () {
         const obj = this.cloneWithoutInit()
         obj.registerThisProto()

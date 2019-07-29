@@ -24,7 +24,7 @@ class Documentation extends ProtoClass {
             console.log("duplicate class ", aClass.type())
         }
         this.classes().push(aClass)
-        console.log("register class ", aClass.type())
+        console.log("registering class " + aClass.type() + " subclass of " + aClass.superClass().type())
     }
 
     asJson() {

@@ -18,6 +18,7 @@ DomStyledView.newSubclassNamed("NodeView").newSlots({
     
     init: function () {
         DomStyledView.init.apply(this)
+        //this.superProxy().init()
         //this.setNodeObservation(NotificationCenter.shared().newObservation().setName("didUpdateNode").setObserver(this))
         this.setNodeObservation(NotificationCenter.shared().newObservation().setObserver(this)) // observe all
         //this.setStyles(BMViewStyles.clone())

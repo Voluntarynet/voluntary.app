@@ -70,6 +70,10 @@ class ProtoClass {
         return this
     }
 
+    static superClass () {
+        return Object.getPrototypeOf(this)
+    }
+
     /*
     static setupSlots () {
         //super.setupSlotsIfNeeded()

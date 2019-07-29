@@ -1,4 +1,12 @@
 
+
+--------------
+
+Docs.class("name").setDescription = ""
+
+FunctionProto.addDoc("methodName", "")
+
+
 MIRROR
 Do we need inheritance?
 

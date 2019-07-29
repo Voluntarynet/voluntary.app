@@ -79160,6 +79160,7 @@ ResourceLoader.pushRelativePaths([
     "categories/_imports.js",
     "Proto.js",
     "ProtoClass.js",
+    "Documentation.js",
     "Map.js",
     "StackTrace.js",
     "ByteFormatter.js",
@@ -79178,7 +79179,8 @@ ResourceLoader.pushRelativePaths([
     "String-ideal.js",
     "Number-ideal.js",
     "Set-ideal.js",
-    "Error-ideal.js"
+    "Error-ideal.js",
+    "Function-ideal.js",
 ]);
 
 
@@ -80864,6 +80866,17 @@ function assertDefined(v) {
 }
 "use strict"
 
+/*
+
+    Function-ideal
+
+    Some extra methods for the Javascript Function primitive.
+
+*/
+
+
+"use strict"
+
 
 /*
 
@@ -80908,8 +80921,26 @@ Proto.setSlots({
     _childProtos: [],
     _allDescendantProtos: null,
     
+    newSubclassNamed: function(name) {
+        const newClass = this.extend()
+        newClass._type = name
+        newClass._super = this
+        window[name] = newClass
+
+        const Documentation = window["Documentation"]
+        if (Documentation) {
+            Documentation.shared().registerClass(newClass)
+        }
+
+        return newClass
+    },
+
+    super: function() {
+        return this._super
+    },
+    
     extend: function () {
-        let obj = this.cloneWithoutInit()
+        const obj = this.cloneWithoutInit()
         obj.registerThisProto()
         obj._parentProto = this
         obj._childProtos = [] // need to create these slots so they won't be inherited
@@ -81319,6 +81350,11 @@ class ProtoClass {
         if (this.allClasses().indexOf(this) === -1) {
             this.allClasses().push(this)
         }
+
+        const Documentation = window["Documentation"]
+        if (Documentation) {
+            Documentation.shared().registerClass(this)
+        }
         return this
     }
 
@@ -81679,6 +81715,75 @@ class ProtoClass {
     }
 }
 
+
+"use strict"
+
+/*
+
+    Documentation
+
+    An simple in-memory documentation system.
+    
+    TODO: Rename to something more unique.
+
+*/
+
+class Documentation extends ProtoClass {
+    init() {
+        super.init()
+        this.newSlots({
+            classes: [],
+        })
+    }
+
+    registerClass(aClass) {
+        const classes = this.classes()
+        if (classes.contains(aClass)) {
+            console.log("duplicate class ", aClass.type())
+        }
+        this.classes().push(aClass)
+        console.log("register class ", aClass.type())
+    }
+
+    asJson() {
+
+    }
+}
+
+window.Documentation = Documentation
+
+// --- Object category -------------------------------------
+
+Object.prototype.docs = function() {
+    if (!this._docs) {
+        this._docs = {}
+    }
+    return this._docs
+}
+
+Object.prototype.setDocs = function (name, description) {
+    const docs = this.docs()
+    docs._name = methodName
+    docs._description = description
+    return this
+}
+
+// --- Function category -------------------------------------
+
+Function.prototype.docs = function() {
+    if (!this._docs) {
+        this._docs = {}
+    }
+    return this._docs
+}
+
+Function.prototype.setDocs = function (name, description, returns) {
+    const docs = this.docs()
+    docs._name = name
+    docs._description = description
+    docs._returns = returns 
+    return this
+}
 
 "use strict"
 
@@ -83489,8 +83594,7 @@ ResourceLoader.pushRelativePaths([
 
 */
 
-window.Point = ideal.Proto.extend().newSlots({
-    type: "Point",
+ideal.Proto.newSubclassNamed("Point").newSlots({
     x: 0,
     y: 0,
     z: 0,
@@ -83721,8 +83825,7 @@ window.Point = ideal.Proto.extend().newSlots({
 
 */
 
-window.Rectangle = ideal.Proto.extend().newSlots({
-    type: "Rectangle",
+ideal.Proto.newSubclassNamed("Rectangle").newSlots({
     origin: null,
     size: null,
 }).setSlots({
@@ -83808,8 +83911,7 @@ window.Rectangle = ideal.Proto.extend().newSlots({
 
 
 
-window.Transform = ideal.Proto.extend().newSlots({
-    type: "ThingView",
+ideal.Proto.newSubclassNamed("Transform").newSlots({
     position: null, // in px units 
     rotation: null, // in degrees units
     scale: null,
@@ -83928,8 +84030,7 @@ window.Event_pushCachedPoint = function(event, point) {
 
 // ----------------
 
-window.EventPoint = window.Point.extend().newSlots({
-    type: "EventPoint",
+window.Point.newSubclassNamed("EventPoint").newSlots({
     id: null,
     state: null,
     target: null, 
@@ -84015,8 +84116,7 @@ window.EventPoint = window.Point.extend().newSlots({
 
 */
 
-window.KeyboardKey = ideal.Proto.extend().newSlots({
-    type: "KeyboardKey",
+ideal.Proto.newSubclassNamed("KeyboardKey").newSlots({
     isDown: false,
     code: null,
     name: "",
@@ -84068,8 +84168,7 @@ window.KeyboardKey = ideal.Proto.extend().newSlots({
 */
 
 
-window.Keyboard = ideal.Proto.extend().newSlots({
-    type: "Keyboard",
+ideal.Proto.newSubclassNamed("Keyboard").newSlots({
     codeToKeys: null, // dictionary of KeyboardKey objects
     isDebugging: false,
     keyboardListener: null,
@@ -84577,8 +84676,7 @@ window.Keyboard = ideal.Proto.extend().newSlots({
 */
 
 
-window.Mouse = ideal.Proto.extend().newSlots({
-    type: "Mouse",
+ideal.Proto.newSubclassNamed("Mouse").newSlots({
     isDown: false,
     downEvent: null,
     currentEvent: null,
@@ -84696,8 +84794,7 @@ window.Mouse = ideal.Proto.extend().newSlots({
 */
 
 
-window.TouchScreen = ideal.Proto.extend().newSlots({
-    type: "TouchScreen",
+ideal.Proto.newSubclassNamed("TouchScreen").newSlots({
     currentEvent: null,
     lastEvent: null,
     touchListener: null,
@@ -84909,8 +85006,7 @@ window.TouchScreen = ideal.Proto.extend().newSlots({
 */
 
 
-window.GamePadManager = ideal.Proto.extend().newSlots({
-    type: "GamePadManager",
+ideal.Proto.newSubclassNamed("GamePadManager").newSlots({
     //gamePadListener: null,
     gamePadsDict: null,
     isDebugging: true,
@@ -85044,8 +85140,7 @@ window.GamePadManager = ideal.Proto.extend().newSlots({
 */
 
 
-window.GamePad = ideal.Proto.extend().newSlots({
-    type: "GamePad",
+ideal.Proto.newSubclassNamed("GamePad").newSlots({
     gamePadManager: null,
     index: null,
     id: null,
@@ -85194,8 +85289,7 @@ ResourceLoader.pushRelativePaths([
 
 */
 
-window.EventSetListener = ideal.Proto.extend().newSlots({
-    type: "EventSetListener",
+ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
     listenTarget: null,
     delegate: null,
     isListening: false,
@@ -85414,8 +85508,7 @@ window.EventSetListener = ideal.Proto.extend().newSlots({
 
 */
 
-window.ClipboardListener = EventSetListener.extend().newSlots({
-    type: "ClipboardListener",
+EventSetListener.newSubclassNamed("ClipboardListener").newSlots({
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)
@@ -85440,8 +85533,7 @@ window.ClipboardListener = EventSetListener.extend().newSlots({
 
 */
 
-window.DocumentListener = EventSetListener.extend().newSlots({
-    type: "DocumentListener",
+EventSetListener.newSubclassNamed("DocumentListener").newSlots({
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)
@@ -85483,8 +85575,7 @@ window.DocumentListener = EventSetListener.extend().newSlots({
 
 */
 
-window.DragListener = EventSetListener.extend().newSlots({
-    type: "DragListener",
+EventSetListener.newSubclassNamed("DragListener").newSlots({
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)
@@ -85514,8 +85605,7 @@ window.DragListener = EventSetListener.extend().newSlots({
 
 */
 
-window.DropListener = EventSetListener.extend().newSlots({
-    type: "DropListener",
+EventSetListener.newSubclassNamed("DropListener").newSlots({
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)
@@ -85553,8 +85643,7 @@ window.DropListener = EventSetListener.extend().newSlots({
 
 */
 
-window.FocusListener = EventSetListener.extend().newSlots({
-    type: "FocusListener",
+EventSetListener.newSubclassNamed("FocusListener").newSlots({
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)
@@ -85580,8 +85669,7 @@ window.FocusListener = EventSetListener.extend().newSlots({
 
 */
 
-window.KeyboardListener = EventSetListener.extend().newSlots({
-    type: "KeyboardListener",
+EventSetListener.newSubclassNamed("KeyboardListener").newSlots({
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)
@@ -85608,8 +85696,7 @@ window.KeyboardListener = EventSetListener.extend().newSlots({
 
 */
 
-window.MouseListener = EventSetListener.extend().newSlots({
-    type: "MouseListener",
+EventSetListener.newSubclassNamed("MouseListener").newSlots({
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)
@@ -85647,8 +85734,7 @@ window.MouseListener = EventSetListener.extend().newSlots({
 
 */
 
-window.TouchListener = EventSetListener.extend().newSlots({
-    type: "TouchListener",
+EventSetListener.newSubclassNamed("TouchListener").newSlots({
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)
@@ -85674,8 +85760,7 @@ window.TouchListener = EventSetListener.extend().newSlots({
 
 */
 
-window.GamePadListener = EventSetListener.extend().newSlots({
-    type: "GamePadListener",
+EventSetListener.newSubclassNamed("GamePadListener").newSlots({
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)
@@ -85700,8 +85785,7 @@ window.GamePadListener = EventSetListener.extend().newSlots({
 
 */
 
-window.WebSocketListener = EventSetListener.extend().newSlots({
-    type: "WebSocketListener",
+EventSetListener.newSubclassNamed("WebSocketListener").newSlots({
 }).setSlots({
     /*
     init: function () {
@@ -85747,8 +85831,7 @@ ResourceLoader.pushRelativePaths([
 */
 
 
-window.GestureManager = ideal.Proto.extend().newSlots({
-    type: "GestureManager",
+ideal.Proto.newSubclassNamed("GestureManager").newSlots({
     activeGesture: null,
     isDebugging: false,
     begunGestures: null,
@@ -85879,9 +85962,7 @@ window.GestureManager = ideal.Proto.extend().newSlots({
 */
 
 
-window.GestureRecognizer = ideal.Proto.extend().newSlots({
-    type: "GestureRecognizer",
-    
+ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({    
     viewTarget: null,
     shouldRemoveOnComplete: false,
 
@@ -86679,8 +86760,7 @@ window.GestureRecognizer = ideal.Proto.extend().newSlots({
 
 */
 
-window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
-    type: "LongPressGestureRecognizer",
+GestureRecognizer.newSubclassNamed("LongPressGestureRecognizer").newSlots({
     timePeriod: 500, // miliseconds
     timeoutId: null, // private
 }).setSlots({
@@ -86817,8 +86897,7 @@ window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
 */
 
 
-window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
-    type: "SlideGestureRecognizer",
+GestureRecognizer.newSubclassNamed("SlideGestureRecognizer").newSlots({
     isPressing: false,
 
     direction: "left", 
@@ -87018,8 +87097,7 @@ window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
 
 */
 
-window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
-    type: "TapGestureRecognizer",
+GestureRecognizer.newSubclassNamed("TapGestureRecognizer").newSlots({
     maxHoldPeriod: 1000, // milliseconds per tap
     timeoutId: null, // private
 
@@ -87196,8 +87274,7 @@ window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
 */
 
 
-window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
-    type: "OrientGestureRecognizer",
+GestureRecognizer.newSubclassNamed("OrientGestureRecognizer").newSlots({
 }).setSlots({
     
     init: function () {
@@ -87478,8 +87555,7 @@ window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
 
 */
 
-window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
-    type: "PanGestureRecognizer",
+GestureRecognizer.newSubclassNamed("PanGestureRecognizer").newSlots({
     isPressing: false,
     minNumberOfFingersRequired: 1,
     maxNumberOfFingersAllowed: 1,
@@ -87620,8 +87696,7 @@ window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
 */
 
 
-window.PinchGestureRecognizer = OrientGestureRecognizer.extend().newSlots({
-    type: "PinchGestureRecognizer",
+OrientGestureRecognizer.newSubclassNamed("PinchGestureRecognizer").newSlots({
 }).setSlots({
     init: function () {
         OrientGestureRecognizer.init.apply(this)
@@ -87666,8 +87741,7 @@ window.PinchGestureRecognizer = OrientGestureRecognizer.extend().newSlots({
 */
 
 
-window.RotationGestureRecognizer = OrientGestureRecognizer.extend().newSlots({
-    type: "RotationGestureRecognizer",
+OrientGestureRecognizer.newSubclassNamed("RotationGestureRecognizer").newSlots({
     minRotatationInDegreesToBegin: 1,
 }).setSlots({
     init: function () {
@@ -87714,8 +87788,7 @@ ResourceLoader.pushRelativePaths([
         
 */
 
-window.EdgePanGestureRecognizer = PanGestureRecognizer.extend().newSlots({
-    type: "EdgePanGestureRecognizer",
+PanGestureRecognizer.newSubclassNamed("EdgePanGestureRecognizer").newSlots({
     edgeName: null,
     maxStartDistance: 15,
 }).setSlots({
@@ -87804,8 +87877,7 @@ window.EdgePanGestureRecognizer = PanGestureRecognizer.extend().newSlots({
 
 */
 
-window.TopEdgePanGestureRecognizer = EdgePanGestureRecognizer.extend().newSlots({
-    type: "TopEdgePanGestureRecognizer",
+EdgePanGestureRecognizer.newSubclassNamed("TopEdgePanGestureRecognizer").newSlots({
 }).setSlots({
     init: function () {
         EdgePanGestureRecognizer.init.apply(this)
@@ -87830,8 +87902,7 @@ window.TopEdgePanGestureRecognizer = EdgePanGestureRecognizer.extend().newSlots(
 
 */
 
-window.BottomEdgePanGestureRecognizer = EdgePanGestureRecognizer.extend().newSlots({
-    type: "BottomEdgePanGestureRecognizer",
+EdgePanGestureRecognizer.newSubclassNamed("BottomEdgePanGestureRecognizer").newSlots({
 }).setSlots({
     init: function () {
         EdgePanGestureRecognizer.init.apply(this)
@@ -87855,8 +87926,7 @@ window.BottomEdgePanGestureRecognizer = EdgePanGestureRecognizer.extend().newSlo
 
 */
 
-window.LeftEdgePanGestureRecognizer = EdgePanGestureRecognizer.extend().newSlots({
-    type: "LeftEdgePanGestureRecognizer",
+EdgePanGestureRecognizer.newSubclassNamed("LeftEdgePanGestureRecognizer").newSlots({
 }).setSlots({
     init: function () {
         EdgePanGestureRecognizer.init.apply(this)
@@ -87881,8 +87951,7 @@ window.LeftEdgePanGestureRecognizer = EdgePanGestureRecognizer.extend().newSlots
 
 */
 
-window.RightEdgePanGestureRecognizer = EdgePanGestureRecognizer.extend().newSlots({
-    type: "RightEdgePanGestureRecognizer",
+EdgePanGestureRecognizer.newSubclassNamed("RightEdgePanGestureRecognizer").newSlots({
 }).setSlots({
     init: function () {
         EdgePanGestureRecognizer.init.apply(this)
@@ -87913,8 +87982,7 @@ ResourceLoader.pushRelativePaths([
 
 */
 
-window.WebBrowserScreen = ideal.Proto.extend().newSlots({
-    type: "WebBrowserScreen",
+ideal.Proto.newSubclassNamed("WebBrowserScreen").newSlots({
 }).setSlots({
     init: function () {
         throw new Error("this class is meant to be used as singleton, for now")
@@ -87976,8 +88044,7 @@ window.WebBrowserScreen = ideal.Proto.extend().newSlots({
 
 */
 
-window.WebBrowserWindow = ideal.Proto.extend().newSlots({
-    type: "WebBrowserWindow",
+ideal.Proto.newSubclassNamed("WebBrowserWindow").newSlots({
     /*documentBody: DocumentBody.shared(),*/
 }).setSlots({
     init: function () {
@@ -88181,8 +88248,7 @@ WebBrowserWindow.shared().setup()
 
 */
 
-window.WebBrowserNotifications = ideal.Proto.extend().newSlots({
-    type: "WebBrowserNotifications",
+ideal.Proto.newSubclassNamed("WebBrowserNotifications").newSlots({
     permissionRequestResult: null,
     waitingNote: null,
 }).setSlots({
@@ -88258,8 +88324,7 @@ window.WebBrowserNotifications = ideal.Proto.extend().newSlots({
 
 // --------------------------------------
 
-window.WebBrowserNotification = ideal.Proto.extend().newSlots({
-    type: "WebBrowserNotification",
+ideal.Proto.newSubclassNamed("WebBrowserNotification").newSlots({
     title: "",
     body: null,
     icon: null, // a url to an image
@@ -88310,8 +88375,7 @@ window.WebBrowserNotification = ideal.Proto.extend().newSlots({
 
 */
 
-window.WebBrowserNotifications = ideal.Proto.extend().newSlots({
-    type: "WebBrowserNotifications",
+ideal.Proto.newSubclassNamed("WebBrowserNotifications").newSlots({
     permissionRequestResult: null,
     waitingNote: null,
 }).setSlots({
@@ -88387,8 +88451,7 @@ window.WebBrowserNotifications = ideal.Proto.extend().newSlots({
 
 // --------------------------------------
 
-window.WebBrowserNotification = ideal.Proto.extend().newSlots({
-    type: "WebBrowserNotification",
+ideal.Proto.newSubclassNamed("WebBrowserNotification").newSlots({
     title: "",
     body: null,
     icon: null, // a url to an image
@@ -88427,8 +88490,7 @@ window.WebBrowserNotification = ideal.Proto.extend().newSlots({
 
 */
 
-window.WebBrowserNotification = ideal.Proto.extend().newSlots({
-    type: "WebBrowserNotification",
+ideal.Proto.newSubclassNamed("WebBrowserNotification").newSlots({
     title: "",
     body: null,
     icon: null, // a url to an image
@@ -88468,8 +88530,7 @@ window.WebBrowserNotification = ideal.Proto.extend().newSlots({
 
 */
 
-window.WebDocument = ideal.Proto.extend().newSlots({
-    type: "WebDocument",
+ideal.Proto.newSubclassNamed("WebDocument").newSlots({
 }).setSlots({
     init: function () {
         ideal.Proto.init.apply(this)
@@ -88512,8 +88573,7 @@ window.WebDocument = ideal.Proto.extend().newSlots({
     sheet.setSelectorProperty("body", "color", "red")
 */
 
-window.StyleSheet = ideal.Proto.extend().newSlots({
-    type: "StyleSheet",
+ideal.Proto.newSubclassNamed("StyleSheet").newSlots({
     sheetElement: null,
 }).setSlots({
     init: function () {
@@ -88966,7 +89026,7 @@ ResourceLoader.pushRelativePaths([
 */
 
 
-window.DomTextTapeMeasure = ideal.Proto.extend().newSlots({
+ideal.Proto.newSubclassNamed("DomTextTapeMeasure").newSlots({
     idName: "DomTextTapeMeasure",
     type: "Div",
     stylesToCopy: ["fontSize","fontStyle", "fontWeight", "fontFamily","lineHeight", "textTransform", "letterSpacing"],
@@ -89048,8 +89108,7 @@ window.DomTextTapeMeasure = ideal.Proto.extend().newSlots({
 
 */
 
-window.DomCSSInspector = ideal.Proto.extend().newSlots({
-    type: "DomCSSInspector",
+ideal.Proto.newSubclassNamed("DomCSSInspector").newSlots({
     idName: "DomCSSInspector",
     //divClassName: null,
 }).setSlots({
@@ -89164,8 +89223,7 @@ const max3 = function(a, b, c) {
     return (a > b) ? ((a > c) ? a : c) : ((b > c) ? b : c);
 }
 
-window.CSSColor = ideal.Proto.extend().newSlots({
-    type: "CSSColor",
+ideal.Proto.newSubclassNamed("CSSColor").newSlots({
     red: 0, // values between 0.0 and 1.0
     green: 0,
     blue: 0,
@@ -89407,8 +89465,7 @@ function DomElement_description(element) {
     TODO: add dict[propertyName] -> validValueSet and check css values when set
 */
 
-window.DomView = ideal.Proto.extend().newSlots({
-    type: "DomView",
+ideal.Proto.newSubclassNamed("DomView").newSlots({
     divClassName: "",
     elementType: "div",
     element: null,
@@ -92387,8 +92444,7 @@ window.DomView = ideal.Proto.extend().newSlots({
 
 */
 
-window.DomStyledView = DomView.extend().newSlots({
-    type: "DomStyledView",
+DomView.newSubclassNamed("DomStyledView").newSlots({
     styles: null,
     isSelected: false,
 }).setSlots({
@@ -92485,8 +92541,7 @@ ResourceLoader.pushRelativePaths([
 
 */
 
-window.BoolView = DomStyledView.extend().newSlots({
-    type: "BoolView",
+DomStyledView.newSubclassNamed("BoolView").newSlots({
     isSelected: false,
     selectedColor: null,
     unselectedColor: null,
@@ -92640,8 +92695,7 @@ window.BoolView = DomStyledView.extend().newSlots({
 
 */
 
-window.ButtonView = DomView.extend().newSlots({
-    type: "ButtonView",
+DomView.newSubclassNamed("ButtonView").newSlots({
     titleView: null,
     isEnabled: true,
 }).setSlots({
@@ -92745,8 +92799,7 @@ window.ButtonView = DomView.extend().newSlots({
 
 */
 
-window.CenteredDomView = DomView.extend().newSlots({
-    type: "CenteredDomView",
+DomView.newSubclassNamed("CenteredDomView").newSlots({
     middleView: null,
     innerView: null,
 }).setSlots({
@@ -92816,8 +92869,7 @@ window.CenteredDomView = DomView.extend().newSlots({
 
 */
 
-window.DocumentBody = DomView.extend().newSlots({
-    type: "DocumentBody",
+DomView.newSubclassNamed("DocumentBody").newSlots({
 }).setSlots({
     init: function () {
         DomView.init.apply(this)
@@ -92909,8 +92961,7 @@ window.DocumentBody = DomView.extend().newSlots({
 
 */
 
-window.PanelView = DomView.extend().newSlots({
-    type: "PanelView",
+DomView.newSubclassNamed("PanelView").newSlots({
     titleView: null,
     subtitleView: null,
     button1: null,
@@ -93027,8 +93078,7 @@ window.PanelView = DomView.extend().newSlots({
     On Return/Enter key, it passes focus to the nextResponder/parent.
 */
 
-window.TextField = DomStyledView.extend().newSlots({
-    type: "TextField",
+DomStyledView.newSubclassNamed("TextField").newSlots({
     isSelected: false,
     selectedColor: null,
     unselectedColor: null,
@@ -93219,8 +93269,7 @@ window.TextField = DomStyledView.extend().newSlots({
 
 */
 
-window.CloseButton = DomView.extend().newSlots({
-    type: "CloseButton",
+window.CloseButton = DomView.newSubclassNamed("CloseButton").newSlots({
     isEnabled: true,
 }).setSlots({
 
@@ -93273,8 +93322,7 @@ window.CloseButton = DomView.extend().newSlots({
 
 */
 
-window.DragBarView = DomView.extend().newSlots({
-    type: "DragBarView",
+DomView.newSubclassNamed("DragBarView").newSlots({
     isEnabled: true,
     isHighlighted: false,
     isDragging: false,
@@ -93485,11 +93533,15 @@ ResourceLoader.pushRelativePaths([
 
     Represents the set of styles for a NodeView, e.g. selected, unselected.
 
-  
+    The basic idea is that both View and Nodes can own styles.
+    Views will use their own style (or the style of some parent such as a row using a column rowStyle),
+    unless their node specifies a style, which overrides the view's own style.
+
+    See DomStyledView and BrowserRow to understand how Views lookup/access/change their style state.
+
     TODO: can we make view styles nodes? recursion?
 
-
-    NOTE: 
+    rowStyles: 
     
     Because rows need to be able to use the background and select colors of their columns,
 
@@ -93499,12 +93551,11 @@ ResourceLoader.pushRelativePaths([
         which asks the node, then itself, then the columns for rowStyles()
         and uses the first non-null result .
 
-        
+
 */
 
 
-window.BMViewStyles = ideal.Proto.extend().newSlots({
-    type: "BMViewStyles",
+ideal.Proto.newSubclassNamed("BMViewStyles").newSlots({
     name: "",
     unselected: null,
     selected: null,
@@ -93610,10 +93661,13 @@ window.BMViewStyles = ideal.Proto.extend().newSlots({
 
     BMViewStyle
 
+    Representation of a single style state (a example of a state is "selected").
+
+    See BMViewStyles for docs.
+
 */
 
-window.BMViewStyle = ideal.Proto.extend().newSlots({
-    type: "BMViewStyle",
+ideal.Proto.newSubclassNamed("BMViewStyle").newSlots({
     name: "",
 
     // use same names as css style, nulls aren't applied
@@ -93667,8 +93721,6 @@ window.BMViewStyle = ideal.Proto.extend().newSlots({
 		
         return this
     },
-    
-
 })
 
 "use strict"
@@ -93679,9 +93731,7 @@ window.BMViewStyle = ideal.Proto.extend().newSlots({
 
 */
 
-window.BMNode = ideal.Proto.extend().newSlots({
-    type: "BMNode",
-        
+ideal.Proto.newSubclassNamed("BMNode").newSlots({        
     // row view summary
     title: null,
     subtitle: null,
@@ -94754,7 +94804,7 @@ ResourceLoader.pushRelativePaths([
             
             // need to define a root
             
-                let root = BMStorableNode.clone()
+                const root = BMStorableNode.clone()
                 store.setRootObject(root)
                 store.load()
             
@@ -94762,15 +94812,16 @@ ResourceLoader.pushRelativePaths([
             // or call scheduleSyncToStore() on it, it will be marked as needing to be persisted in the
             // next event loop
             
-                let test = BMNode.clone()
-                root.this.addSubnode(test) // this marks root as dirty
-                test.this.addSubnode(foo) // this marks test as dirty
+                const test = BMNode.clone()
+                root.addSubnode(test) // this marks root as dirty
+                test.addSubnode(foo) // this marks test as dirty
+                // next event loop will commit changes for root and test
                         
             // for singleton objects, set their pid to a unique name, e.g.
             
                 servers.setPid("_servers")
             
-            // when ready to store
+            // to force an immediate store
             
                 store.store()
             
@@ -94782,14 +94833,12 @@ ResourceLoader.pushRelativePaths([
         object records to make sure they don't use up too much space. To do this call:
     
             pdb.collect()
+
  
 */
 
-window.NodeStore = ideal.Proto.extend().newSlots({
-    type: "NodeStore",
+ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     name: "defaultStoreName",
-    //folderName: "NodeStore",
-    //folder: null,
 
     dirtyObjects: null,
     activeObjectsDict: null,
@@ -95535,8 +95584,7 @@ window.NodeStore = ideal.Proto.extend().newSlots({
 */
 
 
-window.BMDataStore = BMNode.extend().newSlots({
-    type: "BMDataStore",
+BMNode.newSubclassNamed("BMDataStore").newSlots({
     lastSyncTime: 0,
 }).setSlots({
     init: function () {
@@ -95621,9 +95669,7 @@ ResourceLoader.pushRelativePaths([
     
 */
 
-window.BMStorableNode = BMNode.extend().newSlots({
-    type: "BMStorableNode",
-
+BMNode.newSubclassNamed("BMStorableNode").newSlots({
     pid: null,
     shouldStore: false,
 
@@ -96052,8 +96098,7 @@ window.BMStorableNode = BMNode.extend().newSlots({
 */
 
 
-window.BMMenuNode = BMStorableNode.extend().newSlots({
-    type: "BMMenuNode",
+BMStorableNode.newSubclassNamed("BMMenuNode").newSlots({
     label: "",
     hasTest: false,
 }).setSlots({
@@ -96214,8 +96259,7 @@ window.BMMenuNode = BMStorableNode.extend().newSlots({
     
 */
 
-window.BMImageNode = BMStorableNode.extend().newSlots({
-    type: "BMImageNode",
+BMStorableNode.newSubclassNamed("BMImageNode").newSlots({
     dataURL: null,
 }).setSlots({
     init: function () {
@@ -96247,8 +96291,7 @@ window.BMImageNode = BMStorableNode.extend().newSlots({
 
 */
 
-window.BMStoredDatedSetNode = BMStorableNode.extend().newSlots({
-    type: "BMStoredDatedSetNode",
+BMStorableNode.newSubclassNamed("BMStoredDatedSetNode").newSlots({
     maxAgeInSeconds: 30*24*60*60,
     autoCheckPeriod: 1*60*60,
     dict: null,
@@ -96348,27 +96391,27 @@ ResourceLoader.pushRelativePaths([
                     
     example use in subclass 
 
-    BMCustomFormNode = BMFieldSetNode.extend().newSlots({
-        type: "BMCustomFormNode",
+    BMFieldSetNode.newSubclassNamed("BMCustomFormNode").newSlots({
     }).setSlots({
     
-    init: function () {
-        BMFieldSetNode.init.apply(this)
+        init: function () {
+            BMFieldSetNode.init.apply(this)
 
-        this.addFieldNamed("from")
-        this.addFieldNamed("to")
-        this.addFieldNamed("subject")
-        this.addFieldNamed("body").setNodeRowMinHeight(-1)
+            this.addFieldNamed("from")
+            this.addFieldNamed("to")
+            this.addFieldNamed("subject")
+            this.addFieldNamed("body").setNodeRowMinHeight(-1)
 
-        this.setActions(["send"])
-        this.setCanDelete(true)
-    },
+            this.setActions(["send"])
+            this.setCanDelete(true)
+        },
+
+        ...
 
 */  
         
 
-window.BMFieldSetNode = BMStorableNode.extend().newSlots({
-    type: "BMFieldSetNode",
+BMStorableNode.newSubclassNamed("BMFieldSetNode").newSlots({
     status: "",
     isEditable: true,
 }).setSlots({
@@ -96502,9 +96545,7 @@ window.BMFieldSetNode = BMStorableNode.extend().newSlots({
     
 */
         
-window.BMField = BMStorableNode.extend().newSlots({
-    type: "BMField",
-    
+BMStorableNode.newSubclassNamed("BMField").newSlots({
     isVisible: true,
     isEnabled: true,
 
@@ -96689,8 +96730,7 @@ valueMethod: function() {
 
 */
         
-window.BMActionNode = BMStorableNode.extend().newSlots({
-    type: "BMActionNode",
+BMStorableNode.newSubclassNamed("BMActionNode").newSlots({
     target: null,
     methodName: null,
     info: null,
@@ -96744,8 +96784,7 @@ window.BMActionNode = BMStorableNode.extend().newSlots({
 
 */
         
-window.BMCreatorNode = BMStorableNode.extend().newSlots({
-    type: "BMCreatorNode",
+BMStorableNode.newSubclassNamed("BMCreatorNode").newSlots({
 }).setSlots({
 
 }).setSlots({
@@ -96832,8 +96871,7 @@ window.BMCreatorNode = BMStorableNode.extend().newSlots({
 
 */
         
-window.BMOptionNode = BMStorableNode.extend().newSlots({
-    type: "BMOptionNode",
+BMStorableNode.newSubclassNamed("BMOptionNode").newSlots({
     label: null,
     value:  null,
 }).setSlots({
@@ -96878,8 +96916,7 @@ ResourceLoader.pushRelativePaths([
 
 */
         
-window.BMImageWellField = BMField.extend().newSlots({
-    type: "BMImageWellField",
+BMField.newSubclassNamed("BMImageWellField").newSlots({
     onlyShowsKeyWhenEmpty: true,
     maxImageCount: 1,
     isEditable: true,
@@ -96911,8 +96948,7 @@ window.BMImageWellField = BMField.extend().newSlots({
 */
 
         
-window.BMTextAreaField = BMField.extend().newSlots({
-    type: "BMTextAreaField",
+BMField.newSubclassNamed("BMTextAreaField").newSlots({
     isMono: false,
 }).setSlots({
     init: function () {
@@ -96929,9 +96965,7 @@ window.BMTextAreaField = BMField.extend().newSlots({
 
 */
         
-window.BMStampField = BMField.extend().newSlots({
-    type: "BMStampField",
-	
+BMField.newSubclassNamed("BMStampField").newSlots({	
 }).setSlots({
     init: function () {
         BMField.init.apply(this)
@@ -96951,9 +96985,7 @@ window.BMStampField = BMField.extend().newSlots({
 
 */
 
-window.BMIdentityField = BMField.extend().newSlots({
-    type: "BMIdentityField",
-	
+BMField.newSubclassNamed("BMIdentityField").newSlots({	
 }).setSlots({
     init: function () {
         BMField.init.apply(this)
@@ -97002,8 +97034,7 @@ window.BMIdentityField = BMField.extend().newSlots({
 
 */
         
-window.BMDateField = BMField.extend().newSlots({
-    type: "BMDateField",
+BMField.newSubclassNamed("BMDateField").newSlots({
     unsetVisibleValue: "unset",
 }).setSlots({
     init: function () {
@@ -97030,8 +97061,7 @@ window.BMDateField = BMField.extend().newSlots({
 
 */
         
-window.BMNumberField = BMField.extend().newSlots({
-    type: "BMNumberField",
+BMField.newSubclassNamed("BMNumberField").newSlots({
     unsetVisibleValue: "unset",
 }).setSlots({
     init: function () {
@@ -97073,8 +97103,7 @@ window.BMNumberField = BMField.extend().newSlots({
     
 */
 
-window.BMBoolField = BMField.extend().newSlots({
-    type: "BMBoolField",
+BMField.newSubclassNamed("BMBoolField").newSlots({
     unsetVisibleValue: "unset",
 }).setSlots({
     init: function () {
@@ -97122,8 +97151,7 @@ window.BMBoolField = BMField.extend().newSlots({
     
 */
 
-window.BMOptionsField = BMField.extend().newSlots({
-    type: "BMOptionsField",
+BMField.newSubclassNamed("BMOptionsField").newSlots({
     validValues: [],
     options: [],
     validValuesMethod: null,
@@ -97176,8 +97204,7 @@ window.BMOptionsField = BMField.extend().newSlots({
 
 */
         
-window.BMPointerField = BMField.extend().newSlots({
-    type: "BMPointerField",
+BMField.newSubclassNamed("BMPointerField").newSlots({
 }).setSlots({
     init: function () {
         BMField.init.apply(this)
@@ -97221,8 +97248,7 @@ window.BMPointerField = BMField.extend().newSlots({
     
 */
 
-window.BMDataStoreRecord = BMFieldSetNode.extend().newSlots({
-    type: "BMDataStoreRecord",
+BMFieldSetNode.newSubclassNamed("BMDataStoreRecord").newSlots({
     key: null,
     didSetupFields: false,
 }).setSlots({
@@ -97278,8 +97304,7 @@ ResourceLoader.pushRelativePaths([
 
 */
 
-window.NodeView = DomStyledView.extend().newSlots({
-    type: "NodeView",
+DomStyledView.newSubclassNamed("NodeView").newSlots({
     node: null,
     //ownsView: true,
     overrideSubviewProto: null,
@@ -97560,8 +97585,7 @@ window.NodeView = DomStyledView.extend().newSlots({
 
 */
 
-window.ImageWellView = NodeView.extend().newSlots({
-    type: "ImageWellView",
+NodeView.newSubclassNamed("ImageWellView").newSlots({
     imageView: null,
     isEditable: true,
     maxImageCount: null,
@@ -97663,8 +97687,7 @@ window.ImageWellView = NodeView.extend().newSlots({
 
 */
 
-window.ImageView = NodeView.extend().newSlots({
-    type: "ImageView",
+NodeView.newSubclassNamed("ImageView").newSlots({
     closeButtonView: null,
     dataURL: null,
     isEditable: false,
@@ -97868,8 +97891,7 @@ ResourceLoader.pushRelativePaths([
     
 */
 
-window.HashCommand = ideal.Proto.extend().newSlots({
-    type: "HashCommand",
+ideal.Proto.newSubclassNamed("HashCommand").newSlots({
     target: null,
     method: null,
     arguments: [],
@@ -97940,8 +97962,7 @@ window.HashCommand = ideal.Proto.extend().newSlots({
     
 */
 
-window.BrowserView = NodeView.extend().newSlots({
-    type: "BrowserView",
+NodeView.newSubclassNamed("BrowserView").newSlots({
     columns: null,
     isSingleColumn: false,
     defaultHeader: null,
@@ -98722,8 +98743,7 @@ window.BrowserView = NodeView.extend().newSlots({
 
 */
 
-window.BrowserColumn = NodeView.extend().newSlots({
-    type: "BrowserColumn",
+NodeView.newSubclassNamed("BrowserColumn").newSlots({
     rows: null,
     allowsCursorNavigation: true,
     isDebugging: true,
@@ -99690,9 +99710,7 @@ window.BrowserColumn = NodeView.extend().newSlots({
 
 */
 
-window.BrowserColumnGroup = NodeView.extend().newSlots({
-    type: "BrowserColumnGroup",
-    
+NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({    
     header: null,
     footer: null,
     
@@ -100049,8 +100067,7 @@ window.BrowserColumnGroup = NodeView.extend().newSlots({
 
 */
 
-window.BrowserHeader = NodeView.extend().newSlots({
-    type: "BrowserHeader",
+NodeView.newSubclassNamed("BrowserHeader").newSlots({
     backArrowView: null,
     titleView: null,
     doesShowBackArrow: false,
@@ -100168,8 +100185,7 @@ window.BrowserHeader = NodeView.extend().newSlots({
 
 */
 
-window.BrowserHeaderAction = NodeView.extend().newSlots({
-    type: "BrowserHeaderAction",
+NodeView.newSubclassNamed("BrowserHeaderAction").newSlots({
     canClick: true,
 }).setSlots({
     init: function () {
@@ -100226,9 +100242,7 @@ window.BrowserHeaderAction = NodeView.extend().newSlots({
 
 */
 
-window.BrowserFooter = NodeView.extend().newSlots({
-    type: "BrowserFooter",
-
+NodeView.newSubclassNamed("BrowserFooter").newSlots({
     leftActionsView: null,
     textView: null,
     rightActionsView: null,
@@ -100348,8 +100362,7 @@ window.BrowserFooter = NodeView.extend().newSlots({
 
 */
 
-window.BrowserRow = NodeView.extend().newSlots({
-    type: "BrowserRow",
+NodeView.newSubclassNamed("BrowserRow").newSlots({
     isSelectable: true,
     closeButtonView: null,
     defaultHeight: 60,
@@ -101133,8 +101146,7 @@ window.BrowserRow = NodeView.extend().newSlots({
     
 */
 
-window.BrowserTitledRow = BrowserRow.extend().newSlots({
-    type: "BrowserTitledRow",
+BrowserRow.newSubclassNamed("BrowserTitledRow").newSlots({
     titleView: null,
     subtitleView: null,
     noteView: null,
@@ -101275,8 +101287,7 @@ window.BrowserTitledRow = BrowserRow.extend().newSlots({
     
 */
 
-window.BrowserRowNote = TextField.extend().newSlots({
-    type: "BrowserRowNote",
+TextField.newSubclassNamed("BrowserRowNote").newSlots({
 }).setSlots({
     init: function () {
         TextField.init.apply(this)
@@ -101292,8 +101303,7 @@ window.BrowserRowNote = TextField.extend().newSlots({
     
 */
 
-window.BrowserRowSubtitle = TextField.extend().newSlots({
-    type: "BrowserRowSubtitle",
+TextField.newSubclassNamed("BrowserRowSubtitle").newSlots({
 }).setSlots({
     init: function () {
         TextField.init.apply(this)
@@ -101320,8 +101330,7 @@ window.BrowserRowSubtitle = TextField.extend().newSlots({
 
 */
 
-window.BrowserRowTitle = TextField.extend().newSlots({
-    type: "BrowserRowTitle",
+TextField.newSubclassNamed("BrowserRowTitle").newSlots({
 }).setSlots({
     init: function () {
         TextField.init.apply(this)
@@ -101352,9 +101361,7 @@ window.BrowserRowTitle = TextField.extend().newSlots({
 
 */
 
-
-window.BrowserFieldRow = BrowserRow.extend().newSlots({
-    type: "BrowserFieldRow",
+BrowserRow.newSubclassNamed("BrowserFieldRow").newSlots({
     allowsCursorNavigation: false,
 }).setSlots({
     init: function () {
@@ -101409,8 +101416,7 @@ ResourceLoader.pushRelativePaths([
 
 */
 
-window.ShelfView = NodeView.extend().newSlots({
-    type: "ShelfView",
+NodeView.newSubclassNamed("ShelfView").newSlots({
     browser: null,
     defaultWidth: 80,
     scrollView: null,
@@ -101564,8 +101570,7 @@ window.ShelfView = NodeView.extend().newSlots({
 
 */
 
-window.ShelfItemView = NodeView.extend().newSlots({
-    type: "ShelfItemView",
+NodeView.newSubclassNamed("ShelfItemView").newSlots({
     isSelected: false,
     isSelectable: true,
     restCloseButtonOpacity: 0.4,
@@ -101743,8 +101748,7 @@ window.ShelfItemView = NodeView.extend().newSlots({
 
 */
 
-window.ShelfItemGroupView = NodeView.extend().newSlots({
-    type: "ShelfItemGroupView",
+NodeView.newSubclassNamed("ShelfItemGroupView").newSlots({
     isCompacted: true,
     isAlwaysSelected: false,
 }).setSlots({
@@ -101899,8 +101903,7 @@ window.ShelfItemGroupView = NodeView.extend().newSlots({
 
 */
 
-window.ShelfFooterView = DomView.extend().newSlots({
-    type: "ShelfFooterView",
+DomView.newSubclassNamed("ShelfFooterView").newSlots({
 }).setSlots({
     init: function () {
         DomView.init.apply(this)
@@ -102043,8 +102046,7 @@ ResourceLoader.pushRelativePaths([
 
 */
 
-window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
-    type: "BMFieldRowView",
+BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
     keyView: null,
     valueView: null,
     noteView: null,
@@ -102262,8 +102264,7 @@ window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
 
 */
 
-window.BMActionNodeRowView = BrowserRow.extend().newSlots({
-    type: "BMActionNodeRowView",
+BrowserRow.newSubclassNamed("BMActionNodeRowView").newSlots({
     buttonView: null,
 }).setSlots({
     init: function () {
@@ -102329,8 +102330,7 @@ window.BMActionNodeRowView = BrowserRow.extend().newSlots({
 */
 
 
-window.BMTextAreaFieldRowView = BMFieldRowView.extend().newSlots({
-    type: "BMTextAreaFieldRowView",
+BMFieldRowView.newSubclassNamed("BMTextAreaFieldRowView").newSlots({
 }).setSlots({
     init: function () {
         BMFieldRowView.init.apply(this)
@@ -102379,8 +102379,7 @@ window.BMTextAreaFieldRowView = BMFieldRowView.extend().newSlots({
 
 */
 
-window.BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
-    type: "BMImageWellFieldView",
+BMFieldRowView.newSubclassNamed("BMImageWellFieldView").newSlots({
 }).setSlots({
     init: function () {
         BMFieldRowView.init.apply(this)
@@ -102462,8 +102461,7 @@ window.BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
 */
 
 
-window.BMOptionsFieldRowView = BMFieldRowView.extend().newSlots({
-    type: "BMOptionsFieldRowView",
+BMFieldRowView.newSubclassNamed("BMOptionsFieldRowView").newSlots({
     optionsView: null,
 }).setSlots({
     init: function () {
@@ -102589,8 +102587,7 @@ window.BMOptionsFieldRowView = BMFieldRowView.extend().newSlots({
 })
 
 /*
-BMOptionsTableRowView = NodeView.extend().newSlots({
-    type: "BMOptionsTableRowView",
+NodeView.newSubclassNamed("BMOptionsTableRowView").newSlots({
 }).setSlots({
 })
 */
@@ -102602,8 +102599,7 @@ BMOptionsTableRowView = NodeView.extend().newSlots({
 
 */
 
-window.BMOptionsTableView = DomView.extend().newSlots({
-    type: "BMOptionsTableView",
+DomView.newSubclassNamed("BMOptionsTableView").newSlots({
     validValues: null,
 }).setSlots({
     init: function () {
@@ -102745,8 +102741,7 @@ window.BMOptionsTableView = DomView.extend().newSlots({
 
 */
 
-window.BMPointerFieldRowView = BrowserTitledRow.extend().newSlots({
-    type: "BMPointerFieldRowView",
+BrowserTitledRow.newSubclassNamed("BMPointerFieldRowView").newSlots({
 }).setSlots({
     init: function () {
         BrowserTitledRow.init.apply(this)
@@ -102790,8 +102785,7 @@ window.BMPointerFieldRowView = BrowserTitledRow.extend().newSlots({
 
 */
 
-window.App = BMNode.extend().newSlots({
-    type: "App",
+BMNode.newSubclassNamed("App").newSlots({
     name: "App",
     isDebugging: true,
     version: [0, 0],
@@ -102947,8 +102941,7 @@ ResourceLoader.pushRelativePaths([
 
 */
 
-window.BMFontResources = BMNode.extend().newSlots({
-    type: "BMFontResources",
+BMNode.newSubclassNamed("BMFontResources").newSlots({
     extensions: ["ttf", "woff", "woff2"],
 }).setSlots({
     shared: function() {   
@@ -103031,8 +103024,7 @@ window.BMFontResources = BMNode.extend().newSlots({
 
 */
 
-window.BMFontFamily = BMNode.extend().newSlots({
-    type: "BMFontFamily",
+BMNode.newSubclassNamed("BMFontFamily").newSlots({
     name: null,
     fonts: null,
 }).setSlots({
@@ -103070,8 +103062,7 @@ window.BMFontFamily = BMNode.extend().newSlots({
 
 */
 
-window.BMFont = BMNode.extend().newSlots({
-    type: "BMFont",
+BMNode.newSubclassNamed("BMFont").newSlots({
     path: null,
     name: null,
     options: null,
@@ -103151,8 +103142,7 @@ ResourceLoader.pushRelativePaths([
 
 */
 
-window.BMSoundResurces = BMNode.extend().newSlots({
-    type: "BMSoundResurces",
+BMNode.newSubclassNamed("BMSoundResurces").newSlots({
     extensions: ["wav", "mp3", "m4a", "mp4", "oga", "ogg"],
 }).setSlots({
     shared: function() {   
@@ -103209,8 +103199,7 @@ window.BMSoundResurces = BMNode.extend().newSlots({
 
 */
 
-window.BMSound = BMNode.extend().newSlots({
-    type: "BMSound",
+BMNode.newSubclassNamed("BMSound").newSlots({
     path: null,
 }).setSlots({
     init: function () {
@@ -103275,8 +103264,7 @@ window.BMSound = BMNode.extend().newSlots({
 
 */
 
-window.BMAudioPlayer = DomView.extend().newSlots({
-    type: "BMAudioPlayer",
+DomView.newSubclassNamed("BMAudioPlayer").newSlots({
     path: "",
     sourceElement: null,
     isDebugging: false,
@@ -103472,8 +103460,7 @@ ResourceLoader.pushRelativePaths([
 
 */
 
-window.BMImageResources = BMNode.extend().newSlots({
-    type: "BMImageResources",
+BMNode.newSubclassNamed("BMImageResources").newSlots({
     extensions: ["png", "jpg", "jpeg", "gif", "tiff", "bmp"],
 }).setSlots({
     shared: function() {   
@@ -103518,8 +103505,7 @@ window.BMImageResources = BMNode.extend().newSlots({
 
 */
 
-window.BMURLImage = BMNode.extend().newSlots({
-    type: "BMURLImage",
+BMNode.newSubclassNamed("BMURLImage").newSlots({
     path: "",
     dataURL: "",
     isDebugging: false,
@@ -103617,8 +103603,7 @@ ResourceLoader.pushRelativePaths([
 
 */
 
-window.BMThemeStyleSheet = ideal.Proto.extend().newSlots({
-    type: "BMThemeStyleSheet",
+ideal.Proto.newSubclassNamed("BMThemeStyleSheet").newSlots({
 }).setSlots({
     init: function () {
     },
@@ -103661,8 +103646,7 @@ window.BMThemeStyleSheet = ideal.Proto.extend().newSlots({
 
 */
 
-window.BMThemeClass = BMStorableNode.extend().newSlots({
-    type: "BMThemeClass",
+BMStorableNode.newSubclassNamed("BMThemeClass").newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
@@ -103694,8 +103678,7 @@ window.BMThemeClass = BMStorableNode.extend().newSlots({
 
 */
 
-window.BMThemeClassState = BMFieldSetNode.extend().newSlots({
-    type: "BMThemeClassState",
+BMFieldSetNode.newSubclassNamed("BMThemeClassState").newSlots({
     divClassName: null,
 }).setSlots({
     init: function () {
@@ -103760,8 +103743,7 @@ notes on Scroll bars theme options
 
 */
 
-window.BMTheme = BMStorableNode.extend().newSlots({
-    type: "BMTheme",
+BMStorableNode.newSubclassNamed("BMTheme").newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
@@ -103813,9 +103795,7 @@ window.BMTheme = BMStorableNode.extend().newSlots({
 */
 
 
-//window.BMThemeResources = BMStorableNode.extend().newSlots({
-window.BMThemeResources = BMNode.extend().newSlots({
-    type: "BMThemeResources",
+window.BMThemeResources = BMNode.newSubclassNamed("BMThemeResources").newSlots({
 }).setSlots({
     shared: function() {   
         return this.sharedInstanceForClass(BMThemeResources)
@@ -103841,8 +103821,7 @@ window.BMThemeResources = BMNode.extend().newSlots({
 
 */
 
-window.BMResources = BMStorableNode.extend().newSlots({
-    type: "BMResources",
+BMStorableNode.newSubclassNamed("BMResources").newSlots({
     themes: null,
     fonts: null,
     sounds: null,
@@ -103941,7 +103920,7 @@ ResourceLoader.pushRelativePaths([
     BMMessages
 
 
-    BMGetDataItem = BMNode.extend().newSlots({
+    BMNode.newSubclassNamed("BMGetDataItem").newSlots({
         type: "BMGetDataItem",
         hash: null,
         fromMsg: null,
@@ -103950,8 +103929,7 @@ ResourceLoader.pushRelativePaths([
     
 */
 
-window.BMMessages = BMStorableNode.extend().newSlots({
-    type: "BMMessages",
+BMStorableNode.newSubclassNamed("BMMessages").newSlots({
     changeNote: null,
     network: null,
     // TODO: deal with timeouts
@@ -104221,8 +104199,7 @@ window.BMMessages = BMStorableNode.extend().newSlots({
 
 */
 
-window.BMNetwork = BMFieldSetNode.extend().newSlots({
-    type: "BMNetwork",
+BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
     servers: null,
     stunServers: null,
     messages: null,
@@ -104547,9 +104524,7 @@ ResourceLoader.pushRelativePaths([
 
 */
 
-
-window.BMPeerId = BMNode.extend().newSlots({
-    type: "BMPeerId",
+BMNode.newSubclassNamed("BMPeerId").newSlots({
     publicKeyString: null,
     bloomFilter: null,
     error: null,
@@ -104678,8 +104653,7 @@ window.BMPeerId = BMNode.extend().newSlots({
 
 */
 
-window.BMServerConnection = BMNode.extend().newSlots({
-    type: "BMServerConnection",
+BMNode.newSubclassNamed("BMServerConnection").newSlots({
     server: null,
     serverConn: null,
     webSocketListener: null,
@@ -105115,8 +105089,7 @@ window.BMServerConnection = BMNode.extend().newSlots({
 
 */
 
-window.BMServerMessage = ideal.Proto.extend().newSlots({
-    type: "BMServerMessage",
+ideal.Proto.newSubclassNamed("BMServerMessage").newSlots({
     count: 0,
     serverConnection: null,
     id: null,
@@ -105165,8 +105138,7 @@ window.BMServerMessage = ideal.Proto.extend().newSlots({
 
 */
 
-window.BMRServer = BMFieldSetNode.extend().newSlots({
-    type: "BMRServer",
+BMFieldSetNode.newSubclassNamed("BMRServer").newSlots({
     // host: "peers.bitmarkets.org",
     host: "127.0.0.1",
     port: 9000,
@@ -105358,8 +105330,7 @@ window.BMRServer = BMFieldSetNode.extend().newSlots({
 
 */
 
-window.BMRServers = BMStorableNode.extend().newSlots({
-    type: "BMRServers",
+BMStorableNode.newSubclassNamed("BMRServers").newSlots({
     maxConnections: 8,
     isDebugging: false,
 }).setSlots({
@@ -105537,8 +105508,7 @@ window.BMRServers = BMStorableNode.extend().newSlots({
 
 */
 
-window.BMRemotePeer = BMNode.extend().newSlots({
-    type: "BMRemotePeer",
+BMNode.newSubclassNamed("BMRemotePeer").newSlots({
     conn: null,
     serverConnection: null,
     messages: null,
@@ -105845,8 +105815,7 @@ window.BMRemotePeer = BMNode.extend().newSlots({
 
 */
 
-window.BMRemotePeers = BMNode.extend().newSlots({
-    type: "BMRemotePeers",
+BMNode.newSubclassNamed("BMRemotePeers").newSlots({
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)
@@ -105938,8 +105907,7 @@ window.BMRemotePeers = BMNode.extend().newSlots({
     
 */
 
-window.BMStunServer = BMFieldSetNode.extend().newSlots({
-    type: "BMStunServer",
+BMFieldSetNode.newSubclassNamed("BMStunServer").newSlots({
     host: "",
     port: "", 
     //credential: null,
@@ -106006,8 +105974,7 @@ window.BMStunServer = BMFieldSetNode.extend().newSlots({
 */
 
 
-window.BMStunServers = BMStorableNode.extend().newSlots({
-    type: "BMStunServers",
+BMStorableNode.newSubclassNamed("BMStunServers").newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
@@ -106159,8 +106126,7 @@ String.prototype.toBuffer = function () {
 */
 
 
-window.BMMessage = BMFieldSetNode.extend().newSlots({
-    type: "BMMessage",
+BMFieldSetNode.newSubclassNamed("BMMessage").newSlots({
     msgType: null,
     data: null,
     msgTypes: ["addr", "inv", "object", "ping", "pong", "getData"],
@@ -106243,8 +106209,7 @@ window.BMMessage = BMFieldSetNode.extend().newSlots({
 
 */
 
-window.BMAddrMessage = BMMessage.extend().newSlots({
-    type: "BMAddrMessage",
+BMMessage.newSubclassNamed("BMAddrMessage").newSlots({
 }).setSlots({
     init: function () {
         BMMessage.init.apply(this)
@@ -106274,8 +106239,7 @@ window.BMAddrMessage = BMMessage.extend().newSlots({
 
 */
 
-window.BMGetDataMessage = BMMessage.extend().newSlots({
-    type: "BMGetDataMessage",
+BMMessage.newSubclassNamed("BMGetDataMessage").newSlots({
 }).setSlots({
     init: function () {
         BMMessage.init.apply(this)
@@ -106311,8 +106275,7 @@ window.BMGetDataMessage = BMMessage.extend().newSlots({
 
 */
 
-window.BMInvMessage = BMMessage.extend().newSlots({
-    type: "BMInvMessage",
+BMMessage.newSubclassNamed("BMInvMessage").newSlots({
     //bloomFilter: null, // used to filter senders
 }).setSlots({
     init: function () {
@@ -106380,8 +106343,7 @@ window.BMInvMessage = BMMessage.extend().newSlots({
 
 var BitcoreMessage = require("bitcore-message");
 
-window.BMObjectMessage = BMMessage.extend().newSlots({
-    type: "BMObjectMessage",
+BMMessage.newSubclassNamed("BMObjectMessage").newSlots({
     msgType: "object",
     senderPublicKeyString: null,
     //receiverPublicKeyString: null,
@@ -106570,8 +106532,7 @@ window.BMObjectMessage = BMMessage.extend().newSlots({
     
 */
 
-window.BMPingMessage = BMMessage.extend().newSlots({
-    type: "BMPingMessage",
+BMMessage.newSubclassNamed("BMPingMessage").newSlots({
 }).setSlots({
     init: function () {
         BMMessage.init.apply(this)
@@ -106594,8 +106555,7 @@ window.BMPingMessage = BMMessage.extend().newSlots({
     
 */
 
-window.BMPongMessage = BMMessage.extend().newSlots({
-    type: "BMPongMessage",
+BMMessage.newSubclassNamed("BMPongMessage").newSlots({
 }).setSlots({
     init: function () {
         BMMessage.init.apply(this)
@@ -106617,8 +106577,7 @@ window.BMPongMessage = BMMessage.extend().newSlots({
 
 */
 
-window.BMAppMessage = BMFieldSetNode.extend().newSlots({
-    type: "BMAppMessage",
+BMFieldSetNode.newSubclassNamed("BMAppMessage").newSlots({
     objMsg: null,
     senderId: null,
     receiverId: null,
@@ -106804,8 +106763,7 @@ var Buffer = bitcore.deps.Buffer;
     
 */
 
-window.BMKeyPair = BMStorableNode.extend().newSlots({
-    type: "BMKeyPair",
+BMStorableNode.newSubclassNamed("BMKeyPair").newSlots({
     name: "",
     privateKeyString: "",
     hasPrivateKey: true,
@@ -106893,8 +106851,7 @@ window.BMKeyPair = BMStorableNode.extend().newSlots({
     
 */
 
-window.BMLocalIdentities = BMStorableNode.extend().newSlots({
-    type: "BMLocalIdentities",
+BMStorableNode.newSubclassNamed("BMLocalIdentities").newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
@@ -106970,8 +106927,7 @@ var Buffer = bitcore.deps.Buffer;
     
 */
 
-window.BMLocalIdentity = BMKeyPair.extend().newSlots({
-    type: "BMLocalIdentity",
+BMKeyPair.newSubclassNamed("BMLocalIdentity").newSlots({
     name: "",
     privateKeyString: "",
     didChangeIdentityNote: null,
@@ -107121,8 +107077,7 @@ window.BMLocalIdentity = BMKeyPair.extend().newSlots({
     
 */
 
-window.BMRemoteIdentities = BMStorableNode.extend().newSlots({
-    type: "BMRemoteIdentities",
+BMStorableNode.newSubclassNamed("BMRemoteIdentities").newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
@@ -107226,8 +107181,7 @@ window.BMRemoteIdentities = BMStorableNode.extend().newSlots({
 
 var bitcore = require("bitcore-lib")
 
-window.BMRemoteIdentity = BMStorableNode.extend().newSlots({
-    type: "BMRemoteIdentity",
+BMStorableNode.newSubclassNamed("BMRemoteIdentity").newSlots({
     name: "untitled",
     publicKeyString: "",
     hasPrivateKey: false,
@@ -107401,8 +107355,7 @@ window.BMRemoteIdentity = BMStorableNode.extend().newSlots({
     
 */
 
-window.BMProfile = BMFieldSetNode.extend().newSlots({
-    type: "BMProfile",
+BMFieldSetNode.newSubclassNamed("BMProfile").newSlots({
     avatars: [],
 }).setSlots({
     init: function () {
@@ -107411,7 +107364,7 @@ window.BMProfile = BMFieldSetNode.extend().newSlots({
  		this.setShouldStore(true)
         this.setTitle("profile")
         
-        this.addStoredField(BMImageWellField.clone().setValueMethod("avatars").setKey("drop avatar image here").setMaxImageCount(1)).setValueIsEditable(true)
+        this.addStoredField(BMImageWellField.clone().setValueMethod("avatars").setKey("avatar image").setMaxImageCount(1)).setValueIsEditable(true)
 		
         this.addFieldNamed("name").setValueMethod("name").setValueIsEditable(true)
         this.addStoredField(BMIdentityField.clone().setValueMethod("publicKeyString").setKey("public key").setValueIsEditable(true))
@@ -107490,8 +107443,7 @@ ResourceLoader.pushRelativePaths([
 
 */
 
-window.BMApplet = BMStorableNode.extend().newSlots({
-    type: "BMApplet",
+BMStorableNode.newSubclassNamed("BMApplet").newSlots({
 }).setSlots({
     sharedStoredInstance: function() {
         return NodeStore.shared().rootInstanceWithPidForProto(this.type(), this)
@@ -107537,8 +107489,7 @@ ResourceLoader.pushRelativePaths([
 
 */
 
-window.BMBuy = BMStorableNode.extend().newSlots({
-    type: "BMBuy",
+BMStorableNode.newSubclassNamed("BMBuy").newSlots({
     post: null,
 }).setSlots({
     init: function () {
@@ -107569,8 +107520,7 @@ window.BMBuy = BMStorableNode.extend().newSlots({
 
 */
 
-window.BMBuys = BMStorableNode.extend().newSlots({
-    type: "BMBuys",
+BMStorableNode.newSubclassNamed("BMBuys").newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
@@ -107593,8 +107543,8 @@ window.BMBuys = BMStorableNode.extend().newSlots({
 	If can also propogate subnode count sum updates.
 */
 
-window.BMRegion = BMNode.extend().newSlots({
-    type: "BMRegion",
+
+BMNode.newSubclassNamed("BMRegion").newSlots({
     lazyChildrenDict: null,
     allowsSubregions: true,
 }).setSlots({
@@ -107738,8 +107688,7 @@ window.Region = BMRegion
 
 */
 
-window.BMRegions = BMRegion.extend().newSlots({
-    type: "BMRegions",
+BMRegion.newSubclassNamed("BMRegions").newSlots({
 }).setSlots({
     init: function () {
         BMRegion.init.apply(this)
@@ -107781,8 +107730,7 @@ window.BMRegions = BMRegion.extend().newSlots({
 
 */
 
-window.BMClassifieds = BMApplet.extend().newSlots({
-    type: "BMClassifieds",
+BMApplet.newSubclassNamed("BMClassifieds").newSlots({
     regions: null,
     sells: null,
 }).setSlots({
@@ -107808,8 +107756,8 @@ window.BMClassifieds = BMApplet.extend().newSlots({
 
 */
 
-window.BMPost = BMStorableNode.extend().newSlots({
-    type: "BMPost",
+
+BMStorableNode.newSubclassNamed("BMPost").newSlots({
     price: null,
     title: null,
     description: null,
@@ -107876,8 +107824,7 @@ window.BMPost = BMStorableNode.extend().newSlots({
 
 */
 
-window.BMSell = BMStorableNode.extend().newSlots({
-    type: "BMSell",
+BMStorableNode.newSubclassNamed("BMSell").newSlots({
     post: null,
     hasSent: false,
 }).setSlots({
@@ -107918,8 +107865,7 @@ window.BMSell = BMStorableNode.extend().newSlots({
 
 */
 
-window.BMSells = BMStorableNode.extend().newSlots({
-    type: "BMSells",
+BMStorableNode.newSubclassNamed("BMSells").newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
@@ -107945,8 +107891,7 @@ window.BMSells = BMStorableNode.extend().newSlots({
 
 */
 
-window.BMClassifiedPosts = BMStorableNode.extend().newSlots({
-    type: "BMClassifiedPosts",
+BMStorableNode.newSubclassNamed("BMClassifiedPosts").newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
@@ -107965,8 +107910,7 @@ window.BMClassifiedPosts = BMStorableNode.extend().newSlots({
 
 */
 
-window.BMClassifiedPost = BMFieldSetNode.extend().newSlots({
-    type: "BMClassifiedPost",
+BMFieldSetNode.newSubclassNamed("BMClassifiedPost").newSlots({
     title: null, // string
     price: 0,
     currency: "BTC",
@@ -108350,8 +108294,7 @@ ResourceLoader.pushRelativePaths([
 
 */
 
-window.BMTwitter = BMApplet.extend().newSlots({
-    type: "BMTwitter",
+BMApplet.newSubclassNamed("BMTwitter").newSlots({
     feed: null,
     notifications: null,
     messages: null,
@@ -108398,8 +108341,7 @@ window.BMTwitter = BMApplet.extend().newSlots({
 
 */
 
-window.BMFollowingContacts = BMStorableNode.extend().newSlots({
-    type: "BMFollowingContacts",
+BMStorableNode.newSubclassNamed("BMFollowingContacts").newSlots({
 }).setSlots({
     init: function () {
         BMAppMessage.init.apply(this)
@@ -108422,8 +108364,7 @@ window.BMFollowingContacts = BMStorableNode.extend().newSlots({
 
 */
 
-window.BMFollowingContact = BMStorableNode.extend().newSlots({
-    type: "BMFollowingContact",
+BMStorableNode.newSubclassNamed("BMFollowingContact").newSlots({
     isFollowing: false,
 }).setSlots({
     init: function () {
@@ -108450,8 +108391,7 @@ ResourceLoader.pushRelativePaths([
 
 */
 
-window.BMBitcoinWallet = BMApplet.extend().newSlots({
-    type: "BMBitcoinWallet",
+BMApplet.newSubclassNamed("BMBitcoinWallet").newSlots({
 }).setSlots({
 
     init: function () {
@@ -108479,8 +108419,7 @@ ResourceLoader.pushRelativePaths([
 
 */
 
-window.BMChat = BMApplet.extend().newSlots({
-    type: "BMChat",
+BMApplet.newSubclassNamed("BMChat").newSlots({
     //feedPosts: null,
     //myPosts: null,
     // threads: null,
@@ -108607,8 +108546,7 @@ ResourceLoader.pushRelativePaths([
 
 */
 
-window.BMContactLinks = BMStorableNode.extend().newSlots({
-    type: "BMContactLinks",
+BMStorableNode.newSubclassNamed("BMContactLinks").newSlots({
     linkProto: null,
 }).setSlots({
     init: function () {
@@ -108730,8 +108668,7 @@ window.BMContactLinks = BMStorableNode.extend().newSlots({
 
 */
 
-window.BMChatThreads = BMContactLinks.extend().newSlots({
-    type: "BMChatThreads",
+BMContactLinks.newSubclassNamed("BMChatThreads").newSlots({
 }).setSlots({
     init: function () {
         BMContactLinks.init.apply(this)
@@ -108759,8 +108696,7 @@ window.BMChatThreads = BMContactLinks.extend().newSlots({
 
 */
 
-window.BMChatThread = BMStorableNode.extend().newSlots({
-    type: "BMChatThread",
+BMStorableNode.newSubclassNamed("BMChatThread").newSlots({
     remoteIdentity: null,
 }).setSlots({
     
@@ -108863,8 +108799,7 @@ window.BMChatThread = BMStorableNode.extend().newSlots({
 
 */
 
-window.BMChatMessage = BMAppMessage.extend().newSlots({
-    type: "BMChatMessage",
+BMAppMessage.newSubclassNamed("BMChatMessage").newSlots({
     content: "",
 }).setSlots({
     
@@ -108920,8 +108855,7 @@ window.BMChatMessage = BMAppMessage.extend().newSlots({
 
 */
 
-window.BMChatMessageRowView = BrowserTitledRow.extend().newSlots({
-    type: "BMChatMessageRowView",
+BrowserTitledRow.newSubclassNamed("BMChatMessageRowView").newSlots({
 }).setSlots({
     
     init: function () {
@@ -109038,8 +108972,8 @@ ResourceLoader.pushRelativePaths([
 
 */
 
-window.BMPostDrafts = BMStorableNode.extend().newSlots({
-    type: "BMPostDrafts",
+
+BMStorableNode.newSubclassNamed("BMPostDrafts").newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
@@ -109095,8 +109029,7 @@ window.BMPostDrafts = BMStorableNode.extend().newSlots({
 
 */
 
-window.BMPostDraft = BMStorableNode.extend().newSlots({
-    type: "BMPostDraft",
+BMStorableNode.newSubclassNamed("BMPostDraft").newSlots({
     content: "",
 }).setSlots({
     
@@ -109161,9 +109094,8 @@ window.BMPostDraft = BMStorableNode.extend().newSlots({
 
 */
 
-window.BMPostDraftRowView = BrowserRow.extend().newSlots({
-    type: "BMPostDraftRowView",
-    
+
+BrowserRow.newSubclassNamed("BMPostDraftRowView").newSlots({    
     topView: null,
     leftView: null,
     iconView: null,
@@ -109364,8 +109296,7 @@ ResourceLoader.pushRelativePaths([
 
 */
 
-window.BMFeedPosts = BMStorableNode.extend().newSlots({
-    type: "BMFeedPosts",
+BMStorableNode.newSubclassNamed("BMFeedPosts").newSlots({
     hasRead: true,
 }).setSlots({
     init: function () {
@@ -109446,8 +109377,7 @@ window.BMFeedPosts = BMStorableNode.extend().newSlots({
 
 */
 
-window.BMMyPosts = BMStorableNode.extend().newSlots({
-    type: "BMMyPosts",
+BMStorableNode.newSubclassNamed("BMMyPosts").newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
@@ -109491,8 +109421,8 @@ window.BMMyPosts = BMStorableNode.extend().newSlots({
 
 */
 
-window.BMPostMessage = BMAppMessage.extend().newSlots({
-    type: "BMPostMessage",
+
+BMAppMessage.newSubclassNamed("BMPostMessage").newSlots({
     content: "",
 	
     replyCount: 0,
@@ -109657,9 +109587,8 @@ window.BMPostMessage = BMAppMessage.extend().newSlots({
 
 */
 
-window.BMPostThread = BMAppMessage.extend().newSlots({
-    type: "BMPostThread",
-	
+
+BMAppMessage.newSubclassNamed("BMPostThread").newSlots({
     postMessage: null,
 }).setSlots({
     
@@ -109695,8 +109624,8 @@ window.BMPostThread = BMAppMessage.extend().newSlots({
 
 */
 
-window.BMPostMessageRowView = BrowserRow.extend().newSlots({
-    type: "BMPostMessageRowView",
+
+BrowserRow.newSubclassNamed("BMPostMessageRowView").newSlots({
     leftView: null,
     iconView: null,
     middleView: null,
@@ -109956,8 +109885,7 @@ ResourceLoader.pushRelativePaths([
 
 */
 
-window.BMGroupChat = BMApplet.extend().newSlots({
-    type: "BMGroupChat",
+BMApplet.newSubclassNamed("BMGroupChat").newSlots({
     channels: null,
     directMessages: null,
     profile: null,
@@ -109984,8 +109912,7 @@ window.BMGroupChat = BMApplet.extend().newSlots({
 
 */
 
-window.BMGroupChatRoom = BMApplet.extend().newSlots({
-    type: "BMGroupChatRoom",
+BMApplet.newSubclassNamed("BMGroupChatRoom").newSlots({
     name: "Untitled",
 }).setSlots({
 	    init: function () {
@@ -110018,8 +109945,7 @@ window.BMGroupChatRoom = BMApplet.extend().newSlots({
 
 */
 
-window.BMGroupChatChannel = BMApplet.extend().newSlots({
-    type: "BMGroupChatChannel",
+BMApplet.newSubclassNamed("BMGroupChatChannel").newSlots({
     name: "Untitled",
 }).setSlots({
     init: function () {
@@ -110052,8 +109978,7 @@ window.BMGroupChatChannel = BMApplet.extend().newSlots({
 
 */
 
-window.BMGroupConversation = BMApplet.extend().newSlots({
-    type: "BMGroupConversation",
+BMApplet.newSubclassNamed("BMGroupConversation").newSlots({
     remoteIdentity: null,
 }).setSlots({
     init: function () {
@@ -110090,8 +110015,7 @@ ResourceLoader.pushRelativePaths([
 
 */
 
-window.BMInbox = BMStorableNode.extend().newSlots({
-    type: "BMInbox",
+BMStorableNode.newSubclassNamed("BMInbox").newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
@@ -110110,8 +110034,7 @@ window.BMInbox = BMStorableNode.extend().newSlots({
 
 */
 
-window.BMSent = BMStorableNode.extend().newSlots({
-    type: "BMSent",
+BMStorableNode.newSubclassNamed("BMSent").newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
@@ -110131,8 +110054,7 @@ window.BMSent = BMStorableNode.extend().newSlots({
 
 */
 
-window.BMApps = BMStorableNode.extend().newSlots({
-    type: "BMApps",
+BMStorableNode.newSubclassNamed("BMApps").newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
@@ -110217,8 +110139,7 @@ ResourceLoader.pushRelativePaths([
 
 */
 
-window.BMBlacklists = BMStorableNode.extend().newSlots({
-    type: "BMBlacklists",
+BMStorableNode.newSubclassNamed("BMBlacklists").newSlots({
     servers: null,
     peers: null,
     contacts: null,
@@ -110247,8 +110168,7 @@ window.BMBlacklists = BMStorableNode.extend().newSlots({
 
 */
 
-window.BMBlacklistEntry = BMFieldSetNode.extend().newSlots({
-    type: "BMBlacklistEntry",
+BMFieldSetNode.newSubclassNamed("BMBlacklistEntry").newSlots({
 }).setSlots({
     init: function () {
         BMFieldSetNode.init.apply(this)		
@@ -110281,8 +110201,7 @@ window.BMBlacklistEntry = BMFieldSetNode.extend().newSlots({
     
 */
 
-window.BMBlacklist = BMStorableNode.extend().newSlots({
-    type: "BMBlacklist",
+BMStorableNode.newSubclassNamed("BMBlacklist").newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)	
@@ -110306,8 +110225,7 @@ window.BMBlacklist = BMStorableNode.extend().newSlots({
     
 */
 
-window.BMBlacklistedServers = BMBlacklist.extend().newSlots({
-    type: "BMBlacklistedServers",
+BMBlacklist.newSubclassNamed("BMBlacklistedServers").newSlots({
     ipsDict: null, 
 }).setSlots({
     init: function () {
@@ -110329,8 +110247,7 @@ window.BMBlacklistedServers = BMBlacklist.extend().newSlots({
 */
 
 
-window.BMBlacklistedPeers = BMBlacklist.extend().newSlots({
-    type: "BMBlacklistedPeers",
+BMBlacklist.newSubclassNamed("BMBlacklistedPeers").newSlots({
 }).setSlots({
     init: function () {
         BMBlacklist.init.apply(this)		
@@ -110349,8 +110266,7 @@ window.BMBlacklistedPeers = BMBlacklist.extend().newSlots({
 */
 
 
-window.BMBlacklistedContacts = BMBlacklist.extend().newSlots({
-    type: "BMBlacklistedContacts",
+BMBlacklist.newSubclassNamed("BMBlacklistedContacts").newSlots({
 }).setSlots({
     init: function () {
         BMBlacklist.init.apply(this)		
@@ -110374,8 +110290,7 @@ ResourceLoader.pushRelativePaths([
 
 */
 
-window.BMConnection = BMNode.extend().newSlots({
-    type: "BMConnection",
+BMNode.newSubclassNamed("BMConnection").newSlots({
     //log: null,
     connection: null,
     lastConnectionType: null,
@@ -110531,9 +110446,7 @@ window.BMConnection = BMNode.extend().newSlots({
 
 */
 
-window.PeerApp = App.extend().newSlots({
-    type: "PeerApp",
-
+App.newSubclassNamed("PeerApp").newSlots({
     name: "voluntary.app",
     version: [0, 5, 1, 0],
 

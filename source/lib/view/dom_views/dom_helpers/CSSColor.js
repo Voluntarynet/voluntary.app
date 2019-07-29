@@ -75,8 +75,7 @@ const max3 = function(a, b, c) {
     return (a > b) ? ((a > c) ? a : c) : ((b > c) ? b : c);
 }
 
-window.CSSColor = ideal.Proto.extend().newSlots({
-    type: "CSSColor",
+ideal.Proto.newSubclassNamed("CSSColor").newSlots({
     red: 0, // values between 0.0 and 1.0
     green: 0,
     blue: 0,

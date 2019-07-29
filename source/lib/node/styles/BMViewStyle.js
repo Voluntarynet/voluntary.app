@@ -4,10 +4,13 @@
 
     BMViewStyle
 
+    Representation of a single style state (a example of a state is "selected").
+
+    See BMViewStyles for docs.
+
 */
 
-window.BMViewStyle = ideal.Proto.extend().newSlots({
-    type: "BMViewStyle",
+ideal.Proto.newSubclassNamed("BMViewStyle").newSlots({
     name: "",
 
     // use same names as css style, nulls aren't applied
@@ -61,6 +64,4 @@ window.BMViewStyle = ideal.Proto.extend().newSlots({
 		
         return this
     },
-    
-
 })

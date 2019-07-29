@@ -6,8 +6,7 @@
 
 */
 
-window.BrowserColumn = NodeView.extend().newSlots({
-    type: "BrowserColumn",
+NodeView.newSubclassNamed("BrowserColumn").newSlots({
     rows: null,
     allowsCursorNavigation: true,
     isDebugging: true,

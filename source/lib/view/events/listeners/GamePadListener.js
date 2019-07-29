@@ -7,8 +7,7 @@
 
 */
 
-window.GamePadListener = EventSetListener.extend().newSlots({
-    type: "GamePadListener",
+EventSetListener.newSubclassNamed("GamePadListener").newSlots({
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)

@@ -33,8 +33,7 @@
 */
 
 
-window.SlideGestureRecognizer = GestureRecognizer.extend().newSlots({
-    type: "SlideGestureRecognizer",
+GestureRecognizer.newSubclassNamed("SlideGestureRecognizer").newSlots({
     isPressing: false,
 
     direction: "left", 

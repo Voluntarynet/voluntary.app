@@ -39,8 +39,7 @@
 */
 
 
-window.OrientGestureRecognizer = GestureRecognizer.extend().newSlots({
-    type: "OrientGestureRecognizer",
+GestureRecognizer.newSubclassNamed("OrientGestureRecognizer").newSlots({
 }).setSlots({
     
     init: function () {

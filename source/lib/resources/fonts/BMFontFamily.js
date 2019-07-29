@@ -7,8 +7,7 @@
 
 */
 
-window.BMFontFamily = BMNode.extend().newSlots({
-    type: "BMFontFamily",
+BMNode.newSubclassNamed("BMFontFamily").newSlots({
     name: null,
     fonts: null,
 }).setSlots({

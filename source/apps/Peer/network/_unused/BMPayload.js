@@ -48,8 +48,7 @@
 
 "use strict"
 
-window.BMPayload = ideal.Proto.extend().newSlots({
-    type: "BMPayload",
+ideal.Proto.newSubclassNamed("BMPayload").newSlots({
     data: null,
     error: null,
     senderPublicKey: null,

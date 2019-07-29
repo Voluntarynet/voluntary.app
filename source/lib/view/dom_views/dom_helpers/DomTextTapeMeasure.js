@@ -9,7 +9,7 @@
 */
 
 
-window.DomTextTapeMeasure = ideal.Proto.extend().newSlots({
+ideal.Proto.newSubclassNamed("DomTextTapeMeasure").newSlots({
     idName: "DomTextTapeMeasure",
     type: "Div",
     stylesToCopy: ["fontSize","fontStyle", "fontWeight", "fontFamily","lineHeight", "textTransform", "letterSpacing"],

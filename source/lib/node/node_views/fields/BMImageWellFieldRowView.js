@@ -6,8 +6,7 @@
 
 */
 
-window.BMImageWellFieldRowView = BMFieldRowView.extend().newSlots({
-    type: "BMImageWellFieldView",
+BMFieldRowView.newSubclassNamed("BMImageWellFieldView").newSlots({
 }).setSlots({
     init: function () {
         BMFieldRowView.init.apply(this)

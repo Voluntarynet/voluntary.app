@@ -7,8 +7,7 @@
 
 */
 
-window.AnimationListener = EventSetListener.extend().newSlots({
-    type: "AnimationListener",
+EventSetListener.newSubclassNamed("AnimationListener").newSlots({
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)

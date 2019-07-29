@@ -7,8 +7,7 @@
 */
 
 
-window.BMStunServers = BMStorableNode.extend().newSlots({
-    type: "BMStunServers",
+BMStorableNode.newSubclassNamed("BMStunServers").newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)

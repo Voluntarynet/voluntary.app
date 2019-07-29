@@ -12,8 +12,7 @@
 */
 
 
-window.BMMessage = BMFieldSetNode.extend().newSlots({
-    type: "BMMessage",
+BMFieldSetNode.newSubclassNamed("BMMessage").newSlots({
     msgType: null,
     data: null,
     msgTypes: ["addr", "inv", "object", "ping", "pong", "getData"],

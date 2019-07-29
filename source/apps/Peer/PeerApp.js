@@ -8,9 +8,7 @@
 
 */
 
-window.PeerApp = App.extend().newSlots({
-    type: "PeerApp",
-
+App.newSubclassNamed("PeerApp").newSlots({
     name: "voluntary.app",
     version: [0, 5, 1, 0],
 

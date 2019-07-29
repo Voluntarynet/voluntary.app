@@ -7,8 +7,7 @@
 
 */
 
-window.WebSocketListener = EventSetListener.extend().newSlots({
-    type: "WebSocketListener",
+EventSetListener.newSubclassNamed("WebSocketListener").newSlots({
 }).setSlots({
     /*
     init: function () {

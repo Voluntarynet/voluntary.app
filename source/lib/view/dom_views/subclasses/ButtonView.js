@@ -8,8 +8,7 @@
 
 */
 
-window.ButtonView = DomView.extend().newSlots({
-    type: "ButtonView",
+DomView.newSubclassNamed("ButtonView").newSlots({
     titleView: null,
     isEnabled: true,
 }).setSlots({

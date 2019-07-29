@@ -7,8 +7,7 @@
 
 */
 
-window.ShelfItemGroupView = NodeView.extend().newSlots({
-    type: "ShelfItemGroupView",
+NodeView.newSubclassNamed("ShelfItemGroupView").newSlots({
     isCompacted: true,
     isAlwaysSelected: false,
 }).setSlots({

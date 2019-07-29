@@ -9,8 +9,7 @@
 */
 
 
-window.GestureManager = ideal.Proto.extend().newSlots({
-    type: "GestureManager",
+ideal.Proto.newSubclassNamed("GestureManager").newSlots({
     activeGesture: null,
     isDebugging: false,
     begunGestures: null,

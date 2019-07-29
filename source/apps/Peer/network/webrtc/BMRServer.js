@@ -8,8 +8,7 @@
 
 */
 
-window.BMRServer = BMFieldSetNode.extend().newSlots({
-    type: "BMRServer",
+BMFieldSetNode.newSubclassNamed("BMRServer").newSlots({
     // host: "peers.bitmarkets.org",
     host: "127.0.0.1",
     port: 9000,

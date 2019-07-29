@@ -6,9 +6,8 @@
 
 */
 
-window.BMPostThread = BMAppMessage.extend().newSlots({
-    type: "BMPostThread",
-	
+
+BMAppMessage.newSubclassNamed("BMPostThread").newSlots({
     postMessage: null,
 }).setSlots({
     

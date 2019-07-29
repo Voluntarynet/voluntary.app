@@ -6,8 +6,7 @@
 
 */
 
-window.ShelfView = NodeView.extend().newSlots({
-    type: "ShelfView",
+NodeView.newSubclassNamed("ShelfView").newSlots({
     browser: null,
     defaultWidth: 80,
     scrollView: null,

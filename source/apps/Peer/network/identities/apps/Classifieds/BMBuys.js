@@ -6,8 +6,7 @@
 
 */
 
-window.BMBuys = BMStorableNode.extend().newSlots({
-    type: "BMBuys",
+BMStorableNode.newSubclassNamed("BMBuys").newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)

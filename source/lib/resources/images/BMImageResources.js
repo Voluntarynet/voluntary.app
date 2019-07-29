@@ -6,8 +6,7 @@
 
 */
 
-window.BMImageResources = BMNode.extend().newSlots({
-    type: "BMImageResources",
+BMNode.newSubclassNamed("BMImageResources").newSlots({
     extensions: ["png", "jpg", "jpeg", "gif", "tiff", "bmp"],
 }).setSlots({
     shared: function() {   

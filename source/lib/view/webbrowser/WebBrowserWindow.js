@@ -9,8 +9,7 @@
 
 */
 
-window.WebBrowserWindow = ideal.Proto.extend().newSlots({
-    type: "WebBrowserWindow",
+ideal.Proto.newSubclassNamed("WebBrowserWindow").newSlots({
     /*documentBody: DocumentBody.shared(),*/
 }).setSlots({
     init: function () {

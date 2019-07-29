@@ -30,8 +30,7 @@
 
 */
 
-window.DomStyledView = DomView.extend().newSlots({
-    type: "DomStyledView",
+DomView.newSubclassNamed("DomStyledView").newSlots({
     styles: null,
     isSelected: false,
 }).setSlots({

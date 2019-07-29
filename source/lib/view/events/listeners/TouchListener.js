@@ -7,8 +7,7 @@
 
 */
 
-window.TouchListener = EventSetListener.extend().newSlots({
-    type: "TouchListener",
+EventSetListener.newSubclassNamed("TouchListener").newSlots({
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)

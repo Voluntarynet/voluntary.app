@@ -12,8 +12,7 @@
     
 */
 
-window.BMStunServer = BMFieldSetNode.extend().newSlots({
-    type: "BMStunServer",
+BMFieldSetNode.newSubclassNamed("BMStunServer").newSlots({
     host: "",
     port: "", 
     //credential: null,

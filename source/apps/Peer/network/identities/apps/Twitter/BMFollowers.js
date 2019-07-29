@@ -7,8 +7,7 @@
 
 */
 
-window.BMFollowers = BMStorableNode.extend().newSlots({
-    type: "BMFollowers",
+BMStorableNode.newSubclassNamed("BMFollowers").newSlots({
 }).setSlots({
     init: function () {
         BMAppMessage.init.apply(this)

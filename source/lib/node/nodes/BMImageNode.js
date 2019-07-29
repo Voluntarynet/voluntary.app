@@ -6,8 +6,7 @@
     
 */
 
-window.BMImageNode = BMStorableNode.extend().newSlots({
-    type: "BMImageNode",
+BMStorableNode.newSubclassNamed("BMImageNode").newSlots({
     dataURL: null,
 }).setSlots({
     init: function () {

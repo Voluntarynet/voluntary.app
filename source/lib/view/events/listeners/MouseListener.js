@@ -7,8 +7,7 @@
 
 */
 
-window.MouseListener = EventSetListener.extend().newSlots({
-    type: "MouseListener",
+EventSetListener.newSubclassNamed("MouseListener").newSlots({
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)

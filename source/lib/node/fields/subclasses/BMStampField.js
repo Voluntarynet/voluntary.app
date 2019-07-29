@@ -6,9 +6,7 @@
 
 */
         
-window.BMStampField = BMField.extend().newSlots({
-    type: "BMStampField",
-	
+BMField.newSubclassNamed("BMStampField").newSlots({	
 }).setSlots({
     init: function () {
         BMField.init.apply(this)

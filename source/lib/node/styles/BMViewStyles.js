@@ -6,11 +6,15 @@
 
     Represents the set of styles for a NodeView, e.g. selected, unselected.
 
-  
+    The basic idea is that both View and Nodes can own styles.
+    Views will use their own style (or the style of some parent such as a row using a column rowStyle),
+    unless their node specifies a style, which overrides the view's own style.
+
+    See DomStyledView and BrowserRow to understand how Views lookup/access/change their style state.
+
     TODO: can we make view styles nodes? recursion?
 
-
-    NOTE: 
+    rowStyles: 
     
     Because rows need to be able to use the background and select colors of their columns,
 
@@ -20,12 +24,11 @@
         which asks the node, then itself, then the columns for rowStyles()
         and uses the first non-null result .
 
-        
+
 */
 
 
-window.BMViewStyles = ideal.Proto.extend().newSlots({
-    type: "BMViewStyles",
+ideal.Proto.newSubclassNamed("BMViewStyles").newSlots({
     name: "",
     unselected: null,
     selected: null,

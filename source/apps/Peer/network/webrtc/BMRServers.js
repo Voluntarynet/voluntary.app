@@ -6,8 +6,7 @@
 
 */
 
-window.BMRServers = BMStorableNode.extend().newSlots({
-    type: "BMRServers",
+BMStorableNode.newSubclassNamed("BMRServers").newSlots({
     maxConnections: 8,
     isDebugging: false,
 }).setSlots({

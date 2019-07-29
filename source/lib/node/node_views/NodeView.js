@@ -6,8 +6,7 @@
 
 */
 
-window.NodeView = DomStyledView.extend().newSlots({
-    type: "NodeView",
+DomStyledView.newSubclassNamed("NodeView").newSlots({
     node: null,
     //ownsView: true,
     overrideSubviewProto: null,

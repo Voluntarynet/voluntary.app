@@ -8,8 +8,7 @@
 
 */
 
-window.ThreeJSView = DomView.extend().newSlots({
-    type: "ThreeJSView",
+DomView.newSubclassNamed("ThreeJSView").newSlots({
     scene: null,
     camera: null,
     renderer: null,

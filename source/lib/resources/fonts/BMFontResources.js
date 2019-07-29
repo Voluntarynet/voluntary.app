@@ -6,8 +6,7 @@
 
 */
 
-window.BMFontResources = BMNode.extend().newSlots({
-    type: "BMFontResources",
+BMNode.newSubclassNamed("BMFontResources").newSlots({
     extensions: ["ttf", "woff", "woff2"],
 }).setSlots({
     shared: function() {   

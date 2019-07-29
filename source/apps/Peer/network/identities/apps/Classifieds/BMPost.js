@@ -6,8 +6,8 @@
 
 */
 
-window.BMPost = BMStorableNode.extend().newSlots({
-    type: "BMPost",
+
+BMStorableNode.newSubclassNamed("BMPost").newSlots({
     price: null,
     title: null,
     description: null,

@@ -5,7 +5,7 @@
     BMMessages
 
 
-    BMGetDataItem = BMNode.extend().newSlots({
+    BMNode.newSubclassNamed("BMGetDataItem").newSlots({
         type: "BMGetDataItem",
         hash: null,
         fromMsg: null,
@@ -14,8 +14,7 @@
     
 */
 
-window.BMMessages = BMStorableNode.extend().newSlots({
-    type: "BMMessages",
+BMStorableNode.newSubclassNamed("BMMessages").newSlots({
     changeNote: null,
     network: null,
     // TODO: deal with timeouts

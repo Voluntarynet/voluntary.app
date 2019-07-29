@@ -6,8 +6,7 @@
 
 */
 
-window.BMContactLinks = BMStorableNode.extend().newSlots({
-    type: "BMContactLinks",
+BMStorableNode.newSubclassNamed("BMContactLinks").newSlots({
     linkProto: null,
 }).setSlots({
     init: function () {

@@ -13,8 +13,7 @@
 
 */
 
-window.ScreenRightEdgePanGestureRecognizer = ScreenEdgePanGestureRecognizer.extend().newSlots({
-    type: "ScreenRightEdgePanGestureRecognizer",
+ScreenEdgePanGestureRecognizer.newSubclassNamed("ScreenRightEdgePanGestureRecognizer").newSlots({
 }).setSlots({
     init: function () {
         ScreenEdgePanGestureRecognizer.init.apply(this)

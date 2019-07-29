@@ -6,8 +6,7 @@
 
 */
 
-window.BMServerConnection = BMNode.extend().newSlots({
-    type: "BMServerConnection",
+BMNode.newSubclassNamed("BMServerConnection").newSlots({
     server: null,
     serverConn: null,
     webSocketListener: null,

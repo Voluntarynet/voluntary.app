@@ -6,8 +6,7 @@
 
 */
 
-window.ImageWellView = NodeView.extend().newSlots({
-    type: "ImageWellView",
+NodeView.newSubclassNamed("ImageWellView").newSlots({
     imageView: null,
     isEditable: true,
     maxImageCount: null,

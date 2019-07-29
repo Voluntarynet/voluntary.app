@@ -6,8 +6,7 @@
 
 */
 
-window.BMGroupChat = BMApplet.extend().newSlots({
-    type: "BMGroupChat",
+BMApplet.newSubclassNamed("BMGroupChat").newSlots({
     channels: null,
     directMessages: null,
     profile: null,

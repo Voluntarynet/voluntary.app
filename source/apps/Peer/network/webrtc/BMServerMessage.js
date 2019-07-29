@@ -6,8 +6,7 @@
 
 */
 
-window.BMServerMessage = ideal.Proto.extend().newSlots({
-    type: "BMServerMessage",
+ideal.Proto.newSubclassNamed("BMServerMessage").newSlots({
     count: 0,
     serverConnection: null,
     id: null,

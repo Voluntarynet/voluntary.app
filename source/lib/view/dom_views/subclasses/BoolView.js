@@ -7,8 +7,7 @@
 
 */
 
-window.BoolView = DomStyledView.extend().newSlots({
-    type: "BoolView",
+DomStyledView.newSubclassNamed("BoolView").newSlots({
     isSelected: false,
     selectedColor: null,
     unselectedColor: null,

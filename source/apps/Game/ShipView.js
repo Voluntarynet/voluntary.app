@@ -7,8 +7,7 @@
 */
 
 
-window.ShipView = ThingView.extend().newSlots({
-    type: "ShipView",
+ThingView.newSubclassNamed("ShipView").newSlots({
 }).setSlots({
     init: function () {
         ThingView.init.apply(this)

@@ -6,8 +6,7 @@
 
 */
 
-window.BMTheme = BMStorableNode.extend().newSlots({
-    type: "BMTheme",
+BMStorableNode.newSubclassNamed("BMTheme").newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)

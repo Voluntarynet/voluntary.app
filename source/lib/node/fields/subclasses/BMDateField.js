@@ -6,8 +6,7 @@
 
 */
         
-window.BMDateField = BMField.extend().newSlots({
-    type: "BMDateField",
+BMField.newSubclassNamed("BMDateField").newSlots({
     unsetVisibleValue: "unset",
 }).setSlots({
     init: function () {

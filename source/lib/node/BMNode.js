@@ -6,9 +6,7 @@
 
 */
 
-window.BMNode = ideal.Proto.extend().newSlots({
-    type: "BMNode",
-        
+ideal.Proto.newSubclassNamed("BMNode").newSlots({        
     // row view summary
     title: null,
     subtitle: null,

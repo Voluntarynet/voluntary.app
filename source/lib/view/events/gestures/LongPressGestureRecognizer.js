@@ -22,8 +22,7 @@
 
 */
 
-window.LongPressGestureRecognizer = GestureRecognizer.extend().newSlots({
-    type: "LongPressGestureRecognizer",
+GestureRecognizer.newSubclassNamed("LongPressGestureRecognizer").newSlots({
     timePeriod: 500, // miliseconds
     timeoutId: null, // private
 }).setSlots({

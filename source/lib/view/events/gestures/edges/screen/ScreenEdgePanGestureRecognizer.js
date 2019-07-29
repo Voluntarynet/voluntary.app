@@ -26,8 +26,7 @@
         
 */
 
-window.ScreenEdgePanGestureRecognizer = PanGestureRecognizer.extend().newSlots({
-    type: "ScreenEdgePanGestureRecognizer",
+PanGestureRecognizer.newSubclassNamed("ScreenEdgePanGestureRecognizer").newSlots({
     edgeName: null,
     maxStartDistance: 15,
 }).setSlots({

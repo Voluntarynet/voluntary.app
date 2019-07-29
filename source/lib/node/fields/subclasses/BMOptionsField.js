@@ -6,8 +6,7 @@
     
 */
 
-window.BMOptionsField = BMField.extend().newSlots({
-    type: "BMOptionsField",
+BMField.newSubclassNamed("BMOptionsField").newSlots({
     validValues: [],
     options: [],
     validValuesMethod: null,

@@ -44,8 +44,26 @@ Proto.setSlots({
     _childProtos: [],
     _allDescendantProtos: null,
     
+    newSubclassNamed: function(name) {
+        const newClass = this.extend()
+        newClass._type = name
+        newClass._super = this
+        window[name] = newClass
+
+        const Documentation = window["Documentation"]
+        if (Documentation) {
+            Documentation.shared().registerClass(newClass)
+        }
+
+        return newClass
+    },
+
+    super: function() {
+        return this._super
+    },
+    
     extend: function () {
-        let obj = this.cloneWithoutInit()
+        const obj = this.cloneWithoutInit()
         obj.registerThisProto()
         obj._parentProto = this
         obj._childProtos = [] // need to create these slots so they won't be inherited

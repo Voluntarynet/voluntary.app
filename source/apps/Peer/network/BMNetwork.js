@@ -6,8 +6,7 @@
 
 */
 
-window.BMNetwork = BMFieldSetNode.extend().newSlots({
-    type: "BMNetwork",
+BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
     servers: null,
     stunServers: null,
     messages: null,

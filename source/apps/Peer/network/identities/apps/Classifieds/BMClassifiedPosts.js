@@ -6,8 +6,7 @@
 
 */
 
-window.BMClassifiedPosts = BMStorableNode.extend().newSlots({
-    type: "BMClassifiedPosts",
+BMStorableNode.newSubclassNamed("BMClassifiedPosts").newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)

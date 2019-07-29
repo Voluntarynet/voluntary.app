@@ -10,27 +10,27 @@
                     
     example use in subclass 
 
-    BMCustomFormNode = BMFieldSetNode.extend().newSlots({
-        type: "BMCustomFormNode",
+    BMFieldSetNode.newSubclassNamed("BMCustomFormNode").newSlots({
     }).setSlots({
     
-    init: function () {
-        BMFieldSetNode.init.apply(this)
+        init: function () {
+            BMFieldSetNode.init.apply(this)
 
-        this.addFieldNamed("from")
-        this.addFieldNamed("to")
-        this.addFieldNamed("subject")
-        this.addFieldNamed("body").setNodeRowMinHeight(-1)
+            this.addFieldNamed("from")
+            this.addFieldNamed("to")
+            this.addFieldNamed("subject")
+            this.addFieldNamed("body").setNodeRowMinHeight(-1)
 
-        this.setActions(["send"])
-        this.setCanDelete(true)
-    },
+            this.setActions(["send"])
+            this.setCanDelete(true)
+        },
+
+        ...
 
 */  
         
 
-window.BMFieldSetNode = BMStorableNode.extend().newSlots({
-    type: "BMFieldSetNode",
+BMStorableNode.newSubclassNamed("BMFieldSetNode").newSlots({
     status: "",
     isEditable: true,
 }).setSlots({

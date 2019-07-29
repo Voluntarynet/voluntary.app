@@ -6,8 +6,7 @@
 
 */
 
-window.BMRegions = BMRegion.extend().newSlots({
-    type: "BMRegions",
+BMRegion.newSubclassNamed("BMRegions").newSlots({
 }).setSlots({
     init: function () {
         BMRegion.init.apply(this)

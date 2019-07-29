@@ -6,8 +6,7 @@
 
 */
 
-window.BMRemotePeers = BMNode.extend().newSlots({
-    type: "BMRemotePeers",
+BMNode.newSubclassNamed("BMRemotePeers").newSlots({
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)

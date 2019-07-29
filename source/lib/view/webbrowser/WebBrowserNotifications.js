@@ -19,8 +19,7 @@
 
 */
 
-window.WebBrowserNotifications = ideal.Proto.extend().newSlots({
-    type: "WebBrowserNotifications",
+ideal.Proto.newSubclassNamed("WebBrowserNotifications").newSlots({
     permissionRequestResult: null,
     waitingNote: null,
 }).setSlots({
@@ -96,8 +95,7 @@ window.WebBrowserNotifications = ideal.Proto.extend().newSlots({
 
 // --------------------------------------
 
-window.WebBrowserNotification = ideal.Proto.extend().newSlots({
-    type: "WebBrowserNotification",
+ideal.Proto.newSubclassNamed("WebBrowserNotification").newSlots({
     title: "",
     body: null,
     icon: null, // a url to an image

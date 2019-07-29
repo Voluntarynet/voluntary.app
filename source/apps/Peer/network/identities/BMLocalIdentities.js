@@ -7,8 +7,7 @@
     
 */
 
-window.BMLocalIdentities = BMStorableNode.extend().newSlots({
-    type: "BMLocalIdentities",
+BMStorableNode.newSubclassNamed("BMLocalIdentities").newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)

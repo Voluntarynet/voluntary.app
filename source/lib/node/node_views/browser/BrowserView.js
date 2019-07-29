@@ -6,8 +6,7 @@
     
 */
 
-window.BrowserView = NodeView.extend().newSlots({
-    type: "BrowserView",
+NodeView.newSubclassNamed("BrowserView").newSlots({
     columns: null,
     isSingleColumn: false,
     defaultHeader: null,

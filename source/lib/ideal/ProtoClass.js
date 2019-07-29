@@ -54,6 +54,11 @@ class ProtoClass {
         if (this.allClasses().indexOf(this) === -1) {
             this.allClasses().push(this)
         }
+
+        const Documentation = window["Documentation"]
+        if (Documentation) {
+            Documentation.shared().registerClass(this)
+        }
         return this
     }
 

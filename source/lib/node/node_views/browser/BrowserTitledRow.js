@@ -6,8 +6,7 @@
     
 */
 
-window.BrowserTitledRow = BrowserRow.extend().newSlots({
-    type: "BrowserTitledRow",
+BrowserRow.newSubclassNamed("BrowserTitledRow").newSlots({
     titleView: null,
     subtitleView: null,
     noteView: null,

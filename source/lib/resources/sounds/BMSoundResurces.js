@@ -6,8 +6,7 @@
 
 */
 
-window.BMSoundResurces = BMNode.extend().newSlots({
-    type: "BMSoundResurces",
+BMNode.newSubclassNamed("BMSoundResurces").newSlots({
     extensions: ["wav", "mp3", "m4a", "mp4", "oga", "ogg"],
 }).setSlots({
     shared: function() {   

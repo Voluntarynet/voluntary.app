@@ -8,8 +8,7 @@
     
 */
 
-window.HashCommand = ideal.Proto.extend().newSlots({
-    type: "HashCommand",
+ideal.Proto.newSubclassNamed("HashCommand").newSlots({
     target: null,
     method: null,
     arguments: [],

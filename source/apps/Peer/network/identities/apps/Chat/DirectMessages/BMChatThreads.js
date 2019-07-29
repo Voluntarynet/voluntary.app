@@ -6,8 +6,7 @@
 
 */
 
-window.BMChatThreads = BMContactLinks.extend().newSlots({
-    type: "BMChatThreads",
+BMContactLinks.newSubclassNamed("BMChatThreads").newSlots({
 }).setSlots({
     init: function () {
         BMContactLinks.init.apply(this)

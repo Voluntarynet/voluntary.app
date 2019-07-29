@@ -7,8 +7,7 @@
     
 */  
         
-window.GameNode = BMStorableNode.extend().newSlots({
-    type: "GameNode",
+BMStorableNode.newSubclassNamed("GameNode").newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)

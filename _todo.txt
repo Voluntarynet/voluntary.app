@@ -1,4 +1,22 @@
 
+MIRROR
+Do we need inheritance?
+
+View
+
+- nodeMirror() { 
+    const node = this._node
+    if (node && node.nodeMirror) {
+        return node.nodeMirror()
+    }
+    return node
+}
+    
+
+nodeMirror()
+
+- select BMFieldViewRow when clicking on it
+
 - make BrowserRow note view vertically centered
 
 nodeRowLink -> nodeRowLinkMethods?

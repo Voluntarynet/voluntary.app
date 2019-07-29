@@ -7,8 +7,7 @@
 
 */
 
-window.DocumentListener = EventSetListener.extend().newSlots({
-    type: "DocumentListener",
+EventSetListener.newSubclassNamed("DocumentListener").newSlots({
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)

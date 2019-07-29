@@ -16,8 +16,7 @@
 
 */
 
-window.EventSetListener = ideal.Proto.extend().newSlots({
-    type: "EventSetListener",
+ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
     listenTarget: null,
     delegate: null,
     isListening: false,

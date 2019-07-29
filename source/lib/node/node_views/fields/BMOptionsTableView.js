@@ -6,8 +6,7 @@
 
 */
 
-window.BMOptionsTableView = DomView.extend().newSlots({
-    type: "BMOptionsTableView",
+DomView.newSubclassNamed("BMOptionsTableView").newSlots({
     validValues: null,
 }).setSlots({
     init: function () {

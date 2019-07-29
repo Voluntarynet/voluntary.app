@@ -8,9 +8,8 @@
 
 */
 
-window.BMPostDraftRowView = BrowserRow.extend().newSlots({
-    type: "BMPostDraftRowView",
-    
+
+BrowserRow.newSubclassNamed("BMPostDraftRowView").newSlots({    
     topView: null,
     leftView: null,
     iconView: null,

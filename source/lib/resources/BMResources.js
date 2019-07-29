@@ -6,8 +6,7 @@
 
 */
 
-window.BMResources = BMStorableNode.extend().newSlots({
-    type: "BMResources",
+BMStorableNode.newSubclassNamed("BMResources").newSlots({
     themes: null,
     fonts: null,
     sounds: null,

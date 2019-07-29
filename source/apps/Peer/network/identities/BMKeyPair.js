@@ -11,8 +11,7 @@ var Buffer = bitcore.deps.Buffer;
     
 */
 
-window.BMKeyPair = BMStorableNode.extend().newSlots({
-    type: "BMKeyPair",
+BMStorableNode.newSubclassNamed("BMKeyPair").newSlots({
     name: "",
     privateKeyString: "",
     hasPrivateKey: true,

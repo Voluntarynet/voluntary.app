@@ -6,8 +6,7 @@
 
 */
 
-window.ShelfItemView = NodeView.extend().newSlots({
-    type: "ShelfItemView",
+NodeView.newSubclassNamed("ShelfItemView").newSlots({
     isSelected: false,
     isSelectable: true,
     restCloseButtonOpacity: 0.4,

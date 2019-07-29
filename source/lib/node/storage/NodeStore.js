@@ -60,7 +60,7 @@
             
             // need to define a root
             
-                let root = BMStorableNode.clone()
+                const root = BMStorableNode.clone()
                 store.setRootObject(root)
                 store.load()
             
@@ -68,15 +68,16 @@
             // or call scheduleSyncToStore() on it, it will be marked as needing to be persisted in the
             // next event loop
             
-                let test = BMNode.clone()
-                root.this.addSubnode(test) // this marks root as dirty
-                test.this.addSubnode(foo) // this marks test as dirty
+                const test = BMNode.clone()
+                root.addSubnode(test) // this marks root as dirty
+                test.addSubnode(foo) // this marks test as dirty
+                // next event loop will commit changes for root and test
                         
             // for singleton objects, set their pid to a unique name, e.g.
             
                 servers.setPid("_servers")
             
-            // when ready to store
+            // to force an immediate store
             
                 store.store()
             
@@ -88,14 +89,12 @@
         object records to make sure they don't use up too much space. To do this call:
     
             pdb.collect()
+
  
 */
 
-window.NodeStore = ideal.Proto.extend().newSlots({
-    type: "NodeStore",
+ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     name: "defaultStoreName",
-    //folderName: "NodeStore",
-    //folder: null,
 
     dirtyObjects: null,
     activeObjectsDict: null,

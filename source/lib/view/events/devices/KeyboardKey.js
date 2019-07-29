@@ -6,8 +6,7 @@
 
 */
 
-window.KeyboardKey = ideal.Proto.extend().newSlots({
-    type: "KeyboardKey",
+ideal.Proto.newSubclassNamed("KeyboardKey").newSlots({
     isDown: false,
     code: null,
     name: "",

@@ -32,8 +32,7 @@ window.Event_pushCachedPoint = function(event, point) {
 
 // ----------------
 
-window.EventPoint = window.Point.extend().newSlots({
-    type: "EventPoint",
+window.Point.newSubclassNamed("EventPoint").newSlots({
     id: null,
     state: null,
     target: null, 

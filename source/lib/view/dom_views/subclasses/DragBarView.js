@@ -6,8 +6,7 @@
 
 */
 
-window.DragBarView = DomView.extend().newSlots({
-    type: "DragBarView",
+DomView.newSubclassNamed("DragBarView").newSlots({
     isEnabled: true,
     isHighlighted: false,
     isDragging: false,

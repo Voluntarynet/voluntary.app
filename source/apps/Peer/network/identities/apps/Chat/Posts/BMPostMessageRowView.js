@@ -6,8 +6,8 @@
 
 */
 
-window.BMPostMessageRowView = BrowserRow.extend().newSlots({
-    type: "BMPostMessageRowView",
+
+BrowserRow.newSubclassNamed("BMPostMessageRowView").newSlots({
     leftView: null,
     iconView: null,
     middleView: null,

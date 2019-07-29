@@ -8,8 +8,7 @@
 
 var bitcore = require("bitcore-lib")
 
-window.BMRemoteIdentity = BMStorableNode.extend().newSlots({
-    type: "BMRemoteIdentity",
+BMStorableNode.newSubclassNamed("BMRemoteIdentity").newSlots({
     name: "untitled",
     publicKeyString: "",
     hasPrivateKey: false,

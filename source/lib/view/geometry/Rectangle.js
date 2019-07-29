@@ -17,8 +17,7 @@
 
 */
 
-window.Rectangle = ideal.Proto.extend().newSlots({
-    type: "Rectangle",
+ideal.Proto.newSubclassNamed("Rectangle").newSlots({
     origin: null,
     size: null,
 }).setSlots({

@@ -22,8 +22,7 @@
 */
 
 
-window.PinchGestureRecognizer = OrientGestureRecognizer.extend().newSlots({
-    type: "PinchGestureRecognizer",
+OrientGestureRecognizer.newSubclassNamed("PinchGestureRecognizer").newSlots({
 }).setSlots({
     init: function () {
         OrientGestureRecognizer.init.apply(this)

@@ -6,8 +6,7 @@
 
 */
 
-window.WebBrowserScreen = ideal.Proto.extend().newSlots({
-    type: "WebBrowserScreen",
+ideal.Proto.newSubclassNamed("WebBrowserScreen").newSlots({
 }).setSlots({
     init: function () {
         throw new Error("this class is meant to be used as singleton, for now")

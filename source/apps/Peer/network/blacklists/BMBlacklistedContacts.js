@@ -7,8 +7,7 @@
 */
 
 
-window.BMBlacklistedContacts = BMBlacklist.extend().newSlots({
-    type: "BMBlacklistedContacts",
+BMBlacklist.newSubclassNamed("BMBlacklistedContacts").newSlots({
 }).setSlots({
     init: function () {
         BMBlacklist.init.apply(this)		

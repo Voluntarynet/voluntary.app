@@ -7,8 +7,7 @@
 
 */
 
-window.WebBrowserNotification = ideal.Proto.extend().newSlots({
-    type: "WebBrowserNotification",
+ideal.Proto.newSubclassNamed("WebBrowserNotification").newSlots({
     title: "",
     body: null,
     icon: null, // a url to an image

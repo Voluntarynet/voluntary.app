@@ -7,8 +7,7 @@
 
 */
 
-window.BMChatMessage = BMAppMessage.extend().newSlots({
-    type: "BMChatMessage",
+BMAppMessage.newSubclassNamed("BMChatMessage").newSlots({
     content: "",
 }).setSlots({
     

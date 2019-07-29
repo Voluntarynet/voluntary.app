@@ -8,8 +8,7 @@
     
 */
 
-window.BMDataStoreRecord = BMFieldSetNode.extend().newSlots({
-    type: "BMDataStoreRecord",
+BMFieldSetNode.newSubclassNamed("BMDataStoreRecord").newSlots({
     key: null,
     didSetupFields: false,
 }).setSlots({

@@ -7,8 +7,7 @@
 */
 
 
-window.BMOptionsFieldRowView = BMFieldRowView.extend().newSlots({
-    type: "BMOptionsFieldRowView",
+BMFieldRowView.newSubclassNamed("BMOptionsFieldRowView").newSlots({
     optionsView: null,
 }).setSlots({
     init: function () {
@@ -134,8 +133,7 @@ window.BMOptionsFieldRowView = BMFieldRowView.extend().newSlots({
 })
 
 /*
-BMOptionsTableRowView = NodeView.extend().newSlots({
-    type: "BMOptionsTableRowView",
+NodeView.newSubclassNamed("BMOptionsTableRowView").newSlots({
 }).setSlots({
 })
 */

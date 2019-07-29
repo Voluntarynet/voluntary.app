@@ -9,9 +9,7 @@
     
 */
         
-window.BMField = BMStorableNode.extend().newSlots({
-    type: "BMField",
-    
+BMStorableNode.newSubclassNamed("BMField").newSlots({
     isVisible: true,
     isEnabled: true,
 

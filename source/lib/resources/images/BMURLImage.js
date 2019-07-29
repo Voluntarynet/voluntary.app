@@ -6,8 +6,7 @@
 
 */
 
-window.BMURLImage = BMNode.extend().newSlots({
-    type: "BMURLImage",
+BMNode.newSubclassNamed("BMURLImage").newSlots({
     path: "",
     dataURL: "",
     isDebugging: false,

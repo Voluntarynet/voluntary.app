@@ -8,8 +8,7 @@
 
 */
         
-window.BMCreatorNode = BMStorableNode.extend().newSlots({
-    type: "BMCreatorNode",
+BMStorableNode.newSubclassNamed("BMCreatorNode").newSlots({
 }).setSlots({
 
 }).setSlots({

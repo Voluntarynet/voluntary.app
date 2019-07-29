@@ -6,8 +6,8 @@
 
 */
 
-window.BMChannel = BMStorableNode.extend().newSlots({
-    type: "BMChannel",
+
+BMStorableNode.newSubclassNamed("BMChannel").newSlots({
     name: "",
     isDebugging: false,
 }).setSlots({

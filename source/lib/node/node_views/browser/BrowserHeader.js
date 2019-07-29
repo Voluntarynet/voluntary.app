@@ -6,8 +6,7 @@
 
 */
 
-window.BrowserHeader = NodeView.extend().newSlots({
-    type: "BrowserHeader",
+NodeView.newSubclassNamed("BrowserHeader").newSlots({
     backArrowView: null,
     titleView: null,
     doesShowBackArrow: false,

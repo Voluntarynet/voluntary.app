@@ -52,9 +52,7 @@
 */
 
 
-window.GestureRecognizer = ideal.Proto.extend().newSlots({
-    type: "GestureRecognizer",
-    
+ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({    
     viewTarget: null,
     shouldRemoveOnComplete: false,
 

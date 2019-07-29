@@ -8,9 +8,7 @@
 
 */
 
-window.GameApp = App.extend().newSlots({
-    type: "GameApp",
-
+App.newSubclassNamed("GameApp").newSlots({
     name: "game test",
     version: [0, 0, 0, 0],
 

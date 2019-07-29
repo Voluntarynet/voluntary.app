@@ -6,8 +6,7 @@
 
 */
 
-window.BMChat = BMApplet.extend().newSlots({
-    type: "BMChat",
+BMApplet.newSubclassNamed("BMChat").newSlots({
     //feedPosts: null,
     //myPosts: null,
     // threads: null,

@@ -9,8 +9,8 @@
 	If can also propogate subnode count sum updates.
 */
 
-window.BMRegion = BMNode.extend().newSlots({
-    type: "BMRegion",
+
+BMNode.newSubclassNamed("BMRegion").newSlots({
     lazyChildrenDict: null,
     allowsSubregions: true,
 }).setSlots({

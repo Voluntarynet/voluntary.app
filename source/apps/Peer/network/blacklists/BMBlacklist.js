@@ -6,8 +6,7 @@
     
 */
 
-window.BMBlacklist = BMStorableNode.extend().newSlots({
-    type: "BMBlacklist",
+BMStorableNode.newSubclassNamed("BMBlacklist").newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)	

@@ -7,9 +7,7 @@
 */
 
 
-//window.BMThemeResources = BMStorableNode.extend().newSlots({
-window.BMThemeResources = BMNode.extend().newSlots({
-    type: "BMThemeResources",
+window.BMThemeResources = BMNode.newSubclassNamed("BMThemeResources").newSlots({
 }).setSlots({
     shared: function() {   
         return this.sharedInstanceForClass(BMThemeResources)

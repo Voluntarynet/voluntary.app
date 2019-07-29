@@ -6,8 +6,7 @@
 
 */
 
-window.PanelView = DomView.extend().newSlots({
-    type: "PanelView",
+DomView.newSubclassNamed("PanelView").newSlots({
     titleView: null,
     subtitleView: null,
     button1: null,

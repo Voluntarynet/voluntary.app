@@ -8,8 +8,7 @@
 
 */
 
-window.WebDocument = ideal.Proto.extend().newSlots({
-    type: "WebDocument",
+ideal.Proto.newSubclassNamed("WebDocument").newSlots({
 }).setSlots({
     init: function () {
         ideal.Proto.init.apply(this)

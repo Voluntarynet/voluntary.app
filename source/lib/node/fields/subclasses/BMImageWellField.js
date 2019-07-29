@@ -6,8 +6,7 @@
 
 */
         
-window.BMImageWellField = BMField.extend().newSlots({
-    type: "BMImageWellField",
+BMField.newSubclassNamed("BMImageWellField").newSlots({
     onlyShowsKeyWhenEmpty: true,
     maxImageCount: 1,
     isEditable: true,

@@ -6,9 +6,7 @@
 
 */
 
-window.BMIdentityField = BMField.extend().newSlots({
-    type: "BMIdentityField",
-	
+BMField.newSubclassNamed("BMIdentityField").newSlots({	
 }).setSlots({
     init: function () {
         BMField.init.apply(this)

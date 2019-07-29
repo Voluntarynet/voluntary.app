@@ -7,8 +7,7 @@
 
 */
 
-window.BMTwitterMessage = BMAppMessage.extend().newSlots({
-    type: "BMTwitterMessage",
+BMAppMessage.newSubclassNamed("BMTwitterMessage").newSlots({
 }).setSlots({
     init: function () {
         BMAppMessage.init.apply(this)

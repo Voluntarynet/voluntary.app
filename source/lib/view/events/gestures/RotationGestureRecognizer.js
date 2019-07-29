@@ -23,8 +23,7 @@
 */
 
 
-window.RotationGestureRecognizer = OrientGestureRecognizer.extend().newSlots({
-    type: "RotationGestureRecognizer",
+OrientGestureRecognizer.newSubclassNamed("RotationGestureRecognizer").newSlots({
     minRotatationInDegreesToBegin: 1,
 }).setSlots({
     init: function () {

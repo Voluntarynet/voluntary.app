@@ -7,8 +7,7 @@
 
 */
 
-window.BMChatThread = BMStorableNode.extend().newSlots({
-    type: "BMChatThread",
+BMStorableNode.newSubclassNamed("BMChatThread").newSlots({
     remoteIdentity: null,
 }).setSlots({
     

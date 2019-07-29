@@ -6,8 +6,7 @@
 
 */
 
-window.BMActionNodeRowView = BrowserRow.extend().newSlots({
-    type: "BMActionNodeRowView",
+BrowserRow.newSubclassNamed("BMActionNodeRowView").newSlots({
     buttonView: null,
 }).setSlots({
     init: function () {

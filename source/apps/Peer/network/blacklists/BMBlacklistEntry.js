@@ -7,8 +7,7 @@
 
 */
 
-window.BMBlacklistEntry = BMFieldSetNode.extend().newSlots({
-    type: "BMBlacklistEntry",
+BMFieldSetNode.newSubclassNamed("BMBlacklistEntry").newSlots({
 }).setSlots({
     init: function () {
         BMFieldSetNode.init.apply(this)		

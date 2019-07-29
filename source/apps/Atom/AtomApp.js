@@ -8,7 +8,7 @@
 
 */
 
-window.AtomApp = App.extend().newSlots({
+App.newSubclassNamed("AtomApp").newSlots({
     type: "AtomApp",
 
     name: "atom",

@@ -7,8 +7,7 @@
 
 */
 
-window.DragListener = EventSetListener.extend().newSlots({
-    type: "DragListener",
+EventSetListener.newSubclassNamed("DragListener").newSlots({
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)

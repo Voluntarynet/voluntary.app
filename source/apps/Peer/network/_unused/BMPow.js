@@ -21,8 +21,7 @@
 */
 
 
-window.BMPow = ideal.Proto.extend().newSlots({
-    type: "BMPow",
+ideal.Proto.newSubclassNamed("BMPow").newSlots({
     targetDifficulty: 15,
     hash: null, // hex string
     //pow: null, // hex string

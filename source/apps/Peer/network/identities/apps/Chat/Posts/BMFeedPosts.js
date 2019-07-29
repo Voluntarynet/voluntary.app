@@ -6,8 +6,7 @@
 
 */
 
-window.BMFeedPosts = BMStorableNode.extend().newSlots({
-    type: "BMFeedPosts",
+BMStorableNode.newSubclassNamed("BMFeedPosts").newSlots({
     hasRead: true,
 }).setSlots({
     init: function () {

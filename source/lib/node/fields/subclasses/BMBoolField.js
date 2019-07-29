@@ -7,8 +7,7 @@
     
 */
 
-window.BMBoolField = BMField.extend().newSlots({
-    type: "BMBoolField",
+BMField.newSubclassNamed("BMBoolField").newSlots({
     unsetVisibleValue: "unset",
 }).setSlots({
     init: function () {

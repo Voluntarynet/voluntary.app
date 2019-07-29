@@ -6,8 +6,7 @@
     
 */
 
-window.BMProfile = BMFieldSetNode.extend().newSlots({
-    type: "BMProfile",
+BMFieldSetNode.newSubclassNamed("BMProfile").newSlots({
     avatars: [],
 }).setSlots({
     init: function () {
@@ -16,7 +15,7 @@ window.BMProfile = BMFieldSetNode.extend().newSlots({
  		this.setShouldStore(true)
         this.setTitle("profile")
         
-        this.addStoredField(BMImageWellField.clone().setValueMethod("avatars").setKey("drop avatar image here").setMaxImageCount(1)).setValueIsEditable(true)
+        this.addStoredField(BMImageWellField.clone().setValueMethod("avatars").setKey("avatar image").setMaxImageCount(1)).setValueIsEditable(true)
 		
         this.addFieldNamed("name").setValueMethod("name").setValueIsEditable(true)
         this.addStoredField(BMIdentityField.clone().setValueMethod("publicKeyString").setKey("public key").setValueIsEditable(true))

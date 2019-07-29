@@ -6,8 +6,7 @@
 
 */
 
-window.GameView = DomView.extend().newSlots({
-    type: "GameView",
+DomView.newSubclassNamed("GameView").newSlots({
     threejsView: null,
     things: null,
     ship1: null,

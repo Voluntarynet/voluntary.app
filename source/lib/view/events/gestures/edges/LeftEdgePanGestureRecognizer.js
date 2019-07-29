@@ -13,8 +13,7 @@
 
 */
 
-window.LeftEdgePanGestureRecognizer = EdgePanGestureRecognizer.extend().newSlots({
-    type: "LeftEdgePanGestureRecognizer",
+EdgePanGestureRecognizer.newSubclassNamed("LeftEdgePanGestureRecognizer").newSlots({
 }).setSlots({
     init: function () {
         EdgePanGestureRecognizer.init.apply(this)

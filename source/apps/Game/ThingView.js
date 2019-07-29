@@ -7,8 +7,7 @@
 */
 
 
-window.ThingView = DomView.extend().newSlots({
-    type: "ThingView",
+DomView.newSubclassNamed("ThingView").newSlots({
     transform: null,
     transformSpeed: null,
     mass: 1,

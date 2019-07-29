@@ -6,8 +6,7 @@
 
 */
 
-window.BMAddrMessage = BMMessage.extend().newSlots({
-    type: "BMAddrMessage",
+BMMessage.newSubclassNamed("BMAddrMessage").newSlots({
 }).setSlots({
     init: function () {
         BMMessage.init.apply(this)

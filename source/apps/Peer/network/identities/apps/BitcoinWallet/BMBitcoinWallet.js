@@ -6,8 +6,7 @@
 
 */
 
-window.BMBitcoinWallet = BMApplet.extend().newSlots({
-    type: "BMBitcoinWallet",
+BMApplet.newSubclassNamed("BMBitcoinWallet").newSlots({
 }).setSlots({
 
     init: function () {

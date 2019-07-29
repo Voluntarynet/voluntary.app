@@ -6,8 +6,7 @@
 
 */
 
-window.ShelfFooterView = DomView.extend().newSlots({
-    type: "ShelfFooterView",
+DomView.newSubclassNamed("ShelfFooterView").newSlots({
 }).setSlots({
     init: function () {
         DomView.init.apply(this)

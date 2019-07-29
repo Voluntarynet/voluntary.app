@@ -6,8 +6,7 @@
     
 */
 
-window.BMPingMessage = BMMessage.extend().newSlots({
-    type: "BMPingMessage",
+BMMessage.newSubclassNamed("BMPingMessage").newSlots({
 }).setSlots({
     init: function () {
         BMMessage.init.apply(this)

@@ -8,8 +8,7 @@
     sheet.setSelectorProperty("body", "color", "red")
 */
 
-window.StyleSheet = ideal.Proto.extend().newSlots({
-    type: "StyleSheet",
+ideal.Proto.newSubclassNamed("StyleSheet").newSlots({
     sheetElement: null,
 }).setSlots({
     init: function () {

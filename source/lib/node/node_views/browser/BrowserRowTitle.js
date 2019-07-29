@@ -11,8 +11,7 @@
 
 */
 
-window.BrowserRowTitle = TextField.extend().newSlots({
-    type: "BrowserRowTitle",
+TextField.newSubclassNamed("BrowserRowTitle").newSlots({
 }).setSlots({
     init: function () {
         TextField.init.apply(this)

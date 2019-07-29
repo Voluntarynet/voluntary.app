@@ -7,8 +7,7 @@
 
 */
 
-window.KeyboardListener = EventSetListener.extend().newSlots({
-    type: "KeyboardListener",
+EventSetListener.newSubclassNamed("KeyboardListener").newSlots({
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)

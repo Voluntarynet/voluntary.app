@@ -6,8 +6,7 @@
 
 */
 
-window.BMThemeClassState = BMFieldSetNode.extend().newSlots({
-    type: "BMThemeClassState",
+BMFieldSetNode.newSubclassNamed("BMThemeClassState").newSlots({
     divClassName: null,
 }).setSlots({
     init: function () {

@@ -6,8 +6,7 @@
 
 */
 
-window.BMClassifieds = BMApplet.extend().newSlots({
-    type: "BMClassifieds",
+BMApplet.newSubclassNamed("BMClassifieds").newSlots({
     regions: null,
     sells: null,
 }).setSlots({

@@ -6,8 +6,7 @@
     
 */
 
-window.BMRemoteIdentities = BMStorableNode.extend().newSlots({
-    type: "BMRemoteIdentities",
+BMStorableNode.newSubclassNamed("BMRemoteIdentities").newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)

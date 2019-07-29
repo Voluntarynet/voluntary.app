@@ -9,8 +9,7 @@
 */
 
 
-window.BMMenuNode = BMStorableNode.extend().newSlots({
-    type: "BMMenuNode",
+BMStorableNode.newSubclassNamed("BMMenuNode").newSlots({
     label: "",
     hasTest: false,
 }).setSlots({

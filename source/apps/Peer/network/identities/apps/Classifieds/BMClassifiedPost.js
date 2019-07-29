@@ -6,8 +6,7 @@
 
 */
 
-window.BMClassifiedPost = BMFieldSetNode.extend().newSlots({
-    type: "BMClassifiedPost",
+BMFieldSetNode.newSubclassNamed("BMClassifiedPost").newSlots({
     title: null, // string
     price: 0,
     currency: "BTC",

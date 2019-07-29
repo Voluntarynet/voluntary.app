@@ -6,9 +6,7 @@
 
 */
 
-window.BrowserFooter = NodeView.extend().newSlots({
-    type: "BrowserFooter",
-
+NodeView.newSubclassNamed("BrowserFooter").newSlots({
     leftActionsView: null,
     textView: null,
     rightActionsView: null,

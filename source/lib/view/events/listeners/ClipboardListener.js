@@ -7,8 +7,7 @@
 
 */
 
-window.ClipboardListener = EventSetListener.extend().newSlots({
-    type: "ClipboardListener",
+EventSetListener.newSubclassNamed("ClipboardListener").newSlots({
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)

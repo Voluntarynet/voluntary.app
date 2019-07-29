@@ -7,8 +7,7 @@
 
 */
 
-window.DropListener = EventSetListener.extend().newSlots({
-    type: "DropListener",
+EventSetListener.newSubclassNamed("DropListener").newSlots({
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)

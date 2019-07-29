@@ -28,8 +28,7 @@
 
 */
 
-window.TapGestureRecognizer = GestureRecognizer.extend().newSlots({
-    type: "TapGestureRecognizer",
+GestureRecognizer.newSubclassNamed("TapGestureRecognizer").newSlots({
     maxHoldPeriod: 1000, // milliseconds per tap
     timeoutId: null, // private
 

@@ -6,8 +6,7 @@
 
 */
 
-window.BMChatMessageRowView = BrowserTitledRow.extend().newSlots({
-    type: "BMChatMessageRowView",
+BrowserTitledRow.newSubclassNamed("BMChatMessageRowView").newSlots({
 }).setSlots({
     
     init: function () {

@@ -8,8 +8,7 @@
     
 */
 
-window.BMBlacklistedServers = BMBlacklist.extend().newSlots({
-    type: "BMBlacklistedServers",
+BMBlacklist.newSubclassNamed("BMBlacklistedServers").newSlots({
     ipsDict: null, 
 }).setSlots({
     init: function () {

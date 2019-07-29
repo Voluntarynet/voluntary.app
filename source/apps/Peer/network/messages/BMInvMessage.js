@@ -6,8 +6,7 @@
 
 */
 
-window.BMInvMessage = BMMessage.extend().newSlots({
-    type: "BMInvMessage",
+BMMessage.newSubclassNamed("BMInvMessage").newSlots({
     //bloomFilter: null, // used to filter senders
 }).setSlots({
     init: function () {

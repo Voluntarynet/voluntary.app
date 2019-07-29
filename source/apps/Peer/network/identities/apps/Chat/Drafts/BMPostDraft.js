@@ -6,8 +6,7 @@
 
 */
 
-window.BMPostDraft = BMStorableNode.extend().newSlots({
-    type: "BMPostDraft",
+BMStorableNode.newSubclassNamed("BMPostDraft").newSlots({
     content: "",
 }).setSlots({
     

@@ -13,8 +13,7 @@
 
 
 
-window.Transform = ideal.Proto.extend().newSlots({
-    type: "ThingView",
+ideal.Proto.newSubclassNamed("Transform").newSlots({
     position: null, // in px units 
     rotation: null, // in degrees units
     scale: null,

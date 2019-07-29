@@ -7,8 +7,7 @@
 
 */
 
-window.BMTwitter = BMApplet.extend().newSlots({
-    type: "BMTwitter",
+BMApplet.newSubclassNamed("BMTwitter").newSlots({
     feed: null,
     notifications: null,
     messages: null,

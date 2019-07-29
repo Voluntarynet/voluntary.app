@@ -21,8 +21,7 @@
 
 */
 
-window.BrowserRow = NodeView.extend().newSlots({
-    type: "BrowserRow",
+NodeView.newSubclassNamed("BrowserRow").newSlots({
     isSelectable: true,
     closeButtonView: null,
     defaultHeight: 60,

@@ -6,8 +6,8 @@
 
 */
 
-window.BMPostMessage = BMAppMessage.extend().newSlots({
-    type: "BMPostMessage",
+
+BMAppMessage.newSubclassNamed("BMPostMessage").newSlots({
     content: "",
 	
     replyCount: 0,

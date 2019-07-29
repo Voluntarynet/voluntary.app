@@ -6,8 +6,7 @@
 
 */
 
-window.ShelfGroup = BMNode.extend().newSlots({
-    type: "ShelfGroup",
+BMNode.newSubclassNamed("ShelfGroup").newSlots({
     refNode: null,
 }).setSlots({
     init: function () {

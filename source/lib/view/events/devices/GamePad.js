@@ -8,8 +8,7 @@
 */
 
 
-window.GamePad = ideal.Proto.extend().newSlots({
-    type: "GamePad",
+ideal.Proto.newSubclassNamed("GamePad").newSlots({
     gamePadManager: null,
     index: null,
     id: null,

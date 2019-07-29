@@ -36,8 +36,7 @@
 
 */
 
-window.CenteredDomView = DomView.extend().newSlots({
-    type: "CenteredDomView",
+DomView.newSubclassNamed("CenteredDomView").newSlots({
     middleView: null,
     innerView: null,
 }).setSlots({

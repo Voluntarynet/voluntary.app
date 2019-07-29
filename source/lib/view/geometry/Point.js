@@ -9,8 +9,7 @@
 
 */
 
-window.Point = ideal.Proto.extend().newSlots({
-    type: "Point",
+ideal.Proto.newSubclassNamed("Point").newSlots({
     x: 0,
     y: 0,
     z: 0,

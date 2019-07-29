@@ -20,8 +20,7 @@
 
 */
 
-window.BMAudioPlayer = DomView.extend().newSlots({
-    type: "BMAudioPlayer",
+DomView.newSubclassNamed("BMAudioPlayer").newSlots({
     path: "",
     sourceElement: null,
     isDebugging: false,

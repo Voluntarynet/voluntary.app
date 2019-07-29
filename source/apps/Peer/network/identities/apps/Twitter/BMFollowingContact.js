@@ -7,8 +7,7 @@
 
 */
 
-window.BMFollowingContact = BMStorableNode.extend().newSlots({
-    type: "BMFollowingContact",
+BMStorableNode.newSubclassNamed("BMFollowingContact").newSlots({
     isFollowing: false,
 }).setSlots({
     init: function () {

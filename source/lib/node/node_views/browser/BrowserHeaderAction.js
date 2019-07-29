@@ -6,8 +6,7 @@
 
 */
 
-window.BrowserHeaderAction = NodeView.extend().newSlots({
-    type: "BrowserHeaderAction",
+NodeView.newSubclassNamed("BrowserHeaderAction").newSlots({
     canClick: true,
 }).setSlots({
     init: function () {

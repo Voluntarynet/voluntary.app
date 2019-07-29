@@ -9,8 +9,7 @@
 */
 
 
-window.BMDataStore = BMNode.extend().newSlots({
-    type: "BMDataStore",
+BMNode.newSubclassNamed("BMDataStore").newSlots({
     lastSyncTime: 0,
 }).setSlots({
     init: function () {

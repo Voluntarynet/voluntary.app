@@ -9,8 +9,7 @@
 
 */
         
-window.BMPointerField = BMField.extend().newSlots({
-    type: "BMPointerField",
+BMField.newSubclassNamed("BMPointerField").newSlots({
 }).setSlots({
     init: function () {
         BMField.init.apply(this)

@@ -8,8 +8,7 @@
 
 */
 
-window.BMSound = BMNode.extend().newSlots({
-    type: "BMSound",
+BMNode.newSubclassNamed("BMSound").newSlots({
     path: null,
 }).setSlots({
     init: function () {

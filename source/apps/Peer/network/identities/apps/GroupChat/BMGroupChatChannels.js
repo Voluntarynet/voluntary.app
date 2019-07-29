@@ -6,8 +6,7 @@
 
 */
 
-window.BMGroupChatChannel = BMApplet.extend().newSlots({
-    type: "BMGroupChatChannel",
+BMApplet.newSubclassNamed("BMGroupChatChannel").newSlots({
     name: "Untitled",
 }).setSlots({
     init: function () {

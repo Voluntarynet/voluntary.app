@@ -7,8 +7,7 @@
 
 */
 
-window.BMGroupChatRoom = BMApplet.extend().newSlots({
-    type: "BMGroupChatRoom",
+BMApplet.newSubclassNamed("BMGroupChatRoom").newSlots({
     name: "Untitled",
 }).setSlots({
 	    init: function () {

@@ -6,8 +6,7 @@
 
 */
 
-window.BMGroupConversation = BMApplet.extend().newSlots({
-    type: "BMGroupConversation",
+BMApplet.newSubclassNamed("BMGroupConversation").newSlots({
     remoteIdentity: null,
 }).setSlots({
     init: function () {

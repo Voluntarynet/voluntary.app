@@ -9,8 +9,7 @@
 
 */
 
-window.DomCSSInspector = ideal.Proto.extend().newSlots({
-    type: "DomCSSInspector",
+ideal.Proto.newSubclassNamed("DomCSSInspector").newSlots({
     idName: "DomCSSInspector",
     //divClassName: null,
 }).setSlots({

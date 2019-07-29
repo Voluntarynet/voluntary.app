@@ -7,8 +7,7 @@
 */
 
 
-window.BMTextAreaFieldRowView = BMFieldRowView.extend().newSlots({
-    type: "BMTextAreaFieldRowView",
+BMFieldRowView.newSubclassNamed("BMTextAreaFieldRowView").newSlots({
 }).setSlots({
     init: function () {
         BMFieldRowView.init.apply(this)

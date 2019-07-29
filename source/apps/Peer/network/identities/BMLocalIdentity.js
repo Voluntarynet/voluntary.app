@@ -11,8 +11,7 @@ var Buffer = bitcore.deps.Buffer;
     
 */
 
-window.BMLocalIdentity = BMKeyPair.extend().newSlots({
-    type: "BMLocalIdentity",
+BMKeyPair.newSubclassNamed("BMLocalIdentity").newSlots({
     name: "",
     privateKeyString: "",
     didChangeIdentityNote: null,

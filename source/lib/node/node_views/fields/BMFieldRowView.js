@@ -6,8 +6,7 @@
 
 */
 
-window.BMFieldRowView = BrowserFieldRow.extend().newSlots({
-    type: "BMFieldRowView",
+BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
     keyView: null,
     valueView: null,
     noteView: null,

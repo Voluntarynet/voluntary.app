@@ -6,9 +6,7 @@
     
 */
 
-window.BMStorableNode = BMNode.extend().newSlots({
-    type: "BMStorableNode",
-
+BMNode.newSubclassNamed("BMStorableNode").newSlots({
     pid: null,
     shouldStore: false,
 

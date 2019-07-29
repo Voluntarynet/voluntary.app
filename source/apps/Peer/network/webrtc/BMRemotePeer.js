@@ -6,8 +6,7 @@
 
 */
 
-window.BMRemotePeer = BMNode.extend().newSlots({
-    type: "BMRemotePeer",
+BMNode.newSubclassNamed("BMRemotePeer").newSlots({
     conn: null,
     serverConnection: null,
     messages: null,

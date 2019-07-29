@@ -6,8 +6,7 @@
 
 */
 
-window.ImageView = NodeView.extend().newSlots({
-    type: "ImageView",
+NodeView.newSubclassNamed("ImageView").newSlots({
     closeButtonView: null,
     dataURL: null,
     isEditable: false,

@@ -6,8 +6,7 @@
 
 */
 
-window.BMConnection = BMNode.extend().newSlots({
-    type: "BMConnection",
+BMNode.newSubclassNamed("BMConnection").newSlots({
     //log: null,
     connection: null,
     lastConnectionType: null,

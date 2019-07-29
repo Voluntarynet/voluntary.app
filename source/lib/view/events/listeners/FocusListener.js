@@ -7,8 +7,7 @@
 
 */
 
-window.FocusListener = EventSetListener.extend().newSlots({
-    type: "FocusListener",
+EventSetListener.newSubclassNamed("FocusListener").newSlots({
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)

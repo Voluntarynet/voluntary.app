@@ -7,8 +7,7 @@
 */
 
         
-window.BMTextAreaField = BMField.extend().newSlots({
-    type: "BMTextAreaField",
+BMField.newSubclassNamed("BMTextAreaField").newSlots({
     isMono: false,
 }).setSlots({
     init: function () {

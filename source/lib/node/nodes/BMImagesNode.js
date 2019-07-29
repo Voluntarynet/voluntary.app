@@ -6,8 +6,7 @@
 
 */  
 
-window.BMImageResourcesNode = BMStorableNode.extend().newSlots({
-    type: "BMImageResourcesNode",
+BMStorableNode.newSubclassNamed("BMImageResourcesNode").newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)

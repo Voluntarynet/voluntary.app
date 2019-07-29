@@ -7,8 +7,7 @@
 
 */
 
-window.BMApplet = BMStorableNode.extend().newSlots({
-    type: "BMApplet",
+BMStorableNode.newSubclassNamed("BMApplet").newSlots({
 }).setSlots({
     sharedStoredInstance: function() {
         return NodeStore.shared().rootInstanceWithPidForProto(this.type(), this)

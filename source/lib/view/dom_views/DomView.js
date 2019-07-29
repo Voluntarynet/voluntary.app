@@ -8,8 +8,7 @@
     TODO: add dict[propertyName] -> validValueSet and check css values when set
 */
 
-window.DomView = ideal.Proto.extend().newSlots({
-    type: "DomView",
+ideal.Proto.newSubclassNamed("DomView").newSlots({
     divClassName: "",
     elementType: "div",
     element: null,

@@ -7,9 +7,7 @@
 
 */
 
-
-window.BrowserFieldRow = BrowserRow.extend().newSlots({
-    type: "BrowserFieldRow",
+BrowserRow.newSubclassNamed("BrowserFieldRow").newSlots({
     allowsCursorNavigation: false,
 }).setSlots({
     init: function () {

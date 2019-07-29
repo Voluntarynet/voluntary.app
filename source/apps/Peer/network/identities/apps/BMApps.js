@@ -8,8 +8,7 @@
 
 */
 
-window.BMApps = BMStorableNode.extend().newSlots({
-    type: "BMApps",
+BMStorableNode.newSubclassNamed("BMApps").newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)

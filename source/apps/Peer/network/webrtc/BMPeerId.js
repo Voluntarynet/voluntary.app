@@ -8,9 +8,7 @@
 
 */
 
-
-window.BMPeerId = BMNode.extend().newSlots({
-    type: "BMPeerId",
+BMNode.newSubclassNamed("BMPeerId").newSlots({
     publicKeyString: null,
     bloomFilter: null,
     error: null,

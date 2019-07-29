@@ -7,8 +7,7 @@
 
 */
 
-window.BMStoredDatedSetNode = BMStorableNode.extend().newSlots({
-    type: "BMStoredDatedSetNode",
+BMStorableNode.newSubclassNamed("BMStoredDatedSetNode").newSlots({
     maxAgeInSeconds: 30*24*60*60,
     autoCheckPeriod: 1*60*60,
     dict: null,
@@ -22,7 +21,8 @@ window.BMStoredDatedSetNode = BMStorableNode.extend().newSlots({
         this.addStoredSlot("dict", "autoCheckPeriod", "maxAgeInSeconds")
 
         //this.setNoteIsSubnodeCount(true)
-    },
+        return this
+    }.setDoc("init", "initialize the object", "returns this"),
     
     setAutoCheckPeriod: function(seconds) {
         if (seconds && this._autoCheckPeriod !== seconds) {

@@ -16,8 +16,7 @@
 
 */
 
-window.PanGestureRecognizer = GestureRecognizer.extend().newSlots({
-    type: "PanGestureRecognizer",
+GestureRecognizer.newSubclassNamed("PanGestureRecognizer").newSlots({
     isPressing: false,
     minNumberOfFingersRequired: 1,
     maxNumberOfFingersAllowed: 1,

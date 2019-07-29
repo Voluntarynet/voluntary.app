@@ -9,8 +9,7 @@
 */
 
 
-window.Mouse = ideal.Proto.extend().newSlots({
-    type: "Mouse",
+ideal.Proto.newSubclassNamed("Mouse").newSlots({
     isDown: false,
     downEvent: null,
     currentEvent: null,

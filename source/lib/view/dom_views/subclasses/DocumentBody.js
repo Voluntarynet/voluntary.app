@@ -6,8 +6,7 @@
 
 */
 
-window.DocumentBody = DomView.extend().newSlots({
-    type: "DocumentBody",
+DomView.newSubclassNamed("DocumentBody").newSlots({
 }).setSlots({
     init: function () {
         DomView.init.apply(this)

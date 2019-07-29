@@ -7,8 +7,7 @@
 
 */
 
-window.CloseButton = DomView.extend().newSlots({
-    type: "CloseButton",
+window.CloseButton = DomView.newSubclassNamed("CloseButton").newSlots({
     isEnabled: true,
 }).setSlots({
 

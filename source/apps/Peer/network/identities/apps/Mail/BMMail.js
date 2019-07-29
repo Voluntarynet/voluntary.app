@@ -7,8 +7,7 @@
 
 */
 
-window.BMMail = BMApplet.extend().newSlots({
-    type: "BMMail",
+BMApplet.newSubclassNamed("BMMail").newSlots({
     feed: null,
     drafts: null,
     notifications: null,

@@ -11,8 +11,7 @@
     On Return/Enter key, it passes focus to the nextResponder/parent.
 */
 
-window.TextField = DomStyledView.extend().newSlots({
-    type: "TextField",
+DomStyledView.newSubclassNamed("TextField").newSlots({
     isSelected: false,
     selectedColor: null,
     unselectedColor: null,

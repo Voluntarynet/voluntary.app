@@ -10,8 +10,7 @@
 
 */
 
-window.App = BMNode.extend().newSlots({
-    type: "App",
+BMNode.newSubclassNamed("App").newSlots({
     name: "App",
     isDebugging: true,
     version: [0, 0],

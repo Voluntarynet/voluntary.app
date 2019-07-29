@@ -7,8 +7,7 @@
 
 */
 
-window.BMMailMessage = BMAppMessage.extend().newSlots({
-    type: "BMMailMessage",
+BMAppMessage.newSubclassNamed("BMMailMessage").newSlots({
     //canReceive: false,
 }).setSlots({
     init: function () {

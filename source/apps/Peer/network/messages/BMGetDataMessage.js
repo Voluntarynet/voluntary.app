@@ -6,8 +6,7 @@
 
 */
 
-window.BMGetDataMessage = BMMessage.extend().newSlots({
-    type: "BMGetDataMessage",
+BMMessage.newSubclassNamed("BMGetDataMessage").newSlots({
 }).setSlots({
     init: function () {
         BMMessage.init.apply(this)

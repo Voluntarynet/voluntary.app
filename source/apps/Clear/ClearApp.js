@@ -7,8 +7,7 @@
 
 */
 
-window.ClearApp = App.extend().newSlots({
-    type: "ClearApp",
+App.newSubclassNamed("ClearApp").newSlots({
     name: "Clear.app",
     version: [0, 0, 0, 0],
 

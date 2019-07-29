@@ -7,6 +7,7 @@ ResourceLoader.pushRelativePaths([
     "String-ideal.js",
     "Number-ideal.js",
     "Set-ideal.js",
-    "Error-ideal.js"
+    "Error-ideal.js",
+    "Function-ideal.js",
 ]);
 

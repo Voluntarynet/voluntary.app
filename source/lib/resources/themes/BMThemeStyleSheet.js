@@ -6,8 +6,7 @@
 
 */
 
-window.BMThemeStyleSheet = ideal.Proto.extend().newSlots({
-    type: "BMThemeStyleSheet",
+ideal.Proto.newSubclassNamed("BMThemeStyleSheet").newSlots({
 }).setSlots({
     init: function () {
     },

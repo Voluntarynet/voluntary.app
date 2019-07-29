@@ -6,9 +6,7 @@
 
 */
 
-window.BrowserColumnGroup = NodeView.extend().newSlots({
-    type: "BrowserColumnGroup",
-    
+NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({    
     header: null,
     footer: null,
     

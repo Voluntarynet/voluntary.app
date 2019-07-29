@@ -9,8 +9,7 @@
 */
 
 
-window.TouchScreen = ideal.Proto.extend().newSlots({
-    type: "TouchScreen",
+ideal.Proto.newSubclassNamed("TouchScreen").newSlots({
     currentEvent: null,
     lastEvent: null,
     touchListener: null,

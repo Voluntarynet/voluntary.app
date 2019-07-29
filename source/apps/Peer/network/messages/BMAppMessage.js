@@ -6,8 +6,7 @@
 
 */
 
-window.BMAppMessage = BMFieldSetNode.extend().newSlots({
-    type: "BMAppMessage",
+BMFieldSetNode.newSubclassNamed("BMAppMessage").newSlots({
     objMsg: null,
     senderId: null,
     receiverId: null,

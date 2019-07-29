@@ -9,8 +9,7 @@
 
 */
         
-window.BMActionNode = BMStorableNode.extend().newSlots({
-    type: "BMActionNode",
+BMStorableNode.newSubclassNamed("BMActionNode").newSlots({
     target: null,
     methodName: null,
     info: null,

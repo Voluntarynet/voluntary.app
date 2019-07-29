@@ -6,8 +6,7 @@
     
 */
 
-window.BrowserRowNote = TextField.extend().newSlots({
-    type: "BrowserRowNote",
+TextField.newSubclassNamed("BrowserRowNote").newSlots({
 }).setSlots({
     init: function () {
         TextField.init.apply(this)

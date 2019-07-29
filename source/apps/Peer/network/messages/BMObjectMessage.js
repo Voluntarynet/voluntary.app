@@ -34,8 +34,7 @@
 
 var BitcoreMessage = require("bitcore-message");
 
-window.BMObjectMessage = BMMessage.extend().newSlots({
-    type: "BMObjectMessage",
+BMMessage.newSubclassNamed("BMObjectMessage").newSlots({
     msgType: "object",
     senderPublicKeyString: null,
     //receiverPublicKeyString: null,

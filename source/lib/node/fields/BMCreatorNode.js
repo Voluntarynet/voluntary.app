@@ -39,6 +39,7 @@ BMStorableNode.newSubclassNamed("BMCreatorNode").newSlots({
             "BMDateField", 
             //"BMIdentityField", 
             "BMImageWellField", 
+            "BMStringField",
             "BMNumberField", 
             "BMMenuNode", 
             "BMOptionsField"

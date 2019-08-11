@@ -82,6 +82,8 @@ BMNode.newSubclassNamed("App").newSlots({
 		    this.runTests()
         }
 
+        Documentation.shared().show()
+
         //this.registerServiceWorker() // not working yet
     },
 	

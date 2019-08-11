@@ -23,7 +23,7 @@ DomStyledView.newSubclassNamed("NodeView").newSlots({
         this.setNodeObservation(NotificationCenter.shared().newObservation().setObserver(this)) // observe all
         //this.setStyles(BMViewStyles.clone())
         return this
-    },
+    }.setDocs("init", "initializes the object", "returns this"),
 	
 	
     setNode: function(aNode) {

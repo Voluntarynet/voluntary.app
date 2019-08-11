@@ -12,7 +12,7 @@ BrowserRow.newSubclassNamed("BrowserFieldRow").newSlots({
 }).setSlots({
     init: function () {
         BrowserRow.init.apply(this)
-        this.setIsSelectable(false) 
+        //this.setIsSelectable(false) 
         this.makeCursorDefault()
         this.setSpellCheck(false)
 		

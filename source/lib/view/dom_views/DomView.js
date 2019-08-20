@@ -2990,7 +2990,15 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         return this
     },
 
-    // helpers
+    // auto fit 
+    // need to be careful about interactions as some of these change 
+    // display and position attributes
+    // NOTE: when we ask parent to fit child, should we make sure child position attribute allows this?
+
+    hasAbsolutePositionChild: function() {
+        const match = this.subviews().detect(sv => sv.position() === "absolute")
+        return !Type.isNull(match) && !Type.isUndefined(match)
+    },
 
     // auto fit width
 
@@ -3001,22 +3009,26 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     },
 
     autoFitChildWidth: function() {
-        this.setWidth("fit-content")
+        assert(!this.hasAbsolutePositionChild()) // won't be able to autofit!
+
         this.setPosition("relative") 
+        this.setWidth("fit-content")
         return this
     },
 
     // auto fit height
 
     autoFitParentHeight: function() {
-        this.setHeightPercentage(100)
         this.setPosition("absolute")
+        this.setHeightPercentage(100)
         return this
     },
 
     autoFitChildHeight: function() {
-        this.setHeight("fit-content")
+        assert(!this.hasAbsolutePositionChild()) // won't be able to autofit!
+
         this.setPosition("relative") // or static? but can't be absolute
+        this.setHeight("fit-content")
         return this
     },
 

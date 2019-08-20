@@ -174,6 +174,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     */
 
     setCssAttribute: function (key, newValue, didChangeCallbackFunc) {
+        assert(Type.isString(key))
         const style = this.cssStyle()
         const oldValue = style[key]
         if (String(oldValue) !== String(newValue)) {
@@ -184,6 +185,17 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
                 //console.log(this.cssStyle()[key])
             } else {
                 style[key] = newValue
+
+                // sanity check
+                const ignoredKeys = { "background-position": true,  "transition": true, "color": true }
+                const resultValue = style[key]
+                if (!(key in ignoredKeys) && resultValue != newValue) {
+                    let msg = "DomView: style['" + key + "'] not set to expected value\n";
+                    msg += "     set: <" + typeof(newValue) + "> '" + newValue + "'\n";
+                    msg += "     got: <" + typeof(resultValue) + "> '" + resultValue + "'\n";
+                    console.warn(msg)
+                    //throw new Error(msg) 
+                }
             }
 
             if (didChangeCallbackFunc) {
@@ -905,6 +917,9 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     // flex basis
 
     setFlexBasis: function (v) {
+        if (Type.isNumber(v)) {
+            v = this.pxNumberToString(v)
+        }
         this.setCssAttribute("flex-basis", v)
         return this
     },
@@ -1287,13 +1302,26 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         return this
     },
 
+
+    setMinHeightPx: function (aNumber) {
+        this.setMinHeight(this.pxNumberToString(aNumber))
+        return this
+    },
+
+    setMaxHeightPx: function (aNumber) {
+        this.setMaxHeight(this.pxNumberToString(aNumber))
+        return this
+    },
+
     setMinHeight: function (newValue) {
+        assert(Type.isString(newValue))
         // <length> | <percentage> | auto | max-content | min-content | fit-content | fill-available
         this.setCssAttribute("min-height", newValue, () => { this.didChangeHeight() })
         return this
     },
 
     setMaxHeight: function (newValue) {
+        assert(Type.isString(newValue))
         // <length> | <percentage> | none | max-content | min-content | fit-content | fill-available
         this.setCssAttribute("max-height", newValue, () => { this.didChangeHeight() })
         return this

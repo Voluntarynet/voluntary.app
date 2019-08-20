@@ -12,7 +12,11 @@ BMField.newSubclassNamed("BMStringField").newSlots({
     init: function () {
         BMField.init.apply(this)
         this.setViewClassName("BMFieldRowView")
-        this.setKeyIsEditable(false)
-        this.setValueIsEditable(false)
+
+        this.setKeyIsVisible(true)
+        this.setKeyIsEditable(true)
+
+        this.setValueIsVisible(true)
+        this.setValueIsEditable(true)
     },
 })

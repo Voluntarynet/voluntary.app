@@ -17,6 +17,9 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
     init: function () {
         BrowserFieldRow.init.apply(this)
         
+        this.setMaxHeight("none")
+        this.setHeight("auto")
+
         this.setKeyView(TextField.clone().setDivClassName("BMFieldKeyView"))
         this.addContentSubview(this.keyView())     
    		this.keyView().turnOffUserSelect().setSpellCheck(false)   
@@ -28,7 +31,7 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
       
         this.valueView().setUserSelect("text")   // should the value view handle this?
         this.valueView().setSpellCheck(false)   // should the value view handle this?
-        this.valueView().setWidthPercentage(100) 
+        //this.valueView().setWidthPercentage(100) 
 
         this.setNoteView(DomView.clone().setDivClassName("BMFieldRowViewNoteView"))
         this.addContentSubview(this.noteView())

@@ -30,7 +30,7 @@ BrowserRow.newSubclassNamed("BMPostMessageRowView").newSlots({
     init: function () {
         BrowserRow.init.apply(this)
 
-        this.setMinHeight(100)
+        this.setMinHeightPx(100)
         //this.contentView()
 
         // left view

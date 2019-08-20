@@ -82,7 +82,7 @@ NodeView.newSubclassNamed("ImageWellView").newSlots({
         }
         const imageView = ImageView.clone().fetchDataURLFromSrc(dataURL)
         imageView.setIsEditable(this.isEditable())
-        imageView.setMaxHeight(180)
+        imageView.setMaxHeightPx(180)
         this.addSubview(imageView);    
         return this
     },

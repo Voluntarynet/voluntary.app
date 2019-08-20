@@ -226,7 +226,7 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         colors = colors.copy().appendItems(rcolors)
 
         const rgb = colors.atModLength(i)
-        const s = "rgb(" + rgb.map((v) => { return Math.round(v * 255) }).join(",") + ")"
+        const s = "rgb(" + rgb.map((v) => { return Math.round(v * 255) }).join(", ") + ")"
         //console.log("bgColorForIndex = '" + s + "'")
         return s
     },

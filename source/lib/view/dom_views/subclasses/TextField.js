@@ -23,11 +23,10 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
 }).setSlots({
     init: function () {
         DomView.init.apply(this)
-        this.setDisplay("inline-block")
+        //this.setDisplay("inline-block") // if we do it here, we can override it with css classes. Should we eliminate CSS?
         this.turnOffUserSelect()
         this.setWhiteSpace("nowrap")
         this.setOverflow("hidden")
-        this.setDisplay("inline-block")
         this.setTextOverflow("clip")
         this.setSpellCheck(false)
         this.setMinWidth(10)

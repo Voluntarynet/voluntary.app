@@ -72,7 +72,7 @@ class Documentation extends ProtoClass {
         /*
         const s = JSON.stringify(this.asJson(), 2, 2)
         */
-        console.log("docs = ", lines.join("\n"))
+        console.log(this.type() + ".show() = ", lines.join("\n"))
     }
 }
 

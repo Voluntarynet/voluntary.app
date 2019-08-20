@@ -106,11 +106,15 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     setupRowContentView: function() {
         const cv = DomView.clone().setDivClassName("BrowserRowContentView")
         cv.setWidthPercentage(100).setHeightPercentage(100) 
-        cv.setPosition("absolute")
+        //cv.setWidthPercentage(100).setHeight("auto") 
+        cv.setPosition("relative")
+        cv.setFloat("left")
         cv.setTransition("all 0.2s ease, transform 0s, left 0s, right 0s")
+        cv.setMinHeightPx(60)
         cv.setZIndex(1) // so it will be above other views like the slide delete button 
         this.setContentView(cv)
         this.addSubview(cv)
+
         return this
     },
 

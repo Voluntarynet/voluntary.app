@@ -17,7 +17,7 @@ BrowserTitledRow.newSubclassNamed("BMChatMessageRowView").newSlots({
         this.setDisplay("block")
 		
         this.setMinHeight("auto")
-        this.setMaxHeight("1000px")
+        this.setMaxHeightPx(1000)
         this.setHeight("auto")
 		
         this.setPaddingTop(10)

@@ -6,6 +6,6 @@ ResourceLoader.pushRelativePaths([
     "ImageWellView.js",
     "ImageView.js",
     "browser/_imports.js",
-    "fields/_imports.js",
+    "field_views/_imports.js",
 ])
 

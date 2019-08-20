@@ -1,4 +1,12 @@
 
+--------------
+
+Row auto vertical size issue:
+
+- Using absolute position on row contentView prevents vertical size from being auto set.
+- we need absolute positioning for panning contentView?
+
+
 
 --------------
 

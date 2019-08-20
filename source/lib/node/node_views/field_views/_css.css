@@ -11,14 +11,20 @@
     opacity: 1;
     
     display: block;
-    
     position: relative;
 
+    height: auto;
+    min-height: 60px;
+    max-height: none;
+    
+    overflow: visible;
+
+
     width: auto;
+
     transition: background-color .3s ease-out;
 
 	/*padding-left: 20px;*/
-    height: 59px;
 	margin: 0px;
 	
 	text-align: left;
@@ -68,27 +74,21 @@
 /* --------------------------- Key --------------------------- */
 
 .BMFieldKeyView {
-    /*
-    color: #777;
-    */
-
-	display: block;
-    position: relative;
+	display: inline-block;
+    /*position: relative;*/
 
 	overflow: hidden;
-	float: left;
-	top: 18px;
+	margin-top: 18px;
 
-	margin: auto;
 	
-    text-align: right;
+    text-align: left;
     white-space: nowrap;
     /*text-transform: capitalize;*/
 	
 	padding-top: 3px;
 	padding-bottom: 3px;
 	padding-right: 5px;
-	margin: 0px;
+	/*margin: 0px;*/
 	
 	border: 0px dashed #aaa;
 }
@@ -102,13 +102,21 @@
 /* --------------------------- Value --------------------------- */
 
 .BMFieldValueView {
-	display: inline-block;
-    position: relative;
-	top: 18px;
-	overflow: hidden;
+    color: white;
 
-    min-width: 100px;
+	display: block;
+    /*position: relative;*/
+
+
+    width: calc(100% - 42px);
+
+    margin-top: 5px;
+    margin-left: 18px;
+    margin-right: 10px;
+
+
     text-align: left;
+	overflow: hidden;
 
     white-space: nowrap;
     text-transform: none;	
@@ -128,7 +136,8 @@
 	padding-top: 3px;
 	padding-bottom: 3px;
 	
-	border: 0px dashed #aaa;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
 }
 
 .BMFieldValueView br {
@@ -136,7 +145,7 @@
 }
 
 .BMFieldValueView * {
-    display:inline;
+    display: inline;
     white-space:nowrap;
 }
 

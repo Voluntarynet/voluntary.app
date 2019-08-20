@@ -41,7 +41,6 @@
 
 .BMActionNodeButtonView {
     /*height: 42px;*/
-    height: calc(100% - 16px);
     width: calc(100% - 40px);
     margin-top: 8px;
     margin-bottom: 8px;
@@ -59,7 +58,7 @@
 	font-family: AppSemiBold;
 
     text-align: center;
-    line-height: 42px;
+    /*line-height: 42px;*/
     /*overflow: hidden;*/
     /*text-transform: uppercase;*/
     transition: all 0.1 ease;

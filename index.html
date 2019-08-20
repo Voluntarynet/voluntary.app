@@ -772,7 +772,6 @@ html * {
 
 .BMActionNodeButtonView {
     /*height: 42px;*/
-    height: calc(100% - 16px);
     width: calc(100% - 40px);
     margin-top: 8px;
     margin-bottom: 8px;
@@ -790,7 +789,7 @@ html * {
 	font-family: AppSemiBold;
 
     text-align: center;
-    line-height: 42px;
+    /*line-height: 42px;*/
     /*overflow: hidden;*/
     /*text-transform: uppercase;*/
     transition: all 0.1 ease;
@@ -89314,8 +89313,17 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
             } else {
                 style[key] = newValue
 
-                // sanity check
-                const ignoredKeys = { "background-position": true,  "transition": true, "color": true }
+                // sanity check the result
+                // but ignore these keys as they have equivalent functional values 
+                // that can have different string values
+                const ignoredKeys = { 
+                    "background-position": true,  
+                    "transition": true, 
+                    "color": true , 
+                    "background-color": true,
+                    "box-shadow": true
+                }
+
                 const resultValue = style[key]
                 if (!(key in ignoredKeys) && resultValue != newValue) {
                     let msg = "DomView: style['" + key + "'] not set to expected value\n";
@@ -92109,6 +92117,36 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         return this
     },
 
+    // helpers
+
+    // auto fit width
+
+    autoFitParentWidth: function() {
+        this.setDisplay("block")
+        this.setWidth("auto")
+        return this
+    },
+
+    autoFitChildWidth: function() {
+        this.setWidth("fit-content")
+        this.setPosition("relative") 
+        return this
+    },
+
+    // auto fit height
+
+    autoFitParentHeight: function() {
+        this.setHeightPercentage(100)
+        this.setPosition("absolute")
+        return this
+    },
+
+    autoFitChildHeight: function() {
+        this.setHeight("fit-content")
+        this.setPosition("relative") // or static? but can't be absolute
+        return this
+    },
+
 })
 
 "use strict"
@@ -93493,6 +93531,8 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     nodeInspector: null,
     canDelete: false,
     nodeCanInspect: false,
+    canEditRowHeight: false,
+    canEditColumnWidth: false,
 }).setSlots({
     init: function () {
         this._subnodes = []
@@ -96627,6 +96667,7 @@ BMField.newSubclassNamed("BMImageWellField").newSlots({
         this.setKeyIsEditable(false)
         this.setValueIsEditable(false)
         //this.addStoredSlot("imageDataURLs")
+        this.setCanEditRowHeight(true)
     },
 
     /*
@@ -97391,7 +97432,7 @@ NodeView.newSubclassNamed("ImageWellView").newSlots({
     },
     
     imageDataURLs: function() {
-        let urls = this.subviews().map(imageView => imageView.dataURL())
+        const urls = this.subviews().map(imageView => imageView.dataURL())
         const imageDataURLs = urls.select(url => url != null)
         return imageDataURLs
     },
@@ -100151,13 +100192,21 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     onBottomEdgePanMove: function(aGesture) {
         const p = aGesture.currentPosition() // position in document coords
         const f = this.frameInDocument()
-        const h = p.y() - f.y()
+        const newHeight = p.y() - f.y()
         const minHeight = this.node() ? this.node().nodeRowMinHeight() : 10;
-        if (h >= minHeight) {
-            this.setMinAndMaxHeight(h) // need to do same for contentView?
-        } else {
-            this.setMinAndMaxHeight(minHeight) 
+        if (newHeight < 10) {
+            newHeight = 10;
         }
+        this.node().setNodeRowMinHeight(newHeight)
+        this.updateSubviews()
+
+        /*
+            this.node().setNodeRowMinHeight(h)
+            this.updateSubviews()
+            //this.setMinAndMaxHeight(newHeight) // what about contentView?
+            //this.contentView().autoFitParentHeight()
+        */
+
         return this
     },
 
@@ -100314,6 +100363,12 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
                 this.closeButtonView().setOpacity(this.restCloseButtonOpacity())
             } else {
                 this.closeButtonView().setOpacity(0)
+            }
+
+            const h = this.node().nodeRowMinHeight()
+            if (h) {
+                this.setMinAndMaxHeight(h) 
+                this.contentView().autoFitParentHeight()
             }
         }
 

@@ -70,6 +70,8 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     nodeInspector: null,
     canDelete: false,
     nodeCanInspect: false,
+    canEditRowHeight: false,
+    canEditColumnWidth: false,
 }).setSlots({
     init: function () {
         this._subnodes = []

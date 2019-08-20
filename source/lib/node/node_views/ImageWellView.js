@@ -88,7 +88,7 @@ NodeView.newSubclassNamed("ImageWellView").newSlots({
     },
     
     imageDataURLs: function() {
-        let urls = this.subviews().map(imageView => imageView.dataURL())
+        const urls = this.subviews().map(imageView => imageView.dataURL())
         const imageDataURLs = urls.select(url => url != null)
         return imageDataURLs
     },

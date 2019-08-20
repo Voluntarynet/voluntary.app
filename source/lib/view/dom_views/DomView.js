@@ -186,8 +186,17 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
             } else {
                 style[key] = newValue
 
-                // sanity check
-                const ignoredKeys = { "background-position": true,  "transition": true, "color": true }
+                // sanity check the result
+                // but ignore these keys as they have equivalent functional values 
+                // that can have different string values
+                const ignoredKeys = { 
+                    "background-position": true,  
+                    "transition": true, 
+                    "color": true , 
+                    "background-color": true,
+                    "box-shadow": true
+                }
+
                 const resultValue = style[key]
                 if (!(key in ignoredKeys) && resultValue != newValue) {
                     let msg = "DomView: style['" + key + "'] not set to expected value\n";
@@ -2978,6 +2987,36 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
             this.remove(sv)
             aView.addSubview(sv)
         })
+        return this
+    },
+
+    // helpers
+
+    // auto fit width
+
+    autoFitParentWidth: function() {
+        this.setDisplay("block")
+        this.setWidth("auto")
+        return this
+    },
+
+    autoFitChildWidth: function() {
+        this.setWidth("fit-content")
+        this.setPosition("relative") 
+        return this
+    },
+
+    // auto fit height
+
+    autoFitParentHeight: function() {
+        this.setHeightPercentage(100)
+        this.setPosition("absolute")
+        return this
+    },
+
+    autoFitChildHeight: function() {
+        this.setHeight("fit-content")
+        this.setPosition("relative") // or static? but can't be absolute
         return this
     },
 

@@ -86,13 +86,21 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     onBottomEdgePanMove: function(aGesture) {
         const p = aGesture.currentPosition() // position in document coords
         const f = this.frameInDocument()
-        const h = p.y() - f.y()
+        const newHeight = p.y() - f.y()
         const minHeight = this.node() ? this.node().nodeRowMinHeight() : 10;
-        if (h >= minHeight) {
-            this.setMinAndMaxHeight(h) // need to do same for contentView?
-        } else {
-            this.setMinAndMaxHeight(minHeight) 
+        if (newHeight < 10) {
+            newHeight = 10;
         }
+        this.node().setNodeRowMinHeight(newHeight)
+        this.updateSubviews()
+
+        /*
+            this.node().setNodeRowMinHeight(h)
+            this.updateSubviews()
+            //this.setMinAndMaxHeight(newHeight) // what about contentView?
+            //this.contentView().autoFitParentHeight()
+        */
+
         return this
     },
 
@@ -249,6 +257,12 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
                 this.closeButtonView().setOpacity(this.restCloseButtonOpacity())
             } else {
                 this.closeButtonView().setOpacity(0)
+            }
+
+            const h = this.node().nodeRowMinHeight()
+            if (h) {
+                this.setMinAndMaxHeight(h) 
+                this.contentView().autoFitParentHeight()
             }
         }
 

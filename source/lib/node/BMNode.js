@@ -44,7 +44,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     // html
     acceptsFileDrop: false,
 
-    nodeRowMinHeight: 0, // tall fields like draft body
+    nodeMinRowHeight: 0, // tall fields like draft body
     
     nodeContent: null,
     	
@@ -70,8 +70,8 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     nodeInspector: null,
     canDelete: false,
     nodeCanInspect: false,
-    canEditRowHeight: false,
-    canEditColumnWidth: false,
+    nodeCanEditRowHeight: false,
+    nodeCanEditColumnWidth: false,
 }).setSlots({
     init: function () {
         this._subnodes = []

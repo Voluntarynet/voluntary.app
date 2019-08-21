@@ -46,8 +46,8 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
     // edge pan
 
     acceptsBottomEdgePan: function() {
-        if (this.node().canEditColumnWidth) {
-            if (this.node().canEditColumnWidth()) {
+        if (this.node().nodeCanEditColumnWidth) {
+            if (this.node().nodeCanEditColumnWidth()) {
                 return true
             }
         }

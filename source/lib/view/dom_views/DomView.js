@@ -3010,9 +3010,9 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
     autoFitChildWidth: function() {
         assert(!this.hasAbsolutePositionChild()) // won't be able to autofit!
-
-        this.setPosition("relative") 
-        this.setWidth("fit-content")
+        this.setDisplay("inline-block")
+        this.setWidth("auto")
+        this.setOverflow("auto")
         return this
     },
 

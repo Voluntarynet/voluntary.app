@@ -69,8 +69,8 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     // bottom edge pan 
 
     acceptsBottomEdgePan: function() {
-        if (this.node().canEditRowHeight) {
-            if (this.node().canEditRowHeight()) {
+        if (this.node().nodeCanEditRowHeight) {
+            if (this.node().nodeCanEditRowHeight()) {
                 return true
             }
         }
@@ -87,15 +87,15 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         const p = aGesture.currentPosition() // position in document coords
         const f = this.frameInDocument()
         const newHeight = p.y() - f.y()
-        const minHeight = this.node() ? this.node().nodeRowMinHeight() : 10;
+        const minHeight = this.node() ? this.node().nodeMinRowHeight() : 10;
         if (newHeight < 10) {
             newHeight = 10;
         }
-        this.node().setNodeRowMinHeight(newHeight)
+        this.node().setNodeMinRowHeight(newHeight)
         this.updateSubviews()
 
         /*
-            this.node().setNodeRowMinHeight(h)
+            this.node().setNodeMinRowHeight(h)
             this.updateSubviews()
             //this.setMinAndMaxHeight(newHeight) // what about contentView?
             //this.contentView().autoFitParentHeight()
@@ -259,7 +259,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
                 this.closeButtonView().setOpacity(0)
             }
 
-            const h = this.node().nodeRowMinHeight()
+            const h = this.node().nodeMinRowHeight()
             if (h) {
                 this.setMinAndMaxHeight(h) 
                 this.contentView().autoFitParentHeight()
@@ -269,13 +269,13 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         /*
         // take up full height if node asks for it
         const node = this.node()
-        if (node && node.nodeRowMinHeight()) {
+        if (node && node.nodeMinRowHeight()) {
             const e = this.element()
-            if (node.nodeRowMinHeight() === -1) {
+            if (node.nodeMinRowHeight() === -1) {
                 this.setHeight("auto")                
                 this.setPaddingBottom("calc(100% - 20px)")
             } else {
-                this.setHeight(this.pxNumberToString(node.nodeRowMinHeight()))
+                this.setHeight(this.pxNumberToString(node.nodeMinRowHeight()))
             }
         }
         */

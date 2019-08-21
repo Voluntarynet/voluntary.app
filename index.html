@@ -92117,7 +92117,15 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         return this
     },
 
-    // helpers
+    // auto fit 
+    // need to be careful about interactions as some of these change 
+    // display and position attributes
+    // NOTE: when we ask parent to fit child, should we make sure child position attribute allows this?
+
+    hasAbsolutePositionChild: function() {
+        const match = this.subviews().detect(sv => sv.position() === "absolute")
+        return !Type.isNull(match) && !Type.isUndefined(match)
+    },
 
     // auto fit width
 
@@ -92128,22 +92136,26 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     },
 
     autoFitChildWidth: function() {
-        this.setWidth("fit-content")
-        this.setPosition("relative") 
+        assert(!this.hasAbsolutePositionChild()) // won't be able to autofit!
+        this.setDisplay("inline-block")
+        this.setWidth("auto")
+        this.setOverflow("auto")
         return this
     },
 
     // auto fit height
 
     autoFitParentHeight: function() {
-        this.setHeightPercentage(100)
         this.setPosition("absolute")
+        this.setHeightPercentage(100)
         return this
     },
 
     autoFitChildHeight: function() {
-        this.setHeight("fit-content")
+        assert(!this.hasAbsolutePositionChild()) // won't be able to autofit!
+
         this.setPosition("relative") // or static? but can't be absolute
+        this.setHeight("fit-content")
         return this
     },
 
@@ -93505,7 +93517,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     // html
     acceptsFileDrop: false,
 
-    nodeRowMinHeight: 0, // tall fields like draft body
+    nodeMinRowHeight: 0, // tall fields like draft body
     
     nodeContent: null,
     	
@@ -93531,8 +93543,8 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     nodeInspector: null,
     canDelete: false,
     nodeCanInspect: false,
-    canEditRowHeight: false,
-    canEditColumnWidth: false,
+    nodeCanEditRowHeight: false,
+    nodeCanEditColumnWidth: false,
 }).setSlots({
     init: function () {
         this._subnodes = []
@@ -96138,7 +96150,7 @@ ResourceLoader.pushRelativePaths([
             this.addFieldNamed("from")
             this.addFieldNamed("to")
             this.addFieldNamed("subject")
-            this.addFieldNamed("body").setNodeRowMinHeight(-1)
+            this.addFieldNamed("body").setNodeMinRowHeight(-1)
 
             this.setActions(["send"])
             this.setCanDelete(true)
@@ -96667,7 +96679,8 @@ BMField.newSubclassNamed("BMImageWellField").newSlots({
         this.setKeyIsEditable(false)
         this.setValueIsEditable(false)
         //this.addStoredSlot("imageDataURLs")
-        this.setCanEditRowHeight(true)
+        this.addStoredSlot("nodeMinRowHeight")
+        this.setNodeCanEditRowHeight(true)
     },
 
     /*
@@ -99515,8 +99528,8 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
     // edge pan
 
     acceptsBottomEdgePan: function() {
-        if (this.node().canEditColumnWidth) {
-            if (this.node().canEditColumnWidth()) {
+        if (this.node().nodeCanEditColumnWidth) {
+            if (this.node().nodeCanEditColumnWidth()) {
                 return true
             }
         }
@@ -100175,8 +100188,8 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     // bottom edge pan 
 
     acceptsBottomEdgePan: function() {
-        if (this.node().canEditRowHeight) {
-            if (this.node().canEditRowHeight()) {
+        if (this.node().nodeCanEditRowHeight) {
+            if (this.node().nodeCanEditRowHeight()) {
                 return true
             }
         }
@@ -100193,15 +100206,15 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         const p = aGesture.currentPosition() // position in document coords
         const f = this.frameInDocument()
         const newHeight = p.y() - f.y()
-        const minHeight = this.node() ? this.node().nodeRowMinHeight() : 10;
+        const minHeight = this.node() ? this.node().nodeMinRowHeight() : 10;
         if (newHeight < 10) {
             newHeight = 10;
         }
-        this.node().setNodeRowMinHeight(newHeight)
+        this.node().setNodeMinRowHeight(newHeight)
         this.updateSubviews()
 
         /*
-            this.node().setNodeRowMinHeight(h)
+            this.node().setNodeMinRowHeight(h)
             this.updateSubviews()
             //this.setMinAndMaxHeight(newHeight) // what about contentView?
             //this.contentView().autoFitParentHeight()
@@ -100365,7 +100378,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
                 this.closeButtonView().setOpacity(0)
             }
 
-            const h = this.node().nodeRowMinHeight()
+            const h = this.node().nodeMinRowHeight()
             if (h) {
                 this.setMinAndMaxHeight(h) 
                 this.contentView().autoFitParentHeight()
@@ -100375,13 +100388,13 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         /*
         // take up full height if node asks for it
         const node = this.node()
-        if (node && node.nodeRowMinHeight()) {
+        if (node && node.nodeMinRowHeight()) {
             const e = this.element()
-            if (node.nodeRowMinHeight() === -1) {
+            if (node.nodeMinRowHeight() === -1) {
                 this.setHeight("auto")                
                 this.setPaddingBottom("calc(100% - 20px)")
             } else {
-                this.setHeight(this.pxNumberToString(node.nodeRowMinHeight()))
+                this.setHeight(this.pxNumberToString(node.nodeMinRowHeight()))
             }
         }
         */
@@ -101165,13 +101178,13 @@ BrowserRow.newSubclassNamed("BrowserFieldRow").newSlots({
 	
         const node = this.node()
 
-        if (node && node.nodeRowMinHeight()) {
+        if (node && node.nodeMinRowHeight()) {
             const e = this.element()
-            if (node.nodeRowMinHeight() === -1) {
+            if (node.nodeMinRowHeight() === -1) {
                 this.setHeight("auto")                
                 this.setPaddingBottom("calc(100% - 20px)")
             } else {
-                this.setHeight(this.pxNumberToString(node.nodeRowMinHeight()))
+                this.setHeight(this.pxNumberToString(node.nodeMinRowHeight()))
             }
         }
                 
@@ -102002,13 +102015,13 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
 		
         const node = this.node()
 
-        if (node && node.nodeRowMinHeight()) {
-            if (node.nodeRowMinHeight() === -1) {
+        if (node && node.nodeMinRowHeight()) {
+            if (node.nodeMinRowHeight() === -1) {
                 this.setHeight("auto")
                 this.setPaddingBottom("calc(100% - 20px)")
 
             } else {
-                this.setHeight(this.pxNumberToString(node.nodeRowMinHeight()))
+                this.setHeight(this.pxNumberToString(node.nodeMinRowHeight()))
             }
         }
         

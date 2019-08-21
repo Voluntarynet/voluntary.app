@@ -19,7 +19,7 @@
             this.addFieldNamed("from")
             this.addFieldNamed("to")
             this.addFieldNamed("subject")
-            this.addFieldNamed("body").setNodeRowMinHeight(-1)
+            this.addFieldNamed("body").setNodeMinRowHeight(-1)
 
             this.setActions(["send"])
             this.setCanDelete(true)

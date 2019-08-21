@@ -179,13 +179,13 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
 		
         const node = this.node()
 
-        if (node && node.nodeRowMinHeight()) {
-            if (node.nodeRowMinHeight() === -1) {
+        if (node && node.nodeMinRowHeight()) {
+            if (node.nodeMinRowHeight() === -1) {
                 this.setHeight("auto")
                 this.setPaddingBottom("calc(100% - 20px)")
 
             } else {
-                this.setHeight(this.pxNumberToString(node.nodeRowMinHeight()))
+                this.setHeight(this.pxNumberToString(node.nodeMinRowHeight()))
             }
         }
         

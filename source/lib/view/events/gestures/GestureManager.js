@@ -31,27 +31,46 @@ ideal.Proto.newSubclassNamed("GestureManager").newSlots({
     requestActiveGesture: function(aGesture) {
         assert(aGesture)
         //this.releaseActiveGestureIfInactive()
-        if(aGesture == this.activeGesture()) {
+        if(aGesture === this.activeGesture()) {
             console.warn("attempt to activeate an already active gesture ", aGesture.typeId())
             return false
         }
 
-        if (!this.activeGesture()) {
-            aGesture.viewTarget().cancelAllGesturesExcept(aGesture)
-            this.cancelBegunGesturesExcept(aGesture)
-            this.setActiveGesture(aGesture)
-            if (this.isDebugging()) {
-                console.log(this.type() + " activating " + aGesture.description())
-            }
-            return true
-        } else {
-            if (this.isDebugging()) {
-                console.log(this.type() + " rejecting " + aGesture.description())
-                console.log(this.type() + " already active " + this.activeGesture().description())
+        const ag = this.activeGesture()
+        if (ag) {
+            const childViewIsRequesting = ag.viewTarget().hasSubviewDescendant(aGesture.viewTarget())
+            if (childViewIsRequesting) {
+                this.acceptGesture(aGesture)
+                return true
             }
         }
 
+        if (!ag) {
+            this.acceptGesture(aGesture)
+            return true
+        } else {
+            this.rejectGesture(aGesture)
+        }
+
         return false
+    },
+
+    acceptGesture: function(aGesture) { // private method
+        aGesture.viewTarget().cancelAllGesturesExcept(aGesture)
+        this.cancelBegunGesturesExcept(aGesture)
+        this.setActiveGesture(aGesture)
+        if (this.isDebugging()) {
+            console.log(this.type() + " activating " + aGesture.description())
+        }
+        return this
+    },
+
+    rejectGesture: function(aGesture) { // private method
+        if (this.isDebugging()) {
+            console.log(this.type() + " rejecting " + aGesture.description())
+            console.log(this.type() + " already active " + this.activeGesture().description())
+        }
+        return this
     },
 
     deactivateGesture: function(aGesture) {

@@ -9,6 +9,7 @@
     
     Behavior:
     On Return/Enter key, it passes focus to the nextResponder/parent.
+
 */
 
 DomStyledView.newSubclassNamed("TextField").newSlots({
@@ -20,6 +21,9 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
     doesTrim: true,
     didTextInputNote: null,
     didTextEditNote: null,
+    usesDoubleTapToEdit: false, // has to start false for proper state setup
+    doubleTapGestureRecognizer: null,
+    isEditable: false, // need to separate from contentEditable since we want to override when usesDoubleTapToEdit is true.
 }).setSlots({
     init: function () {
         DomView.init.apply(this)
@@ -41,6 +45,71 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
         return this
     },
 
+    setIsEditable: function(aBool) {
+        this._isEditable = aBool
+        if (!this._doubleTapGestureRecognizer) {
+            this.setContentEditable(aBool)
+        }
+        return this
+    },
+
+    isEditable: function() {
+        return this._isEditable
+    },
+
+    doubleTapGestureRecognizer: function() {
+        if (!this._doubleTapGestureRecognizer) {
+            const tg = TapGestureRecognizer.clone()
+            tg.setNumberOfTapsRequired(2)
+            tg.setNumberOfFingersRequired(1)
+            tg.setCompleteMessage("onDoubleTapComplete")
+            tg.setIsDebugging(true)
+            this._doubleTapGestureRecognizer = tg
+        }
+        return this._doubleTapGestureRecognizer
+    },
+
+    setUsesDoubleTapToEdit: function(aBool) {
+        if (this._usesDoubleTapToEdit !== aBool) {
+            this._usesDoubleTapToEdit = aBool
+
+            if (this._usesDoubleTapToEdit) {
+                this.addGestureRecognizer(this.doubleTapGestureRecognizer())
+                this.setContentEditable(false)
+            } else {
+                this.removeGestureRecognizer(this.doubleTapGestureRecognizer())
+                this.setDoubleTapGestureRecognizer(null)
+                if (this.isEditable()) {
+                    this.setContentEditable(true)
+                }
+            }
+        }
+        return this
+    },
+
+    onBlur: function() {
+        DomStyledView.onBlur.apply(this)
+        console.log(this.typeId() + ".onBlur()")
+        if (this.usesDoubleTapToEdit()) {
+            this.setContentEditable(false)
+        }
+    },
+
+    onTapBegin: function(aGesture) {
+        console.log(this.typeId() + ".onTapBegin()")
+        return true
+    },
+
+    onTapCancelled: function(aGesture) {
+        console.log(this.typeId() + ".onTapCancelled()")
+    },
+
+    onDoubleTapComplete: function(aGesture) {
+        console.log(this.typeId() + ".onDoubleTapComplete()")
+        this.setContentEditable(true)
+        this.focus()
+    },
+
     setFontSize: function(aNumber) {
         DomStyledView.setFontSize.apply(this, [aNumber])
         this.setMinAndMaxHeight(aNumber) // make sure TextfField can fit font size
@@ -49,8 +118,8 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
 
     setContentEditable: function(aBool) {
         DomStyledView.setContentEditable.apply(this, [aBool])
-        //console.log(this.typeId() + ".setContentEditable(" + aBool + ") = ", this.isContentEditable())
-        this.setIsRegisteredForClicks(this.isContentEditable()) 
+        //console.log(this.typeId() + ".setContentEditable(" + aBool + ") = ", this.contentEditable())
+        this.setIsRegisteredForClicks(this.contentEditable()) 
         return this
     },
 	
@@ -66,16 +135,19 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
     // ------------------
 
     setValue: function(newValue) {
-        //let newValue = this.visibleValue()
-	    this.setInnerHTML(newValue)
-        return this
-    },	
-			
+        return this.setString(newValue)
+    },
+
     value: function() {
-	    /*
-	    return this.element().text
-        */
-	    return this.innerHTML()
+        // this.element().text ?
+        return this.string()
+    },
+
+    setString: function(newValue) {
+        //let newValue = this.visibleValue()
+        DomStyledView.setString.apply(this, [newValue])
+        //console.log("textfield '" + newValue + "' usesDoubleTapToEdit:", this.usesDoubleTapToEdit())
+        return this
     },
 	
     // ------------------
@@ -181,7 +253,7 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
         // to prevent click-to-edit event from selecting the background row
         //console.log(this.typeId() + ".onClick()")
 
-        if (this.isContentEditable()) {
+        if (this.contentEditable()) {
             this.sendActionToTarget()
             event.stopPropagation()
             return false

@@ -19,6 +19,8 @@ BrowserRow.newSubclassNamed("BrowserTitledRow").newSlots({
         this.setTitleView(this.contentView().addSubview(BrowserRowTitle.clone()))
         this.setSubtitleView(this.contentView().addSubview(BrowserRowSubtitle.clone()))
         this.setNoteView(this.contentView().addSubview(BrowserRowNote.clone()))
+        
+        this.titleView().setUsesDoubleTapToEdit(true)
 
         this.updateSubviews()
         this.setIsSelectable(true)
@@ -67,8 +69,8 @@ BrowserRow.newSubclassNamed("BrowserTitledRow").newSlots({
 
         const node = this.node()
 
-        this.titleView().setContentEditable(node ? node.nodeTitleIsEditable() : false)
-        this.subtitleView().setContentEditable(node ? node.nodeSubtitleIsEditable() : false)
+        this.titleView().setIsEditable(node ? node.nodeTitleIsEditable() : false)
+        this.subtitleView().setIsEditable(node ? node.nodeSubtitleIsEditable() : false)
         
         if (node) {
             const b = this.isSelected()

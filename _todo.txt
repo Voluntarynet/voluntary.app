@@ -1,11 +1,12 @@
 
 --------------
 
-Row auto vertical size issue:
+issue with tap - what if a parent and child view both get a tap?
+- how do we implement an event propogation system like click uses?
+- option: have request activation check to see if the currently activated view is under the requesting on,
+  if so, override it?
 
-- Using absolute position on row contentView prevents vertical size from being auto set.
-- we need absolute positioning for panning contentView?
-
+BrowserRow title - TextField option for double tap to edit?
 
 
 --------------

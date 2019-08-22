@@ -85523,27 +85523,46 @@ ideal.Proto.newSubclassNamed("GestureManager").newSlots({
     requestActiveGesture: function(aGesture) {
         assert(aGesture)
         //this.releaseActiveGestureIfInactive()
-        if(aGesture == this.activeGesture()) {
+        if(aGesture === this.activeGesture()) {
             console.warn("attempt to activeate an already active gesture ", aGesture.typeId())
             return false
         }
 
-        if (!this.activeGesture()) {
-            aGesture.viewTarget().cancelAllGesturesExcept(aGesture)
-            this.cancelBegunGesturesExcept(aGesture)
-            this.setActiveGesture(aGesture)
-            if (this.isDebugging()) {
-                console.log(this.type() + " activating " + aGesture.description())
-            }
-            return true
-        } else {
-            if (this.isDebugging()) {
-                console.log(this.type() + " rejecting " + aGesture.description())
-                console.log(this.type() + " already active " + this.activeGesture().description())
+        const ag = this.activeGesture()
+        if (ag) {
+            const childViewIsRequesting = ag.viewTarget().hasSubviewDescendant(aGesture.viewTarget())
+            if (childViewIsRequesting) {
+                this.acceptGesture(aGesture)
+                return true
             }
         }
 
+        if (!ag) {
+            this.acceptGesture(aGesture)
+            return true
+        } else {
+            this.rejectGesture(aGesture)
+        }
+
         return false
+    },
+
+    acceptGesture: function(aGesture) { // private method
+        aGesture.viewTarget().cancelAllGesturesExcept(aGesture)
+        this.cancelBegunGesturesExcept(aGesture)
+        this.setActiveGesture(aGesture)
+        if (this.isDebugging()) {
+            console.log(this.type() + " activating " + aGesture.description())
+        }
+        return this
+    },
+
+    rejectGesture: function(aGesture) { // private method
+        if (this.isDebugging()) {
+            console.log(this.type() + " rejecting " + aGesture.description())
+            console.log(this.type() + " already active " + this.activeGesture().description())
+        }
+        return this
     },
 
     deactivateGesture: function(aGesture) {
@@ -86759,10 +86778,10 @@ GestureRecognizer.newSubclassNamed("SlideGestureRecognizer").newSlots({
 
     The names of the delegate messages can be specified. Example:
 
-        let tg = TapGestureRecognizer.clone()
+        const tg = TapGestureRecognizer.clone()
         tg.setNumberOfTapsRequired(2)
-        tg.setNumberOfFingerRequired(2)
-        tg.setCompleteMessage("onDoublFingerDoubleTapComplete")
+        tg.setNumberOfFingersRequired(2)
+        tg.setCompleteMessage("onDoubleFingerDoubleTapComplete")
         this.addGestureRecognizer(tg)
 
 */
@@ -86781,6 +86800,7 @@ GestureRecognizer.newSubclassNamed("TapGestureRecognizer").newSlots({
         this.setListenerClasses(this.defaultListenerClasses())
         //this.setIsDebugging(true) 
         this.resetTapCount()
+        this.setShouldRequestActivation(false) // allow multiple tap targets?
         return this
     },
 
@@ -86796,7 +86816,7 @@ GestureRecognizer.newSubclassNamed("TapGestureRecognizer").newSlots({
             this.stopTimer()
         }
 
-        let tid = setTimeout(() => { this.cancel() }, this.maxHoldPeriod());
+        const tid = setTimeout(() => { this.cancel() }, this.maxHoldPeriod());
         this.setTimeoutId(tid)
         return this
     },
@@ -86837,6 +86857,10 @@ GestureRecognizer.newSubclassNamed("TapGestureRecognizer").newSlots({
     onUp: function (event) {
         GestureRecognizer.onUp.apply(this, [event])
  
+        if (this.isDebugging()) {
+            console.log(this.typeId() + ".onUp()  tapCount:" + this.tapCount() + " viewTarget:" + this.viewTarget().typeId())
+        }
+
         if (this.hasTimer()) {
             if (this.tapCount() === this.numberOfTapsRequired()) {
                 this.stopTimer()
@@ -86870,7 +86894,7 @@ GestureRecognizer.newSubclassNamed("TapGestureRecognizer").newSlots({
     // 3 taps * 10 fingers?
 
     incrementTapCountForFingerCount: function(n) {
-        let d = this.tapCountDict()
+        const d = this.tapCountDict()
         if (n in d) { 
             d[n] ++ 
         } else {
@@ -90539,6 +90563,13 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
     // --- subviews ---
 
+    hasSubviewDescendant: function(aView) {
+        const match = this.subviews().detect((sv) => {
+            return sv === aView || sv.hasSubviewDescendant(aView)
+        })
+        return !Type.isNullOrUndefined(match)
+    },
+
     subviewCount: function () {
         return this.subviews().length
     },
@@ -91148,7 +91179,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         return this
     },
 
-    isContentEditable: function () {
+    isContentEditable: function () { // there's a separate method for contentEditable() that just accesses element attribute
         //var v = window.getComputedStyle(this.element(), null).getPropertyValue("contentEditable");
         const s = this.element().contentEditable
         if (s === "inherit" && this.parentView()) {
@@ -92124,7 +92155,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
     hasAbsolutePositionChild: function() {
         const match = this.subviews().detect(sv => sv.position() === "absolute")
-        return !Type.isNull(match) && !Type.isUndefined(match)
+        return !Type.isNullOrUndefined(match)
     },
 
     // auto fit width
@@ -92825,6 +92856,7 @@ DomView.newSubclassNamed("PanelView").newSlots({
     
     Behavior:
     On Return/Enter key, it passes focus to the nextResponder/parent.
+
 */
 
 DomStyledView.newSubclassNamed("TextField").newSlots({
@@ -92836,6 +92868,9 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
     doesTrim: true,
     didTextInputNote: null,
     didTextEditNote: null,
+    usesDoubleTapToEdit: false, // has to start false for proper state setup
+    doubleTapGestureRecognizer: null,
+    isEditable: false, // need to separate from contentEditable since we want to override when usesDoubleTapToEdit is true.
 }).setSlots({
     init: function () {
         DomView.init.apply(this)
@@ -92857,6 +92892,71 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
         return this
     },
 
+    setIsEditable: function(aBool) {
+        this._isEditable = aBool
+        if (!this._doubleTapGestureRecognizer) {
+            this.setContentEditable(aBool)
+        }
+        return this
+    },
+
+    isEditable: function() {
+        return this._isEditable
+    },
+
+    doubleTapGestureRecognizer: function() {
+        if (!this._doubleTapGestureRecognizer) {
+            const tg = TapGestureRecognizer.clone()
+            tg.setNumberOfTapsRequired(2)
+            tg.setNumberOfFingersRequired(1)
+            tg.setCompleteMessage("onDoubleTapComplete")
+            tg.setIsDebugging(true)
+            this._doubleTapGestureRecognizer = tg
+        }
+        return this._doubleTapGestureRecognizer
+    },
+
+    setUsesDoubleTapToEdit: function(aBool) {
+        if (this._usesDoubleTapToEdit !== aBool) {
+            this._usesDoubleTapToEdit = aBool
+
+            if (this._usesDoubleTapToEdit) {
+                this.addGestureRecognizer(this.doubleTapGestureRecognizer())
+                this.setContentEditable(false)
+            } else {
+                this.removeGestureRecognizer(this.doubleTapGestureRecognizer())
+                this.setDoubleTapGestureRecognizer(null)
+                if (this.isEditable()) {
+                    this.setContentEditable(true)
+                }
+            }
+        }
+        return this
+    },
+
+    onBlur: function() {
+        DomStyledView.onBlur.apply(this)
+        console.log(this.typeId() + ".onBlur()")
+        if (this.usesDoubleTapToEdit()) {
+            this.setContentEditable(false)
+        }
+    },
+
+    onTapBegin: function(aGesture) {
+        console.log(this.typeId() + ".onTapBegin()")
+        return true
+    },
+
+    onTapCancelled: function(aGesture) {
+        console.log(this.typeId() + ".onTapCancelled()")
+    },
+
+    onDoubleTapComplete: function(aGesture) {
+        console.log(this.typeId() + ".onDoubleTapComplete()")
+        this.setContentEditable(true)
+        this.focus()
+    },
+
     setFontSize: function(aNumber) {
         DomStyledView.setFontSize.apply(this, [aNumber])
         this.setMinAndMaxHeight(aNumber) // make sure TextfField can fit font size
@@ -92865,8 +92965,8 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
 
     setContentEditable: function(aBool) {
         DomStyledView.setContentEditable.apply(this, [aBool])
-        //console.log(this.typeId() + ".setContentEditable(" + aBool + ") = ", this.isContentEditable())
-        this.setIsRegisteredForClicks(this.isContentEditable()) 
+        //console.log(this.typeId() + ".setContentEditable(" + aBool + ") = ", this.contentEditable())
+        this.setIsRegisteredForClicks(this.contentEditable()) 
         return this
     },
 	
@@ -92882,16 +92982,19 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
     // ------------------
 
     setValue: function(newValue) {
-        //let newValue = this.visibleValue()
-	    this.setInnerHTML(newValue)
-        return this
-    },	
-			
+        return this.setString(newValue)
+    },
+
     value: function() {
-	    /*
-	    return this.element().text
-        */
-	    return this.innerHTML()
+        // this.element().text ?
+        return this.string()
+    },
+
+    setString: function(newValue) {
+        //let newValue = this.visibleValue()
+        DomStyledView.setString.apply(this, [newValue])
+        //console.log("textfield '" + newValue + "' usesDoubleTapToEdit:", this.usesDoubleTapToEdit())
+        return this
     },
 	
     // ------------------
@@ -92997,7 +93100,7 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
         // to prevent click-to-edit event from selecting the background row
         //console.log(this.typeId() + ".onClick()")
 
-        if (this.isContentEditable()) {
+        if (this.contentEditable()) {
             this.sendActionToTarget()
             event.stopPropagation()
             return false
@@ -99528,19 +99631,15 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
     // edge pan
 
     acceptsBottomEdgePan: function() {
-        if (this.node().nodeCanEditColumnWidth) {
-            if (this.node().nodeCanEditColumnWidth()) {
-                return true
-            }
+        if (this.node().nodeCanEditColumnWidth()) {
+            return true
         }
         return false
     },
 
     acceptsRightEdgePan: function() {
-        if (this.node().canEditWidth) {
-            if (this.node().canEditWidth()) {
-                return true
-            }
+        if (this.node().nodeCanEditColumnWidth()) {
+            return true
         }
         return false
 
@@ -100157,7 +100256,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
-        this.setIsRegisteredForClicks(true)
+        //this.setIsRegisteredForClicks(true)
         this.turnOffUserSelect()
         this.setAcceptsFirstResponder(false)
         
@@ -100177,7 +100276,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         
         this.addGestureRecognizer(LongPressGestureRecognizer.clone()) // for long press & pan reordering
         this.addGestureRecognizer(SlideGestureRecognizer.clone()) // for slide delete
-        //this.addGestureRecognizer(TapGestureRecognizer.clone()) 
+        this.addGestureRecognizer(TapGestureRecognizer.clone()) 
 
         //this.addGestureRecognizer(RightEdgePanGestureRecognizer.clone()) // use to adjust width?
         this.addGestureRecognizer(BottomEdgePanGestureRecognizer.clone()) // use to adjust height?
@@ -100548,9 +100647,13 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         }
     },
 
+    acceptsTapBegin: function(aGesture) {
+        return true
+    },
+
     onTapComplete: function() {
-        //console.log(this.typeId() + ".onTapComplete()")
-        //this.justTap()
+        console.log(this.typeId() + ".onTapComplete()")
+        this.justTap()
         return this
     },
 
@@ -100876,7 +100979,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         if (modifierNames.length != 0) {
             const methodName = "on" + modifierNames.join("") + "Click"
             // examples: onShiftClick, onAltMetaClick, etc
-            //console.log("methodName = ", methodName)
+            // console.log("methodName = ", methodName)
             if (this[methodName]) {
                 this[methodName].apply(this, [event])
             }
@@ -100885,7 +100988,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         }
 
         //console.log(this.typeId() + ".onClick()")
-        GestureManager.shared().cancelAllBegunGestures()
+        GestureManager.shared().cancelAllBegunGestures() // why do this? Is it because we don't want the column capturing the tap?
         event.stopPropagation()
         return false
     },
@@ -100955,6 +101058,8 @@ BrowserRow.newSubclassNamed("BrowserTitledRow").newSlots({
         this.setTitleView(this.contentView().addSubview(BrowserRowTitle.clone()))
         this.setSubtitleView(this.contentView().addSubview(BrowserRowSubtitle.clone()))
         this.setNoteView(this.contentView().addSubview(BrowserRowNote.clone()))
+        
+        this.titleView().setUsesDoubleTapToEdit(true)
 
         this.updateSubviews()
         this.setIsSelectable(true)
@@ -101003,8 +101108,8 @@ BrowserRow.newSubclassNamed("BrowserTitledRow").newSlots({
 
         const node = this.node()
 
-        this.titleView().setContentEditable(node ? node.nodeTitleIsEditable() : false)
-        this.subtitleView().setContentEditable(node ? node.nodeSubtitleIsEditable() : false)
+        this.titleView().setIsEditable(node ? node.nodeTitleIsEditable() : false)
+        this.subtitleView().setIsEditable(node ? node.nodeSubtitleIsEditable() : false)
         
         if (node) {
             const b = this.isSelected()

@@ -38,7 +38,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
-        this.setIsRegisteredForClicks(true)
+        //this.setIsRegisteredForClicks(true)
         this.turnOffUserSelect()
         this.setAcceptsFirstResponder(false)
         
@@ -58,7 +58,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         
         this.addGestureRecognizer(LongPressGestureRecognizer.clone()) // for long press & pan reordering
         this.addGestureRecognizer(SlideGestureRecognizer.clone()) // for slide delete
-        //this.addGestureRecognizer(TapGestureRecognizer.clone()) 
+        this.addGestureRecognizer(TapGestureRecognizer.clone()) 
 
         //this.addGestureRecognizer(RightEdgePanGestureRecognizer.clone()) // use to adjust width?
         this.addGestureRecognizer(BottomEdgePanGestureRecognizer.clone()) // use to adjust height?
@@ -429,9 +429,13 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         }
     },
 
+    acceptsTapBegin: function(aGesture) {
+        return true
+    },
+
     onTapComplete: function() {
-        //console.log(this.typeId() + ".onTapComplete()")
-        //this.justTap()
+        console.log(this.typeId() + ".onTapComplete()")
+        this.justTap()
         return this
     },
 
@@ -757,7 +761,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         if (modifierNames.length != 0) {
             const methodName = "on" + modifierNames.join("") + "Click"
             // examples: onShiftClick, onAltMetaClick, etc
-            //console.log("methodName = ", methodName)
+            // console.log("methodName = ", methodName)
             if (this[methodName]) {
                 this[methodName].apply(this, [event])
             }
@@ -766,7 +770,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         }
 
         //console.log(this.typeId() + ".onClick()")
-        GestureManager.shared().cancelAllBegunGestures()
+        GestureManager.shared().cancelAllBegunGestures() // why do this? Is it because we don't want the column capturing the tap?
         event.stopPropagation()
         return false
     },

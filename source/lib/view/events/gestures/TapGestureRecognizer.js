@@ -20,10 +20,10 @@
 
     The names of the delegate messages can be specified. Example:
 
-        let tg = TapGestureRecognizer.clone()
+        const tg = TapGestureRecognizer.clone()
         tg.setNumberOfTapsRequired(2)
-        tg.setNumberOfFingerRequired(2)
-        tg.setCompleteMessage("onDoublFingerDoubleTapComplete")
+        tg.setNumberOfFingersRequired(2)
+        tg.setCompleteMessage("onDoubleFingerDoubleTapComplete")
         this.addGestureRecognizer(tg)
 
 */
@@ -42,6 +42,7 @@ GestureRecognizer.newSubclassNamed("TapGestureRecognizer").newSlots({
         this.setListenerClasses(this.defaultListenerClasses())
         //this.setIsDebugging(true) 
         this.resetTapCount()
+        this.setShouldRequestActivation(false) // allow multiple tap targets?
         return this
     },
 
@@ -57,7 +58,7 @@ GestureRecognizer.newSubclassNamed("TapGestureRecognizer").newSlots({
             this.stopTimer()
         }
 
-        let tid = setTimeout(() => { this.cancel() }, this.maxHoldPeriod());
+        const tid = setTimeout(() => { this.cancel() }, this.maxHoldPeriod());
         this.setTimeoutId(tid)
         return this
     },
@@ -98,6 +99,10 @@ GestureRecognizer.newSubclassNamed("TapGestureRecognizer").newSlots({
     onUp: function (event) {
         GestureRecognizer.onUp.apply(this, [event])
  
+        if (this.isDebugging()) {
+            console.log(this.typeId() + ".onUp()  tapCount:" + this.tapCount() + " viewTarget:" + this.viewTarget().typeId())
+        }
+
         if (this.hasTimer()) {
             if (this.tapCount() === this.numberOfTapsRequired()) {
                 this.stopTimer()
@@ -131,7 +136,7 @@ GestureRecognizer.newSubclassNamed("TapGestureRecognizer").newSlots({
     // 3 taps * 10 fingers?
 
     incrementTapCountForFingerCount: function(n) {
-        let d = this.tapCountDict()
+        const d = this.tapCountDict()
         if (n in d) { 
             d[n] ++ 
         } else {

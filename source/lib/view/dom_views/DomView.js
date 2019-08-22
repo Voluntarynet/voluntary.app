@@ -1412,6 +1412,13 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
     // --- subviews ---
 
+    hasSubviewDescendant: function(aView) {
+        const match = this.subviews().detect((sv) => {
+            return sv === aView || sv.hasSubviewDescendant(aView)
+        })
+        return !Type.isNullOrUndefined(match)
+    },
+
     subviewCount: function () {
         return this.subviews().length
     },
@@ -2021,7 +2028,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         return this
     },
 
-    isContentEditable: function () {
+    isContentEditable: function () { // there's a separate method for contentEditable() that just accesses element attribute
         //var v = window.getComputedStyle(this.element(), null).getPropertyValue("contentEditable");
         const s = this.element().contentEditable
         if (s === "inherit" && this.parentView()) {
@@ -2997,7 +3004,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
     hasAbsolutePositionChild: function() {
         const match = this.subviews().detect(sv => sv.position() === "absolute")
-        return !Type.isNull(match) && !Type.isUndefined(match)
+        return !Type.isNullOrUndefined(match)
     },
 
     // auto fit width

@@ -438,7 +438,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     },
 
     onTapComplete: function() {
-        console.log(this.typeId() + ".onTapComplete()")
+        //console.log(this.typeId() + ".onTapComplete()")
         this.justTap()
         return this
     },

@@ -85941,6 +85941,7 @@ ideal.Proto.newSubclassNamed("GestureManager").newSlots({
 
         const ag = this.activeGesture()
         if (ag) {
+            // allow child views to steal the active gesture
             const childViewIsRequesting = ag.viewTarget().hasSubviewDescendant(aGesture.viewTarget())
             if (childViewIsRequesting) {
                 this.acceptGesture(aGesture)
@@ -93354,6 +93355,11 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
         }
     },
 
+    /*
+    acceptsTapBegin: function(aGesture) {
+        return true
+    },
+
     onTapBegin: function(aGesture) {
         console.log(this.typeId() + ".onTapBegin()")
         return true
@@ -93362,9 +93368,10 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
     onTapCancelled: function(aGesture) {
         console.log(this.typeId() + ".onTapCancelled()")
     },
+    */
 
     onDoubleTapComplete: function(aGesture) {
-        console.log(this.typeId() + ".onDoubleTapComplete()")
+        //console.log(this.typeId() + ".onDoubleTapComplete()")
         this.setContentEditable(true)
         this.focus()
     },

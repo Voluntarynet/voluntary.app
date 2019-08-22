@@ -14,6 +14,7 @@ BMStorableNode.newSubclassNamed("BMCreatorNode").newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
+        this.setNodeTitleIsEditable(false)
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(false)
         this.setNodeCanReorderSubnodes(false)

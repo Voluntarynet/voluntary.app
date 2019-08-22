@@ -66,7 +66,7 @@ BrowserRow.newSubclassNamed("BMPostDraftRowView").newSlots({
                 
         // content view
         this.setTextContentView(this.rightView().addSubview(TextField.clone().setDivClassName("BMPostDraftRowContentView")))
-        this.textContentView().setContentEditable(true)
+        this.textContentView().setIsEditable(true)
 
         this.closeButtonView().setBackgroundImageUrlPath(this.pathForIconName("close"))
         this.closeButtonView().setTop(15).setRight(15).setMinAndMaxWidth(10).setMinAndMaxHeight(10)

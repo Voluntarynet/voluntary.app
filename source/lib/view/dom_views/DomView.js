@@ -1705,6 +1705,10 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         return this.setInnerHTML(v)
     },
 
+    string: function() {
+        return this.innerHTML()
+    },
+
     loremIpsum: function (maxWordCount) {
         this.setInnerHTML("".loremIpsum(10, 40))
         return this
@@ -2085,10 +2089,21 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
     hasGestureType: function (typeName) {
         return this.gesturesOfType(typeName).length > 0
+    },
 
+    hasGestureRecognizer: function(gr) {
+        return this.gestureRecognizers().contains(gr)
+    },
+
+    addGestureRecognizerIfAbsent: function(gr) {
+        if (!this.hasGestureRecognizer(gr)) {
+            this.addGestureRecognizer(gr)
+        }
+        return this
     },
 
     addGestureRecognizer: function (gr) {
+        assert(!this.hasGestureRecognizer(gr))
         this.gestureRecognizers().append(gr)
         gr.setViewTarget(this)
         gr.start()

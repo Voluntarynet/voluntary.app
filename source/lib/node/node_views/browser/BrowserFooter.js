@@ -18,7 +18,7 @@ NodeView.newSubclassNamed("BrowserFooter").newSlots({
 		
         const textView = TextField.clone().setDivClassName("BrowserFooterTextView NodeView DomView") //.setUserSelect("none")
         this.setTextView(textView)
-	    this.textView().setContentEditable(true).setDoesClearOnReturn(true).setDoesHoldFocusOnReturn(true)
+	    this.textView().setIsEditable(true).setDoesClearOnReturn(true).setDoesHoldFocusOnReturn(true)
 						
         this.setRightActionsView(DomView.clone().setDivClassName("BrowserFooterRightActionsView NodeView DomView"))
 		

@@ -45,10 +45,12 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
         return this
     },
 
+    // editing control
+
     setIsEditable: function(aBool) {
-        this._isEditable = aBool
-        if (!this._doubleTapGestureRecognizer) {
-            this.setContentEditable(aBool)
+        if (this._isEditable !== aBool) {
+            this._isEditable = aBool
+            this.syncEditingControl()
         }
         return this
     },
@@ -57,58 +59,69 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
         return this._isEditable
     },
 
-    doubleTapGestureRecognizer: function() {
-        if (!this._doubleTapGestureRecognizer) {
-            const tg = TapGestureRecognizer.clone()
-            tg.setNumberOfTapsRequired(2)
-            tg.setNumberOfFingersRequired(1)
-            tg.setCompleteMessage("onDoubleTapComplete")
-            //tg.setIsDebugging(true)
-            this._doubleTapGestureRecognizer = tg
-        }
-        return this._doubleTapGestureRecognizer
-    },
-
     setUsesDoubleTapToEdit: function(aBool) {
         if (this._usesDoubleTapToEdit !== aBool) {
             this._usesDoubleTapToEdit = aBool
-
-            if (this._usesDoubleTapToEdit) {
-                this.addGestureRecognizer(this.doubleTapGestureRecognizer())
-                this.setContentEditable(false)
-            } else {
-                this.removeGestureRecognizer(this.doubleTapGestureRecognizer())
-                this.setDoubleTapGestureRecognizer(null)
-                if (this.isEditable()) {
-                    this.setContentEditable(true)
-                }
-            }
+            this.syncEditingControl()
         }
         return this
     },
 
+    // double tap gesture
+
+    newDoubleTapGestureRecognizer: function() { // private
+        const tg = TapGestureRecognizer.clone()
+        tg.setNumberOfTapsRequired(2)
+        tg.setNumberOfFingersRequired(1)
+        tg.setCompleteMessage("onDoubleTapComplete")
+        //tg.setIsDebugging(true)
+        return tg
+    },
+
+    doubleTapGestureRecognizer: function() {
+        if (!this._doubleTapGestureRecognizer) {
+            this._doubleTapGestureRecognizer = this.newDoubleTapGestureRecognizer()
+        }
+        return this._doubleTapGestureRecognizer
+    },
+
+    syncEditingControl: function() {
+        if (this.isEditable()) {
+            if (this.usesDoubleTapToEdit()) {
+                //this.doubleTapGestureRecognizer().start()
+                this.addGestureRecognizerIfAbsent(this.doubleTapGestureRecognizer())
+                this.setContentEditable(false)
+            } else {
+                this.setContentEditable(true)
+            }
+        } else {
+            if (this.usesDoubleTapToEdit()) {
+                //this.doubleTapGestureRecognizer().stop()
+                this.removeGestureRecognizer(this.doubleTapGestureRecognizer())
+                this.setDoubleTapGestureRecognizer(null)
+            }
+            this.setContentEditable(false)
+        }
+        return this
+    },
+
+    onDoubleTapComplete: function(aGesture) {
+        // make content editable and select text
+        //console.log(this.typeId() + ".onDoubleTapComplete()")
+        this.setContentEditable(true)
+        this.focus()
+        this.selectAll()
+    },
+
     onBlur: function() {
         DomStyledView.onBlur.apply(this)
-        console.log(this.typeId() + ".onBlur()")
+        //console.log(this.typeId() + ".onBlur()")
         if (this.usesDoubleTapToEdit()) {
             this.setContentEditable(false)
         }
     },
 
-    onTapBegin: function(aGesture) {
-        console.log(this.typeId() + ".onTapBegin()")
-        return true
-    },
 
-    onTapCancelled: function(aGesture) {
-        console.log(this.typeId() + ".onTapCancelled()")
-    },
-
-    onDoubleTapComplete: function(aGesture) {
-        console.log(this.typeId() + ".onDoubleTapComplete()")
-        this.setContentEditable(true)
-        this.focus()
-    },
 
     setFontSize: function(aNumber) {
         DomStyledView.setFontSize.apply(this, [aNumber])

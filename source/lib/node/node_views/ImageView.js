@@ -21,7 +21,7 @@ NodeView.newSubclassNamed("ImageView").newSlots({
         this.addSubview(this.imageContainer())
         
         //this.setEditable(false)
-        this.setContentEditable(false)
+        this.setIsEditable(false)
         this.dragUnhighlight()
         this.turnOffUserSelect()
         this.setTransition("all 0.3s")

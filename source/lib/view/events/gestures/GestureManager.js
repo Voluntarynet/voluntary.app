@@ -38,6 +38,7 @@ ideal.Proto.newSubclassNamed("GestureManager").newSlots({
 
         const ag = this.activeGesture()
         if (ag) {
+            // allow child views to steal the active gesture
             const childViewIsRequesting = ag.viewTarget().hasSubviewDescendant(aGesture.viewTarget())
             if (childViewIsRequesting) {
                 this.acceptGesture(aGesture)

@@ -11,7 +11,7 @@ BMFieldRowView.newSubclassNamed("BMImageWellFieldView").newSlots({
     init: function () {
         BMFieldRowView.init.apply(this)
         //this.keyView().setDivClassName("BMImageWellKeyField") //.setDisplay("none")
-        //this.valueView().setContentEditable(false)
+        //this.valueView().setIsEditable(false)
         this.turnOffUserSelect()
         this.keyView().setTransition("all 0.3s")
         return this

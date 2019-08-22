@@ -63,7 +63,7 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
             tg.setNumberOfTapsRequired(2)
             tg.setNumberOfFingersRequired(1)
             tg.setCompleteMessage("onDoubleTapComplete")
-            tg.setIsDebugging(true)
+            //tg.setIsDebugging(true)
             this._doubleTapGestureRecognizer = tg
         }
         return this._doubleTapGestureRecognizer

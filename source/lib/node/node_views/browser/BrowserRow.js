@@ -249,7 +249,9 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
      
     updateSubviews: function() {   
         if (this.closeButtonView()) {
-            if (this.node()) {
+            const node = this.node()
+
+            if (node) {
                 this.closeButtonView().setColor(this.currentStyle().color()) // needed?
             }
 			
@@ -259,10 +261,12 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
                 this.closeButtonView().setOpacity(0)
             }
 
-            const h = this.node().nodeMinRowHeight()
-            if (h) {
-                this.setMinAndMaxHeight(h) 
-                this.contentView().autoFitParentHeight()
+            if (node) {
+                const h = node.nodeMinRowHeight()
+                if (h) {
+                    this.setMinAndMaxHeight(h) 
+                    this.contentView().autoFitParentHeight()
+                }
             }
         }
 
@@ -751,6 +755,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
 	    this.requestSelection()
     },
 
+    /*
     onClick: function (event) {
         if (this.isDeleting()) {
             return false
@@ -774,6 +779,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         event.stopPropagation()
         return false
     },
+    */
 
     onControlClick: function() {
     },

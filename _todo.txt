@@ -1,6 +1,8 @@
 
 --------------
 
+turn off arrow key handling by column while editing text field
+
 issue with tap - what if a parent and child view both get a tap?
 - how do we implement an event propogation system like click uses?
 - option: have request activation check to see if the currently activated view is under the requesting on,

@@ -111,6 +111,7 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
         this.setContentEditable(true)
         this.focus()
         this.selectAll()
+        this.focus()
     },
 
     onBlur: function() {
@@ -120,8 +121,6 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
             this.setContentEditable(false)
         }
     },
-
-
 
     setFontSize: function(aNumber) {
         DomStyledView.setFontSize.apply(this, [aNumber])

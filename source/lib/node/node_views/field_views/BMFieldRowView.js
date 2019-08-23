@@ -10,7 +10,7 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
     keyView: null,
     valueView: null,
     noteView: null,
-    editableColor: "black",
+    editableColor: "#aaa",
     uneditableColor: "#888",
     errorColor: "red",
 }).setSlots({
@@ -23,7 +23,7 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
         this.setKeyView(TextField.clone().setDivClassName("BMFieldKeyView"))
         this.addContentSubview(this.keyView())     
    		this.keyView().turnOffUserSelect().setSpellCheck(false)   
-        this.keyView().setMarginLeft(20)
+        this.keyView().setMarginLeft(18)
 
         //this.contentView().setPaddingLeft(20)
         this.setValueView(this.createValueView())
@@ -133,7 +133,8 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
             valueView.setToolTip(node.valueError())
 			
         } else {
-            valueView.setBackgroundColor("transparent")
+            //valueView.setBackgroundColor("transparent")
+            //valueView.setBackgroundColor("#333")
             valueView.setColor(color)
             valueView.setToolTip("")
         }

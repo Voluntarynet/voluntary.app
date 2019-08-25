@@ -1,6 +1,8 @@
 
 --------------
 
+unable to edit menu if it's select alled
+
 turn off arrow key handling by column while editing text field
 
 issue with tap - what if a parent and child view both get a tap?

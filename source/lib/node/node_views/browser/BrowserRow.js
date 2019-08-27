@@ -801,7 +801,9 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
             this.setOpacity(0.25)
         }
         */
-	    this.updateSubviews()
+        this.updateSubviews()
+        //this.syncFromNode() // need this to update selection color on fields?
+        //console.log('test sync')
         return this
     },
 

@@ -1,7 +1,32 @@
 
+styles:
+
+    rowItems:
+      title
+      subtitle
+      field key
+      field value 
+      
+        states:
+          unselected 
+          selected
+          disabled
+
+             attributes:
+               font
+               size
+               color
+               background-color
+               opacity
+               border-left, etc
+               border-radius
+               padding?
+               margins?
+      
+
 --------------
 
-unable to edit menu if it's select alled
+need a way to set icon forground colors
 
 turn off arrow key handling by column while editing text field
 

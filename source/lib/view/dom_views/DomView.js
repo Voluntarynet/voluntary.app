@@ -196,7 +196,8 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
                     "background-color": true,
                     "box-shadow": true,
                     "border-bottom": true,
-                    "transform-origin": true
+                    "transform-origin": true,
+                    "outline": true
                 }
 
                 const resultValue = style[key]

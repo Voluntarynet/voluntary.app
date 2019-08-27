@@ -22,11 +22,21 @@ ideal.Proto.newSubclassNamed("BMViewStyle").newSlots({
     borderRight: null,
     borderTop: null,
     borderBottom: null,
+    borderWidth: null,
+    borderColor: null,
+    borderRadius: null,
 	
     // margin, padding, border,...
     // fontSize, fontFamily, fontStyle
 	
-    styleNames: ["color", "backgroundColor", "opacity", "borderLeft", "borderRight", "borderTop", "borderBottom"]
+    styleNames: [
+        "color", 
+        "backgroundColor", 
+        "opacity", 
+        "borderLeft", "borderRight", "borderTop", "borderBottom",
+        //"borderWidth"
+        //"borderRadius"
+    ]
 }).setSlots({
     init: function () {
         return this
@@ -56,7 +66,13 @@ ideal.Proto.newSubclassNamed("BMViewStyle").newSlots({
 	
     applyToView: function(aView) {		
         this.styleNames().forEach( (name) => { 
-            const v = this[name].apply(this)
+            const getterMethod = this[name]
+            if (!getterMethod) {
+                const errorMsg = "missing getter method: " + this.type() + "." + name + "()"
+                console.warn(errorMsg)
+                throw new Error(errorMsg)
+            }
+            const v = getterMethod.apply(this)
             if (v != null) {
                 aView[aView.setterNameForSlot(name)].apply(aView, [v])
             }

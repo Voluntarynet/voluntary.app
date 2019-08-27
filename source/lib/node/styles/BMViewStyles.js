@@ -32,15 +32,16 @@ ideal.Proto.newSubclassNamed("BMViewStyles").newSlots({
     name: "",
     unselected: null,
     selected: null,
+    disabled: null,
     //hover: null, 
     //enabled: null,
-    //disabled: null,
     //error: null,
     isMutable: true,
 }).setSlots({
     init: function () {
         this.setSelected(BMViewStyle.clone())
         this.setUnselected(BMViewStyle.clone())
+        this.setDisabled(BMViewStyle.clone())
         //this.setHover(BMViewStyle.clone())
         return this
     },

@@ -17,6 +17,7 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
 
     bgColors: function () {
         //return this.bgColorsCool()
+        //return this.bgColorsWarm()
         return this.bgColorsGray()
         //return this.bgColorsWhite()
     },

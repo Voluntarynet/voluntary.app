@@ -14,6 +14,30 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
     uneditableColor: "#888",
     errorColor: "red",
 }).setSlots({
+
+    currentBackgroundCssColor: function() {
+        const bg = this.columnGroup().computedBackgroundColor()
+        return CSSColor.clone().setCssColorString(bg)
+    },
+
+    valueBackgroundCssColor: function() {
+        return this.currentBackgroundCssColor().contrastComplement(0.2)
+    },
+
+    valueBackgroundColor: function() {
+        return this.valueBackgroundCssColor().cssColorString()
+    },
+
+    editableColor: function() {
+        return this.valueBackgroundCssColor().contrastComplement(0.2).cssColorString()
+    },
+
+    keyViewColor: function() {
+        //console.log(this.node().title() + " " + this.typeId() + ".isSelected() = ", this.isSelected())
+        return this.currentStyle().color()
+        //return this.valueBackgroundCssColor().contrastComplement(0.2).cssColorString()
+    },
+
     init: function () {
         BrowserFieldRow.init.apply(this)
         
@@ -72,6 +96,12 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
         }
     },
     
+    didChangeIsSelected: function () {
+        BrowserFieldRow.didChangeIsSelected.apply(this)
+        this.syncFromNode() // need this to update selection color on fields?
+        return this
+    },
+
     syncFromNode: function () {
         BrowserFieldRow.syncFromNode.apply(this)
         //console.log(this.typeId() + " syncFromNode")
@@ -117,11 +147,15 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
         keyView.setIsEditable(node.keyIsEditable())
         valueView.setIsEditable(node.valueIsEditable())
 
+        keyView.setColor(this.keyViewColor())
+
         if (!node.valueIsEditable()) {
             //console.log("fieldview key '", node.key(), "' node.valueIsEditable() = ", node.valueIsEditable(), " setColor ", this.uneditableColor())
-            valueView.setColor(this.uneditableColor())
+            //valueView.setColor(this.uneditableColor())
+            valueView.setColor(this.styles().disabled().color())
         } else {
-            valueView.setColor(this.editableColor())
+            //valueView.setColor(this.editableColor())
+            valueView.setColor(this.currentStyle().color())
         }
 		
         // change color if value is invalid
@@ -134,7 +168,9 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
 			
         } else {
             //valueView.setBackgroundColor("transparent")
-            //valueView.setBackgroundColor("#333")
+            //valueView.setBorder("1px solid white")
+            //valueView.setBorderRadius(5)
+            valueView.setBackgroundColor(this.valueBackgroundColor())
             valueView.setColor(color)
             valueView.setToolTip("")
         }

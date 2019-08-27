@@ -38,7 +38,7 @@ BMStorableNode.newSubclassNamed("BMFieldSetNode").newSlots({
         BMStorableNode.init.apply(this)
         this.setNodeMinWidth(500)
         this.setShouldStoreSubnodes(false)
-        this.setNodeColumnBackgroundColor("white")
+        //this.setNodeColumnBackgroundColor("white")
     },        
     
     didUpdateField: function(aField) {

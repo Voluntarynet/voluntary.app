@@ -1671,6 +1671,10 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         return this.isActiveElement() && this.contentEditable()
     },
 
+    isFocused: function() {
+        return this.isActiveElement()
+    },
+
     // --- inner html ---
 
     setInnerHTML: function (v) {
@@ -2227,10 +2231,26 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         return this
     },
 
+    /*
+    onEnterKeyDown: function(event) {
+        console.log(this.typeId() + " onEnterKeyDown")
+        if (this.unfocusOnEnterKey() && this.isFocused()) {
+            console.log(this.typeId() + " releasing focus")
+            // this.releaseFocus() // TODO: implement something to pass focus up view chain to whoever wants it
+            //this.element().parentElement.focus()
+            if (this.parentView()) {
+                this.parentView().focus()
+            }
+        }
+        return this
+    },
+    */
 
     onKeyDown: function (event) {
         //Keyboard.shared().showEvent(event)
 
+        
+        /*
         const isEnterKey = Keyboard.shared().nameForKeyCode(event.keyCode) === "Enter";
 
         if (isEnterKey && this.unfocusOnEnterKey()) {
@@ -2238,6 +2258,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
             // this.releaseFocus() // TODO: implement something to pass focus up view chain to whoever wants it
             this.element().parentElement.focus()
         }
+        */
 
         /*
 		if (this.interceptsTab()) {
@@ -2249,6 +2270,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         */
         
         const methodName = Keyboard.shared().downMethodNameForEvent(event)
+        console.log("onKeyDown methodName: ", methodName)
         this.invokeMethodNameForEvent(methodName, event)
 
         return true

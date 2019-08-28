@@ -107,8 +107,6 @@
 /* --------------------------- Value --------------------------- */
 
 .BMFieldValueView {
-    color: white;
-
 	display: block;
     /*position: relative;*/
 
@@ -142,6 +140,7 @@
 	padding-bottom: 5px;
 	
     /*border: 1px solid rgba(55, 55, 55, 1);*/
+    color: white;
     background-color: rgba(0, 0, 0, 0.2);
     /*border-bottom: 1px solid #555;*/
     border-radius: 5px;
@@ -194,7 +193,8 @@
     text-align: left;
 
     font-family: AppMono, monospace;
-	font-weight: lighter;
+    font-weight: lighter;
+    background-color: transparent;
 }
 
 .BMTextAreaFieldValueView {

@@ -639,6 +639,27 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
 
     // nextRow
 
+    selectFirstRow: function() {
+        this.setSelectedRowIndex(0)
+        return this
+    },
+
+    firstRow: function() {
+        if (this.rows().length > 0) {
+            return this.rows()[0]
+        }
+        return null
+    },
+
+    nextRow: function() {
+        const si = this.selectedRowIndex()
+        if (si !== -1 && si < this.rows().length) {
+            const nextRow = this.rows()[si +1]
+            return nextRow
+        }
+        return null
+    },
+
     selectNextRow: function() {
         const si = this.selectedRowIndex()
         if (si === -1) {
@@ -955,11 +976,18 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     },
 
     selectNextKeyView: function() {
-        this.selectNextRow()
-        const row = this.selectedRow()
-        if (row) {
-
+        const nextRow = this.nextRow()
+        if (nextRow) {
+            this.selectNextRow()
+            nextRow.becomeKeyView()
+        } else {
+            const firstRow = this.firstRow()
+            if (firstRow) {
+                this.selectFirstRow()
+                firstRow.becomeKeyView()
+            }
         }
+        return this
     },
 
 })

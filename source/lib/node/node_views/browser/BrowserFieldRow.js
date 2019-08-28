@@ -4,6 +4,7 @@
 
     BrowserFieldRow
  
+    Is this needed? 
 
 */
 
@@ -41,5 +42,6 @@ BrowserRow.newSubclassNamed("BrowserFieldRow").newSlots({
         return this
     },
     */
+
  
 })

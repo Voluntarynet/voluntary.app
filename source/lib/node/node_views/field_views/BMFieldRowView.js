@@ -254,4 +254,16 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
         BrowserFieldRow.setBackgroundColor.apply(this, [c])
         return this
     },
+
+    becomeKeyView: function() {
+        this.valueView().becomeKeyView()
+        return this
+    },
+
+    unselect: function() {
+        BrowserFieldRow.unselect.apply(this)
+        this.valueView().blur()
+        this.keyView().blur()
+        return this
+    },
 })

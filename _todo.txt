@@ -1,4 +1,12 @@
 
+column/row features:
+
+- use tab to go to next row
+
+multiple selection?
+select all (command-a?, control-a?)
+copy and paste selected rows?
+
 styles:
 
     rowItems:

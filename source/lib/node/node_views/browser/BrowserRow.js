@@ -236,6 +236,13 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     },
     */
     
+    /*
+    selectNextKeyView: function () {
+        this.column().selectNextRow()
+        return this
+    },
+    */
+
     select: function() {
         if (!this.isSelected()) {
             this.setShouldShowFlash(true)

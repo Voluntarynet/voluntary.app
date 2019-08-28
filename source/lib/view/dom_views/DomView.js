@@ -2319,13 +2319,21 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         return false
     },
 
+    becomeKeyView: function() {
+        this.focus()
+        return this
+    },
+
     selectNextKeyView: function () {
-        console.log(this.typeId() + " selectNextKeyView")
+        //console.log(this.typeId() + " selectNextKeyView")
         const nkv = this.nextKeyView()
         if (nkv) {
-            //if (nkv.initialFirstResponder()) {
-            //nkv.focus()
-            //}
+            nkv.becomeKeyView()
+        } else {
+            const p = this.parentView()
+            if (p) {
+                p.selectNextKeyView()
+            }
         }
     },
 

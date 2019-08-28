@@ -169,7 +169,7 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
         const equalSignDown = Keyboard.shared().equalsSignKey().isDown()
         const minusDown     = Keyboard.shared().minusKey().isDown()
 
-
+        // adjust font size (testing this out)
         if (controlDown) {
             const fontSize = this.computedFontSize()
 

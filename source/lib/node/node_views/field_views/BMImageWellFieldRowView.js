@@ -6,7 +6,7 @@
 
 */
 
-BMFieldRowView.newSubclassNamed("BMImageWellFieldView").newSlots({
+BMFieldRowView.newSubclassNamed("BMImageWellFieldRowView").newSlots({
 }).setSlots({
     init: function () {
         BMFieldRowView.init.apply(this)

@@ -1,9 +1,9 @@
 
 .ImageWellView {
 	display: block;
-	position: absolute;
-	height: calc(100%);
-	width: calc(100%);
+	position: relative;
+	height: 100px;
+	width: 100px;
 	/*border: 1px dashed yellow;*/
 	overflow-x: scroll;
 	overflow-y: hidden;
@@ -12,14 +12,16 @@
 .ImageView {
     display: inline-block;
 	position: relative;
+	/*
 	min-width: 200px;
 	max-width: 200px;
 	min-height: 230px;
 	max-height: 230px;
 	margin-bottom: 20px;
-	transition: all 0.5s;
 	margin-left: 30px;
 	margin-right: 30px;
+	*/
+	transition: all 0.5s;
 	border: 0px solid #eee;
 	overflow: hidden;
 }

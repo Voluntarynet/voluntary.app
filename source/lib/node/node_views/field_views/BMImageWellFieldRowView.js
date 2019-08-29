@@ -26,15 +26,25 @@ BMFieldRowView.newSubclassNamed("BMImageWellFieldRowView").newSlots({
     },
 
     syncFromNode: function () {
+        BMFieldRowView.syncFromNode.apply(this)
+
+        const field = this.node()
+
+        /*
         const field = this.node()
 
         if (this.imageWellView()) {
             //console.log("field = ", field.type())
+            // sync key view
             this.keyView().setInnerHTML(field.key())
-            this.imageWellView().setImageDataURLs(field.value())
+            this.keyView().setIsEditable(field.keyIsEditable())
 		    this.updateKeyView()
-		    this.imageWellView().setMaxImageCount(field.maxImageCount())
+
+            this.imageWellView().setImageDataURLs(field.value())
+            this.imageWellView().setIsEditable(field.valueIsEditable())
+
         }
+        */
         
         this.applyStyles() // normally this would happen in updateSubviews
 

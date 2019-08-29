@@ -9,7 +9,6 @@
 NodeView.newSubclassNamed("ImageWellView").newSlots({
     imageView: null,
     isEditable: true,
-    maxImageCount: null,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
@@ -17,8 +16,10 @@ NodeView.newSubclassNamed("ImageWellView").newSlots({
         this.dragUnhighlight()
         this.turnOffUserSelect()
         this.setTransition("all 0.3s")
-
-
+        this.autoFitParentWidth()
+        this.autoFitChildHeight()
+        this.setMinHeightPx(100)
+        this.setTextAlign("center")
         return this
     },
 
@@ -26,9 +27,25 @@ NodeView.newSubclassNamed("ImageWellView").newSlots({
         this.tellParentViews("didUpdateImageWellView", this)
         return this
     },
+
+    /*
+    syncFromNode: function() {
+        NodeView.syncFromNode.apply(this)
+        this.valueView().setBackgroundColor("transparent")
+        return this
+    },
+    */
+    
+    isEditable: function() {
+        // we need this to override the normal isContentEditable return value
+        return this._isEditable
+    },
+    
     
     setIsEditable: function(aBool) {
         this._isEditable = aBool
+        //console.log("this.isEditable() = " + this.isEditable() + " aBool: " + aBool)
+        assert(this.isEditable() === aBool)
         this.subviews().forEach(imageView => imageView.setIsEditable(aBool))
         return this
     },
@@ -46,21 +63,33 @@ NodeView.newSubclassNamed("ImageWellView").newSlots({
     },
     
     isFull: function() {
-        if (this.maxImageCount() == null) {
-            return false
-        }
-        
-        return this.imageCount() >= this.maxImageCount()
+        return this.imageCount() != 0
     },
     
     acceptsDrop: function(event) {
+        if (!this.node()) {
+            console.warn(this.typeId() + ".acceptsDrop() missing node")
+        }
         const accepts = (!this.isFull()) && (this.isEditable() !== false)
-        console.log(this.typeId() + "isEditable:" + this.isEditable() + " isFull:" + this.isFull() + " count:" + this.imageCount() + "/" + this.maxImageCount() + " accepts:" + accepts)
+        console.log(this.typeId() + ".acceptsDrop():")
+        console.log("    isEditable: " + this.isEditable())
+        console.log("        isFull: " + this.isFull())
+        console.log("       accepts: " + accepts)
+        console.log("\n")
         return accepts        
+    },
+
+    setValue: function(aValue) {
+        this.setImageDataURLs(aValue)
+        return this
+    },
+
+    value: function() {
+        return this.imageDataURLs()
     },
     
     setImageDataURLs: function(dataURLs) {
-        if (dataURLs === null) {
+        if (dataURLs === null || dataURLs === "") {
             dataURLs = []
         }
 
@@ -69,7 +98,7 @@ NodeView.newSubclassNamed("ImageWellView").newSlots({
         }
         
         this.removeAllSubviews();
-        //console.log("setImageDataURLs = ", dataURLs)
+        console.log("setImageDataURLs = ", dataURLs)
 
         dataURLs.forEach( (dataURL) => {
             this.addImageDataURL(dataURL)
@@ -82,7 +111,9 @@ NodeView.newSubclassNamed("ImageWellView").newSlots({
         }
         const imageView = ImageView.clone().fetchDataURLFromSrc(dataURL)
         imageView.setIsEditable(this.isEditable())
-        imageView.setMaxHeightPx(180)
+        //imageView.setMaxHeightPx(180)
+        imageView.autoFitChildHeight()
+        imageView.autoFitParentWidth()
         this.addSubview(imageView);    
         return this
     },

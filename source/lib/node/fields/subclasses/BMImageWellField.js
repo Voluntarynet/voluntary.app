@@ -7,8 +7,7 @@
 */
         
 BMField.newSubclassNamed("BMImageWellField").newSlots({
-    onlyShowsKeyWhenEmpty: true,
-    maxImageCount: 1,
+    onlyShowsKeyWhenEmpty: false,
     isEditable: true,
 }).setSlots({
     init: function () {

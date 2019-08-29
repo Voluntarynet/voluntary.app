@@ -18,6 +18,13 @@ NodeView.newSubclassNamed("ImageView").newSlots({
         this.setIsRegisteredForDrop(false)
         
         this.setImageContainer(DomView.clone().setDivClassName("ImageViewImageContainer"))
+        this.setWidthPercentage(100)
+        this.setHeightPercentage(100)
+        //this.imageContainer().setWidth("fit-content")
+        //this.imageContainer().setHeight("fit-content")
+        //this.imageContainer().setBackgroundSize("contain")
+        //this.imageContainer().autoFitChildWidth()
+        //this.imageContainer().autoFitChildHeight()
         this.addSubview(this.imageContainer())
         
         //this.setEditable(false)

@@ -1888,6 +1888,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
             event.preventDefault()
             return true
         }
+        event.preventDefault()
 
         return false;
     },
@@ -1903,6 +1904,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
             event.preventDefault()
             return true
         }
+        event.preventDefault()
 
         return false;
     },
@@ -1937,6 +1939,8 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
             event.preventDefault();
             return true;
         }
+        event.preventDefault();
+
         return false
     },
 

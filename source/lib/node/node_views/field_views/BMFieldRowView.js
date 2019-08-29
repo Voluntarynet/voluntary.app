@@ -102,6 +102,16 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
         return this
     },
 
+    /*
+    syncKeyFromNode: function() {
+
+    },
+
+    syncValueFromNode: function() {
+
+    },
+    */
+
     syncFromNode: function () {
         BrowserFieldRow.syncFromNode.apply(this)
         //console.log(this.typeId() + " syncFromNode")
@@ -165,7 +175,6 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
         if (node.valueError()) {
             valueView.setColor(this.errorColor())
             valueView.setToolTip(node.valueError())
-			
         } else {
             //valueView.setBackgroundColor("transparent")
             //valueView.setBorder("1px solid white")

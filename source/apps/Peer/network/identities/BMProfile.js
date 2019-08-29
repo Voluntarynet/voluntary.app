@@ -15,7 +15,7 @@ BMFieldSetNode.newSubclassNamed("BMProfile").newSlots({
  		this.setShouldStore(true)
         this.setTitle("profile")
         
-        this.addStoredField(BMImageWellField.clone().setValueMethod("avatars").setKey("avatar image").setMaxImageCount(1)).setValueIsEditable(true)
+        this.addStoredField(BMImageWellField.clone().setValueMethod("avatars").setKey("avatar image")).setValueIsEditable(true)
 		
         this.addFieldNamed("name").setValueMethod("name").setValueIsEditable(true)
         this.addStoredField(BMIdentityField.clone().setValueMethod("publicKeyString").setKey("public key").setValueIsEditable(true))

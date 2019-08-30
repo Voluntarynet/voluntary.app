@@ -2274,7 +2274,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         */
         
         const methodName = Keyboard.shared().downMethodNameForEvent(event)
-        console.log("onKeyDown methodName: ", methodName)
+        //console.log("onKeyDown methodName: ", methodName)
         this.invokeMethodNameForEvent(methodName, event)
 
         return true

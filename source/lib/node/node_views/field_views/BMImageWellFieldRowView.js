@@ -40,43 +40,48 @@ BMFieldRowView.newSubclassNamed("BMImageWellFieldRowView").newSlots({
             this.keyView().setIsEditable(field.keyIsEditable())
 		    this.updateKeyView()
 
-            this.imageWellView().setImageDataURLs(field.value())
+            this.imageWellView().setImageDataURL(field.value())
             this.imageWellView().setIsEditable(field.valueIsEditable())
 
         }
         */
         
         this.applyStyles() // normally this would happen in updateSubviews
+        this.imageWellView().setImageDataURL(field.value())
 
         return this
     },
 
     syncToNode: function () {
         const field = this.node()
-		
-        //console.log(this.typeId() + ".syncToNode() imageDataURLs: ", this.dataUrls())
-		
+				
         this.updateKeyView()
 		
         if (field.valueIsEditable()) {
-        	field.setValue(this.imageWellView().imageDataURLs())
+            const data = this.imageWellView().imageDataURL()
+            //console.log("data = " + (data ? data.slice(0, 40) + "..." : "null"))
+        	field.setValue(data)
         }
         
         //NodeView.syncToNode.apply(this)
         return this
     },
 
-    dataUrls: function() {
-        return this.imageWellView().imageDataURLs()
+    dataUrl: function() {
+        return this.imageWellView().imageDataURL()
+    },
+
+    isEmpty: function() {
+        return Type.isNull(this.dataUrl())
     },
     
     updateKeyView: function() {
         let opacity = 1
         
         if(this.node().onlyShowsKeyWhenEmpty && this.node().onlyShowsKeyWhenEmpty()) {
-		    opacity = this.dataUrls().length ? 0 : 1
-	    }
-	    
+		    opacity = this.isEmpty() ? 0 : 1
+        }
+        
 	    this.keyView().setOpacity(opacity)
 	    
         return this

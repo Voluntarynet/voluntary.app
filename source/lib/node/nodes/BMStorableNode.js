@@ -267,10 +267,10 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
 
     scheduleSyncToStore: function() {
         //console.log(this.typeId() + " scheduleSyncToStore this.hasPid() = ", this.hasPid())
-        let typeId = this.typeId()
-        let hasPid = this.hasPid()
-        let shouldStore = this.shouldStore()
-        let isUnserializing = this.isUnserializing()
+        const typeId = this.typeId()
+        const hasPid = this.hasPid()
+        const shouldStore = this.shouldStore()
+        const isUnserializing = this.isUnserializing()
 
         //console.log(this.typeId() + " scheduleSyncToStore this.hasPid() = ", this.hasPid())
 

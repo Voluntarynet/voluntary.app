@@ -20,10 +20,12 @@ NodeView.newSubclassNamed("ImageWellView").newSlots({
         this.autoFitChildHeight()
         this.setMinHeightPx(100)
         this.setTextAlign("center")
+
         return this
     },
 
     syncToNode: function () {
+        NodeView.syncToNode.apply(this)
         this.tellParentViews("didUpdateImageWellView", this)
         return this
     },
@@ -41,12 +43,12 @@ NodeView.newSubclassNamed("ImageWellView").newSlots({
         return this._isEditable
     },
     
-    
     setIsEditable: function(aBool) {
         this._isEditable = aBool
-        //console.log("this.isEditable() = " + this.isEditable() + " aBool: " + aBool)
         assert(this.isEditable() === aBool)
-        this.subviews().forEach(imageView => imageView.setIsEditable(aBool))
+        if (this.imageView()) {
+            this.imageView().setIsEditable(aBool)
+        }
         return this
     },
     
@@ -58,75 +60,80 @@ NodeView.newSubclassNamed("ImageWellView").newSlots({
         this.setBackgroundColor("transparent")
     },
     
-    imageCount: function() {
-        return this.subviews().length
-    },
-    
     isFull: function() {
-        return this.imageCount() != 0
+        //console.log("this.imageView().dataURL()  = ", this.imageView().dataURL() )
+        return this.subviews().length > 0
     },
     
     acceptsDrop: function(event) {
+        /*
         if (!this.node()) {
             console.warn(this.typeId() + ".acceptsDrop() missing node")
         }
+        */
         const accepts = (!this.isFull()) && (this.isEditable() !== false)
+        /*
         console.log(this.typeId() + ".acceptsDrop():")
         console.log("    isEditable: " + this.isEditable())
         console.log("        isFull: " + this.isFull())
         console.log("       accepts: " + accepts)
         console.log("\n")
-        return accepts        
+        */
+       return accepts        
     },
 
     setValue: function(aValue) {
-        this.setImageDataURLs(aValue)
+        this.setImageDataURL(aValue)
         return this
     },
 
     value: function() {
-        return this.imageDataURLs()
+        return this.imageDataURL()
     },
     
-    setImageDataURLs: function(dataURLs) {
-        if (dataURLs === null || dataURLs === "") {
-            dataURLs = []
+    setImageDataURL: function(dataURL) {
+        if (Type.isArray(dataURL)) {
+            dataURL = dataURL[0]
         }
 
-        if (JSON.stringify(dataURLs) === JSON.stringify(this.imageDataURLs())) {
-            return this
+        if (Type.isNull(dataURL) || Type.isUndefined(dataURL)) {
+            dataURL = ""
         }
         
-        this.removeAllSubviews();
-        console.log("setImageDataURLs = ", dataURLs)
+        //console.log(this.typeId() + ".setImageDataURL = ", dataURL)
+        this.removeAllSubviews()
 
-        dataURLs.forEach( (dataURL) => {
-            this.addImageDataURL(dataURL)
-        })
-    },
-    
-    addImageDataURL: function(dataURL) {
-        if (this.isFull()) {
-            return this
+        if (dataURL) {
+            this.setImageView(ImageView.clone())
+            this.addSubview(this.imageView())
+
+            const iv = this.imageView()
+            iv.fetchDataURLFromSrc(dataURL)
+            iv.autoFitChildHeight()
+            iv.autoFitParentWidth()
         }
-        const imageView = ImageView.clone().fetchDataURLFromSrc(dataURL)
-        imageView.setIsEditable(this.isEditable())
-        //imageView.setMaxHeightPx(180)
-        imageView.autoFitChildHeight()
-        imageView.autoFitParentWidth()
-        this.addSubview(imageView);    
         return this
     },
     
-    imageDataURLs: function() {
-        const urls = this.subviews().map(imageView => imageView.dataURL())
-        const imageDataURLs = urls.select(url => url != null)
-        return imageDataURLs
+    imageDataURL: function() {
+        const iv = this.imageView()
+        if (iv && iv.dataURL()) {
+            return iv.dataURL()
+        }
+        return null
     },
     
     onDropImageDataUrl: function(dataURL) {
-        this.addImageDataURL(dataURL)
+        this.setImageDataURL(dataURL)
         this.scheduleSyncToNode() //this.syncToNode()
         return this        
+    },
+    
+    willRemoveSubview: function(aSubview) {
+        NodeView.willRemoveSubview.apply(this, [aSubview])
+        if (aSubview === this.imageView()) {
+            this.setImageView(null)
+        }
+        return this
     },
 })

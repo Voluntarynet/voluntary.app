@@ -78809,6 +78809,10 @@ ResourceLoader.pushRelativePaths([
 
 window.Type = {
 
+    isArray: function(value) {
+        return !Type.isNull(value) && Type.isObject(value) && value.__proto__ === [].__proto__
+    },   
+
     isBoolean: function(value) {
         return typeof(value) === "boolean"
     },   
@@ -91521,7 +91525,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         */
         
         const methodName = Keyboard.shared().downMethodNameForEvent(event)
-        console.log("onKeyDown methodName: ", methodName)
+        //console.log("onKeyDown methodName: ", methodName)
         this.invokeMethodNameForEvent(methodName, event)
 
         return true
@@ -94876,7 +94880,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     sdb: null,
     isReadOnly: false,
 
-    isDebugging: false,
+    isDebugging: true,
 
     nodeStoreDidOpenNote: null,
     lastSyncTime: null,
@@ -95960,10 +95964,10 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
 
     scheduleSyncToStore: function() {
         //console.log(this.typeId() + " scheduleSyncToStore this.hasPid() = ", this.hasPid())
-        let typeId = this.typeId()
-        let hasPid = this.hasPid()
-        let shouldStore = this.shouldStore()
-        let isUnserializing = this.isUnserializing()
+        const typeId = this.typeId()
+        const hasPid = this.hasPid()
+        const shouldStore = this.shouldStore()
+        const isUnserializing = this.isUnserializing()
 
         //console.log(this.typeId() + " scheduleSyncToStore this.hasPid() = ", this.hasPid())
 
@@ -96636,13 +96640,17 @@ BMStorableNode.newSubclassNamed("BMField").newSlots({
     },
     */
 
-    setKey: function(s) {
-        this._key = s
+    /*
+    setKey: function(newValue) {
+        this._key = newValue
         return this
     },
+    */
     
-    setValue: function(v) { // called by View on edit
-        this._value = v
+    setValue: function(newValue) { // called by View on edit
+        const oldValue = this._value
+        this.didUpdateSlot("value", oldValue, newValue)
+        this._value = newValue
 
         if (this.target() && this.valueMethod()) {
             this.setValueOnTarget(v)
@@ -96958,7 +96966,7 @@ BMField.newSubclassNamed("BMImageWellField").newSlots({
         this.setKey("Images")
         this.setKeyIsEditable(false)
         this.setValueIsEditable(false)
-        //this.addStoredSlot("imageDataURLs")
+        //this.addStoredSlot("imageDataURL") // stored in value
         this.addStoredSlot("nodeMinRowHeight")
         this.setNodeCanEditRowHeight(true)
     },
@@ -97657,10 +97665,12 @@ NodeView.newSubclassNamed("ImageWellView").newSlots({
         this.autoFitChildHeight()
         this.setMinHeightPx(100)
         this.setTextAlign("center")
+
         return this
     },
 
     syncToNode: function () {
+        NodeView.syncToNode.apply(this)
         this.tellParentViews("didUpdateImageWellView", this)
         return this
     },
@@ -97678,12 +97688,12 @@ NodeView.newSubclassNamed("ImageWellView").newSlots({
         return this._isEditable
     },
     
-    
     setIsEditable: function(aBool) {
         this._isEditable = aBool
-        //console.log("this.isEditable() = " + this.isEditable() + " aBool: " + aBool)
         assert(this.isEditable() === aBool)
-        this.subviews().forEach(imageView => imageView.setIsEditable(aBool))
+        if (this.imageView()) {
+            this.imageView().setIsEditable(aBool)
+        }
         return this
     },
     
@@ -97695,76 +97705,81 @@ NodeView.newSubclassNamed("ImageWellView").newSlots({
         this.setBackgroundColor("transparent")
     },
     
-    imageCount: function() {
-        return this.subviews().length
-    },
-    
     isFull: function() {
-        return this.imageCount() != 0
+        //console.log("this.imageView().dataURL()  = ", this.imageView().dataURL() )
+        return this.subviews().length > 0
     },
     
     acceptsDrop: function(event) {
+        /*
         if (!this.node()) {
             console.warn(this.typeId() + ".acceptsDrop() missing node")
         }
+        */
         const accepts = (!this.isFull()) && (this.isEditable() !== false)
+        /*
         console.log(this.typeId() + ".acceptsDrop():")
         console.log("    isEditable: " + this.isEditable())
         console.log("        isFull: " + this.isFull())
         console.log("       accepts: " + accepts)
         console.log("\n")
-        return accepts        
+        */
+       return accepts        
     },
 
     setValue: function(aValue) {
-        this.setImageDataURLs(aValue)
+        this.setImageDataURL(aValue)
         return this
     },
 
     value: function() {
-        return this.imageDataURLs()
+        return this.imageDataURL()
     },
     
-    setImageDataURLs: function(dataURLs) {
-        if (dataURLs === null || dataURLs === "") {
-            dataURLs = []
+    setImageDataURL: function(dataURL) {
+        if (Type.isArray(dataURL)) {
+            dataURL = dataURL[0]
         }
 
-        if (JSON.stringify(dataURLs) === JSON.stringify(this.imageDataURLs())) {
-            return this
+        if (Type.isNull(dataURL) || Type.isUndefined(dataURL)) {
+            dataURL = ""
         }
         
-        this.removeAllSubviews();
-        console.log("setImageDataURLs = ", dataURLs)
+        //console.log(this.typeId() + ".setImageDataURL = ", dataURL)
+        this.removeAllSubviews()
 
-        dataURLs.forEach( (dataURL) => {
-            this.addImageDataURL(dataURL)
-        })
-    },
-    
-    addImageDataURL: function(dataURL) {
-        if (this.isFull()) {
-            return this
+        if (dataURL) {
+            this.setImageView(ImageView.clone())
+            this.addSubview(this.imageView())
+
+            const iv = this.imageView()
+            iv.fetchDataURLFromSrc(dataURL)
+            iv.autoFitChildHeight()
+            iv.autoFitParentWidth()
         }
-        const imageView = ImageView.clone().fetchDataURLFromSrc(dataURL)
-        imageView.setIsEditable(this.isEditable())
-        //imageView.setMaxHeightPx(180)
-        imageView.autoFitChildHeight()
-        imageView.autoFitParentWidth()
-        this.addSubview(imageView);    
         return this
     },
     
-    imageDataURLs: function() {
-        const urls = this.subviews().map(imageView => imageView.dataURL())
-        const imageDataURLs = urls.select(url => url != null)
-        return imageDataURLs
+    imageDataURL: function() {
+        const iv = this.imageView()
+        if (iv && iv.dataURL()) {
+            return iv.dataURL()
+        }
+        return null
     },
     
     onDropImageDataUrl: function(dataURL) {
-        this.addImageDataURL(dataURL)
+        this.setImageDataURL(dataURL)
         this.scheduleSyncToNode() //this.syncToNode()
         return this        
+    },
+    
+    willRemoveSubview: function(aSubview) {
+        NodeView.willRemoveSubview.apply(this, [aSubview])
+        if (aSubview === this.imageView()) {
+            this.setImageView(null)
+        }
+        return this
     },
 })
 
@@ -97879,9 +97894,13 @@ NodeView.newSubclassNamed("ImageView").newSlots({
             this.removeCloseButton()
             const parentView = this.parentView()
             this.removeFromParentView()
+            /*
+            if (parentView && parentView.subviewRequestsClose) {
+                parentView.subviewRequestsClose(this)
+            }
+            */
             //console.log(this.typeId() + ".close complete parentView = ", parentView)
-            parentView.scheduleSyncToNode() //parentView.syncToNode()
-
+            parentView.scheduleSyncToNode()
         }, seconds * 1000)
     },
 
@@ -102636,43 +102655,48 @@ BMFieldRowView.newSubclassNamed("BMImageWellFieldRowView").newSlots({
             this.keyView().setIsEditable(field.keyIsEditable())
 		    this.updateKeyView()
 
-            this.imageWellView().setImageDataURLs(field.value())
+            this.imageWellView().setImageDataURL(field.value())
             this.imageWellView().setIsEditable(field.valueIsEditable())
 
         }
         */
         
         this.applyStyles() // normally this would happen in updateSubviews
+        this.imageWellView().setImageDataURL(field.value())
 
         return this
     },
 
     syncToNode: function () {
         const field = this.node()
-		
-        //console.log(this.typeId() + ".syncToNode() imageDataURLs: ", this.dataUrls())
-		
+				
         this.updateKeyView()
 		
         if (field.valueIsEditable()) {
-        	field.setValue(this.imageWellView().imageDataURLs())
+            const data = this.imageWellView().imageDataURL()
+            //console.log("data = " + (data ? data.slice(0, 40) + "..." : "null"))
+        	field.setValue(data)
         }
         
         //NodeView.syncToNode.apply(this)
         return this
     },
 
-    dataUrls: function() {
-        return this.imageWellView().imageDataURLs()
+    dataUrl: function() {
+        return this.imageWellView().imageDataURL()
+    },
+
+    isEmpty: function() {
+        return Type.isNull(this.dataUrl())
     },
     
     updateKeyView: function() {
         let opacity = 1
         
         if(this.node().onlyShowsKeyWhenEmpty && this.node().onlyShowsKeyWhenEmpty()) {
-		    opacity = this.dataUrls().length ? 0 : 1
-	    }
-	    
+		    opacity = this.isEmpty() ? 0 : 1
+        }
+        
 	    this.keyView().setOpacity(opacity)
 	    
         return this

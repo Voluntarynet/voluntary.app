@@ -51,7 +51,7 @@ BMFieldSetNode.newSubclassNamed("BMClassifiedPost").newSlots({
         this.addStoredSlots(["uuid", "postPeriod", "hasSent"])
 
         //this.setImagesNode(BMNode.clone().setViewClassName("ImageView").setSubnodeProto("ImageNode"))
-        this.setImageDataURLs([]) 
+        this.setImageDataURL(null) 
         
         this.setObjMsg(BMObjectMessage.clone())
 
@@ -159,7 +159,7 @@ BMFieldSetNode.newSubclassNamed("BMClassifiedPost").newSlots({
         this.setPostDate(aDict.postDate)
         this.setPostPeriod(aDict.postPeriod)
         this.setUuid(aDict.uuid)
-        this.setImageDataURLs(aDict.imageDataURLs)
+        this.setImageDataURL(aDict.imageDataURL)
         //this.objMsg().setContent(this.postDict())
         this.objMsg().setContent(aDict)
         return this

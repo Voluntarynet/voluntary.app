@@ -15,7 +15,7 @@ BMField.newSubclassNamed("BMImageWellField").newSlots({
         this.setKey("Images")
         this.setKeyIsEditable(false)
         this.setValueIsEditable(false)
-        //this.addStoredSlot("imageDataURLs")
+        //this.addStoredSlot("imageDataURL") // stored in value
         this.addStoredSlot("nodeMinRowHeight")
         this.setNodeCanEditRowHeight(true)
     },

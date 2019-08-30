@@ -70,13 +70,17 @@ BMStorableNode.newSubclassNamed("BMField").newSlots({
     },
     */
 
-    setKey: function(s) {
-        this._key = s
+    /*
+    setKey: function(newValue) {
+        this._key = newValue
         return this
     },
+    */
     
-    setValue: function(v) { // called by View on edit
-        this._value = v
+    setValue: function(newValue) { // called by View on edit
+        const oldValue = this._value
+        this.didUpdateSlot("value", oldValue, newValue)
+        this._value = newValue
 
         if (this.target() && this.valueMethod()) {
             this.setValueOnTarget(v)

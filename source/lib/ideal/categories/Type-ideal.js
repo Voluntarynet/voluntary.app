@@ -14,6 +14,10 @@
 
 window.Type = {
 
+    isArray: function(value) {
+        return !Type.isNull(value) && Type.isObject(value) && value.__proto__ === [].__proto__
+    },   
+
     isBoolean: function(value) {
         return typeof(value) === "boolean"
     },   

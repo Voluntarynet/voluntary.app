@@ -109,9 +109,13 @@ NodeView.newSubclassNamed("ImageView").newSlots({
             this.removeCloseButton()
             const parentView = this.parentView()
             this.removeFromParentView()
+            /*
+            if (parentView && parentView.subviewRequestsClose) {
+                parentView.subviewRequestsClose(this)
+            }
+            */
             //console.log(this.typeId() + ".close complete parentView = ", parentView)
-            parentView.scheduleSyncToNode() //parentView.syncToNode()
-
+            parentView.scheduleSyncToNode()
         }, seconds * 1000)
     },
 

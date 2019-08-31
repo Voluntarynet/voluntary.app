@@ -89,8 +89,11 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     // debug
     isDebugging: false,
 
-    // notifications
+    // notification notes
+    didUpdateNodeNote: null,
     shouldFocusSubnodeNote: null,
+
+    
     nodeUsesColumnBackgroundColor: true,
     nodeInspector: null,
     canDelete: false,
@@ -101,7 +104,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     init: function () {
         this._subnodes = []
         this._actions = []        
-        //this.setDidUpdateNodeNote(NotificationCenter.shared().newNote().setSender(this._uniqueId).setName("didUpdateNode"))
+        this.setDidUpdateNodeNote(NotificationCenter.shared().newNote().setSender(this._uniqueId).setName("didUpdateNode"))
         this.setShouldFocusSubnodeNote(NotificationCenter.shared().newNote().setSender(this._uniqueId).setName("shouldFocusSubnode"))
         this._nodeMinWidth = 180
         this.scheduleFinalize()	
@@ -502,6 +505,8 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     },
 
     didUpdateNode: function() {
+        this.didUpdateNodeNote().post()
+
         if (this.parentNode()) {
             assert(this.parentNode() !== this)
             this.parentNode().didUpdateNode()

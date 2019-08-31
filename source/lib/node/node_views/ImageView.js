@@ -26,7 +26,7 @@ NodeView.newSubclassNamed("ImageView").newSlots({
         //this.imageContainer().autoFitChildWidth()
         //this.imageContainer().autoFitChildHeight()
         this.addSubview(this.imageContainer())
-        
+
         //this.setEditable(false)
         this.setIsEditable(false)
         this.dragUnhighlight()

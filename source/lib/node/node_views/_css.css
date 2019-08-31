@@ -7,6 +7,12 @@
 	/*border: 1px dashed yellow;*/
 	overflow-x: scroll;
 	overflow-y: hidden;
+	margin-left: 19px;
+	margin-right: 13px;
+	border-radius: 5px;
+	padding: 5px;
+	padding-bottom: 3px;
+	text-align: center;
 }
 
 .ImageView {

@@ -1,6 +1,10 @@
 
 
 ImageWellFieldRowView
+    key
+    vale -> ImageWellView 
+                subviews -> ImageView 
+                            subviews -> ImageViewImageContainer
 
 column/row features:
 

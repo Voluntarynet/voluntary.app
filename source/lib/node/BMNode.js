@@ -4,6 +4,33 @@
 
     BMNode
 
+    The base class of model objects that supports the protocol 
+    used to sync with views (subclasses of NodeView).
+
+    The BMStorableNode subclass is used to sync the model to
+    the persistence system (NodeStore).
+
+
+        Notifications (intended for views):
+
+            - didUpdateNode // lets views know they need to scheduleSyncFromNode
+            - shouldFocusSubnode // request that the UI focus on the sender
+
+        Update messages sent to self:
+            - didChangeParentNode 
+            - didChangeSubnodeList // hook to resort if needed and call didReorderParentSubnodes
+            - prepareForFirstAccess // sent to self on first access to subnodes
+            - prepareToAccess // sent to sent whenever a subnode is accessed
+
+        Update messages sent to parent:
+            - didUpdateNode // let parent know a subnode has changed
+
+        Update messages sent to subnodes:
+            - didReorderParentSubnodes // sent on subnode order change
+
+        Protocol helpers:
+            - watchOnceForNote(aNote) // typically used to watch for appDidInit
+
 */
 
 ideal.Proto.newSubclassNamed("BMNode").newSlots({        
@@ -39,7 +66,6 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     // actions
     actions: null,
     nodeCanReorderSubnodes: false,
-    
 
     // html
     acceptsFileDrop: false,
@@ -64,7 +90,6 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     isDebugging: false,
 
     // notifications
-    didUpdateNodeNote: null,
     shouldFocusSubnodeNote: null,
     nodeUsesColumnBackgroundColor: true,
     nodeInspector: null,
@@ -76,7 +101,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     init: function () {
         this._subnodes = []
         this._actions = []        
-        this.setDidUpdateNodeNote(NotificationCenter.shared().newNote().setSender(this._uniqueId).setName("didUpdateNode"))
+        //this.setDidUpdateNodeNote(NotificationCenter.shared().newNote().setSender(this._uniqueId).setName("didUpdateNode"))
         this.setShouldFocusSubnodeNote(NotificationCenter.shared().newNote().setSender(this._uniqueId).setName("shouldFocusSubnode"))
         this._nodeMinWidth = 180
         this.scheduleFinalize()	
@@ -477,8 +502,6 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     },
 
     didUpdateNode: function() {
-        this.didUpdateNodeNote().post()
-
         if (this.parentNode()) {
             assert(this.parentNode() !== this)
             this.parentNode().didUpdateNode()
@@ -727,8 +750,8 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     },
 
     parentNodes: function() {
-        let node = this.parentNode()
-        let results = []
+        const node = this.parentNode()
+        const results = []
 		
         while (node) {
             results.push(node)
@@ -744,7 +767,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     // --- subnode lookup -----------------------------
     
     subnodesSans: function(aSubnode) {
-	    let results = this.subnodes().select((subnode) => { return subnode !== aSubnode })
+	    const results = this.subnodes().select((subnode) => { return subnode !== aSubnode })
 	    return results
     },
 	
@@ -802,7 +825,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     },
     
     verifySubnodesHaveParentNodes: function() {
-        let missing = this.subnodes().detect(function (subnode) { return !subnode.parentNode() })
+        const missing = this.subnodes().detect(function (subnode) { return !subnode.parentNode() })
         if (missing) {
             throw new Error("missing parent node on subnode " + missing.type())
         }
@@ -930,7 +953,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
 	    return this
     },
 
-    // json serialization
+    // --- json serialization ---
 
     asJSON: function() {
         const dict = {}

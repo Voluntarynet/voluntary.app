@@ -19,7 +19,7 @@ NodeView.newSubclassNamed("ImageWellView").newSlots({
         this.autoFitParentWidth()
         this.autoFitChildHeight()
         this.setMinHeightPx(100)
-        this.setTextAlign("center")
+        //this.setTextAlign("center")
 
         return this
     },

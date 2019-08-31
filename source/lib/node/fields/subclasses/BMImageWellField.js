@@ -12,7 +12,7 @@ BMField.newSubclassNamed("BMImageWellField").newSlots({
 }).setSlots({
     init: function () {
         BMField.init.apply(this)
-        this.setKey("Images")
+        this.setKey("Image title")
         this.setKeyIsEditable(false)
         this.setValueIsEditable(false)
         //this.addStoredSlot("imageDataURL") // stored in value

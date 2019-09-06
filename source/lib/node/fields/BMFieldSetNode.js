@@ -7,6 +7,7 @@
     Useful for node's which are to be viewed and interacted with as forms
     
     child nodes are of type BMField and should only be added via addFieldNamed()
+    This method sets the target of the field to this and the method to the field name.
                     
     example use in subclass 
 

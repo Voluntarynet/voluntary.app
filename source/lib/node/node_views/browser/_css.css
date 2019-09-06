@@ -84,11 +84,6 @@
     width: calc(100% - 40px);
     margin-top: 7px;
 
-/*
-    margin-left: 10px;
-    margin-right: 10px;
-    */
-
     margin-bottom: 8px;
     min-height: 25px;
     max-height: 25px;
@@ -238,10 +233,15 @@
     -webkit-overflow-scrolling: touch; 
 }
 
+.BrowserRowContentView {
+    padding-left: 18px;
+    padding-right: 18px;
+}
+
 .BrowserRowTitle {
     display: block;
     margin-top: 15px;
-    margin-left: 20px;
+    margin-left: 0px;
 
     max-width: calc(100% - 55px);
     min-width: 20px;
@@ -262,7 +262,7 @@
 
 .BrowserRowSubtitle {
     display: block;
-    margin-left: 20px;
+    margin-left: 0px;
     
 	width: calc(100% - 55px);
     max-height: 17px;

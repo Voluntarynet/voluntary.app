@@ -46,6 +46,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         this.setupElement()
         this.setEventListenersDict({})
         this.setIsRegisteredForDrop(false)
+        this.setBoxSizing("border-box")
         return this
     },
 
@@ -774,6 +775,18 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     boxShadow: function () {
         return this.getCssAttribute("box-shadow")
     },
+
+    // sizing
+
+    setBoxSizing: function(s) {
+        //this.setBoxSizing("border-box") content-box
+        return this.setCssAttribute("box-sizing", s)
+    },
+
+    boxSizing: function() {
+        return this.getCssAttribute("box-sizing")
+    },
+
 
     // border 
 

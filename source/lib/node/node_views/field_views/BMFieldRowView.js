@@ -47,7 +47,7 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
         this.setKeyView(TextField.clone().setDivClassName("BMFieldKeyView"))
         this.addContentSubview(this.keyView())     
    		this.keyView().turnOffUserSelect().setSpellCheck(false)   
-        this.keyView().setMarginLeft(18)
+        //this.keyView().setMarginLeft(18)
 
         //this.contentView().setPaddingLeft(20)
         this.setValueView(this.createValueView())

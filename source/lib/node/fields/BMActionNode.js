@@ -23,6 +23,10 @@ BMStorableNode.newSubclassNamed("BMActionNode").newSlots({
         this.setNodeRowIsSelectable(true)
     },
 
+    setTitle: function(s) {
+        return BMStorableNode.setTitle.apply(this, [s])
+    },
+
     initNodeInspector: function() {
         BMStorableNode.initNodeInspector.apply(this)
         const titleField = BMField.clone().setKey("title").setValueMethod("title").setValueIsEditable(true).setTarget(this)

@@ -79,7 +79,7 @@ NodeView.newSubclassNamed("ImageWellView").newSlots({
         console.log("       accepts: " + accepts)
         console.log("\n")
         */
-       return accepts        
+        return accepts        
     },
 
     setValue: function(aValue) {

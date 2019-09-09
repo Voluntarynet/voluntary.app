@@ -84,7 +84,7 @@ App.newSubclassNamed("PeerApp").newSlots({
         this.setDataStore(BMDataStore.clone())
         this.about().addSubnode(this.dataStore())
 
-        // protos inspector
+        // protos browser
         //const classBrowser = BMClassBrowser.clone()
         //this.about().addSubnode(classBrowser)
 

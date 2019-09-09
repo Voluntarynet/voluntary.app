@@ -20,7 +20,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         //this.styles().selected().setBorderLeft("1px solid rgba(0, 0, 0, 0.15)")
         //this.styles().unselected().setBorderLeft("1px solid rgba(0, 0, 0, 0.15)")
         this.applyStyles()
-        //this.setIsRegisteredForClicks(true)
+        //this.setIsRegisteredForClicks(true) // use tap gesture instead
         this.setAcceptsFirstResponder(true)
         this._rows = []
 
@@ -472,6 +472,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         return false
     },
 
+    /*
     onControl_i_KeyUp: function(event) {
         // forward method to selected row and resync next column 
         console.log(this.typeId() + ".onControl_i_KeyUp()")
@@ -486,6 +487,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             return result
         }
     },
+    */
 
     onControl_d_KeyUp: function(event) {
         //console.log(this.typeId() + ".onControl_d_KeyUp()")
@@ -619,6 +621,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     onTapComplete: function(aGesture) {
         //console.log(this.typeId() + ".onTapComplete()")
         if (this.node()) {
+            // add a subnode if tapping on empty area
             // make sure tap isn't on a row
             const p = aGesture.downPosition() // there may not be an up position on windows?
             //console.log(this.typeId() + ".onTapComplete() ", aGesture.upEvent())

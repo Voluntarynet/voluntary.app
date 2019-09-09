@@ -83,8 +83,10 @@ BMStorableNode.newSubclassNamed("BMField").newSlots({
         this._value = newValue
 
         if (this.target() && this.valueMethod()) {
-            this.setValueOnTarget(v)
+            this.setValueOnTarget(newValue)
         }
+        
+        this.didUpdateNode()
 
         return this
     },

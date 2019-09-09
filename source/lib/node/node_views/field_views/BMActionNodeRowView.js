@@ -18,7 +18,7 @@ BrowserRow.newSubclassNamed("BMActionNodeRowView").newSlots({
         this.styles().selected().setColor("#888")
         this.styles().selected().setBackgroundColor("#eee")
 		
-        this.setButtonView(ButtonView.clone().setDivClassName("BMActionNodeButtonView"))
+        this.setButtonView(ButtonView.clone().setDivClassName("BMActionNodeView"))
 	    this.buttonView().setTarget(this).setAction("didClickButton")
 	    this.buttonView().setTransition("all 0.3s")
 
@@ -59,6 +59,12 @@ BrowserRow.newSubclassNamed("BMActionNodeRowView").newSlots({
     didClickButton: function() {
         this.doAction()
         return this
+    },
+
+    onDidEdit: function (changedView) {     
+        this.node().setTitle(this.buttonView().title())
+        //this.node().didUpdateView(this)
+        this.scheduleSyncFromNode() // needed for validation?
     },
     
 })

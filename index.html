@@ -773,7 +773,7 @@ html * {
     margin-left: 5px;
 }
 
-.BMActionNodeButtonView {
+.BMActionNodeView {
     /*height: 42px;*/
     width: calc(100% - 40px);
     margin-top: 8px;
@@ -798,7 +798,7 @@ html * {
     transition: all 0.1 ease;
 }
 
-.BMActionNodeButtonView:hover {
+.BMActionNodeView:hover {
     background-color: #aaa;
     transition: opacity background-color 1s ease;
 }
@@ -102518,7 +102518,7 @@ BrowserRow.newSubclassNamed("BMActionNodeRowView").newSlots({
         this.styles().selected().setColor("#888")
         this.styles().selected().setBackgroundColor("#eee")
 		
-        this.setButtonView(ButtonView.clone().setDivClassName("BMActionNodeButtonView"))
+        this.setButtonView(ButtonView.clone().setDivClassName("BMActionNodeView"))
 	    this.buttonView().setTarget(this).setAction("didClickButton")
 	    this.buttonView().setTransition("all 0.3s")
 

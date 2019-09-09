@@ -37,33 +37,39 @@
     margin-left: 5px;
 }
 
-.BMActionNodeButtonView {
-    /*height: 42px;*/
-    width: calc(100% - 40px);
-    margin-top: 8px;
-    margin-bottom: 8px;
-    margin-left: 20px;
-    margin-right: 20px;
+.BMActionNodeView {
+    width: 100%;
+    min-height: 28px;
 
-    background-color:#888;
-    color: white;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    margin-left: 0px;
+    margin-right: 0px;
+
+    padding-top: 8px;
+    padding-bottom: 8px;
+
+    background-color:transparent;
+    color: #bbb;
 
     border-style: solid;
     border-radius: 5px;
-    border-width: 0px;
-    border-color: black;
+    border-width: 1px;
+    border-color:#888;
     
 	font-family: AppSemiBold;
 
     text-align: center;
+    vertical-align: center;
     /*line-height: 42px;*/
     /*overflow: hidden;*/
     /*text-transform: uppercase;*/
     transition: all 0.1 ease;
 }
 
-.BMActionNodeButtonView:hover {
-    background-color: #aaa;
+.BMActionNodeView:hover {
+    color: white;
+    background-color: #888;
     transition: opacity background-color 1s ease;
 }
 
@@ -75,21 +81,16 @@
     /*position: relative;*/
 
 	overflow: hidden;
-	margin-top: 15px;
-    /*margin-left: 0px;*/
+	margin-top: 0px; /*15px;*/
 
-	
     text-align: left;
     white-space: nowrap;
-    /*text-transform: capitalize;*/
     
 	padding-top: 3px;
 	padding-bottom: 3px;
     padding-left: 0px;
 	padding-right: 5px;
-    /*margin: 0px;*/
     
-    text-transform: none;
 	/*font-size: 12px;*/
 	
 	border: 0px dashed #999;
@@ -107,12 +108,12 @@
 	display: block;
     /*position: relative;*/
 
-    width: calc(100% - 42px);
+    width: calc(100%);
 
     margin-top: 5px;
     margin-left: 0px;
     margin-right: 0px;
-    margin-bottom: 15px;
+    margin-bottom: 0px;
 
     text-align: left;
 	overflow: hidden;
@@ -346,26 +347,30 @@
 	color: white;
 }
 
+.BMFieldRowViewErrorView {
+    margin-top: 4px;
+}
+
 .BMFieldRowViewNoteView {
 	display: block;
     position: relative;
-    /*
-	right: 18px;
-    float: right;
-    */
 
-	margin-right: 18px;
 
 	overflow: hidden;
 	
-	width: auto;
+	width: 100%;
 	
     font-weight: normal;
     text-transform: none;
 
 	color: #aaa;
 	
-	padding-top: 3px;
-    padding-bottom: 3px;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 3px;
+    margin-bottom: 3px;
+
+    /*
     border: 1px dashed white;
+    */
 }

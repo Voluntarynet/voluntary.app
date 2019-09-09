@@ -46,7 +46,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         this.setupElement()
         this.setEventListenersDict({})
         this.setIsRegisteredForDrop(false)
-        this.setBoxSizing("border-box")
+        //this.setBoxSizing("border-box")
         return this
     },
 
@@ -2220,10 +2220,20 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     },
 
     onMouseDown: function (event) {
+        const methodName = Mouse.shared().downMethodNameForEvent(event)
+        if (methodName !== "onMouseDown") {
+            console.log(this.typeId() + ".onMouseDown calling: ", methodName)
+            this.invokeMethodNameForEvent(methodName, event)
+        }
         return true
     },
 
     onMouseUp: function (event) {
+        const methodName = Mouse.shared().upMethodNameForEvent(event)
+        if (methodName !== "onMouseUp") {
+            console.log(this.typeId() + ".onMouseUp calling: ", methodName)
+            this.invokeMethodNameForEvent(methodName, event)
+        }
         return true
     },
 
@@ -2266,7 +2276,6 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     onKeyDown: function (event) {
         //Keyboard.shared().showEvent(event)
 
-        
         /*
         const isEnterKey = Keyboard.shared().nameForKeyCode(event.keyCode) === "Enter";
 
@@ -2285,7 +2294,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 	        }
 		}
         */
-        
+
         const methodName = Keyboard.shared().downMethodNameForEvent(event)
         //console.log("onKeyDown methodName: ", methodName)
         this.invokeMethodNameForEvent(methodName, event)
@@ -2303,6 +2312,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
                 return false
             }
         }
+
         return true
     },
 

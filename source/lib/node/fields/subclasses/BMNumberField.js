@@ -29,6 +29,8 @@ BMField.newSubclassNamed("BMNumberField").newSlots({
         } else {
             this.setValueError(null)
         } 
+
+        //this.scheduleSyncToView()
 		
         return isValid
     },

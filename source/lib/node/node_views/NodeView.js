@@ -145,13 +145,6 @@ DomStyledView.newSubclassNamed("NodeView").newSlots({
     },
     
     visibleSubnodes: function() {
-        //console.log(this.typeId() + ".visibleSubnodes() isInspecting:" + this.isInspecting())
-        if (this.isInspecting()) {
-            const subnodes = this.node().nodeInspector().subnodes()
-            if (subnodes) {
-                return subnodes
-            }
-        }
         return this.node().subnodes()
     },
     

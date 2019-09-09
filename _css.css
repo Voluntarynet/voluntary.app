@@ -48,7 +48,18 @@ html * {
     min-height: 1px; 
     max-height: 999999px; 
     zoom: 100%;
-    touch-action: pan-y; /* to avoid slow/choppy handling of touchmove events */
+}
+
+/* to avoid slow/choppy handling of touchmove events */
+
+html * { 
+    touch-action: pan-y; 
+}
+
+/* use border-box to make sure padding is included in dom width calculations */
+
+html * { 
+    box-sizing: border-box;
 }
 
 /* avoid outlines */
@@ -57,19 +68,19 @@ html * {
     outline: none; 
     outline-style: none; 
     -moz-outline-style: none; 
-  }
-  
-  html * :focus { 
+}
+
+html * :focus { 
     outline: none; 
     outline-style: none; 
     -moz-outline-style: none; 
-  }
-  
-  html * :active { 
+}
+
+html * :active { 
     outline: none; 
     outline-style: none; 
     -moz-outline-style: none; 
-  }
+}
     
 /*
 :root {

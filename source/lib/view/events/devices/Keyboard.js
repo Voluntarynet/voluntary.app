@@ -361,6 +361,10 @@ ideal.Proto.newSubclassNamed("Keyboard").newSlots({
         // examples: AltB AltShiftB
         // Note that shift is explicit and the B key is always uppercase
 
+        if (Type.isUndefined(event.keyCode)) {
+            return ""
+        }
+        
         const key = this.keyForCode(event.keyCode)
         const isJustModifier = this.eventIsJustModifierKey(event)
         const modifiers = this.modifierNamesForEvent(event)

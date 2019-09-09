@@ -113,5 +113,16 @@ ideal.Proto.newSubclassNamed("Mouse").newSlots({
         return []
     },
 
+    // full event name
+
+    downMethodNameForEvent: function(event) {
+        const s = Keyboard.shared().modsAndKeyNameForEvent(event)
+        return "on" + s + "MouseDown"
+    },
+
+    upMethodNameForEvent: function(event) {
+        const s = Keyboard.shared().modsAndKeyNameForEvent(event)
+        return "on" + s + "MouseUp"
+    },
     
 })

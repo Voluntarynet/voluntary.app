@@ -44,6 +44,10 @@ DomView.newSubclassNamed("ButtonView").newSlots({
         return this
     },
 
+    title: function() {
+        return this.titleView().value()
+    },
+
     setButtonHeight: function(h) {
         this.setMinAndMaxHeight(h)
         this.setLineHeight(h)

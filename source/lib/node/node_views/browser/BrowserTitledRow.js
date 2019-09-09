@@ -33,11 +33,9 @@ BrowserRow.newSubclassNamed("BrowserTitledRow").newSlots({
 
     setHasSubtitle: function(aBool) {        
         if (aBool) {
-            //this.titleView().setTop(10)
-            this.titleView().setMarginTop(10)
+            this.titleView().setMarginTop(6)
         } else {
-            //this.titleView().setTop(22)      
-            this.titleView().setMarginTop(22)      
+            this.titleView().setMarginTop(13)    // 13   
         }
 
         return this

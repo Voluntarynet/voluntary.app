@@ -12,6 +12,7 @@
 BMStorableNode.newSubclassNamed("BMMenuNode").newSlots({
     label: "",
     hasTest: false,
+    hasSubtitleOfValues: false,
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
@@ -57,6 +58,19 @@ BMStorableNode.newSubclassNamed("BMMenuNode").newSlots({
         this.setLabel(aString)
         this.tellParentNodes("onDidEditNode", this)
         return this
+    },
+
+    subtitle: function() {
+        if (this.hasSubtitleOfValues()) {
+            let parts = []
+            this.subnodes().forEach((subnode) => {
+                if (subnode.value) {
+                    parts.push(subnode.value())
+                }
+            })
+            return parts.join(" ")
+        }
+        return BMStorableNode.subtitle.apply(this)
     },
 
     /*

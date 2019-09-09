@@ -9,11 +9,51 @@
 BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
     keyView: null,
     valueView: null,
+    errorView: null,
     noteView: null,
     editableColor: "#aaa",
     uneditableColor: "#888",
     errorColor: "red",
 }).setSlots({
+    init: function () {
+        BrowserFieldRow.init.apply(this)
+        
+        this.setMaxHeight("none")
+        this.setHeight("auto")
+
+        this.setKeyView(TextField.clone().setDivClassName("BMFieldKeyView"))
+        this.addContentSubview(this.keyView())     
+   		this.keyView().turnOffUserSelect().setSpellCheck(false)   
+        //this.keyView().setMarginLeft(18)
+
+        //this.contentView().setPaddingLeft(20)
+        this.setValueView(this.createValueView())
+        this.addContentSubview(this.valueView())  
+      
+        this.valueView().setUserSelect("text")   // should the value view handle this?
+        this.valueView().setSpellCheck(false)   // should the value view handle this?
+        //this.valueView().setWidthPercentage(100) 
+
+        this.setNoteView(DomView.clone().setDivClassName("BMFieldRowViewNoteView"))
+        this.addContentSubview(this.noteView())
+        this.noteView().setUserSelect("text")
+
+        this.setErrorView(DomView.clone().setDivClassName("BMFieldRowViewErrorView"))
+        this.addContentSubview(this.errorView())
+        this.errorView().setUserSelect("text").setSpellCheck(false)
+        //this.errorView().setInnerHTML("error")
+        this.errorView().setColor("red")
+
+        return this
+    },
+
+    createValueView: function() {
+        const tf = TextField.clone().setDivClassName("BMFieldValueView")
+        //tf.setSelectAllOnDoubleClick(true)
+        return tf
+    },
+
+    // colors
 
     currentBackgroundCssColor: function() {
         const bg = this.columnGroup().computedBackgroundColor()
@@ -38,37 +78,6 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
         //return this.valueBackgroundCssColor().contrastComplement(0.2).cssColorString()
     },
 
-    init: function () {
-        BrowserFieldRow.init.apply(this)
-        
-        this.setMaxHeight("none")
-        this.setHeight("auto")
-
-        this.setKeyView(TextField.clone().setDivClassName("BMFieldKeyView"))
-        this.addContentSubview(this.keyView())     
-   		this.keyView().turnOffUserSelect().setSpellCheck(false)   
-        //this.keyView().setMarginLeft(18)
-
-        //this.contentView().setPaddingLeft(20)
-        this.setValueView(this.createValueView())
-        this.addContentSubview(this.valueView())  
-      
-        this.valueView().setUserSelect("text")   // should the value view handle this?
-        this.valueView().setSpellCheck(false)   // should the value view handle this?
-        //this.valueView().setWidthPercentage(100) 
-
-        this.setNoteView(DomView.clone().setDivClassName("BMFieldRowViewNoteView"))
-        this.addContentSubview(this.noteView())
-        this.noteView().setUserSelect("text")
-        
-        return this
-    },
-
-    createValueView: function() {
-        const tf = TextField.clone().setDivClassName("BMFieldValueView")
-        //tf.setSelectAllOnDoubleClick(true)
-        return tf
-    },
 	
     // visible key and value
     
@@ -82,6 +91,7 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
 
     // sync 
     
+    /*
     syncValueViewToNode: function() {
         //console.log(this.typeId() + ".syncValueViewToNode " + this.node().type())
 	    if (this.node().type() === "BMBoolField" && this.valueView().type() !== "BoolView") {
@@ -92,9 +102,10 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
             this.addContentSubview(this.valueView())  
             //this.valueView().setUserSelect("text")   // should the value view handle this?
 		    //this.valueView().setSpellCheck(false)   // should the value view handle this?	        
-		    //return TextField.clone().setDivClassName("BMFieldValueView")
+            //return TextField.clone().setDivClassName("BMFieldValueView")
         }
     },
+    */
     
     didChangeIsSelected: function () {
         BrowserFieldRow.didChangeIsSelected.apply(this)
@@ -117,12 +128,14 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
         //console.log(this.typeId() + " syncFromNode")
 		
         this.node().prepareToSyncToView()
-        this.syncValueViewToNode() // (lazy) set up the value view to match the field's type
+        //this.syncValueViewToNode() // (lazy) set up the value view to match the field's type
 
         const node = this.node()
         const keyView = this.keyView()
         const valueView = this.valueView()
-		
+        const noteView = this.noteView()
+        const errorView = this.errorView()
+
         if (node.isVisible()) {
             this.setDisplay("block")
         } else {
@@ -171,10 +184,13 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
         // change color if value is invalid
 		
         const color = valueView.color()
-		
+        
         if (node.valueError()) {
-            valueView.setColor(this.errorColor())
-            valueView.setToolTip(node.valueError())
+            //valueView.setColor(this.errorColor())
+            //valueView.setToolTip(node.valueError())
+            //errorView.setColor(this.errorColor())
+            errorView.setDisplay("block")
+            errorView.setInnerHTML(node.valueError())
         } else {
             //valueView.setBackgroundColor("transparent")
             //valueView.setBorder("1px solid white")
@@ -182,12 +198,16 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
             valueView.setBackgroundColor(this.valueBackgroundColor())
             valueView.setColor(color)
             valueView.setToolTip("")
+            errorView.setDisplay("none")
+            errorView.setInnerHTML("")
         }
 				
         if (this.visibleNote()) {
-            this.noteView().setInnerHTML(this.visibleNote())
+            noteView.setDisplay("block")
+            noteView.setInnerHTML(this.visibleNote())
         } else {
-            this.noteView().setInnerHTML("")
+            noteView.setDisplay("none")
+            noteView.setInnerHTML("")
         }
 
         return this

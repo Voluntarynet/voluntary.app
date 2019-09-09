@@ -311,17 +311,11 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         return this
     },
     
+    /*
     onTabKeyUp: function() {
         console.log(this.typeId() + ".onTabKeyUp()")
     },
-
-    onControl_i_KeyUp: function(event) {
-        if (this.node().nodeCanInspect()) { 
-            this.setIsInspecting(!this.isInspecting())
-            //console.log(this.typeId() + ".isInspecting() = ", this.isInspecting())
-            this.scheduleSyncToNode()
-        }
-    },
+    */
 
     // --- styles ---
     
@@ -444,10 +438,40 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         return true
     },
 
-    onTapComplete: function() {
+    onTapComplete: function(aGesture) {
         //console.log(this.typeId() + ".onTapComplete()")
-        this.justTap()
+        const keyModifiers = Keyboard.shared().modifierNamesForEvent(aGesture.lastEvent());
+        const hasThreeFingersDown = aGesture.numberOfFingersDown() === 3;
+        const isAltTap = keyModifiers.contains("Alternate");
+    
+        /*
+        if (keyModifiers.length) {
+            const methodName = "just" + keyModifiers.join("") + "Tap"
+            //console.log(this.typeId() + " tap method " + methodName)
+            if (this[methodName]) {
+                this[methodName].apply(this)
+            }
+        } 
+        */
+        
+        if (hasThreeFingersDown || isAltTap) {
+            this.justInspect()
+        } else {
+            this.justTap()
+        }
+
         return this
+    },
+
+    justInspect: function(event) {
+        console.log(this.typeId() + ".justInspect()")
+        if (this.node().nodeCanInspect()) { 
+            this.setIsInspecting(!this.isInspecting())
+            console.log(this.typeId() + ".isInspecting() = ", this.isInspecting())
+            //this.scheduleSyncToNode()
+            //this.select()
+            this.justTap()
+        }
     },
 
     // -- slide gesture ---
@@ -738,9 +762,6 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     },
     */
 
-    onMouseMove: function(event) {
-    },
-    
     // --- selecting ---
     
     /*
@@ -763,6 +784,11 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     },
 
     /*
+    // NOTE: unneeded after unifying click with gesture tap
+
+    onMouseMove: function(event) {
+    },
+
     onClick: function (event) {
         if (this.isDeleting()) {
             return false
@@ -786,16 +812,18 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         event.stopPropagation()
         return false
     },
-    */
 
     onControlClick: function() {
     },
 
     onAltClick: function() {
+        console.log(this.typeId() + ".onAltClick()")
     },
 
     onShiftClick: function() {
+        console.log(this.typeId() + ".onShiftClick()")
     },
+    */
 
     // -------------------------
 
@@ -821,6 +849,11 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     */
     
     nodeRowLink: function() {
+        //console.log(this.typeId() + ".visibleSubnodes() isInspecting:" + this.isInspecting())
+        if (this.isInspecting()) {
+            return  this.node().nodeInspector()
+        }
+
         return this.node().nodeRowLink()
     },
 

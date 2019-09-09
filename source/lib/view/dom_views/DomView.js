@@ -1841,12 +1841,13 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
     setAction: function (anActionString) {
         this._action = anActionString
-        this.setIsRegisteredForClicks(this.hasTargetAndAction())
+        //this.setIsRegisteredForClicks(this.hasTargetAndAction())
+        console.log(this.typeId() + " attempt setIsRegisteredForClicks")
         return this
     },
 
     onClick: function (event) {
-        //console.log(this.typeId() + ".onClick()")
+        console.log(this.typeId() + ".onClick()")
         this.sendActionToTarget()
         event.stopPropagation()
         return false
@@ -2152,6 +2153,17 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         }
         return this
     },
+
+    addDefaultTapGesture: function() {
+        this.addGestureRecognizer(TapGestureRecognizer.clone()) 
+        return 
+    },
+
+    removeDefaultTapGesture: function() {
+        this.removeGestureRecognizersOfType("TapGestureRecognizer")
+        return 
+    },
+
 
     /*
     requestActiveGesture: function(aGesture) {

@@ -131,7 +131,7 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
     setContentEditable: function(aBool) {
         DomStyledView.setContentEditable.apply(this, [aBool])
         //console.log(this.typeId() + ".setContentEditable(" + aBool + ") = ", this.contentEditable())
-        this.setIsRegisteredForClicks(this.contentEditable()) 
+        //this.setIsRegisteredForClicks(this.contentEditable())  // is this needed after move to tap?
         return this
     },
 	

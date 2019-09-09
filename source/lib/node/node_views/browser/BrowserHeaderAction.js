@@ -17,10 +17,14 @@ NodeView.newSubclassNamed("BrowserHeaderAction").newSlots({
     updateCanClick: function() {
         if (this.canClick()) {
             this.setOpacity(1)
-            this.setIsRegisteredForClicks(true) // will update cursor
+            //this.setIsRegisteredForClicks(true) // will update cursor
+            this.addDefaultTapGesture()
+
         } else {
             this.setOpacity(0.5)
-            this.setIsRegisteredForClicks(false) 
+            //this.setIsRegisteredForClicks(false) 
+            this.removeDefaultTapGesture()
+
         }
     },
     
@@ -52,5 +56,11 @@ NodeView.newSubclassNamed("BrowserHeaderAction").newSlots({
         this.updateImage()
         this.updateTooltip()
         return this
+    },
+
+    onTapComplete: function (aGesture) {
+        console.log(this.typeId() + ".onTapComplete()")
+        this.sendActionToTarget()
+        return false
     },
 })

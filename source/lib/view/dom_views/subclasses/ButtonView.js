@@ -36,6 +36,8 @@ DomView.newSubclassNamed("ButtonView").newSlots({
         this.setAction("close") //.setInnerHTML("&#10799;")
         */
 
+        this.addDefaultTapGesture()
+
         return this
     },
 
@@ -75,5 +77,13 @@ DomView.newSubclassNamed("ButtonView").newSlots({
             DomView.sendActionToTarget.apply(this)
         }
         return this
+    },
+
+    onTapComplete: function (aGesture) {
+        console.log(this.typeId() + ".onTapComplete()")
+        if (!this.isEditable()) {
+            DomView.sendActionToTarget.apply(this)
+        }
+        return false
     },
 })

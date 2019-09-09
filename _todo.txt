@@ -1,7 +1,9 @@
-TextField:
 
-    move setIsRegisteredForClicks to use tap
-    - added a setIsRegisteredForSingleTap
+    move uses of setIsRegisteredForClicks to use tap
+
+- need event propogation for gestures - separate onTap from onAlternateTap?
+- animate row height change
+
     
 fix bug with padding after slide on button row
 

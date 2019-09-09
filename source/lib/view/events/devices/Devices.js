@@ -3,7 +3,14 @@
 /*
     Devices
 
-    Setup and manage devices.
+    Right now, this just sets up the standard devices. 
+    Later, we can using it for 
+        - discovering
+        - organizing
+        - inspecting
+        - managing
+        - globally intercepting & recording input for debugging or playback
+        etc.
 
 */
 

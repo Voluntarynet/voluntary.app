@@ -1,3 +1,9 @@
+TextField:
+
+    move setIsRegisteredForClicks to use tap
+    - added a setIsRegisteredForSingleTap
+    
+fix bug with padding after slide on button row
 
 
 ImageWellFieldRowView

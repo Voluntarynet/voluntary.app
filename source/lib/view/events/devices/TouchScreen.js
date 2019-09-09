@@ -3,7 +3,7 @@
 /*
     TouchScreen
 
-    Global shared instance that tracks current mouse state in window coordinates.
+    Global shared instance that tracks current touch state in window coordinates.
     Registers for capture events on document.body.
 
 */

@@ -7,6 +7,7 @@ ResourceLoader.pushRelativePaths([
     "Mouse.js",
     "TouchScreen.js",
     "GamePadManager.js",
-    "GamePad.js"
+    "GamePad.js",
+    "Devices.js"
 ])
 

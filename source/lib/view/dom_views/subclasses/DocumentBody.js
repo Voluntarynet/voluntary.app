@@ -11,22 +11,16 @@ DomView.newSubclassNamed("DocumentBody").newSlots({
     init: function () {
         DomView.init.apply(this)
 
+        /*
         window.SyncScheduler.shared().scheduleTargetAndMethod(this, "autoAdjustZoomForMobile")
-
-        // using event intercept phase to grab all events and record them
-        // in Mouse.shared() and Keyboard.shared() objects
-        
-        //this.setIsRegisteredForKeyboard(true, true)
-        //this.setIsRegisteredForMouse(true, true)
 
         setTimeout(() => {
             this.setIsRegisteredForDocumentResize(true)
         })
+        */
 
-        Mouse.shared()
-        Keyboard.shared()
-        TouchScreen.shared()
-
+        // setup shared devices for later use
+        Devices.shared().setupIfNeeded()
         return this
     },
 
@@ -45,13 +39,13 @@ DomView.newSubclassNamed("DocumentBody").newSlots({
         return document.body
     },
     
+    /*
     onDocumentResize: function() {
 	     window.SyncScheduler.shared().scheduleTargetAndMethod(this, "autoAdjustZoomForMobile")
         //this.autoAdjustZoomForMobile()
     },
     
     autoAdjustZoomForMobile: function() {
-        /*
         let w = WebBrowserScreen.shared().width();
         let h = WebBrowserScreen.shared().height();
         
@@ -62,14 +56,13 @@ DomView.newSubclassNamed("DocumentBody").newSlots({
         if (w < 800) {
             z = "300%"
         }
-
         
         this.setZoom(z)
         
         //console.log("DocumentBody windowWidth: " + WebBrowserWindow.shared().width() + " zoom: " + this.zoom() )
-        */
         return this
     },
+    */
     
     zoomAdjustedWidth: function() {
         return WebBrowserWindow.shared().width() * this.zoomRatio()

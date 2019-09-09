@@ -559,7 +559,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
             setTimeout(() => {
                 this.cleanupSlide()
                 this.delete()
-            }, dt*1000)
+            }, dt * 1000)
         }, 0)
     },
 
@@ -602,6 +602,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         return this.closeButtonView() && this.closeButtonView().target() != null
     },
     
+    /*
     onMouseOver: function(event) {
         if (this.canDelete() && this.closeButtonView()) {
             this.closeButtonView().setOpacity(1)
@@ -616,10 +617,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
             this.closeButtonView().setTarget(null)
         }        
     },
-
-    onMouseUp: function (event) {
-        NodeView.onMouseUp.apply(this, [event])
-    },
+    */
 
     // tap hold
 

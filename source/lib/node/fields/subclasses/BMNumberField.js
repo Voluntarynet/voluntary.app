@@ -25,7 +25,7 @@ BMField.newSubclassNamed("BMNumberField").newSlots({
         const isValid = this.valueIsNumeric()
 		
         if (!isValid) {
-            this.setValueError("this needs to be a number")
+            this.setValueError("This needs to be a number.")
         } else {
             this.setValueError(null)
         } 

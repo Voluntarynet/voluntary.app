@@ -88499,8 +88499,8 @@ window.DomTransition = class DomTransition extends ProtoClass {
         return this
     }
 
-    syncToDiv() {
-        this.transitions().syncToDiv()
+    syncToDomView() {
+        this.transitions().syncToDomView()
         return this
     }
 }
@@ -88545,12 +88545,12 @@ window.DomTransitions = class DomTransitions extends ProtoClass {
         return this.propertiesAsList().map(t => t.asString()).join(", ")
     }
 
-    syncToDiv() {
+    syncToDomView() {
         this.divView().setTransition(this.asString())
         return this
     }
 
-    syncFromDiv() {
+    syncFromDomView() {
         this.setProperties({})
 
         const s = this.divView().transition()
@@ -88658,12 +88658,12 @@ window.DomBorderRadius = class DomBorderRadius extends ProtoClass {
         return this
     }
 
-    syncToDiv() {
+    syncToDomView() {
         this.divView().setBorderRadius(this.asString())
         return this
     }
 
-    syncFromDiv() {
+    syncFromDomView() {
         const s = this.divView().borderRadius()
 
         if (s) {
@@ -89875,7 +89875,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         this.setCssAttribute("transition", s)
 
         if (this._transitions) {
-            this.transitions().syncFromDiv()
+            this.transitions().syncFromDomView()
         }
 
         return this
@@ -89889,7 +89889,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
     transitions: function () {
         if (this._transitions == null) {
-            this._transitions = DomTransitions.clone().setDomView(this).syncFromDiv()
+            this._transitions = DomTransitions.clone().setDomView(this).syncFromDomView()
         }
         return this._transitions
     },
@@ -97342,7 +97342,7 @@ BMField.newSubclassNamed("BMBoolField").newSlots({
         const isValid = this.valueIsBool()
 		
         if (!isValid) {
-            this.setValueError("this needs to be a boolean (true or false)")
+            this.setValueError("This needs to be a boolean (true or false).")
         } else {
             this.setValueError(null)
         } 

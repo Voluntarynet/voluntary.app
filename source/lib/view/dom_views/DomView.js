@@ -541,7 +541,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         this.setCssAttribute("transition", s)
 
         if (this._transitions) {
-            this.transitions().syncFromDiv()
+            this.transitions().syncFromDomView()
         }
 
         return this
@@ -555,7 +555,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
     transitions: function () {
         if (this._transitions == null) {
-            this._transitions = DomTransitions.clone().setDomView(this).syncFromDiv()
+            this._transitions = DomTransitions.clone().setDomView(this).syncFromDomView()
         }
         return this._transitions
     },
@@ -1544,7 +1544,9 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     },
 
     fadeInToDisplayInlineBlock: function () {
+        this.transitions().at("opacity").updateDuration("0.3s")
         this.setDisplay("inline-block")
+        this.setOpacity(0)
         setTimeout(() => {
             this.setOpacity(1)
         }, 0)
@@ -1552,6 +1554,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     },
 
     fadeOutToDisplayNone: function () {
+        this.transitions().at("opacity").updateDuration("0.3s")
         this.setOpacity(0)
         setTimeout(() => {
             this.setDisplay("none")
@@ -1842,7 +1845,8 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     setAction: function (anActionString) {
         this._action = anActionString
         //this.setIsRegisteredForClicks(this.hasTargetAndAction())
-        if (this.type() !== "ButtonView") {
+        if (this.type() !== "ButtonView" && this.type() !== "BrowserHeaderAction") { 
+            // remove this later if we don't find anything using it
             console.warn(this.typeId() + " may have depended on setIsRegisteredForClicks")
         }
         return this

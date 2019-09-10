@@ -14,7 +14,7 @@ window.DomTransitions = class DomTransitions extends ProtoClass {
         super.init()
         this.newSlots({
             properties: null,
-            divView: null,
+            domView: null,
         })
         this.setProperties({})
     }
@@ -22,7 +22,7 @@ window.DomTransitions = class DomTransitions extends ProtoClass {
     at(aName) {
         const d = this.properties()
         if (!(name in d)) {
-            d[name] = DomTransition.clone().setTransitions(this)
+            d[name] = DomTransition.clone().setProperty(aName).setTransitions(this)
         }
         return d[name]
     }
@@ -31,25 +31,29 @@ window.DomTransitions = class DomTransitions extends ProtoClass {
         return Object.values(this.properties())
     }
 
-    asString(aString) {
+    asString() {
         return this.propertiesAsList().map(t => t.asString()).join(", ")
     }
 
-    syncToDiv() {
-        this.divView().setTransition(this.asString())
+    syncToDomView() {
+        console.log(this.typeId() + ".setTransition('" + this.asString() + "')")
+        this.domView().setTransition(this.asString())
         return this
     }
 
-    syncFromDiv() {
+    syncFromDomView() {
         this.setProperties({})
 
-        const s = this.divView().transition()
-        const transitionStrings = s.split(",")
+        const s = this.domView().transition()
 
-        transitionStrings.forEach((tString) => {
-            const t = DomTransition.clone().setFromString(tString)
-            this.properties()[t.property()] = t
-        })
+        if (s !== "") {
+            const transitionStrings = s.split(",")
+
+            transitionStrings.forEach((tString) => {
+                const t = DomTransition.clone().setFromString(tString)
+                this.properties()[t.property()] = t
+            })
+        }
 
         return this
     }

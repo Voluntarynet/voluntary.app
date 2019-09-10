@@ -88,12 +88,12 @@ window.DomBorderRadius = class DomBorderRadius extends ProtoClass {
         return this
     }
 
-    syncToDiv() {
+    syncToDomView() {
         this.divView().setBorderRadius(this.asString())
         return this
     }
 
-    syncFromDiv() {
+    syncFromDomView() {
         const s = this.divView().borderRadius()
 
         if (s) {

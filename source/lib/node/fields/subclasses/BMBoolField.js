@@ -27,7 +27,7 @@ BMField.newSubclassNamed("BMBoolField").newSlots({
         const isValid = this.valueIsBool()
 		
         if (!isValid) {
-            this.setValueError("this needs to be a boolean (true or false)")
+            this.setValueError("This needs to be a boolean (true or false).")
         } else {
             this.setValueError(null)
         } 

@@ -14,11 +14,29 @@ window.DomTransition = class DomTransition extends ProtoClass {
         this.newSlots({
             property: "",
             duration: 0,
-            timingFunction: "ease-in-ease-out",
+            timingFunction: "ease-in-out", // "linear", "ease", "ease-in", cubic-bezier(n, n, n, n)
             delay: 0, // set to number type (unit = seconds)
             //parent: null,
             transitions: null,
         })
+    }
+
+    updateDuration(s) {
+        this.setDuration(s)
+        this.syncToDomView()
+        return this
+    }
+
+    updateDelay(s) {
+        this.setDelay(s)
+        this.syncToDomView()
+        return this
+    }
+
+    updateTimingFunction(s) {
+        this.setTimingFunction(s)
+        this.syncToDomView()
+        return this
     }
 
     durationString() {
@@ -30,14 +48,14 @@ window.DomTransition = class DomTransition extends ProtoClass {
     }
 
     delayString() {
-        const v = this.duration()
+        const v = this.delay()
         if (Type.isNumber(v)) {
             return v + "s"
         }
         return v
     }
 
-    asString(aString) {
+    asString() {
         const parts = [
             this.property(),
             this.durationString(),
@@ -73,8 +91,8 @@ window.DomTransition = class DomTransition extends ProtoClass {
         return this
     }
 
-    syncToDiv() {
-        this.transitions().syncToDiv()
+    syncToDomView() {
+        this.transitions().syncToDomView()
         return this
     }
 }

@@ -188,9 +188,22 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
         if (node.valueError()) {
             //valueView.setColor(this.errorColor())
             //valueView.setToolTip(node.valueError())
-            //errorView.setColor(this.errorColor())
-            errorView.setDisplay("block")
+            errorView.setColor(this.errorColor())
+            
+            //errorView.setTransition("all 1s")
+            //errorView.setMinAndMaxHeight(0)
+            //errorView.setDisplay("block")
+            //setTimeout(() => { errorView.setMinAndMaxHeight(25) }, 0)
+            
+            /*
+            const t = this.transitions()
+            console.log("transitions: ", t.asString())
+            t.at("height").setDuration("0.3s")
+            t.syncToDomView()
+            */
             errorView.setInnerHTML(node.valueError())
+            errorView.fadeInToDisplayInlineBlock()
+
         } else {
             //valueView.setBackgroundColor("transparent")
             //valueView.setBorder("1px solid white")
@@ -198,8 +211,9 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
             valueView.setBackgroundColor(this.valueBackgroundColor())
             valueView.setColor(color)
             valueView.setToolTip("")
-            errorView.setDisplay("none")
-            errorView.setInnerHTML("")
+            //errorView.setDisplay("none")
+            //errorView.setInnerHTML("")
+            errorView.fadeOutToDisplayNone()
         }
 				
         if (this.visibleNote()) {

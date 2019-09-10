@@ -457,6 +457,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         if (hasThreeFingersDown || isAltTap) {
             this.justInspect()
         } else {
+            this.setIsInspecting(false)
             this.justTap()
         }
 
@@ -466,8 +467,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     justInspect: function(event) {
         console.log(this.typeId() + ".justInspect()")
         if (this.node().nodeCanInspect()) { 
-            this.setIsInspecting(!this.isInspecting())
-            console.log(this.typeId() + ".isInspecting() = ", this.isInspecting())
+            this.setIsInspecting(true)
             //this.scheduleSyncToNode()
             //this.select()
             this.justTap()

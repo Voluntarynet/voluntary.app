@@ -56,7 +56,7 @@ NodeView.newSubclassNamed("ImageView").newSlots({
 
     addCloseButton: function() {
         if (this.closeButtonView() == null) {
-            const cb = NodeView.clone().setDivClassName("ImageCloseButton")
+            const cb = ButtonView.clone().setDivClassName("ImageCloseButton")
             this.setCloseButtonView(cb)
             this.addSubview(cb) 
             cb.setTarget(this).setAction("close") //.setInnerHTML("&#10799;")

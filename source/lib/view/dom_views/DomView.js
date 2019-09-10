@@ -1842,7 +1842,9 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     setAction: function (anActionString) {
         this._action = anActionString
         //this.setIsRegisteredForClicks(this.hasTargetAndAction())
-        console.log(this.typeId() + " attempt setIsRegisteredForClicks")
+        if (this.type() !== "ButtonView") {
+            console.warn(this.typeId() + " may have depended on setIsRegisteredForClicks")
+        }
         return this
     },
 

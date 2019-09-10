@@ -4,6 +4,8 @@
 
     BrowserHeaderAction
 
+    Merge with ButtonView?
+    
 */
 
 NodeView.newSubclassNamed("BrowserHeaderAction").newSlots({

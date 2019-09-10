@@ -492,7 +492,7 @@ html * :active {
 
 .BrowserRowContentView {
     padding-top: 8px;
-    padding-bottom: 12px;
+    padding-bottom: 4px;
     padding-left: 18px;
     padding-right: 18px;
     height: auto;
@@ -862,7 +862,7 @@ html * :active {
     margin-top: 5px;
     margin-left: 0px;
     margin-right: 0px;
-    margin-bottom: 0px;
+    margin-bottom: 4px;
 
     text-align: left;
 	overflow: hidden;
@@ -1097,7 +1097,7 @@ html * :active {
 }
 
 .BMFieldRowViewErrorView {
-    margin-top: 4px;
+    padding-bottom: 0px;
 }
 
 .BMFieldRowViewNoteView {
@@ -88440,11 +88440,29 @@ window.DomTransition = class DomTransition extends ProtoClass {
         this.newSlots({
             property: "",
             duration: 0,
-            timingFunction: "ease-in-ease-out",
+            timingFunction: "ease-in-out", // "linear", "ease", "ease-in", cubic-bezier(n, n, n, n)
             delay: 0, // set to number type (unit = seconds)
             //parent: null,
             transitions: null,
         })
+    }
+
+    updateDuration(s) {
+        this.setDuration(s)
+        this.syncToDomView()
+        return this
+    }
+
+    updateDelay(s) {
+        this.setDelay(s)
+        this.syncToDomView()
+        return this
+    }
+
+    updateTimingFunction(s) {
+        this.setTimingFunction(s)
+        this.syncToDomView()
+        return this
     }
 
     durationString() {
@@ -88456,14 +88474,14 @@ window.DomTransition = class DomTransition extends ProtoClass {
     }
 
     delayString() {
-        const v = this.duration()
+        const v = this.delay()
         if (Type.isNumber(v)) {
             return v + "s"
         }
         return v
     }
 
-    asString(aString) {
+    asString() {
         const parts = [
             this.property(),
             this.durationString(),
@@ -88524,7 +88542,7 @@ window.DomTransitions = class DomTransitions extends ProtoClass {
         super.init()
         this.newSlots({
             properties: null,
-            divView: null,
+            domView: null,
         })
         this.setProperties({})
     }
@@ -88532,7 +88550,7 @@ window.DomTransitions = class DomTransitions extends ProtoClass {
     at(aName) {
         const d = this.properties()
         if (!(name in d)) {
-            d[name] = DomTransition.clone().setTransitions(this)
+            d[name] = DomTransition.clone().setProperty(aName).setTransitions(this)
         }
         return d[name]
     }
@@ -88541,25 +88559,29 @@ window.DomTransitions = class DomTransitions extends ProtoClass {
         return Object.values(this.properties())
     }
 
-    asString(aString) {
+    asString() {
         return this.propertiesAsList().map(t => t.asString()).join(", ")
     }
 
     syncToDomView() {
-        this.divView().setTransition(this.asString())
+        //console.log(this.typeId() + ".setTransition('" + this.asString() + "')")
+        this.domView().setTransition(this.asString())
         return this
     }
 
     syncFromDomView() {
         this.setProperties({})
 
-        const s = this.divView().transition()
-        const transitionStrings = s.split(",")
+        const s = this.domView().transition()
 
-        transitionStrings.forEach((tString) => {
-            const t = DomTransition.clone().setFromString(tString)
-            this.properties()[t.property()] = t
-        })
+        if (s !== "") {
+            const transitionStrings = s.split(",")
+
+            transitionStrings.forEach((tString) => {
+                const t = DomTransition.clone().setFromString(tString)
+                this.properties()[t.property()] = t
+            })
+        }
 
         return this
     }
@@ -88815,6 +88837,14 @@ ResourceLoader.pushRelativePaths([
 
     Used to measure rendered text dimensions given a string and a style.
     
+    Example uses:
+
+            const size1 = DomTextTapeMeasure.sizeOfDivClassWithText(this.divClassName(), text);
+            const h = size1.height;
+            
+            const size2 = DomTextTapeMeasure.sizeOfElementWithText(domElement, text);
+            const w = size2.width;
+
 */
 
 
@@ -88846,12 +88876,12 @@ ideal.Proto.newSubclassNamed("DomTextTapeMeasure").newSlots({
         e.style.visibility = "hidden";
         return e		
     },
-	
-    widthOfDivWithText: function(div, text) { 
+
+    sizeOfElementWithText: function(element, text) { 
         const e = this.testElement()
 		
         this.stylesToCopy().forEach(function (styleName) {
-            const v = DomView.style[styleName]
+            const v = element.style[styleName]
             if (v) {
                 e.style[styleName] = v
             } else {
@@ -88859,25 +88889,27 @@ ideal.Proto.newSubclassNamed("DomTextTapeMeasure").newSlots({
             }
         })
 		
-        e.innerHTML = DomView.innerHTML
+        e.innerHTML = element.innerHTML
 		
         //let height = (e.clientHeight + 1)
         const width = (e.clientWidth + 1) 
+        const height = (e.clientHeight + 1) 
         this.clean()
-        return width
+        return { width: width, height: height }
     },
 	
-    widthOfDivClassWithText: function(divClassName, text) { 
+    sizeOfDivClassWithText: function(divClassName, text) { 
         const e = this.testElement()
         e.className = divClassName
         e.innerHTML = text
 		
         //let height = (e.clientHeight + 1)
         const width = (e.clientWidth + 1) 
+        const height = (e.clientHeight + 1) 
         e.innerHTML = ""
         //console.log(divClassName, " '" + text + "' width = ", width)
         //this.clean()
-        return width
+        return { width: width, height: height }
     },
 	
     clean: function() {
@@ -90490,8 +90522,14 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     // width and height
 
     calcWidth: function () {
-        return DomTextTapeMeasure.widthOfDivClassWithText(this.divClassName(), this.innerHTML())
+        return DomTextTapeMeasure.sizeOfElementWithText(this.element(), this.innerHTML()).width;
+        //return DomTextTapeMeasure.sizeOfDivClassWithText(this.divClassName(), this.innerHTML()).width;
     },
+
+    calcHeight: function () {
+        return DomTextTapeMeasure.sizeOfElementWithText(this.element(), this.innerHTML()).height;
+    },
+
 
     setWidthString: function (s) {
         assert(Type.isString(s) || s === null)
@@ -90878,7 +90916,9 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     },
 
     fadeInToDisplayInlineBlock: function () {
+        this.transitions().at("opacity").updateDuration("0.3s")
         this.setDisplay("inline-block")
+        this.setOpacity(0)
         setTimeout(() => {
             this.setOpacity(1)
         }, 0)
@@ -90886,10 +90926,53 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     },
 
     fadeOutToDisplayNone: function () {
+        this.transitions().at("opacity").updateDuration("0.3s")
         this.setOpacity(0)
         setTimeout(() => {
             this.setDisplay("none")
         }, 200)
+        return this
+    },
+
+    // --- fade + height animations ----
+
+    fadeInHeightToDisplayBlock: function () {
+        this.setMinHeight("100%")
+        this.setMaxHeight("100%")
+        const targetHeight = this.calcHeight()
+
+        this.setOverflow("hidden")
+        this.transitions().at("opacity").updateDuration("0.6s")
+        this.transitions().at("min-height").updateDuration("0.3s")
+        this.transitions().at("max-height").updateDuration("0.3s")
+
+        this.setDisplay("block")
+        this.setOpacity(0)
+        this.setMinAndMaxHeight(0)
+
+        setTimeout(() => {
+            this.setOpacity(1)
+            this.setMinAndMaxHeight(targetHeight)
+        }, 0)
+        return this
+    },
+
+    fadeOutHeightToDisplayNone: function () {
+        this.setOverflow("hidden")
+        this.transitions().at("opacity").updateDuration("0.2s")
+        this.transitions().at("min-height").updateDuration("0.3s")
+        this.transitions().at("max-height").updateDuration("0.3s")
+
+        setTimeout(() => {
+            this.setOpacity(0)
+            this.setMinAndMaxHeight(0)
+        }, 1)
+
+        /*
+        setTimeout(() => {
+            this.setDisplay("none")
+        }, 300)
+        */
         return this
     },
 
@@ -91175,7 +91258,11 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
     setAction: function (anActionString) {
         this._action = anActionString
-        this.setIsRegisteredForClicks(this.hasTargetAndAction())
+        //this.setIsRegisteredForClicks(this.hasTargetAndAction())
+        if (this.type() !== "ButtonView" && this.type() !== "BrowserHeaderAction") { 
+            // remove this later if we don't find anything using it
+            console.warn(this.typeId() + " may have depended on setIsRegisteredForClicks")
+        }
         return this
     },
 
@@ -91486,6 +91573,17 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         }
         return this
     },
+
+    addDefaultTapGesture: function() {
+        this.addGestureRecognizer(TapGestureRecognizer.clone()) 
+        return 
+    },
+
+    removeDefaultTapGesture: function() {
+        this.removeGestureRecognizersOfType("TapGestureRecognizer")
+        return 
+    },
+
 
     /*
     requestActiveGesture: function(aGesture) {
@@ -92761,6 +92859,8 @@ DomView.newSubclassNamed("ButtonView").newSlots({
         this.setAction("close") //.setInnerHTML("&#10799;")
         */
 
+        this.addDefaultTapGesture()
+
         return this
     },
 
@@ -92800,6 +92900,14 @@ DomView.newSubclassNamed("ButtonView").newSlots({
             DomView.sendActionToTarget.apply(this)
         }
         return this
+    },
+
+    onTapComplete: function (aGesture) {
+        console.log(this.typeId() + ".onTapComplete()")
+        if (!this.isEditable()) {
+            DomView.sendActionToTarget.apply(this)
+        }
+        return false
     },
 })
 
@@ -93233,7 +93341,7 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
     setContentEditable: function(aBool) {
         DomStyledView.setContentEditable.apply(this, [aBool])
         //console.log(this.typeId() + ".setContentEditable(" + aBool + ") = ", this.contentEditable())
-        this.setIsRegisteredForClicks(this.contentEditable()) 
+        //this.setIsRegisteredForClicks(this.contentEditable())  // is this needed after move to tap?
         return this
     },
 	
@@ -97297,7 +97405,7 @@ BMField.newSubclassNamed("BMNumberField").newSlots({
         const isValid = this.valueIsNumeric()
 		
         if (!isValid) {
-            this.setValueError("this needs to be a number")
+            this.setValueError("This needs to be a number.")
         } else {
             this.setValueError(null)
         } 
@@ -97988,7 +98096,7 @@ NodeView.newSubclassNamed("ImageView").newSlots({
 
     addCloseButton: function() {
         if (this.closeButtonView() == null) {
-            const cb = NodeView.clone().setDivClassName("ImageCloseButton")
+            const cb = ButtonView.clone().setDivClassName("ImageCloseButton")
             this.setCloseButtonView(cb)
             this.addSubview(cb) 
             cb.setTarget(this).setAction("close") //.setInnerHTML("&#10799;")
@@ -100368,7 +100476,7 @@ NodeView.newSubclassNamed("BrowserHeader").newSlots({
     init: function () {
         NodeView.init.apply(this)
 
-        const backArrowView = DomView.clone().setDivClassName("BackArrow").setTarget(this).setAction("didHitBackArrow")
+        const backArrowView = ButtonView.clone().setDivClassName("BackArrow").setTarget(this).setAction("didHitBackArrow")
         backArrowView.setBackgroundImageUrlPath(this.pathForIconName("left"))        
         backArrowView.setBackgroundSizeWH(10, 10)
         backArrowView.setOpacity(0.6)
@@ -100473,6 +100581,8 @@ NodeView.newSubclassNamed("BrowserHeader").newSlots({
 
     BrowserHeaderAction
 
+    Merge with ButtonView?
+    
 */
 
 NodeView.newSubclassNamed("BrowserHeaderAction").newSlots({
@@ -100486,10 +100596,14 @@ NodeView.newSubclassNamed("BrowserHeaderAction").newSlots({
     updateCanClick: function() {
         if (this.canClick()) {
             this.setOpacity(1)
-            this.setIsRegisteredForClicks(true) // will update cursor
+            //this.setIsRegisteredForClicks(true) // will update cursor
+            this.addDefaultTapGesture()
+
         } else {
             this.setOpacity(0.5)
-            this.setIsRegisteredForClicks(false) 
+            //this.setIsRegisteredForClicks(false) 
+            this.removeDefaultTapGesture()
+
         }
     },
     
@@ -100521,6 +100635,12 @@ NodeView.newSubclassNamed("BrowserHeaderAction").newSlots({
         this.updateImage()
         this.updateTooltip()
         return this
+    },
+
+    onTapComplete: function (aGesture) {
+        console.log(this.typeId() + ".onTapComplete()")
+        this.sendActionToTarget()
+        return false
     },
 })
 
@@ -101088,6 +101208,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         if (hasThreeFingersDown || isAltTap) {
             this.justInspect()
         } else {
+            this.setIsInspecting(false)
             this.justTap()
         }
 
@@ -101097,8 +101218,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     justInspect: function(event) {
         console.log(this.typeId() + ".justInspect()")
         if (this.node().nodeCanInspect()) { 
-            this.setIsInspecting(!this.isInspecting())
-            console.log(this.typeId() + ".isInspecting() = ", this.isInspecting())
+            this.setIsInspecting(true)
             //this.scheduleSyncToNode()
             //this.select()
             this.justTap()
@@ -102588,18 +102708,20 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
         if (node.valueError()) {
             //valueView.setColor(this.errorColor())
             //valueView.setToolTip(node.valueError())
-            //errorView.setColor(this.errorColor())
-            errorView.setDisplay("block")
+            errorView.setColor(this.errorColor())
             errorView.setInnerHTML(node.valueError())
+            errorView.fadeInHeightToDisplayBlock(15)
+
         } else {
             //valueView.setBackgroundColor("transparent")
             //valueView.setBorder("1px solid white")
             //valueView.setBorderRadius(5)
             valueView.setBackgroundColor(this.valueBackgroundColor())
             valueView.setColor(color)
-            valueView.setToolTip("")
-            errorView.setDisplay("none")
-            errorView.setInnerHTML("")
+            //valueView.setToolTip("")
+            //errorView.setDisplay("none")
+            //errorView.setInnerHTML("")
+            errorView.fadeOutHeightToDisplayNone()
         }
 				
         if (this.visibleNote()) {
@@ -103124,7 +103246,7 @@ DomView.newSubclassNamed("BMOptionsTableView").newSlots({
 	
     maxOptionTextWidth: function() {
         return this.subviews().maxValue(function(subview) {
-            return DomTextTapeMeasure.widthOfDivClassWithText("BMOptionsTableRowView", subview.innerHTML())
+            return DomTextTapeMeasure.sizeOfDivClassWithText("BMOptionsTableRowView", subview.innerHTML()).width
         })			
     },
 	

@@ -36,7 +36,7 @@ window.DomTransitions = class DomTransitions extends ProtoClass {
     }
 
     syncToDomView() {
-        console.log(this.typeId() + ".setTransition('" + this.asString() + "')")
+        //console.log(this.typeId() + ".setTransition('" + this.asString() + "')")
         this.domView().setTransition(this.asString())
         return this
     }

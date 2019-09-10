@@ -113,7 +113,7 @@
     margin-top: 5px;
     margin-left: 0px;
     margin-right: 0px;
-    margin-bottom: 0px;
+    margin-bottom: 4px;
 
     text-align: left;
 	overflow: hidden;
@@ -348,7 +348,7 @@
 }
 
 .BMFieldRowViewErrorView {
-    margin-top: 4px;
+    padding-bottom: 0px;
 }
 
 .BMFieldRowViewNoteView {

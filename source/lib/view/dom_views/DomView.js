@@ -1156,8 +1156,14 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     // width and height
 
     calcWidth: function () {
-        return DomTextTapeMeasure.widthOfDivClassWithText(this.divClassName(), this.innerHTML())
+        return DomTextTapeMeasure.sizeOfElementWithText(this.element(), this.innerHTML()).width;
+        //return DomTextTapeMeasure.sizeOfDivClassWithText(this.divClassName(), this.innerHTML()).width;
     },
+
+    calcHeight: function () {
+        return DomTextTapeMeasure.sizeOfElementWithText(this.element(), this.innerHTML()).height;
+    },
+
 
     setWidthString: function (s) {
         assert(Type.isString(s) || s === null)
@@ -1559,6 +1565,48 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         setTimeout(() => {
             this.setDisplay("none")
         }, 200)
+        return this
+    },
+
+    // --- fade + height animations ----
+
+    fadeInHeightToDisplayBlock: function () {
+        this.setMinHeight("100%")
+        this.setMaxHeight("100%")
+        const targetHeight = this.calcHeight()
+
+        this.setOverflow("hidden")
+        this.transitions().at("opacity").updateDuration("0.3s")
+        this.transitions().at("min-height").updateDuration("0.2s")
+        this.transitions().at("max-height").updateDuration("0.2s")
+
+        this.setDisplay("block")
+        this.setOpacity(0)
+        this.setMinAndMaxHeight(0)
+
+        setTimeout(() => {
+            this.setOpacity(1)
+            this.setMinAndMaxHeight(targetHeight)
+        }, 0)
+        return this
+    },
+
+    fadeOutHeightToDisplayNone: function () {
+        this.setOverflow("hidden")
+        this.transitions().at("opacity").updateDuration("0.2s")
+        this.transitions().at("min-height").updateDuration("0.3s")
+        this.transitions().at("max-height").updateDuration("0.3s")
+
+        setTimeout(() => {
+            this.setOpacity(0)
+            this.setMinAndMaxHeight(0)
+        }, 1)
+
+        /*
+        setTimeout(() => {
+            this.setDisplay("none")
+        }, 300)
+        */
         return this
     },
 

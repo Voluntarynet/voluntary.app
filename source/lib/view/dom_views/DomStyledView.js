@@ -53,6 +53,10 @@ DomView.newSubclassNamed("DomStyledView").newSlots({
         return this._styles
     },
 
+    currentColor: function() {
+        return this.currentStyle().color()
+    },
+
     currentBgColor: function() {
         return this.currentStyle().backgroundColor()
     },

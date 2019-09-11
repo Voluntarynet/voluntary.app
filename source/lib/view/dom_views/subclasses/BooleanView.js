@@ -25,19 +25,34 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
         this.turnOffUserSelect()
         this.setWhiteSpace("nowrap")
         this.setOverflow("hidden")
-        this.setTextOverflow("ellipsis")
+        //this.setTextOverflow("ellipsis")
         this.setSpellCheck(false)
         this.setContentEditable(false)
         this.setBorder("1px solid")
         this.setBorderColor(this.trueCheckColor())
-        this.setBorderRadius(5)
+        this.setBorderRadius(3)
+
+        const size = 15
+        const padSize = 2
+        const innerSize = size - padSize * 2 - 2;
+
+        this.setMinAndMaxWidth(size)
+        this.setMinAndMaxHeight(size)
+        this.setPadding(padSize)
+
+        this.setOverflow("hidden")
 
         const cv = DomView.clone().setDivClassName("InnerCheckbox")
         cv.setBackgroundColor(this.falseCheckColor())
-        cv.setBorderRadius(3)
-        cv.setMargin(2)
-        cv.setMinAndMaxHeight(10)
-        cv.setTransition("background-color 0.2s")
+        cv.setBorderRadius(2)
+
+        cv.setMargin(0)
+        cv.setPadding(0)
+        
+        cv.setMinAndMaxWidth(innerSize)
+        cv.setMinAndMaxHeight(innerSize)
+
+        cv.setTransition("background-color 0.1s")
         this.setCheckView(cv)
         this.addSubview(cv)
 		
@@ -161,6 +176,7 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
     },
     
     trueCheckColor: function() {
+        //return this.color()
         return "#aaa"
     },
 
@@ -173,8 +189,6 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
     },
 
     updateIcon: function () {
-        this.setMinAndMaxWidth(16)
-        this.setMinAndMaxHeight(16)
 
         this.checkView().setBackgroundColor(this.currentCheckColor())
 

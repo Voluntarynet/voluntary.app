@@ -14,7 +14,7 @@ function DomElement_atInsertElement(el, index, child) {
     let children = el.children
     
     if (index < children.length) {
-        el.insertBefore(children[index])
+        el.insertBefore(child, children[index])
         return
     }
     

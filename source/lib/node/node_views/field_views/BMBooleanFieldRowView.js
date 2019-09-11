@@ -14,7 +14,14 @@ BMFieldRowView.newSubclassNamed("BMBooleanFieldRowView").newSlots({
         this.turnOffUserSelect()
         this.keyView().setTransition("all 0.3s")
 
-        
+        this.keyView().setDisplay("inline-block")
+        this.valueView().setDisplay("inline-block")
+        this.keyView().setMarginLeft(6)
+
+        this.keyView().setMarginTop(16)
+        this.valueView().setMarginTop(14)
+
+        this.keyView().parentView().swapSubviews(this.keyView(), this.valueView())
         return this
     },
 

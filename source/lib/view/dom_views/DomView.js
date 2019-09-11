@@ -199,7 +199,8 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
                     "border-bottom": true,
                     "transform-origin": true,
                     "outline": true,
-                    "border": true
+                    "border": true,
+                    "border-color": true
                 }
 
                 const resultValue = style[key]
@@ -1495,6 +1496,31 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         return this
     },
 
+    swapSubviews: function(sv1, sv2) {
+        assert(sv1 !== sv2)
+        assert(this.hasSubview(sv1))
+        assert(this.hasSubview(sv2))
+        
+        const i1 = this.indexOfSubview(sv1)
+        const i2 = this.indexOfSubview(sv2)
+
+        this.removeSubview(sv1)
+        this.removeSubview(sv2)
+
+        if (i1 < i2) {
+            this.atInsertSubview(i1, sv2)
+            this.atInsertSubview(i2, sv1)
+        } else {
+            this.atInsertSubview(i1, sv2)
+            this.atInsertSubview(i2, sv1)           
+        }
+
+        assert(this.indexOfSubview(sv1) === i2)
+        assert(this.indexOfSubview(sv2) === i1)
+
+        return this
+    },
+
     orderSubviewFront: function (aSubview) {
         if (this.subviews().last() !== aSubview) {
             this.removeSubview(aSubview)
@@ -1512,12 +1538,8 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     },
 
     orderSubviewBack: function (aSubview) {
-        throw new Error("unimplemented")
-
-        //if (this.subviews().first() !== aSubview) {
-        //    this.removeSubview(aSubview)
-        //    implement insertSubviewAt() with DomElement_atInsertElement()
-        //}
+        this.removeSubview(aSubview)
+        this.atInsertSubview(0, aSubview)
         return this
     },
 
@@ -1532,6 +1554,8 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     atInsertSubview: function (anIndex, aSubview) {
         this.subviews().atInsert(anIndex, aSubview)
         DomElement_atInsertElement(this.element(), anIndex, aSubview.element())
+        aSubview.setParentView(this) // TODO: unify with addSubview
+        this.didChangeSubviewList() // TODO:  unify with addSubview
         return aSubview
     },
 
@@ -1697,7 +1721,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         if (this.hasChildElement(aSubview.element())) {
             this.element().removeChild(aSubview.element());
         } else {
-            //console.warn("WARNING: " + this.type() + " removeSubview " + aSubview.type() + " missing element")
+            console.warn("WARNING: " + this.type() + " removeSubview " + aSubview.type() + " missing element")
         }
 
         if (this.hasChildElement(aSubview.element())) {

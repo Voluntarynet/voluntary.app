@@ -33,10 +33,10 @@
 .BooleanView {
     display: block;
     position: relative;
+    /*
     top: 50%;
     transform: translateY(-50%);
-    margin-top: 10px;
-    margin-left: 0px;
+    */
 }
 
 .BMActionNodeView {

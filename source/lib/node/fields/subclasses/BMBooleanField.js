@@ -2,12 +2,12 @@
       
 /*
 
-    BMBoolField
+    BMBooleanField
 
     
 */
 
-BMField.newSubclassNamed("BMBoolField").newSlots({
+BMField.newSubclassNamed("BMBooleanField").newSlots({
     unsetVisibleValue: "unset",
 }).setSlots({
     init: function () {

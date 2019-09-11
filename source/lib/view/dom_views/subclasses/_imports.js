@@ -2,7 +2,7 @@
 
 ResourceLoader.pushRelativePaths([
     "_css.css",
-    "BoolView.js",
+    "BooleanView.js",
     "ButtonView.js",
     "CenteredDomView.js",
     "DocumentBody.js",

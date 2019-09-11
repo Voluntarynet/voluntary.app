@@ -440,7 +440,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
 
     onTapComplete: function(aGesture) {
         //console.log(this.typeId() + ".onTapComplete()")
-        const keyModifiers = Keyboard.shared().modifierNamesForEvent(aGesture.lastEvent());
+        const keyModifiers = Keyboard.shared().modifierNamesForEvent(aGesture.upEvent());
         const hasThreeFingersDown = aGesture.numberOfFingersDown() === 3;
         const isAltTap = keyModifiers.contains("Alternate");
     

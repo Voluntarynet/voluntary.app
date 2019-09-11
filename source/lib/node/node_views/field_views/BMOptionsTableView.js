@@ -69,7 +69,7 @@ DomView.newSubclassNamed("BMOptionsTableView").newSlots({
 	
     maxOptionTextWidth: function() {
         return this.subviews().maxValue(function(subview) {
-            return DomTextTapeMeasure.sizeOfDivClassWithText("BMOptionsTableRowView", subview.innerHTML()).width
+            return DomTextTapeMeasure.sizeOfCSSClassWithText("BMOptionsTableRowView", subview.innerHTML()).width
         })			
     },
 	

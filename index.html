@@ -779,7 +779,7 @@ html * :active {
     /*border-bottom: 1px solid #ddd;*/
 }
 
-.BoolView {
+.BooleanView {
     position: relative;
     top: 50%;
     transform: translateY(-50%);
@@ -88839,7 +88839,7 @@ ResourceLoader.pushRelativePaths([
     
     Example uses:
 
-            const size1 = DomTextTapeMeasure.sizeOfDivClassWithText(this.divClassName(), text);
+            const size1 = DomTextTapeMeasure.sizeOfCSSClassWithText(this.divClassName(), text);
             const h = size1.height;
             
             const size2 = DomTextTapeMeasure.sizeOfElementWithText(domElement, text);
@@ -88898,7 +88898,7 @@ ideal.Proto.newSubclassNamed("DomTextTapeMeasure").newSlots({
         return { width: width, height: height }
     },
 	
-    sizeOfDivClassWithText: function(divClassName, text) { 
+    sizeOfCSSClassWithText: function(divClassName, text) { 
         const e = this.testElement()
         e.className = divClassName
         e.innerHTML = text
@@ -90523,7 +90523,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
     calcWidth: function () {
         return DomTextTapeMeasure.sizeOfElementWithText(this.element(), this.innerHTML()).width;
-        //return DomTextTapeMeasure.sizeOfDivClassWithText(this.divClassName(), this.innerHTML()).width;
+        //return DomTextTapeMeasure.sizeOfCSSClassWithText(this.divClassName(), this.innerHTML()).width;
     },
 
     calcHeight: function () {
@@ -92657,7 +92657,7 @@ DomView.newSubclassNamed("DomStyledView").newSlots({
 
 ResourceLoader.pushRelativePaths([
     "_css.css",
-    "BoolView.js",
+    "BooleanView.js",
     "ButtonView.js",
     "CenteredDomView.js",
     "DocumentBody.js",
@@ -92672,12 +92672,12 @@ ResourceLoader.pushRelativePaths([
 
 /*
 
-    BoolView
+    BooleanView
 
 
 */
 
-DomStyledView.newSubclassNamed("BoolView").newSlots({
+DomStyledView.newSubclassNamed("BooleanView").newSlots({
     isSelected: false,
     selectedColor: null,
     unselectedColor: null,
@@ -96402,7 +96402,7 @@ BMStorableNode.newSubclassNamed("BMMenuNode").newSlots({
 
         //this.setNodeUsesColumnBackgroundColor(false)
 
-        //this.addInspectorField(BMBoolField.clone().setKey("test").setValueMethod("hasTest").setValueIsEditable(true).setTarget(this))
+        //this.addInspectorField(BMBooleanField.clone().setKey("test").setValueMethod("hasTest").setValueIsEditable(true).setTarget(this))
     },
 
     didLoadFromStore: function() {
@@ -97110,7 +97110,7 @@ BMStorableNode.newSubclassNamed("BMCreatorNode").newSlots({
         return [
             "BMMenuNode", 
             "BMActionNode", 
-            "BMBoolField", 
+            "BMBooleanField", 
             "BMDateField", 
             //"BMIdentityField", 
             "BMImageWellField", 
@@ -97204,7 +97204,7 @@ ResourceLoader.pushRelativePaths([
     "BMIdentityField.js",
     "BMDateField.js",
     "BMNumberField.js",
-    "BMBoolField.js",
+    "BMBooleanField.js",
     "BMOptionsField.js",
     "BMPointerField.js",
 ])
@@ -97425,12 +97425,12 @@ BMField.newSubclassNamed("BMNumberField").newSlots({
       
 /*
 
-    BMBoolField
+    BMBooleanField
 
     
 */
 
-BMField.newSubclassNamed("BMBoolField").newSlots({
+BMField.newSubclassNamed("BMBooleanField").newSlots({
     unsetVisibleValue: "unset",
 }).setSlots({
     init: function () {
@@ -102614,9 +102614,9 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
     /*
     syncValueViewToNode: function() {
         //console.log(this.typeId() + ".syncValueViewToNode " + this.node().type())
-	    if (this.node().type() === "BMBoolField" && this.valueView().type() !== "BoolView") {
+	    if (this.node().type() === "BMBooleanField" && this.valueView().type() !== "BooleanView") {
 	        //console.log("syncValueViewToNode setup bool view")
-	        const boolView = BoolView.clone()
+	        const boolView = BooleanView.clone()
             this.removeContentSubview(this.valueView())  
             this.setValueView(boolView)
             this.addContentSubview(this.valueView())  
@@ -103246,7 +103246,7 @@ DomView.newSubclassNamed("BMOptionsTableView").newSlots({
 	
     maxOptionTextWidth: function() {
         return this.subviews().maxValue(function(subview) {
-            return DomTextTapeMeasure.sizeOfDivClassWithText("BMOptionsTableRowView", subview.innerHTML()).width
+            return DomTextTapeMeasure.sizeOfCSSClassWithText("BMOptionsTableRowView", subview.innerHTML()).width
         })			
     },
 	

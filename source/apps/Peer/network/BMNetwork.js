@@ -44,7 +44,7 @@ BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
         this.setBlacklists(NodeStore.shared().rootInstanceWithPidForProto("_blacklists", BMBlacklists))
         this.addSubnode(this.blacklists())
         
-        this.addStoredField(BMBoolField.clone().setKey("isOpenRelay").setValueMethod("isOpenRelay").setValueIsEditable(true))
+        this.addStoredField(BMBooleanField.clone().setKey("isOpenRelay").setValueMethod("isOpenRelay").setValueIsEditable(true))
 
         this.watchIdentities()
     },

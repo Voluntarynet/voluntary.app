@@ -30,8 +30,8 @@
 
 ideal.Proto.newSubclassNamed("BMViewStyles").newSlots({
     name: "",
-    unselected: null,
-    selected: null,
+    unselected: null, 
+    selected: null, // aka focused
     disabled: null,
     //hover: null, 
     //enabled: null,

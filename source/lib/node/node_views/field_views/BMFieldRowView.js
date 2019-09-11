@@ -94,11 +94,11 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
     /*
     syncValueViewToNode: function() {
         //console.log(this.typeId() + ".syncValueViewToNode " + this.node().type())
-	    if (this.node().type() === "BMBoolField" && this.valueView().type() !== "BoolView") {
+	    if (this.node().type() === "BMBooleanField" && this.valueView().type() !== "BooleanView") {
 	        //console.log("syncValueViewToNode setup bool view")
-	        const boolView = BoolView.clone()
+	        const booleanView = BooleanView.clone()
             this.removeContentSubview(this.valueView())  
-            this.setValueView(boolView)
+            this.setValueView(booleanView)
             this.addContentSubview(this.valueView())  
             //this.valueView().setUserSelect("text")   // should the value view handle this?
 		    //this.valueView().setSpellCheck(false)   // should the value view handle this?	        

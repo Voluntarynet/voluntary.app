@@ -31,6 +31,10 @@ BMStorableNode.newSubclassNamed("BMActionNode").newSlots({
         BMStorableNode.initNodeInspector.apply(this)
         const titleField = BMField.clone().setKey("title").setValueMethod("title").setValueIsEditable(true).setTarget(this)
         this.nodeInspector().addSubnode(titleField)
+
+        // enabled
+        // shows title
+        
     },
 
     canDoAction: function() {

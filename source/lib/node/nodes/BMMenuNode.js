@@ -40,7 +40,7 @@ BMStorableNode.newSubclassNamed("BMMenuNode").newSlots({
 
         //this.setNodeUsesColumnBackgroundColor(false)
 
-        //this.addInspectorField(BMBoolField.clone().setKey("test").setValueMethod("hasTest").setValueIsEditable(true).setTarget(this))
+        //this.addInspectorField(BMBooleanField.clone().setKey("test").setValueMethod("hasTest").setValueIsEditable(true).setTarget(this))
     },
 
     didLoadFromStore: function() {

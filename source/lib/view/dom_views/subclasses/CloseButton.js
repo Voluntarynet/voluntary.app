@@ -5,6 +5,7 @@
 
     CloseButton
 
+    TODO: make subclass of ButtonView
 */
 
 window.CloseButton = DomView.newSubclassNamed("CloseButton").newSlots({

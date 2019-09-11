@@ -8,9 +8,9 @@
     
     Example uses:
 
-            const size1 = DomTextTapeMeasure.sizeOfDivClassWithText(this.divClassName(), text);
+            const size1 = DomTextTapeMeasure.sizeOfCSSClassWithText(this.divClassName(), text);
             const h = size1.height;
-            
+
             const size2 = DomTextTapeMeasure.sizeOfElementWithText(domElement, text);
             const w = size2.width;
 
@@ -60,24 +60,20 @@ ideal.Proto.newSubclassNamed("DomTextTapeMeasure").newSlots({
 		
         e.innerHTML = element.innerHTML
 		
-        //let height = (e.clientHeight + 1)
         const width = (e.clientWidth + 1) 
         const height = (e.clientHeight + 1) 
         this.clean()
         return { width: width, height: height }
     },
 	
-    sizeOfDivClassWithText: function(divClassName, text) { 
+    sizeOfCSSClassWithText: function(divClassName, text) { 
         const e = this.testElement()
         e.className = divClassName
         e.innerHTML = text
 		
-        //let height = (e.clientHeight + 1)
         const width = (e.clientWidth + 1) 
         const height = (e.clientHeight + 1) 
         e.innerHTML = ""
-        //console.log(divClassName, " '" + text + "' width = ", width)
-        //this.clean()
         return { width: width, height: height }
     },
 	

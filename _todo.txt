@@ -1,10 +1,18 @@
 
-    move uses of setIsRegisteredForClicks to use tap
+- fix BooleanFieldRowView
+
+- test out inspectors on other elements - fields like "shows title"
+
+- make CloseButton a subclass of ButtonView
+
+- drag between column support?
+
+
+- cleanup uses of onTapComplete? support onOneFingerTap, onOneFingerDoubleTap, etc?
 
 - need event propogation for gestures - separate onTap from onAlternateTap?
 - animate row height change
 
-    
 fix bug with padding after slide on button row
 
 
@@ -227,7 +235,7 @@ dynamically add field rows?
     Field types:
         Creator     BMCreatorField
         Button      BMActionNode
-        Boolean     BMBoolField  
+        Boolean     BMBooleanField  
         Date        BMDateField
         Text 
         TextArea    BMTextAreaField
@@ -297,7 +305,7 @@ BrowserColumn -> *Row
 Node          -> subitems 
          node.subitems -> BMField
 
-Network Node.subitems = [BMBoolField
+Network Node.subitems = [BMBooleanField
 
 
 

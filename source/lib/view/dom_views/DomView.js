@@ -1157,7 +1157,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
     calcWidth: function () {
         return DomTextTapeMeasure.sizeOfElementWithText(this.element(), this.innerHTML()).width;
-        //return DomTextTapeMeasure.sizeOfDivClassWithText(this.divClassName(), this.innerHTML()).width;
+        //return DomTextTapeMeasure.sizeOfCSSClassWithText(this.divClassName(), this.innerHTML()).width;
     },
 
     calcHeight: function () {

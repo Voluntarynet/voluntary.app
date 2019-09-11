@@ -2,12 +2,12 @@
 
 /*
 
-    BoolView
+    BooleanView
 
 
 */
 
-DomStyledView.newSubclassNamed("BoolView").newSlots({
+DomStyledView.newSubclassNamed("BooleanView").newSlots({
     isSelected: false,
     selectedColor: null,
     unselectedColor: null,
@@ -20,11 +20,10 @@ DomStyledView.newSubclassNamed("BoolView").newSlots({
 }).setSlots({
     init: function () {
         DomView.init.apply(this)
-        this.setDisplay("inline-block")
+        //this.setDisplay("inline-block")
         this.turnOffUserSelect()
         this.setWhiteSpace("nowrap")
         this.setOverflow("hidden")
-        this.setDisplay("inline-block")
         this.setTextOverflow("ellipsis")
         this.setSpellCheck(false)
         this.setContentEditable(false)
@@ -133,7 +132,12 @@ DomStyledView.newSubclassNamed("BoolView").newSlots({
 		this.setInnerHTML(this.currentUnicode())
 		return this
 	},
-	*/
+    */
+    
+    setBackgroundColor: function(s) {
+
+        return this
+    },
 	
     // svg icon
 	

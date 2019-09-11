@@ -780,10 +780,12 @@ html * :active {
 }
 
 .BooleanView {
+    display: block;
     position: relative;
     top: 50%;
     transform: translateY(-50%);
-    margin-left: 5px;
+    margin-top: 10px;
+    margin-left: 0px;
 }
 
 .BMActionNodeView {
@@ -88841,7 +88843,7 @@ ResourceLoader.pushRelativePaths([
 
             const size1 = DomTextTapeMeasure.sizeOfCSSClassWithText(this.divClassName(), text);
             const h = size1.height;
-            
+
             const size2 = DomTextTapeMeasure.sizeOfElementWithText(domElement, text);
             const w = size2.width;
 
@@ -88891,7 +88893,6 @@ ideal.Proto.newSubclassNamed("DomTextTapeMeasure").newSlots({
 		
         e.innerHTML = element.innerHTML
 		
-        //let height = (e.clientHeight + 1)
         const width = (e.clientWidth + 1) 
         const height = (e.clientHeight + 1) 
         this.clean()
@@ -88903,12 +88904,9 @@ ideal.Proto.newSubclassNamed("DomTextTapeMeasure").newSlots({
         e.className = divClassName
         e.innerHTML = text
 		
-        //let height = (e.clientHeight + 1)
         const width = (e.clientWidth + 1) 
         const height = (e.clientHeight + 1) 
         e.innerHTML = ""
-        //console.log(divClassName, " '" + text + "' width = ", width)
-        //this.clean()
         return { width: width, height: height }
     },
 	
@@ -90942,9 +90940,9 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         const targetHeight = this.calcHeight()
 
         this.setOverflow("hidden")
-        this.transitions().at("opacity").updateDuration("0.6s")
-        this.transitions().at("min-height").updateDuration("0.3s")
-        this.transitions().at("max-height").updateDuration("0.3s")
+        this.transitions().at("opacity").updateDuration("0.3s")
+        this.transitions().at("min-height").updateDuration("0.2s")
+        this.transitions().at("max-height").updateDuration("0.2s")
 
         this.setDisplay("block")
         this.setOpacity(0)
@@ -92690,11 +92688,10 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
 }).setSlots({
     init: function () {
         DomView.init.apply(this)
-        this.setDisplay("inline-block")
+        //this.setDisplay("inline-block")
         this.turnOffUserSelect()
         this.setWhiteSpace("nowrap")
         this.setOverflow("hidden")
-        this.setDisplay("inline-block")
         this.setTextOverflow("ellipsis")
         this.setSpellCheck(false)
         this.setContentEditable(false)
@@ -92803,7 +92800,12 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
 		this.setInnerHTML(this.currentUnicode())
 		return this
 	},
-	*/
+    */
+    
+    setBackgroundColor: function(s) {
+
+        return this
+    },
 	
     // svg icon
 	
@@ -92903,7 +92905,7 @@ DomView.newSubclassNamed("ButtonView").newSlots({
     },
 
     onTapComplete: function (aGesture) {
-        console.log(this.typeId() + ".onTapComplete()")
+        //console.log(this.typeId() + ".onTapComplete()")
         if (!this.isEditable()) {
             DomView.sendActionToTarget.apply(this)
         }
@@ -93493,6 +93495,7 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
 
     CloseButton
 
+    TODO: make subclass of ButtonView
 */
 
 window.CloseButton = DomView.newSubclassNamed("CloseButton").newSlots({
@@ -93783,8 +93786,8 @@ ResourceLoader.pushRelativePaths([
 
 ideal.Proto.newSubclassNamed("BMViewStyles").newSlots({
     name: "",
-    unselected: null,
-    selected: null,
+    unselected: null, 
+    selected: null, // aka focused
     disabled: null,
     //hover: null, 
     //enabled: null,
@@ -95459,6 +95462,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         }
 
         const nodeType = this.translateNodeType(nodeDict.type)
+
         let proto = window[nodeType]
         if (!proto) {
             throw new Error("missing proto '" + nodeDict.type + "'")
@@ -97046,6 +97050,10 @@ BMStorableNode.newSubclassNamed("BMActionNode").newSlots({
         BMStorableNode.initNodeInspector.apply(this)
         const titleField = BMField.clone().setKey("title").setValueMethod("title").setValueIsEditable(true).setTarget(this)
         this.nodeInspector().addSubnode(titleField)
+
+        // enabled
+        // shows title
+        
     },
 
     canDoAction: function() {
@@ -97197,108 +97205,91 @@ BMStorableNode.newSubclassNamed("BMOptionNode").newSlots({
 "use strict"
 
 ResourceLoader.pushRelativePaths([
+    "BMBooleanField.js",
+    "BMDateField.js",
+    "BMIdentityField.js",
     "BMImageWellField.js",
+    "BMNumberField.js",
+    "BMPointerField.js",
+    "BMStampField.js",
     "BMStringField.js",
     "BMTextAreaField.js",
-    "BMStampField.js",
-    "BMIdentityField.js",
-    "BMDateField.js",
-    "BMNumberField.js",
-    "BMBooleanField.js",
     "BMOptionsField.js",
-    "BMPointerField.js",
 ])
 
 "use strict"
-
+      
 /*
 
-    BMImageWellField
+    BMBooleanField
 
-*/
-        
-BMField.newSubclassNamed("BMImageWellField").newSlots({
-    onlyShowsKeyWhenEmpty: false,
-    isEditable: true,
-}).setSlots({
-    init: function () {
-        BMField.init.apply(this)
-        this.setKey("Image title")
-        this.setKeyIsEditable(false)
-        this.setValueIsEditable(false)
-        //this.addStoredSlot("imageDataURL") // stored in value
-        this.addStoredSlot("nodeMinRowHeight")
-        this.setNodeCanEditRowHeight(true)
-    },
-
-    /*
-    setValue: function(v) {
-        BMField.setValue.apply(this, [v])
-        //console.log(this.typeId() + " setValue " + v)
-        //this.updateKey()
-        return this
-    },
-    */
-})
-
-"use strict"
-
-/*
-
-    BMStringField
-
-*/
-        
-BMField.newSubclassNamed("BMStringField").newSlots({
-    unsetVisibleValue: "",
-}).setSlots({
-    init: function () {
-        BMField.init.apply(this)
-        this.setViewClassName("BMFieldRowView")
-
-        this.setKeyIsVisible(true)
-        this.setKeyIsEditable(true)
-
-        this.setValueIsVisible(true)
-        this.setValueIsEditable(true)
-    },
-})
-
-"use strict"
-
-/*
-
-    BMTextAreaField
     
 */
 
-        
-BMField.newSubclassNamed("BMTextAreaField").newSlots({
-    isMono: false,
+BMField.newSubclassNamed("BMBooleanField").newSlots({
+    unsetVisibleValue: "unset",
 }).setSlots({
     init: function () {
         BMField.init.apply(this)
-        this.setKeyIsVisible(false)
+        this.setViewClassName("BMFieldRowView")
+        this.setKeyIsEditable(false)
+        this.setValueIsEditable(false)
+        //this.setValue(false)
     },
+
+    valueIsBool: function() {
+        const b = this.value()
+        return Type.isBoolean(b);
+    },
+	
+    validate: function() {
+        const isValid = this.valueIsBool()
+		
+        if (!isValid) {
+            this.setValueError("This needs to be a boolean (true or false).")
+        } else {
+            this.setValueError(null)
+        } 
+		
+        return isValid
+    },
+	
+    normalizeThisValue: function(v) {
+	    if (v === true || v === "t" || v === "true" | v === 1) { return true; }
+	    return false
+    },
+	
+    didUpdateNode: function() {
+        this.validate()
+        return BMField.didUpdateNode.apply(this)
+    },
+
 })
 
 "use strict"
 
 /*
 
-    BMStampField
+    BMDateField
 
 */
         
-BMField.newSubclassNamed("BMStampField").newSlots({	
+BMField.newSubclassNamed("BMDateField").newSlots({
+    unsetVisibleValue: "unset",
 }).setSlots({
     init: function () {
         BMField.init.apply(this)
         this.setViewClassName("BMFieldRowView")
-        //this.setKeyIsVisible(false)
-        //this.setKey("drop images here")
         this.setKeyIsEditable(false)
         this.setValueIsEditable(false)
+    },
+
+    visibleValue: function() {
+        const v = this.value()
+        if (!v) { 
+            return this.unsetVisibleValue()
+        }
+        return new Date(v).toDateString()
     },
 })
 
@@ -97355,27 +97346,32 @@ BMField.newSubclassNamed("BMIdentityField").newSlots({
 
 /*
 
-    BMDateField
+    BMImageWellField
 
 */
         
-BMField.newSubclassNamed("BMDateField").newSlots({
-    unsetVisibleValue: "unset",
+BMField.newSubclassNamed("BMImageWellField").newSlots({
+    onlyShowsKeyWhenEmpty: false,
+    isEditable: true,
 }).setSlots({
     init: function () {
         BMField.init.apply(this)
-        this.setViewClassName("BMFieldRowView")
+        this.setKey("Image title")
         this.setKeyIsEditable(false)
         this.setValueIsEditable(false)
+        //this.addStoredSlot("imageDataURL") // stored in value
+        this.addStoredSlot("nodeMinRowHeight")
+        this.setNodeCanEditRowHeight(true)
     },
 
-    visibleValue: function() {
-        const v = this.value()
-        if (!v) { 
-            return this.unsetVisibleValue()
-        }
-        return new Date(v).toDateString()
+    /*
+    setValue: function(v) {
+        BMField.setValue.apply(this, [v])
+        //console.log(this.typeId() + " setValue " + v)
+        //this.updateKey()
+        return this
     },
+    */
 })
 
 "use strict"
@@ -97422,52 +97418,109 @@ BMField.newSubclassNamed("BMNumberField").newSlots({
 })
 
 "use strict"
-      
+
 /*
 
-    BMBooleanField
+    BMPointerField
 
-    
+    A field that's a pointer to another node.
+    (sometimes the other node is used as a list of items, but not always)
+
 */
+        
+BMField.newSubclassNamed("BMPointerField").newSlots({
+}).setSlots({
+    init: function () {
+        BMField.init.apply(this)
+        this.setKeyIsEditable(false)
+        this.setValueIsEditable(false)
+        this.setKeyIsVisible(true)
+        this.setValueIsVisible(true)
+        this.setNodeRowIsSelectable(true)
+    },
 
-BMField.newSubclassNamed("BMBooleanField").newSlots({
-    unsetVisibleValue: "unset",
+    setValue: function(v) {
+        console.warn("WARNING: BMPointerField setValue '" + v + "'")
+        return this
+    },
+
+    title: function() {
+        return this.value().title()
+    },
+	
+    subtitle: function() {
+        return this.value().subtitle()
+    },
+	
+    note: function() {
+        return this.value().note()
+    },
+	
+    nodeRowLink: function() {
+        return this.value()
+    },
+
+})
+
+"use strict"
+
+/*
+
+    BMStampField
+
+*/
+        
+BMField.newSubclassNamed("BMStampField").newSlots({	
 }).setSlots({
     init: function () {
         BMField.init.apply(this)
         this.setViewClassName("BMFieldRowView")
+        //this.setKeyIsVisible(false)
+        //this.setKey("drop images here")
         this.setKeyIsEditable(false)
         this.setValueIsEditable(false)
-        //this.setValue(false)
     },
+})
 
-    valueIsBool: function() {
-        const b = this.value()
-        return Type.isBoolean(b);
-    },
-	
-    validate: function() {
-        const isValid = this.valueIsBool()
-		
-        if (!isValid) {
-            this.setValueError("This needs to be a boolean (true or false).")
-        } else {
-            this.setValueError(null)
-        } 
-		
-        return isValid
-    },
-	
-    normalizeThisValue: function(v) {
-	    if (v === true || v === "t" || v === "true" | v === 1) { return true; }
-	    return false
-    },
-	
-    didUpdateNode: function() {
-        this.validate()
-        return BMField.didUpdateNode.apply(this)
-    },
+"use strict"
 
+/*
+
+    BMStringField
+
+*/
+        
+BMField.newSubclassNamed("BMStringField").newSlots({
+    unsetVisibleValue: "",
+}).setSlots({
+    init: function () {
+        BMField.init.apply(this)
+        this.setViewClassName("BMFieldRowView")
+
+        this.setKeyIsVisible(true)
+        this.setKeyIsEditable(true)
+
+        this.setValueIsVisible(true)
+        this.setValueIsEditable(true)
+    },
+})
+
+"use strict"
+
+/*
+
+    BMTextAreaField
+    
+*/
+
+        
+BMField.newSubclassNamed("BMTextAreaField").newSlots({
+    isMono: false,
+}).setSlots({
+    init: function () {
+        BMField.init.apply(this)
+        this.setKeyIsVisible(false)
+    },
 })
 
 "use strict"
@@ -97518,51 +97571,6 @@ BMField.newSubclassNamed("BMOptionsField").newSlots({
         return true
     },
 	
-})
-
-"use strict"
-
-/*
-
-    BMPointerField
-
-    A field that's a pointer to another node.
-    (sometimes the other node is used as a list of items, but not always)
-
-*/
-        
-BMField.newSubclassNamed("BMPointerField").newSlots({
-}).setSlots({
-    init: function () {
-        BMField.init.apply(this)
-        this.setKeyIsEditable(false)
-        this.setValueIsEditable(false)
-        this.setKeyIsVisible(true)
-        this.setValueIsVisible(true)
-        this.setNodeRowIsSelectable(true)
-    },
-
-    setValue: function(v) {
-        console.warn("WARNING: BMPointerField setValue '" + v + "'")
-        return this
-    },
-
-    title: function() {
-        return this.value().title()
-    },
-	
-    subtitle: function() {
-        return this.value().subtitle()
-    },
-	
-    note: function() {
-        return this.value().note()
-    },
-	
-    nodeRowLink: function() {
-        return this.value()
-    },
-
 })
 
 "use strict"
@@ -100638,7 +100646,7 @@ NodeView.newSubclassNamed("BrowserHeaderAction").newSlots({
     },
 
     onTapComplete: function (aGesture) {
-        console.log(this.typeId() + ".onTapComplete()")
+        //console.log(this.typeId() + ".onTapComplete()")
         this.sendActionToTarget()
         return false
     },
@@ -101191,7 +101199,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
 
     onTapComplete: function(aGesture) {
         //console.log(this.typeId() + ".onTapComplete()")
-        const keyModifiers = Keyboard.shared().modifierNamesForEvent(aGesture.lastEvent());
+        const keyModifiers = Keyboard.shared().modifierNamesForEvent(aGesture.upEvent());
         const hasThreeFingersDown = aGesture.numberOfFingersDown() === 3;
         const isAltTap = keyModifiers.contains("Alternate");
     
@@ -102511,6 +102519,7 @@ ResourceLoader.pushRelativePaths([
     "_css.css",
     "BMFieldRowView.js",
     "BMActionNodeRowView.js",
+    "BMBooleanFieldRowView.js",
     "BMTextAreaFieldRowView.js",
     "BMImageWellFieldRowView.js",
     "BMOptionsFieldRowView.js",
@@ -102616,9 +102625,9 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
         //console.log(this.typeId() + ".syncValueViewToNode " + this.node().type())
 	    if (this.node().type() === "BMBooleanField" && this.valueView().type() !== "BooleanView") {
 	        //console.log("syncValueViewToNode setup bool view")
-	        const boolView = BooleanView.clone()
+	        const booleanView = BooleanView.clone()
             this.removeContentSubview(this.valueView())  
-            this.setValueView(boolView)
+            this.setValueView(booleanView)
             this.addContentSubview(this.valueView())  
             //this.valueView().setUserSelect("text")   // should the value view handle this?
 		    //this.valueView().setSpellCheck(false)   // should the value view handle this?	        
@@ -102887,6 +102896,61 @@ BrowserRow.newSubclassNamed("BMActionNodeRowView").newSlots({
         //this.node().didUpdateView(this)
         this.scheduleSyncFromNode() // needed for validation?
     },
+    
+})
+
+"use strict"
+
+/*
+
+    BMBooleanFieldRowView
+
+*/
+
+BMFieldRowView.newSubclassNamed("BMBooleanFieldRowView").newSlots({
+}).setSlots({
+    init: function () {
+        BMFieldRowView.init.apply(this)
+
+        this.turnOffUserSelect()
+        this.keyView().setTransition("all 0.3s")
+        return this
+    },
+
+    createValueView: function() {
+        return BooleanView.clone()
+    },
+	
+    booleanView: function() {
+        return this.valueView()
+    },
+
+    /*
+    syncFromNode: function () {
+        BMFieldRowView.syncFromNode.apply(this)
+
+        const field = this.node()
+        this.applyStyles() // normally this would happen in updateSubviews
+        this.booleanView().setValue(field.value())
+        return this
+    },
+
+    syncToNode: function () {
+        const field = this.node()
+				
+        this.updateKeyView()
+		
+        if (field.valueIsEditable()) {
+            const data = this.imageWellView().imageDataURL()
+            //console.log("data = " + (data ? data.slice(0, 40) + "..." : "null"))
+        	field.setValue(data)
+        }
+        
+        //NodeView.syncToNode.apply(this)
+        return this
+    },
+    */
+
     
 })
 

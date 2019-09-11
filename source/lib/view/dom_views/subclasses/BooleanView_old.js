@@ -17,7 +17,6 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
     isEditable: false,
     checkedIcon: null, 
     uncheckedIcon: null,
-    checkView: null,
 }).setSlots({
     init: function () {
         DomView.init.apply(this)
@@ -28,29 +27,16 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
         this.setTextOverflow("ellipsis")
         this.setSpellCheck(false)
         this.setContentEditable(false)
-        this.setBorder("1px solid")
-        this.setBorderColor(this.trueCheckColor())
-        this.setBorderRadius(5)
-
-        const cv = DomView.clone().setDivClassName("InnerCheckbox")
-        cv.setBackgroundColor(this.falseCheckColor())
-        cv.setBorderRadius(3)
-        cv.setMargin(2)
-        cv.setMinAndMaxHeight(10)
-        cv.setTransition("background-color 0.2s")
-        this.setCheckView(cv)
-        this.addSubview(cv)
 		
         //this.setUnfocusOnEnterKey(true)
         //this.setIsRegisteredForKeyboard(true) // gets set by setContentEditable()
 
-        //this.setupForRoundCheckbox()
+        this.setupForRoundCheckbox()
         //this.setupForSquareCheckbox()
         //this.setupForToggleSwitch()
         return this
     },
     
-    /*
     setupForRoundCheckbox: function() {
         this.setCheckedIcon("checkbox-circle-checked")
         this.setUncheckedIcon("checkbox-circle-unchecked")
@@ -68,7 +54,6 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
         this.setUncheckedIcon("toggle-off")
         return this
     },
-    */
 
     // editable
     
@@ -159,31 +144,13 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
     currentIcon: function() {
 	    return this.isChecked() ? this.checkedIcon() : this.uncheckedIcon();
     },
-    
-    trueCheckColor: function() {
-        return "#aaa"
-    },
-
-    falseCheckColor: function() {
-        return "transparent"
-    },
-    
-    currentCheckColor: function() {
-        return this.value() ? this.trueCheckColor() : this.falseCheckColor()
-    },
-
+	
     updateIcon: function () {
-        this.setMinAndMaxWidth(16)
-        this.setMinAndMaxHeight(16)
-
-        this.checkView().setBackgroundColor(this.currentCheckColor())
-
-        /*
+        this.setMinAndMaxWidth(16).setMinAndMaxHeight(16)
         this.setBackgroundImageUrlPath(this.pathForIconName(this.currentIcon()))
         this.setBackgroundSizeWH(16, 16) // use "contain" instead?
         this.setBackgroundPosition("center")
         this.setOpacity(this.isEditable() ? 1 : 0.5)
-        */
         return this
     },
 })

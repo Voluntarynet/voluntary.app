@@ -198,7 +198,8 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
                     "box-shadow": true,
                     "border-bottom": true,
                     "transform-origin": true,
-                    "outline": true
+                    "outline": true,
+                    "border": true
                 }
 
                 const resultValue = style[key]
@@ -797,6 +798,17 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
     border: function () {
         return this.getCssAttribute("border")
+    },
+
+    // border color
+
+    setBorderColor: function (s) {
+        this.setCssAttribute("border-color", s)
+        return this
+    },
+
+    borderColor: function () {
+        return this.getCssAttribute("border-color")
     },
 
     // border top

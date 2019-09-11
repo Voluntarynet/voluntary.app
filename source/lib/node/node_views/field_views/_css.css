@@ -51,10 +51,10 @@
     padding-top: 8px;
     padding-bottom: 8px;
 
-    background-color:transparent;
-    color: #bbb;
+    background-color: #888;
+    color: #ccc;
 
-    border-style: solid;
+    border-style: none;
     border-radius: 5px;
     border-width: 1px;
     border-color:#888;
@@ -89,7 +89,7 @@
     white-space: nowrap;
     
 	padding-top: 3px;
-	padding-bottom: 3px;
+	padding-bottom: 0px;
     padding-left: 0px;
 	padding-right: 5px;
     
@@ -112,7 +112,7 @@
 
     width: calc(100%);
 
-    margin-top: 5px;
+    margin-top: 3px;
     margin-left: 0px;
     margin-right: 0px;
     margin-bottom: 4px;
@@ -138,9 +138,9 @@
 	padding-top: 5px;
 	padding-bottom: 5px;
 	
-    /*border: 1px solid rgba(55, 55, 55, 1);*/
+    border: 1px solid #444;
     color: white;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: transparent;
     /*border-bottom: 1px solid #555;*/
     border-radius: 5px;
 }

@@ -33,5 +33,11 @@ BMFieldRowView.newSubclassNamed("BMBooleanFieldRowView").newSlots({
     booleanView: function() {
         return this.valueView()
     },
+
+    syncFromNode: function() {
+        BMFieldRowView.syncFromNode.apply(this)
+        this.booleanView().updateAppearance()
+        return this
+    },
     
 })

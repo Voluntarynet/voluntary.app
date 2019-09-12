@@ -84,39 +84,19 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
         const size = this.checkboxSize()
         const r = Math.floor((size - 2)/2)-1
         const f = r+1
-        const color = "white"
+        const color = this.getComputedCssAttribute("color") //"white"
         const gap = 2
         let s =  "<svg "
         s += "height='" + size + "' "
         s += "width='" + size + "' "
         s += "style='background-color:transparent;'>\n"
-        s += "<circle cx=" + f + " cy=" + f + " r=" + r + " stroke=" + color + " stroke-width=1 fill='transparent' />\n"
+        s += "<circle cx=" + f + " cy=" + f + " r=" + r + " stroke='" + color + "' stroke-width=1 fill='transparent' />\n"
         if (this.value()) {
             s += "<circle cx=" + f + " cy=" + f + " r=" + (r-gap) + " stroke=" + color + " stroke-width=1 fill='" + color + "' />\n"
         }
         s += "</svg>"
         return s
     },
-    
-    /*
-    setupForRoundCheckbox: function() {
-        this.setCheckedIcon("checkbox-circle-checked")
-        this.setUncheckedIcon("checkbox-circle-unchecked")
-        return this
-    },
-
-    setupForSquareCheckbox: function() {
-        this.setCheckedIcon("checkbox-square-checked")
-        this.setUncheckedIcon("checkbox-square-unchecked")
-        return this
-    },
-
-    setupForToggleSwitch: function() {
-        this.setCheckedIcon("toggle-on")
-        this.setUncheckedIcon("toggle-off")
-        return this
-    },
-    */
 
     // editable
     
@@ -129,7 +109,7 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
             this.setIsRegisteredForClicks(false)
         }
         
-        this.updateIcon()
+        this.updateAppearance()
         
         return this
     },
@@ -163,8 +143,7 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
         
 	    this._value = v
 
-        //this.updateUnicode()
-        this.updateIcon()
+        this.updateAppearance()
         return this
     },	
 	
@@ -194,7 +173,19 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
 	updateUnicode: function() {
 		this.setInnerHTML(this.currentUnicode())
 		return this
-	},
+    },
+    
+    currentIcon: function() {
+	    return this.isChecked() ? this.checkedIcon() : this.uncheckedIcon();
+    },
+
+    updateIcon: function() {
+        this.setBackgroundImageUrlPath(this.pathForIconName(this.currentIcon()))
+        this.setBackgroundSizeWH(16, 16) // use "contain" instead?
+        this.setBackgroundPosition("center")
+        this.setOpacity(this.isEditable() ? 1 : 0.5)
+        return this
+    },
     */
     
     setBackgroundColor: function(s) {
@@ -203,35 +194,9 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
     },
 	
     // svg icon
-	
-    currentIcon: function() {
-	    return this.isChecked() ? this.checkedIcon() : this.uncheckedIcon();
-    },
-    
-    trueCheckColor: function() {
-        //return this.color()
-        return "#aaa"
-    },
 
-    falseCheckColor: function() {
-        return "transparent"
-    },
-    
-    currentCheckColor: function() {
-        return this.value() ? this.trueCheckColor() : this.falseCheckColor()
-    },
-
-    updateIcon: function () {
-
-        //this.checkView().setBackgroundColor(this.currentCheckColor())
+    updateAppearance: function () {
         this.setInnerHTML(this.circleSVG())
-
-        /*
-        this.setBackgroundImageUrlPath(this.pathForIconName(this.currentIcon()))
-        this.setBackgroundSizeWH(16, 16) // use "contain" instead?
-        this.setBackgroundPosition("center")
-        this.setOpacity(this.isEditable() ? 1 : 0.5)
-        */
         return this
     },
 })

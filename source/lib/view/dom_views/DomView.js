@@ -361,8 +361,13 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         return this
     },
 
-    setMargin: function (aNumber) {
-        this.setPxCssAttribute("margin", aNumber)
+    setMargin: function (s) {
+        if (Type.isNumber(s)) {
+            this.setPxCssAttribute("margin", s)
+        } else {
+            this.setCssAttribute("margin", s)
+        }
+
         return this
     },
 

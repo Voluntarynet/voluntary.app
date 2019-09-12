@@ -18,8 +18,9 @@ BMFieldRowView.newSubclassNamed("BMBooleanFieldRowView").newSlots({
         this.valueView().setDisplay("inline-block")
         this.keyView().setMarginLeft(6)
 
-        this.keyView().setMarginTop(16)
-        this.valueView().setMarginTop(14)
+        //this.keyView().setMarginTop(-1)
+        this.keyView().setPaddingBottom(1)
+        this.valueView().setMarginTop(15)
 
         this.keyView().parentView().swapSubviews(this.keyView(), this.valueView())
         return this

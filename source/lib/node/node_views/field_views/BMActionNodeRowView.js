@@ -23,7 +23,7 @@ BrowserRow.newSubclassNamed("BMActionNodeRowView").newSlots({
 	    this.buttonView().setTransition("all 0.3s")
 
         this.addContentSubview(this.buttonView())
-        this.setMinHeightPx(64)
+        //this.setMinHeightPx(64)
         return this
     },
 

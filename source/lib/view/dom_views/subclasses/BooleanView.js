@@ -108,7 +108,6 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
     
     toggle: function() {
         this.setValue(!this.value())
-        //this.scheduleSyncToNode()
         this.didEdit()
         return this
     },
@@ -158,9 +157,7 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
         return this
     },
 
-
     onTapComplete: function (aGesture) {
-        //console.log(this.typeId() + ".onTapComplete()")
         DomView.sendActionToTarget.apply(this)
         this.toggle()
         return false

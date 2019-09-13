@@ -204,6 +204,10 @@ html * :active {
 	padding: 5px;
 	padding-bottom: 3px;
 	text-align: center;
+
+    border: 1px solid #444;
+    color: white;
+    background-color: transparent;
 }
 
 .ImageView {
@@ -782,10 +786,10 @@ html * :active {
 .BooleanView {
     display: block;
     position: relative;
+    /*
     top: 50%;
     transform: translateY(-50%);
-    margin-top: 10px;
-    margin-left: 0px;
+    */
 }
 
 .BMActionNodeView {
@@ -800,10 +804,10 @@ html * :active {
     padding-top: 8px;
     padding-bottom: 8px;
 
-    background-color:transparent;
-    color: #bbb;
+    background-color: #888;
+    color: #ccc;
 
-    border-style: solid;
+    border-style: none;
     border-radius: 5px;
     border-width: 1px;
     border-color:#888;
@@ -838,7 +842,7 @@ html * :active {
     white-space: nowrap;
     
 	padding-top: 3px;
-	padding-bottom: 3px;
+	padding-bottom: 0px;
     padding-left: 0px;
 	padding-right: 5px;
     
@@ -861,7 +865,7 @@ html * :active {
 
     width: calc(100%);
 
-    margin-top: 5px;
+    margin-top: 3px;
     margin-left: 0px;
     margin-right: 0px;
     margin-bottom: 4px;
@@ -887,9 +891,9 @@ html * :active {
 	padding-top: 5px;
 	padding-bottom: 5px;
 	
-    /*border: 1px solid rgba(55, 55, 55, 1);*/
+    border: 1px solid #444;
     color: white;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: transparent;
     /*border-bottom: 1px solid #555;*/
     border-radius: 5px;
 }
@@ -89739,7 +89743,7 @@ function DomElement_atInsertElement(el, index, child) {
     let children = el.children
     
     if (index < children.length) {
-        el.insertBefore(children[index])
+        el.insertBefore(child, children[index])
         return
     }
     
@@ -89973,7 +89977,9 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
                     "box-shadow": true,
                     "border-bottom": true,
                     "transform-origin": true,
-                    "outline": true
+                    "outline": true,
+                    "border": true,
+                    "border-color": true
                 }
 
                 const resultValue = style[key]
@@ -90134,8 +90140,13 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         return this
     },
 
-    setMargin: function (aNumber) {
-        this.setPxCssAttribute("margin", aNumber)
+    setMargin: function (s) {
+        if (Type.isNumber(s)) {
+            this.setPxCssAttribute("margin", s)
+        } else {
+            this.setCssAttribute("margin", s)
+        }
+
         return this
     },
 
@@ -90572,6 +90583,17 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
     border: function () {
         return this.getCssAttribute("border")
+    },
+
+    // border color
+
+    setBorderColor: function (s) {
+        this.setCssAttribute("border-color", s)
+        return this
+    },
+
+    borderColor: function () {
+        return this.getCssAttribute("border-color")
     },
 
     // border top
@@ -91258,6 +91280,31 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         return this
     },
 
+    swapSubviews: function(sv1, sv2) {
+        assert(sv1 !== sv2)
+        assert(this.hasSubview(sv1))
+        assert(this.hasSubview(sv2))
+        
+        const i1 = this.indexOfSubview(sv1)
+        const i2 = this.indexOfSubview(sv2)
+
+        this.removeSubview(sv1)
+        this.removeSubview(sv2)
+
+        if (i1 < i2) {
+            this.atInsertSubview(i1, sv2)
+            this.atInsertSubview(i2, sv1)
+        } else {
+            this.atInsertSubview(i1, sv2)
+            this.atInsertSubview(i2, sv1)           
+        }
+
+        assert(this.indexOfSubview(sv1) === i2)
+        assert(this.indexOfSubview(sv2) === i1)
+
+        return this
+    },
+
     orderSubviewFront: function (aSubview) {
         if (this.subviews().last() !== aSubview) {
             this.removeSubview(aSubview)
@@ -91275,12 +91322,8 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     },
 
     orderSubviewBack: function (aSubview) {
-        throw new Error("unimplemented")
-
-        //if (this.subviews().first() !== aSubview) {
-        //    this.removeSubview(aSubview)
-        //    implement insertSubviewAt() with DomElement_atInsertElement()
-        //}
+        this.removeSubview(aSubview)
+        this.atInsertSubview(0, aSubview)
         return this
     },
 
@@ -91295,6 +91338,8 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     atInsertSubview: function (anIndex, aSubview) {
         this.subviews().atInsert(anIndex, aSubview)
         DomElement_atInsertElement(this.element(), anIndex, aSubview.element())
+        aSubview.setParentView(this) // TODO: unify with addSubview
+        this.didChangeSubviewList() // TODO:  unify with addSubview
         return aSubview
     },
 
@@ -91460,7 +91505,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         if (this.hasChildElement(aSubview.element())) {
             this.element().removeChild(aSubview.element());
         } else {
-            //console.warn("WARNING: " + this.type() + " removeSubview " + aSubview.type() + " missing element")
+            console.warn("WARNING: " + this.type() + " removeSubview " + aSubview.type() + " missing element")
         }
 
         if (this.hasChildElement(aSubview.element())) {
@@ -91984,13 +92029,22 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     },
 
     addDefaultTapGesture: function() {
-        this.addGestureRecognizer(TapGestureRecognizer.clone()) 
-        return 
+        if (!this._defaultTapGesture) {
+            this._defaultTapGesture = this.addGestureRecognizer(TapGestureRecognizer.clone()) 
+        }
+        return this._defaultTapGesture
+    },
+
+    defaultTapGesture: function() {
+        return this._defaultTapGesture
     },
 
     removeDefaultTapGesture: function() {
-        this.removeGestureRecognizersOfType("TapGestureRecognizer")
-        return 
+        if (this._defaultTapGesture) {
+            this.removeGestureRecognizer(this._defaultTapGesture)
+            this._defaultTapGesture = null
+        }
+        return this
     },
 
 
@@ -93012,6 +93066,10 @@ DomView.newSubclassNamed("DomStyledView").newSlots({
         return this._styles
     },
 
+    currentColor: function() {
+        return this.currentStyle().color()
+    },
+
     currentBgColor: function() {
         return this.currentStyle().backgroundColor()
     },
@@ -93096,42 +93154,76 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
     isEditable: false,
     checkedIcon: null, 
     uncheckedIcon: null,
+    innerCheckView: null,
+    outerCheckView: null,
 }).setSlots({
     init: function () {
         DomView.init.apply(this)
         //this.setDisplay("inline-block")
         this.turnOffUserSelect()
         this.setWhiteSpace("nowrap")
-        this.setOverflow("hidden")
-        this.setTextOverflow("ellipsis")
+        this.setOverflow("visible")
         this.setSpellCheck(false)
         this.setContentEditable(false)
-		
-        //this.setUnfocusOnEnterKey(true)
-        //this.setIsRegisteredForKeyboard(true) // gets set by setContentEditable()
 
-        this.setupForRoundCheckbox()
-        //this.setupForSquareCheckbox()
-        //this.setupForToggleSwitch()
+        const size = this.checkboxSize() // size
+        this.setMinAndMaxWidth(size)
+        this.setMinAndMaxHeight(size)
+
+        this.setOverflow("hidden")
+
+        this.setOuterCheckView(this.newCheckView())
+        this.outerCheckView().setInnerHTML(this.outerSVG())
+        this.addSubview(this.outerCheckView())
+
+        this.setInnerCheckView(this.newCheckView())
+        this.innerCheckView().setInnerHTML(this.innerSVG())
+        this.addSubview(this.innerCheckView())
+
+        this.setIsEditable(this.isEditable())
+
         return this
+    },
+
+    newCheckView: function() {
+        const size = this.checkboxSize()
+        const cv = DomView.clone()
+        cv.setDisplay("block")
+        cv.setPosition("absolute")
+        cv.setLeft(0)
+        cv.setTop(0)
+        cv.setMinAndMaxWidth(size)
+        cv.setMinAndMaxHeight(size)
+        cv.setPadding(0)
+        cv.setMargin(0)
+        return cv
+    },
+
+    checkboxSize: function() {
+        return 16
     },
     
-    setupForRoundCheckbox: function() {
-        this.setCheckedIcon("checkbox-circle-checked")
-        this.setUncheckedIcon("checkbox-circle-unchecked")
-        return this
+    outerSVG: function() {
+        const size = this.checkboxSize()
+        const r = Math.floor((size - 2)/2)-1
+        const cx = r + 1
+
+        let s = "<svg height='100%' width='100%' viewBox='0 0 " + size + " " + size + "'>\n"
+        s += "<circle stroke-width='1' cx=" + cx + " cy=" + cx + " r=" + r + " fill='transparent' />\n"
+        s += "</svg>"
+        return s
     },
 
-    setupForSquareCheckbox: function() {
-        this.setCheckedIcon("checkbox-square-checked")
-        this.setUncheckedIcon("checkbox-square-unchecked")
-        return this
-    },
+    innerSVG: function() {
+        const size = this.checkboxSize()
+        const r = Math.floor((size - 2)/2)-1
+        const cx = r + 1
+        const gap = 2
 
-    setupForToggleSwitch: function() {
-        this.setCheckedIcon("toggle-on")
-        this.setUncheckedIcon("toggle-off")
-        return this
+        let s =  "<svg height='100%' width='100%' viewBox='0 0 " + size + " " + size + "'>\n"
+        s += "<circle cx=" + cx + " cy=" + cx + " r=" + (r-gap) + " />\n"
+        s += "</svg>"
+        return s
     },
 
     // editable
@@ -93140,21 +93232,14 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
         this._isEditable = aBool
         
         if (this._isEditable) {
-            this.setIsRegisteredForClicks(true)
+            const g = this.addDefaultTapGesture()
+            g.setShouldRequestActivation(false) // so the row doesn't block the initial tap
         } else {
-            this.setIsRegisteredForClicks(false)
+            this.removeDefaultTapGesture()
         }
         
-        this.updateIcon()
+        this.updateAppearance()
         
-        return this
-    },
-    
-    // clicks
-    
-    onClick: function(event) {
-        DomStyledView.onClick.apply(this, [event])
-        this.toggle()
         return this
     },
     
@@ -93179,8 +93264,7 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
         
 	    this._value = v
 
-        //this.updateUnicode()
-        this.updateIcon()
+        this.updateAppearance()
         return this
     },	
 	
@@ -93191,27 +93275,6 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
     isChecked: function() {
 	    return this.value()
     },
-	
-    // unicode
-	
-    /*
-	checkedUnicode: function() {
-	     return "&#10004;"
-	},
-	
-	uncheckedUnicode: function() {
-	     return "&#10007;"
-	},
-	
-	currentUnicode: function() {
-	    return this.isChecked() ? this.checkedUnicode() : this.uncheckedUnicode();
-	},
-	
-	updateUnicode: function() {
-		this.setInnerHTML(this.currentUnicode())
-		return this
-	},
-    */
     
     setBackgroundColor: function(s) {
 
@@ -93219,18 +93282,25 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
     },
 	
     // svg icon
-	
-    currentIcon: function() {
-	    return this.isChecked() ? this.checkedIcon() : this.uncheckedIcon();
-    },
-	
-    updateIcon: function () {
-        this.setMinAndMaxWidth(16).setMinAndMaxHeight(16)
-        this.setBackgroundImageUrlPath(this.pathForIconName(this.currentIcon()))
-        this.setBackgroundSizeWH(16, 16) // use "contain" instead?
-        this.setBackgroundPosition("center")
-        this.setOpacity(this.isEditable() ? 1 : 0.5)
+
+    updateAppearance: function () {
+        const color = this.getComputedCssAttribute("color")
+
+        const ie = this.innerCheckView().element()
+        ie.style.fill = this.value() ? color : "transparent"
+
+        const oe = this.outerCheckView().element()
+        oe.style.stroke = this.color()
+
         return this
+    },
+
+
+    onTapComplete: function (aGesture) {
+        //console.log(this.typeId() + ".onTapComplete()")
+        DomView.sendActionToTarget.apply(this)
+        this.toggle()
+        return false
     },
 })
 
@@ -93254,8 +93324,6 @@ DomView.newSubclassNamed("ButtonView").newSlots({
         //this.setMinAndMaxWidth(200)
         //this.setButtonHeight(50)
         this.turnOffUserSelect()
-        //this.setBorder("1px solid black")
-        //this.setBackgroundColor("#ccc")
         this.setTextAlign("center")
         this.setVerticalAlign("middle")
         
@@ -103136,7 +103204,8 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
             //valueView.setBackgroundColor("transparent")
             //valueView.setBorder("1px solid white")
             //valueView.setBorderRadius(5)
-            valueView.setBackgroundColor(this.valueBackgroundColor())
+            //valueView.setBackgroundColor(this.valueBackgroundColor())
+            valueView.setBackgroundColor("transparent")
             valueView.setColor(color)
             //valueView.setToolTip("")
             //errorView.setDisplay("none")
@@ -103325,6 +103394,16 @@ BMFieldRowView.newSubclassNamed("BMBooleanFieldRowView").newSlots({
 
         this.turnOffUserSelect()
         this.keyView().setTransition("all 0.3s")
+
+        this.keyView().setDisplay("inline-block")
+        this.valueView().setDisplay("inline-block")
+        this.keyView().setMarginLeft(6)
+
+        //this.keyView().setMarginTop(-1)
+        this.keyView().setPaddingBottom(1)
+        this.valueView().setMarginTop(15)
+
+        this.keyView().parentView().swapSubviews(this.keyView(), this.valueView())
         return this
     },
 
@@ -103336,32 +103415,11 @@ BMFieldRowView.newSubclassNamed("BMBooleanFieldRowView").newSlots({
         return this.valueView()
     },
 
-    /*
-    syncFromNode: function () {
+    syncFromNode: function() {
         BMFieldRowView.syncFromNode.apply(this)
-
-        const field = this.node()
-        this.applyStyles() // normally this would happen in updateSubviews
-        this.booleanView().setValue(field.value())
+        this.booleanView().updateAppearance()
         return this
     },
-
-    syncToNode: function () {
-        const field = this.node()
-				
-        this.updateKeyView()
-		
-        if (field.valueIsEditable()) {
-            const data = this.imageWellView().imageDataURL()
-            //console.log("data = " + (data ? data.slice(0, 40) + "..." : "null"))
-        	field.setValue(data)
-        }
-        
-        //NodeView.syncToNode.apply(this)
-        return this
-    },
-    */
-
     
 })
 

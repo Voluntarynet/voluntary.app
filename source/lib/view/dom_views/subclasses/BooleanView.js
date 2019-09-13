@@ -25,54 +25,17 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
         this.turnOffUserSelect()
         this.setWhiteSpace("nowrap")
         this.setOverflow("visible")
-        //this.setTextOverflow("ellipsis")
         this.setSpellCheck(false)
         this.setContentEditable(false)
-        //this.setBorder("1px solid")
-        //this.setBorderColor(this.trueCheckColor())
-        //this.setBorderRadius(7)
 
         const size = this.checkboxSize()
-        //const padSize = 2
-        //const innerSize = size - padSize * 2 - 2;
-
         this.setMinAndMaxWidth(size)
         this.setMinAndMaxHeight(size)
-        //this.setPadding(padSize)
 
         this.setOverflow("hidden")
-        //this.setBorder("1px dashed yellow")
-        this.setInnerHTML(this.circleSVG())
+        this.setInnerHTML(this.checkboxSVG())
+        this.setIsEditable(this.isEditable())
 
-        /*
-        const cv = DomView.clone().setDivClassName("InnerCheckbox")
-        cv.setBackgroundColor(this.falseCheckColor())
-        cv.setBorderRadius(innerSize/2 + 1)
-
-        cv.setMargin(0)
-        cv.setPadding(0)
-        
-        cv.setMinAndMaxWidth(innerSize)
-        cv.setMinAndMaxHeight(innerSize)
-
-        cv.setMargin("auto")
-        //cv.setPadding("auto")
-        cv.setTopString("50%")
-        cv.setLeftString("50%")
-        cv.setTransform("translate(0%, -10%)")
-
-        cv.setTransition("background-color 0.1s")
-        
-        this.setCheckView(cv)
-        */
-        //this.addSubview(cv)
-		
-        //this.setUnfocusOnEnterKey(true)
-        //this.setIsRegisteredForKeyboard(true) // gets set by setContentEditable()
-
-        //this.setupForRoundCheckbox()
-        //this.setupForSquareCheckbox()
-        //this.setupForToggleSwitch()
         return this
     },
 
@@ -80,15 +43,13 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
         return 16
     },
     
-    circleSVG: function() {
+    checkboxSVG: function() {
         const size = this.checkboxSize()
         const r = Math.floor((size - 2)/2)-1
         const f = r+1
         const color = this.getComputedCssAttribute("color") //"white"
         const gap = 2
-        let s =  "<svg "
-        s += "height='" + size + "' "
-        s += "width='" + size + "' "
+        let s =  "<svg height='" + size + "' width='" + size + "' "
         s += "style='background-color:transparent;'>\n"
         s += "<circle cx=" + f + " cy=" + f + " r=" + r + " stroke='" + color + "' stroke-width=1 fill='transparent' />\n"
         if (this.value()) {
@@ -104,21 +65,14 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
         this._isEditable = aBool
         
         if (this._isEditable) {
-            this.setIsRegisteredForClicks(true)
+            const g = this.addDefaultTapGesture()
+            g.setShouldRequestActivation(false) // so the row doesn't block the initial tap
         } else {
-            this.setIsRegisteredForClicks(false)
+            this.removeDefaultTapGesture()
         }
         
         this.updateAppearance()
         
-        return this
-    },
-    
-    // clicks
-    
-    onClick: function(event) {
-        DomStyledView.onClick.apply(this, [event])
-        this.toggle()
         return this
     },
     
@@ -154,39 +108,6 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
     isChecked: function() {
 	    return this.value()
     },
-	
-    // unicode
-	
-    /*
-	checkedUnicode: function() {
-	     return "&#10004;"
-	},
-	
-	uncheckedUnicode: function() {
-	     return "&#10007;"
-	},
-	
-	currentUnicode: function() {
-	    return this.isChecked() ? this.checkedUnicode() : this.uncheckedUnicode();
-	},
-	
-	updateUnicode: function() {
-		this.setInnerHTML(this.currentUnicode())
-		return this
-    },
-    
-    currentIcon: function() {
-	    return this.isChecked() ? this.checkedIcon() : this.uncheckedIcon();
-    },
-
-    updateIcon: function() {
-        this.setBackgroundImageUrlPath(this.pathForIconName(this.currentIcon()))
-        this.setBackgroundSizeWH(16, 16) // use "contain" instead?
-        this.setBackgroundPosition("center")
-        this.setOpacity(this.isEditable() ? 1 : 0.5)
-        return this
-    },
-    */
     
     setBackgroundColor: function(s) {
 
@@ -196,7 +117,24 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
     // svg icon
 
     updateAppearance: function () {
-        this.setInnerHTML(this.circleSVG())
+        this.setInnerHTML(this.checkboxSVG())
         return this
     },
+
+
+    onTapComplete: function (aGesture) {
+        //console.log(this.typeId() + ".onTapComplete()")
+        DomView.sendActionToTarget.apply(this)
+        this.toggle()
+        return false
+    },
+
+    // clicks
+    /*
+    onClick: function(event) {
+        DomStyledView.onClick.apply(this, [event])
+        this.toggle()
+        return this
+    },
+    */
 })

@@ -18,8 +18,6 @@ DomView.newSubclassNamed("ButtonView").newSlots({
         //this.setMinAndMaxWidth(200)
         //this.setButtonHeight(50)
         this.turnOffUserSelect()
-        //this.setBorder("1px solid black")
-        //this.setBackgroundColor("#ccc")
         this.setTextAlign("center")
         this.setVerticalAlign("middle")
         

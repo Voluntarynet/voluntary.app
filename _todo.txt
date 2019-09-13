@@ -1,8 +1,4 @@
 
-- move BooleanView from onClick to onTap
-
-- fix BooleanFieldRowView
-
 - test out inspectors on other elements - fields like "shows title"
 
 - make CloseButton a subclass of ButtonView

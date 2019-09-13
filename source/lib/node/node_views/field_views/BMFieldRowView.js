@@ -236,7 +236,7 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
     },
     
     onDidEdit: function (changedView) {     
-        this.log(this.type() + " onDidEdit")   
+        //this.log(this.type() + " onDidEdit")   
         this.node().setKey(this.keyView().value())
         this.node().setValue(this.valueView().value())
         this.node().didUpdateView(this)

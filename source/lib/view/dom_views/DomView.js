@@ -2250,13 +2250,22 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     },
 
     addDefaultTapGesture: function() {
-        this.addGestureRecognizer(TapGestureRecognizer.clone()) 
-        return 
+        if (!this._defaultTapGesture) {
+            this._defaultTapGesture = this.addGestureRecognizer(TapGestureRecognizer.clone()) 
+        }
+        return this._defaultTapGesture
+    },
+
+    defaultTapGesture: function() {
+        return this._defaultTapGesture
     },
 
     removeDefaultTapGesture: function() {
-        this.removeGestureRecognizersOfType("TapGestureRecognizer")
-        return 
+        if (this._defaultTapGesture) {
+            this.removeGestureRecognizer(this._defaultTapGesture)
+            this._defaultTapGesture = null
+        }
+        return this
     },
 
 

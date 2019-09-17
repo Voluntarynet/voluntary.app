@@ -163,7 +163,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         return this
     },
 
-    // -----------
+    // --- helpers --------
     
     browser: function() {
         return this.column().browser()
@@ -173,6 +173,10 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         return this.parentView()
     },
     
+    columnGroup: function() {
+        return this.column().columnGroup()
+    },
+
     // node style dict
     
     rowStyles: function() {
@@ -647,6 +651,8 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         })
     },
 
+    // --- pan graphical effects ---
+
     zoomForPan: function() {
         const r = 1.1
         this.setTransform("scale(" + r + ")")
@@ -655,18 +661,6 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
 
     unzoomForPan: function() {
         this.setTransform("scale(1)")
-        return this
-    },
-
-
-    // --- pan gesture ----
-
-    addPanGesture: function() {
-        return this.addGestureRecognizer(PanGestureRecognizer.clone())
-    },
-
-    removePanGesture: function() {
-        this.removeGestureRecognizersOfType("PanGestureRecognizer")
         return this
     },
 
@@ -680,9 +674,18 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         return this
     },
 
-    columnGroup: function() {
-        return this.column().columnGroup()
+    // --- add/remove pan gesture ----
+
+    addPanGesture: function() {
+        return this.addGestureRecognizer(PanGestureRecognizer.clone())
     },
+
+    removePanGesture: function() {
+        this.removeGestureRecognizersOfType("PanGestureRecognizer")
+        return this
+    },
+
+    // --- handle pan gesture ---
 
     acceptsPan: function() {
         return this._isReordering
@@ -696,8 +699,6 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         this.columnGroup().setOverflow("visible")
         this.columnGroup().scrollView().setOverflow("visible")
         this.setZIndex(3)
-
-        //this.setBorder("1px solid rgba(255, 255, 255, 0.05)")
 
         this.column().absolutePositionRows()
 

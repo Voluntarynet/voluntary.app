@@ -8,7 +8,7 @@
 
 */
 
-DomView.newSubclassNamed("ButtonView").newSlots({
+DomView.newSubclassNamed("ButtonView").newSlots({ 
     titleView: null,
     isEnabled: true,
 }).setSlots({

@@ -4,19 +4,25 @@
 
     BooleanView
 
+    The checkbox is composed of 2 overlapping inner views,
+    one for the inner check itself, and one for the outer border around.
+    The check components are rendered with scalable SVG and 
+    are synced to match the color of the parent view's text color by
+    getting the computed color and applying it to the fill or stroke of the
+    svg views.
+
+    TODO: support disabled/uneditable color style?
 
 */
 
 DomStyledView.newSubclassNamed("BooleanView").newSlots({
     isSelected: false,
-    selectedColor: null,
-    unselectedColor: null,
-    doesClearOnReturn: false,
-    doesHoldFocusOnReturn: false,
+    //selectedColor: null,
+    //unselectedColor: null,
+    doesClearOnReturn: false, // needed?
+    doesHoldFocusOnReturn: false, // needed?
     value: false,
     isEditable: false,
-    checkedIcon: null, 
-    uncheckedIcon: null,
     innerCheckView: null,
     outerCheckView: null,
 }).setSlots({
@@ -120,7 +126,7 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
     // ------------------
     
     setValue: function(v) {
-        if (v === null) {
+        if (Type.isNullOrUndefined(v)) {
             v = false;
         }
         
@@ -139,19 +145,24 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
     },
     
     setBackgroundColor: function(s) {
-
+        // needed?
         return this
     },
 	
     // svg icon
 
     updateAppearance: function () {
+        // sent by superview when it changes or syncs to a node
+        // so we can update our appearance to match changes to the parent view's style
+
         const color = this.getComputedCssAttribute("color")
 
         const ie = this.innerCheckView().element()
+        ie.style.transition = "all 0.2s"
         ie.style.fill = this.value() ? color : "transparent"
 
         const oe = this.outerCheckView().element()
+        oe.style.transition = "all 0.2s"
         oe.style.stroke = this.color()
 
         return this

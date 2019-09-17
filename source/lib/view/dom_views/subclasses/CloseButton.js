@@ -8,7 +8,7 @@
     TODO: make subclass of ButtonView
 */
 
-window.CloseButton = DomView.newSubclassNamed("CloseButton").newSlots({
+window.CloseButton = DomView.newSubclassNamed("CloseButton").newSlots({ 
     isEnabled: true,
 }).setSlots({
 
@@ -24,6 +24,8 @@ window.CloseButton = DomView.newSubclassNamed("CloseButton").newSlots({
         this.makeBackgroundNoRepeat()
         this.setAction("close") //.setInnerHTML("&#10799;")
 
+        this.addDefaultTapGesture()
+        
         return this
     },
 
@@ -50,5 +52,13 @@ window.CloseButton = DomView.newSubclassNamed("CloseButton").newSlots({
             this.setDisplay("none")
         }
         return this
+    },
+
+    onTapComplete: function (aGesture) {
+        //console.log(this.typeId() + ".onTapComplete()")
+        if (!this.isEditable()) {
+            DomView.sendActionToTarget.apply(this)
+        }
+        return false
     },
 })

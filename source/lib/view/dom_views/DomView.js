@@ -176,8 +176,11 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
     setCssAttribute: function (key, newValue, didChangeCallbackFunc) {
         assert(Type.isString(key))
+        
         const style = this.cssStyle()
+        const doesSanityCheck = false
         const oldValue = style[key]
+
         if (String(oldValue) !== String(newValue)) {
             if (newValue == null) {
                 //console.log("deleting css key ", key)
@@ -187,29 +190,31 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
             } else {
                 style[key] = newValue
 
-                // sanity check the result
-                // but ignore these keys as they have equivalent functional values 
-                // that can have different string values
-                const ignoredKeys = { 
-                    "background-position": true,  
-                    "transition": true, 
-                    "color": true , 
-                    "background-color": true,
-                    "box-shadow": true,
-                    "border-bottom": true,
-                    "transform-origin": true,
-                    "outline": true,
-                    "border": true,
-                    "border-color": true
-                }
+                if (doesSanityCheck) {
+                    // sanity check the result
+                    // but ignore these keys as they have equivalent functional values 
+                    // that can have different string values
+                    const ignoredKeys = { 
+                        "background-position": true,  
+                        "transition": true, 
+                        "color": true , 
+                        "background-color": true,
+                        "box-shadow": true,
+                        "border-bottom": true,
+                        "transform-origin": true,
+                        "outline": true,
+                        "border": true,
+                        "border-color": true
+                    }
 
-                const resultValue = style[key]
-                if (!(key in ignoredKeys) && resultValue != newValue) {
-                    let msg = "DomView: style['" + key + "'] not set to expected value\n";
-                    msg += "     set: <" + typeof(newValue) + "> '" + newValue + "'\n";
-                    msg += "     got: <" + typeof(resultValue) + "> '" + resultValue + "'\n";
-                    console.warn(msg)
-                    //throw new Error(msg) 
+                    const resultValue = style[key]
+                    if (!(key in ignoredKeys) && resultValue != newValue) {
+                        let msg = "DomView: style['" + key + "'] not set to expected value\n";
+                        msg += "     set: <" + typeof(newValue) + "> '" + newValue + "'\n";
+                        msg += "     got: <" + typeof(resultValue) + "> '" + resultValue + "'\n";
+                        console.warn(msg)
+                        //throw new Error(msg) 
+                    }
                 }
             }
 
@@ -1934,7 +1939,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     setAction: function (anActionString) {
         this._action = anActionString
         //this.setIsRegisteredForClicks(this.hasTargetAndAction())
-        if (this.type() !== "ButtonView" && this.type() !== "BrowserHeaderAction") { 
+        if (anActionString && Type.isNullOrUndefined(this.onTapComplete)) { 
             // remove this later if we don't find anything using it
             console.warn(this.typeId() + " may have depended on setIsRegisteredForClicks")
         }

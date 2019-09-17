@@ -1,8 +1,9 @@
 
-- fix bug with padding after slide on button row
-
-
 - drag items between columns
+    - need to support drag view being a top level view?
+    - detect if drag view is on far left/right of browser columns with more columns and back/forward if held there
+    
+    
 - just text items?
 
 

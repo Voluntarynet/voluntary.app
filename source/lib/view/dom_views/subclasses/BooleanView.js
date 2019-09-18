@@ -31,7 +31,6 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
         //this.setDisplay("inline-block")
         this.turnOffUserSelect()
         this.setWhiteSpace("nowrap")
-        this.setOverflow("visible")
         this.setSpellCheck(false)
         this.setContentEditable(false)
 
@@ -51,6 +50,12 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
 
         this.setIsEditable(this.isEditable())
 
+        /*
+        const svg = SVGView.clone()
+        svg.setMinAndMaxWidth(size)
+        svg.setMinAndMaxHeight(size)
+        this.addSubview(svg)
+        */
         return this
     },
 
@@ -165,6 +170,7 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
         oe.style.transition = "all 0.2s"
         oe.style.stroke = this.color()
 
+        this.subviews().forEach((sv) => { if (sv.updateAppearance) { sv.updateAppearance() }})
         return this
     },
 

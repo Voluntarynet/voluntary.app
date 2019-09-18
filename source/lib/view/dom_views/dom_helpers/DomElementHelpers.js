@@ -47,3 +47,14 @@ function DomElement_description(element) {
 
     return s
 }
+
+window.Element_setStyleIncludingDecendants = function(e, k, v) {
+    if (e.style) {
+        e.style[k] = v
+    }
+    
+    for(let i = 0; i < e.childNodes.length; i ++) {
+        let child = e.childNodes[i]
+        Element_setStyleIncludingDecendants(child, k, v)
+    }
+}

@@ -35,69 +35,30 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
         this.setContentEditable(false)
 
         const size = this.checkboxSize() // size
-        this.setMinAndMaxWidth(size)
-        this.setMinAndMaxHeight(size)
+        this.setMinAndMaxWidthAndHeight(size)
 
         this.setOverflow("hidden")
 
-        this.setOuterCheckView(this.newCheckView())
-        this.outerCheckView().setInnerHTML(this.outerSVG())
-        this.addSubview(this.outerCheckView())
+        const inner = SVGView.clone().setIconName("inner-checkbox")
+        inner.setMinAndMaxWidthAndHeight(size)
+        inner.setStrokeColor("transparent")
+        this.setInnerCheckView(inner)
+        this.addSubview(inner)
 
-        this.setInnerCheckView(this.newCheckView())
-        this.innerCheckView().setInnerHTML(this.innerSVG())
-        this.addSubview(this.innerCheckView())
+        const outer = SVGView.clone().setIconName("outer-checkbox")
+        outer.setMinAndMaxWidthAndHeight(size)
+        outer.setFillColor("transparent")
+        this.setOuterCheckView(outer)
+        this.addSubview(outer)
 
+        
         this.setIsEditable(this.isEditable())
 
-        /*
-        const svg = SVGView.clone()
-        svg.setMinAndMaxWidth(size)
-        svg.setMinAndMaxHeight(size)
-        this.addSubview(svg)
-        */
         return this
-    },
-
-    newCheckView: function() {
-        const size = this.checkboxSize()
-        const cv = DomView.clone()
-        cv.setDisplay("block")
-        cv.setPosition("absolute")
-        cv.setLeft(0)
-        cv.setTop(0)
-        cv.setMinAndMaxWidth(size)
-        cv.setMinAndMaxHeight(size)
-        cv.setPadding(0)
-        cv.setMargin(0)
-        return cv
     },
 
     checkboxSize: function() {
         return 16
-    },
-    
-    outerSVG: function() {
-        const size = this.checkboxSize()
-        const r = Math.floor((size - 2)/2)-1
-        const cx = r + 1
-
-        let s = "<svg height='100%' width='100%' viewBox='0 0 " + size + " " + size + "'>\n"
-        s += "<circle stroke-width='1' cx=" + cx + " cy=" + cx + " r=" + r + " fill='transparent' />\n"
-        s += "</svg>"
-        return s
-    },
-
-    innerSVG: function() {
-        const size = this.checkboxSize()
-        const r = Math.floor((size - 2)/2)-1
-        const cx = r + 1
-        const gap = 2
-
-        let s =  "<svg height='100%' width='100%' viewBox='0 0 " + size + " " + size + "'>\n"
-        s += "<circle cx=" + cx + " cy=" + cx + " r=" + (r-gap) + " />\n"
-        s += "</svg>"
-        return s
     },
 
     // editable
@@ -162,15 +123,9 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
 
         const color = this.getComputedCssAttribute("color")
 
-        const ie = this.innerCheckView().element()
-        ie.style.transition = "all 0.2s"
-        ie.style.fill = this.value() ? color : "transparent"
-
-        const oe = this.outerCheckView().element()
-        oe.style.transition = "all 0.2s"
-        oe.style.stroke = this.color()
-
-        this.subviews().forEach((sv) => { if (sv.updateAppearance) { sv.updateAppearance() }})
+        this.outerCheckView().setStrokeColor(color)
+        this.innerCheckView().setFillColor(this.value() ? color : "transparent")
+        
         return this
     },
 

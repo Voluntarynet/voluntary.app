@@ -176,7 +176,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
     setCssAttribute: function (key, newValue, didChangeCallbackFunc) {
         assert(Type.isString(key))
-        
+
         const style = this.cssStyle()
         const doesSanityCheck = false
         const oldValue = style[key]
@@ -1313,6 +1313,13 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         this.setCssAttribute("max-height", newValue, () => { this.didChangeHeight() })
         return this
     },
+
+    setMinAndMaxWidthAndHeight: function (aNumber) {
+        this.setMinAndMaxWidth(aNumber)
+        this.setMinAndMaxHeight(aNumber)
+        return this
+    },
+
 
     percentageNumberToString: function (aNumber) {
         assert(Type.isNumber(aNumber) && (aNumber >= 0) && (aNumber <= 100))

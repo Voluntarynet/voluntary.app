@@ -39,13 +39,13 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
 
         this.setOverflow("hidden")
 
-        const inner = SVGView.clone().setIconName("inner-checkbox")
+        const inner = SvgIconView.clone().setIconName("inner-checkbox")
         inner.setMinAndMaxWidthAndHeight(size)
         inner.setStrokeColor("transparent")
         this.setInnerCheckView(inner)
         this.addSubview(inner)
 
-        const outer = SVGView.clone().setIconName("outer-checkbox")
+        const outer = SvgIconView.clone().setIconName("outer-checkbox")
         outer.setMinAndMaxWidthAndHeight(size)
         outer.setFillColor("transparent")
         this.setOuterCheckView(outer)

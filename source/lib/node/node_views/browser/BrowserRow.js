@@ -48,8 +48,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         if (TouchScreen.shared().isSupported() || true) { // testing 
             //
         } else {
-	        this.setIsRegisteredForMouse(true) // TODO: replace with TapGesture?
-            this.addCloseButton()
+            //this.addCloseButton()
         }
 
         this.setTransition(this.transitionStyle())
@@ -375,15 +374,17 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
             //this.setCloseButtonView(NodeView.clone().setDivClassName("BrowserRowCloseButton"))
             this.setCloseButtonView(cb)
             this.contentView().addSubview(cb) 
+            /*
             cb.setBackgroundImageUrlPath(this.pathForIconName("close-white"))
             cb.makeBackgroundContain()
             cb.makeBackgroundCentered()
             cb.makeBackgroundNoRepeat()  
-            cb.setMinAndMaxWidth(8).setMinAndMaxHeight(8)
+            */
+            cb.setMinAndMaxWidthAndHeight(8)
             cb.setAction("delete")
             cb.setOpacity(0).setTransition(this.transitionStyle())
             if (this.shouldCenterCloseButton()) {
-                cb.verticallyAlignAbsoluteNow()
+                b.verticallyAlignAbsoluteNow()
             }
         }
         return this
@@ -492,18 +493,23 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         return this
     },
 
+    underContentViewColor: function() {
+        return "black"
+    },
+
     setupSlide: function() {
         if (!this.dragDeleteButtonView()) {
             const h = this.clientHeight()
 
-            this.element().style.backgroundColor = "black"
+            this.element().style.backgroundColor = this.underContentViewColor()
             //this.element().style.outline = "1px dashed blue"
             const cb = CloseButton.clone().setTransition("opacity 0.1s")
-            cb.setMinAndMaxHeight(h)
-            cb.setPosition("absolute")
-            cb.setTop(0)
-            cb.setRight(10)
             this.addSubview(cb)
+
+            const size = 10
+            cb.setMinAndMaxWidthAndHeight(size)
+            cb.verticallyAlignAbsoluteNow()
+            cb.setRight(size * 2)
             cb.setZIndex(0)
             this.setDragDeleteButtonView(cb)
         }
@@ -694,7 +700,8 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     onPanBegin: function(aGesture) {
         this.setTransition("top 0s")
         
-        // visibility
+        // visibility - so we can see the shadow
+        // todo: move to top level view?
         this.column().setOverflow("visible")
         this.columnGroup().setOverflow("visible")
         this.columnGroup().scrollView().setOverflow("visible")

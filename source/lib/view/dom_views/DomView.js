@@ -3015,9 +3015,21 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         const pv = this.parentView()
         if (pv) {
             this.setPosition("absolute")
+            const parentHeight = pv.calcHeight()
+            const height = this.getComputedPxCssAttribute("height")
+
+            //console.log("parentHeight: ", parentHeight)
+            //console.log("height: ", height)
+
+            this.setTop((parentHeight / 2) - (height / 2))
+            /*
             setTimeout(() => {
-                this.setTop(pv.clientHeight() / 2 - this.clientHeight() / 2)
+                //this.setTop(pv.clientHeight() / 2 - this.clientHeight() / 2)
+                this.setTop(pv.calcHeight() / 2 - this.calcHeight() / 2)
             }, 0)
+            */
+        } else {
+            throw new Error("missing parentView")
         }
         return this
     },

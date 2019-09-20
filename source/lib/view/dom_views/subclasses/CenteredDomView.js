@@ -21,7 +21,6 @@
       .inner {
         margin-left: auto;
         margin-right: auto;
-        width: 400px;
         //whatever width you want
       }
 
@@ -72,7 +71,7 @@ DomView.newSubclassNamed("CenteredDomView").newSlots({
         v.setDisplay("block")
         v.setMarginLeft("auto")
         v.setMarginRight("auto")
-        v.innerView().setWidth(400)
+        //v.innerView().setWidth(400)
         this.middleView().addSubview(v)
         return this
     },

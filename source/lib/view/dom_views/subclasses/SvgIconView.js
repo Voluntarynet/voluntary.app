@@ -2,7 +2,7 @@
 
 /*
 
-    SVGView
+    SvgIconView
 
     A view to render scalable SVG within a view that can be 
     synced to match the color of the parent view's text color by
@@ -14,12 +14,12 @@
 
     Example use:
 
-    SVGView.clone().setIconName("add")
+    SvgIconView.clone().setIconName("add")
 
 */
 
 
-DomStyledView.newSubclassNamed("SVGView").newSlots({
+DomStyledView.newSubclassNamed("SvgIconView").newSlots({
     doesMatchParentColor: false,
     svgString: "",
     url: null,
@@ -62,7 +62,15 @@ DomStyledView.newSubclassNamed("SVGView").newSlots({
         this._svgString = s
         this.setInnerHTML(s)
         this.updateAppearance()
+        const style = this.svgElement().style
+        style.position = "absolute"
+        style.top = "0px"
+        style.left = "0px"
         return this
+    },
+
+    svgElement: function() {
+        return this.element().childNodes[0]
     },
 
     didUpdateSlot: function(slotName, oldValue, newValue) {
@@ -94,6 +102,8 @@ DomStyledView.newSubclassNamed("SVGView").newSlots({
             Element_setStyleIncludingDecendants(e, "stroke", this.strokeColor())
         }
 
+        Element_setStyleIncludingDecendants(e, "transition", this.transition())
+
         return this
     },
 
@@ -112,7 +122,6 @@ DomStyledView.newSubclassNamed("SVGView").newSlots({
         Element_setStyleIncludingDecendants(this.element(), "stroke", "white")
         Element_setStyleIncludingDecendants(this.element(), "color", "white")
     },
-
 
     asyncLoad: function() {
         // can't do this on a file:// because of cross site request error
@@ -137,8 +146,7 @@ DomStyledView.newSubclassNamed("SVGView").newSlots({
     svgDict: function() {
         const dict = {}
     
-        dict.add = `
-        <svg width="100%" height="100%" viewBox="0 0 401.994 401.994"><path d="M394,154.175c-5.331-5.33-11.806-7.994-19.417-7.994H255.811V27.406c0-7.611-2.666-14.084-7.994-19.414
+        dict.add = `<svg width="100%" height="100%" viewBox="0 0 401.994 401.994"><path d="M394,154.175c-5.331-5.33-11.806-7.994-19.417-7.994H255.811V27.406c0-7.611-2.666-14.084-7.994-19.414
         C242.488,2.666,236.02,0,228.398,0h-54.812c-7.612,0-14.084,2.663-19.414,7.993c-5.33,5.33-7.994,11.803-7.994,19.414v118.775
         H27.407c-7.611,0-14.084,2.664-19.414,7.994S0,165.973,0,173.589v54.819c0,7.618,2.662,14.086,7.992,19.411
         c5.33,5.332,11.803,7.994,19.414,7.994h118.771V374.59c0,7.611,2.664,14.089,7.994,19.417c5.33,5.325,11.802,7.987,19.414,7.987
@@ -147,8 +155,7 @@ DomStyledView.newSubclassNamed("SVGView").newSlots({
         /></svg>
         `
 
-        dict.close = `<svg width="100%" height="100%"
-        viewBox="0 0 174.239 174.239" style="enable-background:new 0 0 174.239 174.239;" xml:space="preserve">
+        dict.close = `<svg x="0px" y="0px" width="100%" height="100%" viewBox="0 0 174.239 174.239" style="enable-background:new 0 0 174.239 174.239;" xml:space="preserve">
         <path d="M146.537,1.047c-1.396-1.396-3.681-1.396-5.077,0L89.658,52.849c-1.396,1.396-3.681,1.396-5.077,0L32.78,1.047
        c-1.396-1.396-3.681-1.396-5.077,0L1.047,27.702c-1.396,1.396-1.396,3.681,0,5.077l51.802,51.802c1.396,1.396,1.396,3.681,0,5.077
        L1.047,141.46c-1.396,1.396-1.396,3.681,0,5.077l26.655,26.655c1.396,1.396,3.681,1.396,5.077,0l51.802-51.802
@@ -163,7 +170,8 @@ DomStyledView.newSubclassNamed("SVGView").newSlots({
         </svg>
         `
 
-        dict["close-white"] = `<svg width="100%" height="100%" viewBox="0 0 174.239 174.239">
+        /*
+        dict["close-white"] = `<svg x="0px" y="0px" width="100%" height="100%" viewBox="0 0 174.239 174.239">
         <path d="M146.537,1.047c-1.396-1.396-3.681-1.396-5.077,0L89.658,52.849c-1.396,1.396-3.681,1.396-5.077,0L32.78,1.047
         c-1.396-1.396-3.681-1.396-5.077,0L1.047,27.702c-1.396,1.396-1.396,3.681,0,5.077l51.802,51.802c1.396,1.396,1.396,3.681,0,5.077
         L1.047,141.46c-1.396,1.396-1.396,3.681,0,5.077l26.655,26.655c1.396,1.396,3.681,1.396,5.077,0l51.802-51.802
@@ -171,6 +179,7 @@ DomStyledView.newSubclassNamed("SVGView").newSlots({
         l-51.801-51.801c-1.396-1.396-1.396-3.681,0-5.077l51.801-51.801c1.396-1.396,1.396-3.681,0-5.077L146.537,1.047z" fill="#FFFFFF"/>
         </svg>
         `
+        */
 
         dict["right-gray"] = `<svg width="100%" height="100%" viewBox="0 0 306 306">
         <polygon points="94.35,0 58.65,35.7 175.95,153 58.65,270.3 94.35,306 247.35,153" fill="#888"/>
@@ -193,11 +202,11 @@ DomStyledView.newSubclassNamed("SVGView").newSlots({
         `
 
         dict["outer-checkbox"] = `<svg height='100%' width='100%' viewBox='0 0 16 16'>
-        <circle stroke-width='1' cx=7 cy=7 r=6 fill='transparent' />
+        <circle stroke-width='1' cx=7 cy=7 r=6 />
         </svg>`
    
         dict["inner-checkbox"] = `<svg height='100%' width='100%' viewBox='0 0 16 16'>
-        <circle stroke-width='1' cx=7 cy=7 r=4 fill='transparent' />
+        <circle stroke-width='1' cx=7 cy=7 r=4 />
         </svg>`
         
         return dict

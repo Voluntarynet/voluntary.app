@@ -5,50 +5,37 @@
 
     CloseButton
 
-    TODO: make subclass of ButtonView
+    TODO: make subclass of ButtonView?
+
 */
 
 window.CloseButton = DomView.newSubclassNamed("CloseButton").newSlots({ 
     isEnabled: true,
+    iconView: null,
 }).setSlots({
 
     init: function () {
         DomView.init.apply(this)
-
         this.turnOffUserSelect()
 
-        /*
-        this.setDivClassName("ImageCloseButton")
-        this.setIconName("close-white")
-        this.setBackgroundSizeWH(9, 9) // use "contain" instead?
-        this.setBackgroundPosition("center")
-        this.makeBackgroundNoRepeat()
-        */
-        
-        this.setDisplay("table") // to center svg
+        //this.setDisplay("table") // to center svg
 
-        const inner = SvgIconView.clone().setIconName("close")
-        
-        inner.setDisplay("table-cell") // to center svg
-        inner.setVerticalAlign("middle") // to center svg
-        inner.setHeight("100%").setWidth("100%")
-        //inner.setMinAndMaxWidthAndHeight(10)
-        inner.setStrokeColor("white")
-        inner.setFillColor("white")
-        //inner.setBorder("1px dashed red")
-        this.addSubview(inner)
-        //this.setBorder("1px dashed white")
+        const iv = SvgIconView.clone().setIconName("close")
+        //iv.setDisplay("table-cell") // to center svg
+        //iv.setVerticalAlign("middle") // to center svg
+        iv.setHeight("100%").setWidth("100%")
+        iv.setStrokeColor("white")
+        iv.setFillColor("white")
+        this.setIconView(iv)
+        this.addSubview(iv)
 
-        this.setAction("close") //.setInnerHTML("&#10799;")
-
-
+        this.setAction("close")
         this.addDefaultTapGesture()
-
         return this
     },
 
     setIconName: function(aString) {
-        this.setBackgroundImageUrlPath(this.pathForIconName(aString))
+        this.iconView().setIconName(aString)
         return this
     },
 
@@ -65,7 +52,7 @@ window.CloseButton = DomView.newSubclassNamed("CloseButton").newSlots({
 
     syncEnabled: function() {
         if (this._isEnabled) {
-            this.setDisplay("inline-block")
+            this.setDisplay("block")
         } else {
             this.setDisplay("none")
         }

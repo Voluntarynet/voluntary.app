@@ -374,12 +374,12 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
             //this.setCloseButtonView(NodeView.clone().setDivClassName("BrowserRowCloseButton"))
             this.setCloseButtonView(cb)
             this.contentView().addSubview(cb) 
-            /*
+            
             cb.setBackgroundImageUrlPath(this.pathForIconName("close-white"))
             cb.makeBackgroundContain()
             cb.makeBackgroundCentered()
             cb.makeBackgroundNoRepeat()  
-            */
+            
             cb.setMinAndMaxWidthAndHeight(8)
             cb.setAction("delete")
             cb.setOpacity(0).setTransition(this.transitionStyle())
@@ -501,9 +501,9 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         if (!this.dragDeleteButtonView()) {
             const h = this.clientHeight()
 
+            // need to do this because we re-route setBackgroundColor
             this.element().style.backgroundColor = this.underContentViewColor()
-            //this.element().style.outline = "1px dashed blue"
-            const cb = CloseButton.clone().setTransition("opacity 0.1s")
+            const cb = CloseButton.clone().setOpacity(0).setTransition("opacity 0.1s")
             this.addSubview(cb)
 
             const size = 10

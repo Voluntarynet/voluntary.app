@@ -479,6 +479,10 @@ Object.shallowCopyTo({
         });
     },
 
+    nullsRemoved: function() {
+        return this.filter(v => !Type.isNull(v));
+    },
+
     rejectPerform: function () {
         const args = this.slice.call(arguments);
         args.shift(null);

@@ -993,5 +993,24 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         return this
     },
 
+    // drop
+
+    acceptsDropHover: function() {
+        return true
+    },
+
+    onDropHoverEnter: function() {
+
+    },
+
+    onDropHoverMove: function() {
+
+    },
+
+    onDropHoverExit: function() {
+
+    },
+
+
 })
 

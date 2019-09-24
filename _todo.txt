@@ -1,4 +1,24 @@
 
+
+- BrowserRow
+after long press, create global drag view and set self as content
+- replace self in Browser with BrowserRowPlaceHolderView
+Drag view fits to content
+
+GlobalDragView
+- setDragContentView:
+    - start getting pan events events? Change pan gesture target? 
+    
+- dragContentView (make subview and fit to it)
+- dragData?
+- begin
+
+DropTargetProtocol
+- acceptsDragView:
+- dragViewMoved:
+- dragViewEntered:
+- drageViewOut:
+
 - drag items between columns
     - need to support drag view being a top level view?
     - detect if drag view is on far left/right of browser columns with more columns and back/forward if held there

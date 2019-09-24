@@ -26,7 +26,7 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
     isEditable: false, // need to separate from contentEditable since we want to override when usesDoubleTapToEdit is true.
 }).setSlots({
     init: function () {
-        DomView.init.apply(this)
+        DomStyledView.init.apply(this)
         //this.setDisplay("inline-block") // if we do it here, we can override it with css classes. Should we eliminate CSS?
         this.turnOffUserSelect()
         this.setWhiteSpace("nowrap")

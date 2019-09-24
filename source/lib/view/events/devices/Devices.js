@@ -44,4 +44,13 @@ ideal.Proto.newSubclassNamed("Devices").newSlots({
         }
         return this
     },
+
+    currentTouchOrMouseEvent: function() {
+        // needed?
+        const me = Mouse.shared().currentEvent()
+        const te = TouchScreen.shared().currentEvent()
+        const es = [me, te]
+        es.filter(e => !TypeError.isNullOrUndefined(e))
+        return es.min(e => e.timeStamp)
+    },
 })

@@ -1178,6 +1178,16 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
     // width and height
 
+    computedWidth: function() {
+        const w = this.getComputedPxCssAttribute("width")
+        return w
+    },
+
+    computedHeight: function() {
+        const h = this.getComputedPxCssAttribute("height")
+        return h
+    },
+
     calcWidth: function () {
         return DomTextTapeMeasure.sizeOfElementWithText(this.element(), this.innerHTML()).width;
         //return DomTextTapeMeasure.sizeOfCSSClassWithText(this.divClassName(), this.innerHTML()).width;
@@ -1363,6 +1373,10 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         return this
     },
 
+    setMinWidthPx: function (aNumber) {
+        this.setMinWidth(this.pxNumberToString(aNumber))
+        return this
+    },
 
     setMinHeightPx: function (aNumber) {
         this.setMinHeight(this.pxNumberToString(aNumber))
@@ -2261,6 +2275,8 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         return this
     },
 
+    // default tap gesture
+
     addDefaultTapGesture: function() {
         if (!this._defaultTapGesture) {
             this._defaultTapGesture = this.addGestureRecognizer(TapGestureRecognizer.clone()) 
@@ -2280,6 +2296,26 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         return this
     },
 
+    // default pan gesture
+
+    addDefaultPanGesture: function() {
+        if (!this._defaultPanGesture) {
+            this._defaultPanGesture = this.addGestureRecognizer(PanGestureRecognizer.clone()) 
+        }
+        return this._defaultPanGesture
+    },
+
+    defaultPanGesture: function() {
+        return this._defaultPanGesture
+    },
+
+    removeDefaultPanGesture: function() {
+        if (this._defaultPanGesture) {
+            this.removeGestureRecognizer(this._defaultPanGesture)
+            this._defaultPanGesture = null
+        }
+        return this
+    },
 
     /*
     requestActiveGesture: function(aGesture) {
@@ -3251,6 +3287,30 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
         this.setPosition("relative") // or static? but can't be absolute
         this.setHeight("fit-content")
+        return this
+    },
+
+    // --- pan graphical effects ---
+    // TODO: move to a more appropraite subclass?
+
+    addPanZoom: function() {
+        const r = 1.1
+        this.setTransform("scale(" + r + ")")
+        return this
+    },
+
+    removePanZoom: function() {
+        this.setTransform("scale(1)")
+        return this
+    },
+
+    addPanShadow: function() {
+        this.setBoxShadow("0px 0px 10px 10px rgba(0, 0, 0, 0.5)")
+        return this
+    },
+
+    removePanShadow: function() {
+        this.setBoxShadow("none")
         return this
     },
 

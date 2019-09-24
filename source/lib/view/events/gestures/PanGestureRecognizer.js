@@ -46,15 +46,19 @@ GestureRecognizer.newSubclassNamed("PanGestureRecognizer").newSlots({
         return this.hasOkFingerCount();
     },
 
+    doPress: function(event) {
+        this.setIsPressing(true)
+        this.setDownEvent(event)
+        this.startDocListeners()
+        return this
+    },
 
     onDown: function (event) {
         GestureRecognizer.onDown.apply(this, [event])
 
         if (!this.isPressing()) {
             if (this.isReadyToBegin()) {
-                this.setIsPressing(true)
-                this.setDownEvent(event)
-                this.startDocListeners()
+                this.doPress(event)
             }
         }
         

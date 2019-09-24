@@ -8,6 +8,7 @@ ResourceLoader.pushRelativePaths([
     "CloseButton.js",
     "DocumentBody.js",
     "DragBarView.js",
+    "DragView.js",
     "PanelView.js",
     "SvgIconView.js",
     "TextField.js"

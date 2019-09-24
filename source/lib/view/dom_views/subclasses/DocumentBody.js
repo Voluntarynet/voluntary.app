@@ -80,5 +80,26 @@ DomView.newSubclassNamed("DocumentBody").newSlots({
         const domElements = this.element().getElementsByTagName("*");
         return domElements
     },
+
+    viewsUnderPoint: function(aPoint) {
+        const elements = document.elementsFromPoint(aPoint.x(), aPoint.y())
+        const views = elements.map(e => this.firstViewForElement(e)).nullsRemoved()
+        return views
+    },
+
+    firstViewForElement: function(e) {
+        // search up the dom element parents to find one
+        // associated with a DomView instance 
+
+        while (e) {
+            const view = e._domView
+            if (view) {
+                return view
+            }
+            e = e.parentElement
+        }
+
+        return null
+    },
 })
 

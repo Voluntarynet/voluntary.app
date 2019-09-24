@@ -54,5 +54,19 @@ window.Type = {
         return typeof(value) === "symbol"
     }, 
 
+    description: function(value) {
+        if (this.isArray(value)) { return "Array" }
+        if (this.isBoolean(value)) { return "Boolean" }
+        if (this.isFunction(value)) { return "Function" }
+        if (this.isUndefined(value)) { return "Undefined" }
+        if (this.isNull(value)) { return "Null" }
+        if (this.isNumber(value)) { return "Number" }
+        if (this.isObject(value)) { return "Object" }
+        if (this.isString(value)) { return "String" }
+        if (this.isSymbol(value)) { return "Symbol" }
+        throw new Error("unable to identify type for value: ", value)
+        return "?"
+    }
+
 }
 

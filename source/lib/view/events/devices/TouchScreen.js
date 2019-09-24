@@ -45,6 +45,7 @@ ideal.Proto.newSubclassNamed("TouchScreen").newSlots({
             if (this.isDebugging()) {
                 console.log(this.type() + " touch count: " + this.currentPoints().length)
             }
+            //Devices.shared().setCurrentEvent(event)
         }
         return this
     },

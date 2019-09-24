@@ -26,6 +26,12 @@ ideal.Proto.newSubclassNamed("Mouse").newSlots({
         return this.sharedInstanceForClass(Mouse)
     },
 
+    setCurrentEvent: function(event) {
+        this._currentEvent = event
+        //Devices.shared().setCurrentEvent(event)
+        return this
+    },
+
     startListening: function() {
         this.setMouseListener(MouseListener.clone().setUseCapture(true).setListenTarget(document.body).setDelegate(this))
         this.mouseListener().setIsListening(true)

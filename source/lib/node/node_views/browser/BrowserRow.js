@@ -644,7 +644,12 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     onLongPressComplete: function(longPressGesture) {
         longPressGesture.deactivate() // needed?
 
-        const pan = this.addPanGesture()
+        const dv = DragView.clone().setViewBeingDragged(this)
+        dv.initPanWithEvent(longPressGesture.currentEvent())
+        dv.begin()
+
+        /*
+        const pan = this.addDefaultPanGesture()
         pan.setShouldRemoveOnComplete(true)
         pan.setMinDistToBegin(0)
         pan.onDown(longPressGesture.currentEvent())
@@ -653,35 +658,16 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         this.setTransition("all 0s, transform 0.2s") //, min-height 1s, max-height 1s")
         this.contentView().setTransition("transform 0.2s")
         setTimeout(() => { 
-            this.zoomForPan()
+            this.addPanZoom()
         })
+        */
     },
 
-    // --- pan graphical effects ---
 
-    zoomForPan: function() {
-        const r = 1.1
-        this.setTransform("scale(" + r + ")")
-        return this
-    },
-
-    unzoomForPan: function() {
-        this.setTransform("scale(1)")
-        return this
-    },
-
-    addShadow: function() {
-        this.setBoxShadow("0px 0px 10px 10px rgba(0, 0, 0, 0.5)")
-        return this
-    },
-
-    removeShadow: function() {
-        this.setBoxShadow("none")
-        return this
-    },
 
     // --- add/remove pan gesture ----
 
+    /*
     addPanGesture: function() {
         return this.addGestureRecognizer(PanGestureRecognizer.clone())
     },
@@ -690,6 +676,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         this.removeGestureRecognizersOfType("PanGestureRecognizer")
         return this
     },
+    */
 
     // --- handle pan gesture ---
 
@@ -712,7 +699,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         this._dragStartPos = this.relativePos()
 
         this.setTop(this._dragStartPos.y())
-        this.addShadow()
+        this.addPanShadow()
     },
 
     onPanMove: function(aGesture) {
@@ -738,7 +725,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
 
         this.column().stackRows()
         
-        this.unzoomForPan()
+        this.removePanZoom()
         setTimeout(() => {
             this.column().relativePositionRows()
             this.column().didReorderRows()

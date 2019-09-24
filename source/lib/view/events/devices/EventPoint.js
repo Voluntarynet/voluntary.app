@@ -65,11 +65,14 @@ window.Point.newSubclassNamed("EventPoint").newSlots({
     },
 
     findOverview: function() {
-        let e = document.elementFromPoint(p.x(), p.y());
+        let e = document.elementFromPoint(this.x(), this.y());
+
+        // search up the dom elements until we find one 
+        // associated with a DomView instance 
+
         while (e) {
             const view = e._domView
             if (view) {
-                this.setOverview(view)
                 return view
             }
             e = e.parentElement

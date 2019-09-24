@@ -101696,19 +101696,19 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         this.setTransition("all 0s, transform 0.2s") //, min-height 1s, max-height 1s")
         this.contentView().setTransition("transform 0.2s")
         setTimeout(() => { 
-            this.zoomForPan()
+            this.addPanZoom()
         })
     },
 
     // --- pan graphical effects ---
 
-    zoomForPan: function() {
+    addPanZoom: function() {
         const r = 1.1
         this.setTransform("scale(" + r + ")")
         return this
     },
 
-    unzoomForPan: function() {
+    removePanZoom: function() {
         this.setTransform("scale(1)")
         return this
     },
@@ -101780,7 +101780,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
 
         this.column().stackRows()
         
-        this.unzoomForPan()
+        this.removePanZoom()
         setTimeout(() => {
             this.column().relativePositionRows()
             this.column().didReorderRows()

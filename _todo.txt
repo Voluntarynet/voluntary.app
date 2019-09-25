@@ -1,5 +1,10 @@
 
 
+
+Want to expand/navigate BrowserRow if drag hovered for some time 
+    questions:
+    - how to deal with multiple hover targets that accept drag
+
 - BrowserRow
 after long press, create global drag view and set self as content
 - replace self in Browser with BrowserRowPlaceHolderView

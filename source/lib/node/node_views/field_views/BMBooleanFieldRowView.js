@@ -12,7 +12,7 @@ BMFieldRowView.newSubclassNamed("BMBooleanFieldRowView").newSlots({
         BMFieldRowView.init.apply(this)
 
         this.turnOffUserSelect()
-        this.keyView().setTransition("all 0.3s")
+        this.keyView().setTransition("color 0.3s")
 
         this.keyView().setDisplay("inline-block")
         this.valueView().setDisplay("inline-block")

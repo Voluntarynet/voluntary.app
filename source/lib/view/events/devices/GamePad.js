@@ -16,7 +16,6 @@ ideal.Proto.newSubclassNamed("GamePad").newSlots({
     buttons: null,
     axes: null,
     isConnected: false,
-    isDebugging: true,
     shouldSendNotes: false
 }).setSlots({
 
@@ -24,6 +23,7 @@ ideal.Proto.newSubclassNamed("GamePad").newSlots({
         ideal.Proto.init.apply(this)
         this.setButtons([])
         this.setAxes([])
+        this.setIsDebugging(true)
         return this
     },
 

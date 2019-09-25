@@ -20,7 +20,6 @@
 
 ideal.Proto.newSubclassNamed("Keyboard").newSlots({
     codeToKeys: null, // dictionary of KeyboardKey objects
-    isDebugging: false,
     keyboardListener: null,
 }).setSlots({
     shared: function() {   

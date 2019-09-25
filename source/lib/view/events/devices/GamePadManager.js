@@ -33,7 +33,6 @@
 ideal.Proto.newSubclassNamed("GamePadManager").newSlots({
     //gamePadListener: null,
     gamePadsDict: null,
-    isDebugging: true,
     pollPeriod: 1000, // milliseconds
 }).setSlots({
 
@@ -43,6 +42,7 @@ ideal.Proto.newSubclassNamed("GamePadManager").newSlots({
 
     init: function () {
         ideal.Proto.init.apply(this)
+        this.setIsDebugging(true)
         this.setGamePadsDict({})
         //this.startListening()
         this.startPollingIfSupported() // could delay this until connection if listen API is supported

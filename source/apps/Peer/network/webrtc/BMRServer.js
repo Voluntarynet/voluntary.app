@@ -17,11 +17,12 @@ BMFieldSetNode.newSubclassNamed("BMRServer").newSlots({
     serverConnection: null,
     bloomDistance: null,
     error: null,
-    isDebugging: true,
     connectButton: null,
 }).setSlots({
     init: function () {
         BMFieldSetNode.init.apply(this)
+        this.setIsDebugging(true)
+
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(true)
 		

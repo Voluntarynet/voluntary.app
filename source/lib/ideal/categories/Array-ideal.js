@@ -288,7 +288,7 @@ Object.shallowCopyTo({
         return this.forEachCall.apply(this, arguments);
     },
 
-    sortPerform: function (functionName) {
+    sortPerform: function (functionName) { // WARNING: sorts IN-PLACE
         const args = this.slice.call(arguments).slice(1);
         return this.sort(function (x, y) {
             const xRes = x[functionName].apply(x, args);

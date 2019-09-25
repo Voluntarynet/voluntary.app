@@ -22,7 +22,6 @@ ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
     isListening: false,
     eventsDict: null, // should only write from within class & subclasses
     useCapture: false,
-    isDebugging: false,
     methodSuffix: "",
 }).setSlots({
     init: function () {

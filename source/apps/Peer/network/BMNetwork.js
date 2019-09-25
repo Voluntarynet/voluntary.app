@@ -15,7 +15,6 @@ BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
     blacklists: null,
     idsBloomFilter: null,
     shared: null,
-    isDebugging: false,
     isOpenRelay: false,
 }).setSlots({
     init: function () {

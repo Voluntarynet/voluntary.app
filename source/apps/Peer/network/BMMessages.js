@@ -19,7 +19,6 @@ BMStorableNode.newSubclassNamed("BMMessages").newSlots({
     network: null,
     // TODO: deal with timeouts
     globalMinDifficulty: 16,
-    isDebugging: false,
     placedSet: null,
     deletedSet: null,
 }).setSlots({

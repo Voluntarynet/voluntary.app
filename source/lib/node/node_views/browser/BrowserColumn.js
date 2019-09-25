@@ -9,14 +9,15 @@
 NodeView.newSubclassNamed("BrowserColumn").newSlots({
     rows: null,
     allowsCursorNavigation: true,
-    isDebugging: true,
     defaultRowStyles: null,
     rowStyles: null,
     //shouldDarkenUnselected: true,
     dropPlaceHolder: null,
+    hasPausedSync: false,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
+        this.setIsDebugging(true)
         this.setIsRegisteredForKeyboard(true)
         //this.styles().selected().setBorderLeft("1px solid rgba(0, 0, 0, 0.15)")
         //this.styles().unselected().setBorderLeft("1px solid rgba(0, 0, 0, 0.15)")
@@ -384,7 +385,10 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     */
 	
     syncFromNode: function () {
-        
+        if (this.hasPausedSync()) {
+            return this
+        }
+
         if (this.browser() === null) {
             // must have been removed from parentView
             //console.warn("WARNING: skipping BrowserColumn.syncFromNode on node '" + this.node().typeId() + "' because this.browser() is null")
@@ -804,6 +808,9 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             row.setLeft(null)
             row.setRight(null)
             row.setBottom(null)
+
+            row.setMinAndMaxWidth(null)
+            row.setMinAndMaxHeight(null)
         })
 
         this.removeAllSubviews()
@@ -833,8 +840,13 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         //console.log("stackRows")
         orderedRows.forEach((row) => {
             const h = row.clientHeight() 
+
+            row.setMinAndMaxWidth(row.computedWidth())
+            row.setMinAndMaxHeight(row.computedHeight())
+
             row.setPosition("absolute")
             row.setDisplay("block")
+
             //console.log("y:", y + " h:", h)
             row.setTop(y)
             y += h + 0
@@ -1041,34 +1053,56 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             ph.setBackgroundColor("black")
             ph.setMinAndMaxWidth(this.computedWidth())
             ph.setMinAndMaxHeight(64)
+            ph.setTransition("top 0s, left 0.3s")
+            //ph.setZIndex(0)
             this.addSubview(ph)
             this.setDropPlaceHolder(ph)
         }
     },
 
     onDropHoverEnter: function(dragView) {
+        if (!this.acceptsDropHover()) { 
+            return this; 
+        }
+        this.setHasPausedSync(true)
+
         // insert place holder view
         if (!this.dropPlaceHolder()) {
             this.newPlaceHolder()
-            // place in dragview location
+            this.onDropHoverMove(dragView)
         }
     },
 
     onDropHoverMove: function(dragView) {
+        if (!this.acceptsDropHover()) { 
+            return this; 
+        }
+
         // move place holder view
         const ph = this.dropPlaceHolder()
         if (ph) {
             const vp = this.viewPosForWindowPos(dragView.dropPoint())
+            const y = vp.y() - dragView.computedHeight()/2
             ph.setTop(vp.y() - dragView.computedHeight()/2)
-            this.stackRows()
+            this.stackRows() // need to use this so we can animate the row movements
+
         }
+        
     },
 
     onDropHoverExit: function(dragView) {
+        if (!this.acceptsDropHover()) { 
+            return this; 
+        }
+
         this.removeDropPlaceHolder()
     },
 
     onDropHoverComplete: function(dragView) {
+        if (!this.acceptsDropHover()) { 
+            return this; 
+        }
+
         this.removeDropPlaceHolder()
     },
 
@@ -1077,14 +1111,14 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         if (ph) {
             this.removeSubview(ph)
             this.setDropPlaceHolder(null)
-
  
             //setTimeout(() => {
             this.relativePositionRows()
+            this.setHasPausedSync(false)
             this.didReorderRows()
             //}, 500)
+            //this.scheduleSyncFromNode()
         }
-
     },
 
 

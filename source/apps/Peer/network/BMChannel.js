@@ -9,7 +9,6 @@
 
 BMStorableNode.newSubclassNamed("BMChannel").newSlots({
     name: "",
-    isDebugging: false,
 }).setSlots({
     init: function () {
         this.addStoredSlot("name")

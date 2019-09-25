@@ -86,9 +86,6 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     subnodeIndex: null,
     subnodeSortFunc: null,
 
-    // debug
-    isDebugging: false,
-
     // notification notes
     didUpdateNodeNote: null,
     shouldFocusSubnodeNote: null,

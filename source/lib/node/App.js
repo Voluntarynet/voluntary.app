@@ -12,7 +12,6 @@
 
 BMNode.newSubclassNamed("App").newSlots({
     name: "App",
-    isDebugging: true,
     version: [0, 0],
     nodeStoreDidOpenObs: null,
 }).setSlots({
@@ -25,6 +24,7 @@ BMNode.newSubclassNamed("App").newSlots({
         BMNode.init.apply(this)
         this.setNodeStoreDidOpenObs(window.NotificationCenter.shared().newObservation())
         this.nodeStoreDidOpenObs().setName("nodeStoreDidOpen").setObserver(this).setTarget(NodeStore.shared())
+        this.setIsDebugging(true)
     },
 
     title: function() {

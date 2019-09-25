@@ -124,10 +124,12 @@
     overflow: hidden;
     min-height: 100%;
     -webkit-overflow-scrolling: regular; 
-    /*  -webkit-overflow-scrolling: touch seems recognized on Edge, invalid on Chrome */
-     /* mozilla says "-webkit-overflow-scrolling" is only supported on Safari */
-    /*-webkit-overflow-scrolling: touch;*/ /* touch is ok on Edge, invalid on Chrome */
-    /* overflow-scrolling: touch; // neither Edge or Chrome on Windows recognize this property*/
+    /*  
+    -webkit-overflow-scrolling: touch seems recognized on Edge, invalid on Chrome 
+    mozilla says "-webkit-overflow-scrolling" is only supported on Safari 
+    -webkit-overflow-scrolling: touch; touch is ok on Edge, invalid on Chrome 
+    overflow-scrolling: touch; // neither Edge or Chrome on Windows recognize this property
+     */
     -ms-overflow-style: none;
     user-select: none;
 }

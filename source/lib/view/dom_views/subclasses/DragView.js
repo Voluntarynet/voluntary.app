@@ -57,7 +57,6 @@
 
 DomStyledView.newSubclassNamed("DragView").newSlots({
     viewBeingDragged: null,
-
     hoverViews: null,
     dropPoint: null,
 }).setSlots({
@@ -74,25 +73,15 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         this.setWidth("fit-content")
         this.setMinHeight("fit-content")
 
-        //this.setOutline("1px dashed white")
-        //this.setBackgroundColor("black")
-
         return this
     },
-
-    /*
-    setViewBeingDragged: function(aView) {
-        this._viewBeingDragged = aView
-        return this
-    },
-    */
 
     
     syncToViewSize: function() {
         const aView = this.viewBeingDragged()
 
-        const w = aView.computedWidth("width")
-        const h = aView.computedHeight("height")
+        const w = aView.computedWidth()
+        const h = aView.computedHeight()
 
         // match dimensions
         this.setMinAndMaxWidth(w)
@@ -102,9 +91,8 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         this.setLeft(p.x())
         this.setTop(p.y())
 
-        //this.setOutline("1px dashed white")
-        this.setBackgroundColor("black")
-        this.setColor("white")
+        //this.setBackgroundColor("black")
+        //this.setColor("white")
         this.setZIndex(10)
 
         this.setInnerHTML(aView.innerHTML())
@@ -117,6 +105,7 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
 
     begin: function() {
         assert(this.hasPan())
+        
         this.syncToViewSize()
         DocumentBody.shared().addSubview(this)
         this.orderFront()
@@ -172,7 +161,7 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         const np = this._dragStartPos.add(aGesture.diffPos()) 
         this.setLeft(np.x())
         this.setTop(np.y())
-        
+
         this.setDropPoint(aGesture.currentPosition())
         
         const p = aGesture.currentEvent()._cachedPoints.first()
@@ -185,7 +174,7 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         }
         */
 
-        this.hoverOverViews(views)
+        setTimeout(() => { this.hoverOverViews(views) })
     },
 
     hoverOverViews: function(currentHoverViews) {
@@ -219,12 +208,12 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
     // drop hover protocol
 
     hoverEnterView: function(v) {
-        if (v.acceptsDropHover && v.acceptsDropHover(this)) {
-            if (v.onDropHoverEnter) {
-                v.onDropHoverEnter(this)
-                v.setBorder("1px dashed yellow")
-            }
+        //if (v.acceptsDropHover && v.acceptsDropHover(this)) {
+        if (v.onDropHoverEnter) {
+            v.onDropHoverEnter(this)
+            v.setBorder("1px dashed yellow")
         }
+        //}
     },
 
     hoverMoveView: function(v) {

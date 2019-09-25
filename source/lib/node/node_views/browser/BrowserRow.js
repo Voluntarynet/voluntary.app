@@ -38,7 +38,6 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
-        //this.setIsRegisteredForClicks(true)
         this.turnOffUserSelect()
         this.setAcceptsFirstResponder(false)
         
@@ -119,6 +118,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         cv.setTransition("all 0.2s ease, transform 0s, left 0s, right 0s")
         cv.setMinHeightPx(60)
         cv.setZIndex(1) // so it will be above other views like the slide delete button 
+        //this.setZIndex(1)
         this.setContentView(cv)
         this.addSubview(cv)
 
@@ -776,48 +776,6 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
 	    this.requestSelection()
     },
 
-    /*
-    // NOTE: unneeded after unifying click with gesture tap
-
-    onMouseMove: function(event) {
-    },
-
-    onClick: function (event) {
-        if (this.isDeleting()) {
-            return false
-        }
-
-        const modifierNames = Keyboard.shared().modifierNamesForEvent(event)
-
-        if (modifierNames.length != 0) {
-            const methodName = "on" + modifierNames.join("") + "Click"
-            // examples: onShiftClick, onAltMetaClick, etc
-            // console.log("methodName = ", methodName)
-            if (this[methodName]) {
-                this[methodName].apply(this, [event])
-            }
-        } else {
-            this.justTap()
-        }
-
-        //console.log(this.typeId() + ".onClick()")
-        GestureManager.shared().cancelAllBegunGestures() // why do this? Is it because we don't want the column capturing the tap?
-        event.stopPropagation()
-        return false
-    },
-
-    onControlClick: function() {
-    },
-
-    onAltClick: function() {
-        console.log(this.typeId() + ".onAltClick()")
-    },
-
-    onShiftClick: function() {
-        console.log(this.typeId() + ".onShiftClick()")
-    },
-    */
-
     // -------------------------
 
     didChangeIsSelected: function () {
@@ -857,5 +815,31 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         console.log("row display:" + d + " position:" + p)
     },
     */
+
+    dropHoverDidTimeoutSeconds: function() {
+        return 0.3
+    },
+
+    onDropHoverEnter: function(dragView) {
+        const seconds = this.dropHoverDidTimeoutSeconds()
+        this._dropHoverEnterTimeout = setTimeout(
+            () => { this.dropHoverDidTimeout() }, 
+            seconds*1000
+        )
+    },
+
+    dropHoverDidTimeout: function() {
+        console.log(this.typeId() + ".dropHoverDidTimeout()")
+        this.requestSelection()
+    },
+
+    onDropHoverMove: function(dragView) {
+
+    },
+
+    onDropHoverExit: function(dragView) {
+        clearTimeout(this._dropHoverEnterTimeout)
+        this._dropHoverEnterTimeout = null
+    },
 
 })

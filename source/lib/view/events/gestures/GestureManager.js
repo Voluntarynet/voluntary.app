@@ -11,7 +11,6 @@
 
 ideal.Proto.newSubclassNamed("GestureManager").newSlots({
     activeGesture: null,
-    isDebugging: false,
     begunGestures: null,
 }).setSlots({
 

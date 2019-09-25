@@ -12,7 +12,6 @@ BMNode.newSubclassNamed("BMFont").newSlots({
     path: null,
     name: null,
     options: null,
-    isDebugging: false,
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)

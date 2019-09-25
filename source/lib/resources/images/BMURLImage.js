@@ -9,7 +9,6 @@
 BMNode.newSubclassNamed("BMURLImage").newSlots({
     path: "",
     dataURL: "",
-    isDebugging: false,
 }).setSlots({
 
     init: function () {

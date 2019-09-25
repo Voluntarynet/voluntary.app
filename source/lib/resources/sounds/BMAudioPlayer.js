@@ -23,7 +23,6 @@
 DomView.newSubclassNamed("BMAudioPlayer").newSlots({
     path: "",
     sourceElement: null,
-    isDebugging: false,
 }).setSlots({
 
     shared: function() {   

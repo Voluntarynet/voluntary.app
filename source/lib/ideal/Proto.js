@@ -436,6 +436,8 @@ Proto.setSlots({
     */
 });
 
+Proto.newSlot("isDebugging", false);
+
 Proto.newSlot("type", "ideal.Proto");
 
 

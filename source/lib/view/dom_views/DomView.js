@@ -1590,6 +1590,51 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         return aSubview
     },
 
+    moveSubviewToIndex: function(aSubview, i) {
+        assert(i < this.subviews().length)
+        assert(this.subviews().contains(aSubview))
+
+        if (this.subviews()[i] !== aSubview) {
+            this.removeSubview(aSubview)
+            this.atInsertSubview(i, aSubview)
+        }
+
+        /*
+        this.element().removeChild(aSubview.element())
+        DomElement_atInsertElement(this.element(), anIndex, aSubview.element())
+        this.subviews().remove(aSubview)
+        this.subviews().atInsert(anIndex, aSubview)
+        */
+        return this
+    },
+
+    /*
+    max-height: none
+    min-height: ..
+    
+    width: auto
+    height: auto
+
+    */
+
+    updateSubviewsToOrder: function(orderedSubviews) {
+        assert(this.subviews() !== orderedSubviews)
+        assert(this.subviews().length === orderedSubviews.length)
+
+        for (let i = 0; i < this.subviews().length; i ++) {
+            //const v1 = this.subviews()[i]
+            const v2 = orderedSubviews[i]
+            this.moveSubviewToIndex(v2, i)
+            /*
+            if (v1 !=== v2) {
+                this.moveSubviewToIndex(v2, i)
+            }
+            */
+        }
+        
+        return this
+    },
+
     // --- subview utilities ---
 
     sumOfSubviewHeights: function () {
@@ -2930,8 +2975,16 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         return this.element().getBoundingClientRect()
     },
 
-    containsWinPoint: function () {
+    viewportX: function() {
+        return this.boundingClientRect().x
+    },
 
+    viewportY: function() {
+        return this.boundingClientRect().y
+    },
+
+    containsViewportPoint: function () {
+        throw new Error("unimplemented")
     },
 
     isScrolledIntoView: function () {
@@ -3051,8 +3104,8 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         const pv = this.parentView()
         if (pv) {
             this.setPosition("absolute")
-            const parentHeight = pv.calcHeight()
-            const height = this.getComputedPxCssAttribute("height")
+            const parentHeight = pv.calcHeight() // computedHeight?
+            const height = this.computedHeight()
 
             //console.log("parentHeight: ", parentHeight)
             //console.log("height: ", height)

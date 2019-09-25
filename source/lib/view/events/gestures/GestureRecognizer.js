@@ -88,7 +88,6 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
 
     isEmulatingTouch: false, // assumes touch and mouse events aren't mixed
 
-    isDebugging: false,
     isVisualDebugging: false,
     fingerViewDict: null,
 

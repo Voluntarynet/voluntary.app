@@ -102,8 +102,6 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     sdb: null,
     isReadOnly: false,
 
-    isDebugging: false,
-
     nodeStoreDidOpenNote: null,
     lastSyncTime: null,
 }).setSlots({

@@ -11,7 +11,6 @@ BMNode.newSubclassNamed("BMConnection").newSlots({
     connection: null,
     lastConnectionType: null,
     lastIsOnline: 0,
-    isDebugging: false,
 }).setSlots({
     init: function () {
         if (BMConnection._shared) {

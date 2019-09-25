@@ -28,7 +28,7 @@
     overflow-x: hidden;
     overflow-y: auto;
 
-    overflow-scrolling: touch; /* is this needed for MS browser? */
+    /* overflow-scrolling: touch; */ /* is this needed for MS browser? */
     -webkit-overflow-scrolling: touch;
         
     width: calc(100% - 2px);

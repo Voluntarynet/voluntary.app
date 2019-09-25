@@ -13,7 +13,6 @@ BMNode.newSubclassNamed("BMRemotePeer").newSlots({
     status: null,
     remoteInventory: null,
     peerId: null,
-    isDebugging: false,
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)

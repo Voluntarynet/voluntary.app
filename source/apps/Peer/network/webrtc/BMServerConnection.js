@@ -19,7 +19,6 @@ BMNode.newSubclassNamed("BMServerConnection").newSlots({
     error: null,
     //log: null,
     sessionId: null,
-    isDebugging: false,
     statusLog: null,
     pendingMessages: null,
     isOpen: false,

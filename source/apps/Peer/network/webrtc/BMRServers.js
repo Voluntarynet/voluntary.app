@@ -8,7 +8,6 @@
 
 BMStorableNode.newSubclassNamed("BMRServers").newSlots({
     maxConnections: 8,
-    isDebugging: false,
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)

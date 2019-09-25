@@ -59,6 +59,7 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
     viewBeingDragged: null,
 
     hoverViews: null,
+    dropPoint: null,
 }).setSlots({
     init: function () {
         DomStyledView.init.apply(this)
@@ -101,10 +102,12 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         this.setLeft(p.x())
         this.setTop(p.y())
 
-        this.setOutline("1px dashed white")
+        //this.setOutline("1px dashed white")
         this.setBackgroundColor("black")
         this.setColor("white")
-        this.setZIndex(1)
+        this.setZIndex(10)
+
+        this.setInnerHTML(aView.innerHTML())
     },
     
 
@@ -131,6 +134,7 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
 
     end: function() {
         DocumentBody.shared().removeSubview(this)
+        this.exitAllHovers()
         return this
     },
 
@@ -160,6 +164,8 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         this._dragStartPos = this.viewBeingDragged().positionInDocument()
 
         this.addPanShadow()
+
+        this.onPanMove(aGesture)
     },
 
     onPanMove: function(aGesture) {
@@ -167,62 +173,76 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         this.setLeft(np.x())
         this.setTop(np.y())
         
+        this.setDropPoint(aGesture.currentPosition())
+        
         const p = aGesture.currentEvent()._cachedPoints.first()
         const views = DocumentBody.shared().viewsUnderPoint(p)
-        //const names = views.map(v => v.typeId())
-        //const s = names.join(", ")
-        //this.setInnerHTML(s)
 
-        // find a view that wants to accept drag
+        /*
+        if (this.isDebugging()) {
+            const names = views.map(v => v.typeId()).join(", ")
+            this.setInnerHTML(s)
+        }
+        */
+
         this.hoverOverViews(views)
     },
 
     hoverOverViews: function(currentHoverViews) {
+        // find a views that wants to accept drag
+
         const hoverViews = this.hoverViews()
-        const exitedViews = []
-        const enteredViews = []
 
         hoverViews.forEach((v) => {
             if (!currentHoverViews.contains(v)) {
-                // exited 
-                exitedViews.push(v)
-                if(v.onDropHoverExit) {
-                    v.onDropHoverExit(this)
-                    console.log(v.typeId() + " onDropHoverExit")
-                    v.setBorder("none")
-
-                }
+                this.hoverExitView(v)
             }
         })
 
         currentHoverViews.forEach((v) => {
             if (hoverViews.contains(v)) {
-                // move
-                if (v.onDropHoverMove) {
-                    v.onDropHoverMove(this)
-                    console.log(v.typeId() + " onDropHoverMove")
-                }
+                this.hoverMoveView(v)
             } else {
-                // enter
-                if (v.acceptsDropHover && v.acceptsDropHover(this)) {
-                    if (v.onDropHoverEnter) {
-                        v.onDropHoverEnter(this)
-                        console.log(v.typeId() + " onDropHoverEnter")
-                        //this.setInnerHTML(v.typeId() + " onDropHoverEnter")
-                        //enteredViews.push(v)
-                        v.setBorder("1px dashed yellow")
-                    }
-                }
+                this.hoverEnterView(v)
             }
         })
 
-        //currentHoverViews.removeItems(exitedViews)
-        //currentHoverViews.appendItems(enteredViews)
         this.setHoverViews(currentHoverViews)
         return this
     },
 
+    exitAllHovers: function() {
+        this.hoverViews().forEach((v) => { this.hoverExitView(v) })
+        this.setHoverViews([])
+    },
 
+    // drop hover protocol
+
+    hoverEnterView: function(v) {
+        if (v.acceptsDropHover && v.acceptsDropHover(this)) {
+            if (v.onDropHoverEnter) {
+                v.onDropHoverEnter(this)
+                v.setBorder("1px dashed yellow")
+            }
+        }
+    },
+
+    hoverMoveView: function(v) {
+        if (v.onDropHoverMove) {
+            v.onDropHoverMove(this)
+            v.setBorder("1px dashed red")
+        }
+    },
+    
+    hoverExitView: function(v) {
+        if(v.onDropHoverExit) {
+            v.onDropHoverExit(this)
+            v.setBorder("none")
+        }
+    },
+
+
+    // pan
 
     onPanCancelled: function(aGesture) {
         this.onPanComplete(aGesture) // needed?
@@ -230,12 +250,11 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
     },
 
     onPanComplete: function(aGesture) {
-        // visibility
 
-        //this.setTransition(this.transitionStyle())
-        //this.removePanShadow()
-        //this.removePanZoom()
-        //this.end()
+        
+        this.removePanShadow()
+        this.removePanZoom()
+        this.end()
 
         /*
         setTimeout(() => {

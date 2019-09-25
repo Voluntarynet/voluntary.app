@@ -13,6 +13,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     defaultRowStyles: null,
     rowStyles: null,
     //shouldDarkenUnselected: true,
+    dropPlaceHolder: null,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
@@ -994,20 +995,95 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     },
 
     // drop
-
-    acceptsDropHover: function() {
-        return true
+    /*
+    onPanMove: function(aGesture) {
+        const np = this._dragStartPos.add(aGesture.diffPos()) 
+        this.setTop(np.y())
+        this.column().stackRows()
+        this.setTop(np.y())
     },
 
-    onDropHoverEnter: function() {
-
+    onPanCancelled: function(aGesture) {
+        this.onPanComplete(aGesture) // needed?
+        return this
     },
 
-    onDropHoverMove: function() {
+    onPanComplete: function(aGesture) {
+        // visibility
+        this.column().setOverflow("hidden")
+        this.columnGroup().setOverflow("hidden")
+        this.columnGroup().scrollView().setOverflow("hidden")
 
+        this.setTransition(this.transitionStyle())
+        this.removeShadow()
+
+        this.column().stackRows()
+        
+        this.removePanZoom()
+        setTimeout(() => {
+            this.column().relativePositionRows()
+            this.column().didReorderRows()
+            this.setZIndex(null)
+        }, 500)
+
+        //this.removePanGesture() // this will happen automatically
+        this._isReordering = false
+    },
+    */
+
+    acceptsDropHover: function(dragView) {
+        return this.canReorderRows()
     },
 
-    onDropHoverExit: function() {
+    newPlaceHolder: function() {
+        if (!this.dropPlaceHolder()) {
+            const ph = DomView.clone()
+            ph.setBackgroundColor("black")
+            ph.setMinAndMaxWidth(this.computedWidth())
+            ph.setMinAndMaxHeight(64)
+            this.addSubview(ph)
+            this.setDropPlaceHolder(ph)
+        }
+    },
+
+    onDropHoverEnter: function(dragView) {
+        // insert place holder view
+        if (!this.dropPlaceHolder()) {
+            this.newPlaceHolder()
+            // place in dragview location
+        }
+    },
+
+    onDropHoverMove: function(dragView) {
+        // move place holder view
+        const ph = this.dropPlaceHolder()
+        if (ph) {
+            const vp = this.viewPosForWindowPos(dragView.dropPoint())
+            ph.setTop(vp.y() - dragView.computedHeight()/2)
+            this.stackRows()
+        }
+    },
+
+    onDropHoverExit: function(dragView) {
+        this.removeDropPlaceHolder()
+    },
+
+    onDropHoverComplete: function(dragView) {
+        this.removeDropPlaceHolder()
+    },
+
+    removeDropPlaceHolder: function() {
+        const ph = this.dropPlaceHolder()
+        if (ph) {
+            this.removeSubview(ph)
+            this.setDropPlaceHolder(null)
+
+ 
+            //setTimeout(() => {
+            this.relativePositionRows()
+            this.didReorderRows()
+            //}, 500)
+        }
 
     },
 

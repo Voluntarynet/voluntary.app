@@ -6,12 +6,27 @@
     
     A view to globally drag and drop another view or data.
 
-    Drop Protocol:
+    NOTES:
+        - we want this to work the same on mouse and touch devices
+            - always do a *move* when dragging?
 
-        - acceptsDropHover
-        - onDropHoverEnter
-        - onDropHoverMove
-        - onDropHoverExit
+    Drop Protocol - 
+    
+        Messages sent from DragView to viewBeingDragged:
+
+            - onDragBegin
+            - onDragCancelled
+            - onDragComplete // sent before dropHoverComplete
+
+        Messages sent from DragView to views it's dragged over:
+
+            - acceptsDropHover // ignored? 
+            - onDropHoverEnter
+            - onDropHoverMove
+            - onDropHoverExit
+            - acceptsDropHoverComplete // sent on drag release over a view, if returns true, will call onDropHoverComplete
+            - onDropHoverComplete // will get viewBeingDragged from dragView and deal with transfer
+         
 
     Design:
 
@@ -58,7 +73,6 @@
 DomStyledView.newSubclassNamed("DragView").newSlots({
     viewBeingDragged: null,
     hoverViews: null,
-    dropPoint: null,
 }).setSlots({
     init: function () {
         DomStyledView.init.apply(this)
@@ -77,8 +91,9 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
     },
 
     
-    syncToViewSize: function() {
+    syncToView: function() {
         const aView = this.viewBeingDragged()
+        assert(aView.hasParentView())
 
         const w = aView.computedWidth()
         const h = aView.computedHeight()
@@ -106,26 +121,20 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
     begin: function() {
         assert(this.hasPan())
         
-        this.syncToViewSize()
+        this.syncToView()
         DocumentBody.shared().addSubview(this)
         this.orderFront()
 
         // notify viewBeingDragged that we're starting drag, 
         // so parent can maybe hide it and add a empty stand-in?
 
-        if (this.viewBeingDragged().willStartDrag) {
-            this.viewBeingDragged().willStartDrag(this)
-            /// dragComplete, dragCancelled
+        if (this.viewBeingDragged().onDragBegin) {
+            this.viewBeingDragged().onDragBegin(this)
         }
 
         return this
     },
 
-    end: function() {
-        DocumentBody.shared().removeSubview(this)
-        this.exitAllHovers()
-        return this
-    },
 
     initPanWithEvent: function(event) {
         const pan = this.addDefaultPanGesture()
@@ -133,11 +142,10 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         pan.setMinDistToBegin(0)
         pan.onDown(event)
         pan.attemptBegin()
-        this.setTransition("all 0s, transform 0.2s") //, min-height 1s, max-height 1s")
-        this.setTransition("transform 0.2s")
-        setTimeout(() => { 
-            this.addPanZoom()
-        })
+        this.setTransition("all 0s")
+        //setTimeout(() => { 
+        //   this.addPanZoom()
+        //})
         return this
     },
 
@@ -148,12 +156,10 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
     // --- panning ---
 
     onPanBegin: function(aGesture) {
-        this.setTransition("top 0s, left 0s")
-
         this._dragStartPos = this.viewBeingDragged().positionInDocument()
-
+        this.addPanZoom()
         this.addPanShadow()
-
+        this.onPanMove(aGesture)
         this.onPanMove(aGesture)
     },
 
@@ -162,25 +168,63 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         this.setLeft(np.x())
         this.setTop(np.y())
 
-        this.setDropPoint(aGesture.currentPosition())
-        
-        const p = aGesture.currentEvent()._cachedPoints.first()
-        const views = DocumentBody.shared().viewsUnderPoint(p)
+        setTimeout(() => { 
+            this.hoverOverViews()
+        })
 
         /*
-        if (this.isDebugging()) {
-            const names = views.map(v => v.typeId()).join(", ")
-            this.setInnerHTML(s)
-        }
+        this.viewBeingDragged().setMinAndMaxHeight(0)
+        this.viewBeingDragged().setHeight(0)
+        this.viewBeingDragged().setOverflow("hidden")
+        this.viewBeingDragged().setVisibility("hidden")
+        console.log("maxHeight: " + this.viewBeingDragged().maxHeight())
+        console.log("overflow: " + this.viewBeingDragged().overflow())
+        console.log("visibility: " + this.viewBeingDragged().visibility())
         */
-
-        setTimeout(() => { this.hoverOverViews(views) })
     },
 
-    hoverOverViews: function(currentHoverViews) {
-        // find a views that wants to accept drag
+    onPanCancelled: function(aGesture) {
+        if (this.viewBeingDragged().onDragCancelled) {
+            this.viewBeingDragged().onDragCancelled(this)
+        }
 
+        this.end()
+    },
+
+    onPanComplete: function(aGesture) {
+        for(let i = 0; i < this.hoverViews().length; i++ ) {
+            let v = this.hoverViews()[i]
+            if (v.acceptsDropHoverComplete && v.acceptsDropHoverComplete()) {
+
+                v.onDropHoverComplete(this)
+                this.hoverViews().remove(v)
+                
+                break;
+            }
+        }
+
+        
+        if (this.viewBeingDragged().onDragComplete) {
+            this.viewBeingDragged().onDragComplete(this)
+        }
+
+        this.end()
+    },
+
+    // --- hovering behaviors ---
+
+    viewsUnderDefaultPan: function() {
+        const views = DocumentBody.shared().viewsUnderPoint(this.dropPoint())
+        return views
+    },
+
+    dropPoint: function() {
+        return this.defaultPanGesture().currentPosition()
+    },
+
+    hoverOverViews: function() {
         const hoverViews = this.hoverViews()
+        const currentHoverViews = this.viewsUnderDefaultPan()
 
         hoverViews.forEach((v) => {
             if (!currentHoverViews.contains(v)) {
@@ -211,7 +255,10 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         //if (v.acceptsDropHover && v.acceptsDropHover(this)) {
         if (v.onDropHoverEnter) {
             v.onDropHoverEnter(this)
-            v.setBorder("1px dashed yellow")
+
+            if (this.isDebugging()) {
+                v.setBorder("1px dashed yellow")
+            }
         }
         //}
     },
@@ -219,40 +266,46 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
     hoverMoveView: function(v) {
         if (v.onDropHoverMove) {
             v.onDropHoverMove(this)
-            v.setBorder("1px dashed red")
+
+            if (this.isDebugging()) {
+                v.setBorder("1px dashed red")
+            }
         }
     },
     
     hoverExitView: function(v) {
         if(v.onDropHoverExit) {
             v.onDropHoverExit(this)
-            v.setBorder("none")
+
+            if (this.isDebugging()) {
+                v.setBorder("none")
+            }
         }
     },
+    
+    /*
+    hoverCompleteView: function(v) {
+        if(v.onDropHoverComplete) {
+            v.onDropHoverComplete(this)
 
+            if (this.isDebugging()) {
+                v.setBorder("none")
+            }
+        }
+    },
+    */
 
     // pan
 
-    onPanCancelled: function(aGesture) {
-        this.onPanComplete(aGesture) // needed?
+    end: function() {
+
+
+        this.exitAllHovers()
+        this.removePanShadow()
+        this.removePanZoom()
+        DocumentBody.shared().removeSubview(this)
         return this
     },
 
-    onPanComplete: function(aGesture) {
-
-        
-        this.removePanShadow()
-        this.removePanZoom()
-        this.end()
-
-        /*
-        setTimeout(() => {
-            this.column().relativePositionRows()
-            this.column().didReorderRows()
-            this.setZIndex(null)
-        }, 500)
-        */
-
-    },
 
 })

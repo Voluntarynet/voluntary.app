@@ -596,17 +596,6 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     didCompleteSlide: function() {
         this.cleanupSlide()
     },
-
-    /*
-    showTouchDeleteReady: function() {
-    },
-
-    showTouchDeleteButton: function() {
-    },
-
-    hideTouchDeleteButton: function() {
-    },
-    */
     
     hasCloseButton: function() {
         return this.closeButtonView() && this.closeButtonView().target() != null
@@ -631,7 +620,19 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
 
     // tap hold
 
+    setParentView: function(aView) {
+        NodeView.setParentView.apply(this, [aView])
+        //if (!aView && this.type() === "BMActionNodeRowView") {
+        console.log(this.typeId() + ".setParentView(" + Type.description(aView) + ")")
+        //}
+        return this
+    },
+
     acceptsLongPress: function() {
+        if (!this.column()) {
+            console.log("missing parent view on: " + this.typeId())
+        }
+
         return this.column().canReorderRows()
     },
     
@@ -815,6 +816,48 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         console.log("row display:" + d + " position:" + p)
     },
     */
+
+    // --- dragging protocol ---
+
+    onDragBegin: function(aDragView) {
+        assert(this.hasParentView())
+
+        this.setVisibility("hidden")
+        //this.setBorder("1px dashed blue")
+    },
+
+    onDragCancelled: function(aDragView) {
+        assert(this.hasParentView())
+
+
+        this.setVisibility("visible")
+        //this.setBorder(null)
+    },
+
+
+    onDragComplete: function(aDragView) {
+        assert(this.hasParentView())
+
+
+        this.setVisibility("visible")
+        //this.setMinHeight(0)
+        //his.setBorder(null)
+    },
+
+
+    onDragRequestRemove: function() {
+        assert(this.hasParentView())
+        this.removeFromParentView()
+        assert(!this.hasParentView())
+
+        const parentNode = this.node().parentNode()
+        this.node().removeFromParentNode()
+
+        //this.delete()
+        return true
+    },
+
+    // --- dropping protocol ---
 
     dropHoverDidTimeoutSeconds: function() {
         return 0.3

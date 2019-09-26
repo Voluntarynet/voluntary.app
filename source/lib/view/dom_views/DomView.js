@@ -1388,6 +1388,22 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         return this
     },
 
+    maxHeight: function() {
+        return this.getCssAttribute("max-height")
+    },
+
+    minHeight: function() {
+        return this.getCssAttribute("min-height")
+    },
+
+    maxWidth: function() {
+        return this.getCssAttribute("max-width")
+    },
+
+    minWidth: function() {
+        return this.getCssAttribute("min-width")
+    },
+
     setMinHeight: function (newValue) {
         assert(Type.isString(newValue))
         // <length> | <percentage> | auto | max-content | min-content | fit-content | fill-available
@@ -1465,11 +1481,15 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     // --- parentView ---
 
     setParentView: function (aView) {
-        if (this._parentView != aView) {
+        if (this._parentView !== aView) {
             this._parentView = aView
             this.didChangeParentView()
         }
         return this
+    },
+
+    hasParentView: function() {
+        return Type.isNullOrUndefined(this.parentView()) === false
     },
 
     didChangeParentView: function () {
@@ -1501,9 +1521,8 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     },
 
     addSubview: function (aSubview) {
-        if (aSubview == null) {
-            throw new Error("aSubview can't be null")
-        }
+        assert(!Type.isNullOrUndefined(aSubview)) 
+        assert(!Type.isNullOrUndefined(aSubview.element())) 
 
         if (this.hasSubview(aSubview)) {
             throw new Error(this.type() + ".addSubview(" + aSubview.type() + ") attempt to add duplicate subview ")
@@ -1512,10 +1531,6 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         this.willAddSubview(aSubview)
         this.subviews().append(aSubview)
 
-        if (aSubview.element() == null) {
-            throw new Error("null aSubview.element()")
-        }
-
         this.element().appendChild(aSubview.element());
         aSubview.setParentView(this)
         this.didChangeSubviewList()
@@ -1523,7 +1538,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     },
 
     addSubviews: function (someSubviews) {
-        someSubviews.forEach(subview => this.addSubview(subview))
+        someSubviews.forEach(sv => this.addSubview(sv))
         return this
     },
 
@@ -1539,11 +1554,11 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         this.removeSubview(sv2)
 
         if (i1 < i2) {
-            this.atInsertSubview(i1, sv2)
+            this.atInsertSubview(i1, sv2) // i1 is smaller, so do it first
             this.atInsertSubview(i2, sv1)
         } else {
+            this.atInsertSubview(i2, sv1) // i2 is smaller, so do it first          
             this.atInsertSubview(i1, sv2)
-            this.atInsertSubview(i2, sv1)           
         }
 
         assert(this.indexOfSubview(sv1) === i2)
@@ -1584,7 +1599,11 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
     atInsertSubview: function (anIndex, aSubview) {
         this.subviews().atInsert(anIndex, aSubview)
+        assert(this.subviews()[anIndex] === aSubview)
+
         DomElement_atInsertElement(this.element(), anIndex, aSubview.element())
+        assert(this.element().childNodes[anIndex] === aSubview.element())
+
         aSubview.setParentView(this) // TODO: unify with addSubview
         this.didChangeSubviewList() // TODO:  unify with addSubview
         return aSubview
@@ -1797,7 +1816,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         if (this.hasChildElement(aSubview.element())) {
             this.element().removeChild(aSubview.element());
         } else {
-            console.warn("WARNING: " + this.type() + " removeSubview " + aSubview.type() + " missing element")
+            console.warn("WARNING: " + this.type() + " removeSubview " + aSubview.type() + " parent element is missing this child element")
         }
 
         if (this.hasChildElement(aSubview.element())) {

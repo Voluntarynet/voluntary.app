@@ -152,7 +152,7 @@ DomStyledView.newSubclassNamed("NodeView").newSlots({
         // override this method if the view manages it's own subviews
 
         if (!this.node()) { 
-            this.removeAllManagedSubviews();
+            this.removeAllSubviews();
             return
         }
         
@@ -180,8 +180,8 @@ DomStyledView.newSubclassNamed("NodeView").newSlots({
         
         if (!newSubviews.isEqual(this.managedSubviews())) {
             //this.removeAllSubviews() 
-            this.removeAllManagedSubviews()
-            this.addManagedSubviews(newSubviews)
+            this.removeAllSubviews()
+            this.addSubviews(newSubviews)
             this.updateSubnodeToSubviewMap()
             // since node's don't hold a view reference, 
             // subviews no longer referenced in subviews list will be collected
@@ -189,16 +189,6 @@ DomStyledView.newSubclassNamed("NodeView").newSlots({
 
         this.managedSubviews().forEach(subview => subview.syncFromNode())
 
-        return this
-    },
-
-    addManagedSubviews: function(newSubviews) {
-        newSubviews.forEach(subview => this.addSubview(subview))
-        return this
-    },
-
-    removeAllManagedSubviews: function() {
-        this.managedSubviews().copy().forEach((aView) => { this.removeSubview(aView) })
         return this
     },
     

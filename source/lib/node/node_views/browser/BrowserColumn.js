@@ -24,7 +24,6 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         this.applyStyles()
         //this.setIsRegisteredForClicks(true) // use tap gesture instead
         this.setAcceptsFirstResponder(true)
-        this._rows = []
 
         this.setUserSelect("none")
         this.addGestureRecognizer(PinchGestureRecognizer.clone()) // for pinch open to add row
@@ -66,57 +65,37 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     
     // subviews
 
+    /*
     hasRow: function(aRow) {
-        return this._rows.contains(aRow)
+        return this.hasSubview(aRow)
     },
+    */
 
     willAddSubview: function (aSubview) {
         // for subclasses to over-ride
-        if(!this.hasRow(aSubview)) {
-            //console.warn("")
-            //this._rows.append(aSubview)
-        }
+        //if(!this.hasRow(aSubview)) {
+        //console.warn("")
+        //}
     },
 
     willRemoveSubview: function (aSubview) {
         // for subclasses to over-ride
-        if(!this.hasRow(aSubview)) {
-            //console.warn("")
-        }
-    },
-
-    // --- managedSubviews ---
-
-    managedSubviews: function() {
-        return this.rows()
-    },
-
-    removeAllManagedSubviews: function() {
-        this._rows = []
-        NodeView.removeAllManagedSubviews.apply(this)
-        return this
-    },
-
-    addManagedSubviews: function(subviews) {
-        NodeView.addManagedSubviews.apply(this, [subviews])
-        //this.rows().appendItems(subviews)
-        return this
+        //if(!this.hasRow(aSubview)) {
+        //console.warn("")
+        //}
     },
 
     // --- rows ---
     
     rows: function() {
         return this.subviews()
-        //return this._rows
     },
 
     addRow: function(v) {
-        //this._rows.append(v)
         return this.addSubview(v)
     },
 
     removeRow: function(v) {
-        //this._rows.remove(v)
         return this.removeSubview(v)
     },
 
@@ -839,10 +818,13 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         let y = 0
         //console.log("stackRows")
         orderedRows.forEach((row) => {
-            const h = row.clientHeight() 
+            let h = row.computedHeight() //row.clientHeight() 
+            if (row.visibility() === "hidden") {
+                h = 0
+            }
 
             row.setMinAndMaxWidth(row.computedWidth())
-            row.setMinAndMaxHeight(row.computedHeight())
+            row.setMinAndMaxHeight(h)
 
             row.setPosition("absolute")
             row.setDisplay("block")
@@ -1049,7 +1031,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
 
     newPlaceHolder: function() {
         if (!this.dropPlaceHolder()) {
-            const ph = DomView.clone()
+            const ph = DomView.clone().setDivClassName("BrowserRowPlaceHolder")
             ph.setBackgroundColor("black")
             ph.setMinAndMaxWidth(this.computedWidth())
             ph.setMinAndMaxHeight(64)
@@ -1098,13 +1080,61 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         this.removeDropPlaceHolder()
     },
 
+    acceptsDropHoverComplete: function(aDragView) {
+        return true;
+    },
+
     onDropHoverComplete: function(dragView) {
         if (!this.acceptsDropHover()) { 
             return this; 
         }
+        const droppedView = dragView.viewBeingDragged()
+        assert(droppedView.hasParentView())
 
+        this.relativePositionRows()
+        assert(droppedView.hasParentView())
+
+        //const insertIndex = this.rows().indexOf(this.dropPlaceHolder())
+
+        const isFromSameView = this.rows().contains(droppedView)
+
+        if (isFromSameView) {
+            assert(droppedView.hasParentView())
+            this.swapSubviews(droppedView, this.dropPlaceHolder())
+            assert(droppedView.hasParentView())
+        } else {
+            if(droppedView.onDragRequestRemove && droppedView.onDragRequestRemove()) {
+                assert(droppedView.hasParentView() === false)
+                //this.addSubnode(droppedView.node()) // this happens automatically with didReorderSubviews?
+                this.addSubview(droppedView)
+                assert(droppedView.hasParentView())
+                this.swapSubviews(droppedView, this.dropPlaceHolder())
+            }
+        }
+
+        console.log("droppedView.typeId(): " + droppedView.typeId())
         this.removeDropPlaceHolder()
+        assert(droppedView.hasParentView())
+
     },
+
+    /*
+    rowIndexForViewportPoint: function(aPoint) {
+        if (this.rows().length === 0) {
+            return 0
+        }
+
+        const row = this.rows().detect((row) => {
+            return row.frameInDocument().containsPoint(aPoint)
+        })
+
+        if (row) {
+            return this.rows().indexOf(row)
+        }
+
+        return this.rows().length
+    },
+    */
 
     removeDropPlaceHolder: function() {
         const ph = this.dropPlaceHolder()

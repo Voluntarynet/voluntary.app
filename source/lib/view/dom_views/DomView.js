@@ -2723,10 +2723,11 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
             range.moveToElementText(this.element());
             range.select();
         } else if (window.getSelection) {
+            const selection = window.getSelection(); 
             const range = document.createRange();
-            range.selectNode(this.element());
-            window.getSelection().removeAllRanges();
-            window.getSelection().addRange(range);
+            range.selectNodeContents(this.element());
+            selection.removeAllRanges();
+            selection.addRange(range);  
         }
     },
 

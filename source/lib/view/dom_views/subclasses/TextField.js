@@ -108,10 +108,16 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
     onDoubleTapComplete: function(aGesture) {
         // make content editable and select text
         //console.log(this.typeId() + ".onDoubleTapComplete()")
+        if (this.contentEditable()) {
+            //this.setBorder("1px dashed red")
+            return this
+        }
         this.setContentEditable(true)
         this.focus()
         this.selectAll()
-        this.focus()
+        //this.focus()
+        //this.setBorder("1px dashed white")
+        return this
     },
 
     onBlur: function() {
@@ -119,6 +125,8 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
         //console.log(this.typeId() + ".onBlur()")
         if (this.usesDoubleTapToEdit()) {
             this.setContentEditable(false)
+            this.setBorder("none")
+            this.turnOffUserSelect()
         }
     },
 

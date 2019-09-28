@@ -2,7 +2,9 @@
 
 TODO:
 
-- eliminate view NodeView "managedSubviews"?
+- looks like bugs in drag are due to right column being removed while it still owns the dragView...
+    - solution?: have BrowserView support cachedColumns, have column add and remove itself from cache?
+     - Column.cacheInBrowser()
 
 - replace Win/Window point APIs with Viewport? Move all to Document points?
     - have EventPoint use document(?) coordinates and implement viewPortPoint, documentPoint, pointInView(aView)

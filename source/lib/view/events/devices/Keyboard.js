@@ -3,17 +3,17 @@
 /*
     Keyboard
 
-    Global shared instance that tracks current keyboard state in window coordinates.
+    Global shared instance that tracks current keyboard state.
     Registers for capture key events on document.body.
 
-    MacOS/iOS notes:
+    MacOS/iOS note:
 
-    These Mac keys use different names in JS events:
-    CommandLeft -> MetaLeft
-    CommandRight -> MetaRight
-    Option/Alt -> Alternate
-    Control -> Control
-    Function -> [not seen by JS either as key event or modifier]
+        These Mac keys use different names in JS events:
+        CommandLeft -> MetaLeft
+        CommandRight -> MetaRight
+        Option/Alt -> Alternate
+        Control -> Control
+        Function -> [not seen by JS either as key event or modifier]
 
 */
 

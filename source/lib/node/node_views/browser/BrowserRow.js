@@ -620,6 +620,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
 
     // tap hold
 
+    /*
     setParentView: function(aView) {
         NodeView.setParentView.apply(this, [aView])
         //if (!aView && this.type() === "BMActionNodeRowView") {
@@ -627,6 +628,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         //}
         return this
     },
+    */
 
     acceptsLongPress: function() {
         if (!this.column()) {
@@ -685,6 +687,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         return this._isReordering
     },
 
+    /*
     onPanBegin: function(aGesture) {
         this.setTransition("top 0s")
         
@@ -736,7 +739,8 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         //this.removePanGesture() // this will happen automatically
         this._isReordering = false
     },
-
+    */
+   
     // orient testing
 
     /*
@@ -817,47 +821,39 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     },
     */
 
-    // --- dragging protocol ---
+    // --- dragging source protocol ---
 
     onDragBegin: function(aDragView) {
         assert(this.hasParentView())
-
         this.setVisibility("hidden")
         //this.setBorder("1px dashed blue")
     },
 
     onDragCancelled: function(aDragView) {
-        assert(this.hasParentView())
-
-
+        assert(this.hasParentView()) //
         this.setVisibility("visible")
         //this.setBorder(null)
     },
 
-
     onDragComplete: function(aDragView) {
         assert(this.hasParentView())
-
-
         this.setVisibility("visible")
-        //this.setMinHeight(0)
-        //his.setBorder(null)
     },
 
-
     onDragRequestRemove: function() {
-        assert(this.hasParentView())
+        assert(this.hasParentView()) //
         this.removeFromParentView()
-        assert(!this.hasParentView())
+        assert(!this.hasParentView()) //
 
         const parentNode = this.node().parentNode()
         this.node().removeFromParentNode()
+        assert(!this.node().parentNode())
 
-        //this.delete()
+        //this.delete() // we don't want to delete it, we want to move it
         return true
     },
 
-    // --- dropping protocol ---
+    // --- dropping destination protocol implemented to handle selecting/expanding row ---
 
     dropHoverDidTimeoutSeconds: function() {
         return 0.3
@@ -867,17 +863,15 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         const seconds = this.dropHoverDidTimeoutSeconds()
         this._dropHoverEnterTimeout = setTimeout(
             () => { this.dropHoverDidTimeout() }, 
-            seconds*1000
+            seconds * 1000
         )
     },
 
     dropHoverDidTimeout: function() {
-        console.log(this.typeId() + ".dropHoverDidTimeout()")
         this.requestSelection()
     },
 
     onDropHoverMove: function(dragView) {
-
     },
 
     onDropHoverExit: function(dragView) {

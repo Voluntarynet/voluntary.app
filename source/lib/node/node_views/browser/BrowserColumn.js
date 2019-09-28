@@ -154,7 +154,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
                 if (row.unselect) {
                     row.unselect()
                 } else {
-                    console.warn(this.type() + " found a row of type " + row.type() + " that doesn't respond to unselect")
+                    console.warn("=WARNING= " + this.typeId() + ".unselectRowsBesides() row " + row.typeId() + " missing unselect method")
                 }
             }
         })
@@ -202,7 +202,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     selectedRows: function() {
         return this.rows().filter((row) => { 
             if (!row.isSelected) {
-                console.warn("===== missing isSelected method on row of type: ", row.type())
+                console.warn("=WARNING= " + this.typeId() + ".selectedRows() row " + row.typeId() + " missing isSelected method")
                 return false
             }
             return row.isSelected(); 
@@ -1026,7 +1026,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     */
 
     acceptsDropHover: function(dragView) {
-        return this.canReorderRows()
+        return this.node() && this.canReorderRows()
     },
 
     newPlaceHolder: function() {
@@ -1036,21 +1036,23 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             ph.setMinAndMaxWidth(this.computedWidth())
             ph.setMinAndMaxHeight(64)
             ph.setTransition("top 0s, left 0.3s")
-            //ph.setZIndex(0)
             this.addSubview(ph)
             this.setDropPlaceHolder(ph)
         }
+        return this.dropPlaceHolder()
     },
 
     onDropHoverEnter: function(dragView) {
         if (!this.acceptsDropHover()) { 
             return this; 
         }
+
         this.setHasPausedSync(true)
 
         // insert place holder view
         if (!this.dropPlaceHolder()) {
             this.newPlaceHolder()
+            this.dropPlaceHolder().setMinAndMaxHeight(dragView.computedHeight())
             this.onDropHoverMove(dragView)
         }
     },
@@ -1067,9 +1069,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             const y = vp.y() - dragView.computedHeight()/2
             ph.setTop(vp.y() - dragView.computedHeight()/2)
             this.stackRows() // need to use this so we can animate the row movements
-
         }
-        
     },
 
     onDropHoverExit: function(dragView) {
@@ -1088,35 +1088,47 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         if (!this.acceptsDropHover()) { 
             return this; 
         }
-        const droppedView = dragView.viewBeingDragged()
-        assert(droppedView.hasParentView())
+
+        const dv = dragView.viewBeingDragged()
 
         this.relativePositionRows()
-        assert(droppedView.hasParentView())
 
-        //const insertIndex = this.rows().indexOf(this.dropPlaceHolder())
-
-        const isFromSameView = this.rows().contains(droppedView)
+        const isFromSameView = this.rows().contains(dv)
 
         if (isFromSameView) {
-            assert(droppedView.hasParentView())
-            this.swapSubviews(droppedView, this.dropPlaceHolder())
-            assert(droppedView.hasParentView())
+            assert(dv.hasParentView()) //
+            this.swapSubviews(dv, this.dropPlaceHolder())
+            assert(dv.hasParentView()) //
         } else {
-            if(droppedView.onDragRequestRemove && droppedView.onDragRequestRemove()) {
-                assert(droppedView.hasParentView() === false)
-                //this.addSubnode(droppedView.node()) // this happens automatically with didReorderSubviews?
-                this.addSubview(droppedView)
-                assert(droppedView.hasParentView())
-                this.swapSubviews(droppedView, this.dropPlaceHolder())
+            if(dv.onDragRequestRemove && dv.onDragRequestRemove()) {
+                assert(dv.hasParentView() === false)
+                //this.addSubnode(dv.node()) // this happens automatically with didReorderSubviews?
+                this.addSubview(dv)
+                assert(dv.hasParentView()) //
+                this.swapSubviews(dv, this.dropPlaceHolder())
             }
         }
 
-        console.log("droppedView.typeId(): " + droppedView.typeId())
         this.removeDropPlaceHolder()
-        assert(droppedView.hasParentView())
-
+        assert(dv.hasParentView())
     },
+
+    removeDropPlaceHolder: function() {
+        const ph = this.dropPlaceHolder()
+        if (ph) {
+            console.log("removeDropPlaceHolder")
+            this.removeSubview(ph)
+            this.setDropPlaceHolder(null)
+ 
+            //setTimeout(() => {
+            this.relativePositionRows()
+            this.setHasPausedSync(false)
+            this.didReorderRows()
+            //}, 500)
+            //this.scheduleSyncFromNode()
+        }
+    },
+
 
     /*
     rowIndexForViewportPoint: function(aPoint) {
@@ -1135,22 +1147,6 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         return this.rows().length
     },
     */
-
-    removeDropPlaceHolder: function() {
-        const ph = this.dropPlaceHolder()
-        if (ph) {
-            this.removeSubview(ph)
-            this.setDropPlaceHolder(null)
- 
-            //setTimeout(() => {
-            this.relativePositionRows()
-            this.setHasPausedSync(false)
-            this.didReorderRows()
-            //}, 500)
-            //this.scheduleSyncFromNode()
-        }
-    },
-
 
 })
 

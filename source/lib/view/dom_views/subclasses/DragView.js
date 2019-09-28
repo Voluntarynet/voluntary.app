@@ -196,16 +196,15 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
             let v = this.hoverViews()[i]
             if (v.acceptsDropHoverComplete && v.acceptsDropHoverComplete()) {
 
+                if (this.viewBeingDragged().onDragComplete) {
+                    this.viewBeingDragged().onDragComplete(this)
+                }
+
                 v.onDropHoverComplete(this)
                 this.hoverViews().remove(v)
-                
+
                 break;
             }
-        }
-
-        
-        if (this.viewBeingDragged().onDragComplete) {
-            this.viewBeingDragged().onDragComplete(this)
         }
 
         this.end()
@@ -298,9 +297,8 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
     // pan
 
     end: function() {
-
-
         this.exitAllHovers()
+        // animate move to end location before removing?
         this.removePanShadow()
         this.removePanZoom()
         DocumentBody.shared().removeSubview(this)

@@ -12,7 +12,8 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
     defaultHeader: null,
     defaultColumnStyles: null,
     defaultRowStyles: null,
-    watchForNodeUpdates: false
+    watchForNodeUpdates: false,
+    //columnGroupCache: null,
 }).setSlots({
 
     bgColors: function () {
@@ -36,7 +37,8 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
             [32 / 255, 32 / 255, 32 / 255],
             [26 / 255, 26 / 255, 26 / 255],
             [16 / 255, 16 / 255, 16 / 255],
-        ]
+            //[0 / 255, 0 / 255, 0 / 255],
+        ] //.reversed()
     },
 
     bgColorsWarm: function () {
@@ -77,6 +79,7 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         NodeView.init.apply(this)
 
         this.setupDefaultStyles()
+        //this.setColumnGroupCache({})
 
         this.setIsRegisteredForDocumentResize(true)
 
@@ -86,7 +89,7 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
 
         this.setBackgroundColor(this.bgColorForIndex(Math.round(this.bgColors().length / 2)))
         this.setColumnGroupCount(1)
-        //.selectFirstColumn()
+        //this.selectFirstColumn()
 
         this.addGestureRecognizer(LeftEdgePanGestureRecognizer.clone()) 
         this.addGestureRecognizer(RightEdgePanGestureRecognizer.clone()) 
@@ -437,6 +440,8 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         const columnGroups = this.columnGroups()
         columnGroups.first().setNode(this.node())
 
+        //console.log(this.type() + ".syncFromNode()")
+
         columnGroups.forEach((cg) => {
             cg.syncFromNode()
         })
@@ -467,7 +472,7 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
     // --- fitting columns in browser ---------------------------------------------
 
     fitColumns: function () {
-        //console.log(this.typeId() + " fitColumns")
+        //console.log(this.typeId() + ".fitColumns()")
         this.updateSingleColumnMode()
 
         const lastActiveCg = this.lastActiveColumnGroup()
@@ -492,11 +497,7 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         // TODO: merge with this code in multi column fit
         const lastActiveCg = this.lastActiveColumnGroup()
         const fillWidth = (this.browserWidth() - this.left()) - this.widthOfUncollapsedColumnsSansLastActive()
-        /*
-		if (lastActiveCg.targetWidth() *2 < fillWidth && lastActiveCg.targetWidth() < 500) {
-			fillWidth = lastActiveCg.targetWidth()
-		}
-		*/
+
 
         if (lastActiveCg) {
             lastActiveCg.setFlexGrow(1)
@@ -562,13 +563,6 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         return d
     },
 
-    /*
-	removeNullColumns: function() {
-		this.columnGroups().reverse().map((cg) => {
-			//if (cg.node() == null) { this.columnGroups().pop() }
-		})
-	},
-	*/
 
     fitForMultiColumn: function () {
         this.updateBackground()

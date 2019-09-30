@@ -142,7 +142,7 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         pan.setMinDistToBegin(0)
         pan.onDown(event)
         pan.attemptBegin()
-        this.setTransition("all 0s")
+        this.setTransition("all 0s, transform 0.1s, box-shadow 0.1s")
         //setTimeout(() => { 
         //   this.addPanZoom()
         //})
@@ -157,8 +157,11 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
 
     onPanBegin: function(aGesture) {
         this._dragStartPos = this.viewBeingDragged().positionInDocument()
-        this.addPanZoom()
-        this.addPanShadow()
+        setTimeout(() => {
+            this.addPanZoom()
+            this.addPanShadow()
+        })
+
         this.onPanMove(aGesture)
         //this.onPanMove(aGesture) // without this, placeholder is put at bottom of source column
     },
@@ -168,19 +171,12 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         this.setLeft(np.x())
         this.setTop(np.y())
 
+        //this.hoverOverViews()
+        
         setTimeout(() => { 
             this.hoverOverViews()
         })
-
-        /*
-        this.viewBeingDragged().setMinAndMaxHeight(0)
-        this.viewBeingDragged().setHeight(0)
-        this.viewBeingDragged().setOverflow("hidden")
-        this.viewBeingDragged().setVisibility("hidden")
-        console.log("maxHeight: " + this.viewBeingDragged().maxHeight())
-        console.log("overflow: " + this.viewBeingDragged().overflow())
-        console.log("visibility: " + this.viewBeingDragged().visibility())
-        */
+        
     },
 
     onPanCancelled: function(aGesture) {

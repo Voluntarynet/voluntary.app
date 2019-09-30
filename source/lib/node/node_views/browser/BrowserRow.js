@@ -111,14 +111,17 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
 
     setupRowContentView: function() {
         const cv = DomView.clone().setDivClassName("BrowserRowContentView")
-        cv.setWidthPercentage(100).setHeightPercentage(100) 
-        //cv.setWidthPercentage(100).setHeight("auto") 
+        cv.setWidthPercentage(100)
+        cv.setHeightPercentage(100) 
         cv.setPosition("relative")
         cv.setFloat("left")
+
+        //cv.autoFitParentWidth().autoFitParentHeight() // can't do this since we need to float left for sliding
+
         cv.setTransition("all 0.2s ease, transform 0s, left 0s, right 0s")
         cv.setMinHeightPx(60)
-        cv.setZIndex(1) // so it will be above other views like the slide delete button 
-        //this.setZIndex(1)
+        cv.setZIndex(2) // so it will be above other views like the slide delete button 
+        this.setZIndex(1)
         this.setContentView(cv)
         this.addSubview(cv)
 
@@ -823,25 +826,38 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
 
     // --- dragging source protocol ---
 
+    hideForDrag: function() {
+        //this.setDisplay("none")
+        this.setVisibility("hidden")
+        console.log(this.typeId() + " '" + this.node().title() + "'.hideForDrag() visibility: ", this.visibility())
+        //this.setBorder("1px dashed blue")
+    },
+
+    unhideForDrag: function() {
+        //this.setDisplay("block")
+        this.setVisibility("visible")
+        console.log(this.typeId() + " '" + this.node().title() + "'.unhideForDrag() visibility: ", this.visibility())
+        //this.setBorder(null)
+    },
+
     onDragBegin: function(aDragView) {
         assert(this.hasParentView())
-        this.setVisibility("hidden")
+        this.hideForDrag()
         this.columnGroup().cache()
-        //this.setBorder("1px dashed blue")
     },
 
     onDragCancelled: function(aDragView) {
         assert(this.hasParentView()) //
-        this.setVisibility("visible")
+        this.unhideForDrag()
+
         setTimeout(() => {
             this.columnGroup().uncache()
         })
-        //this.setBorder(null)
     },
 
     onDragComplete: function(aDragView) {
         //assert(this.hasParentView())
-        this.setVisibility("visible")
+        this.unhideForDrag()
         setTimeout(() => {
             this.columnGroup().uncache()
         })

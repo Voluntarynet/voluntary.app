@@ -5,13 +5,17 @@ TODO:
 - replace Win/Window point APIs with Viewport? Move all to Document points?
     - have EventPoint use document(?) coordinates and implement asViewPortPoint, asDocumentPoint, asPointInView(aView)
 
+Bug:
+    - long-click drag is causing text selections
+        - google it - how to override click drag? stop propogation of click?
+        - keep selection of until tap?
 
-BrowserRow hover    
+BrowserRow hover
+    BUG: sometimes rows don't hide while being dragged
     - nice animations
-        - set placeholder to correct hieght immediately when created for drag start
+        - set placeholder to correct height immediately when created for drag start
         - shrink placeholder to zero if drag is over middle third of a row (that we can drop on?)
         - animate close of source placeholder after drop
-        - animate dragView moving into destination placeholder
         - animate return of dragView to original column on drop cancel?
     
     - how to deal with multiple hover targets that accept drag

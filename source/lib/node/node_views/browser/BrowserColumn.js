@@ -816,22 +816,23 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         const orderedRows = this.rows().copy().sortPerform("top")
 
         let y = 0
-        //console.log("stackRows")
+        console.log("stackRows")
         orderedRows.forEach((row) => {
-            let h = row.computedHeight() //row.clientHeight() 
-            if (row.visibility() === "hidden") {
-                h = 0
+            let h = 0
+
+            if (row.visibility() === "hidden" || row.display() === "none") {
+                row.setDisplay("none")
+            } else {
+                h = row.computedHeight() //row.clientHeight() 
+                row.setDisplay("block")
+                row.setPosition("absolute")
+                row.setMinAndMaxWidth(row.computedWidth())
+                row.setMinAndMaxHeight(h)
             }
-
-            row.setMinAndMaxWidth(row.computedWidth())
-            row.setMinAndMaxHeight(h)
-
-            row.setPosition("absolute")
-            row.setDisplay("block")
 
             //console.log("y:", y + " h:", h)
             row.setTop(y)
-            y += h + 0
+            y += h
         })
 
         return this
@@ -1120,16 +1121,13 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     removeDropPlaceHolder: function() {
         const ph = this.dropPlaceHolder()
         if (ph) {
-            console.log("removeDropPlaceHolder")
+            //console.log("removeDropPlaceHolder")
             this.removeSubview(ph)
             this.setDropPlaceHolder(null)
  
-            //setTimeout(() => {
             this.relativePositionRows()
             this.setHasPausedSync(false)
             this.didReorderRows()
-            //}, 500)
-            //this.scheduleSyncFromNode()
         }
     },
 

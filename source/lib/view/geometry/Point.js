@@ -219,4 +219,15 @@ ideal.Proto.newSubclassNamed("Point").newSlots({
         return this.asCssStringWithUnitSuffix("scale3d", "")
     },
 
+    // size - TODO: move to Size type?
+
+    width: function() {
+        return this.x()
+    },
+
+    height: function() {
+        return this.y()
+    },
+
+
 })

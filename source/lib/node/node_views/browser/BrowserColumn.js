@@ -1084,6 +1084,10 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         return true;
     },
 
+    dropCompleteDocumentFrame: function() {
+        return this.dropPlaceHolder().frameInDocument()
+    },
+
     onDropHoverComplete: function(dragView) {
         if (!this.acceptsDropHover()) { 
             return this; 

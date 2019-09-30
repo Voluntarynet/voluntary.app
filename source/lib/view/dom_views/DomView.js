@@ -1684,7 +1684,37 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         return this
     },
 
-    // --- fade animations ---
+    // --- animations ---
+
+    animateToDocumentFrame: function(destinationFrame, seconds, completionCallback) {
+        this.setTransition("all " + seconds + "s")
+        assert(this.position() === "absolute")
+        setTimeout(() => {
+            this.setTop(destinationFrame.origin().y())
+            this.setLeft(destinationFrame.origin().x())
+            this.setMinAndMaxWidth(destinationFrame.size().width())
+            this.setMinAndMaxHeight(destinationFrame.size().height())
+        }, 0)
+
+        setTimeout(() => {
+            completionCallback()
+        }, seconds * 1000)
+        return this
+    },
+
+    animateToDocumentPoint: function(destinationPoint, seconds, completionCallback) {
+        this.setTransition("all " + seconds + "s")
+        assert(this.position() === "absolute")
+        setTimeout(() => {
+            this.setTop(destinationPoint.y())
+            this.setLeft(destinationPoint.x())
+        }, 0)
+
+        setTimeout(() => {
+            completionCallback()
+        }, seconds * 1000)
+        return this
+    },
 
     hideAndFadeIn: function () {
         this.setOpacity(0)

@@ -2,25 +2,29 @@
 
 TODO:
 
-- onDropHover, only select a BrowserRow that currently has children
-
-- looks like bugs in drag are due to right column being removed while it still owns the dragView...
-    - solution?: have BrowserView support cachedColumns, have column add and remove itself from cache?
-     - Column.cacheInBrowser()
-
 - replace Win/Window point APIs with Viewport? Move all to Document points?
-    - have EventPoint use document(?) coordinates and implement viewPortPoint, documentPoint, pointInView(aView)
+    - have EventPoint use document(?) coordinates and implement asViewPortPoint, asDocumentPoint, asPointInView(aView)
 
 
-BrowserRow hover
-    - dropping between columns?
-    
+BrowserRow hover    
     - nice animations
+        - set placeholder to correct hieght immediately when created for drag start
+        - shrink placeholder to zero if drag is over middle third of a row (that we can drop on?)
+        - animate close of source placeholder after drop
+        - animate dragView moving into destination placeholder
+        - animate return of dragView to original column on drop cancel?
+    
     - how to deal with multiple hover targets that accept drag
-
     - detect if drag view is on far left/right of browser columns with more columns and back/forward if held there
     
     
+Browser
+    - support multi-touch, shift-click, and shift-click-drag multi-selection
+        - prevent selection nav when doing multi-selection
+    - apply long press to whole multi-selection
+        - special dragView for multi-selection
+    - advanced: support pinch on multi-selection to auto create menu and move selection into it
+
 
 
 Inspector

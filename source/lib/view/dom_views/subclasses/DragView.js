@@ -160,7 +160,7 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         this.addPanZoom()
         this.addPanShadow()
         this.onPanMove(aGesture)
-        this.onPanMove(aGesture)
+        //this.onPanMove(aGesture) // without this, placeholder is put at bottom of source column
     },
 
     onPanMove: function(aGesture) {
@@ -192,22 +192,32 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
     },
 
     onPanComplete: function(aGesture) {
+        let didDrop = false
         for(let i = 0; i < this.hoverViews().length; i++ ) {
             let v = this.hoverViews()[i]
             if (v.acceptsDropHoverComplete && v.acceptsDropHoverComplete()) {
 
-                if (this.viewBeingDragged().onDragComplete) {
-                    this.viewBeingDragged().onDragComplete(this)
+                const completionCallback = () => {
+                    this.hoverCompleteView(v)
+                    this.end()
                 }
+                const period = 0.2 // seconds
+                const destFrame = v.dropCompleteDocumentFrame()
 
-                v.onDropHoverComplete(this)
+                //const destPoint = v.dropPlaceHolder().positionInDocument()
+                this.animateToDocumentFrame(destFrame, period, completionCallback)
+                this.removePanShadow()
+                this.removePanZoom()
+                //this.setIsPaused(true)
                 this.hoverViews().remove(v)
-
+                didDrop = true
                 break;
             }
         }
 
-        this.end()
+        if (!didDrop) {
+            this.end()
+        }
     },
 
     // --- hovering behaviors ---
@@ -282,8 +292,12 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         }
     },
     
-    /*
     hoverCompleteView: function(v) {
+
+        if (this.viewBeingDragged().onDragComplete) {
+            this.viewBeingDragged().onDragComplete(this)
+        }  
+
         if(v.onDropHoverComplete) {
             v.onDropHoverComplete(this)
 
@@ -292,13 +306,14 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
             }
         }
     },
-    */
+    
 
     // pan
 
     end: function() {
         this.exitAllHovers()
-        // animate move to end location before removing?
+        // TODO: animate move to end location before removing
+
         this.removePanShadow()
         this.removePanZoom()
         DocumentBody.shared().removeSubview(this)

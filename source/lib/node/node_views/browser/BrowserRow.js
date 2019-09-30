@@ -854,7 +854,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         }
         assert(!this.hasParentView()) //
 
-        const parentNode = this.node().parentNode()
+        //const parentNode = this.node().parentNode()
         this.node().removeFromParentNode()
         assert(!this.node().parentNode())
 

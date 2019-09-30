@@ -13,7 +13,7 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
     defaultColumnStyles: null,
     defaultRowStyles: null,
     watchForNodeUpdates: false,
-    //columnGroupCache: null,
+    columnGroupCache: null, // dict of nodes, with node.typeId() as key, and BrowserColumnGroup as value
 }).setSlots({
 
     bgColors: function () {
@@ -79,7 +79,7 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         NodeView.init.apply(this)
 
         this.setupDefaultStyles()
-        //this.setColumnGroupCache({})
+        this.setColumnGroupCache({})
 
         this.setIsRegisteredForDocumentResize(true)
 
@@ -94,6 +94,29 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         this.addGestureRecognizer(LeftEdgePanGestureRecognizer.clone()) 
         this.addGestureRecognizer(RightEdgePanGestureRecognizer.clone()) 
 
+        return this
+    },
+
+    // columnGroupCache
+
+
+    getCachedColumnGroupForNode: function(node) {
+        const k = node.typeId()
+        const cg = this.columnGroupCache()[k]
+        return cg
+    },
+
+    cacheColumnGroup: function(cg) {
+        assert(cg.type() === "BrowserColumnGroup")
+        const k = cg.node().typeId()
+        this.columnGroupCache()[k] = cg
+        return this
+    },
+
+    uncacheColumnGroup: function(cg) {
+        assert(cg.type() === "BrowserColumnGroup")
+        const k = cg.node().typeId()
+        delete this.columnGroupCache()[k] 
         return this
     },
 
@@ -295,10 +318,8 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
 
         // add columns as needed
         while (this.columnGroups().length < count) {
-            const newCg = BrowserColumnGroup.clone()
+            const newCg = BrowserColumnGroup.clone().colapse()
             this.addColumnGroup(newCg)
-            newCg.setMinAndMaxWidth(0)
-            newCg.setFlexGrow(0)
         }
 
         //this.updateColumnPositions()
@@ -392,7 +413,7 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
 
         //console.log("selectColumn index: " + index + " cg " + this.columnGroups().length)
 
-        const nextCg = this.columnGroups().itemAfter(selectedColumnGroup)
+        let nextCg = this.columnGroups().itemAfter(selectedColumnGroup)
 
         if (nextCg) {
             const selectedRow = selectedColumnGroup.column().selectedRow()
@@ -405,11 +426,29 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
 
                 if (nextNode) {
                     //console.log("nextNode:  ", nextNode.title())
+
+                    
+                    if (nextCg.node() !== nextNode) { // need a way to use columnGroupCache
+                        const cachedCg = this.getCachedColumnGroupForNode(nextNode)
+
+                        if (cachedCg && nextCg != cachedCg) {
+                            assert(cachedCg.type() === "BrowserColumnGroup")
+                            this.replaceSubviewWith(nextCg, cachedCg)
+                            cachedCg.copySizeFrom(nextCg)
+                            nextCg = cachedCg
+                        } else {
+                            const newCg = BrowserColumnGroup.clone().colapse()
+                            this.replaceSubviewWith(nextCg, newCg)
+                            newCg.copySizeFrom(nextCg)
+                            nextCg = newCg
+                        }
+                    }
+                    
+
                     nextCg.setNode(nextNode)
-                    this.clearColumnsGroupsAfter(nextCg)
-                    //nextCg.column().setTitle(selectedColumn.selectedRowTitle())            
-                    //nextCg.syncFromNode()
                     nextCg.scheduleSyncFromNode()
+                    
+                    this.clearColumnsGroupsAfter(nextCg)
 
                     //if ((nextNode.view().type() !== "BrowserColumnGroup") || nextNode.isKindOf(BMFieldSetNode)) { // TODO: use a better rule here
                     if ((nextNode.viewClassName() !== "BrowserColumnGroup") || nextNode.isKindOf(BMFieldSetNode)) { // TODO: use a better rule here

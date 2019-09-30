@@ -1597,6 +1597,20 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         return this
     },
 
+    replaceSubviewWith: function(oldSubview, newSubview) {
+        assert(this.hasSubview(oldSubview))
+        assert(!this.hasSubview(newSubview))
+        
+        const index = this.indexOfSubview(oldSubview)
+        this.removeSubview(oldSubview)
+        this.atInsertSubview(index, newSubview)
+
+        assert(this.indexOfSubview(newSubview) === index)
+        assert(this.hasSubview(newSubview))
+        assert(!this.hasSubview(oldSubview))
+        return this
+    },
+
     atInsertSubview: function (anIndex, aSubview) {
         this.subviews().atInsert(anIndex, aSubview)
         assert(this.subviews()[anIndex] === aSubview)

@@ -154,7 +154,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
                 if (row.unselect) {
                     row.unselect()
                 } else {
-                    console.warn("=WARNING= " + this.typeId() + ".unselectRowsBesides() row " + row.typeId() + " missing unselect method")
+                    //console.warn("=WARNING= " + this.typeId() + ".unselectRowsBesides() row " + row.typeId() + " missing unselect method")
                 }
             }
         })
@@ -202,7 +202,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     selectedRows: function() {
         return this.rows().filter((row) => { 
             if (!row.isSelected) {
-                console.warn("=WARNING= " + this.typeId() + ".selectedRows() row " + row.typeId() + " missing isSelected method")
+                //console.warn("=WARNING= " + this.typeId() + ".selectedRows() row " + row.typeId() + " missing isSelected method")
                 return false
             }
             return row.isSelected(); 

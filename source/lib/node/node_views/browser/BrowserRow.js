@@ -826,23 +826,32 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     onDragBegin: function(aDragView) {
         assert(this.hasParentView())
         this.setVisibility("hidden")
+        this.columnGroup().cache()
         //this.setBorder("1px dashed blue")
     },
 
     onDragCancelled: function(aDragView) {
         assert(this.hasParentView()) //
         this.setVisibility("visible")
+        setTimeout(() => {
+            this.columnGroup().uncache()
+        })
         //this.setBorder(null)
     },
 
     onDragComplete: function(aDragView) {
-        assert(this.hasParentView())
+        //assert(this.hasParentView())
         this.setVisibility("visible")
+        setTimeout(() => {
+            this.columnGroup().uncache()
+        })
     },
 
     onDragRequestRemove: function() {
-        assert(this.hasParentView()) //
-        this.removeFromParentView()
+        //assert(this.hasParentView()) //
+        if (this.hasParentView()) {
+            this.removeFromParentView()
+        }
         assert(!this.hasParentView()) //
 
         const parentNode = this.node().parentNode()
@@ -860,11 +869,17 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     },
 
     onDropHoverEnter: function(dragView) {
-        const seconds = this.dropHoverDidTimeoutSeconds()
-        this._dropHoverEnterTimeout = setTimeout(
-            () => { this.dropHoverDidTimeout() }, 
-            seconds * 1000
-        )
+        if (this.canDropSelect()) {
+            const seconds = this.dropHoverDidTimeoutSeconds()
+            this._dropHoverEnterTimeout = setTimeout(
+                () => { this.dropHoverDidTimeout() }, 
+                seconds * 1000
+            )
+        }
+    },
+
+    canDropSelect: function() {
+        return this.node().hasSubnodes()
     },
 
     dropHoverDidTimeout: function() {

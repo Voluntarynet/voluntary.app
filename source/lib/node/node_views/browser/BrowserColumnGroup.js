@@ -36,11 +36,37 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
         this.setColumn(BrowserColumn.clone())
         this.scrollView().addSubview(this.column())
 
+
         this.updateScrollView()
         
         this.addGestureRecognizer(RightEdgePanGestureRecognizer.clone()) 
 
         return this
+    },
+
+    copySizeFrom: function(bcg) {
+        this.setMinAndMaxWidth(bcg.minWidth())
+        this.setFlexGrow(bcg.flexGrow())
+        return this
+    },
+
+    colapse: function() {
+        this.setMinAndMaxWidth(0)
+        this.setFlexGrow(0)
+        return this
+    },
+
+    // caching - used to hold onto view state during drag between columns
+
+    cache: function() {
+        this.browser().cacheColumnGroup(this)
+        console.log(this.typeId() + ".cache()")
+        return this
+    },
+    
+    uncache: function() {
+        this.browser().uncacheColumnGroup(this)
+        console.log(this.typeId() + ".uncache()")
     },
 
     // edge pan

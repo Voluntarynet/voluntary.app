@@ -4,6 +4,9 @@
 
     BMNumberField
 
+    A named number field that validates that the 
+    value is a number and shows an appropraite error message.
+
 */
         
 BMField.newSubclassNamed("BMNumberField").newSlots({
@@ -14,6 +17,7 @@ BMField.newSubclassNamed("BMNumberField").newSlots({
         this.setViewClassName("BMFieldRowView")
         this.setKeyIsEditable(false)
         this.setValueIsEditable(false)
+        this.setValue(0)
     },
 
     valueIsNumeric: function() {
@@ -29,14 +33,14 @@ BMField.newSubclassNamed("BMNumberField").newSlots({
         } else {
             this.setValueError(null)
         } 
-
-        //this.scheduleSyncToView()
 		
         return isValid
     },
-	
+    
+    /*
     didUpdateNode: function() {
         this.validate()
         return BMField.didUpdateNode.apply(this)
     },
+    */
 })

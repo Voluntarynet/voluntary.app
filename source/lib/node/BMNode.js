@@ -340,6 +340,10 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         return this.subnodes().length
     },
 
+    hasSubnodes: function() {
+        return this.subnodeCount() > 0
+    },
+
     justAddSubnode: function(aSubnode) {
         return this.justAddSubnodeAt(aSubnode, this.subnodeCount())
     },

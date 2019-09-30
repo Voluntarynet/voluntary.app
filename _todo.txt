@@ -2,6 +2,8 @@
 
 TODO:
 
+- onDropHover, only select a BrowserRow that currently has children
+
 - looks like bugs in drag are due to right column being removed while it still owns the dragView...
     - solution?: have BrowserView support cachedColumns, have column add and remove itself from cache?
      - Column.cacheInBrowser()

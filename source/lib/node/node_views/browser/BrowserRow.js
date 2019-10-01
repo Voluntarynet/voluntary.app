@@ -829,14 +829,14 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     hideForDrag: function() {
         //this.setDisplay("none")
         this.setVisibility("hidden")
-        console.log(this.typeId() + " '" + this.node().title() + "'.hideForDrag() visibility: ", this.visibility())
+        //console.log(this.typeId() + " '" + this.node().title() + "'.hideForDrag() visibility: ", this.visibility())
         //this.setBorder("1px dashed blue")
     },
 
     unhideForDrag: function() {
         //this.setDisplay("block")
         this.setVisibility("visible")
-        console.log(this.typeId() + " '" + this.node().title() + "'.unhideForDrag() visibility: ", this.visibility())
+        //console.log(this.typeId() + " '" + this.node().title() + "'.unhideForDrag() visibility: ", this.visibility())
         //this.setBorder(null)
     },
 

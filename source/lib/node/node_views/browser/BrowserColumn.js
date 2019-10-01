@@ -1026,6 +1026,16 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     },
     */
 
+    acceptedDropNodeTypes: function() { 
+        // null means it accepts node types
+        return null
+    },
+
+    acceptedDropRowTypes: function() {
+        // accept these or any of their subclasses
+        return ["BrowserRow"]
+    },
+
     acceptsDropHover: function(dragView) {
         return this.node() && this.canReorderRows()
     },

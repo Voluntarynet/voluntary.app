@@ -60,13 +60,14 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
 
     cache: function() {
         this.browser().cacheColumnGroup(this)
-        console.log(this.typeId() + ".cache()")
+        //console.log(this.typeId() + ".cache()")
         return this
     },
     
     uncache: function() {
         this.browser().uncacheColumnGroup(this)
-        console.log(this.typeId() + ".uncache()")
+        //console.log(this.typeId() + ".uncache()")
+        return this
     },
 
     // edge pan

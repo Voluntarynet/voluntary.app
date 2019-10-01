@@ -13,6 +13,12 @@ Bugs:
         - google it - how to override click drag? stop propogation of click?
         - keep selection of until tap?
 
+
+Drag/Drop Protocol
+    - add type checking
+        - acceptedDropClassNames
+        
+        
 BrowserRow hover
     - nice animations
         - set placeholder to correct height immediately when created for drag start

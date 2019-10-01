@@ -22,6 +22,9 @@ window.DomTransition = class DomTransition extends ProtoClass {
     }
 
     updateDuration(s) {
+        if (Type.isNumber(s)) {
+            s = s + "s"
+        }
         this.setDuration(s)
         this.syncToDomView()
         return this

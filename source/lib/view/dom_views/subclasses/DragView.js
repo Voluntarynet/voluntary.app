@@ -95,14 +95,16 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         const aView = this.viewBeingDragged()
         assert(aView.hasParentView())
 
-        const w = aView.computedWidth()
-        const h = aView.computedHeight()
+        const f = aView.frameInDocument()
+
+        const w = f.size().width() //aView.computedWidth()
+        const h = f.size().height() //aView.computedHeight()
 
         // match dimensions
         this.setMinAndMaxWidth(w)
         this.setMinAndMaxHeight(h)
 
-        const p = aView.positionInDocument()
+        const p = f.origin()
         this.setLeft(p.x())
         this.setTop(p.y())
 

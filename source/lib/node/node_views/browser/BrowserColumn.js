@@ -816,7 +816,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         const orderedRows = this.rows().copy().sortPerform("top")
 
         let y = 0
-        console.log("stackRows")
+        //console.log("stackRows")
         orderedRows.forEach((row) => {
             let h = 0
 
@@ -1030,12 +1030,14 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         return this.node() && this.canReorderRows()
     },
 
-    newPlaceHolder: function() {
+    newDropPlaceHolder: function() {
         if (!this.dropPlaceHolder()) {
             const ph = DomView.clone().setDivClassName("BrowserRowPlaceHolder")
             ph.setBackgroundColor("black")
             ph.setMinAndMaxWidth(this.computedWidth())
             ph.setMinAndMaxHeight(64)
+            //ph.transitions().at("top").updateDuration(1)
+            //ph.transitions().at("left").updateDuration(0.3)
             ph.setTransition("top 0s, left 0.3s")
             this.addSubview(ph)
             this.setDropPlaceHolder(ph)
@@ -1052,7 +1054,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
 
         // insert place holder view
         if (!this.dropPlaceHolder()) {
-            this.newPlaceHolder()
+            this.newDropPlaceHolder()
             this.dropPlaceHolder().setMinAndMaxHeight(dragView.computedHeight())
             this.onDropHoverMove(dragView)
         }

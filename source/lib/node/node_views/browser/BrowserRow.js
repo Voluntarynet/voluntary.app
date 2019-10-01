@@ -843,7 +843,11 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     onDragBegin: function(aDragView) {
         assert(this.hasParentView())
         this.hideForDrag()
+        const index = this.column().indexOfSubview(this)
+        assert(index !== -1)
+        this.column().moveSubviewToIndex(this.column().newDropPlaceHolder(), index)
         this.columnGroup().cache()
+        this.column().stackRows()
     },
 
     onDragCancelled: function(aDragView) {
@@ -870,7 +874,6 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         }
         assert(!this.hasParentView()) //
 
-        //const parentNode = this.node().parentNode()
         this.node().removeFromParentNode()
         assert(!this.node().parentNode())
 

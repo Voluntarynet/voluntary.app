@@ -150,6 +150,22 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         return this.contentView().removeSubview(aView)
     },
 
+    /*
+    lockSize: function() {
+        NodeView.lockSize.apply(this)
+        this.contentView().lockSize()
+        return this
+    },
+
+    unlockSize: function() {
+        NodeView.unlockSize.apply(this)
+        this.contentView().unlockSize()
+        return this
+    },
+    */
+
+    // ----
+
     setBackgroundColor: function(s) {
         this.contentView().setBackgroundColor(s)
         return this
@@ -623,16 +639,6 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
 
     // tap hold
 
-    /*
-    setParentView: function(aView) {
-        NodeView.setParentView.apply(this, [aView])
-        //if (!aView && this.type() === "BMActionNodeRowView") {
-        console.log(this.typeId() + ".setParentView(" + Type.description(aView) + ")")
-        //}
-        return this
-    },
-    */
-
     acceptsLongPress: function() {
         if (!this.column()) {
             console.log("missing parent view on: " + this.typeId())
@@ -653,23 +659,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         const dv = DragView.clone().setViewBeingDragged(this)
         dv.initPanWithEvent(longPressGesture.currentEvent())
         dv.begin()
-
-        /*
-        const pan = this.addDefaultPanGesture()
-        pan.setShouldRemoveOnComplete(true)
-        pan.setMinDistToBegin(0)
-        pan.onDown(longPressGesture.currentEvent())
-        this._isReordering = true
-        pan.attemptBegin()
-        this.setTransition("all 0s, transform 0.2s") //, min-height 1s, max-height 1s")
-        this.contentView().setTransition("transform 0.2s")
-        setTimeout(() => { 
-            this.addPanZoom()
-        })
-        */
     },
-
-
 
     // --- add/remove pan gesture ----
 
@@ -689,60 +679,6 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     acceptsPan: function() {
         return this._isReordering
     },
-
-    /*
-    onPanBegin: function(aGesture) {
-        this.setTransition("top 0s")
-        
-        // visibility - so we can see the shadow
-        // todo: move to top level view?
-        this.column().setOverflow("visible")
-        this.columnGroup().setOverflow("visible")
-        this.columnGroup().scrollView().setOverflow("visible")
-        this.setZIndex(3)
-
-        this.column().absolutePositionRows()
-
-        this._dragStartPos = this.relativePos()
-
-        this.setTop(this._dragStartPos.y())
-        this.addPanShadow()
-    },
-
-    onPanMove: function(aGesture) {
-        const np = this._dragStartPos.add(aGesture.diffPos()) 
-        this.setTop(np.y())
-        this.column().stackRows()
-        this.setTop(np.y())
-    },
-
-    onPanCancelled: function(aGesture) {
-        this.onPanComplete(aGesture) // needed?
-        return this
-    },
-
-    onPanComplete: function(aGesture) {
-        // visibility
-        this.column().setOverflow("hidden")
-        this.columnGroup().setOverflow("hidden")
-        this.columnGroup().scrollView().setOverflow("hidden")
-
-        this.setTransition(this.transitionStyle())
-        this.removeShadow()
-
-        this.column().stackRows()
-        
-        this.removePanZoom()
-        setTimeout(() => {
-            this.column().relativePositionRows()
-            this.column().didReorderRows()
-            this.setZIndex(null)
-        }, 500)
-
-        //this.removePanGesture() // this will happen automatically
-        this._isReordering = false
-    },
-    */
    
     // orient testing
 
@@ -841,30 +777,15 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     },
 
     onDragBegin: function(aDragView) {
-        assert(this.hasParentView())
-        this.hideForDrag()
-        const index = this.column().indexOfSubview(this)
-        assert(index !== -1)
-        this.column().moveSubviewToIndex(this.column().newDropPlaceHolder(), index)
-        this.columnGroup().cache()
-        this.column().stackRows()
+        this.column().onSubviewDragBegin(aDragView)
     },
 
     onDragCancelled: function(aDragView) {
-        assert(this.hasParentView()) //
-        this.unhideForDrag()
-
-        setTimeout(() => {
-            this.columnGroup().uncache()
-        })
+        this.column().onSubviewDragCancelled(aDragView)
     },
 
     onDragComplete: function(aDragView) {
-        //assert(this.hasParentView())
-        this.unhideForDrag()
-        setTimeout(() => {
-            this.columnGroup().uncache()
-        })
+        this.column().onSubviewDragComplete(aDragView)
     },
 
     onDragRequestRemove: function() {

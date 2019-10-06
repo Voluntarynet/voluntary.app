@@ -2,26 +2,157 @@
 
 TODO:
 
+Drag/Drop Protocol
+
+    - fix bugs make easier to use
+        - problem: 
+            - differences in implementations if destination === source
+                - start/stop for destination vs source hover
+                
+            
+   Drop Protocol
+   
+            
+            DragView
+                viewBeingDragged 
+                sourceView
+                destinationView (set before completion)
+                
+            - have dragging view set a sourceView on DraggingView (usually it's parent)
+            - send different messages to sourceView than other hoverViews
+            
+            
+            Responsibilities:
+            
+                dragItem:
+                    - get long press that starts drag
+                    - setup DraggingView with viewBeingDragged, sourceView
+                    - pass initial event to setup DraggingView pan
+                
+                DraggingView:
+                    - send all protocol messages to item, source, destination
+                    - handle the node level operations?
+                    - animate move to final position or slideback
+                    
+                sourceView:
+                    - open place holder
+                    - hide viewBeingDragged?
+                    
+                destinationView:
+                    - open place holder on enter
+                    - move placeholder on hover
+                    - remove placeholder on exit
+                    - replace placeholder with view on complete
+                    
+                
+                
+            Remove "Hover" from Drop protocol messages
+            
+            - onDragSourceBegin
+            - onDragSourceHover
+            - onDragSourceCancelled // dropped on a view that doesn't accept it
+            
+            // using these messages avoids a bunch of conditions in the receiver 
+            // the source is repsonsible for completing the drag operation
+            // - it will talk to the destination
+            
+            - onDragSourceMoveToDestination
+            - onDragSourceCopyToDestination
+            - onDragSourceLinkToDestination
+            
+            - onDragSourceMoveToSelf // no onDrop sent?
+            - onDragSourceCopyToSelf
+            - onDragSourceLinkToSelf
+            
+            ----
+            
+            - onDragItemBegin
+            - onDragItemCancelled
+            - onDragItemComplete
+            
+            ----
+
+            - onDropDestinationEnter
+            - onDropDestinationHover
+            - onDropDestinationExit
+            - onDropDestinationComplete
+            
+            
+            ------------------
+            
+            start:
+                on source:
+                    - hide dragging view, replace with PlaceHolder
+            hover:
+                - move placeholder
+            exit:
+                on source:
+                    - keep dragging view hidden
+                    - keep placeholder
+                    
+            complete:
+                - if destination is source:
+                    - replace PlaceHolder with dragging view
+                - else
+                    - remove PlaceHolder and dragging view from source
+                    - replace PlaHolder with dragging view in destination
+                        - move node into destination node
+        
+            ------------------
+    
+        Sent from DragView to viewBeingDragged:
+
+            - onDragBegin // ask source to prepare, placeholder, etc
+            - onDragCancelled
+            - onDragComplete // sent before dropHoverComplete
+
+
+        Sent from DragView to views it's dragged over:
+
+            - acceptsDropHover // ignored? 
+            - onDropHoverEnter
+            - onDropHoverMove
+            - onDropHoverExit
+            - acceptsDropHoverComplete // sent on drag release over a view, if returns true, will call onDropHoverComplete
+            - onDropHoverComplete // will get viewBeingDragged from dragView and deal with transfer
+         
+            - onDropHoverEnd // sent after all animations complete?
+            
+            
+            
+            
+
+    - add type checking
+        - acceptedDropClassNames
+        
+    
+
+
+- demo for making diagrams
+    DiagramView
+    
+    
+- add 
+    - a just text area row
+    - title row?
+
 - replace Win/Window point APIs with Viewport? Move all to Document points?
     - have EventPoint use document(?) coordinates and implement asViewPortPoint, asDocumentPoint, asPointInView(aView)
 
 Bugs:
-    - row view layout hosed when moving rows
-    - sometimes rows don't hide while being dragged
+    - source row reappears in source when dragged over not drop area
+    
     - row moving during placeholder index change isn't covering row width
     - long-click drag is causing text selections
         - google it - how to override click drag? stop propogation of click?
         - keep selection of until tap?
 
 
-Drag/Drop Protocol
-    - add type checking
-        - acceptedDropClassNames
         
         
 BrowserRow hover
     - nice animations
-        - set placeholder to correct height immediately when created for drag start
+        - animate placeholder creation if the column isn't the drag source
         - shrink placeholder to zero if drag is over middle third of a row (that we can drop on?)
         - animate close of source placeholder after drop
         - animate return of dragView to original column on drop cancel?

@@ -434,6 +434,12 @@ Proto.setSlots({
         Object.freeze(this)
     }
     */
+
+    debugLog: function (s) {
+        if (this.isDebugging()) {
+            console.log(this.typeId() + ": " + s)
+        }
+    },
 });
 
 Proto.newSlot("isDebugging", false);

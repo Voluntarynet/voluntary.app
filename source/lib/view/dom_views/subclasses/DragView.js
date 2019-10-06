@@ -18,6 +18,7 @@
             - onDragCancelled
             - onDragComplete // sent before dropHoverComplete
 
+
         Messages sent from DragView to views it's dragged over:
 
             - acceptsDropHover // ignored? 
@@ -27,6 +28,7 @@
             - acceptsDropHoverComplete // sent on drag release over a view, if returns true, will call onDropHoverComplete
             - onDropHoverComplete // will get viewBeingDragged from dragView and deal with transfer
          
+            - onDropHoverEnd // sent after all animations complete?
 
     Design:
 
@@ -73,6 +75,8 @@
 DomStyledView.newSubclassNamed("DragView").newSlots({
     viewBeingDragged: null,
     hoverViews: null,
+    dragOperation: "move", // move, copy, link, delete
+    dropDestination: null,
 }).setSlots({
     init: function () {
         DomStyledView.init.apply(this)
@@ -86,6 +90,8 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         this.setMinHeightPx(10)
         this.setWidth("fit-content")
         this.setMinHeight("fit-content")
+
+        this.setIsDebugging(true)
 
         return this
     },
@@ -158,6 +164,7 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
     // --- panning ---
 
     onPanBegin: function(aGesture) {
+        this.debugLog("onPanBegin")
         this._dragStartPos = this.viewBeingDragged().positionInDocument()
         setTimeout(() => {
             this.addPanZoom()
@@ -172,13 +179,10 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         const np = this._dragStartPos.add(aGesture.diffPos()) 
         this.setLeft(np.x())
         this.setTop(np.y())
-
-        //this.hoverOverViews()
         
         setTimeout(() => { 
             this.hoverOverViews()
         })
-        
     },
 
     onPanCancelled: function(aGesture) {
@@ -189,31 +193,33 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         this.end()
     },
 
+    acceptingDropTarget: function() {
+        return this.hoverViews().detect((v) => {
+            return v.acceptsDropHoverComplete && v.acceptsDropHoverComplete()
+        })
+    },
+
     onPanComplete: function(aGesture) {
-        let didDrop = false
-        for(let i = 0; i < this.hoverViews().length; i++ ) {
-            let v = this.hoverViews()[i]
-            if (v.acceptsDropHoverComplete && v.acceptsDropHoverComplete()) {
+        this.debugLog("onPanComplete")
 
-                const completionCallback = () => {
-                    this.hoverCompleteView(v)
-                    this.end()
-                }
-                const period = 0.2 // seconds
-                const destFrame = v.dropCompleteDocumentFrame()
+        const dropTarget = this.acceptingDropTarget()
+        this.setDropDestination(dropTarget)
 
-                //const destPoint = v.dropPlaceHolder().positionInDocument()
-                this.animateToDocumentFrame(destFrame, period, completionCallback)
-                this.removePanShadow()
-                this.removePanZoom()
-                //this.setIsPaused(true)
-                this.hoverViews().remove(v)
-                didDrop = true
-                break;
+        if (dropTarget) {
+            const completionCallback = () => {
+                this.hoverCompleteView(dropTarget)
+                this.end()
             }
+            const period = 0.2 // seconds
+            const destFrame = dropTarget.dropCompleteDocumentFrame()
+
+            this.animateToDocumentFrame(destFrame, period, completionCallback)
+            this.removePanShadow()
+            this.removePanZoom()
+            this.hoverViews().remove(dropTarget)
         }
 
-        if (!didDrop) {
+        if (!dropTarget) {
             this.end()
         }
     },
@@ -231,7 +237,10 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
 
     hoverOverViews: function() {
         const hoverViews = this.hoverViews()
-        const currentHoverViews = this.viewsUnderDefaultPan()
+
+        const currentHoverViews = this.viewsUnderDefaultPan().filter((v) => {
+            return v.acceptsDropHoverComplete && v.acceptsDropHoverComplete()
+        })
 
         hoverViews.forEach((v) => {
             if (!currentHoverViews.contains(v)) {
@@ -273,6 +282,7 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
     hoverMoveView: function(v) {
         if (v.onDropHoverMove) {
             v.onDropHoverMove(this)
+            //this.debugLog(v.typeId() + ".onDropHoverMove()")
 
             if (this.isDebugging()) {
                 v.setBorder("1px dashed red")
@@ -283,6 +293,7 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
     hoverExitView: function(v) {
         if(v.onDropHoverExit) {
             v.onDropHoverExit(this)
+            this.debugLog(v.typeId() + " onDropHoverExit")
 
             if (this.isDebugging()) {
                 v.setBorder("none")
@@ -291,13 +302,14 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
     },
     
     hoverCompleteView: function(v) {
-
         if (this.viewBeingDragged().onDragComplete) {
+            this.debugLog(this.viewBeingDragged().typeId() + " onDragComplete")
             this.viewBeingDragged().onDragComplete(this)
-        }  
+        } 
 
         if(v.onDropHoverComplete) {
             v.onDropHoverComplete(this)
+            this.debugLog(v.typeId() + " onDropHoverComplete")
 
             if (this.isDebugging()) {
                 v.setBorder("none")
@@ -309,6 +321,8 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
     // pan
 
     end: function() {
+        this.debugLog("end")
+
         this.exitAllHovers()
         // TODO: animate move to end location before removing
 

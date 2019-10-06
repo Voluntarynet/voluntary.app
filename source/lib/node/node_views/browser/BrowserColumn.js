@@ -12,7 +12,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     defaultRowStyles: null,
     rowStyles: null,
     //shouldDarkenUnselected: true,
-    dropPlaceHolder: null,
+    rowPlaceHolder: null,
     hasPausedSync: false,
 }).setSlots({
     init: function () {
@@ -775,27 +775,6 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         return this
     },
 
-    relativePositionRows: function() {
-        // should we calc a new subview ordering based on sorting by top values?
-        const orderedRows = this.rows().copy().sortPerform("top")
-
-        orderedRows.forEach((row) => {
-            row.setDisplay("block")
-            row.setPosition("relative")
-
-            row.setTop(null)
-            row.setLeft(null)
-            row.setRight(null)
-            row.setBottom(null)
-
-            row.setMinAndMaxWidth(null)
-            row.setMinAndMaxHeight(null)
-        })
-
-        this.removeAllSubviews()
-        this.addSubviews(orderedRows)
-        return this
-    },
 
     /*
     orderRows: function() {
@@ -812,11 +791,19 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     },
     */
 
+    // -- stacking rows ---
+
     stackRows: function() {
-        const orderedRows = this.rows().copy().sortPerform("top")
+        // we don't need to order rows not for 1st call of stackRows, 
+        // but we do when calling stackRows while moving a drop view around,
+        // so just always do it as top is null, and rows are already ordered the 1st time
+
+        const orderedRows = this.rows().copy().sortPerform("top") 
 
         let y = 0
-        //console.log("stackRows")
+        
+        const columnWidth =  this.computedWidth()
+        
         orderedRows.forEach((row) => {
             let h = 0
 
@@ -826,8 +813,10 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
                 h = row.computedHeight() //row.clientHeight() 
                 row.setDisplay("block")
                 row.setPosition("absolute")
-                row.setMinAndMaxWidth(row.computedWidth())
-                row.setMinAndMaxHeight(h)
+                
+                const w = columnWidth   //row.clientWidth() //row.computedWidth() // don't work, why?
+
+                row.setMinAndMaxWidth(w).setMinAndMaxHeight(h)                
             }
 
             //console.log("y:", y + " h:", h)
@@ -837,6 +826,31 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
 
         return this
     },
+
+    unstackRows: function() {
+        // should we calc a new subview ordering based on sorting by top values?
+        const orderedRows = this.rows().copy().sortPerform("top")
+
+        orderedRows.forEach((row) => {
+            row.setDisplay("block")
+            row.setPosition("relative")
+
+            row.setTop(null)
+            row.setLeft(null)
+            row.setRight(null)
+            row.setBottom(null)
+
+            //row.unlockSize()
+            row.setMinAndMaxWidth(null).setMinAndMaxHeight(null)                
+
+        })
+
+        this.removeAllSubviews()
+        this.addSubviews(orderedRows)
+        return this
+    },
+
+    // --------------
 
     canReorderRows: function() {
         return this.node().nodeCanReorderSubnodes()
@@ -1016,7 +1030,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         
         this.removePanZoom()
         setTimeout(() => {
-            this.column().relativePositionRows()
+            this.column().unstackRows()
             this.column().didReorderRows()
             this.setZIndex(null)
         }, 500)
@@ -1025,6 +1039,48 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         this._isReordering = false
     },
     */
+
+    // -- messages sent by row when dragging ---
+
+    onSubviewDragBegin: function(aDragView) {
+        this.debugLog("onSubviewDragBegin")
+        const subview = aDragView.viewBeingDragged()
+        subview.hideForDrag()
+        const index = this.indexOfSubview(subview)
+        assert(index !== -1)
+        this.moveSubviewToIndex(this.newRowPlaceHolder(), index)
+        this.columnGroup().cache()
+        this.stackRows()
+        return this
+    },
+
+    onSubviewDragCancelled: function(aDragView) {
+        this.debugLog("onSubviewDragCancelled")
+        const subview = aDragView.viewBeingDragged()
+        subview.unhideForDrag()
+        this.removeRowPlaceHolder()
+        this.endDropMode()
+
+        setTimeout(() => {
+            this.columnGroup().uncache()
+        })
+    },
+
+    onSubviewDragComplete: function(aDragView) {
+        this.debugLog("onSubviewDragComplete")
+        const subview = aDragView.viewBeingDragged()
+
+        subview.unhideForDrag()
+        
+        this.removeRowPlaceHolder()
+        this.endDropMode()
+
+        setTimeout(() => {
+            this.columnGroup().uncache()
+        })
+    },
+
+    // --- drop protocol ---
 
     acceptedDropNodeTypes: function() { 
         // null means it accepts node types
@@ -1040,8 +1096,8 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         return this.node() && this.canReorderRows()
     },
 
-    newDropPlaceHolder: function() {
-        if (!this.dropPlaceHolder()) {
+    newRowPlaceHolder: function() {
+        if (!this.rowPlaceHolder()) {
             const ph = DomView.clone().setDivClassName("BrowserRowPlaceHolder")
             ph.setBackgroundColor("black")
             ph.setMinAndMaxWidth(this.computedWidth())
@@ -1050,9 +1106,9 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             //ph.transitions().at("left").updateDuration(0.3)
             ph.setTransition("top 0s, left 0.3s")
             this.addSubview(ph)
-            this.setDropPlaceHolder(ph)
+            this.setRowPlaceHolder(ph)
         }
-        return this.dropPlaceHolder()
+        return this.rowPlaceHolder()
     },
 
     onDropHoverEnter: function(dragView) {
@@ -1063,9 +1119,9 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         this.setHasPausedSync(true)
 
         // insert place holder view
-        if (!this.dropPlaceHolder()) {
-            this.newDropPlaceHolder()
-            this.dropPlaceHolder().setMinAndMaxHeight(dragView.computedHeight())
+        if (!this.rowPlaceHolder()) {
+            this.newRowPlaceHolder()
+            this.rowPlaceHolder().setMinAndMaxHeight(dragView.computedHeight())
             this.onDropHoverMove(dragView)
         }
     },
@@ -1076,7 +1132,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         }
 
         // move place holder view
-        const ph = this.dropPlaceHolder()
+        const ph = this.rowPlaceHolder()
         if (ph) {
             const vp = this.viewPosForWindowPos(dragView.dropPoint())
             const y = vp.y() - dragView.computedHeight()/2
@@ -1086,11 +1142,17 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     },
 
     onDropHoverExit: function(dragView) {
-        if (!this.acceptsDropHover()) { 
+        if (!this.acceptsDropHover(dragView)) { 
             return this; 
         }
 
-        this.removeDropPlaceHolder()
+
+        const dv = dragView.viewBeingDragged()
+        const isFromSameView = this.rows().contains(dv)
+        if (!isFromSameView) {
+            this.removeRowPlaceHolder()
+            this.endDropMode()
+        }
     },
 
     acceptsDropHoverComplete: function(aDragView) {
@@ -1098,7 +1160,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     },
 
     dropCompleteDocumentFrame: function() {
-        return this.dropPlaceHolder().frameInDocument()
+        return this.rowPlaceHolder().frameInDocument()
     },
 
     onDropHoverComplete: function(dragView) {
@@ -1108,41 +1170,48 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
 
         const dv = dragView.viewBeingDragged()
 
-        this.relativePositionRows()
+        this.unstackRows()
 
         const isFromSameView = this.rows().contains(dv)
 
         if (isFromSameView) {
+            // move a view within a parent
             assert(dv.hasParentView()) //
-            this.swapSubviews(dv, this.dropPlaceHolder())
+            this.swapSubviews(dv, this.rowPlaceHolder())
             assert(dv.hasParentView()) //
         } else {
+            // move a view between parents
             if(dv.onDragRequestRemove && dv.onDragRequestRemove()) {
                 assert(dv.hasParentView() === false)
                 //this.addSubnode(dv.node()) // this happens automatically with didReorderSubviews?
                 this.addSubview(dv)
                 assert(dv.hasParentView()) //
-                this.swapSubviews(dv, this.dropPlaceHolder())
+                this.swapSubviews(dv, this.rowPlaceHolder())
             }
         }
 
-        this.removeDropPlaceHolder()
+        this.removeRowPlaceHolder()
+        this.endDropMode()
         assert(dv.hasParentView())
     },
 
-    removeDropPlaceHolder: function() {
-        const ph = this.dropPlaceHolder()
+    removeRowPlaceHolder: function() {
+        this.debugLog("removeRowPlaceHolder")
+
+        const ph = this.rowPlaceHolder()
         if (ph) {
-            //console.log("removeDropPlaceHolder")
+            //console.log("removeRowPlaceHolder")
             this.removeSubview(ph)
-            this.setDropPlaceHolder(null)
- 
-            this.relativePositionRows()
-            this.setHasPausedSync(false)
-            this.didReorderRows()
+            this.setRowPlaceHolder(null)
         }
     },
 
+    endDropMode: function() {
+        this.unstackRows()
+        this.setHasPausedSync(false)
+        this.didReorderRows()
+        return this
+    },
 
     /*
     rowIndexForViewportPoint: function(aPoint) {

@@ -1286,6 +1286,26 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     didChangeHeight: function () {
     },
 
+    // --- lock/unlock size ---
+
+    /*
+    lockSize: function() {
+        const h = this.computedHeight() 
+        const w = this.computedWidth()
+        this.setMinAndMaxWidth(w)
+        this.setMinAndMaxHeight(h)
+        return this
+    },
+
+    unlockSize: function() {
+        this.setMinAndMaxWidth(null)
+        this.setMinAndMaxHeight(null)
+        return this
+    },
+    */
+
+    // ----
+
     setMaxWidth: function (v) {
         /*
         if (v === this._maxWidth) {

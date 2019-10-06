@@ -385,7 +385,7 @@ Object.shallowCopyTo({
             }
         }
 
-        return null;
+        return null; // or should this be undefined?
     },
 
     detectPerform: function (functionName) {

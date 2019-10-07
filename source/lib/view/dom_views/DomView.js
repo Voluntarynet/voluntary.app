@@ -3427,28 +3427,6 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         return this
     },
 
-    // --- pan graphical effects ---
-    // TODO: move to a more appropraite subclass?
 
-    addPanZoom: function() {
-        const r = 1.1
-        this.setTransform("scale(" + r + ")")
-        return this
-    },
-
-    removePanZoom: function() {
-        this.setTransform("scale(1)")
-        return this
-    },
-
-    addPanShadow: function() {
-        this.setBoxShadow("0px 0px 10px 10px rgba(0, 0, 0, 0.5)")
-        return this
-    },
-
-    removePanShadow: function() {
-        this.setBoxShadow("none")
-        return this
-    },
 
 })

@@ -656,9 +656,8 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     onLongPressComplete: function(longPressGesture) {
         longPressGesture.deactivate() // needed?
 
-        const dv = DragView.clone().setViewBeingDragged(this)
-        dv.initPanWithEvent(longPressGesture.currentEvent())
-        dv.begin()
+        const dv = DragView.clone().setItem(this).setSource(this.column())
+        dv.openWithEvent(longPressGesture.currentEvent())
     },
 
     // --- add/remove pan gesture ----
@@ -763,6 +762,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     // --- dragging source protocol ---
 
     hideForDrag: function() {
+        console.log(this.typeId() + " hideForDrag")
         //this.setDisplay("none")
         this.setVisibility("hidden")
         //console.log(this.typeId() + " '" + this.node().title() + "'.hideForDrag() visibility: ", this.visibility())
@@ -770,22 +770,23 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     },
 
     unhideForDrag: function() {
+        console.log(this.typeId() + " unhideForDrag")
         //this.setDisplay("block")
         this.setVisibility("visible")
         //console.log(this.typeId() + " '" + this.node().title() + "'.unhideForDrag() visibility: ", this.visibility())
         //this.setBorder(null)
     },
 
-    onDragBegin: function(aDragView) {
-        this.column().onSubviewDragBegin(aDragView)
+    onDragItemBegin: function(aDragView) {
+        //this.column().onSubviewDragBegin(aDragView)
     },
 
-    onDragCancelled: function(aDragView) {
-        this.column().onSubviewDragCancelled(aDragView)
+    onDragItemCancelled: function(aDragView) {
+        //this.column().onSubviewDragCancelled(aDragView)
     },
 
-    onDragComplete: function(aDragView) {
-        this.column().onSubviewDragComplete(aDragView)
+    onDragItemComplete: function(aDragView) {
+        //this.column().onSubviewDragComplete(aDragView)
     },
 
     onDragRequestRemove: function() {
@@ -804,34 +805,48 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
 
     // --- dropping destination protocol implemented to handle selecting/expanding row ---
 
-    dropHoverDidTimeoutSeconds: function() {
-        return 0.3
+    acceptsDropHover: function() {
+        return this.canDropSelect()
     },
 
-    onDropHoverEnter: function(dragView) {
+    onDragDestinationEnter: function(dragView) {
         if (this.canDropSelect()) {
-            const seconds = this.dropHoverDidTimeoutSeconds()
-            this._dropHoverEnterTimeout = setTimeout(
-                () => { this.dropHoverDidTimeout() }, 
-                seconds * 1000
-            )
+            this.setupDropHoverTimeout()
         }
+    },
+
+    onDragDestinationHover: function(dragView) {
+    },
+
+    onDragDestinationExit: function(dragView) {
+        this.cancelDropHoverTimeout()
+    },
+
+    // ----
+
+    dropHoverDidTimeoutSeconds: function() {
+        return 0.3
     },
 
     canDropSelect: function() {
         return this.node().hasSubnodes()
     },
 
-    dropHoverDidTimeout: function() {
-        this.requestSelection()
+    setupDropHoverTimeout: function() {
+        const seconds = this.dropHoverDidTimeoutSeconds()
+        this._dropHoverEnterTimeout = setTimeout(
+            () => { this.dropHoverDidTimeout() }, 
+            seconds * 1000
+        )
     },
 
-    onDropHoverMove: function(dragView) {
-    },
-
-    onDropHoverExit: function(dragView) {
+    cancelDropHoverTimeout: function() {
         clearTimeout(this._dropHoverEnterTimeout)
         this._dropHoverEnterTimeout = null
+    },
+
+    dropHoverDidTimeout: function() {
+        this.requestSelection()
     },
 
 })

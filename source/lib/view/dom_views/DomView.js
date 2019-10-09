@@ -1872,21 +1872,26 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
             Error.showCurrentStack()
             return aSubview
         }
-        this.willRemoveSubview(aSubview)
 
+        this.willRemoveSubview(aSubview)
         aSubview.willRemove()
+
         this.subviews().remove(aSubview)
 
-        if (this.hasChildElement(aSubview.element())) {
-            this.element().removeChild(aSubview.element());
+        // sanity check 
+
+        const e = aSubview.element()
+        if (this.hasChildElement(e)) {
+            this.element().removeChild(e);
+
+            if (this.hasChildElement(e)) {
+                console.warn("WARNING: " + this.type() + " removeSubview " + aSubview.type() + " failed - still has element after remove")
+                Error.showCurrentStack()
+            }
         } else {
             console.warn("WARNING: " + this.type() + " removeSubview " + aSubview.type() + " parent element is missing this child element")
         }
-
-        if (this.hasChildElement(aSubview.element())) {
-            console.warn("WARNING: " + this.type() + " removeSubview " + aSubview.type() + " failed - still has element after remove")
-            Error.showCurrentStack()
-        }
+ 
 
         aSubview.setParentView(null)
         this.didChangeSubviewList()
@@ -1894,7 +1899,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     },
 
     removeAllSubviews: function () {
-        this.subviews().copy().forEach((aView) => { this.removeSubview(aView) })
+        this.subviews().copy().forEach((v) => { this.removeSubview(v) })
         assert(this.subviews().length === 0)
         return this
     },

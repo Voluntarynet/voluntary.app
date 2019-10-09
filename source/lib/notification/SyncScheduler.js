@@ -186,7 +186,7 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
 
 window.SyncScheduler.registerThisClass()
 
-ideal.Proto.scheduleMethod = function(methodName) {
-    window.SyncScheduler.shared().scheduleTargetAndMethod(this, methodName)
+ideal.Proto.scheduleMethod = function(methodName, priority) {
+    window.SyncScheduler.shared().scheduleTargetAndMethod(this, methodName, priority)
     return this
 }

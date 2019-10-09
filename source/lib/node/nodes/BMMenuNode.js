@@ -60,6 +60,10 @@ BMStorableNode.newSubclassNamed("BMMenuNode").newSlots({
         return this
     },
 
+    acceptedSubnodeTypes: function() {
+        return BMCreatorNode.fieldTypes()
+    },
+
     subtitle: function() {
         if (this.hasSubtitleOfValues()) {
             let parts = []

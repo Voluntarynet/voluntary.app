@@ -55,7 +55,6 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     },
 
     browser: function() {
-        assert(this.columnGroup() != null) 
         return this.columnGroup().browser()
     },
     
@@ -390,7 +389,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         this.setIsRegisteredForDrop(this.node().acceptsFileDrop())
 
         if (selectedIndex === -1) {
-            this.browser().clearColumnsGroupsAfter(this.columnGroup())
+            this.browser().clearColumnsGroupsAfter(this.columnGroup()) // TODO: fragile: careful that this doesn't cause a loop...
         } else {
             // select the row matching the last selected node
 
@@ -478,7 +477,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         // duplicate?
         const node = this.node()
         const row = this.selectedRow()
-        if (row && node.canAddSubnodes() && row.node().duplicate) { 
+        if (row && node.canSelfAddSubnode() && row.node().duplicate) { 
             console.log(this.typeId() + " duplicate selected row " + this.selectedRow().node().title())
             //this.selectedRow()
             node.addSubnode(row.node().duplicate())
@@ -610,7 +609,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             const p = aGesture.downPosition() // there may not be an up position on windows?
             //console.log(this.typeId() + ".onTapComplete() ", aGesture.upEvent())
             if (p.event().target === this.element()) {
-                if (this.node().canAddSubnodes()) {
+                if (this.node().canSelfAddSubnode()) {
                     this.node().add()
                 }
             }
@@ -736,9 +735,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     },
 
     maxRowWidth: function() {
-        const maxWidth = this.rows().maxValue(function(row) {
-            return row.calcWidth()
-        })			
+        const maxWidth = this.rows().maxValue((row) => row.calcWidth())			
         return maxWidth	
     },
 
@@ -1043,25 +1040,22 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         dv.unhideForDrag()
     },
 
-    onDragSourceEnd: function(dragView) {
+    onDragSourceEnd: function(aDragView) {
         this.columnGroup().scheduleMethod("uncache")
         this.endDropMode()
     },
 
     // -- messages sent by DragView to the potential drop view, if not the source ---
 
-    acceptedDropNodeTypes: function() { 
-        // null means it accepts node types
-        return null
-    },
-
-    acceptedDropRowTypes: function() {
-        // accept these or any of their subclasses
-        return ["BrowserRow"]
-    },
-
-    acceptsDropHover: function(dragView) {
-        return this.node() && this.canReorderRows()
+    acceptsDropHover: function(aDragView) {
+        if (this.node()) {
+            if (!aDragView) {
+                console.log("aDragView.item() missing")
+            }
+            const typeOk = this.node().acceptsAddingSubnode(aDragView.item().node())
+            return typeOk && this.canReorderRows()
+        }
+        return false
     },
 
     newRowPlaceHolder: function() {
@@ -1114,7 +1108,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     },
 
     acceptsDropHoverComplete: function(aDragView) {
-        return this.acceptsDropHover();
+        return this.acceptsDropHover(aDragView);
     },
 
     dropCompleteDocumentFrame: function() {
@@ -1173,7 +1167,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     },
 
     endDropMode: function() {
-        console.log(this.typeId() + " endDropMode")
+        this.debugLog("endDropMode")
         this.unstackRows()
         this.removeRowPlaceHolder()
         this.unstackRows()
@@ -1182,7 +1176,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
 
         /*
         this.animateRemoveRowPlaceHolderAndThen(() => {
-            console.log(this.typeId() + " endDropMode done")
+         this.debugLog("endDropMode")
             this.unstackRows()
             this.setHasPausedSync(false)
             this.didReorderRows()

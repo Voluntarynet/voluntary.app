@@ -40,7 +40,7 @@ NodeView.newSubclassNamed("ShelfView").newSlots({
     },
     
     browser: function() {
-        return App.shared().browser()
+        return App.shared().browser() // TODO: fix this hack
     },
 
     // --- hide ----------------------

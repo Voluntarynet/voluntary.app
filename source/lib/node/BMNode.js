@@ -399,6 +399,22 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         return false
     },
 
+    acceptedSubnodeTypes: function() {
+        const types = []
+        if (this.subnodeProto()) {
+            types.push(this.subnodeProto().type())
+        }
+        return types
+    },
+
+    acceptsAddingSubnode: function(aSubnode) {
+        const ancestors = aSubnode.ancestorTypes()
+        const match = this.acceptedSubnodeTypes().detect(type => 
+            ancestors.contains(type)
+        )
+        return !Type.isNullOrUndefined(match)
+    },
+
     addSubnodeProtoForSlotIfAbsent: function(aProto, slotName) {
         const getter = this[slotName]
         if (!getter) {
@@ -737,7 +753,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     },
     */
 
-    canAddSubnodes: function() {
+    canSelfAddSubnode: function() {
         return this.hasAction("add")
     },
 

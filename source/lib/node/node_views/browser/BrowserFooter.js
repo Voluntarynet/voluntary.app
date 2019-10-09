@@ -32,7 +32,7 @@ NodeView.newSubclassNamed("BrowserFooter").newSlots({
     },
 	
     browser: function() {
-        return this.columnGroup().parentView()
+        return this.columnGroup().browser()
     },
 
     setNode: function(aNode) {

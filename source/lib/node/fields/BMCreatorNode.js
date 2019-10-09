@@ -32,6 +32,12 @@ BMStorableNode.newSubclassNamed("BMCreatorNode").newSlots({
     },
     */
 
+    /*
+    acceptsSubnodesOfTypes: function() {
+        return this.fieldTypes()
+    },
+    */
+
     fieldTypes: function() {
         return [
             "BMMenuNode", 

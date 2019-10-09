@@ -99,6 +99,9 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
 
     // columnGroupCache
 
+    hasCachedColumnGroup(cg) {
+        return Object.values(this.columnGroupCache()).contains(cg)
+    },
 
     getCachedColumnGroupForNode: function(node) {
         const k = node.typeId()
@@ -117,6 +120,9 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         assert(cg.type() === "BrowserColumnGroup")
         const k = cg.node().typeId()
         delete this.columnGroupCache()[k] 
+        //cg.scheduleSyncFromNode()
+        console.log("uncacheColumnGroup ", cg.node().title())
+        this.scheduleSyncFromNode()
         return this
     },
 
@@ -292,6 +298,10 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         return this.columnGroups().select(cg => cg.node() !== null)
     },
 
+    newBrowserColumnGroup: function() {
+        return BrowserColumnGroup.clone().setBrowser(this).colapse()
+    },
+
     setColumnGroupCount: function (count) {
         //this.log("setColumnGroupCount " + count)
         if (count === 0) {
@@ -318,7 +328,7 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
 
         // add columns as needed
         while (this.columnGroups().length < count) {
-            const newCg = BrowserColumnGroup.clone().colapse()
+            const newCg = this.newBrowserColumnGroup()
             this.addColumnGroup(newCg)
         }
 
@@ -329,12 +339,27 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         return this
     },
 
+    /*
+    useNewColumnGroupToReplaceColumnGroupAtIndex: function(index) {
+        const cgs = this.columnGroups()
+        const oldCg = cgs[index]
+        const newCg = this.newBrowserColumnGroup()
+        this.replaceSubviewWith(oldCg, newCg)
+        return newCg
+    },
+    */
+
     clearColumnsGroupsAfterIndex: function (index) {
         const cgs = this.columnGroups()
         for (let i = index + 1; i < cgs.length; i++) {
-            let cg = cgs[i]
-            //console.log("clearing column group ", i)
-            cg.setNode(null).syncFromNode()
+            const cg = cgs[i]
+            console.log("clearing column group ", i)
+            //cg.setNode(null).syncFromNode()
+            //this.useNewColumnGroupToReplaceColumnGroupAtIndex(i)
+            if (!Type.isNull(cg.node())) {
+                const theCg = this.setColumnGroupAtIndexToNode(index, null)
+                theCg.syncFromNode() // causes loop as the last column will clear columns after it 
+            }
         }
         return this
     },
@@ -348,7 +373,7 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
     // --- get selected column ---------------------------------------
 
     selectedColumnGroup: function() {
-        return this.columnGroups().detect( (cg) => { return cg.isSelected() })
+        return this.columnGroups().detect(cg => cg.isSelected())
     },
 
     selectedColumn: function() {
@@ -390,6 +415,29 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         return this
     },
 
+    setColumnGroupAtIndexToNode: function(cgIndex, cgNode) {
+        const oldCg = this.columnGroups()[cgIndex]
+
+        if (oldCg.node() !== cgNode) {
+            if (cgNode) {
+                const cachedCg = this.getCachedColumnGroupForNode(cgNode)
+                if (cachedCg && oldCg != cachedCg) {
+                    assert(cachedCg.type() === "BrowserColumnGroup") // sanity check
+                    this.replaceSubviewWith(oldCg, cachedCg)
+                    cachedCg.copySizeFrom(oldCg)
+                    return cachedCg
+                }  
+            }
+            
+            const newCg = this.newBrowserColumnGroup().setNode(cgNode)
+            this.replaceSubviewWith(oldCg, newCg)
+            newCg.copySizeFrom(oldCg)
+            return newCg
+        }
+
+        return oldCg
+    },
+
     selectColumn: function (selectedColumn) {
 
         /*
@@ -426,22 +474,26 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
 
                 if (nextNode) {
                     //console.log("nextNode:  ", nextNode.title())
-
                     
                     if (nextCg.node() !== nextNode) { // need a way to use columnGroupCache
+                        nextCg = this.setColumnGroupAtIndexToNode(nextCg.index(), nextNode)
+
+                        /*
                         const cachedCg = this.getCachedColumnGroupForNode(nextNode)
 
                         if (cachedCg && nextCg != cachedCg) {
-                            assert(cachedCg.type() === "BrowserColumnGroup")
+                            assert(cachedCg.type() === "BrowserColumnGroup") // sanity check
                             this.replaceSubviewWith(nextCg, cachedCg)
                             cachedCg.copySizeFrom(nextCg)
                             nextCg = cachedCg
                         } else {
-                            const newCg = BrowserColumnGroup.clone().colapse()
+                            const newCg = this.newBrowserColumnGroup()
                             this.replaceSubviewWith(nextCg, newCg)
                             newCg.copySizeFrom(nextCg)
                             nextCg = newCg
                         }
+                        */
+                        
                     }
                     
 
@@ -450,7 +502,6 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
                     
                     this.clearColumnsGroupsAfter(nextCg)
 
-                    //if ((nextNode.view().type() !== "BrowserColumnGroup") || nextNode.isKindOf(BMFieldSetNode)) { // TODO: use a better rule here
                     if ((nextNode.viewClassName() !== "BrowserColumnGroup") || nextNode.isKindOf(BMFieldSetNode)) { // TODO: use a better rule here
                         this.setColumnGroupCount(index + 2)
                     }

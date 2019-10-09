@@ -38,7 +38,7 @@ NodeView.newSubclassNamed("BrowserHeader").newSlots({
     },
 	
     browser: function() {
-        return this.columnGroup().parentView()
+        return this.columnGroup().browser()
     },
     
     setShouldShowTitle: function(aBool) {

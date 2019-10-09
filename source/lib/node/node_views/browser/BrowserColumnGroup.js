@@ -17,6 +17,7 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
 
     isCollapsed: false,
     animatesCollapse: true,
+    browser: null,
 
 }).setSlots({
     init: function () {
@@ -57,15 +58,24 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
     },
 
     // caching - used to hold onto view state during drag between columns
+    
+    
+    browser: function() {
+        return this.parentView()
+    },
+    
+    
 
     cache: function() {
-        this.browser().cacheColumnGroup(this)
+        this._browser.cacheColumnGroup(this)
+        //this.browser().cacheColumnGroup(this)
         //console.log(this.typeId() + ".cache()")
         return this
     },
     
     uncache: function() {
-        this.browser().uncacheColumnGroup(this)
+        this._browser.uncacheColumnGroup(this)
+        //this.browser().uncacheColumnGroup(this)
         //console.log(this.typeId() + ".uncache()")
         return this
     },
@@ -323,6 +333,10 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
     },
     
     setNode: function(aNode) {
+        if (Type.isNull(aNode) && this.browser() && this.browser().hasCachedColumnGroup(this)) {
+            console.log(this.typeId() + " setNode(null)")
+        }
+
         if (aNode === this._node) {
             //return
         }
@@ -347,10 +361,6 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
         this.column().setNode(aNode)
         this.footer().setNode(aNode)
         return this
-    },
-
-    browser: function() {
-        return this.parentView()
     },
     
 

@@ -2,13 +2,29 @@
 
 TODO:
 
+
+
 Drag/Drop Protocol
 
-    - fix bugs make easier to use
-        - problem: 
-            - differences in implementations if destination === source
-                - start/stop for destination vs source hover
+    BUG
+        - when caching a drag source BrowserColumnGroup, it's removed from it's parentView (the browser)
+          which causes exception when it later calls this.browser().uncache() after drag completes
+          solutions:
+            - send notification 
+            - hold a reference to the browser
+
+    - navigate left when holding over left side?
+
+    - finish dragging operation type support (link, copy, move)
+    - finish protocol to accept type of view/node and type of operation
+      - acceptsDropFrom(dragView) // check type and action?
+      - acceptsDropLinkOfNode
+      - acceptsDropCopyOfNode
+      - acceptsD
                 
+    Node: 
+    - acceptsSubnodesOfTypes()
+    - canAddSubnode(aSubnode)
             
    Drop Protocol
    
@@ -55,10 +71,9 @@ Drag/Drop Protocol
             - onDragSourceHover
             
             - onDragSourceComplete
-            
                 Replace with:
                     - onDragSourceDropped
-                    - onDragSourceEnd
+                    - onDragSourceEnd // sent after drop or cancelled
                     
             
             - onDragSourceExit

@@ -183,7 +183,7 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
 
     firstAcceptingDropTarget: function() {
         return this.hoverViews().detect((v) => {
-            return v.acceptsDropHoverComplete && v.acceptsDropHoverComplete()
+            return v.acceptsDropHoverComplete && v.acceptsDropHoverComplete(this)
         })
     },
 
@@ -236,7 +236,7 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
     },
 
     newHoverViews: function() {
-        return this.viewsUnderDefaultPan().select(v => v.acceptsDropHover && v.acceptsDropHover())
+        return this.viewsUnderDefaultPan().select(v => v.acceptsDropHover && v.acceptsDropHover(this))
     },
 
     hoverOverViews: function() {

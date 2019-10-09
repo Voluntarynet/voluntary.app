@@ -17,7 +17,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
-        this.setIsDebugging(true)
+        //this.setIsDebugging(true)
         this.setIsRegisteredForKeyboard(true)
         //this.styles().selected().setBorderLeft("1px solid rgba(0, 0, 0, 0.15)")
         //this.styles().unselected().setBorderLeft("1px solid rgba(0, 0, 0, 0.15)")
@@ -249,7 +249,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     },
 
     unselectAllRows: function() {
-        this.rows().forEach(row => row.unselect())
+        this.rows().forEach(row => { if (row.unselect) { row.unselect()} })
         return this
     },
 	
@@ -1003,66 +1003,52 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         return this
     },
 
-    // -- messages sent by row when dragging ---
+    // -- messages sent by DragView to the parent/owner of the view it's dragging ---
 
     onDragSourceBegin: function(aDragView) {
         this.setHasPausedSync(true)
-        
+
         const subview = aDragView.item()
         subview.hideForDrag()
         const index = this.indexOfSubview(subview)
         assert(index !== -1)
         this.moveSubviewToIndex(this.newRowPlaceHolder(), index)
-        this.columnGroup().cache()
+        this.columnGroup().cache() // only needed for source column, since we might navigate while dragging
         this.stackRows()
         return this
     },
 
     onDragSourceCancelled: function(aDragView) {
-        const subview = aDragView.item()
-        subview.unhideForDrag()
+        aDragView.item().unhideForDrag()
         this.removeRowPlaceHolder()
-        this.endDropMode()
-
-        setTimeout(() => {
-            this.columnGroup().uncache()
-        })
     },
 
     onDragSourceEnter: function(dragView) {
-        //this.onDragDestinationEnter(dragView)
+        this.onDragDestinationHover(dragView)
     },
 
+    onDragSourceHover: function(dragView) {
+        this.onDragDestinationHover(dragView)
+    },
 
-    onDragSourceComplete: function(dragView) {
+    onDragSourceExit: function(dragView) {
+        this.onDragDestinationHover(dragView)
+    },
+
+    onDragSourceDropped: function(dragView) {
         const dv = dragView.item()
         this.unstackRows()
-
-        assert(dv.hasParentView()) //
         this.swapSubviews(dv, this.rowPlaceHolder())
-        assert(dv.hasParentView()) //
         this.removeRowPlaceHolder()
         dv.unhideForDrag()
-        this.endDropMode()
-        assert(dv.hasParentView()) ///
     },
 
-    /*
-    onDragSourceComplete: function(aDragView) {
-        const subview = aDragView.item()
-
-        subview.unhideForDrag()
-        
-        this.removeRowPlaceHolder()
+    onDragSourceEnd: function(dragView) {
+        this.columnGroup().scheduleMethod("uncache")
         this.endDropMode()
-
-        setTimeout(() => {
-            this.columnGroup().uncache()
-        })
     },
-    */
 
-    // --- drop protocol ---
+    // -- messages sent by DragView to the potential drop view, if not the source ---
 
     acceptedDropNodeTypes: function() { 
         // null means it accepts node types
@@ -1079,6 +1065,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     },
 
     newRowPlaceHolder: function() {
+        this.debugLog("newRowPlaceHolder")
         if (!this.rowPlaceHolder()) {
             const ph = DomView.clone().setDivClassName("BrowserRowPlaceHolder")
             ph.setBackgroundColor("black")
@@ -1086,13 +1073,12 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             ph.setMinAndMaxHeight(64)
             //ph.transitions().at("top").updateDuration(1)
             //ph.transitions().at("left").updateDuration(0.3)
-            ph.setTransition("top 0s, left 0.3s")
+            ph.setTransition("top 0s, left 0.3s, max-height 1s, min-height 1s")
             this.addSubview(ph)
             this.setRowPlaceHolder(ph)
         }
         return this.rowPlaceHolder()
     },
-
 
 
     // --- drag destination ---
@@ -1108,10 +1094,6 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         }
     },
 
-    onDragSourceHover: function(dragView) {
-        this.onDragDestinationHover(dragView)
-    },
-
     onDragDestinationHover: function(dragView) {
         // move place holder view
         const ph = this.rowPlaceHolder()
@@ -1122,18 +1104,13 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             this.stackRows() // need to use this so we can animate the row movements
         }
     },
-
-    onDragSourceExit: function(dragView) {
-        //this.onDragDestinationExit(dragView)
-    },
     
     onDragDestinationExit: function(dragView) {
-        const dv = dragView.item()
-        const isFromSameView = this.rows().contains(dv)
-        if (!isFromSameView) {
-            this.removeRowPlaceHolder()
-            this.endDropMode()
-        }
+        this.endDropMode()
+    },
+
+    onDragDestinationEnd: function(aDragView) {
+        this.endDropMode()
     },
 
     acceptsDropHoverComplete: function(aDragView) {
@@ -1144,8 +1121,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         return this.rowPlaceHolder().frameInDocument()
     },
 
-
-    onDragDestinationComplete: function(dragView) {
+    onDragDestinationDropped: function(dragView) {
         const dv = dragView.item()
 
         this.unstackRows()
@@ -1155,11 +1131,17 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             assert(dv.hasParentView() === false)
             //this.addSubnode(dv.node()) // this happens automatically with didReorderSubviews?
             this.addSubview(dv)
+
+            dv.setPosition("absolute")
+            dv.setTop(this.rowPlaceHolder().top())
+
             assert(dv.hasParentView()) //
             this.swapSubviews(dv, this.rowPlaceHolder())
+            this.removeRowPlaceHolder()
+
+            dv.unhideForDrag()
         }
 
-        this.removeRowPlaceHolder()
         this.endDropMode()
         assert(dv.hasParentView())
     },
@@ -1175,10 +1157,38 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         }
     },
 
+    animateRemoveRowPlaceHolderAndThen: function(callback) {
+        this.debugLog("animateRemoveRowPlaceHolder")
+
+        const ph = this.rowPlaceHolder()
+        if (ph) {
+            ph.setMinAndMaxHeight(0)
+            setTimeout(() => {
+                this.removeRowPlaceHolder()
+                if (callback) { callback() }
+            }, 1*1000)
+        } else {
+            if (callback) { callback() }
+        }
+    },
+
     endDropMode: function() {
+        console.log(this.typeId() + " endDropMode")
+        this.unstackRows()
+        this.removeRowPlaceHolder()
         this.unstackRows()
         this.setHasPausedSync(false)
         this.didReorderRows()
+
+        /*
+        this.animateRemoveRowPlaceHolderAndThen(() => {
+            console.log(this.typeId() + " endDropMode done")
+            this.unstackRows()
+            this.setHasPausedSync(false)
+            this.didReorderRows()
+        })
+        */
+
         return this
     },
 

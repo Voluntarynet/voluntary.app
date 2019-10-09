@@ -53,9 +53,18 @@ Drag/Drop Protocol
             - onDragSourceBegin
             - onDragSourceEnter
             - onDragSourceHover
+            
             - onDragSourceComplete
+            
+                Replace with:
+                    - onDragSourceDropped
+                    - onDragSourceEnd
+                    
+            
             - onDragSourceExit
             - onDragSourceCancelled // dropped on a view that doesn't accept it
+            
+            
             
             // using these messages avoids a bunch of conditions in the receiver 
             // the source is repsonsible for completing the drag operation
@@ -82,6 +91,8 @@ Drag/Drop Protocol
             - onDragDestinationExit
             - onDragDestinationComplete
             - acceptsDragDestinationComplete
+            
+            - onDragDestinationDrop
             
             
             ------------------

@@ -762,7 +762,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     // --- dragging source protocol ---
 
     hideForDrag: function() {
-        console.log(this.typeId() + " hideForDrag")
+        //console.log(this.typeId() + " hideForDrag")
         //this.setDisplay("none")
         this.setVisibility("hidden")
         //console.log(this.typeId() + " '" + this.node().title() + "'.hideForDrag() visibility: ", this.visibility())
@@ -770,7 +770,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     },
 
     unhideForDrag: function() {
-        console.log(this.typeId() + " unhideForDrag")
+        //console.log(this.typeId() + " unhideForDrag")
         //this.setDisplay("block")
         this.setVisibility("visible")
         //console.log(this.typeId() + " '" + this.node().title() + "'.unhideForDrag() visibility: ", this.visibility())
@@ -785,7 +785,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         //this.column().onSubviewDragCancelled(aDragView)
     },
 
-    onDragItemComplete: function(aDragView) {
+    onDragItemDropped: function(aDragView) {
         //this.column().onSubviewDragComplete(aDragView)
     },
 

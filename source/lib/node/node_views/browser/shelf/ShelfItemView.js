@@ -23,7 +23,7 @@ NodeView.newSubclassNamed("ShelfItemView").newSlots({
 		
         this.setIsRegisteredForMouse()
 		
-        let iv = DomView.clone().setDivClassName("ShelfIconView")
+        const iv = DomView.clone().setDivClassName("ShelfIconView")
         this.setIconView(iv)
         this.addSubview(iv)
         iv.makeBackgroundNoRepeat()
@@ -46,14 +46,14 @@ NodeView.newSubclassNamed("ShelfItemView").newSlots({
     },
 
     setupBadgeView: function() {	
-        let v = DomView.clone().setDivClassName("ShelfBadgeView")
+        const v = DomView.clone().setDivClassName("ShelfBadgeView")
         this.setBadgeView(v)
 	    this.addSubview(v)
         return this
     },
 	
     setupMarkerView: function() {	
-        let v = DomView.clone().setDivClassName("ShelfMarkerView")
+        const v = DomView.clone().setDivClassName("ShelfMarkerView")
         this.setMarkerView(v)
 	    this.addSubview(v)
         return this
@@ -67,10 +67,10 @@ NodeView.newSubclassNamed("ShelfItemView").newSlots({
     },
 
     syncFromNode: function() {
-        let node = this.node()
+        const node = this.node()
         this.setDestinationNode(node)
-        let iconUrl = node.shelfIconUrl()
-        let iconName = node.shelfIconName()
+        const iconUrl = node.shelfIconUrl()
+        const iconName = node.shelfIconName()
 		
         if (iconUrl) {
             this.setImageDataUrl(iconUrl)
@@ -106,9 +106,9 @@ NodeView.newSubclassNamed("ShelfItemView").newSlots({
         this.setMinAndMaxWidth(itemWidth)
         this.setMinAndMaxHeight(itemHeight)
 		
-        let iv = this.iconView()
-        let iconWidth  = itemWidth  * 0.7
-        let iconHeight = itemHeight * 0.7
+        const iv = this.iconView()
+        const iconWidth  = itemWidth  * 0.7
+        const iconHeight = itemHeight * 0.7
         iv.setPosition("relative")
         iv.setLeft((itemWidth-iconWidth)/2)
         iv.setTop((itemHeight-iconHeight)/2)
@@ -132,7 +132,7 @@ NodeView.newSubclassNamed("ShelfItemView").newSlots({
     */
 
     setImageDataUrl: function(imageDataUrl) {
-        let iv = this.iconView()
+        const iv = this.iconView()
         
         if (imageDataUrl) {
     		iv.setBackgroundImageUrlPath(imageDataUrl)        
@@ -146,7 +146,7 @@ NodeView.newSubclassNamed("ShelfItemView").newSlots({
     },
 	
     setIconName: function(name) {
-        let iv = this.iconView()
+        const iv = this.iconView()
         iv.setBackgroundImageUrlPath(this.pathForIconName(name))        
         iv.setBackgroundSizeWH(24, 24)
         this.setItemWidthHeight(78, 45)
@@ -165,7 +165,7 @@ NodeView.newSubclassNamed("ShelfItemView").newSlots({
 
         }
 
-        let destNode = this.destinationNode()
+        const destNode = this.destinationNode()
         if (destNode) {
             App.shared().browser().setNode(destNode).scheduleSyncFromNode() 
         }

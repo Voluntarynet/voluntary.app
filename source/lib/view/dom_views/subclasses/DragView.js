@@ -73,7 +73,7 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         this.setWidth("fit-content")
         this.setMinHeight("fit-content")
 
-        this.setIsDebugging(true)
+        //this.setIsDebugging(true)
 
         return this
     },
@@ -174,18 +174,14 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
     },
 
     onPanCancelled: function(aGesture) {
-        if (this.item().onDragItemCancelled) {
-            this.item().onDragItemCancelled(this)
-        }
-
-        if (this.source().onDragSourceCancelled) {
-            this.source().onDragSourceCancelled(this)
-        }
-
+        this.sendProtocolMessage(this.item(),  "onDragItemCancelled")
+        this.sendProtocolMessage(this.source(), "onDragSourceCancelled")
+        this.sendProtocolMessage(this.source(), "onDragSourceEnd")
+        // TODO: add slide back animation?
         this.close()
     },
 
-    acceptingDropTarget: function() {
+    firstAcceptingDropTarget: function() {
         return this.hoverViews().detect((v) => {
             return v.acceptsDropHoverComplete && v.acceptsDropHoverComplete()
         })
@@ -194,16 +190,28 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
     onPanComplete: function(aGesture) {
         this.debugLog("onPanComplete")
 
-        const aView = this.acceptingDropTarget()
-        assert(aView)
+        const aView = this.firstAcceptingDropTarget()
+        
+        if(!aView) {
+            this.onPanCancelled(aGesture)
+            return;
+        }
+
         const isSource = aView === this.source()
 
         this.setDestination(aView)
 
         if (aView) {
             const completionCallback = () => {
-                this.sendProtocolMessage(this.item(), "onDragItemComplete")
-                this.sendProtocolAction(aView, "Complete")
+                this.sendProtocolMessage(this.item(), "onDragItemDropped")
+                this.sendProtocolAction(aView, "Dropped")
+
+
+                this.sendProtocolMessage(this.source(), "onDragSourceEnd")
+                if (aView !== this.source()) {
+                    this.sendProtocolMessage(aView, "onDragDestinationEnd")
+                }
+
                 this.close()
             }
             const period = 0.2 // seconds
@@ -237,12 +245,14 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
 
         // if old view isn't in new ones, we must have exited it
         const exitingViews = oldViews.select( v => !newViews.contains(v))
+
         // if new view was in old one's, we're still hovering
         const hoveringViews = newViews.select(v => oldViews.contains(v))
+
         // if new view was not in old one's, we must be entering it
         const enteringViews = newViews.select(v => !oldViews.contains(v))
 
-        exitingViews.forEach(aView => this.sendProtocolAction(aView, "Exit"))
+        exitingViews.forEach(aView =>  this.sendProtocolAction(aView, "Exit"))
         hoveringViews.forEach(aView => this.sendProtocolAction(aView, "Hover"))
         enteringViews.forEach(aView => this.sendProtocolAction(aView, "Enter"))
 
@@ -266,10 +276,9 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
 
     sendProtocolMessage: function(receiver, methodName) {
         const msg = receiver.typeId() + " " + methodName + " " + (receiver[methodName] ? "" : " <<<<<<<<<<<<<< NOT FOUND ")
-        //if (msg !== this._lastMsg) {
+
         if (!methodName.contains("Hover")) {
             this.debugLog(msg)
-            this._lastMsg = msg
         }
 
         if (receiver[methodName]) {
@@ -277,11 +286,11 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         }
     },
     
-
-    // pan
+    // close
 
     close: function() {
         this.debugLog("close")
+        // handle calling this out of seqence?
 
         this.exitAllHovers()
         // TODO: animate move to end location before removing

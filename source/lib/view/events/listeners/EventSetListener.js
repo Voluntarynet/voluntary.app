@@ -12,8 +12,7 @@
     const mouseListener = MouseListener.clone().setListenTarget(element).setDelegate(anObject)
 
     will send onMouseDown(event), onMouseOver(event) etc to anObject when those events occur on the element.
-
-
+    
 */
 
 ideal.Proto.newSubclassNamed("EventSetListener").newSlots({

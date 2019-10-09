@@ -10,8 +10,11 @@ ResourceLoader.pushRelativePaths([
     "FocusListener.js",
     "KeyboardListener.js",
     "MouseListener.js",
+    "SelectListener.js",
     "TouchListener.js",
+    "TransitionListener.js",
     "GamePadListener.js",
-    "WebSocketListener.js"
+    "WebSocketListener.js",
+    "WheelListener.js"
 ])
 

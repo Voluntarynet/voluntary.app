@@ -353,14 +353,16 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         const cgs = this.columnGroups()
         for (let i = index + 1; i < cgs.length; i++) {
             const cg = cgs[i]
-            console.log("clearing column group ", i)
             //cg.setNode(null).syncFromNode()
             //this.useNewColumnGroupToReplaceColumnGroupAtIndex(i)
             if (!Type.isNull(cg.node())) {
+                //console.log("clearing column group ", i)
                 const theCg = this.setColumnGroupAtIndexToNode(index, null)
                 theCg.syncFromNode() // causes loop as the last column will clear columns after it 
             }
         }
+        //console.log("---")
+
         return this
     },
 
@@ -477,26 +479,8 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
                     
                     if (nextCg.node() !== nextNode) { // need a way to use columnGroupCache
                         nextCg = this.setColumnGroupAtIndexToNode(nextCg.index(), nextNode)
-
-                        /*
-                        const cachedCg = this.getCachedColumnGroupForNode(nextNode)
-
-                        if (cachedCg && nextCg != cachedCg) {
-                            assert(cachedCg.type() === "BrowserColumnGroup") // sanity check
-                            this.replaceSubviewWith(nextCg, cachedCg)
-                            cachedCg.copySizeFrom(nextCg)
-                            nextCg = cachedCg
-                        } else {
-                            const newCg = this.newBrowserColumnGroup()
-                            this.replaceSubviewWith(nextCg, newCg)
-                            newCg.copySizeFrom(nextCg)
-                            nextCg = newCg
-                        }
-                        */
-                        
                     }
                     
-
                     nextCg.setNode(nextNode)
                     nextCg.scheduleSyncFromNode()
                     

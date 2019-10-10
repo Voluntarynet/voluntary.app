@@ -22,6 +22,7 @@ DomStyledView.newSubclassNamed("NodeView").newSlots({
         //this.setNodeObservation(NotificationCenter.shared().newObservation().setName("didUpdateNode").setObserver(this))
         this.setNodeObservation(NotificationCenter.shared().newObservation().setObserver(this)) // observe all
         //this.setStyles(BMViewStyles.clone())
+        this.updateSubnodeToSubviewMap()
         return this
     }.setDocs("init", "initializes the object", "returns this"),
 	

@@ -1,9 +1,9 @@
 "use strict"
 
 ResourceLoader.pushRelativePaths([
-    "ClearApp.js",
+    "Notepad.js",
 ])
 
 ResourceLoader.pushDoneCallback( () => {
-    ClearApp.shared().run()
+    Notepad.shared().run()
 })

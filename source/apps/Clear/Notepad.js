@@ -2,13 +2,13 @@
 
 /*
     
-    ClearApp
+    Notepad
 
 
 */
 
-App.newSubclassNamed("ClearApp").newSlots({
-    name: "Clear.app",
+App.newSubclassNamed("Notepad").newSlots({
+    name: "Notepad",
     version: [0, 0, 0, 0],
 
     // model
@@ -103,5 +103,5 @@ App.newSubclassNamed("ClearApp").newSlots({
     },
 })
 
-ClearApp.showVersion()
+Notepad.showVersion()
 

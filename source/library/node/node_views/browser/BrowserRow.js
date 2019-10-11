@@ -829,7 +829,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     },
 
     canDropSelect: function() {
-        return this.node().hasSubnodes()
+        return this.node().hasSubnodes() || this.node().nodeCanReorderSubnodes()
     },
 
     setupDropHoverTimeout: function() {

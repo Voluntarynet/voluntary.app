@@ -3,6 +3,10 @@
 /*
     
     BrowserView
+
+    A Miller Column browser. It's subviews are BrowserColumnGroups.
+    Each BrowserColumnGroup has a ColumnHeader, ScrollView, and ColumnFooter.
+    Within a BrowserColumnGroup ScrollView is BrowserColumn whose subviews are BrowserRows.
     
 */
 

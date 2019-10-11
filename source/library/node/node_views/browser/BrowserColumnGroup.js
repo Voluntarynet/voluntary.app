@@ -51,6 +51,14 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
         return this
     },
 
+    copySetupFrom: function(bcg) {
+        this.setIsCollapsed(bcg.isCollapsed())
+        this.copySizeFrom(bcg)
+        this.setDisplay(bcg.display())
+        this.setPosition(bcg.position())
+        return this
+    },
+
     colapse: function() {
         this.setMinAndMaxWidth(0)
         this.setFlexGrow(0)

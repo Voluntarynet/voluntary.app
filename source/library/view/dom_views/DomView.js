@@ -1942,14 +1942,21 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     // --- inner html ---
 
     setInnerHTML: function (v) {
+        const oldValue = this.element().innerHTML
+
         if (v == null) {
             v = ""
         }
 
         v = "" + v
 
-        if (v === this.element().innerHTML) {
+        if (v === oldValue) {
             return this
+        }
+
+        if (this.type() === "BrowserRowNote") {
+        //if (v !== "&gt;" && v !== "") {
+            console.log(this.typeId() + " changing innerHTML from '" + oldValue + "' to '" + v + "'")
         }
 
         const isFocused = this.isActiveElementAndEditable()
@@ -1989,7 +1996,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     tellParentViews: function (msg, aView) {
         const f = this[msg]
         if (f && f.apply(this, [aView])) {
-            return // stop propogation
+            return // stop propogation on first view returning non-false
         }
 
         const p = this.parentView()
@@ -2634,6 +2641,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         //console.log("event: ", event)
         //event.preventDefault()
 
+        /*
         if ((!this.isValid()) && (this.invalidColor() != null)) {
             this.setColor(this.invalidColor())
         } else {
@@ -2641,6 +2649,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
                 this.setColor(null)
             }
         }
+        */
 
         const methodName = Keyboard.shared().upMethodNameForEvent(event)
         this.invokeMethodNameForEvent(methodName, event)
@@ -2650,6 +2659,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     },
 
     didEdit: function () {
+        console.log(this.typeId() + " onDidEdit")
         this.tellParentViews("onDidEdit", this)
         return this
     },

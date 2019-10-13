@@ -235,12 +235,15 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
         return this
     },
     
-    onDidEdit: function (changedView) {     
+    onDidEdit: function (changedView) {
+        //this.syncToNode() 
+        this.scheduleSyncToNode() 
         //this.log(this.type() + " onDidEdit")   
-        this.node().setKey(this.keyView().value())
-        this.node().setValue(this.valueView().value())
-        this.node().didUpdateView(this)
-        this.scheduleSyncFromNode() // needed for validation?
+        //this.node().setKey(this.keyView().value())
+        //this.node().setValue(this.valueView().value())
+        //this.node().didUpdateView(this)
+        //this.scheduleSyncFromNode() // needed for validation? // causes bug with TextEditing if a 2nd edit is ahead of node state
+        return true
     },
 
     updateSubviews: function() {

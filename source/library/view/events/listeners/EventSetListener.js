@@ -136,8 +136,12 @@ ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
             dict.handlerFunc = (event) => { 
                 const delegate = this.delegate()
                 const method = delegate[fullMethodName]
+
+                this.onBeforeEvent(fullMethodName, event)
+
+                let result = true
                 if (method) {
-                    const result = method.apply(delegate, [event]); 
+                    result = method.apply(delegate, [event]); 
 
                     if (this.isDebugging()) {
                         console.log("sent: " + delegate.type() + "." + fullMethodName, "(" + event.type + ") and returned ", result)
@@ -146,15 +150,15 @@ ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
                     if (result === false) {
                         event.stopPropagation()
                     }
-
-                    return result
                 } else {
                     if (this.isDebugging()) {
                         console.log(this.listenTargetDescription() + " MISSING method: " + delegate.type() + "." + fullMethodName, "(" + event.type + ")" )
                     }
                 }
 
-                return true
+                this.onAfterEvent(fullMethodName, event)
+
+                return result
             }
             dict.useCapture = this.useCapture()
 
@@ -165,6 +169,21 @@ ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
             this.listenTarget().addEventListener(eventName, dict.handlerFunc, dict.useCapture);
         })
 
+        return this
+    },
+
+    onBeforeEvent: function(methodName, event) {
+        //console.log(this.typeId() + " onBeforeEvent " + methodName)
+        return this
+    },
+
+    onAfterEvent: function(methodName, event) {
+        //console.log(this.typeId() + " onBeforeEvent " + methodName)
+        // chance to run scheduled events and post notifications
+        // before next event?
+        if (window.SyncScheduler) {
+            window.SyncScheduler.shared().fullSyncNow()
+        }
         return this
     },
 

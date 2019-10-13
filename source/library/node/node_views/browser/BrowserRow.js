@@ -322,7 +322,8 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     
     onDidEdit: function (changedView) {   
         //console.log("onDidEdit")
-        this.scheduleSyncToNode() //this.syncToNode()
+        //this.scheduleSyncToNode() //this.syncToNode() do we need this?
+        return true
     },
     
     // --- sync ---
@@ -731,8 +732,6 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         }
         */
         this.updateSubviews()
-        //this.syncFromNode() // need this to update selection color on fields?
-        //console.log('test sync')
         return this
     },
 

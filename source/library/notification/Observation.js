@@ -14,7 +14,8 @@ window.Observation = class Observation extends ProtoClass {
     init() {
         super.init()
         this.newSlots({
-            target: null, // expects uniqueId string for target
+            //target: null, // expects uniqueId string for target
+            targetId: null, // expects uniqueId string for target
             name: null,
             observer: null,
             center: null, // NotificationCenter that owns this
@@ -23,8 +24,21 @@ window.Observation = class Observation extends ProtoClass {
         })
     }
 
+    setTargetId (aString) {
+        assert(Type.isString(aString))
+        this._targetId = aString
+        return this
+    }
+
+    setTarget (obj) {
+        assert(Type.isObject(obj))
+        //this._target = obj
+        this.setTargetId(obj.typeId())
+        return this
+    }
+
     matchesNotification(note) {
-        const matchesTarget = (note.sender() === this.target()) || (this.target() === null)
+        const matchesTarget = (note.senderId() === this.targetId()) || (this.targetId() === null)
         const matchesName = (note.name() === this.name()) || (this.name() === null)
         return matchesTarget && matchesName
     }
@@ -51,8 +65,8 @@ window.Observation = class Observation extends ProtoClass {
     isEqual(obs) {
         const sameName     = this.name()     === obs.name()
         const sameObserver = this.observer() === obs.observer()
-        const sameTarget   = this.target()   === obs.target()
-        return sameName && sameObserver && sameTarget
+        const sameTargetId = this.targetId()   === obs.targetId()
+        return sameName && sameObserver && sameTargetId
     }
 
     watch() {

@@ -163,19 +163,35 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
         return this.string()
     },
 
+    
     setString: function(newValue) {
+        if (newValue === null) {
+            newValue = ""
+        }
+
+        const oldValue = this.string()
         //let newValue = this.visibleValue()
-        DomStyledView.setString.apply(this, [newValue])
-        //console.log("textfield '" + newValue + "' usesDoubleTapToEdit:", this.usesDoubleTapToEdit())
+        if (oldValue !== newValue) {
+            DomStyledView.setString.apply(this, [newValue])
+            /*
+            console.log(this.typeId() + " setString(")
+            console.log("    old: '" + oldValue + "'")
+            console.log("    new: '" + newValue + "'")
+            console.log("---")
+            */
+            //console.log("textfield '" + newValue + "' usesDoubleTapToEdit:", this.usesDoubleTapToEdit())
+        }
         return this
     },
+    
 	
     // ------------------
-    
-    onKeyDown: function(event) {
-        const controlDown   = Keyboard.shared().controlKey().isDown()
-        const equalSignDown = Keyboard.shared().equalsSignKey().isDown()
-        const minusDown     = Keyboard.shared().minusKey().isDown()
+
+    adjustFontSizeWithKeyboard: function() {
+        const kb = Keyboard.shared()
+        const controlDown   = kb.controlKey().isDown()
+        const equalSignDown = kb.equalsSignKey().isDown()
+        const minusDown     = kb.minusKey().isDown()
 
         // adjust font size (testing this out)
         if (controlDown) {
@@ -189,7 +205,12 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
                 }
             }
         }
-
+        return this
+    },
+    
+    onKeyDown: function(event) {
+        //console.log(this.typeId() + " onKeyDown ", event.key)
+        //this.adjustFontSizeWithKeyboard()
         return DomStyledView.onKeyDown.apply(this, [event])
     },
 
@@ -224,9 +245,12 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
         
         if (this.doesTrim()) {
             newValue = newValue.trim()
-        }
 
-        this.setInnerHTML(newValue)
+            if (newValue !== oldValue) {
+                this.debugLog("formatValue newValue !== oldValue")
+                this.setInnerHTML(newValue)
+            }
+        } 
         
 	    //console.trace(this.type() + " formatValue '" + oldValue + "' -> '" + this.innerHTML() + "'")
         //console.log(this.typeId() + " after formatValue: '" + this.innerHTML() + "'")
@@ -280,6 +304,11 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
         }
 
         return DomStyledView.onClick.apply(this, [event])
+    },
+
+    didEdit: function () {
+        DomStyledView.didEdit.apply(this)
+        return this
     },
 
 })

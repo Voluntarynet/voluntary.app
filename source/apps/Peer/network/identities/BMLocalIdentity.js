@@ -36,7 +36,7 @@ BMKeyPair.newSubclassNamed("BMLocalIdentity").newSlots({
         //console.log("is editable = ", this.profile().fieldNamed("publicKeyString").valueIsEditable())
         this.generatePrivateKey()
         this.setCanDelete(true)
-        this._didChangeIdentityNote = NotificationCenter.shared().newNote().setSender(this.uniqueId()).setName("didChangeIdentity")
+        this._didChangeIdentityNote = NotificationCenter.shared().newNote().setSender(this).setName("didChangeIdentity")
 
         this.setNodeTitleIsEditable(true)
     },
@@ -53,7 +53,7 @@ BMKeyPair.newSubclassNamed("BMLocalIdentity").newSlots({
 
     finalize: function() {
         //console.log(this.typeId() + ".finalize()")
-        NotificationCenter.shared().newNote().setSender(this.uniqueId()).setName("didChangeIdentity").setInfo(this).post()
+        NotificationCenter.shared().newNote().setSender(this).setName("didChangeIdentity").setInfo(this).post()
     },
 	
     didLoadFromStore: function() {

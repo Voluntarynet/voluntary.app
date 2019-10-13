@@ -124,9 +124,8 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         assert(cg.type() === "BrowserColumnGroup")
         const k = cg.node().typeId()
         delete this.columnGroupCache()[k] 
-        //cg.scheduleSyncFromNode()
         console.log("uncacheColumnGroup ", cg.node().title())
-        this.scheduleSyncFromNode()
+        //this.scheduleSyncFromNode() // needed?
         return this
     },
 
@@ -404,7 +403,6 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         this.syncToHashPath()
         return this
     },
-
 
     previous: function() {
         this.popLastActiveColumn()

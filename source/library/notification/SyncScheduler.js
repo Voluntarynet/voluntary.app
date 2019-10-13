@@ -88,6 +88,12 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
         return false
     }
 
+    isSyncingOrScheduledTargetAndMethod(target, syncMethod) {
+        const sc = this.hasScheduledTargetAndMethod(target, syncMethod) 
+        const sy = this.isSyncingTargetAndMethod(target, syncMethod) 
+        return sc || sy;
+    }
+
     hasScheduledTargetAndMethod (target, syncMethod) {
         const actionKey = window.SyncAction.ActionKeyForTargetAndMethod(target, syncMethod)
     	return this.actions().hasKey(actionKey)
@@ -104,6 +110,7 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
     
     unscheduleTargetAndMethod (target, syncMethod) {
         this.actions().removeKey(this.newActionForTargetAndMethod(target, syncMethod).actionsKey())
+        return this
     }
 	
     setTimeoutIfNeeded () {
@@ -181,6 +188,30 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
         })
 		
         return this.type() + ":\n" + parts.join("\n")
+    }
+
+    actionCount () {
+        return this.actions().values().length
+    }
+
+    fullSyncNow () {
+        //this.processSets()
+
+        if (this.actionCount()) {
+            let count = 0
+            const maxCount = 2
+
+            while (this.actionCount()) {
+                console.log("actionCount ", this.actionCount())
+                console.log(this.description())
+                window.NotificationCenter.shared().showNotes()
+                this.processSets()
+                count ++
+                assert (count < maxCount)
+            }
+            console.log("---")
+        }
+        return this
     }
 }
 

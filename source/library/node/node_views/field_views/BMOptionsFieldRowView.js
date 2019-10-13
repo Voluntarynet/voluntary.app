@@ -127,6 +127,7 @@ BMFieldRowView.newSubclassNamed("BMOptionsFieldRowView").newSlots({
             this.close()
         }
 
+        return true
     },
 	
 	

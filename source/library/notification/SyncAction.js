@@ -51,7 +51,8 @@ window.SyncAction = class SyncAction extends ProtoClass {
 	
     description () {
         const t = this.target() ? this.target().typeId() : "null"
-        return t + "." + this.method() + "() order:" + this.order()
+        const o = this.order() === 0 ? "" : " order:" + this.order()
+        return t + " " + this.method() + "" + o
     }
 	
     static ActionKeyForTargetAndMethod (target, method) {

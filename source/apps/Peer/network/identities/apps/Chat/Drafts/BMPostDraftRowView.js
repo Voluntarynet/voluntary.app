@@ -149,6 +149,7 @@ BrowserRow.newSubclassNamed("BMPostDraftRowView").newSlots({
         //console.log(this.typeId() + ".onDidEdit")
         this.updateSubviews()
         this.scheduleSyncToNode()
+        return true
     },
 
     didInput: function() {

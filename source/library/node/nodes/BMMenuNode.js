@@ -133,7 +133,7 @@ BMStorableNode.newSubclassNamed("BMMenuNode").newSlots({
     */
     
     note: function() {
-        return "&gt"
+        return "&gt;"
     },
 
     didChangeParentNode: function () {

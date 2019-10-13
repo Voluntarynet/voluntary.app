@@ -1,30 +1,31 @@
 
-
 TODO:
 
 
+    View <- pull from node, push to node -> Node <- pull from storage, push to storage -> Storage
+    pull: View listens to post from Node, schedulesSyncFromNode when heard
+    push: scheduleSyncToNode
+    
+    Drag/Drop Protocol
 
-Drag/Drop Protocol
+        BUG
+        
+            - do we need to syncFromNode for all tellParentViews("didEditNode")?
+                - was this from before didUpdateNode notifications?
+                - probably can stop at first level responsible for syncing with node?
+            
+        - navigate left when holding over left side?
 
-    BUG
-        - when caching a drag source BrowserColumnGroup, it's removed from it's parentView (the browser)
-          which causes exception when it later calls this.browser().uncache() after drag completes
-          solutions:
-            - send notification 
-            - hold a reference to the browser
-
-    - navigate left when holding over left side?
-
-    - finish dragging operation type support (link, copy, move)
-    - finish protocol to accept type of view/node and type of operation
-      - acceptsDropFrom(dragView) // check type and action?
-      - acceptsDropLinkOfNode
-      - acceptsDropCopyOfNode
-      - acceptsD
+        - finish dragging operation type support (link, copy, move)
+        - finish protocol to accept type of view/node and type of operation
+          - acceptsDropFrom(dragView) // check type and action?
+          - acceptsDropLinkOfNode
+          - acceptsDropCopyOfNode
+          - acceptsD
                 
-    Node: 
-    - acceptsSubnodesOfTypes()
-    - canAddSubnode(aSubnode)
+        Node: 
+        - acceptsSubnodesOfTypes()
+        - canAddSubnode(aSubnode)
             
    Drop Protocol
    

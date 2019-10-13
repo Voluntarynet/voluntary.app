@@ -17,6 +17,17 @@ window.Notification = class Notification extends ProtoClass {
             senderStack: null,
         })
     }
+
+    senderId () {
+        return this.sender().typeId()
+    }
+
+    setSender (obj) {
+        assert(Type.isObject(obj))
+        this._sender = obj
+        //this._senderId = obj.typeId())
+        return this
+    }
     
     isEqual (obs) {
         if (this === obs) { 
@@ -24,21 +35,20 @@ window.Notification = class Notification extends ProtoClass {
         }
         
         const sameName = this.name() === obs.name() 
-        const sameSender = this.sender() === obs.sender() 
+        const sameSenderId = this.senderId() === obs.senderId() 
         // TODO: testing equivalence of info?
         
-        return sameName && sameSender
+        return sameName && sameSenderId
     }
     
     post () {
         if (this.center().isDebugging()) {
-            //console.log(typeof(this.sender()) + "." + this.sender() + " posting note " + this.name() + " and recording stack for debug")
+            //console.log(typeof(this.senderId()) + "." + this.senderId() + " posting note " + this.name() + " and recording stack for debug")
             const e = new Error()
             e.name = "" //"Notification Post Stack"
-            e.message = this.sender() + " posting note '" + this.name() + "'" 
+            e.message = this.senderId() + " posting note '" + this.name() + "'" 
             this.setSenderStack(e.stack);
         }
-        
        
         this.center().addNotification(this)
         return this
@@ -46,6 +56,12 @@ window.Notification = class Notification extends ProtoClass {
     
     schedulePost () {
 	     window.SyncScheduler.shared().scheduleTargetAndMethod(this, "post")
+    }
+
+    description () {
+        const s = this.senderId() ? this.senderId() : "null"
+        const n = this.name() ? this.name() : "null"
+        return s + " " + n
     }
 }
 

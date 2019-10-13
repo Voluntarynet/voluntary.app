@@ -19,7 +19,7 @@ BMStorableNode.newSubclassNamed("BMLocalIdentities").newSlots({
         this.setNoteIsSubnodeCount(true)
         
         //this.setPidSymbol("_localIdentities")  
-        this._didChangeIdentitiesNote = NotificationCenter.shared().newNote().setSender(this.uniqueId()).setName("didChangeIdentities")
+        this._didChangeIdentitiesNote = NotificationCenter.shared().newNote().setSender(this).setName("didChangeIdentities")
         this.setNodeMinWidth(240)
         this.setNodeCanReorderSubnodes(true)
     },

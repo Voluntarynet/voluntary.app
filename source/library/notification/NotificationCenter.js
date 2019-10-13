@@ -21,7 +21,7 @@
     
         Instead of passing an object reference for: 
         
-            Observation.setTarget() and 
+            Observation.setTargetId() and 
             Notification.setSender()
         
         you can pass a uniqueId string/number for the object. e.g. the ideal.js 
@@ -157,7 +157,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
         const showDebug = this.isDebugging() === true && (this.debugNoteName() === null || this.debugNoteName() === note.name());
 
         if (showDebug) {
-            console.log(this.typeId() + " sender " + note.sender() + " posting " + note.name())
+            console.log(this.typeId() + " senderId " + note.senderId() + " posting " + note.name())
             this.showObservers()
         }
         
@@ -178,7 +178,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
                     //console.log("NotificationCenter: while posting note: ", note, " got error: ", error.name)
                     console.log("  OBSERVER (" + obs.observer() + ") STACK: ", error.stack)
                     if (note.senderStack()) {
-                        console.log("  SENDER (" + note.sender() + ") STACK: ", note.senderStack())
+                        console.log("  SENDER (" + note.senderId() + ") STACK: ", note.senderStack())
                     }
                 }
             }
@@ -186,12 +186,31 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
         
         this.setCurrentNote(null)
     }
+
+    show () {
+        console.log(this.typeId() + ":")
+        this.showObservers()
+        this.showNotes()
+    }
+
+    showNotes () {
+        console.log(this.notesDescription())
+    }
+
+    notesDescription() {
+        const notes = this.notifications()
+        return "notes: \n" + notes.map(note => "    " + note.description()).join("\n")
+    }
+
+    observersDescription() {
+        const observations = this.observations() 
+        return "observations:\n" + observations.map((obs) => { 
+            return "    " + obs.observer().type() + " listening to " + obs.targetId() + " " + obs.name()
+        }).join("\n") 
+    }
     
     showObservers () {
-        const observations = this.observations() 
-        console.log("observations:\n" + observations.map((obs) => { 
-            return "    " + obs.observer().type() + " listening to " + obs.target() + " " + obs.name()
-        }).join("\n") )
+        console.log(this.observersDescription())
     }
     
     showCurrentNoteStack () {

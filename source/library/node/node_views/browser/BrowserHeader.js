@@ -13,9 +13,11 @@ NodeView.newSubclassNamed("BrowserHeader").newSlots({
     shouldShowTitle: false,
 	
     rightActionsView: null,
+    actionButtons: null,
 }).setSlots({
     init: function () {
         NodeView.init.apply(this)
+        this.setActionButtons([])
 
         const backArrowView = ButtonView.clone().setDivClassName("BackArrow").setTarget(this).setAction("didHitBackArrow")
         backArrowView.setBackgroundImageUrlPath(this.pathForIconName("left"))        
@@ -56,52 +58,57 @@ NodeView.newSubclassNamed("BrowserHeader").newSlots({
 	
     showsAction: function(actionName) {
         return actionName !== "delete" // uses row delete action instead of column header action now
-        /*
-		if (actionName === "delete" && !WebBrowserWindow.shared().isOnMobile()) {
-			return false
-		}
-		return true
-		*/
     },
 
     syncFromNode: function() {
         const node = this.node()
+
         this.removeAllSubviews()
         
         if (node && this.browser()) {
             if (this.shouldShowTitle()) {
     		    this.titleView().setInnerHTML(node.nodeHeaderTitle())
-    		    this.addSubview(this.titleView())
-	        }
-
-            if (this.doesShowBackArrow()) {
-                this.addSubview(this.backArrowView())
+    		    this.addSubviewIfAbsent(this.titleView())
+	        } else {
+                this.removeSubviewIfPresent(this.titleView())
             }
 
-            node.actions().forEach((action) => {
-                if (this.showsAction(action)) {
-	                const button = BrowserHeaderAction.clone()
-	                button.setTarget(node).setAction(action)
-	                button.setCanClick(this.nodeHasAction(action))
-	                this.addSubview(button).syncFromNode()
-                }
-            })
+            if (this.doesShowBackArrow()) {
+                this.addSubviewIfAbsent(this.backArrowView())
+            } else {
+                this.removeSubviewIfPresent(this.backArrowView())
+            }
+
+            //this.syncActionButtons()
         } else {
             //console.log("no header subviews")
         }
         
         return this
     },
+
+    syncActionButtons: function() {
+        //const oldButtons = this.actionButtons()
+
+        node.actions().forEach((action) => {
+            if (this.showsAction(action)) {
+                const button = BrowserHeaderAction.clone()
+                button.setTarget(node).setAction(action)
+                button.setCanClick(this.nodeHasAction(action))
+                this.addSubview(button).syncFromNode()
+            }
+        })
+
+        return this
+    },
     
     nodeHasAction: function(anAction) {
         return this.node().respondsTo(anAction)
-        //return (anAction in this.node())
     },
 
     didHitBackArrow: function() {
         //console.log(this.typeId() + " back")
         this.browser().previous()
-        //this.columnGroup().column().selectPreviousColumn()
     },
 	
     setDoesShowBackArrow: function(aBool) {

@@ -160,6 +160,7 @@ BMStorableNode.newSubclassNamed("BMField").newSlots({
         if (parentNode.didUpdateField) {
             parentNode.didUpdateField(this)
         }
+        
         return this
     },
 	

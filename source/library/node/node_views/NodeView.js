@@ -57,7 +57,7 @@ DomStyledView.newSubclassNamed("NodeView").newSlots({
     startWatchingNode: function() {
         if (this.node()) {
             //console.log("startWatchingNode " + this.node() + " observation count = " + NotificationCenter.shared().observations().length)
-            this.nodeObservation().setTarget(this.node()._uniqueId).watch()
+            this.nodeObservation().setTarget(this.node()).watch()
         }
         return this
     },
@@ -208,15 +208,47 @@ DomStyledView.newSubclassNamed("NodeView").newSlots({
     },
     
     scheduleSyncToNode: function() {
+        if (this.hasScheduleSyncFromNode()) {
+            this.hasScheduleSyncFromNode()
+            console.log("SKIPPING scheduleSyncToNode because hasScheduleSyncFromNode")
+            window.SyncScheduler.shared().unscheduleTargetAndMethod(this, "syncFromNode")
+            return this
+        }
+        /*
+        if (this.hasScheduleSyncFromNode()) {
+            // wait for view to sync with node first
+            this.unscheduleTargetAndMethod(this, "syncFromNode")
+            return this
+        }
+        */
+        
         //NodeViewSynchronizer.addToNode(this)  
-        window.SyncScheduler.shared().scheduleTargetAndMethod(this, "syncToNode")
+        window.SyncScheduler.shared().scheduleTargetAndMethod(this, "syncToNode", 0)
         return this
     },
     
+    hasScheduleSyncToNode: function() {
+        return window.SyncScheduler.shared().isSyncingOrScheduledTargetAndMethod(this, "syncToNode")
+    },
+
     scheduleSyncFromNode: function() {
+        assert(!this.hasScheduleSyncToNode())
+        /*
+        if (this.hasScheduleSyncToNode()) {
+            // wait for view to sync with node first
+            assert(!this.hasScheduleSyncToNode())
+            return this
+        }
+        */
+
         //NodeViewSynchronizer.addFromNode(this)    
+        console.log(this.typeId() + " scheduleSyncFromNode")
         window.SyncScheduler.shared().scheduleTargetAndMethod(this, "syncFromNode")
         return this
+    },
+
+    hasScheduleSyncFromNode: function() {
+        return window.SyncScheduler.shared().isSyncingOrScheduledTargetAndMethod(this, "syncFromNode")
     },
 
     // logging 

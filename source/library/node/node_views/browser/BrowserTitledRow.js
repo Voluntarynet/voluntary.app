@@ -84,22 +84,21 @@ BrowserRow.newSubclassNamed("BrowserTitledRow").newSlots({
                     this.thumbnailView().setBackgroundImageUrlPath(imageUrl)
                 }
             } 
+
+            if (this.node().note() === "&gt;") {
+                this.noteView().setInnerHTML("")
+                this.makeNoteRightArrow()
+            } else {
+                this.noteView().setString(node.note())
+            }
         }
-        
-        if (this.noteView().innerHTML() === "&gt;") {
-            this.makeNoteRightArrow()
-            this.noteView().setInnerHTML("")
-        }
+
+
 		
         return this
     },
 
     // --- edit ---
-
-    onDidEdit: function (changedView) {   
-        //console.log(this.typeId() + ".onDidEdit")
-        this.scheduleSyncToNode()
-    },
 
     didInput: function() {
         this.scheduleSyncToNode() //this.syncToNode()
@@ -121,7 +120,7 @@ BrowserRow.newSubclassNamed("BrowserTitledRow").newSlots({
         const node = this.node()
         this.titleView().setString(node.title())
         this.subtitleView().setString(node.subtitle())
-        this.noteView().setString(this.node().note())
+        //this.noteView().setString(this.node().note())
         this.updateSubviews()
         return this
     },

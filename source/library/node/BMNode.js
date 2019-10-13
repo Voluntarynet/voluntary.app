@@ -101,8 +101,8 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     init: function () {
         this._subnodes = []
         this._actions = []        
-        this.setDidUpdateNodeNote(NotificationCenter.shared().newNote().setSender(this._uniqueId).setName("didUpdateNode"))
-        this.setShouldFocusSubnodeNote(NotificationCenter.shared().newNote().setSender(this._uniqueId).setName("shouldFocusSubnode"))
+        this.setDidUpdateNodeNote(NotificationCenter.shared().newNote().setSender(this).setName("didUpdateNode"))
+        this.setShouldFocusSubnodeNote(NotificationCenter.shared().newNote().setSender(this).setName("shouldFocusSubnode"))
         this._nodeMinWidth = 180
         this.scheduleFinalize()	
         
@@ -530,14 +530,6 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         }
 
         //this.scheduleSyncToView()
-    },
-    
-    syncToView: function() {
-        /*
-        if (this.view()) {
-            this.view().didUpdateNode() // TODO: move to notifications?
-        }  
-        */
     },
     
     privatePrepareToAccess: function() {

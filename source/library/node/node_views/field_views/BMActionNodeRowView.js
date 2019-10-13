@@ -61,10 +61,17 @@ BrowserRow.newSubclassNamed("BMActionNodeRowView").newSlots({
         return this
     },
 
+    syncToNode: function() {
+        this.node().setTitle(this.buttonView().title()) 
+        BrowserRow.syncToNode.apply(this)
+        return this
+    },
+
     onDidEdit: function (changedView) {     
-        this.node().setTitle(this.buttonView().title())
+        this.scheduleSyncToNode()
         //this.node().didUpdateView(this)
-        this.scheduleSyncFromNode() // needed for validation?
+        //this.scheduleSyncFromNode() // needed for validation?
+        return true
     },
     
 })

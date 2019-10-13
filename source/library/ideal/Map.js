@@ -152,7 +152,7 @@ window.ideal.Map = class Map extends ProtoClass {
         return this.jsMap().hasOwnProperty(k);
     }
 
-    atRemove (k) {
+    removeKey (k) {
         const m = this.jsMap();
         delete m[k];
         return this;

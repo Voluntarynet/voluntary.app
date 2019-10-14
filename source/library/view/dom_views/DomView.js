@@ -2659,7 +2659,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     },
 
     didEdit: function () {
-        console.log(this.typeId() + " onDidEdit")
+        console.log(this.typeId() + " didEdit")
         this.tellParentViews("onDidEdit", this)
         return this
     },

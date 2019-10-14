@@ -1,6 +1,28 @@
 
 TODO:
 
+    OptionsMenu?
+
+
+    SYNCHRONIZATION OVERVIEW
+    
+    VIEW (pulls from node on didUpdateNode notification, pushes to node after event change)
+        event (passes through EventSetListener onBeforeEvent)
+        DomView.didEdit
+            tellParents("onDidEdit") - up view parent chain until implemented and returns 
+        onDidEdit
+            scheduleSyncToNode
+        event returns (passes through EventSetListener onAfterEvent)
+            SyncScheduler.fullSyncNow()
+        syncToNode
+            < call node setters >
+    
+    
+    NODE (Type unserializes json from NodeStore record on awake and calls finalize, serializes self to json for 
+        
+    
+        
+    
 
     View <- pull from node, push to node -> Node <- pull from storage, push to storage -> Storage
     pull: View listens to post from Node, schedulesSyncFromNode when heard

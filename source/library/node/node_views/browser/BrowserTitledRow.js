@@ -104,11 +104,6 @@ BrowserRow.newSubclassNamed("BrowserTitledRow").newSlots({
         this.scheduleSyncToNode()
     },
 
-    onDidEdit: function(aView) {
-        this.scheduleSyncToNode() 
-        return true // stop propogation
-    },
-
     // --- sync ---
 
     syncToNode: function () {   

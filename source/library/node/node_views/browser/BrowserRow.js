@@ -320,10 +320,9 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     
     // -------------
     
-    onDidEdit: function (changedView) {   
-        //console.log("onDidEdit")
-        //this.scheduleSyncToNode() //this.syncToNode() do we need this?
-        return true
+    onDidEdit: function(aView) {
+        this.scheduleSyncToNode() 
+        return true // stop propogation
     },
     
     // --- sync ---

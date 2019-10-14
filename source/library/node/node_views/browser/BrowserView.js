@@ -124,7 +124,7 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         assert(cg.type() === "BrowserColumnGroup")
         const k = cg.node().typeId()
         delete this.columnGroupCache()[k] 
-        console.log("uncacheColumnGroup ", cg.node().title())
+        //console.log("uncacheColumnGroup ", cg.node().title())
         //this.scheduleSyncFromNode() // needed?
         return this
     },
@@ -484,7 +484,7 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
                     }
                     
                     nextCg.setNode(nextNode)
-                    nextCg.scheduleSyncFromNode()
+                    //nextCg.scheduleSyncFromNode()
                     
                     this.clearColumnsGroupsAfter(nextCg)
 
@@ -514,7 +514,9 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
     syncFromNode: function () {
         //this.log("syncFromNode")
         const columnGroups = this.columnGroups()
-        columnGroups.first().setNode(this.node())
+
+        //columnGroups.first().setNode(this.node())
+        this.setColumnGroupAtIndexToNode(0, this.node())
 
         //console.log(this.type() + ".syncFromNode()")
 

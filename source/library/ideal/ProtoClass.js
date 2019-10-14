@@ -421,5 +421,21 @@ class ProtoClass {
 
         return result
     }
+
+    setIsDebugging (aBool) {
+        this._isDebugging = aBool
+        return this
+    }
+
+    isDebugging () {
+        return this._isDebugging
+    }
+
+    debugLog (s) {
+        if (this.isDebugging()) {
+            console.log(this.typeId() + " " + s)
+        }
+        return this
+    }
 }
 

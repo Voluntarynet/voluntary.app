@@ -56,7 +56,7 @@ BMStorableNode.newSubclassNamed("BMMenuNode").newSlots({
 
     setTitle: function (aString) {
         this.setLabel(aString)
-        this.tellParentNodes("onDidEditNode", this)
+        //this.tellParentNodes("onDidEditNode", this)
         return this
     },
 
@@ -145,11 +145,13 @@ BMStorableNode.newSubclassNamed("BMMenuNode").newSlots({
     },
 
     onDidEditNode: function (aNode) {
+        /*
         if (this.parentNode() && this.isFlexRoot() && !this.isLoadingFromJSON()) {
             //const json = this.asJSON()
             //console.log(this.asJSON())
             //this.fromJSON(json)
         }
+        */
     },
 
     /*

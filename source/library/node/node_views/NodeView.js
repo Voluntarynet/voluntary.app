@@ -242,7 +242,7 @@ DomStyledView.newSubclassNamed("NodeView").newSlots({
         */
 
         //NodeViewSynchronizer.addFromNode(this)    
-        console.log(this.typeId() + " scheduleSyncFromNode")
+        //console.log(this.typeId() + " scheduleSyncFromNode")
         window.SyncScheduler.shared().scheduleTargetAndMethod(this, "syncFromNode")
         return this
     },

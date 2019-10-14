@@ -346,7 +346,7 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
         }
 
         if (aNode === this._node) {
-            //return
+            return this
         }
          
         NodeView.setNode.apply(this, [aNode])

@@ -48,7 +48,6 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
             syncSets: ideal.Map.clone(),
             hasTimeout: false,
             isProcessing: false,	
-            isDebugging: false,
             currentAction: null,
         })
     }
@@ -71,11 +70,20 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
         if (!this.hasScheduledTargetAndMethod(target, syncMethod)) {
             const newAction = this.newActionForTargetAndMethod(target, syncMethod, optionalOrder)
 
+            this.debugLog("    -> scheduling " + newAction.description())
+
+            /*
+            if (this.isProcessing() && this.currentAction().method() !== "processPostQueue") {
+                this.debugLog("    - isProcessing " + this.currentAction().description() +  " while scheduling " + newAction.description())
+            }
+            */
+            
             if (syncMethod !== "processPostQueue") {
                 if (this.currentAction() && this.currentAction().equals(newAction)) {
                     let error = this.typeId()
                     error += "  scheduleTargetAndMethod: \n" + newAction.description() 
                     error += "  while processing: " + this.currentAction().description()
+                    error += " loop detected "
                     throw new Error(error)
                 }
             }
@@ -135,6 +143,10 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
     }
 	
     processSets () {
+        if (this.isProcessing()) {
+            console.warn("WARNING: SynScheduler attempt to processSets before last set is completed")
+            return this
+        }
         assert(!this.isProcessing())
         this.setIsProcessing(true)
         const useTry = false
@@ -161,56 +173,61 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
     }
 
     justProcessSetsPRIVATE() {
-        //console.log(this.description())
-        if (this.isDebugging()) { 
-            console.log("Sync")
-        }
+        //this.debugLog(this.description())
+        this.debugLog("Sync")
         
         const actions = this.orderedActions()
         this.clearActions()
         
-        //console.log("actions = ", actions.map(a => a.method()).join(","))
-        //console.log("--- sending ----")
+        //this.debugLog("actions = ", actions.map(a => a.method()).join(","))
+        //this.debugLog("--- sending ----")
         actions.forEach((action) => {
             this.setCurrentAction(action)
             //action.trySend()
             action.send()
+            this.setCurrentAction(null)
         })
-        //console.log("--- done sending ----")
+        //this.debugLog("--- done sending ----")
     }
 
     description () {
-        const parts = []
-        const actions = this.orderedActions()
-        
-        actions.forEach((action) => {
-		    parts.push("    " + action.description())
-        })
-		
-        return this.type() + ":\n" + parts.join("\n")
+        const actionsString = this.orderedActions().map(action => "    " + action.description() ).join("\n")
+        return this.type() + ":\n" + actionsString
     }
 
     actionCount () {
-        return this.actions().values().length
+        return this.actions().keys().length
     }
 
     fullSyncNow () {
-        //this.processSets()
+        if (this.isProcessing()) {
+            this.debugLog(this.type() + " fullSyncNow called while isProcessing so SKIPPING")
+            return this
+        }
 
         if (this.actionCount()) {
+            this.debugLog(" --- fullSyncNow start --- ")
             let count = 0
-            const maxCount = 2
+            const maxCount = 5
 
             while (this.actionCount()) {
-                console.log("actionCount ", this.actionCount())
-                console.log(this.description())
-                window.NotificationCenter.shared().showNotes()
+                /*
+                this.debugLog(" --- processSets # " + count + " --- ")
+                this.debugLog(this.description())
+                this.debugLog(window.NotificationCenter.shared().notesDescription())
+                this.debugLog(" --- ")
+                */
                 this.processSets()
                 count ++
+                if (count > 6) {
+                    this.debugLog("loop?")
+                }
                 assert (count < maxCount)
             }
-            console.log("---")
+
+            this.debugLog(" --- fullSyncNow end --- ")
         }
+
         return this
     }
 }

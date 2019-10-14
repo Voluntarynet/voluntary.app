@@ -49,14 +49,18 @@ window.Notification = class Notification extends ProtoClass {
             e.message = this.senderId() + " posting note '" + this.name() + "'" 
             this.setSenderStack(e.stack);
         }
+
+        //console.log("   queuing post " + this.senderId() + " '" + this.name() + "'" )
        
         this.center().addNotification(this)
         return this
     }
     
+    /*
     schedulePost () {
 	     window.SyncScheduler.shared().scheduleTargetAndMethod(this, "post")
     }
+    */
 
     description () {
         const s = this.senderId() ? this.senderId() : "null"

@@ -213,8 +213,8 @@ BrowserRow.newSubclassNamed("BMPostMessageRowView").newSlots({
     syncToNode: function () {
         //console.log("syncToNode")
         this.node().setContent(this.textView().innerHTML())
-        this.node().tellParentNodes("onDidEditNode", this.node())
-        this.node().scheduleSyncToStore()
+        //his.node().tellParentNodes("onDidEditNode", this.node())
+        this.node().scheduleSyncToStore() // TODO: this should be handled by the node
         return this
     },
 

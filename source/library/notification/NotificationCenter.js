@@ -133,6 +133,8 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
                 this._currentNote = note;
                 //try { 
                 this.postNotificationNow(note)
+                //this.debugLog("   <- posting " + note.description() )
+
                 //} catch (error) {
                 //}
             })
@@ -199,7 +201,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
 
     notesDescription() {
         const notes = this.notifications()
-        return "notes: \n" + notes.map(note => "    " + note.description()).join("\n")
+        return "NotificationCenter: \n" + notes.map(note => "    " + note.description()).join("\n")
     }
 
     observersDescription() {

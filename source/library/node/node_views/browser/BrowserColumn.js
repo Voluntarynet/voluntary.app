@@ -191,6 +191,11 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     },
 
     selectThisColumn: function() {
+        if (Type.isNull(this.browser())) {
+            console.log(this.typeId() + " selectThisColumn WARNING: this.browser() === null" )
+            // TODO: find out why this happens
+            return this
+        }
         this.browser().selectColumn(this)
         return this
     },

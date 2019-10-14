@@ -173,15 +173,24 @@ ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
     },
 
     onBeforeEvent: function(methodName, event) {
-        //console.log(this.typeId() + " onBeforeEvent " + methodName)
+        /*
+        const a = methodName.contains("Capture") ||  methodName.contains("Focus") || methodName.contains("Move") || methodName.contains("Leave") || methodName.contains("Enter") || methodName.contains("Over")
+        if (!a) {
+            console.log(this.typeId() + " onBeforeEvent " + methodName)
+        }
+        */
         return this
     },
 
     onAfterEvent: function(methodName, event) {
-        //console.log(this.typeId() + " onBeforeEvent " + methodName)
         // chance to run scheduled events and post notifications
         // before next event?
         if (window.SyncScheduler) {
+            /*
+            if ( window.SyncScheduler.shared().actionCount()) {
+                console.log(this.typeId() + " onAfterEvent " + methodName)
+            }
+            */
             window.SyncScheduler.shared().fullSyncNow()
         }
         return this

@@ -161,7 +161,7 @@ BrowserRow.newSubclassNamed("BMPostDraftRowView").newSlots({
     syncToNode: function () {   
         //console.log("syncToNode")
         this.node().setContent(this.textContentView().innerHTML())
-        this.node().tellParentNodes("onDidEditNode", this.node())  
+        //this.node().tellParentNodes("onDidEditNode", this.node())  
         this.node().scheduleSyncToStore()
         return this
     },

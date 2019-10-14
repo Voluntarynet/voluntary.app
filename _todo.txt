@@ -8,6 +8,11 @@ TODO:
     
     Drag/Drop Protocol
 
+        TODO
+            - automate Node scheduleSyncToStore instead of making views responsible?
+            - look into "selectThisColumn WARNING: this.browser() === null"
+            - don't allow views to change node?
+            
         BUG
         
             - do we need to syncFromNode for all tellParentViews("didEditNode")?

@@ -101,7 +101,12 @@ BrowserRow.newSubclassNamed("BrowserTitledRow").newSlots({
     // --- edit ---
 
     didInput: function() {
-        this.scheduleSyncToNode() //this.syncToNode()
+        this.scheduleSyncToNode()
+    },
+
+    onDidEdit: function(aView) {
+        this.scheduleSyncToNode() 
+        return true // stop propogation
     },
 
     // --- sync ---
@@ -109,10 +114,10 @@ BrowserRow.newSubclassNamed("BrowserTitledRow").newSlots({
     syncToNode: function () {   
         //console.log("syncToNode")
         const node = this.node()
-        node.setTitle(this.titleView().innerHTML())
-        node.setSubtitle(this.subtitleView().innerHTML())
-        node.tellParentNodes("onDidEditNode", this.node())  
-        node.scheduleSyncToStore()
+        node.setTitle(this.titleView().innerText())
+        node.setSubtitle(this.subtitleView().innerText())
+        //node.tellParentNodes("onDidEditNode", this.node())  
+        node.scheduleSyncToStore() // TODO: this should be handled by the node
         return this
     },
 

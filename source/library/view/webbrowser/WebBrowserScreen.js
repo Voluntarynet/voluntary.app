@@ -54,5 +54,14 @@ ideal.Proto.newSubclassNamed("WebBrowserScreen").newSlots({
         return { width: w, height: h }
     },
 
+    userPrefersDarkMode: function() {
+        // should we add a timer to monitor this value and post notifications on changes?
+        // how about an NoteMonitor object that does this? example:
+        // const m = NoteMonitor.clone().setTarget(this).setMethod("userPrefersDarkMode")
+        // m.setName("didChangeDarkMode").setPeriodInSeconds(1).start()
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        return prefersDark
+    },
+
 })
 

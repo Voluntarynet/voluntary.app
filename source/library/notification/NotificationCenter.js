@@ -44,7 +44,7 @@
         NotificationCenter.shared().removeObserver(this)
         
         // post a notification
-        let note = NotificationCenter.shared().newNote().setSender(this).setName("hello").post()
+        const note = NotificationCenter.shared().newNote().setSender(this).setName("hello").post()
 
         // repost same notification
         note.post()
@@ -61,6 +61,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
             isDebugging: false,
             debugNoteName: "appDidInit",
             currentNote: null,
+            isProcessing: false,
         })
 
         this.setObservations([]);
@@ -122,15 +123,15 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
         // keep local ref of notifications and set 
         // notifications to empty array in case any are
         // added while we process them
-        this._currentNote = null
-        if (!this._isProcessing) {
-            this._isProcessing = true
+        this.setCurrentNote(null)
+
+        if (!this.isProcessing()) {
+            this.setIsProcessing(true)
             //console.log("processPostQueue " + this.notifications().length)
         
             const notes = this.notifications()
             this.setNotifications([])
             notes.forEach( (note) => {
-                this._currentNote = note;
                 //try { 
                 this.postNotificationNow(note)
                 //this.debugLog("   <- posting " + note.description() )
@@ -138,7 +139,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
                 //} catch (error) {
                 //}
             })
-            this._isProcessing = false
+            this.setIsProcessing(false)
         } else {
             Error.showCurrentStack()
             console.warn("WARNING: attempt to call processPostQueue recursively while on note: ", this._currentNote)
@@ -152,7 +153,6 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
         // case any are added while we are posting 
         //
         // TODO: add an dictionary index for efficiency
-        
 
         this.setCurrentNote(note)
         
@@ -175,13 +175,15 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
                 try {
                     obs.sendNotification(note)       
                 } catch(error) {
-                    //console.log("Error", typeof(error), "  ", error);
                     console.log("NOTIFICATION EXCEPTION: '" + error.message + "'");
-                    //console.log("NotificationCenter: while posting note: ", note, " got error: ", error.name)
                     console.log("  OBSERVER (" + obs.observer() + ") STACK: ", error.stack)
                     if (note.senderStack()) {
                         console.log("  SENDER (" + note.senderId() + ") STACK: ", note.senderStack())
                     }
+
+                    // how to we propogate the exception so we can inspect it in the debugger
+                    // without causing an inconsistent state by not completing the other notifications?
+                    throw error
                 }
             }
         })        

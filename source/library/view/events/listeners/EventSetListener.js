@@ -183,9 +183,18 @@ ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
     },
 
     onAfterEvent: function(methodName, event) {
-        // chance to run scheduled events and post notifications
-        // before next event?
         if (window.SyncScheduler) {
+            /*
+                run scheduled events here to ensure that a UI event won't occur
+                before sync as that could leave the node and view out of sync
+                e.g. 
+                - edit view #1
+                - sync to node
+                - node posts didUpdateNode
+                - edit view #2
+                - view get didUpdateNode and does syncFromNode which overwrites view state #2
+            */
+
             /*
             if ( window.SyncScheduler.shared().actionCount()) {
                 console.log(this.typeId() + " onAfterEvent " + methodName)

@@ -6,21 +6,45 @@ TODO:
 
     SYNCHRONIZATION OVERVIEW
     
-    VIEW (pulls from node on didUpdateNode notification, pushes to node after event change)
-        event (passes through EventSetListener onBeforeEvent)
-        DomView.didEdit
-            tellParents("onDidEdit") - up view parent chain until implemented and returns 
-        onDidEdit
-            scheduleSyncToNode
-        event returns (passes through EventSetListener onAfterEvent)
-            SyncScheduler.fullSyncNow()
-        syncToNode
-            < call node setters >
+	
+    VIEW
+	
+		PUSH to node
+	        UI event (will pass through EventSetListener.onBeforeEvent)
+	        DomView.didEdit (called by view's event handling methods)
+	            tellParents("onDidEdit") - propogate up parentView chain until implemented and returns true
+	        DomView.onDidEdit
+	            <updateSubviews?>
+	            NodeView.scheduleSyncToNode (check to make sure EventSetListener isHandling an Event?)
+	        event returns (through EventSetListener)
+	            EventSetListener.onAfterEvent calls SyncScheduler.fullSyncNow()
+				
+		PULL from node
+			(watches for didUpdateNode notification on it's node)
+			NodeView.didUpdateNode
+			NodeView.scheduleSyncFromNode
+			NodeView.syncFromNode 
+	            < call node setters >
+			
+ 
     
-    
-    NODE (Type unserializes json from NodeStore record on awake and calls finalize, serializes self to json for 
+    NODE 
+		
+		TO VIEWS
+		
+		TO STORE
+	        didUpdateSlot
+	            (special subnode rule)
+	            scheduleSyncToStore
+	            NodeStore addDirtyObject(this)
+        FROM STORE
+			Type unserializes json from NodeStore record on awake and calls finalize, serializes self to json for
+			when NodeStore loads an object 
+		
         
-    
+    STORE
+        scheduleStore
+        storeDirtyObjects
         
     
 

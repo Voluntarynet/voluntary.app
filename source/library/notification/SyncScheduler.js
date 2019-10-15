@@ -36,7 +36,20 @@
 
         // view
     	syncToNode	
-    	syncFromNode
+        syncFromNode
+        
+    When to run
+
+        When a UI event is handled, SyncSchedule.fullSyncNow should be called just before
+        control is returned to the browser to ensure that another UI event won't occur
+        before syncing as that could leave the node and view out of sync.
+            For example:
+                - edit view #1
+                - sync to node
+                - node posts didUpdateNode
+                - edit view #2
+                - view get didUpdateNode and does syncFromNode which overwrites view state #2
+
     	
 */
 

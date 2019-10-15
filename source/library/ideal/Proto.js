@@ -101,7 +101,7 @@ Proto.setSlots({
         if (this._childProtos.contains(this)) {
             console.log(this.typeId())
             console.log(this._childProtos.map(function(child) { return child.type() }))
-            throw "loop!"
+            throw "detected loop in childProtos"
         }
         */
 

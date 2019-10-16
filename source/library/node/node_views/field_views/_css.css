@@ -276,7 +276,7 @@
 
 /* --------------------------- Multi --------------------------- */
 
-.BMOptionsFieldRowView {
+.BMOptionsNodeRowView {
     /*display: flex;*/
     position: relative;
 	overflow: visible;

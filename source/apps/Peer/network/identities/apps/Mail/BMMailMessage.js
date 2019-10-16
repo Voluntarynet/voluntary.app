@@ -13,8 +13,8 @@ BMAppMessage.newSubclassNamed("BMMailMessage").newSlots({
     init: function () {
         BMAppMessage.init.apply(this)
 
-        this.addStoredField(BMOptionsField.clone().setKey("from").setValueMethod("fromContact")).setValueIsEditable(false) //.setValidValuesMethod("fromContactNames") //.setNoteMethod("fromContactPublicKey")
-        this.addStoredField(BMOptionsField.clone().setKey("to").setValueMethod("toContact")).setValueIsEditable(true).setValidValuesMethod("toContactNames") //.setNoteMethod("toContactPublicKey")
+        this.addStoredField(BMOptionsNode.clone().setKey("from").setValueMethod("fromContact")).setValueIsEditable(false) //.setValidValuesMethod("fromContactNames") //.setNoteMethod("fromContactPublicKey")
+        this.addStoredField(BMOptionsNode.clone().setKey("to").setValueMethod("toContact")).setValueIsEditable(true).setValidValuesMethod("toContactNames") //.setNoteMethod("toContactPublicKey")
         this.addFieldNamed("subject").setKey("subject")	
 
         this.addStoredField(BMTextAreaField.clone().setKey("body").setValueMethod("body"))

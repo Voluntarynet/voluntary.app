@@ -2,36 +2,50 @@
 
 /*
 
-    BMOptionsField 
+    BMOptionsNode 
     
 */
 
-BMField.newSubclassNamed("BMOptionsField").newSlots({
+BMField.newSubclassNamed("BMOptionsNode").newSlots({
 
 }).setSlots({
     
     init: function () {
-        BMField.init.apply(this)
-        //this.setViewClassName("BMOptionsFieldView")
+        BMStorableNode.init.apply(this)
 
         this.setShouldStore(true)
+        this.addStoredSlot("title")
         this.setShouldStoreSubnodes(true)
+
         this.setCanDelete(true)
         this.setNodeCanInspect(true)
         this.addAction("add")
         this.setNodeMinWidth(300)
 
-        this.setTitle("options title")
+        this.setTitle("title")
         this.setNodeCanEditTitle(true)
 
         //this.setSubtitle("subtitle")
-        this.setNodeCanEditSubtitle(false)
+        //this.setNodeCanEditSubtitle(true)
 
+        //this.setSubnodeProto(BMMenuNode)
         this.setSubnodeProto(BMOptionNode)
-        
         this.setNodeCanReorderSubnodes(true)
+
+        //this.setViewClassName("BMOptionsNodeView")
+    },
+
+    subtitle: function() {
+        return this.selectedSubnodes().map(subnode => subnode.title()).join(", ")
+    },
+
+    setSubtitle: function(aString) {
         return this
     },
+
+    selectedSubnodes: function() {
+        return this.subnodes().select(subnode => subnode.isSelected())
+    },    
 
     acceptedSubnodeTypes: function() {
         return [BMOptionNode.type()]

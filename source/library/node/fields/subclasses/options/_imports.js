@@ -1,6 +1,6 @@
 "use strict"
 
 ResourceLoader.pushRelativePaths([
-    "BMOptionsField.js",
+    "BMOptionsNode.js",
     "BMOptionNode.js"
 ])

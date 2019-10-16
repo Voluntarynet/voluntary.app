@@ -36,4 +36,13 @@ BMStorableNode.newSubclassNamed("BMOptionNode").newSlots({
         return this
     },
 
+    subtitle: function() {
+        return null
+        //return this.isSelected() ? "is selected" : "is not selected"
+    },
+
+    note: function() {
+        return this.isSelected() ? "&#10003;" : ""
+    },
+
 })

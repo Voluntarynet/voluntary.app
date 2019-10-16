@@ -1,6 +1,6 @@
 "use strict"
 
 ResourceLoader.pushRelativePaths([
-    "BMOptionsFieldRowView.js",
+    "BMOptionsNodeRowView.js",
     "BMOptionNodeRowView.js"
 ])

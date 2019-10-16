@@ -39,7 +39,7 @@ BMFieldSetNode.newSubclassNamed("BMClassifiedPost").newSlots({
  		this.addStoredField(BMNumberField.clone().setKey("price").setValueMethod("price")).setValueIsEditable(true).setUnsetVisibleValue(0)
 
 
- 		this.addStoredField(BMOptionsField.clone().setKey("currency").setValueMethod("currency")).setValueIsEditable(true).setValidValuesMethod("currencySymbols").setNoteMethod("currencyName")
+ 		this.addStoredField(BMOptionsNode.clone().setKey("currency").setValueMethod("currency")).setValueIsEditable(true).setValidValuesMethod("currencySymbols").setNoteMethod("currencyName")
  		this.addStoredField(BMDateField.clone().setKey("sent date").setValueMethod("postDate")).setValueIsEditable(false).setUnsetVisibleValue("(not sent yet)")
         this.addStoredField(BMTextAreaField.clone().setKey("description").setValueMethod("description")).setValueIsEditable(true)
         this.addStoredField(BMImageWellField.clone().setKey("drop images here").setValueMethod("imageDataURLs")).setValueIsEditable(true)

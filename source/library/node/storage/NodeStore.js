@@ -439,9 +439,10 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
             //throw new Error(error)
         }
 
-        const nodeType = this.translateNodeType(nodeDict.type)
+        let nodeType = this.translateNodeType(nodeDict.type)
 
         let proto = window[nodeType]
+
         if (!proto) {
             throw new Error("missing proto '" + nodeDict.type + "'")
         }

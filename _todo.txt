@@ -3,6 +3,9 @@ TODO:
 
     OptionsMenu?
 	
+	rename scheduleSyncToView to scheduleSyncToViews
+	rename syncToView to syncToViews
+	
 	replace didUpdateView(aView) on BMField with notification system?
 
 	remove use of &gt;, replace with SVG 

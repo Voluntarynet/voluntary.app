@@ -21,7 +21,7 @@ BMKeyPair.newSubclassNamed("BMLocalIdentity").newSlots({
         BMKeyPair.init.apply(this)
         this.setShouldStore(true)
         //this.setShouldStoreSubnodes(false)
-        this.setNodeTitleIsEditable(true)
+        this.setNodeCanEditTitle(true)
  
         this.initStoredSubnodeSlotWithProto("apps", BMApps)
         this.initStoredSubnodeSlotWithProto("profile", BMProfile)
@@ -38,7 +38,7 @@ BMKeyPair.newSubclassNamed("BMLocalIdentity").newSlots({
         this.setCanDelete(true)
         this._didChangeIdentityNote = NotificationCenter.shared().newNote().setSender(this).setName("didChangeIdentity")
 
-        this.setNodeTitleIsEditable(true)
+        this.setNodeCanEditTitle(true)
     },
     
     didUpdateSubnode: function(aSubnode) {

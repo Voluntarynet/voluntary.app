@@ -12,7 +12,7 @@ BMStorableNode.newSubclassNamed("BMTheme").newSlots({
         BMStorableNode.init.apply(this)
         this.setShouldStore(true)
 
-        this.setNodeTitleIsEditable(true)
+        this.setNodeCanEditTitle(true)
 
         this.setTitle("Untitled Theme")
         this.setNodeMinWidth(270)

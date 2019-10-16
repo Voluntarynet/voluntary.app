@@ -24,10 +24,10 @@ BMStorableNode.newSubclassNamed("BMMenuNode").newSlots({
         this.setNodeMinWidth(300)
 
         this.setTitle("title")
-        this.setNodeTitleIsEditable(true)
+        this.setNodeCanEditTitle(true)
 
         //this.setSubtitle("subtitle")
-        //this.setNodeSubtitleIsEditable(true)
+        //this.setNodeCanEditSubtitle(true)
 
         //this.setSubnodeProto(BMMenuNode)
         this.setSubnodeProto(BMCreatorNode)
@@ -140,9 +140,11 @@ BMStorableNode.newSubclassNamed("BMMenuNode").newSlots({
         this.scheduleSyncToView()
     },
 
+    /*
     isFlexRoot: function () {
         return this.parentNode() && (this.parentNode().type() !== this.type())
     },
+    */
 
     onDidEditNode: function (aNode) {
         /*

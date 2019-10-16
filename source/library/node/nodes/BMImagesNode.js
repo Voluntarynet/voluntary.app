@@ -14,8 +14,8 @@ BMStorableNode.newSubclassNamed("BMImageResourcesNode").newSlots({
         this.setViewClassName("ImageView")
         this.setSubnodeProto("ImageNode")
         
-        this.setNodeTitleIsEditable(true)
-        this.setNodeSubtitleIsEditable(false)
+        this.setNodeCanEditTitle(true)
+        this.setNodeCanEditSubtitle(false)
         this.setNodeMinWidth(200)
         this.setTitle(null)
         this.setSubtitle(null)

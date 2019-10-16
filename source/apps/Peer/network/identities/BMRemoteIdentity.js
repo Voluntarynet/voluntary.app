@@ -22,8 +22,8 @@ BMStorableNode.newSubclassNamed("BMRemoteIdentity").newSlots({
         BMStorableNode.init.apply(this)
         this.setShouldStore(true)
 
-        this.setNodeTitleIsEditable(true)
-        this.setNodeSubtitleIsEditable(false)
+        this.setNodeCanEditTitle(true)
+        this.setNodeCanEditSubtitle(false)
 
         this.addStoredSlots(["name", "publicKeyString"])
 		

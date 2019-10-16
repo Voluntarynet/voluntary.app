@@ -14,7 +14,7 @@ BMStorableNode.newSubclassNamed("BMCreatorNode").newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
-        this.setNodeTitleIsEditable(false)
+        this.setNodeCanEditTitle(false)
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(false)
         this.setNodeCanReorderSubnodes(false)
@@ -84,7 +84,7 @@ BMStorableNode.newSubclassNamed("BMCreatorNode").newSlots({
 
         newNode.setCanDelete(true)
         newNode.setNodeCanInspect(true)
-        newNode.setNodeTitleIsEditable(true)
+        newNode.setNodeCanEditTitle(true)
         //this.column().selectThisColumn()
 
         this.parentNode().replaceSubnodeWith(this, newNode)

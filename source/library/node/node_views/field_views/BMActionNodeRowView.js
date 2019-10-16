@@ -33,7 +33,7 @@ BrowserRow.newSubclassNamed("BMActionNodeRowView").newSlots({
         const bv = this.buttonView()
         bv.setTitle(this.node().title())
         
-        this.buttonView().setIsEditable(this.node().nodeTitleIsEditable())
+        this.buttonView().setIsEditable(this.node().nodeCanEditTitle())
 
         if (this.node().isEnabled()) {
             bv.setOpacity(1)	

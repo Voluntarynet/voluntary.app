@@ -12,8 +12,8 @@ BMStorableNode.newSubclassNamed("BMImageNode").newSlots({
     init: function () {
         BMStorableNode.init.apply(this)
         
-        this.setNodeTitleIsEditable(true)
-        this.setNodeSubtitleIsEditable(false)
+        this.setNodeCanEditTitle(true)
+        this.setNodeCanEditSubtitle(false)
         this.setNodeMinWidth(200)
         this.setTitle("Untitled")
         this.setSubtitle(null)

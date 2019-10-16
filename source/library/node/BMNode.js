@@ -43,8 +43,8 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         
     // row view interaction
     nodeThumbnailUrl: null,
-    nodeTitleIsEditable: false,
-    nodeSubtitleIsEditable: false,
+    nodeCanEditTitle: false,
+    nodeCanEditSubtitle: false,
     nodeRowIsSelectable: true,
     nodeVisibleClassName: null,
     

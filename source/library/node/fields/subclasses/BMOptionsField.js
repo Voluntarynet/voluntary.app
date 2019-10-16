@@ -2,7 +2,7 @@
 
 /*
 
-    BMOptionsField
+    BMOptionsField 
     
 */
 
@@ -13,37 +13,29 @@ BMField.newSubclassNamed("BMOptionsField").newSlots({
 }).setSlots({
     init: function () {
         BMField.init.apply(this)
+
+        this.setShouldStore(true)
+        this.setShouldStoreSubnodes(true)
+        this.setCanDelete(true)
+        this.setNodeCanInspect(true)
+        this.addAction("add")
+        this.setNodeMinWidth(300)
+
+        this.setKeyIsEditable(true)
+        this.setValueIsEditable(false)
+
+        this.setTitle("title")
+        this.setNodeCanEditTitle(true)
+
+        //this.setSubtitle("subtitle")
+        //this.setNodeCanEditSubtitle(true)
+
+        //this.setSubnodeProto(BMMenuNode)
+        this.setSubnodeProto(BMOptionNode)
+        this.setNodeCanReorderSubnodes(true)
+
+
+
         //this.setViewClassName("BMOptionsFieldView")
     },
-
-    setValidValues: function(v) {
-        this._validValues = v
-		
-        if (this.value() === null && v.length) {
-            this.setValue(v[0])
-        }
-
-        return this
-    },
-	
-    validValues: function() {
-        if (this._validValues.length === 0 && this.validValuesMethod()) {
-            const t = this.target()
-            return t[this.validValuesMethod()].apply(t)
-        }
-		
-        return this._validValues
-    },
-	
-    validate: function() {
-        //console.log(this.typeId() + " validate")
-		 
-        if(!this.validValues().contains(this.value())) {	
-            this.setValueError("invalid value")
-            return false
-        }
-        this.setValueError(null)
-        return true
-    },
-	
 })

@@ -9,8 +9,9 @@
 */
         
 BMStorableNode.newSubclassNamed("BMOptionNode").newSlots({
-    label: null,
+    label: "Option Title",
     value:  null,
+    isSelected: false,
 }).setSlots({
 
 }).setSlots({
@@ -19,14 +20,20 @@ BMStorableNode.newSubclassNamed("BMOptionNode").newSlots({
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(false)
         this.setNodeCanReorderSubnodes(false)
-        this.setupSubnodes()
-        //this.setCanDelete(true)
+        this.setCanDelete(true)
         this.addStoredSlot("label")
         this.addStoredSlot("value")
+        this.addStoredSlot("isSelected")
+        this.setNodeCanEditTitle(true)
     },
 
     title: function() {
         return this.label()
+    },
+
+    setTitle: function(aString) {
+        this.setLabel(aString)
+        return this
     },
 
 })

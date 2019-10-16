@@ -67,8 +67,8 @@ BrowserRow.newSubclassNamed("BrowserTitledRow").newSlots({
 
         const node = this.node()
 
-        this.titleView().setIsEditable(node ? node.nodeTitleIsEditable() : false)
-        this.subtitleView().setIsEditable(node ? node.nodeSubtitleIsEditable() : false)
+        this.titleView().setIsEditable(node ? node.nodeCanEditTitle() : false)
+        this.subtitleView().setIsEditable(node ? node.nodeCanEditSubtitle() : false)
         
         if (node) {
             const b = this.isSelected()

@@ -19,13 +19,13 @@ BrowserTitledRow.newSubclassNamed("BMOptionNodeRowView").newSlots({
                                 
     select: function() {
         BrowserTitledRow.select.apply(this)
-        console.log(this.typeId() + " selected ")
-        this.node().setIsSelected(!this.node().isSelected()) // will tell parent node which will ensure only one selected if needed
+        console.log(this.typeId() + + " " + this.node().title() + " picked ")
+        
+        // will tell parent node which will ensure only one selected if needed
         //this.browser().previous()
         // unselect parentNode's view in previous column?
         //this.didEdit()
-        this.node().scheduleSyncToView()
-        this.node().parentNode().scheduleSyncToView()
+        this.node().toggle()
         return this
     },
 

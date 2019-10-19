@@ -7,7 +7,7 @@
 */
 
 BMField.newSubclassNamed("BMOptionsNode").newSlots({
-
+    allowsMultiplePicks: false,
 }).setSlots({
     
     init: function () {
@@ -31,21 +31,51 @@ BMField.newSubclassNamed("BMOptionsNode").newSlots({
         //this.setSubnodeProto(BMMenuNode)
         this.setSubnodeProto(BMOptionNode)
         this.setNodeCanReorderSubnodes(true)
+        this.addStoredSlot("allowsMultiplePicks")
 
         //this.setViewClassName("BMOptionsNodeView")
+        this.addInspectorField(BMBooleanField.clone().setKey("Allows multiple picks").setValueMethod("allowsMultiplePicks").setValueIsEditable(true).setTarget(this))
     },
 
-    subtitle: function() {
-        return this.selectedSubnodes().map(subnode => subnode.title()).join(", ")
+    summary: function() {
+        let s = ""
+        if (this.nodeSummaryShowsKey()) {
+            s += this.title() + ": "
+        }
+        return s + this.childrenSummary()
+    },
+
+    childrenSummary: function() {
+        const picked = this.pickedSubnodes()
+        if (picked.length === 0) {
+            return "None"
+        }
+        return picked.map(subnode => subnode.summary()).join(this.nodeSummaryJoiner())
     },
 
     setSubtitle: function(aString) {
         return this
     },
 
-    selectedSubnodes: function() {
-        return this.subnodes().select(subnode => subnode.isSelected())
-    },    
+    didToggleOption: function(anOptionNode) {
+        if (anOptionNode.isPicked() && !this.allowsMultiplePicks()) {
+            this.unpickSubnodesExcept(anOptionNode)
+        }
+        return this
+    },
+
+    unpickSubnodesExcept: function(anOptionNode) {
+        this.subnodes().forEach(subnode => {
+            if (subnode !== anOptionNode) { 
+                subnode.setIsPicked(false) 
+            }
+        })
+        return this
+    },
+
+    pickedSubnodes: function() {
+        return this.subnodes().select(subnode => subnode.isPicked())
+    },
 
     acceptedSubnodeTypes: function() {
         return [BMOptionNode.type()]
@@ -55,6 +85,7 @@ BMField.newSubclassNamed("BMOptionsNode").newSlots({
         return "&gt;"
     },
 
+    /*
     setValidValues: function(values) {        
         const options = values.map(v => BMOptionNode.clone().setValue(v))
         this.setSubnodes(options)
@@ -64,6 +95,7 @@ BMField.newSubclassNamed("BMOptionsNode").newSlots({
     validValues: function() {
         return this.subnodes().map(sn => sn.value())
     },
+    */
     
     nodeRowLink: function() {
         // used by UI row views to browse into next column

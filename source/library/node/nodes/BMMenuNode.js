@@ -39,8 +39,7 @@ BMStorableNode.newSubclassNamed("BMMenuNode").newSlots({
         //this.setNodeRowStyles(BMViewStyles.clone())
 
         //this.setNodeUsesColumnBackgroundColor(false)
-
-        //this.addInspectorField(BMBooleanField.clone().setKey("test").setValueMethod("hasTest").setValueIsEditable(true).setTarget(this))
+        this.addStoredSlot("nodeSubtitleIsChildrenSummary")
     },
 
     didLoadFromStore: function() {

@@ -191,7 +191,11 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
         
         const actions = this.orderedActions()
         this.clearActions()
-        
+        /*
+        if (actions.length) {
+            console.log("syncing " + actions.length + " actions")
+        }
+        */
         //this.debugLog("actions = ", actions.map(a => a.method()).join(","))
         //this.debugLog("--- sending ----")
         actions.forEach((action) => {

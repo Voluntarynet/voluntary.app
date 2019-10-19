@@ -162,7 +162,8 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     },
     
     requestSelectionOfRow: function(aRow) {
-        return this.didClickRow(aRow)
+        this.didClickRow(aRow)
+        return true
     },
     
     didClickRow: function(clickedRow) {

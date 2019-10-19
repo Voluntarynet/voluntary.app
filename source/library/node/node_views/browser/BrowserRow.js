@@ -492,7 +492,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         console.log(this.typeId() + ".justInspect()")
         if (this.node().nodeCanInspect()) { 
             this.setIsInspecting(true)
-            //this.scheduleSyncToNode()
+            this.scheduleSyncToNode()
             //this.select()
             this.justTap()
         }

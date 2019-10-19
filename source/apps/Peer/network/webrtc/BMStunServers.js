@@ -26,7 +26,7 @@ BMStorableNode.newSubclassNamed("BMStunServers").newSlots({
     },
 
     bootstrap: function() {
-        if (this.subnodes().length === 0) {
+        if (!this.hasSubnodes()) {
             this.addSubnodesIfAbsent(this.bootStrapServers())
         }		
     },

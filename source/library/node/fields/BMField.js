@@ -37,6 +37,9 @@ BMStorableNode.newSubclassNamed("BMField").newSlots({
     valueError: null,
 	
     target: null,
+
+    nodeSummaryShowsKey: false,
+    nodeSummaryShowsValue: false,
 }).setSlots({
 
     init: function () {
@@ -54,11 +57,21 @@ BMStorableNode.newSubclassNamed("BMField").newSlots({
         this.addStoredSlot("valuePrefix")
         this.addStoredSlot("valuePostfix")
 
+        this.addStoredSlot("nodeSummaryShowsKey")
+        this.addStoredSlot("nodeSummaryShowsValue")
+
         //this.setNodeRowStyles(BMViewStyles.sharedBlackOnWhiteStyle())
         //this.setNodeRowStyles(BMViewStyles.sharedWhiteOnBlackStyle())
         //this.customizeNodeRowStyles().setToBlackOnWhite()
         return this
     },  
+
+    initNodeInspector: function() {
+        BMStorableNode.initNodeInspector.apply(this)
+        this.addInspectorField(BMBooleanField.clone().setKey("Summary shows key").setValueMethod("nodeSummaryShowsKey").setValueIsEditable(true).setTarget(this))
+        this.addInspectorField(BMBooleanField.clone().setKey("Summary shows value").setValueMethod("nodeSummaryShowsValue").setValueIsEditable(true).setTarget(this))
+        return this
+    },
     
     /*
     target: function() {
@@ -176,6 +189,20 @@ BMStorableNode.newSubclassNamed("BMField").newSlots({
     nodeRowLink: function() {
         return null
     },
+
+    summary: function() {
+        let parts = []
+
+        if (this.nodeSummaryShowsKey()) {
+            parts.push(this.key())
+        }
+
+        if (this.nodeSummaryShowsValue()) {
+            parts.push(this.value())
+        }
+
+        return parts.join(this.nodeSummaryJoiner())
+    }
 })
 
 

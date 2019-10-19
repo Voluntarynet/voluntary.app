@@ -259,7 +259,7 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
     updateEmptyLabel: function() {
         let node = this.node()
         if (node) {
-            if (node.subnodes().length === 0 && node.nodeEmptyLabel()) {
+            if (node.hasSubnodes() && node.nodeEmptyLabel()) {
                 this.setEmptyLabelText(node.nodeEmptyLabel())
                 return this
             }

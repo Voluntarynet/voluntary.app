@@ -1,7 +1,47 @@
 
 TODO:
 
+	
+	
+	Menu
+		- option to use subtitle as summary - like OptionsNode
+		
+		
+		BMNode
+		
+		summary: function() {
+			return this.title()
+		}
+		
+		summary: function() {
+			if (this.nodeUsesChildrenSummary()) {
+				return this.subnodes().map(subnode => subnode.summary()).join(", ")
+			}
+			return this.title()
+		}
+		
+		// what about images?
+		
+		
+		
+	DateMenu
+		Year list -> Month list -> Day list -> jump back
+		
+
+	Price -> Amount []
+	         Currency -> USD
+			 			 ...
+						 
+
     OptionsMenu?
+	
+	- option with count instead of just check
+	- Menu view inlining option?
+	
+	- support for single selection options
+	
+	make sure options work with keyboard
+	- need to tap or hit enter
 	
 	rename scheduleSyncToView to scheduleSyncToViews
 	rename syncToView to syncToViews

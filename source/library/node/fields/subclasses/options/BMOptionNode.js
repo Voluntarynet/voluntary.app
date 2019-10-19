@@ -11,7 +11,7 @@
 BMStorableNode.newSubclassNamed("BMOptionNode").newSlots({
     label: "Option Title",
     value:  null,
-    isSelected: false,
+    isPicked: false,
 }).setSlots({
 
 }).setSlots({
@@ -23,8 +23,25 @@ BMStorableNode.newSubclassNamed("BMOptionNode").newSlots({
         this.setCanDelete(true)
         this.addStoredSlot("label")
         this.addStoredSlot("value")
-        this.addStoredSlot("isSelected")
+        this.addStoredSlot("isPicked")
         this.setNodeCanEditTitle(true)
+    },
+
+    setIsPicked: function(aBool) {
+        if (this.isPicked() !== aBool) {
+            this._isPicked = aBool
+            if (this.parentNode()) {
+                this.parentNode().didToggleOption(this)
+                this.didUpdateNode()
+                this.scheduleSyncToStore()
+            }
+        }
+        return this
+    },
+
+    toggle: function() {
+        this.setIsPicked(!this.isPicked())
+        return this
     },
 
     title: function() {
@@ -41,8 +58,18 @@ BMStorableNode.newSubclassNamed("BMOptionNode").newSlots({
         //return this.isSelected() ? "is selected" : "is not selected"
     },
 
-    note: function() {
-        return this.isSelected() ? "&#10003;" : ""
+    summary: function() {
+        return this.title()
     },
+
+    note: function() {
+        return this.isPicked() ? "✓" : ""
+    },
+
+    /*
+    setIsSelected: function() {
+        this.scheduleSyncToStore()
+    },
+    */
 
 })

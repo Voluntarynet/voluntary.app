@@ -47,6 +47,8 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     nodeCanEditSubtitle: false,
     nodeRowIsSelectable: true,
     nodeVisibleClassName: null,
+    nodeSubtitleIsChildrenSummary: false,
+    nodeSummaryJoiner: ", ",
     
     nodeRowsStartAtBottom: false,
 
@@ -117,18 +119,19 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
 
     initNodeInspector: function() {
 
+        return this
     },
 
     nodeInspector: function(aField) {
         if (!this._nodeInspector) {
-            this._nodeInspector = BMNode.clone()
+            this._nodeInspector = BMNode.clone().setNodeMinWidth(500)
             this.initNodeInspector()
         }
         return this._nodeInspector
     },
 
     addInspectorField: function(aField) {
-        this.inspector().addSubnode(aField)
+        this.nodeInspector().addSubnode(aField)
         return this
     },
 
@@ -259,6 +262,10 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     // subtitle and note
     
     subtitle: function () {
+        if (this.nodeSubtitleIsChildrenSummary()) {
+            return this.childrenSummary()
+        }
+
         if (this.subtitleIsSubnodeCount() && this.subnodesCount()) {
             return this.subnodesCount()
         }
@@ -975,7 +982,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         dict.title = this.title()
         // TODO: store persistent slots...
         // TODO: store subnodes if set to store them
-        if (this.subnodes().length) { // TODO: use a count method?
+        if (this.hasSubnodes()) { // TODO: use a count method?
             dict.subnodes = this.subnodes().map((subnode) => {
                 return subnode.asJSON()
             })
@@ -1045,5 +1052,21 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     scheduleSelfFor: function(aMethodName, milliseconds) {
         return window.SyncScheduler.shared().scheduleTargetAndMethod(this, aMethodName, milliseconds)
     },
+
+    // --- summary ---
+    
+    		
+    summary: function() {
+        const t = this.title()
+        const s = this.subtitle()
+        if (s) { 
+            return t + ": " + s
+        }
+        return t
+    },
+        
+    childrenSummary: function() {
+        return this.subnodes().map(subnode => subnode.summary()).join(this.nodeSummaryJoiner())
+    }
 
 })

@@ -126,7 +126,7 @@ BMStorableNode.newSubclassNamed("BMFieldSetNode").newSlots({
         dict.type = this.type()
         // TODO: store persistent slots...
         // TODO: store subnodes if set to store them
-        if (this.subnodes().length) { // TODO: use a count method?
+        if (this.hasSubnodes()) { // TODO: use a count method?
             // TODO: check for BMField subclass?
             dict.fields = {}
             this.subnodes().forEach((field) => {

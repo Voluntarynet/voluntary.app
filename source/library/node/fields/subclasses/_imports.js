@@ -12,5 +12,6 @@ ResourceLoader.pushRelativePaths([
     "BMTextAreaField.js",
     "options/_imports.js",
     "date/_imports.js",
+    "time/_imports.js",
     
 ])

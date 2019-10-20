@@ -40,17 +40,17 @@ BMStorableNode.newSubclassNamed("BMCreatorNode").newSlots({
 
     fieldTypes: function() {
         return [
-            "BMMenuNode", 
             "BMActionNode", 
             "BMBooleanField", 
-            "BMDateField", 
+            //"BMDateField", 
+            "BMDateNode",
             //"BMIdentityField", 
             "BMImageWellField", 
-            "BMStringField",
-            "BMNumberField", 
             "BMMenuNode", 
+            "BMNumberField", 
             "BMOptionsNode",
-            "BMDateNode"
+            "BMStringField",
+            "BMTimeNode"
         ]
     },
 
@@ -60,17 +60,34 @@ BMStorableNode.newSubclassNamed("BMCreatorNode").newSlots({
             name = name.sansPrefix("BM")
             name = name.sansSuffix("Field")
             name = name.sansSuffix("Node")
-            const newNode = BMActionNode.clone()
-            newNode.setTitle(name).setTarget(this).setMethodName("didChoose").setInfo(typeName)
-            //newNode.setCanDelete(true)
+            //const newNode = BMActionNode.clone()
+            //newNode.setTitle(name).setTarget(this).setMethodName("didChoose").setInfo(typeName)
+
+            const newNode = BMNode.clone()
+            newNode.setTitle(name) //.setActionTarget(this).setAction("didChoose")
+            newNode._createTypeName = typeName
+
             return newNode
         })
         this.addSubnodes(newSubnodes)
         return this
     },
 
+    onRequestSelectionOfDecendantNode: function(aNode) {
+        const typeName = aNode._createTypeName
+        if (typeName) {
+            this.createType(typeName)
+        }
+        return true
+    },
+
     didChoose: function(actionNode) {
         const typeName = actionNode.info()
+        this.createType(typeName)
+        return this
+    },
+
+    createType: function(typeName) {
         const proto = window[typeName]
         const newNode = proto.clone()
 
@@ -91,5 +108,9 @@ BMStorableNode.newSubclassNamed("BMCreatorNode").newSlots({
         this.parentNode().replaceSubnodeWith(this, newNode)
 
         return this
+    },
+
+    note: function() {
+        return "&gt;"
     },
 })

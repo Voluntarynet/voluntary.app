@@ -225,7 +225,7 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
         if (this.actionCount()) {
             this.debugLog(" --- fullSyncNow start --- ")
             let count = 0
-            const maxCount = 5
+            const maxCount = 10
 
             while (this.actionCount()) {
                 /*

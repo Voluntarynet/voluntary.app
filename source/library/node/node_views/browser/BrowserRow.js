@@ -711,6 +711,12 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         //console.log(this.typeId() + " tellParentViews didClickRow")
         //this.tellParentViews("didClickRow", this)
         this.tellParentViews("requestSelectionOfRow", this)
+
+        const node = this.node()
+        if (node && node.onRequestSelectionOfNode) {
+            node.onRequestSelectionOfNode(this)
+        }
+        
         return this      
     },
 	

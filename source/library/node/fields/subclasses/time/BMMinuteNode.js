@@ -2,11 +2,11 @@
 
 /*
 
-    BMDayNode 
+    BMMinuteNode 
     
 */
 
-BMNode.newSubclassNamed("BMDayNode").newSlots({
+BMNode.newSubclassNamed("BMMinuteNode").newSlots({
     value: 1, // day value starts with 1
 }).setSlots({
     
@@ -16,26 +16,26 @@ BMNode.newSubclassNamed("BMDayNode").newSlots({
         this.setCanDelete(false)
         this.setNodeCanInspect(false)
         this.setNodeMinWidth(300)
-
-        this.setTitle("a day")
         this.setNodeCanEditTitle(false)
-
         this.setNodeCanReorderSubnodes(false)
     },
 
     setValue: function(v) {
-        assert(Number.isInteger(v) && v > 0 && v < 32)
+        assert(Number.isInteger(v) && v > -1 && v < 60)
         this._value = v
         return this
     },
 
-    dayName: function() {
-        const v = this.value()
-        return v + v.ordinalSuffix()
+    minuteName: function() {
+        let s = this.value()
+        if (s < 10) { 
+            s = "0" + s
+        }
+        return s
     },
 
     title: function() {
-        return this.dayName()
+        return this.minuteName()
     },
 
     subtitle: function() {

@@ -1067,6 +1067,23 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         
     childrenSummary: function() {
         return this.subnodes().map(subnode => subnode.summary()).join(this.nodeSummaryJoiner())
-    }
+    },
+
+    nodeSummaryJoiner: function() {
+        let s = this._nodeSummaryJoiner
+        if (s == "") {
+            return "<br>"
+        }
+        return s
+    },
+
+    onRequestSelectionOfDecendantNode: function(aNode) {
+        return false // allow propogation up the parentNode line
+    },
+
+    onRequestSelectionOfNode: function(aView) {
+        this.tellParentNodes("onRequestSelectionOfDecendantNode", this)
+        return this
+    },
 
 })

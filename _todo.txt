@@ -2,25 +2,20 @@
 TODO:
 
 	
+	Design Nodes & Views
+	
+		Header level?
+		Subtitle
+		Content
+		Footer
+		
+		- support inlining so levels work?
+	
 	
 	Menu
-		- option to use subtitle as summary - like OptionsNode
 		
-		
-		BMNode
-		
-		summary: function() {
-			return this.title()
-		}
-		
-		summary: function() {
-			if (this.nodeUsesChildrenSummary()) {
-				return this.subnodes().map(subnode => subnode.summary()).join(", ")
-			}
-			return this.title()
-		}
-		
-		// what about images?
+		- vetically center note
+		- images in summaries? html?
 		
 		
 		

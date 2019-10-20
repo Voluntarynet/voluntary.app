@@ -49,7 +49,7 @@ BMNode.newSubclassNamed("BMYearNode").newSlots({
     prepareToSyncToView: function() {
         // called after Node is selected
         if (!this.subnodes().length) {
-            for (let i = 0; i < 12; i++) {
+            for (let i = 1; i < 12 + 1; i++) {
                 this.addSubnode(BMMonthNode.clone().setValue(i))
             }
         }

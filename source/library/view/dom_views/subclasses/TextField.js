@@ -220,6 +220,7 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
 
         this.formatValue()
 
+        
         this.tellParentViews("didInput", this) 
             
         if (!this.doesHoldFocusOnReturn()) {
@@ -245,13 +246,16 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
         
         if (this.doesTrim()) {
             newValue = newValue.trim()
-
-            if (newValue !== oldValue) {
-                this.debugLog("formatValue newValue !== oldValue")
-                this.setInnerHTML(newValue)
-            }
         } 
+
+        if (true) {
+            //newValue.replaceAll("\n", "<br>")
+        }
         
+        if (newValue !== oldValue) {
+            this.debugLog("formatValue newValue !== oldValue")
+            this.setInnerHTML(newValue)
+        }
 	    //console.trace(this.type() + " formatValue '" + oldValue + "' -> '" + this.innerHTML() + "'")
         //console.log(this.typeId() + " after formatValue: '" + this.innerHTML() + "'")
         return this

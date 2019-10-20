@@ -7,8 +7,7 @@ ResourceLoader.pushRelativePaths([
     "Documentation.js",
     "Map.js",
     "StackTrace.js",
-    "ByteFormatter.js",
-    "TimePeriodFormatter.js",
+    "formatters/_imports.js",
     //"FilePath.js",
 ]);
 

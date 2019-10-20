@@ -315,8 +315,14 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         } 
 
         if (subview) {
-		    this.selectRowWithNode(subnode)
-		    subview.scrollIntoView()
+            this.selectRowWithNode(subnode)
+            //this.clickRowWithNode(subnode)
+            //subview.requestSelection()
+            subview.scrollIntoView()
+            if (this.previousColumn()) {
+                this.previousColumn().selectThisColumn()
+            }
+            //this.selectThisColumn()
 		    //subview.dynamicScrollIntoView()
         } else {
             console.warn("BrowserColumn for node " + this.node().typeId() + " has no matching subview for shouldFocusSubnode " + subnode.typeId())

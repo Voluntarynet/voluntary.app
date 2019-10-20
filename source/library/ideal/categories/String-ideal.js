@@ -82,8 +82,20 @@ Object.shallowCopyTo({
         return result
     },
 
+    sansPrefixes: function(aStringList) {
+        let result = this
+        aStringList.forEach((s) => { result = result.sansPrefix(s) })
+        return result
+    },
+
     sansPrefix: function (prefix) {
         return this.substring(this.beginsWith(prefix) ? prefix.length : 0);
+    },
+
+    sansSuffixes: function(aStringList) {
+        let result = this
+        aStringList.forEach((s) => { result = result.sansSuffix(s) })
+        return result
     },
 
     sansSuffix: function (suffix) {

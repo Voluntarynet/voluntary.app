@@ -47,7 +47,7 @@ class TimeFormatter extends ProtoClass {
     getTwelveHours () {
         let h = this.date().getHours()
         if (h > 12) { h -= 12 }
-        if (h === 0) { h == 12 }
+        if (h === 0) { h = 12 }
         return h
     }
 
@@ -125,9 +125,23 @@ class TimeFormatter extends ProtoClass {
         } 
 
         if (this.showsMilliseconds()) {
-            s += ":"
+            if (s.length) {
+                s += this.hourMinuteSpacer()
+            }
             s += this.millisecondsString() 
         } 
+
+        if (true) {
+            const h = this.date().getHours()
+            const m = this.date().getMinutes()
+            if (h === 0 && m === 0) { 
+                s = "midnight"
+            }
+
+            if (h === 12 && m === 0) { 
+                s = "noon"
+            }
+        }
 
         return s
     }

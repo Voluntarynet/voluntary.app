@@ -10,6 +10,7 @@ ideal.Proto.newSubclassNamed("WebBrowserScreen").newSlots({
 }).setSlots({
     init: function () {
         throw new Error("this class is meant to be used as singleton, for now")
+        ideal.Proto.init.apply(this)
         return this
     },
 
@@ -59,7 +60,7 @@ ideal.Proto.newSubclassNamed("WebBrowserScreen").newSlots({
         // how about an NoteMonitor object that does this? example:
         // const m = NoteMonitor.clone().setTarget(this).setMethod("userPrefersDarkMode")
         // m.setName("didChangeDarkMode").setPeriodInSeconds(1).start()
-        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
         return prefersDark
     },
 

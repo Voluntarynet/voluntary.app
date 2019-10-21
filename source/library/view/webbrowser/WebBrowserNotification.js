@@ -15,6 +15,7 @@ ideal.Proto.newSubclassNamed("WebBrowserNotification").newSlots({
     timeoutMs: 4000,
 }).setSlots({
     init: function () {
+        ideal.Proto.init.apply(this)
         return this
     },
 
@@ -35,4 +36,6 @@ ideal.Proto.newSubclassNamed("WebBrowserNotification").newSlots({
     },
 
 })
+
+
 

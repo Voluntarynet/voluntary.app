@@ -7,7 +7,7 @@
     Representation of a single style state (a example of a state is "selected").
 
     See BMViewStyles for docs.
-
+ 
 */
 
 ideal.Proto.newSubclassNamed("BMViewStyle").newSlots({
@@ -39,6 +39,7 @@ ideal.Proto.newSubclassNamed("BMViewStyle").newSlots({
     ]
 }).setSlots({
     init: function () {
+        ideal.Proto.init.apply(this)
         return this
     },
 

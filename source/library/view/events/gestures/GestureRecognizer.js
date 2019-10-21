@@ -106,6 +106,7 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
     isActive: false, // only used if shouldRequestActivation === false
 }).setSlots({
     init: function () {
+        ideal.Proto.init.apply(this)
         this.setListenerClasses([]) // subclasses override this in their
         this.setDocListeners([])
         this.setViewListeners([])

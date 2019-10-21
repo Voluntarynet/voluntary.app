@@ -14,6 +14,7 @@ ideal.Proto.newSubclassNamed("WebBrowserWindow").newSlots({
 }).setSlots({
     init: function () {
         throw new Error("this class is meant to be used as singleton, for now")
+        ideal.Proto.init.apply(this)
         return this
     },
 

@@ -46,6 +46,7 @@ ideal.Proto.newSubclassNamed("BMPow").newSlots({
     isValid: null, // used to cache result, null means "don't know yet"
 }).setSlots({
     init: function () {
+        ideal.Proto.init.apply(this)
         this.setTargetDifficulty(BMMessages.globalMinDifficulty())
         this.pickRandomPow()
         this._updateNote = NotificationCenter.shared().newNote().setSender(this).setName("powUpdate")

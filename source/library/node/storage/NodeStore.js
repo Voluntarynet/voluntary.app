@@ -106,6 +106,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     lastSyncTime: null,
 }).setSlots({
     init: function () {
+        ideal.Proto.init.apply(this)
         this.setDirtyObjects({})
         this.setActiveObjectsDict({})
         this.setSdb(window.SyncDB.clone())

@@ -23,6 +23,7 @@ ideal.Proto.newSubclassNamed("Rectangle").newSlots({
 }).setSlots({
 
     init: function () {
+        ideal.Proto.init.apply(this)
         this.setOrigin(Point.clone())
         this.setSize(Point.clone())
         return this

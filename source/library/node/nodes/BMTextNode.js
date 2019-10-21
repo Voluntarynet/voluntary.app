@@ -42,6 +42,10 @@ BMStorableNode.newSubclassNamed("BMTextNode").newSlots({
         this.setNodeCanEditColumnWidth(true)
         //this.setNodeUsesColumnBackgroundColor(false)
         this.addStoredSlot("nodeSubtitleIsChildrenSummary")
+
+        this.setNodeColumnStyles(BMViewStyles.clone())
+        //this.setNodeRowStyles(BMViewStyles.clone())
+        this.customizeNodeRowStyles().setToBlackOnWhite().selected().setBackgroundColor("red")
     },
 
     initNodeInspector: function() {

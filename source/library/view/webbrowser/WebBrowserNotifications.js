@@ -24,6 +24,7 @@ ideal.Proto.newSubclassNamed("WebBrowserNotifications").newSlots({
     waitingNote: null,
 }).setSlots({
     init: function () {
+        ideal.Proto.init.apply(this)
         throw new Error("this class is meant to be used as singleton, for now")
         return this
     },
@@ -91,36 +92,5 @@ ideal.Proto.newSubclassNamed("WebBrowserNotifications").newSlots({
     newNote: function() {
         return WebBrowserNotification.clone()
     },
-})
-
-// --------------------------------------
-
-ideal.Proto.newSubclassNamed("WebBrowserNotification").newSlots({
-    title: "",
-    body: null,
-    icon: null, // a url to an image
-    notificationRef: null,
-    timeoutMs: 4000,
-}).setSlots({
-    init: function () {
-        return this
-    },
-
-    tryToPost: function() {
-        WebBrowserNotifications.postNote(this)
-        return this
-    },
-
-    justPost: function() {
-        let note = new Notification(this.title(), { body: this.body(), icon: this.icon() });
-        this.setNotificationRef(note)
-        this.startTimeout()
-        return this
-    },
-
-    startTimeout: function() {
-        setTimeout(notification.close.bind(this.notificationRef()), this.timeoutMs());
-    },
-
 })
 

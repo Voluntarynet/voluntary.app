@@ -42,6 +42,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     eventListenersDict: null,
 }).setSlots({
     init: function () {
+        ideal.Proto.init.apply(this)
         this.setSubviews([])
         this.setupElement()
         this.setEventListenersDict({})

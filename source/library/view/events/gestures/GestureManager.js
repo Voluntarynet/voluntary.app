@@ -15,6 +15,7 @@ ideal.Proto.newSubclassNamed("GestureManager").newSlots({
 }).setSlots({
 
     init: function () {
+        ideal.Proto.init.apply(this)
         this.setBegunGestures({})
         return this
     },

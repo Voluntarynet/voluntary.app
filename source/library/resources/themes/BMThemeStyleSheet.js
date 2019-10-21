@@ -9,6 +9,7 @@
 ideal.Proto.newSubclassNamed("BMThemeStyleSheet").newSlots({
 }).setSlots({
     init: function () {
+        ideal.Proto.init.apply(this)
     },
 
     shared: function() {

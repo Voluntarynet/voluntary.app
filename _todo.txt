@@ -1,6 +1,30 @@
 
 TODO:
 
+	- how do use nodes for viewStyles? Color?
+		- ISSUE: both nodes and views need view styles
+		- ISSUE: loop: viewStyle node needs a viewStyle
+		- SOLUTION: like Nodes can have inspectors - create on access?
+		- NOTE: have viewStyles which can point to others for inheritance?
+		
+	- separate views from rows and drop them into row contentView?
+	
+	- other types: 
+		ColorPicker, 
+		Currencies, Currency Amount 
+		UnitsOfMeasure (Length, Area, Volume, Weight, Mass, Energy)
+		Continents, Countries, Cities, 
+		Lat/Long GPS Position
+		Seat (area, row, seat number)
+		Ticket (event, seat, price, name, confirmation #), Flight, Ride, Conference, Event, Dinning
+		Receipt?
+		Person, Employee, Contractor
+		Building, Home, Apartment, Vehicle, Pet, Furniture
+		Dwelling, car Rental
+		Contract, Commitment, Signature, CryptographicSignature
+		Photobook
+
+	- big: setNodeCanEditColumnWidth(true) not working on TextNode
 	- bug: TextAreaFieldRow breaks when dragging in column, or swipe deleting
 	- Browser option to hide column headers?
 	- rename Shelf to LeftShelf?

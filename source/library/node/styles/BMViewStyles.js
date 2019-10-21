@@ -24,7 +24,7 @@
         which asks the node, then itself, then the columns for rowStyles()
         and uses the first non-null result .
 
-
+ 
 */
 
 
@@ -39,6 +39,7 @@ ideal.Proto.newSubclassNamed("BMViewStyles").newSlots({
     isMutable: true,
 }).setSlots({
     init: function () {
+        ideal.Proto.init.apply(this)
         this.setSelected(BMViewStyle.clone())
         this.setUnselected(BMViewStyle.clone())
         this.setDisabled(BMViewStyle.clone())

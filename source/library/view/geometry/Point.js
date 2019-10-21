@@ -17,6 +17,7 @@ ideal.Proto.newSubclassNamed("Point").newSlots({
 }).setSlots({
 
     init: function () {
+        ideal.Proto.init.apply(this)
         return this
     },
 

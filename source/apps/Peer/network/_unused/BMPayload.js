@@ -56,6 +56,7 @@ ideal.Proto.newSubclassNamed("BMPayload").newSlots({
     donePowCallback: null,
 }).setSlots({
     init: function () {
+        ideal.Proto.init.apply(this)
         this.setPowObject(BMPow.clone())
     },
     

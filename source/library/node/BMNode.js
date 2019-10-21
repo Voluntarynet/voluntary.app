@@ -101,6 +101,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     nodeCanEditColumnWidth: false,
 }).setSlots({
     init: function () {
+        ideal.Proto.init.apply(this)
         this._subnodes = []
         this._actions = []        
         this.setDidUpdateNodeNote(NotificationCenter.shared().newNote().setSender(this).setName("didUpdateNode"))

@@ -132,7 +132,8 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
 
     setFontSize: function(aNumber) {
         DomStyledView.setFontSize.apply(this, [aNumber])
-        this.setMinAndMaxHeight(aNumber) // make sure TextfField can fit font size
+        this.setMinAndMaxHeight(aNumber + 2) // make sure TextfField can fit font size
+        this.didEdit()
         return this
     },
 
@@ -210,7 +211,7 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
     
     onKeyDown: function(event) {
         //console.log(this.typeId() + " onKeyDown ", event.key)
-        //this.adjustFontSizeWithKeyboard()
+        this.adjustFontSizeWithKeyboard()
         return DomStyledView.onKeyDown.apply(this, [event])
     },
 

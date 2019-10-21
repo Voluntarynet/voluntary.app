@@ -24,11 +24,12 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         this.setStoredSlots({})
         this.scheduleSyncToStore()
         //this.addStoredSlot("viewDict")
-        this.addStoredSlot("canDelete")
-        this.addStoredSlot("nodeSummaryJoiner")
+        this.addStoredSlot("canDelete")  // TODO: move elsewhere
+        this.addStoredSlot("nodeSummaryJoiner")  // TODO: move elsewhere
     },
     
     initNodeInspector: function() {
+        // TODO: move this elsewhere
         this.addInspectorField(BMStringField.clone().setKey("Summary joiner").setValueMethod("nodeSummaryJoiner").setValueIsEditable(true).setTarget(this))
         this.addInspectorField(BMBooleanField.clone().setKey("Subtitle is children summary").setValueMethod("nodeSubtitleIsChildrenSummary").setValueIsEditable(true).setTarget(this))
         return this

@@ -1,6 +1,17 @@
 
 TODO:
 
+	- bug: TextAreaFieldRow breaks when dragging in column, or swipe deleting
+	- Browser option to hide column headers?
+	- rename Shelf to LeftShelf?
+	
+	- make inspector for view styles
+	- store/load view styles?
+	- support margin, padding, outline, border for view styles?
+
+	- clean up nodeSubtitleIsChildrenSummary etc storage settings
+	
+	- add options inspector to time and date nodes for formatting
 	
 	Design Nodes & Views
 	

@@ -21,7 +21,7 @@ BMStorableNode.newSubclassNamed("BMTimeNode").newSlots({
         this.setNodeCanReorderSubnodes(false)
         this.setCanDelete(true)
 
-        this.setTitle("Date")
+        this.setTitle("Time")
 
         this.addStoredSlot("title")
         this.addStoredSlot("hour")

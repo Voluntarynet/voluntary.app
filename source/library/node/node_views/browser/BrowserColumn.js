@@ -710,6 +710,9 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     // previous column
 	
     previousColumn: function() {
+        if(!this.browser()) {
+            return null
+        }
         const i = this.columnIndex()
         const previousColumn = this.browser().columns()[i - 1]
         return previousColumn

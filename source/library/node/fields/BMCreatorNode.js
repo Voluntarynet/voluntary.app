@@ -50,7 +50,9 @@ BMStorableNode.newSubclassNamed("BMCreatorNode").newSlots({
             "BMNumberField", 
             "BMOptionsNode",
             "BMStringField",
-            "BMTimeNode"
+            "BMTextAreaField",
+            "BMTextNode",
+            "BMTimeNode",
         ]
     },
 

@@ -11,8 +11,7 @@
 
 BMStorableNode.newSubclassNamed("BMMenuNode").newSlots({
     label: "",
-    hasTest: false,
-    hasSubtitleOfValues: false,
+    //hasSubtitleOfValues: false,
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
@@ -63,6 +62,7 @@ BMStorableNode.newSubclassNamed("BMMenuNode").newSlots({
         return BMCreatorNode.fieldTypes()
     },
 
+    /*
     subtitle: function() {
         if (this.hasSubtitleOfValues()) {
             let parts = []
@@ -75,6 +75,7 @@ BMStorableNode.newSubclassNamed("BMMenuNode").newSlots({
         }
         return BMStorableNode.subtitle.apply(this)
     },
+    */
 
     /*
     colorPairForDepth: function (depthNumber) {

@@ -533,20 +533,23 @@ html * :active {
     display: block;
     margin-top: 3px;
     margin-left: 0px;
+    margin-bottom: 3px;
     
-	width: calc(100% - 55px);
+    width: calc(100% - 55px);
+    
+    /*
     max-height: 17px;
-    
-/*
     color: rgba(255, 255, 255, 0.5);
   */
     
     font-size: 11px;
     font-weight: normal;
 
-	text-align: left;
+    text-align: left;
+    /*
     text-overflow: ellipsis;
     white-space: nowrap;
+    */
     overflow: hidden;
 	word-wrap: break-word;
 	
@@ -1031,7 +1034,7 @@ html * :active {
 
 /* --------------------------- Multi --------------------------- */
 
-.BMOptionsFieldRowView {
+.BMOptionsNodeRowView {
     /*display: flex;*/
     position: relative;
 	overflow: visible;
@@ -78799,8 +78802,7 @@ ResourceLoader.pushRelativePaths([
     "Documentation.js",
     "Map.js",
     "StackTrace.js",
-    "ByteFormatter.js",
-    "TimePeriodFormatter.js",
+    "formatters/_imports.js",
     //"FilePath.js",
 ]);
 
@@ -78812,6 +78814,7 @@ ResourceLoader.pushRelativePaths([
     "Type-ideal.js",
     "Object-ideal.js",
     "Array-ideal.js",
+    "Date-ideal.js",
     "String-ideal.js",
     "Number-ideal.js",
     "Set-ideal.js",
@@ -79949,6 +79952,72 @@ Object.defineProperty(Array.prototype, "equals", {
 
 /*
 
+    Date-ideal
+
+    Some extra methods for the Javascript Date primitive.
+
+*/
+
+Object.shallowCopyTo({
+    monthNames: function() {
+        return [ "January", "February", "March", "April", 
+            "May", "June", "July", "August", 
+            "September", "October", "November", "December" ];
+    },
+
+    monthName: function () {
+        const monthNumber = this.getMonth() - 1
+        return this.monthNames()[monthNumber];
+    },
+
+    dateNumberName: function() {
+        const dayNumber = this.getDate()
+        return dayNumber + dayNumber.ordinalSuffix()
+    },
+
+    paddedNumber: function(n) {
+        const s = "" + n
+        if (s.length == 1) { 
+            return "0" + s
+        }
+        return s
+    },
+
+    zeroPaddedHours: function() {
+        return this.paddedNumber(this.getHours())
+    },
+
+    zeroPaddedMinutes: function() {
+        return this.paddedNumber(this.getMinutes())
+    },
+
+    zeroPaddedSeconds: function() {
+        return this.paddedNumber(this.getSeconds())
+    },
+
+    getTwelveHours: function() {
+        let h = this.getHours()
+        if (h > 12) { h -= 12 }
+        if (h === 0) { h == 12 }
+        return h
+    },
+
+    zeroPaddedUSDate: function() {
+        return this.paddedNumber(this.getTwelveHours()) + ":" + this.paddedNumber(this.getMinutes())
+    },
+
+}, Date.prototype);
+
+
+
+
+
+
+
+"use strict"
+
+/*
+
     String-ideal
 
     Some extra methods for the Javascript String primitive.
@@ -80029,8 +80098,20 @@ Object.shallowCopyTo({
         return result
     },
 
+    sansPrefixes: function(aStringList) {
+        let result = this
+        aStringList.forEach((s) => { result = result.sansPrefix(s) })
+        return result
+    },
+
     sansPrefix: function (prefix) {
         return this.substring(this.beginsWith(prefix) ? prefix.length : 0);
+    },
+
+    sansSuffixes: function(aStringList) {
+        let result = this
+        aStringList.forEach((s) => { result = result.sansSuffix(s) })
+        return result
     },
 
     sansSuffix: function (suffix) {
@@ -80299,6 +80380,24 @@ Object.shallowCopyTo({
     isOdd: function () {
         return this % 2 !== 0;
     },
+
+    ordinalSuffix: function() {
+        const i = this
+        let j = i % 10
+        let k = i % 100
+        
+        if (j == 1 && k != 11) {
+            return "st";
+        }
+        if (j == 2 && k != 12) {
+            return "nd";
+        }
+        if (j == 3 && k != 13) {
+            return "rd";
+        }
+        return "th";
+
+    }
     
 }, Number.prototype);
 
@@ -80636,7 +80735,7 @@ Proto.setSlots({
         if (this._childProtos.contains(this)) {
             console.log(this.typeId())
             console.log(this._childProtos.map(function(child) { return child.type() }))
-            throw "loop!"
+            throw "detected loop in childProtos"
         }
         */
 
@@ -81828,6 +81927,16 @@ StackTrace.registerThisClass()
 
 "use strict"
 
+ResourceLoader.pushRelativePaths([
+    "ByteFormatter.js",
+    "TimePeriodFormatter.js",
+    "TimeFormatter.js"
+]);
+
+
+
+"use strict"
+
 /*
 
     ByteFormatter
@@ -81995,6 +82104,163 @@ TimePeriodFormatter.registerThisClass()
 
 "use strict"
 
+/*
+    
+TimeFormatter 
+
+    Takes a javascript Date and can produces a formatted string description
+    following the object's format option properties. 
+
+	Example use:
+
+    const formatter = TimeFormatter.clone()
+    formatter.setIs24Hour(false)          // this is the default
+    formatter.setShowsMeridiem(true)      // this is the default
+    formatter.setUppercaseMeridiem(false) // this is the default
+    formatter.setAmString("am")           // this is the default
+    formatter.setPmString("am")           // this is the default
+    formatter.setShowsSeconds(false)      // this is the default
+    formatter.setShowsMilliseconds(false) // this is the default
+    formatter.setHourMinuteSpacer(":")    // this is the default
+    formatter.setDate(new Date())
+    const aDateString = formatter.formattedValue()
+
+    example output:
+
+        "10:11am"
+
+
+*/
+
+class TimeFormatter extends ProtoClass {
+    init() {
+        super.init()
+    }
+
+    paddedNumber (n, padLength) {
+        if (!padLength) {
+            padLength = 2
+        }
+        const s = "" + n
+        if (s.length < padLength) { 
+            return "0".repeat(padLength - s.length) + s
+        }
+        return s
+    }
+
+    getTwelveHours () {
+        let h = this.date().getHours()
+        if (h > 12) { h -= 12 }
+        if (h === 0) { h == 12 }
+        return h
+    }
+
+    zeroPaddedUSDate () {
+        return this.paddedNumber(this.getTwelveHours()) + ":" + this.paddedNumber(this.getMinutes())
+    }
+
+    hoursString () {
+        let h = this.date().getHours()
+
+        if (!this.is24Hour()) {
+            h = this.getTwelveHours()
+        }
+        
+        if (this.doesPadHours()) {
+            this.paddedNumber(h)
+        }
+
+        return "" + h
+    }
+
+    minutesString () {
+        return this.paddedNumber(this.date().getMinutes())
+
+    }
+
+    secondsString () {
+        return this.paddedNumber(this.date().getSeconds())
+    }
+
+    millisecondsString () {
+        return this.paddedNumber(this.date().getMilliseconds() % 1000)
+    }
+
+    meridiemString() {
+        let s = ""
+        
+        if (this.date().getHours() < 12) {
+            s = this.amString()
+        } else {
+            s = this.pmString()
+        }
+        
+        if (this.uppercaseMeridem()) {
+            s = s.toUpperCase()
+        }
+
+        return s
+    }
+
+    formattedValue() {
+        assert(this.date())
+        let s = ""
+
+        if (this.showsHours()) {
+            s += this.hoursString()
+        }
+
+        if (this.showsMinutes()) {
+            if (s.length) {
+                s += this.hourMinuteSpacer()
+            }
+            s += this.minutesString()
+        } 
+
+        if (this.showsMeridiem()) { // correct location wrt seconds?
+            s += this.meridiemString()
+        } 
+
+        if (this.showsSeconds()) {
+            if (s.length) {
+                s += this.hourMinuteSpacer()
+            }
+            s += this.secondsString()
+        } 
+
+        if (this.showsMilliseconds()) {
+            if (s.length) {
+                s += this.hourMinuteSpacer()
+            }
+            s += this.millisecondsString() 
+        } 
+
+        return s
+    }
+}
+
+TimeFormatter.newSlots({
+    is24Hour: false, 
+    showsMeridiem: true, 
+    uppercaseMeridem: false, 
+    amString: "am", 
+    pmString: "pm", 
+    doesPadHours: false,
+    showsHours: true,
+    hourMinuteSpacer: ":",
+    showsMinutes: true,
+    showsSeconds: false,
+    showsMilliseconds: false,
+    date: null, // a javascript Date object
+}).setSlots({
+    
+})
+
+
+TimeFormatter.registerThisClass()
+
+"use strict"
+
 ResourceLoader.pushRelativePaths([
     "SyncAction.js",
     "SyncScheduler.js",
@@ -82023,6 +82289,7 @@ window.SyncAction = class SyncAction extends ProtoClass {
             order: 0,
             args: null,
         })
+        this.setIsDebugging(true)
     }
 	
     trySend () {
@@ -82105,7 +82372,20 @@ window.SyncAction.registerThisClass()
 
         // view
     	syncToNode	
-    	syncFromNode
+        syncFromNode
+        
+    When to run
+
+        When a UI event is handled, SyncSchedule.fullSyncNow should be called just before
+        control is returned to the browser to ensure that another UI event won't occur
+        before syncing as that could leave the node and view out of sync.
+            For example:
+                - edit view #1
+                - sync to node
+                - node posts didUpdateNode
+                - edit view #2
+                - view get didUpdateNode and does syncFromNode which overwrites view state #2
+
     	
 */
 
@@ -82247,7 +82527,11 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
         
         const actions = this.orderedActions()
         this.clearActions()
-        
+        /*
+        if (actions.length) {
+            console.log("syncing " + actions.length + " actions")
+        }
+        */
         //this.debugLog("actions = ", actions.map(a => a.method()).join(","))
         //this.debugLog("--- sending ----")
         actions.forEach((action) => {
@@ -82277,7 +82561,7 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
         if (this.actionCount()) {
             this.debugLog(" --- fullSyncNow start --- ")
             let count = 0
-            const maxCount = 5
+            const maxCount = 10
 
             while (this.actionCount()) {
                 /*
@@ -82426,7 +82710,7 @@ window.Notification.registerThisClass()
         NotificationCenter.shared().removeObserver(this)
         
         // post a notification
-        let note = NotificationCenter.shared().newNote().setSender(this).setName("hello").post()
+        const note = NotificationCenter.shared().newNote().setSender(this).setName("hello").post()
 
         // repost same notification
         note.post()
@@ -82443,6 +82727,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
             isDebugging: false,
             debugNoteName: "appDidInit",
             currentNote: null,
+            isProcessing: false,
         })
 
         this.setObservations([]);
@@ -82504,15 +82789,15 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
         // keep local ref of notifications and set 
         // notifications to empty array in case any are
         // added while we process them
-        this._currentNote = null
-        if (!this._isProcessing) {
-            this._isProcessing = true
+        this.setCurrentNote(null)
+
+        if (!this.isProcessing()) {
+            this.setIsProcessing(true)
             //console.log("processPostQueue " + this.notifications().length)
         
             const notes = this.notifications()
             this.setNotifications([])
             notes.forEach( (note) => {
-                this._currentNote = note;
                 //try { 
                 this.postNotificationNow(note)
                 //this.debugLog("   <- posting " + note.description() )
@@ -82520,7 +82805,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
                 //} catch (error) {
                 //}
             })
-            this._isProcessing = false
+            this.setIsProcessing(false)
         } else {
             Error.showCurrentStack()
             console.warn("WARNING: attempt to call processPostQueue recursively while on note: ", this._currentNote)
@@ -82534,7 +82819,6 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
         // case any are added while we are posting 
         //
         // TODO: add an dictionary index for efficiency
-        
 
         this.setCurrentNote(note)
         
@@ -82557,13 +82841,15 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
                 try {
                     obs.sendNotification(note)       
                 } catch(error) {
-                    //console.log("Error", typeof(error), "  ", error);
                     console.log("NOTIFICATION EXCEPTION: '" + error.message + "'");
-                    //console.log("NotificationCenter: while posting note: ", note, " got error: ", error.name)
                     console.log("  OBSERVER (" + obs.observer() + ") STACK: ", error.stack)
                     if (note.senderStack()) {
                         console.log("  SENDER (" + note.senderId() + ") STACK: ", note.senderStack())
                     }
+
+                    // how to we propogate the exception so we can inspect it in the debugger
+                    // without causing an inconsistent state by not completing the other notifications?
+                    throw error
                 }
             }
         })        
@@ -85413,9 +85699,18 @@ ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
     },
 
     onAfterEvent: function(methodName, event) {
-        // chance to run scheduled events and post notifications
-        // before next event?
         if (window.SyncScheduler) {
+            /*
+                run scheduled events here to ensure that a UI event won't occur
+                before sync as that could leave the node and view out of sync
+                e.g. 
+                - edit view #1
+                - sync to node
+                - node posts didUpdateNode
+                - edit view #2
+                - view get didUpdateNode and does syncFromNode which overwrites view state #2
+            */
+
             /*
             if ( window.SyncScheduler.shared().actionCount()) {
                 console.log(this.typeId() + " onAfterEvent " + methodName)
@@ -86326,6 +86621,8 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
         } catch(e) {
             console.error(this.typeId() + ".sendDelegateMessage(" + methodName + ") caught exception ", e.stack)
             result = false
+            //this.cancel() // how to do this without potentially cause a loop?
+            throw e
         }
 
         return result
@@ -88115,6 +88412,15 @@ ideal.Proto.newSubclassNamed("WebBrowserScreen").newSlots({
         let w = Math.min(this.orientedWidth(), WebBrowserWindow.shared().width())
         let h = Math.min(this.orientedHeight(), WebBrowserWindow.shared().height())
         return { width: w, height: h }
+    },
+
+    userPrefersDarkMode: function() {
+        // should we add a timer to monitor this value and post notifications on changes?
+        // how about an NoteMonitor object that does this? example:
+        // const m = NoteMonitor.clone().setTarget(this).setMethod("userPrefersDarkMode")
+        // m.setName("didChangeDarkMode").setPeriodInSeconds(1).start()
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        return prefersDark
     },
 
 })
@@ -94729,6 +95035,7 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
     setFontSize: function(aNumber) {
         DomStyledView.setFontSize.apply(this, [aNumber])
         this.setMinAndMaxHeight(aNumber) // make sure TextfField can fit font size
+        this.didEdit()
         return this
     },
 
@@ -94816,6 +95123,7 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
 
         this.formatValue()
 
+        
         this.tellParentViews("didInput", this) 
             
         if (!this.doesHoldFocusOnReturn()) {
@@ -94841,13 +95149,16 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
         
         if (this.doesTrim()) {
             newValue = newValue.trim()
-
-            if (newValue !== oldValue) {
-                this.debugLog("formatValue newValue !== oldValue")
-                this.setInnerHTML(newValue)
-            }
         } 
+
+        if (true) {
+            //newValue.replaceAll("\n", "<br>")
+        }
         
+        if (newValue !== oldValue) {
+            this.debugLog("formatValue newValue !== oldValue")
+            this.setInnerHTML(newValue)
+        }
 	    //console.trace(this.type() + " formatValue '" + oldValue + "' -> '" + this.innerHTML() + "'")
         //console.log(this.typeId() + " after formatValue: '" + this.innerHTML() + "'")
         return this
@@ -95192,10 +95503,12 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         
     // row view interaction
     nodeThumbnailUrl: null,
-    nodeTitleIsEditable: false,
-    nodeSubtitleIsEditable: false,
+    nodeCanEditTitle: false,
+    nodeCanEditSubtitle: false,
     nodeRowIsSelectable: true,
     nodeVisibleClassName: null,
+    nodeSubtitleIsChildrenSummary: false,
+    nodeSummaryJoiner: ", ",
     
     nodeRowsStartAtBottom: false,
 
@@ -95266,18 +95579,19 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
 
     initNodeInspector: function() {
 
+        return this
     },
 
     nodeInspector: function(aField) {
         if (!this._nodeInspector) {
-            this._nodeInspector = BMNode.clone()
+            this._nodeInspector = BMNode.clone().setNodeMinWidth(500)
             this.initNodeInspector()
         }
         return this._nodeInspector
     },
 
     addInspectorField: function(aField) {
-        this.inspector().addSubnode(aField)
+        this.nodeInspector().addSubnode(aField)
         return this
     },
 
@@ -95408,6 +95722,10 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     // subtitle and note
     
     subtitle: function () {
+        if (this.nodeSubtitleIsChildrenSummary()) {
+            return this.childrenSummary()
+        }
+
         if (this.subtitleIsSubnodeCount() && this.subnodesCount()) {
             return this.subnodesCount()
         }
@@ -96124,7 +96442,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         dict.title = this.title()
         // TODO: store persistent slots...
         // TODO: store subnodes if set to store them
-        if (this.subnodes().length) { // TODO: use a count method?
+        if (this.hasSubnodes()) { // TODO: use a count method?
             dict.subnodes = this.subnodes().map((subnode) => {
                 return subnode.asJSON()
             })
@@ -96193,6 +96511,39 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
 
     scheduleSelfFor: function(aMethodName, milliseconds) {
         return window.SyncScheduler.shared().scheduleTargetAndMethod(this, aMethodName, milliseconds)
+    },
+
+    // --- summary ---
+    
+    		
+    summary: function() {
+        const t = this.title()
+        const s = this.subtitle()
+        if (s) { 
+            return t + ": " + s
+        }
+        return t
+    },
+        
+    childrenSummary: function() {
+        return this.subnodes().map(subnode => subnode.summary()).join(this.nodeSummaryJoiner())
+    },
+
+    nodeSummaryJoiner: function() {
+        let s = this._nodeSummaryJoiner
+        if (s == "") {
+            return "<br>"
+        }
+        return s
+    },
+
+    onRequestSelectionOfDecendantNode: function(aNode) {
+        return false // allow propogation up the parentNode line
+    },
+
+    onRequestSelectionOfNode: function(aView) {
+        this.tellParentNodes("onRequestSelectionOfDecendantNode", this)
+        return this
     },
 
 })
@@ -96646,9 +96997,10 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
             //throw new Error(error)
         }
 
-        const nodeType = this.translateNodeType(nodeDict.type)
+        let nodeType = this.translateNodeType(nodeDict.type)
 
         let proto = window[nodeType]
+
         if (!proto) {
             throw new Error("missing proto '" + nodeDict.type + "'")
         }
@@ -97119,6 +97471,7 @@ ResourceLoader.pushRelativePaths([
     "BMMenuNode.js",
     "BMImageNode.js",
     "BMStoredDatedSetNode.js",
+    "BMTextNode.js",
 ])
 
 //console.log("Currently running script:", Error.callingScriptURL())
@@ -97149,9 +97502,17 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         this.setStoredSlots({})
         this.scheduleSyncToStore()
         //this.addStoredSlot("viewDict")
-        this.addStoredSlot("canDelete")
+        this.addStoredSlot("canDelete")  // TODO: move elsewhere
+        this.addStoredSlot("nodeSummaryJoiner")  // TODO: move elsewhere
     },
     
+    initNodeInspector: function() {
+        // TODO: move this elsewhere
+        this.addInspectorField(BMStringField.clone().setKey("Summary joiner").setValueMethod("nodeSummaryJoiner").setValueIsEditable(true).setTarget(this))
+        this.addInspectorField(BMBooleanField.clone().setKey("Subtitle is children summary").setValueMethod("nodeSubtitleIsChildrenSummary").setValueIsEditable(true).setTarget(this))
+        return this
+    },
+
     // --- overrides from parent class ---
     // hook this to schedules writes when subnode list is changed
 
@@ -97562,7 +97923,6 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
 
 BMStorableNode.newSubclassNamed("BMMenuNode").newSlots({
     label: "",
-    hasTest: false,
     hasSubtitleOfValues: false,
 }).setSlots({
     init: function () {
@@ -97575,10 +97935,10 @@ BMStorableNode.newSubclassNamed("BMMenuNode").newSlots({
         this.setNodeMinWidth(300)
 
         this.setTitle("title")
-        this.setNodeTitleIsEditable(true)
+        this.setNodeCanEditTitle(true)
 
         //this.setSubtitle("subtitle")
-        //this.setNodeSubtitleIsEditable(true)
+        //this.setNodeCanEditSubtitle(true)
 
         //this.setSubnodeProto(BMMenuNode)
         this.setSubnodeProto(BMCreatorNode)
@@ -97590,8 +97950,7 @@ BMStorableNode.newSubclassNamed("BMMenuNode").newSlots({
         //this.setNodeRowStyles(BMViewStyles.clone())
 
         //this.setNodeUsesColumnBackgroundColor(false)
-
-        //this.addInspectorField(BMBooleanField.clone().setKey("test").setValueMethod("hasTest").setValueIsEditable(true).setTarget(this))
+        this.addStoredSlot("nodeSubtitleIsChildrenSummary")
     },
 
     didLoadFromStore: function() {
@@ -97691,9 +98050,11 @@ BMStorableNode.newSubclassNamed("BMMenuNode").newSlots({
         this.scheduleSyncToView()
     },
 
+    /*
     isFlexRoot: function () {
         return this.parentNode() && (this.parentNode().type() !== this.type())
     },
+    */
 
     onDidEditNode: function (aNode) {
         /*
@@ -97747,8 +98108,8 @@ BMStorableNode.newSubclassNamed("BMImageNode").newSlots({
     init: function () {
         BMStorableNode.init.apply(this)
         
-        this.setNodeTitleIsEditable(true)
-        this.setNodeSubtitleIsEditable(false)
+        this.setNodeCanEditTitle(true)
+        this.setNodeCanEditSubtitle(false)
         this.setNodeMinWidth(200)
         this.setTitle("Untitled")
         this.setSubtitle(null)
@@ -97851,13 +98212,65 @@ BMStorableNode.newSubclassNamed("BMStoredDatedSetNode").newSlots({
 
 "use strict"
 
+/*
+    
+    BMTextNode
+    
+    A node that contains Text, stores it's:
+        content, color, font, padding, margin
+    and has an inspector for these attributes
+    
+    support for links?
+
+*/
+
+
+BMStorableNode.newSubclassNamed("BMTextNode").newSlots({
+    hasSubtitleOfValues: false,
+}).setSlots({
+    init: function () {
+        BMStorableNode.init.apply(this)
+        this.setShouldStore(true)
+        this.setShouldStoreSubnodes(true)
+        this.setCanDelete(true)
+        this.setNodeCanInspect(true)
+        this.addAction("add")
+        this.setNodeMinWidth(300)
+
+        this.setTitle("title")
+        this.setNodeCanEditTitle(true)
+
+        this.setSubnodeProto(BMCreatorNode)
+        
+        this.setNodeCanReorderSubnodes(true)
+        this.addStoredSlot("title")
+
+        //this.setNodeUsesColumnBackgroundColor(false)
+        this.addStoredSlot("nodeSubtitleIsChildrenSummary")
+    },
+
+    didLoadFromStore: function() {
+        BMStorableNode.didLoadFromStore.apply(this)
+        this.subnodes().forEach( (subnode) => { subnode.setCanDelete(true) });
+        this.subnodes().forEach( (subnode) => { subnode.setNodeCanInspect(true) });
+        return this
+    },
+
+    acceptedSubnodeTypes: function() {
+        return BMCreatorNode.fieldTypes()
+    },
+
+})
+
+
+"use strict"
+
 ResourceLoader.pushRelativePaths([
     "BMFieldSetNode.js",
     "BMField.js",
     
     "BMActionNode.js",
     "BMCreatorNode.js",
-    "BMOptionNode.js",
     "subclasses/_imports.js"
 ])
 
@@ -97989,7 +98402,7 @@ BMStorableNode.newSubclassNamed("BMFieldSetNode").newSlots({
         dict.type = this.type()
         // TODO: store persistent slots...
         // TODO: store subnodes if set to store them
-        if (this.subnodes().length) { // TODO: use a count method?
+        if (this.hasSubnodes()) { // TODO: use a count method?
             // TODO: check for BMField subclass?
             dict.fields = {}
             this.subnodes().forEach((field) => {
@@ -98056,6 +98469,9 @@ BMStorableNode.newSubclassNamed("BMField").newSlots({
     valueError: null,
 	
     target: null,
+
+    nodeSummaryShowsKey: false,
+    nodeSummaryShowsValue: false,
 }).setSlots({
 
     init: function () {
@@ -98073,11 +98489,21 @@ BMStorableNode.newSubclassNamed("BMField").newSlots({
         this.addStoredSlot("valuePrefix")
         this.addStoredSlot("valuePostfix")
 
+        this.addStoredSlot("nodeSummaryShowsKey")
+        this.addStoredSlot("nodeSummaryShowsValue")
+
         //this.setNodeRowStyles(BMViewStyles.sharedBlackOnWhiteStyle())
         //this.setNodeRowStyles(BMViewStyles.sharedWhiteOnBlackStyle())
         //this.customizeNodeRowStyles().setToBlackOnWhite()
         return this
     },  
+
+    initNodeInspector: function() {
+        BMStorableNode.initNodeInspector.apply(this)
+        this.addInspectorField(BMBooleanField.clone().setKey("Summary shows key").setValueMethod("nodeSummaryShowsKey").setValueIsEditable(true).setTarget(this))
+        this.addInspectorField(BMBooleanField.clone().setKey("Summary shows value").setValueMethod("nodeSummaryShowsValue").setValueIsEditable(true).setTarget(this))
+        return this
+    },
     
     /*
     target: function() {
@@ -98195,6 +98621,20 @@ BMStorableNode.newSubclassNamed("BMField").newSlots({
     nodeRowLink: function() {
         return null
     },
+
+    summary: function() {
+        let parts = []
+
+        if (this.nodeSummaryShowsKey()) {
+            parts.push(this.key())
+        }
+
+        if (this.nodeSummaryShowsValue()) {
+            parts.push(this.value())
+        }
+
+        return parts.join(this.nodeSummaryJoiner())
+    }
 })
 
 
@@ -98288,7 +98728,7 @@ BMStorableNode.newSubclassNamed("BMCreatorNode").newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
-        this.setNodeTitleIsEditable(false)
+        this.setNodeCanEditTitle(false)
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(false)
         this.setNodeCanReorderSubnodes(false)
@@ -98314,16 +98754,18 @@ BMStorableNode.newSubclassNamed("BMCreatorNode").newSlots({
 
     fieldTypes: function() {
         return [
-            "BMMenuNode", 
             "BMActionNode", 
             "BMBooleanField", 
-            "BMDateField", 
+            //"BMDateField", 
+            "BMDateNode",
             //"BMIdentityField", 
             "BMImageWellField", 
-            "BMStringField",
-            "BMNumberField", 
             "BMMenuNode", 
-            "BMOptionsField"
+            "BMNumberField", 
+            "BMOptionsNode",
+            "BMStringField",
+            "BMTextNode",
+            "BMTimeNode"
         ]
     },
 
@@ -98333,17 +98775,34 @@ BMStorableNode.newSubclassNamed("BMCreatorNode").newSlots({
             name = name.sansPrefix("BM")
             name = name.sansSuffix("Field")
             name = name.sansSuffix("Node")
-            const newNode = BMActionNode.clone()
-            newNode.setTitle(name).setTarget(this).setMethodName("didChoose").setInfo(typeName)
-            //newNode.setCanDelete(true)
+            //const newNode = BMActionNode.clone()
+            //newNode.setTitle(name).setTarget(this).setMethodName("didChoose").setInfo(typeName)
+
+            const newNode = BMNode.clone()
+            newNode.setTitle(name) //.setActionTarget(this).setAction("didChoose")
+            newNode._createTypeName = typeName
+
             return newNode
         })
         this.addSubnodes(newSubnodes)
         return this
     },
 
+    onRequestSelectionOfDecendantNode: function(aNode) {
+        const typeName = aNode._createTypeName
+        if (typeName) {
+            this.createType(typeName)
+        }
+        return true
+    },
+
     didChoose: function(actionNode) {
         const typeName = actionNode.info()
+        this.createType(typeName)
+        return this
+    },
+
+    createType: function(typeName) {
         const proto = window[typeName]
         const newNode = proto.clone()
 
@@ -98358,46 +98817,17 @@ BMStorableNode.newSubclassNamed("BMCreatorNode").newSlots({
 
         newNode.setCanDelete(true)
         newNode.setNodeCanInspect(true)
-        newNode.setNodeTitleIsEditable(true)
+        newNode.setNodeCanEditTitle(true)
         //this.column().selectThisColumn()
 
         this.parentNode().replaceSubnodeWith(this, newNode)
 
         return this
     },
-})
 
-"use strict"
-
-/*
-
-    BMOptionNode
-    
-    A single option from a set of options choices.
-
-*/
-        
-BMStorableNode.newSubclassNamed("BMOptionNode").newSlots({
-    label: null,
-    value:  null,
-}).setSlots({
-
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
-        this.setShouldStore(true)
-        this.setShouldStoreSubnodes(false)
-        this.setNodeCanReorderSubnodes(false)
-        this.setupSubnodes()
-        //this.setCanDelete(true)
-        this.addStoredSlot("label")
-        this.addStoredSlot("value")
+    note: function() {
+        return "&gt;"
     },
-
-    title: function() {
-        return this.label()
-    },
-
 })
 
 "use strict"
@@ -98412,7 +98842,10 @@ ResourceLoader.pushRelativePaths([
     "BMStampField.js",
     "BMStringField.js",
     "BMTextAreaField.js",
-    "BMOptionsField.js",
+    "options/_imports.js",
+    "date/_imports.js",
+    "time/_imports.js",
+    
 ])
 
 "use strict"
@@ -98727,52 +99160,816 @@ BMField.newSubclassNamed("BMTextAreaField").newSlots({
 
 "use strict"
 
+ResourceLoader.pushRelativePaths([
+    "BMOptionsNode.js",
+    "BMOptionNode.js"
+])
+
+"use strict"
+
 /*
 
-    BMOptionsField
+    BMOptionsNode 
     
 */
 
-BMField.newSubclassNamed("BMOptionsField").newSlots({
-    validValues: [],
-    options: [],
-    validValuesMethod: null,
+BMField.newSubclassNamed("BMOptionsNode").newSlots({
+    allowsMultiplePicks: false,
 }).setSlots({
+    
     init: function () {
         BMField.init.apply(this)
-        //this.setViewClassName("BMOptionsFieldView")
+
+        this.setShouldStore(true)
+        this.addStoredSlot("title")
+        this.setShouldStoreSubnodes(true)
+
+        this.setCanDelete(true)
+        this.setNodeCanInspect(true)
+        this.addAction("add")
+        this.setNodeMinWidth(300)
+
+        this.setTitle("title")
+        this.setNodeCanEditTitle(true)
+
+        //this.setSubtitle("subtitle")
+        //this.setNodeCanEditSubtitle(true)
+
+        //this.setSubnodeProto(BMMenuNode)
+        this.setSubnodeProto(BMOptionNode)
+        this.setNodeCanReorderSubnodes(true)
+        this.addStoredSlot("allowsMultiplePicks")
+        this.addStoredSlot("nodeSubtitleIsChildrenSummary")
+        this.addStoredSlot("nodeSummaryShowsValue")
+        this.addStoredSlot("nodeSummaryShowsKey")
+
+        //this.setViewClassName("BMOptionsNodeView")
     },
 
-    setValidValues: function(v) {
-        this._validValues = v
-		
-        if (this.value() === null && v.length) {
-            this.setValue(v[0])
-        }
+    initNodeInspector: function() {
+        BMField.initNodeInspector.apply(this)
+        this.addInspectorField(BMBooleanField.clone().setKey("Allows multiple picks").setValueMethod("allowsMultiplePicks").setValueIsEditable(true).setTarget(this))
+        return this
+    },
+    
 
+    summary: function() {
+        let s = ""
+        if (this.nodeSummaryShowsKey()) {
+            s += this.title() + ": "
+        }
+        return s + this.childrenSummary()
+    },
+
+    childrenSummary: function() {
+        const picked = this.pickedSubnodes()
+        if (picked.length === 0) {
+            return "None"
+        }
+        return picked.map(subnode => subnode.summary()).join(this.nodeSummaryJoiner())
+    },
+
+    setSubtitle: function(aString) {
+        return this
+    },
+
+    didToggleOption: function(anOptionNode) {
+        if (anOptionNode.isPicked() && !this.allowsMultiplePicks()) {
+            this.unpickSubnodesExcept(anOptionNode)
+        }
+        return this
+    },
+
+    unpickSubnodesExcept: function(anOptionNode) {
+        this.subnodes().forEach(subnode => {
+            if (subnode !== anOptionNode) { 
+                subnode.setIsPicked(false) 
+            }
+        })
+        return this
+    },
+
+    pickedSubnodes: function() {
+        return this.subnodes().select(subnode => subnode.isPicked())
+    },
+
+    acceptedSubnodeTypes: function() {
+        return [BMOptionNode.type()]
+    },
+    
+    note: function() {
+        return "&gt;"
+    },
+
+    /*
+    setValidValues: function(values) {        
+        const options = values.map(v => BMOptionNode.clone().setValue(v))
+        this.setSubnodes(options)
         return this
     },
 	
     validValues: function() {
-        if (this._validValues.length === 0 && this.validValuesMethod()) {
-            const t = this.target()
-            return t[this.validValuesMethod()].apply(t)
-        }
-		
-        return this._validValues
+        return this.subnodes().map(sn => sn.value())
     },
-	
-    validate: function() {
-        //console.log(this.typeId() + " validate")
-		 
-        if(!this.validValues().contains(this.value())) {	
-            this.setValueError("invalid value")
-            return false
+    */
+    
+    nodeRowLink: function() {
+        // used by UI row views to browse into next column
+        return this
+    },    
+})
+
+"use strict"
+
+/*
+
+    BMOptionNode
+    
+    A single option from a set of options choices.
+
+*/
+        
+BMStorableNode.newSubclassNamed("BMOptionNode").newSlots({
+    label: "Option Title",
+    value:  null,
+    isPicked: false,
+}).setSlots({
+
+}).setSlots({
+    init: function () {
+        BMStorableNode.init.apply(this)
+        this.setShouldStore(true)
+        this.setShouldStoreSubnodes(false)
+        this.setNodeCanReorderSubnodes(false)
+        this.setCanDelete(true)
+        this.addStoredSlot("label")
+        this.addStoredSlot("value")
+        this.addStoredSlot("isPicked")
+        this.setNodeCanEditTitle(true)
+    },
+
+    setIsPicked: function(aBool) {
+        if (this.isPicked() !== aBool) {
+            this._isPicked = aBool
+            if (this.parentNode()) {
+                this.parentNode().didToggleOption(this)
+                this.didUpdateNode()
+                this.scheduleSyncToStore()
+            }
         }
-        this.setValueError(null)
+        return this
+    },
+
+    toggle: function() {
+        this.setIsPicked(!this.isPicked())
+        return this
+    },
+
+    title: function() {
+        return this.label()
+    },
+
+    setTitle: function(aString) {
+        this.setLabel(aString)
+        return this
+    },
+
+    subtitle: function() {
+        return null
+        //return this.isSelected() ? "is selected" : "is not selected"
+    },
+
+    summary: function() {
+        return this.title()
+    },
+
+    note: function() {
+        return this.isPicked() ? "✓" : ""
+    },
+
+    /*
+    setIsSelected: function() {
+        this.scheduleSyncToStore()
+    },
+    */
+
+})
+
+"use strict"
+
+ResourceLoader.pushRelativePaths([
+    "BMDateNode.js",
+    "BMYearNode.js",
+    "BMMonthNode.js",
+    "BMDayNode.js",
+])
+
+"use strict"
+
+/*
+
+    BMDateNode
+    
+    
+
+*/
+        
+BMStorableNode.newSubclassNamed("BMDateNode").newSlots({
+    year: null,
+    month: null,
+    day: null,
+}).setSlots({
+    init: function () {
+        BMStorableNode.init.apply(this)
+        this.setShouldStore(true)
+        this.setShouldStoreSubnodes(false)
+        this.setNodeCanReorderSubnodes(false)
+        this.setCanDelete(true)
+
+        this.setTitle("Date")
+
+        this.addStoredSlot("title")
+        this.addStoredSlot("year")
+        this.addStoredSlot("month")
+        this.addStoredSlot("day")
+
+        this.setNodeCanEditTitle(true)
+        this.setNodeCanEditSubtitle(false)
+
+        return this
+    },
+
+    hasDate: function() {
+        return !Type.isNull(this.year())
+    },
+
+    jsDate: function() {
+        //new Date(year, month, day, hours, minutes, seconds, milliseconds)
+        if (this.hasDate()) {
+            let d = new Date(this.year(), this.month(), this.day(), 0, 0, 0, 0, 0)
+            //console.log("d = ", d)
+            return d
+        }
+        return null
+    },
+
+    subtitle: function() {
+        if (this.hasDate()) {
+            const d = this.jsDate()
+            const s = d.monthName() + " " + d.dateNumberName() + ", " + d.getFullYear()
+            //const s2 = [this.year(), this.month(), this.day()].join(", ")
+            //return s2 + " - " + s
+            return s
+        }
+
+        return "No date selected"
+    },
+
+    note: function() {
+        return "&gt;"
+    },
+
+    prepareToSyncToView: function() {
+        // called after DateNode is selected
+        if (!this.hasSubnodes()) {
+            const startYear = 2019
+            const yearRange = 3
+            for (let i = startYear; i < startYear + yearRange; i++) {
+                const year = BMYearNode.clone().setValue(i)
+                this.addSubnode(year)
+            }
+        }
+    },
+
+    onRequestSelectionOfDecendantNode: function(aNode) {
+        if (aNode.type() === "BMDayNode") {
+            const dayNode = aNode
+            const monthNode = dayNode.parentNode()
+            const yearNode = monthNode.parentNode()
+            this.setDay(dayNode.value())
+            this.setMonth(monthNode.value())
+            this.setYear(yearNode.value())
+            this.scheduleSyncToView()
+            this.parentNode().postShouldFocusSubnode(this)
+        }
         return true
     },
-	
+
+})
+
+"use strict"
+
+/*
+
+    BMYearNode 
+    
+*/
+
+BMNode.newSubclassNamed("BMYearNode").newSlots({
+    allowsMultiplePicks: false,
+    value: 0,
+}).setSlots({
+    
+    init: function () {
+        BMNode.init.apply(this)
+
+        this.setCanDelete(true)
+        this.setNodeMinWidth(300)
+
+        this.setNodeCanEditTitle(true)
+
+        //this.setSubnodeProto(BMMenuNode)
+        this.setSubnodeProto(BMOptionNode)
+        this.setNodeCanReorderSubnodes(true)
+
+        //this.setViewClassName("BMOptionsNodeView")
+    },
+
+    title: function() {
+        return this.value()
+    },
+
+    hasSubnodes: function() {
+        return true;
+    },
+    
+    prepareToAccess: function () {
+        //console.log("this.storeHasChanged() = ", this.storeHasChanged())
+        if (this.subnodes().length === 0) {
+            //this.refreshSubnodes()
+        }
+    },
+    
+    nodeRowLink: function() {
+        // used by UI row views to browse into next column
+        return this
+    },    
+
+    prepareToSyncToView: function() {
+        // called after Node is selected
+        if (!this.subnodes().length) {
+            for (let i = 1; i < 12 + 1; i++) {
+                this.addSubnode(BMMonthNode.clone().setValue(i))
+            }
+        }
+    },
+})
+
+"use strict"
+
+/*
+
+    BMMonthNode 
+    
+*/
+
+BMNode.newSubclassNamed("BMMonthNode").newSlots({
+    value: 1, // month value starts with 1
+}).setSlots({
+    
+    init: function () {
+        BMNode.init.apply(this)
+
+        this.setCanDelete(false)
+        this.setNodeCanInspect(false)
+        this.setNodeMinWidth(300)
+
+        this.setTitle("a month")
+        this.setNodeCanEditTitle(true)
+
+        //this.setSubnodeProto(BMOptionNode)
+        //this.setNodeCanReorderSubnodes(false)
+
+        //this.setViewClassName("BMOptionsNodeView")
+    },
+
+    setValue: function(v) {
+        assert(Number.isInteger(v) && v > 0 && v < 13)
+        this._value = v
+        return this
+    },
+
+    year: function() {
+        const year = this.parentNode().value()
+        return year
+    },
+
+    daysThisMonth: function() {
+        return new Date(this.year(), this.value() - 1, 0).getDate();
+    },
+
+    monthNames: function() {
+        return ["January", "February", "March", "April", 
+            "May", "June", "July", "August", 
+            "September", "October", "November", "December"];
+    },
+
+    monthName: function() {
+        return this.monthNames()[this.value()-1]
+    },
+
+    title: function() {
+        return this.monthName()
+    },
+
+    zeroPaddedMonthNumber: function() {
+        let v = this.value()
+        if (v < 10) { 
+            v = "0" + v 
+        }
+        return v
+    },
+
+    subtitle: function() {
+        //return this.zeroPaddedMonthNumber()
+        return null
+    },
+
+    note: function() {
+        return "&gt;"
+    },
+    
+    nodeRowLink: function() {
+        // used by UI row views to browse into next column
+        return this
+    },    
+
+    prepareToSyncToView: function() {
+        // called after Node is selected
+        if (!this.subnodes().length) {
+
+            for (let i = 1; i < this.daysThisMonth() + 1; i++) {
+                this.addSubnode(BMDayNode.clone().setValue(i))
+            }
+        }
+    },
+})
+
+"use strict"
+
+/*
+
+    BMDayNode 
+    
+*/
+
+BMNode.newSubclassNamed("BMDayNode").newSlots({
+    value: 1, // day value starts with 1
+}).setSlots({
+    
+    init: function () {
+        BMNode.init.apply(this)
+
+        this.setCanDelete(false)
+        this.setNodeCanInspect(false)
+        this.setNodeMinWidth(300)
+
+        this.setTitle("a day")
+        this.setNodeCanEditTitle(false)
+
+        this.setNodeCanReorderSubnodes(false)
+    },
+
+    setValue: function(v) {
+        assert(Number.isInteger(v) && v > 0 && v < 32)
+        this._value = v
+        return this
+    },
+
+    dayName: function() {
+        const v = this.value()
+        return v + v.ordinalSuffix()
+    },
+
+    title: function() {
+        return this.dayName()
+    },
+
+    subtitle: function() {
+        return null
+    },
+    
+    note: function() {
+        return null
+    },
+    
+    nodeRowLink: function() {
+        // used by UI row views to browse into next column
+        return null
+    },    
+})
+
+"use strict"
+
+ResourceLoader.pushRelativePaths([
+    "BMTimeNode.js",
+    "BMHourNode.js",
+    "BMMinuteNode.js",
+    "BMMeridiemNode.js",
+])
+
+"use strict"
+
+/*
+
+    BMTimeNode
+    
+    
+
+*/
+        
+BMStorableNode.newSubclassNamed("BMTimeNode").newSlots({
+    hour: null,
+    minute: null,
+    timezone: null,
+    formatter: null,
+}).setSlots({
+    init: function () {
+        BMStorableNode.init.apply(this)
+        this.setShouldStore(true)
+        this.setShouldStoreSubnodes(false)
+        this.setNodeCanReorderSubnodes(false)
+        this.setCanDelete(true)
+
+        this.setTitle("Time")
+
+        this.addStoredSlot("title")
+        this.addStoredSlot("hour")
+        this.addStoredSlot("minute")
+
+        this.setNodeCanEditTitle(true)
+        this.setNodeCanEditSubtitle(false)
+
+        this.setFormatter(TimeFormatter.clone())
+        return this
+    },
+
+    hasTime: function() {
+        return !Type.isNull(this.hour())
+    },
+
+    jsDate: function() {
+        //new Date(year, month, day, hours, minutes, seconds, milliseconds)
+        if (this.hasTime()) {
+            let d = new Date(0, 0, 0, this.hour(), this.minute(), 0, 0, 0)
+            return d
+        }
+        return null
+    },
+
+    timeString: function() {
+        return this.formatter().setDate(this.jsDate()).formattedValue()
+    },
+
+    subtitle: function() {
+        if (this.hasTime()) {
+            return this.timeString()
+        }
+
+        return "No time selected"
+    },
+
+    note: function() {
+        return "&gt;"
+    },
+
+    prepareToSyncToView: function() {
+        // called after clicked
+        if (!this.hasSubnodes()) {
+            for (let i = 0; i < 23; i++) {
+                const hour = BMHourNode.clone().setValue(i)
+                this.addSubnode(hour)
+            }
+        }
+    },
+
+    onRequestSelectionOfDecendantNode: function(aNode) {
+        if (aNode.type() === "BMMinuteNode") {
+            const minuteNode = aNode
+            const hourNode = minuteNode.parentNode()
+            this.setHour(hourNode.value())
+            this.setMinute(minuteNode.value())
+            this.scheduleSyncToView()
+            this.parentNode().postShouldFocusSubnode(this)
+        }
+        return true
+    },
+
+})
+
+"use strict"
+
+/*
+
+    BMHourNode 
+    
+*/
+
+BMNode.newSubclassNamed("BMHourNode").newSlots({
+    value: 0, // 0 to 23
+}).setSlots({
+    
+    init: function () {
+        BMNode.init.apply(this)
+
+        this.setCanDelete(false)
+        this.setNodeCanInspect(false)
+        this.setNodeMinWidth(300)
+
+        this.setNodeCanEditTitle(false)
+        this.setNodeCanReorderSubnodes(false)
+    },
+
+    setValue: function(v) {
+        assert(Number.isInteger(v) && v > -1 && v < 23)
+        this._value = v
+        return this
+    },
+
+    meridiemName: function() {
+        if (this.value() > 11) {
+            return "pm"
+        }
+        return "am"
+    },
+
+    hourName: function() {
+        let v = this.value() % 12
+        if (v === 0) { v = 12 }
+        return v + "" + this.meridiemName()
+    },
+
+    title: function() {
+        return this.hourName()
+    },
+
+    subtitle: function() {
+        return null
+    },
+    
+    note: function() {
+        return "&gt;"
+    },
+    
+    /*
+    nodeRowLink: function() {
+        return this
+    },    
+    */
+
+    prepareToSyncToView: function() {
+        // called after clicked
+        if (!this.hasSubnodes()) {
+            for (let i = 0; i < 60; i += 5) {
+                const minute = BMMinuteNode.clone().setValue(i)
+                this.addSubnode(minute)
+            }
+        }
+    },
+})
+
+"use strict"
+
+/*
+
+    BMMinuteNode 
+    
+*/
+
+BMNode.newSubclassNamed("BMMinuteNode").newSlots({
+    value: 1, // day value starts with 1
+}).setSlots({
+    
+    init: function () {
+        BMNode.init.apply(this)
+
+        this.setCanDelete(false)
+        this.setNodeCanInspect(false)
+        this.setNodeMinWidth(300)
+        this.setNodeCanEditTitle(false)
+        this.setNodeCanReorderSubnodes(false)
+    },
+
+    setValue: function(v) {
+        assert(Number.isInteger(v) && v > -1 && v < 60)
+        this._value = v
+        return this
+    },
+
+    minuteName: function() {
+        let s = this.value()
+        if (s < 10) { 
+            s = "0" + s
+        }
+        return s
+    },
+
+    title: function() {
+        return this.minuteName()
+    },
+
+    subtitle: function() {
+        return null
+    },
+    
+    note: function() {
+        return null
+    },
+    
+    nodeRowLink: function() {
+        // used by UI row views to browse into next column
+        return null
+    },    
+})
+
+"use strict"
+
+/*
+
+    BMMonthNode 
+    
+*/
+
+BMNode.newSubclassNamed("BMMonthNode").newSlots({
+    value: 1, // month value starts with 1
+}).setSlots({
+    
+    init: function () {
+        BMNode.init.apply(this)
+
+        this.setCanDelete(false)
+        this.setNodeCanInspect(false)
+        this.setNodeMinWidth(300)
+
+        this.setTitle("a month")
+        this.setNodeCanEditTitle(true)
+
+        //this.setSubnodeProto(BMOptionNode)
+        //this.setNodeCanReorderSubnodes(false)
+
+        //this.setViewClassName("BMOptionsNodeView")
+    },
+
+    setValue: function(v) {
+        assert(Number.isInteger(v) && v > 0 && v < 13)
+        this._value = v
+        return this
+    },
+
+    year: function() {
+        const year = this.parentNode().value()
+        return year
+    },
+
+    daysThisMonth: function() {
+        return new Date(this.year(), this.value() - 1, 0).getDate();
+    },
+
+    monthNames: function() {
+        return ["January", "February", "March", "April", 
+            "May", "June", "July", "August", 
+            "September", "October", "November", "December"];
+    },
+
+    monthName: function() {
+        return this.monthNames()[this.value()-1]
+    },
+
+    title: function() {
+        return this.monthName()
+    },
+
+    zeroPaddedMonthNumber: function() {
+        let v = this.value()
+        if (v < 10) { 
+            v = "0" + v 
+        }
+        return v
+    },
+
+    subtitle: function() {
+        //return this.zeroPaddedMonthNumber()
+        return null
+    },
+
+    note: function() {
+        return "&gt;"
+    },
+    
+    nodeRowLink: function() {
+        // used by UI row views to browse into next column
+        return this
+    },    
+
+    prepareToSyncToView: function() {
+        // called after Node is selected
+        if (!this.subnodes().length) {
+
+            for (let i = 1; i < this.daysThisMonth() + 1; i++) {
+                this.addSubnode(BMDayNode.clone().setValue(i))
+            }
+        }
+    },
 })
 
 "use strict"
@@ -100575,7 +101772,8 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     },
     
     requestSelectionOfRow: function(aRow) {
-        return this.didClickRow(aRow)
+        this.didClickRow(aRow)
+        return true
     },
     
     didClickRow: function(clickedRow) {
@@ -100727,8 +101925,14 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         } 
 
         if (subview) {
-		    this.selectRowWithNode(subnode)
-		    subview.scrollIntoView()
+            this.selectRowWithNode(subnode)
+            //this.clickRowWithNode(subnode)
+            //subview.requestSelection()
+            subview.scrollIntoView()
+            if (this.previousColumn()) {
+                this.previousColumn().selectThisColumn()
+            }
+            //this.selectThisColumn()
 		    //subview.dynamicScrollIntoView()
         } else {
             console.warn("BrowserColumn for node " + this.node().typeId() + " has no matching subview for shouldFocusSubnode " + subnode.typeId())
@@ -101116,6 +102320,9 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     // previous column
 	
     previousColumn: function() {
+        if(!this.browser()) {
+            return null
+        }
         const i = this.columnIndex()
         const previousColumn = this.browser().columns()[i - 1]
         return previousColumn
@@ -101886,7 +103093,7 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
     updateEmptyLabel: function() {
         let node = this.node()
         if (node) {
-            if (node.subnodes().length === 0 && node.nodeEmptyLabel()) {
+            if (node.hasSubnodes() && node.nodeEmptyLabel()) {
                 this.setEmptyLabelText(node.nodeEmptyLabel())
                 return this
             }
@@ -102816,7 +104023,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         console.log(this.typeId() + ".justInspect()")
         if (this.node().nodeCanInspect()) { 
             this.setIsInspecting(true)
-            //this.scheduleSyncToNode()
+            this.scheduleSyncToNode()
             //this.select()
             this.justTap()
         }
@@ -103035,6 +104242,12 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         //console.log(this.typeId() + " tellParentViews didClickRow")
         //this.tellParentViews("didClickRow", this)
         this.tellParentViews("requestSelectionOfRow", this)
+
+        const node = this.node()
+        if (node && node.onRequestSelectionOfNode) {
+            node.onRequestSelectionOfNode(this)
+        }
+        
         return this      
     },
 	
@@ -103242,8 +104455,8 @@ BrowserRow.newSubclassNamed("BrowserTitledRow").newSlots({
 
         const node = this.node()
 
-        this.titleView().setIsEditable(node ? node.nodeTitleIsEditable() : false)
-        this.subtitleView().setIsEditable(node ? node.nodeSubtitleIsEditable() : false)
+        this.titleView().setIsEditable(node ? node.nodeCanEditTitle() : false)
+        this.subtitleView().setIsEditable(node ? node.nodeCanEditSubtitle() : false)
         
         if (node) {
             const b = this.isSelected()
@@ -104070,8 +105283,7 @@ ResourceLoader.pushRelativePaths([
     "BMBooleanFieldRowView.js",
     "BMTextAreaFieldRowView.js",
     "BMImageWellFieldRowView.js",
-    "BMOptionsFieldRowView.js",
-    "BMOptionsTableView.js",
+    "options/_imports.js",
     "BMPointerFieldRowView.js"
 ])
 
@@ -104415,7 +105627,7 @@ BrowserRow.newSubclassNamed("BMActionNodeRowView").newSlots({
         const bv = this.buttonView()
         bv.setTitle(this.node().title())
         
-        this.buttonView().setIsEditable(this.node().nodeTitleIsEditable())
+        this.buttonView().setIsEditable(this.node().nodeCanEditTitle())
 
         if (this.node().isEnabled()) {
             bv.setOpacity(1)	
@@ -104650,284 +105862,73 @@ BMFieldRowView.newSubclassNamed("BMImageWellFieldRowView").newSlots({
 
 "use strict"
 
-/*
+ResourceLoader.pushRelativePaths([
+    "BMOptionsNodeRowView.js",
+    "BMOptionNodeRowView.js"
+])
 
-    BMOptionsFieldRowView
-
-*/
-
-
-BMFieldRowView.newSubclassNamed("BMOptionsFieldRowView").newSlots({
-    optionsView: null,
-}).setSlots({
-    init: function () {
-        BMFieldRowView.init.apply(this)
-
-        this.setOptionsView(BMOptionsTableView.clone())
-        this.optionsView().setDisplay("none")
-        this.addContentSubview(this.optionsView())
-
-        this.valueView().setIsRegisteredForFocus(true)
-        this.valueView().onBlur = () => { this.close() }
-        return this
-    },
-	
-    // ------------------ open / close ------------------
-
-    toggleOpen: function() {
-        if (!this.isOpen()) { 
-            this.open() 
-        } else {
-            this.close()
-        }
-        return this
-    },
-	
-    isOpen: function() {
-        return this.optionsView().display() !== "none"
-    },
-	
-	
-    open: function() {
-        if(!this.isOpen()) {
-            //console.log(this.typeId() + " open")
-            this.updateValidValues()
-            this.optionsView().fadeInToDisplayInlineBlock()
-            this.noteView().fadeOutToDisplayNone()
-        } else {
-            this.updateValidValues()
-        }
-    },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
-	
-    close: function() {
-        if(this.isOpen()) {
-            //console.log(this.typeId() + " close")
-            this.optionsView().fadeOutToDisplayNone()
-            this.noteView().fadeInToDisplayInlineBlock() 
-        }
-    },
-	
-    select: function(validValue) {
-        //console.log(this.typeId() + " selected " + validValue)
-        //this.setInnerHTML(validValue)
-        this.node().setValue(validValue)
-        this.node().didUpdateView(this)
-        this.close()
-    },
-	
-    /*
-	showActive: function() {
-		//this.setBackgroundColor(this.activeBackgroundColor())
-		//this.setColor(this.activeColor())
-		return this
-	},
-	
-	showInactive: function() {
-		//this.setBackgroundColor(this.inactiveBackgroundColor())
-		//this.setColor(this.inactiveColor())
-		return this
-	},
-	*/
-	
-    // --------------------------------------
-
-    setNode: function(aNode) {
-        NodeView.setNode.apply(this, [aNode])
-        this.updateValidValues()
-        return this
-    },
-	
-    currentValue: function() {
-        return this.valueView().innerHTML()
-    },
-	
-    currentValidValues: function() {
-        let validValues = this.node().validValues()
-        let value = this.currentValue().strip()
-		
-        if (value.length) {
-            validValues = validValues.select(function (v) { return v.beginsWith(value) || v.contains(value) })
-        }
-		
-        return validValues
-    },
-	
-    updateValidValues: function() {
-        if (this.optionsView()) {
-            this.optionsView().setValidValues(this.currentValidValues())
-            //this.optionsView().setLeft(this.left() + this.clientWidth() + 10)
-        }
-        return this
-    },
-	
-    onDidEdit: function() {
-        let returnValue = BMFieldRowView.onDidEdit.apply(this)
-        //	console.log(this.typeId() + " onDidEdit")
-		
-        let currentValidValues = this.currentValidValues()
-		
-        if (currentValidValues.length === 1 && currentValidValues[0] === this.currentValue()) {
-            this.close()
-            return
-        }
-
-        if (this.currentValidValues().length > 0) {
-            this.open()
-        } else {
-            this.close()
-        }
-
-        return true
-    },
-	
-	
-})
-
-/*
-NodeView.newSubclassNamed("BMOptionsTableRowView").newSlots({
-}).setSlots({
-})
-*/
 "use strict"
 
 /*
 
-    BMOptionsTableView
+    BMOptionsNodeRowView 
+
+    View for BMOptionsNode
+
+    BMOptionsNode -> BMOptionsNodeRowView
+        BMOption -> BMSingleOptionRowView
+        BMMultiOption -> BMMultiOptionRowView
 
 */
 
-DomView.newSubclassNamed("BMOptionsTableView").newSlots({
-    validValues: null,
+
+BrowserTitledRow.newSubclassNamed("BMOptionsNodeRowView").newSlots({
 }).setSlots({
     init: function () {
-        DomView.init.apply(this)
-        this.turnOffUserSelect()
+        BrowserTitledRow.init.apply(this)
+        //this.setHasSubtitle(true)
+        return this
+    },
+   
+	
+})
+
+"use strict"
+
+/*
+
+    BMOptionNodeRowView 
+
+
+*/
+
+
+BrowserTitledRow.newSubclassNamed("BMOptionNodeRowView").newSlots({
+}).setSlots({
+    
+    init: function () {
+        BrowserTitledRow.init.apply(this)
+        this.setHasSubtitle(true)
+        return this
+    },
+                                
+    select: function() {
+        BrowserTitledRow.select.apply(this)
+        console.log(this.typeId() + + " " + this.node().title() + " picked ")
+        
+        // will tell parent node which will ensure only one selected if needed
+        //this.browser().previous()
+        // unselect parentNode's view in previous column?
+        //this.didEdit()
+        this.node().toggle()
         return this
     },
 
-    onClick: function() {
-
-    },
-	
-    hasValidValues: function(validValues) {
-        if (this._validValues) {
-            if (this._validValues.equals(validValues)) {
-                return true
-            }
-        }
-        return false
-    },
-	
-    setValidValues: function(validValues) {
-        if (!this.hasValidValues(validValues)) {
-            this._validValues = validValues
-            this.updatedValidValues()
-        }
-        return this
-    },
-		
-    updatedValidValues: function() {
-        this.removeAllSubviews()
-		
-        this.setTransition("opacity .2s")
-        this.setOpacity(0)
-		
-        this._validValues.forEach((v) => {
-            const optionRow = DomView.clone().setDivClassName("BMOptionsTableRowView")//.setTarget(this).setAction("select")
-            const optionColumn = DomView.clone().setDivClassName("BMOptionsTableColumnView").setInnerHTML(v).setTarget(this).setAction("select")
-            optionRow.addSubview(optionColumn)
-            optionColumn.validValue = v
-            this.addSubview(optionRow)
-        })
-		
-	     window.SyncScheduler.shared().scheduleTargetAndMethod(this, "finishUpdatedValidValues")
+    syncToNode: function() {
+        BrowserTitledRow.syncToNode.apply(this)
         return this
     },
 	
-    finishUpdatedValidValues: function() {
-        this.adjustOptionWidths() 
-        this.setOpacity(1)
-        return this
-    },
-	
-    setOptionWidths: function(maxWidth) {
-        this.subviews().forEach(function(subview) {
-            subview.setMinAndMaxWidth(maxWidth)
-        })
-        return this
-    },
-	
-    maxOptionTextWidth: function() {
-        return this.subviews().maxValue(function(subview) {
-            return DomTextTapeMeasure.sizeOfCSSClassWithText("BMOptionsTableRowView", subview.innerHTML()).width
-        })			
-    },
-	
-    adjustOptionWidths: function() {
-        const maxWidth = this.maxOptionTextWidth()
-		
-        const leftPad = 10
-        const rightPad = 10
-		
-        this.setOptionWidths(maxWidth)
-		
-        const subviewsPerRow = 1
-		
-        if (this.subviews().length > 10) {
-            subviewsPerRow = Math.ceil(Math.sqrt(this.subviews().length))
-        }
-		
-        const fullWidth = maxWidth * subviewsPerRow 
-        const w = fullWidth + leftPad + rightPad
-		
-        //this.setMinAndMaxWidth(w)
-		
-        this.subviews().forEach((subview) => {
-            //subview.setTextAlign("left")
-            //subview.setPaddingLeft(leftPad)
-            //subview.setPaddingRight(rightPad)
-            subview.setMinAndMaxWidth(w)
-        })
-		
-        //const rowCount = this.subviews().length / subviewsPerRow
-        //const h = rowCount * 26
-        //console.log("maxHeight = ", h)
-        //this.setMinAndMaxHeight(h)
-		
-        /*
-		console.log(this.typeId() + " maxWidth: ", maxWidth)
-		console.log(this.typeId() + " subviewsPerRow: ", subviewsPerRow)
-		console.log(this.typeId() + " fullWidth: ", fullWidth)
-		console.log(this.typeId() + " setMinAndMaxWidth: ", w)
-		*/
-		
-        /*
-		if (subviewsPerRow === 1) {
-			this.subviews().forEach(function(subview) {
-				subview.setTextAlign("left")
-				subview.setPaddingLeft(leftPad)
-				subview.setPaddingRight(rightPad)
-			})
-			//this.parentView().setMinAndMaxWidth(fullWidth)
-			//this.setLeft(fullWidth + 30)
-		} else {
-			this.subviews().forEach(function(subview) {
-				subview.setTextAlign("left")
-				subview.setPaddingLeft(leftPad)
-				subview.setPaddingRight(rightPad)
-			})			
-			//this.parentView().textView().setMinAndMaxWidth(maxWidth)
-			//this.setLeft(maxWidth + 30)
-		}
-		*/
-		
-        //this.setLeft(0)
-    },
-	
-    select: function(sender) {
-        //console.log("selected " + sender.validValue)
-        this.parentView().select(sender.validValue)
-    },
 })
 
 "use strict"
@@ -105945,7 +106946,7 @@ BMStorableNode.newSubclassNamed("BMTheme").newSlots({
         BMStorableNode.init.apply(this)
         this.setShouldStore(true)
 
-        this.setNodeTitleIsEditable(true)
+        this.setNodeCanEditTitle(true)
 
         this.setTitle("Untitled Theme")
         this.setNodeMinWidth(270)

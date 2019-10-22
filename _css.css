@@ -48,6 +48,7 @@ html * {
     min-height: 1px; 
     max-height: 999999px; 
     zoom: 100%;
+    box-sizing: border-box;
 }
 
 /* to avoid slow/choppy handling of touchmove events */

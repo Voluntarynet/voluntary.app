@@ -271,7 +271,7 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
     },
     */
     
-    onEnterKeyUp: function() {
+    onEnterKeyUp: function(event) {
         //console.log(this.typeId() + ".onEnterKeyUp()")
         if(this.valueView().activate) {
             this.valueView().activate()

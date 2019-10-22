@@ -4,7 +4,7 @@
 
     BMOptionNodeRowView 
 
-
+ 
 */
 
 
@@ -16,7 +16,32 @@ BrowserTitledRow.newSubclassNamed("BMOptionNodeRowView").newSlots({
         this.setHasSubtitle(true)
         return this
     },
-                                
+
+    toggle: function() {
+        this.node().toggle()
+        return this
+    },
+
+    onEnterKeyUp: function(event) {
+        BrowserTitledRow.onEnterKeyUp.apply(this, [event])
+        this.toggle()
+        return this
+    },
+    
+    onTapComplete: function(aGesture) {
+        BrowserTitledRow.onTapComplete.apply(this, [aGesture])
+        this.toggle()
+        return this
+    },
+    
+/*
+    activate: function() { // not getting called?
+        BrowserTitledRow.activate.apply(this, [aGesture])
+        this.node().toggle()
+        return this
+    },
+  */               
+    /*
     select: function() {
         BrowserTitledRow.select.apply(this)
         console.log(this.typeId() + + " " + this.node().title() + " picked ")
@@ -28,6 +53,7 @@ BrowserTitledRow.newSubclassNamed("BMOptionNodeRowView").newSlots({
         this.node().toggle()
         return this
     },
+    */
 
     syncToNode: function() {
         BrowserTitledRow.syncToNode.apply(this)

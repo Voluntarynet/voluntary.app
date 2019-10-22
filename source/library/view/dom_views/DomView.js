@@ -2665,7 +2665,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         return this
     },
 
-    onEnterKeyUp: function () {
+    onEnterKeyUp: function (event) {
         return true
     },
 

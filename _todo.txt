@@ -1,7 +1,18 @@
 
 TODO:
 
-	- how do use nodes for viewStyles? Color?
+	- ComputedValueNode
+		- can type equation that can access sibiling or parent slots for variables
+		
+	- OptionNode
+		- if single selection jump back on activing
+	- TextNode store isSelectable
+		- MenuNode store wantsRestOfWidth or wantsFillWidth?
+
+	- bug: undefined showing up for notes in Peer app
+	- bug row content view 1px less height than row?
+	
+	- how to use nodes for viewStyles? Color?
 		- ISSUE: both nodes and views need view styles
 		- ISSUE: loop: viewStyle node needs a viewStyle
 		- SOLUTION: like Nodes can have inspectors - create on access?
@@ -9,7 +20,9 @@ TODO:
 		
 	- separate views from rows and drop them into row contentView?
 	
+	
 	- other types: 
+		Number min, max, isInteger
 		ColorPicker, 
 		Currencies, Currency Amount 
 		UnitsOfMeasure (Length, Area, Volume, Weight, Mass, Energy)

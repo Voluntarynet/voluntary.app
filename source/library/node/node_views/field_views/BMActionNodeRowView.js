@@ -44,7 +44,7 @@ BrowserRow.newSubclassNamed("BMActionNodeRowView").newSlots({
         return this
     },
     
-    onEnterKeyUp: function() {
+    onEnterKeyUp: function(event) {
         this.doAction()
         return false
     },

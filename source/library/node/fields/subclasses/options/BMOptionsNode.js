@@ -46,6 +46,11 @@ BMField.newSubclassNamed("BMOptionsNode").newSlots({
         return this
     },
     
+
+    key: function() {
+        return this.title()
+    },
+    
     /*
     summary: function() {
         let s = ""

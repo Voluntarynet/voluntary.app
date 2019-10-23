@@ -40,11 +40,13 @@ BMSummaryNode.newSubclassNamed("BMMenuNode").newSlots({
         //this.setNodeUsesColumnBackgroundColor(false)
     },
 
+    /*
     initNodeInspector: function() {
         BMSummaryNode.initNodeInspector.apply(this)
 
         return this
     },
+    */
 
     didLoadFromStore: function() {
         BMSummaryNode.didLoadFromStore.apply(this)

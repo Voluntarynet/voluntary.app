@@ -39,6 +39,13 @@ BMStorableNode.newSubclassNamed("BMSummaryNode").newSlots({
         return this
     },
 
+    setSummaryFormat: function(f) {
+        this.didUpdateSlot("summaryFormat", this._summaryFormat, f)
+        this._summaryFormat = f
+        this.didUpdateNode()
+        return this
+    },
+
     summaryFormatOptionsNode: function() {
         const sm = BMOptionsNode.clone().setKey("Summary format").setValueMethod("summaryFormat").setValueIsEditable(true).setTarget(this)
         sm.setTitle("Summary format *")
@@ -73,11 +80,12 @@ BMStorableNode.newSubclassNamed("BMSummaryNode").newSlots({
         const k = this.summaryKey()
         let v = this.summaryValue()
         const f = this.summaryFormat()
-        const j = this.nodeSummaryJoiner()
+        const j = this.nodeSummaryJoinerOut()
 
         if (Type.isNull(v)) {
             v = ""
         }
+
 
         if (f === "key") { 
             return k
@@ -99,14 +107,18 @@ BMStorableNode.newSubclassNamed("BMSummaryNode").newSlots({
     },
         
     childrenSummary: function() {
-        return this.subnodes().map(subnode => subnode.summary()).filter(s => s.length).join(this.nodeSummaryJoiner())
+        return this.subnodes().map(subnode => subnode.summary()).filter(s => s.length).join(this.nodeSummaryJoinerOut())
     },
 
-    nodeSummaryJoiner: function() {
+    nodeSummaryJoinerOut: function() {
         let s = this._nodeSummaryJoiner
-        if (s == "") {
+        
+        if (s == "newline") {
             return "<br>"
+        } else {
+            s = s.replaceAll("<br>", "")
         }
+        
         return s
     },
 })

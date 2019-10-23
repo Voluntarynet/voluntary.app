@@ -72,6 +72,20 @@ BMField.newSubclassNamed("BMOptionsNode").newSlots({
         if (anOptionNode.isPicked() && !this.allowsMultiplePicks()) {
             this.unpickSubnodesExcept(anOptionNode)
         }
+
+        let pickedValues = this.pickedSubnodes().map(s => s.value())
+        //this.setValue(pickedValues)
+        
+        if (pickedValues.length) {
+            if (this.allowsMultiplePicks()) {
+                this.setValue(pickedValues)
+            } else {
+                this.setValue(pickedValues.first())
+            }
+        } else {
+            this.setValue(null)
+        }
+
         return this
     },
 

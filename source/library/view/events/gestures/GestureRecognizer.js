@@ -326,7 +326,8 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
         if (this.isDebugging()) {
             console.log(this.shortTypeId() + " sending " + methodName + " to " + vt.typeId())
         }
-        try {
+        //try {
+        if(true) {
             if (vt[methodName]) {
                 result = vt[methodName].apply(vt, [this])
             } else {
@@ -335,12 +336,15 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
                 }
                 result = false
             }
+        }
+        /*
         } catch(e) {
             console.error(this.typeId() + ".sendDelegateMessage(" + methodName + ") caught exception ", e.stack)
             result = false
             //this.cancel() // how to do this without potentially cause a loop?
             throw e
         }
+        */
 
         return result
     },

@@ -48,6 +48,10 @@ BMStorableNode.newSubclassNamed("BMOptionNode").newSlots({
         return this.label()
     },
 
+    value: function() {
+        return this.title()
+    },
+
     setTitle: function(aString) {
         this.setLabel(aString)
         return this

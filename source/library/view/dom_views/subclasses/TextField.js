@@ -212,9 +212,11 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
     },
     
     onKeyUp: function(event) {
-        console.log(this.typeId() + " onKeyUp ", event)
+        //console.log(this.typeId() + " onKeyUp ", event)
         this.adjustFontSizeWithKeyboard()
         DomStyledView.onKeyDown.apply(this, [event])
+        console.log(this.typeId() + " onKeyUp value: [" + this.value() + "]")
+        this.didEdit()
         return false
     },
 
@@ -256,9 +258,12 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
             //newValue.replaceAll("\n", "<br>")
         }
         
+        
         if (newValue !== oldValue) {
             this.debugLog("formatValue newValue !== oldValue")
+            console.log(this.typeId() + " newValue: [" + newValue + "]")
             this.setInnerHTML(newValue)
+            this.didEdit()
         }
 	    //console.trace(this.type() + " formatValue '" + oldValue + "' -> '" + this.innerHTML() + "'")
         //console.log(this.typeId() + " after formatValue: '" + this.innerHTML() + "'")
@@ -318,5 +323,6 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
         DomStyledView.didEdit.apply(this)
         return this
     },
+
 
 })

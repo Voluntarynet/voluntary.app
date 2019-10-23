@@ -38,8 +38,8 @@ BMSummaryNode.newSubclassNamed("BMField").newSlots({
 	
     target: null,
 
-    nodeSummaryShowsKey: false,
-    nodeSummaryShowsValue: false,
+    //nodeSummaryShowsKey: false,
+    //nodeSummaryShowsValue: false,
 }).setSlots({
 
     init: function () {
@@ -57,8 +57,8 @@ BMSummaryNode.newSubclassNamed("BMField").newSlots({
         this.addStoredSlot("valuePrefix")
         this.addStoredSlot("valuePostfix")
 
-        this.addStoredSlot("nodeSummaryShowsKey")
-        this.addStoredSlot("nodeSummaryShowsValue")
+        //this.addStoredSlot("nodeSummaryShowsKey")
+        //this.addStoredSlot("nodeSummaryShowsValue")
 
         //this.setNodeRowStyles(BMViewStyles.sharedBlackOnWhiteStyle())
         //this.setNodeRowStyles(BMViewStyles.sharedWhiteOnBlackStyle())
@@ -68,8 +68,8 @@ BMSummaryNode.newSubclassNamed("BMField").newSlots({
 
     initNodeInspector: function() {
         BMSummaryNode.initNodeInspector.apply(this)
-        this.addInspectorField(BMBooleanField.clone().setKey("Summary shows key").setValueMethod("nodeSummaryShowsKey").setValueIsEditable(true).setTarget(this))
-        this.addInspectorField(BMBooleanField.clone().setKey("Summary shows value").setValueMethod("nodeSummaryShowsValue").setValueIsEditable(true).setTarget(this))
+        //this.addInspectorField(BMBooleanField.clone().setKey("Summary shows key").setValueMethod("nodeSummaryShowsKey").setValueIsEditable(true).setTarget(this))
+        //this.addInspectorField(BMBooleanField.clone().setKey("Summary shows value").setValueMethod("nodeSummaryShowsValue").setValueIsEditable(true).setTarget(this))
         return this
     },
     
@@ -190,6 +190,19 @@ BMSummaryNode.newSubclassNamed("BMField").newSlots({
         return null
     },
 
+    summaryKey: function() {
+        return this.key()
+    },
+
+    summaryValue: function() {
+        return this.value()
+    },
+
+    summary: function() {
+        return BMSummaryNode.summary.apply(this)
+    },
+
+    /*
     summary: function() {
         let parts = []
 
@@ -203,6 +216,13 @@ BMSummaryNode.newSubclassNamed("BMField").newSlots({
 
         return parts.join(this.nodeSummaryJoiner())
     }
+    */
+
+    setNodeSummaryShowsKey: function() {
+    },
+
+    setNodeSummaryShowsValue: function() {
+    },
 })
 
 

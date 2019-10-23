@@ -3,8 +3,11 @@ TODO:
 
 	StorableNode -> SummaryNode -> MenuNode
                                    OptionsNode
-								   
-
+								  
+								  	
+	should text fields be html?
+	
+	
 	- Inspector 
 		- have view inform node when it can stop caching inspector node?
 		- some form of retain/release?

@@ -84,12 +84,34 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
     newObservation () {
         return window.Observation.clone().setCenter(this);
     }
+
+    hasObservationsForTargetId (targetId) {
+        const filtered = this.observations().filter( obs => obs.targetId() === targetId)
+        return filtered.length !== 0
+    }
     
-    removeObservation (anObservation) {  
-        const filtered = this.observations().filter(function (obs) {
-            return !obs.isEqual(anObservation)
-        })
+    removeObservation (anObservation) {
+        /*
+        const targetId = anObservation.targetId()
+        const hasBefore = this.hasObservationsForTargetId(targetId)
+        */
+
+        const filtered = this.observations().filter( obs => !obs.isEqual(anObservation))
         this.setObservations(filtered)
+
+        /*
+        const hasAfter = this.hasObservationsForTargetId(targetId)
+
+        if (targetId && hasBefore && !hasAfter) {
+            // TODO: post to targetId that no one is observing it
+            const target = this.targetForTargetId(targetId)
+            if(target && target.onNoObservers) {
+                target.onNoObservers()
+            }
+            //const note = this.newNote().setSender(target).setName("onNoObservers").post()
+        }
+        */
+
         return this
     }
     

@@ -1,6 +1,16 @@
 
 TODO:
 
+	StorableNode -> SummaryNode -> MenuNode
+                                   OptionsNode
+								   
+
+	- Inspector 
+		- have view inform node when it can stop caching inspector node?
+		- some form of retain/release?
+		- ask NotificationCenter if anyone is watching?
+		- have NotificationCenter send message when watch count goes to zero?
+		
 	- ComputedValueNode
 		- can type equation that can access sibiling or parent slots for variables
 		

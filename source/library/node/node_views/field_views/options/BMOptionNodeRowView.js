@@ -34,13 +34,14 @@ BrowserTitledRow.newSubclassNamed("BMOptionNodeRowView").newSlots({
         return this
     },
     
-/*
+    /*
     activate: function() { // not getting called?
         BrowserTitledRow.activate.apply(this, [aGesture])
         this.node().toggle()
         return this
     },
-  */               
+    */   
+               
     /*
     select: function() {
         BrowserTitledRow.select.apply(this)

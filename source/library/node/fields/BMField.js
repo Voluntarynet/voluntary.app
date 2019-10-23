@@ -9,7 +9,7 @@
     
 */
         
-BMStorableNode.newSubclassNamed("BMField").newSlots({
+BMSummaryNode.newSubclassNamed("BMField").newSlots({
     isVisible: true,
     isEnabled: true,
 
@@ -43,7 +43,7 @@ BMStorableNode.newSubclassNamed("BMField").newSlots({
 }).setSlots({
 
     init: function () {
-        BMStorableNode.init.apply(this)
+        BMSummaryNode.init.apply(this)
         this.setShouldStore(true)
 
         this.addStoredSlot("key")
@@ -67,7 +67,7 @@ BMStorableNode.newSubclassNamed("BMField").newSlots({
     },  
 
     initNodeInspector: function() {
-        BMStorableNode.initNodeInspector.apply(this)
+        BMSummaryNode.initNodeInspector.apply(this)
         this.addInspectorField(BMBooleanField.clone().setKey("Summary shows key").setValueMethod("nodeSummaryShowsKey").setValueIsEditable(true).setTarget(this))
         this.addInspectorField(BMBooleanField.clone().setKey("Summary shows value").setValueMethod("nodeSummaryShowsValue").setValueIsEditable(true).setTarget(this))
         return this

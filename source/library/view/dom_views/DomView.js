@@ -1955,10 +1955,12 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
             return this
         }
 
+        /*
         if (this.type() === "BrowserRowNote") {
         //if (v !== "&gt;" && v !== "") {
             console.log(this.typeId() + " changing innerHTML from '" + oldValue + "' to '" + v + "'")
         }
+        */
 
         const isFocused = this.isActiveElementAndEditable()
 

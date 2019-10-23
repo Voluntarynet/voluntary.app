@@ -58,6 +58,7 @@ DomStyledView.newSubclassNamed("NodeView").newSlots({
         if (this.node()) {
             //console.log("startWatchingNode " + this.node() + " observation count = " + NotificationCenter.shared().observations().length)
             this.nodeObservation().setTarget(this.node()).watch()
+            this.node().onStartObserving()
         }
         return this
     },
@@ -66,6 +67,7 @@ DomStyledView.newSubclassNamed("NodeView").newSlots({
         if (this.node()) {
             //console.log("stopWatchingNode " + this.node() + " observation count = " + NotificationCenter.shared().observations().length)
             this.nodeObservation().stopWatching()
+            this.node().onStopObserving()
         }
         return this
     },
@@ -172,7 +174,7 @@ DomStyledView.newSubclassNamed("NodeView").newSlots({
                 subview = this.newSubviewForSubnode(subnode)
             }
             
-            if(subview == null) {
+            if(Type.isNull(subview)) {
                 throw new Error("null subview")
             }
             

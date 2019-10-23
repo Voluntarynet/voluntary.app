@@ -18,7 +18,7 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
     unselectedColor: null,
     doesClearOnReturn: false,
     doesHoldFocusOnReturn: false,
-    doesTrim: true,
+    doesTrim: false,
     didTextInputNote: null,
     didTextEditNote: null,
     usesDoubleTapToEdit: false, // has to start false for proper state setup
@@ -55,9 +55,11 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
         return this
     },
 
+    
     isEditable: function() {
         return this._isEditable
     },
+    
 
     setUsesDoubleTapToEdit: function(aBool) {
         if (this._usesDoubleTapToEdit !== aBool) {
@@ -209,10 +211,11 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
         return this
     },
     
-    onKeyDown: function(event) {
-        //console.log(this.typeId() + " onKeyDown ", event.key)
+    onKeyUp: function(event) {
+        console.log(this.typeId() + " onKeyUp ", event)
         this.adjustFontSizeWithKeyboard()
-        return DomStyledView.onKeyDown.apply(this, [event])
+        DomStyledView.onKeyDown.apply(this, [event])
+        return false
     },
 
     onEnterKeyUp: function(event) {

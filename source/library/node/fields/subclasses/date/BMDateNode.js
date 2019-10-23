@@ -8,13 +8,13 @@
 
 */
         
-BMStorableNode.newSubclassNamed("BMDateNode").newSlots({
+BMSummaryNode.newSubclassNamed("BMDateNode").newSlots({
     year: null,
     month: null,
     day: null,
 }).setSlots({
     init: function () {
-        BMStorableNode.init.apply(this)
+        BMSummaryNode.init.apply(this)
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(false)
         this.setNodeCanReorderSubnodes(false)

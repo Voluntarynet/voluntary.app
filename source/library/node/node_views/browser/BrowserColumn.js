@@ -445,6 +445,8 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     },
 
     onKeyUp: function(event) {
+        //console.log(this.typeId() + " onKeyDown ", event)
+
         NodeView.onKeyUp.apply(this, [event])
         //console.log(this.typeId() + ".onKeyUp ", event)
         if (event.altKey) {

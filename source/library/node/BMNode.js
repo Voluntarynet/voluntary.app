@@ -47,8 +47,6 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     nodeCanEditSubtitle: false,
     nodeRowIsSelectable: true,
     nodeVisibleClassName: null,
-    nodeSubtitleIsChildrenSummary: false,
-    nodeSummaryJoiner: ", ",
     
     nodeRowsStartAtBottom: false,
 
@@ -118,17 +116,17 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         return this
     },
 
-    initNodeInspector: function() {
-
-        return this
-    },
-
     nodeInspector: function(aField) {
         if (!this._nodeInspector) {
             this._nodeInspector = BMNode.clone().setNodeMinWidth(500)
             this.initNodeInspector()
         }
         return this._nodeInspector
+    },
+
+    initNodeInspector: function() {
+        //this.addInspectorField(aField) // example
+        return this
     },
 
     addInspectorField: function(aField) {
@@ -263,9 +261,6 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     // subtitle and note
     
     subtitle: function () {
-        if (this.nodeSubtitleIsChildrenSummary()) {
-            return this.childrenSummary()
-        }
 
         if (this.subtitleIsSubnodeCount() && this.subnodesCount()) {
             return this.subnodesCount()
@@ -1054,29 +1049,6 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         return window.SyncScheduler.shared().scheduleTargetAndMethod(this, aMethodName, milliseconds)
     },
 
-    // --- summary ---
-    
-    		
-    summary: function() {
-        const t = this.title()
-        const s = this.subtitle()
-        if (s) { 
-            return t + ": " + s
-        }
-        return t
-    },
-        
-    childrenSummary: function() {
-        return this.subnodes().map(subnode => subnode.summary()).join(this.nodeSummaryJoiner())
-    },
-
-    nodeSummaryJoiner: function() {
-        let s = this._nodeSummaryJoiner
-        if (s == "") {
-            return "<br>"
-        }
-        return s
-    },
 
     onRequestSelectionOfDecendantNode: function(aNode) {
         return false // allow propogation up the parentNode line
@@ -1085,6 +1057,28 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     onRequestSelectionOfNode: function(aView) {
         this.tellParentNodes("onRequestSelectionOfDecendantNode", this)
         return this
+    },
+
+    // tracking observer count 
+    // usefull for releasing inspectors when no longer needed
+
+    onStartObserving: function() {
+
+    },
+
+    onStopObserving: function() {
+        const isStillObserved = NotificationCenter.shared().hasObservationsForTargetId(this.uniqueId())
+        if (!isStillObserved) {
+            this.onNoMoreObservers()
+        }
+    },
+
+    onNoMoreObservers: function() {
+
+    },
+
+    summary: function() {
+        return this.title() + " " + this.subtitle()
     },
 
 })

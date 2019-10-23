@@ -8,14 +8,14 @@
 
 */
         
-BMStorableNode.newSubclassNamed("BMTimeNode").newSlots({
+BMSummaryNode.newSubclassNamed("BMTimeNode").newSlots({
     hour: null,
     minute: null,
     timezone: null,
     formatter: null,
 }).setSlots({
     init: function () {
-        BMStorableNode.init.apply(this)
+        BMSummaryNode.init.apply(this)
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(false)
         this.setNodeCanReorderSubnodes(false)

@@ -8,13 +8,14 @@
 
 BMField.newSubclassNamed("BMOptionsNode").newSlots({
     allowsMultiplePicks: false,
+    summaryFormat: "value",
 }).setSlots({
     
     init: function () {
         BMField.init.apply(this)
 
         this.setShouldStore(true)
-        this.addStoredSlot("title")
+        this.addStoredSlot("key")
         this.setShouldStoreSubnodes(true)
 
         this.setCanDelete(true)
@@ -22,7 +23,8 @@ BMField.newSubclassNamed("BMOptionsNode").newSlots({
         this.addAction("add")
         this.setNodeMinWidth(300)
 
-        this.setTitle("title")
+        this.setTitle("Options title")
+        this.setKeyIsVisible(true)
         this.setNodeCanEditTitle(true)
 
         //this.setSubtitle("subtitle")
@@ -32,20 +34,19 @@ BMField.newSubclassNamed("BMOptionsNode").newSlots({
         this.setSubnodeProto(BMOptionNode)
         this.setNodeCanReorderSubnodes(true)
         this.addStoredSlot("allowsMultiplePicks")
-        this.addStoredSlot("nodeSubtitleIsChildrenSummary")
-        this.addStoredSlot("nodeSummaryShowsValue")
-        this.addStoredSlot("nodeSummaryShowsKey")
+
 
         //this.setViewClassName("BMOptionsNodeView")
     },
 
     initNodeInspector: function() {
         BMField.initNodeInspector.apply(this)
-        this.addInspectorField(BMBooleanField.clone().setKey("Allows multiple picks").setValueMethod("allowsMultiplePicks").setValueIsEditable(true).setTarget(this))
+        this.addInspectorField(BMBooleanField.clone().setKey("Multiple picks").setValueMethod("allowsMultiplePicks").setValueIsEditable(true).setTarget(this))
+
         return this
     },
     
-
+    /*
     summary: function() {
         let s = ""
         if (this.nodeSummaryShowsKey()) {
@@ -53,6 +54,7 @@ BMField.newSubclassNamed("BMOptionsNode").newSlots({
         }
         return s + this.childrenSummary()
     },
+    */
 
     childrenSummary: function() {
         const picked = this.pickedSubnodes()

@@ -15,6 +15,7 @@ BMField.newSubclassNamed("BMNumberField").newSlots({
     init: function () {
         BMField.init.apply(this)
         this.setViewClassName("BMFieldRowView")
+        this.setKey("Number title")
         this.setKeyIsEditable(false)
         this.setValueIsEditable(false)
         this.setValue(0)

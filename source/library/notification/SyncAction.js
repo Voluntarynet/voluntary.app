@@ -18,7 +18,7 @@ window.SyncAction = class SyncAction extends ProtoClass {
             order: 0,
             args: null,
         })
-        this.setIsDebugging(true)
+        this.setIsDebugging(false)
     }
 	
     trySend () {

@@ -9,12 +9,12 @@
 */
 
 
-BMStorableNode.newSubclassNamed("BMMenuNode").newSlots({
+BMSummaryNode.newSubclassNamed("BMMenuNode").newSlots({
     label: "",
     //hasSubtitleOfValues: false,
 }).setSlots({
     init: function () {
-        BMStorableNode.init.apply(this)
+        BMSummaryNode.init.apply(this)
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(true)
         this.setCanDelete(true)
@@ -38,11 +38,16 @@ BMStorableNode.newSubclassNamed("BMMenuNode").newSlots({
         //this.setNodeRowStyles(BMViewStyles.clone())
 
         //this.setNodeUsesColumnBackgroundColor(false)
-        this.addStoredSlot("nodeSubtitleIsChildrenSummary")
+    },
+
+    initNodeInspector: function() {
+        BMSummaryNode.initNodeInspector.apply(this)
+
+        return this
     },
 
     didLoadFromStore: function() {
-        BMStorableNode.didLoadFromStore.apply(this)
+        BMSummaryNode.didLoadFromStore.apply(this)
         this.subnodes().forEach( (subnode) => { subnode.setCanDelete(true) });
         this.subnodes().forEach( (subnode) => { subnode.setNodeCanInspect(true) });
         return this
@@ -73,7 +78,7 @@ BMStorableNode.newSubclassNamed("BMMenuNode").newSlots({
             })
             return parts.join(" ")
         }
-        return BMStorableNode.subtitle.apply(this)
+        return BMSummaryNode.subtitle.apply(this)
     },
     */
 
@@ -158,7 +163,7 @@ BMStorableNode.newSubclassNamed("BMMenuNode").newSlots({
 
     /*
     asJSON: function() {
-        const json = BMStorableNode.asJSON.apply(this)
+        const json = BMSummaryNode.asJSON.apply(this)
         json._label = this.label()
         return json
     },
@@ -173,7 +178,7 @@ BMStorableNode.newSubclassNamed("BMMenuNode").newSlots({
 
     /*
     didChangeParentNode: function () {
-        BMStorableNode.didChangeParentNode.apply(this)
+        BMSummaryNode.didChangeParentNode.apply(this)
         if (this.isFlexRoot()) {
             this.removeAction("delete")
         }

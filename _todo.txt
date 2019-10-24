@@ -35,6 +35,11 @@ TODO:
 	
 	
 	- other types: 
+	    Forum, Thread, Message
+		WebLink, AppLink
+		
+		Audio, Video
+	
 		Number min, max, isInteger
 		ColorPicker, 
 		Currencies, Currency Amount 

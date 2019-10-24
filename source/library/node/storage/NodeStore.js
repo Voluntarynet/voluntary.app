@@ -20,7 +20,7 @@
 		
         Example:
  
-				let people = NodeStore.rootInstanceWithPidForProto("_people", PeopleNode) 
+				const people = NodeStore.rootInstanceWithPidForProto("_people", PeopleNode) 
 		
 		This instantiates the object if it's not persisted, loads it if it is, and returns any already 
 		unpersisted instance if there is one.
@@ -56,7 +56,7 @@
 
         Example use:
     
-                let store = NodeStore.clone().setFolderName("store")
+                const store = NodeStore.clone().setFolderName("store")
             
             // need to define a root
             
@@ -132,8 +132,9 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         if (!this.isOpen()) {
             return "closed"
         }
-        let b = this.sdb().totalBytes()
-        return this.sdb().size() + " objects, " + ByteFormatter.clone().setValue(b).formattedValue()
+        const byteCount = this.sdb().totalBytes()
+        const objectCount = this.sdb().size()
+        return objectCount + " objects, " + ByteFormatter.clone().setValue(byteCount).formattedValue()
     },
 
     isOpen: function () {
@@ -272,17 +273,16 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
         let totalStoreCount = 0
 
-        let justStoredPids = {}
+        const justStoredPids = {}
 
         while (true) {
-
             let thisLoopStoreCount = 0
             let dirtyBucket = this._dirtyObjects
             this._dirtyObjects = {}
 
             Object.keys(dirtyBucket).forEach((objId) => {
-                let obj = dirtyBucket[objId]
-                let pid = obj.pid()
+                const obj = dirtyBucket[objId]
+                const pid = obj.pid()
 
                 if (justStoredPids[pid]) {
                     throw new Error("attempt to double store " + pid)
@@ -338,14 +338,14 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         this.debugLog("storeObject(" + obj.pid() + ")")
         this.assertIsWritable()
 
-        let aDict = obj.nodeDict()
+        const aDict = obj.nodeDict()
 
         if (obj.willStore) {
             obj.willStore(aDict)
         }
 
 
-        let serializedString = JSON.stringify(aDict)
+        const serializedString = JSON.stringify(aDict)
         this.sdb().atPut(obj.pid(), serializedString)
 
         /*
@@ -370,7 +370,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     },
 
     pidOfObj: function (obj) {
-        if (typeof(obj._pid) === undefined || obj._pid === null) {
+        if (Type.isNullOrUndefined(obj._pid)) {
             obj._pid = obj.type() + "_" + this.newPid()
         }
         return obj._pid
@@ -383,7 +383,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
     loadObject: function (obj) {
         try {
-            let nodeDict = this.nodeDictAtPid(obj.pid())
+            const nodeDict = this.nodeDictAtPid(obj.pid())
             if (nodeDict) {
                 //obj.setExistsInStore(true)
                 obj.setNodeDict(nodeDict)
@@ -400,7 +400,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     },
 
     nodeDictAtPid: function (pid) {
-        let v = this.sdb().at(pid)
+        const v = this.sdb().at(pid)
         if (v == null) {
             return null
         }
@@ -418,7 +418,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
         //console.log("NodeStore.objectForPid(" + pid + ")")
 
-        let activeObj = this.activeObjectsDict()[pid]
+        const activeObj = this.activeObjectsDict()[pid]
         if (activeObj) {
             //this.debugLog("objectForPid(" + pid + ") found in mem")
             return activeObj
@@ -426,9 +426,9 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
         //this.debugLog("objectForPid(" + pid + ")")
 
-        let nodeDict = this.nodeDictAtPid(pid)
+        const nodeDict = this.nodeDictAtPid(pid)
         if (!nodeDict) {
-            let error = "missing pid '" + pid + "'"
+            const error = "missing pid '" + pid + "'"
             console.warn("WARNING: " + error)
 
             // TODO: add a modal panel to allow user to choose to export and clear data
@@ -440,9 +440,9 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
             //throw new Error(error)
         }
 
-        let nodeType = this.translateNodeType(nodeDict.type)
+        const nodeType = this.translateNodeType(nodeDict.type)
 
-        let proto = window[nodeType]
+        const proto = window[nodeType]
 
         if (!proto) {
             throw new Error("missing proto '" + nodeDict.type + "'")
@@ -520,7 +520,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     },
 
     unrefValueIfNeeded: function (v) {
-        let pid = this.pidIfRef(v)
+        const pid = this.pidIfRef(v)
 
         if (pid) {
             return this.objectForPid(pid)
@@ -534,15 +534,15 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     },
 
     dictIsObjRef: function (dict) {
-        let k = this.objRefKey()
+        const k = this.objRefKey()
         return Type.isString(dict[k])
     },
 
     refForObject: function (obj) {
-        let k = this.objRefKey()
-        let ref = {}
+        const k = this.objRefKey()
+        const ref = {}
 
-        if (obj === null && Type.isObject(obj)) {
+        if (obj === null && Type.isObject(obj)) { // TODO: is this right?
             ref[k] = "null"
         } else {
             ref[k] = obj.pid()
@@ -592,15 +592,15 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
     /*
     pidRefsFromNodeDict: function(nodeDict) {
-        let pids = []
+        const pids = []
 
         if (nodeDict) {
             // property pids
 
 			Object.keys(nodeDict).forEach((k) => {
 
-                    let v = nodeDict[k]
-                    let childPid = this.pidIfRef(v)
+                    const v = nodeDict[k]
+                    const childPid = this.pidIfRef(v)
                     if (childPid) {
                         pids.push(childPid);
                     }
@@ -679,7 +679,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         }
         this._marked[pid] = true
 
-        let refPids = this.pidRefsFromPid(pid)
+        const refPids = this.pidRefsFromPid(pid)
         //this.debugLog("markPid " + pid + " w refs " + JSON.stringify(refPids))
 
         refPids.forEach((refPid) => {
@@ -695,7 +695,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         this.sdb().begin()
 
         let deleteCount = 0
-        let pids = this.sdb().keys()
+        const pids = this.sdb().keys()
 
         pids.forEach((pid) => {
             if (this._marked[pid] !== true) {
@@ -755,14 +755,14 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
             return
         }
 
-        let stringReplacer = function (value) {
+        const stringReplacer = function (value) {
             if (typeof(value) === "string" && value.length > 100) {
                 return value.substring(0, 100) + "...";
             }
             return value
         }
 
-        let replacer = function (key, value) {
+        const replacer = function (key, value) {
             value = stringReplacer(value)
 
             if (typeof(value) === "array") {
@@ -771,8 +771,8 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
             return value;
         }
 
-        let indent = "   ".repeat(level)
-        let nodeDict = this.nodeDictAtPid(pid)
+        const indent = "   ".repeat(level)
+        const nodeDict = this.nodeDictAtPid(pid)
         console.log(indent + pid + ": " + JSON.stringify(nodeDict, replacer, 2 + indent.length))
 
         if (nodeDict.children) {
@@ -784,7 +784,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     },
 
     showDirtyObjects: function (prefixString) {
-        let dirty = this._dirtyObjects
+        const dirty = this._dirtyObjects
         if (!prefixString) {
             prefixString = ""
         }
@@ -797,16 +797,16 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     },
 
     showActiveObjects: function () {
-        let active = this.activeObjectsDict()
+        const active = this.activeObjectsDict()
         console.log("active objects: ")
 
         Object.keys(active).forEach((pid) => {
-            let obj = active[pid]
+            const obj = active[pid]
             console.log("    " + pid + ": ", Object.keys(obj.nodeRefPids()))
         })
 
-        let pid = "_localIdentities"
-        let obj = active[pid]
+        const pid = "_localIdentities"
+        const obj = active[pid]
         //debugger;
         console.log("    " + pid + ": ", Object.keys(obj.nodeRefPids()))
 
@@ -814,12 +814,12 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     },
 
     objectIsReferencedByActiveObjects: function (aNode) {
-        let nodePid = aNode.pid()
-        let active = this.activeObjectsDict()
+        const nodePid = aNode.pid()
+        const active = this.activeObjectsDict()
 
-        let result = Object.keys(active).detect((pid) => {
-            let obj = active[pid]
-            let match = (!(obj === aNode)) && obj.nodeReferencesPid(nodePid)
+        const result = Object.keys(active).detect((pid) => {
+            const obj = active[pid]
+            const match = (!(obj === aNode)) && obj.nodeReferencesPid(nodePid)
             return match
         }) != null
 

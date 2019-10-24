@@ -27,8 +27,6 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         this.addStoredSlot("canDelete")  // TODO: move elsewhere
     },
     
-
-
     // --- overrides from parent class ---
     // hook this to schedules writes when subnode list is changed
 
@@ -95,14 +93,14 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     typeId: function() {
         return this.pid() // is this a good idea?
     },
-*/
+    */
 
     // -------------------------------------------
 
     // --- add / remove stored slots ---
     
     initStoredSubnodeSlotWithProto: function(name, proto) {
-        let obj = proto.clone()
+        const obj = proto.clone()
         this.newSlot(name, obj)
         this.justAddSubnode(obj)
         this.addStoredSlot(name)
@@ -130,13 +128,12 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     // --- get storage dictionary ---
 
     nodeDictForProperties: function () {
-        let dict = { }
+        const dict = {}
         dict.type = this.type()
  
         //console.log(this.typeId() + " storedSlots = " + JSON.stringify(this.storedSlots()))
        
-        let slots = this.storedSlots()
-        Object.keys(slots).forEach((k) => {
+        Object.keys(this.storedSlots()).forEach((k) => {
             let v = null
             if (k.beginsWith("_")) {
                 v = this[k]
@@ -144,7 +141,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
                 try {
 	                v = this[k].apply(this)
                 } catch(error) {
-                    console.warn("WARNING: " + this.type() + "." + k + "() missing method")
+                    console.warn("WARNING: " + this.type() + "." + k + "() exception calling method")
                     //throw error
                 }
             }
@@ -156,7 +153,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     },
 
     nodeDict: function () {
-        let dict = this.nodeDictForProperties()
+        const dict = this.nodeDictForProperties()
         
         if (this.subnodes().length && this.shouldStoreSubnodes()) {
             dict.children = this.subnodePids()
@@ -167,7 +164,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
 
     // --- set storage dictionary ---
    
-    setNodeDict: function (aDict) {   
+    setNodeDict: function (aDict) { 
 	    //BMNode.setNodeDict.apply(this, [aDict])
         // TODO: wrap in try {}
         this.setIsUnserializing(true) 
@@ -183,7 +180,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     prepareToAccess: function() {
         BMNode.prepareToAccess.apply(this)
         if (this.doesLazyLoadChildren()) {
-            let dict = BMNodeStore.shared().nodeDictAtPid(this.pid())
+            const dict = BMNodeStore.shared().nodeDictAtPid(this.pid())
             this.setNodeDictForProperties(dict)
         }
         return this
@@ -199,7 +196,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
                 if (k.beginsWith("_")) {
                     this[k] = v
                 } else {
-                    let setter = "set" + k.capitalized();
+                    const setter = "set" + k.capitalized();
                     if (this[setter]) {
                         this[setter].apply(this, [v])
                     } else {
@@ -219,7 +216,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     },
 
     setNodeDictForChildren: function (aDict) {
-        let newPids = aDict.children
+        const newPids = aDict.children
         if (newPids) {
             if (this.loadsUnionOfChildren()) {
                 throw new Error("loadsUnionOfChildren") // checking if this is being used
@@ -257,8 +254,8 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         // as well as this object itself
 
         Object.keys(this._storedSlots).forEach((slotName) => {
-            let obj = this[slotName].apply(this)
-            let isRef = obj !== null && obj !== undefined && obj.typeId !== undefined
+            const obj = this[slotName].apply(this)
+            const isRef = obj !== null && obj !== undefined && obj.typeId !== undefined
             if (isRef && !obj.hasPid()) {
                 obj.pid()
                 NodeStore.shared().addDirtyObject(this)
@@ -292,7 +289,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
 	    }
 	    
         // check so we don't mark dirty while loading
-        // and use private ilet s directly for performance
+        // and use private slots directly for performance
         if (slotName in this._storedSlots) { 
             //console.log(this.typeId() + ".didUpdateSlot(" + slotName + ",...) -> scheduleSyncToStore")
             this.scheduleSyncToStore()
@@ -308,7 +305,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     // StorableNode
 	
     subnodePids: function() {
-        let pids = []
+        const pids = []
         
         this.subnodes().forEach((subnode) => {
             if (subnode.shouldStore() === true) {
@@ -320,7 +317,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     },
     
     setSubnodePids: function(pids) {
-        let subnodes = pids.map((pid) => {
+        const subnodes = pids.map((pid) => {
             return NodeStore.shared().objectForPid(pid)
         })
 
@@ -335,14 +332,15 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         return this
     },
     
+    /*
     pidRefsFromNodeDict: function(nodeDict) {
-        let pids = []
+        const pids = []
 
         if (nodeDict) {
             // property pids
             Object.keys(nodeDict).forEach((k) => {
-                let v = nodeDict[k]
-                let childPid = this.pidIfRef(v)
+                const v = nodeDict[k]
+                const childPid = this.pidIfRef(v)
                 if (childPid) {
                     pids.push(childPid);
                 }
@@ -358,15 +356,16 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         
         return pids
     },
+    */
 
     nodePidRefsFromNodeDict: function(nodeDict) {
-        let pids = []
+        const pids = []
 
         if (nodeDict) {
             // property pids
             Object.keys(nodeDict).forEach((k) => {
-                let v = nodeDict[k]
-                let childPid = NodeStore.shared().pidIfRef(v)
+                const v = nodeDict[k]
+                const childPid = NodeStore.shared().pidIfRef(v)
                 if (childPid) {
                     pids.push(childPid);
                 }
@@ -386,15 +385,15 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     /*
 	nodeRefPids: function() {
 		if (this._refPids === null) {
-			let refs = {}
-			let dict = this.nodeDict()
-			let keys = Object.keys(dict)
+			const refs = {}
+			const dict = this.nodeDict()
+			const keys = Object.keys(dict)
 		
-			let name = this.typeId()
+			const name = this.typeId()
 			//debugger;
 			// stored slots
 			keys.forEach((k) => {
-				let v = dict[k]
+				const v = dict[k]
 				if (k !== "children" && Type.isObject(v)) {
 					if (v.pid != "null") {
 						refs[v.pid] = true
@@ -424,4 +423,32 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
 	*/
 
 
+    // duplicateable / copy protocol?
+
+    nodeDuplicateDict: function () {
+        const dict = this.nodeDictForProperties()
+        
+        if (this.subnodes().length && this.shouldStoreSubnodes()) {
+            dict.children = this.subnodePids()
+        }
+        
+        return dict
+    },
+
+    // --- set storage dictionary ---
+   
+    /*
+    setNodeDuplicateDict: function (aDict) { 
+	    //BMNode.setNodeDict.apply(this, [aDict])
+        // TODO: wrap in try {}
+        this.setIsUnserializing(true) 
+        this.setNodeDictForProperties(aDict)
+        if (!this.doesLazyLoadChildren()) {
+            this.setNodeDictForChildren(aDict)
+        }
+        this.didLoadFromStore()
+        this.setIsUnserializing(false) 
+        return this
+    },
+    */
 })

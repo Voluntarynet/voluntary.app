@@ -14,7 +14,7 @@
 
 
 BMStorableNode.newSubclassNamed("BMSummaryNode").newSlots({
-    nodeSummaryJoiner: ",",
+    nodeSummaryJoiner: " ",
     nodeSubtitleIsChildrenSummary: false,
     summaryFormat: "value",
 }).setSlots({

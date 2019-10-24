@@ -440,6 +440,10 @@ Proto.setSlots({
             console.log(this.typeId() + ": " + s)
         }
     },
+
+    typeClass: function() {
+        return window[this.type()]
+    },
 });
 
 Proto.newSlot("isDebugging", false);

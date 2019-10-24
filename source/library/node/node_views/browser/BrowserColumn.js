@@ -491,11 +491,15 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         // duplicate?
         const node = this.node()
         const row = this.selectedRow()
-        if (row && node.canSelfAddSubnode() && row.node().duplicate) { 
-            console.log(this.typeId() + " duplicate selected row " + this.selectedRow().node().title())
-            //this.selectedRow()
-            node.addSubnode(row.node().duplicate())
-            this.scheduleSyncFromNode()
+        const canAdd = node.canSelfAddSubnode() 
+        if (row && canAdd) {
+            const canDuplicate = !Type.isNullOrUndefined(row.node().duplicate)
+            if (canDuplicate) { 
+                console.log(this.typeId() + " duplicate selected row " + this.selectedRow().node().title())
+                const dup = row.node().duplicate()
+                node.addSubnode(dup)
+                this.scheduleSyncFromNode()
+            }
         }
     },
 

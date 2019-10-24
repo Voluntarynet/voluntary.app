@@ -1081,4 +1081,12 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         return this.title() + " " + this.subtitle()
     },
 
+    duplicate: function() {
+        const json = this.asJson()
+        const dup = this.typeClass().clone().setJson(json)
+        return dup
+    },
+
+
+
 })

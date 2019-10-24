@@ -344,7 +344,6 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
             obj.willStore(aDict)
         }
 
-
         const serializedString = JSON.stringify(aDict)
         this.sdb().atPut(obj.pid(), serializedString)
 
@@ -441,7 +440,6 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         }
 
         const nodeType = this.translateNodeType(nodeDict.type)
-
         const proto = window[nodeType]
 
         if (!proto) {
@@ -486,7 +484,8 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     },
 
     writeAllActiveObjects: function () {
-        Object.slotValues(this.activeObjectsDict()).forEach((obj) => {
+        const activeObjects = Object.slotValues(this.activeObjectsDict())
+        activeObjects.forEach((obj) => {
             this.storeObject(obj)
         })
         return this
@@ -503,7 +502,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
     refValueIfNeeded: function (v) {
         if (Type.isObject(v)) {
-            if (v == null || Type.isFunction(v.type)) {
+            if (Type.isNull(v) || Type.isFunction(v.type)) {
                 return this.refForObject(v)
             }
         }
@@ -562,8 +561,9 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     },
 
     nodeTypeTranslationDict: function() {
+        // TODO: make this a slot so app can set it on startup
         return {
-            "BMDatedSet": "BMStoredDatedSetNode",
+            //"BMDatedSet": "BMStoredDatedSetNode",
         }
     },
 

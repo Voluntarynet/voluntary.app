@@ -1900,7 +1900,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     },
 
     removeAllSubviews: function () {
-        this.subviews().copy().forEach((v) => { this.removeSubview(v) })
+        this.subviews().shallowCopy().forEach((v) => { this.removeSubview(v) })
         assert(this.subviews().length === 0)
         return this
     },
@@ -3396,7 +3396,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     },
 
     moveAllSubviewsToView: function (aView) {
-        this.subviews().copy().forEach((sv) => {
+        this.subviews().shallowCopy().forEach((sv) => {
             this.remove(sv)
             aView.addSubview(sv)
         })

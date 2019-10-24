@@ -425,6 +425,9 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
 
     // duplicateable / copy protocol?
 
+
+
+    /*
     nodeDuplicateDict: function () {
         const dict = this.nodeDictForProperties()
         
@@ -437,7 +440,6 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
 
     // --- set storage dictionary ---
    
-    /*
     setNodeDuplicateDict: function (aDict) { 
 	    //BMNode.setNodeDict.apply(this, [aDict])
         // TODO: wrap in try {}

@@ -444,6 +444,30 @@ Proto.setSlots({
     typeClass: function() {
         return window[this.type()]
     },
+
+    // --- copying protocol --- 
+
+    copy: function(copyDict) {
+        const id = this.typeId()
+
+        if (!copyDict) { 
+            copyDict = {} // TODO: use a CopyContext object? copyContext.getCopyOfTypeId(id)
+        }
+
+        const obj = copyDict[id]
+        if (!Type.isUndefined(obj)) {
+            return obj
+        }
+
+        const newObject = this.typeClass().clone().copyFrom(this)
+        copyDict[id] = newObject
+        return newObject
+    },
+
+    copyFrom: function(anObject) {
+        throw new Error(this.type() + ".copyFrom() not implemented")
+        return this
+    },
 });
 
 Proto.newSlot("isDebugging", false);

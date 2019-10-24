@@ -259,7 +259,7 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         let colors = this.bgColors()
         const rcolors = this.bgColors().reversed()
         rcolors.removeFirst()
-        colors = colors.copy().appendItems(rcolors)
+        colors = colors.shallowCopy().appendItems(rcolors)
 
         const rgb = colors.atModLength(i)
         const s = "rgb(" + rgb.map((v) => { return Math.round(v * 255) }).join(", ") + ")"

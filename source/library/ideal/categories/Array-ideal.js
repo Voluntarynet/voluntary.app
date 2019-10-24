@@ -122,8 +122,20 @@ Object.shallowCopyTo({
         return null;
     },
 
-    copy: function () {
-        return this.slice();
+    shallowCopy: function() {
+        return this.slice()
+    },
+
+    copy: function (copyDict) {
+        // since not every object will implement copy:
+        // we need to have a check for it
+        return this.slice().map((v) => {
+            if (v.copy) {
+                return v.copy(copyDict)
+            } else {
+                return v
+            }
+        })
     },
 
     split: function (subArrayCount) {
@@ -628,7 +640,7 @@ Object.shallowCopyTo({
     },
 
     clone: function () {
-        return this.copy();
+        return this.shallowCopy();
     },
 
     unique: function () {
@@ -638,7 +650,7 @@ Object.shallowCopyTo({
     },
 
     reversed: function () {
-        return this.copy().reverse();
+        return this.shallowCopy().reverse();
     },
 
     asPath: function () {

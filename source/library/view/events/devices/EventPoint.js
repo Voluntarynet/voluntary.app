@@ -45,16 +45,12 @@ window.Point.newSubclassNamed("EventPoint").newSlots({
         return this
     },
 
-    copyPoint: function(p) {
-        window.Point.copyPoint.apply(this, [p])
+    copyFrom: function(p) {
+        window.Point.copyFrom.apply(this, [p])
         this._id = p._id
         this._state = p._state
         this._target = p._target
         return this
-    },
-
-    copy: function() {
-        return EventPoint.clone().copyPoint(this)
     },
 
     overView: function() {

@@ -31,16 +31,12 @@ ideal.Proto.newSubclassNamed("Point").newSlots({
         return this
     },
 
-    copyPoint: function(p) {
+    copyFrom: function(p) {
         this._x = p._x
         this._y = p._y
         this._z = p._z
         this._t = p._t
         return this
-    },
-
-    copy: function() {
-        return Point.clone().copyPoint(this)
     },
     
     set: function(x, y, z, t) {

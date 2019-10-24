@@ -796,7 +796,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
 
     /*
     orderRows: function() {
-        const orderedRows = this.rows().copy().sortPerform("top")
+        const orderedRows = this.rows().shallowCopy().sortPerform("top")
 
         this.rows().forEach((row) => {
             row.setPosition("absolute")
@@ -816,7 +816,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         // but we do when calling stackRows while moving a drop view around,
         // so just always do it as top is null, and rows are already ordered the 1st time
 
-        const orderedRows = this.rows().copy().sortPerform("top") 
+        const orderedRows = this.rows().shallowCopy().sortPerform("top") 
 
         let y = 0
         
@@ -847,7 +847,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
 
     unstackRows: function() {
         // should we calc a new subview ordering based on sorting by top values?
-        const orderedRows = this.rows().copy().sortPerform("top")
+        const orderedRows = this.rows().shallowCopy().sortPerform("top")
 
         orderedRows.forEach((row) => {
             row.setDisplay("block")

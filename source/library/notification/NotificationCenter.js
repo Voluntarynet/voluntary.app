@@ -185,7 +185,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
             this.showObservers()
         }
         
-        const observations = this.observations().copy()  
+        const observations = this.observations().shallowCopy()  
       
         observations.forEach( (obs) => {
             if (obs.matchesNotification(note)) {

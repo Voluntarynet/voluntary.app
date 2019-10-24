@@ -55,7 +55,7 @@ ideal.Proto.newSubclassNamed("GamePad").newSlots({
                 }
             }
         } else {
-            this.setButtons(newButtons.copy())
+            this.setButtons(newButtons.shallowCopy())
         }
 
         return this

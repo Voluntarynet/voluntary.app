@@ -129,10 +129,10 @@ window.ideal.Map = class Map extends ProtoClass {
     }
 
     merged (aMap) {
-        return this.copy().merge(aMap);
+        return this.shallowCopy().merge(aMap);
     }
 
-    copy () {
+    shallowCopy () {
         return Map.withJsMap(Object.shallowCopyTo(this.jsMap(), {}));
     }
 

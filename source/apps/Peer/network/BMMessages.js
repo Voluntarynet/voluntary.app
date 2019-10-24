@@ -255,7 +255,7 @@ BMStorableNode.newSubclassNamed("BMMessages").newSlots({
         const pubkeys = BMNetwork.shared().allIdentityPublicKeyStrings()
         let count = 0
 				
-        this.messages().copy().forEach( (objMsg) => {
+        this.messages().shallowCopy().forEach( (objMsg) => {
             //console.log("objMsg: ", objMsg)
             const senderPK = objMsg.senderPublicKeyString()
             if (!pubkeys.contains(senderPK)) {

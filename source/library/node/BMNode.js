@@ -38,65 +38,64 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     title: null,
     subtitle: null,
     note: null,
-    subtitleIsSubnodeCount: false,
-    noteIsSubnodeCount: false,
-        
-    // row view interaction
-    nodeThumbnailUrl: null,
-    nodeCanEditTitle: false,
-    nodeCanEditSubtitle: false,
-    nodeRowIsSelectable: true,
-    nodeVisibleClassName: null,
-    
-    nodeRowsStartAtBottom: false,
-
-    // column settings (this should really auto adjust to fit)
-    nodeMinWidth: 200,
-
-    // view
-    view: null,
-    viewClassName: null,
 
     // parent node, subnodes
     parentNode: null,
     subnodes: null,
     subnodeProto: null,
-    nodeEmptyLabel: null, // shown in view when there are no subnodes
+    nodeCanReorderSubnodes: false,
+    
+    // subnodes index
+    subnodeIndex: null,
+    subnodeSortFunc: null,
 
     // actions
     actions: null,
-    nodeCanReorderSubnodes: false,
-
-    // html
-    acceptsFileDrop: false,
-
-    nodeMinRowHeight: 0, // tall fields like draft body
-    
-    nodeContent: null,
-    	
-    // view style overrides
-    viewDict: null, 
-
-    nodeColumnStyles: null,
-    nodeRowStyles: null,
-
-    nodeHasFooter: false,
-    nodeInputFieldMethod: null,
-    
-    subnodeIndex: null,
-    subnodeSortFunc: null,
 
     // notification notes
     didUpdateNodeNote: null,
     shouldFocusSubnodeNote: null,
 
-    
+    // view related, but computed on node
+    subtitleIsSubnodeCount: false,
+    nodeVisibleClassName: null,
+    noteIsSubnodeCount: false,
+    nodeEmptyLabel: null, // shown in view when there are no subnodes
+        
+
+    // --- view related -----------------------------------
+
+    // view settings
+    viewClassName: null,
+    nodeThumbnailUrl: null,
+    nodeCanEditTitle: false,
+    nodeCanEditSubtitle: false,
+    nodeRowIsSelectable: true,
+    nodeRowsStartAtBottom: false,
+    nodeMinRowHeight: 0, // tall fields like draft body
+
+    // html
+    acceptsFileDrop: false,
+        	
+    // view style overrides
+    viewDict: null, 
+    nodeColumnStyles: null,
+    nodeRowStyles: null,
+
+    // view footer
+    nodeHasFooter: false,
+    nodeInputFieldMethod: null, // for footer
+
+    // column settings - TODO: auto adjust to fit?
+    nodeMinWidth: 200,
     nodeUsesColumnBackgroundColor: true,
-    nodeInspector: null,
     canDelete: false,
-    nodeCanInspect: false,
     nodeCanEditRowHeight: false,
     nodeCanEditColumnWidth: false,
+
+    // inspector
+    nodeCanInspect: false,
+    nodeInspector: null,
 }).setSlots({
     init: function () {
         ideal.Proto.init.apply(this)
@@ -149,7 +148,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
 
     sharedNodeColumnStyles: function() {
         if (!BMNode.hasOwnProperty("_nodeColumnStyles")) {
-            let styles = BMViewStyles.clone()
+            const styles = BMViewStyles.clone()
             //styles.selected().setColor("white")
             //styles.unselected().setColor("#aaa")
             BMNode._nodeColumnStyles = styles
@@ -159,7 +158,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
 
     sharedNodeRowStyles: function() {
         if (!BMNode._nodeRowStyles) {
-            let styles = BMViewStyles.clone()
+            const styles = BMViewStyles.clone()
             BMNode._nodeRowStyles = styles
             styles.selected().setColor("white")
             styles.unselected().setColor("#aaa")
@@ -215,7 +214,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     // --- fields ---
     
     addLinkFieldForNode: function(aNode) {
-        let field = BMLinkField.clone().setName(aNode.title()).setValue(aNode)
+        const field = BMLinkField.clone().setName(aNode.title()).setValue(aNode)
         return this.addStoredField(field)
     },
     
@@ -294,7 +293,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     */
     
     viewClass: function () {        
-        let name = this.viewClassName()
+        const name = this.viewClassName()
         if (name) {
             return window[name]
         }
@@ -609,12 +608,12 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     },
     
     tellParentNodes: function(msg, aNode) {
-        let f = this[msg]
+        const f = this[msg]
         if (f && f.apply(this, [aNode])) {
             return
         }
 
-        let p = this.parentNode()
+        const p = this.parentNode()
         if (p) {
             p.tellParentNodes(msg, aNode)
         }
@@ -624,7 +623,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     
     nodePath: function () {
         if (this.parentNode()) {
-            let parts = this.parentNode().nodePath()
+            const parts = this.parentNode().nodePath()
             parts.push(this)
             return parts
         }
@@ -642,7 +641,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     
     nodeAtSubpath: function(subpathArray) {
         if (subpathArray.length > 0) {
-            let subnode = this.firstSubnodeWithTitle(subpathArray[0])
+            const subnode = this.firstSubnodeWithTitle(subpathArray[0])
             if (subnode) {
                 return subnode.nodeAtSubpath(subpathArray.slice(1))
             }
@@ -654,7 +653,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     // --- log ------------------------
     
     log: function(msg) {
-        //let s = this.nodePathString() + " --  " + msg
+        //const s = this.nodePathString() + " --  " + msg
         if (this.isDebugging()) {
         	console.log("[" +  this.nodePathString() + "] " + msg)
         }
@@ -886,7 +885,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     },
 	
     removeSubnodeWithHash: function(h) {
-	    let subnode = this.subnodeWithHash(h)
+	    const subnode = this.subnodeWithHash(h)
 	    if (subnode) {
 	        this.removeSubnode(subnode)
 	    }
@@ -905,13 +904,13 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
             throw new Error(this.type() + " missing hash method on subnode of type " + subnode.typeId())
 	    }
 	    
-        let h = subnode.hash()
+        const h = subnode.hash()
         
         if (h === null) {
             throw new Error(this.type() + " null subnode hash")
         }
         
-        let index = this._subnodeIndex
+        const index = this._subnodeIndex
         
         if (h in index) {
             throw new Error(this.type() + " duplicate subnode hash " + h + " in indexed node")
@@ -934,7 +933,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         this.assertHasSubnodeIndex()
         this._subnodeIndex = {}
         
-	    let index = this._subnodeIndex
+	    //const index = this._subnodeIndex
 	    this.subnodes().forEach((subnode) => {
 	        /*
 	        if (shouldDeleteDuplicates && this.hasSubnodeWithHash(subnode.hash())) {
@@ -1016,7 +1015,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
             {
                 if(rawFile.status === 200 || rawFile.status === 0)
                 {
-                    let json = rawFile.responseText;
+                    const json = rawFile.responseText;
                     this.fromJSON(JSON.parse(json))
                 }
             }
@@ -1081,7 +1080,8 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         return this.title() + " " + this.subtitle()
     },
 
-    duplicate: function() {
+    copyFrom: function(aNode, copyDict) {
+
         const json = this.asJson()
         const dup = this.typeClass().clone().setJson(json)
         return dup

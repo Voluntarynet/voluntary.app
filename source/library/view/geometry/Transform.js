@@ -73,6 +73,4 @@ ideal.Proto.newSubclassNamed("Transform").newSlots({
         return t
     },
     */
-
-
 })

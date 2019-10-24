@@ -110,10 +110,10 @@ ideal.Proto.newSubclassNamed("BMViewStyles").newSlots({
     },
     */
     
-    copyFrom: function(styles) {
+    copyFrom: function(styles, copyDict) {
         assert(this.isMutable())
-        this.selected().copyFrom(styles.selected())
-        this.unselected().copyFrom(styles.unselected())
+        this.selected().copyFrom(styles.selected(), copyDict)
+        this.unselected().copyFrom(styles.unselected(), copyDict)
         return this
     },
     

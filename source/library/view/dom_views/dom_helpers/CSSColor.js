@@ -93,7 +93,7 @@ ideal.Proto.newSubclassNamed("CSSColor").newSlots({
         return this
     },
 
-    copyFrom: function(aColor) {
+    copyFrom: function(aColor, copyDict) {
         return CSSColor.clone().set(aColor.red(), aColor.green(), aColor.blue(), aColor.opacity())
     },
 

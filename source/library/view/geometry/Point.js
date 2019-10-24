@@ -31,7 +31,7 @@ ideal.Proto.newSubclassNamed("Point").newSlots({
         return this
     },
 
-    copyFrom: function(p) {
+    copyFrom: function(p, copyDict) {
         this._x = p._x
         this._y = p._y
         this._z = p._z

@@ -446,6 +446,8 @@ Proto.setSlots({
     },
 
     // --- copying protocol --- 
+    // a copyDict is created if missing and passed
+    // to store the mapping of previous typeIds to new (copied) objects
 
     copy: function(copyDict) {
         const id = this.typeId()
@@ -459,13 +461,13 @@ Proto.setSlots({
             return obj
         }
 
-        const newObject = this.typeClass().clone().copyFrom(this)
+        const newObject = this.typeClass().clone().copyFrom(this, copyDict)
         copyDict[id] = newObject
         return newObject
     },
 
-    copyFrom: function(anObject) {
-        throw new Error(this.type() + ".copyFrom() not implemented")
+    copyFrom: function(anObject, copyDict) {
+        throw new Error(this.type() + ".copyFrom not implemented")
         return this
     },
 });

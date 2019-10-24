@@ -356,7 +356,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         const node = this.node() 
         
         if (node) {
-            this.styles().copyFrom(node.nodeRowStyles()) // TODO: optimize this 
+            this.styles().copyFrom(node.nodeRowStyles(), copyDict) // TODO: optimize this 
         }
         */
         NodeView.applyStyles.apply(this)

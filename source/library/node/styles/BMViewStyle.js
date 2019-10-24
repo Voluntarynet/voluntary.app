@@ -60,7 +60,7 @@ ideal.Proto.newSubclassNamed("BMViewStyle").newSlots({
         return "{" + parts.join(", ") + "}"	
     },
 	
-    copyFrom: function(aViewStyle) {
+    copyFrom: function(aViewStyle, copyDict) {
         aViewStyle.applyToView(this) // we're not a view but this works since we use the same methods/protocol
         return this
     },

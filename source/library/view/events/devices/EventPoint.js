@@ -45,8 +45,8 @@ window.Point.newSubclassNamed("EventPoint").newSlots({
         return this
     },
 
-    copyFrom: function(p) {
-        window.Point.copyFrom.apply(this, [p])
+    copyFrom: function(p, copyDict) {
+        window.Point.copyFrom.apply(this, [p, copyDict])
         this._id = p._id
         this._state = p._state
         this._target = p._target

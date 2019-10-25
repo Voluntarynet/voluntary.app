@@ -13,8 +13,6 @@ BMStorableNode.newSubclassNamed("BMOptionNode").newSlots({
     value:  null,
     isPicked: false,
 }).setSlots({
-
-}).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
         this.setShouldStore(true)
@@ -33,7 +31,6 @@ BMStorableNode.newSubclassNamed("BMOptionNode").newSlots({
             "label", "value", "isPicked", 
         ])
     },
-
 
     setIsPicked: function(aBool) {
         if (this.isPicked() !== aBool) {
@@ -67,7 +64,6 @@ BMStorableNode.newSubclassNamed("BMOptionNode").newSlots({
 
     subtitle: function() {
         return null
-        //return this.isSelected() ? "is selected" : "is not selected"
     },
 
     summary: function() {
@@ -77,11 +73,5 @@ BMStorableNode.newSubclassNamed("BMOptionNode").newSlots({
     note: function() {
         return this.isPicked() ? "✓" : ""
     },
-
-    /*
-    setIsSelected: function() {
-        this.scheduleSyncToStore()
-    },
-    */
 
 })

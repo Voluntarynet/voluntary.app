@@ -410,6 +410,16 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     },
 
     acceptsAddingSubnode: function(aSubnode) {
+        if (aSubnode === this) {
+            return false
+        }
+
+        /*
+        if (this.containsSubnode(aSubnode)) {
+            return false
+        }
+        */
+
         const ancestors = aSubnode.ancestorTypes()
         const match = this.acceptedSubnodeTypes().detect(type => 
             ancestors.contains(type)

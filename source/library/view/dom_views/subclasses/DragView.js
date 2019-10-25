@@ -36,16 +36,16 @@
             
         Messages sent to Destination or Hover target 
             
-            - onDropDestinationEnter // not sent if destination === source
-            - onDropDestinationHover
-            - onDropDestinationExit
-            - onDropDestinationComplete
+            - onDragDestinationEnter // not sent if destination === source
+            - onDragDestinationHover
+            - onDragDestinationExit
+            - onDragDestinationComplete
 
     Example use (from within a view to be dragged):
 
-    startDrag: function() {
-        const dv = DragView.clone().
-
+    onLongPressComplete: function(longPressGesture) {
+        const dv = DragView.clone().setItem(this).setSource(this.column())
+        dv.openWithEvent(longPressGesture.currentEvent()) // TODO: eliminate this step?
     } 
 
 */
@@ -243,18 +243,23 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         const oldViews = this.hoverViews()
         const newViews = this.newHoverViews()
 
-        // if old view isn't in new ones, we must have exited it
-        const exitingViews = oldViews.select( v => !newViews.contains(v))
+        // if new view was not in old one's, we must be entering it
+        const enteringViews = newViews.select(v => !oldViews.contains(v))
 
         // if new view was in old one's, we're still hovering
         const hoveringViews = newViews.select(v => oldViews.contains(v))
 
-        // if new view was not in old one's, we must be entering it
-        const enteringViews = newViews.select(v => !oldViews.contains(v))
-
-        exitingViews.forEach(aView =>  this.sendProtocolAction(aView, "Exit"))
-        hoveringViews.forEach(aView => this.sendProtocolAction(aView, "Hover"))
+        // if old view isn't in new ones, we must have exited it
+        const exitingViews = oldViews.select( v => !newViews.contains(v))
+ 
+        // onDragSourceEnter onDragDestinationEnter 
         enteringViews.forEach(aView => this.sendProtocolAction(aView, "Enter"))
+
+        // onDragSourceHover onDragDestinationHover
+        hoveringViews.forEach(aView => this.sendProtocolAction(aView, "Hover"))
+
+        // onDragSourceExit onDragDestinationExit 
+        exitingViews.forEach(aView =>  this.sendProtocolAction(aView, "Exit")) 
 
         this.setHoverViews(newViews)
         return this

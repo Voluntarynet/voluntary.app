@@ -1070,12 +1070,21 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     // -- messages sent by DragView to the potential drop view, if not the source ---
 
     acceptsDropHover: function(aDragView) {
-        if (this.node()) {
+        const node = this.node()
+        if (node) {
             if (!aDragView) {
                 console.log("aDragView.item() missing")
             }
-            const typeOk = this.node().acceptsAddingSubnode(aDragView.item().node())
-            return typeOk && this.canReorderRows()
+            const dropNode = aDragView.item().node()
+            const acceptsNode = this.node().acceptsAddingSubnode(dropNode)
+            const canReorder = this.canReorderRows()
+            console.log(node.title() + " acceptsNode " + dropNode.title() + " " + acceptsNode)
+            console.log("parentNode " + node.parentNode().title())
+            let result = acceptsNode && canReorder
+            if (result == false) {
+                console.log("false")
+            }
+            return result
         }
         return false
     },

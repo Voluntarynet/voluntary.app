@@ -444,18 +444,12 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         return this	    
     },
 
-    onKeyUp: function(event) {
-        //console.log(this.typeId() + " onKeyDown ", event)
-
-        NodeView.onKeyUp.apply(this, [event])
-        //console.log(this.typeId() + ".onKeyUp ", event)
-        if (event.altKey) {
-            const keyName = Keyboard.shared().nameForKeyCode(event.keyCode)
-            if (keyName === "c") {
-
-            }
-        }
-    }, 
+    //onMetaLeft_d_KeyUp: function(event) {
+    onAlternate_d_KeyUp: function(event) {
+        console.log(this.typeId() + " onMetaLeft_d_KeyUp")
+        this.duplicateSelectedRow()
+        return false // stop propogation
+    },
 
     isInspecting: function() {
         // see if the row that selected this column is being inspected
@@ -486,9 +480,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     },
     */
 
-    onControl_d_KeyUp: function(event) {
-        //console.log(this.typeId() + ".onControl_d_KeyUp()")
-        // duplicate?
+    duplicateSelectedRow: function() {
         const node = this.node()
         const row = this.selectedRow()
         const canAdd = node.canSelfAddSubnode() 
@@ -498,7 +490,9 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
                 console.log(this.typeId() + " duplicate selected row " + this.selectedRow().node().title())
                 const subnode = row.node()
                 const newSubnode = subnode.copy()
-                node.addSubnode(newSubnode)
+                const index = node.indexOfSubnode(subnode)
+                node.addSubnodeAt(newSubnode, index)
+                //node.addSubnode(newSubnode)
                 this.scheduleSyncFromNode()
             }
         }

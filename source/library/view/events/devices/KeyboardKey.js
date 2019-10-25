@@ -36,4 +36,9 @@ ideal.Proto.newSubclassNamed("KeyboardKey").newSlots({
     isOnlyKeyDown: function() {
         return this.isDown() && this.keyboard().currentlyDownKeys().length
     },
+
+    isAlphabetical: function(event) {
+        const c = this.code()
+        return c >= 65 && c <= 90
+    },
 })

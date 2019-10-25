@@ -1,6 +1,7 @@
 "use strict"
 
 /*
+
     Mouse
 
     Global shared instance that tracks current mouse state in window coordinates.

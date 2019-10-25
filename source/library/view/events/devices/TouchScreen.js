@@ -1,6 +1,7 @@
 "use strict"
 
 /*
+
     TouchScreen
 
     Global shared instance that tracks current touch state in window coordinates.

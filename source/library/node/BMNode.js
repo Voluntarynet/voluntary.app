@@ -366,6 +366,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     },
 
     addSubnodeAt: function(aSubnode, anIndex) {
+        assert(anIndex >= 0)
         this.justAddSubnodeAt(aSubnode, anIndex)
         this.didChangeSubnodeList()
         return aSubnode

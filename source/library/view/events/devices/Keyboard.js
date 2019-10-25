@@ -401,8 +401,6 @@ ideal.Proto.newSubclassNamed("Keyboard").newSlots({
 
     // --- special ---
 
-
-
     // get key helpers
 
     shiftKey: function() {
@@ -411,6 +409,10 @@ ideal.Proto.newSubclassNamed("Keyboard").newSlots({
 
     controlKey: function() {
         return this.keyForName("Control")
+    },
+
+    alternateKey: function() {
+        return this.keyForName("Alternate")
     },
 
     leftCommandKey: function() {

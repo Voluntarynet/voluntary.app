@@ -9,6 +9,11 @@
 */
 
 Object.shallowCopyTo({
+    
+    shallowCopy: function() {
+        return this
+    },
+    
     isEmpty: function () {
         return this.length === 0;
     },

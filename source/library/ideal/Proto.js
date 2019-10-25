@@ -461,14 +461,92 @@ Proto.setSlots({
             return obj
         }
 
-        const newObject = this.typeClass().clone().copyFrom(this, copyDict)
+        const newObject = this.typeClass().clone()
+        newObject.copyFrom(this, copyDict)
         copyDict[id] = newObject
         return newObject
     },
 
+    shallowCopySlotnames: function() {
+        return []
+    },
+
+    deepCopySlotnames: function() {
+        return []
+    },
+
+    /*
+    asShallowCopyMember: function(copyDict) {
+        if (this.typeId) {
+            const newValue = copyDict[oldValue.typeId()]
+            if (Type.isUndefined(newValue)) { // not in copy dict
+                newValue
+            }
+        }
+        return this
+    },
+    */
+
+    shallowCopySlotFrom: function(slotName, anObject, copyDict) {
+        const oldValue = anObject.getUsingSlotName(slotName)
+        let newValue = undefined
+        
+        if (!Type.isNullOrUndefined(oldValue)) {
+            if (oldValue.typeId) {
+                newValue = copyDict[oldValue.typeId()]
+            }
+        }
+
+        if (Type.isUndefined(newValue)) { // not in copy dict
+            newValue = oldValue
+        }
+
+        this.setUsingSlotName(slotName, newValue)
+        return this
+    },
+
+    deepCopySlotFrom: function(slotName, anObject, copyDict) {
+        const oldValue = anObject.getUsingSlotName(slotName)
+        let copiedValue = oldValue
+
+        if (!Type.isNull(oldValue) && oldValue.copy) {
+            copiedValue = oldValue.copy(copyDict)
+        }
+
+        this.setUsingSlotName(slotName, copiedValue)
+
+        return this
+    },
+
+    copyFrom: function(aNode, copyDict) {
+
+        const shallowNames = this.shallowCopySlotnames()
+        shallowNames.forEach((slotName) => {
+            this.shallowCopySlotFrom(slotName, aNode, copyDict)
+        })
+
+        const deepNames = this.deepCopySlotnames()
+        deepNames.forEach((slotName) => {
+            this.deepCopySlotFrom(slotName, aNode, copyDict)
+        })
+
+        return this
+    },
+
+    /*
     copyFrom: function(anObject, copyDict) {
         throw new Error(this.type() + ".copyFrom not implemented")
         return this
+    },
+    */
+
+    getUsingSlotName: function(slotName) {
+        return this[slotName].apply(this)
+    },
+
+    setUsingSlotName: function(slotName, aValue) {
+        const setterName = this.setterNameForSlot(slotName)
+        return this[setterName].apply(this, [aValue])
     },
 });
 

@@ -72,6 +72,21 @@ BMSummaryNode.newSubclassNamed("BMField").newSlots({
         //this.addInspectorField(BMBooleanField.clone().setKey("Summary shows value").setValueMethod("nodeSummaryShowsValue").setValueIsEditable(true).setTarget(this))
         return this
     },
+
+    shallowCopySlotnames: function() {
+        const names = BMSummaryNode.shallowCopySlotnames.apply(this)
+        return names.appendItems([
+            "key", "keyIsVisible", "keyIsEditable", 
+            "value", "valueIsVisible","valueIsEditable",
+            "valuePrefix", "valuePostfix",
+            //"valueMethod", "target"
+        ])
+    },
+
+    deepCopySlotnames: function() {
+        const names = BMSummaryNode.deepCopySlotnames.apply(this)
+        return names.appendItems([])
+    },
     
     /*
     target: function() {

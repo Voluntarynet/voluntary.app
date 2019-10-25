@@ -493,11 +493,12 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         const row = this.selectedRow()
         const canAdd = node.canSelfAddSubnode() 
         if (row && canAdd) {
-            const canDuplicate = !Type.isNullOrUndefined(row.node().duplicate)
-            if (canDuplicate) { 
+            const canCopy = !Type.isNullOrUndefined(row.node().copy)
+            if (canCopy) { 
                 console.log(this.typeId() + " duplicate selected row " + this.selectedRow().node().title())
-                const dup = row.node().duplicate()
-                node.addSubnode(dup)
+                const subnode = row.node()
+                const newSubnode = subnode.copy()
+                node.addSubnode(newSubnode)
                 this.scheduleSyncFromNode()
             }
         }

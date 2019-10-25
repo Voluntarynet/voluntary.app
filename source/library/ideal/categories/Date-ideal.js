@@ -56,6 +56,14 @@ Object.shallowCopyTo({
         return this.paddedNumber(this.getTwelveHours()) + ":" + this.paddedNumber(this.getMinutes())
     },
 
+    copy: function() {
+        return this.shallowCopy()
+    },
+
+    shallowCopy: function() {
+        return new Date(date.getTime())
+    },
+
 }, Date.prototype);
 
 

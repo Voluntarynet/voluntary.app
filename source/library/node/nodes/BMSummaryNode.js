@@ -31,6 +31,14 @@ BMStorableNode.newSubclassNamed("BMSummaryNode").newSlots({
         this.addStoredSlot("summaryFormat")
     },
 
+    shallowCopySlotnames: function() {
+        const names = BMStorableNode.shallowCopySlotnames.apply(this)
+        return names.appendItems([
+            "nodeSummaryJoiner", "nodeSubtitleIsChildrenSummary", "summaryFormat", 
+        ])
+    },
+
+
     initNodeInspector: function() {
         BMStorableNode.initNodeInspector.apply(this)
         this.addInspectorField(BMStringField.clone().setKey("Summary joiner").setValueMethod("nodeSummaryJoiner").setValueIsEditable(true).setTarget(this))

@@ -10,6 +10,14 @@
 
 Object.shallowCopyTo({
 
+    copy: function() {
+        return this
+    },
+
+    shallowCopy: function() {
+        return this
+    },
+
     repeat: function (callback) {
         for (let i = 0; i < this; i++) {
             if (callback(i) === false) {

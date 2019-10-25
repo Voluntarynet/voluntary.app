@@ -1080,13 +1080,18 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         return this.title() + " " + this.subtitle()
     },
 
-    copyFrom: function(aNode, copyDict) {
+    // copying protocol
 
-        const json = this.asJson()
-        const dup = this.typeClass().clone().setJson(json)
-        return dup
+
+    shallowCopySlotnames: function() {
+        const names = ideal.Proto.shallowCopySlotnames.apply(this)
+        return names.appendItems(["title", "subtitle", "note"])
     },
 
+    deepCopySlotnames: function() {
+        const names = ideal.Proto.deepCopySlotnames.apply(this)
+        return names.appendItems(["subnodes"])
+    },
 
 
 })

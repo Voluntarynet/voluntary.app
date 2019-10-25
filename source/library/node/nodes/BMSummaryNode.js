@@ -38,7 +38,6 @@ BMStorableNode.newSubclassNamed("BMSummaryNode").newSlots({
         ])
     },
 
-
     initNodeInspector: function() {
         BMStorableNode.initNodeInspector.apply(this)
         this.addInspectorField(BMStringField.clone().setKey("Summary joiner").setValueMethod("nodeSummaryJoiner").setValueIsEditable(true).setTarget(this))

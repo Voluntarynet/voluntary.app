@@ -12,15 +12,16 @@
             
             - onDragItemBegin
             - onDragItemCancelled
-            - onDragItemComplete
-
+            - onDragItemDropped   
 
         Messages sent to Source 
             
             - onDragSourceBegin
             - onDragSourceHover
             - onDragSourceCancelled // dropped on a view that doesn't accept it
-            
+            - onDragSourceDropped
+            - onDragSourceEnd
+
             // using these messages avoids a bunch of conditions in the receiver 
             // the source is repsonsible for completing the drag operation
             // the DragView will set it's destination slot before calling these
@@ -36,10 +37,18 @@
             
         Messages sent to Destination or Hover target 
             
+            - acceptsDropHover
             - onDragDestinationEnter // not sent if destination === source
             - onDragDestinationHover
             - onDragDestinationExit
-            - onDragDestinationComplete
+            - acceptsDropHoverComplete
+            - onDragDestinationDropped
+            - onDragDestinationEnd
+
+        Messages sent by Destination to item
+
+        onDragRequestRemove() // return true if approved
+
 
     Example use (from within a view to be dragged):
 
@@ -52,7 +61,7 @@
 
 DomStyledView.newSubclassNamed("DragView").newSlots({
     item: null, // the view that will be dragged when operation is complete
-    source: null, // the owner of the view being dragged that implements the source protocol
+    source: null, // the view which is the owner of the view being dragged that implements the source protocol
     destination: null, // the view on which the item is dropped
 
     hoverViews: null, // a list of views that self is currently hovering over
@@ -73,7 +82,7 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         this.setWidth("fit-content")
         this.setMinHeight("fit-content")
 
-        //this.setIsDebugging(true)
+        this.setIsDebugging(true)
 
         return this
     },
@@ -187,8 +196,24 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         })
     },
 
+    currentOperation: function() {
+        const keyboard = Keyboard.shared()
+
+        if (keyboard.alternateKey().isDown()) {
+            return "copy"
+        }
+
+        if (keyboard.alternateKey().isDown()) {
+            return "link"
+        }
+
+        return "move"
+    },
+
     onPanComplete: function(aGesture) {
         this.debugLog("onPanComplete")
+
+        this.setDragOperation(this.currentOperation())
 
         const aView = this.firstAcceptingDropTarget()
         
@@ -204,7 +229,7 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         if (aView) {
             const completionCallback = () => {
                 this.sendProtocolMessage(this.item(), "onDragItemDropped")
-                this.sendProtocolAction(aView, "Dropped")
+                this.sendProtocolAction(aView, "Dropped") // onDragSourceDropped onDragDestinationDropped
 
 
                 this.sendProtocolMessage(this.source(), "onDragSourceEnd")
@@ -276,13 +301,22 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         // onDragSourceHover & onDragDestinationHover
         const isSource = aView === this.source()
         const methodName = "onDrag" + (isSource ? "Source" : "Destination") + action
-        this.sendProtocolMessage(aView,methodName )
+        this.sendProtocolMessage(aView, methodName)
     },
 
     sendProtocolMessage: function(receiver, methodName) {
-        const msg = receiver.typeId() + " " + methodName + " " + (receiver[methodName] ? "" : " <<<<<<<<<<<<<< NOT FOUND ")
-
         if (!methodName.contains("Hover")) {
+
+            let msg = receiver.typeId() + " " + methodName 
+
+            if (methodName.contains("Dropped")) {
+                msg += " " + this.dragOperation()
+            }
+    
+            if (!receiver[methodName]) {
+                msg += " <<<<<<<<<<<<<< NOT FOUND "
+            }
+
             this.debugLog(msg)
         }
 

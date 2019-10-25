@@ -2,6 +2,9 @@
 TODO:
 
 
+	BrowserColumn.onDragDestinationDropped
+	- change to insert dropped node and sync instead of inserting view and syncing to node? 
+
 	add canCopy option?
 
 	support copy and link drag

@@ -446,7 +446,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
 
     //onMetaLeft_d_KeyUp: function(event) {
     onAlternate_d_KeyUp: function(event) {
-        console.log(this.typeId() + " onMetaLeft_d_KeyUp")
+        //console.log(this.typeId() + " onMetaLeft_d_KeyUp")
         this.duplicateSelectedRow()
         return false // stop propogation
     },
@@ -487,7 +487,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         if (row && canAdd) {
             const canCopy = !Type.isNullOrUndefined(row.node().copy)
             if (canCopy) { 
-                console.log(this.typeId() + " duplicate selected row " + this.selectedRow().node().title())
+                //console.log(this.typeId() + " duplicate selected row " + this.selectedRow().node().title())
                 const subnode = row.node()
                 const newSubnode = subnode.copy()
                 const index = node.indexOfSubnode(subnode)
@@ -1072,8 +1072,8 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             const dropNode = aDragView.item().node()
             const acceptsNode = this.node().acceptsAddingSubnode(dropNode)
             const canReorder = this.canReorderRows()
-            console.log(node.title() + " acceptsNode " + dropNode.title() + " " + acceptsNode)
-            console.log("parentNode " + node.parentNode().title())
+            //console.log(node.title() + " acceptsNode " + dropNode.title() + " " + acceptsNode)
+            //console.log("parentNode " + node.parentNode().title())
             let result = acceptsNode && canReorder
             if (result == false) {
                 console.log("false")
@@ -1141,6 +1141,24 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     },
 
     onDragDestinationDropped: function(dragView) {
+        this.unstackRows()
+ 
+        const itemView = dragView.item()
+        if(itemView.onDragRequestRemove && itemView.onDragRequestRemove()) {
+            const insertIndex = this.indexOfSubview(this.rowPlaceHolder())
+            this.node().addSubnodeAt(itemView.node(), insertIndex)
+            this.removeRowPlaceHolder()
+        }
+
+        this.setHasPausedSync(false)
+        this.syncFromNode()
+        //this.endDropMode() // we already unstacked the rows
+    },
+
+    /*
+    // version that works with views instead of nodes
+
+    onDragDestinationDropped: function(dragView) {
         const dv = dragView.item()
 
         this.unstackRows()
@@ -1164,6 +1182,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         this.endDropMode()
         assert(dv.hasParentView())
     },
+    */
 
     removeRowPlaceHolder: function() {
         this.debugLog("removeRowPlaceHolder")

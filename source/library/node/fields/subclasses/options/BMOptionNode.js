@@ -27,6 +27,14 @@ BMStorableNode.newSubclassNamed("BMOptionNode").newSlots({
         this.setNodeCanEditTitle(true)
     },
 
+    shallowCopySlotnames: function() {
+        const names = BMStorableNode.shallowCopySlotnames.apply(this)
+        return names.appendItems([
+            "label", "value", "isPicked", 
+        ])
+    },
+
+
     setIsPicked: function(aBool) {
         if (this.isPicked() !== aBool) {
             this._isPicked = aBool

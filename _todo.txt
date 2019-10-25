@@ -1,6 +1,12 @@
 
 TODO:
 
+
+	long press + option == two finger long press?
+	- mapping of certain keys to more fingers?
+	
+	copying an object
+	
 	StorableNode -> SummaryNode -> MenuNode
                                    OptionsNode
 								  

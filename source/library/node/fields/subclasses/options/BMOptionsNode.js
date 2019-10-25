@@ -8,11 +8,12 @@
 
 BMField.newSubclassNamed("BMOptionsNode").newSlots({
     allowsMultiplePicks: false,
-    summaryFormat: "value",
 }).setSlots({
     
     init: function () {
         BMField.init.apply(this)
+
+        this.setSummaryFormat("value")
 
         this.setShouldStore(true)
         this.addStoredSlot("key")
@@ -39,12 +40,25 @@ BMField.newSubclassNamed("BMOptionsNode").newSlots({
         //this.setViewClassName("BMOptionsNodeView")
     },
 
+    shallowCopySlotnames: function() {
+        const names = BMField.shallowCopySlotnames.apply(this)
+        return names.appendItems([
+            "allowsMultiplePicks", 
+        ])
+    },
+
     initNodeInspector: function() {
         BMField.initNodeInspector.apply(this)
         this.addInspectorField(BMBooleanField.clone().setKey("Multiple picks").setValueMethod("allowsMultiplePicks").setValueIsEditable(true).setTarget(this))
-
         return this
     },
+
+    /*
+    setValue: function(v) {
+        BMField.setValue.apply(this, [v])
+        return this
+    },
+    */
     
 
     key: function() {

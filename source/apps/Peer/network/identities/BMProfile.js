@@ -56,7 +56,7 @@ BMFieldSetNode.newSubclassNamed("BMProfile").newSlots({
     didUpdateSlot: function(slotName, oldValue, newValue) {
         BMFieldSetNode.didUpdateSlot.apply(this, [slotName, oldValue, newValue])
         if (slotName === "avatars") {
-		    let parentNode = this.parentNode()
+		    const parentNode = this.parentNode()
 		    if (parentNode && parentNode.didUpdateSubnode) {
 		        parentNode.didUpdateSubnode(this)
 		    }

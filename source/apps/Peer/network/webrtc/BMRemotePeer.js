@@ -125,7 +125,7 @@ BMNode.newSubclassNamed("BMRemotePeer").newSlots({
     },
     
     startConnectTimeout: function () {
-        let timeoutSeconds = 45
+        const timeoutSeconds = 45
         setTimeout(() => { 
             if (!this.isConnected()) {
                 this.log(" connection timeout")
@@ -181,13 +181,13 @@ BMNode.newSubclassNamed("BMRemotePeer").newSlots({
     onData: function(data) {
         this.setStatus("connected")
         this.log("onData '" + data + "'")
-        let msg = BMMessage.messageForString(data)
+        const msg = BMMessage.messageForString(data)
         this.log("onData msg.msgDict(): ", msg.msgDict())
         msg.setSubtitle("received")
         //msg.setSubtitle("via peer " + this.shortId())
         msg.setRemotePeer(this)
         this.log("onData msgType '" + msg.msgType() + "'")
-        let msgType = msg.msgType()
+        const msgType = msg.msgType()
 		
         if (["ping", "pong", "addr", "inv", "getData", "object"].includes(msgType)) {
 	        //this.addMessage(msg.duplicate())
@@ -266,7 +266,7 @@ BMNode.newSubclassNamed("BMRemotePeer").newSlots({
         this.log("got object msg.msgDict(): ", objMsg.msgDict())
         //this.log("got object")
         
-        let msgs = this.network().messages()
+        const msgs = this.network().messages()
         
         if (msgs.validateMsg(objMsg)) {
             this.markSeenHash(objMsg.msgHash())

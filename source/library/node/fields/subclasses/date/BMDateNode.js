@@ -40,7 +40,7 @@ BMSummaryNode.newSubclassNamed("BMDateNode").newSlots({
     jsDate: function() {
         //new Date(year, month, day, hours, minutes, seconds, milliseconds)
         if (this.hasDate()) {
-            let d = new Date(this.year(), this.month(), this.day(), 0, 0, 0, 0, 0)
+            const d = new Date(this.year(), this.month(), this.day(), 0, 0, 0, 0, 0)
             //console.log("d = ", d)
             return d
         }

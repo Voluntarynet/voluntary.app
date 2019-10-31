@@ -28,7 +28,7 @@ Object.shallowCopyTo({
     },
 
     map: function () {
-        let a = [];
+        const a = [];
         for (let i = 0; i < this; i++) {
             a.push(i);
         }

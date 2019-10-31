@@ -55,7 +55,7 @@ BMStorableNode.newSubclassNamed("BMRemoteIdentity").newSlots({
 	
     localIdentity: function() {
         /*
-		let localIdentity = this.parentNode().parentNode()
+		const localIdentity = this.parentNode().parentNode()
 		assert(localIdentity.type() === "BMLocalIdentity")
 		return localIdentity
 		*/
@@ -98,21 +98,21 @@ BMStorableNode.newSubclassNamed("BMRemoteIdentity").newSlots({
     },
 
     isValid: function() {
-        let s = this.publicKeyString()
+        const s = this.publicKeyString()
         return bitcore.PublicKey.isValid(s)
     },
 	
     publicKey: function() {
         if (this.isValid()) {
-            let s = this.publicKeyString()
+            const s = this.publicKeyString()
             return new bitcore.PublicKey(s)
         }
         return null
     },
 
     verifySignatureForMessage: function(signature, msgString) {
-        let address = this.publicKey().toAddress()
-        let verified = Message(msgString).verify(address, signature);
+        const address = this.publicKey().toAddress()
+        const verified = Message(msgString).verify(address, signature);
         return verified
     },
 
@@ -124,9 +124,9 @@ BMStorableNode.newSubclassNamed("BMRemoteIdentity").newSlots({
 
         console.log(this.title() + " >>> " + this.typeId() + ".handleObjMsg(" + objMsg.type() + ") encryptedData:", objMsg.encryptedData())
 		
-        let dict = this.decryptJson(objMsg.encryptedData())
+        const dict = this.decryptJson(objMsg.encryptedData())
         if (dict) {
-            let appMsg = BMAppMessage.fromDataDict(dict)
+            const appMsg = BMAppMessage.fromDataDict(dict)
             //console.log("created ", appMsg.typeId())
 			
             if (appMsg) {
@@ -146,7 +146,7 @@ BMStorableNode.newSubclassNamed("BMRemoteIdentity").newSlots({
 	
     encryptJson: function(dataDict) {
         assert(dataDict)
-        let encryptedData = this.localIdentity().encryptMessageForReceiverId(JSON.stringify(dataDict), this)
+        const encryptedData = this.localIdentity().encryptMessageForReceiverId(JSON.stringify(dataDict), this)
         assert(encryptedData)
 	    // TODO: use sessionKeys
 	    return encryptedData.toString()	    
@@ -158,7 +158,7 @@ BMStorableNode.newSubclassNamed("BMRemoteIdentity").newSlots({
             if(!encryptedData) {
                 throw new Error("encryptedData is null")
             }
-            let decryptedData = this.localIdentity().decryptMessageFromSenderPublicKeyString(encryptedData, this.publicKeyString())
+            const decryptedData = this.localIdentity().decryptMessageFromSenderPublicKeyString(encryptedData, this.publicKeyString())
             if (decryptedData) {
 			    return JSON.parse(decryptedData)	    
 		    }
@@ -167,7 +167,7 @@ BMStorableNode.newSubclassNamed("BMRemoteIdentity").newSlots({
     },
 	
     allIdentitiesMap: function() { // only uses valid remote identities
-        let ids = ideal.Map.clone()
+        const ids = ideal.Map.clone()
         ids.atPut(this.publicKeyString(), this)
         return ids
     },

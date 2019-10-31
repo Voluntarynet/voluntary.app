@@ -9,7 +9,7 @@
 
 	example use:
 
-	let stringVersion = ByteFormatter.clone().setValue(aNumberOfBytes).formattedValue()
+	const stringVersion = ByteFormatter.clone().setValue(aNumberOfBytes).formattedValue()
 
 	example output:
 

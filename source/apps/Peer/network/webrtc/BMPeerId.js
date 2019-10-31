@@ -53,8 +53,8 @@ BMNode.newSubclassNamed("BMPeerId").newSlots({
 	},
 	
 	setEncodedBloomString: function(s) {
-		let filter = BMNetwork.shared().newDefaultBloomFilter()
-		s = s.substr(1); // remove front padding character
+		const filter = BMNetwork.shared().newDefaultBloomFilter()
+		let s = s.substr(1); // remove front padding character
 		s = s.replaceAll("_0", "+")
 		s = s.replaceAll("_1", "/")
 		s = s.replaceAll("_2", "=")
@@ -70,7 +70,7 @@ BMNode.newSubclassNamed("BMPeerId").newSlots({
     },
 	
     setEncodedBloomString: function(s) {
-        let filter = BMNetwork.shared().newDefaultBloomFilter().unserialized(s)
+        const filter = BMNetwork.shared().newDefaultBloomFilter().unserialized(s)
         this.setBloomFilter(filter)
         return this
     },
@@ -84,9 +84,9 @@ BMNode.newSubclassNamed("BMPeerId").newSlots({
     },
 	
     setFromString: function(aString) {
-        let parts = aString.split("-")
-        let pubkey = parts[0]
-        let bloom = parts[1] // open relay blooms are all 1s
+        const parts = aString.split("-")
+        const pubkey = parts[0]
+        const bloom = parts[1] // open relay blooms are all 1s
 		
         try {
 		    if (pubkey && bloom) {
@@ -112,7 +112,7 @@ BMNode.newSubclassNamed("BMPeerId").newSlots({
 	
     chooseRandomPeerId: function() {
         let s = ""
-        let max = 10
+        const max = 10
         for (let i = 0; i < max; i++) {
             s = s + (Math.floor(Math.random()*1000000) % 10)
         }

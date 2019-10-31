@@ -5,13 +5,13 @@
     NodeStore
 
 		An object store for BMStorableNode objects, that supports 
-		- read reference cache of "activeObjects" so re-loading an object will reference the same instance
+		- a read reference cache of "activeObjects" so re-loading an object will reference the same instance
 		- a write reference cache of "dirtyObjects"
 		- automatic tracking of dirty objects (objects whose state needs to be persisted)
 		- group transactional writes of dirty objects ( nodeStore.storeDirtyObjects() )
-		- on disk garbage collection of persisted objects ( nodeStore.collect() )	
-		- supports circular references and properly collecting them
-	
+		- on disk garbage collection of no longer referenced persisted objects ( nodeStore.collect() )	
+		- supports circular references and collecting them when no longer referenced
+        - multiple collection roots
     
     Garbage collection:
     
@@ -30,15 +30,17 @@
         Whenever a BNStorableNode instance is created, it's init method tells the store of 
         it's existence ( addActiveObject(aNode) ) and marks itself as dirty if it's not being unserialized.
         
-        All dirty objects are transactionally persisted on the next event loop. 
+        All dirty objects are transactionally persisted on the next event loop 
+        (or end of curent event if supported). 
 		This avoids multiple writes for multiple changes within a given loop.
     
     Persistent ids:
     
         each object is assigned a _pid property when persisted 
-        _pid is a unique (persistent id) number (in string form) for the object
+        _pid is a unique persistent id (as a string the format typeName_uuid) for the object.
     
-        If a serialized object record dictionary value points to string or number, it's value is stored in json.
+        If a serialized object record dictionary value points to a simple type 
+        (such as a string or number), it's value is stored in json.
         Otherwise, it's value is stored as a pid reference in a dictionary 
         like { _pid: pidNum }. 
     
@@ -277,7 +279,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
         while (true) {
             let thisLoopStoreCount = 0
-            let dirtyBucket = this._dirtyObjects
+            const dirtyBucket = this._dirtyObjects
             this._dirtyObjects = {}
 
             Object.keys(dirtyBucket).forEach((objId) => {
@@ -612,9 +614,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         // pids beginning with _ are considered root
         // to delete them you'll need to call removeEntryForPid()
 
-        return this.sdb().keys().select(function (pid) {
-            return pid[0] === "_"
-        })
+        return this.sdb().keys().select(pid => pid[0] === "_")
     },
 
     flushIfNeeded: function () {
@@ -735,6 +735,8 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         //this.sdb().idb().show()
         return this
     },
+
+    // --- debugging helper methods ---
 
     showPid: function (pid, level, maxLevel) {
         if (level > maxLevel) {

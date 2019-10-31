@@ -167,7 +167,7 @@ BMFieldSetNode.newSubclassNamed("BMRServer").newSlots({
     },
 
     updateBloomDistance: function(bloomUint8Array) {
-        let hostHashUint8Array = this.host().sha256()
+        const hostHashUint8Array = this.host().sha256()
 
         // make sure host bits are at least as long as bloom
         while (hostHashUint8Array.length < bloomUint8Array.length) {

@@ -75,7 +75,7 @@ BMNode.newSubclassNamed("App").newSlots({
 
     appDidInit: function() {
         //this.postNoteNamed("appDidInit")
-        let note = NotificationCenter.shared().newNote().setSender(this).setName("appDidInit")
+        const note = NotificationCenter.shared().newNote().setSender(this).setName("appDidInit")
         note.post()
 
         if (this.runTests) {

@@ -17,10 +17,10 @@ BMStorableNode.newSubclassNamed("BMThemeClass").newSlots({
     },
 
     setupSubnodes: function() {
-        let classProto = window[this.title()]
+        const classProto = window[this.title()]
         //let stateNames = classProto.stateNames()
-        let stateNames = ["active", "inactive", "disabled"]
-        let stateNodes = stateNames.map(function (stateName) {
+        const stateNames = ["active", "inactive", "disabled"]
+        const stateNodes = stateNames.map(function (stateName) {
             return BMThemeClassState.clone().setDivClassName(stateName)
         })
         this.setSubnodes(stateNodes);

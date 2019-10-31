@@ -13,7 +13,7 @@ DomView.newSubclassNamed("ShelfFooterView").newSlots({
         this.turnOffUserSelect()
         this.setTransition("all 0.35s")
 		
-        let itemSize = 80
+        const itemSize = 80
         this.setMinAndMaxWidth(itemSize)
 
         return this
@@ -57,7 +57,7 @@ DomView.newSubclassNamed("ShelfFooterView").newSlots({
             }
         })
         
-        let node = clickedItem.destinationNode()
+        const node = clickedItem.destinationNode()
         if (node) {
             //App.shared().browser().selectNode(node)
             App.shared().browser().setNode(node).scheduleSyncFromNode() // this.browser().syncFromNode()
@@ -67,14 +67,14 @@ DomView.newSubclassNamed("ShelfFooterView").newSlots({
     },
     
     newShelfItem: function() {
-        let item = ShelfItemView.clone()
+        const item = ShelfItemView.clone()
         this.addItem(item)
         item.showUnselected()
         return item
     },
     
     firstItemHeight: function() {
-        let fs = this.firstItem()    
+        const fs = this.firstItem()    
         return fs ? fs.clientHeight() : 0
     },
     
@@ -106,9 +106,9 @@ DomView.newSubclassNamed("ShelfFooterView").newSlots({
     uncompact: function() {
         if (this._isCompacted) {
             this._isCompacted = false
-            let fs = this.firstItem()
+            const fs = this.firstItem()
             if (fs) {
-                let newHeight = this.sumOfSubviewHeights()
+                const newHeight = this.sumOfSubviewHeights()
                 this.setMinAndMaxHeight(newHeight)
                 fs.select()
             }

@@ -211,7 +211,7 @@ class ProtoClass {
 
     /*
     extend () {
-        let obj = this.cloneWithoutInit()
+        const obj = this.cloneWithoutInit()
         Proto._allProtos.push(obj)
         obj._parentProto = this
         //console.log("Proto._allProtos.length = ", Proto._allProtos.length)

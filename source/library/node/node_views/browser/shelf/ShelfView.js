@@ -29,7 +29,7 @@ NodeView.newSubclassNamed("ShelfView").newSlots({
         this._idsObservation = NotificationCenter.shared().newObservation().setName("didChangeIdentities").setObserver(this).watch()
         this._idObservation = NotificationCenter.shared().newObservation().setName("didChangeIdentity").setObserver(this).watch()
         
-        let lids = PeerApp.shared().localIdentities()
+        const lids = PeerApp.shared().localIdentities()
         this.setNode(lids)
         this.scrollView().setNode(lids)
 
@@ -96,7 +96,7 @@ NodeView.newSubclassNamed("ShelfView").newSlots({
 
     /*
     selectFirstGroup: function() {
-        let firstGroup = this.groups()[0]
+        const firstGroup = this.groups()[0]
         if (firstGroup) {
             firstGroup.uncompact()
         }        
@@ -119,7 +119,7 @@ NodeView.newSubclassNamed("ShelfView").newSlots({
     // create identity 
 
     addCreateIdentityGroup: function() {
-        let item = this.newFooterItem()
+        const item = this.newFooterItem()
         //item.setIconName("add-user-white")
         item.setIconName("chat/new_identity")
         item.setTarget(this).setAction("createIdentity").setToolTip("Create New Identity")
@@ -128,22 +128,22 @@ NodeView.newSubclassNamed("ShelfView").newSlots({
     },
 
     createIdentity: function() {     
-        let newLid = App.shared().localIdentities().add()
+        const newLid = App.shared().localIdentities().add()
         this.scheduleSyncFromNode()
         this.setNeedsToSelectLastItem(true)
     },
 
     clickLastGroupProfile: function() {
-        let group = this.scrollView().subviews().last()
-        let item = group.items()[0]
+        const group = this.scrollView().subviews().last()
+        const item = group.items()[0]
         item.onClick(null)
     },
 
     // settings 
 
     addSettingsGroup: function() {
-        let item = this.newFooterItem()
-        let settings = App.shared().about()
+        const item = this.newFooterItem()
+        const settings = App.shared().about()
         //item.setIconName("gear-filled-white")
         item.setIconName("chat/system")
         item.setDestinationNode(settings).setToolTip("Settings")   

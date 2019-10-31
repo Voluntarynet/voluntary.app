@@ -19,16 +19,16 @@ String.prototype.toJsonDict = function() {
 }
 
 String.prototype.sha256String = function() {
-    let h1 = bitcore.crypto.Hash.sha256(this.toBuffer()).toString("hex")
-    //let h2 = bitcore.crypto.Hash.sha256(("" + this).toBuffer()).toString('hex')
+    const h1 = bitcore.crypto.Hash.sha256(this.toBuffer()).toString("hex")
+    //const h2 = bitcore.crypto.Hash.sha256(("" + this).toBuffer()).toString('hex')
     //assert(h1 === h2)
     return h1
 /*
-	let s = "" + this
+	const s = "" + this
 	console.log("String.prototype.sha256String this = " + typeof(s) + " '" + s + "'")
-	let shaBits = sjcl.hash.sha256.hash(s);
-	let shaHex = sjcl.codec.hex.fromBits(shaBits);
-    let h2 = bitcore.crypto.Hash.sha256(this.toBuffer()).toString('hex')
+	const shaBits = sjcl.hash.sha256.hash(s);
+	const shaHex = sjcl.codec.hex.fromBits(shaBits);
+    const h2 = bitcore.crypto.Hash.sha256(this.toBuffer()).toString('hex')
 	console.log("shaHex = ", shaHex)
 	console.log("h2 = ", h2)
 	assert(shaHex === h2)

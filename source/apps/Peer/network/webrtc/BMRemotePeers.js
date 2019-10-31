@@ -58,7 +58,7 @@ BMNode.newSubclassNamed("BMRemotePeers").newSlots({
     },
     
     addRemotePeerForId: function(id) {
-        let peer = this.subnodeWithHash(id)
+        const peer = this.subnodeWithHash(id)
         if (!peer) {
 		 	peer = BMRemotePeer.clone().setPeerIdString(id).setServerConnection(this.serverConnection())
             this.addSubnode(peer)

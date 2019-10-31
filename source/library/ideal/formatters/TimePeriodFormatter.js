@@ -8,7 +8,7 @@ TimePeriodFormatter
 
 	Example use:
 
-	let stringVersion = TimePeriodFormatter.clone().setValueInSeconds(seconds).formattedValue()
+	const stringVersion = TimePeriodFormatter.clone().setValueInSeconds(seconds).formattedValue()
 
 	Example output:
 

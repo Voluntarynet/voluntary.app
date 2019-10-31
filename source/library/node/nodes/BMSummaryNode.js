@@ -93,7 +93,6 @@ BMStorableNode.newSubclassNamed("BMSummaryNode").newSlots({
             v = ""
         }
 
-
         if (f === "key") { 
             return k
         }

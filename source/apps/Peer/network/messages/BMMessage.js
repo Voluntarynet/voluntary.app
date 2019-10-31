@@ -32,10 +32,10 @@ BMFieldSetNode.newSubclassNamed("BMMessage").newSlots({
 
     subtitle: function() {
         if (this.msgDict()) {
-            let ts = this.msgDict().ts
+            const ts = this.msgDict().ts
             if (ts) {
-                let t = Date.now()/1000
-                let dt = t - ts
+                const t = Date.now()/1000
+                const dt = t - ts
                 return TimePeriodFormatter.clone().setValueInSeconds(dt).formattedValue()
             }
         }
@@ -68,13 +68,13 @@ BMFieldSetNode.newSubclassNamed("BMMessage").newSlots({
     },
     
     messageForString: function(aString) {
-        let dict = JSON.parse(aString)
-        let msgType = dict.msgType
+        const dict = JSON.parse(aString)
+        const msgType = dict.msgType
         
         if (this.msgTypes().contains(msgType)) {
-            let className = "BM" + msgType.capitalized() + "Message"
+            const className = "BM" + msgType.capitalized() + "Message"
             //this.log("className '" + className + "'")
-            let proto = window[className]
+            const proto = window[className]
             return proto.clone().setMsgDict(dict)
         }
         

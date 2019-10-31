@@ -130,7 +130,7 @@ BMStorableNode.newSubclassNamed("BMFieldSetNode").newSlots({
             // TODO: check for BMField subclass?
             dict.fields = {}
             this.subnodes().forEach((field) => {
-                let v = field.value()
+                const v = field.value()
                 if (v) { // is empty or null value something we should store?
                     dict.fields[field.key()] = v
                 }

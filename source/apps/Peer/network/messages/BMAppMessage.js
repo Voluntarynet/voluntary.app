@@ -19,7 +19,7 @@ BMFieldSetNode.newSubclassNamed("BMAppMessage").newSlots({
     },
 
     senderPublicKeyString: function() {
-        let rid = this.senderId()
+        const rid = this.senderId()
         if (rid) {
             return rid.publicKeyString()
         }
@@ -30,7 +30,7 @@ BMFieldSetNode.newSubclassNamed("BMAppMessage").newSlots({
 	
     duplicate: function() {
 	    assert(this.objMsg() !== null)
-        let obj = window[this.type()].clone()
+        const obj = window[this.type()].clone()
         obj.setSenderId(this.senderId())
         obj.setReceiverId(this.receiverId())
         obj.setObjMsg(this.objMsg())
@@ -41,7 +41,7 @@ BMFieldSetNode.newSubclassNamed("BMAppMessage").newSlots({
 
     contentDict: function() {
         throw new Error(this.type() + " subclasses should override contentDict")
-        let contentDict = {}
+        const contentDict = {}
         return contentDict
     },
 	
@@ -51,7 +51,7 @@ BMFieldSetNode.newSubclassNamed("BMAppMessage").newSlots({
     },
 	
     dataDict: function() {
-        let dataDict = {}
+        const dataDict = {}
         dataDict.type = this.type()
         dataDict.data = this.contentDict()
         return dataDict
@@ -76,11 +76,11 @@ BMFieldSetNode.newSubclassNamed("BMAppMessage").newSlots({
 
     sendToRemoteId: function (rid) {
         //console.log("rid = ", rid.typeId())
-        let lid = rid.localIdentity()
+        const lid = rid.localIdentity()
         this.setSenderId(lid)
         this.setReceiverId(rid)
         
-        let objMsg = BMObjectMessage.clone()
+        const objMsg = BMObjectMessage.clone()
         objMsg.setSenderPublicKeyString(lid.publicKeyString())
         objMsg.setEncryptedData(rid.encryptJson(this.dataDict()))
         objMsg.makeTimeStampNow()
@@ -106,7 +106,7 @@ BMFieldSetNode.newSubclassNamed("BMAppMessage").newSlots({
     },
 	    
     fromDataDict: function(dataDict) {
-        let className = dataDict.type
+        const className = dataDict.type
         if (!className) {
             return null
         }
@@ -115,7 +115,7 @@ BMFieldSetNode.newSubclassNamed("BMAppMessage").newSlots({
             return null
         }
         
-        let proto = window[className]
+        const proto = window[className]
         if (!proto) {
             return null
         }
@@ -135,7 +135,7 @@ BMFieldSetNode.newSubclassNamed("BMAppMessage").newSlots({
     postFromSender: function (lid) {
         this.setSenderId(lid)
         
-        let objMsg = BMObjectMessage.clone()
+        const objMsg = BMObjectMessage.clone()
         objMsg.setSenderPublicKeyString(lid.publicKeyString())
         objMsg.setData(this.dataDict())
         objMsg.makeTimeStampNow()

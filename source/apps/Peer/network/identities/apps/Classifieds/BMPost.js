@@ -50,12 +50,12 @@ BMStorableNode.newSubclassNamed("BMPost").newSlots({
     send: function () {
         this.log("post")
 
-        let objMsg = BMObjectMessage.clone()
+        const objMsg = BMObjectMessage.clone()
         
         objMsg.setContentDict(this.postDict())
         
-        let myId = App.shared().network().localIdentities().current()
-        let toId = App.shared().network().openIdentity().current()
+        const myId = App.shared().network().localIdentities().current()
+        const toId = App.shared().network().openIdentity().current()
 
         objMsg.send()
     },

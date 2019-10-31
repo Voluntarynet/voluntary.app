@@ -60,7 +60,7 @@ BMStorableNode.newSubclassNamed("BMRemoteIdentities").newSlots({
     },
     
     addIdWithPublicKeyString: function(publicKeyString) {
-        let id = BMRemoteIdentity.clone().setPublicKeyString(publicKeyString)
+        const id = BMRemoteIdentity.clone().setPublicKeyString(publicKeyString)
         this.addSubnode(id)
         return id
     },

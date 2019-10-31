@@ -49,12 +49,12 @@ BMFieldSetNode.newSubclassNamed("BMStunServer").newSlots({
     // ice entry - for Peer options
 	
     setIceDict: function(dict) {
-	    let url = dict.url
-        let parts = url.split(":")
-        let type = parts[0]
+	    const url = dict.url
+        const parts = url.split(":")
+        const type = parts[0]
         assert(type === "stun")
-        let host = parts[1]
-        let port = parts[2]
+        const host = parts[1]
+        const port = parts[2]
         this.setHost(host)
         this.setPort(port)
         return this

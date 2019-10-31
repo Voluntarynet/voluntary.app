@@ -32,7 +32,7 @@ BMStorableNode.newSubclassNamed("BMKeyPair").newSlots({
     },
 	
     generatePrivateKey: function() {
-        let privateKey = new bitcore.PrivateKey();
+        const privateKey = new bitcore.PrivateKey();
         this.setPrivateKeyString(privateKey.toString())
         return this
     },
@@ -60,21 +60,21 @@ BMStorableNode.newSubclassNamed("BMKeyPair").newSlots({
     },
 
     signatureForMessageString: function(msgString) {
-        let signature = BitcoreMessage(msgString).sign(this.privateKey())
+        const signature = BitcoreMessage(msgString).sign(this.privateKey())
         return signature
     },
 
     encryptMessageForReceiverId: function(msgString, receiverId) {
-        let encryptor = ECIES().privateKey(this.privateKey()).publicKey(receiverId.publicKey());
-        let encryptedBase64String = encryptor.encrypt(msgString).toString("base64")
+        const encryptor = ECIES().privateKey(this.privateKey()).publicKey(receiverId.publicKey());
+        const encryptedBase64String = encryptor.encrypt(msgString).toString("base64")
         return encryptedBase64String
     },
     
     decryptMessageFromSenderPublicKeyString: function(encryptedBase64String, senderPublicKeyString) {
-        let encryptedBuffer = new Buffer(encryptedBase64String, "base64")
+        const encryptedBuffer = new Buffer(encryptedBase64String, "base64")
         //console.log("senderPublicKeyString = ", senderPublicKeyString)
-        let senderPublicKey = new bitcore.PublicKey(senderPublicKeyString)
-        let decryptor = ECIES().privateKey(this.privateKey()).publicKey(senderPublicKey);
+        const senderPublicKey = new bitcore.PublicKey(senderPublicKeyString)
+        const decryptor = ECIES().privateKey(this.privateKey()).publicKey(senderPublicKey);
         //console.log("encryptedMsg = '" + encryptedMsg + "'")
         let decrypted = null
         try {

@@ -53,7 +53,7 @@ BMNode.newSubclassNamed("BMDataStore").newSlots({
     },
 
     subnodeForClassName: function (aClassName) {
-        let subnode = this.firstSubnodeWithTitle(aClassName)
+        const subnode = this.firstSubnodeWithTitle(aClassName)
         if (!subnode) {
             subnode = BMNode.clone().setTitle(aClassName).setNoteIsSubnodeCount(true)
             this.justAddSubnode(subnode)
@@ -68,7 +68,7 @@ BMNode.newSubclassNamed("BMDataStore").newSlots({
             className = "roots"
         }
 
-        let classNode = this.subnodeForClassName(className)
+        const classNode = this.subnodeForClassName(className)
         classNode.setNodeMinWidth(300)
         classNode.justAddSubnode(aRecord)
         return this

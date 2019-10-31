@@ -41,7 +41,7 @@ BMSummaryNode.newSubclassNamed("BMTimeNode").newSlots({
     jsDate: function() {
         //new Date(year, month, day, hours, minutes, seconds, milliseconds)
         if (this.hasTime()) {
-            let d = new Date(0, 0, 0, this.hour(), this.minute(), 0, 0, 0)
+            const d = new Date(0, 0, 0, this.hour(), this.minute(), 0, 0, 0)
             return d
         }
         return null

@@ -143,6 +143,7 @@ ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
 
                 this.onBeforeEvent(fullMethodName, event)
 
+                //try {
                 let result = true
                 if (method) {
                     result = method.apply(delegate, [event]); 
@@ -159,6 +160,10 @@ ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
                         console.log(this.listenTargetDescription() + " MISSING method: " + delegate.type() + "." + fullMethodName, "(" + event.type + ")" )
                     }
                 }
+
+                // } catch (e) {
+
+                //}
 
                 this.onAfterEvent(fullMethodName, event)
 

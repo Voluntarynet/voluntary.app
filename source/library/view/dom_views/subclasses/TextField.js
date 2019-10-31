@@ -272,9 +272,9 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
     
     /*
     setInput: function(s) {
-        let n = this.node()
+        const n = this.node()
         if (n) {
-            let m = n.nodeInputFieldMethod()
+            const m = n.nodeInputFieldMethod()
             if (m) {
                 n[m].apply(n, [s])
             }

@@ -93,11 +93,14 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
             
             if (syncMethod !== "processPostQueue") {
                 if (this.currentAction() && this.currentAction().equals(newAction)) {
-                    let error = this.typeId()
-                    error += "  scheduleTargetAndMethod: \n" + newAction.description() 
-                    error += "  while processing: " + this.currentAction().description()
-                    error += " loop detected "
-                    throw new Error(error)
+                    const error = [
+                        this.typeId(),
+                        "  scheduleTargetAndMethod: \n", newAction.description(),
+                        "  while processing: ", this.currentAction().description(),
+                        " loop detected "
+                    ]
+
+                    throw new Error(error.join())
                 }
             }
 

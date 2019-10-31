@@ -72,7 +72,7 @@ BMSummaryNode.newSubclassNamed("BMMenuNode").newSlots({
     /*
     subtitle: function() {
         if (this.hasSubtitleOfValues()) {
-            let parts = []
+            const parts = []
             this.subnodes().forEach((subnode) => {
                 if (subnode.value) {
                     parts.push(subnode.value())

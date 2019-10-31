@@ -288,11 +288,10 @@ ideal.Proto.newSubclassNamed("Keyboard").newSlots({
 
         //const s = JSON.stringify(c2k, null, 4)
 
-        let s = "{\n"
-        Object.keys(c2k).forEach((code) => {
-            s += "    " + code + ": \"" + this.codeToKeys()[code].name() + "\",\n"
+        const lines = Object.keys(c2k).map((code) => {
+            return "    " + code + ": \"" + this.codeToKeys()[code].name() + "\""
         })
-        s += "}\n"
+        const s = "{\n" + lines.join(",\n") + "}\n"
         console.log("c2k:", s)
 
         /*

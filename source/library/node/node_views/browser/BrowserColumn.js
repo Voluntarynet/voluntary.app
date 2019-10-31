@@ -31,6 +31,9 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
 
         this.setRowStyles(BMViewStyles.clone().setToWhiteOnBlack())
         //this.rowStyles().selected().setBackgroundColor("red")
+
+        this.setIsRegisteredForDrop(true)
+
         return this
     },
 
@@ -398,7 +401,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             return this
         }
         
-        this.setIsRegisteredForDrop(this.node().acceptsFileDrop())
+        //this.setIsRegisteredForDrop(this.node().acceptsFileDrop())
 
         if (selectedIndex === -1) {
             this.browser().clearColumnsGroupsAfter(this.columnGroup()) // TODO: fragile: careful that this doesn't cause a loop...
@@ -1099,7 +1102,6 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         return this.rowPlaceHolder()
     },
 
-
     // --- drag destination ---
 
     onDragDestinationEnter: function(dragView) {
@@ -1248,5 +1250,35 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     },
     */
 
+    // Browser drop from desktop
+
+    acceptsDrop: function () {
+        return true
+    },
+
+    onDrop: function (event) {
+        // triggered on drop target
+        if (this.acceptsDrop()) {
+            //const file = event.dataTransfer.files[0];
+            //console.log('onDrop ' + file.path);
+            //this.onDataTransfer(event.dataTransfer)
+            console.log(this.typeId() + " got drop")
+            const data = event.dataTransfer.getData("text");
+            console.log("drop text = ", data)
+            let json = null
+            try {
+                json = JSON.parse(data)
+            } catch (error) {
+
+            }
+            
+            this.dragUnhighlight()
+            event.preventDefault();
+            return true;
+        }
+        event.preventDefault();
+
+        return false
+    },
 })
 

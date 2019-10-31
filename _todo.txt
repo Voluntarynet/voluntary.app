@@ -1,6 +1,8 @@
 
 TODO:
 
+	Name? MetaStep
+	
 
 	BrowserColumn.onDragDestinationDropped
 	- change to insert dropped node and sync instead of inserting view and syncing to node? 
@@ -16,8 +18,19 @@ TODO:
 	
 	StorableNode -> SummaryNode -> MenuNode
                                    OptionsNode
-								  
+								   
+								   
+	- way to present errors in summary (set a message on top node that's presented if any lower nodes have error)
+	- way to clear values in all lower nodes
+	- top node default message for all lower nodes cleared?
+	
+	
+	Prototypes
+	- way to link a top node to it's prototype
+	- special stored property BMStorableNode.viewPrototype
 								  	
+	
+	
 	should text fields be html?
 	
 	
@@ -48,6 +61,27 @@ TODO:
 	
 	
 	- other types: 
+		Address
+		Phone Numbers
+		Email Address
+		FB, Twitter,etc ID
+		Flight Number
+		License
+		Insurance
+		Credit Card
+		Name (first middle last)
+		Age
+		Gender		
+		
+		Emergency Contacts
+		
+
+		
+		Price (choice of currency, limit precision)
+		UnitsOfMeasure (Length, Area, Volume, Weight, Mass, Energy)
+		Photo (Full View) fit to view, stretch to fit
+		Link
+		
 	    Forum, Thread, Message
 		WebLink, AppLink
 		
@@ -55,10 +89,9 @@ TODO:
 	
 		Number min, max, isInteger
 		ColorPicker, 
-		Currencies, Currency Amount 
-		UnitsOfMeasure (Length, Area, Volume, Weight, Mass, Energy)
 		Continents, Countries, Cities, 
 		Lat/Long GPS Position
+		
 		Seat (area, row, seat number)
 		Ticket (event, seat, price, name, confirmation #), Flight, Ride, Conference, Event, Dinning
 		Receipt?

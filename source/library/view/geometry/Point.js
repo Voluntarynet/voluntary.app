@@ -74,6 +74,9 @@ ideal.Proto.newSubclassNamed("Point").newSlots({
         return this
     },
 
+    copy: function() {
+        return this.typeClass().clone().copyFrom(this)
+    },
 
     add: function(p) {
         return this.copy().addInPlace(p)

@@ -46,7 +46,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         this.setSubviews([])
         this.setupElement()
         this.setEventListenersDict({})
-        this.setIsRegisteredForDrop(false)
+        //this.setIsRegisteredForDrop(false)
         //this.setBoxSizing("border-box")
         return this
     },
@@ -2256,18 +2256,60 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
     // dragging
 
+    setDraggable: function(aBool) {
+        assert(Type.isBoolean(aBool))
+        this.element().setAttribute("draggable", aBool);
+        return this
+    },
+
     isRegisteredForDrag: function () {
         return this.dragListener().isListening()
     },
 
     setIsRegisteredForDrag: function (aBool) {
         this.dragListener().setIsListening(aBool)
+        this.setDraggable(aBool)
         return this
     },
 
     onDragStart: function (event) {
         // triggered in element being dragged
-        return true;
+        // DownloadURL only works in Chrome?
+        
+        /*
+        application/json // doesn't work
+        application/x-javascript // doesn't work
+        text/javascript // doesn't work
+        text/x-javascript // doesn't work
+        text/x-json // doesn't work
+        text/plain // works
+        text/html // doesn't works 
+
+        text/uri-list // should work
+        */
+       
+        /*
+        const json = { type: this.type() }
+        //const fileDetails = "application/json:filename.json:{}"
+        //event.dataTransfer.setData("text/plain", "test")
+
+        //const mimeType = "text/plain"
+        const mimeType = "image/png"
+        event.dataTransfer.setData(mimeType, JSON.stringify(json))
+        event.dataTransfer.effectAllowed = "copy";
+        */
+
+        /*
+        const fileDetails = "application/octet-stream:Eadui.ttf:http://thecssninja.com/gmail_dragout/Eadui.ttf"
+        event.dataTransfer.setData("DownloadURL", fileDetails);
+
+        //event.dataTransfer.setData("DownloadURL", fileDetails);
+            <a href="Eadui.ttf" id="dragout" draggable="true" data-downloadurl="
+            application/octet-stream
+            :Eadui.ttf
+            :http://thecssninja.com/gmail_dragout/Eadui.ttf">Font file</a>
+        */
+        return false;
     },
 
     onDragEnd: function (event) {

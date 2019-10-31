@@ -360,20 +360,6 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         return this
     },
 
-    // ----------------------------------------------------
-    // pids
-    // ----------------------------------------------------
-
-    newPid: function () {
-        return Math.floor(Math.random() * Math.pow(10, 17)).toString()
-    },
-
-    pidOfObj: function (obj) {
-        if (Type.isNullOrUndefined(obj._pid)) {
-            obj._pid = obj.type() + "_" + this.newPid()
-        }
-        return obj._pid
-    },
 
     // ----------------------------------------------------
     // reading

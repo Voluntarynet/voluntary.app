@@ -48,13 +48,17 @@ ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
     },
 
     listenTargetDescription: function() {
+        return DomElement_description(this.listenTarget())
+
+        /*        
         const type = typeof(this.listenTarget())
-        /*
+        
         if (type === "Element") { // right type?
             return DomElement_description(this.listenTarget())
         }
-        */
+        
         return type
+        */
     },
 
     // --------------
@@ -144,7 +148,7 @@ ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
                     result = method.apply(delegate, [event]); 
 
                     if (this.isDebugging()) {
-                        console.log("sent: " + delegate.type() + "." + fullMethodName, "(" + event.type + ") and returned ", result)
+                        console.log("sent: " + delegate.type() + "." + fullMethodName, "(" + event.type + ") and returned " + result)
                     }
 
                     if (result === false) {
@@ -216,7 +220,7 @@ ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
 
         const t = this.listenTarget()
         this.forEachEventDict((eventName, dict) => {
-            //console.log(this.delegate().typeId() + " will stop listening for " + dict.methodName)
+            this.debugLog(this.delegate().typeId() + " will stop listening for " + dict.methodName)
             t.removeEventListener(eventName, dict.handlerFunc, dict.useCapture);
         })
 

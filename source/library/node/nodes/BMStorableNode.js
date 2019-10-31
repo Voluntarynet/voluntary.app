@@ -70,13 +70,17 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
             throw new Error("attempt to reassign pid")
         }
         
-        this._pid = NodeStore.shared().pidOfObj(this)
-        
+        //this._pid = NodeStore.shared().pidOfObj(this)
+        const uuid = Math.floor(Math.random() * Math.pow(10, 17)).toString()
+        this._pid = this.type() + "_" + uuid
+
         NodeStore.shared().addActiveObject(this)
         this.scheduleSyncToStore()
         
         return this
     },
+
+    // --------------------------
     
     pid: function() {
         if (!this.shouldStore()) {

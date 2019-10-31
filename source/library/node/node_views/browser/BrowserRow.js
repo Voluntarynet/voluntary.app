@@ -61,6 +61,8 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         //this.addGestureRecognizer(RightEdgePanGestureRecognizer.clone()) // use to adjust width?
         this.addGestureRecognizer(BottomEdgePanGestureRecognizer.clone()) // use to adjust height?
 
+        this.setIsRegisteredForDrag(true)
+
         return this
     },
 
@@ -851,6 +853,47 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
 
     dropHoverDidTimeout: function() {
         this.requestSelection()
+    },
+
+    // Browser style drag
+
+    onDragStart: function (event) {
+        // triggered in element being dragged
+        // DownloadURL only works in Chrome?
+        
+        /*
+        application/json // doesn't work
+        application/x-javascript // doesn't work
+        text/javascript // doesn't work
+        text/x-javascript // doesn't work
+        text/x-json // doesn't work
+        text/plain // works
+        text/html // doesn't works 
+
+        text/uri-list // should work
+        */
+       
+        const json = this.node().copyArchiveDict() 
+        //const fileDetails = "application/json:filename.json:{}"
+        //event.dataTransfer.setData("text/plain", "test")
+
+        const mimeType = "text/plain"
+        event.dataTransfer.setData(mimeType, JSON.stringify(json, null, 4))
+        event.dataTransfer.effectAllowed = "copy";
+
+        /*
+        const fileDetails = "application/octet-stream:Eadui.ttf:http://thecssninja.com/gmail_dragout/Eadui.ttf"
+        event.dataTransfer.setData("DownloadURL", fileDetails);
+
+        //event.dataTransfer.setData("DownloadURL", fileDetails);
+            <a href="Eadui.ttf" id="dragout" draggable="true" data-downloadurl="
+            application/octet-stream
+            :Eadui.ttf
+            :http://thecssninja.com/gmail_dragout/Eadui.ttf">Font file</a>
+        */
+
+
+        return true;
     },
 
 })

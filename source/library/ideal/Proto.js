@@ -445,12 +445,36 @@ Proto.setSlots({
         return window[this.type()]
     },
 
+    // a way to get a dictionary archive of 
+    // a node and it's decendants
+    // this could potentially be dragged out of one browser as a textClipping
+    // and dragged into another
+
+    copyArchiveDict: function() {
+        const dict = {}
+        const copyNode = this.copy(dict)
+
+        const store = {}
+        const copyArchiveDict = { 
+            type: "CopyArchive",
+            store: store,
+            rootId: copyNode.pid()
+        }
+
+        Object.keys(dict).forEach((pid) => {
+            const obj = dict[pid]
+            store[pid] = obj.nodeDict()
+        })
+
+        return copyArchiveDict
+    },
+
     // --- copying protocol --- 
     // a copyDict is created if missing and passed
     // to store the mapping of previous typeIds to new (copied) objects
 
     copy: function(copyDict) {
-        const id = this.typeId()
+        const id = this.pid() // remove dependence on NodeStore?
 
         if (!copyDict) { 
             copyDict = {} // TODO: use a CopyContext object? copyContext.getCopyOfTypeId(id)
@@ -462,9 +486,24 @@ Proto.setSlots({
         }
 
         const newObject = this.typeClass().clone()
-        newObject.copyFrom(this, copyDict)
         copyDict[id] = newObject
+        newObject.copyFrom(this, copyDict)
         return newObject
+    },
+
+    copyFrom: function(aNode, copyDict) {
+
+        const shallowNames = this.shallowCopySlotnames()
+        shallowNames.forEach((slotName) => {
+            this.shallowCopySlotFrom(slotName, aNode, copyDict)
+        })
+
+        const deepNames = this.deepCopySlotnames()
+        deepNames.forEach((slotName) => {
+            this.deepCopySlotFrom(slotName, aNode, copyDict)
+        })
+
+        return this
     },
 
     shallowCopySlotnames: function() {
@@ -477,8 +516,8 @@ Proto.setSlots({
 
     /*
     asShallowCopyMember: function(copyDict) {
-        if (this.typeId) {
-            const newValue = copyDict[oldValue.typeId()]
+        if (this.pid) {
+            const newValue = copyDict[oldValue.pid()]
             if (Type.isUndefined(newValue)) { // not in copy dict
                 newValue
             }
@@ -492,8 +531,8 @@ Proto.setSlots({
         let newValue = undefined
         
         if (!Type.isNullOrUndefined(oldValue)) {
-            if (oldValue.typeId) {
-                newValue = copyDict[oldValue.typeId()]
+            if (oldValue.pid) {
+                newValue = copyDict[oldValue.pid()]
             }
         }
 
@@ -517,28 +556,6 @@ Proto.setSlots({
 
         return this
     },
-
-    copyFrom: function(aNode, copyDict) {
-
-        const shallowNames = this.shallowCopySlotnames()
-        shallowNames.forEach((slotName) => {
-            this.shallowCopySlotFrom(slotName, aNode, copyDict)
-        })
-
-        const deepNames = this.deepCopySlotnames()
-        deepNames.forEach((slotName) => {
-            this.deepCopySlotFrom(slotName, aNode, copyDict)
-        })
-
-        return this
-    },
-
-    /*
-    copyFrom: function(anObject, copyDict) {
-        throw new Error(this.type() + ".copyFrom not implemented")
-        return this
-    },
-    */
 
     getUsingSlotName: function(slotName) {
         return this[slotName].apply(this)

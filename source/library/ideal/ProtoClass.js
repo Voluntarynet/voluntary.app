@@ -226,7 +226,7 @@ class ProtoClass {
     typeId () {
         // do this lazily as type isn't known when object is created
         if (Type.isNullOrUndefined(this._typeId)) {
-            this._typeId = this.type() + this.uniqueId()
+            this._typeId = this.type() + "_" + this.uniqueId()
         }
         return this._typeId
     }

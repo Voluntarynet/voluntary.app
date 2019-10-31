@@ -61,7 +61,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         //this.addGestureRecognizer(RightEdgePanGestureRecognizer.clone()) // use to adjust width?
         this.addGestureRecognizer(BottomEdgePanGestureRecognizer.clone()) // use to adjust height?
 
-        this.setIsRegisteredForDrag(true)
+        //this.setIsRegisteredForDrag(true)
 
         return this
     },

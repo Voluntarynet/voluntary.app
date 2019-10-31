@@ -11,7 +11,7 @@ EventSetListener.newSubclassNamed("DropListener").newSlots({
 }).setSlots({
     init: function () {
         EventSetListener.init.apply(this)
-        this.setIsDebugging(true)
+        //this.setIsDebugging(true)
         return this
     },
 

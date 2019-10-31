@@ -44,9 +44,9 @@ BMNode.newSubclassNamed("BMDataStore").newSlots({
         //console.log(this.typeId() + " refreshSubnodes")
         this.removeAllSubnodes()
         this.store().sdb().keys().sort().forEach((key) => {
-            let subnode = BMDataStoreRecord.clone().setTitle(key)
-            let size = this.store().sdb().at(key).length
-            let sizeDescription = ByteFormatter.clone().setValue(size).formattedValue()
+            const subnode = BMDataStoreRecord.clone().setTitle(key)
+            const size = this.store().sdb().at(key).length
+            const sizeDescription = ByteFormatter.clone().setValue(size).formattedValue()
             subnode.setSubtitle(sizeDescription)
             this.addRecord(subnode)
         })

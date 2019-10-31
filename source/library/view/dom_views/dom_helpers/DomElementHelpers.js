@@ -11,7 +11,7 @@
 */
 
 function DomElement_atInsertElement(el, index, child) {
-    let children = el.children
+    const children = el.children
     
     if (index < children.length) {
         el.insertBefore(child, children[index])
@@ -54,7 +54,7 @@ window.Element_setStyleIncludingDecendants = function(e, k, v) {
     }
     
     for(let i = 0; i < e.childNodes.length; i ++) {
-        let child = e.childNodes[i]
+        const child = e.childNodes[i]
         Element_setStyleIncludingDecendants(child, k, v)
     }
 }

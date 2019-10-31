@@ -70,10 +70,10 @@ ideal.Proto.newSubclassNamed("TouchScreen").newSlots({
 
     /*
     elementsForEvent: function(event) {
-        let elements = [];
-        let points = this.pointsForEvent(event)
+        const elements = [];
+        const points = this.pointsForEvent(event)
         points.forEach((point) => {
-            let e = document.elementFromPoint(p.x(), p.y());
+            const e = document.elementFromPoint(p.x(), p.y());
             if (e) {
                 elements.push(e)
             }

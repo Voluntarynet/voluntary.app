@@ -18,8 +18,8 @@ ideal.Proto.newSubclassNamed("BMThemeStyleSheet").newSlots({
 
     sheet: function() {
         if (!this._sheet) {
-            let sheetName = "ThemeStyleSheet"
-            let sheetElement = document.getElementById(sheetName) 
+            const sheetName = "ThemeStyleSheet"
+            const sheetElement = document.getElementById(sheetName) 
             sheetElement = document.createElement("style")
             sheetElement.id = sheetName
             sheetElement.innerHTML = "";
@@ -31,11 +31,9 @@ ideal.Proto.newSubclassNamed("BMThemeStyleSheet").newSlots({
     },
 
     setDivClassNameAttributeValue: function(divClassName, name, value) {
-        let className = "."  + divClassName.split(" ")[0]
-        let rule = className + " { " + name + ": " + value +"; }"
-
-
-        let sheet = this.sheet()
+        const className = "."  + divClassName.split(" ")[0]
+        const rule = className + " { " + name + ": " + value +"; }"
+        const sheet = this.sheet()
         sheet.insertRule(rule, sheet.cssRules.length); 
         console.log("added rule to theme sheet: " + rule + "")
         return this

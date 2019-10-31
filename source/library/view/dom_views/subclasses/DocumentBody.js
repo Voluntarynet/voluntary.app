@@ -84,8 +84,8 @@ DomView.newSubclassNamed("DocumentBody").newSlots({
     },
     
     autoAdjustZoomForMobile: function() {
-        let w = WebBrowserScreen.shared().width();
-        let h = WebBrowserScreen.shared().height();
+        const w = WebBrowserScreen.shared().width();
+        const h = WebBrowserScreen.shared().height();
         
         console.log("screen " + w + "x" + h)
 

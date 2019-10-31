@@ -5,7 +5,7 @@
     Used to inspect class styles since css hides stylesheet.cssRules.
     
     example use:
-    let value = DomCSSInspector.shared().setDivClassName("..").cssStyle.fontFamily
+    const value = DomCSSInspector.shared().setDivClassName("..").cssStyle.fontFamily
 
 */
 

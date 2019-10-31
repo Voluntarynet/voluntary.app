@@ -150,14 +150,14 @@ DomView.newSubclassNamed("DragBarView").newSlots({
     },
 
     addParentTracking: function() {
-        let r = this.rootView()
+        const r = this.rootView()
         r.element().removeEventListener("mousemove", this._mouseMoveTrackerFunc, false);
         r.element().removeEventListener("mouseup", this._mouseUpTrackerFunc, false);
         return this
     },
 
     removeParentTracking: function() {
-        let r = this.rootView()
+        const r = this.rootView()
         r.element().addEventListener("mousemove", this._mouseMoveTrackerFunc, false);
         r.element().addEventListener("mouseup", this._mouseUpTrackerFunc, false);
         return this

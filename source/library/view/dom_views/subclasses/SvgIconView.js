@@ -131,7 +131,7 @@ DomStyledView.newSubclassNamed("SvgIconView").newSlots({
         rawFile.onreadystatechange = function () {
             if(rawFile.readyState === 4) {
                 if(rawFile.status === 200 || rawFile.status === 0) {
-                    let data = rawFile.responseText;
+                    const data = rawFile.responseText;
                     this.setSvgString(data)
                 }
             }

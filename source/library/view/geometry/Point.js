@@ -26,7 +26,7 @@ ideal.Proto.newSubclassNamed("Point").newSlots({
     },
 
     setTimeToNow: function() {
-        let d = new Date();
+        const d = new Date();
         this._t = d.getTime();
         return this
     },
@@ -103,7 +103,7 @@ ideal.Proto.newSubclassNamed("Point").newSlots({
     },
 
     distanceFromOrigin: function() {
-        let ds = Math.pow(this.x(), 2) + Math.pow(this.y(), 2) + Math.pow(this.z(), 2)
+        const ds = Math.pow(this.x(), 2) + Math.pow(this.y(), 2) + Math.pow(this.z(), 2)
         return Math.sqrt(ds)
     },
 
@@ -126,9 +126,9 @@ ideal.Proto.newSubclassNamed("Point").newSlots({
     },
 
     distanceFrom: function(p) {
-        let dx = this.dxFrom(p)
-        let dy = this.dyFrom(p)
-        let dz = this.dzFrom(p)
+        const dx = this.dxFrom(p)
+        const dy = this.dyFrom(p)
+        const dz = this.dzFrom(p)
         return Math.sqrt(dx*dx + dy*dy + dz*dz)
     },
 
@@ -181,7 +181,7 @@ ideal.Proto.newSubclassNamed("Point").newSlots({
     },
 
     multiplyByScalar: function(v) {
-        let p = Point.clone()
+        const p = Point.clone()
         p.set(this.x() * v, this.y() * v, this.z() * v)
         return p
     },

@@ -57,7 +57,7 @@ DomView.newSubclassNamed("CenteredDomView").newSlots({
     },
 
     setupMiddleView: function() {
-        let v = DomView.clone()
+        const v = DomView.clone()
         v.setDivClassName("CenteredDomView_middleView")
         v.setDisplay("table-cell")
         v.setVerticalAlign("middle")
@@ -66,7 +66,7 @@ DomView.newSubclassNamed("CenteredDomView").newSlots({
     },
 
     setupInnerView: function() {
-        let v = DomView.clone()
+        const v = DomView.clone()
         v.setDivClassName("CenteredDomView_innerView")
         v.setDisplay("block")
         v.setMarginLeft("auto")
@@ -79,7 +79,7 @@ DomView.newSubclassNamed("CenteredDomView").newSlots({
     // TODO: consider if a separate reference to contentView should be kept
 
     setContentView: function(aView) {
-        let iv = this.innerView()
+        const iv = this.innerView()
         if (iv.hasSubview(aView)) {
             iv.removeAllSubviews()
             iv.addSubview(aView)

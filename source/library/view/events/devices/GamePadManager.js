@@ -20,7 +20,7 @@
     GamePadManager.shared().startPolling()
 
     // get array of connected game pads
-    let pads = GamePadManager.shared().connectedGamePads()
+    const pads = GamePadManager.shared().connectedGamePads()
 
     // each pad will have a unique id to identiy it
     pads.forEach( (pad) => { 

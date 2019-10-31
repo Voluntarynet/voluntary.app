@@ -62,7 +62,7 @@ BMStorableNode.newSubclassNamed("BMStoredDatedSetNode").newSlots({
     
     ageInSecondsOfKey: function(h) {
         if (this.hasKey(h)) {
-            let ageInSeconds = Date.now() - this.dict()[h]
+            const ageInSeconds = Date.now() - this.dict()[h]
             return ageInSeconds
         }
         
@@ -70,8 +70,8 @@ BMStorableNode.newSubclassNamed("BMStoredDatedSetNode").newSlots({
     },
 
     deleteExpiredKeys: function() {
-        let max = this.maxAgeInSeconds()
-        let keys = Object.keys(this.dict())
+        const max = this.maxAgeInSeconds()
+        const keys = Object.keys(this.dict())
         
         keys.forEach((k) => {
             if (this.ageInSecondsOfKey(k) > max) {

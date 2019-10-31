@@ -25,7 +25,7 @@ ideal.Proto.newSubclassNamed("WebBrowserNotification").newSlots({
     },
 
     justPost: function() {
-        let note = new Notification(this.title(), { body: this.body(), icon: this.icon() });
+        const note = new Notification(this.title(), { body: this.body(), icon: this.icon() });
         this.setNotificationRef(note)
         this.startTimeout()
         return this

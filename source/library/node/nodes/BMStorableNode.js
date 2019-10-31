@@ -69,14 +69,24 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         if (this._pid) {
             throw new Error("attempt to reassign pid")
         }
-        
-        //this._pid = NodeStore.shared().pidOfObj(this)
-        const uuid = Math.floor(Math.random() * Math.pow(10, 17)).toString()
-        this._pid = this.type() + "_" + uuid
+        // "type" is only using in the pid for debugging purposes
+        // no code should depend on it and everything should work the same without it
 
+        //this._pid = NodeStore.shared().pidOfObj(this)
+        /*
+        const uuid_a = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
+        const uuid_b = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
+        this._pid = this.type() + "_" + uuid_a + uuid_b
+        */
+        this._pid = this.typeId() 
+
+        this.didAssignPid()
+        return this
+    },
+
+    didAssignPid: function() {
         NodeStore.shared().addActiveObject(this)
         this.scheduleSyncToStore()
-        
         return this
     },
 
@@ -156,7 +166,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         return dict
     },
 
-    nodeDict: function () {
+    nodeDict: function () { 
         const dict = this.nodeDictForProperties()
         
         if (this.subnodes().length && this.shouldStoreSubnodes()) {

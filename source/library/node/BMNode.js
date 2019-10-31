@@ -1077,7 +1077,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     },
 
     onStopObserving: function() {
-        const isStillObserved = NotificationCenter.shared().hasObservationsForTargetId(this.uniqueId())
+        const isStillObserved = NotificationCenter.shared().hasObservationsForTargetId(this.typeId())
         if (!isStillObserved) {
             this.onNoMoreObservers()
         }

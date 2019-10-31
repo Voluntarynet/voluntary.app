@@ -133,27 +133,37 @@ Proto.setSlots({
         return this._allDescendantProtos
     },
 
-    /*
-    uniqueId: function () {
-        return this._uniqueId
-    },
-    */
-
     typeId: function () {
-        return this.type() + this.uniqueId()
+        // do this lazily as type isn't known when object is created
+        if (Type.isNull(this._typeId)) {
+            this._typeId = this.type() + "_" + this.uniqueId()
+        }
+        return this._typeId
     },
 
     /*
     getClassVariable: function(name, defaultValue) {
-        if (this[name])
+        const proto = this.typeClass()
+        let value = proto[name]
+        if (Type.isUndefined(value)) {
+            proto[name] = defaultValue
+        }
+        return proto[name]
+    },
+    */
 
+    /*
+    newUniqueInstanceId: function() {
+        //Number.isInteger(Proto._uniqueInstanceId)
+        Proto._uniqueInstanceId ++
+        return Proto._uniqueInstanceId
     },
     */
 
     newUniqueInstanceId: function() {
-        Number.isInteger(Proto._uniqueInstanceId)
-        Proto._uniqueInstanceId ++
-        return Proto._uniqueInstanceId
+        const uuid_a = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
+        const uuid_b = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
+        return uuid_a + uuid_b
     },
 
     setType: function(typeString) {
@@ -167,13 +177,14 @@ Proto.setSlots({
         obj.__proto__ = this;
         //obj.constructor.name = this._type // can't assign to an anonymous Function
         obj._uniqueId = this.newUniqueInstanceId()
+        obj._typeId = null
         obj.assertHasUniqueId()
         // Note: does the JS debugger expect constructor.__proto__.type?
         return obj;
     },
 
     assertHasUniqueId: function() {
-        assert(Number.isInteger(this._uniqueId))
+        assert(!Type.isNullOrUndefined(this._uniqueId))
     },
 
     clone: function () {
@@ -200,12 +211,6 @@ Proto.setSlots({
         }
         return aClass._shared;
     },
-
-    /*
-    uniqueId: function () {
-        return this._uniqueId;
-    },
-    */
 
     toString: function () {
         return this._type;
@@ -384,7 +389,7 @@ Proto.setSlots({
     },
 
     toString: function () {
-        return this.type() + "." + this.uniqueId();
+        return this.typeId();
     },
 
 
@@ -474,7 +479,8 @@ Proto.setSlots({
     // to store the mapping of previous typeIds to new (copied) objects
 
     copy: function(copyDict) {
-        const id = this.pid() // remove dependence on NodeStore?
+        //const id = this.pid() 
+        const id = this.typeId() 
 
         if (!copyDict) { 
             copyDict = {} // TODO: use a CopyContext object? copyContext.getCopyOfTypeId(id)

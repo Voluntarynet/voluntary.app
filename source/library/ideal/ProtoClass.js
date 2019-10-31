@@ -224,11 +224,15 @@ class ProtoClass {
     }
 
     typeId () {
-        return this.type() + this.uniqueId()
+        // do this lazily as type isn't known when object is created
+        if (Type.isNullOrUndefined(this._typeId)) {
+            this._typeId = this.type() + this.uniqueId()
+        }
+        return this._typeId
     }
 
     hasUniqueId () {
-        return Number.isInteger(this._uniqueId)
+        return !Type.isNullOrUndefined(this._uniqueId)
     }
 
     assertHasUniqueId () {
@@ -237,8 +241,8 @@ class ProtoClass {
 
     assignUniqueId () {
         assert(!this.hasUniqueId()) // error may mean attempt to clone a singleton
-        this._uniqueId = ProtoClass.newUniqueId();
-        this.assertHasUniqueId()
+        this._uniqueId = ProtoClass.newUniqueInstanceId(); //newUniqueId();
+        //this.assertHasUniqueId() // TODO: comment out when not debugging uniqueId
         return this
     }
 
@@ -358,12 +362,20 @@ class ProtoClass {
     }
     */
 
+    /*
     static newUniqueId() {
         let key = "_uniqueIdCounter"
         let uid = this.getClassVariable(key, 0)
         uid ++;
         this.setClassVariable(key, uid)
         return uid
+    }
+    */
+
+    static newUniqueInstanceId() {
+        const uuid_a = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
+        const uuid_b = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
+        return uuid_a + uuid_b
     }
 
     uniqueId () {

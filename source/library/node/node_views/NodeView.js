@@ -43,8 +43,8 @@ DomStyledView.newSubclassNamed("NodeView").newSlots({
     },
 
     updateElementIdLabel: function() {
-        const nodeId = this.node() ? this.node().type() + "-" + this.node().uniqueId() : "null"
-        this.element().id = this.type() + "-" + this._uniqueId + " for node " + nodeId
+        const nodeId = this.node() ? this.node().typeId() : "null"
+        this.element().id = this.typeId() + " for node " + nodeId
     },
     
     didChangeNode: function() {

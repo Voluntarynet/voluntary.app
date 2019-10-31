@@ -194,7 +194,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         // don't use pid for these keys so we can
         // use pid to see if the obj gets referrenced when walked from a stored node
 
-        const objId = obj.uniqueId()
+        const objId = obj.typeId()
         if (!(objId in this._dirtyObjects)) {
 
             /*

@@ -1,7 +1,23 @@
 
 TODO:
 
-	Name? MetaStep
+	dragging
+		issues:
+			- interfering with gestures
+		solution:
+			- require special key (C?) to turn on BrowserRow drag out of browser? 
+				- turn on listen to keyboard
+					- on_C_KeyDown, turn on register for dragging
+					- on_C_KeyUp, turn off dragging
+		
+	
+	copying
+	- would be nice to unify store, copy, drag-to-json
+		issues:
+		- need to implement nodeDict on Proto? (yes)
+		- does Proto need a pid? (yes, use type_uuid)
+		- what about auto scheduling sync to NodeStore (only do this on StorableNode?)
+		- need to move ProtoClass to new uniqueId code 
 	
 
 	BrowserColumn.onDragDestinationDropped

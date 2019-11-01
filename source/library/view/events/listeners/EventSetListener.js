@@ -20,7 +20,7 @@ ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
     delegate: null,
     isListening: false,
     eventsDict: null, // should only write from within class & subclasses
-    useCapture: false,
+    useCapture: false, // whether event will be dispatched to listener before EventTarget beneath it in DOM tree.
     methodSuffix: "",
 }).setSlots({
     init: function () {
@@ -138,6 +138,13 @@ ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
         this.forEachEventDict((eventName, dict) => {
             const fullMethodName = this.fullMethodNameFor(dict.methodName)
             dict.handlerFunc = (event) => { 
+
+                /*
+                if (this.isDebugging() && !event._id) {
+                    event._id = Math.floor(Math.random()*100000) // TODO: remove when not debugging
+                }
+                */
+
                 const delegate = this.delegate()
                 const method = delegate[fullMethodName]
 

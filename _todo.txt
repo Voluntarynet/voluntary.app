@@ -1,6 +1,11 @@
 
 TODO:
 
+	use window.postMessage to coordinate boot?
+	- post exceptions?
+	
+	- fix for BooleanFieldView tab action
+	
 	dragging
 		issues:
 			- interfering with gestures
@@ -77,18 +82,18 @@ TODO:
 	
 	
 	- other types: 
+		Name (first middle last)
 		Address
 		Phone Numbers
 		Email Address
 		FB, Twitter,etc ID
+		Map	
+		Credit Card
+		Age
+		Gender
 		Flight Number
 		License
 		Insurance
-		Credit Card
-		Name (first middle last)
-		Age
-		Gender		
-		
 		Emergency Contacts
 		
 

@@ -260,12 +260,6 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     },
     */
     
-    /*
-    selectNextKeyView: function () {
-        this.column().selectNextRow()
-        return this
-    },
-    */
 
     select: function() {
         if (!this.isSelected()) {
@@ -334,12 +328,6 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         this.updateSubviews()
         return this
     },
-    
-    /*
-    onTabKeyUp: function() {
-        console.log(this.typeId() + ".onTabKeyUp()")
-    },
-    */
 
     // --- styles ---
     

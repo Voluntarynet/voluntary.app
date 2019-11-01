@@ -214,8 +214,8 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
     onKeyUp: function(event) {
         //console.log(this.typeId() + " onKeyUp ", event)
         this.adjustFontSizeWithKeyboard()
-        DomStyledView.onKeyDown.apply(this, [event])
-        console.log(this.typeId() + " onKeyUp value: [" + this.value() + "]")
+        DomStyledView.onKeyUp.apply(this, [event])
+        //console.log(this.typeId() + " onKeyUp value: [" + this.value() + "]")
         this.didEdit()
         return false
     },

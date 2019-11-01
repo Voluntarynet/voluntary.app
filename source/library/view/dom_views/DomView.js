@@ -2623,6 +2623,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     */
 
     onKeyDown: function (event) {
+        console.log(this.typeId() + " onKeyDown ", event._id)
         //Keyboard.shared().showEvent(event)
 
         /*
@@ -2715,8 +2716,20 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
     // --- tabs and next key view ----
 
-    onTabKeyDown: function () {
-        this.selectNextKeyView()
+    onTabKeyDown: function (event) {
+        // need to implement this on key down to prevent browser from handling tab?
+        console.log(this.typeId() + " onTabKeyDown ", event._id)
+
+        if(this.selectNextKeyView()) {
+            //event.stopImmediatePropagation() // prevent other listeners from getting this event
+            //console.log("stopImmediatePropagation ")
+        }
+        console.log("---")
+        return false
+    },
+
+    onTabKeyUp: function(event) {
+        //console.log(this.typeId() + " onTabKeyUp ", event._id)
         return false
     },
 
@@ -2726,16 +2739,20 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     },
 
     selectNextKeyView: function () {
-        //console.log(this.typeId() + " selectNextKeyView")
+        // returns true if something is selected, false otherwise
+
+        console.log(this.typeId() + " selectNextKeyView")
         const nkv = this.nextKeyView()
         if (nkv) {
             nkv.becomeKeyView()
+            return true
         } else {
             const p = this.parentView()
             if (p) {
-                p.selectNextKeyView()
+                return p.selectNextKeyView()
             }
         }
+        return false
     },
 
     // --- error checking ---

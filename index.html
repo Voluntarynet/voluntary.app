@@ -80401,7 +80401,7 @@ Object.shallowCopyTo({
 
     paddedNumber: function(n) {
         const s = "" + n
-        if (s.length == 1) { 
+        if (s.length === 1) { 
             return "0" + s
         }
         return s
@@ -80422,7 +80422,7 @@ Object.shallowCopyTo({
     getTwelveHours: function() {
         let h = this.getHours()
         if (h > 12) { h -= 12 }
-        if (h === 0) { h == 12 }
+        if (h === 0) { h = 12 }
         return h
     },
 
@@ -80864,13 +80864,13 @@ Object.shallowCopyTo({
         let j = i % 10
         let k = i % 100
         
-        if (j == 1 && k != 11) {
+        if (j === 1 && k !== 11) {
             return "st";
         }
-        if (j == 2 && k != 12) {
+        if (j === 2 && k !== 12) {
             return "nd";
         }
-        if (j == 3 && k != 13) {
+        if (j === 3 && k !== 13) {
             return "rd";
         }
         return "th";
@@ -81599,7 +81599,7 @@ Proto.setSlots({
     // a copyDict is created if missing and passed
     // to store the mapping of previous typeIds to new (copied) objects
 
-    copy: function(copyDict) {
+    copy: function(copyDict) { 
         //const id = this.pid() 
         const id = this.typeId() 
 
@@ -84003,7 +84003,7 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
         }
 		
         const v = JSON.stringify(object)
-        if (v == null) {
+        if (v === null) {
             throw new Error("can't add null value")
         }
 		
@@ -84112,11 +84112,11 @@ window.SyncDB = class SyncDB extends ProtoClass {
 
     asyncOpen (callback) {
         //console.log("SyncDB asyncOpen()")
-        this.idb().asyncOpenIfNeeded( () => { this.didOpen(callback) })
+        this.idb().asyncOpenIfNeeded( () => { this.onOpen(callback) })
         return this
     }
 	
-    didOpen (callback) {
+    onOpen (callback) {
         // load the cache
         //console.log("SyncDB didOpen() - loading cache")
 		
@@ -84949,16 +84949,19 @@ ideal.Proto.newSubclassNamed("KeyboardKey").newSlots({
 }).setSlots({
     init: function () {
         ideal.Proto.init.apply(this)
+        this.setIsDebugging(true)
         return this
     },
 
     onKeyDown: function (event) {
+        //this.debugLog(this.name() + " onKeyDown " + event._id)
         let shouldPropogate = true
         this.setIsDown(true)
         return shouldPropogate
     },
 
     onKeyUp: function (event) {
+        //this.debugLog(this.name() + " onKeyUp " + event._id)
         let shouldPropogate = true
         this.setIsDown(false)
         return shouldPropogate
@@ -85299,7 +85302,7 @@ ideal.Proto.newSubclassNamed("Keyboard").newSlots({
             key.onKeyDown(event)
 
             if (this.isDebugging()) {
-                console.log(this.typeId() + ".onKeyDown " + key.name())
+                console.log(this.typeId() + ".onKeyDownCapture " + key.name())
             }
         } else {
             console.warn("Keyboard.shared() no key found for event ", event)
@@ -86207,7 +86210,7 @@ ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
     delegate: null,
     isListening: false,
     eventsDict: null, // should only write from within class & subclasses
-    useCapture: false,
+    useCapture: false, // whether event will be dispatched to listener before EventTarget beneath it in DOM tree.
     methodSuffix: "",
 }).setSlots({
     init: function () {
@@ -86325,6 +86328,13 @@ ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
         this.forEachEventDict((eventName, dict) => {
             const fullMethodName = this.fullMethodNameFor(dict.methodName)
             dict.handlerFunc = (event) => { 
+
+                
+                if (!event._id) {
+                    event._id = Math.floor(Math.random()*100000) // TODO: remove when not debugging
+                }
+                
+
                 const delegate = this.delegate()
                 const method = delegate[fullMethodName]
 
@@ -87325,7 +87335,7 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
     // so we can share the event handling code for both devices 
 
     pointsForEvent: function(event) {
-        if (event == null) {
+        if (event === null) {
             throw new Error(this.type() + ".pointsForEvent(event) event is null")
         }
 
@@ -89639,21 +89649,21 @@ window.DomTransition = class DomTransition extends ProtoClass {
         const parts = aString.split(" ").select((part) => { return part !== "" })
 
         let v = parts.removeFirst()
-        assert(v != null)
+        assert(!Type.isNull(v))
         this.setProperty(v)
 
         v = parts.removeFirst()
-        if (v != null) {
+        if (!Type.isNull(v)) {
             this.setDuration(v)
         }
 
         v = parts.removeFirst()
-        if (v != null) {
+        if (!Type.isNull(v)) {
             this.setTimingFunction(v)
         }
 
         v = parts.removeFirst()
-        if (v != null) {
+        if (!Type.isNull(v)) {
             this.setDelay(v)
         }
 
@@ -92669,7 +92679,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         return true
     },
 
-    // -- dropping ---
+    // -- browser dropping ---
 
     isRegisteredForDrop: function () {
         return this.dropListener().isListening()
@@ -93153,26 +93163,8 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     */
 
     onKeyDown: function (event) {
+        //console.log(this.typeId() + " onKeyDown ", event._id)
         //Keyboard.shared().showEvent(event)
-
-        /*
-        const isEnterKey = Keyboard.shared().nameForKeyCode(event.keyCode) === "Enter";
-
-        if (isEnterKey && this.unfocusOnEnterKey()) {
-            console.log(" releasing focus")
-            // this.releaseFocus() // TODO: implement something to pass focus up view chain to whoever wants it
-            this.element().parentElement.focus()
-        }
-        */
-
-        /*
-		if (this.interceptsTab()) {
-	        if (event.keyId === "tab") {
-		        event.preventDefault()
-	            this.onTabKeyDown()
-	        }
-		}
-        */
 
         const methodName = Keyboard.shared().downMethodNameForEvent(event)
         //console.log("onKeyDown methodName: ", methodName)
@@ -93202,31 +93194,10 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
     onKeyUp: function (event) {
         let shouldPropogate = true
-        //console.log(this.typeId() + " onKeyUp specialKeyName=", specialKeyName)
-
-        /*
-		if (this.interceptsTab()) {
-	        if (event.keyId === "tab") {
-	            event.preventDefault()
-				return
-	        }
-		}
-		*/
-
-        //console.log("event: ", event)
-        //event.preventDefault()
-
-        /*
-        if ((!this.isValid()) && (this.invalidColor() != null)) {
-            this.setColor(this.invalidColor())
-        } else {
-            if (this.color() === this.invalidColor()) {
-                this.setColor(null)
-            }
-        }
-        */
+        console.log(this.typeId() + " onKeyUp ", event._id)
 
         const methodName = Keyboard.shared().upMethodNameForEvent(event)
+        console.log("methodName: ", methodName)
         this.invokeMethodNameForEvent(methodName, event)
 
         this.didEdit()
@@ -93245,8 +93216,20 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
     // --- tabs and next key view ----
 
-    onTabKeyDown: function () {
-        this.selectNextKeyView()
+    onTabKeyDown: function (event) {
+        // need to implement this on key down to prevent browser from handling tab?
+        //console.log(this.typeId() + " onTabKeyDown ", event._id)
+
+        if(this.selectNextKeyView()) {
+            //event.stopImmediatePropagation() // prevent other listeners from getting this event
+            //console.log("stopImmediatePropagation ")
+        }
+        console.log("---")
+        return false
+    },
+
+    onTabKeyUp: function(event) {
+        //console.log(this.typeId() + " onTabKeyUp ", event._id)
         return false
     },
 
@@ -93256,16 +93239,20 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     },
 
     selectNextKeyView: function () {
+        // returns true if something is selected, false otherwise
+
         //console.log(this.typeId() + " selectNextKeyView")
         const nkv = this.nextKeyView()
         if (nkv) {
             nkv.becomeKeyView()
+            return true
         } else {
             const p = this.parentView()
             if (p) {
-                p.selectNextKeyView()
+                return p.selectNextKeyView()
             }
         }
+        return false
     },
 
     // --- error checking ---
@@ -95739,8 +95726,8 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
     onKeyUp: function(event) {
         //console.log(this.typeId() + " onKeyUp ", event)
         this.adjustFontSizeWithKeyboard()
-        DomStyledView.onKeyDown.apply(this, [event])
-        console.log(this.typeId() + " onKeyUp value: [" + this.value() + "]")
+        DomStyledView.onKeyUp.apply(this, [event])
+        //console.log(this.typeId() + " onKeyUp value: [" + this.value() + "]")
         this.didEdit()
         return false
     },
@@ -96061,7 +96048,7 @@ ideal.Proto.newSubclassNamed("BMViewStyle").newSlots({
 		
         this.styleNames().forEach( (name) => { 
             const v = this[name].apply(this)
-            if (v != null) {
+            if (!Type.isNull(v)) {
                 parts.push(name + ":" + v)
             }
         })	
@@ -96097,7 +96084,7 @@ ideal.Proto.newSubclassNamed("BMViewStyle").newSlots({
 /*
 
     BMNode
-
+ 
     The base class of model objects that supports the protocol 
     used to sync with views (subclasses of NodeView).
 
@@ -97076,6 +97063,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
 
     // --- json serialization ---
 
+    /*
     asJSON: function() {
         const dict = {}
         dict.type = this.type()
@@ -97127,6 +97115,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         }
         rawFile.send(null);
     },
+    */
 
     // notification helpers - yeah, not ideal
 
@@ -97185,8 +97174,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         return this.title() + " " + this.subtitle()
     },
 
-    // copying protocol
-
+    // overriding copying protocol from Proto
 
     shallowCopySlotnames: function() {
         const names = ideal.Proto.shallowCopySlotnames.apply(this)
@@ -97207,6 +97195,7 @@ ResourceLoader.pushRelativePaths([
     "NodeStore.js",
     "BMDataStore.js",
     //"BMDataStoreRecord.js",
+    "ObjectPool.js"
 ])
 
 "use strict"
@@ -97237,8 +97226,8 @@ ResourceLoader.pushRelativePaths([
 		unpersisted instance if there is one.
 
 	Active objects:
-                
-        Whenever a BNStorableNode instance is created, it's init method tells the store of 
+    
+        Whenever a BNStorableNode instance is created, it's init method tells the (shared) store of 
         it's existence ( addActiveObject(aNode) ) and marks itself as dirty if it's not being unserialized.
         
         All dirty objects are transactionally persisted on the next event loop 
@@ -97269,6 +97258,8 @@ ResourceLoader.pushRelativePaths([
 
         Example use:
     
+            // storing
+
                 const store = NodeStore.clone().setFolderName("store")
             
             // need to define a root
@@ -97279,7 +97270,7 @@ ResourceLoader.pushRelativePaths([
             
             // when you modify any BMStorableNode instance's subnodes or stored data slots, 
             // or call scheduleSyncToStore() on it, it will be marked as needing to be persisted in the
-            // next event loop
+            // next event loop. Examples:
             
                 const test = BMNode.clone()
                 root.addSubnode(test) // this marks root as dirty
@@ -97288,12 +97279,19 @@ ResourceLoader.pushRelativePaths([
                         
             // for singleton objects, set their pid to a unique name, e.g.
             
-                servers.setPid("_servers")
+                SomeProto.rootInstanceForPid("_servers")
             
             // to force an immediate store
             
                 store.store()
             
+
+            // loading
+
+                const nodeStore = NodeStore.shared()
+                nodeStore.asyncOpen(() => { 
+                    // store is opened
+                })
             
     
     Garbage collection
@@ -97309,8 +97307,8 @@ ResourceLoader.pushRelativePaths([
 ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     name: "defaultStoreName",
 
-    dirtyObjects: null,
-    activeObjectsDict: null,
+    dirtyObjects: null, // objects that need to be persisted
+    activeObjectsDict: null, // objects unpersisted - tracking to ensure all refs point to same instance
 
     sdb: null,
     isReadOnly: false,
@@ -97364,18 +97362,20 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         this.sdb().setName(this.name())
 
         this.sdb().asyncOpen(() => {
-            this.didOpen()
+            this.onOpen()
             //this.clear()
             if (callback) {
                 callback()
             }
             this._nodeStoreDidOpenNote.post()
         })
+        return this
     },
 
-    didOpen: function () {
+    onOpen: function () {
         this.updateLastSyncTime()
         this.collect()
+        return this
     },
 
     shared: function () {
@@ -97599,7 +97599,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
     nodeDictAtPid: function (pid) {
         const v = this.sdb().at(pid)
-        if (v == null) {
+        if (Type.isNullOrUndefined(v)) {
             return null
         }
         return JSON.parse(v)
@@ -97609,7 +97609,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         return this.sdb().hasKey(pid)
     },
 
-    objectForPid: function (pid) {
+    objectForPid: function (pid) { 
         if (pid === "null") {
             return null
         }
@@ -98020,7 +98020,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
             const obj = active[pid]
             const match = (!(obj === aNode)) && obj.nodeReferencesPid(nodePid)
             return match
-        }) != null
+        }) !== null
 
         if (!result) {
             //console.log(">>>>>> " + aNode.pid() + " is unreferenced - not storing!")
@@ -98050,23 +98050,23 @@ BMNode.newSubclassNamed("BMDataStore").newSlots({
     },
 
     subtitle: function () {
-        return this.store().shortStatsString()
+        return this.nodeStore().shortStatsString()
     },
 
-    store: function () {
+    nodeStore: function () {
         return NodeStore.shared()
     },
 
     storeHasChanged: function() {
-        return NodeStore.shared().lastSyncTime() !== this.lastSyncTime()
+        return this.nodeStore().lastSyncTime() !== this.lastSyncTime()
     },
 
     prepareToSyncToView: function () {
         //console.log("this.storeHasChanged() = ", this.storeHasChanged())
 
         if (this.subnodes().length === 0 || this.storeHasChanged()) {
-            NodeStore.shared().collect()
-            this.setLastSyncTime(NodeStore.shared().lastSyncTime())
+            this.nodeStore().collect()
+            this.setLastSyncTime(this.nodeStore().lastSyncTime())
             this.refreshSubnodes()
         }
     },
@@ -98074,9 +98074,9 @@ BMNode.newSubclassNamed("BMDataStore").newSlots({
     refreshSubnodes: function () {
         //console.log(this.typeId() + " refreshSubnodes")
         this.removeAllSubnodes()
-        this.store().sdb().keys().sort().forEach((key) => {
+        this.nodeStore().sdb().keys().sort().forEach((key) => {
             const subnode = BMDataStoreRecord.clone().setTitle(key)
-            const size = this.store().sdb().at(key).length
+            const size = this.nodeStore().sdb().at(key).length
             const sizeDescription = ByteFormatter.clone().setValue(size).formattedValue()
             subnode.setSubtitle(sizeDescription)
             this.addRecord(subnode)
@@ -98084,7 +98084,7 @@ BMNode.newSubclassNamed("BMDataStore").newSlots({
     },
 
     subnodeForClassName: function (aClassName) {
-        const subnode = this.firstSubnodeWithTitle(aClassName)
+        let subnode = this.firstSubnodeWithTitle(aClassName)
         if (!subnode) {
             subnode = BMNode.clone().setTitle(aClassName).setNoteIsSubnodeCount(true)
             this.justAddSubnode(subnode)
@@ -98108,6 +98108,96 @@ BMNode.newSubclassNamed("BMDataStore").newSlots({
 
 "use strict"
 
+/*
+
+    ObjectPool
+
+        For persisting a node tree to JSON and back.
+        Usefull for exporting nodes out the the app/browser
+        and into others.
+
+        JSON format:
+
+            {
+                rootPid: "rootPid",
+                pidToDict: {
+                    "objPid" : <nodeDict>
+                }
+
+            }
+
+        Example use:
+    
+            // converting a node to json
+            const poolJson = ObjectPool.clone().setRoot(rootNode).toJson()
+            
+            // converting json to a node
+            const rootNode = ObjectPool.clone().fromJson(poolJson).root()
+
+
+*/
+
+ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
+    rootObject: null,
+    pidToDict: null,
+    pidToObject: null,
+}).setSlots({
+    init: function () {
+        ideal.Proto.init.apply(this)
+        this.setRoot(null)
+        this.setPidToDict({})
+        this.setPidToObject({})
+    },
+
+    toJson: function() {
+        assert(this.root())
+        const json = {}
+        json.rootPid = this.root().pid()
+        this.root().storeToPool(this)
+        return json
+    }, 
+
+    fromJson: function(json) {
+        this.setPidToDict(json.pidToDict)
+        const obj = this.objectForPid(json.rootPid)
+        this.setRootObject(obj)
+        return this
+    },
+
+    nodeDictAtPid: function(pid) {
+        const nodeDict = this.pidToDict()[pid]
+        return nodeDict
+    },
+
+    objectForPid: function(pid) {
+        const cachedbject = this.pidToObject()[pid]
+        if (cachedbject) {
+            return cachedbject
+        }
+
+        const nodeDict = this.nodeDictAtPid(pid)
+        const type = nodeDict.type
+        const proto = window[type]
+
+        if (!proto) {
+            throw new Error("missing proto '" + nodeDict.type + "'")
+        }
+
+        const obj = proto.clone()
+        this.pidToObject()[pid] = object
+
+        obj.justSetPid(pid) // calls addActiveObject()?
+        obj.setExistsInStore(true)
+        obj.setNodeDict(nodeDict)
+        obj.scheduleLoadFinalize()
+
+        return obj
+    },
+
+})
+
+"use strict"
+
 ResourceLoader.pushRelativePaths([
     "BMStorableNode.js",
     "BMSummaryNode.js",
@@ -98123,7 +98213,7 @@ ResourceLoader.pushRelativePaths([
 
 /*
 
-    BMStorableNode
+    BMStorableNode 
     
 */
 
@@ -98148,6 +98238,13 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         this.addStoredSlot("canDelete")  // TODO: move elsewhere
     },
     
+    nodeStore: function() {
+        if (this._nodeStore) {
+            return this._nodeStore
+        }
+        return NodeStore.shared()
+    },
+
     // --- overrides from parent class ---
     // hook this to schedules writes when subnode list is changed
 
@@ -98163,27 +98260,32 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     // persistence id - "pid"
     // -----------------------------------------------
 
-    setPidSymbol: function(aPid) {
-        this.setPid(aPid)
-        this.loadIfPresent()
-        return this
+    rootInstanceForPid: function (pid) { // proto method
+        assert(pid[0] === "_")
+        // replace rootInstanceWithPidForProto with this method?
+
+        if (this.nodeStore().hasObjectForPid(pid)) {
+            return this.nodeStore().objectForPid(pid)
+        }
+
+        return this.clone().setPid(pid)
     },
-        
+    
     setPid: function(aPid) {
         this._pid = aPid
-        NodeStore.shared().addActiveObject(this)
+        this.nodeStore().addActiveObject(this)
         this.scheduleSyncToStore()
         return this
     },
     
     justSetPid: function(aPid) { // don't schedule sync
         this._pid = aPid
-        NodeStore.shared().addActiveObject(this)
+        this.nodeStore().addActiveObject(this)
         return this
     },
     
     hasPid: function() {
-        return this._pid != null
+        return !Type.isNullOrUndefined(this._pid)
     },
     
     assignPid: function() {
@@ -98193,7 +98295,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         // "type" is only using in the pid for debugging purposes
         // no code should depend on it and everything should work the same without it
 
-        //this._pid = NodeStore.shared().pidOfObj(this)
+        //this._pid = this.nodeStore().pidOfObj(this)
         /*
         const uuid_a = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
         const uuid_b = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
@@ -98206,7 +98308,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     },
 
     didAssignPid: function() {
-        NodeStore.shared().addActiveObject(this)
+        this.nodeStore().addActiveObject(this)
         this.scheduleSyncToStore()
         return this
     },
@@ -98273,6 +98375,11 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
             if (k.beginsWith("_")) {
                 v = this[k]
             } else {
+                const isFunction = Type.isFunction(this[k])
+                if(!isFunction) {
+                    console.warn("WARNING: " + this.type() + "." + k + "() not a method")
+                }
+
                 try {
 	                v = this[k].apply(this)
                 } catch(error) {
@@ -98281,7 +98388,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
                 }
             }
            
-            dict[k] = NodeStore.shared().refValueIfNeeded(v)
+            dict[k] = this.nodeStore().refValueIfNeeded(v)
         })
         
         return dict
@@ -98315,7 +98422,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     prepareToAccess: function() {
         BMNode.prepareToAccess.apply(this)
         if (this.doesLazyLoadChildren()) {
-            const dict = BMNodeStore.shared().nodeDictAtPid(this.pid())
+            const dict = this.nodeStore().nodeDictAtPid(this.pid())
             this.setNodeDictForProperties(dict)
         }
         return this
@@ -98326,7 +98433,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         Object.keys(aDict).forEach((k) => {
             if (k !== "children" && k !== "type") {
                 let v = aDict[k]
-                v = NodeStore.shared().unrefValueIfNeeded(v)
+                v = this.nodeStore().unrefValueIfNeeded(v)
                 
                 if (k.beginsWith("_")) {
                     this[k] = v
@@ -98393,7 +98500,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
             const isRef = obj !== null && obj !== undefined && obj.typeId !== undefined
             if (isRef && !obj.hasPid()) {
                 obj.pid()
-                NodeStore.shared().addDirtyObject(this)
+                this.nodeStore().addDirtyObject(this)
                 //console.log(">>>>>>>>>>>>>>>>> loadFinalize assigned pid ", obj.pid())
             }
         })		
@@ -98410,7 +98517,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
 
         if (hasPid && shouldStore && !isUnserializing) {
             //console.log(this.typeId() + " scheduleSyncToStore -> addDirtyObject")
-        	NodeStore.shared().addDirtyObject(this)
+        	this.nodeStore().addDirtyObject(this)
             //this._refPids = null
         }
 
@@ -98437,7 +98544,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         }
     },
 	
-    // StorableNode
+    // subnodes
 	
     subnodePids: function() {
         const pids = []
@@ -98450,20 +98557,14 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
 
         return pids
     },
+
     
     setSubnodePids: function(pids) {
         const subnodes = pids.map((pid) => {
-            return NodeStore.shared().objectForPid(pid)
+            return this.nodeStore().objectForPid(pid)
         })
 
         this.setSubnodes(subnodes)
-        return this
-    },
-
-    // store
-    
-    store: function() {
-        NodeStore.shared().storeObject(obj)
         return this
     },
     
@@ -98500,7 +98601,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
             // property pids
             Object.keys(nodeDict).forEach((k) => {
                 const v = nodeDict[k]
-                const childPid = NodeStore.shared().pidIfRef(v)
+                const childPid = this.nodeStore().pidIfRef(v)
                 if (childPid) {
                     pids.push(childPid);
                 }
@@ -98711,7 +98812,7 @@ BMStorableNode.newSubclassNamed("BMSummaryNode").newSlots({
     nodeSummaryJoinerOut: function() {
         let s = this._nodeSummaryJoiner
         
-        if (s == "newline") {
+        if (s === "newline") {
             return "<br>"
         } else {
             s = s.replaceAll("<br>", "")
@@ -100924,7 +101025,7 @@ BMFieldSetNode.newSubclassNamed("BMDataStoreRecord").newSlots({
     },
 
     value: function () {
-        return NodeStore.shared().sdb().at(this.valuePid())
+        return this.nodeStore().sdb().at(this.valuePid())
     },
 
     dictString: function () {
@@ -100933,8 +101034,8 @@ BMFieldSetNode.newSubclassNamed("BMDataStoreRecord").newSlots({
 
     delete: function () {
         BMFieldSetNode.delete.apply(this)
-        //NodeStore.shared().justRemoveObject(this.value())
-        NodeStore.shared().justRemovePid(this.valuePid())
+        //this.nodeStore().justRemoveObject(this.value())
+        this.nodeStore().justRemovePid(this.valuePid())
         return this
     },
 })
@@ -101449,7 +101550,7 @@ NodeView.newSubclassNamed("ImageView").newSlots({
     // --- close button ---
 
     addCloseButton: function() {
-        if (this.closeButtonView() == null) {
+        if (this.closeButtonView() === null) {
             const cb = ButtonView.clone().setDivClassName("ImageCloseButton")
             this.setCloseButtonView(cb)
             this.addSubview(cb) 
@@ -102125,7 +102226,7 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
     selectColumn: function (selectedColumn) {
 
         /*
-        if (this.selectedColumn() == selectedColumn) {
+        if (this.selectedColumn() === selectedColumn) {
             return this
         }
         */
@@ -102311,7 +102412,7 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         let d = this.columnGroups().map((cg) => {
             if (cg.isCollapsed()) { return "" }
             let s = cg.name()
-            if (cg.node() == null) { s += " [null node] " }
+            if (cg.node() === null) { s += " [null node] " }
             //s += " " + (cg.isCollapsed() ? "collapsed" : "uncollapsed")
             s += " " + this.pxNumberToString(cg.targetWidth())
             return s
@@ -102348,7 +102449,7 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         this.columnGroups().forEach((cg) => {
             const usedWidth = this.widthOfUncollapsedColumns()
             let shouldCollapse = (usedWidth > this.browserWidth()) && (cg !== lastActiveCg)
-            shouldCollapse = shouldCollapse || (cg.node() == null)
+            shouldCollapse = shouldCollapse || (cg.node() === null)
             //console.log(cg.name() + " shouldCollapse:" + shouldCollapse + " usedWidth: " + usedWidth + " browserWidth:" + this.browserWidth())
             cg.setIsCollapsed(shouldCollapse)
         })
@@ -103612,9 +103713,11 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             //console.log(node.title() + " acceptsNode " + dropNode.title() + " " + acceptsNode)
             //console.log("parentNode " + node.parentNode().title())
             let result = acceptsNode && canReorder
-            if (result == false) {
+            /*
+            if (result === false) {
                 console.log("false")
             }
+            */
             return result
         }
         return false
@@ -103802,6 +103905,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             let json = null
             try {
                 json = JSON.parse(data)
+                
             } catch (error) {
 
             }
@@ -104138,13 +104242,13 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
 		
         if (this.node()) {
 	        w = this.node().nodeMinWidth()
-            if (w == null) {
+            if (w === null) {
                 return 0
             }
 	
             if (this.browser() && this.browser().isSingleColumn()) {
                 w = this.browser().browserWidth()
-                assert (w != null) 
+                assert (!Type.isNull(w)) 
             }
         }
 			
@@ -104577,7 +104681,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         //this.addGestureRecognizer(RightEdgePanGestureRecognizer.clone()) // use to adjust width?
         this.addGestureRecognizer(BottomEdgePanGestureRecognizer.clone()) // use to adjust height?
 
-        //this.setIsRegisteredForDrag(true)
+        this.setIsRegisteredForKeyboard(true)
 
         return this
     },
@@ -104776,12 +104880,6 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     },
     */
     
-    /*
-    selectNextKeyView: function () {
-        this.column().selectNextRow()
-        return this
-    },
-    */
 
     select: function() {
         if (!this.isSelected()) {
@@ -104850,12 +104948,6 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         this.updateSubviews()
         return this
     },
-    
-    /*
-    onTabKeyUp: function() {
-        console.log(this.typeId() + ".onTabKeyUp()")
-    },
-    */
 
     // --- styles ---
     
@@ -104894,17 +104986,11 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         return this
     },
     
-    willAcceptFirstResponder: function() {
-        NodeView.willAcceptFirstResponder.apply(this)
-	    console.log(this.typeId() + ".willAcceptFirstResponder()")
-        return this
-    },
-
     
     // close button
     
     addCloseButton: function() {
-        if (this.closeButtonView() == null) {
+        if (this.closeButtonView() === null) {
             //const c = CenteredDomView.clone()
 
             const cb = DomView.clone().setDivClassName("BrowserRowCloseButton")
@@ -105006,6 +105092,23 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         return this
     },
 
+    // --- dragging key ---
+
+
+    on_d_KeyDown: function(event) {
+        console.log(this.typeId() + " on_d_KeyDown ", event._id)
+        this.setIsRegisteredForDrag(true)
+        return false
+    },
+
+    on_d_KeyUp: function(event) {
+        console.log(this.typeId() + " on_d_KeyUp ", event._id)
+        this.setIsRegisteredForDrag(false)
+        return false
+    },
+
+    // ---
+    
     justInspect: function(event) {
         console.log(this.typeId() + ".justInspect()")
         if (this.node().nodeCanInspect()) { 
@@ -105166,6 +105269,9 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     },
     
     onLongPressBegin: function(aGesture) {
+        if (this.isRegisteredForDrag()) {
+            aGesture.cancel() // don't allow in-browser drag when we're doing a drag outside
+        }
     },
 
     onLongPressCancelled: function(aGesture) {
@@ -105239,8 +105345,10 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     },
 	
     willAcceptFirstResponder: function() {
-	    console.log(this.typeId() + ".willAcceptFirstResponder()")
-	    this.requestSelection()
+        NodeView.willAcceptFirstResponder.apply(this)
+	    //console.log(this.typeId() + ".willAcceptFirstResponder()")
+        this.requestSelection()
+        return this
     },
 
     // -------------------------
@@ -105528,7 +105636,7 @@ BrowserRow.newSubclassNamed("BrowserTitledRow").newSlots({
         node.setTitle(this.titleView().innerText())
         node.setSubtitle(this.subtitleView().innerText())
         //node.tellParentNodes("onDidEditNode", this.node())  
-        node.scheduleSyncToStore() // TODO: this should be handled by the node
+        //node.scheduleSyncToStore() // TODO: this should be handled by the node
         return this
     },
 
@@ -105733,7 +105841,7 @@ NodeView.newSubclassNamed("ShelfView").newSlots({
     // --- hide ----------------------
     
     isHidden: function() {
-        return this.parentView() == null
+        return this.parentView() === null
     },
 
     unhide: function() {
@@ -107051,7 +107159,7 @@ BMNode.newSubclassNamed("App").newSlots({
     init: function () {
         BMNode.init.apply(this)
         this.setNodeStoreDidOpenObs(window.NotificationCenter.shared().newObservation())
-        this.nodeStoreDidOpenObs().setName("nodeStoreDidOpen").setObserver(this).setTarget(NodeStore.shared())
+        this.nodeStoreDidOpenObs().setName("nodeStoreDidOpen").setObserver(this).setTarget(this.nodeStore())
         this.setIsDebugging(true)
     },
 
@@ -107077,7 +107185,11 @@ BMNode.newSubclassNamed("App").newSlots({
         }
 
         this.nodeStoreDidOpenObs().watch()
-        NodeStore.shared().setName(this.name()).asyncOpen() 
+        this.nodeStore().setName(this.name()).asyncOpen() 
+    },
+
+    nodeStore: function() {
+        return NodeStore.shared()
     },
 
     showBrowserCompatibilityPanel: function() {
@@ -107778,7 +107890,7 @@ BMNode.newSubclassNamed("BMURLImage").newSlots({
     },
 
     setPath: function(aPath) {
-        if (this._path != aPath) {
+        if (this._path !== aPath) {
             this._path = aPath
             this.loadDataURL()
         }
@@ -108097,7 +108209,7 @@ BMStorableNode.newSubclassNamed("BMResources").newSlots({
 
     setupSubnodes: function() {
 
-        //this.setThemes(NodeStore.shared().rootInstanceWithPidForProto("_themes", BMThemeResources))
+        //this.setThemes(this.nodeStore().rootInstanceWithPidForProto("_themes", BMThemeResources))
         this.setThemes(BMThemeResources.shared())
         this.addSubnode(this.themes())
 
@@ -108346,7 +108458,7 @@ BMStorableNode.newSubclassNamed("BMMessages").newSlots({
 	
     needsMessageWithHash: function(h) {
         const wasDeleted = this.deletedSet().hasKey(h)
-        const isMissing = this.subnodeWithHash(h) == null
+        const isMissing = this.subnodeWithHash(h) === null
         return (!wasDeleted) && isMissing
     },
 	
@@ -108467,23 +108579,22 @@ BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
 		
         BMStorableNode.init.apply(this)
 		
-        //this.setPid("_network")
         this.setTitle("Network")
         this.setNodeMinWidth(250)
         
         this.setConnection(BMConnection.shared())
         this.addSubnode(this.connection())
 
-        this.setServers(NodeStore.shared().rootInstanceWithPidForProto("_servers", BMRServers))
+        this.setServers(this.nodeStore().rootInstanceWithPidForProto("_servers", BMRServers))
         this.addSubnode(this.servers())
 
-        this.setStunServers(NodeStore.shared().rootInstanceWithPidForProto("_stunServers", BMStunServers))
+        this.setStunServers(this.nodeStore().rootInstanceWithPidForProto("_stunServers", BMStunServers))
         this.addSubnode(this.stunServers())
 						
-        this.setMessages(NodeStore.shared().rootInstanceWithPidForProto("_messages", BMMessages))
+        this.setMessages(this.nodeStore().rootInstanceWithPidForProto("_messages", BMMessages))
         this.addSubnode(this.messages())
 		
-        this.setBlacklists(NodeStore.shared().rootInstanceWithPidForProto("_blacklists", BMBlacklists))
+        this.setBlacklists(this.nodeStore().rootInstanceWithPidForProto("_blacklists", BMBlacklists))
         this.addSubnode(this.blacklists())
         
         this.addStoredField(BMBooleanField.clone().setKey("isOpenRelay").setValueMethod("isOpenRelay").setValueIsEditable(true))
@@ -108721,7 +108832,7 @@ BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
     },
 	
     idsBloomFilter: function() {
-        if (this._idsBloomFilter == null) {
+        if (this._idsBloomFilter === null) {
             this.updateIdsBloomFilter()
         }
         return this._idsBloomFilter
@@ -108736,7 +108847,7 @@ BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
 	        return doesMatch
 	    }) 
         //console.log("hasIdentityMatchingBloomFilter match = ", match)
-        return match != null	        
+        return !Type.isNull(match)	        
     },
 
     shouldRelayForSenderPublicKey: function(aPublicKeyString) {
@@ -109089,7 +109200,7 @@ BMNode.newSubclassNamed("BMServerConnection").newSlots({
 
     receiveSignalFromPeer(data) {
         let remotePeer = this.remotePeers().subnodes().detect(p => p.peerId().toString() === data.fromPeer);
-        if (remotePeer == null) {
+        if (remotePeer === null) {
             remotePeer = this.remotePeers().addRemotePeerForId(data.fromPeer);
             remotePeer.setConn(new SimplePeer({
                 initiator: false,
@@ -110533,7 +110644,7 @@ BMMessage.newSubclassNamed("BMInvMessage").newSlots({
     
     addMsgHash: function(msgHash) {
         //const f = this.bloomFilter()
-        //if (f == null || f.checkEntry(
+        //if (f === null || f.checkEntry(
         this.data().push(msgHash)
         return this
     },
@@ -111109,7 +111220,6 @@ BMStorableNode.newSubclassNamed("BMLocalIdentities").newSlots({
         this.setSubnodeProto(BMLocalIdentity)
         this.setNoteIsSubnodeCount(true)
         
-        //this.setPidSymbol("_localIdentities")  
         this._didChangeIdentitiesNote = NotificationCenter.shared().newNote().setSender(this).setName("didChangeIdentities")
         this.setNodeMinWidth(240)
         this.setNodeCanReorderSubnodes(true)
@@ -111337,7 +111447,6 @@ BMStorableNode.newSubclassNamed("BMRemoteIdentities").newSlots({
 
         this.setNoteIsSubnodeCount(true)
         //this.setShouldStoreSubnodes(false)
-        //this.loadIfPresent()
         this._didChangeIdentitiesNote = NotificationCenter.shared().newNote().setSender(this).setName("didChangeIdentities")
         this.watchIdentity()
         this.setNodeMinWidth(240)
@@ -111693,7 +111802,7 @@ ResourceLoader.pushRelativePaths([
 BMStorableNode.newSubclassNamed("BMApplet").newSlots({
 }).setSlots({
     sharedStoredInstance: function() {
-        return NodeStore.shared().rootInstanceWithPidForProto(this.type(), this)
+        return this.nodeStore().rootInstanceWithPidForProto(this.type(), this)
     },
     
     init: function () {
@@ -111771,7 +111880,6 @@ BMStorableNode.newSubclassNamed("BMBuys").newSlots({
 }).setSlots({
     init: function () {
         BMStorableNode.init.apply(this)
-        this.setPid("_buys")
         this.setTitle("Buys")
         this.setActions(["add"])
         this.setSubnodeProto(BMBuy)
@@ -111939,7 +112047,6 @@ BMRegion.newSubclassNamed("BMRegions").newSlots({
 }).setSlots({
     init: function () {
         BMRegion.init.apply(this)
-        //this.setPid("_market")
         //this.setActions(["add"])
         //this.setSubnodeProto(BMPost)
         
@@ -111988,7 +112095,7 @@ BMApplet.newSubclassNamed("BMClassifieds").newSlots({
         this.setRegions(BMRegions.clone())
         this.addSubnode(this.regions())
         
-        //this.setSells(NodeStore.shared().rootInstanceWithPidForProto("BMClassifieds_sells", BMSells)) // move to pid for classifieds
+        //this.setSells(this.nodeStore().rootInstanceWithPidForProto("BMClassifieds_sells", BMSells)) // move to pid for classifieds
         this.setSells(BMSells.clone()) // move to pid for classifieds
         this.addSubnode(this.sells())
     },
@@ -112121,7 +112228,6 @@ BMStorableNode.newSubclassNamed("BMSells").newSlots({
 		
         //this.setTitle("Sells")
         this.setTitle("My Sales")
-        //this.setPid("_sells")
         //this.setActions(["add"])
         this.setSubnodeProto(BMSell)
         this.setNoteIsSubnodeCount(true)
@@ -112143,7 +112249,6 @@ BMStorableNode.newSubclassNamed("BMClassifiedPosts").newSlots({
     init: function () {
         BMStorableNode.init.apply(this)
         this.setTitle("My Posts")
-        //this.setPid("_myPosts")
         this.setSubnodeProto(BMClassifiedPost)
         this.setNoteIsSubnodeCount(true)
     },
@@ -113598,7 +113703,7 @@ BMStorableNode.newSubclassNamed("BMFeedPosts").newSlots({
     },
     
     updateHasRead: function() {
-        this.setHasRead(this.firstUnreadPost() == null)
+        this.setHasRead(this.firstUnreadPost() === null)
         return this
     },
     
@@ -113809,7 +113914,7 @@ BMAppMessage.newSubclassNamed("BMPostMessage").newSlots({
     },
     
     postThread: function() {
-        if (this._postThread == null) {
+        if (this._postThread === null) {
             this._postThread = BMPostThread.clone().setPostMessage(this).update()
         }
         return this._postThread
@@ -113818,7 +113923,7 @@ BMAppMessage.newSubclassNamed("BMPostMessage").newSlots({
     // replies
     
     replies: function() {
-        if (this._replies == null) {
+        if (this._replies === null) {
             this._replies = []
         }
         
@@ -114557,7 +114662,7 @@ BMNode.newSubclassNamed("BMConnection").newSlots({
         this.setTitle("Connection")
         this.setNodeMinWidth(200)
 
-        //this.setServers(NodeStore.shared().rootInstanceWithPidForProto("_servers", BMRServers))
+        //this.setServers(this.nodeStore().rootInstanceWithPidForProto("_servers", BMRServers))
         //this.addSubnode(this.servers())
         
         const con = navigator.connection || navigator.mozConnection || navigator.webkitConnection
@@ -114753,7 +114858,7 @@ App.newSubclassNamed("PeerApp").newSlots({
     setupModel: function () {
 
         // identities
-        this.setLocalIdentities(NodeStore.shared().rootInstanceWithPidForProto("_localIdentities", BMLocalIdentities))
+        this.setLocalIdentities(this.nodeStore().rootInstanceWithPidForProto("_localIdentities", BMLocalIdentities))
         this.addSubnode(this.localIdentities())
 
         // about 

@@ -112,7 +112,7 @@ BrowserRow.newSubclassNamed("BrowserTitledRow").newSlots({
         node.setTitle(this.titleView().innerText())
         node.setSubtitle(this.subtitleView().innerText())
         //node.tellParentNodes("onDidEditNode", this.node())  
-        node.scheduleSyncToStore() // TODO: this should be handled by the node
+        //node.scheduleSyncToStore() // TODO: this should be handled by the node
         return this
     },
 

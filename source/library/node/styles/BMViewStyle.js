@@ -52,7 +52,7 @@ ideal.Proto.newSubclassNamed("BMViewStyle").newSlots({
 		
         this.styleNames().forEach( (name) => { 
             const v = this[name].apply(this)
-            if (v != null) {
+            if (!Type.isNull(v)) {
                 parts.push(name + ":" + v)
             }
         })	

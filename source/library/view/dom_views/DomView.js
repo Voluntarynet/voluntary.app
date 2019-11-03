@@ -2139,7 +2139,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         return true
     },
 
-    // -- dropping ---
+    // -- browser dropping ---
 
     isRegisteredForDrop: function () {
         return this.dropListener().isListening()
@@ -2623,27 +2623,8 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     */
 
     onKeyDown: function (event) {
-        console.log(this.typeId() + " onKeyDown ", event._id)
+        //console.log(this.typeId() + " onKeyDown ", event._id)
         //Keyboard.shared().showEvent(event)
-
-        /*
-        const isEnterKey = Keyboard.shared().nameForKeyCode(event.keyCode) === "Enter";
-
-        if (isEnterKey && this.unfocusOnEnterKey()) {
-            console.log(" releasing focus")
-            // this.releaseFocus() // TODO: implement something to pass focus up view chain to whoever wants it
-            this.element().parentElement.focus()
-        }
-        */
-
-        /*
-		if (this.interceptsTab()) {
-	        if (event.keyId === "tab") {
-		        event.preventDefault()
-	            this.onTabKeyDown()
-	        }
-		}
-        */
 
         const methodName = Keyboard.shared().downMethodNameForEvent(event)
         //console.log("onKeyDown methodName: ", methodName)
@@ -2673,31 +2654,10 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
     onKeyUp: function (event) {
         let shouldPropogate = true
-        //console.log(this.typeId() + " onKeyUp specialKeyName=", specialKeyName)
-
-        /*
-		if (this.interceptsTab()) {
-	        if (event.keyId === "tab") {
-	            event.preventDefault()
-				return
-	        }
-		}
-		*/
-
-        //console.log("event: ", event)
-        //event.preventDefault()
-
-        /*
-        if ((!this.isValid()) && (this.invalidColor() != null)) {
-            this.setColor(this.invalidColor())
-        } else {
-            if (this.color() === this.invalidColor()) {
-                this.setColor(null)
-            }
-        }
-        */
+        console.log(this.typeId() + " onKeyUp ", event._id)
 
         const methodName = Keyboard.shared().upMethodNameForEvent(event)
+        console.log("methodName: ", methodName)
         this.invokeMethodNameForEvent(methodName, event)
 
         this.didEdit()
@@ -2718,7 +2678,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
     onTabKeyDown: function (event) {
         // need to implement this on key down to prevent browser from handling tab?
-        console.log(this.typeId() + " onTabKeyDown ", event._id)
+        //console.log(this.typeId() + " onTabKeyDown ", event._id)
 
         if(this.selectNextKeyView()) {
             //event.stopImmediatePropagation() // prevent other listeners from getting this event
@@ -2741,7 +2701,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     selectNextKeyView: function () {
         // returns true if something is selected, false otherwise
 
-        console.log(this.typeId() + " selectNextKeyView")
+        //console.log(this.typeId() + " selectNextKeyView")
         const nkv = this.nextKeyView()
         if (nkv) {
             nkv.becomeKeyView()

@@ -319,13 +319,13 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
 		
         if (this.node()) {
 	        w = this.node().nodeMinWidth()
-            if (w == null) {
+            if (w === null) {
                 return 0
             }
 	
             if (this.browser() && this.browser().isSingleColumn()) {
                 w = this.browser().browserWidth()
-                assert (w != null) 
+                assert (!Type.isNull(w)) 
             }
         }
 			

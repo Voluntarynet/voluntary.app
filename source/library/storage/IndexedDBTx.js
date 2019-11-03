@@ -98,7 +98,7 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
         }
 		
         const v = JSON.stringify(object)
-        if (v == null) {
+        if (v === null) {
             throw new Error("can't add null value")
         }
 		

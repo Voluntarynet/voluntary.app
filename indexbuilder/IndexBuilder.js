@@ -46,9 +46,9 @@ String.prototype.after = function (aString) {
 
 String.prototype.between = function (prefix, suffix) {
     const after = this.after(prefix);
-    if (after != null) {
+    if (after !== null) {
         const before = after.before(suffix);
-        if (before != null) {
+        if (before !== null) {
             return before;
         }
         else {

@@ -2,7 +2,7 @@
 
 /*
 
-    BMStorableNode
+    BMStorableNode 
     
 */
 
@@ -27,6 +27,13 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         this.addStoredSlot("canDelete")  // TODO: move elsewhere
     },
     
+    nodeStore: function() {
+        if (this._nodeStore) {
+            return this._nodeStore
+        }
+        return NodeStore.shared()
+    },
+
     // --- overrides from parent class ---
     // hook this to schedules writes when subnode list is changed
 
@@ -42,27 +49,32 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     // persistence id - "pid"
     // -----------------------------------------------
 
-    setPidSymbol: function(aPid) {
-        this.setPid(aPid)
-        this.loadIfPresent()
-        return this
+    rootInstanceForPid: function (pid) { // proto method
+        assert(pid[0] === "_")
+        // replace rootInstanceWithPidForProto with this method?
+
+        if (this.nodeStore().hasObjectForPid(pid)) {
+            return this.nodeStore().objectForPid(pid)
+        }
+
+        return this.clone().setPid(pid)
     },
-        
+    
     setPid: function(aPid) {
         this._pid = aPid
-        NodeStore.shared().addActiveObject(this)
+        this.nodeStore().addActiveObject(this)
         this.scheduleSyncToStore()
         return this
     },
     
     justSetPid: function(aPid) { // don't schedule sync
         this._pid = aPid
-        NodeStore.shared().addActiveObject(this)
+        this.nodeStore().addActiveObject(this)
         return this
     },
     
     hasPid: function() {
-        return this._pid != null
+        return !Type.isNullOrUndefined(this._pid)
     },
     
     assignPid: function() {
@@ -72,7 +84,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         // "type" is only using in the pid for debugging purposes
         // no code should depend on it and everything should work the same without it
 
-        //this._pid = NodeStore.shared().pidOfObj(this)
+        //this._pid = this.nodeStore().pidOfObj(this)
         /*
         const uuid_a = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
         const uuid_b = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
@@ -85,7 +97,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     },
 
     didAssignPid: function() {
-        NodeStore.shared().addActiveObject(this)
+        this.nodeStore().addActiveObject(this)
         this.scheduleSyncToStore()
         return this
     },
@@ -152,6 +164,11 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
             if (k.beginsWith("_")) {
                 v = this[k]
             } else {
+                const isFunction = Type.isFunction(this[k])
+                if(!isFunction) {
+                    console.warn("WARNING: " + this.type() + "." + k + "() not a method")
+                }
+
                 try {
 	                v = this[k].apply(this)
                 } catch(error) {
@@ -160,7 +177,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
                 }
             }
            
-            dict[k] = NodeStore.shared().refValueIfNeeded(v)
+            dict[k] = this.nodeStore().refValueIfNeeded(v)
         })
         
         return dict
@@ -194,7 +211,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     prepareToAccess: function() {
         BMNode.prepareToAccess.apply(this)
         if (this.doesLazyLoadChildren()) {
-            const dict = BMNodeStore.shared().nodeDictAtPid(this.pid())
+            const dict = this.nodeStore().nodeDictAtPid(this.pid())
             this.setNodeDictForProperties(dict)
         }
         return this
@@ -205,7 +222,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         Object.keys(aDict).forEach((k) => {
             if (k !== "children" && k !== "type") {
                 let v = aDict[k]
-                v = NodeStore.shared().unrefValueIfNeeded(v)
+                v = this.nodeStore().unrefValueIfNeeded(v)
                 
                 if (k.beginsWith("_")) {
                     this[k] = v
@@ -272,7 +289,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
             const isRef = obj !== null && obj !== undefined && obj.typeId !== undefined
             if (isRef && !obj.hasPid()) {
                 obj.pid()
-                NodeStore.shared().addDirtyObject(this)
+                this.nodeStore().addDirtyObject(this)
                 //console.log(">>>>>>>>>>>>>>>>> loadFinalize assigned pid ", obj.pid())
             }
         })		
@@ -289,7 +306,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
 
         if (hasPid && shouldStore && !isUnserializing) {
             //console.log(this.typeId() + " scheduleSyncToStore -> addDirtyObject")
-        	NodeStore.shared().addDirtyObject(this)
+        	this.nodeStore().addDirtyObject(this)
             //this._refPids = null
         }
 
@@ -316,7 +333,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         }
     },
 	
-    // StorableNode
+    // subnodes
 	
     subnodePids: function() {
         const pids = []
@@ -329,20 +346,14 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
 
         return pids
     },
+
     
     setSubnodePids: function(pids) {
         const subnodes = pids.map((pid) => {
-            return NodeStore.shared().objectForPid(pid)
+            return this.nodeStore().objectForPid(pid)
         })
 
         this.setSubnodes(subnodes)
-        return this
-    },
-
-    // store
-    
-    store: function() {
-        NodeStore.shared().storeObject(obj)
         return this
     },
     
@@ -379,7 +390,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
             // property pids
             Object.keys(nodeDict).forEach((k) => {
                 const v = nodeDict[k]
-                const childPid = NodeStore.shared().pidIfRef(v)
+                const childPid = this.nodeStore().pidIfRef(v)
                 if (childPid) {
                     pids.push(childPid);
                 }

@@ -19,23 +19,23 @@ BMNode.newSubclassNamed("BMDataStore").newSlots({
     },
 
     subtitle: function () {
-        return this.store().shortStatsString()
+        return this.nodeStore().shortStatsString()
     },
 
-    store: function () {
+    nodeStore: function () {
         return NodeStore.shared()
     },
 
     storeHasChanged: function() {
-        return NodeStore.shared().lastSyncTime() !== this.lastSyncTime()
+        return this.nodeStore().lastSyncTime() !== this.lastSyncTime()
     },
 
     prepareToSyncToView: function () {
         //console.log("this.storeHasChanged() = ", this.storeHasChanged())
 
         if (this.subnodes().length === 0 || this.storeHasChanged()) {
-            NodeStore.shared().collect()
-            this.setLastSyncTime(NodeStore.shared().lastSyncTime())
+            this.nodeStore().collect()
+            this.setLastSyncTime(this.nodeStore().lastSyncTime())
             this.refreshSubnodes()
         }
     },
@@ -43,9 +43,9 @@ BMNode.newSubclassNamed("BMDataStore").newSlots({
     refreshSubnodes: function () {
         //console.log(this.typeId() + " refreshSubnodes")
         this.removeAllSubnodes()
-        this.store().sdb().keys().sort().forEach((key) => {
+        this.nodeStore().sdb().keys().sort().forEach((key) => {
             const subnode = BMDataStoreRecord.clone().setTitle(key)
-            const size = this.store().sdb().at(key).length
+            const size = this.nodeStore().sdb().at(key).length
             const sizeDescription = ByteFormatter.clone().setValue(size).formattedValue()
             subnode.setSubtitle(sizeDescription)
             this.addRecord(subnode)
@@ -53,7 +53,7 @@ BMNode.newSubclassNamed("BMDataStore").newSlots({
     },
 
     subnodeForClassName: function (aClassName) {
-        const subnode = this.firstSubnodeWithTitle(aClassName)
+        let subnode = this.firstSubnodeWithTitle(aClassName)
         if (!subnode) {
             subnode = BMNode.clone().setTitle(aClassName).setNoteIsSubnodeCount(true)
             this.justAddSubnode(subnode)

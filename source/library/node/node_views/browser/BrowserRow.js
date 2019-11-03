@@ -61,7 +61,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         //this.addGestureRecognizer(RightEdgePanGestureRecognizer.clone()) // use to adjust width?
         this.addGestureRecognizer(BottomEdgePanGestureRecognizer.clone()) // use to adjust height?
 
-        //this.setIsRegisteredForDrag(true)
+        this.setIsRegisteredForKeyboard(true)
 
         return this
     },
@@ -366,17 +366,11 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         return this
     },
     
-    willAcceptFirstResponder: function() {
-        NodeView.willAcceptFirstResponder.apply(this)
-	    console.log(this.typeId() + ".willAcceptFirstResponder()")
-        return this
-    },
-
     
     // close button
     
     addCloseButton: function() {
-        if (this.closeButtonView() == null) {
+        if (this.closeButtonView() === null) {
             //const c = CenteredDomView.clone()
 
             const cb = DomView.clone().setDivClassName("BrowserRowCloseButton")
@@ -478,6 +472,23 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         return this
     },
 
+    // --- dragging key ---
+
+
+    on_d_KeyDown: function(event) {
+        console.log(this.typeId() + " on_d_KeyDown ", event._id)
+        this.setIsRegisteredForDrag(true)
+        return false
+    },
+
+    on_d_KeyUp: function(event) {
+        console.log(this.typeId() + " on_d_KeyUp ", event._id)
+        this.setIsRegisteredForDrag(false)
+        return false
+    },
+
+    // ---
+    
     justInspect: function(event) {
         console.log(this.typeId() + ".justInspect()")
         if (this.node().nodeCanInspect()) { 
@@ -638,6 +649,9 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     },
     
     onLongPressBegin: function(aGesture) {
+        if (this.isRegisteredForDrag()) {
+            aGesture.cancel() // don't allow in-browser drag when we're doing a drag outside
+        }
     },
 
     onLongPressCancelled: function(aGesture) {
@@ -711,8 +725,10 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     },
 	
     willAcceptFirstResponder: function() {
-	    console.log(this.typeId() + ".willAcceptFirstResponder()")
-	    this.requestSelection()
+        NodeView.willAcceptFirstResponder.apply(this)
+	    //console.log(this.typeId() + ".willAcceptFirstResponder()")
+        this.requestSelection()
+        return this
     },
 
     // -------------------------

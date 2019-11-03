@@ -173,7 +173,7 @@ ideal.Proto.newSubclassNamed("BMPayload").newSlots({
         const decryptedString = sjcl.codec.utf8String.fromBits(encryptedBits)
         const decryptedPayloadDict = decryptedString.toJsonDict();
 
-        if (decryptedPayloadDict == null) {
+        if (decryptedPayloadDict === null) {
             throw new Error("can't convert decrypted payload to JSON");    
         }
         

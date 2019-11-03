@@ -4,4 +4,5 @@ ResourceLoader.pushRelativePaths([
     "NodeStore.js",
     "BMDataStore.js",
     //"BMDataStoreRecord.js",
+    "ObjectPool.js"
 ])

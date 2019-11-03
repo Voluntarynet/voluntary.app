@@ -27,7 +27,7 @@ Object.shallowCopyTo({
 
     paddedNumber: function(n) {
         const s = "" + n
-        if (s.length == 1) { 
+        if (s.length === 1) { 
             return "0" + s
         }
         return s
@@ -48,7 +48,7 @@ Object.shallowCopyTo({
     getTwelveHours: function() {
         let h = this.getHours()
         if (h > 12) { h -= 12 }
-        if (h === 0) { h == 12 }
+        if (h === 0) { h = 12 }
         return h
     },
 

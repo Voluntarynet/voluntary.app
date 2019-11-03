@@ -3,7 +3,7 @@
 /*
 
     BMNode
-
+ 
     The base class of model objects that supports the protocol 
     used to sync with views (subclasses of NodeView).
 
@@ -982,6 +982,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
 
     // --- json serialization ---
 
+    /*
     asJSON: function() {
         const dict = {}
         dict.type = this.type()
@@ -1033,6 +1034,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         }
         rawFile.send(null);
     },
+    */
 
     // notification helpers - yeah, not ideal
 
@@ -1091,8 +1093,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         return this.title() + " " + this.subtitle()
     },
 
-    // copying protocol
-
+    // overriding copying protocol from Proto
 
     shallowCopySlotnames: function() {
         const names = ideal.Proto.shallowCopySlotnames.apply(this)

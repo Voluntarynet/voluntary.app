@@ -319,7 +319,7 @@ ideal.Proto.newSubclassNamed("Keyboard").newSlots({
             key.onKeyDown(event)
 
             if (this.isDebugging()) {
-                console.log(this.typeId() + ".onKeyDown " + key.name())
+                console.log(this.typeId() + ".onKeyDownCapture " + key.name())
             }
         } else {
             console.warn("Keyboard.shared() no key found for event ", event)

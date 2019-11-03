@@ -31,7 +31,7 @@ BMStorableNode.newSubclassNamed("BMResources").newSlots({
 
     setupSubnodes: function() {
 
-        //this.setThemes(NodeStore.shared().rootInstanceWithPidForProto("_themes", BMThemeResources))
+        //this.setThemes(this.nodeStore().rootInstanceWithPidForProto("_themes", BMThemeResources))
         this.setThemes(BMThemeResources.shared())
         this.addSubnode(this.themes())
 

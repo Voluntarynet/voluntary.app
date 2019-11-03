@@ -146,7 +146,7 @@ BMAppMessage.newSubclassNamed("BMPostMessage").newSlots({
     },
     
     postThread: function() {
-        if (this._postThread == null) {
+        if (this._postThread === null) {
             this._postThread = BMPostThread.clone().setPostMessage(this).update()
         }
         return this._postThread
@@ -155,7 +155,7 @@ BMAppMessage.newSubclassNamed("BMPostMessage").newSlots({
     // replies
     
     replies: function() {
-        if (this._replies == null) {
+        if (this._replies === null) {
             this._replies = []
         }
         

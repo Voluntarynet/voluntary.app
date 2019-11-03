@@ -354,7 +354,7 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
     // so we can share the event handling code for both devices 
 
     pointsForEvent: function(event) {
-        if (event == null) {
+        if (event === null) {
             throw new Error(this.type() + ".pointsForEvent(event) event is null")
         }
 

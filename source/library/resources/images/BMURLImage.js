@@ -26,7 +26,7 @@ BMNode.newSubclassNamed("BMURLImage").newSlots({
     },
 
     setPath: function(aPath) {
-        if (this._path != aPath) {
+        if (this._path !== aPath) {
             this._path = aPath
             this.loadDataURL()
         }

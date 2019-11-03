@@ -23,7 +23,7 @@ BMNode.newSubclassNamed("App").newSlots({
     init: function () {
         BMNode.init.apply(this)
         this.setNodeStoreDidOpenObs(window.NotificationCenter.shared().newObservation())
-        this.nodeStoreDidOpenObs().setName("nodeStoreDidOpen").setObserver(this).setTarget(NodeStore.shared())
+        this.nodeStoreDidOpenObs().setName("nodeStoreDidOpen").setObserver(this).setTarget(this.nodeStore())
         this.setIsDebugging(true)
     },
 
@@ -49,7 +49,11 @@ BMNode.newSubclassNamed("App").newSlots({
         }
 
         this.nodeStoreDidOpenObs().watch()
-        NodeStore.shared().setName(this.name()).asyncOpen() 
+        this.nodeStore().setName(this.name()).asyncOpen() 
+    },
+
+    nodeStore: function() {
+        return NodeStore.shared()
     },
 
     showBrowserCompatibilityPanel: function() {

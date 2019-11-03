@@ -478,7 +478,7 @@ Proto.setSlots({
     // a copyDict is created if missing and passed
     // to store the mapping of previous typeIds to new (copied) objects
 
-    copy: function(copyDict) {
+    copy: function(copyDict) { 
         //const id = this.pid() 
         const id = this.typeId() 
 

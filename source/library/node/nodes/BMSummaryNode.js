@@ -119,7 +119,7 @@ BMStorableNode.newSubclassNamed("BMSummaryNode").newSlots({
     nodeSummaryJoinerOut: function() {
         let s = this._nodeSummaryJoiner
         
-        if (s == "newline") {
+        if (s === "newline") {
             return "<br>"
         } else {
             s = s.replaceAll("<br>", "")

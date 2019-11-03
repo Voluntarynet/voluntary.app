@@ -445,7 +445,7 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
     selectColumn: function (selectedColumn) {
 
         /*
-        if (this.selectedColumn() == selectedColumn) {
+        if (this.selectedColumn() === selectedColumn) {
             return this
         }
         */
@@ -631,7 +631,7 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         let d = this.columnGroups().map((cg) => {
             if (cg.isCollapsed()) { return "" }
             let s = cg.name()
-            if (cg.node() == null) { s += " [null node] " }
+            if (cg.node() === null) { s += " [null node] " }
             //s += " " + (cg.isCollapsed() ? "collapsed" : "uncollapsed")
             s += " " + this.pxNumberToString(cg.targetWidth())
             return s
@@ -668,7 +668,7 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         this.columnGroups().forEach((cg) => {
             const usedWidth = this.widthOfUncollapsedColumns()
             let shouldCollapse = (usedWidth > this.browserWidth()) && (cg !== lastActiveCg)
-            shouldCollapse = shouldCollapse || (cg.node() == null)
+            shouldCollapse = shouldCollapse || (cg.node() === null)
             //console.log(cg.name() + " shouldCollapse:" + shouldCollapse + " usedWidth: " + usedWidth + " browserWidth:" + this.browserWidth())
             cg.setIsCollapsed(shouldCollapse)
         })

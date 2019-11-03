@@ -60,7 +60,7 @@ BMStorableNode.newSubclassNamed("BMFeedPosts").newSlots({
     },
     
     updateHasRead: function() {
-        this.setHasRead(this.firstUnreadPost() == null)
+        this.setHasRead(this.firstUnreadPost() === null)
         return this
     },
     

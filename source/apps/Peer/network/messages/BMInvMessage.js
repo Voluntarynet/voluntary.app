@@ -17,7 +17,7 @@ BMMessage.newSubclassNamed("BMInvMessage").newSlots({
     
     addMsgHash: function(msgHash) {
         //const f = this.bloomFilter()
-        //if (f == null || f.checkEntry(
+        //if (f === null || f.checkEntry(
         this.data().push(msgHash)
         return this
     },

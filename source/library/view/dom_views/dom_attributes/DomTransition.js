@@ -73,21 +73,21 @@ window.DomTransition = class DomTransition extends ProtoClass {
         const parts = aString.split(" ").select((part) => { return part !== "" })
 
         let v = parts.removeFirst()
-        assert(v != null)
+        assert(!Type.isNull(v))
         this.setProperty(v)
 
         v = parts.removeFirst()
-        if (v != null) {
+        if (!Type.isNull(v)) {
             this.setDuration(v)
         }
 
         v = parts.removeFirst()
-        if (v != null) {
+        if (!Type.isNull(v)) {
             this.setTimingFunction(v)
         }
 
         v = parts.removeFirst()
-        if (v != null) {
+        if (!Type.isNull(v)) {
             this.setDelay(v)
         }
 

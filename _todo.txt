@@ -1,6 +1,9 @@
 
 TODO:
 
+	- eliminate use of NodeStore.shared() in node load methods?
+	
+
 	use window.postMessage to coordinate boot?
 	- post exceptions?
 	
@@ -32,7 +35,7 @@ TODO:
 
 	support copy and link drag
 	
-	long press + option == two finger long press?
+	long press + option = two finger long press?
 	- mapping of certain keys to more fingers?
 	
 	copying an object

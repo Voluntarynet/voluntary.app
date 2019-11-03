@@ -139,11 +139,11 @@ ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
             const fullMethodName = this.fullMethodNameFor(dict.methodName)
             dict.handlerFunc = (event) => { 
 
-                /*
-                if (this.isDebugging() && !event._id) {
+                
+                if (!event._id) {
                     event._id = Math.floor(Math.random()*100000) // TODO: remove when not debugging
                 }
-                */
+                
 
                 const delegate = this.delegate()
                 const method = delegate[fullMethodName]

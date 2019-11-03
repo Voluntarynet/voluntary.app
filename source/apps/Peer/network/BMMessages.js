@@ -180,7 +180,7 @@ BMStorableNode.newSubclassNamed("BMMessages").newSlots({
 	
     needsMessageWithHash: function(h) {
         const wasDeleted = this.deletedSet().hasKey(h)
-        const isMissing = this.subnodeWithHash(h) == null
+        const isMissing = this.subnodeWithHash(h) === null
         return (!wasDeleted) && isMissing
     },
 	

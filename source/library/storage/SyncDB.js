@@ -48,11 +48,11 @@ window.SyncDB = class SyncDB extends ProtoClass {
 
     asyncOpen (callback) {
         //console.log("SyncDB asyncOpen()")
-        this.idb().asyncOpenIfNeeded( () => { this.didOpen(callback) })
+        this.idb().asyncOpenIfNeeded( () => { this.onOpen(callback) })
         return this
     }
 	
-    didOpen (callback) {
+    onOpen (callback) {
         // load the cache
         //console.log("SyncDB didOpen() - loading cache")
 		

@@ -229,7 +229,7 @@ ideal.Proto.newSubclassNamed("BMPow").newSlots({
     },
     
     globalEstimateTriesPerMs: function() {
-        if (this._globalEstimateTriesPerMs == null) {
+        if (this._globalEstimateTriesPerMs === null) {
             let pow = BMPow.clone()
             pow.setTargetDifficulty(this.maxDifficulty()) // to make sure we don't find it
             this.setTries(0)
@@ -282,14 +282,14 @@ ideal.Proto.newSubclassNamed("BMPow").newSlots({
     },
     
     actualPowDifficulty: function() {
-        if (this.hash() == null || this.powBits() == null) {
+        if (this.hash() === null || this.powBits() === null) {
             return 0
         }
         return this.leftZeroBitCount()    
     },
     
     isValid: function () {
-        if (this._hash == null) { 
+        if (this._hash === null) { 
             //console.warn("WARNING: null hash on BMPow")
             return false 
         }
@@ -297,7 +297,7 @@ ideal.Proto.newSubclassNamed("BMPow").newSlots({
         return this.actualPowDifficulty() >= this.targetDifficulty()
         
         /*
-        if (this._isValid == null) {
+        if (this._isValid === null) {
             this._isValid = this.leftZeroBitCount() >= this.targetDifficulty();
         }
         

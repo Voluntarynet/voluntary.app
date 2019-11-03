@@ -1078,9 +1078,11 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             //console.log(node.title() + " acceptsNode " + dropNode.title() + " " + acceptsNode)
             //console.log("parentNode " + node.parentNode().title())
             let result = acceptsNode && canReorder
-            if (result == false) {
+            /*
+            if (result === false) {
                 console.log("false")
             }
+            */
             return result
         }
         return false
@@ -1268,6 +1270,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             let json = null
             try {
                 json = JSON.parse(data)
+                
             } catch (error) {
 
             }

@@ -46,7 +46,7 @@ NodeView.newSubclassNamed("ShelfView").newSlots({
     // --- hide ----------------------
     
     isHidden: function() {
-        return this.parentView() == null
+        return this.parentView() === null
     },
 
     unhide: function() {

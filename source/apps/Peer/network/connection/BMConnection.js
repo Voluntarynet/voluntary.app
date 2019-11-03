@@ -22,7 +22,7 @@ BMNode.newSubclassNamed("BMConnection").newSlots({
         this.setTitle("Connection")
         this.setNodeMinWidth(200)
 
-        //this.setServers(NodeStore.shared().rootInstanceWithPidForProto("_servers", BMRServers))
+        //this.setServers(this.nodeStore().rootInstanceWithPidForProto("_servers", BMRServers))
         //this.addSubnode(this.servers())
         
         const con = navigator.connection || navigator.mozConnection || navigator.webkitConnection

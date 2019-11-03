@@ -24,23 +24,22 @@ BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
 		
         BMStorableNode.init.apply(this)
 		
-        //this.setPid("_network")
         this.setTitle("Network")
         this.setNodeMinWidth(250)
         
         this.setConnection(BMConnection.shared())
         this.addSubnode(this.connection())
 
-        this.setServers(NodeStore.shared().rootInstanceWithPidForProto("_servers", BMRServers))
+        this.setServers(this.nodeStore().rootInstanceWithPidForProto("_servers", BMRServers))
         this.addSubnode(this.servers())
 
-        this.setStunServers(NodeStore.shared().rootInstanceWithPidForProto("_stunServers", BMStunServers))
+        this.setStunServers(this.nodeStore().rootInstanceWithPidForProto("_stunServers", BMStunServers))
         this.addSubnode(this.stunServers())
 						
-        this.setMessages(NodeStore.shared().rootInstanceWithPidForProto("_messages", BMMessages))
+        this.setMessages(this.nodeStore().rootInstanceWithPidForProto("_messages", BMMessages))
         this.addSubnode(this.messages())
 		
-        this.setBlacklists(NodeStore.shared().rootInstanceWithPidForProto("_blacklists", BMBlacklists))
+        this.setBlacklists(this.nodeStore().rootInstanceWithPidForProto("_blacklists", BMBlacklists))
         this.addSubnode(this.blacklists())
         
         this.addStoredField(BMBooleanField.clone().setKey("isOpenRelay").setValueMethod("isOpenRelay").setValueIsEditable(true))
@@ -278,7 +277,7 @@ BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
     },
 	
     idsBloomFilter: function() {
-        if (this._idsBloomFilter == null) {
+        if (this._idsBloomFilter === null) {
             this.updateIdsBloomFilter()
         }
         return this._idsBloomFilter
@@ -293,7 +292,7 @@ BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
 	        return doesMatch
 	    }) 
         //console.log("hasIdentityMatchingBloomFilter match = ", match)
-        return match != null	        
+        return !Type.isNull(match)	        
     },
 
     shouldRelayForSenderPublicKey: function(aPublicKeyString) {

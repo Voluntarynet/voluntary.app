@@ -26,8 +26,8 @@
 		unpersisted instance if there is one.
 
 	Active objects:
-                
-        Whenever a BNStorableNode instance is created, it's init method tells the store of 
+    
+        Whenever a BNStorableNode instance is created, it's init method tells the (shared) store of 
         it's existence ( addActiveObject(aNode) ) and marks itself as dirty if it's not being unserialized.
         
         All dirty objects are transactionally persisted on the next event loop 
@@ -58,6 +58,8 @@
 
         Example use:
     
+            // storing
+
                 const store = NodeStore.clone().setFolderName("store")
             
             // need to define a root
@@ -68,7 +70,7 @@
             
             // when you modify any BMStorableNode instance's subnodes or stored data slots, 
             // or call scheduleSyncToStore() on it, it will be marked as needing to be persisted in the
-            // next event loop
+            // next event loop. Examples:
             
                 const test = BMNode.clone()
                 root.addSubnode(test) // this marks root as dirty
@@ -77,12 +79,19 @@
                         
             // for singleton objects, set their pid to a unique name, e.g.
             
-                servers.setPid("_servers")
+                SomeProto.rootInstanceForPid("_servers")
             
             // to force an immediate store
             
                 store.store()
             
+
+            // loading
+
+                const nodeStore = NodeStore.shared()
+                nodeStore.asyncOpen(() => { 
+                    // store is opened
+                })
             
     
     Garbage collection
@@ -98,8 +107,8 @@
 ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     name: "defaultStoreName",
 
-    dirtyObjects: null,
-    activeObjectsDict: null,
+    dirtyObjects: null, // objects that need to be persisted
+    activeObjectsDict: null, // objects unpersisted - tracking to ensure all refs point to same instance
 
     sdb: null,
     isReadOnly: false,
@@ -153,18 +162,20 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         this.sdb().setName(this.name())
 
         this.sdb().asyncOpen(() => {
-            this.didOpen()
+            this.onOpen()
             //this.clear()
             if (callback) {
                 callback()
             }
             this._nodeStoreDidOpenNote.post()
         })
+        return this
     },
 
-    didOpen: function () {
+    onOpen: function () {
         this.updateLastSyncTime()
         this.collect()
+        return this
     },
 
     shared: function () {
@@ -388,7 +399,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
     nodeDictAtPid: function (pid) {
         const v = this.sdb().at(pid)
-        if (v == null) {
+        if (Type.isNullOrUndefined(v)) {
             return null
         }
         return JSON.parse(v)
@@ -398,7 +409,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         return this.sdb().hasKey(pid)
     },
 
-    objectForPid: function (pid) {
+    objectForPid: function (pid) { 
         if (pid === "null") {
             return null
         }
@@ -809,7 +820,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
             const obj = active[pid]
             const match = (!(obj === aNode)) && obj.nodeReferencesPid(nodePid)
             return match
-        }) != null
+        }) !== null
 
         if (!result) {
             //console.log(">>>>>> " + aNode.pid() + " is unreferenced - not storing!")

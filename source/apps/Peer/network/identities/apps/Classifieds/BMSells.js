@@ -15,7 +15,6 @@ BMStorableNode.newSubclassNamed("BMSells").newSlots({
 		
         //this.setTitle("Sells")
         this.setTitle("My Sales")
-        //this.setPid("_sells")
         //this.setActions(["add"])
         this.setSubnodeProto(BMSell)
         this.setNoteIsSubnodeCount(true)

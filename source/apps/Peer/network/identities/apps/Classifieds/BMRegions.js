@@ -10,7 +10,6 @@ BMRegion.newSubclassNamed("BMRegions").newSlots({
 }).setSlots({
     init: function () {
         BMRegion.init.apply(this)
-        //this.setPid("_market")
         //this.setActions(["add"])
         //this.setSubnodeProto(BMPost)
         

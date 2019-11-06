@@ -41,7 +41,7 @@ const Base64 = (function () {
     };
 })();
 
-Object.shallowCopyTo({
+Object.assign(Number.prototype, {
 
     copy: function() {
         return this
@@ -103,4 +103,4 @@ Object.shallowCopyTo({
         return Base64.toInt(base64String)
     },
     
-}, Number.prototype);
+});

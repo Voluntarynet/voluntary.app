@@ -44,7 +44,7 @@ Error.callingScriptURL = function() {
 }
 
 
-Object.shallowCopyTo({
+Object.assign(Error.prototype, {
 
     // --- assert ---
 
@@ -133,7 +133,7 @@ Object.shallowCopyTo({
 
 
     
-}, Error.prototype);
+});
 
 // --- helper functions ---
 

@@ -30,16 +30,16 @@ BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
         this.setConnection(BMConnection.shared())
         this.addSubnode(this.connection())
 
-        this.setServers(this.nodeStore().rootInstanceWithPidForProto("_servers", BMRServers))
+        this.setServers(this.defaultStore().rootInstanceWithPidForProto("_servers", BMRServers))
         this.addSubnode(this.servers())
 
-        this.setStunServers(this.nodeStore().rootInstanceWithPidForProto("_stunServers", BMStunServers))
+        this.setStunServers(this.defaultStore().rootInstanceWithPidForProto("_stunServers", BMStunServers))
         this.addSubnode(this.stunServers())
 						
-        this.setMessages(this.nodeStore().rootInstanceWithPidForProto("_messages", BMMessages))
+        this.setMessages(this.defaultStore().rootInstanceWithPidForProto("_messages", BMMessages))
         this.addSubnode(this.messages())
 		
-        this.setBlacklists(this.nodeStore().rootInstanceWithPidForProto("_blacklists", BMBlacklists))
+        this.setBlacklists(this.defaultStore().rootInstanceWithPidForProto("_blacklists", BMBlacklists))
         this.addSubnode(this.blacklists())
         
         this.addStoredField(BMBooleanField.clone().setKey("isOpenRelay").setValueMethod("isOpenRelay").setValueIsEditable(true))

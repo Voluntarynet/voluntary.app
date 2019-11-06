@@ -8,7 +8,7 @@
 
 */
 
-Object.shallowCopyTo({
+Object.assign(String.prototype, {
     
     shallowCopy: function() {
         return this
@@ -325,7 +325,7 @@ Object.shallowCopyTo({
             s4() + "-" + s4() + s4() + s4();
     },
 
-}, String.prototype);
+});
 
 
 

@@ -476,13 +476,13 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
 
 
     on_d_KeyDown: function(event) {
-        console.log(this.typeId() + " on_d_KeyDown ", event._id)
+        //console.log(this.typeId() + " on_d_KeyDown ", event._id)
         this.setIsRegisteredForDrag(true)
         return false
     },
 
     on_d_KeyUp: function(event) {
-        console.log(this.typeId() + " on_d_KeyUp ", event._id)
+        //console.log(this.typeId() + " on_d_KeyUp ", event._id)
         this.setIsRegisteredForDrag(false)
         return false
     },

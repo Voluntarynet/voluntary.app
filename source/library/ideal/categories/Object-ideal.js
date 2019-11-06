@@ -17,15 +17,15 @@ Object.clone = function (obj) {
     return instance
 }
 
+/*
 Object.shallowCopyTo = function (fromObj, toObj) {
-    Object.eachSlot(fromObj, function (name) {
-        toObj[name] = fromObj[name];
-    });
+    Object.assign(toObj, fromObj)
     return toObj;
 }
+*/
 
 Object.shallowCopy = function (obj) {
-    return Object.shallowCopyTo(obj, {});
+    return Object.assign({}, obj);
 }
 
 Object.eachSlot = function (obj, fn) {

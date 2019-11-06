@@ -10,7 +10,7 @@
 BMStorableNode.newSubclassNamed("BMApplet").newSlots({
 }).setSlots({
     sharedStoredInstance: function() {
-        return this.nodeStore().rootInstanceWithPidForProto(this.type(), this)
+        return this.defaultStore().rootInstanceWithPidForProto(this.type(), this)
     },
     
     init: function () {

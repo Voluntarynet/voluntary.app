@@ -65,7 +65,7 @@ App.newSubclassNamed("PeerApp").newSlots({
     setupModel: function () {
 
         // identities
-        this.setLocalIdentities(this.nodeStore().rootInstanceWithPidForProto("_localIdentities", BMLocalIdentities))
+        this.setLocalIdentities(this.defaultStore().rootInstanceWithPidForProto("_localIdentities", BMLocalIdentities))
         this.addSubnode(this.localIdentities())
 
         // about 

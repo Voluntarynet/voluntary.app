@@ -19,23 +19,23 @@ BMNode.newSubclassNamed("BMDataStore").newSlots({
     },
 
     subtitle: function () {
-        return this.nodeStore().shortStatsString()
+        return this.defaultStore().shortStatsString()
     },
 
-    nodeStore: function () {
+    defaultStore: function () {
         return NodeStore.shared()
     },
 
     storeHasChanged: function() {
-        return this.nodeStore().lastSyncTime() !== this.lastSyncTime()
+        return this.defaultStore().lastSyncTime() !== this.lastSyncTime()
     },
 
     prepareToSyncToView: function () {
         //console.log("this.storeHasChanged() = ", this.storeHasChanged())
 
         if (this.subnodes().length === 0 || this.storeHasChanged()) {
-            this.nodeStore().collect()
-            this.setLastSyncTime(this.nodeStore().lastSyncTime())
+            this.defaultStore().collect()
+            this.setLastSyncTime(this.defaultStore().lastSyncTime())
             this.refreshSubnodes()
         }
     },
@@ -43,9 +43,9 @@ BMNode.newSubclassNamed("BMDataStore").newSlots({
     refreshSubnodes: function () {
         //console.log(this.typeId() + " refreshSubnodes")
         this.removeAllSubnodes()
-        this.nodeStore().sdb().keys().sort().forEach((key) => {
+        this.defaultStore().sdb().keys().sort().forEach((key) => {
             const subnode = BMDataStoreRecord.clone().setTitle(key)
-            const size = this.nodeStore().sdb().at(key).length
+            const size = this.defaultStore().sdb().at(key).length
             const sizeDescription = ByteFormatter.clone().setValue(size).formattedValue()
             subnode.setSubtitle(sizeDescription)
             this.addRecord(subnode)

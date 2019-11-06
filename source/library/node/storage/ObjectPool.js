@@ -33,12 +33,15 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
     rootObject: null,
     pidToDict: null,
     pidToObject: null,
+    dirtyObjectsDict: null,
+    isReadOnly: true,
 }).setSlots({
     init: function () {
         ideal.Proto.init.apply(this)
         this.setRoot(null)
         this.setPidToDict({})
         this.setPidToObject({})
+        this.setDirtyObjectsDict({})
     },
 
     toJson: function() {
@@ -56,9 +59,47 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         return this
     },
 
+    // dirty objects
+
+    addDirtyObject: function(anObject) {
+        this.dirtyObjectsDict()[anObject.pid()] = anObject
+        return this
+    },
+
+    // get/set nodeDict for pid
+
+    setNodeDictAtPid: function(dict, pid) {
+        
+        return this
+    },
+
+
     nodeDictAtPid: function(pid) {
         const nodeDict = this.pidToDict()[pid]
         return nodeDict
+    },
+
+    hasObjectForPid: function(pid) {
+        return pid in this.pidToObject()
+    },
+
+    // objects and refs
+
+    refForValue: function(v) {
+        if (Type.isNumber(v) || Type.isString(v) || Type.isNull(v)) {
+            return v
+        }
+
+        if (Type.isFunction(v)) {
+            throw new Error("unable to store functions")
+        }
+
+        if (v.type && Type.isFunction(v.type)) { // TODO: check if BMNode subclass instead
+            this.addActiveObject(v)
+            return { "_pid": v.pid() }
+        }
+
+        return null
     },
 
     objectForPid: function(pid) {
@@ -79,11 +120,16 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         this.pidToObject()[pid] = object
 
         obj.justSetPid(pid) // calls addActiveObject()?
+        this.addActiveObject(obj)
         obj.setExistsInStore(true)
         obj.setNodeDict(nodeDict)
         obj.scheduleLoadFinalize()
 
         return obj
+    },
+
+    addActiveObject: function(obj) {
+        return this
     },
 
 })

@@ -571,10 +571,32 @@ Proto.setSlots({
         const setterName = this.setterNameForSlot(slotName)
         return this[setterName].apply(this, [aValue])
     },
+
+    // encapsulation helpers
+
+    frozenVersion: function() {
+        const obj = Object.clone(this)
+        Object.freeze(obj)
+        return obj
+    },
+
+    sealedVersion: function() {
+        const obj = Object.clone(this)
+        Object.seal(obj)
+        return obj
+    },
+
+    lockedProxy: function() {
+        return new Proxy(this, {
+            set: function(target, propertyName, newValue) {
+                throw new Error("attempt to set property " + propertyName + " on locked proxy object")
+            },
+        })
+    },
+
 });
 
 Proto.newSlot("isDebugging", false);
-
 Proto.newSlot("type", "ideal.Proto");
 
 

@@ -9,6 +9,7 @@ ResourceLoader.pushRelativePaths([
     "StackTrace.js",
     "formatters/_imports.js",
     //"FilePath.js",
+    "ObservableProxy.js",
 ]);
 
 

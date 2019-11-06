@@ -8,7 +8,7 @@
 
 */
 
-Object.shallowCopyTo({
+Object.assign(Date.prototype, {
     monthNames: function() {
         return [ "January", "February", "March", "April", 
             "May", "June", "July", "August", 
@@ -64,7 +64,7 @@ Object.shallowCopyTo({
         return new Date(date.getTime())
     },
 
-}, Date.prototype);
+});
 
 
 

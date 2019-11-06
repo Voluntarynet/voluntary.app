@@ -9,7 +9,7 @@
 */
 
 
-Object.shallowCopyTo({
+Object.assign(Array.prototype, {
 
     // --- read operations ---
 
@@ -846,7 +846,7 @@ Object.shallowCopyTo({
         return true;
     },
     
-}, Array.prototype);
+});
 
 /*
 // Hide method from for-in loops

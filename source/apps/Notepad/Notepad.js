@@ -47,7 +47,7 @@ App.newSubclassNamed("Notepad").newSlots({
     setupModel: function () {
 	
         // flex
-        const myLists = this.nodeStore().rootInstanceWithPidForProto("_menuNode", BMMenuNode);
+        const myLists = this.defaultStore().rootInstanceWithPidForProto("_menuNode", BMMenuNode);
         myLists.setTitle("Notepad")
         this.addSubnode(myLists)
 

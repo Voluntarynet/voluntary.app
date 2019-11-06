@@ -200,27 +200,15 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     // ----------------------------------------------------
 
     addDirtyObject: function (obj) {
-        // dirty objects list won't be huge, so a list is ok
-
         // don't use pid for these keys so we can
         // use pid to see if the obj gets referrenced when walked from a stored node
+        // this way we avoid storing objects not referenced from the stored objects tree
 
-        const objId = obj.typeId()
-        if (!(objId in this._dirtyObjects)) {
-
-            /*
-            if (obj.hasPid()) {
-                console.warn("addDirtyObject: " + obj.pid())
-            } else {
-                console.warn("addDirtyObject: " + obj.typeId())
-            }
-            */
-
-
-            //console.log("addDirtyObject(" + obj.pid() + ")")
-            // this.debugLog("addDirtyObject(" + obj.pid() + ")")
-            if (!this._dirtyObjects[objId]) {
-                this._dirtyObjects[objId] = obj
+        const dirt = this.dirtyObjects()
+        const id = obj.typeId()
+        if (!dirt.hasOwnProperty(id)) {
+            if (!dirt[id]) {
+                dirt[id] = obj
                 this.scheduleStore()
             }
         }
@@ -261,8 +249,8 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         }
 
         //console.warn("   isSyncingTargetAndMethod = ", SyncScheduler.isSyncingTargetAndMethod(this, "storeDirtyObjects"))
-
         //console.log(" --- begin storeDirtyObjects --- ")
+
         if (!this.hasDirtyObjects()) {
             console.log("no dirty objects to store Object.keys(this._dirtyObjects) = ", Reflect.ownKeys(this._dirtyObjects))
             return this
@@ -306,7 +294,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
                 justStoredPids[pid] = obj
                 //}
 
-                thisLoopStoreCount++
+                thisLoopStoreCount ++
             })
 
             totalStoreCount += thisLoopStoreCount
@@ -346,19 +334,17 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         }
     },
 
-    storeObject: function (obj) {
-        //console.log("store obj")
-        this.debugLog("storeObject(" + obj.pid() + ")")
+    setNodeDictAtPid: function(aDict, pid) { // public API
         this.assertIsWritable()
 
-        const aDict = obj.nodeDict()
-
+        /*
         if (obj.willStore) {
             obj.willStore(aDict)
         }
+        */
 
         const serializedString = JSON.stringify(aDict)
-        this.sdb().atPut(obj.pid(), serializedString)
+        this.sdb().atPut(pid, serializedString)
 
         /*
         this happens automatically: 
@@ -366,10 +352,19 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         they are added to dirty object list when pid is assigned
         */
 
+        /*
         if (obj.didStore) {
             obj.didStore(aDict)
         }
+        */
+    },
 
+    storeObject: function (obj) { // private API
+        //console.log("store obj")
+        //this.debugLog("storeObject(" + obj.pid() + ")")
+        //obj.writeToStore(this)
+        const aDict = obj.nodeDict()
+        this.setNodeDictAtPid(aDict, obj.pid())
         return this
     },
 
@@ -377,7 +372,6 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     // ----------------------------------------------------
     // reading
     // ----------------------------------------------------
-
 
     loadObject: function (obj) {
         try {
@@ -397,7 +391,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         return false
     },
 
-    nodeDictAtPid: function (pid) {
+    nodeDictAtPid: function (pid) { // public API
         const v = this.sdb().at(pid)
         if (Type.isNullOrUndefined(v)) {
             return null
@@ -452,8 +446,9 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         }
 
         // need to set pid before dict to handle circular refs
-        obj.justSetPid(pid) // calls addActiveObject()
-        obj.setExistsInStore(true)
+        obj.justSetPid(pid)
+        this.addActiveObject(obj)
+
         //this.debugLog(" nodeDict = ", nodeDict)
         obj.setNodeDict(nodeDict)
         obj.scheduleLoadFinalize()
@@ -467,21 +462,31 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     // active objects (the read cache)
     // ----------------------------------------------------
 
-    // active objects - one's we've read or written to disk
+    // active objects - ones we've read or written to disk
     // we use a dictionary to track the pids and a WeakMap
     // to connect each pid to a object
 
     addActiveObject: function (obj) {
+        /*
+        if (!obj.pid) {
+            console.log("missing pid!")
+        }
+        */
+        const pid = obj.pid()
         //this.debugLog("addActiveObject(" + obj.pid() + ")")
-        this.activeObjectsDict()[obj.pid()] = obj
+        assert(!Type.isNullOrUndefined(pid))
+        this.activeObjectsDict()[pid] = obj
         return this
     },
 
     removeActiveObject: function (obj) {
-        delete this.activeObjectsDict()[obj.pid()]
+        const pid = obj.pid()
+        assert(!Type.isNullOrUndefined(pid))
+        delete this.activeObjectsDict()[pid]
         return this
     },
 
+    /*
     writeAllActiveObjects: function () {
         const activeObjects = Object.slotValues(this.activeObjectsDict())
         activeObjects.forEach((obj) => {
@@ -489,6 +494,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         })
         return this
     },
+    */
 
     // references
     //
@@ -540,10 +546,12 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         const k = this.objRefKey()
         const ref = {}
 
-        if (obj === null && Type.isObject(obj)) { // TODO: is this right?
+        if (Type.isNull(obj)) { // TODO: is this right?
             ref[k] = "null"
-        } else {
+        } else if (Type.isObject(obj)) {
             ref[k] = obj.pid()
+        } else {
+            throw new Error("can't get refForObject(", obj, ")")
         }
 
         return ref
@@ -573,6 +581,9 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     },
 
     pidRefsFromPid: function (pid) {
+        // TODO: change to directly inspect?
+        // direct inspections might help for cases where proto is removed?
+
         const nodeDict = this.nodeDictAtPid(pid)
         if (!nodeDict) {
             return []

@@ -8,7 +8,7 @@
 
 */
 
-Object.shallowCopyTo({
+Object.assign(Set.prototype, {
 
     isSuperset: function(subset) {
         for (let v of subset) {
@@ -70,4 +70,4 @@ Object.shallowCopyTo({
     setA.difference(setC); // => Set [1, 2]
     */
     
-}, Set.prototype);
+});

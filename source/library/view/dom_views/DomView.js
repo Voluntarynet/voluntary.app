@@ -2654,10 +2654,10 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
     onKeyUp: function (event) {
         let shouldPropogate = true
-        console.log(this.typeId() + " onKeyUp ", event._id)
+        //console.log(this.typeId() + " onKeyUp ", event._id)
 
         const methodName = Keyboard.shared().upMethodNameForEvent(event)
-        console.log("methodName: ", methodName)
+        //console.log("methodName: ", methodName)
         this.invokeMethodNameForEvent(methodName, event)
 
         this.didEdit()

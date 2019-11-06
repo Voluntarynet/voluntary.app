@@ -1105,5 +1105,33 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         return names.appendItems(["subnodes"])
     },
 
+    // storage
+
+    writeToStore: function(aStore) {
+        const dict = {}
+        dict.type = this.type()
+
+        // store properties as entries
+
+        const entries = Object.getOwnPropertyNames(this).map((k) => {
+            const v = this[k]  
+            const entry = [k, aStore.refForValue(v)]
+            return entry
+        })
+
+        dict.entries = entries
+
+        const nodeDict = this.nodeDict(aStore)        
+
+        // store subnodes pids
+
+        return this
+    },
+
+    readFromStore: function(aStore) {
+        const nodeDict = aStore.nodeDictForPid(this.pid())
+        this.setNodeDict(nodeDict, aStore)
+        return this
+    },
 
 })

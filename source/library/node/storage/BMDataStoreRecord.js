@@ -28,7 +28,7 @@ BMFieldSetNode.newSubclassNamed("BMDataStoreRecord").newSlots({
     },
 
     value: function () {
-        return this.nodeStore().sdb().at(this.valuePid())
+        return this.defaultStore().sdb().at(this.valuePid())
     },
 
     dictString: function () {
@@ -37,8 +37,8 @@ BMFieldSetNode.newSubclassNamed("BMDataStoreRecord").newSlots({
 
     delete: function () {
         BMFieldSetNode.delete.apply(this)
-        //this.nodeStore().justRemoveObject(this.value())
-        this.nodeStore().justRemovePid(this.valuePid())
+        //this.defaultStore().justRemoveObject(this.value())
+        this.defaultStore().justRemovePid(this.valuePid())
         return this
     },
 })

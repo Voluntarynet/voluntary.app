@@ -67,7 +67,24 @@ window.Type = {
             "Float64Array",
             "BigInt64Array",
             "BigUint64Array",
+            //"TypedArray",
             "Object", // put object last so other types have preference
+        ]
+    },
+
+    typedArrayTypeNames: function() {
+        return [
+            "Int8Array",
+            "Uint8Array",
+            "Uint8ClampedArray",
+            "Int16Array",
+            "Uint16Array",
+            "Int32Array",
+            "Uint32Array",
+            "Float32Array",
+            "Float64Array",
+            "BigInt64Array",
+            "BigUint64Array",
         ]
     },
 
@@ -181,6 +198,12 @@ window.Type = {
     isBigUint64Array: function(v) {
         return Type.valueHasConstructor(v, BigUint64Array);
     },
+
+    
+    isTypedArray: function(v) {
+        return Type.valueHasConstructor(v, TypedArray);
+    },
+    
 
     // type name
 

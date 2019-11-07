@@ -116,7 +116,7 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
 
         }
 
-        if ( Type.isBoolean(v) || Type.isNumber(v) || Type.isString(v) || Type.isNull(v) || Type.isSymbol(v) ) {
+        if (Type.isLiteral(v)) {
             return v
         }
 
@@ -288,6 +288,24 @@ Object.prototype.typeId = function() {
 
 // ------------------
 
+Type.typedArrayTypeNames().forEach((name) => {
+    window[name].prototype.recordForStore = function(aStore) { // should only be called by Store
+        return {
+            type: Type.typeName(this), 
+            length: this.length,
+            values: this.values() // this is an iterator
+        }
+    }
+    
+    window[name].instanceFromRecordInStore = function(aRecord, aStore) { // should only be called by Store
+        const values = aRecord.values
+        const obj = new this(values)
+        return obj
+    }
+})
+
+// ------------------
+
 Date.prototype.recordForStore = function(aStore) { // should only be called by Store
     return {
         type: "Date", 
@@ -344,6 +362,7 @@ Object.instanceFromRecordInStore = function(aRecord, aStore) { // should only be
 }
 
 /*
+TypedArray
 Int8Array
 Uint8Array
 Uint8ClampedArray
@@ -361,13 +380,20 @@ BigUint64Array
 
 const test = function () {
     const simpleStore = SimpleStore
-    const a = [1, 2, [3, null], { foo: "bar", b: true }, new Date()] //new Float64Array(6),
 
+    const fa = new Float64Array(3)
+    fa[0] = 1.2
+    fa[1] = 3.4
+    fa[1] = 5.6
+
+    const a = [1, 2, [3, null], { foo: "bar", b: true }, new Date(), fa]
+
+    
     const aSerialized = JSON.stringify(a, null, 2)
     console.log("aSerialized: " + aSerialized + "\n")
     SimpleStore.storeObject(a)
 
-    //console.log(simpleStore.asJson())
+    console.log(simpleStore.asJson())
     console.log("-----------------")
 
     const b = SimpleStore.objectForPid(a.puuid())

@@ -194,6 +194,8 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
                     console.log(this.typeId() + " sending ", note.name() + " to obs " + obs.type())
                 }
             
+                obs.sendNotification(note)       
+                /*
                 try {
                     obs.sendNotification(note)       
                 } catch(error) {
@@ -207,6 +209,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
                     // without causing an inconsistent state by not completing the other notifications?
                     throw error
                 }
+                */
             }
         })        
         

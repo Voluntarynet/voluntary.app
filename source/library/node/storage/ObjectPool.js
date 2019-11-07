@@ -12,7 +12,7 @@
 
             {
                 rootPid: "rootPid",
-                pidToDict: {
+                puuidToDict: {
                     "objPid" : <nodeDict>
                 }
 
@@ -27,7 +27,7 @@
             const rootNode = ObjectPool.clone().fromJson(poolJson).root()
 
 
-    Some values can be directly stored in JSON such as:
+    Literal values can be directly stored in JSON such as:
 
             String
             Number
@@ -46,28 +46,17 @@
 
             BMNode
 
-    BMNode needs to be referenced by a pid and the Store needs to know it needs to be written if not already present.
+    BMNode needs to be referenced by a puuid and the Store needs to know it needs to be written if not already present.
 
-    If an entry value is not a {}, then we treat it as the value. 
-    If it is a {}. then we decode it.
 
-    Entry formats:
-
-        ["key", rawValue]
-        ["key", "Type", encodedValue]
-
-    Specific examples:
-
-        ["key", "BMStorableNode", "<pid>"]
-        ["key", "Array", [x, y, z]]
 
 */
 
 
 ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
     rootObject: null,
-    pidToDict: null,
-    pidToObject: null,
+    puuidToDict: null,
+    puuidToObject: null,
     dirtyObjectsDict: null,
     isReadOnly: true,
 }).setSlots({
@@ -82,13 +71,13 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
     toJson: function() {
         assert(this.root())
         const json = {}
-        json.rootPid = this.root().pid()
+        json.rootPid = this.root().puuid()
         this.root().storeToPool(this)
         return json
     }, 
 
     fromJson: function(json) {
-        this.setPidToDict(json.pidToDict)
+        this.setPidToDict(json.puuidToDict)
         const obj = this.objectForPid(json.rootPid)
         this.setRootObject(obj)
         return this
@@ -97,33 +86,32 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
     // dirty objects
 
     addDirtyObject: function(anObject) {
-        this.dirtyObjectsDict()[anObject.pid()] = anObject
+        this.dirtyObjectsDict()[anObject.puuid()] = anObject
         return this
     },
 
-    // get/set nodeDict for pid
+    // get/set nodeDict for puuid
 
-    setNodeDictAtPid: function(dict, pid) {
+    setNodeDictAtPid: function(dict, puuid) {
         
         return this
     },
 
-
-    nodeDictAtPid: function(pid) {
-        const nodeDict = this.pidToDict()[pid]
+    nodeDictAtPid: function(puuid) {
+        const nodeDict = this.puuidToDict()[puuid]
         return nodeDict
     },
 
-    hasObjectForPid: function(pid) {
-        return pid in this.pidToObject()
+    hasObjectForPid: function(puuid) {
+        return puuid in this.puuidToObject()
     },
 
     // objects and refs
 
     refForValue: function(v) {
         if(v.toJsonValueForStore(this)) {
-            // nodes return pid refs
-            // { type: "ObjectRef", pid: "xxx" },
+            // nodes return puuid refs
+            // { type: "ObjectRef", puuid: "xxx" },
             // { type: }
 
         }
@@ -142,19 +130,19 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
 
         if (Type.isObject(v) && v.type && Type.isFunction(v.type)) { // TODO: check if BMNode subclass instead
             this.addActiveObject(v)
-            return { "_pid_": v.pid() }
+            return { "_puuid_": v.puuid() }
         }
 
         throw new Error("unable to store this data type")
     },
 
-    objectForPid: function(pid) {
-        const cachedbject = this.pidToObject()[pid]
+    objectForPid: function(puuid) {
+        const cachedbject = this.puuidToObject()[puuid]
         if (cachedbject) {
             return cachedbject
         }
 
-        const nodeDict = this.nodeDictAtPid(pid)
+        const nodeDict = this.nodeDictAtPid(puuid)
         const type = nodeDict.type
         const proto = window[type]
 
@@ -163,9 +151,9 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         }
 
         const obj = proto.clone()
-        this.pidToObject()[pid] = object
+        this.puuidToObject()[puuid] = object
 
-        obj.justSetPid(pid) // calls addActiveObject()?
+        obj.justSetPid(puuid) // calls addActiveObject()?
         this.addActiveObject(obj)
         obj.setExistsInStore(true)
         obj.setNodeDict(nodeDict)
@@ -193,11 +181,11 @@ const SimpleStore = {
     },
 
     addActiveObject: function(anObject) {
-        const pid = anObject.pid()
-        if (!this._activeObjects[pid]) {
+        const puuid = anObject.puuid()
+        if (!this._activeObjects[puuid]) {
             this._storeQueue.push(anObject)
         }
-        this._activeObjects[anObject.pid()] = anObject
+        this._activeObjects[anObject.puuid()] = anObject
     },
 
     processStoreQueue: function() {
@@ -211,57 +199,59 @@ const SimpleStore = {
         this.storeObject(obj)
     },
 
-    recordForPid: function(pid) {
-        return this._recordsDict[pid]
+    recordForPid: function(puuid) {
+        return this._recordsDict[puuid]
     },
 
     objectForRecord: function(aRecord) {
-        return window[aRecord.type].instanceFromRecordInStore(aRecord, this)
+        const aClass = window[aRecord.type]
+        const obj = aClass.instanceFromRecordInStore(aRecord, this)
+        return obj
     },
 
-    objectForPid: function(pid) {
+    objectForPid: function(puuid) {
         /*
-        const obj = this._activeObjects[pid]
+        const obj = this._activeObjects[puuid]
         if (obj) {
             return obj
         }
         */
-        return this.objectForRecord(this.recordForPid(pid))
+        return this.objectForRecord(this.recordForPid(puuid))
     },
 
     unrefValue: function(v) {
         if (Type.isLiteral(v)) {
             return v
         }
-        const pid = v.__pid__
-        assert(pid)
-        return this.objectForPid(pid)
+        const puuid = v["*"]
+        assert(puuid)
+        return this.objectForPid(puuid)
     },
 
     refValue: function(v) {
         if (Type.isLiteral(v)) {
             return v
         }
-        const pid = v.pid()
-        assert(pid)
+        const puuid = v.puuid()
+        assert(puuid)
         this.addActiveObject(v)
         return { 
-            type: Type.description(v), // what about subclasses?
-            __pid__: v.pid()
+            // type: Type.typeName(v), // what about subclasses?
+            "*": v.puuid()
         }
     },
 
     storeObject: function(obj) {
-        const pid = obj.pid()
-        assert(pid)
-        this._recordsDict[pid] = obj.recordForStore(this)
+        const puuid = obj.puuid()
+        assert(puuid)
+        this._recordsDict[puuid] = obj.recordForStore(this)
         this.processStoreQueue()
         return this
     },
 
 }
 
-// --- object pid ---
+// --- object puuid ---
 
 Object.uuid = function() {
     const uuid_a = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
@@ -269,10 +259,10 @@ Object.uuid = function() {
     return uuid_a + uuid_b
 }
 
-Object._pidWeakMap = new WeakMap();
+Object._puuidWeakMap = new WeakMap();
 
-Object.prototype.pid = function() {
-    const map = Object._pidWeakMap
+Object.prototype.puuid = function() {
+    const map = Object._puuidWeakMap
 
     if (!map.has(this)) {
         this.setPid(Object.uuid())
@@ -281,23 +271,47 @@ Object.prototype.pid = function() {
     return map.get(this);
 }
 
-Object.prototype.setPid = function(pid) {
-    Object._pidWeakMap.set(this, pid);
+Object.prototype.setPid = function(puuid) {
+    Object._puuidWeakMap.set(this, puuid);
     return this
+}
+
+/*
+Object.prototype.typeId = function() {
+    const puuid = this.puuid()
+    if (Type.isFunction(this.type)) {
+        return this.type() + puuid
+    }
+    return Type.typeName(this) + "_" + puuid
+}
+*/
+
+// ------------------
+
+Date.prototype.recordForStore = function(aStore) { // should only be called by Store
+    return {
+        type: "Date", 
+        v: this.toJSON()
+    }
+}
+
+Date.instanceFromRecordInStore = function(aRecord, aStore) { // should only be called by Store
+    assert(aRecord.type === "Date")
+    return new Date(new Date(aRecord.v))
 }
 
 // ------------------
 
 Array.prototype.recordForStore = function(aStore) { // should only be called by Store
     return {
-        type: Type.description(this), 
-        value: this.map(v => aStore.refValue(v))
+        type: Type.typeName(this), 
+        v: this.map(v => aStore.refValue(v))
     }
 }
 
 Array.instanceFromRecordInStore = function(aRecord, aStore) { // should only be called by Store
     assert(aRecord.type === "Array")
-    return aRecord.value.map(v => aStore.unrefValue(v))
+    return aRecord.v.map(v => aStore.unrefValue(v))
 }
 
 // ------------------
@@ -329,24 +343,39 @@ Object.instanceFromRecordInStore = function(aRecord, aStore) { // should only be
     return obj
 }
 
-// -------------------
+/*
+Int8Array
+Uint8Array
+Uint8ClampedArray
+Int16Array
+Uint16Array
+Int32Array
+Uint32Array
+Float32Array
+Float64Array
+BigInt64Array
+BigUint64Array
+*/
 
+// -------------------
 
 const test = function () {
     const simpleStore = SimpleStore
-    const a = [1, 2, [3, null], { foo: "bar"}]
+    const a = [1, 2, [3, null], { foo: "bar", b: true }, new Date()] //new Float64Array(6),
 
     const aSerialized = JSON.stringify(a, null, 2)
     console.log("aSerialized: " + aSerialized + "\n")
     SimpleStore.storeObject(a)
-    console.log(simpleStore.asJson())
-    const b = SimpleStore.objectForPid(a.pid())
+
+    //console.log(simpleStore.asJson())
+    console.log("-----------------")
+
+    const b = SimpleStore.objectForPid(a.puuid())
     const bSerialized = JSON.stringify(b, null, 2)
     console.log("bSerialized: " + bSerialized + "\n")
     assert(aSerialized === bSerialized)
     console.log("test passed")
 }
-
 
 test()
 

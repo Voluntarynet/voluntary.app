@@ -7,6 +7,20 @@
     A class for wrapping a reference in a proxy which can
     send proxy trap notifications to observers.
 
+    WARNING:
+
+    Proxies are ~10x slower that direct getter/setters or wrappers around them,
+    so they may not be appropraite for high frequency use objects.
+
+    MOTIVATION:
+
+    The motivation for this class was as an access tripwires for lazy loading of
+    persistent objects.
+
+    POTENITAIL USES:
+
+    https://exploringjs.com/es6/ch_proxies.html
+
     Example:
 
         const myObject = ["a", "b", "c"]
@@ -17,15 +31,14 @@
 
             proxyRef.length
 
-        it will trigger the "get" trap and send an onGetObserved message to myObserver.
+        it will trigger the "get" trap and send an "onGetObserved" message to myObserver.
         
 */
-
 
 ideal.Proto.newSubclassNamed("ObservableProxyHandler").newSlots({        
     observers: null,
     target: null,
-    recovable: null,
+    revocable: null,
     trapNames: [
         "apply",
         "construct",
@@ -65,23 +78,18 @@ ideal.Proto.newSubclassNamed("ObservableProxyHandler").newSlots({
     },
 
     revoke: function() {
+        this.postForTrap("revoke", null)
         this._revocable.revoke()
-        //this.postForTrap("revoke", propertyName)
         return this
     },
 
     setupNoteNames: function() {
         this._noteNamesDict = {}
         this.trapNames().map((name) => {
-            //examples: "onObservedGet", "onObservedSet"
+            // examples: "onObservedGet", "onObservedSet"
             const noteName = "onObserved" + name.capitalized()
             this._noteNamesDict[name] = noteName
         })
-        return this
-    },
-
-    setTarget: function(anObject) {
-        anObject._observableProxyHandler = this
         return this
     },
 
@@ -109,10 +117,30 @@ ideal.Proto.newSubclassNamed("ObservableProxyHandler").newSlots({
         return this
     },
 
-    // special methods
+    // --- proxy trap methods ---
     
-    get: function(target, propertyName) {
+    /*
+    apply: function(target) {
 
+    },
+
+    construct: function(target) {
+
+    },
+
+    */
+
+    defineProperty: function(target, propertyName, descriptor) {
+        this.postForTrap("defineProperty", propertyName)
+        return Object.defineProperty(target, propertyName, descriptor)  
+    },
+
+    deleteProperty: function(target, propertyName) {
+        this.postForTrap("deleteProperty", propertyName)
+        return delete target[propertyName];
+    },
+
+    get: function(target, propertyName) {
         if (propertyName === "observable") {
             const self = this
             return () => { return self }
@@ -132,9 +160,19 @@ ideal.Proto.newSubclassNamed("ObservableProxyHandler").newSlots({
         return Reflect.get(target, propertyName, target);
     },
 
-    set: function(target, propertyName, newValue) {
-        this.postForTrap("set", propertyName)
-        return Reflect.set(target, propertyName, newValue);
+    getOwnPropertyDescriptor: function(target, propertyName) {
+        this.postForTrap("getOwnPropertyDescriptor", propertyName)
+        return Object.getOwnPropertyDescriptor(target, propertyName)
+    },
+
+    getPrototypeOf: function(target) {
+        this.postForTrap("getPrototypeOf", null)
+        return Object.getPrototypeOf(target)
+    },
+
+    isExtensible: function(target, propertyName) {
+        this.postForTrap("isExtensible", propertyName)
+        return Reflect.isExtensible(target)
     },
 
     has: function(target, propertyName) {
@@ -147,41 +185,40 @@ ideal.Proto.newSubclassNamed("ObservableProxyHandler").newSlots({
         return Reflect.ownKeys(target)
     },
 
-    /*
-    setPrototypeOf: function(target) {
-        return Reflect.setPrototypeOf(target) ?
-    },
-    */
-
-    deleteProperty: function(target, propertyName) {
-        this.postForTrap("deleteProperty", propertyName)
-        return delete target[propertyName];
-    },
-
-    getOwnPropertyDescriptor: function(target, propertyName) {
-        this.postForTrap("getOwnPropertyDescriptor", propertyName)
-        return Object.getOwnPropertyDescriptor(target, propertyName)
-    },
-
-    isExtensible: function(target, propertyName) {
-        this.postForTrap("isExtensible", propertyName)
-        return Reflect.isExtensible(target)
-    },
-
     preventExtensions: function(target, propertyName) {
         this.postForTrap("preventExtensions", propertyName)
         return Reflect.preventExtensions(target);
     },
 
+    set: function(target, propertyName, newValue) {
+        this.postForTrap("set", propertyName)
+        return Reflect.set(target, propertyName, newValue);
+    },
+
+    setPrototypeOf: function(target, prototype) {
+        this.postForTrap("setPrototypeOf", null)
+        return Object.setPrototypeOf(target, prototype)  
+    },
 
     // ---------------
 
-    test: function() {
-        const testObserver = {
-            onObservedGet: function(target, propertyName) { console.log("onObservedGet " + propertyName) },
-            onObservedSet: function(target, propertyName) { console.log("onObservedSet " + propertyName) },
-            onObservedHas: function(target, propertyName) { console.log("onObservedHas " + propertyName) }
-        } 
+    selfTest: function() {
+        const resultsDict = {}
+
+        const noteNamesDict = ObservableProxyHandler.clone().noteNamesDict()
+        
+        assert("need to fix this to assign to method name")
+        const eventMethod = (target, propertyName) => { 
+            resultsDict[propertyName] = true 
+            console.log("got note " + propertyName)
+        }
+
+        const testObserver = {}
+
+        Object.values(noteNamesDict).forEach((name) => { 
+            testObserver[name] = eventMethod
+        })
+
     
         const testArray = ["a", "b", "c"]
         const arrayProxy = ObservableProxyHandler.newProxyFor(testArray)
@@ -209,5 +246,4 @@ ideal.Proto.newSubclassNamed("ObservableProxyHandler").newSlots({
 
 })
 
-
-ObservableProxyHandler.test()
+//ObservableProxyHandler.selfTest()

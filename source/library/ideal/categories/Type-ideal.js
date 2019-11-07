@@ -13,10 +13,27 @@
 */
 
 window.Type = {
+    isLiteral: function(v) {
+        return  Type.isString(v) ||
+                Type.isNumber(v) ||
+                Type.isBoolean(v) ||
+                Type.isNull(v);
+    },
 
     isArray: function(value) {
-        return !Type.isNull(value) && Type.isObject(value) && value.__proto__ === [].__proto__
+        return !Type.isNull(value) && 
+                Type.isObject(value) && 
+                value.__proto__ === ([]).__proto__ &&
+                !Type.isUndefined(value.length)
     },   
+
+    isDictionary: function(value) {
+        // also true for objects
+        return !Type.isNull(value) && 
+                Type.isObject(value) && 
+                value.__proto__ === ({}).__proto__ &&
+                Type.isUndefined(value.length)
+    },  
 
     isBoolean: function(value) {
         return typeof(value) === "boolean"
@@ -42,8 +59,9 @@ window.Type = {
         return typeof(value) === "number"
     },
 
-    isObject: function(value) {
-        return typeof(value) === "object"
+    isObject: function(value) { 
+        // WARNING: true for array and dictionary too!
+        return typeof(value) === "object" 
     },
 
     isString: function(value) {

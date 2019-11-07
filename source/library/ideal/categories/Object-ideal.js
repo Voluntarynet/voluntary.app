@@ -6,23 +6,17 @@
     
     Object isn't a prototype or class, it's more like a namespace to organize
     some functions that take an object as an argument. JS ugliness.
+
 */
 
 
 Object.clone = function (obj) {
-    let Proto_constructor = new Function;
+    const Proto_constructor = new Function;
     Proto_constructor.prototype = obj;
-    let instance = new Proto_constructor;
+    const instance = new Proto_constructor;
     instance.constructor = Proto_constructor
     return instance
 }
-
-/*
-Object.shallowCopyTo = function (fromObj, toObj) {
-    Object.assign(toObj, fromObj)
-    return toObj;
-}
-*/
 
 Object.shallowCopy = function (obj) {
     return Object.assign({}, obj);
@@ -34,6 +28,7 @@ Object.eachSlot = function (obj, fn) {
     });
 }
 
+/*
 Object.lookupPath = function (obj, path) {
     path = path.split(".");
     let pc;
@@ -42,10 +37,11 @@ Object.lookupPath = function (obj, path) {
     }
     return obj;
 },
+*/
 
 Object.perform = function (obj, name) {
     if (obj !== undefined && obj !== null && obj[name] && typeof(obj[name]) === "function") {
-        let args = Array.prototype.slice.call(arguments).slice(2);
+        const args = Array.prototype.slice.call(arguments).slice(2);
         return obj[name].apply(obj, args);
     } else {
         return obj;
@@ -53,7 +49,7 @@ Object.perform = function (obj, name) {
 }
 
 Object.values = function (obj) {
-    let values = [];
+    const values = [];
     for (let name in obj) {
         if (obj.hasOwnProperty(name)) {
             values.push(obj[name]);
@@ -62,12 +58,14 @@ Object.values = function (obj) {
     return values;
 }
 
+/*
 Object.pop = function (obj) {
-    let k = Object.keys().last();
-    let v = obj[k];
+    const k = Object.keys().last();
+    const v = obj[k];
     delete obj[k];
     return v;
 }
+*/
 
 // --- deep keys ---
 
@@ -98,7 +96,7 @@ Object.atDeepKey = function (obj, key, seenSet) {
     for (let k in obj) {
         try {
             if (obj.hasOwnProperty(k)) {
-                let v = Object.atDeepKey(obj[k], key, seenSet);
+                const v = Object.atDeepKey(obj[k], key, seenSet);
                 if (v !== null) {
                     return v;
                 }
@@ -116,7 +114,7 @@ Object.allAtDeepKey = function (obj, key) {
         return [];
     }
 
-    let objs = [];
+    const objs = [];
 
     for (let k in obj) {
         if (obj.hasOwnProperty(k)) {
@@ -141,7 +139,7 @@ Object.atPath = function (obj, pathList) {
         return null;
     }
 
-    let k = pathList.first();
+    const k = pathList.first();
     pathList = pathList.rest();
 
     if (pathList.length) {
@@ -160,7 +158,7 @@ Object.slotNames = function (obj) {
 }
 
 Object.slotValues = function (obj) {
-    let values = [];
+    const values = [];
     for (let k in this) {
         if (obj.hasOwnProperty(k)) {
             values.push(this[k]);
@@ -187,10 +185,10 @@ Object.associationDict = function (obj) {
 */
 
 // --- forwardErrors ---------------------------
-
+/*
 Function.prototype.forwardErrors = function (fn) {
     return () => {
-        let e = arguments[0];
+        const e = arguments[0];
         if (e) {
             this(e);
         } else {
@@ -198,3 +196,4 @@ Function.prototype.forwardErrors = function (fn) {
         }
     }
 }
+*/

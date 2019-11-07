@@ -511,7 +511,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
                 return this.refForObject(v)
             }
         }
-        return v
+        return v // assumes arrays and dictionaries don't reference Proto instances?
     },
 
     pidIfRef: function (ref) {

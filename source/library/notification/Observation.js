@@ -5,7 +5,7 @@
     Observation
 
     An abstraction for a NotificationCenter observation. 
-    Holds references to which notification message is a given observer is wants
+    Holds references to which notification message a given observer is wants
     notifications for. 
 
 */
@@ -31,8 +31,6 @@ window.Observation = class Observation extends ProtoClass {
     }
 
     setTarget (obj) {
-        assert(Type.isObject(obj))
-        //this._target = obj
         this.setTargetId(obj.typeId())
         return this
     }
@@ -63,9 +61,9 @@ window.Observation = class Observation extends ProtoClass {
     }
 
     isEqual(obs) {
-        const sameName     = this.name()     === obs.name()
+        const sameName = this.name() === obs.name()
         const sameObserver = this.observer() === obs.observer()
-        const sameTargetId = this.targetId()   === obs.targetId()
+        const sameTargetId = this.targetId() === obs.targetId()
         return sameName && sameObserver && sameTargetId
     }
 

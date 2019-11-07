@@ -1107,6 +1107,9 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
 
     // storage
 
+
+    
+    /*
     writeToStore: function(aStore) {
         const dict = {}
         dict.type = this.type()
@@ -1134,4 +1137,5 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         return this
     },
 
+    */
 })

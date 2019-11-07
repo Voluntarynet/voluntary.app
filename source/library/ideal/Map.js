@@ -4,14 +4,7 @@
 
     Map
 
-*/
 
-/*
-    function map(obj) {
-        return Map.withJsMap(obj);
-    }
-
-    Map.__map = map;
 */
 
 

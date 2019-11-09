@@ -62,18 +62,19 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     },
     
     setPid: function(aPid, aStore = this.defaultStore()) {
-        throw new Error("testing if this is called directly while moving addActiveObject call to store side");
-        /*
-        this._pid = aPid
-        aStore.addActiveObject(this) // TODO: can't rely on this with multiple stores
+        //throw new Error("testing if this is called directly while moving addActiveObject call to store side");
+        
+        this.justSetPid(Pid)
+        //aStore.addActiveObject(this) // TODO: can't rely on this with multiple stores
         this.scheduleSyncToStore()
-        */
+        
         return this
     },
     
     
     justSetPid: function(aPid) { // don't schedule sync
-        this._pid = aPid
+        //this._pid = aPid
+        this.setPuuid(aPid)
         this.defaultStore().addActiveObject(this)
         return this
     },
@@ -82,14 +83,16 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         return !Type.isNullOrUndefined(this._pid)
     },
     
+    /*
     assignPid: function() {
         if (this._pid) {
             throw new Error("attempt to reassign pid")
         }
-        this.justSetPid(this.typeId()) 
+        this.justSetPid(this.puuid()) 
         this.didAssignPid()
         return this
     },
+    */
 
     didAssignPid: function() {
         this.defaultStore().addActiveObject(this)
@@ -104,17 +107,12 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
             throw new Error("attempt to prepare to store a node of type '" + this.type() + "' which has shouldStore === false, use this.setShouldStore(true)")
         }
 		
-        if (!this._pid) {
-            this.assignPid()
+        if (!this.hasPuuid()) {
+            this.puuid()
+            this.didAssignPid()
         }
-        return this._pid
+        return this.puuid()
     },
-  
-    /*  
-    typeId: function() {
-        return this.pid() // is this a good idea?
-    },
-    */
 
     // -------------------------------------------
 

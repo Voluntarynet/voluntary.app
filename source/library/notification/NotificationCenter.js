@@ -24,8 +24,8 @@
             Observation.setTargetId() and 
             Notification.setSender()
         
-        you can pass a uniqueId string/number for the object. e.g. the ideal.js 
-        assigns each instance a _uniqueId.
+        you can pass a typeId string/number for the object. e.g. the ideal.js 
+        assigns each instance a unique typeId.
         
         This should work assuming:
             - notification receiver doesn't already have a reference to the sender

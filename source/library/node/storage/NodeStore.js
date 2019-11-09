@@ -467,11 +467,6 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     // to connect each pid to a object
 
     addActiveObject: function (obj) {
-        /*
-        if (!obj.pid) {
-            console.log("missing pid!")
-        }
-        */
         const pid = obj.pid()
         //this.debugLog("addActiveObject(" + obj.pid() + ")")
         assert(!Type.isNullOrUndefined(pid))

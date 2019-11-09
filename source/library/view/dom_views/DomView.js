@@ -78,7 +78,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     setupElement: function () {
         const e = this.createElement()
         this.setElement(e)
-        this.setDivId(this.type() + "-" + this._uniqueId)
+        this.setDivId(this.type() + "-" + this.puuid())
         this.setupDivClassName()
         return this
     },

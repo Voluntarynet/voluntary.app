@@ -9,26 +9,26 @@ Object.uuid = function() {
 Object._puuidWeakMap = new WeakMap();
 
 Object.prototype.puuid = function() {
-    const map = Object._puuidWeakMap
-
-    if (!map.has(this)) {
-        this.setPid(Object.uuid())
+    if (!this.hasPuuid()) {
+        this.setPuuid(Object.uuid())
     }
 
-    return map.get(this);
+    return Object._puuidWeakMap.get(this);
 }
 
-Object.prototype.setPid = function(puuid) {
+Object.prototype.hasPuuid = function() {
+    return Object._puuidWeakMap.has(this)
+}
+
+Object.prototype.setPuuid = function(puuid) {
     Object._puuidWeakMap.set(this, puuid);
     return this
 }
 
-/*
-Object.prototype.typeId = function() {
+Object.prototype.typePuuid = function() {
     const puuid = this.puuid()
     if (Type.isFunction(this.type)) {
         return this.type() + puuid
     }
     return Type.typeName(this) + "_" + puuid
 }
-*/

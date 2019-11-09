@@ -134,11 +134,14 @@ Proto.setSlots({
     },
 
     typeId: function () {
+        /*
         // do this lazily as type isn't known when object is created
         if (Type.isNull(this._typeId)) {
             this._typeId = this.type() + "_" + this.uniqueId()
         }
         return this._typeId
+        */
+        return this.typePuuid()
     },
 
     /*

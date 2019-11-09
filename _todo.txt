@@ -1,6 +1,11 @@
 
 TODO:
 
+
+	Use 
+		aStore.refValue(v) to add v to activeObjects (which adds to storeQueue if not present in activeObjects)
+		
+	
 	sdb()
 		asyncOpen()
 		isOpen()

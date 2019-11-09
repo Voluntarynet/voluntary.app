@@ -1,6 +1,17 @@
 
 TODO:
 
+	sdb()
+		asyncOpen()
+		isOpen()
+		begin()
+		commit()
+		at(pid)
+		atPut(pid, dict)
+		removeAt(pid)
+		clear()
+		
+
 	- move persistence to use k/v entries instead of dict in case order is important 
 
 	BMNode

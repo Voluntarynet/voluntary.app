@@ -52,6 +52,15 @@
         // repost same notification
         note.post()
 
+    Broadcast notifications:
+
+        For use cases where the overhead of creating post objects would be costly, 
+        it's possible to send a direct message to all name listeners without waiting
+        until the event loop to end. These will pass the target itself instead of a Notification object.
+
+        // call's changedStoredSlot(target) on all listeners for "changedStoredSlot"
+        NotificationCenter.shared().broadcastTargetAndName(this, "changedStoredSlot")
+
 */
 
 window.NotificationCenter = class NotificationCenter extends ProtoClass {
@@ -90,7 +99,6 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
         return window.Observation.clone().setCenter(this);
     }
 
-    /*
     hasObservationsForTargetId (targetId) {
         const obs = this.observations().detect( obs => obs.targetId() === targetId)
         return !Type.isNullOrUndefined(obs)
@@ -100,7 +108,6 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
         const matches = this.observations().filter( obs => obs.targetId() === targetId)
         return matches.length
     }
-    */
     
     removeObservation (anObservation) {
         if (true) {
@@ -162,7 +169,6 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
 
     // --- broadcast ---
 
-    /*
     observersForName (name) {
         return this.nameToObservers()[name] // returns a set
     }
@@ -185,7 +191,6 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
         })
         return hadMatch
     }
-    */
 
     // --- notifying ----
     

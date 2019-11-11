@@ -25,8 +25,6 @@ TODO:
 	
 		- instanceWithPidFromStore(pid, aStore)
 		need to clone and set pud first?
-		- writeToStore(aStore)
-		- readFromStore(aStore)
 		
 		- allow store to override lazy load children
 		

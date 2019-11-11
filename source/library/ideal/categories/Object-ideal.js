@@ -167,33 +167,23 @@ Object.slotValues = function (obj) {
     return values;
 }
 
+/*
 
 // --- Objective-C like associations ---
 
-/*
-Object._globalAssocationWeakMap = new WeakMap()
+Object._allAssociations = new WeakMap()
 
-Object.associationDict = function (obj) {
-    let map = Object._globalAssocationWeakMap
+Object.prototype.associations = function () {
+    let m = Object._allAssociations
 
-    if (!map.has(obj)) {
-        map.set(obj, {})
+    if (!m.has(this)) {
+        m.set(this, {})
     }
 
-    return map.get(obj)
+    return m.get(this)
 }
-*/
 
-// --- forwardErrors ---------------------------
-/*
-Function.prototype.forwardErrors = function (fn) {
-    return () => {
-        const e = arguments[0];
-        if (e) {
-            this(e);
-        } else {
-            fn.apply(null, Array.prototype.slice.call(arguments, 1));
-        }
-    }
+Object.prototype.associationAt = function (k) {
+    return this.associations()[k]
 }
 */

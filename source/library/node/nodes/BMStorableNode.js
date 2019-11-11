@@ -7,7 +7,6 @@
 */
 
 BMNode.newSubclassNamed("BMStorableNode").newSlots({
-    pid: null,
     shouldStore: false,
 
     storedSlots: null, // dict
@@ -62,18 +61,13 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     },
     
     setPid: function(aPid, aStore = this.defaultStore()) {
-        //throw new Error("testing if this is called directly while moving addActiveObject call to store side");
-        
         this.justSetPid(Pid)
-        //aStore.addActiveObject(this) // TODO: can't rely on this with multiple stores
-        this.scheduleSyncToStore()
-        
+        this.scheduleSyncToStore() // is this needed if we add to active objects and set as dirty if not in them?
         return this
     },
     
     
     justSetPid: function(aPid) { // don't schedule sync
-        //this._pid = aPid
         this.setPuuid(aPid)
         this.defaultStore().addActiveObject(this)
         return this
@@ -104,6 +98,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     
     pid: function() {
         if (!this.shouldStore()) {
+            this.shouldStore()
             throw new Error("attempt to prepare to store a node of type '" + this.type() + "' which has shouldStore === false, use this.setShouldStore(true)")
         }
 		
@@ -272,9 +267,10 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         // chance to finish any unserializing this particular instance
         // also see: loadFinalize
 		
-        this.checkForStoredSlotsWithoutPids()
+        //this.checkForStoredSlotsWithoutPids()
     },
 
+    /*
     checkForStoredSlotsWithoutPids: function() {
         // make sure all stored slots have pids after load
         // if not, we've just added them and they'll need to be saved
@@ -290,17 +286,17 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
             }
         })		
     },
+    */
 
     scheduleSyncToStore: function() {
         //console.log(this.typeId() + " scheduleSyncToStore this.hasPid() = ", this.hasPid())
         //const typeId = this.typeId()
-        const hasPid = this.hasPid()
         const shouldStore = this.shouldStore()
         const isUnserializing = this.isUnserializing()
 
-        if (hasPid && shouldStore && !isUnserializing) {
-        	this.defaultStore().addDirtyObject(this)
-            //this._refPids = null
+        if (shouldStore && !isUnserializing) {
+            this.defaultStore().addDirtyObject(this)
+            //Broadcaster.shared().broadcastNameAndArgument("didChangeStoredSlot", this)
         }
 
         return this
@@ -392,76 +388,5 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         
         return pids
     },
-    
-    /*
-	nodeRefPids: function() {
-		if (this._refPids === null) {
-			const refs = {}
-			const dict = this.nodeDict()
-			const keys = Object.keys(dict)
-		
-			const name = this.typeId()
-			//debugger;
-			// stored slots
-			keys.forEach((k) => {
-				const v = dict[k]
-				if (k !== "children" && Type.isObject(v)) {
-					if (v.pid != "null") {
-						refs[v.pid] = true
-					}
-				}
-			})
-		
 
-			// children
-			if (dict.children) {
-				dict.children.forEach((pid) => {
-					if (pid === null || pid === "null") {
-						debugger;
-					}
-					refs[pid] = true
-				})
-			}
-		
-			//this._refPids = refs
-			
-		//	console.log(this.pid() + " nodeRefPids: ", Object.keys(refs))
-		}
-		//return this._refPids
-		
-		return refs
-	},
-	*/
-
-
-    // duplicateable / copy protocol?
-
-
-
-    /*
-    nodeDuplicateDict: function () {
-        const dict = this.nodeDictForProperties()
-        
-        if (this.subnodes().length && this.shouldStoreSubnodes()) {
-            dict.children = this.subnodePids()
-        }
-        
-        return dict
-    },
-
-    // --- set storage dictionary ---
-   
-    setNodeDuplicateDict: function (aDict) { 
-	    //BMNode.setNodeDict.apply(this, [aDict])
-        // TODO: wrap in try {}
-        this.setIsUnserializing(true) 
-        this.setNodeDictForProperties(aDict)
-        if (!this.doesLazyLoadChildren()) {
-            this.setNodeDictForChildren(aDict)
-        }
-        this.didLoadFromStore()
-        this.setIsUnserializing(false) 
-        return this
-    },
-    */
 })

@@ -115,6 +115,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
     nodeStoreDidOpenNote: null,
     lastSyncTime: null,
+    //changedObs: null,
 }).setSlots({
     init: function () {
         ideal.Proto.init.apply(this)
@@ -122,6 +123,29 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         this.setActiveObjectsDict({})
         this.setSdb(window.SyncDB.clone())
         this.setNodeStoreDidOpenNote(window.NotificationCenter.shared().newNote().setSender(this).setName("nodeStoreDidOpen"))
+
+        /*
+        const obs = NotificationCenter.shared().newObservation().setName("changedStoredSlot").setObserver(this)
+        this.setChangedObs(obs)
+        */
+
+        Broadcaster.shared().addListenerForName(this, "didChangeStoredSlot")
+    },
+
+    didChangeStoredSlot: function(aTarget) {
+        this.addDirtyObject(aTarget)
+    },
+    
+    startWatchingForDirtyObjects: function() {
+        Broadcaster.shared().addListenerForName(this, "didChangeStoredSlot")
+        //this.changedObs().watch()
+        return this
+    },
+
+    stopWatchingforDirtyObjects: function() {
+        Broadcaster.shared().removeListenerForName(this, "didChangeStoredSlot")
+        //this.changedObs().stopWatching()
+        return this
     },
 
     updateLastSyncTime: function() {
@@ -175,6 +199,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     onOpen: function () {
         this.updateLastSyncTime()
         this.collect()
+        this.startWatchingForDirtyObjects()
         return this
     },
 
@@ -192,7 +217,9 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
             return this.objectForPid(pid)
         }
 
-        return proto.clone().setPid(pid)
+        const obj =  proto.clone().setPid(pid)
+        this.addActiveObject(obj) 
+        return obj
     },
 
     // ----------------------------------------------------
@@ -337,12 +364,6 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     setNodeDictAtPid: function(aDict, pid) { // public API
         this.assertIsWritable()
 
-        /*
-        if (obj.willStore) {
-            obj.willStore(aDict)
-        }
-        */
-
         const serializedString = JSON.stringify(aDict)
         this.sdb().atPut(pid, serializedString)
 
@@ -351,18 +372,11 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         - when subnode pids are requested for serialization, 
         they are added to dirty object list when pid is assigned
         */
-
-        /*
-        if (obj.didStore) {
-            obj.didStore(aDict)
-        }
-        */
     },
 
     storeObject: function (obj) { // private API
         //console.log("store obj")
         //this.debugLog("storeObject(" + obj.pid() + ")")
-        //obj.writeToStore(this)
         const aDict = obj.nodeDict()
         this.setNodeDictAtPid(aDict, obj.pid())
         return this
@@ -466,7 +480,19 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     // we use a dictionary to track the pids and a WeakMap
     // to connect each pid to a object
 
+    hasActiveObject: function(obj) {
+        return !Type.isUndefined(this.activeObjectsDict()[obj.pid()])
+    },
+
     addActiveObject: function (obj) {
+
+        /*
+        // we only want to do this when doing refValue
+        if (!this.hasActiveObject(obj)) {
+            this.addDirtObject(obj)
+        }
+        */
+
         const pid = obj.pid()
         //this.debugLog("addActiveObject(" + obj.pid() + ")")
         assert(!Type.isNullOrUndefined(pid))

@@ -57,6 +57,59 @@
 
 // ---------------------------------------------------------------------------------------
 
+ideal.Proto.newSubclassNamed("StoreCache").newSlots({
+    dict: null, 
+    isOpen: false,
+    hasBegun: false,
+}).setSlots({
+    init: function() {
+        ideal.Proto.init.apply(this)
+        this.setdict({})
+    },
+
+    asyncOpen: function(callback) {
+        this.setIsOpen(true)
+        callback()
+    },
+
+    begin: function() {
+        assert(!this.hasBegun())
+        this.setHasBegun(true)
+        return this
+    },
+
+    begin: function() {
+        assert(!this.hasBegun())
+        this.setHasBegun(true)
+        return this
+    },
+
+    commit: function() {
+        assert(this.hasBegun())
+        this.setHasBegun(false)
+        return this
+    },
+
+    at: function(k) {
+        return this.dict()[k]
+    },
+
+    atPut: function(k, v) {
+        this.dict()[k] = v
+        return this
+    },
+
+    removeAt: function(k) {
+        delete this.dict()[k]
+        return this
+    },
+
+    clear: function(k, v) {
+        this.setDict({})
+        return this
+    },
+})
+
 
 // need a pidRefsFromPid
 
@@ -112,12 +165,10 @@ ideal.Proto.newSubclassNamed("SimpleStore").newSlots({
     },
 
     objectForPid: function(puuid) {
-        /*
         const obj = this.activeObjects()[puuid]
         if (obj) {
             return obj
         }
-        */
         return this.objectForRecord(this.recordForPid(puuid))
     },
 

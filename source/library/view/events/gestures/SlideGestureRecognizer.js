@@ -53,7 +53,7 @@ GestureRecognizer.newSubclassNamed("SlideGestureRecognizer").newSlots({
     },
 
     setDirection: function(directionName) {
-        assert(directionName in this.validDirectionsDict());
+        assert(this.validDirectionsDict().hasOwnProperty(directionName));
         this._direction = directionName
         return this
     },

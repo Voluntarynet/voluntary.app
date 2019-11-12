@@ -49,7 +49,7 @@ BMStorableNode.newSubclassNamed("BMStoredDatedSetNode").newSlots({
     },
     
     hasKey: function(h) {
-        return h in this.dict()
+        return this.dict().hasOwnProperty(h)
     },
     
     removeKey: function(h) {

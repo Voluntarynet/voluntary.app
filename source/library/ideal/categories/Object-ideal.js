@@ -23,8 +23,8 @@ Object.shallowCopy = function (obj) {
 }
 
 Object.eachSlot = function (obj, fn) {
-    Object.getOwnPropertyNames(obj).forEach(function (name) {
-        fn(name, obj[name]);
+    Object.getOwnPropertyNames(obj).forEach(function (k) {
+        fn(k, obj[k]);
     });
 }
 
@@ -166,6 +166,36 @@ Object.slotValues = function (obj) {
     }
     return values;
 }
+
+Object.prototype.forEachKV = function(fn) {    
+    Object.getOwnPropertyNames(this).forEach((k) => {
+        const v = this[k]
+        fn(k, v);
+    });
+    return this
+}
+
+Object.prototype.mapToArrayKV = function(fn) {
+    let m = []
+    Object.getOwnPropertyNames(this).forEach((k) => {
+        const v = this[k]
+        const r = fn(k, v)
+        m.push(r)
+    }); 
+    return m
+}
+
+/*
+Object.prototype.mapToDictKV = function(fn) {
+    let d = {}
+    Object.getOwnPropertyNames(this).forEach((k) => {
+        const v = this[k]
+        const r = fn(k, v)
+        d[k] = r
+    }); 
+    return {}
+}
+*/
 
 /*
 

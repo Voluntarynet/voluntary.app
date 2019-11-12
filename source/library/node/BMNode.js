@@ -907,7 +907,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
 	
     hasSubnodeWithHash: function(h) {
         this.assertHasSubnodeIndex()
-	    return h in this._subnodeIndex
+	    return this._subnodeIndex.hasOwnProperty(h)
     },
 	
     addSubnodeToIndex: function(subnode) { // private
@@ -925,7 +925,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         
         const index = this._subnodeIndex
         
-        if (h in index) {
+        if (index.hasOwnProperty(h)) {
             throw new Error(this.type() + " duplicate subnode hash " + h + " in indexed node")
         }
         

@@ -28,7 +28,7 @@ Object.prototype.setPuuid = function(puuid) {
 Object.prototype.typePuuid = function() {
     const puuid = this.puuid()
     if (Type.isFunction(this.type)) {
-        return this.type() + puuid
+        return this.type() + "_" + puuid
     }
     return Type.typeName(this) + "_" + puuid
 }

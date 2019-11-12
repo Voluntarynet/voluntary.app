@@ -687,22 +687,18 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
         const deleteCount = this.sweep()
         this._marked = null
-
         this.debugLog("--- end collect - collected " + deleteCount + " pids ---")
-
         return deleteCount
     },
 
     markActiveObjects: function () {
-        Object.keys(this.activeObjectsDict()).forEach((pid) => {
-            this._marked[pid] = true
-        })
+        const marked = this.marked()
+        this.activeObjectsDict().forEachKV((k, v) => { marked[k] = true })
         return this
     },
 
     markPid: function (pid) {
         //this.debugLog("markPid(" + pid + ")")
-
         if (this._marked[pid] === true) {
             return false // already marked it
         }
@@ -710,11 +706,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
         const refPids = this.pidRefsFromPid(pid)
         //this.debugLog("markPid " + pid + " w refs " + JSON.stringify(refPids))
-
-        refPids.forEach((refPid) => {
-            this.markPid(refPid)
-        })
-
+        refPids.forEach(refPid => this.markPid(refPid))
         return true
     },
 
@@ -730,7 +722,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
             if (this._marked[pid] !== true) {
                 this.debugLog("deletePid(" + pid + ")")
                 this.sdb().removeAt(pid)
-                deleteCount++
+                deleteCount ++
             }
         })
 
@@ -814,19 +806,14 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         return this
     },
 
-    showDirtyObjects: function (prefixString) {
+    showDirtyObjects: function (prefixString = "") {
         const dirty = this._dirtyObjects
-        if (!prefixString) {
-            prefixString = ""
-        }
-        //console.log("dirty objects: ")
-        //console.log("dirty objects:  " + Reflect.ownKeys(dirty).join(", "))
-        console.log(prefixString + " dirty objects: " + Object.keys(dirty).map((k) => dirty[k].typeId()).join(", "))
-
-
+        const s = dirty.mapToArrayKV((k, v) => v.typeId()).join(", ")
+        console.log(prefixString + " dirty objects: " + s)
         return this
     },
 
+    /*
     showActiveObjects: function () {
         const active = this.activeObjectsDict()
         console.log("active objects: ")
@@ -838,9 +825,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
         const pid = "_localIdentities"
         const obj = active[pid]
-        //debugger;
         console.log("    " + pid + ": ", Object.keys(obj.nodeRefPids()))
-
         return this
     },
 
@@ -859,4 +844,5 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         }
         return result
     },
+    */
 })

@@ -36,7 +36,7 @@ window.DomTransitions = class DomTransitions extends ProtoClass {
 
     at(aName) {
         const d = this.properties()
-        if (!(name in d)) {
+        if (!d.hasOwnProperty(name)) {
             d[name] = DomTransition.clone().setProperty(aName).setTransitions(this)
         }
         return d[name]

@@ -62,7 +62,7 @@ ideal.Proto.newSubclassNamed("WebBrowserNotifications").newSlots({
     },
 
     isSupported: function() {
-        return ("Notification" in window)
+        return window.hasOwnProperty("Notification")
     },
 
     postNote: function (aNote) {

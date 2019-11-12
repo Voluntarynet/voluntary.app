@@ -18,6 +18,16 @@
     TODO: auto sweep after a write if getting full?
     TODO: update keys, values and size method to use writeCache? Or just assert they are out of tx?
 
+    Atomic Storage protocol:
+
+    	asyncOpen()
+		isOpen()
+		begin()
+		commit()
+		at(key) // return dict
+		atPut(key, dict)
+		removeAt(key)
+		clear()
 */
 
 window.SyncDB = class SyncDB extends ProtoClass {

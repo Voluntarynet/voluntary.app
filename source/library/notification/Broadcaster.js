@@ -4,8 +4,10 @@
 
     Broadcaster
 
-    High performance notifications that skip using Observer and Notification objects and
-    immediately messages listeners. It's up to listeners to efficiently handle this situation.
+    Fast notifications that immediately message listeners 
+    instead of using Observer and Notification objects.
+    As mltiple notifications of the same name are not merged
+    within the same event loop, so listeners should implement handlers efficiently.
 
     Example use:
 

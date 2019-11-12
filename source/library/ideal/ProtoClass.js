@@ -27,7 +27,7 @@ class ProtoClass {
     // --- class slots and variables ---
     
     static getClassVariable(key, defaultValue) {
-        if (!(key in this)) {
+        if (!this.hasOwnProperty(key)) {
             this[key] = defaultValue
         }
         return this[key]

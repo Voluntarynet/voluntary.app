@@ -2,7 +2,7 @@
 
 /*
 
-    MemStore
+    AtomicKVStore
 
     Implements ClientStore protocol but only holds records in
     in-memory dictionary instead of writing to persistent storage.

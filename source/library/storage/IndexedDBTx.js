@@ -17,8 +17,9 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
             tx: null,
             requests: [],
             isCommitted: false,
-            isDebugging: true,
         })
+
+        //this.setIsDebugging(true)
     }
 
     db () {

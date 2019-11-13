@@ -10,8 +10,9 @@
 	- Reads first check the writeCache beforing checking the readCache.
 	
 	- begin() - writes can only be done after calling begin() or an exception is raised
-	- writes/removes are to the writeCache : format: "key" -> { _value: "", _isDelete: aBool }
-	- commit() flushes writeCache to indexedDBFolder, updates readCache
+    - writes/removes are to the writeCache 
+        writeCache format is: "key" -> { _value: "", _isDelete: aBool }
+	- commit() flushes writeCache to indexedDBFolder, and updates readCache
 	
 	- any exception between begin and commit should halt the app and require a restart to ensure consistency
 	
@@ -27,7 +28,8 @@
 		at(key) // return dict
 		atPut(key, dict)
 		removeAt(key)
-		clear()
+        clear()
+        
 */
 
 window.SyncDB = class SyncDB extends ProtoClass {
@@ -40,13 +42,13 @@ window.SyncDB = class SyncDB extends ProtoClass {
             writeCache: null,
             isOpen: false,
             isSynced: false,
-            isDebugging: false,
         })
 
         this.setReadCache({})
 
         // idb
         this.setIdb(IndexedDBFolder.clone())
+        //this.setIsDebugging(true)
     }
 
     setName (aName) {
@@ -74,7 +76,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
             if (callback) {
                 callback()
             }
-            //	this.verifySync()
+            //this.verifySync()
         })
     }
 	
@@ -107,9 +109,8 @@ window.SyncDB = class SyncDB extends ProtoClass {
     }
 	
     asJson () {
-        // WARNING: bad performance if called frequently
-        //let s = JSON.stringify(this._readCache)
-        return JSON.parse(this._readCache)
+        // WARNING: this can be slow for a big store!
+        return JSON.stringify(this._readCache)
     }
 	
     verifySync () {
@@ -119,30 +120,30 @@ window.SyncDB = class SyncDB extends ProtoClass {
             let hasError = false
 			
             for (let k in json) {
-                if (!(k in readCache)) {
+                if ( !readCache.hasOwnProperty(k) ) {
                     //console.log("syncdb not in sync with idb - sdb missing key " + k)
                     hasError = true
-                } else if (json[k] != readCache[k]) {
+                } else if ( json[k] !== readCache[k] ) {
                     //console.log("syncdb not in sync with idb - diff values for key " + k )
                     hasError = true
                 }
 				
-                if (json[k] === undefined || readCache[k] === undefined) {
+                if ( !json.hasOwnProperty(k) || !readCache.hasOwnProperty(k) ) {
                     hasError = true
                 }
             }
 			
 			
             for (let k in readCache) {
-                if (!(k in json)) {
+                if ( !json.hasOwnProperty(k) ) {
                     //console.log("syncdb not in sync with idb - idb missing key " + k)
                     hasError = true
-                } else if (json[k] != readCache[k]) {
+                } else if ( json[k] !== readCache[k] ) {
                     //console.log("syncdb not in sync with idb - diff values for key " + k )
                     hasError = true
                 }
 				
-                if (json[k] === undefined || readCache[k] === undefined) {
+                if ( !json.hasOwnProperty(k) || !readCache.hasOwnProperty(k) ) {
                     hasError = true
                 }
             }
@@ -158,7 +159,6 @@ window.SyncDB = class SyncDB extends ProtoClass {
                 this._isSynced = true
                 //this.idb().show()
                 //console.log("syncdb idb json: ", JSON.stringify(json, null, 2))
-				
             }
 			
             /*
@@ -178,20 +178,16 @@ window.SyncDB = class SyncDB extends ProtoClass {
 	
     totalBytes () {
         let byteCount = 0
-        const dict = this._readCache
-        for (let k in dict) {
-		   if (dict.hasOwnProperty(k)) {
-                let v = dict[k]
-                byteCount += k.length + v.length
-            }
-        }
+        this._readCache.forEachKV((k, v) => {
+            byteCount += k.length + v.length
+        })
         return byteCount
     }
 	
     // transactions
 	
     hasBegun () {
-	    return (this.writeCache() != null)
+	    return (this.writeCache() !== null)
     }
 	
     assertInTx () {
@@ -211,7 +207,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
     }
 	
     hasWrites () {
-        return Object.keys(this._writeCache).length > 0
+        return Object.keys(this._writeCache).length !== 0
     }
 	
     commit () {
@@ -220,45 +216,38 @@ window.SyncDB = class SyncDB extends ProtoClass {
 	    // and block new writes until push to read cache
 	    
 	    this.assertInTx()
-	    
 	    const tx = this.idb().newTx()
-	    
 	    tx.begin()
 	    
 	    let count = 0
-        const d = this._writeCache
-		
-        for (let k in d) {
-		   if (d.hasOwnProperty(k)) {
-                let entry = d[k]
+        
+        this._writeCache.forEachKV((k, entry) => {
+            if (entry._isDelete) {
+                tx.removeAt(k)
+                delete this._readCache[k]
+                if (this.isDebugging()) {
+                    console.log(this.typeId() + " delete ", k)
+                }
+            } else {
+                const v = entry._value
+                //tx.atPut(k, v)
                 
-                if (entry._isDelete) {
-                    tx.removeAt(k)
-                    delete this._readCache[k]
+                if (this._readCache.hasOwnProperty(k)) {
+                    tx.atUpdate(k, v)
                     if (this.isDebugging()) {
-                    	console.log(this.typeId() + " delete ", k)
+                        console.log(this.typeId() + " update ", k)
                     }
                 } else {
-                    let v = entry._value
-                    //tx.atPut(k, v)
-                    
-                    if (k in this._readCache) {
-                        tx.atUpdate(k, v)
-                        if (this.isDebugging()) {
-                        	console.log(this.typeId() + " update ", k)
-                        }
-                    } else {
-                        tx.atAdd(k, v)
-                        if (this.isDebugging()) {
-                        	console.log(this.typeId() + " add ", k)
-                        }
+                    tx.atAdd(k, v)
+                    if (this.isDebugging()) {
+                        console.log(this.typeId() + " add ", k)
                     }
-                    
-                    this._readCache[k] = entry._value
                 }
-                count ++
+                
+                this._readCache[k] = entry._value
             }
-        }
+            count ++
+        })
 		
 		 // indexeddb commits on next event loop but this "commit" is 
 		 // a sanity check - it raises exception if we attempt to write more to the same tx 
@@ -272,13 +261,14 @@ window.SyncDB = class SyncDB extends ProtoClass {
         // TODO: use commit callback to clear writeCache instead of assuming it
         // will complete and setting it to null here
         this._writeCache = null
+        return count
     }
 	
     // NEW
 	
     hasKey(key) {
         this.assertOpen()
-        return key in this._readCache;
+        return this._readCache.hasOwnProperty(key);
     }
 	
     at(key) {
@@ -302,7 +292,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
         this.assertOpen()
 	    this.assertInTx()
 	    
-	    if (!(key in this._writeCache) && this._readCache[key] === value) {
+	    if (!(this._writeCache.hasOwnProperty(key)) && this._readCache[key] === value) {
 	        return
 	    }
 	    
@@ -313,7 +303,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
         this.assertOpen()
 	    this.assertInTx()
 	    
-	    if (!(key in this._writeCache) && !(key in this._readCache)) {
+	    if ( !this._writeCache.hasOwnProperty(key) && !this._readCache.hasOwnProperty(key) ) {
 	        return
 	    }
 	    

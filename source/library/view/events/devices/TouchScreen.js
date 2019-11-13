@@ -15,7 +15,6 @@ ideal.Proto.newSubclassNamed("TouchScreen").newSlots({
     lastEvent: null,
     touchListener: null,
     //isVisualDebugging: false,
-    isDebugging: false,
 }).setSlots({
 
     isSupported: function() {
@@ -33,6 +32,7 @@ ideal.Proto.newSubclassNamed("TouchScreen").newSlots({
     init: function () {
         ideal.Proto.init.apply(this)
         this.startListening()
+        //this.setIsDebugging(true)
         if (this.isDebugging()) {
             console.log(this.typeId() + ".init()")
         }

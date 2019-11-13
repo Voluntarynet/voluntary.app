@@ -70,7 +70,6 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
         this.newSlots({
             observations: null, // array 
             notifications: null, // array
-            isDebugging: false,
             debugNoteName: "appDidInit",
             currentNote: null,
             isProcessing: false,
@@ -80,6 +79,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
         this.setObservations([]);
         this.setNotifications([]);
         this.setNameIndex({});
+        //this.setIsDebugging(true)
     }
 
     // --- observations ----

@@ -14,10 +14,10 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
             pathSeparator: "/",
             db: null,
             didRequestPersistence: false,
-            isDebugging: false,
         })
         this.assertHasUniqueId()
         //this.requestPersistenceIfNeeded()
+        //this.setIsDebugging(true)
     }
 
     requestPersistenceIfNeeded () {

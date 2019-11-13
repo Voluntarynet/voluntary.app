@@ -19,9 +19,10 @@ window.Observation = class Observation extends ProtoClass {
             targetId: null, // expects uniqueId string for target
             name: null,
             observer: null,
-            isDebugging: false,
             isOneShot: false,
         })
+
+        //this.setIsDebugging(true)
     }
 
     setTargetId (aString) {

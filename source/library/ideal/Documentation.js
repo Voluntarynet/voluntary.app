@@ -80,33 +80,41 @@ window.Documentation = Documentation
 
 // --- Object category -------------------------------------
 
-Object.prototype.docs = function() {
-    if (!this._docs) {
-        this._docs = {}
-    }
-    return this._docs
-}
+Object.defineSlots(Object.prototype, {
 
-Object.prototype.setDocs = function (name, description) {
-    const docs = this.docs()
-    docs._name = methodName
-    docs._description = description
-    return this
-}
+    docs: function() {
+        if (!this._docs) {
+            this._docs = {}
+        }
+        return this._docs
+    },
+
+    setDocs: function (name, description) {
+        const docs = this.docs()
+        docs._name = methodName
+        docs._description = description
+        return this
+    },
+    
+})
 
 // --- Function category -------------------------------------
 
-Function.prototype.docs = function() {
-    if (!this._docs) {
-        this._docs = {}
-    }
-    return this._docs
-}
+Object.defineSlots(Function.prototype, {
 
-Function.prototype.setDocs = function (name, description, returns) {
-    const docs = this.docs()
-    docs._name = name
-    docs._description = description
-    docs._returns = returns 
-    return this
-}
+    docs: function() {
+        if (!this._docs) {
+            this._docs = {}
+        }
+        return this._docs
+    },
+
+    setDocs: function (name, description, returns) {
+        const docs = this.docs()
+        docs._name = name
+        docs._description = description
+        docs._returns = returns 
+        return this
+    },
+
+})

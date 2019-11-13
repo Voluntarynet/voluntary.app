@@ -8,7 +8,7 @@
 
 */
 
-Object.assign(Date.prototype, {
+Object.defineSlots(Date.prototype, {
     monthNames: function() {
         return [ "January", "February", "March", "April", 
             "May", "June", "July", "August", 

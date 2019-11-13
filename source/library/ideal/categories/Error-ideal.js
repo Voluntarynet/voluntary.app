@@ -44,7 +44,7 @@ Error.callingScriptURL = function() {
 }
 
 
-Object.assign(Error.prototype, {
+Object.defineSlots(Error.prototype, {
 
     // --- assert ---
 

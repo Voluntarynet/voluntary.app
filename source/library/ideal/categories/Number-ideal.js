@@ -41,7 +41,7 @@ const Base64 = (function () {
     };
 })();
 
-Object.assign(Number.prototype, {
+Object.defineSlots(Number.prototype, {
 
     copy: function() {
         return this

@@ -100,17 +100,7 @@ window.Type = {
                 Type.isObject(value) && 
                 value.__proto__ === ([]).__proto__ &&
                 !Type.isUndefined(value.length)
-    },   
-
-    /*
-    isDictionary: function(value) {
-        // also true for objects
-        return !Type.isNull(value) &&
-                Type.isObject(value) &&
-                value.__proto__ === ({}).__proto__ &&
-                Type.isUndefined(value.length)
     },
-    */
 
     isBoolean: function(value) {
         return typeof(value) === "boolean"

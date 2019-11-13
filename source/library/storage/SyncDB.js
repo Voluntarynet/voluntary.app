@@ -7,10 +7,13 @@
 	A read & write cache on top of IndexedDB to allow us to do all synchronous reads and writes
 	On open, it reads the entire db into a read cache dictionary.
 
-	- Reads first check the writeCache beforing checking the readCache.
+    - keys and values are assumed to be strings
+
+	- at(key) first checks the writeCache beforing checking the readCache
 	
 	- begin() - writes can only be done after calling begin() or an exception is raised
-    - writes/removes are to the writeCache 
+    - atPut(key, value) & removeAt(key)
+        writes/removes are to the writeCache 
         writeCache format is: "key" -> { _value: "", _isDelete: aBool }
 	- commit() flushes writeCache to indexedDBFolder, and updates readCache
 	

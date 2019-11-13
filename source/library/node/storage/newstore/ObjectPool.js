@@ -53,64 +53,6 @@
 */
 
 
-
-
-// ---------------------------------------------------------------------------------------
-
-ideal.Proto.newSubclassNamed("StoreCache").newSlots({
-    dict: null, 
-    isOpen: false,
-    hasBegun: false,
-}).setSlots({
-    init: function() {
-        ideal.Proto.init.apply(this)
-        this.setdict({})
-    },
-
-    asyncOpen: function(callback) {
-        this.setIsOpen(true)
-        callback()
-    },
-
-    begin: function() {
-        assert(!this.hasBegun())
-        this.setHasBegun(true)
-        return this
-    },
-
-    begin: function() {
-        assert(!this.hasBegun())
-        this.setHasBegun(true)
-        return this
-    },
-
-    commit: function() {
-        assert(this.hasBegun())
-        this.setHasBegun(false)
-        return this
-    },
-
-    at: function(k) {
-        return this.dict()[k]
-    },
-
-    atPut: function(k, v) {
-        this.dict()[k] = v
-        return this
-    },
-
-    removeAt: function(k) {
-        delete this.dict()[k]
-        return this
-    },
-
-    clear: function(k, v) {
-        this.setDict({})
-        return this
-    },
-})
-
-
 // need a pidRefsFromPid
 
 ideal.Proto.newSubclassNamed("SimpleStore").newSlots({
@@ -134,10 +76,14 @@ ideal.Proto.newSubclassNamed("SimpleStore").newSlots({
         return JSON.stringify(this.recordsDict(), null, 2)
     },
 
-    addActiveObject: function(anObject) {
+    hasActiveObject: function(anObject) {
         const puuid = anObject.puuid()
-        if (!this.activeObjects()[puuid]) {
-            this.storeQueue().push(anObject)
+        return this.activeObjects().hasOwnProperty(puuid)
+    },
+
+    addActiveObject: function(anObject) {
+        if (!this.hasActiveObject(anObject)) {
+            this.storeQueue().push(anObject) // only do this during ref creation?
         }
         this.activeObjects()[anObject.puuid()] = anObject
     },
@@ -185,13 +131,14 @@ ideal.Proto.newSubclassNamed("SimpleStore").newSlots({
         if (Type.isLiteral(v)) {
             return v
         }
-        const puuid = v.puuid()
-        assert(puuid)
-        this.addActiveObject(v)
-        return { 
-            // type: Type.typeName(v), // what about subclasses?
-            "*": v.puuid()
+
+        if (!this.hasActiveObject(obj)) {
+            this.addDirtObject(obj)
         }
+
+        this.addActiveObject(v)
+        const ref = { "*": v.puuid() }
+        return ref
     },
 
     storeObject: function(obj) {

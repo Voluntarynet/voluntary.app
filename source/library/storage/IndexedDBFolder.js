@@ -243,6 +243,4 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
     }
 }
 
-
 window.IndexedDBFolder.registerThisClass()
-

@@ -375,6 +375,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     },
 
     storeObject: function (obj) { // private API
+        this.addActiveObject(obj) // since we may not call ref on obj which would add it
         //console.log("store obj")
         //this.debugLog("storeObject(" + obj.pid() + ")")
         const aDict = obj.nodeDict()
@@ -455,12 +456,8 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
         const obj = proto.clone()
 
-        if (!obj.justSetPid) {
-            throw new Error("stored object of type '" + nodeDict.type + "' missing justSetPid() method")
-        }
-
         // need to set pid before dict to handle circular refs
-        obj.justSetPid(pid)
+        obj.setPid(pid)
         this.addActiveObject(obj)
 
         //this.debugLog(" nodeDict = ", nodeDict)
@@ -573,6 +570,12 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
             ref[k] = obj.pid()
         } else {
             throw new Error("can't get refForObject(", obj, ")")
+        }
+
+        // schedule to store this if it's not active
+        // as we've now referenced it
+        if (!this.hasActiveObject(obj)) {
+            this.addDirtObject(obj)
         }
 
         return ref

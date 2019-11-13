@@ -8,7 +8,7 @@
 
 */
 
-Object.assign(Set.prototype, {
+Object.defineSlots(Set.prototype, {
 
     isSuperset: function(subset) {
         for (let v of subset) {

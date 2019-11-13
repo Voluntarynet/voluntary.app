@@ -9,7 +9,7 @@
 */
 
 
-Object.assign(Array.prototype, {
+Object.defineSlots(Array.prototype, {
 
     // --- read operations ---
 
@@ -314,74 +314,6 @@ Object.assign(Array.prototype, {
             else {
                 return 0;
             }
-        });
-    },
-
-    parallelPerform: function () {
-        const args = this.slice.call(arguments).slice();
-        const fn = args.pop();
-
-        if (this.length === 0) {
-            fn(null);
-            return;
-        }
-
-        let remaining = this.length;
-        let err = null;
-        args.push(function (error) {
-            err = error;
-            remaining --;
-            if (remaining === 0) {
-                fn(err, ops);
-            }
-        });
-
-        let ops = this.mapPerform.apply(this, args);
-        return this;
-    },
-
-    serialPerform: function (functionName) {
-        let args = this.slice.call(arguments).slice(1);
-        let fn = args.pop();
-
-        if (this.length === 0) {
-            fn(null);
-            return;
-        }
-
-        let i = 0;
-        let next = () => {
-            if (i < this.length) {
-                let e = this[i];
-                i++;
-                e[functionName].apply(e, args);
-            } else {
-                fn();
-            }
-        };
-
-        args.push(function (e) {
-            if (e) {
-                fn(e);
-            } else {
-                next();
-            }
-        });
-
-        next();
-
-        return this;
-    },
-
-    mapPerform: function () {
-        let args = Array.prototype.slice.call(arguments);
-        args.unshift(null);
-        args.push(-1);
-
-        return this.map(function (obj, i) {
-            args[0] = obj;
-            args[args.length - 1] = i; //TODO: should we append i?  Receiver might not expect this ...
-            return Object.perform.apply(Object, args);
         });
     },
 

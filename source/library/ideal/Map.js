@@ -35,7 +35,10 @@ window.ideal.Map = class Map extends ProtoClass {
     }
 
     at (k) {
-        return this.jsMap()[k];
+        if (this.hasKey(k)) { // to avoid inheritance
+            return this.jsMap()[k];
+        }
+        return undefined
     }
 
     mapAt (k) {
@@ -109,6 +112,7 @@ window.ideal.Map = class Map extends ProtoClass {
         return map;
     }
 
+    /*
     atDeepKey (k) {
         return Object.atDeepKey(this.jsMap(), k);
     }
@@ -116,6 +120,7 @@ window.ideal.Map = class Map extends ProtoClass {
     allAtDeepKey (k) {
         return Object.allAtDeepKey(this.jsMap(), k);
     }
+    */
 
     atPath (pathList) {
         return Object.atPath(this.jsMap(), pathList);
@@ -151,6 +156,7 @@ window.ideal.Map = class Map extends ProtoClass {
         return this;
     }
 
+    /*
     percentDecode () {
         this.forEach( (k, v) => {
             this.atPut(k, decodeURIComponent(v));
@@ -168,6 +174,7 @@ window.ideal.Map = class Map extends ProtoClass {
             }
         }).join("&");
     }
+    */
 }
 
 window.ideal.Map.registerThisClass()

@@ -8,20 +8,16 @@
 
 BMNode.newSubclassNamed("BMStorableNode").newSlots({
     shouldStore: false,
-
     storedSlots: null, // dict
-    
     shouldStoreSubnodes: true,
     //loadsUnionOfChildren: false,
     isUnserializing: false,
-    
     doesLazyLoadChildren: false,
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)
         this.setStoredSlots({})
         this.scheduleSyncToStore()
-        //this.addStoredSlot("viewDict")
         this.addStoredSlot("canDelete")  // TODO: move elsewhere
     },
     
@@ -55,42 +51,13 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
             return aStore.objectForPid(pid)
         }
 
-        const obj = this.clone().justSetPid(pid)
+        const obj = this.clone().setPid(pid)
         aStore.addActiveObject(this)
         return obj
     },
     
     setPid: function(aPid, aStore = this.defaultStore()) {
-        this.justSetPid(Pid)
-        this.scheduleSyncToStore() // is this needed if we add to active objects and set as dirty if not in them?
-        return this
-    },
-    
-    
-    justSetPid: function(aPid) { // don't schedule sync
         this.setPuuid(aPid)
-        this.defaultStore().addActiveObject(this)
-        return this
-    },
-    
-    hasPid: function() {
-        return !Type.isNullOrUndefined(this._pid)
-    },
-    
-    /*
-    assignPid: function() {
-        if (this._pid) {
-            throw new Error("attempt to reassign pid")
-        }
-        this.justSetPid(this.puuid()) 
-        this.didAssignPid()
-        return this
-    },
-    */
-
-    didAssignPid: function() {
-        this.defaultStore().addActiveObject(this)
-        this.scheduleSyncToStore() // add to dirty objects
         return this
     },
 
@@ -101,15 +68,8 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
             this.shouldStore()
             throw new Error("attempt to prepare to store a node of type '" + this.type() + "' which has shouldStore === false, use this.setShouldStore(true)")
         }
-		
-        if (!this.hasPuuid()) {
-            this.puuid()
-            this.didAssignPid()
-        }
         return this.puuid()
     },
-
-    // -------------------------------------------
 
     // --- add / remove stored slots ---
     
@@ -122,9 +82,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     },
     
     addStoredSlots: function(slotNames) {
-        slotNames.forEach((slotName) => {
-            this.addStoredSlot(slotName)
-        })
+        slotNames.forEach(k => this.addStoredSlot(k))
         return this
     },
     
@@ -139,8 +97,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         return this
     },
 
-    // --- get storage dictionary ---
-
+    // writing object to store
 
     nodeDict: function (aStore = this.defaultStore()) { 
         const dict = this.nodeDictForProperties()
@@ -152,6 +109,26 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         return dict
     },
 
+    getStoreSlotValue: function(k) {
+        let v = undefined
+
+        if (k.beginsWith("_")) {
+            v = this[k]
+        } else {
+            if(!Type.isFunction(this[k])) {
+                console.warn("WARNING: " + this.type() + "." + k + "() not a method")
+            }
+
+            try {
+                v = this[k].apply(this)
+            } catch(error) {
+                console.warn("WARNING: " + this.type() + "." + k + "() exception calling method")
+            }
+        }
+
+        return v
+    },
+
 
     nodeDictForProperties: function (aStore = this.defaultStore()) {
         const dict = {}
@@ -160,23 +137,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         //console.log(this.typeId() + " storedSlots = " + JSON.stringify(this.storedSlots()))
        
         Object.keys(this.storedSlots()).forEach((k) => {
-            let v = null
-            if (k.beginsWith("_")) {
-                v = this[k]
-            } else {
-                const isFunction = Type.isFunction(this[k])
-                if(!isFunction) {
-                    console.warn("WARNING: " + this.type() + "." + k + "() not a method")
-                }
-
-                try {
-	                v = this[k].apply(this)
-                } catch(error) {
-                    console.warn("WARNING: " + this.type() + "." + k + "() exception calling method")
-                    //throw error
-                }
-            }
-           
+            const v = this.getStoreSlotValue(k)
             dict[k] = aStore.refValueIfNeeded(v)
         })
         
@@ -184,7 +145,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     },
 
  
-    // --- set storage dictionary ---
+    // reading object from store
    
     setNodeDict: function (aDict, aStore = this.defaultStore()) { 
 	    //BMNode.setNodeDict.apply(this, [aDict])
@@ -199,6 +160,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         return this
     },
     
+
     prepareToAccess: function(aStore = this.defaultStore()) {
         BMNode.prepareToAccess.apply(this)
         if (this.doesLazyLoadChildren()) {
@@ -207,25 +169,32 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         }
         return this
     },
+
+
+    setStoreSlotValue: function(k, value, aStore = this.defaultStore()) {
+        if (k !== "children" && k !== "type") {
+            const v = aStore.unrefValueIfNeeded(value)
+            
+            if (k.beginsWith("_")) {
+                this[k] = v
+            } else {
+                const setter = this.setterNameForSlot(k)
+                if (this[setter]) {
+                    this[setter].apply(this, [v])
+                } else {
+                    console.error("WARNING: " + this.type() + "." + setter + "(", v , ") not found - dict is: " , aDict) //, JSON.stringify(aDict))
+                    return false
+                }
+            }
+        }
+        return true
+    },
     
     setNodeDictForProperties: function (aDict, aStore = this.defaultStore()) {
         let hadMissingSetter = false 
         Object.keys(aDict).forEach((k) => {
-            if (k !== "children" && k !== "type") {
-                let v = aDict[k]
-                v = aStore.unrefValueIfNeeded(v)
-                
-                if (k.beginsWith("_")) {
-                    this[k] = v
-                } else {
-                    const setter = this.setterNameForSlot(k)
-                    if (this[setter]) {
-                        this[setter].apply(this, [v])
-                    } else {
-                        console.error("WARNING: " + this.type() + "." + setter + "(", v , ") not found - dict is: " , aDict) //, JSON.stringify(aDict))
-                        hadMissingSetter = true
-                    }
-                }
+            if(!this.setStoreSlotValue(k, aDict[k], aStore)) {
+                hadMissingSetter = true
             }
         })
    
@@ -270,26 +239,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         //this.checkForStoredSlotsWithoutPids()
     },
 
-    /*
-    checkForStoredSlotsWithoutPids: function() {
-        // make sure all stored slots have pids after load
-        // if not, we've just added them and they'll need to be saved
-        // as well as this object itself
-
-        Object.keys(this._storedSlots).forEach((slotName) => {
-            const obj = this[slotName].apply(this)
-            const isRef = obj !== null && obj !== undefined && obj.typeId !== undefined
-            if (isRef && !obj.hasPid()) {
-                obj.pid()
-                this.defaultStore().addDirtyObject(this)
-                //console.log(">>>>>>>>>>>>>>>>> loadFinalize assigned pid ", obj.pid())
-            }
-        })		
-    },
-    */
-
     scheduleSyncToStore: function() {
-        //console.log(this.typeId() + " scheduleSyncToStore this.hasPid() = ", this.hasPid())
         //const typeId = this.typeId()
         const shouldStore = this.shouldStore()
         const isUnserializing = this.isUnserializing()

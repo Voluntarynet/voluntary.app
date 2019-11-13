@@ -8,7 +8,7 @@
 
 */
 
-Object.assign(String.prototype, {
+Object.defineSlots(String.prototype, {
     
     shallowCopy: function() {
         return this

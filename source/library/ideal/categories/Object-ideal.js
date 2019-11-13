@@ -119,35 +119,31 @@ Object.defineSlots(Object.prototype, {
     },
 })
 
-/*
-Object.prototype.mapToDictKV = function(fn) {
-    let d = {}
-    Object.getOwnPropertyNames(this).forEach((k) => {
-        const v = this[k]
-        const r = fn(k, v)
-        d[k] = r
-    }); 
-    return {}
-}
-*/
-
-/*
-
 // --- Objective-C like associations ---
 
-Object._allAssociations = new WeakMap()
+Object.defineSlots(Object, {
 
-Object.prototype.associations = function () {
-    let m = Object._allAssociations
+    _allAssociations: new WeakMap(),
+    
+})
 
-    if (!m.has(this)) {
-        m.set(this, {})
-    }
 
-    return m.get(this)
-}
+Object.defineSlots(Object.prototype, {
 
-Object.prototype.associationAt = function (k) {
-    return this.associations()[k]
-}
-*/
+    associations: function () {
+        let m = Object._allAssociations
+
+        if (!m.has(this)) {
+            m.set(this, {})
+        }
+
+        return m.get(this)
+    },
+
+    associationAt: function (k) {
+        return this.associations()[k]
+    },
+
+})
+
+

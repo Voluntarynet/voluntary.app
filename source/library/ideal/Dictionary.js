@@ -7,8 +7,7 @@
 
 */
 
-
-window.ideal.Map = class Map extends ProtoClass {
+window.ideal.Dictionary = class Map extends ProtoClass {
     static withJsMap (jsMap) {
         jsMap = jsMap || {}
         return this.clone().setJsMap(jsMap)
@@ -41,6 +40,7 @@ window.ideal.Map = class Map extends ProtoClass {
         return undefined
     }
 
+    /*
     mapAt (k) {
         const v = this.at(k);
         if (typeof(v) !== "object" || (Object.getPrototypeOf(v) !== Object.prototype)) {
@@ -50,6 +50,7 @@ window.ideal.Map = class Map extends ProtoClass {
             return Map.withJsMap(v)
         }
     }
+    */
 
     atPut (k, v) {
         this.jsMap()[k] = v;
@@ -63,22 +64,25 @@ window.ideal.Map = class Map extends ProtoClass {
         return this;
     }
 
+    /*
     valuesSortedByKeys () {
         return this.keys().sort().map( (k) => {
             return this.at(k);
         });
     }
+    */
 
     forEach (fn) {
         this.keys().forEach( (k) => {
-            fn(k, this._jsMap[k]);
+            const v = this._jsMap[k]
+            fn(k, v);
         });
 
         return this;
     }
 
     map (fn) {
-        let jsMap = this.jsMap();
+        const jsMap = this.jsMap();
         return this.keys().map(function (k) {
             return fn(k, jsMap[k]);
         });
@@ -104,6 +108,7 @@ window.ideal.Map = class Map extends ProtoClass {
         return Object.keys(this.jsMap()).length === 0;
     }
 
+    /*
     lowerCased () {
         const map = Map.clone();
         this.forEach(function (k, v) {
@@ -112,16 +117,6 @@ window.ideal.Map = class Map extends ProtoClass {
         return map;
     }
 
-    /*
-    atDeepKey (k) {
-        return Object.atDeepKey(this.jsMap(), k);
-    }
-
-    allAtDeepKey (k) {
-        return Object.allAtDeepKey(this.jsMap(), k);
-    }
-    */
-
     atPath (pathList) {
         return Object.atPath(this.jsMap(), pathList);
     }
@@ -129,6 +124,7 @@ window.ideal.Map = class Map extends ProtoClass {
     merged (aMap) {
         return this.shallowCopy().merge(aMap);
     }
+    */
 
     shallowCopy () {
         return Map.withJsMap(Object.assign({}, this.jsMap()));
@@ -164,7 +160,7 @@ window.ideal.Map = class Map extends ProtoClass {
         return this;
     }
 
-    queryString () {
+    asQueryString () {
         return "?" + this.map(function (k, v) {
             if (v) {
                 return k + "=" + encodeURIComponent(v);
@@ -177,4 +173,4 @@ window.ideal.Map = class Map extends ProtoClass {
     */
 }
 
-window.ideal.Map.registerThisClass()
+window.ideal.Dictionary.registerThisClass()

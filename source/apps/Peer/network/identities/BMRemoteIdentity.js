@@ -167,7 +167,7 @@ BMStorableNode.newSubclassNamed("BMRemoteIdentity").newSlots({
     },
 	
     allIdentitiesMap: function() { // only uses valid remote identities
-        const ids = ideal.Map.clone()
+        const ids = ideal.Dictionary.clone()
         ids.atPut(this.publicKeyString(), this)
         return ids
     },

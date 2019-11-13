@@ -482,14 +482,6 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     },
 
     addActiveObject: function (obj) {
-
-        /*
-        // we only want to do this when doing refValue
-        if (!this.hasActiveObject(obj)) {
-            this.addDirtObject(obj)
-        }
-        */
-
         const pid = obj.pid()
         //this.debugLog("addActiveObject(" + obj.pid() + ")")
         assert(!Type.isNullOrUndefined(pid))

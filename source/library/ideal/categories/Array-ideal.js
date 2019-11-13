@@ -36,12 +36,16 @@ Object.defineSlots(Array.prototype, {
     },
 
     at: function (index) {
-        if (index > -1) {
-            return this[index];
-        }
-        else {
+        if (index < 0) {
             return this[this.length + index];
         }
+
+        return this[index];
+    },
+
+    atPut: function(index, value) {
+        this[index] = value
+        return this
     },
 
     atModLength: function (index) {
@@ -154,10 +158,6 @@ Object.defineSlots(Array.prototype, {
         }
 
         return subArrays;
-    },
-
-    chunk: function (chunkSize) {
-        return this.split(Math.ceil(this.length / chunkSize));
     },
 
     // --- write operations ---

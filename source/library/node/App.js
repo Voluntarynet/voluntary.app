@@ -22,6 +22,10 @@ BMNode.newSubclassNamed("App").newSlots({
 
     init: function () {
         BMNode.init.apply(this)
+
+        //Documentation.shared().show()
+
+
         this.setNodeStoreDidOpenObs(window.NotificationCenter.shared().newObservation())
         this.nodeStoreDidOpenObs().setName("nodeStoreDidOpen").setObserver(this).setTarget(this.defaultStore())
         this.setIsDebugging(true)

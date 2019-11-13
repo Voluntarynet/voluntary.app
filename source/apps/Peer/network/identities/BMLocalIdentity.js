@@ -118,7 +118,7 @@ BMKeyPair.newSubclassNamed("BMLocalIdentity").newSlots({
     },
 	
     allIdentitiesMap: function() { // only uses valid remote identities
-        let ids = ideal.Map.clone()
+        let ids = ideal.Dictionary.clone()
         ids.atPut(this.publicKeyString(), this)
 		
         this.remoteIdentities().subnodes().forEach((rid) => { 

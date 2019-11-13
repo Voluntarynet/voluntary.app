@@ -6,5 +6,7 @@ ResourceLoader.pushRelativePaths([
     "Date-store.js",
     "Object-store.js",
     "Proto-store.js",
-    "TypedArray-store.js"
+    "TypedArray-store.js",
+    "BMNode-store.js",
+    "BMStorableNode-store.js",
 ])

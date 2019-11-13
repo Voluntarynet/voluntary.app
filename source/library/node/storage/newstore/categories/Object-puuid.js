@@ -1,7 +1,7 @@
 "use strict"
 
 Object.defineSlots(Object, {
-    uuid: function() {
+    newUuid: function() { // TODO: move this JS UUID when it's added to JS standard lib
         const uuid_a = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
         const uuid_b = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
         return uuid_a + uuid_b
@@ -14,7 +14,7 @@ Object.defineSlots(Object.prototype, {
 
     puuid: function() {
         if (!this.hasPuuid()) {
-            this.setPuuid(Object.uuid())
+            this.setPuuid(Object.newUuid())
         }
 
         return Object._puuidWeakMap.get(this);

@@ -79338,17 +79338,7 @@ window.Type = {
                 Type.isObject(value) && 
                 value.__proto__ === ([]).__proto__ &&
                 !Type.isUndefined(value.length)
-    },   
-
-    /*
-    isDictionary: function(value) {
-        // also true for objects
-        return !Type.isNull(value) &&
-                Type.isObject(value) &&
-                value.__proto__ === ({}).__proto__ &&
-                Type.isUndefined(value.length)
     },
-    */
 
     isBoolean: function(value) {
         return typeof(value) === "boolean"
@@ -79517,163 +79507,127 @@ Type.test()
 
 */
 
-
-Object.clone = function (obj) {
-    const Proto_constructor = new Function;
-    Proto_constructor.prototype = obj;
-    const instance = new Proto_constructor;
-    instance.constructor = Proto_constructor
-    return instance
-}
-
-Object.shallowCopy = function (obj) {
-    return Object.assign({}, obj);
-}
-
-Object.eachSlot = function (obj, fn) {
-    Object.getOwnPropertyNames(obj).forEach(function (name) {
-        fn(name, obj[name]);
-    });
-}
-
-/*
-Object.lookupPath = function (obj, path) {
-    path = path.split(".");
-    let pc;
-    while (obj && (pc = path.shift())) {
-        obj = obj[pc];
-    }
-    return obj;
-},
-*/
-
-Object.perform = function (obj, name) {
-    if (obj !== undefined && obj !== null && obj[name] && typeof(obj[name]) === "function") {
-        const args = Array.prototype.slice.call(arguments).slice(2);
-        return obj[name].apply(obj, args);
-    } else {
-        return obj;
-    }
-}
-
-Object.values = function (obj) {
-    const values = [];
-    for (let name in obj) {
-        if (obj.hasOwnProperty(name)) {
-            values.push(obj[name]);
+Object.defineSlots = function(obj, dict) {
+    Object.keys(dict).forEach((slotName) => {
+        const slotValue = dict[slotName]
+        const descriptor = {
+            configurable: true,
+            enumerable: false,
+            value: slotValue,
+            writable: true,
         }
-    }
-    return values;
+        Object.defineProperty(obj, slotName, descriptor)
+    })
 }
 
-/*
-Object.pop = function (obj) {
-    const k = Object.keys().last();
-    const v = obj[k];
-    delete obj[k];
-    return v;
-}
-*/
+Object.defineSlots(Object, {
+    clone: function (obj) {
+        const Proto_constructor = new Function;
+        Proto_constructor.prototype = obj;
+        const instance = new Proto_constructor;
+        instance.constructor = Proto_constructor
+        return instance
+    },
+    
+    shallowCopy: function (obj) {
+        return Object.assign({}, obj);
+    },
+    
+    eachSlot: function (obj, fn) {
+        Object.getOwnPropertyNames(obj).forEach(function (k) {
+            fn(k, obj[k]);
+        });
+    },
 
-// --- deep keys ---
-
-Object.atDeepKey = function (obj, key, seenSet) {
-    if (typeof(obj) !== "object" /* || (Object.getPrototypeOf(obj) !== Object.prototype)*/) {
-        return null;
-    }
-
-    if (!seenSet) {
-        seenSet = new Set()
-    }
-
-    if (seenSet.has(obj)) {
-        return null
-    }
-
-    seenSet.add(obj)
-
-    for (let k in obj) {
-        //console.log("k = ")
-        if (obj.hasOwnProperty(k)) {
-            if (k === key) {
-                return obj[k];
+    perform: function (obj, name) {
+        if (obj !== undefined && obj !== null && obj[name] && typeof(obj[name]) === "function") {
+            const args = Array.prototype.slice.call(arguments).slice(2);
+            return obj[name].apply(obj, args);
+        } else {
+            return obj;
+        }
+    },
+    
+    values: function (obj) {
+        const values = [];
+        for (let name in obj) {
+            if (obj.hasOwnProperty(name)) {
+                values.push(obj[name]);
             }
         }
-    }
-
-    for (let k in obj) {
-        try {
+        return values;
+    },
+    
+    atPath: function (obj, pathList) {
+        if (typeof(pathList) === "string") {
+            pathList = pathList.split("/");
+        }
+    
+        if (typeof(obj) !== "object" || (Object.getPrototypeOf(obj) !== Object.prototype) || !pathList.length) {
+            return null;
+        }
+    
+        const k = pathList.first();
+        pathList = pathList.rest();
+    
+        if (pathList.length) {
+            return Object.atPath(obj[k], pathList);
+        }
+    
+        if (k === "") {
+            return obj;
+        }
+    
+        return Array.wrap(obj[k]).first();
+    },
+    
+    slotNames: function (obj) {
+        return Object.keys(obj);
+    },
+    
+    slotValues: function (obj) {
+        const values = [];
+        for (let k in this) {
             if (obj.hasOwnProperty(k)) {
-                const v = Object.atDeepKey(obj[k], key, seenSet);
-                if (v !== null) {
-                    return v;
-                }
-            }
-        } catch (e) {
-            console.log("on key '" + k + "' caught error:", e)
-        }
-    }
-
-    return null;
-}
-
-Object.allAtDeepKey = function (obj, key) {
-    if (typeof(obj) !== "object" || (Object.getPrototypeOf(obj) !== Object.prototype)) {
-        return [];
-    }
-
-    const objs = [];
-
-    for (let k in obj) {
-        if (obj.hasOwnProperty(k)) {
-            if (k === key) {
-                objs.append(obj[k]);
-            }
-            else {
-                objs.appendItems(Object.allAtDeepKey(obj[k], key));
+                values.push(this[k]);
             }
         }
-    }
+        return values;
+    },
+})
 
-    return objs;
+
+Object.defineSlots(Object.prototype, {
+    forEachKV: function(fn) {    
+        Object.getOwnPropertyNames(this).forEach((k) => {
+            const v = this[k]
+            fn(k, v);
+        });
+        return this
+    },
+
+    mapToArrayKV: function(fn) {
+        let m = []
+        Object.getOwnPropertyNames(this).forEach((k) => {
+            const v = this[k]
+            const r = fn(k, v)
+            m.push(r)
+        }); 
+        return m
+    },
+})
+
+/*
+Object.prototype.mapToDictKV = function(fn) {
+    let d = {}
+    Object.getOwnPropertyNames(this).forEach((k) => {
+        const v = this[k]
+        const r = fn(k, v)
+        d[k] = r
+    }); 
+    return {}
 }
-
-Object.atPath = function (obj, pathList) {
-    if (typeof(pathList) === "string") {
-        pathList = pathList.split("/");
-    }
-
-    if (typeof(obj) !== "object" || (Object.getPrototypeOf(obj) !== Object.prototype) || !pathList.length) {
-        return null;
-    }
-
-    const k = pathList.first();
-    pathList = pathList.rest();
-
-    if (pathList.length) {
-        return Object.atPath(obj[k], pathList);
-    }
-
-    if (k === "") {
-        return obj;
-    }
-
-    return Array.wrap(obj[k]).first();
-}
-
-Object.slotNames = function (obj) {
-    return Object.keys(obj);
-}
-
-Object.slotValues = function (obj) {
-    const values = [];
-    for (let k in this) {
-        if (obj.hasOwnProperty(k)) {
-            values.push(this[k]);
-        }
-    }
-    return values;
-}
+*/
 
 /*
 
@@ -79707,7 +79661,7 @@ Object.prototype.associationAt = function (k) {
 */
 
 
-Object.assign(Array.prototype, {
+Object.defineSlots(Array.prototype, {
 
     // --- read operations ---
 
@@ -79734,12 +79688,16 @@ Object.assign(Array.prototype, {
     },
 
     at: function (index) {
-        if (index > -1) {
-            return this[index];
-        }
-        else {
+        if (index < 0) {
             return this[this.length + index];
         }
+
+        return this[index];
+    },
+
+    atPut: function(index, value) {
+        this[index] = value
+        return this
     },
 
     atModLength: function (index) {
@@ -79852,10 +79810,6 @@ Object.assign(Array.prototype, {
         }
 
         return subArrays;
-    },
-
-    chunk: function (chunkSize) {
-        return this.split(Math.ceil(this.length / chunkSize));
     },
 
     // --- write operations ---
@@ -80012,74 +79966,6 @@ Object.assign(Array.prototype, {
             else {
                 return 0;
             }
-        });
-    },
-
-    parallelPerform: function () {
-        const args = this.slice.call(arguments).slice();
-        const fn = args.pop();
-
-        if (this.length === 0) {
-            fn(null);
-            return;
-        }
-
-        let remaining = this.length;
-        let err = null;
-        args.push(function (error) {
-            err = error;
-            remaining --;
-            if (remaining === 0) {
-                fn(err, ops);
-            }
-        });
-
-        let ops = this.mapPerform.apply(this, args);
-        return this;
-    },
-
-    serialPerform: function (functionName) {
-        let args = this.slice.call(arguments).slice(1);
-        let fn = args.pop();
-
-        if (this.length === 0) {
-            fn(null);
-            return;
-        }
-
-        let i = 0;
-        let next = () => {
-            if (i < this.length) {
-                let e = this[i];
-                i++;
-                e[functionName].apply(e, args);
-            } else {
-                fn();
-            }
-        };
-
-        args.push(function (e) {
-            if (e) {
-                fn(e);
-            } else {
-                next();
-            }
-        });
-
-        next();
-
-        return this;
-    },
-
-    mapPerform: function () {
-        let args = Array.prototype.slice.call(arguments);
-        args.unshift(null);
-        args.push(-1);
-
-        return this.map(function (obj, i) {
-            args[0] = obj;
-            args[args.length - 1] = i; //TODO: should we append i?  Receiver might not expect this ...
-            return Object.perform.apply(Object, args);
         });
     },
 
@@ -80569,7 +80455,7 @@ Object.defineProperty(Array.prototype, "equals", {
 
 */
 
-Object.assign(Date.prototype, {
+Object.defineSlots(Date.prototype, {
     monthNames: function() {
         return [ "January", "February", "March", "April", 
             "May", "June", "July", "August", 
@@ -80643,7 +80529,7 @@ Object.assign(Date.prototype, {
 
 */
 
-Object.assign(String.prototype, {
+Object.defineSlots(String.prototype, {
     
     shallowCopy: function() {
         return this
@@ -81011,7 +80897,7 @@ const Base64 = (function () {
     };
 })();
 
-Object.assign(Number.prototype, {
+Object.defineSlots(Number.prototype, {
 
     copy: function() {
         return this
@@ -81085,7 +80971,7 @@ Object.assign(Number.prototype, {
 
 */
 
-Object.assign(Set.prototype, {
+Object.defineSlots(Set.prototype, {
 
     isSuperset: function(subset) {
         for (let v of subset) {
@@ -81195,7 +81081,7 @@ Error.callingScriptURL = function() {
 }
 
 
-Object.assign(Error.prototype, {
+Object.defineSlots(Error.prototype, {
 
     // --- assert ---
 
@@ -81941,7 +81827,7 @@ class ProtoClass {
     // --- class slots and variables ---
     
     static getClassVariable(key, defaultValue) {
-        if (!(key in this)) {
+        if (!this.hasOwnProperty(key)) {
             this[key] = defaultValue
         }
         return this[key]
@@ -82448,36 +82334,44 @@ window.Documentation = Documentation
 
 // --- Object category -------------------------------------
 
-Object.prototype.docs = function() {
-    if (!this._docs) {
-        this._docs = {}
-    }
-    return this._docs
-}
+Object.defineSlots(Object.prototype, {
 
-Object.prototype.setDocs = function (name, description) {
-    const docs = this.docs()
-    docs._name = methodName
-    docs._description = description
-    return this
-}
+    docs: function() {
+        if (!this._docs) {
+            this._docs = {}
+        }
+        return this._docs
+    },
+
+    setDocs: function (name, description) {
+        const docs = this.docs()
+        docs._name = methodName
+        docs._description = description
+        return this
+    },
+    
+})
 
 // --- Function category -------------------------------------
 
-Function.prototype.docs = function() {
-    if (!this._docs) {
-        this._docs = {}
-    }
-    return this._docs
-}
+Object.defineSlots(Function.prototype, {
 
-Function.prototype.setDocs = function (name, description, returns) {
-    const docs = this.docs()
-    docs._name = name
-    docs._description = description
-    docs._returns = returns 
-    return this
-}
+    docs: function() {
+        if (!this._docs) {
+            this._docs = {}
+        }
+        return this._docs
+    },
+
+    setDocs: function (name, description, returns) {
+        const docs = this.docs()
+        docs._name = name
+        docs._description = description
+        docs._returns = returns 
+        return this
+    },
+
+})
 
 "use strict"
 
@@ -82516,7 +82410,10 @@ window.ideal.Map = class Map extends ProtoClass {
     }
 
     at (k) {
-        return this.jsMap()[k];
+        if (this.hasKey(k)) { // to avoid inheritance
+            return this.jsMap()[k];
+        }
+        return undefined
     }
 
     mapAt (k) {
@@ -82590,6 +82487,7 @@ window.ideal.Map = class Map extends ProtoClass {
         return map;
     }
 
+    /*
     atDeepKey (k) {
         return Object.atDeepKey(this.jsMap(), k);
     }
@@ -82597,6 +82495,7 @@ window.ideal.Map = class Map extends ProtoClass {
     allAtDeepKey (k) {
         return Object.allAtDeepKey(this.jsMap(), k);
     }
+    */
 
     atPath (pathList) {
         return Object.atPath(this.jsMap(), pathList);
@@ -82632,6 +82531,7 @@ window.ideal.Map = class Map extends ProtoClass {
         return this;
     }
 
+    /*
     percentDecode () {
         this.forEach( (k, v) => {
             this.atPut(k, decodeURIComponent(v));
@@ -82649,6 +82549,7 @@ window.ideal.Map = class Map extends ProtoClass {
             }
         }).join("&");
     }
+    */
 }
 
 window.ideal.Map.registerThisClass()
@@ -83842,7 +83743,6 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
         this.newSlots({
             observations: null, // array 
             notifications: null, // array
-            isDebugging: false,
             debugNoteName: "appDidInit",
             currentNote: null,
             isProcessing: false,
@@ -83852,6 +83752,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
         this.setObservations([]);
         this.setNotifications([]);
         this.setNameIndex({});
+        //this.setIsDebugging(true)
     }
 
     // --- observations ----
@@ -84117,9 +84018,10 @@ window.Observation = class Observation extends ProtoClass {
             targetId: null, // expects uniqueId string for target
             name: null,
             observer: null,
-            isDebugging: false,
             isOneShot: false,
         })
+
+        //this.setIsDebugging(true)
     }
 
     setTargetId (aString) {
@@ -84184,8 +84086,10 @@ window.Observation.registerThisClass()
 
     Broadcaster
 
-    High performance notifications that skip using Observer and Notification objects and
-    immediately messages listeners. It's up to listeners to efficiently handle this situation.
+    Fast notifications that immediately message listeners 
+    instead of using Observer and Notification objects.
+    As mltiple notifications of the same name are not merged
+    within the same event loop, so listeners should implement handlers efficiently.
 
     Example use:
 
@@ -84298,10 +84202,10 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
             pathSeparator: "/",
             db: null,
             didRequestPersistence: false,
-            isDebugging: false,
         })
         this.assertHasUniqueId()
         //this.requestPersistenceIfNeeded()
+        //this.setIsDebugging(true)
     }
 
     requestPersistenceIfNeeded () {
@@ -84527,9 +84431,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
     }
 }
 
-
 window.IndexedDBFolder.registerThisClass()
-
 
 "use strict"
 
@@ -84550,8 +84452,9 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
             tx: null,
             requests: [],
             isCommitted: false,
-            isDebugging: true,
         })
+
+        //this.setIsDebugging(true)
     }
 
     db () {
@@ -84699,17 +84602,32 @@ window.IndexedDBTx.registerThisClass()
 	A read & write cache on top of IndexedDB to allow us to do all synchronous reads and writes
 	On open, it reads the entire db into a read cache dictionary.
 
-	- Reads first check the writeCache beforing checking the readCache.
+    - keys and values are assumed to be strings
+
+	- at(key) first checks the writeCache beforing checking the readCache
 	
 	- begin() - writes can only be done after calling begin() or an exception is raised
-	- writes/removes are to the writeCache : format: "key" -> { _value: "", _isDelete: aBool }
-	- commit() flushes writeCache to indexedDBFolder, updates readCache
+    - atPut(key, value) & removeAt(key)
+        writes/removes are to the writeCache 
+        writeCache format is: "key" -> { _value: "", _isDelete: aBool }
+	- commit() flushes writeCache to indexedDBFolder, and updates readCache
 	
 	- any exception between begin and commit should halt the app and require a restart to ensure consistency
 	
     TODO: auto sweep after a write if getting full?
     TODO: update keys, values and size method to use writeCache? Or just assert they are out of tx?
 
+    Atomic Storage protocol:
+
+    	asyncOpen()
+		isOpen()
+		begin()
+		commit()
+		at(key) // return dict
+		atPut(key, dict)
+		removeAt(key)
+        clear()
+        
 */
 
 window.SyncDB = class SyncDB extends ProtoClass {
@@ -84722,13 +84640,13 @@ window.SyncDB = class SyncDB extends ProtoClass {
             writeCache: null,
             isOpen: false,
             isSynced: false,
-            isDebugging: false,
         })
 
         this.setReadCache({})
 
         // idb
         this.setIdb(IndexedDBFolder.clone())
+        //this.setIsDebugging(true)
     }
 
     setName (aName) {
@@ -84756,7 +84674,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
             if (callback) {
                 callback()
             }
-            //	this.verifySync()
+            //this.verifySync()
         })
     }
 	
@@ -84789,9 +84707,8 @@ window.SyncDB = class SyncDB extends ProtoClass {
     }
 	
     asJson () {
-        // WARNING: bad performance if called frequently
-        //let s = JSON.stringify(this._readCache)
-        return JSON.parse(this._readCache)
+        // WARNING: this can be slow for a big store!
+        return JSON.stringify(this._readCache)
     }
 	
     verifySync () {
@@ -84801,30 +84718,30 @@ window.SyncDB = class SyncDB extends ProtoClass {
             let hasError = false
 			
             for (let k in json) {
-                if (!(k in readCache)) {
+                if ( !readCache.hasOwnProperty(k) ) {
                     //console.log("syncdb not in sync with idb - sdb missing key " + k)
                     hasError = true
-                } else if (json[k] != readCache[k]) {
+                } else if ( json[k] !== readCache[k] ) {
                     //console.log("syncdb not in sync with idb - diff values for key " + k )
                     hasError = true
                 }
 				
-                if (json[k] === undefined || readCache[k] === undefined) {
+                if ( !json.hasOwnProperty(k) || !readCache.hasOwnProperty(k) ) {
                     hasError = true
                 }
             }
 			
 			
             for (let k in readCache) {
-                if (!(k in json)) {
+                if ( !json.hasOwnProperty(k) ) {
                     //console.log("syncdb not in sync with idb - idb missing key " + k)
                     hasError = true
-                } else if (json[k] != readCache[k]) {
+                } else if ( json[k] !== readCache[k] ) {
                     //console.log("syncdb not in sync with idb - diff values for key " + k )
                     hasError = true
                 }
 				
-                if (json[k] === undefined || readCache[k] === undefined) {
+                if ( !json.hasOwnProperty(k) || !readCache.hasOwnProperty(k) ) {
                     hasError = true
                 }
             }
@@ -84840,7 +84757,6 @@ window.SyncDB = class SyncDB extends ProtoClass {
                 this._isSynced = true
                 //this.idb().show()
                 //console.log("syncdb idb json: ", JSON.stringify(json, null, 2))
-				
             }
 			
             /*
@@ -84860,20 +84776,16 @@ window.SyncDB = class SyncDB extends ProtoClass {
 	
     totalBytes () {
         let byteCount = 0
-        const dict = this._readCache
-        for (let k in dict) {
-		   if (dict.hasOwnProperty(k)) {
-                let v = dict[k]
-                byteCount += k.length + v.length
-            }
-        }
+        this._readCache.forEachKV((k, v) => {
+            byteCount += k.length + v.length
+        })
         return byteCount
     }
 	
     // transactions
 	
     hasBegun () {
-	    return (this.writeCache() != null)
+	    return (this.writeCache() !== null)
     }
 	
     assertInTx () {
@@ -84893,7 +84805,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
     }
 	
     hasWrites () {
-        return Object.keys(this._writeCache).length > 0
+        return Object.keys(this._writeCache).length !== 0
     }
 	
     commit () {
@@ -84902,45 +84814,38 @@ window.SyncDB = class SyncDB extends ProtoClass {
 	    // and block new writes until push to read cache
 	    
 	    this.assertInTx()
-	    
 	    const tx = this.idb().newTx()
-	    
 	    tx.begin()
 	    
 	    let count = 0
-        const d = this._writeCache
-		
-        for (let k in d) {
-		   if (d.hasOwnProperty(k)) {
-                let entry = d[k]
+        
+        this._writeCache.forEachKV((k, entry) => {
+            if (entry._isDelete) {
+                tx.removeAt(k)
+                delete this._readCache[k]
+                if (this.isDebugging()) {
+                    console.log(this.typeId() + " delete ", k)
+                }
+            } else {
+                const v = entry._value
+                //tx.atPut(k, v)
                 
-                if (entry._isDelete) {
-                    tx.removeAt(k)
-                    delete this._readCache[k]
+                if (this._readCache.hasOwnProperty(k)) {
+                    tx.atUpdate(k, v)
                     if (this.isDebugging()) {
-                    	console.log(this.typeId() + " delete ", k)
+                        console.log(this.typeId() + " update ", k)
                     }
                 } else {
-                    let v = entry._value
-                    //tx.atPut(k, v)
-                    
-                    if (k in this._readCache) {
-                        tx.atUpdate(k, v)
-                        if (this.isDebugging()) {
-                        	console.log(this.typeId() + " update ", k)
-                        }
-                    } else {
-                        tx.atAdd(k, v)
-                        if (this.isDebugging()) {
-                        	console.log(this.typeId() + " add ", k)
-                        }
+                    tx.atAdd(k, v)
+                    if (this.isDebugging()) {
+                        console.log(this.typeId() + " add ", k)
                     }
-                    
-                    this._readCache[k] = entry._value
                 }
-                count ++
+                
+                this._readCache[k] = entry._value
             }
-        }
+            count ++
+        })
 		
 		 // indexeddb commits on next event loop but this "commit" is 
 		 // a sanity check - it raises exception if we attempt to write more to the same tx 
@@ -84954,13 +84859,14 @@ window.SyncDB = class SyncDB extends ProtoClass {
         // TODO: use commit callback to clear writeCache instead of assuming it
         // will complete and setting it to null here
         this._writeCache = null
+        return count
     }
 	
     // NEW
 	
     hasKey(key) {
         this.assertOpen()
-        return key in this._readCache;
+        return this._readCache.hasOwnProperty(key);
     }
 	
     at(key) {
@@ -84984,7 +84890,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
         this.assertOpen()
 	    this.assertInTx()
 	    
-	    if (!(key in this._writeCache) && this._readCache[key] === value) {
+	    if (!(this._writeCache.hasOwnProperty(key)) && this._readCache[key] === value) {
 	        return
 	    }
 	    
@@ -84995,7 +84901,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
         this.assertOpen()
 	    this.assertInTx()
 	    
-	    if (!(key in this._writeCache) && !(key in this._readCache)) {
+	    if ( !this._writeCache.hasOwnProperty(key) && !this._readCache.hasOwnProperty(key) ) {
 	        return
 	    }
 	    
@@ -86283,7 +86189,6 @@ ideal.Proto.newSubclassNamed("TouchScreen").newSlots({
     lastEvent: null,
     touchListener: null,
     //isVisualDebugging: false,
-    isDebugging: false,
 }).setSlots({
 
     isSupported: function() {
@@ -86301,6 +86206,7 @@ ideal.Proto.newSubclassNamed("TouchScreen").newSlots({
     init: function () {
         ideal.Proto.init.apply(this)
         this.startListening()
+        //this.setIsDebugging(true)
         if (this.isDebugging()) {
             console.log(this.typeId() + ".init()")
         }
@@ -88622,7 +88528,7 @@ GestureRecognizer.newSubclassNamed("SlideGestureRecognizer").newSlots({
     },
 
     setDirection: function(directionName) {
-        assert(directionName in this.validDirectionsDict());
+        assert(this.validDirectionsDict().hasOwnProperty(directionName));
         this._direction = directionName
         return this
     },
@@ -90015,7 +89921,7 @@ ideal.Proto.newSubclassNamed("WebBrowserNotifications").newSlots({
     },
 
     isSupported: function() {
-        return ("Notification" in window)
+        return window.hasOwnProperty("Notification")
     },
 
     postNote: function (aNote) {
@@ -90345,7 +90251,7 @@ window.DomTransitions = class DomTransitions extends ProtoClass {
 
     at(aName) {
         const d = this.properties()
-        if (!(name in d)) {
+        if (!d.hasOwnProperty(name)) {
             d[name] = DomTransition.clone().setProperty(aName).setTransitions(this)
         }
         return d[name]
@@ -96476,7 +96382,7 @@ ResourceLoader.pushRelativePaths([
     "storage/_imports.js",
     "nodes/_imports.js",
     "fields/_imports.js",
-    "storage/BMDataStoreRecord.js", // because this is a subclass of BMFieldSetNode
+    "storage/inspectors/BMDataStoreRecord.js", // because this is a subclass of BMFieldSetNode
     
     "node_views/_imports.js",
 
@@ -97616,7 +97522,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
 	
     hasSubnodeWithHash: function(h) {
         this.assertHasSubnodeIndex()
-	    return h in this._subnodeIndex
+	    return this._subnodeIndex.hasOwnProperty(h)
     },
 	
     addSubnodeToIndex: function(subnode) { // private
@@ -97634,7 +97540,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         
         const index = this._subnodeIndex
         
-        if (h in index) {
+        if (index.hasOwnProperty(h)) {
             throw new Error(this.type() + " duplicate subnode hash " + h + " in indexed node")
         }
         
@@ -97823,11 +97729,17 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
 "use strict"
 
 ResourceLoader.pushRelativePaths([
-    "categories/_imports.js",
+    "newstore/_imports.js",
+    "inspectors/_imports.js",
     "NodeStore.js",
-    "BMDataStore.js",
-    //"BMDataStoreRecord.js",
-    "ObjectPool.js"
+])
+
+"use strict"
+
+ResourceLoader.pushRelativePaths([
+    "categories/_imports.js",
+    "ObjectPool.js",
+    "StoreCache.js"
 ])
 
 "use strict"
@@ -97843,145 +97755,531 @@ ResourceLoader.pushRelativePaths([
 
 "use strict"
 
-Object.uuid = function() {
-    const uuid_a = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
-    const uuid_b = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
-    return uuid_a + uuid_b
-}
+Object.defineSlots(Object, {
+    uuid: function() {
+        const uuid_a = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
+        const uuid_b = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
+        return uuid_a + uuid_b
+    },
 
-Object._puuidWeakMap = new WeakMap();
+    _puuidWeakMap: new WeakMap(),
+})
 
-Object.prototype.puuid = function() {
-    if (!this.hasPuuid()) {
-        this.setPuuid(Object.uuid())
-    }
+Object.defineSlots(Object.prototype, {
 
-    return Object._puuidWeakMap.get(this);
-}
+    puuid: function() {
+        if (!this.hasPuuid()) {
+            this.setPuuid(Object.uuid())
+        }
 
-Object.prototype.hasPuuid = function() {
-    return Object._puuidWeakMap.has(this)
-}
+        return Object._puuidWeakMap.get(this);
+    },
 
-Object.prototype.setPuuid = function(puuid) {
-    Object._puuidWeakMap.set(this, puuid);
-    return this
-}
+    hasPuuid: function() {
+        return Object._puuidWeakMap.has(this)
+    },
 
-Object.prototype.typePuuid = function() {
-    const puuid = this.puuid()
-    if (Type.isFunction(this.type)) {
-        return this.type() + puuid
-    }
-    return Type.typeName(this) + "_" + puuid
-}
+    setPuuid: function(puuid) {
+        Object._puuidWeakMap.set(this, puuid);
+        return this
+    },
 
-"use strict"
+    typePuuid: function() {
+        const puuid = this.puuid()
+        if (Type.isFunction(this.type)) {
+            return this.type() + "_" + puuid
+        }
+        return Type.typeName(this) + "_" + puuid
+    },
 
-Array.prototype.recordForStore = function(aStore) { // should only be called by Store
-    return {
-        type: Type.typeName(this), 
-        v: this.map(v => aStore.refValue(v))
-    }
-}
-
-Array.instanceFromRecordInStore = function(aRecord, aStore) { // should only be called by Store
-    assert(aRecord.type === "Array")
-    return aRecord.v.map(v => aStore.unrefValue(v))
-}
-
+})
 
 "use strict"
 
-Date.prototype.recordForStore = function(aStore) { // should only be called by Store
-    return {
-        type: "Date", 
-        v: this.toJSON()
-    }
-}
+Object.defineSlots(Array.prototype, {
 
-Date.instanceFromRecordInStore = function(aRecord, aStore) { // should only be called by Store
-    assert(aRecord.type === "Date")
-    return new Date(new Date(aRecord.v))
-}
+    recordForStore: function(aStore) { // should only be called by Store
+        return {
+            type: Type.typeName(this), 
+            v: this.map(v => aStore.refValue(v))
+        }
+    },
+
+})
+
+
+Object.defineSlots(Array, {
+
+    instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store
+        assert(aRecord.type === "Array")
+        return aRecord.v.map(v => aStore.unrefValue(v))
+    },
+
+})
+
+
 "use strict"
 
-Object.prototype.recordForStore = function(aStore) { // should only be called by Store
-    const dict = {}
+Object.defineSlots(Date.prototype, {
+    recordForStore: function(aStore) { // should only be called by Store
+        return {
+            type: "Date", 
+            v: this.toJSON()
+        }
+    },
+})
 
-    Object.getOwnPropertyNames(this).forEach((k) => {
-        const v = this[k]
-        dict[k] = aStore.refValue(v)
-    })
+Object.defineSlots(Date, {
+    instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store
+        assert(aRecord.type === "Date")
+        return new Date(new Date(aRecord.v))
+    },
 
-    return {
-        type: "Object", 
-        dict: dict, 
-    }
-}
-
-Object.instanceFromRecordInStore = function(aRecord, aStore) { // should only be called by Store
-    assert(aRecord.type === "Object")
-    
-    const obj = {}
-    const dict = aRecord.dict
-
-    Object.getOwnPropertyNames(dict).forEach((k) => {
-        const v = dict[k]
-        obj[k] = aStore.unrefValue(v)
-    })
-    return obj
-}
+})
 "use strict"
 
+Object.defineSlots(Object.prototype, {
 
-ideal.Proto.recordForStore = function(aStore) { // should only be called by Store
-    
-    const dict = {}
+    recordForStore: function(aStore) { // should only be called by Store
+        const dict = {}
 
-    /*
-    Object.getOwnPropertyNames(this).forEach((k) => {
-        const v = this[k]
-        dict[k] = aStore.refValue(v)
-    })
-    */
+        Object.getOwnPropertyNames(this).forEach((k) => {
+            const v = this[k]
+            dict[k] = aStore.refValue(v)
+        })
 
-    return {
-        type: this.type(), 
-        dict: dict, 
+        return {
+            type: "Object", 
+            dict: dict, 
+        }
+    },
+
+})
+
+Object.defineSlots(Object, {
+
+    instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store
+        assert(aRecord.type === "Object")
+        
+        const obj = {}
+        const dict = aRecord.dict
+
+        Object.getOwnPropertyNames(dict).forEach((k) => {
+            const v = dict[k]
+            obj[k] = aStore.unrefValue(v)
+        })
+        return obj
     }
-}
 
-ideal.Proto.instanceFromRecordInStore = function(aRecord, aStore) { // should only be called by Store    
-    const proto = window[aRecord.type]
-    const obj = proto.clone()
-    const dict = aRecord.dict
+})
+"use strict"
 
-    /*
-    Object.getOwnPropertyNames(dict).forEach((k) => {
-        const v = dict[k]
-        obj[k] = aStore.unrefValue(v)
-    })
-    */
-    return obj
-}
+Object.defineSlots(ideal.Proto, {
+
+    recordForStore: function(aStore) { // should only be called by Store
+        
+        const dict = {}
+
+        /*
+        Object.getOwnPropertyNames(this).forEach((k) => {
+            const v = this[k]
+            dict[k] = aStore.refValue(v)
+        })
+        */
+
+        return {
+            type: this.type(), 
+            dict: dict, 
+        }
+    },
+
+    instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store    
+        const proto = window[aRecord.type]
+        const obj = proto.clone()
+        const dict = aRecord.dict
+
+        /*
+        Object.getOwnPropertyNames(dict).forEach((k) => {
+            const v = dict[k]
+            obj[k] = aStore.unrefValue(v)
+        })
+        */
+        return obj
+    },
+})
 "use strict"
 
 Type.typedArrayTypeNames().forEach((name) => {
-    window[name].prototype.recordForStore = function(aStore) { // should only be called by Store
-        return {
-            type: Type.typeName(this), 
-            length: this.length,
-            values: this.values() // this is an iterator
-        }
-    }
+
+    Object.defineSlots(window[name].prototype, {
+        recordForStore: function(aStore) { // should only be called by Store
+            return {
+                type: Type.typeName(this), 
+                length: this.length,
+                values: this.values() // this is an iterator
+            }
+        },
+    })
     
-    window[name].instanceFromRecordInStore = function(aRecord, aStore) { // should only be called by Store
-        const values = aRecord.values
-        const obj = new this(values)
-        return obj
-    }
+    Object.defineSlots(window[name], {
+        instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store
+            const values = aRecord.values
+            const obj = new this(values)
+            return obj
+        },
+    })
+
 })
+"use strict"
+
+/*
+
+    ObjectPool
+
+        For persisting a node tree to JSON and back.
+        Usefull for exporting nodes out the the app/browser
+        and into others.
+
+        JSON format:
+
+            {
+                rootPid: "rootPid",
+                puuidToDict: {
+                    "objPid" : <nodeDict>
+                }
+
+            }
+
+        Example use:
+    
+            // converting a node to json
+            const poolJson = ObjectPool.clone().setRoot(rootNode).toJson()
+            
+            // converting json to a node
+            const rootNode = ObjectPool.clone().fromJson(poolJson).root()
+
+
+    Literal values can be directly stored in JSON such as:
+
+            String
+            Number
+            Boolean
+            null
+
+    Others need to be encoded, such as:
+
+            Array // need to check for references
+            a dictionary
+            Date
+
+            { __type__: "Array", v: [] }
+
+    And nodes need to be encoded references: 
+
+            BMNode
+
+    BMNode needs to be referenced by a puuid and the Store needs to know it needs to be written if not already present.
+
+
+
+*/
+
+
+// need a pidRefsFromPid
+
+ideal.Proto.newSubclassNamed("SimpleStore").newSlots({
+    rootObject: null, 
+    recordsDict: null, // dict
+    activeObjects: null, // dict
+    storeQueue: null, // array 
+    //isReadOnly: true,
+}).setSlots({
+    init: function() {
+        ideal.Proto.init.apply(this)
+        this.setRootObject(null)
+        this.setRecordsDict({})
+        this.setActiveObjects({})
+        this.setStoreQueue([])
+        return this
+    },
+
+    asJson: function() {
+        this.processStoreQueue()
+        return JSON.stringify(this.recordsDict(), null, 2)
+    },
+
+    hasActiveObject: function(anObject) {
+        const puuid = anObject.puuid()
+        return this.activeObjects().hasOwnProperty(puuid)
+    },
+
+    addActiveObject: function(anObject) {
+        if (!this.hasActiveObject(anObject)) {
+            this.storeQueue().push(anObject) // only do this during ref creation?
+        }
+        this.activeObjects()[anObject.puuid()] = anObject
+    },
+
+    processStoreQueue: function() {
+        while (this.storeQueue().length) {
+            this.processNextStoreQueue()
+        }
+    },
+
+    processNextStoreQueue: function() {
+        const obj = this.storeQueue().shift() // pop's first item
+        this.storeObject(obj)
+    },
+
+    recordForPid: function(puuid) {
+        return this.recordsDict()[puuid]
+    },
+
+    objectForRecord: function(aRecord) {
+        const aClass = window[aRecord.type]
+        const obj = aClass.instanceFromRecordInStore(aRecord, this)
+        obj.setPuuid(aRecord.id)
+        return obj
+    },
+
+    objectForPid: function(puuid) {
+        const obj = this.activeObjects()[puuid]
+        if (obj) {
+            return obj
+        }
+        return this.objectForRecord(this.recordForPid(puuid))
+    },
+
+    unrefValue: function(v) {
+        if (Type.isLiteral(v)) {
+            return v
+        }
+        const puuid = v["*"]
+        assert(puuid)
+        return this.objectForPid(puuid)
+    },
+
+    refValue: function(v) {
+        if (Type.isLiteral(v)) {
+            return v
+        }
+
+        if (!this.hasActiveObject(obj)) {
+            this.addDirtObject(obj)
+        }
+
+        this.addActiveObject(v)
+        const ref = { "*": v.puuid() }
+        return ref
+    },
+
+    storeObject: function(obj) {
+        const puuid = obj.puuid()
+        assert(puuid)
+        this.recordsDict()[puuid] = obj.recordForStore(this)
+        this.processStoreQueue()
+        return this
+    },
+
+})
+
+// -------------------
+
+const test = function () {
+    const simpleStore = SimpleStore.clone()
+
+    const fa = new Float64Array(3)
+    fa[0] = 1.2
+    fa[1] = 3.4
+    fa[1] = 5.6
+
+    const node = BMNode.clone()
+    const a = [1, 2, [3, null], { foo: "bar", b: true }, new Date(), fa, node]
+
+    simpleStore.storeObject(node)
+    console.log(simpleStore.asJson())
+
+    /*
+    const aSerialized = JSON.stringify(a, null, 2)
+    console.log("aSerialized: " + aSerialized + "\n")
+    simpleStore.storeObject(a)
+
+    console.log(simpleStore.asJson())
+    console.log("-----------------")
+
+    const b = simpleStore.objectForPid(a.puuid())
+    const bSerialized = JSON.stringify(b, null, 2)
+    console.log("bSerialized: " + bSerialized + "\n")
+    assert(aSerialized === bSerialized)
+    console.log("test passed")
+    */
+}
+
+test()
+
+
+
+"use strict"
+
+/*
+
+    AtomicKVStore
+
+    Implements ClientStore protocol but only holds records in
+    in-memory dictionary instead of writing to persistent storage.
+
+    This can be useful for constructing a copy store when dragging nodes out of the browser.
+
+    Atomic Dictionary protocol:
+
+    	asyncOpen()
+		isOpen()
+		begin()
+		commit()
+		at(key) // return dict
+		atPut(key, dict)
+		removeAt(key)
+		clear()
+*/
+
+ideal.Proto.newSubclassNamed("MemStore").newSlots({
+    dict: null, 
+    isOpen: false,
+    hasBegun: false,
+}).setSlots({
+    init: function() {
+        ideal.Proto.init.apply(this)
+        this.setdict({})
+    },
+
+    asyncOpen: function(callback) {
+        this.setIsOpen(true)
+        callback()
+    },
+
+    begin: function() {
+        assert(!this.hasBegun())
+        this.setHasBegun(true)
+        return this
+    },
+
+    begin: function() {
+        assert(!this.hasBegun())
+        this.setHasBegun(true)
+        return this
+    },
+
+    commit: function() {
+        assert(this.hasBegun())
+        this.setHasBegun(false)
+        return this
+    },
+
+    at: function(k) {
+        return this.dict()[k]
+    },
+
+    atPut: function(k, v) {
+        this.dict()[k] = v
+        return this
+    },
+
+    removeAt: function(k) {
+        delete this.dict()[k]
+        return this
+    },
+
+    clear: function(k, v) {
+        this.setDict({})
+        return this
+    },
+})
+
+
+"use strict"
+
+ResourceLoader.pushRelativePaths([
+    "BMDataStore.js",
+    //"BMDataStoreRecord.js", // need to load FieldSet first
+])
+
+"use strict"
+
+/*
+
+    BMDataStore
+
+    A visible representation of the NodeStore
+    
+*/
+
+
+BMNode.newSubclassNamed("BMDataStore").newSlots({
+    lastSyncTime: 0,
+}).setSlots({
+    init: function () {
+        BMNode.init.apply(this)
+        this.setTitle("Storage")
+        this.setNodeMinWidth(300)
+    },
+
+    subtitle: function () {
+        return this.defaultStore().shortStatsString()
+    },
+
+    defaultStore: function () {
+        return NodeStore.shared()
+    },
+
+    storeHasChanged: function() {
+        return this.defaultStore().lastSyncTime() !== this.lastSyncTime()
+    },
+
+    prepareToSyncToView: function () {
+        //console.log("this.storeHasChanged() = ", this.storeHasChanged())
+
+        if (this.subnodes().length === 0 || this.storeHasChanged()) {
+            this.defaultStore().collect()
+            this.setLastSyncTime(this.defaultStore().lastSyncTime())
+            this.refreshSubnodes()
+        }
+    },
+
+    refreshSubnodes: function () {
+        //console.log(this.typeId() + " refreshSubnodes")
+        this.removeAllSubnodes()
+        this.defaultStore().sdb().keys().sort().forEach((key) => {
+            const subnode = BMDataStoreRecord.clone().setTitle(key)
+            const size = this.defaultStore().sdb().at(key).length
+            const sizeDescription = ByteFormatter.clone().setValue(size).formattedValue()
+            subnode.setSubtitle(sizeDescription)
+            this.addRecord(subnode)
+        })
+    },
+
+    subnodeForClassName: function (aClassName) {
+        let subnode = this.firstSubnodeWithTitle(aClassName)
+        if (!subnode) {
+            subnode = BMNode.clone().setTitle(aClassName).setNoteIsSubnodeCount(true)
+            this.justAddSubnode(subnode)
+        }
+        return subnode
+    },
+
+    addRecord: function (aRecord) {
+        let className = aRecord.title().split("_").first()
+
+        if (className === "") {
+            className = "roots"
+        }
+
+        const classNode = this.subnodeForClassName(className)
+        classNode.setNodeMinWidth(300)
+        classNode.justAddSubnode(aRecord)
+        return this
+    },
+})
+
 "use strict"
 
 /*
@@ -98359,6 +98657,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     },
 
     storeObject: function (obj) { // private API
+        this.addActiveObject(obj) // since we may not call ref on obj which would add it
         //console.log("store obj")
         //this.debugLog("storeObject(" + obj.pid() + ")")
         const aDict = obj.nodeDict()
@@ -98439,12 +98738,8 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
         const obj = proto.clone()
 
-        if (!obj.justSetPid) {
-            throw new Error("stored object of type '" + nodeDict.type + "' missing justSetPid() method")
-        }
-
         // need to set pid before dict to handle circular refs
-        obj.justSetPid(pid)
+        obj.setPid(pid)
         this.addActiveObject(obj)
 
         //this.debugLog(" nodeDict = ", nodeDict)
@@ -98559,6 +98854,12 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
             throw new Error("can't get refForObject(", obj, ")")
         }
 
+        // schedule to store this if it's not active
+        // as we've now referenced it
+        if (!this.hasActiveObject(obj)) {
+            this.addDirtObject(obj)
+        }
+
         return ref
     },
 
@@ -98671,22 +98972,18 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
         const deleteCount = this.sweep()
         this._marked = null
-
         this.debugLog("--- end collect - collected " + deleteCount + " pids ---")
-
         return deleteCount
     },
 
     markActiveObjects: function () {
-        Object.keys(this.activeObjectsDict()).forEach((pid) => {
-            this._marked[pid] = true
-        })
+        const marked = this.marked()
+        this.activeObjectsDict().forEachKV((k, v) => { marked[k] = true })
         return this
     },
 
     markPid: function (pid) {
         //this.debugLog("markPid(" + pid + ")")
-
         if (this._marked[pid] === true) {
             return false // already marked it
         }
@@ -98694,11 +98991,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
         const refPids = this.pidRefsFromPid(pid)
         //this.debugLog("markPid " + pid + " w refs " + JSON.stringify(refPids))
-
-        refPids.forEach((refPid) => {
-            this.markPid(refPid)
-        })
-
+        refPids.forEach(refPid => this.markPid(refPid))
         return true
     },
 
@@ -98714,7 +99007,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
             if (this._marked[pid] !== true) {
                 this.debugLog("deletePid(" + pid + ")")
                 this.sdb().removeAt(pid)
-                deleteCount++
+                deleteCount ++
             }
         })
 
@@ -98798,19 +99091,14 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         return this
     },
 
-    showDirtyObjects: function (prefixString) {
+    showDirtyObjects: function (prefixString = "") {
         const dirty = this._dirtyObjects
-        if (!prefixString) {
-            prefixString = ""
-        }
-        //console.log("dirty objects: ")
-        //console.log("dirty objects:  " + Reflect.ownKeys(dirty).join(", "))
-        console.log(prefixString + " dirty objects: " + Object.keys(dirty).map((k) => dirty[k].typeId()).join(", "))
-
-
+        const s = dirty.mapToArrayKV((k, v) => v.typeId()).join(", ")
+        console.log(prefixString + " dirty objects: " + s)
         return this
     },
 
+    /*
     showActiveObjects: function () {
         const active = this.activeObjectsDict()
         console.log("active objects: ")
@@ -98822,9 +99110,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
         const pid = "_localIdentities"
         const obj = active[pid]
-        //debugger;
         console.log("    " + pid + ": ", Object.keys(obj.nodeRefPids()))
-
         return this
     },
 
@@ -98843,275 +99129,8 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         }
         return result
     },
-})
-
-"use strict"
-
-/*
-
-    BMDataStore
-
-    A visible representation of the NodeStore
-    
-*/
-
-
-BMNode.newSubclassNamed("BMDataStore").newSlots({
-    lastSyncTime: 0,
-}).setSlots({
-    init: function () {
-        BMNode.init.apply(this)
-        this.setTitle("Storage")
-        this.setNodeMinWidth(300)
-    },
-
-    subtitle: function () {
-        return this.defaultStore().shortStatsString()
-    },
-
-    defaultStore: function () {
-        return NodeStore.shared()
-    },
-
-    storeHasChanged: function() {
-        return this.defaultStore().lastSyncTime() !== this.lastSyncTime()
-    },
-
-    prepareToSyncToView: function () {
-        //console.log("this.storeHasChanged() = ", this.storeHasChanged())
-
-        if (this.subnodes().length === 0 || this.storeHasChanged()) {
-            this.defaultStore().collect()
-            this.setLastSyncTime(this.defaultStore().lastSyncTime())
-            this.refreshSubnodes()
-        }
-    },
-
-    refreshSubnodes: function () {
-        //console.log(this.typeId() + " refreshSubnodes")
-        this.removeAllSubnodes()
-        this.defaultStore().sdb().keys().sort().forEach((key) => {
-            const subnode = BMDataStoreRecord.clone().setTitle(key)
-            const size = this.defaultStore().sdb().at(key).length
-            const sizeDescription = ByteFormatter.clone().setValue(size).formattedValue()
-            subnode.setSubtitle(sizeDescription)
-            this.addRecord(subnode)
-        })
-    },
-
-    subnodeForClassName: function (aClassName) {
-        let subnode = this.firstSubnodeWithTitle(aClassName)
-        if (!subnode) {
-            subnode = BMNode.clone().setTitle(aClassName).setNoteIsSubnodeCount(true)
-            this.justAddSubnode(subnode)
-        }
-        return subnode
-    },
-
-    addRecord: function (aRecord) {
-        let className = aRecord.title().split("_").first()
-
-        if (className === "") {
-            className = "roots"
-        }
-
-        const classNode = this.subnodeForClassName(className)
-        classNode.setNodeMinWidth(300)
-        classNode.justAddSubnode(aRecord)
-        return this
-    },
-})
-
-"use strict"
-
-/*
-
-    ObjectPool
-
-        For persisting a node tree to JSON and back.
-        Usefull for exporting nodes out the the app/browser
-        and into others.
-
-        JSON format:
-
-            {
-                rootPid: "rootPid",
-                puuidToDict: {
-                    "objPid" : <nodeDict>
-                }
-
-            }
-
-        Example use:
-    
-            // converting a node to json
-            const poolJson = ObjectPool.clone().setRoot(rootNode).toJson()
-            
-            // converting json to a node
-            const rootNode = ObjectPool.clone().fromJson(poolJson).root()
-
-
-    Literal values can be directly stored in JSON such as:
-
-            String
-            Number
-            Boolean
-            null
-
-    Others need to be encoded, such as:
-
-            Array // need to check for references
-            a dictionary
-            Date
-
-            { __type__: "Array", v: [] }
-
-    And nodes need to be encoded references: 
-
-            BMNode
-
-    BMNode needs to be referenced by a puuid and the Store needs to know it needs to be written if not already present.
-
-
-
-*/
-
-
-
-
-// ---------------------------------------------------------------------------------------
-
-
-// need a pidRefsFromPid
-
-ideal.Proto.newSubclassNamed("SimpleStore").newSlots({
-    rootObject: null, 
-    recordsDict: null, // dict
-    activeObjects: null, // dict
-    storeQueue: null, // array 
-    //isReadOnly: true,
-}).setSlots({
-    init: function() {
-        ideal.Proto.init.apply(this)
-        this.setRootObject(null)
-        this.setRecordsDict({})
-        this.setActiveObjects({})
-        this.setStoreQueue([])
-        return this
-    },
-
-    asJson: function() {
-        this.processStoreQueue()
-        return JSON.stringify(this.recordsDict(), null, 2)
-    },
-
-    addActiveObject: function(anObject) {
-        const puuid = anObject.puuid()
-        if (!this.activeObjects()[puuid]) {
-            this.storeQueue().push(anObject)
-        }
-        this.activeObjects()[anObject.puuid()] = anObject
-    },
-
-    processStoreQueue: function() {
-        while (this.storeQueue().length) {
-            this.processNextStoreQueue()
-        }
-    },
-
-    processNextStoreQueue: function() {
-        const obj = this.storeQueue().shift() // pop's first item
-        this.storeObject(obj)
-    },
-
-    recordForPid: function(puuid) {
-        return this.recordsDict()[puuid]
-    },
-
-    objectForRecord: function(aRecord) {
-        const aClass = window[aRecord.type]
-        const obj = aClass.instanceFromRecordInStore(aRecord, this)
-        obj.setPuuid(aRecord.id)
-        return obj
-    },
-
-    objectForPid: function(puuid) {
-        /*
-        const obj = this.activeObjects()[puuid]
-        if (obj) {
-            return obj
-        }
-        */
-        return this.objectForRecord(this.recordForPid(puuid))
-    },
-
-    unrefValue: function(v) {
-        if (Type.isLiteral(v)) {
-            return v
-        }
-        const puuid = v["*"]
-        assert(puuid)
-        return this.objectForPid(puuid)
-    },
-
-    refValue: function(v) {
-        if (Type.isLiteral(v)) {
-            return v
-        }
-        const puuid = v.puuid()
-        assert(puuid)
-        this.addActiveObject(v)
-        return { 
-            // type: Type.typeName(v), // what about subclasses?
-            "*": v.puuid()
-        }
-    },
-
-    storeObject: function(obj) {
-        const puuid = obj.puuid()
-        assert(puuid)
-        this.recordsDict()[puuid] = obj.recordForStore(this)
-        this.processStoreQueue()
-        return this
-    },
-
-})
-
-// -------------------
-
-const test = function () {
-    const simpleStore = SimpleStore.clone()
-
-    const fa = new Float64Array(3)
-    fa[0] = 1.2
-    fa[1] = 3.4
-    fa[1] = 5.6
-
-    const node = BMNode.clone()
-    const a = [1, 2, [3, null], { foo: "bar", b: true }, new Date(), fa, node]
-
-    simpleStore.storeObject(node)
-    console.log(simpleStore.asJson())
-
-    /*
-    const aSerialized = JSON.stringify(a, null, 2)
-    console.log("aSerialized: " + aSerialized + "\n")
-    simpleStore.storeObject(a)
-
-    console.log(simpleStore.asJson())
-    console.log("-----------------")
-
-    const b = simpleStore.objectForPid(a.puuid())
-    const bSerialized = JSON.stringify(b, null, 2)
-    console.log("bSerialized: " + bSerialized + "\n")
-    assert(aSerialized === bSerialized)
-    console.log("test passed")
     */
-}
-
-test()
-
-
+})
 
 "use strict"
 
@@ -99136,20 +99155,16 @@ ResourceLoader.pushRelativePaths([
 
 BMNode.newSubclassNamed("BMStorableNode").newSlots({
     shouldStore: false,
-
     storedSlots: null, // dict
-    
     shouldStoreSubnodes: true,
     //loadsUnionOfChildren: false,
     isUnserializing: false,
-    
     doesLazyLoadChildren: false,
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)
         this.setStoredSlots({})
         this.scheduleSyncToStore()
-        //this.addStoredSlot("viewDict")
         this.addStoredSlot("canDelete")  // TODO: move elsewhere
     },
     
@@ -99183,42 +99198,13 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
             return aStore.objectForPid(pid)
         }
 
-        const obj = this.clone().justSetPid(pid)
+        const obj = this.clone().setPid(pid)
         aStore.addActiveObject(this)
         return obj
     },
     
     setPid: function(aPid, aStore = this.defaultStore()) {
-        this.justSetPid(Pid)
-        this.scheduleSyncToStore() // is this needed if we add to active objects and set as dirty if not in them?
-        return this
-    },
-    
-    
-    justSetPid: function(aPid) { // don't schedule sync
         this.setPuuid(aPid)
-        this.defaultStore().addActiveObject(this)
-        return this
-    },
-    
-    hasPid: function() {
-        return !Type.isNullOrUndefined(this._pid)
-    },
-    
-    /*
-    assignPid: function() {
-        if (this._pid) {
-            throw new Error("attempt to reassign pid")
-        }
-        this.justSetPid(this.puuid()) 
-        this.didAssignPid()
-        return this
-    },
-    */
-
-    didAssignPid: function() {
-        this.defaultStore().addActiveObject(this)
-        this.scheduleSyncToStore() // add to dirty objects
         return this
     },
 
@@ -99229,15 +99215,8 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
             this.shouldStore()
             throw new Error("attempt to prepare to store a node of type '" + this.type() + "' which has shouldStore === false, use this.setShouldStore(true)")
         }
-		
-        if (!this.hasPuuid()) {
-            this.puuid()
-            this.didAssignPid()
-        }
         return this.puuid()
     },
-
-    // -------------------------------------------
 
     // --- add / remove stored slots ---
     
@@ -99250,9 +99229,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     },
     
     addStoredSlots: function(slotNames) {
-        slotNames.forEach((slotName) => {
-            this.addStoredSlot(slotName)
-        })
+        slotNames.forEach(k => this.addStoredSlot(k))
         return this
     },
     
@@ -99267,8 +99244,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         return this
     },
 
-    // --- get storage dictionary ---
-
+    // writing object to store
 
     nodeDict: function (aStore = this.defaultStore()) { 
         const dict = this.nodeDictForProperties()
@@ -99280,6 +99256,26 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         return dict
     },
 
+    getStoreSlotValue: function(k) {
+        let v = undefined
+
+        if (k.beginsWith("_")) {
+            v = this[k]
+        } else {
+            if(!Type.isFunction(this[k])) {
+                console.warn("WARNING: " + this.type() + "." + k + "() not a method")
+            }
+
+            try {
+                v = this[k].apply(this)
+            } catch(error) {
+                console.warn("WARNING: " + this.type() + "." + k + "() exception calling method")
+            }
+        }
+
+        return v
+    },
+
 
     nodeDictForProperties: function (aStore = this.defaultStore()) {
         const dict = {}
@@ -99288,23 +99284,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         //console.log(this.typeId() + " storedSlots = " + JSON.stringify(this.storedSlots()))
        
         Object.keys(this.storedSlots()).forEach((k) => {
-            let v = null
-            if (k.beginsWith("_")) {
-                v = this[k]
-            } else {
-                const isFunction = Type.isFunction(this[k])
-                if(!isFunction) {
-                    console.warn("WARNING: " + this.type() + "." + k + "() not a method")
-                }
-
-                try {
-	                v = this[k].apply(this)
-                } catch(error) {
-                    console.warn("WARNING: " + this.type() + "." + k + "() exception calling method")
-                    //throw error
-                }
-            }
-           
+            const v = this.getStoreSlotValue(k)
             dict[k] = aStore.refValueIfNeeded(v)
         })
         
@@ -99312,7 +99292,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     },
 
  
-    // --- set storage dictionary ---
+    // reading object from store
    
     setNodeDict: function (aDict, aStore = this.defaultStore()) { 
 	    //BMNode.setNodeDict.apply(this, [aDict])
@@ -99327,6 +99307,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         return this
     },
     
+
     prepareToAccess: function(aStore = this.defaultStore()) {
         BMNode.prepareToAccess.apply(this)
         if (this.doesLazyLoadChildren()) {
@@ -99335,25 +99316,32 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         }
         return this
     },
+
+
+    setStoreSlotValue: function(k, value, aStore = this.defaultStore()) {
+        if (k !== "children" && k !== "type") {
+            const v = aStore.unrefValueIfNeeded(value)
+            
+            if (k.beginsWith("_")) {
+                this[k] = v
+            } else {
+                const setter = this.setterNameForSlot(k)
+                if (this[setter]) {
+                    this[setter].apply(this, [v])
+                } else {
+                    console.error("WARNING: " + this.type() + "." + setter + "(", v , ") not found - dict is: " , aDict) //, JSON.stringify(aDict))
+                    return false
+                }
+            }
+        }
+        return true
+    },
     
     setNodeDictForProperties: function (aDict, aStore = this.defaultStore()) {
         let hadMissingSetter = false 
         Object.keys(aDict).forEach((k) => {
-            if (k !== "children" && k !== "type") {
-                let v = aDict[k]
-                v = aStore.unrefValueIfNeeded(v)
-                
-                if (k.beginsWith("_")) {
-                    this[k] = v
-                } else {
-                    const setter = this.setterNameForSlot(k)
-                    if (this[setter]) {
-                        this[setter].apply(this, [v])
-                    } else {
-                        console.error("WARNING: " + this.type() + "." + setter + "(", v , ") not found - dict is: " , aDict) //, JSON.stringify(aDict))
-                        hadMissingSetter = true
-                    }
-                }
+            if(!this.setStoreSlotValue(k, aDict[k], aStore)) {
+                hadMissingSetter = true
             }
         })
    
@@ -99398,26 +99386,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         //this.checkForStoredSlotsWithoutPids()
     },
 
-    /*
-    checkForStoredSlotsWithoutPids: function() {
-        // make sure all stored slots have pids after load
-        // if not, we've just added them and they'll need to be saved
-        // as well as this object itself
-
-        Object.keys(this._storedSlots).forEach((slotName) => {
-            const obj = this[slotName].apply(this)
-            const isRef = obj !== null && obj !== undefined && obj.typeId !== undefined
-            if (isRef && !obj.hasPid()) {
-                obj.pid()
-                this.defaultStore().addDirtyObject(this)
-                //console.log(">>>>>>>>>>>>>>>>> loadFinalize assigned pid ", obj.pid())
-            }
-        })		
-    },
-    */
-
     scheduleSyncToStore: function() {
-        //console.log(this.typeId() + " scheduleSyncToStore this.hasPid() = ", this.hasPid())
         //const typeId = this.typeId()
         const shouldStore = this.shouldStore()
         const isUnserializing = this.isUnserializing()
@@ -99926,7 +99895,7 @@ BMStorableNode.newSubclassNamed("BMStoredDatedSetNode").newSlots({
     },
     
     hasKey: function(h) {
-        return h in this.dict()
+        return this.dict().hasOwnProperty(h)
     },
     
     removeKey: function(h) {
@@ -111263,39 +111232,47 @@ ResourceLoader.pushRelativePaths([
     
 */
 
-Object.toJsonStableString = function(obj) {
-    return JSON.stableStringify(obj, null, 2)
-}
+Object.defineSlots(Object.prototype, {
 
-Object.toStableHash = function(obj) {
-    return Object.toJsonStableString(obj).sha256String();
-}
+    toJsonStableString: function(obj) {
+        return JSON.stableStringify(obj, null, 2)
+    },
 
-String.prototype.toJsonDict = function() {
-    return JSON.parse(this)
-}
+    toStableHash: function(obj) {
+        return Object.toJsonStableString(obj).sha256String();
+    },
 
-String.prototype.sha256String = function() {
-    const h1 = bitcore.crypto.Hash.sha256(this.toBuffer()).toString("hex")
-    //const h2 = bitcore.crypto.Hash.sha256(("" + this).toBuffer()).toString('hex')
-    //assert(h1 === h2)
-    return h1
-/*
-	const s = "" + this
-	console.log("String.prototype.sha256String this = " + typeof(s) + " '" + s + "'")
-	const shaBits = sjcl.hash.sha256.hash(s);
-	const shaHex = sjcl.codec.hex.fromBits(shaBits);
-    const h2 = bitcore.crypto.Hash.sha256(this.toBuffer()).toString('hex')
-	console.log("shaHex = ", shaHex)
-	console.log("h2 = ", h2)
-	assert(shaHex === h2)
-    return shaHex;             
-*/   
-}
+})
 
-String.prototype.toBuffer = function () {
-    return new Buffer(this, "binary")
-}
+Object.defineSlots(String.prototype, {
+
+    toJsonDict: function() {
+        return JSON.parse(this)
+    },
+
+    sha256String: function() {
+        const h1 = bitcore.crypto.Hash.sha256(this.toBuffer()).toString("hex")
+        //const h2 = bitcore.crypto.Hash.sha256(("" + this).toBuffer()).toString('hex')
+        //assert(h1 === h2)
+        return h1
+    /*
+        const s = "" + this
+        console.log("String.prototype.sha256String this = " + typeof(s) + " '" + s + "'")
+        const shaBits = sjcl.hash.sha256.hash(s);
+        const shaHex = sjcl.codec.hex.fromBits(shaBits);
+        const h2 = bitcore.crypto.Hash.sha256(this.toBuffer()).toString('hex')
+        console.log("shaHex = ", shaHex)
+        console.log("h2 = ", h2)
+        assert(shaHex === h2)
+        return shaHex;             
+    */   
+    },
+
+    toBuffer: function () {
+        return new Buffer(this, "binary")
+    },
+
+})
 
 
 "use strict"

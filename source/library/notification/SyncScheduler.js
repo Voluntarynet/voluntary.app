@@ -57,8 +57,8 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
     init() {
         super.init()
         this.newSlots({
-            actions: ideal.Map.clone(),
-            syncSets: ideal.Map.clone(),
+            actions: ideal.Dictionary.clone(),
+            syncSets: ideal.Dictionary.clone(),
             hasTimeout: false,
             isProcessing: false,	
             currentAction: null,
@@ -69,7 +69,7 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
         const sets = this.syncSets()
 
         if (!sets.at(syncMethod)) {
-            sets.atPut(syncMethod, ideal.Map.clone())
+            sets.atPut(syncMethod, ideal.Dictionary.clone())
         }
         
         return sets.at(syncMethod)
@@ -149,7 +149,7 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
     }
 	
     clearActions () {
-	    this.setActions(ideal.Map.clone())
+	    this.setActions(ideal.Dictionary.clone())
 	    return this
     }
 	

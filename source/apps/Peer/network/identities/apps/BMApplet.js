@@ -23,7 +23,7 @@ BMStorableNode.newSubclassNamed("BMApplet").newSlots({
     },
 	
     allIdentitiesMap: function() { // only uses valid remote identities
-        const ids = ideal.Map.clone()
+        const ids = ideal.Dictionary.clone()
         return ids
     },
 

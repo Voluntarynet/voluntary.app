@@ -160,7 +160,7 @@ BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
     },
 	
     allIdentitiesMap: function() { // only uses valid remote identities
-        const ids = ideal.Map.clone()
+        const ids = ideal.Dictionary.clone()
         this.localIdentities().subnodes().forEach((id) => { 
 		    ids.merge(id.allIdentitiesMap())
         })

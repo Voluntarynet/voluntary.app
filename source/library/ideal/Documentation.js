@@ -38,7 +38,7 @@ class Documentation extends ProtoClass {
                 if (argNames[0] === "") { 
                     argNames = [] 
                 }
-                methods.push({ name: methodName, argNames: argNames})
+                methods.push({ name: methodName, argNames: argNames, comments: v.extractComments() })
             }
         })
         return methods
@@ -52,6 +52,7 @@ class Documentation extends ProtoClass {
             classDict.superClass = aClass.superClass().type()
             classes.push(classDict)
             classDict.methods = this.methodsDocsForClass(aClass)
+            //classDict.comments = aClass.comments()
         })
         return classes
     }
@@ -66,7 +67,7 @@ class Documentation extends ProtoClass {
                 if (aMethod.argNames.length > 0) {
                     argsString = "(" + aMethod.argNames.join(",") + ")"
                 }
-                lines.push("  - " + aMethod.name + argsString)
+                lines.push("  - " + aMethod.name + argsString + " " + aMethod.comments)
             })
         })
         /*
@@ -117,4 +118,8 @@ Object.defineSlots(Function.prototype, {
         return this
     },
 
+    extractComments: function() {
+        const commentPattern = new RegExp("(\\/\\*([^*]|[\\r\\n]|(\\*+([^*\/]|[\\r\\n])))*\\*+\/)|(\/\/.*)", "g");
+        return this.toString().match(commentPattern)
+    },
 })

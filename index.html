@@ -79212,7 +79212,8 @@ ResourceLoader.pushRelativePaths([
     "Proto.js",
     "ProtoClass.js",
     "Documentation.js",
-    "Map.js",
+    "Dictionary.js",
+    "AtomicDictionary.js",
     "StackTrace.js",
     "formatters/_imports.js",
     //"FilePath.js",
@@ -79598,6 +79599,10 @@ Object.defineSlots(Object, {
 
 
 Object.defineSlots(Object.prototype, {
+    shallowCopy: function (obj) {
+        return Object.assign({}, obj);
+    },
+    
     forEachKV: function(fn) {    
         Object.getOwnPropertyNames(this).forEach((k) => {
             const v = this[k]
@@ -79617,38 +79622,34 @@ Object.defineSlots(Object.prototype, {
     },
 })
 
-/*
-Object.prototype.mapToDictKV = function(fn) {
-    let d = {}
-    Object.getOwnPropertyNames(this).forEach((k) => {
-        const v = this[k]
-        const r = fn(k, v)
-        d[k] = r
-    }); 
-    return {}
-}
-*/
-
-/*
-
 // --- Objective-C like associations ---
 
-Object._allAssociations = new WeakMap()
+Object.defineSlots(Object, {
 
-Object.prototype.associations = function () {
-    let m = Object._allAssociations
+    _allAssociations: new WeakMap(),
+    
+})
 
-    if (!m.has(this)) {
-        m.set(this, {})
-    }
 
-    return m.get(this)
-}
+Object.defineSlots(Object.prototype, {
 
-Object.prototype.associationAt = function (k) {
-    return this.associations()[k]
-}
-*/
+    associations: function () {
+        let m = Object._allAssociations
+
+        if (!m.has(this)) {
+            m.set(this, {})
+        }
+
+        return m.get(this)
+    },
+
+    associationAt: function (k) {
+        return this.associations()[k]
+    },
+
+})
+
+
 
 "use strict"
 
@@ -81374,7 +81375,7 @@ Proto.setSlots({
         obj.__proto__ = this;
         //obj.constructor.name = this._type // can't assign to an anonymous Function
         obj._uniqueId = this.newUniqueInstanceId()
-        obj._typeId = null
+        //obj._typeId = null
         obj.assertHasUniqueId()
         // Note: does the JS debugger expect constructor.__proto__.type?
         return obj;
@@ -82292,7 +82293,7 @@ class Documentation extends ProtoClass {
                 if (argNames[0] === "") { 
                     argNames = [] 
                 }
-                methods.push({ name: methodName, argNames: argNames})
+                methods.push({ name: methodName, argNames: argNames, comments: v.extractComments() })
             }
         })
         return methods
@@ -82306,6 +82307,7 @@ class Documentation extends ProtoClass {
             classDict.superClass = aClass.superClass().type()
             classes.push(classDict)
             classDict.methods = this.methodsDocsForClass(aClass)
+            //classDict.comments = aClass.comments()
         })
         return classes
     }
@@ -82320,7 +82322,7 @@ class Documentation extends ProtoClass {
                 if (aMethod.argNames.length > 0) {
                     argsString = "(" + aMethod.argNames.join(",") + ")"
                 }
-                lines.push("  - " + aMethod.name + argsString)
+                lines.push("  - " + aMethod.name + argsString + " " + aMethod.comments)
             })
         })
         /*
@@ -82371,19 +82373,24 @@ Object.defineSlots(Function.prototype, {
         return this
     },
 
+    extractComments: function() {
+        const commentPattern = new RegExp("(\\/\\*([^*]|[\\r\\n]|(\\*+([^*\/]|[\\r\\n])))*\\*+\/)|(\/\/.*)", "g");
+        return this.toString().match(commentPattern)
+    },
 })
 
 "use strict"
 
 /*
 
-    Map
+    Dictionary
+
+    A wrapper for a Javascript dictionary/object.
 
 
 */
 
-
-window.ideal.Map = class Map extends ProtoClass {
+window.ideal.Dictionary = class Map extends ProtoClass {
     static withJsMap (jsMap) {
         jsMap = jsMap || {}
         return this.clone().setJsMap(jsMap)
@@ -82416,6 +82423,7 @@ window.ideal.Map = class Map extends ProtoClass {
         return undefined
     }
 
+    /*
     mapAt (k) {
         const v = this.at(k);
         if (typeof(v) !== "object" || (Object.getPrototypeOf(v) !== Object.prototype)) {
@@ -82425,6 +82433,7 @@ window.ideal.Map = class Map extends ProtoClass {
             return Map.withJsMap(v)
         }
     }
+    */
 
     atPut (k, v) {
         this.jsMap()[k] = v;
@@ -82438,22 +82447,25 @@ window.ideal.Map = class Map extends ProtoClass {
         return this;
     }
 
+    /*
     valuesSortedByKeys () {
         return this.keys().sort().map( (k) => {
             return this.at(k);
         });
     }
+    */
 
     forEach (fn) {
         this.keys().forEach( (k) => {
-            fn(k, this._jsMap[k]);
+            const v = this._jsMap[k]
+            fn(k, v);
         });
 
         return this;
     }
 
     map (fn) {
-        let jsMap = this.jsMap();
+        const jsMap = this.jsMap();
         return this.keys().map(function (k) {
             return fn(k, jsMap[k]);
         });
@@ -82471,14 +82483,15 @@ window.ideal.Map = class Map extends ProtoClass {
         return map;
     }
 
-    toJSON () {
-        return JSON.stringify(this.jsMap());
+    asJson () {
+        return JSON.stringify(this.jsMap(), null, 2);
     }
 
     isEmpty () {
         return Object.keys(this.jsMap()).length === 0;
     }
 
+    /*
     lowerCased () {
         const map = Map.clone();
         this.forEach(function (k, v) {
@@ -82487,16 +82500,6 @@ window.ideal.Map = class Map extends ProtoClass {
         return map;
     }
 
-    /*
-    atDeepKey (k) {
-        return Object.atDeepKey(this.jsMap(), k);
-    }
-
-    allAtDeepKey (k) {
-        return Object.allAtDeepKey(this.jsMap(), k);
-    }
-    */
-
     atPath (pathList) {
         return Object.atPath(this.jsMap(), pathList);
     }
@@ -82504,6 +82507,7 @@ window.ideal.Map = class Map extends ProtoClass {
     merged (aMap) {
         return this.shallowCopy().merge(aMap);
     }
+    */
 
     shallowCopy () {
         return Map.withJsMap(Object.assign({}, this.jsMap()));
@@ -82539,7 +82543,7 @@ window.ideal.Map = class Map extends ProtoClass {
         return this;
     }
 
-    queryString () {
+    asQueryString () {
         return "?" + this.map(function (k, v) {
             if (v) {
                 return k + "=" + encodeURIComponent(v);
@@ -82552,7 +82556,72 @@ window.ideal.Map = class Map extends ProtoClass {
     */
 }
 
-window.ideal.Map.registerThisClass()
+window.ideal.Dictionary.registerThisClass()
+"use strict"
+
+/*
+
+    AtomicDictionary
+
+*/
+
+window.ideal.AtomicDictionary = class AtomicDictionary extends ideal.Dictionary {
+
+    init () {
+        super.init()
+        this.newSlot("hasBegun", false) // private method
+        this.newSlot("oldVersion", null) // private method
+    }
+
+    begin () {
+        this.assertNotInTx()
+        this.setOldVersion(this.jsMap().shallowCopy()) // so no one else has a reference to our copy
+        this.setJsMap(this.jsMap().shallowCopy())
+        this.setHasBegun(true)
+        return this
+    }
+
+    revert() {
+        this.assertInTx()
+        this.setJsMap(this.oldVersion()) // rever to old version
+        this.setOldVersion(null)
+        this.setHasBegun(false)
+        return this
+    }
+
+    commit () {
+        this.assertInTx()
+        this.setOldVersion(null) // no more need for old version
+        this.setHasBegun(false)
+        return this
+    }
+
+    // just need to make sure writes happen within a transaction
+
+    assertInTx () { // private
+	    assert(this.hasBegun())
+    }
+
+    assertNotInTx () { // private
+	    assert(!this.hasBegun())
+    }
+
+    atPut (k, v) {
+        this.assertInTx()
+        return super.atPut(k, v)
+    }
+
+    removeKey (k) {
+        this.assertInTx()
+        return this.removeKey(k);
+    }
+
+    test () {
+
+    }
+}
+
+window.ideal.AtomicDictionary.registerThisClass()
 "use strict"
 
 /*
@@ -83303,7 +83372,7 @@ window.SyncAction = class SyncAction extends ProtoClass {
     }
 	
     send () {
-        this.debugLog("   <- sending " + this.description())
+        //this.debugLog("   <- sending " + this.description())
         this.target()[this.method()].apply(this.target(), this.args() ? this.args() : [])
     }
 	
@@ -83389,8 +83458,8 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
     init() {
         super.init()
         this.newSlots({
-            actions: ideal.Map.clone(),
-            syncSets: ideal.Map.clone(),
+            actions: ideal.Dictionary.clone(),
+            syncSets: ideal.Dictionary.clone(),
             hasTimeout: false,
             isProcessing: false,	
             currentAction: null,
@@ -83401,7 +83470,7 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
         const sets = this.syncSets()
 
         if (!sets.at(syncMethod)) {
-            sets.atPut(syncMethod, ideal.Map.clone())
+            sets.atPut(syncMethod, ideal.Dictionary.clone())
         }
         
         return sets.at(syncMethod)
@@ -83475,13 +83544,13 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
 	        setTimeout(() => { 
 	            this.setHasTimeout(false)
 	            this.processSets() 
-	        }, 0)
+	        }, 1)
 	    }
 	    return this
     }
 	
     clearActions () {
-	    this.setActions(ideal.Map.clone())
+	    this.setActions(ideal.Dictionary.clone())
 	    return this
     }
 	
@@ -84790,11 +84859,14 @@ window.SyncDB = class SyncDB extends ProtoClass {
 	
     assertInTx () {
 	    assert(this.hasBegun())
-	    return this
+    }
+
+    assertNotInTx () {
+	    assert(!this.hasBegun())
     }
 	
     begin () {
-	    assert(!this.hasBegun())
+	    this.assertNotInTx()
 	
         if (this.isDebugging()) {
             console.log("---- " + this.type() + " begin tx ----")
@@ -86418,7 +86490,7 @@ ideal.Proto.newSubclassNamed("GamePadManager").newSlots({
 
     connectedGamePads: function() {
         const dict = this.gamePadsDict()
-        return Reflect.ownKeys(dict).map(k => dict[k])
+        return Object.getOwnPropertyNames(dict).map(k => dict[k])
     },
     
     /*
@@ -88231,7 +88303,7 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
 
     removeFingerViews: function() {
         const dict = this.fingerViewDict()
-        Reflect.ownKeys(dict).forEach((id) => {
+        Object.getOwnPropertyNames(dict).forEach((id) => {
             const fingerView = dict[id]
             fingerView.removeFromParentView()
         })
@@ -91152,7 +91224,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     setupElement: function () {
         const e = this.createElement()
         this.setElement(e)
-        this.setDivId(this.type() + "-" + this.puuid())
+        this.setDivId(this.typeId())
         this.setupDivClassName()
         return this
     },
@@ -96713,6 +96785,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     nodeInspector: null,
 
     shouldStore: false,
+    isFinalized: false,
 }).setSlots({
     init: function () {
         ideal.Proto.init.apply(this)
@@ -96730,6 +96803,16 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         //this.setNodeRowStyles(BMViewStyles.clone())
         this.setViewDict({})
         return this
+    },
+
+    pid: function() {
+        /*
+        if (!this.shouldStore()) {
+            this.shouldStore()
+            throw new Error("attempt to prepare to store a node of type '" + this.type() + "' which has shouldStore === false, use this.setShouldStore(true)")
+        }
+        */
+        return this.puuid()
     },
 
     nodeInspector: function(aField) {
@@ -96816,6 +96899,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     
     finalize: function() {
         // for subclasses to override
+        this.setIsFinalized(true)
     },    
     
     // -----------------------
@@ -97750,13 +97834,15 @@ ResourceLoader.pushRelativePaths([
     "Date-store.js",
     "Object-store.js",
     "Proto-store.js",
-    "TypedArray-store.js"
+    "TypedArray-store.js",
+    "BMNode-store.js",
+    "BMStorableNode-store.js",
 ])
 
 "use strict"
 
 Object.defineSlots(Object, {
-    uuid: function() {
+    newUuid: function() { // TODO: move this JS UUID when it's added to JS standard lib
         const uuid_a = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
         const uuid_b = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
         return uuid_a + uuid_b
@@ -97769,7 +97855,7 @@ Object.defineSlots(Object.prototype, {
 
     puuid: function() {
         if (!this.hasPuuid()) {
-            this.setPuuid(Object.uuid())
+            this.setPuuid(Object.newUuid())
         }
 
         return Object._puuidWeakMap.get(this);
@@ -97805,6 +97891,10 @@ Object.defineSlots(Array.prototype, {
         }
     },
 
+    shouldStore: function() {
+        return true
+    },
+    
 })
 
 
@@ -97824,7 +97914,7 @@ Object.defineSlots(Date.prototype, {
     recordForStore: function(aStore) { // should only be called by Store
         return {
             type: "Date", 
-            v: this.toJSON()
+            v: this.toJSON() // toJSON is a standard library Date method
         }
     },
 })
@@ -97854,6 +97944,9 @@ Object.defineSlots(Object.prototype, {
         }
     },
 
+    shouldStore: function() {
+        return true
+    },
 })
 
 Object.defineSlots(Object, {
@@ -97932,6 +98025,79 @@ Type.typedArrayTypeNames().forEach((name) => {
 })
 "use strict"
 
+Object.defineSlots(BMNode, {
+
+    recordForStore: function(aStore) { // should only be called by Store
+        
+        const dict = {}
+
+        /*
+        Object.getOwnPropertyNames(this).forEach((k) => {
+            const v = this[k]
+            dict[k] = aStore.refValue(v)
+        })
+        */
+
+        return {
+            type: this.type(), 
+            dict: dict, 
+        }
+    },
+
+    instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store    
+        const proto = window[aRecord.type]
+        const obj = proto.clone()
+        const dict = aRecord.dict
+
+        /*
+        Object.getOwnPropertyNames(dict).forEach((k) => {
+            const v = dict[k]
+            obj[k] = aStore.unrefValue(v)
+        })
+        */
+        return obj
+    },
+})
+"use strict"
+
+/*
+Object.defineSlots(BMStorableNode, {
+
+    recordForStore: function(aStore) { // should only be called by Store
+        
+        const dict = {}
+
+        Object.keys(this.storedSlots()).forEach((k) => {
+            const v = this.getStoreSlotValue(k)
+            dict[k] = aStore.refValue(v)
+        })
+
+        return {
+            type: this.type(), 
+            dict: dict, 
+        }
+    },
+
+    instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store    
+        const proto = window[aRecord.type]
+        const obj = proto.clone()
+        const dict = aRecord.dict
+
+        Object.keys(aDict).forEach((k) => {
+            if(!this.setStoreSlotValue(k, aDict[k], aStore)) {
+                // slot was missing, so store it again without it
+                if (!aStore.isReadyOnly()) {
+                    this.scheduleSyncToStore()
+                }
+            }
+        })
+
+        return obj
+    },
+})
+*/
+"use strict"
+
 /*
 
     ObjectPool
@@ -97953,7 +98119,7 @@ Type.typedArrayTypeNames().forEach((name) => {
         Example use:
     
             // converting a node to json
-            const poolJson = ObjectPool.clone().setRoot(rootNode).toJson()
+            const poolJson = ObjectPool.clone().setRoot(rootNode).asJson()
             
             // converting json to a node
             const rootNode = ObjectPool.clone().fromJson(poolJson).root()
@@ -97989,23 +98155,29 @@ Type.typedArrayTypeNames().forEach((name) => {
 
 ideal.Proto.newSubclassNamed("SimpleStore").newSlots({
     rootObject: null, 
-    recordsDict: null, // dict
+    recordsDict: null, // AtomicDictionary
     activeObjects: null, // dict
-    storeQueue: null, // array 
+    dirtyObjects: null, // dict 
+    lastSyncTime: null, // WARNING: vulnerable to system time changes
     //isReadOnly: true,
 }).setSlots({
     init: function() {
         ideal.Proto.init.apply(this)
         this.setRootObject(null)
-        this.setRecordsDict({})
+        this.setRecordsDict(ideal.AtomicDictionary.clone())
         this.setActiveObjects({})
-        this.setStoreQueue([])
+        this.setDirtyObjects({})
+        this.setLastSyncTime(null)
         return this
     },
 
     asJson: function() {
-        this.processStoreQueue()
-        return JSON.stringify(this.recordsDict(), null, 2)
+        return this.recordsDict().asJson()
+    },
+
+    updateLastSyncTime: function() {
+        this.setLastSyncTime(Date.now())
+        return this
     },
 
     hasActiveObject: function(anObject) {
@@ -98013,26 +98185,61 @@ ideal.Proto.newSubclassNamed("SimpleStore").newSlots({
         return this.activeObjects().hasOwnProperty(puuid)
     },
 
+    addDirtyObject: function(anObject) {
+        const puuid = anObject.puuid()
+        this.dirtyObjects()[puuid] = anObject
+        return this
+    },
+
     addActiveObject: function(anObject) {
         if (!this.hasActiveObject(anObject)) {
-            this.storeQueue().push(anObject) // only do this during ref creation?
+            this.addDirtyObject(anObject) // only do this during ref creation?
         }
         this.activeObjects()[anObject.puuid()] = anObject
     },
 
-    processStoreQueue: function() {
-        while (this.storeQueue().length) {
-            this.processNextStoreQueue()
-        }
+    atomicallyStoreDirtyObjects: function() {
+        this.recordsDict().begin()
+        this.justStoreDirtyObjects()
+        this.recordsDict().commit() // flushes write cache
+        this.updateLastSyncTime()
+        return this
     },
 
-    processNextStoreQueue: function() {
-        const obj = this.storeQueue().shift() // pop's first item
-        this.storeObject(obj)
+    justStoreDirtyObjects: function() { // PRIVATE
+        let totalStoreCount = 0
+        const justStored = {} // use a dict instead of set so we can inspect it for debugging
+
+        while (true) {
+            let thisLoopStoreCount = 0
+            const dirtyBucket = this.dirtyObjects()
+            this.setDirtyObjects({})
+
+            Object.keys(dirtyBucket).forEach((puuid) => {
+                const obj = dirtyBucket[puuid]
+
+                if (justStored[puuid]) {
+                    throw new Error("attempt to double store " + puuid)
+                }
+
+                this.storeObject(obj)
+                justStored[puuid] = obj
+
+                thisLoopStoreCount ++
+            })
+
+            totalStoreCount += thisLoopStoreCount
+            //console.log("totalStoreCount: ", totalStoreCount)
+            if (thisLoopStoreCount === 0) {
+                break
+            }
+        }
+
+        return totalStoreCount
     },
 
     recordForPid: function(puuid) {
-        return this.recordsDict()[puuid]
+        return this.recordsDict().at(puuid)
     },
 
     objectForRecord: function(aRecord) {
@@ -98064,8 +98271,8 @@ ideal.Proto.newSubclassNamed("SimpleStore").newSlots({
             return v
         }
 
-        if (!this.hasActiveObject(obj)) {
-            this.addDirtObject(obj)
+        if (v.shouldStore && v.shouldStore() && !this.hasActiveObject(v)) {
+            this.addDirtyObject(v)
         }
 
         this.addActiveObject(v)
@@ -98076,8 +98283,14 @@ ideal.Proto.newSubclassNamed("SimpleStore").newSlots({
     storeObject: function(obj) {
         const puuid = obj.puuid()
         assert(puuid)
-        this.recordsDict()[puuid] = obj.recordForStore(this)
-        this.processStoreQueue()
+        this.recordsDict().atPut(puuid, obj.recordForStore(this))
+        return this
+    },
+
+    publicStoreObject: function(obj) {
+        this.addActiveObject(obj)
+        this.addDirtyObject(obj)
+        this.atomicallyStoreDirtyObjects()
         return this
     },
 
@@ -98096,8 +98309,9 @@ const test = function () {
     const node = BMNode.clone()
     const a = [1, 2, [3, null], { foo: "bar", b: true }, new Date(), fa, node]
 
-    simpleStore.storeObject(node)
+    simpleStore.publicStoreObject(a)
     console.log(simpleStore.asJson())
+    console.log("---")
 
     /*
     const aSerialized = JSON.stringify(a, null, 2)
@@ -98411,6 +98625,8 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         this.setChangedObs(obs)
         */
 
+        this.setIsDebugging(true)
+
         Broadcaster.shared().addListenerForName(this, "didChangeStoredSlot")
     },
 
@@ -98469,7 +98685,9 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
         this.sdb().asyncOpen(() => {
             this.onOpen()
+            
             //this.clear()
+            
             if (callback) {
                 callback()
             }
@@ -98512,6 +98730,10 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         // don't use pid for these keys so we can
         // use pid to see if the obj gets referrenced when walked from a stored node
         // this way we avoid storing objects not referenced from the stored objects tree
+
+        if (obj.type() === "BMStunServers") {
+            console.log("---")
+        }
 
         const dirt = this.dirtyObjects()
         const id = obj.typeId()
@@ -98561,7 +98783,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         //console.log(" --- begin storeDirtyObjects --- ")
 
         if (!this.hasDirtyObjects()) {
-            console.log("no dirty objects to store Object.keys(this._dirtyObjects) = ", Reflect.ownKeys(this._dirtyObjects))
+            console.log("no dirty objects to store Object.keys(this._dirtyObjects) = ", Object.getOwnPropertyNames(this._dirtyObjects))
             return this
         }
 
@@ -98571,7 +98793,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
         this.assertIsWritable()
 
-        if (!this.sdb().isOpen()) { // delay until it's open
+        if (!this.sdb().isOpen()) {
             throw new Error(this.type() + " storeDirtyObjects but db not open")
         }
 
@@ -98657,6 +98879,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     },
 
     storeObject: function (obj) { // private API
+        assert(obj.shouldStore())
         this.addActiveObject(obj) // since we may not call ref on obj which would add it
         //console.log("store obj")
         //this.debugLog("storeObject(" + obj.pid() + ")")
@@ -98717,7 +98940,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
         const nodeDict = this.nodeDictAtPid(pid)
         if (!nodeDict) {
-            const error = "missing pid '" + pid + "'"
+            const error = "NodeStore missing pid '" + pid + "'"
             console.warn("WARNING: " + error)
 
             // TODO: add a modal panel to allow user to choose to export and clear data
@@ -98764,15 +98987,10 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     },
 
     addActiveObject: function (obj) {
-
-        /*
-        // we only want to do this when doing refValue
-        if (!this.hasActiveObject(obj)) {
-            this.addDirtObject(obj)
-        }
-        */
-
         const pid = obj.pid()
+        if (obj.type() === "BMStunServers") {
+            console.log("---")
+        }
         //this.debugLog("addActiveObject(" + obj.pid() + ")")
         assert(!Type.isNullOrUndefined(pid))
         this.activeObjectsDict()[pid] = obj
@@ -98843,10 +99061,13 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     },
 
     refForObject: function (obj) {
+        assert(obj.shouldStore())
+
+
         const k = this.objRefKey()
         const ref = {}
 
-        if (Type.isNull(obj)) { // TODO: is this right?
+        if (Type.isNull(obj) || !obj.shouldStore()) { // TODO: is this right?
             ref[k] = "null"
         } else if (Type.isObject(obj)) {
             ref[k] = obj.pid()
@@ -98856,8 +99077,8 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
         // schedule to store this if it's not active
         // as we've now referenced it
-        if (!this.hasActiveObject(obj)) {
-            this.addDirtObject(obj)
+        if (!Type.isNull(obj) && obj.shouldStore() && !this.hasActiveObject(obj)) {
+            this.addDirtyObject(obj)
         }
 
         return ref
@@ -99093,8 +99314,8 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
     showDirtyObjects: function (prefixString = "") {
         const dirty = this._dirtyObjects
-        const s = dirty.mapToArrayKV((k, v) => v.typeId()).join(", ")
-        console.log(prefixString + " dirty objects: " + s)
+        const s = dirty.mapToArrayKV((k, v) => "'" +k + "' : '" + v.typeId() + "'").join("\n")
+        console.log(prefixString + " dirty objects: \n" + s)
         return this
     },
 
@@ -99210,13 +99431,6 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
 
     // --------------------------
     
-    pid: function() {
-        if (!this.shouldStore()) {
-            this.shouldStore()
-            throw new Error("attempt to prepare to store a node of type '" + this.type() + "' which has shouldStore === false, use this.setShouldStore(true)")
-        }
-        return this.puuid()
-    },
 
     // --- add / remove stored slots ---
     
@@ -99391,7 +99605,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         const shouldStore = this.shouldStore()
         const isUnserializing = this.isUnserializing()
 
-        if (shouldStore && !isUnserializing) {
+        if (shouldStore && !isUnserializing && this.isFinalized()) {
             this.defaultStore().addDirtyObject(this)
             //Broadcaster.shared().broadcastNameAndArgument("didChangeStoredSlot", this)
         }
@@ -99484,6 +99698,41 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         }
         
         return pids
+    },
+
+    // ----------------------------------------
+    // new store system
+    // ----------------------------------------
+
+    recordForStore: function(aStore) { // should only be called by Store
+        const dict = {}
+
+        Object.keys(this.storedSlots()).forEach((k) => {
+            const v = this.getStoreSlotValue(k)
+            dict[k] = aStore.refValue(v)
+        })
+
+        return {
+            type: this.type(), 
+            dict: dict, 
+        }
+    },
+
+    instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store    
+        const proto = window[aRecord.type]
+        const obj = proto.clone()
+        const dict = aRecord.dict
+
+        Object.keys(aDict).forEach((k) => {
+            if(!this.setStoreSlotValue(k, aDict[k], aStore)) {
+                // slot was missing, so store it again without it
+                if (!aStore.isReadyOnly()) {
+                    this.scheduleSyncToStore()
+                }
+            }
+        })
+
+        return obj
     },
 
 })
@@ -107955,6 +108204,10 @@ BMNode.newSubclassNamed("App").newSlots({
 
     init: function () {
         BMNode.init.apply(this)
+
+        //Documentation.shared().show()
+
+
         this.setNodeStoreDidOpenObs(window.NotificationCenter.shared().newObservation())
         this.nodeStoreDidOpenObs().setName("nodeStoreDidOpen").setObserver(this).setTarget(this.defaultStore())
         this.setIsDebugging(true)
@@ -109512,7 +109765,7 @@ BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
     },
 	
     allIdentitiesMap: function() { // only uses valid remote identities
-        const ids = ideal.Map.clone()
+        const ids = ideal.Dictionary.clone()
         this.localIdentities().subnodes().forEach((id) => { 
 		    ids.merge(id.allIdentitiesMap())
         })
@@ -110501,6 +110754,7 @@ BMStorableNode.newSubclassNamed("BMRServers").newSlots({
     },
 
     finalize: function() {
+        BMStorableNode.finalize.apply(this)
         this.bootstrap()
     },
 
@@ -111144,6 +111398,7 @@ BMStorableNode.newSubclassNamed("BMStunServers").newSlots({
     },
 
     finalize: function() {
+        BMStorableNode.finalize.apply(this)
         this.bootstrap()
     },
 
@@ -112130,6 +112385,7 @@ BMKeyPair.newSubclassNamed("BMLocalIdentity").newSlots({
     },
 
     finalize: function() {
+        BMKeyPair.finalize.apply(this)
         //console.log(this.typeId() + ".finalize()")
         NotificationCenter.shared().newNote().setSender(this).setName("didChangeIdentity").setInfo(this).post()
     },
@@ -112196,7 +112452,7 @@ BMKeyPair.newSubclassNamed("BMLocalIdentity").newSlots({
     },
 	
     allIdentitiesMap: function() { // only uses valid remote identities
-        let ids = ideal.Map.clone()
+        let ids = ideal.Dictionary.clone()
         ids.atPut(this.publicKeyString(), this)
 		
         this.remoteIdentities().subnodes().forEach((rid) => { 
@@ -112501,7 +112757,7 @@ BMStorableNode.newSubclassNamed("BMRemoteIdentity").newSlots({
     },
 	
     allIdentitiesMap: function() { // only uses valid remote identities
-        const ids = ideal.Map.clone()
+        const ids = ideal.Dictionary.clone()
         ids.atPut(this.publicKeyString(), this)
         return ids
     },
@@ -112620,7 +112876,7 @@ BMStorableNode.newSubclassNamed("BMApplet").newSlots({
     },
 	
     allIdentitiesMap: function() { // only uses valid remote identities
-        const ids = ideal.Map.clone()
+        const ids = ideal.Dictionary.clone()
         return ids
     },
 
@@ -113722,6 +113978,7 @@ BMStorableNode.newSubclassNamed("BMContactLinks").newSlots({
     },
 
     finalize: function () {
+        BMStorableNode.finalize.apply(this)
         if (this.parentNode()) {
             this.updatedContacts()
         }
@@ -115761,8 +116018,8 @@ ResourceLoader.pushRelativePaths([
 
 
 ResourceLoader.pushRelativePaths([
-    "Code/Courier Prime Code Italic.ttf",
-    "Code/Courier Prime Code.ttf",
+    //"Code/Courier Prime Code Italic.ttf",
+    //"Code/Courier Prime Code.ttf",
     "Default/Courier Prime Bold Italic.ttf",
     "Default/Courier Prime Bold.ttf",
     "Default/Courier Prime Italic.ttf",
@@ -115832,7 +116089,7 @@ ResourceLoader.pushRelativePaths([
     "appicon-black-600x600.png",
 ]);
 
-ResourceLoader.setResourceFilePaths(["./resources/fonts/Courier Prime/Code/Courier Prime Code Italic.ttf","./resources/fonts/Courier Prime/Code/Courier Prime Code.ttf","./resources/fonts/Courier Prime/Default/Courier Prime Bold Italic.ttf","./resources/fonts/Courier Prime/Default/Courier Prime Bold.ttf","./resources/fonts/Courier Prime/Default/Courier Prime Italic.ttf","./resources/fonts/Courier Prime/Default/Courier Prime.ttf","./resources/fonts/Courier Prime/Sans/Courier Prime Sans Bold Italic.ttf","./resources/fonts/Courier Prime/Sans/Courier Prime Sans Bold.ttf","./resources/fonts/Courier Prime/Sans/Courier Prime Sans Italic.ttf","./resources/fonts/Courier Prime/Sans/Courier Prime Sans.ttf","./resources/fonts/Courier Prime/Semibold/CourierPrime Medium.ttf","./resources/fonts/Courier Prime/Semibold/CourierPrime Semibold.ttf","./resources/fonts/OpenSans/OpenSans Bold.ttf","./resources/fonts/OpenSans/OpenSans Bold Italic.ttf","./resources/fonts/OpenSans/OpenSans Condensed Bold.ttf","./resources/fonts/OpenSans/OpenSans Condensed Light.ttf","./resources/fonts/OpenSans/OpenSans Condensed Light Italic.ttf","./resources/fonts/OpenSans/OpenSans Extra Bold.ttf","./resources/fonts/OpenSans/OpenSans Extra Bold Italic.ttf","./resources/fonts/OpenSans/OpenSans Italic.ttf","./resources/fonts/OpenSans/OpenSans Light.ttf","./resources/fonts/OpenSans/OpenSans Light Italic.ttf","./resources/fonts/OpenSans/OpenSans Regular.ttf","./resources/fonts/OpenSans/OpenSans Semibold.ttf","./resources/fonts/OpenSans/OpenSans Semibold Italic.ttf","./resources/fonts/ShareTechMono/ShareTechMono Regular.ttf","./resources/fonts/PublicSans/PublicSans Black.woff2","./resources/fonts/PublicSans/PublicSans Black Italic.woff2","./resources/fonts/PublicSans/PublicSans Bold.woff2","./resources/fonts/PublicSans/PublicSans Bold Italic.woff2","./resources/fonts/PublicSans/PublicSans Extra Bold.woff2","./resources/fonts/PublicSans/PublicSans Extra Light.woff2","./resources/fonts/PublicSans/PublicSans Extra Light Italic.woff2","./resources/fonts/PublicSans/PublicSans Italic.woff2","./resources/fonts/PublicSans/PublicSans Light.woff2","./resources/fonts/PublicSans/PublicSans Light Italic.woff2","./resources/fonts/PublicSans/PublicSans Medium.woff2","./resources/fonts/PublicSans/PublicSans Medium Italic.woff2","./resources/fonts/PublicSans/PublicSans Regular.woff2","./resources/fonts/PublicSans/PublicSans Semibold.woff2","./resources/fonts/PublicSans/PublicSans Semibold Italic.woff2","./resources/fonts/PublicSans/PublicSans Thin.woff2","./resources/fonts/PublicSans/PublicSans Thin Italic.woff2","./resources/sounds/beep_06.wav","./resources/sounds/bleep_04.wav","./resources/images/appicon-black-600x600.png"]);
+ResourceLoader.setResourceFilePaths(["./resources/fonts/Courier Prime/Default/Courier Prime Bold Italic.ttf","./resources/fonts/Courier Prime/Default/Courier Prime Bold.ttf","./resources/fonts/Courier Prime/Default/Courier Prime Italic.ttf","./resources/fonts/Courier Prime/Default/Courier Prime.ttf","./resources/fonts/Courier Prime/Sans/Courier Prime Sans Bold Italic.ttf","./resources/fonts/Courier Prime/Sans/Courier Prime Sans Bold.ttf","./resources/fonts/Courier Prime/Sans/Courier Prime Sans Italic.ttf","./resources/fonts/Courier Prime/Sans/Courier Prime Sans.ttf","./resources/fonts/Courier Prime/Semibold/CourierPrime Medium.ttf","./resources/fonts/Courier Prime/Semibold/CourierPrime Semibold.ttf","./resources/fonts/OpenSans/OpenSans Bold.ttf","./resources/fonts/OpenSans/OpenSans Bold Italic.ttf","./resources/fonts/OpenSans/OpenSans Condensed Bold.ttf","./resources/fonts/OpenSans/OpenSans Condensed Light.ttf","./resources/fonts/OpenSans/OpenSans Condensed Light Italic.ttf","./resources/fonts/OpenSans/OpenSans Extra Bold.ttf","./resources/fonts/OpenSans/OpenSans Extra Bold Italic.ttf","./resources/fonts/OpenSans/OpenSans Italic.ttf","./resources/fonts/OpenSans/OpenSans Light.ttf","./resources/fonts/OpenSans/OpenSans Light Italic.ttf","./resources/fonts/OpenSans/OpenSans Regular.ttf","./resources/fonts/OpenSans/OpenSans Semibold.ttf","./resources/fonts/OpenSans/OpenSans Semibold Italic.ttf","./resources/fonts/ShareTechMono/ShareTechMono Regular.ttf","./resources/fonts/PublicSans/PublicSans Black.woff2","./resources/fonts/PublicSans/PublicSans Black Italic.woff2","./resources/fonts/PublicSans/PublicSans Bold.woff2","./resources/fonts/PublicSans/PublicSans Bold Italic.woff2","./resources/fonts/PublicSans/PublicSans Extra Bold.woff2","./resources/fonts/PublicSans/PublicSans Extra Light.woff2","./resources/fonts/PublicSans/PublicSans Extra Light Italic.woff2","./resources/fonts/PublicSans/PublicSans Italic.woff2","./resources/fonts/PublicSans/PublicSans Light.woff2","./resources/fonts/PublicSans/PublicSans Light Italic.woff2","./resources/fonts/PublicSans/PublicSans Medium.woff2","./resources/fonts/PublicSans/PublicSans Medium Italic.woff2","./resources/fonts/PublicSans/PublicSans Regular.woff2","./resources/fonts/PublicSans/PublicSans Semibold.woff2","./resources/fonts/PublicSans/PublicSans Semibold Italic.woff2","./resources/fonts/PublicSans/PublicSans Thin.woff2","./resources/fonts/PublicSans/PublicSans Thin Italic.woff2","./resources/sounds/beep_06.wav","./resources/sounds/bleep_04.wav","./resources/images/appicon-black-600x600.png"]);
 
 
       window.onload = function() { 

@@ -20,6 +20,7 @@ BMStorableNode.newSubclassNamed("BMRServers").newSlots({
     },
 
     finalize: function() {
+        BMStorableNode.finalize.apply(this)
         this.bootstrap()
     },
 

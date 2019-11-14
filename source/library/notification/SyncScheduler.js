@@ -143,7 +143,7 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
 	        setTimeout(() => { 
 	            this.setHasTimeout(false)
 	            this.processSets() 
-	        }, 0)
+	        }, 1)
 	    }
 	    return this
     }

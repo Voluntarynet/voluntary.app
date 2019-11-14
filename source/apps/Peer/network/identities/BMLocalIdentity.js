@@ -52,6 +52,7 @@ BMKeyPair.newSubclassNamed("BMLocalIdentity").newSlots({
     },
 
     finalize: function() {
+        BMKeyPair.finalize.apply(this)
         //console.log(this.typeId() + ".finalize()")
         NotificationCenter.shared().newNote().setSender(this).setName("didChangeIdentity").setInfo(this).post()
     },

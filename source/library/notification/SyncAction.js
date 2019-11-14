@@ -36,7 +36,7 @@ window.SyncAction = class SyncAction extends ProtoClass {
     }
 	
     send () {
-        this.debugLog("   <- sending " + this.description())
+        //this.debugLog("   <- sending " + this.description())
         this.target()[this.method()].apply(this.target(), this.args() ? this.args() : [])
     }
 	

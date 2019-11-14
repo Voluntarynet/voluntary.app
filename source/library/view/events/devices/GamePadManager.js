@@ -51,7 +51,7 @@ ideal.Proto.newSubclassNamed("GamePadManager").newSlots({
 
     connectedGamePads: function() {
         const dict = this.gamePadsDict()
-        return Reflect.ownKeys(dict).map(k => dict[k])
+        return Object.getOwnPropertyNames(dict).map(k => dict[k])
     },
     
     /*

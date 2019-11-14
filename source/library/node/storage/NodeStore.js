@@ -129,6 +129,8 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         this.setChangedObs(obs)
         */
 
+        this.setIsDebugging(true)
+
         Broadcaster.shared().addListenerForName(this, "didChangeStoredSlot")
     },
 
@@ -187,7 +189,9 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
         this.sdb().asyncOpen(() => {
             this.onOpen()
+            
             //this.clear()
+            
             if (callback) {
                 callback()
             }
@@ -230,6 +234,10 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         // don't use pid for these keys so we can
         // use pid to see if the obj gets referrenced when walked from a stored node
         // this way we avoid storing objects not referenced from the stored objects tree
+
+        if (obj.type() === "BMStunServers") {
+            console.log("---")
+        }
 
         const dirt = this.dirtyObjects()
         const id = obj.typeId()
@@ -279,7 +287,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         //console.log(" --- begin storeDirtyObjects --- ")
 
         if (!this.hasDirtyObjects()) {
-            console.log("no dirty objects to store Object.keys(this._dirtyObjects) = ", Reflect.ownKeys(this._dirtyObjects))
+            console.log("no dirty objects to store Object.keys(this._dirtyObjects) = ", Object.getOwnPropertyNames(this._dirtyObjects))
             return this
         }
 
@@ -289,7 +297,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
         this.assertIsWritable()
 
-        if (!this.sdb().isOpen()) { // delay until it's open
+        if (!this.sdb().isOpen()) {
             throw new Error(this.type() + " storeDirtyObjects but db not open")
         }
 
@@ -375,6 +383,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     },
 
     storeObject: function (obj) { // private API
+        assert(obj.shouldStore())
         this.addActiveObject(obj) // since we may not call ref on obj which would add it
         //console.log("store obj")
         //this.debugLog("storeObject(" + obj.pid() + ")")
@@ -435,7 +444,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
         const nodeDict = this.nodeDictAtPid(pid)
         if (!nodeDict) {
-            const error = "missing pid '" + pid + "'"
+            const error = "NodeStore missing pid '" + pid + "'"
             console.warn("WARNING: " + error)
 
             // TODO: add a modal panel to allow user to choose to export and clear data
@@ -483,6 +492,9 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
     addActiveObject: function (obj) {
         const pid = obj.pid()
+        if (obj.type() === "BMStunServers") {
+            console.log("---")
+        }
         //this.debugLog("addActiveObject(" + obj.pid() + ")")
         assert(!Type.isNullOrUndefined(pid))
         this.activeObjectsDict()[pid] = obj
@@ -553,10 +565,13 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     },
 
     refForObject: function (obj) {
+        assert(obj.shouldStore())
+
+
         const k = this.objRefKey()
         const ref = {}
 
-        if (Type.isNull(obj)) { // TODO: is this right?
+        if (Type.isNull(obj) || !obj.shouldStore()) { // TODO: is this right?
             ref[k] = "null"
         } else if (Type.isObject(obj)) {
             ref[k] = obj.pid()
@@ -566,8 +581,8 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
         // schedule to store this if it's not active
         // as we've now referenced it
-        if (!this.hasActiveObject(obj)) {
-            this.addDirtObject(obj)
+        if (!Type.isNull(obj) && obj.shouldStore() && !this.hasActiveObject(obj)) {
+            this.addDirtyObject(obj)
         }
 
         return ref
@@ -803,8 +818,8 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
     showDirtyObjects: function (prefixString = "") {
         const dirty = this._dirtyObjects
-        const s = dirty.mapToArrayKV((k, v) => v.typeId()).join(", ")
-        console.log(prefixString + " dirty objects: " + s)
+        const s = dirty.mapToArrayKV((k, v) => "'" +k + "' : '" + v.typeId() + "'").join("\n")
+        console.log(prefixString + " dirty objects: \n" + s)
         return this
     },
 

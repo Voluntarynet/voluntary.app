@@ -21,7 +21,7 @@
         Example use:
     
             // converting a node to json
-            const poolJson = ObjectPool.clone().setRoot(rootNode).toJson()
+            const poolJson = ObjectPool.clone().setRoot(rootNode).asJson()
             
             // converting json to a node
             const rootNode = ObjectPool.clone().fromJson(poolJson).root()
@@ -57,23 +57,29 @@
 
 ideal.Proto.newSubclassNamed("SimpleStore").newSlots({
     rootObject: null, 
-    recordsDict: null, // dict
+    recordsDict: null, // AtomicDictionary
     activeObjects: null, // dict
-    storeQueue: null, // array 
+    dirtyObjects: null, // dict 
+    lastSyncTime: null, // WARNING: vulnerable to system time changes
     //isReadOnly: true,
 }).setSlots({
     init: function() {
         ideal.Proto.init.apply(this)
         this.setRootObject(null)
-        this.setRecordsDict({})
+        this.setRecordsDict(ideal.AtomicDictionary.clone())
         this.setActiveObjects({})
-        this.setStoreQueue([])
+        this.setDirtyObjects({})
+        this.setLastSyncTime(null)
         return this
     },
 
     asJson: function() {
-        this.processStoreQueue()
-        return JSON.stringify(this.recordsDict(), null, 2)
+        return this.recordsDict().asJson()
+    },
+
+    updateLastSyncTime: function() {
+        this.setLastSyncTime(Date.now())
+        return this
     },
 
     hasActiveObject: function(anObject) {
@@ -81,26 +87,61 @@ ideal.Proto.newSubclassNamed("SimpleStore").newSlots({
         return this.activeObjects().hasOwnProperty(puuid)
     },
 
+    addDirtyObject: function(anObject) {
+        const puuid = anObject.puuid()
+        this.dirtyObjects()[puuid] = anObject
+        return this
+    },
+
     addActiveObject: function(anObject) {
         if (!this.hasActiveObject(anObject)) {
-            this.storeQueue().push(anObject) // only do this during ref creation?
+            this.addDirtyObject(anObject) // only do this during ref creation?
         }
         this.activeObjects()[anObject.puuid()] = anObject
     },
 
-    processStoreQueue: function() {
-        while (this.storeQueue().length) {
-            this.processNextStoreQueue()
-        }
+    atomicallyStoreDirtyObjects: function() {
+        this.recordsDict().begin()
+        this.justStoreDirtyObjects()
+        this.recordsDict().commit() // flushes write cache
+        this.updateLastSyncTime()
+        return this
     },
 
-    processNextStoreQueue: function() {
-        const obj = this.storeQueue().shift() // pop's first item
-        this.storeObject(obj)
+    justStoreDirtyObjects: function() { // PRIVATE
+        let totalStoreCount = 0
+        const justStored = {} // use a dict instead of set so we can inspect it for debugging
+
+        while (true) {
+            let thisLoopStoreCount = 0
+            const dirtyBucket = this.dirtyObjects()
+            this.setDirtyObjects({})
+
+            Object.keys(dirtyBucket).forEach((puuid) => {
+                const obj = dirtyBucket[puuid]
+
+                if (justStored[puuid]) {
+                    throw new Error("attempt to double store " + puuid)
+                }
+
+                this.storeObject(obj)
+                justStored[puuid] = obj
+
+                thisLoopStoreCount ++
+            })
+
+            totalStoreCount += thisLoopStoreCount
+            //console.log("totalStoreCount: ", totalStoreCount)
+            if (thisLoopStoreCount === 0) {
+                break
+            }
+        }
+
+        return totalStoreCount
     },
 
     recordForPid: function(puuid) {
-        return this.recordsDict()[puuid]
+        return this.recordsDict().at(puuid)
     },
 
     objectForRecord: function(aRecord) {
@@ -132,8 +173,8 @@ ideal.Proto.newSubclassNamed("SimpleStore").newSlots({
             return v
         }
 
-        if (!this.hasActiveObject(obj)) {
-            this.addDirtObject(obj)
+        if (v.shouldStore && v.shouldStore() && !this.hasActiveObject(v)) {
+            this.addDirtyObject(v)
         }
 
         this.addActiveObject(v)
@@ -144,8 +185,14 @@ ideal.Proto.newSubclassNamed("SimpleStore").newSlots({
     storeObject: function(obj) {
         const puuid = obj.puuid()
         assert(puuid)
-        this.recordsDict()[puuid] = obj.recordForStore(this)
-        this.processStoreQueue()
+        this.recordsDict().atPut(puuid, obj.recordForStore(this))
+        return this
+    },
+
+    publicStoreObject: function(obj) {
+        this.addActiveObject(obj)
+        this.addDirtyObject(obj)
+        this.atomicallyStoreDirtyObjects()
         return this
     },
 
@@ -164,8 +211,9 @@ const test = function () {
     const node = BMNode.clone()
     const a = [1, 2, [3, null], { foo: "bar", b: true }, new Date(), fa, node]
 
-    simpleStore.storeObject(node)
+    simpleStore.publicStoreObject(a)
     console.log(simpleStore.asJson())
+    console.log("---")
 
     /*
     const aSerialized = JSON.stringify(a, null, 2)

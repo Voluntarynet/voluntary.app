@@ -180,7 +180,7 @@ Proto.setSlots({
         obj.__proto__ = this;
         //obj.constructor.name = this._type // can't assign to an anonymous Function
         obj._uniqueId = this.newUniqueInstanceId()
-        obj._typeId = null
+        //obj._typeId = null
         obj.assertHasUniqueId()
         // Note: does the JS debugger expect constructor.__proto__.type?
         return obj;

@@ -51,6 +51,7 @@ BMAppMessage.newSubclassNamed("BMMailMessage").newSlots({
     },
 	
     finalize: function() {
+        BMAppMessage.finalize.apply(this)
         this.setupInputsFromPubkeys()
     },
 	

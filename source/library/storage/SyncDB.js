@@ -195,11 +195,14 @@ window.SyncDB = class SyncDB extends ProtoClass {
 	
     assertInTx () {
 	    assert(this.hasBegun())
-	    return this
+    }
+
+    assertNotInTx () {
+	    assert(!this.hasBegun())
     }
 	
     begin () {
-	    assert(!this.hasBegun())
+	    this.assertNotInTx()
 	
         if (this.isDebugging()) {
             console.log("---- " + this.type() + " begin tx ----")

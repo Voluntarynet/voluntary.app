@@ -22,6 +22,7 @@ BMStorableNode.newSubclassNamed("BMStunServers").newSlots({
     },
 
     finalize: function() {
+        BMStorableNode.finalize.apply(this)
         this.bootstrap()
     },
 

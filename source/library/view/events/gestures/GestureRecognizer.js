@@ -716,7 +716,7 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
 
     removeFingerViews: function() {
         const dict = this.fingerViewDict()
-        Reflect.ownKeys(dict).forEach((id) => {
+        Object.getOwnPropertyNames(dict).forEach((id) => {
             const fingerView = dict[id]
             fingerView.removeFromParentView()
         })

@@ -1,17 +1,16 @@
 "use strict"
 
+/*
 Object.defineSlots(BMStorableNode, {
 
     recordForStore: function(aStore) { // should only be called by Store
         
         const dict = {}
 
-        /*
-        Object.getOwnPropertyNames(this).forEach((k) => {
-            const v = this[k]
+        Object.keys(this.storedSlots()).forEach((k) => {
+            const v = this.getStoreSlotValue(k)
             dict[k] = aStore.refValue(v)
         })
-        */
 
         return {
             type: this.type(), 
@@ -24,12 +23,16 @@ Object.defineSlots(BMStorableNode, {
         const obj = proto.clone()
         const dict = aRecord.dict
 
-        /*
-        Object.getOwnPropertyNames(dict).forEach((k) => {
-            const v = dict[k]
-            obj[k] = aStore.unrefValue(v)
+        Object.keys(aDict).forEach((k) => {
+            if(!this.setStoreSlotValue(k, aDict[k], aStore)) {
+                // slot was missing, so store it again without it
+                if (!aStore.isReadyOnly()) {
+                    this.scheduleSyncToStore()
+                }
+            }
         })
-        */
+
         return obj
     },
 })
+*/

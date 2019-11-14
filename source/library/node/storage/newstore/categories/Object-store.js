@@ -16,6 +16,9 @@ Object.defineSlots(Object.prototype, {
         }
     },
 
+    shouldStore: function() {
+        return true
+    },
 })
 
 Object.defineSlots(Object, {

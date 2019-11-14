@@ -2,7 +2,9 @@
 
 /*
 
-    Map
+    Dictionary
+
+    A wrapper for a Javascript dictionary/object.
 
 
 */
@@ -100,8 +102,8 @@ window.ideal.Dictionary = class Map extends ProtoClass {
         return map;
     }
 
-    toJSON () {
-        return JSON.stringify(this.jsMap());
+    asJson () {
+        return JSON.stringify(this.jsMap(), null, 2);
     }
 
     isEmpty () {

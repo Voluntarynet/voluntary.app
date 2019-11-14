@@ -63,13 +63,6 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
 
     // --------------------------
     
-    pid: function() {
-        if (!this.shouldStore()) {
-            this.shouldStore()
-            throw new Error("attempt to prepare to store a node of type '" + this.type() + "' which has shouldStore === false, use this.setShouldStore(true)")
-        }
-        return this.puuid()
-    },
 
     // --- add / remove stored slots ---
     
@@ -244,7 +237,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         const shouldStore = this.shouldStore()
         const isUnserializing = this.isUnserializing()
 
-        if (shouldStore && !isUnserializing) {
+        if (shouldStore && !isUnserializing && this.isFinalized()) {
             this.defaultStore().addDirtyObject(this)
             //Broadcaster.shared().broadcastNameAndArgument("didChangeStoredSlot", this)
         }
@@ -337,6 +330,41 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         }
         
         return pids
+    },
+
+    // ----------------------------------------
+    // new store system
+    // ----------------------------------------
+
+    recordForStore: function(aStore) { // should only be called by Store
+        const dict = {}
+
+        Object.keys(this.storedSlots()).forEach((k) => {
+            const v = this.getStoreSlotValue(k)
+            dict[k] = aStore.refValue(v)
+        })
+
+        return {
+            type: this.type(), 
+            dict: dict, 
+        }
+    },
+
+    instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store    
+        const proto = window[aRecord.type]
+        const obj = proto.clone()
+        const dict = aRecord.dict
+
+        Object.keys(aDict).forEach((k) => {
+            if(!this.setStoreSlotValue(k, aDict[k], aStore)) {
+                // slot was missing, so store it again without it
+                if (!aStore.isReadyOnly()) {
+                    this.scheduleSyncToStore()
+                }
+            }
+        })
+
+        return obj
     },
 
 })

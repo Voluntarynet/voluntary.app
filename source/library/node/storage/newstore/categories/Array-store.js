@@ -9,6 +9,10 @@ Object.defineSlots(Array.prototype, {
         }
     },
 
+    shouldStore: function() {
+        return true
+    },
+    
 })
 
 

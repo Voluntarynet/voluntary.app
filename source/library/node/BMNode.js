@@ -98,6 +98,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     nodeInspector: null,
 
     shouldStore: false,
+    isFinalized: false,
 }).setSlots({
     init: function () {
         ideal.Proto.init.apply(this)
@@ -115,6 +116,16 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         //this.setNodeRowStyles(BMViewStyles.clone())
         this.setViewDict({})
         return this
+    },
+
+    pid: function() {
+        /*
+        if (!this.shouldStore()) {
+            this.shouldStore()
+            throw new Error("attempt to prepare to store a node of type '" + this.type() + "' which has shouldStore === false, use this.setShouldStore(true)")
+        }
+        */
+        return this.puuid()
     },
 
     nodeInspector: function(aField) {
@@ -201,6 +212,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     
     finalize: function() {
         // for subclasses to override
+        this.setIsFinalized(true)
     },    
     
     // -----------------------

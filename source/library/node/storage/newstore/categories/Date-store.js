@@ -4,7 +4,7 @@ Object.defineSlots(Date.prototype, {
     recordForStore: function(aStore) { // should only be called by Store
         return {
             type: "Date", 
-            v: this.toJSON()
+            v: this.toJSON() // toJSON is a standard library Date method
         }
     },
 })

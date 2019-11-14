@@ -25,6 +25,7 @@ BMStorableNode.newSubclassNamed("BMContactLinks").newSlots({
     },
 
     finalize: function () {
+        BMStorableNode.finalize.apply(this)
         if (this.parentNode()) {
             this.updatedContacts()
         }

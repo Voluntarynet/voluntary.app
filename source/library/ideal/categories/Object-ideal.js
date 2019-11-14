@@ -100,6 +100,10 @@ Object.defineSlots(Object, {
 
 
 Object.defineSlots(Object.prototype, {
+    shallowCopy: function (obj) {
+        return Object.assign({}, obj);
+    },
+    
     forEachKV: function(fn) {    
         Object.getOwnPropertyNames(this).forEach((k) => {
             const v = this[k]

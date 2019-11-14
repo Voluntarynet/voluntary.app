@@ -2,6 +2,10 @@
 TODO:
 
 
+	NodeStore:
+		Remove global _ roots and replace with a single root?
+	
+	
 	Use 
 		aStore.refValue(v) to add v to activeObjects (which adds to storeQueue if not present in activeObjects)
 		

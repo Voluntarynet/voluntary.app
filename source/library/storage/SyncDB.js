@@ -200,7 +200,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
 	    assert(!this.hasBegun())
     }
 	
-    begin () {
+    begin () { // public
 	    this.assertNotInTx()
 	
         if (this.isDebugging()) {
@@ -215,7 +215,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
         return Object.keys(this._writeCache).length !== 0
     }
 	
-    commit () {
+    commit () { // public
 	    // push to indexedDB tx and to SyncDb's read cache
 	    // TODO: only push to read cache on IndexedDB when tx complete callback received,
 	    // and block new writes until push to read cache
@@ -271,12 +271,12 @@ window.SyncDB = class SyncDB extends ProtoClass {
 	
     // NEW
 	
-    hasKey(key) {
+    hasKey(key) { // public
         this.assertOpen()
         return this._readCache.hasOwnProperty(key);
     }
 	
-    at(key) {
+    at(key) { // public
         this.assertOpen()
 		
         if (this._writeCache) {
@@ -293,7 +293,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
         return this._readCache[key]
     }
 	
-    atPut (key, value) {
+    atPut (key, value) { // public
         assert(Type.isString(key))
         assert(Type.isString(value))
         

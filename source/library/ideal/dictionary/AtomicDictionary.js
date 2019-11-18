@@ -25,15 +25,15 @@ window.ideal.AtomicDictionary = class AtomicDictionary extends ideal.Dictionary 
 
     begin () {
         this.assertNotInTx()
-        this.setOldVersion(this.jsMap().shallowCopy()) // so no one else has a reference to our copy
-        this.setJsMap(this.jsMap().shallowCopy())
+        this.setOldVersion(this.jsDict().shallowCopy()) // so no one else has a reference to our copy
+        this.setJsDict(this.jsDict().shallowCopy())
         this.setHasBegun(true)
         return this
     }
 
     revert() {
         this.assertInTx()
-        this.setJsMap(this.oldVersion()) // rever to old version
+        this.setJsDict(this.oldVersion()) // rever to old version
         this.setOldVersion(null)
         this.setHasBegun(false)
         return this

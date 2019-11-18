@@ -89,7 +89,7 @@ ideal.Proto.newSubclassNamed("SimpleStore").newSlots({
         const recordsDict = this.recordsDict()
         const rootKey = "root"
         // do we want this? What if object store is for copy?
-        if (!recordsDict.has(rootKey)) {  
+        if (!recordsDict.hasKey(rootKey)) {  
             const rootObj = {}
             rootObj.setPuuid(rootKey)
             recordsDict.begin()

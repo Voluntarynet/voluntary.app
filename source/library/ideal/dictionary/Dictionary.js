@@ -10,34 +10,33 @@
 */
 
 window.ideal.Dictionary = class Map extends ProtoClass {
-    static withJsMap (jsMap) {
-        jsMap = jsMap || {}
-        return this.clone().setJsMap(jsMap)
+    static withJsDict (jsDict) {
+        return this.clone().setJsDict(jsDict)
     }
 
     init () {
-        this.newSlot("jsMap", null)
-        this.setJsMap({});
+        this.newSlot("jsDict", null)
+        this.setJsDict({});
     }
 
     clear () {
-        this.setJsMap({});
+        this.setJsDict({});
         return this
     }
 
     keys () {
-        return Object.keys(this.jsMap());
+        return Object.keys(this.jsDict());
     }
 
     values () {
         return this.keys().map( (k) => {
-            return this.jsMap()[k];
+            return this.jsDict()[k];
         });
     }
 
     at (k) {
         if (this.hasKey(k)) { // to avoid inheritance
-            return this.jsMap()[k];
+            return this.jsDict()[k];
         }
         return undefined
     }
@@ -49,13 +48,13 @@ window.ideal.Dictionary = class Map extends ProtoClass {
             return v;
         }
         else {
-            return Map.withJsMap(v)
+            return Map.withJsDict(v)
         }
     }
     */
 
     atPut (k, v) {
-        this.jsMap()[k] = v;
+        this.jsDict()[k] = v;
         return this;
     }
 
@@ -84,17 +83,17 @@ window.ideal.Dictionary = class Map extends ProtoClass {
     }
 
     map (fn) {
-        const jsMap = this.jsMap();
+        const jsDict = this.jsDict();
         return this.keys().map(function (k) {
-            return fn(k, jsMap[k]);
+            return fn(k, jsDict[k]);
         });
     }
 
     filtered (fn) {
         const map = Map.clone();
-        const jsMap = this.jsMap();
+        const jsDict = this.jsDict();
         this.keys().forEach(function (k) {
-            const v = jsMap[k];
+            const v = jsDict[k];
             if (fn(k, v)) {
                 map.atPut(k, v);
             }
@@ -103,11 +102,11 @@ window.ideal.Dictionary = class Map extends ProtoClass {
     }
 
     asJson () {
-        return JSON.stringify(this.jsMap(), null, 2);
+        return JSON.stringify(this.jsDict(), null, 2);
     }
 
     isEmpty () {
-        return Object.keys(this.jsMap()).length === 0;
+        return Object.keys(this.jsDict()).length === 0;
     }
 
     /*
@@ -120,7 +119,7 @@ window.ideal.Dictionary = class Map extends ProtoClass {
     }
 
     atPath (pathList) {
-        return Object.atPath(this.jsMap(), pathList);
+        return Object.atPath(this.jsDict(), pathList);
     }
 
     merged (aMap) {
@@ -129,13 +128,13 @@ window.ideal.Dictionary = class Map extends ProtoClass {
     */
 
     shallowCopy () {
-        return Map.withJsMap(Object.assign({}, this.jsMap()));
+        return Map.withJsDict(Object.assign({}, this.jsDict()));
     }
 
     merge (aMap) {
-        const jsMap = this.jsMap();
+        const jsDict = this.jsDict();
         aMap.forEach(function (k, v) {
-            jsMap[k] = v;
+            jsDict[k] = v;
         });
         return this;
     }
@@ -144,12 +143,18 @@ window.ideal.Dictionary = class Map extends ProtoClass {
         return this.keys().size();
     }
 
+    /*
+    has(k) {
+        return this.jsDict().hasOwnProperty(k);
+    }
+    */
+
     hasKey (k) {
-        return this.jsMap().hasOwnProperty(k);
+        return this.jsDict().hasOwnProperty(k);
     }
 
     removeKey (k) {
-        const m = this.jsMap();
+        const m = this.jsDict();
         delete m[k];
         return this;
     }

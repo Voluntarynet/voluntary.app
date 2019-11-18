@@ -142,7 +142,7 @@ BMStorableNode.newSubclassNamed("BMFieldSetNode").newSlots({
     fromJSON: function(json) {
         // TODO: read persistent keys
         if (json.fields) { 
-            Map.withJsMap(json.fields).forEach((key, value) => {
+            Map.withJsDict(json.fields).forEach((key, value) => {
                 const field = this.fieldNamed(key)
                 if (field) {
                     field.setValue(value)

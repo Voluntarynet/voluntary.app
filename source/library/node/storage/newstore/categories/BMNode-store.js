@@ -4,7 +4,7 @@ Object.defineSlots(BMNode, {
 
     recordForStore: function(aStore) { // should only be called by Store
         
-        const dict = {}
+        const entries = []
 
         /*
         Object.getOwnPropertyNames(this).forEach((k) => {
@@ -15,19 +15,20 @@ Object.defineSlots(BMNode, {
 
         return {
             type: this.type(), 
-            dict: dict, 
+            entries: entries, 
         }
     },
 
     instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store    
         const proto = window[aRecord.type]
         const obj = proto.clone()
-        const dict = aRecord.dict
+        const entries = aRecord.entries
 
         /*
-        Object.getOwnPropertyNames(dict).forEach((k) => {
-            const v = dict[k]
-            obj[k] = aStore.unrefValue(v)
+        entries.forEach((entry) => {
+            const k = entry[0]
+            const v = entry[1]
+            const unrefValue = aStore.unrefValue(v)
         })
         */
         return obj

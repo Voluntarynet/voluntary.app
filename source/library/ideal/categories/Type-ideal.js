@@ -55,6 +55,8 @@ window.Type = {
             "String",
             "Symbol",
             "Number",
+            "Map",
+            "Set",
             "Array",
             "Int8Array",
             "Uint8Array",
@@ -100,6 +102,24 @@ window.Type = {
                 Type.isObject(value) && 
                 value.__proto__ === ([]).__proto__ &&
                 !Type.isUndefined(value.length)
+    },
+
+    isSet: function(value) {
+        return !Type.isNull(value) && 
+            Type.isObject(value) && 
+            value.__proto__ === Set.prototype 
+    },
+
+    isMap: function(value) {
+        return !Type.isNull(value) && 
+            Type.isObject(value) && 
+            value.__proto__ === Map.prototype 
+    },  
+
+    isIterator: function(value) {
+        return !Type.isNull(value) && 
+                Type.isObject(value) && 
+                typeof(value[Symbol.iterator]) === "function";
     },
 
     isBoolean: function(value) {

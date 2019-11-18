@@ -4,6 +4,8 @@
 
     AtomicDictionary
 
+    TODO: map dictionary operators to methods or raise exceptions?
+
 */
 
 window.ideal.AtomicDictionary = class AtomicDictionary extends ideal.Dictionary {
@@ -12,6 +14,13 @@ window.ideal.AtomicDictionary = class AtomicDictionary extends ideal.Dictionary 
         super.init()
         this.newSlot("hasBegun", false) // private method
         this.newSlot("oldVersion", null) // private method
+        this.newSlot("isOpen", false) // private method
+        this.newSlot("keysAndValuesAreStrings", true) // private method
+    }
+
+    asyncOpen (callback) {
+        this.setIsOpen(true)
+        callback()
     }
 
     begin () {
@@ -48,11 +57,20 @@ window.ideal.AtomicDictionary = class AtomicDictionary extends ideal.Dictionary 
     }
 
     atPut (k, v) {
+        if (this.keysAndValuesAreStrings()) {
+            assert(Type.isString(k))
+            assert(Type.isString(v))
+        }
+
         this.assertInTx()
         return super.atPut(k, v)
     }
 
     removeKey (k) {
+        if (this.keysAndValuesAreStrings()) {
+            assert(Type.isString(k))
+        }
+
         this.assertInTx()
         return this.removeKey(k);
     }

@@ -7,6 +7,14 @@ Object.defineSlots(Date.prototype, {
             v: this.toJSON() // toJSON is a standard library Date method
         }
     },
+
+    shouldStore: function() {
+        return true
+    },
+
+    storeJsonRefs: function(puuids = new Set()) {
+        return puuids
+    },
 })
 
 Object.defineSlots(Date, {

@@ -4,7 +4,10 @@
 
     SyncDB
 
-	A read & write cache on top of IndexedDB to allow us to do all synchronous reads and writes
+    An atomic persistent dictionary implemented as 
+    a read & write cache on top of IndexedDB so we can do synchronous reads and writes
+    instead of dealing with IndexedDB's async API.
+
 	On open, it reads the entire db into a read cache dictionary.
 
     - keys and values are assumed to be strings
@@ -44,12 +47,9 @@ window.SyncDB = class SyncDB extends ProtoClass {
             readCache: null,
             writeCache: null,
             isOpen: false,
-            isSynced: false,
         })
 
         this.setReadCache({})
-
-        // idb
         this.setIdb(IndexedDBFolder.clone())
         //this.setIsDebugging(true)
     }
@@ -75,7 +75,6 @@ window.SyncDB = class SyncDB extends ProtoClass {
             //	console.log("SyncDB didOpen() - loaded cache")
             this._readCache = dict
             this.setIsOpen(true)
-            this.setIsSynced(true)
             if (callback) {
                 callback()
             }
@@ -295,6 +294,9 @@ window.SyncDB = class SyncDB extends ProtoClass {
     }
 	
     atPut (key, value) {
+        assert(Type.isString(key))
+        assert(Type.isString(value))
+        
         this.assertOpen()
 	    this.assertInTx()
 	    

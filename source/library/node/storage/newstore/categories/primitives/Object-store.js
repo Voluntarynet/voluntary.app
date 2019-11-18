@@ -3,21 +3,30 @@
 Object.defineSlots(Object.prototype, {
 
     recordForStore: function(aStore) { // should only be called by Store
-        const dict = {}
+        const entries = []
 
         Object.getOwnPropertyNames(this).forEach((k) => {
             const v = this[k]
-            dict[k] = aStore.refValue(v)
+            entries.push([k, aStore.refValue(v)])
         })
 
         return {
             type: "Object", 
-            dict: dict, 
+            entries: entries, 
         }
     },
 
     shouldStore: function() {
         return true
+    },
+
+    storeJsonRefs: function(puuids = new Set()) {
+        if (this.hasOwnProperty("*")) {
+            puuids.add(this["*"])
+        } else {
+            throw new Error("dictionaries are reserved for pointers, but we found a non-pointer")
+        }
+        return puuids
     },
 })
 
@@ -25,12 +34,10 @@ Object.defineSlots(Object, {
 
     instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store
         assert(aRecord.type === "Object")
-        
         const obj = {}
-        const dict = aRecord.dict
-
-        Object.getOwnPropertyNames(dict).forEach((k) => {
-            const v = dict[k]
+        aRecord.entries.forEach((entry) => {
+            const k = entry[0]
+            const v = entry[1]
             obj[k] = aStore.unrefValue(v)
         })
         return obj

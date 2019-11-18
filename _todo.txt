@@ -1,10 +1,8 @@
 
 TODO:
 
-
 	NodeStore:
-		Remove global _ roots and replace with a single root?
-	
+		Remove global _ roots and replace with a single root Object that's a dictionary?
 	
 	Use 
 		aStore.refValue(v) to add v to activeObjects (which adds to storeQueue if not present in activeObjects)

@@ -866,7 +866,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     },
     
     verifySubnodesHaveParentNodes: function() {
-        const missing = this.subnodes().detect(function (subnode) { return !subnode.parentNode() })
+        const missing = this.subnodes().detect(subnode => !subnode.parentNode())
         if (missing) {
             throw new Error("missing parent node on subnode " + missing.type())
         }

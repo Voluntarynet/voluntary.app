@@ -201,6 +201,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     },
 
     onOpen: function () {
+        console.log(this.type() + " onOpen db size " + this.sdb().size())
         this.updateLastSyncTime()
         this.collect()
         this.startWatchingForDirtyObjects()
@@ -236,7 +237,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         // this way we avoid storing objects not referenced from the stored objects tree
 
         if (obj.type() === "BMStunServers") {
-            console.log("---")
+            console.log("--- addDirtyObject " + obj.typeId())
         }
 
         const dirt = this.dirtyObjects()
@@ -269,6 +270,12 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         this.assertHasUniqueId()
 
         if (this.isDebugging()) {
+            if (Type.isFunction(s)) {
+                // we provide this option in case what we print in the debug
+                // is expensive to compute, so we can skip it if not debugging
+                s = s() 
+            }
+
             console.log(this.typeId() + ": " + s)
         }
     },
@@ -340,7 +347,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         }
 
 
-        this.debugLog("NodeStore.storeDirtyObjects stored " + totalStoreCount + " objects")
+        this.debugLog(() => "storeDirtyObjects stored " + totalStoreCount + " objects")
 
         /*
 		if (this.isDebugging()) {
@@ -450,6 +457,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
             // TODO: add a modal panel to allow user to choose to export and clear data
             if(!window.SyncScheduler.shared().hasScheduledTargetAndMethod(this, "clear")) {
                 console.warn("WARNING: clearing database because corruption found")
+                this.clear()
                 window.SyncScheduler.shared().scheduleTargetAndMethod(this, "clear")
             }
             return null
@@ -469,11 +477,11 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         obj.setPid(pid)
         this.addActiveObject(obj)
 
-        //this.debugLog(" nodeDict = ", nodeDict)
+        //this.debugLog(() => " nodeDict = " + JSON.stringify(nodeDict, null, 2))
         obj.setNodeDict(nodeDict)
         obj.scheduleLoadFinalize()
 
-        //this.debugLog("objectForPid(" + pid + ")")
+        //this.debugLog(() => "objectForPid(" + pid + ")")
 
         return obj
     },
@@ -697,7 +705,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
         const deleteCount = this.sweep()
         this._marked = null
-        this.debugLog("--- end collect - collected " + deleteCount + " pids ---")
+        this.debugLog(() => "--- end collect - collected " + deleteCount + " pids ---")
         return deleteCount
     },
 
@@ -721,7 +729,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     },
 
     sweep: function () {
-        this.debugLog(" --- sweep --- ")
+        this.debugLog("--- sweep --- ")
         // delete all unmarked records
         this.sdb().begin()
 
@@ -730,7 +738,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
         pids.forEach((pid) => {
             if (this._marked[pid] !== true) {
-                this.debugLog("deletePid(" + pid + ")")
+                this.debugLog(() => " sweep deletePid(" + pid + ")")
                 this.sdb().removeAt(pid)
                 deleteCount ++
             }

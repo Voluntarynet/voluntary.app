@@ -83,11 +83,11 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
         if (!this.hasScheduledTargetAndMethod(target, syncMethod)) {
             const newAction = this.newActionForTargetAndMethod(target, syncMethod, optionalOrder)
 
-            this.debugLog("    -> scheduling " + newAction.description())
+            this.debugLog(() => "    -> scheduling " + newAction.description())
 
             /*
             if (this.isProcessing() && this.currentAction().method() !== "processPostQueue") {
-                this.debugLog("    - isProcessing " + this.currentAction().description() +  " while scheduling " + newAction.description())
+                this.debugLog(() => "    - isProcessing " + this.currentAction().description() +  " while scheduling " + newAction.description())
             }
             */
             
@@ -199,7 +199,7 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
             console.log("syncing " + actions.length + " actions")
         }
         */
-        //this.debugLog("actions = ", actions.map(a => a.method()).join(","))
+        //this.debugLog(() => "actions = ", actions.map(a => a.method()).join(","))
         //this.debugLog("--- sending ----")
         actions.forEach((action) => {
             this.setCurrentAction(action)
@@ -221,7 +221,7 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
 
     fullSyncNow () {
         if (this.isProcessing()) {
-            this.debugLog(this.type() + " fullSyncNow called while isProcessing so SKIPPING")
+            this.debugLog(() => "fullSyncNow called while isProcessing so SKIPPING")
             return this
         }
 
@@ -232,9 +232,9 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
 
             while (this.actionCount()) {
                 /*
-                this.debugLog(" --- processSets # " + count + " --- ")
-                this.debugLog(this.description())
-                this.debugLog(window.NotificationCenter.shared().notesDescription())
+                this.(() => " --- processSets # " + count + " --- ")
+                this.debugLog(() => this.description())
+                this.debugLog(() => window.NotificationCenter.shared().notesDescription())
                 this.debugLog(" --- ")
                 */
                 this.processSets()

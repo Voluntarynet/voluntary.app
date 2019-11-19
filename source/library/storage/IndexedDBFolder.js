@@ -66,9 +66,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
     asyncOpen (callback) {
         this.assertHasUniqueId()
 
-        if (this.isDebugging()) {
-            console.log(this.typeId() + " asyncOpen")
-        }
+        this.debugLog("asyncOpen")
 		
         const request = window.indexedDB.open(this.path(), 2);
         
@@ -119,10 +117,10 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
     /*
     asyncAt (key, callback) {
         //console.log("asyncAt ", key)
-        let objectStore = this.db().transaction(this.storeName(), "readonly").objectStore(this.storeName());
-        let request = objectStore.get(key);
+        const objectStore = this.db().transaction(this.storeName(), "readonly").objectStore(this.storeName());
+        const request = objectStore.get(key);
 
-        let stack = new Error().stack
+        const stack = new Error().stack
         
         request.onerror = (event) => {
             console.log("asyncAt('" + key + "') onerror", event.target.error)
@@ -135,8 +133,8 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
             try {
                 if (!Type.isUndefined(request.result)) {
                     //console.log("asyncAt('" + key + "') onsuccess request.result = ", request.result)
-                    let entry = request.result
-                    let value = JSON.parse(entry.value)
+                    const entry = request.result
+                    const value = JSON.parse(entry.value)
                     callback(value)
                 } else {
                     //console.log("asyncAt('" + key + "') onsuccess request.result = ", request.result)
@@ -159,7 +157,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
         const dict = {}
     
         cursorRequest.onsuccess = (event) => {
-            let cursor = event.target.result;
+            const cursor = event.target.result;
 
             if (cursor) {
                 dict[cursor.value.key] = JSON.parse(cursor.value.value)
@@ -179,7 +177,6 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
     show () {
         this.asyncAsJson((json) => {
 	        console.log(this.typeId() + " " + this.path() + " = " + JSON.stringify(json, null, 2))
-
         })
     }
     
@@ -190,15 +187,21 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
 
         transaction.onerror = function(event) {
             if (errorCallback) {
+                console.log("db clear error")
                 errorCallback(event)
             }
         };
+
+        transaction.oncomplete = function(event) {
+            console.log("db clear completed")
+        }
 
         const objectStore = transaction.objectStore(this.storeName());
         const request = objectStore.clear();
 
         request.onsuccess = function(event) {
             if (callback) {
+                console.log("db clear request success")
                 callback(event)
             }
         };
@@ -216,7 +219,6 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
     	}
 		
         this.setDb(null)
-		
         return this
     }
     

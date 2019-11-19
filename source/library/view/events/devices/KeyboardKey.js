@@ -19,14 +19,14 @@ ideal.Proto.newSubclassNamed("KeyboardKey").newSlots({
     },
 
     onKeyDown: function (event) {
-        //this.debugLog(this.name() + " onKeyDown " + event._id)
+        //this.debugLog(() => this.name() + " onKeyDown " + event._id)
         let shouldPropogate = true
         this.setIsDown(true)
         return shouldPropogate
     },
 
     onKeyUp: function (event) {
-        //this.debugLog(this.name() + " onKeyUp " + event._id)
+        //this.debugLog(() => this.name() + " onKeyUp " + event._id)
         let shouldPropogate = true
         this.setIsDown(false)
         return shouldPropogate

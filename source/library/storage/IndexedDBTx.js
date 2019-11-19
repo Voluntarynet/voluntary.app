@@ -126,9 +126,7 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
     atAdd (key, object) { 
         this.assertNotCommitted()
         
-        if (this.isDebugging()) {
-            console.log(this.typeId() + " add " + key)
-        }
+        this.debugLog(() => " add " + key )
 
         const entry = this.entryForKeyAndValue(key, object)
         const request = this.objectStore().add(entry);
@@ -141,9 +139,7 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
     atUpdate (key, object) {
 	    this.assertNotCommitted()
 
-        if (this.isDebugging()) {
-            console.log(this.typeId() + " atUpdate " + key)
-        }
+        this.debugLog(() => " atUpdate " + key)
 
         const entry = this.entryForKeyAndValue(key, object)
         const request = this.objectStore().put(entry);
@@ -156,9 +152,7 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
     removeAt (key) {
 	    this.assertNotCommitted()
 
-        if (this.isDebugging()) {
-            console.log(this.typeId() + " removeAt " + key)
-        }
+        this.debugLog(() => " removeAt " + key)
 
         const request = this.objectStore().delete(key);
         request._action = "remove"

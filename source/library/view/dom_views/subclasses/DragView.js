@@ -305,7 +305,7 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
     },
 
     sendProtocolMessage: function(receiver, methodName) {
-        if (!methodName.contains("Hover")) {
+        if (!methodName.contains("Hover") && this.isDebugging()) {
 
             let msg = receiver.typeId() + " " + methodName 
 

@@ -170,6 +170,11 @@ ideal.Proto.newSubclassNamed("SimpleStore").newSlots({
         const aClass = window[aRecord.type]
         const obj = aClass.instanceFromRecordInStore(aRecord, this)
         obj.setPuuid(aRecord.id)
+
+        if(obj.scheduleLoadFinalize) {
+            obj.scheduleLoadFinalize()
+        }
+
         return obj
     },
 
@@ -255,16 +260,16 @@ ideal.Proto.newSubclassNamed("SimpleStore").newSlots({
         this.markPid(this.rootObject().puuid()) // this is recursive, but skips marked records
         const deleteCount = this.atomicallySweep()
         this.setMarked(null)
-        this.debugLog("--- end collect - collected " + deleteCount + " pids ---")
+        this.debugLog(() => "--- end collect - collected " + deleteCount + " pids ---")
         return deleteCount
     },
 
     markPid: function (pid) {
-        //this.debugLog("markPid(" + pid + ")")
+        //this.debugLog(() => "markPid(" + pid + ")")
         if (!this.marked().has(pid)) {
             this.marked().add(pid)
             const refPids = this.refSetForPuuid(pid)
-            //this.debugLog("markPid " + pid + " w refs " + JSON.stringify(refPids))
+            //this.debugLog(() => "markPid " + pid + " w refs " + JSON.stringify(refPids))
             refPids.forEach(refPid => this.markPid(refPid))
             return true
         }
@@ -304,7 +309,7 @@ ideal.Proto.newSubclassNamed("SimpleStore").newSlots({
     // ------------------------
 
     atomicallySweep: function () {
-        this.debugLog(" --- sweep --- ")
+        this.debugLog("--- sweep --- ")
         this.recordsDict().begin()
         const deleteCount = this.justSweep()
         this.recordsDict().commit()

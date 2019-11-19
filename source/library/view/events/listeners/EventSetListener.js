@@ -232,7 +232,7 @@ ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
 
         const t = this.listenTarget()
         this.forEachEventDict((eventName, dict) => {
-            this.debugLog(this.delegate().typeId() + " will stop listening for " + dict.methodName)
+            this.debugLog(() => this.delegate().typeId() + " will stop listening for " + dict.methodName)
             t.removeEventListener(eventName, dict.handlerFunc, dict.useCapture);
         })
 

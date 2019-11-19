@@ -236,17 +236,16 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         // use pid to see if the obj gets referrenced when walked from a stored node
         // this way we avoid storing objects not referenced from the stored objects tree
 
-        if (obj.type() === "BMStunServers") {
-            console.log("--- addDirtyObject " + obj.typeId())
-        }
-
         const dirt = this.dirtyObjects()
         const id = obj.typeId()
         if (!dirt.hasOwnProperty(id)) {
-            if (!dirt[id]) {
-                dirt[id] = obj
-                this.scheduleStore()
+
+            if (obj.type() === "BMStunServers") {
+                console.log("--- addDirtyObject " + obj.typeId())
             }
+
+            dirt[id] = obj
+            this.scheduleStore()
         }
 
         return this
@@ -265,20 +264,6 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     // ----------------------------------------------------
     // writing
     // ----------------------------------------------------
-
-    debugLog: function (s) {
-        this.assertHasUniqueId()
-
-        if (this.isDebugging()) {
-            if (Type.isFunction(s)) {
-                // we provide this option in case what we print in the debug
-                // is expensive to compute, so we can skip it if not debugging
-                s = s() 
-            }
-
-            console.log(this.typeId() + ": " + s)
-        }
-    },
 
     hasDirtyObjects: function () {
         return Object.keys(this._dirtyObjects).length > 0

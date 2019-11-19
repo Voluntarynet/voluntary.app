@@ -445,8 +445,15 @@ Proto.setSlots({
 
     debugLog: function (s) {
         if (this.isDebugging()) {
+            if (Type.isFunction(s)) {
+                // we provide this option in case what we print in the debug
+                // is expensive to compute, so we can skip it if not debugging
+                s = s() 
+            }
+
             console.log(this.typeId() + ": " + s)
         }
+        return this
     },
 
     typeClass: function() {

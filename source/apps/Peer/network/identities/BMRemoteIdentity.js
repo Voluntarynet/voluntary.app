@@ -75,7 +75,7 @@ BMStorableNode.newSubclassNamed("BMRemoteIdentity").newSlots({
     didLoadFromStore: function() {
         BMStorableNode.didLoadFromStore.apply(this)
         //this.messages().setTitle("messages")
-        //console.log(this.typeId() + " didLoadFromStore")
+        //this.debugLog(" didLoadFromStore")
     },
     
     title: function () {

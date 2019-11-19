@@ -151,7 +151,7 @@ BMStorableNode.newSubclassNamed("BMMessages").newSlots({
     },
 
     addSubnode: function(msg) {
-        //console.log(this.typeId() + " addSubnode " + msg.pid())
+        //this.debugLog(" addSubnode " + msg.pid())
         BMStorableNode.addSubnode.apply(this, [msg])
         this.notifyChange()
         return this

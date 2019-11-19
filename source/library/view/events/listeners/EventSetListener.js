@@ -192,7 +192,7 @@ ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
         /*
         const a = methodName.contains("Capture") ||  methodName.contains("Focus") || methodName.contains("Move") || methodName.contains("Leave") || methodName.contains("Enter") || methodName.contains("Over")
         if (!a) {
-            console.log(this.typeId() + " onBeforeEvent " + methodName)
+            this.debugLog(" onBeforeEvent " + methodName)
         }
         */
         return this
@@ -213,7 +213,7 @@ ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
 
             /*
             if ( window.SyncScheduler.shared().actionCount()) {
-                console.log(this.typeId() + " onAfterEvent " + methodName)
+                this.debugLog(" onAfterEvent " + methodName)
             }
             */
             window.SyncScheduler.shared().fullSyncNow()

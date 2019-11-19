@@ -107,7 +107,7 @@ NodeView.newSubclassNamed("BrowserHeader").newSlots({
     },
 
     didHitBackArrow: function() {
-        //console.log(this.typeId() + " back")
+        //this.debugLog(" back")
         this.browser().previous()
     },
 	

@@ -109,7 +109,7 @@ ideal.Proto.newSubclassNamed("ObservableProxyHandler").newSlots({
         this._observers.forEach((obs) => {
             if (obs[noteName]) {
                 if (this.isDebugging()) {
-                    console.log(this.typeId() + " posting " + noteName)
+                    this.debugLog(" posting " + noteName)
                 }
                 obs[noteName].apply(obs, [this.target(), propertyName])
             }

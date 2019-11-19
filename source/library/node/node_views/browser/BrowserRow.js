@@ -217,7 +217,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
             const ns = this.node().nodeRowStyles()
             if (ns) {
                 if (debugStyles) {
-                    console.log(this.typeId() + " using nodeRowStyles")
+                    this.debugLog(" using nodeRowStyles")
                 }
                 return ns
             }
@@ -226,7 +226,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         const rs = this.rowStyles()
         if (rs) {
             if (debugStyles) {
-                console.log(this.typeId() + " using rowStyles")
+                this.debugLog(" using rowStyles")
             }
             return rs
         }
@@ -235,13 +235,13 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
             const cs = this.column().rowStyles()
             if (cs) {
                 if (debugStyles) {
-                    console.log(this.typeId() + " using column().rowStyles()")
+                    this.debugLog(" using column().rowStyles()")
                 }
                 return cs
             }
         } else if (debugStyles) {
             const title = this.node() ? this.node().title() : "no node yet"
-            console.log(this.typeId() + " (" + title + ") has no column yet")
+            this.debugLog(" (" + title + ") has no column yet")
         }
 
         return BMViewStyles.sharedWhiteOnBlackStyle()
@@ -437,7 +437,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
 
     justTap: function() {
         if (this.isSelectable()) {
-            //console.log(this.typeId() + ".requestSelection()")
+            //this.debugLog(".requestSelection()")
             this.requestSelection()
         }
     },
@@ -447,7 +447,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     },
 
     onTapComplete: function(aGesture) {
-        //console.log(this.typeId() + ".onTapComplete()")
+        //this.debugLog(".onTapComplete()")
         const keyModifiers = Keyboard.shared().modifierNamesForEvent(aGesture.upEvent());
         const hasThreeFingersDown = aGesture.numberOfFingersDown() === 3;
         const isAltTap = keyModifiers.contains("Alternate");
@@ -455,7 +455,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         /*
         if (keyModifiers.length) {
             const methodName = "just" + keyModifiers.join("") + "Tap"
-            //console.log(this.typeId() + " tap method " + methodName)
+            //this.debugLog(" tap method " + methodName)
             if (this[methodName]) {
                 this[methodName].apply(this)
             }
@@ -476,13 +476,13 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
 
 
     on_d_KeyDown: function(event) {
-        //console.log(this.typeId() + " on_d_KeyDown ", event._id)
+        //this.debugLog(" on_d_KeyDown ", event._id)
         this.setIsRegisteredForDrag(true)
         return false
     },
 
     on_d_KeyUp: function(event) {
-        //console.log(this.typeId() + " on_d_KeyUp ", event._id)
+        //this.debugLog(" on_d_KeyUp ", event._id)
         this.setIsRegisteredForDrag(false)
         return false
     },
@@ -490,7 +490,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     // ---
     
     justInspect: function(event) {
-        console.log(this.typeId() + ".justInspect()")
+        this.debugLog(".justInspect()")
         if (this.node().nodeCanInspect()) { 
             this.setIsInspecting(true)
             this.scheduleSyncToNode()
@@ -506,7 +506,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     },
 
     onSlideBegin: function() {
-        //console.log(this.typeId() + ".onSlideBegin()")
+        //this.debugLog(".onSlideBegin()")
         this.setSlideDeleteOffset(this.clientWidth() * 0.5);
         this.contentView().setTransition("all 0s") 
         this.setupSlide() 
@@ -630,7 +630,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     },
     
     onMouseLeave: function(event) {
-        //console.log(this.typeId() + " onMouseLeave")
+        //this.debugLog(" onMouseLeave")
         if (this.hasCloseButton()) {
             this.closeButtonView().setOpacity(this.restCloseButtonOpacity())
             this.closeButtonView().setTarget(null)
@@ -687,17 +687,17 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
 
     /*
     onOrientBegin: function(aGesture) {
-        console.log(this.typeId() + ".onOrientBegin()")
+        this.debugLog(".onOrientBegin()")
         aGesture.show()
     },
 
     onOrientMove: function(aGesture) {
-        console.log(this.typeId() + ".onOrientMove()")
+        this.debugLog(".onOrientMove()")
         aGesture.show()
     },
 
     onOrientComplete: function(aGesture) {
-        console.log(this.typeId() + ".onOrientComplete()")
+        this.debugLog(".onOrientComplete()")
         aGesture.show()
     },
     */
@@ -712,7 +712,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     
     requestSelection: function () {
         this.select()
-        //console.log(this.typeId() + " tellParentViews didClickRow")
+        //this.debugLog(" tellParentViews didClickRow")
         //this.tellParentViews("didClickRow", this)
         this.tellParentViews("requestSelectionOfRow", this)
 
@@ -726,7 +726,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
 	
     willAcceptFirstResponder: function() {
         NodeView.willAcceptFirstResponder.apply(this)
-	    //console.log(this.typeId() + ".willAcceptFirstResponder()")
+	    //this.debugLog(".willAcceptFirstResponder()")
         this.requestSelection()
         return this
     },
@@ -753,7 +753,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     */
     
     nodeRowLink: function() {
-        //console.log(this.typeId() + ".visibleSubnodes() isInspecting:" + this.isInspecting())
+        //this.debugLog(".visibleSubnodes() isInspecting:" + this.isInspecting())
         if (this.isInspecting()) {
             return  this.node().nodeInspector()
         }
@@ -772,18 +772,18 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     // --- dragging source protocol ---
 
     hideForDrag: function() {
-        //console.log(this.typeId() + " hideForDrag")
+        //this.debugLog(" hideForDrag")
         //this.setDisplay("none")
         this.setVisibility("hidden")
-        //console.log(this.typeId() + " '" + this.node().title() + "'.hideForDrag() visibility: ", this.visibility())
+        //this.debugLog(" '" + this.node().title() + "'.hideForDrag() visibility: ", this.visibility())
         //this.setBorder("1px dashed blue")
     },
 
     unhideForDrag: function() {
-        //console.log(this.typeId() + " unhideForDrag")
+        //this.debugLog(" unhideForDrag")
         //this.setDisplay("block")
         this.setVisibility("visible")
-        //console.log(this.typeId() + " '" + this.node().title() + "'.unhideForDrag() visibility: ", this.visibility())
+        //this.debugLog(" '" + this.node().title() + "'.unhideForDrag() visibility: ", this.visibility())
         //this.setBorder(null)
     },
 

@@ -54,7 +54,7 @@ BMStorableNode.newSubclassNamed("BMActionNode").newSlots({
                 console.warn("no method with this name")
             }
         } else {
-            console.log(this.typeId() + " can't perform action ", this.methodName(), " on ", this.target())
+            this.debugLog(" can't perform action ", this.methodName(), " on ", this.target())
         }
 	    
 	    return this

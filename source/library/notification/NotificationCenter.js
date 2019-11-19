@@ -247,7 +247,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
         const showDebug = this.isDebugging() === true && (this.debugNoteName() === null || this.debugNoteName() === note.name());
 
         if (showDebug) {
-            console.log(this.typeId() + " senderId " + note.senderId() + " posting " + note.name())
+            this.debugLog(" senderId " + note.senderId() + " posting " + note.name())
             this.showObservers()
         }
         
@@ -256,8 +256,8 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
         observations.forEach( (obs) => {
             if (obs.matchesNotification(note)) {
                 if (showDebug) {
-                    console.log(this.typeId() + " " + note.name() + " matches obs ", obs)
-                    console.log(this.typeId() + " sending ", note.name() + " to obs " + obs.type())
+                    this.debugLog(" " + note.name() + " matches obs ", obs)
+                    this.debugLog(" sending ", note.name() + " to obs " + obs.type())
                 }
             
                 obs.sendNotification(note)       
@@ -283,7 +283,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
     }
 
     show () {
-        console.log(this.typeId() + ":")
+        this.debugLog(":")
         this.showObservers()
         this.showNotes()
     }

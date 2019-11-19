@@ -80,7 +80,7 @@ BMStorableNode.newSubclassNamed("BMChatThread").newSlots({
     hasValidRemoteIdentity: function() {
 	    const result = this.threads().chatTargetIds().detect((id) => { return id === this.remoteIdentity() })
 	    //const result = this.localIdentity().remoteIdentities().idWithPublicKeyString(this.remoteIdentity().publicKeyString()) 
-	    //console.log(this.typeId() + " " + this.remoteIdentity().title() + ".hasValidRemoteIdentity() = " + result)
+	    //this.debugLog(" " + this.remoteIdentity().title() + ".hasValidRemoteIdentity() = " + result)
 	    return result != null
     },
 	

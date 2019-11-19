@@ -60,7 +60,7 @@ window.CloseButton = DomView.newSubclassNamed("CloseButton").newSlots({
     },
 
     onTapComplete: function (aGesture) {
-        //console.log(this.typeId() + ".onTapComplete()")
+        //this.debugLog(".onTapComplete()")
         if (!this.isEditable()) {
             DomView.sendActionToTarget.apply(this)
         }

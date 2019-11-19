@@ -45,7 +45,7 @@ ideal.Proto.newSubclassNamed("WebBrowserScreen").newSlots({
     },
         
     show: function() {
-        console.log(this.typeId() + " size " + this.width() + "x" + this.height())
+        this.debugLog(" size " + this.width() + "x" + this.height())
     },
 
     lesserOrientedSize: function() {

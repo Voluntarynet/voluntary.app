@@ -204,7 +204,7 @@ BMNode.newSubclassNamed("BMServerConnection").newSlots({
     },
 
     reconnect: function() {
-        //console.log(this.typeId() + ".reconnect()")
+        //this.debugLog(".reconnect()")
         this.close()
         return this;
     },
@@ -239,7 +239,7 @@ BMNode.newSubclassNamed("BMServerConnection").newSlots({
     showPeers: function() {
 	    this.remotePeers().showPeers()
 	    /*
-		console.log(this.typeId() + ".showPeers()")
+		this.debugLog(".showPeers()")
 		this.subnodes().forEach((peer) => {
 			console.log("    ", peer.hash())
 		})
@@ -249,7 +249,7 @@ BMNode.newSubclassNamed("BMServerConnection").newSlots({
     /*  
     log: function(s) {
         if (this.isDebugging()) {
-            console.log(this.typeId() + " " + s)
+            this.debugLog(" " + s)
         }
         return this
     },
@@ -383,7 +383,7 @@ BMNode.newSubclassNamed("BMServerConnection").newSlots({
     },
 
     setPeerIds: function(ids) {
-        //console.log(this.typeId() + ".setPeerIds(\n" + ids.join("\n") + "\n)")		
+        //this.debugLog(".setPeerIds(\n" + ids.join("\n") + "\n)")		
         ids.remove(this.peerId().toString())
         this.remotePeers().setPeerIds(ids)
         //this.connectToMatchingPeerIds()

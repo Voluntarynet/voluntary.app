@@ -73,7 +73,7 @@ PanGestureRecognizer.newSubclassNamed("EdgePanGestureRecognizer").newSlots({
         const vt = this.viewTarget()
 
         if (!vt) {
-            console.log(this.typeId() + " missing viewTarget")
+            this.debugLog(" missing viewTarget")
             return max
         }
         

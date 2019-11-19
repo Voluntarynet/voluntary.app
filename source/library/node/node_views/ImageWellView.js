@@ -73,7 +73,7 @@ NodeView.newSubclassNamed("ImageWellView").newSlots({
         */
         const accepts = (!this.isFull()) && (this.isEditable() !== false)
         /*
-        console.log(this.typeId() + ".acceptsDrop():")
+        this.debugLog(".acceptsDrop():")
         console.log("    isEditable: " + this.isEditable())
         console.log("        isFull: " + this.isFull())
         console.log("       accepts: " + accepts)
@@ -100,7 +100,7 @@ NodeView.newSubclassNamed("ImageWellView").newSlots({
             dataURL = ""
         }
         
-        //console.log(this.typeId() + ".setImageDataURL = ", dataURL)
+        //this.debugLog(".setImageDataURL = ", dataURL)
         this.removeAllSubviews()
 
         if (dataURL) {

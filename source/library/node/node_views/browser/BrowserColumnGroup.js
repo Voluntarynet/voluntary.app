@@ -77,14 +77,14 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
     cache: function() {
         this._browser.cacheColumnGroup(this)
         //this.browser().cacheColumnGroup(this)
-        //console.log(this.typeId() + ".cache()")
+        //this.debugLog(".cache()")
         return this
     },
     
     uncache: function() {
         this._browser.uncacheColumnGroup(this)
         //this.browser().uncacheColumnGroup(this)
-        //console.log(this.typeId() + ".uncache()")
+        //this.debugLog(".uncache()")
         return this
     },
 
@@ -308,7 +308,7 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
     /*
     setMinAndMaxWidth: function(w) {
         Error.showCurrentStack()
-		console.log(this.typeId() + " / " + (this.node() ? this.node().type() : "?") + " nodeMinWidth = " + w)
+		this.debugLog(" / " + (this.node() ? this.node().type() : "?") + " nodeMinWidth = " + w)
         NodeView.setMinAndMaxWidth.apply(this, [w])
         return this
     },
@@ -342,7 +342,7 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
     
     setNode: function(aNode) {
         if (Type.isNull(aNode) && this.browser() && this.browser().hasCachedColumnGroup(this)) {
-            console.log(this.typeId() + " setNode(null)")
+            this.debugLog(" setNode(null)")
         }
 
         if (aNode === this._node) {

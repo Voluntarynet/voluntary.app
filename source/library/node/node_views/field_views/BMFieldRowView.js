@@ -93,7 +93,7 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
     
     /*
     syncValueViewToNode: function() {
-        //console.log(this.typeId() + ".syncValueViewToNode " + this.node().type())
+        //this.debugLog(".syncValueViewToNode " + this.node().type())
 	    if (this.node().type() === "BMBooleanField" && this.valueView().type() !== "BooleanView") {
 	        //console.log("syncValueViewToNode setup bool view")
 	        const booleanView = BooleanView.clone()
@@ -125,7 +125,7 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
 
     syncFromNode: function () {
         BrowserFieldRow.syncFromNode.apply(this)
-        //console.log(this.typeId() + " syncFromNode")
+        //this.debugLog(" syncFromNode")
 		
         this.node().prepareToSyncToView()
         //this.syncValueViewToNode() // (lazy) set up the value view to match the field's type
@@ -272,7 +272,7 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
     */
     
     onEnterKeyUp: function(event) {
-        //console.log(this.typeId() + ".onEnterKeyUp()")
+        //this.debugLog(".onEnterKeyUp()")
         if(this.valueView().activate) {
             this.valueView().activate()
         }
@@ -281,7 +281,7 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
 
     setBackgroundColor: function(c) {
         /*
-        console.log(this.typeId() + ".setBackgroundColor ", c)
+        this.debugLog(".setBackgroundColor ", c)
         if (c !== "white") {
             console.log("not white")
         }

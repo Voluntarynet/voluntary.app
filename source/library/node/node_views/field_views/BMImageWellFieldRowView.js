@@ -88,7 +88,7 @@ BMFieldRowView.newSubclassNamed("BMImageWellFieldRowView").newSlots({
     },
     
     didUpdateImageWellView: function(anImageWell) {
-        //console.log(this.typeId() + ".didUpdateImageWellView()")
+        //this.debugLog(".didUpdateImageWellView()")
         this.scheduleSyncToNode() 
         return this
     },

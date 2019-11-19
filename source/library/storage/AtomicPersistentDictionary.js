@@ -61,10 +61,10 @@ window.AtomicPersistentDictionary = class AtomicDictionary extends ProtoClass {
 	
     onOpen (callback) {
         // load the cache
-        //console.log(this.typeId() + "" onOpen() - loading cache")
+        //this.debugLog("" onOpen() - loading cache")
 		
         this.idb().asyncAsJson( (dict) => {
-            //	console.log(this.typeId() + " onOpen() - loaded cache")
+            //	this.debugLog(" onOpen() - loaded cache")
             this.setJsDict(dict)
             this.setIsOpen(true)
             if (callback) {

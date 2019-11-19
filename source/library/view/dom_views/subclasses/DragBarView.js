@@ -142,7 +142,7 @@ DomView.newSubclassNamed("DragBarView").newSlots({
     },
 
     onMouseDown: function (event) {
-        //console.log(this.typeId() + " onMouseDown")
+        //this.debugLog(" onMouseDown")
         this.setIsDragging(true)
 
         this.removeParentTracking()
@@ -168,13 +168,13 @@ DomView.newSubclassNamed("DragBarView").newSlots({
     },
 
     onMouseOver: function(event) {
-        //console.log(this.typeId() + " onMouseOver")
+        //this.debugLog(" onMouseOver")
         this.setIsHighlighted(true)
         return false
     },
 
     onMouseLeave: function(event) {
-        //console.log(this.typeId() + " onMouseLeave")
+        //this.debugLog(" onMouseLeave")
         this.setIsHighlighted(false)
         return false
     },

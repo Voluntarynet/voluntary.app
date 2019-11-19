@@ -23,7 +23,7 @@ BMField.newSubclassNamed("BMImageWellField").newSlots({
     /*
     setValue: function(v) {
         BMField.setValue.apply(this, [v])
-        //console.log(this.typeId() + " setValue " + v)
+        //this.debugLog(" setValue " + v)
         //this.updateKey()
         return this
     },

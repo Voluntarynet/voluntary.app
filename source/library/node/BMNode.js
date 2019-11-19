@@ -451,12 +451,12 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         let slotValue = this[slotName].apply(this)
         assert(aProto)
 		
-        console.log(this.typeId() + ".addSubnodeProtoForSlotIfAbsent(" + aProto.type() + ", " + slotName + ")")
-        console.log(this.typeId() + " slotValue = " + slotValue)
+        this.debugLog(".addSubnodeProtoForSlotIfAbsent(" + aProto.type() + ", " + slotName + ")")
+        this.debugLog(" slotValue = " + slotValue)
 		
         if (slotValue === null) {
             slotValue = aProto.clone()
-            //console.log(this.typeId() + "." + setterName + "(", obj, ")")
+            //this.debugLog("." + setterName + "(", obj, ")")
             const setterName = this.setterNameForSlot(slotName)
             this[setterName].apply(this, [slotValue])
         }
@@ -854,7 +854,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     
     setSubnodes: function(subnodes) {
         if (this._subnodes && subnodes && this._subnodes.equals(subnodes)) {
-            //console.log(this.typeId() + ".setSubnodes() - skipping because subnodes are the same <<<<<<<<<<<<<<<<<<<<<")
+            //this.debugLog(".setSubnodes() - skipping because subnodes are the same <<<<<<<<<<<<<<<<<<<<<")
             return this
         }
         subnodes.forEach((subnode) => { subnode.setParentNode(this) })
@@ -1058,7 +1058,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         obs.setObserver(this)
         obs.setIsOneShot(true)
         obs.watch()
-        //console.log(this.typeId() + ".watchOnceForNote('" + aNoteName + "')")
+        //this.debugLog(".watchOnceForNote('" + aNoteName + "')")
         return obs
     },
 
@@ -1067,7 +1067,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         note.setSender(this)
         note.setName(aNoteName)
         note.post()
-        //console.log(this.typeId() + ".postNoteNamed('" + aNoteName + "')")
+        //this.debugLog(".postNoteNamed('" + aNoteName + "')")
         return note
     },
 

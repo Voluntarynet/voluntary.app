@@ -127,7 +127,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         const dict = {}
         dict.type = this.type()
  
-        //console.log(this.typeId() + " storedSlots = " + JSON.stringify(this.storedSlots()))
+        //this.debugLog(" storedSlots = " + JSON.stringify(this.storedSlots()))
        
         Object.keys(this.storedSlots()).forEach((k) => {
             const v = this.getStoreSlotValue(k)
@@ -225,7 +225,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     },
 	
     didLoadFromStore: function() {
-        //console.log(this.typeId() + " didLoadFromStore in BMStorableNode")
+        //this.debugLog(" didLoadFromStore in BMStorableNode")
         // chance to finish any unserializing this particular instance
         // also see: loadFinalize
 		
@@ -254,14 +254,14 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         // check so we don't mark dirty while loading
         // and use private slots directly for performance
         if (slotName in this._storedSlots) { 
-            //console.log(this.typeId() + ".didUpdateSlot(" + slotName + ",...) -> scheduleSyncToStore")
+            //this.debugLog(".didUpdateSlot(" + slotName + ",...) -> scheduleSyncToStore")
             this.scheduleSyncToStore()
         }
 		
         if (newValue != null && this.subnodes().includes(oldValue)) { // TODO: add a switch for this feature
             newValue.setParentNode(this)
             this.subnodes().replaceOccurancesOfWith(oldValue, newValue)
-            //console.log(this.typeId() + " this.subnodes().replaceOccurancesOfWith(", oldValue, ",", newValue, ")")
+            //this.debugLog(" this.subnodes().replaceOccurancesOfWith(", oldValue, ",", newValue, ")")
         }
     },
 	

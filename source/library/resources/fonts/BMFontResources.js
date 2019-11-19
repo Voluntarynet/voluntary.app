@@ -24,7 +24,7 @@ BMNode.newSubclassNamed("BMFontResources").newSlots({
     },
 
     appDidInit: function() {
-        //console.log(this.typeId() + ".appDidInit()")
+        //this.debugLog(".appDidInit()")
         this.setupSubnodes()
         return this
     },

@@ -45,7 +45,7 @@ BrowserTitledRow.newSubclassNamed("BMOptionNodeRowView").newSlots({
     /*
     select: function() {
         BrowserTitledRow.select.apply(this)
-        console.log(this.typeId() + + " " + this.node().title() + " picked ")
+        this.debugLog(+ " " + this.node().title() + " picked ")
         
         // will tell parent node which will ensure only one selected if needed
         //this.browser().previous()

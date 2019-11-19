@@ -65,10 +65,10 @@ DomView.newSubclassNamed("DomStyledView").newSlots({
         let style = null
         if (this.isSelected()) {
             style = this.styles().selected()
-            //console.log(this.typeId() + ".applyStyles() selected ", style.description())
+            //this.debugLog(".applyStyles() selected ", style.description())
         } else {
             style = this.styles().unselected()
-            //console.log(this.typeId() + ".applyStyles() unselected ", style.description())
+            //this.debugLog(".applyStyles() unselected ", style.description())
         }
         return style
     },

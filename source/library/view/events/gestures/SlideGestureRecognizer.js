@@ -125,7 +125,7 @@ GestureRecognizer.newSubclassNamed("SlideGestureRecognizer").newSlots({
     },
 
     finish: function() {
-        //console.log(this.typeId() + ".finish()")
+        //this.debugLog(".finish()")
         this.setIsPressing(false)
         this.deactivate()
         this.stopDocListeners()

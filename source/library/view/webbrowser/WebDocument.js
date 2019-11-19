@@ -36,7 +36,7 @@ ideal.Proto.newSubclassNamed("WebDocument").newSlots({
     },
 
     show: function() {
-        console.log(this.typeId() + ":")
+        this.debugLog(":")
         this.styleSheets().forEach(sheet => sheet.show())
     },
 

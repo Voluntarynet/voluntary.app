@@ -25,14 +25,14 @@ BMNode.newSubclassNamed("BMRemotePeers").newSlots({
     },
 
     showPeers: function() {
-        console.log(this.typeId() + ".showPeers()")
+        this.debugLog(".showPeers()")
         this.subnodes().forEach((peer) => {
             console.log("    ", peer.hash())
         })
     },
 
     setPeerIds: function(ids) {
-        //console.log(this.typeId() + ".setPeerIds(\n" + ids.join("\n") + "\n)")
+        //this.debugLog(".setPeerIds(\n" + ids.join("\n") + "\n)")
 				
         // remove peers not in ids
         this.subnodes().forEach((peer) => {

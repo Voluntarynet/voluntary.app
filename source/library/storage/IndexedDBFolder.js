@@ -71,11 +71,11 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
         const request = window.indexedDB.open(this.path(), 2);
         
         request.onerror = (event) => {
-            console.log(this.typeId() + " open db error ", event);
+            this.debugLog(" open db error ", event);
         };
          
         request.onupgradeneeded = (event) => { 
-            console.log(this.typeId() + " onupgradeneeded - likely setting up local database for the first time")
+            this.debugLog(" onupgradeneeded - likely setting up local database for the first time")
 
             const db = event.target.result;
 
@@ -90,7 +90,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
         };
 
         request.onsuccess =  (event) => {
-            //console.log(this.typeId() + " db open onsuccess ", event)
+            //this.debugLog(" db open onsuccess ", event)
             this.setDb(event.target.result)
             if (callback) {
                 callback()
@@ -141,7 +141,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
                     callback(undefined)
                 }
             } catch (e) {
-                console.log(this.typeId() + " asyncAt('" +  key + "') caught stack ", stack)
+                this.debugLog(" asyncAt('" +  key + "') caught stack ", stack)
             }
         };
         
@@ -163,20 +163,20 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
                 dict[cursor.value.key] = JSON.parse(cursor.value.value)
                 cursor.continue();
             } else {
-                //console.log(this.typeId() + " asyncAsJson returning dict ", JSON.stringify(dict))
+                //this.debugLog(" asyncAsJson returning dict ", JSON.stringify(dict))
                 callback(dict)
             }
         };
         
         cursorRequest.onerror = (event) => {
-            console.log(this.typeId() + " asyncAsJson cursorRequest.onerror ", event)
+            this.debugLog(" asyncAsJson cursorRequest.onerror ", event)
             throw newError("error requesting cursor")
         }
     }
     
     show () {
         this.asyncAsJson((json) => {
-	        console.log(this.typeId() + " " + this.path() + " = " + JSON.stringify(json, null, 2))
+	        this.debugLog(" " + this.path() + " = " + JSON.stringify(json, null, 2))
         })
     }
     
@@ -211,11 +211,11 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
         const request = window.indexedDB.deleteDatabase(this.storeName())
 		
         request.onerror = (event) => {
-  			console.log(this.typeId() +  "Error deleting '" + this.storeName() + "'");
+  			this.debugLog( "Error deleting '" + this.storeName() + "'");
         }
  
         request.onsuccess = (event) => {
-            console.log(this.typeId() + " deleted successfully '" + this.storeName()  + "'");
+            this.debugLog(" deleted successfully '" + this.storeName()  + "'");
     	}
 		
         this.setDb(null)

@@ -180,7 +180,7 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
     },
 
     prepareToSyncToView: function () {
-        //console.log(this.typeId() + " prepareToSyncToView")
+        //this.debugLog(" prepareToSyncToView")
         NodeView.prepareToSyncToView.apply(this)
         this.fitColumns()
         return this
@@ -189,7 +189,7 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
     // --- resizing ---------------------------------
 
     onDocumentResize: function (event) {
-        //console.log(this.typeId() + " onDocumentResize")
+        //this.debugLog(" onDocumentResize")
         this.fitColumns()
         if (this._selectedColumnGroup) {
             this.selectColumn(this._selectedColumnGroup.column())
@@ -455,7 +455,7 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
 
         const index = this.columnGroups().indexOf(selectedColumn.columnGroup())
 
-        //console.log(this.typeId() + " selectColumn " + selectedColumn.node().type() + " index " + index)
+        //this.debugLog(" selectColumn " + selectedColumn.node().type() + " index " + index)
 
         if (this.isSingleColumn()) {
             this.setColumnGroupCount(index + 2)
@@ -550,7 +550,7 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
     // --- fitting columns in browser ---------------------------------------------
 
     fitColumns: function () {
-        //console.log(this.typeId() + ".fitColumns()")
+        //this.debugLog(".fitColumns()")
         this.updateSingleColumnMode()
 
         const lastActiveCg = this.lastActiveColumnGroup()
@@ -716,8 +716,8 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
     },
 
     selectNodePath: function (nodePathArray) {
-        //console.log(this.typeId() + ".selectNodePath(" + nodePathArray.map((node) => { return node.title() }).join("/")  + ")")
-        //console.log(this.typeId() + ".selectNodePath() current path: " + this.nodePathString())
+        //this.debugLog(".selectNodePath(" + nodePathArray.map((node) => { return node.title() }).join("/")  + ")")
+        //this.debugLog(".selectNodePath() current path: " + this.nodePathString())
         this.setColumnGroupCount(1)
 
         let column = this.columns().first()
@@ -727,7 +727,7 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
             nodePathArray.removeFirst()
         }
 
-        //console.log(this.typeId() + ".selectNodePath() selecting path " + nodePathArray.map((node) => { return node.title() }).join("/") )
+        //this.debugLog(".selectNodePath() selecting path " + nodePathArray.map((node) => { return node.title() }).join("/") )
 
         nodePathArray.forEach((node) => {
             //console.log("clicking node " + (node ? node.title() : null))

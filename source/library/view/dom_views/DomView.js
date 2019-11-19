@@ -676,11 +676,11 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     focus: function () {
         if (!this.isActiveElement()) {
 
-            //console.log(this.typeId() + ".focus() " + document.activeElement._domView)
+            //this.debugLog(".focus() " + document.activeElement._domView)
 
             setTimeout(() => {
                 this.element().focus()
-                //console.log(this.typeId() + " did refocus after 0 timeout? " + this.isActiveElement())
+                //this.debugLog(" did refocus after 0 timeout? " + this.isActiveElement())
             }, 0)
         }
         return this
@@ -780,7 +780,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     // box shadow
 
     setBoxShadow: function (s) {
-        //console.log(this.typeId() + ".setBoxShadow(" + s + ")")
+        //this.debugLog(".setBoxShadow(" + s + ")")
         this.setCssAttribute("box-shadow", s)
         return this
     },
@@ -848,7 +848,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     // border left
 
     setBorderLeft: function (s) {
-        //console.log(this.typeId() + " border-left set '", s, "'")
+        //this.debugLog(" border-left set '", s, "'")
         this.setCssAttribute("border-left", s)
         return this
     },
@@ -1958,7 +1958,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         /*
         if (this.type() === "BrowserRowNote") {
         //if (v !== "&gt;" && v !== "") {
-            console.log(this.typeId() + " changing innerHTML from '" + oldValue + "' to '" + v + "'")
+            this.debugLog(" changing innerHTML from '" + oldValue + "' to '" + v + "'")
         }
         */
 
@@ -2111,7 +2111,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     },
 
     onClick: function (event) {
-        console.log(this.typeId() + ".onClick()")
+        this.debugLog(".onClick()")
         this.sendActionToTarget()
         event.stopPropagation()
         return false
@@ -2571,7 +2571,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     onMouseDown: function (event) {
         const methodName = Mouse.shared().downMethodNameForEvent(event)
         if (methodName !== "onMouseDown") {
-            console.log(this.typeId() + ".onMouseDown calling: ", methodName)
+            this.debugLog(".onMouseDown calling: ", methodName)
             this.invokeMethodNameForEvent(methodName, event)
         }
         return true
@@ -2580,7 +2580,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     onMouseUp: function (event) {
         const methodName = Mouse.shared().upMethodNameForEvent(event)
         if (methodName !== "onMouseUp") {
-            console.log(this.typeId() + ".onMouseUp calling: ", methodName)
+            this.debugLog(".onMouseUp calling: ", methodName)
             this.invokeMethodNameForEvent(methodName, event)
         }
         return true
@@ -2609,9 +2609,9 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
     /*
     onEnterKeyDown: function(event) {
-        console.log(this.typeId() + " onEnterKeyDown")
+        this.debugLog(" onEnterKeyDown")
         if (this.unfocusOnEnterKey() && this.isFocused()) {
-            console.log(this.typeId() + " releasing focus")
+            this.debugLog(" releasing focus")
             // this.releaseFocus() // TODO: implement something to pass focus up view chain to whoever wants it
             //this.element().parentElement.focus()
             if (this.parentView()) {
@@ -2623,7 +2623,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     */
 
     onKeyDown: function (event) {
-        //console.log(this.typeId() + " onKeyDown ", event._id)
+        //this.debugLog(" onKeyDown ", event._id)
         //Keyboard.shared().showEvent(event)
 
         const methodName = Keyboard.shared().downMethodNameForEvent(event)
@@ -2634,7 +2634,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     },
 
     invokeMethodNameForEvent: function(methodName, event) {
-        //console.log(this.typeId() + ".invokeMethodNameForEvent('" + methodName + "')")
+        //this.debugLog(".invokeMethodNameForEvent('" + methodName + "')")
         if (this[methodName]) {
             const stopProp = this[methodName].apply(this, [event])
             event.preventDefault()
@@ -2654,7 +2654,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
     onKeyUp: function (event) {
         let shouldPropogate = true
-        //console.log(this.typeId() + " onKeyUp ", event._id)
+        //this.debugLog(" onKeyUp ", event._id)
 
         const methodName = Keyboard.shared().upMethodNameForEvent(event)
         //console.log("methodName: ", methodName)
@@ -2665,7 +2665,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     },
 
     didEdit: function () {
-        console.log(this.typeId() + " didEdit")
+        this.debugLog(" didEdit")
         this.tellParentViews("onDidEdit", this)
         return this
     },
@@ -2678,7 +2678,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
     onTabKeyDown: function (event) {
         // need to implement this on key down to prevent browser from handling tab?
-        //console.log(this.typeId() + " onTabKeyDown ", event._id)
+        //this.debugLog(" onTabKeyDown ", event._id)
 
         if(this.selectNextKeyView()) {
             //event.stopImmediatePropagation() // prevent other listeners from getting this event
@@ -2689,7 +2689,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     },
 
     onTabKeyUp: function(event) {
-        //console.log(this.typeId() + " onTabKeyUp ", event._id)
+        //this.debugLog(" onTabKeyUp ", event._id)
         return false
     },
 
@@ -2701,7 +2701,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     selectNextKeyView: function () {
         // returns true if something is selected, false otherwise
 
-        //console.log(this.typeId() + " selectNextKeyView")
+        //this.debugLog(" selectNextKeyView")
         const nkv = this.nextKeyView()
         if (nkv) {
             nkv.becomeKeyView()
@@ -2733,7 +2733,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     },
 
     willAcceptFirstResponder: function () {
-        //console.log(this.typeId() + ".willAcceptFirstResponder()")
+        //this.debugLog(".willAcceptFirstResponder()")
         return this
     },
 
@@ -2761,7 +2761,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     releaseFirstResponder: function () {
         // walk up parent view chain and focus on the first view to 
         // answer true for the acceptsFirstResponder message
-        //console.log(this.typeId() + ".releaseFirstResponder()")
+        //this.debugLog(".releaseFirstResponder()")
 
         this.blur()
         if (this.parentView()) {
@@ -2775,14 +2775,14 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     onFocus: function () {
         this.willAcceptFirstResponder();
         // subclasses can override 
-        //console.log(this.typeId() + " onFocus")
+        //this.debugLog(" onFocus")
         return true
     },
 
     onBlur: function () {
         this.didReleaseFirstResponder();
         // subclasses can override 
-        //console.log(this.typeId() + " onBlur")
+        //this.debugLog(" onBlur")
         return true
     },
 
@@ -3263,7 +3263,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     // visibility event
 
     onVisibility: function () {
-        //console.log(this.typeId() + ".onVisibility()")
+        //this.debugLog(".onVisibility()")
         this.unregisterForVisibility()
         return true
     },
@@ -3386,10 +3386,10 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
     disablePointerEventsUntilTimeout: function (ms) {
         this.setPointerEvents("none")
-        console.log(this.typeId() + " disabling pointer events")
+        this.debugLog(" disabling pointer events")
 
         setTimeout(() => {
-            console.log(this.typeId() + " enabling pointer events")
+            this.debugLog(" enabling pointer events")
             this.setPointerEvents("inherit")
         }, ms)
 

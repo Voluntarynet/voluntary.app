@@ -35,7 +35,7 @@ BMFieldSetNode.newSubclassNamed("BMAppMessage").newSlots({
         obj.setReceiverId(this.receiverId())
         obj.setObjMsg(this.objMsg())
         obj.setDataDict(this.dataDict())
-        console.log(this.typeId() + " duplicated to " + obj.typeId())
+        this.debugLog(" duplicated to " + obj.typeId())
         return obj
     },
 
@@ -86,7 +86,7 @@ BMFieldSetNode.newSubclassNamed("BMAppMessage").newSlots({
         objMsg.makeTimeStampNow()
         objMsg.signWithSenderId(lid)
         if (objMsg.hasValidationErrors()) {
-            console.log(this.typeId() + ".sendToRemoteId() validationErrors:" + objMsg.hasValidationErrors().join(","))
+            this.debugLog(".sendToRemoteId() validationErrors:" + objMsg.hasValidationErrors().join(","))
         } else {
         	this.setObjMsg(objMsg)
             this.objMsg().send()
@@ -120,7 +120,7 @@ BMFieldSetNode.newSubclassNamed("BMAppMessage").newSlots({
             return null
         }
         
-        //console.log(this.typeId() + " fromDataDict() dataDict = ", dataDict)
+        //this.debugLog(" fromDataDict() dataDict = ", dataDict)
         return proto.clone().setDataDict(dataDict)
     },
 
@@ -141,11 +141,11 @@ BMFieldSetNode.newSubclassNamed("BMAppMessage").newSlots({
         objMsg.makeTimeStampNow()
         objMsg.signWithSenderId(lid)
         if (objMsg.hasValidationErrors()) {
-            console.log(this.typeId() + ".sendToRemoteId() validationErrors:" + objMsg.hasValidationErrors().join(","))
+            this.debugLog(".sendToRemoteId() validationErrors:" + objMsg.hasValidationErrors().join(","))
         } else {
         	this.setObjMsg(objMsg)
             this.objMsg().send()
-            console.log(this.typeId() + ".postFromSender() sent!")
+            this.debugLog(".postFromSender() sent!")
         }
         return this
     },

@@ -98,7 +98,7 @@ DomView.newSubclassNamed("ShelfFooterView").newSlots({
             if (!this.isAlwaysSelected()) {
                 this.unselectItems()
             }
-           // console.log(this.typeId() + ".compact()")
+           // this.debugLog(".compact()")
         }
         return this
     },

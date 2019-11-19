@@ -66,7 +66,7 @@ DomView.newSubclassNamed("BMAudioPlayer").newSlots({
 
     onPlaying: function() {
         if (this.isDebugging()) {
-            console.log(this.typeId() + ".onPlaying() ")
+            this.debugLog(".onPlaying() ")
         }
         return this
     },
@@ -94,7 +94,7 @@ DomView.newSubclassNamed("BMAudioPlayer").newSlots({
             this.stop()
 
             if (this.isDebugging()) {
-                console.log(this.typeId() +  ".setPath:'" + aPath + "'")
+                this.debugLog( ".setPath:'" + aPath + "'")
             }
 
             const source = this.sourceElement()
@@ -122,7 +122,7 @@ DomView.newSubclassNamed("BMAudioPlayer").newSlots({
 
     load: function() {
         if (this.isDebugging()) {
-            console.log(this.typeId() +  ".load() '" + this.path() + "'")
+            this.debugLog( ".load() '" + this.path() + "'")
         }
         this.element().load()
         return this
@@ -136,7 +136,7 @@ DomView.newSubclassNamed("BMAudioPlayer").newSlots({
         }
 
         if (this.isDebugging()) {
-            console.log(this.typeId() +  ".play() '" + this.path() + "'")
+            this.debugLog( ".play() '" + this.path() + "'")
         }
 
         const promise = this.element().play()
@@ -168,7 +168,7 @@ DomView.newSubclassNamed("BMAudioPlayer").newSlots({
 
     stop: function() {
         if (this.isDebugging()) {
-            console.log(this.typeId() +  ".stop() '" + this.path() + "'")
+            this.debugLog( ".stop() '" + this.path() + "'")
         }
 
         this.pause();

@@ -205,7 +205,7 @@ DomStyledView.newSubclassNamed("NodeView").newSlots({
     },
 
     didUpdateNode: function () {
-        //console.log(this.typeId() + " didUpdateNode " + this.node().type())
+        //this.debugLog(" didUpdateNode " + this.node().type())
         this.scheduleSyncFromNode()
     },
     
@@ -244,7 +244,7 @@ DomStyledView.newSubclassNamed("NodeView").newSlots({
         */
 
         //NodeViewSynchronizer.addFromNode(this)    
-        //console.log(this.typeId() + " scheduleSyncFromNode")
+        //this.debugLog(" scheduleSyncFromNode")
         window.SyncScheduler.shared().scheduleTargetAndMethod(this, "syncFromNode")
         return this
     },
@@ -277,7 +277,7 @@ DomStyledView.newSubclassNamed("NodeView").newSlots({
     
     onVisibility: function() {
 	    DomStyledView.onVisibility.apply(this)
-	    //console.log(this.typeId() + ".onVisibility()")
+	    //this.debugLog(".onVisibility()")
 	    const node = this.node()
 	    if (node && node.nodeBecameVisible) {
 	        node.nodeBecameVisible()

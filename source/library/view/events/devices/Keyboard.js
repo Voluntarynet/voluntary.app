@@ -319,7 +319,7 @@ ideal.Proto.newSubclassNamed("Keyboard").newSlots({
             key.onKeyDown(event)
 
             if (this.isDebugging()) {
-                console.log(this.typeId() + ".onKeyDownCapture " + key.name())
+                this.debugLog(".onKeyDownCapture " + key.name())
             }
         } else {
             console.warn("Keyboard.shared() no key found for event ", event)
@@ -334,7 +334,7 @@ ideal.Proto.newSubclassNamed("Keyboard").newSlots({
         key.onKeyUp(event)
 
         if (this.isDebugging()) {
-            console.log(this.typeId() + ".onKeyUp " + key.name())
+            this.debugLog(".onKeyUp " + key.name())
         }
 
         return shouldPropogate
@@ -466,7 +466,7 @@ ideal.Proto.newSubclassNamed("Keyboard").newSlots({
     },
 
     show: function() {
-        console.log(this.typeId() + " downKeys: ", this.downKeyNames())
+        this.debugLog(" downKeys: ", this.downKeyNames())
     },
 
     allModifierNames: function() {

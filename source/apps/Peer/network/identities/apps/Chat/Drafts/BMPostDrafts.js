@@ -39,7 +39,7 @@ BMStorableNode.newSubclassNamed("BMPostDrafts").newSlots({
     /*
 	scheduleSyncToStore: function() {
 		BMStorableNode.scheduleSyncToStore.apply(this)
-        console.log(this.typeId() + " scheduleSyncToStore")
+        this.debugLog(" scheduleSyncToStore")
 		return this
 	},
 	*/

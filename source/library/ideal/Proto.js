@@ -419,7 +419,7 @@ Proto.setSlots({
         // not a great name but this walks back the ancestors and tries to find an
         // existing class with the same name as the ancestor + the given postfix
         // useful for things like type + "View" or type + "RowView", etc
-        //console.log(this.typeId() + " firstAncestorWithMatchingPostfixClass(" + aPostfix + ")")
+        //this.debugLog(" firstAncestorWithMatchingPostfixClass(" + aPostfix + ")")
         const match = this.ancestors().detect((obj) => {
             const name = obj.type() + aPostfix
             const proto = window[name]
@@ -451,7 +451,8 @@ Proto.setSlots({
                 s = s() 
             }
 
-            console.log(this.typeId() + ": " + s)
+            const label = this.typeId()
+            console.log(label + ": " + s)
         }
         return this
     },

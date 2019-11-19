@@ -109,7 +109,7 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
 
     onDoubleTapComplete: function(aGesture) {
         // make content editable and select text
-        //console.log(this.typeId() + ".onDoubleTapComplete()")
+        //this.debugLog(".onDoubleTapComplete()")
         if (this.contentEditable()) {
             //this.setBorder("1px dashed red")
             return this
@@ -124,7 +124,7 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
 
     onBlur: function() {
         DomStyledView.onBlur.apply(this)
-        //console.log(this.typeId() + ".onBlur()")
+        //this.debugLog(".onBlur()")
         if (this.usesDoubleTapToEdit()) {
             this.setContentEditable(false)
             this.setBorder("none")
@@ -141,7 +141,7 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
 
     setContentEditable: function(aBool) {
         DomStyledView.setContentEditable.apply(this, [aBool])
-        //console.log(this.typeId() + ".setContentEditable(" + aBool + ") = ", this.contentEditable())
+        //this.debugLog(".setContentEditable(" + aBool + ") = ", this.contentEditable())
         //this.setIsRegisteredForClicks(this.contentEditable())  // is this needed after move to tap?
         return this
     },
@@ -177,7 +177,7 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
         if (oldValue !== newValue) {
             DomStyledView.setString.apply(this, [newValue])
             /*
-            console.log(this.typeId() + " setString(")
+            this.debugLog(" setString(")
             console.log("    old: '" + oldValue + "'")
             console.log("    new: '" + newValue + "'")
             console.log("---")
@@ -212,16 +212,16 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
     },
     
     onKeyUp: function(event) {
-        //console.log(this.typeId() + " onKeyUp ", event)
+        //this.debugLog(" onKeyUp ", event)
         this.adjustFontSizeWithKeyboard()
         DomStyledView.onKeyUp.apply(this, [event])
-        //console.log(this.typeId() + " onKeyUp value: [" + this.value() + "]")
+        //this.debugLog(" onKeyUp value: [" + this.value() + "]")
         this.didEdit()
         return false
     },
 
     onEnterKeyUp: function(event) {
-	    //console.log(this.typeId() + ".onEnterKeyUp()")
+	    //this.debugLog(".onEnterKeyUp()")
 	    //this.didEdit()
 
         this.formatValue()
@@ -230,7 +230,7 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
         this.tellParentViews("didInput", this) 
             
         if (!this.doesHoldFocusOnReturn()) {
-            //console.log(this.typeId() + " calling releaseFirstResponder")
+            //this.debugLog(" calling releaseFirstResponder")
             this.releaseFirstResponder()
         }
         
@@ -261,12 +261,12 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
         
         if (newValue !== oldValue) {
             this.debugLog("formatValue newValue !== oldValue")
-            console.log(this.typeId() + " newValue: [" + newValue + "]")
+            this.debugLog(" newValue: [" + newValue + "]")
             this.setInnerHTML(newValue)
             this.didEdit()
         }
 	    //console.trace(this.type() + " formatValue '" + oldValue + "' -> '" + this.innerHTML() + "'")
-        //console.log(this.typeId() + " after formatValue: '" + this.innerHTML() + "'")
+        //this.debugLog(" after formatValue: '" + this.innerHTML() + "'")
         return this
     },
     
@@ -296,7 +296,7 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
     },
 
     onDoubleClick: function (event) {
-        console.log(this.typeId() + ".onDoubleClick()")
+        this.debugLog(".onDoubleClick()")
         //this.focus()
         this.selectAll() // looses focus!
         this.element().focus()
@@ -308,7 +308,7 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
     
     onClick: function(event) {
         // to prevent click-to-edit event from selecting the background row
-        //console.log(this.typeId() + ".onClick()")
+        //this.debugLog(".onClick()")
 
         if (this.contentEditable()) {
             this.sendActionToTarget()

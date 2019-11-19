@@ -37,7 +37,7 @@ EventSetListener.newSubclassNamed("DropListener").newSlots({
     },
 
     onBeforeEvent: function(methodName, event) {
-        console.log(this.typeId() + " onBeforeEvent " + methodName)
+        this.debugLog(" onBeforeEvent " + methodName)
         return this
     },
 })

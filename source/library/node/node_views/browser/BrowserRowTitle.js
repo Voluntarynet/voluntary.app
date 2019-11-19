@@ -25,7 +25,7 @@ TextField.newSubclassNamed("BrowserRowTitle").newSlots({
 
     selectNextKeyView: function() {
         /*
-        console.log(this.typeId() + ".selectNextKeyView()")
+        this.debugLog(".selectNextKeyView()")
         const row = this.parentView().parentView();
         const nextRow = this.row().column().selectNextRow()
         */

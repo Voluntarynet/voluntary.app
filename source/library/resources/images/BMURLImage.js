@@ -35,7 +35,7 @@ BMNode.newSubclassNamed("BMURLImage").newSlots({
 
     loadDataURL: function() {
         if (this.isDebugging()) {
-            console.log(this.typeId() + ".loadDataURL() " + this.path())
+            this.debugLog(".loadDataURL() " + this.path())
         }
 
         const request = new XMLHttpRequest();
@@ -49,7 +49,7 @@ BMNode.newSubclassNamed("BMURLImage").newSlots({
     loadedRequest: function(request) {
 
         if (this.isDebugging()) {
-            console.log(this.typeId() + ".loadedRequest() ", request)
+            this.debugLog(".loadedRequest() ", request)
         }
 
         const fileReader = new FileReader();
@@ -59,7 +59,7 @@ BMNode.newSubclassNamed("BMURLImage").newSlots({
             this.setDataURL(dataURL);
 
             if (this.isDebugging()) {
-                console.log(this.typeId() + " setDataURL() ", dataURL)
+                this.debugLog(" setDataURL() ", dataURL)
             }
 
         };

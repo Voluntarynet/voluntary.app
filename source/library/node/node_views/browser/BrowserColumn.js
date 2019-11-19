@@ -48,7 +48,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     },
 
     applyStyles: function() {
-        //console.log(this.typeId() + ".applyStyles()")
+        //this.debugLog(".applyStyles()")
         NodeView.applyStyles.apply(this)
         return this
     },
@@ -185,7 +185,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         /*
         // follow it if we can 
         if (clickedRow.nodeRowLink()) {
-		    //console.log(this.typeId() + ".didClickRow(" + clickedRow.node().title() + ") selecting column ", this.node().title())
+		    //this.debugLog(".didClickRow(" + clickedRow.node().title() + ") selecting column ", this.node().title())
         //	this.browser().selectColumn(this)
         }
         */
@@ -196,7 +196,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
 
     selectThisColumn: function() {
         if (Type.isNull(this.browser())) {
-            console.log(this.typeId() + " selectThisColumn WARNING: this.browser() === null" )
+            this.debugLog(" selectThisColumn WARNING: this.browser() === null" )
             // TODO: find out why this happens
             return this
         }
@@ -336,7 +336,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     },
 	
     scrollToSubnode: function(aSubnode) {
-	    //console.log(this.typeId() + ".scrollToSubnode")
+	    //this.debugLog(".scrollToSubnode")
 	    const subview = this.subviewForNode(aSubnode)
 	    assert(subview)
 	    this.columnGroup().scrollView().setScrollTop(subview.offsetTop())
@@ -449,7 +449,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
 
     //onMetaLeft_d_KeyUp: function(event) {
     onAlternate_d_KeyUp: function(event) {
-        //console.log(this.typeId() + " onMetaLeft_d_KeyUp")
+        //this.debugLog(" onMetaLeft_d_KeyUp")
         this.duplicateSelectedRow()
         return false // stop propogation
     },
@@ -469,7 +469,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     /*
     onControl_i_KeyUp: function(event) {
         // forward method to selected row and resync next column 
-        console.log(this.typeId() + ".onControl_i_KeyUp()")
+        this.debugLog(".onControl_i_KeyUp()")
 
         const row = this.selectedRow()
         if (row) {
@@ -490,7 +490,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         if (row && canAdd) {
             const canCopy = !Type.isNullOrUndefined(row.node().copy)
             if (canCopy) { 
-                //console.log(this.typeId() + " duplicate selected row " + this.selectedRow().node().title())
+                //this.debugLog(" duplicate selected row " + this.selectedRow().node().title())
                 const subnode = row.node()
                 const newSubnode = subnode.copy()
                 const index = node.indexOfSubnode(subnode)
@@ -569,7 +569,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     // --- enter key begins row editing ---------------------------
 	
     onEnterKeyUp: function(event) {
-        //console.log(this.typeId() + ".onEnterKeyUp()")
+        //this.debugLog(".onEnterKeyUp()")
         
         if (!this.canNavigate()) { return }
 	
@@ -618,12 +618,12 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     // -----------------------------
     
     onTapComplete: function(aGesture) {
-        //console.log(this.typeId() + ".onTapComplete()")
+        //this.debugLog(".onTapComplete()")
         if (this.node()) {
             // add a subnode if tapping on empty area
             // make sure tap isn't on a row
             const p = aGesture.downPosition() // there may not be an up position on windows?
-            //console.log(this.typeId() + ".onTapComplete() ", aGesture.upEvent())
+            //this.debugLog(".onTapComplete() ", aGesture.upEvent())
             if (p.event().target === this.element()) {
                 if (this.node().canSelfAddSubnode()) {
                     this.node().add()
@@ -697,7 +697,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             this.setSelectedRowIndex(0)
         }
 
-        //console.log(this.typeId() + " focus")
+        //this.debugLog(" focus")
         return this
     },
     
@@ -761,7 +761,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     // editing
 
     onDoubleClick: function (event) {
-        //console.log(this.typeId() + ".onDoubleClick()")
+        //this.debugLog(".onDoubleClick()")
         return true
     },
 
@@ -891,7 +891,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     onPinchBegin: function(aGesture) {
         // TODO: move row specific code to BrowserRow
 
-        //console.log(this.typeId() + ".onPinchBegin()")
+        //this.debugLog(".onPinchBegin()")
 
         // - calc insert index
         const p = aGesture.beginCenterPosition()
@@ -933,7 +933,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             //newRow.scheduleSyncFromNode()
             //this._temporaryPinchSubnode.didUpdateNode()
         } else {
-            //console.log(this.typeId() + ".onPinchBegin() cancelling due to no add action")
+            //this.debugLog(".onPinchBegin() cancelling due to no add action")
 
             aGesture.cancel()
         }        
@@ -945,7 +945,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             if (s < 0) {
                 s = 0
             }
-            //console.log(this.typeId() + ".onPinchMove() s = ", s)
+            //this.debugLog(".onPinchMove() s = ", s)
             const minHeight = BrowserRow.defaultHeight()
             const newRow = this.subviewForNode(this._temporaryPinchSubnode)
             //newRow.setBackgroundColor("black")
@@ -975,7 +975,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     },
 
     onPinchComplete: function(aGesture) {
-        //console.log(this.typeId() + ".onPinchCompleted()")
+        //this.debugLog(".onPinchCompleted()")
         // if pinch is tall enough, keep new row
 
         if (this._temporaryPinchSubnode) {
@@ -997,7 +997,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     },
 
     onPinchCancelled: function(aGesture) {
-        //console.log(this.typeId() + ".onPinchCancelled()")
+        //this.debugLog(".onPinchCancelled()")
         if (this._temporaryPinchSubnode) {
             this.node().removeSubnode(this._temporaryPinchSubnode)
             this._temporaryPinchSubnode = null
@@ -1264,7 +1264,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             //const file = event.dataTransfer.files[0];
             //console.log('onDrop ' + file.path);
             //this.onDataTransfer(event.dataTransfer)
-            console.log(this.typeId() + " got drop")
+            this.debugLog(" got drop")
             const data = event.dataTransfer.getData("text");
             console.log("drop text = ", data)
             let json = null

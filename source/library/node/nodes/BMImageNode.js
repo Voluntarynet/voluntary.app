@@ -24,7 +24,7 @@ BMStorableNode.newSubclassNamed("BMImageNode").newSlots({
     },        
     
     onDidEditNode: function() {
-        console.log(this.typeId() + " onDidEditNode")
+        this.debugLog(" onDidEditNode")
         this.scheduleSyncToStore()
     },
 })

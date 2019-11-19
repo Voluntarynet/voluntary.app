@@ -76,7 +76,7 @@ BMMessage.newSubclassNamed("BMObjectMessage").newSlots({
     // dict 
     
     setMsgDict: function(dict) {
-        //console.log(this.typeId() + " setMsgDict ", dict)
+        //this.debugLog(" setMsgDict ", dict)
         //this.setPow(dict.pow)
         //this.setSignature(dict.signature)
         this.setMsgType(dict.msgType)
@@ -122,7 +122,7 @@ BMMessage.newSubclassNamed("BMObjectMessage").newSlots({
     computeMsgHash: function() {
         let s = Object.toJsonStableString(this.theDictToHash())
         let hash = s.sha256String()
-        //console.log(this.typeId() + "\n    dict: ", s, "\n    computed hash: " + hash)
+        //this.debugLog("\n    dict: ", s, "\n    computed hash: " + hash)
         return hash
     },
 

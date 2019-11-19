@@ -45,7 +45,7 @@ BMFieldSetNode.newSubclassNamed("BMThemeClassState").newSlots({
     },
 
     didUpdateField: function(aField) {
-        console.log(this.typeId() + ".didUpdateField: " + aField.key() + ":", aField.value())
+        this.debugLog(".didUpdateField: " + aField.key() + ":", aField.value())
 
         if (aField.value()) { // dark mode
             BMThemeStyleSheet.shared().setDivClassNameAttributeValue(this.divClassName(), aField.key(), "#000")

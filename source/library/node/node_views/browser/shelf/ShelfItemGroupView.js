@@ -48,7 +48,7 @@ NodeView.newSubclassNamed("ShelfItemGroupView").newSlots({
     },
     
     didClickItem: function(clickedItem) {
-        //console.log(this.typeId() + ".didClickItem(" + clickedItem.typeId() + ")")
+        //this.debugLog(".didClickItem(" + clickedItem.typeId() + ")")
         
         //this.scrollView().performOnSubviewsExcept("unselect", clickedItem)
 
@@ -123,7 +123,7 @@ NodeView.newSubclassNamed("ShelfItemGroupView").newSlots({
             if (!this.isAlwaysSelected()) {
                 this.unselectItems()
             }
-            // console.log(this.typeId() + ".compact()")
+            // this.debugLog(".compact()")
         }
         return this
     },

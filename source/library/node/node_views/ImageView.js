@@ -114,7 +114,7 @@ NodeView.newSubclassNamed("ImageView").newSlots({
                 parentView.subviewRequestsClose(this)
             }
             */
-            //console.log(this.typeId() + ".close complete parentView = ", parentView)
+            //this.debugLog(".close complete parentView = ", parentView)
             parentView.scheduleSyncToNode()
         }, seconds * 1000)
     },

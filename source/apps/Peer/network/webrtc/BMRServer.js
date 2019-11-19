@@ -47,7 +47,7 @@ BMFieldSetNode.newSubclassNamed("BMRServer").newSlots({
 
     didUpdateNode: function() {
         BMFieldSetNode.didUpdateNode.apply(this)
-        //console.log(this.typeId() + ".didUpdateNode()")
+        //this.debugLog(".didUpdateNode()")
         this.updateButtons()
         return this
     },

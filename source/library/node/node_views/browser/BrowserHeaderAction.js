@@ -61,7 +61,7 @@ NodeView.newSubclassNamed("BrowserHeaderAction").newSlots({
     },
 
     onTapComplete: function (aGesture) {
-        //console.log(this.typeId() + ".onTapComplete()")
+        //this.debugLog(".onTapComplete()")
         this.sendActionToTarget()
         return false
     },

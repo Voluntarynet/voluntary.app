@@ -56,15 +56,15 @@ BMNode.newSubclassNamed("BMFont").newSlots({
 
     didLoad: function() {
         if (this.isDebugging()) {
-            console.log(this.typeId() + ".didLoad(" + this.name() + ") " + this.path())
-            //console.log(this.typeId() + ".didLoad('" + this.name() + "')")
+            this.debugLog(".didLoad(" + this.name() + ") " + this.path())
+            //this.debugLog(".didLoad('" + this.name() + "')")
         }
         return this
     },
 
     onLoadError: function(error) {
         if (this.isDebugging()) {
-            console.log(this.typeId() + ".onLoadError() ", error)
+            this.debugLog(".onLoadError() ", error)
         }
         return this
     },

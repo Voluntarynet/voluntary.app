@@ -100,7 +100,7 @@ GestureRecognizer.newSubclassNamed("TapGestureRecognizer").newSlots({
         GestureRecognizer.onUp.apply(this, [event])
  
         if (this.isDebugging()) {
-            console.log(this.typeId() + ".onUp()  tapCount:" + this.tapCount() + " viewTarget:" + this.viewTarget().typeId())
+            this.debugLog(".onUp()  tapCount:" + this.tapCount() + " viewTarget:" + this.viewTarget().typeId())
         }
 
         if (this.hasTimer()) {

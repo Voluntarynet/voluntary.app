@@ -68,7 +68,7 @@ BMStorableNode.newSubclassNamed("BMContactLinks").newSlots({
         this.removeLinksWithNoContact()
         this.addLinkForEveryContact()
         this.sortSubnodes()
-        //console.log(this.typeId() + " updateIdentities contactLinks " + this.subnodes().length)
+        //this.debugLog(" updateIdentities contactLinks " + this.subnodes().length)
         return this
     },
 
@@ -89,7 +89,7 @@ BMStorableNode.newSubclassNamed("BMContactLinks").newSlots({
     removeLinksWithNoContact: function () {
         this.contactLinks().slice().forEach((link) => {
             if (!link.hasValidRemoteIdentity()) {
-                console.log(this.typeId() + " removing invalid link ", link.title())
+                this.debugLog(" removing invalid link ", link.title())
                 this.removeSubnode(link)
             }
         })

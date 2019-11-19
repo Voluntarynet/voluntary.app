@@ -106,7 +106,7 @@ BMNode.newSubclassNamed("BMRegion").newSlots({
 
     prepareToAccess: function() {
         if(this._lazyChildrenDict != null) {
-            console.log(this.typeId() + " " + this.title() + " lazy load")
+            this.debugLog(" " + this.title() + " lazy load")
             let ld = this._lazyChildrenDict
             this._lazyChildrenDict = null
             this.addChildrenDicts(ld.children)

@@ -53,12 +53,12 @@ BMKeyPair.newSubclassNamed("BMLocalIdentity").newSlots({
 
     finalize: function() {
         BMKeyPair.finalize.apply(this)
-        //console.log(this.typeId() + ".finalize()")
+        //this.debugLog(".finalize()")
         NotificationCenter.shared().newNote().setSender(this).setName("didChangeIdentity").setInfo(this).post()
     },
 	
     didLoadFromStore: function() {
-        //console.log(this.typeId() + " didLoadFromStore")
+        //this.debugLog(" didLoadFromStore")
         BMKeyPair.didLoadFromStore.apply(this)
         this.profile().fieldNamed("publicKeyString").setValueIsEditable(false)
     },
@@ -73,7 +73,7 @@ BMKeyPair.newSubclassNamed("BMLocalIdentity").newSlots({
     }, 
  
     handleObjMsg: function(objMsg) {
-        //console.log(this.typeId() + " " + this.name() + " handleObjMsg ", objMsg)
+        //this.debugLog(" " + this.name() + " handleObjMsg ", objMsg)
         let senderId = this.remoteIdentities().idWithPublicKeyString(objMsg.senderPublicKeyString()) 
         let didHandle = false
 		

@@ -200,7 +200,7 @@ BrowserRow.newSubclassNamed("BMPostMessageRowView").newSlots({
 
     /*
     onDidEdit: function (changedView) {
-        console.log(this.typeId() + ".onDidEdit")
+        this.debugLog(".onDidEdit")
         this.scheduleSyncToNode()
         return true
     },

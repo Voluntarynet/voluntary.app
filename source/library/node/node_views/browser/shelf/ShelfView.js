@@ -85,7 +85,7 @@ NodeView.newSubclassNamed("ShelfView").newSlots({
     // --- clicks -----------------------
     
     didClickGroup: function(clickedGroup) {
-        //console.log(this.typeId() + ".didClickGroup(" + clickedGroup.typeId() + ")")
+        //this.debugLog(".didClickGroup(" + clickedGroup.typeId() + ")")
 
         this.scrollView().performOnSubviewsExcept("compact", clickedGroup)
         clickedGroup.uncompact()

@@ -361,10 +361,10 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
         const eventClass = event.__proto__.constructor;
 
         if (eventClass === MouseEvent) {
-            //console.log(this.typeId() + " got mouse")
+            //this.debugLog(" got mouse")
             return Mouse.shared().pointsForEvent(event)
         } else if (eventClass === TouchEvent) {   
-            //console.log(this.typeId() + " got touch")
+            //this.debugLog(" got touch")
             return TouchScreen.shared().pointsForEvent(event)
         }
         

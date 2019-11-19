@@ -141,7 +141,7 @@ BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
         })
 		
         if (!result) {		
-		    console.log(this.typeId() + ".idWithPublicKeyString(" + publicKeyString + ") = ", result)
+		    this.debugLog(".idWithPublicKeyString(" + publicKeyString + ") = ", result)
 		    console.log("all ids: ", ids.map((id) => { return id.name() + ":" + id.publicKeyString() }))
 	    }
         return result
@@ -210,18 +210,18 @@ BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
     },
 
     didChangeIdentity: function() {
-        //console.log(this.typeId() + ".didChangeIdentity()")
+        //this.debugLog(".didChangeIdentity()")
         this.updateIdsBloomFilter()
     },
 		
     updateIdsBloomFilter: function() {
-        //console.log(this.typeId() + ".updateIdsBloomFilter()")
+        //this.debugLog(".updateIdsBloomFilter()")
         const oldFilter = this._idsBloomFilter
 	
         const ids = this.allIdentities()
 		
         /*
-		console.log(this.typeId() + ".updateIdsBloomFilter() with " + ids.length + " ids")
+		this.debugLog(".updateIdsBloomFilter() with " + ids.length + " ids")
 		console.log("   local ids:  " + this.localIdentities().subnodes().length)
 		console.log("   remote ids: " + this.allRemoteIdentities().length)
 		*/
@@ -256,7 +256,7 @@ BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
     },
 	
     didChangeIdsBloom: function() {
-        //console.log(this.typeId() + ".didChangeIdsBloom()")
+        //this.debugLog(".didChangeIdsBloom()")
         //this._didChangeIdsBloomeNote = NotificationCenter.shared().newNote().setSender(this.typeId()).setName("didChangeIdsBloom")
         this.servers().subnodes().forEach((server) => {
             server.reRequestPeerId() 
@@ -264,7 +264,7 @@ BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
     },
 	
     verifyIdsBloom: function() {
-        //console.log(this.typeId() + ".verifyIdsBloom: " + this.idsBloomFilter().serialized().sha256String().substring(0, 6) )
+        //this.debugLog(".verifyIdsBloom: " + this.idsBloomFilter().serialized().sha256String().substring(0, 6) )
 	    this.allIdentities().forEach((id) => {
             const k = id.publicKeyString()
             const doesMatch = this.idsBloomFilter().checkEntry(k)
@@ -284,7 +284,7 @@ BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
     },
 	
     hasIdentityMatchingBloomFilter: function(bloomFilter) {
-        //console.log(this.typeId() + ".hasIdentityMatchingBloomFilter: " + bloomFilter.serialized().sha256String().substring(0, 6) )
+        //this.debugLog(".hasIdentityMatchingBloomFilter: " + bloomFilter.serialized().sha256String().substring(0, 6) )
 	    const match = this.allIdentities().detect((id) => {
             const k = id.publicKeyString()
             const doesMatch = bloomFilter.checkEntry(k)

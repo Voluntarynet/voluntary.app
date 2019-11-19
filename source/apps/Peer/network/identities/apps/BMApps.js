@@ -47,7 +47,7 @@ BMStorableNode.newSubclassNamed("BMApps").newSlots({
     },
 
     addAppTypeIfMissing: function (appProto) {
-        //console.log(this.typeId() + ".addAppTypeIfMissing(" + appProto.type() + ")")
+        //this.debugLog(".addAppTypeIfMissing(" + appProto.type() + ")")
         if (this.hasAppType(appProto) === false) {
             this.addSubnode(appProto.clone())
         }

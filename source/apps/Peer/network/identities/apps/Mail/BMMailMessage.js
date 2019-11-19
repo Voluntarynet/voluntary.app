@@ -68,14 +68,14 @@ BMAppMessage.newSubclassNamed("BMMailMessage").newSlots({
     },
 
     setupInputsFromPubkeys: function() { // called on load from store
-        //console.log(this.typeId() + " setupInputsFromPubkeys this.senderPublicKeyString() = " + this.senderPublicKeyString())
+        //this.debugLog(" setupInputsFromPubkeys this.senderPublicKeyString() = " + this.senderPublicKeyString())
 
         //if (!App.shared().network()) { return null }
         // if pubkey matches a contact name, set to name
         // otherwise, set to the pubkey
 
         let senderId = App.shared().network().idWithNameOrPubkey(this.senderPublicKeyString())      
-        //console.log(this.typeId() + " senderId = " + senderId)
+        //this.debugLog(" senderId = " + senderId)
         let from = senderId ? senderId.name() : ""
         if (from !== this.fromContact()) { this.setFromContact(from) }
 

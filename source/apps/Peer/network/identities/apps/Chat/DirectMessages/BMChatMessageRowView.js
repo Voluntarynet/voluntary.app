@@ -73,7 +73,7 @@ BrowserTitledRow.newSubclassNamed("BMChatMessageRowView").newSlots({
 		
         const node = this.node()
         if (node) {
-            //console.log(this.typeId() + " updateSubviews node = " + node.typeId() + " content = ", this.node().content())
+            //this.debugLog(" updateSubviews node = " + node.typeId() + " content = ", this.node().content())
             this.titleView().setInnerHTML(node.title())
 		
             if (this.message().wasSentByMe()) {

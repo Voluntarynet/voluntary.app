@@ -157,7 +157,7 @@ ideal.Proto.newSubclassNamed("SimpleStore").newSlots({
             })
 
             totalStoreCount += thisLoopStoreCount
-            //console.log("totalStoreCount: ", totalStoreCount)
+            this.debugLog(() => "totalStoreCount: " + totalStoreCount)
             if (thisLoopStoreCount === 0) {
                 break
             }

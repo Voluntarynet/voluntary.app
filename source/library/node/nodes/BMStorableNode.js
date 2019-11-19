@@ -267,9 +267,12 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
 	
     // subnodes
 	
-    subnodePids: function() {
+    subnodePids: function( aStore = this.defaultStore()) {
         const storableSubnodes = this.subnodes().filter(sn => sn.shouldStore())
-        const pids = storableSubnodes.map(sn => sn.pid())
+        const pids = storableSubnodes.map(sn => { 
+            aStore.willRefObject(sn)
+            return sn.pid()
+        })
         return pids
     },
     

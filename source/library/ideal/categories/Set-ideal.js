@@ -10,6 +10,14 @@
 
 Object.defineSlots(Set.prototype, {
 
+    keysArray: function() {
+        return Array.fromIterator(this.values())
+    },
+
+    valuesArray: function() {
+        return this.keysArray()
+    },
+
     isSuperset: function(subset) {
         for (let v of subset) {
             if (!this.has(v)) {

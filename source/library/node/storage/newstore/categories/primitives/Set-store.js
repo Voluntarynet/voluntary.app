@@ -2,10 +2,6 @@
 
 Object.defineSlots(Set.prototype, {
 
-    valuesArray: function() {
-        return Array.fromIterator(this.values())
-    },
-
     recordForStore: function(aStore) { // should only be called by Store
         return {
             type: Type.typeName(this), 

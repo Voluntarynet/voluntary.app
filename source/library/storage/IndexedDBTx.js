@@ -69,14 +69,6 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
 	
     // --- helpers ---
 	
-    hasKey (key) {
-	    const domStringList = this.objectStore().indexNames
-	    const hasKey = domStringList.contains(key) 
-	    console.log("domStringList.length : ", domStringList.length)
-	    console.log("domStringList['" + key + "'] exists ", hasKey)
-	    return hasKey
-    }
-	
     pushRequest (aRequest) {
 	    this.assertNotCommitted()
 
@@ -107,7 +99,18 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
     }
 	
     // --- operations ----
-	
+    
+    /*
+    hasKey (key) {
+	    const domStringList = this.objectStore().indexNames
+	    const hasKey = domStringList.contains(key) 
+	    console.log("domStringList.length : ", domStringList.length)
+	    console.log("domStringList['" + key + "'] exists ", hasKey)
+	    return hasKey
+    }
+    */
+
+    /*
     atPut (key, object) {
 	    this.assertNotCommitted()
 
@@ -118,9 +121,14 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
         }
         return this
     }
+    */
 	
     atAdd (key, object) { 
-	    this.assertNotCommitted()
+        this.assertNotCommitted()
+        
+        if (this.isDebugging()) {
+            console.log(this.typeId() + " add " + key)
+        }
 
         const entry = this.entryForKeyAndValue(key, object)
         const request = this.objectStore().add(entry);
@@ -133,6 +141,10 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
     atUpdate (key, object) {
 	    this.assertNotCommitted()
 
+        if (this.isDebugging()) {
+            console.log(this.typeId() + " atUpdate " + key)
+        }
+
         const entry = this.entryForKeyAndValue(key, object)
         const request = this.objectStore().put(entry);
         request._action = "put"
@@ -143,6 +155,10 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
     
     removeAt (key) {
 	    this.assertNotCommitted()
+
+        if (this.isDebugging()) {
+            console.log(this.typeId() + " removeAt " + key)
+        }
 
         const request = this.objectStore().delete(key);
         request._action = "remove"

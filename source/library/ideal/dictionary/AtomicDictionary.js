@@ -24,9 +24,10 @@ window.ideal.AtomicDictionary = class AtomicDictionary extends ideal.Dictionary 
     }
 
     begin () {
+        this.assertAccessible()
         this.assertNotInTx()
         this.setOldVersion(this.jsDict().shallowCopy()) // so no one else has a reference to our copy
-        this.setJsDict(this.jsDict().shallowCopy())
+        this.setJsDict(this.jsDict())
         this.setHasBegun(true)
         return this
     }
@@ -62,18 +63,58 @@ window.ideal.AtomicDictionary = class AtomicDictionary extends ideal.Dictionary 
             assert(Type.isString(v))
         }
 
+        this.assertAccessible()
         this.assertInTx()
         return super.atPut(k, v)
     }
 
-    removeKey (k) {
+    removeKey (k) {        
         if (this.keysAndValuesAreStrings()) {
             assert(Type.isString(k))
         }
 
+        this.assertAccessible()
         this.assertInTx()
         return this.removeKey(k);
     }
+
+    // extras 
+
+    assertAccessible () {
+        //this.assertOpen()
+    }
+
+    keys () {
+        this.assertAccessible()
+        return Object.keys(this.jsDict());
+    }
+	
+    values () {
+        this.assertAccessible()
+        return Object.values(this.jsDict());
+    }
+
+    size () {
+        this.assertAccessible()
+        return this.keys().length
+    }	
+
+    asJson () {
+        this.assertAccessible()
+        // WARNING: this can be slow for a big store!
+        return JSON.stringify(this.jsDict())
+    }
+
+    totalBytes () {
+        this.assertAccessible()
+        let byteCount = 0
+        this.jsDict().forEachKV((k, v) => {
+            byteCount += k.length + v.length
+        })
+        return byteCount
+    }
+
+    // test
 
     test () {
 

@@ -121,6 +121,16 @@ Object.defineSlots(Object.prototype, {
         }); 
         return m
     },
+
+    isEqual: function(anObject) { // only checks enumerable properties
+        const keys = Object.getOwnPropertyNames(this)
+        if (keys.length !== Object.getOwnPropertyNames(anObject).length) {
+            return false
+        }
+
+        const foundInequality = keys.detect(k => this.hasOwnProperty(k) !== anObject.hasOwnProperty(k))
+        return !foundInequality
+    },
 })
 
 // --- Objective-C like associations ---

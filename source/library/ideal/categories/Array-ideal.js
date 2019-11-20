@@ -778,6 +778,11 @@ Object.defineSlots(Array.prototype, {
         return true;
     },
     
+    asImmutable: function() {
+        const obj = this.shallowCopy()
+        Object.freeze(obj)
+        return obj
+    },
 });
 
 /*

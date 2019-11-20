@@ -2,7 +2,7 @@
 
 /*
 
-    ObservableProxyHandler
+    ObservableProxy
 
     A class for wrapping a reference in a proxy which can
     send proxy trap notifications to observers.
@@ -24,7 +24,7 @@
     Example:
 
         const myObject = ["a", "b", "c"]
-        const proxyRef = ObservableProxyHandler.newProxyFor(myObject)
+        const proxyRef = ObservableProxy.newProxyFor(myObject)
         proxyRef.observable().addObserver(myObserver)
 
         now if we call:
@@ -35,7 +35,7 @@
         
 */
 
-ideal.Proto.newSubclassNamed("ObservableProxyHandler").newSlots({        
+ideal.Proto.newSubclassNamed("ObservableProxy").newSlots({        
     observers: null,
     target: null,
     revocable: null,
@@ -58,7 +58,7 @@ ideal.Proto.newSubclassNamed("ObservableProxyHandler").newSlots({
 }).setSlots({
 
     newProxyFor: function(aTarget) {
-        const handler = ObservableProxyHandler.clone()
+        const handler = this.typeClass().clone()
         handler.setTarget(aTarget)
         //const proxy = new Proxy(aTarget, handler)
         this.setRevocable(Proxy.revocable(aTarget, handler))
@@ -114,14 +114,16 @@ ideal.Proto.newSubclassNamed("ObservableProxyHandler").newSlots({
                 obs[noteName].apply(obs, [this.target(), propertyName])
             }
         })
-        return this
+        return true
     },
 
     // --- proxy trap methods ---
     
     /*
-    apply: function(target) {
 
+    apply: function(target, thisArg, argumentsList) {
+        this.postForTrap("apply", propertyName)
+        return target[propertyName].apply(target, argumentsList)
     },
 
     construct: function(target) {
@@ -205,7 +207,7 @@ ideal.Proto.newSubclassNamed("ObservableProxyHandler").newSlots({
     selfTest: function() {
         const resultsDict = {}
 
-        const noteNamesDict = ObservableProxyHandler.clone().noteNamesDict()
+        const noteNamesDict = ObservableProxy.clone().noteNamesDict()
         
         assert("need to fix this to assign to method name")
         const eventMethod = (target, propertyName) => { 
@@ -221,7 +223,7 @@ ideal.Proto.newSubclassNamed("ObservableProxyHandler").newSlots({
 
     
         const testArray = ["a", "b", "c"]
-        const arrayProxy = ObservableProxyHandler.newProxyFor(testArray)
+        const arrayProxy = ObservableProxy.newProxyFor(testArray)
         arrayProxy.observable().addObserver(testObserver)
     
         const length = arrayProxy.length // get
@@ -246,4 +248,4 @@ ideal.Proto.newSubclassNamed("ObservableProxyHandler").newSlots({
 
 })
 
-//ObservableProxyHandler.selfTest()
+//ObservableProxy.selfTest()

@@ -3,6 +3,7 @@
 ResourceLoader.pushRelativePaths([
     "Type-ideal.js",
     "Object-ideal.js",
+    "Object-puuid.js",
     "Array-ideal.js",
     "Date-ideal.js",
     "String-ideal.js",

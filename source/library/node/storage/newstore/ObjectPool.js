@@ -55,7 +55,7 @@
 
 // need a pidRefsFromPid
 
-ideal.Proto.newSubclassNamed("SimpleStore").newSlots({
+ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
     name: "defaultDataStore",
     rootObject: null, 
     recordsDict: null, // AtomicDictionary
@@ -329,41 +329,43 @@ ideal.Proto.newSubclassNamed("SimpleStore").newSlots({
 
         return deleteCount
     },
+
+    selfTest: function () {
+        const store = ObjectPool.clone()
+    
+        const aTypedArray = Float64Array.from([1.2, 3.4, 4.5])
+        const aSet = new Set("sv1", "sv2")
+        const aMap = new Map([ ["mk1", "mv1"], ["mk2", "mv2"] ])
+        const aNode = BMNode.clone()
+        const a = [1, 2, [3, null], { foo: "bar", b: true }, aSet, aMap, new Date(), aTypedArray, aNode]
+    
+        store.setRootObject(a)
+        store.publicStoreObject(a)
+        //console.log(store.asJson())
+        console.log("---")
+        store.collect()
+    
+        /*
+        const aSerialized = JSON.stringify(a, null, 2)
+        console.log("aSerialized: " + aSerialized + "\n")
+        store.storeObject(a)
+    
+        console.log(store.asJson())
+        console.log("-----------------")
+    
+        const b = store.objectForPid(a.puuid())
+        const bSerialized = JSON.stringify(b, null, 2)
+        console.log("bSerialized: " + bSerialized + "\n")
+        assert(aSerialized === bSerialized)
+        console.log("test passed")
+        */
+    },
 })
 
 // -------------------
 
-const test = function () {
-    const store = SimpleStore.clone()
 
-    const aTypedArray = Float64Array.from([1.2, 3.4, 4.5])
-    const aSet = new Set("sv1", "sv2")
-    const aMap = new Map([ ["mk1", "mv1"], ["mk2", "mv2"] ])
-    const aNode = BMNode.clone()
-    const a = [1, 2, [3, null], { foo: "bar", b: true }, aSet, aMap, new Date(), aTypedArray, aNode]
 
-    store.setRootObject(a)
-    store.publicStoreObject(a)
-    //console.log(store.asJson())
-    console.log("---")
-    store.collect()
-
-    /*
-    const aSerialized = JSON.stringify(a, null, 2)
-    console.log("aSerialized: " + aSerialized + "\n")
-    store.storeObject(a)
-
-    console.log(store.asJson())
-    console.log("-----------------")
-
-    const b = store.objectForPid(a.puuid())
-    const bSerialized = JSON.stringify(b, null, 2)
-    console.log("bSerialized: " + bSerialized + "\n")
-    assert(aSerialized === bSerialized)
-    console.log("test passed")
-    */
-}
-
-test()
+ObjectPool.selfTest()
 
 

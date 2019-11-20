@@ -10,6 +10,10 @@
 
 Object.defineSlots(Set.prototype, {
 
+    shallowCopy: function() {
+        return new Set(this.values())
+    },
+
     keysArray: function() {
         return Array.fromIterator(this.values())
     },
@@ -63,7 +67,13 @@ Object.defineSlots(Set.prototype, {
             _difference.delete(v);
         }
         return _difference;
-    }
+    },
+
+    asImmutable: function() {
+        const obj = this.shallowCopy()
+        Object.freeze(obj)
+        return obj
+    },
     
     /*
     //Examples

@@ -60,12 +60,15 @@ ObservableProxy.newSubclassNamed("FirewallProxy").newSlots({
         ObservableProxy.init.apply(this)
         this.setProtectedTraps(this.defaultProtectedTraps().shallowCopy())
         this.setProtectedMethods(this.defaultProtectedMethods().shallowCopy())
+        this.setIsDebugging(true)
         return this
     },
 
     postForTrap: function(trapName, propertyName) {
         if (this.protectedTraps().has(trapName)) {
-            throw new Error(this.typeId() + " blocked proxy trap " + trapName + " on property " + propertyName)
+            const msg = " blocked proxy trap '" + trapName + "' on property '" + propertyName + "'"
+            this.debugLog(msg)
+            throw new Error(this.typeId() + msg)
             return false
         }
 
@@ -73,7 +76,9 @@ ObservableProxy.newSubclassNamed("FirewallProxy").newSlots({
     },
 
     onProtectedMethodCall: function(propertyName, argsList) {
-        throw new Error(this.typeId() + " blocked method call " + propertyName + " ")
+        const msg = " blocked method call '" + propertyName + "' "
+        this.debugLog(msg)
+        throw new Error(this.typeId() + msg)
     },
 
     get: function(target, propertyName) {
@@ -102,7 +107,10 @@ ObservableProxy.newSubclassNamed("FirewallProxy").newSlots({
         const arrayFwProxy = FirewallProxy.newProxyFor(array)
         arrayFwProxy.observable().setProtectedMethods(new Set(["atPut"]))
         //arrayFwProxy.observable().setProtectedTraps(new Set([...]))
-        arrayFwProxy.atPut("a", "foo")
+
+        assertThrows(() => arrayFwProxy.atPut(0, "foo"))
+        assertThrows(() => arrayFwProxy[0] = "bar")
+        console.log(this.type() + " - self test passed")
     },
 })
 

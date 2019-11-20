@@ -144,3 +144,14 @@ function assert(v) {
 function assertDefined(v) {
     return Error.assertDefined(v)
 }
+
+function assertThrows(func) {
+    assert(Type.isFunction(func))
+    let didThrow = false
+    try {
+        func()
+    } catch(e) {
+        didThrow = true
+    }
+    assert(didThrow)
+}

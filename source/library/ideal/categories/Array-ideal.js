@@ -218,14 +218,17 @@ Object.defineSlots(Array.prototype, {
     },
 
     removeFirst: function () {
+        // isMutator
         return this.shift();
     },
 
     removeLast: function () {
+        // isMutator
         return this.pop();
     },
 
     removeItems: function (elements) {
+        // isMutator
         elements.forEach(e => this.remove(e));
         return this;
     },
@@ -236,6 +239,7 @@ Object.defineSlots(Array.prototype, {
     },
 
     replace: function (obj, withObj) {
+        // isMutator
         const i = this.indexOf(obj);
         if (i !== -1) {
             this.removeAt(i);
@@ -245,6 +249,7 @@ Object.defineSlots(Array.prototype, {
     },
 
     swap: function (e1, e2) {
+        // isMutator
         const i1 = this.indexOf(e1);
         const i2 = this.indexOf(e2);
 
@@ -639,6 +644,7 @@ Object.defineSlots(Array.prototype, {
     },
     
     replaceOccurancesOfWith: function (oldValue, newValue) {
+        // isMutator
         for (let i = 0; i < this.length; i++) {
             if (this[i] === oldValue) {
                 this[i] = newValue;
@@ -648,6 +654,7 @@ Object.defineSlots(Array.prototype, {
     },
     
     removeOccurancesOf: function (e) {
+        // isMutator
         let i = this.indexOf(e);
         while (i !== -1) {
             this.removeAt(i);
@@ -778,11 +785,15 @@ Object.defineSlots(Array.prototype, {
         return true;
     },
     
+    /*
     asImmutable: function() {
-        const obj = this.shallowCopy()
-        Object.freeze(obj)
-        return obj
+        // doesn't raise exception on attempts to write - too dangerous to use
+
+        //const obj = this.shallowCopy()
+        //Object.freeze(obj)
+        //return obj
     },
+    */
 });
 
 /*

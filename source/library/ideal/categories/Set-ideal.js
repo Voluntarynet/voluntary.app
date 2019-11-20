@@ -69,11 +69,6 @@ Object.defineSlots(Set.prototype, {
         return _difference;
     },
 
-    asImmutable: function() {
-        const obj = this.shallowCopy()
-        Object.freeze(obj)
-        return obj
-    },
     
     /*
     //Examples

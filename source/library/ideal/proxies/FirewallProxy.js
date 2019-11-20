@@ -4,12 +4,10 @@
 
     FirewallProxy
 
-    IMPORTANT: THIS IS UNTESTED AND STILL UNDER CONSTRUCTION
-
     Usefull for passing references to objects but limiting
     how it can be access e.g. which methods can be called on it.
 
-    An example usecase would be an immutable proxy for an array.
+    An example use case would be an immutable proxy for an array.
     So an object that owns the array can share an immutable proxy for it
     that doesn't allow other's to mutate it.
         
@@ -43,16 +41,6 @@ ObservableProxy.newSubclassNamed("FirewallProxy").newSlots({
 
         ])
     },
-
-    /*
-    newProxyFor: function(aTarget) {
-        const handler = ObservableProxy.clone()
-        handler.setTarget(aTarget)
-        //const proxy = new Proxy(aTarget, handler)
-        this.setRevocable(Proxy.revocable(aTarget, handler))
-        return this.proxy()
-    },
-    */
 
     // need to hook GET so we return special functions to hook protected method calls
 
@@ -104,14 +92,81 @@ ObservableProxy.newSubclassNamed("FirewallProxy").newSlots({
 
     selfTest: function() {
         const array = ["a", "b", "c"]
-        const arrayFwProxy = FirewallProxy.newProxyFor(array)
-        arrayFwProxy.observable().setProtectedMethods(new Set(["atPut"]))
-        //arrayFwProxy.observable().setProtectedTraps(new Set([...]))
+        const ap = array.asImmutable()
+        assertThrows(() => ap.atPut(0, "foo"))
+        assertThrows(() => ap[0] = "bar")
+        assertThrows(() => ap.pop())
+        assertThrows(() => ap.reverse())
+        assertThrows(() => ap.shift())
+        assertThrows(() => ap.sort())
 
-        assertThrows(() => arrayFwProxy.atPut(0, "foo"))
-        assertThrows(() => arrayFwProxy[0] = "bar")
+        const set = new Set(["foo", "bar"])
+        const sp = set.asImmutable()
+        assertThrows(() => sp.add(1))
+        assertThrows(() => sp.clear())
+        assertThrows(() => sp.delete("foo"))
+
+        const map = new Map([ ["foo", 1], ["bar", 2] ])
+        const mp = set.asImmutable()
+        assertThrows(() => mp.clear())
+        assertThrows(() => mp.delete("foo"))
+        assertThrows(() => mp.set("foo", 2))
+
+
         console.log(this.type() + " - self test passed")
     },
 })
+
+Object.defineSlots(Set.prototype, {
+    
+    mutatorMethodNamesSet: function() {
+        return new Set([
+            "add",
+            "clear",
+            "delete"
+        ])
+    },
+
+})
+
+Object.defineSlots(Map.prototype, {
+
+    mutatorMethodNamesSet: function() {
+        return new Set([
+            "clear",
+            "delete",
+            "set",
+        ])
+    },
+
+})
+
+Object.defineSlots(Array.prototype, {
+
+    mutatorMethodNamesSet: function() {
+        return new Set([
+            "copyWithin",
+            "pop",
+            "push",
+            "reverse",
+            "shift",
+            "sort",
+            "splice",
+            "unshift"
+        ])
+    },
+
+})
+
+Object.defineSlots(Object.prototype, {
+
+    asImmutable: function() {
+        const obj = FirewallProxy.newProxyFor(this)
+        obj.observable().setProtectedMethods(this.mutatorMethodNamesSet())
+        return obj
+    }
+
+})
+
 
 FirewallProxy.selfTest()

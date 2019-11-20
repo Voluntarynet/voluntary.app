@@ -147,11 +147,19 @@ function assertDefined(v) {
 
 function assertThrows(func) {
     assert(Type.isFunction(func))
+
     let didThrow = false
     try {
         func()
     } catch(e) {
         didThrow = true
     }
+
+    if (!didThrow) {
+        console.log("assertThrows(" + func.toString() + ") failed")
+    } else {
+        //console.log("assertThrows(" + func.toString() + ") passed")
+    }
+
     assert(didThrow)
 }

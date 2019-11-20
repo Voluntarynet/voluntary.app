@@ -79212,12 +79212,11 @@ ResourceLoader.pushRelativePaths([
     "Proto.js",
     "ProtoClass.js",
     "Documentation.js",
-    "Dictionary.js",
-    "AtomicDictionary.js",
+    "dictionary/_imports.js",
     "StackTrace.js",
     "formatters/_imports.js",
     //"FilePath.js",
-    "ObservableProxy.js",
+    "proxies/_imports.js",
 ]);
 
 
@@ -79227,6 +79226,7 @@ ResourceLoader.pushRelativePaths([
 ResourceLoader.pushRelativePaths([
     "Type-ideal.js",
     "Object-ideal.js",
+    "Object-puuid.js",
     "Array-ideal.js",
     "Date-ideal.js",
     "String-ideal.js",
@@ -79294,6 +79294,8 @@ window.Type = {
             "String",
             "Symbol",
             "Number",
+            "Map",
+            "Set",
             "Array",
             "Int8Array",
             "Uint8Array",
@@ -79339,6 +79341,24 @@ window.Type = {
                 Type.isObject(value) && 
                 value.__proto__ === ([]).__proto__ &&
                 !Type.isUndefined(value.length)
+    },
+
+    isSet: function(value) {
+        return !Type.isNull(value) && 
+            Type.isObject(value) && 
+            value.__proto__ === Set.prototype 
+    },
+
+    isMap: function(value) {
+        return !Type.isNull(value) && 
+            Type.isObject(value) && 
+            value.__proto__ === Map.prototype 
+    },  
+
+    isIterator: function(value) {
+        return !Type.isNull(value) && 
+                Type.isObject(value) && 
+                typeof(value[Symbol.iterator]) === "function";
     },
 
     isBoolean: function(value) {
@@ -79620,6 +79640,16 @@ Object.defineSlots(Object.prototype, {
         }); 
         return m
     },
+
+    isEqual: function(anObject) { // only checks enumerable properties
+        const keys = Object.getOwnPropertyNames(this)
+        if (keys.length !== Object.getOwnPropertyNames(anObject).length) {
+            return false
+        }
+
+        const foundInequality = keys.detect(k => this.hasOwnProperty(k) !== anObject.hasOwnProperty(k))
+        return !foundInequality
+    },
 })
 
 // --- Objective-C like associations ---
@@ -79650,6 +79680,47 @@ Object.defineSlots(Object.prototype, {
 })
 
 
+
+"use strict"
+
+Object.defineSlots(Object, {
+    newUuid: function() { // TODO: move this JS UUID when it's added to JS standard lib
+        const uuid_a = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
+        const uuid_b = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
+        return uuid_a + uuid_b
+    },
+
+    _puuidWeakMap: new WeakMap(),
+})
+
+Object.defineSlots(Object.prototype, {
+
+    puuid: function() {
+        if (!this.hasPuuid()) {
+            this.setPuuid(Object.newUuid())
+        }
+
+        return Object._puuidWeakMap.get(this);
+    },
+
+    hasPuuid: function() {
+        return Object._puuidWeakMap.has(this)
+    },
+
+    setPuuid: function(puuid) {
+        Object._puuidWeakMap.set(this, puuid);
+        return this
+    },
+
+    typePuuid: function() {
+        const puuid = this.puuid()
+        if (Type.isFunction(this.type)) {
+            return this.type() + "_" + puuid
+        }
+        return Type.typeName(this) + "_" + puuid
+    },
+
+})
 
 "use strict"
 
@@ -80431,6 +80502,11 @@ Object.defineSlots(Array.prototype, {
         return true;
     },
     
+    asImmutable: function() {
+        const obj = this.shallowCopy()
+        Object.freeze(obj)
+        return obj
+    },
 });
 
 /*
@@ -80974,6 +81050,18 @@ Object.defineSlots(Number.prototype, {
 
 Object.defineSlots(Set.prototype, {
 
+    shallowCopy: function() {
+        return new Set(this.values())
+    },
+
+    keysArray: function() {
+        return Array.fromIterator(this.values())
+    },
+
+    valuesArray: function() {
+        return this.keysArray()
+    },
+
     isSuperset: function(subset) {
         for (let v of subset) {
             if (!this.has(v)) {
@@ -81019,7 +81107,13 @@ Object.defineSlots(Set.prototype, {
             _difference.delete(v);
         }
         return _difference;
-    }
+    },
+
+    asImmutable: function() {
+        const obj = this.shallowCopy()
+        Object.freeze(obj)
+        return obj
+    },
     
     /*
     //Examples
@@ -81614,7 +81708,7 @@ Proto.setSlots({
         // not a great name but this walks back the ancestors and tries to find an
         // existing class with the same name as the ancestor + the given postfix
         // useful for things like type + "View" or type + "RowView", etc
-        //console.log(this.typeId() + " firstAncestorWithMatchingPostfixClass(" + aPostfix + ")")
+        //this.debugLog(" firstAncestorWithMatchingPostfixClass(" + aPostfix + ")")
         const match = this.ancestors().detect((obj) => {
             const name = obj.type() + aPostfix
             const proto = window[name]
@@ -81640,8 +81734,16 @@ Proto.setSlots({
 
     debugLog: function (s) {
         if (this.isDebugging()) {
-            console.log(this.typeId() + ": " + s)
+            if (Type.isFunction(s)) {
+                // we provide this option in case what we print in the debug
+                // is expensive to compute, so we can skip it if not debugging
+                s = s() 
+            }
+
+            const label = this.typeId()
+            console.log(label + ": " + s)
         }
+        return this
     },
 
     typeClass: function() {
@@ -81878,7 +81980,7 @@ class ProtoClass {
     /*
     static setupSlots () {
         //super.setupSlotsIfNeeded()
-        console.log(this.typeId() + ".setupSlots()")
+        this.debugLog(".setupSlots()")
     }
 
     static setupSlotsIfNeeded () {
@@ -82224,7 +82326,7 @@ class ProtoClass {
         // not a great name but this walks back the ancestors and tries to find an
         // existing class with the same name as the ancestor + the given postfix
         // useful for things like type + "View" or type + "RowView", etc
-        //console.log(this.typeId() + " firstAncestorWithMatchingPostfixClass(" + aPostfix + ")")
+        //this.debugLog(" firstAncestorWithMatchingPostfixClass(" + aPostfix + ")")
         const match = this.ancestors().detect((obj) => {
             const name = obj.type() + aPostfix
             const proto = window[name]
@@ -82246,7 +82348,7 @@ class ProtoClass {
 
     debugLog (s) {
         if (this.isDebugging()) {
-            console.log(this.typeId() + " " + s)
+            this.debugLog(" " + s)
         }
         return this
     }
@@ -82381,6 +82483,15 @@ Object.defineSlots(Function.prototype, {
 
 "use strict"
 
+ResourceLoader.pushRelativePaths([
+    "Dictionary.js",
+    "AtomicDictionary.js",
+]);
+
+
+
+"use strict"
+
 /*
 
     Dictionary
@@ -82391,34 +82502,33 @@ Object.defineSlots(Function.prototype, {
 */
 
 window.ideal.Dictionary = class Map extends ProtoClass {
-    static withJsMap (jsMap) {
-        jsMap = jsMap || {}
-        return this.clone().setJsMap(jsMap)
+    static withJsDict (jsDict) {
+        return this.clone().setJsDict(jsDict)
     }
 
     init () {
-        this.newSlot("jsMap", null)
-        this.setJsMap({});
+        this.newSlot("jsDict", null)
+        this.setJsDict({});
     }
 
     clear () {
-        this.setJsMap({});
+        this.setJsDict({});
         return this
     }
 
     keys () {
-        return Object.keys(this.jsMap());
+        return Object.keys(this.jsDict());
     }
 
     values () {
         return this.keys().map( (k) => {
-            return this.jsMap()[k];
+            return this.jsDict()[k];
         });
     }
 
     at (k) {
         if (this.hasKey(k)) { // to avoid inheritance
-            return this.jsMap()[k];
+            return this.jsDict()[k];
         }
         return undefined
     }
@@ -82430,13 +82540,13 @@ window.ideal.Dictionary = class Map extends ProtoClass {
             return v;
         }
         else {
-            return Map.withJsMap(v)
+            return Map.withJsDict(v)
         }
     }
     */
 
     atPut (k, v) {
-        this.jsMap()[k] = v;
+        this.jsDict()[k] = v;
         return this;
     }
 
@@ -82465,17 +82575,17 @@ window.ideal.Dictionary = class Map extends ProtoClass {
     }
 
     map (fn) {
-        const jsMap = this.jsMap();
+        const jsDict = this.jsDict();
         return this.keys().map(function (k) {
-            return fn(k, jsMap[k]);
+            return fn(k, jsDict[k]);
         });
     }
 
     filtered (fn) {
         const map = Map.clone();
-        const jsMap = this.jsMap();
+        const jsDict = this.jsDict();
         this.keys().forEach(function (k) {
-            const v = jsMap[k];
+            const v = jsDict[k];
             if (fn(k, v)) {
                 map.atPut(k, v);
             }
@@ -82484,11 +82594,11 @@ window.ideal.Dictionary = class Map extends ProtoClass {
     }
 
     asJson () {
-        return JSON.stringify(this.jsMap(), null, 2);
+        return JSON.stringify(this.jsDict(), null, 2);
     }
 
     isEmpty () {
-        return Object.keys(this.jsMap()).length === 0;
+        return Object.keys(this.jsDict()).length === 0;
     }
 
     /*
@@ -82501,7 +82611,7 @@ window.ideal.Dictionary = class Map extends ProtoClass {
     }
 
     atPath (pathList) {
-        return Object.atPath(this.jsMap(), pathList);
+        return Object.atPath(this.jsDict(), pathList);
     }
 
     merged (aMap) {
@@ -82510,13 +82620,13 @@ window.ideal.Dictionary = class Map extends ProtoClass {
     */
 
     shallowCopy () {
-        return Map.withJsMap(Object.assign({}, this.jsMap()));
+        return Map.withJsDict(Object.assign({}, this.jsDict()));
     }
 
     merge (aMap) {
-        const jsMap = this.jsMap();
+        const jsDict = this.jsDict();
         aMap.forEach(function (k, v) {
-            jsMap[k] = v;
+            jsDict[k] = v;
         });
         return this;
     }
@@ -82525,12 +82635,18 @@ window.ideal.Dictionary = class Map extends ProtoClass {
         return this.keys().size();
     }
 
+    /*
+    has(k) {
+        return this.jsDict().hasOwnProperty(k);
+    }
+    */
+
     hasKey (k) {
-        return this.jsMap().hasOwnProperty(k);
+        return this.jsDict().hasOwnProperty(k);
     }
 
     removeKey (k) {
-        const m = this.jsMap();
+        const m = this.jsDict();
         delete m[k];
         return this;
     }
@@ -82563,6 +82679,8 @@ window.ideal.Dictionary.registerThisClass()
 
     AtomicDictionary
 
+    TODO: map dictionary operators to methods or raise exceptions?
+
 */
 
 window.ideal.AtomicDictionary = class AtomicDictionary extends ideal.Dictionary {
@@ -82571,19 +82689,27 @@ window.ideal.AtomicDictionary = class AtomicDictionary extends ideal.Dictionary 
         super.init()
         this.newSlot("hasBegun", false) // private method
         this.newSlot("oldVersion", null) // private method
+        this.newSlot("isOpen", false) // private method
+        this.newSlot("keysAndValuesAreStrings", true) // private method
+    }
+
+    asyncOpen (callback) {
+        this.setIsOpen(true)
+        callback()
     }
 
     begin () {
+        this.assertAccessible()
         this.assertNotInTx()
-        this.setOldVersion(this.jsMap().shallowCopy()) // so no one else has a reference to our copy
-        this.setJsMap(this.jsMap().shallowCopy())
+        this.setOldVersion(this.jsDict().shallowCopy()) // so no one else has a reference to our copy
+        this.setJsDict(this.jsDict())
         this.setHasBegun(true)
         return this
     }
 
     revert() {
         this.assertInTx()
-        this.setJsMap(this.oldVersion()) // rever to old version
+        this.setJsDict(this.oldVersion()) // rever to old version
         this.setOldVersion(null)
         this.setHasBegun(false)
         return this
@@ -82607,14 +82733,63 @@ window.ideal.AtomicDictionary = class AtomicDictionary extends ideal.Dictionary 
     }
 
     atPut (k, v) {
+        if (this.keysAndValuesAreStrings()) {
+            assert(Type.isString(k))
+            assert(Type.isString(v))
+        }
+
+        this.assertAccessible()
         this.assertInTx()
         return super.atPut(k, v)
     }
 
-    removeKey (k) {
+    removeKey (k) {        
+        if (this.keysAndValuesAreStrings()) {
+            assert(Type.isString(k))
+        }
+
+        this.assertAccessible()
         this.assertInTx()
         return this.removeKey(k);
     }
+
+    // extras 
+
+    assertAccessible () {
+        //this.assertOpen()
+    }
+
+    keys () {
+        this.assertAccessible()
+        return Object.keys(this.jsDict());
+    }
+	
+    values () {
+        this.assertAccessible()
+        return Object.values(this.jsDict());
+    }
+
+    size () {
+        this.assertAccessible()
+        return this.keys().length
+    }	
+
+    asJson () {
+        this.assertAccessible()
+        // WARNING: this can be slow for a big store!
+        return JSON.stringify(this.jsDict())
+    }
+
+    totalBytes () {
+        this.assertAccessible()
+        let byteCount = 0
+        this.jsDict().forEachKV((k, v) => {
+            byteCount += k.length + v.length
+        })
+        return byteCount
+    }
+
+    // test
 
     test () {
 
@@ -83078,9 +83253,18 @@ TimeFormatter.registerThisClass()
 
 "use strict"
 
+ResourceLoader.pushRelativePaths([
+    "ObservableProxy.js",
+    "FirewallProxy.js",
+]);
+
+
+
+"use strict"
+
 /*
 
-    ObservableProxyHandler
+    ObservableProxy
 
     A class for wrapping a reference in a proxy which can
     send proxy trap notifications to observers.
@@ -83102,7 +83286,7 @@ TimeFormatter.registerThisClass()
     Example:
 
         const myObject = ["a", "b", "c"]
-        const proxyRef = ObservableProxyHandler.newProxyFor(myObject)
+        const proxyRef = ObservableProxy.newProxyFor(myObject)
         proxyRef.observable().addObserver(myObserver)
 
         now if we call:
@@ -83113,7 +83297,7 @@ TimeFormatter.registerThisClass()
         
 */
 
-ideal.Proto.newSubclassNamed("ObservableProxyHandler").newSlots({        
+ideal.Proto.newSubclassNamed("ObservableProxy").newSlots({        
     observers: null,
     target: null,
     revocable: null,
@@ -83136,7 +83320,7 @@ ideal.Proto.newSubclassNamed("ObservableProxyHandler").newSlots({
 }).setSlots({
 
     newProxyFor: function(aTarget) {
-        const handler = ObservableProxyHandler.clone()
+        const handler = this.typeClass().clone()
         handler.setTarget(aTarget)
         //const proxy = new Proxy(aTarget, handler)
         this.setRevocable(Proxy.revocable(aTarget, handler))
@@ -83187,19 +83371,21 @@ ideal.Proto.newSubclassNamed("ObservableProxyHandler").newSlots({
         this._observers.forEach((obs) => {
             if (obs[noteName]) {
                 if (this.isDebugging()) {
-                    console.log(this.typeId() + " posting " + noteName)
+                    this.debugLog(" posting " + noteName)
                 }
                 obs[noteName].apply(obs, [this.target(), propertyName])
             }
         })
-        return this
+        return true
     },
 
     // --- proxy trap methods ---
     
     /*
-    apply: function(target) {
 
+    apply: function(target, thisArg, argumentsList) {
+        this.postForTrap("apply", propertyName)
+        return target[propertyName].apply(target, argumentsList)
     },
 
     construct: function(target) {
@@ -83283,7 +83469,7 @@ ideal.Proto.newSubclassNamed("ObservableProxyHandler").newSlots({
     selfTest: function() {
         const resultsDict = {}
 
-        const noteNamesDict = ObservableProxyHandler.clone().noteNamesDict()
+        const noteNamesDict = ObservableProxy.clone().noteNamesDict()
         
         assert("need to fix this to assign to method name")
         const eventMethod = (target, propertyName) => { 
@@ -83299,7 +83485,7 @@ ideal.Proto.newSubclassNamed("ObservableProxyHandler").newSlots({
 
     
         const testArray = ["a", "b", "c"]
-        const arrayProxy = ObservableProxyHandler.newProxyFor(testArray)
+        const arrayProxy = ObservableProxy.newProxyFor(testArray)
         arrayProxy.observable().addObserver(testObserver)
     
         const length = arrayProxy.length // get
@@ -83324,7 +83510,116 @@ ideal.Proto.newSubclassNamed("ObservableProxyHandler").newSlots({
 
 })
 
-//ObservableProxyHandler.selfTest()
+//ObservableProxy.selfTest()
+"use strict"
+
+/*
+
+    FirewallProxy
+
+    IMPORTANT: THIS IS UNTESTED AND STILL UNDER CONSTRUCTION
+
+    Usefull for passing references to objects but limiting
+    how it can be access e.g. which methods can be called on it.
+
+    An example usecase would be an immutable proxy for an array.
+    So an object that owns the array can share an immutable proxy for it
+    that doesn't allow other's to mutate it.
+        
+    Example:
+
+        const array = ["a", "b", "c"]
+        const proxyRef = FirewallProxy.newProxyFor(array)
+        proxyRef.observable().setProtectedMethodNames(new Set([...]))
+        proxyRef.observable().setProtectedTrapNames(new Set([...]))
+        
+
+*/
+
+ObservableProxy.newSubclassNamed("FirewallProxy").newSlots({        
+    protectedTraps: null, // Set
+    protectedMethods: null, // Set
+}).setSlots({
+
+    defaultProtectedTraps: function() {
+        return new Set([
+            "defineProperty", // Object.defineProperty
+            "deleteProperty", // Object.deleteProperty
+            "preventExtensions", //  Reflect.preventExtensions(target);
+            "set", // obj.x = y or obj[x] = y
+            "setPrototypeOf", // Reflect.setPrototypeOf()
+        ])
+    },
+
+    defaultProtectedMethods: function() {
+        return new Set([
+
+        ])
+    },
+
+    /*
+    newProxyFor: function(aTarget) {
+        const handler = ObservableProxy.clone()
+        handler.setTarget(aTarget)
+        //const proxy = new Proxy(aTarget, handler)
+        this.setRevocable(Proxy.revocable(aTarget, handler))
+        return this.proxy()
+    },
+    */
+
+    // need to hook GET so we return special functions to hook protected method calls
+
+    init: function() {
+        ObservableProxy.init.apply(this)
+        this.setProtectedTraps(this.defaultProtectedTraps().shallowCopy())
+        this.setProtectedMethods(this.defaultProtectedMethods().shallowCopy())
+        return this
+    },
+
+    postForTrap: function(trapName, propertyName) {
+        if (this.protectedTraps().has(trapName)) {
+            throw new Error(this.typeId() + " blocked proxy trap " + trapName + " on property " + propertyName)
+            return false
+        }
+
+        return true
+    },
+
+    onProtectedMethodCall: function(propertyName, argsList) {
+        throw new Error(this.typeId() + " blocked method call " + propertyName + " ")
+    },
+
+    get: function(target, propertyName) {
+        if (propertyName === "observable") {
+            const self = this
+            return () => { return self }
+        }
+
+        this.postForTrap("get", propertyName)
+
+        const isFunction = Type.isFunction(target[propertyName])
+        const isProtected = this.protectedMethods().has(propertyName)
+
+        if (isFunction && isProtected) {
+            const self = this
+            return () => {
+                return self.onProtectedMethodCall(propertyName, arguments)
+            }
+        }
+
+        return Reflect.get(target, propertyName, target);
+    },
+
+    selfTest: function() {
+        const array = ["a", "b", "c"]
+        const arrayFwProxy = FirewallProxy.newProxyFor(array)
+        arrayFwProxy.observable().setProtectedMethods(new Set(["atPut"]))
+        //arrayFwProxy.observable().setProtectedTraps(new Set([...]))
+        arrayFwProxy.atPut("a", "foo")
+    },
+})
+
+FirewallProxy.selfTest()
 "use strict"
 
 ResourceLoader.pushRelativePaths([
@@ -83484,11 +83779,11 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
         if (!this.hasScheduledTargetAndMethod(target, syncMethod)) {
             const newAction = this.newActionForTargetAndMethod(target, syncMethod, optionalOrder)
 
-            this.debugLog("    -> scheduling " + newAction.description())
+            this.debugLog(() => "    -> scheduling " + newAction.description())
 
             /*
             if (this.isProcessing() && this.currentAction().method() !== "processPostQueue") {
-                this.debugLog("    - isProcessing " + this.currentAction().description() +  " while scheduling " + newAction.description())
+                this.debugLog(() => "    - isProcessing " + this.currentAction().description() +  " while scheduling " + newAction.description())
             }
             */
             
@@ -83600,7 +83895,7 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
             console.log("syncing " + actions.length + " actions")
         }
         */
-        //this.debugLog("actions = ", actions.map(a => a.method()).join(","))
+        //this.debugLog(() => "actions = ", actions.map(a => a.method()).join(","))
         //this.debugLog("--- sending ----")
         actions.forEach((action) => {
             this.setCurrentAction(action)
@@ -83622,7 +83917,7 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
 
     fullSyncNow () {
         if (this.isProcessing()) {
-            this.debugLog(this.type() + " fullSyncNow called while isProcessing so SKIPPING")
+            this.debugLog(() => "fullSyncNow called while isProcessing so SKIPPING")
             return this
         }
 
@@ -83633,9 +83928,9 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
 
             while (this.actionCount()) {
                 /*
-                this.debugLog(" --- processSets # " + count + " --- ")
-                this.debugLog(this.description())
-                this.debugLog(window.NotificationCenter.shared().notesDescription())
+                this.(() => " --- processSets # " + count + " --- ")
+                this.debugLog(() => this.description())
+                this.debugLog(() => window.NotificationCenter.shared().notesDescription())
                 this.debugLog(" --- ")
                 */
                 this.processSets()
@@ -83994,7 +84289,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
         const showDebug = this.isDebugging() === true && (this.debugNoteName() === null || this.debugNoteName() === note.name());
 
         if (showDebug) {
-            console.log(this.typeId() + " senderId " + note.senderId() + " posting " + note.name())
+            this.debugLog(" senderId " + note.senderId() + " posting " + note.name())
             this.showObservers()
         }
         
@@ -84003,8 +84298,8 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
         observations.forEach( (obs) => {
             if (obs.matchesNotification(note)) {
                 if (showDebug) {
-                    console.log(this.typeId() + " " + note.name() + " matches obs ", obs)
-                    console.log(this.typeId() + " sending ", note.name() + " to obs " + obs.type())
+                    this.debugLog(" " + note.name() + " matches obs ", obs)
+                    this.debugLog(" sending ", note.name() + " to obs " + obs.type())
                 }
             
                 obs.sendNotification(note)       
@@ -84030,7 +84325,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
     }
 
     show () {
-        console.log(this.typeId() + ":")
+        this.debugLog(":")
         this.showObservers()
         this.showNotes()
     }
@@ -84120,7 +84415,7 @@ window.Observation = class Observation extends ProtoClass {
             method.apply(this._observer, [note])
         } else {
             if (this.isDebugging()) {
-                console.log(this.typeId() + " no method found for note name " + note.name())
+                this.debugLog(" no method found for note name " + note.name())
             }
         }
 
@@ -84253,6 +84548,7 @@ ResourceLoader.pushRelativePaths([
     "IndexedDBFolder.js",
     "IndexedDBTx.js",
     "SyncDB.js",
+    "AtomicPersistentDictionary.js"
 ])
 
 "use strict"
@@ -84323,18 +84619,16 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
     asyncOpen (callback) {
         this.assertHasUniqueId()
 
-        if (this.isDebugging()) {
-            console.log(this.typeId() + " asyncOpen")
-        }
+        this.debugLog("asyncOpen")
 		
         const request = window.indexedDB.open(this.path(), 2);
         
         request.onerror = (event) => {
-            console.log(this.typeId() + " open db error ", event);
+            this.debugLog(" open db error ", event);
         };
          
         request.onupgradeneeded = (event) => { 
-            console.log(this.typeId() + " onupgradeneeded - likely setting up local database for the first time")
+            this.debugLog(" onupgradeneeded - likely setting up local database for the first time")
 
             const db = event.target.result;
 
@@ -84349,7 +84643,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
         };
 
         request.onsuccess =  (event) => {
-            //console.log(this.typeId() + " db open onsuccess ", event)
+            //this.debugLog(" db open onsuccess ", event)
             this.setDb(event.target.result)
             if (callback) {
                 callback()
@@ -84376,10 +84670,10 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
     /*
     asyncAt (key, callback) {
         //console.log("asyncAt ", key)
-        let objectStore = this.db().transaction(this.storeName(), "readonly").objectStore(this.storeName());
-        let request = objectStore.get(key);
+        const objectStore = this.db().transaction(this.storeName(), "readonly").objectStore(this.storeName());
+        const request = objectStore.get(key);
 
-        let stack = new Error().stack
+        const stack = new Error().stack
         
         request.onerror = (event) => {
             console.log("asyncAt('" + key + "') onerror", event.target.error)
@@ -84392,15 +84686,15 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
             try {
                 if (!Type.isUndefined(request.result)) {
                     //console.log("asyncAt('" + key + "') onsuccess request.result = ", request.result)
-                    let entry = request.result
-                    let value = JSON.parse(entry.value)
+                    const entry = request.result
+                    const value = JSON.parse(entry.value)
                     callback(value)
                 } else {
                     //console.log("asyncAt('" + key + "') onsuccess request.result = ", request.result)
                     callback(undefined)
                 }
             } catch (e) {
-                console.log(this.typeId() + " asyncAt('" +  key + "') caught stack ", stack)
+                this.debugLog(" asyncAt('" +  key + "') caught stack ", stack)
             }
         };
         
@@ -84416,27 +84710,26 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
         const dict = {}
     
         cursorRequest.onsuccess = (event) => {
-            let cursor = event.target.result;
+            const cursor = event.target.result;
 
             if (cursor) {
                 dict[cursor.value.key] = JSON.parse(cursor.value.value)
                 cursor.continue();
             } else {
-                //console.log(this.typeId() + " asyncAsJson returning dict ", JSON.stringify(dict))
+                //this.debugLog(" asyncAsJson returning dict ", JSON.stringify(dict))
                 callback(dict)
             }
         };
         
         cursorRequest.onerror = (event) => {
-            console.log(this.typeId() + " asyncAsJson cursorRequest.onerror ", event)
+            this.debugLog(" asyncAsJson cursorRequest.onerror ", event)
             throw newError("error requesting cursor")
         }
     }
     
     show () {
         this.asyncAsJson((json) => {
-	        console.log(this.typeId() + " " + this.path() + " = " + JSON.stringify(json, null, 2))
-
+	        this.debugLog(" " + this.path() + " = " + JSON.stringify(json, null, 2))
         })
     }
     
@@ -84447,15 +84740,21 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
 
         transaction.onerror = function(event) {
             if (errorCallback) {
+                console.log("db clear error")
                 errorCallback(event)
             }
         };
+
+        transaction.oncomplete = function(event) {
+            console.log("db clear completed")
+        }
 
         const objectStore = transaction.objectStore(this.storeName());
         const request = objectStore.clear();
 
         request.onsuccess = function(event) {
             if (callback) {
+                console.log("db clear request success")
                 callback(event)
             }
         };
@@ -84465,15 +84764,14 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
         const request = window.indexedDB.deleteDatabase(this.storeName())
 		
         request.onerror = (event) => {
-  			console.log(this.typeId() +  "Error deleting '" + this.storeName() + "'");
+  			this.debugLog( "Error deleting '" + this.storeName() + "'");
         }
  
         request.onsuccess = (event) => {
-            console.log(this.typeId() + " deleted successfully '" + this.storeName()  + "'");
+            this.debugLog(" deleted successfully '" + this.storeName()  + "'");
     	}
 		
         this.setDb(null)
-		
         return this
     }
     
@@ -84573,14 +84871,6 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
 	
     // --- helpers ---
 	
-    hasKey (key) {
-	    const domStringList = this.objectStore().indexNames
-	    const hasKey = domStringList.contains(key) 
-	    console.log("domStringList.length : ", domStringList.length)
-	    console.log("domStringList['" + key + "'] exists ", hasKey)
-	    return hasKey
-    }
-	
     pushRequest (aRequest) {
 	    this.assertNotCommitted()
 
@@ -84611,7 +84901,18 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
     }
 	
     // --- operations ----
-	
+    
+    /*
+    hasKey (key) {
+	    const domStringList = this.objectStore().indexNames
+	    const hasKey = domStringList.contains(key) 
+	    console.log("domStringList.length : ", domStringList.length)
+	    console.log("domStringList['" + key + "'] exists ", hasKey)
+	    return hasKey
+    }
+    */
+
+    /*
     atPut (key, object) {
 	    this.assertNotCommitted()
 
@@ -84622,9 +84923,12 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
         }
         return this
     }
+    */
 	
     atAdd (key, object) { 
-	    this.assertNotCommitted()
+        this.assertNotCommitted()
+        
+        this.debugLog(() => " add " + key )
 
         const entry = this.entryForKeyAndValue(key, object)
         const request = this.objectStore().add(entry);
@@ -84637,6 +84941,8 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
     atUpdate (key, object) {
 	    this.assertNotCommitted()
 
+        this.debugLog(() => " atUpdate " + key)
+
         const entry = this.entryForKeyAndValue(key, object)
         const request = this.objectStore().put(entry);
         request._action = "put"
@@ -84647,6 +84953,8 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
     
     removeAt (key) {
 	    this.assertNotCommitted()
+
+        this.debugLog(() => " removeAt " + key)
 
         const request = this.objectStore().delete(key);
         request._action = "remove"
@@ -84668,7 +84976,10 @@ window.IndexedDBTx.registerThisClass()
 
     SyncDB
 
-	A read & write cache on top of IndexedDB to allow us to do all synchronous reads and writes
+    An atomic persistent dictionary implemented as 
+    a read & write cache on top of IndexedDB so we can do synchronous reads and writes
+    instead of dealing with IndexedDB's async API.
+
 	On open, it reads the entire db into a read cache dictionary.
 
     - keys and values are assumed to be strings
@@ -84708,12 +85019,9 @@ window.SyncDB = class SyncDB extends ProtoClass {
             readCache: null,
             writeCache: null,
             isOpen: false,
-            isSynced: false,
         })
 
         this.setReadCache({})
-
-        // idb
         this.setIdb(IndexedDBFolder.clone())
         //this.setIsDebugging(true)
     }
@@ -84739,7 +85047,6 @@ window.SyncDB = class SyncDB extends ProtoClass {
             //	console.log("SyncDB didOpen() - loaded cache")
             this._readCache = dict
             this.setIsOpen(true)
-            this.setIsSynced(true)
             if (callback) {
                 callback()
             }
@@ -84865,7 +85172,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
 	    assert(!this.hasBegun())
     }
 	
-    begin () {
+    begin () { // public
 	    this.assertNotInTx()
 	
         if (this.isDebugging()) {
@@ -84880,7 +85187,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
         return Object.keys(this._writeCache).length !== 0
     }
 	
-    commit () {
+    commit () { // public
 	    // push to indexedDB tx and to SyncDb's read cache
 	    // TODO: only push to read cache on IndexedDB when tx complete callback received,
 	    // and block new writes until push to read cache
@@ -84896,7 +85203,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
                 tx.removeAt(k)
                 delete this._readCache[k]
                 if (this.isDebugging()) {
-                    console.log(this.typeId() + " delete ", k)
+                    this.debugLog(" delete ", k)
                 }
             } else {
                 const v = entry._value
@@ -84905,12 +85212,12 @@ window.SyncDB = class SyncDB extends ProtoClass {
                 if (this._readCache.hasOwnProperty(k)) {
                     tx.atUpdate(k, v)
                     if (this.isDebugging()) {
-                        console.log(this.typeId() + " update ", k)
+                        this.debugLog(" update ", k)
                     }
                 } else {
                     tx.atAdd(k, v)
                     if (this.isDebugging()) {
-                        console.log(this.typeId() + " add ", k)
+                        this.debugLog(" add ", k)
                     }
                 }
                 
@@ -84936,12 +85243,12 @@ window.SyncDB = class SyncDB extends ProtoClass {
 	
     // NEW
 	
-    hasKey(key) {
+    hasKey(key) { // public
         this.assertOpen()
         return this._readCache.hasOwnProperty(key);
     }
 	
-    at(key) {
+    at(key) { // public
         this.assertOpen()
 		
         if (this._writeCache) {
@@ -84958,7 +85265,10 @@ window.SyncDB = class SyncDB extends ProtoClass {
         return this._readCache[key]
     }
 	
-    atPut (key, value) {
+    atPut (key, value) { // public
+        assert(Type.isString(key))
+        assert(Type.isString(value))
+        
         this.assertOpen()
 	    this.assertInTx()
 	    
@@ -84982,6 +85292,183 @@ window.SyncDB = class SyncDB extends ProtoClass {
 }
     
 window.SyncDB.registerThisClass()
+
+"use strict"
+
+/*
+
+    AtomicPersistentDictionary
+
+    An atomic persistent dictionary implemented as 
+    a read & write cache on top of IndexedDB.
+    
+    On open, it reads the entire db into a dictionary
+    so we can do synchronous reads and writes (avoiding IndexedDB's async API),
+    and then call the async commit at the end of the event loop.
+
+    - keys and values are assumed to be strings
+
+    - at(key) returns a value from the internal dict
+    - begin() shallow copies the current internal dict
+    - atPut(key, value) & removeAt(key)
+        applies normal op and adds key to changedKeys
+    - revert()
+        not supported yet
+    - commit() constructs a transaction using changedKeys 
+	- at(key) first checks the writeCache beforing checking the readCache
+	
+	- any exception between begin and commit should halt the app and require a restart to ensure consistency
+	
+    TODO: auto sweep after a write if getting full?
+        
+*/
+
+window.AtomicPersistentDictionary = class AtomicDictionary extends ProtoClass {
+    init() {
+        super.init()
+        this.newSlots({
+            name: "AtomicPersistentDictionary", // default name
+            idb: null,
+            isOpen: false,
+            changedKeys: null,
+        })
+
+        this.setChangedKeys(new Set())
+        this.setIdb(IndexedDBFolder.clone())
+    }
+
+    setName (aName) {
+        this.idb().setPath(aName)
+        return this
+    }
+
+    // open
+
+    assertAccessible () {
+        super.assertAccessible()
+        this.assertOpen()
+    }
+
+    asyncOpen (callback) {
+        this.idb().asyncOpenIfNeeded( () => { this.onOpen(callback) })
+        return this
+    }
+	
+    onOpen (callback) {
+        // load the cache
+        //this.debugLog("" onOpen() - loading cache")
+		
+        this.idb().asyncAsJson( (dict) => {
+            //	this.debugLog(" onOpen() - loaded cache")
+            this.setJsDict(dict)
+            this.setIsOpen(true)
+            if (callback) {
+                callback()
+            }
+            //this.verifySync()
+        })
+    }
+	
+    assertOpen () {
+        assert(this.isOpen())
+        return this
+    }
+	
+    // ----
+		
+    clear () {
+        //throw new Error("AtomicPersistentDictionary clear")
+        this.setJsDict({})
+        this.idb().asyncClear() // TODO: lock until callback?
+    }
+		
+    // transactions
+
+    begin() {
+        super.begin()
+        this.changedKeys().clear()
+        return this
+    }
+
+    revert() {
+        super.revert()
+        this.changedKeys().clear()
+        return this
+    }
+	
+    commit () { // public
+	    // push to indexedDB tx 
+	    // TODO: lock until IndexedDB's tx complete callback is received,
+        // ::: super.commit() is at end of method
+
+	    this.assertInTx()
+	    const tx = this.idb().newTx()
+	    tx.begin()
+        tx.setIsDebugging(this.isDebugging())
+        
+	    let count = 0
+        
+        this.keysChanged().keysArray().forEach((k) => {
+            const isDelete = !this.jsDict().hasOwnProperty(k)
+
+            if (isDelete) {
+                tx.removeAt(k)
+            } else {
+                const isUpdate = this.oldVersion().hasOwnProperty(k)
+                const v = this.jsDict()[k]
+                
+                if (isUpdate) {
+                    tx.atUpdate(k, v)
+                } else {
+                    tx.atAdd(k, v)
+                }                
+            }
+            count ++
+        })
+		
+        // indexeddb commits on next event loop automatically
+        // this tx.commit() is just a sanity check -  marks the tx as committed so it raises exception 
+        // if we attempt to write more to the same tx 
+		 
+        tx.commit() // TODO: lock until commit callback?
+		
+        this.debugLog(() => "---- " + this.type() + " committed tx with " + count + " writes ----")
+
+        super.commit()
+        return count
+    }
+	
+    atPut (key, value) {
+        if (this.at(key) !== value) { 
+            super.atPut(key, value)
+            this.changedKeys().add(key)
+        }
+        return this
+    }
+	
+    removeAt (key) {
+        if (this.hasKey(key)) {
+            super.removeAt(key)
+            this.changedKeys().add(key)
+        }
+        return this
+    }
+
+    // --- helpers ---
+
+    verifySync () {
+        this.idb().asyncAsJson( (json) => {	 // BUG: we want to compare strings not json
+            const isSynced = json.isEqual(this.jsDict())
+            if (!isSynced) {
+                //this.idb().show()
+                //console.log("syncdb idb json: ", JSON.stringify(json, null, 2))
+                throw new Error(this.type() + " verifySync failed")
+            }
+        })
+    }
+}
+    
+window.AtomicPersistentDictionary.registerThisClass()
 
 "use strict"
 
@@ -85560,14 +86047,14 @@ ideal.Proto.newSubclassNamed("KeyboardKey").newSlots({
     },
 
     onKeyDown: function (event) {
-        //this.debugLog(this.name() + " onKeyDown " + event._id)
+        //this.debugLog(() => this.name() + " onKeyDown " + event._id)
         let shouldPropogate = true
         this.setIsDown(true)
         return shouldPropogate
     },
 
     onKeyUp: function (event) {
-        //this.debugLog(this.name() + " onKeyUp " + event._id)
+        //this.debugLog(() => this.name() + " onKeyUp " + event._id)
         let shouldPropogate = true
         this.setIsDown(false)
         return shouldPropogate
@@ -85908,7 +86395,7 @@ ideal.Proto.newSubclassNamed("Keyboard").newSlots({
             key.onKeyDown(event)
 
             if (this.isDebugging()) {
-                console.log(this.typeId() + ".onKeyDownCapture " + key.name())
+                this.debugLog(".onKeyDownCapture " + key.name())
             }
         } else {
             console.warn("Keyboard.shared() no key found for event ", event)
@@ -85923,7 +86410,7 @@ ideal.Proto.newSubclassNamed("Keyboard").newSlots({
         key.onKeyUp(event)
 
         if (this.isDebugging()) {
-            console.log(this.typeId() + ".onKeyUp " + key.name())
+            this.debugLog(".onKeyUp " + key.name())
         }
 
         return shouldPropogate
@@ -86055,7 +86542,7 @@ ideal.Proto.newSubclassNamed("Keyboard").newSlots({
     },
 
     show: function() {
-        console.log(this.typeId() + " downKeys: ", this.downKeyNames())
+        this.debugLog(" downKeys: ", this.downKeyNames())
     },
 
     allModifierNames: function() {
@@ -86280,7 +86767,7 @@ ideal.Proto.newSubclassNamed("TouchScreen").newSlots({
         this.startListening()
         //this.setIsDebugging(true)
         if (this.isDebugging()) {
-            console.log(this.typeId() + ".init()")
+            this.debugLog(".init()")
         }
         return this
     },
@@ -86988,7 +87475,7 @@ ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
         /*
         const a = methodName.contains("Capture") ||  methodName.contains("Focus") || methodName.contains("Move") || methodName.contains("Leave") || methodName.contains("Enter") || methodName.contains("Over")
         if (!a) {
-            console.log(this.typeId() + " onBeforeEvent " + methodName)
+            this.debugLog(" onBeforeEvent " + methodName)
         }
         */
         return this
@@ -87009,7 +87496,7 @@ ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
 
             /*
             if ( window.SyncScheduler.shared().actionCount()) {
-                console.log(this.typeId() + " onAfterEvent " + methodName)
+                this.debugLog(" onAfterEvent " + methodName)
             }
             */
             window.SyncScheduler.shared().fullSyncNow()
@@ -87028,7 +87515,7 @@ ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
 
         const t = this.listenTarget()
         this.forEachEventDict((eventName, dict) => {
-            this.debugLog(this.delegate().typeId() + " will stop listening for " + dict.methodName)
+            this.debugLog(() => this.delegate().typeId() + " will stop listening for " + dict.methodName)
             t.removeEventListener(eventName, dict.handlerFunc, dict.useCapture);
         })
 
@@ -87209,7 +87696,7 @@ EventSetListener.newSubclassNamed("DropListener").newSlots({
     },
 
     onBeforeEvent: function(methodName, event) {
-        console.log(this.typeId() + " onBeforeEvent " + methodName)
+        this.debugLog(" onBeforeEvent " + methodName)
         return this
     },
 })
@@ -87948,10 +88435,10 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
         const eventClass = event.__proto__.constructor;
 
         if (eventClass === MouseEvent) {
-            //console.log(this.typeId() + " got mouse")
+            //this.debugLog(" got mouse")
             return Mouse.shared().pointsForEvent(event)
         } else if (eventClass === TouchEvent) {   
-            //console.log(this.typeId() + " got touch")
+            //this.debugLog(" got touch")
             return TouchScreen.shared().pointsForEvent(event)
         }
         
@@ -88672,7 +89159,7 @@ GestureRecognizer.newSubclassNamed("SlideGestureRecognizer").newSlots({
     },
 
     finish: function() {
-        //console.log(this.typeId() + ".finish()")
+        //this.debugLog(".finish()")
         this.setIsPressing(false)
         this.deactivate()
         this.stopDocListeners()
@@ -88852,7 +89339,7 @@ GestureRecognizer.newSubclassNamed("TapGestureRecognizer").newSlots({
         GestureRecognizer.onUp.apply(this, [event])
  
         if (this.isDebugging()) {
-            console.log(this.typeId() + ".onUp()  tapCount:" + this.tapCount() + " viewTarget:" + this.viewTarget().typeId())
+            this.debugLog(".onUp()  tapCount:" + this.tapCount() + " viewTarget:" + this.viewTarget().typeId())
         }
 
         if (this.hasTimer()) {
@@ -89537,7 +90024,7 @@ PanGestureRecognizer.newSubclassNamed("EdgePanGestureRecognizer").newSlots({
         const vt = this.viewTarget()
 
         if (!vt) {
-            console.log(this.typeId() + " missing viewTarget")
+            this.debugLog(" missing viewTarget")
             return max
         }
         
@@ -89712,7 +90199,7 @@ ideal.Proto.newSubclassNamed("WebBrowserScreen").newSlots({
     },
         
     show: function() {
-        console.log(this.typeId() + " size " + this.width() + "x" + this.height())
+        this.debugLog(" size " + this.width() + "x" + this.height())
     },
 
     lesserOrientedSize: function() {
@@ -90106,7 +90593,7 @@ ideal.Proto.newSubclassNamed("WebDocument").newSlots({
     },
 
     show: function() {
-        console.log(this.typeId() + ":")
+        this.debugLog(":")
         this.styleSheets().forEach(sheet => sheet.show())
     },
 
@@ -90338,7 +90825,7 @@ window.DomTransitions = class DomTransitions extends ProtoClass {
     }
 
     syncToDomView() {
-        //console.log(this.typeId() + ".setTransition('" + this.asString() + "')")
+        //this.debugLog(".setTransition('" + this.asString() + "')")
         this.domView().setTransition(this.asString())
         return this
     }
@@ -91822,11 +92309,11 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     focus: function () {
         if (!this.isActiveElement()) {
 
-            //console.log(this.typeId() + ".focus() " + document.activeElement._domView)
+            //this.debugLog(".focus() " + document.activeElement._domView)
 
             setTimeout(() => {
                 this.element().focus()
-                //console.log(this.typeId() + " did refocus after 0 timeout? " + this.isActiveElement())
+                //this.debugLog(" did refocus after 0 timeout? " + this.isActiveElement())
             }, 0)
         }
         return this
@@ -91926,7 +92413,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     // box shadow
 
     setBoxShadow: function (s) {
-        //console.log(this.typeId() + ".setBoxShadow(" + s + ")")
+        //this.debugLog(".setBoxShadow(" + s + ")")
         this.setCssAttribute("box-shadow", s)
         return this
     },
@@ -91994,7 +92481,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     // border left
 
     setBorderLeft: function (s) {
-        //console.log(this.typeId() + " border-left set '", s, "'")
+        //this.debugLog(" border-left set '", s, "'")
         this.setCssAttribute("border-left", s)
         return this
     },
@@ -93104,7 +93591,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         /*
         if (this.type() === "BrowserRowNote") {
         //if (v !== "&gt;" && v !== "") {
-            console.log(this.typeId() + " changing innerHTML from '" + oldValue + "' to '" + v + "'")
+            this.debugLog(" changing innerHTML from '" + oldValue + "' to '" + v + "'")
         }
         */
 
@@ -93257,7 +93744,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     },
 
     onClick: function (event) {
-        console.log(this.typeId() + ".onClick()")
+        this.debugLog(".onClick()")
         this.sendActionToTarget()
         event.stopPropagation()
         return false
@@ -93717,7 +94204,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     onMouseDown: function (event) {
         const methodName = Mouse.shared().downMethodNameForEvent(event)
         if (methodName !== "onMouseDown") {
-            console.log(this.typeId() + ".onMouseDown calling: ", methodName)
+            this.debugLog(".onMouseDown calling: ", methodName)
             this.invokeMethodNameForEvent(methodName, event)
         }
         return true
@@ -93726,7 +94213,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     onMouseUp: function (event) {
         const methodName = Mouse.shared().upMethodNameForEvent(event)
         if (methodName !== "onMouseUp") {
-            console.log(this.typeId() + ".onMouseUp calling: ", methodName)
+            this.debugLog(".onMouseUp calling: ", methodName)
             this.invokeMethodNameForEvent(methodName, event)
         }
         return true
@@ -93755,9 +94242,9 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
     /*
     onEnterKeyDown: function(event) {
-        console.log(this.typeId() + " onEnterKeyDown")
+        this.debugLog(" onEnterKeyDown")
         if (this.unfocusOnEnterKey() && this.isFocused()) {
-            console.log(this.typeId() + " releasing focus")
+            this.debugLog(" releasing focus")
             // this.releaseFocus() // TODO: implement something to pass focus up view chain to whoever wants it
             //this.element().parentElement.focus()
             if (this.parentView()) {
@@ -93769,7 +94256,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     */
 
     onKeyDown: function (event) {
-        //console.log(this.typeId() + " onKeyDown ", event._id)
+        //this.debugLog(" onKeyDown ", event._id)
         //Keyboard.shared().showEvent(event)
 
         const methodName = Keyboard.shared().downMethodNameForEvent(event)
@@ -93780,7 +94267,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     },
 
     invokeMethodNameForEvent: function(methodName, event) {
-        //console.log(this.typeId() + ".invokeMethodNameForEvent('" + methodName + "')")
+        //this.debugLog(".invokeMethodNameForEvent('" + methodName + "')")
         if (this[methodName]) {
             const stopProp = this[methodName].apply(this, [event])
             event.preventDefault()
@@ -93800,7 +94287,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
     onKeyUp: function (event) {
         let shouldPropogate = true
-        //console.log(this.typeId() + " onKeyUp ", event._id)
+        //this.debugLog(" onKeyUp ", event._id)
 
         const methodName = Keyboard.shared().upMethodNameForEvent(event)
         //console.log("methodName: ", methodName)
@@ -93811,7 +94298,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     },
 
     didEdit: function () {
-        console.log(this.typeId() + " didEdit")
+        this.debugLog(" didEdit")
         this.tellParentViews("onDidEdit", this)
         return this
     },
@@ -93824,7 +94311,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
     onTabKeyDown: function (event) {
         // need to implement this on key down to prevent browser from handling tab?
-        //console.log(this.typeId() + " onTabKeyDown ", event._id)
+        //this.debugLog(" onTabKeyDown ", event._id)
 
         if(this.selectNextKeyView()) {
             //event.stopImmediatePropagation() // prevent other listeners from getting this event
@@ -93835,7 +94322,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     },
 
     onTabKeyUp: function(event) {
-        //console.log(this.typeId() + " onTabKeyUp ", event._id)
+        //this.debugLog(" onTabKeyUp ", event._id)
         return false
     },
 
@@ -93847,7 +94334,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     selectNextKeyView: function () {
         // returns true if something is selected, false otherwise
 
-        //console.log(this.typeId() + " selectNextKeyView")
+        //this.debugLog(" selectNextKeyView")
         const nkv = this.nextKeyView()
         if (nkv) {
             nkv.becomeKeyView()
@@ -93879,7 +94366,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     },
 
     willAcceptFirstResponder: function () {
-        //console.log(this.typeId() + ".willAcceptFirstResponder()")
+        //this.debugLog(".willAcceptFirstResponder()")
         return this
     },
 
@@ -93907,7 +94394,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     releaseFirstResponder: function () {
         // walk up parent view chain and focus on the first view to 
         // answer true for the acceptsFirstResponder message
-        //console.log(this.typeId() + ".releaseFirstResponder()")
+        //this.debugLog(".releaseFirstResponder()")
 
         this.blur()
         if (this.parentView()) {
@@ -93921,14 +94408,14 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     onFocus: function () {
         this.willAcceptFirstResponder();
         // subclasses can override 
-        //console.log(this.typeId() + " onFocus")
+        //this.debugLog(" onFocus")
         return true
     },
 
     onBlur: function () {
         this.didReleaseFirstResponder();
         // subclasses can override 
-        //console.log(this.typeId() + " onBlur")
+        //this.debugLog(" onBlur")
         return true
     },
 
@@ -94409,7 +94896,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     // visibility event
 
     onVisibility: function () {
-        //console.log(this.typeId() + ".onVisibility()")
+        //this.debugLog(".onVisibility()")
         this.unregisterForVisibility()
         return true
     },
@@ -94532,10 +95019,10 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
 
     disablePointerEventsUntilTimeout: function (ms) {
         this.setPointerEvents("none")
-        console.log(this.typeId() + " disabling pointer events")
+        this.debugLog(" disabling pointer events")
 
         setTimeout(() => {
-            console.log(this.typeId() + " enabling pointer events")
+            this.debugLog(" enabling pointer events")
             this.setPointerEvents("inherit")
         }, ms)
 
@@ -94681,10 +95168,10 @@ DomView.newSubclassNamed("DomStyledView").newSlots({
         let style = null
         if (this.isSelected()) {
             style = this.styles().selected()
-            //console.log(this.typeId() + ".applyStyles() selected ", style.description())
+            //this.debugLog(".applyStyles() selected ", style.description())
         } else {
             style = this.styles().unselected()
-            //console.log(this.typeId() + ".applyStyles() unselected ", style.description())
+            //this.debugLog(".applyStyles() unselected ", style.description())
         }
         return style
     },
@@ -94958,7 +95445,7 @@ DomView.newSubclassNamed("ButtonView").newSlots({
     },
 
     onTapComplete: function (aGesture) {
-        //console.log(this.typeId() + ".onTapComplete()")
+        //this.debugLog(".onTapComplete()")
         if (!this.isEditable()) {
             DomView.sendActionToTarget.apply(this)
         }
@@ -95127,7 +95614,7 @@ window.CloseButton = DomView.newSubclassNamed("CloseButton").newSlots({
     },
 
     onTapComplete: function (aGesture) {
-        //console.log(this.typeId() + ".onTapComplete()")
+        //this.debugLog(".onTapComplete()")
         if (!this.isEditable()) {
             DomView.sendActionToTarget.apply(this)
         }
@@ -95385,7 +95872,7 @@ DomView.newSubclassNamed("DragBarView").newSlots({
     },
 
     onMouseDown: function (event) {
-        //console.log(this.typeId() + " onMouseDown")
+        //this.debugLog(" onMouseDown")
         this.setIsDragging(true)
 
         this.removeParentTracking()
@@ -95411,13 +95898,13 @@ DomView.newSubclassNamed("DragBarView").newSlots({
     },
 
     onMouseOver: function(event) {
-        //console.log(this.typeId() + " onMouseOver")
+        //this.debugLog(" onMouseOver")
         this.setIsHighlighted(true)
         return false
     },
 
     onMouseLeave: function(event) {
-        //console.log(this.typeId() + " onMouseLeave")
+        //this.debugLog(" onMouseLeave")
         this.setIsHighlighted(false)
         return false
     },
@@ -95736,7 +96223,7 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
     },
 
     sendProtocolMessage: function(receiver, methodName) {
-        if (!methodName.contains("Hover")) {
+        if (!methodName.contains("Hover") && this.isDebugging()) {
 
             let msg = receiver.typeId() + " " + methodName 
 
@@ -96227,7 +96714,7 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
 
     onDoubleTapComplete: function(aGesture) {
         // make content editable and select text
-        //console.log(this.typeId() + ".onDoubleTapComplete()")
+        //this.debugLog(".onDoubleTapComplete()")
         if (this.contentEditable()) {
             //this.setBorder("1px dashed red")
             return this
@@ -96242,7 +96729,7 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
 
     onBlur: function() {
         DomStyledView.onBlur.apply(this)
-        //console.log(this.typeId() + ".onBlur()")
+        //this.debugLog(".onBlur()")
         if (this.usesDoubleTapToEdit()) {
             this.setContentEditable(false)
             this.setBorder("none")
@@ -96259,7 +96746,7 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
 
     setContentEditable: function(aBool) {
         DomStyledView.setContentEditable.apply(this, [aBool])
-        //console.log(this.typeId() + ".setContentEditable(" + aBool + ") = ", this.contentEditable())
+        //this.debugLog(".setContentEditable(" + aBool + ") = ", this.contentEditable())
         //this.setIsRegisteredForClicks(this.contentEditable())  // is this needed after move to tap?
         return this
     },
@@ -96295,7 +96782,7 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
         if (oldValue !== newValue) {
             DomStyledView.setString.apply(this, [newValue])
             /*
-            console.log(this.typeId() + " setString(")
+            this.debugLog(" setString(")
             console.log("    old: '" + oldValue + "'")
             console.log("    new: '" + newValue + "'")
             console.log("---")
@@ -96330,16 +96817,16 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
     },
     
     onKeyUp: function(event) {
-        //console.log(this.typeId() + " onKeyUp ", event)
+        //this.debugLog(" onKeyUp ", event)
         this.adjustFontSizeWithKeyboard()
         DomStyledView.onKeyUp.apply(this, [event])
-        //console.log(this.typeId() + " onKeyUp value: [" + this.value() + "]")
+        //this.debugLog(" onKeyUp value: [" + this.value() + "]")
         this.didEdit()
         return false
     },
 
     onEnterKeyUp: function(event) {
-	    //console.log(this.typeId() + ".onEnterKeyUp()")
+	    //this.debugLog(".onEnterKeyUp()")
 	    //this.didEdit()
 
         this.formatValue()
@@ -96348,7 +96835,7 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
         this.tellParentViews("didInput", this) 
             
         if (!this.doesHoldFocusOnReturn()) {
-            //console.log(this.typeId() + " calling releaseFirstResponder")
+            //this.debugLog(" calling releaseFirstResponder")
             this.releaseFirstResponder()
         }
         
@@ -96379,12 +96866,12 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
         
         if (newValue !== oldValue) {
             this.debugLog("formatValue newValue !== oldValue")
-            console.log(this.typeId() + " newValue: [" + newValue + "]")
+            this.debugLog(" newValue: [" + newValue + "]")
             this.setInnerHTML(newValue)
             this.didEdit()
         }
 	    //console.trace(this.type() + " formatValue '" + oldValue + "' -> '" + this.innerHTML() + "'")
-        //console.log(this.typeId() + " after formatValue: '" + this.innerHTML() + "'")
+        //this.debugLog(" after formatValue: '" + this.innerHTML() + "'")
         return this
     },
     
@@ -96414,7 +96901,7 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
     },
 
     onDoubleClick: function (event) {
-        console.log(this.typeId() + ".onDoubleClick()")
+        this.debugLog(".onDoubleClick()")
         //this.focus()
         this.selectAll() // looses focus!
         this.element().focus()
@@ -96426,7 +96913,7 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
     
     onClick: function(event) {
         // to prevent click-to-edit event from selecting the background row
-        //console.log(this.typeId() + ".onClick()")
+        //this.debugLog(".onClick()")
 
         if (this.contentEditable()) {
             this.sendActionToTarget()
@@ -97138,12 +97625,12 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         let slotValue = this[slotName].apply(this)
         assert(aProto)
 		
-        console.log(this.typeId() + ".addSubnodeProtoForSlotIfAbsent(" + aProto.type() + ", " + slotName + ")")
-        console.log(this.typeId() + " slotValue = " + slotValue)
+        this.debugLog(".addSubnodeProtoForSlotIfAbsent(" + aProto.type() + ", " + slotName + ")")
+        this.debugLog(" slotValue = " + slotValue)
 		
         if (slotValue === null) {
             slotValue = aProto.clone()
-            //console.log(this.typeId() + "." + setterName + "(", obj, ")")
+            //this.debugLog("." + setterName + "(", obj, ")")
             const setterName = this.setterNameForSlot(slotName)
             this[setterName].apply(this, [slotValue])
         }
@@ -97541,7 +98028,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     
     setSubnodes: function(subnodes) {
         if (this._subnodes && subnodes && this._subnodes.equals(subnodes)) {
-            //console.log(this.typeId() + ".setSubnodes() - skipping because subnodes are the same <<<<<<<<<<<<<<<<<<<<<")
+            //this.debugLog(".setSubnodes() - skipping because subnodes are the same <<<<<<<<<<<<<<<<<<<<<")
             return this
         }
         subnodes.forEach((subnode) => { subnode.setParentNode(this) })
@@ -97553,7 +98040,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     },
     
     verifySubnodesHaveParentNodes: function() {
-        const missing = this.subnodes().detect(function (subnode) { return !subnode.parentNode() })
+        const missing = this.subnodes().detect(subnode => !subnode.parentNode())
         if (missing) {
             throw new Error("missing parent node on subnode " + missing.type())
         }
@@ -97745,7 +98232,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         obs.setObserver(this)
         obs.setIsOneShot(true)
         obs.watch()
-        //console.log(this.typeId() + ".watchOnceForNote('" + aNoteName + "')")
+        //this.debugLog(".watchOnceForNote('" + aNoteName + "')")
         return obs
     },
 
@@ -97754,7 +98241,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         note.setSender(this)
         note.setName(aNoteName)
         note.post()
-        //console.log(this.typeId() + ".postNoteNamed('" + aNoteName + "')")
+        //this.debugLog(".postNoteNamed('" + aNoteName + "')")
         return note
     },
 
@@ -97823,148 +98310,18 @@ ResourceLoader.pushRelativePaths([
 ResourceLoader.pushRelativePaths([
     "categories/_imports.js",
     "ObjectPool.js",
-    "StoreCache.js"
 ])
 
 "use strict"
 
 ResourceLoader.pushRelativePaths([
-    "Object-puuid.js",
-    "Array-store.js",
-    "Date-store.js",
-    "Object-store.js",
+    //"Object-puuid.js",
     "Proto-store.js",
-    "TypedArray-store.js",
     "BMNode-store.js",
     "BMStorableNode-store.js",
+    "primitives/_imports.js",
 ])
 
-"use strict"
-
-Object.defineSlots(Object, {
-    newUuid: function() { // TODO: move this JS UUID when it's added to JS standard lib
-        const uuid_a = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
-        const uuid_b = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
-        return uuid_a + uuid_b
-    },
-
-    _puuidWeakMap: new WeakMap(),
-})
-
-Object.defineSlots(Object.prototype, {
-
-    puuid: function() {
-        if (!this.hasPuuid()) {
-            this.setPuuid(Object.newUuid())
-        }
-
-        return Object._puuidWeakMap.get(this);
-    },
-
-    hasPuuid: function() {
-        return Object._puuidWeakMap.has(this)
-    },
-
-    setPuuid: function(puuid) {
-        Object._puuidWeakMap.set(this, puuid);
-        return this
-    },
-
-    typePuuid: function() {
-        const puuid = this.puuid()
-        if (Type.isFunction(this.type)) {
-            return this.type() + "_" + puuid
-        }
-        return Type.typeName(this) + "_" + puuid
-    },
-
-})
-
-"use strict"
-
-Object.defineSlots(Array.prototype, {
-
-    recordForStore: function(aStore) { // should only be called by Store
-        return {
-            type: Type.typeName(this), 
-            v: this.map(v => aStore.refValue(v))
-        }
-    },
-
-    shouldStore: function() {
-        return true
-    },
-    
-})
-
-
-Object.defineSlots(Array, {
-
-    instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store
-        assert(aRecord.type === "Array")
-        return aRecord.v.map(v => aStore.unrefValue(v))
-    },
-
-})
-
-
-"use strict"
-
-Object.defineSlots(Date.prototype, {
-    recordForStore: function(aStore) { // should only be called by Store
-        return {
-            type: "Date", 
-            v: this.toJSON() // toJSON is a standard library Date method
-        }
-    },
-})
-
-Object.defineSlots(Date, {
-    instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store
-        assert(aRecord.type === "Date")
-        return new Date(new Date(aRecord.v))
-    },
-
-})
-"use strict"
-
-Object.defineSlots(Object.prototype, {
-
-    recordForStore: function(aStore) { // should only be called by Store
-        const dict = {}
-
-        Object.getOwnPropertyNames(this).forEach((k) => {
-            const v = this[k]
-            dict[k] = aStore.refValue(v)
-        })
-
-        return {
-            type: "Object", 
-            dict: dict, 
-        }
-    },
-
-    shouldStore: function() {
-        return true
-    },
-})
-
-Object.defineSlots(Object, {
-
-    instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store
-        assert(aRecord.type === "Object")
-        
-        const obj = {}
-        const dict = aRecord.dict
-
-        Object.getOwnPropertyNames(dict).forEach((k) => {
-            const v = dict[k]
-            obj[k] = aStore.unrefValue(v)
-        })
-        return obj
-    }
-
-})
 "use strict"
 
 Object.defineSlots(ideal.Proto, {
@@ -98002,34 +98359,11 @@ Object.defineSlots(ideal.Proto, {
 })
 "use strict"
 
-Type.typedArrayTypeNames().forEach((name) => {
-
-    Object.defineSlots(window[name].prototype, {
-        recordForStore: function(aStore) { // should only be called by Store
-            return {
-                type: Type.typeName(this), 
-                length: this.length,
-                values: this.values() // this is an iterator
-            }
-        },
-    })
-    
-    Object.defineSlots(window[name], {
-        instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store
-            const values = aRecord.values
-            const obj = new this(values)
-            return obj
-        },
-    })
-
-})
-"use strict"
-
 Object.defineSlots(BMNode, {
 
     recordForStore: function(aStore) { // should only be called by Store
         
-        const dict = {}
+        const entries = []
 
         /*
         Object.getOwnPropertyNames(this).forEach((k) => {
@@ -98040,19 +98374,20 @@ Object.defineSlots(BMNode, {
 
         return {
             type: this.type(), 
-            dict: dict, 
+            entries: entries, 
         }
     },
 
     instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store    
         const proto = window[aRecord.type]
         const obj = proto.clone()
-        const dict = aRecord.dict
+        const entries = aRecord.entries
 
         /*
-        Object.getOwnPropertyNames(dict).forEach((k) => {
-            const v = dict[k]
-            obj[k] = aStore.unrefValue(v)
+        entries.forEach((entry) => {
+            const k = entry[0]
+            const v = entry[1]
+            const unrefValue = aStore.unrefValue(v)
         })
         */
         return obj
@@ -98096,6 +98431,328 @@ Object.defineSlots(BMStorableNode, {
     },
 })
 */
+"use strict"
+
+ResourceLoader.pushRelativePaths([
+    "Array-store.js",
+    "ArrayBuffer-store.js",
+    "Date-store.js",
+    "Map-store.js",
+    "Set-store.js",
+    "Object-store.js",
+    "TypedArray-store.js",
+    "literals/_imports.js",
+])
+
+"use strict"
+
+Object.defineSlots(Array.prototype, {
+
+    recordForStore: function(aStore) { // should only be called by Store
+        return {
+            type: Type.typeName(this), 
+            v: this.map(v => aStore.refValue(v))
+        }
+    },
+
+    shouldStore: function() {
+        return true
+    },
+
+    storeJsonRefs: function(puuids = new Set()) {
+        this.forEach(v => { 
+            if (!Type.isNull(v)) { 
+                v.storeJsonRefs(puuids)
+            } 
+        })
+        return puuids
+    },
+})
+
+
+Object.defineSlots(Array, {
+
+    fromIterator: function(iterator) {
+        const values = []
+        let result = iterator.next()
+        while (!result.done) {
+            values.push(result.value)
+            result = iterator.next()
+        }
+        return values
+    },
+    
+    instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store
+        assert(aRecord.type === "Array")
+        return aRecord.v.map(v => aStore.unrefValue(v))
+    },
+
+})
+
+
+"use strict"
+
+
+Object.defineSlots(ArrayBuffer.prototype, {
+
+    values: function() {
+        const values = []
+        for (let i = 0; i < this.byteLength; i++) {
+            values.push(this[i])
+        }
+        return values
+    },
+
+    recordForStore: function(aStore) { // should only be called by Store
+        byteLength
+        return {
+            type: "ArrayBuffer", //Type.typeName(this), 
+            byteLength: this.byteLength,
+            values: this.values(),
+        }
+    },
+
+    shouldStore: function() {
+        return true
+    },
+
+    storeJsonRefs: function(puuids = new Set()) {
+        return puuids
+    },
+})
+
+Object.defineSlots(ArrayBuffer, {
+
+    instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store
+        assert(aRecord.type === "ArrayBuffer")
+        const length = aRecord.byteLength
+        const values = aRecord.values
+        const newBuffer = new ArrayBuffer(aRecord.length)
+        for (let i = 0; i < length; i++) {
+            newBuffer[i] = values[i]
+        }
+        return newBuffer
+    },
+
+})
+
+
+"use strict"
+
+Object.defineSlots(Date.prototype, {
+    recordForStore: function(aStore) { // should only be called by Store
+        return {
+            type: "Date", 
+            v: this.toJSON() // toJSON is a standard library Date method
+        }
+    },
+
+    shouldStore: function() {
+        return true
+    },
+
+    storeJsonRefs: function(puuids = new Set()) {
+        return puuids
+    },
+})
+
+Object.defineSlots(Date, {
+    instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store
+        assert(aRecord.type === "Date")
+        return new Date(new Date(aRecord.v))
+    },
+
+})
+"use strict"
+
+Object.defineSlots(Array.prototype, {
+
+    recordForStore: function(aStore) { // should only be called by Store
+        return {
+            type: Type.typeName(this), 
+            v: this.map(v => aStore.refValue(v))
+        }
+    },
+
+    shouldStore: function() {
+        return true
+    },
+
+    storeJsonRefs: function(puuids = new Set()) {
+        this.forEach(v => { 
+            if (!Type.isNull(v)) { 
+                v.storeJsonRefs(puuids)
+            } 
+        })
+        return puuids
+    },
+})
+
+
+Object.defineSlots(Array, {
+
+    instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store
+        assert(aRecord.type === "Array")
+        return aRecord.v.map(v => aStore.unrefValue(v))
+    },
+
+})
+
+
+"use strict"
+
+Object.defineSlots(Set.prototype, {
+
+    recordForStore: function(aStore) { // should only be called by Store
+        return {
+            type: Type.typeName(this), 
+            values: this.valuesArray().map(v => aStore.refValue(v))
+        }
+    },
+
+    shouldStore: function() {
+        return true
+    },
+
+    storeJsonRefs: function(puuids = new Set()) {
+        this.forEach(v => { 
+            if (!Type.isNull(v)) { 
+                v.storeJsonRefs(puuids)
+            } 
+        })
+        return puuids
+    },
+})
+
+
+Object.defineSlots(Set, {
+
+    instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store
+        assert(aRecord.type === "Set")
+        const values = aRecord.values.map(v => aStore.unrefValue(v))
+        return new Set(values) 
+    },
+
+})
+
+
+"use strict"
+
+Object.defineSlots(Object.prototype, {
+
+    recordForStore: function(aStore) { // should only be called by Store
+        const entries = []
+
+        Object.getOwnPropertyNames(this).forEach((k) => {
+            const v = this[k]
+            entries.push([k, aStore.refValue(v)])
+        })
+
+        return {
+            type: "Object", 
+            entries: entries, 
+        }
+    },
+
+    shouldStore: function() {
+        return true
+    },
+
+    storeJsonRefs: function(puuids = new Set()) {
+        if (this.hasOwnProperty("*")) {
+            puuids.add(this["*"])
+        } else {
+            throw new Error("dictionaries are reserved for pointers, but we found a non-pointer")
+        }
+        return puuids
+    },
+})
+
+Object.defineSlots(Object, {
+
+    instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store
+        assert(aRecord.type === "Object")
+        const obj = {}
+        aRecord.entries.forEach((entry) => {
+            const k = entry[0]
+            const v = entry[1]
+            obj[k] = aStore.unrefValue(v)
+        })
+        return obj
+    }
+
+})
+"use strict"
+
+Type.typedArrayTypeNames().forEach((name) => {
+
+    Object.defineSlots(window[name].prototype, {
+        valuesArray: function() {
+            return Array.fromIterator(this.values())
+        },
+
+        recordForStore: function(aStore) { // should only be called by Store
+            return {
+                type: Type.typeName(this), 
+                //length: this.length,
+                values: this.valuesArray() // this is an iterator
+            }
+        },
+
+        storeJsonRefs: function(puuids = new Set()) {
+            // no references in a TypedArray
+            return puuids
+        },
+    })
+    
+    Object.defineSlots(window[name], {
+        instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store
+            return new this(aRecord.values)
+        },
+    })
+
+})
+"use strict"
+
+ResourceLoader.pushRelativePaths([
+    "String-store.js",
+    "Boolean-store.js",
+    "Number-store.js",
+])
+
+"use strict"
+
+Object.defineSlots(String.prototype, {
+
+    storeJsonRefs: function(puuids = new Set()) {
+        return puuids
+    },
+
+})
+
+
+"use strict"
+
+Object.defineSlots(Boolean.prototype, {
+
+    storeJsonRefs: function(puuids = new Set()) {
+        return puuids
+    },
+
+})
+
+
+"use strict"
+
+Object.defineSlots(Number.prototype, {
+
+    storeJsonRefs: function(puuids = new Set()) {
+        return puuids
+    },
+
+})
+
+
 "use strict"
 
 /*
@@ -98153,13 +98810,15 @@ Object.defineSlots(BMStorableNode, {
 
 // need a pidRefsFromPid
 
-ideal.Proto.newSubclassNamed("SimpleStore").newSlots({
+ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
+    name: "defaultDataStore",
     rootObject: null, 
     recordsDict: null, // AtomicDictionary
     activeObjects: null, // dict
     dirtyObjects: null, // dict 
     lastSyncTime: null, // WARNING: vulnerable to system time changes
     //isReadOnly: true,
+    marked: null, // Set of puuids
 }).setSlots({
     init: function() {
         ideal.Proto.init.apply(this)
@@ -98168,7 +98827,31 @@ ideal.Proto.newSubclassNamed("SimpleStore").newSlots({
         this.setActiveObjects({})
         this.setDirtyObjects({})
         this.setLastSyncTime(null)
+        this.setMarked(null)
         return this
+    },
+
+    setRootObject: function(obj) {
+        if (this._rootObject !== obj) {
+            this._rootObject = obj
+            this.addActiveObject(obj)
+            this.addDirtyObject(obj) // skip when reading it from records?
+        }
+        return this
+    },
+
+    readRoot: function() {
+        const recordsDict = this.recordsDict()
+        const rootKey = "root"
+        // do we want this? What if object store is for copy?
+        if (!recordsDict.hasKey(rootKey)) {  
+            const rootObj = {}
+            rootObj.setPuuid(rootKey)
+            recordsDict.begin()
+            recordsDict.atPut(rootKey, rootObj)
+            recordsDict.commit()
+        }
+        return recordsDict.at(rootKey)
     },
 
     asJson: function() {
@@ -98229,7 +98912,7 @@ ideal.Proto.newSubclassNamed("SimpleStore").newSlots({
             })
 
             totalStoreCount += thisLoopStoreCount
-            //console.log("totalStoreCount: ", totalStoreCount)
+            this.debugLog(() => "totalStoreCount: " + totalStoreCount)
             if (thisLoopStoreCount === 0) {
                 break
             }
@@ -98238,14 +98921,15 @@ ideal.Proto.newSubclassNamed("SimpleStore").newSlots({
         return totalStoreCount
     },
 
-    recordForPid: function(puuid) {
-        return this.recordsDict().at(puuid)
-    },
-
-    objectForRecord: function(aRecord) {
+    objectForRecord: function(aRecord) { // private
         const aClass = window[aRecord.type]
         const obj = aClass.instanceFromRecordInStore(aRecord, this)
         obj.setPuuid(aRecord.id)
+
+        if(obj.scheduleLoadFinalize) {
+            obj.scheduleLoadFinalize()
+        }
+
         return obj
     },
 
@@ -98280,12 +98964,24 @@ ideal.Proto.newSubclassNamed("SimpleStore").newSlots({
         return ref
     },
 
+    // read a record
+
+    recordForPid: function(puuid) { // private
+        const jsonString = this.recordsDict().at(puuid)
+        const aRecord = JSON.parse(jsonString)
+        return aRecord
+    },
+
+    // write a record
+
     storeObject: function(obj) {
         const puuid = obj.puuid()
         assert(puuid)
-        this.recordsDict().atPut(puuid, obj.recordForStore(this))
+        this.recordsDict().atPut(puuid, JSON.stringify(obj.recordForStore(this)))
         return this
     },
+
+    // --- test ----------------------------
 
     publicStoreObject: function(obj) {
         this.addActiveObject(obj)
@@ -98294,120 +98990,139 @@ ideal.Proto.newSubclassNamed("SimpleStore").newSlots({
         return this
     },
 
+    // -------------------------------------
+
+    hasDirtyObjects: function() {
+        return Object.keys(this.dirtyObjects()).length !== 0
+    },
+
+    flushIfNeeded: function () {
+        if (this.hasDirtyObjects()) {
+            this.atomicallyStoreDirtyObjects()
+            assert(!this.hasDirtyObjects())
+        }
+        return this
+    },
+
+    collect: function () {
+        // this is an on-disk collection
+        // in-memory objects aren't considered
+        // so we make sure they're flushed to the db first 
+        this.flushIfNeeded()
+
+        this.debugLog("--- begin collect ---")
+        this.setMarked(new Set())
+        this.markPid(this.rootObject().puuid()) // this is recursive, but skips marked records
+        const deleteCount = this.atomicallySweep()
+        this.setMarked(null)
+        this.debugLog(() => "--- end collect - collected " + deleteCount + " pids ---")
+        return deleteCount
+    },
+
+    markPid: function (pid) {
+        //this.debugLog(() => "markPid(" + pid + ")")
+        if (!this.marked().has(pid)) {
+            this.marked().add(pid)
+            const refPids = this.refSetForPuuid(pid)
+            //this.debugLog(() => "markPid " + pid + " w refs " + JSON.stringify(refPids))
+            refPids.forEach(refPid => this.markPid(refPid))
+            return true
+        }
+        return false
+    },
+
+    refSetForPuuid: function (puuid) {
+        const record = this.recordForPid(puuid)
+        const puuids = new Set()
+
+        if (record) {
+            Object.keys(record).forEach(k => this.puuidsSetFromJson(record[k], puuids))
+        }
+
+        return puuids
+    },
+
+    puuidsSetFromJson: function(json, puuids = new Set()) {
+        // json can only contain array's, dictionaries, and literals.
+        // We store dictionaries as an array of entries, 
+        // so dicts in the json are reserved for pointers
+
+        //console.log(" json: ", JSON.stringify(json, null, 2))
+
+        if (Type.isLiteral(json)) {
+            // we could call storeJsonRefs but, none will add any pids 
+            // and null raises exception, so just skip it
+        } else if (Type.isObject(json) && json.storeJsonRefs) {
+            json.storeJsonRefs(puuids)
+        } else {
+            throw new Error("unable to handle json type: " + typeof(json))
+        }
+        
+        return puuids
+    },
+
+    // ------------------------
+
+    atomicallySweep: function () {
+        this.debugLog("--- sweep --- ")
+        this.recordsDict().begin()
+        const deleteCount = this.justSweep()
+        this.recordsDict().commit()
+        return this
+    },
+
+    justSweep: function () {
+        // delete all unmarked records
+        let deleteCount = 0
+        this.recordsDict().keys().forEach((pid) => {
+            if (!this.marked().has(pid)) {
+                //this.debugLog("deletePid(" + pid + ")")
+                this.recordsDict().removeAt(pid)
+                deleteCount ++
+            }
+        })
+
+        return deleteCount
+    },
+
+    selfTest: function () {
+        const store = ObjectPool.clone()
+    
+        const aTypedArray = Float64Array.from([1.2, 3.4, 4.5])
+        const aSet = new Set("sv1", "sv2")
+        const aMap = new Map([ ["mk1", "mv1"], ["mk2", "mv2"] ])
+        const aNode = BMNode.clone()
+        const a = [1, 2, [3, null], { foo: "bar", b: true }, aSet, aMap, new Date(), aTypedArray, aNode]
+    
+        store.setRootObject(a)
+        store.publicStoreObject(a)
+        //console.log(store.asJson())
+        console.log("---")
+        store.collect()
+    
+        /*
+        const aSerialized = JSON.stringify(a, null, 2)
+        console.log("aSerialized: " + aSerialized + "\n")
+        store.storeObject(a)
+    
+        console.log(store.asJson())
+        console.log("-----------------")
+    
+        const b = store.objectForPid(a.puuid())
+        const bSerialized = JSON.stringify(b, null, 2)
+        console.log("bSerialized: " + bSerialized + "\n")
+        assert(aSerialized === bSerialized)
+        console.log("test passed")
+        */
+    },
 })
 
 // -------------------
 
-const test = function () {
-    const simpleStore = SimpleStore.clone()
-
-    const fa = new Float64Array(3)
-    fa[0] = 1.2
-    fa[1] = 3.4
-    fa[1] = 5.6
-
-    const node = BMNode.clone()
-    const a = [1, 2, [3, null], { foo: "bar", b: true }, new Date(), fa, node]
-
-    simpleStore.publicStoreObject(a)
-    console.log(simpleStore.asJson())
-    console.log("---")
-
-    /*
-    const aSerialized = JSON.stringify(a, null, 2)
-    console.log("aSerialized: " + aSerialized + "\n")
-    simpleStore.storeObject(a)
-
-    console.log(simpleStore.asJson())
-    console.log("-----------------")
-
-    const b = simpleStore.objectForPid(a.puuid())
-    const bSerialized = JSON.stringify(b, null, 2)
-    console.log("bSerialized: " + bSerialized + "\n")
-    assert(aSerialized === bSerialized)
-    console.log("test passed")
-    */
-}
-
-test()
 
 
+ObjectPool.selfTest()
 
-"use strict"
-
-/*
-
-    AtomicKVStore
-
-    Implements ClientStore protocol but only holds records in
-    in-memory dictionary instead of writing to persistent storage.
-
-    This can be useful for constructing a copy store when dragging nodes out of the browser.
-
-    Atomic Dictionary protocol:
-
-    	asyncOpen()
-		isOpen()
-		begin()
-		commit()
-		at(key) // return dict
-		atPut(key, dict)
-		removeAt(key)
-		clear()
-*/
-
-ideal.Proto.newSubclassNamed("MemStore").newSlots({
-    dict: null, 
-    isOpen: false,
-    hasBegun: false,
-}).setSlots({
-    init: function() {
-        ideal.Proto.init.apply(this)
-        this.setdict({})
-    },
-
-    asyncOpen: function(callback) {
-        this.setIsOpen(true)
-        callback()
-    },
-
-    begin: function() {
-        assert(!this.hasBegun())
-        this.setHasBegun(true)
-        return this
-    },
-
-    begin: function() {
-        assert(!this.hasBegun())
-        this.setHasBegun(true)
-        return this
-    },
-
-    commit: function() {
-        assert(this.hasBegun())
-        this.setHasBegun(false)
-        return this
-    },
-
-    at: function(k) {
-        return this.dict()[k]
-    },
-
-    atPut: function(k, v) {
-        this.dict()[k] = v
-        return this
-    },
-
-    removeAt: function(k) {
-        delete this.dict()[k]
-        return this
-    },
-
-    clear: function(k, v) {
-        this.setDict({})
-        return this
-    },
-})
 
 
 "use strict"
@@ -98460,7 +99175,7 @@ BMNode.newSubclassNamed("BMDataStore").newSlots({
     },
 
     refreshSubnodes: function () {
-        //console.log(this.typeId() + " refreshSubnodes")
+        //this.debugLog(" refreshSubnodes")
         this.removeAllSubnodes()
         this.defaultStore().sdb().keys().sort().forEach((key) => {
             const subnode = BMDataStoreRecord.clone().setTitle(key)
@@ -98625,7 +99340,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         this.setChangedObs(obs)
         */
 
-        this.setIsDebugging(true)
+        this.setIsDebugging(false)
 
         Broadcaster.shared().addListenerForName(this, "didChangeStoredSlot")
     },
@@ -98685,7 +99400,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
         this.sdb().asyncOpen(() => {
             this.onOpen()
-            
+            this.show()
             //this.clear()
             
             if (callback) {
@@ -98697,6 +99412,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     },
 
     onOpen: function () {
+        console.log(this.type() + " onOpen db size " + this.sdb().size())
         this.updateLastSyncTime()
         this.collect()
         this.startWatchingForDirtyObjects()
@@ -98731,17 +99447,17 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         // use pid to see if the obj gets referrenced when walked from a stored node
         // this way we avoid storing objects not referenced from the stored objects tree
 
-        if (obj.type() === "BMStunServers") {
-            console.log("---")
-        }
-
         const dirt = this.dirtyObjects()
         const id = obj.typeId()
         if (!dirt.hasOwnProperty(id)) {
-            if (!dirt[id]) {
-                dirt[id] = obj
-                this.scheduleStore()
+
+            if (obj.type() === "BMActionNode") {
+                console.log("--- addDirtyObject " + obj.typeId())
             }
+
+            dirt[id] = obj
+            this.addActiveObject(obj)
+            this.scheduleStore()
         }
 
         return this
@@ -98761,26 +99477,17 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     // writing
     // ----------------------------------------------------
 
-    debugLog: function (s) {
-        this.assertHasUniqueId()
-
-        if (this.isDebugging()) {
-            console.log(this.typeId() + ": " + s)
-        }
-    },
-
     hasDirtyObjects: function () {
         return Object.keys(this._dirtyObjects).length > 0
     },
 
     storeDirtyObjects: function () {
-        //console.log(" --- storeDirtyObjects --- ")
+        this.debugLog(" --- storeDirtyObjects --- ")
         if (this.isDebugging()) {
             this.showDirtyObjects("storing")
         }
 
         //console.warn("   isSyncingTargetAndMethod = ", SyncScheduler.isSyncingTargetAndMethod(this, "storeDirtyObjects"))
-        //console.log(" --- begin storeDirtyObjects --- ")
 
         if (!this.hasDirtyObjects()) {
             console.log("no dirty objects to store Object.keys(this._dirtyObjects) = ", Object.getOwnPropertyNames(this._dirtyObjects))
@@ -98797,7 +99504,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
             throw new Error(this.type() + " storeDirtyObjects but db not open")
         }
 
-        //console.log(" --- begin storeDirtyObjects --- ")
+        this.debugLog(" --- begin storeDirtyObjects --- ")
         this.sdb().begin()
 
         // it's ok to add dirty objects via setPid() while this is
@@ -98829,14 +99536,14 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
             })
 
             totalStoreCount += thisLoopStoreCount
-            //console.log("totalStoreCount: ", totalStoreCount)
+            this.debugLog(() => "totalStoreCount: " + totalStoreCount)
             if (thisLoopStoreCount === 0) {
                 break
             }
         }
 
 
-        this.debugLog("NodeStore.storeDirtyObjects stored " + totalStoreCount + " objects")
+        this.debugLog(() => "storeDirtyObjects stored " + totalStoreCount + " objects")
 
         /*
 		if (this.isDebugging()) {
@@ -98846,14 +99553,14 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
         this.sdb().commit() // flushes write cache
         this.updateLastSyncTime()
-        //console.log("--- commit ---")
+        this.debugLog("--- storeDirtyObjects commit ---")
 
         /*
 		if (this.isDebugging()) {
 			this.collect()
 		}
 		*/
-        //console.log(" --- end storeDirtyObjects --- ")
+        this.debugLog(" --- end storeDirtyObjects --- ")
 
         return totalStoreCount
     },
@@ -98867,22 +99574,24 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
     setNodeDictAtPid: function(aDict, pid) { // public API
         this.assertIsWritable()
-
         const serializedString = JSON.stringify(aDict)
         this.sdb().atPut(pid, serializedString)
+        return this
+    },
 
-        /*
-        this happens automatically: 
-        - when subnode pids are requested for serialization, 
-        they are added to dirty object list when pid is assigned
-        */
+    willRefObject: function(obj) {
+        if (!this.hasActiveObject(obj)) {
+            this.addActiveObject(obj)
+            this.addDirtyObject(obj)
+        }
+        return this
     },
 
     storeObject: function (obj) { // private API
         assert(obj.shouldStore())
-        this.addActiveObject(obj) // since we may not call ref on obj which would add it
-        //console.log("store obj")
-        //this.debugLog("storeObject(" + obj.pid() + ")")
+        this.willRefObject(obj)
+
+        this.debugLog(() => "storeObject(" + obj.pid() + ")")
         const aDict = obj.nodeDict()
         this.setNodeDictAtPid(aDict, obj.pid())
         return this
@@ -98932,11 +99641,11 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
         const activeObj = this.activeObjectsDict()[pid]
         if (activeObj) {
-            //this.debugLog("objectForPid(" + pid + ") found in mem")
+            //this.debugLog("objectForPid(" + pid + ") - found in active objects")
             return activeObj
         }
 
-        //this.debugLog("objectForPid(" + pid + ")")
+        //this.debugLog("objectForPid(" + pid + ") - reading from store")
 
         const nodeDict = this.nodeDictAtPid(pid)
         if (!nodeDict) {
@@ -98946,6 +99655,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
             // TODO: add a modal panel to allow user to choose to export and clear data
             if(!window.SyncScheduler.shared().hasScheduledTargetAndMethod(this, "clear")) {
                 console.warn("WARNING: clearing database because corruption found")
+                this.clear()
                 window.SyncScheduler.shared().scheduleTargetAndMethod(this, "clear")
             }
             return null
@@ -98965,11 +99675,9 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         obj.setPid(pid)
         this.addActiveObject(obj)
 
-        //this.debugLog(" nodeDict = ", nodeDict)
+        this.debugLog(() =>  "objectForPid(" + pid + ") nodeDict = " + JSON.stringify(nodeDict, null, 2))
         obj.setNodeDict(nodeDict)
         obj.scheduleLoadFinalize()
-
-        //this.debugLog("objectForPid(" + pid + ")")
 
         return obj
     },
@@ -98987,13 +99695,17 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     },
 
     addActiveObject: function (obj) {
-        const pid = obj.pid()
-        if (obj.type() === "BMStunServers") {
-            console.log("---")
+        if (!this.hasActiveObject(obj)) {
+            const pid = obj.pid()
+
+            if (obj.type() === "BMStunServers") {
+                console.log("---")
+            }
+            
+            this.debugLog(() => "addActiveObject(" + obj.pid() + ")")
+            assert(!Type.isNullOrUndefined(pid))
+            this.activeObjectsDict()[pid] = obj
         }
-        //this.debugLog("addActiveObject(" + obj.pid() + ")")
-        assert(!Type.isNullOrUndefined(pid))
-        this.activeObjectsDict()[pid] = obj
         return this
     },
 
@@ -99061,24 +99773,17 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     },
 
     refForObject: function (obj) {
-        assert(obj.shouldStore())
-
-
         const k = this.objRefKey()
         const ref = {}
 
         if (Type.isNull(obj) || !obj.shouldStore()) { // TODO: is this right?
             ref[k] = "null"
         } else if (Type.isObject(obj)) {
+            assert(obj.shouldStore())
+            this.willRefObject(obj)
             ref[k] = obj.pid()
         } else {
             throw new Error("can't get refForObject(", obj, ")")
-        }
-
-        // schedule to store this if it's not active
-        // as we've now referenced it
-        if (!Type.isNull(obj) && obj.shouldStore() && !this.hasActiveObject(obj)) {
-            this.addDirtyObject(obj)
         }
 
         return ref
@@ -99113,6 +99818,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
         const nodeDict = this.nodeDictAtPid(pid)
         if (!nodeDict) {
+            console.log("WARNING: called pidRefsFromPid(" + pid + ") but pid not found")
             return []
         }
 
@@ -99193,7 +99899,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
         const deleteCount = this.sweep()
         this._marked = null
-        this.debugLog("--- end collect - collected " + deleteCount + " pids ---")
+        this.debugLog(() => "--- end collect - collected " + deleteCount + " pids ---")
         return deleteCount
     },
 
@@ -99204,20 +99910,20 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     },
 
     markPid: function (pid) {
-        //this.debugLog("markPid(" + pid + ")")
+        //this.debugLog(() => "markPid(" + pid + ")")
         if (this._marked[pid] === true) {
             return false // already marked it
         }
         this._marked[pid] = true
 
         const refPids = this.pidRefsFromPid(pid)
-        //this.debugLog("markPid " + pid + " w refs " + JSON.stringify(refPids))
+        this.debugLog(() => "markPid " + pid + " w refs " + JSON.stringify(refPids))
         refPids.forEach(refPid => this.markPid(refPid))
         return true
     },
 
     sweep: function () {
-        this.debugLog(" --- sweep --- ")
+        this.debugLog("--- sweep --- ")
         // delete all unmarked records
         this.sdb().begin()
 
@@ -99226,7 +99932,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
         pids.forEach((pid) => {
             if (this._marked[pid] !== true) {
-                this.debugLog("deletePid(" + pid + ")")
+                this.debugLog(() => " sweep deletePid(" + pid + ")")
                 this.sdb().removeAt(pid)
                 deleteCount ++
             }
@@ -99304,7 +100010,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         const nodeDict = this.nodeDictAtPid(pid)
         console.log(indent + pid + ": " + JSON.stringify(nodeDict, replacer, 2 + indent.length))
 
-        if (nodeDict.children) {
+        if (!Type.isNullOrUndefined(nodeDict) && nodeDict.children) {
             nodeDict.children.forEach((childPid) => {
                 this.showPid(childPid, level + 1, maxLevel)
             })
@@ -99495,7 +100201,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         const dict = {}
         dict.type = this.type()
  
-        //console.log(this.typeId() + " storedSlots = " + JSON.stringify(this.storedSlots()))
+        //this.debugLog(" storedSlots = " + JSON.stringify(this.storedSlots()))
        
         Object.keys(this.storedSlots()).forEach((k) => {
             const v = this.getStoreSlotValue(k)
@@ -99593,7 +100299,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     },
 	
     didLoadFromStore: function() {
-        //console.log(this.typeId() + " didLoadFromStore in BMStorableNode")
+        //this.debugLog(" didLoadFromStore in BMStorableNode")
         // chance to finish any unserializing this particular instance
         // also see: loadFinalize
 		
@@ -99622,22 +100328,25 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         // check so we don't mark dirty while loading
         // and use private slots directly for performance
         if (slotName in this._storedSlots) { 
-            //console.log(this.typeId() + ".didUpdateSlot(" + slotName + ",...) -> scheduleSyncToStore")
+            //this.debugLog(".didUpdateSlot(" + slotName + ",...) -> scheduleSyncToStore")
             this.scheduleSyncToStore()
         }
 		
         if (newValue != null && this.subnodes().includes(oldValue)) { // TODO: add a switch for this feature
             newValue.setParentNode(this)
             this.subnodes().replaceOccurancesOfWith(oldValue, newValue)
-            //console.log(this.typeId() + " this.subnodes().replaceOccurancesOfWith(", oldValue, ",", newValue, ")")
+            //this.debugLog(" this.subnodes().replaceOccurancesOfWith(", oldValue, ",", newValue, ")")
         }
     },
 	
     // subnodes
 	
-    subnodePids: function() {
+    subnodePids: function( aStore = this.defaultStore()) {
         const storableSubnodes = this.subnodes().filter(sn => sn.shouldStore())
-        const pids = storableSubnodes.map(sn => sn.pid())
+        const pids = storableSubnodes.map(sn => { 
+            aStore.willRefObject(sn)
+            return sn.pid()
+        })
         return pids
     },
     
@@ -100088,7 +100797,7 @@ BMStorableNode.newSubclassNamed("BMImageNode").newSlots({
     },        
     
     onDidEditNode: function() {
-        console.log(this.typeId() + " onDidEditNode")
+        this.debugLog(" onDidEditNode")
         this.scheduleSyncToStore()
     },
 })
@@ -100412,7 +101121,7 @@ BMStorableNode.newSubclassNamed("BMFieldSetNode").newSlots({
     fromJSON: function(json) {
         // TODO: read persistent keys
         if (json.fields) { 
-            Map.withJsMap(json.fields).forEach((key, value) => {
+            Map.withJsDict(json.fields).forEach((key, value) => {
                 const field = this.fieldNamed(key)
                 if (field) {
                     field.setValue(value)
@@ -100734,7 +101443,7 @@ BMStorableNode.newSubclassNamed("BMActionNode").newSlots({
                 console.warn("no method with this name")
             }
         } else {
-            console.log(this.typeId() + " can't perform action ", this.methodName(), " on ", this.target())
+            this.debugLog(" can't perform action ", this.methodName(), " on ", this.target())
         }
 	    
 	    return this
@@ -101028,7 +101737,7 @@ BMField.newSubclassNamed("BMImageWellField").newSlots({
     /*
     setValue: function(v) {
         BMField.setValue.apply(this, [v])
-        //console.log(this.typeId() + " setValue " + v)
+        //this.debugLog(" setValue " + v)
         //this.updateKey()
         return this
     },
@@ -102306,7 +103015,7 @@ DomStyledView.newSubclassNamed("NodeView").newSlots({
     },
 
     didUpdateNode: function () {
-        //console.log(this.typeId() + " didUpdateNode " + this.node().type())
+        //this.debugLog(" didUpdateNode " + this.node().type())
         this.scheduleSyncFromNode()
     },
     
@@ -102345,7 +103054,7 @@ DomStyledView.newSubclassNamed("NodeView").newSlots({
         */
 
         //NodeViewSynchronizer.addFromNode(this)    
-        //console.log(this.typeId() + " scheduleSyncFromNode")
+        //this.debugLog(" scheduleSyncFromNode")
         window.SyncScheduler.shared().scheduleTargetAndMethod(this, "syncFromNode")
         return this
     },
@@ -102378,7 +103087,7 @@ DomStyledView.newSubclassNamed("NodeView").newSlots({
     
     onVisibility: function() {
 	    DomStyledView.onVisibility.apply(this)
-	    //console.log(this.typeId() + ".onVisibility()")
+	    //this.debugLog(".onVisibility()")
 	    const node = this.node()
 	    if (node && node.nodeBecameVisible) {
 	        node.nodeBecameVisible()
@@ -102474,7 +103183,7 @@ NodeView.newSubclassNamed("ImageWellView").newSlots({
         */
         const accepts = (!this.isFull()) && (this.isEditable() !== false)
         /*
-        console.log(this.typeId() + ".acceptsDrop():")
+        this.debugLog(".acceptsDrop():")
         console.log("    isEditable: " + this.isEditable())
         console.log("        isFull: " + this.isFull())
         console.log("       accepts: " + accepts)
@@ -102501,7 +103210,7 @@ NodeView.newSubclassNamed("ImageWellView").newSlots({
             dataURL = ""
         }
         
-        //console.log(this.typeId() + ".setImageDataURL = ", dataURL)
+        //this.debugLog(".setImageDataURL = ", dataURL)
         this.removeAllSubviews()
 
         if (dataURL) {
@@ -102655,7 +103364,7 @@ NodeView.newSubclassNamed("ImageView").newSlots({
                 parentView.subviewRequestsClose(this)
             }
             */
-            //console.log(this.typeId() + ".close complete parentView = ", parentView)
+            //this.debugLog(".close complete parentView = ", parentView)
             parentView.scheduleSyncToNode()
         }, seconds * 1000)
     },
@@ -103007,7 +103716,7 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
     },
 
     prepareToSyncToView: function () {
-        //console.log(this.typeId() + " prepareToSyncToView")
+        //this.debugLog(" prepareToSyncToView")
         NodeView.prepareToSyncToView.apply(this)
         this.fitColumns()
         return this
@@ -103016,7 +103725,7 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
     // --- resizing ---------------------------------
 
     onDocumentResize: function (event) {
-        //console.log(this.typeId() + " onDocumentResize")
+        //this.debugLog(" onDocumentResize")
         this.fitColumns()
         if (this._selectedColumnGroup) {
             this.selectColumn(this._selectedColumnGroup.column())
@@ -103282,7 +103991,7 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
 
         const index = this.columnGroups().indexOf(selectedColumn.columnGroup())
 
-        //console.log(this.typeId() + " selectColumn " + selectedColumn.node().type() + " index " + index)
+        //this.debugLog(" selectColumn " + selectedColumn.node().type() + " index " + index)
 
         if (this.isSingleColumn()) {
             this.setColumnGroupCount(index + 2)
@@ -103377,7 +104086,7 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
     // --- fitting columns in browser ---------------------------------------------
 
     fitColumns: function () {
-        //console.log(this.typeId() + ".fitColumns()")
+        //this.debugLog(".fitColumns()")
         this.updateSingleColumnMode()
 
         const lastActiveCg = this.lastActiveColumnGroup()
@@ -103543,8 +104252,8 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
     },
 
     selectNodePath: function (nodePathArray) {
-        //console.log(this.typeId() + ".selectNodePath(" + nodePathArray.map((node) => { return node.title() }).join("/")  + ")")
-        //console.log(this.typeId() + ".selectNodePath() current path: " + this.nodePathString())
+        //this.debugLog(".selectNodePath(" + nodePathArray.map((node) => { return node.title() }).join("/")  + ")")
+        //this.debugLog(".selectNodePath() current path: " + this.nodePathString())
         this.setColumnGroupCount(1)
 
         let column = this.columns().first()
@@ -103554,7 +104263,7 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
             nodePathArray.removeFirst()
         }
 
-        //console.log(this.typeId() + ".selectNodePath() selecting path " + nodePathArray.map((node) => { return node.title() }).join("/") )
+        //this.debugLog(".selectNodePath() selecting path " + nodePathArray.map((node) => { return node.title() }).join("/") )
 
         nodePathArray.forEach((node) => {
             //console.log("clicking node " + (node ? node.title() : null))
@@ -103729,7 +104438,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     },
 
     applyStyles: function() {
-        //console.log(this.typeId() + ".applyStyles()")
+        //this.debugLog(".applyStyles()")
         NodeView.applyStyles.apply(this)
         return this
     },
@@ -103866,7 +104575,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         /*
         // follow it if we can 
         if (clickedRow.nodeRowLink()) {
-		    //console.log(this.typeId() + ".didClickRow(" + clickedRow.node().title() + ") selecting column ", this.node().title())
+		    //this.debugLog(".didClickRow(" + clickedRow.node().title() + ") selecting column ", this.node().title())
         //	this.browser().selectColumn(this)
         }
         */
@@ -103877,7 +104586,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
 
     selectThisColumn: function() {
         if (Type.isNull(this.browser())) {
-            console.log(this.typeId() + " selectThisColumn WARNING: this.browser() === null" )
+            this.debugLog(" selectThisColumn WARNING: this.browser() === null" )
             // TODO: find out why this happens
             return this
         }
@@ -104017,7 +104726,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     },
 	
     scrollToSubnode: function(aSubnode) {
-	    //console.log(this.typeId() + ".scrollToSubnode")
+	    //this.debugLog(".scrollToSubnode")
 	    const subview = this.subviewForNode(aSubnode)
 	    assert(subview)
 	    this.columnGroup().scrollView().setScrollTop(subview.offsetTop())
@@ -104130,7 +104839,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
 
     //onMetaLeft_d_KeyUp: function(event) {
     onAlternate_d_KeyUp: function(event) {
-        //console.log(this.typeId() + " onMetaLeft_d_KeyUp")
+        //this.debugLog(" onMetaLeft_d_KeyUp")
         this.duplicateSelectedRow()
         return false // stop propogation
     },
@@ -104150,7 +104859,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     /*
     onControl_i_KeyUp: function(event) {
         // forward method to selected row and resync next column 
-        console.log(this.typeId() + ".onControl_i_KeyUp()")
+        this.debugLog(".onControl_i_KeyUp()")
 
         const row = this.selectedRow()
         if (row) {
@@ -104171,7 +104880,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         if (row && canAdd) {
             const canCopy = !Type.isNullOrUndefined(row.node().copy)
             if (canCopy) { 
-                //console.log(this.typeId() + " duplicate selected row " + this.selectedRow().node().title())
+                //this.debugLog(" duplicate selected row " + this.selectedRow().node().title())
                 const subnode = row.node()
                 const newSubnode = subnode.copy()
                 const index = node.indexOfSubnode(subnode)
@@ -104250,7 +104959,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     // --- enter key begins row editing ---------------------------
 	
     onEnterKeyUp: function(event) {
-        //console.log(this.typeId() + ".onEnterKeyUp()")
+        //this.debugLog(".onEnterKeyUp()")
         
         if (!this.canNavigate()) { return }
 	
@@ -104299,12 +105008,12 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     // -----------------------------
     
     onTapComplete: function(aGesture) {
-        //console.log(this.typeId() + ".onTapComplete()")
+        //this.debugLog(".onTapComplete()")
         if (this.node()) {
             // add a subnode if tapping on empty area
             // make sure tap isn't on a row
             const p = aGesture.downPosition() // there may not be an up position on windows?
-            //console.log(this.typeId() + ".onTapComplete() ", aGesture.upEvent())
+            //this.debugLog(".onTapComplete() ", aGesture.upEvent())
             if (p.event().target === this.element()) {
                 if (this.node().canSelfAddSubnode()) {
                     this.node().add()
@@ -104378,7 +105087,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             this.setSelectedRowIndex(0)
         }
 
-        //console.log(this.typeId() + " focus")
+        //this.debugLog(" focus")
         return this
     },
     
@@ -104442,7 +105151,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     // editing
 
     onDoubleClick: function (event) {
-        //console.log(this.typeId() + ".onDoubleClick()")
+        //this.debugLog(".onDoubleClick()")
         return true
     },
 
@@ -104572,7 +105281,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     onPinchBegin: function(aGesture) {
         // TODO: move row specific code to BrowserRow
 
-        //console.log(this.typeId() + ".onPinchBegin()")
+        //this.debugLog(".onPinchBegin()")
 
         // - calc insert index
         const p = aGesture.beginCenterPosition()
@@ -104614,7 +105323,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             //newRow.scheduleSyncFromNode()
             //this._temporaryPinchSubnode.didUpdateNode()
         } else {
-            //console.log(this.typeId() + ".onPinchBegin() cancelling due to no add action")
+            //this.debugLog(".onPinchBegin() cancelling due to no add action")
 
             aGesture.cancel()
         }        
@@ -104626,7 +105335,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             if (s < 0) {
                 s = 0
             }
-            //console.log(this.typeId() + ".onPinchMove() s = ", s)
+            //this.debugLog(".onPinchMove() s = ", s)
             const minHeight = BrowserRow.defaultHeight()
             const newRow = this.subviewForNode(this._temporaryPinchSubnode)
             //newRow.setBackgroundColor("black")
@@ -104656,7 +105365,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     },
 
     onPinchComplete: function(aGesture) {
-        //console.log(this.typeId() + ".onPinchCompleted()")
+        //this.debugLog(".onPinchCompleted()")
         // if pinch is tall enough, keep new row
 
         if (this._temporaryPinchSubnode) {
@@ -104678,7 +105387,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
     },
 
     onPinchCancelled: function(aGesture) {
-        //console.log(this.typeId() + ".onPinchCancelled()")
+        //this.debugLog(".onPinchCancelled()")
         if (this._temporaryPinchSubnode) {
             this.node().removeSubnode(this._temporaryPinchSubnode)
             this._temporaryPinchSubnode = null
@@ -104945,7 +105654,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             //const file = event.dataTransfer.files[0];
             //console.log('onDrop ' + file.path);
             //this.onDataTransfer(event.dataTransfer)
-            console.log(this.typeId() + " got drop")
+            this.debugLog(" got drop")
             const data = event.dataTransfer.getData("text");
             console.log("drop text = ", data)
             let json = null
@@ -105046,14 +105755,14 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
     cache: function() {
         this._browser.cacheColumnGroup(this)
         //this.browser().cacheColumnGroup(this)
-        //console.log(this.typeId() + ".cache()")
+        //this.debugLog(".cache()")
         return this
     },
     
     uncache: function() {
         this._browser.uncacheColumnGroup(this)
         //this.browser().uncacheColumnGroup(this)
-        //console.log(this.typeId() + ".uncache()")
+        //this.debugLog(".uncache()")
         return this
     },
 
@@ -105277,7 +105986,7 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
     /*
     setMinAndMaxWidth: function(w) {
         Error.showCurrentStack()
-		console.log(this.typeId() + " / " + (this.node() ? this.node().type() : "?") + " nodeMinWidth = " + w)
+		this.debugLog(" / " + (this.node() ? this.node().type() : "?") + " nodeMinWidth = " + w)
         NodeView.setMinAndMaxWidth.apply(this, [w])
         return this
     },
@@ -105311,7 +106020,7 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
     
     setNode: function(aNode) {
         if (Type.isNull(aNode) && this.browser() && this.browser().hasCachedColumnGroup(this)) {
-            console.log(this.typeId() + " setNode(null)")
+            this.debugLog(" setNode(null)")
         }
 
         if (aNode === this._node) {
@@ -105474,7 +106183,7 @@ NodeView.newSubclassNamed("BrowserHeader").newSlots({
     },
 
     didHitBackArrow: function() {
-        //console.log(this.typeId() + " back")
+        //this.debugLog(" back")
         this.browser().previous()
     },
 	
@@ -105553,7 +106262,7 @@ NodeView.newSubclassNamed("BrowserHeaderAction").newSlots({
     },
 
     onTapComplete: function (aGesture) {
-        //console.log(this.typeId() + ".onTapComplete()")
+        //this.debugLog(".onTapComplete()")
         this.sendActionToTarget()
         return false
     },
@@ -105883,7 +106592,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
             const ns = this.node().nodeRowStyles()
             if (ns) {
                 if (debugStyles) {
-                    console.log(this.typeId() + " using nodeRowStyles")
+                    this.debugLog(" using nodeRowStyles")
                 }
                 return ns
             }
@@ -105892,7 +106601,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         const rs = this.rowStyles()
         if (rs) {
             if (debugStyles) {
-                console.log(this.typeId() + " using rowStyles")
+                this.debugLog(" using rowStyles")
             }
             return rs
         }
@@ -105901,13 +106610,13 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
             const cs = this.column().rowStyles()
             if (cs) {
                 if (debugStyles) {
-                    console.log(this.typeId() + " using column().rowStyles()")
+                    this.debugLog(" using column().rowStyles()")
                 }
                 return cs
             }
         } else if (debugStyles) {
             const title = this.node() ? this.node().title() : "no node yet"
-            console.log(this.typeId() + " (" + title + ") has no column yet")
+            this.debugLog(" (" + title + ") has no column yet")
         }
 
         return BMViewStyles.sharedWhiteOnBlackStyle()
@@ -106103,7 +106812,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
 
     justTap: function() {
         if (this.isSelectable()) {
-            //console.log(this.typeId() + ".requestSelection()")
+            //this.debugLog(".requestSelection()")
             this.requestSelection()
         }
     },
@@ -106113,7 +106822,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     },
 
     onTapComplete: function(aGesture) {
-        //console.log(this.typeId() + ".onTapComplete()")
+        //this.debugLog(".onTapComplete()")
         const keyModifiers = Keyboard.shared().modifierNamesForEvent(aGesture.upEvent());
         const hasThreeFingersDown = aGesture.numberOfFingersDown() === 3;
         const isAltTap = keyModifiers.contains("Alternate");
@@ -106121,7 +106830,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         /*
         if (keyModifiers.length) {
             const methodName = "just" + keyModifiers.join("") + "Tap"
-            //console.log(this.typeId() + " tap method " + methodName)
+            //this.debugLog(" tap method " + methodName)
             if (this[methodName]) {
                 this[methodName].apply(this)
             }
@@ -106142,13 +106851,13 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
 
 
     on_d_KeyDown: function(event) {
-        //console.log(this.typeId() + " on_d_KeyDown ", event._id)
+        //this.debugLog(" on_d_KeyDown ", event._id)
         this.setIsRegisteredForDrag(true)
         return false
     },
 
     on_d_KeyUp: function(event) {
-        //console.log(this.typeId() + " on_d_KeyUp ", event._id)
+        //this.debugLog(" on_d_KeyUp ", event._id)
         this.setIsRegisteredForDrag(false)
         return false
     },
@@ -106156,7 +106865,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     // ---
     
     justInspect: function(event) {
-        console.log(this.typeId() + ".justInspect()")
+        this.debugLog(".justInspect()")
         if (this.node().nodeCanInspect()) { 
             this.setIsInspecting(true)
             this.scheduleSyncToNode()
@@ -106172,7 +106881,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     },
 
     onSlideBegin: function() {
-        //console.log(this.typeId() + ".onSlideBegin()")
+        //this.debugLog(".onSlideBegin()")
         this.setSlideDeleteOffset(this.clientWidth() * 0.5);
         this.contentView().setTransition("all 0s") 
         this.setupSlide() 
@@ -106296,7 +107005,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     },
     
     onMouseLeave: function(event) {
-        //console.log(this.typeId() + " onMouseLeave")
+        //this.debugLog(" onMouseLeave")
         if (this.hasCloseButton()) {
             this.closeButtonView().setOpacity(this.restCloseButtonOpacity())
             this.closeButtonView().setTarget(null)
@@ -106353,17 +107062,17 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
 
     /*
     onOrientBegin: function(aGesture) {
-        console.log(this.typeId() + ".onOrientBegin()")
+        this.debugLog(".onOrientBegin()")
         aGesture.show()
     },
 
     onOrientMove: function(aGesture) {
-        console.log(this.typeId() + ".onOrientMove()")
+        this.debugLog(".onOrientMove()")
         aGesture.show()
     },
 
     onOrientComplete: function(aGesture) {
-        console.log(this.typeId() + ".onOrientComplete()")
+        this.debugLog(".onOrientComplete()")
         aGesture.show()
     },
     */
@@ -106378,7 +107087,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     
     requestSelection: function () {
         this.select()
-        //console.log(this.typeId() + " tellParentViews didClickRow")
+        //this.debugLog(" tellParentViews didClickRow")
         //this.tellParentViews("didClickRow", this)
         this.tellParentViews("requestSelectionOfRow", this)
 
@@ -106392,7 +107101,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
 	
     willAcceptFirstResponder: function() {
         NodeView.willAcceptFirstResponder.apply(this)
-	    //console.log(this.typeId() + ".willAcceptFirstResponder()")
+	    //this.debugLog(".willAcceptFirstResponder()")
         this.requestSelection()
         return this
     },
@@ -106419,7 +107128,7 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     */
     
     nodeRowLink: function() {
-        //console.log(this.typeId() + ".visibleSubnodes() isInspecting:" + this.isInspecting())
+        //this.debugLog(".visibleSubnodes() isInspecting:" + this.isInspecting())
         if (this.isInspecting()) {
             return  this.node().nodeInspector()
         }
@@ -106438,18 +107147,18 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
     // --- dragging source protocol ---
 
     hideForDrag: function() {
-        //console.log(this.typeId() + " hideForDrag")
+        //this.debugLog(" hideForDrag")
         //this.setDisplay("none")
         this.setVisibility("hidden")
-        //console.log(this.typeId() + " '" + this.node().title() + "'.hideForDrag() visibility: ", this.visibility())
+        //this.debugLog(" '" + this.node().title() + "'.hideForDrag() visibility: ", this.visibility())
         //this.setBorder("1px dashed blue")
     },
 
     unhideForDrag: function() {
-        //console.log(this.typeId() + " unhideForDrag")
+        //this.debugLog(" unhideForDrag")
         //this.setDisplay("block")
         this.setVisibility("visible")
-        //console.log(this.typeId() + " '" + this.node().title() + "'.unhideForDrag() visibility: ", this.visibility())
+        //this.debugLog(" '" + this.node().title() + "'.unhideForDrag() visibility: ", this.visibility())
         //this.setBorder(null)
     },
 
@@ -106773,7 +107482,7 @@ TextField.newSubclassNamed("BrowserRowTitle").newSlots({
 
     selectNextKeyView: function() {
         /*
-        console.log(this.typeId() + ".selectNextKeyView()")
+        this.debugLog(".selectNextKeyView()")
         const row = this.parentView().parentView();
         const nextRow = this.row().column().selectNextRow()
         */
@@ -106926,7 +107635,7 @@ NodeView.newSubclassNamed("ShelfView").newSlots({
     // --- clicks -----------------------
     
     didClickGroup: function(clickedGroup) {
-        //console.log(this.typeId() + ".didClickGroup(" + clickedGroup.typeId() + ")")
+        //this.debugLog(".didClickGroup(" + clickedGroup.typeId() + ")")
 
         this.scrollView().performOnSubviewsExcept("compact", clickedGroup)
         clickedGroup.uncompact()
@@ -107220,7 +107929,7 @@ NodeView.newSubclassNamed("ShelfItemGroupView").newSlots({
     },
     
     didClickItem: function(clickedItem) {
-        //console.log(this.typeId() + ".didClickItem(" + clickedItem.typeId() + ")")
+        //this.debugLog(".didClickItem(" + clickedItem.typeId() + ")")
         
         //this.scrollView().performOnSubviewsExcept("unselect", clickedItem)
 
@@ -107295,7 +108004,7 @@ NodeView.newSubclassNamed("ShelfItemGroupView").newSlots({
             if (!this.isAlwaysSelected()) {
                 this.unselectItems()
             }
-            // console.log(this.typeId() + ".compact()")
+            // this.debugLog(".compact()")
         }
         return this
     },
@@ -107426,7 +108135,7 @@ DomView.newSubclassNamed("ShelfFooterView").newSlots({
             if (!this.isAlwaysSelected()) {
                 this.unselectItems()
             }
-           // console.log(this.typeId() + ".compact()")
+           // this.debugLog(".compact()")
         }
         return this
     },
@@ -107564,7 +108273,7 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
     
     /*
     syncValueViewToNode: function() {
-        //console.log(this.typeId() + ".syncValueViewToNode " + this.node().type())
+        //this.debugLog(".syncValueViewToNode " + this.node().type())
 	    if (this.node().type() === "BMBooleanField" && this.valueView().type() !== "BooleanView") {
 	        //console.log("syncValueViewToNode setup bool view")
 	        const booleanView = BooleanView.clone()
@@ -107596,7 +108305,7 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
 
     syncFromNode: function () {
         BrowserFieldRow.syncFromNode.apply(this)
-        //console.log(this.typeId() + " syncFromNode")
+        //this.debugLog(" syncFromNode")
 		
         this.node().prepareToSyncToView()
         //this.syncValueViewToNode() // (lazy) set up the value view to match the field's type
@@ -107743,7 +108452,7 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
     */
     
     onEnterKeyUp: function(event) {
-        //console.log(this.typeId() + ".onEnterKeyUp()")
+        //this.debugLog(".onEnterKeyUp()")
         if(this.valueView().activate) {
             this.valueView().activate()
         }
@@ -107752,7 +108461,7 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
 
     setBackgroundColor: function(c) {
         /*
-        console.log(this.typeId() + ".setBackgroundColor ", c)
+        this.debugLog(".setBackgroundColor ", c)
         if (c !== "white") {
             console.log("not white")
         }
@@ -107934,7 +108643,7 @@ BMFieldRowView.newSubclassNamed("BMTextAreaFieldRowView").newSlots({
 	
     fillBottomOfColumnIfAvailable: function() {
         if (this.column().rows().last() === this) {
-            //console.log(this.typeId() + " update height")
+            //this.debugLog(" update height")
             this.setMinAndMaxHeightPercentage(100)
             this.setFlexGrow(100)
             this.setBorderBottom("0px")
@@ -108036,7 +108745,7 @@ BMFieldRowView.newSubclassNamed("BMImageWellFieldRowView").newSlots({
     },
     
     didUpdateImageWellView: function(anImageWell) {
-        //console.log(this.typeId() + ".didUpdateImageWellView()")
+        //this.debugLog(".didUpdateImageWellView()")
         this.scheduleSyncToNode() 
         return this
     },
@@ -108122,7 +108831,7 @@ BrowserTitledRow.newSubclassNamed("BMOptionNodeRowView").newSlots({
     /*
     select: function() {
         BrowserTitledRow.select.apply(this)
-        console.log(this.typeId() + + " " + this.node().title() + " picked ")
+        this.debugLog(+ " " + this.node().title() + " picked ")
         
         // will tell parent node which will ensure only one selected if needed
         //this.browser().previous()
@@ -108376,7 +109085,7 @@ BMNode.newSubclassNamed("BMFontResources").newSlots({
     },
 
     appDidInit: function() {
-        //console.log(this.typeId() + ".appDidInit()")
+        //this.debugLog(".appDidInit()")
         this.setupSubnodes()
         return this
     },
@@ -108527,15 +109236,15 @@ BMNode.newSubclassNamed("BMFont").newSlots({
 
     didLoad: function() {
         if (this.isDebugging()) {
-            console.log(this.typeId() + ".didLoad(" + this.name() + ") " + this.path())
-            //console.log(this.typeId() + ".didLoad('" + this.name() + "')")
+            this.debugLog(".didLoad(" + this.name() + ") " + this.path())
+            //this.debugLog(".didLoad('" + this.name() + "')")
         }
         return this
     },
 
     onLoadError: function(error) {
         if (this.isDebugging()) {
-            console.log(this.typeId() + ".onLoadError() ", error)
+            this.debugLog(".onLoadError() ", error)
         }
         return this
     },
@@ -108726,7 +109435,7 @@ DomView.newSubclassNamed("BMAudioPlayer").newSlots({
 
     onPlaying: function() {
         if (this.isDebugging()) {
-            console.log(this.typeId() + ".onPlaying() ")
+            this.debugLog(".onPlaying() ")
         }
         return this
     },
@@ -108754,7 +109463,7 @@ DomView.newSubclassNamed("BMAudioPlayer").newSlots({
             this.stop()
 
             if (this.isDebugging()) {
-                console.log(this.typeId() +  ".setPath:'" + aPath + "'")
+                this.debugLog( ".setPath:'" + aPath + "'")
             }
 
             const source = this.sourceElement()
@@ -108782,7 +109491,7 @@ DomView.newSubclassNamed("BMAudioPlayer").newSlots({
 
     load: function() {
         if (this.isDebugging()) {
-            console.log(this.typeId() +  ".load() '" + this.path() + "'")
+            this.debugLog( ".load() '" + this.path() + "'")
         }
         this.element().load()
         return this
@@ -108796,7 +109505,7 @@ DomView.newSubclassNamed("BMAudioPlayer").newSlots({
         }
 
         if (this.isDebugging()) {
-            console.log(this.typeId() +  ".play() '" + this.path() + "'")
+            this.debugLog( ".play() '" + this.path() + "'")
         }
 
         const promise = this.element().play()
@@ -108828,7 +109537,7 @@ DomView.newSubclassNamed("BMAudioPlayer").newSlots({
 
     stop: function() {
         if (this.isDebugging()) {
-            console.log(this.typeId() +  ".stop() '" + this.path() + "'")
+            this.debugLog( ".stop() '" + this.path() + "'")
         }
 
         this.pause();
@@ -108949,7 +109658,7 @@ BMNode.newSubclassNamed("BMURLImage").newSlots({
 
     loadDataURL: function() {
         if (this.isDebugging()) {
-            console.log(this.typeId() + ".loadDataURL() " + this.path())
+            this.debugLog(".loadDataURL() " + this.path())
         }
 
         const request = new XMLHttpRequest();
@@ -108963,7 +109672,7 @@ BMNode.newSubclassNamed("BMURLImage").newSlots({
     loadedRequest: function(request) {
 
         if (this.isDebugging()) {
-            console.log(this.typeId() + ".loadedRequest() ", request)
+            this.debugLog(".loadedRequest() ", request)
         }
 
         const fileReader = new FileReader();
@@ -108973,7 +109682,7 @@ BMNode.newSubclassNamed("BMURLImage").newSlots({
             this.setDataURL(dataURL);
 
             if (this.isDebugging()) {
-                console.log(this.typeId() + " setDataURL() ", dataURL)
+                this.debugLog(" setDataURL() ", dataURL)
             }
 
         };
@@ -109130,7 +109839,7 @@ BMFieldSetNode.newSubclassNamed("BMThemeClassState").newSlots({
     },
 
     didUpdateField: function(aField) {
-        console.log(this.typeId() + ".didUpdateField: " + aField.key() + ":", aField.value())
+        this.debugLog(".didUpdateField: " + aField.key() + ":", aField.value())
 
         if (aField.value()) { // dark mode
             BMThemeStyleSheet.shared().setDivClassNameAttributeValue(this.divClassName(), aField.key(), "#000")
@@ -109479,7 +110188,7 @@ BMStorableNode.newSubclassNamed("BMMessages").newSlots({
     },
 
     addSubnode: function(msg) {
-        //console.log(this.typeId() + " addSubnode " + msg.pid())
+        //this.debugLog(" addSubnode " + msg.pid())
         BMStorableNode.addSubnode.apply(this, [msg])
         this.notifyChange()
         return this
@@ -109746,7 +110455,7 @@ BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
         })
 		
         if (!result) {		
-		    console.log(this.typeId() + ".idWithPublicKeyString(" + publicKeyString + ") = ", result)
+		    this.debugLog(".idWithPublicKeyString(" + publicKeyString + ") = ", result)
 		    console.log("all ids: ", ids.map((id) => { return id.name() + ":" + id.publicKeyString() }))
 	    }
         return result
@@ -109815,18 +110524,18 @@ BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
     },
 
     didChangeIdentity: function() {
-        //console.log(this.typeId() + ".didChangeIdentity()")
+        //this.debugLog(".didChangeIdentity()")
         this.updateIdsBloomFilter()
     },
 		
     updateIdsBloomFilter: function() {
-        //console.log(this.typeId() + ".updateIdsBloomFilter()")
+        //this.debugLog(".updateIdsBloomFilter()")
         const oldFilter = this._idsBloomFilter
 	
         const ids = this.allIdentities()
 		
         /*
-		console.log(this.typeId() + ".updateIdsBloomFilter() with " + ids.length + " ids")
+		this.debugLog(".updateIdsBloomFilter() with " + ids.length + " ids")
 		console.log("   local ids:  " + this.localIdentities().subnodes().length)
 		console.log("   remote ids: " + this.allRemoteIdentities().length)
 		*/
@@ -109861,7 +110570,7 @@ BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
     },
 	
     didChangeIdsBloom: function() {
-        //console.log(this.typeId() + ".didChangeIdsBloom()")
+        //this.debugLog(".didChangeIdsBloom()")
         //this._didChangeIdsBloomeNote = NotificationCenter.shared().newNote().setSender(this.typeId()).setName("didChangeIdsBloom")
         this.servers().subnodes().forEach((server) => {
             server.reRequestPeerId() 
@@ -109869,7 +110578,7 @@ BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
     },
 	
     verifyIdsBloom: function() {
-        //console.log(this.typeId() + ".verifyIdsBloom: " + this.idsBloomFilter().serialized().sha256String().substring(0, 6) )
+        //this.debugLog(".verifyIdsBloom: " + this.idsBloomFilter().serialized().sha256String().substring(0, 6) )
 	    this.allIdentities().forEach((id) => {
             const k = id.publicKeyString()
             const doesMatch = this.idsBloomFilter().checkEntry(k)
@@ -109889,7 +110598,7 @@ BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
     },
 	
     hasIdentityMatchingBloomFilter: function(bloomFilter) {
-        //console.log(this.typeId() + ".hasIdentityMatchingBloomFilter: " + bloomFilter.serialized().sha256String().substring(0, 6) )
+        //this.debugLog(".hasIdentityMatchingBloomFilter: " + bloomFilter.serialized().sha256String().substring(0, 6) )
 	    const match = this.allIdentities().detect((id) => {
             const k = id.publicKeyString()
             const doesMatch = bloomFilter.checkEntry(k)
@@ -110261,7 +110970,7 @@ BMNode.newSubclassNamed("BMServerConnection").newSlots({
     },
 
     reconnect: function() {
-        //console.log(this.typeId() + ".reconnect()")
+        //this.debugLog(".reconnect()")
         this.close()
         return this;
     },
@@ -110296,7 +111005,7 @@ BMNode.newSubclassNamed("BMServerConnection").newSlots({
     showPeers: function() {
 	    this.remotePeers().showPeers()
 	    /*
-		console.log(this.typeId() + ".showPeers()")
+		this.debugLog(".showPeers()")
 		this.subnodes().forEach((peer) => {
 			console.log("    ", peer.hash())
 		})
@@ -110306,7 +111015,7 @@ BMNode.newSubclassNamed("BMServerConnection").newSlots({
     /*  
     log: function(s) {
         if (this.isDebugging()) {
-            console.log(this.typeId() + " " + s)
+            this.debugLog(" " + s)
         }
         return this
     },
@@ -110440,7 +111149,7 @@ BMNode.newSubclassNamed("BMServerConnection").newSlots({
     },
 
     setPeerIds: function(ids) {
-        //console.log(this.typeId() + ".setPeerIds(\n" + ids.join("\n") + "\n)")		
+        //this.debugLog(".setPeerIds(\n" + ids.join("\n") + "\n)")		
         ids.remove(this.peerId().toString())
         this.remotePeers().setPeerIds(ids)
         //this.connectToMatchingPeerIds()
@@ -110586,7 +111295,7 @@ BMFieldSetNode.newSubclassNamed("BMRServer").newSlots({
 
     didUpdateNode: function() {
         BMFieldSetNode.didUpdateNode.apply(this)
-        //console.log(this.typeId() + ".didUpdateNode()")
+        //this.debugLog(".didUpdateNode()")
         this.updateButtons()
         return this
     },
@@ -111243,14 +111952,14 @@ BMNode.newSubclassNamed("BMRemotePeers").newSlots({
     },
 
     showPeers: function() {
-        console.log(this.typeId() + ".showPeers()")
+        this.debugLog(".showPeers()")
         this.subnodes().forEach((peer) => {
             console.log("    ", peer.hash())
         })
     },
 
     setPeerIds: function(ids) {
-        //console.log(this.typeId() + ".setPeerIds(\n" + ids.join("\n") + "\n)")
+        //this.debugLog(".setPeerIds(\n" + ids.join("\n") + "\n)")
 				
         // remove peers not in ids
         this.subnodes().forEach((peer) => {
@@ -111803,7 +112512,7 @@ BMMessage.newSubclassNamed("BMObjectMessage").newSlots({
     // dict 
     
     setMsgDict: function(dict) {
-        //console.log(this.typeId() + " setMsgDict ", dict)
+        //this.debugLog(" setMsgDict ", dict)
         //this.setPow(dict.pow)
         //this.setSignature(dict.signature)
         this.setMsgType(dict.msgType)
@@ -111849,7 +112558,7 @@ BMMessage.newSubclassNamed("BMObjectMessage").newSlots({
     computeMsgHash: function() {
         let s = Object.toJsonStableString(this.theDictToHash())
         let hash = s.sha256String()
-        //console.log(this.typeId() + "\n    dict: ", s, "\n    computed hash: " + hash)
+        //this.debugLog("\n    dict: ", s, "\n    computed hash: " + hash)
         return hash
     },
 
@@ -112024,7 +112733,7 @@ BMFieldSetNode.newSubclassNamed("BMAppMessage").newSlots({
         obj.setReceiverId(this.receiverId())
         obj.setObjMsg(this.objMsg())
         obj.setDataDict(this.dataDict())
-        console.log(this.typeId() + " duplicated to " + obj.typeId())
+        this.debugLog(" duplicated to " + obj.typeId())
         return obj
     },
 
@@ -112075,7 +112784,7 @@ BMFieldSetNode.newSubclassNamed("BMAppMessage").newSlots({
         objMsg.makeTimeStampNow()
         objMsg.signWithSenderId(lid)
         if (objMsg.hasValidationErrors()) {
-            console.log(this.typeId() + ".sendToRemoteId() validationErrors:" + objMsg.hasValidationErrors().join(","))
+            this.debugLog(".sendToRemoteId() validationErrors:" + objMsg.hasValidationErrors().join(","))
         } else {
         	this.setObjMsg(objMsg)
             this.objMsg().send()
@@ -112109,7 +112818,7 @@ BMFieldSetNode.newSubclassNamed("BMAppMessage").newSlots({
             return null
         }
         
-        //console.log(this.typeId() + " fromDataDict() dataDict = ", dataDict)
+        //this.debugLog(" fromDataDict() dataDict = ", dataDict)
         return proto.clone().setDataDict(dataDict)
     },
 
@@ -112130,11 +112839,11 @@ BMFieldSetNode.newSubclassNamed("BMAppMessage").newSlots({
         objMsg.makeTimeStampNow()
         objMsg.signWithSenderId(lid)
         if (objMsg.hasValidationErrors()) {
-            console.log(this.typeId() + ".sendToRemoteId() validationErrors:" + objMsg.hasValidationErrors().join(","))
+            this.debugLog(".sendToRemoteId() validationErrors:" + objMsg.hasValidationErrors().join(","))
         } else {
         	this.setObjMsg(objMsg)
             this.objMsg().send()
-            console.log(this.typeId() + ".postFromSender() sent!")
+            this.debugLog(".postFromSender() sent!")
         }
         return this
     },
@@ -112386,12 +113095,12 @@ BMKeyPair.newSubclassNamed("BMLocalIdentity").newSlots({
 
     finalize: function() {
         BMKeyPair.finalize.apply(this)
-        //console.log(this.typeId() + ".finalize()")
+        //this.debugLog(".finalize()")
         NotificationCenter.shared().newNote().setSender(this).setName("didChangeIdentity").setInfo(this).post()
     },
 	
     didLoadFromStore: function() {
-        //console.log(this.typeId() + " didLoadFromStore")
+        //this.debugLog(" didLoadFromStore")
         BMKeyPair.didLoadFromStore.apply(this)
         this.profile().fieldNamed("publicKeyString").setValueIsEditable(false)
     },
@@ -112406,7 +113115,7 @@ BMKeyPair.newSubclassNamed("BMLocalIdentity").newSlots({
     }, 
  
     handleObjMsg: function(objMsg) {
-        //console.log(this.typeId() + " " + this.name() + " handleObjMsg ", objMsg)
+        //this.debugLog(" " + this.name() + " handleObjMsg ", objMsg)
         let senderId = this.remoteIdentities().idWithPublicKeyString(objMsg.senderPublicKeyString()) 
         let didHandle = false
 		
@@ -112665,7 +113374,7 @@ BMStorableNode.newSubclassNamed("BMRemoteIdentity").newSlots({
     didLoadFromStore: function() {
         BMStorableNode.didLoadFromStore.apply(this)
         //this.messages().setTitle("messages")
-        //console.log(this.typeId() + " didLoadFromStore")
+        //this.debugLog(" didLoadFromStore")
     },
     
     title: function () {
@@ -113056,7 +113765,7 @@ BMNode.newSubclassNamed("BMRegion").newSlots({
 
     prepareToAccess: function() {
         if(this._lazyChildrenDict != null) {
-            console.log(this.typeId() + " " + this.title() + " lazy load")
+            this.debugLog(" " + this.title() + " lazy load")
             let ld = this._lazyChildrenDict
             this._lazyChildrenDict = null
             this.addChildrenDicts(ld.children)
@@ -114021,7 +114730,7 @@ BMStorableNode.newSubclassNamed("BMContactLinks").newSlots({
         this.removeLinksWithNoContact()
         this.addLinkForEveryContact()
         this.sortSubnodes()
-        //console.log(this.typeId() + " updateIdentities contactLinks " + this.subnodes().length)
+        //this.debugLog(" updateIdentities contactLinks " + this.subnodes().length)
         return this
     },
 
@@ -114042,7 +114751,7 @@ BMStorableNode.newSubclassNamed("BMContactLinks").newSlots({
     removeLinksWithNoContact: function () {
         this.contactLinks().slice().forEach((link) => {
             if (!link.hasValidRemoteIdentity()) {
-                console.log(this.typeId() + " removing invalid link ", link.title())
+                this.debugLog(" removing invalid link ", link.title())
                 this.removeSubnode(link)
             }
         })
@@ -114183,7 +114892,7 @@ BMStorableNode.newSubclassNamed("BMChatThread").newSlots({
     hasValidRemoteIdentity: function() {
 	    const result = this.threads().chatTargetIds().detect((id) => { return id === this.remoteIdentity() })
 	    //const result = this.localIdentity().remoteIdentities().idWithPublicKeyString(this.remoteIdentity().publicKeyString()) 
-	    //console.log(this.typeId() + " " + this.remoteIdentity().title() + ".hasValidRemoteIdentity() = " + result)
+	    //this.debugLog(" " + this.remoteIdentity().title() + ".hasValidRemoteIdentity() = " + result)
 	    return result != null
     },
 	
@@ -114336,7 +115045,7 @@ BrowserTitledRow.newSubclassNamed("BMChatMessageRowView").newSlots({
 		
         const node = this.node()
         if (node) {
-            //console.log(this.typeId() + " updateSubviews node = " + node.typeId() + " content = ", this.node().content())
+            //this.debugLog(" updateSubviews node = " + node.typeId() + " content = ", this.node().content())
             this.titleView().setInnerHTML(node.title())
 		
             if (this.message().wasSentByMe()) {
@@ -114419,7 +115128,7 @@ BMStorableNode.newSubclassNamed("BMPostDrafts").newSlots({
     /*
 	scheduleSyncToStore: function() {
 		BMStorableNode.scheduleSyncToStore.apply(this)
-        console.log(this.typeId() + " scheduleSyncToStore")
+        this.debugLog(" scheduleSyncToStore")
 		return this
 	},
 	*/
@@ -114646,7 +115355,7 @@ BrowserRow.newSubclassNamed("BMPostDraftRowView").newSlots({
     // --- edit ---
 
     onDidEdit: function (changedView) {   
-        //console.log(this.typeId() + ".onDidEdit")
+        //this.debugLog(".onDidEdit")
         this.updateSubviews()
         this.scheduleSyncToNode()
         return true
@@ -115233,7 +115942,7 @@ BrowserRow.newSubclassNamed("BMPostMessageRowView").newSlots({
 
     /*
     onDidEdit: function (changedView) {
-        console.log(this.typeId() + ".onDidEdit")
+        this.debugLog(".onDidEdit")
         this.scheduleSyncToNode()
         return true
     },
@@ -115511,7 +116220,7 @@ BMStorableNode.newSubclassNamed("BMApps").newSlots({
     },
 
     addAppTypeIfMissing: function (appProto) {
-        //console.log(this.typeId() + ".addAppTypeIfMissing(" + appProto.type() + ")")
+        //this.debugLog(".addAppTypeIfMissing(" + appProto.type() + ")")
         if (this.hasAppType(appProto) === false) {
             this.addSubnode(appProto.clone())
         }
@@ -115793,7 +116502,7 @@ BMNode.newSubclassNamed("BMConnection").newSlots({
     },
 	
     onNetworkInformationChange: function() {
-        //console.log(this.typeId() + "Connection type changed from " + this.lastConnectionType() + " to " +  this.connectionType(), this.connection());	  
+        //this.debugLog("Connection type changed from " + this.lastConnectionType() + " to " +  this.connectionType(), this.connection());	  
 
         NotificationCenter.shared().newNote().setSender(this).setName("onNetworkInformationChange").post()
         

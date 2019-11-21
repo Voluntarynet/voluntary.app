@@ -189,7 +189,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
         this.sdb().asyncOpen(() => {
             this.onOpen()
-            this.show()
+            //this.show()
             //this.clear()
             
             if (callback) {
@@ -426,7 +426,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
             return null
         }
 
-        console.log("NodeStore.objectForPid(" + pid + ")")
+        //console.log("NodeStore.objectForPid(" + pid + ")")
 
         const activeObj = this.activeObjectsDict()[pid]
         if (activeObj) {
@@ -699,6 +699,9 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     },
 
     markPid: function (pid) {
+        if (pid === "null") {
+            return this
+        }
         //this.debugLog(() => "markPid(" + pid + ")")
         if (this._marked[pid] === true) {
             return false // already marked it
@@ -708,7 +711,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         const refPids = this.pidRefsFromPid(pid)
         this.debugLog(() => "markPid " + pid + " w refs " + JSON.stringify(refPids))
         refPids.forEach(refPid => this.markPid(refPid))
-        return true
+        return this
     },
 
     sweep: function () {

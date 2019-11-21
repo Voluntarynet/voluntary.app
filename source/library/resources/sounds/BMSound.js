@@ -45,7 +45,7 @@ BMNode.newSubclassNamed("BMSound").newSlots({
 
     prepareToAccess: function() {
         BMNode.prepareToAccess.apply(this)
-        this.play()
+        this.play() // not a good way to do this
     },
 
     //audio.src = 'data:audio/wav;base64,UklGR...;

@@ -79677,9 +79677,36 @@ Object.defineSlots(Object.prototype, {
         return this.associations()[k]
     },
 
+    associationAtPut: function(k, v) {
+        this.associations()[k] = v
+        return this
+    },
+
+    // ----
+
+    isMutator: function() {
+        return this.associationAt("_isMutator")
+    },
+
+    setIsMutator: function(v) {
+        assert(Type.isBoolean(v))
+        return this.associationAtPut("_isMutator", v)
+    },
+
+    mutatorMethodNamesSet: function() {
+        const names = new Set()
+        for (var k in this) {
+            const v = this[k]
+            if (Type.isFunction(v)) {
+                if (v.isMutator()) {
+                    names.add(k)
+                }
+            }
+        }
+        return names
+    },
+
 })
-
-
 
 "use strict"
 
@@ -79942,14 +79969,17 @@ Object.defineSlots(Array.prototype, {
     },
 
     removeFirst: function () {
+        // isMutator
         return this.shift();
     },
 
     removeLast: function () {
+        // isMutator
         return this.pop();
     },
 
     removeItems: function (elements) {
+        // isMutator
         elements.forEach(e => this.remove(e));
         return this;
     },
@@ -79960,6 +79990,7 @@ Object.defineSlots(Array.prototype, {
     },
 
     replace: function (obj, withObj) {
+        // isMutator
         const i = this.indexOf(obj);
         if (i !== -1) {
             this.removeAt(i);
@@ -79969,6 +80000,7 @@ Object.defineSlots(Array.prototype, {
     },
 
     swap: function (e1, e2) {
+        // isMutator
         const i1 = this.indexOf(e1);
         const i2 = this.indexOf(e2);
 
@@ -80363,6 +80395,7 @@ Object.defineSlots(Array.prototype, {
     },
     
     replaceOccurancesOfWith: function (oldValue, newValue) {
+        // isMutator
         for (let i = 0; i < this.length; i++) {
             if (this[i] === oldValue) {
                 this[i] = newValue;
@@ -80372,6 +80405,7 @@ Object.defineSlots(Array.prototype, {
     },
     
     removeOccurancesOf: function (e) {
+        // isMutator
         let i = this.indexOf(e);
         while (i !== -1) {
             this.removeAt(i);
@@ -80448,11 +80482,19 @@ Object.defineSlots(Array.prototype, {
 
     // --- equality ---
 
-    equals: function (array) {
+    equals: function (array /*, visited = new Set()*/) {
         // we want this to work on any object that confroms to the array protocol, 
         // not just objects of the same JS type
         // but how do we test for the [] accessor?
-    
+        // also, how do we deal with circular structures?
+
+        /*
+        if (visited.has(this)) {
+            return true // ?
+        }
+        visited.add(this)
+        */
+
         if(array.length === undefined) {
             return false;
         }
@@ -80476,13 +80518,14 @@ Object.defineSlots(Array.prototype, {
             */
     
             
-            if (a.equals && !a.equals(b)) {
+            if (a.equals && !a.equals(b, visited)) {
                 return false;
             } else if (a !== b) {
                 // Warning - two different object instances will never be equal: {x:20} !== {x:20}
                 return false;
             }
         }
+        
         return true;
     },
 
@@ -80502,24 +80545,15 @@ Object.defineSlots(Array.prototype, {
         return true;
     },
     
+    /*
     asImmutable: function() {
-        const obj = this.shallowCopy()
-        Object.freeze(obj)
-        return obj
+        // doesn't raise exception on write - they just fail silently - too dangerous to use
+        //const obj = this.shallowCopy()
+        //Object.freeze(obj)
+        //return obj
     },
+    */
 });
-
-/*
-// Hide method from for-in loops
-Object.defineProperty(Array.prototype, "equals", { 
-    writable: true,
-    enumerable: false,
-    configurable: true,
-    enumerable: false,
-    value: equalsArrayFunc,
-});
-*/
-
 
 
 "use strict"
@@ -81109,11 +81143,6 @@ Object.defineSlots(Set.prototype, {
         return _difference;
     },
 
-    asImmutable: function() {
-        const obj = this.shallowCopy()
-        Object.freeze(obj)
-        return obj
-    },
     
     /*
     //Examples
@@ -81275,6 +81304,25 @@ function assert(v) {
 
 function assertDefined(v) {
     return Error.assertDefined(v)
+}
+
+function assertThrows(func) {
+    assert(Type.isFunction(func))
+
+    let didThrow = false
+    try {
+        func()
+    } catch(e) {
+        didThrow = true
+    }
+
+    if (!didThrow) {
+        console.log("assertThrows(" + func.toString() + ") failed")
+    } else {
+        //console.log("assertThrows(" + func.toString() + ") passed")
+    }
+
+    assert(didThrow)
 }
 "use strict"
 
@@ -81722,15 +81770,6 @@ Proto.setSlots({
         */
         return result
     },
-
-    /*
-    Can't use this yet because freeze also make's it's prototype immutable
-    Will need to copy whole object and prototype chain before freezing.
-    
-    asImmutable: function() {
-        Object.freeze(this)
-    }
-    */
 
     debugLog: function (s) {
         if (this.isDebugging()) {
@@ -82693,6 +82732,15 @@ window.ideal.AtomicDictionary = class AtomicDictionary extends ideal.Dictionary 
         this.newSlot("keysAndValuesAreStrings", true) // private method
     }
 
+    open () {
+        this.setIsOpen(true)
+        return this
+    }
+
+    assertOpen () {
+        assert(this.isOpen())
+    }
+
     asyncOpen (callback) {
         this.setIsOpen(true)
         callback()
@@ -82756,7 +82804,7 @@ window.ideal.AtomicDictionary = class AtomicDictionary extends ideal.Dictionary 
     // extras 
 
     assertAccessible () {
-        //this.assertOpen()
+        this.assertOpen()
     }
 
     keys () {
@@ -82774,10 +82822,10 @@ window.ideal.AtomicDictionary = class AtomicDictionary extends ideal.Dictionary 
         return this.keys().length
     }	
 
-    asJson () {
+    asJsonString () {
         this.assertAccessible()
         // WARNING: this can be slow for a big store!
-        return JSON.stringify(this.jsDict())
+        return this.jsDict()
     }
 
     totalBytes () {
@@ -83517,12 +83565,10 @@ ideal.Proto.newSubclassNamed("ObservableProxy").newSlots({
 
     FirewallProxy
 
-    IMPORTANT: THIS IS UNTESTED AND STILL UNDER CONSTRUCTION
-
     Usefull for passing references to objects but limiting
     how it can be access e.g. which methods can be called on it.
 
-    An example usecase would be an immutable proxy for an array.
+    An example use case would be an immutable proxy for an array.
     So an object that owns the array can share an immutable proxy for it
     that doesn't allow other's to mutate it.
         
@@ -83553,19 +83599,8 @@ ObservableProxy.newSubclassNamed("FirewallProxy").newSlots({
 
     defaultProtectedMethods: function() {
         return new Set([
-
         ])
     },
-
-    /*
-    newProxyFor: function(aTarget) {
-        const handler = ObservableProxy.clone()
-        handler.setTarget(aTarget)
-        //const proxy = new Proxy(aTarget, handler)
-        this.setRevocable(Proxy.revocable(aTarget, handler))
-        return this.proxy()
-    },
-    */
 
     // need to hook GET so we return special functions to hook protected method calls
 
@@ -83573,12 +83608,19 @@ ObservableProxy.newSubclassNamed("FirewallProxy").newSlots({
         ObservableProxy.init.apply(this)
         this.setProtectedTraps(this.defaultProtectedTraps().shallowCopy())
         this.setProtectedMethods(this.defaultProtectedMethods().shallowCopy())
+        this.setIsDebugging(true)
         return this
     },
 
     postForTrap: function(trapName, propertyName) {
+        // instead of posting to observers, 
+        // just check if it's a protected trap and, if so, raise an exception
+        // TODO: abstract non posting behavior from ObservableProxy and 
+        // use as parent class of both ObservableProxy and Firewall
         if (this.protectedTraps().has(trapName)) {
-            throw new Error(this.typeId() + " blocked proxy trap " + trapName + " on property " + propertyName)
+            const msg = " blocked proxy trap '" + trapName + "' on property '" + propertyName + "'"
+            this.debugLog(msg)
+            throw new Error(this.typeId() + msg)
             return false
         }
 
@@ -83586,7 +83628,9 @@ ObservableProxy.newSubclassNamed("FirewallProxy").newSlots({
     },
 
     onProtectedMethodCall: function(propertyName, argsList) {
-        throw new Error(this.typeId() + " blocked method call " + propertyName + " ")
+        const msg = " blocked method call '" + propertyName + "' "
+        this.debugLog(msg)
+        throw new Error(this.typeId() + msg)
     },
 
     get: function(target, propertyName) {
@@ -83597,13 +83641,16 @@ ObservableProxy.newSubclassNamed("FirewallProxy").newSlots({
 
         this.postForTrap("get", propertyName)
 
-        const isFunction = Type.isFunction(target[propertyName])
+        // if it's a protected method, we'll return a special function
+        // that calls onProtectedMethodCall to raise an exception
         const isProtected = this.protectedMethods().has(propertyName)
-
-        if (isFunction && isProtected) {
-            const self = this
-            return () => {
-                return self.onProtectedMethodCall(propertyName, arguments)
+        if (isProtected) {
+            const isFunction = Type.isFunction(target[propertyName])
+            if (isFunction) {
+                const self = this
+                return () => {
+                    return self.onProtectedMethodCall(propertyName, arguments)
+                }
             }
         }
 
@@ -83611,15 +83658,134 @@ ObservableProxy.newSubclassNamed("FirewallProxy").newSlots({
     },
 
     selfTest: function() {
+        // test array
         const array = ["a", "b", "c"]
-        const arrayFwProxy = FirewallProxy.newProxyFor(array)
-        arrayFwProxy.observable().setProtectedMethods(new Set(["atPut"]))
-        //arrayFwProxy.observable().setProtectedTraps(new Set([...]))
-        arrayFwProxy.atPut("a", "foo")
+        const ap = array.asReadOnly()
+        assertThrows(() => ap.atPut(0, "foo"))
+        assertThrows(() => ap[0] = "bar")
+        assertThrows(() => ap.pop())
+        assertThrows(() => ap.reverse())
+        assertThrows(() => ap.shift())
+        assertThrows(() => ap.sort())
+
+        // test set
+        const set = new Set(["foo", "bar"])
+        const sp = set.asReadOnly()
+        assertThrows(() => sp.add(1))
+        assertThrows(() => sp.clear())
+        assertThrows(() => sp.delete("foo"))
+
+        // test map
+        const map = new Map([ ["foo", 1], ["bar", 2] ])
+        const mp = set.asReadOnly()
+        assertThrows(() => mp.clear())
+        assertThrows(() => mp.delete("foo"))
+        assertThrows(() => mp.set("foo", 2))
+
+        // test date
+        const date = new Date()
+        const dp = date.asReadOnly()
+        assertThrows(() => dp.setYear(1999))
+
+        console.log(this.type() + " - self test passed")
     },
 })
 
-FirewallProxy.selfTest()
+
+// ------------------------------------------------------------------
+// Use FirewallProxy to implement asReadOnly methods on basic types
+// ------------------------------------------------------------------
+
+Object.defineSlots(Object.prototype, {
+    
+    mutatorMethodNamesSet: function() {
+        return new Set([
+            "__defineGetter__",  
+            "__defineSetter__",
+        ])
+    },
+
+})
+
+Object.defineSlots(Set.prototype, {
+    
+    mutatorMethodNamesSet: function() {
+        return new Set([
+            "add",
+            "clear",
+            "delete"
+        ])
+    },
+
+})
+
+Object.defineSlots(Map.prototype, {
+
+    mutatorMethodNamesSet: function() {
+        return new Set([
+            "clear",
+            "delete",
+            "set",
+        ])
+    },
+
+})
+
+Object.defineSlots(Array.prototype, {
+
+    mutatorMethodNamesSet: function() {
+        return new Set([
+            "copyWithin",
+            "pop",
+            "push",
+            "reverse",
+            "shift",
+            "sort",
+            "splice",
+            "unshift"
+        ])
+    },
+
+})
+
+Object.defineSlots(Date.prototype, {
+    
+    mutatorMethodNamesSet: function() {
+        return new Set([
+            "setDate",
+            "setFullYear",
+            "setHours",
+            "setMilliseconds",
+            "setMinutes",
+            "setMonth",
+            "setSeconds",
+            "setTime",
+            "setUTCDate",
+            "setUTCFullYear",
+            "setUTCHours",
+            "setUTCMilliseconds",
+            "setUTCMinutes",
+            "setUTCMonth",
+            "setUTCSeconds",
+            "setYear",
+        ])
+    },
+
+})
+
+Object.defineSlots(Object.prototype, {
+
+    asReadOnly: function() {
+        const obj = FirewallProxy.newProxyFor(this)
+        obj.observable().setProtectedMethods(this.mutatorMethodNamesSet())
+        return obj
+    },
+
+})
+
+
+//FirewallProxy.selfTest()
+
 "use strict"
 
 ResourceLoader.pushRelativePaths([
@@ -97527,7 +97693,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     },
 
     subnodeCount: function() {
-        return this.subnodes().length
+        return this._subnodes.length
     },
 
     hasSubnodes: function() {
@@ -97684,7 +97850,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     },
     
     removeAllSubnodes: function() {
-	    if (this.subnodes().length) {
+	    if (this.subnodeCount()) {
     		this.subnodes().slice().forEach((subnode) => {
     			this.justRemoveSubnode(subnode)
     		})
@@ -97987,24 +98153,18 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     },
 	
     firstSubnodeOfType: function(aProto) {
-        this.prepareToAccess(); // put guard on subnodes instead?
-
         return this.subnodes().detect(function (subnode) {
             return subnode.type() === aProto.type()
         })
     },
 
     firstSubnodeWithSubtitle: function(aString) {
-        this.prepareToAccess(); // put guard on subnodes instead?
-
         return this.subnodes().detect(function (subnode) {
             return subnode.subtitle() === aString
         })
     },
         
     firstSubnodeWithTitle: function(aString) {
-        this.prepareToAccess(); // put guard on subnodes instead?
-
         return this.subnodes().detect(function (subnode) {
             return subnode.title() === aString
         })
@@ -98022,8 +98182,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     // --- subnodes -----------------------------
     
     subnodesCount: function() {
-        this.prepareToAccess()
-        return this._subnodes.length
+        return this.subnodes().length
     },
     
     setSubnodes: function(subnodes) {
@@ -98300,10 +98459,491 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
 "use strict"
 
 ResourceLoader.pushRelativePaths([
+    "BMStorableNode.js",
+    "BMStoredDatedSetNode.js",
     "newstore/_imports.js",
     "inspectors/_imports.js",
     "NodeStore.js",
 ])
+
+"use strict"
+
+/*
+
+    BMStorableNode 
+    
+*/
+
+BMNode.newSubclassNamed("BMStorableNode").newSlots({
+    shouldStore: false,
+    storedSlots: null, // dict
+    shouldStoreSubnodes: true,
+    //loadsUnionOfChildren: false,
+    isUnserializing: false,
+    doesLazyLoadChildren: true,
+}).setSlots({
+    init: function () {
+        BMNode.init.apply(this)
+        this.setStoredSlots({})
+        this.scheduleSyncToStore()
+        this.addStoredSlot("canDelete")  // TODO: move elsewhere
+    },
+    
+    defaultStore: function() {
+        if (this._nodeStore) {
+            return this._nodeStore
+        }
+        return NodeStore.shared()
+    },
+
+    // --- overrides from parent class ---
+    // hook this to schedules writes when subnode list is changed
+
+    didChangeSubnodeList: function() {
+        BMNode.didChangeSubnodeList.apply(this)
+        if (this.shouldStoreSubnodes()) {
+            this.scheduleSyncToStore()
+        }
+        return this
+    },
+
+    // -----------------------------------------------
+    // persistence id - "pid"
+    // -----------------------------------------------
+
+    instanceWithPidFromStore: function (pid, aStore = this.defaultStore()) { // proto method
+        //assert(pid[0] === "_")
+        // replace rootInstanceWithPidForProto with this method?
+
+        if (aStore.hasObjectForPid(pid)) {
+            return aStore.objectForPid(pid)
+        }
+
+        const obj = this.clone().setPid(pid)
+        aStore.addActiveObject(this)
+        return obj
+    },
+    
+    setPid: function(aPid, aStore = this.defaultStore()) {
+        this.setPuuid(aPid)
+        return this
+    },
+
+    // --------------------------
+    
+
+    // --- add / remove stored slots ---
+    
+    initStoredSubnodeSlotWithProto: function(name, proto) {
+        const obj = proto.clone()
+        this.newSlot(name, obj)
+        this.justAddSubnode(obj)
+        this.addStoredSlot(name)
+        return this
+    },
+    
+    addStoredSlots: function(slotNames) {
+        slotNames.forEach(k => this.addStoredSlot(k))
+        return this
+    },
+    
+    addStoredSlot: function(slotName) {
+        this.storedSlots()[slotName] = true
+        // Note: BMStorableNode hooks didUpdateSlot() to call scheduleSyncToStore on updates. 
+        return this
+    },
+    
+    removeStoredSlot: function(slotName) {
+        delete this.storedSlots()[slotName]
+        return this
+    },
+
+    // writing object to store
+
+    nodeDict: function (aStore = this.defaultStore()) { 
+        const dict = this.nodeDictForProperties()
+        
+        if (this.subnodeCount() && this.shouldStoreSubnodes()) {
+            dict.children = this.subnodePids(aStore)
+        }
+        
+        return dict
+    },
+
+    getStoreSlotValue: function(k) {
+        let v = undefined
+
+        if (k.beginsWith("_")) {
+            v = this[k]
+        } else {
+            if(!Type.isFunction(this[k])) {
+                console.warn("WARNING: " + this.type() + "." + k + "() not a method")
+            }
+
+            try {
+                v = this[k].apply(this)
+            } catch(error) {
+                console.warn("WARNING: " + this.type() + "." + k + "() exception calling method")
+            }
+        }
+
+        return v
+    },
+
+
+    nodeDictForProperties: function (aStore = this.defaultStore()) {
+        const dict = {}
+        dict.type = this.type()
+ 
+        //this.debugLog(" storedSlots = " + JSON.stringify(this.storedSlots()))
+       
+        Object.keys(this.storedSlots()).forEach((k) => {
+            const v = this.getStoreSlotValue(k)
+            dict[k] = aStore.refValueIfNeeded(v)
+        })
+        
+        return dict
+    },
+
+ 
+    // reading object from store
+   
+    setNodeDict: function (aDict, aStore = this.defaultStore()) { 
+	    //BMNode.setNodeDict.apply(this, [aDict])
+        // TODO: wrap in try {}
+        this.setIsUnserializing(true) 
+        this.setNodeDictForProperties(aDict, aStore)
+        this.setNodeDictForChildren(aDict, aStore)
+        this.didLoadFromStore()
+        this.setIsUnserializing(false) 
+        return this
+    },
+
+
+    setStoreSlotValue: function(k, value, aStore = this.defaultStore()) {
+        if (k !== "children" && k !== "type") { // not needed with new format
+            const v = aStore.unrefValueIfNeeded(value)
+            
+            if (k.beginsWith("_")) {
+                this[k] = v
+            } else {
+                const setter = this.setterNameForSlot(k)
+                if (this[setter]) {
+                    this[setter].apply(this, [v])
+                } else {
+                    console.error("WARNING: " + this.type() + "." + setter + "(", v , ") not found - dict is: " , aDict) //, JSON.stringify(aDict))
+                    return false
+                }
+            }
+        }
+        return true
+    },
+    
+    setNodeDictForProperties: function (aDict, aStore = this.defaultStore()) {
+        let hadMissingSetter = false 
+        Object.keys(aDict).forEach((k) => {
+            if(!this.setStoreSlotValue(k, aDict[k], aStore)) {
+                hadMissingSetter = true
+            }
+        })
+   
+        if (hadMissingSetter && !aStore.isReadyOnly()) {
+            this.scheduleSyncToStore()
+        }
+		
+        return this
+    },
+
+    setNodeDictForChildren: function (aDict, aStore = this.defaultStore()) {
+        let newPids = aDict.children
+        if (newPids) {
+            /*
+            if (this.loadsUnionOfChildren()) {
+                throw new Error("loadsUnionOfChildren") // checking if this is being used
+                newPids = this.subnodePids().union(newPids)
+            }
+            */
+            
+            this.setSubnodePids(newPids, aStore)
+        }
+        return this
+    },
+    
+    // --- udpates ---
+	
+    scheduleLoadFinalize: function() {
+        window.SyncScheduler.shared().scheduleTargetAndMethod(this, "loadFinalize")
+    },
+    
+    
+    loadFinalize: function() {
+        // called after all objects loaded within this event cycle
+    },
+	
+    didLoadFromStore: function() {
+        //this.debugLog(" didLoadFromStore in BMStorableNode")
+        // chance to finish any unserializing this particular instance
+        // also see: loadFinalize
+		
+        //this.checkForStoredSlotsWithoutPids()
+    },
+
+    scheduleSyncToStore: function() {
+        //const typeId = this.typeId()
+        const shouldStore = this.shouldStore()
+        const isUnserializing = this.isUnserializing()
+
+        if (shouldStore && !isUnserializing && this.isFinalized()) {
+            this.defaultStore().addDirtyObject(this)
+            //Broadcaster.shared().broadcastNameAndArgument("didChangeStoredSlot", this)
+        }
+
+        return this
+    },
+	
+    didUpdateSlot: function(slotName, oldValue, newValue) {
+	    if (!this._storedSlots || !this.shouldStore()) {
+	        // looks like StorableNode hasn't initialized yet
+	        return this
+	    }
+	    
+        // check so we don't mark dirty while loading
+        // and use private slots directly for performance
+        if (slotName in this._storedSlots) { 
+            //this.debugLog(".didUpdateSlot(" + slotName + ",...) -> scheduleSyncToStore")
+            this.scheduleSyncToStore()
+        }
+		
+        if (newValue != null && this._subnodes.includes(oldValue)) { // TODO: add a switch for this feature
+            newValue.setParentNode(this)
+            this.subnodes().replaceOccurancesOfWith(oldValue, newValue)
+            //this.debugLog(" this.subnodes().replaceOccurancesOfWith(", oldValue, ",", newValue, ")")
+        }
+    },
+	
+    // subnodes
+    
+    subnodeCount: function() {
+        if (this._lazySubnodePids) {
+            return this._lazySubnodePids.length
+        }
+        return this._subnodes.length
+    },
+
+    subnodePids: function( aStore = this.defaultStore()) {
+        const storableSubnodes = this.subnodes().filter(sn => sn.shouldStore())
+        const pids = storableSubnodes.map(sn => { 
+            aStore.willRefObject(sn)
+            return sn.pid()
+        })
+        return pids
+    },
+
+    prepareToAccess: function(aStore = this.defaultStore()) {
+        BMNode.prepareToAccess.apply(this)
+        if (this._lazySubnodePids) {
+            //console.log(this.typeId() + " prepareToAccess")
+            this.loadLazyPids()
+            this._lazySubnodePids = null
+        }
+        return this
+    },
+
+    loadLazyPids: function() {
+        this.justSetSubnodePids(this._lazySubnodePids)
+        return this
+    },
+
+    setSubnodePids: function(pids, aStore = this.defaultStore()) {
+        if (this.doesLazyLoadChildren()) {
+            this._lazySubnodePids = pids
+        } else {
+            this.justSetSubnodePids(pids)
+        }
+        return this
+    },
+    
+    justSetSubnodePids: function(pids, aStore = this.defaultStore()) {
+        const subnodes = pids.map((pid) => {
+            return aStore.objectForPid(pid)
+        })
+        this.setSubnodes(subnodes)
+        return this
+    },
+    
+    /*
+    pidRefsFromNodeDict: function(nodeDict) {
+        const pids = []
+
+        if (nodeDict) {
+            // property pids
+            Object.keys(nodeDict).forEach((k) => {
+                const v = nodeDict[k]
+                const childPid = this.pidIfRef(v)
+                if (childPid) {
+                    pids.push(childPid);
+                }
+            })
+            
+            // child pids
+            if (nodeDict.children) {
+                nodeDict.children.forEach(function(childPid) {
+                    pids.push(childPid)
+                })
+            }          
+        }
+        
+        return pids
+    },
+    */
+
+    nodePidRefsFromNodeDict: function(nodeDict) {
+        const pids = []
+
+        if (nodeDict) {
+            // property pids
+            Object.keys(nodeDict).forEach((k) => {
+                const v = nodeDict[k]
+                const childPid = this.defaultStore().pidIfRef(v)
+                if (childPid) {
+                    pids.push(childPid);
+                }
+            })
+            
+            // child pids
+            if (nodeDict.children) {
+                nodeDict.children.forEach(function(childPid) {
+                    pids.push(childPid)
+                })
+            }          
+        }
+        
+        return pids
+    },
+
+    // ----------------------------------------
+    // new store system
+    // ----------------------------------------
+
+    /*
+    recordForStore: function(aStore) { // should only be called by Store
+        const dict = {}
+
+        Object.keys(this.storedSlots()).forEach((k) => {
+            const v = this.getStoreSlotValue(k)
+            dict[k] = aStore.refValue(v)
+        })
+
+        return {
+            type: this.type(), 
+            dict: dict, 
+        }
+    },
+
+    instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store    
+        const proto = window[aRecord.type]
+        const obj = proto.clone()
+        const dict = aRecord.dict
+
+        Object.keys(aDict).forEach((k) => {
+            if(!this.setStoreSlotValue(k, aDict[k], aStore)) {
+                // slot was missing, so store it again without it
+                if (!aStore.isReadyOnly()) {
+                    this.scheduleSyncToStore()
+                }
+            }
+        })
+
+        return obj
+    },
+    */
+
+})
+
+
+"use strict"
+
+/*
+
+    BMStoredDatedSetNode
+
+*/
+
+BMStorableNode.newSubclassNamed("BMStoredDatedSetNode").newSlots({
+    maxAgeInSeconds: 30*24*60*60,
+    autoCheckPeriod: 1*60*60,
+    dict: null,
+}).setSlots({
+    init: function () {
+        BMStorableNode.init.apply(this)
+        this.setShouldStore(true)
+        this.setShouldStoreSubnodes(false)
+		
+        this.setDict({})
+        this.addStoredSlot("dict", "autoCheckPeriod", "maxAgeInSeconds")
+
+        //this.setNoteIsSubnodeCount(true)
+    },
+    
+    setAutoCheckPeriod: function(seconds) {
+        if (seconds && this._autoCheckPeriod !== seconds) {
+            this._autoCheckPeriod = seconds
+            this.autoCheck()
+        }
+    },
+    
+    autoCheck: function() {
+        this.deleteExpiredKeys()
+        setTimeout(() => { this.autoCheck() }, this.autoCheckPeriod()*1000)
+    },
+    
+    didLoadFromStore: function() {
+        BMStorableNode.didLoadFromStore.apply(this)
+        this.deleteExpiredKeys()
+    },
+
+    addKey: function(h) {
+        if (!this.dict()[h]) {
+            this.dict()[h] = Date.now()
+            this.scheduleSyncToStore()
+        }
+        return this
+    },
+    
+    hasKey: function(h) {
+        return this.dict().hasOwnProperty(h)
+    },
+    
+    removeKey: function(h) {
+        if (this.dict()[h]) {
+            delete this.dict()[h]
+            this.scheduleSyncToStore()
+        }
+        return this
+    },
+    
+    ageInSecondsOfKey: function(h) {
+        if (this.hasKey(h)) {
+            const ageInSeconds = Date.now() - this.dict()[h]
+            return ageInSeconds
+        }
+        
+        return null
+    },
+
+    deleteExpiredKeys: function() {
+        const max = this.maxAgeInSeconds()
+        const keys = Object.keys(this.dict())
+        
+        keys.forEach((k) => {
+            if (this.ageInSecondsOfKey(k) > max) {
+                this.removeKey(k)
+            }
+        })
+
+        return this
+    },
+})
 
 "use strict"
 
@@ -98395,31 +99035,39 @@ Object.defineSlots(BMNode, {
 })
 "use strict"
 
-/*
 Object.defineSlots(BMStorableNode, {
 
     recordForStore: function(aStore) { // should only be called by Store
+        const aRecord = {
+            type: this.type(), 
+            slots: [], 
+        }
         
-        const dict = {}
-
         Object.keys(this.storedSlots()).forEach((k) => {
             const v = this.getStoreSlotValue(k)
-            dict[k] = aStore.refValue(v)
+            aRecord.slots.push([k, aStore.refValue(v)])
         })
 
-        return {
-            type: this.type(), 
-            dict: dict, 
-        }
+        aRecord.children = this.subnodePids(aStore)
+
+        return aRecord
     },
 
     instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store    
         const proto = window[aRecord.type]
         const obj = proto.clone()
-        const dict = aRecord.dict
+        obj.loadFromRecord(aRecord, aStore)
+        return obj
+    },
 
-        Object.keys(aDict).forEach((k) => {
-            if(!this.setStoreSlotValue(k, aDict[k], aStore)) {
+    loadFromRecord: function(aRecord, aStore) {
+        this.setIsUnserializing(true) 
+        const slots = aRecord.slots
+
+        slots.forEach((entry) => {
+            const k = entry[0]
+            const v = entry[1]
+            if(!this.setStoreSlotValue(k, v, aStore)) {
                 // slot was missing, so store it again without it
                 if (!aStore.isReadyOnly()) {
                     this.scheduleSyncToStore()
@@ -98427,10 +99075,16 @@ Object.defineSlots(BMStorableNode, {
             }
         })
 
-        return obj
+        this.setSubnodePids(aRecord.children, aStore) // only calls aStore.objectForPid
+
+        this.didLoadFromStore()
+        this.scheduleLoadFinalize()
+
+        this.setIsUnserializing(false) 
+        return this
     },
 })
-*/
+
 "use strict"
 
 ResourceLoader.pushRelativePaths([
@@ -98818,41 +99472,85 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
     dirtyObjects: null, // dict 
     lastSyncTime: null, // WARNING: vulnerable to system time changes
     //isReadOnly: true,
-    marked: null, // Set of puuids
+    markedSet: null, // Set of puuids
 }).setSlots({
     init: function() {
         ideal.Proto.init.apply(this)
-        this.setRootObject(null)
         this.setRecordsDict(ideal.AtomicDictionary.clone())
         this.setActiveObjects({})
         this.setDirtyObjects({})
         this.setLastSyncTime(null)
-        this.setMarked(null)
+        this.setMarkedSet(null)
+
         return this
+    },
+
+    clearCache: function() {
+        this.setActiveObjects({})
+        this.setDirtyObjects({})
+        this.setRootObject(this.objectForPid(this.rootObject().puuid()))
+        return this
+    },
+
+    // --- open ---
+
+    open: function() {
+        assert(this.recordsDict().open)
+        this.recordsDict().open()
+        this.onRecordsDictOpen()
+        return this
+    },
+
+    asyncOpen: function() {
+        assert(this.recordsDict().asyncOpen)
+        this.recordsDict().asyncOpen(() => this.onRecordsDictOpen())
+        return this
+    },
+
+    onRecordsDictOpen: function() {
+        this.setupRoot()
+    },
+
+    // --- root ---
+
+    rootKey: function() {
+        return "root"
+    },
+
+    setupRoot: function() {
+        const rk = this.rootKey()
+        if (!this._rootObject) {
+            if (this.recordsDict().hasKey(rk)) {
+                this.setRootObject(this.objectForPid(rk))
+            } else {
+                const obj = {}
+                obj.setPuuid(rk)
+                this._rootObject = obj
+                this.addActiveObject(obj)
+                this.addDirtyObject(obj)
+            }
+        }
+        return this._rootObject
     },
 
     setRootObject: function(obj) {
-        if (this._rootObject !== obj) {
-            this._rootObject = obj
-            this.addActiveObject(obj)
-            this.addDirtyObject(obj) // skip when reading it from records?
+        if (this._rootObject) {
+            throw new Error("can't change root object")
         }
+        
+        assert(!this.recordsDict().hasKey(obj.puuid()))
+        assert(!this.activeObjects().hasOwnProperty(obj.puuid()))
+        assert(!this.dirtyObjects().hasOwnProperty(obj.puuid()))
+
+        obj.setPuuid(this.rootKey())
+        this._rootObject = obj
+        this.addActiveObject(obj)
+        this.addDirtyObject(obj)
+        
         return this
     },
 
-    readRoot: function() {
-        const recordsDict = this.recordsDict()
-        const rootKey = "root"
-        // do we want this? What if object store is for copy?
-        if (!recordsDict.hasKey(rootKey)) {  
-            const rootObj = {}
-            rootObj.setPuuid(rootKey)
-            recordsDict.begin()
-            recordsDict.atPut(rootKey, rootObj)
-            recordsDict.commit()
-        }
-        return recordsDict.at(rootKey)
-    },
+    // ---  ---
 
     asJson: function() {
         return this.recordsDict().asJson()
@@ -98863,9 +99561,22 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         return this
     },
 
+    // --- active and dirty objects ---
+
     hasActiveObject: function(anObject) {
         const puuid = anObject.puuid()
         return this.activeObjects().hasOwnProperty(puuid)
+    },
+    
+    addActiveObject: function(anObject) {
+        if (!this.hasActiveObject(anObject)) {
+            this.addDirtyObject(anObject) // only do this during ref creation?
+        }
+        this.activeObjects()[anObject.puuid()] = anObject
+    },
+
+    hasDirtyObjects: function() {
+        return Object.keys(this.dirtyObjects()).length !== 0
     },
 
     addDirtyObject: function(anObject) {
@@ -98874,12 +99585,7 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         return this
     },
 
-    addActiveObject: function(anObject) {
-        if (!this.hasActiveObject(anObject)) {
-            this.addDirtyObject(anObject) // only do this during ref creation?
-        }
-        this.activeObjects()[anObject.puuid()] = anObject
-    },
+    // --- storing ---
 
     atomicallyStoreDirtyObjects: function() {
         this.recordsDict().begin()
@@ -98921,6 +99627,8 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         return totalStoreCount
     },
 
+    // --- reading ---
+
     objectForRecord: function(aRecord) { // private
         const aClass = window[aRecord.type]
         const obj = aClass.instanceFromRecordInStore(aRecord, this)
@@ -98939,6 +99647,12 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
             return obj
         }
         return this.objectForRecord(this.recordForPid(puuid))
+    },
+
+    // --- references ---
+
+    unrefValueIfNeeded: function(v) {
+        return this.unrefValue(v)
     },
 
     unrefValue: function(v) {
@@ -98972,7 +99686,7 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         return aRecord
     },
 
-    // write a record
+    // write an object
 
     storeObject: function(obj) {
         const puuid = obj.puuid()
@@ -98981,20 +99695,7 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         return this
     },
 
-    // --- test ----------------------------
-
-    publicStoreObject: function(obj) {
-        this.addActiveObject(obj)
-        this.addDirtyObject(obj)
-        this.atomicallyStoreDirtyObjects()
-        return this
-    },
-
     // -------------------------------------
-
-    hasDirtyObjects: function() {
-        return Object.keys(this.dirtyObjects()).length !== 0
-    },
 
     flushIfNeeded: function () {
         if (this.hasDirtyObjects()) {
@@ -99011,18 +99712,18 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         this.flushIfNeeded()
 
         this.debugLog("--- begin collect ---")
-        this.setMarked(new Set())
+        this.setMarkedSet(new Set())
         this.markPid(this.rootObject().puuid()) // this is recursive, but skips marked records
         const deleteCount = this.atomicallySweep()
-        this.setMarked(null)
+        this.setMarkedSet(null)
         this.debugLog(() => "--- end collect - collected " + deleteCount + " pids ---")
         return deleteCount
     },
 
     markPid: function (pid) {
         //this.debugLog(() => "markPid(" + pid + ")")
-        if (!this.marked().has(pid)) {
-            this.marked().add(pid)
+        if (!this.markedSet().has(pid)) {
+            this.markedSet().add(pid)
             const refPids = this.refSetForPuuid(pid)
             //this.debugLog(() => "markPid " + pid + " w refs " + JSON.stringify(refPids))
             refPids.forEach(refPid => this.markPid(refPid))
@@ -99055,7 +99756,7 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         } else if (Type.isObject(json) && json.storeJsonRefs) {
             json.storeJsonRefs(puuids)
         } else {
-            throw new Error("unable to handle json type: " + typeof(json))
+            throw new Error("unable to handle json type: " + typeof(json) + " missing storeJsonRefs() method?")
         }
         
         return puuids
@@ -99075,7 +99776,7 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         // delete all unmarked records
         let deleteCount = 0
         this.recordsDict().keys().forEach((pid) => {
-            if (!this.marked().has(pid)) {
+            if (!this.markedSet().has(pid)) {
                 //this.debugLog("deletePid(" + pid + ")")
                 this.recordsDict().removeAt(pid)
                 deleteCount ++
@@ -99085,21 +99786,30 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         return deleteCount
     },
 
-    selfTest: function () {
-        const store = ObjectPool.clone()
-    
+    selfTestRoot: function() {
         const aTypedArray = Float64Array.from([1.2, 3.4, 4.5])
         const aSet = new Set("sv1", "sv2")
         const aMap = new Map([ ["mk1", "mv1"], ["mk2", "mv2"] ])
-        const aNode = BMNode.clone()
+        const aNode = BMStorableNode.clone()
         const a = [1, 2, [3, null], { foo: "bar", b: true }, aSet, aMap, new Date(), aTypedArray, aNode]
-    
-        store.setRootObject(a)
-        store.publicStoreObject(a)
-        //console.log(store.asJson())
-        console.log("---")
+        return a
+    },
+
+    selfTest: function () {
+        console.log(this.type() + " --- self test start --- ")
+        const store = ObjectPool.clone()
+        store.open()
+
+        store.rootObject()["test"] = this.selfTestRoot()
+        store.flushIfNeeded()
+        console.log("store:", store.asJson())
+        console.log(" --- ")
         store.collect()
-    
+        store.clearCache()
+        const loadedNode = store.rootObject()["test"].last()
+        console.log("loadedNode = ", loadedNode)
+        console.log(this.type() + " --- self test end --- ")
+
         /*
         const aSerialized = JSON.stringify(a, null, 2)
         console.log("aSerialized: " + aSerialized + "\n")
@@ -99120,8 +99830,9 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
 // -------------------
 
 
-
-ObjectPool.selfTest()
+setTimeout(() => {
+    //ObjectPool.selfTest()
+}, 1000)
 
 
 
@@ -99167,7 +99878,7 @@ BMNode.newSubclassNamed("BMDataStore").newSlots({
     prepareToSyncToView: function () {
         //console.log("this.storeHasChanged() = ", this.storeHasChanged())
 
-        if (this.subnodes().length === 0 || this.storeHasChanged()) {
+        if (this.subnodeCount() === 0 || this.storeHasChanged()) {
             this.defaultStore().collect()
             this.setLastSyncTime(this.defaultStore().lastSyncTime())
             this.refreshSubnodes()
@@ -99400,7 +100111,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
         this.sdb().asyncOpen(() => {
             this.onOpen()
-            this.show()
+            //this.show()
             //this.clear()
             
             if (callback) {
@@ -99910,6 +100621,9 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     },
 
     markPid: function (pid) {
+        if (pid === "null") {
+            return this
+        }
         //this.debugLog(() => "markPid(" + pid + ")")
         if (this._marked[pid] === true) {
             return false // already marked it
@@ -99919,7 +100633,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         const refPids = this.pidRefsFromPid(pid)
         this.debugLog(() => "markPid " + pid + " w refs " + JSON.stringify(refPids))
         refPids.forEach(refPid => this.markPid(refPid))
-        return true
+        return this
     },
 
     sweep: function () {
@@ -100062,389 +100776,13 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 "use strict"
 
 ResourceLoader.pushRelativePaths([
-    "BMStorableNode.js",
     "BMSummaryNode.js",
     "BMMenuNode.js",
     "BMImageNode.js",
-    "BMStoredDatedSetNode.js",
     "BMTextNode.js",
 ])
 
 //console.log("Currently running script:", Error.callingScriptURL())
-
-"use strict"
-
-/*
-
-    BMStorableNode 
-    
-*/
-
-BMNode.newSubclassNamed("BMStorableNode").newSlots({
-    shouldStore: false,
-    storedSlots: null, // dict
-    shouldStoreSubnodes: true,
-    //loadsUnionOfChildren: false,
-    isUnserializing: false,
-    doesLazyLoadChildren: false,
-}).setSlots({
-    init: function () {
-        BMNode.init.apply(this)
-        this.setStoredSlots({})
-        this.scheduleSyncToStore()
-        this.addStoredSlot("canDelete")  // TODO: move elsewhere
-    },
-    
-    defaultStore: function() {
-        if (this._nodeStore) {
-            return this._nodeStore
-        }
-        return NodeStore.shared()
-    },
-
-    // --- overrides from parent class ---
-    // hook this to schedules writes when subnode list is changed
-
-    didChangeSubnodeList: function() {
-        BMNode.didChangeSubnodeList.apply(this)
-        if (this.shouldStoreSubnodes()) {
-            this.scheduleSyncToStore()
-        }
-        return this
-    },
-
-    // -----------------------------------------------
-    // persistence id - "pid"
-    // -----------------------------------------------
-
-    instanceWithPidFromStore: function (pid, aStore = this.defaultStore()) { // proto method
-        //assert(pid[0] === "_")
-        // replace rootInstanceWithPidForProto with this method?
-
-        if (aStore.hasObjectForPid(pid)) {
-            return aStore.objectForPid(pid)
-        }
-
-        const obj = this.clone().setPid(pid)
-        aStore.addActiveObject(this)
-        return obj
-    },
-    
-    setPid: function(aPid, aStore = this.defaultStore()) {
-        this.setPuuid(aPid)
-        return this
-    },
-
-    // --------------------------
-    
-
-    // --- add / remove stored slots ---
-    
-    initStoredSubnodeSlotWithProto: function(name, proto) {
-        const obj = proto.clone()
-        this.newSlot(name, obj)
-        this.justAddSubnode(obj)
-        this.addStoredSlot(name)
-        return this
-    },
-    
-    addStoredSlots: function(slotNames) {
-        slotNames.forEach(k => this.addStoredSlot(k))
-        return this
-    },
-    
-    addStoredSlot: function(slotName) {
-        this.storedSlots()[slotName] = true
-        // Note: BMStorableNode hooks didUpdateSlot() to call scheduleSyncToStore on updates. 
-        return this
-    },
-    
-    removeStoredSlot: function(slotName) {
-        delete this.storedSlots()[slotName]
-        return this
-    },
-
-    // writing object to store
-
-    nodeDict: function (aStore = this.defaultStore()) { 
-        const dict = this.nodeDictForProperties()
-        
-        if (this.subnodes().length && this.shouldStoreSubnodes()) {
-            dict.children = this.subnodePids(aStore)
-        }
-        
-        return dict
-    },
-
-    getStoreSlotValue: function(k) {
-        let v = undefined
-
-        if (k.beginsWith("_")) {
-            v = this[k]
-        } else {
-            if(!Type.isFunction(this[k])) {
-                console.warn("WARNING: " + this.type() + "." + k + "() not a method")
-            }
-
-            try {
-                v = this[k].apply(this)
-            } catch(error) {
-                console.warn("WARNING: " + this.type() + "." + k + "() exception calling method")
-            }
-        }
-
-        return v
-    },
-
-
-    nodeDictForProperties: function (aStore = this.defaultStore()) {
-        const dict = {}
-        dict.type = this.type()
- 
-        //this.debugLog(" storedSlots = " + JSON.stringify(this.storedSlots()))
-       
-        Object.keys(this.storedSlots()).forEach((k) => {
-            const v = this.getStoreSlotValue(k)
-            dict[k] = aStore.refValueIfNeeded(v)
-        })
-        
-        return dict
-    },
-
- 
-    // reading object from store
-   
-    setNodeDict: function (aDict, aStore = this.defaultStore()) { 
-	    //BMNode.setNodeDict.apply(this, [aDict])
-        // TODO: wrap in try {}
-        this.setIsUnserializing(true) 
-        this.setNodeDictForProperties(aDict, aStore)
-        if (!this.doesLazyLoadChildren()) {
-            this.setNodeDictForChildren(aDict, aStore)
-        }
-        this.didLoadFromStore()
-        this.setIsUnserializing(false) 
-        return this
-    },
-    
-
-    prepareToAccess: function(aStore = this.defaultStore()) {
-        BMNode.prepareToAccess.apply(this)
-        if (this.doesLazyLoadChildren()) {
-            const dict = aStore.nodeDictAtPid(this.pid())
-            this.setNodeDictForProperties(dict)
-        }
-        return this
-    },
-
-
-    setStoreSlotValue: function(k, value, aStore = this.defaultStore()) {
-        if (k !== "children" && k !== "type") {
-            const v = aStore.unrefValueIfNeeded(value)
-            
-            if (k.beginsWith("_")) {
-                this[k] = v
-            } else {
-                const setter = this.setterNameForSlot(k)
-                if (this[setter]) {
-                    this[setter].apply(this, [v])
-                } else {
-                    console.error("WARNING: " + this.type() + "." + setter + "(", v , ") not found - dict is: " , aDict) //, JSON.stringify(aDict))
-                    return false
-                }
-            }
-        }
-        return true
-    },
-    
-    setNodeDictForProperties: function (aDict, aStore = this.defaultStore()) {
-        let hadMissingSetter = false 
-        Object.keys(aDict).forEach((k) => {
-            if(!this.setStoreSlotValue(k, aDict[k], aStore)) {
-                hadMissingSetter = true
-            }
-        })
-   
-        if (hadMissingSetter && !aStore.isReadyOnly()) {
-            this.scheduleSyncToStore()
-        }
-		
-        return this
-    },
-
-    setNodeDictForChildren: function (aDict, aStore = this.defaultStore()) {
-        let newPids = aDict.children
-        if (newPids) {
-            /*
-            if (this.loadsUnionOfChildren()) {
-                throw new Error("loadsUnionOfChildren") // checking if this is being used
-                newPids = this.subnodePids().union(newPids)
-            }
-            */
-            
-            this.setSubnodePids(newPids, aStore)
-        }
-        return this
-    },
-    
-    // --- udpates ---
-	
-    scheduleLoadFinalize: function() {
-        window.SyncScheduler.shared().scheduleTargetAndMethod(this, "loadFinalize")
-    },
-    
-    
-    loadFinalize: function() {
-        // called after all objects loaded within this event cycle
-    },
-	
-    didLoadFromStore: function() {
-        //this.debugLog(" didLoadFromStore in BMStorableNode")
-        // chance to finish any unserializing this particular instance
-        // also see: loadFinalize
-		
-        //this.checkForStoredSlotsWithoutPids()
-    },
-
-    scheduleSyncToStore: function() {
-        //const typeId = this.typeId()
-        const shouldStore = this.shouldStore()
-        const isUnserializing = this.isUnserializing()
-
-        if (shouldStore && !isUnserializing && this.isFinalized()) {
-            this.defaultStore().addDirtyObject(this)
-            //Broadcaster.shared().broadcastNameAndArgument("didChangeStoredSlot", this)
-        }
-
-        return this
-    },
-	
-    didUpdateSlot: function(slotName, oldValue, newValue) {
-	    if (!this._storedSlots || !this.shouldStore()) {
-	        // looks like StorableNode hasn't initialized yet
-	        return this
-	    }
-	    
-        // check so we don't mark dirty while loading
-        // and use private slots directly for performance
-        if (slotName in this._storedSlots) { 
-            //this.debugLog(".didUpdateSlot(" + slotName + ",...) -> scheduleSyncToStore")
-            this.scheduleSyncToStore()
-        }
-		
-        if (newValue != null && this.subnodes().includes(oldValue)) { // TODO: add a switch for this feature
-            newValue.setParentNode(this)
-            this.subnodes().replaceOccurancesOfWith(oldValue, newValue)
-            //this.debugLog(" this.subnodes().replaceOccurancesOfWith(", oldValue, ",", newValue, ")")
-        }
-    },
-	
-    // subnodes
-	
-    subnodePids: function( aStore = this.defaultStore()) {
-        const storableSubnodes = this.subnodes().filter(sn => sn.shouldStore())
-        const pids = storableSubnodes.map(sn => { 
-            aStore.willRefObject(sn)
-            return sn.pid()
-        })
-        return pids
-    },
-    
-    setSubnodePids: function(pids, aStore = this.defaultStore()) {
-        const subnodes = pids.map((pid) => {
-            return aStore.objectForPid(pid)
-        })
-
-        this.setSubnodes(subnodes)
-        return this
-    },
-    
-    /*
-    pidRefsFromNodeDict: function(nodeDict) {
-        const pids = []
-
-        if (nodeDict) {
-            // property pids
-            Object.keys(nodeDict).forEach((k) => {
-                const v = nodeDict[k]
-                const childPid = this.pidIfRef(v)
-                if (childPid) {
-                    pids.push(childPid);
-                }
-            })
-            
-            // child pids
-            if (nodeDict.children) {
-                nodeDict.children.forEach(function(childPid) {
-                    pids.push(childPid)
-                })
-            }          
-        }
-        
-        return pids
-    },
-    */
-
-    nodePidRefsFromNodeDict: function(nodeDict) {
-        const pids = []
-
-        if (nodeDict) {
-            // property pids
-            Object.keys(nodeDict).forEach((k) => {
-                const v = nodeDict[k]
-                const childPid = this.defaultStore().pidIfRef(v)
-                if (childPid) {
-                    pids.push(childPid);
-                }
-            })
-            
-            // child pids
-            if (nodeDict.children) {
-                nodeDict.children.forEach(function(childPid) {
-                    pids.push(childPid)
-                })
-            }          
-        }
-        
-        return pids
-    },
-
-    // ----------------------------------------
-    // new store system
-    // ----------------------------------------
-
-    recordForStore: function(aStore) { // should only be called by Store
-        const dict = {}
-
-        Object.keys(this.storedSlots()).forEach((k) => {
-            const v = this.getStoreSlotValue(k)
-            dict[k] = aStore.refValue(v)
-        })
-
-        return {
-            type: this.type(), 
-            dict: dict, 
-        }
-    },
-
-    instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store    
-        const proto = window[aRecord.type]
-        const obj = proto.clone()
-        const dict = aRecord.dict
-
-        Object.keys(aDict).forEach((k) => {
-            if(!this.setStoreSlotValue(k, aDict[k], aStore)) {
-                // slot was missing, so store it again without it
-                if (!aStore.isReadyOnly()) {
-                    this.scheduleSyncToStore()
-                }
-            }
-        })
-
-        return obj
-    },
-
-})
 
 "use strict"
 
@@ -100618,6 +100956,9 @@ BMSummaryNode.newSubclassNamed("BMMenuNode").newSlots({
         //this.setNodeRowStyles(BMViewStyles.clone())
 
         //this.setNodeUsesColumnBackgroundColor(false)
+
+        this.setCanDelete(true)
+        this.setNodeCanInspect(true) 
     },
 
     /*
@@ -100630,8 +100971,12 @@ BMSummaryNode.newSubclassNamed("BMMenuNode").newSlots({
 
     didLoadFromStore: function() {
         BMSummaryNode.didLoadFromStore.apply(this)
-        this.subnodes().forEach( (subnode) => { subnode.setCanDelete(true) });
-        this.subnodes().forEach( (subnode) => { subnode.setNodeCanInspect(true) });
+        /*
+        this.subnodes().forEach( (subnode) => { 
+            subnode.setCanDelete(true)
+            subnode.setNodeCanInspect(true) 
+        });
+        */
         return this
     },
 
@@ -100680,7 +101025,7 @@ BMSummaryNode.newSubclassNamed("BMMenuNode").newSlots({
 
         const colorPair = this.colorPairForDepth(this.nodeDepth())
         const index = this.subnodeIndex()
-        const ratio = index / this.parentNode().subnodes().length
+        const ratio = index / this.parentNode().subnodeCount()
         const topColor = colorPair[0]
         const bottomColor = colorPair[1]
         const c = topColor.interpolateWithColorTo(bottomColor, 1 - ratio)
@@ -100799,91 +101144,6 @@ BMStorableNode.newSubclassNamed("BMImageNode").newSlots({
     onDidEditNode: function() {
         this.debugLog(" onDidEditNode")
         this.scheduleSyncToStore()
-    },
-})
-
-
-"use strict"
-
-/*
-
-    BMStoredDatedSetNode
-
-*/
-
-BMStorableNode.newSubclassNamed("BMStoredDatedSetNode").newSlots({
-    maxAgeInSeconds: 30*24*60*60,
-    autoCheckPeriod: 1*60*60,
-    dict: null,
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
-        this.setShouldStore(true)
-        this.setShouldStoreSubnodes(false)
-		
-        this.setDict({})
-        this.addStoredSlot("dict", "autoCheckPeriod", "maxAgeInSeconds")
-
-        //this.setNoteIsSubnodeCount(true)
-    },
-    
-    setAutoCheckPeriod: function(seconds) {
-        if (seconds && this._autoCheckPeriod !== seconds) {
-            this._autoCheckPeriod = seconds
-            this.autoCheck()
-        }
-    },
-    
-    autoCheck: function() {
-        this.deleteExpiredKeys()
-        setTimeout(() => { this.autoCheck() }, this.autoCheckPeriod()*1000)
-    },
-    
-    didLoadFromStore: function() {
-        BMStorableNode.didLoadFromStore.apply(this)
-        this.deleteExpiredKeys()
-    },
-
-    addKey: function(h) {
-        if (!this.dict()[h]) {
-            this.dict()[h] = Date.now()
-            this.scheduleSyncToStore()
-        }
-        return this
-    },
-    
-    hasKey: function(h) {
-        return this.dict().hasOwnProperty(h)
-    },
-    
-    removeKey: function(h) {
-        if (this.dict()[h]) {
-            delete this.dict()[h]
-            this.scheduleSyncToStore()
-        }
-        return this
-    },
-    
-    ageInSecondsOfKey: function(h) {
-        if (this.hasKey(h)) {
-            const ageInSeconds = Date.now() - this.dict()[h]
-            return ageInSeconds
-        }
-        
-        return null
-    },
-
-    deleteExpiredKeys: function() {
-        const max = this.maxAgeInSeconds()
-        const keys = Object.keys(this.dict())
-        
-        keys.forEach((k) => {
-            if (this.ageInSecondsOfKey(k) > max) {
-                this.removeKey(k)
-            }
-        })
-
-        return this
     },
 })
 
@@ -102273,7 +102533,7 @@ BMNode.newSubclassNamed("BMYearNode").newSlots({
     
     prepareToAccess: function () {
         //console.log("this.storeHasChanged() = ", this.storeHasChanged())
-        if (this.subnodes().length === 0) {
+        if (this.subnodeCount() === 0) {
             //this.refreshSubnodes()
         }
     },
@@ -102285,7 +102545,7 @@ BMNode.newSubclassNamed("BMYearNode").newSlots({
 
     prepareToSyncToView: function() {
         // called after Node is selected
-        if (!this.subnodes().length) {
+        if (!this.subnodeCount()) {
             for (let i = 1; i < 12 + 1; i++) {
                 this.addSubnode(BMMonthNode.clone().setValue(i))
             }
@@ -102374,7 +102634,7 @@ BMNode.newSubclassNamed("BMMonthNode").newSlots({
 
     prepareToSyncToView: function() {
         // called after Node is selected
-        if (!this.subnodes().length) {
+        if (!this.subnodeCount()) {
 
             for (let i = 1; i < this.daysThisMonth() + 1; i++) {
                 this.addSubnode(BMDayNode.clone().setValue(i))
@@ -102741,7 +103001,7 @@ BMNode.newSubclassNamed("BMMonthNode").newSlots({
 
     prepareToSyncToView: function() {
         // called after Node is selected
-        if (!this.subnodes().length) {
+        if (!this.subnodeCount()) {
 
             for (let i = 1; i < this.daysThisMonth() + 1; i++) {
                 this.addSubnode(BMDayNode.clone().setValue(i))
@@ -109361,7 +109621,7 @@ BMNode.newSubclassNamed("BMSound").newSlots({
 
     prepareToAccess: function() {
         BMNode.prepareToAccess.apply(this)
-        this.play()
+        this.play() // not a good way to do this
     },
 
     //audio.src = 'data:audio/wav;base64,UklGR...;
@@ -110536,7 +110796,7 @@ BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
 		
         /*
 		this.debugLog(".updateIdsBloomFilter() with " + ids.length + " ids")
-		console.log("   local ids:  " + this.localIdentities().subnodes().length)
+		console.log("   local ids:  " + this.localIdentities().subnodeCount())
 		console.log("   remote ids: " + this.allRemoteIdentities().length)
 		*/
 		
@@ -114730,7 +114990,7 @@ BMStorableNode.newSubclassNamed("BMContactLinks").newSlots({
         this.removeLinksWithNoContact()
         this.addLinkForEveryContact()
         this.sortSubnodes()
-        //this.debugLog(" updateIdentities contactLinks " + this.subnodes().length)
+        //this.debugLog(" updateIdentities contactLinks " + this.subnodeCount())
         return this
     },
 
@@ -114759,7 +115019,6 @@ BMStorableNode.newSubclassNamed("BMContactLinks").newSlots({
     },
 
     linkForContact: function (rid) {
-        this.prepareToAccess()
         return this.contactLinks().detect((link) => {
             return link.remoteIdentity() === rid
         })

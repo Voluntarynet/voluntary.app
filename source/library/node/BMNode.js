@@ -813,24 +813,18 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     },
 	
     firstSubnodeOfType: function(aProto) {
-        this.prepareToAccess(); // put guard on subnodes instead?
-
         return this.subnodes().detect(function (subnode) {
             return subnode.type() === aProto.type()
         })
     },
 
     firstSubnodeWithSubtitle: function(aString) {
-        this.prepareToAccess(); // put guard on subnodes instead?
-
         return this.subnodes().detect(function (subnode) {
             return subnode.subtitle() === aString
         })
     },
         
     firstSubnodeWithTitle: function(aString) {
-        this.prepareToAccess(); // put guard on subnodes instead?
-
         return this.subnodes().detect(function (subnode) {
             return subnode.title() === aString
         })
@@ -848,8 +842,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     // --- subnodes -----------------------------
     
     subnodesCount: function() {
-        this.prepareToAccess()
-        return this._subnodes.length
+        return this.subnodes().length
     },
     
     setSubnodes: function(subnodes) {

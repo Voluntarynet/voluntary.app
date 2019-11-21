@@ -97,7 +97,6 @@ BMStorableNode.newSubclassNamed("BMContactLinks").newSlots({
     },
 
     linkForContact: function (rid) {
-        this.prepareToAccess()
         return this.contactLinks().detect((link) => {
             return link.remoteIdentity() === rid
         })

@@ -259,7 +259,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         if (this._lazySubnodePids) {
             return this._lazySubnodePids.length
         }
-        return BMNode.subnodeCount.apply(this)
+        return this._subnodes.length
     },
 
     subnodePids: function( aStore = this.defaultStore()) {
@@ -274,7 +274,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     prepareToAccess: function(aStore = this.defaultStore()) {
         BMNode.prepareToAccess.apply(this)
         if (this._lazySubnodePids) {
-            console.log(this.typeId() + " prepareToAccess")
+            //console.log(this.typeId() + " prepareToAccess")
             this.loadLazyPids()
             this._lazySubnodePids = null
         }

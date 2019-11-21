@@ -46,6 +46,7 @@ class ResourceLoaderPanelClass {
     
     init() {
         this._error = null;
+        this._loadCount = 0
         // subclasses should override to initialize
     }
     
@@ -67,8 +68,8 @@ class ResourceLoaderPanelClass {
         return document.getElementById("SpinnerTitle")
     }
 
-    subtitleElement () {
-        return document.getElementById("SpinnerSubtitle")
+    barElement () {
+        return document.getElementById("SpinnerBar")
     }
 
     itemElement () {
@@ -119,8 +120,8 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
 <div>\
 <div id='SpinnerIcon' style='opacity: 0.7; border: 0px dashed yellow; transition: all .6s ease-out; background-image:url(\"resources/icons/appicon.svg\"); background-position: center; background-repeat: no-repeat; height: 60px; width: 100%; background-size: contain;'></div><br> \
 </div>\
-<div id='SpinnerTitle' style='transition: all .6s ease-out;'></div><br> \
-<div id='SpinnerSubtitle' style='transition: all .3s ease-out; letter-spacing: -2.5px;'></div><br> \
+<div id='SpinnerTitle' style='display:none; margin-top: 12px; transition: all .6s ease-out;'></div><br> \
+<center><div style='margin-top: 12px; width:170px; height: 2px; background-color: #444; text-align: left;'><div id='SpinnerBar' style='transition: all 0s ease-out; letter-spacing: -2.5px;'></div><div></center><br> \
 <div id='SpinnerItem' style='color: transparent; transition: all 0.3s ease-out;'></div><br> \
 <div id='SpinnerError' style='color: red; transition: all .6s ease-out; text-align: center; width: 100%;'></div> \
 </div> \
@@ -155,7 +156,7 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
     // --- callabcks ------------------------------------------------
 
     registerForImports () {
-        this._importerUrlCallback = (url) => { this.didImportUrl(url) }
+        this._importerUrlCallback = (url, max) => { this.didImportUrl(url, max) }
         ResourceLoaderClass.shared().pushUrlLoadingCallback(this._importerUrlCallback)
 
         this._importerErrorCallback = (error) => { this.setError(error) }
@@ -170,9 +171,10 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
         return this
     }
 
-    didImportUrl (url) {
-        this.incrementItemCount()
+    didImportUrl (url, max) {
         this.setCurrentItem(url.split("/").pop())
+        this.incrementItemCount(max)
+        //console.log(url)
         return this
     }
 
@@ -219,11 +221,16 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
     },
     */
 
-    incrementItemCount () {
-        const subtitle = this.subtitleElement()
-        if (subtitle) {
-            subtitle.style.color = "#666"
-            subtitle.innerHTML += "."
+    incrementItemCount (max) {
+        this._loadCount ++
+        const e = this.barElement()
+        if (e) {
+            //e.style.color = "#666"
+            e.style.borderRadius = "1px"
+            e.style.height = "2px"
+            e.style.width = Math.floor(100*this._loadCount/400) + "%"
+            e.style.backgroundColor = "#ccc"
+            //console.log("max: ", max)
         }
         return this
     }
@@ -233,7 +240,7 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
         //item.style.opacity = 0
         item.style.color = "#444"
         //item.currentValue = itemName	
-        item.innerHTML = itemName
+        //item.innerHTML = itemName // commented out to make cleaner 
         /*
     	//setTimeout(() => { 
     	    if (item.currentValue === item.innerHTML) {

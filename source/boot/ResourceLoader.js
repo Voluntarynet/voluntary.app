@@ -174,6 +174,7 @@ class ResourceLoaderClass extends ResourceLoaderBase {
         //this.newSlot("archive", null)
 
         this.newSlot("resourceFilePaths", [])
+        this._maxUrlCount = 0
     }
 
     resourceFilePathsWithExtensions(extensions) {
@@ -209,6 +210,7 @@ class ResourceLoaderClass extends ResourceLoaderBase {
 
     pushFilePaths (paths) {
         this.setUrls(paths.concat(this.urls()))
+        this._maxUrlCount += paths.length
         return this
     }
 
@@ -249,7 +251,7 @@ class ResourceLoaderClass extends ResourceLoaderBase {
 
     loadNext () {
         if (!this.isDone()) {
-            let url = this.urls().shift()
+            const url = this.urls().shift()
             this.loadUrl(url)
         } else {
             this.done()
@@ -258,7 +260,7 @@ class ResourceLoaderClass extends ResourceLoaderBase {
     }
 
     loadUrl (url) {
-        this.urlLoadingCallbacks().forEach(callback => callback(url))
+        this.urlLoadingCallbacks().forEach(callback => callback(url, this._maxUrlCount))
 
         const extension = url.split(".").pop().toLowerCase()
         //const fontExtensions = ["ttf", "woff", "woff2"]

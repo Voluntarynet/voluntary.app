@@ -21,18 +21,11 @@
     Notes:
     This code is a bit ugly because it doesn't have any library dependencies 
     as we need to show it before we load the libraries & need it to tell us about any loading errors.
+
 */
 
-class ResourceLoaderPanelClass {
 
-    /*
-    static shared() {
-        if (!this._shared) {
-            this._shared = this.clone()
-        }
-        return this._shared
-    }
-    */
+class ResourceLoaderPanelClass {
 
     type() {
         return this.constructor.name
@@ -47,7 +40,6 @@ class ResourceLoaderPanelClass {
     init() {
         this._error = null;
         this._loadCount = 0
-        // subclasses should override to initialize
     }
     
     // --- elements ------------------------------------------------
@@ -88,7 +80,6 @@ class ResourceLoaderPanelClass {
 
     startWhenReady () {
         //console.log("ResourceLoaderPanel.startWhenReady()")
-        //this.setupHtml()
         if (this.canStart()) {
             this.start()
         } else {
@@ -112,12 +103,6 @@ class ResourceLoaderPanelClass {
         return this
     }
 
-    /*
-                e.style.borderRadius = "2px"
-            e.style.height = "4px"
-            e.style.backgroundColor = "#ccc"
-    */
-
     setupHtml () {
         //console.log("ResourceLoaderPanel.setupHtml()")
         document.body.innerHTML = "<div id='SpinnerMain' style='position: absolute; width:100%; height: 100%; background-color: black; z-index: 100000; font-family: AppRegular, sans-serif; letter-spacing: 3px; font-size:13px;'> \
@@ -126,7 +111,7 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
 <div>\
 <div id='SpinnerIcon' style='opacity: 0.7; border: 0px dashed yellow; transition: all .6s ease-out; background-image:url(\"resources/icons/appicon.svg\"); background-position: center; background-repeat: no-repeat; height: 60px; width: 100%; background-size: contain;'></div><br> \
 </div>\
-<div id='SpinnerTitle' style='display:none; margin-top: 12px; transition: all .6s ease-out;'></div><br> \
+<div id='SpinnerTitle' style='margin-top: 12px; transition: all .6s ease-out;'></div><br> \
 <center><div style='margin-top: 12px; width:170px; height: 4px; border-radius:2px; background-color: #444; text-align: left;'><div id='SpinnerBar' style='height:4px; border-radius:2px; background-color:#bbb; transition: all 0s ease-out; letter-spacing: -2.5px;'></div><div></center><br> \
 <div id='SpinnerItem' style='color: transparent; transition: all 0.3s ease-out;'></div><br> \
 <div id='SpinnerError' style='color: red; transition: all .6s ease-out; text-align: center; width: 100%;'></div> \
@@ -138,7 +123,7 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
     initTitle () {
         const title = this.titleElement()
         title.style.color = "#aaa"
-        title.innerHTML = "LOADING"
+        //title.innerHTML = "LOADING"
 
         if (window.ResourceLoaderIsEmbedded) {
             this.hide()
@@ -156,8 +141,6 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
         this.mainElement().style.visibility = "visible"
         this.titleElement().style.visibility = "visible"
     }
-
-
 
     // --- callabcks ------------------------------------------------
 
@@ -180,7 +163,6 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
     didImportUrl (url, max) {
         this.setCurrentItem(url.split("/").pop())
         this.incrementItemCount(max)
-        //console.log(url)
         return this
     }
 
@@ -221,18 +203,41 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
         }
     }
 
-    /*
-    isPresent: function() {
-        return this.mainElement() !== null
-    },
-    */
+    maxFileCount () {
+        if (!this._maxFileCount) {
+            var s = localStorage.getItem(this.type() + ".maxFileCount");
+            if (s) {
+                this._maxFileCount = Number(s)
+            } else {
+                this._maxFileCount = 1
+            }
+        }
+        return this._maxFileCount
+    }
+
+    setMaxFileCount (count) {
+        this._maxFileCount = count
+        localStorage.setItem(this.type() + ".maxFileCount", count);
+        return this
+    }
 
     incrementItemCount (max) {
         this._loadCount ++
+        if (this._loadCount > this.maxFileCount()) {
+            this.setMaxFileCount(this._loadCount)
+        }
+
         const e = this.barElement()
         if (e) {
-            e.style.width = Math.floor(100*this._loadCount/400) + "%"
-            //console.log("max: ", max)
+            let p = Math.floor(100 * this._loadCount / this.maxFileCount())
+            if (p >= 100) {
+                p = 100
+                e.style.transition = "all 0.3s"
+                e.style.backgroundColor = this._loadCount % 2 ? "#777" : "#ccc"
+                e.style.width = this._loadCount % 2 ? "100%" : "95%"
+            } else {
+                e.style.width = p + "%"
+            }
         }
         return this
     }
@@ -256,9 +261,6 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
     setError (error) {
         this._error = error
         //console.trace()
-        //console.log("ResourceLoaderPanel setError ", error)
-        //console.log("    document.body = ", document.body) 
-        //console.log("    his.errorElement() = ", this.errorElement()) 
         this.errorElement().innerHTML = error
         this.show()
         return this
@@ -286,8 +288,6 @@ style='position: relative; top: 50%; transform: translateY(-50%); height: auto; 
         return this
     }
 }
-
-//console.log("loaded file ResourceLoaderPanel - starting")
 
 window.ResourceLoaderPanel = ResourceLoaderPanelClass.clone()
 window.ResourceLoaderPanel.startWhenReady()

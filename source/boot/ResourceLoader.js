@@ -32,7 +32,8 @@
 			sjcl.random.startCollectors();
 		})		
 
-	Note: Should probably clean this up with promises.
+    Note: Should probably clean this up with promises.
+    
 */
 
 if (!String.prototype.capitalized) {
@@ -129,7 +130,6 @@ class JSScript extends ResourceLoaderBase {
 
     run () {
         const script = document.createElement("script")
-
         //console.log("JSScript loading: '" + this.fullPath() + "'")
 
         script.src = this.fullPath()

@@ -2931,7 +2931,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     },
 
     setContentAfterOrBeforeString: function (aString, afterOrBefore) {
-        const uniqueClassName = "UniqueClass_" + this._uniqueId
+        const uniqueClassName = "UniqueClass_" + this.puuid()
         const e = this.element()
         if (e.className.indexOf(uniqueClassName) === -1) {
             const newRuleKey = "DomView" + uniqueClassName + ":" + afterOrBefore

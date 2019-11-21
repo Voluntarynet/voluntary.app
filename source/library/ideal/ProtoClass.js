@@ -114,7 +114,6 @@ class ProtoClass {
     static clone () {
         //this.setupSlotsIfNeeded()
         const obj = new this()
-        obj.assignUniqueId()
         obj.init()
         return obj
     }
@@ -219,37 +218,13 @@ class ProtoClass {
     }
     */
 
-    uniqueId () {
-        return this._uniqueId
-    }
-
     typeId () {
-        // do this lazily as type isn't known when object is created
-        if (Type.isNullOrUndefined(this._typeId)) {
-            this._typeId = this.type() + "_" + this.uniqueId()
-        }
-        return this._typeId
-    }
-
-    hasUniqueId () {
-        return !Type.isNullOrUndefined(this._uniqueId)
-    }
-
-    assertHasUniqueId () {
-        assert(this.hasUniqueId())
-    }
-
-    assignUniqueId () {
-        assert(!this.hasUniqueId()) // error may mean attempt to clone a singleton
-        this._uniqueId = ProtoClass.newUniqueInstanceId(); //newUniqueId();
-        //this.assertHasUniqueId() // TODO: comment out when not debugging uniqueId
-        return this
+        return this.typePuuid()
     }
 
     cloneWithoutInit () {
         const obj = Object.clone(this);
         obj.__proto__ = this;
-        obj.assignUniqueId();
         return obj;
     }
 
@@ -362,24 +337,10 @@ class ProtoClass {
     }
     */
 
-    /*
-    static newUniqueId() {
-        let key = "_uniqueIdCounter"
-        let uid = this.getClassVariable(key, 0)
-        uid ++;
-        this.setClassVariable(key, uid)
-        return uid
-    }
-    */
-
     static newUniqueInstanceId() {
         const uuid_a = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
         const uuid_b = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
         return uuid_a + uuid_b
-    }
-
-    uniqueId () {
-        return this._uniqueId
     }
 
     isKindOf (aProto) { // TODO: test this for ES6 classes
@@ -396,7 +357,7 @@ class ProtoClass {
     }
 
     toString () {
-        return this.type() + "." + this.uniqueId();
+        return this.typeId();
     }
 
 

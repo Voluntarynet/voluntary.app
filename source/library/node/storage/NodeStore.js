@@ -179,8 +179,6 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     },
 
     asyncOpen: function (callback) {
-        this.assertHasUniqueId()
-
         if (this.isOpen()) {
             throw new Error(this.typeId() + ".asyncOpen() already open")
         }
@@ -211,7 +209,6 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     shared: function () {
         if (!this._shared) {
             this._shared = this.clone()
-            this._shared.assertHasUniqueId()
             //this._shared.setFolder(App.shared().storageFolder().folderNamed(this.folderName())) 
         }
         return this._shared

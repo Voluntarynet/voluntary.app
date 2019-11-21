@@ -81471,13 +81471,6 @@ Proto.setSlots({
     },
 
     typeId: function () {
-        /*
-        // do this lazily as type isn't known when object is created
-        if (Type.isNull(this._typeId)) {
-            this._typeId = this.type() + "_" + this.uniqueId()
-        }
-        return this._typeId
-        */
         return this.typePuuid()
     },
 
@@ -81516,15 +81509,8 @@ Proto.setSlots({
         const obj = Object.clone(this);
         obj.__proto__ = this;
         //obj.constructor.name = this._type // can't assign to an anonymous Function
-        obj._uniqueId = this.newUniqueInstanceId()
-        //obj._typeId = null
-        obj.assertHasUniqueId()
         // Note: does the JS debugger expect constructor.__proto__.type?
         return obj;
-    },
-
-    assertHasUniqueId: function() {
-        assert(!Type.isNullOrUndefined(this._uniqueId))
     },
 
     clone: function () {
@@ -81709,10 +81695,6 @@ Proto.setSlots({
         });
 
         return object;
-    },
-
-    uniqueId: function () {
-        return this._uniqueId
     },
 
     isKindOf: function (aProto) {
@@ -82056,7 +82038,6 @@ class ProtoClass {
     static clone () {
         //this.setupSlotsIfNeeded()
         const obj = new this()
-        obj.assignUniqueId()
         obj.init()
         return obj
     }
@@ -82161,37 +82142,13 @@ class ProtoClass {
     }
     */
 
-    uniqueId () {
-        return this._uniqueId
-    }
-
     typeId () {
-        // do this lazily as type isn't known when object is created
-        if (Type.isNullOrUndefined(this._typeId)) {
-            this._typeId = this.type() + "_" + this.uniqueId()
-        }
-        return this._typeId
-    }
-
-    hasUniqueId () {
-        return !Type.isNullOrUndefined(this._uniqueId)
-    }
-
-    assertHasUniqueId () {
-        assert(this.hasUniqueId())
-    }
-
-    assignUniqueId () {
-        assert(!this.hasUniqueId()) // error may mean attempt to clone a singleton
-        this._uniqueId = ProtoClass.newUniqueInstanceId(); //newUniqueId();
-        //this.assertHasUniqueId() // TODO: comment out when not debugging uniqueId
-        return this
+        return this.typePuuid()
     }
 
     cloneWithoutInit () {
         const obj = Object.clone(this);
         obj.__proto__ = this;
-        obj.assignUniqueId();
         return obj;
     }
 
@@ -82304,24 +82261,10 @@ class ProtoClass {
     }
     */
 
-    /*
-    static newUniqueId() {
-        let key = "_uniqueIdCounter"
-        let uid = this.getClassVariable(key, 0)
-        uid ++;
-        this.setClassVariable(key, uid)
-        return uid
-    }
-    */
-
     static newUniqueInstanceId() {
         const uuid_a = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
         const uuid_b = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
         return uuid_a + uuid_b
-    }
-
-    uniqueId () {
-        return this._uniqueId
     }
 
     isKindOf (aProto) { // TODO: test this for ES6 classes
@@ -82338,7 +82281,7 @@ class ProtoClass {
     }
 
     toString () {
-        return this.type() + "." + this.uniqueId();
+        return this.typeId();
     }
 
 
@@ -84734,7 +84677,6 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
             db: null,
             didRequestPersistence: false,
         })
-        this.assertHasUniqueId()
         //this.requestPersistenceIfNeeded()
         //this.setIsDebugging(true)
     }
@@ -84783,8 +84725,6 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
     }
     
     asyncOpen (callback) {
-        this.assertHasUniqueId()
-
         this.debugLog("asyncOpen")
 		
         const request = window.indexedDB.open(this.path(), 2);
@@ -84870,8 +84810,6 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
     
     asyncAsJson (callback) {   
         //console.log("asyncAsJson start")
-        this.assertHasUniqueId()
-
         const cursorRequest = this.db().transaction(this.storeName(), "readonly").objectStore(this.storeName()).openCursor()
         const dict = {}
     
@@ -94730,7 +94668,7 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
     },
 
     setContentAfterOrBeforeString: function (aString, afterOrBefore) {
-        const uniqueClassName = "UniqueClass_" + this._uniqueId
+        const uniqueClassName = "UniqueClass_" + this.puuid()
         const e = this.element()
         if (e.className.indexOf(uniqueClassName) === -1) {
             const newRuleKey = "DomView" + uniqueClassName + ":" + afterOrBefore
@@ -100101,8 +100039,6 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     },
 
     asyncOpen: function (callback) {
-        this.assertHasUniqueId()
-
         if (this.isOpen()) {
             throw new Error(this.typeId() + ".asyncOpen() already open")
         }
@@ -100133,7 +100069,6 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     shared: function () {
         if (!this._shared) {
             this._shared = this.clone()
-            this._shared.assertHasUniqueId()
             //this._shared.setFolder(App.shared().storageFolder().folderNamed(this.folderName())) 
         }
         return this._shared

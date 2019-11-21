@@ -134,13 +134,6 @@ Proto.setSlots({
     },
 
     typeId: function () {
-        /*
-        // do this lazily as type isn't known when object is created
-        if (Type.isNull(this._typeId)) {
-            this._typeId = this.type() + "_" + this.uniqueId()
-        }
-        return this._typeId
-        */
         return this.typePuuid()
     },
 
@@ -179,15 +172,8 @@ Proto.setSlots({
         const obj = Object.clone(this);
         obj.__proto__ = this;
         //obj.constructor.name = this._type // can't assign to an anonymous Function
-        obj._uniqueId = this.newUniqueInstanceId()
-        //obj._typeId = null
-        obj.assertHasUniqueId()
         // Note: does the JS debugger expect constructor.__proto__.type?
         return obj;
-    },
-
-    assertHasUniqueId: function() {
-        assert(!Type.isNullOrUndefined(this._uniqueId))
     },
 
     clone: function () {
@@ -372,10 +358,6 @@ Proto.setSlots({
         });
 
         return object;
-    },
-
-    uniqueId: function () {
-        return this._uniqueId
     },
 
     isKindOf: function (aProto) {

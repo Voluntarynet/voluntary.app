@@ -27,10 +27,7 @@ TODO:
 	copying
 	- would be nice to unify store, copy, drag-to-json
 		issues:
-		- need to implement nodeDict on Proto? (yes)
-		- does Proto need a pid? (yes, use type_uuid)
 		- what about auto scheduling sync to NodeStore (only do this on StorableNode?)
-		- need to move ProtoClass to new uniqueId code 
 	
 
 	BrowserColumn.onDragDestinationDropped

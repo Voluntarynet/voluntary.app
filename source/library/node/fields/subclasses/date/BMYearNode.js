@@ -36,7 +36,7 @@ BMNode.newSubclassNamed("BMYearNode").newSlots({
     
     prepareToAccess: function () {
         //console.log("this.storeHasChanged() = ", this.storeHasChanged())
-        if (this.subnodes().length === 0) {
+        if (this.subnodeCount() === 0) {
             //this.refreshSubnodes()
         }
     },
@@ -48,7 +48,7 @@ BMNode.newSubclassNamed("BMYearNode").newSlots({
 
     prepareToSyncToView: function() {
         // called after Node is selected
-        if (!this.subnodes().length) {
+        if (!this.subnodeCount()) {
             for (let i = 1; i < 12 + 1; i++) {
                 this.addSubnode(BMMonthNode.clone().setValue(i))
             }

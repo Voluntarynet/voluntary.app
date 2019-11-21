@@ -353,7 +353,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     },
 
     subnodeCount: function() {
-        return this.subnodes().length
+        return this._subnodes.length
     },
 
     hasSubnodes: function() {
@@ -510,7 +510,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     },
     
     removeAllSubnodes: function() {
-	    if (this.subnodes().length) {
+	    if (this.subnodeCount()) {
     		this.subnodes().slice().forEach((subnode) => {
     			this.justRemoveSubnode(subnode)
     		})

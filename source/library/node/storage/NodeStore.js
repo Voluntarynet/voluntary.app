@@ -426,7 +426,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
             return null
         }
 
-        //console.log("NodeStore.objectForPid(" + pid + ")")
+        console.log("NodeStore.objectForPid(" + pid + ")")
 
         const activeObj = this.activeObjectsDict()[pid]
         if (activeObj) {

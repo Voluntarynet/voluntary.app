@@ -68,7 +68,7 @@ BMStorableNode.newSubclassNamed("BMContactLinks").newSlots({
         this.removeLinksWithNoContact()
         this.addLinkForEveryContact()
         this.sortSubnodes()
-        //this.debugLog(" updateIdentities contactLinks " + this.subnodes().length)
+        //this.debugLog(" updateIdentities contactLinks " + this.subnodeCount())
         return this
     },
 

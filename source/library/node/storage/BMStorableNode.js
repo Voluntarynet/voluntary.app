@@ -12,7 +12,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     shouldStoreSubnodes: true,
     //loadsUnionOfChildren: false,
     isUnserializing: false,
-    doesLazyLoadChildren: false,
+    doesLazyLoadChildren: true,
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)
@@ -95,7 +95,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     nodeDict: function (aStore = this.defaultStore()) { 
         const dict = this.nodeDictForProperties()
         
-        if (this.subnodes().length && this.shouldStoreSubnodes()) {
+        if (this.subnodeCount() && this.shouldStoreSubnodes()) {
             dict.children = this.subnodePids(aStore)
         }
         
@@ -145,27 +145,15 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         // TODO: wrap in try {}
         this.setIsUnserializing(true) 
         this.setNodeDictForProperties(aDict, aStore)
-        if (!this.doesLazyLoadChildren()) {
-            this.setNodeDictForChildren(aDict, aStore)
-        }
+        this.setNodeDictForChildren(aDict, aStore)
         this.didLoadFromStore()
         this.setIsUnserializing(false) 
-        return this
-    },
-    
-
-    prepareToAccess: function(aStore = this.defaultStore()) {
-        BMNode.prepareToAccess.apply(this)
-        if (this.doesLazyLoadChildren()) {
-            const dict = aStore.nodeDictAtPid(this.pid())
-            this.setNodeDictForProperties(dict)
-        }
         return this
     },
 
 
     setStoreSlotValue: function(k, value, aStore = this.defaultStore()) {
-        if (k !== "children" && k !== "type") {
+        if (k !== "children" && k !== "type") { // not needed with new format
             const v = aStore.unrefValueIfNeeded(value)
             
             if (k.beginsWith("_")) {
@@ -258,7 +246,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
             this.scheduleSyncToStore()
         }
 		
-        if (newValue != null && this.subnodes().includes(oldValue)) { // TODO: add a switch for this feature
+        if (newValue != null && this._subnodes.includes(oldValue)) { // TODO: add a switch for this feature
             newValue.setParentNode(this)
             this.subnodes().replaceOccurancesOfWith(oldValue, newValue)
             //this.debugLog(" this.subnodes().replaceOccurancesOfWith(", oldValue, ",", newValue, ")")
@@ -266,7 +254,14 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     },
 	
     // subnodes
-	
+    
+    subnodeCount: function() {
+        if (this._lazySubnodePids) {
+            return this._lazySubnodePids.length
+        }
+        return BMNode.subnodeCount.apply(this)
+    },
+
     subnodePids: function( aStore = this.defaultStore()) {
         const storableSubnodes = this.subnodes().filter(sn => sn.shouldStore())
         const pids = storableSubnodes.map(sn => { 
@@ -275,12 +270,35 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         })
         return pids
     },
-    
+
+    prepareToAccess: function(aStore = this.defaultStore()) {
+        BMNode.prepareToAccess.apply(this)
+        if (this._lazySubnodePids) {
+            console.log(this.typeId() + " prepareToAccess")
+            this.loadLazyPids()
+            this._lazySubnodePids = null
+        }
+        return this
+    },
+
+    loadLazyPids: function() {
+        this.justSetSubnodePids(this._lazySubnodePids)
+        return this
+    },
+
     setSubnodePids: function(pids, aStore = this.defaultStore()) {
+        if (this.doesLazyLoadChildren()) {
+            this._lazySubnodePids = pids
+        } else {
+            this.justSetSubnodePids(pids)
+        }
+        return this
+    },
+    
+    justSetSubnodePids: function(pids, aStore = this.defaultStore()) {
         const subnodes = pids.map((pid) => {
             return aStore.objectForPid(pid)
         })
-
         this.setSubnodes(subnodes)
         return this
     },
@@ -339,6 +357,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     // new store system
     // ----------------------------------------
 
+    /*
     recordForStore: function(aStore) { // should only be called by Store
         const dict = {}
 
@@ -369,5 +388,6 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
 
         return obj
     },
+    */
 
 })

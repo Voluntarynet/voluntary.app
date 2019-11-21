@@ -1,30 +1,38 @@
 "use strict"
 
-/*
 Object.defineSlots(BMStorableNode, {
 
     recordForStore: function(aStore) { // should only be called by Store
+        const aRecord = {
+            type: this.type(), 
+            slots: [], 
+        }
         
-        const dict = {}
-
         Object.keys(this.storedSlots()).forEach((k) => {
             const v = this.getStoreSlotValue(k)
-            dict[k] = aStore.refValue(v)
+            aRecord.slots.push([k, aStore.refValue(v)])
         })
 
-        return {
-            type: this.type(), 
-            dict: dict, 
-        }
+        aRecord.children = this.subnodePids(aStore)
+
+        return aRecord
     },
 
     instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store    
         const proto = window[aRecord.type]
         const obj = proto.clone()
-        const dict = aRecord.dict
+        obj.loadFromRecord(aRecord, aStore)
+        return obj
+    },
 
-        Object.keys(aDict).forEach((k) => {
-            if(!this.setStoreSlotValue(k, aDict[k], aStore)) {
+    loadFromRecord: function(aRecord, aStore) {
+        this.setIsUnserializing(true) 
+        const slots = aRecord.slots
+
+        slots.forEach((entry) => {
+            const k = entry[0]
+            const v = entry[1]
+            if(!this.setStoreSlotValue(k, v, aStore)) {
                 // slot was missing, so store it again without it
                 if (!aStore.isReadyOnly()) {
                     this.scheduleSyncToStore()
@@ -32,7 +40,12 @@ Object.defineSlots(BMStorableNode, {
             }
         })
 
-        return obj
+        this.setSubnodePids(aRecord.children, aStore) // only calls aStore.objectForPid
+
+        this.didLoadFromStore()
+        this.scheduleLoadFinalize()
+
+        this.setIsUnserializing(false) 
+        return this
     },
 })
-*/

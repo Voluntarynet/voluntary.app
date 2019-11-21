@@ -63,41 +63,85 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
     dirtyObjects: null, // dict 
     lastSyncTime: null, // WARNING: vulnerable to system time changes
     //isReadOnly: true,
-    marked: null, // Set of puuids
+    markedSet: null, // Set of puuids
 }).setSlots({
     init: function() {
         ideal.Proto.init.apply(this)
-        this.setRootObject(null)
         this.setRecordsDict(ideal.AtomicDictionary.clone())
         this.setActiveObjects({})
         this.setDirtyObjects({})
         this.setLastSyncTime(null)
-        this.setMarked(null)
+        this.setMarkedSet(null)
+
         return this
+    },
+
+    clearCache: function() {
+        this.setActiveObjects({})
+        this.setDirtyObjects({})
+        this.setRootObject(this.objectForPid(this.rootObject().puuid()))
+        return this
+    },
+
+    // --- open ---
+
+    open: function() {
+        assert(this.recordsDict().open)
+        this.recordsDict().open()
+        this.onRecordsDictOpen()
+        return this
+    },
+
+    asyncOpen: function() {
+        assert(this.recordsDict().asyncOpen)
+        this.recordsDict().asyncOpen(() => this.onRecordsDictOpen())
+        return this
+    },
+
+    onRecordsDictOpen: function() {
+        this.setupRoot()
+    },
+
+    // --- root ---
+
+    rootKey: function() {
+        return "root"
+    },
+
+    setupRoot: function() {
+        const rk = this.rootKey()
+        if (!this._rootObject) {
+            if (this.recordsDict().hasKey(rk)) {
+                this.setRootObject(this.objectForPid(rk))
+            } else {
+                const obj = {}
+                obj.setPuuid(rk)
+                this._rootObject = obj
+                this.addActiveObject(obj)
+                this.addDirtyObject(obj)
+            }
+        }
+        return this._rootObject
     },
 
     setRootObject: function(obj) {
-        if (this._rootObject !== obj) {
-            this._rootObject = obj
-            this.addActiveObject(obj)
-            this.addDirtyObject(obj) // skip when reading it from records?
+        if (this._rootObject) {
+            throw new Error("can't change root object")
         }
+        
+        assert(!this.recordsDict().hasKey(obj.puuid()))
+        assert(!this.activeObjects().hasOwnProperty(obj.puuid()))
+        assert(!this.dirtyObjects().hasOwnProperty(obj.puuid()))
+
+        obj.setPuuid(this.rootKey())
+        this._rootObject = obj
+        this.addActiveObject(obj)
+        this.addDirtyObject(obj)
+        
         return this
     },
 
-    readRoot: function() {
-        const recordsDict = this.recordsDict()
-        const rootKey = "root"
-        // do we want this? What if object store is for copy?
-        if (!recordsDict.hasKey(rootKey)) {  
-            const rootObj = {}
-            rootObj.setPuuid(rootKey)
-            recordsDict.begin()
-            recordsDict.atPut(rootKey, rootObj)
-            recordsDict.commit()
-        }
-        return recordsDict.at(rootKey)
-    },
+    // ---  ---
 
     asJson: function() {
         return this.recordsDict().asJson()
@@ -108,9 +152,22 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         return this
     },
 
+    // --- active and dirty objects ---
+
     hasActiveObject: function(anObject) {
         const puuid = anObject.puuid()
         return this.activeObjects().hasOwnProperty(puuid)
+    },
+    
+    addActiveObject: function(anObject) {
+        if (!this.hasActiveObject(anObject)) {
+            this.addDirtyObject(anObject) // only do this during ref creation?
+        }
+        this.activeObjects()[anObject.puuid()] = anObject
+    },
+
+    hasDirtyObjects: function() {
+        return Object.keys(this.dirtyObjects()).length !== 0
     },
 
     addDirtyObject: function(anObject) {
@@ -119,12 +176,7 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         return this
     },
 
-    addActiveObject: function(anObject) {
-        if (!this.hasActiveObject(anObject)) {
-            this.addDirtyObject(anObject) // only do this during ref creation?
-        }
-        this.activeObjects()[anObject.puuid()] = anObject
-    },
+    // --- storing ---
 
     atomicallyStoreDirtyObjects: function() {
         this.recordsDict().begin()
@@ -166,6 +218,8 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         return totalStoreCount
     },
 
+    // --- reading ---
+
     objectForRecord: function(aRecord) { // private
         const aClass = window[aRecord.type]
         const obj = aClass.instanceFromRecordInStore(aRecord, this)
@@ -184,6 +238,12 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
             return obj
         }
         return this.objectForRecord(this.recordForPid(puuid))
+    },
+
+    // --- references ---
+
+    unrefValueIfNeeded: function(v) {
+        return this.unrefValue(v)
     },
 
     unrefValue: function(v) {
@@ -217,7 +277,7 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         return aRecord
     },
 
-    // write a record
+    // write an object
 
     storeObject: function(obj) {
         const puuid = obj.puuid()
@@ -226,20 +286,7 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         return this
     },
 
-    // --- test ----------------------------
-
-    publicStoreObject: function(obj) {
-        this.addActiveObject(obj)
-        this.addDirtyObject(obj)
-        this.atomicallyStoreDirtyObjects()
-        return this
-    },
-
     // -------------------------------------
-
-    hasDirtyObjects: function() {
-        return Object.keys(this.dirtyObjects()).length !== 0
-    },
 
     flushIfNeeded: function () {
         if (this.hasDirtyObjects()) {
@@ -256,18 +303,18 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         this.flushIfNeeded()
 
         this.debugLog("--- begin collect ---")
-        this.setMarked(new Set())
+        this.setMarkedSet(new Set())
         this.markPid(this.rootObject().puuid()) // this is recursive, but skips marked records
         const deleteCount = this.atomicallySweep()
-        this.setMarked(null)
+        this.setMarkedSet(null)
         this.debugLog(() => "--- end collect - collected " + deleteCount + " pids ---")
         return deleteCount
     },
 
     markPid: function (pid) {
         //this.debugLog(() => "markPid(" + pid + ")")
-        if (!this.marked().has(pid)) {
-            this.marked().add(pid)
+        if (!this.markedSet().has(pid)) {
+            this.markedSet().add(pid)
             const refPids = this.refSetForPuuid(pid)
             //this.debugLog(() => "markPid " + pid + " w refs " + JSON.stringify(refPids))
             refPids.forEach(refPid => this.markPid(refPid))
@@ -300,7 +347,7 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         } else if (Type.isObject(json) && json.storeJsonRefs) {
             json.storeJsonRefs(puuids)
         } else {
-            throw new Error("unable to handle json type: " + typeof(json))
+            throw new Error("unable to handle json type: " + typeof(json) + " missing storeJsonRefs() method?")
         }
         
         return puuids
@@ -320,7 +367,7 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         // delete all unmarked records
         let deleteCount = 0
         this.recordsDict().keys().forEach((pid) => {
-            if (!this.marked().has(pid)) {
+            if (!this.markedSet().has(pid)) {
                 //this.debugLog("deletePid(" + pid + ")")
                 this.recordsDict().removeAt(pid)
                 deleteCount ++
@@ -330,21 +377,30 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         return deleteCount
     },
 
-    selfTest: function () {
-        const store = ObjectPool.clone()
-    
+    selfTestRoot: function() {
         const aTypedArray = Float64Array.from([1.2, 3.4, 4.5])
         const aSet = new Set("sv1", "sv2")
         const aMap = new Map([ ["mk1", "mv1"], ["mk2", "mv2"] ])
-        const aNode = BMNode.clone()
+        const aNode = BMStorableNode.clone()
         const a = [1, 2, [3, null], { foo: "bar", b: true }, aSet, aMap, new Date(), aTypedArray, aNode]
-    
-        store.setRootObject(a)
-        store.publicStoreObject(a)
-        //console.log(store.asJson())
-        console.log("---")
+        return a
+    },
+
+    selfTest: function () {
+        console.log(this.type() + " --- self test start --- ")
+        const store = ObjectPool.clone()
+        store.open()
+
+        store.rootObject()["test"] = this.selfTestRoot()
+        store.flushIfNeeded()
+        console.log("store:", store.asJson())
+        console.log(" --- ")
         store.collect()
-    
+        store.clearCache()
+        const loadedNode = store.rootObject()["test"].last()
+        console.log("loadedNode = ", loadedNode)
+        console.log(this.type() + " --- self test end --- ")
+
         /*
         const aSerialized = JSON.stringify(a, null, 2)
         console.log("aSerialized: " + aSerialized + "\n")
@@ -365,7 +421,8 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
 // -------------------
 
 
-
-ObjectPool.selfTest()
+setTimeout(() => {
+    //ObjectPool.selfTest()
+}, 1000)
 
 

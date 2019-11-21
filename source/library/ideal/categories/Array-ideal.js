@@ -731,11 +731,19 @@ Object.defineSlots(Array.prototype, {
 
     // --- equality ---
 
-    equals: function (array) {
+    equals: function (array /*, visited = new Set()*/) {
         // we want this to work on any object that confroms to the array protocol, 
         // not just objects of the same JS type
         // but how do we test for the [] accessor?
-    
+        // also, how do we deal with circular structures?
+
+        /*
+        if (visited.has(this)) {
+            return true // ?
+        }
+        visited.add(this)
+        */
+
         if(array.length === undefined) {
             return false;
         }
@@ -759,13 +767,14 @@ Object.defineSlots(Array.prototype, {
             */
     
             
-            if (a.equals && !a.equals(b)) {
+            if (a.equals && !a.equals(b, visited)) {
                 return false;
             } else if (a !== b) {
                 // Warning - two different object instances will never be equal: {x:20} !== {x:20}
                 return false;
             }
         }
+        
         return true;
     },
 
@@ -787,24 +796,11 @@ Object.defineSlots(Array.prototype, {
     
     /*
     asImmutable: function() {
-        // doesn't raise exception on attempts to write - too dangerous to use
-
+        // doesn't raise exception on write - they just fail silently - too dangerous to use
         //const obj = this.shallowCopy()
         //Object.freeze(obj)
         //return obj
     },
     */
 });
-
-/*
-// Hide method from for-in loops
-Object.defineProperty(Array.prototype, "equals", { 
-    writable: true,
-    enumerable: false,
-    configurable: true,
-    enumerable: false,
-    value: equalsArrayFunc,
-});
-*/
-
 

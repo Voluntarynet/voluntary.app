@@ -18,6 +18,15 @@ window.ideal.AtomicDictionary = class AtomicDictionary extends ideal.Dictionary 
         this.newSlot("keysAndValuesAreStrings", true) // private method
     }
 
+    open () {
+        this.setIsOpen(true)
+        return this
+    }
+
+    assertOpen () {
+        assert(this.isOpen())
+    }
+
     asyncOpen (callback) {
         this.setIsOpen(true)
         callback()
@@ -81,7 +90,7 @@ window.ideal.AtomicDictionary = class AtomicDictionary extends ideal.Dictionary 
     // extras 
 
     assertAccessible () {
-        //this.assertOpen()
+        this.assertOpen()
     }
 
     keys () {
@@ -99,10 +108,10 @@ window.ideal.AtomicDictionary = class AtomicDictionary extends ideal.Dictionary 
         return this.keys().length
     }	
 
-    asJson () {
+    asJsonString () {
         this.assertAccessible()
         // WARNING: this can be slow for a big store!
-        return JSON.stringify(this.jsDict())
+        return this.jsDict()
     }
 
     totalBytes () {

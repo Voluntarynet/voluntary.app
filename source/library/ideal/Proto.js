@@ -434,15 +434,6 @@ Proto.setSlots({
         return result
     },
 
-    /*
-    Can't use this yet because freeze also make's it's prototype immutable
-    Will need to copy whole object and prototype chain before freezing.
-    
-    asImmutable: function() {
-        Object.freeze(this)
-    }
-    */
-
     debugLog: function (s) {
         if (this.isDebugging()) {
             if (Type.isFunction(s)) {

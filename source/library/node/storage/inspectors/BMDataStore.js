@@ -33,7 +33,7 @@ BMNode.newSubclassNamed("BMDataStore").newSlots({
     prepareToSyncToView: function () {
         //console.log("this.storeHasChanged() = ", this.storeHasChanged())
 
-        if (this.subnodes().length === 0 || this.storeHasChanged()) {
+        if (this.subnodeCount() === 0 || this.storeHasChanged()) {
             this.defaultStore().collect()
             this.setLastSyncTime(this.defaultStore().lastSyncTime())
             this.refreshSubnodes()

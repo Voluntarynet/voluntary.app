@@ -4,41 +4,14 @@ TODO:
 	
 	
 	NodeStore:
-		Remove global _ roots and replace with a single root Object that's a dictionary?
+		Remove global _ roots and replace with a single root Node.
 	
-	Use 
-		aStore.refValue(v) to add v to activeObjects (which adds to storeQueue if not present in activeObjects)
-		
-	
-	sdb()
-		asyncOpen()
-		isOpen()
-		begin()
-		commit()
-		at(pid)
-		atPut(pid, dict)
-		removeAt(pid)
-		clear()
-		
-
-	- move persistence to use k/v entries instead of dict in case order is important 
-
 	BMNode
 		- need to support array and dict values on slots which can reference nodes
 		  so we can implement Store.pidRefsFromNodeDict
-	
-		- instanceWithPidFromStore(pid, aStore)
-		need to clone and set pud first?
-		
-		- allow store to override lazy load children
 		
 		- differences between copy and store?
 
-	- eliminate use of NodeStore.shared() in node load methods?
-	
-	use window.postMessage to coordinate boot?
-	- post exceptions?
-	
 	- fix for BooleanFieldView tab action
 	
 	dragging

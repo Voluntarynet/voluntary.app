@@ -222,7 +222,7 @@ BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
 		
         /*
 		this.debugLog(".updateIdsBloomFilter() with " + ids.length + " ids")
-		console.log("   local ids:  " + this.localIdentities().subnodes().length)
+		console.log("   local ids:  " + this.localIdentities().subnodeCount())
 		console.log("   remote ids: " + this.allRemoteIdentities().length)
 		*/
 		

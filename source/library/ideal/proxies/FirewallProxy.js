@@ -38,7 +38,6 @@ ObservableProxy.newSubclassNamed("FirewallProxy").newSlots({
 
     defaultProtectedMethods: function() {
         return new Set([
-
         ])
     },
 
@@ -53,6 +52,10 @@ ObservableProxy.newSubclassNamed("FirewallProxy").newSlots({
     },
 
     postForTrap: function(trapName, propertyName) {
+        // instead of posting to observers, 
+        // just check if it's a protected trap and, if so, raise an exception
+        // TODO: abstract non posting behavior from ObservableProxy and 
+        // use as parent class of both ObservableProxy and Firewall
         if (this.protectedTraps().has(trapName)) {
             const msg = " blocked proxy trap '" + trapName + "' on property '" + propertyName + "'"
             this.debugLog(msg)
@@ -77,13 +80,16 @@ ObservableProxy.newSubclassNamed("FirewallProxy").newSlots({
 
         this.postForTrap("get", propertyName)
 
-        const isFunction = Type.isFunction(target[propertyName])
+        // if it's a protected method, we'll return a special function
+        // that calls onProtectedMethodCall to raise an exception
         const isProtected = this.protectedMethods().has(propertyName)
-
-        if (isFunction && isProtected) {
-            const self = this
-            return () => {
-                return self.onProtectedMethodCall(propertyName, arguments)
+        if (isProtected) {
+            const isFunction = Type.isFunction(target[propertyName])
+            if (isFunction) {
+                const self = this
+                return () => {
+                    return self.onProtectedMethodCall(propertyName, arguments)
+                }
             }
         }
 
@@ -91,8 +97,9 @@ ObservableProxy.newSubclassNamed("FirewallProxy").newSlots({
     },
 
     selfTest: function() {
+        // test array
         const array = ["a", "b", "c"]
-        const ap = array.asImmutable()
+        const ap = array.asReadOnly()
         assertThrows(() => ap.atPut(0, "foo"))
         assertThrows(() => ap[0] = "bar")
         assertThrows(() => ap.pop())
@@ -100,21 +107,43 @@ ObservableProxy.newSubclassNamed("FirewallProxy").newSlots({
         assertThrows(() => ap.shift())
         assertThrows(() => ap.sort())
 
+        // test set
         const set = new Set(["foo", "bar"])
-        const sp = set.asImmutable()
+        const sp = set.asReadOnly()
         assertThrows(() => sp.add(1))
         assertThrows(() => sp.clear())
         assertThrows(() => sp.delete("foo"))
 
+        // test map
         const map = new Map([ ["foo", 1], ["bar", 2] ])
-        const mp = set.asImmutable()
+        const mp = set.asReadOnly()
         assertThrows(() => mp.clear())
         assertThrows(() => mp.delete("foo"))
         assertThrows(() => mp.set("foo", 2))
 
+        // test date
+        const date = new Date()
+        const dp = date.asReadOnly()
+        assertThrows(() => dp.setYear(1999))
 
         console.log(this.type() + " - self test passed")
     },
+})
+
+
+// ------------------------------------------------------------------
+// Use FirewallProxy to implement asReadOnly methods on basic types
+// ------------------------------------------------------------------
+
+Object.defineSlots(Object.prototype, {
+    
+    mutatorMethodNamesSet: function() {
+        return new Set([
+            "__defineGetter__",  
+            "__defineSetter__",
+        ])
+    },
+
 })
 
 Object.defineSlots(Set.prototype, {
@@ -158,15 +187,40 @@ Object.defineSlots(Array.prototype, {
 
 })
 
+Object.defineSlots(Date.prototype, {
+    
+    mutatorMethodNamesSet: function() {
+        return new Set([
+            "setDate",
+            "setFullYear",
+            "setHours",
+            "setMilliseconds",
+            "setMinutes",
+            "setMonth",
+            "setSeconds",
+            "setTime",
+            "setUTCDate",
+            "setUTCFullYear",
+            "setUTCHours",
+            "setUTCMilliseconds",
+            "setUTCMinutes",
+            "setUTCMonth",
+            "setUTCSeconds",
+            "setYear",
+        ])
+    },
+
+})
+
 Object.defineSlots(Object.prototype, {
 
-    asImmutable: function() {
+    asReadOnly: function() {
         const obj = FirewallProxy.newProxyFor(this)
         obj.observable().setProtectedMethods(this.mutatorMethodNamesSet())
         return obj
-    }
+    },
 
 })
 
 
-FirewallProxy.selfTest()
+//FirewallProxy.selfTest()

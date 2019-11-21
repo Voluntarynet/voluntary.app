@@ -1,11 +1,9 @@
 "use strict"
 
 ResourceLoader.pushRelativePaths([
-    "BMStorableNode.js",
     "BMSummaryNode.js",
     "BMMenuNode.js",
     "BMImageNode.js",
-    "BMStoredDatedSetNode.js",
     "BMTextNode.js",
 ])
 

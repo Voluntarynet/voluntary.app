@@ -38,6 +38,9 @@ BMSummaryNode.newSubclassNamed("BMMenuNode").newSlots({
         //this.setNodeRowStyles(BMViewStyles.clone())
 
         //this.setNodeUsesColumnBackgroundColor(false)
+
+        this.setCanDelete(true)
+        this.setNodeCanInspect(true) 
     },
 
     /*
@@ -50,8 +53,12 @@ BMSummaryNode.newSubclassNamed("BMMenuNode").newSlots({
 
     didLoadFromStore: function() {
         BMSummaryNode.didLoadFromStore.apply(this)
-        this.subnodes().forEach( (subnode) => { subnode.setCanDelete(true) });
-        this.subnodes().forEach( (subnode) => { subnode.setNodeCanInspect(true) });
+        /*
+        this.subnodes().forEach( (subnode) => { 
+            subnode.setCanDelete(true)
+            subnode.setNodeCanInspect(true) 
+        });
+        */
         return this
     },
 
@@ -100,7 +107,7 @@ BMSummaryNode.newSubclassNamed("BMMenuNode").newSlots({
 
         const colorPair = this.colorPairForDepth(this.nodeDepth())
         const index = this.subnodeIndex()
-        const ratio = index / this.parentNode().subnodes().length
+        const ratio = index / this.parentNode().subnodeCount()
         const topColor = colorPair[0]
         const bottomColor = colorPair[1]
         const c = topColor.interpolateWithColorTo(bottomColor, 1 - ratio)

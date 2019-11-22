@@ -8,6 +8,19 @@
 
 */
 
+Object.defineSlots(Array, {
+
+    fromIterator: function(iterator) {
+        const values = []
+        let result = iterator.next()
+        while (!result.done) {
+            values.push(result.value)
+            result = iterator.next()
+        }
+        return values
+    },
+    
+})
 
 Object.defineSlots(Array.prototype, {
 

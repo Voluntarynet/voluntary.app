@@ -14,7 +14,7 @@ window.ideal.AtomicDictionary = class AtomicDictionary extends ideal.Dictionary 
         super.init()
         this.newSlot("hasBegun", false) // private method
         this.newSlot("oldVersion", null) // private method
-        this.newSlot("isOpen", false) // private method
+        this.newSlot("isOpen", true) // private method
         this.newSlot("keysAndValuesAreStrings", true) // private method
     }
 

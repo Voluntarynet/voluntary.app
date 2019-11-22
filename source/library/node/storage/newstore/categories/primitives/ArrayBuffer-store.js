@@ -24,7 +24,7 @@ Object.defineSlots(ArrayBuffer.prototype, {
         return true
     },
 
-    storeJsonRefs: function(puuids = new Set()) {
+    refsPidsForJsonStore: function(puuids = new Set()) {
         return puuids
     },
 })

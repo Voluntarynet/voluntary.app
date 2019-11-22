@@ -13,19 +13,13 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     //loadsUnionOfChildren: false,
     isUnserializing: false,
     doesLazyLoadChildren: true,
+    lazySubnodesRefs: null,
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)
         this.setStoredSlots({})
         this.scheduleSyncToStore()
         this.addStoredSlot("canDelete")  // TODO: move elsewhere
-    },
-    
-    defaultStore: function() {
-        if (this._nodeStore) {
-            return this._nodeStore
-        }
-        return NodeStore.shared()
     },
 
     // --- overrides from parent class ---
@@ -256,12 +250,13 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     // subnodes
     
     subnodeCount: function() {
-        if (this._lazySubnodePids) {
-            return this._lazySubnodePids.length
+        if (this.lazySubnodesPids()) {
+            return this.lazySubnodesPids().length
         }
         return this._subnodes.length
     },
-
+    
+    /*
     subnodePids: function( aStore = this.defaultStore()) {
         const storableSubnodes = this.subnodes().filter(sn => sn.shouldStore())
         const pids = storableSubnodes.map(sn => { 
@@ -270,22 +265,34 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         })
         return pids
     },
+    */
 
-    prepareToAccess: function(aStore = this.defaultStore()) {
-        BMNode.prepareToAccess.apply(this)
-        if (this._lazySubnodePids) {
-            //console.log(this.typeId() + " prepareToAccess")
-            this.loadLazyPids()
-            this._lazySubnodePids = null
+    setLazySubnodesPids: function(pids) {
+        //values: this.map(v => aStore.refValue(v))
+
+        this._slazySubnodePids = pids
+        if (!this.doesLazyLoadChildren()) { // if lazy, we'll load on prepareForFirstAccess
+            this.loadSubnodesRecord() 
         }
         return this
     },
 
-    loadLazyPids: function() {
-        this.justSetSubnodePids(this._lazySubnodePids)
+    loadSubnodesRecord: function(aStore = this.defaultStore()) {
+        const subnodes = Array.instanceFromRecordInStore(this.subnodesRecord(), aStore)
+        this.setSubnodes(subnodes)
+        this.setSubnodesRecord(null) // no longer needed
         return this
     },
 
+    prepareForFirstAccess: function(aStore = this.defaultStore()) {
+        BMNode.prepareForFirstAccess.apply(this)
+        if (this.subnodesRecord()) {
+            this.loadSubnodesRecord()
+        }
+        return this
+    },
+
+    /*
     setSubnodePids: function(pids, aStore = this.defaultStore()) {
         if (this.doesLazyLoadChildren()) {
             this._lazySubnodePids = pids
@@ -302,6 +309,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         this.setSubnodes(subnodes)
         return this
     },
+    */
     
     /*
     pidRefsFromNodeDict: function(nodeDict) {
@@ -329,6 +337,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     },
     */
 
+    /*
     nodePidRefsFromNodeDict: function(nodeDict) {
         const pids = []
 
@@ -352,42 +361,11 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         
         return pids
     },
+    */
 
     // ----------------------------------------
     // new store system
     // ----------------------------------------
 
-    /*
-    recordForStore: function(aStore) { // should only be called by Store
-        const dict = {}
-
-        Object.keys(this.storedSlots()).forEach((k) => {
-            const v = this.getStoreSlotValue(k)
-            dict[k] = aStore.refValue(v)
-        })
-
-        return {
-            type: this.type(), 
-            dict: dict, 
-        }
-    },
-
-    instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store    
-        const proto = window[aRecord.type]
-        const obj = proto.clone()
-        const dict = aRecord.dict
-
-        Object.keys(aDict).forEach((k) => {
-            if(!this.setStoreSlotValue(k, aDict[k], aStore)) {
-                // slot was missing, so store it again without it
-                if (!aStore.isReadyOnly()) {
-                    this.scheduleSyncToStore()
-                }
-            }
-        })
-
-        return obj
-    },
-    */
 
 })

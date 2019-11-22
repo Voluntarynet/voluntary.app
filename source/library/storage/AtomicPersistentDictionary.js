@@ -28,7 +28,7 @@
         
 */
 
-window.AtomicPersistentDictionary = class AtomicDictionary extends ProtoClass {
+window.AtomicPersistentDictionary = class AtomicPersistentDictionary extends ideal.AtomicDictionary {
     init() {
         super.init()
         this.newSlots({
@@ -113,7 +113,7 @@ window.AtomicPersistentDictionary = class AtomicDictionary extends ProtoClass {
         
 	    let count = 0
         
-        this.keysChanged().keysArray().forEach((k) => {
+        this.changedKeys().keysArray().forEach((k) => {
             const isDelete = !this.jsDict().hasOwnProperty(k)
 
             if (isDelete) {

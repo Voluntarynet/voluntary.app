@@ -13,10 +13,10 @@ Object.defineSlots(Array.prototype, {
         return true
     },
 
-    storeJsonRefs: function(puuids = new Set()) {
+    refsPidsForJsonStore: function(puuids = new Set()) {
         this.forEach(v => { 
             if (!Type.isNull(v)) { 
-                v.storeJsonRefs(puuids)
+                v.refsPidsForJsonStore(puuids)
             } 
         })
         return puuids

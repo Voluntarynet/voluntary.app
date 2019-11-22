@@ -22,10 +22,6 @@ BMNode.newSubclassNamed("BMDataStore").newSlots({
         return this.defaultStore().shortStatsString()
     },
 
-    defaultStore: function () {
-        return NodeStore.shared()
-    },
-
     storeHasChanged: function() {
         return this.defaultStore().lastSyncTime() !== this.lastSyncTime()
     },

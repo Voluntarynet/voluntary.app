@@ -15,7 +15,7 @@ Type.typedArrayTypeNames().forEach((name) => {
             }
         },
 
-        storeJsonRefs: function(puuids = new Set()) {
+        refsPidsForJsonStore: function(puuids = new Set()) {
             // no references in a TypedArray
             return puuids
         },

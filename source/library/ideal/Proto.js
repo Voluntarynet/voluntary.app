@@ -578,6 +578,10 @@ Proto.setSlots({
         })
     },
 
+    defaultStore: function() {
+        return ObjectPool.shared()
+        //return NodeStore.shared()
+    },
 });
 
 Proto.newSlot("isDebugging", false);

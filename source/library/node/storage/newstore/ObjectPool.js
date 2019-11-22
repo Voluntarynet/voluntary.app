@@ -64,6 +64,7 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
     lastSyncTime: null, // WARNING: vulnerable to system time changes
     //isReadOnly: true,
     markedSet: null, // Set of puuids
+    nodeStoreDidOpenNote: null, // TODO: change name?
 }).setSlots({
     init: function() {
         ideal.Proto.init.apply(this)
@@ -72,14 +73,20 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         this.setDirtyObjects({})
         this.setLastSyncTime(null)
         this.setMarkedSet(null)
+        this.setNodeStoreDidOpenNote(window.NotificationCenter.shared().newNote().setSender(this).setName("nodeStoreDidOpen"))
 
         return this
+    },
+
+    shared: function() {   
+        return this.sharedInstanceForClass(ObjectPool)
     },
 
     clearCache: function() {
         this.setActiveObjects({})
         this.setDirtyObjects({})
-        this.setRootObject(this.objectForPid(this.rootObject().puuid()))
+        this.readRoot()
+        //this.setRootObject(this.objectForPid(this.rootObject().puuid()))
         return this
     },
 
@@ -92,14 +99,25 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         return this
     },
 
-    asyncOpen: function() {
+    asyncOpen: function(callback) {
         assert(this.recordsDict().asyncOpen)
-        this.recordsDict().asyncOpen(() => this.onRecordsDictOpen())
+        this.recordsDict().asyncOpen(() => {
+            this.onRecordsDictOpen()
+            if (callback) {
+                callback()
+            }
+        })
         return this
     },
 
     onRecordsDictOpen: function() {
-        this.setupRoot()
+        this.readRoot()
+        this.nodeStoreDidOpenNote().post()
+        return this
+    },
+
+    isOpen: function() {
+        return this.recordsDict().isOpen()
     },
 
     // --- root ---
@@ -108,30 +126,56 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         return "root"
     },
 
-    setupRoot: function() {
-        const rk = this.rootKey()
-        if (!this._rootObject) {
-            if (this.recordsDict().hasKey(rk)) {
-                this.setRootObject(this.objectForPid(rk))
-            } else {
-                const obj = {}
-                obj.setPuuid(rk)
-                this._rootObject = obj
-                this.addActiveObject(obj)
-                this.addDirtyObject(obj)
-            }
-        }
-        return this._rootObject
+    hasStoredRoot: function() {
+        return this.recordsDict().hasKey(this.rootKey())
     },
 
-    setRootObject: function(obj) {
-        if (this._rootObject) {
-            throw new Error("can't change root object")
+    rootOrIfAbsentFromClosure: function(aClosure) {
+        if (!this.hasStoredRoot()) {
+            const newRoot = aClosure()
+            assert(newRoot)
+            this.setRootObject(newRoot)
         }
-        
-        assert(!this.recordsDict().hasKey(obj.puuid()))
-        assert(!this.activeObjects().hasOwnProperty(obj.puuid()))
-        assert(!this.dirtyObjects().hasOwnProperty(obj.puuid()))
+        return this.rootObject()
+    },
+
+    readRoot: function() {
+        const rk = this.rootKey()
+        if (this.hasStoredRoot()) {
+            this._rootObject = null
+            this.setRootObject(this.objectForPid(rk))
+        }
+        return this.rootObject()
+    },
+
+    knowsObject: function(obj) { // private
+        const puuid = obj.puuid()
+        const foundIt = this.recordsDict().hasKey(puuid) ||
+            this.activeObjects().hasOwnProperty(puuid) ||
+            this.dirtyObjects().hasOwnProperty(puuid)
+        return foundIt
+    },
+
+    assertOpen: function() {
+        assert(this.isOpen())
+    },
+
+    changeOldPidToNewPid: function(oldPid, newPid) {
+        // flush and change pids on all activeObjects 
+        // and pids and pidRefs in recordsDict 
+        throw new Error("unimplemented")
+        return this
+    },
+    
+    setRootObject: function(obj) {
+        this.assertOpen()
+        if (this._rootObject) {
+            // can support this if we change all stored and
+            //this.changeOldPidToNewPid("root", Object.newUuid())
+            throw new Error("can't change root object yet, unimplemented")
+        }
+
+        assert(!this.knowsObject(obj))
 
         obj.setPuuid(this.rootKey())
         this._rootObject = obj
@@ -173,10 +217,25 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
     addDirtyObject: function(anObject) {
         const puuid = anObject.puuid()
         this.dirtyObjects()[puuid] = anObject
+        this.scheduleStore()
+        return this
+    },
+
+    scheduleStore: function () {
+        if (!SyncScheduler.shared().isSyncingTargetAndMethod(this, "storeDirtyObjects")) {
+            if (!SyncScheduler.shared().hasScheduledTargetAndMethod(this, "storeDirtyObjects")) {
+                //console.warn("scheduleStore currentAction = ", SyncScheduler.currentAction() ? SyncScheduler.currentAction().description() : null)
+                window.SyncScheduler.shared().scheduleTargetAndMethod(this, "storeDirtyObjects", 1000)
+            }
+        }
         return this
     },
 
     // --- storing ---
+
+    storeDirtyObjects: function() {
+        this.atomicallyStoreDirtyObjects()
+    },
 
     atomicallyStoreDirtyObjects: function() {
         this.recordsDict().begin()
@@ -253,6 +312,10 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         const puuid = v["*"]
         assert(puuid)
         return this.objectForPid(puuid)
+    },
+
+    willRefObject: function(obj) { // TODO: remove this - it's transitional from NodeStore
+        return this.refValue(obj)
     },
 
     refValue: function(v) {
@@ -342,12 +405,12 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         //console.log(" json: ", JSON.stringify(json, null, 2))
 
         if (Type.isLiteral(json)) {
-            // we could call storeJsonRefs but, none will add any pids 
+            // we could call refsPidsForJsonStore but, none will add any pids 
             // and null raises exception, so just skip it
-        } else if (Type.isObject(json) && json.storeJsonRefs) {
-            json.storeJsonRefs(puuids)
+        } else if (Type.isObject(json) && json.refsPidsForJsonStore) {
+            json.refsPidsForJsonStore(puuids)
         } else {
-            throw new Error("unable to handle json type: " + typeof(json) + " missing storeJsonRefs() method?")
+            throw new Error("unable to handle json type: " + typeof(json) + " missing refsPidsForJsonStore() method?")
         }
         
         return puuids
@@ -391,38 +454,29 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         const store = ObjectPool.clone()
         store.open()
 
-        store.rootObject()["test"] = this.selfTestRoot()
+        store.rootOrIfAbsentFromClosure(() => BMStorableNode.clone())
         store.flushIfNeeded()
         console.log("store:", store.asJson())
         console.log(" --- ")
         store.collect()
         store.clearCache()
-        const loadedNode = store.rootObject()["test"].last()
+        const loadedNode = store.rootObject()
         console.log("loadedNode = ", loadedNode)
         console.log(this.type() + " --- self test end --- ")
 
-        /*
-        const aSerialized = JSON.stringify(a, null, 2)
-        console.log("aSerialized: " + aSerialized + "\n")
-        store.storeObject(a)
-    
-        console.log(store.asJson())
-        console.log("-----------------")
-    
-        const b = store.objectForPid(a.puuid())
-        const bSerialized = JSON.stringify(b, null, 2)
-        console.log("bSerialized: " + bSerialized + "\n")
-        assert(aSerialized === bSerialized)
-        console.log("test passed")
-        */
+    },
+
+    rootInstanceWithPidForProto: function(aTitle, aProto) {
+        return this.rootObject().subnodeWithTitleIfAbsentInsertClosure(aTitle, () => aProto.clone())
     },
 })
 
 // -------------------
 
-
+/*
 setTimeout(() => {
-    //ObjectPool.selfTest()
+    ObjectPool.selfTest()
 }, 1000)
+*/
 
 

@@ -20,7 +20,7 @@ Object.defineSlots(Object.prototype, {
         return true
     },
 
-    storeJsonRefs: function(puuids = new Set()) {
+    refsPidsForJsonStore: function(puuids = new Set()) {
         if (this.hasOwnProperty("*")) {
             puuids.add(this["*"])
         } else {

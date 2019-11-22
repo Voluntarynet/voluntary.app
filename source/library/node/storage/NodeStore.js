@@ -130,7 +130,6 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         */
 
         this.setIsDebugging(false)
-
         Broadcaster.shared().addListenerForName(this, "didChangeStoredSlot")
     },
 
@@ -193,7 +192,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
             if (callback) {
                 callback()
             }
-            this._nodeStoreDidOpenNote.post()
+            this.nodeStoreDidOpenNote().post()
         })
         return this
     },
@@ -206,6 +205,12 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         return this
     },
 
+
+    shared: function() {   
+        return this.sharedInstanceForClass(NodeStore)
+    },
+
+    /*
     shared: function () {
         if (!this._shared) {
             this._shared = this.clone()
@@ -213,6 +218,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         }
         return this._shared
     },
+    */
 
     rootInstanceWithPidForProto: function (pid, proto) {
         if (this.hasObjectForPid(pid)) {

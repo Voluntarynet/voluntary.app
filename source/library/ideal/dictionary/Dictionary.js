@@ -15,6 +15,7 @@ window.ideal.Dictionary = class Map extends ProtoClass {
     }
 
     init () {
+        super.init()
         this.newSlot("jsDict", null)
         this.setJsDict({});
     }

@@ -13,7 +13,7 @@ Object.defineSlots(BMStorableNode, {
             aRecord.slots.push([k, aStore.refValue(v)])
         })
 
-        aRecord.children = this.subnodePids(aStore)
+        aRecord.subnodesRecord = this.subnodes().recordForStore(aStore)
 
         return aRecord
     },
@@ -40,7 +40,11 @@ Object.defineSlots(BMStorableNode, {
             }
         })
 
-        this.setSubnodePids(aRecord.children, aStore) // only calls aStore.objectForPid
+
+        this.setSubnodesRecord(aRecord.subnodesRecord) 
+
+        //const subnodes = Array.instanceFromRecordInStore(this.subnodesRecord(), aStore)
+        //this.setSubnodePids(aRecord.children, aStore) // only calls aStore.objectForPid
 
         this.didLoadFromStore()
         this.scheduleLoadFinalize()

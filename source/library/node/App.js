@@ -56,10 +56,6 @@ BMNode.newSubclassNamed("App").newSlots({
         this.defaultStore().setName(this.name()).asyncOpen() 
     },
 
-    defaultStore: function() {
-        return NodeStore.shared()
-    },
-
     showBrowserCompatibilityPanel: function() {
         console.log("showing panel")
         const panel = window.PanelView.clone()
@@ -72,8 +68,9 @@ BMNode.newSubclassNamed("App").newSlots({
 
     // 2. setup 
 
-    nodeStoreDidOpen: function() {
+    nodeStoreDidOpen: function(aNote) {
         this.nodeStoreDidOpenObs().stopWatching()
+        this.defaultStore().rootOrIfAbsentFromClosure(() => BMStorableNode.clone())
         this.setup()
     },
 

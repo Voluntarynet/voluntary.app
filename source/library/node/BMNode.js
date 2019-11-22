@@ -802,38 +802,42 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     },
 	
     parentNodeTypes: function() {
-        return this.parentNodes().map((node) => { return node.type() })
+        return this.parentNodes().map(node => node.type())
     },
     
     // --- subnode lookup -----------------------------
     
     subnodesSans: function(aSubnode) {
-	    const results = this.subnodes().select((subnode) => { return subnode !== aSubnode })
-	    return results
+	    return this.subnodes().select(subnode => subnode !== aSubnode)
     },
 	
     firstSubnodeOfType: function(aProto) {
-        return this.subnodes().detect(function (subnode) {
-            return subnode.type() === aProto.type()
-        })
+        return this.subnodes().detect(subnode => subnode.type() === aProto.type())
     },
 
     firstSubnodeWithSubtitle: function(aString) {
-        return this.subnodes().detect(function (subnode) {
-            return subnode.subtitle() === aString
-        })
+        return this.subnodes().detect(subnode => subnode.subtitle() === aString)
+    },
+
+    subnodeWithTitleIfAbsentInsertClosure: function(aString, aClosure) {
+        let subnode = this.firstSubnodeWithSubtitle(aString)
+
+        if (!subnode && aClosure) {
+            subnode = aClosure()
+            this.addSubnode(subnode)
+        }
+
+        return subnode
     },
         
     firstSubnodeWithTitle: function(aString) {
-        return this.subnodes().detect(function (subnode) {
-            return subnode.title() === aString
-        })
+        return this.subnodes().detect(subnode => subnode.title() === aString)
     },
 
-    sendRespondingSubnodes: function(aMethodName) {
+    sendRespondingSubnodes: function(aMethodName, argumentList) {
         this.subnodes().forEach((subnode) => { 
             if (subnode[aMethodName]) {
-                subnode[aMethodName].apply(subnode)
+                subnode[aMethodName].apply(subnode, argumentList)
             }
         })
         return this
@@ -850,15 +854,15 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
             //this.debugLog(".setSubnodes() - skipping because subnodes are the same <<<<<<<<<<<<<<<<<<<<<")
             return this
         }
-        subnodes.forEach((subnode) => { subnode.setParentNode(this) })
+        subnodes.forEach(subnode => subnode.setParentNode(this))
         this._subnodes = subnodes
         this.reindexSubnodesIfNeeded()
         this.didChangeSubnodeList()
-        //this.verifySubnodesHaveParentNodes()
+        //this.assertSubnodesHaveParentNodes()
         return this
     },
     
-    verifySubnodesHaveParentNodes: function() {
+    assertSubnodesHaveParentNodes: function() {
         const missing = this.subnodes().detect(subnode => !subnode.parentNode())
         if (missing) {
             throw new Error("missing parent node on subnode " + missing.type())

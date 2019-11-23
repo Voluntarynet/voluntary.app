@@ -90,7 +90,6 @@ class ResourceLoaderBase {
         if (!this[setterName]) {
             this[setterName] = function (newValue) {
                 this[privateName] = newValue;
-                //this.updateSlot(slotName, privateName, newValue);
                 return this;
             }
         }

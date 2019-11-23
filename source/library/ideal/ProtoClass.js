@@ -22,6 +22,7 @@
 
 */
 
+//window.ideal.ProtoClass = 
 class ProtoClass { 
 
     // --- class slots and variables ---
@@ -130,6 +131,12 @@ class ProtoClass {
         return this.constructor.name
     }
 
+    setType (aString) {
+        this._type = aString
+        this.constructor.name = aString
+        return this
+    }
+
     newSlot(slotName, initialValue) {
         if (typeof(slotName) !== "string") {
             throw new Error("name must be a string");
@@ -234,6 +241,7 @@ class ProtoClass {
         return obj;
     }
 
+    /*
     withSets (sets) {
         return this.clone().performSets(sets);
     }
@@ -241,6 +249,7 @@ class ProtoClass {
     withSlots (slots) {
         return this.clone().setSlots(slots);
     }
+    */
 
     init () { 
         // subclasses should override to do initialization
@@ -406,7 +415,10 @@ class ProtoClass {
 
     debugLog (s) {
         if (this.isDebugging()) {
-            this.debugLog(" " + s)
+            if (Type.isFunction(s)) {
+                s = s()
+            }
+            console.log(" " + s)
         }
         return this
     }

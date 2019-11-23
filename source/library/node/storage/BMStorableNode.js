@@ -13,7 +13,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     //loadsUnionOfChildren: false,
     isUnserializing: false,
     doesLazyLoadChildren: true,
-    lazySubnodesRefs: null,
+    subnodePids: null,
 }).setSlots({
     init: function () {
         BMNode.init.apply(this)
@@ -250,8 +250,8 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     // subnodes
     
     subnodeCount: function() {
-        if (this.lazySubnodesPids()) {
-            return this.lazySubnodesPids().length
+        if (this.subnodePids()) {
+            return this.subnodePids().length
         }
         return this._subnodes.length
     },
@@ -292,7 +292,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         return this
     },
 
-    /*
+    
     setSubnodePids: function(pids, aStore = this.defaultStore()) {
         if (this.doesLazyLoadChildren()) {
             this._lazySubnodePids = pids
@@ -309,7 +309,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         this.setSubnodes(subnodes)
         return this
     },
-    */
+    
     
     /*
     pidRefsFromNodeDict: function(nodeDict) {
@@ -337,7 +337,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     },
     */
 
-    /*
+    
     nodePidRefsFromNodeDict: function(nodeDict) {
         const pids = []
 
@@ -361,7 +361,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
         
         return pids
     },
-    */
+    
 
     // ----------------------------------------
     // new store system

@@ -1,7 +1,21 @@
 
 TODO:
 
+
+	- add check to make sure only one commit is done per event loop?
 	
+	- move StorableNode subnodes to a slot
+	- add support for lazySlots
+		- if lazy, compile a getter that checks if loaded?
+	
+		Slot
+			- ownerClass
+			- name
+			- shouldStore
+			- isLazy
+			
+			
+	cleanup shared to use typeClass
 	
 	NodeStore:
 		Remove global _ roots and replace with a single root Node.

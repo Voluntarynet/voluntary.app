@@ -1,6 +1,5 @@
 "use strict"
 
-
 /*
 
     Proto
@@ -162,11 +161,38 @@ Proto.setSlots({
         return uuid_a + uuid_b
     },
 
+    // --- type ---
+
+    //Proto.newSlot("isDebugging", false);
+
+    _isDebugging: false,
+
+    isDebugging: function() {
+        return this._isDebugging
+    },
+
+    setIsDebugging: function(aBool) {
+        this._isDebugging = aBool
+        return this
+    },
+
+
+    // --- type ---
+
+    _type: "ideal.Proto",
+
+    type: function() {
+        return this._type
+    },
+
+
     setType: function(typeString) {
         this._type = typeString
         this.constructor.name = typeString
         return this
     },
+
+    // ---
 
     cloneWithoutInit: function () {
         const obj = Object.clone(this);
@@ -182,6 +208,7 @@ Proto.setSlots({
         return obj;
     },
 
+    /*
     withSets: function (sets) {
         return this.clone().performSets(sets);
     },
@@ -189,6 +216,7 @@ Proto.setSlots({
     withSlots: function (slots) {
         return this.clone().setSlots(slots);
     },
+    */
 
     init: function () { 
         // subclasses should override to do initialization
@@ -214,7 +242,22 @@ Proto.setSlots({
         return this;
     },
 
+    slots: function() {
+        if (!this.hasOwnProperty("_slots")) {
+            this._slots = {}
+        }
+        return this._slots
+    },
+
     newSlot: function (slotName, initialValue) {
+        
+        assert(Type.isString(slotName))
+        assert(Type.isUndefined(this.slots()[slotName]))
+
+        const slot = ideal.Slot.clone().setName(slotName).setInitValue(initialValue).setOwner(this).setupInOwner()
+        this.slots()[slotName] = slot
+
+        /*
         if (typeof(slotName) !== "string") {
             throw new Error("slotName must be a string, not a " + typeof(slotName));
         }
@@ -241,15 +284,7 @@ Proto.setSlots({
                 return this;
             }
         }
-
-        /*
-				this["addTo" + slotName.capitalized()] = function(amount)
-				{
-					this[privateName] = (this[privateName] || 0) + amount;
-					return this;
-				}
-				*/
-
+        */
         return this;
     },
 
@@ -258,9 +293,11 @@ Proto.setSlots({
         if (oldValue !== newValue) {
             this[privateName] = newValue;
             
+            /*
             if (privateName === "_type") {
                 this.contructor.name = newValue
             }
+            */
 
             this.didUpdateSlot(slotName, oldValue, newValue)
             //this.mySlotChanged(name, oldValue, newValue);
@@ -379,6 +416,12 @@ Proto.setSlots({
 
 
     // --- ancestors ---
+
+    /*
+    isInstance: function() {
+        return this.type() === this.__proto__.type()
+    },
+    */
 
     ancestors: function () {
         const results = []
@@ -579,12 +622,11 @@ Proto.setSlots({
     },
 
     defaultStore: function() {
-        return ObjectPool.shared()
-        //return NodeStore.shared()
+        //return ObjectPool.shared()
+        return NodeStore.shared()
     },
 });
 
-Proto.newSlot("isDebugging", false);
-Proto.newSlot("type", "ideal.Proto");
+
 
 

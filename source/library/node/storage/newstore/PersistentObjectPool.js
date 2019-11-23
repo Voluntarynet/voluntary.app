@@ -34,7 +34,7 @@ window.ObjectPool.newSubclassNamed("PersistentObjectPool").newSlots({
 
     selfTestOnStore: function(store) {
         store.rootOrIfAbsentFromClosure(() => BMStorableNode.clone())
-        store.flushIfNeeded()
+        //store.flushIfNeeded()
         console.log("store:", store.asJson())
         console.log(" --- ")
         store.collect()
@@ -51,7 +51,7 @@ window.ObjectPool.newSubclassNamed("PersistentObjectPool").newSlots({
 
 
 //setTimeout(() => {
-PersistentObjectPool.selfTest()
+//PersistentObjectPool.selfTest()
 //}, 1000)
 
 

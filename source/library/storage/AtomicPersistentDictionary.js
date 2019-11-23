@@ -40,6 +40,7 @@ window.AtomicPersistentDictionary = class AtomicPersistentDictionary extends ide
 
         this.setChangedKeys(new Set())
         this.setIdb(IndexedDBFolder.clone())
+        this.setIsDebugging(true)
     }
 
     setName (aName) {
@@ -55,7 +56,7 @@ window.AtomicPersistentDictionary = class AtomicPersistentDictionary extends ide
     }
 
     asyncOpen (callback) {
-        this.idb().asyncOpenIfNeeded( () => { this.onOpen(callback) })
+        this.idb().asyncOpenIfNeeded( () => this.onOpen(callback) )
         return this
     }
 	
@@ -90,6 +91,8 @@ window.AtomicPersistentDictionary = class AtomicPersistentDictionary extends ide
     // transactions
 
     begin() {
+        this.debugLog(this.type() + " begin ---")
+
         super.begin()
         this.changedKeys().clear()
         return this
@@ -102,6 +105,7 @@ window.AtomicPersistentDictionary = class AtomicPersistentDictionary extends ide
     }
 	
     commit () { // public
+        this.debugLog(this.type() + " commit ---")
 	    // push to indexedDB tx 
 	    // TODO: lock until IndexedDB's tx complete callback is received,
         // ::: super.commit() is at end of method

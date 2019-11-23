@@ -1,6 +1,15 @@
 "use strict"
 
 Object.defineSlots(Object, {
+    /*
+    newUuid: function() {
+        return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    },
+    */
+
     newUuid: function() { // TODO: move this JS UUID when it's added to JS standard lib
         const uuid_a = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
         const uuid_b = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
@@ -8,6 +17,8 @@ Object.defineSlots(Object, {
     },
 
     _puuidWeakMap: new WeakMap(),
+
+
 })
 
 Object.defineSlots(Object.prototype, {

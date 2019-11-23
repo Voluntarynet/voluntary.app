@@ -233,19 +233,7 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
 
     // --- storing ---
 
-    storeDirtyObjects: function() {
-        this.atomicallyStoreDirtyObjects()
-    },
-
-    atomicallyStoreDirtyObjects: function() {
-        this.recordsDict().begin()
-        this.justStoreDirtyObjects()
-        this.recordsDict().commit() // flushes write cache
-        this.updateLastSyncTime()
-        return this
-    },
-
-    justStoreDirtyObjects: function() { // PRIVATE
+    storeDirtyObjects: function() { // PRIVATE
         let totalStoreCount = 0
         const justStored = {} // use a dict instead of set so we can inspect it for debugging
 
@@ -353,7 +341,7 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
 
     flushIfNeeded: function () {
         if (this.hasDirtyObjects()) {
-            this.atomicallyStoreDirtyObjects()
+            this.storeDirtyObjects()
             assert(!this.hasDirtyObjects())
         }
         return this
@@ -363,14 +351,18 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         // this is an on-disk collection
         // in-memory objects aren't considered
         // so we make sure they're flushed to the db first 
-        this.flushIfNeeded()
+        this.recordsDict().begin()
+        this.storeDirtyObjects()
 
         this.debugLog("--- begin collect ---")
         this.setMarkedSet(new Set())
         this.markPid(this.rootObject().puuid()) // this is recursive, but skips marked records
-        const deleteCount = this.atomicallySweep()
+        const deleteCount = this.sweep()
         this.setMarkedSet(null)
         this.debugLog(() => "--- end collect - collected " + deleteCount + " pids ---")
+
+        this.recordsDict().commit()
+
         return deleteCount
     },
 
@@ -418,15 +410,7 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
 
     // ------------------------
 
-    atomicallySweep: function () {
-        this.debugLog("--- sweep --- ")
-        this.recordsDict().begin()
-        const deleteCount = this.justSweep()
-        this.recordsDict().commit()
-        return this
-    },
-
-    justSweep: function () {
+    sweep: function () {
         // delete all unmarked records
         let deleteCount = 0
         this.recordsDict().keys().forEach((pid) => {
@@ -440,6 +424,9 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         return deleteCount
     },
 
+    // ---------------------------
+
+    /*
     selfTestRoot: function() {
         const aTypedArray = Float64Array.from([1.2, 3.4, 4.5])
         const aSet = new Set("sv1", "sv2")
@@ -465,6 +452,7 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         console.log(this.type() + " --- self test end --- ")
 
     },
+    */
 
     rootInstanceWithPidForProto: function(aTitle, aProto) {
         return this.rootObject().subnodeWithTitleIfAbsentInsertClosure(aTitle, () => aProto.clone())

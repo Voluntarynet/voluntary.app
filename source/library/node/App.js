@@ -70,7 +70,7 @@ BMNode.newSubclassNamed("App").newSlots({
 
     nodeStoreDidOpen: function(aNote) {
         this.nodeStoreDidOpenObs().stopWatching()
-        this.defaultStore().rootOrIfAbsentFromClosure(() => BMStorableNode.clone())
+        //this.defaultStore().rootOrIfAbsentFromClosure(() => BMStorableNode.clone())
         this.setup()
     },
 

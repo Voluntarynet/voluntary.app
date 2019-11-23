@@ -1,19 +1,33 @@
 "use strict"
 
+/*
+Object.defineSlots(Object.prototype, {
+
+    entriesForStore: function(aStore) {
+        return this.recordForStore().entries()
+    },
+
+})
+
+Object.defineSlots(Object, {
+
+    instanceFromEntriesInStore: function(entries, aStore) { // should only be called by Store
+        return this.instanceFromRecordInStore(Object.fromEntries(entries), aStore)
+    },
+
+})
+*/
+
+
 Object.defineSlots(Array.prototype, {
 
     recordForStore: function(aStore) { // should only be called by Store
-        return {
+        const dict = {
             type: Type.typeName(this), 
             values: this.map(v => aStore.refValue(v))
         }
 
-        /*
-        return [
-            ["type", Type.typeName(this)], 
-            ["values", this.map(v => aStore.refValue(v))], 
-        ]
-        */
+        return dict
     },
 
     shouldStore: function() {

@@ -2,9 +2,9 @@
 
 ResourceLoader.pushRelativePaths([
     "categories/_imports.js",
+    "Slot.js",
     "Proto.js",
     "ProtoClass.js",
-    "Slot.js",
     "Documentation.js",
     "dictionary/_imports.js",
     "StackTrace.js",

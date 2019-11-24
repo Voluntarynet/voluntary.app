@@ -6,7 +6,9 @@
 
 */
 
-window.ideal = {}
+if (!window.ideal) {
+    window.ideal = {}
+}
 
 let Proto = new Object;
 ideal.Proto = Proto
@@ -220,6 +222,7 @@ Proto.setSlots({
 
     init: function () { 
         // subclasses should override to do initialization
+        //console.log(this.typeId() + " isInstance " + this.isInstance())
     },
 
     sharedInstanceForClass: function(aClass) {   
@@ -249,42 +252,13 @@ Proto.setSlots({
         return this._slots
     },
 
-    newSlot: function (slotName, initialValue) {
-        
+    newSlot: function (slotName, initialValue = null) {
         assert(Type.isString(slotName))
         assert(Type.isUndefined(this.slots()[slotName]))
 
         const slot = ideal.Slot.clone().setName(slotName).setInitValue(initialValue).setOwner(this).setupInOwner()
         this.slots()[slotName] = slot
 
-        /*
-        if (typeof(slotName) !== "string") {
-            throw new Error("slotName must be a string, not a " + typeof(slotName));
-        }
-
-        if (initialValue === undefined) { 
-            initialValue = null 
-        };
-
-        const privateName = "_" + slotName;
-        this[privateName] = initialValue;
-
-        if (!this[slotName]) {
-            this[slotName] = function () {
-                return this[privateName];
-            }
-        }
-
-        const setterName = "set" + slotName.capitalized()
-
-        if (!this[setterName]) {
-            this[setterName] = function (newValue) {
-                //this[privateName] = newValue;
-                this.updateSlot(slotName, privateName, newValue);
-                return this;
-            }
-        }
-        */
         return this;
     },
 
@@ -414,14 +388,11 @@ Proto.setSlots({
         return this.typeId();
     },
 
-
     // --- ancestors ---
 
-    /*
     isInstance: function() {
         return this.type() === this.__proto__.type()
     },
-    */
 
     ancestors: function () {
         const results = []

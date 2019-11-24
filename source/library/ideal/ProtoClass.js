@@ -137,34 +137,67 @@ class ProtoClass {
         return this
     }
 
+    slots () {
+        if (!this.hasOwnProperty("_slots")) {
+            this._slots = {}
+        }
+        return this._slots
+    }
+
+    static isInstance() {
+        return false
+    }
+
+    isInstance () {
+        return true
+    }
+
+    static slots () {
+        const self = this.prototype
+        if (!self.hasOwnProperty("_slots")) {
+            self._slots = {}
+        }
+        return self._slots
+    }
+
+
+    static newSlot(slotName, initialValue) {
+            
+        assert(Type.isString(slotName))
+        assert(Type.isUndefined(this.slots()[slotName]))
+
+        /*
+        // TODO: we want to create the private slots and initial value on instances
+        // but ONLY create method slots on classes, not instances...
+        const privateName = "_" + slotName
+        this[privateName] = initialValue
+        */
+
+        const slot = ideal.Slot.clone().setName(slotName).setInitValue(initialValue)
+        slot.setOwner(this.prototype)
+        slot.setupInOwner()
+        this.slots()[slotName] = slot
+        
+        return this;
+    }
+
     newSlot(slotName, initialValue) {
-        if (typeof(slotName) !== "string") {
-            throw new Error("name must be a string");
-        }
+            
+        assert(Type.isString(slotName))
+        assert(Type.isUndefined(this.slots()[slotName]))
 
-        if (initialValue === undefined) { 
-            initialValue = null; 
-        };
+        /*
+        // TODO: we want to create the private slots and initial value on instances
+        // but ONLY create method slots on classes, not instances...
+        const privateName = "_" + slotName
+        this[privateName] = initialValue
+        */
 
-        const privateName = "_" + slotName;
-        this[privateName] = initialValue;
-
-        if (!this[slotName]) {
-            this[slotName] = function () {
-                return this[privateName];
-            }
-        }
-
-        const setterName = "set" + slotName.capitalized()
-
-        if (!this[setterName]) {
-            this[setterName] = function (newValue) {
-                //this[privateName] = newValue;
-                this.updateSlot(slotName, privateName, newValue);
-                return this;
-            }
-        }
-
+        const slot = ideal.Slot.clone().setName(slotName).setInitValue(initialValue)
+        slot.setOwner(this)
+        slot.setupInOwner()
+        this.slots()[slotName] = slot
+        
         return this;
     }
 
@@ -423,4 +456,28 @@ class ProtoClass {
         return this
     }
 }
+
+/*
+class EmptyClass {
+    YOU_FOUND_ME() {
+
+    }
+}
+*/
+
+/*
+function test() {
+    super.test()
+}
+*/
+
+/*
+ProtoClass.newSlots({
+    "TEST_SLOT": 1
+})
+
+console.log("ProtoClass = ", ProtoClass)
+console.log(" --- ")
+*/
+
 

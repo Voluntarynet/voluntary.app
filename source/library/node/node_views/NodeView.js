@@ -296,4 +296,5 @@ DomStyledView.newSubclassNamed("NodeView").newSlots({
     value: function() {
         return this.innerHTML()
     },
-})
+    
+}).initThisProto()

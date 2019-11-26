@@ -69,4 +69,5 @@ ideal.Proto.newSubclassNamed("HashCommand").newSlots({
         }
         */
     },
-})
+    
+}).initThisProto()

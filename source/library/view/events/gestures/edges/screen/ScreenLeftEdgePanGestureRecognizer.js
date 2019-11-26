@@ -21,4 +21,4 @@ ScreenEdgePanGestureRecognizer.newSubclassNamed("ScreenLeftEdgePanGestureRecogni
         return this
     },
 
-})
+}).initThisProto()

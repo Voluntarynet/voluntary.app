@@ -95,4 +95,5 @@ DomView.newSubclassNamed("CenteredDomView").newSlots({
         this.innerView().setWidth(400)
         return this
     },
-})
+    
+}).initThisProto()

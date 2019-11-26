@@ -248,4 +248,4 @@ ideal.Proto.newSubclassNamed("BMPayload").newSlots({
         return pow.actualPowDifficulty()
     },    
     
-})
+}).initThisProto()

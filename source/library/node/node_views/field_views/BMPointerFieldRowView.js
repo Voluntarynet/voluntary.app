@@ -36,4 +36,5 @@ BrowserTitledRow.newSubclassNamed("BMPointerFieldRowView").newSlots({
 		
         return this
     },
-})
+    
+}).initThisProto()

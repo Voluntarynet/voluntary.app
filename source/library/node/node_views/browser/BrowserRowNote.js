@@ -12,4 +12,5 @@ TextField.newSubclassNamed("BrowserRowNote").newSlots({
         TextField.init.apply(this)
         return this
     },
-})
+    
+}).initThisProto()

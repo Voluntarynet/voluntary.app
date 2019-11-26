@@ -28,5 +28,6 @@ BMApplet.newSubclassNamed("BMGroupChatChannel").newSlots({
         this.setName(aString)
         return this
     },	
-})
+
+}).initThisProto()
 

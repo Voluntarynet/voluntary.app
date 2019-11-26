@@ -132,4 +132,4 @@ ideal.Proto.newSubclassNamed("Mouse").newSlots({
         return "on" + s + "MouseUp"
     },
     
-})
+}).initThisProto()

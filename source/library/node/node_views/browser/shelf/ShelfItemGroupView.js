@@ -152,4 +152,4 @@ NodeView.newSubclassNamed("ShelfItemGroupView").newSlots({
         return this
     },
 
-})
+}).initThisProto()

@@ -27,5 +27,5 @@ BMStorableNode.newSubclassNamed("BMApplet").newSlots({
         return ids
     },
 
-})
+}).initThisProto()
 

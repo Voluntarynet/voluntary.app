@@ -161,5 +161,6 @@ BMAppMessage.newSubclassNamed("BMPostMessage").newSlots({
         
         return this._replies
     },
-})
+    
+}).initThisProto()
 

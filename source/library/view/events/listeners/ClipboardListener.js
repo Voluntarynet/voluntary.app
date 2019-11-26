@@ -21,4 +21,4 @@ EventSetListener.newSubclassNamed("ClipboardListener").newSlots({
         return this
     },
 
-})
+}).initThisProto()

@@ -10,7 +10,7 @@
         hash: null,
         fromMsg: null,
     }).setSlots({
-    })
+    }).initThisProto()
     
 */
 
@@ -273,4 +273,4 @@ BMStorableNode.newSubclassNamed("BMMessages").newSlots({
 	
         return this
     },
-})
+}).initThisProto()

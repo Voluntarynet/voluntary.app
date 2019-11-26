@@ -18,4 +18,4 @@ BMStorableNode.newSubclassNamed("BMBlacklist").newSlots({
         this.setNoteIsSubnodeCount(true)
     },
 	
-})
+}).initThisProto()

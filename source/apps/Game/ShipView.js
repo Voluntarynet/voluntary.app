@@ -20,4 +20,4 @@ ThingView.newSubclassNamed("ShipView").newSlots({
     },
 
 
-})
+}).initThisProto()

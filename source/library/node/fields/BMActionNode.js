@@ -59,4 +59,5 @@ BMStorableNode.newSubclassNamed("BMActionNode").newSlots({
 	    
 	    return this
     },
-})
+    
+}).initThisProto()

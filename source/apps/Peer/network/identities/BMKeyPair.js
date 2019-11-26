@@ -89,4 +89,4 @@ BMStorableNode.newSubclassNamed("BMKeyPair").newSlots({
         return anIdentity !== null && this.publicKeyString() === anIdentity.publicKeyString()
     },
 
-})
+}).initThisProto()

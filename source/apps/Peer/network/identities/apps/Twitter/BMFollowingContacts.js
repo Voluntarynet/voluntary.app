@@ -18,5 +18,6 @@ BMStorableNode.newSubclassNamed("BMFollowingContacts").newSlots({
     place: function() {
         
     },
-})
+    
+}).initThisProto()
 

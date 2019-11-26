@@ -21,4 +21,5 @@ EventSetListener.newSubclassNamed("TransitionListener").newSlots({
         this.addEventNameAndMethodName("transitionend", "onTransitionEnd");
         return this
     },
-})
+    
+}).initThisProto()

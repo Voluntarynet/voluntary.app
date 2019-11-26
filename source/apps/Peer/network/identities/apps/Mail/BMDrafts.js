@@ -29,4 +29,4 @@ BMStorableNode.newSubclassNamed("BMDrafts").newSlots({
         return newPrivateMsg
     },
     
-})
+}).initThisProto()

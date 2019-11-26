@@ -20,6 +20,5 @@ BrowserTitledRow.newSubclassNamed("BMOptionsNodeRowView").newSlots({
         //this.setHasSubtitle(true)
         return this
     },
-   
 	
-})
+}).initThisProto()

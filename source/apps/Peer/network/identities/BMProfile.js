@@ -68,4 +68,5 @@ BMFieldSetNode.newSubclassNamed("BMProfile").newSlots({
         return "chat/my_profile"
         //	    return "user-white"
     },
-})
+    
+}).initThisProto()

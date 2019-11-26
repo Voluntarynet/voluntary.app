@@ -85,4 +85,4 @@ BMSummaryNode.newSubclassNamed("BMTimeNode").newSlots({
         return true
     },
 
-})
+}).initThisProto()

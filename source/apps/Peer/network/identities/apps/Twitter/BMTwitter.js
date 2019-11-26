@@ -42,5 +42,6 @@ BMApplet.newSubclassNamed("BMTwitter").newSlots({
         
         
     },
-})
+    
+}).initThisProto()
 

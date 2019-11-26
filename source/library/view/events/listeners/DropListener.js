@@ -40,4 +40,5 @@ EventSetListener.newSubclassNamed("DropListener").newSlots({
         this.debugLog(" onBeforeEvent " + methodName)
         return this
     },
-})
+    
+}).initThisProto()

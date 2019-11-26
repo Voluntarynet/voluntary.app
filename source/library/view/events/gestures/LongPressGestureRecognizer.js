@@ -122,4 +122,5 @@ GestureRecognizer.newSubclassNamed("LongPressGestureRecognizer").newSlots({
         }
         return this
     },
-})
+    
+}).initThisProto()

@@ -44,4 +44,5 @@ ideal.Proto.newSubclassNamed("KeyboardKey").newSlots({
         const c = this.code()
         return c >= 65 && c <= 90
     },
-})
+    
+}).initThisProto()

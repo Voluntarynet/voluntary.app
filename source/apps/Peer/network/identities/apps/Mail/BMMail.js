@@ -48,5 +48,6 @@ BMApplet.newSubclassNamed("BMMail").newSlots({
             this.inbox().addSubnodeIfAbsent(msg)
         }		
     },
-})
+    
+}).initThisProto()
 

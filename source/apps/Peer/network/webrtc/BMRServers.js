@@ -174,4 +174,4 @@ BMStorableNode.newSubclassNamed("BMRServers").newSlots({
         return this
     },
     
-})
+}).initThisProto()

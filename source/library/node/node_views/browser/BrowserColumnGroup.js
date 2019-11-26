@@ -394,4 +394,4 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
         //this.updateEmptyLabel()
         return this
     },
-})
+}).initThisProto()

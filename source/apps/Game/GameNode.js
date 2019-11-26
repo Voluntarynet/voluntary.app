@@ -16,4 +16,4 @@ BMStorableNode.newSubclassNamed("GameNode").newSlots({
         this.setNodeMinWidth(2000)
     },        
     
-})
+}).initThisProto()

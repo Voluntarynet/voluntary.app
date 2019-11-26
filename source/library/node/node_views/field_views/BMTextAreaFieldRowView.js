@@ -46,4 +46,5 @@ BMFieldRowView.newSubclassNamed("BMTextAreaFieldRowView").newSlots({
         }
         return this
     },
-})
+    
+}).initThisProto()

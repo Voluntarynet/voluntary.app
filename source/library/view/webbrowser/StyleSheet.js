@@ -45,5 +45,5 @@ ideal.Proto.newSubclassNamed("StyleSheet").newSlots({
         console.log("sheetElement:", this.sheetElement())
     },
 
-})
+}).initThisProto()
 

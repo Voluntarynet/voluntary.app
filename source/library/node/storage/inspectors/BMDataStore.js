@@ -69,4 +69,5 @@ BMNode.newSubclassNamed("BMDataStore").newSlots({
         classNode.justAddSubnode(aRecord)
         return this
     },
-})
+    
+}).initThisProto()

@@ -38,4 +38,5 @@ ideal.Proto.newSubclassNamed("BMThemeStyleSheet").newSlots({
         console.log("added rule to theme sheet: " + rule + "")
         return this
     },
-})
+    
+}).initThisProto()

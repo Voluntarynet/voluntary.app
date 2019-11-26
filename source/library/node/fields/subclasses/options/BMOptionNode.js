@@ -74,4 +74,4 @@ BMStorableNode.newSubclassNamed("BMOptionNode").newSlots({
         return this.isPicked() ? "✓" : ""
     },
 
-})
+}).initThisProto()

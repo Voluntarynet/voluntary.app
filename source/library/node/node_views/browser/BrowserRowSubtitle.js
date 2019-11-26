@@ -16,6 +16,6 @@ TextField.newSubclassNamed("BrowserRowSubtitle").newSlots({
         return this
     },
 
-})
+}).initThisProto()
 
 

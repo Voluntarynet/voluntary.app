@@ -22,4 +22,4 @@ EventSetListener.newSubclassNamed("TouchListener").newSlots({
         return this
     },
 
-})
+}).initThisProto()

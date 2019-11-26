@@ -38,4 +38,5 @@ OrientGestureRecognizer.newSubclassNamed("RotationGestureRecognizer").newSlots({
         const a = this.activeAngleInDegress()
         return a >= ma
     },
-})
+    
+}).initThisProto()

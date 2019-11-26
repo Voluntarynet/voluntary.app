@@ -302,4 +302,5 @@ BMNode.newSubclassNamed("BMRemotePeer").newSlots({
         }
         return this
     },
-})
+    
+}).initThisProto()

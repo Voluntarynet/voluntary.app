@@ -16,4 +16,4 @@ BMBlacklist.newSubclassNamed("BMBlacklistedPeers").newSlots({
         this.setTitle("peers")
     },
 	
-})
+}).initThisProto()

@@ -92,5 +92,6 @@ ideal.Proto.newSubclassNamed("WebBrowserNotifications").newSlots({
     newNote: function() {
         return WebBrowserNotification.clone()
     },
-})
+    
+}).initThisProto()
 

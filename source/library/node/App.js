@@ -144,5 +144,5 @@ BMNode.newSubclassNamed("App").newSlots({
         });
     }
 
-})
+}).initThisProto()
 

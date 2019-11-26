@@ -517,4 +517,5 @@ ideal.Proto.newSubclassNamed("Keyboard").newSlots({
         console.log("  modsAndKeyName: ", Keyboard.shared().modsAndKeyNameForEvent(event))
         console.log("---")
     },
-})
+    
+}).initThisProto()

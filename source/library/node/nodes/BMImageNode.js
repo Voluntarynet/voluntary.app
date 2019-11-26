@@ -27,4 +27,5 @@ BMStorableNode.newSubclassNamed("BMImageNode").newSlots({
         this.debugLog(" onDidEditNode")
         this.scheduleSyncToStore()
     },
-})
+    
+}).initThisProto()

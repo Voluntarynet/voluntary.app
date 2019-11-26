@@ -136,4 +136,5 @@ NodeView.newSubclassNamed("ImageWellView").newSlots({
         }
         return this
     },
-})
+    
+}).initThisProto()

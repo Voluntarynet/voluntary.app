@@ -23,4 +23,5 @@ EventSetListener.newSubclassNamed("KeyboardListener").newSlots({
         //this.addEventNameAndMethodName("select", "onSelect");
         return this
     },
-})
+    
+}).initThisProto()

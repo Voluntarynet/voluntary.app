@@ -172,4 +172,4 @@ BMStorableNode.newSubclassNamed("BMRemoteIdentity").newSlots({
         return ids
     },
 
-})
+}).initThisProto()

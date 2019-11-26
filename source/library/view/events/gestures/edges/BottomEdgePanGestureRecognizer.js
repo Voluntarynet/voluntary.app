@@ -20,4 +20,5 @@ EdgePanGestureRecognizer.newSubclassNamed("BottomEdgePanGestureRecognizer").newS
         this.setEdgeName("bottom")
         return this
     },
-})
+    
+}).initThisProto()

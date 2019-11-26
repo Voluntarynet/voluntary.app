@@ -32,4 +32,4 @@ BMMessage.newSubclassNamed("BMGetDataMessage").newSlots({
         return this
     },
 
-})
+}).initThisProto()

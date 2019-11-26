@@ -18,4 +18,5 @@ BMMessage.newSubclassNamed("BMPongMessage").newSlots({
             msgType: this.msgType()
         }
     },
-})
+    
+}).initThisProto()

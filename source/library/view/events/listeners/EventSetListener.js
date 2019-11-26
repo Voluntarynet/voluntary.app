@@ -239,7 +239,7 @@ ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
         return this
     },   
 
-})
+}).initThisProto()
 
 /*
     // globally track whether we are inside an event 

@@ -36,5 +36,6 @@ BMRegion.newSubclassNamed("BMRegions").newSlots({
         this.didUpdateNode() 
     }
     */
-})
+   
+}).initThisProto()
 

@@ -91,4 +91,4 @@ DomView.newSubclassNamed("ThreeJSView").newSlots({
     },
     
 
-})
+}).initThisProto()

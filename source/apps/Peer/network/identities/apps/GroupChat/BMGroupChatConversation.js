@@ -21,5 +21,6 @@ BMApplet.newSubclassNamed("BMGroupConversation").newSlots({
     messages: function() {
         return this.subnodes()
     },
-})
+
+}).initThisProto()
 

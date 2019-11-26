@@ -88,4 +88,5 @@ PanGestureRecognizer.newSubclassNamed("EdgePanGestureRecognizer").newSlots({
             right:  points.maxValue(p => Math.abs(f.right()  - p.x()), max)
         }
     },
-})
+    
+}).initThisProto()

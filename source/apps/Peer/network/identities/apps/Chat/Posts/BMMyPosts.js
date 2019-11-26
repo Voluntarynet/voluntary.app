@@ -41,4 +41,5 @@ BMStorableNode.newSubclassNamed("BMMyPosts").newSlots({
         return "chat/feed_a"
         //	    return "home3-white"
     },
-})
+    
+}).initThisProto()

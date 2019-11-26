@@ -303,4 +303,4 @@ BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
         return false
     },
 	
-})
+}).initThisProto()

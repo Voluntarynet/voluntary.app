@@ -146,7 +146,7 @@ BMNode.newSubclassNamed("BMConnection").newSlots({
         return false
     }
 	
-})
+}).initThisProto()
 
 //window.BMConnection.shared() // setup shared instance, needed?
 

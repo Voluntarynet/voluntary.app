@@ -67,4 +67,5 @@ BMNode.newSubclassNamed("BMHourNode").newSlots({
             }
         }
     },
-})
+    
+}).initThisProto()

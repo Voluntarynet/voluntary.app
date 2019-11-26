@@ -144,4 +144,5 @@ BMAppMessage.newSubclassNamed("BMMailMessage").newSlots({
         BMAppMessage.send.apply(this)
         this.delete()
     },
-})
+
+}).initThisProto()

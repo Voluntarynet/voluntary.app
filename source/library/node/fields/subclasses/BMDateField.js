@@ -23,4 +23,5 @@ BMField.newSubclassNamed("BMDateField").newSlots({
         }
         return new Date(v).toDateString()
     },
-})
+    
+}).initThisProto()

@@ -104,5 +104,5 @@ BrowserTitledRow.newSubclassNamed("BMChatMessageRowView").newSlots({
     },
     */
 
-})
+}).initThisProto()
 

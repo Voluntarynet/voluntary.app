@@ -108,4 +108,5 @@ DomView.newSubclassNamed("PanelView").newSlots({
         this.removeFromParentView()
         return this
     }
-})
+    
+}).initThisProto()

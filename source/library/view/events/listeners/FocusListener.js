@@ -22,4 +22,4 @@ EventSetListener.newSubclassNamed("FocusListener").newSlots({
         return this
     },
 
-})
+}).initThisProto()

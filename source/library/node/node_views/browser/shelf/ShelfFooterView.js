@@ -126,4 +126,5 @@ DomView.newSubclassNamed("ShelfFooterView").newSlots({
         return this
     },
     */
-})
+   
+}).initThisProto()

@@ -58,5 +58,6 @@ BMStorableNode.newSubclassNamed("BMPostDraft").newSlots({
         this.delete()
         //this.addMessage(msg)
     },
-})
+    
+}).initThisProto()
 

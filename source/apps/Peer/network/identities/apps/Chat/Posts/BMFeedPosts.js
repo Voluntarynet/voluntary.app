@@ -78,4 +78,5 @@ BMStorableNode.newSubclassNamed("BMFeedPosts").newSlots({
     nodeViewShouldBadge: function() {
         return !this.hasRead()
     },
-})
+
+}).initThisProto()

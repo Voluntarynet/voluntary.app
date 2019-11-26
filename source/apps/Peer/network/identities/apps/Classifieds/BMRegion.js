@@ -141,6 +141,6 @@ BMNode.newSubclassNamed("BMRegion").newSlots({
         return null
     },
     
-})
+}).initThisProto()
 
-window.Region = BMRegion
+//window.Region = BMRegion

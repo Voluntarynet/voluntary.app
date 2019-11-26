@@ -167,4 +167,4 @@ GestureRecognizer.newSubclassNamed("TapGestureRecognizer").newSlots({
     },
     */
 
-})
+}).initThisProto()

@@ -81,4 +81,5 @@ PanGestureRecognizer.newSubclassNamed("ScreenEdgePanGestureRecognizer").newSlots
             right:  points.minValue(p => p.distFromRightOfViewport(),  max)
         }
     },
-})
+    
+}).initThisProto()

@@ -44,4 +44,4 @@ BrowserRow.newSubclassNamed("BrowserFieldRow").newSlots({
     */
 
  
-})
+}).initThisProto()

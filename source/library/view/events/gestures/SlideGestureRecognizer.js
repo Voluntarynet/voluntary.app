@@ -198,4 +198,4 @@ GestureRecognizer.newSubclassNamed("SlideGestureRecognizer").newSlots({
         return Math.abs(funcs[this.direction()](dx, dy))
     },
 
-})
+}).initThisProto()

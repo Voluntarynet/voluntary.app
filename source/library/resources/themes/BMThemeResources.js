@@ -23,4 +23,5 @@ window.BMThemeResources = BMNode.newSubclassNamed("BMThemeResources").newSlots({
         this.addAction("add")
         this.setSubnodeProto(BMTheme)
     },
-})
+    
+}).initThisProto()

@@ -36,4 +36,4 @@ BMMessage.newSubclassNamed("BMInvMessage").newSlots({
         }
     },
 
-})
+}).initThisProto()

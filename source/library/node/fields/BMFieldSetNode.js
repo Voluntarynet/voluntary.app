@@ -152,4 +152,4 @@ BMStorableNode.newSubclassNamed("BMFieldSetNode").newSlots({
         return this
     },
     */
-})
+}).initThisProto()

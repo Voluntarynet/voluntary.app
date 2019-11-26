@@ -18,5 +18,6 @@ BMStorableNode.newSubclassNamed("BMFollowingContact").newSlots({
     title: function() {
         return this.remoteIdentity().title()
     },
-})
+    
+}).initThisProto()
 

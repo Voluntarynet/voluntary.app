@@ -21,4 +21,4 @@ EventSetListener.newSubclassNamed("AnimationListener").newSlots({
         return this
     },
 
-})
+}).initThisProto()

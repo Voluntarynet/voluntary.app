@@ -186,4 +186,4 @@ NodeView.newSubclassNamed("ImageView").newSlots({
         return this
     },
     
-})
+}).initThisProto()

@@ -14,4 +14,5 @@ BMStorableNode.newSubclassNamed("BMClassifiedPosts").newSlots({
         this.setSubnodeProto(BMClassifiedPost)
         this.setNoteIsSubnodeCount(true)
     },
-})
+
+}).initThisProto()

@@ -74,5 +74,5 @@ DomView.newSubclassNamed("GameView").newSlots({
         this._c2.mapToScreen()
         this._c2.show()            
     },
-})
+}).initThisProto()
 

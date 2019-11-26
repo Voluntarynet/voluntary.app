@@ -61,4 +61,4 @@ BrowserTitledRow.newSubclassNamed("BMOptionNodeRowView").newSlots({
         return this
     },
 	
-})
+}).initThisProto()

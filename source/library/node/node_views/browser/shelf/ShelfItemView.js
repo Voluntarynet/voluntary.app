@@ -173,4 +173,4 @@ NodeView.newSubclassNamed("ShelfItemView").newSlots({
         return false
     },
 
-})
+}).initThisProto()

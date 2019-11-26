@@ -67,4 +67,5 @@ BMStorableNode.newSubclassNamed("BMLocalIdentities").newSlots({
         })
         return result
     },
-})
+    
+}).initThisProto()

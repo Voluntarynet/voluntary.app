@@ -25,5 +25,6 @@ BMMessage.newSubclassNamed("BMAddrMessage").newSlots({
             data: this.data()
         }
     },
-})
+    
+}).initThisProto()
 

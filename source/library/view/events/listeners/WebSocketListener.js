@@ -24,4 +24,4 @@ EventSetListener.newSubclassNamed("WebSocketListener").newSlots({
         return this
     },
 
-})
+}).initThisProto()

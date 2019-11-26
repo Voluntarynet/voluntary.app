@@ -21,5 +21,6 @@ BMApplet.newSubclassNamed("BMClassifieds").newSlots({
         this.setSells(BMSells.clone()) // move to pid for classifieds
         this.addSubnode(this.sells())
     },
-})
+
+}).initThisProto()
 

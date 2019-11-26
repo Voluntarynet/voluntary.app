@@ -26,4 +26,5 @@ EventSetListener.newSubclassNamed("SelectListener").newSlots({
         this.addEventNameAndMethodName("selectionchange", "onSelectionChange");
         return this
     },
-})
+    
+}).initThisProto()

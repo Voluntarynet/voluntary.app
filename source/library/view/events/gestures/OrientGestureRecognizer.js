@@ -300,4 +300,4 @@ GestureRecognizer.newSubclassNamed("OrientGestureRecognizer").newSlots({
         console.log(this.debugJson())
     },
 
-})
+}).initThisProto()

@@ -108,4 +108,5 @@ window.Point.newSubclassNamed("EventPoint").newSlots({
     distFromRightOfViewport: function() {
         return this.viewportWidth() - this.distFromLeftOfViewport()
     },
-})
+    
+}).initThisProto()

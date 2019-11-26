@@ -41,5 +41,6 @@ BMFieldSetNode.newSubclassNamed("BMDataStoreRecord").newSlots({
         this.defaultStore().justRemovePid(this.valuePid())
         return this
     },
-})
+    
+}).initThisProto()
 

@@ -47,4 +47,4 @@ BMStorableNode.newSubclassNamed("BMTheme").newSlots({
         return this
     },
 
-})
+}).initThisProto()

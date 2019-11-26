@@ -136,4 +136,5 @@ BrowserRow.newSubclassNamed("BrowserTitledRow").newSlots({
         //nv.setOpacity(0.5)
         return this		
     },
-})
+    
+}).initThisProto()

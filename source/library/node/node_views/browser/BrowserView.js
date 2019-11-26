@@ -850,4 +850,5 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
             this.syncToHashPath();
         }
     }
-})
+    
+}).initThisProto()

@@ -829,5 +829,6 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
     description: function() {
         return this.shortTypeId() + " on " + (this.viewTarget() ? this.viewTarget().typeId() : "null view target")
     },
-})
+    
+}).initThisProto()
 

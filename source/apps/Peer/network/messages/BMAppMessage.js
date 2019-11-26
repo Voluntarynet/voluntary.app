@@ -162,4 +162,5 @@ BMFieldSetNode.newSubclassNamed("BMAppMessage").newSlots({
 
         return this
     },
-})
+    
+}).initThisProto()

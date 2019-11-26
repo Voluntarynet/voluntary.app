@@ -230,4 +230,4 @@ ideal.Proto.newSubclassNamed("Point").newSlots({
     },
 
 
-})
+}).initThisProto()

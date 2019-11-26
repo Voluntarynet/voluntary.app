@@ -45,4 +45,4 @@ BMField.newSubclassNamed("BMBooleanField").newSlots({
         return BMField.didUpdateNode.apply(this)
     },
 
-})
+}).initThisProto()

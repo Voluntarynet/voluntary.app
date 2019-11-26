@@ -30,4 +30,5 @@ DomView.newSubclassNamed("ThingView").newSlots({
         this.transform().addInPlace(this.transformSpeed())
         this.setTransform(this.transform().cssString())
     },
-})
+    
+}).initThisProto()

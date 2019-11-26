@@ -194,6 +194,5 @@ BMSummaryNode.newSubclassNamed("BMMenuNode").newSlots({
     },
     */
 
-
-})
+}).initThisProto()
 

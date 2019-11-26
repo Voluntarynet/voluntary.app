@@ -81,4 +81,5 @@ ideal.Proto.newSubclassNamed("BMViewStyle").newSlots({
 		
         return this
     },
-})
+    
+}).initThisProto()

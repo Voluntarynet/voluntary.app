@@ -355,4 +355,4 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         return this
     },
 
-})
+}).initThisProto()

@@ -53,7 +53,8 @@ BMFieldSetNode.newSubclassNamed("BMThemeClassState").newSlots({
             BMThemeStyleSheet.shared().setDivClassNameAttributeValue(this.divClassName(), aField.key(), "white")
         }
     },
-})
+    
+}).initThisProto()
 
 /* 
 notes on Scroll bars theme options

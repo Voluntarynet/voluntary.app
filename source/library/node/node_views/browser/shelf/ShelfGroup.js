@@ -60,5 +60,5 @@ BMNode.newSubclassNamed("ShelfGroup").newSlots({
         return this  
     },
         
-})
+}).initThisProto()
 

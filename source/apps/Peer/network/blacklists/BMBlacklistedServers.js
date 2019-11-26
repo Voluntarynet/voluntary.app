@@ -18,4 +18,4 @@ BMBlacklist.newSubclassNamed("BMBlacklistedServers").newSlots({
         this.addStoredSlot("ipsDict")
     },
 	
-})
+}).initThisProto()

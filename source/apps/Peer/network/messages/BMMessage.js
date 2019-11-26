@@ -85,4 +85,5 @@ BMFieldSetNode.newSubclassNamed("BMMessage").newSlots({
     duplicate: function() {
         return this
     },
-})
+
+}).initThisProto()

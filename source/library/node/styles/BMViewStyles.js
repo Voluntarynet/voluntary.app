@@ -128,4 +128,5 @@ ideal.Proto.newSubclassNamed("BMViewStyles").newSlots({
         this.unselected().setColor(c)
         return this        
     },
-})
+    
+}).initThisProto()

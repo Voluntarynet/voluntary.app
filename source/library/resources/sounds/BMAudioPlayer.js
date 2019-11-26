@@ -198,4 +198,4 @@ DomView.newSubclassNamed("BMAudioPlayer").newSlots({
         return this;
     }
 
-})
+}).initThisProto()

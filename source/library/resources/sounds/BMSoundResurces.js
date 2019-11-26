@@ -51,4 +51,4 @@ BMNode.newSubclassNamed("BMSoundResurces").newSlots({
         return this.subnodes()
     },
 
-})
+}).initThisProto()

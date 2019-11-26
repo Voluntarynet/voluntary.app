@@ -19,4 +19,4 @@ BMMessage.newSubclassNamed("BMPingMessage").newSlots({
         }
     },
 
-})
+}).initThisProto()

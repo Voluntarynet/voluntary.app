@@ -81,4 +81,5 @@ BMStorableNode.newSubclassNamed("BMStoredDatedSetNode").newSlots({
 
         return this
     },
-})
+    
+}).initThisProto()

@@ -900,4 +900,4 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         return true;
     },
 
-})
+}).initThisProto()

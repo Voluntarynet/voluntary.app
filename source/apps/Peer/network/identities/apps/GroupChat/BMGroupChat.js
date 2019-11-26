@@ -21,5 +21,6 @@ BMApplet.newSubclassNamed("BMGroupChat").newSlots({
         this.setDirectMessages(BMNode.clone().setTitle("direct messages"))
         this.addSubnode(this.directMessages())
     },
-})
+
+}).initThisProto()
 

@@ -246,6 +246,6 @@ ideal.Proto.newSubclassNamed("ObservableProxy").newSlots({
         return true
     }
 
-})
+}).initThisProto()
 
 //ObservableProxy.selfTest()

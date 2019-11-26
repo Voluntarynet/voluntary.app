@@ -78,4 +78,4 @@ BMNode.newSubclassNamed("BMFontResources").newSlots({
         return this
     },
 
-})
+}).initThisProto()

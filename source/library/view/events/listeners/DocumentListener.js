@@ -38,4 +38,5 @@ EventSetListener.newSubclassNamed("DocumentListener").newSlots({
     listenTarget: function() {
         return window // is this the best way to handle this?
     },
-})
+    
+}).initThisProto()

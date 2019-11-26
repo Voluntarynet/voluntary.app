@@ -74,5 +74,5 @@ BMStorableNode.newSubclassNamed("BMTextNode").newSlots({
         return true
     },
 
-})
+}).initThisProto()
 

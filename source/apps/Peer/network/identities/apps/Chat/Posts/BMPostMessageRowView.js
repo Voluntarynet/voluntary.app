@@ -251,4 +251,4 @@ BrowserRow.newSubclassNamed("BMPostMessageRowView").newSlots({
         return this
     },
 
-})
+}).initThisProto()

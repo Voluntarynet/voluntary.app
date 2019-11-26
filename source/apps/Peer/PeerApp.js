@@ -141,7 +141,8 @@ App.newSubclassNamed("PeerApp").newSlots({
 
         window.ResourceLoaderPanel.stop() 
     },
-})
+    
+}).initThisProto()
 
 PeerApp.showVersion()
 

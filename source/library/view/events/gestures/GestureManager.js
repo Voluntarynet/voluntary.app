@@ -104,4 +104,5 @@ ideal.Proto.newSubclassNamed("GestureManager").newSlots({
         });
         return this
     },
-})
+    
+}).initThisProto()

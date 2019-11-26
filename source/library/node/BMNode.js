@@ -578,6 +578,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
 
     subnodes: function() {
         this.privatePrepareToAccess() // causes access loop in some situations - use marker?
+        //this.subnodes = function() { return this._subnodes }
         return this._subnodes
     },
 
@@ -1119,4 +1120,4 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
 
     // storage
 
-})
+}).initThisProto()

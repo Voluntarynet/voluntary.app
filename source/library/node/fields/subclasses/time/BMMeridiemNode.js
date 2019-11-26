@@ -86,4 +86,5 @@ BMNode.newSubclassNamed("BMMonthNode").newSlots({
             }
         }
     },
-})
+    
+}).initThisProto()

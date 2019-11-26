@@ -84,4 +84,5 @@ DomView.newSubclassNamed("ButtonView").newSlots({
         }
         return false
     },
-})
+    
+}).initThisProto()

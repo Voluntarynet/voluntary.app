@@ -133,4 +133,4 @@ GestureRecognizer.newSubclassNamed("PanGestureRecognizer").newSlots({
         return this.currentPosition().distanceFrom(this.beginPosition())
     },
 
-})
+}).initThisProto()

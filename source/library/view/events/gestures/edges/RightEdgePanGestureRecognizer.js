@@ -21,4 +21,4 @@ EdgePanGestureRecognizer.newSubclassNamed("RightEdgePanGestureRecognizer").newSl
         return this
     },
 
-})
+}).initThisProto()

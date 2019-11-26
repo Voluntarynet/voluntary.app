@@ -63,4 +63,4 @@ BMStorableNode.newSubclassNamed("BMResources").newSlots({
     },
     */
 
-})
+}).initThisProto()

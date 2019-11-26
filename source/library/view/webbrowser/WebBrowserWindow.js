@@ -12,6 +12,10 @@
 ideal.Proto.newSubclassNamed("WebBrowserWindow").newSlots({
     /*documentBody: DocumentBody.shared(),*/
 }).setSlots({
+    initThisProto: function() {
+        this.shared().setup()
+    },
+    
     init: function () {
         throw new Error("this class is meant to be used as singleton, for now")
         ideal.Proto.init.apply(this)
@@ -184,7 +188,8 @@ ideal.Proto.newSubclassNamed("WebBrowserWindow").newSlots({
         }
         return null
     },
-})
+
+}).initThisProto()
 
 /*
 console.log("navigator.userAgent = ", navigator.userAgent);
@@ -192,4 +197,4 @@ console.log("window.WebBrowserWindow.agentIsSafari() = ", window.WebBrowserWindo
 console.log("window.WebBrowserWindow.agentIsChrome() = ", window.WebBrowserWindow.agentIsChrome())
 */
 
-WebBrowserWindow.shared().setup()
+//WebBrowserWindow.shared().setup()

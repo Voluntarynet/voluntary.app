@@ -115,4 +115,5 @@ BMStorableNode.newSubclassNamed("BMCreatorNode").newSlots({
     note: function() {
         return "&gt;"
     },
-})
+    
+}).initThisProto()

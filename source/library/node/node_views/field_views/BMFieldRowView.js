@@ -301,4 +301,5 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
         this.keyView().blur()
         return this
     },
-})
+    
+}).initThisProto()

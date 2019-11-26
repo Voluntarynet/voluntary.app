@@ -105,4 +105,4 @@ DomView.newSubclassNamed("DomStyledView").newSlots({
         return this
     },
 	
-})
+}).initThisProto()

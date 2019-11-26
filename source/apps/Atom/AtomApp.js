@@ -16,6 +16,9 @@ App.newSubclassNamed("AtomApp").newSlots({
     atomNodeView: null,
 
 }).setSlots({
+    initProto: function() {
+        //this.showVersion()
+    },
 
     init: function () {
         App.init.apply(this)
@@ -49,7 +52,6 @@ App.newSubclassNamed("AtomApp").newSlots({
         App.appDidInit.apply(this)
         window.ResourceLoaderPanel.stop() 
     },
-})
+}).initThisProto()
 
-window.AtomApp.showVersion()
 

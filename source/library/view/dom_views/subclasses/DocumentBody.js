@@ -101,5 +101,6 @@ DomView.newSubclassNamed("DocumentBody").newSlots({
         return this
     },
     */
-})
+   
+}).initThisProto()
 

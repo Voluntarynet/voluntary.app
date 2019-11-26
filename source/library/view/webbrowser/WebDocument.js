@@ -40,4 +40,4 @@ ideal.Proto.newSubclassNamed("WebDocument").newSlots({
         this.styleSheets().forEach(sheet => sheet.show())
     },
 
-})
+}).initThisProto()

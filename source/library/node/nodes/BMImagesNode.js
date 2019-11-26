@@ -26,4 +26,4 @@ BMStorableNode.newSubclassNamed("BMImageResourcesNode").newSlots({
         //this.addStoredSlots(["title", "dataURL"])
     },        
     
-})
+}).initThisProto()

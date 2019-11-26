@@ -371,4 +371,4 @@ BMFieldSetNode.newSubclassNamed("BMClassifiedPost").newSlots({
         this.setPrice(Math.floor(Math.random()*100)/2)
     },
 
-})
+}).initThisProto()

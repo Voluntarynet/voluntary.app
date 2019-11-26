@@ -336,4 +336,4 @@ ideal.Proto.newSubclassNamed("BMPow").newSlots({
         this.boundsCheckTargetDifficulty()
     },
 
-})
+}).initThisProto()

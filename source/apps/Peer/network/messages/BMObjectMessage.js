@@ -212,5 +212,6 @@ BMMessage.newSubclassNamed("BMObjectMessage").newSlots({
 		
         return errors
     },
-})
+    
+}).initThisProto()
 

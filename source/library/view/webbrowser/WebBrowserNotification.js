@@ -35,7 +35,7 @@ ideal.Proto.newSubclassNamed("WebBrowserNotification").newSlots({
         setTimeout(notification.close.bind(this.notificationRef()), this.timeoutMs());
     },
 
-})
+}).initThisProto()
 
 
 

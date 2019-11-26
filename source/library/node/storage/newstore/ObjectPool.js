@@ -457,7 +457,7 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
     rootInstanceWithPidForProto: function(aTitle, aProto) {
         return this.rootObject().subnodeWithTitleIfAbsentInsertClosure(aTitle, () => aProto.clone())
     },
-})
+}).initThisProto()
 
 // -------------------
 

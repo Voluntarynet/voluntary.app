@@ -134,4 +134,5 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
         this.toggle()
         return false
     },
-})
+    
+}).initThisProto()

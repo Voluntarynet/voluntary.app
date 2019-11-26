@@ -99,4 +99,5 @@ BMStorableNode.newSubclassNamed("BMChatThread").newSlots({
         }
 	    return this
     },
-})
+    
+}).initThisProto()

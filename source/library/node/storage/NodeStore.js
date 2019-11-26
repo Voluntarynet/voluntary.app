@@ -852,4 +852,5 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         return result
     },
     */
-})
+   
+}).initThisProto()

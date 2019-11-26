@@ -24,4 +24,5 @@ BMContactLinks.newSubclassNamed("BMChatThreads").newSlots({
         return "chat/direct_messages"
 	    //return "mail-white"
     },
-})
+    
+}).initThisProto()

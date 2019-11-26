@@ -83,4 +83,4 @@ ideal.Proto.newSubclassNamed("DomTextTapeMeasure").newSlots({
         return this	
     },
 	
-})
+}).initThisProto()

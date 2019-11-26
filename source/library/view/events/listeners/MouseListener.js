@@ -34,4 +34,4 @@ EventSetListener.newSubclassNamed("MouseListener").newSlots({
         return this
     },
 
-})
+}).initThisProto()

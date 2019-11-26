@@ -184,4 +184,5 @@ DomView.newSubclassNamed("DragBarView").newSlots({
         this.addParentTracking()
         return false
     },
-})
+    
+}).initThisProto()

@@ -99,6 +99,6 @@ NodeView.newSubclassNamed("BrowserFooter").newSlots({
         return this
     },
     
-})
+}).initThisProto()
 
 

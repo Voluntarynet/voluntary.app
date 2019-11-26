@@ -74,4 +74,4 @@ BrowserRow.newSubclassNamed("BMActionNodeRowView").newSlots({
         return true
     },
     
-})
+}).initThisProto()

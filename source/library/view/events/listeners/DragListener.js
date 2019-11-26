@@ -27,4 +27,5 @@ EventSetListener.newSubclassNamed("DragListener").newSlots({
         this.listenTarget().ondragstart = (e) => { console.log("--- ondragstart ---"); } // TODO: still needed?
         return this
     },
-})
+    
+}).initThisProto()

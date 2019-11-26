@@ -47,7 +47,8 @@ window.ObjectPool.newSubclassNamed("PersistentObjectPool").newSlots({
     rootInstanceWithPidForProto: function(aTitle, aProto) {
         return this.rootObject().subnodeWithTitleIfAbsentInsertClosure(aTitle, () => aProto.clone())
     },
-})
+    
+}).initThisProto()
 
 
 //setTimeout(() => {

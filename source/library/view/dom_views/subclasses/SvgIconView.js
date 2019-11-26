@@ -212,4 +212,4 @@ DomStyledView.newSubclassNamed("SvgIconView").newSlots({
         return dict
     },
 
-})
+}).initThisProto()

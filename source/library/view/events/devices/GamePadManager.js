@@ -152,4 +152,4 @@ ideal.Proto.newSubclassNamed("GamePadManager").newSlots({
     },
 
 
-})
+}).initThisProto()

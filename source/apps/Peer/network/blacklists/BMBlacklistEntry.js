@@ -30,4 +30,4 @@ BMFieldSetNode.newSubclassNamed("BMBlacklistEntry").newSlots({
         return this.fieldNamed("reason").value()  
     },
 	
-})
+}).initThisProto()

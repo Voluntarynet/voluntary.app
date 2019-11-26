@@ -27,4 +27,4 @@ BMStorableNode.newSubclassNamed("BMBuy").newSlots({
         return this
     },
 
-})
+}).initThisProto()

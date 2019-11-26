@@ -428,7 +428,8 @@ BMNode.newSubclassNamed("BMServerConnection").newSlots({
     remotePeersCount : function() {
         return this.remotePeers().count()
     },
-})
+    
+}).initThisProto()
 
 
 

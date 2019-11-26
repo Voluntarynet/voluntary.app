@@ -16,4 +16,5 @@ BMStorableNode.newSubclassNamed("BMInbox").newSlots({
         this.setNoteIsSubnodeCount(true)
         this.setTitle("inbox")
     },
-})
+    
+}).initThisProto()

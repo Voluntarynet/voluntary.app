@@ -86,4 +86,5 @@ BMStorableNode.newSubclassNamed("BMStunServers").newSlots({
         //console.log("peerOptionsDict: " + JSON.stringify(dict))
         return dict
     },
-})
+    
+}).initThisProto()

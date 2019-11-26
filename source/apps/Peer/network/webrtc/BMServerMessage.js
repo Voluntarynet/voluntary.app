@@ -44,4 +44,5 @@ ideal.Proto.newSubclassNamed("BMServerMessage").newSlots({
     reject: function(reason) {
         this._reject(reason);
     }
-});
+    
+}).initThisProto()

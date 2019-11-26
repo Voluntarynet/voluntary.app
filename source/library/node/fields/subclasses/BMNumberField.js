@@ -44,4 +44,5 @@ BMField.newSubclassNamed("BMNumberField").newSlots({
         return BMField.didUpdateNode.apply(this)
     },
     */
-})
+   
+}).initThisProto()

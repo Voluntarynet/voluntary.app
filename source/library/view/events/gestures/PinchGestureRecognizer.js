@@ -40,4 +40,5 @@ OrientGestureRecognizer.newSubclassNamed("PinchGestureRecognizer").newSlots({
         //console.log(this.shortTypeId() + ".hasMovedEnough() " + d + ">= min " + m)
         return d >= m
     },
-})
+    
+}).initThisProto()

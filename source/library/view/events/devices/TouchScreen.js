@@ -189,4 +189,5 @@ ideal.Proto.newSubclassNamed("TouchScreen").newSlots({
         return this
     },
     */
-})
+   
+}).initThisProto()

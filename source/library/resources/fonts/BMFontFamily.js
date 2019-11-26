@@ -33,4 +33,4 @@ BMNode.newSubclassNamed("BMFontFamily").newSlots({
         return this
     },
 
-})
+}).initThisProto()

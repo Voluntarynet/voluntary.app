@@ -100,7 +100,7 @@ App.newSubclassNamed("Notepad").newSlots({
 
         window.ResourceLoaderPanel.stop() 
     },
-})
+}).initThisProto()
 
 Notepad.showVersion()
 

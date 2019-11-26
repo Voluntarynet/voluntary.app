@@ -28,4 +28,4 @@ BMStorableNode.newSubclassNamed("BMChannel").newSlots({
 	    return this.privateKey().toPublicKey().toString()
     },
 	
-})
+}).initThisProto()

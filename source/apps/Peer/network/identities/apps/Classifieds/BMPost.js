@@ -64,4 +64,4 @@ BMStorableNode.newSubclassNamed("BMPost").newSlots({
         let parts = []
     },
 
-})
+}).initThisProto()

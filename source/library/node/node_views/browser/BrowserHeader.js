@@ -119,6 +119,7 @@ NodeView.newSubclassNamed("BrowserHeader").newSlots({
         }
         return this
     },
-})
+    
+}).initThisProto()
 
 

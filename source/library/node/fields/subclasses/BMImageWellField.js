@@ -28,4 +28,5 @@ BMField.newSubclassNamed("BMImageWellField").newSlots({
         return this
     },
     */
-})
+   
+}).initThisProto()

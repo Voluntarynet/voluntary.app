@@ -8,6 +8,7 @@
 
 BMStorableNode.newSubclassNamed("BMBuys").newSlots({
 }).setSlots({
+    
     init: function () {
         BMStorableNode.init.apply(this)
         this.setTitle("Buys")
@@ -15,4 +16,5 @@ BMStorableNode.newSubclassNamed("BMBuys").newSlots({
         this.setSubnodeProto(BMBuy)
         this.setSubtitleIsSubnodeCount(true)
     },
-})
+
+}).initThisProto()

@@ -52,5 +52,6 @@ BMAppMessage.newSubclassNamed("BMChatMessage").newSlots({
     localIdentityIsSender: function() {
         return this.senderId().equals(this.localIdentity())
     },
-})
+    
+}).initThisProto()
 

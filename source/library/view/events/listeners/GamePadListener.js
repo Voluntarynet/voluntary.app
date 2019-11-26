@@ -20,5 +20,5 @@ EventSetListener.newSubclassNamed("GamePadListener").newSlots({
         return this
     },
 
-})
+}).initThisProto()
 

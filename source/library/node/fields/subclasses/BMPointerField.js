@@ -41,4 +41,4 @@ BMField.newSubclassNamed("BMPointerField").newSlots({
         return this.value()
     },
 
-})
+}).initThisProto()

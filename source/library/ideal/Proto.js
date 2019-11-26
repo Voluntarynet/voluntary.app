@@ -235,6 +235,15 @@ Proto.setSlots({
     },
     */
 
+    initThisProto: function() {
+        this.initProto()
+        return this
+    },
+
+    initProto: function() {
+
+    },
+
     init: function () { 
         // subclasses should override to do initialization
         //console.log(this.typeId() + " isInstance " + this.isInstance())
@@ -478,7 +487,8 @@ Proto.setSlots({
     },
 
     typeClass: function() {
-        return window[this.type()]
+        return this.thisClass()
+        //return window[this.type()]
     },
 
     // a way to get a dictionary archive of 
@@ -625,7 +635,7 @@ Proto.setSlots({
         //return ObjectPool.shared()
         return NodeStore.shared()
     },
-});
+}).initThisProto()
 
 
 

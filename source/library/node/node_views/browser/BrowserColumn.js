@@ -1283,5 +1283,6 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
 
         return false
     },
-})
+    
+}).initThisProto()
 

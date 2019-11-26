@@ -145,4 +145,5 @@ BMField.newSubclassNamed("BMOptionsNode").newSlots({
         // used by UI row views to browse into next column
         return this
     },    
-})
+    
+}).initThisProto()

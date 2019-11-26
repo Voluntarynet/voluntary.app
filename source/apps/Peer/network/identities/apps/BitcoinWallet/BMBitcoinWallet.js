@@ -14,5 +14,6 @@ BMApplet.newSubclassNamed("BMBitcoinWallet").newSlots({
         this.setTitle("Bitcoin Wallet")
 
     },
-})
+    
+}).initThisProto()
 

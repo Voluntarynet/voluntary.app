@@ -28,4 +28,4 @@ BMStorableNode.newSubclassNamed("BMThemeClass").newSlots({
     },
 
 
-})
+}).initThisProto()

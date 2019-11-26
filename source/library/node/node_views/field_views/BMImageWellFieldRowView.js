@@ -92,4 +92,5 @@ BMFieldRowView.newSubclassNamed("BMImageWellFieldRowView").newSlots({
         this.scheduleSyncToNode() 
         return this
     },
-})
+    
+}).initThisProto()

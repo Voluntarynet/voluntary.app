@@ -50,4 +50,5 @@ BMNode.newSubclassNamed("BMDayNode").newSlots({
         // used by UI row views to browse into next column
         return null
     },    
-})
+    
+}).initThisProto()

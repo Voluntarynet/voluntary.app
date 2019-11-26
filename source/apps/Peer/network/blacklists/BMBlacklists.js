@@ -24,4 +24,4 @@ BMStorableNode.newSubclassNamed("BMBlacklists").newSlots({
         this.addStoredSlots(["servers", "peers", "contacts"])
     },
 	
-})
+}).initThisProto()

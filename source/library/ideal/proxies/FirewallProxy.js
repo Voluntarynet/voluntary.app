@@ -128,7 +128,7 @@ ObservableProxy.newSubclassNamed("FirewallProxy").newSlots({
 
         console.log(this.type() + " - self test passed")
     },
-})
+}).initThisProto()
 
 
 // ------------------------------------------------------------------

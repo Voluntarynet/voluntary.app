@@ -368,5 +368,4 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     // new store system
     // ----------------------------------------
 
-
-})
+}).initThisProto()

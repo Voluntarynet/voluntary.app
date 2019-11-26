@@ -32,5 +32,5 @@ BMAppMessage.newSubclassNamed("BMPostThread").newSlots({
         return this
     },
 
-})
+}).initThisProto()
 

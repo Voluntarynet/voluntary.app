@@ -97,4 +97,5 @@ BMStorableNode.newSubclassNamed("BMRemoteIdentities").newSlots({
         return "chat/contacts"
         //	    return "users-white"
     },
-})
+    
+}).initThisProto()

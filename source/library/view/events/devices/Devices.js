@@ -53,4 +53,5 @@ ideal.Proto.newSubclassNamed("Devices").newSlots({
         es.filter(e => !TypeError.isNullOrUndefined(e))
         return es.min(e => e.timeStamp)
     },
-})
+    
+}).initThisProto()

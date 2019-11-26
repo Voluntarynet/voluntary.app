@@ -45,4 +45,4 @@ BMField.newSubclassNamed("BMIdentityField").newSlots({
         return this
     },
 
-})
+}).initThisProto()

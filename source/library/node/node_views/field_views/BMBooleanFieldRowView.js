@@ -40,4 +40,4 @@ BMFieldRowView.newSubclassNamed("BMBooleanFieldRowView").newSlots({
         return this
     },
     
-})
+}).initThisProto()

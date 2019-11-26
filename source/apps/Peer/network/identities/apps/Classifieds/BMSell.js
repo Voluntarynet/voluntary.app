@@ -10,6 +10,7 @@ BMStorableNode.newSubclassNamed("BMSell").newSlots({
     post: null,
     hasSent: false,
 }).setSlots({
+
     init: function () {
         BMStorableNode.init.apply(this)
         this.setShouldStore(true)
@@ -36,5 +37,4 @@ BMStorableNode.newSubclassNamed("BMSell").newSlots({
         //this.post().didUpdateNode()
     },
 
-
-})
+}).initThisProto()

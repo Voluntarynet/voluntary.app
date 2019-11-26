@@ -65,4 +65,5 @@ NodeView.newSubclassNamed("BrowserHeaderAction").newSlots({
         this.sendActionToTarget()
         return false
     },
-})
+    
+}).initThisProto()

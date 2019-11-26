@@ -16,4 +16,5 @@ BMField.newSubclassNamed("BMStampField").newSlots({
         this.setKeyIsEditable(false)
         this.setValueIsEditable(false)
     },
-})
+    
+}).initThisProto()

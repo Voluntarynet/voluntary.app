@@ -325,4 +325,4 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
     },
 
 
-})
+}).initThisProto()

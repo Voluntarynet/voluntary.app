@@ -45,4 +45,5 @@ ideal.Proto.newSubclassNamed("DomCSSInspector").newSlots({
     cssStyle: function(key) {
         return this.testElement().style
     },
-})
+    
+}).initThisProto()

@@ -127,5 +127,6 @@ BMStorableNode.newSubclassNamed("BMSummaryNode").newSlots({
         
         return s
     },
-})
+    
+}).initThisProto()
 

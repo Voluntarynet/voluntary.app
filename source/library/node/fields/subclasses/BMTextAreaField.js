@@ -14,4 +14,5 @@ BMField.newSubclassNamed("BMTextAreaField").newSlots({
         BMField.init.apply(this)
         this.setKeyIsVisible(false)
     },
-})
+    
+}).initThisProto()

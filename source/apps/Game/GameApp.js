@@ -123,7 +123,7 @@ App.newSubclassNamed("GameApp").newSlots({
         App.appDidInit.apply(this)
         window.ResourceLoaderPanel.stop() 
     },
-})
+}).initThisProto()
 
 GameApp.showVersion()
 

@@ -15,4 +15,4 @@ BMBlacklist.newSubclassNamed("BMBlacklistedContacts").newSlots({
         this.setTitle("contacts")
     },
 	
-})
+}).initThisProto()

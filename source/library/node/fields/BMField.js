@@ -238,7 +238,8 @@ BMSummaryNode.newSubclassNamed("BMField").newSlots({
 
     setNodeSummaryShowsValue: function() {
     },
-})
+    
+}).initThisProto()
 
 
 /*

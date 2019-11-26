@@ -83,4 +83,4 @@ BMNode.newSubclassNamed("BMURLImage").newSlots({
         return this
     },
 
-})
+}).initThisProto()

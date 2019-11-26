@@ -64,5 +64,5 @@ ideal.Proto.newSubclassNamed("WebBrowserScreen").newSlots({
         return prefersDark
     },
 
-})
+}).initThisProto()
 

@@ -54,4 +54,5 @@ BMStorableNode.newSubclassNamed("BMPostDrafts").newSlots({
     nodeViewShouldBadge: function() {
         return this.subnodesCount() > 0
     },
-})
+    
+}).initThisProto()

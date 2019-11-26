@@ -16,4 +16,5 @@ BMStorableNode.newSubclassNamed("BMSent").newSlots({
         this.setNoteIsSubnodeCount(true)
         this.setTitle("sent")
     },
-})
+    
+}).initThisProto()

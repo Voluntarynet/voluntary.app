@@ -123,8 +123,9 @@ BMNode.newSubclassNamed("BMPeerId").newSlots({
 	matchesPeerId: function(otherPeerId) {
 	    this.bloomFilter().
 	},
-	*/
-})
+    */
+    
+}).initThisProto()
 
 
 

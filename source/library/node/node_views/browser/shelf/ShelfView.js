@@ -149,5 +149,6 @@ NodeView.newSubclassNamed("ShelfView").newSlots({
         item.setDestinationNode(settings).setToolTip("Settings")   
         item.setIsSelectable(false)
     },
-})
+    
+}).initThisProto()
 

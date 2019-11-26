@@ -17,5 +17,6 @@ BMStorableNode.newSubclassNamed("BMFollowers").newSlots({
     place: function() {
         
     },
-})
+    
+}).initThisProto()
 

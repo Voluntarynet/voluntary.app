@@ -191,4 +191,5 @@ BMFieldSetNode.newSubclassNamed("BMRServer").newSlots({
         this.setBloomDistance(diff)
         return this
     },    
-})
+    
+}).initThisProto()

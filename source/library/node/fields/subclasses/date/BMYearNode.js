@@ -54,4 +54,5 @@ BMNode.newSubclassNamed("BMYearNode").newSlots({
             }
         }
     },
-})
+    
+}).initThisProto()

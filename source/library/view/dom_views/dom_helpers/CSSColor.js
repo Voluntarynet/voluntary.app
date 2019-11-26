@@ -339,5 +339,5 @@ ideal.Proto.newSubclassNamed("CSSColor").newSlots({
         }
     }
 
-})
+}).initThisProto()
 

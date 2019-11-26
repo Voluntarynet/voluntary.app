@@ -87,4 +87,4 @@ ideal.Proto.newSubclassNamed("Rectangle").newSlots({
         return this.x() + this.width() 
     },
 
-})
+}).initThisProto()

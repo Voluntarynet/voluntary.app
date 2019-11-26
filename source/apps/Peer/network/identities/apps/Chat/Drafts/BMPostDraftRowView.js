@@ -190,5 +190,6 @@ BrowserRow.newSubclassNamed("BMPostDraftRowView").newSlots({
         return this
     },
     */
-})
+   
+}).initThisProto()
 

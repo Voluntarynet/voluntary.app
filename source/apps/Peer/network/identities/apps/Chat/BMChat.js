@@ -111,5 +111,5 @@ BMApplet.newSubclassNamed("BMChat").newSlots({
     	}
     },
 		
-})
+}).initThisProto()
 

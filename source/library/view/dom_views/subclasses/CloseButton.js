@@ -66,4 +66,5 @@ window.CloseButton = DomView.newSubclassNamed("CloseButton").newSlots({
         }
         return false
     },
-})
+    
+}).initThisProto()

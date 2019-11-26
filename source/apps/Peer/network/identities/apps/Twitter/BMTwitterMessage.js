@@ -18,5 +18,6 @@ BMAppMessage.newSubclassNamed("BMTwitterMessage").newSlots({
     place: function() {
         
     },
-})
+    
+}).initThisProto()
 

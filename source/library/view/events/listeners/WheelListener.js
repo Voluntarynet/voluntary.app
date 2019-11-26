@@ -19,4 +19,4 @@ EventSetListener.newSubclassNamed("WheelListener").newSlots({
         return this
     },
 
-})
+}).initThisProto()

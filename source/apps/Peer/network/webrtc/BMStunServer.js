@@ -68,4 +68,5 @@ BMFieldSetNode.newSubclassNamed("BMStunServer").newSlots({
         }
         return { url: url }
     },
-})
+    
+}).initThisProto()

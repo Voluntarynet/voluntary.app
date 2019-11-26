@@ -13,5 +13,5 @@ DomView.newSubclassNamed("ShelfScrollView").newSlots({
         return this
     },
 	
-})
+}).initThisProto()
 

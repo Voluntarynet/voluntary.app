@@ -153,4 +153,4 @@ BMKeyPair.newSubclassNamed("BMLocalIdentity").newSlots({
         return null
     },
         
-})	
+}).initThisProto()

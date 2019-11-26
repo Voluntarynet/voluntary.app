@@ -119,4 +119,5 @@ BMStorableNode.newSubclassNamed("BMContactLinks").newSlots({
 
         return this
     },
-})
+    
+}).initThisProto()

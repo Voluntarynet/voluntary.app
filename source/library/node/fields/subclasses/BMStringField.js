@@ -20,4 +20,5 @@ BMField.newSubclassNamed("BMStringField").newSlots({
         this.setValueIsVisible(true)
         this.setValueIsEditable(true)
     },
-})
+    
+}).initThisProto()

@@ -49,4 +49,4 @@ BMNode.newSubclassNamed("BMSound").newSlots({
     },
 
     //audio.src = 'data:audio/wav;base64,UklGR...;
-})
+}).initThisProto()

@@ -69,5 +69,6 @@ BMStorableNode.newSubclassNamed("BMApps").newSlots({
     handleAppMsg: function (aMessage) {
         this.subnodes().forEach((app) => { app.handleAppMsg(aMessage) })
     },
-})
+    
+}).initThisProto()
 

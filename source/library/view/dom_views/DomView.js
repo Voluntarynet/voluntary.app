@@ -3464,6 +3464,4 @@ ideal.Proto.newSubclassNamed("DomView").newSlots({
         return this
     },
 
-
-
-})
+}).initThisProto()

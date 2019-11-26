@@ -31,4 +31,5 @@ TextField.newSubclassNamed("BrowserRowTitle").newSlots({
         */
         return true
     },
-})
+    
+}).initThisProto()

@@ -10,7 +10,7 @@
 */
 
 window.SyncAction = class SyncAction extends ProtoClass {
-    static initClass () {
+    initPrototype () {
         this.newSlots({
             target: null,
             method: null,

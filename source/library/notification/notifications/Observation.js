@@ -11,7 +11,7 @@
 */
 
 window.Observation = class Observation extends ProtoClass {
-    static initClass () {
+    initPrototype () {
         this.newSlots({
             center: null, // NotificationCenter that owns this
             //target: null, // expects uniqueId string for target

@@ -33,7 +33,7 @@ class ProtoClass {
         return subclass
     }
 
-    static initClass() {
+    initPrototype() { 
         // subclasses should call this at end of their definition
     }
 
@@ -63,7 +63,7 @@ class ProtoClass {
     }
     
     static initThisClass () {
-        this.initClass()
+        this.prototype.initPrototype()
 
         //console.log("initThisClass: ", this)
         if (this.allClasses().contains(this)) {
@@ -111,11 +111,13 @@ class ProtoClass {
     // adding instance slots via class ---
 
     static newSlots(slots) {
+        throw new Error("should all on prototype instead")
         this.prototype.newSlots(slots)
         return this;
     }
 
     static setSlots(slots) {
+        throw new Error("should all on prototype instead")
         this.prototype.setSlots(slots)
         return this;
     }
@@ -161,8 +163,16 @@ class ProtoClass {
         return false
     }
 
+    static isClass() {
+        return true
+    }
+
     isInstance () {
         return true
+    }
+
+    isClass () {
+        return false
     }
 
     static slots () {
@@ -172,7 +182,6 @@ class ProtoClass {
         }
         return self._slots
     }
-
 
     static newSlot(slotName, initialValue) {
             
@@ -189,7 +198,7 @@ class ProtoClass {
         const slot = ideal.Slot.clone().setName(slotName).setInitValue(initialValue)
         slot.setOwner(this.prototype)
         slot.setupInOwner()
-        this.slots()[slotName] = slot
+        this.prototype.slots()[slotName] = slot
         
         return this;
     }
@@ -228,7 +237,7 @@ class ProtoClass {
     }
 
     newSlots(slots) {
-        Object.eachSlot(slots,  (slotName, initialValue) => {
+        Object.eachSlot(slots, (slotName, initialValue) => {
             this.newSlot(slotName, initialValue);
         });
 

@@ -9,7 +9,7 @@
 */
 
 window.ViewAnimator = class ViewAnimator extends ProtoClass {
-    static initClass () {
+    initPrototype () {
         this.newSlots({
 
             startValue: 0,

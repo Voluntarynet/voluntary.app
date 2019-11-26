@@ -9,8 +9,6 @@
 */
 
 App.newSubclassNamed("AtomApp").newSlots({
-    type: "AtomApp",
-
     name: "atom",
     version: [0, 0, 1, 0],
 

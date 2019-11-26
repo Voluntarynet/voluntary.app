@@ -34,11 +34,8 @@
 
 
 GestureRecognizer.newSubclassNamed("SlideGestureRecognizer").newSlots({
-    isPressing: false,
-
     direction: "left", 
     validDirectionsDict: { left: 1, right: 2, up: 3, down: 4 },
-    minDistToBegin: 10,
     maxPerpendicularDistToBegin: 10, // will not begin if this is exceeded
     //downPositionInTarget: null,
 }).setSlots({

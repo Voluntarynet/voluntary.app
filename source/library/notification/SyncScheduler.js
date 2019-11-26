@@ -54,7 +54,7 @@
 */
 
 window.SyncScheduler = class SyncScheduler extends ProtoClass {
-    static initClass () {
+    initPrototype () {
         this.newSlots({
             actions: ideal.Dictionary.clone(),
             syncSets: ideal.Dictionary.clone(),

@@ -55,7 +55,7 @@
 */
 
 window.NotificationCenter = class NotificationCenter extends ProtoClass {
-    static initClass () {
+    initPrototype () {
         this.newSlots({
             observations: null, // array 
             notifications: null, // array

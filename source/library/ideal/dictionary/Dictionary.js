@@ -14,7 +14,7 @@ window.ideal.Dictionary = class Map extends ProtoClass {
         return this.clone().setJsDict(jsDict)
     }
 
-    static initClass() {
+    initPrototype() {
         // don't call super as it's init was called when it was created
         this.newSlot("jsDict", null)
     }

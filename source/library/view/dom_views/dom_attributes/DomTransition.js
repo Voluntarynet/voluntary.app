@@ -9,7 +9,7 @@
 */
 
 window.DomTransition = class DomTransition extends ProtoClass {
-    static initClass () {
+    initPrototype () {
         this.newSlots({
             property: "",
             duration: 0,

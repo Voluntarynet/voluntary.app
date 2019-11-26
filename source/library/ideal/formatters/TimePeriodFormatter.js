@@ -20,7 +20,13 @@ TimePeriodFormatter
 
 */
 
-class TimePeriodFormatter extends ProtoClass {
+window.TimePeriodFormatter = class TimePeriodFormatter extends ProtoClass {
+    initPrototype () {
+        this.newSlots({
+            valueInSeconds: 0,
+        })
+    }
+
     init() {
         super.init()
     }
@@ -57,10 +63,4 @@ class TimePeriodFormatter extends ProtoClass {
         const days = Math.floor(hours/24)
         return days + periods.days
     }
-}
-
-TimePeriodFormatter.newSlots({
-    valueInSeconds: 0,
-}).setSlots({
-    
-}).initThisClass()
+}.initThisClass()

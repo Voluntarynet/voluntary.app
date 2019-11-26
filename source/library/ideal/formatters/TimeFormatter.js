@@ -28,7 +28,24 @@ TimeFormatter
 
 */
 
-class TimeFormatter extends ProtoClass {
+window.TimeFormatter = class TimeFormatter extends ProtoClass {
+    initPrototype () {
+        this.newSlots({
+            is24Hour: false, 
+            showsMeridiem: true, 
+            uppercaseMeridem: false, 
+            amString: "am", 
+            pmString: "pm", 
+            doesPadHours: false,
+            showsHours: true,
+            hourMinuteSpacer: ":",
+            showsMinutes: true,
+            showsSeconds: false,
+            showsMilliseconds: false,
+            date: null, // a javascript Date object
+        })
+    }
+
     init() {
         super.init()
     }
@@ -145,23 +162,8 @@ class TimeFormatter extends ProtoClass {
 
         return s
     }
-}
+}.initThisClass()
 
-TimeFormatter.newSlots({
-    is24Hour: false, 
-    showsMeridiem: true, 
-    uppercaseMeridem: false, 
-    amString: "am", 
-    pmString: "pm", 
-    doesPadHours: false,
-    showsHours: true,
-    hourMinuteSpacer: ":",
-    showsMinutes: true,
-    showsSeconds: false,
-    showsMilliseconds: false,
-    date: null, // a javascript Date object
-}).setSlots({
-    
-}).initThisClass()
+
 
 

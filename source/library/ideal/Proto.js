@@ -27,6 +27,7 @@ Proto.setSlots = function (slots) {
 
 Proto.setSlots({    
     allProtos: function() {
+        //return this.getClassVariable("_allProtos", [])
         if (!Proto._allProtos) {
             Proto._allProtos = []
         }
@@ -34,22 +35,61 @@ Proto.setSlots({
     },
 
     registerThisProto: function() {
-        if (this.allProtos().indexOf(this) === -1) {
-            this.allProtos().push(this)
+        if (this.allProtos().contains(this)) {
+            throw new Error("attempt to register same proto twice")
         }
+        this.allProtos().push(this)
         return this
     },
 
     _childProtos: [],
     _allDescendantProtos: null,
     
+    cloneWithoutInit: function () {
+        const obj = Object.clone(this);
+        obj.class = this
+        obj._isClass = false // will get set again in newSubclassNamed
+        //obj.__proto__ = this; // unneeded
+        //this.constructor.name = typeString
+
+        return obj;
+    },
+
+    thisClass: function() {
+        if (this.isClass()) {
+            return this
+        }
+        assert(this.__proto__.isClass())
+        return this.__proto__
+    },
+
+    clone: function () {
+        const obj = this.cloneWithoutInit()
+        obj.init()
+        return obj
+    },
+
+    _isClass: true,
+
+    isInstance: function() {
+        return !this._isClass
+    },
+
+    isClass: function() {
+        return this._isClass
+    },
+
     newSubclassNamed: function(name) {
-        const newClass = this.extend()
+        const newClass = this.cloneWithoutInit()
+        newClass.registerThisProto()
+        newClass._parentProto = this
+        newClass._childProtos = [] // need to create these slots so they won't be inherited
+        this.addChildProto(newClass)
+
         newClass._type = name
         newClass._superClass = this
+        newClass._isClass = true
         window[name] = newClass
-
-        //this.initClass()
         return newClass
     },
 
@@ -86,14 +126,6 @@ Proto.setSlots({
     },
     */
 
-    extend: function () {
-        const obj = this.cloneWithoutInit()
-        obj.registerThisProto()
-        obj._parentProto = this
-        obj._childProtos = [] // need to create these slots so they won't be inherited
-        this.addChildProto(obj)
-        return obj
-    },
 
     addChildProto: function(aProto) {
         this._childProtos.push(aProto)
@@ -138,16 +170,19 @@ Proto.setSlots({
         return this.typePuuid()
     },
 
-    /*
     getClassVariable: function(name, defaultValue) {
-        const proto = this.typeClass()
-        let value = proto[name]
-        if (Type.isUndefined(value)) {
-            proto[name] = defaultValue
+        const proto = this.isClass() ? this : this.thisClass()
+
+        if (Type.isUndefined(proto)) {
+            let isClass = this.isClass()
+            let aClass  = this.thisClass()
         }
+
+        if (!proto.hasOwnProperty(name)) {
+            proto[name] = defaultValue
+        } 
         return proto[name]
     },
-    */
 
 
     /*
@@ -190,19 +225,6 @@ Proto.setSlots({
 
     // ---
 
-    cloneWithoutInit: function () {
-        const obj = Object.clone(this);
-        //obj.__proto__ = this; // unneeded
-        //this.constructor.name = typeString
-        return obj;
-    },
-
-    clone: function () {
-        const obj = this.cloneWithoutInit();
-        obj.init();
-        return obj;
-    },
-
     /*
     withSets: function (sets) {
         return this.clone().performSets(sets);
@@ -241,23 +263,33 @@ Proto.setSlots({
     */
 
     slotNamed: function(slotName) {
-        const slots = this.slots()
+        const slots = this.allSlots()
         if (slots.hasOwnProperty(slotName)) {
             return slots[slotName]
         }
-        return null
+        return null 
     },
 
 
     slots: function() {
-        if (!this.hasOwnProperty("_slots")) {
-            this._slots = {}
+        return this.getClassVariable("_slots", {})
+    },
+
+    allSlots: function(allSlots = {}) {
+        Object.assign(allSlots, this.slots())
+        const superclass = this.superClass()
+        assert(this !== superclass)
+        if (superclass && superclass.allSlots) {
+            superclass.allSlots(allSlots)
         }
-        return this._slots
+        return allSlots
     },
 
     newSlot: function (slotName, initialValue = null) {
         assert(Type.isString(slotName))
+        if (this.slots()[slotName]) {
+            this.slots()[slotName]
+        }
         assert(Type.isUndefined(this.slots()[slotName]))
 
         const slot = ideal.Slot.clone().setName(slotName).setInitValue(initialValue).setOwner(this).setupInOwner()
@@ -393,10 +425,6 @@ Proto.setSlots({
     },
 
     // --- ancestors ---
-
-    isInstance: function() {
-        return this.type() === this.__proto__.type()
-    },
 
     ancestors: function () {
         const results = []

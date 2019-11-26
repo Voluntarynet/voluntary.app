@@ -7,7 +7,7 @@
 */
 
 window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
-    static initClass () {
+    initPrototype () {
         this.newSlots({
             path: "/", // path should end with pathSeparator
             pathSeparator: "/",

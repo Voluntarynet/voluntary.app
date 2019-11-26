@@ -29,7 +29,7 @@
 */
 
 window.AtomicPersistentDictionary = class AtomicPersistentDictionary extends ideal.AtomicDictionary {
-    static initClass () {
+    initPrototype () {
         this.newSlots({
             name: "AtomicPersistentDictionary", // default name
             idb: null,

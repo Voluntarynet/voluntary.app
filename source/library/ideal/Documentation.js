@@ -11,7 +11,7 @@
 */
 
 window.Documentation = class Documentation extends ProtoClass {
-    static initClass () {
+    initPrototype () {
         this.newSlots({
             classes: [],
         })

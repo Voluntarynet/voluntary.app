@@ -25,7 +25,7 @@ console.log("aClass = ", aClass)
 
 
 window.StackFrame = class StackFrame extends ProtoClass {
-    static initClass () {
+    initPrototype () {
         this.newSlots({
             functionName: null,
             url: null,
@@ -77,7 +77,7 @@ window.StackFrame = class StackFrame extends ProtoClass {
 // -----------------------------------------------------------------
 
 window.StackTrace = class StackTrace extends ProtoClass {
-    static initClass () {
+    initPrototype () {
         this.newSlots({
             error: null,
             stackFrames: [],

@@ -39,7 +39,7 @@
 */
 
 window.SyncDB = class SyncDB extends ProtoClass {
-    static initClass () {
+    initPrototype () {
         this.newSlots({
             name: "SyncDB", // default name
             idb: null,

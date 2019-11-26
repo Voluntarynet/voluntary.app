@@ -1,6 +1,17 @@
 
 TODO:
 
+Constructor has a name and points to a 
+
+	move initClass to initProto?
+
+	ConstructorA
+		.prototype -> PrototypeA
+						constructor -> ConstructorA
+						__proto__ -> Object?
+						slots =
+						
+	
 	
 	- add check to make sure only one commit is done per event loop?
 	

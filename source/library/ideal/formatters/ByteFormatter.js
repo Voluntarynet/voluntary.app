@@ -23,7 +23,7 @@
 */
 
 window.ByteFormatter = class ByteFormatter extends ProtoClass {
-    static initClass () {
+    initPrototype () {
         this.newSlots({
             value: 0,
             usePostfix: true,

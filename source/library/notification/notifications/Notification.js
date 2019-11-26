@@ -7,7 +7,7 @@
 */
 
 window.Notification = class Notification extends ProtoClass {
-    static initClass () {
+    initPrototype () {
         this.newSlots({
             name: null,
             sender: null,

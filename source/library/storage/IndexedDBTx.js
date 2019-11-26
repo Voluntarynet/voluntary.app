@@ -9,7 +9,7 @@
 */
 
 window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
-    static initClass () {
+    initPrototype () {
         this.newSlots({
             dbFolder: null,
             objectStore: null,

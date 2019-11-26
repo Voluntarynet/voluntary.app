@@ -17,10 +17,8 @@
 */
 
 GestureRecognizer.newSubclassNamed("PanGestureRecognizer").newSlots({
-    isPressing: false,
     minNumberOfFingersRequired: 1,
     maxNumberOfFingersAllowed: 1,
-    minDistToBegin: 10,
     //downPositionInTarget: null,
 }).setSlots({
     

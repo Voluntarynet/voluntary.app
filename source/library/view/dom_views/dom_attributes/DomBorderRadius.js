@@ -13,7 +13,7 @@
 
 
 window.DomBorderRadius = class DomBorderRadius extends ProtoClass {
-    static initClass () {
+    initPrototype () {
         this.newSlots({
             divView: null,
 

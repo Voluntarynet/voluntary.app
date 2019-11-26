@@ -64,9 +64,7 @@
 */
 
 window.NotificationCenter = class NotificationCenter extends ProtoClass {
-    init() {
-        super.init()
-
+    static initClass () {
         this.newSlots({
             observations: null, // array 
             notifications: null, // array
@@ -75,7 +73,10 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
             isProcessing: false,
             nameIndex: null, // dict of dicts
         })
+    }
 
+    init() {
+        super.init()
         this.setObservations([]);
         this.setNotifications([]);
         this.setNameIndex({});
@@ -320,6 +321,4 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
             console.log("current post sender stack: ", this.currentNote().senderStack())
         }
     }
-}
-
-window.NotificationCenter.registerThisClass()
+}.initThisClass()

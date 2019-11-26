@@ -10,14 +10,17 @@
 */
 
 window.SyncAction = class SyncAction extends ProtoClass {
-    init() {
-        super.init()
+    static initClass () {
         this.newSlots({
             target: null,
             method: null,
             order: 0,
             args: null,
         })
+    }
+
+    init() {
+        super.init()
         this.setIsDebugging(false)
     }
 	
@@ -59,6 +62,5 @@ window.SyncAction = class SyncAction extends ProtoClass {
     static ActionKeyForTargetAndMethod (target, method) {
         return target.typeId() + "." + method
     }
-}
+}.initThisClass()
 
-window.SyncAction.registerThisClass()

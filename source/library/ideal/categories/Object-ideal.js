@@ -24,10 +24,11 @@ Object.defineSlots = function(obj, dict) {
 
 Object.defineSlots(Object, {
     clone: function (obj) {
-        const Proto_constructor = new Function;
-        Proto_constructor.prototype = obj;
-        const instance = new Proto_constructor;
-        instance.constructor = Proto_constructor
+        const f = new Function; // Proto constructor
+        f.prototype = obj;
+        const instance = new f; 
+        // instance.__proto now equals f.prototype which is obj
+        instance.constructor = f
         return instance
     },
     

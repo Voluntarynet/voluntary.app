@@ -9,8 +9,7 @@
 */
 
 window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
-    init() {
-        super.init()
+    static initClass () {
         this.newSlots({
             dbFolder: null,
             objectStore: null,
@@ -18,7 +17,10 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
             requests: [],
             isCommitted: false,
         })
+    }
 
+    init() {
+        super.init()
         this.setIsDebugging(true)
     }
 
@@ -161,9 +163,8 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
         return this
     }
     
-}
+}.initThisClass()
 
-window.IndexedDBTx.registerThisClass()
 
 
 

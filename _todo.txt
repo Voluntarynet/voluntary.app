@@ -1,7 +1,7 @@
 
 TODO:
 
-
+	
 	- add check to make sure only one commit is done per event loop?
 	
 	- move StorableNode subnodes to a slot

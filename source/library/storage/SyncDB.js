@@ -39,8 +39,7 @@
 */
 
 window.SyncDB = class SyncDB extends ProtoClass {
-    init() {
-        super.init()
+    static initClass () {
         this.newSlots({
             name: "SyncDB", // default name
             idb: null,
@@ -48,7 +47,10 @@ window.SyncDB = class SyncDB extends ProtoClass {
             writeCache: null,
             isOpen: false,
         })
+    }
 
+    init() {
+        super.init()
         this.setReadCache({})
         this.setIdb(IndexedDBFolder.clone())
         //this.setIsDebugging(true)
@@ -317,6 +319,6 @@ window.SyncDB = class SyncDB extends ProtoClass {
 	    
         this._writeCache[key] = { _isDelete: true }
     }
-}
-    
-window.SyncDB.registerThisClass()
+
+}.initThisClass()
+

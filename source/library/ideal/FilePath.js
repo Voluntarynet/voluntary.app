@@ -50,6 +50,5 @@ window.ideal.FilePath = class FilePath extends ProtoClass {
         return extension;
     }
 
-}
+}.initThisClass()
 
-window.ideal.FilePath.registerThisClass()

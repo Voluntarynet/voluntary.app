@@ -13,8 +13,7 @@
 
 
 window.DomBorderRadius = class DomBorderRadius extends ProtoClass {
-    init() {
-        super.init()
+    static initClass () {
         this.newSlots({
             divView: null,
 
@@ -24,6 +23,10 @@ window.DomBorderRadius = class DomBorderRadius extends ProtoClass {
             bottomLeft: 0,
             partNames: ["topLeft", "topRight", "bottomRight", "bottomLeft"],
         })
+    }
+
+    init() {
+        super.init()
     }
 
     clear() {
@@ -104,6 +107,5 @@ window.DomBorderRadius = class DomBorderRadius extends ProtoClass {
 
         return this
     }
-}
+}.initThisClass()
 
-DomBorderRadius.registerThisClass()

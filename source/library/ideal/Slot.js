@@ -50,15 +50,24 @@ window.ideal.Slot = class Slot {
         this.simpleNewSlot("ownsGetter", true) 
         this.simpleNewSlot("doesHookGetter", false)
         this.simpleNewSlot("hookedGetterIsOneShot", true) 
+        this.simpleNewSlot("isInGetterHook", false) 
 
         // setter
         this.simpleNewSlot("ownsSetter", true) 
-        this.simpleNewSlot("doesHookSetter", true) // if shouldStore, then auto post isDirty?
+        this.simpleNewSlot("doesHookSetter", false) // if shouldStore, then auto post isDirty?
         //this.simpleNewSlot("doesPostSetter", false) // posts a didUpdateSlot<SlotName> note
 
         // storrage related
         this.simpleNewSlot("isLazy", false) // should hook getter
         this.simpleNewSlot("shouldStore", false) // should hook setter
+    }
+
+    setDoesHookSetter (aBool) {
+        if (this._doesHookSetter !== aBool) {
+            this._doesHookSetter = aBool
+            this.setupSetter()
+        }
+        return this 
     }
 
     setIsLazy (aBool) {
@@ -159,7 +168,8 @@ window.ideal.Slot = class Slot {
     // hooked getter
 
     makeHookedGetter () {
-        this.owner()[this.getterName()] = this.hookedGetter()
+        //this.owner()[this.getterName()] = this.hookedGetter()
+        this.owner()[this.getterName()] = this.safeHookedGetter()
         return this
     }
 
@@ -167,6 +177,31 @@ window.ideal.Slot = class Slot {
         const privateName = this.privateName()
         const func = function () {
             this.willGetSlot(privateName) // opportunity to replace value before first access
+            return this[privateName]
+        }
+        func.setSlot(this)
+        return func
+    }
+
+    safeHookedGetter () {
+        const privateName = this.privateName()
+        // usefull for debugging infinite loops
+        const func = function () {
+            const slot = arguments.callee.slot()
+
+            if (slot.isInGetterHook()) {
+                throw new Error("hooked getter infinite loop detected")
+            }
+
+            slot.setIsInGetterHook(true)
+            try {
+                this.willGetSlot(privateName) 
+            } catch(e) {
+                slot.setIsInGetterHook(false)
+                throw e
+            } 
+            slot.setIsInGetterHook(false)
+
             return this[privateName]
         }
         func.setSlot(this)
@@ -271,6 +306,8 @@ window.ideal.Slot = class Slot {
 
 }
 
+
+// --- slot methods on Function -------------------------------------------------
 
 Object.defineSlots(Function.prototype, {
     slot: function() {

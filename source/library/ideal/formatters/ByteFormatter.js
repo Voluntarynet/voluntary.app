@@ -22,10 +22,8 @@
 
 */
 
-class ByteFormatter extends ProtoClass {
-    init() {
-        super.init()
-        /*
+window.ByteFormatter = class ByteFormatter extends ProtoClass {
+    static initClass () {
         this.newSlots({
             value: 0,
             usePostfix: true,
@@ -43,7 +41,10 @@ class ByteFormatter extends ProtoClass {
                 "zettabytes", 
                 "yottabytes"],
         })
-        */
+    }
+
+    init() {
+        super.init()
     }
 
     formattedValue() {
@@ -70,27 +71,4 @@ class ByteFormatter extends ProtoClass {
 		
         return v + space + orderName + postfix
     }
-}
-
-ByteFormatter.newSlots({
-    value: 0,
-    usePostfix: true,
-    useSpace: false,
-    useLongNames: false,
-    orderNamesShort: ["bytes", "k", "M", "G", "T", "P", "E", "Z", "Y"],
-    orderNamesLong: [
-        "bytes", 
-        "kilobytes", 
-        "megabytes", 
-        "gigabytes", 
-        "terabytes", 
-        "petabytes", 
-        "exabytes", 
-        "zettabytes", 
-        "yottabytes"],
-}).setSlots({
-    
-})
-
-
-ByteFormatter.registerThisClass()
+}.initThisClass()

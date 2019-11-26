@@ -162,7 +162,6 @@ TimeFormatter.newSlots({
     date: null, // a javascript Date object
 }).setSlots({
     
-})
+}).initThisClass()
 
 
-TimeFormatter.registerThisClass()

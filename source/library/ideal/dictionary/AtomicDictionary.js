@@ -128,6 +128,5 @@ window.ideal.AtomicDictionary = class AtomicDictionary extends ideal.Dictionary 
     test () {
 
     }
-}
+}.initThisClass()
 
-window.ideal.AtomicDictionary.registerThisClass()

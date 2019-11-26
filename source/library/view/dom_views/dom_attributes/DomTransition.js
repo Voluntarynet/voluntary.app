@@ -9,8 +9,7 @@
 */
 
 window.DomTransition = class DomTransition extends ProtoClass {
-    init() {
-        super.init()
+    static initClass () {
         this.newSlots({
             property: "",
             duration: 0,
@@ -19,6 +18,10 @@ window.DomTransition = class DomTransition extends ProtoClass {
             //parent: null,
             transitions: null,
         })
+    }
+
+    init() {
+        super.init()
     }
 
     updateDuration(s) {
@@ -98,7 +101,6 @@ window.DomTransition = class DomTransition extends ProtoClass {
         this.transitions().syncToDomView()
         return this
     }
-}
+}.initThisClass()
 
-DomTransition.registerThisClass()
 

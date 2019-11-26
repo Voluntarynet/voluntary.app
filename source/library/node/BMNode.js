@@ -560,6 +560,7 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     },
     
     privatePrepareToAccess: function() {
+        // just here for debugging
         if (!this._isPreparingToAccess) {
             this._isPreparingToAccess = true
 

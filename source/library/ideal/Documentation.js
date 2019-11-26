@@ -10,21 +10,19 @@
 
 */
 
-class Documentation extends ProtoClass {
-    init() {
-        super.init()
+window.Documentation = class Documentation extends ProtoClass {
+    static initClass () {
         this.newSlots({
             classes: [],
         })
     }
 
-    registerClass(aClass) {
-        const classes = this.classes()
-        if (classes.contains(aClass)) {
-            console.log("duplicate class ", aClass.type())
-        }
-        this.classes().push(aClass)
-        //console.log("registering class " + aClass.type() + " subclass of " + aClass.superClass().type())
+    init() {
+        super.init()
+    }
+
+    classes () {
+        return ProtoClass.allClasses()
     }
 
     methodsDocsForClass(aClass) {
@@ -75,9 +73,8 @@ class Documentation extends ProtoClass {
         */
         console.log(this.type() + ".show() = ", lines.join("\n"))
     }
-}
+}.initThisClass()
 
-window.Documentation = Documentation
 
 // --- Object category -------------------------------------
 

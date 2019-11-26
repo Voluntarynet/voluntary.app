@@ -9,7 +9,7 @@
 
 */
 
-class CrossTabLock extends ProtoClass {
+window.CrossTabLock = class CrossTabLock extends ProtoClass {
     init() {
         super.init()
         this.newSlots({
@@ -58,6 +58,4 @@ class CrossTabLock extends ProtoClass {
             }
         }
     }
-}
-
-CrossTabLock.registerThisClass()
+}.initThisClass()

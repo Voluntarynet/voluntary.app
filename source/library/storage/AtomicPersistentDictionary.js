@@ -29,15 +29,17 @@
 */
 
 window.AtomicPersistentDictionary = class AtomicPersistentDictionary extends ideal.AtomicDictionary {
-    init() {
-        super.init()
+    static initClass () {
         this.newSlots({
             name: "AtomicPersistentDictionary", // default name
             idb: null,
             isOpen: false,
             changedKeys: null,
         })
+    }
 
+    init() {
+        super.init()
         this.setChangedKeys(new Set())
         this.setIdb(IndexedDBFolder.clone())
         this.setIsDebugging(true)
@@ -175,6 +177,5 @@ window.AtomicPersistentDictionary = class AtomicPersistentDictionary extends ide
             }
         })
     }
-}
-    
-window.AtomicPersistentDictionary.registerThisClass()
+}.initThisClass()
+

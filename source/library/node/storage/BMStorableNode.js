@@ -75,6 +75,7 @@ BMNode.newSubclassNamed("BMStorableNode").newSlots({
     
     addStoredSlot: function(slotName) {
         this.storedSlots()[slotName] = true
+        this.slotNamed(slotName).setDoesHookSetter(true)
         // Note: BMStorableNode hooks didUpdateSlot() to call scheduleSyncToStore on updates. 
         return this
     },

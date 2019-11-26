@@ -25,9 +25,7 @@ Proto.setSlots = function (slots) {
     return this;
 }
 
-Proto.setSlots({
-    _uniqueInstanceId: 0,
-    
+Proto.setSlots({    
     allProtos: function() {
         if (!Proto._allProtos) {
             Proto._allProtos = []
@@ -51,13 +49,15 @@ Proto.setSlots({
         newClass._superClass = this
         window[name] = newClass
 
-        const Documentation = window["Documentation"]
-        if (Documentation) {
-            Documentation.shared().registerClass(newClass)
-        }
-
+        //this.initClass()
         return newClass
     },
+
+    /*
+    initClass: function() {
+
+    }
+    */
 
     superClass: function() {
         return this._superClass
@@ -149,19 +149,14 @@ Proto.setSlots({
     },
     */
 
-    /*
-    newUniqueInstanceId: function() {
-        //Number.isInteger(Proto._uniqueInstanceId)
-        Proto._uniqueInstanceId ++
-        return Proto._uniqueInstanceId
-    },
-    */
 
+    /*
     newUniqueInstanceId: function() {
         const uuid_a = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
         const uuid_b = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
         return uuid_a + uuid_b
     },
+    */
 
     // --- type ---
 
@@ -187,7 +182,6 @@ Proto.setSlots({
         return this._type
     },
 
-
     setType: function(typeString) {
         this._type = typeString
         this.constructor.name = typeString
@@ -198,9 +192,8 @@ Proto.setSlots({
 
     cloneWithoutInit: function () {
         const obj = Object.clone(this);
-        obj.__proto__ = this;
-        //obj.constructor.name = this._type // can't assign to an anonymous Function
-        // Note: does the JS debugger expect constructor.__proto__.type?
+        //obj.__proto__ = this; // unneeded
+        //this.constructor.name = typeString
         return obj;
     },
 
@@ -236,6 +229,7 @@ Proto.setSlots({
         return this._type;
     },
 
+    /*
     setSlotsIfAbsent: function (slots) {
         Object.eachSlot(slots,  (name, value) => {
             if (!this[name]) {
@@ -244,6 +238,16 @@ Proto.setSlots({
         });
         return this;
     },
+    */
+
+    slotNamed: function(slotName) {
+        const slots = this.slots()
+        if (slots.hasOwnProperty(slotName)) {
+            return slots[slotName]
+        }
+        return null
+    },
+
 
     slots: function() {
         if (!this.hasOwnProperty("_slots")) {
@@ -274,7 +278,6 @@ Proto.setSlots({
             */
 
             this.didUpdateSlot(slotName, oldValue, newValue)
-            //this.mySlotChanged(name, oldValue, newValue);
         }
 
         return this;
@@ -284,9 +287,6 @@ Proto.setSlots({
         // persistence system can hook this
     },
 
-    mySlotChanged: function (slotName, oldValue, newValue) {
-        this.perform(slotName + "SlotChanged", oldValue, newValue);
-    },
 
     ownsSlot: function (name) {
         return this.hasOwnProperty(name);
@@ -298,11 +298,13 @@ Proto.setSlots({
         return doesRespond;
     },
 
+    /*
     aliasSlot: function (slotName, aliasName) {
         this[aliasName] = this[slotName];
         this["set" + aliasName.capitalized()] = this["set" + slotName.capitalized()];
         return this;
     },
+    */
 
     argsAsArray: function (args) {
         return Array.prototype.slice.call(args);
@@ -362,6 +364,7 @@ Proto.setSlots({
         return this;
     },
 
+    /*
     performGets: function (slots) {
         const object = {};
         slots.forEach( (slot) => {
@@ -370,6 +373,7 @@ Proto.setSlots({
 
         return object;
     },
+    */
 
     isKindOf: function (aProto) {
         if (this.__proto__) {
@@ -434,7 +438,8 @@ Proto.setSlots({
         if (this.isDebugging()) {
             if (Type.isFunction(s)) {
                 // we provide this option in case what we print in the debug
-                // is expensive to compute, so we can skip it if not debugging
+                // is expensive to compute (if only because it's done so often), 
+                // so we can skip it if not debugging
                 s = s() 
             }
 
@@ -572,6 +577,9 @@ Proto.setSlots({
 
     // encapsulation helpers
 
+    /*
+    // these are dangerous becuase sets fail silently
+
     frozenVersion: function() {
         const obj = Object.clone(this)
         Object.freeze(obj)
@@ -583,14 +591,7 @@ Proto.setSlots({
         Object.seal(obj)
         return obj
     },
-
-    lockedProxy: function() {
-        return new Proxy(this, {
-            set: function(target, propertyName, newValue) {
-                throw new Error("attempt to set property " + propertyName + " on locked proxy object")
-            },
-        })
-    },
+    */
 
     defaultStore: function() {
         //return ObjectPool.shared()

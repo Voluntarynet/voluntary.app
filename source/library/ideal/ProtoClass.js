@@ -25,6 +25,18 @@
 //window.ideal.ProtoClass = 
 class ProtoClass { 
 
+    static newSubclassNamed (subclassName) {
+        let s = "window['" + subclassName + "'] = class " + subclassName + " extends " + this.type() + " {}"
+        //console.log("s = ", s)
+        let subclass = eval(s)
+        //window[subclassName] = subclass
+        return subclass
+    }
+
+    static initClass() {
+        // subclasses should call this at end of their definition
+    }
+
     // --- class slots and variables ---
     
     static getClassVariable(key, defaultValue) {
@@ -50,16 +62,18 @@ class ProtoClass {
         return this.getClassVariable("_allClasses", [])
     }
     
-    static registerThisClass () {
-        //console.log("registerThisClass: ", this)
+    static initThisClass () {
+        this.initClass()
+
+        //console.log("initThisClass: ", this)
+        if (this.allClasses().contains(this)) {
+            throw new Error("attempt to call initThisClass twice on the same class")
+        }
+
         if (this.allClasses().indexOf(this) === -1) {
             this.allClasses().push(this)
         }
 
-        const Documentation = window["Documentation"]
-        if (Documentation) {
-            Documentation.shared().registerClass(this)
-        }
         return this
     }
 
@@ -132,7 +146,6 @@ class ProtoClass {
     }
 
     setType (aString) {
-        this._type = aString
         this.constructor.name = aString
         return this
     }
@@ -181,10 +194,24 @@ class ProtoClass {
         return this;
     }
 
+    /*
+    newSlotIfAbsent(slotName, initialValue) {
+        const p = this.prototype
+        if (!this.hasOwnPropery(slotName)) {
+            this.justNewSlot(slotName, initialValue)
+        }
+        return this
+    }
+    */
+
     newSlot(slotName, initialValue) {
-            
         assert(Type.isString(slotName))
         assert(Type.isUndefined(this.slots()[slotName]))
+        this.justNewSlot(slotName, initialValue)
+        return this
+    }
+
+    justNewSlot(slotName, initialValue) {
 
         /*
         // TODO: we want to create the private slots and initial value on instances
@@ -197,8 +224,7 @@ class ProtoClass {
         slot.setOwner(this)
         slot.setupInOwner()
         this.slots()[slotName] = slot
-        
-        return this;
+        return this
     }
 
     newSlots(slots) {
@@ -214,7 +240,6 @@ class ProtoClass {
         if (oldValue !== newValue) {
             this[privateName] = newValue;
             this.didUpdateSlot(slotName, oldValue, newValue)
-            //this.mySlotChanged(name, oldValue, newValue);
         }
 
         return this;
@@ -289,9 +314,10 @@ class ProtoClass {
     }
 
     toString () {
-        return this._type;
+        return this.type();
     }
 
+    /*
     setSlotsIfAbsent (slots) {
         Object.eachSlot(slots,  (name, value) => {
             if (!this[name]) {
@@ -299,12 +325,6 @@ class ProtoClass {
             }
         });
         return this;
-    }
-
-    /*
-
-    mySlotChanged (slotName, oldValue, newValue) {
-        this.perform(slotName + "SlotChanged", oldValue, newValue);
     }
     */
 
@@ -379,11 +399,13 @@ class ProtoClass {
     }
     */
 
+    /*
     static newUniqueInstanceId() {
         const uuid_a = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
         const uuid_b = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
         return uuid_a + uuid_b
     }
+    */
 
     isKindOf (aProto) { // TODO: test this for ES6 classes
         if (this.__proto__) {
@@ -402,7 +424,6 @@ class ProtoClass {
         return this.typeId();
     }
 
-
     // --- ancestors ---
 
     ancestors () { // TODO: test this for ES6 classes
@@ -419,7 +440,7 @@ class ProtoClass {
     }
 
     ancestorTypes () {
-        return this.ancestors().map((obj) => { return obj.type() })
+        return this.ancestors().map(obj => obj.type())
     }
 
     firstAncestorWithMatchingPostfixClass (aPostfix) {
@@ -436,6 +457,8 @@ class ProtoClass {
 
         return result
     }
+
+    // debugging
 
     setIsDebugging (aBool) {
         this._isDebugging = aBool

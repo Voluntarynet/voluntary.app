@@ -7,14 +7,17 @@
 */
 
 window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
-    init() {
-        super.init()
+    static initClass () {
         this.newSlots({
             path: "/", // path should end with pathSeparator
             pathSeparator: "/",
             db: null,
             didRequestPersistence: false,
         })
+    }
+
+    init() {
+        super.init()
         //this.requestPersistenceIfNeeded()
         //this.setIsDebugging(true)
     }
@@ -238,6 +241,5 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
     newTx () {
         return window.IndexedDBTx.clone().setDbFolder(this)
     }
-}
+}.initThisClass()
 
-window.IndexedDBFolder.registerThisClass()

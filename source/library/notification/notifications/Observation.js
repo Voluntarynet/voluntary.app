@@ -11,8 +11,7 @@
 */
 
 window.Observation = class Observation extends ProtoClass {
-    init() {
-        super.init()
+    static initClass () {
         this.newSlots({
             center: null, // NotificationCenter that owns this
             //target: null, // expects uniqueId string for target
@@ -21,7 +20,10 @@ window.Observation = class Observation extends ProtoClass {
             observer: null,
             isOneShot: false,
         })
+    }
 
+    init() {
+        super.init()
         //this.setIsDebugging(true)
     }
 
@@ -77,6 +79,4 @@ window.Observation = class Observation extends ProtoClass {
         this.center().removeObservation(this)
         return this
     }
-}
-
-window.Observation.registerThisClass()
+}.initThisClass()

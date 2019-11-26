@@ -14,9 +14,13 @@ window.ideal.Dictionary = class Map extends ProtoClass {
         return this.clone().setJsDict(jsDict)
     }
 
+    static initClass() {
+        // don't call super as it's init was called when it was created
+        this.newSlot("jsDict", null)
+    }
+
     init () {
         super.init()
-        this.newSlot("jsDict", null)
         this.setJsDict({});
     }
 
@@ -68,9 +72,7 @@ window.ideal.Dictionary = class Map extends ProtoClass {
 
     /*
     valuesSortedByKeys () {
-        return this.keys().sort().map( (k) => {
-            return this.at(k);
-        });
+        return this.keys().sort().map(k =>  this.at(k))
     }
     */
 
@@ -111,14 +113,6 @@ window.ideal.Dictionary = class Map extends ProtoClass {
     }
 
     /*
-    lowerCased () {
-        const map = Map.clone();
-        this.forEach(function (k, v) {
-            map.atPut(k.toLowerCase(), v);
-        });
-        return map;
-    }
-
     atPath (pathList) {
         return Object.atPath(this.jsDict(), pathList);
     }
@@ -159,26 +153,4 @@ window.ideal.Dictionary = class Map extends ProtoClass {
         delete m[k];
         return this;
     }
-
-    /*
-    percentDecode () {
-        this.forEach( (k, v) => {
-            this.atPut(k, decodeURIComponent(v));
-        });
-        return this;
-    }
-
-    asQueryString () {
-        return "?" + this.map(function (k, v) {
-            if (v) {
-                return k + "=" + encodeURIComponent(v);
-            }
-            else {
-                return k;
-            }
-        }).join("&");
-    }
-    */
-}
-
-window.ideal.Dictionary.registerThisClass()
+}.initThisClass()

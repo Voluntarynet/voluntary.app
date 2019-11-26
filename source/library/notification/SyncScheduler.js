@@ -54,8 +54,7 @@
 */
 
 window.SyncScheduler = class SyncScheduler extends ProtoClass {
-    init() {
-        super.init()
+    static initClass () {
         this.newSlots({
             actions: ideal.Dictionary.clone(),
             syncSets: ideal.Dictionary.clone(),
@@ -63,6 +62,10 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
             isProcessing: false,	
             currentAction: null,
         })
+    }
+
+    init () {
+        super.init()
     }
 	
     syncSet (syncMethod) {
@@ -250,9 +253,8 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
 
         return this
     }
-}
+}.initThisClass()
 
-window.SyncScheduler.registerThisClass()
 
 ideal.Proto.scheduleMethod = function(methodName, priority) {
     window.SyncScheduler.shared().scheduleTargetAndMethod(this, methodName, priority)

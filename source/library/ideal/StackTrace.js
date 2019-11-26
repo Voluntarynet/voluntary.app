@@ -9,15 +9,33 @@
 
 */
 
-class StackFrame extends ProtoClass {
-    init() {
-        super.init()
+/*
+const aClass = ProtoClass.newSubclassNamed("StackFrame2").newSlots({
+    functionName: null,
+    url: null,
+    lineNumber: null,
+    characterNumber: null,
+}).setSlots({
+
+})
+
+
+console.log("aClass = ", aClass)
+*/
+
+
+window.StackFrame = class StackFrame extends ProtoClass {
+    static initClass () {
         this.newSlots({
             functionName: null,
             url: null,
             lineNumber: null,
             characterNumber: null,
         })
+    }
+
+    init() {
+        super.init() // -> ProtoClass.prototype.init.apply(this)
     }
 
     fromLine(line) {
@@ -53,15 +71,21 @@ class StackFrame extends ProtoClass {
     show() {
         console.log(this.description())
     }
-}
+}.initThisClass() 
 
-class StackTrace extends ProtoClass {
-    init() {
-        super.init()
+
+// -----------------------------------------------------------------
+
+window.StackTrace = class StackTrace extends ProtoClass {
+    static initClass () {
         this.newSlots({
             error: null,
             stackFrames: [],
         })
+    }
+
+    init() {
+        super.init()
     }
 	
     setError(error) {
@@ -96,12 +120,8 @@ class StackTrace extends ProtoClass {
         const f3 = function() { f2() }
         f3()        
     }
-}
 
-StackTrace.registerThisClass()
- 
+}.initThisClass() 
 
 //StackTrace.clone().test()
-
-
 //console.log("Currently running script:", Error.callingScriptURL())

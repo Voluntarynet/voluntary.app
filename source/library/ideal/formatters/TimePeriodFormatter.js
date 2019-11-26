@@ -63,7 +63,4 @@ TimePeriodFormatter.newSlots({
     valueInSeconds: 0,
 }).setSlots({
     
-})
-
-
-TimePeriodFormatter.registerThisClass()
+}).initThisClass()

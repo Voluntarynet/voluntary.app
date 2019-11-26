@@ -34,12 +34,14 @@
 */
 
 window.Broadcaster = class Broadcaster extends ProtoClass {
-    init() {
-        super.init()
+    static initClass () {
         this.newSlots({
             nameToListenerSet: null, // dict to set
         })
+    }
 
+    init() {
+        super.init()
         this.setNameToListenerSet({})
     }
 
@@ -86,9 +88,7 @@ window.Broadcaster = class Broadcaster extends ProtoClass {
         })
     }
 
-}
-
-window.Broadcaster.registerThisClass()
+}.initThisClass()
 
 /*
 ideal.Proto.broadcastMessage = function(methodName) {

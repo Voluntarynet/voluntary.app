@@ -71,11 +71,10 @@ BMNode.newSubclassNamed("BMRegion").newSlots({
     
     addChildrenDicts: function(children) {
         if (children) {
-            let max = children.length
+            const max = children.length
             for(let i = 0; i < max; i++) {
-                let childDict = children[i]
-                //let child = window[childDict._type].clone().setNodeDict(childDict)
-                let child = BMRegion.clone().setNodeDict(childDict)
+                const childDict = children[i]
+                const child = BMRegion.clone().setNodeDict(childDict)
                 this.justAddSubnode(child)
             }
         }  

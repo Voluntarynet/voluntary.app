@@ -7,8 +7,7 @@
 */
 
 window.Notification = class Notification extends ProtoClass {
-    init() {
-        super.init()
+    static initClass () {
         this.newSlots({
             name: null,
             sender: null,
@@ -16,6 +15,10 @@ window.Notification = class Notification extends ProtoClass {
             center: null, // NotificationCenter that owns this
             senderStack: null,
         })
+    }
+
+    init() {
+        super.init()
     }
 
     senderId () {
@@ -67,6 +70,5 @@ window.Notification = class Notification extends ProtoClass {
         const n = this.name() ? this.name() : "null"
         return s + " " + n
     }
-}
+}.initThisClass()
 
-window.Notification.registerThisClass()

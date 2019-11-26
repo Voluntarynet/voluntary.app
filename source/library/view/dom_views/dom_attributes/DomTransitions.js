@@ -25,12 +25,15 @@
 
 
 window.DomTransitions = class DomTransitions extends ProtoClass {
-    init() {
-        super.init()
+    static initClass () {
         this.newSlots({
             properties: null,
             domView: null,
         })
+    }
+
+    init() {
+        super.init()
         this.setProperties({})
     }
 
@@ -72,7 +75,6 @@ window.DomTransitions = class DomTransitions extends ProtoClass {
 
         return this
     }
-}
+}.initThisClass()
 
-DomTransitions.registerThisClass()
 

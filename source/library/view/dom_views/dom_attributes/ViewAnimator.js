@@ -9,8 +9,7 @@
 */
 
 window.ViewAnimator = class ViewAnimator extends ProtoClass {
-    init() {
-        super.init()
+    static initClass () {
         this.newSlots({
 
             startValue: 0,
@@ -21,6 +20,10 @@ window.ViewAnimator = class ViewAnimator extends ProtoClass {
 
             view: null,
         })
+    }
+
+    init() {
+        super.init()
     }
 
     currentValue() {
@@ -112,7 +115,6 @@ window.ViewAnimator = class ViewAnimator extends ProtoClass {
         }
     }
     */
-}
+}.initThisClass()
 
-ViewAnimator.registerThisClass()
 

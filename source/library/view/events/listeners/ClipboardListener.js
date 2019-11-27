@@ -7,7 +7,7 @@
 
 */
 
-window.ClipboardListener = class ClipboardListener extends ProtoClass {
+window.ClipboardListener = class ClipboardListener extends EventSetListener {
     
     initPrototype () {
         this.newSlots({

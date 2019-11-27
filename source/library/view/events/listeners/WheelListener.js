@@ -7,7 +7,7 @@
 
 */
 
-window.WheelListener = class WheelListener extends ProtoClass {
+window.WheelListener = class WheelListener extends EventSetListener {
     
     initPrototype () {
         this.newSlots({

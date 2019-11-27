@@ -7,7 +7,7 @@
 
 */
 
-window.WebSocketListener = class WebSocketListener extends ProtoClass {
+window.WebSocketListener = class WebSocketListener extends EventSetListener {
     
     initPrototype () {
         this.newSlots({

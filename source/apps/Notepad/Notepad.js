@@ -106,5 +106,4 @@ window.Notepad = class Notepad extends App {
     }
 }.initThisClass()
 
-Notepad.showVersion()
 

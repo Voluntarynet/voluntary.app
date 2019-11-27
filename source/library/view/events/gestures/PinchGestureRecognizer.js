@@ -22,7 +22,7 @@
 */
 
 
-window.PinchGestureRecognizer = class PinchGestureRecognizer extends ProtoClass {
+window.PinchGestureRecognizer = class PinchGestureRecognizer extends GestureRecognizer {
     
     initPrototype () {
         this.newSlots({

@@ -35,25 +35,33 @@ window.ProtoClass = class ProtoClass {
     }
     */
 
-    initPrototype() { 
+    /*
+    static newUniqueInstanceId() {
+        const uuid_a = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
+        const uuid_b = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
+        return uuid_a + uuid_b
+    }
+    */
+
+    initPrototype () { 
         // subclasses should call this at end of their definition
     }
 
     // --- class slots and variables ---
     
-    static getClassVariable(key, defaultValue) {
+    static getClassVariable (key, defaultValue) {
         if (!this.hasOwnProperty(key)) {
             this[key] = defaultValue
         }
         return this[key]
     }
 
-    static setClassVariable(key, value) {
+    static setClassVariable (key, value) {
         this[key] = value
         return this
     }
 
-    static shared() {
+    static shared () {
         if (!this.getClassVariable("_shared")) {
             this.setClassVariable("_shared", this.clone())
         }
@@ -83,55 +91,24 @@ window.ProtoClass = class ProtoClass {
         return this
     }
 
-    static self () {
-        return this
-    }
-
-    self () {
-        return this
-    }
-
     static superClass () {
         return Object.getPrototypeOf(this)
     }
 
-    /*
-    static setupSlots () {
-        //super.setupSlotsIfNeeded()
-        this.debugLog(".setupSlots()")
-    }
-
-    static setupSlotsIfNeeded () {
-        if (!this.getClassVariable("_hasSetupSlots", false)) {
-            console.log("--- begin ---")
-            this.setupSlots()
-            if (this.type() !== "ProtoClass") {
-                super.setupSlotsIfNeeded()
-            }
-            console.log("--- end ---")
-            this.setClassVariable("_hasSetupSlots", true)
-        }
-    }
-    */
-
-    // adding instance slots via class ---
-
-    static newSlots(slots) {
+    static newSlots (slots) {
         throw new Error("should all on prototype instead")
         this.prototype.newSlots(slots)
         return this;
     }
 
-    static setSlots(slots) {
+    static setSlots (slots) {
         throw new Error("should all on prototype instead")
         this.prototype.setSlots(slots)
         return this;
     }
 
-
-    // --- instance ---
-
-    constructor() {
+    static type() {
+        return this.name
     }
 
     static clone () {
@@ -140,45 +117,14 @@ window.ProtoClass = class ProtoClass {
         obj.init()
         return obj
     }
-    
-    init() {
-        // subclasses should override to initialize
-    }
 
-    static type() {
-        return this.name
-    }
 
-    type() {
-        return this.constructor.name
-    }
-
-    setType (aString) {
-        this.constructor.name = aString
-        return this
-    }
-
-    slots () {
-        if (!this.hasOwnProperty("_slots")) {
-            this._slots = {}
-        }
-        return this._slots
-    }
-
-    static isInstance() {
+    static isInstance () {
         return false
     }
 
-    static isClass() {
+    static isClass () {
         return true
-    }
-
-    isInstance () {
-        return true
-    }
-
-    isClass () {
-        return false
     }
 
     static slots () {
@@ -189,10 +135,11 @@ window.ProtoClass = class ProtoClass {
         return self._slots
     }
 
-    static newSlot(slotName, initialValue) {
-            
+    static newSlot (slotName, initialValue) {
+
         assert(Type.isString(slotName))
         assert(Type.isUndefined(this.slots()[slotName]))
+        assert(!this.prototype.hasOwnProperty(slotName))
 
         /*
         // TODO: we want to create the private slots and initial value on instances
@@ -209,24 +156,65 @@ window.ProtoClass = class ProtoClass {
         return this;
     }
 
-    /*
-    newSlotIfAbsent(slotName, initialValue) {
-        const p = this.prototype
-        if (!this.hasOwnPropery(slotName)) {
-            this.justNewSlot(slotName, initialValue)
-        }
+    // --- instance ---
+
+    constructor() {
+    }
+    
+    init () {
+        // subclasses should override to initialize
+    }
+
+    type () {
+        return this.constructor.name
+    }
+
+    setType (aString) {
+        this.constructor.name = aString
         return this
     }
-    */
 
-    newSlot(slotName, initialValue) {
+    // --- slots ---
+
+    slotNamed (slotName) {
+        const slots = this.slots()
+        if (slots.hasOwnProperty(slotName)) {
+            return slots[slotName]
+        }
+        
+        if (this.__proto__ && this.__proto__.slotNamed) {
+            return this.__proto__.slotNamed(slotName)
+        }
+
+        return null 
+    }
+
+    slots () {
+        if (!this.hasOwnProperty("_slots")) {
+            this._slots = {}
+        }
+        return this._slots
+    }
+
+
+    isInstance () {
+        return true
+    }
+
+    isClass () {
+        return false
+    }
+
+    newSlot (slotName, initialValue) {
+        /*
+        if (slotName === "overView") {
+            console.log("overView")
+        }
+        */
+        
         assert(Type.isString(slotName))
         assert(Type.isUndefined(this.slots()[slotName]))
-        this.justNewSlot(slotName, initialValue)
-        return this
-    }
-
-    justNewSlot(slotName, initialValue) {
+        //assert(!this.hasOwnProperty(slotName))
 
         /*
         // TODO: we want to create the private slots and initial value on instances
@@ -237,12 +225,13 @@ window.ProtoClass = class ProtoClass {
 
         const slot = ideal.Slot.clone().setName(slotName).setInitValue(initialValue)
         slot.setOwner(this)
+        slot.autoSetGetterSetterOwnership()
         slot.setupInOwner()
         this.slots()[slotName] = slot
         return this
     }
 
-    newSlots(slots) {
+    newSlots (slots) {
         Object.eachSlot(slots, (slotName, initialValue) => {
             this.newSlot(slotName, initialValue);
         });
@@ -250,7 +239,7 @@ window.ProtoClass = class ProtoClass {
         return this;
     }
 
-    updateSlot(slotName, privateName, newValue) {
+    updateSlot (slotName, privateName, newValue) {
         const oldValue = this[privateName];
         if (oldValue !== newValue) {
             this[privateName] = newValue;
@@ -260,18 +249,18 @@ window.ProtoClass = class ProtoClass {
         return this;
     }
 
-    didUpdateSlot(slotName, oldValue, newValue) {
+    didUpdateSlot (slotName, oldValue, newValue) {
         // persistence system can hook this
     }
 
-    setSlots(slots) {
+    setSlots (slots) {
         Object.eachSlot(slots,  (name, initialValue) => {
             this.setSlot(name, initialValue);
         });
         return this;
     }
 
-    setSlot(name, initialValue) {
+    setSlot (name, initialValue) {
         this[name] = initialValue
         return this
     }
@@ -414,13 +403,6 @@ window.ProtoClass = class ProtoClass {
     }
     */
 
-    /*
-    static newUniqueInstanceId() {
-        const uuid_a = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
-        const uuid_b = Math.floor(Math.random() * Math.pow(10, 17)).toBase64()
-        return uuid_a + uuid_b
-    }
-    */
 
     isKindOf (aProto) { // TODO: test this for ES6 classes
         if (this.__proto__) {
@@ -492,6 +474,11 @@ window.ProtoClass = class ProtoClass {
             console.log(" " + s)
         }
         return this
+    }
+
+    defaultStore () {
+        //return ObjectPool.shared()
+        return NodeStore.shared()
     }
 }
 

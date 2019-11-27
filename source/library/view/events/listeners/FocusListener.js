@@ -7,7 +7,7 @@
 
 */
 
-window.FocusListener = class FocusListener extends ProtoClass {
+window.FocusListener = class FocusListener extends EventSetListener {
     
     initPrototype () {
         this.newSlots({

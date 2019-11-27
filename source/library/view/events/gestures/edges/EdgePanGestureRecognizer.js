@@ -16,7 +16,7 @@
         
 */
 
-window.EdgePanGestureRecognizer = class EdgePanGestureRecognizer extends ProtoClass {
+window.EdgePanGestureRecognizer = class EdgePanGestureRecognizer extends GestureRecognizer {
     
     initPrototype () {
         this.newSlots({

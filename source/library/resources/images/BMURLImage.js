@@ -6,7 +6,7 @@
 
 */
 
-window.BMURLImage = class BMURLImage extends ProtoClass {
+window.BMURLImage = class BMURLImage extends BMNode {
     
     initPrototype () {
         this.newSlots({

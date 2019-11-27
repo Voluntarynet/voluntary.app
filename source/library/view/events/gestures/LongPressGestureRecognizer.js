@@ -22,7 +22,7 @@
 
 */
 
-window.LongPressGestureRecognizer = class LongPressGestureRecognizer extends ProtoClass {
+window.LongPressGestureRecognizer = class LongPressGestureRecognizer extends GestureRecognizer {
     
     initPrototype () {
         this.newSlots({

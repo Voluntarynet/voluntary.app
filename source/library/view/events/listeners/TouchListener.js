@@ -7,7 +7,7 @@
 
 */
  
-window.TouchListener = class TouchListener extends ProtoClass {
+window.TouchListener = class TouchListener extends EventSetListener {
     
     initPrototype () {
         this.newSlots({

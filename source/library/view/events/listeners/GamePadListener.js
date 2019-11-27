@@ -7,7 +7,7 @@
 
 */
 
-window.GamePadListener = class GamePadListener extends ProtoClass {
+window.GamePadListener = class GamePadListener extends EventSetListener {
     
     initPrototype () {
         this.newSlots({

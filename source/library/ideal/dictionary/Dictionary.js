@@ -9,7 +9,7 @@
 
 */
 
-window.ideal.Dictionary = class Map extends ProtoClass {
+window.ideal.Dictionary = class Dictionary extends ProtoClass {
     static withJsDict (jsDict) {
         return this.clone().setJsDict(jsDict)
     }

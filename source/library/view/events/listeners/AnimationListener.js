@@ -7,7 +7,7 @@
 
 */
 
-window.AnimationListener = class AnimationListener extends ProtoClass {
+window.AnimationListener = class AnimationListener extends EventSetListener {
     
     initPrototype () {
         this.newSlots({

@@ -31,7 +31,7 @@ window.BMOptionNode = class BMOptionNode extends BMStorableNode {
     }
 
     shallowCopySlotnames () {
-        const names = BMStorableNode.shallowCopySlotnames.apply(this)
+        const names = super.shallowCopySlotnames()
         return names.appendItems([
             "label", "value", "isPicked", 
         ])

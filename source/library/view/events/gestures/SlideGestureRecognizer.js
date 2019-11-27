@@ -33,7 +33,7 @@
 */
 
 
-window.SlideGestureRecognizer = class SlideGestureRecognizer extends ProtoClass {
+window.SlideGestureRecognizer = class SlideGestureRecognizer extends GestureRecognizer {
     
     initPrototype () {
         this.newSlots({

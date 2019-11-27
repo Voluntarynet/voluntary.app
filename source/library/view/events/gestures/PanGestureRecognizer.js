@@ -16,7 +16,7 @@
 
 */
 
-window.PanGestureRecognizer = class PanGestureRecognizer extends ProtoClass {
+window.PanGestureRecognizer = class PanGestureRecognizer extends GestureRecognizer {
     
     initPrototype () {
         this.newSlots({

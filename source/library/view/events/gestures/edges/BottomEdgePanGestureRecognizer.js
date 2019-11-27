@@ -13,7 +13,7 @@
 
 */
 
-window.BottomEdgePanGestureRecognizer = class BottomEdgePanGestureRecognizer extends ProtoClass {
+window.BottomEdgePanGestureRecognizer = class BottomEdgePanGestureRecognizer extends EdgePanGestureRecognizer {
     
     initPrototype () {
         this.newSlots({

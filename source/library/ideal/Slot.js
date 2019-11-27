@@ -62,6 +62,12 @@ window.ideal.Slot = class Slot {
         this.simpleNewSlot("shouldStore", false) // should hook setter
     }
 
+    autoSetGetterSetterOwnership () {
+        this.setOwnsGetter(!this.alreadyHasGetter())
+        this.setOwnsSetter(!this.alreadyHasSetter())
+        return this
+    }
+
     setDoesHookSetter (aBool) {
         if (this._doesHookSetter !== aBool) {
             this._doesHookSetter = aBool
@@ -111,7 +117,7 @@ window.ideal.Slot = class Slot {
     }
 
     setupGetter () {
-        if (!this.alreadyHasGetter() || this.ownsGetter()) {
+        if (this.ownsGetter()) {
             if (this.doesHookGetter()) {
                 if (this.hookedGetterIsOneShot()) {
                     this.makeOneShotHookedGetter()
@@ -130,7 +136,7 @@ window.ideal.Slot = class Slot {
     }
 
     setupSetter () {
-        if (!this.alreadyHasSetter() || this.ownsSetter()) {
+        if (this.ownsSetter()) {
             if (this.doesHookSetter()) {
                 this.makeHookedSetter()
             } else {

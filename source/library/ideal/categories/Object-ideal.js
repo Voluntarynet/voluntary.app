@@ -37,9 +37,7 @@ Object.defineSlots(Object, {
     },
     
     eachSlot: function (obj, fn) {
-        Object.getOwnPropertyNames(obj).forEach(function (k) {
-            fn(k, obj[k]);
-        });
+        Object.getOwnPropertyNames(obj).forEach(k => fn(k, obj[k]) )
     },
 
     perform: function (obj, name) {

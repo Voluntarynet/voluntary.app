@@ -6,7 +6,7 @@
 
 */
 
-window.TouchListener = class TouchListener extends ProtoClass {
+window.BMFontResources = class BMFontResources extends BMNode {
     
     initPrototype () {
         this.newSlots({

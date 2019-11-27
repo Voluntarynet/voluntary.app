@@ -6,7 +6,7 @@
 
 */
 
-window.BMImageResources = class BMImageResources extends ProtoClass {
+window.BMImageResources = class BMImageResources extends BMNode {
     
     initPrototype () {
         this.newSlots({

@@ -7,7 +7,7 @@
 
 */
 
-window.SelectListener = class SelectListener extends ProtoClass {
+window.SelectListener = class SelectListener extends EventSetListener {
     
     initPrototype () {
         this.newSlots({

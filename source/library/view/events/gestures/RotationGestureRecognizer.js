@@ -22,7 +22,7 @@
 
 */
 
-window.RotationGestureRecognizer = class RotationGestureRecognizer extends ProtoClass {
+window.RotationGestureRecognizer = class RotationGestureRecognizer extends GestureRecognizer {
     
     initPrototype () {
         this.newSlots({

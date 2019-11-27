@@ -28,7 +28,7 @@
 
 */
 
-window.TapGestureRecognizer = class TapGestureRecognizer extends ProtoClass {
+window.TapGestureRecognizer = class TapGestureRecognizer extends GestureRecognizer {
     
     initPrototype () {
         this.newSlots({

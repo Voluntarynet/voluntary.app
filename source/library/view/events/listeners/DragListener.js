@@ -7,7 +7,7 @@
 
 */
 
-window.DragListener = class DragListener extends ProtoClass {
+window.DragListener = class DragListener extends EventSetListener {
     
     initPrototype () {
         this.newSlots({

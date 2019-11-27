@@ -135,7 +135,7 @@ window.BooleanView = class BooleanView extends DomStyledView {
     }
 
     onTapComplete  (aGesture) {
-        DomView.sendActionToTarget.apply(this)
+        super.sendActionToTarget()
         this.toggle()
         return false
     }

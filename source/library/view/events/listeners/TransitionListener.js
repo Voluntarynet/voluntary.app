@@ -7,7 +7,7 @@
 
 */
 
-window.TransitionListener = class TransitionListener extends ProtoClass {
+window.TransitionListener = class TransitionListener extends EventSetListener {
     
     initPrototype () {
         this.newSlots({

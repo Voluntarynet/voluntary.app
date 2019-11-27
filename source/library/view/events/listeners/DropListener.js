@@ -7,7 +7,7 @@
 
 */
 
-window.DropListener = class DropListener extends ProtoClass {
+window.DropListener = class DropListener extends EventSetListener {
     
     initPrototype () {
         this.newSlots({

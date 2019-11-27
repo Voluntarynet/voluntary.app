@@ -7,7 +7,7 @@
 
 */
 
-window.KeyboardListener = class KeyboardListener extends ProtoClass {
+window.KeyboardListener = class KeyboardListener extends EventSetListener {
     
     initPrototype () {
         this.newSlots({

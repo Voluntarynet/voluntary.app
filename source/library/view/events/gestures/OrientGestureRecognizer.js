@@ -39,7 +39,7 @@
 */
 
 
-window.OrientGestureRecognizer = class OrientGestureRecognizer extends ProtoClass {
+window.OrientGestureRecognizer = class OrientGestureRecognizer extends GestureRecognizer {
 
     initPrototype() {
         this.newSlots({

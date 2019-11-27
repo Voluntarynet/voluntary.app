@@ -7,7 +7,7 @@
 
 */
 
-window.DocumentListener = class DocumentListener extends ProtoClass {
+window.DocumentListener = class DocumentListener extends EventSetListener {
     
     initPrototype () {
         this.newSlots({

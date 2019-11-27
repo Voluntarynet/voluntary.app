@@ -9,44 +9,42 @@
 
 */
 
-ideal.Proto.newSubclassNamed("WebBrowserWindow").newSlots({
-    /*documentBody: DocumentBody.shared(),*/
-}).setSlots({
-    initThisProto: function() {
-        this.shared().setup()
-    },
+window.WebBrowserWindow = class WebBrowserWindow extends ProtoClass {
     
-    init: function () {
-        throw new Error("this class is meant to be used as singleton, for now")
-        ideal.Proto.init.apply(this)
-        return this
-    },
+    initPrototype () {
+        this.newSlots({
+        })
 
-    documentBody: function() {
+        WebBrowserWindow.shared().setup()
+    }
+    
+    init () {
+        //throw new Error("this class is meant to be used as singleton, for now")
+        super.init()
+        return this
+    }
+
+    documentBody () {
         return DocumentBody.shared()
-    },
-    
-    shared: function() {
-        return this
-    },
+    }
 
-    setup: function() {
+    setup () {
         this.preventDrop()
-    },
+    }
     
     /*  
-    electronWindow: function() {
+    electronWindow () {
         if (!this._electronWindow) {
             const remote = require("electron").remote;
             this._electronWindow = remote.getCurrentWindow()
         }
         return this._electronWindow
-    },
+    }
     */
 
     // prevent window level drop and only allow drop on elements that can handle it
 
-    dropCheck : function(event) {
+    dropCheck  (event) {
         const element = event.target
         const elementMayWantDrop = element.ondrop
         const view = element._domView
@@ -57,56 +55,56 @@ ideal.Proto.newSubclassNamed("WebBrowserWindow").newSlots({
             event.dataTransfer.effectAllowed = "none";
             event.dataTransfer.dropEffect = "none";	
         }
-    },
+    }
 
-    preventDrop: function() {
+    preventDrop () {
         window.addEventListener("dragenter", (e) => { this.dropCheck(e) }, false);
         window.addEventListener("dragover",  (e) => { this.dropCheck(e) }, false);
         window.addEventListener("drop",      (e) => { this.dropCheck(e) }, false);
         return this
-    },
+    }
 	
     // attributes
     
-    width: function () {
+    width  () {
         return window.innerWidth
-    },
+    }
 
-    height: function () {
+    height  () {
         return window.innerHeight
-    },
+    }
     
-    aspectRatio: function() {
+    aspectRatio () {
         return this.width() / this.height()
-    },
+    }
     
-    setWidth: function (w) {
+    setWidth  (w) {
         console.warn("warning: WebBrowserWindow.setWidth() unavailable in browser")
         return this
-    },
+    }
     
-    setHeight: function (h) {
+    setHeight  (h) {
         console.warn("warning: WebBrowserWindow.setHeight() unavailable in browser")
         return this
-    },
+    }
     
-    show: function() {
+    show () {
         console.log("Window size " + this.width() + "x" + this.height())
-    },
+    }
     
-    mobileNames: function() {
+    mobileNames () {
         return ["android", "webos", "iphone", "ipad", "ipod", "blackBerry", "windows phone"]  
-    },
+    }
 
-    agent: function() {
+    agent () {
         return navigator.userAgent.toLowerCase()
-    },
+    }
 
-    vendor: function() {
+    vendor () {
         return navigator.vendor.toLowerCase()
-    },
+    }
 
-    agentIsSafari: function() {
+    agentIsSafari () {
         const vendor = navigator.vendor;
         const agent = navigator.userAgent;
         
@@ -116,22 +114,22 @@ ideal.Proto.newSubclassNamed("WebBrowserWindow").newSlots({
                 !agent.contains("CriOS") &&
                 !agent.contains("FxiOS");
         return isSafari
-    },
+    }
 
-    agentIsChrome: function() {
+    agentIsChrome () {
         const isChrome =  Boolean(window.chrome) //&& 
         //!navigator.userAgent.contains('Brave');
         //console.log("window.chrome = ", window.chrome);
         return isChrome
-    },
+    }
     
-    isOnMobile: function() { 
+    isOnMobile () { 
         const agent = this.agent();
         const match = this.mobileNames().detect((name) => { return agent.contains(name); })
         return match !== null
-    },
+    }
 
-    isTouchDevice: function() {
+    isTouchDevice () {
         //return TouchScreen.shared().isSupported()
 
         // via https://stackoverflow.com/questions/4817029/whats-the-best-way-to-detect-a-touch-screen-device-using-javascript
@@ -140,29 +138,29 @@ ideal.Proto.newSubclassNamed("WebBrowserWindow").newSlots({
         if (navigator.maxTouchPoints) { result = true; }       // works on IE10/11 and Surface	
         //console.log("WebBrowserWindow.isTouchDevice() = ", result)
         return result
-    },
+    }
 
-    urlHash: function() {
+    urlHash () {
         return decodeURI(window.location.hash.substr(1)) // return string after # character
-    },
+    }
     
-    setUrlHash: function(aString) {
+    setUrlHash (aString) {
         if (this.urlHash() !== aString) {
             window.location.hash = encodeURI(aString)
         }
         return this
-    },
+    }
     
-    descriptionDict: function() {
+    descriptionDict () {
         const dict = {
             agent: this.agent(),
             size: this.width() + "x" + this.height(),
             isOnMobile: this.isOnMobile()
         }
         return dict
-    },
+    }
 
-    urlHostname: function() {
+    urlHostname () {
         const parser = document.createElement("a")
         parser.href = window.location.href
         let name = parser.hostname
@@ -170,26 +168,26 @@ ideal.Proto.newSubclassNamed("WebBrowserWindow").newSlots({
 		    name = ""
         }
         return name
-    },
+    }
 	
-    setTitle: function(aName) {
+    setTitle (aName) {
         document.title = aName
         return this
-    },
+    }
 
-    title: function() {
+    title () {
         return document.title
-    },
+    }
     
-    activeDomView: function() {
+    activeDomView () {
         const e = document.activeElement
         if (e && e._domView) {
             return e._domView
         }
         return null
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()
 
 /*
 console.log("navigator.userAgent = ", navigator.userAgent);

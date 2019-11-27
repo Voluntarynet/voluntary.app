@@ -19,53 +19,55 @@
 
 */
 
-ideal.Proto.newSubclassNamed("WebBrowserNotifications").newSlots({
-    permissionRequestResult: null,
-    waitingNote: null,
-}).setSlots({
-    init: function () {
-        ideal.Proto.init.apply(this)
-        throw new Error("this class is meant to be used as singleton, for now")
-        return this
-    },
 
-    shared: function () {
-        return this
-    },
+window.WebBrowserNotifications = class WebBrowserNotifications extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+            permissionRequestResult: null,
+            waitingNote: null,
+        })
+    }
 
-    hasPermission: function () {
+    init  () {
+        super.init()
+        //throw new Error("this class is meant to be used as singleton, for now")
+        return this
+    }
+
+    hasPermission  () {
         return this.permissionRequestResult() === "granted"
-    },
+    }
 
-    wasDenied: function () {
+    wasDenied  () {
         return this.permissionRequestResult() === "denied"
-    },
+    }
 
-    hasAskedForPermission: function () {
+    hasAskedForPermission  () {
         return this.permissionRequestResult() !== null
-    },
+    }
 
-    requestPermissionIfNeeded: function () {
+    requestPermissionIfNeeded  () {
         if (!this.hasAskedForPermission()) {
             this.requestPermission()
         }
         return this
-    },
+    }
 
-    requestPermission: function () {
+    requestPermission  () {
         Notification.requestPermission().then((result) => {
             this.setPermissionRequestResult(result)
             console.log("requestPermission:", result);
             this.postWaitingNotes()
         });
         Notification.requestPermission();
-    },
+    }
 
-    isSupported: function() {
+    isSupported () {
         return window.hasOwnProperty("Notification")
-    },
+    }
 
-    postNote: function (aNote) {
+    postNote  (aNote) {
         this.setWaitingNote(aNote)
 
         if (!this.isSupported()) {
@@ -79,19 +81,19 @@ ideal.Proto.newSubclassNamed("WebBrowserNotifications").newSlots({
         }
 
         return this
-    },
+    }
 
-    postWaitingNotes: function() {
+    postWaitingNotes () {
         if (this.waitingNote()) {
             this.waitingNote().tryToPost()
             this.setWaitingNote(null)
         }
         return this
-    },
+    }
 
-    newNote: function() {
+    newNote () {
         return WebBrowserNotification.clone()
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()
 

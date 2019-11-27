@@ -73,7 +73,7 @@ App.newSubclassNamed("Notepad").newSlots({
     },
 
     isBrowserCompatible: function() {
-        if (WebBrowserWindow.agentIsSafari()) {
+        if (WebBrowserWindow.shared().agentIsSafari()) {
             return false
         }
         return true

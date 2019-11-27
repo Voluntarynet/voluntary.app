@@ -7,35 +7,41 @@
 
 */
 
-ideal.Proto.newSubclassNamed("WebBrowserNotification").newSlots({
-    title: "",
-    body: null,
-    icon: null, // a url to an image
-    notificationRef: null,
-    timeoutMs: 4000,
-}).setSlots({
-    init: function () {
-        ideal.Proto.init.apply(this)
-        return this
-    },
+window.WebBrowserNotification = class WebBrowserNotification extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+            title: "",
+            body: null,
+            icon: null, // a url to an image
+            notificationRef: null,
+            timeoutMs: 4000,
+        })
 
-    tryToPost: function() {
+    }
+
+    init () {
+        super.init()
+        return this
+    }
+
+    tryToPost () {
         WebBrowserNotifications.postNote(this)
         return this
-    },
+    }
 
-    justPost: function() {
+    justPost () {
         const note = new Notification(this.title(), { body: this.body(), icon: this.icon() });
         this.setNotificationRef(note)
         this.startTimeout()
         return this
-    },
+    }
 
-    startTimeout: function() {
+    startTimeout () {
         setTimeout(notification.close.bind(this.notificationRef()), this.timeoutMs());
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()
 
 
 

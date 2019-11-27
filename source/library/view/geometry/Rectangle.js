@@ -17,74 +17,77 @@
 
 */
 
-ideal.Proto.newSubclassNamed("Rectangle").newSlots({
-    origin: null,
-    size: null,
-}).setSlots({
+window.Rectangle = class Rectangle extends ProtoClass {
+    initPrototype () {
+        this.newSlots({
+            origin: null,
+            size: null,
+        })
+    }
 
-    init: function () {
+    init () {
         ideal.Proto.init.apply(this)
         this.setOrigin(Point.clone())
         this.setSize(Point.clone())
         return this
-    },
+    }
     
-    containsPoint: function(p) {
+    containsPoint(p) {
         const a = p.isGreaterThanOrEqualTo(this.origin()) 
         const b = p.isLessThanOrEqualTo(this.maxPoint())
         return a && b
-    },
+    }
 
-    containsRectangle: function(r) {
+    containsRectangle(r) {
         return r.origin().isGreaterThanOrEqualTo(this.origin()) && r.maxPoint().isLessThanOrEqualTo(this.maxPoint())
-    },
+    }
 
-    maxPoint: function() {
+    maxPoint() {
         return this.origin().add(this.size())
-    },
+    }
 
-    asString: function() {
+    asString() {
         return this.type() + "(" + this.origin().asString() + ", " + this.size().asString() + ")"
-    },
+    }
 
     // x, y
 
-    x: function() {
+    x() {
         return this.origin().x();
-    },
+    }
 
-    y: function() {
+    y() {
         return this.origin().y();
-    },
+    }
 
     // width, height
 
-    width: function() {
+    width() {
         return this.size().x();
-    },
+    }
 
-    height: function() {
+    height() {
         return this.size().y();
-    },
+    }
 
     // top, bottom
 
-    top: function() {
+    top() {
         return this.y() 
-    },
+    }
 
-    bottom: function() {
+    bottom() {
         return this.y() + this.height() 
-    },
+    }
 
     // left, right
 
-    left: function() {
+    left() {
         return this.x() 
-    },
+    }
 
-    right: function() {
+    right() {
         return this.x() + this.width() 
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

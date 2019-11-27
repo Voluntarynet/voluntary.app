@@ -18,28 +18,32 @@
 */
 
 
-ideal.Proto.newSubclassNamed("Keyboard").newSlots({
-    codeToKeys: null, // dictionary of KeyboardKey objects
-    keyboardListener: null,
-}).setSlots({
-    shared: function() {   
-        return this.sharedInstanceForClass(Keyboard)
-    },
+window.KeyboardKey = class KeyboardKey extends ProtoClass {
+    initPrototype () {
+        this.newSlots({
+            codeToKeys: null, // dictionary of KeyboardKey objects
+            keyboardListener: null,
+        })
+    }
 
-    init: function () {
-        ideal.Proto.init.apply(this)
+    shared() {   
+        return this.sharedInstanceForClass(Keyboard)
+    }
+
+    init () {
+        super.init()
         this.setupCodeToKeys()
         this.startListening()
         return this
-    },
+    }
 
-    startListening: function() {
+    startListening() {
         this.setKeyboardListener(KeyboardListener.clone().setUseCapture(true).setListenTarget(document.body).setDelegate(this))
         this.keyboardListener().setIsListening(true)
         return this
-    },
+    }
 
-    setupCodeToKeys: function() {
+    setupCodeToKeys() {
         const dict = {}
         const c2k = this.keyCodesToNamesDict()
         Object.keys(c2k).forEach((code) => {
@@ -48,26 +52,26 @@ ideal.Proto.newSubclassNamed("Keyboard").newSlots({
         })
         this.setCodeToKeys(dict)
         return this
-    },
+    }
 
-    keyForCode: function(aCode) {
+    keyForCode(aCode) {
         return this.codeToKeys()[aCode]
-    },
+    }
 
-    keyForName: function(aName) {
+    keyForName(aName) {
         const code = this.keyCodeForName(aName)
         return this.keyForCode(code)
-    },
+    }
 
-    nameForKeyCode: function(aCode) {
+    nameForKeyCode(aCode) {
         const key = this.keyForCode(aCode)
         if (key) {
             return key.name()
         }
         return null
-    },
+    }
 
-    k2c: function() {
+    k2c() {
         if (!this._k2c) {
             this._k2c = {}
             const c2k = this.keyCodesToNamesDict()
@@ -77,20 +81,20 @@ ideal.Proto.newSubclassNamed("Keyboard").newSlots({
             })
         }
         return this._k2c
-    },
+    }
 
-    keyCodeForName: function(aName) {
+    keyCodeForName(aName) {
         return this.k2c()[aName]
-    },
+    }
 
     
-    eventIsJustModifierKey: function(event) {
+    eventIsJustModifierKey(event) {
         const name = this.nameForKeyCode(event.keyCode)
         return this.allModifierNames().contains(name)
-    },
+    }
 
 
-    keyCodesToNamesDict: function() {
+    keyCodesToNamesDict() {
         return {
             8: "Backspace",
             9: "Tab",
@@ -192,10 +196,10 @@ ideal.Proto.newSubclassNamed("Keyboard").newSlots({
             221: "CloseBracket",
             222: "SingleQuote",
         }
-    },
+    }
 
     /*
-    shiftChangingKeysDict: function() {
+    shiftChangingKeysDict() {
         // Based on a Macbook Pro keyboard. 
         // Not sure if this is platform specific.
 
@@ -222,10 +226,10 @@ ideal.Proto.newSubclassNamed("Keyboard").newSlots({
             ".": ["GreaterThan", ">"],
             "/": ["QuestionMark", "?"],
         }
-    },
+    }
     */
 
-    shiftDict: function() {
+    shiftDict() {
         // Based on a Macbook Pro keyboard. 
         // Not sure if this is platform specific.
 
@@ -252,10 +256,10 @@ ideal.Proto.newSubclassNamed("Keyboard").newSlots({
             ">": "GreaterThan",
             "?": "QuestionMark",
         }
-    },
+    }
 
     /*
-    specialKeyCodes: function () { 
+    specialKeyCodes () { 
         return {
             8:  "delete", // "delete" on Apple keyboard
             9:  "tab", 
@@ -274,16 +278,16 @@ ideal.Proto.newSubclassNamed("Keyboard").newSlots({
             46: "delete", 
 
         }
-    },
+    }
     */
 
-    keyForCode: function(aCode) {
+    keyForCode(aCode) {
         return this.codeToKeys()[aCode]
-    },
+    }
 
     // -- events ---
 
-    showCodeToKeys: function() {
+    showCodeToKeys() {
         const c2k = this.keyCodesToNamesDict()
 
         //const s = JSON.stringify(c2k, null, 4)
@@ -301,15 +305,15 @@ ideal.Proto.newSubclassNamed("Keyboard").newSlots({
         })
         */
         return this
-    },
+    }
 
-    keyForEvent: function(event) {
+    keyForEvent(event) {
         const code = event.keyCode
         const key = this.codeToKeys()[code]
         return key
-    },
+    }
 
-    onKeyDownCapture: function (event) {
+    onKeyDownCapture (event) {
         //console.log("event.metaKey = ", event.metaKey)
         
         const shouldPropogate = true
@@ -326,9 +330,9 @@ ideal.Proto.newSubclassNamed("Keyboard").newSlots({
         }
             
         return shouldPropogate
-    },
+    }
 
-    onKeyUpCapture: function (event) {
+    onKeyUpCapture (event) {
         const shouldPropogate = true
         const key = this.keyForEvent(event)
         key.onKeyUp(event)
@@ -338,24 +342,24 @@ ideal.Proto.newSubclassNamed("Keyboard").newSlots({
         }
 
         return shouldPropogate
-    },
+    }
     
     // --- event handling method names ---
 
-    downMethodNameForEvent: function(event) {
+    downMethodNameForEvent(event) {
         return "on" + this.modsAndKeyNameForEvent(event) + "KeyDown"
-    },
+    }
 
-    upMethodNameForEvent: function(event) {
+    upMethodNameForEvent(event) {
         return "on" + this.modsAndKeyNameForEvent(event) + "KeyUp"
-    },
+    }
 
-    eventIsAlphabetical: function(event) {
+    eventIsAlphabetical(event) {
         const c = event.keyCode
         return c >= 65 && c <= 90
-    },
+    }
 
-    modsAndKeyNameForEvent: function(event) {
+    modsAndKeyNameForEvent(event) {
         // examples: AltB AltShiftB
         // Note that shift is explicit and the B key is always uppercase
 
@@ -396,80 +400,80 @@ ideal.Proto.newSubclassNamed("Keyboard").newSlots({
         }
 
         return modifiers.join("") + keyName
-    },
+    }
 
     // --- special ---
 
     // get key helpers
 
-    shiftKey: function() {
+    shiftKey() {
         return this.keyForName("Shift")
-    },
+    }
 
-    controlKey: function() {
+    controlKey() {
         return this.keyForName("Control")
-    },
+    }
 
-    alternateKey: function() {
+    alternateKey() {
         return this.keyForName("Alternate")
-    },
+    }
 
-    leftCommandKey: function() {
+    leftCommandKey() {
         return this.keyForName("MetaLeft")
-    },
+    }
 
-    rightCommandKey: function() {
+    rightCommandKey() {
         return this.keyForName("MetaRight")
-    },
+    }
 
     // get key state helpers
 
-    shiftIsDown: function() {
+    shiftIsDown() {
         return this.shiftKey().isDown()
-    },
+    }
 
-    commandIsDown: function() {
+    commandIsDown() {
         return this.leftCommandKey().isDown() || this.rightCommandKey().isDown()
-    },
+    }
 
 
-    equalsSignKey: function() {
+    equalsSignKey() {
         return this.keyForName("EqualsSign")
-    },
+    }
 
-    minusKey: function() {
+    minusKey() {
         return this.keyForName("Dash")
-    },
+    }
 
-    plusKey: function() {
+    plusKey() {
         return this.keyForName("Plus")
-    },
+    }
 
-    plusIsDown: function() {
+    plusIsDown() {
         return this.plusKey().isDown()
-    },
+    }
 
-    currentlyDownKeys: function() {
+    currentlyDownKeys() {
         return Object.values(this.codeToKeys()).select(key => key.isDown())
-    },
+    }
 
-    currentlyUpKeys: function() {
+    currentlyUpKeys() {
         return Object.values(this.codeToKeys()).select(key => !key.isDown())
-    },
+    }
 
-    hasKeysDown: function() {
+    hasKeysDown() {
         return this.currentlyUpKeys().length !== 0
-    },
+    }
 
-    downKeyNames: function() {
+    downKeyNames() {
         return Keyboard.shared().currentlyDownKeys().map(k => k.name())
-    },
+    }
 
-    show: function() {
+    show() {
         this.debugLog(" downKeys: ", this.downKeyNames())
-    },
+    }
 
-    allModifierNames: function() {
+    allModifierNames() {
         return [
             "Alternate", 
             "Control", 
@@ -477,9 +481,9 @@ ideal.Proto.newSubclassNamed("Keyboard").newSlots({
             "MetaRight", 
             "Shift", 
         ]
-    },
+    }
 
-    modifierNamesForEvent: function(event) {
+    modifierNamesForEvent(event) {
         let modifierNames = []
 
         // event names are ordered alphabetically to avoid ambiguity
@@ -505,9 +509,9 @@ ideal.Proto.newSubclassNamed("Keyboard").newSlots({
         }
 
         return modifierNames
-    },
+    }
 
-    showEvent: function(event) {
+    showEvent(event) {
         console.log("---")
         console.log("Keyboard.showEvent():")
         console.log("  code: ", event.keyCode)
@@ -516,6 +520,6 @@ ideal.Proto.newSubclassNamed("Keyboard").newSlots({
         console.log("  modifierNames: ", Keyboard.shared().modifierNamesForEvent(event))
         console.log("  modsAndKeyName: ", Keyboard.shared().modsAndKeyNameForEvent(event))
         console.log("---")
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

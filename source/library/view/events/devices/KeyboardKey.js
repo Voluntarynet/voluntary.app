@@ -6,43 +6,47 @@
 
 */
 
-ideal.Proto.newSubclassNamed("KeyboardKey").newSlots({
-    isDown: false,
-    code: null,
-    name: "",
-    keyboard: null,
-}).setSlots({
-    init: function () {
-        ideal.Proto.init.apply(this)
+window.KeyboardKey = class KeyboardKey extends ProtoClass {
+    initPrototype () {
+        this.newSlots({
+            isDown: false,
+            code: null,
+            name: "",
+            keyboard: null,
+        })
+    }
+
+    init () {
+        super.init()
         this.setIsDebugging(true)
         return this
-    },
+    }
 
-    onKeyDown: function (event) {
+    onKeyDown (event) {
         //this.debugLog(() => this.name() + " onKeyDown " + event._id)
         let shouldPropogate = true
         this.setIsDown(true)
         return shouldPropogate
-    },
+    }
 
-    onKeyUp: function (event) {
+    onKeyUp (event) {
         //this.debugLog(() => this.name() + " onKeyUp " + event._id)
         let shouldPropogate = true
         this.setIsDown(false)
         return shouldPropogate
-    },
+    }
 
-    isUp: function() {
+    isUp() {
         return !this.isDown()
-    },
+    }
 
-    isOnlyKeyDown: function() {
+    isOnlyKeyDown() {
         return this.isDown() && this.keyboard().currentlyDownKeys().length
-    },
+    }
 
-    isAlphabetical: function(event) {
+    isAlphabetical(event) {
         const c = this.code()
         return c >= 65 && c <= 90
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

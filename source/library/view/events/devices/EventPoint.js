@@ -51,7 +51,6 @@ window.EventPoint = class EventPoint extends Point {
 
     copyFrom(p, copyDict) {
         super.copyFrom(p, copyDict)
-        //window.Point.copyFrom.apply(this, [p, copyDict])
         this._id = p._id
         this._state = p._state
         this._target = p._target

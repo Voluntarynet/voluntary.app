@@ -55,19 +55,25 @@
 
 // need a pidRefsFromPid
 
-ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
-    name: "defaultDataStore",
-    rootObject: null, 
-    recordsDict: null, // AtomicDictionary
-    activeObjects: null, // dict
-    dirtyObjects: null, // dict 
-    lastSyncTime: null, // WARNING: vulnerable to system time changes
-    //isReadOnly: true,
-    markedSet: null, // Set of puuids
-    nodeStoreDidOpenNote: null, // TODO: change name?
-}).setSlots({
-    init: function() {
-        ideal.Proto.init.apply(this)
+
+window.ObjectPool = class ObjectPool extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+            name: "defaultDataStore",
+            rootObject: null, 
+            recordsDict: null, // AtomicDictionary
+            activeObjects: null, // dict
+            dirtyObjects: null, // dict 
+            lastSyncTime: null, // WARNING: vulnerable to system time changes
+            //isReadOnly: true,
+            markedSet: null, // Set of puuids
+            nodeStoreDidOpenNote: null, // TODO: change name?
+        })
+    }
+
+    init () {
+        super.init()
         this.setRecordsDict(ideal.AtomicDictionary.clone())
         this.setActiveObjects({})
         this.setDirtyObjects({})
@@ -76,30 +82,30 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         this.setNodeStoreDidOpenNote(window.NotificationCenter.shared().newNote().setSender(this).setName("nodeStoreDidOpen"))
 
         return this
-    },
+    }
 
-    shared: function() {   
+    shared () {   
         return this.sharedInstanceForClass(ObjectPool)
-    },
+    }
 
-    clearCache: function() {
+    clearCache () {
         this.setActiveObjects({})
         this.setDirtyObjects({})
         this.readRoot()
         //this.setRootObject(this.objectForPid(this.rootObject().puuid()))
         return this
-    },
+    }
 
     // --- open ---
 
-    open: function() {
+    open () {
         assert(this.recordsDict().open)
         this.recordsDict().open()
         this.onRecordsDictOpen()
         return this
-    },
+    }
 
-    asyncOpen: function(callback) {
+    asyncOpen (callback) {
         assert(this.recordsDict().asyncOpen)
         this.recordsDict().asyncOpen(() => {
             this.onRecordsDictOpen()
@@ -108,66 +114,66 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
             }
         })
         return this
-    },
+    }
 
-    onRecordsDictOpen: function() {
+    onRecordsDictOpen () {
         this.readRoot()
         this.nodeStoreDidOpenNote().post()
         return this
-    },
+    }
 
-    isOpen: function() {
+    isOpen () {
         return this.recordsDict().isOpen()
-    },
+    }
 
     // --- root ---
 
-    rootKey: function() {
+    rootKey () {
         return "root"
-    },
+    }
 
-    hasStoredRoot: function() {
+    hasStoredRoot () {
         return this.recordsDict().hasKey(this.rootKey())
-    },
+    }
 
-    rootOrIfAbsentFromClosure: function(aClosure) {
+    rootOrIfAbsentFromClosure (aClosure) {
         if (!this.hasStoredRoot()) {
             const newRoot = aClosure()
             assert(newRoot)
             this.setRootObject(newRoot)
         }
         return this.rootObject()
-    },
+    }
 
-    readRoot: function() {
+    readRoot () {
         const rk = this.rootKey()
         if (this.hasStoredRoot()) {
             this._rootObject = null
             this.setRootObject(this.objectForPid(rk))
         }
         return this.rootObject()
-    },
+    }
 
-    knowsObject: function(obj) { // private
+    knowsObject (obj) { // private
         const puuid = obj.puuid()
         const foundIt = this.recordsDict().hasKey(puuid) ||
             this.activeObjects().hasOwnProperty(puuid) ||
             this.dirtyObjects().hasOwnProperty(puuid)
         return foundIt
-    },
+    }
 
-    assertOpen: function() {
+    assertOpen () {
         assert(this.isOpen())
-    },
+    }
 
-    changeOldPidToNewPid: function(oldPid, newPid) {
+    changeOldPidToNewPid (oldPid, newPid) {
         // flush and change pids on all activeObjects 
         // and pids and pidRefs in recordsDict 
         throw new Error("unimplemented")
         return this
-    },
+    }
     
-    setRootObject: function(obj) {
+    setRootObject (obj) {
         this.assertOpen()
         if (this._rootObject) {
             // can support this if we change all stored and
@@ -183,45 +189,45 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         this.addDirtyObject(obj)
         
         return this
-    },
+    }
 
     // ---  ---
 
-    asJson: function() {
+    asJson () {
         return this.recordsDict().asJson()
-    },
+    }
 
-    updateLastSyncTime: function() {
+    updateLastSyncTime () {
         this.setLastSyncTime(Date.now())
         return this
-    },
+    }
 
     // --- active and dirty objects ---
 
-    hasActiveObject: function(anObject) {
+    hasActiveObject (anObject) {
         const puuid = anObject.puuid()
         return this.activeObjects().hasOwnProperty(puuid)
-    },
+    }
     
-    addActiveObject: function(anObject) {
+    addActiveObject (anObject) {
         if (!this.hasActiveObject(anObject)) {
             this.addDirtyObject(anObject) // only do this during ref creation?
         }
         this.activeObjects()[anObject.puuid()] = anObject
-    },
+    }
 
-    hasDirtyObjects: function() {
+    hasDirtyObjects () {
         return Object.keys(this.dirtyObjects()).length !== 0
-    },
+    }
 
-    addDirtyObject: function(anObject) {
+    addDirtyObject (anObject) {
         const puuid = anObject.puuid()
         this.dirtyObjects()[puuid] = anObject
         this.scheduleStore()
         return this
-    },
+    }
 
-    scheduleStore: function () {
+    scheduleStore  () {
         if (!SyncScheduler.shared().isSyncingTargetAndMethod(this, "storeDirtyObjects")) {
             if (!SyncScheduler.shared().hasScheduledTargetAndMethod(this, "storeDirtyObjects")) {
                 //console.warn("scheduleStore currentAction = ", SyncScheduler.currentAction() ? SyncScheduler.currentAction().description() : null)
@@ -229,11 +235,11 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
             }
         }
         return this
-    },
+    }
 
     // --- storing ---
 
-    storeDirtyObjects: function() { // PRIVATE
+    storeDirtyObjects () { // PRIVATE
         let totalStoreCount = 0
         const justStored = {} // use a dict instead of set so we can inspect it for debugging
 
@@ -263,11 +269,11 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         }
 
         return totalStoreCount
-    },
+    }
 
     // --- reading ---
 
-    objectForRecord: function(aRecord) { // private
+    objectForRecord (aRecord) { // private
         const aClass = window[aRecord.type]
         const obj = aClass.instanceFromRecordInStore(aRecord, this)
         obj.setPuuid(aRecord.id)
@@ -277,36 +283,36 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         }
 
         return obj
-    },
+    }
 
-    objectForPid: function(puuid) {
+    objectForPid (puuid) {
         const obj = this.activeObjects()[puuid]
         if (obj) {
             return obj
         }
         return this.objectForRecord(this.recordForPid(puuid))
-    },
+    }
 
     // --- references ---
 
-    unrefValueIfNeeded: function(v) {
+    unrefValueIfNeeded (v) {
         return this.unrefValue(v)
-    },
+    }
 
-    unrefValue: function(v) {
+    unrefValue (v) {
         if (Type.isLiteral(v)) {
             return v
         }
         const puuid = v["*"]
         assert(puuid)
         return this.objectForPid(puuid)
-    },
+    }
 
-    willRefObject: function(obj) { // TODO: remove this - it's transitional from NodeStore
+    willRefObject (obj) { // TODO: remove this - it's transitional from NodeStore
         return this.refValue(obj)
-    },
+    }
 
-    refValue: function(v) {
+    refValue (v) {
         if (Type.isLiteral(v)) {
             return v
         }
@@ -318,36 +324,36 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         this.addActiveObject(v)
         const ref = { "*": v.puuid() }
         return ref
-    },
+    }
 
     // read a record
 
-    recordForPid: function(puuid) { // private
+    recordForPid (puuid) { // private
         const jsonString = this.recordsDict().at(puuid)
         const aRecord = JSON.parse(jsonString)
         return aRecord
-    },
+    }
 
     // write an object
 
-    storeObject: function(obj) {
+    storeObject (obj) {
         const puuid = obj.puuid()
         assert(puuid)
         this.recordsDict().atPut(puuid, JSON.stringify(obj.recordForStore(this)))
         return this
-    },
+    }
 
     // -------------------------------------
 
-    flushIfNeeded: function () {
+    flushIfNeeded  () {
         if (this.hasDirtyObjects()) {
             this.storeDirtyObjects()
             assert(!this.hasDirtyObjects())
         }
         return this
-    },
+    }
 
-    collect: function () {
+    collect  () {
         // this is an on-disk collection
         // in-memory objects aren't considered
         // so we make sure they're flushed to the db first 
@@ -364,9 +370,9 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         this.recordsDict().commit()
 
         return deleteCount
-    },
+    }
 
-    markPid: function (pid) {
+    markPid  (pid) {
         //this.debugLog(() => "markPid(" + pid + ")")
         if (!this.markedSet().has(pid)) {
             this.markedSet().add(pid)
@@ -376,9 +382,9 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
             return true
         }
         return false
-    },
+    }
 
-    refSetForPuuid: function (puuid) {
+    refSetForPuuid  (puuid) {
         const record = this.recordForPid(puuid)
         const puuids = new Set()
 
@@ -387,9 +393,9 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         }
 
         return puuids
-    },
+    }
 
-    puuidsSetFromJson: function(json, puuids = new Set()) {
+    puuidsSetFromJson (json, puuids = new Set()) {
         // json can only contain array's, dictionaries, and literals.
         // We store dictionaries as an array of entries, 
         // so dicts in the json are reserved for pointers
@@ -406,11 +412,11 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         }
         
         return puuids
-    },
+    }
 
     // ------------------------
 
-    sweep: function () {
+    sweep  () {
         // delete all unmarked records
         let deleteCount = 0
         this.recordsDict().keys().forEach((pid) => {
@@ -422,21 +428,21 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         })
 
         return deleteCount
-    },
+    }
 
     // ---------------------------
 
     /*
-    selfTestRoot: function() {
+    selfTestRoot () {
         const aTypedArray = Float64Array.from([1.2, 3.4, 4.5])
         const aSet = new Set("sv1", "sv2")
         const aMap = new Map([ ["mk1", "mv1"], ["mk2", "mv2"] ])
         const aNode = BMStorableNode.clone()
         const a = [1, 2, [3, null], { foo: "bar", b: true }, aSet, aMap, new Date(), aTypedArray, aNode]
         return a
-    },
+    }
 
-    selfTest: function () {
+    selfTest  () {
         console.log(this.type() + " --- self test start --- ")
         const store = ObjectPool.clone()
         store.open()
@@ -451,13 +457,13 @@ ideal.Proto.newSubclassNamed("ObjectPool").newSlots({
         console.log("loadedNode = ", loadedNode)
         console.log(this.type() + " --- self test end --- ")
 
-    },
+    }
     */
 
-    rootInstanceWithPidForProto: function(aTitle, aProto) {
+    rootInstanceWithPidForProto (aTitle, aProto) {
         return this.rootObject().subnodeWithTitleIfAbsentInsertClosure(aTitle, () => aProto.clone())
-    },
-}).initThisProto()
+    }
+}.initThisClass()
 
 // -------------------
 

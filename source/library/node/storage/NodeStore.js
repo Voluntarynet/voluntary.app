@@ -104,21 +104,26 @@
  
 */
 
-ideal.Proto.newSubclassNamed("NodeStore").newSlots({
-    name: "defaultStoreName",
+window.NodeStore = class NodeStore extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+            name: "defaultStoreName",
 
-    dirtyObjects: null, // objects that need to be persisted
-    activeObjectsDict: null, // objects unpersisted - tracking to ensure all refs point to same instance
+            dirtyObjects: null, // objects that need to be persisted
+            activeObjectsDict: null, // objects unpersisted - tracking to ensure all refs point to same instance
+        
+            sdb: null,
+            isReadOnly: false,
+        
+            nodeStoreDidOpenNote: null,
+            lastSyncTime: null,
+            //changedObs: null,
+        })
+    }
 
-    sdb: null,
-    isReadOnly: false,
-
-    nodeStoreDidOpenNote: null,
-    lastSyncTime: null,
-    //changedObs: null,
-}).setSlots({
-    init: function () {
-        ideal.Proto.init.apply(this)
+    init () {
+        super.init()
         this.setDirtyObjects({})
         this.setActiveObjectsDict({})
         this.setSdb(window.SyncDB.clone())
@@ -131,53 +136,53 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
 
         this.setIsDebugging(false)
         Broadcaster.shared().addListenerForName(this, "didChangeStoredSlot")
-    },
+    }
 
-    didChangeStoredSlot: function(aTarget) {
+    didChangeStoredSlot (aTarget) {
         this.addDirtyObject(aTarget)
-    },
+    }
     
-    startWatchingForDirtyObjects: function() {
+    startWatchingForDirtyObjects () {
         Broadcaster.shared().addListenerForName(this, "didChangeStoredSlot")
         //this.changedObs().watch()
         return this
-    },
+    }
 
-    stopWatchingforDirtyObjects: function() {
+    stopWatchingforDirtyObjects () {
         Broadcaster.shared().removeListenerForName(this, "didChangeStoredSlot")
         //this.changedObs().stopWatching()
         return this
-    },
+    }
 
-    updateLastSyncTime: function() {
+    updateLastSyncTime () {
         this.setLastSyncTime(Date.now())
         return this
-    },
+    }
 
     /*
-    secondsSinceLastSync: function() {
+    secondsSinceLastSync () {
         return (Date.now() - this.lastSyncTime())/1000
-    },
+    }
     */
 
-    descriptionForByteCount: function (b) {
+    descriptionForByteCount (b) {
         return ByteFormatter.clone().setValue(b).formattedValue()
-    },
+    }
 
-    shortStatsString: function () {
+    shortStatsString () {
         if (!this.isOpen()) {
             return "closed"
         }
         const byteCount = this.sdb().totalBytes()
         const objectCount = this.sdb().size()
         return objectCount + " objects, " + ByteFormatter.clone().setValue(byteCount).formattedValue()
-    },
+    }
 
-    isOpen: function () {
+    isOpen () {
         return this.sdb().isOpen()
-    },
+    }
 
-    asyncOpen: function (callback) {
+    asyncOpen (callback) {
         if (this.isOpen()) {
             throw new Error(this.typeId() + ".asyncOpen() already open")
         }
@@ -195,32 +200,32 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
             this.nodeStoreDidOpenNote().post()
         })
         return this
-    },
+    }
 
-    onOpen: function () {
+    onOpen () {
         console.log(this.type() + " onOpen db size " + this.sdb().size())
         this.updateLastSyncTime()
         this.collect()
         this.startWatchingForDirtyObjects()
         return this
-    },
+    }
 
 
-    shared: function() {   
+    shared () {   
         return this.sharedInstanceForClass(NodeStore)
-    },
+    }
 
     /*
-    shared: function () {
+    shared () {
         if (!this._shared) {
             this._shared = this.clone()
             //this._shared.setFolder(App.shared().storageFolder().folderNamed(this.folderName())) 
         }
         return this._shared
-    },
+    }
     */
 
-    rootInstanceWithPidForProto: function (pid, proto) {
+    rootInstanceWithPidForProto (pid, proto) {
         if (this.hasObjectForPid(pid)) {
             return this.objectForPid(pid)
         }
@@ -228,13 +233,13 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         const obj =  proto.clone().setPid(pid)
         this.addActiveObject(obj) 
         return obj
-    },
+    }
 
     // ----------------------------------------------------
     // dirty objects
     // ----------------------------------------------------
 
-    addDirtyObject: function (obj) {
+    addDirtyObject (obj) {
         // don't use pid for these keys so we can
         // use pid to see if the obj gets referrenced when walked from a stored node
         // this way we avoid storing objects not referenced from the stored objects tree
@@ -253,9 +258,9 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         }
 
         return this
-    },
+    }
 
-    scheduleStore: function () {
+    scheduleStore () {
         if (!SyncScheduler.shared().isSyncingTargetAndMethod(this, "storeDirtyObjects")) {
             if (!SyncScheduler.shared().hasScheduledTargetAndMethod(this, "storeDirtyObjects")) {
                 //console.warn("scheduleStore currentAction = ", SyncScheduler.currentAction() ? SyncScheduler.currentAction().description() : null)
@@ -263,17 +268,17 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
             }
         }
         return this
-    },
+    }
 
     // ----------------------------------------------------
     // writing
     // ----------------------------------------------------
 
-    hasDirtyObjects: function () {
+    hasDirtyObjects () {
         return Object.keys(this._dirtyObjects).length > 0
-    },
+    }
 
-    storeDirtyObjects: function () {
+    storeDirtyObjects () {
         this.debugLog(" --- storeDirtyObjects --- ")
         if (this.isDebugging()) {
             this.showDirtyObjects("storing")
@@ -355,31 +360,31 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         this.debugLog(" --- end storeDirtyObjects --- ")
 
         return totalStoreCount
-    },
+    }
 
 
-    assertIsWritable: function () {
+    assertIsWritable () {
         if (this.isReadOnly()) {
             throw new Error("attempt to write to read-only store")
         }
-    },
+    }
 
-    setNodeDictAtPid: function(aDict, pid) { // public API
+    setNodeDictAtPid (aDict, pid) { // public API
         this.assertIsWritable()
         const serializedString = JSON.stringify(aDict)
         this.sdb().atPut(pid, serializedString)
         return this
-    },
+    }
 
-    willRefObject: function(obj) {
+    willRefObject (obj) {
         if (!this.hasActiveObject(obj)) {
             this.addActiveObject(obj)
             this.addDirtyObject(obj)
         }
         return this
-    },
+    }
 
-    storeObject: function (obj) { // private API
+    storeObject (obj) { // private API
         assert(obj.shouldStore())
         this.willRefObject(obj)
 
@@ -387,14 +392,14 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         const aDict = obj.nodeDict()
         this.setNodeDictAtPid(aDict, obj.pid())
         return this
-    },
+    }
 
 
     // ----------------------------------------------------
     // reading
     // ----------------------------------------------------
 
-    loadObject: function (obj) {
+    loadObject (obj) {
         try {
             const nodeDict = this.nodeDictAtPid(obj.pid())
             if (nodeDict) {
@@ -410,21 +415,21 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         }
 
         return false
-    },
+    }
 
-    nodeDictAtPid: function (pid) { // public API
+    nodeDictAtPid (pid) { // public API
         const v = this.sdb().at(pid)
         if (Type.isNullOrUndefined(v)) {
             return null
         }
         return JSON.parse(v)
-    },
+    }
 
-    hasObjectForPid: function (pid) {
+    hasObjectForPid (pid) {
         return this.sdb().hasKey(pid)
-    },
+    }
 
-    objectForPid: function (pid) { 
+    objectForPid (pid) { 
         if (pid === "null") {
             return null
         }
@@ -472,7 +477,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         obj.scheduleLoadFinalize()
 
         return obj
-    },
+    }
 
     // ----------------------------------------------------
     // active objects (the read cache)
@@ -482,11 +487,11 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     // we use a dictionary to track the pids and a WeakMap
     // to connect each pid to a object
 
-    hasActiveObject: function(obj) {
+    hasActiveObject (obj) {
         return !Type.isUndefined(this.activeObjectsDict()[obj.pid()])
-    },
+    }
 
-    addActiveObject: function (obj) {
+    addActiveObject (obj) {
         if (!this.hasActiveObject(obj)) {
             const pid = obj.pid()
 
@@ -499,23 +504,23 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
             this.activeObjectsDict()[pid] = obj
         }
         return this
-    },
+    }
 
-    removeActiveObject: function (obj) {
+    removeActiveObject (obj) {
         const pid = obj.pid()
         assert(!Type.isNullOrUndefined(pid))
         delete this.activeObjectsDict()[pid]
         return this
-    },
+    }
 
     /*
-    writeAllActiveObjects: function () {
+    writeAllActiveObjects () {
         const activeObjects = Object.slotValues(this.activeObjectsDict())
         activeObjects.forEach((obj) => {
             this.storeObject(obj)
         })
         return this
-    },
+    }
     */
 
     // references
@@ -527,25 +532,25 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
     //      if pid === "null" then object is null
     //
 
-    refValueIfNeeded: function (v) {
+    refValueIfNeeded (v) {
         if (Type.isObject(v)) {
             if (Type.isNull(v) || Type.isFunction(v.type)) {
                 return this.refForObject(v)
             }
         }
         return v // assumes arrays and dictionaries don't reference Proto instances?
-    },
+    }
 
-    pidIfRef: function (ref) {
+    pidIfRef (ref) {
         if (Type.isObject(ref)) {
             if (this.dictIsObjRef(ref)) {
                 return ref[this.objRefKey()]
             }
         }
         return null
-    },
+    }
 
-    unrefValueIfNeeded: function (v) {
+    unrefValueIfNeeded (v) {
         const pid = this.pidIfRef(v)
 
         if (pid) {
@@ -553,18 +558,18 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         }
 
         return v
-    },
+    }
 
-    objRefKey: function () {
+    objRefKey () {
         return "pid"
-    },
+    }
 
-    dictIsObjRef: function (dict) {
+    dictIsObjRef (dict) {
         const k = this.objRefKey()
         return Type.isString(dict[k])
-    },
+    }
 
-    refForObject: function (obj) {
+    refForObject (obj) {
         const k = this.objRefKey()
         const ref = {}
 
@@ -579,9 +584,9 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         }
 
         return ref
-    },
+    }
 
-    objectForRef: function (ref) {
+    objectForRef (ref) {
         const k = this.objRefKey()
         const pid = ref[k]
         if (pid === "null") {
@@ -589,22 +594,22 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         }
 
         return this.objectForPid(pid)
-    },
+    }
 
-    nodeTypeTranslationDict: function() {
+    nodeTypeTranslationDict () {
         // TODO: make this a slot so app can set it on startup
         return {
             //"BMDatedSet": "BMStoredDatedSetNode",
         }
-    },
+    }
 
-    translateNodeType: function(typeName) {
+    translateNodeType (typeName) {
         const dict = this.nodeTypeTranslationDict();
         const v = dict[typeName];
         return v ? v : typeName;
-    },
+    }
 
-    pidRefsFromPid: function (pid) {
+    pidRefsFromPid (pid) {
         // TODO: change to directly inspect?
         // direct inspections might help for cases where proto is removed?
 
@@ -623,10 +628,10 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         }
 
         return proto.nodePidRefsFromNodeDict(nodeDict)
-    },
+    }
 
     /*
-    pidRefsFromNodeDict: function(nodeDict) {
+    pidRefsFromNodeDict (nodeDict) {
         const pids = []
 
         if (nodeDict) {
@@ -650,29 +655,29 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         }
         
         return pids
-    },
+    }
     */
 
     // ----------------------------------------------------
     // garbage collection
     // ----------------------------------------------------
 
-    rootPids: function () {
+    rootPids () {
         // pids beginning with _ are considered root
         // to delete them you'll need to call removeEntryForPid()
 
         return this.sdb().keys().select(pid => pid[0] === "_")
-    },
+    }
 
-    flushIfNeeded: function () {
+    flushIfNeeded () {
         if (this.hasDirtyObjects()) {
             this.storeDirtyObjects()
             assert(!this.hasDirtyObjects())
         }
         return this
-    },
+    }
 
-    collect: function () {
+    collect () {
         // this is an on-disk collection
         // in-memory objects aren't considered
         // so we make sure they're flush to the db first 
@@ -693,15 +698,15 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         this._marked = null
         this.debugLog(() => "--- end collect - collected " + deleteCount + " pids ---")
         return deleteCount
-    },
+    }
 
-    markActiveObjects: function () {
+    markActiveObjects () {
         const marked = this.marked()
         this.activeObjectsDict().forEachKV((k, v) => { marked[k] = true })
         return this
-    },
+    }
 
-    markPid: function (pid) {
+    markPid (pid) {
         if (pid === "null") {
             return this
         }
@@ -715,9 +720,9 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         this.debugLog(() => "markPid " + pid + " w refs " + JSON.stringify(refPids))
         refPids.forEach(refPid => this.markPid(refPid))
         return this
-    },
+    }
 
-    sweep: function () {
+    sweep () {
         this.debugLog("--- sweep --- ")
         // delete all unmarked records
         this.sdb().begin()
@@ -736,39 +741,39 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         this.sdb().commit()
 
         return deleteCount
-    },
+    }
 
-    justRemovePid: function (pid) { // private
+    justRemovePid (pid) { // private
         this.sdb().begin()
         this.sdb().removeAt(pid)
         this.sdb().commit()
         return this
-    },
+    }
 
     // transactions
 
-    begin: function () {
+    begin () {
         throw new Error("transactions not implemented yet")
 
-    },
+    }
 
-    commit: function () {
+    commit () {
         throw new Error("transactions not implemented yet")
-    },
+    }
 
-    asJson: function () {
+    asJson () {
         return this.sdb().asJson()
-    },
+    }
 
-    clear: function () {
+    clear () {
         console.warn("====================================")
         console.warn("=== NodeStore clearing all data! ===")
         console.warn("====================================")
         //throw new Error("NodeStore clearing all data!")
         this.sdb().clear();
-    },
+    }
 
-    show: function () {
+    show () {
         console.log("--- NodeStore show ---")
         this.rootPids().forEach((pid) => {
             this.showPid(pid, 1, 3)
@@ -776,11 +781,11 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         console.log("----------------------")
         //this.sdb().idb().show()
         return this
-    },
+    }
 
     // --- debugging helper methods ---
 
-    showPid: function (pid, level, maxLevel) {
+    showPid (pid, level, maxLevel) {
         if (level > maxLevel) {
             return
         }
@@ -811,17 +816,17 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
             })
         }
         return this
-    },
+    }
 
-    showDirtyObjects: function (prefixString = "") {
+    showDirtyObjects (prefixString = "") {
         const dirty = this._dirtyObjects
         const s = dirty.mapToArrayKV((k, v) => "'" +k + "' : '" + v.typeId() + "'").join("\n")
         console.log(prefixString + " dirty objects: \n" + s)
         return this
-    },
+    }
 
     /*
-    showActiveObjects: function () {
+    showActiveObjects () {
         const active = this.activeObjectsDict()
         console.log("active objects: ")
 
@@ -834,9 +839,9 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
         const obj = active[pid]
         console.log("    " + pid + ": ", Object.keys(obj.nodeRefPids()))
         return this
-    },
+    }
 
-    objectIsReferencedByActiveObjects: function (aNode) {
+    objectIsReferencedByActiveObjects (aNode) {
         const nodePid = aNode.pid()
         const active = this.activeObjectsDict()
 
@@ -850,7 +855,7 @@ ideal.Proto.newSubclassNamed("NodeStore").newSlots({
             //console.log(">>>>>> " + aNode.pid() + " is unreferenced - not storing!")
         }
         return result
-    },
+    }
     */
    
-}).initThisProto()
+}.initThisClass()

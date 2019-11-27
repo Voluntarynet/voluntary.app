@@ -8,19 +8,24 @@
     sheet.setSelectorProperty("body", "color", "red")
 */
 
-ideal.Proto.newSubclassNamed("StyleSheet").newSlots({
-    sheetElement: null,
-}).setSlots({
-    init: function () {
-        ideal.Proto.init.apply(this)
+window.StyleSheet = class StyleSheet extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+            sheetElement: null,
+        })
+    }
+
+    init () {
+        super.init()
         return this
-    },
+    }
 
-    href: function() {
+    href () {
         return this.sheetElement().href
-    },
+    }
 
-    changeStylesheetRule: function(selector, property, value) {
+    changeStylesheetRule (selector, property, value) {
         const sheet = this.sheetElement()
 
         selector = selector.toLowerCase();
@@ -39,11 +44,11 @@ ideal.Proto.newSubclassNamed("StyleSheet").newSlots({
         // Add it if it does not
         sheet.insertRule(selector + " { " + property + ": " + value + "; }", 0);
         return this;
-    },
+    }
 
-    show: function() {
+    show () {
         console.log("sheetElement:", this.sheetElement())
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()
 

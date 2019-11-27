@@ -13,26 +13,31 @@
 
 // need a pidRefsFromPid
 
-window.ObjectPool.newSubclassNamed("PersistentObjectPool").newSlots({
-    name: "defaultDataStore",
-}).setSlots({
-    init: function() {
-        ObjectPool.init.apply(this)
+window.PersistentObjectPool = class PersistentObjectPool extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+            name: "defaultDataStore",
+        })
+    }
+
+    init () {
+        super.init()
         this.setRecordsDict(AtomicPersistentDictionary.clone())
         return this
-    },
+    }
 
-    shared: function() {
+    shared () {
         return this.sharedInstanceForClass(PersistentObjectPool)
-    },
+    }
 
-    selfTest: function () {
+    selfTest  () {
         console.log(this.type() + " --- self test start --- ")
         const store = this.typeClass().clone()
         store.asyncOpen(() => this.selfTestOnStore(store))
-    },
+    }
 
-    selfTestOnStore: function(store) {
+    selfTestOnStore (store) {
         store.rootOrIfAbsentFromClosure(() => BMStorableNode.clone())
         //store.flushIfNeeded()
         console.log("store:", store.asJson())
@@ -42,13 +47,13 @@ window.ObjectPool.newSubclassNamed("PersistentObjectPool").newSlots({
         const loadedNode = store.rootObject()
         console.log("loadedNode = ", loadedNode)
         console.log(this.type() + " --- self test end --- ")
-    },
+    }
 
-    rootInstanceWithPidForProto: function(aTitle, aProto) {
+    rootInstanceWithPidForProto (aTitle, aProto) {
         return this.rootObject().subnodeWithTitleIfAbsentInsertClosure(aTitle, () => aProto.clone())
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()
 
 
 //setTimeout(() => {

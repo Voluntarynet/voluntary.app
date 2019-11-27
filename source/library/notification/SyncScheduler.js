@@ -255,8 +255,11 @@ window.SyncScheduler = class SyncScheduler extends ProtoClass {
     }
 }.initThisClass()
 
+Object.defineSlots(ProtoClass.prototype, {
 
-ideal.Proto.scheduleMethod = function(methodName, priority) {
-    window.SyncScheduler.shared().scheduleTargetAndMethod(this, methodName, priority)
-    return this
-}
+    scheduleMethod: function(methodName, priority) {
+        window.SyncScheduler.shared().scheduleTargetAndMethod(this, methodName, priority)
+        return this
+    }
+
+})

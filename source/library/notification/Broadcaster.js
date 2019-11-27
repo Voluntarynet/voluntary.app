@@ -90,9 +90,11 @@ window.Broadcaster = class Broadcaster extends ProtoClass {
 
 }.initThisClass()
 
-/*
-ideal.Proto.broadcastMessage = function(methodName) {
-    window.Broadcaster.shared().broadcastEventName(methodName, this)
-    return this
-}
-*/
+Object.defineSlots(ProtoClass.prototype, {
+
+    broadcastMessage: function(methodName) {
+        window.Broadcaster.shared().broadcastEventName(methodName, this)
+        return this
+    }
+    
+})

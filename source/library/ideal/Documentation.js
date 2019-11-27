@@ -24,8 +24,7 @@ window.Documentation = class Documentation extends ProtoClass {
     }
 
     classes () {
-        return Proto.allProtos()
-        //return ProtoClass.allClasses()
+        return ProtoClass.allClasses()
     }
 
     methodsDocsForClass(aClass) {

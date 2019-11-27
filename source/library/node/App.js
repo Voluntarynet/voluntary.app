@@ -24,7 +24,7 @@ window.App = class App extends BMNode {
         super.init()
 
         //Documentation.shared().show()
-        console.log(Proto.subclassesDescription())
+        //console.log(ProtoClass.subclassesDescription())
 
 
         this.setNodeStoreDidOpenObs(window.NotificationCenter.shared().newObservation())

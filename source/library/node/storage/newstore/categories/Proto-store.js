@@ -1,6 +1,6 @@
 "use strict"
 
-Object.defineSlots(ideal.Proto, {
+Object.defineSlots(ProtoClass.prototype, {
 
     recordForStore: function(aStore) { // should only be called by Store
         

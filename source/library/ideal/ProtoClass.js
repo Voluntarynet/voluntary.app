@@ -156,6 +156,19 @@ window.ProtoClass = class ProtoClass {
         return this;
     }
 
+    /*
+    static subclassesDescription (level) {
+        if (Type.isUndefined(level)) {
+            level = 0
+        }
+        const spacer = "  ".repeat(level)
+        const lines = [spacer + this.type()]
+        const subclassLines = this.subclasses().map(subclass => spacer + subclass.subclassesDescription(level + 1))
+        lines.appendItems(subclassLines)
+        return lines.join("\n")
+    }
+    */
+
     // --- instance ---
 
     constructor() {

@@ -3,7 +3,7 @@
 ResourceLoader.pushRelativePaths([
     "categories/_imports.js",
     "Slot.js",
-    "Proto.js",
+    //"Proto.js",
     "ProtoClass.js",
     "Documentation.js",
     "dictionary/_imports.js",

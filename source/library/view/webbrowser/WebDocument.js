@@ -8,22 +8,23 @@
 
 */
 
-ideal.Proto.newSubclassNamed("WebDocument").newSlots({
-}).setSlots({
-    init: function () {
-        ideal.Proto.init.apply(this)
+window.WebDocument = class WebDocument extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
         return this
-    },
+    }
 
-    shared: function() {   
-        return this.sharedInstanceForClass(WebDocument)
-    },
-
-    body: function() {
+    body () {
         return DocumentBody.shared()
-    },
+    }
 
-    styleSheets: function() {
+    styleSheets () {
         const elements = document.styleSheets;
         const sheets = []
 
@@ -33,11 +34,11 @@ ideal.Proto.newSubclassNamed("WebDocument").newSlots({
         }
 
         return sheets
-    },
+    }
 
-    show: function() {
+    show () {
         this.debugLog(":")
         this.styleSheets().forEach(sheet => sheet.show())
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

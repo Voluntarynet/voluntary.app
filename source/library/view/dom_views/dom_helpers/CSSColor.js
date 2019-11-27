@@ -75,36 +75,42 @@ const max3 = function(a, b, c) {
     return (a > b) ? ((a > c) ? a : c) : ((b > c) ? b : c);
 }
 
-ideal.Proto.newSubclassNamed("CSSColor").newSlots({
-    red: 0, // values between 0.0 and 1.0
-    green: 0,
-    blue: 0,
-    opacity: 1,
-    //isMutable: true,
-}).setSlots({
-    init: function () {
-        ideal.Proto.init.apply(this)
-    },
+window.CSSColor = class CSSColor extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+            red: 0, // values between 0.0 and 1.0
+            green: 0,
+            blue: 0,
+            opacity: 1,
+            //isMutable: true,
+        })
+    }
+    
+    init  () {
+        super.init()
+        return this
+    }
 
-    randomize: function() {
+    randomize () {
         this.setRed(Math.random())
         this.setGreen(Math.random())
         this.setBlue(Math.random())
         return this
-    },
+    }
 
-    copyFrom: function(aColor, copyDict) {
+    copyFrom (aColor, copyDict) {
         return CSSColor.clone().set(aColor.red(), aColor.green(), aColor.blue(), aColor.opacity())
-    },
+    }
 
-    colorMapCache: function() {
+    colorMapCache () {
         if (!CSSColor._colorMapCache) {
             CSSColor._colorMapCache = {}
         }
         return CSSColor._colorMapCache
-    },
+    }
 
-    justParseColorString: function(aColorString) { // private
+    justParseColorString (aColorString) { // private
         // TODO: test if this is expensive
         // also, check for any risk of causing an event?
         const div = document.createElement("div");
@@ -132,9 +138,9 @@ ideal.Proto.newSubclassNamed("CSSColor").newSlots({
         numbers[1] /= 255
         numbers[2] /= 255
         return numbers
-    },
+    }
 
-    parseColorString: function(string) {
+    parseColorString (string) {
         const cache = CSSColor.colorMapCache()
         const cachedResult = cache[string]
         if (!Type.isUndefined(cachedResult)) {
@@ -149,19 +155,19 @@ ideal.Proto.newSubclassNamed("CSSColor").newSlots({
 
         cache[string] = result
         return result
-    },
+    }
 
-    setCssColorString: function(aString) {
+    setCssColorString (aString) {
         const array = this.parseColorString(aString)
         this.set(array[0], array[1], array[2], array[3])
         return this
-    },
+    }
 
-    setHex: function(hex) {
+    setHex (hex) {
         return this.setCssColorString(hex)
-    },
+    }
 
-    set: function(r, g, b, opacity) {
+    set (r, g, b, opacity) {
         this.setRed(r)
         this.setGreen(g)
         this.setBlue(b)
@@ -173,39 +179,39 @@ ideal.Proto.newSubclassNamed("CSSColor").newSlots({
         }
 
         return this
-    },
+    }
 
     // conversion helpers
 
-    v255toUnit: function(v) {
+    v255toUnit (v) {
         return v / 255;
-    },
+    }
 
-    unitTo255: function(v) {
+    unitTo255 (v) {
         return Math.round(v * 255)
-    },
+    }
 
-    red255: function() {
+    red255 () {
         return this.unitTo255(this.red());
-    },
+    }
 
-    green255: function() {
+    green255 () {
         return this.unitTo255(this.green());
-    },
+    }
 
-    blue255: function() {
+    blue255 () {
         return this.unitTo255(this.blue());
-    },
+    }
 
     /*
-    setCssColorString: function(s) {
+    setCssColorString (s) {
 
-    },
+    }
     */
 
-    cssColorString: function() {
+    cssColorString () {
         return "rgba(" + this.red255() + ", " + this.green255() + ", " + this.blue255() + ", " + this.opacity()  + ")"
-    },
+    }
 
     // operations
 
@@ -215,9 +221,9 @@ ideal.Proto.newSubclassNamed("CSSColor").newSlots({
             return v1 - (v1 - v2)*r
         }
         return v2 - (v2 - v1)*r
-    },
+    }
 
-    interpolateWithColorTo: function(other, v) {
+    interpolateWithColorTo (other, v) {
         const r1 = this.red()
         const g1 = this.green()
         const b1 = this.blue()
@@ -235,9 +241,9 @@ ideal.Proto.newSubclassNamed("CSSColor").newSlots({
 
         const result = CSSColor.clone().set(r, g, b, o)
         return result
-    },
+    }
 
-    darken: function(v) {
+    darken (v) {
         assertDefined(v)
         assert(v <= 1)
         const r = this.red()
@@ -247,9 +253,9 @@ ideal.Proto.newSubclassNamed("CSSColor").newSlots({
         this.setGreen(g * v)
         this.setBlue(b * v)
         return this
-    },
+    }
 
-    lighten: function(v) {
+    lighten (v) {
         assertDefined(v)
         const r = this.red()
         const g = this.green()
@@ -258,73 +264,73 @@ ideal.Proto.newSubclassNamed("CSSColor").newSlots({
         this.setGreen(g + (1 - g) * v)
         this.setBlue(b + (1 - b) * v)
         return this
-    },
+    }
 
-    brightness: function() {  
+    brightness () {  
         // return value between 0.0 and 1.0
         return (this.red() + this.green() + this.blue() ) / 3.0;
-    },
+    }
 
-    whiteColor: function() {
+    whiteColor () {
         return CSSColor.clone().set(1, 1, 1, 1)
-    },
+    }
 
-    blackColor: function() {
+    blackColor () {
         return CSSColor.clone().set(0, 0, 0, 1)
-    },
+    }
 
-    lightGrayColor: function() {
+    lightGrayColor () {
         return CSSColor.clone().set(0.75, 0.75, 0.55, 1)
-    },
+    }
 
-    grayColor: function() {
+    grayColor () {
         return CSSColor.clone().set(0.5, 0.5, 0.5, 1)
-    },
+    }
 
-    darkGrayColor: function() {
+    darkGrayColor () {
         return CSSColor.clone().set(0.25, 0.25, 0.25, 1)
-    },
+    }
 
-    redColor: function() {
+    redColor () {
         return CSSColor.clone().set(1, 0, 0, 1)
-    },
+    }
 
-    greenColor: function() {
+    greenColor () {
         return CSSColor.clone().set(0, 1, 0, 1)
-    },
+    }
 
-    blueColor: function() {
+    blueColor () {
         return CSSColor.clone().set(0, 0, 1, 1)
-    },
+    }
 
-    yellowColor: function() {
+    yellowColor () {
         return CSSColor.clone().set(1, 1, 0, 1)
-    },
+    }
 
-    randomColor: function() {
+    randomColor () {
         return CSSColor.clone().randomize()
-    },
+    }
 
-    asDict255: function() {
+    asDict255 () {
         return { r:this.red255(), g:this.green255(), b:this.blue255() }
-    },
+    }
 
-    fromDict255: function(d) {
+    fromDict255 (d) {
         this.setRed(  d.r / 255)
         this.setGreen(d.g / 255)
         this.setBlue( d.b / 255)
         return this
-    },
+    }
 
-    complement: function() {
+    complement () {
         const temprgb = this.asDict255();
         const temphsv = RGB2HSV(temprgb);
         temphsv.hue = HueShift(temphsv.hue, 180.0);
         temprgb = HSV2RGB(temphsv);
         return CSSColor.clone().fromDict255(temprgb)
-    },
+    }
 
-    contrastComplement: function(v) { // v should be a value in the range of 0.0 to 1.0
+    contrastComplement (v) { // v should be a value in the range of 0.0 to 1.0
         // returns another CSSColor object which is the same as the receiver but darkened
         //
 
@@ -339,5 +345,5 @@ ideal.Proto.newSubclassNamed("CSSColor").newSlots({
         }
     }
 
-}).initThisProto()
+}.initThisClass()
 

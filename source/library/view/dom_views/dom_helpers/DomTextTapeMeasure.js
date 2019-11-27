@@ -8,21 +8,24 @@
     
     Example uses:
 
-            const size1 = DomTextTapeMeasure.sizeOfCSSClassWithText(this.divClassName(), text);
+            const size1 = DomTextTapeMeasure.shared().sizeOfCSSClassWithText(this.divClassName(), text);
             const h = size1.height;
 
-            const size2 = DomTextTapeMeasure.sizeOfElementWithText(domElement, text);
+            const size2 = DomTextTapeMeasure.shared().sizeOfElementWithText(domElement, text);
             const w = size2.width;
 
 */
 
-
-ideal.Proto.newSubclassNamed("DomTextTapeMeasure").newSlots({
-    idName: "DomTextTapeMeasure",
-    stylesToCopy: ["fontSize","fontStyle", "fontWeight", "fontFamily","lineHeight", "textTransform", "letterSpacing"],
-}).setSlots({
+window.DomTextTapeMeasure = class WebDocument extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+            idName: "DomTextTapeMeasure",
+            stylesToCopy: ["fontSize","fontStyle", "fontWeight", "fontFamily","lineHeight", "textTransform", "letterSpacing"],
+        })
+    }
 	
-    testElement: function() {
+    testElement () {
         if (!this._testElement) {
             this._testElement = this.createTestElement()
             if (!document.getElementById(this.idName())) {
@@ -30,9 +33,9 @@ ideal.Proto.newSubclassNamed("DomTextTapeMeasure").newSlots({
             }
         }
         return this._testElement
-    },
+    }
 	
-    createTestElement: function() {
+    createTestElement () {
         const e = document.createElement("div");
 	    e.setAttribute("id", this.idName());
         document.body.appendChild(e);
@@ -43,9 +46,9 @@ ideal.Proto.newSubclassNamed("DomTextTapeMeasure").newSlots({
         e.style.top  = -1000;
         e.style.visibility = "hidden";
         return e		
-    },
+    }
 
-    sizeOfElementWithText: function(element, text) { 
+    sizeOfElementWithText (element, text) { 
         const e = this.testElement()
 		
         this.stylesToCopy().forEach(function (styleName) {
@@ -63,9 +66,9 @@ ideal.Proto.newSubclassNamed("DomTextTapeMeasure").newSlots({
         const height = (e.clientHeight + 1) 
         this.clean()
         return { width: width, height: height }
-    },
+    }
 	
-    sizeOfCSSClassWithText: function(divClassName, text) { 
+    sizeOfCSSClassWithText (divClassName, text) { 
         const e = this.testElement()
         e.className = divClassName
         e.innerHTML = text
@@ -74,13 +77,13 @@ ideal.Proto.newSubclassNamed("DomTextTapeMeasure").newSlots({
         const height = (e.clientHeight + 1) 
         e.innerHTML = ""
         return { width: width, height: height }
-    },
+    }
 	
-    clean: function() {
+    clean () {
         const e = this.testElement()
         e.innerHTML = ""
         this.stylesToCopy().forEach(styleName => delete e.style[styleName] )
         return this	
-    },
+    }
 	
-}).initThisProto()
+}.initThisClass()

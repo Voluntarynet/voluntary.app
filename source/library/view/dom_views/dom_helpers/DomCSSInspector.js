@@ -9,16 +9,16 @@
 
 */
 
-ideal.Proto.newSubclassNamed("DomCSSInspector").newSlots({
-    idName: "DomCSSInspector",
-    //divClassName: null,
-}).setSlots({
+window.DomCSSInspector = class DomCSSInspector extends ProtoClass {
     
-    shared: function() {
-        return this
-    },
+    initPrototype () {
+        this.newSlots({
+            idName: "DomCSSInspector",
+            //divClassName: null,
+        })
+    }
 
-    testElement: function() {
+    testElement () {
         if (!this._testElement) {
             this._testElement = this.createTestElement()
             document.body.appendChild(this._testElement);
@@ -27,23 +27,23 @@ ideal.Proto.newSubclassNamed("DomCSSInspector").newSlots({
             }
         }
         return this._testElement
-    },
+    }
 	
-    createTestElement: function() {
+    createTestElement () {
         const e = document.createElement("div");
 	    e.setAttribute("id", this.idName());
         e.style.display = "none";
         e.style.visibility = "hidden";
         return e
-    },
+    }
 
-    setDivClassName: function(aName) {
+    setDivClassName (aName) {
         this.testElement().setAttribute("class", aName);
         return this
-    },
+    }
 
-    cssStyle: function(key) {
+    cssStyle (key) {
         return this.testElement().style
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

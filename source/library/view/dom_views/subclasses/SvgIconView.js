@@ -19,16 +19,21 @@
 */
 
 
-DomStyledView.newSubclassNamed("SvgIconView").newSlots({
-    doesMatchParentColor: false,
-    svgString: "",
-    url: null,
-    iconName: "add",
-    fillColor: "white",
-    strokeColor: "white",
-}).setSlots({
-    init: function () {
-        DomView.init.apply(this)
+window.SvgIconView = class SvgIconView extends DomStyledView {
+    
+    initPrototype () {
+        this.newSlots({
+            doesMatchParentColor: false,
+            svgString: "",
+            url: null,
+            iconName: "add",
+            fillColor: "white",
+            strokeColor: "white",
+        })
+    }
+
+    init () {
+        super.init()
         this.turnOffUserSelect()
         this.setOverflow("hidden")
 
@@ -44,9 +49,9 @@ DomStyledView.newSubclassNamed("SvgIconView").newSlots({
         this.setIconName("add")
         
         return this
-    },
+    }
 
-    setIconName: function(name) {
+    setIconName (name) {
         const svg = this.svgDict()[name]
 
         if (svg) {
@@ -56,9 +61,9 @@ DomStyledView.newSubclassNamed("SvgIconView").newSlots({
         }
 
         return this
-    },
+    }
 
-    setSvgString: function(s) {
+    setSvgString (s) {
         this._svgString = s
         this.setInnerHTML(s)
         this.updateAppearance()
@@ -67,13 +72,13 @@ DomStyledView.newSubclassNamed("SvgIconView").newSlots({
         style.top = "0px"
         style.left = "0px"
         return this
-    },
+    }
 
-    svgElement: function() {
+    svgElement () {
         return this.element().childNodes[0]
-    },
+    }
 
-    didUpdateSlot: function(slotName, oldValue, newValue) {
+    didUpdateSlot (slotName, oldValue, newValue) {
         DomStyledView.didUpdateSlot.apply(this, [slotName, oldValue, newValue])
         const triggerSlots = ["fillColor", "strokeColor"]
         if (triggerSlots.contains(slotName)) {
@@ -81,11 +86,11 @@ DomStyledView.newSubclassNamed("SvgIconView").newSlots({
             //window.SyncScheduler.shared().scheduleTargetAndMethod(this, "updateAppearance")
         }
         return this
-    },
+    }
 
     // svg icon
 
-    updateAppearance: function () {
+    updateAppearance  () {
         // sent by superview when it changes or syncs to a node
         // so we can update our appearance to match changes to the parent view's style
 
@@ -105,10 +110,10 @@ DomStyledView.newSubclassNamed("SvgIconView").newSlots({
         Element_setStyleIncludingDecendants(e, "transition", this.transition())
 
         return this
-    },
+    }
 
     /*
-    setupBackground: function() {
+    setupBackground () {
         // can't use this because we can't walk and set the fill/stroke style on the svg elements 
         // if it's a background image
 
@@ -121,9 +126,9 @@ DomStyledView.newSubclassNamed("SvgIconView").newSlots({
         Element_setStyleIncludingDecendants(this.element(), "fill", "white")
         Element_setStyleIncludingDecendants(this.element(), "stroke", "white")
         Element_setStyleIncludingDecendants(this.element(), "color", "white")
-    },
+    }
 
-    asyncLoad: function() {
+    asyncLoad () {
         // can't do this on a file:// because of cross site request error
         const url = this.pathForIconName(this.iconName())
         const rawFile = new XMLHttpRequest();
@@ -137,13 +142,13 @@ DomStyledView.newSubclassNamed("SvgIconView").newSlots({
             }
         }
         rawFile.send(null);
-    },
+    }
     */
 
     // svgDict is a hack to work around the (very frustrating) cross site restriction on 
     // loading files 
 
-    svgDict: function() {
+    svgDict () {
         const dict = {}
     
         dict.add = `<svg width="100%" height="100%" viewBox="0 0 401.994 401.994"><path d="M394,154.175c-5.331-5.33-11.806-7.994-19.417-7.994H255.811V27.406c0-7.611-2.666-14.084-7.994-19.414
@@ -210,6 +215,6 @@ DomStyledView.newSubclassNamed("SvgIconView").newSlots({
         </svg>`
         
         return dict
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

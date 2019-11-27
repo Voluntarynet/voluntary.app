@@ -61,7 +61,7 @@ window.ProtoClass = class ProtoClass {
     /*
     static sharedInstanceForClass() {
 
-    },
+    }
     */
 
     static allClasses () {

@@ -6,13 +6,19 @@
 
 */
 
-BMStorableNode.newSubclassNamed("BMClassifiedPosts").newSlots({
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
+
+window.BMClassifiedPosts = class BMClassifiedPosts extends BMStorableNode {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
         this.setTitle("My Posts")
         this.setSubnodeProto(BMClassifiedPost)
         this.setNoteIsSubnodeCount(true)
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

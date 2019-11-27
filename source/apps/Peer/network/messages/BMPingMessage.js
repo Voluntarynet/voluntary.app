@@ -6,17 +6,22 @@
     
 */
 
-BMMessage.newSubclassNamed("BMPingMessage").newSlots({
-}).setSlots({
-    init: function () {
-        BMMessage.init.apply(this)
+window.BMPingMessage = class BMPingMessage extends BMMessage {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
         this.setMsgType("ping")
-    },
+    }
         
-    msgDict: function() {
+    msgDict () {
         return {
             msgType: this.msgType()
         }
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

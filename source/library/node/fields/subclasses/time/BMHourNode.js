@@ -6,12 +6,16 @@
     
 */
 
-BMNode.newSubclassNamed("BMHourNode").newSlots({
-    value: 0, // 0 to 23
-}).setSlots({
+window.BMHourNode = class BMHourNode extends BMNode {
     
-    init: function () {
-        BMNode.init.apply(this)
+    initPrototype () {
+        this.newSlots({
+            value: 0, // 0 to 23
+        })
+    }
+
+    init () {
+        super.init()
 
         this.setCanDelete(false)
         this.setNodeCanInspect(false)
@@ -19,46 +23,46 @@ BMNode.newSubclassNamed("BMHourNode").newSlots({
 
         this.setNodeCanEditTitle(false)
         this.setNodeCanReorderSubnodes(false)
-    },
+    }
 
-    setValue: function(v) {
+    setValue (v) {
         assert(Number.isInteger(v) && v > -1 && v < 23)
         this._value = v
         return this
-    },
+    }
 
-    meridiemName: function() {
+    meridiemName () {
         if (this.value() > 11) {
             return "pm"
         }
         return "am"
-    },
+    }
 
-    hourName: function() {
+    hourName () {
         let v = this.value() % 12
         if (v === 0) { v = 12 }
         return v + "" + this.meridiemName()
-    },
+    }
 
-    title: function() {
+    title () {
         return this.hourName()
-    },
+    }
 
-    subtitle: function() {
+    subtitle () {
         return null
-    },
+    }
     
-    note: function() {
+    note () {
         return "&gt;"
-    },
+    }
     
     /*
-    nodeRowLink: function() {
+    nodeRowLink () {
         return this
     },    
     */
 
-    prepareToSyncToView: function() {
+    prepareToSyncToView () {
         // called after clicked
         if (!this.hasSubnodes()) {
             for (let i = 0; i < 60; i += 5) {
@@ -66,6 +70,6 @@ BMNode.newSubclassNamed("BMHourNode").newSlots({
                 this.addSubnode(minute)
             }
         }
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

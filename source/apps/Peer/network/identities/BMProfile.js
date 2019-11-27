@@ -6,11 +6,16 @@
     
 */
 
-BMFieldSetNode.newSubclassNamed("BMProfile").newSlots({
-    avatars: [],
-}).setSlots({
-    init: function () {
-        BMFieldSetNode.init.apply(this)
+window.BMProfile = class BMProfile extends BMFieldSetNode {
+    
+    initPrototype () {
+        this.newSlots({
+            avatars: [],
+        })
+    }
+
+    init () {
+        super.init()
 
  		this.setShouldStore(true)
         this.setTitle("profile")
@@ -32,14 +37,13 @@ BMFieldSetNode.newSubclassNamed("BMProfile").newSlots({
         this.addFieldNamed("instagram").setValueMethod("instagram").setValueIsEditable(true)
         */
         this.setNodeMinWidth(600)
-    },
-    
+    }
 
-    profileImageDataUrl: function() {
+    profileImageDataUrl () {
         return this.avatars()[0]
-    },
+    }
     
-    setParentNode: function(aNode) {
+    setParentNode (aNode) {
         BMFieldSetNode.setParentNode.apply(this, [aNode])
 		
         // pass through fields
@@ -47,13 +51,13 @@ BMFieldSetNode.newSubclassNamed("BMProfile").newSlots({
         this.fieldNamed("publicKeyString").setTarget(aNode)
         //this.fieldNamed("privateKeyString").setTarget(aNode)
         return this
-    },
+    }
 
-    identity: function() {
+    identity () {
         return this.parentNode()
-    },
+    }
 	
-    didUpdateSlot: function(slotName, oldValue, newValue) {
+    didUpdateSlot (slotName, oldValue, newValue) {
         BMFieldSetNode.didUpdateSlot.apply(this, [slotName, oldValue, newValue])
         if (slotName === "avatars") {
 		    const parentNode = this.parentNode()
@@ -62,11 +66,11 @@ BMFieldSetNode.newSubclassNamed("BMProfile").newSlots({
 		    }
         }
         return this
-    },
+    }
 	
-    shelfIconName: function() {
+    shelfIconName () {
         return "chat/my_profile"
         //	    return "user-white"
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

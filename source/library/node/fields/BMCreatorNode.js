@@ -8,37 +8,40 @@
 
 */
         
-BMStorableNode.newSubclassNamed("BMCreatorNode").newSlots({
-}).setSlots({
+window.BMCreatorNode = class BMCreatorNode extends BMStorableNode {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
 
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
+    init () {
+        super.init()
         this.setNodeCanEditTitle(false)
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(false)
         this.setNodeCanReorderSubnodes(false)
         this.setupSubnodes()
         this.setCanDelete(true)
-    },
+    }
 
-    title: function() {
+    title () {
         return "Choose type"
-    },
+    }
 
     /*
-    note: function() {
+    note () {
         return "&gt;"
-    },
+    }
     */
 
     /*
-    acceptsSubnodesOfTypes: function() {
+    acceptsSubnodesOfTypes () {
         return this.fieldTypes()
-    },
+    }
     */
 
-    fieldTypes: function() {
+    fieldTypes () {
         return [
             "BMActionNode", 
             "BMBooleanField", 
@@ -54,9 +57,9 @@ BMStorableNode.newSubclassNamed("BMCreatorNode").newSlots({
             "BMTextNode",
             "BMTimeNode",
         ]
-    },
+    }
 
-    setupSubnodes: function() {
+    setupSubnodes () {
         const newSubnodes = this.fieldTypes().map((typeName) => {
             let name = typeName
             name = name.sansPrefix("BM")
@@ -73,23 +76,23 @@ BMStorableNode.newSubclassNamed("BMCreatorNode").newSlots({
         })
         this.addSubnodes(newSubnodes)
         return this
-    },
+    }
 
-    onRequestSelectionOfDecendantNode: function(aNode) {
+    onRequestSelectionOfDecendantNode (aNode) {
         const typeName = aNode._createTypeName
         if (typeName) {
             this.createType(typeName)
         }
         return true
-    },
+    }
 
-    didChoose: function(actionNode) {
+    didChoose (actionNode) {
         const typeName = actionNode.info()
         this.createType(typeName)
         return this
-    },
+    }
 
-    createType: function(typeName) {
+    createType (typeName) {
         const proto = window[typeName]
         const newNode = proto.clone()
 
@@ -110,10 +113,10 @@ BMStorableNode.newSubclassNamed("BMCreatorNode").newSlots({
         this.parentNode().replaceSubnodeWith(this, newNode)
 
         return this
-    },
+    }
 
-    note: function() {
+    note () {
         return "&gt;"
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

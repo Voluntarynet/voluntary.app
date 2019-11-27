@@ -6,29 +6,34 @@
 
 */
 
-BMNode.newSubclassNamed("ShelfGroup").newSlots({
-    refNode: null,
-}).setSlots({
-    init: function () {
-        BMNode.init.apply(this)
+window.ShelfGroup = class ShelfGroup extends BMNode {
+    
+    initPrototype () {
+        this.newSlots({
+            refNode: null,
+        })
+    }
+
+    init () {
+        super.init()
         return this
-    },
+    }
     
-    iconImageUrl: function() {
+    iconImageUrl () {
         return this.refNode().shelfIconImageUrl()
-    },
+    }
     
-    subnodes: function() {
+    subnodes () {
         return this.refNode().shelfSubnodes()
-    },
+    }
     
-    setRefNode: function(lid) {
+    setRefNode (lid) {
         this._lid = lid
         this.setupSubnodes()
         return this
-    },
+    }
     
-    setupSubnodes: function() {
+    setupSubnodes () {
         
         let posts = this.addSubnode(BMNode.clone().setTitle(lid.title()))
         
@@ -58,7 +63,7 @@ BMNode.newSubclassNamed("ShelfGroup").newSlots({
         
         group.compact()
         return this  
-    },
+    }
         
-}).initThisProto()
+}.initThisClass()
 

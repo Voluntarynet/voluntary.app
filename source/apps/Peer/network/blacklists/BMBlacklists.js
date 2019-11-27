@@ -6,13 +6,18 @@
 
 */
 
-BMStorableNode.newSubclassNamed("BMBlacklists").newSlots({
-    servers: null,
-    peers: null,
-    contacts: null,
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)		
+window.BMBlacklists = class BMBlacklists extends BMStorableNode {
+    
+    initPrototype () {
+        this.newSlots({
+            servers: null,
+            peers: null,
+            contacts: null,
+        })
+    }
+
+    init () {
+        super.init()	
         this.setShouldStore(true)
  		this.setShouldStoreSubnodes(true)
         this.setTitle("Blacklists")
@@ -22,6 +27,6 @@ BMStorableNode.newSubclassNamed("BMBlacklists").newSlots({
         this.initStoredSubnodeSlotWithProto("contacts", BMBlacklistedContacts)
         
         this.addStoredSlots(["servers", "peers", "contacts"])
-    },
+    }
 	
-}).initThisProto()
+}.initThisClass()

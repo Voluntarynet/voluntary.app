@@ -6,19 +6,23 @@
 
 */
 
-BMNode.newSubclassNamed("BMConnection").newSlots({
-    //log: null,
-    connection: null,
-    lastConnectionType: null,
-    lastIsOnline: 0,
-}).setSlots({
-    init: function () {
+window.BMConnection = class BMConnection extends BMNode {
+    
+    initPrototype () {
+        this.newSlots({
+            //log: null,
+            connection: null,
+            lastConnectionType: null,
+            lastIsOnline: 0,
+        })
+    }
+
+    init () {
         if (BMConnection._shared) {
             throw new Error("multiple instances of " + this.type() + " singleton")
         }
-		
-        BMNode.init.apply(this)
-		
+        super.init()
+				
         this.setTitle("Connection")
         this.setNodeMinWidth(200)
 
@@ -36,13 +40,13 @@ BMNode.newSubclassNamed("BMConnection").newSlots({
             this.updateLastState()  
             this.registerForConnectionChange()
         }
-    },
+    }
 
-    shared: function() {   
+    shared () {   
         return this.sharedInstanceForClass(BMConnection)
-    },
+    }
     
-    connectionType: function() {
+    connectionType () {
         if (this.isAvailable()) {
             const s = this.connection().effectiveType
             if (s) {
@@ -50,47 +54,47 @@ BMNode.newSubclassNamed("BMConnection").newSlots({
             }
         }
         return "?"
-    },
+    }
     
-    downlink: function() {
+    downlink () {
         if (this.isAvailable()) {
             return this.connection().downlink
         }
         return null
-    },
+    }
     
-    rtt: function() {
+    rtt () {
         if (this.isAvailable()) {
             return this.connection().rtt
         }
         return null
-    },
+    }
     
-    updateLastConnectionType: function() {
+    updateLastConnectionType () {
         this.setLastConnectionType(this.connectionType())
         return this
-    },
+    }
 
-    updateLastState: function() {
+    updateLastState () {
         this.setLastConnectionType(this.connectionType())
         this.setLastIsOnline(this.isOnline())
         return this
-    },    
+    }
 
-    registerForConnectionChange: function() {
+    registerForConnectionChange () {
         this.connection().addEventListener("change", () => { this.onNetworkInformationChange() });
         return this
-    },
+    }
 	
-    didComeOnline: function() {
+    didComeOnline () {
 	    return this.lastIsOnline() === false && this.isOnline() === true
-    },
+    }
 	
-    didGoOffline: function() {
+    didGoOffline () {
 	    return this.lastIsOnline() === true && this.isOnline() === false
-    },
+    }
 	
-    onNetworkInformationChange: function() {
+    onNetworkInformationChange () {
         //this.debugLog("Connection type changed from " + this.lastConnectionType() + " to " +  this.connectionType(), this.connection());	  
 
         NotificationCenter.shared().newNote().setSender(this).setName("onNetworkInformationChange").post()
@@ -105,24 +109,24 @@ BMNode.newSubclassNamed("BMConnection").newSlots({
         if (this.didGoOffline()) {
             this.onNetworkOffline()
         }
-    },
+    }
 	
-    onNetworkOnline: function() {
+    onNetworkOnline () {
         NotificationCenter.shared().newNote().setSender(this).setName("onNetworkOnline").post()
-    },
+    }
     
-    onNetworkOffline: function() {
+    onNetworkOffline () {
         NotificationCenter.shared().newNote().setSender(this).setName("onNetworkOffline").post()
-    },
+    }
 	
-    isOnline: function() {
+    isOnline () {
         if (this.isAvailable()) {
             return this.rtt() !== 0
         }
         return false
-    },
+    }
     
-    connectionDescription: function() {
+    connectionDescription () {
         if (!this.isAvailable()) {
             return "status unknown"
         }
@@ -132,21 +136,21 @@ BMNode.newSubclassNamed("BMConnection").newSlots({
         }
         
         return this.connectionType() + " " + this.downlink() + "Mbps " + this.rtt() + "ms"
-    },
+    }
     
-    subtitle: function() {
+    subtitle () {
         return this.connectionType()
         //return this.connectionDescription()
-    },
+    }
 
-    isAvailable: function() {
+    isAvailable () {
         if (this.connection()) {
             return true
         }
         return false
     }
 	
-}).initThisProto()
+}.initThisClass()
 
 //window.BMConnection.shared() // setup shared instance, needed?
 

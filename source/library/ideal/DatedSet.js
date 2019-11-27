@@ -7,13 +7,18 @@
 
 */
 
-BMStorableNode.newSubclassNamed("BMStoredDatedSetNode").newSlots({
-    maxAgeInSeconds: 30*24*60*60,
-    autoCheckPeriod: 1*60*60,
-    dict: null,
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
+window.BMStoredDatedSetNode = class BMStoredDatedSetNode extends BMStorableNode {
+    
+    initPrototype () {
+        this.newSlots({
+            maxAgeInSeconds: 30*24*60*60,
+            autoCheckPeriod: 1*60*60,
+            dict: null,
+        })
+    }
+
+    init () {
+        super.init()
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(false)
 		
@@ -22,55 +27,55 @@ BMStorableNode.newSubclassNamed("BMStoredDatedSetNode").newSlots({
 
         //this.setNoteIsSubnodeCount(true)
         return this
-    }.setDoc("init", "initialize the object", "returns this"),
+    } //.setDoc("init", "initialize the object", "returns this"),
     
-    setAutoCheckPeriod: function(seconds) {
+    setAutoCheckPeriod (seconds) {
         if (seconds && this._autoCheckPeriod !== seconds) {
             this._autoCheckPeriod = seconds
             this.autoCheck()
         }
-    },
+    }
     
-    autoCheck: function() {
+    autoCheck () {
         this.deleteExpiredKeys()
         setTimeout(() => { this.autoCheck() }, this.autoCheckPeriod()*1000)
-    },
+    }
     
-    didLoadFromStore: function() {
+    didLoadFromStore () {
         BMStorableNode.didLoadFromStore.apply(this)
         this.deleteExpiredKeys()
-    },
+    }
 
-    addKey: function(h) {
+    addKey (h) {
         if (!this.dict()[h]) {
             this.dict()[h] = Date.now()
             this.scheduleSyncToStore()
         }
         return this
-    },
+    }
     
-    hasKey: function(h) {
+    hasKey (h) {
         return this.dict().hasOwnProperty(h)
-    },
+    }
     
-    removeKey: function(h) {
+    removeKey (h) {
         if (this.dict()[h]) {
             delete this.dict()[h]
             this.scheduleSyncToStore()
         }
         return this
-    },
+    }
     
-    ageInSecondsOfKey: function(h) {
+    ageInSecondsOfKey (h) {
         if (this.hasKey(h)) {
             const ageInSeconds = Date.now() - this.dict()[h]
             return ageInSeconds
         }
         
         return null
-    },
+    }
 
-    deleteExpiredKeys: function() {
+    deleteExpiredKeys () {
         const max = this.maxAgeInSeconds()
         const keys = Object.keys(this.dict())
         
@@ -81,6 +86,6 @@ BMStorableNode.newSubclassNamed("BMStoredDatedSetNode").newSlots({
         })
 
         return this
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

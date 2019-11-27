@@ -7,16 +7,22 @@
 
 */
 
-BMStorableNode.newSubclassNamed("BMFollowers").newSlots({
-}).setSlots({
-    init: function () {
-        BMAppMessage.init.apply(this)
-        this.setTitle("followers")
-    },
 
-    place: function() {
-        
-    },
+window.BMFollowers = class BMFollowers extends BMStorableNode {
     
-}).initThisProto()
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
+        this.setTitle("followers")
+    }
+
+    place () {
+        
+    }
+    
+}.initThisClass()
 

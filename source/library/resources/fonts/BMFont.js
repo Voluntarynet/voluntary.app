@@ -8,33 +8,38 @@
 
 */
 
-BMNode.newSubclassNamed("BMFont").newSlots({
-    path: null,
-    name: null,
-    options: null,
-}).setSlots({
-    init: function () {
-        BMNode.init.apply(this)
+window.BMFont = class BMFont extends BMNode {
+    
+    initPrototype () {
+        this.newSlots({
+            path: null,
+            name: null,
+            options: null,
+        })
+    }
+
+    init () {
+        super.init()
         this.setNodeMinWidth(270)
         this.setOptions({})  // example options { style: 'normal', weight: 700 }  
         //this.setIsDebugging(true)
-    },
+    }
 
-    title: function() {
+    title () {
         return this.name()
-    },
+    }
 
-    name: function() {
+    name () {
         if (this._name) {
             return this._name
         }
 
         return this.path().fileName()
-    },
+    }
 
     // loading 
 
-    load: function() {
+    load () {
         if (!window["FontFace"]) {
             console.warn("this browser is missing FontFace class")
             return this
@@ -52,21 +57,21 @@ BMNode.newSubclassNamed("BMFont").newSlots({
         });
 
         return this
-    },
+    }
 
-    didLoad: function() {
+    didLoad () {
         if (this.isDebugging()) {
             this.debugLog(".didLoad(" + this.name() + ") " + this.path())
             //this.debugLog(".didLoad('" + this.name() + "')")
         }
         return this
-    },
+    }
 
-    onLoadError: function(error) {
+    onLoadError (error) {
         if (this.isDebugging()) {
             this.debugLog(".onLoadError() ", error)
         }
         return this
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

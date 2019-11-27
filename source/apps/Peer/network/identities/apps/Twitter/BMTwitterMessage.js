@@ -7,17 +7,21 @@
 
 */
 
-BMAppMessage.newSubclassNamed("BMTwitterMessage").newSlots({
-}).setSlots({
-    init: function () {
-        BMAppMessage.init.apply(this)
-        this.setTitle("Twitter")
-    },
-
-
-    place: function() {
-        
-    },
+window.BMTwitterMessage = class BMTwitterMessage extends BMAppMessage {
     
-}).initThisProto()
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
+        this.setTitle("Twitter")
+    }
+
+    place () {
+        
+    }
+    
+}.initThisClass()
 

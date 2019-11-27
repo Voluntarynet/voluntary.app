@@ -8,30 +8,31 @@
 
 */
 
-App.newSubclassNamed("GameApp").newSlots({
-    name: "game test",
-    version: [0, 0, 0, 0],
+window.GameApp = class GameApp extends App {
+    
+    initPrototype () {
+        this.newSlots({
+            name: "game test",
+            version: [0, 0, 0, 0],
+        
+            // model
+            about: null,
+            about: null,
+        
+            // views
+            browser: null,
+            shelf: null,
+        
+            atomNodeView: null,
+        })
+    }
 
-    // model
-    about: null,
-    about: null,
+    init () {
+        super.init()
+        return this
+    } 
 
-    // views
-    browser: null,
-    shelf: null,
-
-    atomNodeView: null,
-
-}).setSlots({
-
-    init: function () {
-        //this.setName("voluntary.app")
-
-        App.init.apply(this)
-
-    },
-
-    setup: function () {
+    setup  () {
         App.setup.apply(this)
         
 
@@ -45,18 +46,18 @@ App.newSubclassNamed("GameApp").newSlots({
 
         this.appDidInit()
         return this
-    },
+    }
 
-    setupAtom: function() {
+    setupAtom () {
         this.setAtomNode(AtomNode.clone())
         this.setAtomNodeView(AtomNodeView.clone().setNode(this.atomNode()))
         this.atomNodeView().setIsVertical(true).syncLayout()
         this.rootView().addSubview(this.atomNodeView())
-    },
+    }
 
     // --- setup model ---
 
-    setupModel: function () {
+    setupModel  () {
 
         // about 
 
@@ -81,23 +82,23 @@ App.newSubclassNamed("GameApp").newSlots({
         this.about().addSubnode(this.resources())
 		
         return this
-    },
+    }
 
     // --- setup views ---
     
-    setupViews: function() {
+    setupViews () {
         this.setupBrowser()
         //this.setupShelf()
-    },
+    }
 
-    isBrowserCompatible: function() {
+    isBrowserCompatible () {
         if (WebBrowserWindow.agentIsSafari()) {
             return false
         }
         return true
-    },
+    }
     
-    setupBrowser: function() {	
+    setupBrowser () {	
         this.setBrowser(BrowserView.clone())
     
         this.browser().hideAndFadeIn()
@@ -108,22 +109,22 @@ App.newSubclassNamed("GameApp").newSlots({
         this.browser().scheduleSelfFor("syncFromHashPath", 10)
         //window.SyncScheduler.shared().scheduleTargetAndMethod(this.browser(), "syncFromHashPath", 10)
         return this
-    },
+    }
 
-    setupShelf: function() {
+    setupShelf () {
         this.setShelf(ShelfView.clone())
         this.rootView().addSubview(this.shelf())
 
         //this.shelf().scheduleSelfFor("appDidInit", 10)
         window.SyncScheduler.shared().scheduleTargetAndMethod(this.shelf(), "appDidInit", 10)
         return this        
-    },
+    }
 
-    appDidInit: function () {
+    appDidInit  () {
         App.appDidInit.apply(this)
         window.ResourceLoaderPanel.stop() 
-    },
-}).initThisProto()
+    }
+}.initThisClass()
 
 GameApp.showVersion()
 

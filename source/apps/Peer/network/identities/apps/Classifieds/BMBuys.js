@@ -6,15 +6,19 @@
 
 */
 
-BMStorableNode.newSubclassNamed("BMBuys").newSlots({
-}).setSlots({
+window.BMBuys = class BMBuys extends BMStorableNode {
     
-    init: function () {
-        BMStorableNode.init.apply(this)
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
         this.setTitle("Buys")
         this.setActions(["add"])
         this.setSubnodeProto(BMBuy)
         this.setSubtitleIsSubnodeCount(true)
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

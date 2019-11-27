@@ -6,15 +6,20 @@
 
 */
 
-NodeView.newSubclassNamed("ShelfView").newSlots({
-    browser: null,
-    defaultWidth: 80,
-    scrollView: null,
-    footerView: null,
-    needsToSelectLastItem: false,
-}).setSlots({
-    init: function () {
-        NodeView.init.apply(this)
+window.ShelfView = class ShelfView extends NodeView {
+    
+    initPrototype () {
+        this.newSlots({
+            browser: null,
+            defaultWidth: 80,
+            scrollView: null,
+            footerView: null,
+            needsToSelectLastItem: false,
+        })
+    }
+
+    init () {
+        super.init()
         this.setIsRegisteredForKeyboard(true)
         this.setMinAndMaxWidth(0)
         
@@ -23,9 +28,9 @@ NodeView.newSubclassNamed("ShelfView").newSlots({
         this.setFooterView(this.addSubview(ShelfFooterView.clone()))        
 		
         return this
-    },
+    }
         
-    appDidInit: function() {    
+    appDidInit () {    
         this._idsObservation = NotificationCenter.shared().newObservation().setName("didChangeIdentities").setObserver(this).watch()
         this._idObservation = NotificationCenter.shared().newObservation().setName("didChangeIdentity").setObserver(this).watch()
         
@@ -37,41 +42,41 @@ NodeView.newSubclassNamed("ShelfView").newSlots({
         
         this.unhide()
         return this      
-    },
+    }
     
-    browser: function() {
+    browser () {
         return App.shared().browser() // TODO: fix this hack
-    },
+    }
 
     // --- hide ----------------------
     
-    isHidden: function() {
+    isHidden () {
         return this.parentView() === null
-    },
+    }
 
-    unhide: function() {
+    unhide () {
         if (this.subviews().length) {
             this.setMinAndMaxWidth(this.defaultWidth())
             this.browser().setLeft(this.defaultWidth())
         }
-    },
+    }
     
-    hide: function() {
+    hide () {
         this.setMinAndMaxWidth(0)
         this.browser().setLeft(0)
-    },
+    }
 
     // --- sync -----------------------
     
-    didChangeIdentity: function() {
+    didChangeIdentity () {
 	    this.scheduleSyncFromNode()
-    },
+    }
     
-    didChangeIdentities: function() {
+    didChangeIdentities () {
 	    this.scheduleSyncFromNode()
-    },
+    }
     
-    syncFromNode: function () {
+    syncFromNode  () {
         this.scrollView().syncFromNode()
 
         if (this.needsToSelectLastItem()) {
@@ -80,11 +85,11 @@ NodeView.newSubclassNamed("ShelfView").newSlots({
 	    }
         
         return this
-    },
+    }
     
     // --- clicks -----------------------
     
-    didClickGroup: function(clickedGroup) {
+    didClickGroup (clickedGroup) {
         //this.debugLog(".didClickGroup(" + clickedGroup.typeId() + ")")
 
         this.scrollView().performOnSubviewsExcept("compact", clickedGroup)
@@ -92,63 +97,63 @@ NodeView.newSubclassNamed("ShelfView").newSlots({
         this.scrollView().scrollSubviewToTop(clickedGroup)
 
         return this
-    },
+    }
 
     /*
-    selectFirstGroup: function() {
+    selectFirstGroup () {
         const firstGroup = this.groups()[0]
         if (firstGroup) {
             firstGroup.uncompact()
         }        
-    },
+    }
     */
 
 
     // --- footer -----------------------
 
 
-    setupFooter: function() {
+    setupFooter () {
 	    this.addCreateIdentityGroup()
 	    this.addSettingsGroup()        
-    },
+    }
 
-    newFooterItem: function() {
+    newFooterItem () {
         return this.footerView().addSubview(ShelfItemView.clone())
-    },
+    }
 
     // create identity 
 
-    addCreateIdentityGroup: function() {
+    addCreateIdentityGroup () {
         const item = this.newFooterItem()
         //item.setIconName("add-user-white")
         item.setIconName("chat/new_identity")
         item.setTarget(this).setAction("createIdentity").setToolTip("Create New Identity")
         item.setIsSelectable(false)
         //item.setIsAlwaysSelected(true)     
-    },
+    }
 
-    createIdentity: function() {     
+    createIdentity () {     
         const newLid = App.shared().localIdentities().add()
         this.scheduleSyncFromNode()
         this.setNeedsToSelectLastItem(true)
-    },
+    }
 
-    clickLastGroupProfile: function() {
+    clickLastGroupProfile () {
         const group = this.scrollView().subviews().last()
         const item = group.items()[0]
         item.onClick(null)
-    },
+    }
 
     // settings 
 
-    addSettingsGroup: function() {
+    addSettingsGroup () {
         const item = this.newFooterItem()
         const settings = App.shared().about()
         //item.setIconName("gear-filled-white")
         item.setIconName("chat/system")
         item.setDestinationNode(settings).setToolTip("Settings")   
         item.setIsSelectable(false)
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()
 

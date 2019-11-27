@@ -6,17 +6,22 @@
 
 */
 
-NodeView.newSubclassNamed("BrowserHeader").newSlots({
-    backArrowView: null,
-    titleView: null,
-    doesShowBackArrow: false,
-    shouldShowTitle: false,
-	
-    rightActionsView: null,
-    actionButtons: null,
-}).setSlots({
-    init: function () {
-        NodeView.init.apply(this)
+window.BrowserHeader = class BrowserHeader extends NodeView {
+    
+    initPrototype () {
+        this.newSlots({
+            backArrowView: null,
+            titleView: null,
+            doesShowBackArrow: false,
+            shouldShowTitle: false,
+            
+            rightActionsView: null,
+            actionButtons: null,
+        })
+    }
+
+    init () {
+        super.init()
         this.setActionButtons([])
 
         const backArrowView = ButtonView.clone().setDivClassName("BackArrow").setTarget(this).setAction("didHitBackArrow")
@@ -33,34 +38,34 @@ NodeView.newSubclassNamed("BrowserHeader").newSlots({
 		
         this.setZIndex(2)
         return this
-    },
+    }
 
-    columnGroup: function() {
+    columnGroup () {
         return this.parentView()
-    },
+    }
 	
-    browser: function() {
+    browser () {
         return this.columnGroup().browser()
-    },
+    }
     
-    setShouldShowTitle: function(aBool) {
+    setShouldShowTitle (aBool) {
         if (this._shouldShowTitle !== aBool) {
             this._shouldShowTitle = aBool
             this.scheduleSyncFromNode()
             //console.log(" ----- " + (this.node() ? this.node().title() : null) + " setShouldShowTitle ", aBool)
         }
         return this
-    },
+    }
 	
-    shouldShowTitle: function() {
+    shouldShowTitle () {
         return this.browser().isSingleColumn() && this.browser().lastActiveColumnGroup() === this.columnGroup()
-    },
+    }
 	
-    showsAction: function(actionName) {
+    showsAction (actionName) {
         return actionName !== "delete" // uses row delete action instead of column header action now
-    },
+    }
 
-    syncFromNode: function() {
+    syncFromNode () {
         const node = this.node()
 
         this.removeAllSubviews()
@@ -85,9 +90,9 @@ NodeView.newSubclassNamed("BrowserHeader").newSlots({
         }
         
         return this
-    },
+    }
 
-    syncActionButtons: function() {
+    syncActionButtons () {
         //const oldButtons = this.actionButtons()
 
         node.actions().forEach((action) => {
@@ -100,26 +105,26 @@ NodeView.newSubclassNamed("BrowserHeader").newSlots({
         })
 
         return this
-    },
+    }
     
-    nodeHasAction: function(anAction) {
+    nodeHasAction (anAction) {
         return this.node().respondsTo(anAction)
-    },
+    }
 
-    didHitBackArrow: function() {
+    didHitBackArrow () {
         //this.debugLog(" back")
         this.browser().previous()
-    },
+    }
 	
-    setDoesShowBackArrow: function(aBool) {
+    setDoesShowBackArrow (aBool) {
         if (this._doesShowBackArrow !== aBool) {
             //console.log(this.node().title() + " setDoesShowBackArrow " + aBool)
             this._doesShowBackArrow = aBool
             this.scheduleSyncFromNode()
         }
         return this
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()
 
 

@@ -6,11 +6,15 @@
     
 */
 
+window.BMStunServers = class BMStunServers extends BMStorableNode {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
 
-BMStorableNode.newSubclassNamed("BMStunServers").newSlots({
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
+    init () {
+        super.init()
         this.setShouldStore(true)
         this.setTitle("STUN Servers")
         this.setNoteIsSubnodeCount(true)
@@ -19,28 +23,28 @@ BMStorableNode.newSubclassNamed("BMStunServers").newSlots({
         this.setCanDelete(true)
         this.setSubnodeProto(BMStunServer)
         this.setNodeCanReorderSubnodes(true)
-    },
+    }
 
-    finalize: function() {
+    finalize () {
         BMStorableNode.finalize.apply(this)
         this.bootstrap()
-    },
+    }
 
-    bootstrap: function() {
+    bootstrap () {
         if (!this.hasSubnodes()) {
             this.addSubnodesIfAbsent(this.bootStrapServers())
         }		
-    },
+    }
     
-    addServer: function (aServer) {
+    addServer  (aServer) {
         return this.addSubnode(aServer)
-    },
+    }
     
-    servers: function () {
+    servers  () {
         return this.subnodes()
-    }, 
+    }
 
-    defaultOptions: function() {
+    defaultOptions () {
 		
         return {"iceServers": [
 		    { url:"stun:stun01.sipphone.com" },
@@ -63,28 +67,28 @@ BMStorableNode.newSubclassNamed("BMStunServers").newSlots({
 		    { url:"stun:stun.voxgratia.org" },
 		    { url:"stun:stun.xten.com" },
         ]}	
-    },
+    }
 
-    bootStrapServers: function (dict) {
+    bootStrapServers  (dict) {
         const dicts = this.defaultOptions().iceServers
         return dicts.map((dict) => {
         	return BMStunServer.clone().setIceDict(dict) 
         })
-    },
+    }
 
-    iceEntries: function() {
+    iceEntries () {
 	    if (this.servers()) {
 		    return this.servers().map((server) => { return server.iceDict() })
 	    }
 	    
         console.warn(this.type() + " WARNING: using defaultOptions")
         return this.defaultOptions()
-    },
+    }
 	
-    peerOptionsDict: function() {
+    peerOptionsDict () {
         const dict = this.iceEntries() 
         //console.log("peerOptionsDict: " + JSON.stringify(dict))
         return dict
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

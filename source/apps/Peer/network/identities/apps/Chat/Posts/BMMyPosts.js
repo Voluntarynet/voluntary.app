@@ -6,10 +6,15 @@
 
 */
 
-BMStorableNode.newSubclassNamed("BMMyPosts").newSlots({
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
+window.BMMyPosts = class BMMyPosts extends BMStorableNode {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
         //this.setLinkProto(BMChatThread)
         this.setTitle("my posts")
         this.setActions(["deleteAll"])
@@ -22,24 +27,24 @@ BMStorableNode.newSubclassNamed("BMMyPosts").newSlots({
         this.setSubnodeSortFunc(function (postMsg1, postMsg2) {
 		    return postMsg1.ageInSeconds() - postMsg2.ageInSeconds()
         })
-    },
+    }
 
-    finalize: function() {
+    finalize () {
         BMStorableNode.finalize.apply(this)
         this.setTitle("my posts")
-    },
+    }
 	
-    deleteAll: function() {
+    deleteAll () {
 	    this.subnodes().forEach((post) => {
 	        post.prepareToDelete()
 	    })
 	    this.removeAllSubnodes()
 	    return this
-    },
+    }
 	
-    shelfIconName: function() {
+    shelfIconName () {
         return "chat/feed_a"
         //	    return "home3-white"
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

@@ -6,39 +6,40 @@
 
 */
 
-BMNode.newSubclassNamed("BMImageResources").newSlots({
-    extensions: ["png", "jpg", "jpeg", "gif", "tiff", "bmp"],
-}).setSlots({
-    shared: function() {   
-        return this.sharedInstanceForClass(BMImageResources)
-    },
+window.BMImageResources = class BMImageResources extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+            extensions: ["png", "jpg", "jpeg", "gif", "tiff", "bmp"],
+        })
+    }
 
-    init: function () {
-        BMNode.init.apply(this)
+    init () {
+        super.init()
         this.setTitle("Images")
         this.setNodeMinWidth(270)
         this.setSubnodeProto(BMURLImage)
         return this
-    },
+    }
 
-    resourcePaths: function() {
+    resourcePaths () {
         return ResourceLoader.resourceFilePathsWithExtensions(this.extensions())
-    },
+    }
     
-    appDidInit: function() {
+    appDidInit () {
         this.setupSubnodes()
         return this
-    },
+    }
 
-    setupSubnodes: function() {
+    setupSubnodes () {
         this.resourcePaths().forEach(path => this.addImageWithPath(path))
         return this
-    },
+    }
 
-    addImageWithPath: function(aPath) {
+    addImageWithPath (aPath) {
         const image = this.justAdd()
         image.setPath(aPath)
         return this
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

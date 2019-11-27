@@ -30,38 +30,44 @@
 
 */
 
-DomView.newSubclassNamed("DomStyledView").newSlots({
-    styles: null,
-    isSelected: false,
-}).setSlots({
-    init: function () {
-        DomView.init.apply(this)
+
+window.DomStyledView = class DomStyledView extends DomView {
+    
+    initPrototype () {
+        this.newSlots({
+            styles: null,
+            isSelected: false,
+        })
+    }
+
+    init () {
+        super.init()
         return this
-    },
+    }
 
     // styles
 
-    lookedUpStyles: function() {
+    lookedUpStyles () {
         return null
-    },
+    }
 	
-    styles: function() { 
+    styles () { 
         // since not all views use them, do lazy style setup 
         if (!this._styles) {
             this.setStyles(BMViewStyles.clone()) 
         }
         return this._styles
-    },
+    }
 
-    currentColor: function() {
+    currentColor () {
         return this.currentStyle().color()
-    },
+    }
 
-    currentBgColor: function() {
+    currentBgColor () {
         return this.currentStyle().backgroundColor()
-    },
+    }
 
-    currentStyle: function() {
+    currentStyle () {
         let style = null
         if (this.isSelected()) {
             style = this.styles().selected()
@@ -71,38 +77,38 @@ DomView.newSubclassNamed("DomStyledView").newSlots({
             //this.debugLog(".applyStyles() unselected ", style.description())
         }
         return style
-    },
+    }
 	
-    applyStyles: function() {
+    applyStyles () {
         const style = this.currentStyle()
         style.applyToView(this)		
         return this
-    },
+    }
 
     // select
 	
-    setIsSelected: function(aBool) {
+    setIsSelected (aBool) {
         if (aBool !== this._isSelected) {
 	    	this._isSelected = aBool
 	    	this.didChangeIsSelected()
         }
 	    return this
-    },
+    }
 
-    didChangeIsSelected: function() {
+    didChangeIsSelected () {
         this.applyStyles()
         return this
-    },
+    }
 
 	
-    select: function() {
+    select () {
         this.setIsSelected(true)		
         return this
-    },
+    }
 
-    unselect: function() {
+    unselect () {
         this.setIsSelected(false)
         return this
-    },
+    }
 	
-}).initThisProto()
+}.initThisClass()

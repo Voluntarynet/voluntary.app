@@ -8,50 +8,53 @@
 
 */
 
-App.newSubclassNamed("AtomApp").newSlots({
-    name: "atom",
-    version: [0, 0, 1, 0],
 
-    atomNode: null,
-    atomNodeView: null,
+window.AtomApp = class AtomApp extends App {
+    
+    initPrototype () {
+        this.newSlots({
+            name: "atom",
+            version: [0, 0, 1, 0],
+        
+            atomNode: null,
+            atomNodeView: null,
+        })
+    }
 
-}).setSlots({
-    initProto: function() {
-        //this.showVersion()
-    },
+    init () {
+        super.init()
+        return this
+    } 
 
-    init: function () {
-        App.init.apply(this)
-    },
-
-    setup: function () {
+    setup () {
         App.setup.apply(this)
         
         this.setupAtom()
         //Mouse.shared()
         this.appDidInit()
         return this
-    },
+    }
 
-    setupAtom: function() {
+    setupAtom () {
         this.setAtomNode(AtomNode.clone())
         this.setAtomNodeView(AtomNodeView.clone().setNode(this.atomNode()))
         this.atomNodeView().setIsVertical(true).syncLayout()
         this.rootView().addSubview(this.atomNodeView())
-    },
+    }
 
     
-    isBrowserCompatible: function() {
+    isBrowserCompatible () {
         if (WebBrowserWindow.agentIsSafari()) {
             return false
         }
         return true
-    },
+    }
 
-    appDidInit: function () {
+    appDidInit  () {
         App.appDidInit.apply(this)
         window.ResourceLoaderPanel.stop() 
-    },
-}).initThisProto()
+    }
+    
+}.initThisClass()
 
 

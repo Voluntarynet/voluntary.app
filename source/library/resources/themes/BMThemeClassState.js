@@ -6,45 +6,50 @@
 
 */
 
-BMFieldSetNode.newSubclassNamed("BMThemeClassState").newSlots({
-    divClassName: null,
-}).setSlots({
-    init: function () {
-        BMFieldSetNode.init.apply(this)
+window.BMThemeClassState = class BMThemeClassState extends BMFieldSetNode {
+    
+    initPrototype () {
+        this.newSlots({
+            divClassName: null,
+        })
+    }
+
+    init () {
+        super.init()
         this.setShouldStore(true)
         //this.setSubtitle("state")
         this.setNodeMinWidth(200)
         this.setupSubnodes()
-    },
+    }
 
-    attributeNames: function() {
+    attributeNames () {
         // TODO: request this from the view class, use view class theme state methods instead of direct css keys
         //return ["background", "color", "border"] 
         return BMViewStyle.styleNames()
-    },
+    }
 
-    setDivClassName: function(aName) {
+    setDivClassName (aName) {
         this._divClassName = aName
         this.setTitle(aName)
         let style = DomCSSInspector.shared().setDivClassName(aName).cssStyle()
         this.syncFromViewStyle()
         return this
-    },
+    }
 
-    syncFromViewStyle: function() {
+    syncFromViewStyle () {
   
         return this
-    },
+    }
 
-    setupSubnodes: function() {
+    setupSubnodes () {
         this.attributeNames().forEach((attributeName) => {
             let field = BMField.clone().setKey(attributeName).setValueIsEditable(""); // TODO: no .setValueMethod()??
             this.addStoredField(field)
         })
         return this
-    },
+    }
 
-    didUpdateField: function(aField) {
+    didUpdateField (aField) {
         this.debugLog(".didUpdateField: " + aField.key() + ":", aField.value())
 
         if (aField.value()) { // dark mode
@@ -52,9 +57,9 @@ BMFieldSetNode.newSubclassNamed("BMThemeClassState").newSlots({
         } else {
             BMThemeStyleSheet.shared().setDivClassNameAttributeValue(this.divClassName(), aField.key(), "white")
         }
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()
 
 /* 
 notes on Scroll bars theme options

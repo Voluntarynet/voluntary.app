@@ -6,11 +6,16 @@
 
 */
 
-BMStorableNode.newSubclassNamed("BMFeedPosts").newSlots({
-    hasRead: true,
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
+window.BMFeedPosts = class BMFeedPosts extends BMStorableNode {
+    
+    initPrototype () {
+        this.newSlots({
+            hasRead: true,
+        })
+    }
+
+    init () {
+        super.init()
         this.setTitle("feed")
         this.setShouldStore(true)	
         this.setNoteIsSubnodeCount(true)
@@ -25,58 +30,58 @@ BMStorableNode.newSubclassNamed("BMFeedPosts").newSlots({
         this.setSubnodeSortFunc(function (postMsg1, postMsg2) {
 		    return postMsg1.ageInSeconds() - postMsg2.ageInSeconds()
         })
-    },
+    }
 
-    finalize: function() {
+    finalize () {
         BMStorableNode.finalize.apply(this)
         this.setTitle("feed")
-    },
+    }
 	
-    deleteAll: function() {
+    deleteAll () {
 	    this.subnodes().forEach((post) => {
 	        post.prepareToDelete()
 	    })
 	    this.removeAllSubnodes()
 	    return this
-    },
+    }
 	
 	
-    chat: function() {
+    chat () {
 	    return this.parentNode()
-    },
+    }
 	
-    localIdentity: function() {
+    localIdentity () {
         return this.chat().localIdentity()
-    },
+    }
 	
-    shelfIconUrl: function() {
+    shelfIconUrl () {
 	    return this.localIdentity().profile().profileImageDataUrl()
-    },
+    }
 	
     // hasRead
 	
-    firstUnreadPost: function() {
+    firstUnreadPost () {
 	    return this.subnodes().detect(post => !post.hasRead())
-    },
+    }
     
-    updateHasRead: function() {
+    updateHasRead () {
         this.setHasRead(this.firstUnreadPost() === null)
         return this
-    },
+    }
     
-    didChangeSubnodeList: function() {
+    didChangeSubnodeList () {
         BMStorableNode.didChangeSubnodeList.apply(this)
         this.updateHasRead()
         return this
-    },
+    }
     
-    didUpdateNode: function() {
+    didUpdateNode () {
         BMStorableNode.didUpdateNode.apply(this)
         this.updateHasRead()
-    },
+    }
     
-    nodeViewShouldBadge: function() {
+    nodeViewShouldBadge () {
         return !this.hasRead()
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

@@ -8,19 +8,25 @@
 
 */
 
-BMFieldSetNode.newSubclassNamed("BMRServer").newSlots({
-    // host: "peers.bitmarkets.org",
-    host: "127.0.0.1",
-    port: 9000,
-    path: "",
-    isSecure: false,
-    serverConnection: null,
-    bloomDistance: null,
-    error: null,
-    connectButton: null,
-}).setSlots({
-    init: function () {
-        BMFieldSetNode.init.apply(this)
+
+window.BMRServer = class BMRServer extends BMFieldSetNode {
+    
+    initPrototype () {
+        this.newSlots({
+            // host: "peers.bitmarkets.org",
+            host: "127.0.0.1",
+            port: 9000,
+            path: "",
+            isSecure: false,
+            serverConnection: null,
+            bloomDistance: null,
+            error: null,
+            connectButton: null,
+        })
+    }
+
+    init () {
+        super.init()
         this.setIsDebugging(true)
 
         this.setShouldStore(true)
@@ -43,16 +49,16 @@ BMFieldSetNode.newSubclassNamed("BMRServer").newSlots({
 		
         this.setConnectButton(BMActionNode.clone().setTitle("connect").setMethodName("connect").setTarget(this))
         this.addSubnode(this.connectButton())
-    },
+    }
 
-    didUpdateNode: function() {
+    didUpdateNode () {
         BMFieldSetNode.didUpdateNode.apply(this)
         //this.debugLog(".didUpdateNode()")
         this.updateButtons()
         return this
-    },
+    }
     
-    updateButtons: function() {
+    updateButtons () {
         const cb = this.connectButton()
         if (cb) {
             if (this.serverConnection().isConnected()) {
@@ -61,32 +67,32 @@ BMFieldSetNode.newSubclassNamed("BMRServer").newSlots({
                 cb.setTitle("connect").setMethodName("connect")
             }
         }
-    },
+    }
     
-    servers: function () {
+    servers  () {
         return this.parentNode()
-    },
+    }
     
     /*
-    setPort: function(aPort) {
+    setPort (aPort) {
         this._port = aPort
         if (this._port === 443) {
             this.setIsSecure(true)
         }
         return this
-    },
+    }
     */
 
-    title: function () {
+    title  () {
         //return "RTC Server " + this.host() + "  " + this.port()
         return this.host() + "  " + this.port()
-    },  
+    }
     
-    subtitle: function () {
+    subtitle  () {
         return this.isConnected() ? this.status() : "offline"
-    },
+    }
     
-    status: function() {
+    status () {
         if (this.serverConnection().isConnected()) {
             const total = this.serverConnection().remotePeers().count()
             const connected = this.connectedRemotePeerCount()
@@ -101,46 +107,46 @@ BMFieldSetNode.newSubclassNamed("BMRServer").newSlots({
         }
 
         return "connecting..."
-    }, 
+    }
     
-    connectedRemotePeerCount: function() {
+    connectedRemotePeerCount () {
         return this.serverConnection().connectedRemotePeers().length
-    },
+    }
     
-    connect: function () {
+    connect  () {
         //this.log("BMRServer.connect")
         this.serverConnection().connect()
         return this              
-    },
+    }
     
-    disconnect: function() {
+    disconnect () {
         this.serverConnection().close()
         return this          
-    },
+    }
 
-    reconnect: function() {
+    reconnect () {
         this.serverConnection().reconnect()
         return this		
-    },
+    }
     
-    reRequestPeerId: function() {
+    reRequestPeerId () {
         this.serverConnection().requestId();
-    },
+    }
     
-    isConnected: function () {
+    isConnected  () {
         return this.serverConnection().isConnected()
-    },
+    }
     
-    broadcastMsg: function(msg) {        
+    broadcastMsg (msg) {        
         this.serverConnection().broadcastMsg(msg)
         return this
-    },
+    }
     
-    addrDict: function() {
+    addrDict () {
         return { host: this.host(), port: this.port(), path: this.path(), isSecure: this.isSecure() }
-    },
+    }
     
-    setAddrDict: function(dict) {
+    setAddrDict (dict) {
         this.setHost(dict.host);
         this.setPort(dict.port);
         this.setPath(dict.path);
@@ -148,25 +154,25 @@ BMFieldSetNode.newSubclassNamed("BMRServer").newSlots({
         //if ("path" in dict) { this.setPath(dict.path); }
         //if ("isSecure" in dict) { this.setIsSecure(dict.isSecure); }
         return this
-    },
+    }
     
-    isAddrDict: function(addrDict) {
+    isAddrDict (addrDict) {
         return  this.host() === addrDict.host && 
                 this.port() === addrDict.port &&
                 this.path() === addrDict.path &&
                 this.isSecure() === addrDict.isSecure
-    },
+    }
     
-    connectedRemotePeers: function () {
+    connectedRemotePeers  () {
         return this.serverConnection().connectedRemotePeers()
-    },
+    }
 
-    connectedRemotePeers: function() {
+    connectedRemotePeers () {
         return this.serverConnection().connectedRemotePeers()
 
-    },
+    }
 
-    updateBloomDistance: function(bloomUint8Array) {
+    updateBloomDistance (bloomUint8Array) {
         const hostHashUint8Array = this.host().sha256()
 
         // make sure host bits are at least as long as bloom
@@ -190,6 +196,6 @@ BMFieldSetNode.newSubclassNamed("BMRServer").newSlots({
 		
         this.setBloomDistance(diff)
         return this
-    },    
+    }
     
-}).initThisProto()
+}.initThisClass()

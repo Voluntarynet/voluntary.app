@@ -12,14 +12,18 @@
 
 */
 
+window.BMTextNode = class BMTextNode extends BMStorableNode {
+    
+    initPrototype () {
+        this.newSlots({
+            fontSize: null,
+            color: null,
+            backgroundColor: null,
+        })
+    }
 
-BMStorableNode.newSubclassNamed("BMTextNode").newSlots({
-    fontSize: null,
-    color: null,
-    backgroundColor: null,
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
+    init () {
+        super.init()
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(true)
         this.setCanDelete(true)
@@ -46,33 +50,33 @@ BMStorableNode.newSubclassNamed("BMTextNode").newSlots({
         this.setNodeColumnStyles(BMViewStyles.clone())
         //this.setNodeRowStyles(BMViewStyles.clone())
         this.customizeNodeRowStyles().setToBlackOnWhite().selected().setBackgroundColor("red")
-    },
+    }
 
-    initNodeInspector: function() {
+    initNodeInspector () {
         BMStorableNode.initNodeInspector.apply(this)
         this.addInspectorField(BMNumberField.clone().setKey("Font size").setValueMethod("fontSize").setValueIsEditable(true).setTarget(this))
         this.addInspectorField(BMStringField.clone().setKey("color").setValueMethod("color").setValueIsEditable(true).setTarget(this))
         this.addInspectorField(BMStringField.clone().setKey("Background color").setValueMethod("backgroundColor").setValueIsEditable(true).setTarget(this))
         return this
-    },
+    }
 
-    didLoadFromStore: function() {
+    didLoadFromStore () {
         BMStorableNode.didLoadFromStore.apply(this)
         this.subnodes().forEach( (subnode) => { subnode.setCanDelete(true) });
         this.subnodes().forEach( (subnode) => { subnode.setNodeCanInspect(true) });
         return this
-    },
+    }
 
-    acceptedSubnodeTypes: function() {
+    acceptedSubnodeTypes () {
         return BMCreatorNode.fieldTypes()
-    },
+    }
 
-    onDidEdit: function(aView) {
+    onDidEdit (aView) {
         this.setFontSize(this.titleView().computedFontSize())
         this.setColor(this.titleView().computedColor())
         this.setBackgroundColor(this.titleView().computedBackgroundColor())
         return true
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()
 

@@ -10,20 +10,25 @@
         hash: null,
         fromMsg: null,
     }).setSlots({
-    }).initThisProto()
+    }.initThisClass()
     
 */
 
-BMStorableNode.newSubclassNamed("BMMessages").newSlots({
-    changeNote: null,
-    network: null,
-    // TODO: deal with timeouts
-    globalMinDifficulty: 16,
-    placedSet: null,
-    deletedSet: null,
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
+window.BMMessages = class BMMessages extends BMStorableNode {
+    
+    initPrototype () {
+        this.newSlots({
+            changeNote: null,
+            network: null,
+            // TODO: deal with timeouts
+            globalMinDifficulty: 16,
+            placedSet: null,
+            deletedSet: null,
+        })
+    }
+
+    init () {
+        super.init()
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(true)
 		
@@ -40,45 +45,45 @@ BMStorableNode.newSubclassNamed("BMMessages").newSlots({
         this.setNodeMinWidth(180)
 		
         this.createSubnodeIndex()
-    },
+    }
     
-    subnodeProto: function() {
+    subnodeProto () {
         return BMObjectMessage
-    },
+    }
 
-    loadFinalize: function() {	    
+    loadFinalize () {	    
         this.removeMessagesNotMatchingIdentities()
         this.handleAllMessages()
         return this
-    },
+    }
 	
     // --- deletedSet -----------------------------------------
 
-    deleteObjMsg: function(objMsg) {
+    deleteObjMsg (objMsg) {
         const h = objMsg.hash()
         this.deletedSet().addKey(h)
         this.placedSet().removeKey(h)
         //this.getQueueSet().removeKey(h)
         this.removeSubnodeWithHash(h) 
         return this
-    },
+    }
     
-    hasDeletedHash: function(h) {
+    hasDeletedHash (h) {
         return false ////////////////////////////////////////////////////////////////////////////////// this.deletedSet().hasKey(h)
-    },
+    }
     
     // --------------------------------------------
     
-    messages: function () {
+    messages  () {
         return this.subnodes()
-    },
+    }
 
-    notifyChange: function() {
+    notifyChange () {
         this.changeNote().post()
         return this
-    },
+    }
     
-    validateMsg: function(objMsg) {
+    validateMsg (objMsg) {
         // TODO: add some validation of fields and size?
 
         if (objMsg.hasValidationErrors()) {
@@ -88,13 +93,13 @@ BMStorableNode.newSubclassNamed("BMMessages").newSlots({
         }
 		
    		return true
-    },
+    }
 
-    canRelayObjMsg: function(objMsg) {
+    canRelayObjMsg (objMsg) {
         return this.network().allIdentitiesMap().hasKey(objMsg.senderPublicKeyString())
-    },
+    }
         
-    addMessage: function(objMsg) { // validate and broadcast
+    addMessage (objMsg) { // validate and broadcast
         if (!this.validateMsg(objMsg)) {
             return false
         }
@@ -115,18 +120,18 @@ BMStorableNode.newSubclassNamed("BMMessages").newSlots({
         this.handleObjMsg(objMsg)
 	    this.broadcastMessage(objMsg)		
         return true
-    },
+    }
     
-    hasPlacedObjMsg: function(objMsg) {
+    hasPlacedObjMsg (objMsg) {
         return this.placedSet().hasKey(objMsg.hash())
-    },
+    }
 	
-    markPlacedObjMsg: function(objMsg) {
+    markPlacedObjMsg (objMsg) {
         this.placedSet().addKey(objMsg.hash())
         return this
-    },
+    }
 	
-    handleObjMsg: function(objMsg) {
+    handleObjMsg (objMsg) {
         if (this.hasPlacedObjMsg(objMsg)) {
             return true
         } 
@@ -142,49 +147,49 @@ BMStorableNode.newSubclassNamed("BMMessages").newSlots({
         }
 					
         return didPlace
-    },
+    }
 
-    handleAllMessages: function() {
+    handleAllMessages () {
         this.messages().forEach((objMsg) => {
             this.handleObjMsg(objMsg)
         })
-    },
+    }
 
-    addSubnode: function(msg) {
+    addSubnode (msg) {
         //this.debugLog(" addSubnode " + msg.pid())
         BMStorableNode.addSubnode.apply(this, [msg])
         this.notifyChange()
         return this
-    },
+    }
 
-    broadcastMessage: function(msg) {
+    broadcastMessage (msg) {
 	    // tell peers
 	    const peers = this.network().connectedRemotePeers()
 	    console.log("broadcasting to " + peers.length + " peers")
 	    peers.forEach(function (peer) {
 	        peer.addedObjMsg(msg)
 	    })	
-    },
+    }
     
-    removeMessage: function(msg) {
+    removeMessage (msg) {
         this.removeSubnode(msg)
         return this
-    },
+    }
 
     
     // handling inv (inventory) messages, immediately respond with BMGetDataMessage for missing hashes
 
-    messageWithHash: function(h) {
+    messageWithHash (h) {
         return this.subnodeWithHash(h)
-    },
+    }
 	
-    needsMessageWithHash: function(h) {
+    needsMessageWithHash (h) {
         const wasDeleted = this.deletedSet().hasKey(h)
         const isMissing = this.subnodeWithHash(h) === null
         return (!wasDeleted) && isMissing
-    },
+    }
 	
-    inv: function(invMsg) {
+    inv (invMsg) {
         const remoteInv = invMsg.data()        
         const getMsg = BMGetDataMessage.clone().setRemotePeer(invMsg.remotePeer())
         
@@ -198,35 +203,35 @@ BMStorableNode.newSubclassNamed("BMMessages").newSlots({
         if (getMsg.data().length) {
             getMsg.send()
         }
-    },
+    }
     
     // handling object messages
     
-    network: function() {
+    network () {
         return this.parentNode()
-    },
+    }
     
-    object: function(msg) {
+    object (msg) {
         const h = msg.msgHash()
         
         // remove from the queue
         //delete this._queue[h]
         
         this.addMessage(msg)
-    },
+    }
     
-    getData: function(msg) {
+    getData (msg) {
         msg.data().forEach((aHash) => {
             const objMsg = this.messageWithHash(aHash)
             if (objMsg) {
                 msg.remotePeer().sendMsg(objMsg)
             }
         })
-    },
+    }
     
     // peer connect
     
-    onRemotePeerConnect: function(remotePeer) {
+    onRemotePeerConnect (remotePeer) {
         // send inv
         //const invMsg = this.currentInvMsg()
         const invMsg = BMInvMessage.clone().addMessages(this.messagesMatchingBloom(remotePeer.peerId().bloomFilter()))
@@ -236,19 +241,19 @@ BMStorableNode.newSubclassNamed("BMMessages").newSlots({
         if (invMsg.data().length) {
             remotePeer.sendMsg(invMsg)
         }
-    },
+    }
 
-    messagesMatchingBloom: function (bloom) {
+    messagesMatchingBloom  (bloom) {
         return this.messages().select( (objMsg) => {
             return  bloom.checkEntry(objMsg.senderPublicKeyString())
         })
-    },
+    }
     
-    fullInvMsg: function () {
+    fullInvMsg  () {
         return BMInvMessage.clone().addMessages(this.messages())
-    },
+    }
 
-    removeMessagesNotMatchingIdentities: function() {
+    removeMessagesNotMatchingIdentities () {
         // this gets slow for large msg count but target is short term
         // ephemeral messages for now 
 		
@@ -272,5 +277,5 @@ BMStorableNode.newSubclassNamed("BMMessages").newSlots({
         }
 	
         return this
-    },
-}).initThisProto()
+    }
+}.initThisClass()

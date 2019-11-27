@@ -52,25 +52,30 @@
 
     Example use (from within a view to be dragged):
 
-    onLongPressComplete: function(longPressGesture) {
+    onLongPressComplete (longPressGesture) {
         const dv = DragView.clone().setItem(this).setSource(this.column())
         dv.openWithEvent(longPressGesture.currentEvent()) // TODO: eliminate this step?
     } 
 
 */
 
-DomStyledView.newSubclassNamed("DragView").newSlots({
-    item: null, // the view that will be dragged when operation is complete
-    source: null, // the view which is the owner of the view being dragged that implements the source protocol
-    destination: null, // the view on which the item is dropped
+window.DragView = class DragView extends DomStyledView {
+    
+    initPrototype () {
+        this.newSlots({
+            item: null, // the view that will be dragged when operation is complete
+            source: null, // the view which is the owner of the view being dragged that implements the source protocol
+            destination: null, // the view on which the item is dropped
+        
+            hoverViews: null, // a list of views that self is currently hovering over
+            dragOperation: "move", // the drag operation type: move, copy, link, delete
+        
+            dragStartPos: null, //
+        })
+    }
 
-    hoverViews: null, // a list of views that self is currently hovering over
-    dragOperation: "move", // the drag operation type: move, copy, link, delete
-
-    dragStartPos: null, //
-}).setSlots({
-    init: function () {
-        DomStyledView.init.apply(this)
+    init () {
+        super.init()
         this.setHoverViews([])
 
         this.setDisplay("block")
@@ -85,9 +90,9 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         this.setIsDebugging(true)
 
         return this
-    },
+    }
 
-    setupView: function() {
+    setupView () {
         const aView = this.item()
         assert(aView.hasParentView())
 
@@ -109,14 +114,14 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         this.setZIndex(10)
 
         this.setInnerHTML(aView.innerHTML())
-    },
+    }
 
-    hasPan: function() {
+    hasPan () {
         return !Type.isNull(this.defaultPanGesture())
-    },
+    }
 
 
-    openWithEvent: function(event) {
+    openWithEvent (event) {
         // TODO: this is a hack, find a way to init pan without this
 
         // setup the Pan Gesture to already be started
@@ -130,15 +135,15 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         this.open()
         
         return this
-    },
+    }
 
-    acceptsPan: function() {
+    acceptsPan () {
         return true
-    },
+    }
 
     // --------------------------
 
-    open: function() {        
+    open () {        
         this.setupView()
         DocumentBody.shared().addSubview(this)
         this.orderFront()
@@ -146,16 +151,16 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         this.onBegin()
 
         return this
-    },
+    }
 
-    onBegin: function() {
+    onBegin () {
         this.sendProtocolMessage(this.item(), "onDragItemBegin")
         this.sendProtocolMessage(this.source(), "onDragSourceBegin")
-    },
+    }
     
     // --- panning ---
 
-    onPanBegin: function(aGesture) {
+    onPanBegin (aGesture) {
         this.debugLog("onPanBegin")
         this.setDragStartPos(this.item().positionInDocument())
 
@@ -166,37 +171,37 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         })
 
         this.onPanMove(aGesture)
-    },
+    }
 
-    updatePosition: function() {
+    updatePosition () {
         const newPosition = this.dragStartPos().add(this.defaultPanGesture().diffPos()) 
         this.setLeft(newPosition.x())
         this.setTop(newPosition.y())
-    },
+    }
 
-    onPanMove: function(aGesture) {
+    onPanMove (aGesture) {
         this.updatePosition()
         
         setTimeout(() => { 
             this.hoverOverViews()
         })
-    },
+    }
 
-    onPanCancelled: function(aGesture) {
+    onPanCancelled (aGesture) {
         this.sendProtocolMessage(this.item(),  "onDragItemCancelled")
         this.sendProtocolMessage(this.source(), "onDragSourceCancelled")
         this.sendProtocolMessage(this.source(), "onDragSourceEnd")
         // TODO: add slide back animation?
         this.close()
-    },
+    }
 
-    firstAcceptingDropTarget: function() {
+    firstAcceptingDropTarget () {
         return this.hoverViews().detect((v) => {
             return v.acceptsDropHoverComplete && v.acceptsDropHoverComplete(this)
         })
-    },
+    }
 
-    currentOperation: function() {
+    currentOperation () {
         const keyboard = Keyboard.shared()
 
         if (keyboard.alternateKey().isDown()) {
@@ -208,9 +213,9 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         }
 
         return "move"
-    },
+    }
 
-    onPanComplete: function(aGesture) {
+    onPanComplete (aGesture) {
         this.debugLog("onPanComplete")
 
         this.setDragOperation(this.currentOperation())
@@ -248,23 +253,23 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         } else {
             this.close()
         }
-    },
+    }
 
     // --- hovering behaviors ---
 
-    viewsUnderDefaultPan: function() {
+    viewsUnderDefaultPan () {
         return DocumentBody.shared().viewsUnderPoint(this.dropPoint())
-    },
+    }
 
-    dropPoint: function() {
+    dropPoint () {
         return this.defaultPanGesture().currentPosition()
-    },
+    }
 
-    newHoverViews: function() {
+    newHoverViews () {
         return this.viewsUnderDefaultPan().select(v => v.acceptsDropHover && v.acceptsDropHover(this))
-    },
+    }
 
-    hoverOverViews: function() {
+    hoverOverViews () {
         const oldViews = this.hoverViews()
         const newViews = this.newHoverViews()
 
@@ -288,23 +293,23 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
 
         this.setHoverViews(newViews)
         return this
-    },
+    }
 
-    exitAllHovers: function() {
+    exitAllHovers () {
         this.hoverViews().forEach((aView) => { this.sendProtocolAction(aView, "Exit") })
         this.setHoverViews([])
-    },
+    }
 
     // drop hover protocol
 
-    sendProtocolAction: function(aView, action) {
+    sendProtocolAction (aView, action) {
         // onDragSourceHover & onDragDestinationHover
         const isSource = aView === this.source()
         const methodName = "onDrag" + (isSource ? "Source" : "Destination") + action
         this.sendProtocolMessage(aView, methodName)
-    },
+    }
 
-    sendProtocolMessage: function(receiver, methodName) {
+    sendProtocolMessage (receiver, methodName) {
         if (!methodName.contains("Hover") && this.isDebugging()) {
 
             let msg = receiver.typeId() + " " + methodName 
@@ -323,11 +328,11 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         if (receiver[methodName]) {
             receiver[methodName].apply(receiver, [this])
         }
-    },
+    }
     
     // close
 
-    close: function() {
+    close () {
         this.debugLog("close")
         // handle calling this out of seqence?
 
@@ -337,22 +342,22 @@ DomStyledView.newSubclassNamed("DragView").newSlots({
         this.removePanStyle()
         DocumentBody.shared().removeSubview(this)
         return this
-    },
+    }
 
 
     // --- drag style ---
 
-    addPanStyle: function() {
+    addPanStyle () {
         const r = 1.1
         this.setTransform("scale(" + r + ")")
         this.setBoxShadow("0px 0px 10px 10px rgba(0, 0, 0, 0.5)")
         return this
-    },
+    }
 
-    removePanStyle: function() {
+    removePanStyle () {
         this.setTransform("scale(1)")
         this.setBoxShadow("none")
         return this
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

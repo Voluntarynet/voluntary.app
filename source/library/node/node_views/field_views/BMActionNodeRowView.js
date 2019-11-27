@@ -6,11 +6,16 @@
 
 */
 
-BrowserRow.newSubclassNamed("BMActionNodeRowView").newSlots({
-    buttonView: null,
-}).setSlots({
-    init: function () {
-        BrowserRow.init.apply(this)
+window.BMActionNodeRowView = class BMActionNodeRowView extends BrowserRow {
+    
+    initPrototype () {
+        this.newSlots({
+            buttonView: null,
+        })
+    }
+
+    init () {
+        super.init()
 		
         this.styles().unselected().setColor("#888")
         this.styles().unselected().setBackgroundColor("white")
@@ -25,9 +30,9 @@ BrowserRow.newSubclassNamed("BMActionNodeRowView").newSlots({
         this.addContentSubview(this.buttonView())
         //this.setMinHeightPx(64)
         return this
-    },
+    }
 
-    updateSubviews: function () {	
+    updateSubviews  () {	
         BrowserRow.updateSubviews.apply(this)
 		
         const bv = this.buttonView()
@@ -42,36 +47,36 @@ BrowserRow.newSubclassNamed("BMActionNodeRowView").newSlots({
         }
 		
         return this
-    },
+    }
     
-    onEnterKeyUp: function(event) {
+    onEnterKeyUp (event) {
         this.doAction()
         return false
-    },
+    }
     
-    doAction: function() {
+    doAction () {
         if (this.node().isEnabled()) { // check in node field?
             this.node().doAction()
         }
         return this     
-    },
+    }
     
-    didClickButton: function() {
+    didClickButton () {
         this.doAction()
         return this
-    },
+    }
 
-    syncToNode: function() {
+    syncToNode () {
         this.node().setTitle(this.buttonView().title()) 
         BrowserRow.syncToNode.apply(this)
         return this
-    },
+    }
 
-    onDidEdit: function (changedView) {     
+    onDidEdit  (changedView) {     
         this.scheduleSyncToNode()
         //this.node().didUpdateView(this)
         //this.scheduleSyncFromNode() // needed for validation?
         return true
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

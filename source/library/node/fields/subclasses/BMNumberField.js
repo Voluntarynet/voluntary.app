@@ -9,24 +9,29 @@
 
 */
         
-BMField.newSubclassNamed("BMNumberField").newSlots({
-    unsetVisibleValue: "unset",
-}).setSlots({
-    init: function () {
-        BMField.init.apply(this)
+window.BMNumberField = class BMNumberField extends BMField {
+    
+    initPrototype () {
+        this.newSlots({
+            unsetVisibleValue: "unset",
+        })
+    }
+
+    init () {
+        super.init()
         this.setViewClassName("BMFieldRowView")
         this.setKey("Number title")
         this.setKeyIsEditable(false)
         this.setValueIsEditable(false)
         this.setValue(0)
-    },
+    }
 
-    valueIsNumeric: function() {
+    valueIsNumeric () {
         const n = this.value()
         return !isNaN(parseFloat(n)) && isFinite(n);
-    },
+    }
 	
-    validate: function() {
+    validate () {
         const isValid = this.valueIsNumeric()
 		
         if (!isValid) {
@@ -36,13 +41,13 @@ BMField.newSubclassNamed("BMNumberField").newSlots({
         } 
 		
         return isValid
-    },
+    }
     
     /*
-    didUpdateNode: function() {
+    didUpdateNode () {
         this.validate()
         return BMField.didUpdateNode.apply(this)
-    },
+    }
     */
    
-}).initThisProto()
+}.initThisClass()

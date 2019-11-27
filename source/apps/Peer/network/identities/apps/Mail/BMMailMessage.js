@@ -7,11 +7,16 @@
 
 */
 
-BMAppMessage.newSubclassNamed("BMMailMessage").newSlots({
-    //canReceive: false,
-}).setSlots({
-    init: function () {
-        BMAppMessage.init.apply(this)
+window.BMMailMessage = class BMMailMessage extends BMAppMessage {
+    
+    initPrototype () {
+        this.newSlots({
+            //canReceive: false,
+        })
+    }
+
+    init () {
+        super.init()
 
         this.addStoredField(BMOptionsNode.clone().setKey("from").setValueMethod("fromContact")).setValueIsEditable(false) //.setValidValuesMethod("fromContactNames") //.setNoteMethod("fromContactPublicKey")
         this.addStoredField(BMOptionsNode.clone().setKey("to").setValueMethod("toContact")).setValueIsEditable(true).setValidValuesMethod("toContactNames") //.setNoteMethod("toContactPublicKey")
@@ -24,11 +29,11 @@ BMAppMessage.newSubclassNamed("BMMailMessage").newSlots({
 
         this.setNodeMinWidth(600)
         this.setNodeColumnBackgroundColor("white")
-    },
+    }
 
     // sync
 
-    didUpdateField: function(aField) {
+    didUpdateField (aField) {
         BMFieldSetNode.didUpdateField.apply(this)
 
         let name = aField.valueMethod()
@@ -40,34 +45,34 @@ BMAppMessage.newSubclassNamed("BMMailMessage").newSlots({
         }
 
         return this
-    },
+    }
 
-    updateCanSend: function() {
+    updateCanSend () {
         if (this.canSend()) {
             this.addAction("send")
         } else {
             this.removeAction("send")
         }		
-    },
+    }
 	
-    finalize: function() {
+    finalize () {
         BMAppMessage.finalize.apply(this)
         this.setupInputsFromPubkeys()
-    },
+    }
 	
-    loadFinalize: function() {
+    loadFinalize () {
         this.setupInputsFromPubkeys()
-    },
+    }
 
     // ids
 
-    setupReceiverPubkeyFromInput: function() { // called on edits
+    setupReceiverPubkeyFromInput () { // called on edits
         let receiverId = App.shared().network().idWithNameOrPubkey(this.toContact())
         this.setReceiverPublicKeyString(receiverId? receiverId.publicKeyString() : null)
         return this
-    },
+    }
 
-    setupInputsFromPubkeys: function() { // called on load from store
+    setupInputsFromPubkeys () { // called on load from store
         //this.debugLog(" setupInputsFromPubkeys this.senderPublicKeyString() = " + this.senderPublicKeyString())
 
         //if (!App.shared().network()) { return null }
@@ -82,21 +87,21 @@ BMAppMessage.newSubclassNamed("BMMailMessage").newSlots({
         let receiverId = App.shared().network().idWithNameOrPubkey(this.receiverPublicKeyString())      
         let to = receiverId ? receiverId.name() : ""
         if (to !== this.toContact()) { this.setToContact(to) }
-    },
+    }
 
-    toContactNames: function() {
+    toContactNames () {
         let localNames = App.shared().network().localIdentityNames()
         let remoteNames = this.localIdentity().remoteIdentities().names()
         return localNames.concat(remoteNames)
-    },
+    }
 
-    validateFromAddress: function() {
+    validateFromAddress () {
         if (this.localIdentity()) {
             this.setFromContact(this.localIdentity().name())
         }
-    },
+    }
 
-    title: function() {
+    title () {
         if (!this.localIdentityIsSender()) {
             return this.localIdentity().title()
         }
@@ -106,26 +111,26 @@ BMAppMessage.newSubclassNamed("BMMailMessage").newSlots({
             return s
         }			
         return "No recipient"
-    },
+    }
 
-    subtitle: function () {
+    subtitle  () {
         let s = this.subject()
         if (s) {
             return s
         }
         return "No subject"
-    },   
+    }
 
     // ------------------------
 
-    contentDict: function() {
+    contentDict () {
         let contentDict = {}
         contentDict.subject = this.subject()
         contentDict.body = this.body()
         return contentDict
-    },
+    }
 	
-    setContentDict: function(contentDict) {
+    setContentDict (contentDict) {
 		
         if (!contentDict) {
             this.setSubject("[INVALID KEY]")
@@ -138,11 +143,11 @@ BMAppMessage.newSubclassNamed("BMMailMessage").newSlots({
         this.setupInputsFromPubkeys()
 		
         return this
-    },
+    }
 
-    send: function () {
+    send  () {
         BMAppMessage.send.apply(this)
         this.delete()
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

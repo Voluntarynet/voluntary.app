@@ -13,12 +13,17 @@
 
 */
 
-ScreenEdgePanGestureRecognizer.newSubclassNamed("ScreenBottomEdgePanGestureRecognizer").newSlots({
-}).setSlots({
-    init: function () {
-        ScreenEdgePanGestureRecognizer.init.apply(this)
+window.ScreenBottomEdgePanGestureRecognizer = class ScreenBottomEdgePanGestureRecognizer extends ScreenEdgePanGestureRecognizer {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
         this.setEdgeName("bottom")
         return this
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

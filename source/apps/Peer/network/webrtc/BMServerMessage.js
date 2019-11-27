@@ -6,20 +6,25 @@
 
 */
 
-ideal.Proto.newSubclassNamed("BMServerMessage").newSlots({
-    count: 0,
-    serverConnection: null,
-    id: null,
-    name: null,
-    data: null
-}).setSlots({
-    init: function() {
-        ideal.Proto.init.call(this);
+window.BMServerMessage = class BMServerMessage extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+            count: 0,
+            serverConnection: null,
+            id: null,
+            name: null,
+            data: null
+        })
+    }
+
+    init () {
+        super.init()
         BMServerMessage.setCount(BMServerMessage.count() + 1);
         this.setId(BMServerMessage.count().toString());
-    },
+    }
 
-    send: function() {
+    send () {
         const messageString = JSON.stringify({
             id: this.id(),
             name: this.name(),
@@ -35,14 +40,14 @@ ideal.Proto.newSubclassNamed("BMServerMessage").newSlots({
             this._resolve = resolve;
             this._reject = reject;
         });
-    },
+    }
 
-    resolve: function(value) {
+    resolve (value) {
         this._resolve(value);
-    },
+    }
 
-    reject: function(reason) {
+    reject (reason) {
         this._reject(reason);
     }
     
-}).initThisProto()
+}.initThisClass()

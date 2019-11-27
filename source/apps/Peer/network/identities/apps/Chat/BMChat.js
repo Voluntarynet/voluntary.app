@@ -6,14 +6,18 @@
 
 */
 
-BMApplet.newSubclassNamed("BMChat").newSlots({
-    //feedPosts: null,
-    //myPosts: null,
-    // threads: null,
-}).setSlots({
+window.BMChat = class BMChat extends BMApplet {
     
-    init: function () {
-        BMApplet.init.apply(this)
+    initPrototype () {
+        this.newSlots({
+            //feedPosts: null,
+            //myPosts: null,
+            // threads: null,
+        })
+    }
+
+    init () {
+        super.init()
 
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(false)
@@ -25,24 +29,24 @@ BMApplet.newSubclassNamed("BMChat").newSlots({
         this.initStoredSubnodeSlotWithProto("myPosts",   BMMyPosts)
         this.initStoredSubnodeSlotWithProto("threads",   BMChatThreads)
         this.initStoredSubnodeSlotWithProto("drafts",    BMPostDrafts)
-    },
+    }
 
     /*
-	loadFinalize: function() {
+	loadFinalize () {
 		BMApplet.loadFinalize.apply(this)		
 	},
 	*/
 	
-    localIdentity: function() {
+    localIdentity () {
         return this.parentNodeOfType("BMLocalIdentity")
-    },
+    }
 
-    remoteIdentities: function() {
+    remoteIdentities () {
         return this.localIdentity().remoteIdentities()
-    },
+    }
 
     /*
-	setThreads: function(newValue) {
+	setThreads (newValue) {
 		const oldValue = this._threads
 		this._threads = newValue
 		this.didUpdateSlot("threads", oldValue, newValue)
@@ -54,7 +58,7 @@ BMApplet.newSubclassNamed("BMChat").newSlots({
 	},
 	*/
 	
-    handleAppMsg: function(msg) {
+    handleAppMsg (msg) {
         console.log("  " + this.localIdentity().title() + " app " + this.typeId() + ".handleAppMsg(" + msg.typeId() + ") ") //, msg.dataDict())
 		
         if (msg.type() === BMChatMessage.type()) {
@@ -85,18 +89,18 @@ BMApplet.newSubclassNamed("BMChat").newSlots({
                 //console.log("  sender isn't local id, can't put in myPosts")
             }
         }
-    },
+    }
 
-    handleSentMessage: function(msg) {
+    handleSentMessage (msg) {
         if (msg.senderId() && msg.senderId().equals(this.localIdentity())) {
             const thread = this.threads().linkForContact(msg.receiverId())
             if (thread) {
                 thread.addMessage(msg.duplicate())
             }
         }
-    },
+    }
 	
-    handleReceivedMessage: function(msg) {
+    handleReceivedMessage (msg) {
         //console.log("handleReceivedMessage msg.receiverId() = ", msg.receiverId().type())
         if (msg.receiverId()) {
             //console.log("msg.receiverId() = ", msg.receiverId().type())
@@ -109,7 +113,7 @@ BMApplet.newSubclassNamed("BMChat").newSlots({
     			}
     		}
     	}
-    },
+    }
 		
-}).initThisProto()
+}.initThisClass()
 

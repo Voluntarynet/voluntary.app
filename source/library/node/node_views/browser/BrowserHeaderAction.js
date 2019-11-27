@@ -11,12 +11,12 @@
 NodeView.newSubclassNamed("BrowserHeaderAction").newSlots({
     canClick: true,
 }).setSlots({
-    init: function () {
+    init  () {
         NodeView.init.apply(this)
         return this
-    },
+    }
     
-    updateCanClick: function() {
+    updateCanClick () {
         if (this.canClick()) {
             this.setOpacity(1)
             //this.setIsRegisteredForClicks(true) // will update cursor
@@ -28,9 +28,9 @@ NodeView.newSubclassNamed("BrowserHeaderAction").newSlots({
             this.removeDefaultTapGesture()
 
         }
-    },
+    }
     
-    updateTooltip: function() {
+    updateTooltip () {
         this.setToolTip(this.action())
 
         /*
@@ -43,27 +43,27 @@ NodeView.newSubclassNamed("BrowserHeaderAction").newSlots({
 		*/
 		
         return this
-    },
+    }
 	
-    updateImage: function () {
+    updateImage  () {
         this.setBackgroundImageUrlPath(this.pathForIconName(this.action()))
         this.setBackgroundSizeWH(10, 10) // use "contain" instead?
         this.setBackgroundPosition("center")
         this.setOpacity(0.6)
         return this
-    },
+    }
 
-    syncFromNode: function() {
+    syncFromNode () {
         this.updateCanClick()
         this.updateImage()
         this.updateTooltip()
         return this
-    },
+    }
 
-    onTapComplete: function (aGesture) {
+    onTapComplete  (aGesture) {
         //this.debugLog(".onTapComplete()")
         this.sendActionToTarget()
         return false
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

@@ -6,22 +6,26 @@
 
 */
 
-NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({    
-    header: null,
-    footer: null,
+window.BrowserColumnGroup = class BrowserColumnGroup extends NodeView {
     
-    scrollView: null, // contains column
-    column: null, // is inside scrollView
-    
-    //emptyLabel: null,
+    initPrototype () {
+        this.newSlots({
+            header: null,
+            footer: null,
+            
+            scrollView: null, // contains column
+            column: null, // is inside scrollView
+            
+            //emptyLabel: null,
+        
+            isCollapsed: false,
+            animatesCollapse: true,
+            browser: null,
+        })
+    }
 
-    isCollapsed: false,
-    animatesCollapse: true,
-    browser: null,
-
-}).setSlots({
-    init: function () {
-        NodeView.init.apply(this)
+    init () {
+        super.init()
          
         this.setHeader(BrowserHeader.clone())
         this.addSubview(this.header())
@@ -43,77 +47,77 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
         this.addGestureRecognizer(RightEdgePanGestureRecognizer.clone()) 
 
         return this
-    },
+    }
 
-    copySizeFrom: function(bcg) {
+    copySizeFrom (bcg) {
         this.setMinAndMaxWidth(bcg.minWidth())
         this.setFlexGrow(bcg.flexGrow())
         return this
-    },
+    }
 
-    copySetupFrom: function(bcg) {
+    copySetupFrom (bcg) {
         this.setIsCollapsed(bcg.isCollapsed())
         this.copySizeFrom(bcg)
         this.setDisplay(bcg.display())
         this.setPosition(bcg.position())
         return this
-    },
+    }
 
-    colapse: function() {
+    colapse () {
         this.setMinAndMaxWidth(0)
         this.setFlexGrow(0)
         return this
-    },
+    }
 
     // caching - used to hold onto view state during drag between columns
     
     
-    browser: function() {
+    browser () {
         return this.parentView()
-    },
+    }
     
     
 
-    cache: function() {
+    cache () {
         this._browser.cacheColumnGroup(this)
         //this.browser().cacheColumnGroup(this)
         //this.debugLog(".cache()")
         return this
-    },
+    }
     
-    uncache: function() {
+    uncache () {
         this._browser.uncacheColumnGroup(this)
         //this.browser().uncacheColumnGroup(this)
         //this.debugLog(".uncache()")
         return this
-    },
+    }
 
     // edge pan
 
-    acceptsBottomEdgePan: function() {
+    acceptsBottomEdgePan () {
         if (this.node().nodeCanEditColumnWidth()) {
             return true
         }
         return false
-    },
+    }
 
-    acceptsRightEdgePan: function() {
+    acceptsRightEdgePan () {
         if (this.node().nodeCanEditColumnWidth()) {
             return true
         }
         return false
 
-    },
+    }
 
-    onRightEdgePanBegin: function(aGesture) {
+    onRightEdgePanBegin (aGesture) {
         this._beforeEdgePanBorderRight = this.borderRight()
         this.setBorderRight("1px dashed red")
         this.setTransition("min-width 0s, max-width 0s")
         this.setTransition("0s")
         //this.makeCursorColResize()
-    },
+    }
 
-    onRightEdgePanMove: function(aGesture) {
+    onRightEdgePanMove (aGesture) {
         const p = aGesture.currentPosition() // position in document coords
         const f = this.frameInDocument()
         const h = p.x() - f.x()
@@ -124,24 +128,24 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
             this.setMinAndMaxWidth(minWidth) 
         }
         return this
-    },
+    }
 
-    onRightEdgePanComplete: function(aGesture) {
+    onRightEdgePanComplete (aGesture) {
         this.setBorderRight(this._beforeEdgePanBorderRight)
         //this.makeCursorDefault()
-    },
+    }
 
     // -------------------------------------
     
-    hasHeader: function() {
+    hasHeader () {
         return true
-    },
+    }
     
-    hasFooter: function() {
+    hasFooter () {
         return this.hasSubview(this.footer())
-    },
+    }
     
-    setHasFooter: function(aBool) {
+    setHasFooter (aBool) {
         if (this.hasFooter() !== aBool) {
             if (aBool) {
                 this.addSubview(this.footer())
@@ -151,9 +155,9 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
             this.updateScrollView()
         }
         return this
-    },
+    }
     
-    updateScrollView: function() {
+    updateScrollView () {
         const headerHeight = 40
         const footerHeight = 40
         
@@ -173,22 +177,22 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
         this.scrollView().setTop(top)
         
         return this
-    },
+    }
 
-    isFirstColumnGroup: function() {
+    isFirstColumnGroup () {
         return this.browser().columnGroups().first() === this
-    },
+    }
 
-    didChangeIsSelected: function() {
+    didChangeIsSelected () {
         NodeView.didChangeIsSelected.apply(this)
 		
         if (this.column()) {
             this.column().setIsSelected(this.isSelected())
         }	
         return this
-    },
+    }
 	
-    previousColumnGroup: function() {
+    previousColumnGroup () {
         const prevCol = this.column().previousColumn()
 
         if (prevCol) { 
@@ -196,25 +200,25 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
         }
 
         return null
-    },
+    }
 	
-    isFirstUncollapsed: function() {
+    isFirstUncollapsed () {
         const pcg = this.previousColumnGroup()
         return (!this.isCollapsed()) && (!pcg || pcg.isCollapsed())
-    },
+    }
 	
-    shouldShowBackArrow: function() {
+    shouldShowBackArrow () {
         return !this.isFirstColumnGroup() && this.isFirstUncollapsed()
-    },
+    }
 	
-    updateBackArrow: function() {
+    updateBackArrow () {
         this.header().setDoesShowBackArrow(this.shouldShowBackArrow())
         return this
-    },
+    }
 	
     // collapsing
 	
-    setIsCollapsed: function(aBool) {
+    setIsCollapsed (aBool) {
         if (this._isCollapsed !== aBool) {		
             if (aBool) {
                 this.collapse()
@@ -223,17 +227,17 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
             }
         }
         return this
-    },
+    }
 	
-    name: function() {
+    name () {
         return this.node() ? this.index() + "-" + this.node().title() : null
-    },
+    }
 	
-    index: function() {
+    index () {
         return this.browser().columnGroups().indexOf(this)
-    },
+    }
 	
-    collapse: function() {
+    collapse () {
         //console.log(this.name() + " collapse ")
         this._isCollapsed = true
         this.setMinAndMaxWidth(0)
@@ -241,9 +245,9 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
         this.setFlexShrink(0)
         this.setFlexBasis(0)
         return this
-    },
+    }
 	
-    uncollapse: function() {
+    uncollapse () {
         //console.log(this.name() + " uncollapse")
         this._isCollapsed = false
         this.matchNodeMinWidth()
@@ -251,12 +255,12 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
         this.setFlexShrink(1)
         //this.setFlexBasis(this.targetWidth())
         return this
-    },
+    }
     
     /// empty label 
 
     /*
-    updateEmptyLabel: function() {
+    updateEmptyLabel () {
         let node = this.node()
         if (node) {
             if (node.hasSubnodes() && node.nodeEmptyLabel()) {
@@ -267,9 +271,9 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
             
         this.removeEmptyLabel()
         return this
-    },
+    }
     
-    addEmptyLabelIfMissing: function() {
+    addEmptyLabelIfMissing () {
         if (!this.emptyLabel()) {
             this.setEmptyLabel(DomView.clone().setDivClassName("BrowserColumnEmptyLabel"))
             this.setEmptyLabelText("").turnOffUserSelect()
@@ -277,24 +281,24 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
         }
         
         return this
-    },
+    }
     
-    setEmptyLabelText: function(aString) {       
+    setEmptyLabelText (aString) {       
         this.addEmptyLabelIfMissing()     
         this.emptyLabel().setInnerHTML(aString)
         return this
-    },
+    }
     
-    removeEmptyLabel: function() {
+    removeEmptyLabel () {
         if (this.emptyLabel()) {
             this.removeSubview(this.emptyLabel())
             this.setEmptyLabel(null)
         }
         return this
-    },
+    }
 */
     
-    setColumnClass: function(columnClass) {
+    setColumnClass (columnClass) {
         if (this.column().type() !== columnClass.type()) {
             const view = columnClass.clone().setNode(this.node())
             this.scrollView().removeSubview(this.column())
@@ -303,18 +307,18 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
             this.browser().clipToColumnGroup(this)
         }
         return this
-    },
+    }
     
     /*
-    setMinAndMaxWidth: function(w) {
+    setMinAndMaxWidth (w) {
         Error.showCurrentStack()
 		this.debugLog(" / " + (this.node() ? this.node().type() : "?") + " nodeMinWidth = " + w)
         NodeView.setMinAndMaxWidth.apply(this, [w])
         return this
-    },
+    }
     */
 
-    targetWidth: function() {
+    targetWidth () {
         let w = 0
 		
         if (this.node()) {
@@ -330,17 +334,17 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
         }
 			
         return w		
-    },
+    }
 
-    matchNodeMinWidth: function() {
+    matchNodeMinWidth () {
         const w = this.targetWidth()
         if (w) {
             this.setMinAndMaxWidth(w)
         }
         return this
-    },
+    }
     
-    setNode: function(aNode) {
+    setNode (aNode) {
         if (Type.isNull(aNode) && this.browser() && this.browser().hasCachedColumnGroup(this)) {
             this.debugLog(" setNode(null)")
         }
@@ -369,29 +373,29 @@ NodeView.newSubclassNamed("BrowserColumnGroup").newSlots({
         this.column().setNode(aNode)
         this.footer().setNode(aNode)
         return this
-    },
+    }
     
 
     /*
     NOT USED - VIEWS DON'T IMPLEMENT didUpdate now - they use didUpdateNode
     the syncFromNode overide in this class handles the subviews
     
-    didUpdateNode: function() {
+    didUpdateNode () {
         dfdffdfdf()
         this.log("didUpdateNode")
         this.header().didUpdateNode()
         this.column().didUpdateNode()
         return this        
-    },
+    }
     */
 
     // just using this to make debugging easier
 
-    syncFromNode: function () {        
+    syncFromNode  () {        
         //console.log("BrowserColumnGroup syncFromNode "  + this.node().type())
         this.header().syncFromNode()
         this.column().syncFromNode()
         //this.updateEmptyLabel()
         return this
-    },
-}).initThisProto()
+    }
+}.initThisClass()

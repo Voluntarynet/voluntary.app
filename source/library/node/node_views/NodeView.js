@@ -6,28 +6,30 @@
 
 */
 
-DomStyledView.newSubclassNamed("NodeView").newSlots({
-    node: null,
-    //ownsView: true,
-    overrideSubviewProto: null,
-    nodeObservation: null,
-    isInspecting: false,
-}).setSlots({
+window.NodeView = class NodeView extends DomStyledView {
     
-    // -------------------------------------
-    
-    init: function () {
-        DomStyledView.init.apply(this)
+    initPrototype () {
+        this.newSlots({
+            node: null,
+            //ownsView: true,
+            overrideSubviewProto: null,
+            nodeObservation: null,
+            isInspecting: false,
+        })
+    }
+
+    init () {
+        super.init()
         //this.superProxy().init()
         //this.setNodeObservation(NotificationCenter.shared().newObservation().setName("didUpdateNode").setObserver(this))
         this.setNodeObservation(NotificationCenter.shared().newObservation().setObserver(this)) // observe all
         //this.setStyles(BMViewStyles.clone())
         this.updateSubnodeToSubviewMap()
         return this
-    }.setDocs("init", "initializes the object", "returns this"),
+    } //.setDocs("init", "initializes the object", "returns this"),
 	
 	
-    setNode: function(aNode) {
+    setNode (aNode) {
 
         if (this._node !== aNode) {
 
@@ -40,45 +42,45 @@ DomStyledView.newSubclassNamed("NodeView").newSlots({
         }
 		
         return this
-    },
+    }
 
-    updateElementIdLabel: function() {
+    updateElementIdLabel () {
         const nodeId = this.node() ? this.node().typeId() : "null"
         this.element().id = this.typeId() + " for node " + nodeId
-    },
+    }
     
-    didChangeNode: function() {
+    didChangeNode () {
         if (this.node()) {
             this.scheduleSyncFromNode()
         }
         return this
-    },
+    }
  
-    startWatchingNode: function() {
+    startWatchingNode () {
         if (this.node()) {
             //console.log("startWatchingNode " + this.node() + " observation count = " + NotificationCenter.shared().observations().length)
             this.nodeObservation().setTarget(this.node()).watch()
             this.node().onStartObserving()
         }
         return this
-    },
+    }
        
-    stopWatchingNode: function() {
+    stopWatchingNode () {
         if (this.node()) {
             //console.log("stopWatchingNode " + this.node() + " observation count = " + NotificationCenter.shared().observations().length)
             this.nodeObservation().stopWatching()
             this.node().onStopObserving()
         }
         return this
-    },
+    }
     
-    willRemove: function() {
+    willRemove () {
         DomStyledView.willRemove.apply(this)
         this.stopWatchingNode()
         return this
-    },
+    }
     
-    subviewProto: function() {
+    subviewProto () {
         //console.log("looking for subviewProto")
         if (this.node()) {
             const vc = this.node().nodeRowViewClass()
@@ -87,37 +89,37 @@ DomStyledView.newSubclassNamed("NodeView").newSlots({
             }
         }
         return DomStyledView.subviewProto.apply(this)
-    },
+    }
 
     // --- syncing ---
     
-    managedSubviews: function() {
+    managedSubviews () {
         // use managedSubviews inside NodeView and subclasses so we can separate the
         // views with the NodeView syncs with the Node and it's subviews
         return this.subviews()
-    },
+    }
 
     /*
-    subviewForNode: function(aNode) {
+    subviewForNode (aNode) {
         // TODO: optimize with a dictionary? 
         return this.managedSubviews().detect(aView => aView.node() === aNode )
-    },
+    }
     */
 
-    subviewForNode: function(aNode) {
+    subviewForNode (aNode) {
         assert(this._subnodeToSubview)
         return this._subnodeToSubview[aNode]
-    },
+    }
 
-    updateSubnodeToSubviewMap: function() {
+    updateSubnodeToSubviewMap () {
         // TODO: make this more efficient with add/remove hooks
         const dict = {}
         this.subviews().forEach((sv) => { dict[sv.node()] = sv })
         this._subnodeToSubview = dict
         return this
-    },
+    }
 
-    subviewProtoForSubnode: function(aSubnode) {
+    subviewProtoForSubnode (aSubnode) {
         let proto = this.overrideSubviewProto()
 		
         if (!proto) {
@@ -125,10 +127,10 @@ DomStyledView.newSubclassNamed("NodeView").newSlots({
         }
 				
         return proto      
-    },
+    }
 
     
-    newSubviewForSubnode: function(aSubnode) {
+    newSubviewForSubnode (aSubnode) {
         if (!aSubnode) {
             throw new Error("null aSubnode")
         }
@@ -140,18 +142,18 @@ DomStyledView.newSubclassNamed("NodeView").newSlots({
         }
 		
         return proto.clone().setNode(aSubnode) //.setParentView(this)
-    },
+    }
 
-    updateSubviews: function() {
+    updateSubviews () {
         // for subclasses to override
         return this
-    },
+    }
     
-    visibleSubnodes: function() {
+    visibleSubnodes () {
         return this.node().subnodes()
-    },
+    }
     
-    syncFromNode: function () {
+    syncFromNode  () {
         // override this method if the view manages it's own subviews
 
         if (!this.node()) { 
@@ -193,23 +195,23 @@ DomStyledView.newSubclassNamed("NodeView").newSlots({
         this.managedSubviews().forEach(subview => subview.syncFromNode())
 
         return this
-    },
+    }
     
-    syncToNode: function () {
+    syncToNode  () {
         const node = this.node()
         if (node) {
             node.didUpdateNode()
             //node.scheduleSyncToStore()
         }
         return this
-    },
+    }
 
-    didUpdateNode: function () {
+    didUpdateNode  () {
         //this.debugLog(" didUpdateNode " + this.node().type())
         this.scheduleSyncFromNode()
-    },
+    }
     
-    scheduleSyncToNode: function() {
+    scheduleSyncToNode () {
         if (this.hasScheduleSyncFromNode()) {
             this.hasScheduleSyncFromNode()
             console.log("SKIPPING scheduleSyncToNode because hasScheduleSyncFromNode")
@@ -227,13 +229,13 @@ DomStyledView.newSubclassNamed("NodeView").newSlots({
         //NodeViewSynchronizer.addToNode(this)  
         window.SyncScheduler.shared().scheduleTargetAndMethod(this, "syncToNode", 0)
         return this
-    },
+    }
     
-    hasScheduleSyncToNode: function() {
+    hasScheduleSyncToNode () {
         return window.SyncScheduler.shared().isSyncingOrScheduledTargetAndMethod(this, "syncToNode")
-    },
+    }
 
-    scheduleSyncFromNode: function() {
+    scheduleSyncFromNode () {
         assert(!this.hasScheduleSyncToNode())
         /*
         if (this.hasScheduleSyncToNode()) {
@@ -247,35 +249,35 @@ DomStyledView.newSubclassNamed("NodeView").newSlots({
         //this.debugLog(" scheduleSyncFromNode")
         window.SyncScheduler.shared().scheduleTargetAndMethod(this, "syncFromNode")
         return this
-    },
+    }
 
-    hasScheduleSyncFromNode: function() {
+    hasScheduleSyncFromNode () {
         return window.SyncScheduler.shared().isSyncingOrScheduledTargetAndMethod(this, "syncFromNode")
-    },
+    }
 
     // logging 
     
-    logName: function() {
+    logName () {
         return this.type()
-    },
+    }
     
-    log: function(msg) {
+    log (msg) {
         const s = "[" + this.logName() + "] " + msg
         console.log(s)
         return this
-    },
+    }
     
-    onDropFiles: function(filePaths) {
+    onDropFiles (filePaths) {
         const node = this.node()
         if (node && node.onDropFiles) {
             node.onDropFiles(filePaths)
         }
         return this
-    },
+    }
     
     // visibility
     
-    onVisibility: function() {
+    onVisibility () {
 	    DomStyledView.onVisibility.apply(this)
 	    //this.debugLog(".onVisibility()")
 	    const node = this.node()
@@ -284,17 +286,17 @@ DomStyledView.newSubclassNamed("NodeView").newSlots({
 	    }
 
 	    return this
-    },
+    }
     
     // value
     
-    setValue: function(newValue) {
+    setValue (newValue) {
         this.setInnerHTML(newValue)			
         return this
-    },
+    }
     
-    value: function() {
+    value () {
         return this.innerHTML()
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

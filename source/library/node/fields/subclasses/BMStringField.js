@@ -6,11 +6,16 @@
 
 */
         
-BMField.newSubclassNamed("BMStringField").newSlots({
-    unsetVisibleValue: "",
-}).setSlots({
-    init: function () {
-        BMField.init.apply(this)
+window.BMStringField = class BMStringField extends BMField {
+    
+    initPrototype () {
+        this.newSlots({
+            unsetVisibleValue: "",
+        })
+    }
+
+    init () {
+        super.init()
         this.setViewClassName("BMFieldRowView")
         this.setKey("String title")
 
@@ -19,6 +24,6 @@ BMField.newSubclassNamed("BMStringField").newSlots({
 
         this.setValueIsVisible(true)
         this.setValueIsEditable(true)
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

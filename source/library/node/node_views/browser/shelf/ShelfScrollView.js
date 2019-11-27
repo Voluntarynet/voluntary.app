@@ -6,12 +6,17 @@
 
 */
 
-DomView.newSubclassNamed("ShelfScrollView").newSlots({
-}).setSlots({
-    init: function () {
-        NodeView.init.apply(this)
+window.ShelfScrollView = class ShelfScrollView extends DomView {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
         return this
-    },
+    }
 	
-}).initThisProto()
+}.initThisClass()
 

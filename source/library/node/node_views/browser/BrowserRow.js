@@ -21,23 +21,28 @@
 
 */
 
-NodeView.newSubclassNamed("BrowserRow").newSlots({
-    isSelectable: true,
-    closeButtonView: null,
-    defaultHeight: 60,
-    restCloseButtonOpacity: 0.4,
-    transitionStyle: "all 0.2s ease, width 0s, max-width 0s, min-width 0s",
-    selectedFlashColor: "#ccc",
-    shouldShowFlash: false,
-    shouldCenterCloseButton: true, 
-    contentView: null,
+window.BrowserRow = class BrowserRow extends NodeView {
+    
+    initPrototype () {
+        this.newSlots({
+            isSelectable: true,
+            closeButtonView: null,
+            defaultHeight: 60,
+            restCloseButtonOpacity: 0.4,
+            transitionStyle: "all 0.2s ease, width 0s, max-width 0s, min-width 0s",
+            selectedFlashColor: "#ccc",
+            shouldShowFlash: false,
+            shouldCenterCloseButton: true, 
+            contentView: null,
+        
+            slideDeleteOffset: 0,
+            dragDeleteButtonView: null,
+            isDeleting: false,
+        })
+    }
 
-    slideDeleteOffset: 0,
-    dragDeleteButtonView: null,
-    isDeleting: false,
-}).setSlots({
-    init: function () {
-        NodeView.init.apply(this)
+    init () {
+        super.init()
         this.turnOffUserSelect()
         this.setAcceptsFirstResponder(false)
         
@@ -64,26 +69,26 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         this.setIsRegisteredForKeyboard(true)
 
         return this
-    },
+    }
 
     // bottom edge pan 
 
-    acceptsBottomEdgePan: function() {
+    acceptsBottomEdgePan () {
         if (this.node().nodeCanEditRowHeight) {
             if (this.node().nodeCanEditRowHeight()) {
                 return true
             }
         }
         return false
-    },
+    }
 
-    onBottomEdgePanBegin: function(aGesture) {
+    onBottomEdgePanBegin (aGesture) {
         this._beforeEdgePanBorderBottom = this.borderBottom()
         this.setBorderBottom("1px dashed red")
         this.setTransition("min-height 0s, max-height 0s")
-    },
+    }
 
-    onBottomEdgePanMove: function(aGesture) {
+    onBottomEdgePanMove (aGesture) {
         const p = aGesture.currentPosition() // position in document coords
         const f = this.frameInDocument()
         const newHeight = p.y() - f.y()
@@ -102,16 +107,16 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         */
 
         return this
-    },
+    }
 
-    onBottomEdgePanComplete: function(aGesture) {
+    onBottomEdgePanComplete (aGesture) {
         this.setBorderBottom(this._beforeEdgePanBorderBottom)
-    },
+    }
 
     // -- contentView -- a special subview within the BrowserRow for it's content
     // we route style methods to it
 
-    setupRowContentView: function() {
+    setupRowContentView () {
         const cv = DomView.clone().setDivClassName("BrowserRowContentView")
         cv.setWidthPercentage(100)
         cv.setHeightPercentage(100) 
@@ -128,89 +133,89 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         this.addSubview(cv)
 
         return this
-    },
+    }
 
     /*
-    setMinAndMaxWidth: function(w) {
+    setMinAndMaxWidth (w) {
         NodeView.setMinAndMaxWidth.apply(this, [w])
         this.contentView().setMinAndMaxWidth(w)
         return this
-    },
+    }
 
-    setMinAndMaxHeight: function(w) {
+    setMinAndMaxHeight (w) {
         NodeView.setMinAndMaxHeight.apply(this, [w])
         this.contentView().setMinAndMaxHeight(w)
         return this
-    },
+    }
     */
 
-    addContentSubview: function(aView) {
+    addContentSubview (aView) {
         return this.contentView().addSubview(aView)
-    },
+    }
 
-    removeContentSubview: function(aView) {
+    removeContentSubview (aView) {
         return this.contentView().removeSubview(aView)
-    },
+    }
 
     /*
-    lockSize: function() {
+    lockSize () {
         NodeView.lockSize.apply(this)
         this.contentView().lockSize()
         return this
-    },
+    }
 
-    unlockSize: function() {
+    unlockSize () {
         NodeView.unlockSize.apply(this)
         this.contentView().unlockSize()
         return this
-    },
+    }
     */
 
     // ----
 
-    setBackgroundColor: function(s) {
+    setBackgroundColor (s) {
         this.contentView().setBackgroundColor(s)
         return this
-    },
+    }
 
-    setColor: function(s) {
+    setColor (s) {
         this.contentView().setColor(s)
         return this
-    },
+    }
 
-    setOpacity: function(v) {
+    setOpacity (v) {
         this.contentView().setOpacity(v)
         return this
-    },
+    }
 
     // --- helpers --------
     
-    browser: function() {
+    browser () {
         return this.column().browser()
-    },
+    }
 
-    column: function () {
+    column  () {
         return this.parentView()
-    },
+    }
     
-    columnGroup: function() {
+    columnGroup () {
         return this.column().columnGroup()
-    },
+    }
 
     // node style dict
     
-    rowStyles: function() {
+    rowStyles () {
         return null
-    },
+    }
 
-    didChangeParentView: function() {
+    didChangeParentView () {
         NodeView.didChangeParentView.apply(this)
         //window.SyncScheduler.shared().scheduleTargetAndMethod(this, "applyStyles", 0)
         this.applyStyles()
         return this
-    },
+    }
 
-    lookedUpStyles: function() {
+    lookedUpStyles () {
         const debugStyles = false
 
         if (this.node()) {
@@ -245,10 +250,10 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         }
 
         return BMViewStyles.sharedWhiteOnBlackStyle()
-    },
+    }
 
     /*
-    currentRowStyle: function() {
+    currentRowStyle () {
         const styles = this.node().nodeRowStyles()
         //styles.selected().set
         
@@ -257,22 +262,22 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
  		}
         
         return styles.unselected()
-    },
+    }
     */
     
 
-    select: function() {
+    select () {
         if (!this.isSelected()) {
             this.setShouldShowFlash(true)
         }
 
         NodeView.select.apply(this)
         return this
-    },
+    }
     
     // update
      
-    updateSubviews: function() {   
+    updateSubviews () {   
         if (this.closeButtonView()) {
             const node = this.node()
 
@@ -312,26 +317,26 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         this.applyStyles()
 
         return this
-    },
+    }
     
     // -------------
     
-    onDidEdit: function(aView) {
+    onDidEdit (aView) {
         this.scheduleSyncToNode() 
         return true // stop propogation
-    },
+    }
     
     // --- sync ---
 	
-    syncFromNode: function () {
+    syncFromNode  () {
         // is this ever called?
         this.updateSubviews()
         return this
-    },
+    }
 
     // --- styles ---
     
-    styles: function() { 
+    styles () { 
         const lookedUpStyles = this.lookedUpStyles()
         if (lookedUpStyles) {
             return lookedUpStyles
@@ -339,9 +344,9 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
             this.lookedUpStyles()
         }
         throw new Error("missing styles")
-    },
+    }
 
-    applyStyles: function() {
+    applyStyles () {
         /*
         const node = this.node() 
         
@@ -364,12 +369,12 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
 
         
         return this
-    },
+    }
     
     
     // close button
     
-    addCloseButton: function() {
+    addCloseButton () {
         if (this.closeButtonView() === null) {
             //const c = CenteredDomView.clone()
 
@@ -391,16 +396,16 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
             }
         }
         return this
-    },
+    }
     
-    removeCloseButton: function() {
+    removeCloseButton () {
         if (this.closeButtonView() !== null) {
             this.contentView().removeSubview(this.closeButtonView()) 
             this.setCloseButtonView(null)
         }
-    },
+    }
     
-    delete: function() {
+    delete () {
         //console.log("delete")
         if (this.canDelete()) {
             this.setOpacity(0)
@@ -411,10 +416,10 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
 	            this.node().performAction("delete")
             }, 240)
         }
-    },
+    }
 
     /*
-	animateOpen: function() {
+	animateOpen () {
 		this.setTransition(this.transitionStyle())
 		this.setOpacity(0)
 		this.setMinAndMaxHeight(0)
@@ -425,28 +430,28 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
 	},
 	*/
     
-    canDelete: function() {
+    canDelete () {
         if (this.node()) {
             let canDelete = this.node().canDelete()
             return canDelete
         }
         return false
-    },
+    }
 
     // -- tap gesture ---
 
-    justTap: function() {
+    justTap () {
         if (this.isSelectable()) {
             //this.debugLog(".requestSelection()")
             this.requestSelection()
         }
-    },
+    }
 
-    acceptsTapBegin: function(aGesture) {
+    acceptsTapBegin (aGesture) {
         return true
-    },
+    }
 
-    onTapComplete: function(aGesture) {
+    onTapComplete (aGesture) {
         //this.debugLog(".onTapComplete()")
         const keyModifiers = Keyboard.shared().modifierNamesForEvent(aGesture.upEvent());
         const hasThreeFingersDown = aGesture.numberOfFingersDown() === 3;
@@ -470,26 +475,26 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         }
 
         return this
-    },
+    }
 
     // --- dragging key ---
 
 
-    on_d_KeyDown: function(event) {
+    on_d_KeyDown (event) {
         //this.debugLog(" on_d_KeyDown ", event._id)
         this.setIsRegisteredForDrag(true)
         return false
-    },
+    }
 
-    on_d_KeyUp: function(event) {
+    on_d_KeyUp (event) {
         //this.debugLog(" on_d_KeyUp ", event._id)
         this.setIsRegisteredForDrag(false)
         return false
-    },
+    }
 
     // ---
     
-    justInspect: function(event) {
+    justInspect (event) {
         this.debugLog(".justInspect()")
         if (this.node().nodeCanInspect()) { 
             this.setIsInspecting(true)
@@ -497,27 +502,27 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
             //this.select()
             this.justTap()
         }
-    },
+    }
 
     // -- slide gesture ---
 
-    acceptsSlide: function() {
+    acceptsSlide () {
         return this.canDelete()
-    },
+    }
 
-    onSlideBegin: function() {
+    onSlideBegin () {
         //this.debugLog(".onSlideBegin()")
         this.setSlideDeleteOffset(this.clientWidth() * 0.5);
         this.contentView().setTransition("all 0s") 
         this.setupSlide() 
         return this
-    },
+    }
 
-    underContentViewColor: function() {
+    underContentViewColor () {
         return "black"
-    },
+    }
 
-    setupSlide: function() {
+    setupSlide () {
         if (!this.dragDeleteButtonView()) {
             const h = this.clientHeight()
 
@@ -534,17 +539,17 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
             this.setDragDeleteButtonView(cb)
         }
         return this
-    },
+    }
 
-    cleanupSlide: function() {
+    cleanupSlide () {
         if (this.dragDeleteButtonView()) {
             this.dragDeleteButtonView().removeFromParentView()
             this.setDragDeleteButtonView(null)
         }
         this.setTouchRight(null)
-    },
+    }
 	
-    onSlideMove: function(slideGesture) {
+    onSlideMove (slideGesture) {
         const d = slideGesture.distance()
         const isReadyToDelete = d >= this._slideDeleteOffset
 
@@ -553,16 +558,16 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         if (this._dragDeleteButtonView) {
             this._dragDeleteButtonView.setOpacity(isReadyToDelete ? 1 : 0.2)
         }
-    },
+    }
 
-    setTouchRight: function(v) {
+    setTouchRight (v) {
         //this.setTransform("translateX(" + (v) + "px)");
         //this.setLeft(-v)
         //this.setRight(v)
         this.contentView().setRight(v)
-    },
+    }
 	
-    onSlideComplete: function(slideGesture) {
+    onSlideComplete (slideGesture) {
         //console.log(">>> " + this.type() + " onSlideComplete")
         const d = slideGesture.distance()
         const isReadyToDelete  = d >= this._slideDeleteOffset
@@ -572,13 +577,13 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         } else {
             this.slideBack()
         }
-    },
+    }
 
-    onSlideCancelled: function(aGesture) {
+    onSlideCancelled (aGesture) {
         this.slideBack()
-    },
+    }
 
-    finishSlideAndDelete: function() {
+    finishSlideAndDelete () {
         this.setIsDeleting(true)
         const dt = 0.08 // seconds
         this.contentView().setTransition("right " + dt + "s")
@@ -591,9 +596,9 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
                 this.delete()
             }, dt * 1000)
         }, 0)
-    },
+    }
 
-    slideBack: function() {
+    slideBack () {
         this.disableColumnUntilTimeout(400)
 
         this.contentView().setTransition("all 0.2s ease")
@@ -606,111 +611,111 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         setTimeout(() => {
             this.didCompleteSlide()
         }, 300)
-    },
+    }
 
-    disableColumnUntilTimeout: function(ms) {
+    disableColumnUntilTimeout (ms) {
         //this.column().columnGroup().disablePointerEventsUntilTimeout(ms)
         //this.setPointerEvents("none")
-    },
+    }
 
-    didCompleteSlide: function() {
+    didCompleteSlide () {
         this.cleanupSlide()
-    },
+    }
     
-    hasCloseButton: function() {
+    hasCloseButton () {
         return this.closeButtonView() && this.closeButtonView().target() != null
-    },
+    }
     
     /*
-    onMouseOver: function(event) {
+    onMouseOver (event) {
         if (this.canDelete() && this.closeButtonView()) {
             this.closeButtonView().setOpacity(1)
             this.closeButtonView().setTarget(this)
         }
-    },
+    }
     
-    onMouseLeave: function(event) {
+    onMouseLeave (event) {
         //this.debugLog(" onMouseLeave")
         if (this.hasCloseButton()) {
             this.closeButtonView().setOpacity(this.restCloseButtonOpacity())
             this.closeButtonView().setTarget(null)
         }        
-    },
+    }
     */
 
     // tap hold
 
-    acceptsLongPress: function() {
+    acceptsLongPress () {
         if (!this.column()) {
             console.log("missing parent view on: " + this.typeId())
         }
 
         return this.column().canReorderRows()
-    },
+    }
     
-    onLongPressBegin: function(aGesture) {
+    onLongPressBegin (aGesture) {
         if (this.isRegisteredForDrag()) {
             aGesture.cancel() // don't allow in-browser drag when we're doing a drag outside
         }
-    },
+    }
 
-    onLongPressCancelled: function(aGesture) {
-    },
+    onLongPressCancelled (aGesture) {
+    }
 
-    onLongPressComplete: function(longPressGesture) {
+    onLongPressComplete (longPressGesture) {
         longPressGesture.deactivate() // needed?
 
         const dv = DragView.clone().setItem(this).setSource(this.column())
         dv.openWithEvent(longPressGesture.currentEvent())
-    },
+    }
 
     // --- add/remove pan gesture ----
 
     /*
-    addPanGesture: function() {
+    addPanGesture () {
         return this.addGestureRecognizer(PanGestureRecognizer.clone())
-    },
+    }
 
-    removePanGesture: function() {
+    removePanGesture () {
         this.removeGestureRecognizersOfType("PanGestureRecognizer")
         return this
-    },
+    }
     */
 
     // --- handle pan gesture ---
 
-    acceptsPan: function() {
+    acceptsPan () {
         return this._isReordering
-    },
+    }
    
     // orient testing
 
     /*
-    onOrientBegin: function(aGesture) {
+    onOrientBegin (aGesture) {
         this.debugLog(".onOrientBegin()")
         aGesture.show()
-    },
+    }
 
-    onOrientMove: function(aGesture) {
+    onOrientMove (aGesture) {
         this.debugLog(".onOrientMove()")
         aGesture.show()
-    },
+    }
 
-    onOrientComplete: function(aGesture) {
+    onOrientComplete (aGesture) {
         this.debugLog(".onOrientComplete()")
         aGesture.show()
-    },
+    }
     */
 
     // --- selecting ---
     
     /*
-    requestSelectionOfRow: function() {
+    requestSelectionOfRow () {
         this.tellParentViews("requestSelectionOfRow", this)
-    },
+    }
     */
     
-    requestSelection: function () {
+    requestSelection  () {
         this.select()
         //this.debugLog(" tellParentViews didClickRow")
         //this.tellParentViews("didClickRow", this)
@@ -722,18 +727,18 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         }
         
         return this      
-    },
+    }
 	
-    willAcceptFirstResponder: function() {
+    willAcceptFirstResponder () {
         NodeView.willAcceptFirstResponder.apply(this)
 	    //this.debugLog(".willAcceptFirstResponder()")
         this.requestSelection()
         return this
-    },
+    }
 
     // -------------------------
 
-    didChangeIsSelected: function () {
+    didChangeIsSelected  () {
         NodeView.didChangeIsSelected.apply(this)
         /*
         if (this.isSelected()) {
@@ -744,62 +749,62 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
         */
         this.updateSubviews()
         return this
-    },
+    }
 
     /*
-    sibilingDidChangeSelection: function() {
+    sibilingDidChangeSelection () {
 
-    },
+    }
     */
     
-    nodeRowLink: function() {
+    nodeRowLink () {
         //this.debugLog(".visibleSubnodes() isInspecting:" + this.isInspecting())
         if (this.isInspecting()) {
             return  this.node().nodeInspector()
         }
 
         return this.node().nodeRowLink()
-    },
+    }
 
     /*
-    show: function() {
+    show () {
         const d = this.getComputedCssAttribute("display")
         const p = this.getComputedCssAttribute("position")
         console.log("row display:" + d + " position:" + p)
-    },
+    }
     */
 
     // --- dragging source protocol ---
 
-    hideForDrag: function() {
+    hideForDrag () {
         //this.debugLog(" hideForDrag")
         //this.setDisplay("none")
         this.setVisibility("hidden")
         //this.debugLog(" '" + this.node().title() + "'.hideForDrag() visibility: ", this.visibility())
         //this.setBorder("1px dashed blue")
-    },
+    }
 
-    unhideForDrag: function() {
+    unhideForDrag () {
         //this.debugLog(" unhideForDrag")
         //this.setDisplay("block")
         this.setVisibility("visible")
         //this.debugLog(" '" + this.node().title() + "'.unhideForDrag() visibility: ", this.visibility())
         //this.setBorder(null)
-    },
+    }
 
-    onDragItemBegin: function(aDragView) {
+    onDragItemBegin (aDragView) {
         //this.column().onSubviewDragBegin(aDragView)
-    },
+    }
 
-    onDragItemCancelled: function(aDragView) {
+    onDragItemCancelled (aDragView) {
         //this.column().onSubviewDragCancelled(aDragView)
-    },
+    }
 
-    onDragItemDropped: function(aDragView) {
+    onDragItemDropped (aDragView) {
         //this.column().onSubviewDragComplete(aDragView)
-    },
+    }
 
-    onDragRequestRemove: function() {
+    onDragRequestRemove () {
         //assert(this.hasParentView()) //
         if (this.hasParentView()) {
             this.removeFromParentView()
@@ -811,57 +816,57 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
 
         //this.delete() // we don't want to delete it, we want to move it
         return true
-    },
+    }
 
     // --- dropping destination protocol implemented to handle selecting/expanding row ---
 
-    acceptsDropHover: function() {
+    acceptsDropHover () {
         return this.canDropSelect()
-    },
+    }
 
-    onDragDestinationEnter: function(dragView) {
+    onDragDestinationEnter (dragView) {
         if (this.canDropSelect()) {
             this.setupDropHoverTimeout()
         }
-    },
+    }
 
-    onDragDestinationHover: function(dragView) {
-    },
+    onDragDestinationHover (dragView) {
+    }
 
-    onDragDestinationExit: function(dragView) {
+    onDragDestinationExit (dragView) {
         this.cancelDropHoverTimeout()
-    },
+    }
 
     // ----
 
-    dropHoverDidTimeoutSeconds: function() {
+    dropHoverDidTimeoutSeconds () {
         return 0.3
-    },
+    }
 
-    canDropSelect: function() {
+    canDropSelect () {
         return this.node().hasSubnodes() || this.node().nodeCanReorderSubnodes()
-    },
+    }
 
-    setupDropHoverTimeout: function() {
+    setupDropHoverTimeout () {
         const seconds = this.dropHoverDidTimeoutSeconds()
         this._dropHoverEnterTimeout = setTimeout(
             () => { this.dropHoverDidTimeout() }, 
             seconds * 1000
         )
-    },
+    }
 
-    cancelDropHoverTimeout: function() {
+    cancelDropHoverTimeout () {
         clearTimeout(this._dropHoverEnterTimeout)
         this._dropHoverEnterTimeout = null
-    },
+    }
 
-    dropHoverDidTimeout: function() {
+    dropHoverDidTimeout () {
         this.requestSelection()
-    },
+    }
 
     // Browser style drag
 
-    onDragStart: function (event) {
+    onDragStart  (event) {
         // triggered in element being dragged
         // DownloadURL only works in Chrome?
         
@@ -898,6 +903,6 @@ NodeView.newSubclassNamed("BrowserRow").newSlots({
 
 
         return true;
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

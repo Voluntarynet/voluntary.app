@@ -8,25 +8,29 @@
     
 */
 
+window.BMDataStore = class BMDataStore extends BMNode {
+    
+    initPrototype () {
+        this.newSlots({
+            lastSyncTime: 0,
+        })
+    }
 
-BMNode.newSubclassNamed("BMDataStore").newSlots({
-    lastSyncTime: 0,
-}).setSlots({
-    init: function () {
-        BMNode.init.apply(this)
+    init () {
+        super.init()
         this.setTitle("Storage")
         this.setNodeMinWidth(300)
-    },
+    }
 
-    subtitle: function () {
+    subtitle  () {
         return this.defaultStore().shortStatsString()
-    },
+    }
 
-    storeHasChanged: function() {
+    storeHasChanged () {
         return this.defaultStore().lastSyncTime() !== this.lastSyncTime()
-    },
+    }
 
-    prepareToSyncToView: function () {
+    prepareToSyncToView  () {
         //console.log("this.storeHasChanged() = ", this.storeHasChanged())
 
         if (this.subnodeCount() === 0 || this.storeHasChanged()) {
@@ -34,9 +38,9 @@ BMNode.newSubclassNamed("BMDataStore").newSlots({
             this.setLastSyncTime(this.defaultStore().lastSyncTime())
             this.refreshSubnodes()
         }
-    },
+    }
 
-    refreshSubnodes: function () {
+    refreshSubnodes  () {
         //this.debugLog(" refreshSubnodes")
         this.removeAllSubnodes()
         this.defaultStore().sdb().keys().sort().forEach((key) => {
@@ -46,18 +50,18 @@ BMNode.newSubclassNamed("BMDataStore").newSlots({
             subnode.setSubtitle(sizeDescription)
             this.addRecord(subnode)
         })
-    },
+    }
 
-    subnodeForClassName: function (aClassName) {
+    subnodeForClassName  (aClassName) {
         let subnode = this.firstSubnodeWithTitle(aClassName)
         if (!subnode) {
             subnode = BMNode.clone().setTitle(aClassName).setNoteIsSubnodeCount(true)
             this.justAddSubnode(subnode)
         }
         return subnode
-    },
+    }
 
-    addRecord: function (aRecord) {
+    addRecord  (aRecord) {
         let className = aRecord.title().split("_").first()
 
         if (className === "") {
@@ -68,6 +72,6 @@ BMNode.newSubclassNamed("BMDataStore").newSlots({
         classNode.setNodeMinWidth(300)
         classNode.justAddSubnode(aRecord)
         return this
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

@@ -6,15 +6,20 @@
     
 */
 
-BrowserRow.newSubclassNamed("BrowserTitledRow").newSlots({
-    titleView: null,
-    subtitleView: null,
-    noteView: null,
-    thumbnailView: null,
-    isSelected: false,
-}).setSlots({
-    init: function () {
-        BrowserRow.init.apply(this)
+window.BrowserTitledRow = class BrowserTitledRow extends BrowserRow {
+    
+    initPrototype () {
+        this.newSlots({
+            titleView: null,
+            subtitleView: null,
+            noteView: null,
+            thumbnailView: null,
+            isSelected: false,
+        })
+    }
+
+    init () {
+        super.init()
 
         this.setTitleView(this.contentView().addSubview(BrowserRowTitle.clone()))
         this.setSubtitleView(this.contentView().addSubview(BrowserRowSubtitle.clone()))
@@ -25,13 +30,13 @@ BrowserRow.newSubclassNamed("BrowserTitledRow").newSlots({
         this.updateSubviews()
         this.setIsSelectable(true)
         return this
-    },
+    }
 
-    hasSubtitle: function() {
+    hasSubtitle () {
         return this.subtitleView().innerHTML().length > 0
-    },
+    }
 
-    setHasSubtitle: function(aBool) {        
+    setHasSubtitle (aBool) {        
         if (aBool) {
             this.titleView().setMarginTop(6)
         } else {
@@ -39,9 +44,9 @@ BrowserRow.newSubclassNamed("BrowserTitledRow").newSlots({
         }
 
         return this
-    },
+    }
     
-    setupThumbnailViewIfAbsent: function() {
+    setupThumbnailViewIfAbsent () {
         if (!this.thumbnailView()) {
             const tv = DomView.clone().setDivClassName("BrowserRowThumbnailView")
     		tv.makeBackgroundNoRepeat()
@@ -58,9 +63,9 @@ BrowserRow.newSubclassNamed("BrowserTitledRow").newSlots({
             this.subtitleView().setLeft(offset)
         }
         return this
-    },
+    }
     
-    updateSubviews: function() {
+    updateSubviews () {
         BrowserRow.updateSubviews.apply(this)
 	
         this.setHasSubtitle(this.hasSubtitle())
@@ -96,17 +101,17 @@ BrowserRow.newSubclassNamed("BrowserTitledRow").newSlots({
 
 		
         return this
-    },
+    }
 
     // --- edit ---
 
-    didInput: function() {
+    didInput () {
         this.scheduleSyncToNode()
-    },
+    }
 
     // --- sync ---
 
-    syncToNode: function () {   
+    syncToNode  () {   
         //console.log("syncToNode")
         const node = this.node()
         node.setTitle(this.titleView().innerText())
@@ -114,20 +119,20 @@ BrowserRow.newSubclassNamed("BrowserTitledRow").newSlots({
         //node.tellParentNodes("onDidEditNode", this.node())  
         //node.scheduleSyncToStore() // TODO: this should be handled by the node
         return this
-    },
+    }
 
-    syncFromNode: function () {
+    syncFromNode  () {
         const node = this.node()
         this.titleView().setString(node.title())
         this.subtitleView().setString(node.subtitle())
         //this.noteView().setString(this.node().note())
         this.updateSubviews()
         return this
-    },
+    }
     
     // arrow
     
-    makeNoteRightArrow: function() {
+    makeNoteRightArrow () {
         const nv = this.noteView()
         nv.setBackgroundImageUrlPath(this.pathForIconName("right-gray"))        
         nv.setBackgroundSizeWH(10, 10)
@@ -135,6 +140,6 @@ BrowserRow.newSubclassNamed("BrowserTitledRow").newSlots({
         nv.setMinAndMaxHeight(10)
         //nv.setOpacity(0.5)
         return this		
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

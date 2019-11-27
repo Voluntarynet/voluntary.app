@@ -6,16 +6,19 @@
     
 */
 
-TextField.newSubclassNamed("BrowserRowSubtitle").newSlots({
-}).setSlots({
-    init: function () {
-        TextField.init.apply(this)
-        //this.setMinAndMaxHeight(13)
+window.BrowserRowSubtitle = class BrowserRowSubtitle extends TextField {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
         this.setDisplay("block")
-
         return this
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()
 
 

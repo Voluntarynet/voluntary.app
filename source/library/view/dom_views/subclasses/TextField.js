@@ -12,21 +12,26 @@
 
 */
 
-DomStyledView.newSubclassNamed("TextField").newSlots({
-    isSelected: false,
-    selectedColor: null,
-    unselectedColor: null,
-    doesClearOnReturn: false,
-    doesHoldFocusOnReturn: false,
-    doesTrim: false,
-    didTextInputNote: null,
-    didTextEditNote: null,
-    usesDoubleTapToEdit: false, // has to start false for proper state setup
-    doubleTapGestureRecognizer: null,
-    isEditable: false, // need to separate from contentEditable since we want to override when usesDoubleTapToEdit is true.
-}).setSlots({
-    init: function () {
-        DomStyledView.init.apply(this)
+window.TextField = class TouchLisTextFieldtener extends DomStyledView {
+    
+    initPrototype () {
+        this.newSlots({
+            isSelected: false,
+            selectedColor: null,
+            unselectedColor: null,
+            doesClearOnReturn: false,
+            doesHoldFocusOnReturn: false,
+            doesTrim: false,
+            didTextInputNote: null,
+            didTextEditNote: null,
+            usesDoubleTapToEdit: false, // has to start false for proper state setup
+            doubleTapGestureRecognizer: null,
+            isEditable: false, // need to separate from contentEditable since we want to override when usesDoubleTapToEdit is true.
+        })
+    }
+
+    init () {
+        super.init()
         //this.setDisplay("inline-block") // if we do it here, we can override it with css classes. Should we eliminate CSS?
         this.turnOffUserSelect()
         this.setWhiteSpace("nowrap")
@@ -43,51 +48,51 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
         //this.setDidTextEditNote(NotificationCenter.shared().newNote().setSender(this).setName("didTextEdit"))
 
         return this
-    },
+    }
 
     // editing control
 
-    setIsEditable: function(aBool) {
+    setIsEditable (aBool) {
         if (this._isEditable !== aBool) {
             this._isEditable = aBool
             this.syncEditingControl()
         }
         return this
-    },
+    }
 
     
-    isEditable: function() {
+    isEditable () {
         return this._isEditable
-    },
+    }
     
 
-    setUsesDoubleTapToEdit: function(aBool) {
+    setUsesDoubleTapToEdit (aBool) {
         if (this._usesDoubleTapToEdit !== aBool) {
             this._usesDoubleTapToEdit = aBool
             this.syncEditingControl()
         }
         return this
-    },
+    }
 
     // double tap gesture
 
-    newDoubleTapGestureRecognizer: function() { // private
+    newDoubleTapGestureRecognizer () { // private
         const tg = TapGestureRecognizer.clone()
         tg.setNumberOfTapsRequired(2)
         tg.setNumberOfFingersRequired(1)
         tg.setCompleteMessage("onDoubleTapComplete")
         //tg.setIsDebugging(true)
         return tg
-    },
+    }
 
-    doubleTapGestureRecognizer: function() {
+    doubleTapGestureRecognizer () {
         if (!this._doubleTapGestureRecognizer) {
             this._doubleTapGestureRecognizer = this.newDoubleTapGestureRecognizer()
         }
         return this._doubleTapGestureRecognizer
-    },
+    }
 
-    syncEditingControl: function() {
+    syncEditingControl () {
         if (this.isEditable()) {
             if (this.usesDoubleTapToEdit()) {
                 //this.doubleTapGestureRecognizer().start()
@@ -105,9 +110,9 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
             this.setContentEditable(false)
         }
         return this
-    },
+    }
 
-    onDoubleTapComplete: function(aGesture) {
+    onDoubleTapComplete (aGesture) {
         // make content editable and select text
         //this.debugLog(".onDoubleTapComplete()")
         if (this.contentEditable()) {
@@ -120,9 +125,9 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
         //this.focus()
         //this.setBorder("1px dashed white")
         return this
-    },
+    }
 
-    onBlur: function() {
+    onBlur () {
         DomStyledView.onBlur.apply(this)
         //this.debugLog(".onBlur()")
         if (this.usesDoubleTapToEdit()) {
@@ -130,44 +135,44 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
             this.setBorder("none")
             this.turnOffUserSelect()
         }
-    },
+    }
 
-    setFontSize: function(aNumber) {
+    setFontSize (aNumber) {
         DomStyledView.setFontSize.apply(this, [aNumber])
         this.setMinAndMaxHeight(aNumber + 2) // make sure TextfField can fit font size
         this.didEdit()
         return this
-    },
+    }
 
-    setContentEditable: function(aBool) {
+    setContentEditable (aBool) {
         DomStyledView.setContentEditable.apply(this, [aBool])
         //this.debugLog(".setContentEditable(" + aBool + ") = ", this.contentEditable())
         //this.setIsRegisteredForClicks(this.contentEditable())  // is this needed after move to tap?
         return this
-    },
+    }
 	
-    returnStrings: function() {
+    returnStrings () {
         return ["<div><br></div>", "<br><br>"]
-    },
+    }
 	
-    containsReturns: function() {
+    containsReturns () {
         const value = this.value() // correct?
         return returnStrings.detect(returnString => value.contains(returnString))		
-    },
+    }
 	
     // ------------------
 
-    setValue: function(newValue) {
+    setValue (newValue) {
         return this.setString(newValue)
-    },
+    }
 
-    value: function() {
+    value () {
         // this.element().text ?
         return this.string()
-    },
+    }
 
     
-    setString: function(newValue) {
+    setString (newValue) {
         if (newValue === null) {
             newValue = ""
         }
@@ -185,12 +190,12 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
             //console.log("textfield '" + newValue + "' usesDoubleTapToEdit:", this.usesDoubleTapToEdit())
         }
         return this
-    },
+    }
     
 	
     // ------------------
 
-    adjustFontSizeWithKeyboard: function() {
+    adjustFontSizeWithKeyboard () {
         const kb = Keyboard.shared()
         const controlDown   = kb.controlKey().isDown()
         const equalSignDown = kb.equalsSignKey().isDown()
@@ -209,18 +214,18 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
             }
         }
         return this
-    },
+    }
     
-    onKeyUp: function(event) {
+    onKeyUp (event) {
         //this.debugLog(" onKeyUp ", event)
         this.adjustFontSizeWithKeyboard()
         DomStyledView.onKeyUp.apply(this, [event])
         //this.debugLog(" onKeyUp value: [" + this.value() + "]")
         this.didEdit()
         return false
-    },
+    }
 
-    onEnterKeyUp: function(event) {
+    onEnterKeyUp (event) {
 	    //this.debugLog(".onEnterKeyUp()")
 	    //this.didEdit()
 
@@ -244,9 +249,9 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
         }
         
         return false
-    },
+    }
 	
-    formatValue: function() {
+    formatValue () {
 	    const oldValue = this.innerHTML()
 	    let newValue = this.innerText() // removes returns
         
@@ -268,10 +273,10 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
 	    //console.trace(this.type() + " formatValue '" + oldValue + "' -> '" + this.innerHTML() + "'")
         //this.debugLog(" after formatValue: '" + this.innerHTML() + "'")
         return this
-    },
+    }
     
     /*
-    setInput: function(s) {
+    setInput (s) {
         const n = this.node()
         if (n) {
             const m = n.nodeInputFieldMethod()
@@ -280,33 +285,33 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
             }
         }
         return this
-    },
+    }
     
     */
 
-    activate: function() {
+    activate () {
         this.focus()
         return this
-    },
+    }
 
     /*
-    setSelectAllOnDoubleClick: function(aBool) {
+    setSelectAllOnDoubleClick (aBool) {
         this.setIsRegisteredForClicks(aBool)
         return this
-    },
+    }
 
-    onDoubleClick: function (event) {
+    onDoubleClick  (event) {
         this.debugLog(".onDoubleClick()")
         //this.focus()
         this.selectAll() // looses focus!
         this.element().focus()
         //this.focusAfterDelay(.125) 
         return true
-    },
+    }
     */
 
     
-    onClick: function(event) {
+    onClick (event) {
         // to prevent click-to-edit event from selecting the background row
         //this.debugLog(".onClick()")
 
@@ -317,12 +322,12 @@ DomStyledView.newSubclassNamed("TextField").newSlots({
         }
 
         return DomStyledView.onClick.apply(this, [event])
-    },
+    }
 
-    didEdit: function () {
+    didEdit  () {
         DomStyledView.didEdit.apply(this)
         return this
-    },
+    }
 
 
-}).initThisProto()
+}.initThisClass()

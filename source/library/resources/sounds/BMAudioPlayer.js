@@ -20,39 +20,38 @@
 
 */
 
-DomView.newSubclassNamed("BMAudioPlayer").newSlots({
-    path: "",
-    sourceElement: null,
-}).setSlots({
+window.BMAudioPlayer = class BMAudioPlayer extends DomView {
+    
+    initPrototype () {
+        this.newSlots({
+            path: "",
+            sourceElement: null,
+        })
+    }
 
-    shared: function() {   
-        const shared = this.sharedInstanceForClass(BMAudioPlayer)
-        shared.open()
-        return shared
-    },
-
-    init: function () {
+    init () {
         this.setElementType("audio") // TODO: use a method override instead?
-        DomView.init.apply(this)
+        super.init()
+        this.open()
         return this
-    },
+    }
 
     // open / close
 
-    open: function() {
+    open () {
         this.setVisibility("hidden");
         DocumentBody.shared().addSubviewIfAbsent(this)
         return this
-    },
+    }
 
-    close: function() {
+    close () {
         DocumentBody.shared().removeSubviewIfPresent(this)
         return this
-    },
+    }
 
     // element
 
-    createElement: function() {
+    createElement () {
         const audio = document.createElement("audio")
         audio.setAttribute("autoplay", "");
 
@@ -62,18 +61,18 @@ DomView.newSubclassNamed("BMAudioPlayer").newSlots({
         audio.appendChild(source)
         audio.addEventListener("playing", event => this.onPlaying(event), false); 
         return audio
-    },
+    }
 
-    onPlaying: function() {
+    onPlaying () {
         if (this.isDebugging()) {
             this.debugLog(".onPlaying() ")
         }
         return this
-    },
+    }
 
     // path
 
-    audioTypeForExtension: function(extString) {
+    audioTypeForExtension (extString) {
         const fileExtensionToType = {
             "mp3": "mpeg",
             "wav": "wav",
@@ -85,9 +84,9 @@ DomView.newSubclassNamed("BMAudioPlayer").newSlots({
         const type =  "audio/" + fileExtensionToType[extString.toLowerCase()]
         assert(type)
         return type
-    },
+    }
 
-    setPath: function(aPath) {
+    setPath (aPath) {
         if (this._path != aPath) {
             this._path = aPath
         
@@ -105,32 +104,32 @@ DomView.newSubclassNamed("BMAudioPlayer").newSlots({
             this.load() 
         }
         return this
-    },
+    }
 
-    path: function() {
+    path () {
         return this.sourceElement().getAttribute("src");
-    },
+    }
 
-    name: function() {
+    name () {
         if (!this.path()) {
             return ""
         }
         return this.path().fileName()
-    },
+    }
 
     // loading
 
-    load: function() {
+    load () {
         if (this.isDebugging()) {
             this.debugLog( ".load() '" + this.path() + "'")
         }
         this.element().load()
         return this
-    },
+    }
 
     // playing / pausing / stopping
 
-    play: function() {
+    play () {
         if (this.isPlaying()) {
             return this
         }
@@ -145,28 +144,28 @@ DomView.newSubclassNamed("BMAudioPlayer").newSlots({
         })
         return this
 
-    },
+    }
 
-    isPlaying: function() {
+    isPlaying () {
         const e = this.element()
         return e.duration > 0 && !e.paused
-    },
+    }
 
     // pausing
 
-    pause: function() {
+    pause () {
         this.element().pause()
         return this
-    },
+    }
 
-    isPaused: function() {
+    isPaused () {
         const e = this.element()
         return e.paused
-    },
+    }
 
     // stopping
 
-    stop: function() {
+    stop () {
         if (this.isDebugging()) {
             this.debugLog( ".stop() '" + this.path() + "'")
         }
@@ -174,28 +173,28 @@ DomView.newSubclassNamed("BMAudioPlayer").newSlots({
         this.pause();
         this.setCurrentTime(0);
         return this
-    },
+    }
 
     // current time
 
-    setCurrentTime: function(t) {
+    setCurrentTime (t) {
         this.element().currentTime = t;
         return this;
-    },
+    }
 
-    currentTime: function() {
+    currentTime () {
         return this.element().currentTime;
-    },
+    }
 
     // playback rate
 
-    playbackRate: function() {
+    playbackRate () {
         return this.element().playbackRate;
-    },
+    }
 
-    setPlaybackRate: function(r) {
+    setPlaybackRate (r) {
         this.element().playbackRate = r;
         return this;
     }
 
-}).initThisProto()
+}.initThisClass()

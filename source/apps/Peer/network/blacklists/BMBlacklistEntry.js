@@ -7,10 +7,15 @@
 
 */
 
-BMFieldSetNode.newSubclassNamed("BMBlacklistEntry").newSlots({
-}).setSlots({
-    init: function () {
-        BMFieldSetNode.init.apply(this)		
+window.BMBlacklistEntry = class BMBlacklistEntry extends BMFieldSetNode {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()	
         this.setTitle("Blacklist entry")
         this.setShouldStore(true)
 
@@ -20,14 +25,14 @@ BMFieldSetNode.newSubclassNamed("BMBlacklistEntry").newSlots({
         //this.addFieldNamed("expirationDate").setValueMethod("expirationDate").setValueIsEditable(false).setValue("")
 		
         this.setCanDelete(true)
-    },
+    }
     
-    title: function() {
+    title () {
         return this.fieldNamed("host").value()  
-    },
+    }
     
-    subtitle: function() {
+    subtitle () {
         return this.fieldNamed("reason").value()  
-    },
+    }
 	
-}).initThisProto()
+}.initThisClass()

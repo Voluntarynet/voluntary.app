@@ -8,14 +8,19 @@
 
 */
         
-BMSummaryNode.newSubclassNamed("BMTimeNode").newSlots({
-    hour: null,
-    minute: null,
-    timezone: null,
-    formatter: null,
-}).setSlots({
-    init: function () {
-        BMSummaryNode.init.apply(this)
+window.BMTimeNode = class BMTimeNode extends BMSummaryNode {
+    
+    initPrototype () {
+        this.newSlots({
+            hour: null,
+            minute: null,
+            timezone: null,
+            formatter: null,
+        })
+    }
+
+    init () {
+        super.init()
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(false)
         this.setNodeCanReorderSubnodes(false)
@@ -32,38 +37,38 @@ BMSummaryNode.newSubclassNamed("BMTimeNode").newSlots({
 
         this.setFormatter(TimeFormatter.clone())
         return this
-    },
+    }
 
-    hasTime: function() {
+    hasTime () {
         return !Type.isNull(this.hour())
-    },
+    }
 
-    jsDate: function() {
+    jsDate () {
         //new Date(year, month, day, hours, minutes, seconds, milliseconds)
         if (this.hasTime()) {
             const d = new Date(0, 0, 0, this.hour(), this.minute(), 0, 0, 0)
             return d
         }
         return null
-    },
+    }
 
-    timeString: function() {
+    timeString () {
         return this.formatter().setDate(this.jsDate()).formattedValue()
-    },
+    }
 
-    subtitle: function() {
+    subtitle () {
         if (this.hasTime()) {
             return this.timeString()
         }
 
         return "No time selected"
-    },
+    }
 
-    note: function() {
+    note () {
         return "&gt;"
-    },
+    }
 
-    prepareToSyncToView: function() {
+    prepareToSyncToView () {
         // called after clicked
         if (!this.hasSubnodes()) {
             for (let i = 0; i < 23; i++) {
@@ -71,9 +76,9 @@ BMSummaryNode.newSubclassNamed("BMTimeNode").newSlots({
                 this.addSubnode(hour)
             }
         }
-    },
+    }
 
-    onRequestSelectionOfDecendantNode: function(aNode) {
+    onRequestSelectionOfDecendantNode (aNode) {
         if (aNode.type() === "BMMinuteNode") {
             const minuteNode = aNode
             const hourNode = minuteNode.parentNode()
@@ -83,6 +88,6 @@ BMSummaryNode.newSubclassNamed("BMTimeNode").newSlots({
             this.parentNode().postShouldFocusSubnode(this)
         }
         return true
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

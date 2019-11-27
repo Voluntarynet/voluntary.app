@@ -7,13 +7,17 @@
     
 */
 
+window.BMBlacklistedPeers = class BMBlacklistedPeers extends BMBlacklist {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
 
-BMBlacklist.newSubclassNamed("BMBlacklistedPeers").newSlots({
-}).setSlots({
-    init: function () {
-        BMBlacklist.init.apply(this)		
+    init () {
+        super.init()	
         this.setShouldStore(true)        
         this.setTitle("peers")
-    },
+    }
 	
-}).initThisProto()
+}.initThisClass()

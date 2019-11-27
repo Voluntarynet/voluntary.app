@@ -7,12 +7,17 @@
 
 */
 
-NodeView.newSubclassNamed("ShelfItemGroupView").newSlots({
-    isCompacted: true,
-    isAlwaysSelected: false,
-}).setSlots({
-    init: function () {
-        NodeView.init.apply(this)
+window.ShelfItemGroupView = class ShelfItemGroupView extends NodeView {
+    
+    initPrototype () {
+        this.newSlots({
+            isCompacted: true,
+            isAlwaysSelected: false,
+        })
+    }
+
+    init () {
+        super.init()
         this.turnOffUserSelect()
         this.setTransition("all 0.35s")
 		
@@ -20,34 +25,34 @@ NodeView.newSubclassNamed("ShelfItemGroupView").newSlots({
         this.setMinAndMaxWidth(itemSize)
         this.setOverrideSubviewProto(ShelfItemView)
         return this
-    },
+    }
 
-    visibleSubnodes: function() {
+    visibleSubnodes () {
         return this.node().shelfSubnodes() 
-    },
+    }
     /*
-    newSubviewForSubnode: function(aSubnode) {
+    newSubviewForSubnode (aSubnode) {
         let newSubview = NodeView.newSubviewForSubnode(aSubnode)
         newSubview.setOverrideSubviewProto(ShelfItemView)
         return newSubview
-    },
+    }
 */
     
-    syncFromNode: function() {
+    syncFromNode () {
         NodeView.syncFromNode.apply(this)
         this.showCompaction()
         return this
-    },
+    }
 	
 
     
     // --------------
     
-    shelf: function() {
+    shelf () {
         return this.parentView().parentView()
-    },
+    }
     
-    didClickItem: function(clickedItem) {
+    didClickItem (clickedItem) {
         //this.debugLog(".didClickItem(" + clickedItem.typeId() + ")")
         
         //this.scrollView().performOnSubviewsExcept("unselect", clickedItem)
@@ -61,50 +66,50 @@ NodeView.newSubclassNamed("ShelfItemGroupView").newSlots({
         })
 
         this.shelf().didClickGroup(this)
-    },
+    }
     
 
     // --- items ---
     
-    items: function() {
+    items () {
         return this.subviews()
-    },
+    }
     
-    addItem: function(shelfItemView) {
+    addItem (shelfItemView) {
         this.addSubview(shelfItemView)
         return this
-    },
+    }
     
-    firstItem: function() {
+    firstItem () {
         return this.items()[0]
-    },
+    }
 
-    firstItemHeight: function() {
+    firstItemHeight () {
         let fs = this.firstItem()    
         return fs ? fs.clientHeight() : 0
-    },
+    }
     
-    setIsAlwaysSelected: function(aBool) {
+    setIsAlwaysSelected (aBool) {
         this._isAlwaysSelected = aBool
         if (aBool) {
             this.selectItems()
         }
         return this
-    },
+    }
 
     // --- selection ---
 
-    selectItems: function() {
+    selectItems () {
         this.items().forEach((item) => { item.select() })
         return this
-    },
+    }
        
-    unselectItems: function() {
+    unselectItems () {
         this.items().forEach((item) => { item.unselect() })
         return this
-    },
+    }
 
-    showCompaction: function() {
+    showCompaction () {
         if (this.isCompacted()) {
         	this.setMinAndMaxHeight(this.firstItemHeight())
         } else {
@@ -112,9 +117,9 @@ NodeView.newSubclassNamed("ShelfItemGroupView").newSlots({
             this.setMinAndMaxHeight(newHeight)			
         }
         return this
-    },
+    }
     
-    compact: function() {
+    compact () {
         if (!this._isCompacted) {
             this._isCompacted = true
             
@@ -126,9 +131,9 @@ NodeView.newSubclassNamed("ShelfItemGroupView").newSlots({
             // this.debugLog(".compact()")
         }
         return this
-    },
+    }
     
-    uncompact: function() {
+    uncompact () {
         if (this._isCompacted) {
             this._isCompacted = false
 
@@ -141,15 +146,15 @@ NodeView.newSubclassNamed("ShelfItemGroupView").newSlots({
             
         }        
         return this
-    },
+    }
     
-    toggleCompact: function() {
+    toggleCompact () {
         if (this._isCompacted) {
             this.uncompact()
         } else {
             this.compact()
         }
         return this
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

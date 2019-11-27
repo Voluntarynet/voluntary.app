@@ -6,18 +6,23 @@
 
 */
 
-BMStorableNode.newSubclassNamed("BMBuy").newSlots({
-    post: null,
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
+window.BMBuy = class BMBuy extends BMStorableNode {
+    
+    initPrototype () {
+        this.newSlots({
+            post: null,
+        })
+    }
+
+    init () {
+        super.init()
         this.setTitle("Buy")
         this.setCanDelete(true)
         this.setSubtitle(Math.floor(Math.random()*10000))
         this.addStoredSlot("subtitle")
-    },
+    }
     
-    setPost: function(aPost) {
+    setPost (aPost) {
         if (this.post()) {
             this.removeSubnode(this.post())
         }
@@ -25,6 +30,6 @@ BMStorableNode.newSubclassNamed("BMBuy").newSlots({
         this._post = aPost
         this.addSubnode(aPost)
         return this
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

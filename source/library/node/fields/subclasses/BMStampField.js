@@ -5,16 +5,21 @@
     BMStampField
 
 */
-        
-BMField.newSubclassNamed("BMStampField").newSlots({	
-}).setSlots({
-    init: function () {
-        BMField.init.apply(this)
+
+window.BMStampField = class BMStampField extends BMField {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
         this.setViewClassName("BMFieldRowView")
         //this.setKeyIsVisible(false)
         //this.setKey("drop images here")
         this.setKeyIsEditable(false)
         this.setValueIsEditable(false)
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

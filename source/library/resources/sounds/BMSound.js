@@ -8,45 +8,50 @@
 
 */
 
-BMNode.newSubclassNamed("BMSound").newSlots({
-    path: null,
-}).setSlots({
-    init: function () {
-        BMNode.init.apply(this)
+window.BMSound = class BMSound extends BMNode {
+    
+    initPrototype () {
+        this.newSlots({
+            path: null,
+        })
+    }
+
+    init () {
+        super.init()
         this.setNodeMinWidth(270)
-    },
+    }
 
-    title: function() {
+    title () {
         return this.name()
-    },
+    }
 
-    subtitle: function() {
+    subtitle () {
         return this.path().pathExtension()
-    },
+    }
 
-    name: function() {
+    name () {
         return this.path().lastPathComponent().sansExtension()
-    },
+    }
 
     /*
-    setPath: function(aPath) {
+    setPath (aPath) {
         // update if playing?
         this._path = aPath
         return this
-    },
+    }
     */
 
-    play: function() {
+    play () {
         const audioPlayer = BMAudioPlayer.shared()
         audioPlayer.setPath(this.path())
         audioPlayer.play()
         return this
-    },
+    }
 
-    prepareToAccess: function() {
+    prepareToAccess () {
         BMNode.prepareToAccess.apply(this)
         this.play() // not a good way to do this
-    },
+    }
 
     //audio.src = 'data:audio/wav;base64,UklGR...;
-}).initThisProto()
+}.initThisClass()

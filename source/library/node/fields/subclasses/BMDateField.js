@@ -5,23 +5,28 @@
     BMDateField
 
 */
-        
-BMField.newSubclassNamed("BMDateField").newSlots({
-    unsetVisibleValue: "unset",
-}).setSlots({
-    init: function () {
-        BMField.init.apply(this)
+
+window.BMDateField = class BMDateField extends BMField {
+    
+    initPrototype () {
+        this.newSlots({
+            unsetVisibleValue: "unset",
+        })
+    }
+
+    init () {
+        super.init()
         this.setViewClassName("BMFieldRowView")
         this.setKeyIsEditable(false)
         this.setValueIsEditable(false)
-    },
+    }
 
-    visibleValue: function() {
+    visibleValue () {
         const v = this.value()
         if (!v) { 
             return this.unsetVisibleValue()
         }
         return new Date(v).toDateString()
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

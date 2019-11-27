@@ -6,12 +6,16 @@
     
 */
 
-BMNode.newSubclassNamed("BMDayNode").newSlots({
-    value: 1, // day value starts with 1
-}).setSlots({
+window.BMDayNode = class BMDayNode extends BMNode {
     
-    init: function () {
-        BMNode.init.apply(this)
+    initPrototype () {
+        this.newSlots({
+            value: 1, // day value starts with 1
+        })
+    }
+
+    init () {
+        super.init()
 
         this.setCanDelete(false)
         this.setNodeCanInspect(false)
@@ -21,34 +25,34 @@ BMNode.newSubclassNamed("BMDayNode").newSlots({
         this.setNodeCanEditTitle(false)
 
         this.setNodeCanReorderSubnodes(false)
-    },
+    }
 
-    setValue: function(v) {
+    setValue (v) {
         assert(Number.isInteger(v) && v > 0 && v < 32)
         this._value = v
         return this
-    },
+    }
 
-    dayName: function() {
+    dayName () {
         const v = this.value()
         return v + v.ordinalSuffix()
-    },
+    }
 
-    title: function() {
+    title () {
         return this.dayName()
-    },
+    }
 
-    subtitle: function() {
+    subtitle () {
         return null
-    },
+    }
     
-    note: function() {
+    note () {
         return null
-    },
+    }
     
-    nodeRowLink: function() {
+    nodeRowLink () {
         // used by UI row views to browse into next column
         return null
-    },    
+    }
     
-}).initThisProto()
+}.initThisClass()

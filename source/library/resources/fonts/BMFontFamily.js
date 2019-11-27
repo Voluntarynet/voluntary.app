@@ -7,30 +7,35 @@
 
 */
 
-BMNode.newSubclassNamed("BMFontFamily").newSlots({
-    name: null,
-    fonts: null,
-}).setSlots({
-    init: function () {
-        BMNode.init.apply(this)
-        this.setNodeMinWidth(270)
-    },
+window.BMFontFamily = class BMFontFamily extends BMNode {
+    
+    initPrototype () {
+        this.newSlots({
+            name: null,
+            fonts: null,
+        })
+    }
 
-    title: function() {
+    init () {
+        super.init()
+        this.setNodeMinWidth(270)
+    }
+
+    title () {
         return this.name()
-    },
+    }
 
     /*
-    subtitle: function () {
+    subtitle  () {
         return "font family"
-    },
+    }
     */
 
-    addFontWithPath: function(aPath) {
+    addFontWithPath (aPath) {
         const font = BMFont.clone().setPath(aPath)
         font.load()
         this.addSubnode(font)
         return this
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

@@ -6,77 +6,82 @@
 
 */
 
-BMStorableNode.newSubclassNamed("BMContactLinks").newSlots({
-    linkProto: null,
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
+window.BMContactLinks = class BMContactLinks extends BMStorableNode {
+    
+    initPrototype () {
+        this.newSlots({
+            linkProto: null,
+        })
+    }
+
+    init () {
+        super.init()
         this.setShouldStore(true)
         this.setTitle("contacts")
-    },
+    }
 
-    setParentNode: function (aNode) {
+    setParentNode  (aNode) {
         BMStorableNode.setParentNode.apply(this, [aNode])
         if (aNode === null) {
             this.unwatchIdentities()
         } else {
             this.watchIdentities()
         }
-    },
+    }
 
-    finalize: function () {
+    finalize  () {
         BMStorableNode.finalize.apply(this)
         if (this.parentNode()) {
             this.updatedContacts()
         }
         this.setTitle("contacts")
-    },
+    }
 
-    loadFinalize: function () {
+    loadFinalize  () {
         this.updatedContacts()
-    },
+    }
 
-    watchIdentities: function () {
+    watchIdentities  () {
         if (!this._idsObservation) {
             this._idsObservation = NotificationCenter.shared().newObservation().setName("didChangeIdentity").setObserver(this).watch()
         }
-    },
+    }
 
-    unwatchIdentities: function () {
+    unwatchIdentities  () {
         NotificationCenter.shared().removeObserver(this)
         this._idsObservation = null
-    },
+    }
 
-    didChangeIdentity: function (aNote) {
+    didChangeIdentity  (aNote) {
         //console.log(this.nodePathString() + ".didChangeIdentities() <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
         window.SyncScheduler.shared().scheduleTargetAndMethod(this, "updatedContacts")
-    },
+    }
 
-    chatApp: function () {
+    chatApp  () {
         return this.parentNode()
-    },
+    }
 
-    localIdentity: function () {
+    localIdentity  () {
         return this.parentNodeOfType("BMLocalIdentity")
-    },
+    }
 
-    contactLinks: function () {
+    contactLinks  () {
         return this.subnodes()
-    },
+    }
 
-    updatedContacts: function () {
+    updatedContacts  () {
         this.removeLinksWithNoContact()
         this.addLinkForEveryContact()
         this.sortSubnodes()
         //this.debugLog(" updateIdentities contactLinks " + this.subnodeCount())
         return this
-    },
+    }
 
-    chatTargetIds: function () {
+    chatTargetIds  () {
         return this.localIdentity().remoteIdentities().validSubnodes()
-    },
+    }
 
-    addLinkForEveryContact: function () {
+    addLinkForEveryContact  () {
         this.chatTargetIds().forEach((rid) => {
             if (!this.linkForContact(rid)) {
                 const link = this.linkProto().clone().setRemoteIdentity(rid)
@@ -84,9 +89,9 @@ BMStorableNode.newSubclassNamed("BMContactLinks").newSlots({
             }
         })
         return this
-    },
+    }
 
-    removeLinksWithNoContact: function () {
+    removeLinksWithNoContact  () {
         this.contactLinks().slice().forEach((link) => {
             if (!link.hasValidRemoteIdentity()) {
                 this.debugLog(" removing invalid link ", link.title())
@@ -94,15 +99,15 @@ BMStorableNode.newSubclassNamed("BMContactLinks").newSlots({
             }
         })
         return this
-    },
+    }
 
-    linkForContact: function (rid) {
+    linkForContact  (rid) {
         return this.contactLinks().detect((link) => {
             return link.remoteIdentity() === rid
         })
-    },
+    }
 
-    sortSubnodes: function () {
+    sortSubnodes  () {
         const contactLinks = this.contactLinks().slice()
 
         contactLinks.sort((linkA, linkB) => {
@@ -118,6 +123,6 @@ BMStorableNode.newSubclassNamed("BMContactLinks").newSlots({
         }
 
         return this
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

@@ -6,11 +6,16 @@
 
 */
 
-BMFieldRowView.newSubclassNamed("BMBooleanFieldRowView").newSlots({
-}).setSlots({
-    init: function () {
-        BMFieldRowView.init.apply(this)
+window.BMBooleanFieldRowView = class BMBooleanFieldRowView extends BMFieldRowView {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
 
+    init () {
+        super.init()
+        
         this.turnOffUserSelect()
         this.keyView().setTransition("color 0.3s")
 
@@ -24,20 +29,20 @@ BMFieldRowView.newSubclassNamed("BMBooleanFieldRowView").newSlots({
 
         this.keyView().parentView().swapSubviews(this.keyView(), this.valueView())
         return this
-    },
+    }
 
-    createValueView: function() {
+    createValueView () {
         return BooleanView.clone()
-    },
+    }
 	
-    booleanView: function() {
+    booleanView () {
         return this.valueView()
-    },
+    }
 
-    syncFromNode: function() {
+    syncFromNode () {
         BMFieldRowView.syncFromNode.apply(this)
         this.booleanView().updateAppearance()
         return this
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

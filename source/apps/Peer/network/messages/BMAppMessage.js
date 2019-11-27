@@ -6,29 +6,34 @@
 
 */
 
-BMFieldSetNode.newSubclassNamed("BMAppMessage").newSlots({
-    objMsg: null,
-    senderId: null,
-    receiverId: null,
-    hasRead: false,
-}).setSlots({
-    init: function () {
-        BMFieldSetNode.init.apply(this)
+window.BMAppMessage = class BMAppMessage extends BMFieldSetNode {
+    
+    initPrototype () {
+        this.newSlots({
+            objMsg: null,
+            senderId: null,
+            receiverId: null,
+            hasRead: false,
+        })
+    }
+
+    init () {
+        super.init()
         this.setShouldStore(true)
         this.addStoredSlots(["senderId", "receiverId", "objMsg"])
-    },
+    }
 
-    senderPublicKeyString: function() {
+    senderPublicKeyString () {
         const rid = this.senderId()
         if (rid) {
             return rid.publicKeyString()
         }
         return null
-    },
+    }
     
     // ------------------------
 	
-    duplicate: function() {
+    duplicate () {
 	    assert(this.objMsg() !== null)
         const obj = window[this.type()].clone()
         obj.setSenderId(this.senderId())
@@ -37,44 +42,44 @@ BMFieldSetNode.newSubclassNamed("BMAppMessage").newSlots({
         obj.setDataDict(this.dataDict())
         this.debugLog(" duplicated to " + obj.typeId())
         return obj
-    },
+    }
 
-    contentDict: function() {
+    contentDict () {
         throw new Error(this.type() + " subclasses should override contentDict")
         const contentDict = {}
         return contentDict
-    },
+    }
 	
-    setContentDict: function(contentDict) {
+    setContentDict (contentDict) {
         throw new Error(this.type() + " subclasses should override setContentDict")
         return this
-    },
+    }
 	
-    dataDict: function() {
+    dataDict () {
         const dataDict = {}
         dataDict.type = this.type()
         dataDict.data = this.contentDict()
         return dataDict
-    },
+    }
 
-    setDataDict: function(dataDict) {
+    setDataDict (dataDict) {
 	    this.setContentDict(dataDict.data)		
         return this
-    },
+    }
 
-    setDecryptedData: function(decryptedData) {
+    setDecryptedData (decryptedData) {
         return this
-    },
+    }
 	
-    isSent: function() {
+    isSent () {
         return this.objMsg() !== null
-    },
+    }
 	
-    canEdit: function() {
+    canEdit () {
         return !this.isSent()
-    },
+    }
 
-    sendToRemoteId: function (rid) {
+    sendToRemoteId  (rid) {
         //console.log("rid = ", rid.typeId())
         const lid = rid.localIdentity()
         this.setSenderId(lid)
@@ -92,20 +97,20 @@ BMFieldSetNode.newSubclassNamed("BMAppMessage").newSlots({
             this.objMsg().send()
         }
         return this
-    },
+    }
     
-    hash: function() {
+    hash () {
         if (this.objMsg()) {
             return this.objMsg().msgHash()
         }
         return this.typeId()
-    },
+    }
 	
-    isEqual: function(other) {
+    isEqual (other) {
         return this.hash() === other.hash()
-    },
+    }
 	    
-    fromDataDict: function(dataDict) {
+    fromDataDict (dataDict) {
         const className = dataDict.type
         if (!className) {
             return null
@@ -122,17 +127,17 @@ BMFieldSetNode.newSubclassNamed("BMAppMessage").newSlots({
         
         //this.debugLog(" fromDataDict() dataDict = ", dataDict)
         return proto.clone().setDataDict(dataDict)
-    },
+    }
 
-    prepareToDelete: function() {
+    prepareToDelete () {
         if (this.objMsg()) {
             this.objMsg().delete()
         }
-    },
+    }
 	
     // --- public posts ----
 	
-    postFromSender: function (lid) {
+    postFromSender  (lid) {
         this.setSenderId(lid)
         
         const objMsg = BMObjectMessage.clone()
@@ -148,11 +153,11 @@ BMFieldSetNode.newSubclassNamed("BMAppMessage").newSlots({
             this.debugLog(".postFromSender() sent!")
         }
         return this
-    },
+    }
     
     // updating hasRead
     
-    nodeBecameVisible: function() {
+    nodeBecameVisible () {
         BMFieldSetNode.nodeBecameVisible.apply(this)
 
         if (!this.hasRead()) {
@@ -161,6 +166,6 @@ BMFieldSetNode.newSubclassNamed("BMAppMessage").newSlots({
         }
 
         return this
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

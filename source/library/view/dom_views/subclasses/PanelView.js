@@ -6,15 +6,20 @@
 
 */
 
-DomView.newSubclassNamed("PanelView").newSlots({
-    titleView: null,
-    subtitleView: null,
-    button1: null,
+window.PanelView = class PanelView extends DomView {
+    
+    initPrototype () {
+        this.newSlots({
+            titleView: null,
+            subtitleView: null,
+            button1: null,
+        
+            isDragging: false,
+        })
+    }
 
-    isDragging: false,
-}).setSlots({
-    init: function () {
-        DomView.init.apply(this)
+    init () {
+        super.init()
         this.setTitleView(TextField.clone().setDivClassName("PanelTitleView"))
         this.addSubview(this.titleView())
         this.titleView().setTextAlign("center")
@@ -56,29 +61,29 @@ DomView.newSubclassNamed("PanelView").newSlots({
         */
 
         return this
-    },
+    }
 
-    setTitle: function(s) {
+    setTitle (s) {
         this.titleView().setValue(s)
         return this
-    },
+    }
 
 
     // --- dragging ---
 
-    setupForDraggingWithMouse: function() {
+    setupForDraggingWithMouse () {
         this.setIsRegisteredForMouse(true)
-    },
+    }
 
-    mouseMoveTracker: function(event) {
+    mouseMoveTracker (event) {
         //console.log("mouse pos: ", event.clientX, " x ", event.clientY)
         if (this.isDragging()) {
             this.setLeft(event.clientX - (this._startClientX - this._startLeft))
             this.setTop(event.clientY  - (this._startClientY - this._startTop))
         }
-    },
+    }
 
-    onMouseDown: function (event) {
+    onMouseDown  (event) {
         //console.log("onMouseDown")
         this.setIsDragging(true)
 
@@ -88,25 +93,25 @@ DomView.newSubclassNamed("PanelView").newSlots({
         this._startTop = this.top()
         this._startClientX = event.clientX
         this._startClientY = event.clientY
-    },
+    }
 
-    onMouseMove: function (event) {
-    },
+    onMouseMove  (event) {
+    }
 
-    onMouseUp: function(event) {
+    onMouseUp (event) {
         this.setIsDragging(false)
         //this.setBackgroundColor(this.normalColor())
         this.parentView().element().removeEventListener("mousemove", this._mouseMoveTrackerFunc, false);
-    },
+    }
 
-    hitButton1: function() {
+    hitButton1 () {
         this.close()
         return this
-    },
+    }
 
-    close: function() {
+    close () {
         this.removeFromParentView()
         return this
     }
     
-}).initThisProto()
+}.initThisClass()

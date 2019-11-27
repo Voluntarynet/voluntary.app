@@ -8,13 +8,17 @@
 
 */
 
-DomView.newSubclassNamed("ButtonView").newSlots({ 
-    titleView: null,
-    isEnabled: true,
-}).setSlots({
+window.ButtonView = class ButtonView extends DomView {
+    
+    initPrototype () {
+        this.newSlots({
+            titleView: null,
+            isEnabled: true,
+        })
+    }
 
-    init: function () {
-        DomView.init.apply(this)
+    init () {
+        super.init()
         //this.setMinAndMaxWidth(200)
         //this.setButtonHeight(50)
         this.turnOffUserSelect()
@@ -37,52 +41,52 @@ DomView.newSubclassNamed("ButtonView").newSlots({
         this.addDefaultTapGesture()
 
         return this
-    },
+    }
 
-    setTitle: function(s) {
+    setTitle (s) {
         this.titleView().setValue(s)
         return this
-    },
+    }
 
-    title: function() {
+    title () {
         return this.titleView().value()
-    },
+    }
 
-    setButtonHeight: function(h) {
+    setButtonHeight (h) {
         this.setMinAndMaxHeight(h)
         this.setLineHeight(h)
         return this
-    },
+    }
 
     /*
-    setIconName: function(aString) {
+    setIconName (aString) {
         this.setBackgroundImageUrlPath(this.pathForIconName(aString))
         return this
-    },
+    }
     */
 
-    setIsEditable: function(aBool) {
+    setIsEditable (aBool) {
         this.titleView().setIsEditable(aBool)
         return this
-    },
+    }
 
-    isEditable: function() {
+    isEditable () {
         return this.titleView().isEditable()
-    },
+    }
 
-    sendActionToTarget: function() {
+    sendActionToTarget () {
         if (!this.isEditable()) {
             DomView.sendActionToTarget.apply(this)
         }
         return this
-    },
+    }
 
-    onTapComplete: function (aGesture) {
+    onTapComplete  (aGesture) {
         //this.debugLog(".onTapComplete()")
         if (!this.isEditable()) {
             DomView.sendActionToTarget.apply(this)
         }
         return false
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

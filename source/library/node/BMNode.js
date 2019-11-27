@@ -33,75 +33,80 @@
 
 */
 
-ideal.Proto.newSubclassNamed("BMNode").newSlots({        
-    // row view summary
-    title: null,
-    subtitle: null,
-    note: null,
-
-    // parent node, subnodes
-    parentNode: null,
-    subnodes: null,
-    subnodeProto: null,
-    nodeCanReorderSubnodes: false,
+window.BMNode = class BMNode extends ProtoClass {
     
-    // subnodes index
-    subnodeIndex: null,
-    subnodeSortFunc: null,
+    initPrototype () {
+        this.newSlots({
+            // row view summary
+            title: null,
+            subtitle: null,
+            note: null,
 
-    // actions
-    actions: null,
+            // parent node, subnodes
+            parentNode: null,
+            subnodes: null,
+            subnodeProto: null,
+            nodeCanReorderSubnodes: false,
+            
+            // subnodes index
+            subnodeIndex: null,
+            subnodeSortFunc: null,
 
-    // notification notes
-    didUpdateNodeNote: null,
-    shouldFocusSubnodeNote: null,
+            // actions
+            actions: null,
 
-    // view related, but computed on node
-    subtitleIsSubnodeCount: false,
-    nodeVisibleClassName: null,
-    noteIsSubnodeCount: false,
-    nodeEmptyLabel: null, // shown in view when there are no subnodes
-        
+            // notification notes
+            didUpdateNodeNote: null,
+            shouldFocusSubnodeNote: null,
 
-    // --- view related -----------------------------------
+            // view related, but computed on node
+            subtitleIsSubnodeCount: false,
+            nodeVisibleClassName: null,
+            noteIsSubnodeCount: false,
+            nodeEmptyLabel: null, // shown in view when there are no subnodes
+                
 
-    // view settings
-    viewClassName: null,
-    nodeThumbnailUrl: null,
-    nodeCanEditTitle: false,
-    nodeCanEditSubtitle: false,
-    nodeRowIsSelectable: true,
-    nodeRowsStartAtBottom: false,
-    nodeMinRowHeight: 0, // tall fields like draft body
+            // --- view related -----------------------------------
 
-    // html
-    acceptsFileDrop: false,
-        	
-    // view style overrides
-    viewDict: null, 
-    nodeColumnStyles: null,
-    nodeRowStyles: null,
+            // view settings
+            viewClassName: null,
+            nodeThumbnailUrl: null,
+            nodeCanEditTitle: false,
+            nodeCanEditSubtitle: false,
+            nodeRowIsSelectable: true,
+            nodeRowsStartAtBottom: false,
+            nodeMinRowHeight: 0, // tall fields like draft body
 
-    // view footer
-    nodeHasFooter: false,
-    nodeInputFieldMethod: null, // for footer
+            // html
+            acceptsFileDrop: false,
+                    
+            // view style overrides
+            viewDict: null, 
+            nodeColumnStyles: null,
+            nodeRowStyles: null,
 
-    // column settings - TODO: auto adjust to fit?
-    nodeMinWidth: 200,
-    nodeUsesColumnBackgroundColor: true,
-    canDelete: false,
-    nodeCanEditRowHeight: false,
-    nodeCanEditColumnWidth: false,
+            // view footer
+            nodeHasFooter: false,
+            nodeInputFieldMethod: null, // for footer
 
-    // inspector
-    nodeCanInspect: false,
-    nodeInspector: null,
+            // column settings - TODO: auto adjust to fit?
+            nodeMinWidth: 200,
+            nodeUsesColumnBackgroundColor: true,
+            canDelete: false,
+            nodeCanEditRowHeight: false,
+            nodeCanEditColumnWidth: false,
 
-    shouldStore: false,
-    isFinalized: false,
-}).setSlots({
-    init: function () {
-        ideal.Proto.init.apply(this)
+            // inspector
+            nodeCanInspect: false,
+            nodeInspector: null,
+
+            shouldStore: false,
+            isFinalized: false,
+        })
+    }
+
+    init () {
+        super.init()
         this._subnodes = []
         this._actions = []        
         this.setDidUpdateNodeNote(NotificationCenter.shared().newNote().setSender(this).setName("didUpdateNode"))
@@ -116,9 +121,9 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         //this.setNodeRowStyles(BMViewStyles.clone())
         this.setViewDict({})
         return this
-    },
+    }
 
-    pid: function() {
+    pid () {
         /*
         if (!this.shouldStore()) {
             this.shouldStore()
@@ -126,27 +131,27 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         }
         */
         return this.puuid()
-    },
+    }
 
-    nodeInspector: function(aField) {
+    nodeInspector (aField) {
         if (!this._nodeInspector) {
             this._nodeInspector = BMNode.clone().setNodeMinWidth(500)
             this.initNodeInspector()
         }
         return this._nodeInspector
-    },
+    }
 
-    initNodeInspector: function() {
+    initNodeInspector () {
         //this.addInspectorField(aField) // example
         return this
-    },
+    }
 
-    addInspectorField: function(aField) {
+    addInspectorField (aField) {
         this.nodeInspector().addSubnode(aField)
         return this
-    },
+    }
 
-    customizeNodeRowStyles: function() {
+    customizeNodeRowStyles () {
         if (!this.hasOwnProperty("_nodeRowStyles")) {
             //const styles = BMViewStyles.sharedWhiteOnBlackStyle().setIsMutable(false)
             // NOTE: We can't use the shared style because column bg colors change
@@ -157,9 +162,9 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
             this._nodeRowStyles = styles
         }
         return this._nodeRowStyles
-    },
+    }
 
-    sharedNodeColumnStyles: function() {
+    sharedNodeColumnStyles () {
         if (!BMNode.hasOwnProperty("_nodeColumnStyles")) {
             const styles = BMViewStyles.clone()
             //styles.selected().setColor("white")
@@ -167,9 +172,9 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
             BMNode._nodeColumnStyles = styles
         }
         return BMNode._nodeColumnStyles
-    },
+    }
 
-    sharedNodeRowStyles: function() {
+    sharedNodeRowStyles () {
         if (!BMNode._nodeRowStyles) {
             const styles = BMViewStyles.clone()
             BMNode._nodeRowStyles = styles
@@ -177,11 +182,11 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
             styles.unselected().setColor("#aaa")
         }
         return BMNode._nodeRowStyles
-    },
+    }
 
     // column view style
     
-    setNodeColumnBackgroundColor: function(c) {
+    setNodeColumnBackgroundColor (c) {
 	    if (this.nodeColumnStyles()) {
             this.setNodeColumnStyles(BMViewStyles.clone())
 	    }
@@ -189,58 +194,58 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         this.nodeColumnStyles().selected().setBackgroundColor(c)
         this.nodeColumnStyles().unselected().setBackgroundColor(c)
         return this
-    },
+    }
 
-    nodeColumnBackgroundColor: function() {
+    nodeColumnBackgroundColor () {
 	    if (this.nodeColumnStyles()) {
 		    return this.nodeColumnStyles().selected().backgroundColor()
 	    }
 	    return null
-    },
+    }
 
     
     // --- finalize ----------
 
-    scheduleFinalize: function() {
+    scheduleFinalize () {
         window.SyncScheduler.shared().scheduleTargetAndMethod(this, "finalize")
-    },
+    }
     
-    unscheduleFinalize: function() {
+    unscheduleFinalize () {
         SyncScheduler.unscheduleTargetAndMethod(this, "finalize")
-    },
+    }
     
     
-    finalize: function() {
+    finalize () {
         // for subclasses to override
         this.setIsFinalized(true)
-    },    
+    }
     
     // -----------------------
     
-    nodeVisibleClassName: function() {
+    nodeVisibleClassName () {
         if (this._nodeVisibleClassName) {
             return this._nodeVisibleClassName
         }
 		
         return this.type().sansPrefix("BM")
-    },
+    }
 
     // --- fields ---
     
-    addLinkFieldForNode: function(aNode) {
+    addLinkFieldForNode (aNode) {
         const field = BMLinkField.clone().setName(aNode.title()).setValue(aNode)
         return this.addStoredField(field)
-    },
+    }
     
-    addField: function(aField) {
+    addField (aField) {
         throw new Error("addField shouldn't be called - use BMFieldSetNode")
         return this.addSubnode(aField)
-    },
+    }
         
-    nodeRowLink: function() {
+    nodeRowLink () {
         // used by UI row views to browse into next column
         return this
-    },    
+    }
 
     // nodeRowLinkMethods
     // used by UI row views to choose the node ref to use for the next column
@@ -259,78 +264,78 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
     //      ServerClientsNode (holds list of connected server clients)
     //
 
-    thisNode: function() {
+    thisNode () {
         return this
-    },
+    }
 
-    nodeRowLinkMethods: function() {
+    nodeRowLinkMethods () {
         return ["thisNode"]
-    },
+    }
 
-    defaultNodeRowLinkMethod: function() {
+    defaultNodeRowLinkMethod () {
 
-    },
+    }
 
     // subtitle and note
     
-    subtitle: function () {
+    subtitle  () {
 
         if (this.subtitleIsSubnodeCount() && this.subnodesCount()) {
             return this.subnodesCount()
         }
         
         return this._subtitle
-    },
+    }
     
-    note: function () {
+    note  () {
         if (this.noteIsSubnodeCount() && this.subnodesCount()) {
             return this.subnodesCount()
         }
         
         return this._note
-    },
+    }
 
-    nodeHeaderTitle: function() {
+    nodeHeaderTitle () {
         return this.title()
-    },
+    }
 
     // --- viewClassName ---
     
     /*
-    viewClassName: function() {
+    viewClassName () {
         if (!this._viewClassName) {
             return this.type() + "View" //.sansPrefix("BM")
         }
         
         return this._viewClassName
-    },
+    }
     */
     
-    viewClass: function () {        
+    viewClass  () {        
         const name = this.viewClassName()
         if (name) {
             return window[name]
         }
 
 	  	return this.firstAncestorWithMatchingPostfixClass("View")
-    },
+    }
 
     // --- nodeRowViewClass ---
     
     /*
-    rowNode: function() {
+    rowNode () {
         return this
-    },
+    }
     */
 
-    nodeRowViewClass: function () {   
+    nodeRowViewClass  () {   
 	  	return this.firstAncestorWithMatchingPostfixClass("RowView")
-    },
+    }
 
     // --- subnodes ----------------------------------------
     
     
-    setParentNode: function(aNode) {
+    setParentNode (aNode) {
         if (aNode === this._parentNode) {
             //console.warn(this.type() + " setParentNode(" + aNode.type() + ")  already has parent ", this._parentNode.type())
             //Error.showCurrentStack()
@@ -346,25 +351,25 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         this._parentNode = aNode
         this.didChangeParentNode()
         return this
-    },
+    }
 
-    didChangeParentNode: function() {
+    didChangeParentNode () {
         // for subclasses to override
-    },
+    }
 
-    subnodeCount: function() {
+    subnodeCount () {
         return this._subnodes.length
-    },
+    }
 
-    hasSubnodes: function() {
+    hasSubnodes () {
         return this.subnodeCount() > 0
-    },
+    }
 
-    justAddSubnode: function(aSubnode) {
+    justAddSubnode (aSubnode) {
         return this.justAddSubnodeAt(aSubnode, this.subnodeCount())
-    },
+    }
 	
-    justAddSubnodeAt: function(aSubnode, anIndex) {
+    justAddSubnodeAt (aSubnode, anIndex) {
         if (this.subnodes() === null) {
             throw new Error("subnodes is null")
         }
@@ -377,54 +382,54 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         
         aSubnode.setParentNode(this)
         return aSubnode        
-    },
+    }
 
-    addSubnodeAt: function(aSubnode, anIndex) {
+    addSubnodeAt (aSubnode, anIndex) {
         assert(anIndex >= 0)
         this.justAddSubnodeAt(aSubnode, anIndex)
         this.didChangeSubnodeList()
         return aSubnode
-    },
+    }
 
-    replaceSubnodeWith: function(aSubnode, newSubnode) {
+    replaceSubnodeWith (aSubnode, newSubnode) {
         const index = this.indexOfSubnode(aSubnode)
         assert(index !== -1)
         this.removeSubnode(aSubnode)
         this.addSubnodeAt(newSubnode, index)
         return newSubnode
-    },
+    }
 
-    addSubnode: function(aSubnode) {
+    addSubnode (aSubnode) {
         return this.addSubnodeAt(aSubnode, this.subnodeCount())
-    },
+    }
 
-    addSubnodes: function(subnodes) {
+    addSubnodes (subnodes) {
         subnodes.forEach(subnode => this.addSubnode(subnode))
         return this
-    },
+    }
 
-    addSubnodesIfAbsent: function(subnodes) {
+    addSubnodesIfAbsent (subnodes) {
         subnodes.forEach(subnode => this.addSubnodeIfAbsent(subnode))
         return this
-    },
+    }
     
-    addSubnodeIfAbsent: function(aSubnode) {
+    addSubnodeIfAbsent (aSubnode) {
         if(!this.containsSubnode(aSubnode)) {
             this.addSubnode(aSubnode)
             return true
         }
         return false
-    },
+    }
 
-    acceptedSubnodeTypes: function() {
+    acceptedSubnodeTypes () {
         const types = []
         if (this.subnodeProto()) {
             types.push(this.subnodeProto().type())
         }
         return types
-    },
+    }
 
-    acceptsAddingSubnode: function(aSubnode) {
+    acceptsAddingSubnode (aSubnode) {
         if (aSubnode === this) {
             return false
         }
@@ -440,9 +445,9 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
             ancestors.contains(type)
         )
         return !Type.isNullOrUndefined(match)
-    },
+    }
 
-    addSubnodeProtoForSlotIfAbsent: function(aProto, slotName) {
+    addSubnodeProtoForSlotIfAbsent (aProto, slotName) {
         const getter = this[slotName]
         if (!getter) {
             throw new Error(this.type() + "." + slotName + " slot missing")
@@ -468,26 +473,26 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         }
         
         return this
-    },
+    }
 	
     /*
-	hasSubnode: function(aSubnode) {
+	hasSubnode (aSubnode) {
     	return this.subnodes().detect((subnode) => { return subnode.isEqual(aSubnode) })
 	},
 	*/
 	
-    isEqual: function(aNode) {
+    isEqual (aNode) {
 	    return this === aNode
-    },
+    }
 	
-    containsSubnode: function(aSubnode) {
+    containsSubnode (aSubnode) {
         if (this._subnodeIndex) {
             return aSubnode.hash() in this._subnodeIndex
         }
         return this.subnodes().detect((subnode) => { return subnode.isEqual(aSubnode) })
-    },
+    }
     
-    justRemoveSubnode: function(aSubnode) { // private method 
+    justRemoveSubnode (aSubnode) { // private method 
         this.subnodes().remove(aSubnode)
         
         if (aSubnode.parentNode() === this) {
@@ -495,9 +500,9 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         }
         
         return aSubnode
-    },
+    }
     
-    removeSubnode: function(aSubnode) {
+    removeSubnode (aSubnode) {
         //console.warn(this.typeId() + ".removeSubnode()")
         this.justRemoveSubnode(aSubnode)
 
@@ -507,9 +512,9 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         
         this.didChangeSubnodeList()
         return aSubnode
-    },
+    }
     
-    removeAllSubnodes: function() {
+    removeAllSubnodes () {
 	    if (this.subnodeCount()) {
     		this.subnodes().slice().forEach((subnode) => {
     			this.justRemoveSubnode(subnode)
@@ -522,33 +527,33 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
             this.didChangeSubnodeList()
         }
         return this
-    },
+    }
 
-    didChangeSubnodeList: function() {
+    didChangeSubnodeList () {
         this.sortIfNeeded() // TODO: move to a scheduleSort system - triggered before syncToStore and didUpdateNode?
         this.subnodes().forEach(subnode => subnode.didReorderParentSubnodes())
         this.didUpdateNode()
         return this
-    },
+    }
 
-    didReorderParentSubnodes: function() {
-    },
+    didReorderParentSubnodes () {
+    }
 
-    nodeReorderSudnodesTo: function(newSubnodes) {
+    nodeReorderSudnodesTo (newSubnodes) {
         this.setSubnodes(newSubnodes)
         this.didChangeSubnodeList()
         return this
-    },
+    }
     
     // --- update / sync system ----------------------------
     
-    scheduleSyncToView: function() {
+    scheduleSyncToView () {
         this.didUpdateNode()
         //window.SyncScheduler.shared().scheduleTargetAndMethod(this, "syncToView")
         return this
-    },
+    }
 
-    didUpdateNode: function() {
+    didUpdateNode () {
         this.didUpdateNodeNote().post()
 
         if (this.parentNode()) {
@@ -557,9 +562,9 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         }
 
         //this.scheduleSyncToView()
-    },
+    }
     
-    privatePrepareToAccess: function() {
+    privatePrepareToAccess () {
         // just here for debugging
         if (!this._isPreparingToAccess) {
             this._isPreparingToAccess = true
@@ -574,67 +579,67 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
             this._isPreparingToAccess = false
         }
         return this
-    },
+    }
 
-    subnodes: function() {
+    subnodes () {
         this.privatePrepareToAccess() // causes access loop in some situations - use marker?
         //this.subnodes = function() { return this._subnodes }
         return this._subnodes
-    },
+    }
 
-    indexOfSubnode: function(aSubnode) {
+    indexOfSubnode (aSubnode) {
         return this.subnodes().indexOf(aSubnode);
-    },
+    }
 
-    subnodeIndex: function() {
+    subnodeIndex () {
         const p = this.parentNode()
         if (p) {
             return p.indexOfSubnode(this)
         }
         return 0
-    },
+    }
 
-    nodeDepth: function() {
+    nodeDepth () {
         const p = this.parentNode()
         if (p) {
             return p.nodeDepth() + 1
         }
         return 0
-    },
+    }
 
     // --- shelf ---
 	
-    shelfSubnodes: function() {
+    shelfSubnodes () {
         return []
-    },
+    }
 
-    shelfIconName: function() {
+    shelfIconName () {
 	    return null
-    },
+    }
 	
-    shelfIconUrl: function() {
+    shelfIconUrl () {
 	    return null
-    },
+    }
 
     // ---------------------------------------
     
-    prepareForFirstAccess: function() {
+    prepareForFirstAccess () {
         // subclasses can override 
-    },
+    }
 
-    prepareToAccess: function() {
+    prepareToAccess () {
         // this should be called whenever subnodes need to be accessed
         if (!this._didPrepareForFirstAccess) {
             this._didPrepareForFirstAccess = true
             this.prepareForFirstAccess()
         }
-    },
+    }
     
-    prepareToSyncToView: function() {
+    prepareToSyncToView () {
         this.prepareToAccess();
-    },
+    }
     
-    tellParentNodes: function(msg, aNode) {
+    tellParentNodes (msg, aNode) {
         const f = this[msg]
         if (f && f.apply(this, [aNode])) {
             return
@@ -644,29 +649,29 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         if (p) {
             p.tellParentNodes(msg, aNode)
         }
-    },
+    }
     
     // --- node path ------------------------
     
-    nodePath: function () {
+    nodePath  () {
         if (this.parentNode()) {
             const parts = this.parentNode().nodePath()
             parts.push(this)
             return parts
         }
         return [this]
-    },
+    }
     
-    nodePathString: function () {
+    nodePathString  () {
         return this.nodePath().map(function (node) { return node.title() }).join("/")
         //return this.nodePath().map(function (node) { return node.type() }).join("/")
-    },
+    }
     
-    nodeAtSubpathString: function(pathString) {
+    nodeAtSubpathString (pathString) {
         return this.nodeAtSubpath(pathString.split("/"));        
-    },
+    }
     
-    nodeAtSubpath: function(subpathArray) {
+    nodeAtSubpath (subpathArray) {
         if (subpathArray.length > 0) {
             const subnode = this.firstSubnodeWithTitle(subpathArray[0])
             if (subnode) {
@@ -675,112 +680,112 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
             return null
         }        
         return this
-    },
+    }
 
     // --- log ------------------------
     
-    log: function(msg) {
+    log (msg) {
         //const s = this.nodePathString() + " --  " + msg
         if (this.isDebugging()) {
         	console.log("[" +  this.nodePathString() + "] " + msg)
         }
-    },
+    }
     
     // --- standard actions -----------------------------
     
-    addAction: function(actionString) {
+    addAction (actionString) {
         if (!this.actions().contains(actionString)) {
 	        this.actions().push(actionString)
             this.didUpdateNode()
         }
         return this
-    },
+    }
 
-    removeAction: function(actionString) {
+    removeAction (actionString) {
         if (this.actions().contains(actionString)) {
         	this.actions().remove(actionString)
             this.didUpdateNode()
         }
         return this
-    },
+    }
     
-    addActions: function(actionStringList) {
+    addActions (actionStringList) {
         actionStringList.forEach( (action) => {
             this.addAction(action)
         })
         return this
-    },
+    }
     
-    hasAction: function(actionName) {
+    hasAction (actionName) {
         return this.actions().contains(actionName)
-    },
+    }
     
-    performAction: function(actionName) {
+    performAction (actionName) {
         return this[actionName].apply(this)
-    },
+    }
     
-    postShouldFocusSubnode: function(aSubnode) {
+    postShouldFocusSubnode (aSubnode) {
         this.shouldFocusSubnodeNote().setInfo(aSubnode).post()
         return this
-    },
+    }
     
-    justAddAt: function (anIndex) {  
+    justAddAt  (anIndex) {  
         const newSubnode = this.subnodeProto().clone()
         this.addSubnodeAt(newSubnode, anIndex)
         return newSubnode
-    },
+    }
 
-    justAdd: function (anIndex) {  
+    justAdd  (anIndex) {  
         return this.justAddAt(this.subnodeCount())
-    },
+    }
 
-    addAt: function(anIndex) {
+    addAt (anIndex) {
         const newSubnode = this.justAddAt(anIndex)
         this.didUpdateNode()
         this.postShouldFocusSubnode(newSubnode)
         return newSubnode
-    },
+    }
 
-    add: function () {  
+    add  () {  
         return this.addAt(this.subnodeCount())
-    },
+    }
 
-    removeFromParentNode: function() {
+    removeFromParentNode () {
         if (this.parentNode()) {
             this.parentNode().removeSubnode(this)
         }
         return this
-    },
+    }
 	
-    delete: function () {
+    delete  () {
         this.removeFromParentNode()
         return this
-    },
+    }
 
     /*
-    nodeParentHasDeleteAction: function() {
+    nodeParentHasDeleteAction () {
         const p = this.parentNode()
         return p && p.hasAction("delete")
-    },
+    }
     */
 
     /*
-    canDelete: function() {
+    canDelete () {
         if (this._canDelete) {
             return true
         }
 
         return this.nodeParentHasDeleteAction()
-    },
+    }
     */
 
-    canSelfAddSubnode: function() {
+    canSelfAddSubnode () {
         return this.hasAction("add")
-    },
+    }
 
     // --- utility -----------------------------
     
-    parentNodeOfType: function(className) {
+    parentNodeOfType (className) {
         if (this.type() === className) {
             return this
         }
@@ -790,9 +795,9 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         }
         
         return null
-    },
+    }
 
-    parentNodes: function() {
+    parentNodes () {
         const node = this.parentNode()
         const results = []
 		
@@ -801,27 +806,27 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
             node = this.parentNode()
         }
         return results
-    },
+    }
 	
-    parentNodeTypes: function() {
+    parentNodeTypes () {
         return this.parentNodes().map(node => node.type())
-    },
+    }
     
     // --- subnode lookup -----------------------------
     
-    subnodesSans: function(aSubnode) {
+    subnodesSans (aSubnode) {
 	    return this.subnodes().select(subnode => subnode !== aSubnode)
-    },
+    }
 	
-    firstSubnodeOfType: function(aProto) {
+    firstSubnodeOfType (aProto) {
         return this.subnodes().detect(subnode => subnode.type() === aProto.type())
-    },
+    }
 
-    firstSubnodeWithSubtitle: function(aString) {
+    firstSubnodeWithSubtitle (aString) {
         return this.subnodes().detect(subnode => subnode.subtitle() === aString)
-    },
+    }
 
-    subnodeWithTitleIfAbsentInsertClosure: function(aString, aClosure) {
+    subnodeWithTitleIfAbsentInsertClosure (aString, aClosure) {
         let subnode = this.firstSubnodeWithSubtitle(aString)
 
         if (!subnode && aClosure) {
@@ -830,28 +835,28 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         }
 
         return subnode
-    },
+    }
         
-    firstSubnodeWithTitle: function(aString) {
+    firstSubnodeWithTitle (aString) {
         return this.subnodes().detect(subnode => subnode.title() === aString)
-    },
+    }
 
-    sendRespondingSubnodes: function(aMethodName, argumentList) {
+    sendRespondingSubnodes (aMethodName, argumentList) {
         this.subnodes().forEach((subnode) => { 
             if (subnode[aMethodName]) {
                 subnode[aMethodName].apply(subnode, argumentList)
             }
         })
         return this
-    },
+    }
     
     // --- subnodes -----------------------------
     
-    subnodesCount: function() {
+    subnodesCount () {
         return this.subnodes().length
-    },
+    }
     
-    setSubnodes: function(subnodes) {
+    setSubnodes (subnodes) {
         if (this._subnodes && subnodes && this._subnodes.equals(subnodes)) {
             //this.debugLog(".setSubnodes() - skipping because subnodes are the same <<<<<<<<<<<<<<<<<<<<<")
             return this
@@ -862,66 +867,66 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         this.didChangeSubnodeList()
         //this.assertSubnodesHaveParentNodes()
         return this
-    },
+    }
     
-    assertSubnodesHaveParentNodes: function() {
+    assertSubnodesHaveParentNodes () {
         const missing = this.subnodes().detect(subnode => !subnode.parentNode())
         if (missing) {
             throw new Error("missing parent node on subnode " + missing.type())
         }
         return this
-    },
+    }
 	
     // subnode sorting
 	
-    setSubnodeSortFunc: function(f) {
+    setSubnodeSortFunc (f) {
 	    if (this._subnodeSortFunc !== f) {
 	        this._subnodeSortFunc = f
 	        this.sortIfNeeded()
 	    }
 	    return this
-    },
+    }
 	
-    doesSortSubnodes: function() {
+    doesSortSubnodes () {
 	    return this._subnodeSortFunc !== null
-    },
+    }
 	
-    sortIfNeeded: function() {
+    sortIfNeeded () {
         if (this.doesSortSubnodes()) {
             this._subnodes = this._subnodes.sort(this._subnodeSortFunc)
         }
         return this
-    },
+    }
     
     // subnodeIndex
 	
-    createSubnodeIndex: function() {
+    createSubnodeIndex () {
 	    if (!this._subnodeIndex) { 
 	        this._subnodeIndex = {}
 	        this.reindexSubnodes()
 	    }
 	    return this
-    },
+    }
 	
-    subnodeWithHash: function(h) {
+    subnodeWithHash (h) {
         this.assertHasSubnodeIndex()
         return this._subnodeIndex[h]
-    },
+    }
 	
-    removeSubnodeWithHash: function(h) {
+    removeSubnodeWithHash (h) {
 	    const subnode = this.subnodeWithHash(h)
 	    if (subnode) {
 	        this.removeSubnode(subnode)
 	    }
 	    return this
-    },
+    }
 	
-    hasSubnodeWithHash: function(h) {
+    hasSubnodeWithHash (h) {
         this.assertHasSubnodeIndex()
 	    return this._subnodeIndex.hasOwnProperty(h)
-    },
+    }
 	
-    addSubnodeToIndex: function(subnode) { // private
+    addSubnodeToIndex (subnode) { // private
         this.assertHasSubnodeIndex()
 
 	    if (!subnode.hash) {
@@ -942,16 +947,16 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         
         index[h] = subnode
         return this	    
-    },
+    }
 	
-    reindexSubnodesIfNeeded: function() {
+    reindexSubnodesIfNeeded () {
         if (this._subnodeIndex) {
             this.reindexSubnodes()
         }
         return this
-    },
+    }
 	
-    reindexSubnodes: function() { // private
+    reindexSubnodes () { // private
 	    //let shouldDeleteDuplicates = true // temporary
 	    
         this.assertHasSubnodeIndex()
@@ -969,34 +974,34 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
             this.addSubnodeToIndex(subnode)
 	    })
 	    return this
-    },
+    }
 
-    assertHasSubnodeIndex: function(h) { // private
+    assertHasSubnodeIndex (h) { // private
         if (!this._subnodeIndex) {
             throw new Error(this.type() + " missing subnode index")
         }
-    },    	
+    }
     
     // node view badge
 
-    nodeViewShouldBadge: function() {
+    nodeViewShouldBadge () {
         return false
-    },
+    }
 
-    nodeViewBadgeTitle: function() {
+    nodeViewBadgeTitle () {
         return null
-    },
+    }
 	
     // visibility
 	
-    nodeBecameVisible: function() {
+    nodeBecameVisible () {
 	    return this
-    },
+    }
 
     // --- json serialization ---
 
     /*
-    asJSON: function() {
+    asJSON () {
         const dict = {}
         dict.type = this.type()
         dict.title = this.title()
@@ -1008,13 +1013,13 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
             })
         }
         return dict
-    },
+    }
 
-    isLoadingFromJSON: function() {
+    isLoadingFromJSON () {
         return this._isLoadingFromJSON
-    },
+    }
     
-    fromJSON: function(json) {
+    fromJSON (json) {
         this._isLoadingFromJSON = true
         // TODO: read persistent keys
         if (json.title) {
@@ -1029,9 +1034,9 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         }
         delete this._isLoadingFromJSON
         return this
-    },
+    }
 
-    asyncFromJSONFile: function(file) {
+    asyncFromJSONFile (file) {
         const rawFile = new XMLHttpRequest();
         rawFile.open("GET", file, false);
         rawFile.onreadystatechange = function ()
@@ -1046,12 +1051,12 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
             }
         }
         rawFile.send(null);
-    },
+    }
     */
 
     // notification helpers - yeah, not ideal
 
-    watchOnceForNote: function(aNoteName) {
+    watchOnceForNote (aNoteName) {
         const obs = NotificationCenter.shared().newObservation()
         obs.setName(aNoteName)
         obs.setObserver(this)
@@ -1059,65 +1064,65 @@ ideal.Proto.newSubclassNamed("BMNode").newSlots({
         obs.watch()
         //this.debugLog(".watchOnceForNote('" + aNoteName + "')")
         return obs
-    },
+    }
 
-    postNoteNamed: function(aNoteName) {
+    postNoteNamed (aNoteName) {
         const note = window.NotificationCenter.shared().newNote()
         note.setSender(this)
         note.setName(aNoteName)
         note.post()
         //this.debugLog(".postNoteNamed('" + aNoteName + "')")
         return note
-    },
+    }
 
-    scheduleSelfFor: function(aMethodName, milliseconds) {
+    scheduleSelfFor (aMethodName, milliseconds) {
         return window.SyncScheduler.shared().scheduleTargetAndMethod(this, aMethodName, milliseconds)
-    },
+    }
 
 
-    onRequestSelectionOfDecendantNode: function(aNode) {
+    onRequestSelectionOfDecendantNode (aNode) {
         return false // allow propogation up the parentNode line
-    },
+    }
 
-    onRequestSelectionOfNode: function(aView) {
+    onRequestSelectionOfNode (aView) {
         this.tellParentNodes("onRequestSelectionOfDecendantNode", this)
         return this
-    },
+    }
 
     // tracking observer count 
     // usefull for releasing inspectors when no longer needed
 
-    onStartObserving: function() {
+    onStartObserving () {
 
-    },
+    }
 
-    onStopObserving: function() {
+    onStopObserving () {
         const isStillObserved = NotificationCenter.shared().hasObservationsForTargetId(this.typeId())
         if (!isStillObserved) {
             this.onNoMoreObservers()
         }
-    },
+    }
 
-    onNoMoreObservers: function() {
+    onNoMoreObservers () {
 
-    },
+    }
 
-    summary: function() {
+    summary () {
         return this.title() + " " + this.subtitle()
-    },
+    }
 
     // overriding copying protocol from Proto
 
-    shallowCopySlotnames: function() {
+    shallowCopySlotnames () {
         const names = ideal.Proto.shallowCopySlotnames.apply(this)
         return names.appendItems(["title", "subtitle", "note"])
-    },
+    }
 
-    deepCopySlotnames: function() {
+    deepCopySlotnames () {
         const names = ideal.Proto.deepCopySlotnames.apply(this)
         return names.appendItems(["subnodes"])
-    },
+    }
 
     // storage
 
-}).initThisProto()
+}.initThisClass()

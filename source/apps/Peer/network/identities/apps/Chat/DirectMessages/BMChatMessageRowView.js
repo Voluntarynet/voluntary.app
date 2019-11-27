@@ -6,11 +6,15 @@
 
 */
 
-BrowserTitledRow.newSubclassNamed("BMChatMessageRowView").newSlots({
-}).setSlots({
+window.BMChatMessageRowView = class BMChatMessageRowView extends BrowserTitledRow {
     
-    init: function () {
-        BrowserTitledRow.init.apply(this)
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
         //	this.setSelectedBgColor("white")
         //	this.setUnselectedBgColor("white")
 
@@ -24,9 +28,9 @@ BrowserTitledRow.newSubclassNamed("BMChatMessageRowView").newSlots({
         this.setMarginBottom(10)
 		
         this.setupTitleView()
-    },
+    }
     
-    setupTitleView: function() {
+    setupTitleView () {
         this.titleView().insertDivClassName(this.type() + "Title")
         this.titleView().setWidth("auto")
         this.titleView().setMinWidth("50px")
@@ -38,9 +42,9 @@ BrowserTitledRow.newSubclassNamed("BMChatMessageRowView").newSlots({
         this.titleView().setMarginRight(20)
         this.titleView().setMarginLeft(0)
         //this.titleView().setBorder("1px solid rgba(0,0,0,0.05)")
-    },
+    }
     
-    alignToRight: function() {
+    alignToRight () {
 	    this.titleView().setRight(20)
         this.titleView().setFloat("right")
 	    this.titleView().setBorderRadius("8px 8px 0px 8px") // top-left, top-right,  bottom-right, bottom-left
@@ -48,27 +52,27 @@ BrowserTitledRow.newSubclassNamed("BMChatMessageRowView").newSlots({
         this.titleView().setColor("white")
         //this.titleView().setBorder("1px solid rgba(0,0,0,0.02)")
 	    return this
-    },
+    }
     
-    alignToLeft: function() {
+    alignToLeft () {
         this.titleView().setLeft(20)
     	this.titleView().setFloat("left")
         this.titleView().setBorderRadius("8px 8px 8px 0px") // top-left, top-right,  bottom-right, bottom-left 
         this.titleView().setBackgroundColor("#ccc")
         this.titleView().setColor("black")
 	    return this
-    },
+    }
 
-    setHasSubtitle: function(aBool) {        
+    setHasSubtitle (aBool) {        
         // so it doesn't adjust title 
         return this
-    },
+    }
 
-    message: function() {
+    message () {
         return this.node()
-    },
+    }
 
-    updateSubviews: function() {
+    updateSubviews () {
         BrowserTitledRow.updateSubviews.apply(this)
 		
         const node = this.node()
@@ -84,25 +88,25 @@ BrowserTitledRow.newSubclassNamed("BMChatMessageRowView").newSlots({
         }
 		
         return this
-    },
+    }
 	
-    styleAsSent: function() {
+    styleAsSent () {
         this.alignToRight()
-    },
+    }
 	
-    styleAsReceived: function() {
+    styleAsReceived () {
         this.alignToLeft()
-    },
+    }
     
     /*
-    unselectedBgColor: function() {
+    unselectedBgColor () {
         return "white"
-    },
+    }
     
-    selectedBgColor: function() {
+    selectedBgColor () {
         return "white"
-    },
+    }
     */
 
-}).initThisProto()
+}.initThisClass()
 

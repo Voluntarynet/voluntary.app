@@ -6,34 +6,38 @@
 
 */
 
-BMNode.newSubclassNamed("BMURLImage").newSlots({
-    path: "",
-    dataURL: "",
-}).setSlots({
+window.BMURLImage = class BMURLImage extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+            path: "",
+            dataURL: "",
+        })
+    }
 
-    init: function () {
-        BMNode.init.apply(this)
+    init () {
+        super.init()
         this.setNodeMinWidth(270)
         return this
-    },
+    }
 
-    title: function() {
+    title () {
         return this.path().fileName()
-    },
+    }
 
-    subtitle: function() {
+    subtitle () {
         return this.path().pathExtension()
-    },
+    }
 
-    setPath: function(aPath) {
+    setPath (aPath) {
         if (this._path !== aPath) {
             this._path = aPath
             this.loadDataURL()
         }
         return this
-    },
+    }
 
-    loadDataURL: function() {
+    loadDataURL () {
         if (this.isDebugging()) {
             this.debugLog(".loadDataURL() " + this.path())
         }
@@ -44,9 +48,9 @@ BMNode.newSubclassNamed("BMURLImage").newSlots({
         request.onload = () => { this.loadedRequest(request) };
         request.send();
         return this
-    },
+    }
 
-    loadedRequest: function(request) {
+    loadedRequest (request) {
 
         if (this.isDebugging()) {
             this.debugLog(".loadedRequest() ", request)
@@ -67,9 +71,9 @@ BMNode.newSubclassNamed("BMURLImage").newSlots({
         fileReader.readAsDataURL(request.response); 
         
         return this
-    },
+    }
 
-    didFetchDataURL: function(dataURL) {
+    didFetchDataURL (dataURL) {
         this.setDataURL(dataURL);
         
         /*
@@ -81,6 +85,6 @@ BMNode.newSubclassNamed("BMURLImage").newSlots({
         */
 
         return this
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

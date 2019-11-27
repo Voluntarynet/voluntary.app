@@ -252,11 +252,11 @@ window.EventSetListener = class EventSetListener extends ProtoClass {
     setIsHandlingEvent () {
         DomView._isHandlingEvent = true
         return this
-    },
+    }
 	
     isHandlingEvent () {
         return DomView._isHandlingEvent
-    },
+    }
 
     handleEventFunction (event, eventFunc) {
         //  a try gaurd to make sure isHandlingEvent has correct value
@@ -280,5 +280,5 @@ window.EventSetListener = class EventSetListener extends ProtoClass {
         if (error) {
             throw error
         }
-    },
+    }
 */

@@ -6,58 +6,62 @@
 
 */
 
-BMStorableNode.newSubclassNamed("BMPostDraft").newSlots({
-    content: "",
-}).setSlots({
+window.BMPostDraft = class BMPostDraft extends BMStorableNode {
     
-    init: function () {
-        BMStorableNode.init.apply(this)
+    initPrototype () {
+        this.newSlots({
+            content: "",
+        })
+    }
+
+    init () {
+        super.init()
         this.addStoredSlots(["content"])
         this.setCanDelete(true)
         //this.setContent("...".loremIpsum(40, 100))	
         this.setShouldStore(true)	
         this.customizeNodeRowStyles().setToBlackOnWhite()
-    },
+    }
 	
-    nodeRowLink: function() {
+    nodeRowLink () {
         return null
-    },
+    }
 	
-    title: function() {
+    title () {
 	    return this.content()
-    },
+    }
 	
-    wasSentByMe: function() {
+    wasSentByMe () {
         return this.senderId() === this.localIdentity()
-    },
+    }
 	
-    contentDict: function() {
+    contentDict () {
         const contentDict = {}
         contentDict.content = this.content()
         return contentDict
-    },
+    }
 	
-    setContentDict: function(contentDict) {
+    setContentDict (contentDict) {
         this.setContent(contentDict.content)
         //this.scheduleSyncToView()
         return this
-    },
+    }
 
-    localIdentity: function() {
+    localIdentity () {
         return this.parentNodeOfType("BMLocalIdentity")
-    },
+    }
     
-    avatarImageDataURL: function() {
+    avatarImageDataURL () {
         return this.localIdentity().profile().profileImageDataUrl()
-    },
+    }
 	
-    post: function() {
+    post () {
         const msg = BMPostMessage.clone()
         msg.setContent(this.content())
         msg.postFromSender(this.localIdentity())
         this.delete()
         //this.addMessage(msg)
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()
 

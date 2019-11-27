@@ -7,12 +7,16 @@
 
 */
 
-BMStorableNode.newSubclassNamed("BMChatThread").newSlots({
-    remoteIdentity: null,
-}).setSlots({
+window.BMChatThread = class BMChatThread extends BMStorableNode {
     
-    init: function () {
-        BMStorableNode.init.apply(this)
+    initPrototype () {
+        this.newSlots({
+            remoteIdentity: null,
+        })
+    }
+
+    init () {
+        super.init()
         this.setShouldStore(true)
         this.setTitle("thread")  
         this.setShouldStoreSubnodes(true)
@@ -26,27 +30,27 @@ BMStorableNode.newSubclassNamed("BMChatThread").newSlots({
 
         this.setNodeColumnBackgroundColor("white")
         this.setNodeRowsStartAtBottom(true)
-    },
+    }
 
-    title: function() {
+    title () {
         if (this.remoteIdentity()) {
             return this.remoteIdentity().title()
         }
         return "[missing rid]"
-    },
+    }
 	
-    nodeThumbnailUrl: function() {
+    nodeThumbnailUrl () {
         if (this.remoteIdentity()) {
             return this.remoteIdentity().nodeThumbnailUrl()
         }
         return null
-    },
+    }
 	
-    nodeHeaderTitle: function() {
+    nodeHeaderTitle () {
         return "Chat with " + this.title()
-    },
+    }
 	
-    setInputFieldValue: function(s) {
+    setInputFieldValue (s) {
         const msg = BMChatMessage.clone()
 
         msg.setContent(s)
@@ -55,49 +59,49 @@ BMStorableNode.newSubclassNamed("BMChatThread").newSlots({
         this.addMessage(msg)
 		
 	    return this
-    },
+    }
 	
-    deleteAll: function() {
+    deleteAll () {
 	    this.messages().forEach((chatMsg) => {
 	        chatMsg.prepareToDelete()
 	    })
 	    this.removeAllSubnodes()
 	    return this
-    },
+    }
 	
-    threads: function() {
+    threads () {
         return this.parentNode()
-    },
+    }
 
-    localIdentity: function() {
+    localIdentity () {
         return this.parentNodeOfType("BMLocalIdentity") // this won't work before it's added as a subnode
-    },
+    }
 	
-    assertHasRid: function() {
+    assertHasRid () {
 	    assert(this.remoteIdentity())
-    },
+    }
 	
-    hasValidRemoteIdentity: function() {
+    hasValidRemoteIdentity () {
 	    const result = this.threads().chatTargetIds().detect((id) => { return id === this.remoteIdentity() })
 	    //const result = this.localIdentity().remoteIdentities().idWithPublicKeyString(this.remoteIdentity().publicKeyString()) 
 	    //this.debugLog(" " + this.remoteIdentity().title() + ".hasValidRemoteIdentity() = " + result)
 	    return result != null
-    },
+    }
 	
-    mostRecentDate: function() {
+    mostRecentDate () {
         return 0
-    },
+    }
 	
-    messages: function() {
+    messages () {
         return this.subnodes()
-    },
+    }
 	
-    addMessage: function(msg) {	
+    addMessage (msg) {	
         //console.log(this.nodePathString() + " addMessage " + msg.typeId())
 	    if(this.addSubnodeIfAbsent(msg)) {
 	    	this.postShouldFocusSubnode(msg)
         }
 	    return this
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

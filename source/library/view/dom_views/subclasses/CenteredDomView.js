@@ -35,37 +35,42 @@
 
 */
 
-DomView.newSubclassNamed("CenteredDomView").newSlots({
-    middleView: null,
-    innerView: null,
-}).setSlots({
-    init: function () {
-        DomView.init.apply(this)
+window.CenteredDomView = class CenteredDomView extends DomView {
+    
+    initPrototype () {
+        this.newSlots({
+            middleView: null,
+            innerView: null,
+        })
+    }
+
+    init () {
+        super.init()
         this.setupOuterView()
         this.setupMiddleView()
         this.setupInnerView()
         return this
-    },
+    }
 
-    setupOuterView: function() {
+    setupOuterView () {
         //this.setDivClassName("CenteredDomView")
         this.setDisplay("table")
         this.setPosition("absolute")
         this.setHeightPercentage(100)
         this.setWidthPercentage(100)
         this.addSubview(v)
-    },
+    }
 
-    setupMiddleView: function() {
+    setupMiddleView () {
         const v = DomView.clone()
         v.setDivClassName("CenteredDomView_middleView")
         v.setDisplay("table-cell")
         v.setVerticalAlign("middle")
         this.addSubview(v)
         return this
-    },
+    }
 
-    setupInnerView: function() {
+    setupInnerView () {
         const v = DomView.clone()
         v.setDivClassName("CenteredDomView_innerView")
         v.setDisplay("block")
@@ -74,26 +79,26 @@ DomView.newSubclassNamed("CenteredDomView").newSlots({
         //v.innerView().setWidth(400)
         this.middleView().addSubview(v)
         return this
-    },
+    }
 
     // TODO: consider if a separate reference to contentView should be kept
 
-    setContentView: function(aView) {
+    setContentView (aView) {
         const iv = this.innerView()
         if (iv.hasSubview(aView)) {
             iv.removeAllSubviews()
             iv.addSubview(aView)
         }
         return this
-    },
+    }
 
-    contentView: function() {
+    contentView () {
         return this.innerView().subviews().first()
-    },
+    }
 
-    setContentWidth: function(w) {
+    setContentWidth (w) {
         this.innerView().setWidth(400)
         return this
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

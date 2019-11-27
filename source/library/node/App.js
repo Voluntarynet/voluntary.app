@@ -10,18 +10,18 @@
 
 */
 
-BMNode.newSubclassNamed("App").newSlots({
-    name: "App",
-    version: [0, 0],
-    nodeStoreDidOpenObs: null,
-}).setSlots({
+window.App = class App extends BMNode {
+    
+    initPrototype () {
+        this.newSlots({
+            name: "App",
+            version: [0, 0],
+            nodeStoreDidOpenObs: null,
+        })
+    }
 
-    shared: function() {   
-        return this.sharedInstanceForClass(App)
-    },
-
-    init: function () {
-        BMNode.init.apply(this)
+    init () {
+        super.init()
 
         //Documentation.shared().show()
         console.log(Proto.subclassesDescription())
@@ -30,21 +30,21 @@ BMNode.newSubclassNamed("App").newSlots({
         this.setNodeStoreDidOpenObs(window.NotificationCenter.shared().newObservation())
         this.nodeStoreDidOpenObs().setName("nodeStoreDidOpen").setObserver(this).setTarget(this.defaultStore())
         this.setIsDebugging(true)
-    },
+    }
 
-    title: function() {
+    title () {
         return this.name()
-    },
+    }
     
     // run and setup sequence in order of which methods are called
     // 1. setup NodeStore
 
-    isBrowserCompatible: function() {
+    isBrowserCompatible () {
         // subclasses can override to do their own checks
         return true
-    },
+    }
 
-    run: function() {
+    run () {
 
         if (!this.isBrowserCompatible()) {
             console.log("App showBrowserCompatibilityPanel")
@@ -55,9 +55,9 @@ BMNode.newSubclassNamed("App").newSlots({
 
         this.nodeStoreDidOpenObs().watch()
         this.defaultStore().setName(this.name()).asyncOpen() 
-    },
+    }
 
-    showBrowserCompatibilityPanel: function() {
+    showBrowserCompatibilityPanel () {
         console.log("showing panel")
         const panel = window.PanelView.clone()
         this.rootView().addSubview(panel)
@@ -65,21 +65,21 @@ BMNode.newSubclassNamed("App").newSlots({
         panel.orderFront()
         panel.setZIndex(100)
         console.log("showed panel")
-    },
+    }
 
     // 2. setup 
 
-    nodeStoreDidOpen: function(aNote) {
+    nodeStoreDidOpen (aNote) {
         this.nodeStoreDidOpenObs().stopWatching()
         //this.defaultStore().rootOrIfAbsentFromClosure(() => BMStorableNode.clone())
         this.setup()
-    },
+    }
 
-    setup: function() {
+    setup () {
         return this        
-    },
+    }
 
-    appDidInit: function() {
+    appDidInit () {
         //this.postNoteNamed("appDidInit")
         const note = NotificationCenter.shared().newNote().setSender(this).setName("appDidInit")
         note.post()
@@ -91,37 +91,37 @@ BMNode.newSubclassNamed("App").newSlots({
         //Documentation.shared().show()
 
         //this.registerServiceWorker() // not working yet
-    },
+    }
 	
-    rootView: function() {
+    rootView () {
         return DomView.rootView()
         //return  WebBrowserWindow.shared().documentBody()
-    },
+    }
 
-    mainWindow: function () {
+    mainWindow  () {
         return Window
-    },
+    }
 
-    setName: function(aString) {
+    setName (aString) {
         this._name = aString
         this.setTitle(aString)
         WebBrowserWindow.shared().setTitle(aString)
         return this
-    },
+    }
     
     // --- version ---
 
-    versionsString: function() {
+    versionsString () {
         return this.version().join(".")
-    },
+    }
 
-    showVersion: function() {
+    showVersion () {
         console.log("Application '" + this.name() + "' version " + this.versionsString())
-    },
+    }
 
     // --- server worker ---
 
-    registerServiceWorker: function() {
+    registerServiceWorker () {
         // doesn't work
         // "srsourcec/ServiceWorker.js"
         // "/source/ServiceWorker.js"
@@ -145,5 +145,5 @@ BMNode.newSubclassNamed("App").newSlots({
         });
     }
 
-}).initThisProto()
+}.initThisClass()
 

@@ -7,43 +7,46 @@
  
 */
 
-
-BrowserTitledRow.newSubclassNamed("BMOptionNodeRowView").newSlots({
-}).setSlots({
+window.BMOptionNodeRowView = class BMOptionNodeRowView extends BrowserTitledRow {
     
-    init: function () {
-        BrowserTitledRow.init.apply(this)
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
         this.setHasSubtitle(true)
         return this
-    },
+    }
 
-    toggle: function() {
+    toggle () {
         this.node().toggle()
         return this
-    },
+    }
 
-    onEnterKeyUp: function(event) {
+    onEnterKeyUp (event) {
         BrowserTitledRow.onEnterKeyUp.apply(this, [event])
         this.toggle()
         return this
-    },
+    }
     
-    onTapComplete: function(aGesture) {
+    onTapComplete (aGesture) {
         BrowserTitledRow.onTapComplete.apply(this, [aGesture])
         this.toggle()
         return this
-    },
+    }
     
     /*
-    activate: function() { // not getting called?
+    activate () { // not getting called?
         BrowserTitledRow.activate.apply(this, [aGesture])
         this.node().toggle()
         return this
-    },
+    }
     */   
                
     /*
-    select: function() {
+    select () {
         BrowserTitledRow.select.apply(this)
         this.debugLog(+ " " + this.node().title() + " picked ")
         
@@ -53,12 +56,12 @@ BrowserTitledRow.newSubclassNamed("BMOptionNodeRowView").newSlots({
         //this.didEdit()
         this.node().toggle()
         return this
-    },
+    }
     */
 
-    syncToNode: function() {
+    syncToNode () {
         BrowserTitledRow.syncToNode.apply(this)
         return this
-    },
+    }
 	
-}).initThisProto()
+}.initThisClass()

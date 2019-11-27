@@ -8,11 +8,16 @@
 
 */
 
-BrowserRow.newSubclassNamed("BrowserFieldRow").newSlots({
-    allowsCursorNavigation: false,
-}).setSlots({
-    init: function () {
-        BrowserRow.init.apply(this)
+window.BrowserFieldRow = class BrowserFieldRow extends BrowserRow {
+    
+    initPrototype () {
+        this.newSlots({
+            allowsCursorNavigation: false,
+        })
+    }
+
+    init () {
+        super.init()
         //this.setIsSelectable(false) 
         this.makeCursorDefault()
         this.setSpellCheck(false)
@@ -21,10 +26,10 @@ BrowserRow.newSubclassNamed("BrowserFieldRow").newSlots({
         //this.setStyles(BMViewStyles.sharedWhiteOnBlackStyle())
 
         return this
-    },
+    }
 
     /*
-    updateSubviews: function() {   
+    updateSubviews () {   
 	    BrowserRow.updateSubviews.apply(this)
 	
         const node = this.node()
@@ -40,8 +45,8 @@ BrowserRow.newSubclassNamed("BrowserFieldRow").newSlots({
         }
                 
         return this
-    },
+    }
     */
 
  
-}).initThisProto()
+}.initThisClass()

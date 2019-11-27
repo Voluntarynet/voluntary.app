@@ -6,22 +6,21 @@
 
 */
 
-
-window.BMThemeResources = BMNode.newSubclassNamed("BMThemeResources").newSlots({
-}).setSlots({
-    shared: function() {   
-        return this.sharedInstanceForClass(BMThemeResources)
-    },
+window.BMThemeResources = class BMThemeResources extends BMNode {
     
-    init: function () {
-        BMNode.init.apply(this)
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
         //this.setShouldStore(true)
-        
         this.setTitle("Themes")
         this.setNoteIsSubnodeCount(true)
         this.setNodeMinWidth(270)
         this.addAction("add")
         this.setSubnodeProto(BMTheme)
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

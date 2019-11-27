@@ -8,13 +8,18 @@
     
 */
 
+window.BMMenuNode = class BMMenuNode extends BMSummaryNode {
+    
+    initPrototype () {
+        this.newSlots({
+            label: "",
+            //hasSubtitleOfValues: false,
+        })
+    }
 
-BMSummaryNode.newSubclassNamed("BMMenuNode").newSlots({
-    label: "",
-    //hasSubtitleOfValues: false,
-}).setSlots({
-    init: function () {
-        BMSummaryNode.init.apply(this)
+    init () {
+        super.init()
+
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(true)
         this.setCanDelete(true)
@@ -41,17 +46,17 @@ BMSummaryNode.newSubclassNamed("BMMenuNode").newSlots({
 
         this.setCanDelete(true)
         this.setNodeCanInspect(true) 
-    },
+    }
 
     /*
-    initNodeInspector: function() {
+    initNodeInspector () {
         BMSummaryNode.initNodeInspector.apply(this)
 
         return this
-    },
+    }
     */
 
-    didLoadFromStore: function() {
+    didLoadFromStore () {
         BMSummaryNode.didLoadFromStore.apply(this)
         /*
         this.subnodes().forEach( (subnode) => { 
@@ -60,24 +65,24 @@ BMSummaryNode.newSubclassNamed("BMMenuNode").newSlots({
         });
         */
         return this
-    },
+    }
 
-    title: function () {
+    title  () {
         return this.label()
-    },
+    }
 
-    setTitle: function (aString) {
+    setTitle  (aString) {
         this.setLabel(aString)
         //this.tellParentNodes("onDidEditNode", this)
         return this
-    },
+    }
 
-    acceptedSubnodeTypes: function() {
+    acceptedSubnodeTypes () {
         return BMCreatorNode.fieldTypes()
-    },
+    }
 
     /*
-    subtitle: function() {
+    subtitle () {
         if (this.hasSubtitleOfValues()) {
             const parts = []
             this.subnodes().forEach((subnode) => {
@@ -88,19 +93,19 @@ BMSummaryNode.newSubclassNamed("BMMenuNode").newSlots({
             return parts.join(" ")
         }
         return BMSummaryNode.subtitle.apply(this)
-    },
+    }
     */
 
     /*
-    colorPairForDepth: function (depthNumber) {
+    colorPairForDepth  (depthNumber) {
         if (depthNumber % 2 === 1) {
             return [CSSColor.redColor(), CSSColor.yellowColor()]
         }
 
         return [CSSColor.blueColor(), CSSColor.blueColor().copy().lighten(0.75)]
-    },
+    }
 
-    nodeBackgroundColorObject: function () {
+    nodeBackgroundColorObject  () {
         if (!this.parentNode()) {
             return CSSColor.whiteColor()
         }
@@ -113,9 +118,9 @@ BMSummaryNode.newSubclassNamed("BMMenuNode").newSlots({
         const c = topColor.interpolateWithColorTo(bottomColor, 1 - ratio)
         //console.log("index:" + index + " ratio:" + ratio + " c:", c.cssColorString())
         return c
-    },
+    }
 
-    nodeRowStyles: function () {
+    nodeRowStyles  () {
         // const nextColor = this.colorPairForDepth(this.nodeDepth()+1)[0]
         if (!this._nodeRowStyles) {
             this.customizeNodeRowStyles()
@@ -143,24 +148,24 @@ BMSummaryNode.newSubclassNamed("BMMenuNode").newSlots({
 
         //this._nodeRowStyles.active().setBackgroundColor(c.copy().lighten(0.75).cssColorString())
         return this._nodeRowStyles
-    },
+    }
     */
     
-    note: function() {
+    note () {
         return "&gt;"
-    },
+    }
 
-    didChangeParentNode: function () {
+    didChangeParentNode  () {
         this.scheduleSyncToView()
-    },
+    }
 
     /*
-    isFlexRoot: function () {
+    isFlexRoot  () {
         return this.parentNode() && (this.parentNode().type() !== this.type())
-    },
+    }
     */
 
-    onDidEditNode: function (aNode) {
+    onDidEditNode  (aNode) {
         /*
         if (this.parentNode() && this.isFlexRoot() && !this.isLoadingFromJSON()) {
             //const json = this.asJSON()
@@ -168,31 +173,31 @@ BMSummaryNode.newSubclassNamed("BMMenuNode").newSlots({
             //this.fromJSON(json)
         }
         */
-    },
+    }
 
     /*
-    asJSON: function() {
+    asJSON () {
         const json = BMSummaryNode.asJSON.apply(this)
         json._label = this.label()
         return json
-    },
+    }
 
-    fromJSON: function(json) {
+    fromJSON (json) {
         const obj = this.fromJSON.apply(this, [json])
         obj.setLabel(json._label)
         return obj
-    },
+    }
 
     */
 
     /*
-    didChangeParentNode: function () {
+    didChangeParentNode  () {
         BMSummaryNode.didChangeParentNode.apply(this)
         if (this.isFlexRoot()) {
             this.removeAction("delete")
         }
-    },
+    }
     */
 
-}).initThisProto()
+}.initThisClass()
 

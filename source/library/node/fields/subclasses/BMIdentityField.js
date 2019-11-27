@@ -6,24 +6,29 @@
 
 */
 
-BMField.newSubclassNamed("BMIdentityField").newSlots({	
-}).setSlots({
-    init: function () {
-        BMField.init.apply(this)
+window.BMIdentityField = class BMIdentityField extends BMField {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
         //this.setViewClassName("BMFieldRowView")
         this.setKeyIsEditable(false)
         this.setValueIsEditable(false)
-    },
+    }
 
-    validate: function() {
+    validate () {
         if (!bitcore.PublicKey.isValid(this.value())) {
             this.setValueError("invalid address")
         } else {
             this.setValueError(null)
         }
-    },
+    }
 	
-    setValue: function(inValue) { // called by View on edit
+    setValue (inValue) { // called by View on edit
 	    //console.log("inValue = '" + inValue + "'")
 	    let newValue = inValue.strip()
 	    
@@ -43,6 +48,6 @@ BMField.newSubclassNamed("BMIdentityField").newSlots({
         BMField.setValue.apply(this, [newValue])
 		
         return this
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

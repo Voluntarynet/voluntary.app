@@ -6,25 +6,30 @@
 
 */
 
-BMMessage.newSubclassNamed("BMAddrMessage").newSlots({
-}).setSlots({
-    init: function () {
-        BMMessage.init.apply(this)
+window.BMAddrMessage = class BMAddrMessage extends BMMessage {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
         this.setMsgType("addr")
         this.setData([])
-    },
+    }
     
-    addAddrDict: function(dict) {
+    addAddrDict (dict) {
         this.data().push(dict)
         return this
-    },
+    }
         
-    msgDict: function() {
+    msgDict () {
         return {
             msgType: this.msgType(),
             data: this.data()
         }
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()
 

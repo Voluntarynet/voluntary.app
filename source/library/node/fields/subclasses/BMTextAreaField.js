@@ -6,13 +6,17 @@
     
 */
 
-        
-BMField.newSubclassNamed("BMTextAreaField").newSlots({
-    isMono: false,
-}).setSlots({
-    init: function () {
-        BMField.init.apply(this)
-        this.setKeyIsVisible(false)
-    },
+window.BMTextAreaField = class BMTextAreaField extends BMField {
     
-}).initThisProto()
+    initPrototype () {
+        this.newSlots({
+            isMono: false,
+        })
+    }
+
+    init () {
+        super.init()
+        this.setKeyIsVisible(false)
+    }
+    
+}.initThisClass()

@@ -34,48 +34,53 @@
 
 var BitcoreMessage = require("bitcore-message");
 
-BMMessage.newSubclassNamed("BMObjectMessage").newSlots({
-    msgType: "object",
-    senderPublicKeyString: null,
-    //receiverPublicKeyString: null,
-    timeStamp: null,
-    encryptedData: null,
-    data: null,
-    msgHash: null, // hash of data - computed as needed    
-    signature: null, // sender signature on msgHash
-}).setSlots({
-    init: function () {
-        BMMessage.init.apply(this)
+window.BMObjectMessage = class BMObjectMessage extends BMMessage {
+    
+    initPrototype () {
+        this.newSlots({
+            msgType: "object",
+            senderPublicKeyString: null,
+            //receiverPublicKeyString: null,
+            timeStamp: null,
+            encryptedData: null,
+            data: null,
+            msgHash: null, // hash of data - computed as needed    
+            signature: null, // sender signature on msgHash
+        })
+    }
+
+    init () {
+        super.init()
         this.setShouldStoreSubnodes(false)
         this.setMsgType("object")
         this.addStoredSlots(["msgType", "encryptedData", "data", "senderPublicKeyString", "timeStamp", "signature"])
         this.setCanDelete(true)
-    },
+    }
     
-    duplicate: function() {
+    duplicate () {
         let objMsg = BMObjectMessage.clone()
         objMsg.setMsgDict(this.msgDict())
         return objMsg
-    },
+    }
     
-    setNode: function(aNode) {
+    setNode (aNode) {
         BMMessage.setNode.apply(this, [aNode])
         console.log("BMObjectMessage setNode " + aNode ? aNode.type() : aNode)
         return this
-    },
+    }
 
-    network: function() {
+    network () {
         return App.shared().network()
-    },
+    }
     
-    title: function () {
+    title  () {
         let h = this.msgHash() ? this.msgHash().slice(0, 4) : "null"
         return this.msgType() + " " + h
-    },
+    }
     
     // dict 
     
-    setMsgDict: function(dict) {
+    setMsgDict (dict) {
         //this.debugLog(" setMsgDict ", dict)
         //this.setPow(dict.pow)
         //this.setSignature(dict.signature)
@@ -87,9 +92,9 @@ BMMessage.newSubclassNamed("BMObjectMessage").newSlots({
         this.setTimeStamp(dict.ts)            
         this.setSignature(dict.sig)            
         return this
-    },
+    }
     
-    msgDict: function() {
+    msgDict () {
         let dict = {
             msgType: this.msgType(),
             sender: this.senderPublicKeyString(),
@@ -108,81 +113,81 @@ BMMessage.newSubclassNamed("BMObjectMessage").newSlots({
         }
         
         return dict
-    },
+    }
 
-    theDictToHash: function() {
+    theDictToHash () {
         let dict = this.msgDict()
         delete dict.msgHash   // remove this slots as we are computing hash itself
         delete dict.sig // remove this slot as signature is done on hash
         return dict
-    },
+    }
     
     // hash
 	
-    computeMsgHash: function() {
+    computeMsgHash () {
         let s = Object.toJsonStableString(this.theDictToHash())
         let hash = s.sha256String()
         //this.debugLog("\n    dict: ", s, "\n    computed hash: " + hash)
         return hash
-    },
+    }
 
-    msgHash: function() {
+    msgHash () {
         if (!this._msgHash) {
             this._msgHash = this.computeMsgHash();
         }
         
         return this._msgHash
-    },
+    }
     
-    hash: function() {
+    hash () {
         return this.msgHash()
-    },
+    }
 
     // sign and verify
 	
-    signWithSenderId: function(senderId) {
+    signWithSenderId (senderId) {
         this.setSignature(senderId.signatureForMessageString(this.msgHash()))
         return this
-    },
+    }
     
-    makeTimeStampNow: function() {
+    makeTimeStampNow () {
         this.setTimeStamp(Math.floor(new Date().getTime()/1000))
         return this
-    },
+    }
 	
-    ageInSeconds: function() {
+    ageInSeconds () {
         let nowInSecs = new Date().getTime()/1000
         return nowInSecs - this.timeStamp()
-    },
+    }
 
-    hasValidSignature: function() {
+    hasValidSignature () {
         let spk = new bitcore.PublicKey(this.senderPublicKeyString());
         let isValid = BitcoreMessage(this.msgHash()).verify(spk.toAddress(), this.signature());
         //console.log("hasValidSignature: " + verified)
         return isValid
-    },
+    }
 	    
-    send: function() {
+    send () {
         this.scheduleSyncToStore()
         //console.log(">>> "+ this.typeId() + ".send() adding to network messages")
         this.network().messages().addMessage(this)
         return this
-    },
+    }
 
-    isDeleted: function() {
+    isDeleted () {
         return this.network().messages().hasDeletedHash(this.hash())
-    },
+    }
     
-    delete: function() {
+    delete () {
         this.network().messages().deleteObjMsg(this)
         return this
-    },
+    }
 
-    hasValidationErrors: function() {
+    hasValidationErrors () {
         return this.validationErrors().length !== 0
-    },
+    }
 	
-    validationErrors: function() {
+    validationErrors () {
         let errors = []
 
         if (!this.senderPublicKeyString()) {
@@ -211,7 +216,7 @@ BMMessage.newSubclassNamed("BMObjectMessage").newSlots({
         }
 		
         return errors
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()
 

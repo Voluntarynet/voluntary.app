@@ -6,13 +6,17 @@
 
 */
 
-BMStorableNode.newSubclassNamed("BMSell").newSlots({
-    post: null,
-    hasSent: false,
-}).setSlots({
+window.BMSell = class BMSell extends BMStorableNode {
+    
+    initPrototype () {
+        this.newSlots({
+            post: null,
+            hasSent: false,
+        })
+    }
 
-    init: function () {
-        BMStorableNode.init.apply(this)
+    init () {
+        super.init()
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(true)
 		
@@ -24,17 +28,16 @@ BMStorableNode.newSubclassNamed("BMSell").newSlots({
         this.setPost(BMClassifiedPost.clone())
         this.addSubnode(this.post())
         this.post().setIsEditable(true)
-    },
+    }
 
-    
-    subtitle: function() {
+    subtitle () {
         return this.post().subtitle()
-    },
+    }
 
-    didLoadFromStore: function() {
+    didLoadFromStore () {
         console.log("BMSell didLoadFromStore setting post to be editable")
         //this.post().setIsEditable(true)
         //this.post().didUpdateNode()
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

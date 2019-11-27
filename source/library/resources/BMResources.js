@@ -6,14 +6,19 @@
 
 */
 
-BMStorableNode.newSubclassNamed("BMResources").newSlots({
-    themes: null,
-    fonts: null,
-    sounds: null,
-    images: null,
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
+window.BMResources = class BMResources extends BMStorableNode {
+    
+    initPrototype () {
+        this.newSlots({
+            themes: null,
+            fonts: null,
+            sounds: null,
+            images: null,
+        })
+    }
+
+    init () {
+        super.init()
         this.setShouldStore(true)
 
         this.setTitle("Resources")
@@ -21,15 +26,14 @@ BMStorableNode.newSubclassNamed("BMResources").newSlots({
         this.setNodeMinWidth(200)
 
         this.setupSubnodes()
-
         //this.watchOnceForNote("appDidInit")
-    },
+    }
 
-    shared: function() {   
+    shared () {   
         return this.sharedInstanceForClass(BMResources)
-    },
+    }
 
-    setupSubnodes: function() {
+    setupSubnodes () {
 
         //this.setThemes(this.defaultStore().rootInstanceWithPidForProto("_themes", BMThemeResources))
         this.setThemes(BMThemeResources.shared())
@@ -45,22 +49,22 @@ BMStorableNode.newSubclassNamed("BMResources").newSlots({
         this.addSubnode(this.images())
 
         return this
-    },
+    }
 
     /*
-    appDidInit: function() {
+    appDidInit () {
         this.findResources()
-    },
+    }
 
-    findResources: function() {
+    findResources () {
         this.sendRespondingSubnodes("findResources")
         return this
-    },
+    }
 
-    loadResources: function() {
+    loadResources () {
         this.sendRespondingSubnodes("loadResources")
         return this
-    },
+    }
     */
 
-}).initThisProto()
+}.initThisClass()

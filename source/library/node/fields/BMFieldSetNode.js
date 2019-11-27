@@ -14,7 +14,7 @@
     BMFieldSetNode.newSubclassNamed("BMCustomFormNode").newSlots({
     }).setSlots({
     
-        init: function () {
+        init  () {
             BMFieldSetNode.init.apply(this)
 
             this.addFieldNamed("from")
@@ -24,31 +24,35 @@
 
             this.setActions(["send"])
             this.setCanDelete(true)
-        },
+        }
 
         ...
 
 */  
         
+window.BMFieldSetNode = class BMFieldSetNode extends BMStorableNode {
+    
+    initPrototype () {
+        this.newSlots({
+            status: "",
+            isEditable: true,
+        })
+    }
 
-BMStorableNode.newSubclassNamed("BMFieldSetNode").newSlots({
-    status: "",
-    isEditable: true,
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
+    init () {
+        super.init()
         this.setNodeMinWidth(500)
         this.setShouldStoreSubnodes(false)
         //this.setNodeColumnBackgroundColor("white")
     },        
     
-    didUpdateField: function(aField) {
+    didUpdateField (aField) {
         // override to implement hooks
-    },
+    }
 	
     // --- fields ---
 
-    addStoredField: function(aField) {
+    addStoredField (aField) {
         const name = aField.valueMethod()
         this.addStoredSlot(name)
         if (!this[name]) {
@@ -57,71 +61,71 @@ BMStorableNode.newSubclassNamed("BMFieldSetNode").newSlots({
 
         this.justAddField(aField)
         return aField
-    },
+    }
 
-    addField: function(aField) {
+    addField (aField) {
         return this.justAddField(aField)
-    },
+    }
 	
-    justAddField: function(aField) {
+    justAddField (aField) {
         aField.setTarget(this)
         this.addSubnode(aField)
         return aField
-    },
+    }
 
-    addFieldNamed: function(name) {	
+    addFieldNamed (name) {	
         const field = BMField.clone().setKey(name)
         field.setTarget(this)
         field.setValueMethod(name)
         this.addStoredField(field)
         return field
-    },
+    }
     
-    fieldNamed: function(aName) {
+    fieldNamed (aName) {
         return this.subnodes().detect(function (subnode) { 
             return subnode.valueMethod() === aName || subnode.key() === aName
         })
-    },
+    }
     
-    valueForFieldNamed: function(aName) {
+    valueForFieldNamed (aName) {
         return this.fieldNamed(aName).value()
-    },
+    }
 
     /*
-    copyFieldsFrom: function(sourceObj) {
+    copyFieldsFrom (sourceObj) {
         this.subnodes().forEach((targetField) => {
             const sourceField = sourceObj.fieldNamed(targetField.valueMethod())
             targetField.setValue(sourceField.value())
             //console.log("target field " + targetField.valueMethod() + " set to '" + targetField.value() + "'")
         })
         return this
-    },
+    }
     */
     
-    onDidEditNode: function() {
+    onDidEditNode () {
         this.scheduleSyncToStore()
         this.didUpdateNode()
-    },
+    }
 
     // --- validation ---
 
-    validate: function() {
+    validate () {
         return this.invalidSubnodes().length === 0
-    },
+    }
 
-    invalidSubnodes: function() {
+    invalidSubnodes () {
         return this.subnodes().select(subnode => !subnode.validate())
-    },
+    }
 
-    isValid: function() {
+    isValid () {
         return this.validate() // could cache this later...
-    },
+    }
 
     // --- json serialization ---
     // TODO: can this use persistent storage methods via skip pid use?
 
     /*
-    asJSON: function() {
+    asJSON () {
         const dict = {}
         dict.type = this.type()
         // TODO: store persistent slots...
@@ -137,9 +141,9 @@ BMStorableNode.newSubclassNamed("BMFieldSetNode").newSlots({
             })
         }
         return dict
-    },
+    }
 
-    fromJSON: function(json) {
+    fromJSON (json) {
         // TODO: read persistent keys
         if (json.fields) { 
             Map.withJsDict(json.fields).forEach((key, value) => {
@@ -150,6 +154,6 @@ BMStorableNode.newSubclassNamed("BMFieldSetNode").newSlots({
             })
         }
         return this
-    },
+    }
     */
-}).initThisProto()
+}.initThisClass()

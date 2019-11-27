@@ -29,14 +29,14 @@ App.newSubclassNamed("PeerApp").newSlots({
 
 }).setSlots({
 
-    init: function () {
+    init  () {
         //this.setName("voluntary.app")
 
         App.init.apply(this)
 
-    },
+    }
 
-    setup: function () {
+    setup  () {
         App.setup.apply(this)
         
 
@@ -51,18 +51,18 @@ App.newSubclassNamed("PeerApp").newSlots({
         this.appDidInit()
 
         return this
-    },
+    }
 
-    setupAtom: function() {
+    setupAtom () {
         this.setAtomNode(AtomNode.clone())
         this.setAtomNodeView(AtomNodeView.clone().setNode(this.atomNode()))
         this.atomNodeView().setIsVertical(true).syncLayout()
         this.rootView().addSubview(this.atomNodeView())
-    },
+    }
 
     // --- setup model ---
 
-    setupModel: function () {
+    setupModel  () {
 
         // identities
         this.setLocalIdentities(this.defaultStore().rootInstanceWithPidForProto("_localIdentities", BMLocalIdentities))
@@ -96,23 +96,23 @@ App.newSubclassNamed("PeerApp").newSlots({
         this.about().addSubnode(this.resources())
 		
         return this
-    },
+    }
 
     // --- setup views ---
     
-    setupViews: function() {
+    setupViews () {
         this.setupBrowser()
         //this.setupShelf()
-    },
+    }
 
-    isBrowserCompatible: function() {
+    isBrowserCompatible () {
         if (WebBrowserWindow.agentIsSafari()) {
             return false
         }
         return true
-    },
+    }
     
-    setupBrowser: function() {	
+    setupBrowser () {	
         this.setBrowser(BrowserView.clone())
     
         this.browser().hideAndFadeIn()
@@ -122,27 +122,27 @@ App.newSubclassNamed("PeerApp").newSlots({
         this.browser().scheduleSyncFromNode()
         window.SyncScheduler.shared().scheduleTargetAndMethod(this.browser(), "syncFromHashPath", 10)
         return this
-    },
+    }
 
-    setupShelf: function() {
+    setupShelf () {
         this.setShelf(ShelfView.clone())
         this.rootView().addSubview(this.shelf())
 
         window.SyncScheduler.shared().scheduleTargetAndMethod(this.shelf(), "appDidInit", 10)
 
         return this        
-    },
+    }
 
-    appDidInit: function () {
+    appDidInit  () {
         App.appDidInit.apply(this)
         
         // ResourceLoaderPanel can't use notification as it's a boot object
         // what if we added a one-shot observation for it, or would that be more confusing?
 
         window.ResourceLoaderPanel.stop() 
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()
 
 PeerApp.showVersion()
 

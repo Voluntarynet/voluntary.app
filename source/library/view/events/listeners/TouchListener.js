@@ -6,7 +6,7 @@
     Listens to a set of touch events.
 
 */
-
+ 
 window.TouchListener = class TouchListener extends ProtoClass {
     
     initPrototype () {
@@ -17,7 +17,7 @@ window.TouchListener = class TouchListener extends ProtoClass {
     init () {
         super.init()
         return this
-    }
+    } 
 
     setupEventsDict () {
         this.addEventNameAndMethodName("touchstart",  "onTouchStart");

@@ -6,27 +6,32 @@
 
 */
 
-BMNode.newSubclassNamed("BMServerConnection").newSlots({
-    server: null,
-    serverConn: null,
-    webSocketListener: null,
-    peerId: null,
-    remotePeers: null,
-    delegate: null,
-    lastError: null,
-    privateKey: null,
-    status: "not connected",
-    error: null,
-    //log: null,
-    sessionId: null,
-    statusLog: null,
-    pendingMessages: null,
-    isOpen: false,
+window.BMServerConnection = class BMServerConnection extends BMNode {
+    
+    initPrototype () {
+        this.newSlots({
+            server: null,
+            serverConn: null,
+            webSocketListener: null,
+            peerId: null,
+            remotePeers: null,
+            delegate: null,
+            lastError: null,
+            privateKey: null,
+            status: "not connected",
+            error: null,
+            //log: null,
+            sessionId: null,
+            statusLog: null,
+            pendingMessages: null,
+            isOpen: false,
+        
+            pingInterval: null,
+        })
+    }
 
-    pingInterval: null,
-}).setSlots({
-    init: function () {
-        BMNode.init.apply(this)
+    init () {
+        super.init()
         //this._remotePeers = []
        
         this.setRemotePeers(BMRemotePeers.clone())
@@ -48,15 +53,15 @@ BMNode.newSubclassNamed("BMServerConnection").newSlots({
         //this.createSubnodeIndex()
 
         this.setPendingMessages({});
-    },
+    }
 
     /*
-	loadFinalize: function() {
+	loadFinalize () {
 		this.createSubnodeIndex()
 	},
 	*/
     
-    addLog: function(s, error) {
+    addLog (s, error) {
         const statusNode = BMFieldSetNode.clone().setTitle(s).setSubtitle(new Date().toString())
         //this.statusLog().addSubnode(statusNode)
         statusNode.error = function () { return this._error }
@@ -74,9 +79,9 @@ BMNode.newSubclassNamed("BMServerConnection").newSlots({
         //entry.setSubtitle(new Date().toString())
         //entry.setValue(s)
         this.statusLog().addSubnode(statusNode)
-    },
+    }
 
-    setStatus: function(s, error) {
+    setStatus (s, error) {
         //console.warn(this.typeId() + ".setStatus(" + s + ")")
         
         this._status = s
@@ -88,28 +93,28 @@ BMNode.newSubclassNamed("BMServerConnection").newSlots({
         this.didUpdateNode() 
         this.server().didUpdateNode() 
         return this
-    },
+    }
 
-    shortId: function() {
+    shortId () {
         if (this.peerId()) {
             return this.peerId().toString().substring(0, 3)
         }
         return "-"
-    },
+    }
     
-    subtitle: function () {
+    subtitle  () {
         return this.status()
-    },   
+    }
     
     /*
-    subnodes: function () {
+    subnodes  () {
         return this.remotePeers()
-    },
+    }
     */
 
     // --- server connection --------------------------
 	
-    serverConnectionOptions: function () {
+    serverConnectionOptions  () {
         //console.log("BMNetwork.shared().stunServers().peerOptionsDict() = ", BMNetwork.shared().stunServers().peerOptionsDict())
         return { 
             host: this.server().host(), 
@@ -120,38 +125,38 @@ BMNode.newSubclassNamed("BMServerConnection").newSlots({
             //config: this.defaultConfig()
             //isDebugging: 3, 
         }
-    },
+    }
 
     // --- connection id ----
 	
-    currentPeerId: function() {
+    currentPeerId () {
         const peerId = BMPeerId.clone()
         peerId.setPublicKeyString(this.sessionId().publicKeyString())
         peerId.setBloomFilter(BMNetwork.shared().idsBloomFilter())
         //this.log("currentPeerId = '" + peerId.toString() + "'")
         return peerId
-    },
+    }
 
-    serverConnUrl: function() {
+    serverConnUrl () {
         return "ws" + (this.server().isSecure() ? "s" : "") + "://" + this.server().host() + ":" + this.server().port();
-    },
+    }
             
-    startListening: function() {
+    startListening () {
         assert(this.serverConn() !== null)
         this.setWebSocketListener(WebSocketListener.clone().setListenTarget(this.serverConn()).setDelegate(this))
         this.webSocketListener().start()
         return this
-    },
+    }
 
-    stopListening: function() {
+    stopListening () {
         if (this.webSocketListener()) {
             this.webSocketListener().stop()
         }
         return this
-    },
+    }
 
 
-    connect: function () {
+    connect  () {
         // TODO: add timeout and tell server when it occurs
 
         if (!this.serverConn()) {
@@ -173,7 +178,7 @@ BMNode.newSubclassNamed("BMServerConnection").newSlots({
         }
 
         return this;
-    },
+    }
 
     receiveResponse(response) {
         const pendingMessage = this.pendingMessages()[response.id];
@@ -189,7 +194,7 @@ BMNode.newSubclassNamed("BMServerConnection").newSlots({
         else {
             this.handleError(new Error("Received invalid response: " + JSON.stringify(msg)));
         }
-    },
+    }
 
     receiveSignalFromPeer(data) {
         let remotePeer = this.remotePeers().subnodes().detect(p => p.peerId().toString() === data.fromPeer);
@@ -201,15 +206,15 @@ BMNode.newSubclassNamed("BMServerConnection").newSlots({
             }));
         }
         remotePeer.conn().signal(data.signal);
-    },
+    }
 
-    reconnect: function() {
+    reconnect () {
         //this.debugLog(".reconnect()")
         this.close()
         return this;
-    },
+    }
 	
-    close: function() {
+    close () {
         this.setStatus("closing...")
         this.remotePeers().closeAll()
         this.stopPingInterval()
@@ -226,17 +231,17 @@ BMNode.newSubclassNamed("BMServerConnection").newSlots({
 
         this.onClose();
         return this
-    },
+    }
 
-    finish: function() { // for internal use
+    finish () { // for internal use
         if (this.serverConn()) {
             this.stopListening() // do we want to do this before calling close?
             //this.serverConn().close()
             this.setServerConn(null)
         }
-    },
+    }
 
-    showPeers: function() {
+    showPeers () {
 	    this.remotePeers().showPeers()
 	    /*
 		this.debugLog(".showPeers()")
@@ -244,21 +249,21 @@ BMNode.newSubclassNamed("BMServerConnection").newSlots({
 			console.log("    ", peer.hash())
 		})
 		*/
-    },
+    }
   
     /*  
-    log: function(s) {
+    log (s) {
         if (this.isDebugging()) {
             this.debugLog(" " + s)
         }
         return this
-    },
+    }
 */
 
 
     // --- handling errors ---
     
-    handleError: function(error) {
+    handleError (error) {
         if (error === undefined) {
             // closed connection?
             return
@@ -273,39 +278,39 @@ BMNode.newSubclassNamed("BMServerConnection").newSlots({
             this.log(this.type() + " onError: " + error);
             this.finish()
         }
-    },
+    }
 
     // --- handling web socket events ---
 
-    onError: function(event) {
+    onError (event) {
         this.handleError(new Error(event.data))
-    },
+    }
     
-    onOpen: function() {
+    onOpen () {
         this.setIsOpen(true)
         this.setTitle("Connection " + this.shortId())
         this.setStatus("connected")
         this.log("onOpen " + this.peerId().toString());
         this.startPingInterval()
         this.requestId();
-    },
+    }
 
-    startPingInterval: function() {
+    startPingInterval () {
         assert(this.pingInterval() === null)
         const p = setInterval(() => { this.send("ping"); }, 15000)
         this.setPingInterval(p)
         return this
-    },
+    }
 
-    stopPingInterval: function() {
+    stopPingInterval () {
         if (this.pingInterval()) {
             clearInterval(this.pingInterval());
             this.setPingInterval(null)
         }
         return this
-    },
+    }
 
-    onClose: function(err) {
+    onClose (err) {
         this.setIsOpen(false)
         this.stopPingInterval()
         this.log(this.type() + ".onClose " + err)
@@ -315,9 +320,9 @@ BMNode.newSubclassNamed("BMServerConnection").newSlots({
         }
 
         this.finish()
-    },
+    }
 
-    onMessage: function(event) {
+    onMessage (event) {
         try {
             //console.log("BMServerConnection receive: " + event.data);
             const msg = JSON.parse(event.data);
@@ -325,21 +330,21 @@ BMNode.newSubclassNamed("BMServerConnection").newSlots({
         } catch (error) {
             this.handleError(error);
         }
-    },
+    }
 
     // ----------------------------------
     
-    requestId: function() {
+    requestId () {
         if (this.isOpen()) {
             this.setPeerId(this.currentPeerId());
             return this.send("requestId", { requestedId: this.peerId().toString() }).then(() => {
                 this.updatePeers();
             }).catch(error => this.handleError(error));
         }
-    },
+    }
 
     /*
-	scheduleUpdatePeers: function() {
+	scheduleUpdatePeers () {
 		if (!this._hasScheduledUpdatePeers) {
 			this.__hasScheduledUpdatePeers = true
 			setTimeout(() => {
@@ -353,83 +358,83 @@ BMNode.newSubclassNamed("BMServerConnection").newSlots({
 	},
     */
 
-    isConnected: function () {
+    isConnected  () {
         return this.isOpen()
         //return this.serverConn() !== null
-    },
+    }
 
     //returns a Promise
-    send: function(name, data) {
+    send (name, data) {
         const msg = BMServerMessage.clone();
         msg.setServerConnection(this);
         msg.setName(name);
         msg.setData(data);
         return msg.send();
-    },
+    }
 
     /*
-    onData: function(data) {
+    onData (data) {
         //this.log("onData " + data)
-    },
+    }
 */
 
     // remote peers
     
-    updatePeers: function() {
+    updatePeers () {
         //this.log("updatePeers");
         this.send("listAllPeers")
             .then((peerIds) => this.setPeerIds(peerIds))
             .catch(error => this.handleError(error));
-    },
+    }
 
-    setPeerIds: function(ids) {
+    setPeerIds (ids) {
         //this.debugLog(".setPeerIds(\n" + ids.join("\n") + "\n)")		
         ids.remove(this.peerId().toString())
         this.remotePeers().setPeerIds(ids)
         //this.connectToMatchingPeerIds()
-    },
+    }
 
     /*    
-    connectToAllPeerIds: function () {
+    connectToAllPeerIds  () {
         this.peerIds().forEach((peerId) => { this.connectToPeerId(peerId) })
         return this
-    },
+    }
 */
 
-    onRemotePeerClose: function(remotePeer) {
+    onRemotePeerClose (remotePeer) {
         //this.removeSubnode(remotePeer)
         return this
-    },
+    }
     
-    broadcastMsg: function(msg) {
+    broadcastMsg (msg) {
         //this.log("broadcastMsg " + msg)
         this.remotePeers().subnodes().forEach((remotePeer) => { 
             //console.log("remotePeer = ", remotePeer)
             remotePeer.sendMsg(msg)
         })
         return this
-    },
+    }
     
-    receivedMsgFrom: function(msg, remotePeer) {
+    receivedMsgFrom (msg, remotePeer) {
         const d = this.delegate()
         if (d && d.receivedMsgFrom) {
             d.receivedMsgFrom.apply(d, [msg, remotePeer])
         }
-    },
+    }
     
-    connectedRemotePeers: function () {
+    connectedRemotePeers  () {
         return this.remotePeers().connectedRemotePeers()
-    },
+    }
 
-    connectedRemotePeerCount: function() {
+    connectedRemotePeerCount () {
         return this.remotePeers().connectedRemotePeers().length
-    },
+    }
 
-    remotePeersCount : function() {
+    remotePeersCount  () {
         return this.remotePeers().count()
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()
 
 
 

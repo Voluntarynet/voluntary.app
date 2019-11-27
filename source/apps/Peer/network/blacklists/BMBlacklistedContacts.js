@@ -6,13 +6,17 @@
 
 */
 
+window.BMBlacklistedContacts = class BMBlacklistedContacts extends BMBlacklist {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
 
-BMBlacklist.newSubclassNamed("BMBlacklistedContacts").newSlots({
-}).setSlots({
-    init: function () {
-        BMBlacklist.init.apply(this)		
+    init () {
+        super.init()		
         this.setShouldStore(true)        
         this.setTitle("contacts")
-    },
+    }
 	
-}).initThisProto()
+}.initThisClass()

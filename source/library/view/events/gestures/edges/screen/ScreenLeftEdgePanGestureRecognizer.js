@@ -13,12 +13,17 @@
 
 */
 
-ScreenEdgePanGestureRecognizer.newSubclassNamed("ScreenLeftEdgePanGestureRecognizer").newSlots({
-}).setSlots({
-    init: function () {
-        ScreenEdgePanGestureRecognizer.init.apply(this)
+window.ScreenLeftEdgePanGestureRecognizer = class ScreenLeftEdgePanGestureRecognizer extends ScreenEdgePanGestureRecognizer {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
         this.setEdgeName("left")
         return this
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

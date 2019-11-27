@@ -8,18 +8,23 @@
 
 var bitcore = require("bitcore-lib")
 
-BMStorableNode.newSubclassNamed("BMRemoteIdentity").newSlots({
-    name: "untitled",
-    publicKeyString: "",
-    hasPrivateKey: false,
-    sessionKeys: null,
-    messages: null, // TODO: remove later - no longer used
-}).setSlots({
-	
-    _nodeVisibleClassName: "Contact",
+window.BMRemoteIdentity = class BMRemoteIdentity extends BMStorableNode {
+    
+    initPrototype () {
+        this.newSlots({
+            name: "untitled",
+            publicKeyString: "",
+            hasPrivateKey: false,
+            sessionKeys: null,
+            messages: null, // TODO: remove later - no longer used
+        })
+    }
 
-    init: function () {
-        BMStorableNode.init.apply(this)
+    init () {
+        super.init()
+
+        this.setNodeVisibleClassName("Contact")
+
         this.setShouldStore(true)
 
         this.setNodeCanEditTitle(true)
@@ -39,30 +44,30 @@ BMStorableNode.newSubclassNamed("BMRemoteIdentity").newSlots({
 		
         this.setCanDelete(true)
         this._didChangeIdentityNote = NotificationCenter.shared().newNote().setSender(this).setName("didChangeIdentity").setInfo(this)
-    },
+    }
     
-    nodeThumbnailUrl: function() {
+    nodeThumbnailUrl () {
         return this.profile().profileImageDataUrl()
-    },
+    }
 	
 	
-    postChange: function() {
+    postChange () {
         if (this._didChangeIdentityNote) {
             this._didChangeIdentityNote.post()
         }
         return this
-    },
+    }
 	
-    localIdentity: function() {
+    localIdentity () {
         /*
 		const localIdentity = this.parentNode().parentNode()
 		assert(localIdentity.type() === "BMLocalIdentity")
 		return localIdentity
 		*/
         return this.parentNodeOfType("BMLocalIdentity")
-    },
+    }
     
-    didUpdateSlot: function(slotName, oldValue, newValue) {
+    didUpdateSlot (slotName, oldValue, newValue) {
         BMStorableNode.didUpdateSlot.apply(this, [slotName, oldValue, newValue])
         
         if (slotName === "publicKeyString") {
@@ -70,53 +75,53 @@ BMStorableNode.newSubclassNamed("BMRemoteIdentity").newSlots({
         }
         
         return this
-    },
+    }
 
-    didLoadFromStore: function() {
+    didLoadFromStore () {
         BMStorableNode.didLoadFromStore.apply(this)
         //this.messages().setTitle("messages")
         //this.debugLog(" didLoadFromStore")
-    },
+    }
     
-    title: function () {
+    title  () {
         if (this.name() === "") {
             return "Untitled"
         }
         return this.name()
-    },
+    }
 
-    setTitle: function (s) {
+    setTitle  (s) {
         this.setName(s)
         return this
-    },
+    }
 
-    subtitle: function() {
+    subtitle () {
         if (!this.isValid()) {
             return "need to set public key"
         }
         return null
-    },
+    }
 
-    isValid: function() {
+    isValid () {
         const s = this.publicKeyString()
         return bitcore.PublicKey.isValid(s)
-    },
+    }
 	
-    publicKey: function() {
+    publicKey () {
         if (this.isValid()) {
             const s = this.publicKeyString()
             return new bitcore.PublicKey(s)
         }
         return null
-    },
+    }
 
-    verifySignatureForMessage: function(signature, msgString) {
+    verifySignatureForMessage (signature, msgString) {
         const address = this.publicKey().toAddress()
         const verified = Message(msgString).verify(address, signature);
         return verified
-    },
+    }
 
-    handleObjMsg: function(objMsg) {
+    handleObjMsg (objMsg) {
 		
         if (!objMsg.encryptedData()) {
 		    return false
@@ -138,21 +143,21 @@ BMStorableNode.newSubclassNamed("BMRemoteIdentity").newSlots({
             }
         }
         return false
-    },
+    }
 	
-    equals: function(anIdentity) {
+    equals (anIdentity) {
         return anIdentity !== null && anIdentity.publicKeyString && (this.publicKeyString() === anIdentity.publicKeyString())
-    },
+    }
 	
-    encryptJson: function(dataDict) {
+    encryptJson (dataDict) {
         assert(dataDict)
         const encryptedData = this.localIdentity().encryptMessageForReceiverId(JSON.stringify(dataDict), this)
         assert(encryptedData)
 	    // TODO: use sessionKeys
 	    return encryptedData.toString()	    
-    },
+    }
 	
-    decryptJson: function(encryptedData) {
+    decryptJson (encryptedData) {
 	    // TODO: use sessionKeys
         if (this.isValid()) {
             if(!encryptedData) {
@@ -164,12 +169,12 @@ BMStorableNode.newSubclassNamed("BMRemoteIdentity").newSlots({
 		    }
         }
 	    return null
-    },
+    }
 	
-    allIdentitiesMap: function() { // only uses valid remote identities
+    allIdentitiesMap () { // only uses valid remote identities
         const ids = ideal.Dictionary.clone()
         ids.atPut(this.publicKeyString(), this)
         return ids
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

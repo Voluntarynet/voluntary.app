@@ -6,10 +6,16 @@
 
 */
 
-BrowserTitledRow.newSubclassNamed("BMPointerFieldRowView").newSlots({
-}).setSlots({
-    init: function () {
-        BrowserTitledRow.init.apply(this)
+window.BMPointerFieldRowView = class BMPointerFieldRowView extends BrowserTitledRow {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
+
         this.makeNoteRightArrow()
 		
         this.styles().unselected().setColor("#888")
@@ -19,9 +25,9 @@ BrowserTitledRow.newSubclassNamed("BMPointerFieldRowView").newSlots({
         this.styles().selected().setBackgroundColor("#eee")
 		
         return this
-    },
+    }
 
-    updateSubviews: function () {	
+    updateSubviews  () {	
         BrowserTitledRow.updateSubviews.apply(this)
 		
         let node = this.node()
@@ -35,6 +41,6 @@ BrowserTitledRow.newSubclassNamed("BMPointerFieldRowView").newSlots({
         this.applyStyles()
 		
         return this
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

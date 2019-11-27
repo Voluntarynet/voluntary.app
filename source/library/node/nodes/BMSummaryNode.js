@@ -12,14 +12,19 @@
 
 */
 
+window.BMSummaryNode = class BMSummaryNode extends BMStorableNode {
+    
+    initPrototype () {
+        this.newSlots({
+            nodeSummaryJoiner: " ",
+            nodeSubtitleIsChildrenSummary: false,
+            summaryFormat: "value",
+        })
+    }
 
-BMStorableNode.newSubclassNamed("BMSummaryNode").newSlots({
-    nodeSummaryJoiner: " ",
-    nodeSubtitleIsChildrenSummary: false,
-    summaryFormat: "value",
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
+    init () {
+        super.init()
+
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(true)
 
@@ -29,31 +34,31 @@ BMStorableNode.newSubclassNamed("BMSummaryNode").newSlots({
         this.addStoredSlot("nodeSummaryJoiner")  // TODO: move elsewhere
         this.addStoredSlot("nodeSubtitleIsChildrenSummary") 
         this.addStoredSlot("summaryFormat")
-    },
+    }
 
-    shallowCopySlotnames: function() {
+    shallowCopySlotnames () {
         const names = BMStorableNode.shallowCopySlotnames.apply(this)
         return names.appendItems([
             "nodeSummaryJoiner", "nodeSubtitleIsChildrenSummary", "summaryFormat", 
         ])
-    },
+    }
 
-    initNodeInspector: function() {
+    initNodeInspector () {
         BMStorableNode.initNodeInspector.apply(this)
         this.addInspectorField(BMStringField.clone().setKey("Summary joiner").setValueMethod("nodeSummaryJoiner").setValueIsEditable(true).setTarget(this))
         this.addInspectorField(BMBooleanField.clone().setKey("Subtitle is children summary").setValueMethod("nodeSubtitleIsChildrenSummary").setValueIsEditable(true).setTarget(this))
         this.addInspectorField(this.summaryFormatOptionsNode())
         return this
-    },
+    }
 
-    setSummaryFormat: function(f) {
+    setSummaryFormat (f) {
         this.didUpdateSlot("summaryFormat", this._summaryFormat, f)
         this._summaryFormat = f
         this.didUpdateNode()
         return this
-    },
+    }
 
-    summaryFormatOptionsNode: function() {
+    summaryFormatOptionsNode () {
         const sm = BMOptionsNode.clone().setKey("Summary format").setValueMethod("summaryFormat").setValueIsEditable(true).setTarget(this)
         sm.setTitle("Summary format *")
         
@@ -63,27 +68,27 @@ BMStorableNode.newSubclassNamed("BMSummaryNode").newSlots({
             sm.addSubnode(BMOptionNode.clone().setTitle(format))
         })
         return sm
-    },
+    }
 
-    summaryKey: function() {
+    summaryKey () {
         return this.title()
-    },
+    }
 
-    summaryValue: function() {
+    summaryValue () {
         return this.subtitle()
-    },
+    }
 
-    subtitle: function () {
+    subtitle  () {
         if (this.nodeSubtitleIsChildrenSummary()) {
             return this.childrenSummary()
         }
 
         return BMStorableNode.subtitle.apply(this)
-    },
+    }
 
     // --- summary ---
     		
-    summary: function() {
+    summary () {
         const k = this.summaryKey()
         let v = this.summaryValue()
         const f = this.summaryFormat()
@@ -110,13 +115,13 @@ BMStorableNode.newSubclassNamed("BMSummaryNode").newSlots({
         }
 
         return ""
-    },
+    }
         
-    childrenSummary: function() {
+    childrenSummary () {
         return this.subnodes().map(subnode => subnode.summary()).filter(s => s.length).join(this.nodeSummaryJoinerOut())
-    },
+    }
 
-    nodeSummaryJoinerOut: function() {
+    nodeSummaryJoinerOut () {
         let s = this._nodeSummaryJoiner
         
         if (s === "newline") {
@@ -126,7 +131,7 @@ BMStorableNode.newSubclassNamed("BMSummaryNode").newSlots({
         }
         
         return s
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()
 

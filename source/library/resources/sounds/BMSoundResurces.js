@@ -6,49 +6,50 @@
 
 */
 
-BMNode.newSubclassNamed("BMSoundResurces").newSlots({
-    extensions: ["wav", "mp3", "m4a", "mp4", "oga", "ogg"],
-}).setSlots({
-    shared: function() {   
-        return this.sharedInstanceForClass(BMSoundResurces)
-    },
+window.BMSoundResurces = class BMSoundResurces extends BMNode {
+    
+    initPrototype () {
+        this.newSlots({
+            extensions: ["wav", "mp3", "m4a", "mp4", "oga", "ogg"],
+        })
+    }
 
-    init: function () {
-        BMNode.init.apply(this)
+    init () {
+        super.init()
 
         this.setTitle("Sounds")
         this.setNodeMinWidth(270)
 
         this.watchOnceForNote("appDidInit")
-    },
+    }
 
-    appDidInit: function() {
+    appDidInit () {
         this.setupSubnodes()
         return this
-    },
+    }
 
-    resourcePaths: function() {
+    resourcePaths () {
         return ResourceLoader.resourceFilePathsWithExtensions(this.extensions())
-    },
+    }
 
-    setupSubnodes: function() {
+    setupSubnodes () {
         this.resourcePaths().forEach(path => this.addSoundWithPath(path))
         return this
-    },
+    }
 
-    addSoundWithPath: function(aPath) {
+    addSoundWithPath (aPath) {
         const sound = BMSound.clone().setPath(aPath)
         this.addSound(sound)
         return this
-    },
+    }
 
-    addSound: function(aSound) {
+    addSound (aSound) {
         this.addSubnode(aSound)
         return this
-    },
+    }
 
-    sounds: function() {
+    sounds () {
         return this.subnodes()
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

@@ -6,12 +6,16 @@
     
 */
 
-BMNode.newSubclassNamed("BMMonthNode").newSlots({
-    value: 1, // month value starts with 1
-}).setSlots({
+window.BMMonthNode = class BMMonthNode extends BMNode {
     
-    init: function () {
-        BMNode.init.apply(this)
+    initPrototype () {
+        this.newSlots({
+            value: 1, // month value starts with 1
+        })
+    }
+
+    init () {
+        super.init()
 
         this.setCanDelete(false)
         this.setNodeCanInspect(false)
@@ -24,60 +28,60 @@ BMNode.newSubclassNamed("BMMonthNode").newSlots({
         //this.setNodeCanReorderSubnodes(false)
 
         //this.setViewClassName("BMOptionsNodeView")
-    },
+    }
 
-    setValue: function(v) {
+    setValue (v) {
         assert(Number.isInteger(v) && v > 0 && v < 13)
         this._value = v
         return this
-    },
+    }
 
-    year: function() {
+    year () {
         const year = this.parentNode().value()
         return year
-    },
+    }
 
-    daysThisMonth: function() {
+    daysThisMonth () {
         return new Date(this.year(), this.value() - 1, 0).getDate();
-    },
+    }
 
-    monthNames: function() {
+    monthNames () {
         return ["January", "February", "March", "April", 
             "May", "June", "July", "August", 
             "September", "October", "November", "December"];
-    },
+    }
 
-    monthName: function() {
+    monthName () {
         return this.monthNames()[this.value()-1]
-    },
+    }
 
-    title: function() {
+    title () {
         return this.monthName()
-    },
+    }
 
-    zeroPaddedMonthNumber: function() {
+    zeroPaddedMonthNumber () {
         let v = this.value()
         if (v < 10) { 
             v = "0" + v 
         }
         return v
-    },
+    }
 
-    subtitle: function() {
+    subtitle () {
         //return this.zeroPaddedMonthNumber()
         return null
-    },
+    }
 
-    note: function() {
+    note () {
         return "&gt;"
-    },
+    }
     
-    nodeRowLink: function() {
+    nodeRowLink () {
         // used by UI row views to browse into next column
         return this
-    },    
+    }
 
-    prepareToSyncToView: function() {
+    prepareToSyncToView () {
         // called after Node is selected
         if (!this.subnodeCount()) {
 
@@ -85,6 +89,6 @@ BMNode.newSubclassNamed("BMMonthNode").newSlots({
                 this.addSubnode(BMDayNode.clone().setValue(i))
             }
         }
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

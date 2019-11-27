@@ -8,13 +8,18 @@
 
 */
         
-BMSummaryNode.newSubclassNamed("BMDateNode").newSlots({
-    year: null,
-    month: null,
-    day: null,
-}).setSlots({
-    init: function () {
-        BMSummaryNode.init.apply(this)
+window.BMDateNode = class BMDateNode extends BMSummaryNode {
+    
+    initPrototype () {
+        this.newSlots({
+            year: null,
+            month: null,
+            day: null,
+        })
+    }
+
+    init () {
+        super.init()
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(false)
         this.setNodeCanReorderSubnodes(false)
@@ -31,13 +36,13 @@ BMSummaryNode.newSubclassNamed("BMDateNode").newSlots({
         this.setNodeCanEditSubtitle(false)
 
         return this
-    },
+    }
 
-    hasDate: function() {
+    hasDate () {
         return !Type.isNull(this.year())
-    },
+    }
 
-    jsDate: function() {
+    jsDate () {
         //new Date(year, month, day, hours, minutes, seconds, milliseconds)
         if (this.hasDate()) {
             const d = new Date(this.year(), this.month(), this.day(), 0, 0, 0, 0, 0)
@@ -45,9 +50,9 @@ BMSummaryNode.newSubclassNamed("BMDateNode").newSlots({
             return d
         }
         return null
-    },
+    }
 
-    subtitle: function() {
+    subtitle () {
         if (this.hasDate()) {
             const d = this.jsDate()
             const s = d.monthName() + " " + d.dateNumberName() + ", " + d.getFullYear()
@@ -57,13 +62,13 @@ BMSummaryNode.newSubclassNamed("BMDateNode").newSlots({
         }
 
         return "No date selected"
-    },
+    }
 
-    note: function() {
+    note () {
         return "&gt;"
-    },
+    }
 
-    prepareToSyncToView: function() {
+    prepareToSyncToView () {
         // called after DateNode is selected
         if (!this.hasSubnodes()) {
             const startYear = 2019
@@ -73,9 +78,9 @@ BMSummaryNode.newSubclassNamed("BMDateNode").newSlots({
                 this.addSubnode(year)
             }
         }
-    },
+    }
 
-    onRequestSelectionOfDecendantNode: function(aNode) {
+    onRequestSelectionOfDecendantNode (aNode) {
         if (aNode.type() === "BMDayNode") {
             const dayNode = aNode
             const monthNode = dayNode.parentNode()
@@ -87,6 +92,6 @@ BMSummaryNode.newSubclassNamed("BMDateNode").newSlots({
             this.parentNode().postShouldFocusSubnode(this)
         }
         return true
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

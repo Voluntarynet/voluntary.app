@@ -7,31 +7,35 @@
 */
 
 
-BMAppMessage.newSubclassNamed("BMPostMessage").newSlots({
-    content: "",
-	
-    replyCount: 0,
-    repostCount: 0,
-    likeCount: 0,
-
-    didReply: false,
-    didRepost: false,
-    didLike: false,
-	
-    postThread: null,
-}).setSlots({
+window.BMPostMessage = class BMPostMessage extends BMAppMessage {
     
-    init: function () {
-        BMAppMessage.init.apply(this)
+    initPrototype () {
+        this.newSlots({
+            content: "",
+	
+            replyCount: 0,
+            repostCount: 0,
+            likeCount: 0,
+        
+            didReply: false,
+            didRepost: false,
+            didLike: false,
+            
+            postThread: null,
+        })
+    }
+
+    init () {
+        super.init()
         this.addStoredSlots(["content", "hasRead", "replyCount", "repostCount", "likeCount"])
         this.setCanDelete(true)
         this.setShouldStore(true)	
         this.setContent("...".loremIpsum(4, 100))	
         this.customizeNodeRowStyles().setToBlackOnWhite()
-    },
+    }
 
     /*
-	senderId: function() {
+	senderId () {
 		if (this._senderId) {
 			return this._senderId
 		}
@@ -44,7 +48,7 @@ BMAppMessage.newSubclassNamed("BMPostMessage").newSlots({
 	},
 	*/
     
-    senderName: function() {
+    senderName () {
         if (this.senderId()) {
             return this.senderId().title()
         }
@@ -54,113 +58,113 @@ BMAppMessage.newSubclassNamed("BMPostMessage").newSlots({
         }
         
         return "?"
-    },
+    }
     
-    ageDescription: function() {
+    ageDescription () {
         return TimePeriodFormatter.clone().setValueInSeconds(this.ageInSeconds()).formattedValue()
-    },
+    }
     
-    ageInSeconds: function() {
+    ageInSeconds () {
         if (this.objMsg()) {
             return this.objMsg().ageInSeconds()
         }
         return 0
-    },
+    }
 
-    mostRecentDate: function() {
+    mostRecentDate () {
         return 0
-    },
+    }
 	
-    title: function() {
+    title () {
 	    return this.content()
-    },
+    }
 	
-    wasSentByMe: function() {
+    wasSentByMe () {
         return this.senderId() === this.localIdentity()
-    },
+    }
 	
-    contentDict: function() {
+    contentDict () {
         const contentDict = {}
         contentDict.content = this.content()
         return contentDict
-    },
+    }
 	
-    setContentDict: function(contentDict) {
+    setContentDict (contentDict) {
         this.setContent(contentDict.content)
         //this.scheduleSyncToView()
         return this
-    },
+    }
 	
-    description: function() {
+    description () {
         return this.typeId() + "-" + this.hash() + "'" + this.content() + "'"
-    },
+    }
 
-    localIdentity: function() {
+    localIdentity () {
         return this.parentNodeOfType("BMLocalIdentity")
-    },
+    }
     
-    localIdentityIsSender: function() {
+    localIdentityIsSender () {
         return this.senderId().equals(this.localIdentity())
-    },
+    }
 	
-    avatarImageDataURL: function() {
+    avatarImageDataURL () {
         if (this.senderId()) {
             return this.senderId().profile().profileImageDataUrl()
         }
         return null
-    },
+    }
 	
     // counts
 	
-    incrementReplyCount: function() {
+    incrementReplyCount () {
         this.setReplyCount(this.replyCount() + 1)
         return this
-    },
+    }
     
-    incrementRepostCount: function() {
+    incrementRepostCount () {
         this.setRepostCount(this.repostCount() + 1)
         return this
-    },
+    }
     
-    incrementLikeCount: function() {
+    incrementLikeCount () {
         this.setLikeCount(this.likeCount() + 1)
         return this
-    },
+    }
     
     // link
     
-    nodeRowLink: function() {
+    nodeRowLink () {
         if (this._nodeRowLink) {
             return this._nodeRowLink
         }
         
         return this.postNodeRowLink()
-    },
+    }
     
-    avatarNodeRowLink: function() {
+    avatarNodeRowLink () {
         return this.senderId().profile()
-    },
+    }
     
-    postNodeRowLink: function() {
+    postNodeRowLink () {
         return this.postThread()
-    },
+    }
     
-    postThread: function() {
+    postThread () {
         if (this._postThread === null) {
             this._postThread = BMPostThread.clone().setPostMessage(this).update()
         }
         return this._postThread
-    },
+    }
 
     // replies
     
-    replies: function() {
+    replies () {
         if (this._replies === null) {
             this._replies = []
         }
         
         return this._replies
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()
 

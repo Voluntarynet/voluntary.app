@@ -6,13 +6,18 @@
 
 */
 
-BMApplet.newSubclassNamed("BMGroupChat").newSlots({
-    channels: null,
-    directMessages: null,
-    profile: null,
-}).setSlots({
-    init: function () {
-        BMApplet.init.apply(this)
+window.BMGroupChat = class BMGroupChat extends BMApplet {
+    
+    initPrototype () {
+        this.newSlots({
+            channels: null,
+            directMessages: null,
+            profile: null,
+        })
+    }
+
+    init () {
+        super.init()
         this.setTitle("Slack")
         
         this.setChannels(BMNode.clone().setTitle("channels"))
@@ -20,7 +25,7 @@ BMApplet.newSubclassNamed("BMGroupChat").newSlots({
 
         this.setDirectMessages(BMNode.clone().setTitle("direct messages"))
         this.addSubnode(this.directMessages())
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()
 

@@ -6,29 +6,33 @@
 
 */
 
+window.BMPostMessageRowView = class BMPostMessageRowView extends BrowserRow {
+    
+    initPrototype () {
+        this.newSlots({
+            leftView: null,
+            iconView: null,
+            middleView: null,
+            titleBarView: null,
+            titleBarTextView: null,
+            dateView: null,
+            textView: null,
+            bottomBarView: null,
+            replyButton: null,
+            replyCountView: null,
+        
+            repostButton: null,
+            repostCountView: null,
+        
+            likeButton: null,
+            likeCountView: null,
+            //rightView: null,
+            isSelected: false,
+        })
+    }
 
-BrowserRow.newSubclassNamed("BMPostMessageRowView").newSlots({
-    leftView: null,
-    iconView: null,
-    middleView: null,
-    titleBarView: null,
-    titleBarTextView: null,
-    dateView: null,
-    textView: null,
-    bottomBarView: null,
-    replyButton: null,
-    replyCountView: null,
-
-    repostButton: null,
-    repostCountView: null,
-
-    likeButton: null,
-    likeCountView: null,
-    //rightView: null,
-    isSelected: false,
-}).setSlots({
-    init: function () {
-        BrowserRow.init.apply(this)
+    init () {
+        super.init()
 
         this.setMinHeightPx(100)
         //this.contentView()
@@ -89,27 +93,27 @@ BrowserRow.newSubclassNamed("BMPostMessageRowView").newSlots({
         // console.log(" =======> " + this.typeId() + " this.styles().selected().backgroundColor() = ", this.styles().selected().backgroundColor())
 
         return this
-    },
+    }
 
-    clickedIconView: function () {
+    clickedIconView  () {
         console.log("clickedIconView")
         return this
-    },
+    }
 
-    addCloseButton: function () {
+    addCloseButton  () {
         // avoid adding normal BrowserRow closeButtonView
         return this
-    },
+    }
 
-    setParentView: function (aView) {
+    setParentView  (aView) {
         // what is this for?
         BrowserRow.setParentView.apply(this, [aView])
         this.registerForVisibility()
         return this
-    },
+    }
 
     /*
-	setupIconView: function() {
+	setupIconView () {
 		let iv = DomView.clone().setDivClassName("ShelfIconView")
 		this.setIconView(iv)
         this.leftView().addSubview(iv)
@@ -126,10 +130,10 @@ BrowserRow.newSubclassNamed("BMPostMessageRowView").newSlots({
 		iv.setBackgroundColor("transparent")
 		iv.setOpacity(1)
         return this
-    },
+    }
     */
 
-    setIconDataUrl: function (imageDataUrl) {
+    setIconDataUrl  (imageDataUrl) {
         let iv = this.iconView()
 
         if (imageDataUrl) {
@@ -139,9 +143,9 @@ BrowserRow.newSubclassNamed("BMPostMessageRowView").newSlots({
         }
 
         return this
-    },
+    }
 
-    setupContentView: function () {
+    setupContentView  () {
         let tv = this.textView()
         tv.setMinWidth(50)
         //tv.setPosition("relative")
@@ -151,9 +155,9 @@ BrowserRow.newSubclassNamed("BMPostMessageRowView").newSlots({
         tv.setPaddingBottom(4)
         tv.setWhiteSpace("normal")
         tv.setFontFamily("AppRegular, sans-serif")
-    },
+    }
 
-    showButtonNamed: function (name) {
+    showButtonNamed  (name) {
         // TODO: abstract this into something like a PostAttributeButton 
         let node = this.node()
         let countView = this.perform(name + "CountView")
@@ -174,9 +178,9 @@ BrowserRow.newSubclassNamed("BMPostMessageRowView").newSlots({
             countView.setOpacity(0.5)
             button.setOpacity(0.5)
         }
-    },
+    }
 
-    updateSubviews: function () {
+    updateSubviews  () {
         BrowserRow.updateSubviews.apply(this)
 
         let node = this.node()
@@ -194,61 +198,61 @@ BrowserRow.newSubclassNamed("BMPostMessageRowView").newSlots({
         }
 
         return this
-    },
+    }
 
     // --- edit ---
 
     /*
-    onDidEdit: function (changedView) {
+    onDidEdit  (changedView) {
         this.debugLog(".onDidEdit")
         this.scheduleSyncToNode()
         return true
-    },
+    }
     */
 
-    didInput: function () {
+    didInput  () {
         this.scheduleSyncToNode() //this.syncToNode()
-    },
+    }
 
     // --- sync ---
 
-    syncToNode: function () {
+    syncToNode  () {
         //console.log("syncToNode")
         this.node().setContent(this.textView().innerHTML())
         //his.node().tellParentNodes("onDidEditNode", this.node())
         this.node().scheduleSyncToStore() // TODO: this should be handled by the node
         return this
-    },
+    }
 
-    syncFromNode: function () {
+    syncFromNode  () {
         let node = this.node()
         this.setIconDataUrl(node.avatarImageDataURL())
         this.textView().setString(node.content())
         this.updateSubviews()
         return this
-    },
+    }
 
     // actions
 
-    reply: function () {
+    reply  () {
         console.log("reply")
         this.node().incrementReplyCount()
         this.scheduleSyncToNode()
         return this
-    },
+    }
 
-    repost: function () {
+    repost  () {
         console.log("repost")
         this.node().incrementRepostCount()
         this.scheduleSyncToNode()
         return this
-    },
+    }
 
-    like: function () {
+    like  () {
         console.log("like")
         this.node().incrementLikeCount()
         this.scheduleSyncToNode()
         return this
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

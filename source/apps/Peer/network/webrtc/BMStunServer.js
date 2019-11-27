@@ -12,19 +12,20 @@
     
 */
 
-BMFieldSetNode.newSubclassNamed("BMStunServer").newSlots({
-    host: "",
-    port: "", 
-    //credential: null,
-    //username: null,
-    stunNote: "",
-}).setSlots({
-    localServer: function() {
-        return this.clone().setHost("127.0.0.1").setPort(3478)
-    },
-	
-    init: function () {
-        BMFieldSetNode.init.apply(this)
+window.BMStunServer = class BMStunServer extends BMFieldSetNode {
+    
+    initPrototype () {
+        this.newSlots({
+            host: "",
+            port: "", 
+            //credential: null,
+            //username: null,
+            stunNote: "",
+        })
+    }
+
+    init  () {
+        super.init()
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(true)
         this.addStoredSlots(["host", "port"])
@@ -36,19 +37,23 @@ BMFieldSetNode.newSubclassNamed("BMStunServer").newSlots({
         this.addStoredField(BMField.clone().setKey("host").setValueMethod("host")).setValueIsEditable(true)
         this.addStoredField(BMField.clone().setKey("port").setValueMethod("port")).setValueIsEditable(true)
         this.addStoredField(BMField.clone().setKey("note").setValueMethod("stunNote")).setValueIsEditable(true)
-    },
+    }
 
-    title: function () {
+    localServer () {
+        return this.clone().setHost("127.0.0.1").setPort(3478)
+    }
+
+    title  () {
         return this.host() + " " + this.port()
-    },
+    }
 
-    subtitle: function () {
+    subtitle  () {
         return this.stunNote()
-    },
+    }
 	
     // ice entry - for Peer options
 	
-    setIceDict: function(dict) {
+    setIceDict (dict) {
 	    const url = dict.url
         const parts = url.split(":")
         const type = parts[0]
@@ -58,15 +63,15 @@ BMFieldSetNode.newSubclassNamed("BMStunServer").newSlots({
         this.setHost(host)
         this.setPort(port)
         return this
-    },
+    }
 	
 	
-    iceDict: function() {
+    iceDict () {
         let url = "stun:" + this.host()
         if (this.port() !== null && this.port() !== "") {
             url += ":" + this.port()
         }
         return { url: url }
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

@@ -8,39 +8,44 @@
     
 */
 
-BMFieldSetNode.newSubclassNamed("BMDataStoreRecord").newSlots({
-    key: null,
-    didSetupFields: false,
-}).setSlots({
-    init: function () {
-        BMFieldSetNode.init.apply(this)
+window.BMDataStoreRecord = class BMDataStoreRecord extends BMFieldSetNode {
+    
+    initPrototype () {
+        this.newSlots({
+            key: null,
+            didSetupFields: false,
+        })
+    }
+
+    init () {
+        super.init()
         //this.setCanDelete(true) // not safe for non-developers
         this.setNodeColumnBackgroundColor("white")
         this.setNodeMinWidth(300)
-    },
+    }
 
-    prepareForFirstAccess: function() {
+    prepareForFirstAccess () {
         this.addStoredField(BMTextAreaField.clone().setKey("dict").setValueMethod("dictString").setValueIsEditable(false).setIsMono(true))
-    },
+    }
 
-    valuePid: function () {
+    valuePid  () {
         return this.title()
-    },
+    }
 
-    value: function () {
+    value  () {
         return this.defaultStore().sdb().at(this.valuePid())
-    },
+    }
 
-    dictString: function () {
+    dictString  () {
         return JSON.stringify(JSON.parse(this.value()), null, 2)
-    },
+    }
 
-    delete: function () {
+    delete  () {
         BMFieldSetNode.delete.apply(this)
         //this.defaultStore().justRemoveObject(this.value())
         this.defaultStore().justRemovePid(this.valuePid())
         return this
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()
 

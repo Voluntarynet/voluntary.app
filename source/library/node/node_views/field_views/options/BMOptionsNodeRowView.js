@@ -13,12 +13,17 @@
 */
 
 
-BrowserTitledRow.newSubclassNamed("BMOptionsNodeRowView").newSlots({
-}).setSlots({
-    init: function () {
-        BrowserTitledRow.init.apply(this)
+window.BMOptionsNodeRowView = class BMOptionsNodeRowView extends BrowserTitledRow {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
         //this.setHasSubtitle(true)
         return this
-    },
+    }
 	
-}).initThisProto()
+}.initThisClass()

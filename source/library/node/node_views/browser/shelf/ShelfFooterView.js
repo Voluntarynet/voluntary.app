@@ -6,10 +6,15 @@
 
 */
 
-DomView.newSubclassNamed("ShelfFooterView").newSlots({
-}).setSlots({
-    init: function () {
-        DomView.init.apply(this)
+window.ShelfFooterView = class ShelfFooterView extends DomView {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
         this.turnOffUserSelect()
         this.setTransition("all 0.35s")
 		
@@ -17,38 +22,38 @@ DomView.newSubclassNamed("ShelfFooterView").newSlots({
         this.setMinAndMaxWidth(itemSize)
 
         return this
-    },
+    }
     
-    setIsAlwaysSelected: function(aBool) {
+    setIsAlwaysSelected (aBool) {
         this._isAlwaysSelected = aBool
         if (aBool) {
             this.selectItems()
         }
         return this
-    },
+    }
     
     // --- items ---
     
-    items: function() {
+    items () {
         return this.subviews()
-    },
+    }
     
-    addItem: function(shelfItemView) {
+    addItem (shelfItemView) {
         this.addSubview(shelfItemView)
         return this
-    },
+    }
     
-    firstItem: function() {
+    firstItem () {
         return this.items()[0]
-    },
+    }
     
     // --------------
     
-    shelf: function() {
+    shelf () {
         return this.parentView()
-    },
+    }
     
-    didClickItem: function(clickedItem) {
+    didClickItem (clickedItem) {
         this.items().forEach((item) => {
             if (item !== clickedItem) {
                 if (item !== this.firstItem()) {
@@ -64,32 +69,32 @@ DomView.newSubclassNamed("ShelfFooterView").newSlots({
 
         }
         this.shelf().didClickGroup(this)
-    },
+    }
     
-    newShelfItem: function() {
+    newShelfItem () {
         const item = ShelfItemView.clone()
         this.addItem(item)
         item.showUnselected()
         return item
-    },
+    }
     
-    firstItemHeight: function() {
+    firstItemHeight () {
         const fs = this.firstItem()    
         return fs ? fs.clientHeight() : 0
-    },
+    }
     
     /*
-    selectItems: function() {
+    selectItems () {
         this.items().forEach((item) => { item.select() })
         return this
-    },
+    }
        
-    unselectItems: function() {
+    unselectItems () {
         this.items().forEach((item) => { item.unselect() })
         return this
-    },
+    }
     
-    compact: function() {
+    compact () {
         if (!this._isCompacted) {
             this._isCompacted = true
             
@@ -101,9 +106,9 @@ DomView.newSubclassNamed("ShelfFooterView").newSlots({
            // this.debugLog(".compact()")
         }
         return this
-    },
+    }
     
-    uncompact: function() {
+    uncompact () {
         if (this._isCompacted) {
             this._isCompacted = false
             const fs = this.firstItem()
@@ -115,16 +120,16 @@ DomView.newSubclassNamed("ShelfFooterView").newSlots({
             
         }        
         return this
-    },
+    }
     
-    toggleCompact: function() {
+    toggleCompact () {
         if (this._isCompacted) {
             this.uncompact()
         } else {
             this.compact()
         }
         return this
-    },
+    }
     */
    
-}).initThisProto()
+}.initThisClass()

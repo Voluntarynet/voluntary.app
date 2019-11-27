@@ -6,11 +6,15 @@
 
 */
 
+window.BMPostDrafts = class BMPostDrafts extends BMStorableNode {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
 
-BMStorableNode.newSubclassNamed("BMPostDrafts").newSlots({
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
+    init () {
+        super.init()
         //this.setLinkProto(BMChatThread)
         this.setShouldStore(true)	
         this.setShouldStoreSubnodes(true)	
@@ -21,38 +25,38 @@ BMStorableNode.newSubclassNamed("BMPostDrafts").newSlots({
         this.setNodeColumnBackgroundColor("white")
         this.setNoteIsSubnodeCount(true)
         this.setTitle("my drafts")
-    },
+    }
 
-    finalize: function() {
+    finalize () {
         BMStorableNode.finalize.apply(this)
         this.setTitle("my drafts")
-    },
+    }
 	
 
-    add: function() {
+    add () {
         const result = BMStorableNode.add.apply(this)
         this.scheduleSyncToStore()
         this.didUpdateNode()
         return result
-    },
+    }
 
     /*
-	scheduleSyncToStore: function() {
+	scheduleSyncToStore () {
 		BMStorableNode.scheduleSyncToStore.apply(this)
         this.debugLog(" scheduleSyncToStore")
 		return this
 	},
 	*/
 	
-    shelfIconName: function() {
+    shelfIconName () {
 	    return "chat/drafts"
 	    //return "write-white"
-    },
+    }
 	
     // badge - a badge without a title becomes a marker
 	
-    nodeViewShouldBadge: function() {
+    nodeViewShouldBadge () {
         return this.subnodesCount() > 0
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

@@ -6,11 +6,16 @@
     
 */
 
-TextField.newSubclassNamed("BrowserRowNote").newSlots({
-}).setSlots({
-    init: function () {
-        TextField.init.apply(this)
-        return this
-    },
+window.BrowserRowNote = class BrowserRowNote extends TextField {
     
-}).initThisProto()
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
+        return this
+    } 
+    
+}.initThisClass()

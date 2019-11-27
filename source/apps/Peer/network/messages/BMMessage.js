@@ -11,26 +11,30 @@
 
 */
 
+window.BMMessage = class BMMessage extends BMFieldSetNode {
+    
+    initPrototype () {
+        this.newSlots({
+            msgType: null,
+            data: null,
+            msgTypes: ["addr", "inv", "object", "ping", "pong", "getData"],
+            remotePeer: null,
+        })
+    }
 
-BMFieldSetNode.newSubclassNamed("BMMessage").newSlots({
-    msgType: null,
-    data: null,
-    msgTypes: ["addr", "inv", "object", "ping", "pong", "getData"],
-    remotePeer: null,
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
+    init () {
+        super.init()
         this.setShouldStore(true)
         this.setNodeMinWidth(650)
         this.setNodeColumnBackgroundColor("white")
         //this.setViewClassName("BMMessageView")
-    },
+    }
 
-    title: function() {
+    title () {
         return this.msgType()
-    },
+    }
 
-    subtitle: function() {
+    subtitle () {
         if (this.msgDict()) {
             const ts = this.msgDict().ts
             if (ts) {
@@ -40,34 +44,34 @@ BMFieldSetNode.newSubclassNamed("BMMessage").newSlots({
             }
         }
         return null
-    },
+    }
 
-    prepareForFirstAccess: function() {
+    prepareForFirstAccess () {
 	    // as this field is only needed when viewing the Message in the browser,
 	    // so create it as needed here instead of in the init method
         this.justAddField(BMTextAreaField.clone().setKey("dict").setValueMethod("msgDictString").setValueIsEditable(false).setIsMono(true))
-    },
+    }
     
     // dict
     
-    msgDictString: function() {
+    msgDictString () {
         return JSON.stringify(this.msgDict(), null, 2)
-    },
+    }
 
-    msgDict: function() {
+    msgDict () {
         return {
             msgType: this.msgType(),
             data: this.data()
         }
-    },
+    }
 
-    setMsgDict: function(dict) {
+    setMsgDict (dict) {
         this._msgType = dict.msgType
         this._data = dict.data
         return this
-    },
+    }
     
-    messageForString: function(aString) {
+    messageForString (aString) {
         const dict = JSON.parse(aString)
         const msgType = dict.msgType
         
@@ -80,10 +84,10 @@ BMFieldSetNode.newSubclassNamed("BMMessage").newSlots({
         
         throw new Error("no message type '" + msgType + "'")
         return null
-    },
+    }
     
-    duplicate: function() {
+    duplicate () {
         return this
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

@@ -6,26 +6,31 @@
 
 */
 
-BMFieldRowView.newSubclassNamed("BMImageWellFieldRowView").newSlots({
-}).setSlots({
-    init: function () {
-        BMFieldRowView.init.apply(this)
+window.BMImageWellFieldRowView = class BMImageWellFieldRowView extends BMFieldRowView {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
         //this.keyView().setDivClassName("BMImageWellKeyField") //.setDisplay("none")
         //this.valueView().setIsEditable(false)
         this.turnOffUserSelect()
         this.keyView().setTransition("all 0.3s")
         return this
-    },
+    }
 
-    createValueView: function() {
+    createValueView () {
         return ImageWellView.clone()
-    },
+    }
 	
-    imageWellView: function() {
+    imageWellView () {
         return this.valueView()
-    },
+    }
 
-    syncFromNode: function () {
+    syncFromNode  () {
         BMFieldRowView.syncFromNode.apply(this)
 
         const field = this.node()
@@ -50,9 +55,9 @@ BMFieldRowView.newSubclassNamed("BMImageWellFieldRowView").newSlots({
         this.imageWellView().setImageDataURL(field.value())
 
         return this
-    },
+    }
 
-    syncToNode: function () {
+    syncToNode  () {
         const field = this.node()
 				
         this.updateKeyView()
@@ -65,17 +70,17 @@ BMFieldRowView.newSubclassNamed("BMImageWellFieldRowView").newSlots({
         
         //NodeView.syncToNode.apply(this)
         return this
-    },
+    }
 
-    dataUrl: function() {
+    dataUrl () {
         return this.imageWellView().imageDataURL()
-    },
+    }
 
-    isEmpty: function() {
+    isEmpty () {
         return Type.isNull(this.dataUrl())
-    },
+    }
     
-    updateKeyView: function() {
+    updateKeyView () {
         let opacity = 1
         
         if(this.node().onlyShowsKeyWhenEmpty && this.node().onlyShowsKeyWhenEmpty()) {
@@ -85,12 +90,12 @@ BMFieldRowView.newSubclassNamed("BMImageWellFieldRowView").newSlots({
 	    this.keyView().setOpacity(opacity)
 	    
         return this
-    },
+    }
     
-    didUpdateImageWellView: function(anImageWell) {
+    didUpdateImageWellView (anImageWell) {
         //this.debugLog(".didUpdateImageWellView()")
         this.scheduleSyncToNode() 
         return this
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

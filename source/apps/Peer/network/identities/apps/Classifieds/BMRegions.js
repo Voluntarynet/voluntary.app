@@ -6,10 +6,15 @@
 
 */
 
-BMRegion.newSubclassNamed("BMRegions").newSlots({
-}).setSlots({
-    init: function () {
-        BMRegion.init.apply(this)
+window.BMRegions = class BMRegions extends BMRegion {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
         //this.setActions(["add"])
         //this.setSubnodeProto(BMPost)
         
@@ -26,10 +31,10 @@ BMRegion.newSubclassNamed("BMRegions").newSlots({
         this.setTitle("Regions")
         
         this.onLeavesAddDictChildren(CategoriesDict)
-    },
+    }
     
     /*
-    receivedMsgFrom: function(msg, remotePeer) {
+    receivedMsgFrom (msg, remotePeer) {
         const postDict = JSON.parse(msg)
         const post = BMPost.clone().setPostDict(postDict)
         this.addSubnode(post)
@@ -37,5 +42,5 @@ BMRegion.newSubclassNamed("BMRegions").newSlots({
     }
     */
    
-}).initThisProto()
+}.initThisClass()
 

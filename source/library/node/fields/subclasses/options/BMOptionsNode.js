@@ -6,12 +6,16 @@
     
 */
 
-BMField.newSubclassNamed("BMOptionsNode").newSlots({
-    allowsMultiplePicks: false,
-}).setSlots({
+window.BMOptionsNode = class BMOptionsNode extends BMField {
     
-    init: function () {
-        BMField.init.apply(this)
+    initPrototype () {
+        this.newSlots({
+            allowsMultiplePicks: false,
+        })
+    }
+
+    init () {
+        super.init()
 
         this.setSummaryFormat("value")
 
@@ -38,56 +42,56 @@ BMField.newSubclassNamed("BMOptionsNode").newSlots({
 
 
         //this.setViewClassName("BMOptionsNodeView")
-    },
+    }
 
-    shallowCopySlotnames: function() {
+    shallowCopySlotnames () {
         const names = BMField.shallowCopySlotnames.apply(this)
         return names.appendItems([
             "allowsMultiplePicks", 
         ])
-    },
+    }
 
-    initNodeInspector: function() {
+    initNodeInspector () {
         BMField.initNodeInspector.apply(this)
         this.addInspectorField(BMBooleanField.clone().setKey("Multiple picks").setValueMethod("allowsMultiplePicks").setValueIsEditable(true).setTarget(this))
         return this
-    },
+    }
 
     /*
-    setValue: function(v) {
+    setValue (v) {
         BMField.setValue.apply(this, [v])
         return this
-    },
+    }
     */
     
 
-    key: function() {
+    key () {
         return this.title()
-    },
+    }
     
     /*
-    summary: function() {
+    summary () {
         let s = ""
         if (this.nodeSummaryShowsKey()) {
             s += this.title() + ": "
         }
         return s + this.childrenSummary()
-    },
+    }
     */
 
-    childrenSummary: function() {
+    childrenSummary () {
         const picked = this.pickedSubnodes()
         if (picked.length === 0) {
             return "None"
         }
         return picked.map(subnode => subnode.summary()).join(this.nodeSummaryJoiner())
-    },
+    }
 
-    setSubtitle: function(aString) {
+    setSubtitle (aString) {
         return this
-    },
+    }
 
-    didToggleOption: function(anOptionNode) {
+    didToggleOption (anOptionNode) {
         if (anOptionNode.isPicked() && !this.allowsMultiplePicks()) {
             this.unpickSubnodesExcept(anOptionNode)
         }
@@ -106,44 +110,44 @@ BMField.newSubclassNamed("BMOptionsNode").newSlots({
         }
 
         return this
-    },
+    }
 
-    unpickSubnodesExcept: function(anOptionNode) {
+    unpickSubnodesExcept (anOptionNode) {
         this.subnodes().forEach(subnode => {
             if (subnode !== anOptionNode) { 
                 subnode.setIsPicked(false) 
             }
         })
         return this
-    },
+    }
 
-    pickedSubnodes: function() {
+    pickedSubnodes () {
         return this.subnodes().select(subnode => subnode.isPicked())
-    },
+    }
 
-    acceptedSubnodeTypes: function() {
+    acceptedSubnodeTypes () {
         return [BMOptionNode.type()]
-    },
+    }
     
-    note: function() {
+    note () {
         return "&gt;"
-    },
+    }
 
     /*
-    setValidValues: function(values) {        
+    setValidValues (values) {        
         const options = values.map(v => BMOptionNode.clone().setValue(v))
         this.setSubnodes(options)
         return this
-    },
+    }
 	
-    validValues: function() {
+    validValues () {
         return this.subnodes().map(sn => sn.value())
-    },
+    }
     */
     
-    nodeRowLink: function() {
+    nodeRowLink () {
         // used by UI row views to browse into next column
         return this
-    },    
+    }
     
-}).initThisProto()
+}.initThisClass()

@@ -11,25 +11,30 @@
 
 */
 
-TextField.newSubclassNamed("BrowserRowTitle").newSlots({
-}).setSlots({
-    init: function () {
-        TextField.init.apply(this)
+window.BrowserRowTitle = class BrowserRowTitle extends TextField {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
         //this.setMinAndMaxHeight(17)
         return this
-    },
+    }
 
-    row: function() {
+    row () {
         return this.parentView().parentView()
-    },
+    }
 
-    selectNextKeyView: function() {
+    selectNextKeyView () {
         /*
         this.debugLog(".selectNextKeyView()")
         const row = this.parentView().parentView();
         const nextRow = this.row().column().selectNextRow()
         */
         return true
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

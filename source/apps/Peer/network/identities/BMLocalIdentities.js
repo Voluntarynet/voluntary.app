@@ -7,10 +7,15 @@
     
 */
 
-BMStorableNode.newSubclassNamed("BMLocalIdentities").newSlots({
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
+window.BMLocalIdentities = class BMLocalIdentities extends BMStorableNode {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
         this.setShouldStore(true)
         this.setTitle("My identities")
         
@@ -21,43 +26,43 @@ BMStorableNode.newSubclassNamed("BMLocalIdentities").newSlots({
         this._didChangeIdentitiesNote = NotificationCenter.shared().newNote().setSender(this).setName("didChangeIdentities")
         this.setNodeMinWidth(240)
         this.setNodeCanReorderSubnodes(true)
-    },
+    }
 
-    current: function() {
+    current () {
         if (this.subnodesCount() === 0) {
             this.add()
         }
         
         return this.subnodes()[0]
-    },
+    }
     
-    idWithPublicKeyString: function(s) {
+    idWithPublicKeyString (s) {
         return this.subnodes().detect(function (id) {            
             return id.publicKey().toString() === s
         })
-    },
+    }
 
-    idWithName: function(s) {
+    idWithName (s) {
         return this.subnodes().detect(function (id) {            
             return id.name() === s
         })
-    },
+    }
 	
-    names: function() {
+    names () {
         return this.subnodes().map((id) => { return id.name(); })
-    },
+    }
 	
-    identities: function() {
+    identities () {
 	    return this.subnodes()
-    },
+    }
 	
-    didChangeSubnodeList: function() {
+    didChangeSubnodeList () {
         BMStorableNode.didChangeSubnodeList.apply(this)
         this._didChangeIdentitiesNote.post()
         return this
-    },
+    }
     
-    handleObjMsg: function(objMsg) {
+    handleObjMsg (objMsg) {
         let result = false
         
         //console.log("========== this.identities() = ", this.identities().length)
@@ -66,6 +71,6 @@ BMStorableNode.newSubclassNamed("BMLocalIdentities").newSlots({
             result |= id.handleObjMsg(objMsg)
         })
         return result
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

@@ -21,12 +21,24 @@
 
 */
 
-ObservableProxy.newSubclassNamed("FirewallProxy").newSlots({        
-    protectedTraps: null, // Set
-    protectedMethods: null, // Set
-}).setSlots({
+window.FirewallProxy = class FirewallProxy extends ObservableProxy {
+    
+    initPrototype () {
+        this.newSlots({
+            protectedTraps: null, // Set
+            protectedMethods: null, // Set
+        })
+    }
 
-    defaultProtectedTraps: function() {
+    init () {
+        super.init()
+        this.setProtectedTraps(this.defaultProtectedTraps().shallowCopy())
+        this.setProtectedMethods(this.defaultProtectedMethods().shallowCopy())
+        this.setIsDebugging(true)
+        return this
+    }
+
+    defaultProtectedTraps () {
         return new Set([
             "defineProperty", // Object.defineProperty
             "deleteProperty", // Object.deleteProperty
@@ -34,24 +46,17 @@ ObservableProxy.newSubclassNamed("FirewallProxy").newSlots({
             "set", // obj.x = y or obj[x] = y
             "setPrototypeOf", // Reflect.setPrototypeOf()
         ])
-    },
+    }
 
-    defaultProtectedMethods: function() {
+    defaultProtectedMethods () {
         return new Set([
         ])
-    },
+    }
 
     // need to hook GET so we return special functions to hook protected method calls
 
-    init: function() {
-        ObservableProxy.init.apply(this)
-        this.setProtectedTraps(this.defaultProtectedTraps().shallowCopy())
-        this.setProtectedMethods(this.defaultProtectedMethods().shallowCopy())
-        this.setIsDebugging(true)
-        return this
-    },
 
-    postForTrap: function(trapName, propertyName) {
+    postForTrap (trapName, propertyName) {
         // instead of posting to observers, 
         // just check if it's a protected trap and, if so, raise an exception
         // TODO: abstract non posting behavior from ObservableProxy and 
@@ -64,15 +69,15 @@ ObservableProxy.newSubclassNamed("FirewallProxy").newSlots({
         }
 
         return true
-    },
+    }
 
-    onProtectedMethodCall: function(propertyName, argsList) {
+    onProtectedMethodCall (propertyName, argsList) {
         const msg = " blocked method call '" + propertyName + "' "
         this.debugLog(msg)
         throw new Error(this.typeId() + msg)
-    },
+    }
 
-    get: function(target, propertyName) {
+    get (target, propertyName) {
         if (propertyName === "observable") {
             const self = this
             return () => { return self }
@@ -94,9 +99,9 @@ ObservableProxy.newSubclassNamed("FirewallProxy").newSlots({
         }
 
         return Reflect.get(target, propertyName, target);
-    },
+    }
 
-    selfTest: function() {
+    selfTest () {
         // test array
         const array = ["a", "b", "c"]
         const ap = array.asReadOnly()
@@ -127,8 +132,8 @@ ObservableProxy.newSubclassNamed("FirewallProxy").newSlots({
         assertThrows(() => dp.setYear(1999))
 
         console.log(this.type() + " - self test passed")
-    },
-}).initThisProto()
+    }
+}.initThisClass()
 
 
 // ------------------------------------------------------------------
@@ -137,42 +142,42 @@ ObservableProxy.newSubclassNamed("FirewallProxy").newSlots({
 
 Object.defineSlots(Object.prototype, {
     
-    mutatorMethodNamesSet: function() {
+    mutatorMethodNamesSet () {
         return new Set([
             "__defineGetter__",  
             "__defineSetter__",
         ])
-    },
+    }
 
 })
 
 Object.defineSlots(Set.prototype, {
     
-    mutatorMethodNamesSet: function() {
+    mutatorMethodNamesSet () {
         return new Set([
             "add",
             "clear",
             "delete"
         ])
-    },
+    }
 
 })
 
 Object.defineSlots(Map.prototype, {
 
-    mutatorMethodNamesSet: function() {
+    mutatorMethodNamesSet () {
         return new Set([
             "clear",
             "delete",
             "set",
         ])
-    },
+    }
 
 })
 
 Object.defineSlots(Array.prototype, {
 
-    mutatorMethodNamesSet: function() {
+    mutatorMethodNamesSet () {
         return new Set([
             "copyWithin",
             "pop",
@@ -183,13 +188,13 @@ Object.defineSlots(Array.prototype, {
             "splice",
             "unshift"
         ])
-    },
+    }
 
 })
 
 Object.defineSlots(Date.prototype, {
     
-    mutatorMethodNamesSet: function() {
+    mutatorMethodNamesSet () {
         return new Set([
             "setDate",
             "setFullYear",
@@ -208,17 +213,17 @@ Object.defineSlots(Date.prototype, {
             "setUTCSeconds",
             "setYear",
         ])
-    },
+    }
 
 })
 
 Object.defineSlots(Object.prototype, {
 
-    asReadOnly: function() {
+    asReadOnly () {
         const obj = FirewallProxy.newProxyFor(this)
         obj.observable().setProtectedMethods(this.mutatorMethodNamesSet())
         return obj
-    },
+    }
 
 })
 

@@ -35,55 +35,60 @@
         
 */
 
-ideal.Proto.newSubclassNamed("ObservableProxy").newSlots({        
-    observers: null,
-    target: null,
-    revocable: null,
-    trapNames: [
-        "apply",
-        "construct",
-        "defineProperty", // Object.defineProperty
-        "deleteProperty", // Object.deleteProperty
-        "get", // obj.x or obj[x]
-        "getOwnPropertyDescriptor", // Object.getOwnPropertyDescriptor
-        "getPrototypeOf", // Object.getPrototypeOf
-        "has", // x in obj
-        "isExtensible", // Reflect.isExtensible(target)
-        "ownKeys", // Reflect.ownKeys(target)
-        "preventExtensions", //  Reflect.preventExtensions(target);
-        "set", // obj.x = y or obj[x] = y
-        "setPrototypeOf", // Reflect.setPrototypeOf()
-    ],
-    noteNamesDict: null,
-}).setSlots({
 
-    newProxyFor: function(aTarget) {
+window.ObservableProxy = class ObservableProxy extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+            observers: null,
+            target: null,
+            revocable: null,
+            trapNames: [
+                "apply",
+                "construct",
+                "defineProperty", // Object.defineProperty
+                "deleteProperty", // Object.deleteProperty
+                "get", // obj.x or obj[x]
+                "getOwnPropertyDescriptor", // Object.getOwnPropertyDescriptor
+                "getPrototypeOf", // Object.getPrototypeOf
+                "has", // x in obj
+                "isExtensible", // Reflect.isExtensible(target)
+                "ownKeys", // Reflect.ownKeys(target)
+                "preventExtensions", //  Reflect.preventExtensions(target);
+                "set", // obj.x = y or obj[x] = y
+                "setPrototypeOf", // Reflect.setPrototypeOf()
+            ],
+            noteNamesDict: null,
+        })
+    }
+
+    init () {
+        super.init()
+        this.setObservers([])
+        this.setupNoteNames()
+        //this.setIsDebugging(true)
+        return this
+    }
+
+    newProxyFor (aTarget) {
         const handler = this.typeClass().clone()
         handler.setTarget(aTarget)
         //const proxy = new Proxy(aTarget, handler)
         this.setRevocable(Proxy.revocable(aTarget, handler))
         return this.proxy()
-    },
+    }
 
-    proxy: function() {
+    proxy () {
         return this.revocable().proxy
-    },
+    }
 
-    init: function() {
-        ideal.Proto.init.apply(this)
-        this.setObservers([])
-        this.setupNoteNames()
-        //this.setIsDebugging(true)
-        return this
-    },
-
-    revoke: function() {
+    revoke () {
         this.postForTrap("revoke", null)
         this._revocable.revoke()
         return this
-    },
+    }
 
-    setupNoteNames: function() {
+    setupNoteNames () {
         this._noteNamesDict = {}
         this.trapNames().map((name) => {
             // examples: "onObservedGet", "onObservedSet"
@@ -91,19 +96,19 @@ ideal.Proto.newSubclassNamed("ObservableProxy").newSlots({
             this._noteNamesDict[name] = noteName
         })
         return this
-    },
+    }
 
-    addObserver: function(obs) {
+    addObserver (obs) {
         this.observers().appendIfAbsent(obs)
         return obs
-    },
+    }
 
-    removeObserver: function(obs) {
+    removeObserver (obs) {
         this.observers().remove(obs)
         return obs
-    },
+    }
 
-    postForTrap: function(trapName, propertyName) {
+    postForTrap (trapName, propertyName) {
         const noteName = this.noteNamesDict()[trapName]
 
         this._observers.forEach((obs) => {
@@ -115,34 +120,34 @@ ideal.Proto.newSubclassNamed("ObservableProxy").newSlots({
             }
         })
         return true
-    },
+    }
 
     // --- proxy trap methods ---
     
     /*
 
-    apply: function(target, thisArg, argumentsList) {
+    apply (target, thisArg, argumentsList) {
         this.postForTrap("apply", propertyName)
         return target[propertyName].apply(target, argumentsList)
-    },
+    }
 
-    construct: function(target) {
+    construct (target) {
 
-    },
+    }
 
     */
 
-    defineProperty: function(target, propertyName, descriptor) {
+    defineProperty (target, propertyName, descriptor) {
         this.postForTrap("defineProperty", propertyName)
         return Object.defineProperty(target, propertyName, descriptor)  
-    },
+    }
 
-    deleteProperty: function(target, propertyName) {
+    deleteProperty (target, propertyName) {
         this.postForTrap("deleteProperty", propertyName)
         return delete target[propertyName];
-    },
+    }
 
-    get: function(target, propertyName) {
+    get (target, propertyName) {
         if (propertyName === "observable") {
             const self = this
             return () => { return self }
@@ -160,51 +165,51 @@ ideal.Proto.newSubclassNamed("ObservableProxy").newSlots({
 
         this.postForTrap("get", propertyName)
         return Reflect.get(target, propertyName, target);
-    },
+    }
 
-    getOwnPropertyDescriptor: function(target, propertyName) {
+    getOwnPropertyDescriptor (target, propertyName) {
         this.postForTrap("getOwnPropertyDescriptor", propertyName)
         return Object.getOwnPropertyDescriptor(target, propertyName)
-    },
+    }
 
-    getPrototypeOf: function(target) {
+    getPrototypeOf (target) {
         this.postForTrap("getPrototypeOf", null)
         return Object.getPrototypeOf(target)
-    },
+    }
 
-    isExtensible: function(target, propertyName) {
+    isExtensible (target, propertyName) {
         this.postForTrap("isExtensible", propertyName)
         return Reflect.isExtensible(target)
-    },
+    }
 
-    has: function(target, propertyName) {
+    has (target, propertyName) {
         this.postForTrap("has", propertyName)
         return Reflect.has( target, propertyName );
-    },
+    }
 
-    ownKeys: function(target, propertyName) {
+    ownKeys (target, propertyName) {
         this.postForTrap("ownKeys", propertyName)
         return Reflect.ownKeys(target)
-    },
+    }
 
-    preventExtensions: function(target, propertyName) {
+    preventExtensions (target, propertyName) {
         this.postForTrap("preventExtensions", propertyName)
         return Reflect.preventExtensions(target);
-    },
+    }
 
-    set: function(target, propertyName, newValue) {
+    set (target, propertyName, newValue) {
         this.postForTrap("set", propertyName)
         return Reflect.set(target, propertyName, newValue);
-    },
+    }
 
-    setPrototypeOf: function(target, prototype) {
+    setPrototypeOf (target, prototype) {
         this.postForTrap("setPrototypeOf", null)
         return Object.setPrototypeOf(target, prototype)  
-    },
+    }
 
     // ---------------
 
-    selfTest: function() {
+    selfTest () {
         const resultsDict = {}
 
         const noteNamesDict = ObservableProxy.clone().noteNamesDict()
@@ -246,6 +251,6 @@ ideal.Proto.newSubclassNamed("ObservableProxy").newSlots({
         return true
     }
 
-}).initThisProto()
+}.initThisClass()
 
 //ObservableProxy.selfTest()

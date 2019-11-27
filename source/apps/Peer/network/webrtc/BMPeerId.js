@@ -8,42 +8,46 @@
 
 */
 
-BMNode.newSubclassNamed("BMPeerId").newSlots({
-    publicKeyString: null,
-    bloomFilter: null,
-    error: null,
-}).setSlots({
-    init: function () {
-        BMNode.init.apply(this)
+window.BMPeerId = class BMPeerId extends BMNode {
+    
+    initPrototype () {
+        this.newSlots({
+            publicKeyString: null,
+            bloomFilter: null,
+            error: null,
+        })
+    }
+
+    init () {
+        super.init()
         //this._remotePeers = []
         this.setTitle("Connection")
-    },
+    }
     
-    title: function() {
+    title () {
         return this.publicKeyString()
-    },
+    }
 	
-    subtitle: function() {
+    subtitle () {
         return this.encodedBloomString()
-    },
-	
+    }
 	
     // --- public key ---
 	
-    encodedPublicKeyString: function() {
+    encodedPublicKeyString () {
         return this.publicKeyString()
-    },
+    }
 	
-    setEncodedPublicKeyString: function(aString) {
+    setEncodedPublicKeyString (aString) {
         this.setPublicKeyString(aString)
         return this
-    },
+    }
 	
 	
     // --- bloom key ---
 	
     /*
-	encodedBloomString: function() {
+	encodedBloomString () {
 		assert(this.bloomFilter() !== null)
 		let s = this.bloomFilter().exportData();
 		s = s.replaceAll("+", "_0")
@@ -52,7 +56,7 @@ BMNode.newSubclassNamed("BMPeerId").newSlots({
 		return "0" + s // pad front to ensure that first character is alphanumeric (peerjs wants this)
 	},
 	
-	setEncodedBloomString: function(s) {
+	setEncodedBloomString (s) {
 		const filter = BMNetwork.shared().newDefaultBloomFilter()
 		let s = s.substr(1); // remove front padding character
 		s = s.replaceAll("_0", "+")
@@ -64,26 +68,26 @@ BMNode.newSubclassNamed("BMPeerId").newSlots({
 	},
 	*/
 	
-    encodedBloomString: function() {
+    encodedBloomString () {
         assert(this.bloomFilter() !== null)
         return this.bloomFilter().serialized()
-    },
+    }
 	
-    setEncodedBloomString: function(s) {
+    setEncodedBloomString (s) {
         const filter = BMNetwork.shared().newDefaultBloomFilter().unserialized(s)
         this.setBloomFilter(filter)
         return this
-    },
+    }
 	
     // --- to/from string ----
 	
-    toString: function() {
+    toString () {
         //return this.chooseRandomPeerId()
 		
         return this.encodedPublicKeyString() + "-" + this.encodedBloomString()
-    },
+    }
 	
-    setFromString: function(aString) {
+    setFromString (aString) {
         const parts = aString.split("-")
         const pubkey = parts[0]
         const bloom = parts[1] // open relay blooms are all 1s
@@ -108,24 +112,24 @@ BMNode.newSubclassNamed("BMPeerId").newSlots({
         //console.log("parsed peerid publicKeyString [" + this.publicKeyString() + "] bloom [ " + this.encodedBloomString() + "]")
 		
         return this
-    },
+    }
 	
-    chooseRandomPeerId: function() {
+    chooseRandomPeerId () {
         let s = ""
         const max = 10
         for (let i = 0; i < max; i++) {
             s = s + (Math.floor(Math.random()*1000000) % 10)
         }
         return s
-    },
+    }
 	
     /*
-	matchesPeerId: function(otherPeerId) {
+	matchesPeerId (otherPeerId) {
 	    this.bloomFilter().
 	},
     */
     
-}).initThisProto()
+}.initThisClass()
 
 
 

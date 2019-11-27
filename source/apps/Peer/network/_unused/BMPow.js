@@ -20,61 +20,65 @@
 
 */
 
+window.BMPow = class BMPow extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+            targetDifficulty: 15,
+            hash: null, // hex string
+            //pow: null, // hex string
+            powBits: null, // bitArray
+            
+            // finding
+            tries: 0,
+        
+            isFinding: false,
+            updateCallback: null,
+            doneCallback: null,
+            
+            asyncEndTime: null,
+            asyncTimeoutPeriod: 10*60*1000,
+            
+            syncEndTime: null,
+            syncTimeoutPeriod: 100,
+            syncTriesPerLoop: 2000,
+            status: null,
+            globalEstimateTriesPerMs: null, // set this 
+            doneCallback: null,
+            isValid: null, // used to cache result, null means "don't know yet"
+        })
+    }
 
-ideal.Proto.newSubclassNamed("BMPow").newSlots({
-    targetDifficulty: 15,
-    hash: null, // hex string
-    //pow: null, // hex string
-    powBits: null, // bitArray
-    
-    // finding
-    tries: 0,
-
-    isFinding: false,
-    updateCallback: null,
-    doneCallback: null,
-    
-    asyncEndTime: null,
-    asyncTimeoutPeriod: 10*60*1000,
-    
-    syncEndTime: null,
-    syncTimeoutPeriod: 100,
-    syncTriesPerLoop: 2000,
-    status: null,
-    globalEstimateTriesPerMs: null, // set this 
-    doneCallback: null,
-    isValid: null, // used to cache result, null means "don't know yet"
-}).setSlots({
-    init: function () {
-        ideal.Proto.init.apply(this)
+    init () {
+        super.init()
         this.setTargetDifficulty(BMMessages.globalMinDifficulty())
         this.pickRandomPow()
         this._updateNote = NotificationCenter.shared().newNote().setSender(this).setName("powUpdate")
         this._doneNote = NotificationCenter.shared().newNote().setSender(this).setName("powDone")
-    },
+    }
         
-    pickRandomPow: function() {
+    pickRandomPow () {
         const numBytes = 32;
         this.setPowBits(sjcl.random.randomWords(numBytes/4));
         return this        
-    },
+    }
     
-    powHex: function() {
+    powHex () {
         return sjcl.codec.hex.fromBits(this.powBits());
-    },
+    }
     
-    setPowHex: function(powHex) {
+    setPowHex (powHex) {
         this.setPowBits(sjcl.codec.hex.toBits(powHex));
         return this
-    },
+    }
     
-    setPowBits: function(bits) {
+    setPowBits (bits) {
         this._powBits = bits
         this.setIsValid(null)
         return this
-    },
+    }
     
-    status: function() {
+    status () {
         if (this._status !== null) {
             return this._status;
         }
@@ -88,9 +92,9 @@ ideal.Proto.newSubclassNamed("BMPow").newSlots({
         //console.log("status invalid")
         
         return "generate level " + this.highlightString(this.targetDifficulty()) + " stamp in about " + this.estimateTimeDescription() + ""
-    },
+    }
     
-    asyncFind: function () {
+    asyncFind  () {
         this.setStatus("starting")
         const currentTime = new Date().getTime()
         this.setAsyncEndTime(currentTime + this.asyncTimeoutPeriod())
@@ -99,18 +103,18 @@ ideal.Proto.newSubclassNamed("BMPow").newSlots({
             this._tries = 0
             this.PRIVATE_findPowLoop()
         }
-    },
+    }
     
-    stopFindingPow: function() {
+    stopFindingPow () {
         this.setIsFinding(false);
-    },
+    }
 
-    asyncTimedOut: function() {
+    asyncTimedOut () {
         const currentTime = new Date().getTime()
         return currentTime > this.asyncEndTime()        
-    },
+    }
     
-    PRIVATE_findPowLoop: function() {
+    PRIVATE_findPowLoop () {
         const found = this.syncFind() // sync has a timeout period
         
         if (this.asyncTimedOut()) {
@@ -135,9 +139,9 @@ ideal.Proto.newSubclassNamed("BMPow").newSlots({
                 }, 100);
             } 
         } 
-    },
+    }
 
-    syncFind: function() {
+    syncFind () {
         const syncEndTime = new Date().getTime() + this.syncTimeoutPeriod()
         const done = false;
         do {
@@ -147,9 +151,9 @@ ideal.Proto.newSubclassNamed("BMPow").newSlots({
         } while (!done && syncTimedOut);
         
         return done
-    },
+    }
     
-    syncFindOneLoop: function() {
+    syncFindOneLoop () {
         const  max = this.syncTriesPerLoop();
         for (let i = 0; i < max; i++) {
             this.pickRandomPow()
@@ -160,45 +164,45 @@ ideal.Proto.newSubclassNamed("BMPow").newSlots({
         }
         this._tries += max;
         return false
-    },
+    }
     
     /*
-    estimatedTime: function() {
+    estimatedTime () {
     
     }
     */
     
-    estimateDifficultyForTimeout: function(dtInMiliiseconds) {
+    estimateDifficultyForTimeout (dtInMiliiseconds) {
         // dt = (2 ^ diff)/triesPerMs so: Log2(dt * triesPerMs) = diff
         return Math.log2(dtInMiliiseconds * BMPow.globalEstimateTriesPerMs());
-    },
+    }
  
-    estimatedPercentageDone: function() {
+    estimatedPercentageDone () {
         const  p = this.estimatedRatioDone() * 100
         if (p < 1) { 
             return Math.floor(p*100)/100
         }
         return Math.floor(p)
-    },
+    }
        
-    estimatedRatioDone: function() {
+    estimatedRatioDone () {
         return this.tries() / this.estimatedTriesForTargetDifficulty()
-    },
+    }
     
-    estimatedTriesForTargetDifficulty: function() {
+    estimatedTriesForTargetDifficulty () {
         return Math.pow(2, this.targetDifficulty())
-    },
+    }
     
-    estimateTimeInMsForTargetDifficulty: function() {
+    estimateTimeInMsForTargetDifficulty () {
         // dt = (2 ^ diff)/triesPerMs
         return this.estimatedTriesForTargetDifficulty() / BMPow.globalEstimateTriesPerMs()
-    },
+    }
 
-    highlightString: function (s) { 
+    highlightString  (s) { 
         return "<span style='color:#444;'>" + s + "</span>"; 
-    },
+    }
     
-    estimateTimeDescription: function() {
+    estimateTimeDescription () {
         // move to use TimePeriodFormatter?
         
         let value = null
@@ -221,14 +225,14 @@ ideal.Proto.newSubclassNamed("BMPow").newSlots({
         }
         
         return this.highlightString(value) + " " + unit
-    },
+    }
     
 
-    maxDifficulty: function() {
+    maxDifficulty () {
         return 32 * 8
-    },
+    }
     
-    globalEstimateTriesPerMs: function() {
+    globalEstimateTriesPerMs () {
         if (this._globalEstimateTriesPerMs === null) {
             let pow = BMPow.clone()
             pow.setTargetDifficulty(this.maxDifficulty()) // to make sure we don't find it
@@ -237,10 +241,10 @@ ideal.Proto.newSubclassNamed("BMPow").newSlots({
             this._globalEstimateTriesPerMs = pow.tries() / pow.syncTimeoutPeriod()
         }
         return this._globalEstimateTriesPerMs
-    },
+    }
     
     /*
-    findPowSync: function () {   
+    findPowSync  () {   
         // not efficient but simple and we can cache the bufs later
         let tries = 0;
         while (tries < this._maxTries) {
@@ -257,38 +261,38 @@ ideal.Proto.newSubclassNamed("BMPow").newSlots({
         }
         
         return false
-    },
+    }
     */
     
-    hashBits: function() {
+    hashBits () {
         return sjcl.codec.hex.toBits(this.hash());
-    },
+    }
     
-    catShaBits: function() {
+    catShaBits () {
         let catBits  = sjcl.bitArray.concat(this.hashBits(), this.powBits());
         return sjcl.hash.sha256.hash(catBits);
-    },
+    }
     
-    leftZeroBitCount: function() {
+    leftZeroBitCount () {
         return sjcl.codec.bits.leftZeroBitCount(this.catShaBits());
-    },
+    }
     
-    setHash: function(v) {
+    setHash (v) {
         if (this._hash !== v) {
             this._hash = v
             this._isValid = null
         }
         return this
-    },
+    }
     
-    actualPowDifficulty: function() {
+    actualPowDifficulty () {
         if (this.hash() === null || this.powBits() === null) {
             return 0
         }
         return this.leftZeroBitCount()    
-    },
+    }
     
-    isValid: function () {
+    isValid  () {
         if (this._hash === null) { 
             //console.warn("WARNING: null hash on BMPow")
             return false 
@@ -303,9 +307,9 @@ ideal.Proto.newSubclassNamed("BMPow").newSlots({
         
         return this._isValid 
         */
-    },
+    }
     
-    show: function () {
+    show  () {
         console.log("BMPow show")
         console.log("          pow: '" + this.powHex() + "'")
         console.log("         hash: '" + this.hash() + "'")
@@ -317,23 +321,23 @@ ideal.Proto.newSubclassNamed("BMPow").newSlots({
         ///console.log("        tries: " + this.tries());
         console.log("      isValid: " + this.isValid() )
         return this
-    },
+    }
     
-    boundsCheckTargetDifficulty: function() {
+    boundsCheckTargetDifficulty () {
         let d = this.targetDifficulty() 
         if (d < 0) { d = 0; }        
         if (d > this.maxDifficulty()) { d = this.maxDifficulty(); }  
         this.setTargetDifficulty(d)      
-    },
+    }
     
-    decrementDifficulty: function() {
+    decrementDifficulty () {
         this.setTargetDifficulty(this.targetDifficulty() - 1)
         this.boundsCheckTargetDifficulty()
-    },
+    }
     
-    incrementDifficulty: function() {
+    incrementDifficulty () {
         this.setTargetDifficulty(this.targetDifficulty() + 1)
         this.boundsCheckTargetDifficulty()
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

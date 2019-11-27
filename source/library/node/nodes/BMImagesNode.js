@@ -6,10 +6,15 @@
 
 */  
 
-BMStorableNode.newSubclassNamed("BMImageResourcesNode").newSlots({
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
+window.BMImageResourcesNode = class BMImageResourcesNode extends BMStorableNode {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
 
         this.setViewClassName("ImageView")
         this.setSubnodeProto("ImageNode")
@@ -24,6 +29,6 @@ BMStorableNode.newSubclassNamed("BMImageResourcesNode").newSlots({
         //this.setCanDelete(true)
 
         //this.addStoredSlots(["title", "dataURL"])
-    },        
+    }
     
-}).initThisProto()
+}.initThisClass()

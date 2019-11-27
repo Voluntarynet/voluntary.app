@@ -7,17 +7,22 @@
 
 */
 
-BMStorableNode.newSubclassNamed("BMFollowingContact").newSlots({
-    isFollowing: false,
-}).setSlots({
-    init: function () {
-        BMAppMessage.init.apply(this)
-        this.addStoredSlot("isFollowing")
-    },
-
-    title: function() {
-        return this.remoteIdentity().title()
-    },
+window.BMFollowingContact = class BMFollowingContact extends BMStorableNode {
     
-}).initThisProto()
+    initPrototype () {
+        this.newSlots({
+            isFollowing: false,
+        })
+    }
+
+    init () {
+        super.init()
+        this.addStoredSlot("isFollowing")
+    }
+
+    title () {
+        return this.remoteIdentity().title()
+    }
+    
+}.initThisClass()
 

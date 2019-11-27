@@ -7,26 +7,31 @@
 
 */
 
-BMStorableNode.newSubclassNamed("BMDrafts").newSlots({
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
+window.BMDrafts = class BMDrafts extends BMStorableNode {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
  		this.setShouldStore(true)
         this.setNoteIsSubnodeCount(true)
         this.setSubnodeProto(BMMailMessage)
         this.addAction("add")
         this.setTitle("drafts")
-    },
+    }
     
-    localIdentity: function() {
+    localIdentity () {
         return this.parentNodeOfType("BMLocalIdentity")
-    },
+    }
     
-    add: function() {
+    add () {
         const newPrivateMsg = BMStorableNode.add.apply(this)
         newPrivateMsg.setSenderPublicKeyString(this.localIdentity().publicKeyString()).setupInputsFromPubkeys()
         this.didUpdateNode()
         return newPrivateMsg
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

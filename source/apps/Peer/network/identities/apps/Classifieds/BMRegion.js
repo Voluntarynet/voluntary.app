@@ -10,17 +10,22 @@
 */
 
 
-BMNode.newSubclassNamed("BMRegion").newSlots({
-    lazyChildrenDict: null,
-    allowsSubregions: true,
-}).setSlots({
-    init: function () {
-        BMNode.init.apply(this)
+window.BMRegion = class BMRegion extends BMNode {
+    
+    initPrototype () {
+        this.newSlots({
+            lazyChildrenDict: null,
+            allowsSubregions: true,
+        })
+    }
+
+    init () {
+        super.init()
         this.setNodeMinWidth(160)
         //this.setSubnodeProto(BMPost)
-    },
+    }
     
-    sumOfSubnodeNotes: function() {
+    sumOfSubnodeNotes () {
         let sum = 0
         this.subnodes().forEach((subnode) => {
             if (subnode.title() === "All") {
@@ -37,9 +42,9 @@ BMNode.newSubclassNamed("BMRegion").newSlots({
             }
         })
         return sum
-    },
+    }
     
-    sortIfNeeded: function() {
+    sortIfNeeded () {
         if (this._subnodes.length) {
             if (this._subnodes[0].compare) {
                 this._subnodes = this._subnodes.sort(function (a, b) {
@@ -47,29 +52,29 @@ BMNode.newSubclassNamed("BMRegion").newSlots({
                 })
             }
         }
-    },
+    }
     
-    addSubnode: function(aSubnode) {
+    addSubnode (aSubnode) {
         BMNode.addSubnode.apply(this, [aSubnode])
         this.sortIfNeeded()
         return aSubnode
-    },
+    }
 
-    didUpdateNode: function() {
+    didUpdateNode () {
         this.setNote(this.sumOfSubnodeNotes())
         BMNode.didUpdateNode.apply(this)
         return this
-    },
+    }
     
-    setNodeDict: function(aDict) {
+    setNodeDict (aDict) {
         this.setTitle(aDict.name.titleized())
         this.setAllowsSubregions(aDict._allowsSubregions !== false) // All
         //this.setNoteIsSubnodeCount(aDict._allowsSubregions === false) // All
         this.addChildrenDicts(aDict.children)
         return this
-    },
+    }
     
-    addChildrenDicts: function(children) {
+    addChildrenDicts (children) {
         if (children) {
             const max = children.length
             for(let i = 0; i < max; i++) {
@@ -78,9 +83,9 @@ BMNode.newSubclassNamed("BMRegion").newSlots({
                 this.justAddSubnode(child)
             }
         }  
-    },
+    }
     
-    onLeavesAddDictChildren: function(aDict) {
+    onLeavesAddDictChildren (aDict) {
         if (!this.allowsSubregions()) {
             return this
         }
@@ -92,18 +97,18 @@ BMNode.newSubclassNamed("BMRegion").newSlots({
             this._subnodes.forEach((subnode) => { subnode.onLeavesAddDictChildren(aDict) })
         }
         return this
-    },
+    }
     
-    setupCategoryLeaves: function() {
+    setupCategoryLeaves () {
         if (this._subnodes.length === 0) {
             this.addAction("add")
             this.setSubnodeProto(BMClassifiedPost)
         } else {
             this._subnodes.forEach((subnode) => { subnode.setupCategoryLeaves() })
         }
-    },
+    }
 
-    prepareToAccess: function() {
+    prepareToAccess () {
         if(this._lazyChildrenDict != null) {
             this.debugLog(" " + this.title() + " lazy load")
             let ld = this._lazyChildrenDict
@@ -111,16 +116,16 @@ BMNode.newSubclassNamed("BMRegion").newSlots({
             this.addChildrenDicts(ld.children)
             this.setupCategoryLeaves()
         }        
-    },
+    }
     
-    postPathString: function() {
+    postPathString () {
         let path = this.nodePath()
         path.removeFirst()
         let pathString = path.map(function (p) { return p.title() }).join("/")	
         return pathString
-    },
+    }
 	
-    add: function () {  
+    add  () {  
         /*
         let sell = BMSell.clone()
         App.shared().sells().addSubnode(sell)
@@ -139,8 +144,8 @@ BMNode.newSubclassNamed("BMRegion").newSlots({
         }
 
         return null
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()
 
 //window.Region = BMRegion

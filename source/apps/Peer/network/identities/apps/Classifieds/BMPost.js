@@ -6,14 +6,18 @@
 
 */
 
+window.BMPost = class BMPost extends BMStorableNode {
+    
+    initPrototype () {
+        this.newSlots({
+            price: null,
+            title: null,
+            description: null,
+        })
+    }
 
-BMStorableNode.newSubclassNamed("BMPost").newSlots({
-    price: null,
-    title: null,
-    description: null,
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
+    init () {
+        super.init()
         this.setCanDelete(true)
         this.setNodeMinWidth(550)
         
@@ -21,33 +25,33 @@ BMStorableNode.newSubclassNamed("BMPost").newSlots({
         this.setPrice(0)
         this.setDescription("Description")
         this.addStoredSlots(["price", "title", "description"])
-    },
+    }
     
-    subtitle: function() {
+    subtitle () {
         return this.price() + " BTC"
-    },
+    }
     
-    setPrice: function(p) {
+    setPrice (p) {
         this._price = parseFloat(p)
         return this
-    },
+    }
     
-    postDict: function () {
+    postDict  () {
         return {
             title: this.title(),
             price: this.price(),
             description: this.description(),
         }
-    },
+    }
     
-    setPostDict: function(aDict) {
+    setPostDict (aDict) {
         this.setTitle(aDict.title)
         this.setPrice(aDict.price)
         this.setDescription(aDict.description)
         return this
-    },
+    }
     
-    send: function () {
+    send  () {
         this.log("post")
 
         const objMsg = BMObjectMessage.clone()
@@ -58,10 +62,10 @@ BMStorableNode.newSubclassNamed("BMPost").newSlots({
         const toId = App.shared().network().openIdentity().current()
 
         objMsg.send()
-    },
+    }
     
-    onDropFiles: function(filePaths) {
+    onDropFiles (filePaths) {
         let parts = []
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

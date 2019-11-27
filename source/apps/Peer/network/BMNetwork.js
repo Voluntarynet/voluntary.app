@@ -6,23 +6,29 @@
 
 */
 
-BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
-    servers: null,
-    stunServers: null,
-    messages: null,
-    connection: null,
-    localIdentities: null, // set by parent 
-    blacklists: null,
-    idsBloomFilter: null,
-    shared: null,
-    isOpenRelay: false,
-}).setSlots({
-    init: function () {
+window.BMNetwork = class BMNetwork extends BMFieldSetNode {
+    
+    initPrototype () {
+        this.newSlots({
+            servers: null,
+            stunServers: null,
+            messages: null,
+            connection: null,
+            localIdentities: null, // set by parent 
+            blacklists: null,
+            idsBloomFilter: null,
+            shared: null,
+            isOpenRelay: false,
+        })
+    }
+
+    init () {
+
         if (BMNetwork._shared) {
             throw new Error("multiple instances of " + this.type() + " singleton")
         }
-		
-        BMStorableNode.init.apply(this)
+
+        super.init()
 		
         this.setTitle("Network")
         this.setNodeMinWidth(250)
@@ -45,49 +51,49 @@ BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
         this.addStoredField(BMBooleanField.clone().setKey("isOpenRelay").setValueMethod("isOpenRelay").setValueIsEditable(true))
 
         this.watchIdentities()
-    },
+    }
 
-    loadFinalize: function() {
+    loadFinalize () {
         //this.updateIdsBloomFilter()
-    },
+    }
 
-    watchIdentities: function() {
+    watchIdentities () {
         if (!this._idsObservation) {
 	        this._idsObservation = NotificationCenter.shared().newObservation().setName("didChangeIdentity").setObserver(this).watch()
         }
-    },
+    }
 
-    shared: function() {   
+    shared () {   
         const thisClass = BMNetwork     
         if (!thisClass._shared) {
             thisClass._shared = this.clone();
         }
         return thisClass._shared;
-    },
+    }
 
-    connectedRemotePeers: function () {
+    connectedRemotePeers  () {
         const remotePeers = []
         this.servers().connectedServers().forEach(function (server) {
             remotePeers.appendItems(server.connectedRemotePeers())
         })        
         return remotePeers
-    },
+    }
     
-    connectedRemotePeerCount: function() {
+    connectedRemotePeerCount () {
         return this.servers().subnodes().sum(function (p) {
             return p.connectedRemotePeerCount()
         })
-    },
+    }
     
-    serverCount: function () {
+    serverCount  () {
         return this.servers().subnodesCount()
-    },
+    }
 
-    connectedServerCount: function () {
+    connectedServerCount  () {
         return this.servers().connectedServers().length
-    },
+    }
     
-    subtitle: function() {
+    subtitle () {
         const parts = []
 
         parts.push(this.connectedServerCount() + " of " + this.serverCount() + " servers")
@@ -100,21 +106,21 @@ BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
         parts.push(msgCount + " msg" + ((msgCount!=1) ? "s" : ""))
 
         return parts.join(", ")
-    },
+    }
     
-    broadcastMsg: function(msg) {
+    broadcastMsg (msg) {
         // TODO: add to local inventory
         this.messages().addMessage(msg)
         //this.servers().broadcastMsg(msg)
         return this
-    },
+    }
     
-    addr: function(msg) {
+    addr (msg) {
         this.log("got addr")
         this.servers().addr(msg)
-    },
+    }
     
-    onRemotePeerConnect: function(remotePeer) {      
+    onRemotePeerConnect (remotePeer) {      
         this.log("onRemotePeerConnect " + remotePeer.shortId())
           
         // servers will send addr msg
@@ -125,11 +131,11 @@ BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
         
         //this.log("Network onRemotePeerConnect this.connectedRemotePeerCount()  = " + this.connectedRemotePeerCount())
         this.scheduleSyncToView()
-    },
+    }
 
     // --- identities -----------------------------------------
     
-    idWithPublicKeyString: function(publicKeyString) { 
+    idWithPublicKeyString (publicKeyString) { 
         
         if (publicKeyString === null) {
             console.warn("publicKeyString is null")
@@ -145,9 +151,9 @@ BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
 		    console.log("all ids: ", ids.map((id) => { return id.name() + ":" + id.publicKeyString() }))
 	    }
         return result
-    },
+    }
 
-    allRemoteIdentities: function() {
+    allRemoteIdentities () {
         const allRids = []
         this.localIdentities().subnodes().forEach((id) => { 
             const valids = id.remoteIdentities().validSubnodes()
@@ -157,43 +163,43 @@ BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
             })
         })
         return allRids
-    },
+    }
 	
-    allIdentitiesMap: function() { // only uses valid remote identities
+    allIdentitiesMap () { // only uses valid remote identities
         const ids = ideal.Dictionary.clone()
         this.localIdentities().subnodes().forEach((id) => { 
 		    ids.merge(id.allIdentitiesMap())
         })
         return ids
-    },
+    }
 
-    allIdentities: function() { // only uses valid remote identities
+    allIdentities () { // only uses valid remote identities
         const ids = this.localIdentities().subnodes().concat(this.allRemoteIdentities())
         return ids
-    },
+    }
     
-    allIdentityPublicKeyStrings: function() {
+    allIdentityPublicKeyStrings () {
 	    return this.allIdentitiesMap().keys()
         //return this.allIdentities().map((id) => { return id.publicKeyString(); })
-    },
+    }
 	
     /*
-	allIdentityNames: function() {
+	allIdentityNames () {
 		return this.allIdentities().map((id) => { return id.name(); })
 	},
 
 	
-	localIdentityNames: function() {
+	localIdentityNames () {
 		return this.localIdentities().names()
 	},
 	
-	idWithName: function(aString) {
+	idWithName (aString) {
 		return this.allIdentities().detect((id) => { 
 			return id.name() === aString
 		})
 	},
 	
-	idWithNameOrPubkey: function(aString) {
+	idWithNameOrPubkey (aString) {
 		return this.allIdentities().detect((id) => { 
 			return id.name() === aString || id.publicKeyString() === aString
 		})
@@ -202,19 +208,19 @@ BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
 	
     // --- bloom filter for matching ids -----------------------------------------
 	
-    newDefaultBloomFilter: function() { // proto method?
+    newDefaultBloomFilter () { // proto method?
         const falsePositiveRate = 0.01;
         const maxElementSize = 1000		
         const filter = JSBloom.newFilter(maxElementSize, falsePositiveRate)
         return filter
-    },
+    }
 
-    didChangeIdentity: function() {
+    didChangeIdentity () {
         //this.debugLog(".didChangeIdentity()")
         this.updateIdsBloomFilter()
-    },
+    }
 		
-    updateIdsBloomFilter: function() {
+    updateIdsBloomFilter () {
         //this.debugLog(".updateIdsBloomFilter()")
         const oldFilter = this._idsBloomFilter
 	
@@ -253,17 +259,17 @@ BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
         }
 		
         return this;		
-    },
+    }
 	
-    didChangeIdsBloom: function() {
+    didChangeIdsBloom () {
         //this.debugLog(".didChangeIdsBloom()")
         //this._didChangeIdsBloomeNote = NotificationCenter.shared().newNote().setSender(this.typeId()).setName("didChangeIdsBloom")
         this.servers().subnodes().forEach((server) => {
             server.reRequestPeerId() 
         })
-    },
+    }
 	
-    verifyIdsBloom: function() {
+    verifyIdsBloom () {
         //this.debugLog(".verifyIdsBloom: " + this.idsBloomFilter().serialized().sha256String().substring(0, 6) )
 	    this.allIdentities().forEach((id) => {
             const k = id.publicKeyString()
@@ -274,16 +280,16 @@ BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
             }
 	    })
         //console.log("idsBloom verified!")
-    },
+    }
 	
-    idsBloomFilter: function() {
+    idsBloomFilter () {
         if (this._idsBloomFilter === null) {
             this.updateIdsBloomFilter()
         }
         return this._idsBloomFilter
-    },
+    }
 	
-    hasIdentityMatchingBloomFilter: function(bloomFilter) {
+    hasIdentityMatchingBloomFilter (bloomFilter) {
         //this.debugLog(".hasIdentityMatchingBloomFilter: " + bloomFilter.serialized().sha256String().substring(0, 6) )
 	    const match = this.allIdentities().detect((id) => {
             const k = id.publicKeyString()
@@ -293,14 +299,14 @@ BMFieldSetNode.newSubclassNamed("BMNetwork").newSlots({
 	    }) 
         //console.log("hasIdentityMatchingBloomFilter match = ", match)
         return !Type.isNull(match)	        
-    },
+    }
 
-    shouldRelayForSenderPublicKey: function(aPublicKeyString) {
+    shouldRelayForSenderPublicKey (aPublicKeyString) {
         return this.allIdentityPublicKeyStrings().includes(aPublicKeyString)
-    },
+    }
 
-    nodeShouldUseLightTheme: function() {
+    nodeShouldUseLightTheme () {
         return false
-    },
+    }
 	
-}).initThisProto()
+}.initThisClass()

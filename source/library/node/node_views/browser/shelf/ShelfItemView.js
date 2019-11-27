@@ -6,17 +6,22 @@
 
 */
 
-NodeView.newSubclassNamed("ShelfItemView").newSlots({
-    isSelected: false,
-    isSelectable: true,
-    restCloseButtonOpacity: 0.4,
-    iconView: null,
-    badgeView: null,
-    markerView: null,
-    destinationNode: null,
-}).setSlots({
-    init: function () {
-        NodeView.init.apply(this)
+window.ShelfItemView = class ShelfItemView extends NodeView {
+    
+    initPrototype () {
+        this.newSlots({
+            isSelected: false,
+            isSelectable: true,
+            restCloseButtonOpacity: 0.4,
+            iconView: null,
+            badgeView: null,
+            markerView: null,
+            destinationNode: null,
+        })
+    }
+
+    init () {
+        super.init()
         this.setIsRegisteredForClicks(true)
         this.turnOffUserSelect()
         this.setTransition("all 0.35s")
@@ -38,35 +43,35 @@ NodeView.newSubclassNamed("ShelfItemView").newSlots({
         this.styles().selected().setOpacity(1)
         this.styles().unselected().setOpacity(0.45)
         return this
-    },
+    }
     
-    didUpdateNode: function() {
+    didUpdateNode () {
         NodeView.didUpdateNode.apply(this)
         this.syncFromNode()
-    },
+    }
 
-    setupBadgeView: function() {	
+    setupBadgeView () {	
         const v = DomView.clone().setDivClassName("ShelfBadgeView")
         this.setBadgeView(v)
 	    this.addSubview(v)
         return this
-    },
+    }
 	
-    setupMarkerView: function() {	
+    setupMarkerView () {	
         const v = DomView.clone().setDivClassName("ShelfMarkerView")
         this.setMarkerView(v)
 	    this.addSubview(v)
         return this
-    },
+    }
     
-    name: function() {
+    name () {
         if (this.destinationNode()) {
             return this.destinationNode().title()
         }
         return this.typeId()
-    },
+    }
 
-    syncFromNode: function() {
+    syncFromNode () {
         const node = this.node()
         this.setDestinationNode(node)
         const iconUrl = node.shelfIconUrl()
@@ -91,15 +96,15 @@ NodeView.newSubclassNamed("ShelfItemView").newSlots({
         //this.markerView().verticallyAlignAbsoluteNow()
 		
         return this
-    },
+    }
 	
-    didChangeHeight: function() {
+    didChangeHeight () {
         NodeView.didChangeHeight.apply(this)
 	     window.SyncScheduler.shared().scheduleTargetAndMethod(this.markerView(), "verticallyAlignAbsoluteNow", 0)
         return this
-    },
+    }
     
-    setItemWidthHeight: function(itemWidth, itemHeight) {
+    setItemWidthHeight (itemWidth, itemHeight) {
         //let itemWidth = 78
         //let itemHeight = 70
 		
@@ -115,23 +120,23 @@ NodeView.newSubclassNamed("ShelfItemView").newSlots({
         iv.setMinAndMaxWidth(iconWidth)
         iv.setMinAndMaxHeight(iconHeight)
         return this
-    },
+    }
     
-    setDestinationNode: function(aNode) {
+    setDestinationNode (aNode) {
         this._destinationNode = aNode
         if (aNode) {
             this.setToolTip(aNode.title().capitalized())
         }
         return this
-    },
+    }
     
     /*
-    shelf: function () {
+    shelf  () {
         return this.parentView()
-    },
+    }
     */
 
-    setImageDataUrl: function(imageDataUrl) {
+    setImageDataUrl (imageDataUrl) {
         const iv = this.iconView()
         
         if (imageDataUrl) {
@@ -143,19 +148,19 @@ NodeView.newSubclassNamed("ShelfItemView").newSlots({
         }
         
         return this
-    },
+    }
 	
-    setIconName: function(name) {
+    setIconName (name) {
         const iv = this.iconView()
         iv.setBackgroundImageUrlPath(this.pathForIconName(name))        
         iv.setBackgroundSizeWH(24, 24)
         this.setItemWidthHeight(78, 45)
         return this
-    },
+    }
     
     // --- selecting ---
     
-    onClick: function (event) {
+    onClick  (event) {
         NodeView.onClick.apply(this, [event])
         //console.log(this.name() + ".onClick()")
         
@@ -171,6 +176,6 @@ NodeView.newSubclassNamed("ShelfItemView").newSlots({
         }
         
         return false
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

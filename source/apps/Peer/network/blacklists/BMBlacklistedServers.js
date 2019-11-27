@@ -8,14 +8,19 @@
     
 */
 
-BMBlacklist.newSubclassNamed("BMBlacklistedServers").newSlots({
-    ipsDict: null, 
-}).setSlots({
-    init: function () {
-        BMBlacklist.init.apply(this)		
+window.BMBlacklistedServers = class BMBlacklistedServers extends BMBlacklist {
+    
+    initPrototype () {
+        this.newSlots({
+            ipsDict: null, 
+        })
+    }
+
+    init () {
+        super.init()	
         this.setShouldStore(true)        
         this.setTitle("servers")
         this.addStoredSlot("ipsDict")
-    },
+    }
 	
-}).initThisProto()
+}.initThisClass()

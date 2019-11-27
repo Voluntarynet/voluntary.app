@@ -8,13 +8,18 @@
 
 */
         
-BMStorableNode.newSubclassNamed("BMOptionNode").newSlots({
-    label: "Option Title",
-    value:  null,
-    isPicked: false,
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
+window.BMOptionNode = class BMOptionNode extends BMStorableNode {
+    
+    initPrototype () {
+        this.newSlots({
+            label: "Option Title",
+            value:  null,
+            isPicked: false,
+        })
+    }
+
+    init () {
+        super.init()
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(false)
         this.setNodeCanReorderSubnodes(false)
@@ -23,16 +28,16 @@ BMStorableNode.newSubclassNamed("BMOptionNode").newSlots({
         this.addStoredSlot("value")
         this.addStoredSlot("isPicked")
         this.setNodeCanEditTitle(true)
-    },
+    }
 
-    shallowCopySlotnames: function() {
+    shallowCopySlotnames () {
         const names = BMStorableNode.shallowCopySlotnames.apply(this)
         return names.appendItems([
             "label", "value", "isPicked", 
         ])
-    },
+    }
 
-    setIsPicked: function(aBool) {
+    setIsPicked (aBool) {
         if (this.isPicked() !== aBool) {
             this._isPicked = aBool
             if (this.parentNode()) {
@@ -42,36 +47,36 @@ BMStorableNode.newSubclassNamed("BMOptionNode").newSlots({
             }
         }
         return this
-    },
+    }
 
-    toggle: function() {
+    toggle () {
         this.setIsPicked(!this.isPicked())
         return this
-    },
+    }
 
-    title: function() {
+    title () {
         return this.label()
-    },
+    }
 
-    value: function() {
+    value () {
         return this.title()
-    },
+    }
 
-    setTitle: function(aString) {
+    setTitle (aString) {
         this.setLabel(aString)
         return this
-    },
+    }
 
-    subtitle: function() {
+    subtitle () {
         return null
-    },
+    }
 
-    summary: function() {
+    summary () {
         return this.title()
-    },
+    }
 
-    note: function() {
+    note () {
         return this.isPicked() ? "✓" : ""
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

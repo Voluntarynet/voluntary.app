@@ -7,13 +7,18 @@
     
 */  
         
-BMStorableNode.newSubclassNamed("GameNode").newSlots({
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
+window.GameNode = class GameNode extends BMStorableNode {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
         this.setTitle("Game")
         this.setSubtitle("test")
         this.setNodeMinWidth(2000)
-    },        
+    }    
     
-}).initThisProto()
+}.initThisClass()

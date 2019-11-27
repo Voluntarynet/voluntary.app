@@ -7,11 +7,16 @@
 
 */
 
-BMApplet.newSubclassNamed("BMGroupChatRoom").newSlots({
-    name: "Untitled",
-}).setSlots({
-	    init: function () {
-	        BMApplet.init.apply(this)
+window.BMGroupChatRoom = class BMGroupChatRoom extends BMApplet {
+    
+    initPrototype () {
+        this.newSlots({
+            name: "Untitled",
+        })
+    }
+
+    init () {
+        super.init()
 
         this.setNotifications(BMNode.clone().setTitle("channels"))
 	        this.addSubnode(this.notifications())
@@ -19,16 +24,16 @@ BMApplet.newSubclassNamed("BMGroupChatRoom").newSlots({
         this.setMessages(BMNode.clone().setTitle("direct messages"))
 	        this.addSubnode(this.messages())
 
-	    },
+	    }
 
-    title: function() {
+    title () {
         return this.name()
-    },
+    }
 
-    setTitle: function(aString) {
+    setTitle (aString) {
         this.setName(aString)
         return this
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()
 

@@ -8,22 +8,27 @@
 
 */
 
-
-BrowserRow.newSubclassNamed("BMPostDraftRowView").newSlots({    
-    topView: null,
-    leftView: null,
-    iconView: null,
-    rightView: null,
-    placeHolderView: null,
-    textContentView: null,
-    //deleteButton: null,
-
-    bottomView: null,
-    sendButton: null,
+window.BMPostDraftRowView = class BMPostDraftRowView extends BrowserRow {
+    
+    initPrototype () {
+        this.newSlots({
+            topView: null,
+            leftView: null,
+            iconView: null,
+            rightView: null,
+            placeHolderView: null,
+            textContentView: null,
+            //deleteButton: null,
         
-    isSelected: false,
-}).setSlots({
-    init: function () {
+            bottomView: null,
+            sendButton: null,
+                
+            isSelected: false,
+        })
+    }
+
+    init () {
+        super.init()
         this.setShouldCenterCloseButton(false) // hack, TODO: change this
         BrowserRow.init.apply(this)
 
@@ -95,9 +100,9 @@ BrowserRow.newSubclassNamed("BMPostDraftRowView").newSlots({
         //this.sendAllViewDecendants("setTransition", ["all 0s"])
 				
         return this
-    },
+    }
 
-    setupTextContentView: function() {
+    setupTextContentView () {
         const tv = this.textContentView()
         tv.insertDivClassName(this.type() + "Title")
         //tv.setWidth("auto")
@@ -109,9 +114,9 @@ BrowserRow.newSubclassNamed("BMPostDraftRowView").newSlots({
         tv.setFontFamily("AppRegular, Sans-Serif")       
         tv.setTransition("all 0s")
         return this
-    },
+    }
     
-    setIconDataUrl: function(imageDataUrl) {
+    setIconDataUrl (imageDataUrl) {
         const iv = this.iconView()
         
         if (imageDataUrl) {
@@ -121,9 +126,9 @@ BrowserRow.newSubclassNamed("BMPostDraftRowView").newSlots({
         }
         
         return this
-    },
+    }
 
-    updateSubviews: function() {
+    updateSubviews () {
         BrowserRow.updateSubviews.apply(this)
     
         const node = this.node()
@@ -141,55 +146,55 @@ BrowserRow.newSubclassNamed("BMPostDraftRowView").newSlots({
         //this.sendAllViewDecendants("setTransition", ["all 0s"])
 
         return this
-    },
+    }
 
     // --- edit ---
 
-    onDidEdit: function (changedView) {   
+    onDidEdit  (changedView) {   
         //this.debugLog(".onDidEdit")
         this.updateSubviews()
         this.scheduleSyncToNode()
         return true
-    },
+    }
 
-    didInput: function() {
+    didInput () {
         this.scheduleSyncToNode() //this.syncToNode()
-    },
+    }
 
     // --- sync ---
     
-    syncToNode: function () {   
+    syncToNode  () {   
         //console.log("syncToNode")
         this.node().setContent(this.textContentView().innerHTML())
         //this.node().tellParentNodes("onDidEditNode", this.node())  
         this.node().scheduleSyncToStore()
         return this
-    },
+    }
 
-    syncFromNode: function () {
+    syncFromNode  () {
         const node = this.node()
         this.textContentView().setString(node.content())
         this.setIconDataUrl(node.avatarImageDataURL())
         this.updateSubviews()
         return this
-    },
+    }
     
     // actions
     
-    post: function() {
+    post () {
         this.node().post()
         return this
-    },
+    }
     
     /*
-    delete: function() {
+    delete () {
         this.sendAllViewDecendants("setTransition", ["all 0.2s"])
         setTimeout(() => { this.node().delete() })
         //this.delete()
         //this.node().delete()
         return this
-    },
+    }
     */
    
-}).initThisProto()
+}.initThisClass()
 

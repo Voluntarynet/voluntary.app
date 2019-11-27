@@ -6,21 +6,25 @@
 
 */
 
+window.BMTextAreaFieldRowView = class BMTextAreaFieldRowView extends BMFieldRowView {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
 
-BMFieldRowView.newSubclassNamed("BMTextAreaFieldRowView").newSlots({
-}).setSlots({
-    init: function () {
-        BMFieldRowView.init.apply(this)
+    init () {
+        super.init()
         this.keyView().setDisplay("none")
         //this.valueView().setDivClassName("BMTextAreaFieldValueView")
         return this
-    },
+    }
 
-    createValueView: function() {
+    createValueView () {
         return NodeView.clone().setDivClassName("BMTextAreaFieldValueView NodeView DomView")
-    },
+    }
 	
-    updateSubviews: function() {   
+    updateSubviews () {   
 	    BMFieldRowView.updateSubviews.apply(this)
         this.fillBottomOfColumnIfAvailable()
 		
@@ -32,9 +36,9 @@ BMFieldRowView.newSubclassNamed("BMTextAreaFieldRowView").newSlots({
         }
 		
         return this
-    },
+    }
 	
-    fillBottomOfColumnIfAvailable: function() {
+    fillBottomOfColumnIfAvailable () {
         if (this.column().rows().last() === this) {
             //this.debugLog(" update height")
             this.setMinAndMaxHeightPercentage(100)
@@ -45,6 +49,6 @@ BMFieldRowView.newSubclassNamed("BMTextAreaFieldRowView").newSlots({
             this.setBorderBottom("1px solid #aaa")
         }
         return this
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

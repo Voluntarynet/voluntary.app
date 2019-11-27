@@ -6,26 +6,29 @@
 
 */
 
-BMFieldSetNode.newSubclassNamed("BMClassifiedPost").newSlots({
-    title: null, // string
-    price: 0,
-    currency: "BTC",
-    description: null, // string
-    path: "", // string
-    isEditable: false,
-    objMsg: null,
+window.BMClassifiedPost = class BMClassifiedPost extends BMFieldSetNode {
     
-    postDate: null,
-    postPeriod: 30 * 24 * 60 * 60 * 1000, // 30 days in milliseconds
-    uuid: null,
-    // imagesNode:null,
-    imageDataURLs: null,
-    hasSent: false,
+    initPrototype () {
+        this.newSlots({
+            title: null, // string
+            price: 0,
+            currency: "BTC",
+            description: null, // string
+            path: "", // string
+            isEditable: false,
+            objMsg: null,
+            
+            postDate: null,
+            postPeriod: 30 * 24 * 60 * 60 * 1000, // 30 days in milliseconds
+            uuid: null,
+            // imagesNode:null,
+            imageDataURLs: null,
+            hasSent: false,
+        })
+    }
 
-}).setSlots({
-	
-    init: function () {
-        BMFieldSetNode.init.apply(this)
+    init () {
+        super.init()
         this.setShouldStore(true)
         //this.setNodeMinWidth(550)
         
@@ -62,15 +65,15 @@ BMFieldSetNode.newSubclassNamed("BMClassifiedPost").newSlots({
         this.setCanDelete(true)
 
         this.validate()
-    },
+    }
 
-    setParentNode: function(aNode) {
+    setParentNode (aNode) {
         BMStorableNode.setParentNode.apply(this, [aNode])
         this.syncDeleteAction()
         return this
-    },
+    }
 	
-    syncDeleteAction: function() {
+    syncDeleteAction () {
         if (this.parentNode() && this.parentNode().isKindOf(Region)) {
             //this.removeAction("delete")
             this.setCanDelete(false)
@@ -79,24 +82,24 @@ BMFieldSetNode.newSubclassNamed("BMClassifiedPost").newSlots({
             this.setCanDelete(true)
         }
         return this
-    },
+    }
 
-    didLoadFromStore: function() {
+    didLoadFromStore () {
         BMStorableNode.didLoadFromStore.apply(this)
         this.setIsEditable(!this.hasSent())
         this.validate()
-    },
+    }
 	
-    currencySymbols: function() {
+    currencySymbols () {
         /*
 		return Object.slotNames(CurrenciesDict).map(function (k) {
 			return k + " (" + CurrenciesDict[k].name + ")"
 		}).sort()
 		*/
         return Object.slotNames(CurrenciesDict).sort()
-    },
+    }
 	
-    currencyName: function() {
+    currencyName () {
         if (this.currency()) {
             let dict = CurrenciesDict[this.currency()]
             if (dict) {
@@ -104,23 +107,23 @@ BMFieldSetNode.newSubclassNamed("BMClassifiedPost").newSlots({
             }
         }
         return null
-    },
+    }
   
     /*  
     // images
     
-    setEncodedImages: function(base64images) {
+    setEncodedImages (base64images) {
         let imgs = base64images.map(function (b64) { return ImageNode.clone().setBase64Encoded(b64); });
         this.setImages(imgs)
         return this
-    },
+    }
     
-    getEncodedImages: function() {
+    getEncodedImages () {
         return this.images().map(function (image) { return image.base64Encoded(); });
-    },
+    }
 */
     
-    subtitle: function() {
+    subtitle () {
         try {
 	        if (this.powObj().isFinding()) {
 	            return "stamping... " + this.powObj().estimatedPercentageDone() + "%";
@@ -133,9 +136,9 @@ BMFieldSetNode.newSubclassNamed("BMClassifiedPost").newSlots({
             console.log(e)
         }
         return "error"
-    },
+    }
     
-    postDict: function () {
+    postDict  () {
         return {
             type: "BMClassifiedPost",
             title: this.title(),
@@ -148,9 +151,9 @@ BMFieldSetNode.newSubclassNamed("BMClassifiedPost").newSlots({
             uuid: this.uuid(),
             imageDataURLs: this.imageDataURLs()
         }
-    },
+    }
     
-    setPostDict: function(aDict) {
+    setPostDict (aDict) {
         this.setTitle(aDict.title)
         this.setPrice(aDict.price)
         this.setCurrency(aDict.currency)
@@ -163,33 +166,33 @@ BMFieldSetNode.newSubclassNamed("BMClassifiedPost").newSlots({
         //this.objMsg().setContent(this.postDict())
         this.objMsg().setContent(aDict)
         return this
-    },
+    }
     
-    syncSend: function () {
+    syncSend  () {
         this.objMsg().setContent(this.postDict())
         
         //let myId = App.shared().network().localIdentities().current()
         //let toId = App.shared().network().openIdentity().current()        
         this.objMsg().send()
-    },
+    }
 
-    choosePostDate: function() {
+    choosePostDate () {
         let currentTime = new Date().getTime()
         // add a random time interval of 5 mintues so a receiving node
         // can't guess that a sender is the source if the dt is very small
         let randomInterval = Math.random() * 1000 * 60 * 5; 
         this.setPostDate(currentTime + randomInterval)	
         return this	
-    },
+    }
 	
-    prepareToSend: function() {
+    prepareToSend () {
         this.setUuid(GUID()) 
         this.choosePostDate()
         this.objMsg().setData(this.postDict())
         return this
-    },
+    }
     
-    send: function () {
+    send  () {
         this.prepareToSend()
         this.setIsEditable(false)
         
@@ -198,38 +201,38 @@ BMFieldSetNode.newSubclassNamed("BMClassifiedPost").newSlots({
         
         this.watchPow() // watch for pow update and done notifications
         this.objMsg().asyncPackContent() // will send notification when pow ready        
-    },
+    }
     
     // pow notifications
     
-    watchPow: function() {
+    watchPow () {
         this._powDoneObs.watch()
         this._powUpdateObs.watch()
-    },
+    }
     
-    unwatchPow: function() {
+    unwatchPow () {
         this._powDoneObs.stopWatching()
         this._powUpdateObs.stopWatching()
-    },
+    }
     
-    powObj: function() {
+    powObj () {
         return this.objMsg().powObj()
-    },
+    }
     
-    powUpdate: function(note) {
+    powUpdate (note) {
         if (note.sender() === this.powObj()) {
             //console.log("got powUpdate")
             this.didUpdateNode()
         }
-    },
+    }
     
-    setupFromDict: function() {
+    setupFromDict () {
         this.objMsg().setContent(this.postDict())
         //this.setHasSent(true)
         return this    
-    },
+    }
     
-    powDone: function(note) {
+    powDone (note) {
         if (note.sender() === this.powObj()) {
             //console.log("got powDone")
             this.unwatchPow()
@@ -239,14 +242,14 @@ BMFieldSetNode.newSubclassNamed("BMClassifiedPost").newSlots({
             }
             this.didUpdateNode()
         }
-    },
+    }
     
-    powStatus: function() {
+    powStatus () {
         return this.powObj().status()
-    },
+    }
     
     /////////////////////////
-    descriptionOfMsTimePeriod: function(ms) {
+    descriptionOfMsTimePeriod (ms) {
         
         let seconds = Math.floor(ms / 1000);
         /*
@@ -270,34 +273,34 @@ BMFieldSetNode.newSubclassNamed("BMClassifiedPost").newSlots({
         
         let days = Math.ceil(hours / 24);
         return days + " days"
-    },
+    }
     
-    expireDescription: function() {
+    expireDescription () {
         let ms = this.remainingPeriodInMs();
         return this.descriptionOfMsTimePeriod(ms)
-    },
+    }
     
-    expirationDate: function() {
+    expirationDate () {
         return new Date(this.postDate() + this.postPeriod())
-    },
+    }
     
-    remainingPeriodInMs: function() {
+    remainingPeriodInMs () {
         return new Date().getTime() - this.postDate() + this.postPeriod()
-    },
+    }
     
-    postPeriodDayCount: function() {
+    postPeriodDayCount () {
         return Math.floor(this.postPeriod() / (24 * 60 * 60 * 1000));
-    },
+    }
     
-    cancelSend: function() {
+    cancelSend () {
         
-    },
+    }
     
-    onDropFiles: function(filePaths) {
+    onDropFiles (filePaths) {
         let parts = []
-    },
+    }
     
-    placeInPathString: function(pathString) {
+    placeInPathString (pathString) {
         let rootNode = App.shared()
         let pathComponents = pathString.split("/")
         let region = rootNode.nodeAtSubpath(pathComponents)
@@ -313,45 +316,45 @@ BMFieldSetNode.newSubclassNamed("BMClassifiedPost").newSlots({
             console.log("-----------\n".repeat(3) + "WARNING: " + error + "\n" + "-----------\n".repeat(3))
             //throw new Error(error)
         }
-    },
+    }
     
-    placeInRegion: function() {
+    placeInRegion () {
         this.placeInPathString(this.path())
         return this
-    },
+    }
     
-    placeInAll: function() {
+    placeInAll () {
         this.placeInPathString("Classifieds/All")
         return this
-    },
+    }
     
-    isEqual: function(aPost) {
+    isEqual (aPost) {
         return this.hash() === aPost.hash()
-    },
+    }
     
-    hash: function() {
+    hash () {
         return Object.toStableHash(this.postDict())
-    },
+    }
     
-    incrementPowTarget: function() {
+    incrementPowTarget () {
         //console.log("Post incrementPowTarget")
         this.prepareToSend() // shouldn't need this if there's a default BMPow hash
         this.powObj().incrementDifficulty()
         this.didUpdateNode()
-    },
+    }
     
-    decrementPowTarget: function() {
+    decrementPowTarget () {
         //console.log("Post decrementPowTarget")
         this.prepareToSend() // shouldn't need this if there's a default BMPow hash
         this.powObj().decrementDifficulty()
         this.didUpdateNode()
-    },
+    }
     
-    powDifficulty: function() {
+    powDifficulty () {
         return this.powObj().targetDifficulty()
-    },
+    }
     
-    compare: function(other) {
+    compare (other) {
         let d1 = this.powObj().actualPowDifficulty()
         let d2 = other.powObj().actualPowDifficulty()
         let p1 = this.postDate()
@@ -363,12 +366,12 @@ BMFieldSetNode.newSubclassNamed("BMClassifiedPost").newSlots({
         }
         
         return c;
-    },
+    }
 
-    fillWithTestData: function() {
+    fillWithTestData () {
         this.setTitle("".loremIpsum(2, 5))
         this.setDescription("".loremIpsum(20, 200))
         this.setPrice(Math.floor(Math.random()*100)/2)
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

@@ -6,13 +6,17 @@
     
 */
 
-BMNode.newSubclassNamed("BMYearNode").newSlots({
-    allowsMultiplePicks: false,
-    value: 0,
-}).setSlots({
+window.BMYearNode = class BMYearNode extends BMNode {
     
-    init: function () {
-        BMNode.init.apply(this)
+    initPrototype () {
+        this.newSlots({
+            allowsMultiplePicks: false,
+            value: 0,
+        })
+    }
+
+    init () {
+        super.init()
 
         this.setCanDelete(true)
         this.setNodeMinWidth(300)
@@ -24,35 +28,35 @@ BMNode.newSubclassNamed("BMYearNode").newSlots({
         this.setNodeCanReorderSubnodes(true)
 
         //this.setViewClassName("BMOptionsNodeView")
-    },
+    }
 
-    title: function() {
+    title () {
         return this.value()
-    },
+    }
 
-    hasSubnodes: function() {
+    hasSubnodes () {
         return true;
-    },
+    }
     
-    prepareToAccess: function () {
+    prepareToAccess  () {
         //console.log("this.storeHasChanged() = ", this.storeHasChanged())
         if (this.subnodeCount() === 0) {
             //this.refreshSubnodes()
         }
-    },
+    }
     
-    nodeRowLink: function() {
+    nodeRowLink () {
         // used by UI row views to browse into next column
         return this
-    },    
+    }
 
-    prepareToSyncToView: function() {
+    prepareToSyncToView () {
         // called after Node is selected
         if (!this.subnodeCount()) {
             for (let i = 1; i < 12 + 1; i++) {
                 this.addSubnode(BMMonthNode.clone().setValue(i))
             }
         }
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

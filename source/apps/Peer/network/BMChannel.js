@@ -6,26 +6,32 @@
 
 */
 
+window.BMChannel = class BMChannel extends BMStorableNode {
+    
+    initPrototype () {
+        this.newSlots({
+            name: "",
 
-BMStorableNode.newSubclassNamed("BMChannel").newSlots({
-    name: "",
-}).setSlots({
-    init: function () {
+        })
+    }
+
+    init () {
+        super.init()
         this.addStoredSlot("name")
-    },
+    }
     
-    title: function() {
+    title () {
         return this.name()
-    },
+    }
     
-    privateKey: function() {
+    privateKey () {
         const hexName = this.name().toString(16)
         const privateKey = new bitcore.PrivateKey(hexName);
         return privateKey
-    },
+    }
     
-    publicKeyString: function() {
+    publicKeyString () {
 	    return this.privateKey().toPublicKey().toString()
-    },
+    }
 	
-}).initThisProto()
+}.initThisClass()

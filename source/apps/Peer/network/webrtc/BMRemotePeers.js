@@ -6,32 +6,37 @@
 
 */
 
-BMNode.newSubclassNamed("BMRemotePeers").newSlots({
-}).setSlots({
-    init: function () {
-        BMNode.init.apply(this)
+window.BMRemotePeers = class BMRemotePeers extends BMNode {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
         
         this.setTitle("peers")
         this.setNoteIsSubnodeCount(true)
 
         this.createSubnodeIndex()
-    },
+    }
 	
-    closeAll: function() {
+    closeAll () {
         //this.setStatus("closing...")
         this.subnodes().forEach((peer) => { peer.close() })
         this.removeAllSubnodes()
         return this
-    },
+    }
 
-    showPeers: function() {
+    showPeers () {
         this.debugLog(".showPeers()")
         this.subnodes().forEach((peer) => {
             console.log("    ", peer.hash())
         })
-    },
+    }
 
-    setPeerIds: function(ids) {
+    setPeerIds (ids) {
         //this.debugLog(".setPeerIds(\n" + ids.join("\n") + "\n)")
 				
         // remove peers not in ids
@@ -51,36 +56,36 @@ BMNode.newSubclassNamed("BMRemotePeers").newSlots({
         })
 		
         this.connectToMatchingPeerIds()
-    },
+    }
     
-    serverConnection: function() {
+    serverConnection () {
         return this.parentNode()
-    },
+    }
     
-    addRemotePeerForId: function(id) {
+    addRemotePeerForId (id) {
         const peer = this.subnodeWithHash(id)
         if (!peer) {
 		 	peer = BMRemotePeer.clone().setPeerIdString(id).setServerConnection(this.serverConnection())
             this.addSubnode(peer)
         }
         return peer
-    },
+    }
     
-    connectToMatchingPeerIds: function () {
+    connectToMatchingPeerIds  () {
         this.subnodes().forEach((remotePeer) => { 
             // TODO: add max connections limit? 
             // have peer limit overly friendly blooms?
             remotePeer.connectIfMayShareContacts() 
         })
         return this
-    },
+    }
 
-    connectedRemotePeers: function () {
+    connectedRemotePeers  () {
         return this.subnodes().filter(p => p.isConnected())
-    },
+    }
 
-    count: function() {
+    count () {
         return this.subnodesCount()
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

@@ -48,34 +48,39 @@
 
 "use strict"
 
-ideal.Proto.newSubclassNamed("BMPayload").newSlots({
-    data: null,
-    error: null,
-    senderPublicKey: null,
-    powObject: null,
-    donePowCallback: null,
-}).setSlots({
-    init: function () {
-        ideal.Proto.init.apply(this)
+window.BMPayload = class BMPayload extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+            data: null,
+            error: null,
+            senderPublicKey: null,
+            powObject: null,
+            donePowCallback: null,
+        })
+    }
+
+    init () {
+        super.init()
         this.setPowObject(BMPow.clone())
-    },
+    }
     
     // errors
     
-    throwError: function(errorString) {
+    throwError (errorString) {
         this.setError(errorString)
         throw new Error(errorString) 
-    },
+    }
     
-    setData: function(d) {
+    setData (d) {
         if (typeof(d) !== "object") {
             throw new Error("attempt to set data to non object type of '" + typeof(d) + "'")
         }
         this._data = d
         return this
-    },
+    }
         
-    assertType: function(typeName) {
+    assertType (typeName) {
         if (this._data === null) {
             console.log("Payload object = ", this)
             throw new Error("payload has null data ")
@@ -92,7 +97,7 @@ ideal.Proto.newSubclassNamed("BMPayload").newSlots({
             //console.log(JSON.stringify(this._data))
             this.throwError(this._data.type + " is not equal to " + typeName)
         }
-    },
+    }
         
     // bitcoin curve is sjcl.ecc.curves.k256	    
     /*
@@ -108,7 +113,7 @@ ideal.Proto.newSubclassNamed("BMPayload").newSlots({
     
     /// sign / unsign
 
-    sign: function(senderKeyPair) {
+    sign (senderKeyPair) {
         const payload = Object.toJsonStableString(this.data());
         const payloadHash = sjcl.hash.sha256.hash(payload);
         const sig = senderKeyPair.sec.sign(payloadHash);
@@ -122,9 +127,9 @@ ideal.Proto.newSubclassNamed("BMPayload").newSlots({
         })
             
         return this
-    },
+    }
     
-    unsign: function() {
+    unsign () {
         this.assertType("SignedPayload")
         
         const senderPublicKeyHex = this.data().senderAddress;
@@ -138,7 +143,7 @@ ideal.Proto.newSubclassNamed("BMPayload").newSlots({
         }
         
         return false;
-    },
+    }
 
     /// encrypt / unencrypt
     
@@ -149,7 +154,7 @@ ideal.Proto.newSubclassNamed("BMPayload").newSlots({
         const pt = sjcl.decrypt(pair.sec, ct)
     */
 
-    encrypt: function(receiverPublicKeyHex) {
+    encrypt (receiverPublicKeyHex) {
         const receiverPublicKeyBits = sjcl.codec.hex.toBits(receiverPublicKeyHex);
         //const unencryptedBits = sjcl.codec.utf8String(Object.toJsonStableString(this.data()));
         const encryptedBits = sjcl.encrypt(receiverPublicKeyBits, Object.toJsonStableString(this.data()));
@@ -161,9 +166,9 @@ ideal.Proto.newSubclassNamed("BMPayload").newSlots({
         })
 
         return this
-    },
+    }
 
-    unencrypt: function(receiverPrivateKeyHex) {
+    unencrypt (receiverPrivateKeyHex) {
         this.assertType("EncryptedPayload")
 
         const receiverPrivateKeyBits = sjcl.codec.hex.toBits(receiverPrivateKeyHex)
@@ -180,11 +185,11 @@ ideal.Proto.newSubclassNamed("BMPayload").newSlots({
         this.setDict(decryptedPayloadDict)
         
         return this
-    },
+    }
     
     /// pow / unpow
     
-    pow: function() {
+    pow () {
         // data -> { type: "PowedPayload", payload: data, pow: powString }
         
         const hash = Object.toJsonStableString(this.data()).sha256String();
@@ -193,9 +198,9 @@ ideal.Proto.newSubclassNamed("BMPayload").newSlots({
         pow.syncFind()
         this.setData({ type: "PowedPayload", payload: this.data(), pow: pow.powHex() })
         return true
-    },  
+    }
     
-    asyncPow: function() {
+    asyncPow () {
         // data -> { type: "PowedPayload", payload: data, pow: powString }
         
         const hash = Object.toJsonStableString(this.data()).sha256String();
@@ -204,16 +209,16 @@ ideal.Proto.newSubclassNamed("BMPayload").newSlots({
         pow.setDoneCallback(() => { this.powDone() })
         pow.asyncFind()
         return true
-    },  
+    }
     
-    powDone: function() {
+    powDone () {
         this.setData({ type: "PowedPayload", payload: this.data(), pow: this.powObject().powHex() })
         if (this.donePowCallback()) {
             this.donePowCallback().apply()
         }  
-    },
+    }
       
-    unpow: function() {
+    unpow () {
         
         // { type: "PowedPayload", payload: data, pow: aPow } -> data
         //console.log("BMPayload.unpow this.data() = ", this.data())
@@ -235,9 +240,9 @@ ideal.Proto.newSubclassNamed("BMPayload").newSlots({
         }
         
         return pow.actualPowDifficulty()
-    },
+    }
     
-    actualPowDifficulty: function() {
+    actualPowDifficulty () {
         // { type: "PowedPayload", payload: data, pow: aPow } -> data
         // console.log("BMPayload.unpow this.data() = ", this.data())
         
@@ -246,6 +251,6 @@ ideal.Proto.newSubclassNamed("BMPayload").newSlots({
         const hash = Object.toJsonStableString(this.data().payload).sha256String();
         const pow = BMPow.clone().setHash(hash).setPowHex(this.data().pow)
         return pow.actualPowDifficulty()
-    },    
+    }
     
-}).initThisProto()
+}.initThisClass()

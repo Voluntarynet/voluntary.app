@@ -6,13 +6,18 @@
 
 */
 
-NodeView.newSubclassNamed("BrowserFooter").newSlots({
-    leftActionsView: null,
-    textView: null,
-    rightActionsView: null,
-}).setSlots({
-    init: function () {
-        NodeView.init.apply(this)
+window.BrowserFooter = class BrowserFooter extends NodeView {
+    
+    initPrototype () {
+        this.newSlots({
+            leftActionsView: null,
+            textView: null,
+            rightActionsView: null,
+        })
+    }
+
+    init () {
+        super.init()
 
         this.setLeftActionsView(DomView.clone().setDivClassName("BrowserFooterLeftActionsView NodeView DomView"))
 		
@@ -22,34 +27,33 @@ NodeView.newSubclassNamed("BrowserFooter").newSlots({
 						
         this.setRightActionsView(DomView.clone().setDivClassName("BrowserFooterRightActionsView NodeView DomView"))
 		
-		
         this.setZIndex(2)
         return this
-    },
+    }
     
-    columnGroup: function() {
+    columnGroup () {
         return this.parentView()
-    },
+    }
 	
-    browser: function() {
+    browser () {
         return this.columnGroup().browser()
-    },
+    }
 
-    setNode: function(aNode) {
+    setNode (aNode) {
         if (aNode === this._node) {
             //return
         }
         
         NodeView.setNode.apply(this, [aNode])
         this.updateTextView()
-    },
+    }
 
-    didInput: function(aView) {
+    didInput (aView) {
         this.setInput(aView.innerHTML())
         return this
-    },
+    }
     
-    setInput: function(s) {
+    setInput (s) {
         //console.trace(this.typeId() + ".setInput('" + s + "')")
         
         const n = this.node()
@@ -69,9 +73,9 @@ NodeView.newSubclassNamed("BrowserFooter").newSlots({
         */
         
         return this
-    },
+    }
     
-    updateTextView: function() {
+    updateTextView () {
         //console.log("this.shouldShowTextView() = ", this.shouldShowTextView())
         if (this.shouldShowTextView()) {
             if (!this.hasSubview(this.textView())) {
@@ -83,13 +87,13 @@ NodeView.newSubclassNamed("BrowserFooter").newSlots({
 	        }
         }
         return this
-    },
+    }
     
-    shouldShowTextView: function() {
+    shouldShowTextView () {
         return this.node() && (this.node().nodeInputFieldMethod() !== null)
-    },
+    }
     
-    syncFromNode: function() {
+    syncFromNode () {
         const node = this.node()
         this.removeAllSubviews()
         
@@ -97,8 +101,8 @@ NodeView.newSubclassNamed("BrowserFooter").newSlots({
             this.updateTextView()
         } 
         return this
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()
 
 

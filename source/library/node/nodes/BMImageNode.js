@@ -6,12 +6,16 @@
     
 */
 
-BMStorableNode.newSubclassNamed("BMImageNode").newSlots({
-    dataURL: null,
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
-        
+window.BMImageNode = class BMImageNode extends BMStorableNode {
+    
+    initPrototype () {
+        this.newSlots({
+            dataURL: null,
+        })
+    }
+
+    init () {
+        super.init()
         this.setNodeCanEditTitle(true)
         this.setNodeCanEditSubtitle(false)
         this.setNodeMinWidth(200)
@@ -23,9 +27,9 @@ BMStorableNode.newSubclassNamed("BMImageNode").newSlots({
         this.addStoredSlots(["title", "dataURL"])
     },        
     
-    onDidEditNode: function() {
+    onDidEditNode () {
         this.debugLog(" onDidEditNode")
         this.scheduleSyncToStore()
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

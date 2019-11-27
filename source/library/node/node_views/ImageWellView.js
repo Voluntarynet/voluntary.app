@@ -6,12 +6,17 @@
 
 */
 
-NodeView.newSubclassNamed("ImageWellView").newSlots({
-    imageView: null,
-    isEditable: true,
-}).setSlots({
-    init: function () {
-        NodeView.init.apply(this)
+window.ImageWellView = class ImageWellView extends NodeView {
+    
+    initPrototype () {
+        this.newSlots({
+            imageView: null,
+            isEditable: true,
+        })
+    }
+
+    init () {
+        super.init()
         this.setIsRegisteredForDrop(true)
         this.dragUnhighlight()
         this.turnOffUserSelect()
@@ -20,52 +25,51 @@ NodeView.newSubclassNamed("ImageWellView").newSlots({
         this.autoFitChildHeight()
         this.setMinHeightPx(100)
         //this.setTextAlign("center")
-
         return this
-    },
+    }
 
-    syncToNode: function () {
+    syncToNode  () {
         NodeView.syncToNode.apply(this)
         this.tellParentViews("didUpdateImageWellView", this)
         return this
-    },
+    }
 
     /*
-    syncFromNode: function() {
+    syncFromNode () {
         NodeView.syncFromNode.apply(this)
         this.valueView().setBackgroundColor("transparent")
         return this
-    },
+    }
     */
     
-    isEditable: function() {
+    isEditable () {
         // we need this to override the normal isContentEditable return value
         return this._isEditable
-    },
+    }
     
-    setIsEditable: function(aBool) {
+    setIsEditable (aBool) {
         this._isEditable = aBool
         assert(this.isEditable() === aBool)
         if (this.imageView()) {
             this.imageView().setIsEditable(aBool)
         }
         return this
-    },
+    }
     
-    dragHighlight: function() {
+    dragHighlight () {
         this.setBackgroundColor("#eee")
-    },
+    }
     
-    dragUnhighlight: function() {
+    dragUnhighlight () {
         this.setBackgroundColor("transparent")
-    },
+    }
     
-    isFull: function() {
+    isFull () {
         //console.log("this.imageView().dataURL()  = ", this.imageView().dataURL() )
         return this.subviews().length > 0
-    },
+    }
     
-    acceptsDrop: function(event) {
+    acceptsDrop (event) {
         /*
         if (!this.node()) {
             console.warn(this.typeId() + ".acceptsDrop() missing node")
@@ -80,18 +84,18 @@ NodeView.newSubclassNamed("ImageWellView").newSlots({
         console.log("\n")
         */
         return accepts        
-    },
+    }
 
-    setValue: function(aValue) {
+    setValue (aValue) {
         this.setImageDataURL(aValue)
         return this
-    },
+    }
 
-    value: function() {
+    value () {
         return this.imageDataURL()
-    },
+    }
     
-    setImageDataURL: function(dataURL) {
+    setImageDataURL (dataURL) {
         if (Type.isArray(dataURL)) {
             dataURL = dataURL[0]
         }
@@ -113,28 +117,28 @@ NodeView.newSubclassNamed("ImageWellView").newSlots({
             iv.autoFitParentWidth()
         }
         return this
-    },
+    }
     
-    imageDataURL: function() {
+    imageDataURL () {
         const iv = this.imageView()
         if (iv && iv.dataURL()) {
             return iv.dataURL()
         }
         return null
-    },
+    }
     
-    onDropImageDataUrl: function(dataURL) {
+    onDropImageDataUrl (dataURL) {
         this.setImageDataURL(dataURL)
         this.scheduleSyncToNode() //this.syncToNode()
         return this        
-    },
+    }
     
-    willRemoveSubview: function(aSubview) {
+    willRemoveSubview (aSubview) {
         NodeView.willRemoveSubview.apply(this, [aSubview])
         if (aSubview === this.imageView()) {
             this.setImageView(null)
         }
         return this
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

@@ -9,36 +9,41 @@
 
 */
         
-BMField.newSubclassNamed("BMPointerField").newSlots({
-}).setSlots({
-    init: function () {
-        BMField.init.apply(this)
+window.BMPointerField = class BMPointerField extends BMField {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
         this.setKeyIsEditable(false)
         this.setValueIsEditable(false)
         this.setKeyIsVisible(true)
         this.setValueIsVisible(true)
         this.setNodeRowIsSelectable(true)
-    },
+    }
 
-    setValue: function(v) {
+    setValue (v) {
         console.warn("WARNING: BMPointerField setValue '" + v + "'")
         return this
-    },
+    }
 
-    title: function() {
+    title () {
         return this.value().title()
-    },
+    }
 	
-    subtitle: function() {
+    subtitle () {
         return this.value().subtitle()
-    },
+    }
 	
-    note: function() {
+    note () {
         return this.value().note()
-    },
+    }
 	
-    nodeRowLink: function() {
+    nodeRowLink () {
         return this.value()
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

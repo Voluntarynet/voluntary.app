@@ -7,51 +7,54 @@
 
 */
 
-BMAppMessage.newSubclassNamed("BMChatMessage").newSlots({
-    content: "",
-}).setSlots({
+window.BMChatMessage = class BMChatMessage extends BMAppMessage {
     
-    init: function () {
-        BMAppMessage.init.apply(this)
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
         this.addStoredSlots(["content"])
         this.setCanDelete(true)
-    },	
+    }
 	
-    nodeRowLink: function() {
+    nodeRowLink () {
         return null
-    },
+    }
 	
-    title: function() {
+    title () {
 	    return this.content()
-    },
+    }
 	
-    wasSentByMe: function() {
+    wasSentByMe () {
         return this.senderId() === this.localIdentity()
-    },
+    }
 	
-    contentDict: function() {
+    contentDict () {
         const contentDict = {}
         contentDict.content = this.content()
         return contentDict
-    },
+    }
 	
-    setContentDict: function(contentDict) {
+    setContentDict (contentDict) {
         this.setContent(contentDict.content)
         //this.scheduleSyncToView()
         return this
-    },
+    }
 	
-    description: function() {
+    description () {
         return this.typeId() + "-" + this.hash() + "'" + this.content() + "'"
-    },
+    }
 
-    localIdentity: function() {
+    localIdentity () {
         return this.parentNodeOfType("BMLocalIdentity")
-    },
+    }
     
-    localIdentityIsSender: function() {
+    localIdentityIsSender () {
         return this.senderId().equals(this.localIdentity())
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()
 

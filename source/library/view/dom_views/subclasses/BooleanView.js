@@ -15,19 +15,24 @@
 
 */
 
-DomStyledView.newSubclassNamed("BooleanView").newSlots({
-    isSelected: false,
-    //selectedColor: null,
-    //unselectedColor: null,
-    doesClearOnReturn: false, // needed?
-    doesHoldFocusOnReturn: false, // needed?
-    value: false,
-    isEditable: false,
-    innerCheckView: null,
-    outerCheckView: null,
-}).setSlots({
-    init: function () {
-        DomView.init.apply(this)
+window.BooleanView = class BooleanView extends DomStyledView {
+    
+    initPrototype () {
+        this.newSlots({
+            isSelected: false,
+            //selectedColor: null,
+            //unselectedColor: null,
+            doesClearOnReturn: false, // needed?
+            doesHoldFocusOnReturn: false, // needed?
+            value: false,
+            isEditable: false,
+            innerCheckView: null,
+            outerCheckView: null,
+        })
+    }
+
+    init () {
+        super.init()
         //this.setDisplay("inline-block")
         this.turnOffUserSelect()
         this.setWhiteSpace("nowrap")
@@ -55,15 +60,15 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
         this.setIsEditable(this.isEditable())
 
         return this
-    },
+    }
 
-    checkboxSize: function() {
+    checkboxSize () {
         return 16
-    },
+    }
 
     // editable
     
-    setIsEditable: function(aBool) {        
+    setIsEditable (aBool) {        
         this._isEditable = aBool
         
         if (this._isEditable) {
@@ -76,22 +81,22 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
         this.updateAppearance()
         
         return this
-    },
+    }
     
-    toggle: function() {
+    toggle () {
         this.setValue(!this.value())
         this.didEdit()
         return this
-    },
+    }
     
-    activate: function() {
+    activate () {
         this.toggle()
         return this
-    },
+    }
     
     // ------------------
     
-    setValue: function(v) {
+    setValue (v) {
         if (Type.isNullOrUndefined(v)) {
             v = false;
         }
@@ -100,24 +105,24 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
 
         this.updateAppearance()
         return this
-    },	
+    }
 	
-    value: function() {
+    value () {
 	    return this._value
-    },
+    }
 	
-    isChecked: function() {
+    isChecked () {
 	    return this.value()
-    },
+    }
     
-    setBackgroundColor: function(s) {
+    setBackgroundColor (s) {
         // needed?
         return this
-    },
+    }
 	
     // svg icon
 
-    updateAppearance: function () {
+    updateAppearance  () {
         // sent by superview when it changes or syncs to a node
         // so we can update our appearance to match changes to the parent view's style
 
@@ -127,12 +132,12 @@ DomStyledView.newSubclassNamed("BooleanView").newSlots({
         this.innerCheckView().setFillColor(this.value() ? color : "transparent")
         
         return this
-    },
+    }
 
-    onTapComplete: function (aGesture) {
+    onTapComplete  (aGesture) {
         DomView.sendActionToTarget.apply(this)
         this.toggle()
         return false
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

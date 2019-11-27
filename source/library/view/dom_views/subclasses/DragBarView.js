@@ -6,20 +6,25 @@
 
 */
 
-DomView.newSubclassNamed("DragBarView").newSlots({
-    isEnabled: true,
-    isHighlighted: false,
-    isDragging: false,
-    normalColor: "#333",
-    highlightColor: "#555",
-    dragColor: "#999",
-    delegate: null,
-    thickness: 2,
-    isVerticalDrag: true,
-}).setSlots({
 
-    init: function () {
-        DomView.init.apply(this)
+window.DragBarView = class DragBarView extends DomView {
+    
+    initPrototype () {
+        this.newSlots({
+            isEnabled: true,
+            isHighlighted: false,
+            isDragging: false,
+            normalColor: "#333",
+            highlightColor: "#555",
+            dragColor: "#999",
+            delegate: null,
+            thickness: 2,
+            isVerticalDrag: true,
+        })
+    }
+
+    init () {
+        super.init()
 
         this.turnOffUserSelect()
 
@@ -41,57 +46,57 @@ DomView.newSubclassNamed("DragBarView").newSlots({
 
         this.setBackgroundColor(this.normalColor())
         return this
-    },
+    }
 
-    hoverCursorType: function() {
+    hoverCursorType () {
         if (this.isVerticalDrag()) {
             return "row-resize"
         }
 
         return "col-resize"
-    },
+    }
 
-    setIsVertical: function(aBool) {
+    setIsVertical (aBool) {
         if (this._isVertical !== aBool) {
             this._isVertical = aBool
             //console.log("this.hoverCursorType() = ", this.hoverCursorType())
             this.setCursor(this.hoverCursorType())
         }
         return this
-    },
+    }
 
     // --- editable ---
     
-    setIsEnabled: function(aBool) {
+    setIsEnabled (aBool) {
         if (this._isEnabled !== aBool) {
             this._isEnabled = aBool
             this.syncEnabled()
         }
 
         return this
-    },
+    }
 
-    syncEnabled: function() {
+    syncEnabled () {
         if (this.isEnabled()) {
             this.setDisplay("inline-block")
         } else {
             this.setDisplay("none")
         }
         return this
-    },
+    }
 
     // --- highlighted ---
     
-    setIsHighlighted: function(aBool) {
+    setIsHighlighted (aBool) {
         if (this._isHighlighted !== aBool) {
             this._isHighlighted = aBool
             this.syncHighlighted()
         }
 
         return this
-    },
+    }
 
-    syncHighlighted: function() {
+    syncHighlighted () {
         if (this.isDragging()) {
             return this
         }
@@ -104,32 +109,32 @@ DomView.newSubclassNamed("DragBarView").newSlots({
         this.syncCursor()
 
         return this
-    },
+    }
 
-    syncCursor: function() {
+    syncCursor () {
         if (this.isHighlighted()) {
             this.setCursor(this.hoverCursorType())
         } else {
             this.setCursor(null)
         }
         return this
-    },
+    }
 
     // --- mouse ---
 
-    mouseMoveTracker: function(event) {
+    mouseMoveTracker (event) {
         //console.log("mouse pos: ", event.clientX, " x ", event.clientY)
         if (this.delegate()) {
             this.delegate().didDragDivider(Math.floor(event.clientX), Math.floor(event.clientY))
         }
-    },
+    }
 
-    mouseUpTracker: function(event) {
+    mouseUpTracker (event) {
         //console.log("mouse pos: ", event.clientX, " x ", event.clientY)
         this.onMouseUp(event)
-    },
+    }
 
-    setIsDragging: function(b) {
+    setIsDragging (b) {
         this._isDragging = b;
         if (b) {
             this.setBackgroundColor(this.dragColor())
@@ -139,50 +144,50 @@ DomView.newSubclassNamed("DragBarView").newSlots({
             this.parentView().setBorder("0px dashed white")
         }
         return this
-    },
+    }
 
-    onMouseDown: function (event) {
+    onMouseDown  (event) {
         //this.debugLog(" onMouseDown")
         this.setIsDragging(true)
 
         this.removeParentTracking()
         return false
-    },
+    }
 
-    addParentTracking: function() {
+    addParentTracking () {
         const r = this.rootView()
         r.element().removeEventListener("mousemove", this._mouseMoveTrackerFunc, false);
         r.element().removeEventListener("mouseup", this._mouseUpTrackerFunc, false);
         return this
-    },
+    }
 
-    removeParentTracking: function() {
+    removeParentTracking () {
         const r = this.rootView()
         r.element().addEventListener("mousemove", this._mouseMoveTrackerFunc, false);
         r.element().addEventListener("mouseup", this._mouseUpTrackerFunc, false);
         return this
-    },
+    }
 
-    onMouseMove: function (event) {
+    onMouseMove  (event) {
         return false
-    },
+    }
 
-    onMouseOver: function(event) {
+    onMouseOver (event) {
         //this.debugLog(" onMouseOver")
         this.setIsHighlighted(true)
         return false
-    },
+    }
 
-    onMouseLeave: function(event) {
+    onMouseLeave (event) {
         //this.debugLog(" onMouseLeave")
         this.setIsHighlighted(false)
         return false
-    },
+    }
 
-    onMouseUp: function(event) {
+    onMouseUp (event) {
         this.setIsDragging(false)
         this.addParentTracking()
         return false
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

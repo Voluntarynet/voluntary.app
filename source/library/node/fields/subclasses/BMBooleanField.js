@@ -7,23 +7,28 @@
     
 */
 
-BMField.newSubclassNamed("BMBooleanField").newSlots({
-    unsetVisibleValue: "unset",
-}).setSlots({
-    init: function () {
-        BMField.init.apply(this)
+window.BMBooleanField = class BMBooleanField extends BMField {
+    
+    initPrototype () {
+        this.newSlots({
+            unsetVisibleValue: "unset",
+        })
+    }
+
+    init () {
+        super.init()
         this.setViewClassName("BMFieldRowView")
         this.setKeyIsEditable(false)
         this.setValueIsEditable(false)
         //this.setValue(false)
-    },
+    }
 
-    valueIsBool: function() {
+    valueIsBool () {
         const b = this.value()
         return Type.isBoolean(b);
-    },
+    }
 	
-    validate: function() {
+    validate () {
         const isValid = this.valueIsBool()
 		
         if (!isValid) {
@@ -33,16 +38,16 @@ BMField.newSubclassNamed("BMBooleanField").newSlots({
         } 
 		
         return isValid
-    },
+    }
 	
-    normalizeThisValue: function(v) {
+    normalizeThisValue (v) {
 	    if (v === true || v === "t" || v === "true" | v === 1) { return true; }
 	    return false
-    },
+    }
 	
-    didUpdateNode: function() {
+    didUpdateNode () {
         this.validate()
         return BMField.didUpdateNode.apply(this)
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

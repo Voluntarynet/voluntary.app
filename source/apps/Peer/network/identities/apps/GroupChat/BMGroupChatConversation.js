@@ -6,21 +6,26 @@
 
 */
 
-BMApplet.newSubclassNamed("BMGroupConversation").newSlots({
-    remoteIdentity: null,
-}).setSlots({
-    init: function () {
-        BMApplet.init.apply(this)
-        
-    },
+window.BMGroupConversation = class BMGroupConversation extends BMApplet {
+    
+    initPrototype () {
+        this.newSlots({
+            remoteIdentity: null,
+        })
+    }
 
-    title: function() {
+    init () {
+        super.init()
+        return this
+    } 
+
+    title () {
         this.remoteIdentity().title()
-    },
+    }
 
-    messages: function() {
+    messages () {
         return this.subnodes()
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()
 

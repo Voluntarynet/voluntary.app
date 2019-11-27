@@ -6,30 +6,34 @@
 
 */
 
-BMMessage.newSubclassNamed("BMGetDataMessage").newSlots({
-}).setSlots({
-    init: function () {
-        BMMessage.init.apply(this)
-        this.setMsgType("getData")
-        
-        this.setData([])
-    },
+window.BMGetDataMessage = class BMGetDataMessage extends BMMessage {
     
-    addHash: function(aHash) {
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
+        this.setMsgType("getData")
+        this.setData([])
+    }
+    
+    addHash (aHash) {
         this.data().push(aHash)
         return this
-    },
+    }
         
-    msgDict: function() {
+    msgDict () {
         return {
             msgType: this.msgType(),
             data: this.data()
         }
-    },
+    }
     
-    send: function() {
+    send () {
         this.remotePeer().sendMsg(this)
         return this
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

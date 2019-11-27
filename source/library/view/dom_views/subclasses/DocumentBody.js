@@ -6,10 +6,15 @@
 
 */
 
-DomView.newSubclassNamed("DocumentBody").newSlots({
-}).setSlots({
-    init: function () {
-        DomView.init.apply(this)
+window.DocumentBody = class DocumentBody extends DomView {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
 
         /*
         window.SyncScheduler.shared().scheduleTargetAndMethod(this, "autoAdjustZoomForMobile")
@@ -22,47 +27,47 @@ DomView.newSubclassNamed("DocumentBody").newSlots({
         // setup shared devices for later use
         Devices.shared().setupIfNeeded()
         return this
-    },
+    }
 
-    shared: function() {   
+    shared () {   
         return this.sharedInstanceForClass(DocumentBody)
-    },
+    }
     
-    setupElement: function() {
+    setupElement () {
         document.body._domView = this
         //this._element = document.body
         // get this from element override
         return this
-    },
+    }
     
-    element: function() {
+    element () {
         return document.body
-    },
+    }
     
-    zoomAdjustedWidth: function() {
+    zoomAdjustedWidth () {
         return WebBrowserWindow.shared().width() * this.zoomRatio()
-    },
+    }
     
-    zoomAdjustedHeight: function() {
+    zoomAdjustedHeight () {
         return WebBrowserWindow.shared().width() * this.zoomRatio()
-    },
+    }
     
-    zoomAdjustedSize: function() { // TODO: move to Point
+    zoomAdjustedSize () { // TODO: move to Point
         return { width: this.zoomAdjustedWidth(), height: this.zoomAdjustedHeight() }
-    },
+    }
 
-    allDomElements: function() {
+    allDomElements () {
         const domElements = this.element().getElementsByTagName("*");
         return domElements
-    },
+    }
 
-    viewsUnderPoint: function(aPoint) {
+    viewsUnderPoint (aPoint) {
         const elements = document.elementsFromPoint(aPoint.x(), aPoint.y())
         const views = elements.map(e => this.firstViewForElement(e)).nullsRemoved()
         return views
-    },
+    }
 
-    firstViewForElement: function(e) {
+    firstViewForElement (e) {
         // search up the dom element parents to find one
         // associated with a DomView instance 
 
@@ -75,15 +80,15 @@ DomView.newSubclassNamed("DocumentBody").newSlots({
         }
 
         return null
-    },
+    }
 
     /*
-    onDocumentResize: function() {
+    onDocumentResize () {
 	     window.SyncScheduler.shared().scheduleTargetAndMethod(this, "autoAdjustZoomForMobile")
         //this.autoAdjustZoomForMobile()
-    },
+    }
     
-    autoAdjustZoomForMobile: function() {
+    autoAdjustZoomForMobile () {
         const w = WebBrowserScreen.shared().width();
         const h = WebBrowserScreen.shared().height();
         
@@ -99,8 +104,8 @@ DomView.newSubclassNamed("DocumentBody").newSlots({
         
         //console.log("DocumentBody windowWidth: " + WebBrowserWindow.shared().width() + " zoom: " + this.zoom() )
         return this
-    },
+    }
     */
    
-}).initThisProto()
+}.initThisClass()
 

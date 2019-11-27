@@ -9,41 +9,46 @@
     
 */
         
-BMSummaryNode.newSubclassNamed("BMField").newSlots({
-    isVisible: true,
-    isEnabled: true,
 
-    // key
-    key: "key",
-    keyIsVisible: true,
-    keyIsEditable: false,
+window.BMField = class BMField extends BMSummaryNode {
+    
+    initPrototype () {
+        this.newSlots({
+            isVisible: true,
+            isEnabled: true,
+        
+            // key
+            key: "key",
+            keyIsVisible: true,
+            keyIsEditable: false,
+        
+            // value
+            value: null,
+            valueIsVisible: true,
+            valueIsEditable: true, 
+                
+            link: null,
+            ownsLink: null,
+            
+            // only visible in UI
+            valuePrefix: null,
+            valuePostfix: null,
+            
+            valueMethod: null,
+            noteMethod: null, // fetches note from a parent node method
+                
+            keyError: null,
+            valueError: null,
+            
+            target: null,
+        
+            //nodeSummaryShowsKey: false,
+            //nodeSummaryShowsValue: false,
+        })
+    }
 
-    // value
-    value: null,
-    valueIsVisible: true,
-    valueIsEditable: true, 
-		
-    link: null,
-    ownsLink: null,
-	
-    // only visible in UI
-    valuePrefix: null,
-    valuePostfix: null,
-	
-    valueMethod: null,
-    noteMethod: null, // fetches note from a parent node method
-		
-    keyError: null,
-    valueError: null,
-	
-    target: null,
-
-    //nodeSummaryShowsKey: false,
-    //nodeSummaryShowsValue: false,
-}).setSlots({
-
-    init: function () {
-        BMSummaryNode.init.apply(this)
+    init () {
+        super.init()
         this.setShouldStore(true)
 
         this.addStoredSlot("key")
@@ -66,14 +71,14 @@ BMSummaryNode.newSubclassNamed("BMField").newSlots({
         return this
     },  
 
-    initNodeInspector: function() {
+    initNodeInspector () {
         BMSummaryNode.initNodeInspector.apply(this)
         //this.addInspectorField(BMBooleanField.clone().setKey("Summary shows key").setValueMethod("nodeSummaryShowsKey").setValueIsEditable(true).setTarget(this))
         //this.addInspectorField(BMBooleanField.clone().setKey("Summary shows value").setValueMethod("nodeSummaryShowsValue").setValueIsEditable(true).setTarget(this))
         return this
-    },
+    }
 
-    shallowCopySlotnames: function() {
+    shallowCopySlotnames () {
         const names = BMSummaryNode.shallowCopySlotnames.apply(this)
         return names.appendItems([
             "key", "keyIsVisible", "keyIsEditable", 
@@ -81,31 +86,31 @@ BMSummaryNode.newSubclassNamed("BMField").newSlots({
             "valuePrefix", "valuePostfix",
             //"valueMethod", "target"
         ])
-    },
+    }
 
-    deepCopySlotnames: function() {
+    deepCopySlotnames () {
         const names = BMSummaryNode.deepCopySlotnames.apply(this)
         return names.appendItems([])
-    },
+    }
     
     /*
-    target: function() {
+    target () {
         if (this._target) {
             return this._target
         }
 		
         return this.parentNode()
-    },
+    }
     */
 
     /*
-    setKey: function(newValue) {
+    setKey (newValue) {
         this._key = newValue
         return this
-    },
+    }
     */
     
-    setValue: function(newValue) { // called by View on edit
+    setValue (newValue) { // called by View on edit
         const oldValue = this._value
         this.didUpdateSlot("value", oldValue, newValue)
         this._value = newValue
@@ -117,9 +122,9 @@ BMSummaryNode.newSubclassNamed("BMField").newSlots({
         this.didUpdateNode()
 
         return this
-    },
+    }
 
-    setValueOnTarget: function(v) { // called by View on edit
+    setValueOnTarget (v) { // called by View on edit
         //console.log("setValue '" + v + "'")
         const target = this.target()
         const setter = this.setterNameForSlot(this.valueMethod())
@@ -135,20 +140,20 @@ BMSummaryNode.newSubclassNamed("BMField").newSlots({
         }
 		
         return this
-    },
+    }
 	
-    normalizeThisValue: function(v) {
+    normalizeThisValue (v) {
 	    return v
-    },
+    }
 	
-    value: function() {
+    value () {
         if (this.target()) {
             this._value = this.getValueFromTarget()
         }
         return this._value
-    },
+    }
 
-    getValueFromTarget: function() {
+    getValueFromTarget () {
         const target = this.target()
         const slotName = this.valueMethod()
 
@@ -161,9 +166,9 @@ BMSummaryNode.newSubclassNamed("BMField").newSlots({
         }
 
         return null
-    },
+    }
 	
-    note: function() {
+    note () {
         const target = this.target()
         const slotName = this.noteMethod()
 
@@ -175,9 +180,9 @@ BMSummaryNode.newSubclassNamed("BMField").newSlots({
             }
         }
         return null
-    },
+    }
 	
-    didUpdateView: function(aFieldView) {
+    didUpdateView (aFieldView) {
         this.scheduleSyncToStore()
         
         let parentNode = this.parentNode()
@@ -190,35 +195,35 @@ BMSummaryNode.newSubclassNamed("BMField").newSlots({
         }
         
         return this
-    },
+    }
 	
-    visibleValue: function() {
+    visibleValue () {
         return this.value()
-    },
+    }
 
-    validate: function() {
+    validate () {
         // subclasses should override if needed
         return true
     },    
 	
-    nodeRowLink: function() {
+    nodeRowLink () {
         return null
-    },
+    }
 
-    summaryKey: function() {
+    summaryKey () {
         return this.key()
-    },
+    }
 
-    summaryValue: function() {
+    summaryValue () {
         return this.value()
-    },
+    }
 
-    summary: function() {
+    summary () {
         return BMSummaryNode.summary.apply(this)
-    },
+    }
 
     /*
-    summary: function() {
+    summary () {
         let parts = []
 
         if (this.nodeSummaryShowsKey()) {
@@ -233,17 +238,17 @@ BMSummaryNode.newSubclassNamed("BMField").newSlots({
     }
     */
 
-    setNodeSummaryShowsKey: function() {
-    },
+    setNodeSummaryShowsKey () {
+    }
 
-    setNodeSummaryShowsValue: function() {
-    },
+    setNodeSummaryShowsValue () {
+    }
     
-}).initThisProto()
+}.initThisClass()
 
 
 /*
-valueMethod: function() {
+valueMethod () {
     // defaults to key 
     if (this._valueMethod === null) {
         return this.key()

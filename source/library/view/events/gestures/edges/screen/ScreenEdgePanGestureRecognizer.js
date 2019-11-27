@@ -26,52 +26,57 @@
         
 */
 
-PanGestureRecognizer.newSubclassNamed("ScreenEdgePanGestureRecognizer").newSlots({
-    edgeName: null,
-    maxStartDistance: 15,
-}).setSlots({
-    init: function () {
-        PanGestureRecognizer.init.apply(this)
+window.ScreenEdgePanGestureRecognizer = class ScreenEdgePanGestureRecognizer extends PanGestureRecognizer {
+    
+    initPrototype () {
+        this.newSlots({
+            edgeName: null,
+            maxStartDistance: 15,
+        })
+    }
+
+    init () {
+        super.init()
         this.setListenerClasses(this.defaultListenerClasses()) 
         this.setMinDistToBegin(5)
         //this.setIsDebugging(true)
         return this
-    },
+    }
 
-    start: function() {
+    start () {
         this.startDocListeners() // only want to listen to the document
         return this
-    },
+    }
 
     // --- events --------------------------------------------------------------------
 
-    didFinish: function() {
+    didFinish () {
         GestureRecognizer.didFinish.apply(this)
         this.setIsPressing(false)
         //this.stopDocListeners()
         return this
-    },
+    }
 
-    isReadyToBegin: function() {
+    isReadyToBegin () {
         return this.hasOkFingerCount() &&
                 this.distanceFromEdge() <= this.maxStartDistance();
-    },
+    }
 
-    distanceFromEdge: function() {
+    distanceFromEdge () {
         const name = this.edgeName()
         assert(name)
         const d = this.currentEdgeDistances()[name]
         assertDefined(d)
         return d
-    },
+    }
 
     // -------------
 
-    maxEdgeDistance: function() {
+    maxEdgeDistance () {
         return 100000
-    },
+    }
 
-    currentEdgeDistances: function() {
+    currentEdgeDistances () {
         const max = this.maxEdgeDistance()
         const points = this.allPoints()
         return {
@@ -80,6 +85,6 @@ PanGestureRecognizer.newSubclassNamed("ScreenEdgePanGestureRecognizer").newSlots
             left:   points.minValue(p => p.distFromLeftOfViewport(),   max),
             right:  points.minValue(p => p.distFromRightOfViewport(),  max)
         }
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

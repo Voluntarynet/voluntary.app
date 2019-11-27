@@ -6,17 +6,22 @@
 
 */
 
-BMStorableNode.newSubclassNamed("BMThemeClass").newSlots({
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
+window.BMThemeClass = class BMThemeClass extends BMStorableNode {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
         this.setShouldStore(true)
         //this.setSubtitle("class")
         this.setNodeMinWidth(200)
         this.setupSubnodes()
-    },
+    }
 
-    setupSubnodes: function() {
+    setupSubnodes () {
         const classProto = window[this.title()]
         //let stateNames = classProto.stateNames()
         const stateNames = ["active", "inactive", "disabled"]
@@ -25,7 +30,6 @@ BMStorableNode.newSubclassNamed("BMThemeClass").newSlots({
         })
         this.setSubnodes(stateNodes);
         return this
-    },
+    }
 
-
-}).initThisProto()
+}.initThisClass()

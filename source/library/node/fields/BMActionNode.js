@@ -8,26 +8,31 @@
     the value is the action method name, the target is the field owner.
 
 */
-        
-BMStorableNode.newSubclassNamed("BMActionNode").newSlots({
-    target: null,
-    methodName: null,
-    info: null,
-    isEnabled: true,
-    isEditable: false,
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
+
+window.BMActionNode = class BMActionNode extends BMStorableNode {
+    
+    initPrototype () {
+        this.newSlots({
+            target: null,
+            methodName: null,
+            info: null,
+            isEnabled: true,
+            isEditable: false,
+        })
+    }
+
+    init () {
+        super.init()
         this.setShouldStore(true)
         this.addStoredSlots(["title", "methodName", "info", "isEnabled", "isEditable"])
         this.setNodeRowIsSelectable(true)
-    },
+    }
 
-    setTitle: function(s) {
+    setTitle (s) {
         return BMStorableNode.setTitle.apply(this, [s])
-    },
+    }
 
-    initNodeInspector: function() {
+    initNodeInspector () {
         BMStorableNode.initNodeInspector.apply(this)
         const titleField = BMField.clone().setKey("title").setValueMethod("title").setValueIsEditable(true).setTarget(this)
         this.nodeInspector().addSubnode(titleField)
@@ -35,15 +40,15 @@ BMStorableNode.newSubclassNamed("BMActionNode").newSlots({
         // enabled
         // shows title
         
-    },
+    }
 
-    canDoAction: function() {
+    canDoAction () {
         const t = this.target()
         const m = this.methodName()
         return t && t[m]
-    },
+    }
 
-    doAction: function() {
+    doAction () {
         if (this.canDoAction()) {
             const func = this.target()[this.methodName()]
             
@@ -58,6 +63,6 @@ BMStorableNode.newSubclassNamed("BMActionNode").newSlots({
         }
 	    
 	    return this
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

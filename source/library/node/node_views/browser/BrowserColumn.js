@@ -6,17 +6,22 @@
 
 */
 
-NodeView.newSubclassNamed("BrowserColumn").newSlots({
-    rows: null,
-    allowsCursorNavigation: true,
-    defaultRowStyles: null,
-    rowStyles: null,
-    //shouldDarkenUnselected: true,
-    rowPlaceHolder: null,
-    hasPausedSync: false,
-}).setSlots({
-    init: function () {
-        NodeView.init.apply(this)
+window.BrowserColumn = class BrowserColumn extends NodeView {
+    
+    initPrototype () {
+        this.newSlots({
+            rows: null,
+            allowsCursorNavigation: true,
+            defaultRowStyles: null,
+            rowStyles: null,
+            //shouldDarkenUnselected: true,
+            rowPlaceHolder: null,
+            hasPausedSync: false,
+        })
+    }
+
+    init () {
+        super.init()
         //this.setIsDebugging(true)
         this.setIsRegisteredForKeyboard(true)
         //this.styles().selected().setBorderLeft("1px solid rgba(0, 0, 0, 0.15)")
@@ -35,76 +40,76 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         this.setIsRegisteredForDrop(true)
 
         return this
-    },
+    }
 
-    setRowBackgroundColor: function(aColor) {
+    setRowBackgroundColor (aColor) {
         this.rowStyles().unselected().setBackgroundColor(aColor)
         return this
-    },
+    }
 
-    setRowSelectionColor: function(aColor) {
+    setRowSelectionColor (aColor) {
         this.rowStyles().selected().setBackgroundColor(aColor)
         return this
-    },
+    }
 
-    applyStyles: function() {
+    applyStyles () {
         //this.debugLog(".applyStyles()")
         NodeView.applyStyles.apply(this)
         return this
-    },
+    }
     
-    title: function() {
+    title () {
         return this.node() ? this.node().title() : ""
-    },
+    }
 
-    browser: function() {
+    browser () {
         return this.columnGroup().browser()
-    },
+    }
     
-    columnGroup: function () {
+    columnGroup  () {
         return this.parentView().parentView()
-    },
+    }
     
     // subviews
 
     /*
-    hasRow: function(aRow) {
+    hasRow (aRow) {
         return this.hasSubview(aRow)
-    },
+    }
     */
 
-    willAddSubview: function (aSubview) {
+    willAddSubview  (aSubview) {
         // for subclasses to over-ride
         //if(!this.hasRow(aSubview)) {
         //console.warn("")
         //}
-    },
+    }
 
-    willRemoveSubview: function (aSubview) {
+    willRemoveSubview  (aSubview) {
         // for subclasses to over-ride
         //if(!this.hasRow(aSubview)) {
         //console.warn("")
         //}
-    },
+    }
 
     // --- rows ---
     
-    rows: function() {
+    rows () {
         return this.subviews()
-    },
+    }
 
-    addRow: function(v) {
+    addRow (v) {
         return this.addSubview(v)
-    },
+    }
 
-    removeRow: function(v) {
+    removeRow (v) {
         return this.removeSubview(v)
-    },
+    }
 
 
     // selection
 	
-    didChangeIsSelected: function() {
+    didChangeIsSelected () {
         NodeView.didChangeIsSelected.apply(this)
 
         if (this.isSelected()) {
@@ -114,9 +119,9 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         }
 		
         return this
-    },
+    }
 
-    darkenUnselectedRows: function() {
+    darkenUnselectedRows () {
         const darkenOpacity = 0.5
         this.rows().forEach((row) => {
             if (row.isSelected()) {
@@ -126,28 +131,28 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             }
         })
         return this
-    },
+    }
 
-    undarkenAllRows: function() {
+    undarkenAllRows () {
         this.rows().forEach((row) => {
             row.setOpacity(1)
         })
-    },
+    }
 
-    rowWithNode: function(aNode) {
+    rowWithNode (aNode) {
         return this.rows().detect(row => row.node() === aNode)
-    },
+    }
     
-    didClickRowWithNode: function(aNode) {
+    didClickRowWithNode (aNode) {
         const row = this.rowWithNode(aNode)
         if (!row) {
             throw new Error("column  missing row for node '" + aNode.title() + "'")
         }
         this.didClickRow(row)
         return this
-    },
+    }
     
-    unselectRowsBesides: function(selectedRow) {
+    unselectRowsBesides (selectedRow) {
         const rows = this.rows()
 
         // unselect all other rows
@@ -162,14 +167,14 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         })
         
         return this
-    },
+    }
     
-    requestSelectionOfRow: function(aRow) {
+    requestSelectionOfRow (aRow) {
         this.didClickRow(aRow)
         return true
-    },
+    }
     
-    didClickRow: function(clickedRow) {
+    didClickRow (clickedRow) {
         this.unselectRowsBesides(clickedRow)
 
         /*
@@ -192,9 +197,9 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         
         this.selectThisColumn()
         return true
-    },
+    }
 
-    selectThisColumn: function() {
+    selectThisColumn () {
         if (Type.isNull(this.browser())) {
             this.debugLog(" selectThisColumn WARNING: this.browser() === null" )
             // TODO: find out why this happens
@@ -202,12 +207,12 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         }
         this.browser().selectColumn(this)
         return this
-    },
+    }
     
-    rowRequestsAddColumnForNode: function(aNode) {
-    },
+    rowRequestsAddColumnForNode (aNode) {
+    }
   
-    selectedRows: function() {
+    selectedRows () {
         return this.rows().filter((row) => { 
             if (!row.isSelected) {
                 //console.warn("=WARNING= " + this.typeId() + ".selectedRows() row " + row.typeId() + " missing isSelected method")
@@ -215,22 +220,22 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             }
             return row.isSelected(); 
         })
-    },
+    }
 
-    selectedRow: function() {
+    selectedRow () {
         return this.selectedRows()[0]
-    },
+    }
     
-    selectedNode: function() {
+    selectedNode () {
         const row = this.selectedRow()
         return row ? row.node() : null
-    },
+    }
     
-    selectedRowIndex: function() {
+    selectedRowIndex () {
         return this.rows().indexOf(this.selectedRow())
-    },
+    }
     
-    setSelectedRowIndex: function(index) {
+    setSelectedRowIndex (index) {
         const oldIndex = this.selectedRowIndex()
         //console.log("this.setSelectedRowIndex(" + index + ") oldIndex=", oldIndex)
         if (index !== oldIndex) {
@@ -242,26 +247,26 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             }
         }
         return this
-    },
+    }
   
-    indexOfRowWithNode: function (aNode) {
+    indexOfRowWithNode  (aNode) {
         return this.rows().detectIndex(row => row.node() === aNode)
-    },
+    }
     
-    clickRowWithNode: function(aNode) {
+    clickRowWithNode (aNode) {
         const index = this.indexOfRowWithNode(aNode);
         if (index !== null) {
             this.setSelectedRowIndex(index)
         }
         return this
-    },
+    }
 
-    unselectAllRows: function() {
+    unselectAllRows () {
         this.rows().forEach(row => { if (row.unselect) { row.unselect()} })
         return this
-    },
+    }
 	
-    selectRowWithNode: function (aNode) {
+    selectRowWithNode  (aNode) {
         const selectedRow = this.rows().detect(row => row.node() === aNode)
 		
         if (selectedRow) {
@@ -275,19 +280,19 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         }
 
         return selectedRow
-    },
+    }
     
-    selectedRowTitle: function () {
+    selectedRowTitle  () {
         const row = this.selectedRow()
         if (row) { 
             return row.title().innerHTML() 
         }
         return null
-    },
+    }
 
     // --- sync -----------------------------
 
-    subviewProtoForSubnode: function(aSubnode) {
+    subviewProtoForSubnode (aSubnode) {
         let proto = aSubnode.nodeRowViewClass()
 		
         if (!proto) {
@@ -295,18 +300,18 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         }
 				
         return proto      
-    },
+    }
 
-    setNode: function(aNode) {
+    setNode (aNode) {
         if (this.node() !== aNode) {
             NodeView.setNode.apply(this, [aNode])
             this.unselectAllRows() // move to didChangeNode
             //"shouldFocusSubnode"
         }
         return this
-    },
+    }
 	
-    shouldFocusSubnode: function(aNote) {
+    shouldFocusSubnode (aNote) {
 	    const subnode = aNote.info()
 	    this.clickRowWithNode(subnode)
 
@@ -333,17 +338,17 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
 	    }
 
 	    return this 
-    },
+    }
 	
-    scrollToSubnode: function(aSubnode) {
+    scrollToSubnode (aSubnode) {
 	    //this.debugLog(".scrollToSubnode")
 	    const subview = this.subviewForNode(aSubnode)
 	    assert(subview)
 	    this.columnGroup().scrollView().setScrollTop(subview.offsetTop())
 	    return this 	    
-    },
+    }
     
-    scrollToBottom: function() {
+    scrollToBottom () {
         const last = this.rows().last()
 
         if (last) { 
@@ -351,9 +356,9 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         }
 
         return this
-    },
+    }
 
-    didChangeNode: function() {
+    didChangeNode () {
         NodeView.didChangeNode.apply(this)
 
         if (this.node() && this.node().nodeRowsStartAtBottom()) {
@@ -362,10 +367,10 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         }
 
         return this
-    },
+    }
     
     /*
-    scheduleSyncFromNode: function() {
+    scheduleSyncFromNode () {
         if (this.browser() === null || this.node() === null) {
             console.warn("WARNING: skipping BrowserColumn.scheduleSyncFromNode")
             console.warn("  this.browser() = " , this.browser())
@@ -374,10 +379,10 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         }	    
 	    NodeView.scheduleSyncFromNode.apply(this)
 	    return this
-    },
+    }
     */
 	
-    syncFromNode: function () {
+    syncFromNode  () {
         if (this.hasPausedSync()) {
             return this
         }
@@ -428,16 +433,16 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
                 }
             }
         }
-    },
+    }
 
     // --- keyboard controls, arrow navigation -----------------------------
 
-    canNavigate: function() {
+    canNavigate () {
         return this.allowsCursorNavigation() 
         //return this.allowsCursorNavigation() && this.isActiveElement()
-    },
+    }
 	
-    showSelected: function() {
+    showSelected () {
         /*
         TODO: add check if visible
         if (this.selectedRow()) {
@@ -445,16 +450,16 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         }
         */
         return this	    
-    },
+    }
 
-    //onMetaLeft_d_KeyUp: function(event) {
-    onAlternate_d_KeyUp: function(event) {
+    //onMetaLeft_d_KeyUp (event) {
+    onAlternate_d_KeyUp (event) {
         //this.debugLog(" onMetaLeft_d_KeyUp")
         this.duplicateSelectedRow()
         return false // stop propogation
-    },
+    }
 
-    isInspecting: function() {
+    isInspecting () {
         // see if the row that selected this column is being inspected
         const prev = this.previousColumn() 
         if (prev) {
@@ -464,10 +469,10 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             }
         }
         return false
-    },
+    }
 
     /*
-    onControl_i_KeyUp: function(event) {
+    onControl_i_KeyUp (event) {
         // forward method to selected row and resync next column 
         this.debugLog(".onControl_i_KeyUp()")
 
@@ -480,10 +485,10 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             }
             return result
         }
-    },
+    }
     */
 
-    duplicateSelectedRow: function() {
+    duplicateSelectedRow () {
         const node = this.node()
         const row = this.selectedRow()
         const canAdd = node.canSelfAddSubnode() 
@@ -499,35 +504,35 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
                 this.scheduleSyncFromNode()
             }
         }
-    },
+    }
 
-    onControl_c_KeyUp: function(event) {
+    onControl_c_KeyUp (event) {
         // copy?
-    },
+    }
 
-    onControl_p_KeyUp: function(event) {
+    onControl_p_KeyUp (event) {
         // paste?
-    },
+    }
 	
-    onUpArrowKeyUp: function(event) {
+    onUpArrowKeyUp (event) {
         if (!this.canNavigate()) { 
             return 
         }
         this.selectPreviousRow()
         this.showSelected()
         return false
-    },
+    }
 	
-    onDownArrowKeyUp: function(event) {
+    onDownArrowKeyUp (event) {
         if (!this.canNavigate()) { 
             return 
         }
         this.selectNextRow()
         this.showSelected()
         return false
-    },
+    }
 
-    moveLeft: function() {
+    moveLeft () {
         const pc = this.previousColumn()	
         if (pc) {
             if (this.selectedRow()) { 
@@ -540,35 +545,35 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         	this.selectPreviousColumn()
         }
         return this
-    },
+    }
 
-    moveRight: function() {
+    moveRight () {
         if (this.nextColumn() && this.nextColumn().rows().length > 0) {
         	this.selectNextColumn()
         }
 
         return this
-    },
+    }
 	
-    onLeftArrowKeyUp: function(event) {
+    onLeftArrowKeyUp (event) {
         if (!this.canNavigate()) { 
             return this
         }	
 
         this.moveLeft()
-    },
+    }
 	
-    onRightArrowKeyUp: function(event) {
+    onRightArrowKeyUp (event) {
         if (!this.canNavigate()) { 
             return this
         }	
 
         this.moveRight()
-    },	
+    }
 	
     // --- enter key begins row editing ---------------------------
 	
-    onEnterKeyUp: function(event) {
+    onEnterKeyUp (event) {
         //this.debugLog(".onEnterKeyUp()")
         
         if (!this.canNavigate()) { return }
@@ -579,12 +584,12 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         }
 
         return false
-    },
+    }
 
     // --- keyboard controls, add and delete actions -----------------------------
 
     /*
-    deleteSelectedRow: function() {
+    deleteSelectedRow () {
         let sNode = this.selectedNode()
         if (sNode && sNode.canDelete()) { 
 			sNode.performAction("delete") 
@@ -592,16 +597,16 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
 				this.selectPreviousColumn()
 			}
 		}
-    },
+    }
     */
 
-    onDeleteKeyUp: function(event) {
+    onDeleteKeyUp (event) {
         if (!this.canNavigate()) { return }
         //this.deleteSelectedRow()
         return false
-    },
+    }
 	
-    onPlusKeyUp: function(event) {
+    onPlusKeyUp (event) {
         if (!this.canNavigate()) { return }		
 
         const sNode = this.selectedNode()
@@ -613,11 +618,11 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             }
         }
         return false		
-    },
+    }
 	
     // -----------------------------
     
-    onTapComplete: function(aGesture) {
+    onTapComplete (aGesture) {
         //this.debugLog(".onTapComplete()")
         if (this.node()) {
             // add a subnode if tapping on empty area
@@ -631,38 +636,38 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             }
         }
         return this
-    },
+    }
 
     // -----------------------------
 
-    columnIndex: function() {
+    columnIndex () {
         return this.browser().columnGroups().indexOf(this.columnGroup())
-    },
+    }
 
     // nextRow
 
-    selectFirstRow: function() {
+    selectFirstRow () {
         this.setSelectedRowIndex(0)
         return this
-    },
+    }
 
-    firstRow: function() {
+    firstRow () {
         if (this.rows().length > 0) {
             return this.rows()[0]
         }
         return null
-    },
+    }
 
-    nextRow: function() {
+    nextRow () {
         const si = this.selectedRowIndex()
         if (si !== -1 && si < this.rows().length) {
             const nextRow = this.rows()[si +1]
             return nextRow
         }
         return null
-    },
+    }
 
-    selectNextRow: function() {
+    selectNextRow () {
         const si = this.selectedRowIndex()
         if (si === -1) {
             this.setSelectedRowIndex(0)
@@ -670,9 +675,9 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             this.setSelectedRowIndex(si + 1)
         }
         return this
-    },
+    }
     
-    selectPreviousRow: function() {
+    selectPreviousRow () {
         const si = this.selectedRowIndex()
         if (si === -1) {
             this.setSelectedRowIndex(0)
@@ -680,17 +685,17 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             this.setSelectedRowIndex(si - 1)
         }
         return this
-    },
+    }
 
     // next column
     
-    nextColumn: function() {
+    nextColumn () {
         const i = this.columnIndex()
         const nextColumn = this.browser().columns()[i+1]
         return nextColumn
-    },
+    }
 
-    focus: function() {
+    focus () {
         NodeView.focus.apply(this)
 		
 	    if (this.selectedRowIndex() === -1) {
@@ -699,9 +704,9 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
 
         //this.debugLog(" focus")
         return this
-    },
+    }
     
-    selectNextColumn: function() {
+    selectNextColumn () {
         const nextColumn = this.nextColumn()
         if (nextColumn) {
             this.blur()
@@ -709,20 +714,20 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             nextColumn.focus()
         }
         return this
-    },
+    }
     
     // previous column
 	
-    previousColumn: function() {
+    previousColumn () {
         if(!this.browser()) {
             return null
         }
         const i = this.columnIndex()
         const previousColumn = this.browser().columns()[i - 1]
         return previousColumn
-    },
+    }
 
-    selectPreviousColumn: function() {
+    selectPreviousColumn () {
         //this.log("selectPreviousColumn this.columnIndex() = " + this.columnIndex())
         const prevColumn = this.previousColumn()
         if (prevColumn) {
@@ -731,43 +736,43 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             this.browser().selectColumn(prevColumn)
         }
         return this
-    },
+    }
 
     // paths
     
     /*
-    browserPathArray: function() {
+    browserPathArray () {
         let subviews = this.browser().columns().subviewsBefore(this)
         subviews.push(this)
         return subviews
-    },
+    }
     
-    browserPathString: function() {
+    browserPathString () {
         return this.browserPathArray().map(function (column) { 
             return column.title()  // + ":" + column.node().type()
         }).join("/")
-    },
+    }
     */
 
-    logName: function() {
+    logName () {
         return this.browserPathString()
-    },
+    }
 
-    maxRowWidth: function() {
+    maxRowWidth () {
         const maxWidth = this.rows().maxValue((row) => row.calcWidth())			
         return maxWidth	
-    },
+    }
 
     // editing
 
-    onDoubleClick: function (event) {
+    onDoubleClick  (event) {
         //this.debugLog(".onDoubleClick()")
         return true
-    },
+    }
 
     // reordering support
 
-    absolutePositionRows: function() {
+    absolutePositionRows () {
         const ys = []
         this.rows().forEach((row) => {
             const y = row.relativePos().y()
@@ -789,11 +794,11 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         })
         
         return this
-    },
+    }
 
 
     /*
-    orderRows: function() {
+    orderRows () {
         const orderedRows = this.rows().shallowCopy().sortPerform("top")
 
         this.rows().forEach((row) => {
@@ -804,12 +809,12 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         this.removeAllSubviews()
         this.addSubviews(orderedRows)
         return this
-    },
+    }
     */
 
     // -- stacking rows ---
 
-    stackRows: function() {
+    stackRows () {
         // we don't need to order rows not for 1st call of stackRows, 
         // but we do when calling stackRows while moving a drop view around,
         // so just always do it as top is null, and rows are already ordered the 1st time
@@ -841,9 +846,9 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         })
 
         return this
-    },
+    }
 
-    unstackRows: function() {
+    unstackRows () {
         // should we calc a new subview ordering based on sorting by top values?
         const orderedRows = this.rows().shallowCopy().sortPerform("top")
 
@@ -864,31 +869,31 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         this.removeAllSubviews()
         this.addSubviews(orderedRows)
         return this
-    },
+    }
 
     // --------------
 
-    canReorderRows: function() {
+    canReorderRows () {
         return this.node().nodeCanReorderSubnodes()
-    },
+    }
 
-    didReorderRows: function() { 
+    didReorderRows () { 
         // TODO: make a more scaleable API
         const subnodes = this.rows().map(row => row.node())
         this.node().nodeReorderSudnodesTo(subnodes)
         return this
-    },
+    }
 
     // pinch
 
-    rowContainingPoint: function(aPoint) {
+    rowContainingPoint (aPoint) {
         return this.rows().detect((row) => {
             return row.frameInDocument().containsPoint(aPoint)
         })
-    },
+    }
 
 
-    onPinchBegin: function(aGesture) {
+    onPinchBegin (aGesture) {
         // TODO: move row specific code to BrowserRow
 
         //this.debugLog(".onPinchBegin()")
@@ -937,9 +942,9 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
 
             aGesture.cancel()
         }        
-    },
+    }
     
-    onPinchMove: function(aGesture) {
+    onPinchMove (aGesture) {
         if (this._temporaryPinchSubnode) {
             let s = Math.floor(aGesture.spreadY())
             if (s < 0) {
@@ -972,9 +977,9 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             console.warn(this.typeId() + ".onPinchMove() missing this._temporaryPinchSubnode")
         }
         // do we need to restack views?
-    },
+    }
 
-    onPinchComplete: function(aGesture) {
+    onPinchComplete (aGesture) {
         //this.debugLog(".onPinchCompleted()")
         // if pinch is tall enough, keep new row
 
@@ -994,17 +999,17 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
 
             this._temporaryPinchSubnode = null
         }
-    },
+    }
 
-    onPinchCancelled: function(aGesture) {
+    onPinchCancelled (aGesture) {
         //this.debugLog(".onPinchCancelled()")
         if (this._temporaryPinchSubnode) {
             this.node().removeSubnode(this._temporaryPinchSubnode)
             this._temporaryPinchSubnode = null
         }
-    },
+    }
 
-    selectNextKeyView: function() {
+    selectNextKeyView () {
         const nextRow = this.nextRow()
         if (nextRow) {
             this.selectNextRow()
@@ -1017,11 +1022,11 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             }
         }
         return this
-    },
+    }
 
     // -- messages sent by DragView to the parent/owner of the view it's dragging ---
 
-    onDragSourceBegin: function(aDragView) {
+    onDragSourceBegin (aDragView) {
         this.setHasPausedSync(true)
 
         const subview = aDragView.item()
@@ -1032,41 +1037,41 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         this.columnGroup().cache() // only needed for source column, since we might navigate while dragging
         this.stackRows()
         return this
-    },
+    }
 
-    onDragSourceCancelled: function(aDragView) {
+    onDragSourceCancelled (aDragView) {
         aDragView.item().unhideForDrag()
         this.removeRowPlaceHolder()
-    },
+    }
 
-    onDragSourceEnter: function(dragView) {
+    onDragSourceEnter (dragView) {
         this.onDragDestinationHover(dragView)
-    },
+    }
 
-    onDragSourceHover: function(dragView) {
+    onDragSourceHover (dragView) {
         this.onDragDestinationHover(dragView)
-    },
+    }
 
-    onDragSourceExit: function(dragView) {
+    onDragSourceExit (dragView) {
         this.onDragDestinationHover(dragView)
-    },
+    }
 
-    onDragSourceDropped: function(dragView) {
+    onDragSourceDropped (dragView) {
         const dv = dragView.item()
         this.unstackRows()
         this.swapSubviews(dv, this.rowPlaceHolder())
         this.removeRowPlaceHolder()
         dv.unhideForDrag()
-    },
+    }
 
-    onDragSourceEnd: function(aDragView) {
+    onDragSourceEnd (aDragView) {
         this.columnGroup().scheduleMethod("uncache")
         this.endDropMode()
-    },
+    }
 
     // -- messages sent by DragView to the potential drop view, if not the source ---
 
-    acceptsDropHover: function(aDragView) {
+    acceptsDropHover (aDragView) {
         const node = this.node()
         if (node) {
             if (!aDragView) {
@@ -1086,9 +1091,9 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             return result
         }
         return false
-    },
+    }
 
-    newRowPlaceHolder: function() {
+    newRowPlaceHolder () {
         this.debugLog("newRowPlaceHolder")
         if (!this.rowPlaceHolder()) {
             const ph = DomView.clone().setDivClassName("BrowserRowPlaceHolder")
@@ -1102,11 +1107,11 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             this.setRowPlaceHolder(ph)
         }
         return this.rowPlaceHolder()
-    },
+    }
 
     // --- drag destination ---
 
-    onDragDestinationEnter: function(dragView) {
+    onDragDestinationEnter (dragView) {
         this.setHasPausedSync(true)
 
         // insert place holder view
@@ -1115,9 +1120,9 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             this.rowPlaceHolder().setMinAndMaxHeight(dragView.computedHeight())
             this.onDragDestinationHover(dragView)
         }
-    },
+    }
 
-    onDragDestinationHover: function(dragView) {
+    onDragDestinationHover (dragView) {
         // move place holder view
         const ph = this.rowPlaceHolder()
         if (ph) {
@@ -1126,25 +1131,25 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             ph.setTop(vp.y() - dragView.computedHeight()/2)
             this.stackRows() // need to use this so we can animate the row movements
         }
-    },
+    }
     
-    onDragDestinationExit: function(dragView) {
+    onDragDestinationExit (dragView) {
         this.endDropMode()
-    },
+    }
 
-    onDragDestinationEnd: function(aDragView) {
+    onDragDestinationEnd (aDragView) {
         this.endDropMode()
-    },
+    }
 
-    acceptsDropHoverComplete: function(aDragView) {
+    acceptsDropHoverComplete (aDragView) {
         return this.acceptsDropHover(aDragView);
-    },
+    }
 
-    dropCompleteDocumentFrame: function() {
+    dropCompleteDocumentFrame () {
         return this.rowPlaceHolder().frameInDocument()
-    },
+    }
 
-    onDragDestinationDropped: function(dragView) {
+    onDragDestinationDropped (dragView) {
         this.unstackRows()
  
         const itemView = dragView.item()
@@ -1157,12 +1162,12 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         this.setHasPausedSync(false)
         this.syncFromNode()
         //this.endDropMode() // we already unstacked the rows
-    },
+    }
 
     /*
     // version that works with views instead of nodes
 
-    onDragDestinationDropped: function(dragView) {
+    onDragDestinationDropped (dragView) {
         const dv = dragView.item()
 
         this.unstackRows()
@@ -1185,10 +1190,10 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
 
         this.endDropMode()
         assert(dv.hasParentView())
-    },
+    }
     */
 
-    removeRowPlaceHolder: function() {
+    removeRowPlaceHolder () {
         this.debugLog("removeRowPlaceHolder")
 
         const ph = this.rowPlaceHolder()
@@ -1197,9 +1202,9 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
             this.removeSubview(ph)
             this.setRowPlaceHolder(null)
         }
-    },
+    }
 
-    animateRemoveRowPlaceHolderAndThen: function(callback) {
+    animateRemoveRowPlaceHolderAndThen (callback) {
         this.debugLog("animateRemoveRowPlaceHolder")
 
         const ph = this.rowPlaceHolder()
@@ -1212,9 +1217,9 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         } else {
             if (callback) { callback() }
         }
-    },
+    }
 
-    endDropMode: function() {
+    endDropMode () {
         this.debugLog("endDropMode")
         this.unstackRows()
         this.removeRowPlaceHolder()
@@ -1232,10 +1237,10 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         */
 
         return this
-    },
+    }
 
     /*
-    rowIndexForViewportPoint: function(aPoint) {
+    rowIndexForViewportPoint (aPoint) {
         if (this.rows().length === 0) {
             return 0
         }
@@ -1249,16 +1254,16 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         }
 
         return this.rows().length
-    },
+    }
     */
 
     // Browser drop from desktop
 
-    acceptsDrop: function () {
+    acceptsDrop  () {
         return true
-    },
+    }
 
-    onDrop: function (event) {
+    onDrop  (event) {
         // triggered on drop target
         if (this.acceptsDrop()) {
             //const file = event.dataTransfer.files[0];
@@ -1282,7 +1287,7 @@ NodeView.newSubclassNamed("BrowserColumn").newSlots({
         event.preventDefault();
 
         return false
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()
 

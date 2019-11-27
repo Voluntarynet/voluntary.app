@@ -6,23 +6,27 @@
 
 */
 
-BMContactLinks.newSubclassNamed("BMChatThreads").newSlots({
-}).setSlots({
-    init: function () {
-        BMContactLinks.init.apply(this)
+window.BMChatThreads = class BMChatThreads extends BMContactLinks {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
         this.setLinkProto(BMChatThread)
         //this.setNodeColumnBackgroundColor("white")
-		
-    },
+    }
 
-    finalize: function() {
+    finalize () {
         BMContactLinks.finalize.apply(this)
         this.setTitle("direct messages")
-    },
+    }
 	
-    shelfIconName: function() {
+    shelfIconName () {
         return "chat/direct_messages"
 	    //return "mail-white"
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

@@ -6,10 +6,15 @@
 
 */
 
-BMStorableNode.newSubclassNamed("BMTheme").newSlots({
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
+window.BMTheme = class BMTheme extends BMStorableNode {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
         this.setShouldStore(true)
 
         this.setNodeCanEditTitle(true)
@@ -22,14 +27,14 @@ BMStorableNode.newSubclassNamed("BMTheme").newSlots({
         setTimeout(() => { 
             //console.log("theme as json: ", JSON.stringify(this.asJSON())) 
         }, 1000)
-    },
+    }
 
-    loadFinalize: function() {
+    loadFinalize () {
         // called after all objects loaded within this event cycle
         this.setupSubnodes()
-    },
+    }
 
-    setupSubnodes: function() {
+    setupSubnodes () {
         // setup with all view classes
         
         let viewClasses = DomView.allDescendantProtos()
@@ -45,6 +50,6 @@ BMStorableNode.newSubclassNamed("BMTheme").newSlots({
 
         this.setSubnodes(themeClasses);
         return this
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

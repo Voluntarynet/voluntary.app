@@ -6,14 +6,18 @@
 
 */
 
-BMApplet.newSubclassNamed("BMBitcoinWallet").newSlots({
-}).setSlots({
+window.BMBitcoinWallet = class BMBitcoinWallet extends BMApplet {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
 
-    init: function () {
-        BMApplet.init.apply(this)
+    init () {
+        super.init()
         this.setTitle("Bitcoin Wallet")
 
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()
 

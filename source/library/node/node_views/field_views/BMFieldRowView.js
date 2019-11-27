@@ -6,17 +6,22 @@
 
 */
 
-BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
-    keyView: null,
-    valueView: null,
-    errorView: null,
-    noteView: null,
-    editableColor: "#aaa",
-    uneditableColor: "#888",
-    errorColor: "red",
-}).setSlots({
-    init: function () {
-        BrowserFieldRow.init.apply(this)
+window.BMFieldRowView = class BMFieldRowView extends BrowserFieldRow {
+    
+    initPrototype () {
+        this.newSlots({
+            keyView: null,
+            valueView: null,
+            errorView: null,
+            noteView: null,
+            editableColor: "#aaa",
+            uneditableColor: "#888",
+            errorColor: "red",
+        })
+    }
+
+    init () {
+        super.init()
         
         this.setMaxHeight("none")
         this.setHeight("auto")
@@ -45,54 +50,54 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
         this.errorView().setColor("red")
 
         return this
-    },
+    }
 
-    createValueView: function() {
+    createValueView () {
         const tf = TextField.clone().setDivClassName("BMFieldValueView")
         //tf.setSelectAllOnDoubleClick(true)
         return tf
-    },
+    }
 
     // colors
 
-    currentBackgroundCssColor: function() {
+    currentBackgroundCssColor () {
         const bg = this.columnGroup().computedBackgroundColor()
         return CSSColor.clone().setCssColorString(bg)
-    },
+    }
 
-    valueBackgroundCssColor: function() {
+    valueBackgroundCssColor () {
         return this.currentBackgroundCssColor().contrastComplement(0.2)
-    },
+    }
 
-    valueBackgroundColor: function() {
+    valueBackgroundColor () {
         return this.valueBackgroundCssColor().cssColorString()
-    },
+    }
 
-    editableColor: function() {
+    editableColor () {
         return this.valueBackgroundCssColor().contrastComplement(0.2).cssColorString()
-    },
+    }
 
-    keyViewColor: function() {
+    keyViewColor () {
         //console.log(this.node().title() + " " + this.typeId() + ".isSelected() = ", this.isSelected())
         return this.currentStyle().color()
         //return this.valueBackgroundCssColor().contrastComplement(0.2).cssColorString()
-    },
+    }
 
 	
     // visible key and value
     
-    visibleValue: function() {
+    visibleValue () {
         return this.node().visibleValue()
-    },
+    }
 	
-    visibleKey: function() {
+    visibleKey () {
         return this.node().key()
-    },
+    }
 
     // sync 
     
     /*
-    syncValueViewToNode: function() {
+    syncValueViewToNode () {
         //this.debugLog(".syncValueViewToNode " + this.node().type())
 	    if (this.node().type() === "BMBooleanField" && this.valueView().type() !== "BooleanView") {
 	        //console.log("syncValueViewToNode setup bool view")
@@ -104,26 +109,26 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
 		    //this.valueView().setSpellCheck(false)   // should the value view handle this?	        
             //return TextField.clone().setDivClassName("BMFieldValueView")
         }
-    },
+    }
     */
     
-    didChangeIsSelected: function () {
+    didChangeIsSelected  () {
         BrowserFieldRow.didChangeIsSelected.apply(this)
         this.syncFromNode() // need this to update selection color on fields?
         return this
-    },
+    }
 
     /*
-    syncKeyFromNode: function() {
+    syncKeyFromNode () {
 
-    },
+    }
 
-    syncValueFromNode: function() {
+    syncValueFromNode () {
 
-    },
+    }
     */
 
-    syncFromNode: function () {
+    syncFromNode  () {
         BrowserFieldRow.syncFromNode.apply(this)
         //this.debugLog(" syncFromNode")
 		
@@ -214,13 +219,13 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
         }
 
         return this
-    },
+    }
 
-    visibleNote: function() {
+    visibleNote () {
         return this.node().note()
-    },
+    }
     
-    syncToNode: function () {
+    syncToNode  () {
         const node = this.node()
 
         if (node.keyIsEditable()) {
@@ -233,9 +238,9 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
 		
         NodeView.syncToNode.apply(this)
         return this
-    },
+    }
     
-    onDidEdit: function (changedView) {
+    onDidEdit  (changedView) {
         //this.syncToNode() 
         this.scheduleSyncToNode() 
         //this.log(this.type() + " onDidEdit")   
@@ -244,9 +249,9 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
         //this.node().didUpdateView(this)
         //this.scheduleSyncFromNode() // needed for validation? // causes bug with TextEditing if a 2nd edit is ahead of node state
         return true
-    },
+    }
 
-    updateSubviews: function() {
+    updateSubviews () {
         BrowserFieldRow.updateSubviews.apply(this)
 		
         const node = this.node()
@@ -262,24 +267,24 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
         }
         
         return this
-    },
+    }
 
     /*
-    applyStyles: function() {
+    applyStyles () {
         BrowserFieldRow.applyStyles.apply(this)
         return this
-    },
+    }
     */
     
-    onEnterKeyUp: function(event) {
+    onEnterKeyUp (event) {
         //this.debugLog(".onEnterKeyUp()")
         if(this.valueView().activate) {
             this.valueView().activate()
         }
         return this
-    },
+    }
 
-    setBackgroundColor: function(c) {
+    setBackgroundColor (c) {
         /*
         this.debugLog(".setBackgroundColor ", c)
         if (c !== "white") {
@@ -288,18 +293,18 @@ BrowserFieldRow.newSubclassNamed("BMFieldRowView").newSlots({
         */
         BrowserFieldRow.setBackgroundColor.apply(this, [c])
         return this
-    },
+    }
 
-    becomeKeyView: function() {
+    becomeKeyView () {
         this.valueView().becomeKeyView()
         return this
-    },
+    }
 
-    unselect: function() {
+    unselect () {
         BrowserFieldRow.unselect.apply(this)
         this.valueView().blur()
         this.keyView().blur()
         return this
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

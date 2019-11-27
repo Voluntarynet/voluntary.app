@@ -7,30 +7,33 @@
 */
 
 
-BMAppMessage.newSubclassNamed("BMPostThread").newSlots({
-    postMessage: null,
-}).setSlots({
+window.BMPostThread = class BMPostThread extends BMAppMessage {
     
-    init: function () {
-        BMAppMessage.init.apply(this)	
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
         this.customizeNodeRowStyles().setToBlackOnWhite()
-    },
+    }
     
-    title: function() {
+    title () {
         return "post"
-    },
+    }
     
-    findThreadItems: function() {
+    findThreadItems () {
         const items = []
         items.push(this.postMessage())
         items.appendItems(this.postMessage().replies())
         return items
-    },
+    }
     
-    update: function () {
+    update  () {
         this.setSubnodes(this.findThreadItems()) // merge?
         return this
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()
 

@@ -6,10 +6,15 @@
 
 */
 
-BMStorableNode.newSubclassNamed("BMSells").newSlots({
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
+window.BMSells = class BMSells extends BMStorableNode {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(true)
 		
@@ -18,6 +23,6 @@ BMStorableNode.newSubclassNamed("BMSells").newSlots({
         //this.setActions(["add"])
         this.setSubnodeProto(BMSell)
         this.setNoteIsSubnodeCount(true)
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

@@ -6,27 +6,32 @@
 
 */
         
-BMField.newSubclassNamed("BMImageWellField").newSlots({
-    onlyShowsKeyWhenEmpty: false,
-    isEditable: true,
-}).setSlots({
-    init: function () {
-        BMField.init.apply(this)
+window.BMImageWellField = class BMImageWellField extends BMField {
+    
+    initPrototype () {
+        this.newSlots({
+            onlyShowsKeyWhenEmpty: false,
+            isEditable: true,
+        })
+    }
+
+    init () {
+        super.init()
         this.setKey("Image title")
         this.setKeyIsEditable(false)
         this.setValueIsEditable(false)
         //this.addStoredSlot("imageDataURL") // stored in value
         this.addStoredSlot("nodeMinRowHeight")
         this.setNodeCanEditRowHeight(true)
-    },
+    }
 
     /*
-    setValue: function(v) {
+    setValue (v) {
         BMField.setValue.apply(this, [v])
         //this.debugLog(" setValue " + v)
         //this.updateKey()
         return this
-    },
+    }
     */
    
-}).initThisProto()
+}.initThisClass()

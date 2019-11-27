@@ -7,25 +7,31 @@
 
 */
 
-BMStorableNode.newSubclassNamed("BMApplet").newSlots({
-}).setSlots({
-    sharedStoredInstance: function() {
-        return this.defaultStore().rootInstanceWithPidForProto(this.type(), this)
-    },
+window.BMApplet = class BMApplet extends BMStorableNode {
     
-    init: function () {
-        BMStorableNode.init.apply(this)
-        this.setShouldStore(true)
-    },
+    initPrototype () {
+        this.newSlots({
+        })
+    }
 
-    handleAppMsg: function(aMessage) {
+    init () {
+        super.init()
+        this.setShouldStore(true)
+        return this
+    } 
+
+    sharedStoredInstance () {
+        return this.defaultStore().rootInstanceWithPidForProto(this.type(), this)
+    }
+
+    handleAppMsg (aMessage) {
         // override
-    },
+    }
 	
-    allIdentitiesMap: function() { // only uses valid remote identities
+    allIdentitiesMap () { // only uses valid remote identities
         const ids = ideal.Dictionary.clone()
         return ids
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()
 

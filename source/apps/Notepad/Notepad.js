@@ -7,25 +7,30 @@
 
 */
 
-App.newSubclassNamed("Notepad").newSlots({
-    name: "Notepad",
-    version: [0, 0, 0, 0],
+window.Notepad = class Notepad extends App {
+    
+    initPrototype () {
+        this.newSlots({
+            name: "Notepad",
+            version: [0, 0, 0, 0],
+        
+            // model
+            flexNode: null,
+            settings: null,
+            resources: null,
+            dataStore: null,
+        
+            // views
+            browser: null,
+        })
+    }
 
-    // model
-    flexNode: null,
-    settings: null,
-    resources: null,
-    dataStore: null,
+    init () {
+        super.init()
+        return this
+    } 
 
-    // views
-    browser: null,
-}).setSlots({
-
-    init: function () {
-        App.init.apply(this)
-    },
-
-    setup: function () {
+    setup  () {
         App.setup.apply(this)
         
 
@@ -40,11 +45,11 @@ App.newSubclassNamed("Notepad").newSlots({
         this.appDidInit()
 
         return this
-    },
+    }
 
     // --- setup model ---
 
-    setupModel: function () {        
+    setupModel  () {        
         // flex
         const myLists = this.defaultStore().rootInstanceWithPidForProto("_menuNode", BMMenuNode);
         myLists.setTitle("Notepad")
@@ -63,23 +68,23 @@ App.newSubclassNamed("Notepad").newSlots({
         this.settings().addSubnode(this.dataStore())
 
         return this
-    },
+    }
 
     // --- setup views ---
     
-    setupViews: function() {
+    setupViews () {
         this.setupBrowser()
         //this.setupShelf()
-    },
+    }
 
-    isBrowserCompatible: function() {
+    isBrowserCompatible () {
         if (WebBrowserWindow.shared().agentIsSafari()) {
             return false
         }
         return true
-    },
+    }
     
-    setupBrowser: function() {	
+    setupBrowser () {	
         this.setBrowser(BrowserView.clone())
     
         this.browser().hideAndFadeIn()
@@ -90,17 +95,17 @@ App.newSubclassNamed("Notepad").newSlots({
         this.browser().scheduleMethod("syncFromHashPath", 10)
         //window.SyncScheduler.shared().scheduleTargetAndMethod(this.browser(), "syncFromHashPath", 10)
         return this
-    },
+    }
 
-    appDidInit: function () {
+    appDidInit  () {
         App.appDidInit.apply(this)
         
         // ResourceLoaderPanel can't use notification as it's a boot object
         // what if we added a one-shot observation for it, or would that be more confusing?
 
         window.ResourceLoaderPanel.stop() 
-    },
-}).initThisProto()
+    }
+}.initThisClass()
 
 Notepad.showVersion()
 

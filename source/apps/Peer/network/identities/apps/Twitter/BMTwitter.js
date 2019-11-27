@@ -7,16 +7,21 @@
 
 */
 
-BMApplet.newSubclassNamed("BMTwitter").newSlots({
-    feed: null,
-    notifications: null,
-    messages: null,
-    profile: null,
-    following: null,
-    followers: null,
-}).setSlots({
-    init: function () {
-        BMApplet.init.apply(this)
+window.BMTwitter = class BMTwitter extends BMApplet {
+    
+    initPrototype () {
+        this.newSlots({
+            feed: null,
+            notifications: null,
+            messages: null,
+            profile: null,
+            following: null,
+            followers: null,
+        })
+    }
+
+    init () {
+        super.init()
         this.setTitle("Twitter")
         
         this.setFeed(BMNode.clone())
@@ -36,12 +41,12 @@ BMApplet.newSubclassNamed("BMTwitter").newSlots({
         
         this.setFollowers(BMNode.clone().setTitle("followers"))
         this.addSubnode(this.followers())
-    },
+    }
     
-    handleMessage: function(twitterMessage) {
+    handleMessage (twitterMessage) {
         
         
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()
 

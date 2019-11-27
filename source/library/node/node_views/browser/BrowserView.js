@@ -10,77 +10,22 @@
     
 */
 
-NodeView.newSubclassNamed("BrowserView").newSlots({
-    columns: null,
-    isSingleColumn: false,
-    defaultHeader: null,
-    defaultColumnStyles: null,
-    defaultRowStyles: null,
-    watchForNodeUpdates: false,
-    columnGroupCache: null, // dict of nodes, with node.typeId() as key, and BrowserColumnGroup as value
-}).setSlots({
+window.BrowserView = class BrowserView extends NodeView {
+    
+    initPrototype () {
+        this.newSlots({
+            columns: null,
+            isSingleColumn: false,
+            defaultHeader: null,
+            defaultColumnStyles: null,
+            defaultRowStyles: null,
+            watchForNodeUpdates: false,
+            columnGroupCache: null, // dict of nodes, with node.typeId() as key, and BrowserColumnGroup as value
+        })
+    }
 
-    bgColors: function () {
-        //return this.bgColorsCool()
-        //return this.bgColorsWarm()
-        return this.bgColorsGray()
-        //return this.bgColorsWhite()
-    },
-
-    bgColorsWhite: function () {
-        return [
-            [255, 255, 255],
-        ]
-    },
-
-    bgColorsGray: function () {
-        return [
-            //[64/255, 64/255, 64/255],
-            [60 / 255, 60 / 255, 60 / 255],
-            [48 / 255, 48 / 255, 48 / 255],
-            [32 / 255, 32 / 255, 32 / 255],
-            [26 / 255, 26 / 255, 26 / 255],
-            [16 / 255, 16 / 255, 16 / 255],
-            //[0 / 255, 0 / 255, 0 / 255],
-        ] //.reversed()
-    },
-
-    bgColorsWarm: function () {
-        return [
-            //[0.412, 0.110, 0.067], // header color
-            //[0.867, 0.235, 0.145],
-            [0.871, 0.278, 0.145],
-            //[0.875, 0.325, 0.153],
-            [0.875, 0.325, 0.153],
-            //[0.882, 0.412, 0.161],
-            [0.886, 0.459, 0.165],
-            //[0.890, 0.502, 0.169],
-            [0.898, 0.545, 0.176],
-            //[0.902, 0.592, 0.184],
-            [0.906, 0.635, 0.192],
-            //[0.914, 0.682, 0.196]
-        ]
-    },
-
-    bgColorsCool: function () {
-        return [
-            [0.118, 0.506, 0.965],
-            //[0.118, 0.525, 0.965],
-            [0.122, 0.545, 0.969],
-            //[0.118, 0.569, 0.969],
-            [0.122, 0.584, 0.976],
-            //[0.122, 0.608, 0.976],
-            [0.122, 0.627, 0.980],
-            //[0.122, 0.651, 0.980],
-            [0.125, 0.675, 0.984],
-            //[0.125, 0.694, 0.984],
-            [0.129, 0.718, 0.988],
-            //[0.129, 0.741, 0.988]
-        ]
-    },
-
-    init: function () {
-        NodeView.init.apply(this)
+    init () {
+        super.init()
 
         this.setupDefaultStyles()
         this.setColumnGroupCache({})
@@ -99,39 +44,99 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         this.addGestureRecognizer(RightEdgePanGestureRecognizer.clone()) 
 
         return this
-    },
+    }
+
+    bgColors  () {
+        //return this.bgColorsCool()
+        //return this.bgColorsWarm()
+        return this.bgColorsGray()
+        //return this.bgColorsWhite()
+    }
+
+    bgColorsWhite  () {
+        return [
+            [255, 255, 255],
+        ]
+    }
+
+    bgColorsGray  () {
+        return [
+            //[64/255, 64/255, 64/255],
+            [60 / 255, 60 / 255, 60 / 255],
+            [48 / 255, 48 / 255, 48 / 255],
+            [32 / 255, 32 / 255, 32 / 255],
+            [26 / 255, 26 / 255, 26 / 255],
+            [16 / 255, 16 / 255, 16 / 255],
+            //[0 / 255, 0 / 255, 0 / 255],
+        ] //.reversed()
+    }
+
+    bgColorsWarm  () {
+        return [
+            //[0.412, 0.110, 0.067], // header color
+            //[0.867, 0.235, 0.145],
+            [0.871, 0.278, 0.145],
+            //[0.875, 0.325, 0.153],
+            [0.875, 0.325, 0.153],
+            //[0.882, 0.412, 0.161],
+            [0.886, 0.459, 0.165],
+            //[0.890, 0.502, 0.169],
+            [0.898, 0.545, 0.176],
+            //[0.902, 0.592, 0.184],
+            [0.906, 0.635, 0.192],
+            //[0.914, 0.682, 0.196]
+        ]
+    }
+
+    bgColorsCool  () {
+        return [
+            [0.118, 0.506, 0.965],
+            //[0.118, 0.525, 0.965],
+            [0.122, 0.545, 0.969],
+            //[0.118, 0.569, 0.969],
+            [0.122, 0.584, 0.976],
+            //[0.122, 0.608, 0.976],
+            [0.122, 0.627, 0.980],
+            //[0.122, 0.651, 0.980],
+            [0.125, 0.675, 0.984],
+            //[0.125, 0.694, 0.984],
+            [0.129, 0.718, 0.988],
+            //[0.129, 0.741, 0.988]
+        ]
+    }
+
 
     // columnGroupCache
 
     hasCachedColumnGroup(cg) {
         return Object.values(this.columnGroupCache()).contains(cg)
-    },
+    }
 
-    getCachedColumnGroupForNode: function(node) {
+    getCachedColumnGroupForNode (node) {
         const k = node.typeId()
         const cg = this.columnGroupCache()[k]
         return cg
-    },
+    }
 
-    cacheColumnGroup: function(cg) {
+    cacheColumnGroup (cg) {
         assert(cg.type() === "BrowserColumnGroup")
         const k = cg.node().typeId()
         this.columnGroupCache()[k] = cg
         return this
-    },
+    }
 
-    uncacheColumnGroup: function(cg) {
+    uncacheColumnGroup (cg) {
         assert(cg.type() === "BrowserColumnGroup")
         const k = cg.node().typeId()
         delete this.columnGroupCache()[k] 
         //console.log("uncacheColumnGroup ", cg.node().title())
         //this.scheduleSyncFromNode() // needed?
         return this
-    },
+    }
 
     // edge pan
 
-    onRightEdgePanBegin: function(aGesture) {
+    onRightEdgePanBegin (aGesture) {
         // TODO: animate this until complete
         //console.log("onRightEdgePanBegin")
         //if(this.isSingleColumn()) {
@@ -141,16 +146,16 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         }
         //}
         aGesture.cancel()
-    },
+    }
 
 
     // left screen edge pan
 
-    canMoveLeft: function() {
+    canMoveLeft () {
         return this.activeColumnGroups().length > 1
-    },
+    }
 
-    onLeftEdgePanBegin: function(aGesture) {
+    onLeftEdgePanBegin (aGesture) {
         console.log("onScreenLeftEdgePanBegin")
         console.log("  this.activeColumnGroups().length = ", this.activeColumnGroups().length)
 
@@ -158,12 +163,12 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
             this.previous()
         }
         aGesture.cancel()
-    },
+    }
 
     // -------------------
 
 
-    setupDefaultStyles: function () {
+    setupDefaultStyles  () {
         this.setDefaultColumnStyles(BMViewStyles.clone())
         this.defaultColumnStyles().unselected().setBackgroundColor("white")
         this.defaultColumnStyles().selected().setBackgroundColor("white")
@@ -172,32 +177,32 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         this.defaultRowStyles().unselected().setColor("#aaa")
         this.defaultRowStyles().selected().setColor("white")
         return this
-    },
+    }
 
-    updateBackground: function () {
+    updateBackground  () {
         const n = this.activeColumnGroups().length
         this.setBackgroundColor(this.bgColorForIndex(n + 1))
-    },
+    }
 
-    prepareToSyncToView: function () {
+    prepareToSyncToView  () {
         //this.debugLog(" prepareToSyncToView")
         NodeView.prepareToSyncToView.apply(this)
         this.fitColumns()
         return this
-    },
+    }
 
     // --- resizing ---------------------------------
 
-    onDocumentResize: function (event) {
+    onDocumentResize  (event) {
         //this.debugLog(" onDocumentResize")
         this.fitColumns()
         if (this._selectedColumnGroup) {
             this.selectColumn(this._selectedColumnGroup.column())
         }
         return this
-    },
+    }
 
-    updateSingleColumnMode: function () {
+    updateSingleColumnMode  () {
         //console.log("---")
         //const size = DocumentBody.zoomAdjustedSize()
         //const w = WebBrowserScreen.shared().orientedWidth()
@@ -233,29 +238,29 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
 
         //console.log("---")
         return this
-    },
+    }
 
     // --- columns -------------------------------
 
-    columnGroups: function () {
+    columnGroups  () {
         return this.subviews().select((subview) => { return subview.isKindOf(BrowserColumnGroup) })
-    },
+    }
 
-    addColumnGroup: function (v) {
+    addColumnGroup  (v) {
         return this.addSubview(v)
-    },
+    }
 
-    removeColumnGroup: function (v) {
+    removeColumnGroup  (v) {
         return this.removeSubview(v)
-    },
+    }
 
-    columns: function () {
+    columns  () {
         return this.columnGroups().map((cg) => { return cg.column() })
-    },
+    }
 
     // --- column background colors ----------------------------
 
-    bgColorForIndex: function (i) {
+    bgColorForIndex  (i) {
         let colors = this.bgColors()
         const rcolors = this.bgColors().reversed()
         rcolors.removeFirst()
@@ -265,9 +270,9 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         const s = "rgb(" + rgb.map((v) => { return Math.round(v * 255) }).join(", ") + ")"
         //console.log("bgColorForIndex = '" + s + "'")
         return s
-    },
+    }
 
-    setupColumnGroupColors: function () {
+    setupColumnGroupColors  () {
         let i = 0
 
         this.columnGroups().forEach((cg) => {
@@ -295,17 +300,17 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         })
 
         return this
-    },
+    }
 
-    activeColumnGroups: function () {
+    activeColumnGroups  () {
         return this.columnGroups().select(cg => cg.node() !== null)
-    },
+    }
 
-    newBrowserColumnGroup: function() {
+    newBrowserColumnGroup () {
         return BrowserColumnGroup.clone().setBrowser(this).colapse()
-    },
+    }
 
-    setColumnGroupCount: function (count) {
+    setColumnGroupCount  (count) {
         //this.log("setColumnGroupCount " + count)
         if (count === 0) {
             Error.showCurrentStack()
@@ -340,19 +345,19 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         //this.log("this.columnGroups().length = " + this.columnGroups().length)
         //assert(this.columnGroups().length  === count)
         return this
-    },
+    }
 
     /*
-    useNewColumnGroupToReplaceColumnGroupAtIndex: function(index) {
+    useNewColumnGroupToReplaceColumnGroupAtIndex (index) {
         const cgs = this.columnGroups()
         const oldCg = cgs[index]
         const newCg = this.newBrowserColumnGroup()
         this.replaceSubviewWith(oldCg, newCg)
         return newCg
-    },
+    }
     */
 
-    clearColumnsGroupsAfterIndex: function (index) {
+    clearColumnsGroupsAfterIndex  (index) {
         const cgs = this.columnGroups()
         for (let i = index + 1; i < cgs.length; i++) {
             const cg = cgs[i]
@@ -367,49 +372,49 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         //console.log("---")
 
         return this
-    },
+    }
 
-    clearColumnsGroupsAfter: function (selectedCg) {
+    clearColumnsGroupsAfter  (selectedCg) {
         const cgs = this.columnGroups()
         const index = cgs.indexOf(selectedCg)
         this.clearColumnsGroupsAfterIndex(index)
-    },
+    }
 
     // --- get selected column ---------------------------------------
 
-    selectedColumnGroup: function() {
+    selectedColumnGroup () {
         return this.columnGroups().detect(cg => cg.isSelected())
-    },
+    }
 
-    selectedColumn: function() {
+    selectedColumn () {
         const cg = this.selectedColumnGroup()
         if (cg) {
             return cg.column()
         }
         return null
-    },
+    }
 
     // --- select column ---------------------------------------
 
-    selectFirstColumn: function () {
+    selectFirstColumn  () {
         this.selectColumn(this.columns().first())
         return this
-    },
+    }
 
 
-    updateSelectedColumnTo: function (selectedColumn) {
+    updateSelectedColumnTo  (selectedColumn) {
         const selectedColumnGroup = selectedColumn.columnGroup()
         this.columnGroups().forEach(cg => cg.setIsSelected(cg === selectedColumnGroup))
         this.syncToHashPath()
         return this
-    },
+    }
 
-    previous: function() {
+    previous () {
         this.popLastActiveColumn()
         return this
-    },
+    }
 
-    popLastActiveColumn: function () {
+    popLastActiveColumn  () {
         //console.log("popLastActiveColumn this.activeColumnGroups().length = ", this.activeColumnGroups().length)
         let n = this.activeColumnGroups().length - 1
         if (n < 0) { n = 0; }
@@ -417,9 +422,9 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         this.fitColumns()
         this.syncToHashPath()
         return this
-    },
+    }
 
-    setColumnGroupAtIndexToNode: function(cgIndex, cgNode) {
+    setColumnGroupAtIndexToNode (cgIndex, cgNode) {
         const oldCg = this.columnGroups()[cgIndex]
 
         if (oldCg.node() !== cgNode) {
@@ -440,9 +445,9 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         }
 
         return oldCg
-    },
+    }
 
-    selectColumn: function (selectedColumn) {
+    selectColumn  (selectedColumn) {
 
         /*
         if (this.selectedColumn() === selectedColumn) {
@@ -503,15 +508,15 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         this.fitColumns()
         this.updateSelectedColumnTo(selectedColumn)
         return this
-    },
+    }
 
-    didClickRow: function (row) {
+    didClickRow  (row) {
         console.log("Browser didClickRow ", row)
         // columns intercept this, so we don't get this message anymore
         return true
-    },
+    }
 
-    syncFromNode: function () {
+    syncFromNode  () {
         //this.log("syncFromNode")
         const columnGroups = this.columnGroups()
 
@@ -527,29 +532,29 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         this.setupColumnGroupColors()
         this.fitColumns()
         return this
-    },
+    }
 
-    clipToColumnGroup: function (cg) {
+    clipToColumnGroup  (cg) {
         const index = this.columnGroups().indexOf(cg)
         this.setColumnGroupCount(index + 1)
         return this
-    },
+    }
 
     // --- width --------------------------
 
-    widthOfColumnGroups: function () {
+    widthOfColumnGroups  () {
         return this.columnGroups().sum(cg => cg.minWidth())
-    },
+    }
 
     // --- collapsing column groups -----
 
-    lastActiveColumnGroup: function () {
+    lastActiveColumnGroup  () {
         return this.columnGroups().reversed().detect(cg => cg.column().node() != null)
-    },
+    }
 
     // --- fitting columns in browser ---------------------------------------------
 
-    fitColumns: function () {
+    fitColumns  () {
         //this.debugLog(".fitColumns()")
         this.updateSingleColumnMode()
 
@@ -564,14 +569,14 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         }
 
         return this
-    },
+    }
 
-    updateBackArrow: function () {
+    updateBackArrow  () {
         this.columnGroups().forEach(cg => cg.updateBackArrow())
         return this
-    },
+    }
 
-    makeLastActiveColumnFillRemainingSpace: function () {
+    makeLastActiveColumnFillRemainingSpace  () {
         // TODO: merge with this code in multi column fit
         const lastActiveCg = this.lastActiveColumnGroup()
         const fillWidth = (this.browserWidth() - this.left()) - this.widthOfUncollapsedColumnsSansLastActive()
@@ -584,9 +589,9 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
             lastActiveCg.setMinAndMaxWidth(fillWidth)
         }
         return this
-    },
+    }
 
-    fitForSingleColumn: function () {
+    fitForSingleColumn  () {
         const lastActiveCg = this.lastActiveColumnGroup()
 
         this.columnGroups().forEach((cg) => {
@@ -605,29 +610,29 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         //console.log("lastActiveCg.node().title() = ", lastActiveCg.node().title(), " width ", lastActiveCg.minWidth(), " ", lastActiveCg.maxWidth())
 
         return this
-    },
+    }
 
-    uncollapsedColumns: function () {
+    uncollapsedColumns  () {
         return this.activeColumnGroups().select(cg => !cg.isCollapsed())
-    },
+    }
 
-    widthOfUncollapsedColumns: function () {
+    widthOfUncollapsedColumns  () {
         return this.uncollapsedColumns().sum(cg => cg.targetWidth())
-    },
+    }
 
-    widthOfUncollapsedColumnsSansLastActive: function () {
+    widthOfUncollapsedColumnsSansLastActive  () {
         const lastActiveCg = this.lastActiveColumnGroup()
         const cgs = this.uncollapsedColumns()
         cgs.remove(lastActiveCg)
         return cgs.sum(cg => cg.targetWidth())
-    },
+    }
 
-    setShouldShowTitles: function (aBool) {
+    setShouldShowTitles  (aBool) {
         this.columnGroups().forEach(cg => cg.header().setShouldShowTitle(aBool) )
         return this
-    },
+    }
 
-    columnDescription: function () {
+    columnDescription  () {
         let d = this.columnGroups().map((cg) => {
             if (cg.isCollapsed()) { return "" }
             let s = cg.name()
@@ -639,10 +644,10 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
 
         d += " [" + this.widthOfUncollapsedColumns() + " of " + this.browserWidth() + "]"
         return d
-    },
+    }
 
 
-    fitForMultiColumn: function () {
+    fitForMultiColumn  () {
         this.updateBackground()
         this.uncollapseAllColumns()
         this.collapseLeftColumnsUntilRightColumnsFit()
@@ -651,17 +656,17 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         this.setShouldShowTitles(false) // only show titles in single column mode
         //console.log(this.columnDescription())
         return this
-    },
+    }
 
-    uncollapseAllColumns: function () {
+    uncollapseAllColumns  () {
         this.columnGroups().forEach((cg) => {
             cg.setIsCollapsed(false)
             //console.log(cg.name() + " targetWidth: " + cg.targetWidth())
         })
         return this
-    },
+    }
 
-    collapseLeftColumnsUntilRightColumnsFit: function () {
+    collapseLeftColumnsUntilRightColumnsFit  () {
         const lastActiveCg = this.lastActiveColumnGroup()
         const browserWidth = this.browserWidth()
         // collapse columns from left to right until they all fit
@@ -673,9 +678,9 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
             cg.setIsCollapsed(shouldCollapse)
         })
         return this
-    },
+    }
 
-    expandLastColumnIfNeeded: function () {
+    expandLastColumnIfNeeded  () {
         const lastActiveCg = this.lastActiveColumnGroup()
 
         if (lastActiveCg) {
@@ -690,21 +695,21 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
             lastActiveCg.setFlexBasis(fillWidth)
             lastActiveCg.setMinAndMaxWidth(fillWidth)
         }
-    },
+    }
 
     // -----------------------------------------------
 
-    browserWidth: function () {
+    browserWidth  () {
         return this.clientWidth()
-    },
+    }
 
-    windowWidth: function () {
+    windowWidth  () {
         return App.shared().mainWindow().width()
-    },
+    }
 
     // --- node paths -----------------------------
 
-    selectNode: function (aNode) {
+    selectNode  (aNode) {
         //console.log("selectNode " + aNode.nodePath())
         if (!aNode) {
             console.warn(this.type() + " selectNode called with null argument")
@@ -713,9 +718,9 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         }
         this.selectNodePath(aNode.nodePath())
         return this
-    },
+    }
 
-    selectNodePath: function (nodePathArray) {
+    selectNodePath  (nodePathArray) {
         //this.debugLog(".selectNodePath(" + nodePathArray.map((node) => { return node.title() }).join("/")  + ")")
         //this.debugLog(".selectNodePath() current path: " + this.nodePathString())
         this.setColumnGroupCount(1)
@@ -744,64 +749,64 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         })
 
         //this.syncFromNode()
-    },
+    }
 
-    nodeStringPath: function () {
-    },
+    nodeStringPath  () {
+    }
 
-    nodePathArray: function () {
+    nodePathArray  () {
         return this.activeColumnGroups().map((cg) => { return cg.node() })
-    },
+    }
 
-    lastNode: function() {
+    lastNode () {
         const cg = this.lastActiveColumnGroup()
         if (cg) {
             return cg.node()
         }
         return null
-    },
+    }
 
-    nodePath: function() {
+    nodePath () {
         const lastNode = this.lastNode();
         if (lastNode) {
             return lastNode.nodePath();
         }
         return [];
-    },
+    }
 
-    nodePathString: function () {
+    nodePathString  () {
         const lastNode = this.lastNode();
         if (lastNode) {
             return lastNode.nodePathString(); //.map((node) => { return node.title() }).join("/")
         }
         return ""
-    },
+    }
 
-    setNodePathComponents: function(nodePath) {
+    setNodePathComponents (nodePath) {
         this.setWatchForNodeUpdates(true);
         const lastNode = this.node().nodeAtSubpath(nodePath.slice(1));
         if (lastNode) {
             this.selectNode(lastNode);
         }
         return this;
-    },
+    }
 
-    setNodePathString: function (pathString) {
+    setNodePathString  (pathString) {
         return this.setNodePathComponents(pathString.split("/"));
-    },
+    }
 
     // --- hash paths ------------------------------------- 
 
-    performHashCommandIfPresent: function() {
+    performHashCommandIfPresent () {
         const hash = WebBrowserWindow.shared().urlHash()
         const commandString = hash.after(";")
         const command = HashCommand.clone().parseCommandString(commandString)
         const node = this.lastNode()
         command.setTarget(node).send()
         return this
-    },
+    }
 
-    syncFromHashPath: function () {
+    syncFromHashPath  () {
         const hash = WebBrowserWindow.shared().urlHash()
         let j = ""
 
@@ -837,18 +842,18 @@ NodeView.newSubclassNamed("BrowserView").newSlots({
         this.performHashCommandIfPresent()
         */
         return this
-    },
+    }
 
-    syncToHashPath: function () {
+    syncToHashPath  () {
         const hash = JSON.stringify({ path: this.nodePath().map(n => n.title()) });
         WebBrowserWindow.shared().setUrlHash(hash)
         return this
-    },
+    }
 
-    didUpdateNode: function() {
+    didUpdateNode () {
         if (this.watchForNodeUpdates()) {
             this.syncToHashPath();
         }
     }
     
-}).initThisProto()
+}.initThisClass()

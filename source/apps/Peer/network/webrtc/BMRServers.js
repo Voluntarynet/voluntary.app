@@ -6,89 +6,94 @@
 
 */
 
-BMStorableNode.newSubclassNamed("BMRServers").newSlots({
-    maxConnections: 8,
-}).setSlots({
-    init: function () {
-        BMStorableNode.init.apply(this)
+window.BMRServers = class BMRServers extends BMStorableNode {
+    
+    initPrototype () {
+        this.newSlots({
+            maxConnections: 8,
+        })
+    }
+
+    init () {
+        super.init()
         this.setShouldStore(true)
         this.setTitle("Rendezvous Servers")
         this.setNoteIsSubnodeCount(true)
         this.setNodeMinWidth(300)
         this.setSubnodeProto(BMRServer)
         this.addAction("add")
-    },
+    }
 
-    finalize: function() {
+    finalize () {
         BMStorableNode.finalize.apply(this)
         this.bootstrap()
-    },
+    }
 
-    bootstrap: function() { 
+    bootstrap () { 
         if (this.servers().length === 0) {
 		    this.bootStrapServers().forEach((server) => {
 	            this.addServer(server)		
 	        })	
         }
-    },
+    }
     
-    bootStrapServers: function () {
+    bootStrapServers  () {
         return [
             //BMRServer.clone().setHost("rendezvous9000.voluntary.net").setPort(9000),
             BMRServer.clone().setHost("peer-net-server.herokuapp.com").setPort(443).setIsSecure(true),
             //BMRServer.clone().setHost("127.0.0.1").setPort(9000) ,
             //BMRServer.clone().setHost("127.0.0.1").setPort(433) ,
         ] 
-    },
+    }
     
-    addServer: function (aServer) {
+    addServer  (aServer) {
         if (!this.hasServer(aServer)) {
             this.addSubnode(aServer)
         }
         return aServer
-    },
+    }
     
-    hasServer: function(aServer) {
+    hasServer (aServer) {
         return this.hasAddrDict(aServer.addrDict())
-    },
+    }
     
-    servers: function () {
+    servers  () {
         return this.subnodes()
-    }, 
+    }
     
-    network: function() {
+    network () {
         return this.parentNode()
-    },
+    }
     
-    subtitle: function () {
+    subtitle  () {
         return this.connectedServers().length + " of " + this.servers().length + " servers connected"
-    },
+    }
 
     /*
-    subtitle: function () {
+    subtitle  () {
         return this.connectedRemotePeerCount() + " peers"
-    },
+    }
     */
     
-    connectedRemotePeerCount: function() {
+    connectedRemotePeerCount () {
         return this.connectedServers().sum(function (server) {
             return server.connectedRemotePeerCount()
         })
-    },    
+    }
     
-    connectedServers: function () {
+    connectedServers  () {
         return this.servers().filter(function (server) { return server.isConnected() })
-    },
+    }
     
-    unconnectedServers: function () {
+    unconnectedServers  () {
         return this.servers().filter(function (server) { return !server.isConnected() })
-    },
+    }
     
-    connectionCount: function () {
+    connectionCount  () {
         return this.connectedServers().length
-    },
+    }
     
-    connect: function () {
+    connect  () {
         let unconnectedServers = this.unconnectedServers().shuffle()
         let connectionsToAdd = this.maxConnections() - this.connectionCount()
         
@@ -98,49 +103,49 @@ BMStorableNode.newSubclassNamed("BMRServers").newSlots({
         }
 
         return this              
-    },
+    }
     
     /*
-    connectedRemotePeers: function () {
+    connectedRemotePeers  () {
         let peers = []
         this.connectedServers().forEach(function (server) {
             peers.appendItems(server.connectedRemotePeers())
         })        
         return peers
-    },
+    }
     */
     
     // sending
     
-    broadcastMsg: function(msg) {        
+    broadcastMsg (msg) {        
         this.connectedServers().forEach(function (server) {
             server.broadcastMsg(msg)
         })
         return this
-    },
+    }
     
-    currentAddrMsg: function () {
+    currentAddrMsg  () {
         let msg = BMAddrMessage.clone()
         this.servers().forEach(function (server) {
             msg.addAddrDict(server.addrDict())
         })
         return msg
-    },
+    }
     
-    onRemotePeerConnect: function(remotePeer) {
+    onRemotePeerConnect (remotePeer) {
         // send addr
         let msg = this.currentAddrMsg()
         this.log("sendMsg " + msg.type())
         remotePeer.sendMsg(msg)
-    },
+    }
     
-    hasAddrDict: function(addrDict) {
+    hasAddrDict (addrDict) {
         return this.servers().detect(function (server) {
             return server.isAddrDict(addrDict)
         })        
-    },
+    }
     
-    addr: function(msg) {
+    addr (msg) {
         this.log("got addr")
         // walk the hosts and add any we don't have
         // TODO: check to see if we can connect *before* adding server
@@ -151,11 +156,11 @@ BMStorableNode.newSubclassNamed("BMRServers").newSlots({
                 this.addServer(BMRServer.clone().setAddrDict(addrDict))
             }
         })
-    },
+    }
 
     // --- choosing which servers to connect to ---
 	
-    sortServersByDistanceToBloomFilter: function(aBloomFilter) {
+    sortServersByDistanceToBloomFilter (aBloomFilter) {
         // distance = countOfDifferentBits(hash(serverIp).bitArrayOfBloomLength, uncompactedBloomFilterBitArray)
         // as we connect to peers whose blooms match to one or more of our ids/contacts
         // this distance metric should help minimize number of servers we need to 
@@ -172,6 +177,6 @@ BMStorableNode.newSubclassNamed("BMRServers").newSlots({
         this.setSubnodes(sorted)
 		
         return this
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

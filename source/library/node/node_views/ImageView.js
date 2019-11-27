@@ -6,15 +6,21 @@
 
 */
 
-NodeView.newSubclassNamed("ImageView").newSlots({
-    closeButtonView: null,
-    dataURL: null,
-    isEditable: false,
-    imageContainer: null,
-    rawImageView: null,
-}).setSlots({
-    init: function () {
-        NodeView.init.apply(this)
+window.ImageView = class ImageView extends NodeView {
+    
+    initPrototype () {
+        this.newSlots({
+            closeButtonView: null,
+            dataURL: null,
+            isEditable: false,
+            imageContainer: null,
+            rawImageView: null,
+        })
+    }
+
+    init () {
+        super.init()
+        
         this.setIsRegisteredForDrop(false)
         
         this.setImageContainer(DomView.clone().setDivClassName("ImageViewImageContainer"))
@@ -33,28 +39,28 @@ NodeView.newSubclassNamed("ImageView").newSlots({
         this.turnOffUserSelect()
         this.setTransition("all 0.3s")
         return this
-    },
+    }
 
     // --- editable ---
     
-    setIsEditable: function(aBool) {
+    setIsEditable (aBool) {
         if (aBool) {
             this.addCloseButton()
         } else {
             this.removeCloseButton()
         }
         return this
-    },
+    }
 
     
-    setEditable: function (aBool) {
+    setEditable  (aBool) {
 
         return this
-    },
+    }
     
     // --- close button ---
 
-    addCloseButton: function() {
+    addCloseButton () {
         if (this.closeButtonView() === null) {
             const cb = ButtonView.clone().setDivClassName("ImageCloseButton")
             this.setCloseButtonView(cb)
@@ -67,16 +73,16 @@ NodeView.newSubclassNamed("ImageView").newSlots({
             cb.makeBackgroundNoRepeat()
         }
         return this        
-    },
+    }
     
-    removeCloseButton: function() {
+    removeCloseButton () {
         if (this.closeButtonView() !== null) {
             this.removeSubview(this.closeButtonView()) 
             this.setCloseButtonView(null)
         }
-    },
+    }
 
-    collapse: function() {
+    collapse () {
         this.closeButtonView().setOpacity(0).setTarget(null)
         this.setOpacity(0)
 		
@@ -98,9 +104,9 @@ NodeView.newSubclassNamed("ImageView").newSlots({
         style.marginLeft = "0px";
         style.marginRight = "0px";	
         */
-    },
+    }
     
-    close: function() {
+    close () {
         const seconds = 0.3
 		
         this.collapse()
@@ -117,19 +123,19 @@ NodeView.newSubclassNamed("ImageView").newSlots({
             //this.debugLog(".close complete parentView = ", parentView)
             parentView.scheduleSyncToNode()
         }, seconds * 1000)
-    },
+    }
 
     // --- sync ---
     
-    removeRawImageView: function() {
+    removeRawImageView () {
         if (this.rawImageView()) {
             this.imageContainer().removeSubview(this.rawImageView())
             this.setRawImageView(null)
         }
         return this
-    },
+    }
     
-    setFromDataURL: function(dataURL) {
+    setFromDataURL (dataURL) {
         //console.log("setFromDataURL: ", dataURL)
         if (!dataURL) {
             console.warn(this.typeId() + ".setFromDataURL() called with null argument")
@@ -148,9 +154,9 @@ NodeView.newSubclassNamed("ImageView").newSlots({
         this.imageContainer().addSubview(this.rawImageView())
 	
         return this
-    },
+    }
     
-    fetchDataURLFromSrc: function(src) {
+    fetchDataURLFromSrc (src) {
         if (src.beginsWith("data:")) {
 	        this.setFromDataURL(src)
         } else {
@@ -178,12 +184,12 @@ NodeView.newSubclassNamed("ImageView").newSlots({
         }
 		
         return this
-    },
+    }
     
-    didFetchDataURL: function(dataURL) {
+    didFetchDataURL (dataURL) {
         this.setFromDataURL(dataURL)
         this.scheduleSyncToNode() 
         return this
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

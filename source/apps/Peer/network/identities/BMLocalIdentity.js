@@ -11,14 +11,18 @@ var Buffer = bitcore.deps.Buffer;
     
 */
 
-BMKeyPair.newSubclassNamed("BMLocalIdentity").newSlots({
-    name: "",
-    privateKeyString: "",
-    didChangeIdentityNote: null,
-}).setSlots({
+window.BMLocalIdentity = class BMLocalIdentity extends BMKeyPair {
     
-    init: function () {
-        BMKeyPair.init.apply(this)
+    initPrototype () {
+        this.newSlots({
+            name: "",
+            privateKeyString: "",
+            didChangeIdentityNote: null,
+        })
+    }
+
+    init () {
+        super.init()
         this.setShouldStore(true)
         //this.setShouldStoreSubnodes(false)
         this.setNodeCanEditTitle(true)
@@ -39,40 +43,40 @@ BMKeyPair.newSubclassNamed("BMLocalIdentity").newSlots({
         this._didChangeIdentityNote = NotificationCenter.shared().newNote().setSender(this).setName("didChangeIdentity")
 
         this.setNodeCanEditTitle(true)
-    },
+    }
     
-    didUpdateSubnode: function(aSubnode) {
+    didUpdateSubnode (aSubnode) {
         this.postDidChangeIdentity()
         return this
-    },
+    }
     
-    postDidChangeIdentity: function() {
+    postDidChangeIdentity () {
         this.didChangeIdentityNote().post()
         return this
-    },
+    }
 
-    finalize: function() {
+    finalize () {
         BMKeyPair.finalize.apply(this)
         //this.debugLog(".finalize()")
         NotificationCenter.shared().newNote().setSender(this).setName("didChangeIdentity").setInfo(this).post()
-    },
+    }
 	
-    didLoadFromStore: function() {
+    didLoadFromStore () {
         //this.debugLog(" didLoadFromStore")
         BMKeyPair.didLoadFromStore.apply(this)
         this.profile().fieldNamed("publicKeyString").setValueIsEditable(false)
-    },
+    }
     
-    title: function () {
+    title  () {
         return this.name()
-    },
+    }
     
-    setTitle: function (s) {
+    setTitle  (s) {
         this.setName(s)
         return this
     }, 
  
-    handleObjMsg: function(objMsg) {
+    handleObjMsg (objMsg) {
         //this.debugLog(" " + this.name() + " handleObjMsg ", objMsg)
         let senderId = this.remoteIdentities().idWithPublicKeyString(objMsg.senderPublicKeyString()) 
         let didHandle = false
@@ -88,9 +92,9 @@ BMKeyPair.newSubclassNamed("BMLocalIdentity").newSlots({
         }
         
         return false
-    },
+    }
     
-    handleCleartextObjMsg: function(objMsg) {
+    handleCleartextObjMsg (objMsg) {
         console.log(this.title() + " >>>>>> " + this.typeId() + ".handleCleartextObjMsg(" + objMsg.type() + ") encryptedData:", objMsg.encryptedData(), " data:", objMsg.data())
 		
         let dict = objMsg.data()
@@ -107,18 +111,18 @@ BMKeyPair.newSubclassNamed("BMLocalIdentity").newSlots({
             }
         }
         return false
-    },
+    }
 	
 
-    handleAppMsg: function(appMsg) {	
+    handleAppMsg (appMsg) {	
         return this.apps().handleAppMsg(appMsg)
-    },
+    }
 	
-    idForPublicKeyString: function(pk) {
+    idForPublicKeyString (pk) {
 	    return this.allIdentitiesMap().at(pk)
-    },
+    }
 	
-    allIdentitiesMap: function() { // only uses valid remote identities
+    allIdentitiesMap () { // only uses valid remote identities
         let ids = ideal.Dictionary.clone()
         ids.atPut(this.publicKeyString(), this)
 		
@@ -132,9 +136,9 @@ BMKeyPair.newSubclassNamed("BMLocalIdentity").newSlots({
         })
 		
         return ids
-    },
+    }
 	
-    shelfSubnodes: function() {    
+    shelfSubnodes () {    
         let chat = this.apps().appNamed("Chat")
 
         let feed     = chat.feedPosts()
@@ -145,12 +149,12 @@ BMKeyPair.newSubclassNamed("BMLocalIdentity").newSlots({
         let drafts   = chat.drafts()
         
         return [feed, posts, threads, profile, contacts, drafts]
-    },
+    }
     
     
-    nodeThumbnailUrl: function() {
+    nodeThumbnailUrl () {
         //return this.profile().profileImageDataUrl()
         return null
-    },
+    }
         
-}).initThisProto()
+}.initThisClass()

@@ -6,18 +6,21 @@
 
 */
 
+window.ShipView = class ShipView extends ThingView {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
 
-ThingView.newSubclassNamed("ShipView").newSlots({
-}).setSlots({
-    init: function () {
-        ThingView.init.apply(this)
-
+    init () {
+        super.init()
         return this
-    },
+    } 
 
-    update: function() {
+    update () {
         ThingView.update.apply(this)
-    },
+    }
 
 
-}).initThisProto()
+}.initThisClass()

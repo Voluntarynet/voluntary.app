@@ -9,15 +9,18 @@
 
 */
 
-window.CloseButton = DomView.newSubclassNamed("CloseButton").newSlots({ 
-    isEnabled: true,
-    iconView: null,
-}).setSlots({
+window.CloseButton = class CloseButton extends DomView {
+    
+    initPrototype () {
+        this.newSlots({
+            isEnabled: true,
+            iconView: null,
+        })
+    }
 
-    init: function () {
-        DomView.init.apply(this)
+    init () {
+        super.init()
         this.turnOffUserSelect()
-
         //this.setDisplay("table") // to center svg
 
         const iv = SvgIconView.clone().setIconName("close")
@@ -32,39 +35,39 @@ window.CloseButton = DomView.newSubclassNamed("CloseButton").newSlots({
         this.setAction("close")
         this.addDefaultTapGesture()
         return this
-    },
+    }
 
-    setIconName: function(aString) {
+    setIconName (aString) {
         this.iconView().setIconName(aString)
         return this
-    },
+    }
 
     // --- editable ---
     
-    setIsEnabled: function(aBool) {
+    setIsEnabled (aBool) {
         if (this._isEnabled !== aBool) {
             this._isEnabled = aBool
             this.syncEnabled()
         }
 
         return this
-    },
+    }
 
-    syncEnabled: function() {
+    syncEnabled () {
         if (this._isEnabled) {
             this.setDisplay("block")
         } else {
             this.setDisplay("none")
         }
         return this
-    },
+    }
 
-    onTapComplete: function (aGesture) {
+    onTapComplete  (aGesture) {
         //this.debugLog(".onTapComplete()")
         if (!this.isEditable()) {
             DomView.sendActionToTarget.apply(this)
         }
         return false
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

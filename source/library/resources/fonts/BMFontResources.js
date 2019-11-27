@@ -6,48 +6,49 @@
 
 */
 
-BMNode.newSubclassNamed("BMFontResources").newSlots({
-    extensions: ["ttf", "woff", "woff2"],
-}).setSlots({
-    shared: function() {   
-        return this.sharedInstanceForClass(BMFontResources)
-    },
+window.TouchListener = class TouchListener extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+            extensions: ["ttf", "woff", "woff2"],
+        })
+    }
 
-    init: function () {
-        BMNode.init.apply(this)
+    init () {
+        super.init()
 
         this.setTitle("Fonts")
         this.setNodeMinWidth(270)
 
         this.watchOnceForNote("appDidInit")
         return this
-    },
+    }
 
-    appDidInit: function() {
+    appDidInit () {
         //this.debugLog(".appDidInit()")
         this.setupSubnodes()
         return this
-    },
+    }
     
-    addFamily: function(aFontFamily) {
+    addFamily (aFontFamily) {
         this.addSubnode(aFontFamily)
         return this
-    },
+    }
 
-    families: function() {
+    families () {
         return this.subnodes()
-    },
+    }
 
-    resourcePaths: function() {
+    resourcePaths () {
         return ResourceLoader.resourceFilePathsWithExtensions(this.extensions())
-    },
+    }
 
-    setupSubnodes: function() {
+    setupSubnodes () {
         this.resourcePaths().forEach(path => this.addFontWithPath(path))
         return this
-    },
+    }
 
-    fontFamilyNamed: function(aName) {
+    fontFamilyNamed (aName) {
         let family = this.families().detect(family => family.name() === aName);
 
         if (!family) {
@@ -56,9 +57,9 @@ BMNode.newSubclassNamed("BMFontResources").newSlots({
         }
 
         return family
-    },
+    }
 
-    addFontWithPath: function(aPath) {
+    addFontWithPath (aPath) {
         const components = aPath.split("/")
 
         // verify path is in expected format 
@@ -76,6 +77,6 @@ BMNode.newSubclassNamed("BMFontResources").newSlots({
         family.addFontWithPath(aPath)
 
         return this
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

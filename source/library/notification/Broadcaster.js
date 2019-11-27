@@ -26,7 +26,7 @@
         }
 
         // inside a NodeStore
-        didChangeStoredSlot: function(aSender) {
+        didChangeStoredSlot (aSender) {
             this.addDirtyObject(aSender)
         }
 

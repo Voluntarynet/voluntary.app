@@ -7,18 +7,23 @@
 
 */
 
-EventSetListener.newSubclassNamed("ClipboardListener").newSlots({
-}).setSlots({
-    init: function () {
-        EventSetListener.init.apply(this)
-        return this
-    },
+window.ClipboardListener = class ClipboardListener extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
 
-    setupEventsDict: function() {
+    init  () {
+        super.init()
+        return this
+    }
+
+    setupEventsDict () {
         this.addEventNameAndMethodName("copy", "onCopy");
         this.addEventNameAndMethodName("cut", "onCut");
         this.addEventNameAndMethodName("paste", "onPaste");
         return this
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

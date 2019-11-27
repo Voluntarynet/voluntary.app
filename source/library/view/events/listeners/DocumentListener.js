@@ -7,14 +7,19 @@
 
 */
 
-EventSetListener.newSubclassNamed("DocumentListener").newSlots({
-}).setSlots({
-    init: function () {
-        EventSetListener.init.apply(this)
-        return this
-    },
+window.DocumentListener = class DocumentListener extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
 
-    setupEventsDict: function() {
+    init () {
+        super.init()
+        return this
+    }
+
+    setupEventsDict () {
         this.addEventNameAndMethodName("resize", "onDocumentResize");
 
         // not sure how to organize these other events yet
@@ -33,10 +38,10 @@ EventSetListener.newSubclassNamed("DocumentListener").newSlots({
         //this.addEventNameAndMethodName("fullscreenerror", "onBrowserFullScreenError");
 
         return this
-    },
+    }
 
-    listenTarget: function() {
+    listenTarget () {
         return window // is this the best way to handle this?
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

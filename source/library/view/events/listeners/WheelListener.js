@@ -7,16 +7,21 @@
 
 */
 
-EventSetListener.newSubclassNamed("WheelListener").newSlots({
-}).setSlots({
-    init: function () {
-        EventSetListener.init.apply(this)
-        return this
-    },
+window.WheelListener = class WheelListener extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
 
-    setupEventsDict: function() {
+    init () {
+        super.init()
+        return this
+    }
+
+    setupEventsDict () {
         this.addEventNameAndMethodName("wheel",   "onWheel");
         return this
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

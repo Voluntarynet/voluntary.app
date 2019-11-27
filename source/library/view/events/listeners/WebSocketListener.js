@@ -7,21 +7,24 @@
 
 */
 
-EventSetListener.newSubclassNamed("WebSocketListener").newSlots({
-}).setSlots({
-    /*
-    init: function () {
-        EventSetListener.init.apply(this)
-        return this
-    },
-    */
+window.WebSocketListener = class WebSocketListener extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
 
-    setupEventsDict: function() {
+    init () {
+        super.init()
+        return this
+    }
+
+    setupEventsDict () {
         this.addEventNameAndMethodName("open", "onOpen");
         this.addEventNameAndMethodName("close", "onClose");
         this.addEventNameAndMethodName("error", "onError");
         this.addEventNameAndMethodName("message", "onMessage");
         return this
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

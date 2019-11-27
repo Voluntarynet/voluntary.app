@@ -7,18 +7,23 @@
 
 */
 
-EventSetListener.newSubclassNamed("GamePadListener").newSlots({
-}).setSlots({
-    init: function () {
-        EventSetListener.init.apply(this)
-        return this
-    },
+window.GamePadListener = class GamePadListener extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
 
-    setupEventsDict: function() {
+    init () {
+        super.init()
+        return this
+    }
+
+    setupEventsDict () {
         this.addEventNameAndMethodName("gamepadconnected",   "onGamePadConnected");
         this.addEventNameAndMethodName("gamepaddisconnected", "onGamePadDisconnected");
         return this
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()
 

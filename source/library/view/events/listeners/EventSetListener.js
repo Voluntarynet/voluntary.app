@@ -15,39 +15,44 @@
     
 */
 
-ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
-    listenTarget: null,
-    delegate: null,
-    isListening: false,
-    eventsDict: null, // should only write from within class & subclasses
-    useCapture: false, // whether event will be dispatched to listener before EventTarget beneath it in DOM tree.
-    methodSuffix: "",
-}).setSlots({
-    init: function () {
-        ideal.Proto.init.apply(this)
+window.EventSetListener = class EventSetListener extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+            listenTarget: null,
+            delegate: null,
+            isListening: false,
+            eventsDict: null, // should only write from within class & subclasses
+            useCapture: false, // whether event will be dispatched to listener before EventTarget beneath it in DOM tree.
+            methodSuffix: "",
+        })
+    }
+
+    init  () {
+        super.init()
         this.setEventsDict({})
         this.setupEventsDict()
         return this
-    },
+    }
 
-    setupEventsDict: function() {
+    setupEventsDict () {
         // subclasses override to call addEventNameAndMethodName() for their events
         return this
-    },
+    }
 
     /*
-    view: function() {
+    view () {
         return this.element()._domView
-    },
+    }
     */
 
-    setListenTarget: function(t) {
+    setListenTarget (t) {
         assert(t)
         this._listenTarget = t
         return this
-    },
+    }
 
-    listenTargetDescription: function() {
+    listenTargetDescription () {
         return DomElement_description(this.listenTarget())
 
         /*        
@@ -59,11 +64,11 @@ ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
         
         return type
         */
-    },
+    }
 
     // --------------
 
-    setUseCapture: function(v) {
+    setUseCapture (v) {
         this._useCapture = v ? true : false;
         //this.setupEventsDict()
 
@@ -73,11 +78,11 @@ ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
         }
 
         return this
-    },
+    }
 
     // ---
 
-    fullMethodNameFor: function(methodName) {
+    fullMethodNameFor (methodName) {
         let suffix = ""
 
         if (this.useCapture()) {
@@ -86,29 +91,29 @@ ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
 
         suffix += this.methodSuffix()
         return methodName + suffix
-    },
+    }
 
-    addEventNameAndMethodName: function(eventName, methodName) {
+    addEventNameAndMethodName (eventName, methodName) {
         this.eventsDict()[eventName] = { 
             methodName: methodName, 
             handlerFunc: null,
             useCapture: this.useCapture(),
         }
         return this
-    },
+    }
 
     // ---
 
-    setIsListening: function(aBool) {
+    setIsListening (aBool) {
         if (aBool) {
             this.start()
         } else {
             this.stop()
         }
         return this
-    },
+    }
 
-    forEachEventDict: function(func) {
+    forEachEventDict (func) {
         const eventsDict = this.eventsDict()
         for (let k in eventsDict) {
             if (eventsDict.hasOwnProperty(k)) {
@@ -118,16 +123,16 @@ ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
             }
         }
         return this
-    },
+    }
 
-    assertHasListenTarget: function() {
+    assertHasListenTarget () {
         const t = this.listenTarget()
         assert(t !== null)
         assert(t !== undefined)
         return this
-    },
+    }
 
-    start: function() {
+    start () {
         if (this.isListening()) {
             return this
         }
@@ -186,9 +191,9 @@ ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
         })
 
         return this
-    },
+    }
 
-    onBeforeEvent: function(methodName, event) {
+    onBeforeEvent (methodName, event) {
         /*
         const a = methodName.contains("Capture") ||  methodName.contains("Focus") || methodName.contains("Move") || methodName.contains("Leave") || methodName.contains("Enter") || methodName.contains("Over")
         if (!a) {
@@ -196,9 +201,9 @@ ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
         }
         */
         return this
-    },
+    }
 
-    onAfterEvent: function(methodName, event) {
+    onAfterEvent (methodName, event) {
         if (window.SyncScheduler) {
             /*
                 run scheduled events here to ensure that a UI event won't occur
@@ -219,9 +224,9 @@ ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
             window.SyncScheduler.shared().fullSyncNow()
         }
         return this
-    },
+    }
 
-    stop: function() {
+    stop () {
         if (!this.isListening()) {
             return this
         }
@@ -237,23 +242,23 @@ ideal.Proto.newSubclassNamed("EventSetListener").newSlots({
         })
 
         return this
-    },   
+    }   
 
-}).initThisProto()
+}.initThisClass()
 
 /*
     // globally track whether we are inside an event 
 
-    setIsHandlingEvent: function() {
+    setIsHandlingEvent () {
         DomView._isHandlingEvent = true
         return this
     },
 	
-    isHandlingEvent: function() {
+    isHandlingEvent () {
         return DomView._isHandlingEvent
     },
 
-    handleEventFunction: function(event, eventFunc) {
+    handleEventFunction (event, eventFunc) {
         //  a try gaurd to make sure isHandlingEvent has correct value
         //  isHandlingEvent is used to determine if view should inform node of changes
         //  - it should only while handling an event

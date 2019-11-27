@@ -7,25 +7,30 @@
 
 */
 
-EventSetListener.newSubclassNamed("DragListener").newSlots({
-}).setSlots({
-    init: function () {
-        EventSetListener.init.apply(this)
-        return this
-    },
+window.DragListener = class DragListener extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
 
-    setupEventsDict: function() {
+    init () {
+        super.init()
+        return this
+    }
+
+    setupEventsDict () {
         // fired on draggable element
         this.addEventNameAndMethodName("dragstart", "onDragStart");
         this.addEventNameAndMethodName("drag",      "onDrag");
         this.addEventNameAndMethodName("dragend",   "onDragEnd");
         return this
-    },
+    }
 
-    start: function() {
+    start () {
         EventSetListener.start.apply(this)
         this.listenTarget().ondragstart = (e) => { console.log("--- ondragstart ---"); } // TODO: still needed?
         return this
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

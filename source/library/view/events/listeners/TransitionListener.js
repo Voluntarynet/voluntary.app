@@ -7,19 +7,24 @@
 
 */
 
-EventSetListener.newSubclassNamed("TransitionListener").newSlots({
-}).setSlots({
-    init: function () {
-        EventSetListener.init.apply(this)
-        return this
-    },
+window.TransitionListener = class TransitionListener extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
 
-    setupEventsDict: function() {
+    init () {
+        super.init()
+        return this
+    }
+
+    setupEventsDict () {
         this.addEventNameAndMethodName("transitionrun", "onTransitionRun");
         this.addEventNameAndMethodName("transitionstart", "onTransitionStart");
         this.addEventNameAndMethodName("transitioncancel", "onTransitionCancel");
         this.addEventNameAndMethodName("transitionend", "onTransitionEnd");
         return this
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

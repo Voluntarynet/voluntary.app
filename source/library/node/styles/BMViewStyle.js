@@ -10,44 +10,49 @@
  
 */
 
-ideal.Proto.newSubclassNamed("BMViewStyle").newSlots({
-    name: "",
+window.BMViewStyle = class BMViewStyle extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+            name: "",
 
-    // use same names as css style, nulls aren't applied
-	
-    color: null,
-    backgroundColor: null,
-    opacity: null,
-    borderLeft: null,
-    borderRight: null,
-    borderTop: null,
-    borderBottom: null,
-    borderWidth: null,
-    borderColor: null,
-    borderRadius: null,
-	
-    // margin, padding, border,...
-    // fontSize, fontFamily, fontStyle
-	
-    styleNames: [
-        "color", 
-        "backgroundColor", 
-        "opacity", 
-        "borderLeft", "borderRight", "borderTop", "borderBottom",
-        //"borderWidth"
-        //"borderRadius"
-    ]
-}).setSlots({
-    init: function () {
-        ideal.Proto.init.apply(this)
+            // use same names as css style, nulls aren't applied
+            
+            color: null,
+            backgroundColor: null,
+            opacity: null,
+            borderLeft: null,
+            borderRight: null,
+            borderTop: null,
+            borderBottom: null,
+            borderWidth: null,
+            borderColor: null,
+            borderRadius: null,
+            
+            // margin, padding, border,...
+            // fontSize, fontFamily, fontStyle
+            
+            styleNames: [
+                "color", 
+                "backgroundColor", 
+                "opacity", 
+                "borderLeft", "borderRight", "borderTop", "borderBottom",
+                //"borderWidth"
+                //"borderRadius"
+            ]
+        })
+    }
+
+    init  () {
+        super.init()
         return this
-    },
+    }
 
-    isEmpty: function() {
+    isEmpty () {
         return this.styleNames().detect(s => s != null) === null
-    },
+    }
 
-    description: function() {
+    description () {
         const parts = []
 		
         this.styleNames().forEach( (name) => { 
@@ -58,14 +63,14 @@ ideal.Proto.newSubclassNamed("BMViewStyle").newSlots({
         })	
 		
         return "{" + parts.join(", ") + "}"	
-    },
+    }
 	
-    copyFrom: function(aViewStyle, copyDict) {
+    copyFrom (aViewStyle, copyDict) {
         aViewStyle.applyToView(this) // we're not a view but this works since we use the same methods/protocol
         return this
-    },
+    }
 	
-    applyToView: function(aView) {		
+    applyToView (aView) {		
         this.styleNames().forEach( (name) => { 
             const getterMethod = this[name]
             if (!getterMethod) {
@@ -80,6 +85,6 @@ ideal.Proto.newSubclassNamed("BMViewStyle").newSlots({
         })
 		
         return this
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

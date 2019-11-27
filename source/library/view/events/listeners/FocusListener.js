@@ -7,19 +7,24 @@
 
 */
 
-EventSetListener.newSubclassNamed("FocusListener").newSlots({
-}).setSlots({
-    init: function () {
-        EventSetListener.init.apply(this)
-        return this
-    },
+window.FocusListener = class FocusListener extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
 
-    setupEventsDict: function() {
+    init () {
+        super.init()
+        return this
+    }
+
+    setupEventsDict () {
         this.addEventNameAndMethodName("blur", "onBlur");
         this.addEventNameAndMethodName("focus", "onFocus");
         this.addEventNameAndMethodName("focusin", "onFocusIn");
         this.addEventNameAndMethodName("focusout", "onFocusOut"); 
         return this
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

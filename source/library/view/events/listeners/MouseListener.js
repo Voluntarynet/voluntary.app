@@ -7,14 +7,20 @@
 
 */
 
-EventSetListener.newSubclassNamed("MouseListener").newSlots({
-}).setSlots({
-    init: function () {
-        EventSetListener.init.apply(this)
-        return this
-    },
 
-    setupEventsDict: function() {
+window.MouseListener = class MouseListener extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
+        return this
+    }
+
+    setupEventsDict () {
         this.addEventNameAndMethodName("mousedown", "onMouseDown");
         this.addEventNameAndMethodName("mouseup",   "onMouseUp");
 
@@ -32,6 +38,6 @@ EventSetListener.newSubclassNamed("MouseListener").newSlots({
 
         this.addEventNameAndMethodName("contextmenu", "onContextMenu"); // occurs on right mouse click on element
         return this
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

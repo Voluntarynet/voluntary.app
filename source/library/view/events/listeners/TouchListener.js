@@ -7,19 +7,24 @@
 
 */
 
-EventSetListener.newSubclassNamed("TouchListener").newSlots({
-}).setSlots({
-    init: function () {
-        EventSetListener.init.apply(this)
-        return this
-    },
+window.TouchListener = class TouchListener extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
 
-    setupEventsDict: function() {
+    init () {
+        super.init()
+        return this
+    }
+
+    setupEventsDict () {
         this.addEventNameAndMethodName("touchstart",  "onTouchStart");
         this.addEventNameAndMethodName("touchmove",   "onTouchMove");
         this.addEventNameAndMethodName("touchcancel", "onTouchCancel");
         this.addEventNameAndMethodName("touchend",    "onTouchEnd");
         return this
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

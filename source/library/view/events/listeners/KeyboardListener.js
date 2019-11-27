@@ -7,21 +7,26 @@
 
 */
 
-EventSetListener.newSubclassNamed("KeyboardListener").newSlots({
-}).setSlots({
-    init: function () {
-        EventSetListener.init.apply(this)
+window.KeyboardListener = class KeyboardListener extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
         //this.setIsDebugging(true)
         return this
-    },
+    }
 
-    setupEventsDict: function() {
+    setupEventsDict () {
         this.addEventNameAndMethodName("keyup", "onKeyUp");
         this.addEventNameAndMethodName("keydown", "onKeyDown");
         //this.addEventNameAndMethodName("keypress", "onKeyPress");
         //this.addEventNameAndMethodName("change", "onChange");
         //this.addEventNameAndMethodName("select", "onSelect");
         return this
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

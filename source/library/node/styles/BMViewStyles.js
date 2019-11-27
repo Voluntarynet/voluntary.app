@@ -28,34 +28,39 @@
 */
 
 
-ideal.Proto.newSubclassNamed("BMViewStyles").newSlots({
-    name: "",
-    unselected: null, 
-    selected: null, // aka focused
-    disabled: null,
-    //hover: null, 
-    //enabled: null,
-    //error: null,
-    isMutable: true,
-}).setSlots({
-    init: function () {
+window.BMViewStyles = class BMViewStyles extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+            name: "",
+            unselected: null, 
+            selected: null, // aka focused
+            disabled: null,
+            //hover: null, 
+            //enabled: null,
+            //error: null,
+            isMutable: true,
+        })
+    }
+
+    init () {
         ideal.Proto.init.apply(this)
         this.setSelected(BMViewStyle.clone())
         this.setUnselected(BMViewStyle.clone())
         this.setDisabled(BMViewStyle.clone())
         //this.setHover(BMViewStyle.clone())
         return this
-    },
+    }
 
-    states: function() {
+    states () {
         return [this.unselected(), this.selected()]
-    },
+    }
 
-    isEmpty: function() {
+    isEmpty () {
         return this.states().detect(state => !state.isEmpty()) === null
-    },
+    }
 
-    sharedBlackOnWhiteStyle: function() {
+    sharedBlackOnWhiteStyle () {
         if (!BMViewStyles._sharedBlackOnWhiteStyle) {
             const vs = BMViewStyles.clone()
             vs.setToBlackOnWhite()
@@ -64,17 +69,17 @@ ideal.Proto.newSubclassNamed("BMViewStyles").newSlots({
             BMViewStyles._sharedBlackOnWhiteStyle = vs
         }
         return BMViewStyles._sharedBlackOnWhiteStyle
-    },
+    }
 
-    sharedWhiteOnBlackStyle: function() {
+    sharedWhiteOnBlackStyle () {
         //return this.sharedBlackOnWhiteStyle()
         if (!BMViewStyles._sharedWhiteOnBlackStyle) {
             BMViewStyles._sharedWhiteOnBlackStyle = BMViewStyles.clone().setToWhiteOnBlack().setIsMutable(false).setName("WhiteOnBlack")
         }
         return BMViewStyles._sharedWhiteOnBlackStyle
-    },
+    }
 
-    setToBlackOnWhite: function() {
+    setToBlackOnWhite () {
         assert(this.isMutable())
         this.unselected().setColor("black")
         this.unselected().setBackgroundColor("white")
@@ -84,9 +89,9 @@ ideal.Proto.newSubclassNamed("BMViewStyles").newSlots({
         this.selected().setBackgroundColor("#eee")
         this.selected().setBorderBottom("1px solid #ddd") // "1px solid #ddd"
         return this
-    },
+    }
 
-    setToWhiteOnBlack: function() {
+    setToWhiteOnBlack () {
         assert(this.isMutable())
         this.unselected().setColor("#aaa")
         this.unselected().setBackgroundColor("black")
@@ -96,10 +101,10 @@ ideal.Proto.newSubclassNamed("BMViewStyles").newSlots({
         this.selected().setBackgroundColor("#444") // change for column?
         this.selected().setBorderBottom("none")
         return this
-    },
+    }
     
     /*
-    setToGrayOnTransparent: function() {        
+    setToGrayOnTransparent () {        
         assert(this.isMutable())
         this.unselected().setColor("#aaa")
         this.unselected().setBackgroundColor("transparent")
@@ -107,26 +112,26 @@ ideal.Proto.newSubclassNamed("BMViewStyles").newSlots({
         this.selected().setColor("white")
         this.selected().setBackgroundColor("transparent")        
         return this
-    },
+    }
     */
     
-    copyFrom: function(styles, copyDict) {
+    copyFrom (styles, copyDict) {
         assert(this.isMutable())
         this.selected().copyFrom(styles.selected(), copyDict)
         this.unselected().copyFrom(styles.unselected(), copyDict)
         return this
-    },
+    }
     
-    setBackgroundColor: function(c) {
+    setBackgroundColor (c) {
         this.selected().setBackgroundColor(c)
         this.unselected().setBackgroundColor(c)
         return this        
-    },
+    }
     
-    setColor: function(c) {
+    setColor (c) {
         this.selected().setColor(c)
         this.unselected().setColor(c)
         return this        
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

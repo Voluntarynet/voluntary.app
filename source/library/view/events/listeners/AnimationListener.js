@@ -7,18 +7,23 @@
 
 */
 
-EventSetListener.newSubclassNamed("AnimationListener").newSlots({
-}).setSlots({
-    init: function () {
-        EventSetListener.init.apply(this)
-        return this
-    },
+window.AnimationListener = class AnimationListener extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
 
-    setupEventsDict: function() {
+    init  () {
+        super.init()
+        return this
+    }
+
+    setupEventsDict () {
         this.addEventNameAndMethodName("animationend", "onAnimationEnd");
         this.addEventNameAndMethodName("animationiteration", "onAnimationIteration");
         this.addEventNameAndMethodName("animationstart", "onAnimationStart");
         return this
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

@@ -7,24 +7,29 @@
 
 */
 
-EventSetListener.newSubclassNamed("SelectListener").newSlots({
-}).setSlots({
-    init: function () {
-        EventSetListener.init.apply(this)
-        return this
-    },
+window.SelectListener = class SelectListener extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
 
-    setListenTarget: function(anElement) {
+    init () {
+        super.init()
+        return this
+    }
+
+    setListenTarget (anElement) {
         // is event only works on document or window?
         assert(anElement === document || anElement === window)
         EventSetListener.setListenTarget.apply(this, [anElement])
         return this
-    },
+    }
 
-    setupEventsDict: function() {
+    setupEventsDict () {
         this.addEventNameAndMethodName("selectstart", "onSelectStart");
         this.addEventNameAndMethodName("selectionchange", "onSelectionChange");
         return this
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

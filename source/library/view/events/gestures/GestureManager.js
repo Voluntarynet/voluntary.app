@@ -8,27 +8,32 @@
 
 */
 
+window.GestureManager = class GestureManager extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+            activeGesture: null,
+            begunGestures: null,
+        })
+    }
 
-ideal.Proto.newSubclassNamed("GestureManager").newSlots({
-    activeGesture: null,
-    begunGestures: null,
-}).setSlots({
-
-    init: function () {
-        ideal.Proto.init.apply(this)
+    init () {
+        super.init()
         this.setBegunGestures({})
         return this
-    },
+    }
 
-    shared: function() {   
+    /*
+    shared () {   
         return this.sharedInstanceForClass(GestureManager)
-    },
+    }
+    */
 
-    hasActiveGesture: function() {
+    hasActiveGesture () {
         return this.activeGesture() && this.activeGesture().isActive()
-    },
+    }
 
-    requestActiveGesture: function(aGesture) {
+    requestActiveGesture (aGesture) {
         assert(aGesture)
         //this.releaseActiveGestureIfInactive()
         if(aGesture === this.activeGesture()) {
@@ -54,9 +59,9 @@ ideal.Proto.newSubclassNamed("GestureManager").newSlots({
         }
 
         return false
-    },
+    }
 
-    acceptGesture: function(aGesture) { // private method
+    acceptGesture (aGesture) { // private method
         aGesture.viewTarget().cancelAllGesturesExcept(aGesture)
         this.cancelBegunGesturesExcept(aGesture)
         this.setActiveGesture(aGesture)
@@ -64,45 +69,45 @@ ideal.Proto.newSubclassNamed("GestureManager").newSlots({
             console.log(this.type() + " activating " + aGesture.description())
         }
         return this
-    },
+    }
 
-    rejectGesture: function(aGesture) { // private method
+    rejectGesture (aGesture) { // private method
         if (this.isDebugging()) {
             console.log(this.type() + " rejecting " + aGesture.description())
             console.log(this.type() + " already active " + this.activeGesture().description())
         }
         return this
-    },
+    }
 
-    deactivateGesture: function(aGesture) {
+    deactivateGesture (aGesture) {
         if (this.activeGesture() === aGesture) {
             this.setActiveGesture(null)
         }
         return this
-    },
+    }
 
-    addBegunGesture: function(aGesture) {
+    addBegunGesture (aGesture) {
         this.begunGestures()[aGesture.typeId()] = aGesture
         return this
-    },
+    }
 
-    removeBegunGesture: function(aGesture) {
+    removeBegunGesture (aGesture) {
         delete this.begunGestures()[aGesture.typeId()]
         return this
-    },
+    }
 
-    cancelAllBegunGestures: function() {
+    cancelAllBegunGestures () {
         Object.values(this.begunGestures()).forEach(g => g.cancel() );
         return this
-    },
+    }
 
-    cancelBegunGesturesExcept: function(aGesture) {
+    cancelBegunGesturesExcept (aGesture) {
         Object.values(this.begunGestures()).forEach((g) => {
             if (g !== aGesture) {
                 g.cancel()
             }
         });
         return this
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

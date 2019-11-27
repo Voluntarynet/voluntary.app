@@ -7,27 +7,30 @@
 
 */
 
+window.GamePad = class GamePad extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+            gamePadManager: null,
+            index: null,
+            id: null,
+            timestamp: null,
+            buttons: null,
+            axes: null,
+            isConnected: false,
+            shouldSendNotes: false
+        })
+    }
 
-ideal.Proto.newSubclassNamed("GamePad").newSlots({
-    gamePadManager: null,
-    index: null,
-    id: null,
-    timestamp: null,
-    buttons: null,
-    axes: null,
-    isConnected: false,
-    shouldSendNotes: false
-}).setSlots({
-
-    init: function () {
-        ideal.Proto.init.apply(this)
+    init  () {
+        super.init()
         this.setButtons([])
         this.setAxes([])
         this.setIsDebugging(true)
         return this
-    },
+    }
 
-    updateData: function(gp) {
+    updateData (gp) {
         assert(gp.id() === this.id()) // quick sanity check
 
         if (gp.timestamp !== this.timestamp()) {
@@ -35,11 +38,11 @@ ideal.Proto.newSubclassNamed("GamePad").newSlots({
             this.updateButtons(gp.buttons)
             this.updateAxes(gp.axes)
         }
-    },
+    }
 
     // buttons
 
-    updateButtons: function(newButtons) {
+    updateButtons (newButtons) {
         // make sure number of buttons is correct
         const currentButtons = this.buttons()
         while (currentButtons.length < newButtons.length) {
@@ -59,19 +62,19 @@ ideal.Proto.newSubclassNamed("GamePad").newSlots({
         }
 
         return this
-    },
+    }
 
-    changedButtonIndexTo: function(index, isDown) {
+    changedButtonIndexTo (index, isDown) {
         const note = NotificationCenter.shared().newNote().setSender(this)
         note.setName("onGamePadButton" + index + (isDown ? "Down" : "Up")) // TODO: optimize
         note.setInfo(isDown)
         note.post()
         return this
-    },
+    }
 
     // axes
 
-    updateAxes: function(newAxes) {
+    updateAxes (newAxes) {
         // make sure number of buttons is correct
         const currentAxes = this.axes()
         while (currentAxes.length < newAxes.length) {
@@ -91,32 +94,32 @@ ideal.Proto.newSubclassNamed("GamePad").newSlots({
         }
 
         return this
-    },
+    }
 
-    changedAxesIndexTo: function(index, value) {
+    changedAxesIndexTo (index, value) {
         const note = NotificationCenter.shared().newNote().setSender(this)
         note.setName("onGamePadAxis" + index + "Changed") // TODO: optimize?
         note.setInfo(value)
         note.post()
         return this
-    },
+    }
 
     // connecting
 
-    onConnected: function() {
+    onConnected () {
         this.setIsConnected(true)
         const note = NotificationCenter.shared().newNote().setSender(this)
         note.setName("onGamePadConnected")
         note.post()
         return this
-    },
+    }
 
-    onDisconnected: function() {
+    onDisconnected () {
         this.setIsConnected(false)
         const note = NotificationCenter.shared().newNote().setSender(this)
         note.setName("onGamePadDisconnected")
         note.post()
         return this
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

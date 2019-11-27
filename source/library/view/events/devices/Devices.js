@@ -14,27 +14,32 @@
 
 */
 
+window.Devices = class Devices extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+            //gamePadListener: null,
+            keyboard: null,
+            mouse: null,
+            touchScreen: null,
+            gamePadManager: null,
+            isSetup: false,
+        })
+    }
 
-ideal.Proto.newSubclassNamed("Devices").newSlots({
-    //gamePadListener: null,
-    keyboard: null,
-    mouse: null,
-    touchScreen: null,
-    gamePadManager: null,
-    isSetup: false,
-}).setSlots({
-
-    shared: function() { 
+    /*
+    shared () { 
         return this.sharedInstanceForClass(Devices)
-    },
+    }
+    */
 
-    init: function () {
-        ideal.Proto.init.apply(this)
+    init  () {
+        super.init()
         this.setupIfNeeded() 
         return this
-    },
+    }
 
-    setupIfNeeded: function() {
+    setupIfNeeded () {
         if (!this.isSetup()) {
             Mouse.shared()
             Keyboard.shared()
@@ -43,15 +48,15 @@ ideal.Proto.newSubclassNamed("Devices").newSlots({
             this.setIsSetup(true)
         }
         return this
-    },
+    }
 
-    currentTouchOrMouseEvent: function() {
+    currentTouchOrMouseEvent () {
         // needed?
         const me = Mouse.shared().currentEvent()
         const te = TouchScreen.shared().currentEvent()
         const es = [me, te]
         es.filter(e => !TypeError.isNullOrUndefined(e))
         return es.min(e => e.timeStamp)
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

@@ -7,6 +7,7 @@
 */
 
 window.KeyboardKey = class KeyboardKey extends ProtoClass {
+    
     initPrototype () {
         this.newSlots({
             isDown: false,

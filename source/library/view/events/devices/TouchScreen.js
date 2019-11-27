@@ -9,27 +9,32 @@
 
 */
 
+window.TouchScreen = class TouchScreen extends ProtoClass {
 
-ideal.Proto.newSubclassNamed("TouchScreen").newSlots({
-    currentEvent: null,
-    lastEvent: null,
-    touchListener: null,
-    //isVisualDebugging: false,
-}).setSlots({
+    initPrototype () {
+        this.newSlots({
+            currentEvent: null,
+            lastEvent: null,
+            touchListener: null,
+            //isVisualDebugging: false,
+        })
+    }
 
-    isSupported: function() {
+    isSupported () {
         // return WebBrowserWindow.isTouchDevice()
         let result = false 
         if ("ontouchstart" in window) { result = true; } // works on most browsers 
         if (navigator.maxTouchPoints) { result = true; } // works on IE10/11 and Surface	
         return result
-    },
+    }
 
-    shared: function() { 
+    /*
+    shared () { 
         return this.sharedInstanceForClass(TouchScreen)
-    },
+    }
+    */
 
-    init: function () {
+    init  () {
         ideal.Proto.init.apply(this)
         this.startListening()
         //this.setIsDebugging(true)
@@ -37,9 +42,9 @@ ideal.Proto.newSubclassNamed("TouchScreen").newSlots({
             this.debugLog(".init()")
         }
         return this
-    },
+    }
 
-    setCurrentEvent: function(event) {
+    setCurrentEvent (event) {
         if (this._currentEvent !== event) {
             this.setLastEvent(this._currentEvent)
             this._currentEvent = event
@@ -49,27 +54,27 @@ ideal.Proto.newSubclassNamed("TouchScreen").newSlots({
             //Devices.shared().setCurrentEvent(event)
         }
         return this
-    },
+    }
 
-    startListening: function() {
+    startListening () {
         this.setTouchListener(TouchListener.clone().setUseCapture(true).setListenTarget(document.body).setDelegate(this))
         this.touchListener().setIsListening(true)
         return this
-    },
+    }
 
     // events
 
-    onTouchBeginCapture: function(event) {
+    onTouchBeginCapture (event) {
         if (this.isDebugging()) {
             console.log(this.type() + ".onTouchBeginCapture()")
         }
         this.setCurrentEvent(event)
         //this.handleLeave(event)
         return true
-    },
+    }
 
     /*
-    elementsForEvent: function(event) {
+    elementsForEvent (event) {
         const elements = [];
         const points = this.pointsForEvent(event)
         points.forEach((point) => {
@@ -79,32 +84,32 @@ ideal.Proto.newSubclassNamed("TouchScreen").newSlots({
             }
         })
         return elements
-    },
+    }
     */
 
-    lastPointForId: function(id) {
+    lastPointForId (id) {
         const lastPoints = this.pointsForEvent(this.lastEvent())
         return lastPoints.detect(p => p.id() === id)
-    },
+    }
 
-    currentPointForId: function(id) {
+    currentPointForId (id) {
         const currentPoints = this.pointsForEvent(this.currentEvent())
         return currentPoints.detect(p => p.id() === id)
-    },
+    }
 
-    onTouchMoveCapture: function (event) {
+    onTouchMoveCapture  (event) {
         this.setCurrentEvent(event)
         //this.handleLeave(event)
         return true
-    },
+    }
 
-    onTouchEndCapture: function(event) {
+    onTouchEndCapture (event) {
         this.setCurrentEvent(event)
         //this.handleLeave(event)
         return true
-    },
+    }
 
-    pointForTouch: function(touch) {
+    pointForTouch (touch) {
         assert(event.__proto__.constructor === TouchEvent)
         const p = EventPoint.clone()
         p.setId(touch.identifier)
@@ -115,9 +120,9 @@ ideal.Proto.newSubclassNamed("TouchScreen").newSlots({
         p.setEvent(touch)
         //p.findOverview()
         return p
-    },
+    }
 
-    justPointsForEvent: function(event) {
+    justPointsForEvent (event) {
         //if (this.isDebugging()) {
         //  console.log("touches.length = ", event.touches.length)
         //}
@@ -132,10 +137,10 @@ ideal.Proto.newSubclassNamed("TouchScreen").newSlots({
         }
 
         return points
-    },
+    }
 
 
-    pointsForEvent: function(event) {
+    pointsForEvent (event) {
         if (!Event_hasCachedPoints(event)) {
             event.preventDefault() // needed to prevent browser from handling touches?
 
@@ -144,29 +149,29 @@ ideal.Proto.newSubclassNamed("TouchScreen").newSlots({
         }
 
         return Event_cachedPoints(event)
-    },
+    }
 
-    currentPoints: function() {
+    currentPoints () {
         if (this.currentEvent()) {
             return this.pointsForEvent(this.currentEvent())
         }
         return []
-    },
+    }
 
     // There are no standard onTouchLeave & onTouchOver events,
     // so this is an attempt to add them. Only really need them
     // for visual gesture debugging at the moment though.
     
     /*
-    sendEventToView: function(eventName, event, aView) {
+    sendEventToView (eventName, event, aView) {
         // send to listeners instead?
         aView.gestureRecognizers().forEach((gr) => {
             gr[eventName].apply(gr, [event])
         })
         return this
-    },
+    }
 
-    handleLeave: function(event) {
+    handleLeave (event) {
         // an attempt to add onTouchLeave and onTouchOver events
         const currentPoints = this.pointsForEvent(this.currentEvent())
 
@@ -187,7 +192,7 @@ ideal.Proto.newSubclassNamed("TouchScreen").newSlots({
         })
 
         return this
-    },
+    }
     */
    
-}).initThisProto()
+}.initThisClass()

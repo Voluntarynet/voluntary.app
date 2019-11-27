@@ -29,69 +29,74 @@
 
 */
 
+window.GamePadManager = class GamePadManager extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+            //gamePadListener: null,
+            gamePadsDict: null,
+            pollPeriod: 1000, // milliseconds
+        })
+    }
 
-ideal.Proto.newSubclassNamed("GamePadManager").newSlots({
-    //gamePadListener: null,
-    gamePadsDict: null,
-    pollPeriod: 1000, // milliseconds
-}).setSlots({
-
-    shared: function() { 
+    /*
+    shared () { 
         return this.sharedInstanceForClass(GamePadManager)
-    },
+    }
+    */
 
-    init: function () {
-        ideal.Proto.init.apply(this)
+    init  () {
+        super.init()
         this.setIsDebugging(true)
         this.setGamePadsDict({})
         //this.startListening()
         this.startPollingIfSupported() // could delay this until connection if listen API is supported
         return this
-    },
+    }
 
-    connectedGamePads: function() {
+    connectedGamePads () {
         const dict = this.gamePadsDict()
         return Object.getOwnPropertyNames(dict).map(k => dict[k])
-    },
+    }
     
     /*
-    canListenForConnect: function() {
+    canListenForConnect () {
         return ("ongamepadconnected" in window); 
-    },
+    }
 
-    startListening: function() {
+    startListening () {
         if (this.canListenForConnect()) {
             this.setGamePadListener(GamePadListener.clone().setUseCapture(true).setListenTarget(window).setDelegate(this))
             this.gamePadListener().setIsListening(true)
         }
         return this
-    },
+    }
     
     // listener events
 
     
-    onGamePadConnected: function(event) {
+    onGamePadConnected (event) {
         this.poll()
         return true
-    },
+    }
 
-    onGamePadDisconnected: function(event) {
+    onGamePadDisconnected (event) {
         this.poll()
         return true
-    },
+    }
     */
 
-    startPollingIfSupported: function() {
+    startPollingIfSupported () {
         if (this.isSupported()) {
             this.startPolling()
         }
-    },
+    }
 
-    isSupported: function() {
+    isSupported () {
         return this.navigatorGamepads() !== null
-    },
+    }
 
-    navigatorGamepads: function() {
+    navigatorGamepads () {
         if (navigator.getGamepads) {
             return navigator.getGamepads()
         } 
@@ -101,27 +106,29 @@ ideal.Proto.newSubclassNamed("GamePadManager").newSlots({
         }
 
         return null
-    },
+    }
 
-    startPolling: function() {
+    startPolling () {
         if (!this._intervalId) {
             console.log(this.type() + ".startPolling()")
-            this._intervalId = setInterval(() => { this.poll() }, this.pollPeriod());
+            this._intervalId = setInterval(() => { 
+                this.poll() 
+            }, this.pollPeriod());
         }
-    },
+    }
 
-    stopPolling: function() {
+    stopPolling () {
         if (this.intervalId()) {
             clearInterval(this.intervalId());
             this.setIntervalId(null)
         }
-    },
+    }
 
-    newGamePad: function(index) {
+    newGamePad (index) {
         return GamePad.clone().setGamePadManager(this)
-    },
+    }
 
-    poll: function() {
+    poll () {
         const gamepads = this.navigatorGamepads()
         //console.log(this.type() + ".poll() gamepads.length = ", gamepads.length)
         const padDict = this.gamePadsDict()
@@ -149,7 +156,6 @@ ideal.Proto.newSubclassNamed("GamePadManager").newSlots({
                 }
             }
         }
-    },
+    }
 
-
-}).initThisProto()
+}.initThisClass()

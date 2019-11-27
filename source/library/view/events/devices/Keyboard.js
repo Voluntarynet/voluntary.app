@@ -18,7 +18,7 @@
 */
 
 
-window.KeyboardKey = class KeyboardKey extends ProtoClass {
+window.Keyboard = class Keyboard extends ProtoClass {
     initPrototype () {
         this.newSlots({
             codeToKeys: null, // dictionary of KeyboardKey objects
@@ -26,9 +26,11 @@ window.KeyboardKey = class KeyboardKey extends ProtoClass {
         })
     }
 
+    /*
     shared() {   
         return this.sharedInstanceForClass(Keyboard)
     }
+    */
 
     init () {
         super.init()
@@ -37,13 +39,13 @@ window.KeyboardKey = class KeyboardKey extends ProtoClass {
         return this
     }
 
-    startListening() {
+    startListening () {
         this.setKeyboardListener(KeyboardListener.clone().setUseCapture(true).setListenTarget(document.body).setDelegate(this))
         this.keyboardListener().setIsListening(true)
         return this
     }
 
-    setupCodeToKeys() {
+    setupCodeToKeys () {
         const dict = {}
         const c2k = this.keyCodesToNamesDict()
         Object.keys(c2k).forEach((code) => {
@@ -54,16 +56,16 @@ window.KeyboardKey = class KeyboardKey extends ProtoClass {
         return this
     }
 
-    keyForCode(aCode) {
+    keyForCode (aCode) {
         return this.codeToKeys()[aCode]
     }
 
-    keyForName(aName) {
+    keyForName (aName) {
         const code = this.keyCodeForName(aName)
         return this.keyForCode(code)
     }
 
-    nameForKeyCode(aCode) {
+    nameForKeyCode (aCode) {
         const key = this.keyForCode(aCode)
         if (key) {
             return key.name()
@@ -71,7 +73,7 @@ window.KeyboardKey = class KeyboardKey extends ProtoClass {
         return null
     }
 
-    k2c() {
+    k2c () {
         if (!this._k2c) {
             this._k2c = {}
             const c2k = this.keyCodesToNamesDict()
@@ -83,18 +85,18 @@ window.KeyboardKey = class KeyboardKey extends ProtoClass {
         return this._k2c
     }
 
-    keyCodeForName(aName) {
+    keyCodeForName (aName) {
         return this.k2c()[aName]
     }
 
     
-    eventIsJustModifierKey(event) {
+    eventIsJustModifierKey (event) {
         const name = this.nameForKeyCode(event.keyCode)
         return this.allModifierNames().contains(name)
     }
 
 
-    keyCodesToNamesDict() {
+    keyCodesToNamesDict () {
         return {
             8: "Backspace",
             9: "Tab",
@@ -199,7 +201,7 @@ window.KeyboardKey = class KeyboardKey extends ProtoClass {
     }
 
     /*
-    shiftChangingKeysDict() {
+    shiftChangingKeysDict () {
         // Based on a Macbook Pro keyboard. 
         // Not sure if this is platform specific.
 
@@ -229,7 +231,7 @@ window.KeyboardKey = class KeyboardKey extends ProtoClass {
     }
     */
 
-    shiftDict() {
+    shiftDict () {
         // Based on a Macbook Pro keyboard. 
         // Not sure if this is platform specific.
 
@@ -281,13 +283,13 @@ window.KeyboardKey = class KeyboardKey extends ProtoClass {
     }
     */
 
-    keyForCode(aCode) {
+    keyForCode (aCode) {
         return this.codeToKeys()[aCode]
     }
 
     // -- events ---
 
-    showCodeToKeys() {
+    showCodeToKeys () {
         const c2k = this.keyCodesToNamesDict()
 
         //const s = JSON.stringify(c2k, null, 4)
@@ -307,7 +309,7 @@ window.KeyboardKey = class KeyboardKey extends ProtoClass {
         return this
     }
 
-    keyForEvent(event) {
+    keyForEvent (event) {
         const code = event.keyCode
         const key = this.codeToKeys()[code]
         return key
@@ -346,20 +348,20 @@ window.KeyboardKey = class KeyboardKey extends ProtoClass {
     
     // --- event handling method names ---
 
-    downMethodNameForEvent(event) {
+    downMethodNameForEvent (event) {
         return "on" + this.modsAndKeyNameForEvent(event) + "KeyDown"
     }
 
-    upMethodNameForEvent(event) {
+    upMethodNameForEvent (event) {
         return "on" + this.modsAndKeyNameForEvent(event) + "KeyUp"
     }
 
-    eventIsAlphabetical(event) {
+    eventIsAlphabetical (event) {
         const c = event.keyCode
         return c >= 65 && c <= 90
     }
 
-    modsAndKeyNameForEvent(event) {
+    modsAndKeyNameForEvent (event) {
         // examples: AltB AltShiftB
         // Note that shift is explicit and the B key is always uppercase
 
@@ -406,74 +408,74 @@ window.KeyboardKey = class KeyboardKey extends ProtoClass {
 
     // get key helpers
 
-    shiftKey() {
+    shiftKey () {
         return this.keyForName("Shift")
     }
 
-    controlKey() {
+    controlKey () {
         return this.keyForName("Control")
     }
 
-    alternateKey() {
+    alternateKey () {
         return this.keyForName("Alternate")
     }
 
-    leftCommandKey() {
+    leftCommandKey () {
         return this.keyForName("MetaLeft")
     }
 
-    rightCommandKey() {
+    rightCommandKey () {
         return this.keyForName("MetaRight")
     }
 
     // get key state helpers
 
-    shiftIsDown() {
+    shiftIsDown () {
         return this.shiftKey().isDown()
     }
 
-    commandIsDown() {
+    commandIsDown () {
         return this.leftCommandKey().isDown() || this.rightCommandKey().isDown()
     }
 
 
-    equalsSignKey() {
+    equalsSignKey () {
         return this.keyForName("EqualsSign")
     }
 
-    minusKey() {
+    minusKey () {
         return this.keyForName("Dash")
     }
 
-    plusKey() {
+    plusKey () {
         return this.keyForName("Plus")
     }
 
-    plusIsDown() {
+    plusIsDown () {
         return this.plusKey().isDown()
     }
 
-    currentlyDownKeys() {
+    currentlyDownKeys () {
         return Object.values(this.codeToKeys()).select(key => key.isDown())
     }
 
-    currentlyUpKeys() {
+    currentlyUpKeys () {
         return Object.values(this.codeToKeys()).select(key => !key.isDown())
     }
 
-    hasKeysDown() {
+    hasKeysDown () {
         return this.currentlyUpKeys().length !== 0
     }
 
-    downKeyNames() {
+    downKeyNames () {
         return Keyboard.shared().currentlyDownKeys().map(k => k.name())
     }
 
-    show() {
+    show () {
         this.debugLog(" downKeys: ", this.downKeyNames())
     }
 
-    allModifierNames() {
+    allModifierNames () {
         return [
             "Alternate", 
             "Control", 
@@ -483,7 +485,7 @@ window.KeyboardKey = class KeyboardKey extends ProtoClass {
         ]
     }
 
-    modifierNamesForEvent(event) {
+    modifierNamesForEvent (event) {
         let modifierNames = []
 
         // event names are ordered alphabetically to avoid ambiguity
@@ -511,7 +513,7 @@ window.KeyboardKey = class KeyboardKey extends ProtoClass {
         return modifierNames
     }
 
-    showEvent(event) {
+    showEvent (event) {
         console.log("---")
         console.log("Keyboard.showEvent():")
         console.log("  code: ", event.keyCode)

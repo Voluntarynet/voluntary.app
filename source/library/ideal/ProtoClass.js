@@ -58,6 +58,12 @@ window.ProtoClass = class ProtoClass {
         return this.getClassVariable("_shared")
     }
 
+    /*
+    static sharedInstanceForClass() {
+
+    },
+    */
+
     static allClasses () {
         return this.getClassVariable("_allClasses", [])
     }

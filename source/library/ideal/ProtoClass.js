@@ -23,7 +23,7 @@
 */
 
 //window.ideal.ProtoClass = 
-class ProtoClass { 
+window.ProtoClass = class ProtoClass { 
 
     static newSubclassNamed (subclassName) {
         let s = "window['" + subclassName + "'] = class " + subclassName + " extends " + this.type() + " {}"
@@ -66,13 +66,11 @@ class ProtoClass {
         this.prototype.initPrototype()
 
         //console.log("initThisClass: ", this)
-        if (this.allClasses().contains(this)) {
+        if (window.ProtoClass.allClasses().contains(this)) {
             throw new Error("attempt to call initThisClass twice on the same class")
         }
 
-        if (this.allClasses().indexOf(this) === -1) {
-            this.allClasses().push(this)
-        }
+        ProtoClass.allClasses().push(this)
 
         return this
     }
@@ -488,6 +486,9 @@ class ProtoClass {
         return this
     }
 }
+
+window.ProtoClass.initThisClass()
+
 
 /*
 class EmptyClass {

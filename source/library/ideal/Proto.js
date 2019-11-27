@@ -25,7 +25,15 @@ Proto.setSlots = function (slots) {
     return this;
 }
 
-Proto.setSlots({    
+Proto.setSlots({ 
+    subclassesDescription: function(level = 0) {
+        const spacer = "  ".repeat(level)
+        const lines = [spacer + this.type()]
+        const subclassLines = this._childProtos.map(subclass => spacer + subclass.subclassesDescription(level + 1))
+        lines.appendItems(subclassLines)
+        return lines.join("\n")
+    },
+
     allProtos: function() {
         //return this.getClassVariable("_allProtos", [])
         if (!Proto._allProtos) {

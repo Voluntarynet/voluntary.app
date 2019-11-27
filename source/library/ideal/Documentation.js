@@ -12,9 +12,11 @@
 
 window.Documentation = class Documentation extends ProtoClass {
     initPrototype () {
+        /*
         this.newSlots({
             classes: [],
         })
+        */
     }
 
     init() {
@@ -22,7 +24,8 @@ window.Documentation = class Documentation extends ProtoClass {
     }
 
     classes () {
-        return ProtoClass.allClasses()
+        return Proto.allProtos()
+        //return ProtoClass.allClasses()
     }
 
     methodsDocsForClass(aClass) {
@@ -47,7 +50,10 @@ window.Documentation = class Documentation extends ProtoClass {
         this.classes().forEach((aClass) => {
             const classDict = {}
             classDict.name = aClass.type()
-            classDict.superClass = aClass.superClass().type()
+            const superclass = aClass.superClass()
+            if (superclass.type) {
+                classDict.superClass = superclass.type()
+            }
             classes.push(classDict)
             classDict.methods = this.methodsDocsForClass(aClass)
             //classDict.comments = aClass.comments()
@@ -59,7 +65,8 @@ window.Documentation = class Documentation extends ProtoClass {
         const classes = this.asJson()
         const lines = []
         classes.forEach((aClass) => {
-            lines.push(aClass.name + ":" + aClass.superClass)
+            lines.push(aClass.name + " : " + aClass.superClass)
+            /*
             aClass.methods.forEach((aMethod) => {
                 let argsString = ""
                 if (aMethod.argNames.length > 0) {
@@ -67,13 +74,15 @@ window.Documentation = class Documentation extends ProtoClass {
                 }
                 lines.push("  - " + aMethod.name + argsString + " " + aMethod.comments)
             })
+            */
         })
         /*
         const s = JSON.stringify(this.asJson(), 2, 2)
         */
-        console.log(this.type() + ".show() = ", lines.join("\n"))
+        console.log("DOCUMENTATION:\n\n", lines.join("\n"))
     }
 }.initThisClass()
+
 
 
 // --- Object category -------------------------------------

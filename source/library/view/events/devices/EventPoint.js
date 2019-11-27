@@ -32,35 +32,40 @@ window.Event_pushCachedPoint = function(event, point) {
 
 // ----------------
 
-window.Point.newSubclassNamed("EventPoint").newSlots({
-    id: null,
-    state: null,
-    target: null, 
-    isDown: false,
-    overView: null,
-    event: null,
-}).setSlots({
-    init: function () {
-        window.Point.init.apply(this)
+window.EventPoint = class EventPoint extends Point {
+    initPrototype () {
+        this.newSlots({
+            id: null,
+            state: null,
+            target: null, 
+            isDown: false,
+            overView: null,
+            event: null,
+        })
+    }
+    
+    init () {
+        super.init()
         return this
-    },
+    }
 
-    copyFrom: function(p, copyDict) {
-        window.Point.copyFrom.apply(this, [p, copyDict])
+    copyFrom(p, copyDict) {
+        super.copyFrom(p, copyDict)
+        //window.Point.copyFrom.apply(this, [p, copyDict])
         this._id = p._id
         this._state = p._state
         this._target = p._target
         return this
-    },
+    }
 
-    overView: function() {
+    overView() {
         if (this._overView === null) {
             this._overView = this.findOverview()
         }
         return this._overView
-    },
+    }
 
-    findOverview: function() {
+    findOverview() {
         // search up the dom elements until we find one 
         // associated with a DomView instance 
 
@@ -75,38 +80,38 @@ window.Point.newSubclassNamed("EventPoint").newSlots({
             e = e.parentElement
         }
         return null
-    },
+    }
 
     // viewport helpers
 
-    viewportPosition: function() {
+    viewportPosition() {
         const e = this.event()
         const p = Point.clone().set(e.clientX, e.clientY)
         return p
-    },
+    }
 
-    viewportHeight: function() {
+    viewportHeight() {
         return window.innerHeight
-    },
+    }
 
-    viewportWidth: function() {
+    viewportWidth() {
         return window.innerWidth
-    },
+    }
 
-    distFromTopOfViewport: function() {
+    distFromTopOfViewport() {
         return this.event().clientY
-    },
+    }
 
-    distFromBottomOfViewport: function() {
+    distFromBottomOfViewport() {
         return this.viewportHeight() - this.distFromTopOfViewport()
-    },
+    }
 
-    distFromLeftOfViewport: function() {
+    distFromLeftOfViewport() {
         return this.event().clientX
-    },
+    }
 
-    distFromRightOfViewport: function() {
+    distFromRightOfViewport() {
         return this.viewportWidth() - this.distFromLeftOfViewport()
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

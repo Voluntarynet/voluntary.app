@@ -24,6 +24,7 @@ BMNode.newSubclassNamed("App").newSlots({
         BMNode.init.apply(this)
 
         //Documentation.shared().show()
+        console.log(Proto.subclassesDescription())
 
 
         this.setNodeStoreDidOpenObs(window.NotificationCenter.shared().newObservation())

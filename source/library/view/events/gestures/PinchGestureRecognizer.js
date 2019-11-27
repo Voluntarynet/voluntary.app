@@ -22,23 +22,28 @@
 */
 
 
-OrientGestureRecognizer.newSubclassNamed("PinchGestureRecognizer").newSlots({
-}).setSlots({
-    init: function () {
-        OrientGestureRecognizer.init.apply(this)
+window.PinchGestureRecognizer = class PinchGestureRecognizer extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
         this.setListenerClasses(this.defaultListenerClasses()) 
         //this.setIsDebugging(false)
         //this.setIsVisualDebugging(true)
         this.setMinFingersRequired(2)
         this.setMaxFingersAllowed(2)
         return this
-    },
+    }
 
-    hasMovedEnough: function() {
+    hasMovedEnough () {
         const m = this.minDistToBegin()
         const d = this.currentPosition().distanceFrom(this.downPosition())
         //console.log(this.shortTypeId() + ".hasMovedEnough() " + d + ">= min " + m)
         return d >= m
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

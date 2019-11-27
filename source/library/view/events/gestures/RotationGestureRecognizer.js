@@ -22,21 +22,24 @@
 
 */
 
+window.RotationGestureRecognizer = class RotationGestureRecognizer extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
 
-OrientGestureRecognizer.newSubclassNamed("RotationGestureRecognizer").newSlots({
-    minRotatationInDegreesToBegin: 1,
-}).setSlots({
-    init: function () {
-        OrientGestureRecognizer.init.apply(this)
+    init () {
+        super.init()
         this.setListenerClasses(this.defaultListenerClasses()) 
         //this.setIsDebugging(true)
         return this
-    },
+    }
 
-    hasMovedEnough: function() {
+    hasMovedEnough () {
         const ma = this.minRotatationInDegreesToBegin()
         const a = this.activeAngleInDegress()
         return a >= ma
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

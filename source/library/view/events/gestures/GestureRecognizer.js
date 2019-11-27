@@ -51,62 +51,66 @@
     TODO: move visualizer to separate class?
 */
 
+window.GestureRecognizer = class GestureRecognizer extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+            viewTarget: null,
+            shouldRemoveOnComplete: false,
 
-ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({    
-    viewTarget: null,
-    shouldRemoveOnComplete: false,
+            // listeners
 
-    // listeners
+            listenerClasses: null,
+            viewListeners: null, 
+            docListeners: null, 
+            //isActive: false,
+            defaultListenerClasses: ["MouseListener", "TouchListener"],
 
-    listenerClasses: null,
-    viewListeners: null, 
-    docListeners: null, 
-    //isActive: false,
-    defaultListenerClasses: ["MouseListener", "TouchListener"],
+            // events
 
-    // events
+            overEvent: null,
+            leaveEvent: null,
 
-    overEvent: null,
-    leaveEvent: null,
+            didBegin: false,
+            downEvent: null,
+            beginEvent: null,
+            currentEvent: null,
+            lastEvent: null,
+            upEvent: null,
 
-    didBegin: false,
-    downEvent: null,
-    beginEvent: null,
-    currentEvent: null,
-    lastEvent: null,
-    upEvent: null,
+            // standard messages
 
-    // standard messages
+            acceptMessage: null,    //"accepts<GestureType>"
+            beginMessage: null,     //"on<GestureType>Begin",
+            moveMessage: null,      //"on<GestureType>Move",
+            cancelledMessage: null, // "on<GestureType>Cancelled",
+            completeMessage: null,  // "on<GestureType>Complete",
 
-    acceptMessage: null,    //"accepts<GestureType>"
-    beginMessage: null,     //"on<GestureType>Begin",
-    moveMessage: null,      //"on<GestureType>Move",
-    cancelledMessage: null, // "on<GestureType>Cancelled",
-    completeMessage: null,  // "on<GestureType>Complete",
+            // debugging
 
-    // debugging
+            isEmulatingTouch: false, // assumes touch and mouse events aren't mixed
 
-    isEmulatingTouch: false, // assumes touch and mouse events aren't mixed
+            isVisualDebugging: false,
+            fingerViewDict: null,
 
-    isVisualDebugging: false,
-    fingerViewDict: null,
+            // begin pressing 
 
-    // begin pressing 
+            isPressing: false,
 
-    isPressing: false,
+            minFingersRequired: 2,
+            maxFingersAllowed: 4,
+            minDistToBegin: 10,
+            //maxDistToBegin: null,
+            allowsKeyboardKeys: false,
+            requiresKeyboardKeys: null, 
 
-    minFingersRequired: 2,
-    maxFingersAllowed: 4,
-    minDistToBegin: 10,
-    //maxDistToBegin: null,
-    allowsKeyboardKeys: false,
-    requiresKeyboardKeys: null, 
+            shouldRequestActivation: true,
+            isActive: false, // only used if shouldRequestActivation === false
+        })
+    }
 
-    shouldRequestActivation: true,
-    isActive: false, // only used if shouldRequestActivation === false
-}).setSlots({
-    init: function () {
-        ideal.Proto.init.apply(this)
+    init () {
+        super.init()
         this.setListenerClasses([]) // subclasses override this in their
         this.setDocListeners([])
         this.setViewListeners([])
@@ -116,74 +120,74 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
         //this.setIsDebugging(true)
         //this.setIsVisualDebugging(true)
         return this
-    },
+    }
 
     // -- event helpers --
 
-    clearEvents: function() {
+    clearEvents () {
         this.setDownEvent(null)
         this.setBeginEvent(null)
         this.setCurrentEvent(null)
         return this
-    },
+    }
     
-    setCurrentEvent: function(event) {
+    setCurrentEvent (event) {
         if (this._currentEvent !== event) {
             this.setLastEvent(this._currentEvent)
             this._currentEvent = event
         }
         return this
-    },
+    }
 
-    currentPosition: function() {
+    currentPosition () {
         return this.pointsForEvent(this.currentEvent()).first()
-    },
+    }
 
-    downPosition: function() {
+    downPosition () {
         return this.pointsForEvent(this.downEvent()).first()
-    },
+    }
 
-    beginPosition: function() {
+    beginPosition () {
         return this.pointsForEvent(this.beginEvent()).first()
-    },
+    }
 
-    upPosition: function() {
+    upPosition () {
         return this.pointsForEvent(this.upEvent()).first()
-    },
+    }
 
-    numberOfFingersDown: function() {
+    numberOfFingersDown () {
         const points = this.pointsForEvent(this.currentEvent())
         return points.length
-    },
+    }
 
-    currentEventIsOnTargetView: function() {
+    currentEventIsOnTargetView () {
         const points = this.pointsForEvent(this.currentEvent())
         const p = points.first()
         const view = this.viewTarget()
         return view.containsPoint(p)
         //return points.detect(p1 => !view.containsPoint(p1)) === null
-    },
+    }
 
     // --- listeners ---
 
-    newListeners: function() {
+    newListeners () {
         return this.listenerClasses().map((className) => {
             const proto = window[className];
             const listener = proto.clone();
             listener.setDelegate(this);
             return listener
         })
-    },
+    }
 
     // --- view listeners ---
 
-    stopViewListeners: function() {
+    stopViewListeners () {
         this.viewListeners().forEach(listener => listener.stop())
         this.setViewListeners([])
         return this
-    },
+    }
 
-    startViewListeners: function() {
+    startViewListeners () {
         this.stopViewListeners()
 
         const listeners = this.newListeners().map((listener) => {
@@ -193,17 +197,17 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
         })
         this.setViewListeners(listeners)
         return this
-    },
+    }
 
     // --- doc listeners ---
 
-    stopDocListeners: function() {
+    stopDocListeners () {
         this.docListeners().forEach(listener => listener.stop())
         this.setDocListeners([])
         return this
-    },
+    }
 
-    startDocListeners: function() {
+    startDocListeners () {
         this.stopDocListeners()
 
         const listeners = this.newListeners().map((listener) => {
@@ -215,25 +219,25 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
         })
         this.setDocListeners(listeners)
         return this
-    },
+    }
 
     // condition helpers
 
-    hasMovedEnough: function() {
+    hasMovedEnough () {
         // intended to be overridden by subclasses
         // e.g. a rotation recognizer might look at how much first two fingers have rotated
         const m = this.minDistToBegin()
         const d = this.currentPosition().distanceFrom(this.downPosition())
         return d >= m
-    },
+    }
 
-    hasAcceptableFingerCount: function() {
+    hasAcceptableFingerCount () {
         const n = this.numberOfFingersDown()
         return  n >= this.minFingersRequired() &&
                 n <= this.maxFingersAllowed();
-    },
+    }
 
-    hasAcceptableKeyboardState: function() {
+    hasAcceptableKeyboardState () {
         if (!this.allowsKeyboardKeys()) {
             if (Keyboard.shared().hasKeysDown()) {
                 // make exception for shift key since we use it to emulate multi-touch
@@ -244,59 +248,59 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
             }
         }
         return true
-    },
+    }
 
-    canBegin: function() {
+    canBegin () {
         return !this.isActive() && 
                 this.hasMovedEnough() && 
                 this.hasAcceptableFingerCount() &&
                 this.hasAcceptableKeyboardState();
-    },
+    }
 
     // --- start / stop ---
 
-    start: function() {
+    start () {
         this.startViewListeners()
         // We typically don't want to listen to document level events all the time.
         // Instead, some view events will start and stop the doc listeners.
         //this.startDocListeners() 
         return this
-    },
+    }
 
-    stop: function() {
+    stop () {
         this.stopViewListeners()
         this.stopDocListeners()
         return this
-    },
+    }
 
     // active
 
-    requestActivationIfNeeded: function() {
+    requestActivationIfNeeded () {
         if (this.shouldRequestActivation()) {
             return GestureManager.shared().requestActiveGesture(this);
         }
         this.setIsActive(true)
         return true
-    },
+    }
 
-    isActive: function() {
+    isActive () {
         if (this.shouldRequestActivation()) {
             return GestureManager.shared().activeGesture() === this
         }
         return this._isActive
-    },
+    }
 
-    deactivate: function() {
+    deactivate () {
         if (this.shouldRequestActivation()) {
             GestureManager.shared().deactivateGesture(this);
         }
         this.setIsActive(false)
         return this
-    },
+    }
 
     // finish
 
-    didFinish: function() {
+    didFinish () {
         this.setDidBegin(false)
         GestureManager.shared().removeBegunGesture(this)
 
@@ -314,11 +318,11 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
 
         this.removeFingerViews()
         return this
-    },
+    }
 
     // subclass helpers
 
-    sendDelegateMessage: function(methodName) {
+    sendDelegateMessage (methodName) {
         let result = null
         assert(methodName !== null)
         const vt = this.viewTarget()
@@ -347,13 +351,13 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
         */
 
         return result
-    },
+    }
 
     // points helper
     // maps mouse and touch events to a common list of points (with times and ids) format
     // so we can share the event handling code for both devices 
 
-    pointsForEvent: function(event) {
+    pointsForEvent (event) {
         if (event === null) {
             throw new Error(this.type() + ".pointsForEvent(event) event is null")
         }
@@ -371,59 +375,59 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
         console.warn(this.type() + " can't handle this event type yet: ", event)
 
         return []
-    },
+    }
 
     // all events hook
 
-    onEvent: function(event) {
+    onEvent (event) {
         if (this.isVisualDebugging()) {
             this.updateOutlineView()
             this.updateFingerViews()
             //this.updateDebugTimer()
         }
-    },
+    }
 
     // --- events ---
 
-    onOver: function(event) {
+    onOver (event) {
         this.setOverEvent(event)
         this.setCurrentEvent(event)
         this.onEvent(event)
-    },
+    }
 
-    onDown: function (event) {
+    onDown  (event) {
         this.setDownEvent(event)
         this.setCurrentEvent(event)
         this.onEvent(event)
-    },
+    }
 
-    onMove: function(event) {
+    onMove (event) {
         this.setCurrentEvent(event)
         this.onEvent(event)
-    },
+    }
 
-    onUp: function (event) {
+    onUp  (event) {
         this.setUpEvent(event)
         //this.setCurrentEvent(event) // on Windows, the up event may not have any positions
         this.onEvent(event)
-    },
+    }
 
-    onLeave: function(event) {
+    onLeave (event) {
         this.setLeaveEvent(event)
         this.setCurrentEvent(event)
         this.onEvent(event)
-    },
+    }
 
     // --- mouse events ---
 
-    shouldEmulateEvent: function(event) {
+    shouldEmulateEvent (event) {
         return this.isEmulatingTouch() && 
                 event.shiftKey && 
                 event.__proto__.constructor === MouseEvent &&
                 this.pointsForEvent(event).length === 1;
-    },
+    }
 
-    emulateDownIfNeeded: function(event) {
+    emulateDownIfNeeded (event) {
         const p1 = this.pointsForEvent(event).first()
 
         if (this.shouldEmulateEvent(event)) {
@@ -434,15 +438,15 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
             Event_pushCachedPoint(event, p2)
         }
         return this
-    },
+    }
 
-    onMouseDown: function (event) {        
+    onMouseDown  (event) {        
         this.emulateDownIfNeeded(event)
         this.setDownEvent(event)
         this.onDown(event)
-    },
+    }
 
-    emulateMoveIfNeeded: function(event) {
+    emulateMoveIfNeeded (event) {
         const p2 = this.pointsForEvent(event).first()
 
         if (this.shouldEmulateEvent(event) && this.downEvent()) {      
@@ -454,90 +458,90 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
         }
 
         return this
-    },
+    }
 
-    onMouseMove: function (event) {
+    onMouseMove  (event) {
         this.emulateMoveIfNeeded(event)
         this.onMove(event)
-    },
+    }
 
-    onMouseUp: function (event) {
+    onMouseUp  (event) {
         this.onUp(event)
-    },
+    }
 
-    onMouseLeave: function (event) {
+    onMouseLeave  (event) {
         this.onLeave(event)
-    },
+    }
 
     // mouse capture events
 
-    onMouseOverCapture: function (event) {
+    onMouseOverCapture  (event) {
         this.onOver(event)
-    },
+    }
 
-    onMouseDownCapture: function (event) {
+    onMouseDownCapture  (event) {
         this.emulateDownIfNeeded(event)
         this.onDown(event)
-    },
+    }
 
-    onMouseMoveCapture: function (event) {
+    onMouseMoveCapture  (event) {
         this.emulateMoveIfNeeded(event)
         this.onMove(event)
-    },
+    }
 
-    onMouseUpCapture: function (event) {
+    onMouseUpCapture  (event) {
         this.onUp(event)
-    },
+    }
 
-    onMouseLeaveCapture: function (event) {
+    onMouseLeaveCapture  (event) {
         this.onLeave(event)
-    },
+    }
 
     // touch events
 
-    onTouchStart: function(event) {
+    onTouchStart (event) {
         this.onDown(event)
-    },
+    }
 
-    onTouchMove: function (event) {
+    onTouchMove  (event) {
         this.onMove(event)
-    },
+    }
 
-    onTouchEnd: function(event) {
+    onTouchEnd (event) {
         this.onUp(event)
-    },
+    }
 
-    onTouchCancel: function(event) {
+    onTouchCancel (event) {
         //this.onUp(event)
         this.cancel()
-    },
+    }
     
     // touch capture events
 
-    onTouchStartCapture: function(event) {
+    onTouchStartCapture (event) {
         this.onDown(event)
-    },
+    }
 
-    onTouchMoveCapture: function (event) {
+    onTouchMoveCapture  (event) {
         this.onMove(event)
-    },
+    }
 
-    onTouchEndCapture: function(event) {
+    onTouchEndCapture (event) {
         this.onUp(event)
-    },
+    }
 
-    onTouchCancelCapture: function(event) {
+    onTouchCancelCapture (event) {
         //this.onUp(event)
         this.cancel()
-    },
+    }
 
     // diff position helper
 
-    diffPos: function() {
+    diffPos () {
         return this.currentPosition().subtract(this.beginPosition()).floorInPlace() // floor here?
-    },
+    }
 
-    distance: function() {
+    distance () {
         const dp = this.diffPos()
         const dx = Math.abs(dp.x())
         const dy = Math.abs(dp.y())
@@ -550,32 +554,32 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
             y:     (dx, dy) => dy
         }
         return funcs[this.direction()](dx, dy)
-    },
+    }
 
-    gestureName: function() {
+    gestureName () {
         return this.type().before("GestureRecognizer")
-    },
+    }
 
-    defaultMessageForState: function(state) {
+    defaultMessageForState (state) {
         return "on" + this.gestureName() + state.capitalized()
-    },
+    }
 
-    defaultAcceptMessage: function() {
+    defaultAcceptMessage () {
         return "accepts" + this.gestureName()
-    },
+    }
 
-    autoSetMessageNames: function() {
+    autoSetMessageNames () {
         this.setAcceptMessage(this.defaultAcceptMessage())
         this.setBeginMessage(this.defaultMessageForState("Begin"))
         this.setMoveMessage(this.defaultMessageForState("Move"))
         this.setCancelledMessage(this.defaultMessageForState("Cancelled"))
         this.setCompleteMessage(this.defaultMessageForState("Complete"))
         return this
-    },
+    }
 
     // sending delegate messages
 
-    doesTargetAccept: function() {
+    doesTargetAccept () {
 
         // see if view accepts the gesture before we begin
         // for now, assume it accepts if it doesn't implement the accept<GestureType> method
@@ -588,9 +592,9 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
         }
 
         return true
-    },
+    }
 
-    sendBeginMessage: function() {
+    sendBeginMessage () {
         if (!this.doesTargetAccept()) {
             return this
         }
@@ -600,42 +604,42 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
         this.sendDelegateMessage(this.beginMessage())
         GestureManager.shared().addBegunGesture(this)
         return this
-    },
+    }
 
-    sendMoveMessage: function() {
+    sendMoveMessage () {
         this.sendDelegateMessage(this.moveMessage())
         //this.didMove()
         return this
-    },
+    }
 
-    sendCompleteMessage: function() {
+    sendCompleteMessage () {
         this.sendDelegateMessage(this.completeMessage())
         this.didFinish()
         return this
-    },
+    }
 
-    sendCancelledMessage: function() {
+    sendCancelledMessage () {
         this.sendDelegateMessage(this.cancelledMessage())
         this.didFinish()
         return this
-    },
+    }
 
     // ---
 
-    cleanup: function() {
+    cleanup () {
         this.setDownEvent(null)
         this.setCurrentEvent(null)
         this.setUpEvent(null)
         return this
-    },
+    }
 
-    shouldShowVisualDebugger: function() {
+    shouldShowVisualDebugger () {
         return this.hasDownPointsInView() || this.isActive() // || this.isPressing());
-    },
+    }
 
     // ---  outline view for debugging ---
 
-    newOutlineView: function() {
+    newOutlineView () {
         const v = DomView.clone()
         v.setPointerEvents("none")
         v.setBorder("1px dashed white")
@@ -643,17 +647,17 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
         v.setPosition("absolute")
         v.setZIndex(10000)
         return v
-    },
+    }
 
-    outlineView: function() {
+    outlineView () {
         if (!this._outlineView) {
             const v = this.newOutlineView()
             this._outlineView = v
         }
         return this._outlineView
-    },
+    }
 
-    updateOutlineView: function() {
+    updateOutlineView () {
         /*
         if (this.shouldShowVisualDebugger()) {
             this.showOutlineView()
@@ -664,9 +668,9 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
             }
         }
         */
-    },
+    }
 
-    showOutlineView: function() {
+    showOutlineView () {
         const v = this.outlineView()
         if (!v.parentView()) {
             DocumentBody.shared().addSubview(v)
@@ -678,13 +682,13 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
         v.setMinAndMaxWidth(bounds.width())
         v.setLeft(bounds.x())
         v.setTop(bounds.y())
-    },
+    }
 
 
 
     // --- finger views for debugging ---
 
-    newFingerView: function() {
+    newFingerView () {
         const v = DomView.clone()
         v.setPointerEvents("none")
 
@@ -701,9 +705,9 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
         v.setFontSize(10)
         v.setColor("white")
         return v
-    },
+    }
 
-    viewForFingerId: function(id) {
+    viewForFingerId (id) {
         const fvs = this.fingerViewDict()
         let v = fvs[id]
         if (!v) {
@@ -712,9 +716,9 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
             fvs[id] = v
         }
         return v
-    },
+    }
 
-    removeFingerViews: function() {
+    removeFingerViews () {
         const dict = this.fingerViewDict()
         Object.getOwnPropertyNames(dict).forEach((id) => {
             const fingerView = dict[id]
@@ -722,13 +726,13 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
         })
         this.setFingerViewDict({})
         return this
-    },
+    }
 
-    titleForFingerNumber: function(n) {
+    titleForFingerNumber (n) {
         return "&nbsp;".repeat(26) + this.type() + "&nbsp;" + n + "&nbsp;of&nbsp;" + this.numberOfFingersDown() 
-    },
+    }
 
-    showFingers: function() {
+    showFingers () {
         const points = this.pointsForEvent(this.currentEvent());
         const idsToRemove = Object.getOwnPropertyNames(this.fingerViewDict()) // TODO: move to dict
         let count = 1
@@ -762,9 +766,9 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
         })
 
         return this
-    },
+    }
 
-    updateFingerViews: function() {
+    updateFingerViews () {
         if (this.shouldShowVisualDebugger()) {
             this.showFingers()
         } else {            
@@ -772,17 +776,17 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
         }
 
         return this
-    },
+    }
 
-    updateDebugger: function() {
+    updateDebugger () {
         this.updateOutlineView() 
         this.updateFingerViews()
         if (this.viewTarget()) {
             console.log(this.viewTarget().typeId() + ".updateDebugger")
         }
-    },
+    }
 
-    updateDebugTimer: function() {
+    updateDebugTimer () {
         if (this._debugTimerId) {
             clearTimeout(this._debugTimerId) 
             this._debugTimerId = null
@@ -794,11 +798,11 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
         }, 100);
 
         return this
-    },
+    }
 
     // down points
 
-    hasDownPointsInView: function() {
+    hasDownPointsInView () {
         if (!this.viewTarget()) {
             return false
         }
@@ -808,27 +812,27 @@ ideal.Proto.newSubclassNamed("GestureRecognizer").newSlots({
         const match = points.detect(p => view.containsPoint(p)) 
         //console.log("all points.length:", points.length, " has match:", match != null)
         return match !== null
-    },
+    }
 
-    allPoints: function() { // TODO: some better abstraction for Touch+Mouse?
+    allPoints () { // TODO: some better abstraction for Touch+Mouse?
         const points = []
         points.appendItems(TouchScreen.shared().currentPoints())
         points.appendItems(Mouse.shared().currentPoints())
         return points
-    },
+    }
 
-    allDownPoints: function() { // TODO: some better abstraction for Touch+Mouse?
+    allDownPoints () { // TODO: some better abstraction for Touch+Mouse?
         const points = this.allPoints().select(p => p.isDown())
         return points
-    },
+    }
 
-    shortTypeId: function() {
+    shortTypeId () {
         return this.typeId().replaceAll("GestureRecognizer", "")
-    },
+    }
 
-    description: function() {
+    description () {
         return this.shortTypeId() + " on " + (this.viewTarget() ? this.viewTarget().typeId() : "null view target")
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()
 

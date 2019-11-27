@@ -39,11 +39,15 @@
 */
 
 
-GestureRecognizer.newSubclassNamed("OrientGestureRecognizer").newSlots({
-}).setSlots({
-    
-    init: function () {
-        GestureRecognizer.init.apply(this)
+window.OrientGestureRecognizer = class OrientGestureRecognizer extends ProtoClass {
+
+    initPrototype() {
+        this.newSlots({
+        })
+    }
+
+    init() {
+        super.init()
         this.setListenerClasses(this.defaultListenerClasses())
 
         this.setMinFingersRequired(2)
@@ -52,12 +56,12 @@ GestureRecognizer.newSubclassNamed("OrientGestureRecognizer").newSlots({
 
         //this.setIsDebugging(true)
         return this
-    },
+    }
 
     // events
 
-    onDown: function (event) {
-        GestureRecognizer.onDown.apply(this, [event])
+    onDown(event) {
+        super.onDown(event)
         //console.log(this.shortTypeId() + ".onDown() this.isPressing() = ", this.isPressing())
 
         if (!this.isPressing()) {
@@ -69,33 +73,33 @@ GestureRecognizer.newSubclassNamed("OrientGestureRecognizer").newSlots({
                 //this.setBeginEvent(event)
                 this.startDocListeners()
             }
-        } 
-    },
+        }
+    }
 
     /*
-    hasMovedEnough: function() {
+    hasMovedEnough () {
         // intended to be overridden by subclasses
         // e.g. a rotation recognizer might look at how much first two fingers have rotated
         const m = this.minDistToBegin()
         const d = this.currentPosition().distanceFrom(this.downPosition())
         return d >= m
-    },
+    }
 
-    hasAcceptableFingerCount: function() {
+    hasAcceptableFingerCount () {
         const n = this.numberOfFingersDown()
         return  n >= this.minFingersRequired() &&
                 n <= this.maxFingersAllowed();
-    },
+    }
 
-    canBegin: function() {
+    canBegin () {
         return !this.isActive() && 
                 this.hasMovedEnough() && 
                 this.hasAcceptableFingerCount();
-    },
+    }
     */
 
-    onMove: function(event) {
-        GestureRecognizer.onMove.apply(this, [event])
+    onMove(event) {
+        super.onMove(event)
 
         if (this.isPressing()) {
             if (this.canBegin()) {
@@ -106,23 +110,23 @@ GestureRecognizer.newSubclassNamed("OrientGestureRecognizer").newSlots({
 
             if (this.activePoints().length < this.minFingersRequired()) {
                 this.onUp(event)
-                return 
+                return
             }
-        
+
             if (this.isActive()) {
-                if(this.activePoints().length >= this.minFingersRequired()) {
+                if (this.activePoints().length >= this.minFingersRequired()) {
                     this.sendMoveMessage()
                 } else {
                     this.onUp(event)
                 }
             }
         }
-    },
+    }
 
     // -----------
 
-    onUp: function (event) {
-        GestureRecognizer.onUp.apply(this, [event])
+    onUp(event) {
+        super.onUp(event)
 
         if (this.isPressing()) {
             this.setIsPressing(false)
@@ -131,161 +135,161 @@ GestureRecognizer.newSubclassNamed("OrientGestureRecognizer").newSlots({
             }
             this.didFinish()
         }
-    },
+    }
 
-    cancel: function() {
+    cancel() {
         if (this.isActive()) {
             this.sendCancelledMessage()
         }
         this.didFinish()
         return this
-    },
+    }
 
-    didFinish: function() {
-        GestureRecognizer.didFinish.apply(this)
+    didFinish() {
+        super.didFinish()
         this.setIsPressing(false)
         this.deactivate()
         this.stopDocListeners()
         return this
-    },
+    }
 
     // points - move to GestureRecognizer?
 
-    downPoints: function() {
+    downPoints() {
         const p = this.pointsForEvent(this.downEvent())
         return [p[0], p[1]]
-    },
+    }
 
-    activeForEvent: function(event) {
+    activeForEvent(event) {
         // looks for two points whose id matchs those of the two down points
         const points = this.pointsForEvent(event)
         const ids = this.downPoints().map(p => p.id())
-        return points.select(p => ids.contains(p.id()) )
-    },
+        return points.select(p => ids.contains(p.id()))
+    }
 
-    beginPoints: function() {
+    beginPoints() {
         return this.activeForEvent(this.beginEvent())
-    },
+    }
 
-    lastPoints: function() {
+    lastPoints() {
         return this.activeForEvent(this.lastEvent())
-    },
+    }
 
-    activePoints: function() { // current points that were in down points
+    activePoints() { // current points that were in down points
         return this.activeForEvent(this.currentEvent())
-    },
+    }
 
     // position
 
-    centerForPoints: function(p) {
+    centerForPoints(p) {
         return p[0].midpointTo(p[1])
-    },
+    }
 
-    downCenterPosition: function() {
+    downCenterPosition() {
         return this.centerForPoints(this.downPoints())
-    },
+    }
 
-    beginCenterPosition: function() {
+    beginCenterPosition() {
         return this.centerForPoints(this.beginPoints())
-    },
+    }
 
-    currentCenterPosition: function() {
+    currentCenterPosition() {
         return this.centerForPoints(this.activePoints())
-    },
+    }
 
-    diffPosition: function() {
+    diffPosition() {
         return this.currentCenterPosition().subtract(this.beginCenterPosition())
-    },
+    }
 
     // rotation
 
-    angleInDegreesForPoints: function(p) {
+    angleInDegreesForPoints(p) {
         return p[0].angleInDegreesTo(p[1])
-    },
+    }
 
-    downAngleInDegress: function() {
+    downAngleInDegress() {
         return this.angleInDegreesForPoints(this.downPoints())
-    },
+    }
 
-    beginAngleInDegress: function() {
+    beginAngleInDegress() {
         return this.angleInDegreesForPoints(this.beginPoints())
-    },
+    }
 
-    activeAngleInDegress: function() {
+    activeAngleInDegress() {
         return this.angleInDegreesForPoints(this.activePoints())
-    },
+    }
 
-    rotationInDegrees: function() {
+    rotationInDegrees() {
         // difference between initial angle between 1st two fingers down and their current angle
         const a1 = this.beginAngleInDegress();
         const a2 = this.activeAngleInDegress();
         return a2 - a2;
-    },
+    }
 
     // scale
 
-    spreadForPoints: function(p) {
+    spreadForPoints(p) {
         return p[0].distanceFrom(p[1])
-    },
+    }
 
-    downSpread: function() {
+    downSpread() {
         // initial distance between first two fingers down
         return this.spreadForPoints(this.downPoints())
-    },
+    }
 
-    beginSpread: function() {
+    beginSpread() {
         // initial distance between first two fingers down
         return this.spreadForPoints(this.beginPoints())
-    },
+    }
 
-    currentSpread: function() {
+    currentSpread() {
         // current distance between first two fingers down
         return this.spreadForPoints(this.activePoints())
-    },
+    }
 
-    spread: function() {
+    spread() {
         const s = this.currentSpread() - this.beginSpread();
         //console.log("spread = " + s + " = " + this.currentSpread() + " - " + this.beginSpread() )
         return s
-    },
+    }
 
-    downSpreadX: function() {
+    downSpreadX() {
         const p = this.downPoints()
         return Math.abs(p[0].x() - p[1].x())
-    },
+    }
 
-    downSpreadY: function() {
+    downSpreadY() {
         const p = this.downPoints()
         return Math.abs(p[0].y() - p[1].y())
-    },
+    }
 
-    currentSpreadX: function() {
+    currentSpreadX() {
         const p = this.activePoints()
         return Math.abs(p[0].x() - p[1].x())
-    },
+    }
 
-    currentSpreadY: function() {
+    currentSpreadY() {
         const p = this.activePoints()
         return Math.abs(p[0].y() - p[1].y())
-    },
+    }
 
-    spreadX: function() {
+    spreadX() {
         return this.currentSpreadX() - this.downSpreadX()
-    },
+    }
 
-    spreadY: function() {
+    spreadY() {
         return this.currentSpreadY() - this.downSpreadY()
-    },
+    }
 
-    scale: function() {
+    scale() {
         const s = this.currentSpread() / this.beginSpread();
         //console.log("scale = " + s + " = " + this.currentSpread() + "/" + this.beginSpread() )
         return s
-    },
+    }
 
     // show
 
-    debugJson: function() {
+    debugJson() {
         const dp = this.diffPosition()
         return {
             id: this.typeId(),
@@ -294,10 +298,10 @@ GestureRecognizer.newSubclassNamed("OrientGestureRecognizer").newSlots({
             scale: this.scale(),
             rotation: this.rotationInDegrees()
         }
-    },
+    }
 
-    show: function() {
+    show() {
         console.log(this.debugJson())
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

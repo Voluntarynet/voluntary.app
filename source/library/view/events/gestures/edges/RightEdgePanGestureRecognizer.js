@@ -13,12 +13,17 @@
 
 */
 
-EdgePanGestureRecognizer.newSubclassNamed("RightEdgePanGestureRecognizer").newSlots({
-}).setSlots({
-    init: function () {
-        EdgePanGestureRecognizer.init.apply(this)
+window.RightEdgePanGestureRecognizer = class RightEdgePanGestureRecognizer extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+        })
+    }
+
+    init () {
+        super.init()
         this.setEdgeName("right")
         return this
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

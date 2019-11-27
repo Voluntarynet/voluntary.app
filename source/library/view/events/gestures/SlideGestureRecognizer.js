@@ -33,38 +33,43 @@
 */
 
 
-GestureRecognizer.newSubclassNamed("SlideGestureRecognizer").newSlots({
-    direction: "left", 
-    validDirectionsDict: { left: 1, right: 2, up: 3, down: 4 },
-    maxPerpendicularDistToBegin: 10, // will not begin if this is exceeded
-    //downPositionInTarget: null,
-}).setSlots({
-    init: function () {
-        GestureRecognizer.init.apply(this)
+window.SlideGestureRecognizer = class SlideGestureRecognizer extends ProtoClass {
+    
+    initPrototype () {
+        this.newSlots({
+            direction: "left", 
+            validDirectionsDict: { left: 1, right: 2, up: 3, down: 4 },
+            maxPerpendicularDistToBegin: 10, // will not begin if this is exceeded
+            //downPositionInTarget: null,
+        })
+    }
+
+    init () {
+        super.init()
         this.setListenerClasses(this.defaultListenerClasses())     
         this.setMinFingersRequired(1)
         this.setMaxFingersAllowed(1)
         this.setMinDistToBegin(10)
         //this.setIsDebugging(false)
         return this
-    },
+    }
 
-    setDirection: function(directionName) {
+    setDirection (directionName) {
         assert(this.validDirectionsDict().hasOwnProperty(directionName));
         this._direction = directionName
         return this
-    },
+    }
 
-    setNumberOfTouchesRequired: function(n) {
+    setNumberOfTouchesRequired (n) {
         assert(n === 1) // need to add multi-touch support
         this._numberOfTouchesRequired = n
         return this
-    },
+    }
 
     // --- events --------------------------------------------------------------------
 
-    onDown: function (event) {
-        GestureRecognizer.onDown.apply(this, [event])
+    onDown (event) {
+        super.onDown(event)
 
         if (!this.isPressing()) {
             if (this.hasAcceptableFingerCount()) {
@@ -73,10 +78,10 @@ GestureRecognizer.newSubclassNamed("SlideGestureRecognizer").newSlots({
                 this.startDocListeners()
             }
         }
-    },
+    }
 
-    onMove: function(event) {
-        GestureRecognizer.onMove.apply(this, [event])
+    onMove (event) {
+        super.onMove(event)
 
         if (this.isPressing()) {
             if (!this.isActive() && this.hasMovedTooMuchPerpendicular()) {
@@ -95,12 +100,12 @@ GestureRecognizer.newSubclassNamed("SlideGestureRecognizer").newSlots({
                 this.sendMoveMessage() // move
             }
         }
-    },
+    }
 
     // -----------
 
-    onUp: function (event) {
-        GestureRecognizer.onUp.apply(this, [event])
+    onUp  (event) {
+        super.onUp(event)
 
         if (this.isPressing()) {
             this.setIsPressing(false)
@@ -111,28 +116,28 @@ GestureRecognizer.newSubclassNamed("SlideGestureRecognizer").newSlots({
         }
 
         return true
-    },
+    }
 
-    cancel: function() {
+    cancel () {
         if (this.isActive()) {
             this.sendCancelledMessage()
         }
         this.finish()
         return this
-    },
+    }
 
-    finish: function() {
+    finish () {
         //this.debugLog(".finish()")
         this.setIsPressing(false)
         this.deactivate()
         this.stopDocListeners()
         this.didFinish()
         return this
-    },
+    }
 
     // ----------------------------------
 
-    hasMovedTooMuchPerpendicular: function() {
+    hasMovedTooMuchPerpendicular () {
         let m = this.maxPerpendicularDistToBegin()
         let dp = this.diffPos()
 
@@ -145,9 +150,9 @@ GestureRecognizer.newSubclassNamed("SlideGestureRecognizer").newSlots({
 
         let r = Math.abs(funcs[this.direction()](dp.x(), dp.y())) > m
         return r
-    },
+    }
 
-    hasMovedEnough: function() {
+    hasMovedEnough () {
         let m = this.minDistToBegin()
         let dp = this.diffPos()
 
@@ -160,11 +165,11 @@ GestureRecognizer.newSubclassNamed("SlideGestureRecognizer").newSlots({
 
         let r = funcs[this.direction()](dp.x(), dp.y()) > m
         return r
-    },
+    }
 
     // --- helpers ----
 
-    diffPos: function() {
+    diffPos () {
         let cp = this.currentPosition()
         let bp = this.beginPosition()
 
@@ -183,9 +188,9 @@ GestureRecognizer.newSubclassNamed("SlideGestureRecognizer").newSlots({
 
         funcs[this.direction()](p)
         return p
-    },
+    }
 
-    distance: function() {
+    distance () {
         let p = this.diffPos()
         let dx = p.x()
         let dy = p.y()
@@ -196,6 +201,6 @@ GestureRecognizer.newSubclassNamed("SlideGestureRecognizer").newSlots({
             down:  (dx, dy) => dy
         }
         return Math.abs(funcs[this.direction()](dx, dy))
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

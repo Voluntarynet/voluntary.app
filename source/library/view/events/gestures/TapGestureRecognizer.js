@@ -28,32 +28,36 @@
 
 */
 
-GestureRecognizer.newSubclassNamed("TapGestureRecognizer").newSlots({
-    maxHoldPeriod: 1000, // milliseconds per tap
-    timeoutId: null, // private
-
-    numberOfTapsRequired: 1,
-    numberOfFingersRequired: 1,
-    tapCount: 0,
-}).setSlots({
+window.TapGestureRecognizer = class TapGestureRecognizer extends ProtoClass {
     
-    init: function () {
-        GestureRecognizer.init.apply(this)
+    initPrototype () {
+        this.newSlots({
+            maxHoldPeriod: 1000, // milliseconds per tap
+            timeoutId: null, // private
+
+            numberOfTapsRequired: 1,
+            numberOfFingersRequired: 1,
+            tapCount: 0,
+        })
+    }
+
+    init () {
+        super.init()
         this.setListenerClasses(this.defaultListenerClasses())
         //this.setIsDebugging(true) 
         this.resetTapCount()
         this.setShouldRequestActivation(false) // allow multiple tap targets?
         return this
-    },
+    }
 
-    resetTapCount: function() {
+    resetTapCount () {
         this.setTapCount(0)
         return this
-    },
+    }
 
     // --- timer ---
 
-    startTimer: function(event) {
+    startTimer (event) {
         if (this.timeoutId()) {
             this.stopTimer()
         }
@@ -61,25 +65,25 @@ GestureRecognizer.newSubclassNamed("TapGestureRecognizer").newSlots({
         const tid = setTimeout(() => { this.cancel() }, this.maxHoldPeriod());
         this.setTimeoutId(tid)
         return this
-    },
+    }
 
-    stopTimer: function() {
+    stopTimer () {
         if (this.hasTimer()) {
             clearTimeout(this.timeoutId());
             this.setTimeoutId(null)
             this.resetTapCount()
         }
         return this
-    },
+    }
 
-    hasTimer: function() {
+    hasTimer () {
         return this.timeoutId() !== null
-    },
+    }
 
     // -- single action for mouse and touch up/down ---
 
-    onDown: function (event) {
-        GestureRecognizer.onDown.apply(this, [event])
+    onDown  (event) {
+        super.onDown(event)
         
         if (this.numberOfFingersDown() < this.numberOfFingersRequired()) {
             return this
@@ -94,10 +98,10 @@ GestureRecognizer.newSubclassNamed("TapGestureRecognizer").newSlots({
         }
 
         return true
-    },
+    }
 
-    onUp: function (event) {
-        GestureRecognizer.onUp.apply(this, [event])
+    onUp  (event) {
+        super.onUp(event)
  
         if (this.isDebugging()) {
             this.debugLog(".onUp()  tapCount:" + this.tapCount() + " viewTarget:" + this.viewTarget().typeId())
@@ -111,31 +115,31 @@ GestureRecognizer.newSubclassNamed("TapGestureRecognizer").newSlots({
         } else {
             //this.cancel()
         }
-    },
+    }
 
     // end states
 
-    complete: function() {
+    complete () {
         this.stopTimer()
         if (this.requestActivationIfNeeded()) {
             this.sendCompleteMessage() // complete
         }
-    },
+    }
 
-    cancel: function() {
+    cancel () {
         if (this.hasTimer()) {
             this.stopTimer()
             this.sendCancelledMessage() // cancelled
         }
         return this
-    },
+    }
 
     /*
     // was going to do some auto-naming but decided against it for now
     // too many names for point tap count and number of fingers?
     // 3 taps * 10 fingers?
 
-    incrementTapCountForFingerCount: function(n) {
+    incrementTapCountForFingerCount (n) {
         const d = this.tapCountDict()
         if (n in d) { 
             d[n] ++ 
@@ -143,28 +147,28 @@ GestureRecognizer.newSubclassNamed("TapGestureRecognizer").newSlots({
             d[n] = 1
         }
         return this
-    },
+    }
 
     
-    nameForCount: function(n) {
+    nameForCount (n) {
         if (n === 1) { return "Single" }
         if (n === 2) { return "Double" }
         if (n === 3) { return "Triple"; }
         if (n === 4) { return "Quadruple"; }
         if (n === 5) { return "Quintuple"; }
         return "Many"
-    },
-    beginMessageForCount: function(n) {
+    }
+    beginMessageForCount (n) {
         return "on" + this.nameForCount(n) + "TapBegin"
-    },
+    }
 
-    completeMessageForCount: function(n) {
+    completeMessageForCount (n) {
         return "on" + this.nameForCount(n) + "TapComplete"
-    },
+    }
 
-    cancelledMessageForCount: function(n) {
+    cancelledMessageForCount (n) {
         return "on" + this.nameForCount(n) + "TapCancelled"
-    },
+    }
     */
 
-}).initThisProto()
+}.initThisClass()

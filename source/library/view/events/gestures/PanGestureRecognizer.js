@@ -16,43 +16,47 @@
 
 */
 
-GestureRecognizer.newSubclassNamed("PanGestureRecognizer").newSlots({
-    minNumberOfFingersRequired: 1,
-    maxNumberOfFingersAllowed: 1,
-    //downPositionInTarget: null,
-}).setSlots({
+window.PanGestureRecognizer = class PanGestureRecognizer extends ProtoClass {
     
-    init: function () {
-        GestureRecognizer.init.apply(this)
+    initPrototype () {
+        this.newSlots({
+            minNumberOfFingersRequired: 1,
+            maxNumberOfFingersAllowed: 1,
+            //downPositionInTarget: null,
+        })
+    }
+
+    init () {
+        super.init()
         this.setListenerClasses(this.defaultListenerClasses()) 
         //this.setIsDebugging(false)
         return this
-    },
+    }
 
     // --- events --------------------------------------------------------------------
 
     // tap events
 
-    hasOkFingerCount: function() {
+    hasOkFingerCount () {
         const n = this.numberOfFingersDown()
         const min = this.minNumberOfFingersRequired()
         const max = this.maxNumberOfFingersAllowed()
         return (n >= min && n <= max)
-    },
+    }
 
-    isReadyToBegin: function() {
+    isReadyToBegin () {
         return this.hasOkFingerCount();
-    },
+    }
 
-    doPress: function(event) {
+    doPress (event) {
         this.setIsPressing(true)
         this.setDownEvent(event)
         this.startDocListeners()
         return this
-    },
+    }
 
-    onDown: function (event) {
-        GestureRecognizer.onDown.apply(this, [event])
+    onDown  (event) {
+        super.onDown(event)
 
         if (!this.isPressing()) {
             if (this.isReadyToBegin()) {
@@ -61,9 +65,9 @@ GestureRecognizer.newSubclassNamed("PanGestureRecognizer").newSlots({
         }
         
         return this
-    },
+    }
 
-    attemptBegin: function() {
+    attemptBegin () {
         if (!this.doesTargetAccept()) {
             return;
         }
@@ -75,10 +79,10 @@ GestureRecognizer.newSubclassNamed("PanGestureRecognizer").newSlots({
                 console.log(this.shortTypeId() + ".attemptBegin() FAILED")
             }
         }
-    },
+    }
 
-    onMove: function(event) {
-        GestureRecognizer.onMove.apply(this, [event])
+    onMove (event) {
+        super.onMove(event)
 
         if (this.isPressing()) {
             if (!this.isActive() && this.hasMovedEnough()) {
@@ -90,10 +94,10 @@ GestureRecognizer.newSubclassNamed("PanGestureRecognizer").newSlots({
             }
         }
         return this
-    },
+    }
 
-    onUp: function (event) {
-        GestureRecognizer.onUp.apply(this, [event])
+    onUp  (event) {
+        super.onUp(event)
 
         if (this.isPressing()) {
             if (this.isActive()) {
@@ -102,35 +106,35 @@ GestureRecognizer.newSubclassNamed("PanGestureRecognizer").newSlots({
             this.didFinish() // will set isPressing to false
         }
         return this
-    },
+    }
 
     // ----------------------------------
 
-    cancel: function() {
+    cancel () {
         if (this.isActive()) {
             this.sendCancelledMessage()
         }
         this.didFinish()
         return this
-    },
+    }
 
-    didFinish: function() {
-        GestureRecognizer.didFinish.apply(this)
+    didFinish () {
+        super.didFinish()
         this.setIsPressing(false)
         this.stopDocListeners()
         return this
-    },
+    }
 
     // ----------------------------------
 
-    hasMovedEnough: function() {
+    hasMovedEnough () {
         const m = this.minDistToBegin()
         const d = this.currentPosition().distanceFrom(this.downPosition())
         return d >= m
-    },
+    }
 
-    distance: function() {
+    distance () {
         return this.currentPosition().distanceFrom(this.beginPosition())
-    },
+    }
 
-}).initThisProto()
+}.initThisClass()

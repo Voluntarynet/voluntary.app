@@ -22,13 +22,17 @@
 
 */
 
-GestureRecognizer.newSubclassNamed("LongPressGestureRecognizer").newSlots({
-    timePeriod: 500, // miliseconds
-    timeoutId: null, // private
-}).setSlots({
+window.LongPressGestureRecognizer = class LongPressGestureRecognizer extends ProtoClass {
     
-    init: function () {
-        GestureRecognizer.init.apply(this)
+    initPrototype () {
+        this.newSlots({
+            timePeriod: 500, // miliseconds
+            timeoutId: null, // private
+        })
+    }
+
+    init () {
+        super.init()
         this.setListenerClasses(this.defaultListenerClasses())
         this.setIsDebugging(false) 
 
@@ -36,11 +40,11 @@ GestureRecognizer.newSubclassNamed("LongPressGestureRecognizer").newSlots({
         this.setMaxFingersAllowed(1)
         this.setMinDistToBegin(null)
         return this
-    },
+    }
 
     // --- timer ---
 
-    startTimer: function() {
+    startTimer () {
         if (this.timeoutId()) {
             this.stopTimer()
         }
@@ -49,23 +53,23 @@ GestureRecognizer.newSubclassNamed("LongPressGestureRecognizer").newSlots({
         this.setTimeoutId(tid)
         this.startDocListeners() // didFinish will stop listing
         return this
-    },
+    }
 
-    stopTimer: function() {
+    stopTimer () {
         if (this.hasTimer()) {
             clearTimeout(this.timeoutId());
             this.setTimeoutId(null)
         }
         return this
-    },
+    }
 
-    hasTimer: function() {
+    hasTimer () {
         return this.timeoutId() !== null
-    },
+    }
 
     // -- the completed gesture ---
     
-    onLongPress: function() {
+    onLongPress () {
         this.setTimeoutId(null)
 
         if(this.currentEventIsOnTargetView()) {
@@ -76,12 +80,12 @@ GestureRecognizer.newSubclassNamed("LongPressGestureRecognizer").newSlots({
         } else {
             this.cancel()
         }
-    },
+    }
 
     // -- single action for mouse and touch up/down ---
 
-    onDown: function (event) {
-        GestureRecognizer.onDown.apply(this, [event])
+    onDown  (event) {
+        super.onDown(event)
         
         const isWithin = this.currentEventIsOnTargetView();
 
@@ -91,10 +95,10 @@ GestureRecognizer.newSubclassNamed("LongPressGestureRecognizer").newSlots({
             this.startTimer()
             this.sendBeginMessage()
         }
-    },
+    }
 
-    onMove: function (event) {
-        GestureRecognizer.onMove.apply(this, [event])
+    onMove  (event) {
+        super.onMove(event)
     
         if (this.hasTimer()) { // TODO: also check move distance?
             if(this.currentEventIsOnTargetView()) {
@@ -104,23 +108,23 @@ GestureRecognizer.newSubclassNamed("LongPressGestureRecognizer").newSlots({
             }
         }
 
-    },
+    }
 
-    onUp: function (event) {
-        GestureRecognizer.onUp.apply(this, [event])
+    onUp  (event) {
+        super.onUp(event)
 
         if (this.hasTimer()) {
             this.cancel()
         }
-    },
+    }
 
-    cancel: function() {
+    cancel () {
         if (this.hasTimer()) {
             this.stopTimer()
             this.sendCancelledMessage()
             this.didFinish()
         }
         return this
-    },
+    }
     
-}).initThisProto()
+}.initThisClass()

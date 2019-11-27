@@ -2,7 +2,7 @@
 
 ResourceLoader.pushRelativePaths([
     //"Object-puuid.js",
-    "Proto-store.js",
+    "ProtoClass-store.js",
     "BMNode-store.js",
     "BMStorableNode-store.js",
     "primitives/_imports.js",

@@ -13,16 +13,16 @@
 
 // need a pidRefsFromPid
 
-window.PersistentObjectPool = class PersistentObjectPool extends ProtoClass {
+window.PersistentObjectPool = class PersistentObjectPool extends ObjectPool {
     
     initPrototype () {
         this.newSlots({
-            name: "defaultDataStore",
         })
     }
 
     init () {
         super.init()
+        this.setName("defaultDataStore")
         this.setRecordsDict(AtomicPersistentDictionary.clone())
         return this
     }

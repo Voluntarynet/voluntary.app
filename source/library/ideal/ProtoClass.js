@@ -490,8 +490,9 @@ window.ProtoClass = class ProtoClass {
     }
 
     defaultStore () {
+        return PersistentObjectPool.shared()
         //return ObjectPool.shared()
-        return NodeStore.shared()
+        //return NodeStore.shared()
     }
 }
 

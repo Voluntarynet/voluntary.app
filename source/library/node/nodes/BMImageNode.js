@@ -25,7 +25,7 @@ window.BMImageNode = class BMImageNode extends BMStorableNode {
         this.addActions(["add"])
         this.setCanDelete(true)
         this.addStoredSlots(["title", "dataURL"])
-    },        
+    }
     
     onDidEditNode () {
         this.debugLog(" onDidEditNode")

@@ -18,7 +18,7 @@
 */
 
 
-window.Keyboard = class Keyboard extends ProtoClass {
+window.Keyboard = class Keyboard extends Device {
     initPrototype () {
         this.newSlots({
             codeToKeys: null, // dictionary of KeyboardKey objects

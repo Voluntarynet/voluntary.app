@@ -9,7 +9,7 @@
 
 */
 
-window.Mouse = class Mouse extends ProtoClass {
+window.Mouse = class Mouse extends Device {
     
     initPrototype () {
         this.newSlots({

@@ -7,7 +7,7 @@
 
 */
 
-window.GamePad = class GamePad extends ProtoClass {
+window.GamePad = class GamePad extends Device {
     
     initPrototype () {
         this.newSlots({

@@ -2,6 +2,7 @@
 
 ResourceLoader.pushRelativePaths([
     "EventPoint.js",
+    "Device.js",
     "KeyboardKey.js",
     "Keyboard.js",
     "Mouse.js",

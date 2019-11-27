@@ -6,7 +6,7 @@
 
 */
 
-window.KeyboardKey = class KeyboardKey extends ProtoClass {
+window.KeyboardKey = class KeyboardKey extends Device {
     
     initPrototype () {
         this.newSlots({

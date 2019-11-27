@@ -9,7 +9,7 @@
 
 */
 
-window.TouchScreen = class TouchScreen extends ProtoClass {
+window.TouchScreen = class TouchScreen extends Device {
 
     initPrototype () {
         this.newSlots({

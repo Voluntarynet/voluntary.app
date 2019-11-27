@@ -69,17 +69,17 @@ window.BMField = class BMField extends BMSummaryNode {
         //this.setNodeRowStyles(BMViewStyles.sharedWhiteOnBlackStyle())
         //this.customizeNodeRowStyles().setToBlackOnWhite()
         return this
-    },  
+    }
 
     initNodeInspector () {
-        BMSummaryNode.initNodeInspector.apply(this)
+        super.initNodeInspector()
         //this.addInspectorField(BMBooleanField.clone().setKey("Summary shows key").setValueMethod("nodeSummaryShowsKey").setValueIsEditable(true).setTarget(this))
         //this.addInspectorField(BMBooleanField.clone().setKey("Summary shows value").setValueMethod("nodeSummaryShowsValue").setValueIsEditable(true).setTarget(this))
         return this
     }
 
     shallowCopySlotnames () {
-        const names = BMSummaryNode.shallowCopySlotnames.apply(this)
+        const names = super.shallowCopySlotnames()
         return names.appendItems([
             "key", "keyIsVisible", "keyIsEditable", 
             "value", "valueIsVisible","valueIsEditable",
@@ -89,7 +89,7 @@ window.BMField = class BMField extends BMSummaryNode {
     }
 
     deepCopySlotnames () {
-        const names = BMSummaryNode.deepCopySlotnames.apply(this)
+        const names = super.deepCopySlotnames()
         return names.appendItems([])
     }
     
@@ -204,7 +204,7 @@ window.BMField = class BMField extends BMSummaryNode {
     validate () {
         // subclasses should override if needed
         return true
-    },    
+    }
 	
     nodeRowLink () {
         return null
@@ -218,9 +218,11 @@ window.BMField = class BMField extends BMSummaryNode {
         return this.value()
     }
 
+    /*
     summary () {
-        return BMSummaryNode.summary.apply(this)
+        return super.summary()
     }
+    */
 
     /*
     summary () {

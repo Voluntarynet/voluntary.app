@@ -31,8 +31,7 @@ window.Notepad = class Notepad extends App {
     } 
 
     setup  () {
-        App.setup.apply(this)
-        
+        super.setup()        
 
         if (false) {
             this.setupAtom()
@@ -98,7 +97,7 @@ window.Notepad = class Notepad extends App {
     }
 
     appDidInit  () {
-        App.appDidInit.apply(this)
+        super.appDidInit()
         
         // ResourceLoaderPanel can't use notification as it's a boot object
         // what if we added a one-shot observation for it, or would that be more confusing?

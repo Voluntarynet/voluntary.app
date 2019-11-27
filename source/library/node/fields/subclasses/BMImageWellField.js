@@ -27,7 +27,7 @@ window.BMImageWellField = class BMImageWellField extends BMField {
 
     /*
     setValue (v) {
-        BMField.setValue.apply(this, [v])
+        super.setValue(v)
         //this.debugLog(" setValue " + v)
         //this.updateKey()
         return this

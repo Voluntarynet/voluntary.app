@@ -8,36 +8,36 @@
 
 */
 
-App.newSubclassNamed("PeerApp").newSlots({
-    name: "voluntary.app",
-    version: [0, 5, 1, 0],
-
-    // model
-    about: null,
-    localIdentities: null,
-    network: null,
-    dataStore: null,
-    resources: null,
+window.PeerApp = class PeerApp extends App {
     
-    atomNode: null,
+    initPrototype () {
+        this.newSlots({
+            name: "voluntary.app",
+            version: [0, 5, 1, 0],
+        
+            // model
+            about: null,
+            localIdentities: null,
+            network: null,
+            dataStore: null,
+            resources: null,
+            
+            atomNode: null,
+        
+            // views
+            browser: null,
+            shelf: null,
+        
+            atomNodeView: null,
+        })
+    }
 
-    // views
-    browser: null,
-    shelf: null,
-
-    atomNodeView: null,
-
-}).setSlots({
-
-    init  () {
-        //this.setName("voluntary.app")
-
-        App.init.apply(this)
-
+    init () {
+        super.init()
     }
 
     setup  () {
-        App.setup.apply(this)
+        super.setup()
         
 
         if (false) {
@@ -134,7 +134,7 @@ App.newSubclassNamed("PeerApp").newSlots({
     }
 
     appDidInit  () {
-        App.appDidInit.apply(this)
+        super.appDidInit()
         
         // ResourceLoaderPanel can't use notification as it's a boot object
         // what if we added a one-shot observation for it, or would that be more confusing?

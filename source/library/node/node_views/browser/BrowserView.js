@@ -186,7 +186,7 @@ window.BrowserView = class BrowserView extends NodeView {
 
     prepareToSyncToView  () {
         //this.debugLog(" prepareToSyncToView")
-        NodeView.prepareToSyncToView.apply(this)
+        super.prepareToSyncToView()
         this.fitColumns()
         return this
     }

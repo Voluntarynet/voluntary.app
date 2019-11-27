@@ -40,7 +40,7 @@ window.BMBooleanFieldRowView = class BMBooleanFieldRowView extends BMFieldRowVie
     }
 
     syncFromNode () {
-        BMFieldRowView.syncFromNode.apply(this)
+        super.syncFromNode()
         this.booleanView().updateAppearance()
         return this
     }

@@ -11,11 +11,10 @@
                     
     example use in subclass 
 
-    BMFieldSetNode.newSubclassNamed("BMCustomFormNode").newSlots({
-    }).setSlots({
+    in BMCustomFormNode class:
     
         init  () {
-            BMFieldSetNode.init.apply(this)
+            super.init()
 
             this.addFieldNamed("from")
             this.addFieldNamed("to")
@@ -44,7 +43,7 @@ window.BMFieldSetNode = class BMFieldSetNode extends BMStorableNode {
         this.setNodeMinWidth(500)
         this.setShouldStoreSubnodes(false)
         //this.setNodeColumnBackgroundColor("white")
-    },        
+    }
     
     didUpdateField (aField) {
         // override to implement hooks

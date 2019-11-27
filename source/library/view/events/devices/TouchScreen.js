@@ -35,7 +35,7 @@ window.TouchScreen = class TouchScreen extends ProtoClass {
     */
 
     init  () {
-        ideal.Proto.init.apply(this)
+        super.init()
         this.startListening()
         //this.setIsDebugging(true)
         if (this.isDebugging()) {

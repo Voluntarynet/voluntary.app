@@ -21,7 +21,8 @@ window.BMContactLinks = class BMContactLinks extends BMStorableNode {
     }
 
     setParentNode  (aNode) {
-        BMStorableNode.setParentNode.apply(this, [aNode])
+        super.setParentNode(aNode)
+
         if (aNode === null) {
             this.unwatchIdentities()
         } else {
@@ -30,7 +31,8 @@ window.BMContactLinks = class BMContactLinks extends BMStorableNode {
     }
 
     finalize  () {
-        BMStorableNode.finalize.apply(this)
+        super.finalize()
+
         if (this.parentNode()) {
             this.updatedContacts()
         }

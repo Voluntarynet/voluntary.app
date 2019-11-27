@@ -28,9 +28,8 @@ window.BMPostDraftRowView = class BMPostDraftRowView extends BrowserRow {
     }
 
     init () {
-        super.init()
         this.setShouldCenterCloseButton(false) // hack, TODO: change this
-        BrowserRow.init.apply(this)
+        super.init()
 
         this.setHeight("auto")
         this.setMinHeight("fit-content")
@@ -129,7 +128,7 @@ window.BMPostDraftRowView = class BMPostDraftRowView extends BrowserRow {
     }
 
     updateSubviews () {
-        BrowserRow.updateSubviews.apply(this)
+        super.updateSubviews()
     
         const node = this.node()
         

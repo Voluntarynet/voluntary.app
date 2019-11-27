@@ -25,7 +25,8 @@ window.BMTextAreaFieldRowView = class BMTextAreaFieldRowView extends BMFieldRowV
     }
 	
     updateSubviews () {   
-	    BMFieldRowView.updateSubviews.apply(this)
+        super.updateSubviews()
+        
         this.fillBottomOfColumnIfAvailable()
 		
         if (this.node().isMono()) {

@@ -9,21 +9,6 @@
 
 */
 
-/*
-const aClass = ProtoClass.newSubclassNamed("StackFrame2").newSlots({
-    functionName: null,
-    url: null,
-    lineNumber: null,
-    characterNumber: null,
-}).setSlots({
-
-})
-
-
-console.log("aClass = ", aClass)
-*/
-
-
 window.StackFrame = class StackFrame extends ProtoClass {
     initPrototype () {
         this.newSlots({
@@ -35,7 +20,7 @@ window.StackFrame = class StackFrame extends ProtoClass {
     }
 
     init() {
-        super.init() // -> ProtoClass.prototype.init.apply(this)
+        super.init()
     }
 
     fromLine(line) {

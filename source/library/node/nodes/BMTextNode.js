@@ -53,7 +53,7 @@ window.BMTextNode = class BMTextNode extends BMStorableNode {
     }
 
     initNodeInspector () {
-        BMStorableNode.initNodeInspector.apply(this)
+        super.initNodeInspector()
         this.addInspectorField(BMNumberField.clone().setKey("Font size").setValueMethod("fontSize").setValueIsEditable(true).setTarget(this))
         this.addInspectorField(BMStringField.clone().setKey("color").setValueMethod("color").setValueIsEditable(true).setTarget(this))
         this.addInspectorField(BMStringField.clone().setKey("Background color").setValueMethod("backgroundColor").setValueIsEditable(true).setTarget(this))
@@ -61,7 +61,7 @@ window.BMTextNode = class BMTextNode extends BMStorableNode {
     }
 
     didLoadFromStore () {
-        BMStorableNode.didLoadFromStore.apply(this)
+        super.didLoadFromStore()
         this.subnodes().forEach( (subnode) => { subnode.setCanDelete(true) });
         this.subnodes().forEach( (subnode) => { subnode.setNodeCanInspect(true) });
         return this

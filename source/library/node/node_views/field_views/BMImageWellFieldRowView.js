@@ -31,7 +31,7 @@ window.BMImageWellFieldRowView = class BMImageWellFieldRowView extends BMFieldRo
     }
 
     syncFromNode  () {
-        BMFieldRowView.syncFromNode.apply(this)
+        super.syncFromNode()
 
         const field = this.node()
 
@@ -68,7 +68,7 @@ window.BMImageWellFieldRowView = class BMImageWellFieldRowView extends BMFieldRo
         	field.setValue(data)
         }
         
-        //NodeView.syncToNode.apply(this)
+        //super.suncToNode()
         return this
     }
 

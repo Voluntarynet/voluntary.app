@@ -158,7 +158,7 @@ window.BMAppMessage = class BMAppMessage extends BMFieldSetNode {
     // updating hasRead
     
     nodeBecameVisible () {
-        BMFieldSetNode.nodeBecameVisible.apply(this)
+        super.nodeBecameVisible()
 
         if (!this.hasRead()) {
             this.setHasRead(true)

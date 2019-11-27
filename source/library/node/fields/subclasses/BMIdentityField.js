@@ -44,8 +44,8 @@ window.BMIdentityField = class BMIdentityField extends BMField {
             this.scheduleSyncToView() 
         }
         
-	    //console.log("newValue = '" + newValue + "'")
-        BMField.setValue.apply(this, [newValue])
+        //console.log("newValue = '" + newValue + "'")
+        super.setValue(newValue)
 		
         return this
     }

@@ -31,12 +31,6 @@ window.BMChat = class BMChat extends BMApplet {
         this.initStoredSubnodeSlotWithProto("drafts",    BMPostDrafts)
     }
 
-    /*
-	loadFinalize () {
-		BMApplet.loadFinalize.apply(this)		
-	},
-	*/
-	
     localIdentity () {
         return this.parentNodeOfType("BMLocalIdentity")
     }

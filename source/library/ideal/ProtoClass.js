@@ -25,6 +25,7 @@
 //window.ideal.ProtoClass = 
 window.ProtoClass = class ProtoClass { 
 
+    /*
     static newSubclassNamed (subclassName) {
         let s = "window['" + subclassName + "'] = class " + subclassName + " extends " + this.type() + " {}"
         //console.log("s = ", s)
@@ -32,6 +33,7 @@ window.ProtoClass = class ProtoClass {
         //window[subclassName] = subclass
         return subclass
     }
+    */
 
     initPrototype() { 
         // subclasses should call this at end of their definition

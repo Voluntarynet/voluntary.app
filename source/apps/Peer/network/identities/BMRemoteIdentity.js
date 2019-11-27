@@ -68,7 +68,7 @@ window.BMRemoteIdentity = class BMRemoteIdentity extends BMStorableNode {
     }
     
     didUpdateSlot (slotName, oldValue, newValue) {
-        BMStorableNode.didUpdateSlot.apply(this, [slotName, oldValue, newValue])
+        super.didUpdateSlot(slotName, oldValue, newValue)
         
         if (slotName === "publicKeyString") {
             this.postChange()
@@ -78,7 +78,7 @@ window.BMRemoteIdentity = class BMRemoteIdentity extends BMStorableNode {
     }
 
     didLoadFromStore () {
-        BMStorableNode.didLoadFromStore.apply(this)
+        super.didLoadFromStore()
         //this.messages().setTitle("messages")
         //this.debugLog(" didLoadFromStore")
     }

@@ -55,14 +55,14 @@ window.BMRegion = class BMRegion extends BMNode {
     }
     
     addSubnode (aSubnode) {
-        BMNode.addSubnode.apply(this, [aSubnode])
+        super.addSubnode(aSubnode)
         this.sortIfNeeded()
         return aSubnode
     }
 
     didUpdateNode () {
         this.setNote(this.sumOfSubnodeNotes())
-        BMNode.didUpdateNode.apply(this)
+        super.didUpdateNode()
         return this
     }
     

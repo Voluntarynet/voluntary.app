@@ -50,14 +50,13 @@ window.BMMenuNode = class BMMenuNode extends BMSummaryNode {
 
     /*
     initNodeInspector () {
-        BMSummaryNode.initNodeInspector.apply(this)
-
+        super.initNodeInspector()
         return this
     }
     */
 
     didLoadFromStore () {
-        BMSummaryNode.didLoadFromStore.apply(this)
+        super.didLoadFromStore()
         /*
         this.subnodes().forEach( (subnode) => { 
             subnode.setCanDelete(true)
@@ -92,7 +91,7 @@ window.BMMenuNode = class BMMenuNode extends BMSummaryNode {
             })
             return parts.join(" ")
         }
-        return BMSummaryNode.subtitle.apply(this)
+        return super.subtitle()
     }
     */
 
@@ -177,13 +176,13 @@ window.BMMenuNode = class BMMenuNode extends BMSummaryNode {
 
     /*
     asJSON () {
-        const json = BMSummaryNode.asJSON.apply(this)
+        const json = super.asJSON()
         json._label = this.label()
         return json
     }
 
     fromJSON (json) {
-        const obj = this.fromJSON.apply(this, [json])
+        const obj = super.fromJSON(json)
         obj.setLabel(json._label)
         return obj
     }
@@ -192,7 +191,7 @@ window.BMMenuNode = class BMMenuNode extends BMSummaryNode {
 
     /*
     didChangeParentNode  () {
-        BMSummaryNode.didChangeParentNode.apply(this)
+        super.didChangeParentNode()
         if (this.isFlexRoot()) {
             this.removeAction("delete")
         }

@@ -47,7 +47,7 @@ window.BMBooleanField = class BMBooleanField extends BMField {
 	
     didUpdateNode () {
         this.validate()
-        return BMField.didUpdateNode.apply(this)
+        return super.didUpdateNode()
     }
 
 }.initThisClass()

@@ -51,7 +51,7 @@ window.ScreenEdgePanGestureRecognizer = class ScreenEdgePanGestureRecognizer ext
     // --- events --------------------------------------------------------------------
 
     didFinish () {
-        GestureRecognizer.didFinish.apply(this)
+        super.didFinish()
         this.setIsPressing(false)
         //this.stopDocListeners()
         return this

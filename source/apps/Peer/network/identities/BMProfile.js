@@ -44,7 +44,7 @@ window.BMProfile = class BMProfile extends BMFieldSetNode {
     }
     
     setParentNode (aNode) {
-        BMFieldSetNode.setParentNode.apply(this, [aNode])
+        super.setParentNode(aNode)
 		
         // pass through fields
         this.fieldNamed("name").setTarget(aNode)
@@ -58,7 +58,8 @@ window.BMProfile = class BMProfile extends BMFieldSetNode {
     }
 	
     didUpdateSlot (slotName, oldValue, newValue) {
-        BMFieldSetNode.didUpdateSlot.apply(this, [slotName, oldValue, newValue])
+        super.didUpdateSlot(slotName, oldValue, newValue)
+
         if (slotName === "avatars") {
 		    const parentNode = this.parentNode()
 		    if (parentNode && parentNode.didUpdateSubnode) {

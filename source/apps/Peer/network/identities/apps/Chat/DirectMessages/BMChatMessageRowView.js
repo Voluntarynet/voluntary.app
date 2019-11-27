@@ -73,7 +73,7 @@ window.BMChatMessageRowView = class BMChatMessageRowView extends BrowserTitledRo
     }
 
     updateSubviews () {
-        BrowserTitledRow.updateSubviews.apply(this)
+        super.updateSubviews()
 		
         const node = this.node()
         if (node) {

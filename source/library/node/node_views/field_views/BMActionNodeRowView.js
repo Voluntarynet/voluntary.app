@@ -33,7 +33,7 @@ window.BMActionNodeRowView = class BMActionNodeRowView extends BrowserRow {
     }
 
     updateSubviews  () {	
-        BrowserRow.updateSubviews.apply(this)
+        super.updateSubviews()
 		
         const bv = this.buttonView()
         bv.setTitle(this.node().title())
@@ -68,7 +68,7 @@ window.BMActionNodeRowView = class BMActionNodeRowView extends BrowserRow {
 
     syncToNode () {
         this.node().setTitle(this.buttonView().title()) 
-        BrowserRow.syncToNode.apply(this)
+        super.syncToNode()
         return this
     }
 

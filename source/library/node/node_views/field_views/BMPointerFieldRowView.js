@@ -28,7 +28,7 @@ window.BMPointerFieldRowView = class BMPointerFieldRowView extends BrowserTitled
     }
 
     updateSubviews  () {	
-        BrowserTitledRow.updateSubviews.apply(this)
+        super.updateSubviews()
 		
         let node = this.node()
 

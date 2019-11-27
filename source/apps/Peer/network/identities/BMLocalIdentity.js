@@ -56,14 +56,14 @@ window.BMLocalIdentity = class BMLocalIdentity extends BMKeyPair {
     }
 
     finalize () {
-        BMKeyPair.finalize.apply(this)
+        super.finalize()
         //this.debugLog(".finalize()")
         NotificationCenter.shared().newNote().setSender(this).setName("didChangeIdentity").setInfo(this).post()
     }
 	
     didLoadFromStore () {
         //this.debugLog(" didLoadFromStore")
-        BMKeyPair.didLoadFromStore.apply(this)
+        super.didLoadFromStore()
         this.profile().fieldNamed("publicKeyString").setValueIsEditable(false)
     }
     
@@ -74,7 +74,7 @@ window.BMLocalIdentity = class BMLocalIdentity extends BMKeyPair {
     setTitle  (s) {
         this.setName(s)
         return this
-    }, 
+    }
  
     handleObjMsg (objMsg) {
         //this.debugLog(" " + this.name() + " handleObjMsg ", objMsg)

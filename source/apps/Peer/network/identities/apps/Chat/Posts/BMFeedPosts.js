@@ -33,7 +33,7 @@ window.BMFeedPosts = class BMFeedPosts extends BMStorableNode {
     }
 
     finalize () {
-        BMStorableNode.finalize.apply(this)
+        super.finalize()
         this.setTitle("feed")
     }
 	
@@ -70,13 +70,13 @@ window.BMFeedPosts = class BMFeedPosts extends BMStorableNode {
     }
     
     didChangeSubnodeList () {
-        BMStorableNode.didChangeSubnodeList.apply(this)
+        super.didChangeSubnodeList()
         this.updateHasRead()
         return this
     }
     
     didUpdateNode () {
-        BMStorableNode.didUpdateNode.apply(this)
+        super.didUpdateNode()
         this.updateHasRead()
     }
     

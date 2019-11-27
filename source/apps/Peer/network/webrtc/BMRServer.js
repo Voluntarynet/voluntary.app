@@ -52,7 +52,7 @@ window.BMRServer = class BMRServer extends BMFieldSetNode {
     }
 
     didUpdateNode () {
-        BMFieldSetNode.didUpdateNode.apply(this)
+        super.didUpdateNode()
         //this.debugLog(".didUpdateNode()")
         this.updateButtons()
         return this

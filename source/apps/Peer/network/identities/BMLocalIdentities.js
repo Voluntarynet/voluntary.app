@@ -57,7 +57,7 @@ window.BMLocalIdentities = class BMLocalIdentities extends BMStorableNode {
     }
 	
     didChangeSubnodeList () {
-        BMStorableNode.didChangeSubnodeList.apply(this)
+        super.didChangeSubnodeList()
         this._didChangeIdentitiesNote.post()
         return this
     }

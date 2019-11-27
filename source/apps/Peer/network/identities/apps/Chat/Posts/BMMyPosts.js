@@ -30,7 +30,7 @@ window.BMMyPosts = class BMMyPosts extends BMStorableNode {
     }
 
     finalize () {
-        BMStorableNode.finalize.apply(this)
+        super.finalize()
         this.setTitle("my posts")
     }
 	

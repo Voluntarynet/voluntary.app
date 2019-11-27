@@ -34,7 +34,7 @@ window.BMMailMessage = class BMMailMessage extends BMAppMessage {
     // sync
 
     didUpdateField (aField) {
-        BMFieldSetNode.didUpdateField.apply(this)
+        super.didUpdateField()
 
         let name = aField.valueMethod()
         //console.log("didUpdateField(" + name + ")")
@@ -56,7 +56,7 @@ window.BMMailMessage = class BMMailMessage extends BMAppMessage {
     }
 	
     finalize () {
-        BMAppMessage.finalize.apply(this)
+        super.finalize()
         this.setupInputsFromPubkeys()
     }
 	
@@ -146,7 +146,7 @@ window.BMMailMessage = class BMMailMessage extends BMAppMessage {
     }
 
     send  () {
-        BMAppMessage.send.apply(this)
+        super.send()
         this.delete()
     }
 

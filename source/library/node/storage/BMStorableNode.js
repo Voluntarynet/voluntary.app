@@ -31,7 +31,8 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
     // hook this to schedules writes when subnode list is changed
 
     didChangeSubnodeList () {
-        BMNode.didChangeSubnodeList.apply(this)
+        super.didChangeSubnodeList()
+
         if (this.shouldStoreSubnodes()) {
             this.scheduleSyncToStore()
         }
@@ -141,7 +142,7 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
     // reading object from store
    
     setNodeDict  (aDict, aStore = this.defaultStore()) { 
-	    //BMNode.setNodeDict.apply(this, [aDict])
+	    //super.setNodeDict(aDict, aStore)
         // TODO: wrap in try {}
         this.setIsUnserializing(true) 
         this.setNodeDictForProperties(aDict, aStore)
@@ -291,7 +292,8 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
     }
 
     prepareForFirstAccess (aStore = this.defaultStore()) {
-        BMNode.prepareForFirstAccess.apply(this)
+        super.prepareForFirstAccess()
+
         if (this.subnodesRecord()) {
             this.loadSubnodesRecord()
         }

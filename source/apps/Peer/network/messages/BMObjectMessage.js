@@ -64,7 +64,8 @@ window.BMObjectMessage = class BMObjectMessage extends BMMessage {
     }
     
     setNode (aNode) {
-        BMMessage.setNode.apply(this, [aNode])
+        super.setNode(aNode)
+
         console.log("BMObjectMessage setNode " + aNode ? aNode.type() : aNode)
         return this
     }

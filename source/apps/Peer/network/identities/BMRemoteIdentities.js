@@ -30,7 +30,7 @@ window.BMRemoteIdentities = class BMRemoteIdentities extends BMStorableNode {
     }
 
     didLoadFromStore () {
-        BMStorableNode.didLoadFromStore.apply(this)
+        super.didLoadFromStore()
         this.setTitle("contacts")
         this.postChangeNote()
     }
@@ -84,7 +84,7 @@ window.BMRemoteIdentities = class BMRemoteIdentities extends BMStorableNode {
     }
 	
     didChangeSubnodeList () {
-        BMStorableNode.didChangeSubnodeList.apply(this)
+        super.didChangeSubnodeList()
         this._didChangeIdentitiesNote.post()
         return this
     }

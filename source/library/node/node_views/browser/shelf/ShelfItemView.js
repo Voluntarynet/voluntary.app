@@ -46,7 +46,7 @@ window.ShelfItemView = class ShelfItemView extends NodeView {
     }
     
     didUpdateNode () {
-        NodeView.didUpdateNode.apply(this)
+        super.didUpdateNode()
         this.syncFromNode()
     }
 
@@ -99,7 +99,7 @@ window.ShelfItemView = class ShelfItemView extends NodeView {
     }
 	
     didChangeHeight () {
-        NodeView.didChangeHeight.apply(this)
+        super.didChangeHeight()
 	     window.SyncScheduler.shared().scheduleTargetAndMethod(this.markerView(), "verticallyAlignAbsoluteNow", 0)
         return this
     }
@@ -161,7 +161,8 @@ window.ShelfItemView = class ShelfItemView extends NodeView {
     // --- selecting ---
     
     onClick  (event) {
-        NodeView.onClick.apply(this, [event])
+        super.onClick(event)
+
         //console.log(this.name() + ".onClick()")
         
         if (this.isSelectable()) {

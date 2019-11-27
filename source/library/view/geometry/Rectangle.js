@@ -26,7 +26,7 @@ window.Rectangle = class Rectangle extends ProtoClass {
     }
 
     init () {
-        ideal.Proto.init.apply(this)
+        super.init()
         this.setOrigin(Point.clone())
         this.setSize(Point.clone())
         return this

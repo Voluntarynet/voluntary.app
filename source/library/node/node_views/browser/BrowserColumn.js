@@ -54,7 +54,7 @@ window.BrowserColumn = class BrowserColumn extends NodeView {
 
     applyStyles () {
         //this.debugLog(".applyStyles()")
-        NodeView.applyStyles.apply(this)
+        super.applyStyles()
         return this
     }
     
@@ -110,7 +110,7 @@ window.BrowserColumn = class BrowserColumn extends NodeView {
     // selection
 	
     didChangeIsSelected () {
-        NodeView.didChangeIsSelected.apply(this)
+        super.didChangeIsSelected()
 
         if (this.isSelected()) {
             this.focus()
@@ -304,7 +304,7 @@ window.BrowserColumn = class BrowserColumn extends NodeView {
 
     setNode (aNode) {
         if (this.node() !== aNode) {
-            NodeView.setNode.apply(this, [aNode])
+            super.setNode(aNode)
             this.unselectAllRows() // move to didChangeNode
             //"shouldFocusSubnode"
         }
@@ -359,7 +359,7 @@ window.BrowserColumn = class BrowserColumn extends NodeView {
     }
 
     didChangeNode () {
-        NodeView.didChangeNode.apply(this)
+        super.didChangeNode()
 
         if (this.node() && this.node().nodeRowsStartAtBottom()) {
             setTimeout(() => { this.scrollToBottom() }, 0)
@@ -377,7 +377,7 @@ window.BrowserColumn = class BrowserColumn extends NodeView {
             console.warn("  this.node() = " , this.node())
             return this
         }	    
-	    NodeView.scheduleSyncFromNode.apply(this)
+	    super.scheduleSyncFromNode()
 	    return this
     }
     */
@@ -399,7 +399,7 @@ window.BrowserColumn = class BrowserColumn extends NodeView {
         let selectedIndex = this.selectedRowIndex()
         const lastSelectedNode = this.selectedNode()
         
-        NodeView.syncFromNode.apply(this)
+        super.syncFromNode()
         
         if (this.node() === null) {
             this.setIsRegisteredForDrop(false)
@@ -696,7 +696,7 @@ window.BrowserColumn = class BrowserColumn extends NodeView {
     }
 
     focus () {
-        NodeView.focus.apply(this)
+        super.focus()
 		
 	    if (this.selectedRowIndex() === -1) {
             this.setSelectedRowIndex(0)

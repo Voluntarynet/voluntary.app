@@ -76,16 +76,14 @@ window.ButtonView = class ButtonView extends DomView {
 
     sendActionToTarget () {
         if (!this.isEditable()) {
-            DomView.sendActionToTarget.apply(this)
+            super.sendActionToTarget()
         }
         return this
     }
 
     onTapComplete  (aGesture) {
         //this.debugLog(".onTapComplete()")
-        if (!this.isEditable()) {
-            DomView.sendActionToTarget.apply(this)
-        }
+        this.sendActionToTarget()
         return false
     }
     

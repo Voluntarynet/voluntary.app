@@ -19,7 +19,7 @@ window.ShipView = class ShipView extends ThingView {
     } 
 
     update () {
-        ThingView.update.apply(this)
+        super.update()
     }
 
 

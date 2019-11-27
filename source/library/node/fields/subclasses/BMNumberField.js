@@ -46,7 +46,7 @@ window.BMNumberField = class BMNumberField extends BMField {
     /*
     didUpdateNode () {
         this.validate()
-        return BMField.didUpdateNode.apply(this)
+        return super.didUpdateNode()
     }
     */
    

@@ -46,7 +46,7 @@ window.EdgePanGestureRecognizer = class EdgePanGestureRecognizer extends ProtoCl
 
     /*
     didFinish () {
-        GestureRecognizer.didFinish.apply(this)
+        super.didFinish()
         this.setIsPressing(false)
         this.stopDocListeners()
         return this

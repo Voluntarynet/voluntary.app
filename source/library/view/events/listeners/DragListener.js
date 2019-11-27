@@ -28,7 +28,7 @@ window.DragListener = class DragListener extends ProtoClass {
     }
 
     start () {
-        EventSetListener.start.apply(this)
+        super.start()
         this.listenTarget().ondragstart = (e) => { console.log("--- ondragstart ---"); } // TODO: still needed?
         return this
     }

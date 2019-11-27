@@ -1114,12 +1114,12 @@ window.BMNode = class BMNode extends ProtoClass {
     // overriding copying protocol from Proto
 
     shallowCopySlotnames () {
-        const names = ideal.Proto.shallowCopySlotnames.apply(this)
+        const names = super.shallowCopySlotnames()
         return names.appendItems(["title", "subtitle", "note"])
     }
 
     deepCopySlotnames () {
-        const names = ideal.Proto.deepCopySlotnames.apply(this)
+        const names = super.deepCopySlotnames()
         return names.appendItems(["subnodes"])
     }
 

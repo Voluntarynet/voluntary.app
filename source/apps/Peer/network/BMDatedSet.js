@@ -41,7 +41,7 @@ window.BMStoredDatedSetNode = class BMStoredDatedSetNode extends BMStorableNode 
     }
     
     didLoadFromStore () {
-        BMStorableNode.didLoadFromStore.apply(this)
+        super.didLoadFromStore()
         this.deleteExpiredKeys()
     }
 

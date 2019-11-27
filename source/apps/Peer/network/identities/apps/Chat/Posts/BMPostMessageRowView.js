@@ -107,7 +107,7 @@ window.BMPostMessageRowView = class BMPostMessageRowView extends BrowserRow {
 
     setParentView  (aView) {
         // what is this for?
-        BrowserRow.setParentView.apply(this, [aView])
+        super.setParentView(aView)
         this.registerForVisibility()
         return this
     }
@@ -181,7 +181,7 @@ window.BMPostMessageRowView = class BMPostMessageRowView extends BrowserRow {
     }
 
     updateSubviews  () {
-        BrowserRow.updateSubviews.apply(this)
+        super.updateSubviews()
 
         let node = this.node()
 

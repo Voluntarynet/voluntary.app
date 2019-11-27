@@ -39,7 +39,7 @@ window.ShelfItemGroupView = class ShelfItemGroupView extends NodeView {
 */
     
     syncFromNode () {
-        NodeView.syncFromNode.apply(this)
+        super.syncFromNode()
         this.showCompaction()
         return this
     }

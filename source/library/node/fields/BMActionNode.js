@@ -29,11 +29,13 @@ window.BMActionNode = class BMActionNode extends BMStorableNode {
     }
 
     setTitle (s) {
-        return BMStorableNode.setTitle.apply(this, [s])
+        super.setTitle(s)
+        return this
     }
 
     initNodeInspector () {
-        BMStorableNode.initNodeInspector.apply(this)
+        super.initNodeInspector()
+
         const titleField = BMField.clone().setKey("title").setValueMethod("title").setValueIsEditable(true).setTarget(this)
         this.nodeInspector().addSubnode(titleField)
 

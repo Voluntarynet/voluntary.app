@@ -25,7 +25,7 @@ window.BMRServers = class BMRServers extends BMStorableNode {
     }
 
     finalize () {
-        BMStorableNode.finalize.apply(this)
+        super.finalize()
         this.bootstrap()
     }
 

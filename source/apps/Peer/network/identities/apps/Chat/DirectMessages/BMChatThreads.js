@@ -20,7 +20,7 @@ window.BMChatThreads = class BMChatThreads extends BMContactLinks {
     }
 
     finalize () {
-        BMContactLinks.finalize.apply(this)
+        super.finalize()
         this.setTitle("direct messages")
     }
 	

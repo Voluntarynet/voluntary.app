@@ -26,20 +26,20 @@ window.BMOptionNodeRowView = class BMOptionNodeRowView extends BrowserTitledRow 
     }
 
     onEnterKeyUp (event) {
-        BrowserTitledRow.onEnterKeyUp.apply(this, [event])
+        super.onEnterKeyUp(event)
         this.toggle()
         return this
     }
     
     onTapComplete (aGesture) {
-        BrowserTitledRow.onTapComplete.apply(this, [aGesture])
+        super.onTapComplete(aGesture)
         this.toggle()
         return this
     }
     
     /*
     activate () { // not getting called?
-        BrowserTitledRow.activate.apply(this, [aGesture])
+        super.activate(aGesture)
         this.node().toggle()
         return this
     }
@@ -47,7 +47,7 @@ window.BMOptionNodeRowView = class BMOptionNodeRowView extends BrowserTitledRow 
                
     /*
     select () {
-        BrowserTitledRow.select.apply(this)
+        super.select()
         this.debugLog(+ " " + this.node().title() + " picked ")
         
         // will tell parent node which will ensure only one selected if needed
@@ -60,7 +60,7 @@ window.BMOptionNodeRowView = class BMOptionNodeRowView extends BrowserTitledRow 
     */
 
     syncToNode () {
-        BrowserTitledRow.syncToNode.apply(this)
+        super.syncToNode()
         return this
     }
 	

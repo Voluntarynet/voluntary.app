@@ -29,13 +29,13 @@ window.DropListener = class DropListener extends ProtoClass {
     }
 
     start () {
-        EventSetListener.start.apply(this)
+        super.start()
         this.listenTarget().__isListeningForDrop___ = true
         return this
     }
 
     stop () {
-        EventSetListener.stop.apply(this)
+        super.stop()
         this.listenTarget().__isListeningForDrop___ = false // breaks if multiple drop listeners on same element
         return this
     }

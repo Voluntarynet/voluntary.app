@@ -26,7 +26,7 @@ window.BMStunServers = class BMStunServers extends BMStorableNode {
     }
 
     finalize () {
-        BMStorableNode.finalize.apply(this)
+        super.finalize()
         this.bootstrap()
     }
 

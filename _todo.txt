@@ -1,6 +1,8 @@
 
 TODO:
 
+move three.js to external libraries
+
 Constructor has a name and points to a 
 
 	move initClass to initProto?

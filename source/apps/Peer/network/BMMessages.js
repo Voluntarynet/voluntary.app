@@ -4,13 +4,6 @@
 
     BMMessages
 
-
-    BMNode.newSubclassNamed("BMGetDataItem").newSlots({
-        type: "BMGetDataItem",
-        hash: null,
-        fromMsg: null,
-    }).setSlots({
-    }.initThisClass()
     
 */
 
@@ -157,7 +150,7 @@ window.BMMessages = class BMMessages extends BMStorableNode {
 
     addSubnode (msg) {
         //this.debugLog(" addSubnode " + msg.pid())
-        BMStorableNode.addSubnode.apply(this, [msg])
+        super.addSubnode(msg)
         this.notifyChange()
         return this
     }

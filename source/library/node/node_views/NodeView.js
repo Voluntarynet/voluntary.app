@@ -75,7 +75,7 @@ window.NodeView = class NodeView extends DomStyledView {
     }
     
     willRemove () {
-        DomStyledView.willRemove.apply(this)
+        super.willRemove()
         this.stopWatchingNode()
         return this
     }
@@ -88,7 +88,7 @@ window.NodeView = class NodeView extends DomStyledView {
                 return vc
             }
         }
-        return DomStyledView.subviewProto.apply(this)
+        return super.subviewProto()
     }
 
     // --- syncing ---
@@ -278,7 +278,7 @@ window.NodeView = class NodeView extends DomStyledView {
     // visibility
     
     onVisibility () {
-	    DomStyledView.onVisibility.apply(this)
+	    super.onVisibility()
 	    //this.debugLog(".onVisibility()")
 	    const node = this.node()
 	    if (node && node.nodeBecameVisible) {

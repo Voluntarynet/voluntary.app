@@ -37,14 +37,14 @@ window.BMSummaryNode = class BMSummaryNode extends BMStorableNode {
     }
 
     shallowCopySlotnames () {
-        const names = BMStorableNode.shallowCopySlotnames.apply(this)
+        const names = super.shallowCopySlotnames()
         return names.appendItems([
             "nodeSummaryJoiner", "nodeSubtitleIsChildrenSummary", "summaryFormat", 
         ])
     }
 
     initNodeInspector () {
-        BMStorableNode.initNodeInspector.apply(this)
+        super.initNodeInspector()
         this.addInspectorField(BMStringField.clone().setKey("Summary joiner").setValueMethod("nodeSummaryJoiner").setValueIsEditable(true).setTarget(this))
         this.addInspectorField(BMBooleanField.clone().setKey("Subtitle is children summary").setValueMethod("nodeSubtitleIsChildrenSummary").setValueIsEditable(true).setTarget(this))
         this.addInspectorField(this.summaryFormatOptionsNode())
@@ -83,7 +83,7 @@ window.BMSummaryNode = class BMSummaryNode extends BMStorableNode {
             return this.childrenSummary()
         }
 
-        return BMStorableNode.subtitle.apply(this)
+        return super.subtitle()
     }
 
     // --- summary ---

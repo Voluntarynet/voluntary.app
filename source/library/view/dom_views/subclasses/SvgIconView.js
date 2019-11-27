@@ -79,7 +79,8 @@ window.SvgIconView = class SvgIconView extends DomStyledView {
     }
 
     didUpdateSlot (slotName, oldValue, newValue) {
-        DomStyledView.didUpdateSlot.apply(this, [slotName, oldValue, newValue])
+        super.didUpdateSlot(slotName, oldValue, newValue)
+
         const triggerSlots = ["fillColor", "strokeColor"]
         if (triggerSlots.contains(slotName)) {
             this.updateAppearance()

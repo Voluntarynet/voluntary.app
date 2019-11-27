@@ -128,7 +128,7 @@ window.TextField = class TouchLisTextFieldtener extends DomStyledView {
     }
 
     onBlur () {
-        DomStyledView.onBlur.apply(this)
+        super.onBlur()
         //this.debugLog(".onBlur()")
         if (this.usesDoubleTapToEdit()) {
             this.setContentEditable(false)
@@ -138,14 +138,14 @@ window.TextField = class TouchLisTextFieldtener extends DomStyledView {
     }
 
     setFontSize (aNumber) {
-        DomStyledView.setFontSize.apply(this, [aNumber])
+        super.setFontSize(aNumber)
         this.setMinAndMaxHeight(aNumber + 2) // make sure TextfField can fit font size
         this.didEdit()
         return this
     }
 
     setContentEditable (aBool) {
-        DomStyledView.setContentEditable.apply(this, [aBool])
+        super.setContentEditable(aBool)
         //this.debugLog(".setContentEditable(" + aBool + ") = ", this.contentEditable())
         //this.setIsRegisteredForClicks(this.contentEditable())  // is this needed after move to tap?
         return this
@@ -180,7 +180,7 @@ window.TextField = class TouchLisTextFieldtener extends DomStyledView {
         const oldValue = this.string()
         //let newValue = this.visibleValue()
         if (oldValue !== newValue) {
-            DomStyledView.setString.apply(this, [newValue])
+            super.setString(newValue)
             /*
             this.debugLog(" setString(")
             console.log("    old: '" + oldValue + "'")
@@ -219,7 +219,7 @@ window.TextField = class TouchLisTextFieldtener extends DomStyledView {
     onKeyUp (event) {
         //this.debugLog(" onKeyUp ", event)
         this.adjustFontSizeWithKeyboard()
-        DomStyledView.onKeyUp.apply(this, [event])
+        super.onKeyUp(event)
         //this.debugLog(" onKeyUp value: [" + this.value() + "]")
         this.didEdit()
         return false
@@ -321,11 +321,11 @@ window.TextField = class TouchLisTextFieldtener extends DomStyledView {
             return false
         }
 
-        return DomStyledView.onClick.apply(this, [event])
+        return super.onClick(event)
     }
 
     didEdit  () {
-        DomStyledView.didEdit.apply(this)
+        super.didEdit()
         return this
     }
 

@@ -45,21 +45,21 @@ window.BMOptionsNode = class BMOptionsNode extends BMField {
     }
 
     shallowCopySlotnames () {
-        const names = BMField.shallowCopySlotnames.apply(this)
+        const names = super.shallowCopySlotnames()
         return names.appendItems([
             "allowsMultiplePicks", 
         ])
     }
 
     initNodeInspector () {
-        BMField.initNodeInspector.apply(this)
+        super.initNodeInspector()
         this.addInspectorField(BMBooleanField.clone().setKey("Multiple picks").setValueMethod("allowsMultiplePicks").setValueIsEditable(true).setTarget(this))
         return this
     }
 
     /*
     setValue (v) {
-        BMField.setValue.apply(this, [v])
+        super.setValue(v)
         return this
     }
     */

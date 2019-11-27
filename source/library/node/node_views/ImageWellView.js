@@ -29,14 +29,14 @@ window.ImageWellView = class ImageWellView extends NodeView {
     }
 
     syncToNode  () {
-        NodeView.syncToNode.apply(this)
+        super.suncToNode()
         this.tellParentViews("didUpdateImageWellView", this)
         return this
     }
 
     /*
     syncFromNode () {
-        NodeView.syncFromNode.apply(this)
+        super.syncFromNode()
         this.valueView().setBackgroundColor("transparent")
         return this
     }
@@ -134,7 +134,8 @@ window.ImageWellView = class ImageWellView extends NodeView {
     }
     
     willRemoveSubview (aSubview) {
-        NodeView.willRemoveSubview.apply(this, [aSubview])
+        super.willRemoveSubview(aSubview)
+
         if (aSubview === this.imageView()) {
             this.setImageView(null)
         }

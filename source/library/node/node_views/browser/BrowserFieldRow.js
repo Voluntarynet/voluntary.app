@@ -30,7 +30,7 @@ window.BrowserFieldRow = class BrowserFieldRow extends BrowserRow {
 
     /*
     updateSubviews () {   
-	    BrowserRow.updateSubviews.apply(this)
+        super.updateSubviews()
 	
         const node = this.node()
 

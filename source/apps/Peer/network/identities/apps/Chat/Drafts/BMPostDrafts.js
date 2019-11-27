@@ -28,13 +28,13 @@ window.BMPostDrafts = class BMPostDrafts extends BMStorableNode {
     }
 
     finalize () {
-        BMStorableNode.finalize.apply(this)
+        super.finalize()
         this.setTitle("my drafts")
     }
 	
 
     add () {
-        const result = BMStorableNode.add.apply(this)
+        const result = super.add()
         this.scheduleSyncToStore()
         this.didUpdateNode()
         return result
@@ -42,7 +42,7 @@ window.BMPostDrafts = class BMPostDrafts extends BMStorableNode {
 
     /*
 	scheduleSyncToStore () {
-		BMStorableNode.scheduleSyncToStore.apply(this)
+        super.scheduleSyncToStore()
         this.debugLog(" scheduleSyncToStore")
 		return this
 	},

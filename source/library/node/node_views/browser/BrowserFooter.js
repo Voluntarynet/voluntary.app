@@ -44,7 +44,7 @@ window.BrowserFooter = class BrowserFooter extends NodeView {
             //return
         }
         
-        NodeView.setNode.apply(this, [aNode])
+        super.setNode(aNode)
         this.updateTextView()
     }
 

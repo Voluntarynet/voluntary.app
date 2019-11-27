@@ -27,7 +27,7 @@ window.AtomApp = class AtomApp extends App {
     } 
 
     setup () {
-        App.setup.apply(this)
+        super.setup()
         
         this.setupAtom()
         //Mouse.shared()
@@ -51,7 +51,7 @@ window.AtomApp = class AtomApp extends App {
     }
 
     appDidInit  () {
-        App.appDidInit.apply(this)
+        super.appDidInit()
         window.ResourceLoaderPanel.stop() 
     }
     

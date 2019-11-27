@@ -127,7 +127,7 @@ window.BMPow = class BMPow extends ProtoClass {
             this.setIsFinding(false)
             this.setStatus(null)
             if (this.doneCallback()) { 
-                this.doneCallback().apply() 
+                this.doneCallback()() 
             }
             this._doneNote.post()                
         } else {

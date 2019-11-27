@@ -66,7 +66,7 @@ window.BrowserTitledRow = class BrowserTitledRow extends BrowserRow {
     }
     
     updateSubviews () {
-        BrowserRow.updateSubviews.apply(this)
+        super.updateSubviews()
 	
         this.setHasSubtitle(this.hasSubtitle())
 

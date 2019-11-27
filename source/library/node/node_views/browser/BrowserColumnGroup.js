@@ -184,7 +184,7 @@ window.BrowserColumnGroup = class BrowserColumnGroup extends NodeView {
     }
 
     didChangeIsSelected () {
-        NodeView.didChangeIsSelected.apply(this)
+        super.didChangeIsSelected()
 		
         if (this.column()) {
             this.column().setIsSelected(this.isSelected())
@@ -313,7 +313,7 @@ window.BrowserColumnGroup = class BrowserColumnGroup extends NodeView {
     setMinAndMaxWidth (w) {
         Error.showCurrentStack()
 		this.debugLog(" / " + (this.node() ? this.node().type() : "?") + " nodeMinWidth = " + w)
-        NodeView.setMinAndMaxWidth.apply(this, [w])
+        super.setMinAndMaxWidth(w)
         return this
     }
     */
@@ -353,7 +353,7 @@ window.BrowserColumnGroup = class BrowserColumnGroup extends NodeView {
             return this
         }
          
-        NodeView.setNode.apply(this, [aNode])
+        super.setNode(aNode)
 
         this.setColumnClass(BrowserColumn)
         //this.matchNodeMinWidth()

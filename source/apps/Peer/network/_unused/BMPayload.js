@@ -214,7 +214,7 @@ window.BMPayload = class BMPayload extends ProtoClass {
     powDone () {
         this.setData({ type: "PowedPayload", payload: this.data(), pow: this.powObject().powHex() })
         if (this.donePowCallback()) {
-            this.donePowCallback().apply()
+            this.donePowCallback()()
         }  
     }
       

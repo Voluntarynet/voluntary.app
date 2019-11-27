@@ -22,7 +22,7 @@ window.SelectListener = class SelectListener extends ProtoClass {
     setListenTarget (anElement) {
         // is event only works on document or window?
         assert(anElement === document || anElement === window)
-        EventSetListener.setListenTarget.apply(this, [anElement])
+        super.setListenTarget(anElement)
         return this
     }
 

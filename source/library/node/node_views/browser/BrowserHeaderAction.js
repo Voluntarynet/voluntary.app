@@ -8,13 +8,19 @@
     
 */
 
-NodeView.newSubclassNamed("BrowserHeaderAction").newSlots({
-    canClick: true,
-}).setSlots({
-    init  () {
-        NodeView.init.apply(this)
-        return this
+ 
+window.BrowserHeaderAction = class BrowserHeaderAction extends NodeView {
+    
+    initPrototype () {
+        this.newSlots({
+            canClick: true,
+        })
     }
+
+    init () {
+        super.init()
+        return this
+    } 
     
     updateCanClick () {
         if (this.canClick()) {

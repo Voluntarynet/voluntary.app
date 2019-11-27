@@ -41,7 +41,7 @@ window.BMDataStoreRecord = class BMDataStoreRecord extends BMFieldSetNode {
     }
 
     delete  () {
-        BMFieldSetNode.delete.apply(this)
+        super.delete()
         //this.defaultStore().justRemoveObject(this.value())
         this.defaultStore().justRemovePid(this.valuePid())
         return this

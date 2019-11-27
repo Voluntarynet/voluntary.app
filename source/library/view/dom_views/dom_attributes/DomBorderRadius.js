@@ -46,19 +46,19 @@ window.DomBorderRadius = class DomBorderRadius extends ProtoClass {
     }
 
     partSetters() {
-        return this.partNames().map((k) => { return k.asSetter() })
+        return this.partNames().map(k => k.asSetter())
     }
 
     partValues() {
-        return this.partNames().map((k) => { return this[k].apply(this) })
+        return this.partNames().map(k => this[k].apply(this))
     }
 
     asString(aString) {
-        return this.partValues().map((v) => { return v + "px" }).join(" ")
+        return this.partValues().map(v => v + "px").join(" ")
     }
 
     setFromString(aString) {
-        const parts = aString.split(" ").select((part) => { return part !== "" })
+        const parts = aString.split(" ").select(part => part !== "")
 
         this.clear()
 

@@ -137,14 +137,14 @@ window.BrowserRow = class BrowserRow extends NodeView {
 
     /*
     setMinAndMaxWidth (w) {
-        NodeView.setMinAndMaxWidth.apply(this, [w])
+        super.setMinAndMaxWidth(w)
         this.contentView().setMinAndMaxWidth(w)
         return this
     }
 
-    setMinAndMaxHeight (w) {
-        NodeView.setMinAndMaxHeight.apply(this, [w])
-        this.contentView().setMinAndMaxHeight(w)
+    setMinAndMaxHeight (h) {
+        super.setMinAndMaxHeight(h)
+        this.contentView().setMinAndMaxHeight(h)
         return this
     }
     */
@@ -159,13 +159,13 @@ window.BrowserRow = class BrowserRow extends NodeView {
 
     /*
     lockSize () {
-        NodeView.lockSize.apply(this)
+        super.lockSize()
         this.contentView().lockSize()
         return this
     }
 
     unlockSize () {
-        NodeView.unlockSize.apply(this)
+        super.unlockSize()
         this.contentView().unlockSize()
         return this
     }
@@ -209,7 +209,7 @@ window.BrowserRow = class BrowserRow extends NodeView {
     }
 
     didChangeParentView () {
-        NodeView.didChangeParentView.apply(this)
+        super.didChangeParentView()
         //window.SyncScheduler.shared().scheduleTargetAndMethod(this, "applyStyles", 0)
         this.applyStyles()
         return this
@@ -271,7 +271,7 @@ window.BrowserRow = class BrowserRow extends NodeView {
             this.setShouldShowFlash(true)
         }
 
-        NodeView.select.apply(this)
+        super.select()
         return this
     }
     
@@ -354,15 +354,15 @@ window.BrowserRow = class BrowserRow extends NodeView {
             this.styles().copyFrom(node.nodeRowStyles(), copyDict) // TODO: optimize this 
         }
         */
-        NodeView.applyStyles.apply(this)
-    
+        super.applyStyles()
+
         // flash
 
         /*
         if (this.shouldShowFlash() && this.selectedFlashColor()) {
             this.setBackgroundColor(this.selectedFlashColor())
             //setTimeout(() => { this.setBackgroundColor(this.currentBgColor()) }, 100)
-            setTimeout(() => { NodeView.applyStyles.apply(this) }, 100)
+            setTimeout(() => { super.applyStyles() }, 100)
             this.setShouldShowFlash(false)
         } 
         */
@@ -730,7 +730,7 @@ window.BrowserRow = class BrowserRow extends NodeView {
     }
 	
     willAcceptFirstResponder () {
-        NodeView.willAcceptFirstResponder.apply(this)
+        super.willAcceptFirstResponder()
 	    //this.debugLog(".willAcceptFirstResponder()")
         this.requestSelection()
         return this
@@ -739,7 +739,7 @@ window.BrowserRow = class BrowserRow extends NodeView {
     // -------------------------
 
     didChangeIsSelected  () {
-        NodeView.didChangeIsSelected.apply(this)
+        super.didChangeIsSelected()
         /*
         if (this.isSelected()) {
             this.setOpacity(1)

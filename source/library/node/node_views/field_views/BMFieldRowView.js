@@ -113,7 +113,7 @@ window.BMFieldRowView = class BMFieldRowView extends BrowserFieldRow {
     */
     
     didChangeIsSelected  () {
-        BrowserFieldRow.didChangeIsSelected.apply(this)
+        super.didChangeIsSelected()
         this.syncFromNode() // need this to update selection color on fields?
         return this
     }
@@ -129,7 +129,7 @@ window.BMFieldRowView = class BMFieldRowView extends BrowserFieldRow {
     */
 
     syncFromNode  () {
-        BrowserFieldRow.syncFromNode.apply(this)
+        super.syncFromNode()
         //this.debugLog(" syncFromNode")
 		
         this.node().prepareToSyncToView()
@@ -236,7 +236,7 @@ window.BMFieldRowView = class BMFieldRowView extends BrowserFieldRow {
         	node.setValue(this.valueView().value())
         }
 		
-        NodeView.syncToNode.apply(this)
+        super.suncToNode()
         return this
     }
     
@@ -252,7 +252,7 @@ window.BMFieldRowView = class BMFieldRowView extends BrowserFieldRow {
     }
 
     updateSubviews () {
-        BrowserFieldRow.updateSubviews.apply(this)
+        super.updateSubviews()
 		
         const node = this.node()
 
@@ -271,7 +271,7 @@ window.BMFieldRowView = class BMFieldRowView extends BrowserFieldRow {
 
     /*
     applyStyles () {
-        BrowserFieldRow.applyStyles.apply(this)
+        super.applyStyles()
         return this
     }
     */
@@ -291,7 +291,7 @@ window.BMFieldRowView = class BMFieldRowView extends BrowserFieldRow {
             console.log("not white")
         }
         */
-        BrowserFieldRow.setBackgroundColor.apply(this, [c])
+        super.setBackgroundColor(c)
         return this
     }
 
@@ -301,7 +301,7 @@ window.BMFieldRowView = class BMFieldRowView extends BrowserFieldRow {
     }
 
     unselect () {
-        BrowserFieldRow.unselect.apply(this)
+        super.unselect()
         this.valueView().blur()
         this.keyView().blur()
         return this

@@ -68,7 +68,7 @@ window.BMClassifiedPost = class BMClassifiedPost extends BMFieldSetNode {
     }
 
     setParentNode (aNode) {
-        BMStorableNode.setParentNode.apply(this, [aNode])
+        super.setParentNode(aNode)
         this.syncDeleteAction()
         return this
     }
@@ -85,7 +85,7 @@ window.BMClassifiedPost = class BMClassifiedPost extends BMFieldSetNode {
     }
 
     didLoadFromStore () {
-        BMStorableNode.didLoadFromStore.apply(this)
+        super.didLoadFromStore()
         this.setIsEditable(!this.hasSent())
         this.validate()
     }

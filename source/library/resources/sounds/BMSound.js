@@ -49,7 +49,7 @@ window.BMSound = class BMSound extends BMNode {
     }
 
     prepareToAccess () {
-        BMNode.prepareToAccess.apply(this)
+        super.prepareToAccess()
         this.play() // not a good way to do this
     }
 

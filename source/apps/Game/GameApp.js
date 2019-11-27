@@ -33,8 +33,7 @@ window.GameApp = class GameApp extends App {
     } 
 
     setup  () {
-        App.setup.apply(this)
-        
+        super.setup()        
 
         if (false) {
             this.setupAtom()
@@ -121,7 +120,7 @@ window.GameApp = class GameApp extends App {
     }
 
     appDidInit  () {
-        App.appDidInit.apply(this)
+        super.appDidInit()
         window.ResourceLoaderPanel.stop() 
     }
 }.initThisClass()

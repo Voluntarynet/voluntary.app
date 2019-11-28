@@ -15,7 +15,6 @@ window.Notepad = class Notepad extends App {
             version: [0, 0, 0, 0],
         
             // model
-            flexNode: null,
             settings: null,
             resources: null,
             dataStore: null,
@@ -48,13 +47,20 @@ window.Notepad = class Notepad extends App {
 
     // --- setup model ---
 
-    setupModel  () {        
-        // flex
+    setupModel  () {     
+        
+        this.defaultStore()
+
         const myLists = this.defaultStore().rootInstanceWithPidForProto("_menuNode", BMMenuNode);
         myLists.setTitle("Notepad")
         this.addSubnode(myLists)
 
-        // about 
+        this.setupSettings()
+        return this
+    }
+
+    setupSettings () {
+        // settings
         this.setSettings(BMStorableNode.clone().setTitle("Settings").setSubtitle(null).setNodeMinWidth(250))
         this.addSubnode(this.settings())
 
@@ -65,8 +71,6 @@ window.Notepad = class Notepad extends App {
         // data store
         this.setDataStore(BMDataStore.clone())
         this.settings().addSubnode(this.dataStore())
-
-        return this
     }
 
     // --- setup views ---

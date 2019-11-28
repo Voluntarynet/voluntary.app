@@ -71,7 +71,7 @@ window.App = class App extends BMNode {
 
     nodeStoreDidOpen (aNote) {
         this.nodeStoreDidOpenObs().stopWatching()
-        //this.defaultStore().rootOrIfAbsentFromClosure(() => BMStorableNode.clone())
+        this.defaultStore().rootOrIfAbsentFromClosure(() => BMStorableNode.clone())
         this.setup()
     }
 

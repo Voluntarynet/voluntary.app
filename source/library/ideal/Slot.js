@@ -60,6 +60,7 @@ window.ideal.Slot = class Slot {
         // storrage related
         this.simpleNewSlot("isLazy", false) // should hook getter
         this.simpleNewSlot("shouldStore", false) // should hook setter
+        //this.simpleNewSlot("shouldShallowCopy", false)
     }
 
     autoSetGetterSetterOwnership () {

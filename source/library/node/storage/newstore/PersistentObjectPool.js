@@ -27,10 +27,6 @@ window.PersistentObjectPool = class PersistentObjectPool extends ObjectPool {
         return this
     }
 
-    shared () {
-        return this.sharedInstanceForClass(PersistentObjectPool)
-    }
-
     selfTest  () {
         console.log(this.type() + " --- self test start --- ")
         const store = this.typeClass().clone()

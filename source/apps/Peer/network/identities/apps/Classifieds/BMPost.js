@@ -14,6 +14,7 @@ window.BMPost = class BMPost extends BMStorableNode {
             title: null,
             description: null,
         })
+        this.protoAddStoredSlots(["price", "title", "description"])
     }
 
     init () {
@@ -24,7 +25,6 @@ window.BMPost = class BMPost extends BMStorableNode {
         this.setTitle("Untitled")
         this.setPrice(0)
         this.setDescription("Description")
-        this.addStoredSlots(["price", "title", "description"])
     }
     
     subtitle () {

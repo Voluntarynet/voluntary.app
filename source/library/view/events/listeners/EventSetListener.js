@@ -115,13 +115,9 @@ window.EventSetListener = class EventSetListener extends ProtoClass {
 
     forEachEventDict (func) {
         const eventsDict = this.eventsDict()
-        for (let k in eventsDict) {
-            if (eventsDict.hasOwnProperty(k)) {
-                const eventName = k;
-                const eventDict = eventsDict[eventName]
-                func(eventName, eventDict);
-            }
-        }
+        this.eventsDict().ownForEachKV((eventName, eventDict) => {
+            func(eventName, eventDict);
+        })
         return this
     }
 
@@ -140,7 +136,7 @@ window.EventSetListener = class EventSetListener extends ProtoClass {
 
         this.assertHasListenTarget()
 
-        this.forEachEventDict((eventName, dict) => {
+        this.eventsDict().ownForEachKV((eventName, dict) => {
             const fullMethodName = this.fullMethodNameFor(dict.methodName)
             dict.handlerFunc = (event) => { 
 
@@ -236,7 +232,7 @@ window.EventSetListener = class EventSetListener extends ProtoClass {
         this.assertHasListenTarget()
 
         const t = this.listenTarget()
-        this.forEachEventDict((eventName, dict) => {
+        this.eventsDict().ownForEachKV((eventName, dict) => {
             this.debugLog(() => this.delegate().typeId() + " will stop listening for " + dict.methodName)
             t.removeEventListener(eventName, dict.handlerFunc, dict.useCapture);
         })

@@ -91,7 +91,7 @@ window.GameApp = class GameApp extends App {
     }
 
     isBrowserCompatible () {
-        if (WebBrowserWindow.agentIsSafari()) {
+        if (WebBrowserWindow.shared().agentIsSafari()) {
             return false
         }
         return true

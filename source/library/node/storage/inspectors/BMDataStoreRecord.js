@@ -4,7 +4,7 @@
     
     BMDataStoreRecord
     
-    A visible representation of the NodeStore object record.
+    A visible representation of a storage record.
     
 */
 

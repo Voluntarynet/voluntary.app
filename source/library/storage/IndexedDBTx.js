@@ -16,6 +16,9 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
             tx: null,
             requests: [],
             isCommitted: false,
+            txRequestStack: null,
+            succcessCallback: null,
+            errorCallback: null,
         })
     }
 
@@ -38,24 +41,43 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
 	    assert(this.isCommitted() === false)
     }
 
+    newTx () {
+        assert(Type.isNullOrUndefined(this.tx()))
+        const tx = this.db().transaction(this.storeName(), "readwrite")        
+        tx.onerror = (event) => { this.onTxError(event) }
+        tx.onsuccess = (event) => { this.onTxSuccess(event) }
+        this.setTx(tx)
+        return tx
+    }
+
     begin () {
 	    this.assertNotCommitted()
-	
-	    const tx = this.db().transaction(this.storeName(), "readwrite")
-        this.setTx(tx)
-
-        const requestStack = this.isDebugging() ? new Error().stack : null
-        tx.onerror = (event) => {
-		    if (requestStack) { 
-                console.log("error stack ", requestStack)
-            }
-		  	throw new Error("tx error " + event.target.error)
-        }
-		        
+        this.setTxRequestStack(this.isDebugging() ? new Error().stack : null)
+	    const tx = this.newTx()
         const objectStore = tx.objectStore(this.storeName());
         this.setObjectStore(objectStore)
-        
         return this
+    }
+
+    showTxRequestStack () {
+        //const 
+        const rs = this.txRequestStack()
+        if (rs) { 
+            console.log("error stack ", rs)
+        }
+    }
+
+    onTxError (event) {
+        this.showTxRequestStack()
+        throw new Error("tx error " + event.target.error)
+    }
+
+    onTxSuccess (event) {
+        console.log("indexdb tx onsuccess")
+        const f = this.succcessCallback()
+        if (f) {
+            f()
+        }
     }
 	
     abort () {
@@ -134,6 +156,13 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
         const request = this.objectStore().add(entry);
         request._action = "add"
         request._key = key 
+        /*
+        request.onsuccess = function(event) {
+            // report the success of the request (this does not mean the item
+            // has been stored successfully in the DB - for that you need transaction.onsuccess)
+
+        }
+        */
         this.pushRequest(request)
         return this
     }

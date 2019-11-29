@@ -13,6 +13,7 @@ window.BMChatThread = class BMChatThread extends BMStorableNode {
         this.newSlots({
             remoteIdentity: null,
         })
+        this.protoAddStoredSlot("remoteIdentity")
     }
 
     init () {
@@ -22,7 +23,6 @@ window.BMChatThread = class BMChatThread extends BMStorableNode {
         this.setShouldStoreSubnodes(true)
         //this.addAction("add")
         this.addAction("deleteAll")
-        this.addStoredSlot("remoteIdentity")
         this.setNodeMinWidth(600)
         this.setNodeHasFooter(true)
         this.setNodeInputFieldMethod("setInputFieldValue")

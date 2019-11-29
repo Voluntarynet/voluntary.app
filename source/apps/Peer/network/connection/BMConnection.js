@@ -41,10 +41,6 @@ window.BMConnection = class BMConnection extends BMNode {
             this.registerForConnectionChange()
         }
     }
-
-    shared () {   
-        return this.sharedInstanceForClass(BMConnection)
-    }
     
     connectionType () {
         if (this.isAvailable()) {

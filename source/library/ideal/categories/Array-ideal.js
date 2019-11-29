@@ -24,6 +24,10 @@ Object.defineSlots(Array, {
 
 Object.defineSlots(Array.prototype, {
 
+    clone: function () {
+        return this.shallowCopy();
+    },
+    
     // --- read operations ---
 
     isEmpty: function () {
@@ -211,6 +215,13 @@ Object.defineSlots(Array.prototype, {
         return false;
     },
 
+    removeAll: function() {
+        while(this.length) {
+            this.pop() // TODO: make more efficient?
+        }
+        return this
+    },
+
     removeAt: function (i) {
         this.splice(i, 1);
         return this;
@@ -248,27 +259,6 @@ Object.defineSlots(Array.prototype, {
 
     empty: function () {
         this.splice(0, this.length);
-        return this;
-    },
-
-    replace: function (obj, withObj) {
-        // isMutator
-        const i = this.indexOf(obj);
-        if (i !== -1) {
-            this.removeAt(i);
-            this.atInsert(i, withObj);
-        }
-        return this;
-    },
-
-    swap: function (e1, e2) {
-        // isMutator
-        const i1 = this.indexOf(e1);
-        const i2 = this.indexOf(e2);
-
-        this[i1] = e2;
-        this[i2] = e1;
-
         return this;
     },
 
@@ -357,17 +347,6 @@ Object.defineSlots(Array.prototype, {
         });
     },
 
-    detectSlot: function (slotName, slotValue) {
-        for (let i = 0; i < this.length; i++) {
-            const v = this[i]
-            if (v.perform(slotName) === slotValue) {
-                return v;
-            }
-        }
-
-        return null;
-    },
-
     detectProperty: function (slotName, slotValue) {
         for (let i = 0; i < this.length; i++) {
             const v = this[i]
@@ -389,182 +368,84 @@ Object.defineSlots(Array.prototype, {
         return null;
     },
 
-    everySlot: function (slotName, expectedValue) {
-        return this.every(function (obj) {
-            return obj.perform(slotName) === expectedValue;
-        });
-    },
-
-    everyProperty: function (slotName, expectedValue) {
-        let args = arguments;
-        return this.every(function (obj) {
-            if (args.length === 2) {
-                return obj[slotName] === expectedValue;
-            } else {
-                return obj[slotName];
-            }
-        });
-    },
-
-    everyPerform: function () {
-        let args = arguments;
-        return this.every(function (obj) {
-            return obj.perform.apply(obj, args);
-        });
-    },
-
-    filterPerform: function () {
-        const args = Array.prototype.slice.call(arguments);
-        args.unshift(null);
-        args.push(0);
-        return this.filter(function (e, i) {
-            args[0] = e;
-            args[args.length - 1] = i;
-            return Object.perform.apply(Object, args);
-        });
-    },
-
-    filterSlot: function (slotName, expectedValue) {
-        return this.filter(function (obj) {
-            return obj && (obj.perform(slotName) === expectedValue);
-        });
-    },
-
-    filterProperty: function (slotName, expectedValue) {
-        const args = arguments;
-        return this.filter(function (obj) {
-            if (args.length === 2) {
-                return obj[slotName] === expectedValue;
-            } else {
-                return obj[slotName];
-            }
-        });
-    },
-
     nullsRemoved: function() {
         return this.filter(v => !Type.isNull(v));
     },
 
-    rejectPerform: function () {
-        const args = this.slice.call(arguments);
-        args.shift(null);
-        args.push(0);
-        return this.filter((e, i) => {
-            args[0] = e;
-            args[args.length - 1] = i; //TODO: should we append i?  Receiver might not expect this ...
-            return e && !Object.perform.apply(Object, args);
-        });
+    reject: function(callback) {
+        return this.filter(v => !callback(v))
     },
 
-    rejectSlot: function (slotName, expectedValue) {
-        return this.filter( obj => obj.perform(slotName) !== expectedValue );
-    },
+    // max 
 
-    minValue: function (callback, theDefault) {
-        const obj = this.min(callback);
-        if (obj === undefined) {
-            return theDefault;
-        }
-        return callback(obj);
-    },
-
-    maxValue: function (callback, theDefault) {
-        const obj = this.max(callback);
-        if (obj === undefined) {
-            return theDefault;
-        }
-        return callback(obj);
-    },
-
-    max: function (callback) {
-        let m = undefined;
-        let mObject = undefined;
+    maxEntry: function (optionalCallback) { 
+        // callback is optional
         const length = this.length;
+        const mEntry = [undefined, undefined] 
 
         for (let i = 0; i < length; i++) {
             let v = this[i];
-            if (callback) {
-                v = callback(v);
+            if (optionalCallback) {
+                v = optionalCallback(v);
             }
 
-            if (m === undefined || v > m) {
-                m = v;
-                mObject = this[i];
+            if (mEntry[1] === undefined || v > mEntry[1]) {
+                mEntry[0] = i
+                mEntry[1] = v
             }
         }
 
-        return mObject;
+        return mEntry;
     },
 
-    maxIndex: function (callback) {
-        let m = undefined;
-        let index = 0;
+    maxIndex: function (optionalCallback) {
+        return this.maxEntry(optionalCallback)[0];
+    },
+
+    maxValue: function (optionalCallback, theDefault) {
+        return this.maxEntry(optionalCallback)[1];
+    },
+
+    // min
+
+    minEntry: function (optionalCallback) { 
+        // callback is optional
         const length = this.length;
+        const mEntry = [undefined, undefined] 
 
         for (let i = 0; i < length; i++) {
             let v = this[i];
-            if (callback) {
-                v = callback(v);
+            if (optionalCallback) {
+                v = optionalCallback(v);
             }
 
-            if (m === undefined || v > m) {
-                m = v;
-                index = i;
-            }
-        }
-
-        return index;
-    },
-
-    min: function (callback) {
-        let m = undefined;
-        let mObject = undefined;
-        const length = this.length;
-
-        for (let i = 0; i < length; i++) {
-            let v = this[i];
-            if (callback) {
-                v = callback(v);
-            }
-
-            if (m === undefined || v < m) {
-                m = v;
-                mObject = this[i];
+            if (mEntry[1] === undefined || v < mEntry[1]) {
+                mEntry[0] = i
+                mEntry[1] = v
             }
         }
 
-        return mObject;
+        return mEntry;
     },
 
-    minIndex: function (callback) {
-        let m = undefined;
-        let index = 0;
-        const length = this.length;
-
-        for (let i = 0; i < length; i++) {
-            let v = this[i];
-            if (callback) {
-                v = callback(v);
-            }
-
-            if (m === undefined || v < m) {
-                m = v;
-                index = i;
-            }
-        }
-
-        return index;
+    minIndex: function (optionalCallback) {
+        return this.maxEntry(optionalCallback)[0];
     },
 
-    sum: function (callback) {
-        let m = undefined;
+    minValue: function (optionalCallback) {
+        return this.maxEntry(optionalCallback)[1];
+    },
+
+    // sum
+
+    sum: function (optionalCallback) {
         let sum = 0;
         const length = this.length;
 
         for (let i = 0; i < length; i++) {
             let v = this[i];
-            if (callback) {
-                v = callback(v);
+            if (optionalCallback) {
+                v = calloptionalCallbackback(v);
             }
 
             sum = sum + v;
@@ -574,29 +455,43 @@ Object.defineSlots(Array.prototype, {
     },
 
     average: function () {
+        if (this.length === 0) {
+            return 0
+        }
         return this.sum() / this.length;
     },
 
-    atMidpoint: function () {
-        return this.at(Math.floor((this.length - 1) / 2));
+    /*
+    flatten: function (maxDepth = 1) {
+        const result = [];
+        let needsFlatten = true
+        let depth = 0
+        while (needsFlatten && depth < maxDepth) {
+            depth ++
+            needsFlatten = false
+            this.forEach((item) {
+                if (item === this) {
+                    throw new Error("attempt to flatten recursive array")
+                }
+                if (Type.isArray(item)) { // TODO: generalize to enumerables?
+                    result.appendItems(array)
+                    needsFlatten = true
+                } else {
+                    result.append(item)
+                }
+            });
+        }
+        return result;
     },
+    */
 
-    flatten: function () {
-        const flattened = [];
-        this.forEach(function (array) {
-            flattened.appendItems(array);
-        });
-        return flattened;
-    },
-
-    clone: function () {
-        return this.shallowCopy();
-    },
 
     unique: function () {
-        const set = new Set(this)
-        const results = Array.from(set);
-        return results
+        return Array.from(new Set(this));
+    },
+
+    asSet: function() {
+        return new Set(this)
     },
 
     reversed: function () {
@@ -620,20 +515,18 @@ Object.defineSlots(Array.prototype, {
         return this.first() !== "";
     },
 
-    isArray: true,
-
-    select: function (callback) {
-        const results = []
-    
-        for (let i = 0; i < this.length; i++) {
+    filterInPlace: function(callback) {
+        for (let i = this.length -1; i >= 0; i--) {
             const v = this[i];
-    
             if (callback(v)) {
-                results.push(v)
+                this.removeAt(i)
             }
         }
-    
-        return results;
+        return this
+    },
+
+    select: function (callback) {
+        return this.filter(callback)
     },
     
     after: function (v) {
@@ -668,10 +561,11 @@ Object.defineSlots(Array.prototype, {
     
     removeOccurancesOf: function (e) {
         // isMutator
-        let i = this.indexOf(e);
-        while (i !== -1) {
-            this.removeAt(i);
-            i = this.indexOf(e)
+        for (let i = this.length -1; i >= 0; i--) {
+            const v = this[i];
+            if (v === e) {
+                this.removeAt(i)
+            }
         }
         return this;
     },

@@ -11,6 +11,8 @@ window.BMImageResourcesNode = class BMImageResourcesNode extends BMStorableNode 
     initPrototype () {
         this.newSlots({
         })
+        //this.protoAddStoredSlots(["title", "dataURL"])
+
     }
 
     init () {
@@ -28,7 +30,6 @@ window.BMImageResourcesNode = class BMImageResourcesNode extends BMStorableNode 
         //this.addActions(["add"])
         //this.setCanDelete(true)
 
-        //this.addStoredSlots(["title", "dataURL"])
     }
     
 }.initThisClass()

@@ -12,19 +12,20 @@ window.BMImageNode = class BMImageNode extends BMStorableNode {
         this.newSlots({
             dataURL: null,
         })
-    }
 
-    init () {
-        super.init()
         this.setNodeCanEditTitle(true)
         this.setNodeCanEditSubtitle(false)
         this.setNodeMinWidth(200)
         this.setTitle("Untitled")
         this.setSubtitle(null)
-        
-        this.addActions(["add"])
+
         this.setCanDelete(true)
-        this.addStoredSlots(["title", "dataURL"])
+        this.protoAddStoredSlots(["title", "dataURL"])
+    }
+
+    init () {
+        super.init()
+        this.addActions(["add"])
     }
     
     onDidEditNode () {

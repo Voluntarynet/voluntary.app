@@ -18,21 +18,19 @@ window.BMMessages = class BMMessages extends BMStorableNode {
             placedSet: null,
             deletedSet: null,
         })
+        this.protoAddStoredSlot("deletedSet")
+        this.protoAddStoredSlot("placedSet")
+        this.setShouldStore(true)
+        this.setShouldStoreSubnodes(true)
     }
 
     init () {
         super.init()
-        this.setShouldStore(true)
-        this.setShouldStoreSubnodes(true)
-		
+
         this.setTitle("Messages")
         this.setChangeNote(NotificationCenter.shared().newNote().setSender(this).setName("newMessagesMessage"))
-
         this.setDeletedSet(BMStoredDatedSetNode.clone())
-        this.addStoredSlot("deletedSet")
-
         this.setPlacedSet(BMStoredDatedSetNode.clone())
-        this.addStoredSlot("placedSet")
         
         this.setNoteIsSubnodeCount(true)
         this.setNodeMinWidth(180)
@@ -238,7 +236,7 @@ window.BMMessages = class BMMessages extends BMStorableNode {
 
     messagesMatchingBloom  (bloom) {
         return this.messages().select( (objMsg) => {
-            return  bloom.checkEntry(objMsg.senderPublicKeyString())
+            return bloom.checkEntry(objMsg.senderPublicKeyString())
         })
     }
     

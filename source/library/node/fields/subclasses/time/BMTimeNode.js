@@ -17,10 +17,7 @@ window.BMTimeNode = class BMTimeNode extends BMSummaryNode {
             timezone: null,
             formatter: null,
         })
-    }
 
-    init () {
-        super.init()
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(false)
         this.setNodeCanReorderSubnodes(false)
@@ -28,12 +25,17 @@ window.BMTimeNode = class BMTimeNode extends BMSummaryNode {
 
         this.setTitle("Time")
 
-        this.addStoredSlot("title")
-        this.addStoredSlot("hour")
-        this.addStoredSlot("minute")
+        this.protoAddStoredSlot("title")
+        this.protoAddStoredSlot("hour")
+        this.protoAddStoredSlot("minute")
 
         this.setNodeCanEditTitle(true)
         this.setNodeCanEditSubtitle(false)
+    }
+
+    init () {
+        super.init()
+
 
         this.setFormatter(TimeFormatter.clone())
         return this

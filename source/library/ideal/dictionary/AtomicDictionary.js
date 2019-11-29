@@ -10,12 +10,15 @@
 
 window.ideal.AtomicDictionary = class AtomicDictionary extends ideal.Dictionary {
 
-    init () {
-        super.init()
+    initPrototype () {
         this.newSlot("hasBegun", false) // private method
         this.newSlot("oldVersion", null) // private method
         this.newSlot("isOpen", true) // private method
         this.newSlot("keysAndValuesAreStrings", true) // private method
+    }
+
+    init () {
+        super.init()
     }
 
     open () {
@@ -117,7 +120,7 @@ window.ideal.AtomicDictionary = class AtomicDictionary extends ideal.Dictionary 
     totalBytes () {
         this.assertAccessible()
         let byteCount = 0
-        this.jsDict().forEachKV((k, v) => {
+        this.jsDict().ownForEachKV((k, v) => {
             byteCount += k.length + v.length
         })
         return byteCount

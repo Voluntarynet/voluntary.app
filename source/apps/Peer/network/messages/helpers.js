@@ -10,7 +10,7 @@ Object.defineSlots(Object.prototype, {
 
     toJsonStableString: function(obj) {
         return JSON.stableStringify(obj, null, 2)
-    }
+    },
 
     toStableHash: function (obj) {
         return Object.toJsonStableString(obj).sha256String();
@@ -22,7 +22,7 @@ Object.defineSlots(String.prototype, {
 
     toJsonDict: function () {
         return JSON.parse(this)
-    }
+    },
 
     sha256String: function () {
         const h1 = bitcore.crypto.Hash.sha256(this.toBuffer()).toString("hex")
@@ -40,7 +40,7 @@ Object.defineSlots(String.prototype, {
         assert(shaHex === h2)
         return shaHex;             
     */   
-    }
+    },
 
     toBuffer: function  () {
         return new Buffer(this, "binary")

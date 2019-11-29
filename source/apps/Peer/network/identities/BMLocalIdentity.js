@@ -19,11 +19,13 @@ window.BMLocalIdentity = class BMLocalIdentity extends BMKeyPair {
             privateKeyString: "",
             didChangeIdentityNote: null,
         })
+
+        this.protoAddStoredSlots(["name", "privateKeyString"])
+        this.setShouldStore(true)
     }
 
     init () {
         super.init()
-        this.setShouldStore(true)
         //this.setShouldStoreSubnodes(false)
         this.setNodeCanEditTitle(true)
  
@@ -31,7 +33,6 @@ window.BMLocalIdentity = class BMLocalIdentity extends BMKeyPair {
         this.initStoredSubnodeSlotWithProto("profile", BMProfile)
         this.initStoredSubnodeSlotWithProto("remoteIdentities", BMRemoteIdentities)
         
-        this.addStoredSlots(["name", "privateKeyString"])
         this.setCanDelete(true)
 
         this.setName("Untitled")

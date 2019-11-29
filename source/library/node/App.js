@@ -6,7 +6,7 @@
     A singleton that represents the application. For your application, 
     create a subclass called App and implement a custom setup method.
 
-    Handles starting up NodeStore.
+    Handles starting up persistence system.
 
 */
 
@@ -80,6 +80,8 @@ window.App = class App extends BMNode {
     }
 
     appDidInit () {
+        this.showVersion()
+
         //this.postNoteNamed("appDidInit")
         const note = NotificationCenter.shared().newNote().setSender(this).setName("appDidInit")
         note.post()

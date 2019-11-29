@@ -18,6 +18,8 @@ window.BMRemoteIdentity = class BMRemoteIdentity extends BMStorableNode {
             sessionKeys: null,
             messages: null, // TODO: remove later - no longer used
         })
+
+        this.protoAddStoredSlots(["name", "publicKeyString"])
     }
 
     init () {
@@ -29,8 +31,6 @@ window.BMRemoteIdentity = class BMRemoteIdentity extends BMStorableNode {
 
         this.setNodeCanEditTitle(true)
         this.setNodeCanEditSubtitle(false)
-
-        this.addStoredSlots(["name", "publicKeyString"])
 		
         this.initStoredSubnodeSlotWithProto("profile", BMProfile)
         //this.initStoredSubnodeSlotWithProto("messages", BMInbox)

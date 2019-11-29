@@ -44,7 +44,7 @@ window.AtomApp = class AtomApp extends App {
 
     
     isBrowserCompatible () {
-        if (WebBrowserWindow.agentIsSafari()) {
+        if (WebBrowserWindow.shared().agentIsSafari()) {
             return false
         }
         return true

@@ -23,22 +23,21 @@ window.BMRServer = class BMRServer extends BMFieldSetNode {
             error: null,
             connectButton: null,
         })
+        this.protoAddStoredSlots(["host", "port"])
+        this.setIsDebugging(true)
+        this.setShouldStore(true)
+        this.setShouldStoreSubnodes(true)
+        this.setShouldStoreSubnodes(false)
+        this.setCanDelete(true)
+        this.setNodeMinWidth(500)
     }
 
     init () {
         super.init()
-        this.setIsDebugging(true)
 
-        this.setShouldStore(true)
-        this.setShouldStoreSubnodes(true)
-		
         this.setServerConnection(BMServerConnection.clone().setServer(this))
         //this.addSubnode(this.serverConnection())
         //this.setTitle("RTC Server")
-        this.addStoredSlots(["host", "port"])
-        this.setShouldStoreSubnodes(false)
-        this.setCanDelete(true)
-        this.setNodeMinWidth(500)
 	
         this.addStoredField(BMField.clone().setKey("host").setValueMethod("host"))
         this.addStoredField(BMNumberField.clone().setKey("port").setValueMethod("port").setValueIsEditable(true))
@@ -151,8 +150,8 @@ window.BMRServer = class BMRServer extends BMFieldSetNode {
         this.setPort(dict.port);
         this.setPath(dict.path);
         this.setIsSecure(dict.isSecure);
-        //if ("path" in dict) { this.setPath(dict.path); }
-        //if ("isSecure" in dict) { this.setIsSecure(dict.isSecure); }
+        //if (dict.hasOwnProperty("path")) { this.setPath(dict.path); }
+        //if (dict.hasOwnProperty("isSecure")) { this.setIsSecure(dict.isSecure); }
         return this
     }
     

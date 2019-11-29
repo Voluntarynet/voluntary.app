@@ -80,12 +80,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         this.setLastSyncTime(null)
         this.setMarkedSet(null)
         this.setNodeStoreDidOpenNote(window.NotificationCenter.shared().newNote().setSender(this).setName("nodeStoreDidOpen"))
-
         return this
-    }
-
-    shared () {   
-        return this.sharedInstanceForClass(ObjectPool)
     }
 
     clearCache () {
@@ -225,17 +220,25 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         return this
     }
 
-    scheduleStore  () {
-        if (!SyncScheduler.shared().isSyncingTargetAndMethod(this, "storeDirtyObjects")) {
-            if (!SyncScheduler.shared().hasScheduledTargetAndMethod(this, "storeDirtyObjects")) {
+    scheduleStore () {
+        const scheduler = SyncScheduler.shared()
+        const methodName = "commitStoreDirtyObjects"
+        if (!scheduler.isSyncingTargetAndMethod(this, methodName)) {
+            if (!scheduler.hasScheduledTargetAndMethod(this, methodName)) {
                 //console.warn("scheduleStore currentAction = ", SyncScheduler.currentAction() ? SyncScheduler.currentAction().description() : null)
-                window.SyncScheduler.shared().scheduleTargetAndMethod(this, "storeDirtyObjects", 1000)
+                scheduler.scheduleTargetAndMethod(this, methodName, 1000)
             }
         }
         return this
     }
 
     // --- storing ---
+
+    commitStoreDirtyObjects () {
+        this.recordsDict().begin()
+        this.storeDirtyObjects()
+        this.recordsDict().commit()
+    }
 
     storeDirtyObjects () { // PRIVATE
         let totalStoreCount = 0
@@ -291,7 +294,25 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         return this.objectForRecord(this.recordForPid(puuid))
     }
 
+    //
+
+    activeLazyPids () { // returns a set of pids
+        const puuids = new Set()
+        this.activeObjects().ownForEachKY((pid, obj) => {
+            obj.lazyPids(puuids)
+        })
+        return puuis
+    }
+
     // --- references ---
+
+    refForPid (aPid) {
+        return { "*": this.pid() }
+    }
+
+    pidForRef (aRef) {
+        return aRef["*"]
+    }
 
     unrefValueIfNeeded (v) {
         return this.unrefValue(v)
@@ -356,10 +377,11 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         // in-memory objects aren't considered
         // so we make sure they're flushed to the db first 
         this.recordsDict().begin()
-        this.storeDirtyObjects()
+        this.flushIfNeeded()
 
         this.debugLog("--- begin collect ---")
         this.setMarkedSet(new Set())
+        this.activeLazyPids().forEach(pid => this.markPid(pid))
         this.markPid(this.rootObject().puuid()) // this is recursive, but skips marked records
         const deleteCount = this.sweep()
         this.setMarkedSet(null)

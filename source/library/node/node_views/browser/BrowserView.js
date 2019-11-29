@@ -243,7 +243,7 @@ window.BrowserView = class BrowserView extends NodeView {
     // --- columns -------------------------------
 
     columnGroups  () {
-        return this.subviews().select((subview) => { return subview.isKindOf(BrowserColumnGroup) })
+        return this.subviews().select(subview => subview.isKindOf(BrowserColumnGroup) ) // TODO: is this still neeeded?
     }
 
     addColumnGroup  (v) {

@@ -11,12 +11,13 @@ window.BMChatMessage = class BMChatMessage extends BMAppMessage {
     
     initPrototype () {
         this.newSlots({
+            content: null,
         })
+        this.protoAddStoredSlots(["content"])
     }
 
     init () {
         super.init()
-        this.addStoredSlots(["content"])
         this.setCanDelete(true)
     }
 	

@@ -13,11 +13,11 @@ window.BMFollowingContact = class BMFollowingContact extends BMStorableNode {
         this.newSlots({
             isFollowing: false,
         })
+        this.protoAddStoredSlot("isFollowing")
     }
 
     init () {
         super.init()
-        this.addStoredSlot("isFollowing")
     }
 
     title () {

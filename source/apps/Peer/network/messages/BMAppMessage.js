@@ -15,12 +15,12 @@ window.BMAppMessage = class BMAppMessage extends BMFieldSetNode {
             receiverId: null,
             hasRead: false,
         })
+        this.setShouldStore(true)
+        this.protoAddStoredSlots(["senderId", "receiverId", "objMsg"])
     }
 
     init () {
         super.init()
-        this.setShouldStore(true)
-        this.addStoredSlots(["senderId", "receiverId", "objMsg"])
     }
 
     senderPublicKeyString () {

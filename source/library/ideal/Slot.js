@@ -60,7 +60,9 @@ window.ideal.Slot = class Slot {
         // storrage related
         this.simpleNewSlot("isLazy", false) // should hook getter
         this.simpleNewSlot("shouldStore", false) // should hook setter
+        this.simpleNewSlot("initProto", null) // should hook setter
         //this.simpleNewSlot("shouldShallowCopy", false)
+        //this.simpleNewSlot("shouldDeepCopy", false)
     }
 
     autoSetGetterSetterOwnership () {
@@ -82,6 +84,7 @@ window.ideal.Slot = class Slot {
             this._isLazy = aBool
             this.onChangedAttribute()
         }
+        return this
     }
 
     setShouldStore (aBool) {
@@ -89,12 +92,12 @@ window.ideal.Slot = class Slot {
             this._shouldStore = aBool
             this.onChangedAttribute()
         }
+        return this
     }
 
     onChangedAttribute () {
-        if (this.ownsSlot()) {
-            this.setupInOwner()
-        }
+        this.setupGetter()
+        this.setupSetter()
     }
 
     // setup
@@ -295,7 +298,7 @@ window.ideal.Slot = class Slot {
         return func
     }
 
-    /*
+    
     // call helpers
 
     onInstanceRawGetValue (anInstance) {
@@ -309,7 +312,23 @@ window.ideal.Slot = class Slot {
     onInstanceSetValue (anInstance, aValue) {
         return anInstance[this.setterName()].apply(anInstance, [aValue])
     }
-    */
+
+    refPrivateName () {
+        return "_" + this.name() + "Ref"
+    }
+
+    onInstanceSetValueRef (anInstance, aRef) {        
+        anInstance[this.refPrivateName()] = aRef
+        return this
+    }
+
+    onInstanceInitSlot (anInstance) {
+        if (this.initProto()) {
+            const obj = this.initProto().clone()
+            this.onInstanceSetValue(anInstance, obj)
+        }
+    }
+    
 
 }
 

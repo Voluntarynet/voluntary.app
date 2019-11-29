@@ -39,8 +39,8 @@ window.BMApps = class BMApps extends BMStorableNode {
 
     removeAnyExtraApps  () {
         // remove any apps not in appProtos
-        const types = this.appProtos().map((proto) => { return proto.type() })
-        const matches = this.apps().select((app) => { return types.contains(app.type()) })
+        const types = this.appProtos().map(proto => proto.type())
+        const matches = this.apps().filter(app => types.contains(app.type()) )
         this.setSubnodes(matches)
     }
 
@@ -60,7 +60,7 @@ window.BMApps = class BMApps extends BMStorableNode {
     }
 
     hasAppType  (appProto) {
-        return this.apps().detect((app) => { return app.type() === appProto.type() }) != null
+        return this.apps().detect(app => app.type() === appProto.type()) != null
     }
 
     apps  () {
@@ -72,7 +72,7 @@ window.BMApps = class BMApps extends BMStorableNode {
     }
 
     handleAppMsg  (aMessage) {
-        this.subnodes().forEach((app) => { app.handleAppMsg(aMessage) })
+        this.subnodes().forEach(app => app.handleAppMsg(aMessage) )
     }
     
 }.initThisClass()

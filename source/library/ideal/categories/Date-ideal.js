@@ -9,10 +9,28 @@
 */
 
 Object.defineSlots(Date.prototype, {
+
+    clone: function () {
+        return new Date(this.getTime())
+    },
+
+    copy: function() {
+        return this.shallowCopy()
+    },
+
+    shallowCopy: function() {
+        return new Date(date.getTime())
+    },
+
+    // ---
+   
     monthNames: function() {
-        return [ "January", "February", "March", "April", 
-            "May", "June", "July", "August", 
-            "September", "October", "November", "December" ];
+        return [ 
+            "January", "February", "March", 
+            "April", "May", "June", 
+            "July", "August", "September", 
+            "October", "November", "December" 
+        ];
     },
 
     monthName: function () {
@@ -54,14 +72,6 @@ Object.defineSlots(Date.prototype, {
 
     zeroPaddedUSDate: function() {
         return this.paddedNumber(this.getTwelveHours()) + ":" + this.paddedNumber(this.getMinutes())
-    },
-
-    copy: function() {
-        return this.shallowCopy()
-    },
-
-    shallowCopy: function() {
-        return new Date(date.getTime())
     },
 
 });

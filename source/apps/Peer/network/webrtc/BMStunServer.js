@@ -22,18 +22,17 @@ window.BMStunServer = class BMStunServer extends BMFieldSetNode {
             //username: null,
             stunNote: "",
         })
+        this.protoAddStoredSlots(["host", "port"])
+        //this.protoAddStoredSlots(["credential", "username"])
+        this.setShouldStore(true)
+        this.setShouldStoreSubnodes(true)
+        this.setShouldStoreSubnodes(false)
+        this.setCanDelete(true)
+        this.setNodeMinWidth(500)
     }
 
     init  () {
         super.init()
-        this.setShouldStore(true)
-        this.setShouldStoreSubnodes(true)
-        this.addStoredSlots(["host", "port"])
-        //this.addStoredSlots(["credential", "username"])
-        this.setShouldStoreSubnodes(false)
-        this.setCanDelete(true)
-        this.setNodeMinWidth(500)
-
         this.addStoredField(BMField.clone().setKey("host").setValueMethod("host")).setValueIsEditable(true)
         this.addStoredField(BMField.clone().setKey("port").setValueMethod("port")).setValueIsEditable(true)
         this.addStoredField(BMField.clone().setKey("note").setValueMethod("stunNote")).setValueIsEditable(true)

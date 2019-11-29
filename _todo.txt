@@ -1,12 +1,6 @@
 
 TODO:
 
-move three.js to external libraries
-
-Constructor has a name and points to a 
-
-	move initClass to initProto?
-
 	ConstructorA
 		.prototype -> PrototypeA
 						constructor -> ConstructorA
@@ -15,19 +9,8 @@ Constructor has a name and points to a
 						
 	
 	
-	- add check to make sure only one commit is done per event loop?
-	
-	- move StorableNode subnodes to a slot
-	- add support for lazySlots
-		- if lazy, compile a getter that checks if loaded?
-	
-		Slot
-			- ownerClass
-			- name
-			- shouldStore
-			- isLazy
-			
-			
+	- add store check to make sure only one commit is done per event loop?
+				
 	cleanup shared to use typeClass
 	
 	NodeStore:

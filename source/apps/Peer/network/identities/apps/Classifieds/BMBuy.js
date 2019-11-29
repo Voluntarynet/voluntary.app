@@ -12,6 +12,7 @@ window.BMBuy = class BMBuy extends BMStorableNode {
         this.newSlots({
             post: null,
         })
+        this.protoAddStoredSlot("subtitle")
     }
 
     init () {
@@ -19,7 +20,6 @@ window.BMBuy = class BMBuy extends BMStorableNode {
         this.setTitle("Buy")
         this.setCanDelete(true)
         this.setSubtitle(Math.floor(Math.random()*10000))
-        this.addStoredSlot("subtitle")
     }
     
     setPost (aPost) {

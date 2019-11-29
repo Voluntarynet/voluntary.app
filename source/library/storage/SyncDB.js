@@ -182,7 +182,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
 	
     totalBytes () {
         let byteCount = 0
-        this._readCache.forEachKV((k, v) => {
+        this._readCache.ownForEachKV((k, v) => {
             byteCount += k.length + v.length
         })
         return byteCount
@@ -228,7 +228,7 @@ window.SyncDB = class SyncDB extends ProtoClass {
 	    
 	    let count = 0
         
-        this._writeCache.forEachKV((k, entry) => {
+        this._writeCache.ownForEachKV((k, entry) => {
             if (entry._isDelete) {
                 tx.removeAt(k)
                 delete this._readCache[k]

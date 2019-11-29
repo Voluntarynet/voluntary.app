@@ -13,16 +13,17 @@ window.BMImageWellField = class BMImageWellField extends BMField {
             onlyShowsKeyWhenEmpty: false,
             isEditable: true,
         })
+        this.protoAddStoredSlot("nodeMinRowHeight")
+
+        this.setKey("Image title")
+        this.setKeyIsEditable(false)
+        this.setValueIsEditable(false)
+        //this.protoAddStoredSlot("imageDataURL") // stored in value
+        this.setNodeCanEditRowHeight(true)
     }
 
     init () {
         super.init()
-        this.setKey("Image title")
-        this.setKeyIsEditable(false)
-        this.setValueIsEditable(false)
-        //this.addStoredSlot("imageDataURL") // stored in value
-        this.addStoredSlot("nodeMinRowHeight")
-        this.setNodeCanEditRowHeight(true)
     }
 
     /*

@@ -13,6 +13,7 @@ window.BMSell = class BMSell extends BMStorableNode {
             post: null,
             hasSent: false,
         })
+        this.protoAddStoredSlots(["subtitle", "hasSent"])
     }
 
     init () {
@@ -23,7 +24,6 @@ window.BMSell = class BMSell extends BMStorableNode {
         this.setTitle("Sell")
         this.setCanDelete(true)
         //this.setSubtitle(Math.floor(Math.random()*10000))
-        this.addStoredSlots(["subtitle", "hasSent"])
         
         this.setPost(BMClassifiedPost.clone())
         this.addSubnode(this.post())

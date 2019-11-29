@@ -15,16 +15,14 @@ window.BMStoredDatedSetNode = class BMStoredDatedSetNode extends BMStorableNode 
             autoCheckPeriod: 1 * 60 * 60,
             dict: null,
         })
+        this.setShouldStore(true)
+        this.setShouldStoreSubnodes(false)
+        this.protoAddStoredSlot("dict", "autoCheckPeriod", "maxAgeInSeconds")
     }
 
     init () {
         super.init()
-        this.setShouldStore(true)
-        this.setShouldStoreSubnodes(false)
-		
         this.setDict({})
-        this.addStoredSlot("dict", "autoCheckPeriod", "maxAgeInSeconds")
-
         //this.setNoteIsSubnodeCount(true)
     }
     

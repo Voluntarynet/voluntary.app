@@ -20,33 +20,31 @@ window.BMTextNode = class BMTextNode extends BMStorableNode {
             color: null,
             backgroundColor: null,
         })
-    }
 
-    init () {
-        super.init()
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(true)
         this.setCanDelete(true)
         this.setNodeCanInspect(true)
-        this.addAction("add")
         this.setNodeMinWidth(300)
 
         this.setTitle("title")
         this.setNodeCanEditTitle(true)
 
-        this.setSubnodeProto(BMCreatorNode)
         
         this.setNodeCanReorderSubnodes(true)
-        this.addStoredSlot("title")
-        this.addStoredSlot("fontSize")
-        this.addStoredSlot("color")
-        this.addStoredSlot("backgroundColor")
+        this.protoAddStoredSlot("title")
+        this.protoAddStoredSlot("fontSize")
+        this.protoAddStoredSlot("color")
+        this.protoAddStoredSlot("backgroundColor")
 
         this.setNodeCanEditRowHeight(true)
         this.setNodeCanEditColumnWidth(true)
-        //this.setNodeUsesColumnBackgroundColor(false)
-        this.addStoredSlot("nodeSubtitleIsChildrenSummary")
+    }
 
+    init () {
+        super.init()
+        this.addAction("add")
+        this.setSubnodeProto(BMCreatorNode)
         this.setNodeColumnStyles(BMViewStyles.clone())
         //this.setNodeRowStyles(BMViewStyles.clone())
         this.customizeNodeRowStyles().setToBlackOnWhite().selected().setBackgroundColor("red")
@@ -60,12 +58,14 @@ window.BMTextNode = class BMTextNode extends BMStorableNode {
         return this
     }
 
+    /*
     didLoadFromStore () {
         super.didLoadFromStore()
         this.subnodes().forEach( (subnode) => { subnode.setCanDelete(true) });
         this.subnodes().forEach( (subnode) => { subnode.setNodeCanInspect(true) });
         return this
     }
+    */
 
     acceptedSubnodeTypes () {
         return BMCreatorNode.fieldTypes()

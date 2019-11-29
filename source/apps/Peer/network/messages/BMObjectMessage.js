@@ -47,14 +47,13 @@ window.BMObjectMessage = class BMObjectMessage extends BMMessage {
             msgHash: null, // hash of data - computed as needed    
             signature: null, // sender signature on msgHash
         })
+        this.protoAddStoredSlots(["msgType", "encryptedData", "data", "senderPublicKeyString", "timeStamp", "signature"])
+        this.setCanDelete(true)
+        this.setShouldStoreSubnodes(false)
     }
 
     init () {
         super.init()
-        this.setShouldStoreSubnodes(false)
-        this.setMsgType("object")
-        this.addStoredSlots(["msgType", "encryptedData", "data", "senderPublicKeyString", "timeStamp", "signature"])
-        this.setCanDelete(true)
     }
     
     duplicate () {

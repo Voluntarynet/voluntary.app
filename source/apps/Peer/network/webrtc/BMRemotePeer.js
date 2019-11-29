@@ -284,7 +284,7 @@ window.BMRemotePeer = class BMRemotePeer extends BMNode {
     }
     
     hasSeenMsgHash (aHash) {
-        return aHash in this.remoteInventory()
+        return this.remoteInventory().hasOwnProperty(aHash)
     }
     
     addedObjMsg (msg) {

@@ -45,26 +45,36 @@ window.BMField = class BMField extends BMSummaryNode {
             //nodeSummaryShowsKey: false,
             //nodeSummaryShowsValue: false,
         })
+
+  
+        this.slotNamed("key").setShouldStore(true)
+        this.slotNamed("keyIsVisible").setShouldStore(true)
+        this.slotNamed("keyIsEditable").setShouldStore(true)
+
+        this.slotNamed("value").setShouldStore(true)
+        this.slotNamed("valueIsVisible").setShouldStore(true)
+        this.slotNamed("valueIsEditable").setShouldStore(true)
+
+        this.slotNamed("valuePrefix").setShouldStore(true)
+        this.slotNamed("valuePostfix").setShouldStore(true)
+
+        //this.protoAddStoredSlot("nodeSummaryShowsKey")
+        //this.protoAddStoredSlot("nodeSummaryShowsValue")
+
+        /*
+        this.addShallowCopySlotNames([
+            "key", "keyIsVisible", "keyIsEditable", 
+            "value", "valueIsVisible","valueIsEditable",
+            "valuePrefix", "valuePostfix",
+            //"valueMethod", "target"
+        ])
+        */
+
     }
 
     init () {
         super.init()
         this.setShouldStore(true)
-
-        this.addStoredSlot("key")
-        this.addStoredSlot("keyIsVisible")
-        this.addStoredSlot("keyIsEditable")
-
-        this.addStoredSlot("value")
-        this.addStoredSlot("valueIsVisible")
-        this.addStoredSlot("valueIsEditable")
-
-        this.addStoredSlot("valuePrefix")
-        this.addStoredSlot("valuePostfix")
-
-        //this.addStoredSlot("nodeSummaryShowsKey")
-        //this.addStoredSlot("nodeSummaryShowsValue")
-
         //this.setNodeRowStyles(BMViewStyles.sharedBlackOnWhiteStyle())
         //this.setNodeRowStyles(BMViewStyles.sharedWhiteOnBlackStyle())
         //this.customizeNodeRowStyles().setToBlackOnWhite()
@@ -78,21 +88,6 @@ window.BMField = class BMField extends BMSummaryNode {
         return this
     }
 
-    shallowCopySlotnames () {
-        const names = super.shallowCopySlotnames()
-        return names.appendItems([
-            "key", "keyIsVisible", "keyIsEditable", 
-            "value", "valueIsVisible","valueIsEditable",
-            "valuePrefix", "valuePostfix",
-            //"valueMethod", "target"
-        ])
-    }
-
-    deepCopySlotnames () {
-        const names = super.deepCopySlotnames()
-        return names.appendItems([])
-    }
-    
     /*
     target () {
         if (this._target) {

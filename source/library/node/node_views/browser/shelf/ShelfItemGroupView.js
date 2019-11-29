@@ -21,7 +21,7 @@ window.ShelfItemGroupView = class ShelfItemGroupView extends NodeView {
         this.turnOffUserSelect()
         this.setTransition("all 0.35s")
 		
-        let itemSize = 80
+        const itemSize = 80
         this.setMinAndMaxWidth(itemSize)
         this.setOverrideSubviewProto(ShelfItemView)
         return this
@@ -32,7 +32,7 @@ window.ShelfItemGroupView = class ShelfItemGroupView extends NodeView {
     }
     /*
     newSubviewForSubnode (aSubnode) {
-        let newSubview = NodeView.newSubviewForSubnode(aSubnode)
+        const newSubview = NodeView.newSubviewForSubnode(aSubnode)
         newSubview.setOverrideSubviewProto(ShelfItemView)
         return newSubview
     }
@@ -85,7 +85,7 @@ window.ShelfItemGroupView = class ShelfItemGroupView extends NodeView {
     }
 
     firstItemHeight () {
-        let fs = this.firstItem()    
+        const fs = this.firstItem()    
         return fs ? fs.clientHeight() : 0
     }
     
@@ -100,12 +100,12 @@ window.ShelfItemGroupView = class ShelfItemGroupView extends NodeView {
     // --- selection ---
 
     selectItems () {
-        this.items().forEach((item) => { item.select() })
+        this.items().forEach(item => item.select() )
         return this
     }
        
     unselectItems () {
-        this.items().forEach((item) => { item.unselect() })
+        this.items().forEach(item => item.unselect() )
         return this
     }
 
@@ -113,7 +113,7 @@ window.ShelfItemGroupView = class ShelfItemGroupView extends NodeView {
         if (this.isCompacted()) {
         	this.setMinAndMaxHeight(this.firstItemHeight())
         } else {
-            let newHeight = this.sumOfSubviewHeights()
+            const newHeight = this.sumOfSubviewHeights()
             this.setMinAndMaxHeight(newHeight)			
         }
         return this
@@ -139,7 +139,7 @@ window.ShelfItemGroupView = class ShelfItemGroupView extends NodeView {
 
             this.showCompaction()
 
-            let fs = this.firstItem()
+            const fs = this.firstItem()
             if (fs) {
                 fs.select()
             }

@@ -161,33 +161,6 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
         return this;
     }
 
-    // --- broadcast ---
-
-    /*
-    observersForName (name) {
-        return this.nameToObservers()[name] // returns a set
-    }
-
-    broadcastNameAndArgument (name, anArgument) {
-        // useful for dirty objects to broadcast onStoredSlotChange to stores
-        // so multiple stores can listen, instead of StoreableObject using NodeStore.shared()
-        let hadMatch = false
-        this.observations().forEach((obs) => {
-            if (obs.name() === name) {
-                hadMatch = true
-
-                const observer = obs.observer()
-                if (observer[name]) {
-                    observer[name].apply(observer, [anArgument])
-                } else {
-                    console.warn(observer.typeId() + " registered to observe " + name + " but doesn't respond to it")
-                }
-            }
-        })
-        return hadMatch
-    }
-    */
-
     // --- notifying ----
     
     hasNotification (note) {

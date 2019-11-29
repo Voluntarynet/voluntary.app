@@ -11,20 +11,18 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
     initPrototype () {
         this.newSlots({
             shouldStore: false,
-            storedSlots: null, // dict
             shouldStoreSubnodes: true,
             //loadsUnionOfChildren: false,
             isUnserializing: false,
             doesLazyLoadChildren: true,
             subnodePids: null,
         })
+        this.protoAddStoredSlot("canDelete")  // TODO: move elsewhere
     }
 
     init () {
         super.init()
-        this.setStoredSlots({})
         this.scheduleSyncToStore()
-        this.addStoredSlot("canDelete")  // TODO: move elsewhere
     }
 
     // --- overrides from parent class ---
@@ -59,12 +57,9 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
     setPid (aPid, aStore = this.defaultStore()) {
         this.setPuuid(aPid)
         return this
-    }
+    }    
 
-    // --------------------------
-    
-
-    // --- add / remove stored slots ---
+    // --- stored slots ---
     
     initStoredSubnodeSlotWithProto (name, proto) {
         const obj = proto.clone()
@@ -73,27 +68,10 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
         this.addStoredSlot(name)
         return this
     }
-    
-    addStoredSlots (slotNames) {
-        slotNames.forEach(k => this.addStoredSlot(k))
-        return this
-    }
-    
-    addStoredSlot (slotName) {
-        this.storedSlots()[slotName] = true
-        this.slotNamed(slotName).setDoesHookSetter(true)
-        // Note: BMStorableNode hooks didUpdateSlot() to call scheduleSyncToStore on updates. 
-        return this
-    }
-    
-    removeStoredSlot (slotName) {
-        delete this.storedSlots()[slotName]
-        return this
-    }
 
     // writing object to store
 
-    nodeDict  (aStore = this.defaultStore()) { 
+    nodeDict (aStore = this.defaultStore()) { 
         const dict = this.nodeDictForProperties()
         
         if (this.subnodeCount() && this.shouldStoreSubnodes()) {
@@ -123,14 +101,13 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
         return v
     }
 
-
     nodeDictForProperties  (aStore = this.defaultStore()) {
         const dict = {}
         dict.type = this.type()
  
-        //this.debugLog(" storedSlots = " + JSON.stringify(this.storedSlots()))
+        //this.debugLog(" storedSlotNames = " + JSON.stringify(this.storedSlotNames()))
        
-        Object.keys(this.storedSlots()).forEach((k) => {
+        Object.keys(this.storedSlotNames()).forEach((k) => {
             const v = this.getStoreSlotValue(k)
             dict[k] = aStore.refValueIfNeeded(v)
         })
@@ -242,12 +219,12 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
 	    
         // check so we don't mark dirty while loading
         // and use private slots directly for performance
-        if (slotName in this._storedSlots) { 
+        if (this._storedSlots.hasOwnProperty(slotName)) {
             //this.debugLog(".didUpdateSlot(" + slotName + ",...) -> scheduleSyncToStore")
             this.scheduleSyncToStore()
         }
 		
-        if (newValue != null && this._subnodes.includes(oldValue)) { // TODO: add a switch for this feature
+        if (newValue !== null && this._subnodes.includes(oldValue)) { // TODO: add a switch for this feature
             newValue.setParentNode(this)
             this.subnodes().replaceOccurancesOfWith(oldValue, newValue)
             //this.debugLog(" this.subnodes().replaceOccurancesOfWith(", oldValue, ",", newValue, ")")
@@ -317,7 +294,6 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
         this.setSubnodes(subnodes)
         return this
     }
-    
     
     /*
     pidRefsFromNodeDict (nodeDict) {

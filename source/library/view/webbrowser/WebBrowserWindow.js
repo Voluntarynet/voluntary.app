@@ -117,7 +117,7 @@ window.WebBrowserWindow = class WebBrowserWindow extends ProtoClass {
     }
 
     agentIsChrome () {
-        const isChrome =  Boolean(window.chrome) //&& 
+        const isChrome = Boolean(window.chrome) //&& 
         //!navigator.userAgent.contains('Brave');
         //console.log("window.chrome = ", window.chrome);
         return isChrome

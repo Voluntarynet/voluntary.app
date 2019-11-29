@@ -9,26 +9,24 @@
 window.BMChat = class BMChat extends BMApplet {
     
     initPrototype () {
-        this.newSlots({
-            //feedPosts: null,
-            //myPosts: null,
-            // threads: null,
-        })
+        this.newSlot("feedPosts", null).setShouldStore(true).setInitProto(BMFeedPosts)
+        this.newSlot("myPosts", null).setShouldStore(true).setInitProto(BMMyPosts)
+        this.newSlot("threads", null).setShouldStore(true).setInitProto(BMChatThreads)
+        this.newSlot("drafts", null).setShouldStore(true).setInitProto(BMPostDrafts)
+    
+        this.setShouldStore(true)
+        this.setShouldStoreSubnodes(false)
     }
 
     init () {
-        super.init()
-
-        this.setShouldStore(true)
-        this.setShouldStoreSubnodes(false)
-		
+        super.init()		
         this.setTitle("Chat")
-        //this.setTitle("TWTR")
-
+        /*
         this.initStoredSubnodeSlotWithProto("feedPosts", BMFeedPosts)	
         this.initStoredSubnodeSlotWithProto("myPosts",   BMMyPosts)
         this.initStoredSubnodeSlotWithProto("threads",   BMChatThreads)
         this.initStoredSubnodeSlotWithProto("drafts",    BMPostDrafts)
+        */
     }
 
     localIdentity () {

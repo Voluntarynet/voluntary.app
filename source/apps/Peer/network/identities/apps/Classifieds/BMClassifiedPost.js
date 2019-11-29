@@ -25,6 +25,9 @@ window.BMClassifiedPost = class BMClassifiedPost extends BMFieldSetNode {
             imageDataURLs: null,
             hasSent: false,
         })
+
+        //this.protoAddStoredSlots(["price", "title", "description", "path", "postDate", "postPeriod", "uuid", "imageDataURLs", "hasSent"])
+        this.protoAddStoredSlots(["uuid", "postPeriod", "hasSent"])
     }
 
     init () {
@@ -50,8 +53,7 @@ window.BMClassifiedPost = class BMClassifiedPost extends BMFieldSetNode {
         this.setTitle("Untitled")
         this.setPrice(0)
         this.setDescription("Item or service description")
-        //this.addStoredSlots(["price", "title", "description", "path", "postDate", "postPeriod", "uuid", "imageDataURLs", "hasSent"])
-        this.addStoredSlots(["uuid", "postPeriod", "hasSent"])
+
 
         //this.setImagesNode(BMNode.clone().setViewClassName("ImageView").setSubnodeProto("ImageNode"))
         this.setImageDataURL(null) 
@@ -92,11 +94,11 @@ window.BMClassifiedPost = class BMClassifiedPost extends BMFieldSetNode {
 	
     currencySymbols () {
         /*
-		return Object.slotNames(CurrenciesDict).map(function (k) {
+		return Object.keys(CurrenciesDict).map(function (k) {
 			return k + " (" + CurrenciesDict[k].name + ")"
 		}).sort()
 		*/
-        return Object.slotNames(CurrenciesDict).sort()
+        return Object.keys(CurrenciesDict).sort()
     }
 	
     currencyName () {

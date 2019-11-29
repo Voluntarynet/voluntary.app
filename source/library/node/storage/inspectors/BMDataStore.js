@@ -4,7 +4,7 @@
 
     BMDataStore
 
-    A visible representation of the NodeStore
+    A visible representation of the storage system
     
 */
 

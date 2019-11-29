@@ -15,16 +15,11 @@ window.BMMenuNode = class BMMenuNode extends BMSummaryNode {
             label: "",
             //hasSubtitleOfValues: false,
         })
-    }
-
-    init () {
-        super.init()
 
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(true)
         this.setCanDelete(true)
         this.setNodeCanInspect(true)
-        this.addAction("add")
         this.setNodeMinWidth(300)
 
         this.setTitle("title")
@@ -34,10 +29,9 @@ window.BMMenuNode = class BMMenuNode extends BMSummaryNode {
         //this.setNodeCanEditSubtitle(true)
 
         //this.setSubnodeProto(BMMenuNode)
-        this.setSubnodeProto(BMCreatorNode)
         
         this.setNodeCanReorderSubnodes(true)
-        this.addStoredSlot("label")
+        this.protoAddStoredSlot("label")
 
         //this.setNodeColumnStyles(BMViewStyles.clone())
         //this.setNodeRowStyles(BMViewStyles.clone())
@@ -46,6 +40,12 @@ window.BMMenuNode = class BMMenuNode extends BMSummaryNode {
 
         this.setCanDelete(true)
         this.setNodeCanInspect(true) 
+    }
+
+    init () {
+        super.init()
+        this.addAction("add")
+        this.setSubnodeProto(BMCreatorNode)
     }
 
     /*

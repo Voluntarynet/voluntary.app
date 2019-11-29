@@ -8,7 +8,7 @@ Object.defineSlots(BMStorableNode, {
             slots: [], 
         }
         
-        Object.keys(this.storedSlots()).forEach((k) => {
+        Object.keys(this.storedSlotNames()).forEach((k) => {
             const v = this.getStoreSlotValue(k)
             aRecord.slots.push([k, aStore.refValue(v)])
         })
@@ -39,7 +39,6 @@ Object.defineSlots(BMStorableNode, {
                 }
             }
         })
-
 
         //this.setSubnodesRecord(aRecord.subnodesRecord) 
 

@@ -20,28 +20,25 @@ window.BMSummaryNode = class BMSummaryNode extends BMStorableNode {
             nodeSubtitleIsChildrenSummary: false,
             summaryFormat: "value",
         })
-    }
-
-    init () {
-        super.init()
-
+    
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(true)
 
         this.setTitle("title")
-        this.addStoredSlot("title")
+        this.protoAddStoredSlot("title")
 
-        this.addStoredSlot("nodeSummaryJoiner")  // TODO: move elsewhere
-        this.addStoredSlot("nodeSubtitleIsChildrenSummary") 
-        this.addStoredSlot("summaryFormat")
+        this.protoAddStoredSlot("nodeSummaryJoiner")  // TODO: move elsewhere
+        this.protoAddStoredSlot("nodeSubtitleIsChildrenSummary") 
+        this.protoAddStoredSlot("summaryFormat")
+
+        // shallowCopySlotnames "nodeSummaryJoiner", "nodeSubtitleIsChildrenSummary", "summaryFormat", 
     }
 
-    shallowCopySlotnames () {
-        const names = super.shallowCopySlotnames()
-        return names.appendItems([
-            "nodeSummaryJoiner", "nodeSubtitleIsChildrenSummary", "summaryFormat", 
-        ])
+    init () {
+        super.init()
     }
+
+
 
     initNodeInspector () {
         super.initNodeInspector()

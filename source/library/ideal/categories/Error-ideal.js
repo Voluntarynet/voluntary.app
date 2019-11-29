@@ -8,63 +8,66 @@
 
 */
 
-Error.assert = function(v) {
-    if(!Boolean(v)) {
-        throw new Error("assert failed - false value")
-    }
-    return v
-}
+Object.defineSlots(Error, {
 
-Error.assertDefined = function(v) {
-    if(v === undefined) {
-        throw new Error("assert failed - undefined value")
-    }
-    return v
-}
-
-Error.showCurrentStack = function() {
-    const e = new Error()
-    e.name = "STACK TRACE"
-    e.message = ""
-    console.log( e.stack );
-}
-
-
-Error.try = function(func) {
-    try {
-        func()
-    } catch (error) {
-        this.showError(error)
-    }
-}
-
-Error.callingScriptURL = function() {
-    const urls = new Error().stackURLs()
-    return urls[1]
-}
-
-
-Object.defineSlots(Error.prototype, {
-
-    // --- assert ---
-
-    /*
     assert: function(v) {
         if(!Boolean(v)) {
             throw new Error("assert failed - false value")
         }
         return v
     },
-    
+
     assertDefined: function(v) {
         if(v === undefined) {
             throw new Error("assert failed - undefined value")
         }
         return v
     },
-    */
 
-    // --- assert ---
+    showCurrentStack: function() {
+        const e = new Error()
+        e.name = "STACK TRACE"
+        e.message = ""
+        console.log( e.stack );
+    },
+
+
+    assertThrows: function(func) {
+        assert(Type.isFunction(func))
+
+        let didThrow = false
+        try {
+            func()
+        } catch(e) {
+            didThrow = true
+        }
+
+        if (!didThrow) {
+            console.log("assertThrows(" + func.toString() + ") failed")
+        } else {
+            //console.log("assertThrows(" + func.toString() + ") passed")
+        }
+
+        assert(didThrow)
+    },
+
+    try: function(func) {
+        try {
+            func()
+        } catch (error) {
+            this.showError(error)
+        }
+    },
+
+    callingScriptURL: function() {
+        const urls = new Error().stackURLs()
+        return urls[1]
+    },
+
+})
+
+
+Object.defineSlots(Error.prototype, {
     
     stackURLs: function(v) {
         let urls = this.stack.split("at")
@@ -131,8 +134,6 @@ Object.defineSlots(Error.prototype, {
         console.warn(this.description())
     },
 
-
-    
 });
 
 // --- helper functions ---
@@ -146,20 +147,5 @@ function assertDefined(v) {
 }
 
 function assertThrows(func) {
-    assert(Type.isFunction(func))
-
-    let didThrow = false
-    try {
-        func()
-    } catch(e) {
-        didThrow = true
-    }
-
-    if (!didThrow) {
-        console.log("assertThrows(" + func.toString() + ") failed")
-    } else {
-        //console.log("assertThrows(" + func.toString() + ") passed")
-    }
-
-    assert(didThrow)
+    Error.assertThrows(func)
 }

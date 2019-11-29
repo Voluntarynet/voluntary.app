@@ -85,12 +85,12 @@ window.ShelfFooterView = class ShelfFooterView extends DomView {
     
     /*
     selectItems () {
-        this.items().forEach((item) => { item.select() })
+        this.items().forEach(item => item.select() )
         return this
     }
        
     unselectItems () {
-        this.items().forEach((item) => { item.unselect() })
+        this.items().forEach(item => item.unselect() )
         return this
     }
     

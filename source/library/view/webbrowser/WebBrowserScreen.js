@@ -19,9 +19,9 @@ window.WebBrowserScreen = class WebBrowserScreen extends ProtoClass {
         //return this
     }
 
-    shared () {
-        return this
-    }
+    /*
+    shared()...
+    */
     
     width  () {
         return screen.width

@@ -16,26 +16,23 @@ window.BMOptionNode = class BMOptionNode extends BMStorableNode {
             value:  null,
             isPicked: false,
         })
-    }
 
-    init () {
-        super.init()
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(false)
         this.setNodeCanReorderSubnodes(false)
         this.setCanDelete(true)
-        this.addStoredSlot("label")
-        this.addStoredSlot("value")
-        this.addStoredSlot("isPicked")
+        this.protoAddStoredSlot("label")
+        this.protoAddStoredSlot("value")
+        this.protoAddStoredSlot("isPicked")
         this.setNodeCanEditTitle(true)
+
+        //shallowCopySlots "label", "value", "isPicked", 
     }
 
-    shallowCopySlotnames () {
-        const names = super.shallowCopySlotnames()
-        return names.appendItems([
-            "label", "value", "isPicked", 
-        ])
+    init () {
+        super.init()
     }
+
 
     setIsPicked (aBool) {
         if (this.isPicked() !== aBool) {

@@ -51,11 +51,7 @@ Object.defineSlots(Object, {
     
     values: function (obj) {
         const values = [];
-        for (let name in obj) {
-            if (obj.hasOwnProperty(name)) {
-                values.push(obj[name]);
-            }
-        }
+        obj.ownForEachKV((k, v) => { values.push(v) })
         return values;
     },
     
@@ -82,19 +78,6 @@ Object.defineSlots(Object, {
         return Array.wrap(obj[k]).first();
     },
     
-    slotNames: function (obj) {
-        return Object.keys(obj);
-    },
-    
-    slotValues: function (obj) {
-        const values = [];
-        for (let k in this) {
-            if (obj.hasOwnProperty(k)) {
-                values.push(this[k]);
-            }
-        }
-        return values;
-    },
 })
 
 
@@ -103,7 +86,7 @@ Object.defineSlots(Object.prototype, {
         return Object.assign({}, obj);
     },
     
-    forEachKV: function(fn) {    
+    ownForEachKV: function(fn) {    
         Object.getOwnPropertyNames(this).forEach((k) => {
             const v = this[k]
             fn(k, v);

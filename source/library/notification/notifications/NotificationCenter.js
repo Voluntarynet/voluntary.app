@@ -101,12 +101,12 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
     }
 
     hasObservationsForTargetId (targetId) {
-        const obs = this.observations().detect( obs => obs.targetId() === targetId)
+        const obs = this.observations().detect(obs => obs.targetId() === targetId)
         return !Type.isNullOrUndefined(obs)
     }
 
     countOfObservationsForTargetId (targetId) {
-        const matches = this.observations().filter( obs => obs.targetId() === targetId)
+        const matches = this.observations().filter(obs => obs.targetId() === targetId)
         return matches.length
     }
     
@@ -117,6 +117,7 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
         } else {
             // If possible, we want to send onNoObservers listen targets when 
             // their last observer is removed, so track these
+
             const targetId = anObservation.targetId()
             let removedMatchingTargetId = false
             let stillHasMatchingTargetId = false
@@ -168,29 +169,10 @@ window.NotificationCenter = class NotificationCenter extends ProtoClass {
         return this;
     }
 
-    // --- broadcast ---
+    // --- helpers ---
 
     observersForName (name) {
         return this.nameToObservers()[name] // returns a set
-    }
-
-    broadcastNameAndArgument (name, anArgument) {
-        // useful for dirty objects to broadcast onStoredSlotChange to stores
-        // so multiple stores can listen, instead of StoreableObject using NodeStore.shared()
-        let hadMatch = false
-        this.observations().forEach((obs) => {
-            if (obs.name() === name) {
-                hadMatch = true
-
-                const observer = obs.observer()
-                if (observer[name]) {
-                    observer[name].apply(observer, [anArgument])
-                } else {
-                    console.warn(observer.typeId() + " registered to observe " + name + " but doesn't respond to it")
-                }
-            }
-        })
-        return hadMatch
     }
 
     // --- notifying ----

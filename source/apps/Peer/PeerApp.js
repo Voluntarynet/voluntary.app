@@ -106,7 +106,7 @@ window.PeerApp = class PeerApp extends App {
     }
 
     isBrowserCompatible () {
-        if (WebBrowserWindow.agentIsSafari()) {
+        if (WebBrowserWindow.shared().agentIsSafari()) {
             return false
         }
         return true
@@ -144,5 +144,4 @@ window.PeerApp = class PeerApp extends App {
     
 }.initThisClass()
 
-PeerApp.showVersion()
 

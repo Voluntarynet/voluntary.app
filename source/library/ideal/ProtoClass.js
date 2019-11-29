@@ -22,18 +22,7 @@
 
 */
 
-//window.ideal.ProtoClass = 
 window.ProtoClass = class ProtoClass { 
-
-    /*
-    static newSubclassNamed (subclassName) {
-        let s = "window['" + subclassName + "'] = class " + subclassName + " extends " + this.type() + " {}"
-        //console.log("s = ", s)
-        let subclass = eval(s)
-        //window[subclassName] = subclass
-        return subclass
-    }
-    */
 
     /*
     static newUniqueInstanceId() {
@@ -51,6 +40,9 @@ window.ProtoClass = class ProtoClass {
     
     static getClassVariable (key, defaultValue) {
         if (!this.hasOwnProperty(key)) {
+            if (Type.isFunction()) { 
+                defaultValue = defaultValue()
+            }
             this[key] = defaultValue
         }
         return this[key]
@@ -68,11 +60,9 @@ window.ProtoClass = class ProtoClass {
         return this.getClassVariable("_shared")
     }
 
-    /*
-    static sharedInstanceForClass() {
-
+    static sharedInstanceForClass(aClass) {
+        aClass.shared()
     }
-    */
 
     static allClasses () {
         return this.getClassVariable("_allClasses", [])
@@ -95,6 +85,7 @@ window.ProtoClass = class ProtoClass {
         return Object.getPrototypeOf(this)
     }
 
+    /*
     static newSlots (slots) {
         throw new Error("should all on prototype instead")
         this.prototype.newSlots(slots)
@@ -106,40 +97,36 @@ window.ProtoClass = class ProtoClass {
         this.prototype.setSlots(slots)
         return this;
     }
+    */
 
     static type() {
         return this.name
     }
 
     static clone () {
-        //this.setupSlotsIfNeeded()
         const obj = new this()
         obj.init()
         return obj
     }
 
-
-    static isInstance () {
-        return false
-    }
-
-    static isClass () {
-        return true
-    }
-
     static slots () {
+        throw new Error("use proto version?")
+        /*
         const self = this.prototype
         if (!self.hasOwnProperty("_slots")) {
             self._slots = {}
         }
         return self._slots
+        */
     }
 
     static newSlot (slotName, initialValue) {
-
+        throw new Error("use proto version?")
+        /*
         assert(Type.isString(slotName))
         assert(Type.isUndefined(this.slots()[slotName]))
         assert(!this.prototype.hasOwnProperty(slotName))
+        */
 
         /*
         // TODO: we want to create the private slots and initial value on instances
@@ -148,11 +135,12 @@ window.ProtoClass = class ProtoClass {
         this[privateName] = initialValue
         */
 
+        /*
         const slot = ideal.Slot.clone().setName(slotName).setInitValue(initialValue)
         slot.setOwner(this.prototype)
         slot.setupInOwner()
         this.prototype.slots()[slotName] = slot
-        
+        */
         return this;
     }
 
@@ -169,9 +157,48 @@ window.ProtoClass = class ProtoClass {
     }
     */
 
+    static isClass () {
+        return true
+    }
+
+    static isInstance () {
+        return false
+    }
+
+    static isPrototype () {
+        return false
+    }
+
     // --- instance ---
 
+    thisPrototype () {
+        assert(this.isInstance())
+        let prototype = this.__proto__
+        assert(prototype.isPrototype)
+        return prototype
+    }
+
+    thisClass () {
+        if (this.isPrototype()) {
+            return this.constructor
+        }
+        return this.__proto___.constructor
+    }
+
+    isPrototype () {
+        return this.constructor.prototype === this 
+    }
+    
+    isInstance () {
+        return !this.isPrototype()
+    }
+
+    isClass () {
+        return false
+    }
+
     constructor() {
+        //console.log("constructed!")
     }
     
     init () {
@@ -189,7 +216,9 @@ window.ProtoClass = class ProtoClass {
 
     // --- slots ---
 
+
     slotNamed (slotName) {
+        assert(this.isPrototype())
         const slots = this.slots()
         if (slots.hasOwnProperty(slotName)) {
             return slots[slotName]
@@ -197,10 +226,83 @@ window.ProtoClass = class ProtoClass {
         
         if (this.__proto__ && this.__proto__.slotNamed) {
             return this.__proto__.slotNamed(slotName)
+        } else {
+            //console.log("is this possible?")
         }
 
         return null 
     }
+
+    // slot objects
+
+    allSlots (allSlots = {}) {
+        assert(this.isPrototype())
+        Object.assign(allSlots, this.slots());
+
+        if (this.__proto__ && this.__proto__.slotNamed) {
+            this.__proto__.allSlots(allSlots)
+        } else {
+            //console.log("is this possible?")
+        }
+
+        return allSlots
+    }
+
+    // shallow copy slots
+
+    /*
+    addShallowCopySlotNames (names) {
+        names.forEach(name => this.slotNamed(name).setShouldShallowCopy(true))
+        return this
+    }
+
+    shallowCopySlotnames () {
+        return this.allSlots().filter(slot => slot.shouldShallowCopy()).map(slot => slot.name()).asSet()
+    }
+    */
+
+    // deep copy slots
+
+    /*
+    addDeepCopySlotNames (names) {
+        names.forEach(name => this.slotNamed(name).setShouldDeepCopy(true))
+        return this
+    }
+
+    deepCopySlotnames () {
+        return this.allSlots().filter(slot => slot.shouldDeepCopy()).map(slot => slot.name()).asSet()
+    }
+    */
+
+    // stored slots
+
+    storedSlotNames () { // returns a set  
+        // TODO: use slot cache
+        assert(this.isPrototype())
+        return this.allSlots().filter(slot => slot.shouldStore()).map(slot => slot.name()).asSet()
+    }
+
+    protoAddStoredSlots (slotNames) {
+        assert(this.isPrototype())
+        slotNames.forEach(k => this.protoAddStoredSlot(k))
+        return this
+    }
+    
+    protoAddStoredSlot (slotName) {
+        assert(this.isPrototype())
+        this.slotNamed(slotName).setDoesHookSetter(true).setShouldStore(true)
+        //this.slotNamed(slotName).setDoesHookSetter(true).setShouldStore(true)
+        // Note: BMStorableNode hooks didUpdateSlot() to call scheduleSyncToStore on updates. 
+        return this
+    }
+    
+    protoRemoveStoredSlot (slotName) {
+        assert(this.isPrototype())
+        this.slotNamed(slotName).setDoesHookSetter(false).setShouldStore(false)
+        return this
+    }
+
+    // -------------------------------------
 
     slots () {
         if (!this.hasOwnProperty("_slots")) {
@@ -209,16 +311,8 @@ window.ProtoClass = class ProtoClass {
         return this._slots
     }
 
-
-    isInstance () {
-        return true
-    }
-
-    isClass () {
-        return false
-    }
-
-    newSlot (slotName, initialValue) {
+    newSlot (slotName, initialValue = null) {
+        assert(this.isPrototype())
         /*
         if (slotName === "overView") {
             console.log("overView")
@@ -241,10 +335,11 @@ window.ProtoClass = class ProtoClass {
         slot.autoSetGetterSetterOwnership()
         slot.setupInOwner()
         this.slots()[slotName] = slot
-        return this
+        return slot
     }
 
     newSlots (slots) {
+        assert(this.isPrototype())
         Object.eachSlot(slots, (slotName, initialValue) => {
             this.newSlot(slotName, initialValue);
         });
@@ -290,16 +385,6 @@ window.ProtoClass = class ProtoClass {
     }
     */
 
-    /*
-    extend () {
-        const obj = this.cloneWithoutInit()
-        Proto._allProtos.push(obj)
-        obj._parentProto = this
-        //console.log("Proto._allProtos.length = ", Proto._allProtos.length)
-        return obj;
-    }
-    */
-
     typeId () {
         return this.typePuuid()
     }
@@ -328,6 +413,9 @@ window.ProtoClass = class ProtoClass {
 
     init () { 
         // subclasses should override to do initialization
+        assert(this.isInstance())
+        let allSlots = this.__proto__.allSlots()
+        allSlots.ownForEachKV((slotName, slot) => { slot.onInstanceInitSlot(this) }) // TODO: use slot cache
     }
 
     toString () {
@@ -492,34 +580,10 @@ window.ProtoClass = class ProtoClass {
     defaultStore () {
         return PersistentObjectPool.shared()
         //return ObjectPool.shared()
-        //return NodeStore.shared()
     }
 }
 
-window.ProtoClass.initThisClass()
+window.ProtoClass.initThisClass() // needed as initThisClass looks at window.ProtoClass
 
-
-/*
-class EmptyClass {
-    YOU_FOUND_ME() {
-
-    }
-}
-*/
-
-/*
-function test() {
-    super.test()
-}
-*/
-
-/*
-ProtoClass.newSlots({
-    "TEST_SLOT": 1
-})
-
-console.log("ProtoClass = ", ProtoClass)
-console.log(" --- ")
-*/
 
 

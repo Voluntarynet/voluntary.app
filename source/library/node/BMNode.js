@@ -8,7 +8,7 @@
     used to sync with views (subclasses of NodeView).
 
     The BMStorableNode subclass is used to sync the model to
-    the persistence system (NodeStore).
+    the persistence system.
 
 
         Notifications (intended for views):
@@ -103,6 +103,14 @@ window.BMNode = class BMNode extends ProtoClass {
             shouldStore: false,
             isFinalized: false,
         })
+
+        /*
+        this.slotNamed("title").setShouldShallowCopy(true)
+        this.slotNamed("subtitle").setShouldShallowCopy(true)
+        this.slotNamed("note").setShouldShallowCopy(true)
+
+        this.slotNamed("subnodes").setShouldDeepCopy(true)
+        */
     }
 
     init () {
@@ -569,23 +577,29 @@ window.BMNode = class BMNode extends ProtoClass {
         if (!this._isPreparingToAccess) {
             this._isPreparingToAccess = true
 
+            this.prepareToAccess()
+
+            /*
             try {
                 this.prepareToAccess()
             } catch(e) {
                 this._isPreparingToAccess = false
                 throw e
             }
+            */
             
             this._isPreparingToAccess = false
         }
         return this
     }
 
+    /*
     subnodes () {
         this.privatePrepareToAccess() // causes access loop in some situations - use marker?
         //this.subnodes = function() { return this._subnodes }
         return this._subnodes
     }
+    */
 
     indexOfSubnode (aSubnode) {
         return this.subnodes().indexOf(aSubnode);
@@ -1113,15 +1127,6 @@ window.BMNode = class BMNode extends ProtoClass {
 
     // overriding copying protocol from Proto
 
-    shallowCopySlotnames () {
-        const names = super.shallowCopySlotnames()
-        return names.appendItems(["title", "subtitle", "note"])
-    }
-
-    deepCopySlotnames () {
-        const names = super.deepCopySlotnames()
-        return names.appendItems(["subnodes"])
-    }
 
     // storage
 

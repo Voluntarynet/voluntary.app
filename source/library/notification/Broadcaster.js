@@ -11,7 +11,7 @@
 
     Example use:
 
-        // inside a NodeStore
+        // inside a storable node
         init () {
             ...
             Broadcaster.shared().addListenerForName(this, "didChangeStoredSlot")
@@ -25,7 +25,7 @@
             ...
         }
 
-        // inside a NodeStore
+        // inside a persistent store
         didChangeStoredSlot (aSender) {
             this.addDirtyObject(aSender)
         }

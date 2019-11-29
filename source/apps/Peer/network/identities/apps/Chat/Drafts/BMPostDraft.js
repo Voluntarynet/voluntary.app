@@ -12,11 +12,11 @@ window.BMPostDraft = class BMPostDraft extends BMStorableNode {
         this.newSlots({
             content: "",
         })
+        this.protoAddStoredSlots(["content"])
     }
 
     init () {
         super.init()
-        this.addStoredSlots(["content"])
         this.setCanDelete(true)
         //this.setContent("...".loremIpsum(40, 100))	
         this.setShouldStore(true)	

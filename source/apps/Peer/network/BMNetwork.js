@@ -17,7 +17,6 @@ window.BMNetwork = class BMNetwork extends BMFieldSetNode {
             localIdentities: null, // set by parent 
             blacklists: null,
             idsBloomFilter: null,
-            shared: null,
             isOpenRelay: false,
         })
     }
@@ -63,14 +62,6 @@ window.BMNetwork = class BMNetwork extends BMFieldSetNode {
         }
     }
 
-    shared () {   
-        const thisClass = BMNetwork     
-        if (!thisClass._shared) {
-            thisClass._shared = this.clone();
-        }
-        return thisClass._shared;
-    }
-
     connectedRemotePeers  () {
         const remotePeers = []
         this.servers().connectedServers().forEach(function (server) {
@@ -80,9 +71,7 @@ window.BMNetwork = class BMNetwork extends BMFieldSetNode {
     }
     
     connectedRemotePeerCount () {
-        return this.servers().subnodes().sum(function (p) {
-            return p.connectedRemotePeerCount()
-        })
+        return this.servers().subnodes().sum( p => p.connectedRemotePeerCount())
     }
     
     serverCount  () {

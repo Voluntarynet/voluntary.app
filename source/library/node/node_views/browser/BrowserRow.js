@@ -432,8 +432,7 @@ window.BrowserRow = class BrowserRow extends NodeView {
     
     canDelete () {
         if (this.node()) {
-            let canDelete = this.node().canDelete()
-            return canDelete
+            return this.node().canDelete()
         }
         return false
     }
@@ -777,19 +776,11 @@ window.BrowserRow = class BrowserRow extends NodeView {
     // --- dragging source protocol ---
 
     hideForDrag () {
-        //this.debugLog(" hideForDrag")
-        //this.setDisplay("none")
         this.setVisibility("hidden")
-        //this.debugLog(" '" + this.node().title() + "'.hideForDrag() visibility: ", this.visibility())
-        //this.setBorder("1px dashed blue")
     }
 
     unhideForDrag () {
-        //this.debugLog(" unhideForDrag")
-        //this.setDisplay("block")
         this.setVisibility("visible")
-        //this.debugLog(" '" + this.node().title() + "'.unhideForDrag() visibility: ", this.visibility())
-        //this.setBorder(null)
     }
 
     onDragItemBegin (aDragView) {

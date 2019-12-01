@@ -79,7 +79,7 @@ window.BMLocalIdentity = class BMLocalIdentity extends BMKeyPair {
  
     handleObjMsg (objMsg) {
         //this.debugLog(" " + this.name() + " handleObjMsg ", objMsg)
-        let senderId = this.remoteIdentities().idWithPublicKeyString(objMsg.senderPublicKeyString()) 
+        const senderId = this.remoteIdentities().idWithPublicKeyString(objMsg.senderPublicKeyString()) 
         let didHandle = false
 		
         if (senderId) {
@@ -98,13 +98,13 @@ window.BMLocalIdentity = class BMLocalIdentity extends BMKeyPair {
     handleCleartextObjMsg (objMsg) {
         console.log(this.title() + " >>>>>> " + this.typeId() + ".handleCleartextObjMsg(" + objMsg.type() + ") encryptedData:", objMsg.encryptedData(), " data:", objMsg.data())
 		
-        let dict = objMsg.data()
+        const dict = objMsg.data()
         if (dict) {
-            let appMsg = BMAppMessage.fromDataDict(dict)
+            const appMsg = BMAppMessage.fromDataDict(dict)
             //console.log("created ", appMsg.typeId())
 			
             if (appMsg) {
-			    let senderId = this.idForPublicKeyString(objMsg.senderPublicKeyString())
+			    const senderId = this.idForPublicKeyString(objMsg.senderPublicKeyString())
                 appMsg.setSenderId(senderId)
                 appMsg.setObjMsg(objMsg)
                 this.handleAppMsg(appMsg)
@@ -124,7 +124,7 @@ window.BMLocalIdentity = class BMLocalIdentity extends BMKeyPair {
     }
 	
     allIdentitiesMap () { // only uses valid remote identities
-        let ids = ideal.Dictionary.clone()
+        const ids = ideal.Dictionary.clone()
         ids.atPut(this.publicKeyString(), this)
 		
         this.remoteIdentities().subnodes().forEach((rid) => { 
@@ -140,14 +140,14 @@ window.BMLocalIdentity = class BMLocalIdentity extends BMKeyPair {
     }
 	
     shelfSubnodes () {    
-        let chat = this.apps().appNamed("Chat")
+        const chat = this.apps().appNamed("Chat")
 
-        let feed     = chat.feedPosts()
-        let posts    = chat.myPosts()
-        let threads  = chat.threads()
-        let profile = this.profile()
-        let contacts = this.remoteIdentities()
-        let drafts   = chat.drafts()
+        const feed     = chat.feedPosts()
+        const posts    = chat.myPosts()
+        const threads  = chat.threads()
+        const profile = this.profile()
+        const contacts = this.remoteIdentities()
+        const drafts   = chat.drafts()
         
         return [feed, posts, threads, profile, contacts, drafts]
     }

@@ -69,7 +69,9 @@ window.ProtoClass = class ProtoClass {
     }
     
     static initThisClass () {
-        this.prototype.initPrototype()
+        if (this.prototype.hasOwnProperty("initPrototype")) {
+            this.prototype.initPrototype()
+        }
 
         //console.log("initThisClass: ", this)
         if (window.ProtoClass.allClasses().contains(this)) {

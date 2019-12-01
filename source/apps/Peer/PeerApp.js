@@ -66,7 +66,7 @@ window.PeerApp = class PeerApp extends App {
 
         // identities
         this.setLocalIdentities(this.defaultStore().rootInstanceWithPidForProto("_localIdentities", BMLocalIdentities))
-        this.addSubnode(this.localIdentities())
+        this.addSubnode(BMLinkNode.clone().setTitle("My Identities").setLinkedNode(this.localIdentities()))
 
         // about 
 
@@ -78,7 +78,7 @@ window.PeerApp = class PeerApp extends App {
         // network
         this.setNetwork(BMNetwork.shared())
         this.network().setLocalIdentities(this.localIdentities())
-        this.about().addSubnode(this.network())
+        this.addSubnode(BMLinkNode.clone().setTitle("Network").setLinkedNode(this.network()))
 
         // data store
         this.setDataStore(BMDataStore.clone())

@@ -411,6 +411,12 @@ window.BMNode = class BMNode extends ProtoClass {
         return this.addSubnodeAt(aSubnode, this.subnodeCount())
     }
 
+    addLinkSubnode (aNode) {
+        const link = BMLinkNode.clone().setLinkedNode(aNode)
+        this.addSubnode(link)
+        return this
+    }
+
     addSubnodes (subnodes) {
         subnodes.forEach(subnode => this.addSubnode(subnode))
         return this
@@ -442,16 +448,12 @@ window.BMNode = class BMNode extends ProtoClass {
             return false
         }
 
-        /*
         if (this.containsSubnode(aSubnode)) {
             return false
         }
-        */
 
         const ancestors = aSubnode.ancestorTypes()
-        const match = this.acceptedSubnodeTypes().detect(type => 
-            ancestors.contains(type)
-        )
+        const match = this.acceptedSubnodeTypes().detect(type => ancestors.contains(type))
         return !Type.isNullOrUndefined(match)
     }
 
@@ -495,9 +497,9 @@ window.BMNode = class BMNode extends ProtoClass {
 	
     containsSubnode (aSubnode) {
         if (this._subnodeIndex) {
-            return aSubnode.hash() in this._subnodeIndex
+            return this._subnodeIndex.hasOwnProperty(aSubnode.hash()) 
         }
-        return this.subnodes().detect((subnode) => { return subnode.isEqual(aSubnode) })
+        return this.subnodes().detect(subnode => subnode.isEqual(aSubnode))
     }
     
     justRemoveSubnode (aSubnode) { // private method 
@@ -511,7 +513,6 @@ window.BMNode = class BMNode extends ProtoClass {
     }
     
     removeSubnode (aSubnode) {
-        //console.warn(this.typeId() + ".removeSubnode()")
         this.justRemoveSubnode(aSubnode)
 
         if (this._subnodeIndex) {
@@ -538,7 +539,9 @@ window.BMNode = class BMNode extends ProtoClass {
     }
 
     didChangeSubnodeList () {
-        this.sortIfNeeded() // TODO: move to a scheduleSort system - triggered before syncToStore and didUpdateNode?
+        // TODO: Optimize by setting needsSort=true,
+        // and lazy sort next time index is accessed
+        this.sortIfNeeded()
         this.subnodes().forEach(subnode => subnode.didReorderParentSubnodes())
         this.didUpdateNode()
         return this

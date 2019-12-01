@@ -56,6 +56,7 @@ window.BMCreatorNode = class BMCreatorNode extends BMStorableNode {
             "BMTextAreaField",
             "BMTextNode",
             "BMTimeNode",
+            "BMLinkNode",
         ]
     }
 

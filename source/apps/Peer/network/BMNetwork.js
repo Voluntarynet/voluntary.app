@@ -36,10 +36,10 @@ window.BMNetwork = class BMNetwork extends BMFieldSetNode {
         this.addSubnode(this.connection())
 
         this.setServers(this.defaultStore().rootInstanceWithPidForProto("_servers", BMRServers))
-        this.addSubnode(this.servers())
+        this.addSubnode(BMLinkNode.clone().setLinkedNode(this.servers()))
 
         this.setStunServers(this.defaultStore().rootInstanceWithPidForProto("_stunServers", BMStunServers))
-        this.addSubnode(this.stunServers())
+        this.addSubnode(BMLinkNode.clone().setLinkedNode(this.stunServers()))
 						
         this.setMessages(this.defaultStore().rootInstanceWithPidForProto("_messages", BMMessages))
         this.addSubnode(this.messages())

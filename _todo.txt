@@ -1,6 +1,11 @@
 
 TODO:
 
+
+	Change Observation target to sender
+	
+	mode onDidEditNode and other parent messages to have parents listen to subnodes
+	
 	ConstructorA
 		.prototype -> PrototypeA
 						constructor -> ConstructorA

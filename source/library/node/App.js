@@ -26,7 +26,6 @@ window.App = class App extends BMNode {
         //Documentation.shared().show()
         //console.log(ProtoClass.subclassesDescription())
 
-
         this.setNodeStoreDidOpenObs(window.NotificationCenter.shared().newObservation())
         this.nodeStoreDidOpenObs().setName("nodeStoreDidOpen").setObserver(this).setTarget(this.defaultStore())
         this.setIsDebugging(true)
@@ -45,9 +44,7 @@ window.App = class App extends BMNode {
     }
 
     run () {
-
         if (!this.isBrowserCompatible()) {
-            console.log("App showBrowserCompatibilityPanel")
             window.ResourceLoaderPanel.setError("Sorry, this app only works on<br>Chrome, FireFox, and Brave browsers.")
             //this.showBrowserCompatibilityPanel()
             return this

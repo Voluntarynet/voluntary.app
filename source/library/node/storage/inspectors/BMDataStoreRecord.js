@@ -25,7 +25,7 @@ window.BMDataStoreRecord = class BMDataStoreRecord extends BMFieldSetNode {
     }
 
     prepareForFirstAccess () {
-        this.addStoredField(BMTextAreaField.clone().setKey("dict").setValueMethod("dictString").setValueIsEditable(false).setIsMono(true))
+        this.addSubnode(BMTextAreaField.clone().setKey("dict").setValueMethod("dictString").setValueIsEditable(false).setIsMono(true))
     }
 
     valuePid () {
@@ -33,7 +33,7 @@ window.BMDataStoreRecord = class BMDataStoreRecord extends BMFieldSetNode {
     }
 
     value () {
-        return this.defaultStore().sdb().at(this.valuePid())
+        return this.defaultStore().recordsDict().at(this.valuePid())
     }
 
     dictString () {

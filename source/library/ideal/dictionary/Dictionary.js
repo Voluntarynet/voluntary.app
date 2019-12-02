@@ -153,4 +153,15 @@ window.ideal.Dictionary = class Dictionary extends ProtoClass {
         delete m[k];
         return this;
     }
+
+    // extra helpers
+
+    totalBytes () {
+        let byteCount = 0
+        this.jsDict().ownForEachKV((k, v) => {
+            byteCount += k.length + v.length
+        })
+        return byteCount
+    }
+
 }.initThisClass()

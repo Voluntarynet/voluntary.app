@@ -271,9 +271,11 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
     prepareForFirstAccess (aStore = this.defaultStore()) {
         super.prepareForFirstAccess()
 
+        /*
         if (this.subnodesRecord()) {
             this.loadSubnodesRecord()
         }
+        */
         return this
     }
 

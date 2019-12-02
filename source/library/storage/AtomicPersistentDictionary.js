@@ -59,20 +59,21 @@ window.AtomicPersistentDictionary = class AtomicPersistentDictionary extends ide
 	
     onOpen (callback) {
         // load the cache
-        //this.debugLog("" onOpen() - loading cache")
+        this.debugLog(" onOpen() - loading cache")
         
-        //this.clear()
-        //return 
-
-        this.idb().asyncAsJson( (dict) => {
-            //	this.debugLog(" onOpen() - loaded cache")
-            this.setJsDict(dict)
-            this.setIsOpen(true)
-            if (callback) {
-                callback()
-            }
-            //this.verifySync()
-        })
+        if (false) {
+            this.asyncClear(callback)
+        } else {
+            this.idb().asyncAsJson((dict) => {
+                this.debugLog(" onOpen() - loaded cache")
+                this.setJsDict(dict)
+                this.setIsOpen(true)
+                if (callback) {
+                    callback()
+                }
+                //this.verifySync()
+            })
+        }
     }
 	
     assertOpen () {
@@ -82,10 +83,10 @@ window.AtomicPersistentDictionary = class AtomicPersistentDictionary extends ide
 	
     // ----
 		
-    clear () {
+    asyncClear (callback) {
         //throw new Error("AtomicPersistentDictionary clear")
         this.setJsDict({})
-        this.idb().asyncClear() // TODO: lock until callback?
+        this.idb().asyncClear(callback) // TODO: lock until callback?
     }
 		
     // transactions

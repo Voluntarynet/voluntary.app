@@ -2,11 +2,12 @@
 TODO:
 
 
+	subnodes not loading
+
 	change use of "slot" to mean Slot object and replace other uses with "property"
 	
 	need to add stored field in initPrototype and then instantiate it in init
-	
-	
+
 	- is a field basically a slot which an instance owns?
 	
 	Field issues:

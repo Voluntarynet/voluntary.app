@@ -35,20 +35,17 @@ window.Notepad = class Notepad extends App {
         if (false) {
             this.setupAtom()
         } else {
-            
             this.setupModel()
             this.setupViews()
         }
 
         this.appDidInit()
-
         return this
     }
 
     // --- setup model ---
 
     setupModel () {     
-        
         this.defaultStore()
 
         const myLists = this.defaultStore().rootInstanceWithPidForProto("_menuNode", BMMenuNode);

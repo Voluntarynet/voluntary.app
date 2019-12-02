@@ -23,7 +23,8 @@ window.BMDataStore = class BMDataStore extends BMNode {
     }
 
     subtitle () {
-        return this.defaultStore().shortStatsString()
+        const sizeDescription = ByteFormatter.clone().setValue(this.defaultStore().totalBytes()).formattedValue()
+        return sizeDescription
     }
 
     storeHasChanged () {
@@ -43,9 +44,10 @@ window.BMDataStore = class BMDataStore extends BMNode {
     refreshSubnodes () {
         //this.debugLog(" refreshSubnodes")
         this.removeAllSubnodes()
-        this.defaultStore().sdb().keys().sort().forEach((key) => {
+        const dict = this.defaultStore().recordsDict()
+        dict.keys().sort().forEach((key) => {
             const subnode = BMDataStoreRecord.clone().setTitle(key)
-            const size = this.defaultStore().sdb().at(key).length
+            const size = dict.at(key).length
             const sizeDescription = ByteFormatter.clone().setValue(size).formattedValue()
             subnode.setSubtitle(sizeDescription)
             this.addRecord(subnode)

@@ -297,11 +297,13 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
     //
 
     activeLazyPids () { // returns a set of pids
-        const puuids = new Set()
-        this.activeObjects().ownForEachKY((pid, obj) => {
-            obj.lazyPids(puuids)
+        const pids = new Set()
+        this.activeObjects().ownForEachKV((pid, obj) => {
+            if (obj.lazyPids) {
+                obj.lazyPids(pids)
+            }
         })
-        return puuis
+        return pids
     }
 
     // --- references ---
@@ -483,6 +485,11 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
     rootInstanceWithPidForProto (aTitle, aProto) {
         return this.rootObject().subnodeWithTitleIfAbsentInsertClosure(aTitle, () => aProto.clone())
     }
+
+    totalBytes () {
+        return this.recordsDict().totalBytes()
+    }
+
 }.initThisClass()
 
 

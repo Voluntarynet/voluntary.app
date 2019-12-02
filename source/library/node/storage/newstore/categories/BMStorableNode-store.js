@@ -30,7 +30,7 @@ Object.defineSlots(BMStorableNode.prototype, {
     },
     
     loadFromRecord: function(aRecord, aStore) {
-        this.setIsUnserializing(true) 
+        this.setIsUnserializing(true)
         const slots = aRecord.slots
 
         slots.forEach((entry) => {

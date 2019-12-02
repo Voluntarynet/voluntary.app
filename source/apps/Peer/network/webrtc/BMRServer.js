@@ -43,7 +43,7 @@ window.BMRServer = class BMRServer extends BMFieldSetNode {
         this.addStoredField(BMNumberField.clone().setKey("port").setValueMethod("port").setValueIsEditable(true))
         this.addStoredField(BMField.clone().setKey("path").setValueMethod("path"))
         this.addStoredField(BMBooleanField.clone().setKey("isSecure").setValueMethod("isSecure").setValueIsEditable(true))
-        //this.justAddField(BMPointerField.clone().setKey("serverConnection").setValueMethod("serverConnection").)
+        //this.addField(BMPointerField.clone().setKey("serverConnection").setValueMethod("serverConnection").)
         this.addField(BMPointerField.clone().setKey("serverConnection").setValueMethod("serverConnection"))
 		
         this.setConnectButton(BMActionNode.clone().setTitle("connect").setMethodName("connect").setTarget(this))

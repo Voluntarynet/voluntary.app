@@ -412,6 +412,7 @@ window.BMNode = class BMNode extends ProtoClass {
     }
 
     addLinkSubnode (aNode) {
+        assert(aNode.parentNode())
         const link = BMLinkNode.clone().setLinkedNode(aNode)
         this.addSubnode(link)
         return this

@@ -51,22 +51,19 @@ window.BMFieldSetNode = class BMFieldSetNode extends BMStorableNode {
 	
     // --- fields ---
 
-    addStoredField (aField) {
+    protoAddStoredField (aField) {
+        assert(this.isPrototype())
         const name = aField.valueMethod()
         this.addStoredSlot(name)
         if (!this[name]) {
             this.newSlot(name, null)
         }
 
-        this.justAddField(aField)
+        this.addField(aField)
         return aField
     }
 
     addField (aField) {
-        return this.justAddField(aField)
-    }
-	
-    justAddField (aField) {
         aField.setTarget(this)
         this.addSubnode(aField)
         return aField
@@ -86,21 +83,12 @@ window.BMFieldSetNode = class BMFieldSetNode extends BMStorableNode {
         })
     }
     
+    /*
     valueForFieldNamed (aName) {
         return this.fieldNamed(aName).value()
     }
-
-    /*
-    copyFieldsFrom (sourceObj) {
-        this.subnodes().forEach((targetField) => {
-            const sourceField = sourceObj.fieldNamed(targetField.valueMethod())
-            targetField.setValue(sourceField.value())
-            //console.log("target field " + targetField.valueMethod() + " set to '" + targetField.value() + "'")
-        })
-        return this
-    }
     */
-    
+
     onDidEditNode () {
         this.scheduleSyncToStore()
         this.didUpdateNode()

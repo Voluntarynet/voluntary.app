@@ -19,6 +19,8 @@ window.BMNetwork = class BMNetwork extends BMFieldSetNode {
             idsBloomFilter: null,
             isOpenRelay: false,
         })
+
+        this.protoAddStoredField(BMBooleanField.clone().setKey("isOpenRelay").setValueMethod("isOpenRelay").setValueIsEditable(true))
     }
 
     init () {
@@ -36,18 +38,17 @@ window.BMNetwork = class BMNetwork extends BMFieldSetNode {
         this.addSubnode(this.connection())
 
         this.setServers(this.defaultStore().rootInstanceWithPidForProto("_servers", BMRServers))
-        this.addSubnode(BMLinkNode.clone().setLinkedNode(this.servers()))
+        this.addLinkSubnode(this.servers())
 
         this.setStunServers(this.defaultStore().rootInstanceWithPidForProto("_stunServers", BMStunServers))
-        this.addSubnode(BMLinkNode.clone().setLinkedNode(this.stunServers()))
+        this.addLinkSubnode(this.stunServers())
 						
         this.setMessages(this.defaultStore().rootInstanceWithPidForProto("_messages", BMMessages))
-        this.addSubnode(this.messages())
+        this.addLinkSubnode(this.messages())
 		
         this.setBlacklists(this.defaultStore().rootInstanceWithPidForProto("_blacklists", BMBlacklists))
-        this.addSubnode(this.blacklists())
+        this.addLinkSubnode(this.blacklists())
         
-        this.addStoredField(BMBooleanField.clone().setKey("isOpenRelay").setValueMethod("isOpenRelay").setValueIsEditable(true))
 
         this.watchIdentities()
     }

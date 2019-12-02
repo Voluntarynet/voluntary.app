@@ -242,15 +242,3 @@ window.BMField = class BMField extends BMSummaryNode {
     }
     
 }.initThisClass()
-
-
-/*
-valueMethod () {
-    // defaults to key 
-    if (this._valueMethod === null) {
-        return this.key()
-    }
-    
-    return this._valueMethod
-},
-*/

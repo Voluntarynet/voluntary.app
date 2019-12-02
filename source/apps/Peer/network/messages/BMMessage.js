@@ -49,7 +49,7 @@ window.BMMessage = class BMMessage extends BMFieldSetNode {
     prepareForFirstAccess () {
 	    // as this field is only needed when viewing the Message in the browser,
 	    // so create it as needed here instead of in the init method
-        this.justAddField(BMTextAreaField.clone().setKey("dict").setValueMethod("msgDictString").setValueIsEditable(false).setIsMono(true))
+        this.addField(BMTextAreaField.clone().setKey("dict").setValueMethod("msgDictString").setValueIsEditable(false).setIsMono(true))
     }
     
     // dict

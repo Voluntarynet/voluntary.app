@@ -60,9 +60,11 @@ window.ideal.Slot = class Slot {
         // storrage related
         this.simpleNewSlot("isLazy", false) // should hook getter
         this.simpleNewSlot("shouldStore", false) // should hook setter
-        this.simpleNewSlot("initProto", null) // should hook setter
+        this.simpleNewSlot("initProto", null) // clone this proto on init and set to initial value
         //this.simpleNewSlot("shouldShallowCopy", false)
         //this.simpleNewSlot("shouldDeepCopy", false)
+        this.simpleNewSlot("initInstance", null) // clone this instance on init and set to initial value
+
     }
 
     autoSetGetterSetterOwnership () {
@@ -323,9 +325,15 @@ window.ideal.Slot = class Slot {
     }
 
     onInstanceInitSlot (anInstance) {
-        if (this.initProto()) {
+        if (this.initInstance()) {
+            const obj = this.initInstance()
+            const newObj = obj.prototype.clone().copyFrom(obj)
+            this.onInstanceSetValue(anInstance, obj)
+        } else if (this.initProto()) {
             const obj = this.initProto().clone()
             this.onInstanceSetValue(anInstance, obj)
+        } else if (this.initValue()) {
+            this.onInstanceSetValue(anInstance, this.initValue())
         }
     }
     

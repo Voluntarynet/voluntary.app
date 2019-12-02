@@ -38,8 +38,6 @@ window.BMSummaryNode = class BMSummaryNode extends BMStorableNode {
         super.init()
     }
 
-
-
     initNodeInspector () {
         super.initNodeInspector()
         this.addInspectorField(BMStringField.clone().setKey("Summary joiner").setValueMethod("nodeSummaryJoiner").setValueIsEditable(true).setTarget(this))

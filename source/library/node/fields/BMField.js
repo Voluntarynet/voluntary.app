@@ -60,23 +60,27 @@ window.BMField = class BMField extends BMSummaryNode {
 
         //this.protoAddStoredSlot("nodeSummaryShowsKey")
         //this.protoAddStoredSlot("nodeSummaryShowsValue")
+    }
 
-        /*
-        this.addShallowCopySlotNames([
-            "key", "keyIsVisible", "keyIsEditable", 
-            "value", "valueIsVisible","valueIsEditable",
-            "valuePrefix", "valuePostfix",
-            //"valueMethod", "target"
-        ])
-        */
+    duplicate () {
+        const newObject = this.__proto__.clone().copySlotValuesFrom(this) 
+        return newObject
+    }
 
+    copySlotValuesFrom (otherObject) {
+        this.slots().ownForEachKV((slotName, mySlot) => {
+            const otherSlot = otherObject.slotNamed(slotName)
+            const v = otherSlot.onInstanceGetValue(otherObject)
+            mySlot.onInstanceSetValue(this, v)
+        })
+        return this
     }
 
     init () {
         super.init()
         this.setShouldStore(true)
-        //this.setNodeRowStyles(BMViewStyles.sharedBlackOnWhiteStyle())
-        //this.setNodeRowStyles(BMViewStyles.sharedWhiteOnBlackStyle())
+        //this.setNodeRowStyles(BMViewStyles.shared().sharedBlackOnWhiteStyle())
+        //this.setNodeRowStyles(BMViewStyles.shared().sharedWhiteOnBlackStyle())
         //this.customizeNodeRowStyles().setToBlackOnWhite()
         return this
     }
@@ -88,7 +92,6 @@ window.BMField = class BMField extends BMSummaryNode {
         return this
     }
 
-    /*
     target () {
         if (this._target) {
             return this._target
@@ -96,8 +99,6 @@ window.BMField = class BMField extends BMSummaryNode {
 		
         return this.parentNode()
     }
-    */
-
     /*
     setKey (newValue) {
         this._key = newValue

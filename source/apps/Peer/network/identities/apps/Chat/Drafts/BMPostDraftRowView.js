@@ -149,7 +149,7 @@ window.BMPostDraftRowView = class BMPostDraftRowView extends BrowserRow {
 
     // --- edit ---
 
-    onDidEdit  (changedView) {   
+    onDidEdit (changedView) {   
         //this.debugLog(".onDidEdit")
         this.updateSubviews()
         this.scheduleSyncToNode()
@@ -162,7 +162,7 @@ window.BMPostDraftRowView = class BMPostDraftRowView extends BrowserRow {
 
     // --- sync ---
     
-    syncToNode  () {   
+    syncToNode () {   
         //console.log("syncToNode")
         this.node().setContent(this.textContentView().innerHTML())
         //this.node().tellParentNodes("onDidEditNode", this.node())  
@@ -170,7 +170,7 @@ window.BMPostDraftRowView = class BMPostDraftRowView extends BrowserRow {
         return this
     }
 
-    syncFromNode  () {
+    syncFromNode () {
         const node = this.node()
         this.textContentView().setString(node.content())
         this.setIconDataUrl(node.avatarImageDataURL())

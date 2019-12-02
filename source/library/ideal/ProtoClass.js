@@ -53,6 +53,10 @@ window.ProtoClass = class ProtoClass {
         return this
     }
 
+    static hasShared () {
+        return !Type.isUndefined(this.getClassVariable("_shared"))
+    }
+
     static shared () {
         if (!this.getClassVariable("_shared")) {
             this.setClassVariable("_shared", this.clone())
@@ -175,7 +179,7 @@ window.ProtoClass = class ProtoClass {
 
     thisPrototype () {
         assert(this.isInstance())
-        let prototype = this.__proto__
+        const prototype = this.__proto__
         assert(prototype.isPrototype)
         return prototype
     }
@@ -218,7 +222,6 @@ window.ProtoClass = class ProtoClass {
 
     // --- slots ---
 
-
     slotNamed (slotName) {
         assert(this.isPrototype())
         const slots = this.slots()
@@ -250,32 +253,6 @@ window.ProtoClass = class ProtoClass {
         return allSlots
     }
 
-    // shallow copy slots
-
-    /*
-    addShallowCopySlotNames (names) {
-        names.forEach(name => this.slotNamed(name).setShouldShallowCopy(true))
-        return this
-    }
-
-    shallowCopySlotnames () {
-        return this.allSlots().filter(slot => slot.shouldShallowCopy()).map(slot => slot.name()).asSet()
-    }
-    */
-
-    // deep copy slots
-
-    /*
-    addDeepCopySlotNames (names) {
-        names.forEach(name => this.slotNamed(name).setShouldDeepCopy(true))
-        return this
-    }
-
-    deepCopySlotnames () {
-        return this.allSlots().filter(slot => slot.shouldDeepCopy()).map(slot => slot.name()).asSet()
-    }
-    */
-
     // stored slots
 
     storedSlotNames () { // returns a set  
@@ -292,15 +269,8 @@ window.ProtoClass = class ProtoClass {
     
     protoAddStoredSlot (slotName) {
         assert(this.isPrototype())
-        this.slotNamed(slotName).setDoesHookSetter(true).setShouldStore(true)
-        //this.slotNamed(slotName).setDoesHookSetter(true).setShouldStore(true)
+        this.slotNamed(slotName).setShouldStore(true)
         // Note: BMStorableNode hooks didUpdateSlot() to call scheduleSyncToStore on updates. 
-        return this
-    }
-    
-    protoRemoveStoredSlot (slotName) {
-        assert(this.isPrototype())
-        this.slotNamed(slotName).setDoesHookSetter(false).setShouldStore(false)
         return this
     }
 
@@ -364,7 +334,7 @@ window.ProtoClass = class ProtoClass {
     }
 
     setSlots (slots) {
-        Object.eachSlot(slots,  (name, initialValue) => {
+        Object.eachSlot(slots, (name, initialValue) => {
             this.setSlot(name, initialValue);
         });
         return this;
@@ -416,8 +386,8 @@ window.ProtoClass = class ProtoClass {
     init () { 
         // subclasses should override to do initialization
         assert(this.isInstance())
-        let allSlots = this.__proto__.allSlots()
-        allSlots.ownForEachKV((slotName, slot) => { slot.onInstanceInitSlot(this) }) // TODO: use slot cache
+        const allSlots = this.__proto__.allSlots()
+        allSlots.ownForEachKV((slotName, slot) => slot.onInstanceInitSlot(this)) // TODO: use slot cache
     }
 
     toString () {
@@ -426,7 +396,7 @@ window.ProtoClass = class ProtoClass {
 
     /*
     setSlotsIfAbsent (slots) {
-        Object.eachSlot(slots,  (name, value) => {
+        Object.eachSlot(slots, (name, value) => {
             if (!this[name]) {
                 this.setSlot(name, value);
             }
@@ -507,14 +477,14 @@ window.ProtoClass = class ProtoClass {
     */
 
 
-    isKindOf (aProto) { // TODO: test this for ES6 classes
-        if (this.__proto__) {
-            if (this.__proto__ === aProto) {
+    isKindOf (aClass) { 
+        if (this.constructor) {
+            if (this.constructor === aClass) {
                 return true
             }
 
             if (this.__proto__.isKindOf) {
-                return this.__proto__.isKindOf(aProto)
+                return this.__proto__.isKindOf.apply(this.__proto__, aClass)
             }
         }
         return false

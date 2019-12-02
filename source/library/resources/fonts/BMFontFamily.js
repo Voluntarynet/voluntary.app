@@ -26,7 +26,7 @@ window.BMFontFamily = class BMFontFamily extends BMNode {
     }
 
     /*
-    subtitle  () {
+    subtitle () {
         return "font family"
     }
     */

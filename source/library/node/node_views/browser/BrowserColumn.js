@@ -66,7 +66,7 @@ window.BrowserColumn = class BrowserColumn extends NodeView {
         return this.columnGroup().browser()
     }
     
-    columnGroup  () {
+    columnGroup () {
         return this.parentView().parentView()
     }
     
@@ -78,14 +78,14 @@ window.BrowserColumn = class BrowserColumn extends NodeView {
     }
     */
 
-    willAddSubview  (aSubview) {
+    willAddSubview (aSubview) {
         // for subclasses to over-ride
         //if(!this.hasRow(aSubview)) {
         //console.warn("")
         //}
     }
 
-    willRemoveSubview  (aSubview) {
+    willRemoveSubview (aSubview) {
         // for subclasses to over-ride
         //if(!this.hasRow(aSubview)) {
         //console.warn("")
@@ -249,7 +249,7 @@ window.BrowserColumn = class BrowserColumn extends NodeView {
         return this
     }
   
-    indexOfRowWithNode  (aNode) {
+    indexOfRowWithNode (aNode) {
         return this.rows().detectIndex(row => row.node() === aNode)
     }
     
@@ -266,7 +266,7 @@ window.BrowserColumn = class BrowserColumn extends NodeView {
         return this
     }
 	
-    selectRowWithNode  (aNode) {
+    selectRowWithNode (aNode) {
         const selectedRow = this.rows().detect(row => row.node() === aNode)
 		
         if (selectedRow) {
@@ -282,7 +282,7 @@ window.BrowserColumn = class BrowserColumn extends NodeView {
         return selectedRow
     }
     
-    selectedRowTitle  () {
+    selectedRowTitle () {
         const row = this.selectedRow()
         if (row) { 
             return row.title().innerHTML() 
@@ -382,7 +382,7 @@ window.BrowserColumn = class BrowserColumn extends NodeView {
     }
     */
 	
-    syncFromNode  () {
+    syncFromNode () {
         if (this.hasPausedSync()) {
             return this
         }
@@ -765,7 +765,7 @@ window.BrowserColumn = class BrowserColumn extends NodeView {
 
     // editing
 
-    onDoubleClick  (event) {
+    onDoubleClick (event) {
         //this.debugLog(".onDoubleClick()")
         return true
     }
@@ -1259,11 +1259,11 @@ window.BrowserColumn = class BrowserColumn extends NodeView {
 
     // Browser drop from desktop
 
-    acceptsDrop  () {
+    acceptsDrop () {
         return true
     }
 
-    onDrop  (event) {
+    onDrop (event) {
         // triggered on drop target
         if (this.acceptsDrop()) {
             //const file = event.dataTransfer.files[0];

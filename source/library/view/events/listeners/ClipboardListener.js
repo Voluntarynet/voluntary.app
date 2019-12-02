@@ -14,7 +14,7 @@ window.ClipboardListener = class ClipboardListener extends EventSetListener {
         })
     }
 
-    init  () {
+    init () {
         super.init()
         return this
     }

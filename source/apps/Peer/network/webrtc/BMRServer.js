@@ -68,7 +68,7 @@ window.BMRServer = class BMRServer extends BMFieldSetNode {
         }
     }
     
-    servers  () {
+    servers () {
         return this.parentNode()
     }
     
@@ -82,12 +82,12 @@ window.BMRServer = class BMRServer extends BMFieldSetNode {
     }
     */
 
-    title  () {
+    title () {
         //return "RTC Server " + this.host() + "  " + this.port()
         return this.host() + "  " + this.port()
     }
     
-    subtitle  () {
+    subtitle () {
         return this.isConnected() ? this.status() : "offline"
     }
     
@@ -112,7 +112,7 @@ window.BMRServer = class BMRServer extends BMFieldSetNode {
         return this.serverConnection().connectedRemotePeers().length
     }
     
-    connect  () {
+    connect () {
         //this.log("BMRServer.connect")
         this.serverConnection().connect()
         return this              
@@ -132,7 +132,7 @@ window.BMRServer = class BMRServer extends BMFieldSetNode {
         this.serverConnection().requestId();
     }
     
-    isConnected  () {
+    isConnected () {
         return this.serverConnection().isConnected()
     }
     
@@ -162,7 +162,7 @@ window.BMRServer = class BMRServer extends BMFieldSetNode {
                 this.isSecure() === addrDict.isSecure
     }
     
-    connectedRemotePeers  () {
+    connectedRemotePeers () {
         return this.serverConnection().connectedRemotePeers()
     }
 

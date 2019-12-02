@@ -73,7 +73,7 @@ window.BMObjectMessage = class BMObjectMessage extends BMMessage {
         return App.shared().network()
     }
     
-    title  () {
+    title () {
         let h = this.msgHash() ? this.msgHash().slice(0, 4) : "null"
         return this.msgType() + " " + h
     }

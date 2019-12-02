@@ -300,7 +300,7 @@ window.TextField = class TouchLisTextFieldtener extends DomStyledView {
         return this
     }
 
-    onDoubleClick  (event) {
+    onDoubleClick (event) {
         this.debugLog(".onDoubleClick()")
         //this.focus()
         this.selectAll() // looses focus!
@@ -324,7 +324,7 @@ window.TextField = class TouchLisTextFieldtener extends DomStyledView {
         return super.onClick(event)
     }
 
-    didEdit  () {
+    didEdit () {
         super.didEdit()
         return this
     }

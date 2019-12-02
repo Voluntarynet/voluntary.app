@@ -73,7 +73,7 @@ window.BMSummaryNode = class BMSummaryNode extends BMStorableNode {
         return this.subtitle()
     }
 
-    subtitle  () {
+    subtitle () {
         if (this.nodeSubtitleIsChildrenSummary()) {
             return this.childrenSummary()
         }

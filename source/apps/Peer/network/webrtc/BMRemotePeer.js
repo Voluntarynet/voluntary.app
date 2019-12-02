@@ -60,11 +60,11 @@ window.BMRemotePeer = class BMRemotePeer extends BMNode {
         return "RemotePeer " + this.shortId()
     }
     
-    subtitle  () {
+    subtitle () {
         return this.status()
     }
     
-    addMessage  (msg) {
+    addMessage (msg) {
         return this.messages().addSubnode(msg)
     }
 
@@ -101,7 +101,7 @@ window.BMRemotePeer = class BMRemotePeer extends BMNode {
     // --- peer connection options -------------------
     // TODO: move to BMRemotePeer
 	
-    peerConnectionOptions  () {
+    peerConnectionOptions () {
         return { 
             // label: "",
             // metadata: {},
@@ -110,7 +110,7 @@ window.BMRemotePeer = class BMRemotePeer extends BMNode {
         }
     }
 
-    setConn  (aConn) {
+    setConn (aConn) {
         this._conn = aConn
         this.setStatus("connecting...")
         this.log("connecting")
@@ -129,7 +129,7 @@ window.BMRemotePeer = class BMRemotePeer extends BMNode {
         return this
     }
     
-    startConnectTimeout  () {
+    startConnectTimeout () {
         const timeoutSeconds = 45
         setTimeout(() => { 
             if (!this.isConnected()) {
@@ -154,7 +154,7 @@ window.BMRemotePeer = class BMRemotePeer extends BMNode {
         return this 
     }
     
-    isConnected  () {
+    isConnected () {
         return this.status() === "connected"
     }
 

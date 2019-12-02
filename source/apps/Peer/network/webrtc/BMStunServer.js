@@ -31,7 +31,7 @@ window.BMStunServer = class BMStunServer extends BMFieldSetNode {
         this.setNodeMinWidth(500)
     }
 
-    init  () {
+    init () {
         super.init()
         this.addStoredField(BMField.clone().setKey("host").setValueMethod("host")).setValueIsEditable(true)
         this.addStoredField(BMField.clone().setKey("port").setValueMethod("port")).setValueIsEditable(true)
@@ -42,11 +42,11 @@ window.BMStunServer = class BMStunServer extends BMFieldSetNode {
         return this.clone().setHost("127.0.0.1").setPort(3478)
     }
 
-    title  () {
+    title () {
         return this.host() + " " + this.port()
     }
 
-    subtitle  () {
+    subtitle () {
         return this.stunNote()
     }
 	

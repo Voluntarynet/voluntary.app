@@ -44,7 +44,7 @@ window.WebBrowserWindow = class WebBrowserWindow extends ProtoClass {
 
     // prevent window level drop and only allow drop on elements that can handle it
 
-    dropCheck  (event) {
+    dropCheck (event) {
         const element = event.target
         const elementMayWantDrop = element.ondrop
         const view = element._domView
@@ -59,18 +59,18 @@ window.WebBrowserWindow = class WebBrowserWindow extends ProtoClass {
 
     preventDrop () {
         window.addEventListener("dragenter", (e) => { this.dropCheck(e) }, false);
-        window.addEventListener("dragover",  (e) => { this.dropCheck(e) }, false);
-        window.addEventListener("drop",      (e) => { this.dropCheck(e) }, false);
+        window.addEventListener("dragover", (e) => { this.dropCheck(e) }, false);
+        window.addEventListener("drop",     (e) => { this.dropCheck(e) }, false);
         return this
     }
 	
     // attributes
     
-    width  () {
+    width () {
         return window.innerWidth
     }
 
-    height  () {
+    height () {
         return window.innerHeight
     }
     
@@ -78,12 +78,12 @@ window.WebBrowserWindow = class WebBrowserWindow extends ProtoClass {
         return this.width() / this.height()
     }
     
-    setWidth  (w) {
+    setWidth (w) {
         console.warn("warning: WebBrowserWindow.setWidth() unavailable in browser")
         return this
     }
     
-    setHeight  (h) {
+    setHeight (h) {
         console.warn("warning: WebBrowserWindow.setHeight() unavailable in browser")
         return this
     }

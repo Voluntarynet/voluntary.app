@@ -62,7 +62,7 @@ window.CloseButton = class CloseButton extends DomView {
         return this
     }
 
-    onTapComplete  (aGesture) {
+    onTapComplete (aGesture) {
         //this.debugLog(".onTapComplete()")
         if (!this.isEditable()) {
             this.sendActionToTarget()

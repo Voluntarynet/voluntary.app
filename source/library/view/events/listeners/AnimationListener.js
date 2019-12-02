@@ -14,7 +14,7 @@ window.AnimationListener = class AnimationListener extends EventSetListener {
         })
     }
 
-    init  () {
+    init () {
         super.init()
         return this
     }

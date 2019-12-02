@@ -41,7 +41,7 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
     // persistence id - "pid"
     // -----------------------------------------------
 
-    instanceWithPidFromStore  (pid, aStore = this.defaultStore()) { // proto method
+    instanceWithPidFromStore (pid, aStore = this.defaultStore()) { // proto method
         //assert(pid[0] === "_")
         // replace rootInstanceWithPidForProto with this method?
 
@@ -101,7 +101,7 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
         return v
     }
 
-    nodeDictForProperties  (aStore = this.defaultStore()) {
+    nodeDictForProperties (aStore = this.defaultStore()) {
         const dict = {}
         dict.type = this.type()
  
@@ -118,7 +118,7 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
  
     // reading object from store
    
-    setNodeDict  (aDict, aStore = this.defaultStore()) { 
+    setNodeDict (aDict, aStore = this.defaultStore()) { 
 	    //super.setNodeDict(aDict, aStore)
         // TODO: wrap in try {}
         this.setIsUnserializing(true) 
@@ -149,7 +149,7 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
         return true
     }
     
-    setNodeDictForProperties  (aDict, aStore = this.defaultStore()) {
+    setNodeDictForProperties (aDict, aStore = this.defaultStore()) {
         let hadMissingSetter = false 
         Object.keys(aDict).forEach((k) => {
             if(!this.setStoreSlotValue(k, aDict[k], aStore)) {
@@ -164,7 +164,7 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
         return this
     }
 
-    setNodeDictForChildren  (aDict, aStore = this.defaultStore()) {
+    setNodeDictForChildren (aDict, aStore = this.defaultStore()) {
         let newPids = aDict.children
         if (newPids) {
             /*

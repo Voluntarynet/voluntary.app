@@ -95,17 +95,17 @@ window.BMPostMessageRowView = class BMPostMessageRowView extends BrowserRow {
         return this
     }
 
-    clickedIconView  () {
+    clickedIconView () {
         console.log("clickedIconView")
         return this
     }
 
-    addCloseButton  () {
+    addCloseButton () {
         // avoid adding normal BrowserRow closeButtonView
         return this
     }
 
-    setParentView  (aView) {
+    setParentView (aView) {
         // what is this for?
         super.setParentView(aView)
         this.registerForVisibility()
@@ -133,7 +133,7 @@ window.BMPostMessageRowView = class BMPostMessageRowView extends BrowserRow {
     }
     */
 
-    setIconDataUrl  (imageDataUrl) {
+    setIconDataUrl (imageDataUrl) {
         let iv = this.iconView()
 
         if (imageDataUrl) {
@@ -145,7 +145,7 @@ window.BMPostMessageRowView = class BMPostMessageRowView extends BrowserRow {
         return this
     }
 
-    setupContentView  () {
+    setupContentView () {
         let tv = this.textView()
         tv.setMinWidth(50)
         //tv.setPosition("relative")
@@ -157,7 +157,7 @@ window.BMPostMessageRowView = class BMPostMessageRowView extends BrowserRow {
         tv.setFontFamily("AppRegular, sans-serif")
     }
 
-    showButtonNamed  (name) {
+    showButtonNamed (name) {
         // TODO: abstract this into something like a PostAttributeButton 
         let node = this.node()
         let countView = this.perform(name + "CountView")
@@ -180,7 +180,7 @@ window.BMPostMessageRowView = class BMPostMessageRowView extends BrowserRow {
         }
     }
 
-    updateSubviews  () {
+    updateSubviews () {
         super.updateSubviews()
 
         let node = this.node()
@@ -203,20 +203,20 @@ window.BMPostMessageRowView = class BMPostMessageRowView extends BrowserRow {
     // --- edit ---
 
     /*
-    onDidEdit  (changedView) {
+    onDidEdit (changedView) {
         this.debugLog(".onDidEdit")
         this.scheduleSyncToNode()
         return true
     }
     */
 
-    didInput  () {
+    didInput () {
         this.scheduleSyncToNode() //this.syncToNode()
     }
 
     // --- sync ---
 
-    syncToNode  () {
+    syncToNode () {
         //console.log("syncToNode")
         this.node().setContent(this.textView().innerHTML())
         //his.node().tellParentNodes("onDidEditNode", this.node())
@@ -224,7 +224,7 @@ window.BMPostMessageRowView = class BMPostMessageRowView extends BrowserRow {
         return this
     }
 
-    syncFromNode  () {
+    syncFromNode () {
         let node = this.node()
         this.setIconDataUrl(node.avatarImageDataURL())
         this.textView().setString(node.content())
@@ -234,21 +234,21 @@ window.BMPostMessageRowView = class BMPostMessageRowView extends BrowserRow {
 
     // actions
 
-    reply  () {
+    reply () {
         console.log("reply")
         this.node().incrementReplyCount()
         this.scheduleSyncToNode()
         return this
     }
 
-    repost  () {
+    repost () {
         console.log("repost")
         this.node().incrementRepostCount()
         this.scheduleSyncToNode()
         return this
     }
 
-    like  () {
+    like () {
         console.log("like")
         this.node().incrementLikeCount()
         this.scheduleSyncToNode()

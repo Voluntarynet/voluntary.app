@@ -391,7 +391,7 @@ window.BrowserColumnGroup = class BrowserColumnGroup extends NodeView {
 
     // just using this to make debugging easier
 
-    syncFromNode  () {        
+    syncFromNode () {        
         //console.log("BrowserColumnGroup syncFromNode "  + this.node().type())
         this.header().syncFromNode()
         this.column().syncFromNode()

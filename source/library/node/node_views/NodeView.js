@@ -153,7 +153,7 @@ window.NodeView = class NodeView extends DomStyledView {
         return this.node().subnodes()
     }
     
-    syncFromNode  () {
+    syncFromNode () {
         // override this method if the view manages it's own subviews
 
         if (!this.node()) { 
@@ -197,7 +197,7 @@ window.NodeView = class NodeView extends DomStyledView {
         return this
     }
     
-    syncToNode  () {
+    syncToNode () {
         const node = this.node()
         if (node) {
             node.didUpdateNode()
@@ -206,7 +206,7 @@ window.NodeView = class NodeView extends DomStyledView {
         return this
     }
 
-    didUpdateNode  () {
+    didUpdateNode () {
         //this.debugLog(" didUpdateNode " + this.node().type())
         this.scheduleSyncFromNode()
     }

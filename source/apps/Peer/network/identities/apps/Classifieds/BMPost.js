@@ -36,7 +36,7 @@ window.BMPost = class BMPost extends BMStorableNode {
         return this
     }
     
-    postDict  () {
+    postDict () {
         return {
             title: this.title(),
             price: this.price(),
@@ -51,7 +51,7 @@ window.BMPost = class BMPost extends BMStorableNode {
         return this
     }
     
-    send  () {
+    send () {
         this.log("post")
 
         const objMsg = BMObjectMessage.clone()

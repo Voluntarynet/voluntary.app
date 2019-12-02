@@ -87,7 +87,7 @@ window.CSSColor = class CSSColor extends ProtoClass {
         })
     }
     
-    init  () {
+    init () {
         super.init()
         return this
     }

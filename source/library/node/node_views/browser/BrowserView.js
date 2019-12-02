@@ -46,20 +46,20 @@ window.BrowserView = class BrowserView extends NodeView {
         return this
     }
 
-    bgColors  () {
+    bgColors () {
         //return this.bgColorsCool()
         //return this.bgColorsWarm()
         return this.bgColorsGray()
         //return this.bgColorsWhite()
     }
 
-    bgColorsWhite  () {
+    bgColorsWhite () {
         return [
             [255, 255, 255],
         ]
     }
 
-    bgColorsGray  () {
+    bgColorsGray () {
         return [
             //[64/255, 64/255, 64/255],
             [60 / 255, 60 / 255, 60 / 255],
@@ -71,7 +71,7 @@ window.BrowserView = class BrowserView extends NodeView {
         ] //.reversed()
     }
 
-    bgColorsWarm  () {
+    bgColorsWarm () {
         return [
             //[0.412, 0.110, 0.067], // header color
             //[0.867, 0.235, 0.145],
@@ -88,7 +88,7 @@ window.BrowserView = class BrowserView extends NodeView {
         ]
     }
 
-    bgColorsCool  () {
+    bgColorsCool () {
         return [
             [0.118, 0.506, 0.965],
             //[0.118, 0.525, 0.965],
@@ -168,7 +168,7 @@ window.BrowserView = class BrowserView extends NodeView {
     // -------------------
 
 
-    setupDefaultStyles  () {
+    setupDefaultStyles () {
         this.setDefaultColumnStyles(BMViewStyles.clone())
         this.defaultColumnStyles().unselected().setBackgroundColor("white")
         this.defaultColumnStyles().selected().setBackgroundColor("white")
@@ -179,12 +179,12 @@ window.BrowserView = class BrowserView extends NodeView {
         return this
     }
 
-    updateBackground  () {
+    updateBackground () {
         const n = this.activeColumnGroups().length
         this.setBackgroundColor(this.bgColorForIndex(n + 1))
     }
 
-    prepareToSyncToView  () {
+    prepareToSyncToView () {
         //this.debugLog(" prepareToSyncToView")
         super.prepareToSyncToView()
         this.fitColumns()
@@ -193,7 +193,7 @@ window.BrowserView = class BrowserView extends NodeView {
 
     // --- resizing ---------------------------------
 
-    onDocumentResize  (event) {
+    onDocumentResize (event) {
         //this.debugLog(" onDocumentResize")
         this.fitColumns()
         if (this._selectedColumnGroup) {
@@ -202,7 +202,7 @@ window.BrowserView = class BrowserView extends NodeView {
         return this
     }
 
-    updateSingleColumnMode  () {
+    updateSingleColumnMode () {
         //console.log("---")
         //const size = DocumentBody.zoomAdjustedSize()
         //const w = WebBrowserScreen.shared().orientedWidth()
@@ -242,25 +242,25 @@ window.BrowserView = class BrowserView extends NodeView {
 
     // --- columns -------------------------------
 
-    columnGroups  () {
+    columnGroups () {
         return this.subviews().select(subview => subview.isKindOf(BrowserColumnGroup) ) // TODO: is this still neeeded?
     }
 
-    addColumnGroup  (v) {
+    addColumnGroup (v) {
         return this.addSubview(v)
     }
 
-    removeColumnGroup  (v) {
+    removeColumnGroup (v) {
         return this.removeSubview(v)
     }
 
-    columns  () {
+    columns () {
         return this.columnGroups().map((cg) => { return cg.column() })
     }
 
     // --- column background colors ----------------------------
 
-    bgColorForIndex  (i) {
+    bgColorForIndex (i) {
         let colors = this.bgColors()
         const rcolors = this.bgColors().reversed()
         rcolors.removeFirst()
@@ -272,7 +272,7 @@ window.BrowserView = class BrowserView extends NodeView {
         return s
     }
 
-    setupColumnGroupColors  () {
+    setupColumnGroupColors () {
         let i = 0
 
         this.columnGroups().forEach((cg) => {
@@ -302,7 +302,7 @@ window.BrowserView = class BrowserView extends NodeView {
         return this
     }
 
-    activeColumnGroups  () {
+    activeColumnGroups () {
         return this.columnGroups().select(cg => cg.node() !== null)
     }
 
@@ -310,7 +310,7 @@ window.BrowserView = class BrowserView extends NodeView {
         return BrowserColumnGroup.clone().setBrowser(this).colapse()
     }
 
-    setColumnGroupCount  (count) {
+    setColumnGroupCount (count) {
         //this.log("setColumnGroupCount " + count)
         if (count === 0) {
             Error.showCurrentStack()
@@ -357,7 +357,7 @@ window.BrowserView = class BrowserView extends NodeView {
     }
     */
 
-    clearColumnsGroupsAfterIndex  (index) {
+    clearColumnsGroupsAfterIndex (index) {
         const cgs = this.columnGroups()
         for (let i = index + 1; i < cgs.length; i++) {
             const cg = cgs[i]
@@ -374,7 +374,7 @@ window.BrowserView = class BrowserView extends NodeView {
         return this
     }
 
-    clearColumnsGroupsAfter  (selectedCg) {
+    clearColumnsGroupsAfter (selectedCg) {
         const cgs = this.columnGroups()
         const index = cgs.indexOf(selectedCg)
         this.clearColumnsGroupsAfterIndex(index)
@@ -396,13 +396,13 @@ window.BrowserView = class BrowserView extends NodeView {
 
     // --- select column ---------------------------------------
 
-    selectFirstColumn  () {
+    selectFirstColumn () {
         this.selectColumn(this.columns().first())
         return this
     }
 
 
-    updateSelectedColumnTo  (selectedColumn) {
+    updateSelectedColumnTo (selectedColumn) {
         const selectedColumnGroup = selectedColumn.columnGroup()
         this.columnGroups().forEach(cg => cg.setIsSelected(cg === selectedColumnGroup))
         this.syncToHashPath()
@@ -414,7 +414,7 @@ window.BrowserView = class BrowserView extends NodeView {
         return this
     }
 
-    popLastActiveColumn  () {
+    popLastActiveColumn () {
         //console.log("popLastActiveColumn this.activeColumnGroups().length = ", this.activeColumnGroups().length)
         let n = this.activeColumnGroups().length - 1
         if (n < 0) { n = 0; }
@@ -447,7 +447,7 @@ window.BrowserView = class BrowserView extends NodeView {
         return oldCg
     }
 
-    selectColumn  (selectedColumn) {
+    selectColumn (selectedColumn) {
 
         /*
         if (this.selectedColumn() === selectedColumn) {
@@ -510,13 +510,13 @@ window.BrowserView = class BrowserView extends NodeView {
         return this
     }
 
-    didClickRow  (row) {
+    didClickRow (row) {
         console.log("Browser didClickRow ", row)
         // columns intercept this, so we don't get this message anymore
         return true
     }
 
-    syncFromNode  () {
+    syncFromNode () {
         //this.log("syncFromNode")
         const columnGroups = this.columnGroups()
 
@@ -534,7 +534,7 @@ window.BrowserView = class BrowserView extends NodeView {
         return this
     }
 
-    clipToColumnGroup  (cg) {
+    clipToColumnGroup (cg) {
         const index = this.columnGroups().indexOf(cg)
         this.setColumnGroupCount(index + 1)
         return this
@@ -542,19 +542,19 @@ window.BrowserView = class BrowserView extends NodeView {
 
     // --- width --------------------------
 
-    widthOfColumnGroups  () {
+    widthOfColumnGroups () {
         return this.columnGroups().sum(cg => cg.minWidth())
     }
 
     // --- collapsing column groups -----
 
-    lastActiveColumnGroup  () {
+    lastActiveColumnGroup () {
         return this.columnGroups().reversed().detect(cg => cg.column().node() != null)
     }
 
     // --- fitting columns in browser ---------------------------------------------
 
-    fitColumns  () {
+    fitColumns () {
         //this.debugLog(".fitColumns()")
         this.updateSingleColumnMode()
 
@@ -571,12 +571,12 @@ window.BrowserView = class BrowserView extends NodeView {
         return this
     }
 
-    updateBackArrow  () {
+    updateBackArrow () {
         this.columnGroups().forEach(cg => cg.updateBackArrow())
         return this
     }
 
-    makeLastActiveColumnFillRemainingSpace  () {
+    makeLastActiveColumnFillRemainingSpace () {
         // TODO: merge with this code in multi column fit
         const lastActiveCg = this.lastActiveColumnGroup()
         const fillWidth = (this.browserWidth() - this.left()) - this.widthOfUncollapsedColumnsSansLastActive()
@@ -591,7 +591,7 @@ window.BrowserView = class BrowserView extends NodeView {
         return this
     }
 
-    fitForSingleColumn  () {
+    fitForSingleColumn () {
         const lastActiveCg = this.lastActiveColumnGroup()
 
         this.columnGroups().forEach((cg) => {
@@ -612,27 +612,27 @@ window.BrowserView = class BrowserView extends NodeView {
         return this
     }
 
-    uncollapsedColumns  () {
+    uncollapsedColumns () {
         return this.activeColumnGroups().select(cg => !cg.isCollapsed())
     }
 
-    widthOfUncollapsedColumns  () {
+    widthOfUncollapsedColumns () {
         return this.uncollapsedColumns().sum(cg => cg.targetWidth())
     }
 
-    widthOfUncollapsedColumnsSansLastActive  () {
+    widthOfUncollapsedColumnsSansLastActive () {
         const lastActiveCg = this.lastActiveColumnGroup()
         const cgs = this.uncollapsedColumns()
         cgs.remove(lastActiveCg)
         return cgs.sum(cg => cg.targetWidth())
     }
 
-    setShouldShowTitles  (aBool) {
+    setShouldShowTitles (aBool) {
         this.columnGroups().forEach(cg => cg.header().setShouldShowTitle(aBool) )
         return this
     }
 
-    columnDescription  () {
+    columnDescription () {
         let d = this.columnGroups().map((cg) => {
             if (cg.isCollapsed()) { return "" }
             let s = cg.name()
@@ -647,7 +647,7 @@ window.BrowserView = class BrowserView extends NodeView {
     }
 
 
-    fitForMultiColumn  () {
+    fitForMultiColumn () {
         this.updateBackground()
         this.uncollapseAllColumns()
         this.collapseLeftColumnsUntilRightColumnsFit()
@@ -658,7 +658,7 @@ window.BrowserView = class BrowserView extends NodeView {
         return this
     }
 
-    uncollapseAllColumns  () {
+    uncollapseAllColumns () {
         this.columnGroups().forEach((cg) => {
             cg.setIsCollapsed(false)
             //console.log(cg.name() + " targetWidth: " + cg.targetWidth())
@@ -666,7 +666,7 @@ window.BrowserView = class BrowserView extends NodeView {
         return this
     }
 
-    collapseLeftColumnsUntilRightColumnsFit  () {
+    collapseLeftColumnsUntilRightColumnsFit () {
         const lastActiveCg = this.lastActiveColumnGroup()
         const browserWidth = this.browserWidth()
         // collapse columns from left to right until they all fit
@@ -680,7 +680,7 @@ window.BrowserView = class BrowserView extends NodeView {
         return this
     }
 
-    expandLastColumnIfNeeded  () {
+    expandLastColumnIfNeeded () {
         const lastActiveCg = this.lastActiveColumnGroup()
 
         if (lastActiveCg) {
@@ -699,17 +699,17 @@ window.BrowserView = class BrowserView extends NodeView {
 
     // -----------------------------------------------
 
-    browserWidth  () {
+    browserWidth () {
         return this.clientWidth()
     }
 
-    windowWidth  () {
+    windowWidth () {
         return App.shared().mainWindow().width()
     }
 
     // --- node paths -----------------------------
 
-    selectNode  (aNode) {
+    selectNode (aNode) {
         //console.log("selectNode " + aNode.nodePath())
         if (!aNode) {
             console.warn(this.type() + " selectNode called with null argument")
@@ -720,7 +720,7 @@ window.BrowserView = class BrowserView extends NodeView {
         return this
     }
 
-    selectNodePath  (nodePathArray) {
+    selectNodePath (nodePathArray) {
         //this.debugLog(".selectNodePath(" + nodePathArray.map((node) => { return node.title() }).join("/")  + ")")
         //this.debugLog(".selectNodePath() current path: " + this.nodePathString())
         this.setColumnGroupCount(1)
@@ -751,10 +751,10 @@ window.BrowserView = class BrowserView extends NodeView {
         //this.syncFromNode()
     }
 
-    nodeStringPath  () {
+    nodeStringPath () {
     }
 
-    nodePathArray  () {
+    nodePathArray () {
         return this.activeColumnGroups().map((cg) => { return cg.node() })
     }
 
@@ -774,7 +774,7 @@ window.BrowserView = class BrowserView extends NodeView {
         return [];
     }
 
-    nodePathString  () {
+    nodePathString () {
         const lastNode = this.lastNode();
         if (lastNode) {
             return lastNode.nodePathString(); //.map((node) => { return node.title() }).join("/")
@@ -791,7 +791,7 @@ window.BrowserView = class BrowserView extends NodeView {
         return this;
     }
 
-    setNodePathString  (pathString) {
+    setNodePathString (pathString) {
         return this.setNodePathComponents(pathString.split("/"));
     }
 
@@ -806,7 +806,7 @@ window.BrowserView = class BrowserView extends NodeView {
         return this
     }
 
-    syncFromHashPath  () {
+    syncFromHashPath () {
         const hash = WebBrowserWindow.shared().urlHash()
         let j = ""
 
@@ -844,7 +844,7 @@ window.BrowserView = class BrowserView extends NodeView {
         return this
     }
 
-    syncToHashPath  () {
+    syncToHashPath () {
         const hash = JSON.stringify({ path: this.nodePath().map(n => n.title()) });
         WebBrowserWindow.shared().setUrlHash(hash)
         return this

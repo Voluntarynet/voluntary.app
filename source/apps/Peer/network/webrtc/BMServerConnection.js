@@ -102,19 +102,19 @@ window.BMServerConnection = class BMServerConnection extends BMNode {
         return "-"
     }
     
-    subtitle  () {
+    subtitle () {
         return this.status()
     }
     
     /*
-    subnodes  () {
+    subnodes () {
         return this.remotePeers()
     }
     */
 
     // --- server connection --------------------------
 	
-    serverConnectionOptions  () {
+    serverConnectionOptions () {
         //console.log("BMNetwork.shared().stunServers().peerOptionsDict() = ", BMNetwork.shared().stunServers().peerOptionsDict())
         return { 
             host: this.server().host(), 
@@ -156,7 +156,7 @@ window.BMServerConnection = class BMServerConnection extends BMNode {
     }
 
 
-    connect  () {
+    connect () {
         // TODO: add timeout and tell server when it occurs
 
         if (!this.serverConn()) {
@@ -358,7 +358,7 @@ window.BMServerConnection = class BMServerConnection extends BMNode {
 	},
     */
 
-    isConnected  () {
+    isConnected () {
         return this.isOpen()
         //return this.serverConn() !== null
     }
@@ -395,7 +395,7 @@ window.BMServerConnection = class BMServerConnection extends BMNode {
     }
 
     /*    
-    connectToAllPeerIds  () {
+    connectToAllPeerIds () {
         this.peerIds().forEach((peerId) => { this.connectToPeerId(peerId) })
         return this
     }
@@ -422,7 +422,7 @@ window.BMServerConnection = class BMServerConnection extends BMNode {
         }
     }
     
-    connectedRemotePeers  () {
+    connectedRemotePeers () {
         return this.remotePeers().connectedRemotePeers()
     }
 
@@ -430,7 +430,7 @@ window.BMServerConnection = class BMServerConnection extends BMNode {
         return this.remotePeers().connectedRemotePeers().length
     }
 
-    remotePeersCount  () {
+    remotePeersCount () {
         return this.remotePeers().count()
     }
     

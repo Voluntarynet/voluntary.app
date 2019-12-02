@@ -44,12 +44,6 @@ window.AtomicPersistentDictionary = class AtomicPersistentDictionary extends ide
         this.setIdb(IndexedDBFolder.clone())
         this.setIsDebugging(true)
     }
-
-    setName (aName) {
-        this.idb().setPath(aName)
-        return this
-    }
-
     // open
 
     assertAccessible () {
@@ -58,6 +52,7 @@ window.AtomicPersistentDictionary = class AtomicPersistentDictionary extends ide
     }
 
     asyncOpen (callback) {
+        this.idb().setPath(this.name())
         this.idb().asyncOpenIfNeeded( () => this.onOpen(callback) )
         return this
     }

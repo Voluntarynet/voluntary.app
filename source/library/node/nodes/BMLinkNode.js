@@ -31,14 +31,14 @@ window.BMLinkNode = class BMLinkNode extends BMSummaryNode {
         super.init()
     }
 
-    title  () {
+    title () {
         if (Type.isNull(this.label()) && this.linkedNode()) {
             return this.linkedNode().title()
         }
         return this.label()
     }
 
-    setTitle  (aString) {
+    setTitle (aString) {
         this.setLabel(aString)
         return this
     }

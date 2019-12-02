@@ -2,6 +2,17 @@
 
 Object.defineSlots(BMStorableNode, {
 
+    instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store    
+        const proto = window[aRecord.type]
+        const obj = proto.clone()
+        obj.loadFromRecord(aRecord, aStore)
+        return obj
+    },
+
+})
+
+Object.defineSlots(BMStorableNode.prototype, {
+
     recordForStore: function(aStore) { // should only be called by Store
         const aRecord = {
             type: this.type(), 
@@ -17,14 +28,7 @@ Object.defineSlots(BMStorableNode, {
 
         return aRecord
     },
-
-    instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store    
-        const proto = window[aRecord.type]
-        const obj = proto.clone()
-        obj.loadFromRecord(aRecord, aStore)
-        return obj
-    },
-
+    
     loadFromRecord: function(aRecord, aStore) {
         this.setIsUnserializing(true) 
         const slots = aRecord.slots

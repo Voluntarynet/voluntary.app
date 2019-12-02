@@ -28,19 +28,19 @@ window.BMDataStoreRecord = class BMDataStoreRecord extends BMFieldSetNode {
         this.addStoredField(BMTextAreaField.clone().setKey("dict").setValueMethod("dictString").setValueIsEditable(false).setIsMono(true))
     }
 
-    valuePid  () {
+    valuePid () {
         return this.title()
     }
 
-    value  () {
+    value () {
         return this.defaultStore().sdb().at(this.valuePid())
     }
 
-    dictString  () {
+    dictString () {
         return JSON.stringify(JSON.parse(this.value()), null, 2)
     }
 
-    delete  () {
+    delete () {
         super.delete()
         //this.defaultStore().justRemoveObject(this.value())
         this.defaultStore().justRemovePid(this.valuePid())

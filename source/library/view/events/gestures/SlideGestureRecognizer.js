@@ -104,7 +104,7 @@ window.SlideGestureRecognizer = class SlideGestureRecognizer extends GestureReco
 
     // -----------
 
-    onUp  (event) {
+    onUp (event) {
         super.onUp(event)
 
         if (this.isPressing()) {
@@ -142,10 +142,10 @@ window.SlideGestureRecognizer = class SlideGestureRecognizer extends GestureReco
         let dp = this.diffPos()
 
         let funcs = {
-            left:  (dx, dy) => dy,
+            left: (dx, dy) => dy,
             right: (dx, dy) => dy,
-            up:    (dx, dy) => dx,
-            down:  (dx, dy) => dx
+            up: (dx, dy) => dx,
+            down: (dx, dy) => dx
         }
 
         let r = Math.abs(funcs[this.direction()](dp.x(), dp.y())) > m
@@ -157,10 +157,10 @@ window.SlideGestureRecognizer = class SlideGestureRecognizer extends GestureReco
         let dp = this.diffPos()
 
         let funcs = {
-            left:  (dx, dy) => -dx,
+            left: (dx, dy) => -dx,
             right: (dx, dy) =>  dx,
-            up:    (dx, dy) =>  dy,
-            down:  (dx, dy) => -dy
+            up: (dx, dy) =>  dy,
+            down: (dx, dy) => -dy
         }
 
         let r = funcs[this.direction()](dp.x(), dp.y()) > m
@@ -180,10 +180,10 @@ window.SlideGestureRecognizer = class SlideGestureRecognizer extends GestureReco
         let dx = p.x()
         let dy = p.y()
         let funcs = {
-            left:  (p) => p.setX(Math.min(dx, 0)),
+            left: (p) => p.setX(Math.min(dx, 0)),
             right: (p) => p.setX(Math.max(dx, 0)),
-            up:    (p) => p.setY(Math.max(dy, 0)),
-            down:  (p) => p.setY(Math.min(dy, 0))
+            up: (p) => p.setY(Math.max(dy, 0)),
+            down: (p) => p.setY(Math.min(dy, 0))
         }
 
         funcs[this.direction()](p)
@@ -195,10 +195,10 @@ window.SlideGestureRecognizer = class SlideGestureRecognizer extends GestureReco
         let dx = p.x()
         let dy = p.y()
         let funcs = {
-            left:  (dx, dy) => dx,
+            left: (dx, dy) => dx,
             right: (dx, dy) => dx,
-            up:    (dx, dy) => dy,
-            down:  (dx, dy) => dy
+            up: (dx, dy) => dy,
+            down: (dx, dy) => dy
         }
         return Math.abs(funcs[this.direction()](dx, dy))
     }

@@ -84,7 +84,7 @@ window.LongPressGestureRecognizer = class LongPressGestureRecognizer extends Ges
 
     // -- single action for mouse and touch up/down ---
 
-    onDown  (event) {
+    onDown (event) {
         super.onDown(event)
         
         const isWithin = this.currentEventIsOnTargetView();
@@ -97,7 +97,7 @@ window.LongPressGestureRecognizer = class LongPressGestureRecognizer extends Ges
         }
     }
 
-    onMove  (event) {
+    onMove (event) {
         super.onMove(event)
     
         if (this.hasTimer()) { // TODO: also check move distance?
@@ -110,7 +110,7 @@ window.LongPressGestureRecognizer = class LongPressGestureRecognizer extends Ges
 
     }
 
-    onUp  (event) {
+    onUp (event) {
         super.onUp(event)
 
         if (this.hasTimer()) {

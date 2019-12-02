@@ -53,7 +53,7 @@ window.ImageView = class ImageView extends NodeView {
     }
 
     
-    setEditable  (aBool) {
+    setEditable (aBool) {
 
         return this
     }

@@ -45,7 +45,7 @@ window.GamePadManager = class GamePadManager extends ProtoClass {
     }
     */
 
-    init  () {
+    init () {
         super.init()
         this.setIsDebugging(true)
         this.setGamePadsDict({})

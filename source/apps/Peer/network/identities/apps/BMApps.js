@@ -22,36 +22,36 @@ window.BMApps = class BMApps extends BMStorableNode {
         this.addApps()
     }
 
-    didLoadFromStore  () {
+    didLoadFromStore () {
         this.addApps()
         return this
     }
 
-    appProtos  () {
+    appProtos () {
         return [BMChat] //BMMail, BMTwitter, BMGroupChat] //, BMChat, BMClassifieds, BMBitcoinWallet]
     }
 
-    addApps  () {
+    addApps () {
         this.addAnyMisingApps()
         this.removeAnyExtraApps()
         return this
     }
 
-    removeAnyExtraApps  () {
+    removeAnyExtraApps () {
         // remove any apps not in appProtos
         const types = this.appProtos().map(proto => proto.type())
         const matches = this.apps().filter(app => types.contains(app.type()) )
         this.setSubnodes(matches)
     }
 
-    addAnyMisingApps  () {
+    addAnyMisingApps () {
         this.appProtos().forEach((appProto) => {
             this.addAppTypeIfMissing(appProto)
         })
         return this
     }
 
-    addAppTypeIfMissing  (appProto) {
+    addAppTypeIfMissing (appProto) {
         //this.debugLog(".addAppTypeIfMissing(" + appProto.type() + ")")
         if (this.hasAppType(appProto) === false) {
             this.addSubnode(appProto.clone())
@@ -59,19 +59,19 @@ window.BMApps = class BMApps extends BMStorableNode {
         return this
     }
 
-    hasAppType  (appProto) {
+    hasAppType (appProto) {
         return this.apps().detect(app => app.type() === appProto.type()) != null
     }
 
-    apps  () {
+    apps () {
         return this.subnodes()
     }
 
-    appNamed  (name) {
+    appNamed (name) {
         return this.firstSubnodeWithTitle(name)
     }
 
-    handleAppMsg  (aMessage) {
+    handleAppMsg (aMessage) {
         this.subnodes().forEach(app => app.handleAppMsg(aMessage) )
     }
     

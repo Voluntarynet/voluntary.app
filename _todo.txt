@@ -2,6 +2,27 @@
 TODO:
 
 
+	change use of "slot" to mean Slot object and replace other uses with "property"
+	
+	need to add stored field in initPrototype and then instantiate it in init
+	
+	
+	- is a field basically a slot which an instance owns?
+	
+	Field issues:
+	
+		- initPrototype
+			- add slot
+				- set to shouldStore
+				- set initInstance // fields aren't an initInstance - the value is stored in the slot, field is a subnode
+					- init and setup Field
+		- init
+			- Slot.onInstanceInitSlot
+				- init new instance of field
+				- add new instance as subnode ???
+		
+	
+
 	Change Observation target to sender
 	
 	mode onDidEditNode and other parent messages to have parents listen to subnodes

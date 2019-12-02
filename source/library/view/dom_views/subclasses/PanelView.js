@@ -83,7 +83,7 @@ window.PanelView = class PanelView extends DomView {
         }
     }
 
-    onMouseDown  (event) {
+    onMouseDown (event) {
         //console.log("onMouseDown")
         this.setIsDragging(true)
 
@@ -95,7 +95,7 @@ window.PanelView = class PanelView extends DomView {
         this._startClientY = event.clientY
     }
 
-    onMouseMove  (event) {
+    onMouseMove (event) {
     }
 
     onMouseUp (event) {

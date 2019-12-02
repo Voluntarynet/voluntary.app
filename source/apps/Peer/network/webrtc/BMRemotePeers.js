@@ -71,7 +71,7 @@ window.BMRemotePeers = class BMRemotePeers extends BMNode {
         return peer
     }
     
-    connectToMatchingPeerIds  () {
+    connectToMatchingPeerIds () {
         this.subnodes().forEach((remotePeer) => { 
             // TODO: add max connections limit? 
             // have peer limit overly friendly blooms?
@@ -80,7 +80,7 @@ window.BMRemotePeers = class BMRemotePeers extends BMNode {
         return this
     }
 
-    connectedRemotePeers  () {
+    connectedRemotePeers () {
         return this.subnodes().filter(p => p.isConnected())
     }
 

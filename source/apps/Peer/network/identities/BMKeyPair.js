@@ -26,7 +26,7 @@ window.BMKeyPair = class BMKeyPair extends BMStorableNode {
         this.generatePrivateKey()
     }
     
-    title  () {
+    title () {
         return this.publicKeyString()
     }
     
@@ -48,14 +48,14 @@ window.BMKeyPair = class BMKeyPair extends BMStorableNode {
         return null
     }
 
-    publicKey  () {
+    publicKey () {
         if (this.privateKey()) {
 	        return this.privateKey().toPublicKey()
         }
         return null
     }
 
-    publicKeyString  () {
+    publicKeyString () {
         if (this.publicKey()) {
 	        return this.publicKey().toString()
         }

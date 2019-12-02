@@ -83,14 +83,14 @@ window.BMRemoteIdentity = class BMRemoteIdentity extends BMStorableNode {
         //this.debugLog(" didLoadFromStore")
     }
     
-    title  () {
+    title () {
         if (this.name() === "") {
             return "Untitled"
         }
         return this.name()
     }
 
-    setTitle  (s) {
+    setTitle (s) {
         this.setName(s)
         return this
     }

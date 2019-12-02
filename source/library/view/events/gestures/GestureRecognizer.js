@@ -395,7 +395,7 @@ window.GestureRecognizer = class GestureRecognizer extends ProtoClass {
         this.onEvent(event)
     }
 
-    onDown  (event) {
+    onDown (event) {
         this.setDownEvent(event)
         this.setCurrentEvent(event)
         this.onEvent(event)
@@ -406,7 +406,7 @@ window.GestureRecognizer = class GestureRecognizer extends ProtoClass {
         this.onEvent(event)
     }
 
-    onUp  (event) {
+    onUp (event) {
         this.setUpEvent(event)
         //this.setCurrentEvent(event) // on Windows, the up event may not have any positions
         this.onEvent(event)
@@ -440,7 +440,7 @@ window.GestureRecognizer = class GestureRecognizer extends ProtoClass {
         return this
     }
 
-    onMouseDown  (event) {        
+    onMouseDown (event) {        
         this.emulateDownIfNeeded(event)
         this.setDownEvent(event)
         this.onDown(event)
@@ -460,40 +460,40 @@ window.GestureRecognizer = class GestureRecognizer extends ProtoClass {
         return this
     }
 
-    onMouseMove  (event) {
+    onMouseMove (event) {
         this.emulateMoveIfNeeded(event)
         this.onMove(event)
     }
 
-    onMouseUp  (event) {
+    onMouseUp (event) {
         this.onUp(event)
     }
 
-    onMouseLeave  (event) {
+    onMouseLeave (event) {
         this.onLeave(event)
     }
 
     // mouse capture events
 
-    onMouseOverCapture  (event) {
+    onMouseOverCapture (event) {
         this.onOver(event)
     }
 
-    onMouseDownCapture  (event) {
+    onMouseDownCapture (event) {
         this.emulateDownIfNeeded(event)
         this.onDown(event)
     }
 
-    onMouseMoveCapture  (event) {
+    onMouseMoveCapture (event) {
         this.emulateMoveIfNeeded(event)
         this.onMove(event)
     }
 
-    onMouseUpCapture  (event) {
+    onMouseUpCapture (event) {
         this.onUp(event)
     }
 
-    onMouseLeaveCapture  (event) {
+    onMouseLeaveCapture (event) {
         this.onLeave(event)
     }
 
@@ -503,7 +503,7 @@ window.GestureRecognizer = class GestureRecognizer extends ProtoClass {
         this.onDown(event)
     }
 
-    onTouchMove  (event) {
+    onTouchMove (event) {
         this.onMove(event)
     }
 
@@ -522,7 +522,7 @@ window.GestureRecognizer = class GestureRecognizer extends ProtoClass {
         this.onDown(event)
     }
 
-    onTouchMoveCapture  (event) {
+    onTouchMoveCapture (event) {
         this.onMove(event)
     }
 
@@ -546,12 +546,12 @@ window.GestureRecognizer = class GestureRecognizer extends ProtoClass {
         const dx = Math.abs(dp.x())
         const dy = Math.abs(dp.y())
         const funcs = {
-            left:  (dx, dy) => dx,
+            left: (dx, dy) => dx,
             right: (dx, dy) => dx,
-            up:    (dx, dy) => dy,
-            down:  (dx, dy) => dy,
-            x:     (dx, dy) => dx,
-            y:     (dx, dy) => dy
+            up: (dx, dy) => dy,
+            down: (dx, dy) => dy,
+            x: (dx, dy) => dx,
+            y: (dx, dy) => dy
         }
         return funcs[this.direction()](dx, dy)
     }

@@ -29,7 +29,7 @@ window.Notepad = class Notepad extends App {
         return this
     } 
 
-    setup  () {
+    setup () {
         super.setup()        
 
         if (false) {
@@ -47,7 +47,7 @@ window.Notepad = class Notepad extends App {
 
     // --- setup model ---
 
-    setupModel  () {     
+    setupModel () {     
         
         this.defaultStore()
 
@@ -100,7 +100,7 @@ window.Notepad = class Notepad extends App {
         return this
     }
 
-    appDidInit  () {
+    appDidInit () {
         super.appDidInit()
         
         // ResourceLoaderPanel can't use notification as it's a boot object

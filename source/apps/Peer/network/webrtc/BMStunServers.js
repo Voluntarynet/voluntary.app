@@ -36,11 +36,11 @@ window.BMStunServers = class BMStunServers extends BMStorableNode {
         }		
     }
     
-    addServer  (aServer) {
+    addServer (aServer) {
         return this.addSubnode(aServer)
     }
     
-    servers  () {
+    servers () {
         return this.subnodes()
     }
 
@@ -69,7 +69,7 @@ window.BMStunServers = class BMStunServers extends BMStorableNode {
         ]}	
     }
 
-    bootStrapServers  (dict) {
+    bootStrapServers (dict) {
         const dicts = this.defaultOptions().iceServers
         return dicts.map((dict) => {
         	return BMStunServer.clone().setIceDict(dict) 

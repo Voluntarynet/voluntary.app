@@ -50,7 +50,7 @@ window.AtomApp = class AtomApp extends App {
         return true
     }
 
-    appDidInit  () {
+    appDidInit () {
         super.appDidInit()
         window.ResourceLoaderPanel.stop() 
     }

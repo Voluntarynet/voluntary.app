@@ -125,7 +125,7 @@ window.BMRegion = class BMRegion extends BMNode {
         return pathString
     }
 	
-    add  () {  
+    add () {  
         /*
         let sell = BMSell.clone()
         App.shared().sells().addSubnode(sell)

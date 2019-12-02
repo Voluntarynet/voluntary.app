@@ -79,7 +79,7 @@ window.BMAppMessage = class BMAppMessage extends BMFieldSetNode {
         return !this.isSent()
     }
 
-    sendToRemoteId  (rid) {
+    sendToRemoteId (rid) {
         //console.log("rid = ", rid.typeId())
         const lid = rid.localIdentity()
         this.setSenderId(lid)
@@ -137,7 +137,7 @@ window.BMAppMessage = class BMAppMessage extends BMFieldSetNode {
 	
     // --- public posts ----
 	
-    postFromSender  (lid) {
+    postFromSender (lid) {
         this.setSenderId(lid)
         
         const objMsg = BMObjectMessage.clone()

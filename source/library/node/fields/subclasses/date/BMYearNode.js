@@ -38,7 +38,7 @@ window.BMYearNode = class BMYearNode extends BMNode {
         return true;
     }
     
-    prepareToAccess  () {
+    prepareToAccess () {
         //console.log("this.storeHasChanged() = ", this.storeHasChanged())
         if (this.subnodeCount() === 0) {
             //this.refreshSubnodes()

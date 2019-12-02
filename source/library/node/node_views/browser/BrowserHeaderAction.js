@@ -51,7 +51,7 @@ window.BrowserHeaderAction = class BrowserHeaderAction extends NodeView {
         return this
     }
 	
-    updateImage  () {
+    updateImage () {
         this.setBackgroundImageUrlPath(this.pathForIconName(this.action()))
         this.setBackgroundSizeWH(10, 10) // use "contain" instead?
         this.setBackgroundPosition("center")
@@ -66,7 +66,7 @@ window.BrowserHeaderAction = class BrowserHeaderAction extends NodeView {
         return this
     }
 
-    onTapComplete  (aGesture) {
+    onTapComplete (aGesture) {
         //this.debugLog(".onTapComplete()")
         this.sendActionToTarget()
         return false

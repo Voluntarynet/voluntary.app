@@ -146,7 +146,7 @@ window.DragBarView = class DragBarView extends DomView {
         return this
     }
 
-    onMouseDown  (event) {
+    onMouseDown (event) {
         //this.debugLog(" onMouseDown")
         this.setIsDragging(true)
 
@@ -168,7 +168,7 @@ window.DragBarView = class DragBarView extends DomView {
         return this
     }
 
-    onMouseMove  (event) {
+    onMouseMove (event) {
         return false
     }
 

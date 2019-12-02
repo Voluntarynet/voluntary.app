@@ -22,8 +22,8 @@ window.BrowserFieldRow = class BrowserFieldRow extends BrowserRow {
         this.makeCursorDefault()
         this.setSpellCheck(false)
 		
-        //this.setStyles(BMViewStyles.sharedBlackOnWhiteStyle())
-        //this.setStyles(BMViewStyles.sharedWhiteOnBlackStyle())
+        //this.setStyles(BMViewStyles.shared().sharedBlackOnWhiteStyle())
+        //this.setStyles(BMViewStyles.shared().sharedWhiteOnBlackStyle())
 
         return this
     }

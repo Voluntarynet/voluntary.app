@@ -66,11 +66,11 @@ window.BMMenuNode = class BMMenuNode extends BMSummaryNode {
         return this
     }
 
-    title  () {
+    title () {
         return this.label()
     }
 
-    setTitle  (aString) {
+    setTitle (aString) {
         this.setLabel(aString)
         //this.tellParentNodes("onDidEditNode", this)
         return this
@@ -96,7 +96,7 @@ window.BMMenuNode = class BMMenuNode extends BMSummaryNode {
     */
 
     /*
-    colorPairForDepth  (depthNumber) {
+    colorPairForDepth (depthNumber) {
         if (depthNumber % 2 === 1) {
             return [CSSColor.redColor(), CSSColor.yellowColor()]
         }
@@ -104,7 +104,7 @@ window.BMMenuNode = class BMMenuNode extends BMSummaryNode {
         return [CSSColor.blueColor(), CSSColor.blueColor().copy().lighten(0.75)]
     }
 
-    nodeBackgroundColorObject  () {
+    nodeBackgroundColorObject () {
         if (!this.parentNode()) {
             return CSSColor.whiteColor()
         }
@@ -119,7 +119,7 @@ window.BMMenuNode = class BMMenuNode extends BMSummaryNode {
         return c
     }
 
-    nodeRowStyles  () {
+    nodeRowStyles () {
         // const nextColor = this.colorPairForDepth(this.nodeDepth()+1)[0]
         if (!this._nodeRowStyles) {
             this.customizeNodeRowStyles()
@@ -154,17 +154,17 @@ window.BMMenuNode = class BMMenuNode extends BMSummaryNode {
         return "&gt;"
     }
 
-    didChangeParentNode  () {
+    didChangeParentNode () {
         this.scheduleSyncToView()
     }
 
     /*
-    isFlexRoot  () {
+    isFlexRoot () {
         return this.parentNode() && (this.parentNode().type() !== this.type())
     }
     */
 
-    onDidEditNode  (aNode) {
+    onDidEditNode (aNode) {
         /*
         if (this.parentNode() && this.isFlexRoot() && !this.isLoadingFromJSON()) {
             //const json = this.asJSON()
@@ -190,7 +190,7 @@ window.BMMenuNode = class BMMenuNode extends BMSummaryNode {
     */
 
     /*
-    didChangeParentNode  () {
+    didChangeParentNode () {
         super.didChangeParentNode()
         if (this.isFlexRoot()) {
             this.removeAction("delete")

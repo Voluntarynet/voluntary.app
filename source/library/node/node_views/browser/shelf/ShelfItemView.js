@@ -131,7 +131,7 @@ window.ShelfItemView = class ShelfItemView extends NodeView {
     }
     
     /*
-    shelf  () {
+    shelf () {
         return this.parentView()
     }
     */
@@ -160,7 +160,7 @@ window.ShelfItemView = class ShelfItemView extends NodeView {
     
     // --- selecting ---
     
-    onClick  (event) {
+    onClick (event) {
         super.onClick(event)
 
         //console.log(this.name() + ".onClick()")

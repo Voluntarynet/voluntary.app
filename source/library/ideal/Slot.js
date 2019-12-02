@@ -63,8 +63,8 @@ window.ideal.Slot = class Slot {
         this.simpleNewSlot("initProto", null) // clone this proto on init and set to initial value
         //this.simpleNewSlot("shouldShallowCopy", false)
         //this.simpleNewSlot("shouldDeepCopy", false)
-        this.simpleNewSlot("initInstance", null) // clone this instance on init and set to initial value
-
+        //this.simpleNewSlot("initInstance", null) // clone this instance on init and set to initial value
+        this.simpleNewSlot("field", null)
     }
 
     autoSetGetterSetterOwnership () {
@@ -92,6 +92,9 @@ window.ideal.Slot = class Slot {
     setShouldStore (aBool) {
         if (this._shouldStore !== aBool) {
             this._shouldStore = aBool
+            if (aBool) {
+                this.setDoesHookSetter(true) // TODO: is there a better way?
+            }
             this.onChangedAttribute()
         }
         return this
@@ -325,19 +328,31 @@ window.ideal.Slot = class Slot {
     }
 
     onInstanceInitSlot (anInstance) {
+        /*
         if (this.initInstance()) {
             const obj = this.initInstance()
             const newObj = obj.prototype.clone().copyFrom(obj)
-            this.onInstanceSetValue(anInstance, obj)
-        } else if (this.initProto()) {
+            this.onInstanceSetValue(anInstance, newObj)
+        } else 
+        */
+
+        if (this.initProto()) {
             const obj = this.initProto().clone()
             this.onInstanceSetValue(anInstance, obj)
         } else if (this.initValue()) {
             this.onInstanceSetValue(anInstance, this.initValue())
         }
+
+        if (this.field()) {
+            // duplicate the field instance owned by the slot,
+            // add it as a subnode to the instance,
+            // and sync it to the instance's slot value
+            const newField = this.field().duplicate()
+            anInstance.addSubnode(newField)
+            newField.getValueFromTarget()
+        }
     }
     
-
 }
 
 

@@ -22,7 +22,7 @@ window.BMDataStore = class BMDataStore extends BMNode {
         this.setNodeMinWidth(300)
     }
 
-    subtitle  () {
+    subtitle () {
         return this.defaultStore().shortStatsString()
     }
 
@@ -30,7 +30,7 @@ window.BMDataStore = class BMDataStore extends BMNode {
         return this.defaultStore().lastSyncTime() !== this.lastSyncTime()
     }
 
-    prepareToSyncToView  () {
+    prepareToSyncToView () {
         //console.log("this.storeHasChanged() = ", this.storeHasChanged())
 
         if (this.subnodeCount() === 0 || this.storeHasChanged()) {
@@ -40,7 +40,7 @@ window.BMDataStore = class BMDataStore extends BMNode {
         }
     }
 
-    refreshSubnodes  () {
+    refreshSubnodes () {
         //this.debugLog(" refreshSubnodes")
         this.removeAllSubnodes()
         this.defaultStore().sdb().keys().sort().forEach((key) => {
@@ -52,7 +52,7 @@ window.BMDataStore = class BMDataStore extends BMNode {
         })
     }
 
-    subnodeForClassName  (aClassName) {
+    subnodeForClassName (aClassName) {
         let subnode = this.firstSubnodeWithTitle(aClassName)
         if (!subnode) {
             subnode = BMNode.clone().setTitle(aClassName).setNoteIsSubnodeCount(true)
@@ -61,7 +61,7 @@ window.BMDataStore = class BMDataStore extends BMNode {
         return subnode
     }
 
-    addRecord  (aRecord) {
+    addRecord (aRecord) {
         let className = aRecord.title().split("_").first()
 
         if (className === "") {

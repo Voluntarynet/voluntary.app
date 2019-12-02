@@ -12,7 +12,7 @@ window.Device = class Device extends ProtoClass {
         })
     }
 
-    init  () {
+    init () {
         super.init()
         return this
     }

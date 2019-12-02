@@ -28,7 +28,7 @@ window.EventSetListener = class EventSetListener extends ProtoClass {
         })
     }
 
-    init  () {
+    init () {
         super.init()
         this.setEventsDict({})
         this.setupEventsDict()

@@ -32,7 +32,7 @@ window.GameApp = class GameApp extends App {
         return this
     } 
 
-    setup  () {
+    setup () {
         super.setup()        
 
         if (false) {
@@ -56,7 +56,7 @@ window.GameApp = class GameApp extends App {
 
     // --- setup model ---
 
-    setupModel  () {
+    setupModel () {
 
         // about 
 
@@ -119,7 +119,7 @@ window.GameApp = class GameApp extends App {
         return this        
     }
 
-    appDidInit  () {
+    appDidInit () {
         super.appDidInit()
         window.ResourceLoaderPanel.stop() 
     }

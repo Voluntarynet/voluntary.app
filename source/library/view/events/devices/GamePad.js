@@ -22,7 +22,7 @@ window.GamePad = class GamePad extends Device {
         })
     }
 
-    init  () {
+    init () {
         super.init()
         this.setButtons([])
         this.setAxes([])

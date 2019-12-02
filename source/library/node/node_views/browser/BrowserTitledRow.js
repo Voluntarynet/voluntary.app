@@ -111,7 +111,7 @@ window.BrowserTitledRow = class BrowserTitledRow extends BrowserRow {
 
     // --- sync ---
 
-    syncToNode  () {   
+    syncToNode () {   
         //console.log("syncToNode")
         const node = this.node()
         node.setTitle(this.titleView().innerText())
@@ -121,7 +121,7 @@ window.BrowserTitledRow = class BrowserTitledRow extends BrowserRow {
         return this
     }
 
-    syncFromNode  () {
+    syncFromNode () {
         const node = this.node()
         this.titleView().setString(node.title())
         this.subtitleView().setString(node.subtitle())

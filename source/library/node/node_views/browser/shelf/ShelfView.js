@@ -76,7 +76,7 @@ window.ShelfView = class ShelfView extends NodeView {
 	    this.scheduleSyncFromNode()
     }
     
-    syncFromNode  () {
+    syncFromNode () {
         this.scrollView().syncFromNode()
 
         if (this.needsToSelectLastItem()) {

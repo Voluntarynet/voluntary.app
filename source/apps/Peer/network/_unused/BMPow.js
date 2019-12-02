@@ -94,7 +94,7 @@ window.BMPow = class BMPow extends ProtoClass {
         return "generate level " + this.highlightString(this.targetDifficulty()) + " stamp in about " + this.estimateTimeDescription() + ""
     }
     
-    asyncFind  () {
+    asyncFind () {
         this.setStatus("starting")
         const currentTime = new Date().getTime()
         this.setAsyncEndTime(currentTime + this.asyncTimeoutPeriod())
@@ -198,7 +198,7 @@ window.BMPow = class BMPow extends ProtoClass {
         return this.estimatedTriesForTargetDifficulty() / BMPow.globalEstimateTriesPerMs()
     }
 
-    highlightString  (s) { 
+    highlightString (s) { 
         return "<span style='color:#444;'>" + s + "</span>"; 
     }
     
@@ -244,7 +244,7 @@ window.BMPow = class BMPow extends ProtoClass {
     }
     
     /*
-    findPowSync  () {   
+    findPowSync () {   
         // not efficient but simple and we can cache the bufs later
         let tries = 0;
         while (tries < this._maxTries) {
@@ -292,7 +292,7 @@ window.BMPow = class BMPow extends ProtoClass {
         return this.leftZeroBitCount()    
     }
     
-    isValid  () {
+    isValid () {
         if (this._hash === null) { 
             //console.warn("WARNING: null hash on BMPow")
             return false 
@@ -309,7 +309,7 @@ window.BMPow = class BMPow extends ProtoClass {
         */
     }
     
-    show  () {
+    show () {
         console.log("BMPow show")
         console.log("          pow: '" + this.powHex() + "'")
         console.log("         hash: '" + this.hash() + "'")

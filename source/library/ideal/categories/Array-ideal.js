@@ -445,7 +445,7 @@ Object.defineSlots(Array.prototype, {
         for (let i = 0; i < length; i++) {
             let v = this[i];
             if (optionalCallback) {
-                v = calloptionalCallbackback(v);
+                v = optionalCallback(v);
             }
 
             sum = sum + v;

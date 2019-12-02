@@ -364,7 +364,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
 
     // -------------------------------------
 
-    flushIfNeeded  () {
+    flushIfNeeded () {
         if (this.hasDirtyObjects()) {
             this.storeDirtyObjects()
             assert(!this.hasDirtyObjects())
@@ -372,7 +372,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         return this
     }
 
-    collect  () {
+    collect () {
         // this is an on-disk collection
         // in-memory objects aren't considered
         // so we make sure they're flushed to the db first 
@@ -392,7 +392,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         return deleteCount
     }
 
-    markPid  (pid) {
+    markPid (pid) {
         //this.debugLog(() => "markPid(" + pid + ")")
         if (!this.markedSet().has(pid)) {
             this.markedSet().add(pid)
@@ -404,7 +404,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         return false
     }
 
-    refSetForPuuid  (puuid) {
+    refSetForPuuid (puuid) {
         const record = this.recordForPid(puuid)
         const puuids = new Set()
 
@@ -436,7 +436,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
 
     // ------------------------
 
-    sweep  () {
+    sweep () {
         // delete all unmarked records
         let deleteCount = 0
         this.recordsDict().keys().forEach((pid) => {
@@ -462,7 +462,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         return a
     }
 
-    selfTest  () {
+    selfTest () {
         console.log(this.type() + " --- self test start --- ")
         const store = ObjectPool.clone()
         store.open()

@@ -91,7 +91,7 @@ window.SvgIconView = class SvgIconView extends DomStyledView {
 
     // svg icon
 
-    updateAppearance  () {
+    updateAppearance () {
         // sent by superview when it changes or syncs to a node
         // so we can update our appearance to match changes to the parent view's style
 

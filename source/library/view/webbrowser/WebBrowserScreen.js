@@ -13,21 +13,16 @@ window.WebBrowserScreen = class WebBrowserScreen extends ProtoClass {
         })
     }
 
-    init  () {
-        throw new Error("this class is meant to be used as singleton, for now")
-        //super.init()
-        //return this
+    init () {
+        assert(!this.constructor.hasShared()) // enforce singleton
+        super.init()
     }
 
-    /*
-    shared()...
-    */
-    
-    width  () {
+    width () {
         return screen.width
     }
 
-    height  () {
+    height () {
         return screen.height
     }
     

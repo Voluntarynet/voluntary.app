@@ -20,7 +20,7 @@ window.BMContactLinks = class BMContactLinks extends BMStorableNode {
         this.setTitle("contacts")
     }
 
-    setParentNode  (aNode) {
+    setParentNode (aNode) {
         super.setParentNode(aNode)
 
         if (aNode === null) {
@@ -30,7 +30,7 @@ window.BMContactLinks = class BMContactLinks extends BMStorableNode {
         }
     }
 
-    finalize  () {
+    finalize () {
         super.finalize()
 
         if (this.parentNode()) {
@@ -39,39 +39,39 @@ window.BMContactLinks = class BMContactLinks extends BMStorableNode {
         this.setTitle("contacts")
     }
 
-    loadFinalize  () {
+    loadFinalize () {
         this.updatedContacts()
     }
 
-    watchIdentities  () {
+    watchIdentities () {
         if (!this._idsObservation) {
             this._idsObservation = NotificationCenter.shared().newObservation().setName("didChangeIdentity").setObserver(this).watch()
         }
     }
 
-    unwatchIdentities  () {
+    unwatchIdentities () {
         NotificationCenter.shared().removeObserver(this)
         this._idsObservation = null
     }
 
-    didChangeIdentity  (aNote) {
+    didChangeIdentity (aNote) {
         //console.log(this.nodePathString() + ".didChangeIdentities() <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
         window.SyncScheduler.shared().scheduleTargetAndMethod(this, "updatedContacts")
     }
 
-    chatApp  () {
+    chatApp () {
         return this.parentNode()
     }
 
-    localIdentity  () {
+    localIdentity () {
         return this.parentNodeOfType("BMLocalIdentity")
     }
 
-    contactLinks  () {
+    contactLinks () {
         return this.subnodes()
     }
 
-    updatedContacts  () {
+    updatedContacts () {
         this.removeLinksWithNoContact()
         this.addLinkForEveryContact()
         this.sortSubnodes()
@@ -79,11 +79,11 @@ window.BMContactLinks = class BMContactLinks extends BMStorableNode {
         return this
     }
 
-    chatTargetIds  () {
+    chatTargetIds () {
         return this.localIdentity().remoteIdentities().validSubnodes()
     }
 
-    addLinkForEveryContact  () {
+    addLinkForEveryContact () {
         this.chatTargetIds().forEach((rid) => {
             if (!this.linkForContact(rid)) {
                 const link = this.linkProto().clone().setRemoteIdentity(rid)
@@ -93,7 +93,7 @@ window.BMContactLinks = class BMContactLinks extends BMStorableNode {
         return this
     }
 
-    removeLinksWithNoContact  () {
+    removeLinksWithNoContact () {
         this.contactLinks().slice().forEach((link) => {
             if (!link.hasValidRemoteIdentity()) {
                 this.debugLog(" removing invalid link ", link.title())
@@ -103,13 +103,13 @@ window.BMContactLinks = class BMContactLinks extends BMStorableNode {
         return this
     }
 
-    linkForContact  (rid) {
+    linkForContact (rid) {
         return this.contactLinks().detect((link) => {
             return link.remoteIdentity() === rid
         })
     }
 
-    sortSubnodes  () {
+    sortSubnodes () {
         const contactLinks = this.contactLinks().slice()
 
         contactLinks.sort((linkA, linkB) => {

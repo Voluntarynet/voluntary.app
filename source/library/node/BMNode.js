@@ -161,7 +161,7 @@ window.BMNode = class BMNode extends ProtoClass {
 
     customizeNodeRowStyles () {
         if (!this.hasOwnProperty("_nodeRowStyles")) {
-            //const styles = BMViewStyles.sharedWhiteOnBlackStyle().setIsMutable(false)
+            //const styles = BMViewStyles.shared().sharedWhiteOnBlackStyle().setIsMutable(false)
             // NOTE: We can't use the shared style because column bg colors change
 
             const styles = BMViewStyles.clone()
@@ -286,7 +286,7 @@ window.BMNode = class BMNode extends ProtoClass {
 
     // subtitle and note
     
-    subtitle  () {
+    subtitle () {
 
         if (this.subtitleIsSubnodeCount() && this.subnodesCount()) {
             return this.subnodesCount()
@@ -295,7 +295,7 @@ window.BMNode = class BMNode extends ProtoClass {
         return this._subtitle
     }
     
-    note  () {
+    note () {
         if (this.noteIsSubnodeCount() && this.subnodesCount()) {
             return this.subnodesCount()
         }
@@ -319,7 +319,7 @@ window.BMNode = class BMNode extends ProtoClass {
     }
     */
     
-    viewClass  () {        
+    viewClass () {        
         const name = this.viewClassName()
         if (name) {
             return window[name]
@@ -336,7 +336,7 @@ window.BMNode = class BMNode extends ProtoClass {
     }
     */
 
-    nodeRowViewClass  () {   
+    nodeRowViewClass () {   
 	  	return this.firstAncestorWithMatchingPostfixClass("RowView")
     }
 
@@ -408,11 +408,16 @@ window.BMNode = class BMNode extends ProtoClass {
     }
 
     addSubnode (aSubnode) {
+        if (!this._subnodes) {
+            this._subnodes = []
+        }
         return this.addSubnodeAt(aSubnode, this.subnodeCount())
     }
 
     addLinkSubnode (aNode) {
-        assert(aNode.parentNode())
+        if(aNode.parentNode()) {
+            console.warn("adding a link subnode to a node with no parent (yet)")
+        }
         const link = BMLinkNode.clone().setLinkedNode(aNode)
         this.addSubnode(link)
         return this
@@ -566,7 +571,10 @@ window.BMNode = class BMNode extends ProtoClass {
     }
 
     didUpdateNode () {
-        this.didUpdateNodeNote().post()
+        const note = this.didUpdateNodeNote()
+        if (note) {
+            note.post()
+        }
 
         if (this.parentNode()) {
             assert(this.parentNode() !== this)
@@ -671,7 +679,7 @@ window.BMNode = class BMNode extends ProtoClass {
     
     // --- node path ------------------------
     
-    nodePath  () {
+    nodePath () {
         if (this.parentNode()) {
             const parts = this.parentNode().nodePath()
             parts.push(this)
@@ -680,7 +688,7 @@ window.BMNode = class BMNode extends ProtoClass {
         return [this]
     }
     
-    nodePathString  () {
+    nodePathString () {
         return this.nodePath().map(function (node) { return node.title() }).join("/")
         //return this.nodePath().map(function (node) { return node.type() }).join("/")
     }
@@ -747,13 +755,13 @@ window.BMNode = class BMNode extends ProtoClass {
         return this
     }
     
-    justAddAt  (anIndex) {  
+    justAddAt (anIndex) {  
         const newSubnode = this.subnodeProto().clone()
         this.addSubnodeAt(newSubnode, anIndex)
         return newSubnode
     }
 
-    justAdd  (anIndex) {  
+    justAdd (anIndex) {  
         return this.justAddAt(this.subnodeCount())
     }
 
@@ -764,7 +772,7 @@ window.BMNode = class BMNode extends ProtoClass {
         return newSubnode
     }
 
-    add  () {  
+    add () {  
         return this.addAt(this.subnodeCount())
     }
 
@@ -775,7 +783,7 @@ window.BMNode = class BMNode extends ProtoClass {
         return this
     }
 	
-    delete  () {
+    delete () {
         this.removeFromParentNode()
         return this
     }

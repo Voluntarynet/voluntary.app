@@ -56,31 +56,31 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    gestureRecognizers  () {
+    gestureRecognizers () {
         if (this._gestureRecognizers == null) {
             this._gestureRecognizers = []
         }
         return this._gestureRecognizers
     }
 
-    setDivId  (aString) {
+    setDivId (aString) {
         this.element().id = aString
         return this
     }
 
-    setElement  (e) {
+    setElement (e) {
         this._element = e
         setTimeout(() => { this.setIsRegisteredForFocus(true); }, 0)
         e._domView = this // try to avoid depending on this as much as possible - keep refs to divViews, not elements
         return this
     }
 
-    createElement  () {
+    createElement () {
         const e = document.createElement(this.elementType())
         return e
     }
 
-    setupElement  () {
+    setupElement () {
         const e = this.createElement()
         this.setElement(e)
         this.setDivId(this.typeId())
@@ -88,7 +88,7 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    setupDivClassName  () {
+    setupDivClassName () {
         const ancestorNames = this.ancestors().map((obj) => {
             if (obj.type().contains(".")) {
                 return ""
@@ -105,7 +105,7 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    insertDivClassName  (aName) {
+    insertDivClassName (aName) {
         const names = this.divClassName().split(" ")
         names.removeOccurancesOf(aName) // avoid duplicates
         names.atInsert(0, aName)
@@ -113,14 +113,14 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    removeDivClassName  (aName) {
+    removeDivClassName (aName) {
         const names = this.divClassName().split(" ")
         names.removeOccurancesOf(aName)
         this.setDivClassNames(names)
         return this
     }
 
-    setDivClassNames  (names) {
+    setDivClassNames (names) {
         this.setDivClassName(names.join(" "))
         return this
     }
@@ -135,7 +135,7 @@ window.DomView = class DomView extends ProtoClass {
     }
     */
 
-    stylesheetWithClassName  (className) {
+    stylesheetWithClassName (className) {
         for (let i = 0; i < document.styleSheets.length; i++) {
             const stylesheet = document.styleSheets[i]
 
@@ -180,7 +180,7 @@ window.DomView = class DomView extends ProtoClass {
     }
     */
 
-    setCssAttribute  (key, newValue, didChangeCallbackFunc) {
+    setCssAttribute (key, newValue, didChangeCallbackFunc) {
         assert(Type.isString(key))
 
         const style = this.cssStyle()
@@ -232,7 +232,7 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    getCssAttribute  (key, errorCheck) {
+    getCssAttribute (key, errorCheck) {
         if (errorCheck) {
             throw new Error("getCssAttribute called with 2 arguments")
         }
@@ -241,12 +241,12 @@ window.DomView = class DomView extends ProtoClass {
 
     // css px attributes
 
-    setPxCssAttribute  (name, value, didChangeCallbackFunc) {
+    setPxCssAttribute (name, value, didChangeCallbackFunc) {
         this.setCssAttribute(name, this.pxNumberToString(value), didChangeCallbackFunc)
         return this
     }
 
-    getPxCssAttribute  (name, errorCheck) {
+    getPxCssAttribute (name, errorCheck) {
         const s = this.getCssAttribute(name, errorCheck)
         if (s.length) {
             return this.pxStringToNumber(s)
@@ -256,11 +256,11 @@ window.DomView = class DomView extends ProtoClass {
 
     // computed style
 
-    getComputedCssAttribute  (name, errorCheck) {
+    getComputedCssAttribute (name, errorCheck) {
         return window.getComputedStyle(this.element()).getPropertyValue(name)
     }
 
-    getComputedPxCssAttribute  (name, errorCheck) {
+    getComputedPxCssAttribute (name, errorCheck) {
         const s = this.getComputedCssAttribute(name, errorCheck)
         if (s.length) {
             return this.pxStringToNumber(s)
@@ -270,58 +270,58 @@ window.DomView = class DomView extends ProtoClass {
 
     // --- css properties ---
 
-    setPosition  (s) {
+    setPosition (s) {
         this.setCssAttribute("position", s)
         return this
     }
 
-    position  () {
+    position () {
         return this.getCssAttribute("position")
     }
 
     // pointer events
 
-    setPointerEvents  (s) {
+    setPointerEvents (s) {
         return this.setCssAttribute("pointer-events", s)
     }
 
-    pointerEvents  () {
+    pointerEvents () {
         return this.getCssAttribute("pointer-events")
     }
 
     // transform
 
-    setTextTransform  (s) {
+    setTextTransform (s) {
         this.setCssAttribute("text-transform", s)
         return this
     }
 
-    textTransform  () {
+    textTransform () {
         return this.getCssAttribute("text-transform")
     }
 
     // zoom
 
-    setZoom  (s) {
+    setZoom (s) {
         this.setCssAttribute("zoom", s)
         return this
     }
 
-    zoom  () {
+    zoom () {
         return this.getCssAttribute("zoom")
     }
 
-    zoomRatio  () {
+    zoomRatio () {
         return Number(this.zoom().before("%")) / 100
     }
 
-    setZoomRatio  (r) {
+    setZoomRatio (r) {
         console.log("setZoomRatio: ", r)
         this.setZoomPercentage(r * 100)
         return this
     }
 
-    setZoomPercentage  (aNumber) {
+    setZoomPercentage (aNumber) {
         assert(Type.isNumber(aNumber))
         this.setCssAttribute("zoom", aNumber + "%")
         return this
@@ -329,50 +329,50 @@ window.DomView = class DomView extends ProtoClass {
 
     // font family
 
-    setFontFamily  (s) {
+    setFontFamily (s) {
         this.setCssAttribute("font-family", s)
         return this
     }
 
-    fontFamily  () {
+    fontFamily () {
         return this.getCssAttribute("font-family")
     }
 
     // font weight
 
-    setFontWeight  (s) {
+    setFontWeight (s) {
         this.setCssAttribute("font-weight", s)
         return this
     }
 
-    fontWeight  () {
+    fontWeight () {
         return this.getCssAttribute("font-weight")
     }
 
 
     // font size
 
-    setFontSize  (s) {
+    setFontSize (s) {
         this.setPxCssAttribute("font-size", s)
         return this
     }
 
-    fontSize  () {
+    fontSize () {
         return this.getPxCssAttribute("font-size")
     }
 
-    computedFontSize  () {
+    computedFontSize () {
         return this.getComputedPxCssAttribute("font-size")
     }
 
     // margin
 
-    setMarginString  (s) {
+    setMarginString (s) {
         this.setCssAttribute("margin", s)
         return this
     }
 
-    setMargin  (s) {
+    setMargin (s) {
         if (Type.isNumber(s)) {
             this.setPxCssAttribute("margin", s)
         } else {
@@ -382,180 +382,180 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    margin  () {
+    margin () {
         return this.getCssAttribute("margin")
     }
 
-    setMarginLeft  (aNumber) {
+    setMarginLeft (aNumber) {
         this.setPxCssAttribute("margin-left", aNumber)
         return this
     }
 
-    setMarginRight  (aNumber) {
+    setMarginRight (aNumber) {
         this.setPxCssAttribute("margin-right", aNumber)
         return this
     }
 
-    setMarginTop  (aNumber) {
+    setMarginTop (aNumber) {
         this.setPxCssAttribute("margin-top", aNumber)
         return this
     }
 
-    setMarginBottom  (aNumber) {
+    setMarginBottom (aNumber) {
         this.setPxCssAttribute("margin-bottom", aNumber)
         return this
     }
 
     // padding left
 
-    setPadding  (aNumber) {
+    setPadding (aNumber) {
         this.setPxCssAttribute("padding", aNumber)
         return this
     }
 
-    setPaddingRight  (aNumber) {
+    setPaddingRight (aNumber) {
         this.setPxCssAttribute("padding-right", aNumber)
         return this
     }
 
-    setPaddingLeft  (aNumber) {
+    setPaddingLeft (aNumber) {
         this.setPxCssAttribute("padding-left", aNumber)
         return this
     }
 
-    setPaddingTop  (aNumber) {
+    setPaddingTop (aNumber) {
         this.setPxCssAttribute("padding-top", aNumber)
         return this
     }
 
-    setPaddingBottom  (aNumber) {
+    setPaddingBottom (aNumber) {
         this.setPxCssAttribute("padding-bottom", aNumber)
         return this
     }
 
-    paddingLeft  () {
+    paddingLeft () {
         return this.psStringToNumber(this.getCssAttribute("padding-left"))
     }
 
     // padding right
 
-    setPaddingRight  (aNumber) {
+    setPaddingRight (aNumber) {
         this.setPxCssAttribute("padding-right", aNumber)
         return this
     }
 
-    paddingRight  () {
+    paddingRight () {
         return this.psStringToNumber(this.getCssAttribute("padding-right"))
     }
 
     // text align
 
-    setTextAlign  (s) {
+    setTextAlign (s) {
         this.setCssAttribute("text-align", s)
         return this
     }
 
-    textAlign  () {
+    textAlign () {
         return this.getCssAttribute("text-align")
     }
 
     // background color
 
-    setBackgroundColor  (v) {
+    setBackgroundColor (v) {
         this.setCssAttribute("background-color", v)
         return this
     }
 
-    backgroundColor  () {
+    backgroundColor () {
         return this.getCssAttribute("background-color")
     }
 
-    computedBackgroundColor  () {
+    computedBackgroundColor () {
         return this.getComputedCssAttribute("background-color")
     }
 
     // background image
 
-    setBackgroundImage  (v) {
+    setBackgroundImage (v) {
         this.setCssAttribute("background-image", v)
         return this
     }
 
-    backgroundImage  () {
+    backgroundImage () {
         return this.getCssAttribute("background-image")
     }
 
-    setBackgroundImageUrlPath  (path) {
+    setBackgroundImageUrlPath (path) {
         this.setBackgroundImage("url(\"" + path + "\")")
         return this
     }
 
     // background size
 
-    setBackgroundSizeWH  (x, y) {
+    setBackgroundSizeWH (x, y) {
         this.setCssAttribute("background-size", x + "px " + y + "px")
         return this
     }
 
-    setBackgroundSize  (s) {
+    setBackgroundSize (s) {
         assert(Type.isString(s))
         this.setCssAttribute("background-size", s)
         return this
     }
 
-    makeBackgroundCover  () {
+    makeBackgroundCover () {
         this.setBackgroundSize("cover")
         return this
     }
 
-    makeBackgroundContain  () {
+    makeBackgroundContain () {
         this.setBackgroundSize("contain")
         return this
     }
 
     // background repeat
 
-    makeBackgroundNoRepeat  () {
+    makeBackgroundNoRepeat () {
         this.setBackgroundRepeat("no-repeat")
         return this
     }
 
-    setBackgroundRepeat  (s) {
+    setBackgroundRepeat (s) {
         assert(Type.isString(s))
         this.setCssAttribute("background-repeat", s)
         return this
     }
 
-    backgroundRepeat  () {
+    backgroundRepeat () {
         return this.getCssAttribute("background-repeat")
     }
 
     // background position
 
-    makeBackgroundCentered  () {
+    makeBackgroundCentered () {
         this.setBackgroundPosition("center")
         return this
     }
 
-    setBackgroundPosition  (s) {
+    setBackgroundPosition (s) {
         this.setCssAttribute("background-position", s)
         return this
     }
 
-    backgroundPosition  () {
+    backgroundPosition () {
         return this.getCssAttribute("background-position")
     }
 
     // icons - TODO: find a better place for this
 
-    pathForIconName  (aName) {
+    pathForIconName (aName) {
         const pathSeparator = "/"
         return ["resources", "icons", aName + ".svg"].join(pathSeparator)
     }
 
     // transition
 
-    setTransition  (s) {
+    setTransition (s) {
         this.setCssAttribute("transition", s)
 
         if (this._transitions) {
@@ -565,13 +565,13 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    transition  () {
+    transition () {
         return this.getCssAttribute("transition")
     }
 
     // transitions
 
-    transitions  () {
+    transitions () {
         if (this._transitions == null) {
             this._transitions = DomTransitions.clone().setDomView(this).syncFromDomView()
         }
@@ -580,12 +580,12 @@ window.DomView = class DomView extends ProtoClass {
 
     // transforms
 
-    setTransform  (s) {
+    setTransform (s) {
         this.setCssAttribute("transform", s)
         return this
     }
 
-    setTransformOrigin  (s) {
+    setTransformOrigin (s) {
         //transform-origin: x-axis y-axis z-axis|initial|inherit;
         //const percentageString = this.percentageNumberToString(aNumber)
         this.setCssAttribute("transform-origin", s)
@@ -603,82 +603,82 @@ window.DomView = class DomView extends ProtoClass {
 
     // perspective
 
-    setPerspective  (n) {
+    setPerspective (n) {
         this.setPxCssAttribute("perspective", n)
         return this
     }
 
     // opacity
 
-    setOpacity  (v) {
+    setOpacity (v) {
         this.setCssAttribute("opacity", v)
         return this
     }
 
-    opacity  () {
+    opacity () {
         return this.getCssAttribute("opacity")
     }
 
     // z index 
 
-    setZIndex  (v) {
+    setZIndex (v) {
         this.setCssAttribute("z-index", v)
         return this
     }
 
-    zIndex  () {
+    zIndex () {
         return this.getCssAttribute("z-index")
     }
 
     // cursor 
 
-    setCursor  (s) {
+    setCursor (s) {
         this.setCssAttribute("cursor", s)
         return this
     }
 
-    cursor  () {
+    cursor () {
         return this.getCssAttribute("cursor")
     }
 
-    makeCursorDefault  () {
+    makeCursorDefault () {
         this.setCursor("default")
         return this
     }
 
-    makeCursorPointer  () {
+    makeCursorPointer () {
         this.setCursor("pointer")
         return this
     }
 
-    makeCursorText  () {
+    makeCursorText () {
         this.setCursor("text")
         return this
     }
 
-    makeCursorGrab  () {
+    makeCursorGrab () {
         this.setCursor("grab")
         return this
     }
 
-    makeCursorGrabbing  () {
+    makeCursorGrabbing () {
         this.setCursor("grabbing")
         return this
     }
 
-    makeCursorColResize  () {
+    makeCursorColResize () {
         this.setCursor("col-resize")
         return this
     }
 
-    makeCursorRowResize  () {
+    makeCursorRowResize () {
         this.setCursor("row-resize")
         return this
     }
 
     // --- focus and blur ---
 
-    focus  () {
+    focus () {
         if (!this.isActiveElement()) {
 
             //this.debugLog(".focus() " + document.activeElement._domView)
@@ -691,106 +691,106 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    focusAfterDelay  (seconds) {
+    focusAfterDelay (seconds) {
         setTimeout(() => {
             this.element().focus()
         }, seconds * 1000)
         return this
     }
 
-    hasFocus  () {
+    hasFocus () {
         return this.isActiveElement()
     }
 
-    blur  () { // surrender focus
+    blur () { // surrender focus
         this.element().blur()
         return this
     }
 
     // top
 
-    setTopString  (s) {
+    setTopString (s) {
         this.setCssAttribute("top", s)
         return this
     }
 
-    setTop  (aNumber) {
+    setTop (aNumber) {
         this.setPxCssAttribute("top", aNumber)
         return this
     }
 
-    top  () {
+    top () {
         return this.getPxCssAttribute("top")
     }
 
     // left
 
-    setLeftString  (s) {
+    setLeftString (s) {
         this.setCssAttribute("left", s)
         return this
     }
 
-    setLeft  (aNumber) {
+    setLeft (aNumber) {
         this.setPxCssAttribute("left", aNumber)
         return this
     }
 
-    left  () {
+    left () {
         return this.getPxCssAttribute("left")
     }
 
     // right
 
-    setRightString  (s) {
+    setRightString (s) {
         this.setCssAttribute("right", s)
         return this
     }
 
-    setRight  (aNumber) {
+    setRight (aNumber) {
         this.setPxCssAttribute("right", aNumber)
         return this
     }
 
-    right  () {
+    right () {
         return this.getPxCssAttribute("right")
     }
 
     // bottom
 
-    setBottomString  (s) {
+    setBottomString (s) {
         this.setCssAttribute("bottom", s)
         return this
     }
 
-    setBottom  (aNumber) {
+    setBottom (aNumber) {
         this.setPxCssAttribute("bottom", aNumber)
         return this
     }
 
-    bottom  () {
+    bottom () {
         return this.getPxCssAttribute("bottom")
     }
 
     // float
 
-    setFloat  (s) {
+    setFloat (s) {
         this.setCssAttribute("float", s)
         return this
     }
 
-    float  () {
+    float () {
         return this.getCssAttribute("float")
     }
 
     // box shadow
 
-    setBoxShadow  (s) {
+    setBoxShadow (s) {
         //this.debugLog(".setBoxShadow(" + s + ")")
         this.setCssAttribute("box-shadow", s)
         return this
     }
 
-    boxShadow  () {
+    boxShadow () {
         return this.getCssAttribute("box-shadow")
     }
 
@@ -808,74 +808,74 @@ window.DomView = class DomView extends ProtoClass {
 
     // border 
 
-    setBorder  (s) {
+    setBorder (s) {
         this.setCssAttribute("border", s)
         return this
     }
 
-    border  () {
+    border () {
         return this.getCssAttribute("border")
     }
 
     // border color
 
-    setBorderColor  (s) {
+    setBorderColor (s) {
         this.setCssAttribute("border-color", s)
         return this
     }
 
-    borderColor  () {
+    borderColor () {
         return this.getCssAttribute("border-color")
     }
 
     // border top
 
-    setBorderTop  (s) {
+    setBorderTop (s) {
         this.setCssAttribute("border-top", s)
         return this
     }
 
-    borderTop  () {
+    borderTop () {
         return this.getCssAttribute("border-top")
     }
 
     // border bottom
 
-    setBorderBottom  (s) {
+    setBorderBottom (s) {
         this.setCssAttribute("border-bottom", s)
         return this
     }
 
-    borderBottom  () {
+    borderBottom () {
         return this.getCssAttribute("border-bottom")
     }
 
     // border left
 
-    setBorderLeft  (s) {
+    setBorderLeft (s) {
         //this.debugLog(" border-left set '", s, "'")
         this.setCssAttribute("border-left", s)
         return this
     }
 
-    borderLeft  () {
+    borderLeft () {
         return this.getCssAttribute("border-left")
     }
 
     // border right
 
-    setBorderRight  (s) {
+    setBorderRight (s) {
         this.setCssAttribute("border-right", s)
         return this
     }
 
-    borderRight  () {
+    borderRight () {
         return this.getCssAttribute("border-right")
     }
 
     // border radius
 
-    setBorderRadius  (s) {
+    setBorderRadius (s) {
         if (Type.isNumber(s)) {
             this.setPxCssAttribute("border-radius", s)
         } else {
@@ -884,93 +884,93 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    borderRadius  () {
+    borderRadius () {
         return this.getCssAttribute("border-radius")
     }
 
     // outline
 
-    setOutline  (s) {
+    setOutline (s) {
         this.setCssAttribute("outline", s)
         return this
     }
 
-    outline  () {
+    outline () {
         return this.getCssAttribute("outline")
     }
 
     // line height
 
-    setLineHeight  (aNumber) {
+    setLineHeight (aNumber) {
         this.setPxCssAttribute("line-height", aNumber)
         assert(this.lineHeight() == aNumber)
         return this
     }
 
-    lineHeight  () {
+    lineHeight () {
         return this.getPxCssAttribute("line-height")
     }
 
     // alignment
 
-    setTextAlign  (s) {
+    setTextAlign (s) {
         this.setCssAttribute("text-align", s)
         return this
     }
 
-    textAlign  () {
+    textAlign () {
         return this.getCssAttribute("text-align")
     }
 
     // clear
 
-    setClear  (v) {
+    setClear (v) {
         // clear: none|left|right|both|initial|inherit;
         this.setCssAttribute("clear", v)
         return this
     }
 
-    clear  () {
+    clear () {
         return this.getCssAttribute("clear")
     }
 
 
     // flex direction
 
-    setFlexDirection  (v) {
+    setFlexDirection (v) {
         this.setCssAttribute("flex-direction", v)
         return this
     }
 
-    flexDirection  () {
+    flexDirection () {
         return this.getCssAttribute("flex-direction")
     }
 
     // flex grow
 
-    setFlexGrow  (v) {
+    setFlexGrow (v) {
         this.setCssAttribute("flex-grow", v)
         return this
     }
 
-    flexGrow  () {
+    flexGrow () {
         return this.getCssAttribute("flex-grow")
     }
 
     // flex shrink
 
-    setFlexShrink  (v) {
+    setFlexShrink (v) {
         this.setCssAttribute("flex-shrink", v)
         return this
     }
 
-    flexShrink  () {
+    flexShrink () {
         return this.getCssAttribute("flex-shrink")
     }
 
     // flex basis
 
-    setFlexBasis  (v) {
+    setFlexBasis (v) {
         if (Type.isNumber(v)) {
             v = this.pxNumberToString(v)
         }
@@ -978,111 +978,111 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    flexBasis  () {
+    flexBasis () {
         return this.getCssAttribute("flex-basis")
     }
 
     // color
 
-    setColor  (v) {
+    setColor (v) {
         this.setCssAttribute("color", v)
         return this
     }
 
-    color  () {
+    color () {
         return this.getCssAttribute("color")
     }
 
     // filters
 
-    setFilter  (s) {
+    setFilter (s) {
         this.setCssAttribute("filter", s)
         return this
     }
 
-    filter  () {
+    filter () {
         return this.getCssAttribute("filter")
     }
 
     // visibility
 
-    setIsVisible  (aBool) {
+    setIsVisible (aBool) {
         const v = aBool ? "visible" : "hidden"
         this.setCssAttribute("visibility", v)
         return this
     }
 
-    isVisible  () {
+    isVisible () {
         return this.getCssAttribute("visibility") !== "hidden";
     }
 
     // display
 
-    setDisplay  (s) {
+    setDisplay (s) {
         //assert(s in { "none", ...} );
         this.setCssAttribute("display", s)
         return this
     }
 
-    display  () {
+    display () {
         return this.getCssAttribute("display")
     }
 
     // visibility
 
-    setVisibility  (s) {
+    setVisibility (s) {
         this.setCssAttribute("visibility", s)
         return this
     }
 
-    visibility  () {
+    visibility () {
         return this.getCssAttribute("visibility")
     }
 
     // white space
 
-    setWhiteSpace  (s) {
+    setWhiteSpace (s) {
         this.setCssAttribute("white-space", s)
         return this
     }
 
-    whiteSpace  () {
+    whiteSpace () {
         return this.getCssAttribute("white-space")
     }
 
     // over flow
 
-    setOverflow  (s) {
+    setOverflow (s) {
         assert(Type.isString(s))
         this.setCssAttribute("overflow", s)
         return this
     }
 
-    overflow  () {
+    overflow () {
         return this.getCssAttribute("overflow")
     }
 
     // overflow x
 
-    setOverflowX  (s) {
+    setOverflowX (s) {
         assert(Type.isString(s))
         this.setCssAttribute("overflow-x", s)
         return this
     }
 
-    overflowX  () {
+    overflowX () {
         return this.getCssAttribute("overflow-x")
     }
 
     // overflow y
 
-    setOverflowY  (s) {
+    setOverflowY (s) {
         assert(Type.isString(s))
         this.setCssAttribute("overflow-y", s)
         return this
     }
 
-    overflowY  () {
+    overflowY () {
         return this.getCssAttribute("overflow-y")
     }
 
@@ -1115,18 +1115,18 @@ window.DomView = class DomView extends ProtoClass {
     text-overflow: unset;
     */
 
-    setTextOverflow  (s) {
+    setTextOverflow (s) {
         this.setCssAttribute("text-overflow", s)
         return this
     }
 
-    textOverflow  () {
+    textOverflow () {
         return this.getCssAttribute("text-overflow")
     }
 
     // user select
 
-    userSelectKeys  () {
+    userSelectKeys () {
         return [
             "-moz-user-select",
             "-khtml-user-select",
@@ -1135,26 +1135,26 @@ window.DomView = class DomView extends ProtoClass {
         ]
     }
 
-    userSelect  () {
+    userSelect () {
         const style = this.cssStyle()
         let result = this.userSelectKeys().detect(key => style[key])
         result = result || style.userSelect
         return result
     }
 
-    turnOffUserSelect  () {
+    turnOffUserSelect () {
         this.setUserSelect("none");
         return this
     }
 
-    turnOnUserSelect  () {
+    turnOnUserSelect () {
         this.setUserSelect("text")
         return this
     }
 
     // user selection 
 
-    setUserSelect  (aString) {
+    setUserSelect (aString) {
         const style = this.cssStyle()
         //console.log("'" + aString + "' this.userSelect() = '" + this.userSelect() + "' === ", this.userSelect() == aString)
         if (this.userSelect() !== aString) {
@@ -1166,14 +1166,14 @@ window.DomView = class DomView extends ProtoClass {
 
     // spell check
 
-    setSpellCheck  (aBool) {
+    setSpellCheck (aBool) {
         this.element().setAttribute("spellcheck", aBool);
         return this
     }
 
     // tool tip
 
-    setToolTip  (aName) {
+    setToolTip (aName) {
         if (aName) {
             this.element().setAttribute("title", aName);
         } else {
@@ -1194,28 +1194,28 @@ window.DomView = class DomView extends ProtoClass {
         return h
     }
 
-    calcWidth  () {
+    calcWidth () {
         return DomTextTapeMeasure.shared().sizeOfElementWithText(this.element(), this.innerHTML()).width;
         //return DomTextTapeMeasure.sizeOfCSSClassWithText(this.divClassName(), this.innerHTML()).width;
     }
 
-    calcHeight  () {
+    calcHeight () {
         return DomTextTapeMeasure.shared().sizeOfElementWithText(this.element(), this.innerHTML()).height;
     }
 
 
-    setWidthString  (s) {
+    setWidthString (s) {
         assert(Type.isString(s) || s === null)
         this.setCssAttribute("width", s, () => { this.didChangeWidth() })
         return this
     }
 
-    setWidth  (s) {
+    setWidth (s) {
         this.setWidthString(s)
         return this
     }
 
-    setWidthPercentage  (aNumber) {
+    setWidthPercentage (aNumber) {
         const newValue = this.percentageNumberToString(aNumber)
         this.setCssAttribute("width", newValue, () => { this.didChangeWidth() })
         return this
@@ -1231,32 +1231,32 @@ window.DomView = class DomView extends ProtoClass {
 
     // clientX - includes padding but not scrollbar, border, or margin
 
-    clientWidth  () {
+    clientWidth () {
         return this.element().clientWidth
     }
 
-    clientHeight  () {
+    clientHeight () {
         return this.element().clientHeight
     }
 
     // offsetX - includes borders, padding, scrollbar 
 
-    offsetWidth  () {
+    offsetWidth () {
         return this.element().offsetWidth
     }
 
-    offsetHeight  () {
+    offsetHeight () {
         return this.element().offsetHeight
     }
 
     // width
 
-    minWidth  () {
+    minWidth () {
         const s = this.getCssAttribute("min-width")
         return this.pxStringToNumber(s)
     }
 
-    maxWidth  () {
+    maxWidth () {
         const w = this.getCssAttribute("max-width")
         if (w === "") {
             return null
@@ -1264,11 +1264,11 @@ window.DomView = class DomView extends ProtoClass {
         return this.pxStringToNumber(w)
     }
 
-    cssStyle  () {
+    cssStyle () {
         return this.element().style
     }
 
-    setMinWidth  (v) {
+    setMinWidth (v) {
         const type = typeof (v)
         let newValue = null
         if (v == null) {
@@ -1286,10 +1286,10 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    didChangeWidth  () {
+    didChangeWidth () {
     }
 
-    didChangeHeight  () {
+    didChangeHeight () {
     }
 
     // --- lock/unlock size ---
@@ -1312,7 +1312,7 @@ window.DomView = class DomView extends ProtoClass {
 
     // ----
 
-    setMaxWidth  (v) {
+    setMaxWidth (v) {
         /*
         if (v === this._maxWidth) {
             return this
@@ -1336,33 +1336,33 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    setMinAndMaxWidth  (aNumber) {
+    setMinAndMaxWidth (aNumber) {
         const newValue = this.pxNumberToString(aNumber)
         this.setCssAttribute("max-width", newValue, () => { this.didChangeWidth() })
         this.setCssAttribute("min-width", newValue, () => { this.didChangeWidth() })
         return this
     }
 
-    setMinAndMaxHeight  (aNumber) {
+    setMinAndMaxHeight (aNumber) {
         const newValue = this.pxNumberToString(aNumber)
         this.setCssAttribute("min-height", newValue, () => { this.didChangeHeight() })
         this.setCssAttribute("max-height", newValue, () => { this.didChangeHeight() })
         return this
     }
 
-    setMinAndMaxWidthAndHeight  (aNumber) {
+    setMinAndMaxWidthAndHeight (aNumber) {
         this.setMinAndMaxWidth(aNumber)
         this.setMinAndMaxHeight(aNumber)
         return this
     }
 
 
-    percentageNumberToString  (aNumber) {
+    percentageNumberToString (aNumber) {
         assert(Type.isNumber(aNumber) && (aNumber >= 0) && (aNumber <= 100))
         return aNumber + "%"
     }
 
-    pxNumberToString  (aNumber) {
+    pxNumberToString (aNumber) {
         if (aNumber === null) {
             return null
         }
@@ -1377,7 +1377,7 @@ window.DomView = class DomView extends ProtoClass {
         return aNumber + "px"
     }
 
-    pxStringToNumber  (s) {
+    pxStringToNumber (s) {
         assert(Type.isString(s))
         if (s === "") {
             return 0
@@ -1386,30 +1386,30 @@ window.DomView = class DomView extends ProtoClass {
         return Number(s.replace("px", ""))
     }
 
-    setMinAndMaxHeightPercentage  (aNumber) {
+    setMinAndMaxHeightPercentage (aNumber) {
         const newValue = this.percentageNumberToString(aNumber)
         this.setCssAttribute("min-height", newValue, () => { this.didChangeHeight() })
         this.setCssAttribute("max-height", newValue, () => { this.didChangeHeight() })
         return this
     }
 
-    setHeightPercentage  (aNumber) {
+    setHeightPercentage (aNumber) {
         const newValue = this.percentageNumberToString(aNumber)
         this.setHeightString(newValue)
         return this
     }
 
-    setMinWidthPx  (aNumber) {
+    setMinWidthPx (aNumber) {
         this.setMinWidth(this.pxNumberToString(aNumber))
         return this
     }
 
-    setMinHeightPx  (aNumber) {
+    setMinHeightPx (aNumber) {
         this.setMinHeight(this.pxNumberToString(aNumber))
         return this
     }
 
-    setMaxHeightPx  (aNumber) {
+    setMaxHeightPx (aNumber) {
         this.setMaxHeight(this.pxNumberToString(aNumber))
         return this
     }
@@ -1430,31 +1430,31 @@ window.DomView = class DomView extends ProtoClass {
         return this.getCssAttribute("min-width")
     }
 
-    setMinHeight  (newValue) {
+    setMinHeight (newValue) {
         assert(Type.isString(newValue))
         // <length> | <percentage> | auto | max-content | min-content | fit-content | fill-available
         this.setCssAttribute("min-height", newValue, () => { this.didChangeHeight() })
         return this
     }
 
-    setMaxHeight  (newValue) {
+    setMaxHeight (newValue) {
         assert(Type.isString(newValue))
         // <length> | <percentage> | none | max-content | min-content | fit-content | fill-available
         this.setCssAttribute("max-height", newValue, () => { this.didChangeHeight() })
         return this
     }
 
-    setWidthPxNumber  (aNumber) {
+    setWidthPxNumber (aNumber) {
         this.setWidthString(this.pxNumberToString(aNumber))
         return this
     }
 
-    setHeightPxNumber  (aNumber) {
+    setHeightPxNumber (aNumber) {
         this.setHeightString(this.pxNumberToString(aNumber))
         return this
     }
 
-    setHeight  (s) {
+    setHeight (s) {
         // height: auto|length|initial|inherit;
 
         if (Type.isNumber(s)) {
@@ -1464,28 +1464,28 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    setWidthToAuto  () {
+    setWidthToAuto () {
         this.setWidthString("auto")
         return this
     }
 
-    setHeightToAuto  () {
+    setHeightToAuto () {
         this.setHeightString("auto")
     }
 
-    setHeightString  (s) {
+    setHeightString (s) {
         assert(Type.isString(s) || s === null)
         this.setCssAttribute("height", s, () => { this.didChangeHeight() })
         return this
     }
 
-    height  () {
+    height () {
         return this.getCssAttribute("height")
     }
 
     // --- div class name ---
 
-    setDivClassName  (aName) {
+    setDivClassName (aName) {
         if (this._divClassName !== aName) {
             this._divClassName = aName
             if (this.element()) {
@@ -1495,7 +1495,7 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    divClassName  () {
+    divClassName () {
         if (this.element()) {
             const className = this.element().getAttribute("class");
             this._divClassName = className
@@ -1506,7 +1506,7 @@ window.DomView = class DomView extends ProtoClass {
 
     // --- parentView ---
 
-    setParentView  (aView) {
+    setParentView (aView) {
         if (this._parentView !== aView) {
             this._parentView = aView
             this.didChangeParentView()
@@ -1518,7 +1518,7 @@ window.DomView = class DomView extends ProtoClass {
         return Type.isNullOrUndefined(this.parentView()) === false
     }
 
-    didChangeParentView  () {
+    didChangeParentView () {
         return this
     }
 
@@ -1531,22 +1531,22 @@ window.DomView = class DomView extends ProtoClass {
         return !Type.isNullOrUndefined(match)
     }
 
-    subviewCount  () {
+    subviewCount () {
         return this.subviews().length
     }
 
-    hasSubview  (aSubview) {
+    hasSubview (aSubview) {
         return this.subviews().contains(aSubview)
     }
 
-    addSubviewIfAbsent  (aSubview) {
+    addSubviewIfAbsent (aSubview) {
         if (!this.hasSubview(aSubview)) {
             this.addSubview(aSubview)
         }
         return this
     }
 
-    addSubview  (aSubview) {
+    addSubview (aSubview) {
         assert(!Type.isNullOrUndefined(aSubview)) 
         assert(!Type.isNullOrUndefined(aSubview.element())) 
 
@@ -1563,7 +1563,7 @@ window.DomView = class DomView extends ProtoClass {
         return aSubview
     }
 
-    addSubviews  (someSubviews) {
+    addSubviews (someSubviews) {
         someSubviews.forEach(sv => this.addSubview(sv))
         return this
     }
@@ -1593,7 +1593,7 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    orderSubviewFront  (aSubview) {
+    orderSubviewFront (aSubview) {
         if (this.subviews().last() !== aSubview) {
             this.removeSubview(aSubview)
             this.addSubview(aSubview)
@@ -1601,7 +1601,7 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    orderFront  () {
+    orderFront () {
         const pv = this.parentView()
         if (pv) {
             pv.orderSubviewFront(this)
@@ -1609,13 +1609,13 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    orderSubviewBack  (aSubview) {
+    orderSubviewBack (aSubview) {
         this.removeSubview(aSubview)
         this.atInsertSubview(0, aSubview)
         return this
     }
 
-    orderBack  () {
+    orderBack () {
         const pv = this.parentView()
         if (pv) {
             pv.orderSubviewBack(this)
@@ -1637,7 +1637,7 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    atInsertSubview  (anIndex, aSubview) {
+    atInsertSubview (anIndex, aSubview) {
         this.subviews().atInsert(anIndex, aSubview)
         assert(this.subviews()[anIndex] === aSubview)
 
@@ -1696,11 +1696,11 @@ window.DomView = class DomView extends ProtoClass {
 
     // --- subview utilities ---
 
-    sumOfSubviewHeights  () {
+    sumOfSubviewHeights () {
         return this.subviews().sum(subview => subview.clientHeight())
     }
 
-    performOnSubviewsExcept  (methodName, exceptedSubview) {
+    performOnSubviewsExcept (methodName, exceptedSubview) {
         this.subviews().forEach(subview => {
             if (subview !== exceptedSubview) {
                 subview[methodName].apply(subview)
@@ -1742,7 +1742,7 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    hideAndFadeIn  () {
+    hideAndFadeIn () {
         this.setOpacity(0)
         this.setTransition("all 0.5s")
         setTimeout(() => {
@@ -1750,7 +1750,7 @@ window.DomView = class DomView extends ProtoClass {
         }, 0)
     }
 
-    fadeInToDisplayInlineBlock  () {
+    fadeInToDisplayInlineBlock () {
         this.transitions().at("opacity").updateDuration("0.3s")
         this.setDisplay("inline-block")
         this.setOpacity(0)
@@ -1760,7 +1760,7 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    fadeOutToDisplayNone  () {
+    fadeOutToDisplayNone () {
         this.transitions().at("opacity").updateDuration("0.3s")
         this.setOpacity(0)
         setTimeout(() => {
@@ -1771,7 +1771,7 @@ window.DomView = class DomView extends ProtoClass {
 
     // --- fade + height animations ----
 
-    fadeInHeightToDisplayBlock  () {
+    fadeInHeightToDisplayBlock () {
         this.setMinHeight("100%")
         this.setMaxHeight("100%")
         const targetHeight = this.calcHeight()
@@ -1792,7 +1792,7 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    fadeOutHeightToDisplayNone  () {
+    fadeOutHeightToDisplayNone () {
         this.setOverflow("hidden")
         this.transitions().at("opacity").updateDuration("0.2s")
         this.transitions().at("min-height").updateDuration("0.3s")
@@ -1813,12 +1813,12 @@ window.DomView = class DomView extends ProtoClass {
 
     // -----------------------
 
-    removeFromParentView  () {
+    removeFromParentView () {
         this.parentView().removeSubview(this)
         return this
     }
 
-    removeAfterFadeDelay  (delayInSeconds) {
+    removeAfterFadeDelay (delayInSeconds) {
         // call removeSubview for a direct actions
         // use justRemoteSubview for internal changes
 
@@ -1834,17 +1834,17 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    willRemove  () {
+    willRemove () {
     }
 
-    didChangeSubviewList  () {
+    didChangeSubviewList () {
     }
 
-    hasSubview  (aSubview) {
+    hasSubview (aSubview) {
         return this.subviews().indexOf(aSubview) !== -1;
     }
 
-    hasChildElement  (anElement) {
+    hasChildElement (anElement) {
         const children = this.element().childNodes
         for (let i = 0; i < children.length; i++) {
             const child = children[i]
@@ -1855,22 +1855,22 @@ window.DomView = class DomView extends ProtoClass {
         return false
     }
 
-    willAddSubview  (aSubview) {
+    willAddSubview (aSubview) {
         // for subclasses to over-ride
     }
 
-    willRemoveSubview  (aSubview) {
+    willRemoveSubview (aSubview) {
         // for subclasses to over-ride
     }
 
-    removeSubviewIfPresent  (aSubview) {
+    removeSubviewIfPresent (aSubview) {
         if (this.hasSubview(aSubview)) {
             this.removeSubview(aSubview)
         }
         return this
     }
 
-    removeSubview  (aSubview) {
+    removeSubview (aSubview) {
         //console.warn("WARNING: " + this.type() + " removeSubview " + aSubview.type())
 
         if (!this.hasSubview(aSubview)) {
@@ -1904,17 +1904,17 @@ window.DomView = class DomView extends ProtoClass {
         return aSubview
     }
 
-    removeAllSubviews  () {
+    removeAllSubviews () {
         this.subviews().shallowCopy().forEach(subview => this.removeSubview(subview))
         assert(this.subviews().length === 0)
         return this
     }
 
-    indexOfSubview  (aSubview) {
+    indexOfSubview (aSubview) {
         return this.subviews().indexOf(aSubview)
     }
 
-    subviewAfter  (aSubview) {
+    subviewAfter (aSubview) {
         const index = this.indexOfSubview(aSubview)
         const nextIndex = index + 1
         if (nextIndex < this.subviews().length) {
@@ -1923,7 +1923,7 @@ window.DomView = class DomView extends ProtoClass {
         return null
     }
 
-    sendAllViewDecendants  (methodName, argList) {
+    sendAllViewDecendants (methodName, argList) {
         this.subviews().forEach((v) => {
             v[methodName].apply(v, argList)
             v.sendAllViewDecendants(methodName, argList)
@@ -1933,11 +1933,11 @@ window.DomView = class DomView extends ProtoClass {
 
     // --- active element ---
 
-    isActiveElement  () {
+    isActiveElement () {
         return document.activeElement === this.element()
     }
 
-    isActiveElementAndEditable  () {
+    isActiveElementAndEditable () {
         return this.isActiveElement() && this.contentEditable()
     }
 
@@ -1947,7 +1947,7 @@ window.DomView = class DomView extends ProtoClass {
 
     // --- inner html ---
 
-    setInnerHTML  (v) {
+    setInnerHTML (v) {
         const oldValue = this.element().innerHTML
 
         if (v == null) {
@@ -1982,11 +1982,11 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    innerHTML  () {
+    innerHTML () {
         return this.element().innerHTML
     }
 
-    setString  (v) {
+    setString (v) {
         return this.setInnerHTML(v)
     }
 
@@ -1994,14 +1994,14 @@ window.DomView = class DomView extends ProtoClass {
         return this.innerHTML()
     }
 
-    loremIpsum  (maxWordCount) {
+    loremIpsum (maxWordCount) {
         this.setInnerHTML("".loremIpsum(10, 40))
         return this
     }
 
     // --- updates ---
 
-    tellParentViews  (msg, aView) {
+    tellParentViews (msg, aView) {
         const f = this[msg]
         if (f && f.apply(this, [aView])) {
             return // stop propogation on first view returning non-false
@@ -2017,7 +2017,7 @@ window.DomView = class DomView extends ProtoClass {
 
     // --- event listeners ---
 
-    listenerNamed  (className) {
+    listenerNamed (className) {
         const dict = this.eventListenersDict()
         if (!dict[className]) {
             assert(className in window)
@@ -2027,35 +2027,35 @@ window.DomView = class DomView extends ProtoClass {
         return dict[className]
     }
 
-    clipboardListener  () {
+    clipboardListener () {
         return this.listenerNamed("ClipboardListener")
     }
 
-    documentListener  () {
+    documentListener () {
         return this.listenerNamed("DocumentListener") // listen target will be the window
     }
 
-    dragListener  () {
+    dragListener () {
         return this.listenerNamed("DragListener")
     }
 
-    dropListener  () {
+    dropListener () {
         return this.listenerNamed("DropListener")
     }
 
-    focusListener  () {
+    focusListener () {
         return this.listenerNamed("FocusListener")
     }
 
-    mouseListener  () {
+    mouseListener () {
         return this.listenerNamed("MouseListener")
     }
 
-    keyboardListener  () {
+    keyboardListener () {
         return this.listenerNamed("KeyboardListener")
     }
 
-    touchListener  () {
+    touchListener () {
         return this.listenerNamed("TouchListener")
     }
 
@@ -2064,26 +2064,26 @@ window.DomView = class DomView extends ProtoClass {
 
     // --- window resize events ---
 
-    isRegisteredForDocumentResize  () {
+    isRegisteredForDocumentResize () {
         return this.documentListener().isListening()
     }
 
-    setIsRegisteredForDocumentResize  (aBool) {
+    setIsRegisteredForDocumentResize (aBool) {
         this.documentListener().setIsListening(aBool)
         return this
     }
 
-    onDocumentResize  (event) {
+    onDocumentResize (event) {
         return true
     }
 
     // --- onClick event, target & action ---
 
-    isRegisteredForClicks  () {
+    isRegisteredForClicks () {
         return this.mouseListener().isListening()
     }
 
-    setIsRegisteredForClicks  (aBool) {
+    setIsRegisteredForClicks (aBool) {
         this.mouseListener().setIsListening(aBool)
 
         if (aBool) {
@@ -2095,17 +2095,17 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    hasTargetAndAction  () {
+    hasTargetAndAction () {
         return (this.target() !== null) && (this.action() !== null)
     }
 
-    setTarget  (anObject) {
+    setTarget (anObject) {
         this._target = anObject
         this.setIsRegisteredForClicks(this.hasTargetAndAction())
         return this
     }
 
-    setAction  (anActionString) {
+    setAction (anActionString) {
         this._action = anActionString
         //this.setIsRegisteredForClicks(this.hasTargetAndAction())
         if (anActionString && Type.isNullOrUndefined(this.onTapComplete)) { 
@@ -2115,14 +2115,14 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    onClick  (event) {
+    onClick (event) {
         this.debugLog(".onClick()")
         this.sendActionToTarget()
         event.stopPropagation()
         return false
     }
 
-    sendActionToTarget  () {
+    sendActionToTarget () {
         if (!this.action()) {
             return null
         }
@@ -2140,28 +2140,28 @@ window.DomView = class DomView extends ProtoClass {
         return method.apply(t, [this])
     }
 
-    onDoubleClick  (event) {
+    onDoubleClick (event) {
         return true
     }
 
     // -- browser dropping ---
 
-    isRegisteredForDrop  () {
+    isRegisteredForDrop () {
         return this.dropListener().isListening()
     }
 
-    setIsRegisteredForDrop  (aBool) {
+    setIsRegisteredForDrop (aBool) {
         this.dropListener().setIsListening(aBool)
         return this
     }
 
-    acceptsDrop  () {
+    acceptsDrop () {
         return true
     }
 
     // ---------------------
 
-    onDragEnter  (event) {
+    onDragEnter (event) {
         // triggered on drop target
         console.log("onDragEnter acceptsDrop: ", this.acceptsDrop());
         //event.preventDefault() // needed?
@@ -2176,7 +2176,7 @@ window.DomView = class DomView extends ProtoClass {
         return false;
     }
 
-    onDragOver  (event) {
+    onDragOver (event) {
         // triggered on drop target
         //console.log("onDragOver acceptsDrop: ", this.acceptsDrop(), " event:", event);
         //event.preventDefault() // needed?
@@ -2192,27 +2192,27 @@ window.DomView = class DomView extends ProtoClass {
         return false;
     }
 
-    onDragOverAccept  (event) {
+    onDragOverAccept (event) {
         //console.log("onDragOverAccept ");
         this.dragHighlight()
     }
 
-    onDragLeave  (event) {
+    onDragLeave (event) {
         // triggered on drop target
         //console.log("onDragLeave ", this.acceptsDrop());
         this.dragUnhighlight()
         return this.acceptsDrop();
     }
 
-    dragHighlight  () {
+    dragHighlight () {
 
     }
 
-    dragUnhighlight  () {
+    dragUnhighlight () {
 
     }
 
-    onDrop  (event) {
+    onDrop (event) {
         // triggered on drop target
         if (this.acceptsDrop()) {
             //const file = event.dataTransfer.files[0];
@@ -2227,7 +2227,7 @@ window.DomView = class DomView extends ProtoClass {
         return false
     }
 
-    onDataTransfer  (dataTransfer) {
+    onDataTransfer (dataTransfer) {
         //console.log('onDataTransfer ', dataTransfer);
 
         if (dataTransfer.files.length) {
@@ -2251,11 +2251,11 @@ window.DomView = class DomView extends ProtoClass {
 
     }
 
-    onDropImageDataUrl  (dataUrl) {
+    onDropImageDataUrl (dataUrl) {
         console.log("onDropImageDataUrl: ", dataUrl);
     }
 
-    onDropFiles  (filePaths) {
+    onDropFiles (filePaths) {
         console.log("onDropFiles " + filePaths);
     }
 
@@ -2267,17 +2267,17 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    isRegisteredForDrag  () {
+    isRegisteredForDrag () {
         return this.dragListener().isListening()
     }
 
-    setIsRegisteredForDrag  (aBool) {
+    setIsRegisteredForDrag (aBool) {
         this.dragListener().setIsListening(aBool)
         this.setDraggable(aBool)
         return this
     }
 
-    onDragStart  (event) {
+    onDragStart (event) {
         // triggered in element being dragged
         // DownloadURL only works in Chrome?
         
@@ -2317,7 +2317,7 @@ window.DomView = class DomView extends ProtoClass {
         return false;
     }
 
-    onDragEnd  (event) {
+    onDragEnd (event) {
         // triggered in element being dragged
         this.dragUnhighlight();
         //console.log("onDragEnd");
@@ -2325,23 +2325,23 @@ window.DomView = class DomView extends ProtoClass {
 
     // --- editing - abstracted from content editable for use in non text views ---
 
-    setIsEditable  (aBool) {
+    setIsEditable (aBool) {
         // subclasses can override for non text editing behaviors e.g. a checkbox, toggle switch, etc
         this.setContentEditable(aBool)
         return this
     }
 
-    isEditable  () {
+    isEditable () {
         return this.isContentEditable()
     }
 
     // --- content editing ---
 
-    setContentEditable  (aBool) {
+    setContentEditable (aBool) {
         //console.log(this.divClassName() + " setContentEditable(" + aBool + ")")
         if (aBool) {
             this.makeCursorText()
-            //this.element().ondblclick =  (event) => { this.selectAll();	}
+            //this.element().ondblclick = (event) => { this.selectAll();	}
         } else {
             this.element().ondblclick = null
         }
@@ -2368,7 +2368,7 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    isContentEditable  () { // there's a separate method for contentEditable() that just accesses element attribute
+    isContentEditable () { // there's a separate method for contentEditable() that just accesses element attribute
         //var v = window.getComputedStyle(this.element(), null).getPropertyValue("contentEditable");
         const s = this.element().contentEditable
         if (s === "inherit" && this.parentView()) {
@@ -2378,23 +2378,23 @@ window.DomView = class DomView extends ProtoClass {
         return aBool
     }
 
-    contentEditable  () {
+    contentEditable () {
         return this.element().contentEditable === "true"
     }
 
     // touch events
 
-    setTouchAction  (s) {
+    setTouchAction (s) {
         this.setCssAttribute("-ms-touch-action", s) // needed?
         this.setCssAttribute("touch-action", s)
         return this
     }
 
-    isRegisteredForTouch  () {
+    isRegisteredForTouch () {
         return this.touchListener().isListening()
     }
 
-    setIsRegisteredForTouch  (aBool) {
+    setIsRegisteredForTouch (aBool) {
         this.touchListener().setIsListening(aBool)
 
         if (aBool) {
@@ -2404,25 +2404,25 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    onTouchStart  (event) {
+    onTouchStart (event) {
         //this.onPointsStart(points)
     }
 
-    onTouchMove  (event) {
+    onTouchMove (event) {
         //this.onPointsMove(points)
     }
 
-    onTouchCancel  (event) {
+    onTouchCancel (event) {
         //this.onPointsCancel(points)
     }
 
-    onTouchEnd  (event) {
+    onTouchEnd (event) {
         //this.onPointsEnd(points)
     }
 
     /// GestureRecognizers
 
-    hasGestureType  (typeName) {
+    hasGestureType (typeName) {
         return this.gesturesOfType(typeName).length > 0
     }
 
@@ -2437,7 +2437,7 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    addGestureRecognizer  (gr) {
+    addGestureRecognizer (gr) {
         assert(!this.hasGestureRecognizer(gr))
         this.gestureRecognizers().append(gr)
         gr.setViewTarget(this)
@@ -2445,7 +2445,7 @@ window.DomView = class DomView extends ProtoClass {
         return gr
     }
 
-    removeGestureRecognizer  (gr) {
+    removeGestureRecognizer (gr) {
         if (this.gestureRecognizers()) {
             gr.stop()
             gr.setViewTarget(null)
@@ -2454,11 +2454,11 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    gesturesOfType  (typeName) {
+    gesturesOfType (typeName) {
         return this.gestureRecognizers().select(gr => gr.type() == typeName)
     }
 
-    removeGestureRecognizersOfType  (typeName) {
+    removeGestureRecognizersOfType (typeName) {
         if (this.gestureRecognizers()) {
             this.gestureRecognizers().select(gr => gr.type() == typeName).forEach(gr => this.removeGestureRecognizer(gr))
         }
@@ -2536,7 +2536,7 @@ window.DomView = class DomView extends ProtoClass {
     }
 `   */
 
-    cancelAllGesturesExcept  (aGesture) {
+    cancelAllGesturesExcept (aGesture) {
         this.gestureRecognizers().forEach((gr) => {
             //if (gr.type() !== aGesture.type()) {
             if (gr !== aGesture) {
@@ -2548,32 +2548,32 @@ window.DomView = class DomView extends ProtoClass {
 
     // --- mouse events ---
 
-    isRegisteredForMouse  () {
+    isRegisteredForMouse () {
         return this.mouseListener().isListening()
     }
 
-    setIsRegisteredForMouse  (aBool, useCapture) {
+    setIsRegisteredForMouse (aBool, useCapture) {
         this.mouseListener().setUseCapture(useCapture).setIsListening(aBool) //.setIsDebugging(true)
         return this
     }
 
-    onMouseMove  (event) {
+    onMouseMove (event) {
         return true
     }
 
-    onMouseOver  (event) {
+    onMouseOver (event) {
         return true
     }
 
-    onMouseLeave  (event) {
+    onMouseLeave (event) {
         return true
     }
 
-    onMouseOver  (event) {
+    onMouseOver (event) {
         return true
     }
 
-    onMouseDown  (event) {
+    onMouseDown (event) {
         const methodName = Mouse.shared().downMethodNameForEvent(event)
         if (methodName !== "onMouseDown") {
             this.debugLog(".onMouseDown calling: ", methodName)
@@ -2582,7 +2582,7 @@ window.DomView = class DomView extends ProtoClass {
         return true
     }
 
-    onMouseUp  (event) {
+    onMouseUp (event) {
         const methodName = Mouse.shared().upMethodNameForEvent(event)
         if (methodName !== "onMouseUp") {
             this.debugLog(".onMouseUp calling: ", methodName)
@@ -2593,11 +2593,11 @@ window.DomView = class DomView extends ProtoClass {
 
     // --- keyboard events ---
 
-    isRegisteredForKeyboard  () {
+    isRegisteredForKeyboard () {
         return this.keyboardListener().isListening()
     }
 
-    setIsRegisteredForKeyboard  (aBool, useCapture) {
+    setIsRegisteredForKeyboard (aBool, useCapture) {
         this.keyboardListener().setUseCapture(useCapture).setIsListening(aBool)
 
         const e = this.element()
@@ -2627,7 +2627,7 @@ window.DomView = class DomView extends ProtoClass {
     }
     */
 
-    onKeyDown  (event) {
+    onKeyDown (event) {
         //this.debugLog(" onKeyDown ", event._id)
         //Keyboard.shared().showEvent(event)
 
@@ -2652,12 +2652,12 @@ window.DomView = class DomView extends ProtoClass {
         return true
     }
 
-    onKeyPress  (event) {
+    onKeyPress (event) {
         // console.log("onKeyPress")
         return true
     }
 
-    onKeyUp  (event) {
+    onKeyUp (event) {
         let shouldPropogate = true
         //this.debugLog(" onKeyUp ", event._id)
 
@@ -2669,19 +2669,19 @@ window.DomView = class DomView extends ProtoClass {
         return shouldPropogate
     }
 
-    didEdit  () {
+    didEdit () {
         this.debugLog(" didEdit")
         this.tellParentViews("onDidEdit", this)
         return this
     }
 
-    onEnterKeyUp  (event) {
+    onEnterKeyUp (event) {
         return true
     }
 
     // --- tabs and next key view ----
 
-    onTabKeyDown  (event) {
+    onTabKeyDown (event) {
         // need to implement this on key down to prevent browser from handling tab?
         //this.debugLog(" onTabKeyDown ", event._id)
 
@@ -2703,7 +2703,7 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    selectNextKeyView  () {
+    selectNextKeyView () {
         // returns true if something is selected, false otherwise
 
         //this.debugLog(" selectNextKeyView")
@@ -2722,38 +2722,38 @@ window.DomView = class DomView extends ProtoClass {
 
     // --- error checking ---
 
-    isValid  () {
+    isValid () {
         return true
     }
 
     // --- focus and blur event handling ---
 
-    isRegisteredForFocus  () {
+    isRegisteredForFocus () {
         return this.focusListener().isListening()
     }
 
-    setIsRegisteredForFocus  (aBool) {
+    setIsRegisteredForFocus (aBool) {
         this.focusListener().setIsListening(aBool)
         return this
     }
 
-    willAcceptFirstResponder  () {
+    willAcceptFirstResponder () {
         //this.debugLog(".willAcceptFirstResponder()")
         return this
     }
 
-    didReleaseFirstResponder  () {
+    didReleaseFirstResponder () {
         // called on focus event from browser
         return this
     }
 
     // firstResponder
 
-    willBecomeFirstResponder  () {
+    willBecomeFirstResponder () {
         // called if becomeFirstResponder accepts
     }
 
-    becomeFirstResponder  () {
+    becomeFirstResponder () {
         if (this.acceptsFirstResponder()) {
             this.willBecomeFirstResponder()
             this.focus()
@@ -2763,7 +2763,7 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    releaseFirstResponder  () {
+    releaseFirstResponder () {
         // walk up parent view chain and focus on the first view to 
         // answer true for the acceptsFirstResponder message
         //this.debugLog(".releaseFirstResponder()")
@@ -2777,28 +2777,28 @@ window.DomView = class DomView extends ProtoClass {
 
     // --------------------------------------------------------
 
-    onFocus  () {
+    onFocus () {
         this.willAcceptFirstResponder();
         // subclasses can override 
         //this.debugLog(" onFocus")
         return true
     }
 
-    onBlur  () {
+    onBlur () {
         this.didReleaseFirstResponder();
         // subclasses can override 
         //this.debugLog(" onBlur")
         return true
     }
 
-    innerText  () {
+    innerText () {
         const e = this.element()
         return e.textContent || e.innerText || "";
     }
 
     // --- set caret ----
 
-    moveCaretToEnd  () {
+    moveCaretToEnd () {
         const contentEditableElement = this.element()
         let range, selection;
 
@@ -2823,7 +2823,7 @@ window.DomView = class DomView extends ProtoClass {
 
     // --- text selection ------------------
 
-    selectAll  () {
+    selectAll () {
         if (document.selection) {
             const range = document.body.createTextRange();
             range.moveToElementText(this.element());
@@ -2839,7 +2839,7 @@ window.DomView = class DomView extends ProtoClass {
 
     // --- paste from clipboard ---
 
-    onPaste  (e) {
+    onPaste (e) {
         // prevent pasting text by default after event
         e.preventDefault();
 
@@ -2867,16 +2867,16 @@ window.DomView = class DomView extends ProtoClass {
 
     // ------------
 
-    isRegisteredForClipboard  () {
+    isRegisteredForClipboard () {
         return this.clipboardListener().isListening()
     }
 
-    setIsRegisteredForClipboard  (aBool) {
+    setIsRegisteredForClipboard (aBool) {
         this.clipboardListener().setIsListening(aBool)
         return this
     }
 
-    replaceSelectedText  (replacementText) {
+    replaceSelectedText (replacementText) {
         let range;
         if (window.getSelection) {
             const sel = window.getSelection();
@@ -2926,7 +2926,7 @@ window.DomView = class DomView extends ProtoClass {
     }
     */
 
-    clearSelection  () {
+    clearSelection () {
         if (window.getSelection) {
             window.getSelection().removeAllRanges();
         } else if (document.selection) {
@@ -2935,7 +2935,7 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    setContentAfterOrBeforeString  (aString, afterOrBefore) {
+    setContentAfterOrBeforeString (aString, afterOrBefore) {
         const uniqueClassName = "UniqueClass_" + this.puuid()
         const e = this.element()
         if (e.className.indexOf(uniqueClassName) === -1) {
@@ -2948,55 +2948,55 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    setContentAfterString  (aString) {
+    setContentAfterString (aString) {
         this.setContentAfterOrBeforeString(aString, "after")
         return this
     }
 
-    setContentBeforeString  (aString) {
+    setContentBeforeString (aString) {
         this.setContentAfterOrBeforeString(aString, "before")
         return this
     }
 
     // scroll top
 
-    setScrollTop  (v) {
+    setScrollTop (v) {
         this.element().scrollTop = v
         return this
     }
 
-    scrollTop  () {
+    scrollTop () {
         return this.element().scrollTop
     }
 
     // scroll width & scroll height
 
-    scrollWidth  () {
+    scrollWidth () {
         return this.element().scrollWidth // a read-only value
     }
 
-    scrollHeight  () {
+    scrollHeight () {
         return this.element().scrollHeight // a read-only value
     }
 
     // offset width & offset height
 
-    offsetLeft  () {
+    offsetLeft () {
         return this.element().offsetLeft // a read-only value
     }
 
-    offsetTop  () {
+    offsetTop () {
         return this.element().offsetTop // a read-only value
     }
 
     // scroll actions
 
-    scrollToTop  () {
+    scrollToTop () {
         this.setScrollTop(0)
         return this
     }
 
-    scrollToBottom  () {
+    scrollToBottom () {
         const focusedElement = document.activeElement
         const needsRefocus = focusedElement !== this.element()
         // console.log("]]]]]]]]]]]] " + this.typeId() + ".scrollToTop() needsRefocus = ", needsRefocus)
@@ -3010,7 +3010,7 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    scrollSubviewToTop  (aSubview) {
+    scrollSubviewToTop (aSubview) {
         console.log("]]]]]]]]]]]] " + this.typeId() + ".scrollSubviewToTop()")
         assert(this.hasSubview(aSubview))
         //this.setScrollTop(aSubview.offsetTop())
@@ -3024,7 +3024,7 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    animateValue  (targetFunc, valueFunc, setterFunc, duration) { // duration in milliseconds         
+    animateValue (targetFunc, valueFunc, setterFunc, duration) { // duration in milliseconds         
         console.log("]]]]]]]]]]]] " + this.typeId() + ".animateValue()")
         if (duration == null) {
             duration = 200
@@ -3057,17 +3057,17 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    setScrollTopSmooth  (newScrollTop, scrollDuration) {
+    setScrollTopSmooth (newScrollTop, scrollDuration) {
         this.animateValue(() => { return newScrollTop }, () => { return this.scrollTop() }, (v) => { this.setScrollTop(v) }, scrollDuration)
         return this
     }
 
-    dynamicScrollIntoView  () {
+    dynamicScrollIntoView () {
         this.parentView().scrollSubviewToTop(this)
         return this
     }
 
-    scrollIntoView  () {
+    scrollIntoView () {
         const focusedView = WebBrowserWindow.shared().activeDomView()
         //console.log("]]]]]]]]]]]] " + this.typeId() + ".scrollIntoView() needsRefocus = ", focusedView !== this)
 
@@ -3097,7 +3097,7 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    boundingClientRect  () {
+    boundingClientRect () {
         return this.element().getBoundingClientRect()
     }
 
@@ -3109,11 +3109,11 @@ window.DomView = class DomView extends ProtoClass {
         return this.boundingClientRect().y
     }
 
-    containsViewportPoint  () {
+    containsViewportPoint () {
         throw new Error("unimplemented")
     }
 
-    isScrolledIntoView  () {
+    isScrolledIntoView () {
         const r = this.boundingClientRect()
         const isVisible = (r.top >= 0) && (r.bottom <= window.innerHeight);
         return isVisible;
@@ -3131,53 +3131,53 @@ window.DomView = class DomView extends ProtoClass {
     }
     */
 
-    mouseDownPos  () {
+    mouseDownPos () {
         return this.viewPosForWindowPos(Mouse.shared().downPos())
     }
 
     // view position helpers ----
 
-    setRelativePos  (p) {
+    setRelativePos (p) {
         // why not a 2d transform?
         this.setLeft(p.x())
         this.setTop(p.y())
         return this
     }
 
-    containsPoint  (aPoint) {
+    containsPoint (aPoint) {
         // point must be in document coordinates
         return this.frameInDocument().containsPoint(aPoint)
     }
 
     // viewport coordinates helpers
 
-    frameInViewport  () {
+    frameInViewport () {
         const origin = this.positionInViewport()
         const size = this.sizeInViewport()
         const frame = Rectangle.clone().setOrigin(origin).setSize(size)
         return frame
     }
 
-    positionInViewport  () {
+    positionInViewport () {
         const box = this.element().getBoundingClientRect();
         return Point.clone().set(Math.round(box.left), Math.round(box.top));
     }
 
-    sizeInViewport  () {
+    sizeInViewport () {
         const box = this.element().getBoundingClientRect();
         return Point.clone().set(Math.round(box.width), Math.round(box.height));
     }
 
     // document coordinates helpers
 
-    frameInDocument  () {
+    frameInDocument () {
         const origin = this.positionInDocument()
         const size = this.size()
         const frame = Rectangle.clone().setOrigin(origin).setSize(size)
         return frame
     }
 
-    positionInDocument  () {
+    positionInDocument () {
         const box = this.element().getBoundingClientRect();
 
         // return Point.clone().set(Math.round(box.left), Math.round(box.top));
@@ -3198,13 +3198,13 @@ window.DomView = class DomView extends ProtoClass {
         return p
     }
 
-    size  () {
+    size () {
         return EventPoint.clone().set(this.clientWidth(), this.clientHeight());
     }
 
     // ---------------------
 
-    relativePos  () {
+    relativePos () {
         const pv = this.parentView()
         if (pv) {
             return this.positionInDocument().subtract(pv.positionInDocument())
@@ -3213,20 +3213,20 @@ window.DomView = class DomView extends ProtoClass {
         return this.positionInDocument()
     }
 
-    setRelativePos  (p) {
+    setRelativePos (p) {
         //this.setPosition("absolute")
         this.setLeft(p.x())
         this.setTop(p.y())
         return this
     }
 
-    viewPosForWindowPos  (pos) {
+    viewPosForWindowPos (pos) {
         return pos.subtract(this.positionInDocument())
     }
 
     // --------------
 
-    verticallyAlignAbsoluteNow  () {
+    verticallyAlignAbsoluteNow () {
         const pv = this.parentView()
         if (pv) {
             this.setPosition("absolute")
@@ -3249,7 +3249,7 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    horizontallyAlignAbsoluteNow  () {
+    horizontallyAlignAbsoluteNow () {
         const pv = this.parentView()
         if (pv) {
             this.setPosition("absolute")
@@ -3260,20 +3260,20 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    setVerticalAlign  (s) {
+    setVerticalAlign (s) {
         this.setCssAttribute("vertical-align", s)
         return this
     }
 
     // visibility event
 
-    onVisibility  () {
+    onVisibility () {
         //this.debugLog(".onVisibility()")
         this.unregisterForVisibility()
         return true
     }
 
-    unregisterForVisibility  () {
+    unregisterForVisibility () {
         const obs = this.intersectionObserver()
         if (obs) {
             obs.disconnect()
@@ -3283,7 +3283,7 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    registerForVisibility  () {
+    registerForVisibility () {
         if (this.isRegisteredForVisibility()) {
             return this
         }
@@ -3326,13 +3326,13 @@ window.DomView = class DomView extends ProtoClass {
 
     // centering
 
-    fillParentView  () {
+    fillParentView () {
         this.setWidthPercentage(100)
         this.setHeightPercentage(100)
         return this
     }
 
-    centerInParentView  () {
+    centerInParentView () {
         this.setMinAndMaxWidth(null)
         this.setMinAndMaxHeight(null)
         //this.setWidth("100%")
@@ -3385,11 +3385,11 @@ window.DomView = class DomView extends ProtoClass {
     }
     */
 
-    rootView  () {
+    static rootView () {
         return WebBrowserWindow.shared().documentBody()
     }
 
-    disablePointerEventsUntilTimeout  (ms) {
+    disablePointerEventsUntilTimeout (ms) {
         this.setPointerEvents("none")
         this.debugLog(" disabling pointer events")
 
@@ -3401,7 +3401,7 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    containerize  () {
+    containerize () {
         // create a subview of same size as parent and put all other subviews in it
         const container = DomView.clone()
         container.setMinAndMaxHeight(this.clientHeight())
@@ -3411,7 +3411,7 @@ window.DomView = class DomView extends ProtoClass {
         return container
     }
 
-    uncontainerize  () {
+    uncontainerize () {
         assert(this.subviewCount() === 1)
         const container = this.subviews().first()
         this.removeSubview(container)
@@ -3419,7 +3419,7 @@ window.DomView = class DomView extends ProtoClass {
         return this
     }
 
-    moveAllSubviewsToView  (aView) {
+    moveAllSubviewsToView (aView) {
         this.subviews().shallowCopy().forEach((sv) => {
             this.remove(sv)
             aView.addSubview(sv)

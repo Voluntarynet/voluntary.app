@@ -112,7 +112,7 @@ window.BMFieldRowView = class BMFieldRowView extends BrowserFieldRow {
     }
     */
     
-    didChangeIsSelected  () {
+    didChangeIsSelected () {
         super.didChangeIsSelected()
         this.syncFromNode() // need this to update selection color on fields?
         return this
@@ -128,7 +128,7 @@ window.BMFieldRowView = class BMFieldRowView extends BrowserFieldRow {
     }
     */
 
-    syncFromNode  () {
+    syncFromNode () {
         super.syncFromNode()
         //this.debugLog(" syncFromNode")
 		
@@ -225,7 +225,7 @@ window.BMFieldRowView = class BMFieldRowView extends BrowserFieldRow {
         return this.node().note()
     }
     
-    syncToNode  () {
+    syncToNode () {
         const node = this.node()
 
         if (node.keyIsEditable()) {
@@ -240,7 +240,7 @@ window.BMFieldRowView = class BMFieldRowView extends BrowserFieldRow {
         return this
     }
     
-    onDidEdit  (changedView) {
+    onDidEdit (changedView) {
         //this.syncToNode() 
         this.scheduleSyncToNode() 
         //this.log(this.type() + " onDidEdit")   

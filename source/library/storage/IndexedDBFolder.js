@@ -89,7 +89,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
             objectStore.createIndex("key", "key", { unique: true });
         };
 
-        request.onsuccess =  (event) => {
+        request.onsuccess = (event) => {
             //this.debugLog(" db open onsuccess ", event)
             this.setDb(event.target.result)
             if (callback) {

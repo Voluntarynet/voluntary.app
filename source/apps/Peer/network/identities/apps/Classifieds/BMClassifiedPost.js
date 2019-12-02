@@ -140,7 +140,7 @@ window.BMClassifiedPost = class BMClassifiedPost extends BMFieldSetNode {
         return "error"
     }
     
-    postDict  () {
+    postDict () {
         return {
             type: "BMClassifiedPost",
             title: this.title(),
@@ -170,7 +170,7 @@ window.BMClassifiedPost = class BMClassifiedPost extends BMFieldSetNode {
         return this
     }
     
-    syncSend  () {
+    syncSend () {
         this.objMsg().setContent(this.postDict())
         
         //let myId = App.shared().network().localIdentities().current()
@@ -194,7 +194,7 @@ window.BMClassifiedPost = class BMClassifiedPost extends BMFieldSetNode {
         return this
     }
     
-    send  () {
+    send () {
         this.prepareToSend()
         this.setIsEditable(false)
         

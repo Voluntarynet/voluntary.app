@@ -13,7 +13,7 @@
 
     in BMCustomFormNode class:
     
-        init  () {
+        init () {
             super.init()
 
             this.addFieldNamed("from")
@@ -51,20 +51,28 @@ window.BMFieldSetNode = class BMFieldSetNode extends BMStorableNode {
 	
     // --- fields ---
 
-    protoAddStoredField (aField) {
+    /*
+    protoAddStoredField (aField) { 
         assert(this.isPrototype())
-        const name = aField.valueMethod()
-        this.addStoredSlot(name)
+
+        const slot = this.slotNamed(aField.valueMethod())
+        const name = slot.name()
+
+        // set store to should store, hooks setter
+        this.protoAddStoredSlot(name)
+
+        // add a slot
         if (!this[name]) {
             this.newSlot(name, null)
         }
 
+        // add field to subnodes and setTarget(this)
         this.addField(aField)
         return aField
     }
 
     addField (aField) {
-        aField.setTarget(this)
+        //aField.setTarget(this)
         this.addSubnode(aField)
         return aField
     }
@@ -76,6 +84,7 @@ window.BMFieldSetNode = class BMFieldSetNode extends BMStorableNode {
         this.addStoredField(field)
         return field
     }
+    */
     
     fieldNamed (aName) {
         return this.subnodes().detect(function (subnode) { 

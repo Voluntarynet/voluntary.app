@@ -32,7 +32,7 @@ window.BMActionNodeRowView = class BMActionNodeRowView extends BrowserRow {
         return this
     }
 
-    updateSubviews  () {	
+    updateSubviews () {	
         super.updateSubviews()
 		
         const bv = this.buttonView()
@@ -72,7 +72,7 @@ window.BMActionNodeRowView = class BMActionNodeRowView extends BrowserRow {
         return this
     }
 
-    onDidEdit  (changedView) {     
+    onDidEdit (changedView) {     
         this.scheduleSyncToNode()
         //this.node().didUpdateView(this)
         //this.scheduleSyncFromNode() // needed for validation?

@@ -42,7 +42,7 @@ Object.defineSlots(String.prototype, {
     */   
     },
 
-    toBuffer: function  () {
+    toBuffer: function () {
         return new Buffer(this, "binary")
     }
 

@@ -24,7 +24,7 @@ window.GestureManager = class GestureManager extends ProtoClass {
     }
 
     /*
-    shared () {   
+    static shared () {   
         return this.sharedInstanceForClass(GestureManager)
     }
     */

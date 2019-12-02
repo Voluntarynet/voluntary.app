@@ -37,7 +37,7 @@ window.BMRServers = class BMRServers extends BMStorableNode {
         }
     }
     
-    bootStrapServers  () {
+    bootStrapServers () {
         return [
             //BMRServer.clone().setHost("rendezvous9000.voluntary.net").setPort(9000),
             BMRServer.clone().setHost("peer-net-server.herokuapp.com").setPort(443).setIsSecure(true),
@@ -46,7 +46,7 @@ window.BMRServers = class BMRServers extends BMStorableNode {
         ] 
     }
     
-    addServer  (aServer) {
+    addServer (aServer) {
         if (!this.hasServer(aServer)) {
             this.addSubnode(aServer)
         }
@@ -57,7 +57,7 @@ window.BMRServers = class BMRServers extends BMStorableNode {
         return this.hasAddrDict(aServer.addrDict())
     }
     
-    servers  () {
+    servers () {
         return this.subnodes()
     }
     
@@ -65,12 +65,12 @@ window.BMRServers = class BMRServers extends BMStorableNode {
         return this.parentNode()
     }
     
-    subtitle  () {
+    subtitle () {
         return this.connectedServers().length + " of " + this.servers().length + " servers connected"
     }
 
     /*
-    subtitle  () {
+    subtitle () {
         return this.connectedRemotePeerCount() + " peers"
     }
     */
@@ -81,19 +81,19 @@ window.BMRServers = class BMRServers extends BMStorableNode {
         })
     }
     
-    connectedServers  () {
+    connectedServers () {
         return this.servers().filter(function (server) { return server.isConnected() })
     }
     
-    unconnectedServers  () {
+    unconnectedServers () {
         return this.servers().filter(function (server) { return !server.isConnected() })
     }
     
-    connectionCount  () {
+    connectionCount () {
         return this.connectedServers().length
     }
     
-    connect  () {
+    connect () {
         let unconnectedServers = this.unconnectedServers().shuffle()
         let connectionsToAdd = this.maxConnections() - this.connectionCount()
         
@@ -106,7 +106,7 @@ window.BMRServers = class BMRServers extends BMStorableNode {
     }
     
     /*
-    connectedRemotePeers  () {
+    connectedRemotePeers () {
         let peers = []
         this.connectedServers().forEach(function (server) {
             peers.appendItems(server.connectedRemotePeers())
@@ -124,7 +124,7 @@ window.BMRServers = class BMRServers extends BMStorableNode {
         return this
     }
     
-    currentAddrMsg  () {
+    currentAddrMsg () {
         let msg = BMAddrMessage.clone()
         this.servers().forEach(function (server) {
             msg.addAddrDict(server.addrDict())

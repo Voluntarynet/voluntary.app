@@ -3,7 +3,7 @@
 /*
     DomStyledView
 
-    (one step towards eliminating the remaining css files)
+   (one step towards eliminating the remaining css files)
 
     A base view to handle styles in a uniform way. 
     Holds an instance of BMViewStyles which holds a set of BMViewStyle instances, one for each style.

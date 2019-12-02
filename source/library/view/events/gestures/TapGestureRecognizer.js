@@ -82,7 +82,7 @@ window.TapGestureRecognizer = class TapGestureRecognizer extends GestureRecogniz
 
     // -- single action for mouse and touch up/down ---
 
-    onDown  (event) {
+    onDown (event) {
         super.onDown(event)
         
         if (this.numberOfFingersDown() < this.numberOfFingersRequired()) {
@@ -100,7 +100,7 @@ window.TapGestureRecognizer = class TapGestureRecognizer extends GestureRecogniz
         return true
     }
 
-    onUp  (event) {
+    onUp (event) {
         super.onUp(event)
  
         if (this.isDebugging()) {

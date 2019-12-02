@@ -65,7 +65,7 @@ window.BMMessages = class BMMessages extends BMStorableNode {
     
     // --------------------------------------------
     
-    messages  () {
+    messages () {
         return this.subnodes()
     }
 
@@ -234,13 +234,13 @@ window.BMMessages = class BMMessages extends BMStorableNode {
         }
     }
 
-    messagesMatchingBloom  (bloom) {
+    messagesMatchingBloom (bloom) {
         return this.messages().select( (objMsg) => {
             return bloom.checkEntry(objMsg.senderPublicKeyString())
         })
     }
     
-    fullInvMsg  () {
+    fullInvMsg () {
         return BMInvMessage.clone().addMessages(this.messages())
     }
 

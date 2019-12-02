@@ -97,7 +97,7 @@ window.App = class App extends BMNode {
         //return  WebBrowserWindow.shared().documentBody()
     }
 
-    mainWindow  () {
+    mainWindow () {
         return Window
     }
 

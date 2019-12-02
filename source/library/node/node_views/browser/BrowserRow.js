@@ -194,7 +194,7 @@ window.BrowserRow = class BrowserRow extends NodeView {
         return this.column().browser()
     }
 
-    column  () {
+    column () {
         return this.parentView()
     }
     
@@ -249,7 +249,7 @@ window.BrowserRow = class BrowserRow extends NodeView {
             this.debugLog(" (" + title + ") has no column yet")
         }
 
-        return BMViewStyles.sharedWhiteOnBlackStyle()
+        return BMViewStyles.shared().sharedWhiteOnBlackStyle()
     }
 
     /*
@@ -328,7 +328,7 @@ window.BrowserRow = class BrowserRow extends NodeView {
     
     // --- sync ---
 	
-    syncFromNode  () {
+    syncFromNode () {
         // is this ever called?
         this.updateSubviews()
         return this
@@ -714,7 +714,7 @@ window.BrowserRow = class BrowserRow extends NodeView {
     }
     */
     
-    requestSelection  () {
+    requestSelection () {
         this.select()
         //this.debugLog(" tellParentViews didClickRow")
         //this.tellParentViews("didClickRow", this)
@@ -737,7 +737,7 @@ window.BrowserRow = class BrowserRow extends NodeView {
 
     // -------------------------
 
-    didChangeIsSelected  () {
+    didChangeIsSelected () {
         super.didChangeIsSelected()
         /*
         if (this.isSelected()) {
@@ -857,7 +857,7 @@ window.BrowserRow = class BrowserRow extends NodeView {
 
     // Browser style drag
 
-    onDragStart  (event) {
+    onDragStart (event) {
         // triggered in element being dragged
         // DownloadURL only works in Chrome?
         

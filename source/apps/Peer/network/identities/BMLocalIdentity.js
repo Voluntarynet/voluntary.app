@@ -68,11 +68,11 @@ window.BMLocalIdentity = class BMLocalIdentity extends BMKeyPair {
         this.profile().fieldNamed("publicKeyString").setValueIsEditable(false)
     }
     
-    title  () {
+    title () {
         return this.name()
     }
     
-    setTitle  (s) {
+    setTitle (s) {
         this.setName(s)
         return this
     }

@@ -55,7 +55,7 @@ window.PanGestureRecognizer = class PanGestureRecognizer extends GestureRecogniz
         return this
     }
 
-    onDown  (event) {
+    onDown (event) {
         super.onDown(event)
 
         if (!this.isPressing()) {
@@ -96,7 +96,7 @@ window.PanGestureRecognizer = class PanGestureRecognizer extends GestureRecogniz
         return this
     }
 
-    onUp  (event) {
+    onUp (event) {
         super.onUp(event)
 
         if (this.isPressing()) {

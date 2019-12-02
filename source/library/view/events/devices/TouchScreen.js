@@ -34,7 +34,7 @@ window.TouchScreen = class TouchScreen extends Device {
     }
     */
 
-    init  () {
+    init () {
         super.init()
         this.startListening()
         //this.setIsDebugging(true)
@@ -97,7 +97,7 @@ window.TouchScreen = class TouchScreen extends Device {
         return currentPoints.detect(p => p.id() === id)
     }
 
-    onTouchMoveCapture  (event) {
+    onTouchMoveCapture (event) {
         this.setCurrentEvent(event)
         //this.handleLeave(event)
         return true

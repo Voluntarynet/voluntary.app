@@ -113,7 +113,7 @@ window.BMMailMessage = class BMMailMessage extends BMAppMessage {
         return "No recipient"
     }
 
-    subtitle  () {
+    subtitle () {
         let s = this.subject()
         if (s) {
             return s
@@ -145,7 +145,7 @@ window.BMMailMessage = class BMMailMessage extends BMAppMessage {
         return this
     }
 
-    send  () {
+    send () {
         super.send()
         this.delete()
     }

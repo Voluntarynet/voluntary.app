@@ -33,7 +33,7 @@ window.Devices = class Devices extends ProtoClass {
     }
     */
 
-    init  () {
+    init () {
         super.init()
         this.setupIfNeeded() 
         return this

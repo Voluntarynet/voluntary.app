@@ -17,9 +17,7 @@ window.CrossTabLock = class CrossTabLock extends ProtoClass {
             "lockNumber": null,
         })
 
-        window.addEventListener("storage", 
-            () => { this.localStorageChanged() }
-        )
+        window.addEventListener("storage", () => this.localStorageChanged())
     }
 
     currentLockNumber() {

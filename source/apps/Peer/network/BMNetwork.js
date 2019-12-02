@@ -17,10 +17,10 @@ window.BMNetwork = class BMNetwork extends BMFieldSetNode {
             localIdentities: null, // set by parent 
             blacklists: null,
             idsBloomFilter: null,
-            isOpenRelay: false,
         })
 
-        this.protoAddStoredField(BMBooleanField.clone().setKey("isOpenRelay").setValueMethod("isOpenRelay").setValueIsEditable(true))
+        const isOpenRelayField = BMBooleanField.clone().setKey("isOpenRelay").setValueMethod("isOpenRelay").setValueIsEditable(true)
+        this.newSlot("isOpenRelay", false).setShouldStore(true).setField(isOpenRelayField)
     }
 
     init () {
@@ -49,7 +49,6 @@ window.BMNetwork = class BMNetwork extends BMFieldSetNode {
         this.setBlacklists(this.defaultStore().rootInstanceWithPidForProto("_blacklists", BMBlacklists))
         this.addLinkSubnode(this.blacklists())
         
-
         this.watchIdentities()
     }
 
@@ -63,7 +62,7 @@ window.BMNetwork = class BMNetwork extends BMFieldSetNode {
         }
     }
 
-    connectedRemotePeers  () {
+    connectedRemotePeers () {
         const remotePeers = []
         this.servers().connectedServers().forEach(function (server) {
             remotePeers.appendItems(server.connectedRemotePeers())
@@ -75,11 +74,11 @@ window.BMNetwork = class BMNetwork extends BMFieldSetNode {
         return this.servers().subnodes().sum( p => p.connectedRemotePeerCount())
     }
     
-    serverCount  () {
+    serverCount () {
         return this.servers().subnodesCount()
     }
 
-    connectedServerCount  () {
+    connectedServerCount () {
         return this.servers().connectedServers().length
     }
     

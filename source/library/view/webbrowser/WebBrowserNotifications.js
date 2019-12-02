@@ -29,32 +29,32 @@ window.WebBrowserNotifications = class WebBrowserNotifications extends ProtoClas
         })
     }
 
-    init  () {
+    init () {
         super.init()
         //throw new Error("this class is meant to be used as singleton, for now")
         return this
     }
 
-    hasPermission  () {
+    hasPermission () {
         return this.permissionRequestResult() === "granted"
     }
 
-    wasDenied  () {
+    wasDenied () {
         return this.permissionRequestResult() === "denied"
     }
 
-    hasAskedForPermission  () {
+    hasAskedForPermission () {
         return this.permissionRequestResult() !== null
     }
 
-    requestPermissionIfNeeded  () {
+    requestPermissionIfNeeded () {
         if (!this.hasAskedForPermission()) {
             this.requestPermission()
         }
         return this
     }
 
-    requestPermission  () {
+    requestPermission () {
         Notification.requestPermission().then((result) => {
             this.setPermissionRequestResult(result)
             console.log("requestPermission:", result);
@@ -67,7 +67,7 @@ window.WebBrowserNotifications = class WebBrowserNotifications extends ProtoClas
         return window.hasOwnProperty("Notification")
     }
 
-    postNote  (aNote) {
+    postNote (aNote) {
         this.setWaitingNote(aNote)
 
         if (!this.isSupported()) {

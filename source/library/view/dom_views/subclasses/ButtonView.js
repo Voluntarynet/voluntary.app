@@ -81,7 +81,7 @@ window.ButtonView = class ButtonView extends DomView {
         return this
     }
 
-    onTapComplete  (aGesture) {
+    onTapComplete (aGesture) {
         //this.debugLog(".onTapComplete()")
         this.sendActionToTarget()
         return false

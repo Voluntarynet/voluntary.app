@@ -36,7 +36,7 @@ window.PeerApp = class PeerApp extends App {
         super.init()
     }
 
-    setup  () {
+    setup () {
         super.setup()
         
 
@@ -62,7 +62,7 @@ window.PeerApp = class PeerApp extends App {
 
     // --- setup model ---
 
-    setupModel  () {
+    setupModel () {
 
         // identities
         this.setLocalIdentities(this.defaultStore().rootInstanceWithPidForProto("_localIdentities", BMLocalIdentities))
@@ -133,7 +133,7 @@ window.PeerApp = class PeerApp extends App {
         return this        
     }
 
-    appDidInit  () {
+    appDidInit () {
         super.appDidInit()
         
         // ResourceLoaderPanel can't use notification as it's a boot object

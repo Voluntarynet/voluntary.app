@@ -185,10 +185,16 @@ window.ProtoClass = class ProtoClass {
     }
 
     thisClass () {
+        /*
+        if (this.constructor {
+            return this.constructor
+        }
+        */
+
         if (this.isPrototype()) {
             return this.constructor
         }
-        return this.__proto___.constructor
+        return this.__proto__.constructor
     }
 
     isPrototype () {
@@ -241,7 +247,7 @@ window.ProtoClass = class ProtoClass {
     // slot objects
 
     allSlots (allSlots = {}) {
-        assert(this.isPrototype())
+        //assert(this.isPrototype())
         Object.assign(allSlots, this.slots());
 
         if (this.__proto__ && this.__proto__.slotNamed) {
@@ -257,8 +263,10 @@ window.ProtoClass = class ProtoClass {
 
     storedSlotNames () { // returns a set  
         // TODO: use slot cache
-        assert(this.isPrototype())
-        return this.allSlots().filter(slot => slot.shouldStore()).map(slot => slot.name()).asSet()
+        //assert(this.isPrototype())
+        const slotsArray = Object.values(this.allSlots())
+
+        return slotsArray.filter(slot => slot.shouldStore()).map(slot => slot.name()).asSet()
     }
 
     protoAddStoredSlots (slotNames) {
@@ -440,7 +448,7 @@ window.ProtoClass = class ProtoClass {
     }
 
     setterNameMap () {
-        return this.getClassVariable("_setterNameMap", {})
+        return this.thisClass().getClassVariable("_setterNameMap", {})
     }
 
     setterNameForSlot (name) {

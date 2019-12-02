@@ -29,7 +29,7 @@ window.PersistentObjectPool = class PersistentObjectPool extends ObjectPool {
 
     selfTest () {
         console.log(this.type() + " --- self test start --- ")
-        const store = this.typeClass().clone()
+        const store = this.thisClass().clone()
         store.asyncOpen(() => this.selfTestOnStore(store))
     }
 

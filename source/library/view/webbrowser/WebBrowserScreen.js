@@ -14,7 +14,7 @@ window.WebBrowserScreen = class WebBrowserScreen extends ProtoClass {
     }
 
     init () {
-        assert(!this.constructor.hasShared()) // enforce singleton
+        assert(!this.thisClass().hasShared()) // enforce singleton
         super.init()
     }
 

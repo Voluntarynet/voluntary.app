@@ -71,7 +71,7 @@ window.ObservableProxy = class ObservableProxy extends ProtoClass {
     }
 
     newProxyFor (aTarget) {
-        const handler = this.typeClass().clone()
+        const handler = this.thisClass().clone()
         handler.setTarget(aTarget)
         //const proxy = new Proxy(aTarget, handler)
         this.setRevocable(Proxy.revocable(aTarget, handler))

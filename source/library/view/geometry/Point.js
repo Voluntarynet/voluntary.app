@@ -79,7 +79,7 @@ window.Point = class Point extends ProtoClass {
     }
 
     copy() {
-        return this.typeClass().clone().copyFrom(this)
+        return this.thisClass().clone().copyFrom(this)
     }
 
     add(p) {

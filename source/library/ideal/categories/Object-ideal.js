@@ -51,7 +51,7 @@ Object.defineSlots(Object, {
     
     values: function (obj) {
         const values = [];
-        obj.ownForEachKV((k, v) => { values.push(v) })
+        obj.ownForEachKV((k, v) => values.push(v))
         return values;
     },
     

@@ -80,6 +80,11 @@ window.ideal.AtomicDictionary = class AtomicDictionary extends ideal.Dictionary 
         return super.atPut(k, v)
     }
 
+    removeAt (k) { // TODO: remove either removeAt or removeKey?
+        this.removeKey(k)
+        return this
+    }
+
     removeKey (k) {        
         if (this.keysAndValuesAreStrings()) {
             assert(Type.isString(k))

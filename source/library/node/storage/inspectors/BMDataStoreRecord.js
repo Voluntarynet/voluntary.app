@@ -24,6 +24,10 @@ window.BMDataStoreRecord = class BMDataStoreRecord extends BMFieldSetNode {
         this.setNodeMinWidth(300)
     }
 
+    subtitle () {
+        return this.key()
+    }
+
     prepareForFirstAccess () {
         this.addSubnode(BMTextAreaField.clone().setKey("dict").setValueMethod("dictString").setValueIsEditable(false).setIsMono(true))
     }

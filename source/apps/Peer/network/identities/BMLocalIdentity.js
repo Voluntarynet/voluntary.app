@@ -14,13 +14,14 @@ var Buffer = bitcore.deps.Buffer;
 window.BMLocalIdentity = class BMLocalIdentity extends BMKeyPair {
     
     initPrototype () {
-        this.newSlots({
-            name: "",
-            privateKeyString: "",
-            didChangeIdentityNote: null,
-        })
+        this.newSlot("name", "").setShouldStore(true)
+        this.newSlot("privateKeyString", "").setShouldStore(true)
+        this.newSlot("didChangeIdentityNote", null)
 
-        this.protoAddStoredSlots(["name", "privateKeyString"])
+        this.newSlot("apps", null).setShouldStore(true).setInitProto(BMApps)
+        this.newSlot("profile", null).setShouldStore(true).setInitProto(BMProfile)
+        this.newSlot("remoteIdentities", null).setShouldStore(true).setInitProto(BMRemoteIdentities)
+
         this.setShouldStore(true)
     }
 
@@ -29,9 +30,11 @@ window.BMLocalIdentity = class BMLocalIdentity extends BMKeyPair {
         //this.setShouldStoreSubnodes(false)
         this.setNodeCanEditTitle(true)
  
+        /*
         this.initStoredSubnodeSlotWithProto("apps", BMApps)
         this.initStoredSubnodeSlotWithProto("profile", BMProfile)
         this.initStoredSubnodeSlotWithProto("remoteIdentities", BMRemoteIdentities)
+        */
         
         this.setCanDelete(true)
 
@@ -41,7 +44,7 @@ window.BMLocalIdentity = class BMLocalIdentity extends BMKeyPair {
         //console.log("is editable = ", this.profile().fieldNamed("publicKeyString").valueIsEditable())
         this.generatePrivateKey()
         this.setCanDelete(true)
-        this._didChangeIdentityNote = NotificationCenter.shared().newNote().setSender(this).setName("didChangeIdentity")
+        this.setDidChangeIdentityNote(NotificationCenter.shared().newNote().setSender(this).setName("didChangeIdentity"))
 
         this.setNodeCanEditTitle(true)
     }

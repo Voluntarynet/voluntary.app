@@ -8,6 +8,8 @@
 
 */
 
+Error.stackTraceLimit = 100 // looks like default on Chrome is 10?
+
 Object.defineSlots(Error, {
 
     assert: function(v) {

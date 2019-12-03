@@ -408,10 +408,6 @@ window.BMNode = class BMNode extends ProtoClass {
     }
 
     addSubnode (aSubnode) {
-        if(aSubnode.isKindOf(BMField)) {
-            console.log("adding field subnode")
-        }
-
         if (!this._subnodes) {
             this._subnodes = []
         }
@@ -424,7 +420,7 @@ window.BMNode = class BMNode extends ProtoClass {
         }
         const link = BMLinkNode.clone().setLinkedNode(aNode)
         this.addSubnode(link)
-        return this
+        return link
     }
 
     addSubnodes (subnodes) {

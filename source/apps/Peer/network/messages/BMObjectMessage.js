@@ -15,7 +15,7 @@
  
     // sending
  
-        let m = BMObjectMessage.clone()
+        const m = BMObjectMessage.clone()
         m.setSenderPublicKeyString(localId.publicKeyString())
         m.setEncryptedData(remoteId.encryptJson(dataDict)) // content assumed to be a dict
         m.makeTimeStampNow()
@@ -26,7 +26,7 @@
     // will get keys from localIdentities to attempt decryption
     // returns null is failed
     
-        let content = m.content()     
+        const content = m.content()     
         
 */
 
@@ -37,17 +37,16 @@ var BitcoreMessage = require("bitcore-message");
 window.BMObjectMessage = class BMObjectMessage extends BMMessage {
     
     initPrototype () {
-        this.newSlots({
-            msgType: "object",
-            senderPublicKeyString: null,
-            //receiverPublicKeyString: null,
-            timeStamp: null,
-            encryptedData: null,
-            data: null,
-            msgHash: null, // hash of data - computed as needed    
-            signature: null, // sender signature on msgHash
-        })
-        this.protoAddStoredSlots(["msgType", "encryptedData", "data", "senderPublicKeyString", "timeStamp", "signature"])
+        this.newSlot("msgType", "object").setShouldStore(true)
+        this.newSlot("encryptedData", null).setShouldStore(true)
+        this.newSlot("data", null).setShouldStore(true)
+        this.newSlot("senderPublicKeyString", null).setShouldStore(true)
+        //this.newSlot("receiverPublicKeyString", null).setShouldStore(true)
+        this.newSlot("timeStamp", null).setShouldStore(true)
+        this.newSlot("signature", null).setShouldStore(true)
+
+        this.newSlot("msgHash", null)
+
         this.setCanDelete(true)
         this.setShouldStoreSubnodes(false)
     }
@@ -57,7 +56,7 @@ window.BMObjectMessage = class BMObjectMessage extends BMMessage {
     }
     
     duplicate () {
-        let objMsg = BMObjectMessage.clone()
+        const objMsg = BMObjectMessage.clone()
         objMsg.setMsgDict(this.msgDict())
         return objMsg
     }
@@ -74,7 +73,7 @@ window.BMObjectMessage = class BMObjectMessage extends BMMessage {
     }
     
     title () {
-        let h = this.msgHash() ? this.msgHash().slice(0, 4) : "null"
+        const h = this.msgHash() ? this.msgHash().slice(0, 4) : "null"
         return this.msgType() + " " + h
     }
     
@@ -95,7 +94,7 @@ window.BMObjectMessage = class BMObjectMessage extends BMMessage {
     }
     
     msgDict () {
-        let dict = {
+        const dict = {
             msgType: this.msgType(),
             sender: this.senderPublicKeyString(),
             //receiver: this.receiverPublicKeyString(),
@@ -116,7 +115,7 @@ window.BMObjectMessage = class BMObjectMessage extends BMMessage {
     }
 
     theDictToHash () {
-        let dict = this.msgDict()
+        const dict = this.msgDict()
         delete dict.msgHash   // remove this slots as we are computing hash itself
         delete dict.sig // remove this slot as signature is done on hash
         return dict
@@ -125,8 +124,8 @@ window.BMObjectMessage = class BMObjectMessage extends BMMessage {
     // hash
 	
     computeMsgHash () {
-        let s = Object.toJsonStableString(this.theDictToHash())
-        let hash = s.sha256String()
+        const s = Object.toJsonStableString(this.theDictToHash())
+        const hash = s.sha256String()
         //this.debugLog("\n    dict: ", s, "\n    computed hash: " + hash)
         return hash
     }
@@ -156,13 +155,13 @@ window.BMObjectMessage = class BMObjectMessage extends BMMessage {
     }
 	
     ageInSeconds () {
-        let nowInSecs = new Date().getTime()/1000
+        const nowInSecs = new Date().getTime()/1000
         return nowInSecs - this.timeStamp()
     }
 
     hasValidSignature () {
-        let spk = new bitcore.PublicKey(this.senderPublicKeyString());
-        let isValid = BitcoreMessage(this.msgHash()).verify(spk.toAddress(), this.signature());
+        const spk = new bitcore.PublicKey(this.senderPublicKeyString());
+        const isValid = BitcoreMessage(this.msgHash()).verify(spk.toAddress(), this.signature());
         //console.log("hasValidSignature: " + verified)
         return isValid
     }
@@ -188,7 +187,7 @@ window.BMObjectMessage = class BMObjectMessage extends BMMessage {
     }
 	
     validationErrors () {
-        let errors = []
+        const errors = []
 
         if (!this.senderPublicKeyString()) {
             errors.push("missing senderPublicKeyString")

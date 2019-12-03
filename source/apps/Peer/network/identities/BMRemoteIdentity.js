@@ -11,15 +11,12 @@ var bitcore = require("bitcore-lib")
 window.BMRemoteIdentity = class BMRemoteIdentity extends BMStorableNode {
     
     initPrototype () {
-        this.newSlots({
-            name: "untitled",
-            publicKeyString: "",
-            hasPrivateKey: false,
-            sessionKeys: null,
-            messages: null, // TODO: remove later - no longer used
-        })
+        this.newSlot("name", "untitled").setShouldStore(true)
+        this.newSlot("publicKeyString", "").setShouldStore(true)
 
-        this.protoAddStoredSlots(["name", "publicKeyString"])
+        this.newSlot("hasPrivateKey", false)
+        this.newSlot("sessionKeys", null)
+        this.newSlot("messages", null)  // TODO: remove later - no longer used
     }
 
     init () {
@@ -28,7 +25,6 @@ window.BMRemoteIdentity = class BMRemoteIdentity extends BMStorableNode {
         this.setNodeVisibleClassName("Contact")
 
         this.setShouldStore(true)
-
         this.setNodeCanEditTitle(true)
         this.setNodeCanEditSubtitle(false)
 		

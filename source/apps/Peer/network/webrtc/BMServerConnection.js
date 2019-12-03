@@ -19,7 +19,6 @@ window.BMServerConnection = class BMServerConnection extends BMNode {
             lastError: null,
             privateKey: null,
             status: "not connected",
-            error: null,
             //log: null,
             sessionId: null,
             statusLog: null,
@@ -28,6 +27,8 @@ window.BMServerConnection = class BMServerConnection extends BMNode {
         
             pingInterval: null,
         })
+
+        this.newSlot("error", null) //.setShouldStore(true)
     }
 
     init () {
@@ -74,7 +75,7 @@ window.BMServerConnection = class BMServerConnection extends BMNode {
 	    }
 	    
         //const entry = BMDataStoreRecord.clone().setNodeColumnBackgroundColor("white").setNodeMinWidth(300)
-        statusNode.addStoredField(BMTextAreaField.clone().setKey("dict").setValueMethod("error").setValueIsEditable(false).setIsMono(true))
+        statusNode.addField(BMTextAreaField.clone().setKey("dict").setValueMethod("error").setValueIsEditable(false).setIsMono(true))
         //entry.setTitle(s)
         //entry.setSubtitle(new Date().toString())
         //entry.setValue(s)
@@ -83,15 +84,16 @@ window.BMServerConnection = class BMServerConnection extends BMNode {
 
     setStatus (s, error) {
         //console.warn(this.typeId() + ".setStatus(" + s + ")")
-        
-        this._status = s
-        this.setSubtitle(s)
-        
-        this.addLog(s, error)
-        
-        //this.scheduleSyncToView()
-        this.didUpdateNode() 
-        this.server().didUpdateNode() 
+        if (this._status !== s) {
+            this._status = s
+            this.setSubtitle(s)
+            
+            this.addLog(s, error)
+            
+            //this.scheduleSyncToView()
+            this.didUpdateNode() 
+            this.server().didUpdateNode() 
+        }
         return this
     }
 

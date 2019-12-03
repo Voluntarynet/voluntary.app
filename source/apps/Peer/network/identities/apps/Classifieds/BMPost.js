@@ -9,19 +9,15 @@
 window.BMPost = class BMPost extends BMStorableNode {
     
     initPrototype () {
-        this.newSlots({
-            price: null,
-            title: null,
-            description: null,
-        })
-        this.protoAddStoredSlots(["price", "title", "description"])
+        this.newSlot("price", null).setShouldStore(true)
+        this.newSlot("title", null).setShouldStore(true)
+        this.newSlot("description", null).setShouldStore(true)
     }
 
     init () {
         super.init()
         this.setCanDelete(true)
         this.setNodeMinWidth(550)
-        
         this.setTitle("Untitled")
         this.setPrice(0)
         this.setDescription("Description")

@@ -248,13 +248,14 @@ window.ProtoClass = class ProtoClass {
 
     allSlots (allSlots = {}) {
         //assert(this.isPrototype())
-        Object.assign(allSlots, this.slots());
 
         if (this.__proto__ && this.__proto__.slotNamed) {
             this.__proto__.allSlots(allSlots)
         } else {
             //console.log("is this possible?")
         }
+
+        Object.assign(allSlots, this.slots()); // do this last so we override ancestor slots
 
         return allSlots
     }
@@ -292,6 +293,11 @@ window.ProtoClass = class ProtoClass {
     }
 
     newSlot (slotName, initialValue = null) {
+        assert(Type.isUndefined(this.slots()[slotName]))
+        return this.overrideSlot(slotName, initialValue)
+    }
+
+    overrideSlot (slotName, initialValue = null) {
         assert(this.isPrototype())
         /*
         if (slotName === "overView") {
@@ -300,7 +306,6 @@ window.ProtoClass = class ProtoClass {
         */
         
         assert(Type.isString(slotName))
-        assert(Type.isUndefined(this.slots()[slotName]))
         //assert(!this.hasOwnProperty(slotName))
 
         /*

@@ -9,25 +9,24 @@
 window.BMClassifiedPost = class BMClassifiedPost extends BMFieldSetNode {
     
     initPrototype () {
+        const thirtyDaysInMilliseconds = 30 * 24 * 60 * 60 * 1000
+        this.newSlot("uuid", null).setShouldStore(true)
+        this.newSlot("postPeriod", thirtyDaysInMilliseconds).setShouldStore(true)
+        this.newSlot("hasSent", false).setShouldStore(true)
+        this.newSlot("stamp", null).setShouldStore(true)
+        this.newSlot("title", null).setShouldStore(true)
+        this.newSlot("price", 0).setShouldStore(true)
+        this.newSlot("currency", "BTC").setShouldStore(true)
+        this.newSlot("postDate", null).setShouldStore(true)
+        this.newSlot("description", null).setShouldStore(true)
+        this.newSlot("imageDataURLs", null).setShouldStore(true)
+
         this.newSlots({
-            title: null, // string
-            price: 0,
-            currency: "BTC",
-            description: null, // string
             path: "", // string
             isEditable: false,
             objMsg: null,
-            
-            postDate: null,
-            postPeriod: 30 * 24 * 60 * 60 * 1000, // 30 days in milliseconds
-            uuid: null,
-            // imagesNode:null,
-            imageDataURLs: null,
-            hasSent: false,
         })
 
-        //this.protoAddStoredSlots(["price", "title", "description", "path", "postDate", "postPeriod", "uuid", "imageDataURLs", "hasSent"])
-        this.protoAddStoredSlots(["uuid", "postPeriod", "hasSent"])
     }
 
     init () {
@@ -35,20 +34,17 @@ window.BMClassifiedPost = class BMClassifiedPost extends BMFieldSetNode {
         this.setShouldStore(true)
         //this.setNodeMinWidth(550)
         
- 		this.addStoredField(BMStampField.clone().setKey("stamp").setValueMethod("stamp")).setValueIsEditable(false)
-        this.addFieldNamed("path").setKey("path").setValueIsEditable(false)
+        this.addField(BMStampField.clone().setKey("stamp").setValueMethod("stamp")).setValueIsEditable(false)
+        this.addField(BMField.clone().setKey("path").setValueMethod("path")).setValueIsEditable(false)
         this.fieldNamed("path").visibleValue = function () {
             return this.value().split("/").join(" / ")
         }
-		
-        this.addFieldNamed("title").setKey("title").setValueIsEditable(true)
- 		this.addStoredField(BMNumberField.clone().setKey("price").setValueMethod("price")).setValueIsEditable(true).setUnsetVisibleValue(0)
-
-
- 		this.addStoredField(BMOptionsNode.clone().setKey("currency").setValueMethod("currency")).setValueIsEditable(true).setValidValuesMethod("currencySymbols").setNoteMethod("currencyName")
- 		this.addStoredField(BMDateField.clone().setKey("sent date").setValueMethod("postDate")).setValueIsEditable(false).setUnsetVisibleValue("(not sent yet)")
-        this.addStoredField(BMTextAreaField.clone().setKey("description").setValueMethod("description")).setValueIsEditable(true)
-        this.addStoredField(BMImageWellField.clone().setKey("drop images here").setValueMethod("imageDataURLs")).setValueIsEditable(true)
+        this.addField(BMField.clone().setKey("title").setValueMethod("title")).setValueIsEditable(true)
+ 		this.addField(BMNumberField.clone().setKey("price").setValueMethod("price")).setValueIsEditable(true).setUnsetVisibleValue(0)
+ 		this.addField(BMOptionsNode.clone().setKey("currency").setValueMethod("currency")).setValueIsEditable(true).setValidValuesMethod("currencySymbols").setNoteMethod("currencyName")
+ 		this.addField(BMDateField.clone().setKey("sent date").setValueMethod("postDate")).setValueIsEditable(false).setUnsetVisibleValue("(not sent yet)")
+        this.addField(BMTextAreaField.clone().setKey("description").setValueMethod("description")).setValueIsEditable(true)
+        this.addField(BMImageWellField.clone().setKey("drop images here").setValueMethod("imageDataURLs")).setValueIsEditable(true)
 
         this.setTitle("Untitled")
         this.setPrice(0)

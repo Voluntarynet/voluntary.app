@@ -9,14 +9,11 @@
 window.BMAppMessage = class BMAppMessage extends BMFieldSetNode {
     
     initPrototype () {
-        this.newSlots({
-            objMsg: null,
-            senderId: null,
-            receiverId: null,
-            hasRead: false,
-        })
+        this.newSlot("senderId", null).setShouldStore(true)
+        this.newSlot("receiverId", null).setShouldStore(true)
+        this.newSlot("objMsg", null).setShouldStore(true)
+        this.newSlot("hasRead", false)
         this.setShouldStore(true)
-        this.protoAddStoredSlots(["senderId", "receiverId", "objMsg"])
     }
 
     init () {

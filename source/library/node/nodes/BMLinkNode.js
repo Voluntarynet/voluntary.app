@@ -11,7 +11,7 @@
 window.BMLinkNode = class BMLinkNode extends BMSummaryNode {
     
     initPrototype () {
-        this.newSlot("label", "link title").setShouldStore(true)
+        this.overrideSlot("title", null).setShouldStore(true)
         this.newSlot("linkedNode", null).setShouldStore(true)
 
         this.setShouldStore(true)
@@ -20,7 +20,6 @@ window.BMLinkNode = class BMLinkNode extends BMSummaryNode {
         this.setNodeCanInspect(true)
         this.setNodeMinWidth(300)
 
-        this.setTitle("title of link") // TODO: add option to use title of linked node?
         this.setNodeCanEditTitle(true)
 
         this.setCanDelete(true)
@@ -32,22 +31,29 @@ window.BMLinkNode = class BMLinkNode extends BMSummaryNode {
     }
 
     title () {
-        if (Type.isNull(this.label()) && this.linkedNode()) {
+        return this.linkedNode().title()
+    }
+
+    /*
+    title () {
+        if (Type.isNull(super.title()) && this.linkedNode()) {
             return this.linkedNode().title()
         }
-        return this.label()
-    }
 
-    setTitle (aString) {
-        this.setLabel(aString)
-        return this
+        return super.title()
     }
+    */
 
-    acceptedSubnodeTypes () {
+    acceptedSubnodeTypes () { 
+        // TODO: have browser use nodeRowLink for this protocol?
         return []
     }
     
     note () {
+        if (this.linkedNode()) {
+            return this.linkedNode().note()
+        }
+
         return this.nodeRowLink() ? "&gt;" : null
     }
 

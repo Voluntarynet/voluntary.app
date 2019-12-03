@@ -2,6 +2,13 @@
 TODO:
 
 
+	- fix crash when selecting Settings/Storage
+	
+	- fix visible selection of rows
+	
+	
+	- have auto getter/setters check and call super?
+
 	subnodes not loading
 
 	change use of "slot" to mean Slot object and replace other uses with "property"

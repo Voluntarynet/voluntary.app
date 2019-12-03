@@ -9,10 +9,6 @@
 window.BMImageResourcesNode = class BMImageResourcesNode extends BMStorableNode {
     
     initPrototype () {
-        this.newSlots({
-        })
-        //this.protoAddStoredSlots(["title", "dataURL"])
-
     }
 
     init () {

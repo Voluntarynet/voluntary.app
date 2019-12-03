@@ -13,17 +13,18 @@ window.BMRServer = class BMRServer extends BMFieldSetNode {
     
     initPrototype () {
         this.newSlots({
-            // host: "peers.bitmarkets.org",
-            host: "127.0.0.1",
-            port: 9000,
-            path: "",
-            isSecure: false,
             serverConnection: null,
             bloomDistance: null,
             error: null,
             connectButton: null,
         })
-        this.protoAddStoredSlots(["host", "port"])
+
+        // host: "peers.bitmarkets.org",
+        this.newSlot("host", "127.0.0.1").setShouldStore(true)
+        this.newSlot("port", 9000).setShouldStore(true)
+        this.newSlot("path", "").setShouldStore(true)
+        this.newSlot("isSecure", false).setShouldStore(true)
+        
         this.setIsDebugging(true)
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(true)
@@ -39,10 +40,10 @@ window.BMRServer = class BMRServer extends BMFieldSetNode {
         //this.addSubnode(this.serverConnection())
         //this.setTitle("RTC Server")
 	
-        this.addStoredField(BMField.clone().setKey("host").setValueMethod("host"))
-        this.addStoredField(BMNumberField.clone().setKey("port").setValueMethod("port").setValueIsEditable(true))
-        this.addStoredField(BMField.clone().setKey("path").setValueMethod("path"))
-        this.addStoredField(BMBooleanField.clone().setKey("isSecure").setValueMethod("isSecure").setValueIsEditable(true))
+        this.addField(BMField.clone().setKey("host").setValueMethod("host"))
+        this.addField(BMNumberField.clone().setKey("port").setValueMethod("port").setValueIsEditable(true))
+        this.addField(BMField.clone().setKey("path").setValueMethod("path"))
+        this.addField(BMBooleanField.clone().setKey("isSecure").setValueMethod("isSecure").setValueIsEditable(true))
         //this.addField(BMPointerField.clone().setKey("serverConnection").setValueMethod("serverConnection").)
         this.addField(BMPointerField.clone().setKey("serverConnection").setValueMethod("serverConnection"))
 		

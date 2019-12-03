@@ -9,9 +9,11 @@
 window.BMProfile = class BMProfile extends BMFieldSetNode {
     
     initPrototype () {
-        this.newSlots({
-            avatars: [],
-        })
+        this.newSlot("name", "").setShouldStore(true)
+        this.newSlot("publicKeyString", null).setShouldStore(true)
+        this.newSlot("avatars", []).setShouldStore(true)
+        this.newSlot("phone", null).setShouldStore(true)
+        this.newSlot("email", null).setShouldStore(true)
     }
 
     init () {
@@ -20,15 +22,14 @@ window.BMProfile = class BMProfile extends BMFieldSetNode {
  		this.setShouldStore(true)
         this.setTitle("profile")
         
-        this.addStoredField(BMImageWellField.clone().setValueMethod("avatars").setKey("avatar image")).setValueIsEditable(true)
-		
-        this.addFieldNamed("name").setValueMethod("name").setValueIsEditable(true)
-        this.addStoredField(BMIdentityField.clone().setValueMethod("publicKeyString").setKey("public key").setValueIsEditable(true))
+        this.addField(BMImageWellField.clone().setValueMethod("avatars").setKey("avatar image")).setValueIsEditable(true)
+        this.addField(BMField.clone().setKey("name").setValueMethod("name").setValueIsEditable(true))
+        this.addField(BMIdentityField.clone().setValueMethod("publicKeyString").setKey("public key").setValueIsEditable(true))
         //	this.addStoredField(BMIdentityField.clone().setValueMethod("privateKeyString").setKey("private key").setValueIsEditable(false))
 
         // local fields
-        this.addFieldNamed("phone").setValueMethod("phone").setValueIsEditable(true)
-        this.addFieldNamed("email").setValueMethod("email").setValueIsEditable(true)
+        this.addField(BMField.clone().setKey("phone").setValueMethod("phone").setValueIsEditable(true))
+        this.addField(BMField.clone().setKey("email").setValueMethod("email").setValueIsEditable(true))
         /*
         this.addFieldNamed("address").setValueMethod("address").setValueIsEditable(true)
         this.addFieldNamed("twitter").setValueMethod("twitter").setValueIsEditable(true)

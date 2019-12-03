@@ -19,8 +19,7 @@ window.BMNetwork = class BMNetwork extends BMFieldSetNode {
             idsBloomFilter: null,
         })
 
-        const isOpenRelayField = BMBooleanField.clone().setKey("isOpenRelay").setValueMethod("isOpenRelay").setValueIsEditable(true)
-        this.newSlot("isOpenRelay", false).setShouldStore(true).setField(isOpenRelayField)
+        this.newSlot("isOpenRelay", false).setShouldStore(true) //.setField(isOpenRelayField)
     }
 
     init () {
@@ -48,6 +47,8 @@ window.BMNetwork = class BMNetwork extends BMFieldSetNode {
         this.setBlacklists(this.defaultStore().rootInstanceWithPidForProto("_blacklists", BMBlacklists))
         this.addLinkSubnode(this.blacklists())
         
+        const isOpenRelayField = BMBooleanField.clone().setKey("isOpenRelay").setValueMethod("isOpenRelay").setValueIsEditable(true)
+        this.addField(isOpenRelayField)
         this.watchIdentities()
     }
 

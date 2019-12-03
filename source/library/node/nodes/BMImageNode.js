@@ -9,9 +9,8 @@
 window.BMImageNode = class BMImageNode extends BMStorableNode {
     
     initPrototype () {
-        this.newSlots({
-            dataURL: null,
-        })
+        this.newSlot("title", null).setShouldStore(true)
+        this.newSlot("dataURL", null).setShouldStore(true)
 
         this.setNodeCanEditTitle(true)
         this.setNodeCanEditSubtitle(false)
@@ -20,7 +19,6 @@ window.BMImageNode = class BMImageNode extends BMStorableNode {
         this.setSubtitle(null)
 
         this.setCanDelete(true)
-        this.protoAddStoredSlots(["title", "dataURL"])
     }
 
     init () {

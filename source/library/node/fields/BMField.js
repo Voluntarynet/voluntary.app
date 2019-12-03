@@ -92,6 +92,7 @@ window.BMField = class BMField extends BMSummaryNode {
         return this
     }
 
+    /*
     target () {
         assert(!Type.isNull(this._target)) 
 
@@ -101,6 +102,7 @@ window.BMField = class BMField extends BMSummaryNode {
 		
         return this.parentNode() // we can't do this because we want to support free floating Fields
     }
+    */
 
     /*
     setKey (newValue) {

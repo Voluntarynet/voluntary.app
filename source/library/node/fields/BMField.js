@@ -93,12 +93,15 @@ window.BMField = class BMField extends BMSummaryNode {
     }
 
     target () {
+        assert(!Type.isNull(this._target)) 
+
         if (this._target) {
             return this._target
         }
 		
-        return this.parentNode()
+        return this.parentNode() // we can't do this because we want to support free floating Fields
     }
+
     /*
     setKey (newValue) {
         this._key = newValue

@@ -24,7 +24,6 @@ window.BMNetwork = class BMNetwork extends BMFieldSetNode {
     }
 
     init () {
-
         if (BMNetwork._shared) {
             throw new Error("multiple instances of " + this.type() + " singleton")
         }

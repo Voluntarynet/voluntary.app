@@ -26,7 +26,7 @@ window.SvgIconView = class SvgIconView extends DomStyledView {
             doesMatchParentColor: false,
             svgString: "",
             url: null,
-            iconName: "add",
+            iconName: null,
             fillColor: "white",
             strokeColor: "white",
         })

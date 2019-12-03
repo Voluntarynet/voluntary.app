@@ -236,7 +236,7 @@ window.BMFieldRowView = class BMFieldRowView extends BrowserFieldRow {
         	node.setValue(this.valueView().value())
         }
 		
-        super.suncToNode()
+        super.syncToNode()
         return this
     }
     

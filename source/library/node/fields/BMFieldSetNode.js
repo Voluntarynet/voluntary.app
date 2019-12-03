@@ -71,8 +71,10 @@ window.BMFieldSetNode = class BMFieldSetNode extends BMStorableNode {
         return aField
     }
 
+    */
+
     addField (aField) {
-        //aField.setTarget(this)
+        aField.setTarget(this)
         this.addSubnode(aField)
         return aField
     }
@@ -84,10 +86,9 @@ window.BMFieldSetNode = class BMFieldSetNode extends BMStorableNode {
         this.addStoredField(field)
         return field
     }
-    */
     
     fieldNamed (aName) {
-        return this.subnodes().detect(function (subnode) { 
+        return this.subnodes().detect( (subnode) => { 
             return subnode.valueMethod() === aName || subnode.key() === aName
         })
     }

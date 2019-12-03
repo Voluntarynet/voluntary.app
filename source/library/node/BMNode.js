@@ -408,6 +408,10 @@ window.BMNode = class BMNode extends ProtoClass {
     }
 
     addSubnode (aSubnode) {
+        if(aSubnode.isKindOf(BMField)) {
+            console.log("adding field subnode")
+        }
+
         if (!this._subnodes) {
             this._subnodes = []
         }

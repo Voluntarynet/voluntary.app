@@ -31,7 +31,7 @@ window.BMThemeClassState = class BMThemeClassState extends BMFieldSetNode {
     setDivClassName (aName) {
         this._divClassName = aName
         this.setTitle(aName)
-        let style = DomCSSInspector.shared().setDivClassName(aName).cssStyle()
+        const style = DomCSSInspector.shared().setDivClassName(aName).cssStyle() // needed?
         this.syncFromViewStyle()
         return this
     }
@@ -43,7 +43,7 @@ window.BMThemeClassState = class BMThemeClassState extends BMFieldSetNode {
 
     setupSubnodes () {
         this.attributeNames().forEach((attributeName) => {
-            let field = BMField.clone().setKey(attributeName).setValueIsEditable(""); // TODO: no .setValueMethod()??
+            const field = BMField.clone().setKey(attributeName).setValueIsEditable(""); // TODO: no .setValueMethod()??
             this.addStoredField(field)
         })
         return this

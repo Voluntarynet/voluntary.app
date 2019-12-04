@@ -10,7 +10,6 @@ window.ShelfItemView = class ShelfItemView extends NodeView {
     
     initPrototype () {
         this.newSlots({
-            isSelected: false,
             isSelectable: true,
             restCloseButtonOpacity: 0.4,
             iconView: null,

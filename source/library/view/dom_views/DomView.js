@@ -43,6 +43,7 @@ window.DomView = class DomView extends ProtoClass {
         
             gestureRecognizers: null,
             eventListenersDict: null,
+            defaultTapGesture: null,
         })
     }
 
@@ -2468,20 +2469,16 @@ window.DomView = class DomView extends ProtoClass {
     // default tap gesture
 
     addDefaultTapGesture () {
-        if (!this._defaultTapGesture) {
-            this._defaultTapGesture = this.addGestureRecognizer(TapGestureRecognizer.clone()) 
+        if (!this.defaultTapGesture()) {
+            this.setDefaultTapGesture( this.addGestureRecognizer(TapGestureRecognizer.clone()) )
         }
-        return this._defaultTapGesture
+        return this.defaultTapGesture()
     }
-
-    defaultTapGesture () {
-        return this._defaultTapGesture
-    }
-
+    
     removeDefaultTapGesture () {
-        if (this._defaultTapGesture) {
-            this.removeGestureRecognizer(this._defaultTapGesture)
-            this._defaultTapGesture = null
+        if (this.defaultTapGesture) {
+            this.removeGestureRecognizer(this.defaultTapGesture)
+            this.setDefaultTapGesture(null)
         }
         return this
     }

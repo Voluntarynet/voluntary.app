@@ -293,11 +293,24 @@ window.ProtoClass = class ProtoClass {
     }
 
     newSlot (slotName, initialValue = null) {
-        assert(Type.isUndefined(this.slots()[slotName]))
-        return this.overrideSlot(slotName, initialValue)
+        if(!Type.isUndefined(this.allSlots()[slotName])) {
+            const msg = this.type() + " newSlot('" + slotName + "') - slot already exists"
+            console.log(msg)
+            throw new Error(msg)
+        }
+        return this.justNewSlot(slotName, initialValue)
     }
 
     overrideSlot (slotName, initialValue = null) {
+        if(Type.isUndefined(this.allSlots()[slotName])) {
+            const msg = this.type() + " newSlot('" + slotName + "') - no existing slot to override"
+            console.log(msg)
+            throw new Error(msg)
+        }
+        return this.justNewSlot(slotName, initialValue)
+    }
+
+    justNewSlot (slotName, initialValue = null) { // private
         assert(this.isPrototype())
         /*
         if (slotName === "overView") {

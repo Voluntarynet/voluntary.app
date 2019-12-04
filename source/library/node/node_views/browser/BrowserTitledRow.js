@@ -14,7 +14,6 @@ window.BrowserTitledRow = class BrowserTitledRow extends BrowserRow {
             subtitleView: null,
             noteView: null,
             thumbnailView: null,
-            isSelected: false,
         })
     }
 

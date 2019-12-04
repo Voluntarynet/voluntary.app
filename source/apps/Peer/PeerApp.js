@@ -12,52 +12,33 @@ window.PeerApp = class PeerApp extends App {
     
     initPrototype () {
         this.newSlots({
-            name: "voluntary.app",
-            version: [0, 5, 1, 0],
-        
             // model
             about: null,
             localIdentities: null,
             network: null,
             dataStore: null,
             resources: null,
-            
-            atomNode: null,
-        
+                    
             // views
             browser: null,
-            shelf: null,
-        
-            atomNodeView: null,
+            shelf: null,        
         })
     }
 
     init () {
         super.init()
+        this.setName("voluntary.app")
+        this.setVersion([0, 5, 1, 0])
     }
 
     setup () {
         super.setup()
         
-
-        if (false) {
-            this.setupAtom()
-        } else {
-            
-            this.setupModel()
-            this.setupViews()
-        }
+        this.setupModel()
+        this.setupViews()
 
         this.appDidInit()
-
         return this
-    }
-
-    setupAtom () {
-        this.setAtomNode(AtomNode.clone())
-        this.setAtomNodeView(AtomNodeView.clone().setNode(this.atomNode()))
-        this.atomNodeView().setIsVertical(true).syncLayout()
-        this.rootView().addSubview(this.atomNodeView())
     }
 
     // --- setup model ---

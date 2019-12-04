@@ -341,7 +341,7 @@ window.BrowserRow = class BrowserRow extends NodeView {
         if (lookedUpStyles) {
             return lookedUpStyles
         } else {
-            this.lookedUpStyles()
+            this.lookedUpStyles() // for debugging
         }
         throw new Error("missing styles")
     }

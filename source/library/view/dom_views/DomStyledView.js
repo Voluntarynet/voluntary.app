@@ -34,10 +34,8 @@
 window.DomStyledView = class DomStyledView extends DomView {
     
     initPrototype () {
-        this.newSlots({
-            styles: null,
-            isSelected: false,
-        })
+        this.newSlot("styles", null)
+        this.newSlot("isSelected", false).setDoesHookSetter(true)
     }
 
     init () {
@@ -92,7 +90,14 @@ window.DomStyledView = class DomStyledView extends DomView {
 	    	this._isSelected = aBool
 	    	this.didChangeIsSelected()
         }
+        console.log(this.typeId() + " setIsSelected(" + aBool + ")")
 	    return this
+    }
+
+    didUpdateSlotIsSelected (oldValue, newValue) {
+        // sent by hooked setter
+        this.didChangeIsSelected()
+        return this
     }
 
     didChangeIsSelected () {

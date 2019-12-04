@@ -2,6 +2,11 @@
 TODO:
 
 
+	- remove remaining newSlots({})
+	add AtomicDictionary close
+	
+	- review this.overrideSlot("title"...
+	
 	- fix crash when selecting Settings/Storage
 	
 	- fix visible selection of rows

@@ -30,12 +30,10 @@
 
 window.AtomicPersistentDictionary = class AtomicPersistentDictionary extends ideal.AtomicDictionary {
     initPrototype () {
-        this.newSlots({
-            name: "AtomicPersistentDictionary", // default name
-            idb: null,
-            isOpen: false,
-            changedKeys: null,
-        })
+        this.newSlot("name", "AtomicPersistentDictionary")
+        this.newSlot("idb", null)
+        // this.newSlot("isOpen", false)
+        this.newSlot("changedKeys", null)
     }
 
     init() {
@@ -49,6 +47,11 @@ window.AtomicPersistentDictionary = class AtomicPersistentDictionary extends ide
     assertAccessible () {
         super.assertAccessible()
         this.assertOpen()
+    }
+
+    open () {
+        throw new Error(this.type() + " synchronous open not supported")
+        return this
     }
 
     asyncOpen (callback) {

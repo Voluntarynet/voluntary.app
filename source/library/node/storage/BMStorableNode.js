@@ -10,14 +10,16 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
     
     initPrototype () {
         this.newSlots({
-            shouldStore: false,
+            // shouldStore: false, // defined in BMNode
             shouldStoreSubnodes: true,
             //loadsUnionOfChildren: false,
             isUnserializing: false,
             doesLazyLoadChildren: true,
             subnodePids: null,
         })
-        this.protoAddStoredSlot("canDelete")  // TODO: move elsewhere
+        this.setShouldStore(false)
+        //this.setShouldStoreSubnodes(true)
+        this.overrideSlot("canDelete", false).setShouldStore(true)  // defined in BMNode, but we want to store it
     }
 
     init () {

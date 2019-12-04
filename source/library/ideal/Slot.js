@@ -19,6 +19,11 @@ window.ideal.Slot = class Slot {
         return obj
     }
 
+    static initThisClass () {
+        this.prototype.initPrototype()
+        return this
+    }
+
     simpleNewSlot (slotName, initialValue = null) {
         const privateName = "_" + slotName;
         this[privateName] = initialValue;
@@ -41,7 +46,7 @@ window.ideal.Slot = class Slot {
         return this;
     }
 
-    init () {
+    initPrototype () {
         this.simpleNewSlot("owner", null) // typically a reference to a .prototype
         this.simpleNewSlot("name", false) 
         this.simpleNewSlot("initValue", null) // needed?
@@ -67,7 +72,19 @@ window.ideal.Slot = class Slot {
         this.simpleNewSlot("field", null)
     }
 
+    init () {
+
+    }
+
     autoSetGetterSetterOwnership () {
+        //this.setOwnsGetter(true)
+        //this.setOwnsSetter(true)
+        if (this.alreadyHasGetter()) {
+            console.log(this.owner().type() + "  already has getter " + this.getterName())
+        }
+        if (this.alreadyHasSetter()) {
+            console.log(this.owner().type() + "  already has setter " + this.setterName())
+        }
         this.setOwnsGetter(!this.alreadyHasGetter())
         this.setOwnsSetter(!this.alreadyHasSetter())
         return this
@@ -76,6 +93,9 @@ window.ideal.Slot = class Slot {
     setDoesHookSetter (aBool) {
         if (this._doesHookSetter !== aBool) {
             this._doesHookSetter = aBool
+            if (aBool) { 
+                this.setOwnsSetter(true)
+            }
             this.setupSetter()
         }
         return this 
@@ -254,6 +274,9 @@ window.ideal.Slot = class Slot {
 
     directSetter () {
         const privateName = this.privateName()
+        if (privateName === "_isSelected") {
+            console.log("why?")
+        }
         const func = function (newValue) {
             this[privateName] = newValue
             return this
@@ -279,6 +302,11 @@ window.ideal.Slot = class Slot {
                 this[privateName] = newValue
                 //this.didSetSlot(slotName, oldValue, newValue)
                 this.didUpdateSlot(slotName, oldValue, newValue)
+
+                const methodName = "didUpdateSlot" + slotName.capitalized()
+                if (this[methodName]) {
+                    this[methodName].apply(this, [oldValue, newValue])
+                }
             }
             return this
         }
@@ -353,7 +381,7 @@ window.ideal.Slot = class Slot {
         }
     }
     
-}
+}.initThisClass()
 
 
 // --- slot methods on Function -------------------------------------------------

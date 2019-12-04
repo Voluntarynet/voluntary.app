@@ -12,11 +12,10 @@
 
 */
 
-window.TextField = class TouchLisTextFieldtener extends DomStyledView {
+window.TextField = class TextField extends DomStyledView {
     
     initPrototype () {
         this.newSlots({
-            isSelected: false,
             selectedColor: null,
             unselectedColor: null,
             doesClearOnReturn: false,

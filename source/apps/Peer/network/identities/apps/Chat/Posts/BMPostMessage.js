@@ -12,7 +12,7 @@ window.BMPostMessage = class BMPostMessage extends BMAppMessage {
     initPrototype () {
 
         this.newSlot("content", null).setShouldStore(true)
-        this.newSlot("hasRead", false).setShouldStore(true)
+        this.overrideSlot("hasRead", false).setShouldStore(true)
         this.newSlot("replyCount", 0).setShouldStore(true)
         this.newSlot("repostCount", 0).setShouldStore(true)
         this.newSlot("likeCount", 0).setShouldStore(true)

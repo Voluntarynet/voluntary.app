@@ -21,9 +21,7 @@ window.BMPostDraftRowView = class BMPostDraftRowView extends BrowserRow {
             //deleteButton: null,
         
             bottomView: null,
-            sendButton: null,
-                
-            isSelected: false,
+            sendButton: null,                
         })
     }
 

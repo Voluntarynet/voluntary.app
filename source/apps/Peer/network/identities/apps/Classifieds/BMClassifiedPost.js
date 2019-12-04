@@ -14,19 +14,15 @@ window.BMClassifiedPost = class BMClassifiedPost extends BMFieldSetNode {
         this.newSlot("postPeriod", thirtyDaysInMilliseconds).setShouldStore(true)
         this.newSlot("hasSent", false).setShouldStore(true)
         this.newSlot("stamp", null).setShouldStore(true)
-        this.newSlot("title", null).setShouldStore(true)
+        this.overrideSlot("title", null).setShouldStore(true)
         this.newSlot("price", 0).setShouldStore(true)
         this.newSlot("currency", "BTC").setShouldStore(true)
         this.newSlot("postDate", null).setShouldStore(true)
         this.newSlot("description", null).setShouldStore(true)
         this.newSlot("imageDataURLs", null).setShouldStore(true)
 
-        this.newSlots({
-            path: "", // string
-            isEditable: false,
-            objMsg: null,
-        })
-
+        this.newSlot("path", "")
+        this.newSlot("objMsg", null)
     }
 
     init () {

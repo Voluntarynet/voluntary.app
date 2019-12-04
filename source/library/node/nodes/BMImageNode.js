@@ -9,7 +9,7 @@
 window.BMImageNode = class BMImageNode extends BMStorableNode {
     
     initPrototype () {
-        this.newSlot("title", null).setShouldStore(true)
+        this.overrideSlot("title", null).setShouldStore(true)
         this.newSlot("dataURL", null).setShouldStore(true)
 
         this.setNodeCanEditTitle(true)

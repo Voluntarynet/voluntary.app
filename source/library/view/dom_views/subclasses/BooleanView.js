@@ -19,7 +19,6 @@ window.BooleanView = class BooleanView extends DomStyledView {
     
     initPrototype () {
         this.newSlots({
-            isSelected: false,
             //selectedColor: null,
             //unselectedColor: null,
             doesClearOnReturn: false, // needed?

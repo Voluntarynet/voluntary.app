@@ -27,7 +27,6 @@ window.BMPostMessageRowView = class BMPostMessageRowView extends BrowserRow {
             likeButton: null,
             likeCountView: null,
             //rightView: null,
-            isSelected: false,
         })
     }
 

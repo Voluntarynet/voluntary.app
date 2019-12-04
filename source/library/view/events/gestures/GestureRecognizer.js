@@ -511,7 +511,7 @@ window.GestureRecognizer = class GestureRecognizer extends ProtoClass {
         this.onUp(event)
     }
 
-    onTouchCancel (event) {
+    onTouchCancel (event) { 
         //this.onUp(event)
         this.cancel()
     }
@@ -622,6 +622,11 @@ window.GestureRecognizer = class GestureRecognizer extends ProtoClass {
         this.sendDelegateMessage(this.cancelledMessage())
         this.didFinish()
         return this
+    }
+
+    cancel () {
+        this.sendCancelledMessage()
+        //this.didFinish()
     }
 
     // ---

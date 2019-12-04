@@ -2474,10 +2474,10 @@ window.DomView = class DomView extends ProtoClass {
         }
         return this.defaultTapGesture()
     }
-    
+
     removeDefaultTapGesture () {
-        if (this.defaultTapGesture) {
-            this.removeGestureRecognizer(this.defaultTapGesture)
+        if (this.defaultTapGesture()) {
+            this.removeGestureRecognizer(this.defaultTapGesture())
             this.setDefaultTapGesture(null)
         }
         return this

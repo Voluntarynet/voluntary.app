@@ -141,8 +141,11 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
     }
 
     readRoot () {
+        console.log(" this.hasStoredRoot() = " + this.hasStoredRoot())
         if (this.hasStoredRoot()) {
-            this.setRootObject(this.objectForPid(this.rootKey()))
+            const root = this.objectForPid(this.rootKey())
+            this._rootObject = root
+            //this.setRootObject()
         }
         return this.rootObject()
     }
@@ -235,9 +238,11 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
     // --- storing ---
 
     commitStoreDirtyObjects () {
-        this.recordsDict().begin()
-        this.storeDirtyObjects()
-        this.recordsDict().commit()
+        if (this.hasDirtyObjects()) {
+            this.recordsDict().begin()
+            this.storeDirtyObjects()
+            this.recordsDict().commit()
+        }
     }
 
     storeDirtyObjects () { // PRIVATE
@@ -252,6 +257,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
             Object.keys(dirtyBucket).forEach((puuid) => {
                 const obj = dirtyBucket[puuid]
 
+                //onsole.log("  storing pid " + puuid)
                 if (justStored[puuid]) {
                     throw new Error("attempt to double store " + puuid)
                 }
@@ -263,7 +269,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
             })
 
             totalStoreCount += thisLoopStoreCount
-            this.debugLog(() => "totalStoreCount: " + totalStoreCount)
+            //this.debugLog(() => "totalStoreCount: " + totalStoreCount)
             if (thisLoopStoreCount === 0) {
                 break
             }
@@ -277,6 +283,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
     objectForRecord (aRecord) { // private
         const aClass = window[aRecord.type]
         const obj = aClass.instanceFromRecordInStore(aRecord, this)
+        assert(aRecord.id)
         obj.setPuuid(aRecord.id)
 
         if(obj.scheduleLoadFinalize) {
@@ -352,6 +359,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
     recordForPid (puuid) { // private
         const jsonString = this.recordsDict().at(puuid)
         const aRecord = JSON.parse(jsonString)
+        aRecord.id = puuid
         return aRecord
     }
 
@@ -359,8 +367,13 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
 
     storeObject (obj) {
         const puuid = obj.puuid()
+        if (Type.isUndefined(puuid)) {
+            obj.puuid()
+        }
         assert(puuid)
-        this.recordsDict().atPut(puuid, JSON.stringify(obj.recordForStore(this)))
+        let v = JSON.stringify(obj.recordForStore(this))
+        console.log(puuid + " <- " + v)
+        this.recordsDict().atPut(puuid, v)
         return this
     }
 

@@ -24,7 +24,7 @@ Object.defineSlots(BMStorableNode.prototype, {
             aRecord.slots.push([k, aStore.refValue(v)])
         })
 
-        //aRecord.subnodesRecord = this.subnodes().recordForStore(aStore)
+        aRecord.subnodesRecord = this.subnodes().recordForStore(aStore)
 
         return aRecord
     },
@@ -46,7 +46,10 @@ Object.defineSlots(BMStorableNode.prototype, {
 
         //this.setSubnodesRecord(aRecord.subnodesRecord) 
 
-        //const subnodes = Array.instanceFromRecordInStore(this.subnodesRecord(), aStore)
+        if (aRecord.subnodesRecord) {
+            const subnodes = Array.instanceFromRecordInStore(aRecord.subnodesRecord, aStore)
+            this.setSubnodes(subnodes)
+        }
         //this.setSubnodePids(aRecord.children, aStore) // only calls aStore.objectForPid
 
         this.didLoadFromStore()

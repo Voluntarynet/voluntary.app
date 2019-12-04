@@ -19,7 +19,7 @@ Object.defineSlots(Date.prototype, {
     },
 
     shallowCopy: function() {
-        return new Date(date.getTime())
+        return new Date(this.getTime())
     },
 
     // ---

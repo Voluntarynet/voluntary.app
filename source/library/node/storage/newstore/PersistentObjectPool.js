@@ -44,10 +44,6 @@ window.PersistentObjectPool = class PersistentObjectPool extends ObjectPool {
         console.log("loadedNode = ", loadedNode)
         console.log(this.type() + " --- self test end --- ")
     }
-
-    rootInstanceWithPidForProto (aTitle, aProto) {
-        return this.rootObject().subnodeWithTitleIfAbsentInsertClosure(aTitle, () => aProto.clone())
-    }
     
 }.initThisClass()
 

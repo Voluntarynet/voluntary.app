@@ -18,7 +18,6 @@ Object.defineSlots(Object, {
 
     _puuidWeakMap: new WeakMap(),
 
-
 })
 
 Object.defineSlots(Object.prototype, {
@@ -32,11 +31,17 @@ Object.defineSlots(Object.prototype, {
     },
 
     hasPuuid: function() {
-        return Object._puuidWeakMap.has(this)
+        let hasIt = Object._puuidWeakMap.has(this)
+        if (hasIt) {
+            assert(Object._puuidWeakMap.get(this))
+        }
+        return hasIt
     },
 
     setPuuid: function(puuid) {
+        assert(puuid)
         Object._puuidWeakMap.set(this, puuid);
+        assert(this.hasPuuid())
         return this
     },
 

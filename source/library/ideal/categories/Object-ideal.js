@@ -82,8 +82,8 @@ Object.defineSlots(Object, {
 
 
 Object.defineSlots(Object.prototype, {
-    shallowCopy: function (obj) {
-        return Object.assign({}, obj);
+    shallowCopy: function () {
+        return Object.assign({}, this);
     },
     
     ownForEachKV: function(fn) {    

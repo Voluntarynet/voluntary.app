@@ -39,14 +39,14 @@ window.ideal.AtomicDictionary = class AtomicDictionary extends ideal.Dictionary 
         this.assertAccessible()
         this.assertNotInTx()
         this.setOldVersion(this.jsDict().shallowCopy()) // so no one else has a reference to our copy
-        this.setJsDict(this.jsDict())
         this.setHasBegun(true)
         return this
     }
 
     revert() {
         this.assertInTx()
-        this.setJsDict(this.oldVersion()) // rever to old version
+        // replace dict with old version
+        this.setJsDict(this.oldVersion()) 
         this.setOldVersion(null)
         this.setHasBegun(false)
         return this
@@ -54,7 +54,8 @@ window.ideal.AtomicDictionary = class AtomicDictionary extends ideal.Dictionary 
 
     commit () {
         this.assertInTx()
-        this.setOldVersion(null) // no more need for old version
+        // erase old version
+        this.setOldVersion(null) 
         this.setHasBegun(false)
         return this
     }

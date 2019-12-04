@@ -98,6 +98,7 @@ window.AtomicPersistentDictionary = class AtomicPersistentDictionary extends ide
         this.debugLog(this.type() + " begin ---")
 
         super.begin()
+        assert(this.changedKeys().size === 0)
         this.changedKeys().clear()
         return this
     }
@@ -109,7 +110,7 @@ window.AtomicPersistentDictionary = class AtomicPersistentDictionary extends ide
     }
 	
     commit () { // public
-        this.debugLog(this.type() + " commit ---")
+        this.debugLog(this.type() + " prepare commit ---")
 	    // push to indexedDB tx 
 	    // TODO: lock until IndexedDB's tx complete callback is received,
         // ::: super.commit() is at end of method
@@ -121,14 +122,16 @@ window.AtomicPersistentDictionary = class AtomicPersistentDictionary extends ide
         
 	    let count = 0
         
-        this.changedKeys().keysArray().forEach((k) => {
-            const isDelete = !this.jsDict().hasOwnProperty(k)
+        const keys = this.changedKeys().keysArray()
+        const dict = this.jsDict()
+        keys.forEach((k) => {
+            const isDelete = !dict.hasOwnProperty(k)
 
             if (isDelete) {
                 tx.removeAt(k)
             } else {
                 const isUpdate = this.oldVersion().hasOwnProperty(k)
-                const v = this.jsDict()[k]
+                const v = dict[k]
                 
                 if (isUpdate) {
                     tx.atUpdate(k, v)
@@ -148,6 +151,7 @@ window.AtomicPersistentDictionary = class AtomicPersistentDictionary extends ide
         this.debugLog(() => "---- " + this.type() + " committed tx with " + count + " writes ----")
 
         super.commit()
+        this.changedKeys().clear()
         return count
     }
 	

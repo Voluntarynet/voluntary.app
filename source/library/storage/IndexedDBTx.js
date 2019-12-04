@@ -60,7 +60,6 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
     }
 
     showTxRequestStack () {
-        //const 
         const rs = this.txRequestStack()
         if (rs) { 
             console.log("error stack ", rs)
@@ -98,11 +97,11 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
 
         const requestStack = this.isDebugging() ? new Error().stack : null
         aRequest.onerror = (event) => {
-		    const fullDescription = aRequest.description + " on objectStore [" + this.storeName() + "] " + event.target.error
+		    const fullDescription = "writing key '" + aRequest._key + "' on objectStore '" + this.storeName() + "' error: '" + event.target.error + "'"
+		    console.warn(fullDescription)
 		    if (requestStack) { 
                 console.log("error stack ", requestStack)
             }
-		    console.warn(fullDescription)
 		  	throw new Error(fullDescription)
         }
 	    this.requests().push(aRequest)
@@ -126,13 +125,15 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
     
     /*
     hasKey (key) {
+        // not efficient - only use for debugging
 	    const domStringList = this.objectStore().indexNames
 	    const hasKey = domStringList.contains(key) 
-	    console.log("domStringList.length : ", domStringList.length)
-	    console.log("domStringList['" + key + "'] exists ", hasKey)
+	    //console.log("domStringList.length : ", domStringList.length)
+	    //console.log("domStringList['" + key + "'] exists ", hasKey)
 	    return hasKey
     }
     */
+
 
     /*
     atPut (key, object) {
@@ -148,9 +149,13 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
     */
 	
     atAdd (key, object) { 
+        //assert(!this.hasKey(key))
+
+        assert(Type.isString(key))
+        assert(Type.isString(object))
         this.assertNotCommitted()
         
-        this.debugLog(() => " add " + key )
+        this.debugLog(() => " add " + key + "'" + object + "'")
 
         const entry = this.entryForKeyAndValue(key, object)
         const request = this.objectStore().add(entry);
@@ -168,6 +173,10 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
     }
 
     atUpdate (key, object) {
+        //assert(!this.hasKey(key))
+
+        assert(Type.isString(key))
+        assert(Type.isString(object))
 	    this.assertNotCommitted()
 
         this.debugLog(() => " atUpdate " + key)

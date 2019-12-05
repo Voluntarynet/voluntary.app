@@ -74,7 +74,8 @@ window.BMFieldSetNode = class BMFieldSetNode extends BMStorableNode {
     */
 
     addField (aField) {
-        aField.setTarget(this)
+        aField.setTarget(this) 
+        aField.getValueFromTarget()
         this.addSubnode(aField)
         return aField
     }

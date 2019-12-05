@@ -48,4 +48,8 @@ Object.defineSlots(Object.prototype, {
         return Type.typeName(this) + "_" + puuid
     },
 
+    typeId: function() {
+        return this.typePuuid()
+    },
+
 })

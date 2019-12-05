@@ -228,8 +228,7 @@ window.ProtoClass = class ProtoClass {
 
     // --- slots ---
 
-    slotNamed (slotName) {
-        assert(this.isPrototype())
+    instanceSlotNamed (slotName) {
         const slots = this.slots()
         if (slots.hasOwnProperty(slotName)) {
             return slots[slotName]
@@ -241,7 +240,12 @@ window.ProtoClass = class ProtoClass {
             //console.log("is this possible?")
         }
 
-        return null 
+        return null
+    }
+
+    slotNamed (slotName) {
+        assert(this.isPrototype())
+        return this.instanceSlotNamed(slotName)
     }
 
     // slot objects
@@ -398,11 +402,11 @@ window.ProtoClass = class ProtoClass {
     allDescendantProtos () {
 
     }
-    */
 
     typeId () {
         return this.typePuuid()
     }
+    */
 
     cloneWithoutInit () {
         const obj = Object.clone(this);

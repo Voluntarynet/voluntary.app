@@ -24,6 +24,7 @@ Object.defineSlots(BMNode.prototype, {
         this.allSlots().ownForEachKV((slotName, slot) => {
             if (slot.shouldStore()) {
                 const v = slot.onInstanceGetValue(this)
+                assert(!Type.isUndefined(v))
                 aRecord.entries.push([slotName, aStore.refValue(v)])
             }
         })
@@ -50,19 +51,20 @@ Object.defineSlots(BMNode.prototype, {
             const k = entry[0]
             const v = entry[1]
 
-            const slot = this.slotNamed(k)
+            const slot = this.instanceSlotNamed(k)
 
             if (!slot.hasSetterOnInstance(this)) {
+                // schema must have changed 
+                // so schedule to store again, which will remove missing slot in record
                 this.scheduleSyncToStore()
             } else {
-
                 if (slot.isLazy()) {
                     const pid = aStore.pidFromRef(v)
                     const storeRef = StoreRef.clone().setPid(pid).setStore(aStore)
-                    slot.onInstanceSetValueRef(obj, storeRef)
+                    slot.onInstanceSetValueRef(this, storeRef)
                 } else {
                     const unrefValue = aStore.unrefValue(v)
-                    slot.onInstanceSetValue(obj, unrefValue)
+                    slot.onInstanceSetValue(this, unrefValue)
                 }
             }
 

@@ -80,6 +80,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         this.setLastSyncTime(null)
         this.setMarkedSet(null)
         this.setNodeStoreDidOpenNote(window.NotificationCenter.shared().newNote().setSender(this).setName("nodeStoreDidOpen"))
+        this.setIsDebugging(true)
         return this
     }
 
@@ -218,8 +219,12 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
 
     addDirtyObject (anObject) {
         const puuid = anObject.puuid()
-        this.dirtyObjects()[puuid] = anObject
-        this.scheduleStore()
+        if (!this.dirtyObjects()[puuid]) {
+            this.debugLog("addDirtyObject(" + anObject.typeId() + ")")
+            this.dirtyObjects()[puuid] = anObject
+            this.addActiveObject(anObject)
+            this.scheduleStore()
+        }
         return this
     }
 
@@ -239,9 +244,11 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
 
     commitStoreDirtyObjects () {
         if (this.hasDirtyObjects()) {
+            this.debugLog("--- commitStoreDirtyObjects begin ---")
             this.recordsDict().begin()
             this.storeDirtyObjects()
             this.recordsDict().commit()
+            this.debugLog("--- commitStoreDirtyObjects end ---")
         }
     }
 
@@ -283,7 +290,6 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
     objectForRecord (aRecord) { // private
         const aClass = window[aRecord.type]
         const obj = aClass.instanceFromRecordInStore(aRecord, this)
-        assert(aRecord.id)
         obj.setPuuid(aRecord.id)
 
         if(obj.scheduleLoadFinalize) {
@@ -372,7 +378,8 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         }
         assert(puuid)
         let v = JSON.stringify(obj.recordForStore(this))
-        console.log(puuid + " <- " + v)
+        console.log("storeObject(" + obj.typeId() + ")")
+        //console.log(puuid + " <- " + v)
         this.recordsDict().atPut(puuid, v)
         return this
     }
@@ -392,10 +399,11 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         // in-memory objects aren't considered
         // so we make sure they're flushed to the db first 
         this.recordsDict().begin()
-        this.flushIfNeeded()
+        this.flushIfNeeded() // store any dirty objects
 
         this.debugLog("--- begin collect ---")
         this.setMarkedSet(new Set())
+        this.activeObjects().forEach(obj => this.markPid(obj.puuid()))
         this.activeLazyPids().forEach(pid => this.markPid(pid))
         this.markPid(this.rootObject().puuid()) // this is recursive, but skips marked records
         const deleteCount = this.sweep()
@@ -403,11 +411,10 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         this.debugLog(() => "--- end collect - collected " + deleteCount + " pids ---")
 
         this.recordsDict().commit()
-
         return deleteCount
     }
 
-    markPid (pid) {
+    markPid (pid) { // private
         //this.debugLog(() => "markPid(" + pid + ")")
         if (!this.markedSet().has(pid)) {
             this.markedSet().add(pid)
@@ -433,7 +440,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
     puuidsSetFromJson (json, puuids = new Set()) {
         // json can only contain array's, dictionaries, and literals.
         // We store dictionaries as an array of entries, 
-        // so dicts in the json are reserved for pointers
+        // and reserve dicts in the json for pointers with the format { "*": "<puuid>" }
 
         //console.log(" json: ", JSON.stringify(json, null, 2))
 

@@ -12,7 +12,7 @@
     
 */
 
-window.BMStunServer = class BMStunServer extends BMFieldSetNode {
+window.BMStunServer = class BMStunServer extends BMFieldSetNode { 
     
     initPrototype () {
 
@@ -56,7 +56,11 @@ window.BMStunServer = class BMStunServer extends BMFieldSetNode {
         const type = parts[0]
         assert(type === "stun")
         const host = parts[1]
-        const port = parts[2]
+        let port = parts[2]
+        assert(host)
+        if (Type.isNullOrUndefined(port)) {
+            port = 3478
+        }
         this.setHost(host)
         this.setPort(port)
         return this

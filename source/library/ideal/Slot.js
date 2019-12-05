@@ -392,6 +392,10 @@ window.ideal.Slot = class Slot {
         this.onInstanceSetValue(anInstance, obj)
         this.onInstanceSetValueRef(null)
     }
+
+    hasSetterOnInstance (anInstance) {
+        return Type.isFunction(anInstance[this.setterName()])
+    }
     
 }.initThisClass()
 

@@ -13,6 +13,7 @@ window.BMCreatorNode = class BMCreatorNode extends BMStorableNode {
     initPrototype () {
         this.newSlots({
         })
+        this.overrideSlot("subnodes").setShouldStore(false)
     }
 
     init () {

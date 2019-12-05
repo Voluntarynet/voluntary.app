@@ -42,11 +42,15 @@ window.ideal.Slot = class Slot {
                 return this;
             }
         }
+
+        this._slotNames.add(slotName)
         
         return this;
     }
 
     initPrototype () {
+        this._slotNames = new Set()
+        
         this.simpleNewSlot("owner", null) // typically a reference to a .prototype
         this.simpleNewSlot("name", false) 
         this.simpleNewSlot("initValue", null) // needed?
@@ -76,14 +80,24 @@ window.ideal.Slot = class Slot {
 
     }
 
+    copyFrom (aSlot) {
+        this._slotNames.forEach((slotName) => {
+            const privateName = "_" + slotName;
+            const setterName = "set" + slotName.capitalized()
+            const v = aSlot[slotName].apply(aSlot)
+            this[setterName].apply(this, [v])
+        })
+        return this
+    }
+
     autoSetGetterSetterOwnership () {
         //this.setOwnsGetter(true)
         //this.setOwnsSetter(true)
         if (this.alreadyHasGetter()) {
-            console.log(this.owner().type() + "  already has getter " + this.getterName())
+            //console.log(this.owner().type() + "  already has getter " + this.getterName())
         }
         if (this.alreadyHasSetter()) {
-            console.log(this.owner().type() + "  already has setter " + this.setterName())
+            //console.log(this.owner().type() + "  already has setter " + this.setterName())
         }
         this.setOwnsGetter(!this.alreadyHasGetter())
         this.setOwnsSetter(!this.alreadyHasSetter())
@@ -249,15 +263,16 @@ window.ideal.Slot = class Slot {
     // one shot hooked getter
 
     makeOneShotHookedGetter () {
-        this.owner()[this.getterName()] = this.hookedGetter()
+        this.owner()[this.getterName()] = this.oneShotHookedGetter()
         return this
     }
 
     oneShotHookedGetter () {
         const privateName = this.privateName()
+        const slotName = this.name()
         const func = function () {
-            this.willGetSlot(privateName) // opportunity to replace value before first access
-            arguments.callee.slot().makeDirectGetter() // now, replace with direct getter after first call
+            this.willGetSlot(slotName) // opportunity to replace value before first access
+            this.instanceSlotNamed(slotName).makeDirectGetter() // now, replace with direct getter after first call
             return this[privateName]
         }
         func.setSlot(this)

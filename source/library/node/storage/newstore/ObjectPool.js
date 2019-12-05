@@ -95,19 +95,20 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
     // --- open ---
 
     open () {
-        assert(this.recordsDict().open)
+        this.recordsDict().setName(this.name())
         this.recordsDict().open()
         this.onRecordsDictOpen()
         return this
     }
 
     asyncOpen (callback) {
-        assert(this.recordsDict().asyncOpen)
+        this.recordsDict().setName(this.name())
         this.recordsDict().asyncOpen(() => {
             this.onRecordsDictOpen()
             if (callback) {
                 callback()
             }
+            //this.scheduleStore()
         })
         return this
     }
@@ -246,9 +247,9 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         if (this.hasDirtyObjects()) {
             this.debugLog("--- commitStoreDirtyObjects begin ---")
             this.recordsDict().begin()
-            this.storeDirtyObjects()
+            const storeCount = this.storeDirtyObjects()
             this.recordsDict().commit()
-            this.debugLog("--- commitStoreDirtyObjects end ---")
+            this.debugLog("--- commitStoreDirtyObjects end --- stored " + storeCount + " objects")
         }
     }
 
@@ -288,7 +289,11 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
     // --- reading ---
 
     objectForRecord (aRecord) { // private
-        const aClass = window[aRecord.type]
+        const className = aRecord.type
+        const aClass = window[className]
+        if (!aClass) {
+            throw new Error("missing class '" + className + "'")
+        }
         const obj = aClass.instanceFromRecordInStore(aRecord, this)
         obj.setPuuid(aRecord.id)
 
@@ -403,7 +408,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
 
         this.debugLog("--- begin collect ---")
         this.setMarkedSet(new Set())
-        this.activeObjects().forEach(obj => this.markPid(obj.puuid()))
+        this.activeObjects().ownForEachKV((pid, obj) => this.markPid(pid))
         this.activeLazyPids().forEach(pid => this.markPid(pid))
         this.markPid(this.rootObject().puuid()) // this is recursive, but skips marked records
         const deleteCount = this.sweep()
@@ -461,10 +466,11 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
     sweep () {
         // delete all unmarked records
         let deleteCount = 0
+        const recordsDict = this.recordsDict()
         this.recordsDict().keys().forEach((pid) => {
             if (!this.markedSet().has(pid)) {
                 //this.debugLog("deletePid(" + pid + ")")
-                this.recordsDict().removeAt(pid)
+                recordsDict.removeAt(pid)
                 deleteCount ++
             }
         })

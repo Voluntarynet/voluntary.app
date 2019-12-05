@@ -25,10 +25,12 @@ window.BMPointerField = class BMPointerField extends BMField {
         this.setNodeRowIsSelectable(true)
     }
 
+    /*
     setValue (v) {
         console.warn("WARNING: BMPointerField setValue '" + v + "'")
         return this
     }
+    */
 
     title () {
         return this.value().title()

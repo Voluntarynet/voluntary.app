@@ -27,6 +27,10 @@ window.PersistentObjectPool = class PersistentObjectPool extends ObjectPool {
         return this
     }
 
+    open () {
+        throw new Error(this.type() + " synchronous open not available - use asyncOpen()")
+    }
+
     selfTest () {
         console.log(this.type() + " --- self test start --- ")
         const store = this.thisClass().clone()

@@ -85,7 +85,7 @@ window.BMRServer = class BMRServer extends BMFieldSetNode {
 
     title () {
         //return "RTC Server " + this.host() + "  " + this.port()
-        return this.host() + "  " + this.port()
+        return " [" + this.host() + "]  (" + this.port() + ")"
     }
     
     subtitle () {

@@ -77,8 +77,8 @@ Object.defineSlots(BMNode.prototype, {
     },
 
     willGetSlot: function(slotName) {
-        ProtoClass.willGetSlot.apply(this, [slotName])
-        let slot = this.slotNamed(slotName)
+        ProtoClass.prototype.willGetSlot.apply(this, [slotName])
+        let slot = this.instanceSlotNamed(slotName)
         let storeRef = slot.onInstanceGetValueRef(this)
         if (storeRef) {
             let obj = storeRef.unref()

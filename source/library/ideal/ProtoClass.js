@@ -310,24 +310,21 @@ window.ProtoClass = class ProtoClass {
     }
 
     overrideSlot (slotName, initialValue = null) {
-        if(Type.isUndefined(this.allSlots()[slotName])) {
+        const oldSlot = this.allSlots()[slotName]
+        if(Type.isUndefined(oldSlot)) {
             const msg = this.type() + " newSlot('" + slotName + "') - no existing slot to override"
             console.log(msg)
             throw new Error(msg)
         }
-        return this.justNewSlot(slotName, initialValue)
+        const slot = this.justNewSlot(slotName, initialValue)
+        slot.copyFrom(oldSlot)
+        slot.setInitValue(initialValue)
+        return slot
     }
 
     justNewSlot (slotName, initialValue = null) { // private
         assert(this.isPrototype())
-        /*
-        if (slotName === "overView") {
-            console.log("overView")
-        }
-        */
-        
         assert(Type.isString(slotName))
-        //assert(!this.hasOwnProperty(slotName))
 
         /*
         // TODO: we want to create the private slots and initial value on instances
@@ -352,18 +349,6 @@ window.ProtoClass = class ProtoClass {
 
         return this;
     }
-
-    /*
-    updateSlot (slotName, privateName, newValue) {
-        const oldValue = this[privateName];
-        if (oldValue !== newValue) {
-            this[privateName] = newValue;
-            this.didUpdateSlot(slotName, oldValue, newValue)
-        }
-
-        return this;
-    }
-    */
 
     willGetSlot (slotName) {
         const methodName = "willGetSlot" + slotName.capitalized()

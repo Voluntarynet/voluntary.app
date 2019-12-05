@@ -67,7 +67,7 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
     }
 	
     didUpdateSlot (slotName, oldValue, newValue) {
-	    if (!this.shouldStore()) {
+	    if (!this.shouldStore() || !this.isInstance()) {
 	        return this
 	    }
 	    

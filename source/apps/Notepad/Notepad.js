@@ -10,15 +10,11 @@
 window.Notepad = class Notepad extends App {
     
     initPrototype () {
-        this.newSlots({
-            name: "Notepad",
-            version: [0, 0, 0, 0],
-        
+        this.newSlots({        
             // model
             settings: null,
             resources: null,
             dataStore: null,
-        
             // views
             browser: null,
         })
@@ -26,6 +22,8 @@ window.Notepad = class Notepad extends App {
 
     init () {
         super.init()
+        this.setName("Notepad")
+        this.setVersion([0, 0, 0, 0])
         return this
     } 
 
@@ -46,11 +44,11 @@ window.Notepad = class Notepad extends App {
     // --- setup model ---
 
     setupModel () {     
-        this.defaultStore()
+        this.defaultStore().setName(this.name())
 
         const myLists = this.defaultStore().rootInstanceWithPidForProto("_menuNode", BMMenuNode);
         myLists.setTitle("Notepad")
-        this.addSubnode(myLists)
+        this.addLinkSubnode(myLists)
 
         this.setupSettings()
         return this

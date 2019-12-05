@@ -93,7 +93,7 @@ window.ideal.AtomicDictionary = class AtomicDictionary extends ideal.Dictionary 
 
         this.assertAccessible()
         this.assertInTx()
-        return this.removeKey(k);
+        return super.removeKey(k)
     }
 
     // extras 

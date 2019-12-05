@@ -27,7 +27,7 @@ window.BMRegions = class BMRegions extends BMRegion {
         */
 
         //console.log("begin BMClassifieds init")
-        this.setNodeDict(RegionCountriesDict)
+        //this.setNodeDict(RegionCountriesDict)
         this.setTitle("Regions")
         
         this.onLeavesAddDictChildren(CategoriesDict)

@@ -141,7 +141,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
     }
 
     readRoot () {
-        console.log(" this.hasStoredRoot() = " + this.hasStoredRoot())
+        //console.log(" this.hasStoredRoot() = " + this.hasStoredRoot())
         if (this.hasStoredRoot()) {
             const root = this.objectForPid(this.rootKey())
             this._rootObject = root

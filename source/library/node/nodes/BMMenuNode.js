@@ -16,29 +16,22 @@ window.BMMenuNode = class BMMenuNode extends BMSummaryNode {
             //hasSubtitleOfValues: false,
         })
 
-        this.setShouldStore(true)
-        this.setShouldStoreSubnodes(true)
         this.setCanDelete(true)
         this.setNodeCanInspect(true)
+        this.setShouldStore(true)
+        this.setShouldStoreSubnodes(true)
         this.setNodeMinWidth(300)
 
         this.setTitle("title")
         this.setNodeCanEditTitle(true)
-
-        //this.setSubtitle("subtitle")
-        //this.setNodeCanEditSubtitle(true)
-
-        //this.setSubnodeProto(BMMenuNode)
         
         this.setNodeCanReorderSubnodes(true)
         this.protoAddStoredSlot("label")
 
         //this.setNodeColumnStyles(BMViewStyles.clone())
         //this.setNodeRowStyles(BMViewStyles.clone())
-
         //this.setNodeUsesColumnBackgroundColor(false)
 
-        this.setCanDelete(true)
         this.setNodeCanInspect(true) 
     }
 

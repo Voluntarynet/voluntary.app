@@ -104,6 +104,7 @@ window.ideal.Slot = class Slot {
     setIsLazy (aBool) {
         if (this._isLazy !== aBool) {
             this._isLazy = aBool
+            this.setHookedGetterIsOneShot(aBool) // TODO: make these the same thing?
             this.onChangedAttribute()
         }
         return this
@@ -210,8 +211,9 @@ window.ideal.Slot = class Slot {
 
     hookedGetter () {
         const privateName = this.privateName()
+        const slotName = this.name()
         const func = function () {
-            this.willGetSlot(privateName) // opportunity to replace value before first access
+            this.willGetSlot(slotName) // opportunity to replace value before first access
             return this[privateName]
         }
         func.setSlot(this)
@@ -220,6 +222,7 @@ window.ideal.Slot = class Slot {
 
     safeHookedGetter () {
         const privateName = this.privateName()
+        const slotName = this.name()
         // usefull for debugging infinite loops
         const func = function () {
             const slot = arguments.callee.slot()
@@ -230,7 +233,7 @@ window.ideal.Slot = class Slot {
 
             slot.setIsInGetterHook(true)
             try {
-                this.willGetSlot(privateName) 
+                this.willGetSlot(slotName) 
             } catch(e) {
                 slot.setIsInGetterHook(false)
                 throw e
@@ -302,11 +305,6 @@ window.ideal.Slot = class Slot {
                 this[privateName] = newValue
                 //this.didSetSlot(slotName, oldValue, newValue)
                 this.didUpdateSlot(slotName, oldValue, newValue)
-
-                const methodName = "didUpdateSlot" + slotName.capitalized()
-                if (this[methodName]) {
-                    this[methodName].apply(this, [oldValue, newValue])
-                }
             }
             return this
         }
@@ -314,6 +312,7 @@ window.ideal.Slot = class Slot {
         return func
     }
 
+    /*
     postingSetter () {
         const slotName = this.name()
         const privateName = this.privateName()
@@ -330,6 +329,7 @@ window.ideal.Slot = class Slot {
         func.setSlot(this)
         return func
     }
+    */
 
     
     // call helpers
@@ -353,6 +353,10 @@ window.ideal.Slot = class Slot {
     onInstanceSetValueRef (anInstance, aRef) {        
         anInstance[this.refPrivateName()] = aRef
         return this
+    }
+
+    onInstanceGetValueRef (anInstance, aRef) {        
+        return anInstance[this.refPrivateName()]
     }
 
     onInstanceInitSlot (anInstance) {
@@ -379,6 +383,14 @@ window.ideal.Slot = class Slot {
             anInstance.addSubnode(newField)
             newField.getValueFromTarget()
         }
+    }
+
+    onInstanceLoadRef (anInstance) {
+        let storeRef = this.onInstanceGetValueRef(anInstance)
+        assert(storeRef)
+        let obj = storeRef.unref()
+        this.onInstanceSetValue(anInstance, obj)
+        this.onInstanceSetValueRef(null)
     }
     
 }.initThisClass()

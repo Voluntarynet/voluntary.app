@@ -66,6 +66,7 @@ window.BMRegion = class BMRegion extends BMNode {
         return this
     }
     
+    /*
     setNodeDict (aDict) {
         this.setTitle(aDict.name.titleized())
         this.setAllowsSubregions(aDict._allowsSubregions !== false) // All
@@ -84,6 +85,7 @@ window.BMRegion = class BMRegion extends BMNode {
             }
         }  
     }
+    */
     
     onLeavesAddDictChildren (aDict) {
         if (!this.allowsSubregions()) {

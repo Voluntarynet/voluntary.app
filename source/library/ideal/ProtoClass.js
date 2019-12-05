@@ -262,7 +262,11 @@ window.ProtoClass = class ProtoClass {
 
     // stored slots
 
-    storedSlotNames () { // returns a set  
+    storedSlots () {
+
+    }
+
+    storedSlotNamesSet () { // returns a set  
         // TODO: use slot cache
         //assert(this.isPrototype())
         const slotsArray = Object.values(this.allSlots())
@@ -345,6 +349,7 @@ window.ProtoClass = class ProtoClass {
         return this;
     }
 
+    /*
     updateSlot (slotName, privateName, newValue) {
         const oldValue = this[privateName];
         if (oldValue !== newValue) {
@@ -354,9 +359,21 @@ window.ProtoClass = class ProtoClass {
 
         return this;
     }
+    */
+
+    willGetSlot (slotName) {
+        const methodName = "willGetSlot" + slotName.capitalized()
+        if (this[methodName]) {
+            this[methodName].apply(this)
+        }
+    }
 
     didUpdateSlot (slotName, oldValue, newValue) {
         // persistence system can hook this
+        const methodName = "didUpdateSlot" + slotName.capitalized()
+        if (this[methodName]) {
+            this[methodName].apply(this, [oldValue, newValue])
+        }
     }
 
     setSlots (slots) {

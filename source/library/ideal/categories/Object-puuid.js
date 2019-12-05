@@ -31,17 +31,12 @@ Object.defineSlots(Object.prototype, {
     },
 
     hasPuuid: function() {
-        let hasIt = Object._puuidWeakMap.has(this)
-        if (hasIt) {
-            assert(Object._puuidWeakMap.get(this))
-        }
-        return hasIt
+        return Object._puuidWeakMap.has(this)
     },
 
     setPuuid: function(puuid) {
-        assert(puuid)
+        assert(!Type.isNullOrUndefined(puuid))
         Object._puuidWeakMap.set(this, puuid);
-        assert(this.hasPuuid())
         return this
     },
 

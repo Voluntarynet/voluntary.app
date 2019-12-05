@@ -39,14 +39,6 @@ window.BMPostDrafts = class BMPostDrafts extends BMStorableNode {
         this.didUpdateNode()
         return result
     }
-
-    /*
-	scheduleSyncToStore () {
-        super.scheduleSyncToStore()
-        this.debugLog(" scheduleSyncToStore")
-		return this
-	},
-	*/
 	
     shelfIconName () {
 	    return "chat/drafts"

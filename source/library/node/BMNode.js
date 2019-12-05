@@ -104,6 +104,9 @@ window.BMNode = class BMNode extends ProtoClass {
             isFinalized: false,
         })
 
+        this.newSlot("shouldStoreSubnodes", true) //.setShouldStore(true)
+        this.newSlot("isUnserializing", false)
+
         /*
         this.slotNamed("title").setShouldShallowCopy(true)
         this.slotNamed("subtitle").setShouldShallowCopy(true)

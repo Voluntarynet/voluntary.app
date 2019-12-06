@@ -11,43 +11,33 @@
 window.BMDataStoreRecord = class BMDataStoreRecord extends BMFieldSetNode {
     
     initPrototype () {
-        this.newSlots({
-            key: null,
-            didSetupFields: false,
-        })
+        this.newSlot("key", null)
+        this.newSlot("store", null)
     }
 
     init () {
         super.init()
-        //this.setCanDelete(true) // not safe for non-developers
+        this.setCanDelete(false) // not safe for non-developers
         this.setNodeColumnBackgroundColor("white")
-        this.setNodeMinWidth(300)
-    }
-
-    subtitle () {
-        return this.key()
+        this.setNodeMinWidth(600)
     }
 
     prepareForFirstAccess () {
-        this.addSubnode(BMTextAreaField.clone().setKey("dict").setValueMethod("dictString").setValueIsEditable(false).setIsMono(true))
+        this.addField(BMTextAreaField.clone().setKey("dict").setValueMethod("dictString").setValueIsEditable(false).setIsMono(true))
     }
 
-    valuePid () {
-        return this.title()
-    }
-
-    value () {
-        return this.defaultStore().recordsDict().at(this.valuePid())
+    record () {
+        return this.store().recordForPid(this.key())
     }
 
     dictString () {
-        return JSON.stringify(JSON.parse(this.value()), null, 2)
+        return JSON.stringify(this.record(), null, 2)
     }
 
     delete () {
         super.delete()
         //this.defaultStore().justRemoveObject(this.value())
-        this.defaultStore().justRemovePid(this.valuePid())
+        this.defaultStore().justRemovePid(this.key())
         return this
     }
     

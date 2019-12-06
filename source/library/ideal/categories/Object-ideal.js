@@ -113,6 +113,13 @@ Object.defineSlots(Object.prototype, {
         const foundInequality = keys.detect(k => this.hasOwnProperty(k) !== anObject.hasOwnProperty(k))
         return !foundInequality
     },
+
+    getOwnProperty: function(key) {
+        if (this.hasOwnProperty(key)) {
+            return this[key]
+        }
+        return undefined
+    },
 })
 
 // --- Objective-C like associations ---

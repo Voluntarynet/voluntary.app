@@ -34,7 +34,8 @@ Object.defineSlots(BMNode.prototype, {
 
     lazyPids: function(puuids = new Set()) {
         // when doing Store.collect() will need to check for lazy slot pids on active objects
-        this.allSlots().forEach((slot) => {
+        this.allSlots().ownForEachKV((slotName, slot) => {
+            // only need to do this on unloaded store refs in instances
             const storeRef = slot.onInstanceGetValueRef(this)
             if (storeRef) {
                 puuids.add(storeRef.pid())
@@ -58,16 +59,17 @@ Object.defineSlots(BMNode.prototype, {
                 // so schedule to store again, which will remove missing slot in record
                 this.scheduleSyncToStore()
             } else {
-                if (slot.isLazy()) {
-                    const pid = aStore.pidFromRef(v)
+                if (false && slot.isLazy()) {
+                    const pid = v["*"]
+                    assert(pid)
                     const storeRef = StoreRef.clone().setPid(pid).setStore(aStore)
+                    console.log(this.typeId() + "." + slot.name() + " - setting up storeRef ")
                     slot.onInstanceSetValueRef(this, storeRef)
                 } else {
                     const unrefValue = aStore.unrefValue(v)
                     slot.onInstanceSetValue(this, unrefValue)
                 }
             }
-
         })
 
         this.didLoadFromStore()
@@ -79,17 +81,15 @@ Object.defineSlots(BMNode.prototype, {
     willGetSlot: function(slotName) {
         ProtoClass.prototype.willGetSlot.apply(this, [slotName])
         let slot = this.instanceSlotNamed(slotName)
-        let storeRef = slot.onInstanceGetValueRef(this)
-        if (storeRef) {
-            let obj = storeRef.unref()
-            slot.onInstanceSetValue(this, obj)
+        console.log(this.typeId() + ".willGetSlot('" + slotName + "')")
+        if (slot.isLazy()) {
+            slot.onInstanceLoadRef(this)
         }
     },
 
     scheduleLoadFinalize: function() {
         window.SyncScheduler.shared().scheduleTargetAndMethod(this, "loadFinalize")
     },
-    
     
     loadFinalize: function() {
         // called after all objects loaded within this event cycle

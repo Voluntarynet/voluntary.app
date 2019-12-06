@@ -70,7 +70,7 @@ window.BMStoredDatedSetNode = class BMStoredDatedSetNode extends BMStorableNode 
     
     ageInSecondsOfKey (h) {
         if (this.hasKey(h)) {
-            const ageInSeconds = (Date.now() - this.dict()[h])/1000
+            const ageInSeconds = ( Date.now() - this.dict()[h] ) / 1000
             return ageInSeconds
         }
         

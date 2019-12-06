@@ -146,6 +146,8 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         //console.log(" this.hasStoredRoot() = " + this.hasStoredRoot())
         if (this.hasStoredRoot()) {
             const root = this.objectForPid(this.rootKey())
+            //root.instanceSlotNamed("subnodes").setupInOwner()
+            //root.subnodes()
             this._rootObject = root
             //this.setRootObject()
         }
@@ -314,6 +316,10 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
 
     //
 
+    allPids () {
+        return this.recordsDict().keys()
+    }
+
     activeLazyPids () { // returns a set of pids
         const pids = new Set()
         this.activeObjects().ownForEachKV((pid, obj) => {
@@ -450,8 +456,8 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         //console.log(" json: ", JSON.stringify(json, null, 2))
 
         if (Type.isLiteral(json)) {
-            // we could call refsPidsForJsonStore but, none will add any pids 
-            // and null raises exception, so just skip it
+            // we could call refsPidsForJsonStore but none will add any pids,
+            // and null raises exception, so we can just skip it for now
         } else if (Type.isObject(json) && json.refsPidsForJsonStore) {
             json.refsPidsForJsonStore(puuids)
         } else {
@@ -470,7 +476,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         this.recordsDict().keys().forEach((pid) => {
             if (!this.markedSet().has(pid)) {
                 //this.debugLog("deletePid(" + pid + ")")
-                recordsDict.removeAt(pid)
+                recordsDict.removeKey(pid)
                 deleteCount ++
             }
         })

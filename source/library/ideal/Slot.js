@@ -83,9 +83,12 @@ window.ideal.Slot = class Slot {
     copyFrom (aSlot) {
         this._slotNames.forEach((slotName) => {
             const privateName = "_" + slotName;
+            this[privateName] = aSlot[privateName]
+            /*
             const setterName = "set" + slotName.capitalized()
             const v = aSlot[slotName].apply(aSlot)
             this[setterName].apply(this, [v])
+            */
         })
         return this
     }
@@ -119,7 +122,7 @@ window.ideal.Slot = class Slot {
         if (this._isLazy !== aBool) {
             this._isLazy = aBool
             this.setHookedGetterIsOneShot(aBool) // TODO: make these the same thing?
-            this.onChangedAttribute()
+            //this.onChangedAttribute()
         }
         return this
     }
@@ -129,6 +132,8 @@ window.ideal.Slot = class Slot {
             this._shouldStore = aBool
             if (aBool) {
                 this.setDoesHookSetter(true) // TODO: is there a better way?
+            } else {
+                this.setIsLazy(false)
             }
             this.onChangedAttribute()
         }
@@ -223,6 +228,11 @@ window.ideal.Slot = class Slot {
         return this
     }
 
+    makeDirectGetterOnInstance (anInstance) {
+        anInstance[this.getterName()] = this.directGetter()
+        return this   
+    }
+
     hookedGetter () {
         const privateName = this.privateName()
         const slotName = this.name()
@@ -238,8 +248,8 @@ window.ideal.Slot = class Slot {
         const privateName = this.privateName()
         const slotName = this.name()
         // usefull for debugging infinite loops
+        const slot = this
         const func = function () {
-            const slot = arguments.callee.slot()
 
             if (slot.isInGetterHook()) {
                 throw new Error("hooked getter infinite loop detected")
@@ -263,6 +273,8 @@ window.ideal.Slot = class Slot {
     // one shot hooked getter
 
     makeOneShotHookedGetter () {
+        assert(this.owner().isPrototype())
+        console.log(this.owner().type() + "." + this.name() + " setting up one-shot getter in prototype")
         this.owner()[this.getterName()] = this.oneShotHookedGetter()
         return this
     }
@@ -271,8 +283,9 @@ window.ideal.Slot = class Slot {
         const privateName = this.privateName()
         const slotName = this.name()
         const func = function () {
+            console.log(this.typeId() + "." + slotName + " replacing one-shot getter with direct getter")
+            this.instanceSlotNamed(slotName).makeDirectGetterOnInstance(this) // now, replace with direct getter after first call
             this.willGetSlot(slotName) // opportunity to replace value before first access
-            this.instanceSlotNamed(slotName).makeDirectGetter() // now, replace with direct getter after first call
             return this[privateName]
         }
         func.setSlot(this)
@@ -402,10 +415,15 @@ window.ideal.Slot = class Slot {
 
     onInstanceLoadRef (anInstance) {
         let storeRef = this.onInstanceGetValueRef(anInstance)
-        assert(storeRef)
-        let obj = storeRef.unref()
-        this.onInstanceSetValue(anInstance, obj)
-        this.onInstanceSetValueRef(null)
+        if (storeRef) {
+            let obj = storeRef.unref()
+            this.onInstanceSetValue(anInstance, obj)
+            this.onInstanceSetValueRef(anInstance, null)
+        } else {
+            console.warn(anInstance.typeId() + " unable to load storeRef - not found")
+            console.warn(anInstance.typeId() + ".shouldStoreSubnodes() = " + anInstance.shouldStoreSubnodes())
+            //throw new Error("")
+        }
     }
 
     hasSetterOnInstance (anInstance) {

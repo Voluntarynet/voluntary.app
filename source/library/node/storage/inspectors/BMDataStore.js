@@ -41,16 +41,16 @@ window.BMDataStore = class BMDataStore extends BMNode {
         }
     }
 
+    store () {
+        return this.defaultStore()
+    }
+
     refreshSubnodes () {
         //this.debugLog(" refreshSubnodes")
         this.removeAllSubnodes()
-        const dict = this.defaultStore().recordsDict()
-        dict.keys().sort().forEach((key) => {
-            const subnode = BMDataStoreRecord.clone().setTitle(key)
-            const size = dict.at(key).length
-            const sizeDescription = ByteFormatter.clone().setValue(size).formattedValue()
-            subnode.setSubtitle(sizeDescription)
-            this.addRecord(subnode)
+        this.store().allPids().forEach((pid) => {
+            const aRecord = this.store().recordForPid(pid)
+            this.addRecord(aRecord)
         })
     }
 
@@ -64,16 +64,20 @@ window.BMDataStore = class BMDataStore extends BMNode {
     }
 
     addRecord (aRecord) {
-        let className = aRecord.title().split("_").first()
+        const subnode = BMDataStoreRecord.clone()
+        subnode.setTitle(aRecord.type + " " + aRecord.id)
+        subnode.setKey(aRecord.id)
+        subnode.setStore(this.store())
+        const size = JSON.stringify(aRecord).length
+        const sizeDescription = ByteFormatter.clone().setValue(size).formattedValue()
+        subnode.setSubtitle(sizeDescription)
 
-        if (className === "") {
-            className = "roots"
-        }
-
-        const classNode = this.subnodeForClassName(className)
+        const classNode = this.subnodeForClassName(aRecord.type)
         classNode.setNodeMinWidth(300)
-        classNode.justAddSubnode(aRecord)
+        classNode.justAddSubnode(subnode)
+
         return this
     }
+    
     
 }.initThisClass()

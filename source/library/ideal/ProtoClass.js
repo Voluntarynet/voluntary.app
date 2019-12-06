@@ -319,6 +319,7 @@ window.ProtoClass = class ProtoClass {
         const slot = this.justNewSlot(slotName, initialValue)
         slot.copyFrom(oldSlot)
         slot.setInitValue(initialValue)
+        slot.setOwner(this)
         return slot
     }
 

@@ -104,6 +104,9 @@ window.BMNode = class BMNode extends ProtoClass {
             isFinalized: false,
         })
 
+        //this.newSlot("subnodes", null).setIsLazy(true)
+
+
         this.newSlot("shouldStoreSubnodes", true) //.setShouldStore(true)
         this.newSlot("isUnserializing", false)
 
@@ -381,10 +384,6 @@ window.BMNode = class BMNode extends ProtoClass {
     }
 	
     justAddSubnodeAt (aSubnode, anIndex) {
-        if (this.subnodes() === null) {
-            throw new Error("subnodes is null")
-        }
-        
         this.subnodes().atInsert(anIndex, aSubnode)
 
         if (this._subnodeIndex) {
@@ -411,9 +410,6 @@ window.BMNode = class BMNode extends ProtoClass {
     }
 
     addSubnode (aSubnode) {
-        if (!this._subnodes) {
-            this._subnodes = []
-        }
         return this.addSubnodeAt(aSubnode, this.subnodeCount())
     }
 

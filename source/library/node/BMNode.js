@@ -121,7 +121,8 @@ window.BMNode = class BMNode extends ProtoClass {
 
     init () {
         super.init()
-        this._subnodes = []
+        this.setSubnodes([])
+        //this._subnodes = []
         this._actions = []        
         this.setDidUpdateNodeNote(NotificationCenter.shared().newNote().setSender(this).setName("didUpdateNode"))
         this.setShouldFocusSubnodeNote(NotificationCenter.shared().newNote().setSender(this).setName("shouldFocusSubnode"))
@@ -546,6 +547,7 @@ window.BMNode = class BMNode extends ProtoClass {
     didChangeSubnodeList () {
         // TODO: Optimize by setting needsSort=true,
         // and lazy sort next time index is accessed
+        this.defaultStore().addDirtyObject(this.subnodes())
         this.sortIfNeeded()
         this.subnodes().forEach(subnode => subnode.didReorderParentSubnodes())
         this.didUpdateNode()
@@ -880,19 +882,19 @@ window.BMNode = class BMNode extends ProtoClass {
     subnodesCount () {
         return this.subnodes().length
     }
-    
-    setSubnodes (subnodes) {
-        if (this._subnodes && subnodes && this._subnodes.equals(subnodes)) {
+
+    didUpdateSlotSubnodes(oldValue, newValue) {
+        if (oldValue && newValue && oldValue.equals(newValue)) {
             //this.debugLog(".setSubnodes() - skipping because subnodes are the same <<<<<<<<<<<<<<<<<<<<<")
             return this
         }
-        subnodes.forEach(subnode => subnode.setParentNode(this))
-        this._subnodes = subnodes
+
+        this._subnodes.forEach(subnode => subnode.setParentNode(this))
         this.reindexSubnodesIfNeeded()
         this.didChangeSubnodeList()
-        //this.assertSubnodesHaveParentNodes()
         return this
-    }
+    }   
+
     
     assertSubnodesHaveParentNodes () {
         const missing = this.subnodes().detect(subnode => !subnode.parentNode())

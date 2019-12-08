@@ -25,6 +25,11 @@ Object.defineSlots(BMNode.prototype, {
             if (slot.shouldStore()) {
                 const v = slot.onInstanceGetValue(this)
                 assert(!Type.isUndefined(v))
+                // aStore.refValue(v) is not enough to ensure that if 
+                // v is a non-node object, that it's changes will be stored
+                // as those types have no setter hooks
+
+                //aStore.addDirtyObjectIfNotFlushed(v) // this isn't ideal
                 aRecord.entries.push([slotName, aStore.refValue(v)])
             }
         })
@@ -54,20 +59,22 @@ Object.defineSlots(BMNode.prototype, {
 
             const slot = this.instanceSlotNamed(k)
 
-            if (!slot.hasSetterOnInstance(this)) {
-                // schema must have changed 
-                // so schedule to store again, which will remove missing slot in record
-                this.scheduleSyncToStore()
-            } else {
-                if (false && slot.isLazy()) {
-                    const pid = v["*"]
-                    assert(pid)
-                    const storeRef = StoreRef.clone().setPid(pid).setStore(aStore)
-                    console.log(this.typeId() + "." + slot.name() + " - setting up storeRef ")
-                    slot.onInstanceSetValueRef(this, storeRef)
+            if (slot) {
+                if (!slot.hasSetterOnInstance(this)) {
+                    // schema must have changed 
+                    // so schedule to store again, which will remove missing slot in record
+                    this.scheduleSyncToStore()
                 } else {
-                    const unrefValue = aStore.unrefValue(v)
-                    slot.onInstanceSetValue(this, unrefValue)
+                    if (false && slot.isLazy()) {
+                        const pid = v["*"]
+                        assert(pid)
+                        const storeRef = StoreRef.clone().setPid(pid).setStore(aStore)
+                        console.log(this.typeId() + "." + slot.name() + " - setting up storeRef ")
+                        slot.onInstanceSetValueRef(this, storeRef)
+                    } else {
+                        const unrefValue = aStore.unrefValue(v)
+                        slot.onInstanceSetValue(this, unrefValue)
+                    }
                 }
             }
         })

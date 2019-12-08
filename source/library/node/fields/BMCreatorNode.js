@@ -42,7 +42,7 @@ window.BMCreatorNode = class BMCreatorNode extends BMStorableNode {
     }
     */
 
-    fieldTypes () {
+    static fieldTypes () {
         return [
             "BMActionNode", 
             "BMBooleanField", 
@@ -62,7 +62,7 @@ window.BMCreatorNode = class BMCreatorNode extends BMStorableNode {
     }
 
     setupSubnodes () {
-        const newSubnodes = this.fieldTypes().map((typeName) => {
+        const newSubnodes = this.thisClass().fieldTypes().map((typeName) => {
             let name = typeName
             name = name.sansPrefix("BM")
             name = name.sansSuffix("Field")

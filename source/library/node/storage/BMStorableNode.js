@@ -15,12 +15,15 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
         this.overrideSlot("canDelete", false).setShouldStore(true)  // defined in BMNode, but we want to store it
 
         // subnodes
-        const subnodesSlot = this.overrideSlot("subnodes", null)
+        /*
+        const subnodesSlot = this.newSlot("subnodes", null)
+        //subnodesSlot.setOwnsSetter(true)
         subnodesSlot.setShouldStore(true)
         subnodesSlot.setDoesHookGetter(true)
         subnodesSlot.setHookedGetterIsOneShot(true)
         subnodesSlot.setIsLazy(true)
         subnodesSlot.setupInOwner()
+        */
         
         this.newSlot("lazySubnodeCount", null).setShouldStore(true)
     }
@@ -28,6 +31,19 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
     init () {
         super.init()
         //this.scheduleSyncToStore()
+    }
+
+    didUpdateSlotSubnodes (oldValue, newValue) {
+        super.didUpdateSlotSubnodes(oldValue, newValue)
+
+        if (!this.shouldStore() || !this.isInstance()) {
+	        return this
+        }
+        
+        if (newValue && newValue.syncToStoreOnMutation) {
+            newValue.syncToStoreOnMutation()
+        }
+        return this
     }
 
     // --- overrides from parent class ---
@@ -74,14 +90,17 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
         return this
     }
 	
-    didUpdateSlot (slotName, oldValue, newValue) {
+    didUpdateSlot (aSlot, oldValue, newValue) {
+        const slotName = aSlot.name()
+        super.didUpdateSlot(slotName, oldValue, newValue)
+
 	    if (!this.shouldStore() || !this.isInstance()) {
 	        return this
 	    }
 	    
         // check so we don't mark dirty while loading
         // and use private slots directly for performance
-        if (this.storedSlotNamesSet().has(slotName)) { // WARNING: THIS IS SLOW - use setter hook instead?
+        if (this.storedSlotNamesSet().has(slotName)) { // TODO: WARNING: THIS IS SLOW - use setter hook instead?
             //this.debugLog(".didUpdateSlot(" + slotName + ",...) -> scheduleSyncToStore")
             this.scheduleSyncToStore()
         }

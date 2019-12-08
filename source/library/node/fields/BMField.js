@@ -110,19 +110,12 @@ window.BMField = class BMField extends BMSummaryNode {
         return this
     }
     */
-    
-    setValue (newValue) { // called by View on edit
-        const oldValue = this._value
-        this.didUpdateSlot("value", oldValue, newValue)
-        this._value = newValue
 
+    didUpdateSlotValue (oldValue, newValue) {  // setValue() is called by View on edit
         if (this.target() && this.valueMethod()) {
             this.setValueOnTarget(newValue)
         }
-        
         this.didUpdateNode()
-
-        return this
     }
 
     setValueOnTarget (v) { // called by View on edit

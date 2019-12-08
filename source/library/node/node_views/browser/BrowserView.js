@@ -266,7 +266,8 @@ window.BrowserView = class BrowserView extends NodeView {
         rcolors.removeFirst()
         colors = colors.shallowCopy().appendItems(rcolors)
 
-        const rgb = colors.atModLength(i)
+        const rgb = colors[i % colors.length]
+
         const s = "rgb(" + rgb.map((v) => { return Math.round(v * 255) }).join(", ") + ")"
         //console.log("bgColorForIndex = '" + s + "'")
         return s

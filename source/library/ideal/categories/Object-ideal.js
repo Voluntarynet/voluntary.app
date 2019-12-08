@@ -9,16 +9,20 @@
 
 */
 
+Object.defineSlot = function(obj, slotName, slotValue) {
+    const descriptor = {
+        configurable: true,
+        enumerable: false,
+        value: slotValue,
+        writable: true,
+    }
+    Object.defineProperty(obj, slotName, descriptor)
+}
+
 Object.defineSlots = function(obj, dict) {
     Object.keys(dict).forEach((slotName) => {
         const slotValue = dict[slotName]
-        const descriptor = {
-            configurable: true,
-            enumerable: false,
-            value: slotValue,
-            writable: true,
-        }
-        Object.defineProperty(obj, slotName, descriptor)
+        Object.defineSlot(obj, slotName, slotValue)
     })
 }
 

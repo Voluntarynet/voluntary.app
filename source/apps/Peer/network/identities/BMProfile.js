@@ -57,17 +57,12 @@ window.BMProfile = class BMProfile extends BMFieldSetNode {
     identity () {
         return this.parentNode()
     }
-	
-    didUpdateSlot (slotName, oldValue, newValue) {
-        super.didUpdateSlot(slotName, oldValue, newValue)
-
-        if (slotName === "avatars") {
-		    const parentNode = this.parentNode()
-		    if (parentNode && parentNode.didUpdateSubnode) {
-		        parentNode.didUpdateSubnode(this)
-		    }
+    
+    didUpdateSlotAvatars (oldValue, newValue) {
+        const parentNode = this.parentNode()
+        if (parentNode && parentNode.didUpdateSubnode) {
+            parentNode.didUpdateSubnode(this)
         }
-        return this
     }
 	
     shelfIconName () {

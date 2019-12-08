@@ -91,6 +91,14 @@ window.ProtoClass = class ProtoClass {
         return Object.getPrototypeOf(this)
     }
 
+    superClass () {
+        return this.thisClass().superClass()
+    }
+
+    superPrototype () {
+        return this.superClass().prototype
+    }
+
     /*
     static newSlots (slots) {
         throw new Error("should all on prototype instead")
@@ -358,12 +366,14 @@ window.ProtoClass = class ProtoClass {
         }
     }
 
-    didUpdateSlot (slotName, oldValue, newValue) {
+    didUpdateSlot (aSlot, oldValue, newValue) {
+        /*
         // persistence system can hook this
-        const methodName = "didUpdateSlot" + slotName.capitalized()
+        const methodName = "didUpdateSlot" + aSlot.name().capitalized()
         if (this[methodName]) {
             this[methodName].apply(this, [oldValue, newValue])
         }
+        */
     }
 
     setSlots (slots) {

@@ -1,24 +1,28 @@
 
 TODO:
 
+	take a close look at .overrideSlot() calls
+	replace "delete a[i]" with a.removeAt(i)
+	replace "a[i] = v" with atPut(i, v)
 
+	- need to add app to root subnodes?
+	
+	subnodes not loading
+
+	- fix reordering via drag and drop
+	
 	- remove remaining newSlots({})
-	add AtomicDictionary close
+	
+	- add AtomicDictionary close?
 	
 	- review this.overrideSlot("title"...
-	
-	- fix crash when selecting Settings/Storage
-	
-	- fix visible selection of rows
-	
-	
+
 	- have auto getter/setters check and call super?
 
-	subnodes not loading
 
 	change use of "slot" to mean Slot object and replace other uses with "property"
 	
-	need to add stored field in initPrototype and then instantiate it in init
+	need to add stored field in initPrototype and then instantiate it in init?
 
 	- is a field basically a slot which an instance owns?
 	

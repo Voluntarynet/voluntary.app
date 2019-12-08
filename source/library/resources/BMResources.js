@@ -19,7 +19,7 @@ window.BMResources = class BMResources extends BMStorableNode {
 
     init () {
         super.init()
-        this.setShouldStore(true)
+        this.setShouldStore(false)
 
         this.setTitle("Resources")
         this.setSubtitle("")
@@ -29,9 +29,11 @@ window.BMResources = class BMResources extends BMStorableNode {
         //this.watchOnceForNote("appDidInit")
     }
 
+    /*
     shared () {   
         return this.sharedInstanceForClass(BMResources)
     }
+    */
 
     setupSubnodes () {
 

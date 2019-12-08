@@ -35,7 +35,7 @@ window.DomStyledView = class DomStyledView extends DomView {
     
     initPrototype () {
         this.newSlot("styles", null)
-        this.newSlot("isSelected", false).setDoesHookSetter(true)
+        this.newSlot("isSelected", false).setOwnsSetter(true).setDoesHookSetter(true)
     }
 
     init () {

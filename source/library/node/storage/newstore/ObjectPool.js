@@ -65,6 +65,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
             recordsDict: null, // AtomicDictionary
             activeObjects: null, // dict
             dirtyObjects: null, // dict 
+            justStoredObjects: null, // set
             lastSyncTime: null, // WARNING: vulnerable to system time changes
             //isReadOnly: true,
             markedSet: null, // Set of puuids
@@ -114,6 +115,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
     }
 
     onRecordsDictOpen () {
+        this.collect()
         this.readRoot()
         this.nodeStoreDidOpenNote().post()
         return this
@@ -220,18 +222,46 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         return Object.keys(this.dirtyObjects()).length !== 0
     }
 
-    addDirtyObject (anObject) {
+    addDirtyObjectIfNotFlushed (anObject) {
+        if (!Type.isLiteral(anObject)) {
+            assert(this.justStoredObjects()) // if null, then we aren't in the middle of a store
+            if (!this.justStoredObjects().has(anObject)) {
+                this.addDirtyObject(anObject)
+            }
+        }
+        return this
+    }
+
+    /*
+    hasDirtyObject (anObject) {
         const puuid = anObject.puuid()
-        if (!this.dirtyObjects()[puuid]) {
+        return this.dirtyObjects().hasOwnProperty(puuid)
+    }
+    */
+
+    addDirtyObject (anObject) {
+
+        if (this.justStoredObjects() && this.justStoredObjects().has(anObject)) {
+            return this
+        }
+
+        const puuid = anObject.puuid()
+        if (!this.dirtyObjects().hasOwnProperty(puuid)) {
             this.debugLog("addDirtyObject(" + anObject.typeId() + ")")
             this.dirtyObjects()[puuid] = anObject
             this.addActiveObject(anObject)
             this.scheduleStore()
         }
+
         return this
     }
 
     scheduleStore () {
+        if (!this.isOpen()) {
+            console.log(this.typeId() + " can't schedule store yet, not open")
+            return
+        }
+        assert(this.isOpen())
         const scheduler = SyncScheduler.shared()
         const methodName = "commitStoreDirtyObjects"
         if (!scheduler.isSyncingTargetAndMethod(this, methodName)) {
@@ -257,23 +287,24 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
 
     storeDirtyObjects () { // PRIVATE
         let totalStoreCount = 0
-        const justStored = {} // use a dict instead of set so we can inspect it for debugging
+
+        this.setJustStoredObjects(new Set())
+        const justStored = this.justStoredObjects()
 
         while (true) {
             let thisLoopStoreCount = 0
             const dirtyBucket = this.dirtyObjects()
             this.setDirtyObjects({})
 
-            Object.keys(dirtyBucket).forEach((puuid) => {
-                const obj = dirtyBucket[puuid]
-
-                //onsole.log("  storing pid " + puuid)
-                if (justStored[puuid]) {
+            dirtyBucket.ownForEachKV((puuid, obj) => {
+                assert(Type.isString(puuid))
+                //console.log("  storing pid " + puuid)
+                if (justStored.has(obj)) {
                     throw new Error("attempt to double store " + puuid)
                 }
+                justStored.add(obj)
 
                 this.storeObject(obj)
-                justStored[puuid] = obj
 
                 thisLoopStoreCount ++
             })
@@ -284,7 +315,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
                 break
             }
         }
-
+        this.setJustStoredObjects(null)
         return totalStoreCount
     }
 
@@ -307,7 +338,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
     }
 
     objectForPid (puuid) {
-        const obj = this.activeObjects()[puuid]
+        const obj = this.activeObjects().getOwnProperty(puuid)
         if (obj) {
             return obj
         }
@@ -337,7 +368,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
     }
 
     pidForRef (aRef) {
-        return aRef["*"]
+        return aRef.getOwnProperty("*")
     }
 
     unrefValueIfNeeded (v) {
@@ -348,7 +379,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         if (Type.isLiteral(v)) {
             return v
         }
-        const puuid = v["*"]
+        const puuid = v.getOwnProperty("*")
         assert(puuid)
         return this.objectForPid(puuid)
     }
@@ -374,7 +405,11 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
     // read a record
 
     recordForPid (puuid) { // private
+        if (!this.recordsDict().hasKey(puuid)) {
+            return undefined
+        }
         const jsonString = this.recordsDict().at(puuid)
+        assert(Type.isString(jsonString))
         const aRecord = JSON.parse(jsonString)
         aRecord.id = puuid
         return aRecord
@@ -389,7 +424,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         }
         assert(puuid)
         let v = JSON.stringify(obj.recordForStore(this))
-        console.log("storeObject(" + obj.typeId() + ")")
+        console.log("storeObject(" + obj.typeId() + ") <- " + v)
         //console.log(puuid + " <- " + v)
         this.recordsDict().atPut(puuid, v)
         return this
@@ -412,11 +447,11 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         this.recordsDict().begin()
         this.flushIfNeeded() // store any dirty objects
 
-        this.debugLog("--- begin collect ---")
+        this.debugLog("--- begin collect --- with " + this.recordsDict().keys().length + " pids")
         this.setMarkedSet(new Set())
+        this.markPid(this.rootKey())
         this.activeObjects().ownForEachKV((pid, obj) => this.markPid(pid))
         this.activeLazyPids().forEach(pid => this.markPid(pid))
-        this.markPid(this.rootObject().puuid()) // this is recursive, but skips marked records
         const deleteCount = this.sweep()
         this.setMarkedSet(null)
         this.debugLog(() => "--- end collect - collected " + deleteCount + " pids ---")
@@ -476,7 +511,9 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         this.recordsDict().keys().forEach((pid) => {
             if (!this.markedSet().has(pid)) {
                 //this.debugLog("deletePid(" + pid + ")")
+                const count = recordsDict.keys().length
                 recordsDict.removeKey(pid)
+                assert(recordsDict.keys().length === count - 1)
                 deleteCount ++
             }
         })

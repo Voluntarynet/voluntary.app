@@ -78,15 +78,14 @@ window.SvgIconView = class SvgIconView extends DomStyledView {
         return this.element().childNodes[0]
     }
 
-    didUpdateSlot (slotName, oldValue, newValue) {
-        super.didUpdateSlot(slotName, oldValue, newValue)
+    // didUpdateSlot
 
-        const triggerSlots = ["fillColor", "strokeColor"]
-        if (triggerSlots.contains(slotName)) {
-            this.updateAppearance()
-            //window.SyncScheduler.shared().scheduleTargetAndMethod(this, "updateAppearance")
-        }
-        return this
+    didUpdateSlotFillColor (oldValue, newValue) {
+        this.updateAppearance()
+    }
+
+    didUpdateSlotStrokeColor (oldValue, newValue) {
+        this.updateAppearance()
     }
 
     // svg icon

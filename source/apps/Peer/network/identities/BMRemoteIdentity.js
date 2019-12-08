@@ -62,15 +62,9 @@ window.BMRemoteIdentity = class BMRemoteIdentity extends BMStorableNode {
 		*/
         return this.parentNodeOfType("BMLocalIdentity")
     }
-    
-    didUpdateSlot (slotName, oldValue, newValue) {
-        super.didUpdateSlot(slotName, oldValue, newValue)
-        
-        if (slotName === "publicKeyString") {
-            this.postChange()
-        }
-        
-        return this
+
+    didUpdateSlotPublicKeyString (oldValue, newValue) {
+        this.postChange()
     }
 
     didLoadFromStore () {

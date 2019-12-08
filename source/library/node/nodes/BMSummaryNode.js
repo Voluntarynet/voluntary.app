@@ -46,11 +46,8 @@ window.BMSummaryNode = class BMSummaryNode extends BMStorableNode {
         return this
     }
 
-    setSummaryFormat (f) {
-        this.didUpdateSlot("summaryFormat", this._summaryFormat, f)
-        this._summaryFormat = f
+    didUpdateSlotSummaryFormat () {
         this.didUpdateNode()
-        return this
     }
 
     summaryFormatOptionsNode () {

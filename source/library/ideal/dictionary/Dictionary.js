@@ -17,15 +17,23 @@ window.ideal.Dictionary = class Dictionary extends ProtoClass {
     initPrototype() {
         // don't call super as it's init was called when it was created
         this.newSlot("jsDict", null)
+        this.newSlot("mutateClosure", null)
     }
 
     init () {
         super.init()
-        this.setJsDict({});
+        this.clear();
     }
 
     clear () {
         this.setJsDict({});
+        return this
+    }
+
+    setJsDict (anObject) {
+        this.willMutate()
+        assert(Type.isObject(anObject))
+        this._jsDict = anObject
         return this
     }
 
@@ -34,16 +42,12 @@ window.ideal.Dictionary = class Dictionary extends ProtoClass {
     }
 
     values () {
-        return this.keys().map( (k) => {
-            return this.jsDict()[k];
-        });
+        const dict = this.jsDict()
+        return this.keys().map( k => dict[k] )
     }
 
     at (k) {
-        if (this.hasKey(k)) { // to avoid inheritance
-            return this.jsDict()[k];
-        }
-        return undefined
+        return this.jsDict().getOwnProperty(k)
     }
 
     /*
@@ -53,13 +57,17 @@ window.ideal.Dictionary = class Dictionary extends ProtoClass {
             return v;
         }
         else {
-            return Map.withJsDict(v)
+            return this.thisClass().withJsDict(v)
         }
     }
     */
 
     atPut (k, v) {
-        this.jsDict()[k] = v;
+        const dict = this.jsDict()
+        if (dict[k] !== v) {
+            this.willMutate()
+            dict[k] = v;
+        }
         return this;
     }
 
@@ -76,24 +84,24 @@ window.ideal.Dictionary = class Dictionary extends ProtoClass {
     }
     */
 
-    forEach (fn) {
-        this.keys().forEach( (k) => {
-            const v = this._jsMap[k]
-            fn(k, v);
-        });
+    ownForEachKV (fn) {
+        return this.forEach(fn)
+    }
 
+    forEach (fn) {
+        const jsDict = this.jsDict();
+        this.keys().forEach( k => fn(k, jsDict[k]) )
         return this;
     }
 
     map (fn) {
         const jsDict = this.jsDict();
-        return this.keys().map(function (k) {
-            return fn(k, jsDict[k]);
-        });
+        return this.keys().map( k => fn(k, jsDict[k]) )
     }
 
+    /*
     filtered (fn) {
-        const map = Map.clone();
+        const map = this.thisClass().clone();
         const jsDict = this.jsDict();
         this.keys().forEach(function (k) {
             const v = jsDict[k];
@@ -103,6 +111,7 @@ window.ideal.Dictionary = class Dictionary extends ProtoClass {
         });
         return map;
     }
+    */
 
     asJson () {
         return JSON.stringify(this.jsDict(), null, 2);
@@ -123,14 +132,12 @@ window.ideal.Dictionary = class Dictionary extends ProtoClass {
     */
 
     shallowCopy () {
-        return Map.withJsDict(Object.assign({}, this.jsDict()));
+        return this.thisClass().withJsDict(Object.assign({}, this.jsDict()));
     }
 
-    merge (aMap) {
+    merge (other) {
         const jsDict = this.jsDict();
-        aMap.forEach(function (k, v) {
-            jsDict[k] = v;
-        });
+        other.ownForEachKV((k, v) => { this.atPut(k, v) } )
         return this;
     }
 
@@ -149,8 +156,8 @@ window.ideal.Dictionary = class Dictionary extends ProtoClass {
     }
 
     removeKey (k) {
-        const m = this.jsDict();
-        delete m[k];
+        this.willMutate()
+        delete this.jsDict()[k];
         return this;
     }
 
@@ -162,6 +169,12 @@ window.ideal.Dictionary = class Dictionary extends ProtoClass {
             byteCount += k.length + v.length
         })
         return byteCount
+    }
+
+    willMutate () {
+        if (this.mutateClosure()) {
+            this.mutateClosure()(this)
+        }
     }
 
 }.initThisClass()

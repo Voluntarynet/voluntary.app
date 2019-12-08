@@ -96,12 +96,15 @@ window.ideal.Slot = class Slot {
     autoSetGetterSetterOwnership () {
         //this.setOwnsGetter(true)
         //this.setOwnsSetter(true)
+        
         if (this.alreadyHasGetter()) {
-            //console.log(this.owner().type() + "  already has getter " + this.getterName())
+            console.log(this.owner().type() + "." + this.getterName() + "() exists, so we won't override")
         }
+        
         if (this.alreadyHasSetter()) {
-            //console.log(this.owner().type() + "  already has setter " + this.setterName())
+            console.log(this.owner().type() + "." + this.setterName() + "(v) exists, so we won't override")
         }
+
         this.setOwnsGetter(!this.alreadyHasGetter())
         this.setOwnsSetter(!this.alreadyHasSetter())
         return this
@@ -110,8 +113,13 @@ window.ideal.Slot = class Slot {
     setDoesHookSetter (aBool) {
         if (this._doesHookSetter !== aBool) {
             this._doesHookSetter = aBool
-            if (aBool) { 
-                this.setOwnsSetter(true)
+            if (aBool) {
+                if (this.alreadyHasSetter() && !this.ownsSetter()) {
+                    const msg = this.owner().type() + "." + this.setterName() + "() exists, so we can't hook it - fix by calling slot.setOwnsSetter(true)"
+                    console.log(msg)
+                    throw new Error(msg)
+                } 
+                // this.setOwnsSetter(true)
             }
             this.setupSetter()
         }
@@ -186,11 +194,16 @@ window.ideal.Slot = class Slot {
 
     setupSetter () {
         if (this.ownsSetter()) {
+
+            this.makeHookedSetter()
+
+            /*
             if (this.doesHookSetter()) {
                 this.makeHookedSetter()
             } else {
                 this.makeDirectSetter()
             }
+            */
         }
     }
 
@@ -305,11 +318,24 @@ window.ideal.Slot = class Slot {
 
     directSetter () {
         const privateName = this.privateName()
-        if (privateName === "_isSelected") {
-            console.log("why?")
-        }
+        const slot = this
+        const setterName = this.setterName()
+        //const superProto = this.owner().superPrototype()
         const func = function (newValue) {
+            /*
+            // this is dangerous - we don't always want this behavior
+            if (superProto && superProto[setterName]) {
+                superProto[setterName].apply(this, [newValue])
+            }
+            */
+
             this[privateName] = newValue
+
+            /*
+            if (this[privateName] !== newValue) {
+                this[privateName] = newValue
+            }
+            */
             return this
         }
         func.setSlot(this)
@@ -324,15 +350,29 @@ window.ideal.Slot = class Slot {
     }
     
     hookedSetter () {
+        const slot = this
         const slotName = this.name()
         const privateName = this.privateName()
+        const didUpdateSlotMethodName = "didUpdateSlot" + slotName.capitalized()
         const func = function (newValue) {
             const oldValue = this[privateName]
             if (oldValue !== newValue) {
-                //this.willSetSlot(slotName, oldValue, newValue)
+                /*
+                if (Type.isArray(newValue)) {
+                    console.log("array")
+                }
+                if (slot.shouldStore() && newValue.syncToStoreOnMutation) {
+                    newValue.syncToStoreOnMutation()
+                }
+                */
+                
                 this[privateName] = newValue
-                //this.didSetSlot(slotName, oldValue, newValue)
-                this.didUpdateSlot(slotName, oldValue, newValue)
+                this.didUpdateSlot(slot, oldValue, newValue)
+
+                if (this[didUpdateSlotMethodName]) {
+                    this[didUpdateSlotMethodName].apply(this, [oldValue, newValue])
+                }
+
             }
             return this
         }

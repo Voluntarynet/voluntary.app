@@ -36,19 +36,6 @@ window.BMChat = class BMChat extends BMApplet {
     remoteIdentities () {
         return this.localIdentity().remoteIdentities()
     }
-
-    /*
-	setThreads (newValue) {
-		const oldValue = this._threads
-		this._threads = newValue
-		this.didUpdateSlot("threads", oldValue, newValue)
-		
-		if (newValue === null) {
-			console.warn(this.typeId() + ".setThreads oldValue:", oldValue, " newValue:", newValue)
-		}
-		return this
-	},
-	*/
 	
     handleAppMsg (msg) {
         console.log("  " + this.localIdentity().title() + " app " + this.typeId() + ".handleAppMsg(" + msg.typeId() + ") ") //, msg.dataDict())

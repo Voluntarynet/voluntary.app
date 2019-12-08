@@ -37,6 +37,7 @@ window.AtomicPersistentDictionary = class AtomicPersistentDictionary extends ide
 
     init() {
         super.init()
+        this.setIsOpen(false)
         this.setChangedKeys(new Set())
         this.setIdb(IndexedDBFolder.clone())
         //this.setIsDebugging(true)
@@ -97,7 +98,7 @@ window.AtomicPersistentDictionary = class AtomicPersistentDictionary extends ide
 
     begin() {
         this.debugLog(this.type() + " begin ---")
-
+        this.assertOpen()
         super.begin()
         assert(this.changedKeys().size === 0)
         this.changedKeys().clear()

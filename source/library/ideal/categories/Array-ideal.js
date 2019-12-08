@@ -22,7 +22,70 @@ Object.defineSlots(Array, {
     
 })
 
+
 Object.defineSlots(Array.prototype, {
+    mutatorMethodNames: function() {
+        return [
+            "push",
+            "reverse",
+            "shift",
+            "sort",
+            "splice",
+            "unshift"
+        ]
+    },
+
+    setupMutatorHooks: function() {
+        this.mutatorMethodNames().forEach((slotName) => {
+
+            const unhookedName = "unhooked_" + slotName
+            const unhookedFunction = this[slotName]
+            Object.defineSlot(this, unhookedName, unhookedFunction)
+
+            const hookedFunction = function() {
+                this.willMutate(slotName)
+                //return unhookedFunc.apply(this, arguments)
+                let result = this[unhookedName].apply(this, arguments)
+                /*
+                let argsString = []
+                for (let i=0; i < arguments.length; i++) {
+                    if (i !== 0) { argsString += ", " }
+                    argsString += String(arguments[i])
+                }
+                console.log("hooked Array " + slotName + "(" + argsString + ")") 
+                console.log("result = " + result)
+                */
+                return result
+            }
+            Object.defineSlot(this, slotName, hookedFunction)
+        })
+    },
+
+    willMutate: function(slotName) {
+        //console.log(slotName + " hooked!")
+        // hook this on instances where we need to know about changes
+    },
+
+    syncToStoreOnMutation: function() {
+        this["willMutate"] = this.scheduleSyncToStore
+    },
+
+    defaultStore: function() {
+        return PersistentObjectPool.shared()
+    },
+
+    scheduleSyncToStore: function(slotName) {
+        console.log("Array scheduleSyncToStore " + slotName + " hooked!")
+        this.defaultStore().addDirtyObject(this)
+    },
+
+})
+
+Array.prototype.setupMutatorHooks()
+
+Object.defineSlots(Array.prototype, {
+
+    //
 
     clone: function () {
         return this.shallowCopy();
@@ -60,13 +123,16 @@ Object.defineSlots(Array.prototype, {
         return this[index];
     },
 
-    atPut: function(index, value) {
-        this[index] = value
+    removeAt (index) {
+        this.willMutate()
+        delete this[index]
         return this
     },
 
-    atModLength: function (index) {
-        return this.at(index % this.length)
+    atPut: function(index, value) {
+        this.willMutate()
+        this[index] = value
+        return this
     },
 
     first: function () {
@@ -180,6 +246,7 @@ Object.defineSlots(Array.prototype, {
     // --- write operations ---
 
     atInsert: function (i, e) {
+        this.willMutate()
         this.splice(i, 0, e);
         return this
     },

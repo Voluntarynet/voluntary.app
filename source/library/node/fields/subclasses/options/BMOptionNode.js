@@ -34,16 +34,12 @@ window.BMOptionNode = class BMOptionNode extends BMStorableNode {
     }
 
 
-    setIsPicked (aBool) {
-        if (this.isPicked() !== aBool) {
-            this._isPicked = aBool
-            if (this.parentNode()) {
-                this.parentNode().didToggleOption(this)
-                this.didUpdateNode()
-                this.scheduleSyncToStore()
-            }
+    didUpdateSlotIsPicked (oldValue, newValue) {
+        if (this.parentNode()) {
+            this.parentNode().didToggleOption(this)
+            this.didUpdateNode()
+            this.scheduleSyncToStore()
         }
-        return this
     }
 
     toggle () {

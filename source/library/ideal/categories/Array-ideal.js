@@ -104,6 +104,7 @@ Object.defineSlots(Array.prototype, {
 
         for (let i = 0; i < this.length; i++) {
             if (this[i] !== otherArray[i]) {
+            //if (this.at(i) !== otherArray.at(i)) {
                 return false;
             }
         }
@@ -124,23 +125,23 @@ Object.defineSlots(Array.prototype, {
     },
 
     removeAt (index) {
-        this.willMutate()
+        this.willMutate() // we need to hook this since delete can't be hooked
         delete this[index]
         return this
     },
 
     atPut: function(index, value) {
-        this.willMutate()
+        this.willMutate() // we need to hook this since []= can't be hooked
         this[index] = value
         return this
     },
 
     first: function () {
-        return this[0];
+        return this.at(0)
     },
 
     second: function () {
-        return this[1];
+        return this.at(1)
     },
 
     rest: function () {
@@ -148,7 +149,7 @@ Object.defineSlots(Array.prototype, {
     },
 
     last: function () {
-        return this[this.length - 1];
+        return this.at(this.length - 1) // returns undefined for negative indexes
     },
 
     contains: function (element) {
@@ -162,7 +163,8 @@ Object.defineSlots(Array.prototype, {
 
         for (let i = 0; i < this.length; i++) {
             if (this[i] !== otherArray[i]) {
-                return false;
+            //if (this.at(i) !== otherArray.at(i)) {
+                    return false;
             }
         }
 
@@ -182,8 +184,8 @@ Object.defineSlots(Array.prototype, {
             return null;
         }
 
-        if (this[i] !== undefined) { 
-            return this[i]; 
+        if (this.at(i) !== undefined) { 
+            return this.at(i); 
         }
 
         return null;
@@ -202,8 +204,8 @@ Object.defineSlots(Array.prototype, {
             return null;
         }
 
-        if (this[i]) { 
-            return this[i]; 
+        if (this.at(i)) { 
+            return this.at(i) 
         }
 
         return null;
@@ -246,7 +248,6 @@ Object.defineSlots(Array.prototype, {
     // --- write operations ---
 
     atInsert: function (i, e) {
-        this.willMutate()
         this.splice(i, 0, e);
         return this
     },
@@ -303,9 +304,7 @@ Object.defineSlots(Array.prototype, {
     },
 
     emptiesRemoved: function () {
-        return this.filter(function (e) {
-            return e;
-        });
+        return this.filter(v => !Type.isNullOrUndefined(v) )
     },
 
     removeFirst: function () {
@@ -338,17 +337,18 @@ Object.defineSlots(Array.prototype, {
 
         while (--i) {
             const j = Math.floor(Math.random() * (i + 1));
-            const tempi = this[i];
-            const tempj = this[j];
-            this[i] = tempj;
-            this[j] = tempi;
+            const tempi = this.at(i);
+            const tempj = this.at(j);
+            this.atPut(i, tempj)
+            this.atPut(j, tempi)
         }
 
         return this;
     },
 
     atRandom: function () {
-        return this[Math.floor(Math.random() * this.length)];
+        const i = Math.floor( Math.random() * this.length )
+        return this.at(i);
     },
 
     // --- enumeration ---
@@ -382,13 +382,10 @@ Object.defineSlots(Array.prototype, {
             const yRes = y[functionName].apply(y, args);
             if (xRes < yRes) {
                 return -1;
-            }
-            else if (yRes < xRes) {
+            } else if (yRes < xRes) {
                 return 1;
             }
-            else {
-                return 0;
-            }
+            return 0;
         });
     },
 
@@ -398,7 +395,7 @@ Object.defineSlots(Array.prototype, {
 
     detect: function (callback) {
         for (let i = 0; i < this.length; i++) {
-            const v = this[i]
+            const v = this.at(i)
             if (callback(v, i)) {
                 return v;
             }
@@ -416,7 +413,7 @@ Object.defineSlots(Array.prototype, {
 
     detectProperty: function (slotName, slotValue) {
         for (let i = 0; i < this.length; i++) {
-            const v = this[i]
+            const v = this.at(i)
             if (v[slotName] === slotValue) {
                 return v;
             }
@@ -427,7 +424,7 @@ Object.defineSlots(Array.prototype, {
 
     detectIndex: function (callback) {
         for (let i = 0; i < this.length; i++) {
-            if (callback(this[i], i)) {
+            if (callback(this.at(i), i)) {
                 return i;
             }
         }
@@ -451,7 +448,7 @@ Object.defineSlots(Array.prototype, {
         const mEntry = [undefined, undefined] 
 
         for (let i = 0; i < length; i++) {
-            let v = this[i];
+            let v = this.at(i);
             if (optionalCallback) {
                 v = optionalCallback(v);
             }
@@ -510,7 +507,7 @@ Object.defineSlots(Array.prototype, {
         const length = this.length;
 
         for (let i = 0; i < length; i++) {
-            let v = this[i];
+            let v = this.at(i);
             if (optionalCallback) {
                 v = optionalCallback(v);
             }
@@ -584,7 +581,7 @@ Object.defineSlots(Array.prototype, {
 
     filterInPlace: function(callback) {
         for (let i = this.length -1; i >= 0; i--) {
-            const v = this[i];
+            const v = this.at(i);
             if (callback(v)) {
                 this.removeAt(i)
             }
@@ -619,8 +616,8 @@ Object.defineSlots(Array.prototype, {
     replaceOccurancesOfWith: function (oldValue, newValue) {
         // isMutator
         for (let i = 0; i < this.length; i++) {
-            if (this[i] === oldValue) {
-                this[i] = newValue;
+            if (this.at(i) === oldValue) {
+                this.atPut(i, newValue);
             }
         }
         return this
@@ -629,7 +626,7 @@ Object.defineSlots(Array.prototype, {
     removeOccurancesOf: function (e) {
         // isMutator
         for (let i = this.length -1; i >= 0; i--) {
-            const v = this[i];
+            const v = this.at(i);
             if (v === e) {
                 this.removeAt(i)
             }
@@ -728,14 +725,14 @@ Object.defineSlots(Array.prototype, {
         }
     
         for (let i = 0, l = this.length; i < l; i++) {
-            const a = this[i]
-            const b = array[i]
+            const a = this.at(i)
+            const b = array.at(i)
             
             // Check if we have nested arrays
             /*
-                if (this[i] instanceof Array && array[i] instanceof Array) {
+                if (this.at(i) instanceof Array && array[i] instanceof Array) {
                     // recurse into the nested arrays
-                    if (!this[i].equals(array[i]))
+                    if (!this.at(i).equals(array[i]))
                         return false;       
                 }     
             */
@@ -754,8 +751,8 @@ Object.defineSlots(Array.prototype, {
 
 
     containsEquals: function (b) {
-        for (let i = 0, l=this.length; i < l; i++) {
-            let a = this[i]
+        for (let i = 0, l = this.length; i < l; i++) {
+            let a = this.at(i)
 
             if (a.equals) {
                 if (!a.equals(b)) {

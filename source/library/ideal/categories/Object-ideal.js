@@ -89,6 +89,20 @@ Object.defineSlots(Object.prototype, {
     shallowCopy: function () {
         return Object.assign({}, this);
     },
+
+    at (key) {
+        return this[key] 
+    },
+
+    atPut(key, value) {
+        this[key] = value
+        return this
+    },
+
+    removeAt (key) {
+        delete this[key]
+        return this
+    },
     
     ownForEachKV: function(fn) {    
         Object.getOwnPropertyNames(this).forEach((k) => {

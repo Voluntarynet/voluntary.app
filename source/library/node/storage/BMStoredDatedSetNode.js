@@ -57,7 +57,7 @@ window.BMStoredDatedSetNode = class BMStoredDatedSetNode extends BMStorableNode 
     
     removeKey (h) {
         if (this.dict()[h]) {
-            delete this.dict()[h]
+            this.dict().removeAt(h)
             this.scheduleSyncToStore()
         }
         return this

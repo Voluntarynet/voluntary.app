@@ -714,11 +714,11 @@ window.GestureRecognizer = class GestureRecognizer extends ProtoClass {
 
     viewForFingerId (id) {
         const fvs = this.fingerViewDict()
-        let v = fvs[id]
+        let v = fvs.at(id)
         if (!v) {
             v = this.newFingerView()
             DocumentBody.shared().addSubview(v)
-            fvs[id] = v
+            fvs.atPut(id, v)
         }
         return v
     }

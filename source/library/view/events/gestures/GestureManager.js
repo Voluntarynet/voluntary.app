@@ -87,12 +87,12 @@ window.GestureManager = class GestureManager extends ProtoClass {
     }
 
     addBegunGesture (aGesture) {
-        this.begunGestures()[aGesture.typeId()] = aGesture
+        this.begunGestures().atPut(aGesture.typeId(), aGesture)
         return this
     }
 
     removeBegunGesture (aGesture) {
-        delete this.begunGestures()[aGesture.typeId()]
+        delete this.begunGestures().at(aGesture.typeId())
         return this
     }
 

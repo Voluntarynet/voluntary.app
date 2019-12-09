@@ -141,7 +141,7 @@ window.GamePadManager = class GamePadManager extends ProtoClass {
                 if (!gamePad) {
                     gamePad = this.newGamePad().setIndex(i).setId(gp.id)
                     gamePad.onConnected()
-                    this.gamePadsDict()[i] = gamePad
+                    this.gamePadsDict().atPut(i, gamePad)
                 }
                 gamePad.updateData(gp)
 
@@ -152,7 +152,7 @@ window.GamePadManager = class GamePadManager extends ProtoClass {
             } else {
                 if (gamePad) {
                     gamePad.onDisconnected()
-                    padDict[i] = null
+                    padDict.atPut(i, null)
                 }
             }
         }

@@ -52,9 +52,9 @@ window.GamePad = class GamePad extends Device {
         if (this.shouldSendNotes()) {
             // check for differences
             for (let i = 0; i < newButtons.length; i ++) {
-                if (currentButtons[i] !== newButtons[i]) {
-                    currentButtons[i] = newButtons[i]
-                    this.changedButtonIndexTo(i, newButtons[i])
+                if (currentButtons.at(i) !== newButtons.at(i)) {
+                    currentButtons.atPut(i, newButtons.at(i))
+                    this.changedButtonIndexTo(i, newButtons.at(i))
                 }
             }
         } else {
@@ -84,8 +84,8 @@ window.GamePad = class GamePad extends Device {
         if (this.shouldSendNotes()) {
             // check for differences
             for (let i = 0; i < newAxes.length; i ++) {
-                if (currentAxes[i] !== newAxes[i]) {
-                    currentAxes[i] = newAxes[i]
+                if (currentAxes.at(i) !== newAxes.at(i)) {
+                    currentAxes.atPut(i, newAxes.at(i))
                     this.changedAxesIndexTo(i, newAxes[i])
                 }
             }

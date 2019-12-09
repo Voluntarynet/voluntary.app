@@ -94,11 +94,11 @@ window.EventSetListener = class EventSetListener extends ProtoClass {
     }
 
     addEventNameAndMethodName (eventName, methodName) {
-        this.eventsDict()[eventName] = { 
+        this.eventsDict().atPut(eventName, { 
             methodName: methodName, 
             handlerFunc: null,
             useCapture: this.useCapture(),
-        }
+        })
         return this
     }
 

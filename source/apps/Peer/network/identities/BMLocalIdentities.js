@@ -33,7 +33,7 @@ window.BMLocalIdentities = class BMLocalIdentities extends BMStorableNode {
             this.add()
         }
         
-        return this.subnodes()[0]
+        return this.subnodes().first()
     }
     
     idWithPublicKeyString (s) {

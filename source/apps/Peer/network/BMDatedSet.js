@@ -44,8 +44,8 @@ window.BMStoredDatedSetNode = class BMStoredDatedSetNode extends BMStorableNode 
     }
 
     addKey (h) {
-        if (!this.dict()[h]) {
-            this.dict()[h] = Date.now()
+        if (!this.dict().at(h)) {
+            this.dict().atPut(h, Date.now())
             this.scheduleSyncToStore()
         }
         return this

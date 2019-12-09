@@ -121,14 +121,14 @@ window.BrowserView = class BrowserView extends NodeView {
     cacheColumnGroup (cg) {
         assert(cg.type() === "BrowserColumnGroup")
         const k = cg.node().typeId()
-        this.columnGroupCache()[k] = cg
+        this.columnGroupCache().atPut(k, cg)
         return this
     }
 
     uncacheColumnGroup (cg) {
         assert(cg.type() === "BrowserColumnGroup")
         const k = cg.node().typeId()
-        delete this.columnGroupCache()[k] 
+        this.columnGroupCache().removeAt(k) 
         //console.log("uncacheColumnGroup ", cg.node().title())
         //this.scheduleSyncFromNode() // needed?
         return this
@@ -324,7 +324,7 @@ window.BrowserView = class BrowserView extends NodeView {
         /*
 		// collapse excess columns
         for (let i = count; i < this.columnGroups().length - 1; i ++) {
-            this.columnGroups()[i].collpase()
+            this.columnGroups().at(i).collpase()
         }
         */
 
@@ -361,7 +361,7 @@ window.BrowserView = class BrowserView extends NodeView {
     clearColumnsGroupsAfterIndex (index) {
         const cgs = this.columnGroups()
         for (let i = index + 1; i < cgs.length; i++) {
-            const cg = cgs[i]
+            const cg = cgs.at(i)
             //cg.setNode(null).syncFromNode()
             //this.useNewColumnGroupToReplaceColumnGroupAtIndex(i)
             if (!Type.isNull(cg.node())) {

@@ -122,7 +122,6 @@ window.BMNode = class BMNode extends ProtoClass {
     init () {
         super.init()
         this.setSubnodes([])
-        //this._subnodes = []
         this._actions = []        
         this.setDidUpdateNodeNote(NotificationCenter.shared().newNote().setSender(this).setName("didUpdateNode"))
         this.setShouldFocusSubnodeNote(NotificationCenter.shared().newNote().setSender(this).setName("shouldFocusSubnode"))
@@ -585,26 +584,28 @@ window.BMNode = class BMNode extends ProtoClass {
         //this.scheduleSyncToView()
     }
     
+    /*
     privatePrepareToAccess () {
         // just here for debugging
         if (!this._isPreparingToAccess) {
             this._isPreparingToAccess = true
 
-            this.prepareToAccess()
+            //this.prepareToAccess()
 
-            /*
+            
             try {
                 this.prepareToAccess()
             } catch(e) {
                 this._isPreparingToAccess = false
                 throw e
             }
-            */
+            
             
             this._isPreparingToAccess = false
         }
         return this
     }
+    */
 
     /*
     subnodes () {
@@ -972,7 +973,7 @@ window.BMNode = class BMNode extends ProtoClass {
             throw new Error(this.type() + " duplicate subnode hash " + h + " in indexed node")
         }
         
-        index[h] = subnode
+        index.atPut(h, subnode)
         return this	    
     }
 	

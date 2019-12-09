@@ -187,7 +187,7 @@ window.BMMessages = class BMMessages extends BMStorableNode {
         remoteInv.forEach( (h) => {
             if (this.needsMessageWithHash(h)) {
                 getMsg.addHash(h)
-                //this._queue[h] = true
+                //this._queue.atPut(h, true)
             }
         })
         

@@ -45,8 +45,9 @@ window.BMRegion = class BMRegion extends BMNode {
     }
     
     sortIfNeeded () {
-        if (this._subnodes.length) {
-            if (this._subnodes[0].compare) {
+        const subnodes = this._subnodes
+        if (subnodes.length) {
+            if (subnodes.first().compare) {
                 this._subnodes = this._subnodes.sort(function (a, b) {
                     return a.compare(b)
                 })

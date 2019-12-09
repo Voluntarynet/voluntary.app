@@ -33,7 +33,7 @@ window.BMServerMessage = class BMServerMessage extends ProtoClass {
 
         //console.log('BMServerMessage send: ' + messageString);
 
-        this.serverConnection().pendingMessages()[this.id()] = this;
+        this.serverConnection().pendingMessages().atPut(this.id(), this);
         this.serverConnection().serverConn().send(messageString);
 
         return new Promise((resolve, reject) => {

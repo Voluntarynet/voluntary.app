@@ -426,7 +426,7 @@ window.BrowserColumn = class BrowserColumn extends NodeView {
                 if (this.rows().length) {
                     // otherwise, select close to last selected index
                     const i = Math.min(selectedIndex, this.rows().length - 1)
-                    row = this.rows()[i]
+                    row = this.rows().at(i)
                     //this.log("selecting row titled '" + row.title().innerHTML() + "'")
                     row.setIsSelected(true)
                     this.didClickRow(row)

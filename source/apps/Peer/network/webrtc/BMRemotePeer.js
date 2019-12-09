@@ -230,7 +230,7 @@ window.BMRemotePeer = class BMRemotePeer extends BMNode {
     // inventory
 
     markSeenHash (aHash) {
-        this.remoteInventory()[aHash] = true
+        this.remoteInventory().atPut(aHash, true)
         return true
     }
 

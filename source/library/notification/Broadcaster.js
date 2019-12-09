@@ -83,7 +83,7 @@ window.Broadcaster = class Broadcaster extends ProtoClass {
         Object.keys(n2l).forEach((name) => {
             const listenerSet = n2l[name]
             if (listenerSet.values().length === 0) {
-                delete n2l[name]
+                n2l.delete(name)
             }
         })
     }

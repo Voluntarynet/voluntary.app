@@ -134,7 +134,7 @@ window.BMFieldSetNode = class BMFieldSetNode extends BMStorableNode {
             this.subnodes().forEach((field) => {
                 const v = field.value()
                 if (v) { // is empty or null value something we should store?
-                    dict.fields[field.key()] = v
+                    dict.fields.atPut(field.key(), v)
                 }
             })
         }

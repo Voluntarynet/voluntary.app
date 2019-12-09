@@ -36,6 +36,11 @@ Object.defineSlots(Array.prototype, {
         ]
     },
 
+    setShouldSyncToStore: function(aBool) {
+        this._shouldSyncToStore = aBool
+        return this
+    },
+
     setupMutatorHooks: function() {
         this.mutatorMethodNames().forEach((slotName) => {
 

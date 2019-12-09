@@ -15,15 +15,15 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
         this.overrideSlot("canDelete", false).setShouldStore(true)  // defined in BMNode, but we want to store it
 
         // subnodes
-        /*
-        const subnodesSlot = this.newSlot("subnodes", null)
+        
+        const subnodesSlot = this.overrideSlot("subnodes", null)
         //subnodesSlot.setOwnsSetter(true)
         subnodesSlot.setShouldStore(true)
-        subnodesSlot.setDoesHookGetter(true)
-        subnodesSlot.setHookedGetterIsOneShot(true)
-        subnodesSlot.setIsLazy(true)
+        //subnodesSlot.setDoesHookGetter(true)
+        //subnodesSlot.setHookedGetterIsOneShot(true)
+        //subnodesSlot.setIsLazy(true)
         subnodesSlot.setupInOwner()
-        */
+        
         
         this.newSlot("lazySubnodeCount", null).setShouldStore(true)
     }

@@ -25,8 +25,8 @@ const RGB2HSV = function (rgb) {
     return hsv;
 }
 
-// RGB2HSV and HSV2RGB are based on Color Match Remix [http://color.twysted.net/]
-// which is based on or copied from ColorMatch 5K [http://colormatch.dk/]
+// RGB2HSV and HSV2RGB are based on Color Match Remix see: http://color.twysted.net/
+// which is based on or copied from ColorMatch 5K see: http://colormatch.dk/
 const HSV2RGB = function (hsv) {
     var rgb = new Object();
     if (hsv.saturation == 0) {
@@ -142,7 +142,7 @@ window.CSSColor = class CSSColor extends ProtoClass {
 
     parseColorString (string) {
         const cache = CSSColor.colorMapCache()
-        const cachedResult = cache[string]
+        const cachedResult = cache.at(string)
         if (!Type.isUndefined(cachedResult)) {
             return cachedResult
         }
@@ -153,13 +153,13 @@ window.CSSColor = class CSSColor extends ProtoClass {
 
         const result = this.justParseColorString(string)
 
-        cache[string] = result
+        cache.atPut(string, result)
         return result
     }
 
     setCssColorString (aString) {
         const array = this.parseColorString(aString)
-        this.set(array[0], array[1], array[2], array[3])
+        this.set(array.at(0), array.at(1), array.at(2), array.at(3))
         return this
     }
 

@@ -86,7 +86,8 @@ window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
     }
 	
     commit () {
-	    this.setIsCommitted(true)
+        this.setIsCommitted(true)
+        this.tx().commit()
 	    return this
     }
 	

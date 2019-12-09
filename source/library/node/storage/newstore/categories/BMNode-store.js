@@ -29,7 +29,6 @@ Object.defineSlots(BMNode.prototype, {
                 // v is a non-node object, that it's changes will be stored
                 // as those types have no setter hooks
 
-                //aStore.addDirtyObjectIfNotFlushed(v) // this isn't ideal
                 aRecord.entries.push([slotName, aStore.refValue(v)])
             }
         })

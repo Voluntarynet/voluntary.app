@@ -1,6 +1,9 @@
 
 TODO:
 
+	need a way to avoid addDirtyObject until object unref or ref is called....
+	
+	
 	take a close look at .overrideSlot() calls
 	replace "delete a[i]" with a.removeAt(i)
 	replace "a[i] = v" with atPut(i, v)

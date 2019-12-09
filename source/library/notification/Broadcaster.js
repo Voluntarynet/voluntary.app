@@ -27,7 +27,7 @@
 
         // inside a persistent store
         didChangeStoredSlot (aSender) {
-            this.addDirtyObject(aSender)
+            ... tell store to persist it ...
         }
 
     Example use:

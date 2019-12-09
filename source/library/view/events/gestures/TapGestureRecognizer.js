@@ -142,9 +142,9 @@ window.TapGestureRecognizer = class TapGestureRecognizer extends GestureRecogniz
     incrementTapCountForFingerCount (n) {
         const d = this.tapCountDict()
         if (d.hasOwnProperty(n)) { 
-            d[n] ++ 
+            d.atPut(n, d.at(n)+1)
         } else {
-            d[n] = 1
+            d.atPut(n, 1)
         }
         return this
     }

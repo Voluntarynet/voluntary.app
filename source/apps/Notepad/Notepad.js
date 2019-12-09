@@ -44,7 +44,11 @@ window.Notepad = class Notepad extends App {
     // --- setup model ---
 
     setupModel () {     
-        const myLists = this.defaultStore().rootInstanceWithPidForProto("_menuNode", BMMenuNode);
+        let  root = this.defaultStore().rootObject()
+        console.log("rooObject.subnodes = ", root.subnodes().map(sn => sn.title()).join(",") )
+        //root.removeAllSubnodes()
+
+        const myLists = this.defaultStore().rootInstanceWithPidForProto("Notepad", BMMenuNode);
         myLists.setTitle("Notepad")
         this.addLinkSubnode(myLists)
 

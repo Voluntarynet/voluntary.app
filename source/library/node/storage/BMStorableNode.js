@@ -40,9 +40,6 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
 	        return this
         }
         
-        if (newValue && newValue.syncToStoreOnMutation) {
-            newValue.syncToStoreOnMutation()
-        }
         return this
     }
 
@@ -83,8 +80,9 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
         const isUnserializing = this.isUnserializing()
 
         if (shouldStore && !isUnserializing && this.isFinalized()) {
-            this.defaultStore().addDirtyObject(this)
-            //Broadcaster.shared().broadcastNameAndArgument("didChangeStoredSlot", this)
+            super.scheduleSyncToStore()
+            //this.defaultStore().addDirtyObject(this)
+            //Broadcaster.shared().broadcastNameAndArgument("isDirty", this)
         }
 
         return this

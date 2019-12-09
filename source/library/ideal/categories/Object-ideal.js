@@ -86,6 +86,11 @@ Object.defineSlots(Object, {
 
 
 Object.defineSlots(Object.prototype, {
+
+    willMutate: function() {
+
+    },
+    
     shallowCopy: function () {
         return Object.assign({}, this);
     },
@@ -113,7 +118,7 @@ Object.defineSlots(Object.prototype, {
     },
 
     mapToArrayKV: function(fn) {
-        let m = []
+        const m = []
         Object.getOwnPropertyNames(this).forEach((k) => {
             const v = this[k]
             const r = fn(k, v)
@@ -152,7 +157,7 @@ Object.defineSlots(Object, {
 Object.defineSlots(Object.prototype, {
 
     associations: function () {
-        let m = Object._allAssociations
+        const m = Object._allAssociations
 
         if (!m.has(this)) {
             m.set(this, {})

@@ -546,7 +546,6 @@ window.BMNode = class BMNode extends ProtoClass {
     didChangeSubnodeList () {
         // TODO: Optimize by setting needsSort=true,
         // and lazy sort next time index is accessed
-        this.defaultStore().addDirtyObject(this.subnodes())
         this.sortIfNeeded()
         this.subnodes().forEach(subnode => subnode.didReorderParentSubnodes())
         this.didUpdateNode()
@@ -850,24 +849,26 @@ window.BMNode = class BMNode extends ProtoClass {
         return this.subnodes().detect(subnode => subnode.type() === aProto.type())
     }
 
+    firstSubnodeWithTitle (aString) {
+        return this.subnodes().detect(subnode => subnode.title() === aString)
+    }
+
     firstSubnodeWithSubtitle (aString) {
         return this.subnodes().detect(subnode => subnode.subtitle() === aString)
     }
 
     subnodeWithTitleIfAbsentInsertClosure (aString, aClosure) {
-        let subnode = this.firstSubnodeWithSubtitle(aString)
+        let subnode = this.firstSubnodeWithTitle(aString)
 
         if (!subnode && aClosure) {
             subnode = aClosure()
+            subnode.setTitle(aString)
             this.addSubnode(subnode)
         }
 
         return subnode
     }
         
-    firstSubnodeWithTitle (aString) {
-        return this.subnodes().detect(subnode => subnode.title() === aString)
-    }
 
     sendRespondingSubnodes (aMethodName, argumentList) {
         this.subnodes().forEach((subnode) => { 

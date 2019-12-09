@@ -24,6 +24,7 @@ Object.defineSlots(Array, {
 
 
 Object.defineSlots(Array.prototype, {
+
     mutatorMethodNames: function() {
         return [
             "push",
@@ -59,24 +60,6 @@ Object.defineSlots(Array.prototype, {
             }
             Object.defineSlot(this, slotName, hookedFunction)
         })
-    },
-
-    willMutate: function(slotName) {
-        //console.log(slotName + " hooked!")
-        // hook this on instances where we need to know about changes
-    },
-
-    syncToStoreOnMutation: function() {
-        this["willMutate"] = this.scheduleSyncToStore
-    },
-
-    defaultStore: function() {
-        return PersistentObjectPool.shared()
-    },
-
-    scheduleSyncToStore: function(slotName) {
-        console.log("Array scheduleSyncToStore " + slotName + " hooked!")
-        this.defaultStore().addDirtyObject(this)
     },
 
 })
@@ -164,7 +147,7 @@ Object.defineSlots(Array.prototype, {
         for (let i = 0; i < this.length; i++) {
             if (this[i] !== otherArray[i]) {
             //if (this.at(i) !== otherArray.at(i)) {
-                    return false;
+                return false;
             }
         }
 

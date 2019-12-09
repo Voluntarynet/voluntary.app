@@ -165,9 +165,9 @@ window.AtomicPersistentDictionary = class AtomicPersistentDictionary extends ide
         return this
     }
 	
-    removeAt (key) {
+    removeKey (key) {
         if (this.hasKey(key)) {
-            super.removeAt(key)
+            super.removeKey(key)
             this.changedKeys().add(key)
         }
         return this

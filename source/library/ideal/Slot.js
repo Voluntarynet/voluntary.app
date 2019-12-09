@@ -98,11 +98,11 @@ window.ideal.Slot = class Slot {
         //this.setOwnsSetter(true)
         
         if (this.alreadyHasGetter()) {
-            console.log(this.owner().type() + "." + this.getterName() + "() exists, so we won't override")
+            //console.log(this.owner().type() + "." + this.getterName() + "() exists, so we won't override")
         }
         
         if (this.alreadyHasSetter()) {
-            console.log(this.owner().type() + "." + this.setterName() + "(v) exists, so we won't override")
+            //console.log(this.owner().type() + "." + this.setterName() + "(v) exists, so we won't override")
         }
 
         this.setOwnsGetter(!this.alreadyHasGetter())
@@ -357,14 +357,6 @@ window.ideal.Slot = class Slot {
         const func = function (newValue) {
             const oldValue = this[privateName]
             if (oldValue !== newValue) {
-                /*
-                if (Type.isArray(newValue)) {
-                    console.log("array")
-                }
-                if (slot.shouldStore() && newValue.syncToStoreOnMutation) {
-                    newValue.syncToStoreOnMutation()
-                }
-                */
                 
                 this[privateName] = newValue
                 this.didUpdateSlot(slot, oldValue, newValue)

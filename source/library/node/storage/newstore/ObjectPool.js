@@ -222,6 +222,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         return Object.keys(this.dirtyObjects()).length !== 0
     }
 
+    /*
     addDirtyObjectIfNotFlushed (anObject) {
         if (!Type.isLiteral(anObject)) {
             assert(this.justStoredObjects()) // if null, then we aren't in the middle of a store
@@ -231,6 +232,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         }
         return this
     }
+   */
 
     /*
     hasDirtyObject (anObject) {
@@ -337,12 +339,19 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         return obj
     }
 
-    objectForPid (puuid) {
-        const obj = this.activeObjects().getOwnProperty(puuid)
-        if (obj) {
-            return obj
+    objectForPid (puuid) { // private
+        const activeObj = this.activeObjects().getOwnProperty(puuid)
+        if (activeObj) {
+            return activeObj
         }
-        return this.objectForRecord(this.recordForPid(puuid))
+        
+        const loadedObj = this.objectForRecord(this.recordForPid(puuid))
+        if (loadedObj) {
+            loadedObj.setShouldSyncToStore(true)
+            return loadedObj
+        }
+
+        return undefined
     }
 
     //
@@ -381,11 +390,8 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         }
         const puuid = v.getOwnProperty("*")
         assert(puuid)
-        return this.objectForPid(puuid)
-    }
-
-    willRefObject (obj) { // TODO: remove this - it's transitional from NodeStore
-        return this.refValue(obj)
+        const obj = this.objectForPid(puuid)
+        return obj
     }
 
     refValue (v) {
@@ -394,6 +400,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         }
 
         if (v.shouldStore && v.shouldStore() && !this.hasActiveObject(v)) {
+            v.setShouldSyncToStore(true)
             this.addDirtyObject(v)
         }
 
@@ -454,9 +461,12 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         this.activeLazyPids().forEach(pid => this.markPid(pid))
         const deleteCount = this.sweep()
         this.setMarkedSet(null)
-        this.debugLog(() => "--- end collect - collected " + deleteCount + " pids ---")
 
         this.recordsDict().commit()
+        this.debugLog(() => "--- end collect --- collected " + deleteCount + " pids ---")
+
+        let remainingCount = this.recordsDict().size()
+        this.debugLog(() => " remaining keys after commit: " + remainingCount)
         return deleteCount
     }
 

@@ -26,21 +26,27 @@ window.ideal.Slot = class Slot {
 
     simpleNewSlot (slotName, initialValue = null) {
         const privateName = "_" + slotName;
-        this[privateName] = initialValue;
+        //this[privateName] = initialValue;
+        Object.defineSlot(this, privateName, initialValue)
+
 
         if (!this[slotName]) {
-            this[slotName] = function () {
+            const simpleGetter = function () {
                 return this[privateName];
             }
+
+            Object.defineSlot(this, slotName, simpleGetter)
         }
 
         const setterName = "set" + slotName.capitalized()
 
         if (!this[setterName]) {
-            this[setterName] = function (newValue) {
+            const simpleSetter = function (newValue) {
                 this[privateName] = newValue;
                 return this;
             }
+
+            Object.defineSlot(this, setterName, simpleSetter)
         }
 
         this._slotNames.add(slotName)
@@ -49,7 +55,9 @@ window.ideal.Slot = class Slot {
     }
 
     initPrototype () {
-        this._slotNames = new Set()
+        Object.defineSlot(this, "_slotNames", new Set())
+
+        //this._slotNames = new Set()
         
         this.simpleNewSlot("owner", null) // typically a reference to a .prototype
         this.simpleNewSlot("name", false) 
@@ -163,7 +171,8 @@ window.ideal.Slot = class Slot {
     }
 
     setupValue () {
-        this.owner()[this.privateName()] = this.initValue()
+        Object.defineSlot(this.owner(), this.privateName(), this.initValue())
+        //this.owner()[this.privateName()] = this.initValue()
         return this
     }
 
@@ -220,7 +229,8 @@ window.ideal.Slot = class Slot {
     // direct getter
 
     makeDirectGetter () {
-        this.owner()[this.getterName()] = this.directGetter()
+        Object.defineSlot(this.owner(), this.getterName(), this.directGetter())
+        //this.owner()[this.getterName()] = this.directGetter()
         return this
     }
 
@@ -237,12 +247,13 @@ window.ideal.Slot = class Slot {
 
     makeHookedGetter () {
         //this.owner()[this.getterName()] = this.hookedGetter()
-        this.owner()[this.getterName()] = this.safeHookedGetter()
+        Object.defineSlot(this.owner(), this.getterName(), this.safeHookedGetter())
         return this
     }
 
     makeDirectGetterOnInstance (anInstance) {
-        anInstance[this.getterName()] = this.directGetter()
+        //anInstance[this.getterName()] = this.directGetter()
+        Object.defineSlot(anInstance, this.getterName(), this.directGetter())
         return this   
     }
 
@@ -288,7 +299,8 @@ window.ideal.Slot = class Slot {
     makeOneShotHookedGetter () {
         assert(this.owner().isPrototype())
         console.log(this.owner().type() + "." + this.name() + " setting up one-shot getter in prototype")
-        this.owner()[this.getterName()] = this.oneShotHookedGetter()
+        //this.owner()[this.getterName()] = this.oneShotHookedGetter()
+        Object.defineSlot(this.owner(), this.getterName(), this.oneShotHookedGetter())
         return this
     }
 
@@ -312,7 +324,8 @@ window.ideal.Slot = class Slot {
     }
 
     makeDirectSetter () {
-        this.owner()[this.setterName()] = this.directSetter()
+        //this.owner()[this.setterName()] = this.directSetter()
+        Object.defineSlot(this.owner(), this.setterName(), this.directSetter())
         return this
     }
 
@@ -345,7 +358,8 @@ window.ideal.Slot = class Slot {
     // hooked setter
 
     makeHookedSetter () {
-        this.owner()[this.setterName()] = this.hookedSetter()
+        //this.owner()[this.setterName()] = this.hookedSetter()
+        Object.defineSlot(this.owner(), this.setterName(), this.hookedSetter())
         return this
     }
     
@@ -446,9 +460,9 @@ window.ideal.Slot = class Slot {
     }
 
     onInstanceLoadRef (anInstance) {
-        let storeRef = this.onInstanceGetValueRef(anInstance)
+        const storeRef = this.onInstanceGetValueRef(anInstance)
         if (storeRef) {
-            let obj = storeRef.unref()
+            const obj = storeRef.unref()
             this.onInstanceSetValue(anInstance, obj)
             this.onInstanceSetValueRef(anInstance, null)
         } else {
@@ -460,6 +474,21 @@ window.ideal.Slot = class Slot {
 
     hasSetterOnInstance (anInstance) {
         return Type.isFunction(anInstance[this.setterName()])
+    }
+
+    shouldStoreOnInstancePrivateName() {
+        return "_shouldStoreSlot" + this.name().capitalized()
+    }
+
+    shouldStoreInstance (anInstance) {
+        const k = this.shouldStoreOnInstancePrivateName()
+        return anInstance[k]
+    }
+
+    setShouldStoreInstance (anInstance, aBool) {
+        const k = this.shouldStoreOnInstancePrivateName()
+        anInstance[k] = aBool
+        return aBool
     }
     
 }.initThisClass()

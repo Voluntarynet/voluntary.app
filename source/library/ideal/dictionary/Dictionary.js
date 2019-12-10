@@ -5,6 +5,7 @@
     Dictionary
 
     A wrapper for a Javascript dictionary/object.
+    We can use this to ensure all dictionary methods are hooked.
 
 
 */

@@ -67,6 +67,7 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
     
     asyncOpen (callback) {
         this.debugLog("asyncOpen")
+        console.log(" --- " + this.type() + " opening path '" + this.path() + "' --- ")
 		
         const request = window.indexedDB.open(this.path(), 2);
         

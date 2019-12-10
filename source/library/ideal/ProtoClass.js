@@ -346,7 +346,7 @@ window.ProtoClass = class ProtoClass {
         slot.setOwner(this)
         slot.autoSetGetterSetterOwnership()
         slot.setupInOwner()
-        this.slots()[slotName] = slot
+        this.slots().atPut(slotName, slot)
         return slot
     }
 
@@ -390,19 +390,9 @@ window.ProtoClass = class ProtoClass {
 
 
     childProtos () {
-        const result = ProtoClass.allClasses().select((proto) => { return proto._parentProto === this })
+        const result = ProtoClass.allClasses().select(proto => proto._parentProto === this )
         return result
     }
-
-    /*
-    allDescendantProtos () {
-
-    }
-
-    typeId () {
-        return this.typePuuid()
-    }
-    */
 
     cloneWithoutInit () {
         const obj = Object.clone(this);
@@ -416,16 +406,6 @@ window.ProtoClass = class ProtoClass {
         return obj;
     }
 
-    /*
-    withSets (sets) {
-        return this.clone().performSets(sets);
-    }
-
-    withSlots (slots) {
-        return this.clone().setSlots(slots);
-    }
-    */
-
     init () { 
         // subclasses should override to do initialization
         assert(this.isInstance())
@@ -437,28 +417,9 @@ window.ProtoClass = class ProtoClass {
         return this.type();
     }
 
-    /*
-    setSlotsIfAbsent (slots) {
-        Object.eachSlot(slots, (name, value) => {
-            if (!this[name]) {
-                this.setSlot(name, value);
-            }
-        });
-        return this;
-    }
-    */
-
     ownsSlot (name) {
         return this.hasOwnProperty(name);
     }
-
-    /*
-    aliasSlot (slotName, aliasName) {
-        this[aliasName] = this[slotName];
-        this["set" + aliasName.capitalized()] = this["set" + slotName.capitalized()];
-        return this;
-    }
-    */
 
     argsAsArray (args) {
         return Array.prototype.slice.call(args);
@@ -478,7 +439,6 @@ window.ProtoClass = class ProtoClass {
         }
 
         throw new Error(this, ".perform(" + message + ") missing method")
-
         return this;
     }
 

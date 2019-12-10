@@ -9,6 +9,14 @@
 
 */
 
+Object.defineSlotIfNeeded = function(obj, slotName, slotValue) {
+    if (this.hasOwnProperty(slotName)) {
+        this[slotName] = slotValue
+    } else {
+        Object.defineSlot(this, slotName, slotValue)
+    }
+}
+
 Object.defineSlot = function(obj, slotName, slotValue) {
     const descriptor = {
         configurable: true,
@@ -90,6 +98,10 @@ Object.defineSlots(Object.prototype, {
     willMutate: function() {
 
     },
+
+    didMutate: function() {
+
+    },
     
     shallowCopy: function () {
         return Object.assign({}, this);
@@ -143,6 +155,13 @@ Object.defineSlots(Object.prototype, {
         }
         return undefined
     },
+
+    /*
+    setOwnProperty: function(key, value) {
+        this[key] = value
+        return this
+    },
+    */
 })
 
 // --- Objective-C like associations ---

@@ -46,7 +46,7 @@ window.PeerApp = class PeerApp extends App {
     setupModel () {
 
         // identities
-        this.setLocalIdentities(this.defaultStore().rootInstanceWithPidForProto("_localIdentities", BMLocalIdentities))
+        this.setLocalIdentities(this.defaultStore().rootInstanceWithPidForProto("Local Identities", BMLocalIdentities))
         this.addLinkSubnode(this.localIdentities()).setTitle("Identities")
 
         // about 

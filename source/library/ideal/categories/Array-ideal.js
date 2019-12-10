@@ -10,6 +10,12 @@
 
 Object.defineSlots(Array, {
 
+    clone: function() {
+        let obj = new this()
+        obj.init()
+        return obj
+    },
+
     fromIterator: function(iterator) {
         const values = []
         let result = iterator.next()
@@ -52,6 +58,7 @@ Object.defineSlots(Array.prototype, {
                 this.willMutate(slotName)
                 //return unhookedFunc.apply(this, arguments)
                 let result = this[unhookedName].apply(this, arguments)
+                this.didMutate(slotName)
                 /*
                 let argsString = []
                 for (let i=0; i < arguments.length; i++) {
@@ -73,10 +80,14 @@ Array.prototype.setupMutatorHooks()
 
 Object.defineSlots(Array.prototype, {
 
-    //
+    init: function() {
+        //super.init()
+    },
 
     clone: function () {
-        return this.shallowCopy();
+        const obj = this.shallowCopy();
+        obj.init()
+        return obj
     },
     
     // --- read operations ---

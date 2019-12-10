@@ -300,7 +300,7 @@ window.BMClassifiedPost = class BMClassifiedPost extends BMFieldSetNode {
         let region = rootNode.nodeAtSubpath(pathComponents)
         if (region) {
             //console.log("inserting post " + this.hash() + " into region path " + pathString + " ", this.postDict().title)
-            if (!region.containsSubnode(this)) {
+            if (!region.hasSubnode(this)) {
                 region.this.addSubnode(this)
             } else {
                 console.log("can't insert duplicate subnode")

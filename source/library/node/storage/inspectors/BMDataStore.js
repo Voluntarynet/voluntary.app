@@ -65,7 +65,8 @@ window.BMDataStore = class BMDataStore extends BMNode {
 
     addRecord (aRecord) {
         const subnode = BMDataStoreRecord.clone()
-        subnode.setTitle(aRecord.type + " " + aRecord.id)
+        //subnode.setTitle(aRecord.type + " " + aRecord.id)
+        subnode.setTitle(aRecord.id)
         subnode.setKey(aRecord.id)
         subnode.setStore(this.store())
         const size = JSON.stringify(aRecord).length

@@ -6,6 +6,7 @@ ResourceLoader.pushRelativePaths([
     //"Proto.js",
     "ProtoClass.js",
     "Documentation.js",
+    "array/_imports.js",
     "dictionary/_imports.js",
     "StackTrace.js",
     "formatters/_imports.js",

@@ -27,9 +27,8 @@ window.BMPost = class BMPost extends BMStorableNode {
         return this.price() + " BTC"
     }
     
-    setPrice (p) {
-        this._price = parseFloat(p)
-        return this
+    didUpdateSlotPrice (oldValue, newValue) {
+        this._price = parseFloat(newValue)
     }
     
     postDict () {

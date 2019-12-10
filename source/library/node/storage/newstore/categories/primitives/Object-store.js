@@ -46,10 +46,10 @@ Object.defineSlots(Object.prototype, {
         return puuids
     },
 
-    _shouldSyncToStore: false,
+    _shouldSyncToStore: false, // need to do this with defineSlot
 
     setShouldSyncToStore: function(aBool) {
-        this._shouldSyncToStore = aBool
+        Object.defineSlotIfNeeded(this, "_shouldSyncToStore", aBool)
         return this
     },
 

@@ -1,17 +1,18 @@
 
 TODO:
 
-	need a way to avoid addDirtyObject until object unref or ref is called....
-	
-	
+	- replace BMNode.subnodeIndex code with an IndexedArray subclass of Array?
+
 	take a close look at .overrideSlot() calls
 	replace "delete a[i]" with a.removeAt(i)
 	replace "a[i] = v" with atPut(i, v)
 
+	- replace old subnode hooks? 
+		- have subnodes array notify node of mutation?
+		- needed to notify views?
+		
 	- need to add app to root subnodes?
 	
-	subnodes not loading
-
 	- fix reordering via drag and drop
 	
 	- remove remaining newSlots({})

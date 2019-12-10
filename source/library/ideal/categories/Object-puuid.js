@@ -16,12 +16,31 @@ Object.defineSlots(Object, {
         return uuid_a + uuid_b
     },
 
-    _puuidWeakMap: new WeakMap(),
+    //_puuidWeakMap: new WeakMap(),
 
 })
 
 Object.defineSlots(Object.prototype, {
 
+    puuid: function() {
+        if (!this.hasPuuid()) {
+            this.setPuuid(Object.newUuid())
+        }
+
+        return this["_puuid"]
+    },
+
+    hasPuuid: function() {
+        return Object.prototype.hasOwnProperty.apply(this, ["_puuid"])
+    },
+
+    setPuuid: function(puuid) {
+        assert(!Type.isNullOrUndefined(puuid))
+        this["_puuid"] = puuid
+        return this
+    },
+
+    /*
     puuid: function() {
         if (!this.hasPuuid()) {
             this.setPuuid(Object.newUuid())
@@ -36,9 +55,15 @@ Object.defineSlots(Object.prototype, {
 
     setPuuid: function(puuid) {
         assert(!Type.isNullOrUndefined(puuid))
+        
+        if (this.hasPuuid() && this.puuid() !== puuid) {
+            // hook this situation? It should be rare.   
+        }
+
         Object._puuidWeakMap.set(this, puuid);
         return this
     },
+    */
 
     typePuuid: function() {
         const puuid = this.puuid()

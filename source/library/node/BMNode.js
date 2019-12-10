@@ -122,7 +122,8 @@ window.BMNode = class BMNode extends ProtoClass {
     init () {
         super.init()
         this.setSubnodes([])
-        this._actions = []        
+        //this._actions = []   
+        Object.defineSlot(this ,"_actions", [])  
         this.setDidUpdateNodeNote(NotificationCenter.shared().newNote().setSender(this).setName("didUpdateNode"))
         this.setShouldFocusSubnodeNote(NotificationCenter.shared().newNote().setSender(this).setName("shouldFocusSubnode"))
         this._nodeMinWidth = 180
@@ -433,7 +434,7 @@ window.BMNode = class BMNode extends ProtoClass {
     }
     
     addSubnodeIfAbsent (aSubnode) {
-        if(!this.containsSubnode(aSubnode)) {
+        if(!this.hasSubnode(aSubnode)) {
             this.addSubnode(aSubnode)
             return true
         }
@@ -453,7 +454,7 @@ window.BMNode = class BMNode extends ProtoClass {
             return false
         }
 
-        if (this.containsSubnode(aSubnode)) {
+        if (this.hasSubnode(aSubnode)) {
             return false
         }
 
@@ -461,46 +462,12 @@ window.BMNode = class BMNode extends ProtoClass {
         const match = this.acceptedSubnodeTypes().detect(type => ancestors.contains(type))
         return !Type.isNullOrUndefined(match)
     }
-
-    addSubnodeProtoForSlotIfAbsent (aProto, slotName) {
-        const getter = this[slotName]
-        if (!getter) {
-            throw new Error(this.type() + "." + slotName + " slot missing")
-        }
-		
-        let slotValue = this[slotName].apply(this)
-        assert(aProto)
-		
-        this.debugLog(".addSubnodeProtoForSlotIfAbsent(" + aProto.type() + ", " + slotName + ")")
-        this.debugLog(" slotValue = " + slotValue)
-		
-        if (slotValue === null) {
-            slotValue = aProto.clone()
-            //this.debugLog("." + setterName + "(", obj, ")")
-            const setterName = this.setterNameForSlot(slotName)
-            this[setterName].apply(this, [slotValue])
-        }
-        // TODO: this doesn't preserve ordering - how to address this?
-        // split up init between stored and unstored slots?
-		
-        if (!this.containsSubnode(slotValue)) {
-            this.addSubnode(slotValue)
-        }
-        
-        return this
-    }
-	
-    /*
-	hasSubnode (aSubnode) {
-    	return this.subnodes().detect((subnode) => { return subnode.isEqual(aSubnode) })
-	},
-	*/
 	
     isEqual (aNode) {
 	    return this === aNode
     }
 	
-    containsSubnode (aSubnode) {
+    hasSubnode (aSubnode) {
         if (this._subnodeIndex) {
             return this._subnodeIndex.hasOwnProperty(aSubnode.hash()) 
         }
@@ -521,7 +488,8 @@ window.BMNode = class BMNode extends ProtoClass {
         this.justRemoveSubnode(aSubnode)
 
         if (this._subnodeIndex) {
-            delete this._subnodeIndex[aSubnode.hash()] 
+            this._subnodeIndex.removeAt(aSubnode.hash())
+            //delete this._subnodeIndex[aSubnode.hash()] 
         }
         
         this.didChangeSubnodeList()
@@ -930,7 +898,7 @@ window.BMNode = class BMNode extends ProtoClass {
     // subnodeIndex
 	
     createSubnodeIndex () {
-	    if (!this._subnodeIndex) { 
+	    if (!this.hasOwnProperty("_subnodeIndex")) { 
 	        this._subnodeIndex = {}
 	        this.reindexSubnodes()
 	    }

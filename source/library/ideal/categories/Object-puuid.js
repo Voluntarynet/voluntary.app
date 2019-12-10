@@ -77,4 +77,8 @@ Object.defineSlots(Object.prototype, {
         return this.typePuuid()
     },
 
+    type: function() {
+        return this.constructor.name
+    },
+
 })

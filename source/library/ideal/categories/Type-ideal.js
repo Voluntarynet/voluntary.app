@@ -218,6 +218,11 @@ window.Type = {
     // type name
 
     typeName: function(value) {
+        if (Type.isObject(value)) {
+            //return value.type()
+            return value.constructor.name
+        }
+
         const typeNames = this.allTypeNames()
         for (let i = 0; i < typeNames.length; i++) {
             const typeName = typeNames[i]

@@ -8,9 +8,15 @@
 
 window.BMServerMessage = class BMServerMessage extends ProtoClass {
     
+    static initThisClass () {
+        this.prototype.initPrototype.apply(this.prototype)
+        Object.defineSlot(this, "_instanceCount", 0)
+        Object.defineSlot(this, "incrementInstanceCount", function () { return this._instanceCount ++ })
+        return this
+    }
+
     initPrototype () {
         this.newSlots({
-            count: 0,
             serverConnection: null,
             id: null,
             name: null,
@@ -20,8 +26,7 @@ window.BMServerMessage = class BMServerMessage extends ProtoClass {
 
     init () {
         super.init()
-        BMServerMessage.setCount(BMServerMessage.count() + 1);
-        this.setId(BMServerMessage.count().toString());
+        this.setId(BMServerMessage.incrementInstanceCount());
     }
 
     send () {

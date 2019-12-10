@@ -1,6 +1,9 @@
 
 TODO:
 
+        BMServerMessage.setCount(BMServerMessage.count() + 1);
+
+
 	- move from BMNode.isUnserializing to tracking unserializing in ObjectPool (useful for non BMNode objects)
 
 	- replace BMNode.subnodeIndex code with an IndexedArray subclass of Array?

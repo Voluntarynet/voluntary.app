@@ -63,7 +63,7 @@ Object.defineSlots(Object.prototype, {
         //console.log(slotName + " hooked!")
         // hook this on instances where we need to know about changes
         if (this._shouldSyncToStore) {
-            this.scheduleSyncToStore()
+            this.scheduleSyncToStore(slotName)
         }
     },
     
@@ -78,7 +78,7 @@ Object.defineSlots(Object.prototype, {
     },
     
     scheduleSyncToStore: function(slotName) {
-        console.log("Array scheduleSyncToStore " + slotName + " hooked!")
+        console.log(this.typeId() + " scheduleSyncToStore (via " + slotName + ")")
         this.defaultStore().addDirtyObject(this)
     },
 })

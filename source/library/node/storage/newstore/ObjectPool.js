@@ -325,6 +325,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
 
     objectForRecord (aRecord) { // private
         const className = aRecord.type
+        console.log(this.type() + " loading type " + className + " " + aRecord.id)
         const aClass = window[className]
         if (!aClass) {
             throw new Error("missing class '" + className + "'")

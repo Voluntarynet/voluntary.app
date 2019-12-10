@@ -29,54 +29,6 @@ Object.defineSlots(Array, {
 })
 
 
-Object.defineSlots(Array.prototype, {
-
-    mutatorMethodNames: function() {
-        return [
-            "push",
-            "reverse",
-            "shift",
-            "sort",
-            "splice",
-            "unshift"
-        ]
-    },
-
-    setShouldSyncToStore: function(aBool) {
-        this._shouldSyncToStore = aBool
-        return this
-    },
-
-    setupMutatorHooks: function() {
-        this.mutatorMethodNames().forEach((slotName) => {
-
-            const unhookedName = "unhooked_" + slotName
-            const unhookedFunction = this[slotName]
-            Object.defineSlot(this, unhookedName, unhookedFunction)
-
-            const hookedFunction = function() {
-                this.willMutate(slotName)
-                //return unhookedFunc.apply(this, arguments)
-                let result = this[unhookedName].apply(this, arguments)
-                this.didMutate(slotName)
-                /*
-                let argsString = []
-                for (let i=0; i < arguments.length; i++) {
-                    if (i !== 0) { argsString += ", " }
-                    argsString += String(arguments[i])
-                }
-                console.log("hooked Array " + slotName + "(" + argsString + ")") 
-                console.log("result = " + result)
-                */
-                return result
-            }
-            Object.defineSlot(this, slotName, hookedFunction)
-        })
-    },
-
-})
-
-Array.prototype.setupMutatorHooks()
 
 Object.defineSlots(Array.prototype, {
 
@@ -88,6 +40,14 @@ Object.defineSlots(Array.prototype, {
         const obj = this.shallowCopy();
         obj.init()
         return obj
+    },
+
+    willMutate: function (slotName) {
+
+    },
+
+    didMutate: function(slotName) {
+
     },
     
     // --- read operations ---
@@ -124,14 +84,19 @@ Object.defineSlots(Array.prototype, {
     },
 
     removeAt (index) {
-        this.willMutate() // we need to hook this since delete can't be hooked
+        // we need to hook this since delete can't be hooked
+        const v = this[index]
+        this.willMutate("removeAt", v) 
         delete this[index]
+        this.didMutate("removeAt", v)
         return this
     },
 
-    atPut: function(index, value) {
-        this.willMutate() // we need to hook this since []= can't be hooked
-        this[index] = value
+    atPut: function(index, v) {
+        // we need to hook this since []= can't be hooked
+        this.willMutate("atPut", v) 
+        this[index] = v
+        this.didMutate("atPut", v)
         return this
     },
 
@@ -161,8 +126,7 @@ Object.defineSlots(Array.prototype, {
         }
 
         for (let i = 0; i < this.length; i++) {
-            if (this[i] !== otherArray[i]) {
-            //if (this.at(i) !== otherArray.at(i)) {
+            if (this.at(i) !== otherArray.at(i)) {
                 return false;
             }
         }

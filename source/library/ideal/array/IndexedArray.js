@@ -13,6 +13,15 @@
         a[i] = b -> instead use a.atPut(i, b)
         delete a[i] -> instead use a.removeAt(i)
     
+    Efficiency:
+
+        The index is produced lazily. 
+        Mutations to the array will set needsReindex property to true.
+        On accessing the index (e.g. calling itemForIndexKey(key)), the 
+        index will be updated, if needed.
+
+        This could be optimized by overloading some of the mutation operations
+        and adding and removing the index as needed without setting the needsReindex to true.
     
     Example use:
 
@@ -23,35 +32,39 @@
 
 */
 
-window.IndexedArray = class IndexedArray extends Array {
+window.IndexedArray = class IndexedArray extends StorableArray {
     static withArray (anArray) {
         return this.clone().copyFrom(anArray)
     }
 
     static initThisClass () {
-        this.prototype.initPrototype()
+        if (this.prototype.hasOwnProperty("initPrototype")) {
+            this.prototype.initPrototype.apply(this.prototype)
+        }
         return this
     }
 
     initPrototype () {
-        //Object.defineSlot(this, "_index", {}) 
-
-        //this.newSlot("index", null)
-        //this.newSlot("indexClosure", null)
     }
 
     init () {
+        super.init()
         Object.defineSlot(this, "_index", {}) 
         Object.defineSlot(this, "_indexClosure", null) 
+        Object.defineSlot(this, "_needsReindex", false) 
     }
 
     // index
 
     setIndex (aDict) {
         this._index = aDict
+        return this
     }
 
     index () {
+        if (this._needsReindex) {
+            this.reindex()
+        }
         return this._index
     }
 
@@ -65,55 +78,97 @@ window.IndexedArray = class IndexedArray extends Array {
         return this._indexClosure
     }
 
-    // -----
+    // --- lazy reindexing ---
+
+    setNeedsReindex (aDict) {
+        this._needsReindex = aDict
+        return this
+    }
+
+    needsReindex () {
+        return this._needsReindex
+    }
 
     reindex () {
+        this.setNeedsReindex(false) // do this first to avoid infinite loop
         this.setIndex({})
         this.forEach( v => this.addItemToIndex(v) )
         return this
     }
 
-    hasIndexKey (key) {
-        return this.index().hasOwnProperty(key)
+    didMutate (slotName, optionalValue) {
+        super.didMutate()
+
+        if (!this._needsReindex) {
+            // If we don't already need to reindex, 
+            // check if we can avoid it.
+            // These cover the common use cases.
+
+            if (slotName === "atPut") {
+                // We can just add it, instead of doing a fill reindex.
+                this.addItemToIndex(optionalValue)
+                return
+            }
+
+            if (slotName === "removeAt") {
+                if (!this.contains(optionalValue)) {
+                    // No copies of this value in the array, 
+                    // so we can just remove it from the index.
+                    this.removeItemFromIndex(optionalValue)
+                    return
+                }
+            }
+        }
+
+        this.setNeedsReindex(true)
     }
 
-    itemForIndexKey (key) {
+    // accessing index - public
+
+    itemForIndexKey (key) { // public
         if (this.hasIndexKey(key)) {
             return this.index().at(key)
         }
     }
 
-    indexKeyForItem (v) {
+    // indexing - private
+
+    indexHasItem (v) { // private
+        const key = this.indexClosure()(v)
+        return this.hasIndexKey(key)
+    }
+
+    hasIndexKey (key) { // private
+        return this._index.hasOwnProperty(key)
+    }
+
+    indexKeyForItem (v) { // private
         const key = this.indexClosure()(v)
         return key
     }
 
-    addItemToIndex (v) {
+    addItemToIndex (v) { // private
         const key = this.indexKeyForItem(v)
         assert(Type.isString(key))
-        this.index().atPut(key, v)
+        this._index.atPut(key, v)
         return this
     }
 
-    removeItemFromIndex (v) {
+    removeItemFromIndex (v) { // private
         const key = this.indexKeyForItem(v)
-        this.index().removeAt(key)
+        this._index.removeAt(key)
         return this
     }
 
-    didMutate () {
-        super.didMutate()
-        this.reindex()
-    }
+    // --------------------------------
 
     static selfTest () {
-        let ia = window.IndexedArray.clone()
+        let ia = IndexedArray.clone()
         ia.setIndexClosure(v => v.toString())
         ia.push(123)
         let result = ia.itemForIndexKey("123")
         assert(result === 123)
+        return this
     }
 
-}.initThisClass()
-
-IndexedArray.selfTest()
+}.initThisClass() //.selfTest()

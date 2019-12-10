@@ -1,6 +1,6 @@
 "use strict"
 
-Object.defineSlots(Array.prototype, {
+Object.defineSlots(Map.prototype, {
 
     recordForStore: function(aStore) { // should only be called by Store
         return {
@@ -24,10 +24,10 @@ Object.defineSlots(Array.prototype, {
 })
 
 
-Object.defineSlots(Array, {
+Object.defineSlots(Map, {
 
     instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store
-        assert(aRecord.type === "Array")
+        assert(aRecord.type === "Map")
         return aRecord.v.map(v => aStore.unrefValue(v))
     },
 

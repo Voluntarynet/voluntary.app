@@ -49,8 +49,15 @@ Object.defineSlots(Array.prototype, {
 Object.defineSlots(Array, {
     
     instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store
-        assert(aRecord.type === "Array")
-        return aRecord.v.map(v => aStore.unrefValue(v))
+        let typeName = aRecord.type
+        if (typeName === "Array") {
+            typeName = "StorableArray"
+        }
+        const aClass = window[typeName]
+        const newArray = aClass.clone()
+        const loadedValues = aRecord.v.map(v => aStore.unrefValue(v))
+        loadedValues.forEach( v => newArray.push(v) )
+        return newArray
     },
 
     lengthOfRecord: function(aRecord) {

@@ -20,7 +20,9 @@ window.ideal.Slot = class Slot {
     }
 
     static initThisClass () {
-        this.prototype.initPrototype()
+        if (this.prototype.hasOwnProperty("initPrototype")) {
+            this.prototype.initPrototype.apply(this.prototype)
+        }
         return this
     }
 

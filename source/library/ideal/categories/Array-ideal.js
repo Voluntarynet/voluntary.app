@@ -10,8 +10,12 @@
 
 Object.defineSlots(Array, {
 
+    withArray: function(anArray) {
+        return this.clone().copyFrom(anArray)
+    },
+
     clone: function() {
-        let obj = new this()
+        const obj = new this()
         obj.init()
         return obj
     },
@@ -28,26 +32,27 @@ Object.defineSlots(Array, {
     
 })
 
-
+// -----------------
 
 Object.defineSlots(Array.prototype, {
 
     init: function() {
-        //super.init()
     },
 
     clone: function () {
-        const obj = this.shallowCopy();
-        obj.init()
-        return obj
+        return this.thisClass().clone()
     },
 
     willMutate: function (slotName) {
-
     },
 
     didMutate: function(slotName) {
+    },
 
+    copyFrom: function(anArray) {
+        this.clear()
+        anArray.forEach(v => this.push(v))
+        return this
     },
     
     // --- read operations ---

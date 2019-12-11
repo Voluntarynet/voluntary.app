@@ -325,7 +325,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
 
     objectForRecord (aRecord) { // private
         const className = aRecord.type
-        console.log(this.type() + " loading type " + className + " " + aRecord.id)
+        console.log("loading " + className + " " + aRecord.id)
         const aClass = window[className]
         if (!aClass) {
             throw new Error("missing class '" + className + "'")
@@ -432,7 +432,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         }
         assert(puuid)
         let v = JSON.stringify(obj.recordForStore(this))
-        console.log("storeObject(" + obj.typeId() + ") <- " + v)
+        console.log("store " + obj.puuid() + " <- " + v)
         //console.log(puuid + " <- " + v)
         this.recordsDict().atPut(puuid, v)
         return this

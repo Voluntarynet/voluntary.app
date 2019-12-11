@@ -22,9 +22,6 @@
 
 
 window.HookedArray = class HookedArray extends Array {
-    static withArray (anArray) {
-        return this.clone().copyFrom(anArray)
-    }
 
     static initThisClass () {
         this.prototype.initPrototype.apply(this.prototype)
@@ -36,6 +33,7 @@ window.HookedArray = class HookedArray extends Array {
     }
 
     init () {
+        super.init()
         Object.defineSlot(this, "_observers", new Set()) 
     }
 
@@ -118,7 +116,7 @@ window.HookedArray = class HookedArray extends Array {
     // ------------------------------
 
     static selfTest () {
-        const a = window.HookedArray.clone()
+        const a = this.clone()
         let gotNotification = false
         a.willMutate = () => {
             gotNotification = true

@@ -33,9 +33,6 @@
 */
 
 window.IndexedArray = class IndexedArray extends StorableArray {
-    static withArray (anArray) {
-        return this.clone().copyFrom(anArray)
-    }
 
     static initThisClass () {
         if (this.prototype.hasOwnProperty("initPrototype")) {

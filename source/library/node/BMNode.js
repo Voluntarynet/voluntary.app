@@ -101,14 +101,12 @@ window.BMNode = class BMNode extends ProtoClass {
             nodeInspector: null,
 
             shouldStore: false,
-            isFinalized: false,
         })
 
         //this.newSlot("subnodes", null).setIsLazy(true)
 
 
         this.newSlot("shouldStoreSubnodes", true) //.setShouldStore(true)
-        this.newSlot("isUnserializing", false)
 
         /*
         this.slotNamed("title").setShouldShallowCopy(true)
@@ -225,14 +223,8 @@ window.BMNode = class BMNode extends ProtoClass {
         window.SyncScheduler.shared().scheduleTargetAndMethod(this, "finalize")
     }
     
-    unscheduleFinalize () {
-        SyncScheduler.unscheduleTargetAndMethod(this, "finalize")
-    }
-    
-    
     finalize () {
-        // for subclasses to override
-        this.setIsFinalized(true)
+        // for subclasses to override if needed
     }
     
     // -----------------------

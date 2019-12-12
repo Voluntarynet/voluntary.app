@@ -65,7 +65,9 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
             recordsDict: null, // AtomicDictionary
             activeObjects: null, // dict
             dirtyObjects: null, // dict 
+            loadingPids: null, // set
             justStoredObjects: null, // set
+            loadingObjects: null, // set
             lastSyncTime: null, // WARNING: vulnerable to system time changes
             //isReadOnly: true,
             markedSet: null, // Set of puuids
@@ -215,7 +217,11 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         if (!this.hasActiveObject(anObject)) {
             this.addDirtyObject(anObject) // only do this during ref creation?
         }
-        this.activeObjects()[anObject.puuid()] = anObject
+        this.justAddActiveObject(anObject)
+    }
+
+    justAddActiveObject (anObject) {
+        this.activeObjects().atPut(anObject.puuid(), anObject)
     }
 
     hasDirtyObjects () {
@@ -242,8 +248,12 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
     */
 
     addDirtyObject (anObject) {
-
+    
         if (this.justStoredObjects() && this.justStoredObjects().has(anObject)) {
+            return this
+        }
+
+        if (this.loadingPids() && this.loadingPids().has(anObject.puuid())) {
             return this
         }
 
@@ -332,27 +342,51 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         }
         const obj = aClass.instanceFromRecordInStore(aRecord, this)
         obj.setPuuid(aRecord.id)
-
-        if(obj.scheduleLoadFinalize) {
-            obj.scheduleLoadFinalize()
-        }
+        this.justAddActiveObject(obj)
+        
+        obj.didLoadFromStore()
 
         return obj
     }
 
+    activeObjectForPid (puuid) {
+        return this.activeObjects().getOwnProperty(puuid)
+    }
+
     objectForPid (puuid) { // private
-        const activeObj = this.activeObjects().getOwnProperty(puuid)
+        console.log("objectForPid " + puuid)
+
+        const activeObj = this.activeObjectForPid(puuid)
         if (activeObj) {
             return activeObj
         }
-        
-        const loadedObj = this.objectForRecord(this.recordForPid(puuid))
-        if (loadedObj) {
-            loadedObj.setShouldSyncToStore(true)
-            return loadedObj
+
+        let startedLoad = Type.isNull(this.loadingPids())
+        if (startedLoad) {
+            this.setLoadingPids(new Set())
         }
 
-        return undefined
+        this.loadingPids().add(puuid)
+        
+        const loadedObj = this.objectForRecord(this.recordForPid(puuid))
+        let result = undefined
+
+        if (loadedObj) {
+            loadedObj.setShouldSyncToStore(true)
+            result = loadedObj
+        }
+
+        if (startedLoad) {
+            this.loadingPids().forEach((loadedPid) => {
+                const obj = this.activeObjectForPid(loadedPid)
+                if (obj.loadFinalize) {
+                    obj.loadFinalize()
+                }
+            })
+            this.setLoadingPids(null)
+        }
+
+        return result
     }
 
     //

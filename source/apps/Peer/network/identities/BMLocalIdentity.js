@@ -62,7 +62,7 @@ window.BMLocalIdentity = class BMLocalIdentity extends BMKeyPair {
     finalize () {
         super.finalize()
         //this.debugLog(".finalize()")
-        NotificationCenter.shared().newNote().setSender(this).setName("didChangeIdentity").setInfo(this).post()
+        this.postDidChangeIdentity()
     }
 	
     didLoadFromStore () {

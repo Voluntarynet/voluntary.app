@@ -31,7 +31,6 @@ window.BMPostDrafts = class BMPostDrafts extends BMStorableNode {
         super.finalize()
         this.setTitle("my drafts")
     }
-	
 
     add () {
         const result = super.add()

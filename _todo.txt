@@ -1,11 +1,9 @@
 
 TODO:
 
-        BMServerMessage.setCount(BMServerMessage.count() + 1);
 
-
-	- move from BMNode.isUnserializing to tracking unserializing in ObjectPool (useful for non BMNode objects)
-
+	remove isFinalized
+	
 	- replace BMNode.subnodeIndex code with an IndexedArray subclass of Array?
 
 	take a close look at .overrideSlot() calls

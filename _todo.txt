@@ -1,7 +1,13 @@
 
 TODO:
 
-	- add pointer fields for StorageRecord
+	when to turn on shouldStore on StorableArray?
+	
+	- remove old BMNode sorting code
+	- with BMNode subnode observer, no longer need didChangeSubnodeList calls?
+	
+	- merge BMFieldSetNode with BMNode?
+	
 	- find how Theme and other stuff is getting into Storage
 
 	- work on didUpdateNode notifications - coalesce 

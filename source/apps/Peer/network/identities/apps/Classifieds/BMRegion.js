@@ -23,6 +23,7 @@ window.BMRegion = class BMRegion extends BMNode {
         super.init()
         this.setNodeMinWidth(160)
         //this.setSubnodeProto(BMPost)
+        this.setSubnodeSortFunc((a, b) => { return a.compare(b) })
     }
     
     sumOfSubnodeNotes () {
@@ -42,23 +43,6 @@ window.BMRegion = class BMRegion extends BMNode {
             }
         })
         return sum
-    }
-    
-    sortIfNeeded () {
-        const subnodes = this._subnodes
-        if (subnodes.length) {
-            if (subnodes.first().compare) {
-                this._subnodes = this._subnodes.sort(function (a, b) {
-                    return a.compare(b)
-                })
-            }
-        }
-    }
-    
-    addSubnode (aSubnode) {
-        super.addSubnode(aSubnode)
-        this.sortIfNeeded()
-        return aSubnode
     }
 
     didUpdateNode () {

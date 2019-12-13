@@ -15,7 +15,8 @@
     
     Efficiency:
 
-        The index is produced lazily. 
+        The index is produced lazily, so there's (practically) no cost if it isn't used.
+        TODO: This could be improved by removing didMutate method until needed? 
         Mutations to the array will set needsReindex property to true.
         On accessing the index (e.g. calling itemForIndexKey(key)), the 
         index will be updated, if needed.
@@ -77,8 +78,8 @@ window.IndexedArray = class IndexedArray extends StorableArray {
 
     // --- lazy reindexing ---
 
-    setNeedsReindex (aDict) {
-        this._needsReindex = aDict
+    setNeedsReindex (aBool) {
+        this._needsReindex = aBool
         return this
     }
 
@@ -101,7 +102,7 @@ window.IndexedArray = class IndexedArray extends StorableArray {
     didMutate (slotName, optionalValue) {
         super.didMutate(slotName, optionalValue)
 
-        if (!this._needsReindex && optionalValue) {
+        if (this._indexClosure && !this._needsReindex && optionalValue) {
             // If we don't already need to reindex, 
             // check if we can avoid it.
             // These cover the common use cases.

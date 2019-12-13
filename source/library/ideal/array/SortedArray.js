@@ -9,7 +9,8 @@
     
     Efficiency:
 
-    Once sorted, a binary insert would be 
+    Once sorted, a binary insert would be faster.
+    TODO: remove didMutate method when sortFunc is not defined?
 
     
     Example use:
@@ -35,13 +36,17 @@ window.SortedArray = class SortedArray extends IndexedArray {
     init () {
         super.init()
         Object.defineSlot(this, "_isSorting", false)
-        Object.defineSlot(this, "_sortFunc", {})
+        Object.defineSlot(this, "_sortFunc", null)
+    }
+
+    doesSort () {
+        return !Type.isNull(this._sortFunc)
     }
 
     setSortFunc (aFunc) {
         if (this._sortFunc !== aFunc) {
             this._sortFunc = aFunc
-
+            this.resort()
         }
         return this
     }
@@ -57,7 +62,7 @@ window.SortedArray = class SortedArray extends IndexedArray {
     }
 
     resort () {
-        if (!this._isSorting && this._sortFunc && this.length) {
+        if (this._sortFunc && this.length && !this._isSorting) {
             this._isSorting = true
             this.sort(this._sortFunc)
             this._isSorting = false
@@ -85,13 +90,11 @@ window.SortedArray = class SortedArray extends IndexedArray {
     // --------------------------------
 
     static selfTest () {
-        let sa = this.clone()
+        let sa = this.clone().setShouldSyncToStore(false)
         sa.setSortFunc((a, b) => { return a - b })
         sa.push(3, 1, 2)
         assert(sa.isEqual([1, 2, 3]))
         return this
     }
 
-}.initThisClass()
-
-setTimeout( () => { SortedArray.selfTest() }, 5000)
+}.initThisClass() //.selfTest()

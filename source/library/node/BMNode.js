@@ -47,7 +47,6 @@ window.BMNode = class BMNode extends ProtoClass {
             subnodes: null,
             subnodeProto: null,
             nodeCanReorderSubnodes: false,
-            subnodeSortFunc: null,
 
             // actions
             actions: null,
@@ -503,7 +502,6 @@ window.BMNode = class BMNode extends ProtoClass {
     didChangeSubnodeList () {
         // TODO: Optimize by setting needsSort=true,
         // and lazy sort next time index is accessed
-        this.sortIfNeeded()
         //this.subnodes().forEach(subnode => subnode.didReorderParentSubnodes())
         this.didUpdateNode()
         return this
@@ -875,33 +873,19 @@ window.BMNode = class BMNode extends ProtoClass {
     // --- subnode sorting ---
 	
     setSubnodeSortFunc (f) {
-	    if (this._subnodeSortFunc !== f) {
-	        this._subnodeSortFunc = f
-	        this.sortIfNeeded()
-	    }
+        this.subnodes().setSortFunc(f)
 	    return this
     }
 	
     doesSortSubnodes () {
-	    return this._subnodeSortFunc !== null
-    }
-	
-    sortIfNeeded () {
-        if (this.doesSortSubnodes()) {
-            this.setSubnodes(this._subnodes.sort(this._subnodeSortFunc))
-        }
-        return this
+	    return this.subnodes().doesSort()
     }
     
-    // --- subnode index ---
+    // --- subnode indexing ---
 	
     lazyIndexedSubnodes () {
-        if (!this.subnodes().isKindOf(IndexedArray)) {
-            const ia = IndexedArray.withArray(this.subnodes())
-            this.isEqual.setIndexClosure( subnode => subnode.hash() )
-            this.setSubnodes(ia)
-            // store will become aware of this change when syncing node,
-            // and referencing subnodes slot
+        if (!this.subnodes().indexClosure()) {
+            this.subnodes().setIndexClosure( sn => sn.hash() )
         }
 	    return this.subnodes()
     }

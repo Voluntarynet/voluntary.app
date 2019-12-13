@@ -162,6 +162,22 @@ Object.defineSlots(Object.prototype, {
         return this
     },
     */
+
+    isKindOf: function(aClass) {
+        if (this.constructor) {
+            if (this.constructor === aClass) {
+                return true
+            }
+
+            let proto = this.__proto__
+
+            if (proto) {
+                return proto.isKindOf.apply(proto, [aClass])
+            }
+        }
+
+        return false
+    }
 })
 
 // --- Objective-C like associations ---

@@ -23,7 +23,13 @@ window.BMDataStoreRecord = class BMDataStoreRecord extends BMFieldSetNode {
     }
 
     prepareForFirstAccess () {
-        this.addField(BMTextAreaField.clone().setKey("recordString").setValueMethod("recordString").setValueIsEditable(false).setIsMono(true))
+        const jsonField = BMTextAreaField.clone().setKey("recordString").setValueMethod("recordString").setValueIsEditable(false).setIsMono(true)
+        this.addField(jsonField)
+
+        this.referencedRecords().forEach((aRecord) => {
+            const node = BMDataStoreRecord.forRecord(aRecord)
+            this.addSubnode(node)
+        })
     }
 
     record () {
@@ -38,6 +44,14 @@ window.BMDataStoreRecord = class BMDataStoreRecord extends BMFieldSetNode {
         return JSON.stringify(this.record(), null, 2)
     }
 
+    referencedRecords () {
+        return this.referencedPidSet().map( pid => this.defaultStore().recordForPid(pid) )
+    }
+
+    referencedPidSet () {
+        return this.defaultStore().refSetForPuuid(this.record().id)
+    }
+
     /*
     delete () {
         super.delete()
@@ -45,6 +59,18 @@ window.BMDataStoreRecord = class BMDataStoreRecord extends BMFieldSetNode {
         return this
     }
     */
+
+    static forRecord (aRecord) {
+        const subnode = BMDataStoreRecord.clone()
+        subnode.setTitle(aRecord.type + " " + aRecord.id)
+        //subnode.setTitle(aRecord.id)
+        subnode.setKey(aRecord.id)
+        subnode.setStore(this.defaultStore()) //// <-------------------- avoid this?
+        const size = JSON.stringify(aRecord).length
+        const sizeDescription = ByteFormatter.clone().setValue(size).formattedValue()
+        subnode.setSubtitle(sizeDescription)
+        return subnode
+    }
     
 }.initThisClass()
 

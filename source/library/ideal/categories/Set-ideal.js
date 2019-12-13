@@ -69,6 +69,12 @@ Object.defineSlots(Set.prototype, {
         return _difference;
     },
 
+    map: function(func) {
+        const result = new Set()
+        this.forEach((v) => result.add(func(v)))
+        return result
+    },
+
     
     /*
     //Examples

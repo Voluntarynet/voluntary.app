@@ -1,7 +1,12 @@
 
 TODO:
 
+	- add pointer fields for StorageRecord
+	- find how Theme and other stuff is getting into Storage
 
+	- work on didUpdateNode notifications - coalesce 
+
+	- asReadOnly method on array with returns ReadOnlyArray Copy
 	bug: row title / subtitle are sometimes clipped
 	remove isFinalized?
 	
@@ -12,9 +17,7 @@ TODO:
 	- replace old subnode hooks? 
 		- have subnodes array notify node of mutation?
 		- needed to notify views?
-		
-	- need to add app to root subnodes?
-	
+			
 	- fix reordering via drag and drop
 	
 	- remove remaining newSlots({})
@@ -23,12 +26,10 @@ TODO:
 
 	- have auto getter/setters check and call super?
 
-
-	change use of "slot" to mean Slot object and replace other uses with "property"
+	change use of "slot" to mean Slot object and replace other uses (e.g. newSlots) with "property"
 	
 	need to add stored field in initPrototype and then instantiate it in init?
 
-	- is a field basically a slot which an instance owns?
 	
 	Field issues:
 	

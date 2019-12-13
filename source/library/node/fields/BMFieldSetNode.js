@@ -119,39 +119,4 @@ window.BMFieldSetNode = class BMFieldSetNode extends BMStorableNode {
         return this.validate() // could cache this later...
     }
 
-    // --- json serialization ---
-    // TODO: can this use persistent storage methods via skip pid use?
-
-    /*
-    asJSON () {
-        const dict = {}
-        dict.type = this.type()
-        // TODO: store persistent slots...
-        // TODO: store subnodes if set to store them
-        if (this.hasSubnodes()) { // TODO: use a count method?
-            // TODO: check for BMField subclass?
-            dict.fields = {}
-            this.subnodes().forEach((field) => {
-                const v = field.value()
-                if (v) { // is empty or null value something we should store?
-                    dict.fields.atPut(field.key(), v)
-                }
-            })
-        }
-        return dict
-    }
-
-    fromJSON (json) {
-        // TODO: read persistent keys
-        if (json.fields) { 
-            Map.withJsDict(json.fields).forEach((key, value) => {
-                const field = this.fieldNamed(key)
-                if (field) {
-                    field.setValue(value)
-                }
-            })
-        }
-        return this
-    }
-    */
 }.initThisClass()

@@ -177,8 +177,8 @@
     position: relative;
     top: 0px;
     left: 0px;
-	padding: 0;
-    margin: 20px;
+	padding: 20px;
+    margin: 0px;
     width: auto;
     min-height: auto;
 
@@ -194,6 +194,7 @@
     font-family: AppMono, monospace;
     font-weight: lighter;
     background-color: transparent;
+    /*border-right: 1px solid #aaa;*/
 }
 
 .BMTextAreaFieldValueView {

@@ -99,12 +99,20 @@ window.IndexedArray = class IndexedArray extends StorableArray {
     }
 
     didMutate (slotName, optionalValue) {
-        super.didMutate()
+        super.didMutate(slotName, optionalValue)
 
-        if (!this._needsReindex) {
+        if (!this._needsReindex && optionalValue) {
             // If we don't already need to reindex, 
             // check if we can avoid it.
             // These cover the common use cases.
+
+            /*
+            if (slotName === "push") {
+                // need to add a way to handle multiple arguments first
+                optionalArguments.forEach(v => this.addItemToIndex(v))
+                return
+            }
+            */
 
             if (slotName === "atPut") {
                 // We can just add it, instead of doing a fill reindex.

@@ -119,7 +119,7 @@ window.BMNode = class BMNode extends ProtoClass {
 
     init () {
         super.init()
-        this.setSubnodes([])
+        this.setSubnodes(HookedArray.clone())
         //this._actions = []   
         Object.defineSlot(this ,"_actions", [])  
         this.setDidUpdateNodeNote(NotificationCenter.shared().newNote().setSender(this).setName("didUpdateNode"))
@@ -504,13 +504,15 @@ window.BMNode = class BMNode extends ProtoClass {
         // TODO: Optimize by setting needsSort=true,
         // and lazy sort next time index is accessed
         this.sortIfNeeded()
-        this.subnodes().forEach(subnode => subnode.didReorderParentSubnodes())
+        //this.subnodes().forEach(subnode => subnode.didReorderParentSubnodes())
         this.didUpdateNode()
         return this
     }
 
+    /*
     didReorderParentSubnodes () {
     }
+    */
 
     nodeReorderSudnodesTo (newSubnodes) {
         this.setSubnodes(newSubnodes)
@@ -843,11 +845,19 @@ window.BMNode = class BMNode extends ProtoClass {
         return this.subnodes().length
     }
 
-    didUpdateSlotSubnodes(oldValue, newValue) {
+    onDidMutate (anObject) {
+        if (anObject === this._subnodes) {
+            this.didChangeSubnodeList()
+        }
+    }
+
+    didUpdateSlotSubnodes (oldValue, newValue) {
         if (oldValue && newValue && oldValue.equals(newValue)) {
             //this.debugLog(".setSubnodes() - skipping because subnodes are the same <<<<<<<<<<<<<<<<<<<<<")
             return this
         }
+
+        this._subnodes.addObserver(this)
 
         this._subnodes.forEach(subnode => subnode.setParentNode(this))
         this.didChangeSubnodeList()

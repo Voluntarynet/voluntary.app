@@ -5,6 +5,15 @@
 
     BMStoredDatedSetNode
 
+    A set, with an insertion data attached to each value.
+    The set has a maxAgeInSeconds setting (the age at which an enty will be deleted),
+    and autoCheckPeriod with is the period at which it checks to see if 
+    there are any items to be removed.
+
+    TODO:
+    This could be optimized by setting the check period to the soonest expiring item,
+    and updating this on any removal or overwrite.
+    
 */
 
 window.BMStoredDatedSetNode = class BMStoredDatedSetNode extends BMStorableNode {

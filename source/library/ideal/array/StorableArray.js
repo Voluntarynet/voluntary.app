@@ -25,6 +25,19 @@ window.StorableArray = class StorableArray extends HookedArray {
         return this
     }
 
+    shouldSyncToStore () {
+        return this._shouldSyncToStore
+    }
+
+    scheduleSyncToStore (slotName) {
+        //console.log(this.typeId() + " scheduleSyncToStore (via " + slotName + ")")
+        this.defaultStore().addDirtyObject(this)
+    }
+
+    defaultStore () {
+        return PersistentObjectPool.shared()
+    }
+
     didMutate (slotName) {
         super.didMutate()
 

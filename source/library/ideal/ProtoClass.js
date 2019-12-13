@@ -479,19 +479,21 @@ window.ProtoClass = class ProtoClass {
     }
     */
 
-
-    isKindOf (aClass) { 
+    /*
+    isKindOf (aClass) {  // implemented in Object.prototype
         if (this.constructor) {
             if (this.constructor === aClass) {
                 return true
             }
 
-            if (this.__proto__.isKindOf) {
-                return this.__proto__.isKindOf.apply(this.__proto__, aClass)
+            let proto = this.__proto__ 
+            if (proto) {
+                return proto.isKindOf.apply(proto, [aClass])
             }
         }
         return false
     }
+    */
 
     toString () {
         return this.typeId();

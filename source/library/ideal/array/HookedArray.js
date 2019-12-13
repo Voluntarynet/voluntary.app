@@ -61,9 +61,9 @@ window.HookedArray = class HookedArray extends Array {
     
     setupMutatorHooks () {
         this.mutatorMethodNames().forEach((slotName) => {
-
             const unhookedName = "unhooked_" + slotName
             const unhookedFunction = this[slotName]
+
             Object.defineSlot(this, unhookedName, unhookedFunction)
 
             const hookedFunction = function() {
@@ -83,6 +83,7 @@ window.HookedArray = class HookedArray extends Array {
 
                 return result
             }
+            
             Object.defineSlot(this, slotName, hookedFunction)
         })
     }

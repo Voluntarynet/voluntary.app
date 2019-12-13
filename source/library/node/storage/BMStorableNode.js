@@ -73,20 +73,6 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
     // reading object from store
 
     // --- udpates ---
-
-    scheduleSyncToStore () {
-        //const typeId = this.typeId()
-        const shouldStore = this.shouldStore()
-        const isUnserializing = this.isUnserializing()
-
-        if (shouldStore && !isUnserializing && this.isFinalized()) {
-            super.scheduleSyncToStore()
-            //this.defaultStore().addDirtyObject(this)
-            //Broadcaster.shared().broadcastNameAndArgument("isDirty", this)
-        }
-
-        return this
-    }
 	
     didUpdateSlot (aSlot, oldValue, newValue) {
         const slotName = aSlot.name()

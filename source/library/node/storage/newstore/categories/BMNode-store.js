@@ -50,7 +50,7 @@ Object.defineSlots(BMNode.prototype, {
 
 
     loadFromRecord: function(aRecord, aStore) {
-        this.setIsUnserializing(true)
+        //this.setIsUnserializing(true)
 
         aRecord.entries.forEach((entry) => {
             const k = entry[0]
@@ -80,7 +80,7 @@ Object.defineSlots(BMNode.prototype, {
 
         this.didLoadFromStore()
         this.scheduleLoadFinalize()
-        this.setIsUnserializing(false) 
+        //this.setIsUnserializing(false) 
         return this
     },
 

@@ -344,7 +344,9 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         obj.setPuuid(aRecord.id)
         this.justAddActiveObject(obj)
         
-        obj.didLoadFromStore()
+        if (obj.didLoadFromStore) {
+            obj.didLoadFromStore()
+        }
 
         return obj
     }

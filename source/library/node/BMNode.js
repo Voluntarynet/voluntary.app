@@ -47,9 +47,6 @@ window.BMNode = class BMNode extends ProtoClass {
             subnodes: null,
             subnodeProto: null,
             nodeCanReorderSubnodes: false,
-            
-            // subnodes index
-            subnodeIndex: null,
             subnodeSortFunc: null,
 
             // actions
@@ -101,6 +98,9 @@ window.BMNode = class BMNode extends ProtoClass {
             nodeInspector: null,
 
             shouldStore: false,
+
+            isFinalized: false, // end of init calls scheduleFinalize, finalized sets this to true
+            // done to avoid adding dirty during init?
         })
 
         //this.newSlot("subnodes", null).setIsLazy(true)
@@ -225,6 +225,7 @@ window.BMNode = class BMNode extends ProtoClass {
     
     finalize () {
         // for subclasses to override if needed
+        this.setIsFinalized(true)
     }
     
     // -----------------------
@@ -378,11 +379,6 @@ window.BMNode = class BMNode extends ProtoClass {
 	
     justAddSubnodeAt (aSubnode, anIndex) {
         this.subnodes().atInsert(anIndex, aSubnode)
-
-        if (this._subnodeIndex) {
-            this.addSubnodeToIndex(aSubnode)
-        }
-        
         aSubnode.setParentNode(this)
         return aSubnode        
     }
@@ -460,9 +456,11 @@ window.BMNode = class BMNode extends ProtoClass {
     }
 	
     hasSubnode (aSubnode) {
-        if (this._subnodeIndex) {
-            return this._subnodeIndex.hasOwnProperty(aSubnode.hash()) 
+        if (this.subnodes().indexHasItem) {
+            // use our index if we have one
+            return this.subnodes().indexHasItem(aSubnode) 
         }
+        //return this.subnodes().detect(subnode => subnode === aSubnode)
         return this.subnodes().detect(subnode => subnode.isEqual(aSubnode))
     }
     
@@ -481,7 +479,6 @@ window.BMNode = class BMNode extends ProtoClass {
 
         if (this._subnodeIndex) {
             this._subnodeIndex.removeAt(aSubnode.hash())
-            //delete this._subnodeIndex[aSubnode.hash()] 
         }
         
         this.didChangeSubnodeList()
@@ -578,7 +575,7 @@ window.BMNode = class BMNode extends ProtoClass {
         return this.subnodes().indexOf(aSubnode);
     }
 
-    subnodeIndex () {
+    subnodeIndexInParent () {
         const p = this.parentNode()
         if (p) {
             return p.indexOfSubnode(this)
@@ -625,6 +622,8 @@ window.BMNode = class BMNode extends ProtoClass {
     prepareToSyncToView () {
         this.prepareToAccess();
     }
+
+    // --- parent chain notifications ---
     
     tellParentNodes (msg, aNode) {
         const f = this[msg]
@@ -829,7 +828,6 @@ window.BMNode = class BMNode extends ProtoClass {
         return subnode
     }
         
-
     sendRespondingSubnodes (aMethodName, argumentList) {
         this.subnodes().forEach((subnode) => { 
             if (subnode[aMethodName]) {
@@ -852,11 +850,9 @@ window.BMNode = class BMNode extends ProtoClass {
         }
 
         this._subnodes.forEach(subnode => subnode.setParentNode(this))
-        this.reindexSubnodesIfNeeded()
         this.didChangeSubnodeList()
         return this
     }   
-
     
     assertSubnodesHaveParentNodes () {
         const missing = this.subnodes().detect(subnode => !subnode.parentNode())
@@ -866,7 +862,7 @@ window.BMNode = class BMNode extends ProtoClass {
         return this
     }
 	
-    // subnode sorting
+    // --- subnode sorting ---
 	
     setSubnodeSortFunc (f) {
 	    if (this._subnodeSortFunc !== f) {
@@ -882,24 +878,26 @@ window.BMNode = class BMNode extends ProtoClass {
 	
     sortIfNeeded () {
         if (this.doesSortSubnodes()) {
-            this._subnodes = this._subnodes.sort(this._subnodeSortFunc)
+            this.setSubnodes(this._subnodes.sort(this._subnodeSortFunc))
         }
         return this
     }
     
-    // subnodeIndex
+    // --- subnode index ---
 	
-    createSubnodeIndex () {
-	    if (!this.hasOwnProperty("_subnodeIndex")) { 
-	        this._subnodeIndex = {}
-	        this.reindexSubnodes()
-	    }
-	    return this
+    lazyIndexedSubnodes () {
+        if (!this.subnodes().isKindOf(IndexedArray)) {
+            const ia = IndexedArray.withArray(this.subnodes())
+            this.isEqual.setIndexClosure( subnode => subnode.hash() )
+            this.setSubnodes(ia)
+            // store will become aware of this change when syncing node,
+            // and referencing subnodes slot
+        }
+	    return this.subnodes()
     }
 	
     subnodeWithHash (h) {
-        this.assertHasSubnodeIndex()
-        return this._subnodeIndex[h]
+        return this.lazyIndexedSubnodes().itemForIndexKey(h)
     }
 	
     removeSubnodeWithHash (h) {
@@ -911,67 +909,10 @@ window.BMNode = class BMNode extends ProtoClass {
     }
 	
     hasSubnodeWithHash (h) {
-        this.assertHasSubnodeIndex()
-	    return this._subnodeIndex.hasOwnProperty(h)
-    }
-	
-    addSubnodeToIndex (subnode) { // private
-        this.assertHasSubnodeIndex()
-
-	    if (!subnode.hash) {
-            throw new Error(this.type() + " missing hash method on subnode of type " + subnode.typeId())
-	    }
-	    
-        const h = subnode.hash()
-        
-        if (h === null) {
-            throw new Error(this.type() + " null subnode hash")
-        }
-        
-        const index = this._subnodeIndex
-        
-        if (index.hasOwnProperty(h)) {
-            throw new Error(this.type() + " duplicate subnode hash " + h + " in indexed node")
-        }
-        
-        index.atPut(h, subnode)
-        return this	    
-    }
-	
-    reindexSubnodesIfNeeded () {
-        if (this._subnodeIndex) {
-            this.reindexSubnodes()
-        }
-        return this
-    }
-	
-    reindexSubnodes () { // private
-	    //let shouldDeleteDuplicates = true // temporary
-	    
-        this.assertHasSubnodeIndex()
-        this._subnodeIndex = {}
-        
-	    //const index = this._subnodeIndex
-	    this.subnodes().forEach((subnode) => {
-	        /*
-	        if (shouldDeleteDuplicates && this.hasSubnodeWithHash(subnode.hash())) {
-	            console.warn("duplicate subnode hash found")
-	        } else {
-	            this.addSubnodeToIndex(subnode)
-            }
-	        */
-            this.addSubnodeToIndex(subnode)
-	    })
-	    return this
-    }
-
-    assertHasSubnodeIndex (h) { // private
-        if (!this._subnodeIndex) {
-            throw new Error(this.type() + " missing subnode index")
-        }
+	    return this.lazyIndexedSubnodes().hasIndexKey(h)
     }
     
-    // node view badge
+    // --- node view badge ---
 
     nodeViewShouldBadge () {
         return false
@@ -987,63 +928,7 @@ window.BMNode = class BMNode extends ProtoClass {
 	    return this
     }
 
-    // --- json serialization ---
-
-    /*
-    asJSON () {
-        const dict = {}
-        dict.type = this.type()
-        dict.title = this.title()
-        // TODO: store persistent slots...
-        // TODO: store subnodes if set to store them
-        if (this.hasSubnodes()) { // TODO: use a count method?
-            dict.subnodes = this.subnodes().map((subnode) => {
-                return subnode.asJSON()
-            })
-        }
-        return dict
-    }
-
-    isLoadingFromJSON () {
-        return this._isLoadingFromJSON
-    }
-    
-    fromJSON (json) {
-        this._isLoadingFromJSON = true
-        // TODO: read persistent keys
-        if (json.title) {
-            this.setTitle(json.title)
-        }
-        
-        if (json.subnodes) { 
-            this.setSubnodes(json.subnodes.map((subnodeDict) => {
-                const type = subnodeDict.type
-                return window[type].clone().fromJSON(subnodeDict)
-            }))
-        }
-        delete this._isLoadingFromJSON
-        return this
-    }
-
-    asyncFromJSONFile (file) {
-        const rawFile = new XMLHttpRequest();
-        rawFile.open("GET", file, false);
-        rawFile.onreadystatechange = function ()
-        {
-            if(rawFile.readyState === 4)
-            {
-                if(rawFile.status === 200 || rawFile.status === 0)
-                {
-                    const json = rawFile.responseText;
-                    this.fromJSON(JSON.parse(json))
-                }
-            }
-        }
-        rawFile.send(null);
-    }
-    */
-
-    // notification helpers - yeah, not ideal
+    // --- notification helpers --- 
 
     watchOnceForNote (aNoteName) {
         const obs = NotificationCenter.shared().newObservation()
@@ -1068,6 +953,7 @@ window.BMNode = class BMNode extends ProtoClass {
         return window.SyncScheduler.shared().scheduleTargetAndMethod(this, aMethodName, milliseconds)
     }
 
+    // -- selection requests ---
 
     onRequestSelectionOfDecendantNode (aNode) {
         return false // allow propogation up the parentNode line
@@ -1099,10 +985,5 @@ window.BMNode = class BMNode extends ProtoClass {
     summary () {
         return this.title() + " " + this.subtitle()
     }
-
-    // overriding copying protocol from Proto
-
-
-    // storage
 
 }.initThisClass()

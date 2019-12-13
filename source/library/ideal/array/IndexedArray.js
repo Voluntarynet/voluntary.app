@@ -93,6 +93,11 @@ window.IndexedArray = class IndexedArray extends StorableArray {
         return this
     }
 
+    hasIndexedItem(anObject) {
+        const key = this.indexKeyForItem(anObject)
+        return !Type.isUndefined(this.itemForIndexKey(key))
+    }
+
     didMutate (slotName, optionalValue) {
         super.didMutate()
 

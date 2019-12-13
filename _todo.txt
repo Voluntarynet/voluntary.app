@@ -2,7 +2,7 @@
 TODO:
 
 
-	remove isFinalized
+	remove isFinalized?
 	
 	- replace BMNode.subnodeIndex code with an IndexedArray subclass of Array?
 

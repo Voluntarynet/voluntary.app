@@ -103,7 +103,7 @@ window.BMMenuNode = class BMMenuNode extends BMSummaryNode {
         }
 
         const colorPair = this.colorPairForDepth(this.nodeDepth())
-        const index = this.subnodeIndex()
+        const index = this.subnodeIndexInParent()
         const ratio = index / this.parentNode().subnodeCount()
         const topColor = colorPair[0]
         const bottomColor = colorPair[1]

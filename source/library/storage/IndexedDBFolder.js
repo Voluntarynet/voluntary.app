@@ -100,6 +100,15 @@ window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
         
         return this
     }
+
+    close () {
+        if (this.isOpen()) {
+            this.db().close()
+            this.setIsOpen(false)
+            this.setDb(null)
+        }
+        return this
+    }
     
     // paths
     

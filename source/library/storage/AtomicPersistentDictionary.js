@@ -54,6 +54,14 @@ window.AtomicPersistentDictionary = class AtomicPersistentDictionary extends ide
         return this
     }
 
+    close () {
+        if (this.isOpen()) {
+            this.idb().close()
+            this.setIsOpen(false)
+        }
+        return this
+    }
+
     asyncOpen (callback) {
         this.idb().setPath(this.name())
         this.idb().asyncOpenIfNeeded( () => this.onOpen(callback) )

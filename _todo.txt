@@ -2,10 +2,9 @@
 TODO:
 
 
+	bug: row title / subtitle are sometimes clipped
 	remove isFinalized?
 	
-	- replace BMNode.subnodeIndex code with an IndexedArray subclass of Array?
-
 	take a close look at .overrideSlot() calls
 	replace "delete a[i]" with a.removeAt(i)
 	replace "a[i] = v" with atPut(i, v)
@@ -19,9 +18,7 @@ TODO:
 	- fix reordering via drag and drop
 	
 	- remove remaining newSlots({})
-	
-	- add AtomicDictionary close?
-	
+		
 	- review this.overrideSlot("title"...
 
 	- have auto getter/setters check and call super?

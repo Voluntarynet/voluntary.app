@@ -35,6 +35,11 @@ window.ideal.AtomicDictionary = class AtomicDictionary extends ideal.Dictionary 
         callback()
     }
 
+    close () {
+        this.setIsOpen(false)
+        return this
+    }
+
     begin () {
         this.assertAccessible()
         this.assertNotInTx()

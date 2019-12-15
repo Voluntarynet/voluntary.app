@@ -28,7 +28,7 @@ window.BMThemeClass = class BMThemeClass extends BMStorableNode {
         const stateNodes = stateNames.map(function (stateName) {
             return BMThemeClassState.clone().setDivClassName(stateName)
         })
-        this.setSubnodes(stateNodes);
+        this.copySubnodes(stateNodes);
         return this
     }
 

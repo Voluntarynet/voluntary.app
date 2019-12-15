@@ -36,6 +36,32 @@ Object.defineSlots(Array, {
 
 Object.defineSlots(Array.prototype, {
 
+    isPrototype: function() {
+        return this.constructor.prototype === this 
+    },
+    
+    isInstance: function() {
+        return !this.isPrototype()
+    },
+
+    isClass: function() {
+        return false
+    },
+
+    thisPrototype: function() {
+        assert(this.isInstance())
+        const prototype = this.__proto__
+        assert(prototype.isPrototype)
+        return prototype
+    },
+
+    thisClass: function() {
+        if (this.isPrototype()) {
+            return this.constructor
+        }
+        return this.__proto__.constructor
+    },
+
     init: function() {
     },
 
@@ -47,6 +73,13 @@ Object.defineSlots(Array.prototype, {
     },
 
     didMutate: function(slotName) {
+    },
+
+    clear: function() {
+        while (this.length) {
+            this.pop()
+        }
+        return this
     },
 
     copyFrom: function(anArray) {

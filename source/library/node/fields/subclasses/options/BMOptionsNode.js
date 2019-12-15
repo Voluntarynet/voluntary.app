@@ -124,7 +124,7 @@ window.BMOptionsNode = class BMOptionsNode extends BMField {
     /*
     setValidValues (values) {        
         const options = values.map(v => BMOptionNode.clone().setValue(v))
-        this.setSubnodes(options)
+        this.copySubnodes(options)
         return this
     }
 	

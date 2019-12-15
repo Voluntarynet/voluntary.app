@@ -9,9 +9,7 @@
 window.BMContactLinks = class BMContactLinks extends BMStorableNode {
     
     initPrototype () {
-        this.newSlots({
-            linkProto: null,
-        })
+        this.newSlot("linkProto", null)
     }
 
     init () {
@@ -74,7 +72,6 @@ window.BMContactLinks = class BMContactLinks extends BMStorableNode {
     updatedContacts () {
         this.removeLinksWithNoContact()
         this.addLinkForEveryContact()
-        this.sortSubnodes()
         //this.debugLog(" updateIdentities contactLinks " + this.subnodeCount())
         return this
     }
@@ -109,6 +106,7 @@ window.BMContactLinks = class BMContactLinks extends BMStorableNode {
         })
     }
 
+    /*
     sortSubnodes () {
         const contactLinks = this.contactLinks().slice()
 
@@ -121,10 +119,11 @@ window.BMContactLinks = class BMContactLinks extends BMStorableNode {
         })
 
         if (!contactLinks.equals(this.contactLinks())) {
-            this.setSubnodes(contactLinks)
+            this.copySubnodes(contactLinks)
         }
 
         return this
     }
+    */
     
 }.initThisClass()

@@ -23,7 +23,8 @@ window.BMDataStoreRecord = class BMDataStoreRecord extends BMFieldSetNode {
     }
 
     prepareForFirstAccess () {
-        const jsonField = BMTextAreaField.clone().setKey("recordString").setValueMethod("recordString").setValueIsEditable(false).setIsMono(true)
+        const jsonField = BMTextAreaField.clone().setKey("recordString")
+        jsonField.setValueMethod("recordString").setValueIsEditable(false).setIsMono(true)
         this.addField(jsonField)
 
         this.referencedRecords().forEach((aRecord) => {

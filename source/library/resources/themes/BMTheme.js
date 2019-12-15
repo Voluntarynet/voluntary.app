@@ -48,7 +48,7 @@ window.BMTheme = class BMTheme extends BMStorableNode {
             return BMThemeClass.clone().setTitle(childProto.type());
         })
 
-        this.setSubnodes(themeClasses);
+        this.copySubnodes(themeClasses);
         return this
     }
 

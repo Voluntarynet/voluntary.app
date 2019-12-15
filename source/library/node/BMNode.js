@@ -500,8 +500,6 @@ window.BMNode = class BMNode extends ProtoClass {
     }
 
     didChangeSubnodeList () {
-        // TODO: Optimize by setting needsSort=true,
-        // and lazy sort next time index is accessed
         //this.subnodes().forEach(subnode => subnode.didReorderParentSubnodes())
         this.didUpdateNode()
         return this
@@ -512,9 +510,13 @@ window.BMNode = class BMNode extends ProtoClass {
     }
     */
 
+    copySubnodes (newSubnodes) {
+        this.subnodes().copyFrom(newSubnodes)
+        return this
+    }
+
     nodeReorderSudnodesTo (newSubnodes) {
-        this.setSubnodes(newSubnodes)
-        this.didChangeSubnodeList()
+        this.copySubnodes(newSubnodes)
         return this
     }
     
@@ -850,13 +852,7 @@ window.BMNode = class BMNode extends ProtoClass {
     }
 
     didUpdateSlotSubnodes (oldValue, newValue) {
-        if (oldValue && newValue && oldValue.equals(newValue)) {
-            //this.debugLog(".setSubnodes() - skipping because subnodes are the same <<<<<<<<<<<<<<<<<<<<<")
-            return this
-        }
-
         this._subnodes.addObserver(this)
-
         this._subnodes.forEach(subnode => subnode.setParentNode(this))
         this.didChangeSubnodeList()
         return this

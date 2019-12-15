@@ -17,9 +17,7 @@
     Example use:
 
 
-
 */
-
 
 window.HookedArray = class HookedArray extends Array {
 
@@ -83,7 +81,7 @@ window.HookedArray = class HookedArray extends Array {
 
                 return result
             }
-            
+
             Object.defineSlot(this, slotName, hookedFunction)
         })
     }

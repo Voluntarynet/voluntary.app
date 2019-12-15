@@ -31,7 +31,7 @@ window.BMPostThread = class BMPostThread extends BMAppMessage {
     }
     
     update () {
-        this.setSubnodes(this.findThreadItems()) // merge?
+        this.copySubnodes(this.findThreadItems()) // merge?
         return this
     }
 

@@ -41,7 +41,7 @@ window.BMApps = class BMApps extends BMStorableNode {
         // remove any apps not in appProtos
         const types = this.appProtos().map(proto => proto.type())
         const matches = this.apps().filter(app => types.contains(app.type()) )
-        this.setSubnodes(matches)
+        this.copySubnodes(matches)
     }
 
     addAnyMisingApps () {

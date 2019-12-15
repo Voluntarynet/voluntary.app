@@ -174,7 +174,7 @@ window.BMRServers = class BMRServers extends BMStorableNode {
             return serverA.bloomDistance() - serverB.bloomDistance() // smallest distance first	
         })
 		
-        this.setSubnodes(sorted)
+        this.copySubnodes(sorted)
 		
         return this
     }

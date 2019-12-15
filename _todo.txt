@@ -1,6 +1,18 @@
 
 TODO:
 
+	cleanup prepare for first access
+	get lazy slot loads working
+	
+	OPTIMIZATION
+	- move creation of unhooked_ slots to Array 
+	- and implement it's methods using unhooked methods with calls to will+didMutate?
+	- implement a doMutation(aClosure) that pauses mutation callbacks and calls will/didMutate?
+
+	FEATURES
+	Slot type checking setTypeCheck(aClassName)
+	- copy slots?
+	
 	when to turn on shouldStore on StorableArray?
 	
 	- remove old BMNode sorting code
@@ -10,7 +22,7 @@ TODO:
 	
 	- find how Theme and other stuff is getting into Storage
 
-	- work on didUpdateNode notifications - coalesce 
+	- work on didUpdateNode notifications - coalesce?
 
 	- asReadOnly method on array with returns ReadOnlyArray Copy
 	bug: row title / subtitle are sometimes clipped

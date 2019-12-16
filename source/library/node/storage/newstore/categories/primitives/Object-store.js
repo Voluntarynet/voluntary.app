@@ -6,11 +6,7 @@ Object.defineSlots(Object, {
     instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store
         assert(aRecord.type === "Object")
         const obj = {}
-        aRecord.entries.forEach((entry) => {
-            const k = entry[0]
-            const v = entry[1]
-            obj[k] = aStore.unrefValue(v)
-        })
+        obj.loadFromRecord(aRecord, aStore)
         return obj
     }
 
@@ -18,6 +14,15 @@ Object.defineSlots(Object, {
 
 
 Object.defineSlots(Object.prototype, {
+
+    loadFromRecord: function(aRecord, aStore) {
+        aRecord.entries.forEach((entry) => {
+            const k = entry[0]
+            const v = entry[1]
+            this[k] = aStore.unrefValue(v)
+        })
+        return this
+    },
 
     recordForStore: function(aStore) { // should only be called by Store
         const entries = []

@@ -55,12 +55,6 @@ window.BMServerConnection = class BMServerConnection extends BMNode {
 
         this.setPendingMessages({});
     }
-
-    /*
-	loadFinalize () {
-		this.createSubnodeIndex()
-	},
-	*/
     
     addLog (s, error) {
         const statusNode = BMFieldSetNode.clone().setTitle(s).setSubtitle(new Date().toString())

@@ -75,6 +75,10 @@ Object.defineSlots(Set.prototype, {
         return result
     },
 
+    isEmpty: function(func) {
+        return this.size == 0        
+    },
+
     
     /*
     //Examples

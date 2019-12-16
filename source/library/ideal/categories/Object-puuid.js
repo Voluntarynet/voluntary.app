@@ -22,6 +22,8 @@ Object.defineSlots(Object, {
 
 Object.defineSlots(Object.prototype, {
 
+    _puuid: undefined,
+
     puuid: function() {
         if (!this.hasPuuid()) {
             this.setPuuid(Object.newUuid())

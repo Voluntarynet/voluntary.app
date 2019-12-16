@@ -72,6 +72,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
             //isReadOnly: true,
             markedSet: null, // Set of puuids
             nodeStoreDidOpenNote: null, // TODO: change name?
+            isFinalizing: false,
         })
     }
 
@@ -80,6 +81,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         this.setRecordsDict(ideal.AtomicDictionary.clone())
         this.setActiveObjects({})
         this.setDirtyObjects({})
+        this.setLoadingPids(new Set())
         this.setLastSyncTime(null)
         this.setMarkedSet(null)
         this.setNodeStoreDidOpenNote(window.NotificationCenter.shared().newNote().setSender(this).setName("nodeStoreDidOpen"))
@@ -364,9 +366,8 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
             return activeObj
         }
 
-        let startedLoad = Type.isNull(this.loadingPids())
-        if (startedLoad) {
-            this.setLoadingPids(new Set())
+        if (!this.isFinalizing() && this.loadingPids().size === 0) {
+            window.SyncScheduler.shared().scheduleTargetAndMethod(this, "finalizeLoadingPids")
         }
 
         this.loadingPids().add(puuid)
@@ -379,17 +380,24 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
             result = loadedObj
         }
 
-        if (startedLoad) {
-            this.loadingPids().forEach((loadedPid) => {
+
+        return result
+    }
+
+    finalizeLoadingPids () {
+        this.setIsFinalizing(true)
+        while (!this.loadingPids().isEmpty()) {
+            const lastSet = this.loadingPids()
+            this.setLoadingPids(new Set())
+
+            lastSet.forEach((loadedPid) => {
                 const obj = this.activeObjectForPid(loadedPid)
                 if (obj.loadFinalize) {
                     obj.loadFinalize()
                 }
             })
-            this.setLoadingPids(null)
         }
-
-        return result
+        this.setIsFinalizing(false)
     }
 
     //

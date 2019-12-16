@@ -359,10 +359,13 @@ window.ProtoClass = class ProtoClass {
         return this;
     }
 
-    willGetSlot (slotName) {
-        const methodName = "willGetSlot" + slotName.capitalized()
-        if (this[methodName]) {
-            this[methodName].apply(this)
+    willGetSlot (aSlot) {
+        // example: if the slot name is "subnodes",
+        // this will call this.willGetSlotSubnodes()
+        const s = slot.willGetSlotName()
+        const f = this[s]
+        if (f) {
+            f.apply(this)
         }
     }
 

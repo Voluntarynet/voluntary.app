@@ -9,10 +9,10 @@ Object.defineSlots(Array, {
             typeName = "StorableArray"
         }
         const aClass = window[typeName]
-        const newArray = aClass.clone()
-        const loadedValues = aRecord.values.map(v => aStore.unrefValue(v))
-        loadedValues.forEach( v => newArray.push(v) )
-        return newArray
+        const obj = aClass.clone()
+        //const obj = this.thisClass().clone()
+        //obj.loadFromRecord(aRecord, aStore) 
+        return obj
     },
 
     lengthOfRecord: function(aRecord) {
@@ -31,6 +31,12 @@ Object.defineSlots(Array.prototype, {
         }
 
         return dict
+    },
+
+    loadFromRecord: function(aRecord, aStore) {
+        const loadedValues = aRecord.values.map(v => aStore.unrefValue(v))
+        loadedValues.forEach( v => this.push(v) )
+        return this
     },
 
     shouldStore: function() {

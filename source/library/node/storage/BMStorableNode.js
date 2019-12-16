@@ -19,11 +19,11 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
         const subnodesSlot = this.overrideSlot("subnodes", null)
         //subnodesSlot.setOwnsSetter(true)
         subnodesSlot.setShouldStore(true)
-        //subnodesSlot.setDoesHookGetter(true)
-        //subnodesSlot.setHookedGetterIsOneShot(true)
-        //subnodesSlot.setIsLazy(true)
+        subnodesSlot.setDoesHookGetter(true)
+        subnodesSlot.setHookedGetterIsOneShot(true)
+        subnodesSlot.setIsLazy(true)
+        subnodesSlot.setInitProto(StorableArray)
         subnodesSlot.setupInOwner()
-        
         
         this.newSlot("lazySubnodeCount", null).setShouldStore(true)
     }
@@ -36,9 +36,11 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
     didUpdateSlotSubnodes (oldValue, newValue) {
         super.didUpdateSlotSubnodes(oldValue, newValue)
 
+        /*
         if (!this.shouldStore() || !this.isInstance()) {
 	        return this
         }
+        */
         
         return this
     }
@@ -47,7 +49,9 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
     // hook this to schedules writes when subnode list is changed
 
     updateLazySubnodeCount () {
-        this.setLazySubnodeCount(this.subnodes().length)
+        if (this._subnodes) {
+            this.setLazySubnodeCount(this.subnodes().length)
+        }
     }
 
     didChangeSubnodeList () {
@@ -75,21 +79,19 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
     // --- udpates ---
 	
     didUpdateSlot (aSlot, oldValue, newValue) {
-        const slotName = aSlot.name()
-        super.didUpdateSlot(slotName, oldValue, newValue)
+        super.didUpdateSlot(aSlot, oldValue, newValue)
 
 	    if (!this.shouldStore() || !this.isInstance()) {
 	        return this
 	    }
 	    
-        // check so we don't mark dirty while loading
-        // and use private slots directly for performance
-        if (this.storedSlotNamesSet().has(slotName)) { // TODO: WARNING: THIS IS SLOW - use setter hook instead?
-            //this.debugLog(".didUpdateSlot(" + slotName + ",...) -> scheduleSyncToStore")
+        if (aSlot.shouldStore()) { 
             this.scheduleSyncToStore()
         }
-		
-        if (newValue !== null && this._subnodes && this._subnodes.includes(oldValue)) { // TODO: add a switch for this feature
+        
+        // TODO: add a switch for this feature
+        // TODO: find a way to avoid this?
+        if (newValue !== null && this._subnodes && this._subnodes.includes(oldValue)) { 
             newValue.setParentNode(this)
             this.subnodes().replaceOccurancesOfWith(oldValue, newValue)
             //this.debugLog(" this.subnodes().replaceOccurancesOfWith(", oldValue, ",", newValue, ")")
@@ -97,12 +99,6 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
     }
 	
     // subnodes
-
-    willGetSlotSubnodes () {
-        if (!this._subnodes) {
-            //this.slotNamed("subnodes").onInstanceUnref(this)
-        }
-    }
     
     subnodeCount () {
         if (!this._subnodes) {
@@ -115,6 +111,5 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
         super.prepareForFirstAccess()
         return this
     }
-
 
 }.initThisClass()

@@ -80,6 +80,7 @@ window.ideal.Slot = class Slot {
         this.simpleNewSlot("isLazy", false) // should hook getter
         this.simpleNewSlot("shouldStore", false) // should hook setter
         this.simpleNewSlot("initProto", null) // clone this proto on init and set to initial value
+        this.simpleNewSlot("valueClass", null) // declare the value should be a kind of valueClass
         //this.simpleNewSlot("shouldShallowCopy", false)
         //this.simpleNewSlot("shouldDeepCopy", false)
         //this.simpleNewSlot("initInstance", null) // clone this instance on init and set to initial value
@@ -187,7 +188,9 @@ window.ideal.Slot = class Slot {
     setupGetter () {
         if (this.ownsGetter()) {
             if (this.doesHookGetter()) {
-                if (this.hookedGetterIsOneShot()) {
+                if (this.isLazy()) {
+                    this.makeLazyGetter()
+                } else if (this.hookedGetterIsOneShot()) {
                     this.makeOneShotHookedGetter()
                 } else {
                     this.makeHookedGetter()
@@ -253,6 +256,13 @@ window.ideal.Slot = class Slot {
         return this
     }
 
+
+    makeLazyGetter () {
+        //this.owner()[this.getterName()] = this.hookedGetter()
+        Object.defineSlot(this.owner(), this.getterName(), this.lazyGetter())
+        return this
+    }
+
     makeDirectGetterOnInstance (anInstance) {
         //anInstance[this.getterName()] = this.directGetter()
         Object.defineSlot(anInstance, this.getterName(), this.directGetter())
@@ -262,8 +272,9 @@ window.ideal.Slot = class Slot {
     hookedGetter () {
         const privateName = this.privateName()
         const slotName = this.name()
+        const slot = this
         const func = function () {
-            this.willGetSlot(slotName) // opportunity to replace value before first access
+            this.willGetSlot(slot) // opportunity to replace value before first access
             return this[privateName]
         }
         func.setSlot(this)
@@ -277,13 +288,13 @@ window.ideal.Slot = class Slot {
         const slot = this
         const func = function () {
 
-            if (slot.isInGetterHook()) {
+            if (slot.isInGetterHook()) { 
                 throw new Error("hooked getter infinite loop detected")
             }
 
             slot.setIsInGetterHook(true)
             try {
-                this.willGetSlot(slotName) 
+                this.willGetSlot(slot) 
             } catch(e) {
                 slot.setIsInGetterHook(false)
                 throw e
@@ -306,13 +317,44 @@ window.ideal.Slot = class Slot {
         return this
     }
 
+    willGetSlotName () {
+        return "willGet" + this.name().capitalized()
+    }
+
     oneShotHookedGetter () {
         const privateName = this.privateName()
         const slotName = this.name()
+        const slot = this
+        const willGetSlotName = this.willGetSlotName()
         const func = function () {
-            console.log(this.typeId() + "." + slotName + " replacing one-shot getter with direct getter")
-            this.instanceSlotNamed(slotName).makeDirectGetterOnInstance(this) // now, replace with direct getter after first call
-            this.willGetSlot(slotName) // opportunity to replace value before first access
+            console.log(this.typeId() + "." + slot.name() + " replacing one-shot getter with direct getter")
+            slot.makeDirectGetterOnInstance(this) // now, replace with direct getter after first call
+            //this.willGetSlot(slot) // opportunity to replace value before first access
+            if (this[willGetSlotName]) {
+                this[willGetSlotName].apply(this)
+            }
+            return this[privateName]
+        }
+        func.setSlot(this)
+        return func
+    }
+
+    lazyGetter () {
+        const slot = this
+        const privateName = this.privateName()
+        const slotName = this.name()
+        const willGetSlotName = this.willGetSlotName()
+        const func = function () {
+            console.log(this.typeId() + "." + slot.name() + " lazySlotGetter")
+            
+            slot.makeDirectGetterOnInstance(this) // now, replace with direct getter after first call
+            
+            slot.onInstanceLoadRef(this)
+
+            if (this[willGetSlotName]) {
+                this[willGetSlotName].apply(this)
+            }
+
             return this[privateName]
         }
         func.setSlot(this)
@@ -422,6 +464,8 @@ window.ideal.Slot = class Slot {
         return anInstance[this.setterName()].apply(anInstance, [aValue])
     }
 
+    // --- StoreRefs for lazy slots ---
+
     refPrivateName () {
         return "_" + this.name() + "Ref"
     }
@@ -435,6 +479,8 @@ window.ideal.Slot = class Slot {
         return anInstance[this.refPrivateName()]
     }
 
+    // -----------------------------------------------------
+
     onInstanceInitSlot (anInstance) {
         /*
         if (this.initInstance()) {
@@ -444,7 +490,10 @@ window.ideal.Slot = class Slot {
         } else 
         */
 
-        if (this.initProto()) {
+        if (this.isLazy()) {
+            const obj = this.initProto().clone()
+            anInstance[this.privateName()] = obj
+        } else if (this.initProto()) {
             const obj = this.initProto().clone()
             this.onInstanceSetValue(anInstance, obj)
         } else if (this.initValue()) {
@@ -464,12 +513,14 @@ window.ideal.Slot = class Slot {
     onInstanceLoadRef (anInstance) {
         const storeRef = this.onInstanceGetValueRef(anInstance)
         if (storeRef) {
+            console.warn(anInstance.typeId() + " loaded storeRef")
             const obj = storeRef.unref()
-            this.onInstanceSetValue(anInstance, obj)
+            anInstance[this.privateName()] = obj // is this safe? what about initialization?
+            //this.onInstanceSetValue(anInstance, obj)
             this.onInstanceSetValueRef(anInstance, null)
         } else {
             console.warn(anInstance.typeId() + " unable to load storeRef - not found")
-            console.warn(anInstance.typeId() + ".shouldStoreSubnodes() = " + anInstance.shouldStoreSubnodes())
+            //console.warn(anInstance.typeId() + ".shouldStoreSubnodes() = " + anInstance.shouldStoreSubnodes())
             //throw new Error("")
         }
     }

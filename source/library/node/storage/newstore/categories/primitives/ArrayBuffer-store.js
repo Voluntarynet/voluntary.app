@@ -1,7 +1,29 @@
 "use strict"
 
 
+Object.defineSlots(ArrayBuffer, {
+
+    instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store
+        assert(aRecord.type === "ArrayBuffer")
+        const bytes = aRecord.bytes
+        const obj = new ArrayBuffer(bytes.length)
+        //obj.loadFromRecord(aRecord, aStore)
+        return obj
+    },
+
+})
+
+
 Object.defineSlots(ArrayBuffer.prototype, {
+
+    loadFromRecord: function(aRecord, aStore) {
+        assert(aRecord.bytes.length === this.length)
+        const bytes = aRecord.bytes
+        for (let i = 0; i < bytes.length; i++) {
+            newBuffer[i] = bytes[i]
+        }
+        return this
+    },
 
     values: function() {
         const bytes = []
@@ -30,17 +52,5 @@ Object.defineSlots(ArrayBuffer.prototype, {
     },
 })
 
-Object.defineSlots(ArrayBuffer, {
 
-    instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store
-        assert(aRecord.type === "ArrayBuffer")
-        const bytes = aRecord.bytes
-        const newBuffer = new ArrayBuffer(bytes.length)
-        for (let i = 0; i < length; i++) {
-            newBuffer[i] = bytes[i]
-        }
-        return newBuffer
-    },
-
-})
 

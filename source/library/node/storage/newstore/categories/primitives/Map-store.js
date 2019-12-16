@@ -1,7 +1,28 @@
 "use strict"
 
+Object.defineSlots(Map, {
+
+    instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store
+        const obj = this.clone()
+        //obj.loadFromRecord(aRecord, aStore)
+        return obj
+    },
+
+})
+
 
 Object.defineSlots(Map.prototype, {
+
+    loadFromRecord: function(aRecord, aStore) {
+
+        aRecord.entries.forEach((entry) => {
+            const key = entry[0]
+            const value = aStore.unrefValue(entry[1])
+            this.atPut(key, value)
+        })
+
+        return this
+    },
 
     recordForStore: function(aStore) { // should only be called by Store
         var iterator = this.entries();
@@ -35,20 +56,5 @@ Object.defineSlots(Map.prototype, {
 })
 
 
-Object.defineSlots(Map, {
 
-    instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store
-        assert(aRecord.type === this.type())
-        const newMap = this.thisClass().clone()
-
-        aRecord.entries.forEach((entry) => {
-            const key = entry[0]
-            const value = aStore.unrefValue(entry[1])
-            newMap.atPut(key, value)
-        })
-
-        return newMap
-    },
-
-})
 

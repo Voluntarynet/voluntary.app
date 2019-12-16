@@ -1,6 +1,24 @@
 "use strict"
 
+
+Object.defineSlots(Set, {
+
+    instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store
+        assert(aRecord.type === "Set")
+        const obj = this.clone()
+        //obj.loadFromRecord(aRecord, aStore)
+        return obj
+    },
+
+})
+
 Object.defineSlots(Set.prototype, {
+
+    loadFromRecord: function(aRecord, aStore) {
+        const values = aRecord.values.map(v => aStore.unrefValue(v))
+        values.forEach(v => this.add(v))
+        return this
+    },
 
     recordForStore: function(aStore) { // should only be called by Store
         return {
@@ -24,13 +42,5 @@ Object.defineSlots(Set.prototype, {
 })
 
 
-Object.defineSlots(Set, {
 
-    instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store
-        assert(aRecord.type === "Set")
-        const values = aRecord.values.map(v => aStore.unrefValue(v))
-        return new Set(values) 
-    },
-
-})
 

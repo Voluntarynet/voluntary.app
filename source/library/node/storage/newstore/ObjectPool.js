@@ -343,6 +343,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         const obj = aClass.instanceFromRecordInStore(aRecord, this)
         obj.setPuuid(aRecord.id)
         this.justAddActiveObject(obj)
+        obj.loadFromRecord(aRecord, this)
         
         if (obj.didLoadFromStore) {
             obj.didLoadFromStore()
@@ -436,7 +437,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
             return v
         }
 
-        if (v.shouldStore && v.shouldStore() && !this.hasActiveObject(v)) {
+        if (v.shouldStore && !this.hasActiveObject(v)) {
             v.setShouldSyncToStore(true)
             this.addDirtyObject(v)
         }

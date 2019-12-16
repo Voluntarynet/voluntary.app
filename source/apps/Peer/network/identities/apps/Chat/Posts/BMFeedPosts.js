@@ -45,7 +45,6 @@ window.BMFeedPosts = class BMFeedPosts extends BMStorableNode {
 	    return this
     }
 	
-	
     chat () {
 	    return this.parentNode()
     }

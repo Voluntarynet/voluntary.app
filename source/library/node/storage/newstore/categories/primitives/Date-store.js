@@ -1,10 +1,25 @@
 "use strict"
 
+Object.defineSlots(Date, {
+    instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store
+        const obj = this.clone()
+        //obj.loadFromRecord(aRecord, aStore)
+        return obj
+    },
+
+})
+
 Object.defineSlots(Date.prototype, {
+
+    loadFromRecord: function(aRecord, aStore) {
+        this.setTime(aRecord.time)
+        return this
+    },
+
     recordForStore: function(aStore) { // should only be called by Store
         return {
-            type: "Date", 
-            v: this.toJSON() // toJSON is a standard library Date method
+            type: this.type(), 
+            time: this.getTime() // toJSON is a standard library Date method
         }
     },
 
@@ -17,10 +32,3 @@ Object.defineSlots(Date.prototype, {
     },
 })
 
-Object.defineSlots(Date, {
-    instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store
-        assert(aRecord.type === "Date")
-        return new Date(new Date(aRecord.v))
-    },
-
-})

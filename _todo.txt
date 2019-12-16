@@ -1,6 +1,17 @@
 
 TODO:
 
+	CONSIDER
+	Slot.setInitType(StorableArray)
+	should we support unloading lazy references?
+	should every record have a write ts/timeStamp?
+
+	change semantics of willGetSlot etc to pass slot instead of slot name
+	
+	RANDOM
+	proxy rebroadcaster? posts any message sent to it (supports list of valid messages?)
+	
+	
 	cleanup prepare for first access
 	get lazy slot loads working
 	
@@ -9,6 +20,11 @@ TODO:
 	- and implement it's methods using unhooked methods with calls to will+didMutate?
 	- implement a doMutation(aClosure) that pauses mutation callbacks and calls will/didMutate?
 
+	ELEGANCE
+	- cleaner way to handle lazySubnodesCount?
+		- have storeRef able to access Record properties?
+		- Array.lengthForRecord(this.slotNamed("subnodes").storeRef().record())?
+		
 	FEATURES
 	Slot type checking setTypeCheck(aClassName)
 	- copy slots?

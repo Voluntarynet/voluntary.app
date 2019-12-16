@@ -44,12 +44,8 @@ window.BMNode = class BMNode extends ProtoClass {
 
             // parent node, subnodes
             parentNode: null,
-            subnodes: null,
             subnodeProto: null,
             nodeCanReorderSubnodes: false,
-
-            // actions
-            actions: null,
 
             // notification notes
             didUpdateNodeNote: null,
@@ -102,8 +98,9 @@ window.BMNode = class BMNode extends ProtoClass {
             // done to avoid adding dirty during init?
         })
 
-        //this.newSlot("subnodes", null).setIsLazy(true)
 
+        this.newSlot("subnodes", null).setInitProto(HookedArray)
+        this.newSlot("actions", null).setInitProto(Array)
 
         this.newSlot("shouldStoreSubnodes", true) //.setShouldStore(true)
 
@@ -118,9 +115,9 @@ window.BMNode = class BMNode extends ProtoClass {
 
     init () {
         super.init()
-        this.setSubnodes(HookedArray.clone())
+        //this.setSubnodes(HookedArray.clone())
         //this._actions = []   
-        Object.defineSlot(this ,"_actions", [])  
+        //Object.defineSlot(this ,"_actions", [])  
         this.setDidUpdateNodeNote(NotificationCenter.shared().newNote().setSender(this).setName("didUpdateNode"))
         this.setShouldFocusSubnodeNote(NotificationCenter.shared().newNote().setSender(this).setName("shouldFocusSubnode"))
         this._nodeMinWidth = 180

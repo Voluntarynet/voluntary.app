@@ -1,5 +1,23 @@
 "use strict"
 
+
+Object.defineSlots(ProtoClass, {
+
+    instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store    
+        const proto = window[aRecord.type]
+        const obj = proto.clone()
+        const dict = aRecord.dict
+
+        /*
+        Object.getOwnPropertyNames(dict).forEach((k) => {
+            const v = dict[k]
+            obj[k] = aStore.unrefValue(v)
+        })
+        */
+        return obj
+    },
+})
+
 Object.defineSlots(ProtoClass.prototype, {
 
     recordForStore: function(aStore) { // should only be called by Store
@@ -19,17 +37,4 @@ Object.defineSlots(ProtoClass.prototype, {
         }
     },
 
-    instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store    
-        const proto = window[aRecord.type]
-        const obj = proto.clone()
-        const dict = aRecord.dict
-
-        /*
-        Object.getOwnPropertyNames(dict).forEach((k) => {
-            const v = dict[k]
-            obj[k] = aStore.unrefValue(v)
-        })
-        */
-        return obj
-    },
 })

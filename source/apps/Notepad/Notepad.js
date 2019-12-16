@@ -44,7 +44,7 @@ window.Notepad = class Notepad extends App {
     // --- setup model ---
 
     setupModel () {     
-        let  root = this.defaultStore().rootObject()
+        let root = this.defaultStore().rootObject()
         console.log("rooObject.subnodes = ", root.subnodes().map(sn => sn.title()).join(",") )
         //root.removeAllSubnodes()
 

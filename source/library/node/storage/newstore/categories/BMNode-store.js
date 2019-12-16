@@ -4,9 +4,9 @@
 Object.defineSlots(BMNode, {
 
     instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store    
-        const proto = window[aRecord.type]
-        const obj = proto.clone()
-        obj.loadFromRecord(aRecord, aStore)
+        //const proto = window[aRecord.type]
+        const obj = this.clone()
+        //obj.loadFromRecord(aRecord, aStore)
         return obj
     },
 
@@ -50,7 +50,6 @@ Object.defineSlots(BMNode.prototype, {
 
 
     loadFromRecord: function(aRecord, aStore) {
-        //this.setIsUnserializing(true)
 
         aRecord.entries.forEach((entry) => {
             const k = entry[0]
@@ -64,7 +63,7 @@ Object.defineSlots(BMNode.prototype, {
                     // so schedule to store again, which will remove missing slot in record
                     this.scheduleSyncToStore()
                 } else {
-                    if (false && slot.isLazy()) {
+                    if (slot.isLazy()) {
                         const pid = v["*"]
                         assert(pid)
                         const storeRef = StoreRef.clone().setPid(pid).setStore(aStore)
@@ -80,17 +79,7 @@ Object.defineSlots(BMNode.prototype, {
 
         this.didLoadFromStore()
         this.scheduleLoadFinalize()
-        //this.setIsUnserializing(false) 
         return this
-    },
-
-    willGetSlot: function(slotName) {
-        ProtoClass.prototype.willGetSlot.apply(this, [slotName])
-        let slot = this.instanceSlotNamed(slotName)
-        console.log(this.typeId() + ".willGetSlot('" + slotName + "')")
-        if (slot.isLazy()) {
-            slot.onInstanceLoadRef(this)
-        }
     },
 
     scheduleLoadFinalize: function() {

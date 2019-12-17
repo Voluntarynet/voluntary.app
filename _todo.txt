@@ -1,6 +1,9 @@
 
 TODO:
 
+
+	move justStoredObjects to storingPids
+	
 	CONSIDER
 	Slot.setInitType(StorableArray)
 	should we support unloading lazy references?

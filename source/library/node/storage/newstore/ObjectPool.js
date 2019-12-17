@@ -66,6 +66,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
             activeObjects: null, // dict
             dirtyObjects: null, // dict 
             loadingPids: null, // set
+            storingPids: null, // set
             justStoredObjects: null, // set
             loadingObjects: null, // set
             lastSyncTime: null, // WARNING: vulnerable to system time changes
@@ -233,18 +234,6 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
     }
 
     /*
-    addDirtyObjectIfNotFlushed (anObject) {
-        if (!Type.isLiteral(anObject)) {
-            assert(this.justStoredObjects()) // if null, then we aren't in the middle of a store
-            if (!this.justStoredObjects().has(anObject)) {
-                this.addDirtyObject(anObject)
-            }
-        }
-        return this
-    }
-   */
-
-    /*
     hasDirtyObject (anObject) {
         const puuid = anObject.puuid()
         return this.dirtyObjects().hasOwnProperty(puuid)
@@ -312,8 +301,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
     storeDirtyObjects () { // PRIVATE
         let totalStoreCount = 0
         console.log("---------- storeDirtyObjects BEGIN ---------------")
-        this.setJustStoredObjects(new Set())
-        let justStored = this.justStoredObjects()
+        this.setStoringPids(new Set())
 
         while (true) {
             let thisLoopStoreCount = 0
@@ -321,18 +309,15 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
             this.setDirtyObjects({})
 
             dirtyBucket.ownForEachKV((puuid, obj) => {
-                assert(Type.isString(puuid))
                 //console.log("  storing pid " + puuid)
 
-                if (justStored.has(obj)) {
-                    //let pids = justStored.map(v => v.puuid())
-                    //assert(pids.has(puuid))
-                    let msg = "ERROR: attempt to double store " + obj.typeId()
+                if (this.storingPids().has(puuid)) {
+                    const msg = "ERROR: attempt to double store " + obj.typeId()
                     console.log(msg)
                     throw new Error(msg)
                 }
 
-                justStored.add(obj)
+                this.storingPids().add(puuid)
 
                 this.storeObject(obj)
 
@@ -345,7 +330,8 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
                 break
             }
         }
-        this.setJustStoredObjects(null)
+
+        this.setStoringPids(null)
         console.log("---------- storeDirtyObjects END ---------------")
         return totalStoreCount
     }
@@ -380,7 +366,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
     }
 
     objectForPid (puuid) { // private
-        console.log("objectForPid " + puuid)
+        //console.log("objectForPid " + puuid)
 
         const activeObj = this.activeObjectForPid(puuid)
         if (activeObj) {
@@ -393,17 +379,14 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
 
         this.loadingPids().add(puuid)
         
-        let aRecord = this.recordForPid(puuid)
+        const aRecord = this.recordForPid(puuid)
         const loadedObj = this.objectForRecord(aRecord)
-        let result = undefined
-
         if (loadedObj) {
             loadedObj.setShouldSyncToStore(true)
-            result = loadedObj
         }
 
 
-        return result
+        return loadedObj
     }
 
     finalizeLoadingPids () {

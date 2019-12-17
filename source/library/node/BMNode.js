@@ -94,12 +94,12 @@ window.BMNode = class BMNode extends ProtoClass {
 
             shouldStore: false,
 
-            isFinalized: false, // end of init calls scheduleFinalize, finalized sets this to true
+            //isFinalized: false, // end of init calls scheduleFinalize, finalized sets this to true
             // done to avoid adding dirty during init?
         })
 
 
-        this.newSlot("subnodes", null).setInitProto(HookedArray)
+        this.newSlot("subnodes", null).setInitProto(SubnodesArray)
         this.newSlot("actions", null).setInitProto(Array)
 
         this.newSlot("shouldStoreSubnodes", true) //.setShouldStore(true)
@@ -115,7 +115,7 @@ window.BMNode = class BMNode extends ProtoClass {
 
     init () {
         super.init()
-        //this.setSubnodes(HookedArray.clone())
+        //this.setSubnodes(SubnodesArray.clone())
         //this._actions = []   
         //Object.defineSlot(this ,"_actions", [])  
         this.setDidUpdateNodeNote(NotificationCenter.shared().newNote().setSender(this).setName("didUpdateNode"))
@@ -215,14 +215,6 @@ window.BMNode = class BMNode extends ProtoClass {
     
     // --- finalize ----------
 
-    scheduleFinalize () {
-        window.SyncScheduler.shared().scheduleTargetAndMethod(this, "finalize")
-    }
-    
-    finalize () {
-        // for subclasses to override if needed
-        this.setIsFinalized(true)
-    }
     
     // -----------------------
     
@@ -450,14 +442,28 @@ window.BMNode = class BMNode extends ProtoClass {
     isEqual (aNode) {
 	    return this === aNode
     }
+
+    /*
+    hash () {
+        // don't assume hash() always returns the puuid as
+        // subclasses can override to measure equality in their own way
+        return this.puuid()
+    }
+    */
+
+    createSubnodesIndex () {
+        this.subnodes().setIndexClosure( v => v.hash() )
+        return this
+    }
 	
     hasSubnode (aSubnode) {
-        if (this.subnodes().indexHasItem) {
-            // use our index if we have one
-            return this.subnodes().indexHasItem(aSubnode) 
+        const subnodes = this.subnodes()
+        if (subnodes.length > 100) {
+            this.createSubnodesIndex()
+            return subnodes.indexHasItem(aSubnode) 
         }
-        //return this.subnodes().detect(subnode => subnode === aSubnode)
-        return this.subnodes().detect(subnode => subnode.isEqual(aSubnode))
+        //return subnodes.detect(subnode => subnode === aSubnode)
+        return subnodes.detect(subnode => subnode.isEqual(aSubnode))
     }
     
     justRemoveSubnode (aSubnode) { // private method 

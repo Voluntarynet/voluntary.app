@@ -19,7 +19,7 @@ window.BMRemotePeers = class BMRemotePeers extends BMNode {
         this.setTitle("peers")
         this.setNoteIsSubnodeCount(true)
 
-        //this.createSubnodeIndex()
+        this.createSubnodesIndex()
     }
 	
     closeAll () {

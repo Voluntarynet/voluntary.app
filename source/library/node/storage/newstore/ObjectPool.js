@@ -216,9 +216,11 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
     }
     
     addActiveObject (anObject) {
+        /*
         if (!this.hasActiveObject(anObject)) {
             this.addDirtyObject(anObject) // only do this during ref creation?
         }
+        */
         this.justAddActiveObject(anObject)
     }
 
@@ -248,6 +250,14 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         return this.dirtyObjects().hasOwnProperty(puuid)
     }
     */
+
+    onObjectUpdatePid (anObject, oldPid, newPid) {
+        if (this.hasActiveObject(anObject)) {
+            const msg = "onObjectUpdatePid " + anObject.typeId() + " " + oldPid + " -> " + newPid
+            console.log(msg)
+            throw new Error(msg)
+        }
+    }
 
     addDirtyObject (anObject) {
     
@@ -301,9 +311,9 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
 
     storeDirtyObjects () { // PRIVATE
         let totalStoreCount = 0
-
+        console.log("---------- storeDirtyObjects BEGIN ---------------")
         this.setJustStoredObjects(new Set())
-        const justStored = this.justStoredObjects()
+        let justStored = this.justStoredObjects()
 
         while (true) {
             let thisLoopStoreCount = 0
@@ -313,9 +323,15 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
             dirtyBucket.ownForEachKV((puuid, obj) => {
                 assert(Type.isString(puuid))
                 //console.log("  storing pid " + puuid)
+
                 if (justStored.has(obj)) {
-                    throw new Error("attempt to double store " + puuid)
+                    //let pids = justStored.map(v => v.puuid())
+                    //assert(pids.has(puuid))
+                    let msg = "ERROR: attempt to double store " + obj.typeId()
+                    console.log(msg)
+                    throw new Error(msg)
                 }
+
                 justStored.add(obj)
 
                 this.storeObject(obj)
@@ -330,6 +346,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
             }
         }
         this.setJustStoredObjects(null)
+        console.log("---------- storeDirtyObjects END ---------------")
         return totalStoreCount
     }
 
@@ -342,7 +359,11 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         if (!aClass) {
             throw new Error("missing class '" + className + "'")
         }
+        if (className === "BMLocalIdentities") {
+            console.log("debug")
+        }
         const obj = aClass.instanceFromRecordInStore(aRecord, this)
+        assert(!this.hasActiveObject(obj))
         obj.setPuuid(aRecord.id)
         this.justAddActiveObject(obj)
         obj.loadFromRecord(aRecord, this)
@@ -372,7 +393,8 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
 
         this.loadingPids().add(puuid)
         
-        const loadedObj = this.objectForRecord(this.recordForPid(puuid))
+        let aRecord = this.recordForPid(puuid)
+        const loadedObj = this.objectForRecord(aRecord)
         let result = undefined
 
         if (loadedObj) {
@@ -477,7 +499,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         }
         assert(puuid)
         let v = JSON.stringify(obj.recordForStore(this))
-        console.log("store " + obj.puuid() + " <- " + v)
+        //console.log("store " + obj.puuid() + " <- " + v)
         //console.log(puuid + " <- " + v)
         this.recordsDict().atPut(puuid, v)
         return this

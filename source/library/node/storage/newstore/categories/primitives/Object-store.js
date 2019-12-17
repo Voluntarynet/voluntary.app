@@ -81,9 +81,12 @@ Object.defineSlots(Object.prototype, {
     defaultStore: function() {
         return PersistentObjectPool.shared()
     },
-    
-    scheduleSyncToStore: function(slotName) {
-        console.log(this.typeId() + " scheduleSyncToStore (via " + slotName + ")")
-        this.defaultStore().addDirtyObject(this)
+
+    scheduleSyncToStore (slotName) {
+        //console.log(this.typeId() + " scheduleSyncToStore (via " + slotName + ")")
+        if (this.isFinalized()) {
+            this.defaultStore().addDirtyObject(this)
+        }
     },
+
 })

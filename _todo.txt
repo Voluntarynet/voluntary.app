@@ -42,7 +42,6 @@ TODO:
 
 	- asReadOnly method on array with returns ReadOnlyArray Copy
 	bug: row title / subtitle are sometimes clipped
-	remove isFinalized?
 	
 	take a close look at .overrideSlot() calls
 	replace "delete a[i]" with a.removeAt(i)

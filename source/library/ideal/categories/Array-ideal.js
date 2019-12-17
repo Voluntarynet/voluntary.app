@@ -62,8 +62,11 @@ Object.defineSlots(Array.prototype, {
         return this.__proto__.constructor
     },
 
+    /*
     init: function() {
+        console.log("Array init")
     },
+    */
 
     clone: function () {
         return this.thisClass().clone()

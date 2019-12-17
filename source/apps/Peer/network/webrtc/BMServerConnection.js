@@ -51,7 +51,7 @@ window.BMServerConnection = class BMServerConnection extends BMNode {
 
         this.setSessionId(BMKeyPair.clone().generatePrivateKey())
         this.setPeerId(BMPeerId.clone())
-        //this.createSubnodeIndex()
+        this.createSubnodesIndex()
 
         this.setPendingMessages({});
     }

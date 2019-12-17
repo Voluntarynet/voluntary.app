@@ -5,8 +5,8 @@ Object.defineSlots(Array, {
     
     instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store
         let typeName = aRecord.type
-        if (typeName === "Array") {
-            typeName = "StorableArray"
+        if (typeName !== "SubnodesArray") {
+            typeName = "SubnodesArray" // TODO: have setSubnodes do a type conversion? 
         }
         const aClass = window[typeName]
         const obj = aClass.clone()

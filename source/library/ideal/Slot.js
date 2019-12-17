@@ -345,7 +345,7 @@ window.ideal.Slot = class Slot {
         const slotName = this.name()
         const willGetSlotName = this.willGetSlotName()
         const func = function () {
-            console.log(this.typeId() + "." + slot.name() + " lazySlotGetter")
+            //console.log(this.typeId() + "." + slot.name() + " lazySlotGetter")
             
             slot.makeDirectGetterOnInstance(this) // now, replace with direct getter after first call
             
@@ -519,7 +519,7 @@ window.ideal.Slot = class Slot {
             //this.onInstanceSetValue(anInstance, obj)
             this.onInstanceSetValueRef(anInstance, null)
         } else {
-            console.warn(anInstance.typeId() + " unable to load storeRef - not found")
+            //console.warn(anInstance.typeId() + " unable to load storeRef - not found")
             //console.warn(anInstance.typeId() + ".shouldStoreSubnodes() = " + anInstance.shouldStoreSubnodes())
             //throw new Error("")
         }

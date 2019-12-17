@@ -26,7 +26,7 @@ window.BMChatThread = class BMChatThread extends BMStorableNode {
         this.setNodeMinWidth(600)
         this.setNodeHasFooter(true)
         this.setNodeInputFieldMethod("setInputFieldValue")
-        //this.createSubnodeIndex()
+        this.createSubnodesIndex()
 
         this.setNodeColumnBackgroundColor("white")
         this.setNodeRowsStartAtBottom(true)

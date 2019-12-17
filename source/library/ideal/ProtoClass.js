@@ -221,9 +221,7 @@ window.ProtoClass = class ProtoClass {
         //console.log("constructed!")
     }
     
-    init () {
-        // subclasses should override to initialize
-    }
+
 
     type () {
         return this.constructor.name
@@ -410,8 +408,9 @@ window.ProtoClass = class ProtoClass {
     }
 
     init () { 
+        super.init()
         // subclasses should override to do initialization
-        assert(this.isInstance())
+        //assert(this.isInstance())
         const allSlots = this.__proto__.allSlots()
         allSlots.ownForEachKV((slotName, slot) => slot.onInstanceInitSlot(this)) // TODO: use slot cache
     }

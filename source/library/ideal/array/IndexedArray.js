@@ -76,6 +76,10 @@ window.IndexedArray = class IndexedArray extends StorableArray {
         return this._indexClosure
     }
 
+    isIndexed () {
+        return Type.isFunction(this._indexClosure)
+    }
+
     // --- lazy reindexing ---
 
     setNeedsReindex (aBool) {
@@ -142,12 +146,13 @@ window.IndexedArray = class IndexedArray extends StorableArray {
         }
     }
 
-    // indexing - private
-
-    indexHasItem (v) { // private
+    indexHasItem (v) { // public
+        assert(this.isIndexed()) 
         const key = this.indexClosure()(v)
         return this.hasIndexKey(key)
     }
+
+    // indexing - private
 
     hasIndexKey (key) { // private
         return this._index.hasOwnProperty(key)

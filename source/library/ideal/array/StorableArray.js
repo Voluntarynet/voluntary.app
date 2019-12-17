@@ -29,10 +29,14 @@ window.StorableArray = class StorableArray extends HookedArray {
         return this._shouldSyncToStore
     }
 
+    /*
     scheduleSyncToStore (slotName) {
         //console.log(this.typeId() + " scheduleSyncToStore (via " + slotName + ")")
-        this.defaultStore().addDirtyObject(this)
+        if (this.isFinalized()) {
+            this.defaultStore().addDirtyObject(this)
+        }
     }
+    */
 
     defaultStore () {
         return PersistentObjectPool.shared()

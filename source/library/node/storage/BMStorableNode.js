@@ -22,7 +22,7 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
         subnodesSlot.setDoesHookGetter(true)
         subnodesSlot.setHookedGetterIsOneShot(true)
         subnodesSlot.setIsLazy(true)
-        subnodesSlot.setInitProto(StorableArray)
+        subnodesSlot.setInitProto(SubnodesArray)
         subnodesSlot.setupInOwner()
         
         this.newSlot("lazySubnodeCount", null).setShouldStore(true)

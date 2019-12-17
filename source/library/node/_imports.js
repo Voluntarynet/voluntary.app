@@ -2,6 +2,7 @@
 
 ResourceLoader.pushRelativePaths([
     "styles/_imports.js",
+    "SubnodesArray.js",
     "BMNode.js",
 	
     "storage/_imports.js",

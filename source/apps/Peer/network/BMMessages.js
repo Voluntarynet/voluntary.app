@@ -35,7 +35,7 @@ window.BMMessages = class BMMessages extends BMStorableNode {
         this.setNoteIsSubnodeCount(true)
         this.setNodeMinWidth(180)
         
-        //this.createSubnodeIndex()
+        this.createSubnodesIndex()
     }
     
     subnodeProto () {

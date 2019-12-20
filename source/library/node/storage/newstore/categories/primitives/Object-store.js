@@ -50,17 +50,6 @@ Object.defineSlots(Object.prototype, {
         }
         return puuids
     },
-
-    /*
-    setShouldSyncToStore: function(aBool) {
-        this._shouldSyncToStore = aBool
-        return this
-    },
-
-    shouldSyncToStore: function() {
-        return this._shouldSyncToStore
-    },
-    */
     
     defaultStore: function() {
         return PersistentObjectPool.shared()
@@ -68,12 +57,6 @@ Object.defineSlots(Object.prototype, {
 
     scheduleSyncToStore: function(slotName) {
         this.didMutate()
-        /*
-        if (this.isFinalized() && this.shouldSyncToStore()) {
-            console.log(this.typeId() + " scheduleSyncToStore (via " + slotName + ")")
-            this.defaultStore().addDirtyObject(this)
-        }
-        */
     },
 
     loadFinalize: function()   {

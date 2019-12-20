@@ -16,73 +16,17 @@
     
     A few weird JS things:
 
-    The Array, Set, and Map constructors do not inherit from Object, 
+    The Array, Set, and Map constructors do not inherit from Object 
+    (they and the Object constructor all inherit from constructor named "")
     but their constructor prototypes *do* inherit from Object.prototype.
 
-    How to correct this?
+    To make this consistent (so we can inherit class methods) we do:
 
-    [Array, Set, Map].forEach(aClass => aClass.__proto__ = Object)
-
-    Also
-
-    Array, Set, Map do not inherit from Object.
-
-        Array.__proto__ === Object -> false
-
-    Instead, Object and those classes have a common base class whose name is ""
-
-        Array.__proto__ === Object.__proto__ --> true
-        Object.__proto__.name -> ""
-
-    It's odd to call the base class "". Maybe they mislabelled 
-    Dictionary as "Object" so they couldn't call the base class "Object"
-    and decided to call it "".
-
-    Now here's were things get weirder: 
-    In instances, the prototype change doesn't follow the class chain.
-    To make this simpler, let's put the base class in a variable:
-
-        BaseClass = Object.__proto__
-
-    Now these look correct:
-
-        ({}).__proto__ === Object.prototype -> true
-        (new Array()).__proto__ === Array.prototype -> true
-
-    And those prototypes should point to the base class prototype, right?
-
-        (new Array()).__proto__.__proto__ === BaseClass.prototype -> false
-        (new Object()).__proto__ === BaseClass.prototype -> false
-
-    This is because the base class has no prototype:
-
-        BaseClass.prototype -> undefined 
-
-    And here's the really weird thing:
-
-        (new Array()).__proto__.__proto__ === Object.prototype -> true
-
-    What?
+        [Array, Set, Map].forEach(aClass => aClass.__proto__ = Object)
 
 */
 
 [Array, Set, Map].forEach(aClass => aClass.__proto__ = Object)
-
-/*
-Object.constructor.prototype = {} 
-Object.constructor.prototype.__proto__ = null
-Object.prototype.__proto__ = Object.constructor.prototype
-
-Object.defineProperty(Object.prototype, "__proto__", 
-    {
-        configurable: true,
-        enumerable: false,
-        value: Object.constructor.prototype,
-        writable: true,
-    })
-
-Object.constructor.prototype.testingThis = "hello"
-*/
 
 
 Object.defineSlot = function(obj, slotName, slotValue) {

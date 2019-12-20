@@ -109,7 +109,6 @@ window.BMNode = class BMNode extends ProtoClass {
         this.setDidUpdateNodeNote(NotificationCenter.shared().newNote().setSender(this).setName("didUpdateNode"))
         this.setShouldFocusSubnodeNote(NotificationCenter.shared().newNote().setSender(this).setName("shouldFocusSubnode"))
         this._nodeMinWidth = 180
-        this.scheduleFinalize()	
         
         //this.setNodeColumnStyles(this.sharedNodeColumnStyles())
         //this.setNodeRowStyles(this.sharedNodeRowStyles())

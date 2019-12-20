@@ -33,7 +33,7 @@
 
 */
 
-window.IndexedArray = class IndexedArray extends StorableArray {
+window.IndexedArray = class IndexedArray extends HookedArray {
 
     static initThisClass () {
         if (this.prototype.hasOwnProperty("initPrototype")) {

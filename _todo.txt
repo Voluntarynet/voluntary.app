@@ -1,13 +1,6 @@
 
 TODO:
-
-
-	Object -> mutation -> MutationHub -> observers -> ObjectPool
 	
-	If the mutating object isn't in the ObjectPool's activeObjects, it's ignored.
-	If it is, it's added to it's dirtyObjects
-	
-		
 	FINALIZATION
 
 		// called on all objects
@@ -24,7 +17,6 @@ TODO:
 	move justStoredObjects to storingPids
 	
 	CONSIDER
-	Slot.setInitType(StorableArray)
 	should we support unloading lazy references?
 	should every record have a write ts/timeStamp?
 
@@ -51,7 +43,6 @@ TODO:
 	Slot type checking setTypeCheck(aClassName)
 	- copy slots?
 	
-	when to turn on shouldStore on StorableArray?
 	
 	- remove old BMNode sorting code
 	- with BMNode subnode observer, no longer need didChangeSubnodeList calls?

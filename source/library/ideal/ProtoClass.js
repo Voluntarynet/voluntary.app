@@ -3,22 +3,9 @@
 /*
 
     ProtoClass
-    
-    working on moving Proto to ES6 classes
 
-    problems and potential solutions:
-
-    P: getting list of classes?
-    S: call registerClass() on each class after defined, use ProtoClass.allClasses() to get list
-
-    P: inheriting proto ivars?
-    S: Use class variables instead?
-
-    P: protos as singletons?
-    S: Yse ClassName.shared() instead
-
-    P: interactively adding, removing, changing protos?
-    S: ?
+    Base class to implement some things we're used to in Smalltalk/ObjC,
+    as well as Slot related methods.
 
 */
 
@@ -40,7 +27,7 @@ window.ProtoClass = class ProtoClass {
     
     static getClassVariable (key, defaultValue) {
         if (!this.hasOwnProperty(key)) {
-            if (Type.isFunction()) { 
+            if (Type.isFunction(defaultValue)) { 
                 defaultValue = defaultValue()
             }
             this[key] = defaultValue
@@ -101,20 +88,6 @@ window.ProtoClass = class ProtoClass {
         return this.superClass().prototype
     }
 
-    /*
-    static newSlots (slots) {
-        throw new Error("should all on prototype instead")
-        this.prototype.newSlots(slots)
-        return this;
-    }
-
-    static setSlots (slots) {
-        throw new Error("should all on prototype instead")
-        this.prototype.setSlots(slots)
-        return this;
-    }
-    */
-
     static type() {
         return this.name
     }
@@ -123,41 +96,6 @@ window.ProtoClass = class ProtoClass {
         const obj = new this()
         obj.init()
         return obj
-    }
-
-    static slots () {
-        throw new Error("use proto version?")
-        /*
-        const self = this.prototype
-        if (!self.hasOwnProperty("_slots")) {
-            self._slots = {}
-        }
-        return self._slots
-        */
-    }
-
-    static newSlot (slotName, initialValue) {
-        throw new Error("use proto version?")
-        /*
-        assert(Type.isString(slotName))
-        assert(Type.isUndefined(this.slots()[slotName]))
-        assert(!this.prototype.hasOwnProperty(slotName))
-        */
-
-        /*
-        // TODO: we want to create the private slots and initial value on instances
-        // but ONLY create method slots on classes, not instances...
-        const privateName = "_" + slotName
-        this[privateName] = initialValue
-        */
-
-        /*
-        const slot = ideal.Slot.clone().setName(slotName).setInitValue(initialValue)
-        slot.setOwner(this.prototype)
-        slot.setupInOwner()
-        this.prototype.slots()[slotName] = slot
-        */
-        return this;
     }
 
     /*
@@ -201,9 +139,12 @@ window.ProtoClass = class ProtoClass {
         }
         */
 
+        // we assume objects are cloned from prototypes
+
         if (this.isPrototype()) {
             return this.constructor
         }
+
         return this.__proto__.constructor
     }
 
@@ -222,8 +163,6 @@ window.ProtoClass = class ProtoClass {
     constructor() {
         //console.log("constructed!")
     }
-    
-
 
     type () {
         return this.constructor.name
@@ -398,15 +337,6 @@ window.ProtoClass = class ProtoClass {
     }
     */
 
-    /*
-    clone () {
-        const obj = Object.clone(this);
-        obj.__proto__ = this;
-        obj.init();
-        return obj;
-    }
-    */
-
     init () { 
         super.init()
         // subclasses should override to do initialization
@@ -457,45 +387,6 @@ window.ProtoClass = class ProtoClass {
         }
         return setter
     }
-
-    /*
-    performSet (name, value) {
-        return this.perform("set" + name.capitalized(), value);
-    }
-
-    performSets (slots) {
-        Object.eachSlot(slots, (name, value) => {
-            this.perform("set" + name.capitalized(), value);
-        });
-
-        return this;
-    }
-
-    performGets (slots) {
-        let object = {};
-        slots.forEach( (slot) => {
-            object[slot] = this.perform(slot);
-        });
-
-        return object;
-    }
-    */
-
-    /*
-    isKindOf (aClass) {  // implemented in Object.prototype
-        if (this.constructor) {
-            if (this.constructor === aClass) {
-                return true
-            }
-
-            let proto = this.__proto__ 
-            if (proto) {
-                return proto.isKindOf.apply(proto, [aClass])
-            }
-        }
-        return false
-    }
-    */
 
     toString () {
         return this.typeId();
@@ -556,14 +447,6 @@ window.ProtoClass = class ProtoClass {
         return this
     }
 
-    defaultStore () {
-        return PersistentObjectPool.shared()
-        //return ObjectPool.shared()
-    }
-
-    didLoadFromStore () {
-        super.didLoadFromStore()
-    }
 }
 
 window.ProtoClass.initThisClass() // needed as initThisClass looks at window.ProtoClass

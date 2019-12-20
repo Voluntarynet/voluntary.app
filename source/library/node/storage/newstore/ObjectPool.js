@@ -48,8 +48,6 @@
 
     BMNode needs to be referenced by a puuid and the Store needs to know it needs to be written if not already present.
 
-
-
 */
 
 
@@ -67,7 +65,6 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
             dirtyObjects: null, // dict 
             loadingPids: null, // set
             storingPids: null, // set
-            //justStoredObjects: null, // set
             loadingObjects: null, // set
             lastSyncTime: null, // WARNING: vulnerable to system time changes
             //isReadOnly: true,

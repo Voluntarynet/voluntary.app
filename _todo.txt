@@ -1,6 +1,9 @@
 
 TODO:
 	
+	
+	add shouldSelfTest to Object prototype to support runnign all tests?
+	
 	FINALIZATION
 
 		// called on all objects

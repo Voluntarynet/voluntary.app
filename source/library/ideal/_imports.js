@@ -11,7 +11,7 @@ ResourceLoader.pushRelativePaths([
     "StackTrace.js",
     "formatters/_imports.js",
     //"FilePath.js",
-    "proxies/_imports.js",
+    //"proxies/_imports.js",
 ]);
 
 

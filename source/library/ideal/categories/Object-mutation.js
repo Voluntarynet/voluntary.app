@@ -7,8 +7,6 @@ Object.defineSlots(Object, {
 
 Object.defineSlots(Object.prototype, {
 
-    // --- mutation observers ---------------------------
-
     setMutationObservers: function(aSet) {
         this._mutationObservers = aSet
         return this
@@ -32,7 +30,8 @@ Object.defineSlots(Object.prototype, {
         return this
     },
 
-    // ------------------------------
+
+    // --- ---
 
     willMutate: function() {
         /*

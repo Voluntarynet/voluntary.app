@@ -51,30 +51,14 @@ Object.defineSlots(Object.prototype, {
         return puuids
     },
 
-    _shouldSyncToStore: false, // need to do this with defineSlot
-
+    /*
     setShouldSyncToStore: function(aBool) {
-        Object.defineSlotIfNeeded(this, "_shouldSyncToStore", aBool)
+        this._shouldSyncToStore = aBool
         return this
     },
 
     shouldSyncToStore: function() {
         return this._shouldSyncToStore
-    },
-
-    // mutation
-
-    willMutate: function(slotName) {
-        //console.log(slotName + " hooked!")
-        // hook this on instances where we need to know about changes
-        if (this._shouldSyncToStore) {
-            this.scheduleSyncToStore(slotName)
-        }
-    },
-    
-    /*
-    syncToStoreOnMutation: function() {
-        this["willMutate"] = this.scheduleSyncToStore
     },
     */
     
@@ -82,10 +66,19 @@ Object.defineSlots(Object.prototype, {
         return PersistentObjectPool.shared()
     },
 
-    scheduleSyncToStore (slotName) {
-        //console.log(this.typeId() + " scheduleSyncToStore (via " + slotName + ")")
-        if (this.isFinalized()) {
+    scheduleSyncToStore: function(slotName) {
+        this.didMutate()
+        /*
+        if (this.isFinalized() && this.shouldSyncToStore()) {
+            console.log(this.typeId() + " scheduleSyncToStore (via " + slotName + ")")
             this.defaultStore().addDirtyObject(this)
+        }
+        */
+    },
+
+    loadFinalize: function()   {
+        if (this.didLoadFromStore) {
+            this.didLoadFromStore()
         }
     },
 

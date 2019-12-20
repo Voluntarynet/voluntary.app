@@ -10,9 +10,11 @@
 
 Object.defineSlots(Date.prototype, {
 
+    /*
     clone: function () {
         return new Date(this.getTime())
     },
+    */
 
     copy: function() {
         return this.shallowCopy()

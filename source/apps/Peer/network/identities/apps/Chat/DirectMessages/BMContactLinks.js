@@ -38,6 +38,7 @@ window.BMContactLinks = class BMContactLinks extends BMStorableNode {
     }
 
     loadFinalize () {
+        super.loadFinalize()
         this.updatedContacts()
     }
 

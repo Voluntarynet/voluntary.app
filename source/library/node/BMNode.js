@@ -93,24 +93,12 @@ window.BMNode = class BMNode extends ProtoClass {
             nodeInspector: null,
 
             shouldStore: false,
-
-            //isFinalized: false, // end of init calls scheduleFinalize, finalized sets this to true
-            // done to avoid adding dirty during init?
         })
 
 
         this.newSlot("subnodes", null).setInitProto(SubnodesArray)
         this.newSlot("actions", null).setInitProto(Array)
-
         this.newSlot("shouldStoreSubnodes", true) //.setShouldStore(true)
-
-        /*
-        this.slotNamed("title").setShouldShallowCopy(true)
-        this.slotNamed("subtitle").setShouldShallowCopy(true)
-        this.slotNamed("note").setShouldShallowCopy(true)
-
-        this.slotNamed("subnodes").setShouldDeepCopy(true)
-        */
     }
 
     init () {
@@ -478,10 +466,6 @@ window.BMNode = class BMNode extends ProtoClass {
     
     removeSubnode (aSubnode) {
         this.justRemoveSubnode(aSubnode)
-
-        if (this._subnodeIndex) {
-            this._subnodeIndex.removeAt(aSubnode.hash())
-        }
         
         this.didChangeSubnodeList()
         return aSubnode
@@ -493,10 +477,6 @@ window.BMNode = class BMNode extends ProtoClass {
     			this.justRemoveSubnode(subnode)
     		})
     		
-            if (this._subnodeIndex) {
-                this._subnodeIndex = {}
-            }
-        
             this.didChangeSubnodeList()
         }
         return this
@@ -848,14 +828,14 @@ window.BMNode = class BMNode extends ProtoClass {
         return this.subnodes().length
     }
 
-    onDidMutate (anObject) {
+    onDidMutateObject (anObject) {
         if (anObject === this._subnodes) {
             this.didChangeSubnodeList()
         }
     }
 
     didUpdateSlotSubnodes (oldValue, newValue) {
-        this._subnodes.addObserver(this)
+        this._subnodes.addMutationObserver(this)
         this._subnodes.forEach(subnode => subnode.setParentNode(this))
         this.didChangeSubnodeList()
         return this

@@ -85,7 +85,9 @@ window.BMRemoteIdentities = class BMRemoteIdentities extends BMStorableNode {
 	
     didChangeSubnodeList () {
         super.didChangeSubnodeList()
-        this._didChangeIdentitiesNote.post()
+        if (this._didChangeIdentitiesNote) {
+            this._didChangeIdentitiesNote.post()
+        }
         return this
     }
     

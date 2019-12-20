@@ -53,6 +53,7 @@ window.BMNetwork = class BMNetwork extends BMFieldSetNode {
     }
 
     loadFinalize () {
+        super.loadFinalize()
         //this.updateIdsBloomFilter()
     }
 

@@ -83,7 +83,7 @@ window.Documentation = class Documentation extends ProtoClass {
 }.initThisClass()
 
 
-
+/*
 // --- Object category -------------------------------------
 
 Object.defineSlots(Object.prototype, {
@@ -128,3 +128,5 @@ Object.defineSlots(Function.prototype, {
         return this.toString().match(commentPattern)
     },
 })
+
+*/

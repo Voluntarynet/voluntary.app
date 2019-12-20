@@ -14,12 +14,6 @@ Object.defineSlots(Array, {
         return this.clone().copyFrom(anArray)
     },
 
-    clone: function() {
-        const obj = new this()
-        obj.init()
-        return obj
-    },
-
     fromIterator: function(iterator) {
         const values = []
         let result = iterator.next()
@@ -36,47 +30,11 @@ Object.defineSlots(Array, {
 
 Object.defineSlots(Array.prototype, {
 
-    isPrototype: function() {
-        return this.constructor.prototype === this 
-    },
-    
-    isInstance: function() {
-        return !this.isPrototype()
-    },
-
-    isClass: function() {
-        return false
-    },
-
-    thisPrototype: function() {
-        assert(this.isInstance())
-        const prototype = this.__proto__
-        assert(prototype.isPrototype)
-        return prototype
-    },
-
-    thisClass: function() {
-        if (this.isPrototype()) {
-            return this.constructor
-        }
-        return this.__proto__.constructor
-    },
-
     /*
     init: function() {
-        console.log("Array init")
+        Object.prototype.init.apply(this)
     },
     */
-
-    clone: function () {
-        return this.thisClass().clone()
-    },
-
-    willMutate: function (slotName) {
-    },
-
-    didMutate: function(slotName) {
-    },
 
     clear: function() {
         while (this.length) {
@@ -295,7 +253,9 @@ Object.defineSlots(Array.prototype, {
     },
 
     removeAt: function (i) {
+        this.willMutate("removeAt")
         this.splice(i, 1);
+        this.didMutate("removeAt")
         return this;
     },
 

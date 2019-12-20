@@ -79835,34 +79835,6 @@ Object.defineSlots(Object.prototype, {
         return this.constructor.name
     },
 
-    //
-    // Unserializing - how it works
-    //
-    // we don't want objects to call scheduleStore on slot updates 
-    // while they are unserializing (since those slots are *already* 
-    // in the store as we are reading them from the store)
-    //
-    // To avoid this, Objects should call this.setIsUnserializing(true) in init()
-    // and scheduleFinalize. At the end of the event loop, their
-    // finalize() will be called it will this.setIsUnserializing(false)
-    //
-    // Inside didUpdateSlot(), scheduleStore isn't called if isUnserializing is true
-    //
-    //
-
-    /*
-    _isUnserializing: false,
-
-    isUnserializing: function() {
-        return this._isUnserializing
-    },
-
-    setIsUnserializing: function(aBool) {
-        this._isUnserializing = aBool
-        return this
-    },
-    */
-
     // is finalized
     //
     //  we don't want to scheduleSyncToStore while the object is initializing
@@ -79874,7 +79846,7 @@ Object.defineSlots(Object.prototype, {
     _isFinalized: false,
 
     isFinalized: function() {
-        return this._isFinalized
+        return this.getOwnProperty("_isFinalized") === true
     },
 
     setIsFinalized: function(aBool) {
@@ -79883,6 +79855,7 @@ Object.defineSlots(Object.prototype, {
     },
 
     finalize: function() {
+        assert(!this.isFinalized())
         // for subclasses to override if needed
         this.setIsFinalized(true)
     },
@@ -79891,12 +79864,14 @@ Object.defineSlots(Object.prototype, {
         this.scheduleFinalize()
     },
 
+    // finalize
+
+    didLoadFromStore: function() {
+    },
+
     scheduleFinalize () {
-        if (window["Scheduler"]) {
-            window.SyncScheduler.shared().scheduleTargetAndMethod(this, "finalize")
-        } else {
-            setTimeout(() => { this.finalize() }, 0)
-        }
+        assert(!this.isFinalized())
+        this.setIsFinalized(true) // only BMNode schedules this
     },
 
 })
@@ -80198,7 +80173,9 @@ Object.defineSlots(Array.prototype, {
     },
 
     removeAt: function (i) {
+        this.willMutate("removeAt")
         this.splice(i, 1);
+        this.didMutate("removeAt")
         return this;
     },
 
@@ -82599,6 +82576,10 @@ window.ProtoClass = class ProtoClass {
         return PersistentObjectPool.shared()
         //return ObjectPool.shared()
     }
+
+    didLoadFromStore () {
+        super.didLoadFromStore()
+    }
 }
 
 window.ProtoClass.initThisClass() // needed as initThisClass looks at window.ProtoClass
@@ -82855,11 +82836,15 @@ window.HookedArray = class HookedArray extends Array {
     // ------------------------------
 
     willMutate () {
+        //super.willMutate()
         //this.observers().forEach(v => v.onWillMutate(this))
     }
 
     didMutate () {
-        this.observers().forEach(v => v.onDidMutate(this))
+        //super.didMutate()
+        this.observers().forEach(v => { 
+            v.onDidMutate(this)
+        })
     }
 
     // ------------------------------
@@ -97726,24 +97711,12 @@ window.BMNode = class BMNode extends ProtoClass {
             nodeInspector: null,
 
             shouldStore: false,
-
-            //isFinalized: false, // end of init calls scheduleFinalize, finalized sets this to true
-            // done to avoid adding dirty during init?
         })
 
 
         this.newSlot("subnodes", null).setInitProto(SubnodesArray)
         this.newSlot("actions", null).setInitProto(Array)
-
         this.newSlot("shouldStoreSubnodes", true) //.setShouldStore(true)
-
-        /*
-        this.slotNamed("title").setShouldShallowCopy(true)
-        this.slotNamed("subtitle").setShouldShallowCopy(true)
-        this.slotNamed("note").setShouldShallowCopy(true)
-
-        this.slotNamed("subnodes").setShouldDeepCopy(true)
-        */
     }
 
     init () {
@@ -98111,10 +98084,6 @@ window.BMNode = class BMNode extends ProtoClass {
     
     removeSubnode (aSubnode) {
         this.justRemoveSubnode(aSubnode)
-
-        if (this._subnodeIndex) {
-            this._subnodeIndex.removeAt(aSubnode.hash())
-        }
         
         this.didChangeSubnodeList()
         return aSubnode
@@ -98126,10 +98095,6 @@ window.BMNode = class BMNode extends ProtoClass {
     			this.justRemoveSubnode(subnode)
     		})
     		
-            if (this._subnodeIndex) {
-                this._subnodeIndex = {}
-            }
-        
             this.didChangeSubnodeList()
         }
         return this
@@ -98647,7 +98612,7 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
         subnodesSlot.setShouldStore(true)
         subnodesSlot.setDoesHookGetter(true)
         subnodesSlot.setHookedGetterIsOneShot(true)
-        subnodesSlot.setIsLazy(true)
+        //subnodesSlot.setIsLazy(true)
         subnodesSlot.setInitProto(SubnodesArray)
         subnodesSlot.setupInOwner()
         
@@ -98854,37 +98819,47 @@ ResourceLoader.pushRelativePaths([
 Object.defineSlots(ProtoClass, {
 
     instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store    
-        const proto = window[aRecord.type]
-        const obj = proto.clone()
-        const dict = aRecord.dict
+
+        throw new Error("unimplemented")
 
         /*
-        Object.getOwnPropertyNames(dict).forEach((k) => {
-            const v = dict[k]
+        const proto = window[aRecord.type]
+        const obj = proto.clone()
+        const entries = aRecord.entries
+
+
+        aRecord.entries.forEach((entry) => {
+            const k = entry[0]
+            const v = entry[1]
             obj[k] = aStore.unrefValue(v)
         })
-        */
+        
         return obj
+        */
     },
 })
 
 Object.defineSlots(ProtoClass.prototype, {
 
     recordForStore: function(aStore) { // should only be called by Store
-        
-        const dict = {}
+
+        throw new Error("unimplemented")
 
         /*
+        const record = {
+            type: this.type(), 
+            entries: [], 
+        }
+
+
         Object.getOwnPropertyNames(this).forEach((k) => {
             const v = this[k]
-            dict[k] = aStore.refValue(v)
+            const entry = [k, aStore.refValue(v)]
+            record.entries.push(entry) 
         })
-        */
 
-        return {
-            type: this.type(), 
-            dict: dict, 
-        }
+        return record
+        */
     },
 
 })
@@ -98967,26 +98942,25 @@ Object.defineSlots(BMNode.prototype, {
             }
         })
 
-        this.didLoadFromStore()
-        this.scheduleLoadFinalize()
+        //this.didLoadFromStore()
         return this
     },
 
     scheduleLoadFinalize: function() {
         window.SyncScheduler.shared().scheduleTargetAndMethod(this, "loadFinalize")
     },
+
+    scheduleFinalize () {
+        // Object scheduleFinalize just calls this.finalize()
+        assert(!this.isFinalized())
+        window.SyncScheduler.shared().scheduleTargetAndMethod(this, "finalize")
+    },
     
+    /*
     loadFinalize: function() {
-        // called after all objects loaded within this event cycle
+        // Object.loadFinalize handles this
     },
-	
-    didLoadFromStore: function() {
-        //this.debugLog(" didLoadFromStore in BMStorableNode")
-        // chance to finish any unserializing this particular instance
-        // also see: loadFinalize
-		
-        //this.checkForStoredSlotsWithoutPids()
-    },
+    */
 
 })
 
@@ -99047,7 +99021,7 @@ Object.defineSlots(Array.prototype, {
 
     loadFromRecord: function(aRecord, aStore) {
         const loadedValues = aRecord.values.map(v => aStore.unrefValue(v))
-        loadedValues.forEach( v => this.push(v) )
+        loadedValues.forEach( v => this.unhooked_push(v) )
         return this
     },
 
@@ -99352,10 +99326,16 @@ Object.defineSlots(Object.prototype, {
         return PersistentObjectPool.shared()
     },
 
-    scheduleSyncToStore (slotName) {
-        //console.log(this.typeId() + " scheduleSyncToStore (via " + slotName + ")")
+    scheduleSyncToStore: function(slotName) {
         if (this.isFinalized()) {
+            console.log(this.typeId() + " scheduleSyncToStore (via " + slotName + ")")
             this.defaultStore().addDirtyObject(this)
+        }
+    },
+
+    loadFinalize: function()   {
+        if (this.didLoadFromStore) {
+            this.didLoadFromStore()
         }
     },
 
@@ -99695,6 +99675,10 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
 
     addDirtyObject (anObject) {
     
+        if (!this.hasActiveObject(anObject)) {
+            console.log("looks like it hasn't been referenced yet")
+        }
+    
         if (this.justStoredObjects() && this.justStoredObjects().has(anObject)) {
             return this
         }
@@ -99745,7 +99729,6 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
 
     storeDirtyObjects () { // PRIVATE
         let totalStoreCount = 0
-        console.log("---------- storeDirtyObjects BEGIN ---------------")
         this.setStoringPids(new Set())
 
         while (true) {
@@ -99777,7 +99760,6 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         }
 
         this.setStoringPids(null)
-        console.log("---------- storeDirtyObjects END ---------------")
         return totalStoreCount
     }
 
@@ -99790,18 +99772,22 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         if (!aClass) {
             throw new Error("missing class '" + className + "'")
         }
+        /*
         if (className === "BMLocalIdentities") {
             console.log("debug")
         }
+        */
         const obj = aClass.instanceFromRecordInStore(aRecord, this)
         assert(!this.hasActiveObject(obj))
         obj.setPuuid(aRecord.id)
         this.justAddActiveObject(obj)
         obj.loadFromRecord(aRecord, this)
         
+        /*
         if (obj.didLoadFromStore) {
             obj.didLoadFromStore()
         }
+        */
 
         return obj
     }
@@ -99828,6 +99814,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         const loadedObj = this.objectForRecord(aRecord)
         if (loadedObj) {
             loadedObj.setShouldSyncToStore(true)
+            loadedObj.scheduleLoadFinalize()
         }
 
 
@@ -101503,6 +101490,10 @@ window.BMIdentityField = class BMIdentityField extends BMField {
     }
 	
     setValue (inValue) { // called by View on edit
+        if (Type.isNull(inValue)) {
+            console.log("WARNING: " + this.type() + " setValue(null)")
+            return this
+        }
 	    //console.log("inValue = '" + inValue + "'")
 	    let newValue = inValue.strip()
 	    
@@ -109983,6 +109974,7 @@ window.BMTheme = class BMTheme extends BMStorableNode {
     }
 
     loadFinalize () {
+        super.loadFinalize()
         // called after all objects loaded within this event cycle
         this.setupSubnodes()
     }
@@ -110185,6 +110177,7 @@ window.BMMessages = class BMMessages extends BMStorableNode {
     }
 
     loadFinalize () {	    
+        super.loadFinalize()
         this.removeMessagesNotMatchingIdentities()
         this.handleAllMessages()
         return this
@@ -110468,6 +110461,7 @@ window.BMNetwork = class BMNetwork extends BMFieldSetNode {
     }
 
     loadFinalize () {
+        super.loadFinalize()
         //this.updateIdsBloomFilter()
     }
 
@@ -114154,6 +114148,7 @@ window.BMContactLinks = class BMContactLinks extends BMStorableNode {
     }
 
     loadFinalize () {
+        super.loadFinalize()
         this.updatedContacts()
     }
 
@@ -116041,7 +116036,9 @@ window.BMRemoteIdentities = class BMRemoteIdentities extends BMStorableNode {
 	
     didChangeSubnodeList () {
         super.didChangeSubnodeList()
-        this._didChangeIdentitiesNote.post()
+        if (this._didChangeIdentitiesNote) {
+            this._didChangeIdentitiesNote.post()
+        }
         return this
     }
     

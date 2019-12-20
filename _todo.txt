@@ -2,6 +2,25 @@
 TODO:
 
 
+	Object -> mutation -> MutationHub -> observers -> ObjectPool
+	
+	If the mutating object isn't in the ObjectPool's activeObjects, it's ignored.
+	If it is, it's added to it's dirtyObjects
+	
+		
+	FINALIZATION
+
+		// called on all objects
+		- scheduleFinalize // Object just calls finalize(), BMNode schedules finalize
+		- finalize
+
+		- didLoadFromStore
+
+		- scheduleLoadFinalize
+		- loadFinalize
+
+	BUG: d key not working on input
+	
 	move justStoredObjects to storingPids
 	
 	CONSIDER

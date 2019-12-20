@@ -19,7 +19,7 @@ window.ideal.Slot = class Slot {
         return obj
     }
 
-    static initThisClass () {
+    static initThisClass () { // can Object handle this now?
         if (this.prototype.hasOwnProperty("initPrototype")) {
             this.prototype.initPrototype.apply(this.prototype)
         }

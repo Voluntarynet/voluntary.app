@@ -29,6 +29,10 @@ window.BMIdentityField = class BMIdentityField extends BMField {
     }
 	
     setValue (inValue) { // called by View on edit
+        if (Type.isNull(inValue)) {
+            console.log("WARNING: " + this.type() + " setValue(null)")
+            return this
+        }
 	    //console.log("inValue = '" + inValue + "'")
 	    let newValue = inValue.strip()
 	    

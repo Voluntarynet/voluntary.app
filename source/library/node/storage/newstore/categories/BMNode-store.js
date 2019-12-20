@@ -77,25 +77,24 @@ Object.defineSlots(BMNode.prototype, {
             }
         })
 
-        this.didLoadFromStore()
-        this.scheduleLoadFinalize()
+        //this.didLoadFromStore()
         return this
+    },
+
+    scheduleFinalize: function () {
+        // Object scheduleFinalize just calls this.finalize()
+        assert(!this.isFinalized())
+        window.SyncScheduler.shared().scheduleTargetAndMethod(this, "finalize")
     },
 
     scheduleLoadFinalize: function() {
         window.SyncScheduler.shared().scheduleTargetAndMethod(this, "loadFinalize")
     },
-    
+
+    /*
     loadFinalize: function() {
-        // called after all objects loaded within this event cycle
+        // Object.loadFinalize handles this
     },
-	
-    didLoadFromStore: function() {
-        //this.debugLog(" didLoadFromStore in BMStorableNode")
-        // chance to finish any unserializing this particular instance
-        // also see: loadFinalize
-		
-        //this.checkForStoredSlotsWithoutPids()
-    },
+    */
 
 })

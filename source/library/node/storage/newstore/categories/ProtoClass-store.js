@@ -4,37 +4,47 @@
 Object.defineSlots(ProtoClass, {
 
     instanceFromRecordInStore: function(aRecord, aStore) { // should only be called by Store    
-        const proto = window[aRecord.type]
-        const obj = proto.clone()
-        const dict = aRecord.dict
+
+        throw new Error("unimplemented")
 
         /*
-        Object.getOwnPropertyNames(dict).forEach((k) => {
-            const v = dict[k]
+        const proto = window[aRecord.type]
+        const obj = proto.clone()
+        const entries = aRecord.entries
+
+
+        aRecord.entries.forEach((entry) => {
+            const k = entry[0]
+            const v = entry[1]
             obj[k] = aStore.unrefValue(v)
         })
-        */
+        
         return obj
+        */
     },
 })
 
 Object.defineSlots(ProtoClass.prototype, {
 
     recordForStore: function(aStore) { // should only be called by Store
-        
-        const dict = {}
+
+        throw new Error("unimplemented")
 
         /*
+        const record = {
+            type: this.type(), 
+            entries: [], 
+        }
+
+
         Object.getOwnPropertyNames(this).forEach((k) => {
             const v = this[k]
-            dict[k] = aStore.refValue(v)
+            const entry = [k, aStore.refValue(v)]
+            record.entries.push(entry) 
         })
-        */
 
-        return {
-            type: this.type(), 
-            dict: dict, 
-        }
+        return record
+        */
     },
 
 })

@@ -35,7 +35,7 @@ Object.defineSlots(Array.prototype, {
 
     loadFromRecord: function(aRecord, aStore) {
         const loadedValues = aRecord.values.map(v => aStore.unrefValue(v))
-        loadedValues.forEach( v => this.push(v) )
+        loadedValues.forEach( v => this.unhooked_push(v) )
         return this
     },
 

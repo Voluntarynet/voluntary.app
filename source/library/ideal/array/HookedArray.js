@@ -28,11 +28,11 @@ window.HookedArray = class HookedArray extends Array {
 
     initPrototype () {
         this.setupMutatorHooks()
+        //Object.defineSlot(this, "_mutationObservers", null) 
     }
 
     init () {
         super.init()
-        Object.defineSlot(this, "_observers", new Set()) 
     }
 
     // ------------------------------
@@ -47,6 +47,7 @@ window.HookedArray = class HookedArray extends Array {
 
     mutatorMethodNames () {
         // we can't hook []= or delete[] but we can hook these
+        // and use hooked methods instead of operators for those
         return [
             "push",
             "reverse",
@@ -86,42 +87,63 @@ window.HookedArray = class HookedArray extends Array {
         })
     }
 
-    // ------------------------------
+    // --- mutation observers ---------------------------
 
-    observers () {
-        return this._observers
-    }
-
-    addObserver (anObserver) {
-        this.observers().add(anObserver)
+    /*
+    setMutationObservers (aSet) {
+        this._mutationObservers = aSet
         return this
     }
 
-    removeObserver (anObserver) {
-        this.observers().delete(anObserver)
+    mutationObservers () {
+        return this._mutationObservers
+    }
+
+    addMutationObserver (anObserver) {
+        if (!this._mutationObservers) {
+            this.setMutationObservers(new Set())
+        }
+
+        this.mutationObservers().add(anObserver)
+        return this
+    }
+
+    removeMutationObserver (anObserver) {
+        this.mutationObservers().delete(anObserver)
         return this
     }
 
     // ------------------------------
 
     willMutate () {
-        //this.observers().forEach(v => v.onWillMutate(this))
+        //super.willMutate()
+        //this.mutationObservers().forEach(v => v.onWillMutateObject(this))
     }
 
     didMutate () {
-        this.observers().forEach(v => v.onDidMutate(this))
+        super.didMutate()
+        if (this._mutationObservers) {
+            this.mutationObservers().forEach(v => { 
+                v.onDidMutateObject(this)
+            })
+        }
     }
+    */
 
     // ------------------------------
 
     static selfTest () {
         const a = this.clone()
-        let gotNotification = false
+        let gotWillMutate = false
         a.willMutate = () => {
-            gotNotification = true
+            gotWillMutate = true
+        }
+        a.didMutate = () => {
+            gotDidMutate = true
         }
         a.push("b")
-        assert(gotNotification)
+        assert(gotWillMutate)
+        assert(gotDidMutate)
         return this
     }
 

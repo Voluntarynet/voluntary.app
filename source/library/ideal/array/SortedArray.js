@@ -90,7 +90,7 @@ window.SortedArray = class SortedArray extends IndexedArray {
     // --------------------------------
 
     static selfTest () {
-        let sa = this.clone().setShouldSyncToStore(false)
+        let sa = this.clone() 
         sa.setSortFunc((a, b) => { return a - b })
         sa.push(3, 1, 2)
         assert(sa.isEqual([1, 2, 3]))

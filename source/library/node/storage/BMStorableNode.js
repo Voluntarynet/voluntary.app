@@ -21,7 +21,7 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
         subnodesSlot.setShouldStore(true)
         subnodesSlot.setDoesHookGetter(true)
         subnodesSlot.setHookedGetterIsOneShot(true)
-        subnodesSlot.setIsLazy(true)
+        //subnodesSlot.setIsLazy(true)
         subnodesSlot.setInitProto(SubnodesArray)
         subnodesSlot.setupInOwner()
         
@@ -33,17 +33,17 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
         //this.scheduleSyncToStore()
     }
 
+    /*
     didUpdateSlotSubnodes (oldValue, newValue) {
         super.didUpdateSlotSubnodes(oldValue, newValue)
 
-        /*
-        if (!this.shouldStore() || !this.isInstance()) {
-	        return this
-        }
-        */
+        //if (!this.shouldStore() || !this.isInstance()) {
+	    //    return this
+       // }
         
         return this
     }
+    */
 
     // --- overrides from parent class ---
     // hook this to schedules writes when subnode list is changed
@@ -58,9 +58,11 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
         super.didChangeSubnodeList()
         this.updateLazySubnodeCount()
 
+        /*
         if (this.shouldStoreSubnodes()) {
             this.scheduleSyncToStore()
         }
+        */
         return this
     }
 

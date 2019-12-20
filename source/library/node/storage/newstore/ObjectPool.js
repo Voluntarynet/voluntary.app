@@ -67,7 +67,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
             dirtyObjects: null, // dict 
             loadingPids: null, // set
             storingPids: null, // set
-            justStoredObjects: null, // set
+            //justStoredObjects: null, // set
             loadingObjects: null, // set
             lastSyncTime: null, // WARNING: vulnerable to system time changes
             //isReadOnly: true,
@@ -217,16 +217,10 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
     }
     
     addActiveObject (anObject) {
-        /*
-        if (!this.hasActiveObject(anObject)) {
-            this.addDirtyObject(anObject) // only do this during ref creation?
+        if(!this.hasActiveObject(anObject)) {
+            anObject.addMutationObserver(this)
+            this.activeObjects().atPut(anObject.puuid(), anObject)
         }
-        */
-        this.justAddActiveObject(anObject)
-    }
-
-    justAddActiveObject (anObject) {
-        this.activeObjects().atPut(anObject.puuid(), anObject)
     }
 
     hasDirtyObjects () {
@@ -248,21 +242,35 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         }
     }
 
-    addDirtyObject (anObject) {
-    
-        if (this.justStoredObjects() && this.justStoredObjects().has(anObject)) {
-            return this
+    onDidMutateObject (anObject) {
+        if (anObject.isFinalized() && this.hasActiveObject(anObject)) {
+            this.addDirtyObject(anObject)
         }
+    }
 
-        if (this.loadingPids() && this.loadingPids().has(anObject.puuid())) {
-            return this
+    addDirtyObject (anObject) {
+        if (!this.hasActiveObject(anObject)) {
+            console.log("looks like it hasn't been referenced yet")
+            throw new Error("not referenced yet")
         }
 
         const puuid = anObject.puuid()
+
+        if (this.storingPids()) {
+            if (this.storingPids().has(puuid)) {
+                return this
+            }
+        }
+
+        if (this.loadingPids()) {
+            if (this.loadingPids().has(puuid)) {
+                return this
+            }
+        }
+
         if (!this.dirtyObjects().hasOwnProperty(puuid)) {
             this.debugLog("addDirtyObject(" + anObject.typeId() + ")")
             this.dirtyObjects()[puuid] = anObject
-            this.addActiveObject(anObject)
             this.scheduleStore()
         }
 
@@ -300,7 +308,6 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
 
     storeDirtyObjects () { // PRIVATE
         let totalStoreCount = 0
-        console.log("---------- storeDirtyObjects BEGIN ---------------")
         this.setStoringPids(new Set())
 
         while (true) {
@@ -332,7 +339,6 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         }
 
         this.setStoringPids(null)
-        console.log("---------- storeDirtyObjects END ---------------")
         return totalStoreCount
     }
 
@@ -345,18 +351,22 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         if (!aClass) {
             throw new Error("missing class '" + className + "'")
         }
+        /*
         if (className === "BMLocalIdentities") {
             console.log("debug")
         }
+        */
         const obj = aClass.instanceFromRecordInStore(aRecord, this)
         assert(!this.hasActiveObject(obj))
         obj.setPuuid(aRecord.id)
-        this.justAddActiveObject(obj)
+        this.addActiveObject(obj)
         obj.loadFromRecord(aRecord, this)
         
+        /*
         if (obj.didLoadFromStore) {
             obj.didLoadFromStore()
         }
+        */
 
         return obj
     }
@@ -382,7 +392,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         const aRecord = this.recordForPid(puuid)
         const loadedObj = this.objectForRecord(aRecord)
         if (loadedObj) {
-            loadedObj.setShouldSyncToStore(true)
+            loadedObj.scheduleLoadFinalize()
         }
 
 
@@ -451,7 +461,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         }
 
         if (v.shouldStore && !this.hasActiveObject(v)) {
-            v.setShouldSyncToStore(true)
+            this.addActiveObject(v)
             this.addDirtyObject(v)
         }
 
@@ -482,8 +492,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         }
         assert(puuid)
         let v = JSON.stringify(obj.recordForStore(this))
-        //console.log("store " + obj.puuid() + " <- " + v)
-        //console.log(puuid + " <- " + v)
+        console.log("store " + obj.puuid() + " <- " + v)
         this.recordsDict().atPut(puuid, v)
         return this
     }

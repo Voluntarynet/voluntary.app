@@ -77,12 +77,14 @@ window.ProtoClass = class ProtoClass {
             this.prototype.initPrototype.apply(this.prototype)
         }
 
+        /*
         //console.log("initThisClass: ", this)
         if (window.ProtoClass.allClasses().contains(this)) {
             throw new Error("attempt to call initThisClass twice on the same class")
         }
 
         ProtoClass.allClasses().push(this)
+        */
 
         return this
     }
@@ -389,23 +391,21 @@ window.ProtoClass = class ProtoClass {
         return this
     }
 
-
+    /*
     childProtos () {
         const result = ProtoClass.allClasses().select(proto => proto._parentProto === this )
         return result
     }
+    */
 
-    cloneWithoutInit () {
+    /*
+    clone () {
         const obj = Object.clone(this);
         obj.__proto__ = this;
-        return obj;
-    }
-
-    clone () {
-        const obj = this.cloneWithoutInit();
         obj.init();
         return obj;
     }
+    */
 
     init () { 
         super.init()
@@ -559,6 +559,10 @@ window.ProtoClass = class ProtoClass {
     defaultStore () {
         return PersistentObjectPool.shared()
         //return ObjectPool.shared()
+    }
+
+    didLoadFromStore () {
+        super.didLoadFromStore()
     }
 }
 

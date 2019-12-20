@@ -43,6 +43,7 @@ window.BMMessages = class BMMessages extends BMStorableNode {
     }
 
     loadFinalize () {	    
+        super.loadFinalize()
         this.removeMessagesNotMatchingIdentities()
         this.handleAllMessages()
         return this

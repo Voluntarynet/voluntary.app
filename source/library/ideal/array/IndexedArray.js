@@ -68,8 +68,9 @@ window.IndexedArray = class IndexedArray extends HookedArray {
 
     // index closure
 
-    setIndexClosure (aDict) {
-        this._indexClosure = aDict
+    setIndexClosure (aFunction) {
+        this._indexClosure = aFunction
+        return thi
     }
 
     indexClosure () {
@@ -83,7 +84,7 @@ window.IndexedArray = class IndexedArray extends HookedArray {
     // --- lazy reindexing ---
 
     setNeedsReindex (aBool) {
-        this._needsReindex = aBool
+        this.__needsReindex = aBool
         return this
     }
 

@@ -482,13 +482,13 @@ window.BrowserRow = class BrowserRow extends NodeView {
     on_d_KeyDown (event) {
         //this.debugLog(" on_d_KeyDown ", event._id)
         this.setIsRegisteredForDrag(true)
-        return false
+        return true
     }
 
     on_d_KeyUp (event) {
         //this.debugLog(" on_d_KeyUp ", event._id)
         this.setIsRegisteredForDrag(false)
-        return false
+        return true
     }
 
     // ---

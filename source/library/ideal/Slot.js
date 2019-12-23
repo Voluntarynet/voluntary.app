@@ -501,6 +501,9 @@ window.ideal.Slot = class Slot {
         } else 
         */
 
+        // to ensure privateName isn't enumerable
+        Object.defineSlot(anInstance, this.privateName(), anInstance[this.privateName()])
+
         if (this.isLazy()) {
             const obj = this.initProto().clone()
             anInstance[this.privateName()] = obj

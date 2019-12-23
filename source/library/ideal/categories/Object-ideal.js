@@ -23,7 +23,20 @@
 
 [Array, Set, Map].forEach(aClass => aClass.__proto__ = Object)
 
+/*
+Object.hasOwnSlot = function(obj, slotName, slotValue) {
+    const descriptor = Object.getOwnPropertyDescriptor(slotName)
+    if (descriptor) {
+        if (Type.isUndefined(slotValue) || this[slotName] === slotValue) {
+            return true
+        }
+    }
+    return false
+}
+*/
+
 Object.defineSlot = function(obj, slotName, slotValue) {
+    //if (!Object.hasOwnSlot(obj, slotName, slotValue)) {
     const descriptor = {
         configurable: true,
         enumerable: false,
@@ -31,6 +44,7 @@ Object.defineSlot = function(obj, slotName, slotValue) {
         writable: true,
     }
     Object.defineProperty(obj, slotName, descriptor)
+    //}
 }
 
 /*

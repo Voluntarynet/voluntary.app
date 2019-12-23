@@ -31,6 +31,7 @@ window.SortedArray = class SortedArray extends IndexedArray {
     }
 
     initPrototype () {
+
     }
 
     init () {
@@ -54,6 +55,7 @@ window.SortedArray = class SortedArray extends IndexedArray {
     sortFunc () {
         return this._sortFunc
     }
+
 
     // sort
 

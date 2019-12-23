@@ -2639,8 +2639,9 @@ window.DomView = class DomView extends ProtoClass {
         //this.debugLog(".invokeMethodNameForEvent('" + methodName + "')")
         if (this[methodName]) {
             const stopProp = this[methodName].apply(this, [event])
-            event.preventDefault()
+            //event.preventDefault()
             if (stopProp === false) {
+                //event.preventDefault()
                 event.stopPropagation()
                 return false
             }

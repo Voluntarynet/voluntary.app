@@ -1,6 +1,9 @@
 
 TODO:
 	
+	work on shouldStoreSubnodes - need to override this on a per class (or per instance) basis for
+	nodes like BMDateField
+	
 	
 	need to work on enforcing shouldStore = false when a Node shouldn't store it's subnodes
 	

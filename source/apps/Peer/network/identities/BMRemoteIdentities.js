@@ -52,9 +52,7 @@ window.BMRemoteIdentities = class BMRemoteIdentities extends BMStorableNode {
     }
 	
     validSubnodes () {
-        return this.subnodes().select(function (id) {
-            return id.isValid()
-        })		
+        return this.subnodes().select((id) => id.isValid())		
     }
 
     idWithPublicKeyString (publicKeyString) { // limits to valid nodes
@@ -70,17 +68,15 @@ window.BMRemoteIdentities = class BMRemoteIdentities extends BMStorableNode {
     }
 
     idWithName (s) {
-        return this.subnodes().detect(function (id) {            
-            return id.name() === s
-        })
+        return this.subnodes().detect(id => id.name() === s)
     }
 	
     names () {
-        return this.subnodes().map((id) => { return id.name(); })
+        return this.subnodes().map(id => id.name())
     }
 	
     publicKeyStrings () {
-        return this.validSubnodes().map((id) => { return id.publicKeyString(); })
+        return this.validSubnodes().map(id => id.publicKeyString())
     }
 	
     didChangeSubnodeList () {

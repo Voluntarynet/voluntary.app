@@ -16,6 +16,7 @@ Object.defineSlots(Object, {
 Object.defineSlots(Object.prototype, {
 
     loadFromRecord: function(aRecord, aStore) {
+        assert(aRecord.type === "Object")
         aRecord.entries.forEach((entry) => {
             const k = entry[0]
             const v = entry[1]
@@ -27,13 +28,13 @@ Object.defineSlots(Object.prototype, {
     recordForStore: function(aStore) { // should only be called by Store
         const entries = []
 
-        Object.getOwnPropertyNames(this).forEach((k) => {
+        Object.keys(this).forEach((k) => {
             const v = this[k]
             entries.push([k, aStore.refValue(v)])
         })
 
         return {
-            type: "Object", 
+            type: this.type(), 
             entries: entries, 
         }
     },

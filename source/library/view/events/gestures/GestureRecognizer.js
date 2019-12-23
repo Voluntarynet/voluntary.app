@@ -725,7 +725,7 @@ window.GestureRecognizer = class GestureRecognizer extends ProtoClass {
 
     removeFingerViews () {
         const dict = this.fingerViewDict()
-        Object.getOwnPropertyNames(dict).forEach((id) => {
+        Object.keys(dict).forEach((id) => {
             const fingerView = dict[id]
             fingerView.removeFromParentView()
         })
@@ -739,7 +739,7 @@ window.GestureRecognizer = class GestureRecognizer extends ProtoClass {
 
     showFingers () {
         const points = this.pointsForEvent(this.currentEvent());
-        const idsToRemove = Object.getOwnPropertyNames(this.fingerViewDict()) // TODO: move to dict
+        const idsToRemove = Object.keys(this.fingerViewDict()) // TODO: move to dict
         let count = 1
 
         points.forEach((point) => {

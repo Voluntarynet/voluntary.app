@@ -50,10 +50,6 @@
 
 */
 
-
-// need a pidRefsFromPid
-
-
 window.ObjectPool = class ObjectPool extends ProtoClass {
     
     initPrototype () {
@@ -61,11 +57,10 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
             name: "defaultDataStore",
             rootObject: null, 
             recordsDict: null, // AtomicDictionary
-            activeObjects: null, // dict
-            dirtyObjects: null, // dict 
-            loadingPids: null, // set
-            storingPids: null, // set
-            loadingObjects: null, // set
+            activeObjects: null, // dict - objects known to the pool (previously loaded or referenced)
+            dirtyObjects: null, // dict - objects with mutations that need to be stored
+            loadingPids: null, // set - pids of objects that we're loading in this event loop
+            storingPids: null, // set - pids of objects that we're storing in this event loop
             lastSyncTime: null, // WARNING: vulnerable to system time changes
             //isReadOnly: true,
             markedSet: null, // Set of puuids
@@ -214,10 +209,35 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
     }
     
     addActiveObject (anObject) {
+        assert(!anObject.isClass())
+
+        if (!anObject.shouldStore()) {
+            return false
+        }
+
+        if (!anObject.isInstance()) {
+            const msg = "can't store non instance of type '" + anObject.type() + "'"
+            console.log(msg)
+            anObject.isKindOf(ProtoClass) 
+            throw new Error(msg)
+        }
+
+        if (!anObject.isKindOf(ProtoClass) && !anObject.isKindOf(SubnodesArray)) {
+        //if (["Object", "PersistentObjectPool", "Set", "Map"].contains(anObject.type())) {
+            const msg = "can't store object of type '" + anObject.type() + "'"
+            console.log("---")
+            console.log(msg)
+            console.log("---")
+            anObject.isKindOf(ProtoClass) 
+            throw new Error(msg)
+        }
+
         if(!this.hasActiveObject(anObject)) {
             anObject.addMutationObserver(this)
             this.activeObjects().atPut(anObject.puuid(), anObject)
         }
+
+        return true
     }
 
     hasDirtyObjects () {
@@ -232,6 +252,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
     */
 
     onObjectUpdatePid (anObject, oldPid, newPid) {
+        // sanity check for debugging - could remove later
         if (this.hasActiveObject(anObject)) {
             const msg = "onObjectUpdatePid " + anObject.typeId() + " " + oldPid + " -> " + newPid
             console.log(msg)
@@ -245,6 +266,25 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         }
     }
 
+    isStoringObject (anObject) {
+        const puuid = anObject.puuid()
+        if (this.storingPids()) {
+            if (this.storingPids().has(puuid)) {
+                return true
+            }
+        }
+        return false
+    }
+
+    isLoadingObject (anObject) {
+        if (this.loadingPids()) {
+            if (this.loadingPids().has(puuid)) {
+                return true
+            }
+        }
+        return false
+    }
+
     addDirtyObject (anObject) {
         if (!this.hasActiveObject(anObject)) {
             console.log("looks like it hasn't been referenced yet")
@@ -253,16 +293,12 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
 
         const puuid = anObject.puuid()
 
-        if (this.storingPids()) {
-            if (this.storingPids().has(puuid)) {
-                return this
-            }
+        if (this.isStoringObject(anObject)) {
+            return this
         }
 
-        if (this.loadingPids()) {
-            if (this.loadingPids().has(puuid)) {
-                return this
-            }
+        if (this.isLoadingObject(anObject)) {
+            return this
         }
 
         if (!this.dirtyObjects().hasOwnProperty(puuid)) {
@@ -277,7 +313,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
     scheduleStore () {
         if (!this.isOpen()) {
             console.log(this.typeId() + " can't schedule store yet, not open")
-            return
+            return this
         }
         assert(this.isOpen())
         const scheduler = SyncScheduler.shared()
@@ -343,7 +379,9 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
 
     objectForRecord (aRecord) { // private
         const className = aRecord.type
-        console.log("loading " + className + " " + aRecord.id)
+        
+        //console.log("loading " + className + " " + aRecord.id)
+        
         const aClass = window[className]
         if (!aClass) {
             throw new Error("missing class '" + className + "'")
@@ -353,6 +391,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
             console.log("debug")
         }
         */
+        assert(aRecord.id)
         const obj = aClass.instanceFromRecordInStore(aRecord, this)
         assert(!this.hasActiveObject(obj))
         obj.setPuuid(aRecord.id)
@@ -457,7 +496,14 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
             return v
         }
 
-        if (v.shouldStore && !this.hasActiveObject(v)) {
+        assert(!v.isClass())
+
+        if (!v.shouldStore()) {
+            console.log("warning - called refValue on " + v.type() + " which has shouldStore=false")
+            return null
+        }
+
+        if (!this.hasActiveObject(v)) {
             this.addActiveObject(v)
             this.addDirtyObject(v)
         }
@@ -483,6 +529,8 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
     // write an object
 
     storeObject (obj) {
+        assert(obj.shouldStore())
+
         const puuid = obj.puuid()
         if (Type.isUndefined(puuid)) {
             obj.puuid()
@@ -584,13 +632,20 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
                 deleteCount ++
             }
         })
-
         return deleteCount
     }
 
     // ---------------------------
 
-    /*
+    rootInstanceWithPidForProto (aTitle, aProto) {
+        return this.rootObject().subnodeWithTitleIfAbsentInsertClosure(aTitle, () => aProto.clone())
+    }
+
+    totalBytes () {
+        return this.recordsDict().totalBytes()
+    }
+
+/*
     selfTestRoot () {
         const aTypedArray = Float64Array.from([1.2, 3.4, 4.5])
         const aSet = new Set("sv1", "sv2")
@@ -614,17 +669,8 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         const loadedNode = store.rootObject()
         console.log("loadedNode = ", loadedNode)
         console.log(this.type() + " --- self test end --- ")
-
     }
     */
-
-    rootInstanceWithPidForProto (aTitle, aProto) {
-        return this.rootObject().subnodeWithTitleIfAbsentInsertClosure(aTitle, () => aProto.clone())
-    }
-
-    totalBytes () {
-        return this.recordsDict().totalBytes()
-    }
 
 }.initThisClass()
 

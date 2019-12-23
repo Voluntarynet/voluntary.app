@@ -60,7 +60,7 @@ window.NodeView = class NodeView extends DomStyledView {
         if (this.node()) {
             //console.log("startWatchingNode " + this.node() + " observation count = " + NotificationCenter.shared().observations().length)
             this.nodeObservation().setTarget(this.node()).watch()
-            this.node().onStartObserving()
+            //this.node().onStartObserving()
         }
         return this
     }
@@ -69,7 +69,7 @@ window.NodeView = class NodeView extends DomStyledView {
         if (this.node()) {
             //console.log("stopWatchingNode " + this.node() + " observation count = " + NotificationCenter.shared().observations().length)
             this.nodeObservation().stopWatching()
-            this.node().onStopObserving()
+            //this.node().onStopObserving()
         }
         return this
     }

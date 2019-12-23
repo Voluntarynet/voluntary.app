@@ -147,6 +147,9 @@ window.ideal.Slot = class Slot {
     }
 
     setShouldStore (aBool) {
+        if (this.name() === "subnodeProto") {
+            console.log("---")
+        }
         if (this._shouldStore !== aBool) {
             this._shouldStore = aBool
             if (aBool) {
@@ -244,7 +247,7 @@ window.ideal.Slot = class Slot {
         const func = function () {
             return this[privateName]
         }
-        func.setSlot(this)
+        //func.setSlot(this)
         return func
     }
 
@@ -277,7 +280,7 @@ window.ideal.Slot = class Slot {
             this.willGetSlot(slot) // opportunity to replace value before first access
             return this[privateName]
         }
-        func.setSlot(this)
+        //func.setSlot(this)
         return func
     }
 
@@ -303,7 +306,7 @@ window.ideal.Slot = class Slot {
 
             return this[privateName]
         }
-        func.setSlot(this)
+        //func.setSlot(this)
         return func
     }
 
@@ -335,7 +338,7 @@ window.ideal.Slot = class Slot {
             }
             return this[privateName]
         }
-        func.setSlot(this)
+        //func.setSlot(this)
         return func
     }
 
@@ -357,7 +360,7 @@ window.ideal.Slot = class Slot {
 
             return this[privateName]
         }
-        func.setSlot(this)
+        //func.setSlot(this)
         return func
     }
 
@@ -395,7 +398,7 @@ window.ideal.Slot = class Slot {
             */
             return this
         }
-        func.setSlot(this)
+        //func.setSlot(this)
         return func
     }
 
@@ -426,7 +429,7 @@ window.ideal.Slot = class Slot {
             }
             return this
         }
-        func.setSlot(this)
+        //func.setSlot(this)
         return func
     }
 
@@ -444,7 +447,7 @@ window.ideal.Slot = class Slot {
             }
             return this
         }
-        func.setSlot(this)
+        //func.setSlot(this)
         return func
     }
     */
@@ -549,6 +552,7 @@ window.ideal.Slot = class Slot {
 
 // --- slot methods on Function -------------------------------------------------
 
+/*
 Object.defineSlots(Function.prototype, {
     slot: function() {
         return this._slot
@@ -564,3 +568,4 @@ Object.defineSlots(Function.prototype, {
     },
 
 })
+*/

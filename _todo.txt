@@ -2,6 +2,16 @@
 TODO:
 	
 	
+	need to work on enforcing shouldStore = false when a Node shouldn't store it's subnodes
+	
+	this._xxx makes an enumerable slot - this is a problem for arrays and dictionaries
+	
+	
+	verify that slot added on instance is not enumerable
+	if it was not enumerable is class
+	
+	add shouldStore to Array, Map, Set
+	
 	add shouldSelfTest to Object prototype to support runnign all tests?
 	
 	FINALIZATION

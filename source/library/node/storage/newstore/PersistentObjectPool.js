@@ -7,11 +7,7 @@
         An ObjectPool that uses a PersistentAtomicDictionary
         to store it's records.
 
-
 */
-
-
-// need a pidRefsFromPid
 
 window.PersistentObjectPool = class PersistentObjectPool extends ObjectPool {
     

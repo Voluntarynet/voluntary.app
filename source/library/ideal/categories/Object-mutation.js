@@ -8,7 +8,9 @@ Object.defineSlots(Object, {
 Object.defineSlots(Object.prototype, {
 
     setMutationObservers: function(aSet) {
-        this._mutationObservers = aSet
+        if (!this._mutationObservers) {
+            Object.defineSlot(this, "_mutationObservers", aSet) 
+        }
         return this
     },
 

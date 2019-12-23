@@ -92,7 +92,7 @@ window.BMNode = class BMNode extends ProtoClass {
             nodeCanInspect: false,
             nodeInspector: null,
 
-            shouldStore: false,
+            //shouldStore: false,
         })
 
 
@@ -103,9 +103,7 @@ window.BMNode = class BMNode extends ProtoClass {
 
     init () {
         super.init()
-        //this.setSubnodes(SubnodesArray.clone())
-        //this._actions = []   
-        //Object.defineSlot(this ,"_actions", [])  
+
         this.setDidUpdateNodeNote(NotificationCenter.shared().newNote().setSender(this).setName("didUpdateNode"))
         this.setShouldFocusSubnodeNote(NotificationCenter.shared().newNote().setSender(this).setName("shouldFocusSubnode"))
         this._nodeMinWidth = 180
@@ -120,12 +118,6 @@ window.BMNode = class BMNode extends ProtoClass {
     }
 
     pid () {
-        /*
-        if (!this.shouldStore()) {
-            this.shouldStore()
-            throw new Error("attempt to prepare to store a node of type '" + this.type() + "' which has shouldStore === false, use this.setShouldStore(true)")
-        }
-        */
         return this.puuid()
     }
 
@@ -198,10 +190,6 @@ window.BMNode = class BMNode extends ProtoClass {
 	    }
 	    return null
     }
-
-    
-    // --- finalize ----------
-
     
     // -----------------------
     
@@ -430,13 +418,11 @@ window.BMNode = class BMNode extends ProtoClass {
 	    return this === aNode
     }
 
-    /*
     hash () {
         // don't assume hash() always returns the puuid as
         // subclasses can override to measure equality in their own way
         return this.puuid()
     }
-    */
 
     createSubnodesIndex () {
         this.subnodes().setIndexClosure( v => v.hash() )
@@ -465,7 +451,6 @@ window.BMNode = class BMNode extends ProtoClass {
     
     removeSubnode (aSubnode) {
         this.justRemoveSubnode(aSubnode)
-        
         this.didChangeSubnodeList()
         return aSubnode
     }
@@ -520,40 +505,7 @@ window.BMNode = class BMNode extends ProtoClass {
             assert(this.parentNode() !== this)
             this.parentNode().didUpdateNode()
         }
-
-        //this.scheduleSyncToView()
     }
-    
-    /*
-    privatePrepareToAccess () {
-        // just here for debugging
-        if (!this._isPreparingToAccess) {
-            this._isPreparingToAccess = true
-
-            //this.prepareToAccess()
-
-            
-            try {
-                this.prepareToAccess()
-            } catch(e) {
-                this._isPreparingToAccess = false
-                throw e
-            }
-            
-            
-            this._isPreparingToAccess = false
-        }
-        return this
-    }
-    */
-
-    /*
-    subnodes () {
-        this.privatePrepareToAccess() // causes access loop in some situations - use marker?
-        //this.subnodes = function() { return this._subnodes }
-        return this._subnodes
-    }
-    */
 
     indexOfSubnode (aSubnode) {
         return this.subnodes().indexOf(aSubnode);
@@ -939,6 +891,7 @@ window.BMNode = class BMNode extends ProtoClass {
     // tracking observer count 
     // usefull for releasing inspectors when no longer needed
 
+    /*
     onStartObserving () {
 
     }
@@ -953,6 +906,7 @@ window.BMNode = class BMNode extends ProtoClass {
     onNoMoreObservers () {
 
     }
+    */
 
     summary () {
         return this.title() + " " + this.subtitle()

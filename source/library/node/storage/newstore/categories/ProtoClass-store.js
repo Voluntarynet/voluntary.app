@@ -37,7 +37,7 @@ Object.defineSlots(ProtoClass.prototype, {
         }
 
 
-        Object.getOwnPropertyNames(this).forEach((k) => {
+        Object.keys(this).forEach((k) => {
             const v = this[k]
             const entry = [k, aStore.refValue(v)]
             record.entries.push(entry) 

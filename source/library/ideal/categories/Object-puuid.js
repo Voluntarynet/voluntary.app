@@ -40,7 +40,7 @@ Object.defineSlots(Object.prototype, {
             let oldPid = this["_puuid"]
             this.defaultStore().onObjectUpdatePid(this, oldPid, puuid)
         }
-        this["_puuid"] = puuid
+        Object.defineSlot(this, "_puuid", puuid)
         return this
     },
 

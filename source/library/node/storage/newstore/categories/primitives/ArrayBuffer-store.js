@@ -7,10 +7,9 @@ Object.defineSlots(ArrayBuffer, {
         assert(aRecord.type === "ArrayBuffer")
         const bytes = aRecord.bytes
         const obj = new ArrayBuffer(bytes.length)
-        //obj.loadFromRecord(aRecord, aStore)
+        // loadFromRecord is called from the Store after puuid is set
         return obj
     },
-
 })
 
 
@@ -20,12 +19,12 @@ Object.defineSlots(ArrayBuffer.prototype, {
         assert(aRecord.bytes.length === this.length)
         const bytes = aRecord.bytes
         for (let i = 0; i < bytes.length; i++) {
-            newBuffer[i] = bytes[i]
+            this[i] = bytes[i]
         }
         return this
     },
 
-    values: function() {
+    bytes: function() {
         const bytes = []
         for (let i = 0; i < this.byteLength; i++) {
             bytes.push(this[i])
@@ -34,17 +33,10 @@ Object.defineSlots(ArrayBuffer.prototype, {
     },
 
     recordForStore: function(aStore) { // should only be called by Store
-        byteLength
         return {
             type: "ArrayBuffer", //Type.typeName(this), 
-            bytes: this.values(),
+            bytes: this.bytes(),
         }
-    },
-
-    _shouldStore: false, 
-
-    shouldStore: function() {
-        return this._shouldStore
     },
 
     refsPidsForJsonStore: function(puuids = new Set()) {

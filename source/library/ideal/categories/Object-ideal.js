@@ -7,11 +7,6 @@
     Object isn't a prototype or class, it's more like a namespace to organize
     some functions that take an object as an argument. JS ugliness.
 
-*/
-
-
-/*
-
     NOTES:
     
     A few weird JS things:
@@ -28,7 +23,6 @@
 
 [Array, Set, Map].forEach(aClass => aClass.__proto__ = Object)
 
-
 Object.defineSlot = function(obj, slotName, slotValue) {
     const descriptor = {
         configurable: true,
@@ -39,8 +33,31 @@ Object.defineSlot = function(obj, slotName, slotValue) {
     Object.defineProperty(obj, slotName, descriptor)
 }
 
+/*
+window.Test = class Test {
+    setup () {
+        this._foo = 123
+    }
+}
+
+Object.defineSlot(Test.prototype, "_foo", "bar")
+
+let test = new Test()
+test.setup()
+
+console.log(test)
+let d = Reflect.getOwnPropertyDescriptor(test, "_foo")
+console.log(d)
+
+if(d.enumerable) {
+    console.log("is enumerable")
+} else {
+    console.log("is not enumberable")
+}
+*/
+
 Object.defineSlotIfNeeded = function(obj, slotName, slotValue) {
-    if (this.hasOwnProperty(slotName)) {1111111111
+    if (this.hasOwnProperty(slotName)) {
         this[slotName] = slotValue
     } else {
         Object.defineSlot(obj, slotName, slotValue)
@@ -98,7 +115,7 @@ const classSlots = {
     */
     
     eachSlot: function (obj, fn) {
-        Object.getOwnPropertyNames(obj).forEach(k => fn(k, obj[k]) )
+        Object.keys(obj).forEach(k => fn(k, obj[k]) )
     },
     
     values: function (obj) {
@@ -107,14 +124,32 @@ const classSlots = {
         return values;
     },
 
+    isKindOf: function(aClass) {
+        //assert(this.isClass())
+        //assert(aClass.isClass())
+        
+        if (this.name === "") {
+            // anything touching the root "" class seems to crash Chrome,
+            // so let's be carefull to leave it along
+            return false
+        }
+
+        if (this === aClass) {
+            return true 
+        }
+        
+        let proto = this.__proto__
+        if (proto && proto.name !== "") {
+            return proto.isKindOf.apply(proto, [aClass])
+        }
+
+        return false
+    },
+
+
 }
 
 Object.defineSlots(Object, classSlots)
-/*
-Object.defineSlots(Array, classSlots)
-Object.defineSlots(Set, classSlots)
-Object.defineSlots(Map, classSlots)
-*/
 
 // --- prototype ---
 
@@ -123,6 +158,7 @@ const prototypeSlots = {
     initPrototype: function() {
         Object.defineSlot(this, "_isFinalized", false) 
         Object.defineSlot(this, "_mutationObservers", null) 
+        Object.defineSlot(this, "_shouldStore", false)
     },
 
     clone: function () {
@@ -234,30 +270,35 @@ const prototypeSlots = {
     },
     
     ownForEachKV: function(fn) {    
-        Object.getOwnPropertyNames(this).forEach((k) => {
+        Object.keys(this).forEach((k) => {
             const v = this[k]
             fn(k, v);
         });
         return this
     },
 
+    /*
     mapToArrayKV: function(fn) {
         const m = []
-        Object.getOwnPropertyNames(this).forEach((k) => {
+        Object.keys(this).forEach((k) => {
             const v = this[k]
             const r = fn(k, v)
             m.push(r)
         }); 
         return m
     },
+    */
 
-    isEqual: function(anObject) { // only checks enumerable properties
-        const keys = Object.getOwnPropertyNames(this)
-        if (keys.length !== Object.getOwnPropertyNames(anObject).length) {
+    isEqual: function(anObject) { 
+        // compare like we would two dictionaries
+        // only checks enumerable properties
+        const keys = Object.keys(this)
+        const otherKeys = Object.keys(anObject)
+        if (keys.length !== otherKeys.length) {
             return false
         }
 
-        const foundInequality = keys.detect(k => this.hasOwnProperty(k) !== anObject.hasOwnProperty(k))
+        const foundInequality = keys.detect(k => this.getOwnProperty(k) !== anObject.getOwnProperty(k))
         return !foundInequality
     },
 
@@ -270,27 +311,15 @@ const prototypeSlots = {
 
     /*
     setOwnProperty: function(key, value) {
-        this[key] = value
+        Object.defineSlot(this, key, value)
         return this
     },
     */
 
     isKindOf: function(aClass) {
-        if (this.constructor) {
-            if (this.constructor === aClass) {
-                return true
-            }
-
-            let proto = this.__proto__
-
-            if (proto) {
-                return proto.isKindOf.apply(proto, [aClass])
-            }
-        }
-
-        return false
+        //assert(!this.isClass())
+        return this.thisClass().isKindOf(aClass)
     },
-
 
     // --- storage ---
 
@@ -307,7 +336,7 @@ const prototypeSlots = {
     },
 
     setIsFinalized: function(aBool) {
-        this._isFinalized = aBool
+        Object.defineSlot(this, "_isFinalized", aBool)
         return this
     },
 
@@ -322,16 +351,9 @@ const prototypeSlots = {
     didLoadFromStore: function() {
     },
 
-    scheduleFinalize () {
-        assert(!this.isFinalized())
-        this.setIsFinalized(true) // only BMNode schedules this
-    },
-
-
     scheduleFinalize: function () {
-        // Object scheduleFinalize just calls this.finalize()
-        assert(!this.isFinalized())
-        this.setIsFinalized(true)
+        //window.SyncScheduler.shared().scheduleTargetAndMethod(this, "finalize")
+        this.finalize()
     },
 
     scheduleLoadFinalize: function() {
@@ -341,6 +363,20 @@ const prototypeSlots = {
 
     loadFinalize: function() {
         // for subclasses to override
+    },
+
+
+    setShouldStore: function(aBool) {
+        if (aBool != this._shouldStore) {
+            //this.willMutate("shouldStore")
+            Object.defineSlot(this, "_shouldStore", aBool)
+            //this.didMutate("shouldStore")
+        }
+        return this
+    },
+
+    shouldStore: function() {
+        return this._shouldStore
     },
 
 }

@@ -56,7 +56,7 @@ window.GamePadManager = class GamePadManager extends ProtoClass {
 
     connectedGamePads () {
         const dict = this.gamePadsDict()
-        return Object.getOwnPropertyNames(dict).map(k => dict[k])
+        return Object.keys(dict).map(k => dict[k])
     }
     
     /*

@@ -9,7 +9,6 @@
 window.BMStorableNode = class BMStorableNode extends BMNode {
     
     initPrototype () {
-
         this.setShouldStore(false)
         //this.setShouldStoreSubnodes(true)
         this.overrideSlot("canDelete", false).setShouldStore(true)  // defined in BMNode, but we want to store it
@@ -27,56 +26,6 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
         
         this.newSlot("lazySubnodeCount", null).setShouldStore(true)
     }
-
-    init () {
-        super.init()
-        //this.scheduleSyncToStore()
-    }
-
-    /*
-    didUpdateSlotSubnodes (oldValue, newValue) {
-        super.didUpdateSlotSubnodes(oldValue, newValue)
-
-        //if (!this.shouldStore() || !this.isInstance()) {
-	    //    return this
-       // }
-        
-        return this
-    }
-    */
-
-    // --- overrides from parent class ---
-    // hook this to schedules writes when subnode list is changed
-
-    updateLazySubnodeCount () {
-        if (this._subnodes) {
-            this.setLazySubnodeCount(this.subnodes().length)
-        }
-    }
-
-    didChangeSubnodeList () {
-        super.didChangeSubnodeList()
-        this.updateLazySubnodeCount()
-
-        /*
-        if (this.shouldStoreSubnodes()) {
-            this.scheduleSyncToStore()
-        }
-        */
-        return this
-    }
-
-    // --- stored slots ---
-    
-    initStoredSubnodeSlotWithProto (name, proto) {
-        const obj = proto.clone()
-        this.newSlot(name, obj)
-        this.justAddSubnode(obj)
-        this.addStoredSlot(name)
-        return this
-    }
- 
-    // reading object from store
 
     // --- udpates ---
 	
@@ -98,6 +47,36 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
             this.subnodes().replaceOccurancesOfWith(oldValue, newValue)
             //this.debugLog(" this.subnodes().replaceOccurancesOfWith(", oldValue, ",", newValue, ")")
         }
+    }
+
+    /*
+    didUpdateSlotSubnodes (oldValue, newValue) {
+        super.didUpdateSlotSubnodes(oldValue, newValue)
+        this.updateLazySubnodeCount()        
+        return this
+    }
+    */
+
+    updateLazySubnodeCount () {
+        if (this._subnodes) {
+            this.setLazySubnodeCount(this.subnodes().length)
+        }
+    }
+
+    didChangeSubnodeList () {
+        super.didChangeSubnodeList()
+        this.updateLazySubnodeCount()
+        return this
+    }
+
+    // --- stored slots ---
+    
+    initStoredSubnodeSlotWithProto (name, proto) {
+        const obj = proto.clone()
+        this.newSlot(name, obj)
+        this.justAddSubnode(obj)
+        this.addStoredSlot(name)
+        return this
     }
 	
     // subnodes

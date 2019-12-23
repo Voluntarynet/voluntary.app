@@ -9,7 +9,7 @@
 
 */
 
-window.ProtoClass = class ProtoClass { 
+window.ProtoClass = class ProtoClass extends Object { 
 
     /*
     static newUniqueInstanceId() {
@@ -160,9 +160,11 @@ window.ProtoClass = class ProtoClass {
         return false
     }
 
+    /*
     constructor() {
         //console.log("constructed!")
     }
+    */
 
     type () {
         return this.constructor.name

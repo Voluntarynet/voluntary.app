@@ -72,7 +72,7 @@ window.AtomicPersistentDictionary = class AtomicPersistentDictionary extends ide
         // load the cache
         this.debugLog(" onOpen() - loading cache")
         
-        if (false) {
+        if (true) {
             this.setJsDict({})
             this.setIsOpen(true)
             this.asyncClear(callback)

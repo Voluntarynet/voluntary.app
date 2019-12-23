@@ -22,7 +22,8 @@ Object.defineSlots(BMNode.prototype, {
         }
 
         this.allSlots().ownForEachKV((slotName, slot) => {
-            if (slot.shouldStoreSlot()) {
+            //if (slot.shouldStoreSlot()) {
+            if (slot.shouldStoreSlotOnInstance(this)) {
                 const v = slot.onInstanceGetValue(this)
                 assert(!Type.isUndefined(v))
                 // aStore.refValue(v) is not enough to ensure that if 

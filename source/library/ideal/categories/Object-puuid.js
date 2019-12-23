@@ -40,7 +40,7 @@ Object.defineSlots(Object.prototype, {
             let oldPid = this["_puuid"]
             this.defaultStore().onObjectUpdatePid(this, oldPid, puuid)
         }
-        Object.defineSlot(this, "_puuid", puuid)
+        Object.defineSlot(this, "_puuid", puuid) // so _puuid isn't enumerable
         return this
     },
 

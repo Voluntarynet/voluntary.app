@@ -13,6 +13,8 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
         //this.setShouldStoreSubnodes(true)
         this.overrideSlot("canDelete", false).setShouldStoreSlot(true)  // defined in BMNode, but we want to store it
 
+        this.setShouldStore(true)
+        
         // subnodes
         
         const subnodesSlot = this.overrideSlot("subnodes", null)

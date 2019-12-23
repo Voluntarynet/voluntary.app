@@ -212,7 +212,11 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         assert(!anObject.isClass())
 
         if (!anObject.shouldStore()) {
-            return false
+            const msg = "attempt to addActiveObject '" + anObject.type() + "' but shouldStore is false"
+            console.log(msg)
+            anObject.shouldStore()
+            throw new Error(msg)
+        //return false
         }
 
         if (!anObject.isInstance()) {
@@ -222,15 +226,24 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
             throw new Error(msg)
         }
 
+        /*
         if (!anObject.isKindOf(ProtoClass) && !anObject.isKindOf(SubnodesArray)) {
         //if (["Object", "PersistentObjectPool", "Set", "Map"].contains(anObject.type())) {
             const msg = "can't store object of type '" + anObject.type() + "'"
             console.log("---")
             console.log(msg)
             console.log("---")
-            anObject.isKindOf(ProtoClass) 
+            //anObject.isKindOf(ProtoClass) 
+            Object.shouldStore() 
+            let path = anObject.slotValuePath("_shouldStore")
+            console.log("_shouldStore path:", JSON.stringify(path))
+            path = anObject.slotValuePath("shouldStore")
+            console.log("shouldStore path:", path)
+            anObject.shouldStore() 
+
             throw new Error(msg)
         }
+        */
 
         if(!this.hasActiveObject(anObject)) {
             anObject.addMutationObserver(this)

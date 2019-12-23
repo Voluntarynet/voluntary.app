@@ -543,7 +543,7 @@ window.ideal.Slot = class Slot {
         return Type.isFunction(anInstance[this.setterName()])
     }
 
-    /*
+    // --- should store on instance ---
 
     shouldStoreSlotOnInstancePrivateName() {
         return "_shouldStoreSlot" + this.name().capitalized()
@@ -551,15 +551,18 @@ window.ideal.Slot = class Slot {
 
     shouldStoreSlotOnInstance (anInstance) {
         const k = this.shouldStoreSlotOnInstancePrivateName()
-        return anInstance[k]
+        const v = anInstance[k]
+        if (Type.isUndefined(v)) {
+            return this.shouldStoreSlot()
+        }
+        return v === true
     }
 
     setShouldStoreSlotOnInstance (anInstance, aBool) {
         const k = this.shouldStoreSlotOnInstancePrivateName()
-        anInstance[k] = aBool
+        Object.defineSlot(anInstance, k, aBool)
         return aBool
     }
-    */
     
 }.initThisClass()
 

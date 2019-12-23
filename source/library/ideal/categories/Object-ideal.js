@@ -172,7 +172,7 @@ const prototypeSlots = {
     initPrototype: function() {
         Object.defineSlot(this, "_isFinalized", false) 
         Object.defineSlot(this, "_mutationObservers", null) 
-        Object.defineSlot(this, "_shouldStore", false)
+        Object.defineSlot(this, "_shouldStore", true)
     },
 
     clone: function () {
@@ -282,12 +282,19 @@ const prototypeSlots = {
         delete this[key]
         return this
     },
+
+    ownForEachValue: function(fn) {
+        Object.keys(this).forEach( k => fn(this[k]) )
+        return this
+    },
+
+    ownForEachKey: function(fn) {
+        Object.keys(this).forEach( k => fn(k) )
+        return this
+    },
     
     ownForEachKV: function(fn) {    
-        Object.keys(this).forEach((k) => {
-            const v = this[k]
-            fn(k, v);
-        });
+        Object.keys(this).forEach( k => fn(k, this[k]) )
         return this
     },
 
@@ -335,9 +342,7 @@ const prototypeSlots = {
         return this.thisClass().isKindOf(aClass)
     },
 
-    // --- storage ---
-
-    // is finalized
+    // --- finalize ---
     //
     //  we don't want to scheduleSyncToStore while the object is initializing
     // (e.g. while it's being unserialized from a store)
@@ -360,8 +365,6 @@ const prototypeSlots = {
         this.setIsFinalized(true)
     },
 
-    // finalize
-
     didLoadFromStore: function() {
     },
 
@@ -379,6 +382,7 @@ const prototypeSlots = {
         // for subclasses to override
     },
 
+    // --- shouldStore ---
 
     setShouldStore: function(aBool) {
         if (aBool != this._shouldStore) {
@@ -393,6 +397,33 @@ const prototypeSlots = {
         return this._shouldStore
     },
 
+    typeCategory: function() {
+        if (this.isInstance()) {
+            return "instance"
+        } else if (this.isPrototype()) {
+            return "prototype" 
+        } else if (this.isClass()) {
+            return "class" 
+        } 
+        throw new Error("unable to identify")
+    },
+
+    fullTypeName: function() {
+        return this.type() + " " + this.typeCategory()
+    },
+
+    slotValuePath: function(slotName, entries = []) {
+        const entry = [this.fullTypeName(), this.getOwnProperty(slotName)] 
+        entries.push(entry)
+
+        const proto = this.__proto__
+        if (proto) { // Object.prototype.__proto__ = null
+            //proto.constructor.name !== "") {
+            return proto.slotValuePath.apply(proto, [slotName, entries])
+        }
+        
+        return entries
+    }
 }
 
 

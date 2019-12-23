@@ -39,10 +39,6 @@ Object.defineSlots(Array.prototype, {
         return this
     },
 
-    shouldStore: function() {
-        return true
-    },
-
     refsPidsForJsonStore: function(puuids = new Set()) {
         this.forEach(v => { 
             if (!Type.isNull(v)) { 

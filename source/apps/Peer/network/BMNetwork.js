@@ -35,16 +35,16 @@ window.BMNetwork = class BMNetwork extends BMFieldSetNode {
         this.setConnection(BMConnection.shared())
         this.addSubnode(this.connection())
 
-        this.setServers(this.defaultStore().rootInstanceWithPidForProto("_servers", BMRServers))
+        this.setServers(this.defaultStore().rootInstanceWithPidForProto("Servers", BMRServers))
         this.addLinkSubnode(this.servers())
 
-        this.setStunServers(this.defaultStore().rootInstanceWithPidForProto("_stunServers", BMStunServers))
+        this.setStunServers(this.defaultStore().rootInstanceWithPidForProto("StunServers", BMStunServers))
         this.addLinkSubnode(this.stunServers())
 						
-        this.setMessages(this.defaultStore().rootInstanceWithPidForProto("_messages", BMMessages))
+        this.setMessages(this.defaultStore().rootInstanceWithPidForProto("Messages", BMMessages))
         this.addLinkSubnode(this.messages())
 		
-        this.setBlacklists(this.defaultStore().rootInstanceWithPidForProto("_blacklists", BMBlacklists))
+        this.setBlacklists(this.defaultStore().rootInstanceWithPidForProto("Blacklists", BMBlacklists))
         this.addLinkSubnode(this.blacklists())
         
         const isOpenRelayField = BMBooleanField.clone().setKey("isOpenRelay").setValueMethod("isOpenRelay").setValueIsEditable(true)

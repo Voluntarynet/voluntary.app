@@ -94,8 +94,6 @@ window.BMNode = class BMNode extends ProtoClass {
             // inspector
             nodeCanInspect: false,
             nodeInspector: null,
-
-            //shouldStore: false,
         })
 
 

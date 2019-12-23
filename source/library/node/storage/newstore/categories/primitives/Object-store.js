@@ -40,7 +40,7 @@ Object.defineSlots(Object.prototype, {
     },
 
     shouldStore: function() {
-        return true
+        return this._shouldStore
     },
 
     refsPidsForJsonStore: function(puuids = new Set()) {

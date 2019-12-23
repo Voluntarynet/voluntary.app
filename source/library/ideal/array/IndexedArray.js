@@ -70,7 +70,7 @@ window.IndexedArray = class IndexedArray extends HookedArray {
 
     setIndexClosure (aFunction) {
         this._indexClosure = aFunction
-        return thi
+        return this
     }
 
     indexClosure () {

@@ -1,19 +1,25 @@
 
 TODO:
+
+	On primitives we're doing:
+
+	shouldStore () {
+	   return true
+	}
+
+	Make shouldStore true the default on Object and 
+	call setShouldStore(false) to prevent this?
+
+
+
+	 
+	move Slot/slots into base Object? How to ensure init is called? Do we want it called on all Arrays, etc?
 	
 	work on shouldStoreSubnodes - need to override this on a per class (or per instance) basis for
 	nodes like BMDateField
 	
-	
-	need to work on enforcing shouldStore = false when a Node shouldn't store it's subnodes
-	
 	this._xxx makes an enumerable slot - this is a problem for arrays and dictionaries
-	
-	
-	verify that slot added on instance is not enumerable
-	if it was not enumerable is class
-	
-	add shouldStore to Array, Map, Set
+	putting Object.defineSlot in init solves this problem
 	
 	add shouldSelfTest to Object prototype to support runnign all tests?
 	
@@ -27,23 +33,17 @@ TODO:
 
 		- scheduleLoadFinalize
 		- loadFinalize
-
-	BUG: d key not working on input
-	
-	move justStoredObjects to storingPids
-	
+		
+		
 	CONSIDER
 	should we support unloading lazy references?
 	should every record have a write ts/timeStamp?
 
 	change semantics of willGetSlot etc to pass slot instead of slot name
 	
-	RANDOM
-	proxy rebroadcaster? posts any message sent to it (supports list of valid messages?)
-	
-	
-	cleanup prepare for first access
-	get lazy slot loads working
+	RANDOM proxy rebroadcaster? posts any message sent to it (supports list of valid messages?)
+
+ cleanup prepare for first access
 	
 	OPTIMIZATION
 	- move creation of unhooked_ slots to Array 

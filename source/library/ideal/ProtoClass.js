@@ -223,7 +223,6 @@ window.ProtoClass = class ProtoClass extends Object {
         // TODO: use slot cache
         //assert(this.isPrototype())
         const slotsArray = Object.values(this.allSlots())
-
         return slotsArray.filter(slot => slot.shouldStoreSlot()).map(slot => slot.name()).asSet()
     }
 
@@ -244,7 +243,7 @@ window.ProtoClass = class ProtoClass extends Object {
 
     slots () {
         if (!this.hasOwnProperty("_slots")) {
-            this._slots = {}
+            Object.defineSlot(this, "_slots", {})
         }
         return this._slots
     }
@@ -431,7 +430,7 @@ window.ProtoClass = class ProtoClass extends Object {
     // debugging
 
     setIsDebugging (aBool) {
-        this._isDebugging = aBool
+        Object.defineSlot(this, "_isDebugging", aBool)
         return this
     }
 

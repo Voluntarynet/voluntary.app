@@ -36,6 +36,9 @@
 window.BMNode = class BMNode extends ProtoClass {
     
     initPrototype () {
+        let aSlot = this.newSlot("subnodeProto", null)
+        assert(!aSlot.shouldStoreSlot())
+        
         this.newSlots({
             // row view summary
             title: null,
@@ -44,7 +47,7 @@ window.BMNode = class BMNode extends ProtoClass {
 
             // parent node, subnodes
             parentNode: null,
-            subnodeProto: null,
+            //subnodeProto: null,
             nodeCanReorderSubnodes: false,
 
             // notification notes

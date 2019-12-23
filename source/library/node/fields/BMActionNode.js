@@ -12,11 +12,11 @@
 window.BMActionNode = class BMActionNode extends BMStorableNode {
     
     initPrototype () {
-        this.overrideSlot("title", null).setShouldStore(true)
-        this.newSlot("methodName", null).setShouldStore(true)
-        this.newSlot("info", null).setShouldStore(true)
-        this.newSlot("isEnabled", true).setShouldStore(true)
-        this.newSlot("isEditable", false).setShouldStore(true)
+        this.overrideSlot("title", null).setShouldStoreSlot(true)
+        this.newSlot("methodName", null).setShouldStoreSlot(true)
+        this.newSlot("info", null).setShouldStoreSlot(true)
+        this.newSlot("isEnabled", true).setShouldStoreSlot(true)
+        this.newSlot("isEditable", false).setShouldStoreSlot(true)
         this.newSlot("target", null)
         this.setShouldStore(true)
         this.setNodeRowIsSelectable(true)

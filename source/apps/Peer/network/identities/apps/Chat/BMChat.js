@@ -9,10 +9,10 @@
 window.BMChat = class BMChat extends BMApplet {
     
     initPrototype () {
-        this.newSlot("feedPosts", null).setShouldStore(true).setInitProto(BMFeedPosts)
-        this.newSlot("myPosts", null).setShouldStore(true).setInitProto(BMMyPosts)
-        this.newSlot("threads", null).setShouldStore(true).setInitProto(BMChatThreads)
-        this.newSlot("drafts", null).setShouldStore(true).setInitProto(BMPostDrafts)
+        this.newSlot("feedPosts", null).setShouldStoreSlot(true).setInitProto(BMFeedPosts)
+        this.newSlot("myPosts", null).setShouldStoreSlot(true).setInitProto(BMMyPosts)
+        this.newSlot("threads", null).setShouldStoreSlot(true).setInitProto(BMChatThreads)
+        this.newSlot("drafts", null).setShouldStoreSlot(true).setInitProto(BMPostDrafts)
     
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(false)

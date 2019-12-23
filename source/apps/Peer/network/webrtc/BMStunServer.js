@@ -16,11 +16,11 @@ window.BMStunServer = class BMStunServer extends BMFieldSetNode {
     
     initPrototype () {
 
-        this.newSlot("host", "").setShouldStore(true)
-        this.newSlot("port", "").setShouldStore(true)
-        //this.newSlot("credential", null).setShouldStore(true)
-        //this.newSlot("username", null).setShouldStore(true)
-        this.newSlot("stunNote", "").setShouldStore(true)
+        this.newSlot("host", "").setShouldStoreSlot(true)
+        this.newSlot("port", "").setShouldStoreSlot(true)
+        //this.newSlot("credential", null).setShouldStoreSlot(true)
+        //this.newSlot("username", null).setShouldStoreSlot(true)
+        this.newSlot("stunNote", "").setShouldStoreSlot(true)
         
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(true)

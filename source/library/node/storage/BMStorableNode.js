@@ -11,20 +11,20 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
     initPrototype () {
         this.setShouldStore(false)
         //this.setShouldStoreSubnodes(true)
-        this.overrideSlot("canDelete", false).setShouldStore(true)  // defined in BMNode, but we want to store it
+        this.overrideSlot("canDelete", false).setShouldStoreSlot(true)  // defined in BMNode, but we want to store it
 
         // subnodes
         
         const subnodesSlot = this.overrideSlot("subnodes", null)
         //subnodesSlot.setOwnsSetter(true)
-        subnodesSlot.setShouldStore(true)
+        subnodesSlot.setShouldStoreSlot(true)
         subnodesSlot.setDoesHookGetter(true)
         subnodesSlot.setHookedGetterIsOneShot(true)
         //subnodesSlot.setIsLazy(true)
         subnodesSlot.setInitProto(SubnodesArray)
         subnodesSlot.setupInOwner()
         
-        this.newSlot("lazySubnodeCount", null).setShouldStore(true)
+        this.newSlot("lazySubnodeCount", null).setShouldStoreSlot(true)
     }
 
     // --- udpates ---
@@ -36,7 +36,7 @@ window.BMStorableNode = class BMStorableNode extends BMNode {
 	        return this
 	    }
 	    
-        if (aSlot.shouldStore()) { 
+        if (aSlot.shouldStoreSlot()) { 
             this.scheduleSyncToStore()
         }
         

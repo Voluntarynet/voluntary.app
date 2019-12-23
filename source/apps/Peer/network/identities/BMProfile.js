@@ -9,11 +9,11 @@
 window.BMProfile = class BMProfile extends BMFieldSetNode {
     
     initPrototype () {
-        this.newSlot("name", "").setShouldStore(true)
-        this.newSlot("publicKeyString", null).setShouldStore(true)
-        this.newSlot("avatars", []).setShouldStore(true)
-        this.newSlot("phone", null).setShouldStore(true)
-        this.newSlot("email", null).setShouldStore(true)
+        this.newSlot("name", "").setShouldStoreSlot(true)
+        this.newSlot("publicKeyString", null).setShouldStoreSlot(true)
+        this.newSlot("avatars", []).setShouldStoreSlot(true)
+        this.newSlot("phone", null).setShouldStoreSlot(true)
+        this.newSlot("email", null).setShouldStoreSlot(true)
     }
 
     init () {

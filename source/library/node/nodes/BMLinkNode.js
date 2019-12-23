@@ -11,8 +11,8 @@
 window.BMLinkNode = class BMLinkNode extends BMSummaryNode {
     
     initPrototype () {
-        this.overrideSlot("title", null).setShouldStore(true)
-        this.newSlot("linkedNode", null).setShouldStore(true)
+        this.overrideSlot("title", null).setShouldStoreSlot(true)
+        this.newSlot("linkedNode", null).setShouldStoreSlot(true)
 
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(false)

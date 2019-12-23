@@ -47,16 +47,16 @@ window.BMField = class BMField extends BMSummaryNode {
         })
 
   
-        this.slotNamed("key").setShouldStore(true)
-        this.slotNamed("keyIsVisible").setShouldStore(true)
-        this.slotNamed("keyIsEditable").setShouldStore(true)
+        this.slotNamed("key").setShouldStoreSlot(true)
+        this.slotNamed("keyIsVisible").setShouldStoreSlot(true)
+        this.slotNamed("keyIsEditable").setShouldStoreSlot(true)
 
-        this.slotNamed("value").setShouldStore(true)
-        this.slotNamed("valueIsVisible").setShouldStore(true)
-        this.slotNamed("valueIsEditable").setShouldStore(true)
+        this.slotNamed("value").setShouldStoreSlot(true)
+        this.slotNamed("valueIsVisible").setShouldStoreSlot(true)
+        this.slotNamed("valueIsEditable").setShouldStoreSlot(true)
 
-        this.slotNamed("valuePrefix").setShouldStore(true)
-        this.slotNamed("valuePostfix").setShouldStore(true)
+        this.slotNamed("valuePrefix").setShouldStoreSlot(true)
+        this.slotNamed("valuePostfix").setShouldStoreSlot(true)
 
         //this.protoAddStoredSlot("nodeSummaryShowsKey")
         //this.protoAddStoredSlot("nodeSummaryShowsValue")

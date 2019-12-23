@@ -10,7 +10,7 @@
 window.BMChatMessage = class BMChatMessage extends BMAppMessage {
     
     initPrototype () {
-        this.newSlot("content", null).setShouldStore(true)
+        this.newSlot("content", null).setShouldStoreSlot(true)
         this.setCanDelete(true)
     }
 

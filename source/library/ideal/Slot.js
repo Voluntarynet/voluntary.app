@@ -26,6 +26,14 @@ window.ideal.Slot = class Slot {
         return this
     }
 
+    setShouldStore (aBool) {
+        throw new Error("Slot.setShouldStore should not be called")
+    }
+
+    shouldStore () {
+        throw new Error("Slot.shouldStore should not be called")
+    }
+
     simpleNewSlot (slotName, initialValue = null) {
         const privateName = "_" + slotName;
         //this[privateName] = initialValue;
@@ -78,7 +86,7 @@ window.ideal.Slot = class Slot {
 
         // storrage related
         this.simpleNewSlot("isLazy", false) // should hook getter
-        this.simpleNewSlot("shouldStore", false) // should hook setter
+        this.simpleNewSlot("shouldStoreSlot", false) // should hook setter
         this.simpleNewSlot("initProto", null) // clone this proto on init and set to initial value
         this.simpleNewSlot("valueClass", null) // declare the value should be a kind of valueClass
         //this.simpleNewSlot("shouldShallowCopy", false)
@@ -146,12 +154,12 @@ window.ideal.Slot = class Slot {
         return this
     }
 
-    setShouldStore (aBool) {
+    setShouldStoreSlot (aBool) {
         if (this.name() === "subnodeProto") {
             console.log("---")
         }
-        if (this._shouldStore !== aBool) {
-            this._shouldStore = aBool
+        if (this._shouldStoreSlot !== aBool) {
+            this._shouldStoreSlot = aBool
             if (aBool) {
                 this.setDoesHookSetter(true) // TODO: is there a better way?
             } else {
@@ -532,20 +540,23 @@ window.ideal.Slot = class Slot {
         return Type.isFunction(anInstance[this.setterName()])
     }
 
-    shouldStoreOnInstancePrivateName() {
+    /*
+
+    shouldStoreSlotOnInstancePrivateName() {
         return "_shouldStoreSlot" + this.name().capitalized()
     }
 
-    shouldStoreInstance (anInstance) {
-        const k = this.shouldStoreOnInstancePrivateName()
+    shouldStoreSlotOnInstance (anInstance) {
+        const k = this.shouldStoreSlotOnInstancePrivateName()
         return anInstance[k]
     }
 
-    setShouldStoreInstance (anInstance, aBool) {
-        const k = this.shouldStoreOnInstancePrivateName()
+    setShouldStoreSlotOnInstance (anInstance, aBool) {
+        const k = this.shouldStoreSlotOnInstancePrivateName()
         anInstance[k] = aBool
         return aBool
     }
+    */
     
 }.initThisClass()
 

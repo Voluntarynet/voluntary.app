@@ -20,10 +20,10 @@ window.BMRServer = class BMRServer extends BMFieldSetNode {
         })
 
         // host: "peers.bitmarkets.org",
-        this.newSlot("host", "127.0.0.1").setShouldStore(true)
-        this.newSlot("port", 9000).setShouldStore(true)
-        this.newSlot("path", "").setShouldStore(true)
-        this.newSlot("isSecure", false).setShouldStore(true)
+        this.newSlot("host", "127.0.0.1").setShouldStoreSlot(true)
+        this.newSlot("port", 9000).setShouldStoreSlot(true)
+        this.newSlot("path", "").setShouldStoreSlot(true)
+        this.newSlot("isSecure", false).setShouldStoreSlot(true)
         
         this.setIsDebugging(true)
         this.setShouldStore(true)

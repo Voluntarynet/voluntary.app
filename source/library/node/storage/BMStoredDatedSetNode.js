@@ -10,9 +10,9 @@
 window.BMStoredDatedSetNode = class BMStoredDatedSetNode extends BMStorableNode {
     
     initPrototype () {
-        this.newSlot("maxAgeInSeconds", 30*24*60*60).setShouldStore(true)
-        this.newSlot("autoCheckPeriod", 1*60*60).setShouldStore(true)
-        this.newSlot("dict", null).setShouldStore(true)
+        this.newSlot("maxAgeInSeconds", 30*24*60*60).setShouldStoreSlot(true)
+        this.newSlot("autoCheckPeriod", 1*60*60).setShouldStoreSlot(true)
+        this.newSlot("dict", null).setShouldStoreSlot(true)
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(false)
     }

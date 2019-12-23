@@ -37,13 +37,13 @@ var BitcoreMessage = require("bitcore-message");
 window.BMObjectMessage = class BMObjectMessage extends BMMessage {
     
     initPrototype () {
-        this.overrideSlot("msgType", "object").setShouldStore(true)
-        this.newSlot("encryptedData", null).setShouldStore(true)
-        this.overrideSlot("data", null).setShouldStore(true)
-        this.newSlot("senderPublicKeyString", null).setShouldStore(true)
-        //this.newSlot("receiverPublicKeyString", null).setShouldStore(true)
-        this.newSlot("timeStamp", null).setShouldStore(true)
-        this.newSlot("signature", null).setShouldStore(true)
+        this.overrideSlot("msgType", "object").setShouldStoreSlot(true)
+        this.newSlot("encryptedData", null).setShouldStoreSlot(true)
+        this.overrideSlot("data", null).setShouldStoreSlot(true)
+        this.newSlot("senderPublicKeyString", null).setShouldStoreSlot(true)
+        //this.newSlot("receiverPublicKeyString", null).setShouldStoreSlot(true)
+        this.newSlot("timeStamp", null).setShouldStoreSlot(true)
+        this.newSlot("signature", null).setShouldStoreSlot(true)
 
         this.newSlot("msgHash", null)
 

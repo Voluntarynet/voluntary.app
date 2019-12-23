@@ -224,7 +224,7 @@ window.ProtoClass = class ProtoClass extends Object {
         //assert(this.isPrototype())
         const slotsArray = Object.values(this.allSlots())
 
-        return slotsArray.filter(slot => slot.shouldStore()).map(slot => slot.name()).asSet()
+        return slotsArray.filter(slot => slot.shouldStoreSlot()).map(slot => slot.name()).asSet()
     }
 
     protoAddStoredSlots (slotNames) {
@@ -235,7 +235,7 @@ window.ProtoClass = class ProtoClass extends Object {
     
     protoAddStoredSlot (slotName) {
         assert(this.isPrototype())
-        this.slotNamed(slotName).setShouldStore(true)
+        this.slotNamed(slotName).setShouldStoreSlot(true)
         // Note: BMStorableNode hooks didUpdateSlot() to call scheduleSyncToStore on updates. 
         return this
     }

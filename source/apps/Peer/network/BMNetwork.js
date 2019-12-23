@@ -19,7 +19,7 @@ window.BMNetwork = class BMNetwork extends BMFieldSetNode {
             idsBloomFilter: null,
         })
 
-        this.newSlot("isOpenRelay", false).setShouldStore(true) //.setField(isOpenRelayField)
+        this.newSlot("isOpenRelay", false).setShouldStoreSlot(true) //.setField(isOpenRelayField)
     }
 
     init () {

@@ -11,8 +11,8 @@ var bitcore = require("bitcore-lib")
 window.BMRemoteIdentity = class BMRemoteIdentity extends BMStorableNode {
     
     initPrototype () {
-        this.newSlot("name", "untitled").setShouldStore(true)
-        this.newSlot("publicKeyString", "").setShouldStore(true)
+        this.newSlot("name", "untitled").setShouldStoreSlot(true)
+        this.newSlot("publicKeyString", "").setShouldStoreSlot(true)
 
         this.newSlot("hasPrivateKey", false)
         this.newSlot("sessionKeys", null)

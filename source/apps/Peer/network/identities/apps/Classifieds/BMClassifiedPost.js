@@ -10,16 +10,16 @@ window.BMClassifiedPost = class BMClassifiedPost extends BMFieldSetNode {
     
     initPrototype () {
         const thirtyDaysInMilliseconds = 30 * 24 * 60 * 60 * 1000
-        this.newSlot("uuid", null).setShouldStore(true)
-        this.newSlot("postPeriod", thirtyDaysInMilliseconds).setShouldStore(true)
-        this.newSlot("hasSent", false).setShouldStore(true)
-        this.newSlot("stamp", null).setShouldStore(true)
-        this.overrideSlot("title", null).setShouldStore(true)
-        this.newSlot("price", 0).setShouldStore(true)
-        this.newSlot("currency", "BTC").setShouldStore(true)
-        this.newSlot("postDate", null).setShouldStore(true)
-        this.newSlot("description", null).setShouldStore(true)
-        this.newSlot("imageDataURLs", null).setShouldStore(true)
+        this.newSlot("uuid", null).setShouldStoreSlot(true)
+        this.newSlot("postPeriod", thirtyDaysInMilliseconds).setShouldStoreSlot(true)
+        this.newSlot("hasSent", false).setShouldStoreSlot(true)
+        this.newSlot("stamp", null).setShouldStoreSlot(true)
+        this.overrideSlot("title", null).setShouldStoreSlot(true)
+        this.newSlot("price", 0).setShouldStoreSlot(true)
+        this.newSlot("currency", "BTC").setShouldStoreSlot(true)
+        this.newSlot("postDate", null).setShouldStoreSlot(true)
+        this.newSlot("description", null).setShouldStoreSlot(true)
+        this.newSlot("imageDataURLs", null).setShouldStoreSlot(true)
 
         this.newSlot("path", "")
         this.newSlot("objMsg", null)

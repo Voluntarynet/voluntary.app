@@ -406,10 +406,12 @@ window.BMNode = class BMNode extends ProtoClass {
             return false
         }
 
+        /*
         if (this.hasSubnode(aSubnode)) {
             return false
         }
-
+        */
+        //const type = aSunode.type()
         const ancestors = aSubnode.ancestorTypes()
         const match = this.acceptedSubnodeTypes().detect(type => ancestors.contains(type))
         return !Type.isNullOrUndefined(match)

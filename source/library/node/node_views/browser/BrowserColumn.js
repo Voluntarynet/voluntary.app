@@ -1072,15 +1072,15 @@ window.BrowserColumn = class BrowserColumn extends NodeView {
     // -- messages sent by DragView to the potential drop view, if not the source ---
 
     acceptsDropHover (aDragView) {
-        const node = this.node()
+        let node = this.node()
         if (node) {
             if (!aDragView) {
                 console.log("aDragView.item() missing")
             }
-            const dropNode = aDragView.item().node()
-            const acceptsNode = this.node().acceptsAddingSubnode(dropNode)
-            const canReorder = this.canReorderRows()
-            //console.log(node.title() + " acceptsNode " + dropNode.title() + " " + acceptsNode)
+            let dropNode = aDragView.item().node()
+            let acceptsNode = node.acceptsAddingSubnode(dropNode)
+            let canReorder = this.canReorderRows()
+            console.log(node.title() + " acceptsNode " + dropNode.title() + " " + acceptsNode)
             //console.log("parentNode " + node.parentNode().title())
             let result = acceptsNode && canReorder
             /*

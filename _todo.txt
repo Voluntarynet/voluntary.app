@@ -1,16 +1,10 @@
 
 TODO:
 
-	On primitives we're doing:
-
-	shouldStore () {
-	   return true
-	}
-
-	Make shouldStore true the default on Object and 
-	call setShouldStore(false) to prevent this?
-
-
+	Update Volunutary site to say project is on hold.
+	Move Notepad repo.
+	Come up with Notepad/Sketchpad name
+     
 
 	 
 	move Slot/slots into base Object? How to ensure init is called? Do we want it called on all Arrays, etc?

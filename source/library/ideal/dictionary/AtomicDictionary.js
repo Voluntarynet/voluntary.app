@@ -65,6 +65,51 @@ window.ideal.AtomicDictionary = class AtomicDictionary extends ideal.Dictionary 
         return this
     }
 
+    changeEntries () {
+        // format: ["key", "insert/update/delet", newValue]
+        const entries = []
+
+        const d1 = this.oldVersion()
+        const d2 = this.jsDict()
+
+        const k1 = Object.keys(d1).asSet()
+        const k2 = Object.keys(d2).asSet()
+
+        const keys = k1.union(k2)
+
+        keys.forEach((k) => {
+            const v1 = d1[k]
+            const v2 = d2[k]
+
+            if (v1 !== v2) {
+                if (Type.isUndefined(v2)) {
+                    entries.push([k]) // removeAt(k)
+                } else if (Type.isUndefined(v1)) {
+                    entries.push([k, v2]) // atPut(k, v2)
+                }
+            }
+        })
+
+        return entries
+    }
+
+    commitApplyChangeEntries (entries) {
+        this.begin()
+
+        entries.forEach((entry) => {
+            const k = entry[1]
+            const v = entry[2]
+
+            if (Type.isUndefined(v)) {
+                this.removeAt(k)
+            } else {
+                this.atPut(k, v)
+            }
+        })
+        
+        this.commit()
+    }
+
     // just need to make sure writes happen within a transaction
 
     assertInTx () { // private

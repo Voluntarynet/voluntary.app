@@ -133,18 +133,11 @@ window.ProtoClass = class ProtoClass extends Object {
     }
 
     thisClass () {
-        /*
-        if (this.constructor {
-            return this.constructor
-        }
-        */
-
-        // we assume objects are cloned from prototypes
-
         if (this.isPrototype()) {
             return this.constructor
         }
 
+        // it's an instance
         return this.__proto__.constructor
     }
 
@@ -159,12 +152,6 @@ window.ProtoClass = class ProtoClass extends Object {
     isClass () {
         return false
     }
-
-    /*
-    constructor() {
-        //console.log("constructed!")
-    }
-    */
 
     type () {
         return this.constructor.name

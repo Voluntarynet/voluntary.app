@@ -2,6 +2,7 @@
 //"CREDITS.txt",
 //"README.md",
 
+
 ResourceLoader.pushRelativePaths([
     "PublicSans Black.woff2",
     "PublicSans Black Italic.woff2",
@@ -21,3 +22,4 @@ ResourceLoader.pushRelativePaths([
     "PublicSans Thin.woff2",
     "PublicSans Thin Italic.woff2",
 ]);
+

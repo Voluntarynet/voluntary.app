@@ -43,7 +43,8 @@ window.ideal.AtomicDictionary = class AtomicDictionary extends ideal.Dictionary 
     begin () {
         this.assertAccessible()
         this.assertNotInTx()
-        this.setOldVersion(this.jsDict().shallowCopy()) // so no one else has a reference to our copy
+        let old = this.jsDict().shallowCopy()
+        this.setOldVersion(old) // so no one else has a reference to our copy
         this.setHasBegun(true)
         return this
     }
@@ -65,8 +66,15 @@ window.ideal.AtomicDictionary = class AtomicDictionary extends ideal.Dictionary 
         return this
     }
 
+    /*
+        - changeEntries 
+        Usefull for sharing changes with a peer or server.
+        Note: We may need a 2 phase commit where we hold onto old version
+        until remote share acknowledges commit
+    */
+
     changeEntries () {
-        // format: ["key", "insert/update/delet", newValue]
+        // format: ["key", newValueIfNotDelete]
         const entries = []
 
         const d1 = this.oldVersion()
@@ -83,7 +91,7 @@ window.ideal.AtomicDictionary = class AtomicDictionary extends ideal.Dictionary 
 
             if (v1 !== v2) {
                 if (Type.isUndefined(v2)) {
-                    entries.push([k]) // removeAt(k)
+                    entries.push([k]) // removeKey(k)
                 } else if (Type.isUndefined(v1)) {
                     entries.push([k, v2]) // atPut(k, v2)
                 }
@@ -97,16 +105,16 @@ window.ideal.AtomicDictionary = class AtomicDictionary extends ideal.Dictionary 
         this.begin()
 
         entries.forEach((entry) => {
-            const k = entry[1]
-            const v = entry[2]
+            const k = entry[0]
+            const v = entry[1]
 
             if (Type.isUndefined(v)) {
-                this.removeAt(k)
+                this.removeKey(k)
             } else {
                 this.atPut(k, v)
             }
         })
-        
+
         this.commit()
     }
 
@@ -179,8 +187,29 @@ window.ideal.AtomicDictionary = class AtomicDictionary extends ideal.Dictionary 
 
     // test
 
-    test () {
-
+    static selfTest () {
+        this.selfTest_changeEntries()
     }
-}.initThisClass()
+
+    static selfTest_changeEntries () {
+        // changeEntries test
+        const ad1 = this.clone()
+        const ad2 = this.clone()
+
+        ad1.begin()
+        ad1.atPut("foo", "bar")
+        ad1.commit()
+
+        ad1.begin()
+        ad1.removeAt("foo")
+        let entries = ad1.changeEntries()
+        ad1.commit()
+
+        ad2.commitApplyChangeEntries(entries)
+
+        assert(ad1.isEqual(ad2))
+
+        return this
+    }
+}.initThisClass()//.selfTest()
 

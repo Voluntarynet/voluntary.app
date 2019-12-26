@@ -1,6 +1,8 @@
 
 TODO:
 
+	move detect (and other map ops) to use undefined where more appropriate than null
+
 	Update Volunutary site to say project is on hold.
 	Move Notepad repo.
 	Come up with Notepad/Sketchpad name

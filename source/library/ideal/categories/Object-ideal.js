@@ -266,7 +266,8 @@ const prototypeSlots = {
     // -------------------
     
     shallowCopy: function () {
-        return Object.assign({}, this);
+        let copy = Object.assign({}, this);
+        return copy
     },
 
     at (key) {

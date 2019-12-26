@@ -10,7 +10,13 @@
 window.StoreRef = class StoreRef {
     
     static clone() {
-        return new StoreRef()
+        const instance = new StoreRef()
+        instance.init()
+        return instance
+    }
+
+    init () {
+        Object.defineSlot(this, "_store", null)
     }
 
     setPid (aPid) {

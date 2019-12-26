@@ -122,6 +122,18 @@ window.ideal.Dictionary = class Dictionary extends ProtoClass {
         return Object.keys(this.jsDict()).length === 0;
     }
 
+    keySet () {
+        return this.keys().asSet()
+    }
+
+    isEqual (other) {
+        assert(other.isKindOf(Dictionary)) // protocol check would be better
+
+        const allKeys = this.keySet().union(other.keySet())
+        const nonMatchingKey = allKeys.detect(k => this.at(k) !== other.at(k))
+        return Type.isNullOrUndefined(nonMatchingKey)
+    }
+
     /*
     atPath (pathList) {
         return Object.atPath(this.jsDict(), pathList);
@@ -154,6 +166,11 @@ window.ideal.Dictionary = class Dictionary extends ProtoClass {
 
     hasKey (k) {
         return this.jsDict().hasOwnProperty(k);
+    }
+
+    removeAt (k) {
+        console.log(this.typeId() + " warning: using removeAt instead of removeKey")
+        return this.removeKey(k)
     }
 
     removeKey (k) {

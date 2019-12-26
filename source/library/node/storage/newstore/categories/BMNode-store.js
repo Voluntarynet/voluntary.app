@@ -68,7 +68,7 @@ Object.defineSlots(BMNode.prototype, {
                         const pid = v["*"]
                         assert(pid)
                         const storeRef = StoreRef.clone().setPid(pid).setStore(aStore)
-                        console.log(this.typeId() + "." + slot.name() + " - setting up storeRef ")
+                        console.log(this.typeId() + "." + slot.name() + " [" + this.title() + "] - setting up storeRef ")
                         slot.onInstanceSetValueRef(this, storeRef)
                     } else {
                         const unrefValue = aStore.unrefValue(v)

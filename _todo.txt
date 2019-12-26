@@ -1,6 +1,8 @@
 
 TODO:
 
+	make sure all _privateName = are preceeded by instance init that calls defineSlot
+	
 	move detect (and other map ops) to use undefined where more appropriate than null
 
 	Update Volunutary site to say project is on hold.
@@ -8,6 +10,8 @@ TODO:
 	Come up with Notepad/Sketchpad name
      
 
+	have SlotGroup which manages privateName, getter, and setter?
+	
 	 
 	move Slot/slots into base Object? How to ensure init is called? Do we want it called on all Arrays, etc?
 	

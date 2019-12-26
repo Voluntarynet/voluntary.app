@@ -289,7 +289,7 @@ window.ProtoClass = class ProtoClass extends Object {
     willGetSlot (aSlot) {
         // example: if the slot name is "subnodes",
         // this will call this.willGetSlotSubnodes()
-        const s = slot.willGetSlotName()
+        const s = aSlot.willGetSlotName()
         const f = this[s]
         if (f) {
             f.apply(this)

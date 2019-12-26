@@ -527,8 +527,10 @@ window.ideal.Slot = class Slot {
     onInstanceLoadRef (anInstance) {
         const storeRef = this.onInstanceGetValueRef(anInstance)
         if (storeRef) {
-            console.warn(anInstance.typeId() + "." + this.name() + " - loading storeRef")
+            //console.warn(anInstance.typeId() + "." + this.name() + " [" + anInstance.title() + "] - loading storeRef")
+            //console.warn(anInstance.title() + " loading storeRef for " + this.name())
             const obj = storeRef.unref()
+            //console.warn("   loaded: " + obj.type())
             anInstance[this.privateName()] = obj // is this safe? what about initialization?
             //this.onInstanceSetValue(anInstance, obj)
             this.onInstanceSetValueRef(anInstance, null)

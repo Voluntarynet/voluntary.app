@@ -1195,15 +1195,37 @@ window.DomView = class DomView extends ProtoClass {
         return h
     }
 
+    // desired size
+
+    desiredWidth () {
+        return this.calcCssWidth()
+    }
+
+    desiredHeight () {
+        return this.calcCssHeight()
+    }
+
+    // calculated CSS size (outside of parent view)
+
+    calcCssWidth () {
+        return DomTextTapeMeasure.shared().sizeOfCSSClassWithText(this.divClassName(), this.innerHTML()).width;
+    }
+
+    calcCssHeight () {
+        return DomTextTapeMeasure.shared().sizeOfCSSClassWithText(this.element(), this.innerHTML()).height;
+    }
+
+    // calculated size (within parent view)
+
     calcWidth () {
         return DomTextTapeMeasure.shared().sizeOfElementWithText(this.element(), this.innerHTML()).width;
-        //return DomTextTapeMeasure.sizeOfCSSClassWithText(this.divClassName(), this.innerHTML()).width;
     }
 
     calcHeight () {
         return DomTextTapeMeasure.shared().sizeOfElementWithText(this.element(), this.innerHTML()).height;
     }
 
+    // width
 
     setWidthString (s) {
         assert(Type.isString(s) || s === null)

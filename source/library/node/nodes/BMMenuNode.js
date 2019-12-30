@@ -11,10 +11,7 @@
 window.BMMenuNode = class BMMenuNode extends BMSummaryNode {
     
     initPrototype () {
-        this.newSlots({
-            label: "",
-            //hasSubtitleOfValues: false,
-        })
+        this.newSlot("label", "").setShouldStoreSlot(true)
 
         this.setCanDelete(true)
         this.setNodeCanInspect(true)
@@ -26,7 +23,6 @@ window.BMMenuNode = class BMMenuNode extends BMSummaryNode {
         this.setNodeCanEditTitle(true)
         
         this.setNodeCanReorderSubnodes(true)
-        this.protoAddStoredSlot("label")
 
         //this.setNodeColumnStyles(BMViewStyles.clone())
         //this.setNodeRowStyles(BMViewStyles.clone())
@@ -48,16 +44,12 @@ window.BMMenuNode = class BMMenuNode extends BMSummaryNode {
     }
     */
 
+    /*
     didLoadFromStore () {
         super.didLoadFromStore()
-        /*
-        this.subnodes().forEach( (subnode) => { 
-            subnode.setCanDelete(true)
-            subnode.setNodeCanInspect(true) 
-        });
-        */
         return this
     }
+    */
 
     title () {
         return this.label()
@@ -72,21 +64,6 @@ window.BMMenuNode = class BMMenuNode extends BMSummaryNode {
     acceptedSubnodeTypes () {
         return BMCreatorNode.fieldTypes()
     }
-
-    /*
-    subtitle () {
-        if (this.hasSubtitleOfValues()) {
-            const parts = []
-            this.subnodes().forEach((subnode) => {
-                if (subnode.value) {
-                    parts.push(subnode.value())
-                }
-            })
-            return parts.join(" ")
-        }
-        return super.subtitle()
-    }
-    */
 
     /*
     colorPairForDepth (depthNumber) {
@@ -152,42 +129,7 @@ window.BMMenuNode = class BMMenuNode extends BMSummaryNode {
     }
 
     /*
-    isFlexRoot () {
-        return this.parentNode() && (this.parentNode().type() !== this.type())
-    }
-    */
-
     onDidEditNode (aNode) {
-        /*
-        if (this.parentNode() && this.isFlexRoot() && !this.isLoadingFromJSON()) {
-            //const json = this.asJSON()
-            //console.log(this.asJSON())
-            //this.fromJSON(json)
-        }
-        */
-    }
-
-    /*
-    asJSON () {
-        const json = super.asJSON()
-        json._label = this.label()
-        return json
-    }
-
-    fromJSON (json) {
-        const obj = super.fromJSON(json)
-        obj.setLabel(json._label)
-        return obj
-    }
-
-    */
-
-    /*
-    didChangeParentNode () {
-        super.didChangeParentNode()
-        if (this.isFlexRoot()) {
-            this.removeAction("delete")
-        }
     }
     */
 

@@ -1,6 +1,39 @@
 
 TODO:
 
+	replace node label slots with title overrides?
+
+	have reorder cause parent nodes to re-render
+	
+	PointerField vs LinkNode?
+	
+	Row delete X in wrong position?
+	
+	Prototypes node
+
+	disable row view gestures while any Text is being edited
+
+	unify node->view sync and node->store sync?
+	
+	ActorNode?
+
+	work on shouldStoreSubnodes - need to override this on a per class (or per instance) basis for
+	nodes like BMDateField
+	
+	simplify getter/setter hooks?
+
+	If a lazy ref can be on a network store, should we move to supporting
+	fully async local store too?
+		- we have finalize and loadFinalize, but we'll need more ways of 
+		making upper level looks into lower level async?
+	Better to make remote store fully synchronous for now.
+	
+
+	get drag in/out of browser copy working again
+	
+	unify willGetSlotName by moving it into Slot? remove from ProtoClass
+
+	//add name caching for willGetSlot, didGetSlotName
 	make sure all _privateName = are preceeded by instance init that calls defineSlot
 	
 	move detect (and other map ops) to use undefined where more appropriate than null
@@ -9,17 +42,10 @@ TODO:
 	Move Notepad repo.
 	Come up with Notepad/Sketchpad name
      
-
 	have SlotGroup which manages privateName, getter, and setter?
-	
-	 
 	move Slot/slots into base Object? How to ensure init is called? Do we want it called on all Arrays, etc?
 	
-	work on shouldStoreSubnodes - need to override this on a per class (or per instance) basis for
-	nodes like BMDateField
 	
-	this._xxx makes an enumerable slot - this is a problem for arrays and dictionaries
-	putting Object.defineSlot in init solves this problem
 	
 	add shouldSelfTest to Object prototype to support runnign all tests?
 	
@@ -36,8 +62,16 @@ TODO:
 		
 		
 	CONSIDER
-	should we support unloading lazy references?
-	should every record have a write ts/timeStamp?
+	support unloading lazy references? Subnodes array should only ever be 
+	referenced by owner node, so it's always safe to unload it
+	how to remove from activeObjects unless we can be sure no references are held?
+	Store.activeObjectsReferencingObject(anObject), using refPids
+	BMNode.unloadSubnodesIfPossible
+	
+	
+	TIMESTAMPS
+	every record has write ts/timeStamp? Should ts be stored in object or is it store dependent?
+	Hold ts only in record. Ask store for *it's* ts for a record.
 
 	change semantics of willGetSlot etc to pass slot instead of slot name
 	

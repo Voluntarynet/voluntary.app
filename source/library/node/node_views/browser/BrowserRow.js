@@ -135,6 +135,10 @@ window.BrowserRow = class BrowserRow extends NodeView {
         return this
     }
 
+    desiredWidth () {
+        return this.calcWidth()
+    }
+
     /*
     setMinAndMaxWidth (w) {
         super.setMinAndMaxWidth(w)
@@ -322,6 +326,7 @@ window.BrowserRow = class BrowserRow extends NodeView {
     // -------------
     
     onDidEdit (aView) {
+        //this.browser().fitColumns()
         this.scheduleSyncToNode() 
         return true // stop propogation
     }
@@ -835,6 +840,9 @@ window.BrowserRow = class BrowserRow extends NodeView {
     }
 
     canDropSelect () {
+        if (this.node().title() === "Prototypes") {
+            console.log("---")
+        }
         return this.node().hasSubnodes() || this.node().nodeCanReorderSubnodes()
     }
 

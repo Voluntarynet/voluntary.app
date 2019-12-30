@@ -658,6 +658,30 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         return this.recordsDict().totalBytes()
     }
 
+    // ---------------------------
+
+    /*
+    activeObjectsReferencingObject (anObject) {
+        // useful for seeing if we can unload an object
+        // BUT, to do full collect, do a mark/sweep on active objects
+        // where sweep only removes unmarked from activeObjects and records cache?
+
+        assert(this.hasActiveObject(anObject)) 
+
+        const referencers = new Set()
+        const pid = anObject.puuid()
+
+        this.activeObjects().forEach((obj) => {
+            const refPids = this.refSetForPuuid(obj.puuid())
+            if (refPids.has(pid)) {
+                referencers.add(obj)
+            }
+        })
+
+        return referencers
+    }
+    */
+
 /*
     selfTestRoot () {
         const aTypedArray = Float64Array.from([1.2, 3.4, 4.5])

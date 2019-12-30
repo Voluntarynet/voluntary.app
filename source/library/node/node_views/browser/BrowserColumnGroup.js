@@ -326,7 +326,14 @@ window.BrowserColumnGroup = class BrowserColumnGroup extends NodeView {
             if (w === null) {
                 return 0
             }
-	
+
+            let rw = this.column().maxRowWidth()
+            //console.log("column " + this.node().title() + " maxRowWidth:" + rw)
+            this.column().maxRowWidth()
+            if (rw > w) {
+                w = rw
+            }
+
             if (this.browser() && this.browser().isSingleColumn()) {
                 w = this.browser().browserWidth()
                 assert (!Type.isNull(w)) 
@@ -334,6 +341,11 @@ window.BrowserColumnGroup = class BrowserColumnGroup extends NodeView {
         }
 			
         return w		
+    }
+
+    fitToTargetWidth () {
+        this.setMinAndMaxWidth(this.targetWidth()+50)
+        return this
     }
 
     matchNodeMinWidth () {
@@ -388,6 +400,11 @@ window.BrowserColumnGroup = class BrowserColumnGroup extends NodeView {
         return this        
     }
     */
+
+    didUpdateNode () {
+        super.didUpdateNode()
+        
+    }
 
     // just using this to make debugging easier
 

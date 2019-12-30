@@ -184,13 +184,6 @@ window.BrowserView = class BrowserView extends NodeView {
         this.setBackgroundColor(this.bgColorForIndex(n + 1))
     }
 
-    prepareToSyncToView () {
-        //this.debugLog(" prepareToSyncToView")
-        super.prepareToSyncToView()
-        this.fitColumns()
-        return this
-    }
-
     // --- resizing ---------------------------------
 
     onDocumentResize (event) {
@@ -656,6 +649,8 @@ window.BrowserView = class BrowserView extends NodeView {
         this.updateBackArrow()
         this.setShouldShowTitles(false) // only show titles in single column mode
         //console.log(this.columnDescription())
+
+        this.uncollapsedColumns().forEach(column => column.fitToTargetWidth())
         return this
     }
 

@@ -61,5 +61,9 @@ window.BMLinkNode = class BMLinkNode extends BMSummaryNode {
         return this.linkedNode()
     }
 
+    nodeCanReorderSubnodes () {
+        return this.linkedNode().nodeCanReorderSubnodes() // have this operation done in the browser?
+    }
+
 }.initThisClass()
 

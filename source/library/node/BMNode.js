@@ -678,6 +678,8 @@ window.BMNode = class BMNode extends ProtoClass {
     removeFromParentNode () {
         if (this.parentNode()) {
             this.parentNode().removeSubnode(this)
+        } else {
+            throw new Error("missing parentNode")
         }
         return this
     }

@@ -97,15 +97,28 @@ window.BrowserTitledRow = class BrowserTitledRow extends BrowserRow {
             }
         }
 
-
-		
         return this
+    }
+
+    desiredWidth () {
+        const w = this.titleView().calcCssWidth()
+        //console.log("calcCssWidth of row title '" + this.node().title() + "' = " + w)
+        return w + 50
+        //return this.titleView().calcWidth()
     }
 
     // --- edit ---
 
     didInput () {
+        // if text is blocked, sync browser?
+        this.browser().fitColumns()
         this.scheduleSyncToNode()
+    }
+
+    onDidEdit (aView) {
+        super.onDidEdit() 
+        this.browser().fitColumns()
+        return true // stop propogation
     }
 
     // --- sync ---

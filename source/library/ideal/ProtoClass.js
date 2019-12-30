@@ -345,8 +345,9 @@ window.ProtoClass = class ProtoClass extends Object {
         return Array.prototype.slice.call(args);
     }
 
-    canPerform (message) {
-        return this[message] && typeof(this[message]) === "function";
+    respondsTo (methodName) {
+        const f = this[methodName] 
+        return typeof(f) === "function";
     }
 
     performWithArgList (message, argList) {

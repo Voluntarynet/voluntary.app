@@ -93,10 +93,31 @@ window.ideal.Slot = class Slot {
         //this.simpleNewSlot("shouldDeepCopy", false)
         //this.simpleNewSlot("initInstance", null) // clone this instance on init and set to initial value
         this.simpleNewSlot("field", null)
+
+        // slot hook names
+        this.simpleNewSlot("willGetSlotName", null)
+        //this.simpleNewSlot("willUpdateSlotName", null)
+        //this.simpleNewSlot("didUpdateSlotName", null)
     }
 
     init () {
 
+    }
+
+    setName (aName) {
+        this._name = aName
+        this.didUpdateSlotName()
+        return this
+    }
+
+    didUpdateSlotName () {
+        const capName = this.name().capitalized()
+        this.setWillGetSlotName("willGetSlot" + capName)
+        /*
+        this.setDidUpdateSlotName("didUpdateSlot" + capName)
+        this.setWillUpdateSlotName("willUpdateSlot" + capName)
+        */
+        return this
     }
 
     copyFrom (aSlot) {
@@ -328,10 +349,6 @@ window.ideal.Slot = class Slot {
         return this
     }
 
-    willGetSlotName () {
-        return "willGet" + this.name().capitalized()
-    }
-
     oneShotHookedGetter () {
         const privateName = this.privateName()
         const slotName = this.name()
@@ -417,6 +434,21 @@ window.ideal.Slot = class Slot {
         Object.defineSlot(this.owner(), this.setterName(), this.hookedSetter())
         return this
     }
+
+    /*
+    updateWithHookOnInstance (anInstance) {
+        const slotName = this.name()
+        const privateName = this.privateName()
+        const didUpdateSlotMethodName = "didUpdateSlot" + slotName.capitalized()
+        const oldValue = this[privateName]
+
+        this[privateName] = newValue
+        this.didUpdateSlot(slot, oldValue, newValue)
+        if (this[didUpdateSlotMethodName]) {
+            this[didUpdateSlotMethodName].apply(this, [oldValue, newValue])
+        }
+    }
+    */
     
     hookedSetter () {
         const slot = this
@@ -482,7 +514,7 @@ window.ideal.Slot = class Slot {
     }
 
     onInstanceSetValueRef (anInstance, aRef) {        
-        anInstance[this.refPrivateName()] = aRef
+        Object.defineSlot(anInstance, this.refPrivateName(), aRef)
         return this
     }
 
@@ -527,13 +559,20 @@ window.ideal.Slot = class Slot {
     onInstanceLoadRef (anInstance) {
         const storeRef = this.onInstanceGetValueRef(anInstance)
         if (storeRef) {
+            
             //console.warn(anInstance.typeId() + "." + this.name() + " [" + anInstance.title() + "] - loading storeRef")
             //console.warn(anInstance.title() + " loading storeRef for " + this.name())
             const obj = storeRef.unref()
+            /*
             //console.warn("   loaded: " + obj.type())
             anInstance[this.privateName()] = obj // is this safe? what about initialization?
             //this.onInstanceSetValue(anInstance, obj)
             this.onInstanceSetValueRef(anInstance, null)
+            */
+
+            const setter = anInstance[this.setterName()]
+            setter.apply(anInstance, [obj])
+
         } else {
             //console.warn(anInstance.typeId() + " unable to load storeRef - not found")
             //console.warn(anInstance.typeId() + ".shouldStoreSubnodes() = " + anInstance.shouldStoreSubnodes())

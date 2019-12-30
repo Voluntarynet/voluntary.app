@@ -759,7 +759,11 @@ window.BrowserColumn = class BrowserColumn extends NodeView {
     }
 
     maxRowWidth () {
-        const maxWidth = this.rows().maxValue((row) => row.calcWidth())			
+        if (this.rows().length === 0) {
+            return 0
+        }
+        
+        const maxWidth = this.rows().maxValue(row => row.desiredWidth())			
         return maxWidth	
     }
 
@@ -874,13 +878,15 @@ window.BrowserColumn = class BrowserColumn extends NodeView {
     // --------------
 
     canReorderRows () {
-        return this.node().nodeCanReorderSubnodes()
+        return this.node().nodeRowLink().nodeCanReorderSubnodes()
+        //return this.node().nodeCanReorderSubnodes()
     }
 
     didReorderRows () { 
         // TODO: make a more scaleable API
         const subnodes = this.rows().map(row => row.node())
-        this.node().nodeReorderSudnodesTo(subnodes)
+        this.node().nodeRowLink().nodeReorderSudnodesTo(subnodes)
+        //this.node().nodeReorderSudnodesTo(subnodes)
         return this
     }
 

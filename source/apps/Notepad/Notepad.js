@@ -52,6 +52,12 @@ window.Notepad = class Notepad extends App {
         myLists.setTitle("Notepad")
         this.addLinkSubnode(myLists)
 
+
+        const prototypes = this.defaultStore().rootInstanceWithPidForProto("Prototypes", BMMenuNode);
+        prototypes.setTitle("Prototypes")
+        prototypes.setNodeCanReorderSubnodes(true)
+        this.addLinkSubnode(prototypes)
+
         this.setupSettings()
         return this
     }

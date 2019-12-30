@@ -70,6 +70,7 @@ window.DomTextTapeMeasure = class WebDocument extends ProtoClass {
 	
     sizeOfCSSClassWithText (divClassName, text) { 
         const e = this.testElement()
+        this.clean()
         e.className = divClassName
         e.innerHTML = text
 		

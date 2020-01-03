@@ -15,26 +15,21 @@
         })
         search.find()
         assert(search.matchingPaths()[0] === "globalThis/String")
+
 */
 
-class NamespaceSearch {
+class NamespaceSearch extends ProtoClass {
 
-    matchingPaths () {
-        return this._matchingPaths
-    }
-
-    setSlotMatchClosure (aClosure) {
-        this._slotMatchClosure = aClosure
-        return this
-    }
-
-    slotMatchClosure () {
-        return this._slotMatchClosure
+    init () {
+        this.newSlot("visited", null)
+        this.newSlot("matchingPaths", null)
+        this.newSlot("slotMatchClosure", null)
+        this.clear()
     }
 
     clear () {
-        this._visited = new Set([this]) // to avoid searching this object
-        this._matchingPaths = []
+        this.setVisited(new Set([this])) // to avoid searching this object
+        this.setMatchingPaths([])
     }
 
     find (searchString) {
@@ -47,14 +42,11 @@ class NamespaceSearch {
         }
 
         this.findOnObject(globalThis, ["globalThis"])
-        //console.log("this._visited.size = " + this._visited.size)
         return this
     }
 
     findOnObject (v, path = []) {
-        let joinedPath = path.join("/")
-
-        if (Type.isLiteral(v) || Type.isNullOrUndefined(v)) {
+        if (Type.isNullOrUndefined(v)) {
             return false
         }
 
@@ -64,6 +56,7 @@ class NamespaceSearch {
             this._visited.add(v)
         }
 
+        //const joinedPath = path.join("/")
 
         Object.getOwnPropertyNames(v).forEach((k) => {
             if (this.canAccessSlot(v, k)) {
@@ -73,27 +66,27 @@ class NamespaceSearch {
     }
 
     canAccessSlot (v, k) {
+        // to avoid illegal operation errors
         const descriptor = Object.getOwnPropertyDescriptor(v, k)
-        if (descriptor.get) {
-            return false // to avoid illigal operation error
-        }      
-        return true 
+        const hasCustomGetter = Type.isUndefined(descriptor.get)
+        return !hasCustomGetter
     }
 
     findOnSlot (slotOwner, slotName, path = []) {
-        let localPath = path.shallowCopy()
+        const localPath = path.shallowCopy()
         localPath.push(slotName)
         
-        //console.log(localPath.join("/"))
         const slotValue = slotOwner[slotName]
 
         if (this.doesMatchOnSlot(slotOwner, slotName, slotValue, localPath)) {
             this.addMatchingPath(localPath)
-            //console.log("found match at" + localPath + "'")
         }
 
-        //console.log(" " + localPath.join("/") + " (" + typeof(slotValue) + ")")
         this.findOnObject(slotValue, localPath)
+    }
+
+    doesMatchOnSlot (slotOwner, slotName, slotValue, slotPath) {
+        return this.slotMatchClosure()(slotOwner, slotName, slotValue, slotPath)
     }
 
     addMatchingPath (aPath) {
@@ -104,22 +97,18 @@ class NamespaceSearch {
         return this
     }
 
-    doesMatchOnSlot (slotOwner, slotName, slotValue, slotPath) {
-        return this.slotMatchClosure()(slotOwner, slotName, slotValue, slotPath)
-    }
-
     showMatches () {
         console.log("matchingPaths:")
-        this._matchingPaths.forEach(p => console.log(p))
+        this._matchingPaths.forEach(p => console.log("  " + p))
     }
 
     static selfTest () {
-        const search = new this()
-        search.setSlotMatchClosure(function (slotOwner, slotName, slotValue, slotPath) {
+        const ns = NamespaceSearch.clone()
+        ns.setSlotMatchClosure(function (slotOwner, slotName, slotValue, slotPath) {
             return slotName === "String"
         })
-        search.find()
-        assert(search.matchingPaths()[0] === "globalThis/String")
+        ns.find()
+        assert(ns.matchingPaths()[0] === "globalThis/String")
     }
 
 }

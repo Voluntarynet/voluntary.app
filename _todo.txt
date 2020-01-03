@@ -3,8 +3,8 @@ TODO:
 
 	Notes: 
 	Underlying datastructure for Hypercard and spreadsheets, are tables.
-	Difference is that hypercard has customized row editors and is focused on search, 
-	while spreadsheets are focused on calculation. They're different views into (basically) the same model.
+	Hypercard has customized row editors and is focused on search, 
+	while spreadsheets are focused on calculation. 
 	
 	
 	tap-tap-hold drag to copy vs 

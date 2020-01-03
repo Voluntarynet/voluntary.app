@@ -38,6 +38,7 @@ window.BrowserRow = class BrowserRow extends NodeView {
             slideDeleteOffset: 0,
             dragDeleteButtonView: null,
             isDeleting: false,
+            lastTapDate: null,
         })
     }
 
@@ -456,6 +457,7 @@ window.BrowserRow = class BrowserRow extends NodeView {
     }
 
     onTapComplete (aGesture) {
+        this.setLastTapDate(new Date())
         //this.debugLog(".onTapComplete()")
         const keyModifiers = Keyboard.shared().modifierNamesForEvent(aGesture.upEvent());
         const hasThreeFingersDown = aGesture.numberOfFingersDown() === 3;
@@ -666,10 +668,35 @@ window.BrowserRow = class BrowserRow extends NodeView {
     onLongPressCancelled (aGesture) {
     }
 
-    onLongPressComplete (longPressGesture) {
-        longPressGesture.deactivate() // needed?
+    isTapTapHold () {
+        // ok, now we need to figure out if this is a tap-hold or tap-tap-hold
+        const maxDt = 0.7 // between tap time + long tap hold time before complete is triggered
+        let isTapTapHold = false
+        const t1 = this.lastTapDate()
+        const t2 = new Date()
+        if (t1) {
+            const dtSeconds = (t2.getTime() - t1.getTime())/1000
+            //console.log("dtSeconds = " + dtSeconds)
+            
+            if (dtSeconds < maxDt) {
+                isTapTapHold = true
+            }
+        }
+        return isTapTapHold
+    }
 
+    onLongPressComplete (longPressGesture) {
+        const isTapTapHold = this.isTapTapHold()
+
+        longPressGesture.deactivate() // needed?
         const dv = DragView.clone().setItem(this).setSource(this.column())
+
+        if (isTapTapHold) {
+            dv.setDragOperation("copy")
+        } else {
+            dv.setDragOperation("move")
+        }
+        
         dv.openWithEvent(longPressGesture.currentEvent())
     }
 

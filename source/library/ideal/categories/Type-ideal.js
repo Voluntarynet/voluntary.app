@@ -91,29 +91,9 @@ window.Type = {
     },
 
     isClass: function(v) {
-        if (Type.isNullOrUndefined(v)) {
-            return false
-        }
-
-        let result = typeof v === "function"
+        const result = typeof(v) === "function"
             && /^class\s/.test(Function.prototype.toString.call(v));
 
-        //let result = typeof v === "function" && v.prototype && v.prototype.constructor === v;
-
-        // WARNING: this is a guess
-        //let pnames = Object.getOwnPropertyNames(v)
-        //let result = pnames.contains("constructor") && Type.isFunction(v.constructor) 
-        /*
-        let c = Object.hasOwnPropertyName(v, "constructor")
-        let a = Type.isFunction(v) && Type.isFunction(v.constructor) && v.prototype 
-        let b = v.__proto__ && Type.isFunction(v.__proto__)
-        let result = a && b
-        */
-
-        if (result) {
-            console.log("isClass " + v.name)
-            console.log("---")
-        }
         return result
     },
 

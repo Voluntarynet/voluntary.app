@@ -66,12 +66,20 @@ window.DragView = class DragView extends DomStyledView {
             item: null, // the view that will be dragged when operation is complete
             source: null, // the view which is the owner of the view being dragged that implements the source protocol
             destination: null, // the view on which the item is dropped
-        
+            
+            validOperations: new Set(["move", "copy", "link", "delete"]),
+
             hoverViews: null, // a list of views that self is currently hovering over
-            dragOperation: "move", // the drag operation type: move, copy, link, delete
-        
-            dragStartPos: null, //
+            dragStartPos: null, // start position in screen coordinates 
         })
+
+
+        // the drag operation type: move, copy, link, delete
+        this.newSlot("dragOperation", "move").setDoesHookSetter(true)
+    }
+
+    didUpdateSlotDragOperation () {
+        assert(this.validOperations().contains(this.dragOperation()))
     }
 
     init () {

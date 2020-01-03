@@ -1,6 +1,7 @@
 "use strict"
 
 ResourceLoader.pushRelativePaths([
+    "Event-cachedPoints.js",
     "EventPoint.js",
     "Device.js",
     "KeyboardKey.js",

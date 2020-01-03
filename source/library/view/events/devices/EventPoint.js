@@ -1,6 +1,7 @@
 "use strict"
 
 /*
+
     EventPoint
 
     Class to represent a 2d or 3d point, optionally with a time.
@@ -12,48 +13,6 @@
     use the viewportPosition() method.
 
 */
-
-
-Object.defineSlots(Event.prototype, {
-    hasCachedPoints: function() {
-        return this._cachedPoints !== undefined
-    },
-
-    setCachedPoints: function(points) {
-        this._cachedPoints = points
-    },
-
-    cachedPoints: function() {
-        return this._cachedPoints
-    },
-    
-    pushCachedPoint: function(point) {
-        assert(this._cachedPoints)
-        this._cachedPoints.push(point)
-    }
-})
-
-
-/*
-window.Event_hasCachedPoints = function(event) {
-    return event._cachedPoints !== undefined
-}
-
-window.Event_setCachedPoints = function(event, points) {
-    event._cachedPoints = points
-}
-
-window.Event_cachedPoints = function(event) {
-    return event._cachedPoints
-}
-
-window.Event_pushCachedPoint = function(event, point) {
-    assert(event._cachedPoints)
-    event._cachedPoints.push(point)
-}
-*/
-
-// ----------------
 
 window.EventPoint = class EventPoint extends Point {
     initPrototype () {

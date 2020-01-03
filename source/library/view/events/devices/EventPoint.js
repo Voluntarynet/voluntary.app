@@ -13,6 +13,28 @@
 
 */
 
+
+Object.defineSlots(Event.prototype, {
+    hasCachedPoints: function() {
+        return this._cachedPoints !== undefined
+    },
+
+    setCachedPoints: function(points) {
+        this._cachedPoints = points
+    },
+
+    cachedPoints: function() {
+        return this._cachedPoints
+    },
+    
+    pushCachedPoint: function(point) {
+        assert(this._cachedPoints)
+        this._cachedPoints.push(point)
+    }
+})
+
+
+/*
 window.Event_hasCachedPoints = function(event) {
     return event._cachedPoints !== undefined
 }
@@ -29,6 +51,7 @@ window.Event_pushCachedPoint = function(event, point) {
     assert(event._cachedPoints)
     event._cachedPoints.push(point)
 }
+*/
 
 // ----------------
 

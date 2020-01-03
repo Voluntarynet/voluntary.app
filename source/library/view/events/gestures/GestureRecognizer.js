@@ -435,7 +435,7 @@ window.GestureRecognizer = class GestureRecognizer extends ProtoClass {
             const p2 = p1.copy().setId("emulatedTouch")
             p2.setX(p2.x() + 10)
             p2.setY(p2.y() + 10)
-            Event_pushCachedPoint(event, p2)
+            event.pushCachedPoint(p2)
         }
         return this
     }
@@ -454,7 +454,7 @@ window.GestureRecognizer = class GestureRecognizer extends ProtoClass {
             const p1 = this.pointsForEvent(this.downEvent()).first()
             const v = p2.subtract(p1).negated()
             const emulatedPoint = p1.add(v).setId("emulatedTouch")
-            Event_pushCachedPoint(event, emulatedPoint)
+            event.pushCachedPoint(emulatedPoint)
         }
 
         return this

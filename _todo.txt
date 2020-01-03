@@ -1,6 +1,34 @@
 
 TODO:
 
+	Notes: 
+	Underlying datastructure for Hypercard and spreadsheets, are tables.
+	Difference is that hypercard has customized row editors and is focused on search, 
+	while spreadsheets are focused on calculation. They're different views into (basically) the same model.
+	
+	
+	tap-tap-hold drag to copy vs 
+	tap-hold drag to move
+	 
+	Self?
+
+	Way to drag selection for copy (vs move)
+	
+	Prototypes
+		- Primitives
+		- 3rd Party
+		- Custom
+		
+	Have CreatorNode add prototypes to list?
+	
+	Have row.desiredWidth include subtitle?
+	add inspector to choose how row desiredWidth calculated - use elipsis if title/subtitle cut off 
+	
+	DateNode needs inspector & fix weird subnodes - are they being stored?
+		- set year range
+		- option to display age?
+		- options on subtitle stuff
+	
 	replace node label slots with title overrides?
 
 	have reorder cause parent nodes to re-render

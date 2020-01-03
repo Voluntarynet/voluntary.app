@@ -111,12 +111,12 @@ window.Mouse = class Mouse extends Device {
     }
 
     pointsForEvent (event) {
-        if (!Event_hasCachedPoints(event)) {
+        if (!event.hasCachedPoints()) {
             const points = [this.pointForEvent(event)]
-            Event_setCachedPoints(event, points)
+            event.setCachedPoints(points)
         }
 
-        return Event_cachedPoints(event)
+        return event.cachedPoints()
     }
 
     currentPoints () {

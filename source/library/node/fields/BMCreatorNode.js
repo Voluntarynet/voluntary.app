@@ -61,8 +61,8 @@ window.BMCreatorNode = class BMCreatorNode extends BMStorableNode {
         ]
     }
 
-    setupSubnodes () {
-        const newSubnodes = this.thisClass().fieldTypes().map((typeName) => {
+    primitiveSubnodes () {
+        const primitiveNodes = this.thisClass().fieldTypes().map((typeName) => {
             let name = typeName
             name = name.sansPrefix("BM")
             name = name.sansSuffix("Field")
@@ -73,10 +73,14 @@ window.BMCreatorNode = class BMCreatorNode extends BMStorableNode {
             const newNode = BMNode.clone()
             newNode.setTitle(name) //.setActionTarget(this).setAction("didChoose")
             newNode._createTypeName = typeName
-
             return newNode
         })
-        this.addSubnodes(newSubnodes)
+
+        return primitiveNodes
+    }
+
+    setupSubnodes () {
+        this.addSubnodes(this.primitiveSubnodes())
         return this
     }
 

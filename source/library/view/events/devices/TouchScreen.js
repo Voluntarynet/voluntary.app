@@ -141,14 +141,14 @@ window.TouchScreen = class TouchScreen extends Device {
 
 
     pointsForEvent (event) {
-        if (!Event_hasCachedPoints(event)) {
+        if (!event.hasCachedPoints()) {
             event.preventDefault() // needed to prevent browser from handling touches?
 
             const points = this.justPointsForEvent(event)
-            Event_setCachedPoints(event, points)
+            event.setCachedPoints(points)
         }
 
-        return Event_cachedPoints(event)
+        return event.cachedPoints(event)
     }
 
     currentPoints () {

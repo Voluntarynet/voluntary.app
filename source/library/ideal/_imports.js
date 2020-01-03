@@ -12,6 +12,7 @@ ResourceLoader.pushRelativePaths([
     "formatters/_imports.js",
     //"FilePath.js",
     //"proxies/_imports.js",
+    "NamespaceSearch.js"
 ]);
 
 

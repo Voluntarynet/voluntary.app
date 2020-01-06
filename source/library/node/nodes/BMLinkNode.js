@@ -31,7 +31,8 @@ window.BMLinkNode = class BMLinkNode extends BMSummaryNode {
     }
 
     title () {
-        return this.linkedNode().title()
+        const ln = this.linkedNode()
+        return ln ? ln.title() : null
     }
 
     /*
@@ -62,7 +63,8 @@ window.BMLinkNode = class BMLinkNode extends BMSummaryNode {
     }
 
     nodeCanReorderSubnodes () {
-        return this.linkedNode().nodeCanReorderSubnodes() // have this operation done in the browser?
+        const ln = this.linkedNode()
+        return ln ? ln.nodeCanReorderSubnodes() : false // have this operation done in the browser?
     }
 
 }.initThisClass()

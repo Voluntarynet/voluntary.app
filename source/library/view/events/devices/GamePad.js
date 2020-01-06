@@ -10,16 +10,14 @@
 window.GamePad = class GamePad extends Device {
     
     initPrototype () {
-        this.newSlots({
-            gamePadManager: null,
-            index: null,
-            id: null,
-            timestamp: null,
-            buttons: null,
-            axes: null,
-            isConnected: false,
-            shouldSendNotes: false
-        })
+        this.newSlot("gamePadManager", null)
+        this.newSlot("index", null)
+        this.newSlot("id", null)
+        this.newSlot("timestamp", null)
+        this.newSlot("buttons", null)
+        this.newSlot("axes", null)
+        this.newSlot("isConnected", false)
+        this.newSlot("shouldSendNotes", false)
     }
 
     init () {

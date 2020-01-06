@@ -9,12 +9,10 @@
 window.KeyboardKey = class KeyboardKey extends Device {
     
     initPrototype () {
-        this.newSlots({
-            isDown: false,
-            code: null,
-            name: "",
-            keyboard: null,
-        })
+        this.newSlot("isDown", false)
+        this.newSlot("code", null)
+        this.newSlot("name", "")
+        this.newSlot("keyboard", null)
     }
 
     init () {

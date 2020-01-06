@@ -9,13 +9,11 @@
 window.ShelfView = class ShelfView extends NodeView {
     
     initPrototype () {
-        this.newSlots({
-            browser: null,
-            defaultWidth: 80,
-            scrollView: null,
-            footerView: null,
-            needsToSelectLastItem: false,
-        })
+        this.newSlot("browser", null)
+        this.newSlot("defaultWidth", 80)
+        this.newSlot("scrollView", null)
+        this.newSlot("footerView", null)
+        this.newSlot("needsToSelectLastItem", false)
     }
 
     init () {

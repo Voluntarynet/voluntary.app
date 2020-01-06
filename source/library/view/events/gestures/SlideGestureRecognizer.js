@@ -36,12 +36,10 @@
 window.SlideGestureRecognizer = class SlideGestureRecognizer extends GestureRecognizer {
     
     initPrototype () {
-        this.newSlots({
-            direction: "left", 
-            validDirectionsDict: { left: 1, right: 2, up: 3, down: 4 },
-            maxPerpendicularDistToBegin: 10, // will not begin if this is exceeded
-            //downPositionInTarget: null,
-        })
+        this.newSlot("direction", "left")
+        this.newSlot("validDirectionsDict", { left: 1, right: 2, up: 3, down: 4 })
+        this.newSlot("maxPerpendicularDistToBegin", 10) // will not begin if this is exceeded
+        //downPositionInTarget: null,
     }
 
     init () {

@@ -14,15 +14,12 @@
 
 window.DomBorderRadius = class DomBorderRadius extends ProtoClass {
     initPrototype () {
-        this.newSlots({
-            divView: null,
-
-            topLeft: 0,
-            topRight: 0,
-            bottomRight: 0,
-            bottomLeft: 0,
-            partNames: ["topLeft", "topRight", "bottomRight", "bottomLeft"],
-        })
+        this.newSlot("divView", null)
+        this.newSlot("topLeft", 0)
+        this.newSlot("topRight", 0)
+        this.newSlot("bottomRight", 0)
+        this.newSlot("bottomLeft", 0)
+        this.newSlot("partNames", ["topLeft", "topRight", "bottomRight", "bottomLeft"])
     }
 
     init() {

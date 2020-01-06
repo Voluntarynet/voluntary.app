@@ -13,67 +13,30 @@
 window.BMField = class BMField extends BMSummaryNode {
     
     initPrototype () {
-        this.newSlots({
-            isVisible: true,
-            isEnabled: true,
-        
-            // key
-            key: "key",
-            keyIsVisible: true,
-            keyIsEditable: false,
-        
-            // value
-            value: null,
-            valueIsVisible: true,
-            valueIsEditable: true, 
-                
-            link: null,
-            ownsLink: null,
-            
-            // only visible in UI
-            valuePrefix: null,
-            valuePostfix: null,
-            
-            valueMethod: null,
-            noteMethod: null, // fetches note from a parent node method
-                
-            keyError: null,
-            valueError: null,
-            
-            target: null,
-        
-            //nodeSummaryShowsKey: false,
-            //nodeSummaryShowsValue: false,
-        })
+        this.newSlot("isVisible", true)
+        this.newSlot("isEnabled", true)
 
-  
-        this.slotNamed("key").setShouldStoreSlot(true)
-        this.slotNamed("keyIsVisible").setShouldStoreSlot(true)
-        this.slotNamed("keyIsEditable").setShouldStoreSlot(true)
+        // key
+        this.newSlot("key", "key").setShouldStoreSlot(true)
+        this.newSlot("keyIsVisible", true).setShouldStoreSlot(true)
+        this.newSlot("keyIsEditable", false).setShouldStoreSlot(true)
 
-        this.slotNamed("value").setShouldStoreSlot(true)
-        this.slotNamed("valueIsVisible").setShouldStoreSlot(true)
-        this.slotNamed("valueIsEditable").setShouldStoreSlot(true)
+        // value
+        this.newSlot("value", null).setShouldStoreSlot(true)
+        this.newSlot("valueIsVisible", true).setShouldStoreSlot(true)
+        this.newSlot("valueIsEditable", true).setShouldStoreSlot(true)
 
-        this.slotNamed("valuePrefix").setShouldStoreSlot(true)
-        this.slotNamed("valuePostfix").setShouldStoreSlot(true)
+        this.newSlot("link", null)
+        this.newSlot("ownsLink", null)
 
-        //this.protoAddStoredSlot("nodeSummaryShowsKey")
-        //this.protoAddStoredSlot("nodeSummaryShowsValue")
-    }
+        this.newSlot("valuePrefix", null).setShouldStoreSlot(true)
+        this.newSlot("valuePostfix", null).setShouldStoreSlot(true)
 
-    duplicate () {
-        const newObject = this.__proto__.clone().copySlotValuesFrom(this) 
-        return newObject
-    }
-
-    copySlotValuesFrom (otherObject) {
-        this.slots().ownForEachKV((slotName, mySlot) => {
-            const otherSlot = otherObject.slotNamed(slotName)
-            const v = otherSlot.onInstanceGetValue(otherObject)
-            mySlot.onInstanceSetValue(this, v)
-        })
-        return this
+        this.newSlot("valueMethod", null)
+        this.newSlot("noteMethod", null)  // fetches note from a parent node method
+        this.newSlot("keyError", null)
+        this.newSlot("valueError", null)
+        this.newSlot("target", null)
     }
 
     init () {

@@ -279,10 +279,24 @@ window.ProtoClass = class ProtoClass extends Object {
 
     newSlots (slots) {
         assert(this.isPrototype())
+        if (Object.keys(slots).length === 0) {
+            return this
+        }
+        let s = this.type() + ":\n"
         Object.eachSlot(slots, (slotName, initialValue) => {
+            let initialValueString = initialValue
+            if (!Type.isLiteral(initialValueString)) {
+                initialValueString = "[insert]"
+            } else if (Type.isString(initialValueString)) {
+                initialValueString = "\"" + initialValueString + "\""
+            }
+            const line =  "     this.newSlot(\"" + slotName + "\", " + initialValueString + ")\n"
+            //console.log(line)
+            s += line
             this.newSlot(slotName, initialValue);
         });
 
+        console.log(s)
         return this;
     }
 

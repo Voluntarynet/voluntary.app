@@ -24,22 +24,20 @@
 window.BrowserRow = class BrowserRow extends NodeView {
     
     initPrototype () {
-        this.newSlots({
-            isSelectable: true,
-            closeButtonView: null,
-            defaultHeight: 60,
-            restCloseButtonOpacity: 0.4,
-            transitionStyle: "all 0.2s ease, width 0s, max-width 0s, min-width 0s",
-            selectedFlashColor: "#ccc",
-            shouldShowFlash: false,
-            shouldCenterCloseButton: true, 
-            contentView: null,
-        
-            slideDeleteOffset: 0,
-            dragDeleteButtonView: null,
-            isDeleting: false,
-            lastTapDate: null,
-        })
+        this.newSlot("isSelectable", true) //.setDuplicateOp("copyValue")
+        this.newSlot("closeButtonView", null)
+        this.newSlot("defaultHeight", 60)
+        this.newSlot("restCloseButtonOpacity", 0.4)
+        this.newSlot("transitionStyle", "all 0.2s ease, width 0s, max-width 0s, min-width 0s")
+        this.newSlot("selectedFlashColor", "#ccc")
+        this.newSlot("shouldShowFlash", false)
+        this.newSlot("shouldCenterCloseButton", true)
+        this.newSlot("contentView", null)
+    
+        this.newSlot("slideDeleteOffset", 0)
+        this.newSlot("dragDeleteButtonView", null)
+        this.newSlot("isDeleting", false)
+        this.newSlot("lastTapDate", null)
     }
 
     init () {
@@ -62,14 +60,22 @@ window.BrowserRow = class BrowserRow extends NodeView {
         
         this.addGestureRecognizer(LongPressGestureRecognizer.clone()) // for long press & pan reordering
         this.addGestureRecognizer(SlideGestureRecognizer.clone()) // for slide delete
-        this.addGestureRecognizer(TapGestureRecognizer.clone()) 
-
-        //this.addGestureRecognizer(RightEdgePanGestureRecognizer.clone()) // use to adjust width?
-        this.addGestureRecognizer(BottomEdgePanGestureRecognizer.clone()) // use to adjust height?
+        this.addGestureRecognizer(TapGestureRecognizer.clone()) // for selection, and tap-longpress
+        //this.addGestureRecognizer(RightEdgePanGestureRecognizer.clone()) // for adjusting width?
+        this.addGestureRecognizer(BottomEdgePanGestureRecognizer.clone()) // for adjusting height?
 
         this.setIsRegisteredForKeyboard(true)
 
         return this
+    }
+
+    duplicate () {
+        const dup = super.duplicate()
+        dup.setNode(this.node().duplicate())
+
+        // need to duplicate node and place it in node parent's subnodes?
+
+        return dup
     }
 
     // bottom edge pan 
@@ -668,7 +674,7 @@ window.BrowserRow = class BrowserRow extends NodeView {
     onLongPressCancelled (aGesture) {
     }
 
-    isTapTapHold () {
+    isTapLongPress () {
         // ok, now we need to figure out if this is a tap-hold or tap-tap-hold
         const maxDt = 0.7 // between tap time + long tap hold time before complete is triggered
         let isTapTapHold = false
@@ -686,14 +692,16 @@ window.BrowserRow = class BrowserRow extends NodeView {
     }
 
     onLongPressComplete (longPressGesture) {
-        const isTapTapHold = this.isTapTapHold()
-
         longPressGesture.deactivate() // needed?
+
+        const isTapLongPress = this.isTapLongPress()
+
         const dv = DragView.clone().setItem(this).setSource(this.column())
 
-        if (isTapTapHold) {
+
+        if (isTapLongPress) {
             dv.setDragOperation("copy")
-        } else {
+        } else { // otherwise, it's just a normal long press
             dv.setDragOperation("move")
         }
         

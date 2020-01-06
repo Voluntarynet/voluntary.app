@@ -22,14 +22,12 @@
 window.SvgIconView = class SvgIconView extends DomStyledView {
     
     initPrototype () {
-        this.newSlots({
-            doesMatchParentColor: false,
-            svgString: "",
-            url: null,
-            iconName: null,
-            fillColor: "white",
-            strokeColor: "white",
-        })
+        this.newSlot("doesMatchParentColor", false)
+        this.newSlot("svgString", "")
+        this.newSlot("url", null)
+        this.newSlot("iconName", null)
+        this.newSlot("fillColor", "white")
+        this.newSlot("strokeColor", "white")
     }
 
     init () {

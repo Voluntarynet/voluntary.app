@@ -9,10 +9,8 @@
 window.ImageWellView = class ImageWellView extends NodeView {
     
     initPrototype () {
-        this.newSlots({
-            imageView: null,
-            isEditable: true,
-        })
+        this.newSlot("imageView", null)
+        this.newSlot("isEditable", true)
     }
 
     init () {

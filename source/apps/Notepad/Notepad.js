@@ -10,14 +10,13 @@
 window.Notepad = class Notepad extends App {
     
     initPrototype () {
-        this.newSlots({        
-            // model
-            settings: null,
-            resources: null,
-            dataStore: null,
-            // views
-            browser: null,
-        })
+        // model
+        this.newSlot("settings", null)
+        this.newSlot("resources", null)
+        this.newSlot("dataStore", null)
+
+        // view
+        this.newSlot("browser", null)
     }
 
     init () {

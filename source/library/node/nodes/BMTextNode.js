@@ -15,11 +15,16 @@
 window.BMTextNode = class BMTextNode extends BMStorableNode {
     
     initPrototype () {
-        this.newSlots({
-            fontSize: null,
-            color: null,
-            backgroundColor: null,
-        })
+        this.protoAddStoredSlot("title")
+        /*
+        this.protoAddStoredSlot("fontSize")
+        this.protoAddStoredSlot("color")
+        this.protoAddStoredSlot("backgroundColor")
+        */
+       
+        this.newSlot("fontSize", null).setShouldStoreSlot(true)
+        this.newSlot("color", null).setShouldStoreSlot(true)
+        this.newSlot("backgroundColor", null).setShouldStoreSlot(true)
 
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(true)
@@ -32,10 +37,7 @@ window.BMTextNode = class BMTextNode extends BMStorableNode {
 
         
         this.setNodeCanReorderSubnodes(true)
-        this.protoAddStoredSlot("title")
-        this.protoAddStoredSlot("fontSize")
-        this.protoAddStoredSlot("color")
-        this.protoAddStoredSlot("backgroundColor")
+  
 
         this.setNodeCanEditRowHeight(true)
         this.setNodeCanEditColumnWidth(true)

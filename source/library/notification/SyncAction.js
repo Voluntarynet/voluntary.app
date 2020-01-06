@@ -10,13 +10,12 @@
 */
 
 window.SyncAction = class SyncAction extends ProtoClass {
+
     initPrototype () {
-        this.newSlots({
-            target: null,
-            method: null,
-            order: 0,
-            args: null,
-        })
+        this.newSlot("target", null)
+        this.newSlot("method", null)
+        this.newSlot("order", 0)
+        this.newSlot("args", null)
     }
 
     init() {

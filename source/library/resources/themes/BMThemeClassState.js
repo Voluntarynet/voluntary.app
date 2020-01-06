@@ -9,9 +9,7 @@
 window.BMThemeClassState = class BMThemeClassState extends BMFieldSetNode {
     
     initPrototype () {
-        this.newSlots({
-            divClassName: null,
-        })
+        this.newSlot("divClassName", null)
     }
 
     init () {

@@ -9,9 +9,7 @@
 window.BMDateField = class BMDateField extends BMField {
     
     initPrototype () {
-        this.newSlots({
-            unsetVisibleValue: "unset",
-        })
+        this.newSlot("unsetVisibleValue", "unset")
     }
 
     init () {

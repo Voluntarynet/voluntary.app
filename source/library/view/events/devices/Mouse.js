@@ -12,13 +12,11 @@
 window.Mouse = class Mouse extends Device {
     
     initPrototype () {
-        this.newSlots({
-            isDown: false,
-            downEvent: null,
-            currentEvent: null,
-            upEvent: null,
-            mouseListener: null,
-        })
+        this.newSlot("isDown", false)
+        this.newSlot("downEvent", null)
+        this.newSlot("currentEvent", null)
+        this.newSlot("upEvent", null)
+        this.newSlot("mouseListener", null)
     }
 
     init () {

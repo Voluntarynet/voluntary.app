@@ -38,10 +38,8 @@
 window.CenteredDomView = class CenteredDomView extends DomView {
     
     initPrototype () {
-        this.newSlots({
-            middleView: null,
-            innerView: null,
-        })
+        this.newSlot("middleView", null)
+        this.newSlot("innerView", null)
     }
 
     init () {

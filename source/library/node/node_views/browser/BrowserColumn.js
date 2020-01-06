@@ -9,15 +9,13 @@
 window.BrowserColumn = class BrowserColumn extends NodeView {
     
     initPrototype () {
-        this.newSlots({
-            rows: null,
-            allowsCursorNavigation: true,
-            defaultRowStyles: null,
-            rowStyles: null,
-            //shouldDarkenUnselected: true,
-            rowPlaceHolder: null,
-            hasPausedSync: false,
-        })
+        this.newSlot("rows", null)
+        this.newSlot("allowsCursorNavigation", true)
+        this.newSlot("defaultRowStyles", null)
+        this.newSlot("rowStyles", null)
+        this.newSlot("rowPlaceHolder", null)
+        this.newSlot("hasPausedSync", false)
+        //shouldDarkenUnselected: true,
     }
 
     init () {
@@ -1032,21 +1030,27 @@ window.BrowserColumn = class BrowserColumn extends NodeView {
 
     // -- messages sent by DragView to the parent/owner of the view it's dragging ---
 
-    onDragSourceBegin (aDragView) {
+    onDragSourceBegin (dragView) {
         this.setHasPausedSync(true)
 
-        const subview = aDragView.item()
-        subview.hideForDrag()
+        const subview = dragView.item()
         const index = this.indexOfSubview(subview)
         assert(index !== -1)
-        this.moveSubviewToIndex(this.newRowPlaceHolder(), index)
+
+        this.newRowPlaceHolder()
+
+        if (dragView.isMoveOp()) {
+            subview.hideForDrag()
+            this.moveSubviewToIndex(this.rowPlaceHolder(), index)
+        }
+
         this.columnGroup().cache() // only needed for source column, since we might navigate while dragging
         this.stackRows()
         return this
     }
 
-    onDragSourceCancelled (aDragView) {
-        aDragView.item().unhideForDrag()
+    onDragSourceCancelled (dragView) {
+        dragView.item().unhideForDrag()
         this.removeRowPlaceHolder()
     }
 
@@ -1065,28 +1069,34 @@ window.BrowserColumn = class BrowserColumn extends NodeView {
     onDragSourceDropped (dragView) {
         const dv = dragView.item()
         this.unstackRows()
-        this.swapSubviews(dv, this.rowPlaceHolder())
+        if (dragView.isMoveOp()) {
+            this.swapSubviews(dv, this.rowPlaceHolder())
+        }
+        if (dragView.isCopyOp()) {
+            const newRow = dv.duplicate()
+            this.addSubview(newRow)
+            this.swapSubviews(newRow, this.rowPlaceHolder())
+        }
         this.removeRowPlaceHolder()
         dv.unhideForDrag()
     }
 
-    onDragSourceEnd (aDragView) {
+    onDragSourceEnd (dragView) {
         this.columnGroup().scheduleMethod("uncache")
         this.endDropMode()
     }
 
     // -- messages sent by DragView to the potential drop view, if not the source ---
 
-    acceptsDropHover (aDragView) {
+    acceptsDropHover (dragView) {
         let node = this.node()
         if (node) {
-            if (!aDragView) {
-                console.log("aDragView.item() missing")
-            }
-            let dropNode = aDragView.item().node()
+            assert(dragView.item())
+
+            let dropNode = dragView.item().node()
             let acceptsNode = node.acceptsAddingSubnode(dropNode)
             let canReorder = this.canReorderRows()
-            console.log(node.title() + " acceptsNode " + dropNode.title() + " " + acceptsNode)
+            //console.log(node.title() + " acceptsNode " + dropNode.title() + " " + acceptsNode)
             //console.log("parentNode " + node.parentNode().title())
             let result = acceptsNode && canReorder
             /*

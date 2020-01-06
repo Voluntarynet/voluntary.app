@@ -18,14 +18,12 @@
 window.EventSetListener = class EventSetListener extends ProtoClass {
     
     initPrototype () {
-        this.newSlots({
-            listenTarget: null,
-            delegate: null,
-            isListening: false,
-            eventsDict: null, // should only write from within class & subclasses
-            useCapture: false, // whether event will be dispatched to listener before EventTarget beneath it in DOM tree.
-            methodSuffix: "",
-        })
+        this.newSlot("listenTarget", null)
+        this.newSlot("delegate", null)
+        this.newSlot("isListening", false)
+        this.newSlot("eventsDict", null).setComment("should only write from within class & subclasses")
+        this.newSlot("useCapture", false).setComment("whether event will be dispatched to listener before EventTarget beneath it in DOM tree")
+        this.newSlot("methodSuffix", "")
     }
 
     init () {

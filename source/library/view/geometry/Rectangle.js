@@ -19,10 +19,8 @@
 
 window.Rectangle = class Rectangle extends ProtoClass {
     initPrototype () {
-        this.newSlots({
-            origin: null,
-            size: null,
-        })
+        this.newSlot("origin", null)
+        this.newSlot("size", null)
     }
 
     init () {

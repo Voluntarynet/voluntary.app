@@ -26,10 +26,8 @@
 
 window.DomTransitions = class DomTransitions extends ProtoClass {
     initPrototype () {
-        this.newSlots({
-            properties: null,
-            domView: null,
-        })
+        this.newSlot("properties", null)
+        this.newSlot("domView", null)
     }
 
     init() {

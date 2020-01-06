@@ -11,11 +11,9 @@
 window.BMFont = class BMFont extends BMNode {
     
     initPrototype () {
-        this.newSlots({
-            path: null,
-            name: null,
-            options: null,
-        })
+        this.newSlot("path", null)
+        this.newSlot("name", null)
+        this.newSlot("options", null)
     }
 
     init () {

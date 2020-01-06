@@ -7,9 +7,12 @@
     Object isn't a prototype or class, it's more like a namespace to organize
     some functions that take an object as an argument. JS ugliness.
 
-    NOTES:
+*/
+
+
+/*
     
-    A few weird JS things:
+    Weird JS things:
 
     The Array, Set, and Map constructors do not inherit from Object 
     (they and the Object constructor all inherit from constructor named "")
@@ -424,7 +427,49 @@ const prototypeSlots = {
         }
         
         return entries
-    }
+    },
+
+    duplicate: function() {
+        assert(this.isInstance())
+        return this.thisClass().clone().copyFrom(this)
+    },
+
+    copy: function() {
+        return this.duplicate()
+    },
+
+    copyFrom: function(anObject) {
+        // WARNING: subclasses will need to customize this
+        this.duplicateSlotValuesFrom(anObject) 
+        return this
+    },
+
+    duplicateSlotValuesFrom: function(otherObject) {
+        // TODO: add a type check of some kind?
+
+        this.thisPrototype().allSlots().ownForEachKV((slotName, mySlot) => {
+            const otherSlot = otherObject.thisPrototype().slotNamed(slotName)
+            const v = otherSlot.onInstanceGetValue(otherObject)
+            const dop = otherSlot.duplicateOp()
+
+            if (dop === "copyValue") {
+                mySlot.onInstanceSetValue(this, v)
+            } else if (dop === "duplicate" && v && v.duplicate) {
+                const dup = v.duplicate()
+                mySlot.onInstanceSetValue(this, dup)
+            }
+        })
+        return this
+    },
+
+    copySlotValuesFrom: function(otherObject) {
+        this.thisPrototype().allSlots().ownForEachKV((slotName, mySlot) => {
+            const otherSlot = otherObject.thisPrototype().slotNamed(slotName)
+            const v = otherSlot.onInstanceGetValue(otherObject)
+            mySlot.onInstanceSetValue(this, v)
+        })
+        return this
+    },
 }
 
 

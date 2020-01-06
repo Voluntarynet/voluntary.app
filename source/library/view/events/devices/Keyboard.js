@@ -20,10 +20,8 @@
 
 window.Keyboard = class Keyboard extends Device {
     initPrototype () {
-        this.newSlots({
-            codeToKeys: null, // dictionary of KeyboardKey objects
-            keyboardListener: null,
-        })
+        this.newSlot("codeToKeys", null).setComment("dictionary of KeyboardKey objects")
+        this.newSlot("keyboardListener", null)
     }
 
     /*

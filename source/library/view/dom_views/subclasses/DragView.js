@@ -62,24 +62,29 @@
 window.DragView = class DragView extends DomStyledView {
     
     initPrototype () {
-        this.newSlots({
-            item: null, // the view that will be dragged when operation is complete
-            source: null, // the view which is the owner of the view being dragged that implements the source protocol
-            destination: null, // the view on which the item is dropped
-            
-            validOperations: new Set(["move", "copy", "link", "delete"]),
+        // the view that will be dragged when operation is complete
+        this.newSlot("item", null)
 
-            hoverViews: null, // a list of views that self is currently hovering over
-            dragStartPos: null, // start position in screen coordinates 
-        })
+        // the view which is the owner of the view being dragged that implements the source protocol
+        this.newSlot("source", null)
 
+        // the view on which the item is dropped
+        this.newSlot("destination", null)
+
+        this.newSlot("validOperations", new Set(["move", "copy", "link", "delete"]))
+
+        // a list of views that self is currently hovering over
+        this.newSlot("hoverViews", null)
+
+        // start position in screen coordinates 
+        this.newSlot("dragStartPos", null)
 
         // the drag operation type: move, copy, link, delete
         this.newSlot("dragOperation", "move").setDoesHookSetter(true)
     }
 
     didUpdateSlotDragOperation () {
-        assert(this.validOperations().contains(this.dragOperation()))
+        assert(this.validOperations().has(this.dragOperation()))
     }
 
     init () {
@@ -99,6 +104,27 @@ window.DragView = class DragView extends DomStyledView {
 
         return this
     }
+
+    // operation type helpers
+
+    isCopyOp () {
+        return this.dragOperation() === "copy"
+    }
+
+    isMoveOp () {
+        return this.dragOperation() === "move"
+    }
+
+    isLinkOp () {
+        return this.dragOperation() === "link"
+    }
+
+    isDeleteOp () {
+        return this.dragOperation() === "delete"
+    }
+
+
+    // ----
 
     setupView () {
         const aView = this.item()
@@ -226,7 +252,7 @@ window.DragView = class DragView extends DomStyledView {
     onPanComplete (aGesture) {
         this.debugLog("onPanComplete")
 
-        this.setDragOperation(this.currentOperation())
+        //this.setDragOperation(this.currentOperation())
 
         const aView = this.firstAcceptingDropTarget()
         
@@ -243,7 +269,6 @@ window.DragView = class DragView extends DomStyledView {
             const completionCallback = () => {
                 this.sendProtocolMessage(this.item(), "onDragItemDropped")
                 this.sendProtocolAction(aView, "Dropped") // onDragSourceDropped onDragDestinationDropped
-
 
                 this.sendProtocolMessage(this.source(), "onDragSourceEnd")
                 if (aView !== this.source()) {

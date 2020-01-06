@@ -22,9 +22,7 @@ TimePeriodFormatter
 
 window.TimePeriodFormatter = class TimePeriodFormatter extends ProtoClass {
     initPrototype () {
-        this.newSlots({
-            valueInSeconds: 0,
-        })
+        this.newSlot("valueInSeconds", 0)
     }
 
     init() {

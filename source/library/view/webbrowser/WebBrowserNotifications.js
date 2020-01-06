@@ -23,10 +23,8 @@
 window.WebBrowserNotifications = class WebBrowserNotifications extends ProtoClass {
     
     initPrototype () {
-        this.newSlots({
-            permissionRequestResult: null,
-            waitingNote: null,
-        })
+        this.newSlot("permissionRequestResult", null)
+        this.newSlot("waitingNote", null)
     }
 
     init () {

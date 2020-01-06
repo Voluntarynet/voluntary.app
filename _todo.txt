@@ -1,6 +1,9 @@
 
 TODO:
 
+	- support accepts subnode drop onto link node
+	- add Slot attribute for behavior on duplicate: aSlot.duplicateOp()?
+	
 	Notes: 
 	Underlying datastructure for Hypercard and spreadsheets, are tables.
 	Hypercard has customized row editors and is focused on search, 

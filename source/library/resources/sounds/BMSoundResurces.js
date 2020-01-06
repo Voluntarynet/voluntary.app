@@ -9,9 +9,7 @@
 window.BMSoundResurces = class BMSoundResurces extends BMNode {
     
     initPrototype () {
-        this.newSlots({
-            extensions: ["wav", "mp3", "m4a", "mp4", "oga", "ogg"],
-        })
+        this.newSlot("extensions", ["wav", "mp3", "m4a", "mp4", "oga", "ogg"])
     }
 
     init () {

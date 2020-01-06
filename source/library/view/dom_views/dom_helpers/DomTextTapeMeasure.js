@@ -16,13 +16,19 @@
 
 */
 
-window.DomTextTapeMeasure = class WebDocument extends ProtoClass {
+window.DomTextTapeMeasure = class DomTextTapeMeasure extends ProtoClass {
     
     initPrototype () {
-        this.newSlots({
-            idName: "DomTextTapeMeasure",
-            stylesToCopy: ["fontSize","fontStyle", "fontWeight", "fontFamily","lineHeight", "textTransform", "letterSpacing"],
-        })
+        this.newSlot("idName", "DomTextTapeMeasure")
+        this.newSlot("stylesToCopy", [
+            "fontSize",
+            "fontStyle", 
+            "fontWeight", 
+            "fontFamily",
+            "lineHeight", 
+            "textTransform", 
+            "letterSpacing"
+        ])
     }
 	
     testElement () {

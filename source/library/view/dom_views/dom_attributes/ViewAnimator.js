@@ -10,16 +10,12 @@
 
 window.ViewAnimator = class ViewAnimator extends ProtoClass {
     initPrototype () {
-        this.newSlots({
-
-            startValue: 0,
-            targetValue: 0,
-            viewProperty: "",
-            duration: 200, // milliseconds
-            easing: "linear",
-
-            view: null,
-        })
+        this.newSlot("startValue", 0)
+        this.newSlot("targetValue", 0)
+        this.newSlot("viewProperty", "")
+        this.newSlot("duration", 200).setComment("milliseconds")
+        this.newSlot("easing", "linear")
+        this.newSlot("view", null)
     }
 
     init() {

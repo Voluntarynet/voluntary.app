@@ -12,9 +12,7 @@
 window.BrowserHeaderAction = class BrowserHeaderAction extends NodeView {
     
     initPrototype () {
-        this.newSlots({
-            canClick: true,
-        })
+        this.newSlot("canClick", true)
     }
 
     init () {

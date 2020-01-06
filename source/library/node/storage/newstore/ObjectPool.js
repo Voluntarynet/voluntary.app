@@ -53,20 +53,35 @@
 window.ObjectPool = class ObjectPool extends ProtoClass {
     
     initPrototype () {
-        this.newSlots({
-            name: "defaultDataStore",
-            rootObject: null, 
-            recordsDict: null, // AtomicDictionary
-            activeObjects: null, // dict - objects known to the pool (previously loaded or referenced)
-            dirtyObjects: null, // dict - objects with mutations that need to be stored
-            loadingPids: null, // set - pids of objects that we're loading in this event loop
-            storingPids: null, // set - pids of objects that we're storing in this event loop
-            lastSyncTime: null, // WARNING: vulnerable to system time changes
-            //isReadOnly: true,
-            markedSet: null, // Set of puuids
-            nodeStoreDidOpenNote: null, // TODO: change name?
-            isFinalizing: false,
-        })
+        this.newSlot("name", "defaultDataStore")
+        this.newSlot("rootObject", null)
+
+        // AtomicDictionary
+        this.newSlot("recordsDict", null) 
+
+        // dict - objects known to the pool (previously loaded or referenced)
+        this.newSlot("activeObjects", null) 
+
+        // dict - objects with mutations that need to be stored
+        this.newSlot("dirtyObjects", null)
+
+        // set - pids of objects that we're loading in this event loop
+        this.newSlot("loadingPids", null)
+
+        // set - pids of objects that we're storing in this event loop
+        this.newSlot("storingPids", null)
+
+        // WARNING: vulnerable to system time changes
+        this.newSlot("lastSyncTime", null)
+        //isReadOnly: true,
+
+        // Set of puuids
+        this.newSlot("markedSet", null) 
+
+        // TODO: change name?
+        this.newSlot("nodeStoreDidOpenNote", null)
+
+        this.newSlot("isFinalizing", false)
     }
 
     init () {
@@ -78,7 +93,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         this.setLastSyncTime(null)
         this.setMarkedSet(null)
         this.setNodeStoreDidOpenNote(window.NotificationCenter.shared().newNote().setSender(this).setName("nodeStoreDidOpen"))
-        this.setIsDebugging(true)
+        this.setIsDebugging(false)
         return this
     }
 
@@ -550,7 +565,7 @@ window.ObjectPool = class ObjectPool extends ProtoClass {
         }
         assert(puuid)
         let v = JSON.stringify(obj.recordForStore(this))
-        console.log("store " + obj.puuid() + " <- " + v)
+        this.debugLog("store " + obj.puuid() + " <- " + v)
         this.recordsDict().atPut(puuid, v)
         return this
     }

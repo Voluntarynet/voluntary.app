@@ -9,9 +9,7 @@
 window.BMActionNodeRowView = class BMActionNodeRowView extends BrowserRow {
     
     initPrototype () {
-        this.newSlots({
-            buttonView: null,
-        })
+        this.newSlot("buttonView", null)
     }
 
     init () {

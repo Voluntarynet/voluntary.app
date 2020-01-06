@@ -24,23 +24,22 @@
 
 window.ByteFormatter = class ByteFormatter extends ProtoClass {
     initPrototype () {
-        this.newSlots({
-            value: 0,
-            usePostfix: true,
-            useSpace: false,
-            useLongNames: false,
-            orderNamesShort: ["bytes", "k", "M", "G", "T", "P", "E", "Z", "Y"],
-            orderNamesLong: [
-                "bytes", 
-                "kilobytes", 
-                "megabytes", 
-                "gigabytes", 
-                "terabytes", 
-                "petabytes", 
-                "exabytes", 
-                "zettabytes", 
-                "yottabytes"],
-        })
+
+        this.newSlot("value", 0)
+        this.newSlot("usePostfix", true)
+        this.newSlot("useSpace", false)
+        this.newSlot("useLongNames", false)
+        this.newSlot("orderNamesShort", ["bytes", "k", "M", "G", "T", "P", "E", "Z", "Y"])
+        this.newSlot("orderNamesLong", [
+            "bytes", 
+            "kilobytes", 
+            "megabytes", 
+            "gigabytes", 
+            "terabytes", 
+            "petabytes", 
+            "exabytes", 
+            "zettabytes", 
+            "yottabytes"])
     }
 
     init() {

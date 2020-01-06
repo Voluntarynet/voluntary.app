@@ -98,6 +98,10 @@ window.ideal.Slot = class Slot {
         this.simpleNewSlot("willGetSlotName", null)
         //this.simpleNewSlot("willUpdateSlotName", null)
         //this.simpleNewSlot("didUpdateSlotName", null)
+
+        this.simpleNewSlot("duplicateOp", "nop") // nop, copyValue, duplicate?
+        this.simpleNewSlot("comment", null)
+        this.simpleNewSlot("isPrivate", false)
     }
 
     init () {

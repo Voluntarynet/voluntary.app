@@ -13,11 +13,9 @@
 window.App = class App extends BMNode {
     
     initPrototype () {
-        this.newSlots({
-            name: "App",
-            version: [0, 0],
-            nodeStoreDidOpenObs: null,
-        })
+        this.newSlot("name", "App")
+        this.newSlot("version", [0, 0])
+        this.newSlot("nodeStoreDidOpenObs", null)
     }
 
     init () {

@@ -9,9 +9,7 @@
 window.BMMinuteNode = class BMMinuteNode extends BMNode {
     
     initPrototype () {
-        this.newSlots({
-            value: 1, // day value starts with 1
-        })
+        this.newSlot("value", 1)
     }
 
     init () {

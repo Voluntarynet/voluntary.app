@@ -9,12 +9,10 @@
 window.BrowserTitledRow = class BrowserTitledRow extends BrowserRow {
     
     initPrototype () {
-        this.newSlots({
-            titleView: null,
-            subtitleView: null,
-            noteView: null,
-            thumbnailView: null,
-        })
+        this.newSlot("titleView", null)
+        this.newSlot("subtitleView", null)
+        this.newSlot("noteView", null)
+        this.newSlot("thumbnailView", null)
     }
 
     init () {

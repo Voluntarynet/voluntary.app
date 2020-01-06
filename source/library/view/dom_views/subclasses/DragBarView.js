@@ -10,17 +10,15 @@
 window.DragBarView = class DragBarView extends DomView {
     
     initPrototype () {
-        this.newSlots({
-            isEnabled: true,
-            isHighlighted: false,
-            isDragging: false,
-            normalColor: "#333",
-            highlightColor: "#555",
-            dragColor: "#999",
-            delegate: null,
-            thickness: 2,
-            isVerticalDrag: true,
-        })
+        this.newSlot("isEnabled", true)
+        this.newSlot("isHighlighted", false)
+        this.newSlot("isDragging", false)
+        this.newSlot("normalColor", "#333")
+        this.newSlot("highlightColor", "#555")
+        this.newSlot("dragColor", "#999")
+        this.newSlot("delegate", null)
+        this.newSlot("thickness", 2)
+        this.newSlot("isVerticalDrag", true)
     }
 
     init () {

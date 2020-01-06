@@ -11,9 +11,7 @@
 window.BMSound = class BMSound extends BMNode {
     
     initPrototype () {
-        this.newSlots({
-            path: null,
-        })
+        this.newSlot("path", null)
     }
 
     init () {

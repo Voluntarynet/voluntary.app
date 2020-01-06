@@ -8,12 +8,10 @@
 
 window.IndexedDBFolder = class IndexedDBFolder extends ProtoClass {
     initPrototype () {
-        this.newSlots({
-            path: "/", // path should end with pathSeparator
-            pathSeparator: "/",
-            db: null,
-            didRequestPersistence: false,
-        })
+        this.newSlot("path", "/")
+        this.newSlot("pathSeparator", "/") // path should end with pathSeparator
+        this.newSlot("db", null)
+        this.newSlot("didRequestPersistence", false)
     }
 
     init() {

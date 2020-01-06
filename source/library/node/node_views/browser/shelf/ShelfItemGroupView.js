@@ -10,10 +10,8 @@
 window.ShelfItemGroupView = class ShelfItemGroupView extends NodeView {
     
     initPrototype () {
-        this.newSlots({
-            isCompacted: true,
-            isAlwaysSelected: false,
-        })
+        this.newSlot("isCompacted", true)
+        this.newSlot("isAlwaysSelected", false)
     }
 
     init () {

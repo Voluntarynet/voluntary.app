@@ -12,10 +12,7 @@
 window.DomCSSInspector = class DomCSSInspector extends ProtoClass {
     
     initPrototype () {
-        this.newSlots({
-            idName: "DomCSSInspector",
-            //divClassName: null,
-        })
+        this.newSlot("idName", "DomCSSInspector")
     }
 
     testElement () {

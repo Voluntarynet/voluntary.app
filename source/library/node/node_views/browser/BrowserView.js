@@ -13,15 +13,15 @@
 window.BrowserView = class BrowserView extends NodeView {
     
     initPrototype () {
-        this.newSlots({
-            columns: null,
-            isSingleColumn: false,
-            defaultHeader: null,
-            defaultColumnStyles: null,
-            defaultRowStyles: null,
-            watchForNodeUpdates: false,
-            columnGroupCache: null, // dict of nodes, with node.typeId() as key, and BrowserColumnGroup as value
-        })
+        this.newSlot("columns", null)
+        this.newSlot("isSingleColumn", false)
+        this.newSlot("defaultHeader", null)
+        this.newSlot("defaultColumnStyles", null)
+        this.newSlot("defaultRowStyles", null)
+        this.newSlot("watchForNodeUpdates", false)
+
+        // dict of nodes, with node.typeId() as key, and BrowserColumnGroup as value
+        this.newSlot("columnGroupCache", null)
     }
 
     init () {

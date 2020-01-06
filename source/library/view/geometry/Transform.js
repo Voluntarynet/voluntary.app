@@ -13,11 +13,9 @@
 
 window.Transform = class Transform extends ProtoClass {
     initPrototype () {
-        this.newSlots({
-            position: null, // in px units 
-            rotation: null, // in degrees units
-            scale: null,
-        })
+        this.newSlot("position", null).setComment("in px units") 
+        this.newSlot("rotation", null).setComment("in degrees units") 
+        this.newSlot("scale", null)
     }
 
     init () {

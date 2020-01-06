@@ -11,9 +11,7 @@
 window.BMDataStore = class BMDataStore extends BMNode {
     
     initPrototype () {
-        this.newSlots({
-            lastSyncTime: 0,
-        })
+        this.newSlot("lastSyncTime", 0)
     }
 
     init () {

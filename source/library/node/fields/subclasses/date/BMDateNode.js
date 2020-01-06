@@ -11,11 +11,11 @@
 window.BMDateNode = class BMDateNode extends BMSummaryNode {
     
     initPrototype () {
-        this.newSlots({
-            year: null,
-            month: null,
-            day: null,
-        })
+        this.protoAddStoredSlot("title")
+
+        this.newSlot("year", null).setShouldStoreSlot(true)
+        this.newSlot("month", null).setShouldStoreSlot(true)
+        this.newSlot("day", null).setShouldStoreSlot(true)
 
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(false)
@@ -23,12 +23,6 @@ window.BMDateNode = class BMDateNode extends BMSummaryNode {
         this.setCanDelete(true)
 
         this.setTitle("Date")
-
-        this.protoAddStoredSlot("title")
-        this.protoAddStoredSlot("year")
-        this.protoAddStoredSlot("month")
-        this.protoAddStoredSlot("day")
-
         this.setNodeCanEditTitle(true)
         this.setNodeCanEditSubtitle(false)
     }

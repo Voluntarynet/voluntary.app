@@ -9,9 +9,7 @@
 window.BMStringField = class BMStringField extends BMField {
     
     initPrototype () {
-        this.newSlots({
-            unsetVisibleValue: "",
-        })
+        this.newSlot("unsetVisibleValue", "")
     }
 
     init () {

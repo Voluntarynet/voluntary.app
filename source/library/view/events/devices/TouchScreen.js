@@ -12,12 +12,10 @@
 window.TouchScreen = class TouchScreen extends Device {
 
     initPrototype () {
-        this.newSlots({
-            currentEvent: null,
-            lastEvent: null,
-            touchListener: null,
-            //isVisualDebugging: false,
-        })
+        this.newSlot("currentEvent", null)
+        this.newSlot("lastEvent", null)
+        this.newSlot("touchListener", null)
+        //this.newSlot("isVisualDebugging", false)
     }
 
     isSupported () {

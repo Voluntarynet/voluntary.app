@@ -9,15 +9,12 @@
 window.BrowserHeader = class BrowserHeader extends NodeView {
     
     initPrototype () {
-        this.newSlots({
-            backArrowView: null,
-            titleView: null,
-            doesShowBackArrow: false,
-            shouldShowTitle: false,
-            
-            rightActionsView: null,
-            actionButtons: null,
-        })
+        this.newSlot("backArrowView", null)
+        this.newSlot("titleView", null)
+        this.newSlot("doesShowBackArrow", false)
+        this.newSlot("shouldShowTitle", false)
+        this.newSlot("rightActionsView", null)
+        this.newSlot("actionButtons", null)
     }
 
     init () {

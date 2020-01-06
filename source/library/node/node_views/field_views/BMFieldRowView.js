@@ -9,15 +9,13 @@
 window.BMFieldRowView = class BMFieldRowView extends BrowserFieldRow {
     
     initPrototype () {
-        this.newSlots({
-            keyView: null,
-            valueView: null,
-            errorView: null,
-            noteView: null,
-            editableColor: "#aaa",
-            uneditableColor: "#888",
-            errorColor: "red",
-        })
+        this.newSlot("keyView", null)
+        this.newSlot("valueView", null)
+        this.newSlot("errorView", null)
+        this.newSlot("noteView", null)
+        this.newSlot("editableColor", "#aaa")
+        this.newSlot("uneditableColor", "#888")
+        this.newSlot("errorColor", "red")
     }
 
     init () {

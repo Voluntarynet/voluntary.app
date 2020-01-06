@@ -36,70 +36,74 @@
 window.BMNode = class BMNode extends ProtoClass {
     
     initPrototype () {
-        let aSlot = this.newSlot("subnodeProto", null)
-        assert(!aSlot.shouldStoreSlot())
         
-        this.newSlots({
-            // row view summary
-            title: null,
-            subtitle: null,
-            note: null,
+        // row view summary
 
-            // parent node, subnodes
-            parentNode: null,
-            //subnodeProto: null,
-            nodeCanReorderSubnodes: false,
+        this.newSlot("title", null)
+        this.newSlot("subtitle", null)
+        this.newSlot("note", null)
 
-            // notification notes
-            didUpdateNodeNote: null,
-            shouldFocusSubnodeNote: null,
+        // parent node, subnodes
 
-            // view related, but computed on node
-            subtitleIsSubnodeCount: false,
-            nodeVisibleClassName: null,
-            noteIsSubnodeCount: false,
-            nodeEmptyLabel: null, // shown in view when there are no subnodes
-                
-
-            // --- view related -----------------------------------
-
-            // view settings
-            viewClassName: null,
-            nodeThumbnailUrl: null,
-            nodeCanEditTitle: false,
-            nodeCanEditSubtitle: false,
-            nodeRowIsSelectable: true,
-            nodeRowsStartAtBottom: false,
-            nodeMinRowHeight: 0, // tall fields like draft body
-
-            // html
-            acceptsFileDrop: false,
-                    
-            // view style overrides
-            viewDict: null, 
-            nodeColumnStyles: null,
-            nodeRowStyles: null,
-
-            // view footer
-            nodeHasFooter: false,
-            nodeInputFieldMethod: null, // for footer
-
-            // column settings - TODO: auto adjust to fit?
-            nodeMinWidth: 200,
-            nodeUsesColumnBackgroundColor: true,
-            canDelete: false,
-            nodeCanEditRowHeight: false,
-            nodeCanEditColumnWidth: false,
-
-            // inspector
-            nodeCanInspect: false,
-            nodeInspector: null,
-        })
-
-
+        this.newSlot("parentNode", null)
+        this.newSlot("nodeCanReorderSubnodes", false)
         this.newSlot("subnodes", null).setInitProto(SubnodesArray)
-        this.newSlot("actions", null).setInitProto(Array)
         this.newSlot("shouldStoreSubnodes", true) //.setShouldStore(true)
+        this.newSlot("subnodeProto", null)
+
+        // notification notes
+
+        this.newSlot("didUpdateNodeNote", null)
+        this.newSlot("shouldFocusSubnodeNote", null)
+
+        // view related, but computed on node
+
+        this.newSlot("subtitleIsSubnodeCount", false)
+        this.newSlot("nodeVisibleClassName", null)
+        this.newSlot("noteIsSubnodeCount", false)
+        this.newSlot("nodeEmptyLabel", null) // shown in view when there are no subnodes
+
+        // view settings
+
+        this.newSlot("viewClassName", null)
+        this.newSlot("nodeThumbnailUrl", null)
+        this.newSlot("nodeCanEditTitle", false)
+        this.newSlot("nodeCanEditSubtitle", false)
+        this.newSlot("nodeRowIsSelectable", true)
+        this.newSlot("nodeRowsStartAtBottom", false)
+        this.newSlot("nodeMinRowHeight", 0)
+
+        // html
+
+        this.newSlot("acceptsFileDrop", false)
+
+        // view style overrides
+
+        this.newSlot("viewDict", null)
+        this.newSlot("nodeColumnStyles", null)
+        this.newSlot("nodeRowStyles", null)
+
+        // view footer
+
+        this.newSlot("nodeHasFooter", false)
+        this.newSlot("nodeInputFieldMethod", null)
+
+        // column settings - TODO: auto adjust to fit?
+
+        this.newSlot("nodeMinWidth", 200)
+        this.newSlot("nodeUsesColumnBackgroundColor", true)
+        this.newSlot("canDelete", false).setDuplicateOp("copyValue")
+        this.newSlot("nodeCanEditRowHeight", false)
+        this.newSlot("nodeCanEditColumnWidth", false)
+
+        // inspector
+
+        this.newSlot("nodeCanInspect", false)
+        this.newSlot("nodeInspector", null)
+
+        // actions
+
+        this.newSlot("actions", null).setInitProto(Array)
     }
 
     init () {

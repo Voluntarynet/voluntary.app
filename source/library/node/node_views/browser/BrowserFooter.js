@@ -9,11 +9,9 @@
 window.BrowserFooter = class BrowserFooter extends NodeView {
     
     initPrototype () {
-        this.newSlots({
-            leftActionsView: null,
-            textView: null,
-            rightActionsView: null,
-        })
+        this.newSlot("leftActionsView", null)
+        this.newSlot("textView", null)
+        this.newSlot("rightActionsView", null)
     }
 
     init () {

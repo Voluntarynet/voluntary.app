@@ -9,9 +9,7 @@
 window.BMFontResources = class BMFontResources extends BMNode {
     
     initPrototype () {
-        this.newSlots({
-            extensions: ["ttf", "woff", "woff2"],
-        })
+        this.newSlot("extensions", ["ttf", "woff", "woff2"])
     }
 
     init () {

@@ -17,14 +17,12 @@
 window.Devices = class Devices extends ProtoClass {
     
     initPrototype () {
-        this.newSlots({
-            //gamePadListener: null,
-            keyboard: null,
-            mouse: null,
-            touchScreen: null,
-            gamePadManager: null,
-            isSetup: false,
-        })
+        //this.newSlot("gamePadListener", null)
+        this.newSlot("keyboard", null)
+        this.newSlot("mouse", null)
+        this.newSlot("touchScreen", null)
+        this.newSlot("gamePadManager", null)
+        this.newSlot("isSetup", false)
     }
 
     /*

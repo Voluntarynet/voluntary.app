@@ -35,9 +35,7 @@
 
 window.Broadcaster = class Broadcaster extends ProtoClass {
     initPrototype () {
-        this.newSlots({
-            nameToListenerSet: null, // dict to set
-        })
+        this.newSlot("nameToListenerSet", null)  // dict to set
     }
 
     init() {

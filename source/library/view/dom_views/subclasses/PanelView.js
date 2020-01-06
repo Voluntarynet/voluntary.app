@@ -9,13 +9,10 @@
 window.PanelView = class PanelView extends DomView {
     
     initPrototype () {
-        this.newSlots({
-            titleView: null,
-            subtitleView: null,
-            button1: null,
-        
-            isDragging: false,
-        })
+        this.newSlot("titleView", null)
+        this.newSlot("subtitleView", null)
+        this.newSlot("button1", null)
+        this.newSlot("isDragging", false)
     }
 
     init () {

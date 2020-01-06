@@ -9,9 +9,7 @@
 window.BMImageResources = class BMImageResources extends BMNode {
     
     initPrototype () {
-        this.newSlots({
-            extensions: ["png", "jpg", "jpeg", "gif", "tiff", "bmp"],
-        })
+        this.newSlot("extensions", ["png", "jpg", "jpeg", "gif", "tiff", "bmp"])
     }
 
     init () {

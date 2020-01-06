@@ -18,16 +18,12 @@
 window.BooleanView = class BooleanView extends DomStyledView {
     
     initPrototype () {
-        this.newSlots({
-            //selectedColor: null,
-            //unselectedColor: null,
-            doesClearOnReturn: false, // needed?
-            doesHoldFocusOnReturn: false, // needed?
-            value: false,
-            isEditable: false,
-            innerCheckView: null,
-            outerCheckView: null,
-        })
+        this.newSlot("doesClearOnReturn", false)  // needed?
+        this.newSlot("doesHoldFocusOnReturn", false)  // needed?
+        this.newSlot("value", false)
+        this.newSlot("isEditable", false)
+        this.newSlot("innerCheckView", null)
+        this.newSlot("outerCheckView", null)
     }
 
     init () {

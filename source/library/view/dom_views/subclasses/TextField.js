@@ -15,18 +15,21 @@
 window.TextField = class TextField extends DomStyledView {
     
     initPrototype () {
-        this.newSlots({
-            selectedColor: null,
-            unselectedColor: null,
-            doesClearOnReturn: false,
-            doesHoldFocusOnReturn: false,
-            doesTrim: false,
-            didTextInputNote: null,
-            didTextEditNote: null,
-            usesDoubleTapToEdit: false, // has to start false for proper state setup
-            doubleTapGestureRecognizer: null,
-            isEditable: false, // need to separate from contentEditable since we want to override when usesDoubleTapToEdit is true.
-        })
+        this.newSlot("selectedColor", null)
+        this.newSlot("unselectedColor", null)
+        this.newSlot("doesClearOnReturn", false)
+        this.newSlot("doesHoldFocusOnReturn", false)
+        this.newSlot("doesTrim", false)
+        this.newSlot("didTextInputNote", null)
+        this.newSlot("didTextEditNote", null)
+
+        // has to start false for proper state setup
+        this.newSlot("usesDoubleTapToEdit", false) 
+
+        this.newSlot("doubleTapGestureRecognizer", null)
+
+        // need to separate from contentEditable since we want to override when usesDoubleTapToEdit is true.
+        this.newSlot("isEditable", false)
     }
 
     init () {

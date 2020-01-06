@@ -12,9 +12,7 @@
 window.BMNumberField = class BMNumberField extends BMField {
     
     initPrototype () {
-        this.newSlots({
-            unsetVisibleValue: "unset",
-        })
+        this.newSlot("unsetVisibleValue", "unset")
     }
 
     init () {

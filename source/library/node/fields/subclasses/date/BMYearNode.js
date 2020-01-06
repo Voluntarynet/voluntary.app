@@ -9,10 +9,8 @@
 window.BMYearNode = class BMYearNode extends BMNode {
     
     initPrototype () {
-        this.newSlots({
-            allowsMultiplePicks: false,
-            value: 0,
-        })
+        this.newSlot("allowsMultiplePicks", false)
+        this.newSlot("value", 0)
     }
 
     init () {

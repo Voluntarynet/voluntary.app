@@ -11,10 +11,8 @@
 window.ButtonView = class ButtonView extends DomView {
     
     initPrototype () {
-        this.newSlots({
-            titleView: null,
-            isEnabled: true,
-        })
+        this.newSlot("titleView", null)
+        this.newSlot("isEnabled", true)
     }
 
     init () {

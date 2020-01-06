@@ -19,10 +19,8 @@
 window.EdgePanGestureRecognizer = class EdgePanGestureRecognizer extends GestureRecognizer {
     
     initPrototype () {
-        this.newSlots({
-            edgeName: null,
-            maxStartDistance: 15,
-        })
+        this.newSlot("edgeName", null)
+        this.newSlot("maxStartDistance", 15)
     }
 
     init () {

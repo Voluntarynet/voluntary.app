@@ -65,14 +65,12 @@
 
 window.NotificationCenter = class NotificationCenter extends ProtoClass {
     initPrototype () {
-        this.newSlots({
-            observations: null, // array 
-            notifications: null, // array
-            debugNoteName: "appDidInit",
-            currentNote: null,
-            isProcessing: false,
-            nameIndex: null, // dict of dicts
-        })
+        this.newSlot("observations", null) // array 
+        this.newSlot("notifications", null) // array 
+        this.newSlot("debugNoteName", "appDidInit")
+        this.newSlot("currentNote", null)
+        this.newSlot("isProcessing", false)
+        this.newSlot("nameIndex", null) // dict of dicts
     }
 
     init() {

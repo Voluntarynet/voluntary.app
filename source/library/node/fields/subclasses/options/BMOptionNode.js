@@ -11,22 +11,15 @@
 window.BMOptionNode = class BMOptionNode extends BMStorableNode {
     
     initPrototype () {
-        this.newSlots({
-            label: "Option Title",
-            value:  null,
-            isPicked: false,
-        })
+        this.newSlot("label", "Option Title").setShouldStoreSlot(true)
+        this.newSlot("value", null).setShouldStoreSlot(true)
+        this.newSlot("isPicked", false).setShouldStoreSlot(true)
 
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(false)
         this.setNodeCanReorderSubnodes(false)
         this.setCanDelete(true)
-        this.protoAddStoredSlot("label")
-        this.protoAddStoredSlot("value")
-        this.protoAddStoredSlot("isPicked")
         this.setNodeCanEditTitle(true)
-
-        //shallowCopySlots "label", "value", "isPicked", 
     }
 
     init () {

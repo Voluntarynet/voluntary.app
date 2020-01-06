@@ -9,10 +9,8 @@
 window.BMURLImage = class BMURLImage extends BMNode {
     
     initPrototype () {
-        this.newSlots({
-            path: "",
-            dataURL: "",
-        })
+        this.newSlot("path", "")
+        this.newSlot("dataURL", "")
     }
 
     init () {

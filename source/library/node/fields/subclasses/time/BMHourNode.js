@@ -9,9 +9,7 @@
 window.BMHourNode = class BMHourNode extends BMNode {
     
     initPrototype () {
-        this.newSlots({
-            value: 0, // 0 to 23
-        })
+        this.newSlot("value", 0).setComment("0 to 23")
     }
 
     init () {

@@ -25,10 +25,8 @@
 window.LongPressGestureRecognizer = class LongPressGestureRecognizer extends GestureRecognizer {
     
     initPrototype () {
-        this.newSlots({
-            timePeriod: 500, // miliseconds
-            timeoutId: null, // private
-        })
+        this.newSlot("timePeriod", 500).setComment("milliseconds")
+        this.newSlot("timeoutId", null).setIsPrivate(true)
     }
 
     init () {

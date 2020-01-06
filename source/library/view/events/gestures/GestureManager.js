@@ -11,10 +11,8 @@
 window.GestureManager = class GestureManager extends ProtoClass {
     
     initPrototype () {
-        this.newSlots({
-            activeGesture: null,
-            begunGestures: null,
-        })
+        this.newSlot("activeGesture", null)
+        this.newSlot("begunGestures", null)
     }
 
     init () {

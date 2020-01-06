@@ -16,14 +16,12 @@
 
 window.EventPoint = class EventPoint extends Point {
     initPrototype () {
-        this.newSlots({
-            id: null,
-            state: null,
-            target: null, 
-            isDown: false,
-            overView: null,
-            event: null,
-        })
+        this.newSlot("id", null)
+        this.newSlot("state", null)
+        this.newSlot("target", null)
+        this.newSlot("isDown", false)
+        this.newSlot("overView", null)
+        this.newSlot("event", null)
     }
     
     init () {

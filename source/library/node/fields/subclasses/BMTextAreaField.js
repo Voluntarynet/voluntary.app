@@ -9,9 +9,7 @@
 window.BMTextAreaField = class BMTextAreaField extends BMField {
     
     initPrototype () {
-        this.newSlots({
-            isMono: false,
-        })
+        this.newSlot("isMono", false)
     }
 
     init () {

@@ -23,10 +23,8 @@
 window.BMAudioPlayer = class BMAudioPlayer extends DomView {
     
     initPrototype () {
-        this.newSlots({
-            path: "",
-            sourceElement: null,
-        })
+        this.newSlot("path", "")
+        this.newSlot("sourceElement", null)
     }
 
     init () {

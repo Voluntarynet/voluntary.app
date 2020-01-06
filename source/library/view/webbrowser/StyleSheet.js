@@ -11,9 +11,7 @@
 window.StyleSheet = class StyleSheet extends ProtoClass {
     
     initPrototype () {
-        this.newSlots({
-            sheetElement: null,
-        })
+        this.newSlot("sheetElement", null)
     }
 
     init () {

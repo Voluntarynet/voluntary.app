@@ -9,13 +9,11 @@
 window.ImageView = class ImageView extends NodeView {
     
     initPrototype () {
-        this.newSlots({
-            closeButtonView: null,
-            dataURL: null,
-            isEditable: false,
-            imageContainer: null,
-            rawImageView: null,
-        })
+        this.newSlot("closeButtonView", null)
+        this.newSlot("dataURL", null)
+        this.newSlot("isEditable", false)
+        this.newSlot("imageContainer", null)
+        this.newSlot("rawImageView", null)
     }
 
     init () {

@@ -32,11 +32,9 @@
 window.GamePadManager = class GamePadManager extends ProtoClass {
     
     initPrototype () {
-        this.newSlots({
-            //gamePadListener: null,
-            gamePadsDict: null,
-            pollPeriod: 1000, // milliseconds
-        })
+        //this.newSlot("gamePadListener", null)
+        this.newSlot("gamePadsDict", null)
+        this.newSlot("pollPeriod", 1000).setComment("milliseconds")
     }
 
     /*

@@ -9,19 +9,13 @@
 window.BrowserColumnGroup = class BrowserColumnGroup extends NodeView {
     
     initPrototype () {
-        this.newSlots({
-            header: null,
-            footer: null,
-            
-            scrollView: null, // contains column
-            column: null, // is inside scrollView
-            
-            //emptyLabel: null,
-        
-            isCollapsed: false,
-            animatesCollapse: true,
-            browser: null,
-        })
+        this.newSlot("header", null)
+        this.newSlot("footer", null)
+        this.newSlot("scrollView", null) // contains column
+        this.newSlot("column", null) // is inside scrollView
+        this.newSlot("isCollapsed", false)
+        this.newSlot("animatesCollapse", true)
+        this.newSlot("browser", null)
     }
 
     init () {

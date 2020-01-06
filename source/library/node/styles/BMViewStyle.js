@@ -13,34 +13,30 @@
 window.BMViewStyle = class BMViewStyle extends ProtoClass {
     
     initPrototype () {
-        this.newSlots({
-            name: "",
+        this.newSlot("name", "")
 
-            // use same names as css style, nulls aren't applied
-            
-            color: null,
-            backgroundColor: null,
-            opacity: null,
-            borderLeft: null,
-            borderRight: null,
-            borderTop: null,
-            borderBottom: null,
-            borderWidth: null,
-            borderColor: null,
-            borderRadius: null,
-            
-            // margin, padding, border,...
-            // fontSize, fontFamily, fontStyle
-            
-            styleNames: [
-                "color", 
-                "backgroundColor", 
-                "opacity", 
-                "borderLeft", "borderRight", "borderTop", "borderBottom",
-                //"borderWidth"
-                //"borderRadius"
-            ]
-        })
+        // use same names as css style, nulls aren't applied
+
+        this.newSlot("color", null)
+        this.newSlot("backgroundColor", null)
+        this.newSlot("opacity", null)
+        this.newSlot("borderLeft", null)
+        this.newSlot("borderRight", null)
+        this.newSlot("borderTop", null)
+        this.newSlot("borderBottom", null)
+        this.newSlot("borderWidth", null)
+        this.newSlot("borderColor", null)
+        this.newSlot("borderRadius", null)
+
+        this.newSlot("styleNames", [
+            "color", 
+            "backgroundColor", 
+            "opacity", 
+            "borderLeft", "borderRight", "borderTop", "borderBottom",
+            //"borderWidth"
+            //"borderRadius"
+        ])
+
     }
 
     init () {

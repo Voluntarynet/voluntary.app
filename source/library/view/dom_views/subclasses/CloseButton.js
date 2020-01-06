@@ -12,10 +12,8 @@
 window.CloseButton = class CloseButton extends DomView {
     
     initPrototype () {
-        this.newSlots({
-            isEnabled: true,
-            iconView: null,
-        })
+        this.newSlot("isEnabled", true)
+        this.newSlot("iconView", null)
     }
 
     init () {

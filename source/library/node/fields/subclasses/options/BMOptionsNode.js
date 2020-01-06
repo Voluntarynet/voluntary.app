@@ -9,9 +9,7 @@
 window.BMOptionsNode = class BMOptionsNode extends BMField {
     
     initPrototype () {
-        this.newSlots({
-            allowsMultiplePicks: false,
-        })
+        this.newSlot("allowsMultiplePicks", false)
 
         this.setShouldStore(true)
         this.protoAddStoredSlot("key")

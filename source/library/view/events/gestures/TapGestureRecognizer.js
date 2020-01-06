@@ -31,14 +31,11 @@
 window.TapGestureRecognizer = class TapGestureRecognizer extends GestureRecognizer {
     
     initPrototype () {
-        this.newSlots({
-            maxHoldPeriod: 1000, // milliseconds per tap
-            timeoutId: null, // private
-
-            numberOfTapsRequired: 1,
-            numberOfFingersRequired: 1,
-            tapCount: 0,
-        })
+        this.newSlot("maxHoldPeriod", 1000).setComment("milliseconds per tap")
+        this.newSlot("timeoutId", null) // private
+        this.newSlot("numberOfTapsRequired", 1)
+        this.newSlot("numberOfFingersRequired", 1)
+        this.newSlot("tapCount", 0)
     }
 
     init () {

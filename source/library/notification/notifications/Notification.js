@@ -8,13 +8,11 @@
 
 window.Notification = class Notification extends ProtoClass {
     initPrototype () {
-        this.newSlots({
-            name: null,
-            sender: null,
-            info: null,
-            center: null, // NotificationCenter that owns this
-            senderStack: null,
-        })
+        this.newSlot("name", null)
+        this.newSlot("sender", null)
+        this.newSlot("info", null)
+        this.newSlot("center", null) // NotificationCenter that owns this
+        this.newSlot("senderStack", null)
     }
 
     init() {

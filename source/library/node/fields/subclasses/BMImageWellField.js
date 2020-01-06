@@ -9,10 +9,9 @@
 window.BMImageWellField = class BMImageWellField extends BMField {
     
     initPrototype () {
-        this.newSlots({
-            onlyShowsKeyWhenEmpty: false,
-            isEditable: true,
-        })
+        this.newSlot("onlyShowsKeyWhenEmpty", false)
+        this.newSlot("isEditable", true)
+        
         this.protoAddStoredSlot("nodeMinRowHeight")
 
         this.setKey("Image title")

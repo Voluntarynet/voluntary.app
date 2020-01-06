@@ -10,16 +10,14 @@
 
 window.IndexedDBTx = class IndexedDBTx extends ProtoClass {
     initPrototype () {
-        this.newSlots({
-            dbFolder: null,
-            objectStore: null,
-            tx: null,
-            requests: [],
-            isCommitted: false,
-            txRequestStack: null,
-            succcessCallback: null,
-            errorCallback: null,
-        })
+        this.newSlot("dbFolder", null)
+        this.newSlot("objectStore", null)
+        this.newSlot("tx", null)
+        this.newSlot("requests", [])
+        this.newSlot("isCommitted", false)
+        this.newSlot("txRequestStack", null)
+        this.newSlot("succcessCallback", null)
+        this.newSlot("errorCallback", null)
     }
 
     init() {

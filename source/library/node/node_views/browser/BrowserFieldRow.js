@@ -11,9 +11,7 @@
 window.BrowserFieldRow = class BrowserFieldRow extends BrowserRow {
     
     initPrototype () {
-        this.newSlots({
-            allowsCursorNavigation: false,
-        })
+        this.newSlot("allowsCursorNavigation", false)
     }
 
     init () {

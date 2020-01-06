@@ -11,12 +11,10 @@
 
 window.StackFrame = class StackFrame extends ProtoClass {
     initPrototype () {
-        this.newSlots({
-            functionName: null,
-            url: null,
-            lineNumber: null,
-            characterNumber: null,
-        })
+        this.newSlot("functionName", null)
+        this.newSlot("url", null)
+        this.newSlot("lineNumber", null)
+        this.newSlot("characterNumber", null)
     }
 
     init() {
@@ -63,10 +61,8 @@ window.StackFrame = class StackFrame extends ProtoClass {
 
 window.StackTrace = class StackTrace extends ProtoClass {
     initPrototype () {
-        this.newSlots({
-            error: null,
-            stackFrames: [],
-        })
+        this.newSlot("error", null)
+        this.newSlot("stackFrames", [])
     }
 
     init() {

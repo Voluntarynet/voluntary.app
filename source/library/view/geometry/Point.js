@@ -12,12 +12,10 @@
 
 window.Point = class Point extends ProtoClass {
     initPrototype () {
-        this.newSlots({
-            x: 0,
-            y: 0,
-            z: 0,
-            t: 0,
-        })
+        this.newSlot("x", 0)
+        this.newSlot("y", 0)
+        this.newSlot("z", 0)
+        this.newSlot("t", 0)
     }
 
     init () {

@@ -78,13 +78,12 @@ const max3 = function(a, b, c) {
 window.CSSColor = class CSSColor extends ProtoClass {
     
     initPrototype () {
-        this.newSlots({
-            red: 0, // values between 0.0 and 1.0
-            green: 0,
-            blue: 0,
-            opacity: 1,
-            //isMutable: true,
-        })
+        // values between 0.0 and 1.0
+        this.newSlot("red", 0)
+        this.newSlot("green", 0)
+        this.newSlot("blue", 0)
+        this.newSlot("opacity", 1)
+        //isMutable: true,
     }
     
     init () {
@@ -103,7 +102,7 @@ window.CSSColor = class CSSColor extends ProtoClass {
         return CSSColor.clone().set(aColor.red(), aColor.green(), aColor.blue(), aColor.opacity())
     }
 
-    colorMapCache () {
+    static colorMapCache () {
         if (!CSSColor._colorMapCache) {
             CSSColor._colorMapCache = {}
         }

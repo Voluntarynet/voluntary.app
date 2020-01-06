@@ -10,10 +10,8 @@
 window.BMFontFamily = class BMFontFamily extends BMNode {
     
     initPrototype () {
-        this.newSlots({
-            name: null,
-            fonts: null,
-        })
+        this.newSlot("name", null)
+        this.newSlot("fonts", null)
     }
 
     init () {

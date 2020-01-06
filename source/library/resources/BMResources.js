@@ -9,12 +9,10 @@
 window.BMResources = class BMResources extends BMStorableNode {
     
     initPrototype () {
-        this.newSlots({
-            themes: null,
-            fonts: null,
-            sounds: null,
-            images: null,
-        })
+        this.newSlot("themes", null)
+        this.newSlot("fonts", null)
+        this.newSlot("sounds", null)
+        this.newSlot("images", null)
     }
 
     init () {

@@ -31,16 +31,14 @@
 window.BMViewStyles = class BMViewStyles extends ProtoClass {
     
     initPrototype () {
-        this.newSlots({
-            name: "",
-            unselected: null, 
-            selected: null, // aka focused
-            disabled: null,
-            //hover: null, 
-            //enabled: null,
-            //error: null,
-            isMutable: true,
-        })
+        this.newSlot("name", "")
+        this.newSlot("unselected", null)
+        this.newSlot("selected", null) // aka focused
+        this.newSlot("disabled", null)
+        //hover: null, 
+        //enabled: null,
+        //error: null,
+        this.newSlot("isMutable", true)
     }
 
     init () {

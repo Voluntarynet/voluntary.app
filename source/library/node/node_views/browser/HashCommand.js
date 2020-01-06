@@ -11,11 +11,9 @@
 window.HashCommand = class HashCommand extends ProtoClass {
     
     initPrototype () {
-        this.newSlots({
-            target: null,
-            method: null,
-            arguments: [],
-        })
+        this.newSlot("target", null)
+        this.newSlot("method", null)
+        this.newSlot("arguments", [])
     }
 
     init () {

@@ -11,40 +11,39 @@
 window.DomView = class DomView extends ProtoClass {
     
     initPrototype () {
-        this.newSlots({
-            divClassName: "",
-            elementType: "div",
-            element: null,
-        
-            // parent view and subviews
-            parentView: null,
-            subviews: null,
-        
-            // target / action
-            target: null,
-            action: null,
-            showsHaloWhenEditable: false,
-            tabCount: 0,
-            validColor: null,
-            invalidColor: null,
-            //isHandlingEvent: false,
-        
-            // key views
-            interceptsTab: true,
-            nextKeyView: null,
-            canMakeKey: true,
-            unfocusOnEnterKey: false,
-        
-            // event handling
-            isRegisteredForVisibility: false,
-            intersectionObserver: null,
-        
-            acceptsFirstResponder: false,
-        
-            gestureRecognizers: null,
-            eventListenersDict: null,
-            defaultTapGesture: null,
-        })
+        this.newSlot("divClassName", "")
+        this.newSlot("elementType", "div")
+        this.newSlot("element", null)
+
+        // parent view and subviews
+
+        this.newSlot("parentView", null)
+        this.newSlot("subviews", null)
+
+        // target / action
+
+        this.newSlot("target", null)
+        this.newSlot("action", null)
+        this.newSlot("showsHaloWhenEditable", false)
+        this.newSlot("tabCount", 0)
+        this.newSlot("validColor", null)
+        this.newSlot("invalidColor", null)
+
+        // key views
+
+        this.newSlot("interceptsTab", true)
+        this.newSlot("nextKeyView", null)
+        this.newSlot("canMakeKey", true)
+        this.newSlot("unfocusOnEnterKey", false)
+
+        // event handling
+
+        this.newSlot("isRegisteredForVisibility", false)
+        this.newSlot("intersectionObserver", null)
+        this.newSlot("acceptsFirstResponder", false)
+        this.newSlot("gestureRecognizers", null)
+        this.newSlot("eventListenersDict", null)
+        this.newSlot("defaultTapGesture", null)
     }
 
     init () {

@@ -32,10 +32,8 @@
 window.BMFieldSetNode = class BMFieldSetNode extends BMStorableNode {
     
     initPrototype () {
-        this.newSlots({
-            status: "",
-            isEditable: true,
-        })
+        this.newSlot("status", "")
+        this.newSlot("isEditable", true)
     }
 
     init () {

@@ -10,14 +10,11 @@
 
 window.DomTransition = class DomTransition extends ProtoClass {
     initPrototype () {
-        this.newSlots({
-            property: "",
-            duration: 0,
-            timingFunction: "ease-in-out", // "linear", "ease", "ease-in", cubic-bezier(n, n, n, n)
-            delay: 0, // set to number type (unit = seconds)
-            //parent: null,
-            transitions: null,
-        })
+        this.newSlot("property", "")
+        this.newSlot("duration", 0)
+        this.newSlot("timingFunction", "ease-in-out") // "linear", "ease", "ease-in", cubic-bezier(n, n, n, n)
+        this.newSlot("delay", 0) // set to number type (unit = seconds)
+        this.newSlot("transitions", null)
     }
 
     init() {

@@ -19,11 +19,9 @@
 window.PanGestureRecognizer = class PanGestureRecognizer extends GestureRecognizer {
     
     initPrototype () {
-        this.newSlots({
-            minNumberOfFingersRequired: 1,
-            maxNumberOfFingersAllowed: 1,
-            //downPositionInTarget: null,
-        })
+        this.newSlot("minNumberOfFingersRequired", 1)
+        this.newSlot("maxNumberOfFingersAllowed", 1)
+        //downPositionInTarget: null,
     }
 
     init () {

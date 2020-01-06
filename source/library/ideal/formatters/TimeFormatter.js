@@ -30,20 +30,18 @@ TimeFormatter
 
 window.TimeFormatter = class TimeFormatter extends ProtoClass {
     initPrototype () {
-        this.newSlots({
-            is24Hour: false, 
-            showsMeridiem: true, 
-            uppercaseMeridem: false, 
-            amString: "am", 
-            pmString: "pm", 
-            doesPadHours: false,
-            showsHours: true,
-            hourMinuteSpacer: ":",
-            showsMinutes: true,
-            showsSeconds: false,
-            showsMilliseconds: false,
-            date: null, // a javascript Date object
-        })
+        this.newSlot("is24Hour", false)
+        this.newSlot("showsMeridiem", true)
+        this.newSlot("uppercaseMeridem", false)
+        this.newSlot("amString", "am")
+        this.newSlot("pmString", "pm")
+        this.newSlot("doesPadHours", false)
+        this.newSlot("showsHours", true)
+        this.newSlot("hourMinuteSpacer", ":")
+        this.newSlot("showsMinutes", true)
+        this.newSlot("showsSeconds", false)
+        this.newSlot("showsMilliseconds", false)
+        this.newSlot("date", null) // a javascript Date object
     }
 
     init() {

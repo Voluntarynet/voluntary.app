@@ -54,59 +54,51 @@
 window.GestureRecognizer = class GestureRecognizer extends ProtoClass {
     
     initPrototype () {
-        this.newSlots({
-            viewTarget: null,
-            shouldRemoveOnComplete: false,
+        this.newSlot("viewTarget", null)
+        this.newSlot("shouldRemoveOnComplete", false)
 
-            // listeners
+        // listeners
 
-            listenerClasses: null,
-            viewListeners: null, 
-            docListeners: null, 
-            //isActive: false,
-            defaultListenerClasses: ["MouseListener", "TouchListener"],
+        this.newSlot("listenerClasses", null)
+        this.newSlot("viewListeners", null)
+        this.newSlot("docListeners", null)
+        this.newSlot("defaultListenerClasses", ["MouseListener", "TouchListener"])
 
-            // events
+        // events
 
-            overEvent: null,
-            leaveEvent: null,
+        this.newSlot("overEvent", null)
+        this.newSlot("leaveEvent", null)
+        this.newSlot("didBegin", false)
+        this.newSlot("downEvent", null)
+        this.newSlot("beginEvent", null)
+        this.newSlot("currentEvent", null)
+        this.newSlot("lastEvent", null)
+        this.newSlot("upEvent", null)
 
-            didBegin: false,
-            downEvent: null,
-            beginEvent: null,
-            currentEvent: null,
-            lastEvent: null,
-            upEvent: null,
+        // standard messages
 
-            // standard messages
+        this.newSlot("acceptMessage", null)  //"accepts<GestureType>"
+        this.newSlot("beginMessage", null) //"on<GestureType>Begin",
+        this.newSlot("moveMessage", null) //"on<GestureType>Move",
+        this.newSlot("cancelledMessage", null) // "on<GestureType>Cancelled",
+        this.newSlot("completeMessage", null) // "on<GestureType>Complete",
+        
+        // debugging
 
-            acceptMessage: null,    //"accepts<GestureType>"
-            beginMessage: null,     //"on<GestureType>Begin",
-            moveMessage: null,      //"on<GestureType>Move",
-            cancelledMessage: null, // "on<GestureType>Cancelled",
-            completeMessage: null,  // "on<GestureType>Complete",
+        this.newSlot("isEmulatingTouch", false) // assumes touch and mouse events aren't mixed
+        this.newSlot("isVisualDebugging", false)
+        this.newSlot("fingerViewDict", null)
 
-            // debugging
+        // begin pressing 
 
-            isEmulatingTouch: false, // assumes touch and mouse events aren't mixed
-
-            isVisualDebugging: false,
-            fingerViewDict: null,
-
-            // begin pressing 
-
-            isPressing: false,
-
-            minFingersRequired: 2,
-            maxFingersAllowed: 4,
-            minDistToBegin: 10,
-            //maxDistToBegin: null,
-            allowsKeyboardKeys: false,
-            requiresKeyboardKeys: null, 
-
-            shouldRequestActivation: true,
-            isActive: false, // only used if shouldRequestActivation === false
-        })
+        this.newSlot("isPressing", false)
+        this.newSlot("minFingersRequired", 2)
+        this.newSlot("maxFingersAllowed", 4)
+        this.newSlot("minDistToBegin", 10)
+        this.newSlot("allowsKeyboardKeys", false)
+        this.newSlot("requiresKeyboardKeys", null)
+        this.newSlot("shouldRequestActivation", true)
+        this.newSlot("isActive", false) // only used if shouldRequestActivation === false
     }
 
     init () {

@@ -10,14 +10,11 @@
 window.WebBrowserNotification = class WebBrowserNotification extends ProtoClass {
     
     initPrototype () {
-        this.newSlots({
-            title: "",
-            body: null,
-            icon: null, // a url to an image
-            notificationRef: null,
-            timeoutMs: 4000,
-        })
-
+        this.newSlot("title", "")
+        this.newSlot("body", null)
+        this.newSlot("icon", null).setComment("a url to an image")
+        this.newSlot("notificationRef", null)
+        this.newSlot("timeoutMs", 4000)
     }
 
     init () {

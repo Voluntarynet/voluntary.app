@@ -1069,14 +1069,17 @@ window.BrowserColumn = class BrowserColumn extends NodeView {
     onDragSourceDropped (dragView) {
         const dv = dragView.item()
         this.unstackRows()
+
         if (dragView.isMoveOp()) {
             this.swapSubviews(dv, this.rowPlaceHolder())
+        } else if (dragView.isCopyOp()) {
+            const dupRow = dv.duplicate()
+            //dupRow.setNode(this.node().duplicate()) // done by row
+            this.node().addSubnode(dupRow.node())
+            this.addSubview(dupRow)
+            this.swapSubviews(dupRow, this.rowPlaceHolder())
         }
-        if (dragView.isCopyOp()) {
-            const newRow = dv.duplicate()
-            this.addSubview(newRow)
-            this.swapSubviews(newRow, this.rowPlaceHolder())
-        }
+
         this.removeRowPlaceHolder()
         dv.unhideForDrag()
     }

@@ -13,6 +13,10 @@ Object.defineSlots(String.prototype, {
     shallowCopy: function() {
         return this
     },
+
+    duplicate: function() {
+        return this
+    },
     
     isEmpty: function () {
         return this.length === 0;

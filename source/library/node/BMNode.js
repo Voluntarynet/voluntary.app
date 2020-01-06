@@ -39,9 +39,9 @@ window.BMNode = class BMNode extends ProtoClass {
         
         // row view summary
 
-        this.newSlot("title", null)
-        this.newSlot("subtitle", null)
-        this.newSlot("note", null)
+        this.newSlot("title", null).setDuplicateOp("copyValue")
+        this.newSlot("subtitle", null).setDuplicateOp("copyValue")
+        this.newSlot("note", null).setDuplicateOp("copyValue")
 
         // parent node, subnodes
 
@@ -120,6 +120,12 @@ window.BMNode = class BMNode extends ProtoClass {
         //this.setNodeRowStyles(BMViewStyles.clone())
         this.setViewDict({})
         return this
+    }
+
+    duplicate () {
+        const dup = super.duplicate()
+        dup.setSubnodes(this.subnodes().map(sn => sn.duplicate()))
+        return dup
     }
 
     pid () {

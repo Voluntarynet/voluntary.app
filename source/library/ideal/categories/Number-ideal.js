@@ -43,6 +43,10 @@ const Base64 = (function () {
 
 Object.defineSlots(Number.prototype, {
 
+    duplicate: function() {
+        return this
+    },
+    
     copy: function() {
         return this
     },

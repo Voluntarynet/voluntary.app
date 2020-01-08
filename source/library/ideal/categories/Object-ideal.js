@@ -24,7 +24,8 @@
 
 */
 
-[Array, Set, Map].forEach(aClass => aClass.__proto__ = Object)
+const classesToFix =[Array, Set, Map]
+classesToFix.forEach(aClass => aClass.__proto__ = Object)
 
 /*
 Object.hasOwnSlot = function(obj, slotName, slotValue) {

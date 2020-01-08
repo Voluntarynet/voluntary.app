@@ -10,8 +10,7 @@
 window.DropListener = class DropListener extends EventSetListener {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

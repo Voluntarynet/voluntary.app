@@ -10,8 +10,7 @@
 window.GameNode = class GameNode extends BMStorableNode {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

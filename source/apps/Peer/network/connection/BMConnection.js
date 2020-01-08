@@ -9,12 +9,9 @@
 window.BMConnection = class BMConnection extends BMNode {
     
     initPrototype () {
-        this.newSlots({
-            //log: null,
-            connection: null,
-            lastConnectionType: null,
-            lastIsOnline: 0,
-        })
+        this.newSlot("connection", null)
+        this.newSlot("lastConnectionType", null)
+        this.newSlot("lastIsOnline", 0)
     }
 
     init () {

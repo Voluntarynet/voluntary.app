@@ -11,10 +11,7 @@
 window.BMBlacklistedServers = class BMBlacklistedServers extends BMBlacklist {
     
     initPrototype () {
-        this.newSlots({
-            ipsDict: null, 
-        })
-        this.protoAddStoredSlot("ipsDict")
+        this.newSlot("ipsDict", null).setShouldStoreSlot(true)
     }
 
     init () {

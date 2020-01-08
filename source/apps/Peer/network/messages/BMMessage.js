@@ -14,12 +14,10 @@
 window.BMMessage = class BMMessage extends BMFieldSetNode {
     
     initPrototype () {
-        this.newSlots({
-            msgType: null,
-            data: null,
-            msgTypes: ["addr", "inv", "object", "ping", "pong", "getData"],
-            remotePeer: null,
-        })
+        this.newSlot("msgType", null)
+        this.newSlot("data", null)
+        this.newSlot("msgTypes", ["addr", "inv", "object", "ping", "pong", "getData"])
+        this.newSlot("remotePeer", null)
     }
 
     init () {

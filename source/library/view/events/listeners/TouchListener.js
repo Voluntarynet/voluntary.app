@@ -10,8 +10,6 @@
 window.TouchListener = class TouchListener extends EventSetListener {
     
     initPrototype () {
-        this.newSlots({
-        })
     }
 
     init () {

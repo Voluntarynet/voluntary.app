@@ -12,11 +12,8 @@
 window.CrossTabLock = class CrossTabLock extends ProtoClass {
     init() {
         super.init()
-        this.newSlots({
-            "lockName": "cross-tab-lock",
-            "lockNumber": null,
-        })
-
+        this.newSlot("lockName", "cross-tab-lock")
+        this.newSlot("lockNumber", null)
         window.addEventListener("storage", () => this.localStorageChanged())
     }
 

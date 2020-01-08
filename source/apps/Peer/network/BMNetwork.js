@@ -9,16 +9,13 @@
 window.BMNetwork = class BMNetwork extends BMFieldSetNode {
     
     initPrototype () {
-        this.newSlots({
-            servers: null,
-            stunServers: null,
-            messages: null,
-            connection: null,
-            localIdentities: null, // set by parent 
-            blacklists: null,
-            idsBloomFilter: null,
-        })
-
+        this.newSlot("servers", null)
+        this.newSlot("stunServers", null)
+        this.newSlot("messages", null)
+        this.newSlot("connection", null)
+        this.newSlot("localIdentities", null).setComment("set by parents")
+        this.newSlot("blacklists", null)
+        this.newSlot("idsBloomFilter", null)
         this.newSlot("isOpenRelay", false).setShouldStoreSlot(true) //.setField(isOpenRelayField)
     }
 

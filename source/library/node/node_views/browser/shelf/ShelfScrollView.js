@@ -9,8 +9,7 @@
 window.ShelfScrollView = class ShelfScrollView extends DomView {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

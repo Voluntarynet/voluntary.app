@@ -9,8 +9,7 @@
 window.BMAddrMessage = class BMAddrMessage extends BMMessage {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

@@ -9,14 +9,12 @@
 window.BMRemotePeer = class BMRemotePeer extends BMNode {
     
     initPrototype () {
-        this.newSlots({
-            conn: null,
-            serverConnection: null,
-            messages: null,
-            status: null,
-            remoteInventory: null,
-            peerId: null,
-        })
+        this.newSlot("conn", null)
+        this.newSlot("serverConnection", null)
+        this.newSlot("messages", null)
+        this.newSlot("status", null)
+        this.newSlot("remoteInventory", null)
+        this.newSlot("peerId", null)
     }
 
     init () {

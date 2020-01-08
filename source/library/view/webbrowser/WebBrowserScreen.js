@@ -9,8 +9,7 @@
 window.WebBrowserScreen = class WebBrowserScreen extends ProtoClass {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

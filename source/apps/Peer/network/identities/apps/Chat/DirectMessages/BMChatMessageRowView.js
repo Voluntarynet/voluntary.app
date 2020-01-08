@@ -9,8 +9,7 @@
 window.BMChatMessageRowView = class BMChatMessageRowView extends BrowserTitledRow {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

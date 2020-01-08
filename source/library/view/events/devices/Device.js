@@ -8,8 +8,7 @@
 window.Device = class Device extends ProtoClass {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

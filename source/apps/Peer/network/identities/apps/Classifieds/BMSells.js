@@ -9,8 +9,7 @@
 window.BMSells = class BMSells extends BMStorableNode {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

@@ -9,11 +9,7 @@
 window.BMChannel = class BMChannel extends BMStorableNode {
     
     initPrototype () {
-        this.newSlots({
-            name: "",
-
-        })
-        this.protoAddStoredSlot("name")
+        this.newSlot("name", "").setShouldStoreSlot(true)
     }
 
     init () {

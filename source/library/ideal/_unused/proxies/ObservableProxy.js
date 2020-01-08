@@ -39,27 +39,25 @@
 window.ObservableProxy = class ObservableProxy extends ProtoClass {
     
     initPrototype () {
-        this.newSlots({
-            observers: null,
-            target: null,
-            revocable: null,
-            trapNames: [
-                "apply",
-                "construct",
-                "defineProperty", // Object.defineProperty
-                "deleteProperty", // Object.deleteProperty
-                "get", // obj.x or obj[x]
-                "getOwnPropertyDescriptor", // Object.getOwnPropertyDescriptor
-                "getPrototypeOf", // Object.getPrototypeOf
-                "has", // x in obj
-                "isExtensible", // Reflect.isExtensible(target)
-                "ownKeys", // Reflect.ownKeys(target)
-                "preventExtensions", //  Reflect.preventExtensions(target);
-                "set", // obj.x = y or obj[x] = y
-                "setPrototypeOf", // Reflect.setPrototypeOf()
-            ],
-            noteNamesDict: null,
-        })
+        this.newSlot("observers", null)
+        this.newSlot("target", null)
+        this.newSlot("revocable", null)
+        this.newSlot("trapNames", [
+            "apply",
+            "construct",
+            "defineProperty", // Object.defineProperty
+            "deleteProperty", // Object.deleteProperty
+            "get", // obj.x or obj[x]
+            "getOwnPropertyDescriptor", // Object.getOwnPropertyDescriptor
+            "getPrototypeOf", // Object.getPrototypeOf
+            "has", // x in obj
+            "isExtensible", // Reflect.isExtensible(target)
+            "ownKeys", // Reflect.ownKeys(target)
+            "preventExtensions", //  Reflect.preventExtensions(target);
+            "set", // obj.x = y or obj[x] = y
+            "setPrototypeOf", // Reflect.setPrototypeOf()
+        ])
+        this.newSlot("noteNamesDict", null)
     }
 
     init () {

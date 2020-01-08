@@ -9,9 +9,7 @@
 window.BMBuy = class BMBuy extends BMStorableNode {
     
     initPrototype () {
-        this.newSlots({
-            post: null,
-        })
+        this.newSlot("post", null)
         this.protoAddStoredSlot("subtitle")
     }
 

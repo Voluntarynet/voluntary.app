@@ -9,8 +9,7 @@
 window.BMMyPosts = class BMMyPosts extends BMStorableNode {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

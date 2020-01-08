@@ -25,12 +25,6 @@ window.Mouse = class Mouse extends Device {
         return this
     }
 
-    /*
-    shared () { 
-        return this.sharedInstanceForClass(Mouse)
-    }
-    */
-
     setCurrentEvent (event) {
         this._currentEvent = event
         //Devices.shared().setCurrentEvent(event)

@@ -9,8 +9,7 @@
 window.BMTextAreaFieldRowView = class BMTextAreaFieldRowView extends BMFieldRowView {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

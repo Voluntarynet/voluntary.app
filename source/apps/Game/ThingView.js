@@ -10,12 +10,10 @@
 window.ThingView = class ThingView extends DomView {
     
     initPrototype () {
-        this.newSlots({
-            transform: null,
-            transformSpeed: null,
-            mass: 1,
-            icon: null,
-        })
+        this.newSlot("transform", null)
+        this.newSlot("transformSpeed", null)
+        this.newSlot("mass", 1)
+        this.newSlot("icon", null)
     }
 
     init () {

@@ -12,12 +12,10 @@
 window.BMRServer = class BMRServer extends BMFieldSetNode {
     
     initPrototype () {
-        this.newSlots({
-            serverConnection: null,
-            bloomDistance: null,
-            error: null,
-            connectButton: null,
-        })
+        this.newSlot("serverConnection", null)
+        this.newSlot("bloomDistance", null)
+        this.newSlot("error", null)
+        this.newSlot("connectButton", null)
 
         // host: "peers.bitmarkets.org",
         this.newSlot("host", "127.0.0.1").setShouldStoreSlot(true)

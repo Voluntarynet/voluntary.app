@@ -14,8 +14,7 @@
 window.BrowserRowTitle = class BrowserRowTitle extends TextField {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

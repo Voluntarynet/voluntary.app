@@ -25,8 +25,7 @@
 window.PinchGestureRecognizer = class PinchGestureRecognizer extends GestureRecognizer {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

@@ -11,8 +11,6 @@
 window.MouseListener = class MouseListener extends EventSetListener {
     
     initPrototype () {
-        this.newSlots({
-        })
     }
 
     init () {

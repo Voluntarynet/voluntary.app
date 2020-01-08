@@ -10,8 +10,7 @@
 window.BMInbox = class BMInbox extends BMStorableNode {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

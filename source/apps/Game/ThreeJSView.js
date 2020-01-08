@@ -11,11 +11,9 @@
 window.ThreeJSView = class ThreeJSView extends DomView {
     
     initPrototype () {
-        this.newSlots({
-            scene: null,
-            camera: null,
-            renderer: null,
-        })
+        this.newSlot("scene", null)
+        this.newSlot("camera", null)
+        this.newSlot("renderer", null)
     }
 
     init () {

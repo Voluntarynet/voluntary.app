@@ -51,13 +51,11 @@
 window.BMPayload = class BMPayload extends ProtoClass {
     
     initPrototype () {
-        this.newSlots({
-            data: null,
-            error: null,
-            senderPublicKey: null,
-            powObject: null,
-            donePowCallback: null,
-        })
+        this.newSlot("data", null)
+        this.newSlot("error", null)
+        this.newSlot("senderPublicKey", null)
+        this.newSlot("powObject", null)
+        this.newSlot("donePowCallback", null)
     }
 
     init () {

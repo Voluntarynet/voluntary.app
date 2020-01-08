@@ -11,20 +11,16 @@
 window.GameApp = class GameApp extends App {
     
     initPrototype () {
-        this.newSlots({
-            name: "game test",
-            version: [0, 0, 0, 0],
-        
-            // model
-            about: null,
-            about: null,
-        
-            // views
-            browser: null,
-            shelf: null,
-        
-            atomNodeView: null,
-        })
+        this.newSlot("name", "game test")
+        this.newSlot("version", [0, 0, 0, 0])
+
+        // model
+        this.newSlot("about", null)
+
+        // views
+        this.newSlot("browser", null)
+        this.newSlot("shelf", null)
+        this.newSlot("atomNodeView", null)
     }
 
     init () {

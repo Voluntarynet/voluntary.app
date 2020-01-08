@@ -9,9 +9,7 @@
 window.BMGroupConversation = class BMGroupConversation extends BMApplet {
     
     initPrototype () {
-        this.newSlots({
-            remoteIdentity: null,
-        })
+        this.newSlot("remoteIdentity", null)
     }
 
     init () {

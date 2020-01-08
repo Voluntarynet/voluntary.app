@@ -12,13 +12,10 @@
 window.AtomApp = class AtomApp extends App {
     
     initPrototype () {
-        this.newSlots({
-            name: "atom",
-            version: [0, 0, 1, 0],
-        
-            atomNode: null,
-            atomNodeView: null,
-        })
+        this.newSlot("name", "atom")
+        this.newSlot("version", [0, 0, 1, 0])
+        this.newSlot("atomNode", null)
+        this.newSlot("atomNodeView", null)
     }
 
     init () {

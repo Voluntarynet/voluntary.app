@@ -10,15 +10,13 @@
 window.BMMail = class BMMail extends BMApplet {
     
     initPrototype () {
-        this.newSlots({
-            feed: null,
-            drafts: null,
-            notifications: null,
-            messages: null,
-            profile: null,
-            following: null,
-            followers: null,
-        })
+        this.newSlot("feed", null)
+        this.newSlot("drafts", null)
+        this.newSlot("notifications", null)
+        this.newSlot("messages", null)
+        this.newSlot("profile", null)
+        this.newSlot("following", null)
+        this.newSlot("followers", null)
     }
 
     init () {

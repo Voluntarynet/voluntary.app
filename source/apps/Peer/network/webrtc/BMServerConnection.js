@@ -9,25 +9,20 @@
 window.BMServerConnection = class BMServerConnection extends BMNode {
     
     initPrototype () {
-        this.newSlots({
-            server: null,
-            serverConn: null,
-            webSocketListener: null,
-            peerId: null,
-            remotePeers: null,
-            delegate: null,
-            lastError: null,
-            privateKey: null,
-            status: "not connected",
-            //log: null,
-            sessionId: null,
-            statusLog: null,
-            pendingMessages: null,
-            isOpen: false,
-        
-            pingInterval: null,
-        })
-
+        this.newSlot("server", null)
+        this.newSlot("serverConn", null)
+        this.newSlot("webSocketListener", null)
+        this.newSlot("peerId", null)
+        this.newSlot("remotePeers", null)
+        this.newSlot("delegate", null)
+        this.newSlot("lastError", null)
+        this.newSlot("privateKey", null)
+        this.newSlot("status", "not connected")
+        this.newSlot("sessionId", null)
+        this.newSlot("statusLog", null)
+        this.newSlot("pendingMessages", null)
+        this.newSlot("isOpen", false)
+        this.newSlot("pingInterval", null)
         this.newSlot("error", null) //.setShouldStore(true)
     }
 

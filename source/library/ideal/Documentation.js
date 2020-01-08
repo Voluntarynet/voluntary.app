@@ -12,11 +12,7 @@
 
 window.Documentation = class Documentation extends ProtoClass {
     initPrototype () {
-        /*
-        this.newSlots({
-            classes: [],
-        })
-        */
+
     }
 
     init() {

@@ -9,8 +9,7 @@
 window.BMBooleanFieldRowView = class BMBooleanFieldRowView extends BMFieldRowView {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

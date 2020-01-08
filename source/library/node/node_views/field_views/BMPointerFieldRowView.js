@@ -9,8 +9,7 @@
 window.BMPointerFieldRowView = class BMPointerFieldRowView extends BrowserTitledRow {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

@@ -10,8 +10,7 @@
 window.BMFollowingContacts = class BMFollowingContacts extends BMStorableNode {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

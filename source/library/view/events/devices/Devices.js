@@ -25,12 +25,6 @@ window.Devices = class Devices extends ProtoClass {
         this.newSlot("isSetup", false)
     }
 
-    /*
-    shared () { 
-        return this.sharedInstanceForClass(Devices)
-    }
-    */
-
     init () {
         super.init()
         this.setupIfNeeded() 

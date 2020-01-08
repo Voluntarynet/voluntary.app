@@ -9,9 +9,7 @@
 window.BMGroupChatChannel = class BMGroupChatChannel extends BMApplet {
     
     initPrototype () {
-        this.newSlots({
-            name: "Untitled",
-        })
+        this.newSlot("name", "Untitled")
     }
 
     init () {

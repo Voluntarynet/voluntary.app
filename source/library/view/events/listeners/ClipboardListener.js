@@ -10,8 +10,7 @@
 window.ClipboardListener = class ClipboardListener extends EventSetListener {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

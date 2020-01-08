@@ -16,12 +16,10 @@ window.BMServerMessage = class BMServerMessage extends ProtoClass {
     }
 
     initPrototype () {
-        this.newSlots({
-            serverConnection: null,
-            id: null,
-            name: null,
-            data: null
-        })
+        this.newSlot("serverConnection", null)
+        this.newSlot("id", null)
+        this.newSlot("name", null)
+        this.newSlot("data", null)
     }
 
     init () {

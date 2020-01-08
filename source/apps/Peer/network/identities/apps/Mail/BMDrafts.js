@@ -10,8 +10,7 @@
 window.BMDrafts = class BMDrafts extends BMStorableNode {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

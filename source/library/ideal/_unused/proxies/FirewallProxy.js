@@ -24,10 +24,8 @@
 window.FirewallProxy = class FirewallProxy extends ObservableProxy {
     
     initPrototype () {
-        this.newSlots({
-            protectedTraps: null, // Set
-            protectedMethods: null, // Set
-        })
+        this.newSlot("protectedTraps", null).setComment("a Set")
+        this.newSlot("protectedMethods", null).setComment("a Set")
     }
 
     init () {

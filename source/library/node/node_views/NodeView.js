@@ -9,7 +9,7 @@
 window.NodeView = class NodeView extends DomStyledView {
     
     initPrototype () {
-        this.newSlot("node", null)
+        this.newSlot("node", null) //.setDuplicateOp("duplicate")
         //this.newSlot("ownsView", true)
         this.newSlot("overrideSubviewProto", null)
         this.newSlot("nodeObservation", null)

@@ -16,8 +16,7 @@
 window.RightEdgePanGestureRecognizer = class RightEdgePanGestureRecognizer extends EdgePanGestureRecognizer {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

@@ -53,25 +53,25 @@ window.BMNode = class BMNode extends ProtoClass {
 
         // notification notes
 
-        this.newSlot("didUpdateNodeNote", null)
-        this.newSlot("shouldFocusSubnodeNote", null)
+        this.newSlot("didUpdateNodeNote", null) // private
+        this.newSlot("shouldFocusSubnodeNote", null) // private
 
         // view related, but computed on node
 
-        this.newSlot("subtitleIsSubnodeCount", false)
-        this.newSlot("nodeVisibleClassName", null)
-        this.newSlot("noteIsSubnodeCount", false)
+        this.newSlot("subtitleIsSubnodeCount", false).setDuplicateOp("copyValue")
+        this.newSlot("nodeVisibleClassName", null).setDuplicateOp("copyValue")
+        this.newSlot("noteIsSubnodeCount", false).setDuplicateOp("copyValue")
         this.newSlot("nodeEmptyLabel", null) // shown in view when there are no subnodes
 
         // view settings
 
         this.newSlot("viewClassName", null)
         this.newSlot("nodeThumbnailUrl", null)
-        this.newSlot("nodeCanEditTitle", false)
-        this.newSlot("nodeCanEditSubtitle", false)
-        this.newSlot("nodeRowIsSelectable", true)
-        this.newSlot("nodeRowsStartAtBottom", false)
-        this.newSlot("nodeMinRowHeight", 0)
+        this.newSlot("nodeCanEditTitle", false).setDuplicateOp("copyValue")
+        this.newSlot("nodeCanEditSubtitle", false).setDuplicateOp("copyValue")
+        this.newSlot("nodeRowIsSelectable", true).setDuplicateOp("copyValue")
+        this.newSlot("nodeRowsStartAtBottom", false).setDuplicateOp("copyValue")
+        this.newSlot("nodeMinRowHeight", 0).setDuplicateOp("copyValue")
 
         // html
 
@@ -90,15 +90,15 @@ window.BMNode = class BMNode extends ProtoClass {
 
         // column settings - TODO: auto adjust to fit?
 
-        this.newSlot("nodeMinWidth", 200)
-        this.newSlot("nodeUsesColumnBackgroundColor", true)
+        this.newSlot("nodeMinWidth", 200).setDuplicateOp("copyValue")
+        this.newSlot("nodeUsesColumnBackgroundColor", true).setDuplicateOp("copyValue")
         this.newSlot("canDelete", false).setDuplicateOp("copyValue")
-        this.newSlot("nodeCanEditRowHeight", false)
-        this.newSlot("nodeCanEditColumnWidth", false)
+        this.newSlot("nodeCanEditRowHeight", false).setDuplicateOp("copyValue")
+        this.newSlot("nodeCanEditColumnWidth", false).setDuplicateOp("copyValue")
 
         // inspector
 
-        this.newSlot("nodeCanInspect", false)
+        this.newSlot("nodeCanInspect", false).setDuplicateOp("copyValue")
         this.newSlot("nodeInspector", null)
 
         // actions

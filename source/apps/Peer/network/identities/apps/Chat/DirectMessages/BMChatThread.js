@@ -10,10 +10,7 @@
 window.BMChatThread = class BMChatThread extends BMStorableNode {
     
     initPrototype () {
-        this.newSlots({
-            remoteIdentity: null,
-        })
-        this.protoAddStoredSlot("remoteIdentity")
+        this.newSlot("remoteIdentity", null).setShouldStoreSlot(true)
     }
 
     init () {

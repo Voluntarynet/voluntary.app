@@ -10,8 +10,7 @@
 window.BMOptionNodeRowView = class BMOptionNodeRowView extends BrowserTitledRow {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

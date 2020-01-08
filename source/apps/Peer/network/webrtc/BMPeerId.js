@@ -11,11 +11,9 @@
 window.BMPeerId = class BMPeerId extends BMNode {
     
     initPrototype () {
-        this.newSlots({
-            publicKeyString: null,
-            bloomFilter: null,
-            error: null,
-        })
+        this.newSlot("publicKeyString", null)
+        this.newSlot("bloomFilter", null)
+        this.newSlot("error", null)
     }
 
     init () {

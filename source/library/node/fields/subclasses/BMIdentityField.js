@@ -9,8 +9,7 @@
 window.BMIdentityField = class BMIdentityField extends BMField {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

@@ -12,8 +12,7 @@
 window.BMPointerField = class BMPointerField extends BMField {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

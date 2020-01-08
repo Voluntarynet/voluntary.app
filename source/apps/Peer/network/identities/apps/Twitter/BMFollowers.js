@@ -11,8 +11,7 @@
 window.BMFollowers = class BMFollowers extends BMStorableNode {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

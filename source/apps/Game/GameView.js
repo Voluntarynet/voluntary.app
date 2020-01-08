@@ -9,12 +9,10 @@
 window.GameView = class GameView extends DomView {
     
     initPrototype () {
-        this.newSlots({
-            threejsView: null,
-            things: null,
-            ship1: null,
-            ship2: null,
-        })
+        this.newSlot("threejsView", 1)
+        this.newSlot("things", null)
+        this.newSlot("ship1", null)
+        this.newSlot("ship2", null)
     }
 
     init () {

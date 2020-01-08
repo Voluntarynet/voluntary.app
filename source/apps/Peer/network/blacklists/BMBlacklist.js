@@ -9,8 +9,7 @@
 window.BMBlacklist = class BMBlacklist extends BMStorableNode {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

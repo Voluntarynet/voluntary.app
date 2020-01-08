@@ -10,8 +10,7 @@
 window.BMLocalIdentities = class BMLocalIdentities extends BMStorableNode {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

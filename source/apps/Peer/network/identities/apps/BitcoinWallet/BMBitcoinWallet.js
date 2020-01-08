@@ -9,8 +9,7 @@
 window.BMBitcoinWallet = class BMBitcoinWallet extends BMApplet {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

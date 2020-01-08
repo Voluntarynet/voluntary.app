@@ -12,8 +12,7 @@
 window.PersistentObjectPool = class PersistentObjectPool extends ObjectPool {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

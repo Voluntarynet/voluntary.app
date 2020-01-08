@@ -10,8 +10,7 @@
 window.WebSocketListener = class WebSocketListener extends EventSetListener {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

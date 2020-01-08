@@ -10,8 +10,7 @@
 window.BMTwitterMessage = class BMTwitterMessage extends BMAppMessage {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

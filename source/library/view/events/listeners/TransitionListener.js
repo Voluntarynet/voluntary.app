@@ -10,8 +10,7 @@
 window.TransitionListener = class TransitionListener extends EventSetListener {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

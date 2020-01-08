@@ -9,8 +9,7 @@
 window.BMRemoteIdentities = class BMRemoteIdentities extends BMStorableNode {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

@@ -9,8 +9,7 @@
 window.BMThemeStyleSheet = class BMThemeStyleSheet extends ProtoClass {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

@@ -9,8 +9,7 @@
 window.BMBlacklistedContacts = class BMBlacklistedContacts extends BMBlacklist {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

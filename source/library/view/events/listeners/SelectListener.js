@@ -10,8 +10,6 @@
 window.SelectListener = class SelectListener extends EventSetListener {
     
     initPrototype () {
-        this.newSlots({
-        })
     }
 
     init () {

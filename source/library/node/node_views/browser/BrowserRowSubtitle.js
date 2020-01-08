@@ -9,8 +9,7 @@
 window.BrowserRowSubtitle = class BrowserRowSubtitle extends TextField {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

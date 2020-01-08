@@ -9,11 +9,9 @@
 window.BMGroupChat = class BMGroupChat extends BMApplet {
     
     initPrototype () {
-        this.newSlots({
-            channels: null,
-            directMessages: null,
-            profile: null,
-        })
+        this.newSlot("channels", null)
+        this.newSlot("directMessages", null)
+        this.newSlot("profile", null)
     }
 
     init () {

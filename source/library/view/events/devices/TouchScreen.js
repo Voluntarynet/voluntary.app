@@ -26,12 +26,6 @@ window.TouchScreen = class TouchScreen extends Device {
         return result
     }
 
-    /*
-    shared () { 
-        return this.sharedInstanceForClass(TouchScreen)
-    }
-    */
-
     init () {
         super.init()
         this.startListening()

@@ -25,8 +25,7 @@
 window.RotationGestureRecognizer = class RotationGestureRecognizer extends GestureRecognizer {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

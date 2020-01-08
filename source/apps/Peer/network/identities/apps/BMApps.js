@@ -11,8 +11,7 @@
 window.BMApps = class BMApps extends BMStorableNode {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

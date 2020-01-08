@@ -10,8 +10,7 @@
 window.FocusListener = class FocusListener extends EventSetListener {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

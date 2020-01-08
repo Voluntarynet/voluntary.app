@@ -9,9 +9,7 @@
 window.BMRServers = class BMRServers extends BMStorableNode {
     
     initPrototype () {
-        this.newSlots({
-            maxConnections: 8,
-        })
+        this.newSlot("maxConnections", 8)
     }
 
     init () {

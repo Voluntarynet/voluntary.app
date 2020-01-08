@@ -9,8 +9,7 @@
 window.BrowserRowNote = class BrowserRowNote extends TextField {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

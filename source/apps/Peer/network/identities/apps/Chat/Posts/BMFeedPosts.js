@@ -9,9 +9,7 @@
 window.BMFeedPosts = class BMFeedPosts extends BMStorableNode {
     
     initPrototype () {
-        this.newSlots({
-            hasRead: true,
-        })
+        this.newSlot("hasRead", true)
     }
 
     init () {

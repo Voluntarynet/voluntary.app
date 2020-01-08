@@ -9,8 +9,7 @@
 window.BMImageWellFieldRowView = class BMImageWellFieldRowView extends BMFieldRowView {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

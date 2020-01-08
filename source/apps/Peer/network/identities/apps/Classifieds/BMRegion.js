@@ -13,10 +13,8 @@
 window.BMRegion = class BMRegion extends BMNode {
     
     initPrototype () {
-        this.newSlots({
-            lazyChildrenDict: null,
-            allowsSubregions: true,
-        })
+        this.newSlot("lazyChildrenDict", null)
+        this.newSlot("allowsSubregions", true)
     }
 
     init () {

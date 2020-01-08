@@ -11,18 +11,17 @@
 window.PeerApp = class PeerApp extends App {
     
     initPrototype () {
-        this.newSlots({
-            // model
-            about: null,
-            localIdentities: null,
-            network: null,
-            dataStore: null,
-            resources: null,
-                    
-            // views
-            browser: null,
-            shelf: null,        
-        })
+        
+        // model
+        this.newSlot("about", null)
+        this.newSlot("localIdentities", null)
+        this.newSlot("network", null)
+        this.newSlot("dataStore", null)
+        this.newSlot("resources", null)
+
+        // views
+        this.newSlot("browser", null)
+        this.newSlot("shelf", null)
     }
 
     init () {

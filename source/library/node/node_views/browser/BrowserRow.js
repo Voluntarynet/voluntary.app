@@ -72,9 +72,6 @@ window.BrowserRow = class BrowserRow extends NodeView {
     duplicate () {
         const dup = super.duplicate()
         dup.setNode(this.node().duplicate())
-
-        // need to duplicate node and place it in node parent's subnodes?
-
         return dup
     }
 

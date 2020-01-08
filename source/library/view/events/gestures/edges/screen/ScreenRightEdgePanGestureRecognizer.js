@@ -16,8 +16,7 @@
 window.ScreenRightEdgePanGestureRecognizer = class ScreenRightEdgePanGestureRecognizer extends ScreenEdgePanGestureRecognizer {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

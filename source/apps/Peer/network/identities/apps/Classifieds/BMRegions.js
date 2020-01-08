@@ -9,8 +9,7 @@
 window.BMRegions = class BMRegions extends BMRegion {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

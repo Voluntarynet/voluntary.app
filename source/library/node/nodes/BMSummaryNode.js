@@ -15,9 +15,9 @@
 window.BMSummaryNode = class BMSummaryNode extends BMStorableNode {
     
     initPrototype () {
-        this.newSlot("nodeSummaryJoiner", " ").setShouldStoreSlot(true)
-        this.newSlot("nodeSubtitleIsChildrenSummary", false).setShouldStoreSlot(true)
-        this.newSlot("summaryFormat", "value").setShouldStoreSlot(true)
+        this.newSlot("nodeSummaryJoiner", " ").setShouldStoreSlot(true).setDuplicateOp("copyValue")
+        this.newSlot("nodeSubtitleIsChildrenSummary", false).setShouldStoreSlot(true).setDuplicateOp("copyValue")
+        this.newSlot("summaryFormat", "value").setShouldStoreSlot(true).setDuplicateOp("copyValue")
     
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(true)

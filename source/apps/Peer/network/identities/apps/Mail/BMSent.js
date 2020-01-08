@@ -10,8 +10,7 @@
 window.BMSent = class BMSent extends BMStorableNode {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

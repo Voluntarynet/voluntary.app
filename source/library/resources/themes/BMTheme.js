@@ -9,8 +9,7 @@
 window.BMTheme = class BMTheme extends BMStorableNode {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

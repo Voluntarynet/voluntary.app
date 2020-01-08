@@ -10,9 +10,6 @@
 window.BMMailMessage = class BMMailMessage extends BMAppMessage {
     
     initPrototype () {
-        this.newSlots({
-            //canReceive: false,
-        })
     }
 
     init () {

@@ -9,8 +9,7 @@
 window.BMStampField = class BMStampField extends BMField {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

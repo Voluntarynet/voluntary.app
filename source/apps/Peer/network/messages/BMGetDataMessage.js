@@ -9,8 +9,7 @@
 window.BMGetDataMessage = class BMGetDataMessage extends BMMessage {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

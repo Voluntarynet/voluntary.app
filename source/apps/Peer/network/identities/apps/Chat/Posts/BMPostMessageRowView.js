@@ -9,25 +9,21 @@
 window.BMPostMessageRowView = class BMPostMessageRowView extends BrowserRow {
     
     initPrototype () {
-        this.newSlots({
-            leftView: null,
-            iconView: null,
-            middleView: null,
-            titleBarView: null,
-            titleBarTextView: null,
-            dateView: null,
-            textView: null,
-            bottomBarView: null,
-            replyButton: null,
-            replyCountView: null,
-        
-            repostButton: null,
-            repostCountView: null,
-        
-            likeButton: null,
-            likeCountView: null,
-            //rightView: null,
-        })
+        this.newSlot("leftView", null)
+        this.newSlot("iconView", null)
+        this.newSlot("middleView", null)
+        this.newSlot("titleBarView", null)
+        this.newSlot("titleBarTextView", null)
+        this.newSlot("dateView", null)
+        this.newSlot("textView", null)
+        this.newSlot("bottomBarView", null)
+        this.newSlot("replyButton", null)
+        this.newSlot("replyCountView", null)
+        this.newSlot("repostButton", null)
+        this.newSlot("repostCountView", null)
+        this.newSlot("likeButton", null)
+        this.newSlot("likeCountView", null)
+        //rightView: null,
     }
 
     init () {

@@ -9,8 +9,7 @@
 window.BMInvMessage = class BMInvMessage extends BMMessage {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

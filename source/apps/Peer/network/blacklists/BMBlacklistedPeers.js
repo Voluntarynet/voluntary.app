@@ -10,8 +10,7 @@
 window.BMBlacklistedPeers = class BMBlacklistedPeers extends BMBlacklist {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

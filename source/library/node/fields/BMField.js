@@ -17,22 +17,22 @@ window.BMField = class BMField extends BMSummaryNode {
         this.newSlot("isEnabled", true)
 
         // key
-        this.newSlot("key", "key").setShouldStoreSlot(true)
-        this.newSlot("keyIsVisible", true).setShouldStoreSlot(true)
-        this.newSlot("keyIsEditable", false).setShouldStoreSlot(true)
+        this.newSlot("key", "key").setShouldStoreSlot(true).setDuplicateOp("duplicate")
+        this.newSlot("keyIsVisible", true).setShouldStoreSlot(true).setDuplicateOp("duplicate")
+        this.newSlot("keyIsEditable", false).setShouldStoreSlot(true).setDuplicateOp("duplicate")
 
         // value
-        this.newSlot("value", null).setShouldStoreSlot(true)
-        this.newSlot("valueIsVisible", true).setShouldStoreSlot(true)
-        this.newSlot("valueIsEditable", true).setShouldStoreSlot(true)
+        this.newSlot("value", null).setShouldStoreSlot(true).setDuplicateOp("duplicate")
+        this.newSlot("valueIsVisible", true).setShouldStoreSlot(true).setDuplicateOp("duplicate")
+        this.newSlot("valueIsEditable", true).setShouldStoreSlot(true).setDuplicateOp("duplicate")
 
         this.newSlot("link", null)
         this.newSlot("ownsLink", null)
 
-        this.newSlot("valuePrefix", null).setShouldStoreSlot(true)
-        this.newSlot("valuePostfix", null).setShouldStoreSlot(true)
+        this.newSlot("valuePrefix", null).setShouldStoreSlot(true).setDuplicateOp("duplicate")
+        this.newSlot("valuePostfix", null).setShouldStoreSlot(true).setDuplicateOp("duplicate")
 
-        this.newSlot("valueMethod", null)
+        this.newSlot("valueMethod", null).setDuplicateOp("duplicate")
         this.newSlot("noteMethod", null)  // fetches note from a parent node method
         this.newSlot("keyError", null)
         this.newSlot("valueError", null)

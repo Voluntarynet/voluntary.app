@@ -2,7 +2,6 @@
 TODO:
 
 	- support accepts subnode drop onto link node
-	- add Slot attribute for behavior on duplicate: aSlot.duplicateOp()?
 	
 	Notes: 
 	Underlying datastructure for Hypercard and spreadsheets, are tables.
@@ -146,9 +145,7 @@ TODO:
 		- needed to notify views?
 			
 	- fix reordering via drag and drop
-	
-	- remove remaining newSlots({})
-		
+			
 	- review this.overrideSlot("title"...
 
 	- have auto getter/setters check and call super?

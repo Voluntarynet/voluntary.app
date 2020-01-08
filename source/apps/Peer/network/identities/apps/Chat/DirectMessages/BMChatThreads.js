@@ -9,8 +9,7 @@
 window.BMChatThreads = class BMChatThreads extends BMContactLinks {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

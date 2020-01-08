@@ -23,30 +23,27 @@
 window.BMPow = class BMPow extends ProtoClass {
     
     initPrototype () {
-        this.newSlots({
-            targetDifficulty: 15,
-            hash: null, // hex string
-            //pow: null, // hex string
-            powBits: null, // bitArray
-            
-            // finding
-            tries: 0,
-        
-            isFinding: false,
-            updateCallback: null,
-            doneCallback: null,
-            
-            asyncEndTime: null,
-            asyncTimeoutPeriod: 10*60*1000,
-            
-            syncEndTime: null,
-            syncTimeoutPeriod: 100,
-            syncTriesPerLoop: 2000,
-            status: null,
-            globalEstimateTriesPerMs: null, // set this 
-            doneCallback: null,
-            isValid: null, // used to cache result, null means "don't know yet"
-        })
+        this.newSlot("targetDifficulty", 15)
+        this.newSlot("hash", null).setComment("hex string")
+        //this.newSlot("pow", null).setComment("hex string")
+        this.newSlot("powBits", null).setComment("bit array")
+
+        // finding
+        this.newSlot("tries", 0)
+        this.newSlot("isFinding", false)
+
+        this.newSlot("updateCallback", null)
+        this.newSlot("doneCallback", null)
+
+        this.newSlot("asyncEndTime", null)
+        this.newSlot("asyncTimeoutPeriod", 10*60*1000).setComment("in milliseconds")
+
+        this.newSlot("syncEndTime", null)
+        this.newSlot("syncTimeoutPeriod", 100)
+        this.newSlot("syncTriesPerLoop", 2000)
+        this.newSlot("status", null)
+        this.newSlot("globalEstimateTriesPerMs", null)  // set this 
+        this.newSlot("isValid", null) // used to cache result, null means "don't know yet"
     }
 
     init () {

@@ -99,13 +99,24 @@ window.ideal.Slot = class Slot {
         //this.simpleNewSlot("willUpdateSlotName", null)
         //this.simpleNewSlot("didUpdateSlotName", null)
 
-        this.simpleNewSlot("duplicateOp", "nop") // nop, copyValue, duplicate?
+        this.simpleNewSlot("duplicateOp", "nop")
+        this.simpleNewSlot("validDuplicateOps", new Set(["nop", "copyValue", "duplicate"])) 
         this.simpleNewSlot("comment", null)
         this.simpleNewSlot("isPrivate", false)
     }
 
     init () {
 
+    }
+
+    validDuplicateOps () {
+        return new Set(["nop", "copyValue", "duplicate"])
+    }
+
+    setDuplicateOp (aString) {
+        assert(this.validDuplicateOps().has(aString))
+        this._duplicateOp = aString
+        return this
     }
 
     setName (aName) {

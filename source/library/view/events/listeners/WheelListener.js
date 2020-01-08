@@ -10,8 +10,7 @@
 window.WheelListener = class WheelListener extends EventSetListener {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

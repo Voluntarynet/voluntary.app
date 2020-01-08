@@ -10,8 +10,7 @@
 window.BMApplet = class BMApplet extends BMStorableNode {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

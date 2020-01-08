@@ -9,8 +9,7 @@
 window.ShelfFooterView = class ShelfFooterView extends DomView {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

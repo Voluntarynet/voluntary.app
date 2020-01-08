@@ -37,12 +37,6 @@ window.GamePadManager = class GamePadManager extends ProtoClass {
         this.newSlot("pollPeriod", 1000).setComment("milliseconds")
     }
 
-    /*
-    shared () { 
-        return this.sharedInstanceForClass(GamePadManager)
-    }
-    */
-
     init () {
         super.init()
         this.setIsDebugging(true)

@@ -9,9 +9,7 @@
 window.ShelfGroup = class ShelfGroup extends BMNode {
     
     initPrototype () {
-        this.newSlots({
-            refNode: null,
-        })
+        this.newSlot("refNode", null)
     }
 
     init () {

@@ -10,6 +10,7 @@ ResourceLoader.pushRelativePaths([
     "Date-ideal.js",
     "String-ideal.js",
     "Number-ideal.js",
+    "Boolean-ideal.js",
     "Set-ideal.js",
     "Error-ideal.js",
     "Function-ideal.js",

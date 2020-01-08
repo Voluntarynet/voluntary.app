@@ -10,8 +10,7 @@
 window.AnimationListener = class AnimationListener extends EventSetListener {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

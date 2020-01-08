@@ -9,10 +9,8 @@
 window.BMClassifieds = class BMClassifieds extends BMApplet {
     
     initPrototype () {
-        this.newSlots({
-            regions: null,
-            sells: null,
-        })
+        this.newSlot("regions", null)
+        this.newSlot("sells", null)
     }
 
     init () {

@@ -12,8 +12,7 @@
 window.WebBrowserWindow = class WebBrowserWindow extends ProtoClass {
     
     initPrototype () {
-        this.newSlots({
-        })
+
 
         WebBrowserWindow.shared().setup()
     }

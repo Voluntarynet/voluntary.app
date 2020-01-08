@@ -9,8 +9,7 @@
 window.BMPingMessage = class BMPingMessage extends BMMessage {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

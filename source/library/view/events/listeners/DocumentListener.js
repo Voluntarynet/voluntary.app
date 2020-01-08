@@ -10,8 +10,7 @@
 window.DocumentListener = class DocumentListener extends EventSetListener {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

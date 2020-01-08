@@ -11,8 +11,7 @@
 window.WebDocument = class WebDocument extends ProtoClass {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

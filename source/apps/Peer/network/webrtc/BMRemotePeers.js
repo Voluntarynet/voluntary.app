@@ -9,8 +9,7 @@
 window.BMRemotePeers = class BMRemotePeers extends BMNode {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

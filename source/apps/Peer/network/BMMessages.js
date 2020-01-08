@@ -10,16 +10,14 @@
 window.BMMessages = class BMMessages extends BMStorableNode {
     
     initPrototype () {
-        this.newSlots({
-            changeNote: null,
-            network: null,
-            // TODO: deal with timeouts
-            globalMinDifficulty: 16,
-            placedSet: null,
-            deletedSet: null,
-        })
-        this.protoAddStoredSlot("deletedSet")
-        this.protoAddStoredSlot("placedSet")
+        this.newSlot("changeNote", null)
+        this.newSlot("network", null)
+        // TODO: deal with timeouts
+        this.newSlot("globalMinDifficulty", 16)
+        this.newSlot("placedSet", null).setShouldStoreSlot(true)
+        this.newSlot("deletedSet", null).setShouldStoreSlot(true)
+
+
         this.setShouldStore(true)
         this.setShouldStoreSubnodes(true)
     }

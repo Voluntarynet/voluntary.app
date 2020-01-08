@@ -9,8 +9,7 @@
 window.DocumentBody = class DocumentBody extends DomView {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

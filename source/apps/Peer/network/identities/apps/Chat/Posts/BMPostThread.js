@@ -10,8 +10,7 @@
 window.BMPostThread = class BMPostThread extends BMAppMessage {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

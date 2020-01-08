@@ -11,18 +11,16 @@
 window.BMPostDraftRowView = class BMPostDraftRowView extends BrowserRow {
     
     initPrototype () {
-        this.newSlots({
-            topView: null,
-            leftView: null,
-            iconView: null,
-            rightView: null,
-            placeHolderView: null,
-            textContentView: null,
-            //deleteButton: null,
-        
-            bottomView: null,
-            sendButton: null,                
-        })
+
+        this.newSlot("topView", null)
+        this.newSlot("leftView", null)
+        this.newSlot("iconView", null)
+        this.newSlot("rightView", null)
+        this.newSlot("placeHolderView", null)
+        this.newSlot("textContentView", null)
+        //deleteButton: null,
+        this.newSlot("bottomView", null)
+        this.newSlot("sendButton", null)
     }
 
     init () {

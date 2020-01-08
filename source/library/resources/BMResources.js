@@ -27,12 +27,6 @@ window.BMResources = class BMResources extends BMStorableNode {
         //this.watchOnceForNote("appDidInit")
     }
 
-    /*
-    shared () {   
-        return this.sharedInstanceForClass(BMResources)
-    }
-    */
-
     setupSubnodes () {
 
         //this.setThemes(this.defaultStore().rootInstanceWithPidForProto("_themes", BMThemeResources))

@@ -9,8 +9,7 @@
 window.BMStunServers = class BMStunServers extends BMStorableNode {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

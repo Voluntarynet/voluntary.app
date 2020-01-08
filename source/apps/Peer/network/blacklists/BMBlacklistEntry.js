@@ -10,8 +10,7 @@
 window.BMBlacklistEntry = class BMBlacklistEntry extends BMFieldSetNode {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

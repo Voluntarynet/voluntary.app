@@ -10,8 +10,7 @@
 window.BMClassifiedPosts = class BMClassifiedPosts extends BMStorableNode {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

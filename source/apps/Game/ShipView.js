@@ -9,8 +9,7 @@
 window.ShipView = class ShipView extends ThingView {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

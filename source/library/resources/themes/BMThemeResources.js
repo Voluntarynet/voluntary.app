@@ -9,8 +9,7 @@
 window.BMThemeResources = class BMThemeResources extends BMNode {
     
     initPrototype () {
-        this.newSlots({
-        })
+
     }
 
     init () {

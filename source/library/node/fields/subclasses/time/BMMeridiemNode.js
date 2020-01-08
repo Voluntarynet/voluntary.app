@@ -9,9 +9,7 @@
 window.BMMonthNode = class BMMonthNode extends BMNode {
     
     initPrototype () {
-        this.newSlots({
-            value: 1, // month value starts with 1
-        })
+        this.newSlot("value", 1).setComment("month value starts with 1")
     }
 
     init () {
